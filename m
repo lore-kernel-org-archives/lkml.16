@@ -1,141 +1,132 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEA2146A66
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC13D146A66
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748952595; cv=none; b=nLpIlxuFgCmEvLrCgMiKlEmvd6oyEjd6CjQ0tG3jan1TSK/ULloa/CW7b1vinICQtE+mIl6tN8RZI9qVnmkUGKb3orqJLkGUuEUA/YqLVELzKbEvWmijWJvWShVaf7RDKv5imnDlHYY3+m9p5kc4TbaBfVmjMa28yJvB6NDEKLc=
+	t=1748952719; cv=none; b=t/1SweYEYga4g1di4O+8f/+YAYk97lhdub4aMAEJZ0tBDaoUmhRZFXNSl+4Md+E6J120Y+DiDX7Tsdu44jZE/eslgSCZfwEi7gSChu86Yo5PZgDsYT7f5C/ffTSONIqJizfHGViT2oc+s5bC8uRwae5+ylGgEO6JLz24L1Jw9CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748952595; c=relaxed/simple;
-	bh=YryBAYYqkusGLWOaZUx/ENPVrzfzihfvA3OAF4RkZyE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GBFQfJJUbUq/AFU55yxR2noe7fH+qogOU2+OMR7GfcJWwp3+chNtJ+wggaSFZcX5vQ96gTyGh50XQmPoLkLwGBAhqpY7TEivHaiwOeLcir/n4Ob5k1B3T99WR8PKx4ZdD1dXyJy40Vcu8srsvb4Kq3pLMrQbUzJgcA4gDCeQ+DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QKjE60on; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748952719; c=relaxed/simple;
+	bh=n+Ml2A7QDS9pBXBY5/8zFlwpWsHlV5Vcmn3x1XR0Bmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HO003rG2hvTbT4q0lFRJIT+ckV8Zn4kWAD5/5x0n6J6RAjGBGmaXSa7KggM2iYHF7UlSzlN28mJXd+kvztZGLDXQza+js19KQv4xMYEpJInNT+jyV1C6MBl3S2ZyTQ7M22CjatXY66KlIunJRMzahZTeDgVpHPx0ftTFkHzvLEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KBuDX1qc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=f7zUdW+6; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KBuDX1qc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=f7zUdW+6; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QKjE60on"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70b4e497d96so53167077b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:09:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748952591; x=1749557391; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wkgkfx1ZHJ5WRXN3wk71OJao3glFFdhvQiWlOBbCHtw=;
-        b=QKjE60on8C0B1uf7Wkdr4vd3wZEUNW/3x685xZ2L1Ujg5MCiUKYJVHko1af2IRHuCw
-         eiZlimKJqQe561ASjCIvjujo/a63N+xe4UPdANf0Mk+eP172bgz2yHZQ5ZKgItNkps0d
-         8bjOdPteDQF4uyTGMcvppPAeOERxrH+gdS1gvmyPh9phN9LCKcbXM7dMEqGStpPMaWd6
-         fPzTKrePbM7X2xzNuiOxKfGnErudddrnTJoRo6luOt5ona3WXNTPktOj4HgeFNRsCyB7
-         vZCC9fQycUzJqkIMqqatqK6CtGCOD28cecO9XgWuaZypgtdmUSX+VMK9NHfOtxU0YoQU
-         xr8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748952591; x=1749557391;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wkgkfx1ZHJ5WRXN3wk71OJao3glFFdhvQiWlOBbCHtw=;
-        b=ffLegEYNVb9DJccsHq1Jzeo8rIbsyz+pc5iHDuUiHEO4mQQeMqBOg5vNiexXaT8dZi
-         juRXsiQLFWC4AvvdeNOU4gXG+K1wuyPkhN4MgkWpP6laujSeUol/NuGdqQISfFsSvNU2
-         S+mUhEU696dbHZ40+yAaYfKI55l4wR0b97/2rlaKyJm83m9eABQMKt8jbBrlhhxiZp6W
-         1CIMzDW0SL+J2HG2oMJjh9OMuux1P55U96K/qIfiNngLGa6ltG7xJQRI4prxXvZj8ncq
-         THcmqGnvwVGORW6WyAv8DDeCGwchOKGuEp24LS/4O4MqMkVAv/1Z9NOZe0ynNh7gPGgs
-         1oRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnLnxPrh8JodZomLyE0vR9V0012SDVAUfwZ7L7hONQdNFcuolW3GN/fxd8aT5/lgPkumwvayVxPLF1Xwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/lMIeCPbQuncZawHOiHqbgZpK6Vu4b2b3pE6NDpn/RcrEOJpC
-	j90/uZrk5R4WCoSLTnKdWH4sRzwFEP1RgeT07SJYH7Yrj7QrMtq9SkZsysakKCs8PywFitpgtbR
-	40IkV/3VDetBegH3f5ANW5YBr60w7aCiG+T2X5Lclug==
-X-Gm-Gg: ASbGncv46k6I42TjOzKAajsWviS/cJbcSxzXjDKpp9VJM25rKbkcPnhqdFr4khKyjR0
-	vvH7rXtLReutwY0UFOZNS0P+fVw8B1eYb95TLLvW0L0Ov9EtVSvcxQkdj11G56wQHHIgGQygi9K
-	3r7O7biBTNeXTcft6GLZTkOnX1b0fne3/mGMAvkKBEs/s=
-X-Google-Smtp-Source: AGHT+IEBu6kRLR+QihKU16+LErg47sPGw3yJ9MbHWp+STBlEAPmBRdPA2kKSotqf4d+nhihTdrEqxcQCav79Y/SEImk=
-X-Received: by 2002:a05:690c:6888:b0:70e:923:2173 with SMTP id
- 00721157ae682-71097c2a76fmr158597817b3.5.1748952591135; Tue, 03 Jun 2025
- 05:09:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KBuDX1qc";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="f7zUdW+6";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KBuDX1qc";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="f7zUdW+6"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out2.suse.de (Postfix) with ESMTP id AF3D11FBA4;
+	Tue,  3 Jun 2025 12:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748952715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lKWJbX0PLKuRXFkwoq7rogv1tm65PhpIOsVYoZQ/ZIk=;
+	b=KBuDX1qc4X6RVCI1Er/XBW/X9j7Nl7fl7eA0Bm6/fBjn0GAIGBnKMQIBsHYgqT2/BH0o4x
+	cHuXiV6nkmBU0TyuPUO1JmzqUTX5cNucS4I8ug7V0UI5a2ijfi6l8WJHUlyfJEvRDmQOki
+	SYYan06yt6kxXs++1TYpRem5KHPzTt4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748952715;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lKWJbX0PLKuRXFkwoq7rogv1tm65PhpIOsVYoZQ/ZIk=;
+	b=f7zUdW+6DWgJFZCT0bpAFE/fV4iYkZG+u1R5OcMARAGM1iVM8oiOgYVyYRDk/KVXc2sXLT
+	SzvANfWba12tJjDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748952715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lKWJbX0PLKuRXFkwoq7rogv1tm65PhpIOsVYoZQ/ZIk=;
+	b=KBuDX1qc4X6RVCI1Er/XBW/X9j7Nl7fl7eA0Bm6/fBjn0GAIGBnKMQIBsHYgqT2/BH0o4x
+	cHuXiV6nkmBU0TyuPUO1JmzqUTX5cNucS4I8ug7V0UI5a2ijfi6l8WJHUlyfJEvRDmQOki
+	SYYan06yt6kxXs++1TYpRem5KHPzTt4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748952715;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lKWJbX0PLKuRXFkwoq7rogv1tm65PhpIOsVYoZQ/ZIk=;
+	b=f7zUdW+6DWgJFZCT0bpAFE/fV4iYkZG+u1R5OcMARAGM1iVM8oiOgYVyYRDk/KVXc2sXLT
+	SzvANfWba12tJjDw==
+Date: Tue, 3 Jun 2025 14:11:55 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+To: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
+	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v4 5/5] x86: implement crashkernel cma reservation
+Message-ID: <aD7mi4j2llS-Kpfv@dwarf.suse.cz>
+References: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
+ <aDoVhDc11ZcJyHm2@dwarf.suse.cz>
+ <aD7WLv86BOVS+GPm@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602131906.25751-1-hiagofranco@gmail.com>
-In-Reply-To: <20250602131906.25751-1-hiagofranco@gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 3 Jun 2025 14:09:14 +0200
-X-Gm-Features: AX0GCFuMy0nMLljWiQ8PZlmv65MxrymGJ77Eb8A4CZbrmvODDSNF3Eq2H4oVdUw
-Message-ID: <CAPDyKFrUAF5oWkyc3mLf0+R9VAypBotNyR4B5Chr3KQFYJOjbw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] remoteproc: imx_rproc: allow attaching to running
- core kicked by the bootloader
-To: Hiago De Franco <hiagofranco@gmail.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, linux-pm@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com, 
-	"Rafael J . Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD7WLv86BOVS+GPm@MiWiFi-R3L-srv>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ZERO(0.00)[0];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo,suse.cz:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Mon, 2 Jun 2025 at 15:19, Hiago De Franco <hiagofranco@gmail.com> wrote:
->
-> From: Hiago De Franco <hiago.franco@toradex.com>
->
-> This patch series depends on Ulf's patches that are currently under review,
-> "pmdomain: Add generic ->sync_state() support to genpd" [1]. Without them,
-> this series is not going to work.
->
-> For the i.MX8X and i.MX8 family SoCs, currently when the remotecore is
-> started by the bootloader and the M core and A core are in the same
-> partition, the driver is not capable to detect the remote core and
-> report the correct state of it.
->
-> This patch series implement a new function, dev_pm_genpd_is_on(), which
-> returns the power status of a given power domain (M core power domains
-> IMX_SC_R_M4_0_PID0 and IMX_SC_R_M4_0_MU_1A in this case). If it is already
-> powered on, the driver will attach to it.
->
-> Finally, the imx_rproc_clk_enable() function was also changed to make it
-> return before dev_clk_get() is called, as it currently generates an SCU
-> fault reset if the remote core is already running and the kernel tries
-> to enable the clock again. These changes are a follow up from a v1 sent
-> to imx_rproc [2] and from a reported regression [3].
->
-> [1] https://lore.kernel.org/all/20250523134025.75130-1-ulf.hansson@linaro.org/
-> [2] https://lore.kernel.org/lkml/20250423155131.101473-1-hiagofranco@gmail.com/
-> [3] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
->
-> v4:
-> - dev_pm_genpd_is_on() introduced to drivers/pmdomain/core.c
-> - imx_rproc.c updated to use the generic power domains instead of the
->   SCU API call, which depends on Ulf's patch series.
->
-> v3:
-> - https://lore.kernel.org/all/20250519171514.61974-1-hiagofranco@gmail.com/
->
-> v2:
-> - https://lore.kernel.org/lkml/20250507160056.11876-1-hiagofranco@gmail.com/
->
-> v1:
-> - https://lore.kernel.org/lkml/20250505154849.64889-1-hiagofranco@gmail.com/
->
-> Hiago De Franco (3):
->   pmdomain: core: introduce dev_pm_genpd_is_on
->   remoteproc: imx_rproc: skip clock enable when M-core is managed by the
->     SCU
->   remoteproc: imx_rproc: detect and attach to pre-booted remote cores
->
->  drivers/pmdomain/core.c        | 27 +++++++++++++++++++++++++++
->  drivers/remoteproc/imx_rproc.c | 33 ++++++++++++++++++++++++++-------
->  include/linux/pm_domain.h      |  6 ++++++
->  3 files changed, 59 insertions(+), 7 deletions(-)
->
+On Tue, Jun 03, 2025 at 07:02:06PM +0800, Baoquan He wrote:
+> On 05/30/25 at 10:31pm, Jiri Bohac wrote:
+> ......snip.. 
+> > @@ -582,7 +582,7 @@ static void __init arch_reserve_crashkernel(void)
+> >  
+> >  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> >  				&crash_size, &crash_base,
+> > -				&low_size, NULL, &high);
+> > +				&low_size, &cma_size, &high);
+> >  	if (ret)
+> >  		return;
+> >  
+> > @@ -592,6 +592,7 @@ static void __init arch_reserve_crashkernel(void)
+> >  	}
+> >  
+> >  	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
+> > +	reserve_crashkernel_cma(cma_size);
+> 
+> Wondering if ,high|low is still allowed (or needed) when ,cma is specified.
 
-We are awaiting further feedback on the other series [1]. As you have
-tested it, may I add your tested-by tag for it? Or perhaps if you can
-send a reply to the cover-letter for it?
+Probably not needed but it works, totally independent of the
+extra CMA-reserved area.
 
-Anyway, for $subject series:
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+I saw no reason to artificially prevent it.
 
-Kind regards
-Uffe
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
