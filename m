@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EB0288C86;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F309828937C;
 	Tue,  3 Jun 2025 18:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748975278; cv=none; b=dL4rAgpRvoEe+TcnCSs7bdN1Px7mhaxqi5L8dlsqilqHCG2jGHxTRWfwQtPn1RqdXRFnHBL5XrdazQPnoyXON/o+bhK0vNAuzoGqSRusMAigjBTcIhrrOTy4KdxqMH2Lcv/XdwqbjdZmCyUswkV6LFIbgJigGtjVppsHjsr1UsA=
+	t=1748975279; cv=none; b=YOvdo964nM/gpKkB0bNEKA6iK1etu9JEp53/cN0BfP+MGoCChyMvZC8Tv3WTQVxInz87mr0RhBJY0ZgW/39+NDvPP0SUyDz5571KIcyFkvZjjBXJCT3xt8Aws+HRj7Y85fTJ6z4NoEJXVXZ8tmJHAeYWgJzA3/tMpfwEEx5WKjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748975278; c=relaxed/simple;
-	bh=lvfJmhHzqfRhiVokgh8fkyPZVe+2w470C/Ow49zz0Dw=;
+	s=arc-20240116; t=1748975279; c=relaxed/simple;
+	bh=0x7YH9y/JkBGT9ytAdxSehZZA+xuBXJA2DXrZ4nc8IY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=s3qJGpjZJbYoXWfl4vrwWp4kSMnevVoentyDuET8dDk0NULiT/heM12rIqu2vXceR/QCAbRZ9Z8eIPhLQDwVYHwE+io+181F+iNdUgKX5V2+w1TA4X3QvXJK3nUXnDEg7nzEj7NmWdi3c3NTm2dTC/nsSe2wljsgSICsue+dEr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPbcvwzr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Z7Nu42LQSsDVNz/N1cw9JaGWhYDhBpdbvC4K5xxoR3X0Ggz5P6gUJxKTWOdZ0+BzSRTAfOugdlQEeydnzO29N+1PM0VmQCTIP3ZvLncViGcAmNb6O/rB9Qnam+N3oiHBwQOmNBrMJxFir+PbDiFvHYBYhccR/nSmXT5DPzsUh+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b+iYkEGX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPbcvwzr"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 19B1FC4CEEE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b+iYkEGX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 565D1C4CEFD;
 	Tue,  3 Jun 2025 18:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1748975278;
-	bh=lvfJmhHzqfRhiVokgh8fkyPZVe+2w470C/Ow49zz0Dw=;
+	bh=0x7YH9y/JkBGT9ytAdxSehZZA+xuBXJA2DXrZ4nc8IY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gPbcvwzrHtDDeE1PiMXynxBs+KHnfjxjw7IYE8kj7ouVtItSB9kPUvmgP8aSmcZQh
-	 CeUSRwMmLN/KATMFqapCCuySaAPc3G36bC1vGQueuei3AuGr45AUKl6MDoGTuI8Qgr
-	 dbmMtxpgpjilp69+wNJOJTKJ/u9xzjy31h9eZaKNv6j4csKs9LJ9Q5z0VJgY693i6D
-	 QxJs+QZpq2H5tQ4iiwTT9CRpJMpGyCJ81U+MonaQZIPZYsRYqbUQ0zAiNMQSEP/uZ1
-	 ZnTER+ft++x8o7COKJ3jcNaeqD0AiHDe6AO5CUXXKUDsK5cjc4Q9I5csNE7C1p2Ase
-	 mhRb8srcM8prg==
+	b=b+iYkEGXSMV4hSqEC9bYTTtL9x4dmLiNQtE6wWVMIJ18OQpLdhvMQN1yGttemBMWu
+	 L7RXo4WCouJSokZ0g8a+01p3bC38YpOe7J9JvbEfzoU/VhnHauVkXrsDoOPM5acrQ+
+	 n1CPxLscqwmWVNGgsiz7X+vywe8PLP6rQGTKlI/AgLgEy2jwylt0DKl40iLD07miYV
+	 13I06Fw1XSG2qCfIhFH3LKKFdMNjF8XZSf5BayiLqQ+UFcVYuH04ckihGhvvESvO6U
+	 c02Sv0DU2HjuvD61BZuiMgo9ev/urF5jlXYU/7pEOmreyMELPgXoZcSn0o0DKAIyVY
+	 K6EJkJ57OHLAg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06285C5AD49;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EC6C5AD49;
 	Tue,  3 Jun 2025 18:27:58 +0000 (UTC)
 From: Samuel Kayode via B4 Relay <devnull+samuel.kayode.savoirfairelinux.com@kernel.org>
-Date: Tue, 03 Jun 2025 14:27:46 -0400
-Subject: [PATCH v4 2/6] mfd: pf1550: add core mfd driver
+Date: Tue, 03 Jun 2025 14:27:49 -0400
+Subject: [PATCH v4 5/6] power: supply: pf1550: add battery charger support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250603-pf1550-v4-2-bfdf51ee59cc@savoirfairelinux.com>
+Message-Id: <20250603-pf1550-v4-5-bfdf51ee59cc@savoirfairelinux.com>
 References: <20250603-pf1550-v4-0-bfdf51ee59cc@savoirfairelinux.com>
 In-Reply-To: <20250603-pf1550-v4-0-bfdf51ee59cc@savoirfairelinux.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -56,12 +56,12 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Enric Balletbo i Serra <eballetbo@gmail.com>, 
  Samuel Kayode <samuel.kayode@savoirfairelinux.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748975277; l=20758;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748975277; l=19916;
  i=samuel.kayode@savoirfairelinux.com; s=20250527;
  h=from:subject:message-id;
- bh=HsuHsmK3Eflb7SLibimFftzFSzdVO8l8ifuJx5khmmU=;
- b=V36pvRJmuL+rFOpOvgmeUP1O2u/DdGJn3AEJ5GJ22kK9gr9l05uM/eG15RVroZt94X+9HYjLw
- PtQjbVbjGLvBhz+45BBqPjEh8sLbIudZHt86qCFsVz1E4K3iXtpTtRS
+ bh=EcLyhSnGsNi4H0v8HISao0/WlnCtJzbmdR8elOgimvs=;
+ b=MntQnueu/7NxP7wdKOKaL2G8EtrWR/qqu/kJABqiQL83jHYJ15TWh1r0o0gDoo8fY9TODKS4p
+ DBTHrQRPOz0BZCzWXVVLmUeLOVPx8kLWkZTm7t/Geg9yGJxsU2bvUCK
 X-Developer-Key: i=samuel.kayode@savoirfairelinux.com; a=ed25519;
  pk=TPSQGQ5kywnnPyGs0EQqLajLFbdDu17ahXz8/gxMfio=
 X-Endpoint-Received: by B4 Relay for
@@ -71,82 +71,68 @@ Reply-To: samuel.kayode@savoirfairelinux.com
 
 From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
 
-Add the core mfd driver for pf1550 PMIC. There are 3 subdevices for
-which the drivers will be added in subsequent patches.
+Add support for the battery charger for pf1550 PMIC.
 
 Signed-off-by: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
 ---
 v4:
- - Use struct resource to define irq so platform_get_irq can be used in
-   children as suggested by Dmitry
- - Let mfd_add_devices create the mappings for the interrupts
- - ack_base and init_ack_masked defined for charger and regulator irq
-   chips
- - No need to define driver_data in table id
+- Finish handling of some interrupts in threaded irq handler
+- Use platform_get_irq
 v3:
- - Address Dmitry's feedback:
-   - Place Table IDs next to each other
-   - Drop of_match_ptr
-   - Replace dev_err with dev_err_probe in probe method
-   - Drop useless log in probe
- - Map all irqs instead of doing it in the sub-devices as recommended by
-   Dmitry.
+- Use struct power_supply_get_battery_info to get constant charge
+  voltage if specified
+- Use virqs mapped in MFD driver
 v2:
- - Address feedback from Enric Balletbo Serra
+- Address feedback from Enric Balletbo Serra
 ---
- drivers/mfd/Kconfig        |  14 +++
- drivers/mfd/Makefile       |   2 +
- drivers/mfd/pf1550.c       | 305 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/pf1550.h | 244 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 565 insertions(+)
+ drivers/power/supply/Kconfig          |  11 +
+ drivers/power/supply/Makefile         |   1 +
+ drivers/power/supply/pf1550-charger.c | 654 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 666 insertions(+)
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 96992af22565205716d72db0494c7bf2567b045e..de3fc9c5e88b5c2a2c7325e2ceeb8f9c3ca057de 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -558,6 +558,20 @@ config MFD_MX25_TSADC
- 	  i.MX25 processors. They consist of a conversion queue for general
- 	  purpose ADC and a queue for Touchscreens.
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 79ddb006e2dad6bf96b71ed570a37c006b5f9433..6d0c872edac1f45da314632e671af1aeda4c87b8 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -471,6 +471,17 @@ config CHARGER_88PM860X
+ 	help
+ 	  Say Y here to enable charger for Marvell 88PM860x chip.
  
-+config MFD_PF1550
-+	tristate "NXP PF1550 PMIC Support"
-+	depends on I2C=y && OF
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
++config CHARGER_PF1550
++	tristate "NXP PF1550 battery charger driver"
++	depends on MFD_PF1550
 +	help
-+	  Say yes here to add support for NXP PF1550.
-+	  This is a companion Power Management IC with regulators, onkey,
-+	  and charger control on chip.
-+	  This driver provides common support for accessing the device;
-+	  additional drivers must be enabled in order to use the functionality
-+	  of the device.
++	  Say Y to enable support for the NXP PF1550 battery charger.
++	  The device is a single cell Li-Ion/Li-Polymer battery charger for
++	  portable application.
 +
- config MFD_HI6421_PMIC
- 	tristate "HiSilicon Hi6421 PMU/Codec IC"
- 	depends on OF
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 5e5cc279af6036a6b3ea1f1f0feeddf45b85f15c..7391d1b81d1ee499507b4ac24ff00eb2e344d60b 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -120,6 +120,8 @@ obj-$(CONFIG_MFD_MC13XXX)	+= mc13xxx-core.o
- obj-$(CONFIG_MFD_MC13XXX_SPI)	+= mc13xxx-spi.o
- obj-$(CONFIG_MFD_MC13XXX_I2C)	+= mc13xxx-i2c.o
- 
-+obj-$(CONFIG_MFD_PF1550)	+= pf1550.o
++	  This driver can also be built as a module. If so, the module will be
++	  called pf1550-charger.
 +
- obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
- 
- ocelot-soc-objs			:= ocelot-core.o ocelot-spi.o
-diff --git a/drivers/mfd/pf1550.c b/drivers/mfd/pf1550.c
+ config BATTERY_RX51
+ 	tristate "Nokia RX-51 (N900) battery driver"
+ 	depends on TWL4030_MADC
+diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+index 4f5f8e3507f80da02812f0d08c2d81ddff0a272f..7f68380099c59dab71b73120150612a23e16a745 100644
+--- a/drivers/power/supply/Makefile
++++ b/drivers/power/supply/Makefile
+@@ -64,6 +64,7 @@ obj-$(CONFIG_CHARGER_RT9467)	+= rt9467-charger.o
+ obj-$(CONFIG_CHARGER_RT9471)	+= rt9471.o
+ obj-$(CONFIG_BATTERY_TWL4030_MADC)	+= twl4030_madc_battery.o
+ obj-$(CONFIG_CHARGER_88PM860X)	+= 88pm860x_charger.o
++obj-$(CONFIG_CHARGER_PF1550)	+= pf1550-charger.o
+ obj-$(CONFIG_BATTERY_RX51)	+= rx51_battery.o
+ obj-$(CONFIG_AB8500_BM)		+= ab8500_bmdata.o ab8500_charger.o ab8500_fg.o ab8500_btemp.o ab8500_chargalg.o
+ obj-$(CONFIG_CHARGER_CPCAP)	+= cpcap-charger.o
+diff --git a/drivers/power/supply/pf1550-charger.c b/drivers/power/supply/pf1550-charger.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..ec9022ce8d45b0d0d041101264d9cdb05b79cb57
+index 0000000000000000000000000000000000000000..4865b21ba53e4b6c3f04d1781a98697359abc5c5
 --- /dev/null
-+++ b/drivers/mfd/pf1550.c
-@@ -0,0 +1,305 @@
++++ b/drivers/power/supply/pf1550-charger.c
+@@ -0,0 +1,654 @@
 +// SPDX-License-Identifier: GPL-2.0
 +//
-+// pf1550.c - mfd core driver for the PF1550
++// pf1550_charger.c - charger driver for the PF1550
 +//
 +// Copyright (C) 2016 Freescale Semiconductor, Inc.
 +// Robin Gong <yibin.gong@freescale.com>
@@ -154,551 +140,650 @@ index 0000000000000000000000000000000000000000..ec9022ce8d45b0d0d041101264d9cdb0
 +// Portions Copyright (c) 2025 Savoir-faire Linux Inc.
 +// Samuel Kayode <samuel.kayode@savoirfairelinux.com>
 +//
-+// This driver is based on max77693.c
-+//
 +
-+#include <linux/err.h>
-+#include <linux/i2c.h>
 +#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/mfd/core.h>
 +#include <linux/mfd/pf1550.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/power_supply.h>
 +
-+static const struct regmap_config pf1550_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = PF1550_PMIC_REG_END,
++#define PF1550_CHARGER_NAME		"pf1550-charger"
++#define PF1550_DEFAULT_CONSTANT_VOLT	4200000
++#define PF1550_DEFAULT_MIN_SYSTEM_VOLT	3500000
++#define PF1550_DEFAULT_THERMAL_TEMP	75
++#define PF1550_CHARGER_IRQ_NR		5
++
++static const char *pf1550_charger_model		= "PF1550";
++static const char *pf1550_charger_manufacturer	= "NXP";
++
++struct pf1550_charger {
++	struct device *dev;
++	const struct pf1550_dev *pf1550;
++	struct power_supply *charger;
++	struct power_supply_desc psy_desc;
++	struct delayed_work vbus_sense_work;
++	struct delayed_work chg_sense_work;
++	struct delayed_work bat_sense_work;
++	struct mutex mutex;
++
++	u32 constant_volt;
++	u32 min_system_volt;
++	u32 thermal_regulation_temp;
 +};
 +
-+static const struct regmap_irq pf1550_regulator_irqs[] = {
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW1_LS,         0, PMIC_IRQ_SW1_LS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW2_LS,         0, PMIC_IRQ_SW2_LS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW3_LS,         0, PMIC_IRQ_SW3_LS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW1_HS,         3, PMIC_IRQ_SW1_HS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW2_HS,         3, PMIC_IRQ_SW2_HS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW3_HS,         3, PMIC_IRQ_SW3_HS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_LDO1_FAULT,    16, PMIC_IRQ_LDO1_FAULT),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_LDO2_FAULT,    16, PMIC_IRQ_LDO2_FAULT),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_LDO3_FAULT,    16, PMIC_IRQ_LDO3_FAULT),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_TEMP_110,      22, PMIC_IRQ_TEMP_110),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_TEMP_125,      22, PMIC_IRQ_TEMP_125),
-+};
-+
-+static const struct regmap_irq_chip pf1550_regulator_irq_chip = {
-+	.name			= "pf1550-regulator",
-+	.status_base		= PF1550_PMIC_REG_SW_INT_STAT0,
-+	.ack_base		= PF1550_PMIC_REG_SW_INT_STAT0,
-+	.mask_base		= PF1550_PMIC_REG_SW_INT_MASK0,
-+	.use_ack                = 1,
-+	.init_ack_masked	= 1,
-+	.num_regs		= 23,
-+	.irqs			= pf1550_regulator_irqs,
-+	.num_irqs		= ARRAY_SIZE(pf1550_regulator_irqs),
-+};
-+
-+static const struct resource regulator_resources[] = {
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_SW1_LS),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_SW2_LS),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_SW3_LS),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_SW1_HS),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_SW2_HS),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_SW3_HS),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_LDO1_FAULT),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_LDO2_FAULT),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_LDO3_FAULT),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_TEMP_110),
-+	DEFINE_RES_IRQ(PF1550_PMIC_IRQ_TEMP_125),
-+};
-+
-+static const struct regmap_irq pf1550_onkey_irqs[] = {
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_PUSHI,  0, ONKEY_IRQ_PUSHI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_1SI,    0, ONKEY_IRQ_1SI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_2SI,    0, ONKEY_IRQ_2SI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_3SI,    0, ONKEY_IRQ_3SI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_4SI,    0, ONKEY_IRQ_4SI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_8SI,    0, ONKEY_IRQ_8SI),
-+};
-+
-+static const struct regmap_irq_chip pf1550_onkey_irq_chip = {
-+	.name			= "pf1550-onkey",
-+	.status_base		= PF1550_PMIC_REG_ONKEY_INT_STAT0,
-+	.ack_base		= PF1550_PMIC_REG_ONKEY_INT_STAT0,
-+	.mask_base		= PF1550_PMIC_REG_ONKEY_INT_MASK0,
-+	.use_ack                = 1,
-+	.init_ack_masked	= 1,
-+	.num_regs		= 1,
-+	.irqs			= pf1550_onkey_irqs,
-+	.num_irqs		= ARRAY_SIZE(pf1550_onkey_irqs),
-+};
-+
-+static const struct resource onkey_resources[] = {
-+	DEFINE_RES_IRQ(PF1550_ONKEY_IRQ_PUSHI),
-+	DEFINE_RES_IRQ(PF1550_ONKEY_IRQ_1SI),
-+	DEFINE_RES_IRQ(PF1550_ONKEY_IRQ_2SI),
-+	DEFINE_RES_IRQ(PF1550_ONKEY_IRQ_3SI),
-+	DEFINE_RES_IRQ(PF1550_ONKEY_IRQ_4SI),
-+	DEFINE_RES_IRQ(PF1550_ONKEY_IRQ_8SI),
-+};
-+
-+static const struct regmap_irq pf1550_charger_irqs[] = {
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_BAT2SOCI,	0, CHARG_IRQ_BAT2SOCI),
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_BATI,           0, CHARG_IRQ_BATI),
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_CHGI,           0, CHARG_IRQ_CHGI),
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_VBUSI,          0, CHARG_IRQ_VBUSI),
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_THMI,           0, CHARG_IRQ_THMI),
-+};
-+
-+static const struct regmap_irq_chip pf1550_charger_irq_chip = {
-+	.name			= "pf1550-charger",
-+	.status_base		= PF1550_CHARG_REG_CHG_INT,
-+	.ack_base		= PF1550_CHARG_REG_CHG_INT,
-+	.mask_base		= PF1550_CHARG_REG_CHG_INT_MASK,
-+	.use_ack                = 1,
-+	.init_ack_masked	= 1,
-+	.num_regs		= 1,
-+	.irqs			= pf1550_charger_irqs,
-+	.num_irqs		= ARRAY_SIZE(pf1550_charger_irqs),
-+};
-+
-+static const struct resource charger_resources[] = {
-+	DEFINE_RES_IRQ(PF1550_CHARG_IRQ_BAT2SOCI),
-+	DEFINE_RES_IRQ(PF1550_CHARG_IRQ_BATI),
-+	DEFINE_RES_IRQ(PF1550_CHARG_IRQ_CHGI),
-+	DEFINE_RES_IRQ(PF1550_CHARG_IRQ_VBUSI),
-+	DEFINE_RES_IRQ(PF1550_CHARG_IRQ_THMI),
-+};
-+
-+static const struct mfd_cell pf1550_regulator_cell = {
-+	.name = "pf1550-regulator",
-+	.num_resources = ARRAY_SIZE(regulator_resources),
-+	.resources = regulator_resources,
-+};
-+
-+static const struct mfd_cell pf1550_onkey_cell = {
-+	.name = "pf1550-onkey",
-+	.num_resources = ARRAY_SIZE(onkey_resources),
-+	.resources = onkey_resources,
-+};
-+
-+static const struct mfd_cell pf1550_charger_cell = {
-+	.name = "pf1550-charger",
-+	.num_resources = ARRAY_SIZE(charger_resources),
-+	.resources = charger_resources,
-+};
-+
-+int pf1550_read_otp(const struct pf1550_dev *pf1550, unsigned int index,
-+		    unsigned int *val)
++static int pf1550_get_charger_state(struct regmap *regmap, int *val)
 +{
-+	int ret = 0;
++	int ret;
++	unsigned int data;
 +
-+	ret = regmap_write(pf1550->regmap, PF1550_PMIC_REG_KEY, 0x15);
-+	if (ret)
-+		goto read_err;
-+	ret = regmap_write(pf1550->regmap, PF1550_CHARG_REG_CHGR_KEY2, 0x50);
-+	if (ret)
-+		goto read_err;
-+	ret = regmap_write(pf1550->regmap, PF1550_TEST_REG_KEY3, 0xAB);
-+	if (ret)
-+		goto read_err;
-+	ret = regmap_write(pf1550->regmap, PF1550_TEST_REG_FMRADDR, index);
-+	if (ret)
-+		goto read_err;
-+	ret = regmap_read(pf1550->regmap, PF1550_TEST_REG_FMRDATA, val);
-+	if (ret)
-+		goto read_err;
++	ret = regmap_read(regmap, PF1550_CHARG_REG_CHG_SNS, &data);
++	if (ret < 0)
++		return ret;
++
++	data &= PF1550_CHG_SNS_MASK;
++
++	switch (data) {
++	case PF1550_CHG_PRECHARGE:
++	case PF1550_CHG_CONSTANT_CURRENT:
++		*val = POWER_SUPPLY_STATUS_CHARGING;
++		break;
++	case PF1550_CHG_CONSTANT_VOL:
++		*val = POWER_SUPPLY_STATUS_CHARGING;
++		break;
++	case PF1550_CHG_EOC:
++		*val = POWER_SUPPLY_STATUS_CHARGING;
++		break;
++	case PF1550_CHG_DONE:
++		*val = POWER_SUPPLY_STATUS_FULL;
++		break;
++	case PF1550_CHG_TIMER_FAULT:
++	case PF1550_CHG_SUSPEND:
++		*val = POWER_SUPPLY_STATUS_NOT_CHARGING;
++		break;
++	case PF1550_CHG_OFF_INV:
++	case PF1550_CHG_OFF_TEMP:
++	case PF1550_CHG_LINEAR_ONLY:
++		*val = POWER_SUPPLY_STATUS_DISCHARGING;
++		break;
++	default:
++		*val = POWER_SUPPLY_STATUS_UNKNOWN;
++	}
 +
 +	return 0;
-+
-+read_err:
-+	dev_err(pf1550->dev, "read otp reg %x found!\n", index);
-+	return ret;
 +}
-+EXPORT_SYMBOL_GPL(pf1550_read_otp);
 +
-+static int pf1550_add_child_device(struct pf1550_dev *pmic,
-+				   const struct mfd_cell *cell,
-+				   struct regmap_irq_chip_data *pdata,
-+				   int pirq, int irq_flags,
-+				   const struct regmap_irq_chip *chip,
-+				   struct regmap_irq_chip_data **data)
++static int pf1550_get_charge_type(struct regmap *regmap, int *val)
 +{
-+	struct device *dev = pmic->dev;
-+	struct irq_domain *domain;
++	int ret;
++	unsigned int data;
++
++	ret = regmap_read(regmap, PF1550_CHARG_REG_CHG_SNS, &data);
++	if (ret < 0)
++		return ret;
++
++	data &= PF1550_CHG_SNS_MASK;
++
++	switch (data) {
++	case PF1550_CHG_SNS_MASK:
++		*val = POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
++		break;
++	case PF1550_CHG_CONSTANT_CURRENT:
++	case PF1550_CHG_CONSTANT_VOL:
++	case PF1550_CHG_EOC:
++		*val = POWER_SUPPLY_CHARGE_TYPE_FAST;
++		break;
++	case PF1550_CHG_DONE:
++	case PF1550_CHG_TIMER_FAULT:
++	case PF1550_CHG_SUSPEND:
++	case PF1550_CHG_OFF_INV:
++	case PF1550_CHG_BAT_OVER:
++	case PF1550_CHG_OFF_TEMP:
++	case PF1550_CHG_LINEAR_ONLY:
++		*val = POWER_SUPPLY_CHARGE_TYPE_NONE;
++		break;
++	default:
++		*val = POWER_SUPPLY_CHARGE_TYPE_UNKNOWN;
++	}
++
++	return 0;
++}
++
++/*
++ * Supported health statuses:
++ *  - POWER_SUPPLY_HEALTH_DEAD
++ *  - POWER_SUPPLY_HEALTH_GOOD
++ *  - POWER_SUPPLY_HEALTH_OVERVOLTAGE
++ *  - POWER_SUPPLY_HEALTH_UNKNOWN
++ */
++static int pf1550_get_battery_health(struct regmap *regmap, int *val)
++{
++	int ret;
++	unsigned int data;
++
++	ret = regmap_read(regmap, PF1550_CHARG_REG_BATT_SNS, &data);
++	if (ret < 0)
++		return ret;
++
++	data &= PF1550_BAT_SNS_MASK;
++
++	switch (data) {
++	case PF1550_BAT_NO_DETECT:
++		*val = POWER_SUPPLY_HEALTH_DEAD;
++		break;
++	case PF1550_BAT_NO_VBUS:
++	case PF1550_BAT_LOW_THAN_PRECHARG:
++	case PF1550_BAT_CHARG_FAIL:
++	case PF1550_BAT_HIGH_THAN_PRECHARG:
++		*val = POWER_SUPPLY_HEALTH_GOOD;
++		break;
++	case PF1550_BAT_OVER_VOL:
++		*val = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
++		break;
++	default:
++		*val = POWER_SUPPLY_HEALTH_UNKNOWN;
++		break;
++	}
++
++	return 0;
++}
++
++static int pf1550_get_present(struct regmap *regmap, int *val)
++{
++	unsigned int data;
 +	int ret;
 +
-+	ret = devm_regmap_add_irq_chip(dev, pmic->regmap, pirq, irq_flags,
-+				       0, chip, data);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to add %s IRQ chip\n", chip->name);
++	ret = regmap_read(regmap, PF1550_CHARG_REG_BATT_SNS, &data);
++	if (ret < 0)
++		return ret;
 +
-+	domain = regmap_irq_get_domain(*data);
++	data &= PF1550_BAT_SNS_MASK;
++	*val = (data == PF1550_BAT_NO_DETECT) ? 0 : 1;
 +
-+	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, cell, 1,
-+				    NULL, 0, domain);
++	return 0;
 +}
 +
-+static int pf1550_i2c_probe(struct i2c_client *i2c)
++static int pf1550_get_online(struct regmap *regmap, int *val)
 +{
-+	struct pf1550_dev *pf1550;
-+	const struct mfd_cell *regulator = &pf1550_regulator_cell;
-+	const struct mfd_cell *onkey = &pf1550_onkey_cell;
-+	const struct mfd_cell *charger = &pf1550_charger_cell;
-+	unsigned int reg_data = 0;
++	unsigned int data;
++	int ret;
++
++	ret = regmap_read(regmap, PF1550_CHARG_REG_VBUS_SNS, &data);
++	if (ret < 0)
++		return ret;
++
++	*val = (data & PF1550_VBUS_VALID) ? 1 : 0;
++
++	return 0;
++}
++
++static void pf1550_chg_bat_work(struct work_struct *work)
++{
++	struct pf1550_charger *chg = container_of(to_delayed_work(work),
++						  struct pf1550_charger,
++						  bat_sense_work);
++	unsigned int data;
++
++	if (!chg->charger)
++		return;
++
++	mutex_lock(&chg->mutex);
++
++	if (regmap_read(chg->pf1550->regmap, PF1550_CHARG_REG_BATT_SNS, &data)) {
++		dev_err(chg->dev, "Read BATT_SNS error.\n");
++		mutex_unlock(&chg->mutex);
++		return;
++	}
++
++	switch (data & PF1550_BAT_SNS_MASK) {
++	case PF1550_BAT_NO_VBUS:
++		dev_dbg(chg->dev, "No valid VBUS input.\n");
++		break;
++	case PF1550_BAT_LOW_THAN_PRECHARG:
++		dev_dbg(chg->dev, "VBAT < VPRECHG.LB.\n");
++		break;
++	case PF1550_BAT_CHARG_FAIL:
++		dev_dbg(chg->dev, "Battery charging failed.\n");
++		break;
++	case PF1550_BAT_HIGH_THAN_PRECHARG:
++		dev_dbg(chg->dev, "VBAT > VPRECHG.LB.\n");
++		break;
++	case PF1550_BAT_OVER_VOL:
++		dev_dbg(chg->dev, "VBAT > VBATOV.\n");
++		break;
++	case PF1550_BAT_NO_DETECT:
++		dev_dbg(chg->dev, "Battery not detected.\n");
++		break;
++	default:
++		dev_err(chg->dev, "Unknown value read:%x\n",
++			data & PF1550_CHG_SNS_MASK);
++	}
++
++	mutex_unlock(&chg->mutex);
++}
++
++static void pf1550_chg_chg_work(struct work_struct *work)
++{
++	struct pf1550_charger *chg = container_of(to_delayed_work(work),
++						  struct pf1550_charger,
++						  chg_sense_work);
++	unsigned int data;
++
++	if (!chg->charger)
++		return;
++
++	mutex_lock(&chg->mutex);
++
++	if (regmap_read(chg->pf1550->regmap, PF1550_CHARG_REG_CHG_SNS, &data)) {
++		dev_err(chg->dev, "Read CHG_SNS error.\n");
++		mutex_unlock(&chg->mutex);
++		return;
++	}
++
++	switch (data & PF1550_CHG_SNS_MASK) {
++	case PF1550_CHG_PRECHARGE:
++		dev_dbg(chg->dev, "In pre-charger mode.\n");
++		break;
++	case PF1550_CHG_CONSTANT_CURRENT:
++		dev_dbg(chg->dev, "In fast-charge constant current mode.\n");
++		break;
++	case PF1550_CHG_CONSTANT_VOL:
++		dev_dbg(chg->dev, "In fast-charge constant voltage mode.\n");
++		break;
++	case PF1550_CHG_EOC:
++		dev_dbg(chg->dev, "In EOC mode.\n");
++		break;
++	case PF1550_CHG_DONE:
++		dev_dbg(chg->dev, "In DONE mode.\n");
++		break;
++	case PF1550_CHG_TIMER_FAULT:
++		dev_info(chg->dev, "In timer fault mode.\n");
++		break;
++	case PF1550_CHG_SUSPEND:
++		dev_info(chg->dev, "In thermistor suspend mode.\n");
++		break;
++	case PF1550_CHG_OFF_INV:
++		dev_info(chg->dev, "Input invalid, charger off.\n");
++		break;
++	case PF1550_CHG_BAT_OVER:
++		dev_info(chg->dev, "Battery over-voltage.\n");
++		break;
++	case PF1550_CHG_OFF_TEMP:
++		dev_info(chg->dev, "Temp high, charger off.\n");
++		break;
++	case PF1550_CHG_LINEAR_ONLY:
++		dev_dbg(chg->dev, "In Linear mode, not charging.\n");
++		break;
++	default:
++		dev_err(chg->dev, "Unknown value read:%x\n",
++			data & PF1550_CHG_SNS_MASK);
++	}
++
++	mutex_unlock(&chg->mutex);
++}
++
++static void pf1550_chg_vbus_work(struct work_struct *work)
++{
++	struct pf1550_charger *chg = container_of(to_delayed_work(work),
++						  struct pf1550_charger,
++						  vbus_sense_work);
++	enum power_supply_type old_type;
++	unsigned int data;
++
++	if (!chg->charger)
++		return;
++
++	mutex_lock(&chg->mutex);
++
++	if (regmap_read(chg->pf1550->regmap, PF1550_CHARG_REG_VBUS_SNS, &data)) {
++		dev_err(chg->dev, "Read VBUS_SNS error.\n");
++		mutex_unlock(&chg->mutex);
++		return;
++	}
++
++	old_type = chg->psy_desc.type;
++
++	if (data & PF1550_VBUS_UVLO) {
++		chg->psy_desc.type = POWER_SUPPLY_TYPE_BATTERY;
++		dev_dbg(chg->dev, "VBUS deattached.\n");
++	}
++	if (data & PF1550_VBUS_IN2SYS)
++		dev_dbg(chg->dev, "VBUS_IN2SYS_SNS.\n");
++	if (data & PF1550_VBUS_OVLO)
++		dev_dbg(chg->dev, "VBUS_OVLO_SNS.\n");
++	if (data & PF1550_VBUS_VALID) {
++		chg->psy_desc.type = POWER_SUPPLY_TYPE_MAINS;
++		dev_dbg(chg->dev, "VBUS attached.\n");
++	}
++
++	if (old_type != chg->psy_desc.type)
++		power_supply_changed(chg->charger);
++
++	mutex_unlock(&chg->mutex);
++}
++
++static irqreturn_t pf1550_charger_irq_handler(int irq, void *data)
++{
++	struct pf1550_charger *chg = data;
++	struct device *dev = chg->dev;
++	struct platform_device *pdev = to_platform_device(dev);
++	int i, irq_type = -1;
++
++	for (i = 0; i < PF1550_CHARGER_IRQ_NR; i++)
++		if (irq == platform_get_irq(pdev, i))
++			irq_type = i;
++
++	switch (irq_type) {
++	case PF1550_CHARG_IRQ_BAT2SOCI:
++		dev_info(dev, "BAT to SYS Overcurrent interrupt.\n");
++		break;
++	case PF1550_CHARG_IRQ_BATI:
++		schedule_delayed_work(&chg->bat_sense_work,
++				      msecs_to_jiffies(10));
++		break;
++	case PF1550_CHARG_IRQ_CHGI:
++		schedule_delayed_work(&chg->chg_sense_work,
++				      msecs_to_jiffies(10));
++		break;
++	case PF1550_CHARG_IRQ_VBUSI:
++		schedule_delayed_work(&chg->vbus_sense_work,
++				      msecs_to_jiffies(10));
++		break;
++	case PF1550_CHARG_IRQ_THMI:
++		dev_info(dev, "Thermal interrupt.\n");
++		break;
++	default:
++		dev_err(dev, "unknown interrupt occurred.\n");
++	}
++
++	return IRQ_HANDLED;
++}
++
++static enum power_supply_property pf1550_charger_props[] = {
++	POWER_SUPPLY_PROP_STATUS,
++	POWER_SUPPLY_PROP_CHARGE_TYPE,
++	POWER_SUPPLY_PROP_HEALTH,
++	POWER_SUPPLY_PROP_PRESENT,
++	POWER_SUPPLY_PROP_ONLINE,
++	POWER_SUPPLY_PROP_MODEL_NAME,
++	POWER_SUPPLY_PROP_MANUFACTURER,
++};
++
++static int pf1550_charger_get_property(struct power_supply *psy,
++				       enum power_supply_property psp,
++			    union power_supply_propval *val)
++{
++	struct pf1550_charger *chg = power_supply_get_drvdata(psy);
++	struct regmap *regmap = chg->pf1550->regmap;
 +	int ret = 0;
 +
-+	pf1550 = devm_kzalloc(&i2c->dev, sizeof(*pf1550), GFP_KERNEL);
-+	if (!pf1550)
-+		return -ENOMEM;
++	switch (psp) {
++	case POWER_SUPPLY_PROP_STATUS:
++		ret = pf1550_get_charger_state(regmap, &val->intval);
++		break;
++	case POWER_SUPPLY_PROP_CHARGE_TYPE:
++		ret = pf1550_get_charge_type(regmap, &val->intval);
++		break;
++	case POWER_SUPPLY_PROP_HEALTH:
++		ret = pf1550_get_battery_health(regmap, &val->intval);
++		break;
++	case POWER_SUPPLY_PROP_PRESENT:
++		ret = pf1550_get_present(regmap, &val->intval);
++		break;
++	case POWER_SUPPLY_PROP_ONLINE:
++		ret = pf1550_get_online(regmap, &val->intval);
++		break;
++	case POWER_SUPPLY_PROP_MODEL_NAME:
++		val->strval = pf1550_charger_model;
++		break;
++	case POWER_SUPPLY_PROP_MANUFACTURER:
++		val->strval = pf1550_charger_manufacturer;
++		break;
++	default:
++		return -EINVAL;
++	}
 +
-+	i2c_set_clientdata(i2c, pf1550);
-+	pf1550->dev = &i2c->dev;
-+	pf1550->i2c = i2c;
-+	pf1550->irq = i2c->irq;
-+
-+	pf1550->regmap = devm_regmap_init_i2c(i2c, &pf1550_regmap_config);
-+	if (IS_ERR(pf1550->regmap))
-+		return dev_err_probe(pf1550->dev, PTR_ERR(pf1550->regmap),
-+				     "failed to allocate register map\n");
-+
-+	ret = regmap_read(pf1550->regmap, PF1550_PMIC_REG_DEVICE_ID, &reg_data);
-+	if (ret < 0 || reg_data != PF1550_DEVICE_ID)
-+		return dev_err_probe(pf1550->dev, ret ?: -EINVAL,
-+				     "device not found!\n");
-+
-+	pf1550->type = PF1550;
-+
-+	ret = pf1550_add_child_device(pf1550, regulator,
-+				      pf1550->irq_data_regulator,
-+				      pf1550->irq, IRQF_ONESHOT | IRQF_SHARED |
-+				      IRQF_TRIGGER_FALLING,
-+				      &pf1550_regulator_irq_chip,
-+				      &pf1550->irq_data_regulator);
-+	if (ret)
-+		return ret;
-+
-+	ret = pf1550_add_child_device(pf1550, onkey, pf1550->irq_data_onkey,
-+				      pf1550->irq, IRQF_ONESHOT | IRQF_SHARED |
-+				      IRQF_TRIGGER_FALLING,
-+				      &pf1550_onkey_irq_chip,
-+				      &pf1550->irq_data_onkey);
-+	if (ret)
-+		return ret;
-+
-+	ret = pf1550_add_child_device(pf1550, charger, pf1550->irq_data_charger,
-+				      pf1550->irq, IRQF_ONESHOT | IRQF_SHARED |
-+				      IRQF_TRIGGER_FALLING,
-+				      &pf1550_charger_irq_chip,
-+				      &pf1550->irq_data_charger);
 +	return ret;
 +}
 +
-+static int pf1550_suspend(struct device *dev)
++static int pf1550_set_constant_volt(struct pf1550_charger *chg,
++				    unsigned int uvolt)
 +{
-+	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
-+	struct pf1550_dev *pf1550 = i2c_get_clientdata(i2c);
++	unsigned int data;
 +
-+	if (device_may_wakeup(dev)) {
-+		enable_irq_wake(pf1550->irq);
-+		disable_irq(pf1550->irq);
-+	}
++	if (uvolt >= 3500000 && uvolt <= 4440000)
++		data = 8 + (uvolt - 3500000) / 20000;
++	else
++		return dev_err_probe(chg->dev, -EINVAL,
++				     "Wrong value for constant voltage\n");
 +
-+	return 0;
++	dev_dbg(chg->dev, "Charging constant voltage: %u (0x%x)\n", uvolt,
++		data);
++
++	return regmap_update_bits(chg->pf1550->regmap,
++				  PF1550_CHARG_REG_BATT_REG,
++				  PF1550_CHARG_REG_BATT_REG_CHGCV_MASK, data);
 +}
 +
-+static int pf1550_resume(struct device *dev)
++static int pf1550_set_min_system_volt(struct pf1550_charger *chg,
++				      unsigned int uvolt)
 +{
-+	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
-+	struct pf1550_dev *pf1550 = i2c_get_clientdata(i2c);
++	unsigned int data;
 +
-+	if (device_may_wakeup(dev)) {
-+		disable_irq_wake(pf1550->irq);
-+		enable_irq(pf1550->irq);
++	switch (uvolt) {
++	case 3500000:
++		data = 0x0;
++		break;
++	case 3700000:
++		data = 0x1;
++		break;
++	case 4300000:
++		data = 0x2;
++		break;
++	default:
++		return dev_err_probe(chg->dev, -EINVAL,
++				     "Wrong value for minimum system voltage\n");
 +	}
 +
-+	return 0;
++	data <<= PF1550_CHARG_REG_BATT_REG_VMINSYS_SHIFT;
++
++	dev_dbg(chg->dev, "Minimum system regulation voltage: %u (0x%x)\n",
++		uvolt, data);
++
++	return regmap_update_bits(chg->pf1550->regmap,
++				  PF1550_CHARG_REG_BATT_REG,
++				  PF1550_CHARG_REG_BATT_REG_VMINSYS_MASK, data);
 +}
 +
-+static DEFINE_SIMPLE_DEV_PM_OPS(pf1550_pm, pf1550_suspend, pf1550_resume);
++static int pf1550_set_thermal_regulation_temp(struct pf1550_charger *chg,
++					      unsigned int cells)
++{
++	unsigned int data;
 +
-+static const struct i2c_device_id pf1550_i2c_id[] = {
-+	{ "pf1550", 0 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pf1550_i2c_id);
++	switch (cells) {
++	case 60:
++		data = 0x0;
++		break;
++	case 75:
++		data = 0x1;
++		break;
++	case 90:
++		data = 0x2;
++		break;
++	case 105:
++		data = 0x3;
++		break;
++	default:
++		return dev_err_probe(chg->dev, -EINVAL,
++				     "Wrong value for thermal temperature\n");
++	}
 +
-+static const struct of_device_id pf1550_dt_match[] = {
-+	{ .compatible = "nxp,pf1550" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, pf1550_dt_match);
++	data <<= PF1550_CHARG_REG_THM_REG_CNFG_REGTEMP_SHIFT;
 +
-+static struct i2c_driver pf1550_i2c_driver = {
-+	.driver = {
-+		   .name = "pf1550",
-+		   .pm = pm_sleep_ptr(&pf1550_pm),
-+		   .of_match_table = pf1550_dt_match,
-+	},
-+	.probe = pf1550_i2c_probe,
-+	.id_table = pf1550_i2c_id,
-+};
-+module_i2c_driver(pf1550_i2c_driver);
++	dev_dbg(chg->dev, "Thermal regulation loop temperature: %u (0x%x)\n",
++		cells, data);
 +
-+MODULE_DESCRIPTION("NXP PF1550 multi-function core driver");
-+MODULE_AUTHOR("Robin Gong <yibin.gong@freescale.com>");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/pf1550.h b/include/linux/mfd/pf1550.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..bdacaaf69aea8ef6d627629581c3350084c65f86
---- /dev/null
-+++ b/include/linux/mfd/pf1550.h
-@@ -0,0 +1,244 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++	return regmap_update_bits(chg->pf1550->regmap,
++				  PF1550_CHARG_REG_THM_REG_CNFG,
++				  PF1550_CHARG_REG_THM_REG_CNFG_REGTEMP_MASK,
++				  data);
++}
++
 +/*
-+ * pf1550.h - mfd head file for PF1550
-+ *
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Robin Gong <yibin.gong@freescale.com>
-+ *
-+ * Portions Copyright (c) 2025 Savoir-faire Linux Inc.
-+ * Samuel Kayode <samuel.kayode@savoirfairelinux.com>
++ * Sets charger registers to proper and safe default values.
 + */
++static int pf1550_reg_init(struct pf1550_charger *chg)
++{
++	struct device *dev = chg->dev;
++	int ret;
++	unsigned int data;
 +
-+#ifndef __LINUX_MFD_PF1550_H
-+#define __LINUX_MFD_PF1550_H
++	/* Unmask charger interrupt, mask DPMI and reserved bit */
++	ret =  regmap_write(chg->pf1550->regmap, PF1550_CHARG_REG_CHG_INT_MASK,
++			    PF1550_CHG_INT_MASK);
++	if (ret)
++		return dev_err_probe(dev, ret,
++				     "Error unmask charger interrupt\n");
 +
-+#include <linux/i2c.h>
-+#include <linux/regmap.h>
++	ret = regmap_read(chg->pf1550->regmap, PF1550_CHARG_REG_VBUS_SNS,
++			  &data);
++	if (ret)
++		return dev_err_probe(dev, ret, "Read charg vbus_sns error\n");
 +
-+enum chips { PF1550 = 1, };
++	if (data & PF1550_VBUS_VALID)
++		chg->psy_desc.type = POWER_SUPPLY_TYPE_MAINS;
 +
-+enum pf1550_pmic_reg {
-+	/* PMIC regulator part */
-+	PF1550_PMIC_REG_DEVICE_ID		= 0x00,
-+	PF1550_PMIC_REG_OTP_FLAVOR		= 0x01,
-+	PF1550_PMIC_REG_SILICON_REV		= 0x02,
++	ret = pf1550_set_constant_volt(chg, chg->constant_volt);
++	if (ret)
++		return ret;
 +
-+	PF1550_PMIC_REG_INT_CATEGORY		= 0x06,
-+	PF1550_PMIC_REG_SW_INT_STAT0		= 0x08,
-+	PF1550_PMIC_REG_SW_INT_MASK0		= 0x09,
-+	PF1550_PMIC_REG_SW_INT_SENSE0		= 0x0A,
-+	PF1550_PMIC_REG_SW_INT_STAT1		= 0x0B,
-+	PF1550_PMIC_REG_SW_INT_MASK1		= 0x0C,
-+	PF1550_PMIC_REG_SW_INT_SENSE1		= 0x0D,
-+	PF1550_PMIC_REG_SW_INT_STAT2		= 0x0E,
-+	PF1550_PMIC_REG_SW_INT_MASK2		= 0x0F,
-+	PF1550_PMIC_REG_SW_INT_SENSE2		= 0x10,
-+	PF1550_PMIC_REG_LDO_INT_STAT0		= 0x18,
-+	PF1550_PMIC_REG_LDO_INT_MASK0		= 0x19,
-+	PF1550_PMIC_REG_LDO_INT_SENSE0		= 0x1A,
-+	PF1550_PMIC_REG_TEMP_INT_STAT0		= 0x20,
-+	PF1550_PMIC_REG_TEMP_INT_MASK0		= 0x21,
-+	PF1550_PMIC_REG_TEMP_INT_SENSE0		= 0x22,
-+	PF1550_PMIC_REG_ONKEY_INT_STAT0		= 0x24,
-+	PF1550_PMIC_REG_ONKEY_INT_MASK0		= 0x25,
-+	PF1550_PMIC_REG_ONKEY_INT_SENSE0	= 0x26,
-+	PF1550_PMIC_REG_MISC_INT_STAT0		= 0x28,
-+	PF1550_PMIC_REG_MISC_INT_MASK0		= 0x29,
-+	PF1550_PMIC_REG_MISC_INT_SENSE0		= 0x2A,
++	ret = pf1550_set_min_system_volt(chg, chg->min_system_volt);
++	if (ret)
++		return ret;
 +
-+	PF1550_PMIC_REG_COINCELL_CONTROL	= 0x30,
++	ret = pf1550_set_thermal_regulation_temp(chg,
++						 chg->thermal_regulation_temp);
++	if (ret)
++		return ret;
 +
-+	PF1550_PMIC_REG_SW1_VOLT		= 0x32,
-+	PF1550_PMIC_REG_SW1_STBY_VOLT		= 0x33,
-+	PF1550_PMIC_REG_SW1_SLP_VOLT		= 0x34,
-+	PF1550_PMIC_REG_SW1_CTRL		= 0x35,
-+	PF1550_PMIC_REG_SW1_CTRL1		= 0x36,
-+	PF1550_PMIC_REG_SW2_VOLT		= 0x38,
-+	PF1550_PMIC_REG_SW2_STBY_VOLT		= 0x39,
-+	PF1550_PMIC_REG_SW2_SLP_VOLT		= 0x3A,
-+	PF1550_PMIC_REG_SW2_CTRL		= 0x3B,
-+	PF1550_PMIC_REG_SW2_CTRL1		= 0x3C,
-+	PF1550_PMIC_REG_SW3_VOLT		= 0x3E,
-+	PF1550_PMIC_REG_SW3_STBY_VOLT		= 0x3F,
-+	PF1550_PMIC_REG_SW3_SLP_VOLT		= 0x40,
-+	PF1550_PMIC_REG_SW3_CTRL		= 0x41,
-+	PF1550_PMIC_REG_SW3_CTRL1		= 0x42,
-+	PF1550_PMIC_REG_VSNVS_CTRL		= 0x48,
-+	PF1550_PMIC_REG_VREFDDR_CTRL		= 0x4A,
-+	PF1550_PMIC_REG_LDO1_VOLT		= 0x4C,
-+	PF1550_PMIC_REG_LDO1_CTRL		= 0x4D,
-+	PF1550_PMIC_REG_LDO2_VOLT		= 0x4F,
-+	PF1550_PMIC_REG_LDO2_CTRL		= 0x50,
-+	PF1550_PMIC_REG_LDO3_VOLT		= 0x52,
-+	PF1550_PMIC_REG_LDO3_CTRL		= 0x53,
-+	PF1550_PMIC_REG_PWRCTRL0		= 0x58,
-+	PF1550_PMIC_REG_PWRCTRL1		= 0x59,
-+	PF1550_PMIC_REG_PWRCTRL2		= 0x5A,
-+	PF1550_PMIC_REG_PWRCTRL3		= 0x5B,
-+	PF1550_PMIC_REG_SW1_PWRDN_SEQ		= 0x5F,
-+	PF1550_PMIC_REG_SW2_PWRDN_SEQ		= 0x60,
-+	PF1550_PMIC_REG_SW3_PWRDN_SEQ		= 0x61,
-+	PF1550_PMIC_REG_LDO1_PWRDN_SEQ		= 0x62,
-+	PF1550_PMIC_REG_LDO2_PWRDN_SEQ		= 0x63,
-+	PF1550_PMIC_REG_LDO3_PWRDN_SEQ		= 0x64,
-+	PF1550_PMIC_REG_VREFDDR_PWRDN_SEQ	= 0x65,
++	/* Turn on charger */
++	ret = regmap_write(chg->pf1550->regmap, PF1550_CHARG_REG_CHG_OPER,
++			   PF1550_CHG_TURNON);
++	if (ret)
++		return dev_err_probe(dev, ret, "Error turn on charger\n");
 +
-+	PF1550_PMIC_REG_STATE_INFO		= 0x67,
-+	PF1550_PMIC_REG_I2C_ADDR		= 0x68,
-+	PF1550_PMIC_REG_IO_DRV0			= 0x69,
-+	PF1550_PMIC_REG_IO_DRV1			= 0x6A,
-+	PF1550_PMIC_REG_RC_16MHZ		= 0x6B,
-+	PF1550_PMIC_REG_KEY			= 0x6F,
++	return 0;
++}
 +
-+	/* charger part */
-+	PF1550_CHARG_REG_CHG_INT		= 0x80,
-+	PF1550_CHARG_REG_CHG_INT_MASK		= 0x82,
-+	PF1550_CHARG_REG_CHG_INT_OK		= 0x84,
-+	PF1550_CHARG_REG_VBUS_SNS		= 0x86,
-+	PF1550_CHARG_REG_CHG_SNS		= 0x87,
-+	PF1550_CHARG_REG_BATT_SNS		= 0x88,
-+	PF1550_CHARG_REG_CHG_OPER		= 0x89,
-+	PF1550_CHARG_REG_CHG_TMR		= 0x8A,
-+	PF1550_CHARG_REG_CHG_EOC_CNFG		= 0x8D,
-+	PF1550_CHARG_REG_CHG_CURR_CNFG		= 0x8E,
-+	PF1550_CHARG_REG_BATT_REG		= 0x8F,
-+	PF1550_CHARG_REG_BATFET_CNFG		= 0x91,
-+	PF1550_CHARG_REG_THM_REG_CNFG		= 0x92,
-+	PF1550_CHARG_REG_VBUS_INLIM_CNFG	= 0x94,
-+	PF1550_CHARG_REG_VBUS_LIN_DPM		= 0x95,
-+	PF1550_CHARG_REG_USB_PHY_LDO_CNFG	= 0x96,
-+	PF1550_CHARG_REG_DBNC_DELAY_TIME	= 0x98,
-+	PF1550_CHARG_REG_CHG_INT_CNFG		= 0x99,
-+	PF1550_CHARG_REG_THM_ADJ_SETTING	= 0x9A,
-+	PF1550_CHARG_REG_VBUS2SYS_CNFG		= 0x9B,
-+	PF1550_CHARG_REG_LED_PWM		= 0x9C,
-+	PF1550_CHARG_REG_FAULT_BATFET_CNFG	= 0x9D,
-+	PF1550_CHARG_REG_LED_CNFG		= 0x9E,
-+	PF1550_CHARG_REG_CHGR_KEY2		= 0x9F,
++static void pf1550_dt_parse_dev_info(struct pf1550_charger *chg)
++{
++	struct device *dev = chg->dev;
++	struct power_supply_battery_info *info;
 +
-+	PF1550_TEST_REG_FMRADDR			= 0xC4,
-+	PF1550_TEST_REG_FMRDATA			= 0xC5,
-+	PF1550_TEST_REG_KEY3			= 0xDF,
++	if (device_property_read_u32(dev->parent, "nxp,min-system-microvolt",
++				     &chg->min_system_volt))
++		chg->min_system_volt = PF1550_DEFAULT_MIN_SYSTEM_VOLT;
 +
-+	PF1550_PMIC_REG_END			= 0xff,
++	if (device_property_read_u32(dev->parent,
++				     "nxp,thermal-regulation-celsius",
++				     &chg->thermal_regulation_temp))
++		chg->thermal_regulation_temp = PF1550_DEFAULT_THERMAL_TEMP;
++
++	if (power_supply_get_battery_info(chg->charger, &info))
++		chg->constant_volt = PF1550_DEFAULT_CONSTANT_VOLT;
++	else
++		chg->constant_volt = info->constant_charge_voltage_max_uv;
++}
++
++static int pf1550_charger_probe(struct platform_device *pdev)
++{
++	struct pf1550_charger *chg;
++	struct power_supply_config psy_cfg = {};
++	const struct pf1550_dev *pf1550 = dev_get_drvdata(pdev->dev.parent);
++	int i, ret;
++
++	chg = devm_kzalloc(&pdev->dev, sizeof(*chg), GFP_KERNEL);
++	if (!chg)
++		return -ENOMEM;
++
++	chg->dev = &pdev->dev;
++	chg->pf1550 = pf1550;
++
++	if (!chg->pf1550->regmap)
++		return dev_err_probe(&pdev->dev, -ENODEV,
++				     "failed to get regmap\n");
++
++	platform_set_drvdata(pdev, chg);
++
++	mutex_init(&chg->mutex);
++
++	INIT_DELAYED_WORK(&chg->vbus_sense_work, pf1550_chg_vbus_work);
++	INIT_DELAYED_WORK(&chg->chg_sense_work, pf1550_chg_chg_work);
++	INIT_DELAYED_WORK(&chg->bat_sense_work, pf1550_chg_bat_work);
++
++	for (i = 0; i < PF1550_CHARGER_IRQ_NR; i++) {
++		int irq = platform_get_irq(pdev, i);
++
++		if (irq < 0)
++			return irq;
++
++		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
++						pf1550_charger_irq_handler,
++						IRQF_NO_SUSPEND,
++						"pf1550-charger", chg);
++		if (ret)
++			return dev_err_probe(&pdev->dev, ret,
++					     "failed irq request\n");
++	}
++
++	psy_cfg.drv_data = chg;
++
++	chg->psy_desc.name = PF1550_CHARGER_NAME;
++	chg->psy_desc.type = POWER_SUPPLY_TYPE_BATTERY;
++	chg->psy_desc.get_property = pf1550_charger_get_property;
++	chg->psy_desc.properties = pf1550_charger_props;
++	chg->psy_desc.num_properties = ARRAY_SIZE(pf1550_charger_props);
++
++	chg->charger = devm_power_supply_register(&pdev->dev, &chg->psy_desc,
++						  &psy_cfg);
++	if (IS_ERR(chg->charger))
++		return dev_err_probe(&pdev->dev, PTR_ERR(chg->charger),
++				     "failed: power supply register\n");
++
++	pf1550_dt_parse_dev_info(chg);
++
++	ret = pf1550_reg_init(chg);
++
++	return ret;
++}
++
++static void pf1550_charger_remove(struct platform_device *pdev)
++{
++	struct pf1550_charger *chg = platform_get_drvdata(pdev);
++
++	cancel_delayed_work_sync(&chg->bat_sense_work);
++	cancel_delayed_work_sync(&chg->chg_sense_work);
++	cancel_delayed_work_sync(&chg->vbus_sense_work);
++}
++
++static const struct platform_device_id pf1550_charger_id[] = {
++	{ "pf1550-charger", 0 },
++	{ /* sentinel */ }
 +};
++MODULE_DEVICE_TABLE(platform, pf1550_charger_id);
 +
-+#define PF1550_DEVICE_ID		0x7c
-+
-+#define PF1550_CHG_TURNON		0x2
-+
-+#define PF1550_CHG_PRECHARGE		0
-+#define PF1550_CHG_CONSTANT_CURRENT	1
-+#define PF1550_CHG_CONSTANT_VOL		2
-+#define PF1550_CHG_EOC			3
-+#define PF1550_CHG_DONE			4
-+#define PF1550_CHG_TIMER_FAULT		6
-+#define PF1550_CHG_SUSPEND		7
-+#define PF1550_CHG_OFF_INV		8
-+#define PF1550_CHG_BAT_OVER		9
-+#define PF1550_CHG_OFF_TEMP		10
-+#define PF1550_CHG_LINEAR_ONLY		12
-+#define PF1550_CHG_SNS_MASK		0xf
-+#define PF1550_CHG_INT_MASK             0x51
-+
-+#define PF1550_BAT_NO_VBUS		0
-+#define PF1550_BAT_LOW_THAN_PRECHARG	1
-+#define PF1550_BAT_CHARG_FAIL		2
-+#define PF1550_BAT_HIGH_THAN_PRECHARG	4
-+#define PF1550_BAT_OVER_VOL		5
-+#define	PF1550_BAT_NO_DETECT		6
-+#define PF1550_BAT_SNS_MASK		0x7
-+
-+#define PF1550_VBUS_UVLO		BIT(2)
-+#define PF1550_VBUS_IN2SYS		BIT(3)
-+#define PF1550_VBUS_OVLO		BIT(4)
-+#define PF1550_VBUS_VALID		BIT(5)
-+
-+#define PF1550_CHARG_REG_BATT_REG_CHGCV_MASK		0x3f
-+#define PF1550_CHARG_REG_BATT_REG_VMINSYS_SHIFT		6
-+#define PF1550_CHARG_REG_BATT_REG_VMINSYS_MASK		(0x3 << 6)
-+#define PF1550_CHARG_REG_THM_REG_CNFG_REGTEMP_SHIFT	2
-+#define PF1550_CHARG_REG_THM_REG_CNFG_REGTEMP_MASK	(0x3 << 2)
-+
-+#define PMIC_IRQ_SW1_LS		BIT(0)
-+#define PMIC_IRQ_SW2_LS		BIT(1)
-+#define PMIC_IRQ_SW3_LS		BIT(2)
-+#define PMIC_IRQ_SW1_HS		BIT(0)
-+#define PMIC_IRQ_SW2_HS		BIT(1)
-+#define PMIC_IRQ_SW3_HS		BIT(2)
-+#define PMIC_IRQ_LDO1_FAULT	BIT(0)
-+#define PMIC_IRQ_LDO2_FAULT	BIT(1)
-+#define PMIC_IRQ_LDO3_FAULT	BIT(2)
-+#define PMIC_IRQ_TEMP_110	BIT(0)
-+#define PMIC_IRQ_TEMP_125	BIT(1)
-+
-+#define ONKEY_IRQ_PUSHI		BIT(0)
-+#define ONKEY_IRQ_1SI		BIT(1)
-+#define ONKEY_IRQ_2SI		BIT(2)
-+#define ONKEY_IRQ_3SI		BIT(3)
-+#define ONKEY_IRQ_4SI		BIT(4)
-+#define ONKEY_IRQ_8SI		BIT(5)
-+
-+#define CHARG_IRQ_BAT2SOCI	BIT(1)
-+#define CHARG_IRQ_BATI		BIT(2)
-+#define CHARG_IRQ_CHGI		BIT(3)
-+#define CHARG_IRQ_VBUSI		BIT(5)
-+#define CHARG_IRQ_DPMI		BIT(6)
-+#define CHARG_IRQ_THMI		BIT(7)
-+
-+enum pf1550_pmic_irq {
-+	PF1550_PMIC_IRQ_SW1_LS,
-+	PF1550_PMIC_IRQ_SW2_LS,
-+	PF1550_PMIC_IRQ_SW3_LS,
-+	PF1550_PMIC_IRQ_SW1_HS,
-+	PF1550_PMIC_IRQ_SW2_HS,
-+	PF1550_PMIC_IRQ_SW3_HS,
-+	PF1550_PMIC_IRQ_LDO1_FAULT,
-+	PF1550_PMIC_IRQ_LDO2_FAULT,
-+	PF1550_PMIC_IRQ_LDO3_FAULT,
-+	PF1550_PMIC_IRQ_TEMP_110,
-+	PF1550_PMIC_IRQ_TEMP_125,
++static struct platform_driver pf1550_charger_driver = {
++	.driver = {
++		.name	= "pf1550-charger",
++	},
++	.probe		= pf1550_charger_probe,
++	.remove		= pf1550_charger_remove,
++	.id_table	= pf1550_charger_id,
 +};
++module_platform_driver(pf1550_charger_driver);
 +
-+enum pf1550_onkey_irq {
-+	PF1550_ONKEY_IRQ_PUSHI,
-+	PF1550_ONKEY_IRQ_1SI,
-+	PF1550_ONKEY_IRQ_2SI,
-+	PF1550_ONKEY_IRQ_3SI,
-+	PF1550_ONKEY_IRQ_4SI,
-+	PF1550_ONKEY_IRQ_8SI,
-+};
-+
-+enum pf1550_charg_irq {
-+	PF1550_CHARG_IRQ_BAT2SOCI,
-+	PF1550_CHARG_IRQ_BATI,
-+	PF1550_CHARG_IRQ_CHGI,
-+	PF1550_CHARG_IRQ_VBUSI,
-+	PF1550_CHARG_IRQ_THMI,
-+};
-+
-+enum pf1550_regulators {
-+	PF1550_SW1,
-+	PF1550_SW2,
-+	PF1550_SW3,
-+	PF1550_VREFDDR,
-+	PF1550_LDO1,
-+	PF1550_LDO2,
-+	PF1550_LDO3,
-+};
-+
-+struct pf1550_dev {
-+	struct device *dev;
-+	struct i2c_client *i2c;
-+	int type;
-+	struct regmap *regmap;
-+	struct regmap_irq_chip_data *irq_data_regulator;
-+	struct regmap_irq_chip_data *irq_data_onkey;
-+	struct regmap_irq_chip_data *irq_data_charger;
-+	int irq;
-+};
-+
-+int pf1550_read_otp(const struct pf1550_dev *pf1550, unsigned int index,
-+		    unsigned int *val);
-+
-+#endif /* __LINUX_MFD_PF1550_H */
++MODULE_AUTHOR("Robin Gong <yibin.gong@freescale.com>");
++MODULE_DESCRIPTION("PF1550 charger driver");
++MODULE_LICENSE("GPL");
 
 -- 
 2.49.0
