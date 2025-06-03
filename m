@@ -1,105 +1,119 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f226.google.com (mail-pf1-f226.google.com [209.85.210.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2848494;
-	Tue,  3 Jun 2025 18:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9AF51C5A
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 18:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748976400; cv=none; b=UJtgssiNGOjw6sPXBZNWKkGgEaAbjKxdosim+I0o18Gnci7/4h5zoI9LBcV6INP1TLUu4ETRNgi240vNCZhsnA3ZHMb1j7O8+OE0rsnQwPAnQEnJuPpucts13D5SyqMLM2csm+qKLKW4SKejEyAam6I2mmuYBr62Yr1gDOvDfYc=
+	t=1748976476; cv=none; b=Tl8kYUgqKkZZIG1P+cSam0pl6fdVLxyWe4/UmV7V3RADTPcWeWMbtzvfBTcFC47846GLD81nkCMtezU/XIjBx1KdXR3R5Luychbto63VvPRfa8WE+tlI6GgUK+oZfO7TuL0SNwfq/o9+xgXo8hUWaYlZCw3HEG0JJv2fanU+zoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748976400; c=relaxed/simple;
-	bh=6YxfXBW8yHwsAfvzOrx7vVDCuuaIMhPjOPQeml1grfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hv11qiySyUUpe3VXdoLhj3IqxWGjmvde2zO1S2WlA2yu5kOAn/gHy7lXP5m6QB8PeUtFvtSYEfR7O5zlBysIEKmL4XazEtVh8rB0LFvZjdQz9zHXCoFIhhEKjU5nRubUjnDhnripPndbFai+yyIYmiBO7WL5iToOx8ExTAYnsKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SixH3Ezq; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748976476; c=relaxed/simple;
+	bh=T1nJCLcmWXLOe6y4Ii4bdG1cnEHziBxfcWmNxILh2TA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z00MqiKPUZVyGPhc5p+OvWBcR2gbHSo0uQTBAqWRvF+T0tWCDeEDDm5cddklviHR7dg7HlukjRlgoeXqxb9oJqhf84wSiJhobGMvd3MAORZqh4FI1eCPyqCBU8nmwGR/bv0/fqytbvs+Z0D1BXyG2i4G1J5ngZbetO6PGfodbJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=EDNGC76R; arc=none smtp.client-ip=209.85.210.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SixH3Ezq"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-234c5b57557so52758455ad.3;
-        Tue, 03 Jun 2025 11:46:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="EDNGC76R"
+Received: by mail-pf1-f226.google.com with SMTP id d2e1a72fcca58-742cabe1825so465114b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 11:47:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748976398; x=1749581198; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ppE9vk917BHduobClc1IBbd2o8JPuLm3PkUKaicBhUU=;
-        b=SixH3Ezq+KfhLiraBvlCW7VkMybZ9KDC1M+MgHF9DvEWn8SMHqCbd7Kfh7PvhjyHjR
-         ps5sLiivrsVOEf6inxXud/79XJ7auLAwT8ZAEQ+zKtGQY23JooqIBNerJAk2jpP93amR
-         nCkeajdE5E3efUUlwAxwGkjhIQVBhUjuxKxjGJVXlQDF7FXm2arfq4EsnZrlbGHxOZ9S
-         QfGcrgVImXtUWACwp8GY/bhaTKirE7D+xBLRWIl0SiZ8MhF5hPpZRxOJAOicJxCgUFGc
-         5qxXihPBEFVNAnPxbpk4GUqzig1bFa4BfqSh7QRYvxS5EhmQ8xkoDPp4ejzaDRdedMZ8
-         oSEA==
+        d=purestorage.com; s=google2022; t=1748976474; x=1749581274; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wleOKjFHw+cNcX4TN+jBCmGoOfaK4yhpbI0lui86FvI=;
+        b=EDNGC76ROYG8mb6RidcHTxSwVsFWN9RJoPQGZQ7mu+uNEO+69BVw/5g9qRPeTAIwu5
+         E4D5HJk9bUe5bz3UN0RNxjwsIMVSXB6yckQVl4X0qTrKU0AOrI2Fo9nmxLszlvGqoRLD
+         eBBOSwyAnW95vkrtUjnNSx8YmWNrLWFm5YhMt5BKw2AYgt4pfDxiW1FlxmWH0HA4wB95
+         +2eHfFBxeLgLf2JeZzmbN9N2lEfjQSYsTTbajALdqFJF8WY6yxz6V8bjqKtcRRX0Ca6g
+         8U7jL3eS4bI1De7oh4KwZ5oSWkCpp/sNjQrKALuIFcOOp1St9NK6Xm3WXM4u5jB+WvDf
+         21bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748976398; x=1749581198;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ppE9vk917BHduobClc1IBbd2o8JPuLm3PkUKaicBhUU=;
-        b=v08+GnosOIHJKOPLosc8s3RBUroFd05c+C4LY/9JvDZr8jYCYR3K06/8DALuhieM5d
-         9LZr94E0sowVuoLorXKkeyvEW8zOm+EoBxbDgee+uqQFAu5dsfw60IPqqNKN+PHNrGeo
-         ur48dbaSyGhUZSO749Ul5BjCk97s279Q2/W2Im/ti/gVsKlaAcrPvpM/+iU9pE3siV7n
-         AUTobXbZJW3213js4L0pCj/EBjFLkmXzhcpm2E9u/YkY9TRPgbspz3wf1s/AZGxJiTpV
-         e1LRNT9jivWKquVIoArBt64h7yb0XzPYV67nd5wgOW5DnK8k79QeSNTXJ8EPVio5Mwub
-         syew==
-X-Forwarded-Encrypted: i=1; AJvYcCUVJGDqcDlIidSwNF5YBZb8sGdt/W/S+PHauyYgEHOqXNHwm8LCnAGF5b7DrRDjmvZYntVt+VecMP8zoxxX@vger.kernel.org, AJvYcCX6Oz8TNo+ProiH5vmOSBFkK46aHrtA6siIUpNuVtqau8FuzO+bFs3WYnw1b89Sz2XXXNf0e5sTeeni@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5LsgJ3kLeEy2EsbkBvtQcsUTHpig81duxPjgl6shYlGTiCQ0N
-	NM6UBXNkbM+OWc+i+uX4Cxbd5Yif4sRDlssqMPn930X+Mbpa6LLKwtS4
-X-Gm-Gg: ASbGnctkE4ezm0AcdWqAZnPtX2sh2BcBxzupKfHgju1wc2ytHgHhbW6uPl4WC+KEA21
-	pXKw8J9Lab4SAvoiJ8G1H+jV0Tc81o+4VMLLrwt5D1JUVFulQ7hRE0vOGFb7H6oLthTgHPSQaoA
-	9H/q4NXD2NpYolCKk3tN1Fj3Yk/6qxHv7aE7yXkys4uoMAbKYVZzvp0Z/yEy0gEo45WdeLWbF3F
-	iiFvJrOITy6PKCGDKUMUCTLqiNVi+b0L1niX8QxOHdxZY0fuAbIik62oma/GP5rpApCOP+4uB/W
-	uXL4bbX4zTIP36m8Bfzc/SrQeibdAcKTCMZGTvAXn1ot82wQ+phR9DgKIWX3oISzGI3LfYSVKg=
-	=
-X-Google-Smtp-Source: AGHT+IFcH3grCHzJsyskubvaf0Z5s6fjHytLM/lQCsPAO1zATzfGge59L6TrwZPqmDc9Ts9cXibr5Q==
-X-Received: by 2002:a17:902:d544:b0:224:10a2:cae7 with SMTP id d9443c01a7336-235396cb241mr273853675ad.40.1748976397805;
-        Tue, 03 Jun 2025 11:46:37 -0700 (PDT)
-Received: from joaog-nb ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd8da6sm90709925ad.146.2025.06.03.11.46.34
+        d=1e100.net; s=20230601; t=1748976474; x=1749581274;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wleOKjFHw+cNcX4TN+jBCmGoOfaK4yhpbI0lui86FvI=;
+        b=qczFkom820XUUyJzAPjvqMO0+Dgsh+R+sjMYH09EOOX7Kf8Kn1ttCl9eqOWpSgENMO
+         kZXx9sC/O0PHowTIYh6gXddRe4rTsJ1V+pfBPtd5LW/B697DVpOIy5K/wpkeSmZbx7pG
+         sC5G5/mlsDCHLPDrLUldoslS+Qdk1xwKcatUq8gTjicHfVm+q0q0fYXDjbrAr9X8Dv0j
+         SuDfHduNS/C7A+DR4P3UAOXhE8P76J0VNMlfFpdW1Xd8WtFS1TwOzIOdLRGBKRUpqGoq
+         z/EeZF4UnCYUMl0aTwSn8ebk/hv6fdPuqGOfpux3IRIjAK4xaNQAXgw3qfZdq83O7Xzf
+         8Vig==
+X-Forwarded-Encrypted: i=1; AJvYcCWMehsVXC13G3gr6L6o/wdw3eIXQZucwJfav8ZSaZ9sH6Gp04g/SqIuYwhzISdHvZo8MR4ovmyNJKMXl7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxFxGV24DkBbNWfDVCiMN1bRI2/larHNWMIuTJoCA2oYXZRkuA
+	AP7SiEgRUgp3x8eccr3YsjH+vNvc8WRKAIdjDWRAeOyb7g/iEEIdasdEHKW9mPypNML7miIdt1U
+	JPl2i4i61tw0FHjIIzX+htU3p2OYgzvWQIquC
+X-Gm-Gg: ASbGnctcJvbuPuzLkaxy0Hiu61iReugIhS9R6eH5UDq2K81aExYQaWt+t5w9b3KEKGb
+	fqkhkXSOPg496bTJTNnmxd7Id1BInPhM10gppqGiJXKRKFGFv5mmz7Gr9NFlcu1JvBOh8P4thuH
+	7u50l02REQi8JMTg56ar+5ar+sNv/WM28yuuQtWS3YF0BRybPVjhAcf3wmdsJV8KUoldlh8Z3Mm
+	f3YD1D2qDCUqzwg1FRaKD2QEOqYU0PXSSCkg6ItxLUOZJvXs+2CCMVkH5QcVsqym0Ym1Fkc8Mpk
+	o2A2Jg5R1Ggk9fIKhXsUo/lpbhSCEd9N7XdWCbF0/Let
+X-Google-Smtp-Source: AGHT+IF9o/kLaE/7tSmOjOj70ylD0L4dQmAqwISZaTT54uQrF1uMJGXZ/22CdVWSxkBTXdol5aFUQ6VoHoKD
+X-Received: by 2002:a05:6a00:1815:b0:736:4d90:f9c0 with SMTP id d2e1a72fcca58-7480b20132dmr118819b3a.1.1748976474360;
+        Tue, 03 Jun 2025 11:47:54 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id d2e1a72fcca58-747afe98193sm743791b3a.1.2025.06.03.11.47.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 11:46:37 -0700 (PDT)
-Date: Tue, 3 Jun 2025 15:46:32 -0300
-From: 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Farouk Bouabid <farouk.bouabid@cherry.de>, 
-	Quentin Schulz <quentin.schulz@cherry.de>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
-Subject: Re: [PATCH v2 3/3] hwmon: (amc6821) Add cooling device support
-Message-ID: <ukezxbl6x62mmdgxmzkjsb3mtg6tz5ecyib3cu6y7iavpr7257@vvxmy7vawpp5>
-References: <20250603-b4-amc6821-cooling-device-support-v2-0-74943c889a2d@toradex.com>
- <20250603-b4-amc6821-cooling-device-support-v2-3-74943c889a2d@toradex.com>
+        Tue, 03 Jun 2025 11:47:54 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 7EAF834027F;
+	Tue,  3 Jun 2025 12:47:53 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 7B4C8E41D2E; Tue,  3 Jun 2025 12:47:53 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] block: flip iter directions in blk_rq_integrity_map_user()
+Date: Tue,  3 Jun 2025 12:47:51 -0600
+Message-ID: <20250603184752.1185676-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250603-b4-amc6821-cooling-device-support-v2-3-74943c889a2d@toradex.com>
 
-Hi all,
+blk_rq_integrity_map_user() creates the ubuf iter with ITER_DEST for
+write-direction operations and ITER_SOURCE for read-direction ones.
+This is backwards; writes use the user buffer as a source for metadata
+and reads use it as a destination. Switch to the rq_data_dir() helper,
+which maps writes to ITER_SOURCE (WRITE) and reads to ITER_DEST(READ).
 
-> +
-> +	if (IS_ENABLED(CONFIG_THERMAL) && fan_np && data->fan_cooling_levels)
-> +		return PTR_ERR_OR_ZERO(devm_thermal_of_cooling_device_register(dev,
-> +									       fan_np,
-> +									       client->name,
-> +									       data,
-> +									       &amc6821_cooling_ops));
-> +
-> +	return 0;
->  }
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Fixes: fe8f4ca7107e ("block: modify bio_integrity_map_user to accept iov_iter as argument")
+---
+ block/blk-integrity.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-There's a mistake here: `fan_np` is used after `of_node_put(fan_np)`. I will
-address it in v3.
+diff --git a/block/blk-integrity.c b/block/blk-integrity.c
+index a1678f0a9f81..e4e2567061f9 100644
+--- a/block/blk-integrity.c
++++ b/block/blk-integrity.c
+@@ -115,17 +115,12 @@ EXPORT_SYMBOL(blk_rq_map_integrity_sg);
+ int blk_rq_integrity_map_user(struct request *rq, void __user *ubuf,
+ 			      ssize_t bytes)
+ {
+ 	int ret;
+ 	struct iov_iter iter;
+-	unsigned int direction;
+ 
+-	if (op_is_write(req_op(rq)))
+-		direction = ITER_DEST;
+-	else
+-		direction = ITER_SOURCE;
+-	iov_iter_ubuf(&iter, direction, ubuf, bytes);
++	iov_iter_ubuf(&iter, rq_data_dir(rq), ubuf, bytes);
+ 	ret = bio_integrity_map_user(rq->bio, &iter);
+ 	if (ret)
+ 		return ret;
+ 
+ 	rq->nr_integrity_segments = blk_rq_count_integrity_sg(rq->q, rq->bio);
+-- 
+2.45.2
 
-Sorry for the inconvenience.
-
-Best Regards,
-João Paulo Gonçalves
