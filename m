@@ -1,108 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D82F1E519
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5503C1E519
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748955428; cv=none; b=KARyhYIqJy1kq6aMw/5HckFJ2c1rljohNTI5+LN7qHBqKarIeNGvtKjvinnwPhwe5xpn/dZkGI/4FaGRcjfR6NHG8rxHCf6C3vmKAk0WrOSYnIbRcj2yDIMx6Qe19BGR8nPZ+GlyUoKojCH5jIwUwbOLU1JJaSRdMqk6JyFTPsg=
+	t=1748955439; cv=none; b=j8n9Wn4WwTCSWtxAvbEcsa9oo0yKLiPt036DQP+Tl9rml54PD2XmZVRVPBQkEakORUriLQUf2nvCVInTgKYydRdcbGQxqSy+NAF3Q0Jt7Lj66uXvEanzxXY+xacV1OYAgLM8Q740kcvUlXI8WAWtBACyRXpFIAhibcXZdu+o9OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748955428; c=relaxed/simple;
-	bh=JB5dJY1ZvEfS5wF759w9qPwAnoG1BBGlK7STGS/xjYA=;
+	s=arc-20240116; t=1748955439; c=relaxed/simple;
+	bh=YpSUlje0QFo8fAg0UbMHlFaUYLWtmOn9kosehVUWl2c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oCGUvrzJoPn6ey4ioLc2CFxEGIsQBXvrWMf+fjKtMfdpbABTo86diEHAs+R+5R+jDM9HsKd/7jEBG1ZRQX5SmPfb34Y81VztuoCdjRuLHunSuJXj7gJPf1FmyD7Aw8W5RaZbYKOGsPaJFvlGnGmai/OrTTeQ0MsvUbMxt3PFE9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SmxuHz5A; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQQ38HhqTiPvisiNMs0Nq2kAxitxUWaDXzUA4lLHx920+cBbCznpLgJg5RGDRUF3y6+mX4QScewbqIOS/W1tyaA667ukEGwLsyGIy0X2bHIbcRBOoorT5/PXqtzmUViRd68zutxAZi3nwCqxh7CmVJp5FmIRYLAcCBQKaPa+kRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=GhiFs+Oa; arc=none smtp.client-ip=45.157.188.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SmxuHz5A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748955426;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hXN9nPbX3VjM2OeWHPUoDpb9LpXeCU9nEzDdnFdKokk=;
-	b=SmxuHz5A16E0jK8IuYBSGffIFVNpLTZVHYJkw2qwwZ/yzP0KmmSKc8zZVWPj74SVJgQFjb
-	2Ri8zfB/vFtM699Kq4Yui0wObMQGzCwCR+7Fon07Qrnoz9bUa31kDded2OJI1dV/QvDcJ2
-	xKFdLg/JZ0gwZfHWlvwX4MHrioJFaQU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-YxuB4EGBOPeFqJBeX4rZKg-1; Tue,
- 03 Jun 2025 08:57:04 -0400
-X-MC-Unique: YxuB4EGBOPeFqJBeX4rZKg-1
-X-Mimecast-MFC-AGG-ID: YxuB4EGBOPeFqJBeX4rZKg_1748955423
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 56F771808888;
-	Tue,  3 Jun 2025 12:56:55 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.13])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 304753001FF6;
-	Tue,  3 Jun 2025 12:56:47 +0000 (UTC)
-Date: Tue, 3 Jun 2025 20:56:43 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jiri Bohac <jbohac@suse.cz>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: Re: [PATCH v4 5/5] x86: implement crashkernel cma reservation
-Message-ID: <aD7w/YfdKMqa7m89@MiWiFi-R3L-srv>
-References: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
- <aDoVhDc11ZcJyHm2@dwarf.suse.cz>
- <aD7WLv86BOVS+GPm@MiWiFi-R3L-srv>
- <aD7mi4j2llS-Kpfv@dwarf.suse.cz>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="GhiFs+Oa"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bBVs24Wlqz19Nm;
+	Tue,  3 Jun 2025 14:49:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1748954950;
+	bh=f3sEmdCXf265fZdW3agrYCmOKfWp1F1brT5D1vfWqXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GhiFs+OagmKnjzrO37+j/bRCJRvL9X3nchSdSAL8QZU93u7utA+y7M8Amp3tayn7Y
+	 IO9csEQOJKBi0mYDUlEtitpv2pCrsfPbqVoQ3xYe9TAcL3iY//3waB8c/VPB78CrOt
+	 4joM5dCTU2faTdJvacgFSKLJK8cYRtNhLvtQiqA4=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bBVs15hNzzDkc;
+	Tue,  3 Jun 2025 14:49:09 +0200 (CEST)
+Date: Tue, 3 Jun 2025 14:49:09 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Jan Kara <jack@suse.cz>
+Cc: Song Liu <song@kernel.org>, 
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Christian Brauner <brauner@kernel.org>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, repnop@google.com, 
+	Jeff Layton <jlayton@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
+Message-ID: <20250603.be1ahteePh8z@digikod.net>
+References: <20250528222623.1373000-1-song@kernel.org>
+ <20250528222623.1373000-4-song@kernel.org>
+ <20250528223724.GE2023217@ZenIV>
+ <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
+ <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
+ <CAADnVQ+UGsvfAM8-E8Ft3neFkz4+TjE=rPbP1sw1m5_4H9BPNg@mail.gmail.com>
+ <CAPhsuW78L8WUkKz8iJ1whrZ2gLJR+7Kh59eFrSXvrxP0DwMGig@mail.gmail.com>
+ <20250530.oh5pahH9Nui9@digikod.net>
+ <vumjuw5ha6jtxtadsr5vwjtuneeqfg3vpydciczsn75qdg2ekv@464a4dxtxx27>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aD7mi4j2llS-Kpfv@dwarf.suse.cz>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <vumjuw5ha6jtxtadsr5vwjtuneeqfg3vpydciczsn75qdg2ekv@464a4dxtxx27>
+X-Infomaniak-Routing: alpha
 
-On 06/03/25 at 02:11pm, Jiri Bohac wrote:
-> On Tue, Jun 03, 2025 at 07:02:06PM +0800, Baoquan He wrote:
-> > On 05/30/25 at 10:31pm, Jiri Bohac wrote:
-> > ......snip.. 
-> > > @@ -582,7 +582,7 @@ static void __init arch_reserve_crashkernel(void)
-> > >  
-> > >  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> > >  				&crash_size, &crash_base,
-> > > -				&low_size, NULL, &high);
-> > > +				&low_size, &cma_size, &high);
-> > >  	if (ret)
-> > >  		return;
-> > >  
-> > > @@ -592,6 +592,7 @@ static void __init arch_reserve_crashkernel(void)
-> > >  	}
-> > >  
-> > >  	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
-> > > +	reserve_crashkernel_cma(cma_size);
+On Tue, Jun 03, 2025 at 11:46:22AM +0200, Jan Kara wrote:
+> On Fri 30-05-25 16:20:39, Mickaël Salaün wrote:
+> > On Thu, May 29, 2025 at 10:05:59AM -0700, Song Liu wrote:
+> > > On Thu, May 29, 2025 at 9:57 AM Alexei Starovoitov
+> > > <alexei.starovoitov@gmail.com> wrote:
+> > > [...]
+> > > > >
+> > > > > How about we describe this as:
+> > > > >
+> > > > > Introduce a path iterator, which safely (no crash) walks a struct path.
+> > > > > Without malicious parallel modifications, the walk is guaranteed to
+> > > > > terminate. The sequence of dentries maybe surprising in presence
+> > > > > of parallel directory or mount tree modifications and the iteration may
+> > > > > not ever finish in face of parallel malicious directory tree manipulations.
+> > > >
+> > > > Hold on. If it's really the case then is the landlock susceptible
+> > > > to this type of attack already ?
+> > > > landlock may infinitely loop in the kernel ?
+> > > 
+> > > I think this only happens if the attacker can modify the mount or
+> > > directory tree as fast as the walk, which is probably impossible
+> > > in reality.
 > > 
-> > Wondering if ,high|low is still allowed (or needed) when ,cma is specified.
+> > Yes, so this is not an infinite loop but an infinite race between the
+> > kernel and a very fast malicious user space process with an infinite
+> > number of available nested writable directories, that would also require
+> > a filesystem (and a kernel) supporting infinite pathname length.
 > 
-> Probably not needed but it works, totally independent of the
-> extra CMA-reserved area.
+> Well, you definitely don't need infinite pathname length. Example:
+> 
+> Have a dir hierarchy like:
+> 
+>   A
+>  / \
+> B   C
+> |
+> D
+> 
+> Start iterating from A/B/D, you climb up to A/B. In parallel atacker does:
+> 
+> mv A/B/ A/C/; mkdir A/B
+> 
+> Now by following parent you get to A/C. In parallel attaker does:
+> 
+> mv A/C/ A/B/; mkdir A/C
+> 
+> And now you are essentially where you've started so this can repeat
+> forever.
 
-Allowing it can simplify the current code, while I can't imagine what
-cases need people to specify
-"crashkernel=xM,high crashkernel=xM,low crashkernel=zM,cma" at one time.
+Yes, this is the scenario I had in mind talking about "infinite race"
+(instead of infinite loop).  For this to work it will require the
+filesystem to support an infinite number of nested directories, but I'm
+not sure which FS could be eligible.
 
-Just personal thought, I haven't think of a strong reason to prevent it
-too.
+Anyway, what would would be the threat model for this infinite race?
 
 > 
-> I saw no reason to artificially prevent it.
+> As others wrote this particular timing might be hard enough to hit for it
+> to not be a practical attack but I would not bet much on somebody not being
+> able to invent some variant that works, in particular with BPF iterator.
+
+There might exist corner cases that could be an issue but would the
+impact be different than with other kinds of path walk?
+
+What could we do to avoid or limit such issue?
+
 > 
+> 								Honza
 > -- 
-> Jiri Bohac <jbohac@suse.cz>
-> SUSE Labs, Prague, Czechia
-> 
-
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
