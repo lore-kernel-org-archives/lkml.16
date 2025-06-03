@@ -1,203 +1,197 @@
-Received: from mail-il1-f225.google.com (mail-il1-f225.google.com [209.85.166.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D6F2528EF
-	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 23:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB5319D8AC;
+	Tue,  3 Jun 2025 23:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748993921; cv=none; b=t4sIk0bBS3KgRQyFzompOYUN7f8Fx5ZpJGQeLuZ4144nFl4tHzzYzrdMphaF+o54Oa2pqakrCwpvL4J9QlCROofWFnzOuLC2rzK4jakWHm5WM9AT1Iuzx1/+B2fh/DB3cH+kTvgg+eaPakYDqGQEUDHQBZGmuBOoJqvWNGMLkgA=
+	t=1748994087; cv=none; b=H8FnYQtLJRUJQ3kNecJWT1xYdh/jatzPMgwWAIn/05I+pGQXEZq3kbKHcm6ap07Xp4bhGpyXO51+bYFiuYEtkbBOWZTq/J6QydB6cp21mEs+s2BNGjXf/4MIDxKU7nDmpx/ba0i3iURhQAFlXlOdxKFh85SUb0uQchXEiM0tYgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748993921; c=relaxed/simple;
-	bh=GRKko8U6tkBwoDvqev25212EMIC0D1LUxb+uSFlHjvA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uWxqHwfgCnoUZ22nB+MfyCLQZVa3/Rv5RPwB7Ve7fmZ15u/4/BLgPVkl9b/sZ/UD2l3rk+g64FyHaYLnyGDHL0o4aUpXch5pC9WS0+1VpH1pI+d44HGjcqgVt7Ip1DJCjPa7njGiaiN3aegJGePxh3YlOBd4bQ/IakqG47oWVuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=KTM4WEDp; arc=none smtp.client-ip=209.85.166.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1748994087; c=relaxed/simple;
+	bh=jcY/C4ofy4+Q1Z2QfgHwr2QW+0HHCEq2O6cW3dOTmCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mOd01rJosCj1qK3FGqVS/P061AI0iwbZozyuaWVgb5GHp2OXLC+i2WgXmI1omZBDNpu41tsdwaxQSIZ5+OUmdQN5nHghZuMMys3KoD9MUSU2vdcsj4KYCLhKpJe6WtZaHVi9udwdv6f3JaAKPgFpXUSCk1rN9dsuP2p/xcwEtoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1L+wnin; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="KTM4WEDp"
-Received: by mail-il1-f225.google.com with SMTP id e9e14a558f8ab-3da73df6b6bso18635205ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 16:38:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1748993917; x=1749598717; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/R0RpgCFKdTj3IOKRqUkoQl1YyksTGBaXOZihTi8ctY=;
-        b=KTM4WEDp1d4DHkOu92A6lL7h/GBr5zNy5dZ7BMk2MYTg+ip5aeLGTRcY6XgT5Iy+xx
-         +uAA2thmT0uoHnNf3WrcliZN/ririxeGYhzprzlazkTRGT2UFFuONWR8GxtIax1AAS6P
-         PSzSdGFOM8R4rg066jLU9ZD9OQLc/Ag6ew0ZQRolvZnItRC14GaVXNMVhopVdj+2eEQc
-         TpksRpE0IPQi8iUcQLbVuOTWr8i68ip8SHJoaQCqM/LfXV536e232lyIjQWn6qmoneCu
-         mzo0+6x/aCp8vKr+qZGf6/SDKmrZWg2QUsx7RZXVxUaDZTnzvvc4X+Uhw8gOEJ2WsRpr
-         xL0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748993917; x=1749598717;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/R0RpgCFKdTj3IOKRqUkoQl1YyksTGBaXOZihTi8ctY=;
-        b=bOCSFqIhCLgMHuZlzxQILHJY0y2mgOZPEkwyCTEu6H1WVLmN6PMylIo5hLFe/RZ/Ax
-         0Tczgd+ljmSTaY3z7G+UIdcd1PryGCMjF83mFVTzhHXRwKL0Opj5V9BTssEyVZea5he4
-         arbk6Y2C41gBvWWH+XGMaWISsBqE8s3t08seximszLjYguwrQh9wcevvpMXTYFCXdyKK
-         lOm9a7p0NQRwbr6nm9K3+nYciNq6rCbE4tsxOlWFLRLH5CJVnWe9rWhVXeC+FJO1kepx
-         Ca3trPfXGhT93GO4CEfyI+xssgYZ5UDVs7ryRduw9/guoy2K8iewLiW5gpEOpVUHrQdI
-         MSDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOoIxL2EMS9zYsxM+1B0Q9Hh185JW9eRNhLG947ggddVeBpaQeZ2bWhiP2q6it5vFZBWwRVrX8wZROj/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpVqZkWASxYkuJudxcr+CYf5mB9Mlvn8nYWrJGoOTj96IH4Ihi
-	zftJDwORchCtmuCYQ1ZHFY49eJXf9TibgbK3Njx0QiBC13e8OSfxF16tx/GWO4H5BZB+mxudOOc
-	yYL079q53dyo/eIWgzAcZttVfcrbsOgO4SO0x
-X-Gm-Gg: ASbGncvkdQIQKfgknf27LX5KmlvILT7vHTIxs4H5JXZsSolURFxBepKJHAC8uLrQR3R
-	8whQh7F/Na6goYfSoQIcqvJGgORZdPJqrFMBg4d51xgE4ozPXY1tKrMKPfKiQq0eA0yJo5dkaHr
-	gosMChbISZh0tyyoK6awD6onURkMmXkTiBu2TRliLxoCxJdqnVGgjh+47Rl8NlVpzw5uF1wEYFh
-	mNaWeT2Rx5A5hKN6UM/Uadpz2rN0ONAbXLvGNajJSyPzFNz8xah7eDuny9PtkT65NKOg+g5MeOU
-	w5TFb8xqQ9KUaYB+4ycHIVVdnSrVEPyHm7ucB30xkp+FWw==
-X-Google-Smtp-Source: AGHT+IE2Clg33E/8c+qwuR12THXL4yJ4NH4pmMoiTeWYcHOgHxUyzjy7wBBi6+80u6OaDk7frWPxrt/0AjAt
-X-Received: by 2002:a05:6e02:3989:b0:3dc:7fa4:832 with SMTP id e9e14a558f8ab-3ddbee093d0mr9255995ab.9.1748993917492;
-        Tue, 03 Jun 2025 16:38:37 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-4fdd7e3ee09sm297542173.37.2025.06.03.16.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 16:38:37 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id ED38C3401B8;
-	Tue,  3 Jun 2025 17:38:36 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id DBCA5E40EF7; Tue,  3 Jun 2025 17:38:36 -0600 (MDT)
-From: Uday Shankar <ushankar@purestorage.com>
-Date: Tue, 03 Jun 2025 17:38:33 -0600
-Subject: [PATCH] selftests: ublk: kublk: improve behavior on init failure
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1L+wnin"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81775C4CEED;
+	Tue,  3 Jun 2025 23:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748994087;
+	bh=jcY/C4ofy4+Q1Z2QfgHwr2QW+0HHCEq2O6cW3dOTmCE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r1L+wninfoiRbAtjUlpB+Qpbp0fDiyHAUJ5nsiE7t/MN1odkoLEPT6W6OAiLGutgv
+	 D9X/AUaaKhgvVYOZIpWMRsSYliNzadsPyC4IX5VZ7a1UtygsZNgx9WPD17trS/+4Ap
+	 swiYcdelilgNwWfnmkLKsUFKt6tWwLQo/I4JDLoVitlWvabygNuJCu+dVJWJScoBbD
+	 I3UY+Iq/AIWUvpdMnfaU6f2Ejg1MUItUX8zXTc69AW1VVwF0nXowpxIs+KfxZATrpP
+	 xIN1VltwO5SX1jKV8vqrmrdvu7E+iq+R2eaj99G2D3xhH3xN5w/13vbfIoiwWdO6j4
+	 npu5H+MnbTC3A==
+Date: Tue, 3 Jun 2025 16:41:25 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>,
+	Howard Chu <howardchu95@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Xu Yang <xu.yang_2@nxp.com>, Tengda Wu <wutengda@huaweicloud.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v3 00/10] Move uid filtering to BPF filters
+Message-ID: <aD-IJRi0n1WGmOFP@google.com>
+References: <20250425214008.176100-1-irogers@google.com>
+ <CAP-5=fXiYHbe9gd_TNyy=txzrd+ONxecnpZr+uPeOnF5XxunGw@mail.gmail.com>
+ <aD586_XkeOH2_Fes@google.com>
+ <CAP-5=fUXJ6fW4738Fnx9AK2mPeA74ZpYKv=Ui6wYLWXE3KRRTQ@mail.gmail.com>
+ <aD94FJN4Pjsx7exP@google.com>
+ <CAP-5=fX98m+PPkHR2+KdjtJfc0ONMwkjeoCLzjwG_O=5j50=5g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250603-ublk_init_fail-v1-1-87c91486230e@purestorage.com>
-X-B4-Tracking: v=1; b=H4sIAHiHP2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMwNj3dKknOz4zLzMkvi0xMwc3SQTSwtLA1NDU8vUJCWgpoKi1LTMCrC
- B0bG1tQCSUc+VYAAAAA==
-X-Change-ID: 20250603-ublk_init_fail-b498905159eb
-To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX98m+PPkHR2+KdjtJfc0ONMwkjeoCLzjwG_O=5j50=5g@mail.gmail.com>
 
-Some failure modes are handled poorly by kublk. For example, if ublk_drv
-is built as a module but not currently loaded into the kernel, ./kublk
-add ... just hangs forever. This happens because in this case (and a few
-others), the worker process does not notify its parent (via a write to
-the shared eventfd) that it has tried and failed to initialize, so the
-parent hangs forever. Fix this by ensuring that we always notify the
-parent process of any initialization failure, and have the parent print
-a (not very descriptive) log line when this happens.
+On Tue, Jun 03, 2025 at 04:22:53PM -0700, Ian Rogers wrote:
+> On Tue, Jun 3, 2025 at 3:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Mon, Jun 02, 2025 at 11:26:12PM -0700, Ian Rogers wrote:
+> > > On Mon, Jun 2, 2025 at 9:41 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > On Tue, May 27, 2025 at 01:39:21PM -0700, Ian Rogers wrote:
+> > > > > On Fri, Apr 25, 2025 at 2:40 PM Ian Rogers <irogers@google.com> wrote:
+> > > > > >
+> > > > > > Rather than scanning /proc and skipping PIDs based on their UIDs, use
+> > > > > > BPF filters for uid filtering. The /proc scanning in thread_map is
+> > > > > > racy as the PID may exit before the perf_event_open causing perf to
+> > > > > > abort. BPF UID filters are more robust as they avoid the race. The
+> > > > > > /proc scanning also misses processes starting after the perf
+> > > > > > command. Add a helper for commands that support UID filtering and wire
+> > > > > > up. Remove the non-BPF UID filtering support given it doesn't work.
+> > > > > >
+> > > > > > v3: Add lengthier commit messages as requested by Arnaldo. Rebase on
+> > > > > >     tmp.perf-tools-next.
+> > > > > >
+> > > > > > v2: Add a perf record uid test (Namhyung) and force setting
+> > > > > >     system-wide for perf trace and perf record (Namhyung). Ensure the
+> > > > > >     uid filter isn't set on tracepoint evsels.
+> > > > > >
+> > > > > > v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.com/
+> > > > >
+> > > > > Ping. Thanks,
+> > > >
+> > > > I'm ok with preferring BPF over /proc scanning, but still hesitate to
+> > > > remove it since some people don't use BPF.  Can you please drop that
+> > > > part and make parse_uid_filter() conditional on BPF?
+> > >
+> > > Hi Namhyung,
+> > >
+> > > The approach of scanning /proc fails as:
+> > > 1) processes that start after perf starts will be missed,
+> > > 2) processes that terminate between being scanned in /proc and
+> > > perf_event_open will cause perf to fail (essentially the -u option is
+> > > just sugar to scan /proc and then provide the processes as if they
+> > > were a -p option - such an approach doesn't need building into the
+> > > tool).
+> >
+> > Yeah, I remember we had this discussion before.  I think (1) is not true
+> > as perf events will be inherited to children (but there is a race).
+> 
+> If you log in from another terminal? Anything that creates a new
+> process for that user but isn't inherited will be missed, which isn't
+> merely a race.
 
-Signed-off-by: Uday Shankar <ushankar@purestorage.com>
----
- tools/testing/selftests/ublk/kublk.c | 34 +++++++++++++++++++++++-----------
- 1 file changed, 23 insertions(+), 11 deletions(-)
+As long as the another terminal is owned by the same user, any new
+process from the terminal will inherit events, no?
 
-diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
-index a98e14e4c245965d817b93843ff9a4011291223b..e2d2042810d4bb472e48a0ed91317d2bdf6e2f2a 100644
---- a/tools/testing/selftests/ublk/kublk.c
-+++ b/tools/testing/selftests/ublk/kublk.c
-@@ -1112,7 +1112,7 @@ static int __cmd_dev_add(const struct dev_ctx *ctx)
- 	__u64 features;
- 	const struct ublk_tgt_ops *ops;
- 	struct ublksrv_ctrl_dev_info *info;
--	struct ublk_dev *dev;
-+	struct ublk_dev *dev = NULL;
- 	int dev_id = ctx->dev_id;
- 	int ret, i;
- 
-@@ -1120,13 +1120,15 @@ static int __cmd_dev_add(const struct dev_ctx *ctx)
- 	if (!ops) {
- 		ublk_err("%s: no such tgt type, type %s\n",
- 				__func__, tgt_type);
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto fail;
- 	}
- 
- 	if (nr_queues > UBLK_MAX_QUEUES || depth > UBLK_QUEUE_DEPTH) {
- 		ublk_err("%s: invalid nr_queues or depth queues %u depth %u\n",
- 				__func__, nr_queues, depth);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto fail;
- 	}
- 
- 	/* default to 1:1 threads:queues if nthreads is unspecified */
-@@ -1136,30 +1138,37 @@ static int __cmd_dev_add(const struct dev_ctx *ctx)
- 	if (nthreads > UBLK_MAX_THREADS) {
- 		ublk_err("%s: %u is too many threads (max %u)\n",
- 				__func__, nthreads, UBLK_MAX_THREADS);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto fail;
- 	}
- 
- 	if (nthreads != nr_queues && !ctx->per_io_tasks) {
- 		ublk_err("%s: threads %u must be same as queues %u if "
- 			"not using per_io_tasks\n",
- 			__func__, nthreads, nr_queues);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto fail;
- 	}
- 
- 	dev = ublk_ctrl_init();
- 	if (!dev) {
- 		ublk_err("%s: can't alloc dev id %d, type %s\n",
- 				__func__, dev_id, tgt_type);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto fail;
- 	}
- 
- 	/* kernel doesn't support get_features */
- 	ret = ublk_ctrl_get_features(dev, &features);
--	if (ret < 0)
--		return -EINVAL;
-+	if (ret < 0) {
-+		ret = -EINVAL;
-+		goto fail;
-+	}
- 
--	if (!(features & UBLK_F_CMD_IOCTL_ENCODE))
--		return -ENOTSUP;
-+	if (!(features & UBLK_F_CMD_IOCTL_ENCODE)) {
-+		ret = -ENOTSUP;
-+		goto fail;
-+	}
- 
- 	info = &dev->dev_info;
- 	info->dev_id = ctx->dev_id;
-@@ -1200,7 +1209,8 @@ static int __cmd_dev_add(const struct dev_ctx *ctx)
- fail:
- 	if (ret < 0)
- 		ublk_send_dev_event(ctx, dev, -1);
--	ublk_ctrl_deinit(dev);
-+	if (dev)
-+		ublk_ctrl_deinit(dev);
- 	return ret;
- }
- 
-@@ -1262,6 +1272,8 @@ static int cmd_dev_add(struct dev_ctx *ctx)
- 		shmctl(ctx->_shmid, IPC_RMID, NULL);
- 		/* wait for child and detach from it */
- 		wait(NULL);
-+		if (exit_code == EXIT_FAILURE)
-+			ublk_err("%s: command failed\n", __func__);
- 		exit(exit_code);
- 	} else {
- 		exit(EXIT_FAILURE);
+> 
+> >  And
+> > (2) is a real problem but it's also about a race and it can succeed.
+> >
+> > Maybe we could change it to skip failed events when the target is a
+> > user but that's not the direction you want.
+> 
+> We could have other events and try to discover new processes via them,
+> do things like dummy events to cover races. It is just a lot of
+> complexity for something that is a trivial amount of BPF. In something
+> like 10 years nobody has bothered to fix this up.
 
----
-base-commit: c09a8b00f850d3ca0af998bff1fac4a3f6d11768
-change-id: 20250603-ublk_init_fail-b498905159eb
+I don't want any complex solution for this.  Let's not touch this.
 
-Best regards,
--- 
-Uday Shankar <ushankar@purestorage.com>
+> 
+> > >
+> > > This patch series adds a test [1] and perf test has lots of processes
+> > > starting and exiting, matching condition (2) above*. If this series
+> > > were changed to an approach that uses BPF and falls back on /proc
+> > > scanning then the -u option would be broken for both reasons above but
+> > > also prove a constant source of test flakes.
+> > >
+> > > Rather than give the users something both frustrating to use (keeps
+> > > quitting due to failed opens) and broken (missing processes) I think
+> > > it is better to quit perf at that point informing the user they need
+> > > more permissions to load the BPF program. This also makes the -u
+> > > option testable.
+> > >
+> > > So the request for a change I don't think is sensible as it provides a
+> > > worse user and testing experience. There is also the cognitive load of
+> > > having the /proc scanning code in the code base, whereas the BPF
+> > > filter is largely isolated.
+> >
+> > But I think the problem is that it has different requirements - BPF and
+> > root privilege.  So it should be used after checking the requirements
+> > and fail or fallback.
+> >
+> > Does it print proper error messages if not?  With that we can deprecate
+> > the existing behavior and remove it later.
+> 
+> For `perf top` with TUI you get an error message in a box of:
+> ```
+> failed to set filter "BPF" on event cpu_atom/cycles/P with 1
+> (Operation not permitted)
+> ```
+> With --stdio you get:
+> ```
+> libbpf: Error in bpf_object__probe_loading(): -EPERM. Couldn't load
+> trivial BPF program. Make sure your kernel supports BPF
+> (CONFIG_BPF_SYSCALL=y) and/or that RLIMIT_MEMLOCK is set to big enough
+> value.
+> libbpf: failed to load object 'sample_filter_bpf'
+> libbpf: failed to load BPF skeleton 'sample_filter_bpf': -EPERM
+> Failed to load perf sample-filter BPF skeleton
+> failed to set filter "BPF" on event cpu_atom/cycles/P with 1
+> (Operation not permitted)
+> ```
+> This matches the existing behavior if you put a filter on an event.
+
+But that's different as user directly asked the BPF filter.
+The following message would be better (unless you fallback to the old
+behavior).
+
+"-u/--uid option is using BPF filter but perf is not built with BPF.
+Please make sure to build with libbpf and bpf skeletons."
+
+and/or
+
+"-u/--uid option is using BPF filter which requires root privilege."
+
+You may check if the filter program and map is pinned already.
+
+Thanks,
+Namhyung
 
