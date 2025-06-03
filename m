@@ -1,35 +1,65 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B067246B8;
-	Tue,  3 Jun 2025 12:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC43D22D7BF
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 12:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748952222; cv=none; b=nhUvMkN4PeFh8z9rQ8BWhR3Q4/Bj/FIesUHPXMQDb838lzbhhrcB1Wisr2QSAg1Syg1eB82mCmCE4hp7JTX/hOHiKEVAR5EAwbvDSv/Q1+nB89JsctLioiryYImb6k/CovMErfZlyMIdHl7gF293neismOEtMEcH1KAjanG1O4Y=
+	t=1748952246; cv=none; b=ndn7ZWtwjsqjUoih8PnzTrt8/djc8XCEvZcZekkGU7/P70DO46h7e1/y8zP8fR8TufkiyPmilAyvQWL32CiSwGHG3ovOhSyhY2pII7+kVl25YPCNREO9MWmVRTOFiXhjCEP5LLrVSQB8/6eK2kSpIJGd8QBXYnR67CA6ZP2axsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748952222; c=relaxed/simple;
-	bh=giLjSiS06S2p3iW3XtomXSbobX9IDJkEJ8D7v5SJ0Mw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UW9RYJSlgze0/b80kWqJQmyhpvucpcCvV8GUXXMjmW/KeaxdZXSsJFREDipHG0RUCVNqWwqpZE/9CI89cA4xl3gcgD0dcm9G/TId0REJX+NXQE+P55FAbacV1XQv3KduGNXbTIjr0Rn1m1u5aOq3u86gKDqJJS6loU852t1Cnzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bBTsQ6gKDz27hfy;
-	Tue,  3 Jun 2025 20:04:26 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id D06C0180043;
-	Tue,  3 Jun 2025 20:03:35 +0800 (CST)
-Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 3 Jun 2025 20:03:35 +0800
-Received: from [10.67.121.59] (10.67.121.59) by kwepemn100009.china.huawei.com
- (7.202.194.112) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Jun
- 2025 20:03:34 +0800
-Message-ID: <c2034f07-5422-4ab1-952e-f7d74d0675a7@huawei.com>
-Date: Tue, 3 Jun 2025 20:03:34 +0800
+	s=arc-20240116; t=1748952246; c=relaxed/simple;
+	bh=eKVE11jLj8lDyZOQhotMaEk97jjBKUbpiusFQCUvx/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=INXHWUqiHwJauEewSpm6WqiPGSSkh3qR3cFTuayUqAJDvTMFJQLUm6AdGEnSiCViG9RowULQex6nhfmYk6VOpUMT7BuMnjZK4b5eQGxlueswLaCCvCVKPm9h6IWAYjpKKESkd9Fga4jg8aN6MlbbQc3qT0XAcSpqHNxEtadly3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DYeJHmJP; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DYeJHmJP"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad55d6aeb07so858389266b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 05:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748952243; x=1749557043; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=HDZ21hWlWv1x+o04xchdKXVEcwFizZSvZru6Ba/BmlI=;
+        b=DYeJHmJPH0IXSvhbBmDnvKnfmFAedWZTkv7JGS+TDGE2AWHD0quGjVWauKouV/DerI
+         DAR8YDirmFD4BMNhUxoJ2xyg4FC6b5vp7c0yuHzbYWLlPbjLf189hSx+0/3n3nonYF87
+         qKdvIwIGBLTpfDoG+fg4CHg8jRATbNUjDmAL8OeDOLKl1ex4COqBRqkmUM4Z7qxIa5hP
+         rMiCu+7zIjQEAN/hCbZLwVzmPDxxi8/XuHEiA8SXbU0Pq0K76RMBwzEd7QU1Kn8+NRC4
+         5g1pPVZZuzF4QQumHUlNNh+lTJM26/aj1Popfm2iz7tHRgoWoMBkjWsg1SRtF3gV+/iZ
+         z6zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748952243; x=1749557043;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HDZ21hWlWv1x+o04xchdKXVEcwFizZSvZru6Ba/BmlI=;
+        b=D9FrfestjQQP6BnHrc8WX1uKz3qNr/kqAXB/tepQM6JtYOAD7FopPmPRUHxObCQAn+
+         1ZD+sNh5LT70T29eMywSrbmy329GZ1jNMtZvMLmveRXB27b9ZZCMBGLFkz3bLlEcdB9Z
+         SaZBh11Ci+JlhwAJ6I/hAGJJHuTbFpYaz0xP+4l0Vurz/+rLEE2QZxmax5Z3/p2nhePW
+         QxHUCcMUt0TN84lFbQ6MlscpSE/rzuuegR0G2PzFm6vGdQEGJV1926WYZgFV78By8q4v
+         t8nrbjkJbW8gbFb8YoKCSoZUkuuRqe0M1Pm7Ccq1ow/aqk0UvIgBWVO01V6X4eDNDMBA
+         ZBdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKQeFBEdfrWOM8pG59+T70xuPcGjY40/c0TRpeRBBDs6vfQPO5emLb8n5Xv9z9etiqafIboTgXWMlMpKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqWA3gyyBuhaiq9xED3eSdrGs7nZGdpi1z3aasdu9bTgeb4Esf
+	U7yttvyhdEgq5jyix9KFWecb8buOYrjPitxA7TG0tdrIfPSrgBb63wHh+hUzcLc9EqE=
+X-Gm-Gg: ASbGncvCnEBL3CGBLBzZ6jXZqcI4NEJYhGgxlaLuBeXKQO1si5SDkA8OA4NqQEHOTJq
+	DFNSJuKLQSUjQYoyQGAkJoSxAjaqnkeaYrx/m/SLPoTyBuXyPRgQfkoFYGaqULZ9lWL4YWuYjSq
+	lj/6q33rrf6I9rnywJ3DsIChzBb9kMy7sm4DbtOx0Jr8gfQWxQFCCCIsvgvMoNqE22e4n4JQ+oR
+	KIVDLvRisIkuGHiLDIJVj/73+g1eM62ZhZT09yvTBTxsbvkKi/vcD+fjW4dsZr6H0rOARo2Y9QH
+	CifvcOF2oGf4H8v3bMuuSC1pzdq8lcmsFEcbBRScVB/q+XZuji1cqJih
+X-Google-Smtp-Source: AGHT+IFdRpQTjbCVEAc5nDVoTookmyFz0UYQ5bCgOGFgKVeZAWQ8RM/2i+LzJ8MkDBkj3RKJ8+7qOQ==
+X-Received: by 2002:a17:907:6eac:b0:ad5:3156:2c06 with SMTP id a640c23a62f3a-adb36be2f5emr1647258866b.28.1748952242835;
+        Tue, 03 Jun 2025 05:04:02 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.159.167])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adb34881d45sm753497466b.128.2025.06.03.05.04.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 05:04:02 -0700 (PDT)
+Message-ID: <a845370c-a1f0-4d02-9144-f199ca845d59@suse.com>
+Date: Tue, 3 Jun 2025 15:04:00 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,127 +67,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v20 1/1] mctp pcc: Implement MCTP over PCC
- Transport
-To: Adam Young <admiyo@amperemail.onmicrosoft.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Sudeep Holla
-	<sudeep.holla@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	<admiyo@os.amperecomputing.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Jeremy Kerr <jk@codeconstruct.com.au>,
-	"Eric Dumazet" <edumazet@google.com>, Matt Johnston
-	<matt@codeconstruct.com.au>, Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski
-	<kuba@kernel.org>
-References: <20250423220142.635223-1-admiyo@os.amperecomputing.com>
- <20250423220142.635223-2-admiyo@os.amperecomputing.com>
- <497a60df-c97e-48b7-bf0f-decbee6ed732@huawei.com>
- <a9f67a55-3471-46b3-bd02-757b0796658a@amperemail.onmicrosoft.com>
- <807e5ea9-ed04-4203-b4a6-bf90952e7934@huawei.com>
- <9e3e0739-b859-4a62-954e-2b13f7d5dd85@amperemail.onmicrosoft.com>
-From: "lihuisong (C)" <lihuisong@huawei.com>
-In-Reply-To: <9e3e0739-b859-4a62-954e-2b13f7d5dd85@amperemail.onmicrosoft.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemn100009.china.huawei.com (7.202.194.112)
+Subject: Re: [RFC PATCH 11/20] x86/virt/seamldr: Abort updates if errors
+ occurred midway
+To: Chao Gao <chao.gao@intel.com>, linux-coco@lists.linux.dev,
+ x86@kernel.org, kvm@vger.kernel.org
+Cc: seanjc@google.com, pbonzini@redhat.com, eddie.dong@intel.com,
+ kirill.shutemov@intel.com, dave.hansen@intel.com, dan.j.williams@intel.com,
+ kai.huang@intel.com, isaku.yamahata@intel.com, elena.reshetova@intel.com,
+ rick.p.edgecombe@intel.com, Farrah Chen <farrah.chen@intel.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org
+References: <20250523095322.88774-1-chao.gao@intel.com>
+ <20250523095322.88774-12-chao.gao@intel.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+Autocrypt: addr=nik.borisov@suse.com; keydata=
+ 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
+In-Reply-To: <20250523095322.88774-12-chao.gao@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-在 2025/6/3 4:51, Adam Young 写道:
->
-> On 5/30/25 02:19, lihuisong (C) wrote:
->>
->> 在 2025/4/29 2:48, Adam Young 写道:
->>>
->>> On 4/24/25 09:03, lihuisong (C) wrote:
->>>>> +    rc = mctp_pcc_initialize_mailbox(dev, &mctp_pcc_ndev->inbox,
->>>>> +                     context.inbox_index);
->>>>> +    if (rc)
->>>>> +        goto free_netdev;
->>>>> +    mctp_pcc_ndev->inbox.client.rx_callback = 
->>>>> mctp_pcc_client_rx_callback;
->>>> It is good to move the assignemnt of  rx_callback pointer to 
->>>> initialize inbox mailbox.
->>>
->>>
->>> The other changes are fine, but this one I do not agree with.
->>>
->>> The rx callback only makes sense for one of the two mailboxes, and 
->>> thus is not appropriate for a generic function.
->>>
->>> Either  initialize_mailbox needs more complex logic, or would 
->>> blindly assign the callback to both mailboxes, neither of which 
->>> simplifies or streamlines the code.  That function emerged as a way 
->>> to reduce duplication.  Lets keep it that way.
->>>
->> It depends on you. But please reply my below comment. I didn't see 
->> any change about it in next version.
->>
->> -->
->>
->>> +static netdev_tx_t mctp_pcc_tx(struct sk_buff *skb, struct 
->>> net_device *ndev)
->>> +{
->>> +    struct mctp_pcc_ndev *mpnd = netdev_priv(ndev);
->>> +    struct mctp_pcc_hdr *mctp_pcc_header;
->>> +    void __iomem *buffer;
->>> +    unsigned long flags;
->>> +    int len = skb->len;
->>> +    int rc;
->>> +
->>> +    rc = skb_cow_head(skb, sizeof(struct mctp_pcc_hdr));
->>> +    if (rc)
->>> +        goto err_drop;
->>> +
->>> +    mctp_pcc_header = skb_push(skb, sizeof(struct mctp_pcc_hdr));
->>> +    mctp_pcc_header->signature = cpu_to_le32(PCC_MAGIC | 
->>> mpnd->outbox.index);
->>> +    mctp_pcc_header->flags = cpu_to_le32(PCC_HEADER_FLAGS);
->>> +    memcpy(mctp_pcc_header->mctp_signature, MCTP_SIGNATURE,
->>> +           MCTP_SIGNATURE_LENGTH);
->>> +    mctp_pcc_header->length = cpu_to_le32(len + 
->>> MCTP_SIGNATURE_LENGTH);
->>> +
->>> +    spin_lock_irqsave(&mpnd->lock, flags);
->>> +    buffer = mpnd->outbox.chan->shmem;
->>> +    memcpy_toio(buffer, skb->data, skb->len);
->>> + 
->>> mpnd->outbox.chan->mchan->mbox->ops->send_data(mpnd->outbox.chan->mchan,
->>> +                            NULL);
->>> +    spin_unlock_irqrestore(&mpnd->lock, flags);
->>> +
->> Why does it not need to know if the packet is sent successfully?
->> It's possible for the platform not to finish to send the packet after 
->> executing this unlock.
->> In this moment, the previous packet may be modified by the new packet 
->> to be sent.
->
-> I think you missed version  21.
->
-> Version 21 of this function ends with:
->         memcpy_toio(buffer, skb->data, skb->len);
->         rc = mpnd->outbox.chan->mchan->mbox->ops->send_data
->                 (mpnd->outbox.chan->mchan, NULL);
->         spin_unlock_irqrestore(&mpnd->lock, flags);
->         if ACPI_FAILURE(rc)
->                 goto err_drop;
->         dev_dstats_tx_add(ndev, len);
->         dev_consume_skb_any(skb);
->         return NETDEV_TX_OK;
-> err_drop:
->         dev_dstats_tx_dropped(ndev);
->         kfree_skb(skb);
->         return NETDEV_TX_OK;
->
->
-> Once the memcpy_toio completes, the driver will not look at the packet 
-> again.  if the Kernel did change it at this point, it would not affect 
-> the flow.  The send of the packet is checked vi rc returned from 
-> send_data, and it tags the packet as dropped.  Is this not sufficient?
->
-Yes, it is not enough.
-Once send_data() return success, platform can receive an interrupt，but 
-the processing of the platform has not ended.
-This processing includes handling data and then triggering an interrupt 
-to notify OS.
->
->
->
+
+On 5/23/25 12:52, Chao Gao wrote:
+> The update process is divided into multiple stages, each of which may
+> encounter failures. However, the current state machine for updates proceeds
+> to the next stage regardless of errors.
+> 
+> Continuing updates when errors occur midway is pointless.
+> 
+> Implement a mechanism that transitions directly to the final stage,
+> effectively aborting the update and skipping all remaining stages when an
+> error is detected.
+> 
+> This is in preparation for adding the first stage that may fail.
+> 
+> Signed-off-by: Chao Gao <chao.gao@intel.com>
+> Tested-by: Farrah Chen <farrah.chen@intel.com>
+> ---
+>   arch/x86/virt/vmx/tdx/seamldr.c | 17 +++++++++++++++--
+>   1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/virt/vmx/tdx/seamldr.c b/arch/x86/virt/vmx/tdx/seamldr.c
+> index 01dc2b0bc4a5..9d0d37a92bfd 100644
+> --- a/arch/x86/virt/vmx/tdx/seamldr.c
+> +++ b/arch/x86/virt/vmx/tdx/seamldr.c
+> @@ -247,6 +247,7 @@ enum tdp_state {
+>   static struct {
+>   	enum tdp_state state;
+>   	atomic_t thread_ack;
+> +	atomic_t failed;
+>   } tdp_data;
+>   
+>   static void set_state(enum tdp_state state)
+> @@ -261,8 +262,16 @@ static void set_state(enum tdp_state state)
+>   /* Last one to ack a state moves to the next state. */
+>   static void ack_state(void)
+>   {
+> -	if (atomic_dec_and_test(&tdp_data.thread_ack))
+> -		set_state(tdp_data.state + 1);
+> +	if (atomic_dec_and_test(&tdp_data.thread_ack)) {
+> +		/*
+> +		 * If an error occurred, abort the update by skipping to
+> +		 * the final state
+> +		 */
+> +		if (atomic_read(&tdp_data.failed))
+> +			set_state(TDP_DONE);
+> +		else
+> +			set_state(tdp_data.state + 1);
+> +	}
+>   }
+>   
+>   /*
+> @@ -285,6 +294,9 @@ static int do_seamldr_install_module(void *params)
+>   			default:
+>   				break;
+>   			}
+> +
+> +			if (ret)
+> +				atomic_inc(&tdp_data.failed);
+
+Should there be some explicit ordering requirement between setting an 
+error and reading it in ack_state by a different CPU?
+
+
+  < snip>
+
