@@ -1,214 +1,135 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF068BE8;
-	Tue,  3 Jun 2025 10:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39B91531E3;
+	Tue,  3 Jun 2025 10:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748945879; cv=none; b=cA2XhIcjXG+uowlvq5nVJQUwKkGvRe5WKEtmhizSY54OLkYMmocpuV4d+WHdKlPH+b/FhuncpCXoetHlI0+tqZbUZNN6DFwICxXSkzckshx6R6IoMkvKsG/rcNFM8HomzaluIbiZauDpO/sU3eFa0E+VV+PzlOA/jpjlqMKsIOI=
+	t=1748945931; cv=none; b=tRxlF4B29jOFze4406cG/S8c03SoZQWGIejF6jGq0nTdBOAY6zq45y8kwrM3TaoqMD0+xEYmv8LqkBTClajLGS20sE3lJxvTdrzMDNy/T75JA1kul2D+X17UiQr3OsLS+isxtV5aqneBY3dQ2VnqIJDHC+l0ccIfbID4q0qiHYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748945879; c=relaxed/simple;
-	bh=qAC4fpMrc+fF2adFxTF7f8fgQuyywdm1wAP3quelQ8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eoncCPZQwUMYWI/c+LRwIslsIDw+rd8Lyyd2RVvgMEtSJOZWPsJnhKHD+IzIlRaUc8pScNRQouTLkJIAESY0Si1Bf5NGytXz4d0Bf6IcYSHZ7mTB8EbzM5ruKFLpI0rKiUbcWTqqdBwo35goXe+jCemeQp7L6D1HeD/uF5tz6CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VLuzwhVH; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1748945931; c=relaxed/simple;
+	bh=myd45d0i3xtNd60c7nVWYYckLHlit4IIiH9M202Dspk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GdqUFjcveLoNkUXnqjfPTabm55utniWi0d9AhRIjuh8apF0U00OyFOLCP9XS7lmS5Vmtr9SGU6acodZqr5hDifXq3MdsTvwa3W/D1baQr52C+RuydmL3dlbox3fuP+BlWouZckh/5rHH0yKHDATe4gIkGlilCcvzM0ivPb5krxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9K8a4Ky; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLuzwhVH"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451d7b50815so17828465e9.2;
-        Tue, 03 Jun 2025 03:17:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9K8a4Ky"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3109f106867so6830624a91.1;
+        Tue, 03 Jun 2025 03:18:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748945876; x=1749550676; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=S0P1OcEuL1F48p/Jk+38qe7qlgSJuzzL+bo4Wlmq7TQ=;
-        b=VLuzwhVHDUhXZxSatbxd6xv6biXmZffBKQHtnF8dHWxoypUMASw5QhTwRMRJfg9yEZ
-         tuxfNj7yXd5Nc35/cRPQtoMlWMf8j9DFBWZr+eMpbDPQOElS1K1wdFHbRZOPJ8PMjJ06
-         QvmCJG0j25SRDEF8xBZ7+kIv2KDYt9CNXpa4ddW+t+HxA+Hqdj/IJL8qv0g2trKRntEM
-         xnbSm3TdlRIVTJ5cOknTbSe3d9Cn+dy58FpBLT1ACUewSStFGpob8JApwfNWUTJScbPr
-         twv6AJJIF9PaWrZp3H3Y3Ctxox/nSgJngneU/yWiiIo1UAQxdovjwHov7VNOfQFTZd45
-         smTg==
+        d=gmail.com; s=20230601; t=1748945929; x=1749550729; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=70huqT6ptBSO340GgOIthwb677KQu/LcWxypJ+D6Bb4=;
+        b=B9K8a4KyWTVMTTHNv02YZVR6pRTOPQVde3rLGuzablf2Ax3DrXUc2SMm2TRxLFAElV
+         DMpzUZQOMWjCcHroN6UvQteuUiTMsKBS+IHtwxg4XwOiKRMGDf+tdwEDr1Snw4Ccbv3B
+         KMbt//s2KVl3cf/M1bPlRlxaVfP2QwYmhskXlUzbW66uXD/ohqxUOrvrVjCQ/gAGJ/5b
+         IBFZ57w2h7cKBi3AyJyEV8Llust5t3WGljDDMsRtZnNLKf98qjTp8oZFcrrrzbUKysP/
+         /Oisk0a2XPM11K2PMTl06KXRrjAtM/WXf/ZQQxIx3Gr+Y4kHqJVdUorqfKzplC2T15Z3
+         Kaew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748945876; x=1749550676;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S0P1OcEuL1F48p/Jk+38qe7qlgSJuzzL+bo4Wlmq7TQ=;
-        b=Q1q7aq+qs2Yr4132Hz81MVCm5OUh+Tkt2z4JFyxmwjIfXjwNWLjNNHwp/AddIkmxsR
-         4v2vbT38n1p75SR+YRHpVgjyjrypQHNjNe7kTf/yFWAo0wlDCrUPWpft5ws9sKjR9NeL
-         Odh38isQAeR+yiz5ZG7GbVB1x80kpvuCJr+xK8cYOxcsp/DoqHINlB9EG81cXXHx9Hnq
-         0+Exj4q0PeDzcNMm2OBwd7llcuZ12q9f5BtxxUEIzKMoIGUpYAmavLJk06lzZ9ASFZsu
-         YAkFj91WYQLHuzpwa8TmQhiPjRQ0+Zjtyze8/Mw6648e1Da5TQcoJZuoHftLpahvoLEA
-         KAEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTY2c9/qPAM76ISq19JzHCKCpzunL4AQhRsg1x3w1gOQ3ryJUqdqwuS4uM3wfNqtw6aHQ5B7QmmSdK+kw=@vger.kernel.org, AJvYcCWg56DnsTrL1VsUDLEmwIw5NpQpexnRVk0FD4h8fy3uCKddQIt9l26ew8bYaQk4uEpAyDh2vykLGZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlT7mqtO7K+XkosxnxY7+mdP9DEISx2WKskzVL4a4WdQGYBWtf
-	Yauz1DHnYfefE+5a7kc1+RoVXkp6jomvsiW4Dalvds802fbzaNW9/0iAByBM/1aKUzM=
-X-Gm-Gg: ASbGncsVinZ/oh1004sREdCUaqulbxtYn7El7wo70pBcPQSDFHfSQI7QnTe37G3BpZY
-	QrO/pOGddbIy36KB6QMnbaEzQ5mGUbCCSzDZlBC3MGR4B4iExbuV+akE86DjqBPAbd39FS0ryp8
-	hCXKFNtDyS5leuisWz9dThTUOzpjEAzFUHNrcYnNUVDgSQil/BfntUyjQAzYFvXIFMo6FqfYXwz
-	ODHXCZlJJaNRg4BuoA3VcUHQyZXfO+y7e68pDfqdoqVQenGG/g16BKQSNykhoz4XxW4Zd1PvNPd
-	DuriZ3uW+Aj9/tNipzPLSy5YJZM0b2UgXbYz34ySKHum4X8n/XrDGWqGLGav
-X-Google-Smtp-Source: AGHT+IEWLJbPeG9pLGW1Pj3XDlHYZS7Tj3RLsVjIfu2M5iP457IZ8VxY7J70cN3uUko4tUW5axp9MA==
-X-Received: by 2002:a05:600c:1553:b0:442:f482:c42d with SMTP id 5b1f17b1804b1-450d884316fmr154997435e9.9.1748945875924;
-        Tue, 03 Jun 2025 03:17:55 -0700 (PDT)
-Received: from debian.local ([81.78.104.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f009ff7asm18023011f8f.90.2025.06.03.03.17.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 03:17:55 -0700 (PDT)
-Date: Tue, 3 Jun 2025 11:17:53 +0100
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Johan Hovold <johan@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Saravana Kannan <saravanak@google.com>,
-	amd-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v3 2/5] PM: sleep: Suspend async parents after suspending
- children
-Message-ID: <aD7L0RD4HT-mEtBc@debian.local>
-References: <10629535.nUPlyArG6x@rjwysocki.net>
- <3541233.QJadu78ljV@rjwysocki.net>
- <aD2U3VIhf8vDkl09@debian.local>
- <CAJZ5v0h-nrVamqiAJ957aYjHqaeAZUUW7BRi0WxPgCFc40M5cQ@mail.gmail.com>
- <7f0e2865-d35e-4a13-8617-8679afb4b23f@kernel.org>
- <CAJZ5v0gL3rW8dOxXdPWYjZuq5kAaD8qTa4vZ5++k9+0WniNAdQ@mail.gmail.com>
- <CAJZ5v0jDZQaR8S6Kn_RoXHBU86+tpjp=qgyxm5h03YEe2S=nPg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1748945929; x=1749550729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=70huqT6ptBSO340GgOIthwb677KQu/LcWxypJ+D6Bb4=;
+        b=R4MnyZQLiRmKhIhuSpaLdMscxCJ1MtcPNjD6bh48AhGR1w6uPbFJURF6MkdyGywYiG
+         /htC8pbWnw6czGDA+8kLFj1ysCHhPI2DfDO16kq9rSrSC+lywOrT2dNpllzYrMXCZ7ha
+         NpOZGFCWTcmltVVcs4MjuT880Po0m8pdzzRz5p+pOw9BRxzznRqxIsQpxFEUkrssIJiH
+         XVhew/iUogg8DaQio3nNTb6ZyKYUZt/MqRBuupNm9QuoscZIXcys7a+qX7d/G9/Yz3/9
+         HQTyuVEIPuMybT/U66BBQ/yjLMC6I79ZEMm9DmLlpQTTfNfKvhT0HtGP9nGDnVYYy0iZ
+         648w==
+X-Forwarded-Encrypted: i=1; AJvYcCUCR/M34Ozjd/V+XbR/vHKxQ2FUv47FxqtbDxDplxXNTE4YxeUVOomLxm0/NMaYbFZl748wQ8peHea5PRE=@vger.kernel.org, AJvYcCV5RHJtxWhPn3p2cckMjOCUsWX8V1l4hpTIa4QuMUattj6K4R4VLKvD7QwGnvU/J9iOiUm1xS27@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4iANQyCEKOz4fHf6ZwML7EancQzX62jT3EKrvODDnlOixkfp9
+	GpO4N4BPZQTAbu5keeHfuIi72cdr3QGA7hrTlHdEkvoK0nYR04nqAoARYNi/JvMa4nhvk1FackB
+	su/B2hQ4vDnhtMAozwPyQWhaBo0Ya19c=
+X-Gm-Gg: ASbGncvm7USg8lJIh02cYrcDmriUbQoPZr5OEYyhH+ekmFIUEekW1u5KZzMjZw/qhDz
+	eNmQeHIoxl9usGUjdIqtxGcWgi+Ews4VvnWXSUWGmebkpENdW4ZKHlumzf++hmjQ6NMX9oY1edN
+	WhlgObAqMIhWpAmpGYQi5Gi2V/RvLviXGmSMm+Ug/XIjWLrO5I25jmf3YhZSiqp6dfSPQ=
+X-Google-Smtp-Source: AGHT+IFKdJlxQDPpwIlOWRylCF1tesMVeTdg7R2okl539fFA1Vg3wuEauXM5tgTgd+fNiRzwCx4qmhOuDVvam+0erWg=
+X-Received: by 2002:a17:90b:4c09:b0:312:1b53:5ead with SMTP id
+ 98e67ed59e1d1-31240d1c0d7mr23255282a91.4.1748945928882; Tue, 03 Jun 2025
+ 03:18:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250531101308.155757-1-noltari@gmail.com> <20250531101308.155757-9-noltari@gmail.com>
+ <a8332eba-70c3-482a-a644-c86c13792f8b@broadcom.com> <CAOiHx=nmuZe+aeZQrRSB6re1K0G9DzL-+w+dAs5Bkdze72Rf0w@mail.gmail.com>
+In-Reply-To: <CAOiHx=nmuZe+aeZQrRSB6re1K0G9DzL-+w+dAs5Bkdze72Rf0w@mail.gmail.com>
+From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Date: Tue, 3 Jun 2025 12:18:15 +0200
+X-Gm-Features: AX0GCFv4JEbh2JLg-oJFNxNP6YLTksnO0gB3S-DotEdw2V91RfbTd5BRS5LyFL8
+Message-ID: <CAKR-sGe7dB9kn28-3mcj41VXpVYGLvLQc85j=JcuJpsT4-6Nrg@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/10] net: dsa: b53: fix unicast/multicast flooding
+ on BCM5325
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, andrew@lunn.ch, olteanv@gmail.com, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	vivien.didelot@gmail.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dgcbueu@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJZ5v0jDZQaR8S6Kn_RoXHBU86+tpjp=qgyxm5h03YEe2S=nPg@mail.gmail.com>
 
-On Tue, Jun 03, 2025 at 11:38:37AM +0200, Rafael J. Wysocki wrote:
->=20
-> Chris, please check if the attached patch helps.  I'm going to post it
-> as a fix anyway later today, but it would be good to verify that it is
-> sufficient.
+Hi Jonas,
 
-This did not fix my test case, pstore crash log was:
+El lun, 2 jun 2025 a las 22:08, Jonas Gorski
+(<jonas.gorski@gmail.com>) escribi=C3=B3:
+>
+> On Mon, Jun 2, 2025 at 8:09=E2=80=AFPM Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
+> >
+> > On 5/31/25 03:13, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> > > BCM5325 doesn't implement UC_FLOOD_MASK, MC_FLOOD_MASK and IPMC_FLOOD=
+_MASK
+> > > registers.
+> > > This has to be handled differently with other pages and registers.
+> > >
+> > > Fixes: a8b659e7ff75 ("net: dsa: act as passthrough for bridge port fl=
+ags")
+> > > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> > > ---
+> >
+> > [snip]
+> >
+> > > +/*******************************************************************=
+******
+> > > + * IEEE 802.1X Registers
+> > > + *******************************************************************=
+******/
+> > > +
+> > > +/* Multicast DLF Drop Control register (16 bit) */
+> > > +#define B53_IEEE_MCAST_DLF           0x94
+> > > +#define B53_IEEE_MCAST_DROP_EN               BIT(11)
+> > > +
+> > > +/* Unicast DLF Drop Control register (16 bit) */
+> > > +#define B53_IEEE_UCAST_DLF           0x96
+> > > +#define B53_IEEE_UCAST_DROP_EN               BIT(11)
+> >
+> > Are you positive the 5325 implements all of those registers? They are
+> > not documented in my databook.
+>
+> They are in 5325E-DS14-R pages 112 - 112 (134/135)
+>
+> That being said, I don't thing we need to touch the MC/BC/DLF rate
+> control registers when enabling/disabling flooding - these only limit
+> how much traffic may be UC / MC  on a port, but apart from that they
+> do not limit flooding. We don't limit this on other switch models
+> either.
 
-<6>[  100.690222] Freezing remaining freezable tasks completed (elapsed 0.0=
-01 seconds)
-<6>[  100.690392] printk: Suspending console(s) (use no_console_suspend to =
-debug)
-<7>[  100.949462] PM: suspend of devices aborted after 1.796 msecs
-<7>[  100.949469] PM: start suspend of devices aborted after 258.160 msecs
-<3>[  100.949472] PM: Some devices failed to suspend, or early wake event d=
-etected
-<4>[  100.949565]  slab kmalloc-cg-4k start ffff916fede97000 pointer offset=
- 1936 size 4096
-<3>[  100.949589] list_add corruption. prev->next should be next (ffffffff8=
-f877180), but was ffff916f8ed40998. (prev=3Dffff916fede97790).
-<4>[  100.949600] ------------[ cut here ]------------
-<2>[  100.949601] kernel BUG at lib/list_debug.c:32!
-<4>[  100.949607] Oops: invalid opcode: 0000 [#1] SMP
-<4>[  100.949610] CPU: 13 UID: 0 PID: 3703 Comm: amd_s2idle.py.o Not tainte=
-d 6.15.0-09119-g98079dc6057f #438 PREEMPT(voluntary)=20
-<4>[  100.949613] Hardware name: HP HP Pavilion Aero Laptop 13-be0xxx/8916,=
- BIOS F.17 12/18/2024
-<4>[  100.949614] RIP: 0010:__list_add_valid_or_report+0x90/0xa0
-<4>[  100.949619] Code: 98 8a ff 0f 0b 48 89 f7 48 89 34 24 e8 69 c6 c5 ff =
-48 8b 34 24 48 c7 c7 30 53 40 8f 48 8b 16 48 89 f1 48 89 de e8 50 98 8a ff =
-<0f> 0b 90 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 0f 1e fa 41 54
-<4>[  100.949621] RSP: 0018:ffffa0f6c715fb68 EFLAGS: 00010246
-<4>[  100.949622] RAX: 0000000000000075 RBX: ffffffff8f877180 RCX: 00000000=
-00000027
-<4>[  100.949623] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9172=
-4689e180
-<4>[  100.949624] RBP: ffffffff8f876140 R08: 0000000000000001 R09: 00000000=
-00000000
-<4>[  100.949625] R10: 0000000000000001 R11: 0000000000000006 R12: 00000000=
-00000010
-Oops#1 Part3
-<4>[  100.949626] R13: 000000177d0d8fb9 R14: ffff916fede97790 R15: ffff916f=
-8e564820
-<4>[  100.949627] FS:  00007f076a109100(0000) GS:ffff9172b67c7000(0000) knl=
-GS:0000000000000000
-<4>[  100.949628] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4>[  100.949629] CR2: 00007fa8ce10f61c CR3: 00000001b80bb000 CR4: 00000000=
-00f50ef0
-<4>[  100.949630] PKRU: 55555554
-<4>[  100.949630] Call Trace:
-<4>[  100.949631]  <TASK>
-<4>[  100.949632]  dpm_resume+0x139/0x350
-<4>[  100.949636]  dpm_resume_end+0x11/0x20
-<4>[  100.949639]  suspend_devices_and_enter+0x18e/0x9f0
-<4>[  100.949642]  pm_suspend.cold+0x273/0x2cf
-<4>[  100.949645]  state_store+0x6c/0xd0
-<4>[  100.949647]  kernfs_fop_write_iter+0x194/0x250
-<4>[  100.949650]  vfs_write+0x254/0x550
-<4>[  100.949654]  ksys_write+0x71/0xe0
-<4>[  100.949656]  do_syscall_64+0x97/0x3d0
-<4>[  100.949658]  ? __lock_acquire+0x469/0x2200
-<4>[  100.949662]  ? __handle_mm_fault+0xaa7/0xf70
-<4>[  100.949665]  ? lock_acquire+0xc9/0x2d0
-<4>[  100.949667]  ? find_held_lock+0x2b/0x80
-<4>[  100.949669]  ? rcu_read_unlock+0x17/0x60
-<4>[  100.949672]  ? lock_release+0xd1/0x2a0
-<4>[  100.949674]  ? find_held_lock+0x2b/0x80
-<4>[  100.949676]  ? exc_page_fault+0x90/0x240
-<4>[  100.949678]  ? lock_release+0xd1/0x2a0
-<4>[  100.949681]  ? do_user_addr_fault+0x36e/0x690
-<4>[  100.949684]  ? lockdep_hardirqs_on_prepare+0xd7/0x170
-<4>[  100.949686]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-<4>[  100.949688] RIP: 0033:0x7f076a199687
-<4>[  100.949690] Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 =
-59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 =
-<5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
-Oops#1 Part2
-<4>[  100.949691] RSP: 002b:00007ffd3a7a3990 EFLAGS: 00000202 ORIG_RAX: 000=
-0000000000001
-<4>[  100.949693] RAX: ffffffffffffffda RBX: 00007f076a109100 RCX: 00007f07=
-6a199687
-<4>[  100.949694] RDX: 0000000000000003 RSI: 0000000008d3e090 RDI: 00000000=
-00000004
-<4>[  100.949694] RBP: 0000000000000000 R08: 0000000000000000 R09: 00000000=
-00000000
-<4>[  100.949695] R10: 0000000000000000 R11: 0000000000000202 R12: 00007f07=
-6a109068
-<4>[  100.949696] R13: 0000000000000004 R14: 0000000000a7e4f0 R15: 00000000=
-00a50af8
-<4>[  100.949700]  </TASK>
-<4>[  100.949700] Modules linked in: snd_seq_dummy snd_hrtimer snd_seq snd_=
-seq_device xt_conntrack nft_chain_nat xt_MASQUERADE nf_nat nf_conntrack_net=
-link nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xfrm_user xfrm_algo xt_addr=
-type nft_compat nf_tables br_netfilter bridge stp llc ccm overlay qrtr rfco=
-mm cmac algif_hash algif_skcipher af_alg bnep binfmt_misc ext4 mbcache jbd2=
- nls_ascii nls_cp437 vfat fat snd_acp3x_rn snd_soc_dmic snd_acp3x_pdm_dma s=
-nd_sof_amd_rembrandt snd_sof_amd_acp snd_sof_pci snd_sof_xtensa_dsp snd_sof=
- snd_sof_utils snd_ctl_led snd_soc_core snd_compress snd_hda_codec_realtek =
-iwlmvm snd_pci_ps snd_hda_codec_generic snd_soc_acpi_amd_match snd_hda_scod=
-ec_component snd_rpl_pci_acp6x snd_hda_codec_hdmi intel_rapl_msr uvcvideo s=
-nd_acp_pci mac80211 btusb snd_hda_intel intel_rapl_common videobuf2_vmalloc=
- snd_amd_acpi_mach btrtl snd_intel_dspcfg videobuf2_memops libarc4 kvm_amd =
-snd_acp_legacy_common btintel snd_hda_codec uvc videobuf2_v4l2 snd_hwdep sn=
-d_pci_acp6x btbcm kvm videodev snd_hda_core snd_pci_acp5x btmtk
-Oops#1 Part1
-<4>[  100.949738]  iwlwifi snd_rn_pci_acp3x videobuf2_common snd_pcm hp_wmi=
- bluetooth irqbypass sg snd_acp_config mc snd_timer platform_profile rapl c=
-fg80211 snd_soc_acpi pcspkr sparse_keymap snd wmi_bmof ee1004 snd_pci_acp3x=
- soundcore k10temp ccp rfkill battery ac evdev joydev acpi_tad amd_pmc msr =
-parport_pc ppdev lp parport nvme_fabrics efi_pstore configfs nfnetlink efiv=
-arfs ip_tables x_tables autofs4 crc32c_cryptoapi btrfs blake2b_generic xor =
-raid6_pq dm_crypt dm_mod sd_mod uas usb_storage scsi_mod scsi_common amdgpu=
- drm_client_lib i2c_algo_bit drm_ttm_helper ttm drm_panel_backlight_quirks =
-drm_exec drm_suballoc_helper amdxcp drm_buddy gpu_sched hid_multitouch drm_=
-display_helper hid_generic nvme xhci_pci drm_kms_helper ucsi_acpi sp5100_tc=
-o typec_ucsi ghash_clmulni_intel cec i2c_hid_acpi nvme_core xhci_hcd watchd=
-og roles sha512_ssse3 rc_core amd_sfh i2c_hid nvme_keyring usbcore i2c_piix=
-4 typec video aesni_intel serio_raw crc16 hid nvme_auth i2c_smbus fan usb_c=
-ommon drm button wmi
-<4>[  100.949784] ---[ end trace 0000000000000000 ]---
+In that case there's nothing to enable/disable on the BCM5325 and we
+should do an early return on b53_port_set_ucast_flood and
+b53_port_set_mcast_flood since UC_FLOOD_MASK, MC_FLOOD_MASK and
+IPMC_FLOOD_MASK don't exist.
+
+>
+> Regards,
+> Jonas
+
+Best regards,
+=C3=81lvaro.
