@@ -1,201 +1,221 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 239D42C3261;
-	Tue,  3 Jun 2025 03:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748920201; cv=none; b=Yi5p1BJVsZH2LEJdpNWvqKvjx6LOX38qlrxgCU+88+4aN7DE9/ZnB5E+55dSUjE3lbNQE2lum9+uKcMBpOTnYGntM3gp5RrV1OB5PdFE/fkfYrLd7QB5BnxVaiYWu89IDtspmq/Bt/bzmnEwrXiVyYyUjMAASVwlnIv1pK1eWhA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748920201; c=relaxed/simple;
-	bh=d/HNEnZxtNsbml+mpIKxBU2NCJc6lxB9UPGaecti2wM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sphpszqDtcaTTZUhs/qXgrBx+w1CnlAtZJMa0UjlVTwkX7UkPdQV3mpQo2zXVCgeWndQ/K1VPrrnz5Cw2VxMwxn2QIx3xjbXV8lI4n90NTH8H93EQq7xo5UBABcx0DfcnFFybgP9n4JGwb+T6jYkRPvDleqFwvUIi6QFpTcslOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.50])
-	by app2 (Coremail) with SMTP id HwEQrAB3dO5sZz5o9lN7AQ--.54653S2;
-	Tue, 03 Jun 2025 11:09:32 +0800 (CST)
-Received: from [10.12.169.168] (unknown [10.12.169.168])
-	by gateway (Coremail) with SMTP id _____wAX4uloZz5oEow0AA--.38125S2;
-	Tue, 03 Jun 2025 11:09:30 +0800 (CST)
-Message-ID: <371b632f-3522-4b8e-8e2f-4e3c53a7c047@hust.edu.cn>
-Date: Tue, 3 Jun 2025 11:09:28 +0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788124C92;
+	Tue,  3 Jun 2025 03:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748920544; cv=fail; b=S7/ciXx2uyVZzANi57zZp+jtQtEuD4+VuL5sXjZT+pOFUmWyUGqFThf1pl8t82AE9gsA/kzxwRZfjZFpUd/ks/XJ2qViAlfO3rznAdATYcUpZ8KuCYxtYU4H3Gw+mf0fQmgoPM9BNs9KaD+bW9cuAabGGJD7QnGErXeVZlctYJE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748920544; c=relaxed/simple;
+	bh=/1c/K3vSrNJY2ltDNE1fxT0b4WZbBpdUXo9r3es8y9I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=q888qED4n6E2x5xaB+8+646RgkIf1tMnnXUOQ+9Sp2QW0Z5fJjBnfIJ1acgpdTA9GL79lpd60YKsIatn6BhsQY+HFc99+YcVYU5YuFBpIg8UJLK2C4VZQPSZhaDoZN1vQR5MxGPckuhYGtM0v0h6k+qK6njULXAxuMhwLcINJCc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pIWv5xZa; arc=fail smtp.client-ip=40.107.237.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pIWv5xZa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pa5Upy0CiZB9Td9KDn0UxPqBdRvs/aPFEIhft5wOquBhMWHyuBv+ybQHPLUGRdMo3f+s1LHojro02GXQYyh12/XDO/2z15ICBbVryZfOwLW/ZUjsTHmJSxwlS+Rw15+m6hbSt1bVwj+Un+/fcbeI1ePU8AOpYuLkGXMq3pKt11l82CPhcu0EX8JV6yeE6pvdpa7zm5rLqd3Fd4SG/dm5Q9TtE2PsUPb+2jeax6PZzxrWCHHYJpUvxX286zHrxIJ9LCBdGBHa8aRvcfqqSZNo9ODlJ75h6MeZyz4cubDoHW6zq4BQB5lkwcAojGy5wosAmDF/etVPV8CpMmlZPndz9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pN/XgaiupB7Kw79gNPWWcELxCNnJTYYGuhUUTn4F6sM=;
+ b=k9HOgbp9l45cVEyKKWl+NxOlnkbBje/kZk+gbMQf1rHYK1WxkGgXNeyFYpHBadRt3cCeDyhaSkzwTuZDlGeeTuxzNuQ9oeREfhdu7FjoMizvWeFsFwYHJ6xAp2TrLrgf6XXqK3YFe2uxfr/RouAvm7I9HBT8ORwjavkzOLQaECRFoxn92dze6lZcYbMLDRB9WFvGp42MprPt81ctOxvt53/+kKdBEb8caVsSlp4DfZbQK5fRE9SCOVyLg5yqpUemv9gi6LTqkNBRfnhTjRP7A51xL+34JkRKdE57HXOwCyxFZZIdOSHw3DyABK3mN8IaEgcvqORJdAmgHQ+gLg9nxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pN/XgaiupB7Kw79gNPWWcELxCNnJTYYGuhUUTn4F6sM=;
+ b=pIWv5xZa+4k+mF8bp2d6sD0vPbHLUrK012utIT88DfPL6g0dkBF4wqdolevKB6XMQupf4WfCpq1FM5SEv6HA2ITTG/MJhS8Azg7EEwsmVwn7aBPRoEIaNR+XHhs0t9bkQ6mSLYT3hqn/pxZh+tPb3JttFljxIrQI/Qhf3cdQIGw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18) by
+ PH0PR12MB7813.namprd12.prod.outlook.com (2603:10b6:510:286::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Tue, 3 Jun
+ 2025 03:15:39 +0000
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620]) by DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620%5]) with mapi id 15.20.8722.031; Tue, 3 Jun 2025
+ 03:15:39 +0000
+Message-ID: <eb2cdc21-0744-4ac7-96a7-bc84625a5644@amd.com>
+Date: Mon, 2 Jun 2025 23:15:29 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] i2c: amd-isp: Initialize unique adpater name
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>
+Cc: rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>,
+ sfr@canb.auug.org.au, linux-next@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
+ king.li@amd.com, dantony@amd.com
+References: <20250530200234.1539571-1-pratap.nirujogi@amd.com>
+ <20250530200234.1539571-3-pratap.nirujogi@amd.com>
+ <8670fa5f-5bf6-7dfe-1ec7-5cd1ec4472aa@linux.intel.com>
+Content-Language: en-GB
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <8670fa5f-5bf6-7dfe-1ec7-5cd1ec4472aa@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CPXP152CA0006.LAMP152.PROD.OUTLOOK.COM (2603:10d6:103::18)
+ To DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH linux next v2] Docs/zh_CN: Translate vxlan.rst to
- Simplified Chinese
-To: jiang.kun2@zte.com.cn
-Cc: alexs@kernel.org, si.yanteng@linux.dev, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- xu.xin16@zte.com.cn, yang.yang29@zte.com.cn, fan.yu9@zte.com.cn,
- qiu.yutan@zte.com.cn, wang.yaxin@zte.com.cn
-References: <20250603110337057ZRxTnZrzJ39S_CAoGTJ5D@zte.com.cn>
-From: Dongliang Mu <dzm91@hust.edu.cn>
-In-Reply-To: <20250603110337057ZRxTnZrzJ39S_CAoGTJ5D@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HwEQrAB3dO5sZz5o9lN7AQ--.54653S2
-Authentication-Results: app2; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoW3GF4UXF4fKF17Kw1UtF1rCrg_yoW7Xr18pF
-	Wqgryxtw47KFy0krW7Gw45Jrn8CFykCan7GF97t3Wktr4fG3yktry7Krn8CrZagryrZFyF
-	va18Kry5u3y2yaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm0b7Iv0xC_Cr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
-	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r
-	1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI
-	12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxV
-	W8Jr0_Cr1UMcIj6x8ErcxFaVAv8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVW8Jr0_Cr1U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCF04k20x
-	vE74AGY7Cv6cx26r4fZr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
-	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVj
-	vjDU0xZFpf9x07jfpndUUUUU=
-X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|PH0PR12MB7813:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0bb5d80e-20a8-4245-49bc-08dda24cea4f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dzRKSzhEbFIrVTJRbVY4djJTelNqUWsvYWxINitPc2N0RXlPSXB3cTlmVFBY?=
+ =?utf-8?B?elJhSjNUSEUvZkkxc3A4OGNsRmNRUDVSZDJmRkx6YmdDdHlXbjc0cEVaaXlD?=
+ =?utf-8?B?UVQyRnBoekxqRHJFdWRaN2dTekdUakczc0R3SW8wR0tLZ2l4dnlRN3JxdGVY?=
+ =?utf-8?B?MnNFWFN2cUtPeEVwNGFKcE16ckszMDVzUUFBRDE1YllTT29lWTRNb09sc1B4?=
+ =?utf-8?B?Nk1mY3IycW05N0ZReVJGeS9WS1pMM2tJVHJhbjVGVHhDc25kSnE2REF6amR1?=
+ =?utf-8?B?NmZSM0phVlpsQy9NQnVuWERCeXhwek9nU2hlOUJ6RnpIczN3VXlZdTNSbHhk?=
+ =?utf-8?B?SjIrTkR0dytjL21uOFl2TEhLQlVLUHVZdW0yNWhucGJDVk94V05uRUt0eHR3?=
+ =?utf-8?B?NE51ZzgvSmI5S3Z6dnhMdjA3Wkx4SlhDNzNwS3lzVXJZSjBkRzc3SE9Fc2Zn?=
+ =?utf-8?B?M2JubG13N0p0MlI3OEFiL0FPWmwrQy9udTNDWi9pMUFjMndzTXVLa1hjVTFU?=
+ =?utf-8?B?OWhSTFVTZHRsdFBuSitvQWxIRzBIbEdyejNHL0x5VmRwZEtHckdiMklud2ZI?=
+ =?utf-8?B?d21rdngvVXhyT1dwZTMyaGYzRGtJaEJBNGxoMGx0V0lCM1VVWGluSXFFTmZD?=
+ =?utf-8?B?ZklGWjBxbWxRUW9vREd6cmE4bkFsSHVBa2F2ZEZRSTlkYVBMS3FzN0N2QzRk?=
+ =?utf-8?B?QWpDczVuZ0JnZFBIa0Z1d0ErU04rNDJaSGgvRCsxMHNJTG1WRG93YjR2d0tX?=
+ =?utf-8?B?YnYvWkEzZmZuU1E4cWMrY0piY1I1OHdqQXAzZWhTS3hldCttWG1tU0hZZU1i?=
+ =?utf-8?B?RklLdGNzemJDSmRJbldpeG11dml2TWFxSzJ6anVGWVVvckNSdENFK3NSQUxS?=
+ =?utf-8?B?eUQ3cWVZcTZqSmxBTHprSWNPYlVoMzlVaWJGcnM1VHllUzNucEZ6bmVFbENI?=
+ =?utf-8?B?YUxBamtxYzFEQmcxVGl6MVExREJjS2c5TUFPeWlpZE9tNUphMUtENDlENE13?=
+ =?utf-8?B?UXVBQWdNNmVBRGJ2UE5LS3ZoOFczSGxVOVV5N0hPRWw0bTNJamJIeXNBSmE4?=
+ =?utf-8?B?S0gwWFNGZ21DVXMwbXU3eGN0eGhhYlZpeDV5V3orNkdEbXRya0lJbFRkMlFR?=
+ =?utf-8?B?Um1UekZUdUp3S3gwbGJkYnk1OExzWFRXK2lGOWdmcDFGbHBhS3BTS1hrNGo3?=
+ =?utf-8?B?ZFlib1FYZWNGckhXSUtMQWM4WGxjNVUwWmlMc081R3Q0ejNxSGRBWnl1Rm0x?=
+ =?utf-8?B?YkRla0VjOVdadWRJRnVRTkd4aUkxc2x5V3YwL0ZzZjYyOHp6Z1BjWFB6NEF5?=
+ =?utf-8?B?ZDRPcUVWdGkwOVdLaW1zeUhKdSt0bU9McWdlaWZVeERsS2hTUmt6ZjdHaDVL?=
+ =?utf-8?B?NjZ6UkxNekxaNG9aUnorVlg2WHVwOUQ1TTMyaHFMZHhGcEdiczRjMWUxSk10?=
+ =?utf-8?B?S3NzNFUvMVo5ZmRQOXRjeHRoNEpJUmlsWDF3L3NqZ2hKWGtRaVp1QjhTaFlN?=
+ =?utf-8?B?WG9YdTJWeUxQbFJQNmVTbzRiK0JMYngyNThoei9UMEFwTkVPRm5hWDRkMkVZ?=
+ =?utf-8?B?TGp1WlpPeW95YWxBY1gwVmZWL09yVGJMVC9qL3pZc245eDZ4NXNGQlQ2QTZP?=
+ =?utf-8?B?emEvQ3pldXVYM0pMVGtMdGhKQjJTQ0ozbEZNaVVCR3AyU1cxTWl3WXRUTmhE?=
+ =?utf-8?B?UVlaV25JemNsbGpROWVLQ2NoYWE0bldIV1Jod0dOdGxXbnZGZDZ5TDYyU25U?=
+ =?utf-8?B?L0cyM2xmek93Y2xZUWFwNG5xZzBCY29wTHpCU1dNdUQ5MmhCSnFtNXFmc0Rw?=
+ =?utf-8?B?Ly9KenRFbUMxc2F2YWhqaVFTVVpGVjg3Yktrc20rMk9meS8xRlRFbFZ3VUk4?=
+ =?utf-8?B?QjNxMjZxbzhDWlljZldneGR0T21yUnVmWEJyWDdJWUUrSDNDK2R2N054cHI0?=
+ =?utf-8?Q?Ae6gV2hfsMw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6440.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U1FGQTRaQmtpMll6di9LMVhTQ0o5enkxcTlIdjZZZHQvUEpTaHREMGhUWHAz?=
+ =?utf-8?B?bHYyU29IQUoxMFdUSkJLVUE3VWsxeXd0M1lTTlVYaFlCRXlsdks5RlNnWk44?=
+ =?utf-8?B?bzZVOVlWMEtFOFZCQWI4VndQcC9mTi85Y21YWDZaWmo1T1lVZjVtaS83ZHdx?=
+ =?utf-8?B?WHl2d2FwQXlxbUh3amExTWR6emp1TXlGRHpBMDV2WGJIbFpGWkRQS1VIK2ZC?=
+ =?utf-8?B?SEY3aHFCQXU0dTNaV09kVU9UOXplS3FCZ0FYUkhVaGtHWnZyOWplUWZQUVgz?=
+ =?utf-8?B?YmdLK0VCMjk0cWZOZXZoYTdZSmNacFFud3gxZm1hU1VaNE5vL0VKdGo0VHdu?=
+ =?utf-8?B?TDNpOG9GM2ozNjRMZmtzUTlraUhsUXBKYzRMSVR6TXRXdC9BQStkb3NnTzlx?=
+ =?utf-8?B?VVhvUnZwWkthY2pYWWVLRWZkd3F2aklvS1pSMkdrc296SG1yUkU3Q3UzQ0U0?=
+ =?utf-8?B?ajZYZSsxRk1UUHFKSWVwTGVMOWpib21Tc0Y1OTRQVUpEdHYzOXlORUppTGtD?=
+ =?utf-8?B?WFpGeEFneFJBRGxsd255ZTNrUTNwR1JSa3NYelptaE81NktFeUdXblc3cGFZ?=
+ =?utf-8?B?T1FGcVlEZmkzUE80MU1pekFzWmlnVVNXY05ZMUQvK2s0eWdHTDdmTllYMnI1?=
+ =?utf-8?B?Z0Y1eVZsTE5DRy9JSDdHbFpxZ2g0ZFBOT2lmRUtwdTFOTkFOTnFQYWw2MW9T?=
+ =?utf-8?B?M205QzNZaHpZY3pqZHFnaktacHdpTnNud2pPQ2t5M0hKVEZGQTV2RGFhL2ln?=
+ =?utf-8?B?UzNSRURHNmxUMlJwWWxKTDdyT3hpbXdOM1NPbm1XZWpaQVB1ODhEbzZUV3RS?=
+ =?utf-8?B?Z0hFV05YcFVnbEZKRkVOdWhiWmhZM01rYWh6c0duUG5hNk1CMWF4VmxxcGIy?=
+ =?utf-8?B?bHlNM0hSc3ZuOGtBa0NMakczSlFBVkRDSzJKRjUwcTM4TFQvUlJ2YTBOOUow?=
+ =?utf-8?B?RTdHN044MC9hejl6MUpJdjhGSVU3S3ZYVEZWdUpMckdEdWgyNHVHckNKT3JN?=
+ =?utf-8?B?MVFLakRzb3U3NUp1L0pPTS9IbHdvZWV2L3NoMlZ5VEdOdU5DaVUybXhhc0lu?=
+ =?utf-8?B?ckJONEVsekU3UjlIbnl0Z0hqRmphTDFBMktPOGh6alYxNUZ1RDlLc2pnZlBC?=
+ =?utf-8?B?czEydXFyWnZ0ZGdBWTFBbldqSW1hL3VWK25nbjNtUDVwOGUxVG1yQWNPaCti?=
+ =?utf-8?B?a0RSdTZ2T0FXeFdTV25FSEZqUENJME1iNHZIVlNxTVROazh5cjVObC9KQjdY?=
+ =?utf-8?B?L0JCR28vUlBNdjlGUmlvaHRJR1lKNnJSbmI5a3hnazVEVnBFY0RnUWIyeDNS?=
+ =?utf-8?B?MEhMWXNSRllKNHB1OGk4Sm00N1BpRW03MHdZYlgvYS9sSDBvc1pDcjEwRUR1?=
+ =?utf-8?B?a3RLZ2VmaUlIYmJ2clZRYnU3YzFsa1E3N2hmT21kditJZDBlaGZMYzQ0VVpT?=
+ =?utf-8?B?bTB6cDV0d0t4NEdHUUp4eGNxQ0x0a2dSK0NQbmw4V3FpYmIzbG5YR1g5UytR?=
+ =?utf-8?B?MmFTd3ZxZC9EZlM3V3gwRGNKWU5ndTlZYVJ3ZkF1RG9KS2lvMkl2TURqU3dQ?=
+ =?utf-8?B?dU1HZ1hVVTlJSXIrUXFpRlpXcGlxQUlFdXZlcGxrdGViQWQvbUNSQ3ZkRGpT?=
+ =?utf-8?B?QW1laEh4MUYwa09GenBkWWwxUEpqOFk1Rk83dFcxVjV5OUw2WWZmMnBCS09z?=
+ =?utf-8?B?VnA2bW10T1pyOTl6VFYxSTlxN3NaS3pFVWRVVnc0NTNwRGhWUFpydElDc2xB?=
+ =?utf-8?B?dTNnVjdBck9idUovZkEwendwRWIzdnNBcFAxTGd3R0s4NGcvMng2bHRhaWdV?=
+ =?utf-8?B?Q0NNQlZVV3Z3dUljRGsvSzYvRC9MR3Y0TDVuRmNyZzRHMGNrbXdLVzFiMExN?=
+ =?utf-8?B?OWU5NDcrV1d3SkJxVnlyNG8wR2hnazhlMG82UHJwU0llc3V1clArK1Q0WnhN?=
+ =?utf-8?B?Mk9FVU01R1BVWDJEakVCbFZMQVVTQytIU2FiaGx4M1NPMEUvYTN3TU8vdjBn?=
+ =?utf-8?B?S3BHUTJ2SzNvS0ZQZ1VZVUtJajFDcWdLdkFWM2l5OXNFK2licDB2V0tzQkw4?=
+ =?utf-8?B?eEtlTmNseHlUUnRXazEzSjVnWDdEVzBOOVA2ZHBpd013bTlzSGN3a1VuRFRp?=
+ =?utf-8?Q?k2zzGj49NUkjgLlEaU21L2VgW?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bb5d80e-20a8-4245-49bc-08dda24cea4f
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6440.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 03:15:39.3175
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8fYNS82t9xQb1o/C2Y+d0C3nIZF97Xd+Jo8AEwjkmTEWNITTFZmlFeWFBtDkiYZqAR1X4hRrnzz2YnHvy9c1Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7813
 
+Hi Ilpo,
 
-On 6/3/25 11:03 AM, jiang.kun2@zte.com.cn wrote:
-> From: Qiu Yutan <qiu.yutan@zte.com.cn>
->
-> translate the "vxlan.rst" into Simplified Chinese
->
-> Update to commit 33a1aaf82bcf("docs: vxlan: add info
-> about device features")
-Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
->
-> Signed-off-by: Qiu Yutan <qiu.yutan@zte.com.cn>
-> Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
-> Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
-> Signed-off-by: xu xin <xu.xin15@zte.com.cn>
-> ---
+Thanks for the review feedback and guidance. Sure, I will take care of 
+addressing the review comments and will ensure to include the key 
+stakeholders / mailing lists recommened by scripts/get_maintainer.pl 
+while submitting the next patch.
 
-Hi Qiu,
+Thanks,
+Pratap
 
-Next time, please add the changelog here, e.g., "v1->v2: remove rst suffix".
+On 5/31/2025 1:06 AM, Ilpo Järvinen wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> 
+> 
+> Hi Pratap,
+> 
+> Please send the next version(s) to all relevant people as indicated by
+> scripts/get_maintainer.pl.
+> 
+> On Fri, 30 May 2025, Pratap Nirujogi wrote:
+> 
+>> Initialize unique name for amdisp i2c adapter, which is used
+>> in the platform driver to detect the matching adapter for
+>> i2c_client creation.
+>>
+>> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@infradead.org
+>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+>> ---
+>>   drivers/i2c/busses/i2c-designware-amdisp.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-designware-amdisp.c b/drivers/i2c/busses/i2c-designware-amdisp.c
+>> index ad6f08338124..e8cb3785c740 100644
+>> --- a/drivers/i2c/busses/i2c-designware-amdisp.c
+>> +++ b/drivers/i2c/busses/i2c-designware-amdisp.c
+>> @@ -62,6 +62,8 @@ static int amd_isp_dw_i2c_plat_probe(struct platform_device *pdev)
+>>
+>>        adap = &isp_i2c_dev->adapter;
+>>        adap->owner = THIS_MODULE;
+>> +     snprintf(adap->name, sizeof(adap->name),
+>> +              "AMDISP DesignWare I2C adapter");
+> 
+> scnprintf() is preferrable over snprintf(). Even if you don't use the
+> return value here, eventually somebody will want to get rid of snprintf()
+> entirely so lets try not add new ones.
+> 
+sure, will use scnprintf() in place of snprintf() in v2.
 
-Dongliang Mu
-
->   .../translations/zh_CN/networking/index.rst   |  2 +-
->   .../translations/zh_CN/networking/vxlan.rst   | 85 +++++++++++++++++++
->   2 files changed, 86 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/translations/zh_CN/networking/vxlan.rst
->
-> diff --git a/Documentation/translations/zh_CN/networking/index.rst b/Documentation/translations/zh_CN/networking/index.rst
-> index d07dd69f980b..0ef6dd989615 100644
-> --- a/Documentation/translations/zh_CN/networking/index.rst
-> +++ b/Documentation/translations/zh_CN/networking/index.rst
-> @@ -21,6 +21,7 @@
->      :maxdepth: 1
->
->      msg_zerocopy
-> +   vxlan
->
->   Todolist:
->
-> @@ -142,7 +143,6 @@ Todolist:
->   *   tuntap
->   *   udplite
->   *   vrf
-> -*   vxlan
->   *   x25
->   *   x25-iface
->   *   xfrm_device
-> diff --git a/Documentation/translations/zh_CN/networking/vxlan.rst b/Documentation/translations/zh_CN/networking/vxlan.rst
-> new file mode 100644
-> index 000000000000..e319eddfcdbe
-> --- /dev/null
-> +++ b/Documentation/translations/zh_CN/networking/vxlan.rst
-> @@ -0,0 +1,85 @@
-> +.. SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +.. include:: ../disclaimer-zh_CN.rst
-> +
-> +:Original: Documentation/networking/vxlan.rst
-> +
-> +:翻译:
-> +
-> + 范雨 Fan Yu <fan.yu9@zte.com.cn>
-> +
-> +:校译:
-> +
-> + - 邱禹潭 Qiu Yutan <qiu.yutan@zte.com.cn>
-> + - 徐鑫 xu xin <xu.xin16@zte.com.cn>
-> +
-> +==========================
-> +虚拟扩展本地局域网协议文档
-> +==========================
-> +
-> +VXLAN 协议是一种隧道协议，旨在解决 IEEE 802.1q 中 VLAN ID（4096）有限的问题。
-> +VXLAN 将标识符的大小扩展到 24 位（16777216）。
-> +
-> +VXLAN 在 IETF RFC 7348 中进行了描述，并已由多家供应商设计实现。
-> +该协议通过 UDP 协议运行，并使用特定目的端口。
-> +本文档介绍了 Linux 内核隧道设备，Openvswitch 也有单独的 VXLAN 实现。
-> +
-> +与大多数隧道不同，VXLAN 是 1 对 N 的网络，而不仅仅是点对点网络。
-> +VXLAN 设备可以通过类似于学习桥接器的方式动态学习另一端点的 IP 地址，也可以利用静态配置的转发条目。
-> +
-> +VXLAN 的管理方式与它的两个近邻 GRE 和 VLAN 相似。
-> +配置 VXLAN 需要 iproute2 的版本与 VXLAN 首次向上游合并的内核版本相匹配。
-> +
-> +1. 创建 vxlan 设备::
-> +
-> +	# ip link add vxlan0 type vxlan id 42 group 239.1.1.1 dev eth1 dstport 4789
-> +
-> +这将创建一个名为 vxlan0 的网络设备，该设备通过 eth1 使用组播组 239.1.1.1 处理转发表中没有对应条目的流量。
-> +目标端口号设置为 IANA 分配的值 4789，VXLAN 的 Linux 实现早于 IANA 选择标准目的端口号的时间。
-> +因此默认使用 Linux 选择的值，以保持向后兼容性。
-> +
-> +2. 删除 vxlan 设备::
-> +
-> +	# ip link delete vxlan0
-> +
-> +3. 查看 vxlan 设备信息::
-> +
-> +	# ip -d link show vxlan0
-> +
-> +使用新的 bridge 命令可以创建、销毁和显示 vxlan 转发表。
-> +
-> +1. 创建vxlan转发表项::
-> +
-> +	# bridge fdb add to 00:17:42:8a:b4:05 dst 192.19.0.2 dev vxlan0
-> +
-> +2. 删除vxlan转发表项::
-> +
-> +	# bridge fdb delete 00:17:42:8a:b4:05 dev vxlan0
-> +
-> +3. 显示vxlan转发表项::
-> +
-> +	# bridge fdb show dev vxlan0
-> +
-> +以下网络接口控制器特性可能表明对 UDP 隧道相关的卸载支持（最常见的是 VXLAN 功能，
-> +但是对特定封装协议的支持取决于网络接口控制器）：
-> +
-> + - `tx-udp_tnl-segmentation`
-> + - `tx-udp_tnl-csum-segmentation`
-> +    对 UDP 封装帧执行 TCP 分段卸载的能力
-> +
-> + - `rx-udp_tunnel-port-offload`
-> +    在接收端解析 UDP 封装帧，使网络接口控制器能够执行协议感知卸载，
-> +    例如内部帧的校验和验证卸载（只有不带协议感知卸载的网络接口控制器才需要）
-> +
-> +对于支持 `rx-udp_tunnel-port-offload` 的设备，可使用 `ethtool` 查询当前卸载端口的列表::
-> +
-> +  $ ethtool --show-tunnels eth0
-> +  Tunnel information for eth0:
-> +    UDP port table 0:
-> +      Size: 4
-> +      Types: vxlan
-> +      No entries
-> +    UDP port table 1:
-> +      Size: 4
-> +      Types: geneve, vxlan-gpe
-> +      Entries (1):
-> +          port 1230, vxlan-gpe
+>>        ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+>>        adap->dev.of_node = pdev->dev.of_node;
+>>        /* use dynamically allocated adapter id */
+>>
+> 
+> --
+>   i.
+> 
 
