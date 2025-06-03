@@ -1,131 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5B116F265;
-	Tue,  3 Jun 2025 14:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B86D238D49
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 14:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748960593; cv=none; b=JDcENl7rU9oissRLnDGsjRXKlmbqcYXBGutpYu7YGhqwldPYOZ+HkEiRsOwhJRUrnwxhDch7os8mhkhJguFMpgwQJuHSYrnQf/XOeW6vqYZEEjc4k5I5BnZVR6m9PcUAHWNv/nqa8Jsww5crTVCnghSReZPIj8QboFZoyrgsMc0=
+	t=1748960686; cv=none; b=FEu9/+4VbaMQf1wZgyCbEa/tT7waKuFHSZtPXlSOa6tLy8KpOHZeaXjTGNWpDW0PyTRsXob1+Mh2MmnQZ1eq2xtey3SqSqkVbRb6qjaW3/ZlP4u+Eg6ihZUPmgAYJwY73sqft7jP9Zpk0uZM9Kpr0vbmp1ManH/LKDARre/9Xc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748960593; c=relaxed/simple;
-	bh=NlWl7a3wFvZKvfFyfM6OWivl5MZ1iDz04JjQdHs6kQ0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bg0/dZHlKHLFYOFSQFiylES90VNAoVlDDPprBbw0f9AOqmBNePWWVDPV772oSvvQ57x4Ox3FaDkOYT5iNdyp120B1AmpGQWA+kVk+V3+EKQizrclxMl0SCM6yygKIUkUVXToxAFrzphlTHyYvk2BIOL3pxfdvV2q+KT6edtwWT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U5thkw33; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748960686; c=relaxed/simple;
+	bh=8P8VpDyERLX0d7YNci0mUwMHPwaKMA33bffoWYiDOoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uss3t2z8FLeW07aDfDdCFs99LVIWmPttrFNWygHgdAYuBOIssrMgAF4qpJ9x9OXUJtiKw44o/G1vlZNSn8BxFnvfKwm8weE5LCEtSyidPvXGD64fMDWy4d2iPUk/TPAQfEd4NVWQ5fwHw7kNz9CCSXqHyDZv46/0YjZ/W1cyIk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcZZUlY4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U5thkw33"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748960592; x=1780496592;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=NlWl7a3wFvZKvfFyfM6OWivl5MZ1iDz04JjQdHs6kQ0=;
-  b=U5thkw33EsQ/WLnjD3DYmHlkAXUApYjM+ccFgp6Qz3kFLaiJr4KRimCz
-   nnh3r/G3QRftEwZl38EOjqyjBfHekDaGA0ki4h3ccsr6Ovk3PG+3DxzNf
-   PFHxHi4gVxK7sLGQ3UfgCy9b2zcjWMkjGp2m9nkrGsZVtSIYUMRl25ren
-   OM9CAuCY9iZv3ilaL15gfRoEuRfXL4t+qyZKAJWE7/tEbU6gEa6RFIyUE
-   x68R7YMhBEfqSnGWo1P/TQl/pltiyFAbHcoVQrVNTyedgz8kiR/HPgQM+
-   Z9BgciOUduuPUs7Vv5VfetcvNGj2kO4w9M5esnM8LXUQS1IRXzBzlSNMZ
-   A==;
-X-CSE-ConnectionGUID: 31D6/OZqQ9uuc5G2Z4uSsw==
-X-CSE-MsgGUID: KXu8NOYtS9WYa6TOudcnCg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="54662928"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="54662928"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:23:11 -0700
-X-CSE-ConnectionGUID: Jr+EHcFaRsyguEqjY01W/Q==
-X-CSE-MsgGUID: gjiUFl1USyCleeRHXFixzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="145836666"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:23:07 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 3 Jun 2025 17:23:04 +0300 (EEST)
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
-    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    William McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-In-Reply-To: <a4a5855c-6d58-4fc5-85d7-4727d27efbe0@linaro.org>
-Message-ID: <e0833d0d-cf1c-b036-c9f4-d27b933330f0@linux.intel.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org> <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com> <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com> <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com> <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org> <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com> <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
- <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com> <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org> <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org> <a4a5855c-6d58-4fc5-85d7-4727d27efbe0@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcZZUlY4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F937C4CEED;
+	Tue,  3 Jun 2025 14:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748960685;
+	bh=8P8VpDyERLX0d7YNci0mUwMHPwaKMA33bffoWYiDOoQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tcZZUlY4T6EfydwCQ090MG6vqI7M4UU9SIKhGZRzBEnWbgz/cP1Uy/djS+adVoJNQ
+	 NwWME4e3vLT/EELNQnDkSgIN0y1aNf4ZGKWCDPo5D/xAPt+q4hyNS6UnuXOlGufVCl
+	 aSfrdoWeAuHab//2ghDX/LhcrAp3UOwKdAf3lstikV4Pwg0tWWdtTEHK0Wlkc2A2J9
+	 0E8lWXJQ7ZH959nry1KBohTeWMB1TgLyBaAE0YS174Cyqn+Qc2mHz4wROWHJwkjj/F
+	 IroNYxEkovS4Ok4uCF7bLQH9LS2TKBRRB9hAYYB6BvLia1enGpH7axLzxTsG99QxfF
+	 VSXmpo7Rrykwg==
+Date: Tue, 3 Jun 2025 16:24:40 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH] PCI/MSI: Size device MSI domain with the maximum number
+ of vectors
+Message-ID: <aD8FqJvZWaZR7J9m@lpieralisi>
+References: <20250603141801.915305-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-643506472-1748960221=:937"
-Content-ID: <9240f5a8-bfe9-8fb6-c912-f3d6e2108718@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603141801.915305-1-maz@kernel.org>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Jun 03, 2025 at 03:18:01PM +0100, Marc Zyngier wrote:
+> Zenghui reports that since 1396e89e09f0 ("genirq/msi: Move prepare()
+> call to per-device allocation"), his Multi-MSI capable device isn't
+> working anymore.
+> 
+> This is a consequence of 15c72f824b32 ("PCI/MSI: Add support for
+> per device MSI[X] domains"), which always creates a MSI domain of
+> size 1, even in the presence of Multi-MSI.
+> 
+> While this was somehow working until then, moving the .prepare()
+> call ends up sizing the ITS table with a tiny value for this device,
+> and making the endpoint driver unhappy.
+> 
+> Instead, always create the domain (and call the .prepare() helper)
+> with the maximum expected size.
+> 
+> Fixes: 1396e89e09f0 ("genirq/msi: Move prepare() call to per-device allocation")
+> Fixes: 15c72f824b32 ("PCI/MSI: Add support for per device MSI[X] domains")
+> Link: https://lore.kernel.org/r/0b1d7aec-1eac-a9cd-502a-339e216e08a1@huawei.com
+> Reported-by: Zenghui Yu <yuzenghui@huawei.com>
+> Tested-by: Zenghui Yu <yuzenghui@huawei.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/pci/msi/irqdomain.c | 5 +++--
+>  drivers/pci/msi/msi.c       | 8 ++++----
+>  drivers/pci/msi/msi.h       | 2 +-
+>  3 files changed, 8 insertions(+), 7 deletions(-)
 
---8323328-643506472-1748960221=:937
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <d97beb54-0e1e-84fe-90fe-278100d12192@linux.intel.com>
+Reviewed-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 
-On Tue, 3 Jun 2025, Tudor Ambarus wrote:
-> On 6/3/25 11:48 AM, Tudor Ambarus wrote:
-> > On 6/3/25 11:36 AM, Tudor Ambarus wrote:
-> >> On 6/3/25 9:13 AM, Ilpo J=E4rvinen wrote:
-> >>> So please test if this patch solves your problem:
-> >>
-> >> It fails in a different way, the bridge window resource never gets
-> >> assigned with the proposed patch.
-> >>
-> >> With the patch applied: https://termbin.com/h3w0
-> >=20
-> > above is no revert and with the proposed fix. It also contains the
-> > prints https://termbin.com/g4zn
-> >=20
-> > It seems the prints in pbus_size_mem are not longer hit, likely because
-> > of the new condition added: ``!pdev_resources_assignable(dev) ||``,
-> > pci_dev_for_each_resource() finishes without doing anything.
-> >=20
-> >> With the blamed commit reverted: https://termbin.com/3rh6
-> >=20
->=20
-> I think I found the inconsistency.
->=20
-> __pci_bus_assign_resources()
-> =09pbus_assign_resources_sorted()
-> =09=09pdev_sort_resources(dev, &head);
->=20
-> But pdev_sort_resources() is called with a newly LIST_HEAD(head), not
-> with realloc_head, thus the resources never get sorted.
-
-pdev_sort_resources() is not supposed to add resources into realloc_head=20
-but just collects all the relevant resources in the descending order by
-size.
-
-There are two main lists here. The head list contains all relevant=20
-resources we're going to process and realloc_head keeps track which of=20
-them are optional (or optional in part, that is, some resources have the=20
-base size and the optional size).
-
-__assign_resources_sorted() will apply the optional sizes from=20
-realloc_head and re-sorts the head list while changing the sizes.
-If not all resources can be assigned, rollback happens and base sizes are=
-=20
-assigned first, and then reassign_resources_sorted() handles the=20
-realloc_head ones afterwards for as many resources as possible.
-
-> pdev_sort_resources() exits early at
-> =09``if (!pdev_resources_assignable(dev))``
-
-Yes it does, for 0001:01:00.0.
-
---=20
- i.
---8323328-643506472-1748960221=:937--
+> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+> index d7ba8795d60f..c05152733993 100644
+> --- a/drivers/pci/msi/irqdomain.c
+> +++ b/drivers/pci/msi/irqdomain.c
+> @@ -271,6 +271,7 @@ static bool pci_create_device_domain(struct pci_dev *pdev, const struct msi_doma
+>  /**
+>   * pci_setup_msi_device_domain - Setup a device MSI interrupt domain
+>   * @pdev:	The PCI device to create the domain on
+> + * @hwsize:	The maximum number of MSI vectors
+>   *
+>   * Return:
+>   *  True when:
+> @@ -287,7 +288,7 @@ static bool pci_create_device_domain(struct pci_dev *pdev, const struct msi_doma
+>   *	- The device is removed
+>   *	- MSI is disabled and a MSI-X domain is created
+>   */
+> -bool pci_setup_msi_device_domain(struct pci_dev *pdev)
+> +bool pci_setup_msi_device_domain(struct pci_dev *pdev, unsigned int hwsize)
+>  {
+>  	if (WARN_ON_ONCE(pdev->msix_enabled))
+>  		return false;
+> @@ -297,7 +298,7 @@ bool pci_setup_msi_device_domain(struct pci_dev *pdev)
+>  	if (pci_match_device_domain(pdev, DOMAIN_BUS_PCI_DEVICE_MSIX))
+>  		msi_remove_device_irq_domain(&pdev->dev, MSI_DEFAULT_DOMAIN);
+>  
+> -	return pci_create_device_domain(pdev, &pci_msi_template, 1);
+> +	return pci_create_device_domain(pdev, &pci_msi_template, hwsize);
+>  }
+>  
+>  /**
+> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+> index d6ce04054702..6ede55a7c5e6 100644
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -439,16 +439,16 @@ int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+>  	if (nvec < minvec)
+>  		return -ENOSPC;
+>  
+> -	if (nvec > maxvec)
+> -		nvec = maxvec;
+> -
+>  	rc = pci_setup_msi_context(dev);
+>  	if (rc)
+>  		return rc;
+>  
+> -	if (!pci_setup_msi_device_domain(dev))
+> +	if (!pci_setup_msi_device_domain(dev, nvec))
+>  		return -ENODEV;
+>  
+> +	if (nvec > maxvec)
+> +		nvec = maxvec;
+> +
+>  	for (;;) {
+>  		if (affd) {
+>  			nvec = irq_calc_affinity_vectors(minvec, nvec, affd);
+> diff --git a/drivers/pci/msi/msi.h b/drivers/pci/msi/msi.h
+> index fc70b601e942..0b420b319f50 100644
+> --- a/drivers/pci/msi/msi.h
+> +++ b/drivers/pci/msi/msi.h
+> @@ -107,7 +107,7 @@ enum support_mode {
+>  };
+>  
+>  bool pci_msi_domain_supports(struct pci_dev *dev, unsigned int feature_mask, enum support_mode mode);
+> -bool pci_setup_msi_device_domain(struct pci_dev *pdev);
+> +bool pci_setup_msi_device_domain(struct pci_dev *pdev, unsigned int hwsize);
+>  bool pci_setup_msix_device_domain(struct pci_dev *pdev, unsigned int hwsize);
+>  
+>  /* Legacy (!IRQDOMAIN) fallbacks */
+> -- 
+> 2.47.2
+> 
