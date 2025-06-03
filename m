@@ -1,32 +1,43 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7EA8494;
-	Tue,  3 Jun 2025 06:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC6920E330
+	for <linux-kernel@vger.kernel.org>; Tue,  3 Jun 2025 06:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748931153; cv=none; b=OeMiI7C0iDyDZRHMRG0pkNrnFVqQJMO2fFiXa+ujjkuqYPhVMCJHd9ce8wxjIGUClxP/deG922/Y64SEJNMXmMbCzpTpLYTAwNyYDcWY8amxZPHHmPeQ0oYcvvBBSrTOAzsx/PudSp6Qi2HWlLm5u9C6p1v/lnJ37XOgTjGqk6M=
+	t=1748931309; cv=none; b=Actoda+U67r6adGI6lNhc89uPuHy+u3kCvNMiM6apZQQi89C5TBKT3sFhP7MsnMFHolhiriy5OYkQLhY1l/2slBsU7hJR95Wqia63nddsQfdkJiHEQ3nsxjnlkATZOeAaRjceJ+gS03bQ1MMVrPVhRVwgxsRQf1FWpAFehzMPqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748931153; c=relaxed/simple;
-	bh=BLBicKxUdfy3A8BLWdtrjmCmWquuwY3rJHu/dkcCUfM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WUKODcO/5bNSUTWqJKaqeGHyLBx5nsfh5Yz8vezzdxPA8PRaFqp76ebnL/SD1iUHyK6kKU0xFYY3vGj9Jij9yYUvwmrz8Ttcggxl5u9OzvXp/Vfa0wtSOmSe+1CpxZcLubA8vi67dQlj1x8oYwYuTTNXDmzmpb3xzNE+Gl7WJ48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowADXhtXpkD5oBobTAg--.17728S2;
-	Tue, 03 Jun 2025 14:06:33 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: cjd@cjdns.fr,
-	daniel.lezcano@linaro.org,
-	tglx@linutronix.de
-Cc: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] clocksource/timer-econet-en751221: Convert comma to semicolon
-Date: Tue,  3 Jun 2025 14:04:50 +0800
-Message-Id: <20250603060450.1310204-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1748931309; c=relaxed/simple;
+	bh=1Ea9a0evHerWA9sQo7KubQ3sXTMJTQmuVWo8mtMj5yA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KCk4MySNwnQgJoFIvm1ETIOE0U9a6zq9tufjtdnaLPxHaKJP2p8dRJyAmRCuCJuFYnfO3Dw2r7o+lAjbzqRoIbfSZpBV7WjAOIXv8ZmrspeeRnyNgC2BmueKnmXYkjRE8mw/QDvZo91qGfVSR2+e0LF2OB5VP47o/ETcqTfvED0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from abreu.mpip-mainz.mpg.de (guest-wlan-ext.mpip-mainz.mpg.de [194.95.63.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id D4F7661E647A7;
+	Tue, 03 Jun 2025 08:14:18 +0200 (CEST)
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Juan Yescas <jyescas@google.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: Kconfig: Use verb *use* in plural form in description
+Date: Tue,  3 Jun 2025 08:13:03 +0200
+Message-ID: <20250603061303.479551-2-pmenzel@molgen.mpg.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,53 +45,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADXhtXpkD5oBobTAg--.17728S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gr4rCw4kuw4kuw1xGrW3ZFb_yoWDCFc_Kr
-	n2qrnrCrn0yr90gw4Duw17Za9akF1vqw1Fqrn2qasxAa4UAF1qkr4DZr1293s8u3y0yF98
-	C3y7GFW5Zw13WjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbIAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-	cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
-	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_
-	Jw1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
-	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
-	xVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
-	8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280
-	aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyT
-	uYvjfU1l1vDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Replace comma between expressions with semicolons.
+*workloads* is plural requiring the verb *use* in plural form.
 
-Using a ',' in place of a ';' can have unintended side effects.
-Although that is not the case here, it is seems best to use ';'
-unless ',' is intended.
-
-Found by inspection.
-No functional change intended.
-Compile tested only.
-
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Fixes: e13e7922d034 ("mm: add CONFIG_PAGE_BLOCK_ORDER to select page block order")
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
 ---
- drivers/clocksource/timer-econet-en751221.c | 2 +-
+Reading the sentence it feels like, something is missing before the
+*please*, but I am no native speaker.
+
+ mm/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-econet-en751221.c b/drivers/clocksource/timer-econet-en751221.c
-index 3b449fdaafee..4008076b1a21 100644
---- a/drivers/clocksource/timer-econet-en751221.c
-+++ b/drivers/clocksource/timer-econet-en751221.c
-@@ -146,7 +146,7 @@ static int __init cevt_init(struct device_node *np)
- 	for_each_possible_cpu(i) {
- 		struct clock_event_device *cd = &per_cpu(econet_timer_pcpu, i);
+diff --git a/mm/Kconfig b/mm/Kconfig
+index f8bb8f070d0d..e3a07687ed0b 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1022,7 +1022,7 @@ config PAGE_BLOCK_ORDER
+ 	  or MAX_PAGE_ORDER.
  
--		cd->rating		= 310,
-+		cd->rating		= 310;
- 		cd->features		= CLOCK_EVT_FEAT_ONESHOT |
- 					  CLOCK_EVT_FEAT_C3STOP |
- 					  CLOCK_EVT_FEAT_PERCPU;
+ 	  Reducing pageblock order can negatively impact THP generation
+-	  success rate. If your workloads uses THP heavily, please use this
++	  success rate. If your workloads use THP heavily, please use this
+ 	  option with caution.
+ 
+ 	  Don't change if unsure.
 -- 
-2.25.1
+2.49.0
 
