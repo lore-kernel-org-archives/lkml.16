@@ -1,184 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012011.outbound.protection.outlook.com [52.101.66.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6EB1A5BBD;
-	Wed,  4 Jun 2025 12:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749038882; cv=none; b=CF8SG9CSEqrT/AzhR9ixoVFrGfyJLRN/u5SHDxWkfZDIapZ5Q/VAyFTU9n0QKvMslNuCergZWGbEtEeBfutXmI7vLBhx+nRKh2WCyLSxDtSNyuFtsdQZYGq3FDfkj0O0KO0wu2CEAuI/cBYViefTUpCx4kjBhtX6Pv2lOdhMULM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749038882; c=relaxed/simple;
-	bh=JGjvHMM1UBKGBFe4oZgVTLwSUN2F5OP2sQO5HIWNYtY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kEzEF1doqfEZi16N1bw6Kt5Su8gWoDJH5IZrKlQrwMWLQBP60l0QppqrvbVVSVCkLIsFkzTO8qHXNg+9zL9Erx1cBD4lPATGitkb5TEAFaowFVY0VkIspondTSyu2nmxyFSpkZ2IYAhHr/GvfPlGOVke0K8c300fBZlIdxEXKVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdBrv4tr; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2F61E3772;
+	Wed,  4 Jun 2025 12:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749038911; cv=fail; b=eQ7NpMNJ6ikFzldXTkzy79UUTmWb++1rU7EsFVs/VP/pHz9i4H3DX+TY3QKuPKfCG4YnfnprcQ5LAPvm5J2nhr1VO7yw1ui8GBFPNhMOZs8vEKtqajYbgeKHd2VDhv6/8D8/u5u2bj1fvGyZMEWydy+GDaffUICqRZXftf4WZgM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749038911; c=relaxed/simple;
+	bh=i/iuxuOmaoPEJHULOocaHuC0pIzW55L3OGkFbU44+5Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nZqcA8/rzwQU4WOZ9HMxyLEHpc8Ddj9mC0wfEnDTQsOj/bu2Lie1NlXwJxBc6Y2UNnVGml6+OzSaq/axZmBdtZK9qmqltE/NG7MHTlBbtu6gZi05+kBOTtAShFJFoNFV2g3K0q3ZC0r2rvk0wpncvaVSiE+QjMaPzlfDDYeq+Fw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=jwIb6/Zo; arc=fail smtp.client-ip=52.101.66.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdBrv4tr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30703C4CEE7;
-	Wed,  4 Jun 2025 12:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749038881;
-	bh=JGjvHMM1UBKGBFe4oZgVTLwSUN2F5OP2sQO5HIWNYtY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FdBrv4trwT8p4QmYOPtphbxL67Hs8mAoetDvfecAQ9X7mG6NEeEg86fFwRBKIb5yw
-	 9xxA45tU48kgDkxYCJkFKBOpwBzuEMTDJ3PQWfYiiAatmaX9jr2GtmOZCU1L+epMbz
-	 EWJMTuS3BxLWO+cCTLzndZATxUOdxrbAcvXxvfnSWsbq63nCDaWOhhZX4CorFaNO+n
-	 32r4wf8qolXonz5q7PTShuuy0FC0HURETE7XOt5R8IuXw88ZsOVx3MfhjuQHSl3v0k
-	 9peoZreNNQfq/ZyBjuMScg60tkc2suxcYqRBv4w5Ale/r14DjqywcHmJ0O7ZnE1NWP
-	 48tRCM0HZeGng==
-Message-ID: <cc4dbf7c-e023-403c-88be-4691f97a0ff0@kernel.org>
-Date: Wed, 4 Jun 2025 14:07:52 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="jwIb6/Zo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VesxxYSyN2i3d1KQ7gfMThLV07FzPMoAKQAoU5cfRCerqxARJp2l7hSsHAP67NaQqUewxzCbDjwH3noJh//JYmQWVnRCLeN9RkAmwiuuPJGz9Q5WAbXka8RKwUOAlml3bKkLGv1G2KTyh2/fy/mq7y7afQb6fdnOgIU8nfPf4/+VKRwpgEnMKN/gaVX55BOI916VRG/J4NrP5dw0MqQMeNBF0Iq2/Ql8yVXJhRgC7DXweI2SvtAGdCdIvwmtbAkNr8UT84n23PI8T7XP2gJVDhfldSlcqd0Ncci9LCkJdepUA3Usp8U+6tktW+N3fGCYQkGyE7PY1BzP+gJthpXNjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i/iuxuOmaoPEJHULOocaHuC0pIzW55L3OGkFbU44+5Y=;
+ b=eJlten50TYgfSqsStgH3dwkUhdaSS1vJ/YUuvnMMv71Dxz6w6Dv+Drh9hqgkmj5gzfhee87syAeNWixJRXAcZqpeFQ3cFkPmZO3Mh5g0OSegxawdAemGhSo5pVb7eyO2T4tHAiybDCpJ6yCf/W5vJrME71Rvc7tTn7UGfjCSjBeLm2lAWNvtxVJbovvID3QSDSgMH8BapG3DeVJYPHz+FYCT3Yeud4zYwtyVqC3XRlR5+RPOR42f0RAtgC3nVJYX1mos4D/sgyGBO35IKRaqbDsKaIIO7KtQw5MRodhl9TOk3HmbRlPXPyvKXuPrfn+aLN4iMyhYmCcK0BZqOptYMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i/iuxuOmaoPEJHULOocaHuC0pIzW55L3OGkFbU44+5Y=;
+ b=jwIb6/Zo4yhzmQ2yqAUT+fVy6GY5pt6tVgSHLoA1HzKjyYbjWlDZv/weOR0bft+jyVuwQ8bmyvRcfP3uL0aeuncMKCRyKBMi3B4u7KL43SHSenOOskiNGQp2kpwaAnn2SVMUD29jnUVSDV28iI/lQOyiJy9zXg2OFGpQBtE5wjBU+yUHSy1cT6TTU8Z4S+S2qw34rvN7/Os5LTwvkjp0a7tqFVdS3m7Zq+bNjF1zlvxkDxaiTSHp73y7jJpMbKdFEk0prI+PAcF/EfOvIFwaiMFP0RmFtMiIO3txRpjmVzpue0M5xZV4vsj9CB4DW23BPvDsnViXcKTEc2AFToN9qA==
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by DBAPR04MB7414.eurprd04.prod.outlook.com (2603:10a6:10:1a0::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Wed, 4 Jun
+ 2025 12:08:26 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8813.018; Wed, 4 Jun 2025
+ 12:08:26 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: Russell King <linux@armlinux.org.uk>
+CC: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>, Florian Fainelli
+	<f.fainelli@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>,
+	"hkallweit1@gmail.com" <hkallweit1@gmail.com>, "davem@davemloft.net"
+	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	"xiaolei.wang@windriver.com" <xiaolei.wang@windriver.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: RE: [PATCH v2 net] net: phy: clear phydev->devlink when the link is
+ deleted
+Thread-Topic: [PATCH v2 net] net: phy: clear phydev->devlink when the link is
+ deleted
+Thread-Index: AQHby8C/1AHS0HJUFE6a7bJae4mQobPgVKIAgBGjJoCAAG4doIAAUgsAgAA/5PA=
+Date: Wed, 4 Jun 2025 12:08:26 +0000
+Message-ID:
+ <PAXPR04MB851003DFCAA705E17F7B7117886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
+References: <20250523083759.3741168-1-wei.fang@nxp.com>
+ <8b947cec-f559-40b4-a0e0-7a506fd89341@gmail.com>
+ <d696a426-40bb-4c1a-b42d-990fb690de5e@quicinc.com>
+ <PAXPR04MB85107D8AB628CC9814C9B230886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <aD_-xLBCswtemwee@shell.armlinux.org.uk>
+In-Reply-To: <aD_-xLBCswtemwee@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|DBAPR04MB7414:EE_
+x-ms-office365-filtering-correlation-id: 6f39651f-f820-41d3-cefd-08dda36082d9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?FWrHYXucZ+QQ9G41hLtOpRVPM2Tr8g8FO3YCZoWdIDxyJJsNKO5NGJIC1Q2C?=
+ =?us-ascii?Q?HhLBXmhBiPJ22FnqzJUGXCmo9e0Iili+m5wg+IWsgnMI/fSRu086Qbe4zi27?=
+ =?us-ascii?Q?x5f5BQ48dPo8tUN0Zcf4VDOMeKRXCLw3T53ivLShyhY3mdfOEujGqDablJuH?=
+ =?us-ascii?Q?XI+Ai8Vl4rdzjNpTmKMk5pVbyh7Jj2QhcbqTDADot+O7xRi6NyPzSOKxKZNs?=
+ =?us-ascii?Q?NicUyiCIQj0jJSwwtrV6/EoOWAQ9FUzCezdN2G9mm9RmBP7GMW84uHUH4VGK?=
+ =?us-ascii?Q?kR9ff/qMSM2lkElITmxQtLUMm246gTshc1eUyzE8CdvrkQKJkhq9V0j0wlEY?=
+ =?us-ascii?Q?zdnwE+LHb2QEy1QfL4nArKrLg8P57CkLWHUGdvNiHebJt7GGm/6t1W3LhdoI?=
+ =?us-ascii?Q?LERaWoJVr93fkkXGQq0jpzB8Yq2Fc5OQVasv0ktKw1o+DrOVoWI5RTDMgd0k?=
+ =?us-ascii?Q?kkfmfMmatWJ2o0+1BwsQtI9jKDomPduK8cd8R/yN2WfajBnK3cft7HeNvog6?=
+ =?us-ascii?Q?lVFVkQlDFun7AxkOb1tgecbwKfGcCiVpLxAaj4qZGCI2StsiI8kRyhDkdkJn?=
+ =?us-ascii?Q?7XnuLauzQQpGfwHQOZcywiTMYolUfloeW/P99dAay/GaEWFNkJGqqXqRuusK?=
+ =?us-ascii?Q?JHzInabslRL5WlGCKrOw5pqKhzu0jTzcnKAJCpdVkN9nhaRpYDX+eD/NnBL2?=
+ =?us-ascii?Q?spuKmCeq313ZFrgH9+3QtvUpNE5J+bLBADWRuvJDbD8UJ1qTLwAoTWy4Qh2+?=
+ =?us-ascii?Q?577Ht+m1D2tEvIAZpkOUdBpMPy5vor6D/OlUR2nbzy8zpjRK7iJCa9+tg1G2?=
+ =?us-ascii?Q?m94a/luQF2ZXDNAnWQya4lfVBGLuslhCQKgzH4FhMCoGYOdnvltKWpx6FnnZ?=
+ =?us-ascii?Q?hk/jTp52PnoX2vP6BZT5jwl1zVi75MSQsz2jIPO38HjUvqm/okiCkp9Su6Dw?=
+ =?us-ascii?Q?EWa9LUfEKVJtmAKpRdXaDwcJaXzh0jJoPx2pHvKa0nzYAQMqb4Gc3xYFoXT3?=
+ =?us-ascii?Q?xujoGZTsOIzmq6UhiZeOcW79C9FZZ9BbeKZ4JPe9dg4sxt1f+QPybzwZisfL?=
+ =?us-ascii?Q?Z6Ej/wf/W7/lUIwPRKV6Y7NEPsH1sxr3CHeI97T5EVfmilUfGf358c0tr+XA?=
+ =?us-ascii?Q?7yCctaH5Oi1JFN5reX80+EJyWejgchZjZzqkNCNwKWRIe12Mn6mgEylZVr4W?=
+ =?us-ascii?Q?XeDYRm+K6Hf0R3LHqhenh1gQAsWn5EdXIAMM9QQA5seNfznNimvXSbwVK32X?=
+ =?us-ascii?Q?ll3FXwBQhWXsBlFNXCt5ragPqboinNnyiaMy6vX1G9xFI7QyqsoQMf2ROFuX?=
+ =?us-ascii?Q?I/ru1ehNL3AII4PjgOnhR+7ek7peikKAgvPhpNyXrSkIMOsxqey1QZ6d668L?=
+ =?us-ascii?Q?nqz11SykD30pZu5obpsv0Kurikzf++1CGxFMbhsPQYRVF9bmqIzN+9O/Cdg8?=
+ =?us-ascii?Q?+uI1DZ+IbGM=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?4+b0swPnJSvij14Yad6Fz6cv2OR2bL438pgWXjuI6zEC4KPoT5WBdezkzg+W?=
+ =?us-ascii?Q?B40Tas64Y1GkdZaHKndTC31dj0MwhPGBirBnOfJ6+GDO64T7rA5tu5pDMtT7?=
+ =?us-ascii?Q?TaqNissGBF+IoQnEqXJFMSRBMasc/+HdUQCbOaLPqIGYWg8q7hu6eCmfTze3?=
+ =?us-ascii?Q?n2M1oko4yszavjHDqlz4ykox2o+HFl21m3CIfyvS1CGvL3PLeWi/TJxbBPnm?=
+ =?us-ascii?Q?VbbDQrYm+5CTA8oLRg5NMQQHcepJ1v0aRfIKdIiis5rFssiFzZ0CoVu3/QXc?=
+ =?us-ascii?Q?ykHoiuoHNJWMow21awegY7KJsg9zPgHCu5re17xgrYpmE2i1DBoaPo/uW09S?=
+ =?us-ascii?Q?AJfA9Tp7UrWypwUqSw+VJoOZxSXFNEWEIp8CzngfqOCw8fHqVvf6aUsV881I?=
+ =?us-ascii?Q?Xcsr8cEngvaoP1nLI/clJWJFkcXf6z+zCwXafvQBeny5DCCkzqbKg09bjksP?=
+ =?us-ascii?Q?ny7kiaSOjLAaYIYxXGVMlvnxgT0b8Ai7qkzq/n3fcD+4GuPin8FLfYZFFLyT?=
+ =?us-ascii?Q?mp9rqKsW2us2PfN33nJ3K6hL/RuT1Mz6saeL0eHWfZYVFKS8uXOZg1XTrKbB?=
+ =?us-ascii?Q?QdXkpx28HYTKSRIruYFAnmqTqas6jjZfkf8B9hhEpIggyIgUwO2UwJS3AAzr?=
+ =?us-ascii?Q?0EUf4siiICa7/LiX5ITkldaOCC03kaSeed8+qfWVuaQqJdYzKLgxTZfkyTuu?=
+ =?us-ascii?Q?NhzYxZMyRjXNEPuSvHaVATS8yLu4HZe62G6tKac98WdTPL6xBY6BajCLGzb7?=
+ =?us-ascii?Q?FI9QWcaUrvTJ2oy6Wt03Dojd6KMDllb7q8FDSvIIBYFbT1d9qT69lgrJz4nx?=
+ =?us-ascii?Q?gSEXHP1oPfmAoRZkHeW92/+0qs1qA/Jn/mLd1o6kswpMMCDW5rjYXmoHvmIp?=
+ =?us-ascii?Q?JzXvHrb12/g50iz8BkSF5GN+GHnqQ0un/OvUGHnWpiImzTunY6Yq3YTEsQJt?=
+ =?us-ascii?Q?WYweTpQhrMoMfs347D2Mm5NMtbBeeBP0rNbTlHY5fhB1VAWzpgiawvP5zuo8?=
+ =?us-ascii?Q?EGqTnVC1kZqepRBTQwAL/skYSwx6KkWGeKBN1bk1F3JLGy2B6cR715lfa6vJ?=
+ =?us-ascii?Q?o//y1o3eGsD0RODGPLY+x0QqiRlL6Mb+9fZe0Ct2EDx6f8piYuKiZqKZUHVa?=
+ =?us-ascii?Q?Ngj8McTgO3lWqM9OTeqW6FuVycFna29gL+2NBa+6169rf8cI+9RS8gJKPDt+?=
+ =?us-ascii?Q?DfQwm4+sb/c+/IzoFGlegy290c4pOcHqxwtCgl8b2gEgyXzWfW8zIpV9w+Eq?=
+ =?us-ascii?Q?zywG1KBjA+H0rGAPMr1+gEJ7BsBQJ9+WMaB3CDH2T6pguyrC8TAUYzXOhEkl?=
+ =?us-ascii?Q?3AQX9CHvW/goqGRnaxgJSF2U44Hf5eVcN/VZu3Fm6Z0XcoFxJpM6/n7QZX0e?=
+ =?us-ascii?Q?EofXDgMQOIXIW/JlPBlid3tmyKer7R3BkSt1+TycqAZVUakN5ru6R+Ob6OUA?=
+ =?us-ascii?Q?M/mGx1HXWxpLb3DEZugCpo/O+7XvXwyR/b0tiA5GqgMI26qDgu9giuChJ8Di?=
+ =?us-ascii?Q?m0dN8PBtPNxgkRTHMQ4QBdP7LVyuDi0lVakmieC9un6JvbSjMwk8Nnk9NTKz?=
+ =?us-ascii?Q?qrUWjVkQafJ29+Kkk5g=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/8] drm/imagination: Use pwrseq for TH1520 GPU power
- management
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
- Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns
- <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
- <CGME20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1@eucas1p1.samsung.com>
- <20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
- <20250603-whispering-jaybird-of-thunder-f87867@kuoka>
- <d42a8c49-7ad2-49ef-bd9c-1e3d9981b58e@samsung.com>
- <e5a0bee2-ff74-47cf-ad2c-0c78b57ae6cf@kernel.org>
- <a6a29e58-8613-47f0-9e5c-d125da7ddb49@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <a6a29e58-8613-47f0-9e5c-d125da7ddb49@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f39651f-f820-41d3-cefd-08dda36082d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2025 12:08:26.3781
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cr3XRPFtgtmXJMtxbmd4mVbD7F+qIROMknlk3bd6mDRGPoqPseSD9AKruPUouIdTt3T1mCHM8jWzROEoUs3cAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7414
 
-On 04/06/2025 13:53, Michal Wilczynski wrote:
->>>
->>> The GPU node will depend on the AON node, which will be the sole
->>> provider for the 'gpu-power' sequencer (based on the discussion in patch
->>> 1).
->>>
->>> Therefore, if the AON/pwrseq driver has already completed its probe, and
->>> devm_pwrseq_get() in the GPU driver subsequently returns -EPROBE_DEFER
->>> (because pwrseq_get found 'no match' on the bus for 'gpu-power'), the
->>> interpretation is that the AON driver did not register this optional
->>> sequencer. Since AON is the only anticipated source, it implies the
->>> sequencer won't become available later from its designated provider.
->>
->> I don't understand why you made this assumption. AON could be a module
->> and this driver built-in. AON will likely probe later.
-> 
-> You're absolutely right that AON could be a module and would generally
-> probe later in that scenario. However, the GPU device also has a
-> 'power-domains = <&aon TH1520_GPU_PD>' dependency. If the AON driver (as
-> the PM domain provider) were a late probing module, the GPU driver's
-> probe would hit -EPROBE_DEFER when its power domain is requested
-> which happens before attempting to get other resources like a power
-> sequencer.
+> On Wed, Jun 04, 2025 at 06:00:54AM +0000, Wei Fang wrote:
+> > I think this issue is also introduced by the commit bc66fa87d4fd
+> > ("net: phy: Add link between phy dev and mac dev"). I suggested
+> > to change the DL_FLAG_STATELESS flag to
+> > DL_FLAG_AUTOREMOVE_SUPPLIER to solve this issue, so that
+> > the consumer (MAC controller) driver will be automatically removed
+> > when the link is removed. The changes are as follows.
+>=20
+> I suspect this still has problems. This is fine if the PHY device is
+> going away and as you say device_del() is called.
+>=20
+> However, you need to consider the case where a MAC driver attaches the
+> PHY during .ndo_open and releases it during .ndo_release. These will
+> happen multiple times.
 
-Huh, so basically you imply certain hardware design and certain DTS
-description in your driver code. Well, that's clearly fragile design to
-me, because you should not rely how hardware properties are presented in
-DTS. Will work here on th1520 with this DTS, won't work with something else.
+.ndo_release? Do you mean .ndo_stop?
 
-Especially that this looks like generic Imagination GPU code, common to
-multiple devices, not TH1520 only specific.
+>=20
+> Each time the MAC driver attaches to the PHY via .ndo_open, we will
+> call device_link_add(), but the device link will not be removed when
+> .ndo_release is called.
+>=20
+> Either device_link_add() will fail, or we will eat memory each time
+> the device is closed and re-opened.
 
-> 
-> So, if the GPU driver's code does reach the devm_pwrseq_get(dev,
-> "gpu-power") call, it strongly implies the AON driver has already
-> successfully probed.
-> 
-> This leads to the core challenge with the optional 'gpu-power'
-> sequencer: Even if the AON driver has already probed, if it then chooses
-> not to register the "gpu-power" sequence (because it's an optional
-> feature), pwrseq_get() will still find "no device matched" on the
-> pwrseq_bus and return EPROBE_DEFER.
-> 
-> If the GPU driver defers here, as it normally should for -EPROBE_DEFER,
-> it could wait indefinitely for an optional sequence that its
-> already probed AON provider will not supply.
-> 
-> Anyway I think you're right, that this is probably confusing and we
-> shouldn't rely on this behavior.
-> 
-> To solve this, and to allow the GPU driver to correctly handle
-> -EPROBE_DEFER when a sequencer is genuinely expected, I propose using a
-> boolean property on the GPU's DT node, e.g.
-> img,gpu-expects-power-sequencer. If the GPU node provides this property
-> it means the pwrseq 'gpu-power' is required.
+Below is what I find in the kernel doc of device_link_add().
+https://elixir.bootlin.com/linux/v6.15/source/drivers/base/core.c#L711
 
-No, that would be driver design in DTS.
+if a device link between the given @consumer and @supplier pair
+exists already when this function is called for them, the existing link wil=
+l
+be returned regardless of its current type and status.
 
-I think the main problem is the pwrseq API: you should get via phandle,
-not name of the pwrseq controller. That's how all producer-consumer
-relationships are done in OF platforms.
+Therefore, it will not create new link each time the netdev is re-opened.
 
-It's also fragile to rely on names in case of systems with multiple
-similar devices. This does not affect your platform and this hardware in
-general, but shows issues with interface: imagine multiple gpus and
-multiple pwr sequence devices. Which one should be obtained?
-gpu-power-1? But if GPUs are the same class of devices (e.g. 2x TG1520
-GPU) this is just imprecise.
+>=20
+> If that is correct, then we're trading one problem for another.
+>=20
 
-
-Best regards,
-Krzysztof
