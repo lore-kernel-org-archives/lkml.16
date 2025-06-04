@@ -1,228 +1,199 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3E8748F
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 11:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877C128DF3A
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 11:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749035343; cv=none; b=WjpPOc0/aBP3etIJV7Lak1hYmYKOjgLDV+YNYxOMpWAmbL1F5KgQUZi5rc3kqEuT/oHtL+e67OwOggkI/1L4qOMs2HafRDppmlhji0I2jZ165sVD8bJbCkyNTQ/nlEuAFCg7NfJzD4nlSpbqifU9Sez5JjSR13xXgJjSS0u175g=
+	t=1749035362; cv=none; b=LqBsqRaho7yRz1zac0Fndj+Ik085izS6y9RkKW2CF8R1MxPkPhhadQN8szonVD3aHfIgZARQuyCGt8Xd4uo3BFpueF4I7EeKHHLgUvkhJGc4pe3FDGFZA9SmvczwZ9TgMUBIDIJZ6Jh3EeZuhi41yrInTJDPgSTEDZMm0pCYObM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749035343; c=relaxed/simple;
-	bh=pyi5fUpMBDA7xVdsAPRF/Q9ktcBAwK+luYZR5u5s9nc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W7v+kToaeIjG65tJEzD15cq3IqW83FjnBUnR+ZFUBQibVd42rDsguN/aW+klGpdJL3w3md8VtJvCzRTu8zddQDPi9O9Cw1HTCEr+lnrOwvO5X2CD4BKdZa+Mpue4mt/M0R97+xCGEEPxFawQxYFlKG7FybvKnou4isnjfbNEehQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Q0zvDwY0; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749035362; c=relaxed/simple;
+	bh=bxbzNNKPCagVAfsznDam2r9jaVbG7yC74u5DW2QcVFI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ViKqtbM+CU7c2d16hdIGuWDxSWWTd7TUm6wn4UGCCKJ8Ye3TArZcFtkviSI4EXZNC6jBI6PjybgMw9/WrdDUvglmnvRmUkiGLsHt+qJl9agBy1AUy8qcbCL8n2k9pwHtCdPcqUp2Kn9ntdDNpDV9koZ55T8gmzYLWfW1uNczNho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d76ficgW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Q0zvDwY0"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so77705505e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 04:08:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749035338; x=1749640138; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fo/dL6h3Yr2vVYWODP4+BLrzuTaAimU3j5bsgQKsn4o=;
-        b=Q0zvDwY0swWxGlE/TZiC//TqzmYPhSYjLpoSYruYkWgeIwLPHFBVCthpSOv/Ko+OO2
-         iMQLwREAH8l+0FZFfq4fTTBwENWld6ODLklbd4hrUZnhjQUn2MR1jO5hCV4E+FiyiZHj
-         Bzs/jYV/szgH7zAhuHRbwCUErbmrJY1+53jXlWP4gbTQpj5EAmsEGwa+N1sN1cs7fmI2
-         Xq+g3o9Rq5+74ORETwKfvtqW+QQR+Amr3OorAUrr+B8ra73mwU5mTb34YMuQwA4TMKVM
-         sxAlPm+Ojcu1UpFHvs06CNYV1nwbnu1I4yN2U4pymFB7dr91CxNiVwlY2s9HKVv8Di6D
-         0x6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749035338; x=1749640138;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fo/dL6h3Yr2vVYWODP4+BLrzuTaAimU3j5bsgQKsn4o=;
-        b=qJwDSqLczWorCKb0EVEJQ71zMJqr/F4KRCeunL5z5UuslwQuSeNchPn69XYbWs53N4
-         HLPrwD3hObGzeKWWdq9d76G7MQVoC94CHBpzoEWdN+GhTAjFQtPSmcJg7/uaOSzUHG3p
-         zlq/8RQ5KIbrgBkLdk/ULRahAFv6Jd4aHV8PXkke9HL4EdrbYYtbzL7zsdTL52tHweCE
-         wb1JXkFSYqF5KTESgv5XYAcn+G2BZImuUPH04H66Ah00ra68Jh2oesiqTFD1vmsrtmQ0
-         SKLxJiBhY0zBJBkiUFSeLmUhgbkbOpVRl3734MfM9XtWtaBQSp34GZyLcSOw/wYGVGLe
-         lijA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCUgdqePdMXrwgdmgVowPDYnwwEx7FimRUwQj3/JFAtjf0vhsJudOsQF0jTkXjTxT1QW0Bq60NcVoumIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb80pS9Qh5EP2PAEw/FzRtlpxkBFGU9uEdkrNv/OaHf8JWMPYp
-	+quE2cGSBMfFEaQMIbrEF0pu1+gZnoULTqXEGXVkfyMuAgfeks6HfITzL2lA7BI8PXk=
-X-Gm-Gg: ASbGncskL0GDsipo6Mn7Oj/UrSvovjM3Req2aaZNxQ+4s4CtPtPD5mFcNqbTbXm6OuG
-	yPAypJefePrpJIbW+vYMnb/Cj3mrZ0cMv3niXW3haW7vnbDFzTbkYhGG5ZNoRopG0kPVGm0M1hg
-	fJpGQn0ieE2RWwpTc45Kz/1IWYeCbbqQl1+U8WJ2WQzMZNIoIIKlcI/zjwrD8HZ1qzbddwU6h23
-	eOV3berJ0tNts3uJgGvYJ8xjp7S4hGZ3jaE8e5exQqDYoP1yme1aoAZLgCzopsaBZxS4VTWjZOb
-	hyxGo3dZWKtfDlAuZmIaThTS1woRtBndtqSvDTM/PYciAz2fta3/5g==
-X-Google-Smtp-Source: AGHT+IGzwTw0APJOBCPXYsgbi3L8T2cF37ouY+tpV3tVwkWBF2/qFMnNgv0OYaykSm6L6gQBiWeTzQ==
-X-Received: by 2002:a05:6000:430a:b0:3a3:7593:81a1 with SMTP id ffacd0b85a97d-3a51d967d6emr1755178f8f.43.1749035338282;
-        Wed, 04 Jun 2025 04:08:58 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd3506sm101742875ad.156.2025.06.04.04.08.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 04:08:57 -0700 (PDT)
-Date: Wed, 4 Jun 2025 13:08:40 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>
-Cc: 'Michael Kelley' <mhklinux@outlook.com>,
-	'John Ogness' <john.ogness@linutronix.de>,
-	'Ryo Takakura' <ryotkkr98@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Problem with nbcon console and amba-pl011 serial port
-Message-ID: <aEApOPTqbVOR35F_@pathway.suse.cz>
-References: <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
- <84y0u95e0j.fsf@jogness.linutronix.de>
- <84plfl5bf1.fsf@jogness.linutronix.de>
- <TY4PR01MB13777674C22721FCD8ACF4FCCD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d76ficgW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE364C4CEE7;
+	Wed,  4 Jun 2025 11:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749035362;
+	bh=bxbzNNKPCagVAfsznDam2r9jaVbG7yC74u5DW2QcVFI=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=d76ficgWdxxqPKuMtBDUFhRi8MS/oyNrEUGQ34Bkafomm8+7djXA8UCvTJ2LHbod1
+	 HIHzw2gV3/ck5nB472azG8/WGH6w4mn79IyRymk/W5YmOFWamKZLp1fihjvA1KTXYH
+	 WcwnjFrboIPtRrVJZ7TM5RRQAwDSQESgOhL82Xgkp3gRQ/ZETm4AIL+Orxhd/TPK2F
+	 l92pT2D7pErPMJ/itTOsIFInlaaE8dGa3oB8Tp/9jaOuFhyE+PovEuQfmC4SJ6DXGe
+	 s1q86KCXJgqMQ8lmbQA6muM8AkU6fcXJdnlpzJuayDFjY5MX/7wz84TETngsmLCoAW
+	 c/Kwmu4MeUTBg==
+Message-ID: <1791cead-c598-41dc-8c6c-811787df14b7@kernel.org>
+Date: Wed, 4 Jun 2025 19:09:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TY4PR01MB13777674C22721FCD8ACF4FCCD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ ke.wang@unisoc.com, Hao_hao.Wang@unisoc.com, baocong.liu@unisoc.com
+Subject: Re: [PATCH] f2fs: compress: fix UAF of f2fs_inode_info in
+ f2fs_free_dic
+To: Zhiguo Niu <niuzhiguo84@gmail.com>
+References: <1749016492-31835-1-git-send-email-zhiguo.niu@unisoc.com>
+ <061c94ab-ff57-42e3-ad7c-592dfb2a822e@kernel.org>
+ <CAHJ8P3J4Q-0ckCuZhV-r_O_Hct4yqqtC0uboLjxZP1bnfBJOEg@mail.gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <CAHJ8P3J4Q-0ckCuZhV-r_O_Hct4yqqtC0uboLjxZP1bnfBJOEg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed 2025-06-04 04:11:10, Toshiyuki Sato (Fujitsu) wrote:
-> > On 2025-06-03, John Ogness <john.ogness@linutronix.de> wrote:
-> > > On 2025-06-03, "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com> wrote:
-> > >>> 4. pr_emerg() has a high logging level, and it effectively steals the console
-> > >>> from the "pr/ttyAMA0" task, which I believe is intentional in the nbcon
-> > design.
-> > >>> Down in pl011_console_write_thread(), the "pr/ttyAMA0" task is doing
-> > >>> nbcon_enter_unsafe() and nbcon_exit_unsafe() around each character
-> > >>> that it outputs.  When pr_emerg() steals the console, nbcon_exit_unsafe()
-> > >>> returns 0, so the "for" loop exits. pl011_console_write_thread() then
-> > >>> enters a busy "while" loop waiting to reclaim the console. It's doing this
-> > >>> busy "while" loop with interrupts disabled, and because of the panic,
-> > >>> it never succeeds.
-
-I am a bit surprised that it never succeeds. The panic CPU takes over
-the ownership but it releases it when the messages are flushed. And
-the original owner should be able to reacquire it in this case.
-
-But maybe, this does not work well on virtualized systems when the
-virtualized CPUs do not run at the same time.
-
-> > >>> Whatever CPU is running "pr/ttyAMA0" is effectively
-> > >>> stuck at this point.
-> > >>>
-> > >>> 5. Meanwhile panic() continues, calling panic_other_cpus_shutdown(). On
-> > >>> ARM64, other CPUs are stopped by sending them an IPI. Each CPU receives
-> > >>> the IPI and calls the PSCI function to stop itself. But the CPU running
-> > >>> "pr/ttyAMA0" is looping forever with interrupts disabled, so it never
-> > >>> processes the IPI and it never stops. ARM64 doesn't have a true NMI that
-> > >>> can override the looping with interrupts disabled, so there's no way to
-> > >>> stop that CPU.
-> > >>>
-> > >>> 6. The failure to stop the "pr/ttyAMA0" CPU then causes downstream
-> > >>> problems, such as when loading and running a kdump kernel.
-
-Thanks a lot for this great analyze. It makes sense. It must have been
-hard to put all the pieces together.
-
-> > >
-> > > [...]
-> > >
-
-> This is a proposed fix to force termination by returning false from
-> nbcon_reacquire_nobuf when a panic occurs within pl011_console_write_thread.
->  (I believe this is similar to what John suggested in his previous reply.)
+On 6/4/25 18:49, Zhiguo Niu wrote:
+> Chao Yu <chao@kernel.org> 于2025年6月4日周三 17:48写道：
+>>
+>> On 6/4/25 13:54, Zhiguo Niu wrote:
+>>> The decompress_io_ctx may be released asynchronously after
+>>> I/O completion. If this file is deleted immediately after read,
+>>> and the kworker of processing post_read_wq has not been executed yet
+>>> due to high workloads, It is possible that the inode(f2fs_inode_info)
+>>> is evicted and freed before it is used f2fs_free_dic.
+>>>
+>>>     The UAF case as below:
+>>>     Thread A                                      Thread B
+>>>     - f2fs_decompress_end_io
+>>>      - f2fs_put_dic
+>>>       - queue_work
+>>>         add free_dic work to post_read_wq
+>>>                                                    - do_unlink
+>>>                                                     - iput
+>>>                                                      - evict
+>>>                                                       - call_rcu
+>>>     This file is deleted after read.
+>>>
+>>>     Thread C                                 kworker to process post_read_wq
+>>>     - rcu_do_batch
+>>>      - f2fs_free_inode
+>>>       - kmem_cache_free
+>>>      inode is freed by rcu
+>>>                                              - process_scheduled_works
+>>>                                               - f2fs_late_free_dic
+>>>                                                - f2fs_free_dic
+>>>                                                 - f2fs_release_decomp_mem
+>>>                                       read (dic->inode)->i_compress_algorithm
+>>>
+>>> This patch increase inode->i_count before f2fs_free_dic and decrease it
+>>> after free the dic.
+>>>
+>>> Cc: Daeho Jeong <daehojeong@google.com>
+>>> Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in softirq")
+>>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+>>> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
+>>> ---
+>>>  fs/f2fs/compress.c | 19 ++++++++++++++-----
+>>>  1 file changed, 14 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+>>> index b3c1df9..6b3b3a7 100644
+>>> --- a/fs/f2fs/compress.c
+>>> +++ b/fs/f2fs/compress.c
+>>> @@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct decompress_io_ctx *dic,
+>>>  }
+>>>
+>>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+>>> -             bool bypass_destroy_callback);
+>>> +             bool bypass_destroy_callback, bool late_free);
+>>>
+>>>  struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+>>>  {
+>>> @@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+>>>       return dic;
+>>>
+>>>  out_free:
+>>> -     f2fs_free_dic(dic, true);
+>>> +     f2fs_free_dic(dic, true, false);
+>>>       return ERR_PTR(ret);
+>>>  }
+>>>
+>>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+>>> -             bool bypass_destroy_callback)
+>>> +             bool bypass_destroy_callback, bool late_free)
+>>>  {
+>>>       int i;
+>>>
+>>> @@ -1775,6 +1775,11 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+>>>       }
+>>>
+>>>       page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
+>>> +     if (late_free) {
+>>> +             spin_lock(&dic->inode->i_lock);
+>>> +             atomic_dec(&dic->inode->i_count);
+>>> +             spin_unlock(&dic->inode->i_lock);
+>>
+>> If it is the last one release i_count, it needs to call iput_final to evict inode
+>> like what iput did, so we'd better to call iput() here?
+> Hi Chao,
+> Yes, we have also tested this method(iput/__iget), and it worked.
+> Just think It is simpler and easier to read to directly operate
+> i_count, and then free it
+> by relying on the memory module when i_count=0.
+> But It seems iput/__iget is better.
+>>
+>>> +     }
+>>>       kmem_cache_free(dic_entry_slab, dic);
+>>>  }
+>>>
+>>> @@ -1783,16 +1788,20 @@ static void f2fs_late_free_dic(struct work_struct *work)
+>>>       struct decompress_io_ctx *dic =
+>>>               container_of(work, struct decompress_io_ctx, free_work);
+>>>
+>>> -     f2fs_free_dic(dic, false);
+>>> +     f2fs_free_dic(dic, false, true);
+>>>  }
+>>>
+>>>  static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task)
+>>>  {
+>>>       if (refcount_dec_and_test(&dic->refcnt)) {
+>>>               if (in_task) {
+>>> -                     f2fs_free_dic(dic, false);
+>>> +                     f2fs_free_dic(dic, false, false);
+>>>               } else {
+>>>                       INIT_WORK(&dic->free_work, f2fs_late_free_dic);
+>>> +                     /* to avoid inode is evicted simultaneously */
+>>> +                     spin_lock(&dic->inode->i_lock);
+>>> +                     atomic_inc(&dic->inode->i_count);
+>>> +                     spin_unlock(&dic->inode->i_lock);
+>>
+>> iget()?
+>>
+>> BTW, can we store i_compress_algorithm in dic to avoid inode access?
 > 
-> While I couldn't reproduce the issue using sysrq-trigger in my environment
->  (It seemed that the panic was being executed before the thread processing),
-> I did observe nbcon_reacquire_nobuf failing to complete when injecting an
-> NMI (SError) during pl011_console_write_thread. 
-> Applying this fix seems to have resolved the "SMP: failed to stop secondary
-> CPUs" issue.
+> Also thought of this method, but it would require more changes.
+> dic->inode used in f2fs_free_dic are all needed to modify except
+> i_compress_algorithm.
+> such as  page_array_free(dic->inode),
+
+Zhiguo,
+
+page_array_free() parses dic->inode to get sbi only, so we can pass sbi to
+page_array_free() directly to avoid using dic->inode.
+
+> allow_memalloc_for_decomp(F2FS_I_SB(dic->inode)).
 > 
-> This patch is for test.
-> Modifications to imx and other drivers, as well as adding __must_check, 
-> will likely be required.
+> Do you have any other suggestions?
+
+Using iget/iput looks fine to me, please go ahead.
+
+Thanks,
+
+> thanks！
 > 
-> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> index 11d650975..c3a2b22e6 100644
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -2577,8 +2577,10 @@ pl011_console_write_thread(struct console *co, struct nbcon_write_context *wctxt
->  		}
->  	}
->  
-> -	while (!nbcon_enter_unsafe(wctxt))
-> -		nbcon_reacquire_nobuf(wctxt);
-> +	while (!nbcon_enter_unsafe(wctxt)) {
-> +		if (!nbcon_reacquire_nobuf(wctxt))
-> +			return;
-> +	}
->  
->  	while ((pl011_read(uap, REG_FR) ^ uap->vendor->inv_fr) & uap->vendor->fr_busy)
->  		cpu_relax();
-> diff --git a/include/linux/console.h b/include/linux/console.h
-> index 8f10d0a85..ae278b875 100644
-> --- a/include/linux/console.h
-> +++ b/include/linux/console.h
-> @@ -604,14 +604,14 @@ extern void nbcon_cpu_emergency_exit(void);
->  extern bool nbcon_can_proceed(struct nbcon_write_context *wctxt);
->  extern bool nbcon_enter_unsafe(struct nbcon_write_context *wctxt);
->  extern bool nbcon_exit_unsafe(struct nbcon_write_context *wctxt);
-> -extern void nbcon_reacquire_nobuf(struct nbcon_write_context *wctxt);
-> +extern bool nbcon_reacquire_nobuf(struct nbcon_write_context *wctxt);
->  #else
->  static inline void nbcon_cpu_emergency_enter(void) { }
->  static inline void nbcon_cpu_emergency_exit(void) { }
->  static inline bool nbcon_can_proceed(struct nbcon_write_context *wctxt) { return false; }
->  static inline bool nbcon_enter_unsafe(struct nbcon_write_context *wctxt) { return false; }
->  static inline bool nbcon_exit_unsafe(struct nbcon_write_context *wctxt) { return false; }
-> -static inline void nbcon_reacquire_nobuf(struct nbcon_write_context *wctxt) { }
-> +static inline bool nbcon_reacquire_nobuf(struct nbcon_write_context *wctxt) { }
->  #endif
->  
->  extern int console_set_on_cmdline;
-> diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-> index fd12efcc4..ec016bb24 100644
-> --- a/kernel/printk/nbcon.c
-> +++ b/kernel/printk/nbcon.c
-> @@ -909,14 +909,18 @@ EXPORT_SYMBOL_GPL(nbcon_exit_unsafe);
->   * output buffer because that has been lost. This function cannot be used to
->   * resume printing.
->   */
+>>
+>> Thanks,
+>>
+>>>                       queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
+>>>                                       &dic->free_work);
+>>>               }
+>>
 
-Please, add a comment explaining the new return value. Something
-like:
-
- * Return:	True when the context reacquired the owner ship. The caller
- *		might try entering the unsafe state and restore the original
- *		console device setting. It just must not access the output
- *		buffer anymore.
- *
- *		False when another CPU is in panic() and a busy waiting for
- *		the ownership is not safe. It might prevent stopping this
- *		CPU and create further complications, especially on virtualized
- *		systems without proper NMI. The caller should bail out
- *		immediately without touching the console device or
- *		the output buffer.
-
-It is very long. But I think that a good explanation might safe people
-troubles in the future.
-
-> -void nbcon_reacquire_nobuf(struct nbcon_write_context *wctxt)
-> +bool nbcon_reacquire_nobuf(struct nbcon_write_context *wctxt)
->  {
->  	struct nbcon_context *ctxt = &ACCESS_PRIVATE(wctxt, ctxt);
->  
-> -	while (!nbcon_context_try_acquire(ctxt))
-> +	while (!nbcon_context_try_acquire(ctxt)) {
->  		cpu_relax();
-> +		if (other_cpu_in_panic())
-> +			return false;
-> +	}
->  
->  	nbcon_write_context_set_buf(wctxt, NULL, 0);
-
-It would make sense to set the NULL buffer even when returning "false".
-
-> +	return true;
->  }
->  EXPORT_SYMBOL_GPL(nbcon_reacquire_nobuf);
