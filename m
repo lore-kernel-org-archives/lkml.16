@@ -1,189 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473941A5BA0;
-	Wed,  4 Jun 2025 01:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68E6274FEA
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 01:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748999190; cv=none; b=u5qQaORev7a6tnHpGQz/v5rImrhbrlXPIq6u64OyHq19yXPTzBlNReD7lnV//Glk7P9azR7owHvA50WosGRk4o2UcZs7mE6m3XOkxinbbD3vFtkyMsEqbJ/TQgvf428TXnyD1SQ5IyG04BurAhlyisPhW79NnY91vJChQLWTRek=
+	t=1748999193; cv=none; b=KtBVWL1ZD2irW+lSr5tM3DzC7NwaNUE4Av1I/NslhZD09v5BuZmbSnsZRepvKyUV+yIf8gLvEreMqT2lcYSJmj8Ob7IhlPloz/XOpbZD437K6NuC3QkDdhHbJ2jahDy6rjyxFurgNOAd50lA401fYZmZCwBxp6G0yiMrbDLY2m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748999190; c=relaxed/simple;
-	bh=q7JYVPVG2dRLlDqWkJSfnGRBlhdWxwq+TInUPdY3o64=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PFvF4I9ePmimsRJ+UVPqN5JbhG0/yQhQYtv2uXdXq14x04hbBzjFz4bgDja6A7A4+IsnBsESWhOlx0Qqy2hyeHIg2b90CiHtzcx+cWa/YKiEQaqtSf4HjuU+nIjdTkcNghmRb7BOiRlGHK4TjCHHsnhZWFafFfQ22PKD6kMTLKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMhwNPq3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748999193; c=relaxed/simple;
+	bh=IQVVm2xw/bzq7dRFtzdHXISHByqKzowllZ0anTotjhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hiqtMK4qRreJKpRbkyrmcbGmJFN0FxtTGF1KJuToEjLOruEqcBacbygT3MyLaEHVrem4ddWpNLPfEm0aEBdvQlDC8mHpOivc1KlubelPjWMw1uS+XYc2nh+qDi3rxH7pU5g89Pj9bKoir4CV9qqxXJAM+lWV01dfFTXzG50POAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=c8vli8My; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMhwNPq3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6662C4CEEF;
-	Wed,  4 Jun 2025 01:06:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748999190;
-	bh=q7JYVPVG2dRLlDqWkJSfnGRBlhdWxwq+TInUPdY3o64=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GMhwNPq3YNTYhv8Edqq4LTeDb5E92FsdNtPzGxUO+/DpiROetHGS1FIBfB+Z8Ptum
-	 +/+pKCgxQ36t04fYQdCxA3ANLFO/gv5E63Nk78mwRyYVp21lCvbin1IlaQ4jD7709q
-	 +Om8Itk2jsTobJOHme2LUUujE0647HmtXLQ4u8uFMT7aH5o/RTU69+CcUJ1cbsJUZ5
-	 /O0C1VwfF6zzUSmztrDfa1LHVib+la3ckx/UhP7/TsiJfeRdXuOyyeFxWXKhljxnOh
-	 Fx9WphGcxFx1LCJomQ40KsZlEZo6g0u/NaTW6EOtf+FQMSVXTviCcgwlviIDs2lmRB
-	 gx5tSML0hQPMw==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Henk Vergonet <henk.vergonet@gmail.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Felix Fietkau <nbd@nbd.name>,
-	Sasha Levin <sashal@kernel.org>,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	uwu@icenowy.me,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 05/27] wifi: mt76: mt76x2: Add support for LiteOn WN4516R,WN4519R
-Date: Tue,  3 Jun 2025 21:05:58 -0400
-Message-Id: <20250604010620.6819-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250604010620.6819-1-sashal@kernel.org>
-References: <20250604010620.6819-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="c8vli8My"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b26d7ddbfd7so6424356a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 18:06:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748999190; x=1749603990; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LhHMc55NRcsN/FvPE9B87wOrlUj3VF0MtSHgMnAPDz4=;
+        b=c8vli8MyEe8l2a0DR0XNegz6yakVCON8KoZR8aFgg0WeMYKfLSvtHJvTQHf75lU+N3
+         wNtjuA4HUSGFVxOsbq7QfSd9L2+yuZFbRxDvSJgAYERJPlkU4FgDadcu4Z7v+HFzanCt
+         Zuj4LMl4ZiAgdTp4++qaRUOlTL567JIvTux4r5b7lh24f5zSAUVf49kgaWmozQ862+5K
+         fjygTQc6afqAg5/IT7fYKGTiOzrCiLFzqcp5Xnp81qGvp1xfGTuDashjqnsHHhQ14Lsv
+         uLgaTonDlQo5J8xneb/iMLylXU5JC5fLMfh9rOMpuCVTMmUSqW0dgDNRijZxr4e6vEQg
+         IkjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748999190; x=1749603990;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LhHMc55NRcsN/FvPE9B87wOrlUj3VF0MtSHgMnAPDz4=;
+        b=j80v86YQK0WyqjuiyfPNSAbinOjvewcQ8yN6UgkIUmJZcwxUGbF5CscyYBKg47TQM/
+         lDNAi5cPG+RyPaRZLfa9Ik3pnhpY76NG8kjI1V46ujyHkhTI8SVTZkiWgBUtqWMy5VOo
+         k5hMkwrThLDASdv2920PY//7fLauctYK3MnCJCzUq0FFsKBr4TB7a+iQIm8a7ybSc7ip
+         HD+VX/SybaK6Ut+qg/QljtrtwVI4mLooweRL2N7D6GKSbrmH43AVbHzVvTnuEhcCSkgV
+         i4ypcgRETq0DI/EhOhMGVYpsIwj353letqy3vDAfabLJSheOxQtCVAK3PJlYkGMTXkUp
+         AVBw==
+X-Forwarded-Encrypted: i=1; AJvYcCWa6qN/yOoBl9mz4sCvGcNvrvuVu3mrbt65l7M5GdA5v41RRqldBQCFO3GGgXqU97OzIX7kJ2oTmm9yDj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYJ9lTcOQFcSuGrynTADakunFBkV1hoF2Qo5Ze662u7vJm1an+
+	88xuDjoXZxc57i3PUZRCEoY8JnTE4euz93jYCEXPqNZA9W+w87Nfd+9bJZBJHr1Oe2M=
+X-Gm-Gg: ASbGncs9WzpIF1Dwpn+939FGZlnuPrMPEgdm+ixzLGlJ2vIqtPbe84Uw1yFJQAA4qGD
+	4I+/MWeCSYYJlaMGg0sOSeaetkR18/YGQJQd1T5vfJiwUBlgQwvJrPfduu1pskWRYYVvFRQ3aHG
+	QEqqQwaXbVzki6pOB0mNrsItFC0eMpQ799ljUoIv84ANaEo2lOqsSCFrKH3dWySxgsxs8h4CVa+
+	wGUh4mxvbTpCcmpwhdrlKCfGdXYLmdiv2koh2Sx3PhzwDiR0ne4jJyNzlxYn4wgAx9DcxywGdlZ
+	fJB7JudHqDBDuhO0kunsA+B6yXZ4Js4p/UJX89KYom/5Yuz1qfyeoj742Ho93g==
+X-Google-Smtp-Source: AGHT+IFvTALfjp/Y3ibakB8CWPTcZ35xraSu/LuIlBzY9vBaddLzmcMTcOCjwa9SRy36GVF16/VEAg==
+X-Received: by 2002:a17:90a:da87:b0:311:e8cc:4253 with SMTP id 98e67ed59e1d1-3130ccf5106mr1396296a91.2.1748999189904;
+        Tue, 03 Jun 2025 18:06:29 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2e9262sm7890955a91.27.2025.06.03.18.06.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 18:06:29 -0700 (PDT)
+Date: Tue, 3 Jun 2025 18:06:27 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Zong Li <zong.li@sifive.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: traps: handle uprobe event in software-check
+ exception
+Message-ID: <aD-cE9IGrV6nOUjX@debug.ba.rivosinc.com>
+References: <20250314092614.27372-1-zong.li@sifive.com>
+ <aD3WKnyp_ffk60oF@debug.ba.rivosinc.com>
+ <CANXhq0r8DeksFQC2ht8jeLpfn-0Tvuy4LU52BOMAj-AAB83+5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.237
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANXhq0r8DeksFQC2ht8jeLpfn-0Tvuy4LU52BOMAj-AAB83+5A@mail.gmail.com>
 
-From: Henk Vergonet <henk.vergonet@gmail.com>
+On Tue, Jun 03, 2025 at 09:48:08AM +0800, Zong Li wrote:
+>On Tue, Jun 3, 2025 at 12:50 AM Deepak Gupta <debug@rivosinc.com> wrote:
+>>
+>> Hi Zong,
+>>
+>> Thanks for taking the initiative for making cfi work with uprobe.
+>> And sorry for not noticing the patch earlier.
+>> Few comments inline.
+>>
+>>
+>> On Fri, Mar 14, 2025 at 05:26:14PM +0800, Zong Li wrote:
+>> >Handle the uprobe event first before handling the CFI violation in
+>> >software-check exception handler. Because when the landing pad is
+>> >activated, if the uprobe point is set at the lpad instruction at
+>> >the beginning of a function, the system triggers a software-check
+>> >exception instead of an ebreak exception due to the exception
+>> >priority, then uprobe can't work successfully.
+>> >
+>> >Co-developed-by: Deepak Gupta <debug@rivosinc.com>
+>> >Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>> >Signed-off-by: Zong Li <zong.li@sifive.com>
+>> >---
+>> >
+>> >This patch is based on top of the following series
+>> >[PATCH v11 00/27] riscv control-flow integrity for usermode
+>> >
+>> > arch/riscv/kernel/traps.c | 9 ++++++---
+>> > 1 file changed, 6 insertions(+), 3 deletions(-)
+>> >
+>> >diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+>> >index 3f7709f4595a..ef5a92111ee1 100644
+>> >--- a/arch/riscv/kernel/traps.c
+>> >+++ b/arch/riscv/kernel/traps.c
+>> >@@ -386,9 +386,12 @@ asmlinkage __visible __trap_section void do_trap_software_check(struct pt_regs *
+>> >       if (user_mode(regs)) {
+>> >               irqentry_enter_from_user_mode(regs);
+>> >
+>> >-              /* not a cfi violation, then merge into flow of unknown trap handler */
+>> >-              if (!handle_user_cfi_violation(regs))
+>> >-                      do_trap_unknown(regs);
+>> >+              /* handle uprobe event frist */
+>> >+              if (!probe_breakpoint_handler(regs)) {
+>>
+>> If task has uprobe enabled and there is a cfi violation due to mismatch in
+>> return address on shadow stack and regular stack, then it would be a cfi
+>> bypass, right?
+>> Perhaps we should be doing this only when we match that sw check exception
+>> is due to forward cfi violation?
+>>
+>> Do you agree?
+>
+>Yes, let me add a condition for forward cfi violation here. Thanks for
+>pointing it out.
 
-[ Upstream commit 3c0e4f606d8693795a2c965d6f4987b1bfc31097 ]
+Cool, I'll send out another revision for my cfi series this week.
+If you send out your uprobe fix, I can include it in my patchset.
 
-Adds support for:
- - LiteOn WN4516R
- - LiteOn WN4519R
- Both use:
- - A nonstandard USB connector
- - Mediatek chipset MT7600U
- - ASIC revision: 76320044
-
-Disabled VHT support on ASIC revision 76320044:
-
- This fixes the 5G connectibity issue on LiteOn WN4519R module
- see https://github.com/openwrt/mt76/issues/971
-
- And may also fix the 5G issues on the XBox One Wireless Adapter
- see https://github.com/openwrt/mt76/issues/200
-
- I have looked at the FCC info related to the MT7632U chip as mentioned in here:
- https://github.com/openwrt/mt76/issues/459
- These confirm the chipset does not support 'ac' mode and hence VHT should be turned of.
-
-Signed-off-by: Henk Vergonet <henk.vergonet@gmail.com>
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Link: https://patch.msgid.link/20250418143914.31384-1-henk.vergonet@gmail.com
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-**YES** This commit should be backported to stable kernel trees. Here's
-my detailed analysis: ## Comparison with Similar Commits This commit
-closely matches **Similar Commit #1** (XBox One wifi adapter support)
-which was marked as **YES** for backporting. Both commits: - Add new USB
-device IDs for wireless adapters - Include hardware-specific workarounds
-for device limitations - Fix connectivity issues for specific hardware
-## Code Changes Analysis ### 1. USB Device ID Additions (Low Risk) ```c
-{ USB_DEVICE(0x0471, 0x2126) }, /bin /bin.usr-is-merged /boot /dev /etc
-/home /init /lib /lib.usr-is-merged /lib64 /lost+found /media /mnt /opt
-/proc /root /run /sbin /sbin.usr-is-merged /snap /srv /sys /tmp /usr
-/var LiteOn WN4516R module, nonstandard USB connector linux/ {
-USB_DEVICE(0x0471, 0x7600) }, /bin /bin.usr-is-merged /boot /dev /etc
-/home /init /lib /lib.usr-is-merged /lib64 /lost+found /media /mnt /opt
-/proc /root /run /sbin /sbin.usr-is-merged /snap /srv /sys /tmp /usr
-/var LiteOn WN4519R module, nonstandard USB connector linux/ ``` -
-**Risk**: Minimal - adding device IDs is very safe - **Impact**: Enables
-support for new hardware without affecting existing devices - **Scope**:
-Contained to device identification ### 2. VHT Capability Fix (Critical
-Bug Fix) ```c switch (dev->mt76.rev) { case 0x76320044: /bin /bin.usr-
-is-merged /boot /dev /etc /home /init /lib /lib.usr-is-merged /lib64
-/lost+found /media /mnt /opt /proc /root /run /sbin /sbin.usr-is-merged
-/snap /srv /sys /tmp /usr /var these ASIC revisions do not support VHT
-linux/ vht = false; break; default: vht = true; break; } ``` - **Fixes
-critical connectivity issues**: The commit explicitly fixes 5G
-connectivity problems - **Hardware-specific workaround**: Targets a
-specific ASIC revision (0x76320044) - **Conservative approach**:
-Disables problematic VHT only for affected hardware - **Minimal
-regression risk**: Existing devices continue using VHT as before ##
-Backport Suitability Criteria ✅ **Fixes user-affecting bugs**: Resolves
-5G connectivity issues on LiteOn modules and potentially XBox One
-adapters ✅ **Small and contained**: Changes are minimal - 2 new USB IDs
-and a targeted VHT disable ✅ **No architectural changes**: Uses existing
-framework, just adds device support and fixes capability detection ✅
-**References external issues**: Links to GitHub issues #971 and #200,
-indicating real user problems ✅ **Clear side effects documentation**:
-VHT disabling is well-documented and justified with FCC information ✅
-**Follows stable tree rules**: Important hardware support fix with
-minimal regression risk ✅ **Confined to subsystem**: Changes limited to
-mt76x2 USB driver ## Hardware Impact Assessment The commit addresses
-**confirmed hardware limitations** where VHT was incorrectly enabled on
-chipsets that don't support it, causing: - Connection failures in 5GHz
-band - Potential instability when VHT features are attempted This
-matches the pattern of **Similar Commit #1** which added support for
-newer XBox One adapters and was successfully backported. The
-risk/benefit ratio strongly favors backporting: minimal code changes
-that fix real connectivity issues for specific hardware without
-affecting other devices.
-
- drivers/net/wireless/mediatek/mt76/mt76x2/usb.c     |  2 ++
- .../net/wireless/mediatek/mt76/mt76x2/usb_init.c    | 13 ++++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c b/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
-index 82a193aac09d7..95c548f45bdf8 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
-@@ -17,6 +17,8 @@ static const struct usb_device_id mt76x2u_device_table[] = {
- 	{ USB_DEVICE(0x057c, 0x8503) },	/* Avm FRITZ!WLAN AC860 */
- 	{ USB_DEVICE(0x7392, 0xb711) },	/* Edimax EW 7722 UAC */
- 	{ USB_DEVICE(0x0e8d, 0x7632) },	/* HC-M7662BU1 */
-+	{ USB_DEVICE(0x0471, 0x2126) }, /* LiteOn WN4516R module, nonstandard USB connector */
-+	{ USB_DEVICE(0x0471, 0x7600) }, /* LiteOn WN4519R module, nonstandard USB connector */
- 	{ USB_DEVICE(0x2c4e, 0x0103) },	/* Mercury UD13 */
- 	{ USB_DEVICE(0x0846, 0x9053) },	/* Netgear A6210 */
- 	{ USB_DEVICE(0x045e, 0x02e6) },	/* XBox One Wireless Adapter */
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/usb_init.c b/drivers/net/wireless/mediatek/mt76/mt76x2/usb_init.c
-index ffc2deba29ac6..c845e83897659 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2/usb_init.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2/usb_init.c
-@@ -191,6 +191,7 @@ int mt76x2u_register_device(struct mt76x02_dev *dev)
- {
- 	struct ieee80211_hw *hw = mt76_hw(dev);
- 	struct mt76_usb *usb = &dev->mt76.usb;
-+	bool vht;
- 	int err;
- 
- 	INIT_DELAYED_WORK(&dev->cal_work, mt76x2u_phy_calibrate);
-@@ -215,7 +216,17 @@ int mt76x2u_register_device(struct mt76x02_dev *dev)
- 
- 	/* check hw sg support in order to enable AMSDU */
- 	hw->max_tx_fragments = dev->mt76.usb.sg_en ? MT_TX_SG_MAX_SIZE : 1;
--	err = mt76_register_device(&dev->mt76, true, mt76x02_rates,
-+	switch (dev->mt76.rev) {
-+	case 0x76320044:
-+		/* these ASIC revisions do not support VHT */
-+		vht = false;
-+		break;
-+	default:
-+		vht = true;
-+		break;
-+	}
-+
-+	err = mt76_register_device(&dev->mt76, vht, mt76x02_rates,
- 				   ARRAY_SIZE(mt76x02_rates));
- 	if (err)
- 		goto fail;
--- 
-2.39.5
-
+>
+>>
+>> >+                      /* not a cfi violation, then merge into flow of unknown trap handler */
+>> >+                      if (!handle_user_cfi_violation(regs))
+>> >+                              do_trap_unknown(regs);
+>> >+              }
+>> >
+>> >               irqentry_exit_to_user_mode(regs);
+>> >       } else {
+>> >--
+>> >2.17.1
+>> >
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
