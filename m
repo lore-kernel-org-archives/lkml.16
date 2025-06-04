@@ -1,55 +1,54 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE92171A1;
-	Wed,  4 Jun 2025 02:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B372E3BB48
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 03:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749005966; cv=none; b=EOtcN0HEHJngiBr0x3lkPAGdA41YvemLRjVQlLlVBz0diY1+yzi4KBFzli5s1rQnoPp34YU0SQ4SKbKl47SiVe/3uHB3/ZRFPIbUPVYPqxSZNTogb1J61+IagME9vQll4xD4Qv/tb04efRRyvWfTMFblLfMDn4kHB0Q/3gJKF7E=
+	t=1749006171; cv=none; b=ARcLYRj4NZe3ZASLrn70d0X2sPGqsbHSu6mFYLZnv968nVfkceT/x1r6Vrj++Ojpne/8oX7aeDAvFTMt4Bbo8UxR7mN3hLEVY3O8Pypbmbej4yMrz55H57aTGhiiw6DoNehxEW75Oeuj9NURvpwYFYnjcJjrPKC6vMYZz9CT1Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749005966; c=relaxed/simple;
-	bh=TzIfJSQiYccDaSYxU14uxVmwdxaEmC/dXhnVn6Nzsp4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=V+jqy59rQeMHw2lfditLd1EtNRfILM+OBZWLMlHJC/7PjINzDrEgjuRGTWYsRaE20k4StEQcDnWiQZ74Z1FfhGBk3qNK4REQ3F5Vt0e1dl6zGbs6AMJol2XxrFsnw7ERmTxmbidleJzTSEqlEBOCoXG3VwWOFVXhn0JoUT+3p0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RfVfYm+K; arc=none smtp.client-ip=209.85.208.172
+	s=arc-20240116; t=1749006171; c=relaxed/simple;
+	bh=yhhVpInicP6iy5WBpCMtSBz9guuVRd9h9jETSNF9Q5c=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=LU1+HfZP0nvXVvieI5tdCdGzLXtm1jtySkKP6rhi1gXLFp+tIiJ2MFTAZrHBzAy7IhgLf94BvCPlW3+ft+3Si8RKJSbKfUOr8MSjtHkKDbqBWD5bOXmo+gnIhG+nNSAyPn598TBcxnQYeOkaNJkIYqhuJR/E02cIGlMH9TEMzyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mobbtSQg; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfVfYm+K"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32925727810so55703061fa.0;
-        Tue, 03 Jun 2025 19:59:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mobbtSQg"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553241d30b3so6771106e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 20:02:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749005963; x=1749610763; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749006168; x=1749610968; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=rt+D3Uf3eUUD4HW5vfHTNtXXx2j8DsAepkcRUcCnZqM=;
-        b=RfVfYm+KQyOu7kVFxgwTYXRanrRAp836XE07K6k8r8gy86XBSQTkfZljPJbQYcplR7
-         7/swiIDqY9yLl+kr+W3MKyfm2LOFM1TzsTaIN25ZiQX4RXvC4H69FskffeM5v96CkaFk
-         6MOoustvJNLiDr4lYpIfKKE2rUtE41SMi/sSZWk7aQYNvM8TtKh46lx7DZeMJHGKLbPF
-         T2TT6Xn9/Kff4o/7RExFrF0Knatt/0LWUh0/vpNsvQo8W/nNm1HeQgTjLJ/H+17mDFil
-         N62EidjBo8osHqU/90gFnSM7zCbewIbqBumOZoz0FTRd1Wi+ZyEog2guD4JhwC+q4MQn
-         tLxw==
+        bh=GeRUt5U8UJSWikUfG0CDvL6CE+32CJ682+R3DA0hI4s=;
+        b=mobbtSQgtfo9Dlzwg8PvOimdFo/Ar4M3ePl6blJurt9Vm7M18egb/M/Vj5XPwk0Fi1
+         6jV1SxBtGXksCh6XPlzkUIOOesxMOMZfj6gDlc//CRRkwaxS5jyxYrVNiRRZhZV4Qe/s
+         LByG6rkMl0jLSDW7BH9sxRwqcCaWH4sWrQXxzyZEBJN+R1w11JgPtBK3kK+w6vkG4dUJ
+         p86PZUKsNgLTFYXZj0h2VNW2EFZQLJcMfTw/sFzdmDfrifBxbBrAm2srao4eWHIccukB
+         xUoNtJ8BNWkJpTI/TVUc6OnfD9YrFW+ZXzKhqGUeZzXJMQ0n0JUQo2cJ6q08ISA0jNFQ
+         lJHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749005963; x=1749610763;
+        d=1e100.net; s=20230601; t=1749006168; x=1749610968;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=rt+D3Uf3eUUD4HW5vfHTNtXXx2j8DsAepkcRUcCnZqM=;
-        b=a3PFRRWfNJgAnnMic9vPr32MFqMpy0HmBAXzW5ez8Y5pFZW6nZ7a87hOD8283uG6bi
-         ZbOnDKF89g62bSZ4D0fEALCqjNMAztzurDqsxVj02aI+w79bVcS4dnjnKzZ0Ci+m7jn9
-         WTk0V1ilaMmijQV4Elum62aW5ANDllqQg4Aj6bwDdBzo28gNBqSDkM9vrOuBR/J/9Kio
-         CG++F8wt+9JYm/Ehx0CY8qq6VAb/U4xNdBslqjHcK/cozrNW2LoA49q6aGHrMYFHMqb9
-         UGL4dzw8G3jbkQOnUizCf7uGgXIow6ZCEXF7HHmlstpYqy81JcbeFSOeYJhL4GESsJ7d
-         iPVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWil84wrJODySdXRC2klcZa0j6UsoEBW49zpe6p5aGzx5mRQHWiPh/jYI6u3HvOwHBWmCc/2eHPdAdu19A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxpkR0/zStfH8oEYMD4r0VuDZsPaEgAg3tNaT3eyLi3PZ9Rx6E
-	PGtzpU8dzvQCBv0EyNTJOp7Z1u77OhRI90IUPHqh1lkP/Q1nPcu3dR0TsvHuzW6i8SDqiR0Fy5O
-	qY0KeqxkHqsZuc3OChiQ7Xl1DvGJatfU4ubgi
-X-Gm-Gg: ASbGncupaoF8t8rbVRdNOM+ErAZZxgIVyAs3ofc5Pa8JTj+7ehp3d98gU7djBOtvGIr
-	MyhLGEeg9Gy/ZO5H2XG6EsdIzFqMs8DUir+IQ2zaRoCcbBYP0XSkXD5FBHYMDLpPhDoYGs6ITvp
-	ZD+x4x4THIYH/QfkWGrBsPhZN0aWuerHN2bvt1n4q7JFBwHw==
-X-Google-Smtp-Source: AGHT+IGpADhxpISd06wLlevlEELZzMgnCLmJDRqqFzQ5oL0RY4VTWQo9W0dhgghHlRtrb6AuTYX9Hap9KM2OapJnhvA=
-X-Received: by 2002:a2e:8a87:0:b0:32a:6ccf:a48b with SMTP id
- 38308e7fff4ca-32ac7258d5bmr2066341fa.38.1749005962528; Tue, 03 Jun 2025
- 19:59:22 -0700 (PDT)
+        bh=GeRUt5U8UJSWikUfG0CDvL6CE+32CJ682+R3DA0hI4s=;
+        b=fdGLzmwaLx06LaU4UTjSslpdkqAAT1Ieb5qDxABWg4oBGPWnW/I582f7lTPjrUSoXR
+         g4D5Jt9WBaQO79+zAtOWGzWvxKUlCX0yvRARk3woMgh/YLU6lYac8AGj8toFA/VSh0hI
+         xpH3ylFUZ9NghJYJSVXLOaV+b4mrCdnHyTzOAB3aAxQ3vSkh9Nh97NgKdIhXH3q1cjdX
+         cXxq/wQG+az6bAds2jbzJIOXsXsLg1hRqcIaTZffppXxTqIraXUE1jVnPZVJHo0kytPt
+         q4poIuHh8nxT3siOqPpbM1XYE40lGgNMAg++tWGNMIcTWOcs6OA2+1+sLz9HcF8no3d3
+         KQqw==
+X-Gm-Message-State: AOJu0YwitRKcZ6cfgb4cUnQDS/YBnZFDOAL8AlbUUeMJn9+SBqOoHAxB
+	yA4jem7MFsWtxol8uGE0kcqgtxfsuHrgmV/E5RggxGvIiNXto+VdkYlTR7TVdvvmZl44ZcDGaag
+	y5WL0qD0JEpCu4nHQfN2CGIe4UMjyMwE/wb0Y
+X-Gm-Gg: ASbGncutRWFeUUKIUq9MnDndcP92NW4/X6xYK76PxgY+JnTVbe3mw/8vEqFSIrUGu6V
+	TpGxqdp10GwjP5huP4pIMup37CrFTvt03tLFq2D0kDVdSYQF6Qu6Zm0AGWMy5FCd48AI6hpFzA6
+	LjZ6JdYIBei/O0PwW9rKONdbinHxqQGAEZmOw=
+X-Google-Smtp-Source: AGHT+IEMD8WPwa83n8LdyDqZqkTcA55a3+XdCGKG082P6Id4WuWu4d0/hvSS+Q2852t0kj5MQtisHjOAto4z167xoZA=
+X-Received: by 2002:a05:6512:3b9a:b0:553:330e:59da with SMTP id
+ 2adb3069b0e04-55356df2b6bmr308207e87.53.1749006167521; Tue, 03 Jun 2025
+ 20:02:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,12 +56,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: Luka <luka.2016.cs@gmail.com>
-Date: Wed, 4 Jun 2025 10:59:10 +0800
-X-Gm-Features: AX0GCFtnwCBZSk-d3y4Qa__7ovIgMlNq_oO-1gBs3-9Di2fZqeckIHPco1_CooE
-Message-ID: <CALm_T+1JyGaNwvZGfue7hDt7q4pk1wdgC6R47GyCZ3exLBSqwg@mail.gmail.com>
-Subject: [Bug] soft lockup in blk_rq_timed_out_timer in Linux v6.12
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 4 Jun 2025 11:02:33 +0800
+X-Gm-Features: AX0GCFsEFEi2BEEfa4cgeNk34tauVgp3qZq8BLXjhmMLEmIPkhh4CKS0gmV7W-M
+Message-ID: <CALm_T+1OF_Vvigyt6Jdb1f0LjXysCfcjMFN1842KKRFbyzi+ug@mail.gmail.com>
+Subject: [Bug] spinlock recursion in pl011_console_write in Linux v6.12
+To: Russell King <linux@armlinux.org.uk>, Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 Dear Kernel Maintainers,
@@ -87,11 +86,14 @@ issue while conducting stability and fuzzing tests on the Android 16
 platform and identified that the root cause lies in the upstream
 codebase.
 
-Bug Location:  blk_rq_timed_out_timer+0x40/0x58 block/blk-core.c:392
 
-Bug Report: https://hastebin.com/share/luqeturafo.bash
+Bug Location:  pl011_console_write+0xf4/0x770
+drivers/tty/serial/amba-pl011.c:2323
 
-Entire Log: https://hastebin.com/share/oxihuwisek.perl
+Bug Report: https://hastebin.com/share/duhenefemo.bash
+
+Entire Log: https://hastebin.com/share/unogayisol.less
+
 
 Thank you very much for your time and attention. I sincerely apologize
 that I am currently unable to provide a reproducer for this issue.
