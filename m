@@ -1,155 +1,179 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF751DDC1;
-	Wed,  4 Jun 2025 15:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1502417332C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749051155; cv=none; b=nEKTrhTA7NUYgn6B+txtKVCrbE8W+nhl6KOECTJV/rYl4sSbKNMPD6aPiYGNV+53gKU1ApoC9odf1BnKf379MV+R24iN1bxHtkQdu6JK+OC6LbMeL3vkS7Cia7eINgthL0QfjuIk/WqOTmq45rzgBDfXYPtxQcvazjdxKZaR3JU=
+	t=1749051276; cv=none; b=OMirVx7WIprLlCf0NpELcZDF10/mVeBZQTFzmrGE+sa1XHU32CQM9vzL0dntp9SiPDkLhqxv8TaAs3EhOM/ofeCt6c1ajB2uQL1ro/ZV4aYlzxg1DyiSm7hLXG/JWf5SuOZ7ZhKMOXWQFu6tC61Ssi022f0C+RAQ1zQ6v91Zf8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749051155; c=relaxed/simple;
-	bh=Oxj0L0vMUeF1rATIob8FyEydepIqKducGZ1bw6oENWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u4pFkqYiNXbX5m/Sjpzd3k2T2O7Vhi8+GNbPD4grKpOi2x8tJPtrGSlaqSDMARNz+CdgLodupmAjCrDsLmPOAGwaJ9SvTlOH2X1LU/FCs4va33GXCrtli9RwfhAXzcMHw5hiutcot179Kk8wH/ylliRQnLJkmWVNXMyJ0W/0SG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B6oP9n3H; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749051276; c=relaxed/simple;
+	bh=qTXEgU4faK8V3+o1webIL89G6tLPcijOJ2B4kkypv04=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=SXD4mIQ1Pp7OnM3ZpwjMXDib7/ei+ms022T10sXtkmHj3JZb0MsMdu2lBWjYhnOHRyI0LPF68w1uPDHttFVupS1nY1t554G0wtKR1DfEeBwZo5/B+Sh4vrq+Sr0jjw0SBA/TZ1K3coF4qDSQ7qxwQNmi2ZJUZSt0z8y6qcOxoKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aHSdrBfd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B6oP9n3H"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=zSIx60s8W1RWmCAF04ar6XaDTCMxl8+rRsS7EF61guU=; b=B6oP9n3HnEWwmroXUatjSLp0PB
-	NtpK3WbsPpN8PGKdq4svfO035Bd6PjgODgScaDHOjm5fCSfybX4KxecZlOhU5NB5Lzifu0guXSMQ8
-	M+GjaTu2GusJh0wpNjx5civ2v535J9ZftwnpJa8/RbmiBq81Lx+ejCGF6kKjR50sZvmw0y5HC9V1Y
-	rYksRqKo6BWLnF2VO7fKZXe937u3FN6t9MXvcf8/DqXS6xRJn6k1ZQz+ZRZGaVM7qoyK6lKbU7mVG
-	lYfiEmEUWU8yHX+zaABzBqHAcXmAiDZvvLqmHkTW1b+dBS0P9bkL3EEoD2fcFjNrrUfhGEX2hssVb
-	fwxGiKsA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMq6G-00000003ED3-1d8p;
-	Wed, 04 Jun 2025 15:32:20 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BD968300787; Wed,  4 Jun 2025 17:32:19 +0200 (CEST)
-Date: Wed, 4 Jun 2025 17:32:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Baisheng Gao <baisheng.gao@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
-	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
-Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
- sample
-Message-ID: <20250604153219.GJ39944@noisy.programming.kicks-ass.net>
-References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
- <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
- <20250604142437.GM38114@noisy.programming.kicks-ass.net>
- <aEBeRfScZKD-7h5u@J2N7QTR9R3>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aHSdrBfd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749051274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o2KiML0jpnv35I2ryANTISLMOhOT0NTQ+BIj5SUwYgU=;
+	b=aHSdrBfdpWo+VlBMNNWLM7vQrYqmLAhHjLfHW3BIKRcNXwgCJ+8JB/VLGOI/IVOhV0Xs+6
+	p9/Z3AUkfvexKcKsu8azXafIuEEjYMHYLyBThi1g7u61UqMOFgFmiudpSUxqKvtK+9wpGL
+	wapQT8R9p1LTdooCJyidUqYer8+IYk0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-16-NZydtSNtNuymBvMkhyhlXA-1; Wed,
+ 04 Jun 2025 11:34:31 -0400
+X-MC-Unique: NZydtSNtNuymBvMkhyhlXA-1
+X-Mimecast-MFC-AGG-ID: NZydtSNtNuymBvMkhyhlXA_1749051269
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 41659195608C;
+	Wed,  4 Jun 2025 15:34:29 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.2])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DCD6919560AE;
+	Wed,  4 Jun 2025 15:34:26 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHS8izMMU8QZrvXRiDjqwsBg_34s+dhvSyrU7XGMBuPF6eWyTA@mail.gmail.com>
+References: <CAHS8izMMU8QZrvXRiDjqwsBg_34s+dhvSyrU7XGMBuPF6eWyTA@mail.gmail.com> <770012.1748618092@warthog.procyon.org.uk>
+To: Mina Almasry <almasrymina@google.com>
+Cc: dhowells@redhat.com, willy@infradead.org, hch@infradead.org,
+    Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+    netdev@vger.kernel.org, linux-mm@kvack.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: Device mem changes vs pinning/zerocopy changes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEBeRfScZKD-7h5u@J2N7QTR9R3>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1098852.1749051265.1@warthog.procyon.org.uk>
+Date: Wed, 04 Jun 2025 16:34:25 +0100
+Message-ID: <1098853.1749051265@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, Jun 04, 2025 at 03:55:01PM +0100, Mark Rutland wrote:
+Mina Almasry <almasrymina@google.com> wrote:
 
-> I think we might need something in the perf core for cpu-bound events, assuming
-> those can also potentially make samples.
+> Hi David! Yes, very happy to collaborate.
+
+:-)
+
+> FWIW, my initial gut feeling is that the work doesn't conflict that much.
+> The tcp devmem netmem/net_iov stuff is designed to follow the page stuff,
+> and as the usage of struct page changes we're happy moving net_iovs and
+> netmems to do the same thing. My read is that it will take a small amount of
+> extra work, but there are no in-principle design conflicts, at least AFAICT
+> so far.
+
+The problem is more the code you changed in the current merge window I'm also
+wanting to change, so merge conflicts will arise.
+
+However, I'm also looking to move the points at which refs are taken/dropped
+which will directly inpinge on the design of the code that's currently
+upstream.
+
+Would it help if I created some diagrams to show what I'm thinking of?
+
+> I believe the main challenge here is that there are many code paths in
+> the net stack that expect to be able to grab a ref on skb frags. See
+> all the callers of skb_frag_ref/skb_frag_unref:
 > 
-> From a quick scan of perf_event_sample_format:
-> 
-> 	PERF_SAMPLE_IP			// safe
-> 	PERF_SAMPLE_TID			// safe
-> 	PERF_SAMPLE_TIME		// safe
-> 	PERF_SAMPLE_ADDR		// ???
+> tcp_grow_skb, __skb_zcopy_downgrade_managed, __pskb_copy_fclone,
+> pskb_expand_head, skb_zerocopy, skb_split, pksb_carve_inside_header,
+> pskb_care_inside_nonlinear, tcp_clone_payload, skb_segment.
 
-Safe, set by driver, or 0.
+Oh, yes, I've come to appreciate that well.  A chunk of that can actually go
+away, I think.
 
-> 	PERF_SAMPLE_READ		// ???
+> I think to accomplish what you're describing we need to modify
+> skb_frag_ref to do something else other than taking a reference on the
+> page or net_iov. I think maybe taking a reference on the skb itself
+> may be acceptable, and the skb can 'guarantee' that the individual
+> frags underneath it don't disappear while these functions are
+> executing.
 
-This is basically read(2) on a fd, but in sample format. Only the count
-values. This good.
+Maybe.  There is an issue with that, though it may not be insurmountable: If a
+userspace process does, say, a MSG_ZEROCOPY send of a page worth of data over
+TCP, under a typicalish MTU, say, 1500, this will be split across at least
+three skbuffs.
 
-> 	PERF_SAMPLE_CALLCHAIN		// may access mm
+This would involve making a call into GUP to get a pin - but we'd need a
+separate pin for each skbuff and we might (in fact we currently do) end up
+calling into GUP thrice to do the address translation and page pinning.
 
-Right.
+What I want to do is to put this outside of the skbuff so that GUP pin can be
+shared - but if, instead, we attach a pin to each skbuff, we need to get that
+extra pin in some way.  Now, it may be reasonable to add a "get me an extra
+pin for such-and-such a range" thing and store the {physaddr,len} in the
+skbuff fragment, but we also have to be careful not to overrun the pin count -
+if there's even a pin count per se.
 
-> 	PERF_SAMPLE_ID			// safe
-> 	PERF_SAMPLE_CPU			// safe
-> 	PERF_SAMPLE_PERIOD		// safe
-> 	PERF_SAMPLE_STREAM_ID		// ???
-safe
+> But devmem TCP doesn't get much in the way here, AFAICT. It's really
+> the fact that so many of the networking code paths want to obtain page
+> refs via skb_frag_ref so there is potentially a lot of code to touch.
 
-> 	PERF_SAMPLE_RAW			// ???
-safe, this is random data returned by the driver
+Yep.
 
-> 	PERF_SAMPLE_BRANCH_STACK	// safe
-> 	PERF_SAMPLE_REGS_USER		// safe
-> 	PERF_SAMPLE_STACK_USER		// may access mm
-> 	PERF_SAMPLE_WEIGHT		// ???
-> 	PERF_SAMPLE_DATA_SRC		// ???
-Both should be safe, driver sets them.
+> But, AFAICT, skb_frag_t needs a struct page inside of it, not just a
+> physical address. skb_frags can mmap'd into userspace for TCP
+> zerocopy, see tcp_zerocopy_vm_insert_batch (which is a very old
+> feature, it's not a recent change). There may be other call paths in
+> the net stack that require a full page and just a physical address
+> will do. (unless somehow we can mmap a physical address to the
+> userspace).
 
-> 	PERF_SAMPLE_IDENTIFIER		// safe
-> 	PERF_SAMPLE_TRANSACTION		// ???
-Safe, another random thing the driver can set. This was for
-transactional memory stuff.
+Yeah - I think this needs very careful consideration and will need some
+adjustment.  Some of the pages that may, in the future, get zerocopied or
+spliced into the socket *really* shouldn't be spliced out into some random
+process's address space - and, in fact, may not even have a refcount (say they
+come from the slab).  Basically, TCP has implemented async vmsplice()...
 
-> 	PERF_SAMPLE_REGS_INTR		// safe
-> 	PERF_SAMPLE_PHYS_ADDR		// safe; handles mm==NULL && addr < TASK_SIZE
-> 	PERF_SAMPLE_AUX			// ???
+> Is struct net_txbuf intended to replace struct sk_buff in the tx path
+> only? If so, I'm not sure that works.
 
-Safe, should be driver, PT for Intel, or that CoreSight for ARM.
+No - the idea is that it runs a parallel track to it and holds "references" to
+the buffer memory.  This is then divided up amongst a number of sk_buffs that
+hold refs on the first txbuf that it uses memory from.
 
-> 	PERF_SAMPLE_CGROUP		// safe
-> 	PERF_SAMPLE_DATA_PAGE_SIZE	// partial; doesn't check addr < TASK_SIZE
-> 	PERF_SAMPLE_CODE_PAGE_SIZE	// partial; doesn't check addr < TASK_SIZE
+txbufs would allow us to take and hold a single ref or pin (or even nothing,
+just a destructor) on each piece of supplied buffer memory and for that to be
+shared between a sequence of skbufs.
 
-But does use init_mm when !mm, perf_get_page_size().
+> Currently TX and RX memory share a single data structure (sk_buff), and I
+> believe that is critical.
 
-> 	PERF_SAMPLE_WEIGHT_STRUCT	// ???
-Safe, driver bits again.
+Yep.  And we need to keep sk_buff because an sk_buff is more than just a
+memory pinning device - it also retains the metadata for a packet.
 
-> 
-> ... I think all the dodgy cases use mm somehow, so maybe the perf core
-> should check for current->mm?
+> ... So I think, maybe, instead of introducing a new struct, you have to make
+> the modifications you envision to struct sk_buff itself?
 
-This then... I suppose.
+It may be possible.  But see above.  I want to be able to share pins between
+sk_buffs.
 
----
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f34c99f8ce8f..49944e4ec3e7 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7439,6 +7439,10 @@ perf_sample_ustack_size(u16 stack_size, u16 header_size,
- 	if (!regs)
- 		return 0;
- 
-+	/* No mm, no stack, no dump. */
-+	if (!current->mm)
-+		return 0;
-+
- 	/*
- 	 * Check if we fit in with the requested stack size into the:
- 	 * - TASK_SIZE
-@@ -8153,6 +8157,9 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
- 	if (!kernel && !user)
- 		return &__empty_callchain;
- 
-+	if (!current->mm)
-+		user = false;
-+
- 	callchain = get_perf_callchain(regs, 0, kernel, user,
- 				       max_stack, crosstask, true);
- 	return callchain ?: &__empty_callchain;
+> OK, you realize that TX packets can be forwarded to RX. The opposite
+> is true, RX can be forwarded to TX. And it's not just AF_UNIX and
+> loopback. Packets can be forwarded via ip forwarding, and tc, and
+> probably another half dozen features in the net stack I don't know
+> about.
+
+Yeah, I'd noticed that.
+
+> I think you need to modify the existing sk_buff. I think adding
+> a new struct and migrating the entire net stack to use that is a bit
+> too ambitious. But up to you. Just my 2 cents here.
+
