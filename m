@@ -1,72 +1,49 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2069.outbound.protection.outlook.com [40.107.236.69])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFFF1E51F6
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749055050; cv=fail; b=mHXbKyUzP5ERucrE5xg+fxUi346RfgEshjTv1gJtb6FWqf6gD8b57OuwCaXqbb7xtG7REwRQ6k1zUCDdOEYKO3SN8m654FJtcEhppkel69+GODzwcc1j1l9DuiwYHk6WKlsAWvIuJDlS9OZ55XxDP+IbCgKUufYWl5xhnxQWbu4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749055050; c=relaxed/simple;
-	bh=fZcOoid2iiMnOEkU4yDbi1eIaGDGbcPoDrcrQGoNCIc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aJU6hOnUj8YfaoeZ4ZrKO/QZNiY0nzwz1J2WQxrO14sM6vzVOg6ZF/2cYshqTyKC18NOiVSolt+isWcx07crTBq8hwFLxMLs/hJSalFB8x0lxkwFgy95k8/qFyY9uXkL56HexRF1K4MPEXRl7X6KyiogyMKhw2DD2zhJjJumtD8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zOuPMEKw; arc=fail smtp.client-ip=40.107.236.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B631DED51
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749055067; cv=none; b=sG4GukOC7iFx4dTELptGWAHeLV5FMCeaukyn9vFHN3XUraAdYdd1uAGrvGmQ5xSRVBHRsqZQgEYwKNrSnUssMKQPxB1imqY/GORWYRTe/I20v+oYVToI32AOSpZdkTtQGbkLErDJAPs00Fa4Dn2azjc6z2Y81fxWviFZLpkwfrA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749055067; c=relaxed/simple;
+	bh=k1VAhtvWn1mdnc82A42urCXNfSl687+frp/shs2RzIQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i1Dao87Av/qMsounI1C9gzGM/Vq2mvjvqVSENcO58vCubtt+vIpuMXnDXChK13pQNSujg1ZJb3f/FidWKJsTlt8PMNP2hmO8LlGI3JnSCUkFVS5xa8xuYDKVfFUryqSyBKyehvZt9fxjBitsz+2XiWwvlpTlTdR+9QC6xb5ihcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aMePBzl/; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zOuPMEKw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ko/ctveeBVJKCUcVHJgoSYVcuhGWv8Mauupz/SvQt1AxAWTCYutZ88513LIPeu3ShPNlFQ+Y8ih1AxldekOMVFeerm/YLa3g1MqA1EBmO4Gri1INmwp/tr3gJOmAzdxWpoF/XItwGA1nVg7gpkRNxlA/Wz7LYdKcFnK8pbQOK3/MDWpcBFLbD0723806O9uMFWpZRl2cYbQwlHUgd+mdprO8dacevtCGcBmA2XpVCkMFaOXtodlCzh8/AJ8je9jW4j8Llcoh7th0oDmehedtari3Eya4YEzg7wHKZxl9A+x7h9zBHqjRP+T0+n1YWCo9ASeRFE3U8htUoFxtNP8fQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n/22qpuEXc2iSpGELsQIKflWqo39wLrEdAbW5wTRVTI=;
- b=oMKhzCIg5xfDDL4AP77SRplF5IcGzJc8UOOkgRCegIu8+QOeNK21XLeDwcYuL6g84uWryY1DyHlGrwyBfIg0+5tt2U0EK4NTLZg8zHiBIiJg6RmiilRaCbOqsl8VsiM1i0QJ/Iu2MJRiOap4WcbYrZl4Vse47t8LhTQVUehOZSlymNgYhRfr5jxvqCH2Vi02oxsUNQ5O5W8Au3/ZM75gDb7y+OtYaZufGc/8QkoqF6n1O6DSNPmQtSDLMa4TQFYqfUf4yo45MOFm6aOIgf/eoJygHxD9xBXgj6H+UJX+slpavr3t3mJ4ZvnnaOBbtaDf2ZMZiqsbzDo8qzV6IrI8CA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=8bytes.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n/22qpuEXc2iSpGELsQIKflWqo39wLrEdAbW5wTRVTI=;
- b=zOuPMEKwCA4GQX9zZGbgjQAJjXrQQOFy07swz10cLzgGo9HIBq+qxoAhIMYWEHh3WUagyMBtsJyTPbc8NTg5ISG1XnswfcFFahNAfEzHxsGpnUG0ZQaEJ4r+F6O7DdpHFhSa/9QFd2FaDs2QUM6O8xIxgv21Du76oLYg6TjVkVY=
-Received: from SJ0PR03CA0346.namprd03.prod.outlook.com (2603:10b6:a03:39c::21)
- by BN7PPF0D942FA9A.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6c7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Wed, 4 Jun
- 2025 16:37:26 +0000
-Received: from CO1PEPF000075F4.namprd03.prod.outlook.com
- (2603:10b6:a03:39c:cafe::8f) by SJ0PR03CA0346.outlook.office365.com
- (2603:10b6:a03:39c::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.23 via Frontend Transport; Wed,
- 4 Jun 2025 16:37:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000075F4.mail.protection.outlook.com (10.167.249.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8792.29 via Frontend Transport; Wed, 4 Jun 2025 16:37:25 +0000
-Received: from BLRDHSRIVAS.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 4 Jun
- 2025 11:37:22 -0500
-From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-To: <joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <will@kernel.org>,
-	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
-	<iommu@lists.linux.dev>, <Vasant.Hegde@amd.com>,
-	<dheerajkumar.srivastava@amd.com>
-CC: Vasant Hegde <vasant.hegde@amd.com>
-Subject: [PATCH v6 1/8] iommu/amd: Refactor AMD IOMMU debugfs initial setup
-Date: Wed, 4 Jun 2025 22:06:40 +0530
-Message-ID: <20250604163647.1439-2-dheerajkumar.srivastava@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250604163647.1439-1-dheerajkumar.srivastava@amd.com>
-References: <20250604163647.1439-1-dheerajkumar.srivastava@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aMePBzl/"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749055062;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LpQJtvbQ0WTNzxLrRi6c5eMnvReMC88RFvMxCl1x3Ss=;
+	b=aMePBzl/Kpp/mc2Qthi84fsO91CCWhQU6s10DjhzRzngNpjRGDzyOpYaS/Vd78OtVKBHmU
+	B6XxJLcdvcmWF8gxU20PBS6FgsEhyiBp81BcOpkjUcwC6EOgZK7h6DExgVCL/pUBulrwJn
+	cTL90JD5YNNQiu0R0zBQlYz7tjIvNXg=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next] bpf: Add show_fdinfo for perf_event
+Date: Thu,  5 Jun 2025 00:37:22 +0800
+Message-Id: <20250604163723.3175258-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,147 +51,212 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000075F4:EE_|BN7PPF0D942FA9A:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f021166-cdb8-414c-eab7-08dda3861694
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Uv6o2H2QLnBIU3LM+yb29J7Wf6Vg4lqcrk0qTECn07g0WHYw+gn2IaMx6K1I?=
- =?us-ascii?Q?7ZHDjAR2Z+FaLKmJ8i9vgpWUTNrvGM/M3GKTDbbE0bTElQZYffO1GN8z9CxG?=
- =?us-ascii?Q?ZJOrHG4Q96EdxzHChQcEj4WOCuf3ClU/HpdBw7Ska45xATfvxT9yFOTKTg64?=
- =?us-ascii?Q?69OiR2Wvq9YAq7qmrpkKUDdSzC/krC3tAu/pWp32obU7UUCQF3KmEl36LaKz?=
- =?us-ascii?Q?44Lfwr8Opx3eCr7Pi7dRI1fzK9EET2fBqPsEdsHHtejVWATEVy4Vp+ff3vjZ?=
- =?us-ascii?Q?K/eNpgrFoTjYlzwIDh+w03oJulWvDouILoMT0PmkEUBgUEh6Q6tKwOTXLqhO?=
- =?us-ascii?Q?86D5Mh4J4jlmQFrzSm49Betl6pD0MGojOi54YjXzqUYbvfJNsbtT2J67AL8o?=
- =?us-ascii?Q?l6hsO++jOExiOwYB7YckkP/WODoN2wU6PyX3DdXMrMNsUe43QG5Sf6THjcKe?=
- =?us-ascii?Q?7JHBbG2LeZ50qvydFA9Zuz7klSdwy29pqiPvowQSiHBZmC73sLJoHUjbN2aQ?=
- =?us-ascii?Q?rQaysWOF2MLc1hog5q7oK0OI49goGcOZAGZR2PwtnrFKSrkgzFMLHsjuzvR6?=
- =?us-ascii?Q?EGgng9jbe1becyvVg9bP+OnB4wYwVjZ32DpUxAbyzW9J6HlzFg5DNn5nfjQG?=
- =?us-ascii?Q?LX8CuBqYix3w9RrSoj5U/uZgr6bxXqtrK12dsTiqjDzNvZ1Uenita8fqOR5X?=
- =?us-ascii?Q?LCdO6tpAcf//kK+tt9eYNEJXk0ftD8WfJ3NT7AnJ0Fsn4VEflP6/dAIPPOoD?=
- =?us-ascii?Q?fSiLaGIqufZR6aOJjvHXHSFRC+76z6162GQ4DiyYa88O3LUnonB+VMRkizED?=
- =?us-ascii?Q?PPlVTYVv2ElgMgqhhDfZGuUTTnPEOHZNy8PxV7Z0Bc7wszmI6SRF0zxViibG?=
- =?us-ascii?Q?zSkz3a/V6th2Go/Ll0NlihwvSgUIGriC3EVcHzKxJ0xFSAyQ4GsJXu+y4DOt?=
- =?us-ascii?Q?Wx2LlyG4L0Ew/4ocKO7PUDzZ8X7R6EteXAur0BwVkRW9ZNbPV5Mpl+9ufgSf?=
- =?us-ascii?Q?G01pkHNDeJTh+AkL74Q8F3bYeV+Oc6mxJpM/T7ClK0K9PDIpP48q5lqZxWKz?=
- =?us-ascii?Q?kgKfGNkiMUKX9z54oMuzrBmJKo0yrYWRObuH+SawtEX+U1A/tIzzbdNVxhV3?=
- =?us-ascii?Q?4FYr7FqfAcCHMYqaOEfDYuod1B51A8dpZjzRNORkMhhDuah2flNqDQZtJYgQ?=
- =?us-ascii?Q?w7Eay3icK7MYFYmdeHOiVl/cc8Ope/NzK64Vo2d7WWApneTx14UcF2I0De01?=
- =?us-ascii?Q?PFIGMqm18GufLhqBbGkl9iwCmquPj6WSvbB2j0+phNIEIqp1rp6d9utesg+P?=
- =?us-ascii?Q?kearl01AbsdzZLWrN9T7M7FuqzNqAvs6KmFF8h7K96sck8d8vEWNlqP7mrMK?=
- =?us-ascii?Q?5E/r2yFMmCCp9JS5c3vEWhgV17cDzluxoskgG4oEZj4qcJ19ItXCH3JLPJK0?=
- =?us-ascii?Q?AY9bEHWA9tISiE9biOsLzW+Cx9uP5/4BO0ZQW7OPV/J6QQeRLD/VPxuup70e?=
- =?us-ascii?Q?6ghwAgHd7F3KDgZHhlwSMbD3YpUAsTyYb0hE?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 16:37:25.4821
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f021166-cdb8-414c-eab7-08dda3861694
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000075F4.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF0D942FA9A
+X-Migadu-Flow: FLOW_OUT
 
-Rearrange initial setup of AMD IOMMU debugfs to segregate per IOMMU
-setup and setup which is common for all IOMMUs. This ensures that common
-debugfs paths (introduced in subsequent patches) are created only once
-instead of being created for each IOMMU.
+After commit 1b715e1b0ec5 ("bpf: Support ->fill_link_info for perf_event") add
+perf_event info, we can also show the info with the method of cat /proc/[fd]/fdinfo.
 
-With the change, there is no need to use lock as amd_iommu_debugfs_setup()
-will be called only once during AMD IOMMU initialization. So remove lock
-acquisition in amd_iommu_debugfs_setup().
+kprobe fdinfo:
+link_type:	perf
+link_id:	2
+prog_tag:	bcf7977d3b93787c
+prog_id:	18
+name:	bpf_fentry_test1
+offset:	0
+missed:	0
+addr:	ffffffffaea8d134
+event_type:	3
+cookie:	3735928559
 
-Signed-off-by: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+uprobe fdinfo:
+link_type:	perf
+link_id:	6
+prog_tag:	bcf7977d3b93787c
+prog_id:	7
+name:	/proc/self/exe
+offset:	6507541
+event_type:	1
+cookie:	3735928559
+
+tracepoint fdinfo:
+link_type:	perf
+link_id:	4
+prog_tag:	bcf7977d3b93787c
+prog_id:	8
+tp_name:	sched_switch
+event_type:	5
+cookie:	3735928559
+
+perf_event fdinfo:
+link_type:	perf
+link_id:	5
+prog_tag:	bcf7977d3b93787c
+prog_id:	9
+type:	1
+config:	2
+event_type:	6
+cookie:	3735928559
+
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 ---
- drivers/iommu/amd/amd_iommu.h |  4 ++--
- drivers/iommu/amd/debugfs.c   | 16 +++++++---------
- drivers/iommu/amd/init.c      |  5 ++---
- 3 files changed, 11 insertions(+), 14 deletions(-)
+ kernel/bpf/syscall.c | 126 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
 
-diff --git a/drivers/iommu/amd/amd_iommu.h b/drivers/iommu/amd/amd_iommu.h
-index 220c598b7e14..70873bb78b3c 100644
---- a/drivers/iommu/amd/amd_iommu.h
-+++ b/drivers/iommu/amd/amd_iommu.h
-@@ -28,9 +28,9 @@ void *__init iommu_alloc_4k_pages(struct amd_iommu *iommu,
- 				  gfp_t gfp, size_t size);
- 
- #ifdef CONFIG_AMD_IOMMU_DEBUGFS
--void amd_iommu_debugfs_setup(struct amd_iommu *iommu);
-+void amd_iommu_debugfs_setup(void);
- #else
--static inline void amd_iommu_debugfs_setup(struct amd_iommu *iommu) {}
-+static inline void amd_iommu_debugfs_setup(void) {}
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 9794446bc8..9af54852eb 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -3793,6 +3793,35 @@ static int bpf_perf_link_fill_kprobe(const struct perf_event *event,
+ 	info->perf_event.kprobe.cookie = event->bpf_cookie;
+ 	return 0;
+ }
++
++static void bpf_perf_link_fdinfo_kprobe(const struct perf_event *event,
++					struct seq_file *seq)
++{
++	const char *name;
++	int err;
++	u32 prog_id, type;
++	u64 offset, addr;
++	unsigned long missed;
++
++	err = bpf_get_perf_event_info(event, &prog_id, &type, &name,
++				      &offset, &addr, &missed);
++	if (err)
++		return;
++
++	if (type == BPF_FD_TYPE_KRETPROBE)
++		type = BPF_PERF_EVENT_KRETPROBE;
++	else
++		type = BPF_PERF_EVENT_KPROBE;
++
++	seq_printf(seq,
++		   "name:\t%s\n"
++		   "offset:\t%llu\n"
++		   "missed:\t%lu\n"
++		   "addr:\t%llx\n"
++		   "event_type:\t%u\n"
++		   "cookie:\t%llu\n",
++		   name, offset, missed, addr, type, event->bpf_cookie);
++}
  #endif
  
- /* Needed for interrupt remapping */
-diff --git a/drivers/iommu/amd/debugfs.c b/drivers/iommu/amd/debugfs.c
-index 545372fcc72f..ff9520e002be 100644
---- a/drivers/iommu/amd/debugfs.c
-+++ b/drivers/iommu/amd/debugfs.c
-@@ -13,20 +13,18 @@
- #include "amd_iommu.h"
- 
- static struct dentry *amd_iommu_debugfs;
--static DEFINE_MUTEX(amd_iommu_debugfs_lock);
- 
- #define	MAX_NAME_LEN	20
- 
--void amd_iommu_debugfs_setup(struct amd_iommu *iommu)
-+void amd_iommu_debugfs_setup(void)
- {
-+	struct amd_iommu *iommu;
- 	char name[MAX_NAME_LEN + 1];
- 
--	mutex_lock(&amd_iommu_debugfs_lock);
--	if (!amd_iommu_debugfs)
--		amd_iommu_debugfs = debugfs_create_dir("amd",
--						       iommu_debugfs_dir);
--	mutex_unlock(&amd_iommu_debugfs_lock);
-+	amd_iommu_debugfs = debugfs_create_dir("amd", iommu_debugfs_dir);
- 
--	snprintf(name, MAX_NAME_LEN, "iommu%02d", iommu->index);
--	iommu->debugfs = debugfs_create_dir(name, amd_iommu_debugfs);
-+	for_each_iommu(iommu) {
-+		snprintf(name, MAX_NAME_LEN, "iommu%02d", iommu->index);
-+		iommu->debugfs = debugfs_create_dir(name, amd_iommu_debugfs);
-+	}
+ #ifdef CONFIG_UPROBE_EVENTS
+@@ -3820,6 +3849,34 @@ static int bpf_perf_link_fill_uprobe(const struct perf_event *event,
+ 	info->perf_event.uprobe.cookie = event->bpf_cookie;
+ 	return 0;
  }
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index 14aa0d77df26..ecc6c246f87e 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -3387,7 +3387,6 @@ int amd_iommu_enable_faulting(unsigned int cpu)
-  */
- static int __init amd_iommu_init(void)
- {
--	struct amd_iommu *iommu;
- 	int ret;
++
++static void bpf_perf_link_fdinfo_uprobe(const struct perf_event *event,
++					struct seq_file *seq)
++{
++	const char *name;
++	int err;
++	u32 prog_id, type;
++	u64 offset, addr;
++	unsigned long missed;
++
++	err = bpf_get_perf_event_info(event, &prog_id, &type, &name,
++				      &offset, &addr, &missed);
++	if (err)
++		return;
++
++	if (type == BPF_FD_TYPE_URETPROBE)
++		type = BPF_PERF_EVENT_URETPROBE;
++	else
++		type = BPF_PERF_EVENT_UPROBE;
++
++	seq_printf(seq,
++		   "name:\t%s\n"
++		   "offset:\t%llu\n"
++		   "event_type:\t%u\n"
++		   "cookie:\t%llu\n",
++		   name, offset, type, event->bpf_cookie);
++
++}
+ #endif
  
- 	ret = iommu_go_to_state(IOMMU_INITIALIZED);
-@@ -3401,8 +3400,8 @@ static int __init amd_iommu_init(void)
+ static int bpf_perf_link_fill_probe(const struct perf_event *event,
+@@ -3888,10 +3945,79 @@ static int bpf_perf_link_fill_link_info(const struct bpf_link *link,
  	}
- #endif
- 
--	for_each_iommu(iommu)
--		amd_iommu_debugfs_setup(iommu);
-+	if (!ret)
-+		amd_iommu_debugfs_setup();
- 
- 	return ret;
  }
+ 
++static void bpf_perf_event_link_show_fdinfo(const struct perf_event *event,
++					    struct seq_file *seq)
++{
++	seq_printf(seq,
++		   "type:\t%u\n"
++		   "config:\t%llu\n"
++		   "event_type:\t%u\n"
++		   "cookie:\t%llu\n",
++		   event->attr.type, event->attr.config,
++		   BPF_PERF_EVENT_EVENT, event->bpf_cookie);
++}
++
++static void bpf_tracepoint_link_show_fdinfo(const struct perf_event *event,
++					    struct seq_file *seq)
++{
++	int err;
++	const char *name;
++	u32 prog_id;
++
++	err = bpf_get_perf_event_info(event, &prog_id, NULL, &name, NULL,
++				      NULL, NULL);
++	if (err)
++		return;
++
++	seq_printf(seq,
++		   "tp_name:\t%s\n"
++		   "event_type:\t%u\n"
++		   "cookie:\t%llu\n",
++		   name, BPF_PERF_EVENT_TRACEPOINT, event->bpf_cookie);
++}
++
++static void bpf_probe_link_show_fdinfo(const struct perf_event *event,
++				       struct seq_file *seq)
++{
++#ifdef CONFIG_KPROBE_EVENTS
++	if (event->tp_event->flags & TRACE_EVENT_FL_KPROBE)
++		return bpf_perf_link_fdinfo_kprobe(event, seq);
++#endif
++
++#ifdef CONFIG_UPROBE_EVENTS
++	if (event->tp_event->flags & TRACE_EVENT_FL_UPROBE)
++		return bpf_perf_link_fdinfo_uprobe(event, seq);
++#endif
++}
++
++static void bpf_perf_link_show_fdinfo(const struct bpf_link *link,
++				      struct seq_file *seq)
++{
++	struct bpf_perf_link *perf_link;
++	const struct perf_event *event;
++
++	perf_link = container_of(link, struct bpf_perf_link, link);
++	event = perf_get_event(perf_link->perf_file);
++	if (IS_ERR(event))
++		return;
++
++	switch (event->prog->type) {
++	case BPF_PROG_TYPE_PERF_EVENT:
++		return bpf_perf_event_link_show_fdinfo(event, seq);
++	case BPF_PROG_TYPE_TRACEPOINT:
++		return bpf_tracepoint_link_show_fdinfo(event, seq);
++	case BPF_PROG_TYPE_KPROBE:
++		return bpf_probe_link_show_fdinfo(event, seq);
++	default:
++		return;
++	}
++}
++
+ static const struct bpf_link_ops bpf_perf_link_lops = {
+ 	.release = bpf_perf_link_release,
+ 	.dealloc = bpf_perf_link_dealloc,
+ 	.fill_link_info = bpf_perf_link_fill_link_info,
++	.show_fdinfo = bpf_perf_link_show_fdinfo,
+ };
+ 
+ static int bpf_perf_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
 -- 
-2.25.1
+2.43.0
 
