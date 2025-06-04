@@ -1,165 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505A429008E
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 14:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD47938384
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 14:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045663; cv=none; b=ijLAwQNX2M79mfW2PASkxQAAlUgu7tReuxlfASuVK5EdUBOJr5a7/jowdc4ClxQCYmxRhkav3LMBIfJvs/gsYwV7cQcu89i9PaLhhxUMFMFroHAruXfn5UjV+4zBvnSEUIrcQJM0AgQgZ6DiuKWB6ddcTkeaX6/uoBQ/uSGh/hk=
+	t=1749045746; cv=none; b=D/PGUll7T0dklWBPJogP6LL3T4M17pedAQ2YfqotdT/IsTTsseLOx9tbLHEJJUzh05x5iRZMrTM0hdWn+mffnYNMNjSreE5Ic1PbvLA9wwsYFXxhle1tJl40Vxx5/vG75ounL4g243WZmvgsyw540K20mNq1M8T7hG0Iv+XAKJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045663; c=relaxed/simple;
-	bh=/jraNwTtJpORq8daMzld6WHV7HfbUMS87ukomyrIkKE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sDsz76PK1tEVIVh3vYh4jheyRI0bAb8mLaKJ/qFhw4rEFpG+8DdbtSozfuYQmB6YT9tT1bFzSCqc1umt2SYex6VOajLYHJlqImTNk0suQqYPMOIGgO3E6/B5Y+PRbZQ/ODeGZPSsI6w6EAbn6jxbS2qVaPhgwOMq094AqnuSX2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HbT2t6t1; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749045746; c=relaxed/simple;
+	bh=SF2TUI7mUMzc/jSBFlCExxvSiZraFWQni6zRHWJeB4A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=O2OdaqmPFAyWC8pKW4uL/Vf/PiiFjr7TkBAmNkz47UOm2qQLYRMcAXB0/zF5Ed7Wyco9rH4a4bdBKF+ppckD8f9qIxQszdfMnFdyYjOu12O05OxkCV0R0aXZHethl7KV7QaFUkpMZty3MccVit5FRK821kcu2uAF+ktJTAdKTOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cE35S6Gl; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HbT2t6t1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749045662; x=1780581662;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/jraNwTtJpORq8daMzld6WHV7HfbUMS87ukomyrIkKE=;
-  b=HbT2t6t1onwTWlFZtUXmNSpM5S2F1f+S97RHSZkpBXpAqbgFXSzRAkDL
-   z6SHDg0CeAyWQWHkvdh5qr0IA/iKMs+1AAPWo+xfNgw9ioNN0FW+wg9/t
-   9xHQPJIyj7GPJDU00an6B6c9E6L/MKAGvlWPlomAD/a9PpxPDkLXai0op
-   LuW6R7acXIGMOXKqbX6ianN8gjWzF9OVPDXBhTqqfvmqkrEh+8rJflUZK
-   qOXDIKiBHGJ/0Y8taWT9UuyNbXhqZF8uli+whlOmfPCCgyufIXH6VETwL
-   NVBHysRUS+T+nV4786cDjBw+CM+KXsAmjtVGXM9QJbIv91mG/7DmMFKrF
-   A==;
-X-CSE-ConnectionGUID: 8ycatYYqSmeWaJ1hG5+zGg==
-X-CSE-MsgGUID: wkMV42eZSUy3D25XTvzCKA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51200159"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="51200159"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:01:00 -0700
-X-CSE-ConnectionGUID: 5AKLfDWHRziP8K35hrKIlw==
-X-CSE-MsgGUID: fDq3JjtQSySbezOjr88hzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="150475265"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.229]) ([10.125.110.229])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:01:00 -0700
-Message-ID: <c6c2ef2e-7372-4ce4-9ac6-6a2a60f18093@intel.com>
-Date: Wed, 4 Jun 2025 07:00:59 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cE35S6Gl"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ea0e890ccso6660221a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 07:02:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749045744; x=1749650544; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4H4b6gj2RPA1NSrnkWfDydCjI09ZASRQKphvEZK2b8s=;
+        b=cE35S6GlhsRDrfcQ4WEL/rCkHwGVKBsIoIaWsj4cFbPq+IozhwD5kY+6X2L+AR8x8w
+         InGzc1vW/cJWKxHrahvIQnghy8uki7b6+RESwHb7olNIzlKsLtELGhuKPygNomX9KhPy
+         GQEBmZYCaa38LlbsG36e/iLJQKuQ2cQ80TNPdPt4lIWfG7EPcH5nE/B8NaeCqtBcuhb4
+         T4UWqwGlhYxMZS97dhtbTwHOfdoEuZDOC6roBfgEzmjUSt7UksSiSZ4W2/I/sSfcfHFl
+         9aiH512lsLaHVmq6cWVDBW1PyCWG3/F/EB8VPmkfLvdA/3X96Udd4kDlfFkM5X7yNxwk
+         ruWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749045744; x=1749650544;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4H4b6gj2RPA1NSrnkWfDydCjI09ZASRQKphvEZK2b8s=;
+        b=hwt1MrxfkYklHc9wJYl/y8Lf9XcEad/UGZfto8ZCD9Nsuf1BnNzI3HWZdL5x9rxkl9
+         fUwbDIA+6uuJ+yK1rspvY44blomcZlVeKwIq5sJNMhI/ORJDoUnBwQU3nnGIiStHQEcw
+         NVEGl/htLY9de6k40/S+AMrmb6A/HGxA1xOS68Mgol4SktduAJRTrmbRhB6aq5R9W/ih
+         9fgEPyk91uXkXbuTVlVvAt6BKw7371h1P5Dv9almYrzZRbg3i+tENl+NVM8/BvM7fuf9
+         c7m/r7aW9byWau60fGThpaE3h52JfQp4JcOXXhHOpHIsmDeuZJtzwO8CeiwxgtHxHntB
+         1gKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIUAXNZHcPYj/owNGG7Tu9qdHw0lG5SRyUVuvrLYcGWqaVM6rtf5acR5i4TOHeT8j35X56CvwnhAb1+yw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3BAMDLy40cHfk6QJ3QkK0H0eNd457L/BHE+scH2JjL1kCSvYE
+	SKb58qmPrGbje2JzSD63PiU40s34WHrcbuTgHmcgXV5BkZMvyv4du6BVqqgiKXSuYmRTfp+c7J9
+	Z3y865g==
+X-Google-Smtp-Source: AGHT+IHaoqvtVI0Yz46iIwHy/iA5qtPYPdu+XqdbPfhM44STMOd9JolDoyV7EuaxX4Sn5kzKGTMBLEw92Is=
+X-Received: from pjbrj10.prod.google.com ([2002:a17:90b:3e8a:b0:313:221f:6571])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5587:b0:311:d05c:936
+ with SMTP id 98e67ed59e1d1-3130cd31f24mr5027744a91.17.1749045744042; Wed, 04
+ Jun 2025 07:02:24 -0700 (PDT)
+Date: Wed, 4 Jun 2025 07:02:22 -0700
+In-Reply-To: <aC-otXnBwHsdZ7B4@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] x86: Change maintainers list for the Intel TXT project
- group
-To: "Camacho Romero, Michal" <michal.camacho.romero@intel.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "Mowka, Mateusz" <mateusz.mowka@intel.com>,
- "Pawlicki, AdamX" <adamx.pawlicki@intel.com>
-Cc: "Michalak, BartlomiejX" <bartlomiejx.michalak@intel.com>,
- "Fedko, Artem" <artem.fedko@intel.com>,
- "Zielinski, Marcel" <marcel.zielinski@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Ning Sun <ning.sun@intel.com>
-References: <IA1PR11MB7755413461E0F4403A702E3AAF6CA@IA1PR11MB7755.namprd11.prod.outlook.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <IA1PR11MB7755413461E0F4403A702E3AAF6CA@IA1PR11MB7755.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250522005555.55705-1-mlevitsk@redhat.com> <20250522005555.55705-4-mlevitsk@redhat.com>
+ <aC-XmCl9SVX39Hgl@google.com> <aC-otXnBwHsdZ7B4@google.com>
+Message-ID: <aEBR7mbg-iTYdCtJ@google.com>
+Subject: Re: [PATCH v5 3/5] KVM: nVMX: check vmcs12->guest_ia32_debugctl value
+ given by L2
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Chao Gao <chao.gao@intel.com>, 
+	Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On 6/4/25 00:51, Camacho Romero, Michal wrote:
-> I’m BIOS Engineer from the Intel Corp, working on the BIOS security 
-> modules development, including TBOOT MLE project: As the present
-> INTEL(R) TRUSTED EXECUTION TECHNOLOGY (TXT) group's maintainer (Ning
-> Sun) doesn't work currently on the TBOOT project's development, he
-> was replaced by the active TBOOT MLE project's developers, who will
-> maintain Intel TXT project group and are currently maintaining the
-> TBOOT MLE project: http://tboot.sourceforge.net <http://
-> tboot.sourceforge.net>
-
-Hi Michal,
-
-For folks to function as effective maintainers, they need to be able to
-review and submit patches. This patch wasn't submitted following our
-normal processes:
-
-> https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
-
-It came to me quite mangled, and was likely dropped from the mailing
-lists because of the HTML.
-
-The easiest way to do it these days is probably to just use
-git-send-email. But if you're going to be an effective maintainer,
-you'll need to get your email setup sorted sooner or later. That means
-no Outlook.
-
-It's also normal to cc the person who is being replaced, or even after
-they've moved on to other jobs.
-
-Since there are three of you, could you please go take a look at this
-"trenchboot" stuff? Their aim seems to be to duplicate some of what
-tboot can be used for, and they expect to leverage TXT itself:
-
+On Thu, May 22, 2025, Sean Christopherson wrote:
+> +Jim
+> 
+> On Thu, May 22, 2025, Sean Christopherson wrote:
+> > On Wed, May 21, 2025, Maxim Levitsky wrote:
+> > > Check the vmcs12 guest_ia32_debugctl value before loading it, to avoid L2
+> > > being able to load arbitrary values to hardware IA32_DEBUGCTL.
+> > > 
+> > > Reviewed-by: Chao Gao <chao.gao@intel.com>
+> > > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > > ---
+> > >  arch/x86/kvm/vmx/nested.c | 3 ++-
+> > >  arch/x86/kvm/vmx/vmx.c    | 2 +-
+> > >  arch/x86/kvm/vmx/vmx.h    | 1 +
+> > >  3 files changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> > > index e073e3008b16..00f2b762710c 100644
+> > > --- a/arch/x86/kvm/vmx/nested.c
+> > > +++ b/arch/x86/kvm/vmx/nested.c
+> > > @@ -3146,7 +3146,8 @@ static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
+> > >  		return -EINVAL;
+> > >  
+> > >  	if ((vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS) &&
+> > > -	    CC(!kvm_dr7_valid(vmcs12->guest_dr7)))
+> > > +	    (CC(!kvm_dr7_valid(vmcs12->guest_dr7)) ||
+> > > +	     CC(vmcs12->guest_ia32_debugctl & ~vmx_get_supported_debugctl(vcpu, false))))
+> > 
+> > This is a breaking change.  For better or worse (read: worse), KVM's ABI is to
+> > drop BTF and LBR if they're unsupported (the former is always unsupported).
+> > Failure to honor that ABI means L1 can't excplitly load what it think is its
+> > current value into L2.
+> > 
+> > I'll slot in a path to provide another helper for checking the validity of
+> > DEBUGCTL.  I think I've managed to cobble together something that isn't too
+> > horrific (options are a bit limited due to the existing ugliness).
+> 
+> And then Jim ruined my day.  :-)
+> 
+> As evidenced by this hilarious KUT testcase, it's entirely possible there are
+> existing KVM guests that are utilizing/abusing DEBUGCTL features.
+> 
+> 	/*
+> 	 * Optional RTM test for hardware that supports RTM, to
+> 	 * demonstrate that the current volume 3 of the SDM
+> 	 * (325384-067US), table 27-1 is incorrect. Bit 16 of the exit
+> 	 * qualification for debug exceptions is not reserved. It is
+> 	 * set to 1 if a debug exception (#DB) or a breakpoint
+> 	 * exception (#BP) occurs inside an RTM region while advanced
+> 	 * debugging of RTM transactional regions is enabled.
+> 	 */
+> 	if (this_cpu_has(X86_FEATURE_RTM)) {
+> 		vmcs_write(ENT_CONTROLS,
+> 			   vmcs_read(ENT_CONTROLS) | ENT_LOAD_DBGCTLS);
+> 		/*
+> 		 * Set DR7.RTM[bit 11] and IA32_DEBUGCTL.RTM[bit 15]
+> 		 * in the guest to enable advanced debugging of RTM
+> 		 * transactional regions.
+> 		 */
+> 		vmcs_write(GUEST_DR7, BIT(11));
+> 		vmcs_write(GUEST_DEBUGCTL, BIT(15));
+> 		single_step_guest("Hardware delivered single-step in "
+> 				  "transactional region", starting_dr6, 0);
+> 		check_db_exit(false, false, false, &xbegin, BIT(16),
+> 			      starting_dr6);
+> 	} else {
+> 		vmcs_write(GUEST_RIP, (u64)&skip_rtm);
+> 		enter_guest();
+> 	}
+> 
+> For RTM specifically, disallowing DEBUGCTL.RTM but allowing DR7.RTM seems a bit
+> silly.  Unless there's a security concern, that can probably be fixed by adding
+> support for RTM.  Note, there's also a virtualization hole here, as KVM doesn't
+> vet DR7 beyond checking that bits 63:32 are zero, i.e. a guest could set DR7.RTM
+> even if KVM doesn't advertise support.  Of course, closing that hole would require
+> completely dropping support for disabling DR interception, since VMX doesn't
+> give per-DR controls.
 >
-https://lore.kernel.org/all/18F9BD47-282D-4225-AB6B-FDA4AD52D7AE@gmail.com/
+> For the other bits, I don't see a good solution.  The only viable options I see
+> are to silently drop all unsupported bits (maybe with a quirk?), or enforce all
+> bits and cross our fingers that no L1 VMM is running guests with those bits set
+> in GUEST_DEBUGCTL.
 
-If nothing else, it would be great to know if you folks think trenchboot
-is the way forward and what the future of the tboot code in the kernel
-is if trenchboot is also there.
+Paolo and I discussed this in PUCK this morning.
 
-Oh, and again since there are three of you...  first link in:
+We agree trying to close the DR7 virtualization hole would be futile, and that we
+should add support for DEBUGCTL.RTM to avoid breaking use of that specific bit.
 
-	Documentation/arch/x86/intel_txt.rst
+For the other DEBUGCTL bits, none of them actually work (although, somewhat
+amusingly, FREEZE_WHILE_SMM would "work" for real SMIs, which aren't visible to
+L1), so we're going to roll the dice, cross our fingers that no existing workload
+is setting those bits only in vmcs12.GUEST_DEBUGCTL, and enforce
+vmx_get_supported_debugctl() at VM-Enter without any quirk.
 
-gets a 404. That would be a nice thing to fix up first, I think. Maybe
-you can send a fix for that along with the fixed MAINTAINERS update.
-
-
+  6   TR: Setting this bit to 1 enables branch trace messages to be sent.
+  7   BTS: Setting this bit enables branch trace messages (BTMs) to be logged in a BTS buffer.
+  8   BTINT: When clear, BTMs are logged in a BTS buffer in circular fashion.
+  9   BTS_OFF_OS: When set, BTS or BTM is skipped if CPL = 0.
+  10  BTS_OFF_USR: When set, BTS or BTM is skipped if CPL > 0.
+  11  FREEZE_LBRS_ON_PMI: When set, the LBR stack is frozen on a PMI request.
+  12  FREEZE_PERFMON_ON_PMI: When set, each ENABLE bit of the global counter control MSR are frozen on a PMI request.
+  13  ENABLE_UNCORE_PMI: When set, enables the logical processor to receive and generate PMI on behalf of the uncore.
+  14  FREEZE_WHILE_SMM: When set, freezes perfmon and trace messages while in SMM.
