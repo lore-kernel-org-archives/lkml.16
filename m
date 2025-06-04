@@ -1,196 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2056.outbound.protection.outlook.com [40.107.20.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73567290BDA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFCE290BD2;
 	Wed,  4 Jun 2025 14:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749046770; cv=none; b=XevIiDokJXoLxtHc8TkVAUOdzId03ubrW+/fBRPpyF2kC+zDaR/dFhqzUNhtHimMsK1NpUrBPFqZyiGY2nSeUjer1RibM4gQ79R6ot0zBhh5y8KWr7/nuVMOWs3VFR2UGIcFFIR2J4jP/z0Th3T2tnBu69xp3O65dIZTbb0K6tw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749046770; cv=fail; b=l3dlu52RVSc6rOZjr8BMTH1t7MlyQZkCTrudjyJLahDlRhEmByla73Qv4IdjHwvczPox7q4sMJj/a8QecT4NPvY0SliEbTtu3+icmiefYSKC0Eial3CpVmGTk5bO/tu+8uh77sOcU9aCxvR3aQgLNWymge9FsQQgTH/1OWpSCho=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749046770; c=relaxed/simple;
-	bh=nvCdP0Vwqyv1w/nWeuE741pzwxdxLERa4Y/vBATrZhI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R9phpO1SpFhGATgoeaQH7VyumznrkgpuFv0u3ZEPdapL6jTQc+YO3BseZFXkBF4a/zk9sHkHDoIgLl8e4J8eXixkdOZKg1nNozsMgf9H3aOQC/k3nLTyBPGT0FShhG1qFItE7hYD8pZI19LP3znpiFq7xeOTakZT9TvNFF0BOqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MaDhrEXP; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=7fK4BsaEXqhZFIdUEG1yNjhgJw+n9MfelF0N/QYZJZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tmHeG4y4XtX/1+LSUX84ewAzF5x2ibDPZNp5F5E2YXlHqOszP0l+igAjDorGinoP9U6zfUeExzXR3u98R5hcwKNIVCPoe3js6mLsF00BTQTD0Fri1TeC8bolHKnZvGMkv43jY6/EKybjGV7j6mx+sSc8RfQrVpz7CiMxYcJUb/o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=W/TiDbDv; arc=fail smtp.client-ip=40.107.20.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MaDhrEXP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749046768; x=1780582768;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nvCdP0Vwqyv1w/nWeuE741pzwxdxLERa4Y/vBATrZhI=;
-  b=MaDhrEXPpCq2+0VtQ52F34rES13HIvrNq8abAj0kytD0TkmozLNl7kIJ
-   w7eHYDucxLb6eq4g3JMZmzfQEdvqauJsCn69ukGZAbeOO2RvrSLo2ZiJv
-   KRkJ4Lq8uvJ0IrcL1J7Bq/bziLaPcP/wrtMLJQfqDWw7WjdM4iayLesK4
-   ZMIE35nl4t84pvzAlUiXSRDhfhF8fOrznA6FrJoqv6gwJQ27cBZZi7CvJ
-   oM9y205tnaItKgm5WUP5FIeoHVWG8hCkjNY4sv1qOiBawzUwJt6VdSyRl
-   IuCc7Phy1dA/gaLG03B6BZ8Eb2kYKpz2YeT5TkBCtKKzZHbbPgP5jspQT
-   Q==;
-X-CSE-ConnectionGUID: u8wYudwCTuyByGe1L7imHQ==
-X-CSE-MsgGUID: krjGmWmxQfSMpP41mxlQBg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="62489553"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="62489553"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:19:27 -0700
-X-CSE-ConnectionGUID: gpf1jbhDR02P7Vc1SsI37g==
-X-CSE-MsgGUID: HaGLvCGpTPyRlTH47RR87Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="150363145"
-Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.110.233]) ([10.125.110.233])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:19:25 -0700
-Message-ID: <343f6719-598a-453b-9903-21632bc6b623@intel.com>
-Date: Wed, 4 Jun 2025 07:19:26 -0700
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="W/TiDbDv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z5SdONDAlGOqV5FCykblbUkVVs1EqaXrAGgSZKhRU1V2jGiyQTbodyXYBPYheWmdWVIBKYODn//kKgJW/MhHGMKyO8MG5fv8NH4+HYYltDvl6VXlLB+15bzo4m66VctmM1Y+aHTxZHAkGLUuo5E1qmQGDG84m3+UxQqcxSX5t0RzZHwWJkFOSzp+4RvujZY9rAqQuRHTv2q+j81CB5tFlvG1cG52oAfVjI5fU1Y8kvDLVjVCx+ZaPXkeuiBqzzOP07g6pUcRdoJxIIi4y9JLx5mxMgcdAH0NyhDazLSnwyaGOrEEFuMw2h8AVsouHIo1zn0YumVld9t9JLrvq8UoQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7fK4BsaEXqhZFIdUEG1yNjhgJw+n9MfelF0N/QYZJZo=;
+ b=BD6iCTQF3hrrX1GyriRzK1gTnB94ByCkPQB/MFgNTQjQZCsPLs7cA/DezfB4xNiEAbrtVjLSzJq5Og/WdiflFPNDY7i0hAweMZk0nSPy80vkVjh4Prxw8gW/qnl/Aeo6M/CWsB0o2kext5dtKB4yNH9hFsVQf9h+rMUyS8IcWZywPu/MU2syrukBjLyXDYn+yql5kU3iqLJP7gT4Hbgk/dM5dnujEfQrkLev0wdWLqHJ4m/yMie+s4v971tptf2eKJPqjq0SRJHliVMVIgdY80iCOWAHcDF0kCvUiRpVfVT24jwMd6Zb3teiTMxw/mJceChp8H4M9IuBg2zBQcpRrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7fK4BsaEXqhZFIdUEG1yNjhgJw+n9MfelF0N/QYZJZo=;
+ b=W/TiDbDvQvJ4yYm+mLXoklUwbtQwZ2SxeTGU+M36RWa6wndlbMhto0wGdmj8X6lWxRHRSsE1Aq2YfuGlacm7TV0DInq1o/Jb4KlyFOWLYSSPJHogb7czkK8bjKZDiEv/isfnwd5RZv5DvwlVRePWui/5d1VPeDTjTWzPEEnBW5k7IKkCzabV7jjOZxunZAHb26fNBlcvfYSr6ChrW/etYKgBCnFhGA/FBNo2OF4DCwHDoBv8HEB2ZY1POn0SNVxExde/AxGTzCVEjx07sUmh/Q1cmJnNS060llNY/3Utxp/1xtuttGJhTTOIdNNZWyi5Owb4Xaou6m7LAYBLLwB89w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by VI2PR04MB10619.eurprd04.prod.outlook.com (2603:10a6:800:26d::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Wed, 4 Jun
+ 2025 14:19:25 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8813.018; Wed, 4 Jun 2025
+ 14:19:25 +0000
+Date: Wed, 4 Jun 2025 23:29:19 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Stefano Radaelli <stefano.radaelli21@gmail.com>,
+	Mathieu Othacehe <othacehe@gnu.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [v1] arm64: dts: freescale: imx93-var-som: update eqos support
+ for MaxLinear PHY
+Message-ID: <20250604152919.GA29462@nxa18884-linux>
+References: <20250603221416.74523-1-stefano.radaelli21@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603221416.74523-1-stefano.radaelli21@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI2PR01CA0024.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::20) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
- enable and reset paths
-To: Shuai Xue <xueshuai@linux.alibaba.com>,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>, fenghuay@nvidia.com,
- vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
- <20250522063329.51156-2-xueshuai@linux.alibaba.com>
- <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
- <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
- <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
- <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
- <874ix5bhkz.fsf@intel.com> <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
- <22b3a299-b148-46ec-804e-2f6cbb3d5de1@linux.alibaba.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <22b3a299-b148-46ec-804e-2f6cbb3d5de1@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|VI2PR04MB10619:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7e990749-dff3-4656-6bc8-08dda372cefd
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|366016|1800799024|376014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SsppRPXvuY9+gXWURC3BJU7v9arWiEgP1fOZBkN7AGY04lWXQmifQCzM3DTb?=
+ =?us-ascii?Q?al9wVcYQ9szLcKwOMJmck5RHhS2bv4eyLR7q+mpY3aGHeMmcUfbFhOl8OEs9?=
+ =?us-ascii?Q?x5saItB3FviUs10DAnfPM8HOvxWnVH2BsTXj4+6CX51xtpc0GLIGow+XV4+F?=
+ =?us-ascii?Q?zhIbeLs0Onv8RhyywRcm3AAubnCaTObBYBW4/RDva4YA159Mj0zFfqDeqg1G?=
+ =?us-ascii?Q?55KAgbeTlgzyKiYe/x9m9F1GsDj0Y0HrO8Mei5G9P4Bd8UIEuZsIIkCB8Ysc?=
+ =?us-ascii?Q?vONhjfoLnAJouuw4wOahvzcmI+ndsiNNDiJw90FPEQAYihKocYFFHsGS8T8Y?=
+ =?us-ascii?Q?tyqEPPQFcC5N/J4onsvv6Rks2hYoLdKUIDNmVbwbhzxhMiSuUezOpIZoJZjG?=
+ =?us-ascii?Q?HaCMa/PNKD1fAlxYgzCMOMSbDR9PjeF1EbwpaM85HZpH5DYVL9hMf8p4dkDD?=
+ =?us-ascii?Q?JoWMaKBuW5quz8EbccS0BAHq7cYdsas52tqrLk/CLux+YhZdVSItmyFsvant?=
+ =?us-ascii?Q?uT3evp6pjWcSF6KiL7s7EzoddNHxqa8CUFtSLf1WnJtMv8miSL2flwKIipD9?=
+ =?us-ascii?Q?UtkS/X+kSyGY4uolszVEzmAMrO/ulIVuqI33kWpU+QmIOlyAIrOwrPHpgX/g?=
+ =?us-ascii?Q?6C6ecEE1mesTeWSjiM3UI7o2Kk85rev+7qRPrk5R+zV56aUtajKt99NMB5Rt?=
+ =?us-ascii?Q?cazplpCfcasJ34kEltpNKAFNMlQHRkZ5IXSMWtOVzAoGqYg837kfPHKiT8xw?=
+ =?us-ascii?Q?1dOX+1W/mO1YWJkb08Xk7lB149wEM6WhyzG6H/bl+jNzAWQbJliPDLQrNnpE?=
+ =?us-ascii?Q?kRrcB5mLAzSQto/p8iksgl77oVXxdGCizm7hFdhVSKr/GIAabWsmX5APK6qK?=
+ =?us-ascii?Q?zdlbemlhs6pN1HVogOI/ZN9KEmNxg2vhhsv7uDmzCN40tLacFukmrR40upPJ?=
+ =?us-ascii?Q?bNtchS9dCmcPtli5mQDO9jz4qRu4yiVls5lvvzrsKjslugH2r86kcdjpZzUX?=
+ =?us-ascii?Q?D27XngYq3UR77pxw1m+ty1CMjzR50UG+9lUytw391RM/Q5rEyBl9G/Vwtrui?=
+ =?us-ascii?Q?xmMDcAt5HeZbCdU4Dpppt52oJkhxpjBlDztrR5yHgn4tbzmIXGVpCwyMFdVX?=
+ =?us-ascii?Q?CAK6s9XcxpH78xktX9UpOquXzdoRJYJiZ+hw11eFrkltkSZ8zw40oQ5RQcQc?=
+ =?us-ascii?Q?76UefMYOyvFF/dJTOFFCvoz+jhN9LMlo/CBrmoCD0RYP3EGSLGol8dhyVXqX?=
+ =?us-ascii?Q?YZkfJvVXclRFLuLooFkYpYMTdF/zZtWSTpH4l637DmlbD97TUhFTc065lJMK?=
+ =?us-ascii?Q?yhbJCaSfc1Mcwrm9k4XWCNpKYbr6hAeK8VgwbhnElr8EGUiT5b7b1JkgDa/L?=
+ =?us-ascii?Q?kEn/KPPr3I1b5qcH4F1VE7ZjxcjISEk7kTuvzGUHT5GT+bDLgjdDMG2uNPnW?=
+ =?us-ascii?Q?cdyBOMcq5tvjcj9Shylp2pIiGgVINjuh23h7wuzlPJVraR6kGnNECQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(366016)(1800799024)(376014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Sg2tNXRviGrTpQN4NoTsmNGEQS8Mf4hDX14BOXD+D1H9Tw4eUdLTGswmCzvC?=
+ =?us-ascii?Q?zsNpVJ27knDvTRygfbLkYaECm2xNgHl/PGWOT9yUbVycN0GefAS/XPPefkKV?=
+ =?us-ascii?Q?cMpr6cSw2iryLV0VGoNRJ7FY0abQvxvXLjK+F9+luKNCnFxXtcP9nasMvkrM?=
+ =?us-ascii?Q?Tg6tZbeFofP6tk+/v2tj4YbY5ie+jC1LHLepnG1a0AHh3Hv/lcBsGiKJwPkr?=
+ =?us-ascii?Q?uozzX38XcB4FmNWDdcUW8CdjB6GEKXlOk06VV+1o148s7cUZgfzCaswRlXRb?=
+ =?us-ascii?Q?TQh5xUdZOqJh6qDOkgqkajxUoxFHyB3HiLgXWlMUuokw9PmaPH2lr5B9BRiQ?=
+ =?us-ascii?Q?N0AuZ8q4hcGVzZYhk/hOZ9BSJ7Ujwy0B7FFUERsY1ThMVK8kpkokDKjKJeSX?=
+ =?us-ascii?Q?MW/+VvgnYbvcW3A9DQ9cb6N5ASH9TBFDnWZkKmZXqzYXUb/m6lkykXoxE1df?=
+ =?us-ascii?Q?P0fdelLlwg9IINKPgCC9CIE4AZb6PV6D6qaLuTe0FKgdce9uj1rpkIGPSsY+?=
+ =?us-ascii?Q?wwHB6BsA6zXtsjndeLPJCKF+6EyZ282SaH7v0F9lVVmPu/zwwA+VN0I0oVYv?=
+ =?us-ascii?Q?ubVMsfOW64FnERTse6bsaxcjV7Ipy2nlYLghzVtBGxAxF0kh3ga/715D7HyG?=
+ =?us-ascii?Q?50OvOWmVq2uVQp9yEnOLLRmI9H83UGctqbnUS62IneOukQNJNnZhZ4tp2ltq?=
+ =?us-ascii?Q?0tso79S2LXq4XECrkYIJQD3E6NAjEi7H0OtnicU78TSO0CG9uxt9gRGvw7mf?=
+ =?us-ascii?Q?lUTWrqnm6L3/ShWMfqEZmrtA+lBQ42dzem/P1UuIUCx2M3sZUHjr/xN+cOBS?=
+ =?us-ascii?Q?3YFRTzZG1jd4t5qp5cb4/Cub54wzXrvF8t2xp84YHo5C83Mx9vljisKA5Q8r?=
+ =?us-ascii?Q?f5R8q9NidfCMXa2ZigdQCZQsw+A7Roey2bTGeqJXJG01KfrAAT0F4M01LzHX?=
+ =?us-ascii?Q?eZeVgDayPWPxBqT18Y/sy+8IAMQTrAt417YuPpUWGdV4vg3uoAk1xeivwOj4?=
+ =?us-ascii?Q?1+Yq7Fole31vBOrxu5e0Og8TGaWuNxBCQQVYDj2vz1kCi91GEgmy0KjR8bDX?=
+ =?us-ascii?Q?FkYwsSdtEWax8u+t64E+bdYA2gYuORwSHOu0SUBEHfEeUKblBMa5SCLpltY/?=
+ =?us-ascii?Q?JsR63JWiL8qWwzFA03I+lLpxIBsLFhUN4AppwKf6J7/8d2oX89gWKLVYSsPh?=
+ =?us-ascii?Q?nifrSlIqEy3NVwulEhXKx5PvBP/OYtaL483xVcCud3AAZRre4fExfSGquO0z?=
+ =?us-ascii?Q?O1ZPsYIQpHQYlplcU8RhxvvOG6bsW3DRKN6VvEVap8LfFQXMJnMVSGtxw3Zt?=
+ =?us-ascii?Q?PG7uAzi5inzVGVx8RG7tlDkz9nAANH1IyQt2bT+hHGt5sXh6ONQBl+I8zm8c?=
+ =?us-ascii?Q?m8gRYqxdM2ftqVHaUEPvVJ17fdieyDfL9H7WhlB559Zhe7BeVtpCaU/FfNLn?=
+ =?us-ascii?Q?qwxsX/t5sJ+KiekmleoCOBdGgYMs8TnL1Boia9lOzkHCJ9rKW+yE3EbWMlzr?=
+ =?us-ascii?Q?mVIuW9G4K/FpoGxZWUJvWl8qd2fLMYW4fBbgVoX0RlMNPv9f24sFdLROceG4?=
+ =?us-ascii?Q?c4eCAOehCVY1iYb1Z6k3RZiDcvwAW2f4zN/bmXNW?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e990749-dff3-4656-6bc8-08dda372cefd
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 14:19:25.3591
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z1wroKivVKOs7vMQmxlLeLrveBvok6GBKMBynflzPhLrGwvK5yATzf2f+DguWluIhzLm2NM70fkFnFOpbbMhMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10619
 
++Mathieu who upstreamed the initial support for this board.
 
-
-On 6/4/25 1:55 AM, Shuai Xue wrote:
-> 
-> 
-> 在 2025/6/3 22:32, Dave Jiang 写道:
->>
->>
->> On 5/27/25 7:21 PM, Vinicius Costa Gomes wrote:
->>> Shuai Xue <xueshuai@linux.alibaba.com> writes:
->>>
->>>> 在 2025/5/23 22:54, Dave Jiang 写道:
->>>>>
->>>>>
->>>>> On 5/22/25 10:20 PM, Shuai Xue wrote:
->>>>>>
->>>>>>
->>>>>> 在 2025/5/22 22:55, Dave Jiang 写道:
->>>>>>>
->>>>>>>
->>>>>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
->>>>>>>> A device reset command disables all WQs in hardware. If issued while a WQ
->>>>>>>> is being enabled, it can cause a mismatch between the software and hardware
->>>>>>>> states.
->>>>>>>>
->>>>>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
->>>>>>>> send a reset command and clear the state (wq->state) of all WQs. It then
->>>>>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
->>>>>>>> ensure consistency between the software and hardware states.
->>>>>>>>
->>>>>>>> However, a race condition exists between the WQ enable path and the
->>>>>>>> reset/recovery path. For example:
->>>>>>>>
->>>>>>>> A: WQ enable path                   B: Reset and recovery path
->>>>>>>> ------------------                 ------------------------
->>>>>>>> a1. issue IDXD_CMD_ENABLE_WQ
->>>>>>>>                                       b1. issue IDXD_CMD_RESET_DEVICE
->>>>>>>>                                       b2. clear wq->state
->>>>>>>>                                       b3. check wq_enable_map bit, not set
->>>>>>>> a2. set wq->state = IDXD_WQ_ENABLED
->>>>>>>> a3. set wq_enable_map
->>>>>>>>
->>>>>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
->>>>>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
->>>>>>>> leading to an inconsistency between wq->state (software) and the actual
->>>>>>>> hardware state (IDXD_WQ_DISABLED).
->>>>>>>
->>>>>>>
->>>>>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
->>>>>>>
->>>>>>> DJ
->>>>>>
->>>>>> Yep, how about add a spin lock to enable wq and reset device path.
->>>>>>
->>>>>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
->>>>>> index 38633ec5b60e..c0dc904b2a94 100644
->>>>>> --- a/drivers/dma/idxd/device.c
->>>>>> +++ b/drivers/dma/idxd/device.c
->>>>>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
->>>>>>    }
->>>>>>    EXPORT_SYMBOL_GPL(idxd_wq_enable);
->>>>>>    +/*
->>>>>> + * This function enables a WQ in hareware and updates the driver maintained
->>>>>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
->>>>>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
->>>>>> + * otherwise disable the WQ without the driver's state being properly
->>>>>> + * updated.
->>>>>> + *
->>>>>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
->>>>>> + * called after the WQ has been explicitly disabled, so no concurrency
->>>>>> + * issues arise.
->>>>>> + */
->>>>>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
->>>>>> +{
->>>>>> +       struct idxd_device *idxd = wq->idxd;
->>>>>> +       int ret;
->>>>>> +
->>>>>> +       spin_lock(&idxd->dev_lock);
->>>>>
->>>>> Let's start using the new cleanup macro going forward:
->>>>> guard(spinlock)(&idxd->dev_lock);
->>>>>
->>>>> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
->>>>> guard(device)(idxd_confdev(idxd));
->>>>
->>>> Then we need to replace the lock from spinlock to mutex lock?
->>>
->>> We still need a (spin) lock that we could hold in interrupt contexts.
->>>
->>>>
->>>>>
->>>>> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
->>>>> guard(device)(wq_confdev(wq));
->>>>>
->>>>> If you are up for it that is.
->>>>
->>>> We creates a hierarchy: pdev -> idxd device -> wq device.
->>>> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
->>>>
->>>>       (wq_confdev(wq))->parent = idxd_confdev(idxd);
->>>>
->>>> Is it safe to grap lock of idxd_confdev(idxd) under hold
->>>> lock of wq_confdev(wq)?
->>>>
->>>> We have mounts of code use spinlock of idxd->dev_lock under
->>>> hold of wq->wq_lock.
->>>>
->>>
->>> I agree with Dave that the locking could be simplified, but I don't
->>> think that we should hold this series because of that. That
->>> simplification can be done later.
->>
->> I agree. Just passing musing on the current code.
-> 
-> Got it, do I need to send a separate patch for Patch 2?
-
-Not sure what you mean. Do you mean if you need to send patch 2 again?
-> 
-> Thanks.
-> Shuai
-
+Regards,
+Peng
