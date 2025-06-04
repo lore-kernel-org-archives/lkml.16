@@ -1,115 +1,124 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CFC7143895;
-	Wed,  4 Jun 2025 18:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0782E1F9A89;
+	Wed,  4 Jun 2025 18:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749060850; cv=none; b=DaNav3b/BCEc4RYc4zoqGs5v4BibC4FHdCQVBcFqAu8xmaztuymgv3nBHdTWpYqom7lz32HjJmu303pxTE3c768esMN4x5Np4+1cqVtY9OkenJRamoopBc3uPtV95mf3HYGZL2U9EX+dqeklgOu8JTqajq8XSjDVBdyEoarETd0=
+	t=1749060879; cv=none; b=A4J1/GuXW9Yk71U/HLWtns7N+hlqNAyKMCpBgzhAMKxWBr6MEsEuseknfVqn91pR73Bos1VKq4JQ7HzMjazktWU2VeXu2nECA3hEFwdE0BDtDRZ8MSjViBRt6G2DLNH7FzeEaVjUEYUDMLy2/xujddMNiT+yOQqYpPGe7gk/qY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749060850; c=relaxed/simple;
-	bh=Ih6PrpFoYo5W/qpmk508vba1vovNomriF+kLrTM1iGw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YyCG0FbA2n02qQw4f2f6D3DSMhYUqtQJHNRC8SBp9hf1U2juSXsx4XEUWUk5z6im33nFHu7DlvaF7lZyAzwL2seb5CsyG0No3xJgoFD3RrYAZebveUMrYZ2l2Ge59+C4dt0fQSs9XE5IMIVPRjPjsitpzkTft+gjTIMNSW9tjs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C089612FC;
-	Wed,  4 Jun 2025 11:13:49 -0700 (PDT)
-Received: from [10.57.26.187] (unknown [10.57.26.187])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D96B3F5A1;
-	Wed,  4 Jun 2025 11:14:02 -0700 (PDT)
-Message-ID: <921810b5-436e-4402-8304-9ba2eb335ed9@arm.com>
-Date: Wed, 4 Jun 2025 19:14:00 +0100
+	s=arc-20240116; t=1749060879; c=relaxed/simple;
+	bh=ehgtzLTDO+WEBHp3jiFE5+O21zqJvWbW0LGGhdbMTFQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rU2xDAI1QH/NOmCRcxyohFi7qIq6k+D1k+zn+r0kBXNu4ygj8LkNQmxYI1gfYzalZiTTQmaBOQjcPbVeR9X/f2NZ3dxRzoMDtSBrQy3rgbC6CcUUzfleibICqUYKFoBDkEh7U3+GoZgu+t+mc9SgZr0tmd2lRBmCqWiNJfa9OW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b7UbHZn+; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7UbHZn+"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a51d552de4so81748f8f.0;
+        Wed, 04 Jun 2025 11:14:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749060876; x=1749665676; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8aoZzBXtabDZ4ZNWdYqVpRgG+emFPNLC/glUQopk4ic=;
+        b=b7UbHZn+HVt3Q/F+rQT8i977QZzleto53Gpbmu0KHmEfCSxV3IVDFVb+KOO5uao138
+         G9Jmlm9C4umy5XNBQ12xA6TsbpQJwDwUlbkh1iHZa0NB7pP4KMpyubjliYSxoserSZRN
+         5iARlAv7gam03DTdDzbnATNMXk8nRqyTMp8yVfo2Ys8iJl+9EruYh7lv6nQ6G1tKLJz1
+         SzFWoiJn15TwxhXN5/cOXV+bMW9Yw0vCro6IAxPUmUo+qjR+EyMhlqCqHGOR8Bn+cqjZ
+         /JfgUx6V8tjHGGwj3OPWrZ1w4Lrsnp2wuKL0qrIYUTDkDTS20PubxvcefhFKh0oIJlpB
+         Twgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749060876; x=1749665676;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8aoZzBXtabDZ4ZNWdYqVpRgG+emFPNLC/glUQopk4ic=;
+        b=ebCZcotcFKVeeT8UY/NsuSM9oZMHs5cOgr2CzFGIz0v4HHPoi7JvdPG2eVpn5Yi/Kl
+         BbHcwdnvnnOsI5Or9N63f3upSq7nmma27NWPPNDThVkXs/0WsHaYKW9xyttLD+0HF7mH
+         U6Y4PNFz7iYpuow1MA8e0P1uHaVR59j5u7/wPsEUk+nDCqlNvJqwGePWgkTkupPrO+Qm
+         /rxh9T1Se6SHPQX92TMec+9/Pk5vIr0V+pasTXoRYEcyAgny6pzgjsH9+Q15ZMTLtsRT
+         zkcpz64EY4Pz1bafbZWzdWbPzNq2CwyLqnQKwknhejLbKnnP8Xf9knk50Cd+uc8RONB5
+         4qwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfJtVrw4jAgjUlKVW8dfvdpIT8WtTkEpYPcLvkENOoj79CXrBtsxl/abA0sWKlf53YKIxkcemE@vger.kernel.org, AJvYcCUuOCG6HrBvvnqS70q3dVIeAv6LI24wqltcnu+ows2kW9xDz4q6Ul0i4NeIT8VDH/A9lU8vduiQabM3mBvXAur1sXc=@vger.kernel.org, AJvYcCV+GrAvfSAU9YDFh+Eb9kSDx/I+PP1AuYQyZTs1dU/HSwNAGF/vvqNdQ6LNXqpxccxw0Gv8O7cH7o0W@vger.kernel.org, AJvYcCXTgPETgvVWXATC+NvjLfXdtVeBpeg8xhvV+rwXb8YqYba3Pel3jPjLJB5V2bT1laSUlwcXJ13k7Mz5LEGu@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWVOi51CTU819cybAgMw7ylqNiXuUqx3YjHw/8ER0sb7qQ1rDN
+	qnr6it0P1qe18M56eBwAu3UBMtTxX345BMXvI85mzPIHOj0OmbR1fQfqo9j92k5L/BB4rYkiGFU
+	YmswFmUX0Yj7Qkd+4pWCFmj2A8SFZ/ig=
+X-Gm-Gg: ASbGnctRKJ4oQnEW9bmSPcROu2YytqXFaKFm4ivNb94KiLoD6g+ikMumQYsfkLFrlw0
+	joVtedTuprMDcDUt0Aab1zeH7v7v6xFCa5E5hud37zWiLes9Ub81RwemRvPrnvNMMPXnekXgqnG
+	9vKWrdfLYAIHIOnsfbCt1sOWlC3+/p7WVSCzvLADhBEICE759pqmBHBPN2vEhimHoAzA==
+X-Google-Smtp-Source: AGHT+IEFXnFaqjhcI9IoEC+sWC51BhXcOMPTI9Db9Zy1IDnegd1BMkWud7zjIBCg2gUWrap+yi329OY3rsUQOVHAy4M=
+X-Received: by 2002:a05:6000:25ca:b0:3a4:d452:fff with SMTP id
+ ffacd0b85a97d-3a51d91fad0mr3166598f8f.17.1749060875920; Wed, 04 Jun 2025
+ 11:14:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/10] accel/rocket: Add a new driver for Rockchip's
- NPU
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Kever Yang <kever.yang@rock-chips.com>,
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-References: <20250604-6-10-rocket-v6-0-237ac75ddb5e@tomeuvizoso.net>
- <20250604-6-10-rocket-v6-5-237ac75ddb5e@tomeuvizoso.net>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250604-6-10-rocket-v6-5-237ac75ddb5e@tomeuvizoso.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250604065200.163778-1-john.madieu.xa@bp.renesas.com> <20250604065200.163778-3-john.madieu.xa@bp.renesas.com>
+In-Reply-To: <20250604065200.163778-3-john.madieu.xa@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 4 Jun 2025 19:14:10 +0100
+X-Gm-Features: AX0GCFt6k1sh_fjSNrp1SyZVuu5vH6txeiL7eVP9YJcg7aYzSzipt8rLlAjnyKI
+Message-ID: <CA+V-a8uaFOHd3Mp+fwH2i+0=7eUNNrkbpXHFduu9azHA7qS6sQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] dt-bindings: net: renesas-gbeth: Add support for
+ RZ/G3E (R9A09G047) SoC
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: prabhakar.mahadev-lad.rj@bp.renesas.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	geert+renesas@glider.be, magnus.damm@gmail.com, biju.das.jz@bp.renesas.com, 
+	john.madieu@gmail.com, netdev@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[ Since Daniel made me look... ]
+On Wed, Jun 4, 2025 at 7:53=E2=80=AFAM John Madieu
+<john.madieu.xa@bp.renesas.com> wrote:
+>
+> Document support for the GBETH IP found on the Renesas RZ/G3E (R9A09G047)=
+ SoC.
+> The GBETH block on RZ/G3E is equivalent in functionality to the GBETH fou=
+nd on
+> RZ/V2H(P) (R9A09G057).
+>
+> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml        | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+Reviwed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On 2025-06-04 8:57 am, Tomeu Vizoso wrote:
-[...]
-> diff --git a/drivers/accel/rocket/Kconfig b/drivers/accel/rocket/Kconfig
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..9a59c6c61bf4d6460d8008b16331f001c97de67d
-> --- /dev/null
-> +++ b/drivers/accel/rocket/Kconfig
-> @@ -0,0 +1,25 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +config DRM_ACCEL_ROCKET
-> +       tristate "Rocket (support for Rockchip NPUs)"
-> +       depends on DRM
-> +       depends on ARM64 || COMPILE_TEST
+Cheers,
+Prabhakar
 
-Best make that "(ARCH_ROCKCHIP && ARM64) || COMPILE_TEST" now before 
-someone else inevitably does. Or perhaps just a pre-emptive 
-"ARCH_ROCKCHIP || COMPILE_TEST" if this is the same NPU that's in RV1126 
-etc.
-
-> +       depends on MMU
-> +       select DRM_SCHED
-> +       select IOMMU_SUPPORT
-
-Selecting user-visible symbols is often considered bad form, but this 
-one isn't even functional - all you're doing here is forcing the 
-top-level availability of all the IOMMU driver/API options.
-
-If you really want to nanny the user and dissuade them from building a 
-config which is unlikely to be useful in practice, then at best maybe 
-"depends on ROCKCHIP_IOMMU || COMPILE_TEST", but TBH I wouldn't even 
-bother with that. Even if you want to rely on using the IOMMU client API 
-unconditionally, it'll fail decisively enough at runtime if there's no 
-IOMMU present (or the API is stubbed out entirely).
-
-> +       select IOMMU_IO_PGTABLE_LPAE
-
-And I have no idea what this might think it's here for :/
-
-Thanks,
-Robin.
-
-> +       select DRM_GEM_SHMEM_HELPER
-> +       help
-> +	  Choose this option if you have a Rockchip SoC that contains a
-> +	  compatible Neural Processing Unit (NPU), such as the RK3588. Called by
-> +	  Rockchip either RKNN or RKNPU, it accelerates inference of neural
-> +	  networks.
-> +
-> +	  The interface exposed to userspace is described in
-> +	  include/uapi/drm/rocket_accel.h and is used by the Rocket userspace
-> +	  driver in Mesa3D.
-> +
-> +	  If unsure, say N.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called rocket.
+> diff --git a/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbet=
+h.yaml b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
+> index c498a9999289..9961253d1d41 100644
+> --- a/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
+> +++ b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
+> @@ -14,6 +14,7 @@ select:
+>      compatible:
+>        contains:
+>          enum:
+> +          - renesas,r9a09g047-gbeth
+>            - renesas,r9a09g056-gbeth
+>            - renesas,r9a09g057-gbeth
+>            - renesas,rzv2h-gbeth
+> @@ -24,6 +25,7 @@ properties:
+>    compatible:
+>      items:
+>        - enum:
+> +          - renesas,r9a09g047-gbeth # RZ/G3E
+>            - renesas,r9a09g056-gbeth # RZ/V2N
+>            - renesas,r9a09g057-gbeth # RZ/V2H(P)
+>        - const: renesas,rzv2h-gbeth
+> --
+> 2.25.1
+>
+>
