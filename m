@@ -1,279 +1,173 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2082.outbound.protection.outlook.com [40.107.92.82])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78908339A1
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749053787; cv=fail; b=PH4ZjgiV0pHTIuyeEyc44P6f+oScgSLbGB6bJ6FyUffimDeYKWbSvqjr/V5yuMHBqd6XISO9nhWCkbo/cvmLx4d7pF4x3xZEBxE0VbepotQjy8HuEd/ZH9q+eUmDN+cLpmtQANit3oR1LMlNrUerk1UKUSBP3UOtHtqHGyf+TrI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749053787; c=relaxed/simple;
-	bh=USfJuYM9dRU7iG77RUpC0Hm3coLzmOLl3ktUGw0MEsQ=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=X4arQZtS1qzF0yaRNB0qQZ1g5TZxUMiyljlmayvUbZvlcpnJYTGV046naPkJ1FMRd6tQfDoqDRoc7Zpf69FFjq7kFcdo8Z6umSuU4XmVpKnM4hp4dfMCUBMa56hjQ3p90wJltWlMHHsNF72+PzlxGATTTQTF4ycDZA/ya4kb5Hg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UGutifWO; arc=fail smtp.client-ip=40.107.92.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7D8339A1
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749053833; cv=none; b=cvH5slxrEm+AP7tI+6HnhnlTG2718+nhcMYC9KmQPVGDucHVnzNxnjDIqHPbJCXENeNsqbuz2JrICfmGboQVGP0MJZ7Kl26/qRZsY/8Y+GqTC43/2AuzE9YkPU/6SQ1Xb7/APVreiYAvX4+tVz1lIh/OPp138dqP99XZ89+ef50=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749053833; c=relaxed/simple;
+	bh=NRKNdkhiCm3Mg2VKiD37TR2Pp5nvR2AWfzrXscNez5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qede1huRvLovFOJAbEBNRX6UpE8hAHlEJJ5TMYZ1Fj8ztr390gbxRa30htaqLHWDXI5sw3z+ajCVpF88JVDnU1whBtHWNoqkcfbpJtr23mg245Oof0p4VibWovhq9JoPxjszXfWGElgV4gvroazgEhC2FEzvtqQNamiBYgNUBEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cd0lJAhb; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UGutifWO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x8bZ/t92FSoUF7lGf+390WJAvpM39s2s+wyXHAib689DUe6ivkgYZiHbbJotiwwlq3/bEbMH1yuP6Ml3Kve0zRw9njw3hAnTU94T+zQXbW459Sb/1/d3lsU2cTAQegoZpq29s/byYMrOf2xSwytsVqpJcAEbggs87ZRleI6e83143j4l3mCNYRPw51YvpUjYE+3CSd92gZh/6iP93BnZpnaOYwNS9H0Uoqh11RDA2T0ScpQC8s0LIweUQdF4mOIUs5RchiPKuUqPsRyw2Zee6RyFqvblske0T05Nmwt/WSu7HheJlRslOgDv8aGQr6H9AJq/tAK+5AbR1BQ1AaRA5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UtEJOoCK5XOWa3zUVY2KraHUJcWk8fEzPHPiSC7r29s=;
- b=XGwBKzlaixNuTOT1NWJOPVj+vP0dKF1SFCR81/B4ISn24Kbi9EJ6cAqH3I9hunp/foPH/Pgn2ngwcb7ZNGcOCg+r0AvikRvHjU2nOp4/ODl/NUso4nOmkBA1PCuRQEDQVm0KN4ccG37GntRWlvd9QBK0W85yehwwKMLz07Py1eWbXYhqE8equikWgUN+hnucxFzIlvu5q8Joplv3xFDUJKB5Otgy1zOIiHU4cv2lFIwV+0CPk+9I+BH7gX1g/ePhlPX9t5VeO1lV7+UC2G+m5go6Ago94H3ZVmOx1Qg/UNE0ERMVXJjTsvC5NIdQ6ZkwM1ojDHzbSC1AedM+LNErRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UtEJOoCK5XOWa3zUVY2KraHUJcWk8fEzPHPiSC7r29s=;
- b=UGutifWOHvl65m/1AupnzkIJdCFVVziMrlBuZCS9uQCa4EuwjUb3Shr2vacUVd/+5tneOPYdti8XtrYeqCBuyLQtWEZpFTi07KPtp8wZpTU1NicCIjBVla4m03wUA3eW0HOH7NPZ5Ivu4OZjqUdN6GywcHRb5H3jFZHkUm6Lbh0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN9PR12MB5163.namprd12.prod.outlook.com (2603:10b6:408:11c::7)
- by CH1PPF73CDB1C12.namprd12.prod.outlook.com (2603:10b6:61f:fc00::615) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.30; Wed, 4 Jun
- 2025 16:16:22 +0000
-Received: from BN9PR12MB5163.namprd12.prod.outlook.com
- ([fe80::61ca:6d43:a98d:3b7f]) by BN9PR12MB5163.namprd12.prod.outlook.com
- ([fe80::61ca:6d43:a98d:3b7f%4]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
- 16:16:22 +0000
-Message-ID: <58921dc3-aa6e-41bc-90d3-d25a4a2cce8b@amd.com>
-Date: Wed, 4 Jun 2025 21:46:16 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/8] iommu/amd: Add debugfs support to dump IRT Table
-To: Vasant Hegde <vasant.hegde@amd.com>, joro@8bytes.org,
- suravee.suthikulpanit@amd.com, will@kernel.org, robin.murphy@arm.com,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev
-References: <20250407173500.1827-1-dheerajkumar.srivastava@amd.com>
- <20250407173500.1827-8-dheerajkumar.srivastava@amd.com>
- <a7d4929b-f7ff-4ce5-800e-79df3816d9d6@amd.com>
-Content-Language: en-US
-From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-In-Reply-To: <a7d4929b-f7ff-4ce5-800e-79df3816d9d6@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0182.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::18) To BN9PR12MB5163.namprd12.prod.outlook.com
- (2603:10b6:408:11c::7)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cd0lJAhb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749053831; x=1780589831;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NRKNdkhiCm3Mg2VKiD37TR2Pp5nvR2AWfzrXscNez5E=;
+  b=cd0lJAhbtW9pE4hj9VvQhBPoK7D8R7tPlsO9+DWgqAbuBhyhtmnbWcC+
+   P0PizwDVmZzOrJniHc57BK9gqmblarb+cgzujbzQmeTN/FwSZK+efHeG4
+   hXo5eadLviCEF+nOkNO78I7DjZbEdeUr7Dy5gynRps0YstKtXSTDyFc7F
+   1nq9OaMV+N4n6Od9jNMNYzyGmFgDG99gxSmegbCefrfGXGkq4i8q2/3NE
+   VH1rp5KhCdfUPk+tiuH+BFXRuFBbs2K1ngtkhcK4zUG7/ktwFSN8y96jG
+   j0QeigqHy0VDIg8BqHYX+d59g1xtcmB1GtTJxPg4YhLgYLDkjDoEmimzB
+   w==;
+X-CSE-ConnectionGUID: 7v+zi+GuSyC4pf4Gc0c5og==
+X-CSE-MsgGUID: 9c9qZC3ST5a4n+tZ34vWnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="50261826"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="50261826"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 09:17:10 -0700
+X-CSE-ConnectionGUID: VvzPzS8YTaO3fVliUioZRQ==
+X-CSE-MsgGUID: ZJbG3SLUR7m33B7xCLoViQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="146173900"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 04 Jun 2025 09:17:09 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uMqnb-0003IF-09;
+	Wed, 04 Jun 2025 16:17:07 +0000
+Date: Thu, 5 Jun 2025 00:16:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Donny Turizo <donnyturizo13@gmail.com>, gregkh@linuxfoundation.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Donny Turizo <donnyturizo13@gmail.com>
+Subject: Re: [PATCH v3] staging: rtl8723bs: Fix typo in variable name
+ 'ips_deffer_ms'
+Message-ID: <202506050029.f8Llelhe-lkp@intel.com>
+References: <20250522211626.4931-1-donnyturizo13@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN9PR12MB5163:EE_|CH1PPF73CDB1C12:EE_
-X-MS-Office365-Filtering-Correlation-Id: db83357f-09d0-42e2-dce7-08dda383259d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bmFNQ0EzcURQUWt0MXFST3FFdXAxTVVXMitoQ2hna3RyUXE2VkxzYmovSGdk?=
- =?utf-8?B?aDl5MFYxVGY4eU9iNmdrM2dwMG5jaDR2d2F0dittTjFDdk5KdjJ1dXRRcElC?=
- =?utf-8?B?RVZEbjdzRkxPcGUyZDh0WmE3TWJNbGNIa0U0RHlLQmZnNHU2SldQbWFFVzk3?=
- =?utf-8?B?YzZ2N1k3Rlk0K0xJM3NxSHNINGlRWlFGcnMrWVRRNWJ5MXkvdDFmRzhiZUZz?=
- =?utf-8?B?eURPU1kyN1ora0NWdnpBODBZbUJLVFdTdFNHY21RYzdkZWRoZFhwa09GSXhz?=
- =?utf-8?B?TlQrVEFBQVBja1hES050V0xkMGhHRldtYXlPampmZWJLL1dXalgzZ1B3OFVl?=
- =?utf-8?B?eDM4MWhua1pLODJkM0VlWHIrUXZwRjlpR2paQmx5ZnkyRTNpN3M4OU9lUk50?=
- =?utf-8?B?cVRuUjNYTGV2Y0NzTmQrRWdKZWs2WUhIc1haUHk3RkZQMmRXaXZJWG9xUHl6?=
- =?utf-8?B?ZlZ3SmtqQmsyRnRSWlZxR2hxWWlQUkRUelN2YjBkQ2d6M1FTOUgrNzRyNWhF?=
- =?utf-8?B?M0hSc2tpNWR4VHpDTkEwRkZIREw1YmRGSHNRWkFVenhkVXhwbVdmeGlvS2Fj?=
- =?utf-8?B?UU1sMXM4SjJJazJUZGpUR0pjMGxJczlHdmlWUnhvQWtvR2RwVHRYOExqNVRU?=
- =?utf-8?B?QlFOdWRmV2c1ZzRMeUpVOHFub0srR1RnZG1lMXEyMDh3Mkt6dFJ0WWtOa1A2?=
- =?utf-8?B?Q2VCTlByWndtVzdvczNVejRqUERaa3JQUGFqZkxRb0Q4ZzF1Ymh2eitpSHMr?=
- =?utf-8?B?ZzBmRUdJOTI5bVRKZkxVUjBaV1hhdFpNK2FzZStYMlVNTG1udnF5bTNlSXZQ?=
- =?utf-8?B?QVkrd2ZUL1ArWEV6UVdmU3Bhc3NKaHdvN0JWYWxxd29qL0ZMOHE4c1VZRWtN?=
- =?utf-8?B?YU8yZ2RiWW1ZSkNnODh0Qi9vaU9BWmU0UW1HaGJ1VnBDa1dqSkM0OXZrMmk1?=
- =?utf-8?B?eUg0eDMvNU1DVWRFR21McjRwaklzd0JCN3oxb2p2S2RTbVdReHFkSGVVWFFL?=
- =?utf-8?B?ckRjeDd2YzZXM0Nxdjl6dU9lcGtZRnBBRkViOXhmQy9JVXF0SDV6K2M3WUJt?=
- =?utf-8?B?VVNHeUIwbEJzSUtFVkhnc3oyMEZkZTNFUFVsdWFFMHp0RTBSem5MdGpodmpP?=
- =?utf-8?B?UWFlYVNhY1hxbE05clptS2tEK0VNMnRFNW1sTjNQMndPMGpQWEFFaDdMbExV?=
- =?utf-8?B?RDB4bXV3bjZZMzVuWUVjN1V0amM0WHFvdThqNE5ZMWxWUGxWV0VhOU1nUkFE?=
- =?utf-8?B?SURIeWNTa0I4Ym5qaGhLS2d0V3hScmVkcTBpYW9zVjlHdkdtZDNtb1FmZUZ3?=
- =?utf-8?B?ZTd4aDA0Q0NLa0E2ZklzM2dUc0F0NjZmajg4OHl1Z0RLZDE0VzRuclJUZlhU?=
- =?utf-8?B?T083Wk9ySG9VVzNaLys5aVhMT0tUUVJUdFA5dGcyMVBNS0pLREw4c3A0aTI1?=
- =?utf-8?B?L3JyNkQ3dnJ5RkRmTjJ3TXhLaFdNclIrcG9rV2Z2Z0lKblFPZzdDZlZlcUE0?=
- =?utf-8?B?bkQwYzh2UXNWdjNKQnFlTHRxWlRTUUlUOGJGNldOOGE2MjVGT0hRNGs3VkpD?=
- =?utf-8?B?N0JVeENydE0xWWVTL29sWEcyeGRuZUx0KzdGbjVKTTBEVG9lSmg4ZkZpNTg4?=
- =?utf-8?B?T3pISmE2QXRLQTNPTENVcFBZNkNwZy9JK3JVREpJMnJPWUhZN0V5bGNudmR3?=
- =?utf-8?B?azhoUktiYUllMzFuQWNLaTRaTG9PS1NwWUk4cGhaUDcyaExoZE5NaVFRbFRo?=
- =?utf-8?B?SUR0aFRTcU1Qay9mQjV5ZkhsZkpVamxhSmtRM2NsbUxkMjZPV0dHR254K1o0?=
- =?utf-8?B?cHM1djdQRllCd2ZUYWg5eWVnaVRVOEFLeGdWb3RWLzhnajVKeW5Hc0V1b3Js?=
- =?utf-8?B?elMxMWU0RVNmS1BJMHhReWFvY01sNVYxNjY5UEdvVVhaRUk4VGptZ1Z0UTUw?=
- =?utf-8?Q?yra1w11V3sg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NGxCNU8rOG83RHBVZjRoUU5WWDBlTUJqUkNLZXFJZUMvT3FDa3JvMFIyUUx4?=
- =?utf-8?B?aFAzbEo3aGFBSElucGJXME45ZzlLU0VQMlFzV2J2OUYvclRmK1FhUEZlQm4r?=
- =?utf-8?B?aG9icjVRbHB1TTJnMDNIdGswbEVaVGRtOUNWdDRpOGVsQ0I1Y1dxd0YzaGtW?=
- =?utf-8?B?SVlmbnVDSnd1ZnpoWVE3RG1PMWtFekFEcm1ENkRmZWxnOE85eGVxTjMxYWZz?=
- =?utf-8?B?VUpVUDZKODB0aWNiV294WWV1Y0ZHTWJjZnRhM1BQV0I5alNlckV1eEhqYzM3?=
- =?utf-8?B?UVVobnV5MWZFZ1l4Ri9aK1lVa2owbFFuNFVjMUJOSU1tZ0pkVE1KL2lCRWoy?=
- =?utf-8?B?V2tWdFA1UVNwMTgvZ1p6Q2hiQ0cvY04vTGJhWm8xTEhUK0ZmaHB3RDJHOCt5?=
- =?utf-8?B?NzYxUWdpdWVBeXlpK1c3d2FVNGRQMUY3WnZVU2JxTWVnYTFwY0VsZU1uL0JO?=
- =?utf-8?B?Wmptd2xPMEY5eFM3Mm8xZVJ5LzBLK0pwS2RrRTkyTGYvRVVTSWlWbHBaamxV?=
- =?utf-8?B?NkFiZjZKNlQvVFZTa3Z6YlN4MkRiQzRNSERSMHBNVkZGakZlc2RzQkFlR21M?=
- =?utf-8?B?WjFSS0hFZVBQcXJ3bGYwRGcwK3M4YnBwQnJZM3lRc29iYzR6ejl5TFMvTTNR?=
- =?utf-8?B?RVQ0RVc0eEE0aC9uVUxFK1Y3NFFkR1h0Ti9DQno5U0NTN2Q1b1JwQlgwbWtC?=
- =?utf-8?B?MENPY0xiL2RBMG1NZ3A0MUtzdUJKYmxKd1lDNTlQUGJSY2JzUy8zdEErakNl?=
- =?utf-8?B?QlBOMUxlNVJ3Y2Q2MmtRNDJZaGxXT1AzRlBtYm5EVlNkSDR0eEI4TVVlc3Bl?=
- =?utf-8?B?eFRoR09rVmFSSFNBQld5VHNacHh5SDZXZDhDUEtiMUlzbkpDM2tld3U0K0Rj?=
- =?utf-8?B?dnN2MXBiV0xnSi9PRHBteXR6N0MxVjd5ZWlIQUE5UFIwZEhCQmNPN1MybVJH?=
- =?utf-8?B?aXVXZ1N6NFVrM1J2MVlLK29SanJoaXU1b2ZVdGg1a3VwK0pPTTIxMDIyU0ty?=
- =?utf-8?B?NWlZWDgveVhSZlVNNlJtZGg2bjFkNm8vcjIrSndiU1BjTk0xZis3MG5QNmJm?=
- =?utf-8?B?dWZwQmhxQmg0UU1qWDVuZEFrR2kzVEpLaTFZa295S1J2eDN1RmZGUEZJNldW?=
- =?utf-8?B?WDFBUnhpUjExNW5jQzB2Y3czcW44K2V0b295dEM1RGlqZW5IbzcrNFp1WmZr?=
- =?utf-8?B?UCtDcDlFa0pRYWdjaG5UNjQ4TzNWOXVSem1uZk9lbnI2WUU2RUVNTXU5cW51?=
- =?utf-8?B?SnBaSm45elVQR3VqbFBieW9TL0thdUhTV2pGa1NiMFM4dUtuNXNBYTFNMHhv?=
- =?utf-8?B?TXZNU0ZkZ0NZZUQ2d3ROaE1ENDR5cmQ0N0cxdGpxSU00S1Z0S1dUNjR4cGta?=
- =?utf-8?B?N3lJaDFISkhwV0RoZjJ3blNLK3hUNGJ6eldWRTR5N1FkV0txWmx6RVdHbTk3?=
- =?utf-8?B?d2tKbnd1V3VIaUpJQ2VTM1pjeXhMTlEvK0FPVDg2d0t6dUFJUE9VRzNwdjFt?=
- =?utf-8?B?RzNwaTMyZ3lFRlRXdVZGWVRSU3ljb25aUWpMMzBFd1hvRkw3djA2cS9JcDFL?=
- =?utf-8?B?SVVBOExhRURoTTVhaHdaay9yV0s1RXZQbEdCbjM0S1c0bjhjZnZ2VVJvSEE2?=
- =?utf-8?B?RkdOYmdnRmZaeHZDWEU3L1FVZjRyOWN6ZkR4SWtkUkJrT1RFV3dMTWlNTk9L?=
- =?utf-8?B?UEhoY3l1NWtmSDc4ZlZ0MFZsZkhrSFNWRWppbkZvL0dWVjJNVk5USUh6aGY4?=
- =?utf-8?B?eldyVVVQSzBaVzVzUkRvWW12dTRTTUwrcXBxQ28xUkZBTlZIbGRjSFJpZTBP?=
- =?utf-8?B?RjVlbWZPaHZxbEpLQThUaDRTYUhNK0NqSkhZdUlXSSs2MXB2Qml0b3ZHaUE4?=
- =?utf-8?B?d2JmVGpYYWU1dWphS1JkRE5PZjc5cEhYS1VoOEQyRVlGTDFqLzRNRzFucWtT?=
- =?utf-8?B?YVNyTDZjdWdReVh2dU9Xa3dyREp4dDUza0FqMjRFWnN6Z0l6TkNSVjcvVit6?=
- =?utf-8?B?Z0xVbGlSczFuTGxpTVMvT2tHTWROZTFSWVFxQmQ5ZEYxRDV3TG1LeUxaNE1w?=
- =?utf-8?B?TjZCVFZKbmJnVmNZZVVwSFZiTGl4Q1ZGc2xKVVEzbE9nY0N6KzVYNE01V3RM?=
- =?utf-8?Q?uZnKj2JL23MO0wyVhwY4NjEEJ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db83357f-09d0-42e2-dce7-08dda383259d
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5163.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 16:16:22.7340
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WJdzjfznxvonsPcORKG6O6Iiu7eVc+hvsrJJteL6Fvzr0Pztqil9QZ+O01CgF9zFSTR6h59VUY3t729LCx+Ocg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF73CDB1C12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522211626.4931-1-donnyturizo13@gmail.com>
 
-Hi Vasant,
+Hi Donny,
 
-Thanks for reviewing the patch.
+kernel test robot noticed the following build errors:
 
-On 5/1/2025 3:36 PM, Vasant Hegde wrote:
-> 
-> 
-> On 4/7/2025 11:04 PM, Dheeraj Kumar Srivastava wrote:
->> In cases where we have an issue in the device interrupt path with IOMMU
->> interrupt remapping enabled, dumping valid IRT table entries for the device
->> is very useful and good input for debugging the issue.
->>
->> eg.
->> -> To dump irte entries for a particular device
->>     #echo "c4:00.0" > /sys/kernel/debug/iommu/amd/devid
->>     #cat /sys/kernel/debug/iommu/amd/irqtbl | less
->>
->>     or
->>
->>     #echo "0000:c4:00.0" > /sys/kernel/debug/iommu/amd/devid
->>     #cat /sys/kernel/debug/iommu/amd/irqtbl | less
->>
->> Signed-off-by: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
->> ---
->>   drivers/iommu/amd/debugfs.c | 106 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 106 insertions(+)
->>
->> diff --git a/drivers/iommu/amd/debugfs.c b/drivers/iommu/amd/debugfs.c
->> index c6ff47561afb..28fe546e0bc0 100644
->> --- a/drivers/iommu/amd/debugfs.c
->> +++ b/drivers/iommu/amd/debugfs.c
->> @@ -11,6 +11,7 @@
->>   #include <linux/pci.h>
->>   
->>   #include "amd_iommu.h"
->> +#include "../irq_remapping.h"
->>   
->>   static struct dentry *amd_iommu_debugfs;
->>   
->> @@ -254,6 +255,109 @@ static int iommu_devtbl_show(struct seq_file *m, void *unused)
->>   }
->>   DEFINE_SHOW_ATTRIBUTE(iommu_devtbl);
->>   
->> +static void dump_128_irte(struct seq_file *m, struct irq_remap_table *table, u16 int_tab_len)
->> +{
->> +	struct irte_ga *ptr, *irte;
->> +	int index;
->> +
->> +	for (index = 0; index < int_tab_len; index++) {
->> +		ptr = (struct irte_ga *)table->table;
->> +		irte = &ptr[index];
->> +
->> +		if (AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) &&
->> +		    !irte->lo.fields_vapic.valid)
->> +			continue;
->> +		else if (!irte->lo.fields_remap.valid)
->> +			continue;
->> +		seq_printf(m, "IRT[%04d] %016llx %016llx\n", index, irte->hi.val, irte->lo.val);
->> +	}
->> +}
->> +
->> +static void dump_32_irte(struct seq_file *m, struct irq_remap_table *table, u16 int_tab_len)
->> +{
->> +	union irte *ptr, *irte;
->> +	int index;
->> +
->> +	for (index = 0; index < int_tab_len; index++) {
->> +		ptr = (union irte *)table->table;
->> +		irte = &ptr[index];
->> +
->> +		if (!irte->fields.valid)
->> +			continue;
->> +		seq_printf(m, "IRT[%04d] %08x\n", index, irte->val);
->> +	}
->> +}
->> +
->> +static void dump_irte(struct seq_file *m, u16 devid, struct amd_iommu_pci_seg *pci_seg)
->> +{
->> +	struct dev_table_entry *dev_table;
->> +	struct irq_remap_table *table;
->> +	struct amd_iommu *iommu;
->> +	unsigned long flags;
->> +	u16 int_tab_len;
->> +
->> +	table = pci_seg->irq_lookup_table[devid];
->> +	if (!table) {
->> +		seq_printf(m, "IRQ lookup table not set for %04x:%02x:%02x:%x\n",
->> +			   pci_seg->id, PCI_BUS_NUM(devid), PCI_SLOT(devid), PCI_FUNC(devid));
->> +		return;
->> +	}
->> +
->> +	iommu = pci_seg->rlookup_table[devid];
->> +	if (!iommu)
->> +		return;
->> +
->> +	dev_table = get_dev_table(iommu);
->> +	if (!dev_table) {
->> +		seq_puts(m, "Device table not found");
->> +		return;
->> +	}
->> +
->> +	int_tab_len = 1 << ((dev_table[devid].data[2] >> 1) & 0xfULL);
-> 
-> This is hard to read. Please use the macros like FIELD_GET
-> 
->> +	if (int_tab_len > 2048)
-> 
-> s/2048/MAX_IRQS_PER_TABLE_2K/
+[auto build test ERROR on staging/staging-testing]
 
-Sure I will use macros to fetch and validate IRT table length from DTE.
+url:    https://github.com/intel-lab-lkp/linux/commits/Donny-Turizo/staging-rtl8723bs-Fix-typo-in-variable-name-ips_deffer_ms/20250523-052530
+base:   staging/staging-testing
+patch link:    https://lore.kernel.org/r/20250522211626.4931-1-donnyturizo13%40gmail.com
+patch subject: [PATCH v3] staging: rtl8723bs: Fix typo in variable name 'ips_deffer_ms'
+config: sparc64-allmodconfig (https://download.01.org/0day-ci/archive/20250605/202506050029.f8Llelhe-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250605/202506050029.f8Llelhe-lkp@intel.com/reproduce)
 
-Thanks
-Dheeraj
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506050029.f8Llelhe-lkp@intel.com/
 
-> 
-> 
-> -Vasant
-> 
-> 
+All errors (new ones prefixed by >>):
 
+   drivers/staging/rtl8723bs/core/rtw_pwrctrl.c: In function '_rtw_pwr_wakeup':
+>> drivers/staging/rtl8723bs/core/rtw_pwrctrl.c:1076:48: error: 'ips_deffer_ms' undeclared (first use in this function); did you mean 'ips_defer_ms'?
+    1076 |         deny_time = jiffies + msecs_to_jiffies(ips_deffer_ms);
+         |                                                ^~~~~~~~~~~~~
+         |                                                ips_defer_ms
+   drivers/staging/rtl8723bs/core/rtw_pwrctrl.c:1076:48: note: each undeclared identifier is reported only once for each function it appears in
+
+
+vim +1076 drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
+
+554c0a3abf216c Hans de Goede          2017-03-29  1012  
+3a0e883f688e25 Donny Turizo           2025-05-22  1013  int _rtw_pwr_wakeup(struct adapter *padapter, u32 ips_defer_ms, const char *caller)
+554c0a3abf216c Hans de Goede          2017-03-29  1014  {
+554c0a3abf216c Hans de Goede          2017-03-29  1015  	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
+554c0a3abf216c Hans de Goede          2017-03-29  1016  	struct pwrctrl_priv *pwrpriv = dvobj_to_pwrctl(dvobj);
+554c0a3abf216c Hans de Goede          2017-03-29  1017  	struct mlme_priv *pmlmepriv;
+554c0a3abf216c Hans de Goede          2017-03-29  1018  	int ret = _SUCCESS;
+554c0a3abf216c Hans de Goede          2017-03-29  1019  	unsigned long start = jiffies;
+3a0e883f688e25 Donny Turizo           2025-05-22  1020  	unsigned long deny_time = jiffies + msecs_to_jiffies(ips_defer_ms);
+554c0a3abf216c Hans de Goede          2017-03-29  1021  
+554c0a3abf216c Hans de Goede          2017-03-29  1022  	/* for LPS */
+554c0a3abf216c Hans de Goede          2017-03-29  1023  	LeaveAllPowerSaveMode(padapter);
+554c0a3abf216c Hans de Goede          2017-03-29  1024  
+554c0a3abf216c Hans de Goede          2017-03-29  1025  	/* IPS still bound with primary adapter */
+554c0a3abf216c Hans de Goede          2017-03-29  1026  	padapter = GET_PRIMARY_ADAPTER(padapter);
+554c0a3abf216c Hans de Goede          2017-03-29  1027  	pmlmepriv = &padapter->mlmepriv;
+554c0a3abf216c Hans de Goede          2017-03-29  1028  
+554c0a3abf216c Hans de Goede          2017-03-29  1029  	if (time_before(pwrpriv->ips_deny_time, deny_time))
+554c0a3abf216c Hans de Goede          2017-03-29  1030  		pwrpriv->ips_deny_time = deny_time;
+554c0a3abf216c Hans de Goede          2017-03-29  1031  
+554c0a3abf216c Hans de Goede          2017-03-29  1032  
+709c8e49b51c37 Fabio Aiuto            2021-04-07  1033  	if (pwrpriv->ps_processing)
+554c0a3abf216c Hans de Goede          2017-03-29  1034  		while (pwrpriv->ps_processing && jiffies_to_msecs(jiffies - start) <= 3000)
+8204b61a775879 Jia-Ju Bai             2018-09-15  1035  			mdelay(10);
+554c0a3abf216c Hans de Goede          2017-03-29  1036  
+709c8e49b51c37 Fabio Aiuto            2021-04-07  1037  	if (!(pwrpriv->bInternalAutoSuspend) && pwrpriv->bInSuspend)
+8ec06b9ff8a4f5 Ross Schmidt           2020-11-09  1038  		while (pwrpriv->bInSuspend && jiffies_to_msecs(jiffies - start) <= 3000
+709c8e49b51c37 Fabio Aiuto            2021-04-07  1039  		)
+8204b61a775879 Jia-Ju Bai             2018-09-15  1040  			mdelay(10);
+554c0a3abf216c Hans de Goede          2017-03-29  1041  
+554c0a3abf216c Hans de Goede          2017-03-29  1042  	/* System suspend is not allowed to wakeup */
+2e20a5ac67f8a5 Nishka Dasgupta        2019-07-25  1043  	if (!(pwrpriv->bInternalAutoSuspend) && pwrpriv->bInSuspend) {
+554c0a3abf216c Hans de Goede          2017-03-29  1044  		ret = _FAIL;
+554c0a3abf216c Hans de Goede          2017-03-29  1045  		goto exit;
+554c0a3abf216c Hans de Goede          2017-03-29  1046  	}
+554c0a3abf216c Hans de Goede          2017-03-29  1047  
+554c0a3abf216c Hans de Goede          2017-03-29  1048  	/* block??? */
+2e20a5ac67f8a5 Nishka Dasgupta        2019-07-25  1049  	if (pwrpriv->bInternalAutoSuspend  && padapter->net_closed) {
+554c0a3abf216c Hans de Goede          2017-03-29  1050  		ret = _FAIL;
+554c0a3abf216c Hans de Goede          2017-03-29  1051  		goto exit;
+554c0a3abf216c Hans de Goede          2017-03-29  1052  	}
+554c0a3abf216c Hans de Goede          2017-03-29  1053  
+554c0a3abf216c Hans de Goede          2017-03-29  1054  	/* I think this should be check in IPS, LPS, autosuspend functions... */
+2e20a5ac67f8a5 Nishka Dasgupta        2019-07-25  1055  	if (check_fwstate(pmlmepriv, _FW_LINKED)) {
+554c0a3abf216c Hans de Goede          2017-03-29  1056  		ret = _SUCCESS;
+554c0a3abf216c Hans de Goede          2017-03-29  1057  		goto exit;
+554c0a3abf216c Hans de Goede          2017-03-29  1058  	}
+554c0a3abf216c Hans de Goede          2017-03-29  1059  
+554c0a3abf216c Hans de Goede          2017-03-29  1060  	if (rf_off == pwrpriv->rf_pwrstate) {
+554c0a3abf216c Hans de Goede          2017-03-29  1061  		{
+bc21df678b4d5d Zhansaya Bagdauletkyzy 2021-04-06  1062  			if (ips_leave(padapter) == _FAIL) {
+554c0a3abf216c Hans de Goede          2017-03-29  1063  				ret = _FAIL;
+554c0a3abf216c Hans de Goede          2017-03-29  1064  				goto exit;
+554c0a3abf216c Hans de Goede          2017-03-29  1065  			}
+554c0a3abf216c Hans de Goede          2017-03-29  1066  		}
+554c0a3abf216c Hans de Goede          2017-03-29  1067  	}
+554c0a3abf216c Hans de Goede          2017-03-29  1068  
+554c0a3abf216c Hans de Goede          2017-03-29  1069  	/* TODO: the following checking need to be merged... */
+8ec06b9ff8a4f5 Ross Schmidt           2020-11-09  1070  	if (padapter->bDriverStopped || !padapter->bup || !padapter->hw_init_completed) {
+554c0a3abf216c Hans de Goede          2017-03-29  1071  		ret = false;
+554c0a3abf216c Hans de Goede          2017-03-29  1072  		goto exit;
+554c0a3abf216c Hans de Goede          2017-03-29  1073  	}
+554c0a3abf216c Hans de Goede          2017-03-29  1074  
+554c0a3abf216c Hans de Goede          2017-03-29  1075  exit:
+554c0a3abf216c Hans de Goede          2017-03-29 @1076  	deny_time = jiffies + msecs_to_jiffies(ips_deffer_ms);
+554c0a3abf216c Hans de Goede          2017-03-29  1077  	if (time_before(pwrpriv->ips_deny_time, deny_time))
+554c0a3abf216c Hans de Goede          2017-03-29  1078  		pwrpriv->ips_deny_time = deny_time;
+554c0a3abf216c Hans de Goede          2017-03-29  1079  	return ret;
+554c0a3abf216c Hans de Goede          2017-03-29  1080  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
