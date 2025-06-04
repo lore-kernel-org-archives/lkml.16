@@ -1,114 +1,87 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C9A1FF1A1;
-	Wed,  4 Jun 2025 20:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14675BA42;
+	Wed,  4 Jun 2025 20:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749070069; cv=none; b=RoDdyBmX9f49CwLb5NePUXWuXNt1whVImkpCb47X7QByF54JcTh93zpVwAzWMFEtxsokbf8LuJNBH64ZSRcu0XIWHj1rxSlhYX9gz/DRRj3d/q3UY1cEaVc9/o2FNpYXv3PT+j+c4F4H1Y1fQMkgiuxjlHZ0QvcKyT/wFFncfes=
+	t=1749070315; cv=none; b=mzEdbObBOy/YJ+MmXnzSE7tFWG6fKEdlDQ0N8TV56Aou4A7eD3eH8zW9szkYwmZK2/CvAgIDjp+Je/LZuwnh09ma8wTHarP2S0Ffy5/4dU4oHy05hiWApF3Gn8S6vsl5NIVuawCGsSlglXykOfhRHl4LNwdqslV2lxjWjpZyflE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749070069; c=relaxed/simple;
-	bh=ahIawL/3uECcl0ieqmZXqycsQOB+QbfjIOqNqgm5uDI=;
+	s=arc-20240116; t=1749070315; c=relaxed/simple;
+	bh=q1ItLl8hb0svlGL7qApVhJBy3xKiqmCvNH/oYjin/vs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SyFEDKBbTt2uR0D2YwDwiRapwb+CSHUGrCRAmUqZ+9nxLMUQUTUKWtplvCf1TXqZbiienaOEWJTlYbYYeCtNx6xrooFauctFv17+rw4mu4CzI7J+yZCTA8I8zlCYw84J2hxZ1cUd2Ec+NRfKQ1Xom/9rJChJ4+D59VUNGRVljp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iISEMPYO; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=FVnq+qRI5lGVN8Sh1gTK/Pnz5rei/dS1B6Xq0482L/Np7GogWR6dCTG/mNJZZ6zcug7XQfGybSHRmHY/fDTu/2Hd5eH1ZYjAqVjRTUlX3rW4O5YcMYwYch+oVecN4+FEru5otdw0+9VmYzri85PoB8mxVauUYGqc24/utjmwpdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qui73LPg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iISEMPYO"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70f94fe1e40so15476237b3.1;
-        Wed, 04 Jun 2025 13:47:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749070067; x=1749674867; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cmYp+AgXWjFBzOAQ3xKQ2cWb6I5jYIve5Qz9uF8eKkY=;
-        b=iISEMPYOSxiTnrt4EwaIuspd/I9S58FZq2UbtwshKEcSDxXL1WY22ppzROZL714VUa
-         UYe/7JSA5NqCVBu71ph6k893cBTWstciNb7Y6dYWbZsWGpx/cQX6YHnNKUG0haZBhWzh
-         8SzNHSm0rgbVjDOxCXWAyOem/S72ElEQ2N9Zkt1FC+p0rubKCNP4wNgvtvEIHnXu14Sq
-         LcmsYwNHMix8Q3kIuvN4v12yccOc4smlCniFH0Dq0golA97v1ar2TcrQgHjGLlRX7OJS
-         o2jYW6cNRj7VxuEHvh2BF29o3iKNnIMMu1gzdwOrabvb571gSo1uxaKgTS0K1zYOpecT
-         a0fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749070067; x=1749674867;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cmYp+AgXWjFBzOAQ3xKQ2cWb6I5jYIve5Qz9uF8eKkY=;
-        b=LPKaxI/XX1Hw32ZkIuESU3+Obkx1f0U06QAjPrZ/bIAjzZQMKFT099jXVP8Tbtgb0z
-         E+LzJrbdT/++aSxFA+OpaXPVdDdL4FZN2sZ4wDbZMD9GwYOUP9LblsMaP6VcwKYBYrgU
-         i0cxfIVfs/Xtlj6WcCHhcgJXIy6j7mG4bP+iwYR7OB8zmxtUccBcb4NlmWq/LrqP4ZeY
-         M+YA16q/z8KNMoe4v0GlKDJeuUpZTp13/CRJSdEKVSWMLzHp0ZNsUFsIKgFbrZrycCXD
-         VHOB3/w2sH4/k1z6O5l0E/GIWhWJ4ZNpo5giPJ2eGlLXcggM+WJgv5pocZBFIdxiJJdP
-         FyZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKwKl63cxTHLNh5SovgxKZKYJlmWDLwWZX9g2Dr67HBjXtyFxYUf59KQCYb+H2v71xd3udWLiilzPDAYo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+WqX13AfsUrN2DxEdy96e1C2OsXaIAvaxslZ/aD4UmPN7pZAI
-	mnB6+Ju/jdmUER/e8V3CBKZ4mxy5QVsxP1VGlQgOsOl89J5wGjFw2ISwUmkr5w==
-X-Gm-Gg: ASbGncug6bt3jqxQ+n6Io6mgnn07Oe11amyQPee03MJIjVy0z+cGNohpJDigbw96FlY
-	CUT4j9IMx+ynBfDqGlWugp/njhJn0mLhCO09l1AOoBU1k1Py2sZockOymg/ka4pFmt6+fV+8B6o
-	6hLRd3hN28iu+v7YPLA7E1EkIHlA9XHjlopEH79RZJy0D/B78ARe/+lq1qU1sGZgCfnYAu5Eqbc
-	COuv120O87CouCkN14TIebN6oQy4FkyGJcFITLEi49QNu34g0X93iFybnek6BC4dGAG5p2MDKOZ
-	FFwtwUIX3lEf5yFfJmZ+U2v8qYUYfpz4x3CmL+U5ljK8EhL8MzT441IrDI4en/et4IHsSufkUx8
-	wm+a/Mth+/a4enMd3kyCHBA==
-X-Google-Smtp-Source: AGHT+IEYiS315DaurOeALt/L9xPEOmBb4l/x4od1HV/FNKcRr95UAYvqOCqUSwEpWb1iDEwHbQ1m6A==
-X-Received: by 2002:a05:690c:620f:b0:703:b708:e15c with SMTP id 00721157ae682-710e7e3e37cmr16027487b3.13.1749070067216;
-        Wed, 04 Jun 2025 13:47:47 -0700 (PDT)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8acd546fsm31448387b3.78.2025.06.04.13.47.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 13:47:46 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	=?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	Gaurav Jain <gaurav.jain@nxp.com>
-Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Subject: [PATCH 2/2] crypto: caam - Fix opencoded cpumask_next_wrap() in caam_drv_ctx_init()
-Date: Wed,  4 Jun 2025 16:47:41 -0400
-Message-ID: <20250604204742.21183-3-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250604204742.21183-1-yury.norov@gmail.com>
-References: <20250604204742.21183-1-yury.norov@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qui73LPg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C892FC4CEE4;
+	Wed,  4 Jun 2025 20:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749070313;
+	bh=q1ItLl8hb0svlGL7qApVhJBy3xKiqmCvNH/oYjin/vs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Qui73LPg7EfNN7/jeHKpwSzKMrxZMqvIl1HcRIlW+hjdFjyxP9Tzg4QZ4nf59Veoh
+	 SwRdWykduwrcnGod3vnQqHyM+UhVaEBwWGB6SS8JKuMMcFVPo8u/XpZV1Z9eeML35p
+	 DqtNS18k+FgcXzloW3t98+1cgiXPGyaqsvVBaLDzCwAc/NGGOF4pj/ROoxCoLDWRdX
+	 7Yb/l3gdG3CWYm6NnXfhXejii7Y5SW0lPG0qxpVEEdpaBbzyyrsfvpulUQIDvuT/mJ
+	 1jJqf345MRr/bYOHUpLGbaMCidEI7mqBrmYIe3Z0zc63qma89/5iqU1pPF8polRGnH
+	 wh3AdHMGBZ/ig==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org,
+	Mike Yuan <me@yhndnzj.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Luca Boccassi <luca.boccassi@gmail.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] pidfs: never refuse ppid == 0 in PIDFD_GET_INFO
+Date: Wed,  4 Jun 2025 22:50:29 +0200
+Message-ID: <20250604-umtreiben-pulle-3a0f7ffb961b@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250604150238.42664-1-me@yhndnzj.com>
+References: <20250604150238.42664-1-me@yhndnzj.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1551; i=brauner@kernel.org; h=from:subject:message-id; bh=q1ItLl8hb0svlGL7qApVhJBy3xKiqmCvNH/oYjin/vs=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQ4bHwcl2NoYjcxoeSsoluB7+Y/d3oWCuakh/48J6N32 qYl+++8jlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIkcXsXwT22HzYFtGVeMFoi9 3JY9c7ZsU/BEnr2bfI5Ou95ZtXrN8RCGf7qKcVY+e+a09fc4R6/eYVngon/wiu/R+8dfv5KYu7r gJRcA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+On Wed, 04 Jun 2025 15:03:42 +0000, Mike Yuan wrote:
+> In systemd we spotted an issue after switching to ioctl(PIDFD_GET_INFO)
+> for obtaining pid number the pidfd refers to, that for processes
+> with a parent from outer pidns PIDFD_GET_INFO unexpectedly yields
+> -ESRCH [1]. It turned out that there's an arbitrary check blocking
+> this, which is not really sensible given getppid() happily returns
+> 0 for such processes. Just drop the spurious check and userspace
+> ought to handle ppid == 0 properly everywhere.
+> 
+> [...]
 
-The dedicated cpumask_next_wrap() is more verbose and better optimized
-comparing to cpumask_next() followed by cpumask_first().
+The original motivation has likely been to exclude calling
+PIDFD_GET_INFO for kthreads. But it's questionable whether that's a
+sensible restriction given that we allow to retrieve information about
+kthreads via /proc/<pid>/status already.
 
-Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 ---
- drivers/crypto/caam/qi.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/caam/qi.c b/drivers/crypto/caam/qi.c
-index b6e7c0b29d4e..1e731ed8702b 100644
---- a/drivers/crypto/caam/qi.c
-+++ b/drivers/crypto/caam/qi.c
-@@ -442,11 +442,8 @@ struct caam_drv_ctx *caam_drv_ctx_init(struct device *qidev,
- 	if (!cpumask_test_cpu(*cpu, cpus)) {
- 		int *pcpu = &get_cpu_var(last_cpu);
- 
--		*pcpu = cpumask_next(*pcpu, cpus);
--		if (*pcpu >= nr_cpu_ids)
--			*pcpu = cpumask_first(cpus);
-+		*pcpu = cpumask_next_wrap(*pcpu, cpus);
- 		*cpu = *pcpu;
--
- 		put_cpu_var(last_cpu);
- 	}
- 	drv_ctx->cpu = *cpu;
--- 
-2.43.0
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] pidfs: never refuse ppid == 0 in PIDFD_GET_INFO
+      https://git.kernel.org/vfs/vfs/c/b55eb6eb2a74
