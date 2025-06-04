@@ -1,93 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020C026ACC;
-	Wed,  4 Jun 2025 14:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73567290BDA;
+	Wed,  4 Jun 2025 14:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749046770; cv=none; b=L922Z7VHm74FdalNXwPcBRxfSKMArA/hhPvxqd1MzCtMLXJciRIrYu78WTVlRX2KB3jL6mqoFLpSVGigvlYvlbhTfuaLtoVohFRJl/qUIXwGh7n56CQw1yxkfMFBouR5+EztqJZ8k/4QsjdorDisbQf0QqIH8qPI7+dIiyqavxw=
+	t=1749046770; cv=none; b=XevIiDokJXoLxtHc8TkVAUOdzId03ubrW+/fBRPpyF2kC+zDaR/dFhqzUNhtHimMsK1NpUrBPFqZyiGY2nSeUjer1RibM4gQ79R6ot0zBhh5y8KWr7/nuVMOWs3VFR2UGIcFFIR2J4jP/z0Th3T2tnBu69xp3O65dIZTbb0K6tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749046770; c=relaxed/simple;
-	bh=7YsuzD8Qz+jO4WRfB8ZOVNTmXy1/NRoTyJpWk3RBQmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ubDiPJW06rqE/0DDkf8fXhnFsgfLUv4/6mSGi22DHcYeFIwWZ7zqrQ+5DQmZeb24NwLohOHj+LWjugTfU0BUr7mVNcZsSUMUWAAqGrC694Qv5o1TzJsIzvE1H153O+8iPnGFgtJ0VskMMocr9n7VngAeRG2GJdVCjqKTwUQBZDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Smnr6tvu; arc=none smtp.client-ip=10.30.226.201
+	bh=nvCdP0Vwqyv1w/nWeuE741pzwxdxLERa4Y/vBATrZhI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R9phpO1SpFhGATgoeaQH7VyumznrkgpuFv0u3ZEPdapL6jTQc+YO3BseZFXkBF4a/zk9sHkHDoIgLl8e4J8eXixkdOZKg1nNozsMgf9H3aOQC/k3nLTyBPGT0FShhG1qFItE7hYD8pZI19LP3znpiFq7xeOTakZT9TvNFF0BOqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MaDhrEXP; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Smnr6tvu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D66AC4CEFA;
-	Wed,  4 Jun 2025 14:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749046769;
-	bh=7YsuzD8Qz+jO4WRfB8ZOVNTmXy1/NRoTyJpWk3RBQmc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Smnr6tvuIR7JjHfl4D2OAQvC5kT4zIzGU/qYIFKRuAifKlCT4Mj6OXpeS2Io/LxPk
-	 1mVQv5OQptPXFFwq0lWlGwt9pUFlQDl7zngPKEDEotpc4QhG5ZoOpsAaArcBRgmhVL
-	 pw2If8cYdH8ayppEgVq3MwnxRwIJExiuyD3QHBcamiglank6OHxFFTL3MqTiGdpaPf
-	 zn95oZcu3uRaCMq2Qi9X47SOwj6G9CQ44ydpPXcfXaw5d6kuDIsO3oU+wfc2nRoN+j
-	 14/s8cqnsXwHcrobT7y9WHQ0SYUOq3Na27tGjxIfoyuAY0innSXNQyC0XNfa6TYRDg
-	 zvkIGY3nh+MZA==
-Date: Wed, 4 Jun 2025 15:19:23 +0100
-From: Mark Brown <broonie@kernel.org>
-To: samuel.kayode@savoirfairelinux.com
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pm@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>,
-	Abel Vesa <abelvesa@linux.com>, Robin Gong <b38343@freescale.com>,
-	Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v4 2/6] mfd: pf1550: add core mfd driver
-Message-ID: <41f40dfc-a71e-46d9-bd06-807a8d9c5748@sirena.org.uk>
-References: <20250603-pf1550-v4-0-bfdf51ee59cc@savoirfairelinux.com>
- <20250603-pf1550-v4-2-bfdf51ee59cc@savoirfairelinux.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MaDhrEXP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749046768; x=1780582768;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nvCdP0Vwqyv1w/nWeuE741pzwxdxLERa4Y/vBATrZhI=;
+  b=MaDhrEXPpCq2+0VtQ52F34rES13HIvrNq8abAj0kytD0TkmozLNl7kIJ
+   w7eHYDucxLb6eq4g3JMZmzfQEdvqauJsCn69ukGZAbeOO2RvrSLo2ZiJv
+   KRkJ4Lq8uvJ0IrcL1J7Bq/bziLaPcP/wrtMLJQfqDWw7WjdM4iayLesK4
+   ZMIE35nl4t84pvzAlUiXSRDhfhF8fOrznA6FrJoqv6gwJQ27cBZZi7CvJ
+   oM9y205tnaItKgm5WUP5FIeoHVWG8hCkjNY4sv1qOiBawzUwJt6VdSyRl
+   IuCc7Phy1dA/gaLG03B6BZ8Eb2kYKpz2YeT5TkBCtKKzZHbbPgP5jspQT
+   Q==;
+X-CSE-ConnectionGUID: u8wYudwCTuyByGe1L7imHQ==
+X-CSE-MsgGUID: krjGmWmxQfSMpP41mxlQBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="62489553"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="62489553"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:19:27 -0700
+X-CSE-ConnectionGUID: gpf1jbhDR02P7Vc1SsI37g==
+X-CSE-MsgGUID: HaGLvCGpTPyRlTH47RR87Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="150363145"
+Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.110.233]) ([10.125.110.233])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:19:25 -0700
+Message-ID: <343f6719-598a-453b-9903-21632bc6b623@intel.com>
+Date: Wed, 4 Jun 2025 07:19:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CxhOUmXXhXq/QXX/"
-Content-Disposition: inline
-In-Reply-To: <20250603-pf1550-v4-2-bfdf51ee59cc@savoirfairelinux.com>
-X-Cookie: I'm definitely not in Omaha!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
+ enable and reset paths
+To: Shuai Xue <xueshuai@linux.alibaba.com>,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>, fenghuay@nvidia.com,
+ vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
+ linux-kernel@vger.kernel.org
+References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
+ <20250522063329.51156-2-xueshuai@linux.alibaba.com>
+ <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
+ <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
+ <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
+ <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
+ <874ix5bhkz.fsf@intel.com> <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
+ <22b3a299-b148-46ec-804e-2f6cbb3d5de1@linux.alibaba.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <22b3a299-b148-46ec-804e-2f6cbb3d5de1@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
---CxhOUmXXhXq/QXX/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Jun 03, 2025 at 02:27:46PM -0400, Samuel Kayode via B4 Relay wrote:
+On 6/4/25 1:55 AM, Shuai Xue wrote:
+> 
+> 
+> 在 2025/6/3 22:32, Dave Jiang 写道:
+>>
+>>
+>> On 5/27/25 7:21 PM, Vinicius Costa Gomes wrote:
+>>> Shuai Xue <xueshuai@linux.alibaba.com> writes:
+>>>
+>>>> 在 2025/5/23 22:54, Dave Jiang 写道:
+>>>>>
+>>>>>
+>>>>> On 5/22/25 10:20 PM, Shuai Xue wrote:
+>>>>>>
+>>>>>>
+>>>>>> 在 2025/5/22 22:55, Dave Jiang 写道:
+>>>>>>>
+>>>>>>>
+>>>>>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
+>>>>>>>> A device reset command disables all WQs in hardware. If issued while a WQ
+>>>>>>>> is being enabled, it can cause a mismatch between the software and hardware
+>>>>>>>> states.
+>>>>>>>>
+>>>>>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
+>>>>>>>> send a reset command and clear the state (wq->state) of all WQs. It then
+>>>>>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
+>>>>>>>> ensure consistency between the software and hardware states.
+>>>>>>>>
+>>>>>>>> However, a race condition exists between the WQ enable path and the
+>>>>>>>> reset/recovery path. For example:
+>>>>>>>>
+>>>>>>>> A: WQ enable path                   B: Reset and recovery path
+>>>>>>>> ------------------                 ------------------------
+>>>>>>>> a1. issue IDXD_CMD_ENABLE_WQ
+>>>>>>>>                                       b1. issue IDXD_CMD_RESET_DEVICE
+>>>>>>>>                                       b2. clear wq->state
+>>>>>>>>                                       b3. check wq_enable_map bit, not set
+>>>>>>>> a2. set wq->state = IDXD_WQ_ENABLED
+>>>>>>>> a3. set wq_enable_map
+>>>>>>>>
+>>>>>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
+>>>>>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
+>>>>>>>> leading to an inconsistency between wq->state (software) and the actual
+>>>>>>>> hardware state (IDXD_WQ_DISABLED).
+>>>>>>>
+>>>>>>>
+>>>>>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
+>>>>>>>
+>>>>>>> DJ
+>>>>>>
+>>>>>> Yep, how about add a spin lock to enable wq and reset device path.
+>>>>>>
+>>>>>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+>>>>>> index 38633ec5b60e..c0dc904b2a94 100644
+>>>>>> --- a/drivers/dma/idxd/device.c
+>>>>>> +++ b/drivers/dma/idxd/device.c
+>>>>>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
+>>>>>>    }
+>>>>>>    EXPORT_SYMBOL_GPL(idxd_wq_enable);
+>>>>>>    +/*
+>>>>>> + * This function enables a WQ in hareware and updates the driver maintained
+>>>>>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
+>>>>>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
+>>>>>> + * otherwise disable the WQ without the driver's state being properly
+>>>>>> + * updated.
+>>>>>> + *
+>>>>>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
+>>>>>> + * called after the WQ has been explicitly disabled, so no concurrency
+>>>>>> + * issues arise.
+>>>>>> + */
+>>>>>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
+>>>>>> +{
+>>>>>> +       struct idxd_device *idxd = wq->idxd;
+>>>>>> +       int ret;
+>>>>>> +
+>>>>>> +       spin_lock(&idxd->dev_lock);
+>>>>>
+>>>>> Let's start using the new cleanup macro going forward:
+>>>>> guard(spinlock)(&idxd->dev_lock);
+>>>>>
+>>>>> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
+>>>>> guard(device)(idxd_confdev(idxd));
+>>>>
+>>>> Then we need to replace the lock from spinlock to mutex lock?
+>>>
+>>> We still need a (spin) lock that we could hold in interrupt contexts.
+>>>
+>>>>
+>>>>>
+>>>>> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
+>>>>> guard(device)(wq_confdev(wq));
+>>>>>
+>>>>> If you are up for it that is.
+>>>>
+>>>> We creates a hierarchy: pdev -> idxd device -> wq device.
+>>>> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
+>>>>
+>>>>       (wq_confdev(wq))->parent = idxd_confdev(idxd);
+>>>>
+>>>> Is it safe to grap lock of idxd_confdev(idxd) under hold
+>>>> lock of wq_confdev(wq)?
+>>>>
+>>>> We have mounts of code use spinlock of idxd->dev_lock under
+>>>> hold of wq->wq_lock.
+>>>>
+>>>
+>>> I agree with Dave that the locking could be simplified, but I don't
+>>> think that we should hold this series because of that. That
+>>> simplification can be done later.
+>>
+>> I agree. Just passing musing on the current code.
+> 
+> Got it, do I need to send a separate patch for Patch 2?
 
-> +enum pf1550_pmic_reg {
-> +	/* PMIC regulator part */
-> +	PF1550_PMIC_REG_DEVICE_ID		= 0x00,
-> +	PF1550_PMIC_REG_OTP_FLAVOR		= 0x01,
-> +	PF1550_PMIC_REG_SILICON_REV		= 0x02,
-> +
-> +	PF1550_PMIC_REG_INT_CATEGORY		= 0x06,
+Not sure what you mean. Do you mean if you need to send patch 2 again?
+> 
+> Thanks.
+> Shuai
 
-I notice that you don't seem to be using the top level interrupt here,
-that's going to add overhead since you need to check more registers on
-each interrupt.  Look at the sub irq stuff for some generic handling for
-that.
-
---CxhOUmXXhXq/QXX/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhAVeoACgkQJNaLcl1U
-h9BcZAf/bAoZC9oVRKkCQ7a6xVE/Snfm0QLW9yVBOGPr/nmKmruf5JM8TICwAO8c
-BkL4IPkPOI/ydRth25EvtqGczAXgZLU2UC4cupTLNofUqb11NarGxhmd2kI5QUP3
-RmyPWVpGpglxl275sJ/zro3f4u5erLXFcrcbTov1HOvcfIGotPmZhXtE7Pccm0+N
-+cECCVbEzSIdZaFDw0DyZ34VYrBaQIFbOmBDi1tlkcO2xgEPkIDsRt0rsG+M/iIY
-u8WRbMFOpSl7VVIgDhJCbmX9hNrRes/qLTqFUHhvyz0FwqX0fRMK93zQas3AgupX
-Ndt5Zdid0LqkRokAr919rQf2ZxvL2A==
-=kr6O
------END PGP SIGNATURE-----
-
---CxhOUmXXhXq/QXX/--
