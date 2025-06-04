@@ -1,112 +1,103 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE2724B26;
-	Wed,  4 Jun 2025 14:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E22624B26;
+	Wed,  4 Jun 2025 14:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749047093; cv=none; b=SZ4SwDTup2+SxRZJAiWs16G0mZGk928JZVY/Zev7oQYJtjc+6Vc3XbGeej/X7HUg7LFyysCA4WVvcad6TdJDDvaPLVKxRXM8X7MR1MAuoVgst5+Vj5zNDxo82/PnZf3PlLMuZQUx0oT3sLx+Utf2ABUFLGKfdP0PZlOw86/DAXY=
+	t=1749047135; cv=none; b=OoQUcbU52cYAwNNew4qTu1PD+PxbgjnHkmatCwTK3+XV3mTEKIOtzlcWzmQQlS5q3UUATjNrS+aABQG7JrEI9NhRJk9AVgfILDCgKss7m8bp0D6NasOzVgCjwIO0vkvwzfHeleOCzsMFdS//jLIRWCbdC8Xje2CwYlpYaAa4FaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749047093; c=relaxed/simple;
-	bh=aBj67WqnNRdJAwIA2FVK7ZrPey12dn3fCDbsu6xdMlo=;
+	s=arc-20240116; t=1749047135; c=relaxed/simple;
+	bh=Rj2/ruFOKQorwxIO/Q4QbkwEcBo2WBVADSmD3EOg3d4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pOXhfh5G73dnzK6hTy0VkwZmiODNrN2MwphDTQJcZm0qcJ12VqoEWFw40/O4xfLNvgK0K1TtfiJUGwokX+xYyfhaAI1Q8gmU2GZYoaLNZ08LQqo3j1o27NcSWGaNxAqKrNj+XFiIYhJxEqWlV02yiL98FSQfzmrtwZ+K1qugX0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SATPIaNP; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=oehjLihJlauYejIIXht7Nto3MQ5EsYKXdQOCeFtWbne7Yng/MkNzDMs1vOgzwSnVb7ksnNx+GBASLAu0Qx7rvc+7npw7s8tv+lgfRxlfI4BWhWrCCDutMONhUQnwspvy8mpAhawimYxHxBAqkpIq8CffuGSYbaVcXWRMsaOEiBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qsCT1YoN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SATPIaNP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7p5VmWb2SIAcmGijn39glw69okIY8rokGtORJAyMkNA=; b=SATPIaNPngxKZMjgYZLRyy6+zp
-	jynnjRFkJtsaLQlCmttogi7m8o9WhTL+bk8Qj2Zi4oMewjUf6xLuF78m/lPNvMfBRQcIE5pXi7dyo
-	mg8bHpIGkBEcAjRcHDZAv++lIUeW9dWs7C6F5q0zUdE1TitXmXguxbAxGttvdntpwXSGS6eRYG2Rl
-	SOeowo/kx0Q/1FoAYXe8x4vjDm4GNhgCaZl81lloPwJSttyUhLY1fNzqiI5x4Sq/nsS36iMCl2MmR
-	98IRMJM/E6Qs1z21+K7XpJ3fBeihXr7HYX5uJtp+fxgAo3lq6pPIcTwGmgOc4BRl88oUC9wjr79Aa
-	/2W2bMQQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMp2k-00000000uJJ-2Kam;
-	Wed, 04 Jun 2025 14:24:38 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E2EE7300787; Wed,  4 Jun 2025 16:24:37 +0200 (CEST)
-Date: Wed, 4 Jun 2025 16:24:37 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Baisheng Gao <baisheng.gao@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
-	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
-Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
- sample
-Message-ID: <20250604142437.GM38114@noisy.programming.kicks-ass.net>
-References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
- <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qsCT1YoN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0504DC4CEE4;
+	Wed,  4 Jun 2025 14:25:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749047134;
+	bh=Rj2/ruFOKQorwxIO/Q4QbkwEcBo2WBVADSmD3EOg3d4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qsCT1YoNWD4jDyioy4d+KlZSuwv6QyqIGjfol19SEqUFMOc/WMrtrDcNyYGmH+WnC
+	 NQIfTVvdoW3bCbmNA0ASXSWxERQ7thaSULcS/HXGydrF8yNQ+kaJnj+bbGy2Cv6u0n
+	 n0N3mqNyHPKbmizKmLsRS+yhSZJJXZJ/5sGlsMeL2UutS16XbkWBdgVvHJi5xEvyZg
+	 f+XD2b72d8ZEMP91QTev/FLJXTM4vWThZYeT3Jx84QGnBb5MIPd5Zkx9dUbl1Laon7
+	 yB1G76YbCChFaowiaAC7FpmXzzPwuyFONjIqW6925Q7Kwp2OsWXklX9l7DOmDTqPFg
+	 g+WEIyYLvPhDg==
+Date: Wed, 4 Jun 2025 15:25:29 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pm@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>,
+	Abel Vesa <abelvesa@linux.com>, Robin Gong <b38343@freescale.com>,
+	Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v4 3/6] regulator: pf1550: add support for regulator
+Message-ID: <f2064326-e696-48cc-8f0e-5e51c95548b5@sirena.org.uk>
+References: <20250603-pf1550-v4-0-bfdf51ee59cc@savoirfairelinux.com>
+ <20250603-pf1550-v4-3-bfdf51ee59cc@savoirfairelinux.com>
+ <eb1fb4e2-42aa-4795-bc6c-dbcf1fa04f11@sirena.org.uk>
+ <aEBSSHA8bxw2igAW@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LeZqoxaN4Nid9bpS"
+Content-Disposition: inline
+In-Reply-To: <aEBSSHA8bxw2igAW@fedora>
+X-Cookie: Non-sequiturs make me eat lampshades.
+
+
+--LeZqoxaN4Nid9bpS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
 
-On Wed, Jun 04, 2025 at 03:05:43PM +0100, Mark Rutland wrote:
+On Wed, Jun 04, 2025 at 10:03:52AM -0400, Samuel Kayode wrote:
+> On Wed, Jun 04, 2025 at 12:35:21PM +0100, Mark Brown wrote:
 
-> Loooking at 5.15.149 and current HEAD (5abc7438f1e9), do_exit() calls
-> exit_mm() before perf_event_exit_task(), so it looks
-> like perf could sample from another task's mm.
-> 
-> Yuck.
-> 
-> Peter, does the above sound plausible to you?
+> > > +	switch (irq_type) {
+> > > +	case PF1550_PMIC_IRQ_SW1_LS:
+> > > +		event = REGULATOR_EVENT_OVER_CURRENT;
+> > > +	case PF1550_PMIC_IRQ_SW1_HS:
+> > > +		event = REGULATOR_EVENT_OVER_CURRENT;
+> > > +	case PF1550_PMIC_IRQ_LDO1_FAULT:
+> > > +		event = REGULATOR_EVENT_OVER_CURRENT;
 
-Yuck indeed. And yeah, we should probably re-arrange things there.
+> > You appear to be flagging all these events as over current events which
+> > doesn't seem entirely plausible.
 
-Something like so?
+> It does seem like it but the manual describes these interrupts as "current limit
+> interrupt". The interrupts ending in _LS are "low-side current limit interrupt",
+> _HS are "high-side current limit interrupt" and _FAULT are "current limit fault
+> interrupt".
 
----
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 38645039dd8f..3407c16fc5a3 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -944,6 +944,15 @@ void __noreturn do_exit(long code)
- 	taskstats_exit(tsk, group_dead);
- 	trace_sched_process_exit(tsk, group_dead);
- 
-+	/*
-+	 * Since samping can touch ->mm, make sure to stop everything before we
-+	 * tear it down.
-+	 *
-+	 * Also flushes inherited counters to the parent - before the parent
-+	 * gets woken up by child-exit notifications.
-+	 */
-+	perf_event_exit_task(tsk);
-+
- 	exit_mm();
- 
- 	if (group_dead)
-@@ -959,14 +968,6 @@ void __noreturn do_exit(long code)
- 	exit_task_work(tsk);
- 	exit_thread(tsk);
- 
--	/*
--	 * Flush inherited counters to the parent - before the parent
--	 * gets woken up by child-exit notifications.
--	 *
--	 * because of cgroup mode, must be called before cgroup_exit()
--	 */
--	perf_event_exit_task(tsk);
--
- 	sched_autogroup_exit_task(tsk);
- 	cgroup_exit(tsk);
- 
+That at least needs some comments I think, and for the _LS while it's
+hard to parse what "low side" means my guess would be that it's a
+warning to match the other interrupt being the actual error.
+
+--LeZqoxaN4Nid9bpS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhAV1gACgkQJNaLcl1U
+h9A44Af/aPWc+RQEJQ4xYMYmCbH4Fi/ZIzfT1qLksu73+7JtX4xSsy1ow2vtuYTV
+Dtkvg9UYeNJ0aJlcHzwqI/fxC68jgwqgZBYMCYuUqEDdNUqq/Be9nCf0tonft6kI
+JkjPKy4Cc4P9Gt2SYovWRGn6qLW7MME8mSsBTh4XLDY7BQZCfKwel0n7bylt6QEy
+OO0PU1QgzRlLk/s66ysVGDPkeVV4jKV9YpejzCV4WQ83yRWY45kHXEPvUtF9NzfI
+tTX34J49/IpmN37m5zT/znhyNgMjJvjqfzxXK4COp40DelsYxaWeU42A+LDI9x+X
+futIraVxzEJC8amaHr0fhdXW5dJDoQ==
+=Lh6W
+-----END PGP SIGNATURE-----
+
+--LeZqoxaN4Nid9bpS--
