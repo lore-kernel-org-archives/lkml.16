@@ -1,157 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6F029009A;
-	Wed,  4 Jun 2025 14:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB76290BB0;
+	Wed,  4 Jun 2025 14:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045952; cv=none; b=t50tOZu0ftmpvjlU5xIcBOwBYWktx9axzSXQ+f8DdEC6vSpdm38M0wOxsMjLVGyaAlPU1tvoecxORffrbVbqBMHzo9x37AZsZu4F17z6oY/2ET+/FLTD0uGL9+aT3iG9gzQ3SXzxZ+e3ONJVemcRYP8x4uQ6NvwZaypDPXr2SJA=
+	t=1749045955; cv=none; b=SM+lBIIPvuLMTvFZ/kwxeIfJI2Zn1HWJ+lbUi2EL8I7mcJbGnrEX5zdCfevYVbhpnsad6Y/l+8aImx2Vio+m7RBwYHATSWy/GtYZcPTA4+PEr3wrIQZmvmuLM3OPUcdFdhCJlOBRdBi75J0TM7t7vq/BfPRlIx4FLObpZV3MtgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045952; c=relaxed/simple;
-	bh=IIEwGMNU/iJrUu7/3CwdVOUWTk7lAwMeHyQc/py9Ccg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UPkMg4FOtMNv0UrQPYHkfA5YROY5kzo8s5otfIOLlnwdT/Pxd6+chJSrrKCihokwCorBZrGOZRHUY7f6iy6OVKEK4BUDIjdeTe/0/92hwGTzDBgsNBW578e3Ax0rCS9RBLx9+qR2o6CpFueZU1RabN2HiZKk95aG2WT2P1479D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXv44fZ0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXv44fZ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFF0C4AF0B;
-	Wed,  4 Jun 2025 14:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749045951;
-	bh=IIEwGMNU/iJrUu7/3CwdVOUWTk7lAwMeHyQc/py9Ccg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YXv44fZ0Sr4s/P77xwDWM3bl+et2NQKht5j2jXoEX7yG3Eb/UtkVmKaiHHWaUB9v8
-	 pJXXUkBke75VXdJPUmIfxipVu2+83CiMConF36hFMxRKyHRv0QCZA+JIwmG3dQRuVA
-	 8kZdxz6G/aiqVvfTX1Aq0GmkXa7fPXDY6Qt39+1VB7XnuKf6KyD28IGbCpp50cL2XD
-	 lsqvyCGCnbs5z+dx7GYJ6ZxRvM4Y+jmot4hjUu7Y2/vdmkEBUq/PdCfg8GdtunYAd2
-	 +WCBSbOFnVHpLgVnXQByT23u1jd31PlAqg5NZbDroRwqAgNwoduwYrZong1X+jdoQx
-	 PnsL1rGIH027A==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so7993658a12.2;
-        Wed, 04 Jun 2025 07:05:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXAWuVDXx3s83CKNpi5fz2Km7U+kcX94RBZ69rE0AFlM4Hkz+yV7QBBFJl9t7nakkSp0VPA4cDG@vger.kernel.org, AJvYcCXCa7IhxRjpJRYPnf3k3Au1eeVP8o5ix9TF1qDmTIBUY4ijepj71UZ4ubjovAYY7nT1GjuDvGVgrkdd5pQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxteLgmecjqUXL9rpUnUDHUqZyYYde5iSJId3SxMqmCrDnyGrAs
-	X9oHpVfp9dzwq8gN8KMz/sAaMFTXtauWqunvwfaXofD4t26C0l8GLNY6Tn6pZsQCH8DMtnRrjW+
-	72p2Xd7lh2Y7nVFGuko4pdOiRbqaYxKE=
-X-Google-Smtp-Source: AGHT+IHzLrFJ0tDCiOZ2aUxsctyLKXzDo7JOd/wEZA10wfKlrAyYi5vIntUo8b7ssgCiiur5CYeoKuJbXK6hT8b9IDw=
-X-Received: by 2002:a05:6402:2351:b0:607:1973:2082 with SMTP id
- 4fb4d7f45d1cf-6071973209cmr498604a12.11.1749045950321; Wed, 04 Jun 2025
- 07:05:50 -0700 (PDT)
+	s=arc-20240116; t=1749045955; c=relaxed/simple;
+	bh=Ak2W+o8IxIKSA2WZaZODaZ0/CBGDnqt8Ha3K2Qh6peE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6yTRjsuYSPtdNZ048f8gzE+yHoIplqUN86WdXHVZ4JPk5+/wUX9cX8YR2k3UsXQ4aIAdbIOogzG1Wu1zLMnl39BoVeVpVnCeJ/t/z3XqGQj0Aelih74RRMBrwJXLbVBHUzdcaR5nlBpxckWWFweZXxRX8r1z5toKnhud6ykyRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7F781758;
+	Wed,  4 Jun 2025 07:05:34 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 562883F5A1;
+	Wed,  4 Jun 2025 07:05:49 -0700 (PDT)
+Date: Wed, 4 Jun 2025 15:05:43 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Baisheng Gao <baisheng.gao@unisoc.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
+	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
+Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
+ sample
+Message-ID: <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
+References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
-In-Reply-To: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 4 Jun 2025 22:05:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvKA_KKer2m4iG2-t1TsphfY807WvqIwtlUIzYSRATglAOWgOM5PL3hSDQ
-Message-ID: <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: vDSO: correctly use asm parameters in syscall wrappers
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: WANG Xuerui <kernel@xen0n.name>, "Theodore Ts'o" <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250424025429.10942-1-baisheng.gao@unisoc.com>
 
-On Tue, Jun 3, 2025 at 7:49=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> The syscall wrappers use the "a0" register for two different register
-> variables, both the first argument and the return value. The "ret"
-> variable is used as both input and output while the argument register is
-> only used as input. Clang treats the conflicting input parameters as
-> undefined behaviour and optimizes away the argument assignment.
->
-> The code seems to work by chance for the most part today but that may
-> change in the future. Specifically clock_gettime_fallback() fails with
-> clockids from 16 to 23, as implemented by the upcoming auxiliary clocks.
->
-> Switch the "ret" register variable to a pure output, similar to the other
-> architectures' vDSO code. This works in both clang and GCC.
-Hmmm, at first the constraint is "=3Dr", during the progress of
-upstream, Xuerui suggested me to use "+r" instead [1].
-[1]  https://lore.kernel.org/linux-arch/5b14144a-9725-41db-7179-c059c41814c=
-f@xen0n.name/
+On Thu, Apr 24, 2025 at 10:54:29AM +0800, Baisheng Gao wrote:
+> In order to fix the race condition between exit_mmap and
+> perf_output_sample below, forbidding to copy the user stack
+> of an exiting process.
+> 
+>  Internal error: synchronous external abort: ffffffff96000010 [#1]
+>   PREEMPT SMP
 
-Huacai
+That ESR value (0x96000010, which got sign-extended somewhere), is a
+synchronous external abort, not on translation table walk.
 
->
-> Link: https://lore.kernel.org/lkml/20250602102825-42aa84f0-23f1-4d10-89fc=
--e8bbaffd291a@linutronix.de/
-> Link: https://lore.kernel.org/lkml/20250519082042.742926976@linutronix.de=
-/
-> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-> Fixes: 18efd0b10e0f ("LoongArch: vDSO: Wire up getrandom() vDSO implement=
-ation")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+That means that some memory access was translated to some PA where the
+endpoint responded with an error (and it strongly implies you're poking
+MMIO or a PA terminated early by the interconnect).
+
+>  CPU: 3 PID: 2651 Comm: binder:2649_1 Tainted: G        W  OE
+>   5.15.149-android13-8-00008-gbe074b05e5af-ab12096863 #1
+>  Hardware name: Spreadtrum UMS9230 1H10 SoC (DT)
+>  pstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>  pc : __arch_copy_from_user+0x180/0x218
+>  lr : arch_perf_out_copy_user+0xb0/0x17c
+>  sp : ffffffc00801baf0
+>  x29: ffffffc00801baf0 x28: ffffffc00801bbf8 x27: ffffffc00801bbe8
+>  x26: 0000000000000000 x25: 0000000000001000 x24: 000000000000feb8
+>  x23: 00000000000005f0 x22: ffffff80613c8000 x21: ffffff8143102a10
+>  x20: 0000007c239643c0 x19: 00000000000005f0 x18: ffffffc00801d058
+>  x17: ffffffc16e677000 x16: ffffffc008018000 x15: 0000007c239643c0
+>  x14: 0000000000000002 x13: 0000000000000003 x12: ffffffc008000000
+>  x11: ffffff8000090000 x10: ffffffc008090000 x9 : 0000007fffffffff
+>  x8 : 0000007c239643c0 x7 : 000000000000feb8 x6 : ffffff8143102a10
+>  x5 : ffffff8143103000 x4 : 0000000000000000 x3 : ffffff8093cad140
+>  x2 : 0000000000000570 x1 : 0000007c239643c0 x0 : ffffff8143102a10
+>  Call trace:
+>   __arch_copy_from_user+0x180/0x218
+>   perf_output_sample+0x14e4/0x1904
+>   perf_event_output_forward+0x90/0x130
+>   __perf_event_overflow+0xc8/0x17c
+>   perf_swevent_hrtimer+0x124/0x290
+>   __run_hrtimer+0x134/0x4a0
+>   hrtimer_interrupt+0x2e4/0x560
+>   arch_timer_handler_phys+0x5c/0xa0
+>   handle_percpu_devid_irq+0xc0/0x374
+>   handle_domain_irq+0xd8/0x160
+>   gic_handle_irq.34215+0x58/0x26c
+>   call_on_irq_stack+0x3c/0x70
+>   do_interrupt_handler+0x44/0xa0
+>   el1_interrupt+0x34/0x64
+>   el1h_64_irq_handler+0x1c/0x2c
+>   el1h_64_irq+0x7c/0x80
+>   release_pages+0xac/0x9b4
+>   tlb_finish_mmu+0xb0/0x238
+>   exit_mmap+0x1b8/0x538
+>   __mmput+0x40/0x274
+>   mmput+0x40/0x134
+>   exit_mm+0x3bc/0x72c
+
+The mmput() here happens after current->mm was set to NULL and the task
+entered lazy TLB mode.
+
+AFAICT, either:
+
+* Something has gone wrong such that the CPU is still using the
+  translation tables of the exiting task, and those are in some
+  inconsistent state.
+
+* Due to lazymm, the active_mm belongs to some other tas, and perf is
+  sampling from that other task's VA space (which does not correlate at
+  all with the pt_regs). That other task happens to have some MMIO
+  mapped.
+
+... either of which is a pretty horrid bug.
+
+Loooking at 5.15.149 and current HEAD (5abc7438f1e9), do_exit() calls
+exit_mm() before perf_event_exit_task(), so it looks
+like perf could sample from another task's mm.
+
+Yuck.
+
+Peter, does the above sound plausible to you?
+
+Mark.
+
+>   do_exit+0x294/0x1160
+>   do_group_exit+0xc8/0x174
+>   get_signal+0x830/0x95c
+>   do_signal+0x9c/0x2a8
+>   do_notify_resume+0x98/0x1ac
+>   el0_svc+0x5c/0x84
+>   el0t_64_sync_handler+0x88/0xec
+>   el0t_64_sync+0x1b8/0x1bc
+> 
+> Signed-off-by: Baisheng Gao <baisheng.gao@unisoc.com>
 > ---
->  arch/loongarch/include/asm/vdso/getrandom.h    | 2 +-
->  arch/loongarch/include/asm/vdso/gettimeofday.h | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/vdso/getrandom.h b/arch/loongarch=
-/include/asm/vdso/getrandom.h
-> index 48c43f55b039b42168698614d0479b7a872d20f3..a81724b69f291ee49dd1f46b1=
-2d6893fc18442b8 100644
-> --- a/arch/loongarch/include/asm/vdso/getrandom.h
-> +++ b/arch/loongarch/include/asm/vdso/getrandom.h
-> @@ -20,7 +20,7 @@ static __always_inline ssize_t getrandom_syscall(void *=
-_buffer, size_t _len, uns
->
->         asm volatile(
->         "      syscall 0\n"
-> -       : "+r" (ret)
-> +       : "=3Dr" (ret)
->         : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
->         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
->           "memory");
-> diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loonga=
-rch/include/asm/vdso/gettimeofday.h
-> index 88cfcf13311630ed5f1a734d23a2bc3f65d79a88..f15503e3336ca1bdc9675ec6e=
-17bbb77abc35ef4 100644
-> --- a/arch/loongarch/include/asm/vdso/gettimeofday.h
-> +++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
-> @@ -25,7 +25,7 @@ static __always_inline long gettimeofday_fallback(
->
->         asm volatile(
->         "       syscall 0\n"
-> -       : "+r" (ret)
-> +       : "=3Dr" (ret)
->         : "r" (nr), "r" (tv), "r" (tz)
->         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
->           "$t8", "memory");
-> @@ -44,7 +44,7 @@ static __always_inline long clock_gettime_fallback(
->
->         asm volatile(
->         "       syscall 0\n"
-> -       : "+r" (ret)
-> +       : "=3Dr" (ret)
->         : "r" (nr), "r" (clkid), "r" (ts)
->         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
->           "$t8", "memory");
-> @@ -63,7 +63,7 @@ static __always_inline int clock_getres_fallback(
->
->         asm volatile(
->         "       syscall 0\n"
-> -       : "+r" (ret)
-> +       : "=3Dr" (ret)
->         : "r" (nr), "r" (clkid), "r" (ts)
->         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
->           "$t8", "memory");
->
-> ---
-> base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
-> change-id: 20250603-loongarch-vdso-syscall-f585a99bea03
->
-> Best regards,
+>  kernel/events/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index e93c19565914..9c9b571b812d 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7867,7 +7867,8 @@ void perf_output_sample(struct perf_output_handle *handle,
+>                 }
+>         }
+> 
+> -       if (sample_type & PERF_SAMPLE_STACK_USER) {
+> +       if (sample_type & PERF_SAMPLE_STACK_USER &&
+> +                       !(current->flags & PF_EXITING)) {
+>                 perf_output_sample_ustack(handle,
+>                                           data->stack_user_size,
+>                                           data->regs_user.regs);
 > --
-> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
->
+> 2.34.1
+> 
+> ________________________________
+>  This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
+> 本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
