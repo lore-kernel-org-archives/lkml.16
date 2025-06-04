@@ -1,141 +1,131 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6323C1E1DE7
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 11:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793F051C5A;
+	Wed,  4 Jun 2025 11:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749037530; cv=none; b=YoO4SIa0fsQlZygALDtM9iFXPw/3M7VykxZKjjYxaLwv+7IfkZ93brSVeVwZnDS5KYJ06G6sk9rnFb8C/e2pWo7zO6EpVQn6Ec/x9kXNGL4tpxQbYjTTuwmA8EJ5/DIy1IVK2kIY52vpbdf5FoM2ZEKpFDcdex0Y0FKcYDAsI1Y=
+	t=1749037778; cv=none; b=YwlfaZxAqh61VuG5bxeezPTk4XlSVAyPRDhFgpz7rw1+AVixw9XGkvYHfdtuFTg7M5w08ZPGls/KKZu1kbl/C10dyhtJfEcJBG+WtH4joMA5cCLPjJzEeekI3bpFR3J1aluWhY1OSEPNFUgUlPWSp0E6yD+QObXtZ02PH3raRWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749037530; c=relaxed/simple;
-	bh=TmHCFiRDPScVcYmoA0LMLEoluTj57EotqkbpUyllzTI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W1v/FSIIChSvJC04T1FMSuogYtYCHPoQqSYn/0GnACcfJx7Z+UMc1updascX+7zoNnn37NC+Xf3ToxrOqTvPWrggyD3dhUMowPpkPK33CR8scb5cGB3ivqYXIm7bRuNTscvOOhBkqZSOsyaUbzttCG0iA1KBZdsMCUdo7xuQInM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6790B439B4;
-	Wed,  4 Jun 2025 11:45:19 +0000 (UTC)
-Message-ID: <57a1ced6-406b-4197-96ca-6b83d99ca1a0@ghiti.fr>
-Date: Wed, 4 Jun 2025 13:45:18 +0200
+	s=arc-20240116; t=1749037778; c=relaxed/simple;
+	bh=LWoCnVWu9kyApgL0kLFdiS1HexGeNKcPhWj+9WD/Kfc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cs4hW2XX3dhX/49HMoCjp1DqVNjVCt1tdI3OPbwk3pBoVOvMlfp8Pd50xgvZB4Vp0F5/4SyHXunWxw7715B63PpMklsOTvx3WuZ3XL84JvVmIvF7R6PfUyKN4OvrMoXCxKHS20pkxlaFkOMf7BJwyiecgraPxJ14yklYYz5Cuf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=is9MVYSO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="is9MVYSO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CDBAC4CEF1;
+	Wed,  4 Jun 2025 11:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749037778;
+	bh=LWoCnVWu9kyApgL0kLFdiS1HexGeNKcPhWj+9WD/Kfc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=is9MVYSOVtMnrgwzOzakjMU3j5YIu5jgPQCNZ1v4fPjqDWeZMLwzYyBcKFjy39C4D
+	 v1Z9szTqR0IVIkZ8VSvcQ/61F2FrKKPFeKJx9w5BsVn3tqUY7N9O2w8cxInat0Fhe0
+	 i9el7HpsFNYdvn0r8YdXYW9DRKMbvFD/fmIgfybGB1Q+tOKfx0r+U3tP7msrCzSxZl
+	 jABrlyGkysOSPZr5SMDuId1rfK4kTiFCnf7AdGKKbbJHlAxjVpsLvMrQ2EEuMhlMeA
+	 4kvekT8tH+9tVFypIl/1TWw68frh2gDhlwiGu+Az0R2MTx+PVIjsm5iIMUbijCu7S1
+	 UFrPJ24rpPleA==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Sasha Levin <sashal@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.15 6/9] bus: fsl-mc: increase MC_CMD_COMPLETION_TIMEOUT_MS value
+Date: Wed,  4 Jun 2025 07:49:19 -0400
+Message-Id: <20250604114923.208380-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250604114923.208380-1-sashal@kernel.org>
+References: <20250604114923.208380-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] RISC-V: vDSO: Wire up getrandom() vDSO implementation
-To: Xi Ruoyao <xry111@xry111.site>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Nathan Chancellor <nathan@kernel.org>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Guo Ren <guoren@kernel.org>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250411024600.16045-1-xry111@xry111.site>
- <20250411095103-2aad099a-e4a1-4efb-8374-dd27bf05b668@linutronix.de>
- <a2477829-f3a5-4763-89f3-8c2c1f4716b8@ghiti.fr>
- <7f840a23ab8865d7f205caec56817c660e237d64.camel@xry111.site>
- <71f093d5-4823-4bc6-b9ee-23433bd8c60c@ghiti.fr>
- <0f0eb024d7ed062141a8aa048017e6f7ef7c1fd4.camel@xry111.site>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <0f0eb024d7ed062141a8aa048017e6f7ef7c1fd4.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.15
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvtdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeffhfdvfedtvdffhffhleejveeviedvffdtudegveffffegffdtieetveehjeduveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhlughsrdhssgenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdeingdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepgihrhiduudduseigrhihudduuddrshhithgvpdhrtghpthhtohepthhhohhmrghsrdifvghishhsshgthhhuhheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplfgrshhonhesiiigvdgtgedrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrt
- ghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehguhhorhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Xi,
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-On 6/3/25 14:48, Xi Ruoyao wrote:
-> On Fri, 2025-05-23 at 12:06 +0200, Alexandre Ghiti wrote:
->> On 5/23/25 10:02, Xi Ruoyao wrote:
->>> On Fri, 2025-05-23 at 10:01 +0200, Alexandre Ghiti wrote:
->>>> Hi Xi,
->>>>
->>>> On 4/11/25 10:04, Thomas Weißschuh wrote:
->>>>> On Fri, Apr 11, 2025 at 10:46:00AM +0800, Xi Ruoyao wrote:
->>>>>> Hook up the generic vDSO implementation to the generic vDSO
->>>>>> getrandom
->>>>>> implementation by providing the required
->>>>>> __arch_chacha20_blocks_nostack
->>>>>> and getrandom_syscall implementations. Also wire up the selftests.
->>>>>>
->>>>>> The benchmark result:
->>>>>>
->>>>>> 	vdso: 25000000 times in 2.466341333 seconds
->>>>>> 	libc: 25000000 times in 41.447720005 seconds
->>>>>> 	syscall: 25000000 times in 41.043926672 seconds
->>>>>>
->>>>>> 	vdso: 25000000 x 256 times in 162.286219353 seconds
->>>>>> 	libc: 25000000 x 256 times in 2953.855018685 seconds
->>>>>> 	syscall: 25000000 x 256 times in 2796.268546000 seconds
->>>>>>
->>>>>> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
->>>>>> ---
->>>>>>
->>>>>> [v1]->v2:
->>>>>> - Fix the commit message.
->>>>>> - Only build the vDSO getrandom code if CONFIG_VDSO_GETRANDOM, to
->>>>>>      unbreak RV32 build.
->>>>>> - Likewise, only enable the selftest if __riscv_xlen == 64.
->>>>>>
->>>>>> [v1]:
->>>>>> https://lore.kernel.org/all/20250224122541.65045-1-xry111@xry111.site/
->>>>>>
->>>>>>     arch/riscv/Kconfig                            |   1 +
->>>>>>     arch/riscv/include/asm/vdso/getrandom.h       |  30 +++
->>>>>>     arch/riscv/kernel/vdso/Makefile               |  12 +
->>>>>>     arch/riscv/kernel/vdso/getrandom.c            |  10 +
->>>>>>     arch/riscv/kernel/vdso/vdso.lds.S             |   1 +
->>>>>>     arch/riscv/kernel/vdso/vgetrandom-chacha.S    | 244
->>>>>> ++++++++++++++++++
->>>>>>     .../selftests/vDSO/vgetrandom-chacha.S        |   2 +
->>>>>>     7 files changed, 300 insertions(+)
->>>>>>     create mode 100644 arch/riscv/include/asm/vdso/getrandom.h
->>>>>>     create mode 100644 arch/riscv/kernel/vdso/getrandom.c
->>>>>>     create mode 100644 arch/riscv/kernel/vdso/vgetrandom-chacha.S
->>>>> <snip>
->>>>>
->>>>>> diff --git a/arch/riscv/kernel/vdso/vdso.lds.S
->>>>>> b/arch/riscv/kernel/vdso/vdso.lds.S
->>>>>> index 8e86965a8aae..abc69cda0445 100644
->>>>>> --- a/arch/riscv/kernel/vdso/vdso.lds.S
->>>>>> +++ b/arch/riscv/kernel/vdso/vdso.lds.S
->>>>>> @@ -80,6 +80,7 @@ VERSION
->>>>>>     #ifndef COMPAT_VDSO
->>>>>>     		__vdso_riscv_hwprobe;
->>>>>>     #endif
->>>>>> +		__vdso_getrandom;
->>>>> For consistency this could be gated behind CONFIG_VDSO_GETRANDOM.
->>>> Nathan sent a fix for this here:
->>>>
->>>> https://lore.kernel.org/all/20250423-riscv-fix-compat_vdso-lld-v2-1-b7bbbc244501@kernel.org/
->>> I've given it an R-b.  Do you prefer me to squash the patches and keep
->>> the SoB of both I and Nathan?
->> Hmm I was about to send a new PR today after the CI passes, I mentioned
->> Nathan's patch in the squash so he keeps credit for the fix. Unless you
->> can send something today, I'll keep my squashed patch.
-> Palmer has reverted this in for-next and Thomas just informed me another
-> mistake in the code at https://lore.kernel.org/all/20250603-loongarch-
-> vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de/.
->
-> I'll try to sort things up and send v3 in the week.
+[ Upstream commit 23d060136841c58c2f9ee8c08ad945d1879ead4b ]
 
+In case the MC firmware runs in debug mode with extensive prints pushed
+to the console, the current timeout of 500ms is not enough.
+Increase the timeout value so that we don't have any chance of wrongly
+assuming that the firmware is not responding when it's just taking more
+time.
 
-I already sent this patch with a few fixes in my second PR for 6.16 
-(https://git.kernel.org/pub/scm/linux/kernel/git/alexghiti/linux.git/commit/?h=alex-for-next-sbi-3.0-rebase-6.15-rc6&id=dc5240f09bca7b5fc72ad8894d6b9321bce51139)
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Link: https://lore.kernel.org/r/20250408105814.2837951-7-ioana.ciornei@nxp.com
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-Can you just send the fix? I'll merge it next week in -rc2.
+Based on my analysis of the commit and the surrounding code context,
+here is my assessment: **YES** This commit should be backported to
+stable kernel trees. **Detailed Analysis:** **1. Bug Fix Nature:** This
+commit addresses a real timeout issue where legitimate MC firmware
+operations can fail due to an inadequate timeout value. The commit
+message explicitly states that "In case the MC firmware runs in debug
+mode with extensive prints pushed to the console, the current timeout of
+500ms is not enough." **2. Code Change Analysis:** The change is minimal
+and surgical: - Changes a single timeout constant from 500ms to 15000ms
+(15 seconds) - Only affects `drivers/bus/fsl-mc/mc-sys.c:22` - No
+architectural changes or new functionality added - The timeout is used
+in both `mc_polling_wait_preemptible()` and `mc_polling_wait_atomic()`
+functions that handle MC command completion **3. Risk Assessment:** The
+change has minimal risk: - Increasing a timeout value is generally safe
+and doesn't change behavior for successful operations - Only affects
+systems with Freescale/NXP DPAA2 Management Complex hardware - The
+original 500ms timeout was clearly insufficient for legitimate use cases
+- Similar to successful backports in the reference commits (e.g.,
+Similar Commit #1 and #3 which both increased timeouts) **4. Impact and
+Importance:** - Fixes a real user-facing issue where MC commands fail
+with timeouts during firmware debug scenarios - The FSL-MC bus is
+critical infrastructure for DPAA2 networking architecture on NXP ARM
+SoCs - Timeout failures can cause device initialization problems and
+system instability - The `mc_send_command()` function is used
+extensively throughout the FSL-MC subsystem for all hardware
+communication **5. Comparison with Similar Commits:** - Very similar to
+Similar Commit #1 (UCSI timeout increase from 1s to 5s) - **Status:
+YES** - Very similar to Similar Commit #3 (MLX5 timeout decrease from 2
+hours to 60s) - **Status: YES** - Both of these were timeout adjustments
+that got backported successfully **6. Subsystem Scope:** The change is
+contained within the FSL-MC bus driver subsystem and only affects NXP
+DPAA2 hardware platforms, making it a safe candidate for stable trees.
+**7. Explicit Stable Tree Criteria:** This meets the stable tree
+criteria: - Fixes an important bug affecting real users - Small and
+contained change with minimal regression risk - No new features or
+architectural changes - Addresses a timeout issue that can cause system
+functionality problems The commit represents a classic example of a
+safe, important bug fix that should be backported to help users
+experiencing MC command timeouts in production environments, especially
+during firmware debugging scenarios.
 
-Thanks,
+ drivers/bus/fsl-mc/mc-sys.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Alex
+diff --git a/drivers/bus/fsl-mc/mc-sys.c b/drivers/bus/fsl-mc/mc-sys.c
+index f2052cd0a0517..b22c59d57c8f0 100644
+--- a/drivers/bus/fsl-mc/mc-sys.c
++++ b/drivers/bus/fsl-mc/mc-sys.c
+@@ -19,7 +19,7 @@
+ /*
+  * Timeout in milliseconds to wait for the completion of an MC command
+  */
+-#define MC_CMD_COMPLETION_TIMEOUT_MS	500
++#define MC_CMD_COMPLETION_TIMEOUT_MS	15000
+ 
+ /*
+  * usleep_range() min and max values used to throttle down polling
+-- 
+2.39.5
 
-
->
