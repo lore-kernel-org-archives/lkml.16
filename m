@@ -1,199 +1,268 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4F4111BF;
-	Wed,  4 Jun 2025 19:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA0F111BF;
+	Wed,  4 Jun 2025 19:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749066866; cv=none; b=FFuGpMVM34a87mqw2bQCgathnI9tmRbb+h+n2o/PuelLMm9rt2PQ/p/21T8D2ZSvQGyM+YwVt7xbfftz0wi8U8RjiLDW1a7/5lBgul1Pt6Vx4qvMCj586KXGNENqpeavFtwhOp2E1D3XrNghA3L1Ra6sPlp2UoDhPralZ1N/zHY=
+	t=1749066882; cv=none; b=LoyTU/9s6fOAdGytjGBaBHFWegTuN1xA6ieTPQcKgP1PfxaJeGByaFxR0IB4az8JQJI+EPaOpT04Of0a4uSaMfqEMuRo+jxisVaxWFnpeePKqKMx81i1vtJXB5Tv6Ki4HabiWLzeFcGoIK8JHwJW/y3CPW0Wf+E7nwFJIV7NGZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749066866; c=relaxed/simple;
-	bh=FK5qCDPK6HuTjCJbnQOSRwdSyUGsa/lU7mjXf4FKb7w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J0ll3KKaJqq16oynI8IqxJhd5AFJw4jrVCQcKV5SvwbbIkDPnp0zWQ8eSUF8fpmUPzQG2LhKd0J8sRJur3LW8InS4PNM5U+6RpTKFZzeBHIdlAMYNPiRinJ2pCIFFR+TBH3w3THEXueV9bOnkPJc5AFRMdyT9BvAcshpDZcgQfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffgH1hU1; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffgH1hU1"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a589b7dd5fso2808101cf.0;
-        Wed, 04 Jun 2025 12:54:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749066864; x=1749671664; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kqa5razpkQwxe4vQQTx47r6fs83MP5HEXihvc/yiIDU=;
-        b=ffgH1hU14ELFRpPmWToMokb0gZhGUKCMbaU0kx4ESlBMmqIUMbXDhx9C8S1AK7ADOQ
-         LqQB5M2JrBoAlolkYYqdZni9E7cKcre3+VIZyzZDiBn7re1GQxTicuO/JjyK40FTlTjg
-         +vbi/+/QEHaNQuk3XUn6B9rPFQUw3AdpAMHra6hrJyS26K94gn4zaeZYcivyDpVyI11+
-         Vz7+v0gWwy/DDvuVGtaAv80Y2r2FWzBNLbH7cl4CgnzQMyZHxtsIDffqmiwk1eHWiaQ3
-         HCm8/yivbAMj25rhIzzZnOeTY7XW2bHtcppUX+B6MrCzZ8hrUnO0LmJ8UgdzgtssfeyT
-         Jy4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749066864; x=1749671664;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kqa5razpkQwxe4vQQTx47r6fs83MP5HEXihvc/yiIDU=;
-        b=u9k7ncfvcFpW0ehFh8W3RPcXXe4LrsDbz7IvSeizVSu8tm4iRF+4l+fstQnxADLPwf
-         i4c9nnl4byvIICFzdo8arW+mERzTGN19u/y1Oe9E4uHbB2FIR4IB/4tlSEGA8b11lASV
-         1Amuy+GmPA+B5rLGhVHSVQ7hKATuYqH58YlpXPOwzXpqp/tgrRMPlHe/o5/85lU4ToME
-         7VM86nJkKqW2sL8s578joy3lgIEnFV0uEva8u2vRtrP2c0u0ulgFt1clBYmIWpAQroMt
-         ImE1rpc/HJ1JOm/jXnE+Y5URLISt+PkupH9K3njI4MkZq7km17ISNOg1lKD9DzdsJlCk
-         AUlg==
-X-Forwarded-Encrypted: i=1; AJvYcCU02wxFxhseBKiZoh5gduxWgtUoBNevdmz49oPJAVgkzhkmFCAByJXlB/YVAz81syz74qadFZ3hjHy8YyOW@vger.kernel.org, AJvYcCVtm04wOii6rUg9yFGM+jkX8guJ9+zhJvQEorYnt71e4mUNdy9V8DMjCVhrRYIv1h9xaKbAE4cRJYED@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqueylSZpqoFC0O6uP1KPbvddFXnk1r9/oCX5k5NT5qalYAz6e
-	Xxo4w4KJvZaKhT5smniCk76ODlB/+pUNri1+r4dKWes3TkeaOMUoMMfle5NIIjq06XEQWnwyQVI
-	+Wtnvr3BrBsmTQ1F7XXxvyvm9DSn+2ZE=
-X-Gm-Gg: ASbGncvou7d88PaCtlTqKR1V2VIfkzQxEfXDAk/HWvuFI4BILRMxzObI3esJP661VjZ
-	39TfdTDB6tz2yiL3h+f4GczXDEnvpBLAnIq4465z/NqYOrOdEcp5oc8J9g1DE0YxqOD18kGEkIU
-	dAu7cfo7+ivvpMg7RSsZJFHUCxa16Dx8lQ+0KCghzLbKyMUtTE/gdgQn9N36Wf1aRxMw==
-X-Google-Smtp-Source: AGHT+IHAyy7cOKoQrKo/qrn3FqhxEupKgT1BOK1u+EwZ6v7KzrpFo7ToVVNkwt6ARpY9qanwEAnINSvWr4g7fwW6JX0=
-X-Received: by 2002:a05:622a:1927:b0:4a1:511a:b99f with SMTP id
- d75a77b69052e-4a5a573b2c3mr68994861cf.3.1749066864086; Wed, 04 Jun 2025
- 12:54:24 -0700 (PDT)
+	s=arc-20240116; t=1749066882; c=relaxed/simple;
+	bh=oKw90SyLsedrAFGhq66683nzBJAYf46emgOFII6AEx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rXCNenvjAiajBx40lvED+PS8MiZNF+W23bOXXkqP9j/LsOfnYI7J8e3tMiC0wW5BhDKpm+uBNMDH8aVnftl2mtmIloqyoskQm+EReaOihv5V35RQyvBkR9CDnbXGKdhDiR9XDYiqMGY4dii/Sd1aS4ZOQFVkoscdWPquIvI719E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 2138D1A05B1;
+	Wed,  4 Jun 2025 19:15:10 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 8E5F42F;
+	Wed,  4 Jun 2025 19:15:08 +0000 (UTC)
+Date: Wed, 4 Jun 2025 15:16:25 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] eventfs: Simplify code using guard()s
+Message-ID: <20250604151625.250d13e1@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <6656934.DvuYhMxLoT@workhorse> <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com>
- <23482965.EfDdHjke4D@workhorse>
-In-Reply-To: <23482965.EfDdHjke4D@workhorse>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 4 Jun 2025 23:54:14 +0400
-X-Gm-Features: AX0GCFuLXULnMLr8rryeq8foOrYa4cmHNsLuY_-MFNEhem-Gq9QzyGKN9mE70Mw
-Message-ID: <CABjd4YxBHn4f4QRVxk1uLGgt7-n=VQqF0_ZSJsKSxZuVtrLiaw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 8E5F42F
+X-Stat-Signature: 53uycops735pk585ew3nrdg1t36e45qd
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX190ANwMAkLRQwGtYb8o1JhLLF/z4Ly/Yyc=
+X-HE-Tag: 1749064508-499009
+X-HE-Meta: U2FsdGVkX19K54TRwk+lP3533Vh+tzF9iJwSy5fWAOFZ3Ac72gvRDnmpKHEbBXwTvgMq0CE5f9wfIG4fOJqSJpE2RcnbUhCPYuGi222TNC9mwtqPMI0ZcrjgfKEH52WLNuVJA9vBTRjAWNT1PdgArnGoWGqr2Go5aDkWCdxvXu9/6Zsz9XnCzZNV5EecYp145E/jLGTclbQdJyOdWo8Cw8ssyOkkogE3x4MAfR2b4fru62xbCV13BrXqN40ebDzlAZah2kqWg7925uWGfiMjOI3Kf+g3vZhyRjEeEEkmZoAjZgGp5nASYu58xQwKEItTjKMgkx3EScEI9E+bPlg4rPeu+IYyfQ2DYiX+Tiii414vG4M3Z13aa3EVNQgMAmM1
 
-On Wed, Jun 4, 2025 at 11:23=E2=80=AFPM Nicolas Frattaroli
-<nicolas.frattaroli@collabora.com> wrote:
->
-> On Wednesday, 4 June 2025 21:12:35 Central European Summer Time Alexey Ch=
-arkov wrote:
-> > On Wed, Jun 4, 2025 at 10:38=E2=80=AFPM Nicolas Frattaroli
-> > <nicolas.frattaroli@collabora.com> wrote:
-> > >
-> > > On Tuesday, 3 June 2025 19:01:13 Central European Summer Time Alexey =
-Charkov wrote:
-> > > > List both CPU supply regulators which drive the little and big CPU
-> > > > clusters, respectively, so that cpufreq can pick them up.
-> > > >
-> > > > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > > > ---
-> > > >  .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 28 ++++++++++=
-++++++++++++
-> > > >  1 file changed, 28 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b=
-/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-> > > > index b09e789c75c47fec7cf7e9810ab0dcca32d9404a..d9c129be55a0d997e04=
-e6d677cdc98fb50353418 100644
-> > > > --- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-> > > > +++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-> > > > @@ -207,6 +207,22 @@ vcc_3v3_ufs_s0: regulator-vcc-ufs-s0 {
-> > > >       };
-> > > >  };
-> > > >
-> > > > +&cpu_b0 {
-> > > > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > > > +};
-> > > > +
-> > > > +&cpu_b1 {
-> > > > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > > > +};
-> > > > +
-> > > > +&cpu_b2 {
-> > > > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > > > +};
-> > > > +
-> > > > +&cpu_b3 {
-> > > > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > > > +};
-> > > > +
-> > > >  &combphy0_ps {
-> > > >       status =3D "okay";
-> > > >  };
-> > > > @@ -215,6 +231,18 @@ &cpu_l0 {
-> > > >       cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > > >  };
-> > > >
-> > > > +&cpu_l1 {
-> > > > +     cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > > > +};
-> > > > +
-> > > > +&cpu_l2 {
-> > > > +     cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > > > +};
-> > > > +
-> > > > +&cpu_l3 {
-> > > > +     cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > > > +};
-> > > > +
-> > > >  &gmac0 {
-> > > >       phy-mode =3D "rgmii-id";
-> > > >       clock_in_out =3D "output";
-> > > >
-> > > >
-> > >
-> > > Reviewed-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > > Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > >
-> > > > so that cpufreq can pick them up.
-> > >
-> > > Fwiw, even without this patch they're picked up by cpufreq-dt for me:
-> > >
-> > >     user@trixie:~$ sudo cpupower frequency-info
-> > >       analyzing CPU 5:
-> > >       driver: cpufreq-dt
-> > >       CPUs which run at the same hardware frequency: 4 5 6 7
-> > >       CPUs which need to have their frequency coordinated by software=
-: 4 5 6 7
-> > >       maximum transition latency: 40.0 us
-> > >       hardware limits: 408 MHz - 2.30 GHz
-> > >       available frequency steps:  408 MHz, 600 MHz, 816 MHz, 1.01 GHz=
-, 1.20 GHz, 1.42 GHz, 1.61 GHz, 1.80 GHz, 2.02 GHz, 2.21 GHz, 2.30 GHz
-> > >       available cpufreq governors: ondemand userspace performance sch=
-edutil
-> > >       current policy: frequency should be within 408 MHz and 2.30 GHz=
-.
-> > >                       The governor "schedutil" may decide which speed=
- to use
-> > >                       within this range.
-> > >       current CPU frequency: 1.61 GHz (asserted by call to hardware)
-> > >     user@trixie:~$ uname -a
-> > >     Linux trixie 6.15.0-11173-g546b1c9e93c2 #2 SMP PREEMPT Wed Jun  4=
- 20:32:52 CEST 2025 aarch64 GNU/Linux
-> >
-> > Frequencies are fine, but I don't think the more power hungry big CPU
-> > cluster gets any voltage scaling without it. Once I try to load the
-> > system enough that the governor decides to bump the big cluster
-> > frequency up, the regulator stays at 850000 microvolts, causing random
-> > reboots when the whole cluster starts starving. With the patch,
-> > voltage oscillates between 700000-737000 microvolts in idle and jumps
-> > up to 950000 under load, and the system seems stable.
->
-> Okay, that sounds pretty serious and in this case you should add the
-> following tag at the end of the commit message, usually as the first
-> thing after the line break:
->
->   Fixes: 40f742b07ab2 ("arm64: dts: rockchip: Add rk3576-armsom-sige5 boa=
-rd")
->
-> That way, our stable kernel robot overlords will pick it up and
-> backport it to the kernels that already contain the mentioned commit.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Will do, thanks!
+Use guard(mutex), scoped_guard(mutex) and guard(src) to simplify the code
+and remove a lot of the jumps to "out:" labels.
 
-Best regards,
-Alexey
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 96 +++++++++++++++-------------------------
+ 1 file changed, 36 insertions(+), 60 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 8705c77a9e75..117110fbabbf 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -180,29 +180,25 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	const char *name;
+ 	int ret;
+ 
+-	mutex_lock(&eventfs_mutex);
++	guard(mutex)(&eventfs_mutex);
+ 	ei = dentry->d_fsdata;
+-	if (ei->is_freed) {
+-		/* Do not allow changes if the event is about to be removed. */
+-		mutex_unlock(&eventfs_mutex);
++	/* Do not allow changes if the event is about to be removed. */
++	if (ei->is_freed)
+ 		return -ENODEV;
+-	}
+ 
+ 	/* Preallocate the children mode array if necessary */
+ 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
+ 		if (!ei->entry_attrs) {
+ 			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
+ 						  GFP_NOFS);
+-			if (!ei->entry_attrs) {
+-				ret = -ENOMEM;
+-				goto out;
+-			}
++			if (!ei->entry_attrs)
++				return -ENOMEM;
+ 		}
+ 	}
+ 
+ 	ret = simple_setattr(idmap, dentry, iattr);
+ 	if (ret < 0)
+-		goto out;
++		return ret;
+ 
+ 	/*
+ 	 * If this is a dir, then update the ei cache, only the file
+@@ -225,8 +221,6 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			}
+ 		}
+ 	}
+- out:
+-	mutex_unlock(&eventfs_mutex);
+ 	return ret;
+ }
+ 
+@@ -528,26 +522,24 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 	struct tracefs_inode *ti;
+ 	struct eventfs_inode *ei;
+ 	const char *name = dentry->d_name.name;
+-	struct dentry *result = NULL;
+ 
+ 	ti = get_tracefs(dir);
+ 	if (WARN_ON_ONCE(!(ti->flags & TRACEFS_EVENT_INODE)))
+ 		return ERR_PTR(-EIO);
+ 
+-	mutex_lock(&eventfs_mutex);
++	guard(mutex)(&eventfs_mutex);
+ 
+ 	ei = ti->private;
+ 	if (!ei || ei->is_freed)
+-		goto out;
++		return NULL;
+ 
+ 	list_for_each_entry(ei_child, &ei->children, list) {
+ 		if (strcmp(ei_child->name, name) != 0)
+ 			continue;
+ 		/* A child is freed and removed from the list at the same time */
+ 		if (WARN_ON_ONCE(ei_child->is_freed))
+-			goto out;
+-		result = lookup_dir_entry(dentry, ei, ei_child);
+-		goto out;
++			return NULL;
++		return lookup_dir_entry(dentry, ei, ei_child);
+ 	}
+ 
+ 	for (int i = 0; i < ei->nr_entries; i++) {
+@@ -561,14 +553,12 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 
+ 		data = ei->data;
+ 		if (entry->callback(name, &mode, &data, &fops) <= 0)
+-			goto out;
++			return NULL;
++
++		return lookup_file_dentry(dentry, ei, i, mode, data, fops);
+ 
+-		result = lookup_file_dentry(dentry, ei, i, mode, data, fops);
+-		goto out;
+ 	}
+- out:
+-	mutex_unlock(&eventfs_mutex);
+-	return result;
++	return NULL;
+ }
+ 
+ /*
+@@ -584,7 +574,6 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	struct eventfs_inode *ei;
+ 	const char *name;
+ 	umode_t mode;
+-	int idx;
+ 	int ret = -EINVAL;
+ 	int ino;
+ 	int i, r, c;
+@@ -598,16 +587,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 	c = ctx->pos - 2;
+ 
+-	idx = srcu_read_lock(&eventfs_srcu);
++	guard(srcu)(&eventfs_srcu);
+ 
+-	mutex_lock(&eventfs_mutex);
+-	ei = READ_ONCE(ti->private);
+-	if (ei && ei->is_freed)
+-		ei = NULL;
+-	mutex_unlock(&eventfs_mutex);
+-
+-	if (!ei)
+-		goto out;
++	scoped_guard(mutex, &eventfs_mutex) {
++		ei = READ_ONCE(ti->private);
++		if (!ei || ei->is_freed)
++			return -EINVAL;
++	}
+ 
+ 	/*
+ 	 * Need to create the dentries and inodes to have a consistent
+@@ -622,21 +608,19 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 		entry = &ei->entries[i];
+ 		name = entry->name;
+ 
+-		mutex_lock(&eventfs_mutex);
+ 		/* If ei->is_freed then just bail here, nothing more to do */
+-		if (ei->is_freed) {
+-			mutex_unlock(&eventfs_mutex);
+-			goto out;
++		scoped_guard(mutex, &eventfs_mutex) {
++			if (ei->is_freed)
++				return -EINVAL;
++			r = entry->callback(name, &mode, &cdata, &fops);
+ 		}
+-		r = entry->callback(name, &mode, &cdata, &fops);
+-		mutex_unlock(&eventfs_mutex);
+ 		if (r <= 0)
+ 			continue;
+ 
+ 		ino = EVENTFS_FILE_INODE_INO;
+ 
+ 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
+-			goto out;
++			return -EINVAL;
+ 	}
+ 
+ 	/* Subtract the skipped entries above */
+@@ -659,19 +643,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 		ino = eventfs_dir_ino(ei_child);
+ 
+-		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
+-			goto out_dec;
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR)) {
++			/* Incremented ctx->pos without adding something, reset it */
++			ctx->pos--;
++			return -EINVAL;
++		}
+ 	}
+-	ret = 1;
+- out:
+-	srcu_read_unlock(&eventfs_srcu, idx);
+-
+-	return ret;
+-
+- out_dec:
+-	/* Incremented ctx->pos without adding something, reset it */
+-	ctx->pos--;
+-	goto out;
++	return 1;
+ }
+ 
+ /**
+@@ -728,11 +706,10 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	INIT_LIST_HEAD(&ei->children);
+ 	INIT_LIST_HEAD(&ei->list);
+ 
+-	mutex_lock(&eventfs_mutex);
+-	if (!parent->is_freed)
+-		list_add_tail(&ei->list, &parent->children);
+-	mutex_unlock(&eventfs_mutex);
+-
++	scoped_guard(mutex, &eventfs_mutex) {
++		if (!parent->is_freed)
++			list_add_tail(&ei->list, &parent->children);
++	}
+ 	/* Was the parent freed? */
+ 	if (list_empty(&ei->list)) {
+ 		cleanup_ei(ei);
+@@ -877,9 +854,8 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
+ 	if (!ei)
+ 		return;
+ 
+-	mutex_lock(&eventfs_mutex);
++	guard(mutex)(&eventfs_mutex);
+ 	eventfs_remove_rec(ei, 0);
+-	mutex_unlock(&eventfs_mutex);
+ }
+ 
+ /**
+-- 
+2.47.2
+
