@@ -1,140 +1,104 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA5624DCF9;
-	Wed,  4 Jun 2025 12:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD09D28B7ED
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749041182; cv=none; b=q1Cf6aWsDm6XwxWtgduowmcGfsabd/eVyOuQzG37NjkvH++W2fsIvkJaMISJkexGSQHenLpZm6YLMaO2F2ySLH0UEQXlNzHnPED2YHmSGJ6lS5moXD/Jo9zMYVcHgkfTjSHbBxGtMhEd+vxJTyqck1TfuXVr/n5+N++w1eBgOME=
+	t=1749041206; cv=none; b=YhD5nt9nIFAwxGquLOjyidVOlIkZZaBRU/VZISKq4arcyCJ9f6YudQWb2AWOovehQ/EblpARZtOvqAJ7cPwvx+LUir6dyHijCuPDww27WU6NdnHk4fYxrhaBLSbXfHHrS09eY1u2qu+rORK2LiTTZuHcEuMAWY2geJ5SznDHM/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749041182; c=relaxed/simple;
-	bh=Jj5d5qdiuvNZV+1ZocrmbCC3IGMI4hi5uTm1a75PdYA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DwL/+vmV4ukHF9K92UCm0D3SLo9HRT1DOa1VuGVkUCylwwAn2ayGSIOmRRcMIU01FVCPsji+cYxBBRXJ+iiRC0WumLo79YQOZQPJy7nZ0hH+0LBfCFVEd/9XelBmyx3wEwQs7t2A+zlddg9/nTutf87PJoLqRVnMb9GD2DG0ED8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aP0TCoLo; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749041206; c=relaxed/simple;
+	bh=kGTwydqDMCIPl1CpZID+y6ccqB84UAx9ACYmkDc7hJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R2Q9I+ZeCA6AlYaLEmA1gmHyqtUqSnwgb813xoLOYzYXBwmsIIOffasCjJwSF4mrz1Xr9pi14meGu1GcOJ5qqffeq2ym98GJwz2OrNSD3esd+LDeYlbcUVJXkPttnWfpwg6l3g9Ifw5x7qXmKMcM+BaN0qt9tTrO6UIk+P/5GpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ia0N+eAW; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aP0TCoLo"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749041169; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=TPLFxmuO1Q5FsFGt4jj6PdsNEZVTzIdznxUKQp9Xs4o=;
-	b=aP0TCoLo+hrHR3m6LmEXykmRNzuv/qqlwIe5N2b5VaP8UvceZeIJbqYYVB9Uu4b+vuF4fJl/nwseLLtQ2/arykUp/7v5SQsGKSFKKp8y+LYXegJZP8hgEKCxZ6LleiYaTqMSjDjQBKnXOqT0wT2ZiKk4id1q2LaKmtjnysy90ng=
-Received: from 30.121.8.237(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wd4RjKR_1749041167 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 04 Jun 2025 20:46:07 +0800
-Message-ID: <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
-Date: Wed, 4 Jun 2025 20:46:02 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ia0N+eAW"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso13151146a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:46:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749041203; x=1749646003; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F6qdJO3p1x1A/ngwXZAm0UCO5G7hC2bDfKwNoG0neIM=;
+        b=Ia0N+eAWw0RMn7qQ2DLnwDjzHtu0CoS6kblI8MC+dHTfNxWtYaB64YEQ5Xz5/DGyWl
+         CTCe9R5zlkgZji4NQAs0qi2yTSNoa6/dR8OJl2jwvjG3fTiQIxp+TtmgavvCKsa0Hr8h
+         7/33rwjR5oUZCIORhShDNvfk5HWNjxuBxepxQGSsmcVODjWDEOE8Fcjw3UHzGyotYyyR
+         ZbjWFNQbqVn/WjC4di0odXWufJFU+snScR61sycc67e7GkOYWfxC2jViZggMA8fX4g0Z
+         mZtZqg5E7f5KX4YroXJ8ZkWY1zznmWW1tmMfwmSYsxtr672t0b1f0diyeqVWCY479/Bn
+         h7NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749041203; x=1749646003;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F6qdJO3p1x1A/ngwXZAm0UCO5G7hC2bDfKwNoG0neIM=;
+        b=JwuO/RspRKpgJRKLGKTu8aXU4mTkHEHf0wgR4OV28JsKRaGIHaENKAkLpl0gbpUDaH
+         VKgtjKjfnHvvXzDnqOpieRs8oQj7tidXGmMjmn0s5bEVxbgIuUkOXI0wV5bnFC6f54/W
+         hJps2lYq+6Vm1l0dw6jZ3t5TEN/wafoGtlAiQQF70TP4GCWJyH+T59gJyQp7krNflKyj
+         7+ct2tqWI0AQoXd5qqfLasfxu0hCGGZJKPUfkHQybJnkA7Y0kDpHIZ6NTc16y/kKV8FR
+         ABuEyuThbkJxQp2aTWPlPBt6vHl//sJXauoyNaBWcU4RKujha5+D0JVIuoNCkwLXC79l
+         xKLw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9DH5rZ+ug8H5VA14cUldYn+KnxwBu18fFK7v27J63rf52PYWdhT+qidsxdi1fGuMBVSxucu6we6ZXnQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2D88cde9qy4/BF6Of5p4t0M+BmlZj6HFN2DKDzggtFP8t7Mo2
+	0gFOsYaGaLDyDOr9H2ydflJbXzHHqigvxJPijY7BtqJo4GA7O8R2A9NayfX6tKEkj6s=
+X-Gm-Gg: ASbGncvctG2y5EGYx9AjkVT6arlkBGqqF2KVos8wmT2yeGdpLPDN4cYPB67kYK+sDjX
+	c6vHXmyNtQhiVDyGDTGX6P9p6KKUXLo9qS/dGycchaUzZ+gVr6NX5FmQFXky3aYnfS8jSYSMRbX
+	NZijGg5JAr+WPzFgbKb3Phl8zDlhHbn0f58grXYh7YntRgOTOGWPhh3sli2f8E+AkZfJHLDBw+o
+	jO42k7/Tg4gFO7KN5VJ6G5IPxBItVP0M5+K3JwkeTs17lFM/gtZrPDr9o/WsU4hYBtKl7H2BLWQ
+	E0hVoYUBtlgrfeFnMj5eOiuxVNgUC6NzFagc5M0ECnsfFev+AQY+ELdgRP4=
+X-Google-Smtp-Source: AGHT+IH3hjyMtS7nUHzS5hLiFEDH6xWffHB5UpuCedgbYbZsl9L/r1OhGo56kbxkn7IVvP66st9SWg==
+X-Received: by 2002:a17:907:1ca1:b0:ad2:2dc9:e3d3 with SMTP id a640c23a62f3a-addf8ffa8d4mr256307466b.57.1749041203137;
+        Wed, 04 Jun 2025 05:46:43 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5dd04551sm1102106966b.93.2025.06.04.05.46.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 05:46:42 -0700 (PDT)
+Date: Wed, 4 Jun 2025 15:46:41 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] phy: use per-PHY lockdep keys
+Message-ID: <aEBAMUdAVPB+cN78@linaro.org>
+References: <20250530-phy-subinit-v2-1-09dfe80e82a8@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
-To: Shakeel Butt <shakeel.butt@linux.dev>, Michal Hocko <mhocko@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, donettom@linux.ibm.com,
- aboorvad@linux.ibm.com, sj@kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
- <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
- <aDm1GCV8yToFG1cq@tiehlicka>
- <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
- <aD6vHzRhwyTxBqcl@tiehlicka>
- <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
- <aD7OM5Mrg5jnEnBc@tiehlicka>
- <7307bb7a-7c45-43f7-b073-acd9e1389000@linux.alibaba.com>
- <aD8LKHfCca1wQ5pS@tiehlicka>
- <obfnlpvc4tmb6gbd4mw7h7jamp3kouyhnpl4cusetyctswznod@yr6dyrsbay6w>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <obfnlpvc4tmb6gbd4mw7h7jamp3kouyhnpl4cusetyctswznod@yr6dyrsbay6w>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530-phy-subinit-v2-1-09dfe80e82a8@oss.qualcomm.com>
 
+On 25-05-30 19:08:28, Dmitry Baryshkov wrote:
+> If the PHY driver uses another PHY internally (e.g. in case of eUSB2,
+> repeaters are represented as PHYs), then it would trigger the following
+> lockdep splat because all PHYs use a single static lockdep key and thus
+> lockdep can not identify whether there is a dependency or not and
+> reports a false positive.
+> 
+> Make PHY subsystem use dynamic lockdep keys, assigning each driver a
+> separate key. This way lockdep can correctly identify dependency graph
+> between mutexes.
+> 
 
+[...]
 
-On 2025/6/4 01:29, Shakeel Butt wrote:
-> On Tue, Jun 03, 2025 at 04:48:08PM +0200, Michal Hocko wrote:
->> On Tue 03-06-25 22:22:46, Baolin Wang wrote:
->>> Let me try to clarify further.
->>>
->>> The 'mm->rss_stat' is updated by using add_mm_counter(),
->>> dec/inc_mm_counter(), which are all wrappers around
->>> percpu_counter_add_batch(). In percpu_counter_add_batch(), there is percpu
->>> batch caching to avoid 'fbc->lock' contention.
->>
->> OK, this is exactly the line of argument I was looking for. If _all_
->> updates done in the kernel are using batching and therefore the lock is
->> only held every N (percpu_counter_batch) updates then a risk of locking
->> contention would be decreased. This is worth having a note in the
->> changelog.
+> 
+> Fixes: 3584f6392f09 ("phy: qcom: phy-qcom-snps-eusb2: Add support for eUSB2 repeater")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-OK.
+I'm OK with this as a temporary workaround, at least until we figure out
+a way to have chained PHYs in the generic framework. I think long-term,
+the PHY framework should be the one to call the ops of the child PHY on
+behalf of the parent.
 
->>> This patch changes task_mem()
->>> and task_statm() to get the accurate mm counters under the 'fbc->lock', but
->>> this will not exacerbate kernel 'mm->rss_stat' lock contention due to the
->>> the percpu batch caching of the mm counters.
->>>
->>> You might argue that my test cases cannot demonstrate an actual lock
->>> contention, but they have already shown that there is no significant
->>> 'fbc->lock' contention when the kernel updates 'mm->rss_stat'.
->>
->> I was arguing that `top -d 1' doesn't really represent a potential
->> adverse usage. These proc files are generally readable so I would be
->> expecting something like busy loop read while process tries to update
->> counters to see the worst case scenario. If that is barely visible then
->> we can conclude a normal use wouldn't even notice.
-
-OK.
-
-> Baolin, please run stress-ng command that stresses minor anon page
-> faults in multiple threads and then run multiple bash scripts which cat
-> /proc/pidof(stress-ng)/status. That should be how much the stress-ng
-> process is impacted by the parallel status readers versus without them.
-
-Sure. Thanks Shakeel. I run the stress-ng with the 'stress-ng --fault 32 
---perf -t 1m' command, while simultaneously running the following 
-scripts to read the /proc/pidof(stress-ng)/status for each thread.
-
- From the following data, I did not observe any obvious impact of this 
-patch on the stress-ng tests when repeatedly reading the 
-/proc/pidof(stress-ng)/status.
-
-w/o patch
-stress-ng: info:  [6891]          3,993,235,331,584 CPU Cycles 
-          59.767 B/sec
-stress-ng: info:  [6891]          1,472,101,565,760 Instructions 
-          22.033 B/sec (0.369 instr. per cycle)
-stress-ng: info:  [6891]                 36,287,456 Page Faults Total 
-           0.543 M/sec
-stress-ng: info:  [6891]                 36,287,456 Page Faults Minor 
-           0.543 M/sec
-
-w/ patch
-stress-ng: info:  [6872]          4,018,592,975,968 CPU Cycles 
-          60.177 B/sec
-stress-ng: info:  [6872]          1,484,856,150,976 Instructions 
-          22.235 B/sec (0.369 instr. per cycle)
-stress-ng: info:  [6872]                 36,547,456 Page Faults Total 
-           0.547 M/sec
-stress-ng: info:  [6872]                 36,547,456 Page Faults Minor 
-           0.547 M/sec
-
-=========================
-#!/bin/bash
-
-# Get the PIDs of stress-ng processes
-PIDS=$(pgrep stress-ng)
-
-# Loop through each PID and monitor /proc/[pid]/status
-for PID in $PIDS; do
-     while true; do
-         cat /proc/$PID/status
-	usleep 100000
-     done &
-done
+For now, this LGTM:
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
