@@ -1,70 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CC42472B4;
-	Wed,  4 Jun 2025 08:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300BB2475C2
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024547; cv=none; b=pl4yBt2dHUqcDPG9a+786Ch8XySUsjWYAJjglmRzw5knKu2Rx/x8cHmM0aOQsbk+lKfcxoOlusNEZvOHp3XYCF1zBCyTE8vijD8r2Rn3PaO8rzzeXzRatmAnbJqVOCI1z69ujAIclKR9E2w+1AU7jeqZpSL8RTk+asMrMnCrUwU=
+	t=1749024674; cv=none; b=TUtZHHy/RRJLooG7jMqOeVHOXOVA3OJgYJU6VhvUrXcFZbB4gDdpzbQLWWr6S0RNSjIlMbhBGBKjO/VFHQNcAv/3eAcL9+GkUCaA6la0CHpJhoLeFOrpLsl7J3vOQvPuBjAF2QhsmZivRyzRnsCT0xCyfYscsrdb/WSrTWtp99I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024547; c=relaxed/simple;
-	bh=qGh3pbRgNAKZP7UMu01RjTepLuZCO7P3GANf1dJsyps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KWyLySFtPr1ivQyUCQkXPwBPYFOISU5mjwzNMGQtT8vtVj34I7KnQLzpA8tacyRjc4nbK9EfMbVYr8UtutPbCDiIsERJUpIBv6OeqI6aOOeuS64i9iHgG3zimVNQl/uFMGgfxmQCgaPjLT5V4HihFes1gIwTDo10lOyfi5PZpGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lyKhvucs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749024674; c=relaxed/simple;
+	bh=7wZBTAGrNfSHVUSbIrH62aYt/z7Oh7TmDhSzaHHOK/E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=e9rbTUEoz+poc8CQkUBrGx/KuWt2KnTopSqG7NbmxTojfCvsCw5fdlhf1Chj1aKYlFS7PKPnZvinBj5Lni9PJSbr8uYMIwRICdIzbcPJDQ02cZQ9JGNrp/lHV2N1apalS6gTtX5bMO0pSbRY2ehlg4MmNkiqKl904wmw06K59Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=I2dRidDR; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lyKhvucs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E2FC4CEE7;
-	Wed,  4 Jun 2025 08:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749024547;
-	bh=qGh3pbRgNAKZP7UMu01RjTepLuZCO7P3GANf1dJsyps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lyKhvucsVcbKTD31bZWi0XENE30zi2V8cMD2MFdZB2yzTf3JthNAuz1SQ328CrG7R
-	 3U82UguPTil1PRFxblteWUzXsrOZyO8dyVtrz2q/rZWYemDVCUkBMRAHDJme8nVWIb
-	 0oErXV9xLbAc5SNqOo9ghCJ43pZHo8RS5f7ow4bs=
-Date: Wed, 4 Jun 2025 10:09:04 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 5.10 000/270] 5.10.238-rc1 review
-Message-ID: <2025060406-dial-boxlike-7e57@gregkh>
-References: <20250602134307.195171844@linuxfoundation.org>
- <6dd7aac1-4ca1-46c5-8a07-22a4851a9b34@sirena.org.uk>
- <2025060302-reflected-tarot-acfc@gregkh>
- <4ba58b4c-414d-480b-b02b-c1724f6761f9@sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="I2dRidDR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=2QALGxwPi385gRG5AfiZexaj+frrv2bP+KaEk0aGjIA=;
+	b=I2dRidDR1O0cg2pbCDUuhmErWUmYKSzL7DbkT4UXwn/s1nNYKT+Zmocc2yObVC
+	j0JajyBQdzYfo2KuSFGEs4pE3KLYaRbiFK64IYvUjkkbmkj9swALk0UPFhPcAM6V
+	aZ0tW8IIcxfJ3qRCEuJfqSdpwwm0skKfCRhotL2QuxaOM=
+Received: from liubaolin-VMware-Virtual-Platform.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD3X+GG_z9odVJMGA--.1635S2;
+	Wed, 04 Jun 2025 16:10:47 +0800 (CST)
+From: Baolin Liu <liubaolin12138@163.com>
+To: lee@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	liubaolin12138@163.com,
+	Baolin Liu <liubaolin@kylinos.cn>
+Subject: [PATCH v1] mfd: Remove unused of_node variables
+Date: Wed,  4 Jun 2025 16:10:43 +0800
+Message-Id: <20250604081043.802659-1-liubaolin12138@163.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ba58b4c-414d-480b-b02b-c1724f6761f9@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3X+GG_z9odVJMGA--.1635S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uw1xGr47tw13WF47XFWrXwb_yoW8CFykpF
+	ZxGFy5Ar4UJa1DuayvkrWDuFy5t3WrG3y0kF1xCasa9r43Aa4kKFyYqry8XF15CFWxJFy3
+	tFZ7tFy8CF4FkaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JU0hF7UUUUU=
+X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/1tbiUhFiymg-qOnzQQACsN
 
-On Tue, Jun 03, 2025 at 11:46:06AM +0100, Mark Brown wrote:
-> On Tue, Jun 03, 2025 at 12:06:34PM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Jun 03, 2025 at 10:45:34AM +0100, Mark Brown wrote:
-> 
-> > > This fails to boot with a NFS root on Raspberry Pi 3b+, due to
-> > > 558a48d4fabd70213117ec20f476adff48f72365 ("net: phy: microchip: force
-> > > IRQ polling mode for lan88xx") as was also a problem for other stables.
-> 
-> > Odd, I see it in the 5.15.y released tree, so did we get a fix for it
-> > with a different commit or should it just be dropped entirely from the
-> > 5.10.y queue?
-> 
-> There's a revert in the v5.15 tree as 2edc296e2107a003e383f87cdc7e29bddcb6b17e,
-> IIRC it went it while I was on holiday so I didn't test the release it
-> went into.
+From: Baolin Liu <liubaolin@kylinos.cn>
 
-Ah, that makes sense.  All now dropped, thanks for warning me.
+Clean up unused device tree node variables to eliminate compiler warnings:
+`warning: unused variable ‘node’`
 
-greg k-h
+No functional changes.
+
+Signed-off-by: Baolin Liu <liubaolin@kylinos.cn>
+---
+ drivers/mfd/88pm860x-core.c | 1 -
+ drivers/mfd/max8925-core.c  | 1 -
+ drivers/mfd/twl4030-irq.c   | 1 -
+ 3 files changed, 3 deletions(-)
+
+diff --git a/drivers/mfd/88pm860x-core.c b/drivers/mfd/88pm860x-core.c
+index 488e346047c1..750f9db95386 100644
+--- a/drivers/mfd/88pm860x-core.c
++++ b/drivers/mfd/88pm860x-core.c
+@@ -573,7 +573,6 @@ static int device_irq_init(struct pm860x_chip *chip,
+ 	unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+ 	int data, mask, ret = -EINVAL;
+ 	int nr_irqs, irq_base = -1;
+-	struct device_node *node = i2c->dev.of_node;
+ 
+ 	mask = PM8607_B0_MISC1_INV_INT | PM8607_B0_MISC1_INT_CLEAR
+ 		| PM8607_B0_MISC1_INT_MASK;
+diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
+index 78b16c67a5fc..9d6358337d97 100644
+--- a/drivers/mfd/max8925-core.c
++++ b/drivers/mfd/max8925-core.c
+@@ -656,7 +656,6 @@ static int max8925_irq_init(struct max8925_chip *chip, int irq,
+ {
+ 	unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+ 	int ret;
+-	struct device_node *node = chip->dev->of_node;
+ 
+ 	/* clear all interrupts */
+ 	max8925_reg_read(chip->i2c, MAX8925_CHG_IRQ1);
+diff --git a/drivers/mfd/twl4030-irq.c b/drivers/mfd/twl4030-irq.c
+index 232c2bfe8c18..c95a73186112 100644
+--- a/drivers/mfd/twl4030-irq.c
++++ b/drivers/mfd/twl4030-irq.c
+@@ -676,7 +676,6 @@ int twl4030_init_irq(struct device *dev, int irq_num)
+ 	static struct irq_chip	twl4030_irq_chip;
+ 	int			status, i;
+ 	int			irq_base, irq_end, nr_irqs;
+-	struct			device_node *node = dev->of_node;
+ 
+ 	/*
+ 	 * TWL core and pwr interrupts must be contiguous because
+-- 
+2.39.2
+
