@@ -1,97 +1,171 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D381DED69
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF331DDA0C;
+	Wed,  4 Jun 2025 16:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749054505; cv=none; b=pdW8ipCKGM3Xghm2GwzNfWPeKMxMs5b4Rw4JxPnTaDnb3xvvlcME9wqdTXJrww3nZzWztauKxzo6QfjrfY8EFAxwmMapmqm0IpsNvdknwbBxwe22bedoY9DdZwN6MqUoQ/X3A2asRK38QcJBGoR6mBAlnWQVt/ca5G9v0VxbD4Q=
+	t=1749054617; cv=none; b=GjMYuikXkdFVA7wTe6lkWJ0UX43Ue+sDiQZK+FNOQbiR1u39+cZPeOklEIqfDL2A37K+Yfm79UJBIBgk7ithwxg4YnCXrW0MqmaGEmNSriBZhBRfBhkPFfF9l7e8SodA/dWGYq2pfH9+t37U00SB9v361cT5jQBofJoXztKtuEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749054505; c=relaxed/simple;
-	bh=ZJyIckFTExpj1Y90auHWc4FV90jywqVwpSKCRNl8zVM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ivpLboILITFsfy/mZBX7fDypL4Z8IP/CExWr9xRptL1yb/iIBjtbpKvmwsJkYRrPSgFgmS2DW4hGDVLEOczuAZeibsTn3/4cgmyFEDMvfdWRT8H9y9pu/bTQUl/oxMGkCB7zPAnFls+3QDjFAPf8/rnxdLGmyb4X1jGz0EHcimA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P+brBL3G; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749054617; c=relaxed/simple;
+	bh=1Dkfld7z7Nz/jU3LSfpdgyvyWJ0WOr284arW7DyFew4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JC9XJK3vlx+Tckgk/SiIt5BSayWj24ckh1/77yRITdNe65IPFV2Lw0v3rvriLf6uLPDSjZcRnVwC3Di3uOBFs1OTI7Z8Qy7RZH911m2G3RWGarxfbdiS6+stoqQF6eCDDasMNgTvYY4MD4qeAIKwSjOY7UWTaVvXOnk3tdJ6Z38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LX3EfVya; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P+brBL3G"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c36951518so6373440a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:28:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749054503; x=1749659303; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1/PzlSGATB5QLnfIO/9xMz9wdcBK9gS0k4KlE7K+2X4=;
-        b=P+brBL3GL+WkCqCZG73OPSkr1aeaFNiXEruGWSKDXLPmxdiJxBfu+xZmMeMYQDOBrN
-         yvWoBMvhf/SjodiTb13kEGg2iIDG584yORArRgQH+6CoLI19I2RV4d4xtdB5u/F2ofvI
-         bUlWii+utYBh0MBoiBqrZdFPijc4gPRPGFtcS/bsHY9oLzPKdK3YHlQAFT1OYD4ujQjV
-         hKOcDzPyEKp0N4kjG6bHYhk1gAXCnsRiYgfQs1nP0Fc3dx2BHPiwqMFbYoRONDWoaAwh
-         hQQCjMbDCE/yck5DLAi33NsXJzp/w0xPVznk10EgLQB9PfgBxE9JAM3f8kvl4/AXkY+A
-         o9Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749054503; x=1749659303;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1/PzlSGATB5QLnfIO/9xMz9wdcBK9gS0k4KlE7K+2X4=;
-        b=FxjTLPhzf3ufx9q4l+bY3SVbFWYHBDpRe9vNhB8B3lsbl5DHTz0Oi1IXS2TIAkciNI
-         +hjtXdR1HCp735A4++aHLBAFeENiyJkYWsE47mmmC6GfjXnuCOyNGYgn43KjO+dinHA6
-         W8NN8KRGxP9ZXvn+xQov5bChnpVEPSYJHutYn1mcZdjy+TunZZb1pGELetly1EvZ6EHI
-         hoJkcCLvpbgUGue9EJDsYRYoqd8GVTmuS7wgVjhk3huQ8m7L/N6sFwpeOhW0A+qk2Dbu
-         tx3Cx5nTgrB6bFsre7AS0/d8VQBbfDhMrVxlVNxtuV+wWSBcuLIBpM4Lw+5N2104NarO
-         Hndg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAnN3hO49s/5JB0ctvQxr/JRjXc3vM+0+pAPm0Lyn4Q9khIju6Z43r7ZPYXvwOjymm00Hoa3iTUWsMMic=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1GhIgam7gLTB/EsiGfNflnao2/Q4wdADui9WV+iq7TAME+kVh
-	LNxIYh97rGERbbl9ZvmnTWSwmpGobNci7Itj479qAB2Fiu2ruL3THvDtyCHnwVSfc2JozdUzqYp
-	UuhNSxQ==
-X-Google-Smtp-Source: AGHT+IEKjmRcgY92eBfv/tMGluyG//CiEtS2rija0phY6qR/oNwBHkY8e9r7FMkUXjtbaeAfSjA+T/QL5JE=
-X-Received: from pfjt21.prod.google.com ([2002:a05:6a00:21d5:b0:747:a97f:513f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:a24b:b0:1f5:a577:dd10
- with SMTP id adf61e73a8af0-21d22c86371mr6166950637.36.1749054503567; Wed, 04
- Jun 2025 09:28:23 -0700 (PDT)
-Date: Wed, 4 Jun 2025 09:28:21 -0700
-In-Reply-To: <a9f3f64c-2f82-40b0-80c0-ed1482861dc2@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LX3EfVya"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FC8C4CEE4;
+	Wed,  4 Jun 2025 16:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749054616;
+	bh=1Dkfld7z7Nz/jU3LSfpdgyvyWJ0WOr284arW7DyFew4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=LX3EfVyaLIfpmPLwRexknSU0TIIK28XO7r0RXp96qDPl8vwqunyVvHzvdu7yKQ/w/
+	 ux+Mpd3pS3CC6t2zHvMRibzNivZNuP5TJWYptRmWPSTeBxaD7cHPImZFtu2ZZbGXUQ
+	 0EXLq3db7FtfNheso90cWfC1hY35rcEoW5/LeDroePH+N5dq3xd9ECyaykBANnnyDX
+	 WLSNcAqLWbZmvJwB84YEgvrMjyla9/b59NSKpLiYbDK7mATzwdbyf50lyasPXLGtLn
+	 t9SMREzpOgrkiOoXNbjwptAiehjhoFVC7/0suH3ZzB6OM12ZzSizJzetUKFDHT6vNK
+	 GX8Vc8AhBn5oA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: pratyush@kernel.org,  jasonmiu@google.com,  graf@amazon.com,
+  changyuanl@google.com,  rppt@kernel.org,  dmatlack@google.com,
+  rientjes@google.com,  corbet@lwn.net,  rdunlap@infradead.org,
+  ilpo.jarvinen@linux.intel.com,  kanie@linux.alibaba.com,
+  ojeda@kernel.org,  aliceryhl@google.com,  masahiroy@kernel.org,
+  akpm@linux-foundation.org,  tj@kernel.org,  yoann.congal@smile.fr,
+  mmaurer@google.com,  roman.gushchin@linux.dev,  chenridong@huawei.com,
+  axboe@kernel.dk,  mark.rutland@arm.com,  jannh@google.com,
+  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
+  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
+  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
+  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
+  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
+  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
+  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
+  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
+  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
+  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
+  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
+  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
+  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
+  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
+  stuart.w.hayes@gmail.com
+Subject: Re: [RFC v2 06/16] luo: luo_subsystems: add subsystem registration
+In-Reply-To: <20250515182322.117840-7-pasha.tatashin@soleen.com>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+	<20250515182322.117840-7-pasha.tatashin@soleen.com>
+Date: Wed, 04 Jun 2025 18:30:07 +0200
+Message-ID: <mafs0iklbtqpc.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250529234013.3826933-1-seanjc@google.com> <20250529234013.3826933-26-seanjc@google.com>
- <a9f3f64c-2f82-40b0-80c0-ed1482861dc2@redhat.com>
-Message-ID: <aEB0JZJNs3dDZWJx@google.com>
-Subject: Re: [PATCH 25/28] KVM: nSVM: Access MSRPM in 4-byte chunks only for
- merging L0 and L1 bitmaps
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>, Chao Gao <chao.gao@intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Wed, Jun 04, 2025, Paolo Bonzini wrote:
-> On 5/30/25 01:40, Sean Christopherson wrote:
-> > @@ -1363,8 +1357,9 @@ void svm_leave_nested(struct kvm_vcpu *vcpu)
-> >   static int nested_svm_exit_handled_msr(struct vcpu_svm *svm)
-> >   {
-> > -	u32 offset, msr, value;
-> > -	int write, mask;
-> > +	u32 offset, msr;
-> > +	int write;
-> > +	u8 value;
-> >   	if (!(vmcb12_is_intercept(&svm->nested.ctl, INTERCEPT_MSR_PROT)))
-> >   		return NESTED_EXIT_HOST;
-> > @@ -1372,18 +1367,15 @@ static int nested_svm_exit_handled_msr(struct vcpu_svm *svm)
-> >   	msr    = svm->vcpu.arch.regs[VCPU_REGS_RCX];
-> >   	offset = svm_msrpm_offset(msr);
-> >   	write  = svm->vmcb->control.exit_info_1 & 1;
-> > -	mask   = 1 << ((2 * (msr & 0xf)) + write);
-> 
-> This is wrong.  The bit to read isn't always bit 0 or bit 1, therefore mask
-> needs to remain.
+On Thu, May 15 2025, Pasha Tatashin wrote:
 
-/facepalm
+> Introduce the framework for kernel subsystems (e.g., KVM, IOMMU, device
+> drivers) to register with LUO and participate in the live update process
+> via callbacks.
+>
+> Subsystem Registration:
+> - Defines struct liveupdate_subsystem in linux/liveupdate.h,
+>   which subsystems use to provide their name and optional callbacks
+>   (prepare, freeze, cancel, finish). The callbacks accept
+>   a u64 *data intended for passing state/handles.
+> - Exports liveupdate_register_subsystem() and
+>   liveupdate_unregister_subsystem() API functions.
+> - Adds drivers/misc/liveupdate/luo_subsystems.c to manage a list
+>   of registered subsystems.
+>   Registration/unregistration is restricted to
+>   specific LUO states (NORMAL/UPDATED).
+>
+> Callback Framework:
+> - The main luo_core.c state transition functions
+>   now delegate to new luo_do_subsystems_*_calls() functions
+>   defined in luo_subsystems.c.
+> - These new functions are intended to iterate through the registered
+>   subsystems and invoke their corresponding callbacks.
+>
+> FDT Integration:
+> - Adds a /subsystems subnode within the main LUO FDT created in
+>   luo_core.c. This node has its own compatibility string
+>   (subsystems-v1).
+> - luo_subsystems_fdt_setup() populates this node by adding a
+>   property for each registered subsystem, using the subsystem's
+>   name.
+>   Currently, these properties are initialized with a placeholder
+>   u64 value (0).
+> - luo_subsystems_startup() is called from luo_core.c on boot to
+>   find and validate the /subsystems node in the FDT received via
+>   KHO. It panics if the node is missing or incompatible.
+> - Adds a stub API function liveupdate_get_subsystem_data() intended
+>   for subsystems to retrieve their persisted u64 data from the FDT
+>       in the new kernel.
+>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+[...]
+> +/**
+> + * liveupdate_unregister_subsystem - Unregister a kernel subsystem handler from
+> + * LUO
+> + * @h: Pointer to the same liveupdate_subsystem structure that was used during
+> + * registration.
+> + *
+> + * Unregisters a previously registered subsystem handler. Typically called
+> + * during module exit or subsystem teardown. LUO removes the structure from its
+> + * internal list; the caller is responsible for any necessary memory cleanup
+> + * of the structure itself.
+> + *
+> + * Return: 0 on success, negative error code otherwise.
+> + * -EINVAL if h is NULL.
+> + * -ENOENT if the specified handler @h is not found in the registration list.
+> + * -EBUSY if LUO is not in the NORMAL state.
+> + */
+> +int liveupdate_unregister_subsystem(struct liveupdate_subsystem *h)
+> +{
+> +	struct liveupdate_subsystem *iter;
+> +	bool found = false;
+> +	int ret = 0;
+> +
+> +	luo_state_read_enter();
+> +	if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
+> +		luo_state_read_exit();
+> +		return -EBUSY;
+> +	}
+> +
+> +	mutex_lock(&luo_subsystem_list_mutex);
+> +	list_for_each_entry(iter, &luo_subsystems_list, list) {
+> +		if (iter == h) {
+> +			found = true;
 
-Duh.  I managed to forget that multiple MSRs are packed into a byte.  Hrm, which
-means our nSVM test is even more worthless than I thought.  I'll see if I can get
-it to detect this bug.
+Nit: you don't actually need the found variable. You can do the same
+check that list_for_each_entry() uses, which is to call
+list_entry_is_head().
+
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (found) {
+> +		list_del_init(&h->list);
+> +	} else {
+> +		pr_warn("Subsystem handler '%s' not found for unregistration.\n",
+> +			h->name);
+> +		ret = -ENOENT;
+> +	}
+> +
+> +	mutex_unlock(&luo_subsystem_list_mutex);
+> +	luo_state_read_exit();
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(liveupdate_unregister_subsystem);
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
