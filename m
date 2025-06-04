@@ -1,140 +1,120 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9215E1C6FF9;
-	Wed,  4 Jun 2025 17:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749058910; cv=none; b=SRjfBvbxAUdIhV9AGcbJeESXrR1KpCfTMv3ebvNq0BTGBSQl2MJXIfFhcKtquLsSt+RLclQ/2GTaqK8x9GI4ydQEuVrx0Ft2mOFu3mFe9/IGGy78qW8YnQSQqLuGkQ/pFIviwDsXZGado3AlgHMTZQjN+/1Bf8/4SAA+hiqgzxQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749058910; c=relaxed/simple;
-	bh=SBlx4OclKtfbCBO5SGOY4UbWjGPwcDJ/xhSdtW+BsSo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NDkkW5xA8Q/9L6IYG6mPM2iKVrk+7XvHI+h9PW2Jj1nlj2z/8e0dgCymmawkOXRUGPHiD+MlXG3JTmWkULAqnjWNvFeia+9ewL/NfBxbPlI+eDL+PWA7ZjW4lQiyQCgC7PRExF9iLG9Wrzqrxlnbf6INyP00FjE4byoTVecANBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jKdq541i; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BF11C6FF9;
+	Wed,  4 Jun 2025 17:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749058955; cv=pass; b=Ry1q9PEkpuJ81BzKiz80tEPzGl+mlmu/QhouI8CgkUn1pTgNyvB+N9o7ksHtNEofsDcVYGV940hBiUHuz2f39udDNSDej/eJdeL7ZFk1wEmtP5A/zlj442do1DMbfJIC9Ll94PJjRq6yvCZcYa88kxtyDVnmiE5uoEKAk1ZF02E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749058955; c=relaxed/simple;
+	bh=P/nOm3A+fRHkexIVm6/vg9F9WCWvxU8DZ75b/RO/ANY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E7worYby6AiICRhuB4EFiOw2qftw5mDn+FarjoDJRCmbZYhhkN/LZXaoKhjIdrPB4sjXbkFdeSquEEZ8Q4o8sYlnzFP711TRs0JZLgV6xw8uhevDm+NawJgrXUoH6Cn1pAER8Cmv+LcyD1t58reDzUywg/GjvxDLdMzcpDY1ElY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=EYY+7lgU; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jKdq541i"
-Received: from [100.64.97.8] (unknown [20.29.225.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 88804201FF4E;
-	Wed,  4 Jun 2025 10:41:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 88804201FF4E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749058902;
-	bh=BrACxwElUc8bZrub7/AT5Z18iJFYeBGEOkSTuTx9Hcg=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=jKdq541iXquM5zMmFvpleVp43GzUz9GDrsBjuxRFzFzQOU6w8EzxEsxPt1J76Kq8U
-	 75SzTD9aDjoicQHVfLY/Miig9MLBivXiodfvaq5WI36rIQV+Bp6WjzZRW8HfuymmpV
-	 q9h3OfA7YiK4KQwngQmDbGUaBdfM7Jxmm6BuHYzw=
-Message-ID: <8e6a80f8-765c-408a-bdae-0de1008dfce1@linux.microsoft.com>
-Date: Wed, 4 Jun 2025 10:41:41 -0700
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="EYY+7lgU"
+ARC-Seal: i=1; a=rsa-sha256; t=1749058941; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=eMXojg86QR8llNFDQfUYPsppCp4d11NgWNnR868ClQD0NH96rizDt+Ejb5GNHYAD7aPUuubkE1rXNzqS8LlBn5BdiBfBGdf+UvRKkDvDE8Q0hd7kXjCI6CkDXSO1KUMSYp79/95pwPp7/LFG9MAGInzc75wNUvdWZaPHtKbpUms=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749058941; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Imfqw/toyNUrbHQezVHBo1nlOiaFHJLrR+wJoVAGROw=; 
+	b=h2OobGEpTvffyBXFIDWCjz/C/fuIdmgSgz0rLg4x28tXPVZsowJVKBmpklI5yUaSrkZyYOG0vZYdZ1M6uKmSmnCBGeckZffOivAPFjMdqCIiZGIIX8ZbGXSgHH7ExEa2UPu8Ly+F+kzjp/5yjc1VVMBXsYfrxTDEdBPgwFJPGX4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749058941;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=Imfqw/toyNUrbHQezVHBo1nlOiaFHJLrR+wJoVAGROw=;
+	b=EYY+7lgUKsSliK6UV4MdkV34F1U8SNsvwzqdvBSC+JT50alt/0wZW6S9S9nyrREg
+	nQSyhg6jyQm3MqPwwrMhJxim4bHYdggPZ6yLAmQZIU9Jgngbnu3R7XgGY+ruUuQ1VNu
+	KScjCJgkGysLoNh80YaRSP/3xvMvtQcJqo0owbjc=
+Received: by mx.zohomail.com with SMTPS id 1749058939078558.9112570826974;
+	Wed, 4 Jun 2025 10:42:19 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Pei Xiao <xiaopei01@kylinos.cn>
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject:
+ Re: [PATCH 2/2] ASOC: rockchip: Use helper function devm_clk_get_enabled()
+Date: Wed, 04 Jun 2025 19:42:15 +0200
+Message-ID: <24654754.ouqheUzb2q@workhorse>
+In-Reply-To:
+ <3b3d8f60e553af09a51b501b8ff5406fa5e898dd.1749006565.git.xiaopei01@kylinos.cn>
+References:
+ <cover.1749006565.git.xiaopei01@kylinos.cn>
+ <3b3d8f60e553af09a51b501b8ff5406fa5e898dd.1749006565.git.xiaopei01@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: eahariha@linux.microsoft.com, "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
- <arnd@arndb.de>, "x86@kernel.org" <x86@kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
- hypercall arguments
-To: Michael Kelley <mhklinux@outlook.com>
-References: <20250415180728.1789-1-mhklinux@outlook.com>
- <20250415180728.1789-2-mhklinux@outlook.com>
- <f2ccf839-1ce3-4827-997e-809ec9d3b021@linux.microsoft.com>
- <SN6PR02MB4157FEE08571B84B6CEBFC92D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
- <1643d6a8-7d4f-4d6e-aeab-f43963644a1f@linux.microsoft.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <1643d6a8-7d4f-4d6e-aeab-f43963644a1f@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-Hi Michael,
-
-On 4/21/2025 4:27 PM, Easwar Hariharan wrote:
-> On 4/21/2025 2:24 PM, Michael Kelley wrote:
->> From: Easwar Hariharan <eahariha@linux.microsoft.com> Sent: Monday, April 21, 2025 1:41 PM
->>>>
+On Wednesday, 4 June 2025 05:13:30 Central European Summer Time Pei Xiao wrote:
+> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for prepared
+> and enabled clocks"), devm_clk_get() and clk_prepare_enable() can now be
+> replaced by devm_clk_get_enabled() when driver enables the clocks for the
+> whole lifetime of the device. Moreover, it is no longer necessary to
+> unprepare and disable the clocks explicitly.
 > 
-> <snip>
+> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+> ---
+>  sound/soc/rockchip/rockchip_sai.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
 > 
->>>>
->>>
->>> This is very cool, thanks for taking the time! I think the function naming
->>> could be more intuitive, e.g. hv_setup_*_args(). I'd not block it for that reason,
->>> but would be super happy if you would update it. What do you think?
->>>
->>
->> I'm not particularly enamored with my naming scheme, but it was the
->> best I could come up with. My criteria were:
->>
->> * Keep the length reasonably short to not make line length problems
->>    any worse
->> * Distinguish the input args only, input & output args, and array versions
-> 
-> I think the in/inout/array scheme you have does this nicely
-> 
->> * Use the standard "hv_" prefix for Hyper-V related code
->>
->> Using "setup" instead of "hvcall" seems like an improvement to me, and
->> it is 1 character shorter.  The "hv" prefix would be there, but they wouldn't
->> refer specifically to hypercalls. I would not add "_args" on the end because
->> that's another 5 characters in length. So we would have:
->>
->> * hv_setup_in()
->> * hv_setup_inout()
->> * hv_setup_in_array()
->> * hv_setup_inout_array()
->> * hv_setup_in_batch_size() [??]
->>
->> Or maybe, something like this, or similar, which picks up the "args" string,
->> but not "setup":
->>
->> * hv_hcargs_in()
->> * hv_hcargs_inout()
->> * hv_hcargs_in_array()
->> * hv_hcargs_inout_array()
->> * hv_hcargs_in_batch_size() [??]
->>
->> I'm very open to any other ideas because I'm not particularly
->> happy with the hv_hvcall_* approach.
-> 
-> Between the two presented here, I prefer option 1, with the "setup" verb because it tells you
-> inline what the function will do. I agree that the "args" is unnecessary because most
-> hypercall args are named hv_{input, output}_* and are clearly arguments to hv_do_hypercall()
-> and friends.
-> 
-> Since hv_setup*() will normally be followed shortly after by hv_do_hypercall(), I don't
-> see a problem with not referring specifically to hypercalls, it should be clear in context.
-> 
-> For hv_hvcall_in_batch_size(), I think it serves a fundamentally different function than the
-> other wrappers and doesn't need to follow the "setup" pattern. Instead it could be named 
-> hv_get_input_batch_size() for the same length and similarly tell you its purpose inline.
-> 
-> I am continuing to review the rest of the series, sorry for the delay, and thank you for your
-> patience!
+> diff --git a/sound/soc/rockchip/rockchip_sai.c b/sound/soc/rockchip/rockchip_sai.c
+> index 79b04770da1c..2ec675708681 100644
+> --- a/sound/soc/rockchip/rockchip_sai.c
+> +++ b/sound/soc/rockchip/rockchip_sai.c
+> @@ -1448,16 +1448,12 @@ static int rockchip_sai_probe(struct platform_device *pdev)
+>  				     "Failed to get mclk\n");
+>  	}
+>  
+> -	sai->hclk = devm_clk_get(&pdev->dev, "hclk");
+> +	sai->hclk = devm_clk_get_enabled(&pdev->dev, "hclk");
+>  	if (IS_ERR(sai->hclk)) {
+>  		return dev_err_probe(&pdev->dev, PTR_ERR(sai->hclk),
+>  				     "Failed to get hclk\n");
+>  	}
+>  
+> -	ret = clk_prepare_enable(sai->hclk);
+> -	if (ret)
+> -		return dev_err_probe(&pdev->dev, ret, "Failed to enable hclk\n");
+> -
+>  	regmap_read(sai->regmap, SAI_VERSION, &sai->version);
+>  
+>  	ret = rockchip_sai_init_dai(sai, res, &dai);
+> @@ -1512,8 +1508,6 @@ static int rockchip_sai_probe(struct platform_device *pdev)
+>  	if (pm_runtime_put(&pdev->dev))
+>  		rockchip_sai_runtime_suspend(&pdev->dev);
+>  err_disable_hclk:
+> -	clk_disable_unprepare(sai->hclk);
+> -
+>  	return ret;
+>  }
+>  
 > 
 
-Sorry this took so long, commercial work took up all of my focus the past few weeks. The rest
-of the patches look good to me. If you could follow up with a v4 for the function naming,
-Wei can pick this up for the 6.17 merge window.
+Please get rid of the err_disable_hclk label, and change the
 
-Thanks,
-Easwar (he/him)
+    goto err_disable_hclk;
+
+in the resume failure condition to a 
+
+    return ret;
+
+Other than that, patch tested to be working fine.
+
+Kind regards,
+Nicolas Frattaroli
+
+
