@@ -1,160 +1,175 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAA2280319;
-	Wed,  4 Jun 2025 08:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFF9248864;
+	Wed,  4 Jun 2025 08:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024233; cv=none; b=BCFg0hSwnrtvh992TjxrL5+j8Bn5Yob/sQB/wzr9boZB8bTcZfCDSFAdlNNT9q7cUGo20wK2JuOQ8PY9qyPLzyaI1yQGx3kw20ZhVOvZ9k/UUW8APlFZNbW7PBqrcezP9NlLf2miQg1/u/BxV3o382AK6UsPCCzaOk2sqFVT9kk=
+	t=1749024364; cv=none; b=QJ+lmsvnDYiudHlAwxblmZlbaW+1g1ly0Dmyr8EtwlqI7SadmVXbao8uRx+BmmMkbMcvBV2JeGimTj+GlcU2ArlqKlX+1r9otyDa4k18iOFObzrTUqzUYsEDbiHTcUwizDRvPayzYb5prx7TT8XUaqGhrqJ4iZLEeUsvREAVmLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024233; c=relaxed/simple;
-	bh=s/lHWPOo8ujarL1wxZGVeaoXIYtuWp17/aQ4Lkb8WCc=;
+	s=arc-20240116; t=1749024364; c=relaxed/simple;
+	bh=xS1R11uzqC459r4QjcDRxMAKoX1+B/CSgK8i1N/RzdQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5bzdRymTH7SHjGxKpE1VGiq4HILcYXbA8xbGKxj+Qpq2q/IJ2PncoRg656BISblG4ro0KQNs8+CqV7DMyZa4ZCXIwra9NkDwq1Mg9w3Vw9zPOR8x23y/N3gktiTPKpjo8BYltpw5mrnivmN5QnwiTIj0Tgue3PJbqdZOmIvatg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ui2E3wyr; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=gMQKoBjrzldlTTNI3qi4Dc4zIlR2c7OZR9BHlkpcTe8hsHaNjj9aiY34ui+z7DsBe0NsUYVwH5xiLAdCJ+IokLcIf4o1PgVUyhlyvWwed/xbGLMeWX4b379heAt07s1yP+wOWp3Jj7fBfY/eHoH0VKqDylA50kUfeTnX7InuYXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=plwalYed; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ui2E3wyr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xaoyFvQwKIYu5nwGYw5DvgtC4POUAUMRWFKFbgDSrok=; b=Ui2E3wyrhSiR5tHo0yMCvpVDdF
-	mUsAC6iyWpkXI/qjlE2oww60KX+PxnfJi/wz503G49Lf7cIwi1EgBuziRm4yo6jnHV5KyXO4Cv7nd
-	OEoTrX1g2Vee07PGHOMvHpBLh5qiLzGsXMoFgdjHxc5KG/wFZGPcEpVql6BBEy4Y9FEFJRweIDqkv
-	GcaaFxDJUh5n+fvlKTbLtFIoqFmfm+TbFrtnh78jdBYcSEtFnWdaYPJJw9kwVFi87LmBO/bcVfP/6
-	Ps3vnepcRRjYAvhr9pXKfRSYtK551PkxesLqigESqveDZtC3UscllDc6/gH+u8QBaeJLF25wYhgy8
-	lDw12ntA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMj64-00000002tPO-1hgL;
-	Wed, 04 Jun 2025 08:03:40 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C6763300787; Wed,  4 Jun 2025 10:03:39 +0200 (CEST)
-Date: Wed, 4 Jun 2025 10:03:39 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250604080339.GB35970@noisy.programming.kicks-ass.net>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
- <20250603144414.GC38114@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="plwalYed"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B4B2C4CEE7;
+	Wed,  4 Jun 2025 08:06:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749024364;
+	bh=xS1R11uzqC459r4QjcDRxMAKoX1+B/CSgK8i1N/RzdQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=plwalYed/vw6S10JNziXcVRYzG+GcprKkD0Ewu81fv0WFUZkYJL0DkZhLx/mUJkvN
+	 chQyNlvv0q7nF5+Xqjx1hEzg4FcKMytpRvjcOY/CzXPabFjDczpGI4U0JYtW+iuy/z
+	 iJPkHOEmuj8iSyu+DvOawYRc0us2mw1Gl++kTOv4=
+Date: Wed, 4 Jun 2025 10:06:01 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 5.10 000/270] 5.10.238-rc1 review
+Message-ID: <2025060412-cursor-navigate-126d@gregkh>
+References: <20250602134307.195171844@linuxfoundation.org>
+ <4c608184-5a64-4814-a70a-d2395662d437@gmail.com>
+ <52e321d9-2695-4677-b8bf-4be99fc0d681@gmail.com>
+ <2025060344-kiwi-anagram-fc9e@gregkh>
+ <b60e753c-eb13-46af-9365-1b33ae2e7859@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250603144414.GC38114@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b60e753c-eb13-46af-9365-1b33ae2e7859@gmail.com>
 
-On Tue, Jun 03, 2025 at 04:44:14PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 03, 2025 at 03:00:40PM +0100, Leo Yan wrote:
-> 
-> > > +	if (event->state > PERF_EVENT_STATE_OFF)
-> > > +		perf_cgroup_event_disable(event, ctx);
-> > > +
+On Tue, Jun 03, 2025 at 09:00:58AM -0700, Florian Fainelli wrote:
+> On 6/3/25 00:58, Greg Kroah-Hartman wrote:
+> > On Mon, Jun 02, 2025 at 09:50:24AM -0700, Florian Fainelli wrote:
+> > > On 6/2/25 09:49, Florian Fainelli wrote:
+> > > > On 6/2/25 06:44, Greg Kroah-Hartman wrote:
+> > > > > This is the start of the stable review cycle for the 5.10.238 release.
+> > > > > There are 270 patches in this series, all will be posted as a response
+> > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > let me know.
+> > > > > 
+> > > > > Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> > > > > Anything received after that time might be too late.
+> > > > > 
+> > > > > The whole patch series can be found in one patch at:
+> > > > >      https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/
+> > > > > patch-5.10.238-rc1.gz
+> > > > > or in the git tree and branch at:
+> > > > >      git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-
+> > > > > rc.git linux-5.10.y
+> > > > > and the diffstat can be found below.
+> > > > > 
+> > > > > thanks,
+> > > > > 
+> > > > > greg k-h
+> > > > 
+> > > > On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on
+> > > > BMIPS_GENERIC:
+> > > > 
+> > > > Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > > > 
+> > > > Similar build warning as reported for 5.4, due to the same commit:
+> > > > 
+> > > > commit b47e6abc7dc5772ecb45383d9956f9fcb7fdf33c
+> > > > Author: Jeongjun Park <aha310510@gmail.com>
+> > > > Date:   Tue Apr 22 20:30:25 2025 +0900
+> > > > 
+> > > >       tracing: Fix oob write in trace_seq_to_buffer()
+> > > > 
+> > > >       commit f5178c41bb43444a6008150fe6094497135d07cb upstream.
+> > > > 
+> > > > In file included from ./include/linux/kernel.h:15,
+> > > >                    from ./include/asm-generic/bug.h:20,
+> > > >                    from ./arch/arm/include/asm/bug.h:60,
+> > > >                    from ./include/linux/bug.h:5,
+> > > >                    from ./include/linux/mmdebug.h:5,
+> > > >                    from ./include/linux/mm.h:9,
+> > > >                    from ./include/linux/ring_buffer.h:5,
+> > > >                    from kernel/trace/trace.c:15:
+> > > > kernel/trace/trace.c: In function 'tracing_splice_read_pipe':
+> > > > ./include/linux/minmax.h:20:35: warning: comparison of distinct pointer
+> > > > types lacks a cast
+> > > >      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+> > > >         |                                   ^~
+> > > > ./include/linux/minmax.h:26:18: note: in expansion of macro '__typecheck'
+> > > >      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+> > > >         |                  ^~~~~~~~~~~
+> > > > ./include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
+> > > >      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+> > > >         |                               ^~~~~~~~~~
+> > > > ./include/linux/minmax.h:45:25: note: in expansion of macro '__careful_cmp'
+> > > >      45 | #define min(x, y)       __careful_cmp(x, y, <)
+> > > >         |                         ^~~~~~~~~~~~~
+> > > > kernel/trace/trace.c:6688:43: note: in expansion of macro 'min'
+> > > >    6688 | min((size_t)trace_seq_used(&iter->seq),
+> > > >         |                                           ^~~
+> > > > 
+> > > 
+> > > And also this one:
+> > > 
+> > > commit e0a3a33cecd3ce2fde1de4ff0e223dc1db484a8d
+> > > Author: Eric Dumazet <edumazet@google.com>
+> > > Date:   Wed Mar 5 13:05:50 2025 +0000
+> > > 
+> > >      tcp: bring back NUMA dispersion in inet_ehash_locks_alloc()
+> > > 
+> > >      [ Upstream commit f8ece40786c9342249aa0a1b55e148ee23b2a746 ]
+> > > 
+> > > 
+> > > on ARM64:
+> > > 
+> > > In file included from ./include/linux/kernel.h:15,
+> > >                   from ./include/linux/list.h:9,
+> > >                   from ./include/linux/module.h:12,
+> > >                   from net/ipv4/inet_hashtables.c:12:
+> > > net/ipv4/inet_hashtables.c: In function 'inet_ehash_locks_alloc':
+> > > ./include/linux/minmax.h:20:35: warning: comparison of distinct pointer
+> > > types lacks a cast
+> > >     20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+> > >        |                                   ^~
+> > > ./include/linux/minmax.h:26:18: note: in expansion of macro '__typecheck'
+> > >     26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+> > >        |                  ^~~~~~~~~~~
+> > > ./include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
+> > >     36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+> > >        |                               ^~~~~~~~~~
+> > > ./include/linux/minmax.h:52:25: note: in expansion of macro '__careful_cmp'
+> > >     52 | #define max(x, y)       __careful_cmp(x, y, >)
+> > >        |                         ^~~~~~~~~~~~~
+> > > net/ipv4/inet_hashtables.c:946:19: note: in expansion of macro 'max'
+> > >    946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE /
+> > > locksz);
+> > >        |                   ^~~
+> > > 
 > > 
-> > As we discussed, seems to me, the issue is caused by an ambigous state
-> > machine transition:
+> > For both of these, I'll just let them be as they are ok, it's just the
+> > mess of our min/max macro unwinding causes these issues.
 > > 
-> > When a PMU event state is PERF_EVENT_STATE_EXIT, the current code does
-> > not transite the state to PERF_EVENT_STATE_OFF. As a result, the
-> > list_del_event() function skips to clean up cgroup pointer for non OFF
-> > states. This is different from the code prior to the commit a3c3c6667,
-> > which transits states EXIT -> INACTIVE -> OFF.
+> > Unless they really bother someone, and in that case, a patch to add the
+> > correct type to the backport to make the noise go away would be greatly
+> > appreciated.
 > 
-> Right.
-> 
-> > My suggestion is not reliable. Roughly read code, except for the
-> > PERF_EVENT_STATE_EXIT case, I think other error cases should also clean
-> > up the cgroup pointer.  The reason is I don't see other places to
-> > clean up the cgroup pointer for these error cases:
-> > 
-> >   PERF_EVENT_STATE_REVOKED
-> >   PERF_EVENT_STATE_DEAD
-> 
-> Those should be done here; on the first transition into these states.
-> 
-> > Only in the PERF_EVENT_STATE_ERROR state, we don't need to cleanup
-> > cgroup as this has already been handled in merge_sched_in().
-> > 
-> > So a correct condition would be:
-> > 
-> >     if (event->state > PERF_EVENT_STATE_OFF ||
-> >         event->state <= PERF_EVENT_STATE_EXIT)
-> >         perf_cgroup_event_disable(event, ctx);
-> 
-> I'm too tired to get my head straight. I'll look tomorrow.
+> Yeah that's a reasonable resolution, I will try to track down the missing
+> patches for minmax.h so we are warning free for the stable kernels.
 
+I tried in the past, it's non-trivial.  What would be easier is to just
+properly cast the variables in the places where this warning is showing
+up to get rid of that warning.  We've done that in some backports in the
+past as well.
 
-Right; had a sleep. Lets do this :-)
+good luck!
 
-
-So the normal states are:
-
-	    ACTIVE    ---.
-	       ^         |
-	       |         |
-       sched_{in,out}()  |
-	       |         |
-	       v         |
-      ,---> INACTIVE  <--+
-      |                  |
-      |            {dis,en}able()
-  sched_in()             |
-      |       OFF     <--+
-      |                  |
-      `--->  ERROR    ---'
-
-That is:
-
-sched_in:	INACTIVE          -> {ACTIVE,ERROR}
-sched_out:	ACTIVE            -> INACTIVE
-disable:	{ACTIVE,INACTIVE} -> OFF
-enable:         {OFF,ERROR}       -> INACTIVE
-
-Where OFF/ERROR are 'disable' and have this perf_cgroup_event_disable()
-called.
-
-Then we have {EXIT,REVOKED,DEAD} states which are various shades of
-defunct events:
-
- - EXIT means task that the even was assigned to died, but child events
-   still live, and further children can still be created. But the event
-   itself will never be active again. It can only transition to
-   {REVOKED,DEAD};
-
- - REVOKED means the PMU the event was associated with is gone; all
-   functionality is stopped but the event is still alive. Can only
-   transition to DEAD;
-
- - DEAD event really is DYING tearing down state and freeing bits.
-
-And now we have the sitation that __perf_remove_from_context() can do:
-
-  {ACTIVE,INACTIVE,OFF,ERROR} -> {OFF,EXIT,REVOKED,DEAD}
-
-Where the {OFF,ERROR} -> * transition already have
-perf_cgroup_event_disable(), but the {ACTIVE,INACTIVE} -> * part has
-not.
-
-The condition:
-
-  if (event->state > PERF_EVENT_STATE_OFF)
-
-captures exactly that {ACTIVE,INACTIVE} that still needs the cgroup
-disable. Every other state is already a disabled state.
-
-
-Agreed?
-
-Also, I should probably stick most of all this in a comment somewhere.
+greg k-h
