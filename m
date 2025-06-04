@@ -1,291 +1,184 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2084.outbound.protection.outlook.com [40.107.94.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1BE28C84F
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 09:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749030023; cv=none; b=l5tOcHUk6iFj6Htr1/fdP8/T7iObKMPHKx285dd8/O+9B0tnEjqM1poT3z2X+T02UPZwT18iRNA0OPGfEgxD3MXMFCrnItacu5jg81Uukr0L2FSVnhoXgqbMOXeFGh1+rEuh8Q18Lgql3QyHpswSK4Y/xpAW21SII2IbCRTzDvE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749030023; c=relaxed/simple;
-	bh=1Oq+QK6DtW3S+GpXlQ6xHnSJKU+GIAlR+6vmh4nl108=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qjBD6kIzl8sEkh22aWiHrocX8oJIwJGvzdFfIJgAt/kr0HLtkGM/hDpmQ4bb+lls9ceTaQ3S445AbNCToePEvTVVVZlP+VxujQgOx+9KTS08HFP53hahyGIJ96wMx3Hyi3pCkbTFVtpwb/NTrnmBtWjlSU+XLW2RtAg6+C8cCa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WuZJA+Cm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A509A28D824;
+	Wed,  4 Jun 2025 09:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749030026; cv=fail; b=E2UkYBaVxFoIYJKWi+nUnc5cYeY6XHaR1G2ImcxcDKtc1qhd7epkTbQk+ntaFZYcYZFuUh/LLvzgANUcP10VTYUsGui7JOwBQiwwLuE9anpUOqrXUnPh8dqQKzU7XGmmmoDz3zKqId81djir2yti8UUxxSMtY7GfrS9TdzUJ/aw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749030026; c=relaxed/simple;
+	bh=bF282Sm3QeVPOhQ2PRTwEnm9Kuppu1b2OZ+tZSfOqL4=;
+	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID:Date; b=aljimwyYuAL0/vWzPh1jfWh5GZFqGXl8hbOyD6k8/eEm4q9wSX7W0eaaUlZF0vwlamhDGEzmmscbQLmN+bWVy+mOT/pe2v3s6GqMPEhwCe5ZKqTBuE+i1FFZbpBspyV80JCBT+0XPJHW3AaCCnmhk/R5E1FP1iFMj199BDiS0w4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XnU5wmgf; arc=fail smtp.client-ip=40.107.94.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WuZJA+Cm"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5548FBni004226
-	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 09:40:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ehfJf/B06kDJTwICFuLMnBb1b7Hu+mMt7DmuRM99TgU=; b=WuZJA+CmnISg0IGm
-	U/O0RkM8c/iieR5oUzJ3HzpVAX4shqOyIIndJXKX7hGtTtyIEc8SGXDyL55N36Lz
-	vjc2851eI+jeJfIscrWvr7jn+1gS/o0l2WgjYukUBhdEbysZgiLPhBEphMBT7cF3
-	igb+8ITdJgvQjPjaZ9BUeKJgNhGKn/2FpvQwuE3ZCPP21D4j2xsMame6FAwmdzHQ
-	mEKNN7mIVD64fkKBx2+H/sq6bJRig05ULB19AtusL4nfWfmkw3f5mrhZ/RhQzMfV
-	1uax2kC4wLwz6nD3HXYssQr97uwYk2MdyGSjSZs5xeUvisGREzaFtx/ziJTFe8ZI
-	NDtLng==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8rwma5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:40:21 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2358ddcb1e3so52177385ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 02:40:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749030020; x=1749634820;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ehfJf/B06kDJTwICFuLMnBb1b7Hu+mMt7DmuRM99TgU=;
-        b=TzWuLwaGUeRqxlVt87+juTb4aiJMhi7yaZ/q/399yqBk5CiyXg7xQZGft8pjQrnFaT
-         pkQJr5fayNi9AeZjN6ahCbccrIHlPElCXD6GEay5hKqlV7uFMp98bYIAv2mxN4A5b2CO
-         IULIpqYYS73+YUI8iuospfWHF1qPss07IP5WTyBiuC30ZK9Cz1juOtRsD4mn66WHV3uS
-         bLwzWj2pa5OxbGn1X1QAb0vGS91o9V7IrfoQqM/R+sUe2yhA+PzqDg7kd63c7mXTJPmX
-         vskP8RN9rm4n/J1XWAXb4nGwd2KZA8bJkGzaDLibwNSBe1XTPDnPUEzaRvoM9+N5o1g2
-         sc7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVh+LXPQRkx4/O7aCOHhYkwPh2W27OOVGR0RSnOFh8ddxG1kUKiPnzBFyzNTvwNBCU0f1YVsF51TpISUA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtPnNW/y/NNpbF28P2pzesOUqGNtDQJaKSz7jCzYUXXd22VsI+
-	7ugBKP80osMVuIafYDA+vcbp7dUkr+VyIS6DxBcS/DQXhUR91Xd9JH5NqW2NrT2EWg8pFB37F9p
-	g7oIc0AgtrGSUGFIPxD3IS2nqOu7uDa8awm74/tK4zNBMRuHabwdDZ7gJ0wyaHFd0gGiqMFFgos
-	o=
-X-Gm-Gg: ASbGncutHMvIew3rXkVvbtxuPE1tlhjYGwH1Ax2g58o3W5rwl0Y1pRUk7KmvoS12DgU
-	xAnBR8Mg7QkYWPNaVFdipoL0HgrlZzeHXYBxI1mWJxJ2vrPUQPr6FDXQv/4NDRNuJMuoJtowjBW
-	OhqiiX72lrJT+QRvS+BkOiCqRHpjVoIwxDTb3+mE83K/11HyjkIrkciNaFUjtisCU5WEqPqPZT4
-	zowU6/hp3WAJhlNIVtjfOaSkYaT/Auy27sKSGbkULxKJfJ5f/CHrm6Iz4tdzYff+9ZvghwnTyYU
-	GuXU/irpE1X418xnKqgkTxm/d3FV2WpxZ9pObl8zianq9DGIyC0e1UWbNIBGTVfaKD8RCbQ4LgE
-	c
-X-Received: by 2002:a17:902:e80e:b0:234:a139:11fa with SMTP id d9443c01a7336-235e112921emr28649595ad.3.1749030020019;
-        Wed, 04 Jun 2025 02:40:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG1vhO7ZAlz+m9O2qFjGc4Yn7BJiMc/2wBHTuo17Wh8+4LWBA/1mZhmuYZdb7VBXfY2r5zHiA==
-X-Received: by 2002:a17:902:e80e:b0:234:a139:11fa with SMTP id d9443c01a7336-235e112921emr28649175ad.3.1749030019581;
-        Wed, 04 Jun 2025 02:40:19 -0700 (PDT)
-Received: from [10.133.33.130] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd8d6dsm99932015ad.119.2025.06.04.02.40.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 02:40:18 -0700 (PDT)
-Message-ID: <9f332148-57ef-4716-8866-36c702a9aeb6@oss.qualcomm.com>
-Date: Wed, 4 Jun 2025 17:40:13 +0800
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XnU5wmgf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lQ25bLockpTqkBfTncVK45oNF4/PMqYixBSpL7sEg+0QIcfC8XkGukIrfj/AJpGfjRbPoT99CY+CXTKEur7cTDm1+zQBH+GmqkSjDgY+VITp1hM+wuKeiZX6030c5W2stn6XkAWj7SQxloGkoA48gowx711A68SJ0ZGEIJa7RkyiwIZm+kWthXzli19reJUcCw449oEtXCiOUfFkBD7JdcPMuDCM0jzddquF5ZNjOBBYPHDOg90C8cLHVGqFeiX0EugOYyVpq3fqv/Z4G7Lo2IxrTgeruRXobnmOXg870M+8PrKDkbNJd9kskI3kELvMWy7tQzBt+mYrtMJaFfnQTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Qte4hbuiSpO+PHhzWwbW7+hX2TGq1Z5YVG1L8fcj5FE=;
+ b=sHUrxNSs/Y3gygiM+OscPKnWG0EJxop9a+ewHuEFAM7bSVd0+BciMZ0/pzKPamdI91/THLckHoH9YGMZQ1LPOv+yobIKmD3sl5yzwWiDnJEjQu8JW17fk3/91jKtwrxHG/BUNX2qfvquK0HLomuupkSOZDPdCbtGyvy74rawC7X4Fxs1dwrh/7jyLg902WAHUKWxsKOsfUn0I4EbdS2gZzaz8HXxIFNggxcBXu2q54wqOYslCrQv37rT23b8jUqjk/NFDHk9Xu+oQE+yCStjMW+FgLNkPGnsocpTw37w8JoP+YzSQ8lWliV3mpwIe6uYrBc0jOzu8XfdGsR8PeMDtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qte4hbuiSpO+PHhzWwbW7+hX2TGq1Z5YVG1L8fcj5FE=;
+ b=XnU5wmgfIBhFUGEF1d2NN2EWx0scxhOjfkC6J+c52J/gs6nQx01+dkIjJfRG250a+nfecgU3QzrgY2r4gcQq+3LhFX+cin0uo2xL7e1OzpPtR8Bu4wBpMGr9gwVoen7PyvvU1D6laJsBoUiMcta2RERh5cYH96rPj6tJx1D4DEUgMFsqMYtVHt1taFhMTKHIEcytqsbW3LO2nXPX+IjqXBJZmPiUCZlFUhJw7RvRQmCQ8Qn7CP1q3+IsyjI4BHLfceYfX1H9Nl/xkilb0xOOnYucDrt+j/5aUbbH/0DNWagRq9FWOpInACtXGuXsmJ/FTY7ku7la7Q2pWD0fjyAR4Q==
+Received: from SJ0PR05CA0204.namprd05.prod.outlook.com (2603:10b6:a03:330::29)
+ by BL3PR12MB6426.namprd12.prod.outlook.com (2603:10b6:208:3b5::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.35; Wed, 4 Jun
+ 2025 09:40:19 +0000
+Received: from CO1PEPF000066EA.namprd05.prod.outlook.com
+ (2603:10b6:a03:330:cafe::53) by SJ0PR05CA0204.outlook.office365.com
+ (2603:10b6:a03:330::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.23 via Frontend Transport; Wed,
+ 4 Jun 2025 09:40:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CO1PEPF000066EA.mail.protection.outlook.com (10.167.249.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8792.29 via Frontend Transport; Wed, 4 Jun 2025 09:40:18 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 4 Jun 2025
+ 02:40:03 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 4 Jun
+ 2025 02:40:03 -0700
+Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Wed, 4 Jun 2025 02:40:02 -0700
+From: Jon Hunter <jonathanh@nvidia.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
+	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
+	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.4 000/204] 5.4.294-rc1 review
+In-Reply-To: <20250602134255.449974357@linuxfoundation.org>
+References: <20250602134255.449974357@linuxfoundation.org>
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/8] dt-bindings: soc: qcom: pmic-glink: Move X1E80100
- out of fallbacks
-To: Krzysztof Kozlowski <krzk@kernel.org>, Sebastian Reichel
- <sre@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
-        David Collins <david.collins@oss.qualcomm.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, kernel@oss.qualcomm.com,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
- <20250530-qcom_battmgr_update-v2-6-9e377193a656@oss.qualcomm.com>
- <4e093835-af3b-4a84-b42f-fa7d3a6f60a1@kernel.org>
- <14cba9ae-e3bb-46e8-a800-be5d979b2e06@oss.qualcomm.com>
- <b07200a2-4e7b-480e-a683-d116e7da8de8@kernel.org>
- <c4be4b97-6104-45e3-b555-6691e369c3a4@oss.qualcomm.com>
- <bcf487c9-e522-44a3-b094-daf98823a195@kernel.org>
- <a840aa80-75ef-4527-bc17-226ba5157a85@oss.qualcomm.com>
- <898e998f-11b2-4b08-9580-263046c0615a@kernel.org>
-Content-Language: en-US
-From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
-In-Reply-To: <898e998f-11b2-4b08-9580-263046c0615a@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: tnuUtpyaJd1OgM4MZrP8U_acNkjRkTKB
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA3MiBTYWx0ZWRfX46iRVKrW3vPc
- pEH3EFz0wAdzk/LQSjizaO8q03Jxs6qu12AU/8ZNEGW/MYVoMVWdtC+aDyoXH59ZLVyYAbuE8/V
- CXd3UKegO9EZxPTVGMJ+zaMKKAqHl+WIwxVpk1j4NqLvBvj/AcSHYD9aAqyrXh1ecVHFFDerRb/
- P+gGV6R7dNBXJx74/Q1tk3JwfKPpYqsgw7P05wLOsh98Hsi5lLNvYmYAshcInp+N1hZ6+YmKFuR
- MHOdofMVinLja2kAKrjmRD6ToSTVL+UJrghsGKqSOonIDpyfohkffByTJTi998uBBmCe9kdLd0b
- WuMeA78Uei52Unw+DBm2P77uzkkVJcpYN2mS68ZXqQUFpCafHscACa4ol7jW6k+FVlfZk7K8H+p
- dYgJyED2ULuFL5PvGhl6vPT1vNCnJ1eYl6mooB9RPJdPBME5MB5UOrq3ZiMU8Zwum/SrvZm4
-X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=68401485 cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=OiBcQO-rpwxFLkUKu48A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-GUID: tnuUtpyaJd1OgM4MZrP8U_acNkjRkTKB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
- impostorscore=0 spamscore=0 mlxlogscore=999 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506040072
+Message-ID: <9550e42f-473a-4fae-8ee2-506c261f6bcf@rnnvmail203.nvidia.com>
+Date: Wed, 4 Jun 2025 02:40:02 -0700
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066EA:EE_|BL3PR12MB6426:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0d2ce919-3ea4-4555-4a8c-08dda34bd162
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|7416014|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?THpwRVJHRk02TktoVFNaVnhaTFZYb3RMRXpTeTVUckFtVENwUjJtWlRmOUxn?=
+ =?utf-8?B?R1VZV2ZWc2J4cVI5dndEdFFGMjhVVkE4eEhzVS94QlRSMlArZVVwV2lNNXJ0?=
+ =?utf-8?B?ZklmWmZ2Z3FhMVB2djFCS1FQRjd4TWdzWkNweHdhY0l5aTJiNlhLbFpZUlVw?=
+ =?utf-8?B?YkdJVldjMnZCVVRXaE9aY3VyY0VtaWpuenBuNU9UL1pncCtsRWNObWtFQ1Q5?=
+ =?utf-8?B?OG5xc0lvQzA0KzhPL3lKTG5vQURTR3lDcVVrTHUvMElYL0lOYTE5cEhyNmxH?=
+ =?utf-8?B?dS9DY1VyTTZTeDlTckVQQzk0RzRFMU5sL2VkYVRQeE1GOTFoZmFCZ2pYU2Va?=
+ =?utf-8?B?dlAwTFFkcjNWVUZTMDVyZGozUldCSjIzL0lGOUk1ZERpMDc1UjgrK2g3QkVN?=
+ =?utf-8?B?djZad3pMMitLZlN5b1hhNWlNKzc3OCtPbTdPODVzZW9Bblg4SmMzeEJlL2F1?=
+ =?utf-8?B?UUJsb3Rza2x1elplMVhRdXJ3VnAvc0E2aWdtcWNjaUdVN1B3bmVHVkFsYnJR?=
+ =?utf-8?B?QmNpUzQwRmNJUkFJU0J4b1p4TDJOZ2RjRnRjRFBZZEtlbFZRS3BNMlFKM3Ax?=
+ =?utf-8?B?aUFzelE0SHIydTFzM1FtWHh3a3pvTXRXWmVIR21pK051MmFyd3cxTnhXOEpH?=
+ =?utf-8?B?Q0EyMzFJb0h0OUd6djMrM01XcGRqYzQzSXNRRi9zdXVIbWEwYndnRDNaN0pW?=
+ =?utf-8?B?TU5RMjFBWDNzY3ZEWmZYUE9QSEw3V2hNRHl2MnBsQWZEeElLYlp5MG1xbkY4?=
+ =?utf-8?B?aDZLanZwM0l2alFxdThsTEJRblZMaUJ5eXhlVlBLQ2E2WTRQRHhqZitiQTlu?=
+ =?utf-8?B?ZlpEUjZ1Unh4V1IrRVNiS29taHVWUEN2S1lhM09EbzZ0M2hWRGdIejFYSjJy?=
+ =?utf-8?B?bjhwOE04b1NJY0s5L3AxYXArdDBXMEhkbENla3VqcDRKbTZUUHQxSWt2T2Nr?=
+ =?utf-8?B?Y3haMlBnTXpSUVIyd1ZBcDVTSjAwUmtQVXQ4bDVQa2NpWFl0K2lqSDJ1RGFO?=
+ =?utf-8?B?VWNvWVZmQnMrNTRoU1JPV0tuZFdWUkhNZjdndzlWMkZyRGs5bG1URVNEMlRG?=
+ =?utf-8?B?eGM5SURxdmFydlNFZDFBRlNIN2NVNndVdkR3dTN0TGtGUXdoejdQV1FYRW82?=
+ =?utf-8?B?NnA0T3JpMGErZ3h5SXZoSHZLcVRRSHZEY3hmSmZzN3hMR1hZdWtIcGJrKzVs?=
+ =?utf-8?B?YzlPRlFVWkFvdnFjd0wycnZkWnRWMVE2eG5idmhRUlArdk5xcGNLendWVzha?=
+ =?utf-8?B?bnRsTTA0cFlsN2F3NmFnNUtkQTlkcm5tK1lxQW90VXNQTjZMWXdkQ1FuR3BK?=
+ =?utf-8?B?U1h1Q3I1NnpCRGx1ZlhNR1RmeWdLVHBLUTBEd2VxVW5GMFd0Y0ZOZndmaStB?=
+ =?utf-8?B?MS9mSVF0Z3hIQ1k3cWdjSm8ySGhLMExmNGdvOHdsNzVqK3VHNFhram54QjA2?=
+ =?utf-8?B?aCtKeUdmZHUrZEJnVG1kMzJmOEtSak9rTVNaTit2cmZkQmdkMktXb3dmSi9l?=
+ =?utf-8?B?OFcxNHJ2Wi9KM0Fxc1cxS1grcUNtQmVjcWUvUHh1RTdieVo4YU1FVnhHb1R4?=
+ =?utf-8?B?Z0MxU0lkN3UyZFpOcWNKK0hCK1E4aE8yOFcxNjZsYldMVmZTMFQ2eWI1QVJo?=
+ =?utf-8?B?TzhoTlpsYTZxakpaWW5YeFBjL2FvT0xLWnNBVVVQdUx5eEdtU2lhMkR4QkJl?=
+ =?utf-8?B?MklqcW0xWFdhUnpwaHBtbllYU3F2V2tGQWs4K0QyZisvMGNkcXZscksrd0J3?=
+ =?utf-8?B?TllXNHRCS05qalBQZnVENk9rSFhyeXR5ZHlaSmlNajgxKytyWjEvTDBLbzhX?=
+ =?utf-8?B?elFpZ1p3bmx1TFBZU1pXVjU4TVZ6R2g2aCthK3BCaXJMUVJqdHpMMldkTWIz?=
+ =?utf-8?B?UUhGYzdRU1NFaHZrYzh5Rk5TRGkvcERQc3hCODlJYVk4NGYxN054cC9NMnVJ?=
+ =?utf-8?B?L0gvYjdEaTlRRnJEeW93MnNQbnZvOHZlVnJUeGR1Z3l0VWlyRzhERUJHcnR5?=
+ =?utf-8?B?Y2VxcmxYdzBIL2lDUGQrK2VuNVFLd2Z2aGFzSUUwNDdqUUI5VHJtVlZ5a1NU?=
+ =?utf-8?B?V2lrUkp6VXdJU1VGN2ZpdnkyRHQwUHd2WWdndz09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(7416014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 09:40:18.6856
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d2ce919-3ea4-4555-4a8c-08dda34bd162
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066EA.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6426
 
+On Mon, 02 Jun 2025 15:45:33 +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.294 release.
+> There are 204 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.294-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-On 6/3/2025 5:34 PM, Krzysztof Kozlowski wrote:
-> On 03/06/2025 09:41, Fenglin Wu wrote:
->> On 6/3/2025 3:06 PM, Krzysztof Kozlowski wrote:
->>> On 03/06/2025 08:59, Fenglin Wu wrote:
->>>> On 6/3/2025 2:47 PM, Krzysztof Kozlowski wrote:
->>>>> On 03/06/2025 08:42, Fenglin Wu wrote:
->>>>>> On 6/2/2025 3:40 PM, Krzysztof Kozlowski wrote:
->>>>>>> On 30/05/2025 09:35, Fenglin Wu via B4 Relay wrote:
->>>>>>>> From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
->>>>>>>>
->>>>>>>> Move X1E80100 out of the fallbacks of SM8550 in pmic-glink support.
->>>>>>> Why?
->>>>>>>
->>>>>>> Do not describe what you do here, it's obvious. We see it from the diff.
->>>>>>>
->>>>>>>
->>>>>>> Best regards,
->>>>>>> Krzysztof
->>>>>> Previously, in qcom_battmgr driver, x1e80100 was specified with a match
->>>>>> data the same as sc8280xp, also sm8550 was treated a fallback of sm8350
->>>>>> without the need of a match data.
->>>>>>
->>>>>> In ucsi_glink driver, sm8550 had a match data and x1e80100 was treated
->>>>>> as a fallback of sm8550. There was no issues to make x1e80100 as a
->>>>>> fallback of sm8550 from both qcom_battmgr and ucsi_glink driver perspective.
->>>>>>
->>>>>> In patch [5/8] in this series, in qcom_battmgr driver, it added charge
->>>>>> control functionality for sm8550 and x1e80100 differently hence
->>>>>> different match data was specified for them, and it makes x1e80100 ad
->>>>>> sm8550 incompatible and they need to be treated differently.
->>>>> So you break ABI and that's your problem to fix. You cannot make devices
->>>>> incompatible without good justification.
->>>> I would say x1e80100 and sm8550 are different and incompatible from a
->>>> battery management firmware support perspective. The x1e80100 follows
->>>> the sc8280xp as a compute platform, whereas the sm8550 follows the
->>>> sm8350 as a mobile platform.
->>> Not correct arguments for compatibility.
->>>
->>>> The difference between them was initially ignored because the sm8550
->>>> could use everything that the sm8350 has, and no match data needed to be
->>>> specified for it. However, now the sm8550 has new features that the
->>>> sm8350 doesn't have, requiring us to treat it differently, thus the
->>>> incompatibility was acknowledged.
->>> So they are perfectly compatible.
->>>
->>> I really do not understand what we are discussing here. Explain in
->>> simple terms of DT spec: what is incompatible that SW cannot use one
->>> interface to handle the other?
->> 1. x1e80100 was a fallback of sc8280xp, it used "sc8280xp_bat_psy_desc"
->
-> No, that's not true. Read the binding again:
->
->                - qcom,x1e80100-pmic-glink
->             - const: qcom,sm8550-pmic-glink
->
-> No fallback to sc8280xp.
->
->
->> when registering the power supply device.
->>
->> 2. sm8550 was a fallback of sm8350, and they all used
->
-> Also not true. The remaining fallback is not sm8350.
->
->
->> "sm8350_bat_psy_desc" when registering the power supply device.
->>
->> 3. x1e80100 and sm8550 they are incompatible as they are using different
->> data structure of "xxx_bat_psy_desc"  and other “psy_desc" too, such as,
->> ac/usb/wls.
-> Look at the driver and bindings now - they are compatible. It looks like
-> you made it incompatible and now you claim the "they are incompatible".
-> No, you did it. Look at the driver.
->
->
->
->> 4. For charge control functionality, it's only supported in the battery
->> management firmware in x1e80100 and sm8550 platforms. And the change in
->> battmgr driver (patch [5/8]) adds the support by using 2 additional
->> power supply properties, which eventually need to be added in the
->> "properties" data member of "xxx_bat_psy_desc" when registering power
->> supply devices. Hence, "x1e80100_bat_psy_desc" and "sm8550_bat_psy_desc"
->> are created and used separately when registering power supply device
->> according to the "variant" value defined in the match data.
->>
->> The main code change is in [5/8], I am pasting a snippet which might
->> help to explain this a little bit:
->>
->> -       if (battmgr->variant == QCOM_BATTMGR_SC8280XP) {
->> -               battmgr->bat_psy = devm_power_supply_register(dev,
->> &sc8280xp_bat_psy_desc, &psy_cfg);
->> +       if (battmgr->variant == QCOM_BATTMGR_SC8280XP ||
->> battmgr->variant == QCOM_BATTMGR_X1E80100) {
->> +               if (battmgr->variant == QCOM_BATTMGR_X1E80100)
->> +                       psy_desc = &x1e80100_bat_psy_desc;
->> +               else
->> +                       psy_desc = &sc8280xp_bat_psy_desc;
->> +
->> +               battmgr->bat_psy = devm_power_supply_register(dev,
->> psy_desc, &psy_cfg);
->>                   if (IS_ERR(battmgr->bat_psy))
->>                           return dev_err_probe(dev,
->> PTR_ERR(battmgr->bat_psy),
->
-> This explains nothing to me. I think you did not get my questions at all
-> and just want to push whatever you have in drivers.
->
-> Such ping pongs are just tiring, so go back to my previous email, read
-> it carefully and try harder to understand what compatibility means.
->
->
-> NAK, you are affecting the users and ABI with justification "I make it
-> now incompatible, so it is incompatible".
->
-> Best regards,
-> Krzysztof
+All tests passing for Tegra ...
 
-Thanks for the explanation with patience. I misunderstood the fallback 
-behavior.
+Test results for stable-v5.4:
+    10 builds:	10 pass, 0 fail
+    24 boots:	24 pass, 0 fail
+    54 tests:	54 pass, 0 fail
 
-I was worried about if the compatible string matching would work 
-correctly if both the device node and the driver declared multiple 
-identical compatible strings.
+Linux version:	5.4.294-rc1-gdbf9e583326d
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
-I understand now and even if the device node and the driver have defined 
-multiple identical compatible strings, the best match which is the most 
-specific compatible string will be found.
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-So in the example below, for X1E80100-CRD, the battmgr driver will 
-always match to "qcom,x1e80100-pmic-glink" which is the most specific 
-compatible string defined at the beginning of the device node compatible 
-string, and the compatibility has not been broken.
-
-In qcom_battmgr driver:
-
-static const struct of_device_id qcom_battmgr_of_variants[] = {
-         ...
-         { .compatible = "qcom,x1e80100-pmic-glink", .data = (void 
-*)QCOM_BATTMGR_X1E80100 },
-         { .compatible = "qcom,sm8550-pmic-glink", .data = (void 
-*)QCOM_BATTMGR_SM8550 },
-         ...
-};
-
-In x1-crd.dtsi:
-
-pmic-glink {
-           compatible = "qcom,x1e80100-pmic-glink",
-                      "qcom,sm8550-pmic-glink",
-                      "qcom,pmic-glink";
-         ...
-
-}
-
-Let me know if my understanding is correct. I will drop patch 
-[6/8],[7/8],[8/8] in next version.
-
-Thanks
-
+Jon
