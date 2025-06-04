@@ -1,162 +1,193 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF3C1E47AD
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 20:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2798D111BF
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749070737; cv=none; b=P75w0y3wbXjyFsoEQDwCVSX7PlqciQcOVOxXB3PUkfWTli7WPBK2xNOhmR28bAE9dT4rlt7xoh48P12WL02bWe3yDh4FYFgKbCYBaNIRglxgaEl2WjUOzW0El4IVC97GYMepzaXXXRRFFpqxsofIR8Pf53CP8/EjzVk7FasjWqg=
+	t=1749071007; cv=none; b=Tv9YHBeAg9X4BW2bOve15pDPnbGbxjUrJ9UyKeobhNGHVXvAxUchv+MCNNTI93KUSUxb2t85pmJ2ujAHKLlWqkUysU2kjLEptL1mthGqT5O58DmQrJzhXqHyerpofdn9UsUeEXvwdpndk89xb9vQiV5rNq4wpdpb12sOD8vgJPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749070737; c=relaxed/simple;
-	bh=zYGIV8gUJFeESoLXphcUN3VcBCSW38+M6xGL/Gy3T2E=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IECteawGkACyM4+9UROl74un4geiOd0m7RhXF2iWecftqpcd0uVTWBz87MiVnd2cguEb0cu4dNA2ngon0pk9WBERSFt0GUfnjkPiyQhPYC/Tv8QVc6XLEiZ5kgO+BLCO4Tz/mjxOsxjqwqF3PMnhM4YUYOUgrrYG+gwmVxQ/tUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hKaS5he9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749071007; c=relaxed/simple;
+	bh=Fybfpl+9NRRoM+EOI6O4wAg0E8lwrxs97y3QuiCUKKc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Vtf+ox9ko0f4bADRs9YiLVIvUND+iLZuTVK2rVlBBKVsp8hUJ9dK7j78qsyUA4KMSFBP8N4tniiqj7AdM1f1bIqPjMaDnZB5Etu7zwttXLQY6vWb9GpUAIoHs2Werr+vLTVpSL5wcYUf2D8m0BCalRia5sy3UI9pw8vfYAOLYng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PwwqrDkO; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hKaS5he9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749070735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IjFlZ2/sUA2L86ngL9b3sMgbK1PseoDFjEohelsa5Jg=;
-	b=hKaS5he9ZwmMwa2vzrC1tPtC5wBLDMACM7iumqhIFqYC/THZoykJwm0C0yUVZfx+9npUb/
-	E64lOevoeo+fzzs81H491Db3mOCTG1OAAQr0LFwDwSe2QJMmy7qkbsfJV1DbG2kVofSOHr
-	v797OkXmDXdXvmeD/F5GQdksGVrVLyY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-329-dEBF4cY6MPKv-sqDefHqNA-1; Wed, 04 Jun 2025 16:58:51 -0400
-X-MC-Unique: dEBF4cY6MPKv-sqDefHqNA-1
-X-Mimecast-MFC-AGG-ID: dEBF4cY6MPKv-sqDefHqNA_1749070730
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a503f28b09so139537f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 13:58:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749070730; x=1749675530;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IjFlZ2/sUA2L86ngL9b3sMgbK1PseoDFjEohelsa5Jg=;
-        b=d73LTGZF4nhpT0x9U5yEL7dGExoCzEqDsNvgJ9Mi8VoAkzk+291x1DPHJibVeu7fnU
-         rhWnsHshJ8QQpyuF24jTbrbSKssy2YLGoN/RlG+adXYg7bkz7up/EvPRl/0G8fSohk9i
-         OpHuDMa2c/mo5+88GVzxYA+6swUqVWaJUJMUnoTe+uf/n001qJcXzdqCRCMyTbQvFXSf
-         sCBXikRM2CgoS3UKPlGPdS6XeANtoQ5L7j9Mp60H8minsUcEZftrtCexXaVYwbLb7jSk
-         m2OlLbIbKbJWoqEfGsHWBC0LVKvyky7XF10sSecc/nDqES1KL3/DuHc1v3frAbdX3+XL
-         gnkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWBeKQMHlg+F0aS9k92hN1JNdpfEvrk41dZPmztaaGWVHH8Z+dBb/B7It0kvyqsXXeZH+lEPPHA0pZUPPs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJPRE2GiGyJtJ6SXxoPaPHKke7CAXcNGdHhHst0tiuMjSiVk6w
-	hn0xL80NGPEqXSj4heo5z60RMJJBdm7vWxJOQG4SYAAlA9OrYy4Gu7rJ7N+EvdrNyYPMeUU2YmH
-	gPBhKBhrwizzcKWwqZ+HbGdAH1oi05JGmF4asT8MdKKvJnsduwrZrCxDZ4zB1sq3Eaw==
-X-Gm-Gg: ASbGncshHoDxzOKLB9TpK1hm7hPReiuKpLmas1RHoU7RTNZ87F/zf5CT23wVNstFT6A
-	2TT2sfFwRGGgZE9I2EsZuAAJ1fTxo9Bxb84PPy7kRCTS94aVOjkM/P+blTGS1C1oo8oZYFhIJh9
-	j89BTPqXxEeqrlQKT98eorGG4SX7vjmmptuI9/OLfI0M7BgaifTN/iNyu1C5t8+zY/gZyXNmRoB
-	Aj60ZKfmYCQUdJZvcW486IL8gu2lM2R6kc/cKQE2xxOQBJv1nK3X3KIZ2MRQDIg/azPaEwAYXOo
-	ycRhpRK7TPafXdpng0ZYKvHvxtwGeHrYF+fyVORuT3hHFi992y2sJ1rB9U9I
-X-Received: by 2002:a05:6000:2890:b0:3a4:e603:3d2 with SMTP id ffacd0b85a97d-3a526a84717mr847209f8f.0.1749070730442;
-        Wed, 04 Jun 2025 13:58:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEa+Gezp8iiTLoB/KqZ3gWK809er5J18zOcbOHxYhrjEk3yJTf+o6JBeAedMNn9aSfhfWFJMQ==
-X-Received: by 2002:a05:6000:2890:b0:3a4:e603:3d2 with SMTP id ffacd0b85a97d-3a526a84717mr847196f8f.0.1749070730088;
-        Wed, 04 Jun 2025 13:58:50 -0700 (PDT)
-Received: from rh (p200300f6af1bce00e6fe5f11c0a7f4a1.dip0.t-ipconnect.de. [2003:f6:af1b:ce00:e6fe:5f11:c0a7:f4a1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe754acsm23052362f8f.59.2025.06.04.13.58.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 13:58:49 -0700 (PDT)
-Date: Wed, 4 Jun 2025 22:58:48 +0200 (CEST)
-From: Sebastian Ott <sebott@redhat.com>
-To: Zenghui Yu <yuzenghui@huawei.com>
-cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-    Colton Lewis <coltonlewis@google.com>, 
-    Ricardo Koller <ricarkol@google.com>, Joey Gouly <joey.gouly@arm.com>, 
-    Suzuki K Poulose <suzuki.poulose@arm.com>, Shuah Khan <shuah@kernel.org>, 
-    linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] KVM: arm64: selftests: arch_timer_edge_cases
- fixes
-In-Reply-To: <adf8b877-7ca2-f60b-fb59-578c70d0e3c0@huawei.com>
-Message-ID: <9b9f7099-4e81-9b74-a1ac-37cd4965675b@redhat.com>
-References: <20250527142434.25209-1-sebott@redhat.com> <adf8b877-7ca2-f60b-fb59-578c70d0e3c0@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PwwqrDkO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749071005; x=1780607005;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=Fybfpl+9NRRoM+EOI6O4wAg0E8lwrxs97y3QuiCUKKc=;
+  b=PwwqrDkOdDf4lur1GQn0OCPyRUP81u6VmqjzHw3zAOlrfDsiJXjUfGwS
+   aItTJzD/QC9ED5jQ10uYmtV9CzHNcFOU1qbibxzcsMvwqKqpqHoqaytWv
+   Gtd7t5Eiy473/6SCjh8rRNzQKXHAleW4LxGDp9fmWN+AftKssoYFOn3z4
+   1Zg73YAVou2LQMdPUUMRSkrzLqoiN+yOcL7A6hGCkHgpFprwIdeh6sPXc
+   vdRhg+HIwLmmjPdl84xdWH7ubU2jVRku+KTdGiQmkcoDWp7/xEoqNBZHK
+   iC1188LqpT5CtaUq8lncHJYogJHz/R+yjL+7flfb0T5scAZUfpjKDOetq
+   g==;
+X-CSE-ConnectionGUID: mBXzsYO2S6+0VWtvLDlLYw==
+X-CSE-MsgGUID: zpDlbaokQiOHbPRrsp412A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="62530236"
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="62530236"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:03:24 -0700
+X-CSE-ConnectionGUID: eCszTzyTRlSkawbUpvgRjA==
+X-CSE-MsgGUID: wuNqWI6ITYWCMQl6HrIc3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="176178606"
+Received: from jekeller-desk.jf.intel.com ([10.166.241.15])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:03:24 -0700
+From: Jacob Keller <jacob.e.keller@intel.com>
+Date: Wed, 04 Jun 2025 14:03:15 -0700
+Subject: [PATCH] drm/nouveau/bl: Use kasprintf for interface name
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250604-jk-nouveua-drm-bl-snprintf-fix-v1-1-79b1593ad664@intel.com>
+X-B4-Tracking: v=1; b=H4sIAJO0QGgC/x2NMQ6DMAwAv4I811JqGoZ+peoQEqc1bQ1yACEh/
+ k7U8W6426GwCRe4NzsYr1Jk1ArXSwPxHfTFKKkykCPvOnfD4YM6LisvAZP9sP9i0clE54xZNow
+ Ugycf2kQZamQyrvo/eDyP4wR50NWVcAAAAA==
+X-Change-ID: 20250604-jk-nouveua-drm-bl-snprintf-fix-c2ca525a3d2f
+To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Ben Skeggs <bskeggs@redhat.com>, Pierre Moreau <pierre.morrow@free.fr>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+ Philip Li <philip.li@intel.com>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>, 
+ Jacob Keller <jacob.e.keller@intel.com>
+X-Mailer: b4 0.14.2
 
-Hi Zenghui,
+The nouveau_get_backlight_name() function generates a unique name for the
+backlight interface, appending an id from 1 to 99 for all backlight devices
+after the first.
 
-On Tue, 3 Jun 2025, Zenghui Yu wrote:
-> On 2025/5/27 22:24, Sebastian Ott wrote:
->> Some small fixes for arch_timer_edge_cases that I stumbled upon
->> while debugging failures for this selftest on ampere-one.
->>
->> Changes since v1: modified patch 3 based on suggestions from Marc.
->>
->> I've done some tests with this on various machines - seems to be all
->> good, however on ampere-one I now hit this in 10% of the runs:
->> ==== Test Assertion Failure ====
->>   arm64/arch_timer_edge_cases.c:481: timer_get_cntct(timer) >= DEF_CNT + (timer_get_cntfrq() * (uint64_t)(delta_2_ms) / 1000)
->>   pid=166657 tid=166657 errno=4 - Interrupted system call
->>      1  0x0000000000404db3: test_run at arch_timer_edge_cases.c:933
->>      2  0x0000000000401f9f: main at arch_timer_edge_cases.c:1062
->>      3  0x0000ffffaedd625b: ?? ??:0
->>      4  0x0000ffffaedd633b: ?? ??:0
->>      5  0x00000000004020af: _start at ??:?
->>   timer_get_cntct(timer) >= DEF_CNT + msec_to_cycles(delta_2_ms)
->>
->> This is not new, it was just hidden behind the other failure. I'll
->> try to figure out what this is about (seems to be independent of
->> the wait time)..
->
-> Not sure if you have figured it out. I can easily reproduce it on my box
-> and I *guess* it is that we have some random XVAL values when we enable
-> the timer..
+GCC 15 (and likely other compilers) produce the following
+-Wformat-truncation warning:
 
-Yes, I think so, too.
+nouveau_backlight.c: In function ‘nouveau_backlight_init’:
+nouveau_backlight.c:56:69: error: ‘%d’ directive output may be truncated writing between 1 and 10 bytes into a region of size 3 [-Werror=format-truncation=]
+   56 |                 snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight%d", nb);
+      |                                                                     ^~
+In function ‘nouveau_get_backlight_name’,
+    inlined from ‘nouveau_backlight_init’ at nouveau_backlight.c:351:7:
+nouveau_backlight.c:56:56: note: directive argument in the range [1, 2147483647]
+   56 |                 snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight%d", nb);
+      |                                                        ^~~~~~~~~~~~~~~~
+nouveau_backlight.c:56:17: note: ‘snprintf’ output between 14 and 23 bytes into a destination of size 15
+   56 |                 snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight%d", nb);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-> test_reprogramming_timer()
-> {
-> 	local_irq_disable();
-> 	reset_timer_state(timer, DEF_CNT);
+The warning started appearing after commit ab244be47a8f ("drm/nouveau:
+Fix a potential theorical leak in nouveau_get_backlight_name()") This fix
+for the ida usage removed the explicit value check for ids larger than 99.
+The compiler is unable to intuit that the ida_alloc_max() limits the
+returned value range between 0 and 99.
 
-My first attempt was to also initialize cval here
+The warning has gone unfixed for some time, with at least one kernel test
+robot report. The code breaks W=1 builds, which is especially frustrating
+with the introduction of CONFIG_WERROR.
 
->
-> 	/* Program the timer to DEF_CNT + delta_1_ms. */
-> 	set_tval_irq(timer, msec_to_cycles(delta_1_ms), CTL_ENABLE);
->
-> 	[...]
-> }
->
-> set_tval_irq()
-> {
-> 	timer_set_ctl(timer, ctl);
->
-> 	// There is a window that we enable the timer with *random* XVAL
-> 	// values and we may get the unexpected interrupt.. And it's
-> 	// unlikely that KVM can be aware of TVAL's change (and
-> 	// re-evaluate the interrupt's pending state) before hitting the
-> 	// GUEST_ASSERT().
->
-> 	timer_set_tval(timer, tval_cycles);
+Refactor the function to avoid the fixed-length buffer entirely. Use
+kasprintf to allocate a buffer of appropriate size. This avoids the need
+for BL_NAME_SIZE and resolves the -Wformat-truncation warning, fixing W=1
+builds.
 
-Yes, I stumbled over this as well. I've always assumed that this order is
-becauase of this from the architecture "If CNTV_CTL_EL0.ENABLE is 0, the 
-value returned is UNKNOWN." However re-reading that part today I realized
-that this only concerns register reads.
+Compile tested only.
 
-Maybe somone on cc knows why it's in that order?
+Fixes: ab244be47a8f ("drm/nouveau: Fix a potential theorical leak in nouveau_get_backlight_name()")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202312050324.0kv4PnfZ-lkp@intel.com/
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+---
+This could also be fixed by simply increasing BL_NAME_SIZE to 24, making it
+large enough to fit any size integer into its format string, or by checking
+the return value of snprintf.
+---
+ drivers/gpu/drm/nouveau/nouveau_backlight.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-I'm currently testing this with the above swapped and it's looking good,
-so far.
+diff --git a/drivers/gpu/drm/nouveau/nouveau_backlight.c b/drivers/gpu/drm/nouveau/nouveau_backlight.c
+index d47442125fa183146135f3725eae161c68e2a900..d3cf69fe2eeb33c24ee698db19b34a56a72f51cb 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_backlight.c
++++ b/drivers/gpu/drm/nouveau/nouveau_backlight.c
+@@ -42,22 +42,21 @@
+ #include "nouveau_acpi.h"
+ 
+ static struct ida bl_ida;
+-#define BL_NAME_SIZE 15 // 12 for name + 2 for digits + 1 for '\0'
+ 
+-static bool
+-nouveau_get_backlight_name(char backlight_name[BL_NAME_SIZE],
+-			   struct nouveau_backlight *bl)
++static char *
++nouveau_get_backlight_name(struct nouveau_backlight *bl)
+ {
+ 	const int nb = ida_alloc_max(&bl_ida, 99, GFP_KERNEL);
+ 
+ 	if (nb < 0)
+-		return false;
+-	if (nb > 0)
+-		snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight%d", nb);
+-	else
+-		snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight");
++		return NULL;
++
+ 	bl->id = nb;
+-	return true;
++
++	if (nb > 0)
++		return kasprintf(GFP_KERNEL, "nv_backlight%d", nb);
++	else
++		return kasprintf(GFP_KERNEL, "nv_backlight");
+ }
+ 
+ static int
+@@ -293,9 +292,9 @@ nouveau_backlight_init(struct drm_connector *connector)
+ 	struct nouveau_backlight *bl;
+ 	struct nouveau_encoder *nv_encoder = NULL;
+ 	struct nvif_device *device = &drm->client.device;
+-	char backlight_name[BL_NAME_SIZE];
+ 	struct backlight_properties props = {0};
+ 	const struct backlight_ops *ops;
++	char *backlight_name;
+ 	int ret;
+ 
+ 	if (apple_gmux_present()) {
+@@ -348,7 +347,8 @@ nouveau_backlight_init(struct drm_connector *connector)
+ 		goto fail_alloc;
+ 	}
+ 
+-	if (!nouveau_get_backlight_name(backlight_name, bl)) {
++	backlight_name = nouveau_get_backlight_name(bl);
++	if (!backlight_name) {
+ 		NV_ERROR(drm, "Failed to retrieve a unique name for the backlight interface\n");
+ 		goto fail_alloc;
+ 	}
+@@ -356,6 +356,7 @@ nouveau_backlight_init(struct drm_connector *connector)
+ 	props.type = BACKLIGHT_RAW;
+ 	bl->dev = backlight_device_register(backlight_name, connector->kdev,
+ 					    nv_encoder, ops, &props);
++	kfree(backlight_name);
+ 	if (IS_ERR(bl->dev)) {
+ 		if (bl->id >= 0)
+ 			ida_free(&bl_ida, bl->id);
 
-> }
->
-> I'm not familiar with the test so I'm not 100% sure that this is the
-> root cause. But I hope this helps with your analysis ;-) .
+---
+base-commit: 90b83efa6701656e02c86e7df2cb1765ea602d07
+change-id: 20250604-jk-nouveua-drm-bl-snprintf-fix-c2ca525a3d2f
 
-It did, thanks!
-
-Sebastian
+Best regards,
+-- 
+Jacob Keller <jacob.e.keller@intel.com>
 
