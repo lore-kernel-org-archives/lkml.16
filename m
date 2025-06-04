@@ -1,136 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B141E52D;
-	Wed,  4 Jun 2025 14:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E1F290098;
+	Wed,  4 Jun 2025 14:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749046070; cv=none; b=t/PXdFiKjgPTYZb4pu1q/E3h1WD20gUcnWp5f9+L1VlFJxl1J4g+QKqOWM+NzoSHiURQ7jLRbBkLNlFrxyoscONmXHSkkrNSUNl+OGl+UahNqI5EpU/98kkB+W9nNMNsp04z57XxJrMje416KqhGEMK89JtZUTLER8n1ANBhmTk=
+	t=1749046120; cv=none; b=LXLlCt2UWCCfj/qQEUG0VpTH9QKXAO6aO/hIUlAY0qANIZPoH7kE4y6dZmXGter68scmseDdvpayTWnL4tUrb3C9ERBCAZQugXAqiOdn5M9IP8XIqSL52azKV5+/v1GdTSlZhSe4WGb+HDp5VdXyDe/+FyKOk+IThgdtPUwIFKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749046070; c=relaxed/simple;
-	bh=b6xnqzpYhDmE6s6nfOyKsqfw46QpWokc7n3shvEH8eE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ONctVcK4F09+C5pAQXRJWQh99QiDcQLMBURSVjtefptBk9tNK00ekPJ+/piEpvKnY5duXR7N/CdjWEPTKiLxOgoOYNRhhv1v5DM4ns+/AKBm9mLhkjSPkz1KLkW/39sanWH5FcXZmjJz+GYgkt2Mu2740KjbD0RNJqa78oflVtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGsYUtSw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749046120; c=relaxed/simple;
+	bh=qygzon9ZGomXvOHxs2jcZe0II7jq7w4SYlKKQPP37i4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WL7ulKBGewQDT/xb6zIev5s+2sfxaNfqELCezR2dR46GJbFx62QHNsg6O3V3bJZvlPDUDQaXDJQBPcAkaRwHnNSS384jhKyAAbVig5xM0flmZevgEqJD1cV/56Xo3m1EwuclunxYEKNi7+w2MGEwy9Ba2OEPDii51dqB5f+JL0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=wqKmuQgJ; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGsYUtSw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08C44C4CEE4;
-	Wed,  4 Jun 2025 14:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749046069;
-	bh=b6xnqzpYhDmE6s6nfOyKsqfw46QpWokc7n3shvEH8eE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qGsYUtSwf16XeOcAzxtoTu8ey1M0HmLlDL0wk9MemHSHWIUKgo5LwAsy1akEtLCye
-	 wXbnF66y821mK49ulzh0fkdNghwDJOM+nqmLYrjnMpoux6dnhZENm1loJAXawIVGVj
-	 fZkFUrPM14uKPZrNRuuMKKlPeDcufHlgqumWvocceKk81jp5xk3qc77RqZ51SCp2Gf
-	 NWe+FEhQMeI+bjQazBCjHMD7RBbt9+Q0lg2dYZRTSJObz4BNwbw2YEpW2tf43V6tlp
-	 ZKIrnlrXon8J4EggkkhyJPS5Bh2R3ng6Dr8tvC90v39TohVNqZpXnMPWhAg1b0092S
-	 +NcN4Fn/mP6jQ==
-Message-ID: <cd6e92af-1304-4078-9ed7-de1cb53c66da@kernel.org>
-Date: Wed, 4 Jun 2025 16:07:43 +0200
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="wqKmuQgJ"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2BA983D8579B;
+	Wed,  4 Jun 2025 10:08:38 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id AShOL6JctYpF; Wed,  4 Jun 2025 10:08:37 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 989CC3D85879;
+	Wed,  4 Jun 2025 10:08:37 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 989CC3D85879
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1749046117; bh=Pz5WKHMCeRqhtLXzRHEnNCYyKPN9r9VGYTPK+PEEo5E=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=wqKmuQgJtqMpRVLk0y+HRjAInmpa1C6fUgTK7DBGROL1WhiM6zfTqo86wrT9vAcBi
+	 zSu00H04YFM3E8x40iuLR6KhYZsC7ggS5WbgUt9lyw3cCkA3reCs7vVbd+SQrQMxCn
+	 oZ1zAOhdP1jEHzt05ov1O/HcAyxRGdy/e3ASKGrumKFgJVg7yLpC1DCig6VK0T27rX
+	 VwSbVNc9io+F0Xts6K3N6IaV86zo6t3YJumigmcYY1wT6xUKJ6gn7Q9G0U/IaQN5xq
+	 oCUW3Gny3duN42F19tr9mUILfbZnIc6Vk5lyNiTzVP6R4OjDC/pzHq6bbRaCTSt64O
+	 QCk562L05HIkw==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id kOFfdEsvz-Sa; Wed,  4 Jun 2025 10:08:37 -0400 (EDT)
+Received: from fedora (unknown [192.168.51.254])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 3FF763D8579B;
+	Wed,  4 Jun 2025 10:08:37 -0400 (EDT)
+Date: Wed, 4 Jun 2025 10:08:36 -0400
+From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-input@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Rob Herring <robh@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Abel Vesa <abelvesa@kernel.org>, Abel Vesa <abelvesa@linux.com>,
+	Enric Balletbo i Serra <eballetbo@gmail.com>,
+	Robin Gong <b38343@freescale.com>, Robin Gong <yibin.gong@nxp.com>
+Subject: Re: [PATCH v3 5/6] power: supply: pf1550: add battery charger support
+Message-ID: <aEBTZD1WmS14qoNc@fedora>
+References: <20250527-pf1550-v3-5-45f69453cd51@savoirfairelinux.com>
+ <f5942d82-a7ce-46e1-ba13-ec2beef3403f@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] dt-bindings: crypto: Document support for SPAcc
-To: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com,
- manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com,
- Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
-References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
- <20250602053231.403143-2-pavitrakumarm@vayavyalabs.com>
- <fae97f84-bdb9-42de-b292-92d2b262f16a@kernel.org>
- <CALxtO0mpQtqPB0h_Wff2dLGo=Mxk02JJQkK4rn+=TuScNdSfxQ@mail.gmail.com>
- <3570be5b-cb20-4259-9a9b-959098b902d0@kernel.org>
- <CALxtO0mH=GwhQxQBsmMQYd+qgAue9WxXN1XWo9BncVJvJk6d8A@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CALxtO0mH=GwhQxQBsmMQYd+qgAue9WxXN1XWo9BncVJvJk6d8A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f5942d82-a7ce-46e1-ba13-ec2beef3403f@web.de>
+Content-Transfer-Encoding: quoted-printable
 
-On 04/06/2025 14:20, Pavitrakumar Managutte wrote:
->>
->>>>> +
->>>>> +  snps,vspacc-id:
->>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>> +    description: |
->>>>> +      Virtual SPAcc instance identifier.
->>>>> +      The SPAcc hardware supports multiple virtual instances (determined by
->>>>> +      ELP_SPACC_CONFIG_VSPACC_CNT parameter), and this ID is used to identify
->>>>> +      which virtual instance this node represents.
->>>>
->>>> No, IDs are not accepted.
->>>
->>> PK: This represents the specific virtual SPAcc that is being used in
->>> the current configuration. It is used to index into the register banks
->>> and the context memories of the virtual SPAcc that is being used. The
->>> SPAcc IP can be configured as dedicated virtual SPAccs in
->>> heterogeneous environments.
->>
->> OK. Why registers are not narrowed to only this instance? It feels like
->> you provide here full register space for multiple devices and then
->> select the bank with above ID.
-> 
-> PK: No, we cant narrow the registers to only this instance since its
-> is just a single SPAcc with multiple virtual SPAcc instances. The same
-> set of registers(aka register banks) and context memories are
-> repeated, but sit at different offset addresses (i*4000 +
-> register-offsets). The crypto hardware engine inside is shared by all
-> the virtual SPAccs. This is very much for a heterogeneous computing
-> scenario.
+On Mon, Jun 02, 2025 at 08:44:04PM +0200, Markus Elfring wrote:
+> =E2=80=A6
+> > +++ b/drivers/power/supply/pf1550-charger.c
+> > @@ -0,0 +1,639 @@
+> =E2=80=A6
+> > +static void pf1550_charger_irq_work(struct work_struct *work)
+> > +{
+> =E2=80=A6
+> > +	mutex_lock(&chg->mutex);
+> > +
+> > +	for (i =3D 0; i < PF1550_CHARGER_IRQ_NR; i++) {
+> =E2=80=A6
+> > +	mutex_unlock(&chg->mutex);
+> > +}
+> =E2=80=A6
+>=20
+> Under which circumstances would you become interested to apply a statem=
+ent
+> like =E2=80=9Cguard(mutex)(&chg->mutex);=E2=80=9D?
+> https://elixir.bootlin.com/linux/v6.15/source/include/linux/mutex.h#L20=
+1
+>
+I think it can be applied to v4 of this patch. I'll try it out and tag yo=
+u on
+the next version.
 
-Then maybe you have one crypto engine? You ask us to guess all of this,
-also because you do not upstream the DTS for real product. Any
-mentioning of "virtual" already raises concerns...
-
-Best regards,
-Krzysztof
+Thanks,
+Sam
