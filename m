@@ -1,121 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88C927C175;
-	Wed,  4 Jun 2025 08:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAB028137A;
+	Wed,  4 Jun 2025 08:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024466; cv=none; b=H12m6MxxzYQ8ciwU1v3tvU8WL0bVnriT7y/Guy/LRJ7gEHQW/5MdJsrqBZzh/prscTvOf7apEVOaPKRHg0vmIQO5AmnHpa0i0E06glgj7fYpou2ntIHyt8LrtDCHNpOD2byqZJtvTow3R0I+1GL+I1L46cyDChcEpW+pNcLBkdQ=
+	t=1749024480; cv=none; b=Yj3k1uA9TnYvRp23DZ0zVl5RZLpNbnEPvS/zl2wq0gJnM+pDaQMYPNcffFNWQEoS3zOKj2RcXuRelVCZ5SMDfqej/pmOjXDabFqRrx8qYRz1bLTFxGq8ZB8BAbphPw8Yce5YfcqH3FhwOxzJpNEbxnmmotahgPYGPS0Pf2uy0Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024466; c=relaxed/simple;
-	bh=udKDE2z3Dh+zqzXfzXV5t59Ts2YA2zBXT9lPczBGBS4=;
+	s=arc-20240116; t=1749024480; c=relaxed/simple;
+	bh=/7JQPneGSdMcZBQxQyUWbhwLUGRX3LY+MRtNfc1CRS4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pxt6EIdQgqglw60zvLx2tzPYvxKs8LOUb3k+KdkioNnbbq9JWwq/GEuwyKHYKpUy0kWvbp4e4c15W7BjHauNvx9WzVgtDNA5XEzEwSgsmOsgkRuc6ug38viXAdgnXmx5HuM3Lzorymi7B26IOlAs86OkzlkShP9owdzdNuePSJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3YIPlYL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AgOE+8UVR9UVmUDychEwsHtV8KPem23o2N6Fz/UB6/s1qOM9Y3TXgjLu/Gwit0Db6CU1DiD8mAH+zRT7ZuUENLbDII7Ok8cdZ7YXRxMWrwJq+sMgBsbT3oemdB4lcVzfUbm5WNS3k4N1nlp00EesM2fx968IDzb3F5vGDnzpCFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=IGlr3/M+; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3YIPlYL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45DBFC4CEE7;
-	Wed,  4 Jun 2025 08:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749024466;
-	bh=udKDE2z3Dh+zqzXfzXV5t59Ts2YA2zBXT9lPczBGBS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h3YIPlYLvNMuU/TEmJORHLVoAKjDkiS4dNNtm9kp1I8H+iv70L6zFAhK/z0GMrfMV
-	 fooH7ILEVwS/0hX6w5gBlkSNwwvIntzKx2XWZJEadN3B7HIb1Caw/VrL5zyNLaPHD3
-	 CWaWQkFUTbnHf/DbH+vZn3YKbpgmnTgxAf/OrvrsvA5lxd2dfotlkMgFgemItEg9pD
-	 QrXgvoge4tcVUcIH33FC0HqNG9BI6VdL/uVjV5HDTsyUAYSj+XgBBSAY25LPAd0Eyo
-	 1sKVXm3+0PYAyOokrAEVLCHMRWlAlVAKt3gdSUnRM/9Y/s4RJRAp1/Dpoe3PAOEMxo
-	 E6aq92l0R2ONA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uMj9y-000000003m2-1ilT;
-	Wed, 04 Jun 2025 10:07:43 +0200
-Date: Wed, 4 Jun 2025 10:07:42 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Miaoqing Pan <quic_miaoqing@quicinc.com>
-Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
-Message-ID: <aD_-zt755Jr_LsWM@hovoldconsulting.com>
-References: <20250526114803.2122-1-johan+linaro@kernel.org>
- <20250526114803.2122-2-johan+linaro@kernel.org>
- <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
- <aD1axxSAJsbUfnHH@hovoldconsulting.com>
- <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
- <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
- <01634993-80b1-496e-8453-e94b2efe658c@quicinc.com>
- <7025db40-dda0-4cbb-80bd-09bd590584da@quicinc.com>
- <aD_wgACEfm1_1GNz@hovoldconsulting.com>
- <79b4bac1-6e55-408c-a334-006eded4229f@quicinc.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IGlr3/M+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=+Bpzrm16WN6oSaQuwLtYmFyc8WV8CsH8T7lwcJTKxAw=; b=IGlr3/M+u/1r5P2aqJThWvquCu
+	OsYWJPLLVhBzFkejTLaGHl9pQ1vnUJdE1iFdHuXwSrfbOYpRboncUFhLXX8GBAeA+S9RvLwS0G/TI
+	0A/UTF0d70Wz1+73Y2wmlgfdGo3xjl0/CcDpNl8G6OlH3mbelHmy0Pw9Bg4XC6PqQBZHy4g7dyOnJ
+	HHc+wck/2Jrvohq4949FEKby8MA4dcuJNoWdZdEmm0vSgpJ0Shl2NotOp0OcdzSZfjmj6qTsBqOvp
+	J0bnLbe8glPR+f7Woe9wfHLBIPIqOnCfjgG0GJAwCo3kuNMnZ698xO2CHQ3oTtzUFSe93/mlAl635
+	7VRjuxWg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46960)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uMj9v-0006xS-2n;
+	Wed, 04 Jun 2025 09:07:39 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uMj9o-00010z-2v;
+	Wed, 04 Jun 2025 09:07:32 +0100
+Date: Wed, 4 Jun 2025 09:07:32 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"andrew@lunn.ch" <andrew@lunn.ch>,
+	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"xiaolei.wang@windriver.com" <xiaolei.wang@windriver.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH v2 net] net: phy: clear phydev->devlink when the link is
+ deleted
+Message-ID: <aD_-xLBCswtemwee@shell.armlinux.org.uk>
+References: <20250523083759.3741168-1-wei.fang@nxp.com>
+ <8b947cec-f559-40b4-a0e0-7a506fd89341@gmail.com>
+ <d696a426-40bb-4c1a-b42d-990fb690de5e@quicinc.com>
+ <PAXPR04MB85107D8AB628CC9814C9B230886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <79b4bac1-6e55-408c-a334-006eded4229f@quicinc.com>
+In-Reply-To: <PAXPR04MB85107D8AB628CC9814C9B230886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Jun 04, 2025 at 03:57:57PM +0800, Miaoqing Pan wrote:
-> On 6/4/2025 3:06 PM, Johan Hovold wrote:
-> > On Wed, Jun 04, 2025 at 01:32:08PM +0800, Miaoqing Pan wrote:
-> >> On 6/4/2025 10:34 AM, Miaoqing Pan wrote:
-> >>> On 6/3/2025 7:51 PM, Johan Hovold wrote:
-> >>>> On Tue, Jun 03, 2025 at 06:52:37PM +0800, Baochen Qiang wrote:
+On Wed, Jun 04, 2025 at 06:00:54AM +0000, Wei Fang wrote:
+> I think this issue is also introduced by the commit bc66fa87d4fd
+> ("net: phy: Add link between phy dev and mac dev"). I suggested
+> to change the DL_FLAG_STATELESS flag to
+> DL_FLAG_AUTOREMOVE_SUPPLIER to solve this issue, so that
+> the consumer (MAC controller) driver will be automatically removed
+> when the link is removed. The changes are as follows.
 
-> >>>>> The sequence is
-> >>>>>
-> >>>>>      1# reading HP
-> >>>>>          srng->u.dst_ring.cached_hp = READ_ONCE(*srng-
-> >>>>>> u.dst_ring.hp_addr);
-> >>>>>
-> >>>>>      2# validate HP
-> >>>>>          if (srng->u.dst_ring.tp == srng->u.dst_ring.cached_hp)
-> >>>>>              return NULL;
-> >>>>>
-> >>>>>      3# get desc
-> >>>>>          desc = srng->ring_base_vaddr + srng->u.dst_ring.tp;
-> >>>>>
-> >>>>>      4# accessing desc
-> >>>>>          ath11k_hal_desc_reo_parse_err(... desc, ...)
-> >>>>>
-> >>>>> Clearly each step depends on the results of previous steps. In this
-> >>>>> case the compiler/CPU
-> >>>>> is expected to be smart enough to not do any reordering, isn't it?
-> >>>>
-> >>>> Steps 3 and 4 can be done speculatively before the load in step 1 is
-> >>>> complete as long as the result is discarded if it turns out not to be
-> >>>> needed.
-> > 
-> >>> If the condition in step 2 is true and step 3 speculatively loads
-> >>> descriptor from TP before step 1, could this cause issues?
-> >>
-> >> Sorry for typo, if the condition in step 2 is false and step 3
-> >> speculatively loads descriptor from TP before step 1, could this cause
-> >> issues?
-> > 
-> > Almost correct; the descriptor can be loaded (from TP) before the head
-> > pointer is loaded and thus before the condition in step 2 has been
-> > evaluated. And if the condition in step 2 later turns out to be false,
-> > step 4 may use stale data from before the head pointer was updated.
-> 
-> Actually, there's a missing step between step 3 and step 4: TP+1.
-> 
-> TP+1:
-> 	srng->u.dst_ring.tp += srng->entry_size
+I suspect this still has problems. This is fine if the PHY device is
+going away and as you say device_del() is called.
 
-Sure, but that is not relevant for the issue at hand.
+However, you need to consider the case where a MAC driver attaches the
+PHY during .ndo_open and releases it during .ndo_release. These will
+happen multiple times.
 
-> TP is managed by the CPU and points to the current first unprocessed 
-> descriptor, while HP and the descriptor are asynchronously updated by 
-> DMA. So are you saying that the descriptor obtained through speculative 
-> loading has not yet been updated, or is in the process of being updated?
+Each time the MAC driver attaches to the PHY via .ndo_open, we will
+call device_link_add(), but the device link will not be removed when
+.ndo_release is called.
 
-Exactly.
+Either device_link_add() will fail, or we will eat memory each time
+the device is closed and re-opened.
 
-Johan
+If that is correct, then we're trading one problem for another.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
