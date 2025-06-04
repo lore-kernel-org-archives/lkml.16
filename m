@@ -1,160 +1,203 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2077.outbound.protection.outlook.com [40.107.236.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7551F4C8C;
-	Wed,  4 Jun 2025 08:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027131; cv=fail; b=g+z+dO1nfd29iHutgh3rnikXg0xgi8CGTIxVe4dWgpu/RVNPeeGANOWrij/y9baW4/PDxXPaDmSMJGtPudF59f6mVuBO5ZYvrjK3ER7ZZdNN1+4omClEOlAb5DqVCT4TnNFrUZTSZxB+dWF4XcNKDUgmQrzRpF7ivbAtmcJTrqA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027131; c=relaxed/simple;
-	bh=xuCpJuD3CRu24JE2kBDsjldm+otw7gzHfGLZOaIeMBg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pvtzPdpgLIWTM0BEI4u4B2V05KILoLN1J1RxepXeYVMkwdRS8ivHjssRYi8kb5nte68Aa/Qpp/sU242TbVnpqOoO8ZqCjB0B+2srw03s0t3yuS7O2FbxlgGxYpTb7RI6Tjbu0Jrz3/4ufduxr+YJoDTbMu/HqguNK8Kh9jxwNNM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wAilgrvo; arc=fail smtp.client-ip=40.107.236.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wAilgrvo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=arG5/KQQkMI4tRfK4JmS7rTt/isuZITFYWqr/vKBqsrPFPHoxPnRrphqcp3s9Ya5s665Gi5XtnCG58+REMsSzZE6BGyYfNeH2DIjaKAxWM6QVsp4F1/I7C2h+k6iyBsctaGz0WsbYTOAcgkekVE+3WCkCLju3BTI3LDMogEqCwTbyOL+vMENckss3G7fRoxeLfBXuWUW+D0qdOCLSJpSZttiB8iz8B4vP8orBiFPVHvS1Y7NfvL2hOgd84D++8CQLHo/iWTUYyClwLrItGpvnzHuPJUIGiaiDO8jFbqcm38Do/YhzUfXytxSnVUe7SLaLqooso926Z0F01CpcWmkGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KSl2cXs20mGjws9X6IA7KwxLXv+6jjze8lBAtntP0YU=;
- b=tPW15f0p3YnUFtxLphVctW5FjS17fY36nCg7U8e4JhTypM0OQR2NbirzJtovHTJ3cjudyce1J/hZG9GF6L79w3Bhxn7W5c3+pEQG3Ov2rKm0FSEwSBJRrNz/Gz32+ilCt1XzH+rHaTj/BDNGfccslcaPGfVvYQjSRVVEH5Vq9rfP5tPRObzggkRpi6EhgySfIGY92ipS3F0pH9fcLsGfC0CvTOuUTcIHcb+oiwOD+nwBczGIKhXHEylUru9lpCJx2qI7D5hheElWI4DnDRt6OL9K5DFbG4ufgeXMSKfX+xBVTikthplp/JIBVb/X/g6gVG7aRhj214egydg7toGklA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KSl2cXs20mGjws9X6IA7KwxLXv+6jjze8lBAtntP0YU=;
- b=wAilgrvovKt4MQGzLYDKu+IVfAOLxa9JbAtdvQ1N/7Ojq9uEu2tzToGLREV5gue8DrTjriV0cZMxdagMTY/h+x4CeFMkkPneF5pQ27UQX6eiJjWxb3xQVws0MlfYr6Uy9B0IGT09B0iYfZaEdQdZVchw4Th7p2It4wErhhUQFNQ=
-Received: from BLAPR03CA0161.namprd03.prod.outlook.com (2603:10b6:208:32f::8)
- by MW4PR12MB7213.namprd12.prod.outlook.com (2603:10b6:303:22a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Wed, 4 Jun
- 2025 08:52:01 +0000
-Received: from BL6PEPF00020E65.namprd04.prod.outlook.com
- (2603:10b6:208:32f:cafe::f0) by BLAPR03CA0161.outlook.office365.com
- (2603:10b6:208:32f::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.24 via Frontend Transport; Wed,
- 4 Jun 2025 08:52:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF00020E65.mail.protection.outlook.com (10.167.249.26) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8792.29 via Frontend Transport; Wed, 4 Jun 2025 08:51:59 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 4 Jun
- 2025 03:51:58 -0500
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39 via Frontend
- Transport; Wed, 4 Jun 2025 03:51:57 -0500
-From: Michal Simek <michal.simek@amd.com>
-To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Adrian Hunter <adrian.hunter@intel.com>, Conor Dooley
-	<conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring
-	<robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "open list:OPEN
- FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..."
-	<linux-mmc@vger.kernel.org>
-Subject: [PATCH] dt-bindings: mmc: arasan,sdhci: Make interrupt optional
-Date: Wed, 4 Jun 2025 10:51:54 +0200
-Message-ID: <a527f5adffc6efe4c1ad2ccc40e1e095d73efe74.1749027112.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.43.0
+Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45C3E28B7E1;
+	Wed,  4 Jun 2025 08:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749027181; cv=none; b=i7sGsRFlpV925r5KqqtpWpyW8r6qJr9YMLuMFCo/YFmZWdgO2XlylVDfmfNQdsE8MVUZZgRzrrxZy/njP/2qILfo3tGIFVhjsyd7XYsvsoD5uHntB5s6AeKMycwcZP/295WhPT8qNc+f022Q8EbmyUXGYOVtLA86+m8SmpagNMM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749027181; c=relaxed/simple;
+	bh=qFpva0TmfGMoqQwfYpHpQh703G/IXdwn7pLxD30Dac4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=H2zb35M+zT0slvaKoBqxNP4vQf5l85p/MGueyZR3oV3Wu3VJimAikWLMfr0dBahSktvQCqQgkZueaKmgiYpUAtmg7RN5g+n744Oxnq+HueKYuelxp2QYkIniFVcPBPjCMfdEO1jxzhXdPbgji+Lpeqm1ecE9plnx44BwAqazHrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.79.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app2 (Coremail) with SMTP id TQJkCgD3lpVVCUBo0WKaAA--.53474S2;
+	Wed, 04 Jun 2025 16:52:39 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: p.zabel@pengutronix.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v2 1/2] dt-bindings: reset: eswin: Documentation for eic7700 SoC
+Date: Wed,  4 Jun 2025 16:52:35 +0800
+Message-Id: <20250604085235.2153-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
+References: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=878; i=michal.simek@amd.com; h=from:subject:message-id; bh=xuCpJuD3CRu24JE2kBDsjldm+otw7gzHfGLZOaIeMBg=; b=owGbwMvMwCG2mv3fB7+vgl8ZT6slMWQ4cGp3MxYbXL9x2e6npVAhg1Wqk4xZZMyngts8bHlfO NRj2k06SlkYxDgYZMUUWaYz6Tis+XZtqdjyyHyYOaxMIEMYuDgFYCLCRgz/o6+HGrXb68eKpie/ uVEboLuL75Lb+eAIWdGgGFWO0phljAzf762uiC/0zL3YM6/oz5eDJ/9d3TJpo5xb5d8JO8KbOdw ZAQ==
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: michal.simek@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E65:EE_|MW4PR12MB7213:EE_
-X-MS-Office365-Filtering-Correlation-Id: ae7fd9c8-a273-4810-8603-08dda345119b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?MgXCQYYU6DHgr9bapD41SMI3c98TFXbJnD2Y9dOXnhzHJy1ZzYEu5/JRTfcW?=
- =?us-ascii?Q?ziAVwSlr9GB9TiuDv0F1IMeiX8WDm1syNmisJKLNMUFFjxQ2OuyMjQeqEDXi?=
- =?us-ascii?Q?d27J4zA2B2LGEHM+Nf2VEZ9eOhJLefNKoCMWThWWwTgG81OZ5/PWhoGvMKw4?=
- =?us-ascii?Q?uL60n+e6/6/WTNGB6+a3hr2eBwg2ny7M8S4EJnux9SFzLmnPzzZYvK5Alp9D?=
- =?us-ascii?Q?B5fZKZWJUYG4lhEI3y7+mg5ledF43BKAj5MdJmAA94sAZj2bt/oL6N4o67zC?=
- =?us-ascii?Q?gKjePfrWadEakpGWgV3PunSVtGDCcAnYeVuiq79TCsiSBsdgtG5wdWNVRQh5?=
- =?us-ascii?Q?2iA1fy8Af7uSOe4uZFWNaPCibVeJDnwMxIVjJGT8/jUTpCBUkBOTLNU5Qr4+?=
- =?us-ascii?Q?9r8NiUUPJSJbNoQ1U1cPeRvbEbj/zbBDz+CWDiwl0WN1OX+46naqCJ3Erl38?=
- =?us-ascii?Q?Sw0CoPijU47BJm28/Te2TtT0UKR0vY3lYFrCjI5o5v4GmvpQjupzywGHzkvP?=
- =?us-ascii?Q?APmpl/vEiKoGhuN/1EPIHN8OF8Rc+3v6TZiqle+1t8yUUKekI/1l8JkiWxmS?=
- =?us-ascii?Q?7ioZ6mgApAt0MlQ8oyNFdF3qsvhLJjpvnRl391hD7VKrfY1cyhYLrNtvitmX?=
- =?us-ascii?Q?D2qW8Hg7zuPlbqO22FUs3RPWrq0k3ldRe+Xcq5ZaRrr6sixDW4/Xw/R8eYdl?=
- =?us-ascii?Q?f6Y5rFem9HhD0s5M2mkPsKRYVtalBEDH/2LB6YnZHGGX0UKQRdVSSuAuLQsb?=
- =?us-ascii?Q?EV5y7catk9YzxgvKZ7QlHBJwcQs7rAFDwvGERmo3GdVuuHpdnfg45NjkcPae?=
- =?us-ascii?Q?0b9BN6bins8bGfFAyPWG1bNZrMSKUzWUx1ypP7Y6VVZguTLL6om55s4LzCAB?=
- =?us-ascii?Q?O311+WmtKJCdnkCxafINCzvnGxZghcYQ9Z5ZgHc46Lumy2ke0nj+S+mflRlP?=
- =?us-ascii?Q?BM9MTyD+9XYM1s1odQ4XSqXvZtDZrt99iT0/e1rc9bp9ORuqipnLpIttL53V?=
- =?us-ascii?Q?XtWDqu4WWtHfejb3WXTe/P5kBx8LAiCQ5WpVw6smKTppHAT/x3aP6hwuWeFv?=
- =?us-ascii?Q?byQGOQbQEte807A1ocqBpiSgpuZ987yFeW+Eq67FEnShOxW7/M6PLoWg4Jyh?=
- =?us-ascii?Q?VsQsMkvmS9hhb/TvnpXD30ll33sW/yGXYCwQNyTTYaPXJnG884/NXV2rUOBQ?=
- =?us-ascii?Q?O3kS4LL/7UZuls9v5Bbt9LagZyB9awGr1rFeq0A7OQwfxlrcAeYVwR/koTU4?=
- =?us-ascii?Q?LufQaa1LKFeqVZgKK/FaH8oMz64dZlN37AfvJQf9/VoGqtvk/KlwYHbp1qe+?=
- =?us-ascii?Q?sCkAret1XiuCX/lt4xSLyDDbxsT+kLgoySncmij8D7Gh1Wvvb+6lss5LXTuS?=
- =?us-ascii?Q?8o/mEvYVLBmSWJi0ishd+a0gbmPiPZsKyYh/7XQ1ErmU5x8OxJYhd5GWoJYL?=
- =?us-ascii?Q?+0M0GllV2g5NMahfzrSUkHQsTF1CuOwsa2F5X32MFbSnwT62jiCtTQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 08:51:59.9527
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae7fd9c8-a273-4810-8603-08dda345119b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E65.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7213
+X-CM-TRANSID:TQJkCgD3lpVVCUBo0WKaAA--.53474S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF1UKry8Zw1kuFykuryDJrb_yoWrAw47pF
+	4kCFyDtr1DKFWIgw4FvF1SkF13Jwn3Wr1DXr4UZF47JF1Utw1vya4YgFs5JF98ZFs3GrW3
+	WFykXw18Zr9rAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUXJ5wUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-Bootloader (as U-Boot) is not using interrupt which doesn't need to be even
-described in DT that's why make interrupt optional property.
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-Signed-off-by: Michal Simek <michal.simek@amd.com>
+Add device tree binding documentation and header file for the ESWIN
+eic7700 reset controller module.
+
+Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
+Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
 ---
+ .../bindings/reset/eswin,eic7700-reset.yaml   | 41 +++++++++++
+ .../dt-bindings/reset/eswin,eic7700-reset.h   | 73 +++++++++++++++++++
+ 2 files changed, 114 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
+ create mode 100644 include/dt-bindings/reset/eswin,eic7700-reset.h
 
-For example mini configurations used for programming.
-https://source.denx.de/u-boot/u-boot/-/blob/master/arch/arm/dts/zynqmp-mini-emmc0.dts
----
- Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
-index 8e79de97b242..0472225e6e58 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
-@@ -192,7 +192,6 @@ dependencies:
- required:
-   - compatible
-   - reg
--  - interrupts
-   - clocks
-   - clock-names
- 
--- 
-2.43.0
+diff --git a/Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml b/Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
+new file mode 100644
+index 000000000000..85ad5fec9430
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/eswin,eic7700-reset.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ESWIN EIC7700 SoC reset controller
++
++maintainers:
++  - Yifeng Huang <huangyifeng@eswincomputing.com>
++  - Xuyang Dong <dongxuyang@eswincomputing.com>
++
++properties:
++  compatible:
++    items:
++      - const: eswin,eic7700-reset
++      - const: syscon
++      - const: simple-mfd
++
++  reg:
++    maxItems: 1
++
++  '#reset-cells':
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/reset/eswin,eic7700-reset.h>
++
++    reset-controller@51828000 {
++        compatible = "eswin,eic7700-reset", "syscon", "simple-mfd";
++        reg = <0x51828000 0x80000>;
++        #reset-cells = <2>;
++    };
+diff --git a/include/dt-bindings/reset/eswin,eic7700-reset.h b/include/dt-bindings/reset/eswin,eic7700-reset.h
+new file mode 100644
+index 000000000000..7ba31db86141
+--- /dev/null
++++ b/include/dt-bindings/reset/eswin,eic7700-reset.h
+@@ -0,0 +1,73 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
++ *
++ * Device Tree binding constants for EIC7700 reset controller.
++ *
++ * Authors:
++ *	Yifeng Huang <huangyifeng@eswincomputing.com>
++ *	Xuyang Dong <dongxuyang@eswincomputing.com>
++ */
++
++#ifndef __DT_ESWIN_EIC7700_RESET_H__
++#define __DT_ESWIN_EIC7700_RESET_H__
++
++#define SNOC_RST_CTRL 0
++#define GPU_RST_CTRL 1
++#define DSP_RST_CTRL 2
++#define D2D_RST_CTRL 3
++#define DDR_RST_CTRL 4
++#define TCU_RST_CTRL 5
++#define NPU_RST_CTRL 6
++#define HSPDMA_RST_CTRL 7
++#define PCIE_RST_CTRL 8
++#define I2C_RST_CTRL 9
++#define FAN_RST_CTRL 10
++#define PVT_RST_CTRL 11
++#define MBOX_RST_CTRL 12
++#define UART_RST_CTRL 13
++#define GPIO_RST_CTRL 14
++#define TIMER_RST_CTRL 15
++#define SSI_RST_CTRL 16
++#define WDT_RST_CTRL 17
++#define LSP_CFGRST_CTRL 18
++#define U84_RST_CTRL 19
++#define SCPU_RST_CTRL 20
++#define LPCPU_RST_CTRL 21
++#define VC_RST_CTRL 22
++#define JD_RST_CTRL 23
++#define JE_RST_CTRL 24
++#define VD_RST_CTRL 25
++#define VE_RST_CTRL 26
++#define G2D_RST_CTRL 27
++#define VI_RST_CTRL 28
++#define DVP_RST_CTRL 29
++#define ISP0_RST_CTRL 30
++#define ISP1_RST_CTRL 31
++#define SHUTTER_RST_CTRL 32
++#define VO_PHYRST_CTRL 33
++#define VO_I2SRST_CTRL 34
++#define VO_RST_CTRL 35
++#define BOOTSPI_RST_CTRL 36
++#define I2C1_RST_CTRL 37
++#define I2C0_RST_CTRL 38
++#define DMA1_RST_CTRL 39
++#define FPRT_RST_CTRL 40
++#define HBLOCK_RST_CTRL 41
++#define SECSR_RST_CTRL 42
++#define OTP_RST_CTRL 43
++#define PKA_RST_CTRL 44
++#define SPACC_RST_CTRL 45
++#define TRNG_RST_CTRL 46
++#define RESERVED 47
++#define TIMER0_RST_CTRL 48
++#define TIMER1_RST_CTRL 49
++#define TIMER2_RST_CTRL 50
++#define TIMER3_RST_CTRL 51
++#define RTC_RST_CTRL 52
++#define MNOC_RST_CTRL 53
++#define RNOC_RST_CTRL 54
++#define CNOC_RST_CTRL 55
++#define LNOC_RST_CTRL 56
++
++#endif /*endif __DT_ESWIN_EIC7700_RESET_H__*/
+--
+2.17.1
 
