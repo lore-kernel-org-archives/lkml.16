@@ -1,109 +1,87 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A017D22A813;
-	Wed,  4 Jun 2025 04:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AB63594B
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 04:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749010750; cv=none; b=Nc6ozbDwI9161UoloxwusIlEn4X7sKy1jQduVaNe9Z0JQ30ORlFfTM8A9rMQJ8Q+SqNykKMm6RHL1s3OLYr6YCEz+JzbLetr4RSFJCLyCxvipGcz6cXbCLE8kBKOLkLVh1SqX6G6b2PU4D0w3NMGYVUdkw4uZwAKE2OQsjH7QkI=
+	t=1749010824; cv=none; b=YDcmUHiziqE8Ri4rKevmXhi09ACNITbF71YkZTQot2u+R8D/vc+kpc70zpPeGU4itabIr2ZAYReg+lbF2lGmwKE5S/QOjkZYojYuYhENQXIv1afphmebM+z6Ddg0kJk3jHQ7Is2oub8nrekzHW78BXpa4rX3lkMNmuv8ASl53ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749010750; c=relaxed/simple;
-	bh=U5jP+lXXoeXfOXG4BEs/tLNfMJ3AevB5d9zyUYUMwdc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Q3LVmr6L2KuC9HzJeN3Lfnq4WI0uNVq0iwYrUkOJ//OxQ4XO/4Z4aXcLWp5Z3FJwcHyV1GotvaxOBPgjlS0xvJ5DaXv204CactSqfwbSGSqx82E7fVgeOd64Rlx1oKWqo2JrOo3wSwo3iEQpwqnERM0kZ3SUzvGg8X6oQ4JKlGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MNn720XV; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNn720XV"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54acc0cd458so7826320e87.0;
-        Tue, 03 Jun 2025 21:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749010746; x=1749615546; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vwSmbFm9BQLJoSJOmaEVrFb2/yxxwEJVld2ae/xv9LY=;
-        b=MNn720XVRMl3BfOp7aGgyoxoF3n1mMzCPQfJMgvN3xSL72d2h1rN0oh4aftSua6UKl
-         XeBIe6i3sm531Ks/eAOy8UIU2LWujft8lrmO614CVYjsU8fkfE9O5v0YDjbrr4k8smCd
-         mC/a6SnVG7yYUdCZaYfKb8VXDFHzz5c+BCcM6wucVOeBiDPrFrVzJVmuRDAdEabSze0D
-         DLTjjIAILAbAPBya+xCCC/jTHEEXu4LlXmC8P3eFUuZxboht0fe41tH+lMWVvtxS+PoS
-         MG+/8s72/lxhYito93cZXachO0TYA8OmLuheFlLPZ/dj1UhwsoASoqdVgeD83JyawT5x
-         yMew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749010746; x=1749615546;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vwSmbFm9BQLJoSJOmaEVrFb2/yxxwEJVld2ae/xv9LY=;
-        b=OR9D0ca9nEvnLWN2YftKc4jBXQRh1XPlmOaiEbbLU2vRXryPUDlfO+UieLl2RToEyn
-         Lm/KRwNnzqkxyUzCMnsvcWhGoJ6PQfkOdgINP8Wo48CoFVwTkLSDQ0x2GMRkfA+7B/Zq
-         tTeP7/0djCGEqHH05iIpbY5PK+tF0blGZj00LsH8/iEsxIW0WoXiqrn6wPkxRBiAdXIO
-         nSWGpnz/EVoPoqaIXoelbqKsSxFZW/iH/jGDeO6UXCYWDGNSnFc9yLZXER4WyPAY1U3t
-         WehfkHScZDFuudblqACNs7F7FdgJwyzAUrEsFsdvv8b+DJeDRU+U+3wpjIhpQ/JNOU1s
-         861A==
-X-Forwarded-Encrypted: i=1; AJvYcCWe0sjBuEb2PttsxDPqm8G/JwYZRin5F9rGDpRcqRGXREzkrPf8QZ1Z0fwP+MoFqzqpILBma6Ts@vger.kernel.org, AJvYcCXyt5HDQ9UwjmPIqQRmDPbuh6qr6RYq37sFieP+G1KS9h42YXkbLfxMgnh2rlt4S7vsgul4uJVjOKsaTG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO07eqz3cG3Z7C2k66XTRt06BU0e622tnDoqo8cvzCd0akVbGD
-	hvkmkvG6apDYkRSrNQAeJ76y8LXAEA7+i8Iz7zPXSuPA9f5ZnqKcDEu4/JXgqGblprABeewipH6
-	caP6LXfaKfrJpgefKDUFpawpi0OTfW+XUwZu7
-X-Gm-Gg: ASbGncvX+UHoqq8rdwCt67+cFLtizHbR9mEFRdxVwRlinik7uAliA0a3BUapOVISq26
-	qxkQnlB+7nTVZKwKUc8MVWUkOzV1MnEg+UPKbsJdv/8+6imThmMGxBD3H6N5VBaSjyRcvqpMdGL
-	NO0SqxgQRCdEjbEbawlZ3IMvoUlflNxErcAno=
-X-Google-Smtp-Source: AGHT+IEW8wj69/CJqKq7zWiNi1G1ylZSFxN4OeC7JGtrvBnHGNCTYka6lyBv1oGIAYFpr1QpyK+vReP+fnvUdDk6fpM=
-X-Received: by 2002:a05:6512:3d22:b0:54f:c074:f91b with SMTP id
- 2adb3069b0e04-55356aea9a9mr400195e87.24.1749010746464; Tue, 03 Jun 2025
- 21:19:06 -0700 (PDT)
+	s=arc-20240116; t=1749010824; c=relaxed/simple;
+	bh=iH9f4lkCPQHrlLs0MpK3hGyqrrwReYReCUD4qDK2Fj4=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=UuvB4r+yELfpP2hATCtzPBrSE0/ubCHIyWMIc6wkUWZV7ebnIv8I3Uyj7oTNrkqUp/yX/9qa7HAAh2YO3Cvh9fDo6TTuDWTcokWyZ3lB4HnxT9E4Krb6DLKhN3MlE0n5o++qqQAt/UAOR9V1+fZDr1Q2MyLS8SwuBptrSg82skI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bBvTF6ksdz13Kfb;
+	Wed,  4 Jun 2025 12:18:25 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1124F180238;
+	Wed,  4 Jun 2025 12:20:19 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 4 Jun 2025 12:20:18 +0800
+Subject: Re: [PATCH v1] jffs2: fix comment typo and adjust formatting
+To: Baolin Liu <liubaolin12138@163.com>, <dwmw2@infradead.org>,
+	<richard@nod.at>
+CC: <liubaolin@kylinos.cn>, <linux-mtd@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250604022056.111032-1-liubaolin12138@163.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <1d247663-9b37-1bff-d18c-7f6866e5f041@huawei.com>
+Date: Wed, 4 Jun 2025 12:20:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Luka <luka.2016.cs@gmail.com>
-Date: Wed, 4 Jun 2025 12:18:55 +0800
-X-Gm-Features: AX0GCFtdOftKsu9kho5lrbGXwbclP_bIOHXNUOSPcUC05XiyVFuZViyCXsylFCQ
-Message-ID: <CALm_T+0emUog-74YTfGnpY4AAgh=jFsYBmttc-uesXFRoyofhw@mail.gmail.com>
-Subject: [Bug] task hung in rtnl_newlink in Linux kernel v6.12
-To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20250604022056.111032-1-liubaolin12138@163.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
 
-Dear Kernel Maintainers,
+ÔÚ 2025/6/4 10:20, Baolin Liu Ð´µÀ:
+> From: Baolin Liu <liubaolin@kylinos.cn>
+> 
+> This commit makes two documentation improvements:
+> 1. Fixes spelling of "coresponding" to "corresponding"
+> 2. Adjusts comment formatting to meet kernel style guidelines by:
+>     - Breaking long lines to fit 80-column limit
+>     - Aligning asterisks in multi-line comments
+>     - Improving readability while preserving original meaning
+> 
+> No functional changes.
+> 
+> Signed-off-by: Baolin Liu <liubaolin@kylinos.cn>
+> ---
+>   fs/jffs2/build.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
 
-I am writing to report a potential vulnerability identified in the
-upstream Linux Kernel version v6.12, corresponding to the following
-commit in the mainline repository:
+Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
+> diff --git a/fs/jffs2/build.c b/fs/jffs2/build.c
+> index 6ae9d6fefb86..1e651d3dcef3 100644
+> --- a/fs/jffs2/build.c
+> +++ b/fs/jffs2/build.c
+> @@ -185,8 +185,10 @@ static int jffs2_build_filesystem(struct jffs2_sb_info *c)
+>   			 * one. */
+>   			if (fd->type == DT_DIR) {
+>   				if (!fd->ic) {
+> -					/* We'll have complained about it and marked the coresponding
+> -					   raw node obsolete already. Just skip it. */
+> +					/* We'll have complained about it
+> +					 * and marked the corresponding raw node obsolete already.
+> +					 * Just skip it.
+> +					 */
+>   					continue;
+>   				}
+>   
+> 
 
-Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
-
-This issue was discovered during the testing of the Android 16 AOSP
-kernel, which is based on Linux kernel version 6.12, specifically from
-the AOSP kernel branch:
-
-AOSP kernel branch: android16-6.12
-Manifest path: kernel/common.git
-Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
-
-Although this kernel branch is used in Android 16 development, its
-base is aligned with the upstream Linux v6.12 release. I observed this
-issue while conducting stability and fuzzing tests on the Android 16
-platform and identified that the root cause lies in the upstream
-codebase.
-
-
-Bug Location: rtnl_newlink+0x64c/0x12f4 net/core/rtnetlink.c:3772
-
-Bug Report: https://hastebin.com/share/omisagagir.bash
-
-Entire Log: https://hastebin.com/share/cetuxoduko.perl
-
-
-Thank you very much for your time and attention. I sincerely apologize
-that I am currently unable to provide a reproducer for this issue.
-However, I am actively working on reproducing the problem, and I will
-make sure to share any findings or reproducing steps with you as soon
-as they are available.
-
-I greatly appreciate your efforts in maintaining the Linux kernel and
-your attention to this matter.
-
-Best regards,
-Luka
