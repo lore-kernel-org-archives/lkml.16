@@ -1,30 +1,30 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83523286A1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55D871E519;
 	Wed,  4 Jun 2025 00:43:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748997829; cv=none; b=iz2rLq/imBH12zvqwWi0vwD2UXaYY9aHkfTNyWcBcDqTJZ3pfgGQoGbdrP/sHL643HTMU7zN1kBaJzXcuMpJPJh9gKCf5Kw/sZyI0niupSv93nyslibSzHUgXwvOg50mVwrrik8DWd72eFN9iprLxKUXmSWIZNwbGhcb9/5lwN0=
+	t=1748997829; cv=none; b=Ppd8witQf0dPZTUTuFNDdDIf4IkzqILN0WJt/Nf41EzzKoOpzDG6O4fhOdTMWK6YhDd8rk0qadQuonNcDP3rtYTcEBZo6kR/h+wRdm6uXaZO8e2nsyi85zWH3WApz/MfI5h5toWH9JcZtXBdM5ug8VqD9JSyk0uTXaaTFppy6sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748997829; c=relaxed/simple;
-	bh=HBQr7m9q3N3TQWANmfZROgY/3eYF1L7aiZwfZ2AV4Wg=;
+	bh=Z2a9TzfIsBx6WMfuQqjTzSaUgD3Resw90i86KAVIP6o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jHmVY9Izn4DnXidXxty+OnLBu/KbIsKgnojCoxISDfqY76k8jGo8slfdKOAxW1s5qUe6ekkBg5w9yQ5N0XjlpiopPG1nkajNHWIV6GGZC1dAm0mvH9kvp8YaO58H8yHMsyUfg2URkxlVMVkpX7BWYmT5/qFOZvttWEdOHau6P0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QiqoC+yL; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=nTML19VUOEjSkeitv45Yv7ivzrb76Cr9Wnst0eiBCddJbSCZrN8ap8k6BY0edSHMPEIZV0/V/6v5SYdZ4OZxmLvd7VJMgnvjvZvvli38HCymdjBwxbppwTV+Osl7C1y+F568hUhPCuuTBuNZY8qobgslgVLT40MVlbzcdxDlNsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=O7fBzkqF; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QiqoC+yL"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="O7fBzkqF"
 Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A79C72117447;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 30C2E2117441;
 	Tue,  3 Jun 2025 17:43:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A79C72117447
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 30C2E2117441
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1748997826;
-	bh=ftxOWRCisP0EsHUqwVLwCROgXQzvFotG1fMQh4+Adsk=;
+	bh=njYzXPLBXWszHfRNWp7EuYdZXKPASUgohOyGSK4pdFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QiqoC+yLZZklcLTqWGKPbc+HQfrSPMO6MJLDmCJ+rA9rGVd0yRfD2wuE8EWTAjVxP
-	 3dsh4vkv8nqroPXThXm59Ly7J2RihhGRtuGm4eYgrljlss6p18y1VcOX9Q322VCc/k
-	 mc/S1w7tyBEOMFlTo87sKUY6SNUWMWs03D9TnpzE=
+	b=O7fBzkqF6w2hGSpwMWVGZPljeDJ5BKyANglSzBkU2Nyd6MU/YG/51DnwPoI8vx72P
+	 dWqWRqMUXwYRyKpwIP93KKCgqcHzBuVi2Yrkq0y+FZUEO7+0rrBTQF/1CVsSXBeZjE
+	 Whn0O+aI0aOm76mtNNH1BgZ9NtQ3H/6n3B/pkvyQ=
 From: Roman Kisel <romank@linux.microsoft.com>
 To: alok.a.tiwari@oracle.com,
 	arnd@arndb.de,
@@ -48,9 +48,9 @@ Cc: apais@microsoft.com,
 	benhill@microsoft.com,
 	bperkins@microsoft.com,
 	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v3 09/15] Drivers: hv: Use memunmap() to check if the address is in IO map
-Date: Tue,  3 Jun 2025 17:43:35 -0700
-Message-ID: <20250604004341.7194-10-romank@linux.microsoft.com>
+Subject: [PATCH hyperv-next v3 07/15] Drivers: hv: Post messages via the confidential VMBus if available
+Date: Tue,  3 Jun 2025 17:43:33 -0700
+Message-ID: <20250604004341.7194-8-romank@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250604004341.7194-1-romank@linux.microsoft.com>
 References: <20250604004341.7194-1-romank@linux.microsoft.com>
@@ -62,37 +62,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It might happen that some hyp SynIC pages aren't IO mapped.
+When the confidential VMBus is available, the guest should post
+messages via the paravisor.
 
-Use memunmap() that checks for that and only then calls iounmap()
+Update hv_post_message() to request posting messages from the paravisor
+rather than through GHCB or TD calls.
 
 Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 ---
- drivers/hv/hv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hv/hv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 6a4857def82d..9a66656d89e0 100644
+index e25c91eb6af5..1f7cf1244509 100644
 --- a/drivers/hv/hv.c
 +++ b/drivers/hv/hv.c
-@@ -358,7 +358,7 @@ void hv_synic_disable_regs(unsigned int cpu)
- 	 */
- 	simp.simp_enabled = 0;
- 	if (ms_hyperv.paravisor_present || hv_root_partition()) {
--		iounmap(hv_cpu->hyp_synic_message_page);
-+		memunmap(hv_cpu->hyp_synic_message_page);
- 		hv_cpu->hyp_synic_message_page = NULL;
- 	} else {
- 		simp.base_simp_gpa = 0;
-@@ -370,7 +370,7 @@ void hv_synic_disable_regs(unsigned int cpu)
- 	siefp.siefp_enabled = 0;
+@@ -74,7 +74,7 @@ int hv_post_message(union hv_connection_id connection_id,
+ 	aligned_msg->payload_size = payload_size;
+ 	memcpy((void *)aligned_msg->payload, payload, payload_size);
  
- 	if (ms_hyperv.paravisor_present || hv_root_partition()) {
--		iounmap(hv_cpu->hyp_synic_event_page);
-+		memunmap(hv_cpu->hyp_synic_event_page);
- 		hv_cpu->hyp_synic_event_page = NULL;
- 	} else {
- 		siefp.base_siefp_gpa = 0;
+-	if (ms_hyperv.paravisor_present) {
++	if (ms_hyperv.paravisor_present && !vmbus_is_confidential()) {
+ 		if (hv_isolation_type_tdx())
+ 			status = hv_tdx_hypercall(HVCALL_POST_MESSAGE,
+ 						  virt_to_phys(aligned_msg), 0);
 -- 
 2.43.0
 
