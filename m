@@ -1,183 +1,132 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4BC141987;
-	Wed,  4 Jun 2025 17:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11691141987;
+	Wed,  4 Jun 2025 17:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749059773; cv=none; b=bJVsDNg/f39H0H1Cd/W5IA5bYGikkk25As1o8q7Gxx45RULmj3dyl2EF56MsJDIbsL3Ln1NGcwyj9vwInIaPIYn3bzL4UfWjYCDUr/ZLF599MYpvu2BPPiIl20X04gB4hErR6QNxHVsIN1so3QZ5DcpUvsXPVbo+DNxuM7JASiM=
+	t=1749059780; cv=none; b=gNPWR4uXFlea4zzpaLhS8tF46/AFxIobZU1yeQ2tOf4hev+Zuzs757L7Gg7Bm3F/+6c9H5IAP9faxwtCygcx7kfb91MWFd0y73jnuHvfnEbC4fYnLaeCp8Xzi8ldoY/Ak/A2BBPXVev9iClyMdcP29jFbrXkf9tULA9ZAwtaWJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749059773; c=relaxed/simple;
-	bh=mYG5hiT0eBPeGiNJXk7MDFsaXtzwu/f1E+RCpzRa3D0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RZFmrrYxOHApjdngbMIb3fXlhEOjhVweYl2D4f98YAkOTs1YmZSRqPdPbjUMQuU+WOU3B1ctWkRvC/X9Vqwer3EnFxJlYXY83VXsHTZZLQ+l/TSnm+ybN5Qm2mmaPMOXcpwEgUefubI8TajX7fddVhg9PM+OuYKANSk9LnHjf1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nOaKsagc; arc=none smtp.client-ip=209.85.219.45
+	s=arc-20240116; t=1749059780; c=relaxed/simple;
+	bh=LanZ6nb2p+uD+QPGfvXz73pBQC0IcFdV3eUSjxilio0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q1u6KD/VXtqEl75PlxtiCqf4G8zySA8v8NC5hf1BqwBqJmvwz+dGoqYEmEXFLJ9p3p7J08XWRFzFaPJugIwRzAg8jFWoM+0MYW9kNLBRBax8zDv5cVD5LYbCuUcIeJ5GQ3Pc6DRqNbcdmajVr2x9x+gJwOps82NDwFkp+v5uArM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A04olrBT; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOaKsagc"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6fae04a3795so2100286d6.3;
-        Wed, 04 Jun 2025 10:56:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A04olrBT"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-309fac646adso1274778a91.1;
+        Wed, 04 Jun 2025 10:56:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749059770; x=1749664570; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gnvEKTcmmLwrMRljEPpuN+GEAVNuq2EmP2jnZ/w/9S8=;
-        b=nOaKsagce3dNeRTFveXQj9SIdqWLqfuvWpOnHp4rhMtO6RC8YZz3wxQ/JJjEZIkwzL
-         YgcvvwLdklQhNCs58LU2E4mrU9XF49izfUVDYa0K8HHcd3GPenu5tz82xhJ6OXGSyn/v
-         WrnCDcEGyI9IExtJVlmfKvxTS+o2s20O1xtnmGmnRtA4Xy9/K2tiffidwLooNvrBujAP
-         4ytrzJ46kw0C15sufVvkGoHrkMeXUKAhfstXI26/E28Y3LiHe1R5Hjng5GeisoegyMT5
-         XGQri+yCKZgbgnEPE42NFRcDgiZ6Lk5JS3bgpxbyOvGAwPZ6wVQhkVxr9lqrna5GSsM6
-         yBgg==
+        d=gmail.com; s=20230601; t=1749059778; x=1749664578; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Euwi8cH8s0mdwA2LRTqEh1pB7vpHN6OEAf9ObZHDik=;
+        b=A04olrBTAXoJk+2Azow7BwmvtG3eem6721KYkrGWGGGV69cA7Sp6sWhDFfiDYcAVKI
+         3m0B7hfrTW+Wbgq2weN+zEfwhxEPFPnl1i0HbJze9Re/NHcY20Uzd6PUckZMZ2IzDcv1
+         AaaneIdy3bEoPH352ptS487WdGW/YHcOTi3rTc486shCud/xh56ViYzUTsiySUcNJmBa
+         4hENzS6IgwQ3lJLC30FjUj2hnJTKOtKFTCB/ENG+FsPyR0vTKRga4AlBu2LmrYwE3ORv
+         sA/1mjJ5QpkyRQCeDdDvUwwAwBYZwF91gxBQJodQvziwl+54cvlhx8Ew57ugrmrHgNwf
+         Tcag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749059770; x=1749664570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gnvEKTcmmLwrMRljEPpuN+GEAVNuq2EmP2jnZ/w/9S8=;
-        b=HSz0pOQ/pwBEto8yAKZwPBvFWu5JTknWXrfEf1tTSs8Jh2iXuMkpw8r3M/LlHSYXwy
-         VzyWD0azHz8abLEqre81o7vUuweOkOX3ftbBg5wJX68pyiQZpTFvMNVZALs+CrFjbvrx
-         2hZjtD0jLk0H8f0zm4zADahae4YS88FqA9xpfL9qNbSJM4PACHo8ThTQV3uia3ZEjnPf
-         PezGJlVzRlvLuFQsvodORKVN9hVvURA7suzBnUOhGhWM3td2b5DpyMIJlmkeIRCG6UKF
-         d3kcHpB5K6kYRhODlxAt3A+UH9gF7SuAWubdHDimKxTeiUGw4QpTCNSMSB0lO7ZbqshI
-         nPjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKoieTAlQ57AwiAY0DMhY2uRnDbseix54GzJC/ujjXlifpRqsW0Ou4kVM3hWWv9TLcq/FssdPKBeqsVlc=@vger.kernel.org, AJvYcCX6ZidZQ4Z+tIhgO0cLYSBDRX3btZVAMREe27azylUR32JFD/s/ha+U+1WgdXE8/RfL8EDxs43NY04EMe9yx37d@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiX/XvXLhiXe+S182UC0uwAnoza/9xOP3ONlg1Xeb+uItMKWxg
-	QPHQG4bjWcckdQhtQXnei664I8wRviUwGnuj1C2Y18zUq4V2+HWYvVpAO08N45R/9dzBC/PzNGk
-	JrM2mKwtP9Dj+/53REvo4rvROLRLjXuc=
-X-Gm-Gg: ASbGncu6o1Ma5xL7hs3Uk9bmCRlccxwHe/2PA6w69lJ8+5dlL1ilX7fhriv5xyPz/Oj
-	7xuXk/K736dkGexNuhHqL4XKIkiNol041l6quIC+gsy8msmPwYvdV+s0gj1q2U8euV/8Isk9FcZ
-	Sn7UgXqaDCUo9yAVIY1rR1wmlBrDJKAQFuKg==
-X-Google-Smtp-Source: AGHT+IHgPYUhO6aBFmp/KGRv6pAgLdkGthbSxhqN+51/VWLbrFeRdK6jUDS8WlqrwQbaAL5J6gzzwUPAhrVoQpkLbqw=
-X-Received: by 2002:a05:6214:242e:b0:6e8:fbb7:6764 with SMTP id
- 6a1803df08f44-6faf6fe41aemr57817946d6.45.1749059769696; Wed, 04 Jun 2025
- 10:56:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749059778; x=1749664578;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/Euwi8cH8s0mdwA2LRTqEh1pB7vpHN6OEAf9ObZHDik=;
+        b=lVT3Io+OzWK/uTzVTJI5x2YH/6G5xGw8R0quMfQDbp/3xZACMUeb125ywa90kWTTrk
+         6YVA7TIQVUMP8A/c4I4VwPwgbqdHSdUd4JX+VhOWcZUUOSYSsBcm0x2j4GU2/uxQ16rX
+         IZaFoaPJHnHdD38vR1NU8IUvPdHpRRCjpoTM88QdgAfUXF50fkqakwEJHujiXk2/stFo
+         WwSmWMSZb69iRY2HV3SUgD+GjDz9eP+XLcSXqaL3EPXYWGMMSoTUlNzOBTcsBXn9af+K
+         EQPQvp4Ox8jydG9roGnPw2Tpl26KByRntZ/3fWURRMStYOFaqzESHBZei4SxfVFBZE4o
+         bo6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVUQUkxv3odhqU07YpW6gX9+9WhFh2tkVY5K6eyZBeYGL9Abfxr6kLtoHVJsUWnq8gG+jnEvoC4/CF7t5c8@vger.kernel.org, AJvYcCVfPQr8KH+4POM737cc2p80po9DHlwzVuJAY1+oThdWitwtVlNUEzf7Ab7vDoTbwOx6Lp9v/TQ1VzdyBOd3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0hwSLVvL2KSxLcfRzzBlug7urE9xIzrAuII/hkbFgc0z55u6i
+	h3ZsDG1bkK1yQH+FlQvk/RWVCPILWgLaxA70nAFzm/U6F1GSq1aPA4UmE3f38Q==
+X-Gm-Gg: ASbGncs/6Xw3I0ZiyHcvR98c9T0dzhoe9zhfXpP7iUeh1d2uj7Rgo0oqFcq9u99C2HS
+	8hzFLQMkbpBdnVipqLEsu9oO77MYmL5jMNbNribFHvCm4kvCkHqRkhPsZ/msoYyhW7gSZk1kuZr
+	RKYdP7LC9xwljHpm5NggliBLxlIzrtZh616hmcvVj7JdA4tq7U9AptkxbZtw3arPTAEPghDDYkh
+	HEgoX9DZgmpYaqw9TZLpyo/A76nLRVtcHjO7NCxc67ElK3ICR1tdwlU5SaIbrGykMgecnCLNod+
+	HW0JDl5YC4o/Ql/VNCATCoWNjyoItLCjpozB7zunc5f4vSi3jg==
+X-Google-Smtp-Source: AGHT+IHblasMKmm6BcsNSe9ySzE24cboKqnKZUZq5n3QdEBR7VgbwEyc17E0jOQpdWgdihRXEusRnA==
+X-Received: by 2002:a17:90b:55c7:b0:311:be43:f09a with SMTP id 98e67ed59e1d1-31328fa028emr519168a91.9.1749059778060;
+        Wed, 04 Jun 2025 10:56:18 -0700 (PDT)
+Received: from localhost ([2601:1c0:5000:d5c:89fa:e299:1a34:c1f5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2b67f4sm9232208a91.3.2025.06.04.10.56.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 10:56:17 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] MAINTAINERS: .mailmap: update Rob Clark's email address
+Date: Wed,  4 Jun 2025 10:55:58 -0700
+Message-ID: <20250604175600.89902-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524083618.29615-1-suresh.k.chandrappa@gmail.com>
-In-Reply-To: <20250524083618.29615-1-suresh.k.chandrappa@gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Wed, 4 Jun 2025 10:55:58 -0700
-X-Gm-Features: AX0GCFtcpSexHVVUqZ5FfuA5ekkM5E7Wr5rglkeeWBhvyX4PPBqfBC5CRQilNqg
-Message-ID: <CAKEwX=MGgNw6rq1Y+gao=_AKP+hjuck-dafeaEs18YB21gGQKA@mail.gmail.com>
-Subject: Re: [PATCH] selftests: cachestat: add tests for mmap and /proc/cpuinfo
-To: Suresh K C <suresh.k.chandrappa@gmail.com>
-Cc: hannes@cmpxchg.org, shuah@kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 24, 2025 at 1:36=E2=80=AFAM Suresh K C
-<suresh.k.chandrappa@gmail.com> wrote:
->
-> From: Suresh K C <suresh.k.chandrappa@gmail.com>
->
-> Add a test case to verify cachestat behavior with memory-mapped files
-> using mmap(). This ensures that pages accessed via mmap are correctly
-> accounted for in the page cache.
->
-> Also add a test for /proc/cpuinfo to validate cachestat's handling of
-> virtual files in pseudo-filesystems. This improves test coverage for
+From: Rob Clark <robin.clark@oss.qualcomm.com>
 
-Hmm, it's been awhile since I wrote these tests, but isn't there
-already a test for /proc/* files?
+Remap historical email addresses to @oss.qualcomm.com.
 
-> edge cases involving non-regular files.
->
-> Tested on x86_64 with default kernel config.
->
-> Signed-off-by: Suresh K C <suresh.k.chandrappa@gmail.com>
-> ---
->  .../selftests/cachestat/test_cachestat.c      | 69 ++++++++++++++++++-
->  1 file changed, 67 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/cachestat/test_cachestat.c b/tools/t=
-esting/selftests/cachestat/test_cachestat.c
-> index 632ab44737ec..81e7f6dd2279 100644
-> --- a/tools/testing/selftests/cachestat/test_cachestat.c
-> +++ b/tools/testing/selftests/cachestat/test_cachestat.c
-> @@ -22,7 +22,7 @@
->
->  static const char * const dev_files[] =3D {
->         "/dev/zero", "/dev/null", "/dev/urandom",
-> -       "/proc/version", "/proc"
-> +       "/proc/version","/proc/cpuinfo","/proc"
->  };
->
->  void print_cachestat(struct cachestat *cs)
-> @@ -202,6 +202,65 @@ static int test_cachestat(const char *filename, bool=
- write_random, bool create,
->         return ret;
->  }
->
-> +bool test_cachestat_mmap(void){
-> +
-> +       size_t PS =3D sysconf(_SC_PAGESIZE);
-> +       size_t filesize =3D PS * 512 * 2;;
-> +       int syscall_ret;
-> +       size_t compute_len =3D PS * 512;
-> +       struct cachestat_range cs_range =3D { PS, compute_len };
-> +       char *filename =3D "tmpshmcstat";
-> +       unsigned long num_pages =3D compute_len / PS;
-> +       struct cachestat cs;
-> +       bool ret =3D true;
-> +       int fd =3D open(filename, O_RDWR | O_CREAT | O_TRUNC, 0666);
-> +       if (fd < 0) {
-> +               ksft_print_msg("Unable to create mmap file.\n");
-> +               ret =3D false;
-> +               goto out;
-> +       }
-> +       if (ftruncate(fd, filesize)) {
-> +               ksft_print_msg("Unable to truncate mmap file.\n");
-> +               ret =3D false;
-> +               goto close_fd;
-> +       }
-> +       if (!write_exactly(fd, filesize)) {
-> +               ksft_print_msg("Unable to write to mmap file.\n");
-> +               ret =3D false;
-> +               goto close_fd;
-> +       }
-> +       char *map =3D mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_SH=
-ARED, fd, 0);
-> +       if (map =3D=3D MAP_FAILED) {
-> +               ksft_print_msg("mmap failed.\n");
-> +               ret =3D false;
-> +               goto close_fd;
-> +       }
-> +
-> +       for (int i =3D 0; i < filesize; i++) {
-> +               map[i] =3D 'A';
-> +       }
-> +       map[filesize - 1] =3D 'X';
-> +
-> +       syscall_ret =3D syscall(__NR_cachestat, fd, &cs_range, &cs, 0);
-> +
-> +       if (syscall_ret) {
-> +               ksft_print_msg("Cachestat returned non-zero.\n");
-> +               ret =3D false;
-> +       } else {
-> +               print_cachestat(&cs);
-> +               if (cs.nr_cache + cs.nr_evicted !=3D num_pages) {
-> +                       ksft_print_msg("Total number of cached and evicte=
-d pages is off.\n");
-> +                       ret =3D false;
-> +               }
-> +       }
-> +
-> +close_fd:
-> +       close(fd);
-> +       unlink(filename);
-> +out:
-> +       return ret;
-> +}
-> +
+Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
+---
+ .mailmap    | 2 ++
+ MAINTAINERS | 6 +++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-This looks 90% the same as another test. Are we literally just adding
-the mmap step to test_cachestat and call it a new test?
+diff --git a/.mailmap b/.mailmap
+index 6a6aa09e244b..b72a164280ea 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -633,6 +633,8 @@ Richard Genoud <richard.genoud@bootlin.com> <richard.genoud@gmail.com>
+ Richard Leitner <richard.leitner@linux.dev> <dev@g0hl1n.net>
+ Richard Leitner <richard.leitner@linux.dev> <me@g0hl1n.net>
+ Richard Leitner <richard.leitner@linux.dev> <richard.leitner@skidata.com>
++Rob Clark <robin.clark@oss.qualcomm.com> <robdclark@chromium.org>
++Rob Clark <robin.clark@oss.qualcomm.com> <robdclark@gmail.com>
+ Robert Foss <rfoss@kernel.org> <robert.foss@linaro.org>
+ Rocky Liao <quic_rjliao@quicinc.com> <rjliao@codeaurora.org>
+ Rodrigo Siqueira <siqueira@igalia.com> <rodrigosiqueiramelo@gmail.com>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ee57fc5d48f8..5dd1a3234cc5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7567,7 +7567,7 @@ F:	Documentation/devicetree/bindings/display/panel/panel-mipi-dbi-spi.yaml
+ F:	drivers/gpu/drm/tiny/panel-mipi-dbi.c
+ 
+ DRM DRIVER for Qualcomm Adreno GPUs
+-M:	Rob Clark <robdclark@gmail.com>
++M:	Rob Clark <robin.clark@oss.qualcomm.com>
+ R:	Sean Paul <sean@poorly.run>
+ R:	Konrad Dybcio <konradybcio@kernel.org>
+ L:	linux-arm-msm@vger.kernel.org
+@@ -7586,7 +7586,7 @@ F:	drivers/gpu/drm/msm/registers/adreno/
+ F:	include/uapi/drm/msm_drm.h
+ 
+ DRM DRIVER for Qualcomm display hardware
+-M:	Rob Clark <robdclark@gmail.com>
++M:	Rob Clark <robin.clark@oss.qualcomm.com>
+ M:	Abhinav Kumar <quic_abhinavk@quicinc.com>
+ M:	Dmitry Baryshkov <lumag@kernel.org>
+ R:	Sean Paul <sean@poorly.run>
+@@ -20287,7 +20287,7 @@ F:	drivers/soc/qcom/icc-bwmon.c
+ F:	drivers/soc/qcom/trace_icc-bwmon.h
+ 
+ QUALCOMM IOMMU
+-M:	Rob Clark <robdclark@gmail.com>
++M:	Rob Clark <robin.clark@oss.qualcomm.com>
+ L:	iommu@lists.linux.dev
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+-- 
+2.49.0
 
-Can we at least refactor things?
