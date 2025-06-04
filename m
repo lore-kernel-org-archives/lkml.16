@@ -1,156 +1,273 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592FA32C85;
-	Wed,  4 Jun 2025 14:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749048452; cv=none; b=lWdO25OoMaT0SYOBk334IST7FocdeUTFIgI1SYDsRy4hqIvR12olWjMEucfTGDgVMpbxQWc4VGvgdiJVtuZwMSR3Vn5C8v+ZzEGh8TrmPezJb71phfkF/lRjwtNhNss9K3hF8AjEv2YtSwBn9hXLDu4CWhP6ZrpCv9mzNs4Z/bg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749048452; c=relaxed/simple;
-	bh=s794wOPYqmOh7ctoNUyErF6+1Cjz5YD1viu4ZG67VJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n2vPbDu5lr2BXzIYv/aoMSBNPfpZxOKzmgVsKImAutUt6gN3byonfFlArVxbYLsR7PKtt65WVcA3AA9CucNvQJ9VeMWWb3iznntvVN6IGWxXlclPQGyFTnmjR/EB2ohyQbHuFw0Ht0RSKEW792vqZJoFakmee6wryGBRNSrE6Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=T307lBYR; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A2C244676;
+	Wed,  4 Jun 2025 14:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749048476; cv=fail; b=IXmAsuPL3gy1XWCr4iAktbexVrW8vDzODPmrlkwwUAbdQiInaNElqeeefWy7fMpG2ue/iYUYgIQNRVegEDJevzFqFITWk1o/03TdrKXOI5WchuNEGreTkvrAYik0WJ0Tvyh9ojFEh7Ii/7IRVQXH1FGQL3k1eqqSJMzfX15UUEQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749048476; c=relaxed/simple;
+	bh=xJtRDhwmiGLFt67gHtY0dSS2UAHKuUHsOeR3JOuQso8=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=e/+Ipndt6o4oDUlbWNd9HoW+QJ0xn68iVkVBH04LA3Pd5pS0TByNU02OtYROIPnj3IfsUJDQR+4y0APYATnSZL8WaSIu2K8GfDwnLGk/grzSZVP5ggpcOhOzn02t2hNczRttQaz1DtDodnbEsxImCiqYZhZQS18cyOkOCmzGrNQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UdGlhCZ2; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="T307lBYR"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 7B67E25B4D;
-	Wed,  4 Jun 2025 16:47:22 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id RreaCiUezlfL; Wed,  4 Jun 2025 16:47:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749048441; bh=s794wOPYqmOh7ctoNUyErF6+1Cjz5YD1viu4ZG67VJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=T307lBYRQTcYkHnp2ZEUgWq5m45CBUmBiHKIlJr6GlPmZhzr9eXYbYqSgI9qcpR02
-	 K/Zk4jx4VhlVeQ3bmSICTsxUkv1rSLLccFFKWnGTSGoBijsz0itN98J7Pf0rZqumPZ
-	 goDh9JE1DdcTK8/gfqhNUr2boSpAqjIk6gVqxVrnXLLobKH4QWBVa2XTQ2LRsGdC0c
-	 +a1IiNexXnEbBg89XR7hWb3bMY0v81Srw+/MHlWNmBdlVoftd6Tro+KU4AiZlDxLT4
-	 2qfCjJ4ij0RRO7kJ4y1ML2c2BjZNfUeAOHymok4j3Z//n10b3FSMAFSZPZ3Glib5IC
-	 0rS/TToWSo/eQ==
-Date: Wed, 4 Jun 2025 14:47:04 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform/loongarch: laptop: Get brightness setting
- from EC on probe
-Message-ID: <aEBcaDvEKZVO77FY@pie.lan>
-References: <20250531113851.21426-1-ziyao@disroot.org>
- <20250531113851.21426-2-ziyao@disroot.org>
- <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com>
- <aD6Zz8L9WJRXvwaW@pie.lan>
- <CAAhV-H6j1OT9D8ZBtyEP=Mu5+m=t0ebUvuC=gVeNsoPizwK1TQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UdGlhCZ2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749048475; x=1780584475;
+  h=date:from:to:cc:subject:message-id:
+   content-transfer-encoding:mime-version;
+  bh=xJtRDhwmiGLFt67gHtY0dSS2UAHKuUHsOeR3JOuQso8=;
+  b=UdGlhCZ2I608zzWU0Sf0NRlgW8cPo9M8TgfeLDPih25X5HQB78mC6Fjq
+   EYRkoiHxEizdVrsZzc7adwnkG3dv31Vv/Pg8XwbT6DwO0JOath0zn5+f7
+   /SD1bvygDSd71aD93zac9LVSn6rPerPXpUnBH6dKulHWMn5L7mLwbnrES
+   D5Q2da/OawXzC3JO6ceJoX4izTR1sVnW9RlpGiLRHBOt1jmp9mAnOe8JF
+   NCNRXxAw9Rwe1mL0ZRB/VVLsznMsmLTBmkMuIPFAYp2oMxDA5UZpeYavW
+   tU2/EExZ7oo2f9FR3lv+vvMZFEgFiPgeShvJlIsQShxanoygHxgcTL3Z/
+   w==;
+X-CSE-ConnectionGUID: Ual60CrOT56sEimbDUDVDA==
+X-CSE-MsgGUID: N10TNNcVS2ueu90uc6XwMA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="50250575"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="50250575"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:47:54 -0700
+X-CSE-ConnectionGUID: 5nrctUJfT8CKW6A52LUCXQ==
+X-CSE-MsgGUID: XQn5rQTaSRucAXlWhP1sZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="176093765"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:47:54 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 4 Jun 2025 07:47:53 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 4 Jun 2025 07:47:53 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.46)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 4 Jun 2025 07:47:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=po0rB37TCwgWBlveLhOxBrcFqts700xXFWmxoFXny/IAF7cvJgbf3n1yGbBdXDn9Cvxy9useCuWr1KDuKl/a2Zv4TOa3CX3X7nKTMu0DvO2bUeWbBu0F3iE5DT4vT/RUGC4LurirnN4sP6MGh67rSMwyaFOBUjtp/onCWdIQir1amz7jRj/zk6JvScbb3pEnOf11TK3vu4KpMsj29ulhiMLh7XCLE4ahhtcyw+P5mPS1jyBLbhFGwwHFbjW55L/CVqb/tqWCfmDaeBMb66d6D+8zJsxONIw3OA+9Q1n53Q8UJRMyprlE5z+V5MqYzURxpaDpFIEaF1jIIcbm1ehXYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+qPWP4+M7pziXlqKmEY7zQrgMd7zAW4liAvjipUIOxA=;
+ b=qA0l2r7lKRPyfku6gBnHiS6skiz2o1sthz25oPgnOmfhiHtkG5dqSXSqjw9iAHaJ1sKXjIoM4KnwYLqvt1v0dXpLMwSJ2OtQvA+nYRCWg9E8A94v+7yDZvioX4dbZkYPPam/bDSrOwcaA0mVqZGiU2oYT4JgNmJlrWAn9NU4wZp6lx8OiFk+NmR+bYgtgdH//b7BPh+/7Mh5kfMQMMTkeiwXzJ30W1LwxiKRZxsi3/jA/04UP3rMkroZK4D4Udv0k1CpmFIxdkNjhFxYO8sk9PuChUxOzUMmVEOtV28j2hbU6A6bsFX5V6kjP4dKsSx+xIej2WkzrXYuHgXa3OYqBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by CH2PR11MB8865.namprd11.prod.outlook.com (2603:10b6:610:282::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Wed, 4 Jun
+ 2025 14:47:48 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
+ 14:47:48 +0000
+Date: Wed, 4 Jun 2025 22:47:38 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Oleg Nesterov <oleg@redhat.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Christian Brauner <brauner@kernel.org>, K Prateek Nayak
+	<kprateek.nayak@amd.com>, <linux-fsdevel@vger.kernel.org>,
+	<oliver.sang@intel.com>
+Subject: [linus:master] [pipe]  ee5eda8ea5:  stress-ng.pipeherd.ops_per_sec
+ 26.0% improvement
+Message-ID: <202506042255.d1d90443-lkp@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR02CA0014.apcprd02.prod.outlook.com
+ (2603:1096:4:194::19) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H6j1OT9D8ZBtyEP=Mu5+m=t0ebUvuC=gVeNsoPizwK1TQ@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|CH2PR11MB8865:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2e42a4c6-db9b-470b-e38f-08dda376c5db
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?/TiLjvYnTqe14oV3/wPUlHS6EeyyUfVyVDfjWVBMuuOct5/IjAamwdJtSe?=
+ =?iso-8859-1?Q?zhAdEEhW15IU7FB5ZBBxoAYE7FPg41V0eEd713MKQTIFpRqpc68Qe/4rlR?=
+ =?iso-8859-1?Q?130+fnDXOIRs67dpOcLKyQaOIlbNfZyLer4ABlGWPuiu12WD8itBWZ8A92?=
+ =?iso-8859-1?Q?zoF1O+btFCC4f9oUECcZ2MdmivYQyW7UYhcLNLmtifmwufQJ2fdNrQwFzn?=
+ =?iso-8859-1?Q?AIXuFmjteJvPs1lOfzN5Xlwg2tZldsJJrgnYwIKuwdKALccGkxscYCyB7P?=
+ =?iso-8859-1?Q?gsPNRV7KTlpqmakfl5ICLe5Ubwn5LBcmBh0sYQ0bnsPinZbsRF9ZKINGRv?=
+ =?iso-8859-1?Q?Gw/vfS2pol0KcDbx2x/6RJqstVzPEuZF6goiEGwOtDfoI4bFsSzz9Roqtg?=
+ =?iso-8859-1?Q?J3c5sLkcBTJJXbR+SGOo8grVxqhEG/EUovtvT3KFZkZUK2IdLAjA2F0SwF?=
+ =?iso-8859-1?Q?WFaHg8HiWg22s+mYDNCvXsLYS+UxYQD2sUiBMgIWOJvSiMciPmKpfvlw27?=
+ =?iso-8859-1?Q?48zb41lLvXsGnLBJkoJ64d51ZAQ+XZs2XTA5HnXRAmLyMB0al27u3X+Vlm?=
+ =?iso-8859-1?Q?6nnJp+zpvZMtE4/2yyccJoQhoCljRxLkpPbVex+0d1b18HRTZaeIKiBMCk?=
+ =?iso-8859-1?Q?j3dD+QiqRgEvs7E2Zpb2U3htQD9Ea+OWdJPk6KeJPj4VTVXbE8zoSTi4bW?=
+ =?iso-8859-1?Q?HwXQlgZoyVjXYTnJTLQCumcoGW2OpQm7+ucM5hcyi7QEWwHpyUbjbrYlPM?=
+ =?iso-8859-1?Q?QKGz3jnBNxX55hFI1faee1PbB/d/akE0aXDjjy3Z7zOIm6PtZEUMupNUUl?=
+ =?iso-8859-1?Q?7dlEI4yDmw9dXAdEQyAhgbDoQGZvs8naa1S+ruK6ejA4WkFaZg1Fpeq0B0?=
+ =?iso-8859-1?Q?gIUMpQbLMpiqYy/K4MkP48RYx4EPhv42oxksYopNafM5RJpffe5O5iCzfC?=
+ =?iso-8859-1?Q?nMh8QLh3ivFSReZurNdJbOSFpVM6mGzT+giGLQIMozs0jFTKyPTlRxu+mI?=
+ =?iso-8859-1?Q?2LGkn66FBQZqPVks5rCKoVO75BRSEKTFLh1fFwigd+VR0XDyVPU3pCXtn6?=
+ =?iso-8859-1?Q?qZdcq5ufT8X8XmyePPYGWWVFePnwxvr8DLcSBa8NWYNsf+Uo+rJ/QbziWv?=
+ =?iso-8859-1?Q?pB60HkuBPn3vmNg/Z5SKUu+3pR5rESd7pBcjCAcAjixms2FNr29C/9mGt+?=
+ =?iso-8859-1?Q?kbQpiFfGnBdVCVOLGatvgpXYgJXveAyLtstpyrd4kxX2kPNnW+szUGprpc?=
+ =?iso-8859-1?Q?KYjqdDodb3BxGG6AxmXoDenTb7U2VT4mF2CvxPJBScbFiz7s6VPYjlbDwS?=
+ =?iso-8859-1?Q?jaICPs6F8gtmkFTIHFIKxKQ4jje0BJHeZX9oyo3u0uAk6UpZsqs4k7kYRF?=
+ =?iso-8859-1?Q?BbiAsEK+A4W0FeRsAUCSp6N2hF5YOYcdHl9njQj82KhPiKOwK7jW/M3S63?=
+ =?iso-8859-1?Q?YKi4hk8UnWr1qtC1?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?TaDpEQBpI0z/EF56A8uMyHk/GrT2tJt5LkUuefFFoEonyuXhq4BmFuTLxN?=
+ =?iso-8859-1?Q?Hr2rCowOvD5Q/9ilfSW4LPAcyYO5rylMInbaxLeYPUuFEMvVdMziQ+tds9?=
+ =?iso-8859-1?Q?hAVxD8ptcqZXC/a7Ll3MGDhL5GDxw7SDOaTGEVAChX+h0VorOlUSql9GBW?=
+ =?iso-8859-1?Q?o6ztAq9rSTqhDp8PQkP85irxSIPPch/DJVEbRTof8AJ7hgD9yufeliID2+?=
+ =?iso-8859-1?Q?3z/BZdc+bpLLOLth8vSvf3QWqDA6ACBwb0rQRj1yl4U2t3GtMJvRe1KKm5?=
+ =?iso-8859-1?Q?uHpEyAZ1NFPXYiliaC21D0BckPeCOgxobvnaDKZqOVUsbEiOFlzdQYaWqT?=
+ =?iso-8859-1?Q?U2fyYotNhDrEndn1QR6WDJ/8d5Xc/mhNFFgKq0EwiEu0+leyr26Kqd/HMx?=
+ =?iso-8859-1?Q?yLB8SnS0a8x/lHVVDN4YUZ+0meLKqCZc9iOpG+J1Slwcd863s+MiIOddDJ?=
+ =?iso-8859-1?Q?XJXW5EZQ9lBhrOXB6IDgjBI3Aie7aPLnAKlD42azsTxgl5/xmb0jo7uG+G?=
+ =?iso-8859-1?Q?vfTMuOuR040s6RMkp1idnniYAqDgxjZZ5AMbMZVUxbGRcn5cu9itk2F6PQ?=
+ =?iso-8859-1?Q?+yzMlMbSdpGhmMp1sC81MZpjKtJ8lNsK1ce5On3/x4SeoPvEXZLZbtlvVo?=
+ =?iso-8859-1?Q?hL2sYKsvaPDPDmwbLY4DkzzOU5Ap7ygBUxEZQ5tGBiJ/rdDwpHAzyQ7HKt?=
+ =?iso-8859-1?Q?zGgHSDk24TMkV0cexfzI54FIXOJF/e56+fJ7CJDivG/WKtTIV7dfyvFGKl?=
+ =?iso-8859-1?Q?IhQ2T+FTnTjM4qAYyErYSDveQLqQBoAgZHpRIgXi6BvtUd1FKXNnOGIe+g?=
+ =?iso-8859-1?Q?jGGrbMUvew2zmGGUwadvTm2/9Jym5pdKn6LfzmOVRTvAcapcrvc6bfVmnE?=
+ =?iso-8859-1?Q?mdKT+taxAxfUCLXaK4DuzXAhMGZB14uTT9/yqVXWqJuNt40+aefWxXvNnw?=
+ =?iso-8859-1?Q?NVDNyRixF6ELptJJGY+gI6yaxYbXzy0QgMe9zP2MtKt0wiH9uSitGNUuQ2?=
+ =?iso-8859-1?Q?vQbA7ppTL4rvq+s4sxW/IygfXeOZICy4In52AEhlXZjHZNJ/MS/N463cpT?=
+ =?iso-8859-1?Q?ABWJzbRmYT0ckTU30MdUAfrYjstU/fbN1Yp7UBMkGtJX61JgUkCtrH5QHI?=
+ =?iso-8859-1?Q?heslsxTyOF1tq7SqaW3LIhH5OzeTRbAYKrORUhhXAdMkKLmp0Y3ZrlYOXS?=
+ =?iso-8859-1?Q?9tw0p3d5eFtNULpQXXZqUgdPEyqPR3+j0ASZ0LV/zdQteRT8R04V04g3yd?=
+ =?iso-8859-1?Q?7INNm968JkTI7vpZ6go3OtuYjuxjuppoVRI8Y9DY3GSKfos3DpHm1LPJeO?=
+ =?iso-8859-1?Q?Q5s7XPuJadMzj1ti263lbVp4k/hbRdBrdmGRrw0KS6pWhR6l68b1hZSVCm?=
+ =?iso-8859-1?Q?aU13bmlD8hdSX3UgE5lTq5XQbsDpM2mueSy5COBLcPTO50TekA2ATNHZrf?=
+ =?iso-8859-1?Q?bPp4bM0sUkH6V89Bebynpb5eQ5+nwS0Y8TNM7tDFVwleHdGhx5tjRIbw6c?=
+ =?iso-8859-1?Q?i/5Ul9vmGWzg6D1w2ncJrmGMyTxJWuyHBEhAg+yJ+DT8ZmmqF9brdMlrnn?=
+ =?iso-8859-1?Q?/wELOPP7+d98c3ynE+kktXahGv7lcQgFoo3sUV0r8LVSrkOwdzMCOClmXU?=
+ =?iso-8859-1?Q?O1TF8PWAgLTiLGBQdb2sW4UNBkn85hY3tv3Ql4CHFb3vaZBY2l2YIOWQ?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e42a4c6-db9b-470b-e38f-08dda376c5db
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 14:47:48.1628
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n+NiMRFZ5yZt+RreCisRXOVjuRoQUdnwp90nIaTH2VtUpA+XLIVfGGW5bf/4TmqeKe3YnGxJKkIHBKyBHDuPYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB8865
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 04, 2025 at 09:56:20PM +0800, Huacai Chen wrote:
-> On Tue, Jun 3, 2025 at 2:44â€¯PM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > On Tue, Jun 03, 2025 at 12:11:48PM +0800, Huacai Chen wrote:
-> > > On Sat, May 31, 2025 at 7:39â€¯PM Yao Zi <ziyao@disroot.org> wrote:
-> > > >
-> > > > Previously 1 is unconditionally taken as current brightness value. This
-> > > > causes problems since it's required to restore brightness settings on
-> > > > resumption, and a value that doesn't match EC's state before suspension
-> > > > will cause surprising changes of screen brightness.
-> > > laptop_backlight_register() isn't called at resuming, so I think your
-> > > problem has nothing to do with suspend (S3).
-> >
-> > It does have something to do with it. In loongson_hotkey_resume() which
-> > is called when leaving S3 (suspension), the brightness is restored
-> > according to props.brightness,
-> >
-> >         bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
-> >         if (bd) {
-> >                 loongson_laptop_backlight_update(bd) ?
-> >                 pr_warn("Loongson_backlight: resume brightness failed") :
-> >                 pr_info("Loongson_backlight: resume brightness %d\n", bd->props
-> > .brightness);
-> >         }
-> >
-> > and without this patch, props.brightness is always set to 1 when the
-> > driver probes, but actually (at least with the firmware on my laptop)
-> > the screen brightness is set to 80 instead of 1 on cold boot, IOW, a
-> > brightness value that doesn't match hardware state is set to
-> > props.brightness.
-> >
-> > On resumption, loongson_hotkey_resume() restores the brightness
-> > settings according to props.brightness. But as the value isn't what is
-> > used by hardware before suspension. the screen brightness will look very
-> > different (1 v.s. 80) comparing to the brightness before suspension.
-> >
-> > Some dmesg proves this as well, without this patch it says
-> >
-> >         loongson_laptop: Loongson_backlight: resume brightness 1
-> >
-> > but before suspension, reading
-> > /sys/class/backlight/loongson3_laptop/actual_brightness yields 80.
-> OK, that makes sense. But the commit message can still be improved, at
-> least replace suspension/resumption with suspend/resume. You can grep
-> them at Documentation/power.
 
-Oops, thanks for the hint. Seems suspend/resume are wider used, and I
-will reword the commit message in v2 :)
 
-> Huacai
+Hello,
 
-Regards,
-Yao Zi
+kernel test robot noticed a 26.0% improvement of stress-ng.pipeherd.ops_per_sec on:
 
-> >
-> > > But there is really a problem about hibernation (S4): the brightness
-> > > is 1 during booting, but when switching to the target kernel, the
-> > > brightness may jump to the old value.
-> > >
-> > > If the above case is what you meet, please update the commit message.
-> > >
-> > > Huacai
-> >
-> > Thanks,
-> > Yao Zi
-> >
-> > > >
-> > > > Let's get brightness from EC and take it as the current brightness on
-> > > > probe of the laptop driver to avoid the surprising behavior. Tested on
-> > > > TongFang L860-T2 3A5000 laptop.
-> > > >
-> > > > Cc: stable@vger.kernel.org
-> > > > Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
-> > > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > > ---
-> > > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-> > > > index 99203584949d..828bd62e3596 100644
-> > > > --- a/drivers/platform/loongarch/loongson-laptop.c
-> > > > +++ b/drivers/platform/loongarch/loongson-laptop.c
-> > > > @@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
-> > > >         if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
-> > > >                 return -EIO;
-> > > >
-> > > > -       props.brightness = 1;
-> > > > +       props.brightness = ec_get_brightness();
-> > > >         props.max_brightness = status;
-> > > >         props.type = BACKLIGHT_PLATFORM;
-> > > >
-> > > > --
-> > > > 2.49.0
-> > > >
-> > > >
-> 
+
+commit: ee5eda8ea59546af2e8f192c060fbf29862d7cbd ("pipe: change pipe_write() to never add a zero-sized buffer")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+
+
+testcase: stress-ng
+config: x86_64-rhel-9.4
+compiler: gcc-12
+test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
+parameters:
+
+	nr_threads: 100%
+	testtime: 60s
+	test: pipeherd
+	cpufreq_governor: performance
+
+
+
+
+
+
+Details are as below:
+-------------------------------------------------------------------------------------------------->
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250604/202506042255.d1d90443-lkp@intel.com
+
+=========================================================================================
+compiler/cpufreq_governor/kconfig/nr_threads/rootfs/tbox_group/test/testcase/testtime:
+  gcc-12/performance/x86_64-rhel-9.4/100%/debian-12-x86_64-20240206.cgz/lkp-icl-2sp7/pipeherd/stress-ng/60s
+
+commit: 
+  f2ffc48de2 ("Merge patch series "pipe: don't update {a,c,m}time for anonymous pipes"")
+  ee5eda8ea5 ("pipe: change pipe_write() to never add a zero-sized buffer")
+
+f2ffc48de2017c69 ee5eda8ea59546af2e8f192c060 
+---------------- --------------------------- 
+         %stddev     %change         %stddev
+             \          |                \  
+    138055 ± 18%     +33.4%     184128 ± 14%  cpuidle..usage
+      0.19 ±160%  +61380.1%     115.68 ±185%  perf-sched.wait_time.avg.ms.__cond_resched.__mutex_lock.constprop.0.anon_pipe_read
+      0.20 ±153%  +2.1e+05%     418.07 ±203%  perf-sched.wait_time.max.ms.__cond_resched.__mutex_lock.constprop.0.anon_pipe_read
+      3930            +7.8%       4235 ±  3%  vmstat.procs.r
+   7317310 ±  4%     -14.5%    6253797 ± 10%  vmstat.system.cs
+      1025 ± 38%    +135.0%       2409 ± 19%  sched_debug.cfs_rq:/.util_est.avg
+   3586492 ±  4%     -15.2%    3040317 ± 10%  sched_debug.cpu.nr_switches.avg
+    474729 ± 17%     +49.6%     710035 ± 22%  sched_debug.cpu.nr_switches.stddev
+      3.32 ± 46%      +1.5        4.82 ± 13%  perf-profile.calltrace.cycles-pp.perf_mmap__push.record__mmap_read_evlist.__cmd_record.cmd_record.run_builtin
+      3.32 ± 46%      +1.5        4.82 ± 13%  perf-profile.calltrace.cycles-pp.record__mmap_read_evlist.__cmd_record.cmd_record.run_builtin.handle_internal_command
+      3.32 ± 46%      +1.5        4.82 ± 13%  perf-profile.children.cycles-pp.perf_mmap__push
+      3.32 ± 46%      +1.5        4.82 ± 13%  perf-profile.children.cycles-pp.record__mmap_read_evlist
+      0.18 ± 12%     -41.7%       0.10 ± 31%  stress-ng.pipeherd.context_switches_per_bogo_op
+    107177 ±  9%     -28.5%      76592 ± 21%  stress-ng.pipeherd.context_switches_per_sec
+ 2.331e+09 ±  3%     +26.0%  2.937e+09 ± 10%  stress-ng.pipeherd.ops
+  38728105 ±  3%     +26.0%   48797851 ± 10%  stress-ng.pipeherd.ops_per_sec
+ 4.578e+08 ±  4%     -15.2%  3.882e+08 ± 10%  stress-ng.time.voluntary_context_switches
+ 3.182e+10            +8.2%  3.443e+10 ±  2%  perf-stat.i.branch-instructions
+      0.54 ±  3%      -0.1        0.41 ± 12%  perf-stat.i.branch-miss-rate%
+ 1.723e+08 ±  3%     -18.5%  1.404e+08 ± 10%  perf-stat.i.branch-misses
+      4.74 ± 10%      +0.6        5.31 ±  4%  perf-stat.i.cache-miss-rate%
+ 2.402e+08           -22.2%  1.869e+08 ±  4%  perf-stat.i.cache-references
+   7536250 ±  4%     -15.0%    6402680 ± 10%  perf-stat.i.context-switches
+      1.39            -5.3%       1.31 ±  2%  perf-stat.i.cpi
+   3691320 ±  6%     -26.5%    2711535 ± 17%  perf-stat.i.cpu-migrations
+ 1.427e+11            +6.2%  1.515e+11 ±  2%  perf-stat.i.instructions
+      0.73            +5.9%       0.77 ±  2%  perf-stat.i.ipc
+    175.44 ±  5%     -18.8%     142.50 ± 12%  perf-stat.i.metric.K/sec
+      0.54 ±  4%      -0.1        0.41 ± 13%  perf-stat.overall.branch-miss-rate%
+      4.43 ± 11%      +0.7        5.18 ±  3%  perf-stat.overall.cache-miss-rate%
+      1.37            -5.7%       1.29 ±  2%  perf-stat.overall.cpi
+      0.73            +6.1%       0.78 ±  2%  perf-stat.overall.ipc
+ 3.128e+10            +8.3%  3.386e+10 ±  2%  perf-stat.ps.branch-instructions
+ 1.692e+08 ±  3%     -18.5%  1.379e+08 ± 10%  perf-stat.ps.branch-misses
+ 2.362e+08           -22.2%  1.839e+08 ±  4%  perf-stat.ps.cache-references
+   7395716 ±  4%     -15.0%    6283076 ± 10%  perf-stat.ps.context-switches
+   3621055 ±  6%     -26.5%    2660111 ± 17%  perf-stat.ps.cpu-migrations
+ 1.403e+11            +6.3%   1.49e+11 ±  2%  perf-stat.ps.instructions
+ 8.691e+12            +5.3%  9.152e+12 ±  2%  perf-stat.total.instructions
+
+
+
+
+Disclaimer:
+Results have been estimated based on internal Intel analysis and are provided
+for informational purposes only. Any difference in system hardware or software
+design or configuration may affect actual performance.
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
