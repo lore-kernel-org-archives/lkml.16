@@ -1,57 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422AE223DC1;
-	Wed,  4 Jun 2025 10:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0C6223DC1;
+	Wed,  4 Jun 2025 10:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749032651; cv=none; b=pvnmswse2M1kZNwxNZ1l+0cGkIZ9klUWb7iQW8W9CtbHSAhPXB4cQTNU+fSHJ5zkeflgjtMUwOir/jUMNfrousw48KJoxOHi1LHZHm+kBpUyg2Dd4NG040eZG8Z9fLRbUgvDHH+orSWtpkOLnoS93mvVOCqkH8W8eH3LxmB5NFM=
+	t=1749032718; cv=none; b=a910ksE/hxe4IKmRrbuiPF3Y8C8eeVwK46KJCv1WbqKsmuOS5OXZB+6BgE+KVoEi6IjX0fTukP8ldSj2x9Em1jJ4bwjXZR2i36w/89ouzHm0XRLdShT0ORNhsDvr7MsLIdDAtKvpDUXP2VQWTDtfX9wzTTLXHDDNyLVIAgdT6GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749032651; c=relaxed/simple;
-	bh=CkA7t5JHKnLC81OTeJgx+nWLwzFbh3oMj2svLeegIBI=;
+	s=arc-20240116; t=1749032718; c=relaxed/simple;
+	bh=BNG3k2EZnzx3U0v7bx3XO6iS4R70EkPOxvqtIZ8NH5A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AXMGN6YcX0Gd1M+JYwMhLiy/E7FrqHEgT2QDmTEorle3RzRIoJYV2o3iNXnSWHKoMA8sa514hmYTg4RR/pKTNEGUnbegNKsIg7AAXH0GznnTQtaeHTwgjaAWrAK8EvKA5TmDtcIeylqRm+UFDgrhneRogs8UkGbBkw+tpjiVIz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSV2UJw/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dUVyLjBQQ9OB0iJzbukF7+BPYETVVZ/Bxv5byYLFFwgJfjODqzjR/QI0iWzfPvE0d4/PUlmV7fimyPfYRXtCM5b7/j8t9TWiJ92AEO6q0HNHwCEDgfQpJKHl/c132xQWENCBj8woH7GwVd14uJ3v+00sNZVMlKscUkuC/COOe8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBjigJuM; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSV2UJw/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6737C4CEE7;
-	Wed,  4 Jun 2025 10:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749032650;
-	bh=CkA7t5JHKnLC81OTeJgx+nWLwzFbh3oMj2svLeegIBI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uSV2UJw/i73iytoNxBk5Iq4aWiF3a/acB6XUW19B7KG1PXEN5f6k5B2Ze3TM0qCDo
-	 4VDjEqfa30L+LZx9eKuMQ7l1S61c9UDyfF6+jDaATvRlem3OHYhVNwWfFKOpGO1rYk
-	 T/ddZxpTCRY2C1NI5YwvkfVom5CPEBCjXNMoRqcTHtTs9zfgMQ9LQug8BJ7mNF9pm8
-	 mWUsU24tydD9GKZb4+5cD4y208fFnLyOnqObAK3XPzSgMB3Mm1boem0vcxnZONCRc7
-	 43nKuL9JjINnDmWe2KF79z1QsNZXYLy6SV2qdxPxWloUtUPwvACeDhsQYxmjnDEzqm
-	 e6jHQ/4+4wcuQ==
-Date: Wed, 4 Jun 2025 12:24:03 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Lyude Paul <lyude@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4 17/20] gpu: nova-core: compute layout of the FRTS
- region
-Message-ID: <aEAew5aBnfSqXFdT@cassiopeiae>
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-17-05dfd4f39479@nvidia.com>
- <632966ba8231e8f3c20350b217b225301280cdd3.camel@redhat.com>
- <DADGJZGG5PXE.170H96D26HIN6@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBjigJuM"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b2f0dc1424aso1058791a12.0;
+        Wed, 04 Jun 2025 03:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749032716; x=1749637516; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QBZorERfZGVAeB4b9MQwohizAQ7RVji7qJz8RExp9pY=;
+        b=OBjigJuM+TBFoL14Ls2dFluDiRsB9lpB0stdbpVE3O+KLi43qwAJf6+SkFLqf8wtrh
+         z4E8Hrp2utOJPa6ZcPc3szHkwmUchc+rJXlKKIMfh2IxF+l/xXSFulGcXHql4cZ9801d
+         T2eJJoP9gW6iP8ADUWbKs6re3YFt3QMI988YxodWoMBM/5WKZ/cCcXXrrVCkvXmSUUn7
+         VP/8NC9MAH21irCgftqeFgCa7dkugQcmr8l5TxyzpiHBgB6MCtwrFHikujFDU9WXQAnp
+         frav6voCNGHfKf3fLdAq5DLdNDib+IceOfOBegVPZkaWnNWXjzOFf6FtIiSgraVcxN5G
+         7xGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749032716; x=1749637516;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QBZorERfZGVAeB4b9MQwohizAQ7RVji7qJz8RExp9pY=;
+        b=pm/1KrGB/h9ESD+J88lHyVzUPBxPte3JkkM+RkExvnfauF6gOB/A3fu03BaatkjdwC
+         sGvAvQclJ1f/oLnG/cq5GQrnikin8IxlF2LhxVTBWo7yvOtstVZO5uNXzboDgbOfsZN/
+         hkeqjoMe2EFtQOs6a/QEOuGPYGur2mJ60ZTjhc94Hqk8Z/C/gcrzbvZgPPFYOyyCZS1B
+         1RkClGSfw0qz4d0F592l16urYUDSmR/HsQNt//lSfJhz/HHg5oKkaTH+3qHpjPtVkTRc
+         +jndPa8BVwPmJd7FQGE1PcHddYulnlrMtJ51ReTXFGLe0aXsMx3sfwM/Pam6I0R4mJsx
+         7JCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWTLexuRBaIreLohn9I0vD3DcnifIAbEl3ni3LpXXGMBFCKbEtMnF2x1cFcOLQKRNZIeDChQNX/pKL@vger.kernel.org, AJvYcCW24ioTtwjPRHwn8tsQUvi9QZWyRUua3gL5nI0xD5vGkZPmdV7j5VOcjA0nkCuds6eSAE/XZIDqFRkapfc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9id+wA9qn7Wb9QeAoFoUuhjaotJhoEUYwrhdS5Zx10x8yJNNQ
+	WjLrxpdxYH724mhIU7IhGICBQ28K2RdTt0pdlnBFmWuDWaPnuANBPL1z
+X-Gm-Gg: ASbGncsVnX5MUGbvBz+IqYRMhiMkcKeoqmYff8Zc8r/yutjES7lPQCAeMg6eFd0WlqC
+	on8iQKqjyc0T2pSWDH0wrXrCyJmlHjTjACC7BK+v7ZOvF4r6eLa/N0RjUkyYPCpDmXelIiq3RGo
+	zlzj8NOffh9MuxzXkOWRZbQVbmmvl0CIT0utvyLo7O7Fo/wMAP10rED9DlJwUk/ocw5+4nrYOau
+	PpU6Uq+oRP0cC02vvLgtNrxNdIbqrhOvUp/TS7KJ0KrspNwZS8CKddC3+sWC1Glu7iZxBkogolw
+	n71Ji7kbu6NmKEtCP1X8YyQdRctjFldZJgw+bIOmv0dOGG5g
+X-Google-Smtp-Source: AGHT+IEKyQ32HiyWlJskTxRYL8AQnVG4qWWHt6Qqr3ywr5giPCq3wD9L9VKOqjgiM8Sod4EwUE2ZGQ==
+X-Received: by 2002:a17:90b:38c4:b0:312:959:dc45 with SMTP id 98e67ed59e1d1-3130cca4fdbmr3399852a91.3.1749032715722;
+        Wed, 04 Jun 2025 03:25:15 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:7b3::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2c2fa3sm9473906a91.19.2025.06.04.03.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 03:25:15 -0700 (PDT)
+Date: Wed, 4 Jun 2025 07:25:09 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: linux-rockchip@lists.infradead.org,
+	Hugh Cole-Baker <sigmaris@gmail.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] PCI: rockchip-host: Retry link training on
+ failure without PERST#
+Message-ID: <aEAfBc3gsVTmkCyE@geday>
+References: <aEAOiO_YIqWH9frQ@geday>
+ <317943F7-8658-436D-9E3C-05CB6404F122@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,17 +81,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DADGJZGG5PXE.170H96D26HIN6@nvidia.com>
+In-Reply-To: <317943F7-8658-436D-9E3C-05CB6404F122@gmail.com>
 
-On Wed, Jun 04, 2025 at 01:18:37PM +0900, Alexandre Courbot wrote:
-> On Wed Jun 4, 2025 at 6:14 AM JST, Lyude Paul wrote:
-> > On Wed, 2025-05-21 at 15:45 +0900, Alexandre Courbot wrote:
-> >> +                const NV_PRAMIN_SIZE: u64 = 0x100000;
-> >
-> > Don't leave those size constants out, they're getting lonely :C
+On Wed, Jun 04, 2025 at 02:20:20PM +0400, Christian Hewitt wrote:
+> I think you have me confused with another Christian (or auto-complete
+> scored a new victim). Sadly I have no clue about PCI and not a lot of
+> knowledge on RK3399 matters :)
 > 
-> Not quite sure where I should put these; they are not used (for now)
-> anywhere else, so the relevant scope is not obvious to me. Any
-> suggestion?
+> CH.
 
-I assume Lyude means that you should use SZ_1M here. :)
+Hi Christian,
+
+I did not confuse you. I thought your work with LibreElec partially
+involved getting the ol' hand dirty with RK3399 patches. But if it's not
+the case, I'll drop you from future Cc: on this subject.
+
+Thanks!
+Geraldo Nascimento
