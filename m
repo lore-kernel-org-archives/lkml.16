@@ -1,223 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7A71F4606;
-	Wed,  4 Jun 2025 06:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22B682B9A9;
+	Wed,  4 Jun 2025 06:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749019643; cv=none; b=C4b0Q+tRHdPcqq+UCnWWpnhWtxgAAH54pVzgk0fVUmtJh69lcVOdNYVPt4frVzoTMLJcq8AU0WyXLgUE73souE4jXamOEPygjp1OxkZWxnTB+drFqFcQYVnMVhIxvC+EsvJFYa8vOqQYWa8UWSiM1qLAHFzi3SEcKFzEdN/YVoU=
+	t=1749019953; cv=none; b=O2qLVl7JppewgTupMuGaCDtAUSkZ2dISUeb5zwg70uTSFiCornaoQ46HKlEhqwrqXjOcpsdcfzzZb3fBR4gqMJGnK/IXSur3sWNJTSOkqnj1yoM4F/0jKzVPC+9D7GH9N2Nx6+Y/MCNs8aPmFnyo35zZ+UQa5giXFU86Ir31NqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749019643; c=relaxed/simple;
-	bh=SVuq2csc8B+tntGJ/PFd3caemy9vyyP3hUodtswqWwA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VLLm04oVt6fikgOhtf/GspXEnTHe7jovXLWUkmQ9keoHvkao64xH85lwwDdyCRH5UVzgdaGDhoY7t0FhwkCgi2dHtHaFynOuFxAi+7+VXpZy7/bKgoVLPtclgp4eF1exGrJCZWScEUOipCiFkGhqA7RfQOtDJLN8bFTWanmzDxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+UQCwsq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+UQCwsq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD56C4CEE7;
-	Wed,  4 Jun 2025 06:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749019642;
-	bh=SVuq2csc8B+tntGJ/PFd3caemy9vyyP3hUodtswqWwA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=o+UQCwsqi2NvZG7jB2mPLYKlfETFtz7e/3kAD/cMMGuNU44cRY75oy2YgXqk1lyFV
-	 4hxJIOyrEBYGkX4x9gfE0WoZMhbqrJTDVFWUr1Gibz/QwRqY1IUqhnpZqF9lttalT9
-	 1eT1z7/OKBQRHd8xniK5iv41Lk54Lw87gpYyVy5/S3SDsxDrj9hQ6Mo68TJ76Jdynz
-	 UDILQx5cQrQG+OAD1DiBNkkmjnClYds1VIAb7oJEqriLg4r5tsPJZurHGMP6pwlWWl
-	 rfJXsicBelvHWXc6dTm0ZNjGE/vK3TiFRJGNtHWD+xH72vzIrvs1LEVKYCAcWI/2El
-	 YDvcxBvmGfpeA==
-Message-ID: <5fb1bcc0-db25-466a-b315-685d8b362245@kernel.org>
-Date: Wed, 4 Jun 2025 08:47:15 +0200
+	s=arc-20240116; t=1749019953; c=relaxed/simple;
+	bh=G5m/DmmWuNvT20bPcL1Uarq9Pf4dQmINhuu8phslNrA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KpvH8kWgyedBPtL6qxIAHOlP0aAUI/hYV6EKMzqpbIyqLL2dznBsTh0YjoQ5B+eavh3QeK4D+MZ041RDuZrDFULyzTTSrkEPFpZnuQ9W/C9EN7FL0V7UYilB0QnEnsbslJF2PXDr96GVgIQAf4z5z1Y6BqQa/k9LzK3RqjFJ/tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: EXyizG4rTayaEo+Z3yN2oQ==
+X-CSE-MsgGUID: Get4dq+gQSqZI32LIDBxJQ==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 04 Jun 2025 15:52:22 +0900
+Received: from ubuntu.adwin.renesas.com (unknown [10.226.93.1])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 098F8417CA9D;
+	Wed,  4 Jun 2025 15:52:16 +0900 (JST)
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: prabhakar.mahadev-lad.rj@bp.renesas.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com
+Cc: biju.das.jz@bp.renesas.com,
+	john.madieu@gmail.com,
+	netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Madieu <john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 0/4] Add support for GBETH IPs found on RZ/G3E SoCs
+Date: Wed,  4 Jun 2025 08:51:56 +0200
+Message-ID: <20250604065200.163778-1-john.madieu.xa@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/6] dt-bindings: mfd: add pf1550
-To: samuel.kayode@savoirfairelinux.com, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Dmitry Torokhov
- <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
- Abel Vesa <abelvesa@kernel.org>, Abel Vesa <abelvesa@linux.com>,
- Robin Gong <b38343@freescale.com>,
- Enric Balletbo i Serra <eballetbo@gmail.com>
-References: <20250603-pf1550-v4-0-bfdf51ee59cc@savoirfairelinux.com>
- <20250603-pf1550-v4-1-bfdf51ee59cc@savoirfairelinux.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250603-pf1550-v4-1-bfdf51ee59cc@savoirfairelinux.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/06/2025 20:27, Samuel Kayode via B4 Relay wrote:
-> From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-> 
-> Add a DT binding document for pf1550 PMIC. This describes the core mfd
-> device along with its children: regulators, charger and onkey.
-> 
-> Signed-off-by: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-> ---
-> v4:
->  - Address Krzystof's feedback:
->    - Filename changed to nxp,pf1550.yaml
->    - Replace Freescale with NXP
->    - Define include before battery-cell
->    - Drop operating-range-celsius in example since
->      nxp,thermal-regulation-celsisus already exists
->  - Not sure if there is similar binding to thermal-regulation...
->    for regulating temperature on thermal-zones? @Sebastian and @Krzysztof
-> v3:
->  - Address Krzysztof's feedback:
->    - Fold charger and onkey objects
->    - Drop compatible for sub-devices: onkey, charger and regulator.
->    - Drop constant voltage property already included in
->      monitored-battery
->    - Fix whitespace warnings
->    - Fix license
-> v2:
->  - Add yamls for the PMIC and the sub-devices
-> ---
->  .../devicetree/bindings/mfd/nxp,pf1550.yaml        | 139 +++++++++++++++++++++
->  1 file changed, 139 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/nxp,pf1550.yaml b/Documentation/devicetree/bindings/mfd/nxp,pf1550.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..add895311b892a6731f54e47fcaaba8dfdac14b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/nxp,pf1550.yaml
-> @@ -0,0 +1,139 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/nxp,pf1550.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP PF1550 Power Management IC
-> +
-> +maintainers:
-> +  - Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-> +
-> +description: |
+Hi all,
 
-Drop |, Do not need '|' unless you need to preserve formatting.
+This series adds support for the two Gigabit Ethernet (GBETH) interfaces on the
+Renesas RZ/G3E (R9A09G047) SoCs and their enablement on the SMARC-II EVK. This
+is achieved by integrating the necessary clock/reset signals prior to defining
+common DTS nodes, and enabling both GBETH ports at the board level.
 
-> +  PF1550 PMIC provides battery charging and power supply for low power IoT and
-> +  wearable applications. This device consists of an i2c controlled MFD that
-> +  includes regulators, battery charging and an onkey/power button.
-> +
-> +$ref: /schemas/power/supply/power-supply.yaml
-> +
-> +properties:
-> +  compatible:
-> +    const: nxp,pf1550
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  wakeup-source: true
-> +
-> +  regulators:
-> +    type: object
-> +
-> +    patternProperties:
-> +      "^(ldo[1-3]|sw[1-3]|vrefddr)$":
-> +        type: object
-> +        $ref: /schemas/regulator/regulator.yaml
-> +        description:
-> +          regulator configuration for ldo1-3, buck converters(sw1-3)
-> +          and DDR termination reference voltage (vrefddr)
-> +        unevaluatedProperties: false
-> +
-> +    additionalProperties: false
+Here are pach dependencies:
 
-Please put it after type:object
+ - Patch 1/4 is based on renesas-drivers tree, on top of renesas-clk-for-v6.17
+ branch
+ - Patches [2,3,4]/4 are based on renesas-devel tree, on top of
+ renesas-dts-for-v6.17 branch
 
-> +
-> +  monitored-battery:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
+Below are some test logs, involving pings, then unbind/bind, then pings again:
 
-Drop, comes from power supply schema
+```
+root@smarc-rzg3e:~# ping -I eth0 google.com
+PING google.com (172.217.20.174) from 192.168.1.245 eth0: 56(84) bytes of data.
+64 bytes from waw02s07-in-f14.1e100.net (172.217.20.174): icmp_seq=1 ttl=117 time=4.42 ms
+64 bytes from waw02s07-in-f14.1e100.net (172.217.20.174): icmp_seq=2 ttl=117 time=3.87 ms
+64 bytes from waw02s07-in-f14.1e100.net (172.217.20.174): icmp_seq=3 ttl=117 time=3.68 ms
+64 bytes from waw02s07-in-f14.1e100.net (172.217.20.174): icmp_seq=4 ttl=117 time=3.83 ms
+^C
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 3.680/3.949/4.415/0.278 ms
+root@smarc-rzg3e:~# 
 
-> +    description: |
-> +      A phandle to a monitored battery node that contains a valid value
-> +      for:
-> +      constant-charge-voltage-max-microvolt.
-> +
-> +  nxp,thermal-regulation-celsius:
-> +    description:
-> +      Temperature threshold for thermal regulation of charger in celsius.
-> +    enum: [ 60, 75, 90, 105 ]
-> +
-> +  nxp,min-system-microvolt:
-> +    description:
-> +      System specific lower limit voltage.
-> +    enum: [ 3500000, 3700000, 4300000 ]
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
+root@smarc-rzg3e:~# ping -I eth1 google.com
+PING google.com (142.250.75.238) from 192.168.1.242 eth1: 56(84) bytes of data.
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=1 ttl=251 time=4.72 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=2 ttl=251 time=4.34 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=3 ttl=251 time=5.66 ms
+^C
+--- google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 4.338/4.904/5.659/0.555 ms
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# echo "15c40000.ethernet" > /sys/bus/platform/drivers/renesas-gbeth/bind
+[  413.422009] renesas-gbeth 15c40000.ethernet: IRQ sfty not found
+[  413.429570] renesas-gbeth 15c40000.ethernet: User ID: 0x0, Synopsys ID: 0x52
+[  413.436749] renesas-gbeth 15c40000.ethernet:         DWMAC4/5
+[  413.441974] renesas-gbeth 15c40000.ethernet: DMA HW capability register supported
+[  413.449536] renesas-gbeth 15c40000.ethernet: RX Checksum Offload Engine supported
+[  413.457098] renesas-gbeth 15c40000.ethernet: Wake-Up On Lan supported
+[  413.463617] renesas-gbeth 15c40000.ethernet: Enable RX Mitigation via HW Watchdog Timer
+[  413.471807] renesas-gbeth 15c40000.ethernet: Enabled L3L4 Flow TC (entries=8)
+[  413.478982] renesas-gbeth 15c40000.ethernet: Enabled RFS Flow TC (entries=10)
+[  413.486148] renesas-gbeth 15c40000.ethernet: Using 32/32 bits DMA host/device width
+[  413.523040] renesas-gbeth 15c40000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-0
+[  413.534875] renesas-gbeth 15c40000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-1
+[  413.546218] renesas-gbeth 15c40000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-2
+[  413.556666] renesas-gbeth 15c40000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-3
+[  413.633799] renesas-gbeth 15c40000.ethernet eth0: PHY [stmmac-1:07] driver [Microchip KSZ9131 Gigabit PHY] (irq=27)
+[  413.659645] dwmac4: Master AXI performs fixed burst length
+[  413.666549] renesas-gbeth 15c40000.ethernet eth0: No Safety Features support found
+[  413.674263] renesas-gbeth 15c40000.ethernet eth0: IEEE 1588-2008 Advanced Timestamp supported
+[  413.683733] renesas-gbeth 15c40000.ethernet eth0: registered PTP clock
+[  413.695546] renesas-gbeth 15c40000.ethernet eth0: configuring for phy/rgmii-id link mode
+[  416.576645] renesas-gbeth 15c40000.ethernet eth0: Link is Up - 1Gbps/Full - flow control off
+root@smarc-rzg3e:~#
+root@smarc-rzg3e:~# echo "15c30000.ethernet" > /sys/bus/platform/drivers/renesas-gbeth/bind
+[  430.269771] renesas-gbeth 15c30000.ethernet: IRQ sfty not found
+[  430.277347] renesas-gbeth 15c30000.ethernet: User ID: 0x1, Synopsys ID: 0x52
+[  430.284525] renesas-gbeth 15c30000.ethernet:         DWMAC4/5
+[  430.289753] renesas-gbeth 15c30000.ethernet: DMA HW capability register supported
+[  430.297317] renesas-gbeth 15c30000.ethernet: RX Checksum Offload Engine supported
+[  430.304880] renesas-gbeth 15c30000.ethernet: Wake-Up On Lan supported
+[  430.311400] renesas-gbeth 15c30000.ethernet: Enable RX Mitigation via HW Watchdog Timer
+[  430.319598] renesas-gbeth 15c30000.ethernet: Enabled L3L4 Flow TC (entries=8)
+[  430.326774] renesas-gbeth 15c30000.ethernet: Enabled RFS Flow TC (entries=10)
+[  430.333942] renesas-gbeth 15c30000.ethernet: Using 32/32 bits DMA host/device width
+[  430.360549] renesas-gbeth 15c30000.ethernet eth1: Register MEM_TYPE_PAGE_POOL RxQ-0
+[  432.366627] renesas-gbeth 15c30000.ethernet eth1: Register MEM_TYPE_PAGE_POOL RxQ-1
+[  432.377218] renesas-gbeth 15c30000.ethernet eth1: Register MEM_TYPE_PAGE_POOL RxQ-2
+[  432.386450] renesas-gbeth 15c30000.ethernet eth1: Register MEM_TYPE_PAGE_POOL RxQ-3
+[  432.461470] renesas-gbeth 15c30000.ethernet eth1: PHY [stmmac-0:07] driver [Microchip KSZ9131 Gigabit PHY] (irq=23)
+[  432.487523] dwmac4: Master AXI performs fixed burst length
+[  432.494429] renesas-gbeth 15c30000.ethernet eth1: No Safety Features support found
+[  432.502149] renesas-gbeth 15c30000.ethernet eth1: IEEE 1588-2008 Advanced Timestamp supported
+[  432.511638] renesas-gbeth 15c30000.ethernet eth1: registered PTP clock
+[  432.523033] renesas-gbeth 15c30000.ethernet eth1: configuring for phy/rgmii-id link mode
+[  435.489601] renesas-gbeth 15c30000.ethernet eth1: Link is Up - 1Gbps/Full - flow control off
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# ping -I eth0 google.com
+PING google.com (142.250.75.238) from 192.168.1.242 eth0: 56(84) bytes of data.
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=1 ttl=251 time=4.62 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=2 ttl=251 time=4.19 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=3 ttl=251 time=4.49 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=4 ttl=251 time=4.76 ms
+^C
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 4.189/4.514/4.758/0.210 ms
+root@smarc-rzg3e:~# ping -I eth1 google.com
+PING google.com (142.250.75.238) from 192.168.1.245 eth1: 56(84) bytes of data.
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=1 ttl=251 time=4.45 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=2 ttl=251 time=4.79 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=3 ttl=251 time=4.42 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=4 ttl=251 time=4.47 ms
+^C
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 4.417/4.530/4.787/0.149 ms
+root@smarc-rzg3e:~# 
+```
 
-And this becomes unevaluatedProperties: false.
+Regards,
+John Madieu
 
-With these changes (and after testing with dt_bindings_check):
+John Madieu (4):
+  clk: renesas: r9a09g047: Add clock and reset signals for the GBETH IPs
+  dt-bindings: net: renesas-gbeth: Add support for RZ/G3E (R9A09G047)
+    SoC
+  arm64: dts: renesas: r9a09g047: Add GBETH nodes
+  arm64: dts: renesas: rzg3e-smarc-som: Enable eth{0-1} (GBETH)
+    interfaces
 
+ .../bindings/net/renesas,r9a09g057-gbeth.yaml |   2 +
+ arch/arm64/boot/dts/renesas/r9a09g047.dtsi    | 207 ++++++++++++++++++
+ .../boot/dts/renesas/rzg3e-smarc-som.dtsi     | 106 +++++++++
+ drivers/clk/renesas/r9a09g047-cpg.c           |  64 ++++++
+ 4 files changed, 379 insertions(+)
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+-- 
+2.25.1
 
-
-Best regards,
-Krzysztof
