@@ -1,292 +1,196 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456BA82864;
-	Wed,  4 Jun 2025 09:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB7479F2
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 09:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749029782; cv=none; b=sn727TKMU11Hna9kpTYY7hvLkr4qo3swKAHMJQMXK/TJYL8bocl8Fm3tNGxpdCaSAZ8G6EbNxPtx0rkjN0Soao6VYNTf+zaBq7qv1EVk6PGFagQpxAmReuncWr1qegduWmHTrfL7NqdLdzAXsE+V6MhVVTfGYkauIe0Vtc20n7g=
+	t=1749029882; cv=none; b=aIWqo0vqIyuX9X/KSQefxLWSspAb7cu6JtyjNAx0oseaeSMCzr8u/nlVahwov6xwd46YjgBRJMAvN8xBxSHoCORj8Q2RaTWbUqz50WEbeBjinZCEvZ+NSK9xHJm6O1aUZLt1D05PH5E1YOlgpPtA7vPALMKTg/JUcc5cl7vkZ7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749029782; c=relaxed/simple;
-	bh=0b0UpOZGoz9b9Oj2yt0/+c1AigdIfX0+NKUZ0HHnAyk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uZlRx77av3aL4DFUuIuwp/VGfsJ1D6QZ5+ObY91AJZ5q2CvJVEJgW+VWdMky6HviqxFsMdkLHSZJUVBHOA+GgThkVfc3w+22mV/IoVBl7VIIC9/zpObN3gR5vGbHjub8lxfyMZ97wG9Gs4v1Sp57WpJ4awwvlCCKDVe/xcpkTeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XJBiI245; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749029882; c=relaxed/simple;
+	bh=IefVJKRoaTZXyYlWJwwqwPpNNzeZVtle+HBXhnWHRus=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=igF/Qvd8Tz+UO/NBDwEFlll64viomELTpo0JjY5VhPNW28mIh7WroMR9xOZShQvMu+mK24Bbot2q96iqfBvNs0YcQ4SGtbS7PUdZ6Jte8wtzNR7Z3giJ5McvxnWIQBUbZgoPUPmgkRgZTKP5UW2+zK6+IDJQnfcVwMqO2CFO3SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JOGYFj+5; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XJBiI245"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5547t2eS032469;
-	Wed, 4 Jun 2025 09:36:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Aamdvi6wxPKp4kP4MW9geq4G
-	Kuy3gj464lLjH6acW4I=; b=XJBiI245LEtK+xvNtxepGGpBddCL0uo2JOqagsF3
-	+0QAJvn9xXOr0uNs7sE/bVXIQ+GXD4Cvm/Gnd4Kso6Uzd5MAh0Giwlqld37L2EaO
-	ubuwkzMVYJv2fo/yr4LQ8kCCtZevtY9SIDgeH1oHIAsYULTktZLShMZyk65F3Twn
-	VOrjjdwLKUGSvIIbrPLtX87biFNWkiIk+qu1CU/1Jive/bzpgONjm+xitbhxtpXl
-	gHbJm0IOxH63DM4WGn9Un40Wx4PWwr0/qTK8qGmfxrEn1oGo5OcOP5t2KeXHuO3N
-	7jyVetyjMa0eztcCC36Dv3oUZcgD4omcTxT2wIlGlcMgXA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471sfuvdqa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 09:36:12 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5549aBgV012507
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 4 Jun 2025 09:36:11 GMT
-Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 4 Jun 2025 02:36:05 -0700
-Date: Wed, 4 Jun 2025 15:05:55 +0530
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>
-CC: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>, <kernel@oss.qualcomm.com>,
-        Pratyush Brahma <quic_pbrahma@quicinc.com>,
-        Prakash Gupta <quic_guptap@quicinc.com>
-Subject: Re: [PATCH v9 2/4] arm64: dts: qcom: iq9: Introduce new memory map
- for qcs9100/qcs9075
-Message-ID: <aEATe3pi1SsfZVI3@hu-wasimn-hyd.qualcomm.com>
-References: <20250530092850.631831-1-quic_wasimn@quicinc.com>
- <20250530092850.631831-3-quic_wasimn@quicinc.com>
- <ss3xhat6v3s4ivcypw6fqcmblqait56pqhzwuhzyfhevp4kzlr@5e3f5nwb6lhb>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JOGYFj+5"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-450dada0f83so38485505e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 02:38:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749029879; x=1749634679; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=w9Z4UCGtO6U0GVT4g7AwP3ADkarkEdCLcrxioVcqn6k=;
+        b=JOGYFj+5OBQXm17ZWZ/atAlN2VVVHVerzisuifHukR1jQ8N05g9NSxXDaYCctkZmRk
+         R6LkH5KNfqusgDwaG/j6gDz7Kgsj2k9fQGpzQmZUwO1cGM8pXmzkYwC4zkbfUWgW2hSe
+         WS7HXFauCwbkSaFGm7MB7wuFdjQZdfObuj6NkirUB/9gy1yrrT/7HgJE7eCTvbVPKw4H
+         5QGOHBW2jdkW3KiCgEkO1SkYzQObDxySBjvjioerorW/J4sVYoxbzaCw3a9TRmENOzSt
+         i9PoMbEqZJHzb0gbXMWevlPrDxR451n3LqCCifZuLh+kz5YuLsgWOcwT6DQ1WZWpdgsL
+         bbeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749029879; x=1749634679;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w9Z4UCGtO6U0GVT4g7AwP3ADkarkEdCLcrxioVcqn6k=;
+        b=OAtEzKlgey467tX/eHJOed8xtuxccJg6/XfDx2Udi0oWlV6F2X97pA8DTWh+l0QXSD
+         rH1QwcPEhImhtY1zqhQ49XGvknTjk0WxgF65ly/1J4nNTrL4u8OhOPaU8aRvP/Fy1Qo+
+         d7TZUCCixKOWejWlymWpTN+xgtW8JUNzu7/S7+8PFey9aNceyoFqcBNzRptmMaM0PdO9
+         k+s0sRR4U/e0PAVwWZV/tR6DIopQXS1gCHcqjf8jJ2L8GtLbCraV3xx/QqDCL0NlIyLB
+         ap/VC9NR/dnfuCW3VbEYezrJUYuYmYoYA8Hn1KWcwJkA4vFyhojoDmlh0z3MBoAsWyPr
+         kM5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWt+MjqW/1TmxddyjCjUweRweMOS61iN6R7ftSws6dE1ogxeNZuJ3lCVa4Nd2vcRXKF4+AcH9o8HNLUU5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFfSQhZPME7h/DcK0xlSkVfDJew63yhpAt6S+YCmB1z0ZCuxfS
+	e1qPtVlJoR3E+0PD+Rwi3P/3tZDvtQhWOmGFIAY+5W3kKDG9Yz5sjyRGK58dabf+Arp63lapxjl
+	XtLSKQXvUiw2s1x9SnA==
+X-Google-Smtp-Source: AGHT+IHbB15ak9OkLyyLKjiL2SuiJUR5ZPZ+YNrGcnXzpsUEWmNZ70EDL0B0udyTAmN0Mlas7cyYu9RJKod5RTQ=
+X-Received: from wmbay12.prod.google.com ([2002:a05:600c:1e0c:b0:43d:b30:d2df])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:35d4:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-451f0a63602mr16072705e9.2.1749029879077;
+ Wed, 04 Jun 2025 02:37:59 -0700 (PDT)
+Date: Wed, 4 Jun 2025 09:37:56 +0000
+In-Reply-To: <DAACCYW3QRQE.1O75L2SHJYVPM@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ss3xhat6v3s4ivcypw6fqcmblqait56pqhzwuhzyfhevp4kzlr@5e3f5nwb6lhb>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CY8I5Krl c=1 sm=1 tr=0 ts=6840138c cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=6_P49hg9oysbzb5WdkEA:9 a=CjuIK1q_8ugA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: UT2cgFoPtz9T-eK3Gqwo7CfwdUdKbv1n
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA3MSBTYWx0ZWRfX6Iq/0usoNpFy
- at/GVhz+/bnXFxqHmHMF8T3o8mHzuIfHoAMs1561PLi5gHg/B/keqA/KmyLdUMM8nXBJo0kCwu9
- ibhIv8W4kMBFUucNy5ARZb8Hitq3O4+iM4cWH2yUKRRaTdpkGlj9WY37nMiTzEdw2Z6F3aEHe2B
- FamypfgPYVzDEBwnctr5glUmNSOeKA25O/Dfq5qZ1tlPkgMmTjPqbMT+V0uKlwVJMlq/BY7wsSo
- SD3wb8LoYIo+kH/vSqxBd0O0zJ0H5sSQpKfTGGksvpq+ZuaqPfZbeW1ks9ShrH+k608pmYvorBJ
- m29bVBo3kNseJcr7QTKzh6moh4T0qfOemL3GNyvfSP0djgv4NcBLvw99sQtErQaaR0z/XSo1ena
- WvGTMOW2WeE6qXc3fY7EA/qLONt8Pemq/OF380quczSkPW5cdoZ7ogxwyVsdfE7DkUE1KNoh
-X-Proofpoint-GUID: UT2cgFoPtz9T-eK3Gqwo7CfwdUdKbv1n
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 spamscore=0 impostorscore=0
- phishscore=0 mlxlogscore=801 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506040071
+Mime-Version: 1.0
+References: <20250530-b4-rust_miscdevice_registrationdata-v4-0-d313aafd7e59@gmail.com>
+ <20250530-b4-rust_miscdevice_registrationdata-v4-2-d313aafd7e59@gmail.com> <DAACCYW3QRQE.1O75L2SHJYVPM@kernel.org>
+Message-ID: <aEAT9B669Qvi0rlR@google.com>
+Subject: Re: [PATCH v4 2/3] rust: miscdevice: add additional data to MiscDeviceRegistration
+From: Alice Ryhl <aliceryhl@google.com>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Christian Schrefl <chrisi.schrefl@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee@kernel.org>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, 
+	"Gerald =?utf-8?Q?Wisb=C3=B6ck?=" <gerald.wisboeck@feather.ink>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Jun 02, 2025 at 10:41:39AM -0500, Bjorn Andersson wrote:
-> On Fri, May 30, 2025 at 02:58:45PM +0530, Wasim Nazir wrote:
-> > From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-> > 
-> > SA8775P has a memory map which caters to the auto specific requirements.
+On Sat, May 31, 2025 at 02:23:23PM +0200, Benno Lossin wrote:
+> On Fri May 30, 2025 at 10:46 PM CEST, Christian Schrefl wrote:
+> > @@ -45,32 +46,46 @@ pub const fn into_raw<T: MiscDevice>(self) -> bindings::miscdevice {
+> >  /// # Invariants
+> >  ///
+> >  /// `inner` is a registered misc device.
+> > -#[repr(transparent)]
+> > +#[repr(C)]
 > 
-> I thought SA8775P was the IoT platform and SA8255P was the automotive
-> one. Has this changed?
-
-Both SA8775P & SA8255P is for auto but former one is non-SCMI based while
-the later one is SCMI based chip.
-
-Only IQ9 series of chips (QCS9100 & QCS9075) are for IOT.
-
+> Why do we need linear layout? `container_of!` also works with the `Rust`
+> layout.
 > 
-> > QCS9100 & QCS9075 are its IOT variants (with marketing name as IQ9) which
-> > inherit the memory map of SA8775P require a slightly different memory
-> > map as compared to SA8775P auto parts.
-> > This new memory map is applicable for all the IoT boards which inherit
-> > the initial SA8775P memory map. This is not applicable for non-IoT
+> >  #[pin_data(PinnedDrop)]
+> > -pub struct MiscDeviceRegistration<T> {
+> > +pub struct MiscDeviceRegistration<T: MiscDevice> {
+> >      #[pin]
+> >      inner: Opaque<bindings::miscdevice>,
+> > +    #[pin]
+> > +    data: Opaque<T::RegistrationData>,
+> >      _t: PhantomData<T>,
 > 
-> Is there are platform out there that actually uses the "initial SA8775P
-> memory map"?
-
-Yes currently sa8775p-ride and sa8775p-ride-r3 are using initial memory
-map.
-
+> No need to keep the `PhantomData` field around, since you're using `T`
+> above.
 > 
-> > boards.
-> > 
-> > Some new carveouts (viz. gunyah_md and a few pil dtb carveouts) have been
-> > introduced as part of firmware updates for IoT. The size and base address
-> > have been updated for video PIL carveout compared to SA8775P since it is
-> > being brought up for the first time on IoT boards. The base addresses
-> > of the rest of the PIL carveouts have been updated to accommodate the
-> > change in size of video since PIL regions are relocatable and their
-> > functionality is not impacted due to this change. The size of camera
-> > pil has also been increased without breaking any feature.
-> > 
-> > The size of trusted apps carveout has also been reduced since it is
-> > sufficient to meet IoT requirements. Also, audio_mdf_mem & tz_ffi_mem
-> > carveout and its corresponding scm reference has been removed as these
-> > are not required for IoT parts.
-> > 
-> > Incorporate these changes in the updated memory map.
-> > 
-> > Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
-> > Signed-off-by: Prakash Gupta <quic_guptap@quicinc.com>
-> > Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
-> > ---
-> >  .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 113 ++++++++++++++++++
-> >  1 file changed, 113 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
-> > new file mode 100644
-> > index 000000000000..ff2600eb5e3d
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> >  }
+> >  
+> > -// SAFETY: It is allowed to call `misc_deregister` on a different thread from where you called
+> > -// `misc_register`.
+> > -unsafe impl<T> Send for MiscDeviceRegistration<T> {}
+> > -// SAFETY: All `&self` methods on this type are written to ensure that it is safe to call them in
+> > -// parallel.
+> > -unsafe impl<T> Sync for MiscDeviceRegistration<T> {}
+> > +// SAFETY:
+> > +// - It is allowed to call `misc_deregister` on a different thread from where you called
+> > +//   `misc_register`.
+> > +// - Only implements `Send` if `MiscDevice::RegistrationData` is also `Send`.
+> > +unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::RegistrationData: Send {}
+> > +
+> > +// SAFETY:
+> > +// - All `&self` methods on this type are written to ensure that it is safe to call them in
+> > +//   parallel.
+> > +// - `MiscDevice::RegistrationData` is always `Sync`.
+> > +unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
 > 
-> The naming convention is <soc>-<something>.dtsi and I don't see any
-> other uses of the "iq9" naming.
-
-As this new memory map is common for IQ9 series of SoC (QCS9100 &
-QCS9075), so we have used its common name.
-Once the DT structure for QCS9100 is refactored, we would update this
-common file there.
-
+> I would feel better if we still add the `T::RegistrationData: Sync`
+> bound here even if it is vacuous today.
 > 
-> > @@ -0,0 +1,113 @@
-> > +// SPDX-License-Identifier: BSD-3-Clause
+> >  impl<T: MiscDevice> MiscDeviceRegistration<T> {
+> >      /// Register a misc device.
+> > -    pub fn register(opts: MiscDeviceOptions) -> impl PinInit<Self, Error> {
+> > +    pub fn register(
+> > +        opts: MiscDeviceOptions,
+> > +        data: impl PinInit<T::RegistrationData, Error>,
+> > +    ) -> impl PinInit<Self, Error> {
+> >          try_pin_init!(Self {
+> > +            data <- Opaque::pin_init(data),
+> >              inner <- Opaque::try_ffi_init(move |slot: *mut bindings::miscdevice| {
+> >                  // SAFETY: The initializer can write to the provided `slot`.
+> >                  unsafe { slot.write(opts.into_raw::<T>()) };
+> >  
+> > -                // SAFETY: We just wrote the misc device options to the slot. The miscdevice will
+> > -                // get unregistered before `slot` is deallocated because the memory is pinned and
+> > -                // the destructor of this type deallocates the memory.
+> > +                // SAFETY:
+> > +                // * We just wrote the misc device options to the slot. The miscdevice will
+> > +                //   get unregistered before `slot` is deallocated because the memory is pinned and
+> > +                //   the destructor of this type deallocates the memory.
+> > +                // * `data` is Initialized before `misc_register` so no race with `fops->open()`
+> > +                //   is possible.
+> >                  // INVARIANT: If this returns `Ok(())`, then the `slot` will contain a registered
+> >                  // misc device.
+> >                  to_result(unsafe { bindings::misc_register(slot) })
+> > @@ -93,13 +108,24 @@ pub fn device(&self) -> &Device {
+> >          // before the underlying `struct miscdevice` is destroyed.
+> >          unsafe { Device::as_ref((*self.as_raw()).this_device) }
+> >      }
 > > +
+> > +    /// Access the additional data stored in this registration.
+> > +    pub fn data(&self) -> &T::RegistrationData {
+> > +        // SAFETY:
+> > +        // * No mutable reference to the value contained by `self.data` can ever be created.
+> > +        // * The value contained by `self.data` is valid for the entire lifetime of `&self`.
 > 
-> Why is there a blank space here?
-
-Will remove this in next patch.
-
+> Please add type invariants for these two requirements.
 > 
-> Regards,
-> Bjorn
-
-Regards,
-Wasim
+> > +        unsafe { &*self.data.get() }
+> > +    }
+> >  }
+> >  
+> >  #[pinned_drop]
+> > -impl<T> PinnedDrop for MiscDeviceRegistration<T> {
+> > +impl<T: MiscDevice> PinnedDrop for MiscDeviceRegistration<T> {
+> >      fn drop(self: Pin<&mut Self>) {
+> >          // SAFETY: We know that the device is registered by the type invariants.
+> >          unsafe { bindings::misc_deregister(self.inner.get()) };
+> > +
+> > +        // SAFETY: `self.data` is valid for dropping and nothing uses it anymore.
 > 
-> > +/*
-> > + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> > + */
-> > +
-> > +/delete-node/ &pil_camera_mem;
-> > +/delete-node/ &pil_adsp_mem;
-> > +/delete-node/ &pil_gdsp0_mem;
-> > +/delete-node/ &pil_gdsp1_mem;
-> > +/delete-node/ &pil_cdsp0_mem;
-> > +/delete-node/ &pil_gpu_mem;
-> > +/delete-node/ &pil_cdsp1_mem;
-> > +/delete-node/ &pil_cvp_mem;
-> > +/delete-node/ &pil_video_mem;
-> > +/delete-node/ &audio_mdf_mem;
-> > +/delete-node/ &trusted_apps_mem;
-> > +/delete-node/ &hyptz_reserved_mem;
-> > +/delete-node/ &tz_ffi_mem;
-> > +
-> > +/ {
-> > +	reserved-memory {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges;
-> > +
-> > +		gunyah_md_mem: gunyah-md@91a80000 {
-> > +			reg = <0x0 0x91a80000 0x0 0x80000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		pil_camera_mem: pil-camera@95200000 {
-> > +			reg = <0x0 0x95200000 0x0 0x700000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		pil_adsp_mem: pil-adsp@95900000 {
-> > +			reg = <0x0 0x95900000 0x0 0x1e00000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		q6_adsp_dtb_mem: q6-adsp-dtb@97700000 {
-> > +			reg = <0x0 0x97700000 0x0 0x80000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		q6_gdsp0_dtb_mem: q6-gdsp0-dtb@97780000 {
-> > +			reg = <0x0 0x97780000 0x0 0x80000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		pil_gdsp0_mem: pil-gdsp0@97800000 {
-> > +			reg = <0x0 0x97800000 0x0 0x1e00000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		pil_gdsp1_mem: pil-gdsp1@99600000 {
-> > +			reg = <0x0 0x99600000 0x0 0x1e00000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		q6_gdsp1_dtb_mem: q6-gdsp1-dtb@9b400000 {
-> > +			reg = <0x0 0x9b400000 0x0 0x80000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		q6_cdsp0_dtb_mem: q6-cdsp0-dtb@9b480000 {
-> > +			reg = <0x0 0x9b480000 0x0 0x80000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		pil_cdsp0_mem: pil-cdsp0@9b500000 {
-> > +			reg = <0x0 0x9b500000 0x0 0x1e00000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		pil_gpu_mem: pil-gpu@9d300000 {
-> > +			reg = <0x0 0x9d300000 0x0 0x2000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		q6_cdsp1_dtb_mem: q6-cdsp1-dtb@9d380000 {
-> > +			reg = <0x0 0x9d380000 0x0 0x80000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		pil_cdsp1_mem: pil-cdsp1@9d400000 {
-> > +			reg = <0x0 0x9d400000 0x0 0x1e00000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		pil_cvp_mem: pil-cvp@9f200000 {
-> > +			reg = <0x0 0x9f200000 0x0 0x700000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		pil_video_mem: pil-video@9f900000 {
-> > +			reg = <0x0 0x9f900000 0x0 0x1000000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		trusted_apps_mem: trusted-apps@d1900000 {
-> > +			reg = <0x0 0xd1900000 0x0 0x1c00000>;
-> > +			no-map;
-> > +		};
-> > +	};
-> > +
-> > +	firmware {
-> > +		scm {
-> > +			/delete-property/ memory-region;
-> > +		};
-> > +	};
-> > +};
-> > --
-> > 2.49.0
-> > 
+> Ditto.
+> 
+> > +        unsafe { core::ptr::drop_in_place(self.data.get()) };
+> >      }
+> >  }
+> >  
+> > @@ -109,6 +135,13 @@ pub trait MiscDevice: Sized {
+> >      /// What kind of pointer should `Self` be wrapped in.
+> >      type Ptr: ForeignOwnable + Send + Sync;
+> >  
+> > +    /// The additional data carried by the [`MiscDeviceRegistration`] for this [`MiscDevice`].
+> > +    /// If no additional data is required than the unit type `()` should be used.
+> > +    ///
+> > +    /// This data can be accessed in [`MiscDevice::open()`] using
+> > +    /// [`MiscDeviceRegistration::data()`].
+> > +    type RegistrationData: Sync;
+> 
+> Why do we require `Sync` here?
+> 
+> We might want to give this a shorter name?
+
+
