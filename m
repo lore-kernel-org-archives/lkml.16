@@ -1,268 +1,225 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2070.outbound.protection.outlook.com [40.107.101.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA0F111BF;
-	Wed,  4 Jun 2025 19:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749066882; cv=none; b=LoyTU/9s6fOAdGytjGBaBHFWegTuN1xA6ieTPQcKgP1PfxaJeGByaFxR0IB4az8JQJI+EPaOpT04Of0a4uSaMfqEMuRo+jxisVaxWFnpeePKqKMx81i1vtJXB5Tv6Ki4HabiWLzeFcGoIK8JHwJW/y3CPW0Wf+E7nwFJIV7NGZQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749066882; c=relaxed/simple;
-	bh=oKw90SyLsedrAFGhq66683nzBJAYf46emgOFII6AEx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rXCNenvjAiajBx40lvED+PS8MiZNF+W23bOXXkqP9j/LsOfnYI7J8e3tMiC0wW5BhDKpm+uBNMDH8aVnftl2mtmIloqyoskQm+EReaOihv5V35RQyvBkR9CDnbXGKdhDiR9XDYiqMGY4dii/Sd1aS4ZOQFVkoscdWPquIvI719E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 2138D1A05B1;
-	Wed,  4 Jun 2025 19:15:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 8E5F42F;
-	Wed,  4 Jun 2025 19:15:08 +0000 (UTC)
-Date: Wed, 4 Jun 2025 15:16:25 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] eventfs: Simplify code using guard()s
-Message-ID: <20250604151625.250d13e1@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B23111BF;
+	Wed,  4 Jun 2025 19:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749066992; cv=fail; b=a1yLoYoclnID9XtgMmsF/xkSbRkcQVtGMNm06Hcbo2VRmLU2dvM0YodmPL/K5XjL2jvm6SZZJg2AfxHTH55CCDnzSverO7CuPi/PE4YHdBAmExBikJ+NV5b9LLQsbcSiTl+RMpycvzc6pOCPCQYLT61DcQnBJiTp0LZnc/xnu3w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749066992; c=relaxed/simple;
+	bh=UqKNzEhwQUj6YWf+BeW2Jp/7N6y3IjkNrVKFd9mwjok=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BX78EKKV/O2vnJHq9nQAjxO88heIq/OwqPAZgPclsdDLpJRv85VlfJpOQMrpjYjxDnPXYGgROe4KIxqQcFD/ex5KpfLrQU2T6rxizJowLcf6wtZn/UsmNrFJw/XM/cJRLfp5pu1Rpni+omZOU2GL1uRvp56uiaeIMC2fejL4zy8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AOB7THtn; arc=fail smtp.client-ip=40.107.101.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AOB7THtn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aqwj4g+DIohZv/K+E1QPsQiRLqqKm1YKD7AmXXWRQLq2tXnp3hLuvwX2FsKdnSPmTBAKVU/tIC87mHRD+xdRQ5X/0Mrm+4fv9OHgJnsFh4NzTtPpZW+jCZ6AGt7pbEZouEsMUNAyvWGKMj2LE3sObGPKl0xwsp+h3yvTII/jZ3VZw5YP5TWyLErVQZvcrpZj8oDWdM3lmcn1t954adlBTGYZwWP2IWe0Ayj4jxLcNEICf1JtU7/JXLzaImUP/n9b22tKxM7F1GvdIvwzDLVG+ohdtBT6v49q2u9gfVswPUuIwJ+i0gQGl/Uj6eCJEsAulIFEGfoPuVGuJJvTejh2kg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HqrRYagQO0A/3kjoscxlGaj7ErrJxlVi0C132e6VRMc=;
+ b=ym/hnWMBxMnpELR/A+JgKWlFgGomvv4uCgaxO5/AE9L1yXXjbOlMt5uUO93IiM16KFkEDb25qC5EACPcaPYcmSF+X+3uxD/ZNC2nzNpn2CGUVngeGRDhpE7KLY3r5vU7EIYDiNqSI+8LqZuuKrQFZSPDG0hmieBRyWv0mrMvHOaxL8QyQz4NC3gow3/KtEe5x+VphT6ARW/5R1XW0v8nvZaeGboV2LLfTA2ib4K/pbPxcRwAtSbDYEJ6ShVaZWIaRkRYrsKus0On62QUb7VocoxHDr8hanNCYIzeGt/CQDFHuTG2+9s4TbgeReCxlGqMBUxELsuimbvvJkNdXT7rqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HqrRYagQO0A/3kjoscxlGaj7ErrJxlVi0C132e6VRMc=;
+ b=AOB7THtnKLkHR4jDV7pcUBxXDWS7QdLcjiYWBzQdjydH6b8Hoa2xUBM9ErwiU6h2eoTz77XMjs9SZF3DLJn8Vg0LquUUGUVbFpodoomLeCa6bFJDzJDvhOR78swMD5MP8WTXjmx9/nWUREiUrH+YWMwr/lpX3pgHrAqf7C125zI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6222.namprd12.prod.outlook.com (2603:10b6:208:3c2::19)
+ by DM4PR12MB9071.namprd12.prod.outlook.com (2603:10b6:8:bd::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Wed, 4 Jun
+ 2025 19:56:26 +0000
+Received: from MN0PR12MB6222.namprd12.prod.outlook.com
+ ([fe80::4044:a263:92a1:6b3e]) by MN0PR12MB6222.namprd12.prod.outlook.com
+ ([fe80::4044:a263:92a1:6b3e%7]) with mapi id 15.20.8769.037; Wed, 4 Jun 2025
+ 19:56:26 +0000
+Message-ID: <e13cace9-1ab3-4c22-88f7-0d020423c430@amd.com>
+Date: Wed, 4 Jun 2025 14:56:22 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/7] cxl/region: Avoid null pointer dereference in
+ is_cxl_region()
+To: Dave Jiang <dave.jiang@intel.com>,
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
+ <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Ying Huang <huang.ying.caritas@gmail.com>,
+ Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
+ Greg KH <gregkh@linuxfoundation.org>, Terry Bowman <terry.bowman@amd.com>,
+ Robert Richter <rrichter@amd.com>,
+ Benjamin Cheatham <benjamin.cheatham@amd.com>,
+ PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>,
+ Zhijian Li <lizhijian@fujitsu.com>
+References: <20250603221949.53272-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250603221949.53272-2-Smita.KoralahalliChannabasappa@amd.com>
+ <3464d8cb-e53c-4e6b-b810-49e51c98e902@intel.com>
+From: Nathan Fontenot <nathan.fontenot@amd.com>
+Content-Language: en-US
+Organization: AMD
+In-Reply-To: <3464d8cb-e53c-4e6b-b810-49e51c98e902@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0206.namprd04.prod.outlook.com
+ (2603:10b6:806:126::31) To MN0PR12MB6222.namprd12.prod.outlook.com
+ (2603:10b6:208:3c2::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 8E5F42F
-X-Stat-Signature: 53uycops735pk585ew3nrdg1t36e45qd
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX190ANwMAkLRQwGtYb8o1JhLLF/z4Ly/Yyc=
-X-HE-Tag: 1749064508-499009
-X-HE-Meta: U2FsdGVkX19K54TRwk+lP3533Vh+tzF9iJwSy5fWAOFZ3Ac72gvRDnmpKHEbBXwTvgMq0CE5f9wfIG4fOJqSJpE2RcnbUhCPYuGi222TNC9mwtqPMI0ZcrjgfKEH52WLNuVJA9vBTRjAWNT1PdgArnGoWGqr2Go5aDkWCdxvXu9/6Zsz9XnCzZNV5EecYp145E/jLGTclbQdJyOdWo8Cw8ssyOkkogE3x4MAfR2b4fru62xbCV13BrXqN40ebDzlAZah2kqWg7925uWGfiMjOI3Kf+g3vZhyRjEeEEkmZoAjZgGp5nASYu58xQwKEItTjKMgkx3EScEI9E+bPlg4rPeu+IYyfQ2DYiX+Tiii414vG4M3Z13aa3EVNQgMAmM1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6222:EE_|DM4PR12MB9071:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e4c70f9-0605-4f4b-e937-08dda3a1e3b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YUtKcTc1N3BEaHAyeS9Ic2JGOWxaZGpxQ3c4REorQXdwMTNLR1Zoc3NsUGRw?=
+ =?utf-8?B?TWk5OFQxMU1RQUU2S3VvM3BLN2k1SU1yVmZRSlJWd3hUVExPbUtORXRzSGJs?=
+ =?utf-8?B?NnNSdW04b3psMmkrVWZqbWFYam8rdnJueFBqNnF1OW44SDBldjI2SGgxWGdF?=
+ =?utf-8?B?eXNZZUdhdGhPSjBJS0hkKzB4bFduRlE3NFM2NFZLTXBNbHdkMnc1bFo0NEVK?=
+ =?utf-8?B?MmRPYUdGT2FTNlp5K250REtMQW1aMjJtUzJzSGxLM2Y4Zk9NSERibkQ1K0kv?=
+ =?utf-8?B?RWEzbytSLzhUQjlGTWw3UHhzREVTYXJ5KzRmWFFrVEorTk8zaDVYTndoOUQ1?=
+ =?utf-8?B?VDBGcmJDYlM3TXFJcnpKYlBnc1RsTWpaQ1c0bTBIRTVyNURqVGRCY2NpcTNi?=
+ =?utf-8?B?VUtxTFhCTmFyV3BLYVNybnZoVzNlaDgvdDRVL1RmdkQ1ZUtNRmtUN3k1eE43?=
+ =?utf-8?B?MGROZU5FNGxDcG5WQTVJZDNZemp5SE5OS3VaYjZXRmFpVWgxTUROdlhzMXNH?=
+ =?utf-8?B?anBSOGh5UWx4QUVsdHp0LzM0K0QzZ1NxNXRiUlloQy9BRk5sTjJIMllQaFdQ?=
+ =?utf-8?B?UVFhRUVhTE9lbUJzS3VDaUdJenBZMjZZZGx2Q3pVR05iQUdWUVlrQXV6NkxP?=
+ =?utf-8?B?d1ZwdDMzR2R2NmN1NTFzNjhsaWVsZWJSR0ZHNWV3ZjBtQjVDNjJ6QlhZU1dN?=
+ =?utf-8?B?UDVvMkNjcjJwcU0yNXJVNUxCY3JOWEJ0aDBrblZwdDFEMDFUOGh5Z2M1aEsv?=
+ =?utf-8?B?alY4cUgvQUlNWVRaUGpleWNuQW5GRWswRHlhTWhCNmdxY2s5N2tZRVV5Qldq?=
+ =?utf-8?B?bXoyb1Qrc3VEb1hlL0ZlczdKaHp1YVpXaUN1cHUyNERhR2pFVjB6Sng0VEFG?=
+ =?utf-8?B?U3lHbG8rV25CRVdIdGo1ZWNOVVVrb2ZBZmdIWmlFQmJjTDEyNEhuaXhWcDA5?=
+ =?utf-8?B?T1Rtd296SlhNSVhEQWhuOVlob1ZvRU81T3IwdDdCZ0Nzc0grUTlGeTVDVFZL?=
+ =?utf-8?B?b0pNSkUvUmxNVXpEYVZVVVp5ODNrNWtKNHhCSWV5eDBwSEE1a0g5T053TlVs?=
+ =?utf-8?B?RmN3Wks2UlYzaldGakdyZy92aTNXRHZabEw5WW9lby9Sb0V4R3RHcjZXbGpK?=
+ =?utf-8?B?NHRYSjdTWDJnSTc5T1JpQkVrZitSU0JVWWJnUyttbndnemkzT2RNTXpPcE1G?=
+ =?utf-8?B?bEU3dm5jblJ5OGJnbmpzQjZxRmFwN1dIQ2E2aTdLMmVsZU9LcEd4eGYwN0V3?=
+ =?utf-8?B?UE9Ebm1mcEZGUTFvM3BqWlYvUEY2MjRUc0FEYUVrekowMmEwekE4ODlqcTVJ?=
+ =?utf-8?B?N0NqWnNKZVQ2MGVsSUo3cTh6ZGFUNTRzQlZRd25maTJBcXpRR3I0enlpbk5o?=
+ =?utf-8?B?Z25KSEgrU0ZMbCsyeFF0SGlLLzNQM2ZCWkx3bkNuSXJSeWRCYWhCa1E4VjZ6?=
+ =?utf-8?B?WjR5VDRvaDQ1Z2cvY2JqWEhjak92OXFrbG1IWi93b3pMZEc1TWlZSnFkMVNQ?=
+ =?utf-8?B?SzkzeVU1elFDOCs2YVhoM2pDRmxOTStDcG5CYlBMUkN6bGNvTFZMVkhKTExV?=
+ =?utf-8?B?KzJNbGNOSjl1Zy9vbTVNcVVCci8xQkVEMUl5YlEvdEV0b1g2eTUrOGdPcVVR?=
+ =?utf-8?B?QmRlN2tTVEhMUERiNXB5WWFsbzhuTGlPWXBDdUxxNnVDT2xNaDBOdHA2VUQ3?=
+ =?utf-8?B?RTZ3NHRrcTVPTnZpYkNON0pzZEVrVWhtcGdGQ09FNEF4RGYwdHkrMFNiU0ds?=
+ =?utf-8?B?ZHpkYTh3MlJVZXZwVUVKUkhrU0lnM3JLS081c3Q2RjcrVlZpajFhb21qN3ly?=
+ =?utf-8?B?SEtGeWRSUUdZOXliTXFLSitidEVQWGhqUDU5M0tOSFpaK3d3WnlZM3FjYVlB?=
+ =?utf-8?B?SkNpL05uN3B2T25QSHlaeFVSeVErZzhIeEE1QjlEQ1dHZ1NNbXViNXowMkhi?=
+ =?utf-8?Q?CFekoWNhB/U=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6222.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Uyt4UFRaZ0tPbnZzUGR3NVQvVHZBcXFKQVFadVZVRUorR2JsQTlzSmxlQkpQ?=
+ =?utf-8?B?bXUzTUwzcHNsTzNaOUtGWkg4NUpUMUs5QnlrWDVsZEw2MDc4aXBFcDFuUnE3?=
+ =?utf-8?B?eHp1OHA5Y2xsaWJ4bmNUZHhscEFYekxkVno2OHhYNXdERFg2TDNRaTBFVzJu?=
+ =?utf-8?B?dTdrQ2NVaFc5ZENZWnROQnBMSHFiWitSOFVEdHNNYlhUN0FWY0d2R1FKR25l?=
+ =?utf-8?B?cjJQaTZrbnI2ZzBZdmdXWEhmM2tiRTUzU3pDWTJFVXBScGc0Z0dZUS9BKzIx?=
+ =?utf-8?B?cjJQZzlDWWdBSjRxYnRnY1NueGVaSHJhblJRUiticmtNN1VKSXRFdUEwbGJa?=
+ =?utf-8?B?dEVzSmdjbStMWGFSdXhoVE96Z3FHR1Z4U2gxL0RkTkdMcVZHUHdjY2Q0UWlo?=
+ =?utf-8?B?WUhad090ZFlFOS9ITjNqSFBTOHh4QXJJTkdTeStzelBrSnNMR0wxcm9RbmJu?=
+ =?utf-8?B?M0JENG54U2xBSzVIQ2NzL2xvN0NRMGYxMjZDWmF3bGUzN0pGeFlzcHp6T1FC?=
+ =?utf-8?B?M2JQMEgwTDBNZlgxQjd3U041UWJaekhxSHBKcGhGN212UGUreUhVc2NiMWs1?=
+ =?utf-8?B?Z3pGTUNMNTRlMzU4VFdZWTFMTE5VbkU4TTRpODNlQTNWQlUzYUxGQ1QrRDBF?=
+ =?utf-8?B?VFU4Zjd4bjFGSG5vcndnTXo1KzJya2lsS25vdWVjS3lWVm5xYjh6Ylltc0NL?=
+ =?utf-8?B?MnhuekVoVHBpZCs5QmE0Q1dpQVY0d2s4L1NoNVJVWndNN1BQcW4reGVnRHQ4?=
+ =?utf-8?B?eVdKc2JWcVlodUR3QnRBclNmclZaeFN0dFNYcmtqYXZsOVBKQlpETktqSThT?=
+ =?utf-8?B?eEI1aW9CdlBBYlY5ekRLcHhXek12b0Zqa2lUelgzUkZiNngwd3JjSVdqZHZC?=
+ =?utf-8?B?MnpKdG5hTWVpYkVFRUl3TENybUZ4eittbldmVVhlZFQ1OGZBN1o0TFF5VmxV?=
+ =?utf-8?B?dzQzdDZjUjR3Ukw3a0duWHd3aWRqOFU1NExtWGE4OXVyL3UrTTVmUU5uci9i?=
+ =?utf-8?B?N0VETFZLRnNWUHVWRXVKSUJGWEVLUHoxNDd1M3JvdXEvUk5oMmlqaWpXOWsr?=
+ =?utf-8?B?N2JZZUhvZ0JxQm1rK2h1bFpwWFNrVURTZWZ5L1VYRmlYZm1ZdjUxRVFWaFVH?=
+ =?utf-8?B?NU1JUWpJMlM2TEQ5RUgweEpsdkNpOUI3TmlWdy9yNkQ1RmJ1R1hkbE1ZY2lB?=
+ =?utf-8?B?eXVIM3BTSDZ0VTBUc3NOWGF3alZZR0VPcElBaGorVDBTZ1czQ0NGQWdzenA1?=
+ =?utf-8?B?UG1YdUlzc25TWWY1cDBzaGIxc3NTWS96aEY0bFJlcHBWNjFQMytqdHpoVmJW?=
+ =?utf-8?B?alQ0YTdWSjg5VGpKekVObHdTcFJ3UHdTdUVEQXlXWngvc2FaRVZmS0RvZkY5?=
+ =?utf-8?B?d2IzOWw5c0Y1alNDRGpjc3IrSE5Tam5IQ2w4SkJvY1VGWWVrdDYzTmhNVSs3?=
+ =?utf-8?B?UlB0cmJrY0NCRVhLOU5XNHpGYkxYUUZ2UTU1bUNBSTRJMmtqZmgybGVFVGFL?=
+ =?utf-8?B?WGVjZGgrVEE0QU9uUitNdWRFa1E1TTJ6VHVKcEwrSTVmcTNaejgxQ2lJdjBr?=
+ =?utf-8?B?WDBKUXhQYmt4SE12MGg2ZnVBSWNwOUF6U2c4UUF5MUh0ZnJMQ29VL3VpUXJv?=
+ =?utf-8?B?Vm9yRXJXT0hnOElIbDJ5N2tqVTBLTnZFT0x2TVVOTVdMSG1iUTJyZUc5Si9E?=
+ =?utf-8?B?YVA4bDQzNForaFA5b3kzeGFHWnVCSW1ldStqZnJPSlJvaElnNW9wU08zTWpH?=
+ =?utf-8?B?SlE0Rk42ZmdYODVxK2ZXNy9tV0lnZGFjd2JBZ3M2NlFxN1dIRWx1ODZHa1Fp?=
+ =?utf-8?B?d1RQaVNtY3lpSEZlWmNIalYwM2RkeUFTYjVDaFNteGVEQXA5RUcxaXBCNVVj?=
+ =?utf-8?B?ZTdLSU8xcDVXZXZqODhDbGZmZzhBbkpJZDdQbmR4UHlvUDdsNldNdmhhNysx?=
+ =?utf-8?B?dFQ2SUF2NFdNeE1QcVh4M2o5MWswVVIxalpZTHNHd0VqWGR6ME5pUGYyQk1m?=
+ =?utf-8?B?Uytxa2FlNWd0Z3NRUS92MXZQZmNTenRNYUVLTWZNUzk2ZWxvdmNYL3lEeEVS?=
+ =?utf-8?B?L25BZFoybzlvdGhJUGtraEZ6UlhrMW5NYS81Lzk5aVJoRG0zTHhCSlkxd2hN?=
+ =?utf-8?Q?+4NcLqkMEx10G05YLJ+VS6YgQ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e4c70f9-0605-4f4b-e937-08dda3a1e3b6
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6222.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 19:56:26.3829
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: utmuX9vxORd0XIueRTJMAauKbzMcC0BSU1VSqnk5hboGQBfck2mHKtRW8oU/nsHMn0sMvPxr78P83yLXxO+u/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB9071
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 6/3/2025 6:49 PM, Dave Jiang wrote:
+> 
+> 
+> On 6/3/25 3:19 PM, Smita Koralahalli wrote:
+>> Add a NULL check in is_cxl_region() to prevent potential null pointer
+>> dereference if a caller passes a NULL device. This change ensures the
+>> function safely returns false instead of triggering undefined behavior
+>> when dev is NULL.
+> 
+> Don't think this change is necessary. The code paths should not be hitting any NULL region devices unless it's a programming error.
 
-Use guard(mutex), scoped_guard(mutex) and guard(src) to simplify the code
-and remove a lot of the jumps to "out:" labels.
+I originally added this to the patchset during some initial development to handle possible
+NULL dev pointers when updating soft reserve resources, see cxl_region_softreserv_update()
+in patch 5/7.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 96 +++++++++++++++-------------------------
- 1 file changed, 36 insertions(+), 60 deletions(-)
+In the current form of the that routine it appears we shouldn't execute the while loop
+if dev is NULL so this could get from the patch set.
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 8705c77a9e75..117110fbabbf 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -180,29 +180,25 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	const char *name;
- 	int ret;
- 
--	mutex_lock(&eventfs_mutex);
-+	guard(mutex)(&eventfs_mutex);
- 	ei = dentry->d_fsdata;
--	if (ei->is_freed) {
--		/* Do not allow changes if the event is about to be removed. */
--		mutex_unlock(&eventfs_mutex);
-+	/* Do not allow changes if the event is about to be removed. */
-+	if (ei->is_freed)
- 		return -ENODEV;
--	}
- 
- 	/* Preallocate the children mode array if necessary */
- 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
- 		if (!ei->entry_attrs) {
- 			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
- 						  GFP_NOFS);
--			if (!ei->entry_attrs) {
--				ret = -ENOMEM;
--				goto out;
--			}
-+			if (!ei->entry_attrs)
-+				return -ENOMEM;
- 		}
- 	}
- 
- 	ret = simple_setattr(idmap, dentry, iattr);
- 	if (ret < 0)
--		goto out;
-+		return ret;
- 
- 	/*
- 	 * If this is a dir, then update the ei cache, only the file
-@@ -225,8 +221,6 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
- 			}
- 		}
- 	}
-- out:
--	mutex_unlock(&eventfs_mutex);
- 	return ret;
- }
- 
-@@ -528,26 +522,24 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 	struct tracefs_inode *ti;
- 	struct eventfs_inode *ei;
- 	const char *name = dentry->d_name.name;
--	struct dentry *result = NULL;
- 
- 	ti = get_tracefs(dir);
- 	if (WARN_ON_ONCE(!(ti->flags & TRACEFS_EVENT_INODE)))
- 		return ERR_PTR(-EIO);
- 
--	mutex_lock(&eventfs_mutex);
-+	guard(mutex)(&eventfs_mutex);
- 
- 	ei = ti->private;
- 	if (!ei || ei->is_freed)
--		goto out;
-+		return NULL;
- 
- 	list_for_each_entry(ei_child, &ei->children, list) {
- 		if (strcmp(ei_child->name, name) != 0)
- 			continue;
- 		/* A child is freed and removed from the list at the same time */
- 		if (WARN_ON_ONCE(ei_child->is_freed))
--			goto out;
--		result = lookup_dir_entry(dentry, ei, ei_child);
--		goto out;
-+			return NULL;
-+		return lookup_dir_entry(dentry, ei, ei_child);
- 	}
- 
- 	for (int i = 0; i < ei->nr_entries; i++) {
-@@ -561,14 +553,12 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 
- 		data = ei->data;
- 		if (entry->callback(name, &mode, &data, &fops) <= 0)
--			goto out;
-+			return NULL;
-+
-+		return lookup_file_dentry(dentry, ei, i, mode, data, fops);
- 
--		result = lookup_file_dentry(dentry, ei, i, mode, data, fops);
--		goto out;
- 	}
-- out:
--	mutex_unlock(&eventfs_mutex);
--	return result;
-+	return NULL;
- }
- 
- /*
-@@ -584,7 +574,6 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 	struct eventfs_inode *ei;
- 	const char *name;
- 	umode_t mode;
--	int idx;
- 	int ret = -EINVAL;
- 	int ino;
- 	int i, r, c;
-@@ -598,16 +587,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 	c = ctx->pos - 2;
- 
--	idx = srcu_read_lock(&eventfs_srcu);
-+	guard(srcu)(&eventfs_srcu);
- 
--	mutex_lock(&eventfs_mutex);
--	ei = READ_ONCE(ti->private);
--	if (ei && ei->is_freed)
--		ei = NULL;
--	mutex_unlock(&eventfs_mutex);
--
--	if (!ei)
--		goto out;
-+	scoped_guard(mutex, &eventfs_mutex) {
-+		ei = READ_ONCE(ti->private);
-+		if (!ei || ei->is_freed)
-+			return -EINVAL;
-+	}
- 
- 	/*
- 	 * Need to create the dentries and inodes to have a consistent
-@@ -622,21 +608,19 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 		entry = &ei->entries[i];
- 		name = entry->name;
- 
--		mutex_lock(&eventfs_mutex);
- 		/* If ei->is_freed then just bail here, nothing more to do */
--		if (ei->is_freed) {
--			mutex_unlock(&eventfs_mutex);
--			goto out;
-+		scoped_guard(mutex, &eventfs_mutex) {
-+			if (ei->is_freed)
-+				return -EINVAL;
-+			r = entry->callback(name, &mode, &cdata, &fops);
- 		}
--		r = entry->callback(name, &mode, &cdata, &fops);
--		mutex_unlock(&eventfs_mutex);
- 		if (r <= 0)
- 			continue;
- 
- 		ino = EVENTFS_FILE_INODE_INO;
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
--			goto out;
-+			return -EINVAL;
- 	}
- 
- 	/* Subtract the skipped entries above */
-@@ -659,19 +643,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 		ino = eventfs_dir_ino(ei_child);
- 
--		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
--			goto out_dec;
-+		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR)) {
-+			/* Incremented ctx->pos without adding something, reset it */
-+			ctx->pos--;
-+			return -EINVAL;
-+		}
- 	}
--	ret = 1;
-- out:
--	srcu_read_unlock(&eventfs_srcu, idx);
--
--	return ret;
--
-- out_dec:
--	/* Incremented ctx->pos without adding something, reset it */
--	ctx->pos--;
--	goto out;
-+	return 1;
- }
- 
- /**
-@@ -728,11 +706,10 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
- 	INIT_LIST_HEAD(&ei->children);
- 	INIT_LIST_HEAD(&ei->list);
- 
--	mutex_lock(&eventfs_mutex);
--	if (!parent->is_freed)
--		list_add_tail(&ei->list, &parent->children);
--	mutex_unlock(&eventfs_mutex);
--
-+	scoped_guard(mutex, &eventfs_mutex) {
-+		if (!parent->is_freed)
-+			list_add_tail(&ei->list, &parent->children);
-+	}
- 	/* Was the parent freed? */
- 	if (list_empty(&ei->list)) {
- 		cleanup_ei(ei);
-@@ -877,9 +854,8 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
- 	if (!ei)
- 		return;
- 
--	mutex_lock(&eventfs_mutex);
-+	guard(mutex)(&eventfs_mutex);
- 	eventfs_remove_rec(ei, 0);
--	mutex_unlock(&eventfs_mutex);
- }
- 
- /**
--- 
-2.47.2
+-Nathan 
+
+> 
+>>
+>> Co-developed-by: Nathan Fontenot <Nathan.Fontenot@amd.com>
+>> Signed-off-by: Nathan Fontenot <Nathan.Fontenot@amd.com>
+>> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+>> ---
+>>  drivers/cxl/core/region.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index c3f4dc244df7..109b8a98c4c7 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -2333,7 +2333,7 @@ const struct device_type cxl_region_type = {
+>>  
+>>  bool is_cxl_region(struct device *dev)
+>>  {
+>> -	return dev->type == &cxl_region_type;
+>> +	return dev && dev->type == &cxl_region_type;
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(is_cxl_region, "CXL");
+>>  
+> 
 
