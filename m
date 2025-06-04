@@ -1,111 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70F428B7ED;
-	Wed,  4 Jun 2025 09:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78574204C2F;
+	Wed,  4 Jun 2025 09:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749029015; cv=none; b=eZkD+SMnR75Tp4tWMNkLDYcjejSDprkxK+wxBAYyFpivy0MSECrRWV6oTBzwDNioN7mPKkAyKhDI0QYR8qV2X1hjxitggOU3W0Sul5eSjKSlwzZn+3fTKsZU74Mx1nw+gm0OcbZPRBaWJ3GwNk2N7UpNGN3tEmw6FPx5M4HX/X0=
+	t=1749029054; cv=none; b=u2EoAeUF5oiqPA+Y8ymhbTEzS07eW5H02ayughoH7qd+I8DuxI49LSwlPUWt3lKJ3W4n2chLL4cyI9JDGmJmmrMPZLaHBR9sdwaSmq4ZeCZ3OaN9LGEghvG167wx+J/5ncRtYusIO7ykOBdAo6xPAFlfe2pkoUY6LK7Hl8mODkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749029015; c=relaxed/simple;
-	bh=4XsM1mwEJuog2VF4KvPV9bu4b1v/w/WR88Lnj3fYsiU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZS/31ZXZre6YxxlhFGHURIBu5Wb9VDkP6dLQxOIIBYOy4dVPXc8o7lgwkmsqYKr7qwd/IDfeHofHJ4WClLWJ2nmnxkSzdrpFUxAn2yurzpFA2sU8lEu9HnfC43O2Si+i4ZxqHXAh0btYVE4+M5RjQxMIFJMl4IJMQrWUPX1q1FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxA/Gsue; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749029054; c=relaxed/simple;
+	bh=3Vt9Ersmy51fQ4UGCzG+5fBUf5HJgTPUKNpIdSpjnHU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=V8tDHeucIqRfEsFPAl6HM0CDDdBegZW7slZ8hPDaVLlXWVCswRQwu5ybSB4rJKcY0KL7LAgSOndX9xrRz3kq9vtDjMWEO+4LoUoLeMkAPFfIdq1ZxBk0R3A32QUrsX9jn/sxeYGJU/nXSxx07/IdO/geaNoFLI57RhXYGfCufJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qmKVFBJ+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N4r51sj9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxA/Gsue"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F2EFC4AF0B;
-	Wed,  4 Jun 2025 09:23:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749029014;
-	bh=4XsM1mwEJuog2VF4KvPV9bu4b1v/w/WR88Lnj3fYsiU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HxA/Gsuemf2DcY8BMao+TEFANZzj9kC4BFUIUBnZvpvBowABTB6Y9Imy4w648NOiX
-	 XuUYVwSHC2OV6N1jG1bQO5olYOEB/Yxba5F5FlKiN67oMBBmQORLCwWSKkOLssd7vl
-	 Gnuxgmcdl65KLhmLEvgEdXlKjojxy+Bv7vCbyniFc/uSEH+D2Z2WI1jOJq2tPU8eAH
-	 7kAc/4zkqPtWHcVWYFHhhrYVEPJTOBNQwj/jEsY76/Zc2Og4P+g2N36varhaxI6NtC
-	 Vqvp1gWUqKi6qWKNnekwgQbrEowFm51TsnzHbeV72QK8/7O0ZpHYza/I/fPXw5LMX5
-	 Sorgx8gNDcH5w==
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-408d7e2ad03so1944230b6e.1;
-        Wed, 04 Jun 2025 02:23:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVC7D0HHhYpgbStfA8L/AsbBnOAx7KcICmFoUseVtzWtMC51xI80cdOoWpZQI/758H8GCHHFiOg8NkEoZWY@vger.kernel.org, AJvYcCXIwHgdvIzNqfBpF3+uK80zqnGhvnxERTzuQaug1LGygtNVOYEPzVyDTqMF7a6UGANKIKQUVgfdW4ZO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiMyg3WQM3ROIrYQA5ihv7zVDJaKKYKKCA5+kQScX94ilWgwWk
-	J5yD77PDfL+NLyiDrFSdF8R1czaFXGgihZZasVyTzotmobM5fAIKzHPJu7DYdNe0nlUrLO9V977
-	wXckbvvN4DmvXiJUf7yHaoltiff5u/sw=
-X-Google-Smtp-Source: AGHT+IGeAE3e+SRqBmPSi7SR3JkCnSTrhPk6TQUJbkYXOJBaJph89XQsZ/9euL5rpS9aR/+RIGtXcIQJms68QE8EtpE=
-X-Received: by 2002:a05:6808:2f19:b0:3f8:1df6:40f with SMTP id
- 5614622812f47-408f0efeca9mr1826673b6e.15.1749029013555; Wed, 04 Jun 2025
- 02:23:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qmKVFBJ+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N4r51sj9"
+Date: Wed, 04 Jun 2025 09:24:08 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749029050;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OMYbWrQ6EXrRjZdoFNsi/rJdPmu0zrgE79fu3+vahOY=;
+	b=qmKVFBJ++JmXnhLriGTx0+0qfHCH5MKzmyOwPB0ncewRzCgAvsjFXWx1fgSh7MZ/t3tUl2
+	JOIOg26EGJ3aIzaHAvdQMumOk+uMZr+gyiUrAiILGl+tGAHnVvAWHGLMo533n9xjiv/APh
+	rgWfrOnpu3y4wmnsx7g2EajUg/+5aii459iqjj3ItFGSpUIUMw8rnSrWhM90C8uw9pYUp9
+	utBkp8Wcmf0aIUqrvFfVlErVKKW9M98WEGcZ3mtbvhs1ZMPztEf02qLw8GyzE53Ikhe1qp
+	8s9Vu2N7N8W/NoaSXKJUIzknrs7okJnT2IoAvDYbzqaHiD5SD+6cenBArS1QHQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749029050;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OMYbWrQ6EXrRjZdoFNsi/rJdPmu0zrgE79fu3+vahOY=;
+	b=N4r51sj92GSK9ydR6XP00VmTi7imjiDm9ktSmA432AhB4i3ihEvtXnWwsMwG5CQvU0H9zK
+	bDbsicOxO0ymE/Dg==
+From: "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] PCI/MSI: Size device MSI domain with the maximum
+ number of vectors
+Cc: Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250603141801.915305-1-maz@kernel.org>
+References: <20250603141801.915305-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530175420.1277-1-khaliidcaliy@gmail.com>
-In-Reply-To: <20250530175420.1277-1-khaliidcaliy@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 4 Jun 2025 11:23:21 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j9A4XC15mDLcZyop2TOOV=KTKNDZsqnUbza0NqH6f9sQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtryV6M2hjXcKMBFG1uUYrgw5uAzHIOlWehu-0nziEWbn8Y6MGpxkoEw1s
-Message-ID: <CAJZ5v0j9A4XC15mDLcZyop2TOOV=KTKNDZsqnUbza0NqH6f9sQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH] x86/ACPI: invalidate all cache lines on ACPI
- C-state transitions
-To: Khalid Ali <khaliidcaliy@gmail.com>
-Cc: rafael@kernel.org, enb@kernel.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174902904863.406.10681052840126037634.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 30, 2025 at 7:54=E2=80=AFPM Khalid Ali <khaliidcaliy@gmail.com>=
- wrote:
->
-> From: Khalid Ali <khaliidcaliy@gmail.com>
->
-> According to ACPI spec 6.4 and 6.5, upon C-state
+The following commit has been merged into the irq/urgent branch of tip:
 
-Which section?
+Commit-ID:     9cc82d99b13c1ad04e3dff9182b7953a8dba10b6
+Gitweb:        https://git.kernel.org/tip/9cc82d99b13c1ad04e3dff9182b7953a8dba10b6
+Author:        Marc Zyngier <maz@kernel.org>
+AuthorDate:    Tue, 03 Jun 2025 15:18:01 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 04 Jun 2025 11:19:25 +02:00
 
-> transitions (specifically C2 and C3) it is required and explicitly
-> mentioned to invalidate and writeback all modified cache line using
-> WBINVD.
->
-> However the current ACPI C-state entry using monitor/mwait instructions
-> it have been used CLFLUSH by flushing the cache line associated by
-> monitored address. That what all about this patch addresses,
-> invalidating all cache lines instead of single cache line.
->
-> Let me know if there any reason and decisions behind the current
-> implementation.
+PCI/MSI: Size device MSI domain with the maximum number of vectors
 
-I think that Peter has answered this already.
+Zenghui reports that since 1396e89e09f0 ("genirq/msi: Move prepare() call
+to per-device allocation"), his Multi-MSI capable device isn't working
+anymore.
 
-Anyway: Is there any practical reason to make this change?  For
-instance, any system that doesn't work before it and works after it?
+This is a consequence of 15c72f824b32 ("PCI/MSI: Add support for per device
+MSI[X] domains"), which always creates a MSI domain of size 1, even in the
+presence of Multi-MSI.
 
-> Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
-> ---
->  arch/x86/kernel/acpi/cstate.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.=
-c
-> index d5ac34186555..eb3d435e08ad 100644
-> --- a/arch/x86/kernel/acpi/cstate.c
-> +++ b/arch/x86/kernel/acpi/cstate.c
-> @@ -222,6 +222,9 @@ void __cpuidle acpi_processor_ffh_cstate_enter(struct=
- acpi_processor_cx *cx)
->         struct cstate_entry *percpu_entry;
->
->         percpu_entry =3D per_cpu_ptr(cpu_cstate_entry, cpu);
-> +       /* flush and invalidate all modified cache line on C3 and C2 stat=
-e entry*/
-> +       if (cx->type =3D=3D ACPI_STATE_C3 || cx->type =3D=3D ACPI_STATE_C=
-2)
-> +               wbinvd();
->         mwait_idle_with_hints(percpu_entry->states[cx->index].eax,
->                               percpu_entry->states[cx->index].ecx);
->  }
-> --
+While this was somehow working until then, moving the .prepare() call ends
+up sizing the ITS table with a tiny value for this device, and making the
+endpoint driver unhappy.
+
+Instead, always create the domain and call the .prepare() helper with the
+maximum expected size.
+
+Fixes: 1396e89e09f0 ("genirq/msi: Move prepare() call to per-device allocation")
+Fixes: 15c72f824b32 ("PCI/MSI: Add support for per device MSI[X] domains")
+Reported-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Zenghui Yu <yuzenghui@huawei.com>
+Reviewed-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Link: https://lore.kernel.org/all/20250603141801.915305-1-maz@kernel.org
+Closes: https://lore.kernel.org/r/0b1d7aec-1eac-a9cd-502a-339e216e08a1@huawei.com
+---
+ drivers/pci/msi/irqdomain.c | 5 +++--
+ drivers/pci/msi/msi.c       | 8 ++++----
+ drivers/pci/msi/msi.h       | 2 +-
+ 3 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+index d7ba879..c051527 100644
+--- a/drivers/pci/msi/irqdomain.c
++++ b/drivers/pci/msi/irqdomain.c
+@@ -271,6 +271,7 @@ static bool pci_create_device_domain(struct pci_dev *pdev, const struct msi_doma
+ /**
+  * pci_setup_msi_device_domain - Setup a device MSI interrupt domain
+  * @pdev:	The PCI device to create the domain on
++ * @hwsize:	The maximum number of MSI vectors
+  *
+  * Return:
+  *  True when:
+@@ -287,7 +288,7 @@ static bool pci_create_device_domain(struct pci_dev *pdev, const struct msi_doma
+  *	- The device is removed
+  *	- MSI is disabled and a MSI-X domain is created
+  */
+-bool pci_setup_msi_device_domain(struct pci_dev *pdev)
++bool pci_setup_msi_device_domain(struct pci_dev *pdev, unsigned int hwsize)
+ {
+ 	if (WARN_ON_ONCE(pdev->msix_enabled))
+ 		return false;
+@@ -297,7 +298,7 @@ bool pci_setup_msi_device_domain(struct pci_dev *pdev)
+ 	if (pci_match_device_domain(pdev, DOMAIN_BUS_PCI_DEVICE_MSIX))
+ 		msi_remove_device_irq_domain(&pdev->dev, MSI_DEFAULT_DOMAIN);
+ 
+-	return pci_create_device_domain(pdev, &pci_msi_template, 1);
++	return pci_create_device_domain(pdev, &pci_msi_template, hwsize);
+ }
+ 
+ /**
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index d6ce040..6ede55a 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -439,16 +439,16 @@ int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+ 	if (nvec < minvec)
+ 		return -ENOSPC;
+ 
+-	if (nvec > maxvec)
+-		nvec = maxvec;
+-
+ 	rc = pci_setup_msi_context(dev);
+ 	if (rc)
+ 		return rc;
+ 
+-	if (!pci_setup_msi_device_domain(dev))
++	if (!pci_setup_msi_device_domain(dev, nvec))
+ 		return -ENODEV;
+ 
++	if (nvec > maxvec)
++		nvec = maxvec;
++
+ 	for (;;) {
+ 		if (affd) {
+ 			nvec = irq_calc_affinity_vectors(minvec, nvec, affd);
+diff --git a/drivers/pci/msi/msi.h b/drivers/pci/msi/msi.h
+index fc70b60..0b420b3 100644
+--- a/drivers/pci/msi/msi.h
++++ b/drivers/pci/msi/msi.h
+@@ -107,7 +107,7 @@ enum support_mode {
+ };
+ 
+ bool pci_msi_domain_supports(struct pci_dev *dev, unsigned int feature_mask, enum support_mode mode);
+-bool pci_setup_msi_device_domain(struct pci_dev *pdev);
++bool pci_setup_msi_device_domain(struct pci_dev *pdev, unsigned int hwsize);
+ bool pci_setup_msix_device_domain(struct pci_dev *pdev, unsigned int hwsize);
+ 
+ /* Legacy (!IRQDOMAIN) fallbacks */
