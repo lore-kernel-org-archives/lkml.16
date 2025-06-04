@@ -1,326 +1,306 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42B752F88
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 18:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749060161; cv=none; b=pGwvct9st4oeVHQk7ofbwZR9dq7HBRO/R6Tt0wpYTkx4Rt2pSu4VSo9pG2rTg/nkLWcOzMVt3LCQuGry3tO0iZ9jj0rUXiOcYwooR7JF7DhCG6/nUnVihERfujeisOlK2y5RAgOJ2/gRB+fTOXNTaVKROh3h6xJpo5WeMaj0f0o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749060161; c=relaxed/simple;
-	bh=F8HnxpY70p/Zp2iUyqkIkhQ+KlYjxgtmeLMWDz54ozM=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=uHnRJ9XkGKpdZZWu6Y/IzMU1SaO6FtOtogsLoatg+FDd6fCLsHf3KZt53w3tm0WIhlYNIZh0nlM01hOWiMl5fLZlj1jJIyUTy1uu4vpIQFvcnvaJhggugNdcLzLJkFYvxCib9oslBC0NiRZgmSWntS24QunfQXTmihoL+xI9/Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=dfluSOO+; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792D1171A1;
+	Wed,  4 Jun 2025 18:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749060288; cv=fail; b=COYuwIn5FLByBlaQmssXxX/fjLYd/BLDJ7IYUJSPvbccHkOywbAYKcleqY+28Tq/Np/BVFojmxawhs0D/sP0N1c/GkzJab8xwUXtVdW3Pr9dCFCULvmAo/urxvuWlIyuCxVPtkSO5c+K5MQ/BgP9pAeYqT66M8kCcod432R1B4M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749060288; c=relaxed/simple;
+	bh=IKdwvrey4QRVge0FctAlmNuDrHgtI5t+D3OvOtRnP9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=LNVEerXhUk5CURoHs9HsXbpDsqf24J5nAmNwMCCHo9t17sFqOGuC6QEY1EXSh/uUbpBUxDuWXV89tx2sxkhA2eojnTh+DsAMP+xsNnodRvNdFs4GwSjvlAr4L8qPwbdYju2m8ShgnQSSPq09uviyak3yFOXgand74AI/NYl7OK4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=q/232Kd2; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=OBRAGmyD; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="dfluSOO+"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-74019695377so137260b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 11:02:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q/232Kd2";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="OBRAGmyD"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554FdwkA023805;
+	Wed, 4 Jun 2025 18:04:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2025-04-25; bh=FMYxu+bsxDKbkwTq
+	v5a4TRNQadjclqbjIgvLc0tlkEk=; b=q/232Kd2y1DjJZKqnsfgzLizBtge8Opp
+	MhekJL44LbJtWQ2NiDcgoWrNNlTJii84OqB6vjltFqvxNCjxBfpEaBgbkObHDRHX
+	M7SQyZN84CRf3XvFj8xC9U18AIAlH4wio/4VbGhUyC8IRE4O3h3SzGLSxdMxK9AX
+	Ezt69D/Io2F6jdUchO1673DsxDNOgE+fnJCvk0KfN+y0WFsZI9T9h8VHMGkn7nQU
+	XzmJRCrfgfemdA6O5uK84atZWBF5ZKyWOotU8d83BVK1ZX/AORTKDGwoQYjpaZYQ
+	RnFueZG0Ia3kprNRFMCZFX8UZu7b6znizlDmotvPcmLzlqcg8SKQEg==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471g8cvjc5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 04 Jun 2025 18:04:16 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 554HvShv034873;
+	Wed, 4 Jun 2025 18:04:16 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04on2083.outbound.protection.outlook.com [40.107.101.83])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7bbafv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 04 Jun 2025 18:04:15 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ce+qz5e6uEVSUGmJgusKi/lnN+raEAi/xN88DlPuevgF0eJeyL7fnE5y2WPaP+hfMn0xPiKF9W64eVaHKixv9XEXkFPgY3c/rKiJJZVAmzxO9lh7KLEh8HWH9b5iQmlptblGnHyo+tFRBd25Ml2sSLwPzQ1ZYQt7tgNLq+lVBQ+eZpqVg3tAKXYw/rIKzdIidL+9HO7LaRm6B6ekuuM9XPoLzk+Wn8nWxjDTkZaMT2F3XosMogC0ckFtFCaT0ioCm0EDYwn81uxDC5f/PloAbqE2DXfAZLLEtEW/ELgEPHuAjBVS6GgGgc00PdPP4askgpHwVS4423ZtI60MMXF9og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FMYxu+bsxDKbkwTqv5a4TRNQadjclqbjIgvLc0tlkEk=;
+ b=VR//tWwgkMvlyTGrxMxgVTET470Tg0y2O/fjJHU/DylONAnxva72LKrHk61LtvToMavlLpPCKJ02xxjW41ULvf/OeiILnO/H2xhGXOA1YDBChp9v+xRA07r1RzoeAUItJToC7B8iC+q+rMhzqwWZjn/QReTXeuV9n204zkziKn5Aa7Ap9rf74OXDmxKxeR1NoEgGA/Pid3xzLthmBepYFBQBl+cj622SMXW+Dktg3ljUItx8nPsttUO21gXt0Zxn1EinpF2CvcyPaukb3lajXvL5I/nQdOAbaljpuS3VTQ/vFw6UXgvJJYI6p2bTm32ljTwXOfzcL6UrBSKZJOgh9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749060157; x=1749664957; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4sb9NtYIBm94y/rjJYszo90EtKu9XX4CPTVA/wAKQT8=;
-        b=dfluSOO+1nTAtSN05kvky7z4h4bB20K7kUPb7wwI0JJU9PHQJ9y7/53dT1r15ErXzC
-         pmk3z2hw7rnWfNevFrgf7UGNEE3G00YKK4IwbgEaJ48nyv9AcZpHGjwwMwlDGqCzMLIg
-         RfkWPUHK0aktnbR9to4m6fvDfrb7gsC2laFDP61gFKEZVdW3mRso1DuhpOsOcTrH7qbK
-         9CUri0DyY2eOB4jfs3MOvvbsm7zcNv3W0UiUMy8nafT5EPsb+5rN/6svhGhYyquGpVEq
-         b+7lEi3cfE2lEv43XsIPZAYFR6ObbptgiOOv67Bx+iBn6AykCPzR7Ehwrw818xZ3lMmi
-         byuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749060157; x=1749664957;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4sb9NtYIBm94y/rjJYszo90EtKu9XX4CPTVA/wAKQT8=;
-        b=MzCBJEKrkych3JntiIPAvF4qcn6OEPWhHY6s4xbF2JXCwuTXs1iWKnRQd+adlh2reg
-         lG570iLz0X2Y5Gxd4sK1/6BaVFbjv0Rs9hr59AJjMeedn9k2OQ3wV8j6NVi0Pf38+7d9
-         HixBEpaT5MtRJJ/Cj2KP6xl2Pu8NhXopyczwMGgqnrNcv1lFUH7rLw4L4EJU0WnVUooZ
-         uP1M86/jIASmnRSQaqX29caqzxHrxXdR/IyDtp636J2Xq+Hv0sabUqDh530ggJDzlQMl
-         t7t14Y93nVfcxybSFrbbohIK3hRr9o4xsWJTL0tKLglKnhyIMU82PWd4GESeXGJk9zs8
-         knnA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLUf1YxaD7j44y3kMUN+v6jHxsMKVnCYYi4HIjXLtgTuAzoSkObPVDia7Fr25vbbzmQ3+7TbsLemwxEn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9YBaQN46+5dDg5ddvyhf28X2sGcXH8JvQFt4VN3PdVSenUI8J
-	q4J8BWAJ1begmxfztHZ97UAd8lTOsQxCsFOFY2A0eAgtdBOirnU9tsksa8urdb9FNAo=
-X-Gm-Gg: ASbGnct5HVK5flDxek2U0cZqGpqDcYa0I9Y/qUm+Ji3n0M0d4mVZNTClkMi++QuWXVR
-	55rGsz1a/ZWYCYoefotXYrUze55wIhR2FZhkkBBY/ahNWbWkmNG0fBpxYXZJqFVffczOERFUCuw
-	ZntExGaRA65Dwn9UcNYFPQrFCzuJfylwyXb4eMXrSX2WIFU7d/OEwZzbdLgzBo/ua3VEjucssff
-	z1yA0xvvhG582bGJ2fsnBeEa/Tq9T+vZTUM3KH5CNzHYycUW9o5zHkSdZlEfyYAI9B9C1p5Neka
-	VonuX7VqzOQ/luuZ7L2kFbYmy3gBqdh0bXm26nrRVRyBlJf2E2dVNV8=
-X-Google-Smtp-Source: AGHT+IGzoLjlPGLsxX/VcQAibjCHSuGjPNjwdnzeCXTcDSgTlXsCpPwGWWh1fCsXTwlbhq/KM2w0wQ==
-X-Received: by 2002:a05:6a21:48f:b0:1fd:f4df:96ed with SMTP id adf61e73a8af0-21d22ce22c7mr5169223637.26.1749060156608;
-        Wed, 04 Jun 2025 11:02:36 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::4:3cec])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-747afff72bcsm11485461b3a.166.2025.06.04.11.02.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 11:02:35 -0700 (PDT)
-Date: Wed, 04 Jun 2025 11:02:35 -0700 (PDT)
-X-Google-Original-Date: Wed, 04 Jun 2025 11:02:33 PDT (-0700)
-Subject:     Re: [PATCH v8 00/14] riscv: add SBI FWFT misaligned exception delegation support
-In-Reply-To: <20250523101932.1594077-1-cleger@rivosinc.com>
-CC: Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
-  atishp@atishpatra.org, shuah@kernel.org, corbet@lwn.net, linux-riscv@lists.infradead.org,
-  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
-  linux-kselftest@vger.kernel.org, cleger@rivosinc.com, samuel.holland@sifive.com, ajones@ventanamicro.com,
-  debug@rivosinc.com, Charlie Jenkins <charlie@rivosinc.com>
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: cleger@rivosinc.com
-Message-ID: <mhng-C1CE13EE-C4E6-490D-ABF4-CE7BD84737C3@palmerdabbelt-mac>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FMYxu+bsxDKbkwTqv5a4TRNQadjclqbjIgvLc0tlkEk=;
+ b=OBRAGmyDRCVT7wSs8q/Z9DqIkEfDhwayfHSmjlxIUSZBj+1V2JyfEWHbGIiWzyLK+FZvL+owOJJbLbbpIryK6o9Jsv/elaTYCa9ibYRrpzfPtIWt1UDI4MUsYH/aIJr7dK3VMPVF5hcrfdj4QxVi8+J5YTevVbbhYQ8CmFN3izk=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by SJ5PPF2740EE012.namprd10.prod.outlook.com (2603:10b6:a0f:fc02::795) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Wed, 4 Jun
+ 2025 18:03:14 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8746.041; Wed, 4 Jun 2025
+ 18:03:14 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Shakeel Butt <shakeel.butt@linux.dev>,
+        Jonathan Corbet <corbet@lwn.net>, Jann Horn <jannh@google.com>,
+        Qi Zheng <zhengqi.arch@bytedance.com>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] docs/mm: expand vma doc to highlight pte freeing, non-vma traversal
+Date: Wed,  4 Jun 2025 19:03:08 +0100
+Message-ID: <20250604180308.137116-1-lorenzo.stoakes@oracle.com>
+X-Mailer: git-send-email 2.49.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO6P123CA0051.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:310::7) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ5PPF2740EE012:EE_
+X-MS-Office365-Filtering-Correlation-Id: a597da94-f62a-46db-cd73-08dda3921359
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DZs0opCFhc6idFDLrwjAWTVIWylwYQyW/KhR3TTCPSaHKh43d7aIp+8fNuYe?=
+ =?us-ascii?Q?lnIzXtbmVZ+kLzZDK3KFn8hg9yhjr7PM9XRDH1PmVgqMR8R7hp9p7jBCS2Y1?=
+ =?us-ascii?Q?kkkNRfNRFm3shXdnmJnJWcRGkMwmUJwWj9KjHdmUF1cBISZlOQPqb09RGcdF?=
+ =?us-ascii?Q?Os9r5+OxRYfwJkIsPkNci6NrNtkLYvk7fkf9fY9lYD+PfwpnFPLY/M0U+j5s?=
+ =?us-ascii?Q?5mHgqOr5/nPhxl7ISChvSIKMvN+jTWYni5HQyrABFLZeY9lFoBXB81QmM9LE?=
+ =?us-ascii?Q?fQD/a+tUGOzO8D0nvmlvHpAF8wdaxiavBqGgkdY1UdcZu+bteovsq6SV2mX9?=
+ =?us-ascii?Q?tkPwXmAvzBAl9gKBnldxhqaw1CnoB0AEhwVahQl4IHZ6bwTG7qy6JQuxjIu3?=
+ =?us-ascii?Q?NoZ4s4QEgEEUbiOUrL2lz8D4EtnLFDSFPARKo0tORmIQvazZ1BuE4SoaFjAZ?=
+ =?us-ascii?Q?FzoXm0kPtzWuIsYNYrxKv5GGNsbniJ/9v30wuydHB8fWsdGMO+U2AOf7W58N?=
+ =?us-ascii?Q?HfmzpZPc344XPWK1pEvxjoXTTnWU0ruELnGZGnBG3IV2E+QnBDdgRr0frKJq?=
+ =?us-ascii?Q?EBo9dsOt93gmJKhtGlfeT69o5MksKh/mk/qE7XQlsxJJAwbPDCNDuNZ8+3TH?=
+ =?us-ascii?Q?ktsAo53j0XNLIDtSRS9eysQwnjLUmPRfbm56plvqMk082KA6UgZCoFh9X40x?=
+ =?us-ascii?Q?VG7rag5Obr1oeXPBkx+0C9Ff21UneQQnGaKx07m8kmf7qLm9MBHDy01b48jy?=
+ =?us-ascii?Q?3BaIWRsTaR1m0plyTV67S1MhXykGjkJk7l54iEAtPxjpMFU01/zWEDKP/9RE?=
+ =?us-ascii?Q?HoPkqr4VKOSuxZbCIQfT6/iEke///56ydm4ysDTGza1d0TmGDuGrXOWRZjDe?=
+ =?us-ascii?Q?hX2QVW9F+uHMKomhMmgEsFGxmEtm+WyQ3t3vBttaRptKSZ7Jkare2CmzuJoS?=
+ =?us-ascii?Q?cJakc7zNZFsi0OZzVjfIUQe5dckYyb5sqjtLZVSMda2+B0lzHAe1/GQQ8jEE?=
+ =?us-ascii?Q?GRHYTwSa8OoVwJg/xxIx5B7dpI2bRG+6VMm2OkCwepnPeDxFQZpgueyoZnLZ?=
+ =?us-ascii?Q?ebdu+0lGV4kCtadpj7sLrZn+vMI35rpeKbreYtYia/4ZdPdcGAKJ4xM8Uite?=
+ =?us-ascii?Q?eSwJbz5m6GSTPTdzMG4Q+UW0+v3s2fm17wqCXBDtEivhY28ZFKwcso8d4Wvf?=
+ =?us-ascii?Q?MHdqRIcpwa2iNF8kmMVLlWlyinPL1to6K61RyCpcs9hfBTKe3p4akalQY6nS?=
+ =?us-ascii?Q?EwdfZ79Zt+d+SPV4ArHQFEwBti1YZ8eRmUB/IWWLXF7bePxKLU9r8T/MLrdd?=
+ =?us-ascii?Q?mwoujgbFSX9dG4nbwNRIzyEBbzvWHBYpgtbjvjCEiHie30Zg7hlFOPUZ7v+b?=
+ =?us-ascii?Q?Pbst+uVR+ATf/VVF4i1LVDcujXA4DNKRdTHHC3RQv9ZS83V8aCGdPRavq2Wf?=
+ =?us-ascii?Q?BfPLW/seoNk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?wUAdoDEoBmXcA8dDg2ixYZiyl4S6DXrphDnw/bwAnNd01cCe4ocnwM6+OWgY?=
+ =?us-ascii?Q?2F35nK4P/Lof8kyBkscjBVa926ggfgXnug+EOFafAt5jXDWx+FjNa2HuJJUu?=
+ =?us-ascii?Q?Z1jO2fgvBzWrBWLVKanxYpRm/zOoYtmTyTY8rTwNzF0aTFifIrKCp9E+BXHH?=
+ =?us-ascii?Q?c33+xiC0MVQMGEwIb8hB/W5vsw6REaL6DkGv2o1K10eOfYCzBS4z4oxjOLF2?=
+ =?us-ascii?Q?QFeFPBxu8Z+T5oEFjPtzI/GboFg76Sb8d9z/s2EBbnCmH6jLiUUIYMEkp1Ib?=
+ =?us-ascii?Q?PsRKH9VEPvk22P3MRBQmURdvhRjo472NICMJbD4PBDTFm305o7kk6U3A4/7u?=
+ =?us-ascii?Q?RSW1Mji5YDiQh7vJPrvUd/+A9/TyBpgQDX+zR+5J1DM54bIMvuPCGpuJv6+f?=
+ =?us-ascii?Q?+U20gCxWyOi02EN6q+xnxUw2T3tNOYhdNU/bkLLihmJrKNOP700jIjxuYef7?=
+ =?us-ascii?Q?NHdajJaZI599VQc4bjhE3pNoR/dv9IZwJYQ0C4n6e9oZ8UthMdiVbTORpAny?=
+ =?us-ascii?Q?qH1wTfnseUSRFP/MsZnW5gvpMtypbuz8fV9Y8w9tbnl5ZOrCmuZbaw8wDIJq?=
+ =?us-ascii?Q?fovwIYVQG6nSH8M6ejdk0hEnJ8l9NU701Pl4eA13Ymc9xVaR2vGytiTTHSEz?=
+ =?us-ascii?Q?MRQPyWZnt/Y/4NkpaZoVf7v21GwSP8SNuJl9QvrLblKZ6e7AiKrIx5U6czSK?=
+ =?us-ascii?Q?GjoF59g6hHu30NH/Ba6pHp5eXl0Gz5OOAGUZeUHx3BYDjO18vnxuJg1WMxvI?=
+ =?us-ascii?Q?xcRPMHmq57I4pv4wIEAOmnI/8zBnZNMP16hJ5kSy6Fc09V/Apst30OM4OLtr?=
+ =?us-ascii?Q?PsaU5cuuzwERirz4kxhRi0iUHu63TwWN6h5mGZLCpQ/X3vW0Yuv5KmYL7yyq?=
+ =?us-ascii?Q?UA+FJwAuVp/NLB0nTFqp0bg9J59KSxQwbwlJ1OUa5KDQdniY7kl6EV4ofc3Z?=
+ =?us-ascii?Q?KE0LHSAlaN6tSULvzgGylWz0hze+mqrlE7YJG+gt4H5gYDIyCYb11Faa8FHU?=
+ =?us-ascii?Q?hsJWsc9KX1vVvtjpkT50iD0yUsRCXiB9ZaFFxEFAM954VoEj5GTTbWw5sSJA?=
+ =?us-ascii?Q?otINXfJOD6KIm+F5UyuE5UUUHLVuYMHi3eItkWPNunX897ClQw+zTJ+lHQUE?=
+ =?us-ascii?Q?UhK9yU0p/90VqgcwxCSqkJVT9oyXZFpaJq7FQvA9i9RZSk9byuTcDzETPhwY?=
+ =?us-ascii?Q?+2Gv2Cg4ne247EC2FQS3i4QRAPbtVH21ajXV6CDugFA2wSZ7PlFwSDQBywry?=
+ =?us-ascii?Q?HF4bc6TINmQrXtadNrXL7darInM1zfpTWttJpKjdfpAqQUuTRTIgyz54fcWm?=
+ =?us-ascii?Q?ogAoO6ESHJI9TT0CAQH0Ie5atSPDiDKJnqmp46qysYhQCwrk60Zhy1fbTv4B?=
+ =?us-ascii?Q?HPmf5giSQa3bdIfc/G1BdEfvEpvSVG981JKnNggMUkVj+7uEOtUYEwRgSUOy?=
+ =?us-ascii?Q?INtLOI0ku07NkBK3hAun63At4BC8F/TXJAKLSJP5oy+fb8zustH36mUBGuIR?=
+ =?us-ascii?Q?2m2/2uhcP1uXvRah4saOzDhU1DQ0Mk5HbNu1A6F3I3fImgNPFHU9hnLSyPAi?=
+ =?us-ascii?Q?tjWSdBUpb2ev9OEQQKwapRCoJDKqzjZ5CKBTLcw1kwkWQYuh+zCKX4GYJ7jc?=
+ =?us-ascii?Q?1w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Ml5v61vjJ2v9EH76jeaYuikr4Lhul5gNJ5o58K7DV7WRzhZ7HWcSTYWtXu0ymld3Xglj6UY+aVnIiy3m2BoS8KMqSl9IrrB0+vJ2c0npELOKWxzaZfEOSfv9YQeEP3rjuBAuGbtWuF7Q6AlVwqSXS2F4s1cMuobfjyCmbAxEuMuV4+O5jwXJPqruDbKGS+q8R2al3Ne/G5/x12pDXy3RNyhOgnXSrIVe/B9AScXRWp7RGqBSwifckqOa1tMEMA5mW8PWK4yl4a6t348fZAqjpTNo7Vd6AOELPvOSnrshElYR2g5LSKkRlYruDpVgcZcfhR1oDJjN1VtKLZM8ZvHhpSE4oqlY1RxSlre+LusBR0bvpg8UsFrCPFW5ugBBlg1uZrZpzmUG9x4QEHedq4//9akI1iPOwhHDoFPoEJHHiuD/9N3o1EX34fgG1g4S4D5zdjBFzNz5N3IaIt1BeHhMr64QvA7EriWVqmxPdGg5k+ZCMgQVK5qgkyo8/I2D+ey57/Dgc8S4a0HfssCEql6I4QxPz+P2KiGzqM4TrL4JA7XjpWbjyZEYvO5+6l3SH/eU3nwv9EiB9LkAafjvuV4zIe0W5DpIv9NdHK+XN6v0HYE=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a597da94-f62a-46db-cd73-08dda3921359
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 18:03:14.2932
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +umVD7TUFL7gIBUuAEZMOgfSrmOSLERsNLDMGzvr+uyRa/QqupDMxmAqzYFmOyW9lqz6BvobU4PA+En4Lx0DcfbVtlZjrzfqOq+7tD6Uf4U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF2740EE012
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_04,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 spamscore=0 suspectscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506040141
+X-Proofpoint-GUID: 8tICHBd9sQzMUbiXmTPU3IdocQwLMA2f
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDE0MSBTYWx0ZWRfX4vLN/JNpIvT1 3JEpF8GFyOKGJZNBCpVsFBROR9zKKc/VVH1LRdETMOg6eDWL4M7AcDYlt8dYRUsHInvvz6aSZB4 uEiwZ4JIDakwrw5p8gV4CNE1iuw3TxTeMlpvviCbiUmFgM1f9AxoYAw1LFM42PM8JlSnYc/1VrY
+ NN1//By1/ncOvlM9qeZSntHGcZIfBMnOhP3woWWcPfFgOv6A8pv4eJldLUilkwCBg21mzvYcfDv r2BgJaUZtBLy5TqZ1/90yi8A8UJMjWIMol7/E7M9a5AudVnyTyVyZPn+iTJH1xnlJw1P6DZt3l2 7gF9X4TCNPZ+6yFgSAAJmBtEyrLx24+XPSsuf+/gzeV7me8N/ihRWyVZoQsAYrHVqeGJwI8bz9J
+ dSgKyiZ9DmBLjQevlfciQyA1scxEMDaG9P2i1UnSfERaGH6IFu7f/kc1gAoYtQ/WffPSdkEv
+X-Authority-Analysis: v=2.4 cv=KaTSsRYD c=1 sm=1 tr=0 ts=68408aa0 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=brj9Pt4pMQsRI3ToJi4A:9
+X-Proofpoint-ORIG-GUID: 8tICHBd9sQzMUbiXmTPU3IdocQwLMA2f
 
-On Fri, 23 May 2025 03:19:17 PDT (-0700), cleger@rivosinc.com wrote:
-> The SBI Firmware Feature extension allows the S-mode to request some
-> specific features (either hardware or software) to be enabled. This
-> series uses this extension to request misaligned access exception
-> delegation to S-mode in order to let the kernel handle it. It also adds
-> support for the KVM FWFT SBI extension based on the misaligned access
-> handling infrastructure.
->
-> FWFT SBI extension is part of the SBI V3.0 specifications [1]. It can be
-> tested using the qemu provided at [2] which contains the series from
-> [3]. Upstream kvm-unit-tests can be used inside kvm to tests the correct
-> delegation of misaligned exceptions. Upstream OpenSBI can be used.
->
-> Note: Since SBI V3.0 is not yet ratified, FWFT extension API is split
-> between interface only and implementation, allowing to pick only the
-> interface which do not have hard dependencies on SBI.
->
-> The tests can be run using the kselftest from series [4].
->
-> $ qemu-system-riscv64 \
-> 	-cpu rv64,trap-misaligned-access=true,v=true \
-> 	-M virt \
-> 	-m 1024M \
-> 	-bios fw_dynamic.bin \
-> 	-kernel Image
->  ...
->
->  # ./misaligned
->  TAP version 13
->  1..23
->  # Starting 23 tests from 1 test cases.
->  #  RUN           global.gp_load_lh ...
->  #            OK  global.gp_load_lh
->  ok 1 global.gp_load_lh
->  #  RUN           global.gp_load_lhu ...
->  #            OK  global.gp_load_lhu
->  ok 2 global.gp_load_lhu
->  #  RUN           global.gp_load_lw ...
->  #            OK  global.gp_load_lw
->  ok 3 global.gp_load_lw
->  #  RUN           global.gp_load_lwu ...
->  #            OK  global.gp_load_lwu
->  ok 4 global.gp_load_lwu
->  #  RUN           global.gp_load_ld ...
->  #            OK  global.gp_load_ld
->  ok 5 global.gp_load_ld
->  #  RUN           global.gp_load_c_lw ...
->  #            OK  global.gp_load_c_lw
->  ok 6 global.gp_load_c_lw
->  #  RUN           global.gp_load_c_ld ...
->  #            OK  global.gp_load_c_ld
->  ok 7 global.gp_load_c_ld
->  #  RUN           global.gp_load_c_ldsp ...
->  #            OK  global.gp_load_c_ldsp
->  ok 8 global.gp_load_c_ldsp
->  #  RUN           global.gp_load_sh ...
->  #            OK  global.gp_load_sh
->  ok 9 global.gp_load_sh
->  #  RUN           global.gp_load_sw ...
->  #            OK  global.gp_load_sw
->  ok 10 global.gp_load_sw
->  #  RUN           global.gp_load_sd ...
->  #            OK  global.gp_load_sd
->  ok 11 global.gp_load_sd
->  #  RUN           global.gp_load_c_sw ...
->  #            OK  global.gp_load_c_sw
->  ok 12 global.gp_load_c_sw
->  #  RUN           global.gp_load_c_sd ...
->  #            OK  global.gp_load_c_sd
->  ok 13 global.gp_load_c_sd
->  #  RUN           global.gp_load_c_sdsp ...
->  #            OK  global.gp_load_c_sdsp
->  ok 14 global.gp_load_c_sdsp
->  #  RUN           global.fpu_load_flw ...
->  #            OK  global.fpu_load_flw
->  ok 15 global.fpu_load_flw
->  #  RUN           global.fpu_load_fld ...
->  #            OK  global.fpu_load_fld
->  ok 16 global.fpu_load_fld
->  #  RUN           global.fpu_load_c_fld ...
->  #            OK  global.fpu_load_c_fld
->  ok 17 global.fpu_load_c_fld
->  #  RUN           global.fpu_load_c_fldsp ...
->  #            OK  global.fpu_load_c_fldsp
->  ok 18 global.fpu_load_c_fldsp
->  #  RUN           global.fpu_store_fsw ...
->  #            OK  global.fpu_store_fsw
->  ok 19 global.fpu_store_fsw
->  #  RUN           global.fpu_store_fsd ...
->  #            OK  global.fpu_store_fsd
->  ok 20 global.fpu_store_fsd
->  #  RUN           global.fpu_store_c_fsd ...
->  #            OK  global.fpu_store_c_fsd
->  ok 21 global.fpu_store_c_fsd
->  #  RUN           global.fpu_store_c_fsdsp ...
->  #            OK  global.fpu_store_c_fsdsp
->  ok 22 global.fpu_store_c_fsdsp
->  #  RUN           global.gen_sigbus ...
->  [12797.988647] misaligned[618]: unhandled signal 7 code 0x1 at 0x0000000000014dc0 in misaligned[4dc0,10000+76000]
->  [12797.988990] CPU: 0 UID: 0 PID: 618 Comm: misaligned Not tainted 6.13.0-rc6-00008-g4ec4468967c9-dirty #51
->  [12797.989169] Hardware name: riscv-virtio,qemu (DT)
->  [12797.989264] epc : 0000000000014dc0 ra : 0000000000014d00 sp : 00007fffe165d100
->  [12797.989407]  gp : 000000000008f6e8 tp : 0000000000095760 t0 : 0000000000000008
->  [12797.989544]  t1 : 00000000000965d8 t2 : 000000000008e830 s0 : 00007fffe165d160
->  [12797.989692]  s1 : 000000000000001a a0 : 0000000000000000 a1 : 0000000000000002
->  [12797.989831]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ffffffffdeadbeef
->  [12797.989964]  a5 : 000000000008ef61 a6 : 626769735f6e0000 a7 : fffffffffffff000
->  [12797.990094]  s2 : 0000000000000001 s3 : 00007fffe165d838 s4 : 00007fffe165d848
->  [12797.990238]  s5 : 000000000000001a s6 : 0000000000010442 s7 : 0000000000010200
->  [12797.990391]  s8 : 000000000000003a s9 : 0000000000094508 s10: 0000000000000000
->  [12797.990526]  s11: 0000555567460668 t3 : 00007fffe165d070 t4 : 00000000000965d0
->  [12797.990656]  t5 : fefefefefefefeff t6 : 0000000000000073
->  [12797.990756] status: 0000000200004020 badaddr: 000000000008ef61 cause: 0000000000000006
->  [12797.990911] Code: 8793 8791 3423 fcf4 3783 fc84 c737 dead 0713 eef7 (c398) 0001
->  #            OK  global.gen_sigbus
->  ok 23 global.gen_sigbus
->  # PASSED: 23 / 23 tests passed.
->  # Totals: pass:23 fail:0 xfail:0 xpass:0 skip:0 error:0
->
-> With kvm-tools:
->
->  # lkvm run -k sbi.flat -m 128
->   Info: # lkvm run -k sbi.flat -m 128 -c 1 --name guest-97
->   Info: Removed ghost socket file "/root/.lkvm//guest-97.sock".
->
->  ##########################################################################
->  #    kvm-unit-tests
->  ##########################################################################
->
->  ... [test messages elided]
->  PASS: sbi: fwft: FWFT extension probing no error
->  PASS: sbi: fwft: get/set reserved feature 0x6 error == SBI_ERR_DENIED
->  PASS: sbi: fwft: get/set reserved feature 0x3fffffff error == SBI_ERR_DENIED
->  PASS: sbi: fwft: get/set reserved feature 0x80000000 error == SBI_ERR_DENIED
->  PASS: sbi: fwft: get/set reserved feature 0xbfffffff error == SBI_ERR_DENIED
->  PASS: sbi: fwft: misaligned_deleg: Get misaligned deleg feature no error
->  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature invalid value error
->  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature invalid value error
->  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value no error
->  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value 0
->  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value no error
->  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value 1
->  PASS: sbi: fwft: misaligned_deleg: Verify misaligned load exception trap in supervisor
->  SUMMARY: 50 tests, 2 unexpected failures, 12 skipped
->
-> This series is available at [5].
->
-> Link: https://github.com/riscv-non-isa/riscv-sbi-doc/releases/download/vv3.0-rc2/riscv-sbi.pdf [1]
-> Link: https://github.com/rivosinc/qemu/tree/dev/cleger/misaligned [2]
-> Link: https://lore.kernel.org/all/20241211211933.198792-3-fkonrad@amd.com/T/ [3]
-> Link: https://lore.kernel.org/linux-riscv/20250414123543.1615478-1-cleger@rivosinc.com [4]
-> Link: https://github.com/rivosinc/linux/tree/dev/cleger/fwft [5]
-> ---
->
-> V8:
->  - Move misaligned_access_speed under CONFIG_RISCV_MISALIGNED and add a
->    separate commit for that.
->
-> V7:
->  - Fix ifdefery build problems
->  - Move sbi_fwft_is_supported with fwft_set_req struct
->  - Added Atish Reviewed-by
->  - Updated KVM vcpu cfg hedeleg value in set_delegation
->  - Changed SBI ETIME error mapping to ETIMEDOUT
->  - Fixed a few typo reported by Alok
->
-> V6:
->  - Rename FWFT interface to remove "_local"
->  - Fix test for MEDELEG values in KVM FWFT support
->  - Add __init for unaligned_access_init()
->  - Rebased on master
->
-> V5:
->  - Return ERANGE as mapping for SBI_ERR_BAD_RANGE
->  - Removed unused sbi_fwft_get()
->  - Fix kernel for sbi_fwft_local_set_cpumask()
->  - Fix indentation for sbi_fwft_local_set()
->  - Remove spurious space in kvm_sbi_fwft_ops.
->  - Rebased on origin/master
->  - Remove fixes commits and sent them as a separate series [4]
->
-> V4:
->  - Check SBI version 3.0 instead of 2.0 for FWFT presence
->  - Use long for kvm_sbi_fwft operation return value
->  - Init KVM sbi extension even if default_disabled
->  - Remove revert_on_fail parameter for sbi_fwft_feature_set().
->  - Fix comments for sbi_fwft_set/get()
->  - Only handle local features (there are no globals yet in the spec)
->  - Add new SBI errors to sbi_err_map_linux_errno()
->
-> V3:
->  - Added comment about kvm sbi fwft supported/set/get callback
->    requirements
->  - Move struct kvm_sbi_fwft_feature in kvm_sbi_fwft.c
->  - Add a FWFT interface
->
-> V2:
->  - Added Kselftest for misaligned testing
->  - Added get_user() usage instead of __get_user()
->  - Reenable interrupt when possible in misaligned access handling
->  - Document that riscv supports unaligned-traps
->  - Fix KVM extension state when an init function is present
->  - Rework SBI misaligned accesses trap delegation code
->  - Added support for CPU hotplugging
->  - Added KVM SBI reset callback
->  - Added reset for KVM SBI FWFT lock
->  - Return SBI_ERR_DENIED_LOCKED when LOCK flag is set
->
-> Clément Léger (14):
->   riscv: sbi: add Firmware Feature (FWFT) SBI extensions definitions
->   riscv: sbi: remove useless parenthesis
->   riscv: sbi: add new SBI error mappings
->   riscv: sbi: add FWFT extension interface
->   riscv: sbi: add SBI FWFT extension calls
->   riscv: misaligned: request misaligned exception from SBI
->   riscv: misaligned: use on_each_cpu() for scalar misaligned access
->     probing
->   riscv: misaligned: declare misaligned_access_speed under
->     CONFIG_RISCV_MISALIGNED
->   riscv: misaligned: move emulated access uniformity check in a function
->   riscv: misaligned: add a function to check misalign trap delegability
->   RISC-V: KVM: add SBI extension init()/deinit() functions
->   RISC-V: KVM: add SBI extension reset callback
->   RISC-V: KVM: add support for FWFT SBI extension
->   RISC-V: KVM: add support for SBI_FWFT_MISALIGNED_DELEG
->
->  arch/riscv/include/asm/cpufeature.h        |  14 +-
->  arch/riscv/include/asm/kvm_host.h          |   5 +-
->  arch/riscv/include/asm/kvm_vcpu_sbi.h      |  12 +
->  arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h |  29 +++
->  arch/riscv/include/asm/sbi.h               |  60 +++++
->  arch/riscv/include/uapi/asm/kvm.h          |   1 +
->  arch/riscv/kernel/sbi.c                    |  81 ++++++-
->  arch/riscv/kernel/traps_misaligned.c       | 112 ++++++++-
->  arch/riscv/kernel/unaligned_access_speed.c |   8 +-
->  arch/riscv/kvm/Makefile                    |   1 +
->  arch/riscv/kvm/vcpu.c                      |   4 +-
->  arch/riscv/kvm/vcpu_sbi.c                  |  54 +++++
->  arch/riscv/kvm/vcpu_sbi_fwft.c             | 257 +++++++++++++++++++++
->  arch/riscv/kvm/vcpu_sbi_sta.c              |   3 +-
->  14 files changed, 620 insertions(+), 21 deletions(-)
->  create mode 100644 arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
->  create mode 100644 arch/riscv/kvm/vcpu_sbi_fwft.c
+The process addresses documentation already contains a great deal of
+information about mmap/VMA locking and page table traversal and
+manipulation.
 
-Sorry I'm still kind of out of it here, but I think Alex was saying this 
-has dependencies in the patchwork call this morning?
+However it waves it hands about non-VMA traversal. Add a section for this
+and explain the caveats around this kind of traversal.
+
+Additionally, commit 6375e95f381e ("mm: pgtable: reclaim empty PTE page in
+madvise(MADV_DONTNEED)") caused zapping to also free empty PTE page
+tables. Highlight this.
+
+Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+---
+v2:
+* Replaced references to walk_page_range_novma() with
+  walk_kernel_page_table_range() and walk_page_range_debug() as necessary.
+* Dropped references to v6.14 and the commit that introduces PTE reclaim on
+  zap as per Jon.
+* Added additional reference about freeing PTE page tables tables when
+  zapping under RCU.
+* Clarified kernel page table locking as per Jann.
+* Dropped the warning about zapping and PTE page table removal - it was too
+  vague anyway, but it seems that VMA lock acquisition in this scenario is
+  not required.
+* I will address the issues Jon raised re: markup in follow up series.
+
+v1:
+https://lore.kernel.org/all/20250602210710.106159-1-lorenzo.stoakes@oracle.com/
+
+ Documentation/mm/process_addrs.rst | 54 ++++++++++++++++++++++++++----
+ 1 file changed, 48 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/mm/process_addrs.rst b/Documentation/mm/process_addrs.rst
+index e6756e78b476..be49e2a269e4 100644
+--- a/Documentation/mm/process_addrs.rst
++++ b/Documentation/mm/process_addrs.rst
+@@ -303,7 +303,9 @@ There are four key operations typically performed on page tables:
+ 1. **Traversing** page tables - Simply reading page tables in order to traverse
+    them. This only requires that the VMA is kept stable, so a lock which
+    establishes this suffices for traversal (there are also lockless variants
+-   which eliminate even this requirement, such as :c:func:`!gup_fast`).
++   which eliminate even this requirement, such as :c:func:`!gup_fast`). There is
++   also a special case of page table traversal for non-VMA regions which we
++   consider separately below.
+ 2. **Installing** page table mappings - Whether creating a new mapping or
+    modifying an existing one in such a way as to change its identity. This
+    requires that the VMA is kept stable via an mmap or VMA lock (explicitly not
+@@ -335,15 +337,13 @@ ahead and perform these operations on page tables (though internally, kernel
+ operations that perform writes also acquire internal page table locks to
+ serialise - see the page table implementation detail section for more details).
+
++.. note:: We free empty PTE tables on zap under the RCU lock - this does not
++          change the aforementioned locking requirements around zapping.
++
+ When **installing** page table entries, the mmap or VMA lock must be held to
+ keep the VMA stable. We explore why this is in the page table locking details
+ section below.
+
+-.. warning:: Page tables are normally only traversed in regions covered by VMAs.
+-             If you want to traverse page tables in areas that might not be
+-             covered by VMAs, heavier locking is required.
+-             See :c:func:`!walk_page_range_novma` for details.
+-
+ **Freeing** page tables is an entirely internal memory management operation and
+ has special requirements (see the page freeing section below for more details).
+
+@@ -355,6 +355,44 @@ has special requirements (see the page freeing section below for more details).
+              from the reverse mappings, but no other VMAs can be permitted to be
+              accessible and span the specified range.
+
++Traversing non-VMA page tables
++------------------------------
++
++We've focused above on traversal of page tables belonging to VMAs. It is also
++possible to traverse page tables which are not represented by VMAs.
++
++Kernel page table mappings themselves are generally managed but whatever part of
++the kernel established them and the aforementioned locking rules do not apply -
++for instance vmalloc has its own set of locks which are utilised for
++establishing and tearing down page its page tables.
++
++However, for convenience we provide the :c:func:`!walk_kernel_page_table_range`
++function which is synchronised via the mmap lock on the :c:macro:`!init_mm`
++kernel instantiation of the :c:struct:`!struct mm_struct` metadata object.
++
++If an operation requires exclusive access, a write lock is used, but if not, a
++read lock suffices - we assert only that at least a read lock has been acquired.
++
++Since, aside from vmalloc and memory hot plug, kernel page tables are not torn
++down all that often - this usually suffices, however any caller of this
++functionality must ensure that any additionally required locks are acquired in
++advance.
++
++We also permit a truly unusual case is the traversal of non-VMA ranges in
++**userland** ranges, as provided for by :c:func:`!walk_page_range_debug`.
++
++This has only one user - the general page table dumping logic (implemented in
++:c:macro:`!mm/ptdump.c`) - which seeks to expose all mappings for debug purposes
++even if they are highly unusual (possibly architecture-specific) and are not
++backed by a VMA.
++
++We must take great care in this case, as the :c:func:`!munmap` implementation
++detaches VMAs under an mmap write lock before tearing down page tables under a
++downgraded mmap read lock.
++
++This means such an operation could race with this, and thus an mmap **write**
++lock is required.
++
+ Lock ordering
+ -------------
+
+@@ -461,6 +499,10 @@ Locking Implementation Details
+ Page table locking details
+ --------------------------
+
++.. note:: This section explores page table locking requirements for page tables
++          encompassed by a VMA. See the above section on non-VMA page table
++          traversal for details on how we handle that case.
++
+ In addition to the locks described in the terminology section above, we have
+ additional locks dedicated to page tables:
+
+--
+2.49.0
