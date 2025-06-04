@@ -1,144 +1,306 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD9D339A1
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B852150997
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749053924; cv=none; b=WkRAEFLBEDMGqPGfw38wvT5De2z3kjVxynsbsxZz2ZNj4CoLeBC+dIwiEGjPkPXSaoJa3RJMKCJ/4gNkocsRJAitOcGmmY+xPv+udL3OGJSRns5JISUqI7CMWhef0cJ5hbIdC8o/o3FTe5uVbnExcxkBFKpelCND963KoFSP/AU=
+	t=1749053989; cv=none; b=AtB9bEx6U/E7+Z9wiRx3hklYcw9AAw985ICo8xoGYERGoyjAZGmnt16w3n4KvMGM5sl7J1eimKDGyCJZAgKrTQ4rw/USKK+VIm+Ql/jyqH2aanwc+ln2G+vv8tqXtTLFkfq6xUyB9BGOXgClfEurcsH/OarCindyP4XDpTGUirE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749053924; c=relaxed/simple;
-	bh=Xa8jPrzkHR+phbaz3krb7ugDZBKndKxpt7yIWX1fDJU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VD6psHjXv30AqJrgbfhevUtV31NHTfA1WxGJXJwedzvjvC6V1ZjJsYe1pg2kHrWwR3TIlos1M1s3R1P8/DFxt210tL783JGiWUcGubcAOIupKezmSyIA0UqESrJMa7A6V3BN/0FkVv7hbHfBGjZcFhmKpTRNNnG6Qigbzij/C2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=Ul97M4au; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
+	s=arc-20240116; t=1749053989; c=relaxed/simple;
+	bh=y3F25a2pa6S8w4TqkjybCugMmFlZGUBOKp656lW4RBE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SdjWSpBBHg+7gtuNnQne/9rxa5zoi0mYpDbkg70jFdEg3aGCkXdA9BEve1Cp7slYvtbwYLfPQwNw9hmLHnQnL7AibNRG4y2cRZK9tO9Mk9JI5t/WHnqJgN9+xIwI6ze4i0N7DgrLMnvVrIxmLKP59FZl0ozO3CPYMfbOaFiathY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b/LtHklp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="Ul97M4au"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fac8c5b262so1312926d6.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar.org; s=google; t=1749053921; x=1749658721; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=P8AKCIoAa/d1XSYeACl75HYH/kq79WoVL90DxYrmfW4=;
-        b=Ul97M4auabDOEhu2AeiJTH9wMBFUorRY7bWadbSaFbDIovT1rcKtXv82c0bvWEClfA
-         z/E0VDnF2SuyFuNAtmWQZLw3rOsJh12v7F+2H2L3JgX44jUNlPxy28cyQsqVylWXNIIh
-         vefa5eQnkYvHb/BYUjQnpOZkEauWrgVCxnhv9U6tHButf6a8R/gB48IWbX+cBQV6g7bU
-         sZChg+4lo8icz4TCY5dA4Yp9VizhXUYMvb6Eyj0E9RyJ8KksnSwbwSpDXwmZuJ7Jki4A
-         T0DJubFnWzUrym3CMQPKtn8iP6KodvT/qbkBIxNP/XGcc4IGf2nu2UsAIHhELbpGvVXc
-         aTEw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/LtHklp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749053986;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=csg6622WwuHA1d9W4OikS57rwnjGZheDjPfoYpBH7sQ=;
+	b=b/LtHklpPRMXz2Tnc6b4kkYivkaeG5tNlCjUfvXU4jgWW52ytOrMcvqwqOTUz3ssa4bt41
+	/ci5uVZ6ZOXbVPoGPYtQJF/K2ll0HKC6E0pe5QvZrK6Bouw2Mesiczu0KPFDNiU0BQcsHO
+	7T0ZyuzTWe4F70eTTtVO/x9jTI7sxfc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-388-cLsrKwe8NtGe43AsfJXx1w-1; Wed, 04 Jun 2025 12:19:44 -0400
+X-MC-Unique: cLsrKwe8NtGe43AsfJXx1w-1
+X-Mimecast-MFC-AGG-ID: cLsrKwe8NtGe43AsfJXx1w_1749053984
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4eec544c6so8558f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:19:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749053921; x=1749658721;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1749053983; x=1749658783;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=P8AKCIoAa/d1XSYeACl75HYH/kq79WoVL90DxYrmfW4=;
-        b=fi/87Ex0162ySZoEqkL6wvvMyk5TI2dG5ihtwsf6NLBdDJnJJkp35wBgQH1Q8XPNfi
-         3U4cYjE+9u6097KDeguC9sqdgNP91XSN3CzMhNw1OQ8CUXmiA7aR2FUcCL7HyjBO2JaD
-         N5aCnjEdONHDtQz9+nOM6PXbWpJyYXFmA5vOHBm+hoyTZj2L4/Pck6wLKAvzSEILGfCC
-         kRdYZBMY3DaOUS/doEkhkZX4Nm99lsH0DLOWmm8ytNjVuA7s3fBkg62fMZAlm+XHDfp+
-         Q1Z3xzHcC+p8TCNf1EJS6/MkVJy52R8UHw6jv4OBcSZ2rHu83VrF5sRQFd9RdNaQiGjm
-         NIeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWoOGA7TIx8fE3rbWgS0KXsU1XZhxqm7ctMUx1L13zI59T5joskkRaXswPN4PlPti38aHgxui5baBqTCvQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzY2Wlnv+x6KGTdo6adnkJFEbVtvNNXzRymfNL1Fkz6Mg4EpRP
-	rykv5M/mumA6b63k5LrOdfEvxgi2QuBttKKwt1UuIBRh9Q5jdHwOLxVXidm7vpnVQrPrw0F9eG8
-	UN/6RsNfPFWJossZVNwIkganm7Ea40EVVrj2Z5UrMeQ==
-X-Gm-Gg: ASbGnctebmL79vqWcyDYd0MpFwwla66FB8WENj7ipehuT/TzFVMITw9ba5j3wa+udTO
-	iOA+FVpcXrpWKwcMLlkCrffW2FQ4zME/W7cIBj7QtnpsJDPMh07lKoaMcfFtEwnMPS0EmYPyhtG
-	n+we4Rpdat6oRvJ7FNOwlg/x/2e6BiDmo5GhbJoP02dp76fc4Fj3L7LZsW5FDH72KEW5prDprmW
-	I7sJA==
-X-Google-Smtp-Source: AGHT+IHKumrpYp7KXj3Oppwg97YrZ8QLTUdlX7sch68BDDJcICEIYXc2OCGtCAc7AHX04x4oGqNiMhls5e1iB1AyII0=
-X-Received: by 2002:a05:622a:4d44:b0:48b:4f9b:fcfc with SMTP id
- d75a77b69052e-4a5a57559e0mr54446431cf.22.1749053921456; Wed, 04 Jun 2025
- 09:18:41 -0700 (PDT)
+        bh=csg6622WwuHA1d9W4OikS57rwnjGZheDjPfoYpBH7sQ=;
+        b=TF60yBWK8qhf70XTzXtc2YhUeVz4+F7xiMBsGlHiLWtyjtOK+Rg1wWKYHr92VDu1gC
+         XsnOzwgNj0dLd6MjPXWmeh4WhqKAqUrfCBB7V3B7f6RPSTZAwskAiyOO/5xc1MAWxWUv
+         Sr7vgmLGC30se0KW0rZa3jrE1SmM9erHNbFULY5b+d/2K4lQsooHnuowMyMN7cV9YE93
+         qkCVcDiKdWwQGMlZMdoe8w0LumD38tyTcym8arBSVw013jC/6Ux5DvIRN9nMxYoLh3xP
+         9DcjnYb3A1n97azd4mErUDuE9ND9DFKxrPMEpW2e3IpXvxSQ6RlSm4wlYC2DssneTlUs
+         qX8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWeE4ir0xwK7k+Otd6+U8lnm4Cj7hurIMY9iCuFea8FDtw7HJmgSm8EzSdm2cR/LCqOpbsZ4R+0D3ReZGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymnlXHS7a80hnlcC+IsSjKR0eJBhsj3+BGRGYcT6Hobse9LGKs
+	qulAWdSAetPPbM9me0VstQpbk21tBcwG2AvENHB0gQQfAA5o/YShPhuWfyM7Itxi4LtVhOLPRdu
+	WsENFhxXuG8yFh94Jj6dOoxZk8OXJbfD9fAZe4hh5tU+xkAcGcHxqRFIntRQRvD3s1Q==
+X-Gm-Gg: ASbGncubijlv4l1r03ZM8i7LOl9os8b6AXHr7Hp3t75iMt5zW5sJ2dF8zzAEKBe9HY6
+	ZhUkXp766kRBemdVGXcQbK4TCnJw0Bosut0hy6MjG7cemKOTfhY4ZJMoAjFAaL2uUFT3Fpz5zlt
+	lTXTe0eX2OGyW3LuNAqp1jK10lWrQKky/rtsTca3cAe1i1aEgdqSN592sksskYwKeTNp2Zk8UOt
+	plMMamxWtSDWn+4y7wEZ4C1SKAxSeZycTYdO/3grFbLq+YYYKjKdobvOGjWch4svZWfHPFDA2+i
+	E1VI770MmZc+AA==
+X-Received: by 2002:a05:6000:250c:b0:3a0:b84c:7c64 with SMTP id ffacd0b85a97d-3a51d8ff9e2mr2726969f8f.13.1749053983541;
+        Wed, 04 Jun 2025 09:19:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEf43lIbEauPt+sDm35yLZ8848223C3hrJgOMF0TVNAStsqCrlELVBS19S2PHcrLlNfnUhapQ==
+X-Received: by 2002:a05:6000:250c:b0:3a0:b84c:7c64 with SMTP id ffacd0b85a97d-3a51d8ff9e2mr2726951f8f.13.1749053983114;
+        Wed, 04 Jun 2025 09:19:43 -0700 (PDT)
+Received: from [192.168.10.81] ([151.49.64.79])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-450d7fa2493sm201440525e9.16.2025.06.04.09.19.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 09:19:42 -0700 (PDT)
+Message-ID: <a9f3f64c-2f82-40b0-80c0-ed1482861dc2@redhat.com>
+Date: Wed, 4 Jun 2025 18:19:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604-6-10-rocket-v6-0-237ac75ddb5e@tomeuvizoso.net> <20250604-6-10-rocket-v6-6-237ac75ddb5e@tomeuvizoso.net>
-In-Reply-To: <20250604-6-10-rocket-v6-6-237ac75ddb5e@tomeuvizoso.net>
-From: Daniel Stone <daniel@fooishbar.org>
-Date: Wed, 4 Jun 2025 17:18:29 +0100
-X-Gm-Features: AX0GCFspq72tjQe2nH9NHC6pMzIvIPvg3yffH3OtDe0wEz2aVsnXcTNMk1xSlik
-Message-ID: <CAPj87rPv7Pd5tbXhpRLaUJCGB8JmD4kfF50WRsEiST2gvtg3Bg@mail.gmail.com>
-Subject: Re: [PATCH v6 06/10] accel/rocket: Add IOCTL for BO creation
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Cc: Rob Herring <robh@kernel.org>, Maxime Ripard <mripard@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Kever Yang <kever.yang@rock-chips.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 25/28] KVM: nSVM: Access MSRPM in 4-byte chunks only for
+ merging L0 and L1 bitmaps
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
+ Chao Gao <chao.gao@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20250529234013.3826933-1-seanjc@google.com>
+ <20250529234013.3826933-26-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20250529234013.3826933-26-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Tomeu,
-I have some bad news ...
-
-On Wed, 4 Jun 2025 at 08:57, Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote:
-> +int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct drm_file *file)
-> +{
-> +       [...]
+On 5/30/25 01:40, Sean Christopherson wrote:
+> Access the MSRPM using u32/4-byte chunks (and appropriately adjusted
+> offsets) only when merging L0 and L1 bitmaps as part of emulating VMRUN.
+> The only reason to batch accesses to MSRPMs is to avoid the overhead of
+> uaccess operations (e.g. STAC/CLAC and bounds checks) when reading L1's
+> bitmap pointed at by vmcb12.  For all other uses, either per-bit accesses
+> are more than fast enough (no uaccess), or KVM is only accessing a single
+> bit (nested_svm_exit_handled_msr()) and so there's nothing to batch.
+> 
+> In addition to (hopefully) documenting the uniqueness of the merging code,
+> restricting chunked access to _just_ the merging code will allow for
+> increasing the chunk size (to unsigned long) with minimal risk.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/svm/nested.c | 50 ++++++++++++++++-----------------------
+>   arch/x86/kvm/svm/svm.h    | 18 ++++++++++----
+>   2 files changed, 34 insertions(+), 34 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index e07e10fb52a5..a4e98ada732b 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -187,31 +187,19 @@ void recalc_intercepts(struct vcpu_svm *svm)
+>   static int nested_svm_msrpm_merge_offsets[6] __ro_after_init;
+>   static int nested_svm_nr_msrpm_merge_offsets __ro_after_init;
+>   
+> -static const u32 msrpm_ranges[] = {
+> -	SVM_MSRPM_RANGE_0_BASE_MSR,
+> -	SVM_MSRPM_RANGE_1_BASE_MSR,
+> -	SVM_MSRPM_RANGE_2_BASE_MSR
+> -};
+> +#define SVM_BUILD_MSR_BYTE_NR_CASE(range_nr, msr)				\
+> +	case SVM_MSRPM_FIRST_MSR(range_nr) ... SVM_MSRPM_LAST_MSR(range_nr):	\
+> +		return SVM_MSRPM_BYTE_NR(range_nr, msr);
+>   
+>   static u32 svm_msrpm_offset(u32 msr)
+>   {
+> -	u32 offset;
+> -	int i;
+> -
+> -	for (i = 0; i < ARRAY_SIZE(msrpm_ranges); i++) {
+> -		if (msr < msrpm_ranges[i] ||
+> -		    msr >= msrpm_ranges[i] + SVM_MSRS_PER_RANGE)
+> -			continue;
+> -
+> -		offset  = (msr - msrpm_ranges[i]) / SVM_MSRS_PER_BYTE;
+> -		offset += (i * SVM_MSRPM_BYTES_PER_RANGE);  /* add range offset */
+> -
+> -		/* Now we have the u8 offset - but need the u32 offset */
+> -		return offset / 4;
+> +	switch (msr) {
+> +	SVM_BUILD_MSR_BYTE_NR_CASE(0, msr)
+> +	SVM_BUILD_MSR_BYTE_NR_CASE(1, msr)
+> +	SVM_BUILD_MSR_BYTE_NR_CASE(2, msr)
+> +	default:
+> +		return MSR_INVALID;
+>   	}
+> -
+> -	/* MSR not in any range */
+> -	return MSR_INVALID;
+>   }
+>   
+>   int __init nested_svm_init_msrpm_merge_offsets(void)
+> @@ -245,6 +233,12 @@ int __init nested_svm_init_msrpm_merge_offsets(void)
+>   		if (WARN_ON(offset == MSR_INVALID))
+>   			return -EIO;
+>   
+> +		/*
+> +		 * Merging is done in 32-bit chunks to reduce the number of
+> +		 * accesses to L1's bitmap.
+> +		 */
+> +		offset /= sizeof(u32);
 > +
-> +       /* This will map the pages to the IOMMU linked to core 0 */
-> +       sgt = drm_gem_shmem_get_pages_sgt(shmem_obj);
-> +       if (IS_ERR(sgt)) {
-> +               ret = PTR_ERR(sgt);
-> +               goto err;
-> +       }
+>   		for (j = 0; j < nested_svm_nr_msrpm_merge_offsets; j++) {
+>   			if (nested_svm_msrpm_merge_offsets[j] == offset)
+>   				break;
+> @@ -1363,8 +1357,9 @@ void svm_leave_nested(struct kvm_vcpu *vcpu)
+>   
+>   static int nested_svm_exit_handled_msr(struct vcpu_svm *svm)
+>   {
+> -	u32 offset, msr, value;
+> -	int write, mask;
+> +	u32 offset, msr;
+> +	int write;
+> +	u8 value;
+>   
+>   	if (!(vmcb12_is_intercept(&svm->nested.ctl, INTERCEPT_MSR_PROT)))
+>   		return NESTED_EXIT_HOST;
+> @@ -1372,18 +1367,15 @@ static int nested_svm_exit_handled_msr(struct vcpu_svm *svm)
+>   	msr    = svm->vcpu.arch.regs[VCPU_REGS_RCX];
+>   	offset = svm_msrpm_offset(msr);
+>   	write  = svm->vmcb->control.exit_info_1 & 1;
+> -	mask   = 1 << ((2 * (msr & 0xf)) + write);
+
+This is wrong.  The bit to read isn't always bit 0 or bit 1, therefore 
+mask needs to remain.  But it can be written easily as:
+
+    	msr = svm->vcpu.arch.regs[VCPU_REGS_RCX];
+	write = svm->vmcb->control.exit_info_1 & 1;
+
+	bit = svm_msrpm_bit(msr);
+	if (bit == MSR_INVALID)
+		return NESTED_EXIT_DONE;
+	offset = bit / BITS_PER_BYTE;
+	mask = BIT(write) << (bit & (BITS_PER_BYTE - 1));
+
+and this even removes the need to use svm_msrpm_offset() in 
+nested_svm_exit_handled_msr().
+
+
+At this point, it may even make sense to keep the adjustment for the 
+offset in svm_msrpm_offset(), like this:
+
+static u32 svm_msrpm_offset(u32 msr)
+{
+	u32 bit = svm_msr_bit(msr);
+	if (bit == MSR_INVALID)
+		return MSR_INVALID;
+
+	/*
+	 * Merging is done in 32-bit chunks to reduce the number of
+	 * accesses to L1's bitmap.
+	 */
+	return bit / (BITS_PER_BYTE * sizeof(u32));
+}
+
+I'll let you be the judge on this.
+
+Paolo
+
+>   	if (offset == MSR_INVALID)
+>   		return NESTED_EXIT_DONE;
+>   
+> -	/* Offset is in 32 bit units but need in 8 bit units */
+> -	offset *= 4;
+> -
+> -	if (kvm_vcpu_read_guest(&svm->vcpu, svm->nested.ctl.msrpm_base_pa + offset, &value, 4))
+> +	if (kvm_vcpu_read_guest(&svm->vcpu, svm->nested.ctl.msrpm_base_pa + offset,
+> +				&value, sizeof(value)))
+>   		return NESTED_EXIT_DONE;
+>   
+> -	return (value & mask) ? NESTED_EXIT_DONE : NESTED_EXIT_HOST;
+> +	return (value & BIT(write)) ? NESTED_EXIT_DONE : NESTED_EXIT_HOST;
+>   }
+>   
+>   static int nested_svm_intercept_ioio(struct vcpu_svm *svm)
+> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> index 77287c870967..155b6089fcd2 100644
+> --- a/arch/x86/kvm/svm/svm.h
+> +++ b/arch/x86/kvm/svm/svm.h
+> @@ -634,15 +634,23 @@ static_assert(SVM_MSRS_PER_RANGE == 8192);
+>   	(range_nr * SVM_MSRPM_BYTES_PER_RANGE * BITS_PER_BYTE +			\
+>   	 (msr - SVM_MSRPM_RANGE_## range_nr ##_BASE_MSR) * SVM_BITS_PER_MSR)
+>   
+> -#define SVM_MSRPM_SANITY_CHECK_BITS(range_nr)					\
+> +#define SVM_MSRPM_BYTE_NR(range_nr, msr)					\
+> +	(range_nr * SVM_MSRPM_BYTES_PER_RANGE +					\
+> +	 (msr - SVM_MSRPM_RANGE_## range_nr ##_BASE_MSR) / SVM_MSRS_PER_BYTE)
 > +
-> +       /* Map the pages to the IOMMUs linked to the other cores, so all cores can access this BO */
+> +#define SVM_MSRPM_SANITY_CHECK_BITS_AND_BYTES(range_nr)				\
+>   static_assert(SVM_MSRPM_BIT_NR(range_nr, SVM_MSRPM_FIRST_MSR(range_nr) + 1) ==	\
+>   	      range_nr * 2048 * 8 + 2);						\
+>   static_assert(SVM_MSRPM_BIT_NR(range_nr, SVM_MSRPM_FIRST_MSR(range_nr) + 7) ==	\
+> -	      range_nr * 2048 * 8 + 14);
+> +	      range_nr * 2048 * 8 + 14);					\
+> +static_assert(SVM_MSRPM_BYTE_NR(range_nr, SVM_MSRPM_FIRST_MSR(range_nr) + 1) ==	\
+> +	      range_nr * 2048);							\
+> +static_assert(SVM_MSRPM_BYTE_NR(range_nr, SVM_MSRPM_FIRST_MSR(range_nr) + 7) ==	\
+> +	      range_nr * 2048 + 1);
+>   
+> -SVM_MSRPM_SANITY_CHECK_BITS(0);
+> -SVM_MSRPM_SANITY_CHECK_BITS(1);
+> -SVM_MSRPM_SANITY_CHECK_BITS(2);
+> +SVM_MSRPM_SANITY_CHECK_BITS_AND_BYTES(0);
+> +SVM_MSRPM_SANITY_CHECK_BITS_AND_BYTES(1);
+> +SVM_MSRPM_SANITY_CHECK_BITS_AND_BYTES(2);
+>   
+>   #define SVM_BUILD_MSR_BITMAP_CASE(bitmap, range_nr, msr, bitop, bit_rw)		\
+>   	case SVM_MSRPM_FIRST_MSR(range_nr) ... SVM_MSRPM_LAST_MSR(range_nr):	\
 
-So, uh, this is not great.
-
-We only have a single IOMMU context (well, one per core, but one
-effective VMA) for the whole device. Every BO that gets created, gets
-mapped into the IOMMU until it's been destroyed. Given that there is
-no client isolation and no CS validation, that means that every client
-has RW access to every BO created by any other client, for the
-lifetime of that BO.
-
-I really don't think that this is tractable, given that anyone with
-access to the device can exfiltrate anything that anyone else has
-provided to the device.
-
-I also don't think that CS validation is tractable tbh.
-
-So I guess that leaves us with the third option: enforcing context
-separation within the kernel driver.
-
-The least preferable option I can think of is that rkt sets up and
-tears down MMU mappings for each job, according to the BO list
-provided for it. This seems like way too much overhead - especially
-with RK IOMMU ops having been slow enough within DRM that we expended
-a lot of effort in Weston doing caching of DRM BOs to avoid doing this
-unless completely necessary. It also seems risky wrt allocating memory
-in drm_sched paths to ensure forward progress.
-
-Slightly more preferable than this would be that rkt kept a
-per-context list of BOs and their VA mappings, and when switching
-between different contexts, would tear down all MMU mappings from the
-old context and set up mappings from the new. But this has the same
-issues with drm_sched.
-
-The most preferable option from where I sit is that we could have an
-explicit notion of driver-managed IOMMU contexts, such that rkt could
-prepare the IOMMU for each context, and then switching contexts at
-job-run time would be a matter of changing the root DTE pointer and
-issuing a flush. But I don't see that anywhere in the user-facing
-IOMMU API, and I'm sure Robin (CCed) will be along shortly to explain
-why it's not possible ...
-
-Either way, I wonder if we have fully per-context mappings, userspace
-should not manage IOVAs in the VM_BIND style common to newer drivers,
-rather than relying on the kernel to do VA allocation and inform
-userspace of them?
-
-I'm really sorry this has come so late in the game.
-
-Cheers,
-Daniel
