@@ -1,273 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A2C244676;
-	Wed,  4 Jun 2025 14:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749048476; cv=fail; b=IXmAsuPL3gy1XWCr4iAktbexVrW8vDzODPmrlkwwUAbdQiInaNElqeeefWy7fMpG2ue/iYUYgIQNRVegEDJevzFqFITWk1o/03TdrKXOI5WchuNEGreTkvrAYik0WJ0Tvyh9ojFEh7Ii/7IRVQXH1FGQL3k1eqqSJMzfX15UUEQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749048476; c=relaxed/simple;
-	bh=xJtRDhwmiGLFt67gHtY0dSS2UAHKuUHsOeR3JOuQso8=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=e/+Ipndt6o4oDUlbWNd9HoW+QJ0xn68iVkVBH04LA3Pd5pS0TByNU02OtYROIPnj3IfsUJDQR+4y0APYATnSZL8WaSIu2K8GfDwnLGk/grzSZVP5ggpcOhOzn02t2hNczRttQaz1DtDodnbEsxImCiqYZhZQS18cyOkOCmzGrNQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UdGlhCZ2; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE9925C801;
+	Wed,  4 Jun 2025 14:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749048526; cv=none; b=ruqpWd97hdWdES2W4b5eNVOuXFx+MUQ3GwawaQsDQFj+eJUJ+gfTzYSuVVBd5+GqruFIFwhb0dklH+M6n2/GeZn2crBTZPRP5JMRt9juUfjoNpsKJQkczz+DG12YcJDKCWcMUNKDIIuhHNPG7VEwSMx39nj8sM52QTo/FN+Aajw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749048526; c=relaxed/simple;
+	bh=iAh3S8VOuuZTZ4HbWC4OQklPUScRAN7wXnHJJOh3i9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eRPpC342ppILaBacHOSrzx6e84ERmkP5UdKXry6hBSqkQI+ykZ5droC5UPSuO9JlQe8sNC4gOyNAbgqtwwhx7twDxsMr6xt6wg9/yGpoVw5GZqDa8/hYaIy4103ejiVYPoskzojJ7YlDOUYuYvzzHxP9Dkx1QubZ5RPhK1kgasM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=JeQB3GwK; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UdGlhCZ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749048475; x=1780584475;
-  h=date:from:to:cc:subject:message-id:
-   content-transfer-encoding:mime-version;
-  bh=xJtRDhwmiGLFt67gHtY0dSS2UAHKuUHsOeR3JOuQso8=;
-  b=UdGlhCZ2I608zzWU0Sf0NRlgW8cPo9M8TgfeLDPih25X5HQB78mC6Fjq
-   EYRkoiHxEizdVrsZzc7adwnkG3dv31Vv/Pg8XwbT6DwO0JOath0zn5+f7
-   /SD1bvygDSd71aD93zac9LVSn6rPerPXpUnBH6dKulHWMn5L7mLwbnrES
-   D5Q2da/OawXzC3JO6ceJoX4izTR1sVnW9RlpGiLRHBOt1jmp9mAnOe8JF
-   NCNRXxAw9Rwe1mL0ZRB/VVLsznMsmLTBmkMuIPFAYp2oMxDA5UZpeYavW
-   tU2/EExZ7oo2f9FR3lv+vvMZFEgFiPgeShvJlIsQShxanoygHxgcTL3Z/
-   w==;
-X-CSE-ConnectionGUID: Ual60CrOT56sEimbDUDVDA==
-X-CSE-MsgGUID: N10TNNcVS2ueu90uc6XwMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="50250575"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="50250575"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:47:54 -0700
-X-CSE-ConnectionGUID: 5nrctUJfT8CKW6A52LUCXQ==
-X-CSE-MsgGUID: XQn5rQTaSRucAXlWhP1sZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="176093765"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:47:54 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 4 Jun 2025 07:47:53 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 4 Jun 2025 07:47:53 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.46)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 4 Jun 2025 07:47:52 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=po0rB37TCwgWBlveLhOxBrcFqts700xXFWmxoFXny/IAF7cvJgbf3n1yGbBdXDn9Cvxy9useCuWr1KDuKl/a2Zv4TOa3CX3X7nKTMu0DvO2bUeWbBu0F3iE5DT4vT/RUGC4LurirnN4sP6MGh67rSMwyaFOBUjtp/onCWdIQir1amz7jRj/zk6JvScbb3pEnOf11TK3vu4KpMsj29ulhiMLh7XCLE4ahhtcyw+P5mPS1jyBLbhFGwwHFbjW55L/CVqb/tqWCfmDaeBMb66d6D+8zJsxONIw3OA+9Q1n53Q8UJRMyprlE5z+V5MqYzURxpaDpFIEaF1jIIcbm1ehXYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+qPWP4+M7pziXlqKmEY7zQrgMd7zAW4liAvjipUIOxA=;
- b=qA0l2r7lKRPyfku6gBnHiS6skiz2o1sthz25oPgnOmfhiHtkG5dqSXSqjw9iAHaJ1sKXjIoM4KnwYLqvt1v0dXpLMwSJ2OtQvA+nYRCWg9E8A94v+7yDZvioX4dbZkYPPam/bDSrOwcaA0mVqZGiU2oYT4JgNmJlrWAn9NU4wZp6lx8OiFk+NmR+bYgtgdH//b7BPh+/7Mh5kfMQMMTkeiwXzJ30W1LwxiKRZxsi3/jA/04UP3rMkroZK4D4Udv0k1CpmFIxdkNjhFxYO8sk9PuChUxOzUMmVEOtV28j2hbU6A6bsFX5V6kjP4dKsSx+xIej2WkzrXYuHgXa3OYqBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by CH2PR11MB8865.namprd11.prod.outlook.com (2603:10b6:610:282::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Wed, 4 Jun
- 2025 14:47:48 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
- 14:47:48 +0000
-Date: Wed, 4 Jun 2025 22:47:38 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Oleg Nesterov <oleg@redhat.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Christian Brauner <brauner@kernel.org>, K Prateek Nayak
-	<kprateek.nayak@amd.com>, <linux-fsdevel@vger.kernel.org>,
-	<oliver.sang@intel.com>
-Subject: [linus:master] [pipe]  ee5eda8ea5:  stress-ng.pipeherd.ops_per_sec
- 26.0% improvement
-Message-ID: <202506042255.d1d90443-lkp@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR02CA0014.apcprd02.prod.outlook.com
- (2603:1096:4:194::19) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="JeQB3GwK"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 7C8123D852DB;
+	Wed,  4 Jun 2025 10:48:41 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id VQ7zUzPCdv6W; Wed,  4 Jun 2025 10:48:41 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id E55A73D856F5;
+	Wed,  4 Jun 2025 10:48:40 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com E55A73D856F5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1749048521; bh=YT5CSr2behDQmvPervqqlHa1+NLbBpJUObmWSJIQq/Y=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=JeQB3GwK3wTiyXogTAfOrYwGcRm8xVrhtaSj171R6hqkME5SkY4/ym+sMcOH++T3y
+	 tmk3ZzALIR/ozEhe9tTMRPfLBi8YFnD+khmcifiZmLuUAkV+EiQjInaZdXTMt/N6zz
+	 e24EQgG+kxWDvS3C4vDNq1wUhi2BNII8C6PwUcIYmSCR0unF21ochP0uJTed8MYpez
+	 ZP+Kw8Nv2OAoMEbhnLtko7wJEGOXzCbyhUjUm/pFkaaMAQOw8eps4YH84qIpRbXtyE
+	 I9zakO/U6PGJsyikSZzdq/D3EmDxYNxgHvCc00WIsQFluPLzqkVqKP2QiuBdX+4x3Y
+	 XKfc3i0yYY8Lw==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id N-LkPakHOke5; Wed,  4 Jun 2025 10:48:40 -0400 (EDT)
+Received: from fedora (unknown [192.168.51.254])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 9437B3D852DB;
+	Wed,  4 Jun 2025 10:48:40 -0400 (EDT)
+Date: Wed, 4 Jun 2025 10:48:39 -0400
+From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pm@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>,
+	Abel Vesa <abelvesa@linux.com>, Robin Gong <b38343@freescale.com>,
+	Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v4 3/6] regulator: pf1550: add support for regulator
+Message-ID: <aEBcx0ySywwa4BaZ@fedora>
+References: <20250603-pf1550-v4-0-bfdf51ee59cc@savoirfairelinux.com>
+ <20250603-pf1550-v4-3-bfdf51ee59cc@savoirfairelinux.com>
+ <eb1fb4e2-42aa-4795-bc6c-dbcf1fa04f11@sirena.org.uk>
+ <aEBSSHA8bxw2igAW@fedora>
+ <f2064326-e696-48cc-8f0e-5e51c95548b5@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|CH2PR11MB8865:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e42a4c6-db9b-470b-e38f-08dda376c5db
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?/TiLjvYnTqe14oV3/wPUlHS6EeyyUfVyVDfjWVBMuuOct5/IjAamwdJtSe?=
- =?iso-8859-1?Q?zhAdEEhW15IU7FB5ZBBxoAYE7FPg41V0eEd713MKQTIFpRqpc68Qe/4rlR?=
- =?iso-8859-1?Q?130+fnDXOIRs67dpOcLKyQaOIlbNfZyLer4ABlGWPuiu12WD8itBWZ8A92?=
- =?iso-8859-1?Q?zoF1O+btFCC4f9oUECcZ2MdmivYQyW7UYhcLNLmtifmwufQJ2fdNrQwFzn?=
- =?iso-8859-1?Q?AIXuFmjteJvPs1lOfzN5Xlwg2tZldsJJrgnYwIKuwdKALccGkxscYCyB7P?=
- =?iso-8859-1?Q?gsPNRV7KTlpqmakfl5ICLe5Ubwn5LBcmBh0sYQ0bnsPinZbsRF9ZKINGRv?=
- =?iso-8859-1?Q?Gw/vfS2pol0KcDbx2x/6RJqstVzPEuZF6goiEGwOtDfoI4bFsSzz9Roqtg?=
- =?iso-8859-1?Q?J3c5sLkcBTJJXbR+SGOo8grVxqhEG/EUovtvT3KFZkZUK2IdLAjA2F0SwF?=
- =?iso-8859-1?Q?WFaHg8HiWg22s+mYDNCvXsLYS+UxYQD2sUiBMgIWOJvSiMciPmKpfvlw27?=
- =?iso-8859-1?Q?48zb41lLvXsGnLBJkoJ64d51ZAQ+XZs2XTA5HnXRAmLyMB0al27u3X+Vlm?=
- =?iso-8859-1?Q?6nnJp+zpvZMtE4/2yyccJoQhoCljRxLkpPbVex+0d1b18HRTZaeIKiBMCk?=
- =?iso-8859-1?Q?j3dD+QiqRgEvs7E2Zpb2U3htQD9Ea+OWdJPk6KeJPj4VTVXbE8zoSTi4bW?=
- =?iso-8859-1?Q?HwXQlgZoyVjXYTnJTLQCumcoGW2OpQm7+ucM5hcyi7QEWwHpyUbjbrYlPM?=
- =?iso-8859-1?Q?QKGz3jnBNxX55hFI1faee1PbB/d/akE0aXDjjy3Z7zOIm6PtZEUMupNUUl?=
- =?iso-8859-1?Q?7dlEI4yDmw9dXAdEQyAhgbDoQGZvs8naa1S+ruK6ejA4WkFaZg1Fpeq0B0?=
- =?iso-8859-1?Q?gIUMpQbLMpiqYy/K4MkP48RYx4EPhv42oxksYopNafM5RJpffe5O5iCzfC?=
- =?iso-8859-1?Q?nMh8QLh3ivFSReZurNdJbOSFpVM6mGzT+giGLQIMozs0jFTKyPTlRxu+mI?=
- =?iso-8859-1?Q?2LGkn66FBQZqPVks5rCKoVO75BRSEKTFLh1fFwigd+VR0XDyVPU3pCXtn6?=
- =?iso-8859-1?Q?qZdcq5ufT8X8XmyePPYGWWVFePnwxvr8DLcSBa8NWYNsf+Uo+rJ/QbziWv?=
- =?iso-8859-1?Q?pB60HkuBPn3vmNg/Z5SKUu+3pR5rESd7pBcjCAcAjixms2FNr29C/9mGt+?=
- =?iso-8859-1?Q?kbQpiFfGnBdVCVOLGatvgpXYgJXveAyLtstpyrd4kxX2kPNnW+szUGprpc?=
- =?iso-8859-1?Q?KYjqdDodb3BxGG6AxmXoDenTb7U2VT4mF2CvxPJBScbFiz7s6VPYjlbDwS?=
- =?iso-8859-1?Q?jaICPs6F8gtmkFTIHFIKxKQ4jje0BJHeZX9oyo3u0uAk6UpZsqs4k7kYRF?=
- =?iso-8859-1?Q?BbiAsEK+A4W0FeRsAUCSp6N2hF5YOYcdHl9njQj82KhPiKOwK7jW/M3S63?=
- =?iso-8859-1?Q?YKi4hk8UnWr1qtC1?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?TaDpEQBpI0z/EF56A8uMyHk/GrT2tJt5LkUuefFFoEonyuXhq4BmFuTLxN?=
- =?iso-8859-1?Q?Hr2rCowOvD5Q/9ilfSW4LPAcyYO5rylMInbaxLeYPUuFEMvVdMziQ+tds9?=
- =?iso-8859-1?Q?hAVxD8ptcqZXC/a7Ll3MGDhL5GDxw7SDOaTGEVAChX+h0VorOlUSql9GBW?=
- =?iso-8859-1?Q?o6ztAq9rSTqhDp8PQkP85irxSIPPch/DJVEbRTof8AJ7hgD9yufeliID2+?=
- =?iso-8859-1?Q?3z/BZdc+bpLLOLth8vSvf3QWqDA6ACBwb0rQRj1yl4U2t3GtMJvRe1KKm5?=
- =?iso-8859-1?Q?uHpEyAZ1NFPXYiliaC21D0BckPeCOgxobvnaDKZqOVUsbEiOFlzdQYaWqT?=
- =?iso-8859-1?Q?U2fyYotNhDrEndn1QR6WDJ/8d5Xc/mhNFFgKq0EwiEu0+leyr26Kqd/HMx?=
- =?iso-8859-1?Q?yLB8SnS0a8x/lHVVDN4YUZ+0meLKqCZc9iOpG+J1Slwcd863s+MiIOddDJ?=
- =?iso-8859-1?Q?XJXW5EZQ9lBhrOXB6IDgjBI3Aie7aPLnAKlD42azsTxgl5/xmb0jo7uG+G?=
- =?iso-8859-1?Q?vfTMuOuR040s6RMkp1idnniYAqDgxjZZ5AMbMZVUxbGRcn5cu9itk2F6PQ?=
- =?iso-8859-1?Q?+yzMlMbSdpGhmMp1sC81MZpjKtJ8lNsK1ce5On3/x4SeoPvEXZLZbtlvVo?=
- =?iso-8859-1?Q?hL2sYKsvaPDPDmwbLY4DkzzOU5Ap7ygBUxEZQ5tGBiJ/rdDwpHAzyQ7HKt?=
- =?iso-8859-1?Q?zGgHSDk24TMkV0cexfzI54FIXOJF/e56+fJ7CJDivG/WKtTIV7dfyvFGKl?=
- =?iso-8859-1?Q?IhQ2T+FTnTjM4qAYyErYSDveQLqQBoAgZHpRIgXi6BvtUd1FKXNnOGIe+g?=
- =?iso-8859-1?Q?jGGrbMUvew2zmGGUwadvTm2/9Jym5pdKn6LfzmOVRTvAcapcrvc6bfVmnE?=
- =?iso-8859-1?Q?mdKT+taxAxfUCLXaK4DuzXAhMGZB14uTT9/yqVXWqJuNt40+aefWxXvNnw?=
- =?iso-8859-1?Q?NVDNyRixF6ELptJJGY+gI6yaxYbXzy0QgMe9zP2MtKt0wiH9uSitGNUuQ2?=
- =?iso-8859-1?Q?vQbA7ppTL4rvq+s4sxW/IygfXeOZICy4In52AEhlXZjHZNJ/MS/N463cpT?=
- =?iso-8859-1?Q?ABWJzbRmYT0ckTU30MdUAfrYjstU/fbN1Yp7UBMkGtJX61JgUkCtrH5QHI?=
- =?iso-8859-1?Q?heslsxTyOF1tq7SqaW3LIhH5OzeTRbAYKrORUhhXAdMkKLmp0Y3ZrlYOXS?=
- =?iso-8859-1?Q?9tw0p3d5eFtNULpQXXZqUgdPEyqPR3+j0ASZ0LV/zdQteRT8R04V04g3yd?=
- =?iso-8859-1?Q?7INNm968JkTI7vpZ6go3OtuYjuxjuppoVRI8Y9DY3GSKfos3DpHm1LPJeO?=
- =?iso-8859-1?Q?Q5s7XPuJadMzj1ti263lbVp4k/hbRdBrdmGRrw0KS6pWhR6l68b1hZSVCm?=
- =?iso-8859-1?Q?aU13bmlD8hdSX3UgE5lTq5XQbsDpM2mueSy5COBLcPTO50TekA2ATNHZrf?=
- =?iso-8859-1?Q?bPp4bM0sUkH6V89Bebynpb5eQ5+nwS0Y8TNM7tDFVwleHdGhx5tjRIbw6c?=
- =?iso-8859-1?Q?i/5Ul9vmGWzg6D1w2ncJrmGMyTxJWuyHBEhAg+yJ+DT8ZmmqF9brdMlrnn?=
- =?iso-8859-1?Q?/wELOPP7+d98c3ynE+kktXahGv7lcQgFoo3sUV0r8LVSrkOwdzMCOClmXU?=
- =?iso-8859-1?Q?O1TF8PWAgLTiLGBQdb2sW4UNBkn85hY3tv3Ql4CHFb3vaZBY2l2YIOWQ?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e42a4c6-db9b-470b-e38f-08dda376c5db
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 14:47:48.1628
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n+NiMRFZ5yZt+RreCisRXOVjuRoQUdnwp90nIaTH2VtUpA+XLIVfGGW5bf/4TmqeKe3YnGxJKkIHBKyBHDuPYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB8865
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2064326-e696-48cc-8f0e-5e51c95548b5@sirena.org.uk>
 
+On Wed, Jun 04, 2025 at 03:25:29PM +0100, Mark Brown wrote:
+> On Wed, Jun 04, 2025 at 10:03:52AM -0400, Samuel Kayode wrote:
+> > On Wed, Jun 04, 2025 at 12:35:21PM +0100, Mark Brown wrote:
+> 
+> > > > +	switch (irq_type) {
+> > > > +	case PF1550_PMIC_IRQ_SW1_LS:
+> > > > +		event = REGULATOR_EVENT_OVER_CURRENT;
+> > > > +	case PF1550_PMIC_IRQ_SW1_HS:
+> > > > +		event = REGULATOR_EVENT_OVER_CURRENT;
+> > > > +	case PF1550_PMIC_IRQ_LDO1_FAULT:
+> > > > +		event = REGULATOR_EVENT_OVER_CURRENT;
+> 
+> > > You appear to be flagging all these events as over current events which
+> > > doesn't seem entirely plausible.
+> 
+> > It does seem like it but the manual describes these interrupts as "current limit
+> > interrupt". The interrupts ending in _LS are "low-side current limit interrupt",
+> > _HS are "high-side current limit interrupt" and _FAULT are "current limit fault
+> > interrupt".
+> 
+> That at least needs some comments I think, and for the _LS while it's
+> hard to parse what "low side" means my guess would be that it's a
+> warning to match the other interrupt being the actual error.
 
+Yes, It certainly does need comments. The high-side sensing is more accurate
+and can detect load shorts, so a warning for low side would be more appropriate.
 
-Hello,
+Thanks,
+Sam
 
-kernel test robot noticed a 26.0% improvement of stress-ng.pipeherd.ops_per_sec on:
-
-
-commit: ee5eda8ea59546af2e8f192c060fbf29862d7cbd ("pipe: change pipe_write() to never add a zero-sized buffer")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-
-
-testcase: stress-ng
-config: x86_64-rhel-9.4
-compiler: gcc-12
-test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
-parameters:
-
-	nr_threads: 100%
-	testtime: 60s
-	test: pipeherd
-	cpufreq_governor: performance
-
-
-
-
-
-
-Details are as below:
--------------------------------------------------------------------------------------------------->
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250604/202506042255.d1d90443-lkp@intel.com
-
-=========================================================================================
-compiler/cpufreq_governor/kconfig/nr_threads/rootfs/tbox_group/test/testcase/testtime:
-  gcc-12/performance/x86_64-rhel-9.4/100%/debian-12-x86_64-20240206.cgz/lkp-icl-2sp7/pipeherd/stress-ng/60s
-
-commit: 
-  f2ffc48de2 ("Merge patch series "pipe: don't update {a,c,m}time for anonymous pipes"")
-  ee5eda8ea5 ("pipe: change pipe_write() to never add a zero-sized buffer")
-
-f2ffc48de2017c69 ee5eda8ea59546af2e8f192c060 
----------------- --------------------------- 
-         %stddev     %change         %stddev
-             \          |                \  
-    138055 ± 18%     +33.4%     184128 ± 14%  cpuidle..usage
-      0.19 ±160%  +61380.1%     115.68 ±185%  perf-sched.wait_time.avg.ms.__cond_resched.__mutex_lock.constprop.0.anon_pipe_read
-      0.20 ±153%  +2.1e+05%     418.07 ±203%  perf-sched.wait_time.max.ms.__cond_resched.__mutex_lock.constprop.0.anon_pipe_read
-      3930            +7.8%       4235 ±  3%  vmstat.procs.r
-   7317310 ±  4%     -14.5%    6253797 ± 10%  vmstat.system.cs
-      1025 ± 38%    +135.0%       2409 ± 19%  sched_debug.cfs_rq:/.util_est.avg
-   3586492 ±  4%     -15.2%    3040317 ± 10%  sched_debug.cpu.nr_switches.avg
-    474729 ± 17%     +49.6%     710035 ± 22%  sched_debug.cpu.nr_switches.stddev
-      3.32 ± 46%      +1.5        4.82 ± 13%  perf-profile.calltrace.cycles-pp.perf_mmap__push.record__mmap_read_evlist.__cmd_record.cmd_record.run_builtin
-      3.32 ± 46%      +1.5        4.82 ± 13%  perf-profile.calltrace.cycles-pp.record__mmap_read_evlist.__cmd_record.cmd_record.run_builtin.handle_internal_command
-      3.32 ± 46%      +1.5        4.82 ± 13%  perf-profile.children.cycles-pp.perf_mmap__push
-      3.32 ± 46%      +1.5        4.82 ± 13%  perf-profile.children.cycles-pp.record__mmap_read_evlist
-      0.18 ± 12%     -41.7%       0.10 ± 31%  stress-ng.pipeherd.context_switches_per_bogo_op
-    107177 ±  9%     -28.5%      76592 ± 21%  stress-ng.pipeherd.context_switches_per_sec
- 2.331e+09 ±  3%     +26.0%  2.937e+09 ± 10%  stress-ng.pipeherd.ops
-  38728105 ±  3%     +26.0%   48797851 ± 10%  stress-ng.pipeherd.ops_per_sec
- 4.578e+08 ±  4%     -15.2%  3.882e+08 ± 10%  stress-ng.time.voluntary_context_switches
- 3.182e+10            +8.2%  3.443e+10 ±  2%  perf-stat.i.branch-instructions
-      0.54 ±  3%      -0.1        0.41 ± 12%  perf-stat.i.branch-miss-rate%
- 1.723e+08 ±  3%     -18.5%  1.404e+08 ± 10%  perf-stat.i.branch-misses
-      4.74 ± 10%      +0.6        5.31 ±  4%  perf-stat.i.cache-miss-rate%
- 2.402e+08           -22.2%  1.869e+08 ±  4%  perf-stat.i.cache-references
-   7536250 ±  4%     -15.0%    6402680 ± 10%  perf-stat.i.context-switches
-      1.39            -5.3%       1.31 ±  2%  perf-stat.i.cpi
-   3691320 ±  6%     -26.5%    2711535 ± 17%  perf-stat.i.cpu-migrations
- 1.427e+11            +6.2%  1.515e+11 ±  2%  perf-stat.i.instructions
-      0.73            +5.9%       0.77 ±  2%  perf-stat.i.ipc
-    175.44 ±  5%     -18.8%     142.50 ± 12%  perf-stat.i.metric.K/sec
-      0.54 ±  4%      -0.1        0.41 ± 13%  perf-stat.overall.branch-miss-rate%
-      4.43 ± 11%      +0.7        5.18 ±  3%  perf-stat.overall.cache-miss-rate%
-      1.37            -5.7%       1.29 ±  2%  perf-stat.overall.cpi
-      0.73            +6.1%       0.78 ±  2%  perf-stat.overall.ipc
- 3.128e+10            +8.3%  3.386e+10 ±  2%  perf-stat.ps.branch-instructions
- 1.692e+08 ±  3%     -18.5%  1.379e+08 ± 10%  perf-stat.ps.branch-misses
- 2.362e+08           -22.2%  1.839e+08 ±  4%  perf-stat.ps.cache-references
-   7395716 ±  4%     -15.0%    6283076 ± 10%  perf-stat.ps.context-switches
-   3621055 ±  6%     -26.5%    2660111 ± 17%  perf-stat.ps.cpu-migrations
- 1.403e+11            +6.3%   1.49e+11 ±  2%  perf-stat.ps.instructions
- 8.691e+12            +5.3%  9.152e+12 ±  2%  perf-stat.total.instructions
-
-
-
-
-Disclaimer:
-Results have been estimated based on internal Intel analysis and are provided
-for informational purposes only. Any difference in system hardware or software
-design or configuration may affect actual performance.
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
