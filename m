@@ -1,73 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA18B22DFB5
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6EB1A5BBD;
+	Wed,  4 Jun 2025 12:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749038746; cv=none; b=GDPsTikbRJv7/vh78M0p+Zd50SV2qW6cD39jbMY/JaYbiODmyCP1fheacxWsdHtMg9uAiGnrNtBMT1M8b/aU+alXvE9/o7DNXETXc9Wl6fNXeSYeYqTYRYtlBYrjL9rOGsKyWKAdpQT2D+ZeW7UrPKvPceXlrr+iFrP99U6Jy8g=
+	t=1749038882; cv=none; b=CF8SG9CSEqrT/AzhR9ixoVFrGfyJLRN/u5SHDxWkfZDIapZ5Q/VAyFTU9n0QKvMslNuCergZWGbEtEeBfutXmI7vLBhx+nRKh2WCyLSxDtSNyuFtsdQZYGq3FDfkj0O0KO0wu2CEAuI/cBYViefTUpCx4kjBhtX6Pv2lOdhMULM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749038746; c=relaxed/simple;
-	bh=U8AVzAlrbEZ0aChrxNGmrNRiyqyM220uTc6XmlAQjho=;
+	s=arc-20240116; t=1749038882; c=relaxed/simple;
+	bh=JGjvHMM1UBKGBFe4oZgVTLwSUN2F5OP2sQO5HIWNYtY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o1hvNXCmuK5CZRS8OzJtrKQPZDyWdolIDxYEMUUXlRrWbkl+4p+Z4gP6S1AvMmChrGKesZmxZzvCXHA/Qk4T60yMsdB3l8U3I8ILgN5W/Z4aR+vAjKfKFDSqws022O/LhmvUTzIDkY0c2rQClNDJ+WZy2XdZvNFvS3Vs/apLMSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fBhdUkRV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=kEzEF1doqfEZi16N1bw6Kt5Su8gWoDJH5IZrKlQrwMWLQBP60l0QppqrvbVVSVCkLIsFkzTO8qHXNg+9zL9Erx1cBD4lPATGitkb5TEAFaowFVY0VkIspondTSyu2nmxyFSpkZ2IYAhHr/GvfPlGOVke0K8c300fBZlIdxEXKVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdBrv4tr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBhdUkRV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749038743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Rs0btbQ6D2xanKsfDuTxjlpnDIaLcj7WvAFOziSOBxI=;
-	b=fBhdUkRVnDqJ0Y5HcKvW08xkfXZaD3avkTu/F3zxVkEh5D6WlWfSM6FH9xjfa9Vhdwk0h7
-	g+baqeuBmcZeCUyBStQ6wky4Q39sJdv6USYWNYIvbjzBpyHNCYx8IcFBqVT3PVNsPg6DPE
-	5rG8l/Dyyrs98orazEYgRZYiPMekAMI=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-422-7-4qGx4fNUOh734QEiDvkw-1; Wed, 04 Jun 2025 08:05:42 -0400
-X-MC-Unique: 7-4qGx4fNUOh734QEiDvkw-1
-X-Mimecast-MFC-AGG-ID: 7-4qGx4fNUOh734QEiDvkw_1749038741
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-451d2037f1eso22778275e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:05:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749038741; x=1749643541;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Rs0btbQ6D2xanKsfDuTxjlpnDIaLcj7WvAFOziSOBxI=;
-        b=upxgM8/DFuLnbhp1Zqsrc9+UZo23F4KFytODqwYOKce74lQ1Bq+cMwN/dHnu8FyJZc
-         +reqFPMpWNiSrkB1BMskBAqwy80SxpFBrdmURyTrw4O1PHaBatkfke8ApfAR6I7JRPSX
-         16q43XBYyFqpc5Anu86NS8i2Ke0GGgymBa/6OB5abRnoT9J/LD8hUdZlmu1inCoFj1qE
-         SiRKCjKinHK18W2iEXoAJnD+f4kQc0OxCRFE6vp+tbppZDMLH1sGeREc1Mi33BBCj7UC
-         dE8vPBY6+GfTKbtWDjWl9SssHOM/vsRelYiDetjxvU+WaTeb1sTzRvsAI50UOtdWir5z
-         Jd0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVvNYlnfFdvS/bzwYLwk3glGCaxky9v4AXs4gcsUkU0iG+W2egCTr+QRtqYiP/a2X6UWGHVDMIzdIplrcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRb68sLqLppwBLRoZP0PwDOLBwE8XSttGzKLwDaMMN5NsSfGpJ
-	Y77ARJvilcfkearfWFPFZVRt+8jQXS1vVkZb7lT6saf0L8KTeZrRnhUNoW+/6RkuBjJxLF8TeA+
-	fx5NvEr/VFebD8rqwICxM4q2q44m0Z0YtYZ1ZgImi716KtaQ2+frEPMFc9BQpLZ50TA==
-X-Gm-Gg: ASbGnctR+vK2pLHmPfVSLTMbAJsx78o9jvNKh8krTLh3qv9hi9gAYcDy97jl6PsQchs
-	Ln7yqwOwwndA5V8P5OjOl/04DgRhSCcBpCkN4tQpU9geJgRMnnZMO0sR4JVGezZ17fGJUUB96wF
-	7H019uWSlBdCAjl2q8D7hpa8VGHDfG1WxLPqjCciCDxOcuTncWDuqE+xbE+vTWqPPcuUjnYBK5R
-	O18KMjX39brlBfjVwJ5SSMok4mXcVufq0tgyS79uFGCEJ62rABbvGQFOxuttFCMgX6Uu6JRxDPz
-	pLsKS3/wwIHAPWOPR6AKQZPn9H7FKVl89LYvrSj6bWPgutnaZJX8yB0T7V5FDW8i/Gf1imQCESv
-	uN7/MXLTrAj8D/hqq5DwNL3xlAE8TLHYrTnTdbRk=
-X-Received: by 2002:a05:600c:34c2:b0:440:68db:9fef with SMTP id 5b1f17b1804b1-451f0b09f62mr18360355e9.20.1749038741082;
-        Wed, 04 Jun 2025 05:05:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEBsuyo9l+yFSCcNj2JR7ZoUNJ4TDGNXGCjYZQjJw2vbSw0Yu0DciIRlxFRq3I5iJNsenYpfg==
-X-Received: by 2002:a05:600c:34c2:b0:440:68db:9fef with SMTP id 5b1f17b1804b1-451f0b09f62mr18359835e9.20.1749038740628;
-        Wed, 04 Jun 2025 05:05:40 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf? (p200300d82f1bb8006fdb1af24fbd1fdf.dip0.t-ipconnect.de. [2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8000d8csm196532255e9.24.2025.06.04.05.05.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 05:05:40 -0700 (PDT)
-Message-ID: <5c054941-62c2-483c-ac19-592aa795ed93@redhat.com>
-Date: Wed, 4 Jun 2025 14:05:39 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdBrv4tr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30703C4CEE7;
+	Wed,  4 Jun 2025 12:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749038881;
+	bh=JGjvHMM1UBKGBFe4oZgVTLwSUN2F5OP2sQO5HIWNYtY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FdBrv4trwT8p4QmYOPtphbxL67Hs8mAoetDvfecAQ9X7mG6NEeEg86fFwRBKIb5yw
+	 9xxA45tU48kgDkxYCJkFKBOpwBzuEMTDJ3PQWfYiiAatmaX9jr2GtmOZCU1L+epMbz
+	 EWJMTuS3BxLWO+cCTLzndZATxUOdxrbAcvXxvfnSWsbq63nCDaWOhhZX4CorFaNO+n
+	 32r4wf8qolXonz5q7PTShuuy0FC0HURETE7XOt5R8IuXw88ZsOVx3MfhjuQHSl3v0k
+	 9peoZreNNQfq/ZyBjuMScg60tkc2suxcYqRBv4w5Ale/r14DjqywcHmJ0O7ZnE1NWP
+	 48tRCM0HZeGng==
+Message-ID: <cc4dbf7c-e023-403c-88be-4691f97a0ff0@kernel.org>
+Date: Wed, 4 Jun 2025 14:07:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,116 +35,150 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [DISCUSSION] proposed mctl() API
-To: Johannes Weiner <hannes@cmpxchg.org>, Barry Song <21cnbao@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>,
- SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>,
- Mike Rapoport <rppt@kernel.org>, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-api@vger.kernel.org, Pedro Falcato <pfalcato@suse.de>
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
- <aDh9LtSLCiTLjg2X@casper.infradead.org>
- <20250529211423.GA1271329@cmpxchg.org>
- <CAGsJ_4yKDqUu8yZjHSmWBz3CpQhU6DM0=EhibfTwHbTo+QWvZA@mail.gmail.com>
- <20250604120013.GA1431@cmpxchg.org>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3 3/8] drm/imagination: Use pwrseq for TH1520 GPU power
+ management
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+ Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns
+ <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
+ <CGME20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1@eucas1p1.samsung.com>
+ <20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
+ <20250603-whispering-jaybird-of-thunder-f87867@kuoka>
+ <d42a8c49-7ad2-49ef-bd9c-1e3d9981b58e@samsung.com>
+ <e5a0bee2-ff74-47cf-ad2c-0c78b57ae6cf@kernel.org>
+ <a6a29e58-8613-47f0-9e5c-d125da7ddb49@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250604120013.GA1431@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <a6a29e58-8613-47f0-9e5c-d125da7ddb49@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 04.06.25 14:00, Johannes Weiner wrote:
-> On Fri, May 30, 2025 at 07:52:28PM +1200, Barry Song wrote:
->> On Fri, May 30, 2025 at 9:14 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+On 04/06/2025 13:53, Michal Wilczynski wrote:
 >>>
->>> On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
->>>> Barry's problem is that we're all nervous about possibly regressing
->>>> performance on some unknown workloads.  Just try Barry's proposal, see
->>>> if anyone actually compains or if we're just afraid of our own shadows.
+>>> The GPU node will depend on the AON node, which will be the sole
+>>> provider for the 'gpu-power' sequencer (based on the discussion in patch
+>>> 1).
 >>>
->>> I actually explained why I think this is a terrible idea. But okay, I
->>> tried the patch anyway.
->>>
->>> This is 'git log' on a hot kernel repo after a large IO stream:
->>>
->>>                                       VANILLA                      BARRY
->>> Real time                 49.93 (    +0.00%)         60.36 (   +20.48%)
->>> User time                 32.10 (    +0.00%)         32.09 (    -0.04%)
->>> System time               14.41 (    +0.00%)         14.64 (    +1.50%)
->>> pgmajfault              9227.00 (    +0.00%)      18390.00 (   +99.30%)
->>> workingset_refault_file  184.00 (    +0.00%)    236899.00 (+127954.05%)
->>>
->>> Clearly we can't generally ignore page cache hits just because the
->>> mmaps() are intermittent.
+>>> Therefore, if the AON/pwrseq driver has already completed its probe, and
+>>> devm_pwrseq_get() in the GPU driver subsequently returns -EPROBE_DEFER
+>>> (because pwrseq_get found 'no match' on the bus for 'gpu-power'), the
+>>> interpretation is that the AON driver did not register this optional
+>>> sequencer. Since AON is the only anticipated source, it implies the
+>>> sequencer won't become available later from its designated provider.
 >>
->> Hi Johannes,
->> Thanks!
->>
->> Are you on v1, which lacks folio demotion[1], or v2, which includes it [2]?
->>
->> [1] https://lore.kernel.org/linux-mm/20250412085852.48524-1-21cnbao@gmail.com/
->> [2] https://lore.kernel.org/linux-mm/20250514070820.51793-1-21cnbao@gmail.com/
+>> I don't understand why you made this assumption. AON could be a module
+>> and this driver built-in. AON will likely probe later.
 > 
-> The subthread is about whether the reference dismissal / demotion
-> should be unconditional (v1) or opt-in (v2).
+> You're absolutely right that AON could be a module and would generally
+> probe later in that scenario. However, the GPU device also has a
+> 'power-domains = <&aon TH1520_GPU_PD>' dependency. If the AON driver (as
+> the PM domain provider) were a late probing module, the GPU driver's
+> probe would hit -EPROBE_DEFER when its power domain is requested
+> which happens before attempting to get other resources like a power
+> sequencer.
+
+Huh, so basically you imply certain hardware design and certain DTS
+description in your driver code. Well, that's clearly fragile design to
+me, because you should not rely how hardware properties are presented in
+DTS. Will work here on th1520 with this DTS, won't work with something else.
+
+Especially that this looks like generic Imagination GPU code, common to
+multiple devices, not TH1520 only specific.
+
 > 
-> I'm arguing for v2.
+> So, if the GPU driver's code does reach the devm_pwrseq_get(dev,
+> "gpu-power") call, it strongly implies the AON driver has already
+> successfully probed.
+> 
+> This leads to the core challenge with the optional 'gpu-power'
+> sequencer: Even if the AON driver has already probed, if it then chooses
+> not to register the "gpu-power" sequence (because it's an optional
+> feature), pwrseq_get() will still find "no device matched" on the
+> pwrseq_bus and return EPROBE_DEFER.
+> 
+> If the GPU driver defers here, as it normally should for -EPROBE_DEFER,
+> it could wait indefinitely for an optional sequence that its
+> already probed AON provider will not supply.
+> 
+> Anyway I think you're right, that this is probably confusing and we
+> shouldn't rely on this behavior.
+> 
+> To solve this, and to allow the GPU driver to correctly handle
+> -EPROBE_DEFER when a sequencer is genuinely expected, I propose using a
+> boolean property on the GPU's DT node, e.g.
+> img,gpu-expects-power-sequencer. If the GPU node provides this property
+> it means the pwrseq 'gpu-power' is required.
 
-+1
+No, that would be driver design in DTS.
 
--- 
-Cheers,
+I think the main problem is the pwrseq API: you should get via phandle,
+not name of the pwrseq controller. That's how all producer-consumer
+relationships are done in OF platforms.
 
-David / dhildenb
+It's also fragile to rely on names in case of systems with multiple
+similar devices. This does not affect your platform and this hardware in
+general, but shows issues with interface: imagine multiple gpus and
+multiple pwr sequence devices. Which one should be obtained?
+gpu-power-1? But if GPUs are the same class of devices (e.g. 2x TG1520
+GPU) this is just imprecise.
 
+
+Best regards,
+Krzysztof
