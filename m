@@ -1,159 +1,187 @@
-Received: from outbound.qs.icloud.com (p-east3-cluster6-host7-snip4-10.eps.apple.com [57.103.85.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB802171A1
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 09:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.85.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9851171A1;
+	Wed,  4 Jun 2025 09:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027678; cv=none; b=u1hnS9kbpKq6aU8zjeirOfxn7Tnt9+Hynr1LDdVht23ueFzByxENOU0GPrrHRIf8Igu/x4BQxDT4eK/wkCkGKyAnsSID9I3PZZtbQuuEDnT531a427f3QxTrMJipK39BVza01DZ8rRFZi45ec5zj5/8Bwy216pcDHh1PqGLZJCQ=
+	t=1749027779; cv=none; b=WGpAXcQNie7aAzoDALmyForHEguh+xDDLyHy0K6T6AZTQIORrJ0fgGX8wXf8+PqjS7+1iIjlkKIYzwjm74bI7ZCS2AgJ0dvTvJdrV9IxYdxR6EvpWiLorc/o5e1layoVWeQ/B0RqJCFUl6OqM1xlklx0qrGxzkmN4wTb++8F8NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027678; c=relaxed/simple;
-	bh=iuL1JT5nTcgFDeToCkLLShncc97SpGrqDVx4yf4GM7k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D4hTfYeJAVhrh/lM5Q+kz/z7E5JwZ58j6OXhTge+QNIdztzaDVMdUal9Epqvp/y20td3q1a3BtWV4msGsqoOPEmU8WB9hlCEf2kMZSv8w6VpZQh5ijlxCWRm1J8Pvl8wYPmKYUIs74qOfx2bqYGPjMIGrqGn9lmB7KWVweOSVHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me; spf=pass smtp.mailfrom=etehtsea.me; dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b=huS+KKUM; arc=none smtp.client-ip=57.103.85.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etehtsea.me
+	s=arc-20240116; t=1749027779; c=relaxed/simple;
+	bh=ACscrL2viB9MccNiRSmG7exlusg6hWuddEnoY03JguA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=fMQu8aMhTi36HgwKuG3G7c9lZT/DM2KAeZ7CBPpuLpZCBf0epHua08rHnnNackZKmmVJCaXA8f4fS5dhXIYIyPbEKHvBBl823pZLOS1Dy6P9Lyo7SaqP4jOJo19YgQYxyTdHQ7LVYJ9Vlhnm+owaVBuWlGErBdBZ1iq8bWAa4C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n6lAo/+1; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b="huS+KKUM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=etehtsea.me; s=sig1;
-	bh=1+Yrgh6Z4uyJ/+tbV7dwmp0mh5zinPbKsKU8zEJOQ44=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
-	b=huS+KKUMXZFNne46uxDYoH2TR2b4rsBMdH4bZYwhzuRPOAK5oEn7fAMzN2Bjgsr4K
-	 Ii37TpCfis0bay6sNYvrbTdBswO6TnDxsOBfdUmnmnEqFQfq0bUkMd2gkWGkyfRtNj
-	 XSj4UvTR86eDIABeFDbSpJ4izmgB3N1X9eKBkDyXaeX5cPwx8g7dPhaB3cQDfwL4+A
-	 ifj05fcA7c+0MZsSMxvRZwFwbWrETI2ebICVZElPbMzP7BQx+PldPPdIg6o22xWddX
-	 pQJV6diBqHF03+BkUdw1GaPGJeCqRF7K5MXJZFigun/406jgsnJbpSjLL7ZrJgRMl/
-	 k4eTYmrJNETow==
-Received: from outbound.qs.icloud.com (localhost [127.0.0.1])
-	by outbound.qs.icloud.com (Postfix) with ESMTPS id C17A018002A8;
-	Wed,  4 Jun 2025 09:01:10 +0000 (UTC)
-Received: from localhost (qs-asmtp-me-k8s.p00.prod.me.com [17.57.155.37])
-	by outbound.qs.icloud.com (Postfix) with ESMTPSA id EC35618002AF;
-	Wed,  4 Jun 2025 09:01:07 +0000 (UTC)
-From: Konstantin Shabanov <mail@etehtsea.me>
-To: Sandy Huang <hjc@rock-chips.com>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Konstantin Shabanov <mail@etehtsea.me>,
-	Dan Callaghan <djc@djc.id.au>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V5 RESEND] drm/rockchip: Reject AFBC for res >2560 on rk3399
-Date: Wed,  4 Jun 2025 09:00:53 +0000
-Message-ID: <20250604090054.7070-1-mail@etehtsea.me>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n6lAo/+1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 83E82432FC;
+	Wed,  4 Jun 2025 09:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749027769;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Nmq+6v2A71B0bX8QqGblVfzuVcGFArdbHQL7ep/nDU=;
+	b=n6lAo/+16LWdc57oz+Z5OQbqq5O62F1rsRLiGS2p6TFSfAjyskbkQtbhDEsZm1KdNCoX0S
+	ng17QFnHMgV0DQUmociuS/rHsZLZsGJetjsJ6NFsM1vOioue2IrKX/PXoaZz2QKGB1L3X2
+	ecnLSxmzffTC0quPLldjqPasHXpNPmMoqpi/x8t91vxrWfji/OeEnsihZ6dC99WzDo+J3s
+	WnZ0TzE5fZD9tN/wijK3T18zor9d7kBJHiFcGPpI+eDK3izPQiW/6fGSkhPIXiyNPhEX04
+	pQuHsQO6MB+4XF3FEo9sUOjA23gLZWYAiIHE+0QGRs6OChIvpQttLy7ANz/GfQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: ZL3YM8dNqYDIvFCJ8br2ljtNZ7Y0DHdP
-X-Proofpoint-ORIG-GUID: ZL3YM8dNqYDIvFCJ8br2ljtNZ7Y0DHdP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
- mlxlogscore=999 phishscore=0 bulkscore=0 mlxscore=0 clxscore=1030 spamscore=0
- adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.22.0-2503310001 definitions=main-2506040067
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 04 Jun 2025 11:02:44 +0200
+Message-Id: <DADMLIVHMSSO.3AXSI5216WCT6@bootlin.com>
+Subject: [Question] attributes encoding in BTF
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+To: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>, "Andrii
+ Nakryiko" <andrii.nakryiko@gmail.com>
+Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
+ <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
+ "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
+ <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
+ <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
+ <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
+ <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
+ <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Catalin
+ Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan" <shuah@kernel.org>, "Maxime
+ Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
+ <alexandre.torgue@foss.st.com>, "Florent Revest" <revest@chromium.org>,
+ "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
+ <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kselftest@vger.kernel.org>,
+ <linux-stm32@st-md-mailman.stormreply.com>, <dwarves@vger.kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
+ <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
+ <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
+ <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+ <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
+ <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
+In-Reply-To: <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkuffhvfevofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetueeljeefkeejheduudfgffdvhfegffdvleeggeefvdeikefhleeuhefgtefgudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefvddprhgtphhtthhopegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhhiihdrnhgrkhhrhihikhhosehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlsehiohhgvggrrhgsohigr
+ dhnvghtpdhrtghpthhtohepjhhohhhnrdhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrthhinhdrlhgruheslhhinhhugidruggvvhdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhm
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-As it isn't supported by rk3399. From the datasheet[1]
-("1.2.10 Video IN/OUT", "Display Interface", p. 17):
+Hi all,
+a simpler version of this series has been merged, and so I am now taking a
+look at the issue I have put aside in the merged version: dealing with more
+specific data layout for arguments passed on stack. For example, a function
+can pass small structs on stack, but this need special care when generating
+the corresponding bpf trampolines. Those structs have specific alignment
+specified by the target ABI, but it can also be altered with attributes
+packing the structure or modifying the alignment.
 
-  Support AFBC function co-operation with GPU
-    * support 2560x1600 UI
+Some platforms already support structs on stack (see
+tracing_struct_many_args test), but as discussed earlier, those may suffer
+from the same kind of issue mentioned above.
 
-Signed-off-by: Konstantin Shabanov <mail@etehtsea.me>
-Reported-by: Dan Callaghan <djc@djc.id.au>
-Closes: https://gitlab.freedesktop.org/mesa/mesa/-/issues/7968
+On Wed Apr 23, 2025 at 9:24 PM CEST, Alexis Lothor=C3=A9 wrote:
+> Hi Andrii,
+>
+> On Wed Apr 23, 2025 at 7:15 PM CEST, Andrii Nakryiko wrote:
+>> On Thu, Apr 17, 2025 at 12:14=E2=80=AFAM Alexis Lothor=C3=A9
+>> <alexis.lothore@bootlin.com> wrote:
+>>>
+>>> Hi Andrii,
+>>>
+>>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
 
-[1]: https://opensource.rock-chips.com/images/d/d7/Rockchip_RK3399_Datasheet_V2.1-20200323.pdf
----
- V4 -> V5: Extract AFBC support check into drv
- V3 -> V4: Correct redundant header inclusion
- V2 -> V3: Run check only on rk3399
- V1 -> V2: Move the check to the fb_create callback
+[...]
 
- AFBC check is implemented in a similar manner as in the malidp driver.
- Resend of the https://lore.kernel.org/all/20250521160556.14346-2-mail@etehtsea.me/.
- 
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 16 ++++++++++++++++
- drivers/gpu/drm/rockchip/rockchip_drm_drv.h |  2 ++
- drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |  3 +++
- 3 files changed, 21 insertions(+)
+>> I'd suggest looking at btf__align_of() in libbpf (tools/lib/bpf/btf.c)
+>> to see how we calculate alignment there. It seems to work decently
+>> enough. It won't cover any arch-specific extra rules like double
+>> needing 16-byte alignment (I vaguely remember something like that for
+>> some architectures, but I might be misremembering), or anything
+>> similar. It also won't detect (I don't think it's possible without
+>> DWARF) artificially increased alignment with attribute((aligned(N))).
+>
+> Thanks for the pointer, I'll take a look at it. The more we discuss this
+> series, the less member size sounds relevant for what I'm trying to achie=
+ve
+> here.
+>
+> Following Xu's comments, I have been thinking about how I could detect th=
+e
+> custom alignments and packing on structures, and I was wondering if I cou=
+ld
+> somehow benefit from __attribute__ encoding in BTF info ([1]). But
+> following your hint, I also see some btf_is_struct_packed() in
+> tools/lib/bpf/btf_dump.c that could help. I'll dig this further and see i=
+f
+> I can manage to make something work with all of this.
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-index 180fad5d49ad..9fb04022b2f3 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-@@ -42,6 +42,8 @@
- #define DRIVER_MAJOR	1
- #define DRIVER_MINOR	0
- 
-+#define RK3399_AFBC_MAX_WIDTH		2560
-+
- static const struct drm_driver rockchip_drm_driver;
- 
- /*
-@@ -350,6 +352,20 @@ int rockchip_drm_endpoint_is_subdriver(struct device_node *ep)
- 	return false;
- }
- 
-+bool rockchip_verify_afbc_framebuffer_size(struct drm_device *dev,
-+					   const struct drm_mode_fb_cmd2 *mode_cmd)
-+{
-+	if (of_machine_is_compatible("rockchip,rk3399") &&
-+	    mode_cmd->width > RK3399_AFBC_MAX_WIDTH) {
-+		DRM_DEBUG_KMS("AFBC is not supported for the width %d (max %d)\n",
-+			      mode_cmd->width,
-+			      RK3399_AFBC_MAX_WIDTH);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static void rockchip_drm_match_remove(struct device *dev)
- {
- 	struct device_link *link;
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-index c183e82a42a5..5dabceaa4fd6 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-@@ -86,6 +86,8 @@ int rockchip_drm_wait_vact_end(struct drm_crtc *crtc, unsigned int mstimeout);
- int rockchip_drm_encoder_set_crtc_endpoint_id(struct rockchip_encoder *rencoder,
- 					      struct device_node *np, int port, int reg);
- int rockchip_drm_endpoint_is_subdriver(struct device_node *ep);
-+bool rockchip_verify_afbc_framebuffer_size(struct drm_device *dev,
-+					   const struct drm_mode_fb_cmd2 *mode_cmd);
- extern struct platform_driver cdn_dp_driver;
- extern struct platform_driver dw_hdmi_rockchip_pltfm_driver;
- extern struct platform_driver dw_hdmi_qp_rockchip_pltfm_driver;
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-index 5829ee061c61..f0527f12f568 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-@@ -52,6 +52,9 @@ rockchip_fb_create(struct drm_device *dev, struct drm_file *file,
- 	}
- 
- 	if (drm_is_afbc(mode_cmd->modifier[0])) {
-+		if (!rockchip_verify_afbc_framebuffer_size(dev, mode_cmd))
-+			return ERR_PTR(-EINVAL);
-+
- 		ret = drm_gem_fb_afbc_init(dev, mode_cmd, afbc_fb);
- 		if (ret) {
- 			drm_framebuffer_put(&afbc_fb->base);
+Andrii's comment above illustrates well my current issue: when functions
+pass arguments on stack, we are missing info for some of them to correctly
+build trampolines, especially for struct, which can have attributes like
+__attribute__((packed)) or __attribute__((align(x))). [1] seems to be a
+recent solution implemented for BTF to cover this need. IIUC it encodes any
+arbitratry attribute affecting a data type or function, so if I have some
+struct like this one in my kernel or a module:
 
-base-commit: 685c407f168cb49a12cc703230d1e2d62767bfd2
--- 
-2.49.0
+struct foo {
+    short b
+    int a;
+} __packed;
+
+I would expect the corresponding BTF data to have some BTF_KIND_DECL_TAG
+describing the "packed" attribute for the corresponding structure, but I
+fail to find any of those when running:
+
+$ bpftool btf dump file vmlinux format raw
+
+In there I see some DECL_TAG but those are mostly 'bpf_kfunc', I see not
+arbitrary attribute like 'packed' or 'aligned(x)'.
+
+What I really need to do in the end is to be able to parse those alignments
+attributes info in the kernel at runtime when generating trampolines, but I
+hoped to be able to see them with bpftool first to validate the concept.
+
+I started taking a look further at this and stumbled upon [2] in which Alan
+gives many more details about the feature, so I did the following checks:
+- kernel version 6.15.0-rc4 from bpf-next_base: it contains the updated
+  Makefile.btf calling pahole with `--btf_features=3Dattributes`
+- pahole v1.30
+  $ pahole --supported_btf_features
+  encode_force,var,float,decl_tag,type_tag,enum64,optimized_func,consistent=
+_func,decl_tag_kfuncs,reproducible_build,distilled_base,global_var,attribut=
+es
+  This pahole comes from my distro pkg manager, but I have also done the
+  same test with a freshly built pahole, while taking care of pulling the
+  libbpf submodule.
+- bpftool v7.6.0
+    bpftool v7.6.0
+    using libbpf v1.6
+    features: llvm, skeletons
+
+Could I be missing something obvious ? Or did I misunderstand the actual
+attribute encoding feature ?
+
+Thanks,
+
+Alexis
+
+[1] https://lore.kernel.org/bpf/20250130201239.1429648-1-ihor.solodrai@linu=
+x.dev/
+[2] https://lore.kernel.org/all/CA+icZUW31vpS=3DR3zM6G4FMkzuiQovqtd+e-8ihws=
+K_A-QtSSYg@mail.gmail.com/
+
+--=20
+Alexis Lothor=C3=A9, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
