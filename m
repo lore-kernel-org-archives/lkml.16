@@ -1,202 +1,86 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D2627462
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 03:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7242D1DA21
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 03:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749006951; cv=none; b=RB/iH1UsLl5qiz4P0LlHWHOATql11s1hgXdFLPk3POjh3Wu413mR3VYgUX41jxpGOKpGJ2Xg7+hMHZ+gRlMMcKtOnNVCxlv6wM5Ez1O0Gk0DSv4y1DVqsnXh4d92NjZKkyJ/hiRg0WI/7odFjustzNMkZHwqu7VlgN5mmf+IoYI=
+	t=1749007089; cv=none; b=CvcbyKA9vjzRB+hW7tsukOb0IiFMZPl4ys5rmz2cX9hcVTt85etF5wgYa9eG5PDDcozUsQ3LsVNl4/rt2mVPKH8RhalECA9vsWJE8itzMkVfm566QcvwMIwZOTHWL/rJ9W9IQwMt5T1asKKH/GlajmcYtbx4v7Qi82zGWkBb5ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749006951; c=relaxed/simple;
-	bh=5K4MQQ5D0bD4kdVvrtXxzbpcO82nVdXBm+YGiPiLG68=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qDR0QosCSsKqvT0Xn9kXjU0FsM+ffm/CesBgJWYd0d55wXNVCAQa2HWqKAEMAyU/sx8TgeouWi9LjkUy8x4aRhz9p0AUSUrhf9IpFjN6GCQZtLTMHYpsubwP1ndZi1msd4OKzKtZIJLLF8j/+J/QZfEUedfkVPLY2+VYP9vO5MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=CJcvXWoF; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="CJcvXWoF"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso7803040b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 20:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1749006949; x=1749611749; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w5fG5l4hQXv8yGsPykiMnPUQCgbt9tOBCN1omnHe9NY=;
-        b=CJcvXWoFlTKo43jYIMQ1FpNCYgdHiROs8kJaRPsWYFVsaUG8r/3qTjbdagQoCux6v3
-         yUQ3Dw2EwYGWcYl/VFRcwpGYQBO1tmpSdJlDDD+6s1Nwgdp14Z8it0NWX1PLWbTTVG7H
-         NyYdTPLzMsJ/EVeZDmRxLRA8IwUpndws0VBnJIVSlRoIXGPZ4FlCWFkm0U4Gm/sJifmW
-         pJzv+RXQq9btnrWECe/O7E+GJI89Aqzmxao1vlzXNPLniWu29x/6Piqgc5Ht1f2L6sRr
-         EdWbqwgpeGl6AgHXfl7ddGxsolohSH1FxgGwZuhaBIlvTg4MvWbEhy0kK+t2B5VXyl/Z
-         t1pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749006949; x=1749611749;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w5fG5l4hQXv8yGsPykiMnPUQCgbt9tOBCN1omnHe9NY=;
-        b=jheg0N/dn8Wpgrh7DCtNIk8130z7QXjElJLpXoKsHXyifiVIzPY8pOiuA2VyGtTFcp
-         D3RaxgN6ao9azHwwNr5tI47QktUWBlt9B9ZVrpNd33m8F0sISc/BJytR0xCgtiX2S+ut
-         Bgs8Kx2iejtnVnhD3nqK8o9qZhYRzbgZnIz7W9BqnhHJI7CSwkBx5Q55+Xz/M7+/lqPH
-         l6wjzqBSKtCzf9n15XD/i5sVNiQOQLVEyXdXOjFDoFFKEctUIRhsFY3LMhP/qOadvxKY
-         DdN6y3GkVobFVVuSH9iiWZZDezxep171yjX5nLCfiGS99nT5GTfO5vFG+w3o8DDbC3oL
-         GT2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXfELePM1DACnCRxSgGDnhBxKHSg6kaHtLHvAtbZcxL+IPPF+/uw3yzlZ+6f3nukOOUehm9ULCD+69I6XQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPAn3yc6IXs4OW/FZpsFVh5Ed6ixXIZ5H5O+zToN7jZoq1bbGo
-	2Exxlf8g1Sfk6/KQIeOE3b7BrN/YT5HZcmx+NJRy2X96lRm4uHPThT2rlk8j3/qsS3k=
-X-Gm-Gg: ASbGncthvw8/m0Qr9NzNAC3ULKlszAGEQvWQ9oqn27mSsaT+IMbs/EPStm7rGF5V0pD
-	ChkVa3wejYKl0dn0acZ9RH0kI9vywYeWY0rcfeNvlJUPxKpVlB5etzDTpa41ojOQc346aRkdl+T
-	yHx4kgaMDHl0xZaQjhiFTpLGLJTJTgUJn1whgde+rKofMWP+tP1DoqljsXbTYxmgJCwMZw7r/iE
-	NbSDZN2D7YO7a1nGljiGthBdEelwgOHVpm+6WoR/Im4Mp/XHfigTo9aGx4dIkYCnouztPAXTDM8
-	Wh4X4hwspu+Pqjl08RA7sCGLgCeu5EKV0iI0SJWBYFvF1Y3CMHzyX8+gitkixXf6AEUAVW0Nmyv
-	DGw==
-X-Google-Smtp-Source: AGHT+IHeMztvH/4BxcGokHkf3yurYYRaWgFDwtJD4OKMLxALQDdXbF8pTdOAm1Rhqyof6kYiL1tGfQ==
-X-Received: by 2002:a05:6a00:3a1d:b0:747:aa79:e2f5 with SMTP id d2e1a72fcca58-7480b07a27dmr2006740b3a.0.1749006948608;
-        Tue, 03 Jun 2025 20:15:48 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe96381sm10498942b3a.10.2025.06.03.20.15.44
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 03 Jun 2025 20:15:48 -0700 (PDT)
-From: lizhe.67@bytedance.com
+	s=arc-20240116; t=1749007089; c=relaxed/simple;
+	bh=0ZiCWsWxD8FXyIS2woUnMV1G81roXZ6sK20SkhumZ5k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HXWlBjraIpmkggUJLf5OjawWmj+vYziTMAqXyy39LNhiApyEH8p/xcefmnzRUYvb4vVwDyaCGm+QAgHxCRzgLkXrLd+Mj135ArqKV1qtlpVYDVGb6YDP+IA3O7XEiOzYPyXf1ixN7PzP1QL+kJLxbvN3iku2kC5YEZXmMEPF8RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 853e1c6e40f211f0b29709d653e92f7d-20250604
+X-CID-CACHE: Type:Local,Time:202506041104+08,HitQuantity:1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:e37eb776-1ba1-4d49-9782-a173116750ba,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:6493067,CLOUDID:ee68645b08a44cf72da7de252771bdb6,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 853e1c6e40f211f0b29709d653e92f7d-20250604
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <xialonglong@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1550991278; Wed, 04 Jun 2025 11:18:01 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id CC3D916001A01;
+	Wed,  4 Jun 2025 11:18:00 +0800 (CST)
+X-ns-mid: postfix-683FBAE8-646960652
+Received: from kylin-pc.. (unknown [172.25.130.133])
+	by node4.com.cn (NSMail) with ESMTPA id C923C16001CC7;
+	Wed,  4 Jun 2025 03:17:59 +0000 (UTC)
+From: Longlong Xia <xialonglong@kylinos.cn>
 To: akpm@linux-foundation.org,
-	david@redhat.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	peterx@redhat.com
+	xu.xin16@zte.com.cn
 Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	dev.jain@arm.com,
-	muchun.song@linux.dev,
-	lizhe.67@bytedance.com
-Subject: [PATCH v2] gup: optimize longterm pin_user_pages() for large folio
-Date: Wed,  4 Jun 2025 11:15:36 +0800
-Message-ID: <20250604031536.9053-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
+	Longlong Xia <xialonglong@kylinos.cn>
+Subject: [PATCH 0/2] mm/ksm: calculate ksm_process_profit more accurately
+Date: Wed,  4 Jun 2025 11:17:53 +0800
+Message-ID: <20250604031758.4150209-1-xialonglong@kylinos.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-From: Li Zhe <lizhe.67@bytedance.com>
+During the KSM testing, it was observed that the sum of KSM profits=20
+for each process does not equal the general_profit.
 
-In the current implementation of the longterm pin_user_pages() function,
-we invoke the collect_longterm_unpinnable_folios() function. This function
-iterates through the list to check whether each folio belongs to the
-"longterm_unpinnabled" category. The folios in this list essentially
-correspond to a contiguous region of user-space addresses, with each folio
-representing a physical address in increments of PAGESIZE. If this
-user-space address range is mapped with large folio, we can optimize the
-performance of function pin_user_pages() by reducing the frequency of
-memory accesses using READ_ONCE. This patch leverages this approach to
-achieve performance improvements.
+The reason is general_profit_show() only considers ksm_pages_sharing,
+whereas ksm_process_profit() accounts for both ksm_pages_sharing
+and ksm_pages_shared for each process. By concentrating solely on=20
+ksm_pages_sharing, we can achieve a more accurate representation=20
+of actual profits.
 
-The performance test results obtained through the gup_test tool from the
-kernel source tree are as follows. We achieve an improvement of over 70%
-for large folio with pagesize=2M. For normal page, we have only observed
-a very slight degradation in performance.
+Thanks for review and comments!
 
-Without this patch:
+Longlong Xia (2):
+  mm/ksm: calculate ksm_process_profit more accurately
+  mm/ksm: Rename ksm_merging_pages to ksm_process_sharing
 
-    [root@localhost ~] ./gup_test -HL -m 8192 -n 512
-    TAP version 13
-    1..1
-    # PIN_LONGTERM_BENCHMARK: Time: get:13623 put:10799 us#
-    ok 1 ioctl status 0
-    # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-    [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
-    TAP version 13
-    1..1
-    # PIN_LONGTERM_BENCHMARK: Time: get:129733 put:31753 us#
-    ok 1 ioctl status 0
-    # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+ Documentation/admin-guide/mm/ksm.rst          |  6 ++---
+ Documentation/filesystems/proc.rst            |  6 ++---
+ .../translations/zh_CN/admin-guide/mm/ksm.rst |  8 +++----
+ .../translations/zh_TW/admin-guide/mm/ksm.rst |  8 +++----
+ fs/proc/base.c                                | 10 ++++-----
+ include/linux/mm_types.h                      |  2 +-
+ mm/ksm.c                                      | 22 ++++++++-----------
+ .../selftests/mm/ksm_functional_tests.c       | 10 ++++-----
+ 8 files changed, 34 insertions(+), 38 deletions(-)
 
-With this patch:
-
-    [root@localhost ~] ./gup_test -HL -m 8192 -n 512
-    TAP version 13
-    1..1
-    # PIN_LONGTERM_BENCHMARK: Time: get:4075 put:10792 us#
-    ok 1 ioctl status 0
-    # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-    [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
-    TAP version 13
-    1..1
-    # PIN_LONGTERM_BENCHMARK: Time: get:130727 put:31763 us#
-    ok 1 ioctl status 0
-    # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-
-Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
----
-Changelogs:
-
-v1->v2:
-- Modify some unreliable code.
-- Update performance test data.
-
-v1 patch: https://lore.kernel.org/all/20250530092351.32709-1-lizhe.67@bytedance.com/
-
- mm/gup.c | 37 +++++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index 84461d384ae2..57fd324473a1 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2317,6 +2317,31 @@ static void pofs_unpin(struct pages_or_folios *pofs)
- 		unpin_user_pages(pofs->pages, pofs->nr_entries);
- }
- 
-+static struct folio *pofs_next_folio(struct folio *folio,
-+				struct pages_or_folios *pofs, long *index_ptr)
-+{
-+	long i = *index_ptr + 1;
-+
-+	if (!pofs->has_folios) {
-+		unsigned long start_pfn = folio_pfn(folio);
-+		unsigned long end_pfn = start_pfn + folio_nr_pages(folio);
-+
-+		for (; i < pofs->nr_entries; i++) {
-+			unsigned long pfn = page_to_pfn(pofs->pages[i]);
-+
-+			/* Is this page part of this folio? */
-+			if ((pfn < start_pfn) || (pfn >= end_pfn))
-+				break;
-+		}
-+	}
-+
-+	if (unlikely(i == pofs->nr_entries))
-+		return NULL;
-+	*index_ptr = i;
-+
-+	return pofs_get_folio(pofs, i);
-+}
-+
- /*
-  * Returns the number of collected folios. Return value is always >= 0.
-  */
-@@ -2324,16 +2349,12 @@ static void collect_longterm_unpinnable_folios(
- 		struct list_head *movable_folio_list,
- 		struct pages_or_folios *pofs)
- {
--	struct folio *prev_folio = NULL;
- 	bool drain_allow = true;
--	unsigned long i;
--
--	for (i = 0; i < pofs->nr_entries; i++) {
--		struct folio *folio = pofs_get_folio(pofs, i);
-+	long i = 0;
-+	struct folio *folio;
- 
--		if (folio == prev_folio)
--			continue;
--		prev_folio = folio;
-+	for (folio = pofs_get_folio(pofs, 0); folio;
-+			folio = pofs_next_folio(folio, pofs, &i)) {
- 
- 		if (folio_is_longterm_pinnable(folio))
- 			continue;
--- 
-2.20.1
+--=20
+2.43.0
 
