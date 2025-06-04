@@ -1,557 +1,196 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11021117.outbound.protection.outlook.com [52.101.65.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327BB1DED6D
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027514; cv=none; b=u7KWD5y9npDX5wVjpV2zYM9gB1kygctbe7EShPsq1ntWMqHy44jnk3Aj3xZ3QCnK8ns3N6x4Cmqi6i94qU1PVWx4ThOhpb8snfsqhiA4+Y5BnuK1hI1LxK47Fsc48H9BsdtZA0Fz6k1FM5MmfJ3Gcu5t3QTHkPGj5W+ymrDopAM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027514; c=relaxed/simple;
-	bh=HbqAOgkyfLZJ65spBctg5HHBp0pGqzmotIz1JGi2yJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yn12Vylw8adSqV7IT8AOJkG+KhWP20ZhgwSQ0+5xUfz8T0FpsvYllzabkSXWWU2ffJE3AU8hzfDrOyRtrmvLvwKWdpEFxGEpR6CuygK+Dh+2CrUIB52342wUBL94wACGumLo6OzMhv7GW299OQN3pC1uSVesnu1eQnklVXoqsQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zyf/l6L7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lJnhLoWD; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zyf/l6L7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lJnhLoWD; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DEC1EDA04;
+	Wed,  4 Jun 2025 08:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749027534; cv=fail; b=lYAkgqo6g473LBQjF86O4epDktBkz+9Uf1C47kdXmTMaDBboAFGG8SvLxMMat8C+4U81CLKX/mON69gNZyTQIaa7MNIactYHkxHFJztNXxUxi94v/9dvoW/pxzXkMz50MBUBViWWhXbz9/gnM6ObhRBGR5ObQ6XxpCryW41b5tI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749027534; c=relaxed/simple;
+	bh=6QgzJfS3yoMvWzpAZopNiSX4c1llHMCxcVWXHQ+XGt8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=km6gMCAQtETaWHUp6PvilN3ncpH9G8OsVVEGD1kRU9aXdCisfj+aM+GhJHvrQ8Y88EEy2pOQvmU899BVKwoIZlZ/NJgLzqAFNKJ/bGVx9bg+B2F5LrIFNU/dY/BMr7yRCKInjZdyIaVjND07FKurxp3hz6QR2qzUzoZVqF+McQ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; dkim=pass (1024-bit key) header.d=prodrive-technologies.com header.i=@prodrive-technologies.com header.b=T4E0U5s9; arc=fail smtp.client-ip=52.101.65.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zyf/l6L7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lJnhLoWD";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zyf/l6L7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lJnhLoWD"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 533473E721;
-	Wed,  4 Jun 2025 08:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749027380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iqgZ8xPpJ3EsotfPgJZu6XfZF4dEZTN6chU7R4xgPFI=;
-	b=zyf/l6L7UnAMb0Dpnr/7OVV4DJaZLO+ULCvTWXb+sjTl//Q5t26FyjO53SAQeXdt4B+F/4
-	7XhtjkaxDpDVJajn2t6Na8Ums2pJkohYX+XXj8a/D2cYnnHESZkmXW+GC7ye12gxR+XdBU
-	OclyZASmy7sKURr3b2B2SWbYLL1N9RY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749027380;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iqgZ8xPpJ3EsotfPgJZu6XfZF4dEZTN6chU7R4xgPFI=;
-	b=lJnhLoWDrMdseb6xeK/Ox7hJcvwGblc16TF1+EtYAaKmMPf/pGq6vTiWh3+NkUXFnjPySB
-	Ysy/xdNYTrLVpYBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="zyf/l6L7";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=lJnhLoWD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749027380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iqgZ8xPpJ3EsotfPgJZu6XfZF4dEZTN6chU7R4xgPFI=;
-	b=zyf/l6L7UnAMb0Dpnr/7OVV4DJaZLO+ULCvTWXb+sjTl//Q5t26FyjO53SAQeXdt4B+F/4
-	7XhtjkaxDpDVJajn2t6Na8Ums2pJkohYX+XXj8a/D2cYnnHESZkmXW+GC7ye12gxR+XdBU
-	OclyZASmy7sKURr3b2B2SWbYLL1N9RY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749027380;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iqgZ8xPpJ3EsotfPgJZu6XfZF4dEZTN6chU7R4xgPFI=;
-	b=lJnhLoWDrMdseb6xeK/Ox7hJcvwGblc16TF1+EtYAaKmMPf/pGq6vTiWh3+NkUXFnjPySB
-	Ysy/xdNYTrLVpYBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A6E0C1369A;
-	Wed,  4 Jun 2025 08:56:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id C0NkJzIKQGiWCAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 04 Jun 2025 08:56:18 +0000
-Message-ID: <b5c43a16-4f8a-480e-9c99-f984dc0697f7@suse.de>
-Date: Wed, 4 Jun 2025 10:56:18 +0200
+	dkim=pass (1024-bit key) header.d=prodrive-technologies.com header.i=@prodrive-technologies.com header.b="T4E0U5s9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CfW5A2VOP/dcFo4V0o3785YhUxCCdkmDNY+iKWE/gR6y4Lmx7jrWYR8Nt92skllZp2GR5YlU0saiXPejFCn9lgX2U4yTbcTHTboexFX6RBKEBNln8Y+CD4+JOkKJnd2kTtX1dsIyHmF1YeElcZWoTeKM5mMBV5c4AYc3qIIIqFXjrX4BpVLWU+v9B9aAEICp9X3W5ywHo7UcvHGFCqjrjJlbWl/jlgIoTtc8oWmn0dFFlZnjxClpe5zbU3DVzqHj/NSw3AVN4ZnXm239DgWpjeePBucVvyv0mE+SivV0GtGniB8XT9bgWWsdZ472MrEVe1OTGqgSjG0Zs9qrfCDafg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j/vOjvSONNgXu3mdGQd0qlUcsKlul/lLzXd5QKYbmpU=;
+ b=xCMScpjC+vpNd4TpvW6FzGj7d0aGuEr9M+uSQOEykyLg6HEVMw853AovEzhIdiLyXHgf3JL/8x6QbgIilmX2wJCBupNmUFp4qXqy9ky2o672G5ijRFFL0FJAl+Zqqs2iJc/8rpcnhHxEOlH4xSHsLvdckGm7ZW46YWWl/S7HWFB23ZYA4ts+PQmvz803SNEaDRf1WqnqrzVmsc2ZqxqGTBMDBA8yIFbnivK6jxxAz+XqbNik+RNTqGeEqgyAOuDKjl6y4huX87X2y7Yz+VeQ+QY+xfWEzrgeA8R1YJ2gk2hVoFZ3MpnY1QKZW0Mmh/6qI2ALn6v9zxAvL4do8fiAgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prodrive-technologies.com; dmarc=pass action=none
+ header.from=prodrive-technologies.com; dkim=pass
+ header.d=prodrive-technologies.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=prodrive-technologies.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j/vOjvSONNgXu3mdGQd0qlUcsKlul/lLzXd5QKYbmpU=;
+ b=T4E0U5s9CbKoIBr7G31/SCefZQG03n2bwirFtAMb63VwDNr6QLaeOuD1L9Kiw/hBBthbMWH+7QvDmJUpdafP5zogux1hJfVypGGao0iqI5qwePhy3/hAU1jtCIIJOjEHbFZ3qMzfpNbEtnGbT6U46LDLEIknJAR5qc7CKt/app4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=prodrive-technologies.com;
+Received: from AS8PR02MB9532.eurprd02.prod.outlook.com (2603:10a6:20b:5a8::17)
+ by PAVPR02MB9428.eurprd02.prod.outlook.com (2603:10a6:102:306::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.19; Wed, 4 Jun
+ 2025 08:58:43 +0000
+Received: from AS8PR02MB9532.eurprd02.prod.outlook.com
+ ([fe80::4636:d263:14f1:bced]) by AS8PR02MB9532.eurprd02.prod.outlook.com
+ ([fe80::4636:d263:14f1:bced%4]) with mapi id 15.20.8792.026; Wed, 4 Jun 2025
+ 08:58:42 +0000
+Message-ID: <194f6c85-ad28-4217-b014-54bc64c6a9ca@prodrive-technologies.com>
+Date: Wed, 4 Jun 2025 10:58:41 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: regulator: add pca9450: Add
+ regulator-allowed-modes
+To: Krzysztof Kozlowski <krzk@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250525071823.819342-1-martijn.de.gouw@prodrive-technologies.com>
+ <aced65a2-937e-494d-a3bd-aa9b295f73b7@prodrive-technologies.com>
+ <5ea091c6-7e78-4945-81b4-9b5c427d2e4d@kernel.org>
+Content-Language: en-US
+From: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+In-Reply-To: <5ea091c6-7e78-4945-81b4-9b5c427d2e4d@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AS4P250CA0030.EURP250.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5e3::20) To AS8PR02MB9532.eurprd02.prod.outlook.com
+ (2603:10a6:20b:5a8::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 4/5] drm/bridge: Update the bridge enable/disable doc
-To: Aradhya Bhatia <aradhya.bhatia@linux.dev>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Devarsh Thakkar <devarsht@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
- Udit Kumar <u-kumar1@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
- Alexander Sverdlin <alexander.sverdlin@siemens.com>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>
-References: <20250406131642.171240-1-aradhya.bhatia@linux.dev>
- <20250406131642.171240-5-aradhya.bhatia@linux.dev>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250406131642.171240-5-aradhya.bhatia@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_DN_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_TO(0.00)[linux.dev,ideasonboard.com,oss.qualcomm.com,intel.com,linaro.org,kernel.org,kwiboo.se,gmail.com,linux.intel.com,ffwll.ch];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid,suse.de:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 533473E721
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.01
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR02MB9532:EE_|PAVPR02MB9428:EE_
+X-MS-Office365-Filtering-Correlation-Id: 582b7c56-2836-41a4-7cdd-08dda34601a7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SGZ5NWdvU1N0bzFoRlZ2RjBqVXBOZ2xKdEdpemgvU3Uwb3dSdmpaOG1DbFhU?=
+ =?utf-8?B?a0NENmFvUlZMMTZnazE2LzZkQ3NhbGtXd0RqbHgwSTNma2NSalFXN01QZjBI?=
+ =?utf-8?B?dWc3V3pLSTIxdzFKUXROZE15Vm9HRVFtaURGUERFT0dESnRFVnIrcGQrcCtz?=
+ =?utf-8?B?NzhNNGVhTHlNVHdDV3EvNytaQzdxUTBneDdpMGhMcUNFa2NmaStpUXVzODh5?=
+ =?utf-8?B?THdMQnJHN0dEcThiK3NjMTAwamhjR282YlVqVVVYYU9aREFRWWQ5eU9ONDhJ?=
+ =?utf-8?B?ankrMXhTbXQrUHdsalN6R0VTaUlYb2hBYVhRa0Y4ZEN2RjdnN3JRZFozRTlN?=
+ =?utf-8?B?bUV4ZGx6d3lhejV1U3ozTUdJbFVKd3RTQThHL09kV05BQTlaMXJISVdLMFlZ?=
+ =?utf-8?B?RkoxWGwvbzVEdGFtTnQ1RHdIUGswNkxIRmFZUm9HYzlMbERuUVVxS3loa2k2?=
+ =?utf-8?B?N3lodGNsTzJIZkk4bVkwL0lwNlJieTAvVVRZQ0Nnem9zc0RqYVVpWjY4RVNZ?=
+ =?utf-8?B?NE1hRE1YKzdTUzFLZFM3UUhuamczQ2R0U3QxNFRZQTlYbHRpYm5ibHY3TVZx?=
+ =?utf-8?B?SzhzWXg1bkNDZ3RDMGNMNWpTUHE1RTM5TjVBZGRxQXpHazRIT1dZb1ZNQnp3?=
+ =?utf-8?B?R2pHT0I5bjdOajFYeW9OOWJKR2t4MTIyWnlBVWZ2MUZyVGdnbkpDNktyalNV?=
+ =?utf-8?B?cW1FbUxqemtBbk0rZW5zQXVlMHVJUEtmMEpPUnJRcHpBU2tzQStadStpc3BZ?=
+ =?utf-8?B?REdQN1paa255S0xkRFE4elRFOHdqZjJMcXZCSURWY3Y1Tjg4a1NmNHBOUzBy?=
+ =?utf-8?B?cW9RQW4rUmVlR1JHMUt6UXlYLzM3d3BzYVBYWERNbWM3dFJsYnhNbmtZR2h1?=
+ =?utf-8?B?UkRYSGxRNW9EZFRRWGE2NHlhdjhoSTI3SGtBbTNxTzErb1BTdHNRQVVlcnNv?=
+ =?utf-8?B?OW9FMVppZWl2Q2JNNG44Q1VzcitrdmhwRVAzcDFYemFOUzJ3RVlNcW1samZz?=
+ =?utf-8?B?VjNzTE9LTFdMR3lWREhJN0diS1ozWkVoWHhrbmJHdmk4Ymd6REN0SFp2ekIr?=
+ =?utf-8?B?Z2hiNm5tSGFyL0NNUWRmWVluNW5uRHpCYUZEdVJFOG9laVIwdFNrZVRKa2ls?=
+ =?utf-8?B?bWs5czN2VkR4Q3NZaXpBbHhqT1V4UDRHUDRQaVFzbWoxTUw5cmxpeExUR29B?=
+ =?utf-8?B?eTc4WHR1OGtPcmlEcFl1UFJUMU5sNFdGVTBHdjhzMGFScTMwbE9nci9SQzYz?=
+ =?utf-8?B?SmJmYktER2FMQWtOWFMrSWdsRUJpWUpnWUpkcStGcHJSZGhSVit3Tmh4cjFE?=
+ =?utf-8?B?VjVYdVRIVmE3bGEyUjNrMXRITkxGSG8xNkovbjJLcFlZZkgxZ0NFTGJSMEVn?=
+ =?utf-8?B?ZjNTSGVBQm1VQUZ3Zi9BUnhRN05ueC8rVEJuRm1seE5tbkk3R0djajJsa3NR?=
+ =?utf-8?B?djNYTW0zSWdxR3kzN01HT09jVUNLMko0N3lONzM3NlMzUVl6WUxHNUEvNGNo?=
+ =?utf-8?B?T0VqYklhYVlpL0dNZFoySGNIVWljOWE5Vk00akpzZXVNMGJCanZ6REVHZ0tH?=
+ =?utf-8?B?WUR2azBTOXJ0angrbXNtK0d5RXJXZDNtRXJpb3pjeFkrL2hiZGhHcnFoQlBC?=
+ =?utf-8?B?ZlBadERsZWlKamNUTVk2VlRGTHFPcDJsS3FYdE42R1g2MG4vRmZ6TSs1THJW?=
+ =?utf-8?B?SmUvRmNOcUZZUmF2Tm9WT0hpS0djc1ErT0Z5QnpSOG8xRkNTT2RjMXF6YlpZ?=
+ =?utf-8?B?VkdHZ1BtMTRhWGJ3bXlvQTBaV1BnRTR0T2cyTThnckZ3YVRSV3gwYUV0Yy9G?=
+ =?utf-8?B?Z1RpMWxxWWZJUWxPcjhjZnM3RTR4cTRVRUJWMlloakFoclFGNWFHamFSOXRY?=
+ =?utf-8?B?OHAvR1UrQmNyT2wxTURsbG5TMGROc1Z6UG0zdWN6aE05NitlRnpYRlp6NkNw?=
+ =?utf-8?Q?+Hw7oEFQLl4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR02MB9532.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aVVsUzduNjNYcmc0LzB5bHFCMGZQWTVqajBsa2JkUU9oVXlKRlYvVFNxbTF2?=
+ =?utf-8?B?TFRTM3VkZnlJZVkyaTFIVFp1UWZzN1VOa2d1MTFRQzU0MHZMWjBDMkFsM0pT?=
+ =?utf-8?B?Ni9kVUZBZ1Y4enVTdFdCRlJmeHNrQzRXT2d3QTA3S0pUeWloaXdJRE44UGo0?=
+ =?utf-8?B?c1hwWU9xeXhhZStNdU54eXFreEJ4Z2lBVkZvc1ZhL1B0bSsyOFcyTHNqWEN6?=
+ =?utf-8?B?THl6MGxVRVltVm50aktBZ3I5T1dHYUFJNC9NMVYyUE9nQWt4T1ZXWmZCMXNI?=
+ =?utf-8?B?R0RhL0s5c3EzQ1FEdVFKdUpzN0pzbUxobGxyWEZlZjZGWWRaTVBNVWU1S3M5?=
+ =?utf-8?B?YnB3dFlxWHFRRCtRTjNzOVphQ0tleDc1VFIrSEkyMU81SytmUUNvRjlLdm40?=
+ =?utf-8?B?UTB2Y0FBL1EzREN1S2paS3Z2VUdBcWR6QUlaaW1TaGRkOEh6ZVU2cmFmNmZI?=
+ =?utf-8?B?SUIwMjRCMDlZeXJacnBFRVI5S2xWanI4U1dKZlFKRHBZcHJ3THZYYnN6S3NZ?=
+ =?utf-8?B?UGt5K1JRdVl6alhyQ0RCS2s0OFZpelhLNEhJejBuSXZ5ZW9IRHVnbHp1Vldl?=
+ =?utf-8?B?U1ZGRjI0akRBSmhrYkNMUjFaUjRwRWlLYU14SUxRcmlpYjM1VFhaSXJXNEZt?=
+ =?utf-8?B?c2dHTW9wWW9jM3JxbXpxQWllaFpUSnRqaG9UV3pNOXBTcTlrdWxKa2JTRERS?=
+ =?utf-8?B?YUhraUEvZ2xSTGt0OGJBY1Q3UE9iMjlmeEVsckIxVTliQ2doWjN0MjRyMHVs?=
+ =?utf-8?B?WjVDaTQ1L1RmUGthdzdPWktJYm43ZUlJRERWQ3pMREV5K1VQL0wzZ29UNXpR?=
+ =?utf-8?B?N1hBZmp2bzVMVjVCNUFQZFh6bGc5UEg4dnNiRTdpR0xFaTlkTFhWWTYrZWR5?=
+ =?utf-8?B?M3J0RzkzcGdzUzZJQTFaQ0VKSmhJM0I4UEJoZGpHT25tN0x6UDNKUCsvd3JT?=
+ =?utf-8?B?dFMvMlBzc1VBc1dOREdwb0hCK3dPRUg5Z2VJUGJYNVBYUkRYSXFSUXpGckxx?=
+ =?utf-8?B?Zm9oZHd3L08wUFpUZXlhaktRSzF3YTJFeE5seVF2eHh4M0xRUUY5UEdxR0tD?=
+ =?utf-8?B?aVh2N3hBWkpMa09QVjk0VlQ0eTZia3JhNzVYcXEvRTIvdWlKdVNIbVlDWjlL?=
+ =?utf-8?B?WmR5YWxCekIxQ1ZBeXppSHJwWHdyYTRzaWVrU25RYUVjTlB5RHpJTXZtK3RQ?=
+ =?utf-8?B?dWZicWFacGNqVDNkV3FRek94QUVxcU45YndIRUNmUUpBVVNIL1lKSTJ0NUMv?=
+ =?utf-8?B?Z0xzay9QVDN0ODZYVFovL05HN1lMbWtJSERFRXpCclRDMGJCQlhJTlU0VUo5?=
+ =?utf-8?B?TlFnd29tbFovNGRhR0NscHlVc2F4VXZueGNKbVJWa284VDZFME5TZ0VwQXRt?=
+ =?utf-8?B?ajNzNHhyUlRTNmhkUU5GcnVPWklvSkxWdzV0emc1ckE5YmdQT1FJYk5jM24x?=
+ =?utf-8?B?U1NqOVJxT2NWZlpsZjFpRng0eEZpMk1UQU9RSCtPWEo5MjBTV0I3akJpK0tn?=
+ =?utf-8?B?QWd3bDhZQVEyTWFLaStaRjN1VUhScGdhQ2tNVVFLR05wVXdvdXpMRWxmM2dW?=
+ =?utf-8?B?UUhZQkNyLytPYXhodnVoZDZQd3NoQmY1U0VrdFFCcmFIMXB3S29PQUNTb0FO?=
+ =?utf-8?B?aTRBdDZZdzBVRzB4VzhWb2xoVlZnZ2JTYkJYOXZyVWNLVjBKWklNanpzc3ZY?=
+ =?utf-8?B?aWQ3QmRIa2kxUG9Na1NOckpDSHhnOFF6a0k0UWY2MHhRRmhaVzNia2Vpb2p6?=
+ =?utf-8?B?ajZMRjJKOVJqNStzVGZQckJqQTROb1V6Q2RRNFFZTW12WEMyVHAvcUdkckdz?=
+ =?utf-8?B?bUM3cHVUU3M1S3NFLy91OVEvOE5HZGNwTk84b3lrZzV1ZGVXK2dQdnBSbmRo?=
+ =?utf-8?B?YXFhMitkYUZac1BuNEFTcEx3cUNQL21jc3pkY214UUJxYlhIQUg2NGJNcVdr?=
+ =?utf-8?B?bVgwSE14dEJRalFweGZ4V1dRV0FoS2wzOXBVRFVYWnU0K21TeHovL2dWdzVQ?=
+ =?utf-8?B?dEg1cUJieFZQNmsvSTJGK0ZTUkpHbzIzZkxVaWpWWE5hc3pQNG1Gd2x3OUtl?=
+ =?utf-8?B?WnhKYncxcjU1YnlZZXJRcCtFcU5lNFRsQnJCWmtLMDVJdktFYis4SXBIVE9V?=
+ =?utf-8?B?U1liMW5XMDlkaTNuU2UxdnZEa01ySVYwR3JvZWRDMXN4dmw4SzdKd0x6RXZV?=
+ =?utf-8?Q?y6sBl2CLzmdUvLGyCetdpJpb3idbMLkkzB8S5H8KEjIK?=
+X-OriginatorOrg: prodrive-technologies.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 582b7c56-2836-41a4-7cdd-08dda34601a7
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB9532.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 08:58:42.9060
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 612607c9-5af7-4e7f-8976-faf1ae77be60
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xSnmrnQLEFTk0HPVDNfSIZAeXmDX2aRGJf5dmJMBr14jP46a/DeZSfgkWAgYPLU5S4Tqj0ciVjNePsYdyuoxiKJN0Mrx/oQFgjk6LywR9dH7lP++267tN7cu5T3C5TngK4KEIYYc4tCAMt+Js6Aruw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR02MB9428
 
 
 
-Am 06.04.25 um 15:16 schrieb Aradhya Bhatia:
-> Now that the bridges get pre-enabled before the CRTC is enabled, and get
-> post-disabled after the CRTC is disabled, update the function
-> descriptions to accurately reflect the updated scenario.
->
-> The enable sequence for the display pipeline looks like:
->
-> 	bridge[n]_pre_enable
-> 	...
-> 	bridge[1]_pre_enable
->
-> 	crtc_enable
-> 	encoder_enable
->
-> 	bridge[1]_enable
-> 	...
-> 	bridge[n]_enable
->
-> And, the disable sequence for the display pipeline looks like:
->
-> 	bridge[n]_disable
-> 	...
-> 	bridge[1]_disable
->
-> 	encoder_disable
-> 	crtc_disable
->
-> 	bridge[1]_post_disable
-> 	...
-> 	bridge[n]_post_disable
->
-> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+On 6/4/2025 10:27 AM, Krzysztof Kozlowski wrote:
+> On 04/06/2025 09:04, Martijn de Gouw wrote:
+>> Hi,
+>>
+>> On 5/25/2025 9:18 AM, Martijn de Gouw wrote:
+>>> Make the PWM mode on the buck controllers configurable from devicetree.
+>>> Some boards require forced PWM mode to keep the supply ripple within
+>>> acceptable limits under light load conditions.
+>>>
+>>> Signed-off-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+>>> ---
+>>> Changes in v3:
+>>>   - Fix typo in the examples
+>>> Changes in v2:
+>>>   - Add the header to the binding patch
+>>>   - Improve commit message
+>>>
+>>>  .../regulator/nxp,pca9450-regulator.yaml       | 14 ++++++++++++++
+>>>  .../regulator/nxp,pca9450-regulator.h          | 18 ++++++++++++++++++
+>>>  2 files changed, 32 insertions(+)
+>>
+>> Does this patch need additional changes?
+> 
+> What is wrong with the email you already received? What do you exactly
+> need from us?
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+V2 was merged rather quickly, on V3 there was only the Acked-by: Conor Dooley. So it's safe to assume V3 is now waiting to be merged?
 
-I think this patch could be merged with patch 3.
-
-> ---
->   include/drm/drm_bridge.h | 249 ++++++++++++++++++++++++++++-----------
->   1 file changed, 183 insertions(+), 66 deletions(-)
->
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index cdad3b78a195..e5ccbefa60a8 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -164,17 +164,33 @@ struct drm_bridge_funcs {
->   	/**
->   	 * @disable:
->   	 *
-> -	 * This callback should disable the bridge. It is called right before
-> -	 * the preceding element in the display pipe is disabled. If the
-> -	 * preceding element is a bridge this means it's called before that
-> -	 * bridge's @disable vfunc. If the preceding element is a &drm_encoder
-> -	 * it's called right before the &drm_encoder_helper_funcs.disable,
-> -	 * &drm_encoder_helper_funcs.prepare or &drm_encoder_helper_funcs.dpms
-> -	 * hook.
-> +	 * The @disable callback should disable the bridge.
->   	 *
->   	 * The bridge can assume that the display pipe (i.e. clocks and timing
->   	 * signals) feeding it is still running when this callback is called.
->   	 *
-> +	 *
-> +	 * If the preceding element is a &drm_bridge, then this is called before
-> +	 * that bridge is disabled via one of:
-> +	 *
-> +	 * - &drm_bridge_funcs.disable
-> +	 * - &drm_bridge_funcs.atomic_disable
-> +	 *
-> +	 * If the preceding element of the bridge is a display controller, then
-> +	 * this callback is called before the encoder is disabled via one of:
-> +	 *
-> +	 * - &drm_encoder_helper_funcs.atomic_disable
-> +	 * - &drm_encoder_helper_funcs.prepare
-> +	 * - &drm_encoder_helper_funcs.disable
-> +	 * - &drm_encoder_helper_funcs.dpms
-> +	 *
-> +	 * and the CRTC is disabled via one of:
-> +	 *
-> +	 * - &drm_crtc_helper_funcs.prepare
-> +	 * - &drm_crtc_helper_funcs.atomic_disable
-> +	 * - &drm_crtc_helper_funcs.disable
-> +	 * - &drm_crtc_helper_funcs.dpms.
-> +	 *
->   	 * The @disable callback is optional.
->   	 *
->   	 * NOTE:
-> @@ -187,17 +203,34 @@ struct drm_bridge_funcs {
->   	/**
->   	 * @post_disable:
->   	 *
-> -	 * This callback should disable the bridge. It is called right after the
-> -	 * preceding element in the display pipe is disabled. If the preceding
-> -	 * element is a bridge this means it's called after that bridge's
-> -	 * @post_disable function. If the preceding element is a &drm_encoder
-> -	 * it's called right after the encoder's
-> -	 * &drm_encoder_helper_funcs.disable, &drm_encoder_helper_funcs.prepare
-> -	 * or &drm_encoder_helper_funcs.dpms hook.
-> -	 *
->   	 * The bridge must assume that the display pipe (i.e. clocks and timing
-> -	 * signals) feeding it is no longer running when this callback is
-> -	 * called.
-> +	 * signals) feeding this bridge is no longer running when the
-> +	 * @post_disable is called.
-> +	 *
-> +	 * This callback should perform all the actions required by the hardware
-> +	 * after it has stopped receiving signals from the preceding element.
-> +	 *
-> +	 * If the preceding element is a &drm_bridge, then this is called after
-> +	 * that bridge is post-disabled (unless marked otherwise by the
-> +	 * @pre_enable_prev_first flag) via one of:
-> +	 *
-> +	 * - &drm_bridge_funcs.post_disable
-> +	 * - &drm_bridge_funcs.atomic_post_disable
-> +	 *
-> +	 * If the preceding element of the bridge is a display controller, then
-> +	 * this callback is called after the encoder is disabled via one of:
-> +	 *
-> +	 * - &drm_encoder_helper_funcs.atomic_disable
-> +	 * - &drm_encoder_helper_funcs.prepare
-> +	 * - &drm_encoder_helper_funcs.disable
-> +	 * - &drm_encoder_helper_funcs.dpms
-> +	 *
-> +	 * and the CRTC is disabled via one of:
-> +	 *
-> +	 * - &drm_crtc_helper_funcs.prepare
-> +	 * - &drm_crtc_helper_funcs.atomic_disable
-> +	 * - &drm_crtc_helper_funcs.disable
-> +	 * - &drm_crtc_helper_funcs.dpms
->   	 *
->   	 * The @post_disable callback is optional.
->   	 *
-> @@ -240,18 +273,30 @@ struct drm_bridge_funcs {
->   	/**
->   	 * @pre_enable:
->   	 *
-> -	 * This callback should enable the bridge. It is called right before
-> -	 * the preceding element in the display pipe is enabled. If the
-> -	 * preceding element is a bridge this means it's called before that
-> -	 * bridge's @pre_enable function. If the preceding element is a
-> -	 * &drm_encoder it's called right before the encoder's
-> -	 * &drm_encoder_helper_funcs.enable, &drm_encoder_helper_funcs.commit or
-> -	 * &drm_encoder_helper_funcs.dpms hook.
-> -	 *
->   	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
-> -	 * will not yet be running when this callback is called. The bridge must
-> -	 * not enable the display link feeding the next bridge in the chain (if
-> -	 * there is one) when this callback is called.
-> +	 * will not yet be running when the @pre_enable is called.
-> +	 *
-> +	 * This callback should perform all the necessary actions to prepare the
-> +	 * bridge to accept signals from the preceding element.
-> +	 *
-> +	 * If the preceding element is a &drm_bridge, then this is called before
-> +	 * that bridge is pre-enabled (unless marked otherwise by
-> +	 * @pre_enable_prev_first flag) via one of:
-> +	 *
-> +	 * - &drm_bridge_funcs.pre_enable
-> +	 * - &drm_bridge_funcs.atomic_pre_enable
-> +	 *
-> +	 * If the preceding element of the bridge is a display controller, then
-> +	 * this callback is called before the CRTC is enabled via one of:
-> +	 *
-> +	 * - &drm_crtc_helper_funcs.atomic_enable
-> +	 * - &drm_crtc_helper_funcs.commit
-> +	 *
-> +	 * and the encoder is enabled via one of:
-> +	 *
-> +	 * - &drm_encoder_helper_funcs.atomic_enable
-> +	 * - &drm_encoder_helper_funcs.enable
-> +	 * - &drm_encoder_helper_funcs.commit
->   	 *
->   	 * The @pre_enable callback is optional.
->   	 *
-> @@ -265,19 +310,31 @@ struct drm_bridge_funcs {
->   	/**
->   	 * @enable:
->   	 *
-> -	 * This callback should enable the bridge. It is called right after
-> -	 * the preceding element in the display pipe is enabled. If the
-> -	 * preceding element is a bridge this means it's called after that
-> -	 * bridge's @enable function. If the preceding element is a
-> -	 * &drm_encoder it's called right after the encoder's
-> -	 * &drm_encoder_helper_funcs.enable, &drm_encoder_helper_funcs.commit or
-> -	 * &drm_encoder_helper_funcs.dpms hook.
-> +	 * The @enable callback should enable the bridge.
->   	 *
->   	 * The bridge can assume that the display pipe (i.e. clocks and timing
->   	 * signals) feeding it is running when this callback is called. This
->   	 * callback must enable the display link feeding the next bridge in the
->   	 * chain if there is one.
->   	 *
-> +	 * If the preceding element is a &drm_bridge, then this is called after
-> +	 * that bridge is enabled via one of:
-> +	 *
-> +	 * - &drm_bridge_funcs.enable
-> +	 * - &drm_bridge_funcs.atomic_enable
-> +	 *
-> +	 * If the preceding element of the bridge is a display controller, then
-> +	 * this callback is called after the CRTC is enabled via one of:
-> +	 *
-> +	 * - &drm_crtc_helper_funcs.atomic_enable
-> +	 * - &drm_crtc_helper_funcs.commit
-> +	 *
-> +	 * and the encoder is enabled via one of:
-> +	 *
-> +	 * - &drm_encoder_helper_funcs.atomic_enable
-> +	 * - &drm_encoder_helper_funcs.enable
-> +	 * - drm_encoder_helper_funcs.commit
-> +	 *
->   	 * The @enable callback is optional.
->   	 *
->   	 * NOTE:
-> @@ -290,17 +347,30 @@ struct drm_bridge_funcs {
->   	/**
->   	 * @atomic_pre_enable:
->   	 *
-> -	 * This callback should enable the bridge. It is called right before
-> -	 * the preceding element in the display pipe is enabled. If the
-> -	 * preceding element is a bridge this means it's called before that
-> -	 * bridge's @atomic_pre_enable or @pre_enable function. If the preceding
-> -	 * element is a &drm_encoder it's called right before the encoder's
-> -	 * &drm_encoder_helper_funcs.atomic_enable hook.
-> -	 *
->   	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
-> -	 * will not yet be running when this callback is called. The bridge must
-> -	 * not enable the display link feeding the next bridge in the chain (if
-> -	 * there is one) when this callback is called.
-> +	 * will not yet be running when the @atomic_pre_enable is called.
-> +	 *
-> +	 * This callback should perform all the necessary actions to prepare the
-> +	 * bridge to accept signals from the preceding element.
-> +	 *
-> +	 * If the preceding element is a &drm_bridge, then this is called before
-> +	 * that bridge is pre-enabled (unless marked otherwise by
-> +	 * @pre_enable_prev_first flag) via one of:
-> +	 *
-> +	 * - &drm_bridge_funcs.pre_enable
-> +	 * - &drm_bridge_funcs.atomic_pre_enable
-> +	 *
-> +	 * If the preceding element of the bridge is a display controller, then
-> +	 * this callback is called before the CRTC is enabled via one of:
-> +	 *
-> +	 * - &drm_crtc_helper_funcs.atomic_enable
-> +	 * - &drm_crtc_helper_funcs.commit
-> +	 *
-> +	 * and the encoder is enabled via one of:
-> +	 *
-> +	 * - &drm_encoder_helper_funcs.atomic_enable
-> +	 * - &drm_encoder_helper_funcs.enable
-> +	 * - &drm_encoder_helper_funcs.commit
->   	 *
->   	 * The @atomic_pre_enable callback is optional.
->   	 */
-> @@ -310,18 +380,31 @@ struct drm_bridge_funcs {
->   	/**
->   	 * @atomic_enable:
->   	 *
-> -	 * This callback should enable the bridge. It is called right after
-> -	 * the preceding element in the display pipe is enabled. If the
-> -	 * preceding element is a bridge this means it's called after that
-> -	 * bridge's @atomic_enable or @enable function. If the preceding element
-> -	 * is a &drm_encoder it's called right after the encoder's
-> -	 * &drm_encoder_helper_funcs.atomic_enable hook.
-> +	 * The @atomic_enable callback should enable the bridge.
->   	 *
->   	 * The bridge can assume that the display pipe (i.e. clocks and timing
->   	 * signals) feeding it is running when this callback is called. This
->   	 * callback must enable the display link feeding the next bridge in the
->   	 * chain if there is one.
->   	 *
-> +	 * If the preceding element is a &drm_bridge, then this is called after
-> +	 * that bridge is enabled via one of:
-> +	 *
-> +	 * - &drm_bridge_funcs.enable
-> +	 * - &drm_bridge_funcs.atomic_enable
-> +	 *
-> +	 * If the preceding element of the bridge is a display controller, then
-> +	 * this callback is called after the CRTC is enabled via one of:
-> +	 *
-> +	 * - &drm_crtc_helper_funcs.atomic_enable
-> +	 * - &drm_crtc_helper_funcs.commit
-> +	 *
-> +	 * and the encoder is enabled via one of:
-> +	 *
-> +	 * - &drm_encoder_helper_funcs.atomic_enable
-> +	 * - &drm_encoder_helper_funcs.enable
-> +	 * - drm_encoder_helper_funcs.commit
-> +	 *
->   	 * The @atomic_enable callback is optional.
->   	 */
->   	void (*atomic_enable)(struct drm_bridge *bridge,
-> @@ -329,16 +412,32 @@ struct drm_bridge_funcs {
->   	/**
->   	 * @atomic_disable:
->   	 *
-> -	 * This callback should disable the bridge. It is called right before
-> -	 * the preceding element in the display pipe is disabled. If the
-> -	 * preceding element is a bridge this means it's called before that
-> -	 * bridge's @atomic_disable or @disable vfunc. If the preceding element
-> -	 * is a &drm_encoder it's called right before the
-> -	 * &drm_encoder_helper_funcs.atomic_disable hook.
-> +	 * The @atomic_disable callback should disable the bridge.
->   	 *
->   	 * The bridge can assume that the display pipe (i.e. clocks and timing
->   	 * signals) feeding it is still running when this callback is called.
->   	 *
-> +	 * If the preceding element is a &drm_bridge, then this is called before
-> +	 * that bridge is disabled via one of:
-> +	 *
-> +	 * - &drm_bridge_funcs.disable
-> +	 * - &drm_bridge_funcs.atomic_disable
-> +	 *
-> +	 * If the preceding element of the bridge is a display controller, then
-> +	 * this callback is called before the encoder is disabled via one of:
-> +	 *
-> +	 * - &drm_encoder_helper_funcs.atomic_disable
-> +	 * - &drm_encoder_helper_funcs.prepare
-> +	 * - &drm_encoder_helper_funcs.disable
-> +	 * - &drm_encoder_helper_funcs.dpms
-> +	 *
-> +	 * and the CRTC is disabled via one of:
-> +	 *
-> +	 * - &drm_crtc_helper_funcs.prepare
-> +	 * - &drm_crtc_helper_funcs.atomic_disable
-> +	 * - &drm_crtc_helper_funcs.disable
-> +	 * - &drm_crtc_helper_funcs.dpms.
-> +	 *
->   	 * The @atomic_disable callback is optional.
->   	 */
->   	void (*atomic_disable)(struct drm_bridge *bridge,
-> @@ -347,16 +446,34 @@ struct drm_bridge_funcs {
->   	/**
->   	 * @atomic_post_disable:
->   	 *
-> -	 * This callback should disable the bridge. It is called right after the
-> -	 * preceding element in the display pipe is disabled. If the preceding
-> -	 * element is a bridge this means it's called after that bridge's
-> -	 * @atomic_post_disable or @post_disable function. If the preceding
-> -	 * element is a &drm_encoder it's called right after the encoder's
-> -	 * &drm_encoder_helper_funcs.atomic_disable hook.
-> -	 *
->   	 * The bridge must assume that the display pipe (i.e. clocks and timing
-> -	 * signals) feeding it is no longer running when this callback is
-> -	 * called.
-> +	 * signals) feeding this bridge is no longer running when the
-> +	 * @atomic_post_disable is called.
-> +	 *
-> +	 * This callback should perform all the actions required by the hardware
-> +	 * after it has stopped receiving signals from the preceding element.
-> +	 *
-> +	 * If the preceding element is a &drm_bridge, then this is called after
-> +	 * that bridge is post-disabled (unless marked otherwise by the
-> +	 * @pre_enable_prev_first flag) via one of:
-> +	 *
-> +	 * - &drm_bridge_funcs.post_disable
-> +	 * - &drm_bridge_funcs.atomic_post_disable
-> +	 *
-> +	 * If the preceding element of the bridge is a display controller, then
-> +	 * this callback is called after the encoder is disabled via one of:
-> +	 *
-> +	 * - &drm_encoder_helper_funcs.atomic_disable
-> +	 * - &drm_encoder_helper_funcs.prepare
-> +	 * - &drm_encoder_helper_funcs.disable
-> +	 * - &drm_encoder_helper_funcs.dpms
-> +	 *
-> +	 * and the CRTC is disabled via one of:
-> +	 *
-> +	 * - &drm_crtc_helper_funcs.prepare
-> +	 * - &drm_crtc_helper_funcs.atomic_disable
-> +	 * - &drm_crtc_helper_funcs.disable
-> +	 * - &drm_crtc_helper_funcs.dpms
->   	 *
->   	 * The @atomic_post_disable callback is optional.
->   	 */
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Regards, Martijn
