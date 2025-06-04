@@ -1,182 +1,155 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BFF3C17
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 05:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24CD2581
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 05:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749016391; cv=none; b=FP/X4tHotBuWbknrlI6vXZdRc8QdlrJiXpsYI7tNkIYy3/tr4/6GeERcPJW20Jwp8RAsLsMRs14rHvNK/O4KiaN/a0f8fJKyl7bGLTZcocsWrSXlMJQUA5A7/w8gFwqUXSqhlSRTOaZmGRIg4gOcakMwfqCw0jCMj6LBYalWsnY=
+	t=1749016576; cv=none; b=Jv1YG2BI2K44ba5tdpsvOcqdtV7ZbXsvsNM7ZVfyacpxf1kcT1DYOsS8rmv3d3SK36ZvWbq8FxfIIbUxNPo+QdCcIHneX2eEWpgQ61ENQBwfEw/k4X5FQvtrqWfODDx1vFt+h6qU8OVbmnQbVE35/UGmprzWoCuneUqPqrOYhwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749016391; c=relaxed/simple;
-	bh=tzlv4oylmNO8aJYZeRq6x4+sQ62yIGkI6pIDgXS2aLY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pq/tH6Exe8es/oKUjSgbs789ANrZPK17cNs+1Dor9oktGEiw97sX4FyJLJ03nwX+5BNOqnzB1ndMf/PixmNwNdlabazV1DUdZSfa7I/zgnoAZWWxItuGzKawHKqZ317kd+LCcHcqlmSMzhIR92AQa5JAnWLpjh8nR0/uLDcSCF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QSU/0jch; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QSU/0jch"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553JZghU032471
-	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 05:53:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=6mPyPqOohXXvTddm3xF8dctlb/vnPecy4zR
-	eWJway9E=; b=QSU/0jchxWJZ9JtRr65e9TuGTWO35kEehGwyHVeGAeIF8dOfyxY
-	9IqDvm+3UwxgooNA/Lsc9C8qZ653XtzwynxC8v1Q2b6dLpob7rV/4qm4EAK1wlKb
-	DrEqbmgErzFTCFswOZVYYczr1JeW1mGk7oPgT9pxxWXVIGUMon8jUBZpwvjbUmAQ
-	2BOPwyXT9Q+0xJM1rjP0TwjLpyq+EauBvQBtwOov80klwXcn/zvGQXrAJEQPBWMn
-	LeYe4FOoB+6vde8Mbd8M76+K6QMIVZnyHaIE/W6uycWdxwjx41fweDA7QrvIfm5C
-	pVAV5FyA3amtP7csrcfodvyRNweJ6Kvc/fg==
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471sfuusqk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:53:08 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-740270e168aso5256024b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 22:53:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749016387; x=1749621187;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6mPyPqOohXXvTddm3xF8dctlb/vnPecy4zReWJway9E=;
-        b=nzoBu1UGYlGbAJoS6cFvP5NacUOaIw35PSDZVe+zlDsjGQDE+JoSL55RzyF9nlG9Rc
-         U7/QiSF5IhtqM3U74wG0uYMnMwDJmldH3O/RhEM70BnvLbo1sMvxVRSN/NhnravV8F/r
-         arwElBdeR2QG08Bty+83dvk4hLl5rjrLWM2IuVP/jjdWlburjb4rpk9d5EsMtOTIDRxk
-         6d9eHA9dG40b0A+7wqnMKBZ2f36qEUSigZ81u+BfAdK76hD0qwUU0NaGn62jNXBwRMzf
-         0snbggzlwZeGbxu4hXlFmTtIVvRd5dj1IjE4mb7F+50OjjkdhibZPbQKRjOdE9emvPRj
-         mXqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqsfTwUFyHFKJOhDNOrvojCcPAgTJT5jWQNafx5Bb/NWz+gV1Nz0Kt4zWC0qADQ7Z67/8KwGOLkhxF6nY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYqVPjtLXRyD2zRyzSGhaCcWVwSYmQiKFGZjXkTVZboI1iUnfd
-	9CO4U4oMD/BD0OmA1yDdegrtB7YDasdPY/2RJIex/EWaOlpPHwsFBx0m06MwmFvbMwkBfz/v/b4
-	adsjph7DASEqHMpeMYRYgpdX+/yWjJH7COz7w/YCOEsbvywwiRTkvKYNTdc4UrYKiG1ehVBQQNs
-	uCXA==
-X-Gm-Gg: ASbGncs8kVF93nbn1koamUbdkWrNGaciobvXi0/Gen8GJ6+zgayjqJT8CtzenKAh60c
-	v+/TtaRpY5WZ9CnMIec2sFnRf5zDC1wMj+z8Y6l9mIDOdEHu/kXsqC8INHvl9Y76qPdSeCeiczQ
-	EdgRwaLjEGW19gc47vnAvuDEEkDyl4euLFUZE0mRBgAow/0Cb6cTnk2qJbnGB8Zs2xmL6h+4TVm
-	2DbXrPLTj87HhWGHedj5dViQha6po7fUsvaQEzs7rtTCUZuupYRdBbbhFEkvYNhKNVxL8DClk3r
-	iem1dutJSR7JkZ0PRjdi1fXFEnKVpUpxghGrCR2cJTKjRhl84zsr/1bIgEfYJLVIgnKFq7k=
-X-Received: by 2002:a05:6a00:b93:b0:73e:30af:f479 with SMTP id d2e1a72fcca58-7480b4b3643mr2310631b3a.19.1749016387485;
-        Tue, 03 Jun 2025 22:53:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHSnPzCsfA2iQIrtlqFTnD1joMbqRjSXjSD1ZpPYgu1ZIxTqFBm47Nxh1QE+SXu2zjtHXscYw==
-X-Received: by 2002:a05:6a00:b93:b0:73e:30af:f479 with SMTP id d2e1a72fcca58-7480b4b3643mr2310609b3a.19.1749016387142;
-        Tue, 03 Jun 2025 22:53:07 -0700 (PDT)
-Received: from Z2-SFF-G9-MQ.ap.qualcomm.com (i-global052.qualcomm.com. [199.106.103.52])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff725asm10702500b3a.172.2025.06.03.22.53.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 22:53:06 -0700 (PDT)
-From: Miaoqing Pan <miaoqing.pan@oss.qualcomm.com>
-To: jjohnson@kernel.org
-Cc: ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Miaoqing Pan <miaoqing.pan@oss.qualcomm.com>
-Subject: [PATCH ath-next] wifi: ath12k: fix uaf in ath12k_core_init()
-Date: Wed,  4 Jun 2025 13:52:50 +0800
-Message-Id: <20250604055250.1228501-1-miaoqing.pan@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1749016576; c=relaxed/simple;
+	bh=bouI8G1RCJFrYUxKLMlvgTppgPpvVWjm7uAA7NORbeQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gfTOB0slpvVzY0GwAnH8iRsaqqzK1p7L0dRjG9wPTM4UY06N7lH6d+9p1JzfyNDJP2lteH5e0DNaNNiMMd0nD5whVkfKKM3TueNedKmQXb5XRj43a4e72crAP6CLq2OSFP7vRpxa3mpWTQIlGomgYSFzZPjQkbHAV2SEvuKMmcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+	by SHSQR01.spreadtrum.com with ESMTP id 5545uAR6087460
+	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 13:56:10 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 5545tCa2081483;
+	Wed, 4 Jun 2025 13:55:12 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4bBxYb1T71z2Nr6MM;
+	Wed,  4 Jun 2025 13:52:19 +0800 (CST)
+Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.48; Wed, 4 Jun 2025 13:55:09 +0800
+From: Zhiguo Niu <zhiguo.niu@unisoc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
+        <Hao_hao.Wang@unisoc.com>, <baocong.liu@unisoc.com>
+Subject: [PATCH] f2fs: compress: fix UAF of f2fs_inode_info in f2fs_free_dic
+Date: Wed, 4 Jun 2025 13:54:52 +0800
+Message-ID: <1749016492-31835-1-git-send-email-zhiguo.niu@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=CY8I5Krl c=1 sm=1 tr=0 ts=683fdf44 cx=c_pps
- a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=b9+bayejhc3NMeqCNyeLQQ==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=TzEngFNX8HBHNH07LrEA:9
- a=zc0IvFSfCIW2DFIPzwfm:22
-X-Proofpoint-ORIG-GUID: 9WMYwDd2gVN9rH5aHxxMxd0mxdE5OiNi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA0OCBTYWx0ZWRfX/x7uTQf07T8W
- Jto2ZNum4psPXnve3wkoUNFvtnlka1oLwVut50PscTZZPu5dPEe7cXIQFoYQlA/kuxEGji6369U
- kTrvwUg5V9KvvFI8czAEM5LK6SY07LMrYzrLxBc5axXkXdnuVMBe3IQmRAkBuqJc2h0LkvHvn3n
- vLZSk881mdTTT+RBr27RaGWBSR+zOLAy/T0JTTVGoFugsRYvafaXNJ4u2OR5X9h9bViiBxJ/olS
- Vxk2A1I2nV02CgHwjrDNDkJBU3VhM3v0HuvRLakBODly1+XtUJ0BM2Uv8ubdNx94P03hNSl0g5i
- DN1Yki/LuWu8eAeDYEbJrBwNWsl9fNcEeoMDashXbqMXE/HATurAh/Wor7ey5NUNZGQ+dYAgclb
- 8j9wr1NigUkwgikKeHymLAc7/jaNBK9Jnhu/5herHBK5PUjkczJrGdCROpoxKLtovwU/tJuy
-X-Proofpoint-GUID: 9WMYwDd2gVN9rH5aHxxMxd0mxdE5OiNi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_01,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 spamscore=0 impostorscore=0
- phishscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506040048
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 5545tCa2081483
 
-When the execution of ath12k_core_hw_group_assign() or
-ath12k_core_hw_group_create() fails, the registered notifier chain is not
-unregistered properly. Its memory is freed after rmmod, which may trigger
-to a use-after-free (UAF) issue if there is a subsequent access to this
-notifier chain.
+The decompress_io_ctx may be released asynchronously after
+I/O completion. If this file is deleted immediately after read,
+and the kworker of processing post_read_wq has not been executed yet
+due to high workloads, It is possible that the inode(f2fs_inode_info)
+is evicted and freed before it is used f2fs_free_dic.
 
-Fixes the issue by calling ath12k_core_panic_notifier_unregister() in
-failure cases.
+    The UAF case as below:
+    Thread A                                      Thread B
+    - f2fs_decompress_end_io
+     - f2fs_put_dic
+      - queue_work
+        add free_dic work to post_read_wq
+                                                   - do_unlink
+                                                    - iput
+                                                     - evict
+                                                      - call_rcu
+    This file is deleted after read.
 
-Call trace:
- notifier_chain_register+0x4c/0x1f0 (P)
- atomic_notifier_chain_register+0x38/0x68
- ath12k_core_init+0x50/0x4e8 [ath12k]
- ath12k_pci_probe+0x5f8/0xc28 [ath12k]
- pci_device_probe+0xbc/0x1a8
- really_probe+0xc8/0x3a0
- __driver_probe_device+0x84/0x1b0
- driver_probe_device+0x44/0x130
- __driver_attach+0xcc/0x208
- bus_for_each_dev+0x84/0x100
- driver_attach+0x2c/0x40
- bus_add_driver+0x130/0x260
- driver_register+0x70/0x138
- __pci_register_driver+0x68/0x80
- ath12k_pci_init+0x30/0x68 [ath12k]
- ath12k_init+0x28/0x78 [ath12k]
+    Thread C                                 kworker to process post_read_wq
+    - rcu_do_batch
+     - f2fs_free_inode
+      - kmem_cache_free
+     inode is freed by rcu
+                                             - process_scheduled_works
+                                              - f2fs_late_free_dic
+                                               - f2fs_free_dic
+                                                - f2fs_release_decomp_mem
+                                      read (dic->inode)->i_compress_algorithm
 
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+This patch increase inode->i_count before f2fs_free_dic and decrease it
+after free the dic.
 
-Fixes: 6f245ea0ec6c ("wifi: ath12k: introduce device group abstraction")
-Signed-off-by: Miaoqing Pan <miaoqing.pan@oss.qualcomm.com>
+Cc: Daeho Jeong <daehojeong@google.com>
+Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in softirq")
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
 ---
- drivers/net/wireless/ath/ath12k/core.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ fs/f2fs/compress.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
-index 31d851d8e688..ebc0560d40e3 100644
---- a/drivers/net/wireless/ath/ath12k/core.c
-+++ b/drivers/net/wireless/ath/ath12k/core.c
-@@ -2129,7 +2129,8 @@ int ath12k_core_init(struct ath12k_base *ab)
- 	if (!ag) {
- 		mutex_unlock(&ath12k_hw_group_mutex);
- 		ath12k_warn(ab, "unable to get hw group\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err_unregister_notifier;
- 	}
- 
- 	mutex_unlock(&ath12k_hw_group_mutex);
-@@ -2144,7 +2145,7 @@ int ath12k_core_init(struct ath12k_base *ab)
- 		if (ret) {
- 			mutex_unlock(&ag->mutex);
- 			ath12k_warn(ab, "unable to create hw group\n");
--			goto err;
-+			goto err_destroy_hw_group;
- 		}
- 	}
- 
-@@ -2152,9 +2153,12 @@ int ath12k_core_init(struct ath12k_base *ab)
- 
- 	return 0;
- 
--err:
-+err_destroy_hw_group:
- 	ath12k_core_hw_group_destroy(ab->ag);
- 	ath12k_core_hw_group_unassign(ab);
-+err_unregister_notifier:
-+	ath12k_core_panic_notifier_unregister(ab);
-+
- 	return ret;
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index b3c1df9..6b3b3a7 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct decompress_io_ctx *dic,
  }
  
-
-base-commit: c3910de7bab78afbc106206aed5ec8e79458fbee
+ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+-		bool bypass_destroy_callback);
++		bool bypass_destroy_callback, bool late_free);
+ 
+ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+ {
+@@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+ 	return dic;
+ 
+ out_free:
+-	f2fs_free_dic(dic, true);
++	f2fs_free_dic(dic, true, false);
+ 	return ERR_PTR(ret);
+ }
+ 
+ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+-		bool bypass_destroy_callback)
++		bool bypass_destroy_callback, bool late_free)
+ {
+ 	int i;
+ 
+@@ -1775,6 +1775,11 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+ 	}
+ 
+ 	page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
++	if (late_free) {
++		spin_lock(&dic->inode->i_lock);
++		atomic_dec(&dic->inode->i_count);
++		spin_unlock(&dic->inode->i_lock);
++	}
+ 	kmem_cache_free(dic_entry_slab, dic);
+ }
+ 
+@@ -1783,16 +1788,20 @@ static void f2fs_late_free_dic(struct work_struct *work)
+ 	struct decompress_io_ctx *dic =
+ 		container_of(work, struct decompress_io_ctx, free_work);
+ 
+-	f2fs_free_dic(dic, false);
++	f2fs_free_dic(dic, false, true);
+ }
+ 
+ static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task)
+ {
+ 	if (refcount_dec_and_test(&dic->refcnt)) {
+ 		if (in_task) {
+-			f2fs_free_dic(dic, false);
++			f2fs_free_dic(dic, false, false);
+ 		} else {
+ 			INIT_WORK(&dic->free_work, f2fs_late_free_dic);
++			/* to avoid inode is evicted simultaneously */
++			spin_lock(&dic->inode->i_lock);
++			atomic_inc(&dic->inode->i_count);
++			spin_unlock(&dic->inode->i_lock);
+ 			queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
+ 					&dic->free_work);
+ 		}
 -- 
-2.34.1
+1.9.1
 
