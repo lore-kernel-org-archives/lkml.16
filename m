@@ -1,132 +1,252 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11691141987;
-	Wed,  4 Jun 2025 17:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F171E47AD
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 18:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749059780; cv=none; b=gNPWR4uXFlea4zzpaLhS8tF46/AFxIobZU1yeQ2tOf4hev+Zuzs757L7Gg7Bm3F/+6c9H5IAP9faxwtCygcx7kfb91MWFd0y73jnuHvfnEbC4fYnLaeCp8Xzi8ldoY/Ak/A2BBPXVev9iClyMdcP29jFbrXkf9tULA9ZAwtaWJk=
+	t=1749060014; cv=none; b=QORpw/ziG1oUjerI7Leb+BfdAb7nKwVT/nGGTNbcAlf2IfkAbqTDP3JAIw8vYQ3ujEyxEsCbO1c1j8WlymLlNQ9iHM47Y257qI8XRe5FmB3kmwFqKcd9kEDEyGYVhlTVvZlrj7VaKEdlyjhmCpKrX153Y6lmsYRTxDXbS+JN9sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749059780; c=relaxed/simple;
-	bh=LanZ6nb2p+uD+QPGfvXz73pBQC0IcFdV3eUSjxilio0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q1u6KD/VXtqEl75PlxtiCqf4G8zySA8v8NC5hf1BqwBqJmvwz+dGoqYEmEXFLJ9p3p7J08XWRFzFaPJugIwRzAg8jFWoM+0MYW9kNLBRBax8zDv5cVD5LYbCuUcIeJ5GQ3Pc6DRqNbcdmajVr2x9x+gJwOps82NDwFkp+v5uArM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A04olrBT; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749060014; c=relaxed/simple;
+	bh=mQdiMLwpr/D/RPPJncE98Kj7r844XBV8j5bb0XC5diU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=msPMk0K8y+qL7pgx3zYXHBw3dYyxaxkI9kLpBbLiYNNKdBlIEGiZ+m9us0PgdWv+JB0pktckULTtS+0tN57OxzDZV4uUi71Mh4s0ZQspWC6K3DtligMQZFlXKyXYSkGFVmsOS/zDQeeGdUbJYl3hfxI/MCLwN5WU+kNN2aEhAIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G3Bdgbe8; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A04olrBT"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-309fac646adso1274778a91.1;
-        Wed, 04 Jun 2025 10:56:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G3Bdgbe8"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3dd89a85414so350415ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 11:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749059778; x=1749664578; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Euwi8cH8s0mdwA2LRTqEh1pB7vpHN6OEAf9ObZHDik=;
-        b=A04olrBTAXoJk+2Azow7BwmvtG3eem6721KYkrGWGGGV69cA7Sp6sWhDFfiDYcAVKI
-         3m0B7hfrTW+Wbgq2weN+zEfwhxEPFPnl1i0HbJze9Re/NHcY20Uzd6PUckZMZ2IzDcv1
-         AaaneIdy3bEoPH352ptS487WdGW/YHcOTi3rTc486shCud/xh56ViYzUTsiySUcNJmBa
-         4hENzS6IgwQ3lJLC30FjUj2hnJTKOtKFTCB/ENG+FsPyR0vTKRga4AlBu2LmrYwE3ORv
-         sA/1mjJ5QpkyRQCeDdDvUwwAwBYZwF91gxBQJodQvziwl+54cvlhx8Ew57ugrmrHgNwf
-         Tcag==
+        d=google.com; s=20230601; t=1749060012; x=1749664812; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PeYxgzkU7+N1oJQSpf8JCDFCeNTG/MQ78IVMo3IFmU4=;
+        b=G3Bdgbe8FjVIG6PG7d+iKg6pGWfGStDtZ7mOZehvv7gASpy+q8E6MqVlqoDklJOg54
+         wvA2844DfjNZ1O7yL2bo5ZS0eVuLT9NhGGVc3ND/4y0zrcCeJvsSPYNbnv7firv3y9sa
+         IA2Lv5BFxkoOzHR/Zg1f8Ekah4ieRoaS0iAucwCgayP4nLSI5KZwkh2LVJ5f46YT7DR7
+         Dj0+YBZwmq0WSiQlpeUY5L/cKVf5xb123fy/RR+secEN7AyAtnjh9D1GdxzScBHCRPPj
+         nDyQpiHXCCu1kGVI/kZvEH9egB0jqNMA7BGxut58nKcruuUxo/rulruSXe0Veu/7NIOe
+         FkNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749059778; x=1749664578;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Euwi8cH8s0mdwA2LRTqEh1pB7vpHN6OEAf9ObZHDik=;
-        b=lVT3Io+OzWK/uTzVTJI5x2YH/6G5xGw8R0quMfQDbp/3xZACMUeb125ywa90kWTTrk
-         6YVA7TIQVUMP8A/c4I4VwPwgbqdHSdUd4JX+VhOWcZUUOSYSsBcm0x2j4GU2/uxQ16rX
-         IZaFoaPJHnHdD38vR1NU8IUvPdHpRRCjpoTM88QdgAfUXF50fkqakwEJHujiXk2/stFo
-         WwSmWMSZb69iRY2HV3SUgD+GjDz9eP+XLcSXqaL3EPXYWGMMSoTUlNzOBTcsBXn9af+K
-         EQPQvp4Ox8jydG9roGnPw2Tpl26KByRntZ/3fWURRMStYOFaqzESHBZei4SxfVFBZE4o
-         bo6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVUQUkxv3odhqU07YpW6gX9+9WhFh2tkVY5K6eyZBeYGL9Abfxr6kLtoHVJsUWnq8gG+jnEvoC4/CF7t5c8@vger.kernel.org, AJvYcCVfPQr8KH+4POM737cc2p80po9DHlwzVuJAY1+oThdWitwtVlNUEzf7Ab7vDoTbwOx6Lp9v/TQ1VzdyBOd3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0hwSLVvL2KSxLcfRzzBlug7urE9xIzrAuII/hkbFgc0z55u6i
-	h3ZsDG1bkK1yQH+FlQvk/RWVCPILWgLaxA70nAFzm/U6F1GSq1aPA4UmE3f38Q==
-X-Gm-Gg: ASbGncs/6Xw3I0ZiyHcvR98c9T0dzhoe9zhfXpP7iUeh1d2uj7Rgo0oqFcq9u99C2HS
-	8hzFLQMkbpBdnVipqLEsu9oO77MYmL5jMNbNribFHvCm4kvCkHqRkhPsZ/msoYyhW7gSZk1kuZr
-	RKYdP7LC9xwljHpm5NggliBLxlIzrtZh616hmcvVj7JdA4tq7U9AptkxbZtw3arPTAEPghDDYkh
-	HEgoX9DZgmpYaqw9TZLpyo/A76nLRVtcHjO7NCxc67ElK3ICR1tdwlU5SaIbrGykMgecnCLNod+
-	HW0JDl5YC4o/Ql/VNCATCoWNjyoItLCjpozB7zunc5f4vSi3jg==
-X-Google-Smtp-Source: AGHT+IHblasMKmm6BcsNSe9ySzE24cboKqnKZUZq5n3QdEBR7VgbwEyc17E0jOQpdWgdihRXEusRnA==
-X-Received: by 2002:a17:90b:55c7:b0:311:be43:f09a with SMTP id 98e67ed59e1d1-31328fa028emr519168a91.9.1749059778060;
-        Wed, 04 Jun 2025 10:56:18 -0700 (PDT)
-Received: from localhost ([2601:1c0:5000:d5c:89fa:e299:1a34:c1f5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2b67f4sm9232208a91.3.2025.06.04.10.56.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 10:56:17 -0700 (PDT)
-From: Rob Clark <robdclark@gmail.com>
-To: dri-devel@lists.freedesktop.org
-Cc: freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] MAINTAINERS: .mailmap: update Rob Clark's email address
-Date: Wed,  4 Jun 2025 10:55:58 -0700
-Message-ID: <20250604175600.89902-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1749060012; x=1749664812;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PeYxgzkU7+N1oJQSpf8JCDFCeNTG/MQ78IVMo3IFmU4=;
+        b=LGTCOXNRxIzZt91Ln58tc1tGeeW/ccYD1oYgjG1Ovv4A8g+HmZPoWYjgJCCPaARW3X
+         ji3Z2b8qhXrF1Og9AXWPNcftzb615CWsIVKgUsk4FUskLRd6hvL+JzNCBiMBennMAAiu
+         wqPS1TUzsQAyiMWjOL1X26YidaOg8HwJLjLGDxJV1phIjnHK9z7B/ns2mkvLE12i6HPv
+         jETJlI9ZhgRXgUc8uJ72BfSb2ljCGRSwbwgqm5+zOwsMtycsU65eg6BkaEfC8LMq11GI
+         ABZDnDBZRIRgeCam413FERiztbbx2VTx3Lw4huOzoRb2tmXTTsEEzRy9DLTVz65UJpsb
+         GeXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXc5yV74UU4xKM+HRj5PyGRgZOARbmAriT0JFN52aqjPi+8g5na1txmxD+6pRYPfCvbcXGiE43BH96ujOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbHno+96jCEO9qR9SJw+hKrVfhG5HLDH+OvKD4UZqGjlDY0/7N
+	8Gll4LeD3w9gKpL3YIBy1hXJmRACo4PWxNEaLkKdEZoaukzoLMXyE1a3LnUb7zKsRNYfi+Ww5Qs
+	yELHBxnBy7NDgfYTDiBHC08vNXnHmaWSsTK1x8GED
+X-Gm-Gg: ASbGncuYVf3RetAG5ry2k9vC1KvDVhWNNPduzmlom49YfdDjCvuJwgoLM/d/G53UBb2
+	NU8w6OlKc1+IQnfSZqo9SvS9wMUrEeeQJ8ySqvXSrT1i7PgOgvSaj3D3rl7YNeKMxvlQAfLSK/9
+	CGAssmGWcVdEBh/tTYzDSfFH7IqMHSIt/7OEJoQ1mhZvcrGdHSnjLCi7TlK/mef+TjncYWiWZ1e
+	KxZo/OXhQ==
+X-Google-Smtp-Source: AGHT+IEGn3VhIfD4mAYNEfZ2xYER9px3sByFf20vfnRXqAcQWgWdAHxhv3CB1nPOxAYy1IIkeODTEC51HzYp/FlFI64=
+X-Received: by 2002:a05:6e02:1a4b:b0:3dd:c526:434f with SMTP id
+ e9e14a558f8ab-3ddc6af8682mr1805ab.9.1749060010927; Wed, 04 Jun 2025 11:00:10
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250604174835.1852481-1-namhyung@kernel.org>
+In-Reply-To: <20250604174835.1852481-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 4 Jun 2025 10:59:57 -0700
+X-Gm-Features: AX0GCFv9ejXA-mo2bEchLXhzhQCtWd1_-nEiRTzMrsm4OHcJFIYtAPHkL-IUT5k
+Message-ID: <CAP-5=fWap82Wjx2EBTESFsTxSikkJ3TW7B_jSjhUkgfheQu_xw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf bpf-filter: Improve error messages
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Rob Clark <robin.clark@oss.qualcomm.com>
+On Wed, Jun 4, 2025 at 10:48=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> The BPF filter needs libbpf/BPF-skeleton support and root privilege.
+> Add error messages to help users understand the problem easily.
+>
+> When it's not build with BPF support (make BUILD_BPF_SKEL=3D0).
+>
+>   $ sudo perf record -e cycles --filter "pid !=3D 0" true
+>   Error: BPF filter is requested but perf is not built with BPF.
+>         Please make sure to build with libbpf and BPF skeleton.
+>
+>    Usage: perf record [<options>] [<command>]
+>       or: perf record [<options>] -- <command> [<options>]
+>
+>           --filter <filter>
+>                             event filter
+>
+> When it supports BPF but runs without root or CAP_BPF.  Note that it
+> also checks pinned BPF filters.
+>
+>   $ perf record -e cycles --filter "pid !=3D 0" -o /dev/null true
+>   Error: BPF filter only works for users with the CAP_BPF capability!
+>         Please run 'perf record --setup-filter pin' as root first.
+>
+>    Usage: perf record [<options>] [<command>]
+>       or: perf record [<options>] -- <command> [<options>]
+>
+>           --filter <filter>
+>                             event filter
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Remap historical email addresses to @oss.qualcomm.com.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
----
- .mailmap    | 2 ++
- MAINTAINERS | 6 +++---
- 2 files changed, 5 insertions(+), 3 deletions(-)
+> ---
+> v2) change fprintf() -> pr_err()  (Ian)
+>
+>  tools/perf/util/bpf-filter.c | 28 ++++++++++++++++++++++++++++
+>  tools/perf/util/bpf-filter.h |  3 +++
+>  tools/perf/util/cap.c        |  1 -
+>  tools/perf/util/cap.h        |  5 +++++
+>  4 files changed, 36 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+> index a4fdf6911ec1c32e..92e2f054b45e91dd 100644
+> --- a/tools/perf/util/bpf-filter.c
+> +++ b/tools/perf/util/bpf-filter.c
+> @@ -52,6 +52,7 @@
+>  #include <internal/xyarray.h>
+>  #include <perf/threadmap.h>
+>
+> +#include "util/cap.h"
+>  #include "util/debug.h"
+>  #include "util/evsel.h"
+>  #include "util/target.h"
+> @@ -618,11 +619,38 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__=
+new(enum perf_bpf_filter_term
+>         return expr;
+>  }
+>
+> +static bool check_bpf_filter_capable(void)
+> +{
+> +       bool used_root;
+> +
+> +       if (perf_cap__capable(CAP_BPF, &used_root))
+> +               return true;
+> +
+> +       if (!used_root) {
+> +               /* Check if root already pinned the filter programs and m=
+aps */
+> +               int fd =3D get_pinned_fd("filters");
+> +
+> +               if (fd >=3D 0) {
+> +                       close(fd);
+> +                       return true;
+> +               }
+> +       }
+> +
+> +       pr_err("Error: BPF filter only works for %s!\n"
+> +              "\tPlease run 'perf record --setup-filter pin' as root fir=
+st.\n",
+> +              used_root ? "root" : "users with the CAP_BPF capability");
+> +
+> +       return false;
+> +}
+> +
+>  int perf_bpf_filter__parse(struct list_head *expr_head, const char *str)
+>  {
+>         YY_BUFFER_STATE buffer;
+>         int ret;
+>
+> +       if (!check_bpf_filter_capable())
+> +               return -EPERM;
+> +
+>         buffer =3D perf_bpf_filter__scan_string(str);
+>
+>         ret =3D perf_bpf_filter_parse(expr_head);
+> diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
+> index 916ed7770b734f15..122477f2de44bb60 100644
+> --- a/tools/perf/util/bpf-filter.h
+> +++ b/tools/perf/util/bpf-filter.h
+> @@ -5,6 +5,7 @@
+>  #include <linux/list.h>
+>
+>  #include "bpf_skel/sample-filter.h"
+> +#include "util/debug.h"
 
-diff --git a/.mailmap b/.mailmap
-index 6a6aa09e244b..b72a164280ea 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -633,6 +633,8 @@ Richard Genoud <richard.genoud@bootlin.com> <richard.genoud@gmail.com>
- Richard Leitner <richard.leitner@linux.dev> <dev@g0hl1n.net>
- Richard Leitner <richard.leitner@linux.dev> <me@g0hl1n.net>
- Richard Leitner <richard.leitner@linux.dev> <richard.leitner@skidata.com>
-+Rob Clark <robin.clark@oss.qualcomm.com> <robdclark@chromium.org>
-+Rob Clark <robin.clark@oss.qualcomm.com> <robdclark@gmail.com>
- Robert Foss <rfoss@kernel.org> <robert.foss@linaro.org>
- Rocky Liao <quic_rjliao@quicinc.com> <rjliao@codeaurora.org>
- Rodrigo Siqueira <siqueira@igalia.com> <rodrigosiqueiramelo@gmail.com>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ee57fc5d48f8..5dd1a3234cc5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7567,7 +7567,7 @@ F:	Documentation/devicetree/bindings/display/panel/panel-mipi-dbi-spi.yaml
- F:	drivers/gpu/drm/tiny/panel-mipi-dbi.c
- 
- DRM DRIVER for Qualcomm Adreno GPUs
--M:	Rob Clark <robdclark@gmail.com>
-+M:	Rob Clark <robin.clark@oss.qualcomm.com>
- R:	Sean Paul <sean@poorly.run>
- R:	Konrad Dybcio <konradybcio@kernel.org>
- L:	linux-arm-msm@vger.kernel.org
-@@ -7586,7 +7586,7 @@ F:	drivers/gpu/drm/msm/registers/adreno/
- F:	include/uapi/drm/msm_drm.h
- 
- DRM DRIVER for Qualcomm display hardware
--M:	Rob Clark <robdclark@gmail.com>
-+M:	Rob Clark <robin.clark@oss.qualcomm.com>
- M:	Abhinav Kumar <quic_abhinavk@quicinc.com>
- M:	Dmitry Baryshkov <lumag@kernel.org>
- R:	Sean Paul <sean@poorly.run>
-@@ -20287,7 +20287,7 @@ F:	drivers/soc/qcom/icc-bwmon.c
- F:	drivers/soc/qcom/trace_icc-bwmon.h
- 
- QUALCOMM IOMMU
--M:	Rob Clark <robdclark@gmail.com>
-+M:	Rob Clark <robin.clark@oss.qualcomm.com>
- L:	iommu@lists.linux.dev
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
--- 
-2.49.0
+nit: I'd generally avoid the util/ prefix here as bpf-filter.h and
+debug.h are in the same directory. The compiler first looks in the
+same directory before using include paths:
+https://gcc.gnu.org/onlinedocs/cpp/Search-Path.html
+So including this way is saying please search using the include paths
+which is weird when the files are in the same directory. I know the
+style in the code base is inconsistent with this, but I wish it
+wasn't.
 
+Thanks,
+Ian
+
+>
+>  struct perf_bpf_filter_expr {
+>         struct list_head list;
+> @@ -38,6 +39,8 @@ int perf_bpf_filter__unpin(void);
+>  static inline int perf_bpf_filter__parse(struct list_head *expr_head __m=
+aybe_unused,
+>                                          const char *str __maybe_unused)
+>  {
+> +       pr_err("Error: BPF filter is requested but perf is not built with=
+ BPF.\n"
+> +               "\tPlease make sure to build with libbpf and BPF skeleton=
+.\n");
+>         return -EOPNOTSUPP;
+>  }
+>  static inline int perf_bpf_filter__prepare(struct evsel *evsel __maybe_u=
+nused,
+> diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
+> index 69d9a2bcd40bfdd1..24a0ea7e6d97749b 100644
+> --- a/tools/perf/util/cap.c
+> +++ b/tools/perf/util/cap.c
+> @@ -7,7 +7,6 @@
+>  #include "debug.h"
+>  #include <errno.h>
+>  #include <string.h>
+> -#include <linux/capability.h>
+>  #include <sys/syscall.h>
+>  #include <unistd.h>
+>
+> diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
+> index 0c6a1ff55f07340a..c1b8ac033ccc5826 100644
+> --- a/tools/perf/util/cap.h
+> +++ b/tools/perf/util/cap.h
+> @@ -3,6 +3,7 @@
+>  #define __PERF_CAP_H
+>
+>  #include <stdbool.h>
+> +#include <linux/capability.h>
+>
+>  /* For older systems */
+>  #ifndef CAP_SYSLOG
+> @@ -13,6 +14,10 @@
+>  #define CAP_PERFMON    38
+>  #endif
+>
+> +#ifndef CAP_BPF
+> +#define CAP_BPF                39
+> +#endif
+> +
+>  /* Query if a capability is supported, used_root is set if the fallback =
+root check was used. */
+>  bool perf_cap__capable(int cap, bool *used_root);
+>
+> --
+> 2.49.0.1266.g31b7d2e469-goog
+>
