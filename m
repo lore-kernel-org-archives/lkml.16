@@ -1,252 +1,326 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F171E47AD
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 18:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42B752F88
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 18:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749060014; cv=none; b=QORpw/ziG1oUjerI7Leb+BfdAb7nKwVT/nGGTNbcAlf2IfkAbqTDP3JAIw8vYQ3ujEyxEsCbO1c1j8WlymLlNQ9iHM47Y257qI8XRe5FmB3kmwFqKcd9kEDEyGYVhlTVvZlrj7VaKEdlyjhmCpKrX153Y6lmsYRTxDXbS+JN9sg=
+	t=1749060161; cv=none; b=pGwvct9st4oeVHQk7ofbwZR9dq7HBRO/R6Tt0wpYTkx4Rt2pSu4VSo9pG2rTg/nkLWcOzMVt3LCQuGry3tO0iZ9jj0rUXiOcYwooR7JF7DhCG6/nUnVihERfujeisOlK2y5RAgOJ2/gRB+fTOXNTaVKROh3h6xJpo5WeMaj0f0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749060014; c=relaxed/simple;
-	bh=mQdiMLwpr/D/RPPJncE98Kj7r844XBV8j5bb0XC5diU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=msPMk0K8y+qL7pgx3zYXHBw3dYyxaxkI9kLpBbLiYNNKdBlIEGiZ+m9us0PgdWv+JB0pktckULTtS+0tN57OxzDZV4uUi71Mh4s0ZQspWC6K3DtligMQZFlXKyXYSkGFVmsOS/zDQeeGdUbJYl3hfxI/MCLwN5WU+kNN2aEhAIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G3Bdgbe8; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749060161; c=relaxed/simple;
+	bh=F8HnxpY70p/Zp2iUyqkIkhQ+KlYjxgtmeLMWDz54ozM=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=uHnRJ9XkGKpdZZWu6Y/IzMU1SaO6FtOtogsLoatg+FDd6fCLsHf3KZt53w3tm0WIhlYNIZh0nlM01hOWiMl5fLZlj1jJIyUTy1uu4vpIQFvcnvaJhggugNdcLzLJkFYvxCib9oslBC0NiRZgmSWntS24QunfQXTmihoL+xI9/Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=dfluSOO+; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G3Bdgbe8"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3dd89a85414so350415ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 11:00:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="dfluSOO+"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-74019695377so137260b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 11:02:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749060012; x=1749664812; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PeYxgzkU7+N1oJQSpf8JCDFCeNTG/MQ78IVMo3IFmU4=;
-        b=G3Bdgbe8FjVIG6PG7d+iKg6pGWfGStDtZ7mOZehvv7gASpy+q8E6MqVlqoDklJOg54
-         wvA2844DfjNZ1O7yL2bo5ZS0eVuLT9NhGGVc3ND/4y0zrcCeJvsSPYNbnv7firv3y9sa
-         IA2Lv5BFxkoOzHR/Zg1f8Ekah4ieRoaS0iAucwCgayP4nLSI5KZwkh2LVJ5f46YT7DR7
-         Dj0+YBZwmq0WSiQlpeUY5L/cKVf5xb123fy/RR+secEN7AyAtnjh9D1GdxzScBHCRPPj
-         nDyQpiHXCCu1kGVI/kZvEH9egB0jqNMA7BGxut58nKcruuUxo/rulruSXe0Veu/7NIOe
-         FkNQ==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749060157; x=1749664957; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4sb9NtYIBm94y/rjJYszo90EtKu9XX4CPTVA/wAKQT8=;
+        b=dfluSOO+1nTAtSN05kvky7z4h4bB20K7kUPb7wwI0JJU9PHQJ9y7/53dT1r15ErXzC
+         pmk3z2hw7rnWfNevFrgf7UGNEE3G00YKK4IwbgEaJ48nyv9AcZpHGjwwMwlDGqCzMLIg
+         RfkWPUHK0aktnbR9to4m6fvDfrb7gsC2laFDP61gFKEZVdW3mRso1DuhpOsOcTrH7qbK
+         9CUri0DyY2eOB4jfs3MOvvbsm7zcNv3W0UiUMy8nafT5EPsb+5rN/6svhGhYyquGpVEq
+         b+7lEi3cfE2lEv43XsIPZAYFR6ObbptgiOOv67Bx+iBn6AykCPzR7Ehwrw818xZ3lMmi
+         byuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749060012; x=1749664812;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PeYxgzkU7+N1oJQSpf8JCDFCeNTG/MQ78IVMo3IFmU4=;
-        b=LGTCOXNRxIzZt91Ln58tc1tGeeW/ccYD1oYgjG1Ovv4A8g+HmZPoWYjgJCCPaARW3X
-         ji3Z2b8qhXrF1Og9AXWPNcftzb615CWsIVKgUsk4FUskLRd6hvL+JzNCBiMBennMAAiu
-         wqPS1TUzsQAyiMWjOL1X26YidaOg8HwJLjLGDxJV1phIjnHK9z7B/ns2mkvLE12i6HPv
-         jETJlI9ZhgRXgUc8uJ72BfSb2ljCGRSwbwgqm5+zOwsMtycsU65eg6BkaEfC8LMq11GI
-         ABZDnDBZRIRgeCam413FERiztbbx2VTx3Lw4huOzoRb2tmXTTsEEzRy9DLTVz65UJpsb
-         GeXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXc5yV74UU4xKM+HRj5PyGRgZOARbmAriT0JFN52aqjPi+8g5na1txmxD+6pRYPfCvbcXGiE43BH96ujOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbHno+96jCEO9qR9SJw+hKrVfhG5HLDH+OvKD4UZqGjlDY0/7N
-	8Gll4LeD3w9gKpL3YIBy1hXJmRACo4PWxNEaLkKdEZoaukzoLMXyE1a3LnUb7zKsRNYfi+Ww5Qs
-	yELHBxnBy7NDgfYTDiBHC08vNXnHmaWSsTK1x8GED
-X-Gm-Gg: ASbGncuYVf3RetAG5ry2k9vC1KvDVhWNNPduzmlom49YfdDjCvuJwgoLM/d/G53UBb2
-	NU8w6OlKc1+IQnfSZqo9SvS9wMUrEeeQJ8ySqvXSrT1i7PgOgvSaj3D3rl7YNeKMxvlQAfLSK/9
-	CGAssmGWcVdEBh/tTYzDSfFH7IqMHSIt/7OEJoQ1mhZvcrGdHSnjLCi7TlK/mef+TjncYWiWZ1e
-	KxZo/OXhQ==
-X-Google-Smtp-Source: AGHT+IEGn3VhIfD4mAYNEfZ2xYER9px3sByFf20vfnRXqAcQWgWdAHxhv3CB1nPOxAYy1IIkeODTEC51HzYp/FlFI64=
-X-Received: by 2002:a05:6e02:1a4b:b0:3dd:c526:434f with SMTP id
- e9e14a558f8ab-3ddc6af8682mr1805ab.9.1749060010927; Wed, 04 Jun 2025 11:00:10
- -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749060157; x=1749664957;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4sb9NtYIBm94y/rjJYszo90EtKu9XX4CPTVA/wAKQT8=;
+        b=MzCBJEKrkych3JntiIPAvF4qcn6OEPWhHY6s4xbF2JXCwuTXs1iWKnRQd+adlh2reg
+         lG570iLz0X2Y5Gxd4sK1/6BaVFbjv0Rs9hr59AJjMeedn9k2OQ3wV8j6NVi0Pf38+7d9
+         HixBEpaT5MtRJJ/Cj2KP6xl2Pu8NhXopyczwMGgqnrNcv1lFUH7rLw4L4EJU0WnVUooZ
+         uP1M86/jIASmnRSQaqX29caqzxHrxXdR/IyDtp636J2Xq+Hv0sabUqDh530ggJDzlQMl
+         t7t14Y93nVfcxybSFrbbohIK3hRr9o4xsWJTL0tKLglKnhyIMU82PWd4GESeXGJk9zs8
+         knnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWLUf1YxaD7j44y3kMUN+v6jHxsMKVnCYYi4HIjXLtgTuAzoSkObPVDia7Fr25vbbzmQ3+7TbsLemwxEn8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9YBaQN46+5dDg5ddvyhf28X2sGcXH8JvQFt4VN3PdVSenUI8J
+	q4J8BWAJ1begmxfztHZ97UAd8lTOsQxCsFOFY2A0eAgtdBOirnU9tsksa8urdb9FNAo=
+X-Gm-Gg: ASbGnct5HVK5flDxek2U0cZqGpqDcYa0I9Y/qUm+Ji3n0M0d4mVZNTClkMi++QuWXVR
+	55rGsz1a/ZWYCYoefotXYrUze55wIhR2FZhkkBBY/ahNWbWkmNG0fBpxYXZJqFVffczOERFUCuw
+	ZntExGaRA65Dwn9UcNYFPQrFCzuJfylwyXb4eMXrSX2WIFU7d/OEwZzbdLgzBo/ua3VEjucssff
+	z1yA0xvvhG582bGJ2fsnBeEa/Tq9T+vZTUM3KH5CNzHYycUW9o5zHkSdZlEfyYAI9B9C1p5Neka
+	VonuX7VqzOQ/luuZ7L2kFbYmy3gBqdh0bXm26nrRVRyBlJf2E2dVNV8=
+X-Google-Smtp-Source: AGHT+IGzoLjlPGLsxX/VcQAibjCHSuGjPNjwdnzeCXTcDSgTlXsCpPwGWWh1fCsXTwlbhq/KM2w0wQ==
+X-Received: by 2002:a05:6a21:48f:b0:1fd:f4df:96ed with SMTP id adf61e73a8af0-21d22ce22c7mr5169223637.26.1749060156608;
+        Wed, 04 Jun 2025 11:02:36 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:500::4:3cec])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-747afff72bcsm11485461b3a.166.2025.06.04.11.02.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 11:02:35 -0700 (PDT)
+Date: Wed, 04 Jun 2025 11:02:35 -0700 (PDT)
+X-Google-Original-Date: Wed, 04 Jun 2025 11:02:33 PDT (-0700)
+Subject:     Re: [PATCH v8 00/14] riscv: add SBI FWFT misaligned exception delegation support
+In-Reply-To: <20250523101932.1594077-1-cleger@rivosinc.com>
+CC: Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
+  atishp@atishpatra.org, shuah@kernel.org, corbet@lwn.net, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+  linux-kselftest@vger.kernel.org, cleger@rivosinc.com, samuel.holland@sifive.com, ajones@ventanamicro.com,
+  debug@rivosinc.com, Charlie Jenkins <charlie@rivosinc.com>
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: cleger@rivosinc.com
+Message-ID: <mhng-C1CE13EE-C4E6-490D-ABF4-CE7BD84737C3@palmerdabbelt-mac>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250604174835.1852481-1-namhyung@kernel.org>
-In-Reply-To: <20250604174835.1852481-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 4 Jun 2025 10:59:57 -0700
-X-Gm-Features: AX0GCFv9ejXA-mo2bEchLXhzhQCtWd1_-nEiRTzMrsm4OHcJFIYtAPHkL-IUT5k
-Message-ID: <CAP-5=fWap82Wjx2EBTESFsTxSikkJ3TW7B_jSjhUkgfheQu_xw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf bpf-filter: Improve error messages
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 4, 2025 at 10:48=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Fri, 23 May 2025 03:19:17 PDT (-0700), cleger@rivosinc.com wrote:
+> The SBI Firmware Feature extension allows the S-mode to request some
+> specific features (either hardware or software) to be enabled. This
+> series uses this extension to request misaligned access exception
+> delegation to S-mode in order to let the kernel handle it. It also adds
+> support for the KVM FWFT SBI extension based on the misaligned access
+> handling infrastructure.
 >
-> The BPF filter needs libbpf/BPF-skeleton support and root privilege.
-> Add error messages to help users understand the problem easily.
+> FWFT SBI extension is part of the SBI V3.0 specifications [1]. It can be
+> tested using the qemu provided at [2] which contains the series from
+> [3]. Upstream kvm-unit-tests can be used inside kvm to tests the correct
+> delegation of misaligned exceptions. Upstream OpenSBI can be used.
 >
-> When it's not build with BPF support (make BUILD_BPF_SKEL=3D0).
+> Note: Since SBI V3.0 is not yet ratified, FWFT extension API is split
+> between interface only and implementation, allowing to pick only the
+> interface which do not have hard dependencies on SBI.
 >
->   $ sudo perf record -e cycles --filter "pid !=3D 0" true
->   Error: BPF filter is requested but perf is not built with BPF.
->         Please make sure to build with libbpf and BPF skeleton.
+> The tests can be run using the kselftest from series [4].
 >
->    Usage: perf record [<options>] [<command>]
->       or: perf record [<options>] -- <command> [<options>]
+> $ qemu-system-riscv64 \
+> 	-cpu rv64,trap-misaligned-access=true,v=true \
+> 	-M virt \
+> 	-m 1024M \
+> 	-bios fw_dynamic.bin \
+> 	-kernel Image
+>  ...
 >
->           --filter <filter>
->                             event filter
+>  # ./misaligned
+>  TAP version 13
+>  1..23
+>  # Starting 23 tests from 1 test cases.
+>  #  RUN           global.gp_load_lh ...
+>  #            OK  global.gp_load_lh
+>  ok 1 global.gp_load_lh
+>  #  RUN           global.gp_load_lhu ...
+>  #            OK  global.gp_load_lhu
+>  ok 2 global.gp_load_lhu
+>  #  RUN           global.gp_load_lw ...
+>  #            OK  global.gp_load_lw
+>  ok 3 global.gp_load_lw
+>  #  RUN           global.gp_load_lwu ...
+>  #            OK  global.gp_load_lwu
+>  ok 4 global.gp_load_lwu
+>  #  RUN           global.gp_load_ld ...
+>  #            OK  global.gp_load_ld
+>  ok 5 global.gp_load_ld
+>  #  RUN           global.gp_load_c_lw ...
+>  #            OK  global.gp_load_c_lw
+>  ok 6 global.gp_load_c_lw
+>  #  RUN           global.gp_load_c_ld ...
+>  #            OK  global.gp_load_c_ld
+>  ok 7 global.gp_load_c_ld
+>  #  RUN           global.gp_load_c_ldsp ...
+>  #            OK  global.gp_load_c_ldsp
+>  ok 8 global.gp_load_c_ldsp
+>  #  RUN           global.gp_load_sh ...
+>  #            OK  global.gp_load_sh
+>  ok 9 global.gp_load_sh
+>  #  RUN           global.gp_load_sw ...
+>  #            OK  global.gp_load_sw
+>  ok 10 global.gp_load_sw
+>  #  RUN           global.gp_load_sd ...
+>  #            OK  global.gp_load_sd
+>  ok 11 global.gp_load_sd
+>  #  RUN           global.gp_load_c_sw ...
+>  #            OK  global.gp_load_c_sw
+>  ok 12 global.gp_load_c_sw
+>  #  RUN           global.gp_load_c_sd ...
+>  #            OK  global.gp_load_c_sd
+>  ok 13 global.gp_load_c_sd
+>  #  RUN           global.gp_load_c_sdsp ...
+>  #            OK  global.gp_load_c_sdsp
+>  ok 14 global.gp_load_c_sdsp
+>  #  RUN           global.fpu_load_flw ...
+>  #            OK  global.fpu_load_flw
+>  ok 15 global.fpu_load_flw
+>  #  RUN           global.fpu_load_fld ...
+>  #            OK  global.fpu_load_fld
+>  ok 16 global.fpu_load_fld
+>  #  RUN           global.fpu_load_c_fld ...
+>  #            OK  global.fpu_load_c_fld
+>  ok 17 global.fpu_load_c_fld
+>  #  RUN           global.fpu_load_c_fldsp ...
+>  #            OK  global.fpu_load_c_fldsp
+>  ok 18 global.fpu_load_c_fldsp
+>  #  RUN           global.fpu_store_fsw ...
+>  #            OK  global.fpu_store_fsw
+>  ok 19 global.fpu_store_fsw
+>  #  RUN           global.fpu_store_fsd ...
+>  #            OK  global.fpu_store_fsd
+>  ok 20 global.fpu_store_fsd
+>  #  RUN           global.fpu_store_c_fsd ...
+>  #            OK  global.fpu_store_c_fsd
+>  ok 21 global.fpu_store_c_fsd
+>  #  RUN           global.fpu_store_c_fsdsp ...
+>  #            OK  global.fpu_store_c_fsdsp
+>  ok 22 global.fpu_store_c_fsdsp
+>  #  RUN           global.gen_sigbus ...
+>  [12797.988647] misaligned[618]: unhandled signal 7 code 0x1 at 0x0000000000014dc0 in misaligned[4dc0,10000+76000]
+>  [12797.988990] CPU: 0 UID: 0 PID: 618 Comm: misaligned Not tainted 6.13.0-rc6-00008-g4ec4468967c9-dirty #51
+>  [12797.989169] Hardware name: riscv-virtio,qemu (DT)
+>  [12797.989264] epc : 0000000000014dc0 ra : 0000000000014d00 sp : 00007fffe165d100
+>  [12797.989407]  gp : 000000000008f6e8 tp : 0000000000095760 t0 : 0000000000000008
+>  [12797.989544]  t1 : 00000000000965d8 t2 : 000000000008e830 s0 : 00007fffe165d160
+>  [12797.989692]  s1 : 000000000000001a a0 : 0000000000000000 a1 : 0000000000000002
+>  [12797.989831]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ffffffffdeadbeef
+>  [12797.989964]  a5 : 000000000008ef61 a6 : 626769735f6e0000 a7 : fffffffffffff000
+>  [12797.990094]  s2 : 0000000000000001 s3 : 00007fffe165d838 s4 : 00007fffe165d848
+>  [12797.990238]  s5 : 000000000000001a s6 : 0000000000010442 s7 : 0000000000010200
+>  [12797.990391]  s8 : 000000000000003a s9 : 0000000000094508 s10: 0000000000000000
+>  [12797.990526]  s11: 0000555567460668 t3 : 00007fffe165d070 t4 : 00000000000965d0
+>  [12797.990656]  t5 : fefefefefefefeff t6 : 0000000000000073
+>  [12797.990756] status: 0000000200004020 badaddr: 000000000008ef61 cause: 0000000000000006
+>  [12797.990911] Code: 8793 8791 3423 fcf4 3783 fc84 c737 dead 0713 eef7 (c398) 0001
+>  #            OK  global.gen_sigbus
+>  ok 23 global.gen_sigbus
+>  # PASSED: 23 / 23 tests passed.
+>  # Totals: pass:23 fail:0 xfail:0 xpass:0 skip:0 error:0
 >
-> When it supports BPF but runs without root or CAP_BPF.  Note that it
-> also checks pinned BPF filters.
+> With kvm-tools:
 >
->   $ perf record -e cycles --filter "pid !=3D 0" -o /dev/null true
->   Error: BPF filter only works for users with the CAP_BPF capability!
->         Please run 'perf record --setup-filter pin' as root first.
+>  # lkvm run -k sbi.flat -m 128
+>   Info: # lkvm run -k sbi.flat -m 128 -c 1 --name guest-97
+>   Info: Removed ghost socket file "/root/.lkvm//guest-97.sock".
 >
->    Usage: perf record [<options>] [<command>]
->       or: perf record [<options>] -- <command> [<options>]
+>  ##########################################################################
+>  #    kvm-unit-tests
+>  ##########################################################################
 >
->           --filter <filter>
->                             event filter
+>  ... [test messages elided]
+>  PASS: sbi: fwft: FWFT extension probing no error
+>  PASS: sbi: fwft: get/set reserved feature 0x6 error == SBI_ERR_DENIED
+>  PASS: sbi: fwft: get/set reserved feature 0x3fffffff error == SBI_ERR_DENIED
+>  PASS: sbi: fwft: get/set reserved feature 0x80000000 error == SBI_ERR_DENIED
+>  PASS: sbi: fwft: get/set reserved feature 0xbfffffff error == SBI_ERR_DENIED
+>  PASS: sbi: fwft: misaligned_deleg: Get misaligned deleg feature no error
+>  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature invalid value error
+>  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature invalid value error
+>  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value no error
+>  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value 0
+>  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value no error
+>  PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value 1
+>  PASS: sbi: fwft: misaligned_deleg: Verify misaligned load exception trap in supervisor
+>  SUMMARY: 50 tests, 2 unexpected failures, 12 skipped
 >
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
+> This series is available at [5].
+>
+> Link: https://github.com/riscv-non-isa/riscv-sbi-doc/releases/download/vv3.0-rc2/riscv-sbi.pdf [1]
+> Link: https://github.com/rivosinc/qemu/tree/dev/cleger/misaligned [2]
+> Link: https://lore.kernel.org/all/20241211211933.198792-3-fkonrad@amd.com/T/ [3]
+> Link: https://lore.kernel.org/linux-riscv/20250414123543.1615478-1-cleger@rivosinc.com [4]
+> Link: https://github.com/rivosinc/linux/tree/dev/cleger/fwft [5]
 > ---
-> v2) change fprintf() -> pr_err()  (Ian)
 >
->  tools/perf/util/bpf-filter.c | 28 ++++++++++++++++++++++++++++
->  tools/perf/util/bpf-filter.h |  3 +++
->  tools/perf/util/cap.c        |  1 -
->  tools/perf/util/cap.h        |  5 +++++
->  4 files changed, 36 insertions(+), 1 deletion(-)
+> V8:
+>  - Move misaligned_access_speed under CONFIG_RISCV_MISALIGNED and add a
+>    separate commit for that.
 >
-> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-> index a4fdf6911ec1c32e..92e2f054b45e91dd 100644
-> --- a/tools/perf/util/bpf-filter.c
-> +++ b/tools/perf/util/bpf-filter.c
-> @@ -52,6 +52,7 @@
->  #include <internal/xyarray.h>
->  #include <perf/threadmap.h>
+> V7:
+>  - Fix ifdefery build problems
+>  - Move sbi_fwft_is_supported with fwft_set_req struct
+>  - Added Atish Reviewed-by
+>  - Updated KVM vcpu cfg hedeleg value in set_delegation
+>  - Changed SBI ETIME error mapping to ETIMEDOUT
+>  - Fixed a few typo reported by Alok
 >
-> +#include "util/cap.h"
->  #include "util/debug.h"
->  #include "util/evsel.h"
->  #include "util/target.h"
-> @@ -618,11 +619,38 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__=
-new(enum perf_bpf_filter_term
->         return expr;
->  }
+> V6:
+>  - Rename FWFT interface to remove "_local"
+>  - Fix test for MEDELEG values in KVM FWFT support
+>  - Add __init for unaligned_access_init()
+>  - Rebased on master
 >
-> +static bool check_bpf_filter_capable(void)
-> +{
-> +       bool used_root;
-> +
-> +       if (perf_cap__capable(CAP_BPF, &used_root))
-> +               return true;
-> +
-> +       if (!used_root) {
-> +               /* Check if root already pinned the filter programs and m=
-aps */
-> +               int fd =3D get_pinned_fd("filters");
-> +
-> +               if (fd >=3D 0) {
-> +                       close(fd);
-> +                       return true;
-> +               }
-> +       }
-> +
-> +       pr_err("Error: BPF filter only works for %s!\n"
-> +              "\tPlease run 'perf record --setup-filter pin' as root fir=
-st.\n",
-> +              used_root ? "root" : "users with the CAP_BPF capability");
-> +
-> +       return false;
-> +}
-> +
->  int perf_bpf_filter__parse(struct list_head *expr_head, const char *str)
->  {
->         YY_BUFFER_STATE buffer;
->         int ret;
+> V5:
+>  - Return ERANGE as mapping for SBI_ERR_BAD_RANGE
+>  - Removed unused sbi_fwft_get()
+>  - Fix kernel for sbi_fwft_local_set_cpumask()
+>  - Fix indentation for sbi_fwft_local_set()
+>  - Remove spurious space in kvm_sbi_fwft_ops.
+>  - Rebased on origin/master
+>  - Remove fixes commits and sent them as a separate series [4]
 >
-> +       if (!check_bpf_filter_capable())
-> +               return -EPERM;
-> +
->         buffer =3D perf_bpf_filter__scan_string(str);
+> V4:
+>  - Check SBI version 3.0 instead of 2.0 for FWFT presence
+>  - Use long for kvm_sbi_fwft operation return value
+>  - Init KVM sbi extension even if default_disabled
+>  - Remove revert_on_fail parameter for sbi_fwft_feature_set().
+>  - Fix comments for sbi_fwft_set/get()
+>  - Only handle local features (there are no globals yet in the spec)
+>  - Add new SBI errors to sbi_err_map_linux_errno()
 >
->         ret =3D perf_bpf_filter_parse(expr_head);
-> diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
-> index 916ed7770b734f15..122477f2de44bb60 100644
-> --- a/tools/perf/util/bpf-filter.h
-> +++ b/tools/perf/util/bpf-filter.h
-> @@ -5,6 +5,7 @@
->  #include <linux/list.h>
+> V3:
+>  - Added comment about kvm sbi fwft supported/set/get callback
+>    requirements
+>  - Move struct kvm_sbi_fwft_feature in kvm_sbi_fwft.c
+>  - Add a FWFT interface
 >
->  #include "bpf_skel/sample-filter.h"
-> +#include "util/debug.h"
+> V2:
+>  - Added Kselftest for misaligned testing
+>  - Added get_user() usage instead of __get_user()
+>  - Reenable interrupt when possible in misaligned access handling
+>  - Document that riscv supports unaligned-traps
+>  - Fix KVM extension state when an init function is present
+>  - Rework SBI misaligned accesses trap delegation code
+>  - Added support for CPU hotplugging
+>  - Added KVM SBI reset callback
+>  - Added reset for KVM SBI FWFT lock
+>  - Return SBI_ERR_DENIED_LOCKED when LOCK flag is set
+>
+> Clément Léger (14):
+>   riscv: sbi: add Firmware Feature (FWFT) SBI extensions definitions
+>   riscv: sbi: remove useless parenthesis
+>   riscv: sbi: add new SBI error mappings
+>   riscv: sbi: add FWFT extension interface
+>   riscv: sbi: add SBI FWFT extension calls
+>   riscv: misaligned: request misaligned exception from SBI
+>   riscv: misaligned: use on_each_cpu() for scalar misaligned access
+>     probing
+>   riscv: misaligned: declare misaligned_access_speed under
+>     CONFIG_RISCV_MISALIGNED
+>   riscv: misaligned: move emulated access uniformity check in a function
+>   riscv: misaligned: add a function to check misalign trap delegability
+>   RISC-V: KVM: add SBI extension init()/deinit() functions
+>   RISC-V: KVM: add SBI extension reset callback
+>   RISC-V: KVM: add support for FWFT SBI extension
+>   RISC-V: KVM: add support for SBI_FWFT_MISALIGNED_DELEG
+>
+>  arch/riscv/include/asm/cpufeature.h        |  14 +-
+>  arch/riscv/include/asm/kvm_host.h          |   5 +-
+>  arch/riscv/include/asm/kvm_vcpu_sbi.h      |  12 +
+>  arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h |  29 +++
+>  arch/riscv/include/asm/sbi.h               |  60 +++++
+>  arch/riscv/include/uapi/asm/kvm.h          |   1 +
+>  arch/riscv/kernel/sbi.c                    |  81 ++++++-
+>  arch/riscv/kernel/traps_misaligned.c       | 112 ++++++++-
+>  arch/riscv/kernel/unaligned_access_speed.c |   8 +-
+>  arch/riscv/kvm/Makefile                    |   1 +
+>  arch/riscv/kvm/vcpu.c                      |   4 +-
+>  arch/riscv/kvm/vcpu_sbi.c                  |  54 +++++
+>  arch/riscv/kvm/vcpu_sbi_fwft.c             | 257 +++++++++++++++++++++
+>  arch/riscv/kvm/vcpu_sbi_sta.c              |   3 +-
+>  14 files changed, 620 insertions(+), 21 deletions(-)
+>  create mode 100644 arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
+>  create mode 100644 arch/riscv/kvm/vcpu_sbi_fwft.c
 
-nit: I'd generally avoid the util/ prefix here as bpf-filter.h and
-debug.h are in the same directory. The compiler first looks in the
-same directory before using include paths:
-https://gcc.gnu.org/onlinedocs/cpp/Search-Path.html
-So including this way is saying please search using the include paths
-which is weird when the files are in the same directory. I know the
-style in the code base is inconsistent with this, but I wish it
-wasn't.
-
-Thanks,
-Ian
-
->
->  struct perf_bpf_filter_expr {
->         struct list_head list;
-> @@ -38,6 +39,8 @@ int perf_bpf_filter__unpin(void);
->  static inline int perf_bpf_filter__parse(struct list_head *expr_head __m=
-aybe_unused,
->                                          const char *str __maybe_unused)
->  {
-> +       pr_err("Error: BPF filter is requested but perf is not built with=
- BPF.\n"
-> +               "\tPlease make sure to build with libbpf and BPF skeleton=
-.\n");
->         return -EOPNOTSUPP;
->  }
->  static inline int perf_bpf_filter__prepare(struct evsel *evsel __maybe_u=
-nused,
-> diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
-> index 69d9a2bcd40bfdd1..24a0ea7e6d97749b 100644
-> --- a/tools/perf/util/cap.c
-> +++ b/tools/perf/util/cap.c
-> @@ -7,7 +7,6 @@
->  #include "debug.h"
->  #include <errno.h>
->  #include <string.h>
-> -#include <linux/capability.h>
->  #include <sys/syscall.h>
->  #include <unistd.h>
->
-> diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
-> index 0c6a1ff55f07340a..c1b8ac033ccc5826 100644
-> --- a/tools/perf/util/cap.h
-> +++ b/tools/perf/util/cap.h
-> @@ -3,6 +3,7 @@
->  #define __PERF_CAP_H
->
->  #include <stdbool.h>
-> +#include <linux/capability.h>
->
->  /* For older systems */
->  #ifndef CAP_SYSLOG
-> @@ -13,6 +14,10 @@
->  #define CAP_PERFMON    38
->  #endif
->
-> +#ifndef CAP_BPF
-> +#define CAP_BPF                39
-> +#endif
-> +
->  /* Query if a capability is supported, used_root is set if the fallback =
-root check was used. */
->  bool perf_cap__capable(int cap, bool *used_root);
->
-> --
-> 2.49.0.1266.g31b7d2e469-goog
->
+Sorry I'm still kind of out of it here, but I think Alex was saying this 
+has dependencies in the patchwork call this morning?
