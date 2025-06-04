@@ -1,63 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768E6B665
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 00:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5176CA4E;
+	Wed,  4 Jun 2025 00:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748997549; cv=none; b=SZ4szfD1bdS+uKMr/PHIFUu8bnb+eg2WMRcTnOe6awO6r0aMkRXFG5DeVZvAJy7hlbUbd/wS6UZYAotyODK1m89FZrPabGTCkG8EwmUvKSuHswOiIyFkIQ4qSL3i45udqoyKBRJH0It7Msav4gxA8F/n+thXLxRx6IdcvRqlpTE=
+	t=1748997827; cv=none; b=pQebBDwx7bnAjRSay/GYHxrbvvmWqJ3eEFD1mAs38LkyMm+dFANFIUXDpCI7Wsnu6YlnlYJPBbynpZ0kVp2+QPBiYkxR2tOEtkAWipPzAC766E6TkxN0259WqB7F5UBJb8vb9OUeicxirpeAiVI8MrC0kTiG2mBn+RpZPggqEhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748997549; c=relaxed/simple;
-	bh=sV0fxa4gfgOOrnxqSA6w5QF023wOAeg8/ZM5DkSBckg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fGTi0bjpPA882TZCYH/V8LkOa7hTf3roAL5DQ4UmUiVHkvb0TwYm2Jj/RhREZYnkMYoMexbmSi9iZmf3zBwWAAjhmo5IikWrbvzuEvRrJXCgz9EgutgZyIxbyLnrXvW1hJpt0DzieZSQotdGW9dQpZmYllr3lXBqq3FvWD1RIJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cjt0HMGd; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748997827; c=relaxed/simple;
+	bh=z06AfXBu3Wnaj3am6I5bQMHfFjjgGU6Io2/r8kFyd2o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Fe4uCg1t9dkLcx+VZ9fayDX/QAjw/7z8hIvs6WEYx40OoFrpqMTKK2P/iVKLlAHTfRAMjWtw54SHpyCTvh8WsUEdLfElSjHIohJqK0NsdJ1bivIj4ppxl/T+NtScOkusxEb2ZevqNlYDlG6GFfaThLWzThZHj98ADcffi3J3xYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UsAkW9Ni; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cjt0HMGd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748997547; x=1780533547;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=sV0fxa4gfgOOrnxqSA6w5QF023wOAeg8/ZM5DkSBckg=;
-  b=cjt0HMGdkkliWwodcm03IaF/lGLHSCuN6tiLNVmK6iUAiydUI4n5t9kO
-   c94Njz3Z4yBsC56zwzCmOaLrrMQ5vzVEyTzlw8HkGd681oQ5lE4Ylt4sy
-   vIX8TXOaiaA8qyroyPINlILpqEHyI/bdkah3DLMh8k5WSy/zU5JTi5HOx
-   IRzsgtkNX6k2o1PeXUCSxLk4ZGCxysW7+V9ffIpLu+hRmD+m7pmM2oXRh
-   IL87xpB064C46NZ4sww9XKKeXcMgEN7BASUCNhH/owiy/PkM9jtzArJgi
-   ciKQ0nVzzt7/dU3jEep0d3yd+O5DxozwSyhLxiBg8R/68qJGJwGR8lhpx
-   Q==;
-X-CSE-ConnectionGUID: RTv0IzMLSSujr1qh+S+p3A==
-X-CSE-MsgGUID: IB+59o7XSGGocNqPei/Uqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="54721305"
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="54721305"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 17:39:06 -0700
-X-CSE-ConnectionGUID: K3naTJ0PS6Ojq/InZphH/g==
-X-CSE-MsgGUID: ZRdcfBtEQA6CTeFbEMk+eQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="145970070"
-Received: from mgoodin-mobl3.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.124.221.56])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 17:39:03 -0700
-From: Kai Huang <kai.huang@intel.com>
-To: dave.hansen@intel.com,
-	peterz@infradead.org,
-	tglx@linutronix.de,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UsAkW9Ni"
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 342582116B25;
+	Tue,  3 Jun 2025 17:43:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 342582116B25
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748997825;
+	bh=8goRauVaYSFozRwRLcm6JZoNqih7m4xmGWRntzKXbqU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UsAkW9NioV6LBEgDomuRjnAfurpjQs3G5mUAkWGn4umNEd0uSk8TY7RT0XgF8GqTZ
+	 HnaLsw4M7vtQLDRJZf9r7KNIqAJ1NVtoO2lB1Ls5qmZvJhuUjFcm8gzMtF9uWtIapp
+	 PINmxtR94CBCr9aqgU8GWv521lbQMGp2s2giu8uA=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: alok.a.tiwari@oracle.com,
+	arnd@arndb.de,
 	bp@alien8.de,
-	mingo@redhat.com,
+	corbet@lwn.net,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
 	hpa@zytor.com,
-	kirill.shutemov@linux.intel.com
-Cc: rick.p.edgecombe@intel.com,
-	x86@kernel.org,
-	samitolvanen@google.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/virt/tdx: Add ENDBR for low level SEAMCALL assembly functions
-Date: Wed,  4 Jun 2025 12:38:48 +1200
-Message-ID: <20250604003848.13154-1-kai.huang@intel.com>
-X-Mailer: git-send-email 2.49.0
+	kys@microsoft.com,
+	mingo@redhat.com,
+	mhklinux@outlook.com,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: [PATCH hyperv-next v3 03/15] arch: hyperv: Get/set SynIC synth.registers via paravisor
+Date: Tue,  3 Jun 2025 17:43:29 -0700
+Message-ID: <20250604004341.7194-4-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250604004341.7194-1-romank@linux.microsoft.com>
+References: <20250604004341.7194-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,134 +62,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Build warnings about missing ENDBR around making SEAMCALLs[*] were
-observed when using some randconfig[1] to build today's Linus's tree.
+The confidential VMBus is built on the guest talking to the
+paravisor only.
 
-In the C code, the low level SEAMCALL assembly functions (__seamcall(),
-__seamcall_ret() and __seamcall_saved_ret()) are indirectly called via
-the common sc_retry() function:
+Provide functions that allow manipulating the SynIC registers
+via paravisor. No functional changes.
 
-    static inline u64 sc_retry(sc_func_t func, u64 fn,
-		    	       struct tdx_module_args *args)
-    { ... }
-
-    #define seamcall(_fn, _args) sc_retry(__seamcall, (_fn), (_args))
-
-It turns out compilers may not always be smart enough to figure out how
-to call those assembly functions directly.
-
-The disassembly of the vmlinux built from the aforementioned config
-confirms that __seamcall*() are indirectly called:
-
-    <sc_retry>:
-			       ......
-
-       4c 89 ee                mov    %r13,%rsi
-       4c 89 e7                mov    %r12,%rdi
-       e8 35 8c 7d 01          call   ffffffff82b3e220 <__pi___x86_indirect_thunk_rbp>
-       4c 39 f0                cmp    %r14,%rax
-
-In this case ENDBR is needed at the beginning of __seamcall*().
-
-Change SYM_FUNC_START() to SYM_TYPED_FUNC_START() for __seamcall*() to
-add ENDBR to them.
-
-When the compiler can generate direct call for __seamcall*(), the
-additional ENDBR is safe since it has no impact to directly called
-functions.
-
-When kernel IBT was added to the kernel, initially the SYM_FUNC_START()
-had the ENDBR added in commit
-
-  c4691712b546 ("x86/linkage: Add ENDBR to SYM_FUNC_START*()")
-
-However when the commit
-
-  582077c94052 ("x86/cfi: Clean up linkage")
-
-removed the ENDBR from the SYM_FUNC_START() and added it to the
-SYM_TYPED_FUNC_START(), it didn't touch the SEAMCALL assembly.
-
-[*] Aforementioned build warning:
-
-vmlinux.o: warning: objtool: try_init_module_global+0x5d: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: read_sys_metadata_field+0x4a: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: do_global_key_config+0x36: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_phymem_page_reclaim+0x71: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_phymem_cache_wb+0x41: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_phymem_page_wbinvd_tdr+0x95: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdx_cpu_enable+0x7b: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: init_tdmr+0x59: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: config_tdx_module.constprop.0+0x19d: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_vp_addcx+0x91: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_vp_init+0x76: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_vp_wr+0x87: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_vp_rd+0x6d: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_vp_flush+0x4c: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_vp_create+0x85: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_mng_create+0x73: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_mem_page_aug+0xb4: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_mem_sept_add+0xb4: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_mem_page_add+0xce: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_mng_addcx+0x91: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_mem_page_remove+0x7e: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_mem_track+0x4c: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_mng_init+0x6d: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_mng_key_freeid+0x4c: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_mng_vpflushdone+0x4c: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_mr_finalize+0x4c: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_mr_extend+0x77: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_mng_rd+0x6d: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_mng_key_config+0x4c: relocation to !ENDBR: __seamcall+0x0
-vmlinux.o: warning: objtool: tdh_mem_range_block+0x7e: relocation to !ENDBR: __seamcall_ret+0x0
-vmlinux.o: warning: objtool: tdh_phymem_page_wbinvd_hkid+0x7d: relocation to !ENDBR: __seamcall+0x0
-
-Fixes: 582077c94052 ("x86/cfi: Clean up linkage")
-Link: https://download.01.org/0day-ci/archive/20250524/202505240530.5KktQ5mX-lkp@intel.com/config [1]
-Signed-off-by: Kai Huang <kai.huang@intel.com>
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 ---
- arch/x86/virt/vmx/tdx/seamcall.S | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/mshyperv.c | 44 ++++++++++++++++++++++++++++++++++
+ drivers/hv/hv_common.c         | 13 ++++++++++
+ include/asm-generic/mshyperv.h |  2 ++
+ 3 files changed, 59 insertions(+)
 
-diff --git a/arch/x86/virt/vmx/tdx/seamcall.S b/arch/x86/virt/vmx/tdx/seamcall.S
-index 6854c52c374b..637226ae935d 100644
---- a/arch/x86/virt/vmx/tdx/seamcall.S
-+++ b/arch/x86/virt/vmx/tdx/seamcall.S
-@@ -1,5 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/frame.h>
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 3e2533954675..83a85d94bcb3 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -89,6 +89,50 @@ void hv_set_non_nested_msr(unsigned int reg, u64 value)
+ }
+ EXPORT_SYMBOL_GPL(hv_set_non_nested_msr);
  
- #include "tdxcall.S"
-@@ -18,7 +19,7 @@
-  * Return (via RAX) TDX_SEAMCALL_VMFAILINVALID if the SEAMCALL itself
-  * fails, or the completion status of the SEAMCALL leaf function.
-  */
--SYM_FUNC_START(__seamcall)
-+SYM_TYPED_FUNC_START(__seamcall)
- 	TDX_MODULE_CALL host=1
- SYM_FUNC_END(__seamcall)
++/*
++ * Attempt to get the SynIC register value from the paravisor.
++ *
++ * Not all paravisors support reading SynIC registers, so this function
++ * may fail. The register for the SynIC of the running CPU is accessed.
++ *
++ * Writes the SynIC register value into the memory pointed by val,
++ * and ~0ULL is on failure.
++ *
++ * Returns -ENODEV if the MSR is not a SynIC register, or another error
++ * code if getting the MSR fails (meaning the paravisor doesn't support
++ * relaying VMBus comminucations).
++ */
++int hv_para_get_synic_register(unsigned int reg, u64 *val)
++{
++	u64 reg_val = ~0ULL;
++	int err = -ENODEV;
++
++	if (hv_is_synic_msr(reg))
++		reg_val = native_read_msr_safe(reg, &err);
++	*val = reg_val;
++
++	return err;
++}
++
++/*
++ * Attempt to set the SynIC register value with the paravisor.
++ *
++ * Not all paravisors support reading SynIC registers, so this function
++ * may fail. The register for the SynIC of the running CPU is accessed.
++ *
++ * Sets the register to the value supplied.
++ *
++ * Returns: -ENODEV if the MSR is not a SynIC register, or another error
++ * code if writing to the MSR fails (meaning the paravisor doesn't support
++ * relaying VMBus comminucations).
++ */
++int hv_para_set_synic_register(unsigned int reg, u64 val)
++{
++	if (!hv_is_synic_msr(reg))
++		return -ENODEV;
++	return wrmsrl_safe(reg, val);
++}
++
+ u64 hv_get_msr(unsigned int reg)
+ {
+ 	if (hv_nested)
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 49898d10faff..a179ea482cb1 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -716,6 +716,19 @@ u64 __weak hv_tdx_hypercall(u64 control, u64 param1, u64 param2)
+ }
+ EXPORT_SYMBOL_GPL(hv_tdx_hypercall);
  
-@@ -37,7 +38,7 @@ SYM_FUNC_END(__seamcall)
-  * Return (via RAX) TDX_SEAMCALL_VMFAILINVALID if the SEAMCALL itself
-  * fails, or the completion status of the SEAMCALL leaf function.
-  */
--SYM_FUNC_START(__seamcall_ret)
-+SYM_TYPED_FUNC_START(__seamcall_ret)
- 	TDX_MODULE_CALL host=1 ret=1
- SYM_FUNC_END(__seamcall_ret)
- 
-@@ -59,6 +60,6 @@ SYM_FUNC_END(__seamcall_ret)
-  * Return (via RAX) TDX_SEAMCALL_VMFAILINVALID if the SEAMCALL itself
-  * fails, or the completion status of the SEAMCALL leaf function.
-  */
--SYM_FUNC_START(__seamcall_saved_ret)
-+SYM_TYPED_FUNC_START(__seamcall_saved_ret)
- 	TDX_MODULE_CALL host=1 ret=1 saved=1
- SYM_FUNC_END(__seamcall_saved_ret)
-
-base-commit: 5abc7438f1e9d62e91ad775cc83c9594c48d2282
++int __weak hv_para_get_synic_register(unsigned int reg, u64 *val)
++{
++	*val = ~0ULL;
++	return -ENODEV;
++}
++EXPORT_SYMBOL_GPL(hv_para_get_synic_register);
++
++int __weak hv_para_set_synic_register(unsigned int reg, u64 val)
++{
++	return -ENODEV;
++}
++EXPORT_SYMBOL_GPL(hv_para_set_synic_register);
++
+ void hv_identify_partition_type(void)
+ {
+ 	/* Assume guest role */
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index 9722934a8332..f239b102fc53 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -333,6 +333,8 @@ bool hv_is_isolation_supported(void);
+ bool hv_isolation_type_snp(void);
+ u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size);
+ u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
++int hv_para_get_synic_register(unsigned int reg, u64 *val);
++int hv_para_set_synic_register(unsigned int reg, u64 val);
+ void hyperv_cleanup(void);
+ bool hv_query_ext_cap(u64 cap_query);
+ void hv_setup_dma_ops(struct device *dev, bool coherent);
 -- 
-2.49.0
+2.43.0
 
