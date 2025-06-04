@@ -1,118 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811F2320F;
-	Wed,  4 Jun 2025 18:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03E9320F;
+	Wed,  4 Jun 2025 18:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749063439; cv=none; b=Fr6x5pR0/sq29WkX07rpah3fW75umEbvFDsCtfs3yzRlToCYQzyVOo2CvtmiwA/ZcIDBUIGMOcAv4p1jyB7m97hFAeblhEZ4gDnflYOrwNJvwM0iE5EKVlKVF6KzkKdcHrJq+1m3akvHg1m5AlX5hyoKRRP+al7Tgwn3DDLIiTk=
+	t=1749063505; cv=none; b=DIOqG7nX+rVEZECLBVeDRAiQZLnuAhQOYiLqPQ6TaNrGoimjCdNogjBRaZIpD8+UfpYg4wZOr0fCJCXsLK0AMPVZJcflLUsFqYugHgyqbWiNsmuITeeGdyAnUpRb6Go49iBiOpIj6K5iXrLg/CnCYNAvgZg7TED1/fghvFJetM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749063439; c=relaxed/simple;
-	bh=iJ1q+c3Gj1u9vRGIqFindBNw9XMdex5v4Tpbt2wrCz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1mC0T78QtkYfCcl8oT4B8yHDUV8aA36Ch30EbelDZyeBCUGFJowhtkxcbuoyv/xcdJ1Uibcx2Ac43uVqtrLpF6iffneZ3V5UoX0PnmW6gYet516LZhthLbsN82v5xGwww6QfRQEjRQuHAFsPwXn8bQtpESBB3+nE0POu9W32xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3mg+D2y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749063505; c=relaxed/simple;
+	bh=mzGOHlpXmqwWMa0Wr+MTGcZeDudXFPUN2a3kzEWMULE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bHa0oGRzJBh2uBiQ1ar/h7irz9NO1yHSGps+TuRFVM3fuwWfZFUOAhkYD+wBXzxO6D3t6Qi5CoyLUWxw6Je2Mbsu7PT0AZ1UX7uXAneiZAjLULFByvKdvWK0/UIEN3rYXoAqk3JE4yhoD/5sU5RJkzhDWNX+HYam8aLp3nYUXwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X51E8hV/; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3mg+D2y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECFF1C4CEE4;
-	Wed,  4 Jun 2025 18:57:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749063438;
-	bh=iJ1q+c3Gj1u9vRGIqFindBNw9XMdex5v4Tpbt2wrCz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N3mg+D2yPd4ESJYA6C2vs7riXu4gYgEk+dvKlJNWjJwccSG38RwRqDDOhK9fp/81Z
-	 3DoroZIhja0SuZ/03M/f4DeJMYN0QQbe1ld2e8cqlyzloE8mDz9HDeZGS4nYo76k1m
-	 SCpb2gi7iPgv1IIIusM5Nl/kwKlXq6jk0etryJFztMdCR55FFuWj/Ahn5AOJUk7GWa
-	 3Zd+KfNmJOzSR/8hBLNEQ8X4K5j4f0IeCBcCQi8/YhZMUf/8b9tqn3DT4+QCHHhywo
-	 pgS7w2qXVjDr0yji7ONeXyX6mfT2LAeEY0XGEJBX1oyQqbYkEriKMGWKtbBBrGWt7E
-	 l2NYDFn2AqqQA==
-Date: Wed, 4 Jun 2025 20:57:12 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-Message-ID: <aECXCGVaVNt7lQ0J@cassiopeiae>
-References: <aD6yOte8g4_pcks7@google.com>
- <aD62ZGBwqXxTroeX@cassiopeiae>
- <aD64YNuqbPPZHAa5@google.com>
- <aD68BzKRAvmNBLaV@cassiopeiae>
- <CAH5fLgjweugttOtuiyawNp5s2N9JPoo5FTJ+Zs9t_S87ggC1Gg@mail.gmail.com>
- <aD7DvBfAxKi7Fpg_@cassiopeiae>
- <CAH5fLggKL4jMjrJJEYV=Snqftu+oc4-sTNj9spinON5kHVP9xg@mail.gmail.com>
- <aD7JuyVRVr5dSqE9@cassiopeiae>
- <aD7Lhsjh6HPXedjT@cassiopeiae>
- <C6A531ED-B464-46C5-A1B1-BD4A87528CA1@collabora.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X51E8hV/"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2301ac32320so1741525ad.1;
+        Wed, 04 Jun 2025 11:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749063503; x=1749668303; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AMYbwbXYccHSVQPKYSpzbCZ+y7pvWM10sRF6pDZbbxY=;
+        b=X51E8hV/dtYUNi8t+bisa9U/xdT5c0e25qniKfgHiFX635wiZdoWYls3uQOlC2HRx6
+         clFyKEkxmADDY56ycp495bf42QeHbOxU1er763YgZR44Vz7gljfIBy+WZMC/5SRwa6SY
+         1f3TTc6VjdzfQejXRpcnSaActdUUXPD8qYfLXohmzjYr+q8AbVNgEw8HOOniJ8m68A2Q
+         WDggG5b479pxGOlub4geHMlqLMOF1LZIyB3xsIXCFS/Ct2Zkt1xh5SH7SUk5jxqfUvP1
+         pA63yBjPrHHJ7szYs+Z+akoociYNf364r5ex/UxQcQyb4WxDQIWhJF175/ArH6+gBsc+
+         bKSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749063503; x=1749668303;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AMYbwbXYccHSVQPKYSpzbCZ+y7pvWM10sRF6pDZbbxY=;
+        b=Vm5mCfxw5EqDnl+ksG/Y5HjlEYUsVQxocZCOTRABRFU9LKka6JikyIBHFGlsCWozIY
+         csgQxgNQDeqs3bl84K1sin2NmCL2N5VqSGcbqMKNhN1ZKyEA5eBkSExKbVPhyIJpp9mu
+         WfpMcZflLLYOd7DipCF1RcXgDsg7TCLagzp94TVgPNneg/T4iYeYE6yYds9E5bakdo6Z
+         8XJUBP5l8lkqUuaCfElz2xemTVHBvbxeONfGbLarEKdYyylFp/+axpN3jm+qIX9WQdPy
+         jnMZPw2Yr3ZL9tsb/BVD7k9pGB7qF5TPNdYwb10agvRbJzCLDHgjPCATED/pQAhnKUoN
+         Gcow==
+X-Forwarded-Encrypted: i=1; AJvYcCWB0BIgYyzYb7VTGieO7+HouVxM+raVMu9xKRvDlEKPKLhTG6E5D7wA0+l5bUI15sa54slztSXbCUra1Mw=@vger.kernel.org, AJvYcCXz8/3XPobA7g3+z/Hp6AesnRvYkmKsnaVCI3XOz/nHa+KEykhhw0AbhGot/mJf5dfNOk81X32o@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLphT5d+1WkdmAFkyE1HJK0dugHN0bvu5Mtp60lE17rpBbCqTg
+	v8hdg7C1N+rcmkMh0Qp3yO0XZBynbaBeCJr9gs+65I9Qb+zS5c2eH28=
+X-Gm-Gg: ASbGnct0Ny7PxsNjmopLYUvoPKYFMcIIAyRJSa7cdmHhAb3w5OmxCw37t1dCKIxsfFy
+	HZYKHUfpaMe3wG24JoIXU+hMrs4xg1sWb3TeTwFbxjoW/NEfzMj2HFfbjVsPBxKVxXlmTNW1pG8
+	VQxGo/THrW7/dzlgST+CfkQY8qX7fq7dkhZoADld4/0qITB6fRZ3Zebr4Nt/5fw1oz8lQ1SUI4k
+	NqFH0xDCugj7A5goKbhNrDL0L/x3UREcFNXy3NtV6V2+p2fefmnYlgqlVPPt8Z+JMHK+y/U0ZPA
+	xSWdDsi0lkdCHYfmqkbxQeXOi8++
+X-Google-Smtp-Source: AGHT+IFGNavVpVXbSNDzCNHh541HFTvUZ/3LSwb0lEij0rwquG0taUQdVUEvneaPNYwhjS5e4aBOpQ==
+X-Received: by 2002:a17:903:a50:b0:235:e71e:a396 with SMTP id d9443c01a7336-235e71ea9a9mr26420135ad.51.1749063502848;
+        Wed, 04 Jun 2025 11:58:22 -0700 (PDT)
+Received: from fedora.. ([2601:647:6700:3390::c8d1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd939asm107532785ad.70.2025.06.04.11.58.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 11:58:22 -0700 (PDT)
+From: Kuniyuki Iwashima <kuni1840@gmail.com>
+To: luka.2016.cs@gmail.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	horms@kernel.org,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com
+Subject: Re: [Bug] task hung in rtnl_newlink in Linux kernel v6.12
+Date: Wed,  4 Jun 2025 11:56:39 -0700
+Message-ID: <20250604185820.147956-1-kuni1840@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <CALm_T+0emUog-74YTfGnpY4AAgh=jFsYBmttc-uesXFRoyofhw@mail.gmail.com>
+References: <CALm_T+0emUog-74YTfGnpY4AAgh=jFsYBmttc-uesXFRoyofhw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <C6A531ED-B464-46C5-A1B1-BD4A87528CA1@collabora.com>
 
-On Wed, Jun 04, 2025 at 03:32:16PM -0300, Daniel Almeida wrote:
-> So, what is the result of this discussion?
+From: Luka <luka.2016.cs@gmail.com>
+Date: Wed, 4 Jun 2025 12:18:55 +0800
+> Dear Kernel Maintainers,
 > 
-> > On 3 Jun 2025, at 07:16, Danilo Krummrich <dakr@kernel.org> wrote:
-> > 
-> > On Tue, Jun 03, 2025 at 12:09:05PM +0200, Danilo Krummrich wrote:
-> >> Yes, we could solve this with a lock as well, but it would be an additional
-> >> lock, just to maintain the current drop() semantics, which I don't see much
-> >> value in.
-> > 
-> > If we want to keep the current drop() semantics we could use a completion
-> > instead.
-> > 
-> > // Devres::drop()
-> > revoke_nosync()
-> > complete()
-> > 
-> > // devres_callback
-> > if !try_revoke() {
-> > // we end up here if try_revoke() indicates that the object was
-> > // revoked already
-> > wait_for_completion()
-> > }
+> I am writing to report a potential vulnerability identified in the
+> upstream Linux Kernel version v6.12, corresponding to the following
+> commit in the mainline repository:
 > 
-> This looks like what is going on here [0], so should I implement what Alice suggested? i.e.:
-> 
-> > > Based on this, we could imagine something along these lines:
-> > > 
-> > > struct RegistrationInner(i32);
-> > > impl Drop for RegistrationInner {
-> > > fn drop(&mut self) {
-> > > free_irq(...);
-> > > }
-> > > }
-> > > 
-> > > struct Registration<T> {
-> > > reg: Devres<RegistrationInner>,
-> > > data: T,
-> > > }
-> > > 
-> > > Here you can access the `data` on the registration at any time without
-> > > synchronization.
+> Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
 
-Yes, I think that's the best approach. You can also have a look at [1], which
-implements this approach for misc device already, even though it's slightly more
-complicated.
-
-[1] https://lore.kernel.org/lkml/20250530142447.166524-6-dakr@kernel.org/
+Please run syzkaller on the latest upstream or at least the latest LTS
+release.
 
 > 
-> — Daniel
+> This issue was discovered during the testing of the Android 16 AOSP
+> kernel, which is based on Linux kernel version 6.12, specifically from
+> the AOSP kernel branch:
 > 
-> [0] https://lore.kernel.org/rust-for-linux/CANiq72nfOcOGJuktzSpNAUWwekaZ98JL7c1FhMKCjPSG80JMPA@mail.gmail.com/T/#t
+> AOSP kernel branch: android16-6.12
+> Manifest path: kernel/common.git
+> Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
+> 
+> Although this kernel branch is used in Android 16 development, its
+> base is aligned with the upstream Linux v6.12 release. I observed this
+> issue while conducting stability and fuzzing tests on the Android 16
+> platform and identified that the root cause lies in the upstream
+> codebase.
+> 
+> 
+> Bug Location: rtnl_newlink+0x64c/0x12f4 net/core/rtnetlink.c:3772
+
+You can find a bunch of similar reports in the mailing list or the
+syzbot dashboard, where too many threads waiting for the same global
+mutex, e.g.
+
+https://lore.kernel.org/netdev/tencent_A3FB41E607B2126D163C5D4C87DC196E0707@qq.com/
+
+When you don't have a repro, please make sure there is no duplicate
+report before posting.
+
+Thanks
+
+> 
+> Bug Report: https://hastebin.com/share/omisagagir.bash
+> 
+> Entire Log: https://hastebin.com/share/cetuxoduko.perl
+> 
+> 
+> Thank you very much for your time and attention. I sincerely apologize
+> that I am currently unable to provide a reproducer for this issue.
+> However, I am actively working on reproducing the problem, and I will
+> make sure to share any findings or reproducing steps with you as soon
+> as they are available.
+> 
+> I greatly appreciate your efforts in maintaining the Linux kernel and
+> your attention to this matter.
+> 
