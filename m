@@ -1,167 +1,116 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05127339A1
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B52339A1;
+	Wed,  4 Jun 2025 16:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749054409; cv=none; b=qI7gU1axnH5raoX2pXJUTUq8axChvePBvpP6Q+k0sZEZMnPyggUyCR3ZnqFT54/05FbH5AkPudSoIxZjc7rqYbplsp7CS6a0cIQHqNbDUBuCG5ofxm+W9hfWN73K4nyjj8TZqP+ErK/BV3Lv23U/JpV1LZWhwBLsregfbNtqs1M=
+	t=1749054481; cv=none; b=QAXyggpiP8zzhH1Y2jaMd1geg0irfAjBAGIMMxCEl8Z6bIFDsRXabo3EAKTsMqaD9TlvUz+mEoi88RKmt4AYwbY0dJ708iaG8PUWlFBN6QjxUWH7iJFzg4Hf53ocWOGtZPSlKbUufPCBwEDL4CAjdaDPzxDmjMAYc/oPJYgv4Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749054409; c=relaxed/simple;
-	bh=b2Jp9y1aS3dq0K/b3a9Q4JLHQgTnLOLgMzTeqWA6jGU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=F4Jl21xMhDCinmrkmHk7KEqZ85/oQ3MgH6e3AVIOu/jLY2f1yWw04emTDc2NW5KWVcLX8SO/fBL1sNwP2M67jhfsnh+cRdNc28Hx9EwyyxrHDa/EPsT/Hx/k1V+dSFLdDnFTpnyFJE62Joaj0WfyRBHj76+vC4J95OOGP3RJcSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Sg8txfAy; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749054481; c=relaxed/simple;
+	bh=M5CwoT9fT6WRXkVfDF7hfLXgzn+49k9G+Q1xlBia7Ck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KCtwYVxTIP8R7gzv3upjjA0g4rNd9lPWNP0jGl+htZ6k7nVtep7UnFqhX51LtmGVnjXBg8xQKtJJOcl0Yz6dq4pknOIwknFQtaDVgq7DDayxLh7tfcFVUaMvROfFFgnVcvJ9lKOnwqv5KXfaU19WghA85lyCjRUuTxAiFTp72eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GGDTKJDd; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sg8txfAy"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-735ae79a44bso5786362a34.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749054407; x=1749659207; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ll3GQZZx1aAM5fgTmVcrO9i0nGXI4VPhhW9oOfi4ATE=;
-        b=Sg8txfAyFJrCWHpvrorCXdZqmFvZ4Ap+tkrZyBW3nqp/q8eITQ2sX/Ac1qhSOcl7CT
-         EHOJXtZFXkTJg+h4IK1ghZK1vplWw54mH8PTiHScDPS6H8TowE0cccD2IaiztfhWwK89
-         fJfznLME5OQYHa+Asilr091z0nwJWqIdtpuvJdpEyRNOz2brMZ1+bb9mIXn++BDMLDyO
-         u35wJZnLJaKUWiKQFOo7aK5/w6SxjBB3+ucHXta8THu8Sg5BL6IXzHf3dlQ5NpSjVCuo
-         6R2orCRFXdf8T1FRGUpMWJ5rdHInUbdXeWCUnAPV9uYRpry9m+HNLHGehdYoeuMhy1Ww
-         itxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749054407; x=1749659207;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ll3GQZZx1aAM5fgTmVcrO9i0nGXI4VPhhW9oOfi4ATE=;
-        b=R+yldbaFxrxw8V1/B+KgVLcKTbDiRW9bMTCVm/Iy1hiiLB8LQO6jHZQ2PM40FXFQtA
-         5Mti6zDNl2rCCwvckEZsani49uoOW66Tuvp0GWPJoBr+J2Bs8kkDV6W6hsqy6HndhG3S
-         ddZlESQ+u+x8C7x9Ilvfk7Qmc+5O/YFU2JGEbR6ZSWFYAKk+lOYVpVLrknFrzgKJ7Sg4
-         1ooN5DmugznI/9PvYa00AGBUSm5/hi8z1iiV+FO4K8xeFCGHnv+mQzR39O0G8+t9PTAn
-         D9wqRt82WejKYOCnzTDz6Z/UWln/KsMSi2AfK/jdeajfMZQPp9xCR4qKIi/n8UmNb6cU
-         hoow==
-X-Forwarded-Encrypted: i=1; AJvYcCURyObFP9ahsv9SNexvCm2vj6/TGtgx2kBBS17AJpOOBMuS4vQu7VGWhm2ZagRG27jtmUMCer4EgM+LlM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAUEIL1KV8UvksrzagMfXXpTt8siOt20rog/c19oaRWTgRVkFh
-	wq97Xdaj4d6+Rh/IWUUtwJev2UVueJ6Q7a6lQRhoMgTcIk623YEehQCXsgglBxSJS2iDeW77C/G
-	wYmboaw==
-X-Gm-Gg: ASbGncswoiR5B5Xrhcjud5LWIm9sneTshyBwQNdmRbpsjsFA+TMqAEHwxTigm+o1dRm
-	qjKB+u0Lci0d1p5CWRvdcwd0n7K3ObeXs/RSBa+Sm0HQz2PHh2ExSuT+KGS5hDdmaIh10UemtMC
-	d3acADTlaes0+KPGjE80mdWHkUswvLr95AGhJfkRkt7yqoHpz+jbAueYfo5iaipGGgkdcwtCYgv
-	tADqDD0evBMIPIvEBGx23kFoj+xvLAGJdfrkzNw/BHRQnycqxlAGRC67uiPAfVK108mC7BnuIDW
-	YbKAxkvlK0M2CBFFmDmLvF7kvPhoX311pfMs/mvdxv5p+q/3ZV4M/vHk4FwrpqsrQeZWma7vwCi
-	b8y2N+uLdV5EE74R8yIj1f9z+KCbxXAnfCHGTXeXfnovvYA==
-X-Google-Smtp-Source: AGHT+IGSJuYZ5PsSec3GKgHBhYBIFvpgIeA062k15kkewiYaZixAYmRU9waq5Y86IJBjw0vOZ1huZA==
-X-Received: by 2002:a05:6808:99a:b0:408:e711:9a8 with SMTP id 5614622812f47-408f0f68e39mr2160313b6e.15.1749054396518;
-        Wed, 04 Jun 2025 09:26:36 -0700 (PDT)
-Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40678d038c0sm2244681b6e.46.2025.06.04.09.26.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 09:26:35 -0700 (PDT)
-Date: Wed, 4 Jun 2025 09:26:21 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-To: =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
-cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
-    Linus Torvalds <torvalds@linux-foundation.org>, 
-    Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, 
-    Matthew Auld <matthew.auld@intel.com>, 
-    Matthew Brost <matthew.brost@intel.com>, dri-devel@lists.freedesktop.org, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>
-Subject: Re: [PATCH v2] drm/ttm: Fix compile error when CONFIG_SHMEM is not
- set
-In-Reply-To: <6b3a37712330ec4b17968075f71296717db54046.camel@linux.intel.com>
-Message-ID: <d996ffad-42f1-1643-e44e-e837b2e3949d@google.com>
-References: <20250604085121.324be8c1@gandalf.local.home> <6b3a37712330ec4b17968075f71296717db54046.camel@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GGDTKJDd"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554C8Fku031727;
+	Wed, 4 Jun 2025 16:27:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=odV9eqRZtddxv8cXsVKaJfeGVY72dp
+	B5o5Jyqa1hHPg=; b=GGDTKJDdyFUUgdnHT8bHLAcvAeBZC4sdD4sUduWm8Ix9pZ
+	BQqhb8GrMiPX7KIGcZGd5Jvzsy6GYWVKN9YlLeMInYeSwVR/5vwHKG5zC8Odi00X
+	crkOyaKJNd7h8L5IZYpHjjRUTAlVzzlzk6Zk8E43zUp4q8KFsjxgf1JDZRQPnqrE
+	F/dL59kjCNkCDsRY5gC0jxMHBfws3dNaIc8vw+TOs5juMtnOHp4U54UjFTzXU44u
+	mHeeLuWLmT/yI9On8PDHLRB6aOSpBXunQUeovxITEHxVeKm57MiLTUv31VtuJ1pj
+	761wnilUJPkjhFn/c3DYQdJGFiXnBNBft5JnJMoQ==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471geyushx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 16:27:55 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 554FgW7s024914;
+	Wed, 4 Jun 2025 16:27:55 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 470dkmgjc9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 16:27:55 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 554GRpRZ48234854
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 4 Jun 2025 16:27:51 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3A2182004E;
+	Wed,  4 Jun 2025 16:27:51 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E0EED20040;
+	Wed,  4 Jun 2025 16:27:50 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  4 Jun 2025 16:27:50 +0000 (GMT)
+Date: Wed, 4 Jun 2025 18:27:49 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/mm: Fix in_atomic() handling in
+ do_secure_storage_access()
+Message-ID: <aEB0BfLG9yM3Gb4u@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250603134936.1314139-1-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463770367-1698767313-1749054395=:6218"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603134936.1314139-1-hca@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: XXR5RXs-nmhHCVi5aTsnkL_WPjZgyPqb
+X-Proofpoint-ORIG-GUID: XXR5RXs-nmhHCVi5aTsnkL_WPjZgyPqb
+X-Authority-Analysis: v=2.4 cv=X4dSKHTe c=1 sm=1 tr=0 ts=6840740b cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=kcu79PlnQnCj__8gWF0A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDEyMiBTYWx0ZWRfXxreFWSEaAFdM Kw0yp+1C5a0AEsyRQYizXnAiu+q38eNgrMQQ2PUS0RKCGgd4C7fc3rsHaGA9DePfqQLwfpzECXV zAxTy6cf2i5VLAL74qupbQUbV6NwUXV6QS/uNgcffN2LPCUq/YHWtWbFq7IP3mjI3yT8fKnKhnt
+ EhDrSmG9B++U55a4YudEJSBQFCb7exFxa5m1xQwvBJTynvBVnMm7nmGe+WxaCl/8UBECCQlfPau dYfbJM1sGI5XUN55AQpdMCYhB+fvQzeDbxcIJp9u1FkvmiIS4PkXKJ5f9K1efGCT8+SzohJ4LsE tRwPZFuZ579S7lQdgSByQmHy3lLH3d+jkZS7Vd+V/PbtKNy4jMI2iv4cZwGP8GQj6M4wXRJhhe/
+ 2GAyXj/Q1cW5GRt9G//o8Ma8stXgit0BhErvd3IZbdZnSK5OhOC1Tgn9whdaA3+7wW+O23Gg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=627 adultscore=0 clxscore=1011 phishscore=0 bulkscore=0
+ malwarescore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506040122
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Jun 03, 2025 at 03:49:36PM +0200, Heiko Carstens wrote:
+> diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+> index 3829521450dd..e1ad05bfd28a 100644
+> --- a/arch/s390/mm/fault.c
+> +++ b/arch/s390/mm/fault.c
+> @@ -441,6 +441,8 @@ void do_secure_storage_access(struct pt_regs *regs)
+>  		if (rc)
+>  			BUG();
+>  	} else {
+> +		if (faulthandler_disabled())
+> +			return handle_fault_error_nolock(regs, 0);
 
----1463770367-1698767313-1749054395=:6218
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+This could trigger WARN_ON_ONCE() in handle_fault_error_nolock():
 
-On Wed, 4 Jun 2025, Thomas Hellstr=C3=B6m wrote:
-> On Wed, 2025-06-04 at 08:51 -0400, Steven Rostedt wrote:
-> > From: Steven Rostedt <rostedt@goodmis.org>
-> >=20
-> > When CONFIG_SHMEM is not set, the following compiler error occurs:
-> >=20
-> > ld: vmlinux.o: in function `ttm_backup_backup_page':
-> > (.text+0x10363bc): undefined reference to `shmem_writeout'
-> > make[3]: ***
-> > [/work/build/trace/nobackup/linux.git/scripts/Makefile.vmlinux:91:
-> > vmlinux.unstripped] Error 1
-> > make[2]: *** [/work/build/trace/nobackup/linux.git/Makefile:1241:
-> > vmlinux] Error 2
-> > make[1]: *** [/work/build/trace/nobackup/linux.git/Makefile:248:
-> > __sub-make] Error 2
-> > make[1]: Leaving directory '/work/build/nobackup/tracetest'
-> > make: *** [Makefile:248: __sub-make] Error 2
-> >=20
-> > This is due to the replacement of writepage and calling
-> > swap_writeout()
-> > and shmem_writeout() directly. The issue is that when CONFIG_SHMEM is
-> > not
-> > defined, shmem_writeout() is also not defined.
-> >=20
-> > The function ttm_backup_backup_page() called mapping->a_ops-
-> > >writepage()
-> > which was then changed to call shmem_writeout() directly.
-> >=20
-> > Even before commit 84798514db50 ("mm: Remove swap_writepage() and
-> > shmem_writepage()"), it didn't make sense to call anything other than
-> > shmem_writeout() as the ttm_backup deals only with shmem folios.
-> >=20
-> > Have DRM_TTM config option select SHMEM to guarantee that
-> > shmem_writeout()
-> > is available.
-> >=20
-> > Link:
-> > https://lore.kernel.org/all/20250602170500.48713a2b@gandalf.local.home/
-> >=20
-> > Suggested-by: Hugh Dickins <hughd@google.com>
-> > Fixes: 84798514db50 ("mm: Remove swap_writepage() and
-> > shmem_writepage()")
-> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > ---
-> > Changes since v1:
-> > https://lore.kernel.org/all/20250602170500.48713a2b@gandalf.local.home/
-> >=20
-> > - Instead of adding a shmem_writeout() stub, just make CONFIG_DRM_TTM
-> > =C2=A0 select CONFIG_SHMEM (Hugh Dickins)
-> >=20
-> > =C2=A0drivers/gpu/drm/Kconfig | 1 +
-> > =C2=A01 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> > index f094797f3b2b..ded28c71d89c 100644
-> > --- a/drivers/gpu/drm/Kconfig
-> > +++ b/drivers/gpu/drm/Kconfig
-> > @@ -188,6 +188,7 @@ source "drivers/gpu/drm/display/Kconfig"
-> > =C2=A0config DRM_TTM
-> > =C2=A0=09tristate
-> > =C2=A0=09depends on DRM && MMU
-> > +=09select SHMEM
-> > =C2=A0=09help
-> > =C2=A0=09=C2=A0 GPU memory management subsystem for devices with multip=
-le
-> > =C2=A0=09=C2=A0 GPU memory types. Will be enabled automatically if a
-> > device driver
->=20
-> Reviewed-by: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
+		if (WARN_ON_ONCE(!si_code))
+			si_code = SEGV_MAPERR;
 
-Acked-by: Hugh Dickins <hughd@google.com>
+Would this warning be justified in this case (aka user_mode(regs) == true)?
 
-Thanks a lot!
----1463770367-1698767313-1749054395=:6218--
+>  		mm = current->mm;
+>  		mmap_read_lock(mm);
+>  		vma = find_vma(mm, addr);
