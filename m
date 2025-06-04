@@ -1,90 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC50BEAF1;
-	Wed,  4 Jun 2025 04:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BA71537DA
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 04:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749010546; cv=none; b=lT1lMsts1LzNVm8J5yvCDA92jv4yJ4WN4tj++Foczskx8gF06wZ34dA7lw7x9DEjijT5P9aTHmbmPHL8iQuF29GAQuOqGyPoTYckagC6RBAW1wuqkBqnek/nNPqHWMf/lITm6Nms8fkj7o/tNbZGWUMGKRV6dgfpnKvbqGr9mEE=
+	t=1749010629; cv=none; b=ND2hKRgiw/JQ+IuPC7pyNz109UuTYZfzuiHcGUwUzJaZ+wRSdNSMBZEOQ9i+ude4F34omRi7PASota8GDjDJnwTFxL4fqzatt4l0ZWmZsieQXZ4dF7JaQLzFT2RbaXz6wv2BRIUuZF/qFYq8QYpECWPzAUw0scNC0qYYoUmxlZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749010546; c=relaxed/simple;
-	bh=TISq2IOqcxgXqiUwD6UtnHmSV44dC7o5qVYxd3d8+2Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=krl9kK9/WiLDIVBHiX1bxZbriJ5nwKRkrQk5BI1z8LAussZ/Pw80iVbPfdRlMib4TcZ6tY/qPIauTNHL+ob/EIbttzVXmfMjwr3R4LsXdAM6oRdrXB8iF19xvBHFa8XiJ7WXDtg28gwge4D9WysgFk9V8CzO+gwlZpOHWMHjFbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFB641756;
-	Tue,  3 Jun 2025 21:15:25 -0700 (PDT)
-Received: from MacBook-Pro.blr.arm.com (MacBook-Pro.blr.arm.com [10.164.18.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 731363F673;
-	Tue,  3 Jun 2025 21:15:39 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org,
-	willy@infradead.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	david@redhat.com,
-	anshuman.khandual@arm.com,
-	ryan.roberts@arm.com,
-	ziy@nvidia.com,
-	aneesh.kumar@kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2] xarray: Add a BUG_ON() to ensure caller is not sibling
-Date: Wed,  4 Jun 2025 09:45:33 +0530
-Message-Id: <20250604041533.91198-1-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1749010629; c=relaxed/simple;
+	bh=ZCgaY+erfqlfYlXx0N4bWHKlR1lngLaphaFixVdLeJU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=F267p+1oPZIVyrHKUBHx3dT9OV9eQCDKYcBndFz+lg3zsL+dmUMvMdOGHJjqRdyiEMsPqkodMj8vjEAPXS2vE7nQ80n9kRQ5EH46XDjdk3WaAoOgT+/wrFb0A8HdAUordP3g/swNqx835oEY3QGo8FwEiyxBjTeeP8WKasdVpYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FaLFJ4KR; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaLFJ4KR"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5533c562608so4972775e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 21:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749010625; x=1749615425; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jFhbuFZEV76kB9iHFCA2deOXj1dbKW0OVCEbvuQQzM4=;
+        b=FaLFJ4KRiyUokMAsogUzpPp6xUqNwO/hVoge5EhGh2ouhKothQDY9dho8y8fF2yJbk
+         rkGyYyuYLRC4o9CvwjQZ5qEer0APvebbm/1vv8d5l7+R6StYx4pLdl2VlCbILbXHoVW4
+         o8xaj6jNKUpG6cK4gUtBGZ7ak1lVwRi3Py713Zm9sslaUX58EXjZbmNAD3N8tISiCke4
+         SkLHIq40KodNWw0qJowCaFyFf15p3uzJG2g7GWIzIN2y07nJuB+AgtxWdqwDrKy2UYYl
+         Z2d/spMrZg/xXzac7Y3mU5zg9tAevaQfD0dal+8XHl06MQlnqnwhtkpT+R4xij9RWt4X
+         qLOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749010625; x=1749615425;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jFhbuFZEV76kB9iHFCA2deOXj1dbKW0OVCEbvuQQzM4=;
+        b=EdPmhoqMGFNTxPfjy2kL8kepPc7bUyZSmLkH8DjvDzP4wdDsTIqsw57mZJMRwpjDCn
+         GHbBb9vjkDzuDQI3nR7cv0LUqPkZmf8j6qv8vQUs6lT3WjOfFwhDf4Q4Og2kGHQhLRHE
+         YPlgY0kOsZic6B8B5kV/ug67ew82+Havag2p2xyVOIjDiU22oumdlG2uIWHoR1KBXsDD
+         92BilZRaUykUW7Xq0XWIs1WbV4nJcrjq5R+repW7V6fRyCs7vJKyquxN3k6To6jHY+gi
+         Aq5Km+YWw+KYiEw+ZZT6HJrXNGCD6ok5g2trYOJiqok/u7N64GeMb4KmIxQ5SuS/uTwL
+         W1JA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzUe2VaCHtsKNfoBfRAb0RXl48DSlnG24YE+ksNhO4gkd93aw7r9r0gJV/gMq/XZZO9q/xheuiTxUrcZg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrHJTtcegVB6v93d00MUmdKwEFQqzZqKBF2eP7VlUHMJjitmBh
+	dyNFZL8s6f9klMhsZeo4b2N8L4RVHUfD0hcollTBUpCptIb3ldENYBpMddVuctVtoQXXhiQSJJJ
+	Rm7uXqrYZpozmLMDdh0u8JgWznIT4/EY=
+X-Gm-Gg: ASbGnctoB0pGjTu73GYLbhXgIwrEhUhOelqlX4vEJAXw1bcbYJ9T3cBMDMnLEiUrGvV
+	oR74PCU0erSaX0C0eQTsPUGSETbEu35pIq99sgrcr4QRA+ZZkcHhWPpz0JaPxJoqxB7GqRTZ7a8
+	nbQNdtdoyzwB8F95i0+g1dQXp4aJPWMktP2kE=
+X-Google-Smtp-Source: AGHT+IF8JYcUurqoQVRaGs1znsIUmEcxTMMDwTYEFMllSxwzCtKHMcp9RJ9lMNUkGD4wl+T1v9ONx2pPqZkMAvVA458=
+X-Received: by 2002:a05:6512:b10:b0:553:2159:8718 with SMTP id
+ 2adb3069b0e04-55356dfedefmr335365e87.40.1749010624804; Tue, 03 Jun 2025
+ 21:17:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Luka <luka.2016.cs@gmail.com>
+Date: Wed, 4 Jun 2025 12:16:53 +0800
+X-Gm-Features: AX0GCFvhccyFHKlZbwBTzZB85ZzyFsSf5as1lRKCg-8Sw62j4Daen-A1EwG4Og8
+Message-ID: <CALm_T+3nBU3CTxFp6NCO9mU74ZrMFeyyTqUYf-TuUajY8RtLwA@mail.gmail.com>
+Subject: [Bug] task hung in ret_from_fork in Linux v6.12
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Suppose xas is pointing somewhere near the end of the multi-entry batch.
-Then it may happen that the computed slot already falls beyond the batch,
-thus breaking the loop due to !xa_is_sibling(), and computing the wrong
-order. For example, suppose we have a shift-6 node having an order-9
-entry => 8 - 1 = 7 siblings, so assume the slots are at offset 0 till 7 in
-this node. If xas->xa_offset is 6, then the code will compute order as
-1 + xas->xa_node->shift = 7. Therefore, the order computation must start
-from the beginning of the multi-slot entries, that is, the non-sibling
-entry. Thus ensure that the caller is aware of this by triggering a BUG
-when the entry is a sibling entry. Note that this BUG_ON() is only
-active while running selftests, so there is no overhead in a running
-kernel.
+Dear Kernel Maintainers,
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
-v1->v2:
- - Expand changelog, add comment
+I am writing to report a potential vulnerability identified in the
+upstream Linux Kernel version v6.12, corresponding to the following
+commit in the mainline repository:
 
-Based on Torvalds' master branch.
+Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
 
- lib/xarray.c | 3 +++
- 1 file changed, 3 insertions(+)
+This issue was discovered during the testing of the Android 16 AOSP
+kernel, which is based on Linux kernel version 6.12, specifically from
+the AOSP kernel branch:
 
-diff --git a/lib/xarray.c b/lib/xarray.c
-index 76dde3a1cacf..ae3d80f4b4ee 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -1910,6 +1910,7 @@ EXPORT_SYMBOL(xa_store_range);
-  * @xas: XArray operation state.
-  *
-  * Called after xas_load, the xas should not be in an error state.
-+ * The xas should not be pointing to a sibling entry.
-  *
-  * Return: A number between 0 and 63 indicating the order of the entry.
-  */
-@@ -1920,6 +1921,8 @@ int xas_get_order(struct xa_state *xas)
- 	if (!xas->xa_node)
- 		return 0;
- 
-+	XA_NODE_BUG_ON(xas->xa_node, xa_is_sibling(xa_entry(xas->xa,
-+		       xas->xa_node, xas->xa_offset)));
- 	for (;;) {
- 		unsigned int slot = xas->xa_offset + (1 << order);
- 
--- 
-2.30.2
+AOSP kernel branch: android16-6.12
+Manifest path: kernel/common.git
+Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
 
+Although this kernel branch is used in Android 16 development, its
+base is aligned with the upstream Linux v6.12 release. I observed this
+issue while conducting stability and fuzzing tests on the Android 16
+platform and identified that the root cause lies in the upstream
+codebase.
+
+
+Bug Location: ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
+
+Bug Report: https://hastebin.com/share/xiyapaboxu.shell
+
+Entire Log: https://hastebin.com/share/kibohuxobi.yaml
+
+
+Thank you very much for your time and attention. I sincerely apologize
+that I am currently unable to provide a reproducer for this issue.
+However, I am actively working on reproducing the problem, and I will
+make sure to share any findings or reproducing steps with you as soon
+as they are available.
+
+I greatly appreciate your efforts in maintaining the Linux kernel and
+your attention to this matter.
+
+Best regards,
+Luka
