@@ -1,91 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B67E28FAB3;
-	Wed,  4 Jun 2025 13:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CDF4C7C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749044634; cv=none; b=ZE7R8tn1IW+92S7ees4gq7cbNcAQB8Ib5f137KT9AZsZTkpRAgvy+0LShOHGNF29UhNssjpXCViGnRJL6AvcCiZbbsZaA4/+7dBQNuPZtc0KQ91ySZ0kMgZkv9INGMszi8/cKEQMzC+h+N/fY2bcWy3E9AiIsHXrHvU2SmDAqW8=
+	t=1749044780; cv=none; b=iLfN4zkEAAFwXdT1P48Iy+0qDLO2+wpeCC3MLZnmMjyfyni+bXiAOCTBMXt6pppYsdijtCzxI/bdcZKOQFOY9J6ZxcFwjx8qqmcI+zUEV9EivuByOwzjCw9y7J2NbmJIzDOXSnF+h5LNCGzHM2VGqvxik2Z46IdgQ9B1vbWb3Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749044634; c=relaxed/simple;
-	bh=P+lH2ko8gaskpFvOoIGVplo2oG0ShWHoC4Hb2rcnhos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JU19VlJwP5hA/QuzDpLwzrwrXoEOxGVomWnR1e0wJPwpELT1hHEPHkj1JgN1JezbmUfnHuWwV0YYrWaFpeznlT5QZSwpmpGAU8DyjRljzvmKAJ4VgMa7fV/HwDZ9ag+hDrEogWaAtZucKNPzXyHCzGukBOBP88Nq3/2PeNNssXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmUWSekf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749044780; c=relaxed/simple;
+	bh=YJPOsL22ThpRGTAEU8zCPpChahGMKoCsqZagO3a+IMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O0eERdxu7/PTehL0B55E+uQWAFH2+jEFTKBwA/Cr6GaUHZVlotd3sfcryrLfYDUI7NPZ/xF8RVTd82Q9OO2Kj3CwSE85cGWr6KKlwDALRk9UbIy3CgO/Mza3ZQoERpVxqYOdx1MOoGVuQfPeszJXQ3e8kesV/th1HitmdAcObc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yZGh7dyN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=T99duzdA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yZGh7dyN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=T99duzdA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmUWSekf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B05BBC4CEE7;
-	Wed,  4 Jun 2025 13:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749044633;
-	bh=P+lH2ko8gaskpFvOoIGVplo2oG0ShWHoC4Hb2rcnhos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PmUWSekfAl95RaHPAiN2mMrc4fFPSm/r50eHrN9KKSjct6LMlgETWQQ4Xng5WYKhc
-	 SNi8UsM7lMYsIT0P54jKvnYrqpZONdQIVZDWU0BUFxMM3m8kOYCnXBGp3feLgvN6Iw
-	 Hyf5cXhv/zkJwnYEvbM3lw9P1ypJ3I87YIQbO3uWtO0may8qkRhzT64E99+dVP9HlP
-	 FkC5IOWh4aw0bST34Pj7EPAQqJTDgiWoG+EmtlKQ0hlWsvKDVRqb74fqBqYjANuxih
-	 B3J/O4gA7S+Grkzwiuu/K05PK+zEwM5DJ9U3VsJvOXvG/PnHwEx4flmSag+3MIAfi0
-	 t72HsDfKiyo7A==
-Date: Wed, 4 Jun 2025 14:43:47 +0100
-From: Lee Jones <lee@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-	Michal Luczaj <mhal@rbox.co>, Rao Shoaib <Rao.Shoaib@oracle.com>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v6.1 05/27] af_unix: Replace BUG_ON() with WARN_ON_ONCE().
-Message-ID: <20250604134347.GH7758@google.com>
-References: <20250521152920.1116756-1-lee@kernel.org>
- <20250521152920.1116756-6-lee@kernel.org>
- <20250523221418.6de8c601@pumpkin>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yZGh7dyN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="T99duzdA";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yZGh7dyN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="T99duzdA"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BA9C51F7E3;
+	Wed,  4 Jun 2025 13:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749044775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Cs31b9zVXZaeOwnSQ6nLcuIEQJuLmUfOSWuYO7gkuL8=;
+	b=yZGh7dyNbUA7BrgsEqQbtrnHLDJ3j0WWnUyF/riXUWJZq9tsifTTMHwiCOBsHqsS7RnnS1
+	vrriw6lscswHAQ5ead4+eSZxJ1MNrmRp4JCiIg7WierHw9ko4tIGwoKT8sP9q13WKyQC3R
+	v8VYfVElPUrgfQ2RP+tgi3SH7h3O0H4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749044775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Cs31b9zVXZaeOwnSQ6nLcuIEQJuLmUfOSWuYO7gkuL8=;
+	b=T99duzdAdlq1noE6JJF8h/vDYXrjG/ipbxDbNOTxZ4HYLWHWOfL8VyZo0OAqH8Y8d/AqhR
+	puyNuH5jhrUpcKCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749044775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Cs31b9zVXZaeOwnSQ6nLcuIEQJuLmUfOSWuYO7gkuL8=;
+	b=yZGh7dyNbUA7BrgsEqQbtrnHLDJ3j0WWnUyF/riXUWJZq9tsifTTMHwiCOBsHqsS7RnnS1
+	vrriw6lscswHAQ5ead4+eSZxJ1MNrmRp4JCiIg7WierHw9ko4tIGwoKT8sP9q13WKyQC3R
+	v8VYfVElPUrgfQ2RP+tgi3SH7h3O0H4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749044775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Cs31b9zVXZaeOwnSQ6nLcuIEQJuLmUfOSWuYO7gkuL8=;
+	b=T99duzdAdlq1noE6JJF8h/vDYXrjG/ipbxDbNOTxZ4HYLWHWOfL8VyZo0OAqH8Y8d/AqhR
+	puyNuH5jhrUpcKCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 98FA213A63;
+	Wed,  4 Jun 2025 13:46:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CCSLJCdOQGhzaQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 04 Jun 2025 13:46:15 +0000
+Message-ID: <1aa7c368-c37f-4b00-876c-dcf51a523c42@suse.cz>
+Date: Wed, 4 Jun 2025 15:46:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250523221418.6de8c601@pumpkin>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
+Content-Language: en-US
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Michal Hocko <mhocko@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
+ surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
+ sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
+ <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
+ <aDm1GCV8yToFG1cq@tiehlicka>
+ <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
+ <aD6vHzRhwyTxBqcl@tiehlicka>
+ <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
+ <aD7OM5Mrg5jnEnBc@tiehlicka>
+ <7307bb7a-7c45-43f7-b073-acd9e1389000@linux.alibaba.com>
+ <aD8LKHfCca1wQ5pS@tiehlicka>
+ <obfnlpvc4tmb6gbd4mw7h7jamp3kouyhnpl4cusetyctswznod@yr6dyrsbay6w>
+ <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.29
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.19)[-0.968];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Fri, 23 May 2025, David Laight wrote:
-
-> On Wed, 21 May 2025 16:27:04 +0100
-> Lee Jones <lee@kernel.org> wrote:
+On 6/4/25 14:46, Baolin Wang wrote:
+>> Baolin, please run stress-ng command that stresses minor anon page
+>> faults in multiple threads and then run multiple bash scripts which cat
+>> /proc/pidof(stress-ng)/status. That should be how much the stress-ng
+>> process is impacted by the parallel status readers versus without them.
 > 
-> > From: Kuniyuki Iwashima <kuniyu@amazon.com>
-> > 
-> > [ Upstream commit d0f6dc26346863e1f4a23117f5468614e54df064 ]
-> > 
-> > This is a prep patch for the last patch in this series so that
-> > checkpatch will not warn about BUG_ON().
-> 
-> Does any of this actually make any sense?
-> Either the BUG_ON() should be just deleted because it can't happen
-> (or doesn't matter) or there should be an error path.
-> Blindly replacing with WARN_ON_ONCE() can't be right.
-> 
-> The last change (repeated here)
-> >  	if (u) {
-> > -		BUG_ON(!u->inflight);
-> > -		BUG_ON(list_empty(&u->link));
-> > +		WARN_ON_ONCE(!u->inflight);
-> > +		WARN_ON_ONCE(list_empty(&u->link));
-> >  
-> >  		u->inflight--;
-> >  		if (!u->inflight)
-> is clearly just plain wrong.
-> If 'inflight' is zero then 'decrementing' it to ~0 is just going
-> to 'crash and burn' very badly not much later on.
+> Sure. Thanks Shakeel. I run the stress-ng with the 'stress-ng --fault 32 
+> --perf -t 1m' command, while simultaneously running the following 
+> scripts to read the /proc/pidof(stress-ng)/status for each thread.
 
-All of this gets removed in patch 20, so I fear the point is moot.
+How many of those scripts?
 
--- 
-Lee Jones [李琼斯]
+>  From the following data, I did not observe any obvious impact of this 
+> patch on the stress-ng tests when repeatedly reading the 
+> /proc/pidof(stress-ng)/status.
+> 
+> w/o patch
+> stress-ng: info:  [6891]          3,993,235,331,584 CPU Cycles 
+>           59.767 B/sec
+> stress-ng: info:  [6891]          1,472,101,565,760 Instructions 
+>           22.033 B/sec (0.369 instr. per cycle)
+> stress-ng: info:  [6891]                 36,287,456 Page Faults Total 
+>            0.543 M/sec
+> stress-ng: info:  [6891]                 36,287,456 Page Faults Minor 
+>            0.543 M/sec
+> 
+> w/ patch
+> stress-ng: info:  [6872]          4,018,592,975,968 CPU Cycles 
+>           60.177 B/sec
+> stress-ng: info:  [6872]          1,484,856,150,976 Instructions 
+>           22.235 B/sec (0.369 instr. per cycle)
+> stress-ng: info:  [6872]                 36,547,456 Page Faults Total 
+>            0.547 M/sec
+> stress-ng: info:  [6872]                 36,547,456 Page Faults Minor 
+>            0.547 M/sec
+> 
+> =========================
+> #!/bin/bash
+> 
+> # Get the PIDs of stress-ng processes
+> PIDS=$(pgrep stress-ng)
+> 
+> # Loop through each PID and monitor /proc/[pid]/status
+> for PID in $PIDS; do
+>      while true; do
+>          cat /proc/$PID/status
+> 	usleep 100000
+
+Hm but this limits the reading to 10 per second? If we want to simulate an
+adversary process, it should be without the sleeps I think?
+
+>      done &
+> done
+
