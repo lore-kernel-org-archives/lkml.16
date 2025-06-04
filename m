@@ -1,144 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DEF33DF
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9445F33DF;
+	Wed,  4 Jun 2025 12:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749041518; cv=none; b=sjs7Uo5NWbtzjwkA5o7zAbTCtxLecUt3K2cv0nW708QCHxKtiCURB2c9YPm53voX6Ud/4sHA/idD2HNOUuJ/skvGgmMLpRhvs9nrRwjBPkvqzJeE4bkyCXHygcS/qgSR6hmfbHvV1yo6eTAzPkIcpc91ndfbRm83qeSLU+nJESQ=
+	t=1749041584; cv=none; b=KzgHQGNIeRPNnXnZxH1wfDbTThpbEsFqowZedGGgtCh5qAGVZOpilfKg7AU5hnMZTFvfhfCdQn/qLkB4DAdiennpKnOPRPiK8CsxSUNDVu87zX9FLKk0DH9PFJj+A2gAN0zuBfRqfM4cdYWL86OHfKuxE8yTUTwGZYv2ouxRqnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749041518; c=relaxed/simple;
-	bh=6DsbJp3huQy2CaTfbfR0iFAPFfUmFh8cI/ypYNf0QLM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gSZg5lkrFVrS8uGwB3M92Y6lUKs6nEuCENxI2ri6t3BeRRnejq300YK6EoiB5iCw/Ot1oz2BaOEzSVsOfYdVQnRBgoXhLwrGlwFn2ipkvBLJHsA+UvM4Jy6zkdHmTtBWrAsY/rBHAwHwBE8eGA/bdAFFk8Ib0afQPASnZ6n6wao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BPHmtb7S; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749041584; c=relaxed/simple;
+	bh=qj1wXFWn/k0q+9pBku0c2DhqWxiMsO51WgTTVtOCaRQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PdZ4rPu3s4wgi91+NlrJdnD2UOEIQdahaB076NcC9kYK3P+jDH/BE8tO5bsoqtuEICfUVnc+DVC/xBu+y0gZ7IHZadbQ54yQYesFBHcqzss7FPFDR64L+cG80uh/A1Wkxs75LeR7bo0chLEXzaPFDbmpdfs6fABx7ywF1yUj22c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ZlNJidwy; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BPHmtb7S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749041516; x=1780577516;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=6DsbJp3huQy2CaTfbfR0iFAPFfUmFh8cI/ypYNf0QLM=;
-  b=BPHmtb7Sar2stI48Cto7l7e13FLo5W3o5xqXPrYfUfrwY2KlfLFV70t7
-   1zQxUJfHSkekmkBed89xFgmGUoyH5BFajR/wa1V0k7yfNuIOPZP22JjLD
-   u1HfcKPNkj6+M+qApscDOUAgLGgeOEIemLl4AegKmiZlsJnOr48S5rf+8
-   /x6OmfT+y1zEaE93UkY2NFBZkusqE33QKDhQEeS6FmeYMJO71vbx/gRfX
-   HKxGpIXM0GxCAiAmAE6G/7G6z++JfBOv9dGNZl95M1QGY4RW7cE3Pju3C
-   edHqb3bIrIoYqP2vdjysImrKS+ONsmC6h2Ti79uYxoKRtkTHguW2pMqZn
-   A==;
-X-CSE-ConnectionGUID: 98sV05tTQmGf232Zpe7MrQ==
-X-CSE-MsgGUID: Y9oDDTDWQyaM3X71oeCsGA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51265010"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="51265010"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 05:51:56 -0700
-X-CSE-ConnectionGUID: QffnyYzYSLeykVg1A7rVNQ==
-X-CSE-MsgGUID: SnEBvwtpQSq+xiFL8jzcsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="145140884"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO [10.245.245.121]) ([10.245.245.121])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 05:51:53 -0700
-Message-ID: <6b3a37712330ec4b17968075f71296717db54046.camel@linux.intel.com>
-Subject: Re: [PATCH v2] drm/ttm: Fix compile error when CONFIG_SHMEM is not
- set
-From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Matthew Wilcox	
- <willy@infradead.org>, linux-mm@kvack.org, Andrew Morton	
- <akpm@linux-foundation.org>, Christian Koenig <christian.koenig@amd.com>, 
- Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
- Matthew Brost	 <matthew.brost@intel.com>, dri-devel@lists.freedesktop.org,
- Maarten Lankhorst	 <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Date: Wed, 04 Jun 2025 14:51:49 +0200
-In-Reply-To: <20250604085121.324be8c1@gandalf.local.home>
-References: <20250604085121.324be8c1@gandalf.local.home>
-Organization: Intel Sweden AB, Registration Number: 556189-6027
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ZlNJidwy"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8B39E41A90
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1749041581; bh=LjjTe/RnLIgB3GLa+a3sJGMhTl4SyHlvR/y+FhkSjTo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ZlNJidwyK++0BfHq3lI+mJ5k5aMXddZE07omGrpON7mgqblWJEKoNiGhrZOy6s2XC
+	 2v90BXtTL+hSEQxGk2g12vWK/ZUvJFuALy1FkIHqEb+bY3id6afnYJlCFFZAYXcCae
+	 BrQHH35QFQSrl+U7bDv8JG/ELWXVLESsKHkmwufXbt+n6rGf4E45DXkrRnj/mXN27E
+	 tb3kFTIZ63fYBr6ZqLn3WfElwrCueasFmQ9AC4DwHL1ABRS4jDsfqH8sX+GY075xmC
+	 B+K/FhCHJSQTzQec0leodvOpvUd3D+nOq8N7QyeSARlThPIY/kGQGscC4AtI+8kGTb
+	 Ax91xER7jgBpw==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 8B39E41A90;
+	Wed,  4 Jun 2025 12:53:01 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Roman Kisel <romank@linux.microsoft.com>, alok.a.tiwari@oracle.com,
+ arnd@arndb.de, bp@alien8.de, dave.hansen@linux.intel.com,
+ decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+ kys@microsoft.com, mingo@redhat.com, mhklinux@outlook.com,
+ tglx@linutronix.de, wei.liu@kernel.org, linux-arch@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, x86@kernel.org
+Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v3 01/15] Documentation: hyperv:
+ Confidential VMBus
+In-Reply-To: <20250604004341.7194-2-romank@linux.microsoft.com>
+References: <20250604004341.7194-1-romank@linux.microsoft.com>
+ <20250604004341.7194-2-romank@linux.microsoft.com>
+Date: Wed, 04 Jun 2025 06:53:00 -0600
+Message-ID: <87ecvzk6s3.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Wed, 2025-06-04 at 08:51 -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
->=20
-> When CONFIG_SHMEM is not set, the following compiler error occurs:
->=20
-> ld: vmlinux.o: in function `ttm_backup_backup_page':
-> (.text+0x10363bc): undefined reference to `shmem_writeout'
-> make[3]: ***
-> [/work/build/trace/nobackup/linux.git/scripts/Makefile.vmlinux:91:
-> vmlinux.unstripped] Error 1
-> make[2]: *** [/work/build/trace/nobackup/linux.git/Makefile:1241:
-> vmlinux] Error 2
-> make[1]: *** [/work/build/trace/nobackup/linux.git/Makefile:248:
-> __sub-make] Error 2
-> make[1]: Leaving directory '/work/build/nobackup/tracetest'
-> make: *** [Makefile:248: __sub-make] Error 2
->=20
-> This is due to the replacement of writepage and calling
-> swap_writeout()
-> and shmem_writeout() directly. The issue is that when CONFIG_SHMEM is
-> not
-> defined, shmem_writeout() is also not defined.
->=20
-> The function ttm_backup_backup_page() called mapping->a_ops-
-> >writepage()
-> which was then changed to call shmem_writeout() directly.
->=20
-> Even before commit 84798514db50 ("mm: Remove swap_writepage() and
-> shmem_writepage()"), it didn't make sense to call anything other than
-> shmem_writeout() as the ttm_backup deals only with shmem folios.
->=20
-> Have DRM_TTM config option select SHMEM to guarantee that
-> shmem_writeout()
-> is available.
->=20
-> Link:
-> https://lore.kernel.org/all/20250602170500.48713a2b@gandalf.local.home/
->=20
-> Suggested-by: Hugh Dickins <hughd@google.com>
-> Fixes: 84798514db50 ("mm: Remove swap_writepage() and
-> shmem_writepage()")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Roman Kisel <romank@linux.microsoft.com> writes:
+
+> Define what the confidential VMBus is and describe what advantages
+> it offers on the capable hardware.
+>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 > ---
-> Changes since v1:
-> https://lore.kernel.org/all/20250602170500.48713a2b@gandalf.local.home/
->=20
-> - Instead of adding a shmem_writeout() stub, just make CONFIG_DRM_TTM
-> =C2=A0 select CONFIG_SHMEM (Hugh Dickins)
->=20
-> =C2=A0drivers/gpu/drm/Kconfig | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index f094797f3b2b..ded28c71d89c 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -188,6 +188,7 @@ source "drivers/gpu/drm/display/Kconfig"
-> =C2=A0config DRM_TTM
-> =C2=A0	tristate
-> =C2=A0	depends on DRM && MMU
-> +	select SHMEM
-> =C2=A0	help
-> =C2=A0	=C2=A0 GPU memory management subsystem for devices with multiple
-> =C2=A0	=C2=A0 GPU memory types. Will be enabled automatically if a
-> device driver
+>  Documentation/virt/hyperv/coco.rst | 125 ++++++++++++++++++++++++++++-
+>  1 file changed, 124 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/virt/hyperv/coco.rst b/Documentation/virt/hyperv/coco.rst
+> index c15d6fe34b4e..b4904b64219d 100644
+> --- a/Documentation/virt/hyperv/coco.rst
+> +++ b/Documentation/virt/hyperv/coco.rst
 
-Reviewed-by: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
+[...]
+
+> +
+> +Here is the data flow for a conventional VMBus connection and the Confidential
+> +VMBus connection (C stands for the client or VSC, S for the server or VSP):
+> +
+> ++---- GUEST ----+       +----- DEVICE ----+        +----- HOST -----+
+> +|               |       |                 |        |                |
+> +|               |       |                 |        |                |
+> +|               |       |                 ==========                |
+> +|               |       |                 |        |                |
+> +|               |       |                 |        |                |
+> +|               |       |                 |        |                |
+> ++----- C -------+       +-----------------+        +------- S ------+
+
+This will generate all kinds of errors during the docs build and will
+not give the results you are looking for - please actually build the
+docs after making a change like this.
+
+You need to put the diagram into a literal block.
 
 Thanks,
-Thomas
 
-
+jon
