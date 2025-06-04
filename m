@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EF922B8C2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8E221B8F6;
 	Wed,  4 Jun 2025 07:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749022853; cv=none; b=dfbXrfuGhQ9lKNKAJNPRBl4oc/bE21yKh7r3ao0jZbj7RSRDl9gKwoFoWXrhaJxbEnXlLsv0LPpMw9QCWWmTEaWYihKJMMOUPKVPWOqB0egP/IulpyBXk/xnWVt6RUwfj+WyhKwlLKtvonVevjH3xmq29ULTjUpKMDFkgeSeqfI=
+	t=1749022853; cv=none; b=Jh2hau3xRtj2se6XvHEKR1getpVGJdi1PVJiACMwV8BbgF3TaGyMRcTQthDqOOdXnPPYXlXusDrEzE7WCFdMeLjO/hiYUaAMrJj3Je2AKBuqVuwaaZ3U8flSefLmTgE7iyf0D+flDFBbYlLmMCDc+cYEMJCsX/mj/QsFqlETpuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749022853; c=relaxed/simple;
-	bh=pHr+iNzLv9GxJXJt/p1c4oLkaW7OLQQwQD2ifOprTdk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gryMWx+jyh/nmeojXdMaR+N3sC+of8cx2yWWdt4hgdX4MV9vpff2PNZnty4QJge08m2lVJIKrzF4bPPG7MbZrdy3PNUDwKCMAL4xFb2pNRd2jueQOZRj6t4WlL71VGNe7DIwDEnCX+Gk1CGVnbDXuIRJt1nYkfgY9WXQ52YHPIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhLDvS/J; arc=none smtp.client-ip=10.30.226.201
+	bh=vHqBtRLv8H0LKoVMxIP6SYKoQOs/9V+tdbYZDQwMuos=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ng0srQZpSKml7N3HJIAsaXaBRTBz3jBtmAXsP78K7c+Tuy6SigjsCo2fNJUEwDL4fy5E7S2Yp256zW5q2U1+3hBnQf9jMvhsgHu8Hn7pggjIpRQVVgK0VkIAkw2cduG5u7etAMrzn8M4n6TRnSIkWtli/PVmRW6o8h0746psyuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDluHRf2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhLDvS/J"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 374DEC4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDluHRf2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 67E72C4CEF0;
 	Wed,  4 Jun 2025 07:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749022853;
-	bh=pHr+iNzLv9GxJXJt/p1c4oLkaW7OLQQwQD2ifOprTdk=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=YhLDvS/JK1MQjqJOCtFmwY4ee7MnE1rf5k+7mIya90zdFIJZ0WTetG5/26ePTXhiG
-	 /1svIGiL6GaK1QRuwQPdTMST0ZZADHh7rblpDdYAcPkAQ/9bbMcvreT4hsTc+/zk/m
-	 BlRGWM/WvmCFDRJ7aq6lku1l6OOkio/Ch5mSjVRz0r2J63C0MWxchQrOKD4zvCEteC
-	 eqsPlR2aX7ZXv8x7wCLHHc/FsfwezehO5/tIY4+HGbLfWJ/Mu0YGRYwDzWybrY2YiB
-	 4EnsOoyCtwy4ipeHNfIs8N/IBPp2wvs6cy51zQlygEb4O3FaJbbAz2jKHUmdheTPVI
-	 tZE2CrSZpaqZg==
+	bh=vHqBtRLv8H0LKoVMxIP6SYKoQOs/9V+tdbYZDQwMuos=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=hDluHRf22qyArZZ0Bf4LaeVN5YWL2ILBxAe8nesypxE/FSnVq5LJDAXDUW2M5OosV
+	 M5w7cOhYZ8MU/GQ5nVnyLbPXuqZYI3FC9Z3elvWKE62v2i775IZm47Ma0ZR6H/cpOO
+	 c2jNBBxDtIQrsDIoCB7IFy3iPnb2AnkoHeoOcaUTDDx6pRrkVYdFCN4y7eWeJcGA+n
+	 2HoAZ8c2jvK69e1Vbh8TwiFAknDBEaIVRCQsKbcyfd0Mfofv/lkQyBL6HDWC5FuTYt
+	 NVKGSBXwa1jVMD96nU0beturM3usQWcKrAzIkJe+rXryO/OeSyBzd62KFp0V5Jwyy0
+	 IoRnkCFQvDf+A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE15C5B552;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC24C61CE7;
 	Wed,  4 Jun 2025 07:40:53 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Subject: [PATCH 0/3] support for amlogic the new SPI IP
-Date: Wed, 04 Jun 2025 15:40:50 +0800
-Message-Id: <20250604-spisg-v1-0-5893dbe9d953@amlogic.com>
+Date: Wed, 04 Jun 2025 15:40:53 +0800
+Subject: [PATCH 3/3] MAINTAINERS: Add an entry for Amlogic spi driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIL4P2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMwNj3eKCzOJ0XXOLNCNDMwuj1KTEZCWg2oKi1LTMCrA50bG1tQCIsWq
- JVwAAAA==
+Message-Id: <20250604-spisg-v1-3-5893dbe9d953@amlogic.com>
+References: <20250604-spisg-v1-0-5893dbe9d953@amlogic.com>
+In-Reply-To: <20250604-spisg-v1-0-5893dbe9d953@amlogic.com>
 To: Sunny Luo <sunny.luo@amlogic.com>, Mark Brown <broonie@kernel.org>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>
@@ -50,11 +50,11 @@ Cc: linux-amlogic@lists.infradead.org, linux-spi@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749022851; l=1058;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749022851; l=878;
  i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=pHr+iNzLv9GxJXJt/p1c4oLkaW7OLQQwQD2ifOprTdk=;
- b=zYbYWKMNv3d0lQCjOkN7LVwChi6psdws+UWgSlWO/xtLIY8JcHtqxIaHqmCGEcRkP5u6l4uxN
- mPd/KhjEPTcBNK2OHN9ffH7JR2kD8r/8Mo2jJr8HnFlCej2L0E4QD0C
+ bh=r4XosHXySa02DQkB3mCCJMHyJ40Hjw6wxKehQsmElKk=;
+ b=V4rmS3CzffbGaQiEdobEEU7Z8PraHYH4CYYX3P8e/1YeEZXDgPrue6bxH7exz0FzZ2U8tUDPi
+ BOhs5J0HjqVDceFzwk6dNAeM2qJD80EpRdu0UaiwOkr2m42wrmlSQZk
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
@@ -62,33 +62,37 @@ X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
 X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 Reply-To: xianwei.zhao@amlogic.com
 
-Introduced support for the new SPI IP (SPISG). The SPISG is
-a communication-oriented SPI controller from Amlogic,supporting
-three operation modes: PIO, block DMA, and scatter-gather DMA.
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Add the drivers and device tree bindings corresponding to the SPISG.
+Add Amlogic spi entry to MAINTAINERS to clarify the maintainers.
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
-Sunny Luo (2):
-      dt-bindings: spi: Add binding document of Amlogic SPISG controller
-      spi: Add Amlogic SPISG driver
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Xianwei Zhao (1):
-      MAINTAINERS: Add an entry for Amlogic spi driver
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ff4de47dbd55..8ed6da015668 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1271,6 +1271,15 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/rtc/amlogic,a4-rtc.yaml
+ F:	drivers/rtc/rtc-amlogic-a4.c
+ 
++AMLOGIC SPISG DRIVER
++M:	Sunny Luo <sunny.luo@amlogic.com>
++M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
++L:	linux-amlogic@lists.infradead.org
++L:	linux-spi@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/spi/amlogic,a4-spisg.yaml
++F:	drivers/spi/spi-amlogic-spisg.c
++
+ AMPHENOL CHIPCAP 2 DRIVER
+ M:	Javier Carrasco <javier.carrasco.cruz@gmail.com>
+ L:	linux-hwmon@vger.kernel.org
 
- .../devicetree/bindings/spi/amlogic,a4-spisg.yaml  |  55 ++
- MAINTAINERS                                        |   9 +
- drivers/spi/Kconfig                                |   9 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-amlogic-spisg.c                    | 944 +++++++++++++++++++++
- 5 files changed, 1018 insertions(+)
----
-base-commit: 57cf46cd1fe351846e1b065ca9546eef66675ecd
-change-id: 20250603-spisg-78f21682ebac
-
-Best regards,
 -- 
-Xianwei Zhao <xianwei.zhao@amlogic.com>
+2.37.1
 
 
