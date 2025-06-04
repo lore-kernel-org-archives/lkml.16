@@ -1,105 +1,148 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EBD1E1E1F;
-	Wed,  4 Jun 2025 02:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 434A61F9F70;
+	Wed,  4 Jun 2025 02:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749005529; cv=none; b=e1wUbxmcEt1hi+gzvp3YAYrY10JRNQtK8aCvIhSqhk5R02KVZDlj6JiG0+oxhZcnrwCvtcx7lskuOnetPMf/dA+VaScihb8y2cvNZvRFiOO7QbwOgeuzJ1nJo9fZyJz7ftekhXafSlq7Esb+beKoLx2CLRinoEP2/3mawlOUYnk=
+	t=1749005590; cv=none; b=Qpkak8PUCZmm+2xKdhig3K1c8IIPDOZyP49uABQL7oDw1fPEpCQj4Yye5VNfLFhz47bv1LRQP7dD3Ub3GJjMUZ4DRVcWW7+6sh2bUfJvgrbvmTMlV/BDoasAOsDnYQiG4lqHWsf5dG0KPDj84xDCQEaJGn5mZtAozYiB22kXbak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749005529; c=relaxed/simple;
-	bh=hBQ4MgEXY2rwG0rp4bqP8e7JBI6c11cI7lmQ7++la6s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hYG/42Koe3Y+QNXeA1PENB8l+eSZao+AiuuC53Z1b3A0lByn2WheDBsqwjlyVLKXP1sQKjIv4Rho6tDB5yUyhcppJjeh9HGUSKRmEABbayW+MOl2G39pGUzkNQ+fV3WMGo5Mkj6fZ6JnH+Fwnqo1n/2ygzbrnySXU2ta4SJP0ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LT54+u9q; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LT54+u9q"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747e41d5469so3090875b3a.3;
-        Tue, 03 Jun 2025 19:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749005527; x=1749610327; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TOeeEMdrMDtMEeEduAZUXPOjlx9iKJzWvtmF1KfWyp4=;
-        b=LT54+u9qo7aCgILwkFdKgIsVC/vikGTrf+TOh6AFy6oGhHpls0gBncY1y8DZ0zp2RC
-         wa5QctTmT1uiFuUYej9j52XJowerk12jjWIKlVaB+MYG59tMLrPjqwZUEfxswLPEdXgc
-         mvdsM6eySo6V1N0IVj7iak/WUiSGIvq4bTWQqEGj7GoSkQ/kVWtr5yN+LR4JSoYoAbi0
-         QLwwI0ajW6su9UsxG9PNOE5a8yHt0bzkYyd0F4/3s4FSCYWsnx+cWFKhlxzMsTLaqRYK
-         w2J3bBs5COV8n0Z+xvLliQwMk2OLxWIroU8cGtM0KFyT4vxOQNqG9CE+uqsJjmHL2mE/
-         N58g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749005527; x=1749610327;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TOeeEMdrMDtMEeEduAZUXPOjlx9iKJzWvtmF1KfWyp4=;
-        b=kns5hOSxmK1UJtdP/G30hoDYz7VuUim4ILnwQI80jPRIQDX4tNUXRhNsXYlgTTZ3KL
-         zsff/QeNmsQ2+4tYWAe8ideZlD9VJGL45MmwoDmvS26xK8HJag6MEdUf5hpg9yAO5zTF
-         ci3WXNGaI4P0XM3Yrx0yz8uyUqB//z7sAUE+M2OF+t6W6IK6WI6ej5VhJKFH7HB4IJhl
-         p9ZANkg13XAvx0aOJ0JMXtn7r7+EiXS7NIQ8y2YaPjAlpGmPr5KvHnPyHurkTEGL4i8X
-         UXlRE9YONtUUDc2lM0kgq0WS4IugWVxnInIxzZQLDc/Xzra4zloUz7EjV45jqW5j4O0B
-         Xkyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYOK9I32OSY/JrTAxg4kdw5K7OQ9qU4qVG6H+9Rw61BC1w0zsopw4g0CfAF23aO/VX10vg3qZi8R4N360=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzivjH5nj2aoOnHmg8EMNvTGvvu3LRaoFrHl6D3G2S9K4uu/6hF
-	GviSfcm+TjcqWq1vf5lygnBZ3C5lN9s21XaqHwEh8PS0SgHkXJ3+VnJhBvhFag==
-X-Gm-Gg: ASbGnctJyuq4n8TJTf1AFOS8ORKu1v1B8yElydEwflV4GL9EnHbrHUD6zxG7Mzo6ZLe
-	hrQb61ZLFcUjCG/CP027fTPBhApZmc8hZCyftHmOW7KGPgAV4I/nB+cjE1oxp5gIrNXtOSm73Um
-	CwLIJi1dYM+NroHOR2n7s5/tIqdS2lQMaXEesWZkIYp52Hj3m/NJU2MGlkx4PQix8bRoTyCCh0B
-	MsdqhYcFpaEusMxKwiXWDSSWzpKDG345b/voyZtHgHYXg2PgH/CAvDk+YYspXTDhIpnXJTfxbWv
-	dCQ4OcuSgUJhVln7yQGzrdOYASYFBMIvY5TQf7+07c2rfiSyF4pU86ZUS1WOMy8jUI0s233dUFQ
-	gAUogqqCbcpSCy12TErNlGE2En3BCKFUmiH4gqBcnrti0+QwCbEo4IUI+EkQX86GE
-X-Google-Smtp-Source: AGHT+IGWzXvwFfGpJfboCLq3cym03YrEYGUWJgol2ltG51yl2T74UwO761yg7B3YeNOI9r8g58aOxA==
-X-Received: by 2002:a05:6a20:1604:b0:1f5:67e2:7790 with SMTP id adf61e73a8af0-21d22b02123mr1551273637.17.1749005527472;
-        Tue, 03 Jun 2025 19:52:07 -0700 (PDT)
-Received: from cs00-MS-7C09.. (2001-b400-e303-56f7-0ad3-ef89-8727-568b.emome-ip6.hinet.net. [2001:b400:e303:56f7:ad3:ef89:8727:568b])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb9d1dfsm7763725a12.55.2025.06.03.19.52.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 19:52:06 -0700 (PDT)
-From: hsyemail2@gmail.com
-X-Google-Original-From: syhuang3@nuvoton.com
-To: johan@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sheng-Yuan Huang <syhuang3@nuvoton.com>
-Subject: [PATCH v2 0/1] USB: serial: nct_usb_serial: add support for Nuvoton USB adapter
-Date: Wed,  4 Jun 2025 10:51:53 +0800
-Message-ID: <20250604025154.10165-1-syhuang3@nuvoton.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2025060325-everyone-padlock-931a@gregkh>
-References: <2025060325-everyone-padlock-931a@gregkh>
+	s=arc-20240116; t=1749005590; c=relaxed/simple;
+	bh=9wfY+yvRgQnruPB/Le46bQg63025QDIHYWA1g7RBE6I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=j18ny/jhQFQlKGiT5gCEvhH/Cxehp/SIAWfbsa8zI71TZQf5FZZ7zNWdf3je+4CoM9jr0bj81RxtvPhOLMEKKMAARatTTdLHSWuxb2vUC5hPOlMJQHPxtz+NlOwF3j++ozXlK+e/XgDeR3TNQUyxo4+5gY7eTV2iPOYf+5NxCKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-14-683fb5093870
+From: Byungchul Park <byungchul@sk.com>
+To: willy@infradead.org,
+	netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel_team@skhynix.com,
+	kuba@kernel.org,
+	almasrymina@google.com,
+	ilias.apalodimas@linaro.org,
+	harry.yoo@oracle.com,
+	hawk@kernel.org,
+	akpm@linux-foundation.org,
+	davem@davemloft.net,
+	john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch,
+	asml.silence@gmail.com,
+	toke@redhat.com,
+	tariqt@nvidia.com,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	david@redhat.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	horms@kernel.org,
+	linux-rdma@vger.kernel.org,
+	bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: [RFC v4 09/18] page_pool: rename __page_pool_put_page() to __page_pool_put_netmem()
+Date: Wed,  4 Jun 2025 11:52:37 +0900
+Message-Id: <20250604025246.61616-10-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250604025246.61616-1-byungchul@sk.com>
+References: <20250604025246.61616-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTcRjG/Z9zds5xOTktqdOCpFFZgpZl8v8QUxDilJVRQZRCLXdywzll
+	U9MiMJUycTNKKGzBMjKd1mpeNi9YeY/yks6ad5k4M3KWyzUvYU7x2+99Hp7fl5dE+a2YgJQp
+	UlilQiwX4lyMO+NTHMStDpcenO7jQK2hAofl7nT4cty8eulrAPyzMERAZ0s7Dp8/c6FQ252D
+	wXnDIgon22wEHCuxY7DhrgmFtoIOHKpzllCYZS5FYE+NhgMLF1+g0JQ5TsC+Oi0ORytWONDe
+	pMbgx6IyDI5pImCbbit0ffoJYIvBhEBX/lMcPuzV4XAiZwzA3mYbBp/c1gBoaLRy4JJbi0fs
+	YqrKBhCmtmiEYHTGVKayNJDJs/aijFF/D2eMcw8IZvhrA850PF7CmFqzE2HU2Q6c+T05iDGz
+	jf04Y6jqx5jPuhaCcRp3nqEucY9KWLksjVUeEF3hSls6C/Bk++b0giETkgnqfPOAN0lToXRh
+	VwO6wcZ/o7iHcSqAtloX1nI/KoR22tqxPMAlUcrBoSe1S4in2ELF0j96XxEexqg99F/NBPAw
+	jwqjWwtaiXWpP13+5v2ayHs1H3Y8WtvyqSO02mxBPVKaWiDoxrcOzvpgO/2h1IrdBzwd8NID
+	vkyRliiWyUODpRkKWXpwXFKiEaw+t+TWcowZzPWcawIUCYQ+PPOwSMrniNNUGYlNgCZRoR/P
+	f/9qxJOIM26wyqTLylQ5q2oCO0hMuI13yHVdwqfixSlsAssms8qNFiG9BZkg8MQxdVym6Gz8
+	Qsa1SS9HfVzdxMVTtQkXTvsOrtxpjypOcAVlN0ceD+9wu/XTPHzlaiDyrdurNssVNhMtskRL
+	Imdz3+W3jkTVL+4VBJw8rN09bon1iVH96rS3T00lfj+Pal7f7BqotiV0bPpiQ3P3SQXL8nqt
+	xi6xzDuHKgvDhJhKKg4JRJUq8X8dtS6g2AIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTcRyG+++c/XfJxXGKnQwxBmZJzoSUXxfN6kOnPliEEGiko53adE7b
+	VFQQLU1LcmrZBZs0M81bTKbpFJGad8qKqeEtZzMlulipmZfKnNG3h+flfb+8fEJcSbrzleoE
+	VqOWqSRYSApD92f6Cp4cVOy+XREAemMthprFZHg0YeaCvroRwfzSKA/mOroxlJUuEKB/lUXC
+	D+MyAVNddh7YKqZJaM1pIsCe34MhL2uFgMvmSg60l/Ry4XWjjgtFy+UENGVM8KC/RY9hvHaV
+	C9OWPBJ6i6tIsOlCoMvgBgvPPyPoMDZxYOF6CYabVgOGySwbAmu7nYR7l3QIjG1DXFhZ1OMQ
+	CdNQNcxhmovf8hiDKZGpr/RhcoesBGOqvoYZ0+wNHjP2phUzPXdXSKbZPMdh8jJnMPN9aoRk
+	vrYNYqbswzcOY2wYJJkXhg7eSedw4QE5q1ImsRq/4CihoqMvH8dPOyfnjzZxMlDLplwk4NPU
+	Htr0exw7GFPe9NDQEuFgV8qfnrN3k7lIyCeoGS49pV/hOAIX6gz90fqY52CS8qJ/6iaRg0VU
+	IN2Z38n7N+pJ19Q9XR8SrPmxmTvrXTEVQOeZB4gCJDSgDdXIValOipUpVQFSbYwiRa1Mlp6L
+	izWhtf8q0n4VmtF8/1ELovhI4iQyjwUrxFxZkjYl1oJoPiFxFXnuXFMiuSwlldXERWoSVazW
+	grbySclm0fHTbJSYuiBLYGNYNp7V/E85fIF7Brr6qXxU4abDw4E5GUFVilZr/X1Z2r5ZMvqs
+	32zRCemfMI9jV+TbT2miH4gLF7sk0yPW9AKLYUt2auHAl9KI8HK3uslEr9yHiiJxceOhyCOD
+	KX3e8o06X8Ph7H5s29uyK/28EUcsODWHvl8NansZ6N5/y+PZoHxbmDThosu7HX5SCalVyPx9
+	CI1W9hcRWZbBuwIAAA==
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Sheng-Yuan Huang <syhuang3@nuvoton.com>
+Now that __page_pool_put_page() puts netmem, not struct page, rename it
+to __page_pool_put_netmem() to reflect what it does.
 
-This is the v2 of the patch to add support for the Nuvoton USB-to-serial adapter.
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+Reviewed-by: Mina Almasry <almasrymina@google.com>
+---
+ net/core/page_pool.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Changes since v1:
-- Removed redundant driver name prefixes (NCT_DRVNAME) in dev_*() messages.
-- Removed unnecessary __func__ usage in dev_dbg().
-- Dropped verbose dev_info() message to keep the driver quiet when working properly.
-
-I sincerely thank Greg Kroah-Hartman for his detailed and patient review.
-
-Best regards,  
-Sheng-Yuan Huang
-
-Sheng-Yuan Huang (1):
-  USB: serial: nct_usb_serial: add support for Nuvoton USB adapter
-
- drivers/usb/serial/nct_usb_serial.c | 1480 +++++++++++++++++++++++++++
- 1 file changed, 1480 insertions(+)
- create mode 100644 drivers/usb/serial/nct_usb_serial.c
-
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index c31a35621b24..0d6a72a71745 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -790,8 +790,8 @@ static bool __page_pool_page_can_be_recycled(netmem_ref netmem)
+  * subsystem.
+  */
+ static __always_inline netmem_ref
+-__page_pool_put_page(struct page_pool *pool, netmem_ref netmem,
+-		     unsigned int dma_sync_size, bool allow_direct)
++__page_pool_put_netmem(struct page_pool *pool, netmem_ref netmem,
++		       unsigned int dma_sync_size, bool allow_direct)
+ {
+ 	lockdep_assert_no_hardirq();
+ 
+@@ -850,7 +850,7 @@ static bool page_pool_napi_local(const struct page_pool *pool)
+ 	/* Allow direct recycle if we have reasons to believe that we are
+ 	 * in the same context as the consumer would run, so there's
+ 	 * no possible race.
+-	 * __page_pool_put_page() makes sure we're not in hardirq context
++	 * __page_pool_put_netmem() makes sure we're not in hardirq context
+ 	 * and interrupts are enabled prior to accessing the cache.
+ 	 */
+ 	cpuid = smp_processor_id();
+@@ -868,8 +868,8 @@ void page_pool_put_unrefed_netmem(struct page_pool *pool, netmem_ref netmem,
+ 	if (!allow_direct)
+ 		allow_direct = page_pool_napi_local(pool);
+ 
+-	netmem = __page_pool_put_page(pool, netmem, dma_sync_size,
+-				      allow_direct);
++	netmem = __page_pool_put_netmem(pool, netmem, dma_sync_size,
++					allow_direct);
+ 	if (netmem && !page_pool_recycle_in_ring(pool, netmem)) {
+ 		/* Cache full, fallback to free pages */
+ 		recycle_stat_inc(pool, ring_full);
+@@ -970,8 +970,8 @@ void page_pool_put_netmem_bulk(netmem_ref *data, u32 count)
+ 				continue;
+ 			}
+ 
+-			netmem = __page_pool_put_page(pool, netmem, -1,
+-						      allow_direct);
++			netmem = __page_pool_put_netmem(pool, netmem, -1,
++							allow_direct);
+ 			/* Approved for bulk recycling in ptr_ring cache */
+ 			if (netmem)
+ 				bulk[bulk_len++] = netmem;
 -- 
-2.43.0
+2.17.1
 
