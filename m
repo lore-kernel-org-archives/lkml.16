@@ -1,210 +1,160 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515ED28C2AE;
-	Wed,  4 Jun 2025 08:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAA2280319;
+	Wed,  4 Jun 2025 08:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024187; cv=none; b=YDbiwzSIXBGASV2K/5NHjv6SiGmHXkgojIv1xDgFaM3wZqdtb8Clwg4nEqpzCwdyQK4nxBNTWHiRmfuyTSkxc9xkY7Yrffa1RTG0EibBVrAnjJK2nfuHNHCF2WAWpoS3uUJyuAn46phZ9mOryu/Aabn8hZnY1czX8ZYYs5Ls0cI=
+	t=1749024233; cv=none; b=BCFg0hSwnrtvh992TjxrL5+j8Bn5Yob/sQB/wzr9boZB8bTcZfCDSFAdlNNT9q7cUGo20wK2JuOQ8PY9qyPLzyaI1yQGx3kw20ZhVOvZ9k/UUW8APlFZNbW7PBqrcezP9NlLf2miQg1/u/BxV3o382AK6UsPCCzaOk2sqFVT9kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024187; c=relaxed/simple;
-	bh=1VcCFceTG/LGsiaaYi9oesfmJnJvJjVWIDbiROPWHvI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=duwPzHUKt2oNPB2JizA6vXWWguWnCVzUco1kncGEf//8w+RzxKaEF7Qj+v8zc5Ypu+PSOqF93pvwUWqiie+0IY6RT5uwh5i6Pj5fVpE42vO/tV0kghMgZ2mErluIklpjllX+txiaimCsl6YaxWb/sLyLrKTHSRLUTlGm/6FFRFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XrWe1JAF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1749024233; c=relaxed/simple;
+	bh=s/lHWPOo8ujarL1wxZGVeaoXIYtuWp17/aQ4Lkb8WCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U5bzdRymTH7SHjGxKpE1VGiq4HILcYXbA8xbGKxj+Qpq2q/IJ2PncoRg656BISblG4ro0KQNs8+CqV7DMyZa4ZCXIwra9NkDwq1Mg9w3Vw9zPOR8x23y/N3gktiTPKpjo8BYltpw5mrnivmN5QnwiTIj0Tgue3PJbqdZOmIvatg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ui2E3wyr; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XrWe1JAF"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553KHuXF013865;
-	Wed, 4 Jun 2025 08:02:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=63Odaf94EmR
-	eTQJHppfWUto3VKV9CucNCqzuWtxTt6Y=; b=XrWe1JAFDrD+KuvIUwj4ua1iGW7
-	Vz85INFRYI+FLVVLkigWp9HpNtVxvP5FRqk42SbJnBWViUHLHLXvrJbh95qaQnrT
-	AapjnLXW+oXwfgQDXZPTQfS4dwLO0l7SZR0fVCVhAl+kdxcE0UCYoyuX1fzrGp4Y
-	vKaUHXyZsjvy3iz/VT5gcziynA7e1SOXsLIYeLiRtLNYIhQuo9gW2mepWMYCh2LT
-	EwBuc/ZaAvQCRnZrvsLOCVgbPHQft11lHVG5knJmt5U/qWXF3vq5ns2SBGyg8Y/5
-	T7Bm6HBCVdZr/5kG5XO9oDUBzoTj+bCKJPzf4Xqb5yapoy0On8LSVML5f1g==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8nn9mt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 08:02:51 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55482miv003983;
-	Wed, 4 Jun 2025 08:02:48 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 46ytumensm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 08:02:48 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55482mTu003975;
-	Wed, 4 Jun 2025 08:02:48 GMT
-Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 55482mbG003973
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 08:02:48 +0000
-Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 4635958)
-	id 3A4BE40D25; Wed,  4 Jun 2025 16:02:47 +0800 (CST)
-From: Wenbin Yao <quic_wenbyao@quicinc.com>
-To: catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, andersson@kernel.org,
-        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, kishon@kernel.org, sfr@canb.auug.org.au,
-        linux-phy@lists.infradead.org
-Cc: krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
-        quic_mrana@quicinc.com, quic_cang@quicinc.com,
-        qiang.yu@oss.qualcomm.com, quic_wenbyao@quicinc.com,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Abel Vesa <abel.vesa@linaro.org>
-Subject: [PATCH v4 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
-Date: Wed,  4 Jun 2025 16:02:37 +0800
-Message-Id: <20250604080237.494014-6-quic_wenbyao@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250604080237.494014-1-quic_wenbyao@quicinc.com>
-References: <20250604080237.494014-1-quic_wenbyao@quicinc.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ui2E3wyr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xaoyFvQwKIYu5nwGYw5DvgtC4POUAUMRWFKFbgDSrok=; b=Ui2E3wyrhSiR5tHo0yMCvpVDdF
+	mUsAC6iyWpkXI/qjlE2oww60KX+PxnfJi/wz503G49Lf7cIwi1EgBuziRm4yo6jnHV5KyXO4Cv7nd
+	OEoTrX1g2Vee07PGHOMvHpBLh5qiLzGsXMoFgdjHxc5KG/wFZGPcEpVql6BBEy4Y9FEFJRweIDqkv
+	GcaaFxDJUh5n+fvlKTbLtFIoqFmfm+TbFrtnh78jdBYcSEtFnWdaYPJJw9kwVFi87LmBO/bcVfP/6
+	Ps3vnepcRRjYAvhr9pXKfRSYtK551PkxesLqigESqveDZtC3UscllDc6/gH+u8QBaeJLF25wYhgy8
+	lDw12ntA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMj64-00000002tPO-1hgL;
+	Wed, 04 Jun 2025 08:03:40 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C6763300787; Wed,  4 Jun 2025 10:03:39 +0200 (CEST)
+Date: Wed, 4 Jun 2025 10:03:39 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Message-ID: <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+ <20250603140040.GB8020@e132581.arm.com>
+ <20250603144414.GC38114@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fvu70HQQXt-4PC9iltsIRwclDSyVz_8v
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2MyBTYWx0ZWRfX8MWsHyoVxrOU
- c3GyZodoQF4bbr+BBLzl4J2vdNWlp/c8t3TQ4fpTFU+TclbZs9CkNUZzODxSTRtC5np5Ox1Iqgg
- 4gBxcuXbAf9cANrV6DcmmjtJE7bfqpdKATRKg4EHT6+lQoF1ws5xfT2/a5qmH2LyPLNuutjoCkm
- NfEL8LEtzegIKvdNTpoHzFblmlDZZP4kzdL5/QqX165nLlspYzD4GHQ7hMzmeKSi0MglqKWVuzX
- uqzn73RuB5DCkEfsGcghFktNn1f40uIdB4Q8bqn6ZNjZWWBpcHq96KQjPtyKaPt3gX2+mJPbLCe
- Q1OewbL2Klzyut56PvbqGSOS/5wVye+MPDevefGiGFnjHXnASN4U2SIP02iAmi8zTS24FBXssY9
- IIqwR7AaCETghP5IPCyFbf6DexvT4wTAHkunuy7taWHZGGXOMYdmucFXjYFkyfE8w8AY8LGf
-X-Proofpoint-ORIG-GUID: fvu70HQQXt-4PC9iltsIRwclDSyVz_8v
-X-Authority-Analysis: v=2.4 cv=UphjN/wB c=1 sm=1 tr=0 ts=683ffdab cx=c_pps
- a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
- a=COk6AnOGAAAA:8 a=nx6k_dx03XC393A_Fq4A:9 a=cvBusfyB2V15izCimMoJ:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 impostorscore=0 lowpriorityscore=0
- phishscore=0 mlxlogscore=999 clxscore=1015 malwarescore=0 adultscore=0
- bulkscore=0 mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506040063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603144414.GC38114@noisy.programming.kicks-ass.net>
 
-From: Qiang Yu <qiang.yu@oss.qualcomm.com>
+On Tue, Jun 03, 2025 at 04:44:14PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 03, 2025 at 03:00:40PM +0100, Leo Yan wrote:
+> 
+> > > +	if (event->state > PERF_EVENT_STATE_OFF)
+> > > +		perf_cgroup_event_disable(event, ctx);
+> > > +
+> > 
+> > As we discussed, seems to me, the issue is caused by an ambigous state
+> > machine transition:
+> > 
+> > When a PMU event state is PERF_EVENT_STATE_EXIT, the current code does
+> > not transite the state to PERF_EVENT_STATE_OFF. As a result, the
+> > list_del_event() function skips to clean up cgroup pointer for non OFF
+> > states. This is different from the code prior to the commit a3c3c6667,
+> > which transits states EXIT -> INACTIVE -> OFF.
+> 
+> Right.
+> 
+> > My suggestion is not reliable. Roughly read code, except for the
+> > PERF_EVENT_STATE_EXIT case, I think other error cases should also clean
+> > up the cgroup pointer.  The reason is I don't see other places to
+> > clean up the cgroup pointer for these error cases:
+> > 
+> >   PERF_EVENT_STATE_REVOKED
+> >   PERF_EVENT_STATE_DEAD
+> 
+> Those should be done here; on the first transition into these states.
+> 
+> > Only in the PERF_EVENT_STATE_ERROR state, we don't need to cleanup
+> > cgroup as this has already been handled in merge_sched_in().
+> > 
+> > So a correct condition would be:
+> > 
+> >     if (event->state > PERF_EVENT_STATE_OFF ||
+> >         event->state <= PERF_EVENT_STATE_EXIT)
+> >         perf_cgroup_event_disable(event, ctx);
+> 
+> I'm too tired to get my head straight. I'll look tomorrow.
 
-All PCIe PHYs on the X1E80100 SOC require the vdda-qref, which feeds QREF
-clocks provided by the TCSR device.
 
-Hence, restore the vdda-qref request for the 6th and the 3th PCIe instance
-by reverting commit 031b46b4729b ("phy: qcom: qmp-pcie: drop bogus x1e80100
-qref supplies") and commit eb7a22f830f6("phy: qcom: qmp-pcie: drop bogus
-x1e80100 qref supply"). For the 4th PCIe instance (Gen3 x2), add a new
-driver data entry, namely x1e80100_qmp_gen3x2_pciephy_cfg, which is a copy
-of sm8550_qmp_gen3x2_pciephy_cfg but uses sm8550_qmp_phy_vreg_l instead.
+Right; had a sleep. Lets do this :-)
 
-Fixes: eb7a22f830f6 ("phy: qcom: qmp-pcie: drop bogus x1e80100 qref supplies")
-Fixes: 031b46b4729b ("phy: qcom: qmp-pcie: drop bogus x1e80100 qref supplies")
-Fixes: 606060ce8fd0 ("phy: qcom-qmp-pcie: Add support for X1E80100 g3x2 and g4x2 PCIE")
-Cc: Johan Hovold <johan+linaro@kernel.org>
-Cc: Abel Vesa <abel.vesa@linaro.org>
-Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
----
- drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 41 ++++++++++++++++++++----
- 1 file changed, 34 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-index 461b9e0af..c3c725744 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-@@ -4142,6 +4142,33 @@ static const struct qmp_phy_cfg sa8775p_qmp_gen4x4_pciephy_cfg = {
- 	.phy_status		= PHYSTATUS_4_20,
- };
- 
-+static const struct qmp_phy_cfg x1e80100_qmp_gen3x2_pciephy_cfg = {
-+	.lanes = 2,
-+
-+	.offsets		= &qmp_pcie_offsets_v5,
-+
-+	.tbls = {
-+		.serdes		= sm8550_qmp_gen3x2_pcie_serdes_tbl,
-+		.serdes_num	= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_serdes_tbl),
-+		.tx		= sm8550_qmp_gen3x2_pcie_tx_tbl,
-+		.tx_num		= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_tx_tbl),
-+		.rx		= sm8550_qmp_gen3x2_pcie_rx_tbl,
-+		.rx_num		= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_rx_tbl),
-+		.pcs		= sm8550_qmp_gen3x2_pcie_pcs_tbl,
-+		.pcs_num	= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_pcs_tbl),
-+		.pcs_misc	= sm8550_qmp_gen3x2_pcie_pcs_misc_tbl,
-+		.pcs_misc_num	= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_pcs_misc_tbl),
-+	},
-+	.reset_list		= sdm845_pciephy_reset_l,
-+	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
-+	.vreg_list		= sm8550_qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(sm8550_qmp_phy_vreg_l),
-+	.regs			= pciephy_v5_regs_layout,
-+
-+	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-+	.phy_status		= PHYSTATUS,
-+};
-+
- static const struct qmp_phy_cfg x1e80100_qmp_gen4x2_pciephy_cfg = {
- 	.lanes = 2,
- 
-@@ -4164,8 +4191,8 @@ static const struct qmp_phy_cfg x1e80100_qmp_gen4x2_pciephy_cfg = {
- 
- 	.reset_list		= sdm845_pciephy_reset_l,
- 	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
--	.vreg_list		= qmp_phy_vreg_l,
--	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.vreg_list		= sm8550_qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(sm8550_qmp_phy_vreg_l),
- 	.regs			= pciephy_v6_regs_layout,
- 
- 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-@@ -4197,8 +4224,8 @@ static const struct qmp_phy_cfg x1e80100_qmp_gen4x4_pciephy_cfg = {
- 
- 	.reset_list		= sdm845_pciephy_reset_l,
- 	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
--	.vreg_list		= qmp_phy_vreg_l,
--	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.vreg_list		= sm8550_qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(sm8550_qmp_phy_vreg_l),
- 	.regs			= pciephy_v6_regs_layout,
- 
- 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-@@ -4228,8 +4255,8 @@ static const struct qmp_phy_cfg x1e80100_qmp_gen4x8_pciephy_cfg = {
- 
- 	.reset_list		= sdm845_pciephy_reset_l,
- 	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
--	.vreg_list		= qmp_phy_vreg_l,
--	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.vreg_list		= sm8550_qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(sm8550_qmp_phy_vreg_l),
- 	.regs			= pciephy_v6_regs_layout,
- 
- 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-@@ -5094,7 +5121,7 @@ static const struct of_device_id qmp_pcie_of_match_table[] = {
- 		.data = &sm8650_qmp_gen4x2_pciephy_cfg,
- 	}, {
- 		.compatible = "qcom,x1e80100-qmp-gen3x2-pcie-phy",
--		.data = &sm8550_qmp_gen3x2_pciephy_cfg,
-+		.data = &x1e80100_qmp_gen3x2_pciephy_cfg,
- 	}, {
- 		.compatible = "qcom,x1e80100-qmp-gen4x2-pcie-phy",
- 		.data = &x1e80100_qmp_gen4x2_pciephy_cfg,
--- 
-2.34.1
+So the normal states are:
 
+	    ACTIVE    ---.
+	       ^         |
+	       |         |
+       sched_{in,out}()  |
+	       |         |
+	       v         |
+      ,---> INACTIVE  <--+
+      |                  |
+      |            {dis,en}able()
+  sched_in()             |
+      |       OFF     <--+
+      |                  |
+      `--->  ERROR    ---'
+
+That is:
+
+sched_in:	INACTIVE          -> {ACTIVE,ERROR}
+sched_out:	ACTIVE            -> INACTIVE
+disable:	{ACTIVE,INACTIVE} -> OFF
+enable:         {OFF,ERROR}       -> INACTIVE
+
+Where OFF/ERROR are 'disable' and have this perf_cgroup_event_disable()
+called.
+
+Then we have {EXIT,REVOKED,DEAD} states which are various shades of
+defunct events:
+
+ - EXIT means task that the even was assigned to died, but child events
+   still live, and further children can still be created. But the event
+   itself will never be active again. It can only transition to
+   {REVOKED,DEAD};
+
+ - REVOKED means the PMU the event was associated with is gone; all
+   functionality is stopped but the event is still alive. Can only
+   transition to DEAD;
+
+ - DEAD event really is DYING tearing down state and freeing bits.
+
+And now we have the sitation that __perf_remove_from_context() can do:
+
+  {ACTIVE,INACTIVE,OFF,ERROR} -> {OFF,EXIT,REVOKED,DEAD}
+
+Where the {OFF,ERROR} -> * transition already have
+perf_cgroup_event_disable(), but the {ACTIVE,INACTIVE} -> * part has
+not.
+
+The condition:
+
+  if (event->state > PERF_EVENT_STATE_OFF)
+
+captures exactly that {ACTIVE,INACTIVE} that still needs the cgroup
+disable. Every other state is already a disabled state.
+
+
+Agreed?
+
+Also, I should probably stick most of all this in a comment somewhere.
