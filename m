@@ -1,310 +1,277 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E852C1DE3DB
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749055439; cv=fail; b=BtKg/xg/6RW0uqTjrYEUkpENIjdHbOk9j3J/yL4AEEQZQ7bWW3dwb1PRiyXY1eZrWf9vTmRaQ5fKnL9hojhHYuix7WVHQniqvAXbq+AzRxAtZghqniejrknGQOCAGvJpd7g639E9g+0G+w/9HZ9aHI/megp22hKNeg0EskWxzyA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749055439; c=relaxed/simple;
-	bh=cA7KT+Ue7OBxEMDCxj2q02T7iPkdHm/j5m9Sbyq+7q4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bwqZkjUBgHmm/h6OmBI74c9GTRVSKSD981r7vv7GZ5A5CXe4j0mAh4b2LeqIqFdz6+UvA0CBcu3X3Q0PNElcS4IHDqLEcNxh7RUZ6ufoZprx9SKmmgQCnj7+EbC2He9obr50Dy/fIxNNzb2/KcQpKkrcN+jxR3cYvVFv88tkpjw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b0Yvpkl0; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615E71DED51
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749055441; cv=none; b=ocigoq6PcquUHzQ03wgqIOhxWI5EhBxxHuGX7dvt3Swg5E5M8nNqSSeDC1IA8NA5dXDb2bjiq++77FmIN2pmQUT8bO6SZOcB5kPBzMikQyRmmb/qE6+rxyXIdVYxy3I3ATyB3QZsiA/6mvif6qiRuYjXdmZgGx9g5+hccKV8FKI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749055441; c=relaxed/simple;
+	bh=D+aWTJlBR5Z1dDFyEuWrqwhKgcw6YgC3O9B89j9DBdM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hw4Nkh/PepavTMEoQtrmjpElSSRXM9sUNFJjgY8Gw9Q65XrwlkauKJEhjJYU/doyI7z2eLBh3qiSyIiy9IcHshJT+WxxrKvofl7XgnxMPZmeZZpwrIkwuUJsw1ZkvaYGo5sk7LU+g6UmR2rRlm5RNJpf+2KOS0C/REUCW7yfQBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SGQZeTkV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b0Yvpkl0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749055438; x=1780591438;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=cA7KT+Ue7OBxEMDCxj2q02T7iPkdHm/j5m9Sbyq+7q4=;
-  b=b0Yvpkl02bVc/Gl0OFkluqsStJF/5KpeBvEGaQ7iKdt0XN7yzD4IpTAv
-   v2xYIsm12z4jTSCWkNb7fx0N8rpE2xetSZmLHkEief8btSpxVTuNneDSM
-   kCaOY2PqoQEpodeNPx8P1Z/6Lizf8Eg3G8zXssKN34mRUO8JaELn3QXFe
-   fyCF0ZJrS7dSDD2Yz40Bn4ernJGjIBZ2c4Z0EbfO/KAPuZUKwWkqFpagC
-   c69qTaLHKZu3WDSzjdZAPf8hjRSPaFNAvMfoudbMo2VzZqiSlOJ45/8D+
-   9hTSnJgzT2imTztaXgsPVoLU8YVXvegNjgjqIM8Qh5ZUuDCg79cAT53t8
-   Q==;
-X-CSE-ConnectionGUID: kAE38NdWTVe7OFSnaU5ndw==
-X-CSE-MsgGUID: r3nF5koSTruULfqFoGXvcg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="61769217"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="61769217"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 09:43:51 -0700
-X-CSE-ConnectionGUID: cdSPxojrQMOoZ0r4FZmiWg==
-X-CSE-MsgGUID: LyC7H82RTU2Ju/m7fX4K8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="176205759"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 09:43:50 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 4 Jun 2025 09:43:50 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 4 Jun 2025 09:43:50 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.66)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 4 Jun 2025 09:43:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CwCA9eXCRM9qhTPJ16zr9P/IvycnCWn8tb//+JoyH7w00fPH8Kep4IRWxF8g5iuLGfbJfdpxNigiCwhjMj5k9BbhtxQFonxTRSrWr/l3fzqh+5HnoHAfYD7MrZpRGtgdIiaedYB3WFXzll/1oht8moE7dZD1s1EmEbxdaxsznGw8uW9t66uQUFu87UjxfUFCvwdPf6DbRTXIkKpB1nYdJMt45iOaas3cM4jw7hJDYNQ1hnU2Wd2WiHidUtoZ0EfMQqoXKumiQFpyyHKl/bfgxOC4x7pRyzjbaB905OnxGCq63j6pHB8JNoKXfrpyzSAkTHyRHaBqFdNVR/tW+JKZmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wCLfVeNDCWU4jdng1w6nMkiPfAYyzkg/2DRxpnhQOc4=;
- b=pSffTo9a0+yT0ZpEL9aR8U3Ut03MHlZw7/L2x7BO+/YHFGCMc6cpLrGDUsxkAtrzk1/ZyeRNFGWltisMFNgk7m7V1jW0oqQa290xA9Q8rStMdJMC7BYeleB1mQBcfFfQwLVkgNhcmTmVn2JPfUgV5dHxnQ4S2iUlfvkHv4N/e9Q1H7zQEV0EKyNUWSpdP0gvZ+zpzEgawlimrbwhHDCLI3p/s1DVePHCMGzKAUXe32CLO45T+ocMg5ZBm4LT0eEbHfomJpKRsAz/d/vybv/erNJ8a7BsJdUwiPJVIYcHXQ4rZ+SYskXJ+EB9IKHN89Gz3eMm713xD85qyQwikBaxlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
- by SA1PR11MB8326.namprd11.prod.outlook.com (2603:10b6:806:379::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Wed, 4 Jun
- 2025 16:43:28 +0000
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332%5]) with mapi id 15.20.8769.029; Wed, 4 Jun 2025
- 16:43:28 +0000
-Date: Wed, 4 Jun 2025 09:45:00 -0700
-From: Matthew Brost <matthew.brost@intel.com>
-To: Simona Vetter <simona.vetter@ffwll.ch>
-CC: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, "Philipp
- Stanner" <phasta@kernel.org>, Danilo Krummrich <dakr@kernel.org>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/sched: Discourage usage of separate workqueues
-Message-ID: <aEB4DFFE2C7gElRL@lstrano-desk.jf.intel.com>
-References: <20250604081657.124453-2-phasta@kernel.org>
- <7a09c357-2d28-4dd6-b637-4387cc430938@amd.com>
- <aEBhIzccXBPyt_58@phenom.ffwll.local>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEBhIzccXBPyt_58@phenom.ffwll.local>
-X-ClientProxiedBy: BYAPR05CA0031.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::44) To PH7PR11MB6522.namprd11.prod.outlook.com
- (2603:10b6:510:212::12)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SGQZeTkV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749055438;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5uX+RcrMuYZZlT9e7PZl8kq+9gKjyZrSElVvecqGEe0=;
+	b=SGQZeTkVwub0G4YYLmmpJB0qeXFJbYrjgzLGZDJUFGvxK6hoAG0hS7NEkqmJVFAkW18Cvx
+	vVyRuDS/o+nxITyjlo3dChtoG+yOIV2ntsaPuMBvdgbcl1jERCkGR96vZLTUUw7RFtZPnZ
+	YMPvckPrEY3a798DKC1aNrJ4bSmaRsA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-533-Zp-K8omzMw-dD0I6nzLn2g-1; Wed, 04 Jun 2025 12:43:57 -0400
+X-MC-Unique: Zp-K8omzMw-dD0I6nzLn2g-1
+X-Mimecast-MFC-AGG-ID: Zp-K8omzMw-dD0I6nzLn2g_1749055436
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a5232c6ae8so7587f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:43:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749055434; x=1749660234;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5uX+RcrMuYZZlT9e7PZl8kq+9gKjyZrSElVvecqGEe0=;
+        b=A5HC75Bp8MnF2z0W9O0eFBGPOZ8G0V5Ihf+UvSyQKgWKdBBwyMSAG1VM0VuH5kj3Nz
+         cmm9iUUTqrHKA/gdpkQob+tDW8HMzF9HeX5dEFtOMymO8vOfndOANnOAaJtiyssxR5+s
+         RONRsZ++QFpaknrGfu/YlQnSDkN6NOCDybuhFoq3UekOUue4M73so6MHiFZAeYnz4bmM
+         uG7kqy0NMTn7GxDKIrQz8q5yC4OPxLg1kRpZeVW4JM/15QZWjGZpM7o9EC93i81ccPNC
+         d4hD7hXS+J67zP68r8M5CMHG+UUUCv6jiXvwOUAaCzZQ7FzQ32s3aVvfUe2Uiu5HmFMH
+         gULw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHokJ3S6BVLlg+2HhYClyUO1oKZaG8s0OwTbQUftyZ4yHG/MrvYQcdGPX7O7gaHw31xPZLKjZ7FeR7deY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNbrotbxX/3fHvy/bjlybF2Kk4Dy8JUd+kV9G7PwKT25EoEKRe
+	b89KbDL9AGiGaisgB7RsdqnNfSAhYWLVgUnizXpWx4ln46V2aaySeTyxkLRIESmTTkpLcmbXY32
+	WeEp9eNnUFvaLfIUq4XFAc/1hTN86y9H3IIpF6tuts4NXBH19rvwwipFW8dH6KFkEmg==
+X-Gm-Gg: ASbGncv3vC9/0FurDZya0xcA8eCp+Hti2LXdKAK1f0NlyrKX61n75cGT+IiYPc+AAWF
+	31+VYfxmmF9QitovviWf0R2lncJsXxfAjGnoJCyp7hSLTPeVEP02uSEezn7RPKU3zcDYjpE9m74
+	2bRIrdJQwSi3FoPCePEuXuef3zYXe/WqwvtLa5aYiJIa0iWiGLJsLYmOtjyjY6CNmiVqeSzHDXf
+	uXBCeinzvM/UgCWyU6TP62rSHj/ERZhDMjSLg4n8DsK5vYTM8inG6KbzzFTcqXnWajLHfUukUap
+	WU6a8P5G4xe9KW3GbCFWIiYC
+X-Received: by 2002:a05:6000:400d:b0:3a4:db94:2cfc with SMTP id ffacd0b85a97d-3a51d97b8c9mr3072855f8f.43.1749055433848;
+        Wed, 04 Jun 2025 09:43:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGCntt0U7ekMD/3TwxfttPyNya1EiPp8j8ZDG5E1tlDGzx3/ONAjY/WPQcKTOr2WSgewAeoZQ==
+X-Received: by 2002:a05:6000:400d:b0:3a4:db94:2cfc with SMTP id ffacd0b85a97d-3a51d97b8c9mr3072830f8f.43.1749055433447;
+        Wed, 04 Jun 2025 09:43:53 -0700 (PDT)
+Received: from [192.168.10.81] ([151.49.64.79])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4f009748fsm21929578f8f.80.2025.06.04.09.43.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 09:43:52 -0700 (PDT)
+Message-ID: <e84bd556-38db-49eb-9ea1-f30ea84f2d3a@redhat.com>
+Date: Wed, 4 Jun 2025 18:43:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|SA1PR11MB8326:EE_
-X-MS-Office365-Filtering-Correlation-Id: 34b9202d-44a4-4a04-be40-08dda386ee87
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?aXByBqqyISLcGrGetO2QKjf+Bs0zv7YkBBQgADxDiqDj34FsINCuhGe1R1?=
- =?iso-8859-1?Q?Yi/coLanqtvvFMsI1wpYNvZ1YXlrnKBxI8onmnFrpZAR1FGTqlW9gauUlX?=
- =?iso-8859-1?Q?zIFT+LfRzIdRTiEGdrg4tWR7br98KylW5fozuEgSaD1/vQKwsXo7MG1b35?=
- =?iso-8859-1?Q?WSFNt0zviotVmL0aUjU6790ZQ1U+Gb9T4Iw7KNjTvkR7D0e9FAhP3xSIKZ?=
- =?iso-8859-1?Q?Kec95tWq1yGtsa9fsDkPbzmwEVsVTiltOC2zNKucgLPUbrZWJk8qsUZ0K2?=
- =?iso-8859-1?Q?7zeZvma1i3uYUlqCVqovLPeuFvnmccwdF5Z5Y+2tnzLOR8D8VpjWuSF7tu?=
- =?iso-8859-1?Q?P6/5JIlSwQVEpPRXCJfN8zfqKPX6bL5n7AS2o+IKd4zqGZd0/ANt96kt52?=
- =?iso-8859-1?Q?/hbJNWfjNCjyocM5kpXeYRAtS+xdKebS2p+taTowINLU8AFSWq4doY3LLA?=
- =?iso-8859-1?Q?vJb/nPEsKGe1D/VSx8rzUAIFrEXDAaFnp10W/AVmXOtRtxEglJrHft46lC?=
- =?iso-8859-1?Q?cYxgSJDYvVmAANsZAmkPVmlC+btUINmF9XrL6xQs5OOQKMfHlhIv5HLPye?=
- =?iso-8859-1?Q?KsRUN+7gSHTwAeB8x9Ua6ijt1BvCBdSgzIZr+IlmiHOlL20R5l8keJD4hX?=
- =?iso-8859-1?Q?+X1i+sx51Ot6Y71VoKWgtUCHGDlWhGATVp/8rkdSdaeYs1/52Thk+n7yjP?=
- =?iso-8859-1?Q?xUPjLTSbQIlQYVB9AldLtGcyDbeIoUXVIx+VlabAm9bxWeqpynpauC6LXt?=
- =?iso-8859-1?Q?/MEXrVXCEyLpcCVotLvPxx83i658+RB1peO41tJuSF8Ku+hjP8G+RdqZZQ?=
- =?iso-8859-1?Q?BqLLMYYA0lIpwZOlSEpsqUM85R0Vc3+hd/g7ekGZuiAdz6iLxECe5MBIwj?=
- =?iso-8859-1?Q?jjWo8mZ3HY+ynwrzEIIDVdE/J24UM9+IilZTi2k38zWhZmuPi1ww7K1q9A?=
- =?iso-8859-1?Q?5GrB0UxVxTzXGuigV+3Rf1d6YKNpObw7L1Q+g22WX1kv2odJzCqJ3qAdC7?=
- =?iso-8859-1?Q?CryC2I5cEhrHJMx5YiH46QXpnEKYX2xEZIBXlZoy9xJ43/Oj/4QOFBf+Zp?=
- =?iso-8859-1?Q?PiYGjL3xaT2RpsAj2RfBoNd2vpUVrSHdsCftsuPbjslDsV4sgxWDueFz3t?=
- =?iso-8859-1?Q?3fizZcwTS2Hws5dBJxfyjVGyM4kXpjd7mkYL/Q9fhp9Hhg3X2UindeR5ix?=
- =?iso-8859-1?Q?PvDRH60zZvwPipqTLwL3Atm9rSqFoK87BRgJFo7niwPMkBQYgRjzo21RBr?=
- =?iso-8859-1?Q?I+PMnRTP8Yr9zoL+dJmvknSTrinTu3cP9OFAt72khQKng4gEuaL5Q9Mc7z?=
- =?iso-8859-1?Q?FTgs7fkYbwFwiZczJjJtQgipyBjTt2y3/2X+JF1FvNmQt2vVT7IqvB59cM?=
- =?iso-8859-1?Q?3On/1fVTx0gXbv6EZhk4a7Qra7/9d+wm9lrhWIgVHHx8UI6f+191E=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?bGQFW+0RfVyLnrVmI9nwvlcFL3MJYp7zzrNkkQRHj4JqX42+qtWQi8L52F?=
- =?iso-8859-1?Q?dRjXE5Tsmitd8c7JT1YVnsW9jOrBMHQdDfB64zx/7UcrdGGrBpY2wclmQM?=
- =?iso-8859-1?Q?QTiMThUL/M06cH0SsD7cmTnMzAIco8qao6+dawPPEiYrlc8nV4mcYtNnJI?=
- =?iso-8859-1?Q?KG7d/JtDfaGpmMqQdOPryZ7peFK/S7vYHvt2x9lHR8iTvVNGM92hH8NKo7?=
- =?iso-8859-1?Q?8oVutpxr3f1N6us0VJ0TIziDUY7gizZqCcf574ahfILq4atOSw9dZyq+v/?=
- =?iso-8859-1?Q?kyrT36SdTARXTJY8qLanQsTbtLYMIzVoR6NyT01qdupBumDM/s8MOsPtbI?=
- =?iso-8859-1?Q?0DF6t+44+V2g+hgYTqFnO9+ZrAsTnPqo+MqfCaSm7EcDzLYEFUdPN/+192?=
- =?iso-8859-1?Q?FZntkZlP5/T65yVU9u77rAIwgsz41zG/ktgTlEedK5jNfhvfMv+xN5kH2W?=
- =?iso-8859-1?Q?9E4qe5Fi5Y26Zk1OM61sCvgUDzIgXEvvERTKTF3JmREyiRdGcTlF8WIFnf?=
- =?iso-8859-1?Q?vzMc/ybxyS0V/ecNZlpSvSesN630ieV/wzli/Xdt+EkHYCpH1+t6eZIQq2?=
- =?iso-8859-1?Q?SyaOtuDkLRSqPWCr4l3KylVPCauYfxG5og7IQ8opKikRpoIEsvY7xBlh8O?=
- =?iso-8859-1?Q?8umjWVf2iKD79q44OChC2A4ht5w6CVKwpaj3V/IrenpfbaUj2KDCbybd3s?=
- =?iso-8859-1?Q?35PQzJTgbInMLGR+BmpZHXwB8OL/enzL3MHq3TLvaE8hK7Lct3zU+j5tm3?=
- =?iso-8859-1?Q?E8VkKiBMCbK6fu0t3P9v2+nG0WiUAZeuG35zfHoJ/ZKkxMJH9CdrpHQoU+?=
- =?iso-8859-1?Q?lLvAxTU4ly723w5nBAEL/UrQQ+U21WRW9bDtz11AaanHbcproeo+xDnWIF?=
- =?iso-8859-1?Q?3kzBjY57wQI4fjOzDoiwiL5ApnlY73g1Ce0cgRnPAGFnvGaqVKQbJhS3N3?=
- =?iso-8859-1?Q?Ta2zkqkhCJWLVm5DJecybwFM0YkdwgBaxUcxXvXTFC68KIpNKvwaUA3k2a?=
- =?iso-8859-1?Q?8EHIj/61VWDcB/glN9vrpVJ6KDcUgZH52L895FXYY4YykNj6liPWPbsRdt?=
- =?iso-8859-1?Q?CJA2iKF7MZYtsRzHuUkBv9Xyko5+SyVpPXIYmv+ePnSkL8uY08BLPFcETc?=
- =?iso-8859-1?Q?JbmtnYHwHutmVDqdMzaWgQoULVPng+czTcB5TE8iUrpULyRtk591xz0DHC?=
- =?iso-8859-1?Q?vhJyUC90LLMSJGUdOa6n9enEnvni+iORQo49eWyXtk1MJEYKgwRVyQcEfO?=
- =?iso-8859-1?Q?XRGMCAgspEgnlBPRcOt7Y3y9IwxYdIndDoUEhmap2aClpHcUtxyNw9siu3?=
- =?iso-8859-1?Q?Dm3D3gbaBJGpNEXIQDo/WdUlvPiDdd4XBv/7iL1x9+PktkVzOE/uCMw7XI?=
- =?iso-8859-1?Q?0JqY4djI5TPGovG+CO/qI13g6Q0RFwoBTD4M8lncl7YWLDCXw5DxtN1CIx?=
- =?iso-8859-1?Q?V3y7z8FpwSXDBjY1IYnKl+B7ns+g5HYFi+SvYRvXzt/mxL3ND6lUgAkoiu?=
- =?iso-8859-1?Q?EFR+Oxvx82tfJOvVyb/B/43zOPTGXykz7xa39dPdYmKhjE1kKpSiYZwcPh?=
- =?iso-8859-1?Q?cglzFXr/KyzOoV573pPC9eNoIexR7W1vkv0JAldVOaIDePtg8GZ9BEjWWO?=
- =?iso-8859-1?Q?ayRGbLDHssTqKJ3+PvrVo/cv6Jvbrsx5s0CwXypqyz8wnN7QBJoMBhRA?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34b9202d-44a4-4a04-be40-08dda386ee87
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 16:43:28.2380
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q829CvP3XxxgW1a5ZwvIEkbpgwziS67nt81AHFR7QkxuPV5gwnLpRVdxE3AHAR6NzBzKrS0vNkhn29jMQFCOZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8326
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/15] KVM: x86: Fold kvm_setup_default_irq_routing() into
+ kvm_ioapic_init()
+To: Sean Christopherson <seanjc@google.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250519232808.2745331-1-seanjc@google.com>
+ <20250519232808.2745331-6-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20250519232808.2745331-6-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 04, 2025 at 05:07:15PM +0200, Simona Vetter wrote:
-> On Wed, Jun 04, 2025 at 11:41:25AM +0200, Christian König wrote:
-> > On 6/4/25 10:16, Philipp Stanner wrote:
-> > > struct drm_sched_init_args provides the possibility of letting the
-> > > scheduler use user-controlled workqueues, instead of the scheduler
-> > > creating its own workqueues. It's currently not documented who would
-> > > want to use that.
-> > > 
-> > > Not sharing the submit_wq between driver and scheduler has the advantage
-> > > of no negative intereference between them being able to occur (e.g.,
-> > > MMU notifier callbacks waiting for fences to get signaled). A separate
-> > > timeout_wq should rarely be necessary, since using the system_wq could,
-> > > in the worst case, delay a timeout.
-> > > 
-> > > Discourage the usage of own workqueues in the documentation.
-> > > 
-> > > Suggested-by: Danilo Krummrich <dakr@kernel.org>
-> > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> > > ---
-> > >  include/drm/gpu_scheduler.h | 7 +++++--
-> > >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-> > > index 81dcbfc8c223..11740d745223 100644
-> > > --- a/include/drm/gpu_scheduler.h
-> > > +++ b/include/drm/gpu_scheduler.h
-> > > @@ -590,14 +590,17 @@ struct drm_gpu_scheduler {
-> > >   *
-> > >   * @ops: backend operations provided by the driver
-> > >   * @submit_wq: workqueue to use for submission. If NULL, an ordered wq is
-> > > - *	       allocated and used.
-> > > + *	       allocated and used. It is recommended to pass NULL unless there
-> > > + *	       is a good reason not to.
-> > 
-> > Yeah, that's probably a good idea. I'm not sure why xe and nouveau actually wanted that.
-
-At one point before workqueues could share a lockdep map we had to pass
-in a workqueue to not run out of lockdep keys. That restriction is now
-gone, so Xe passes in NULL.
-
-Part of reasoning also was there was an interface to pass in the TDR
-workqueue, so added one for the submit workqueue.
-
-Xe does have an upcoming use for this though. We have a mode where
-multiple queues share FW resources so interaction with the FW between
-multiple queues needs to exclusive so we use a single submit workqueue
-for queues sharing FW resources to avoid using locks in scheduler ops.
-
-queues == GPU scheduler / entry in this context.
-
+On 5/20/25 01:27, Sean Christopherson wrote:
+> Move the default IRQ routing table used for in-kernel I/O APIC routing to
+> ioapic.c where it belongs, and fold the call to kvm_set_irq_routing() into
+> kvm_ioapic_init() (the call via kvm_setup_default_irq_routing() is done
+> immediately after kvm_ioapic_init()).
 > 
-> The idea of this trick is that you have a fw scheduler which only has one
-> queue, and a bunch of other things in your driver that also need to be
-> stuffed into this fw queue (or handled by talking with the fw through
-> these ringbuffers).
+> In addition to making it more obvious that the so called "default" routing
+> only applies to an in-kernel I/O APIC, getting it out of irq_comm.c will
+> allow removing irq_comm.c entirely, and will also allow for guarding KVM's
+> in-kernel I/O APIC emulation with a Kconfig with minimal #ifdefs.
 > 
-> If you use one single-threaded wq for everything then you don't need
-> additional locking anymore, and a lot of things become easier.
-> 
+> No functional change intended.
 
-Yes, this how Xe avoid locks in all scheduler ops. Same in upcoming use
-case above - multiple queues uses the same single-threaded wq.
+Well, it also applies to the PIC.  Even though the IOAPIC and PIC (and 
+PIT) do come in a bundle, it's a bit weird to have the PIC routing 
+entries initialized by kvm_ioapic_init().  Please keep 
+kvm_setup_default_irq_routine() a separate function.
 
-> We should definitely document this trick better though, I didn't find any
-> place where that was documented.
-> 
+Paolo
 
-This is a good idea.
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/ioapic.c   | 32 ++++++++++++++++++++++++++++++++
+>   arch/x86/kvm/irq.h      |  1 -
+>   arch/x86/kvm/irq_comm.c | 32 --------------------------------
+>   arch/x86/kvm/x86.c      |  6 ------
+>   4 files changed, 32 insertions(+), 39 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+> index 8c8a8062eb19..dc45ea9f5b9c 100644
+> --- a/arch/x86/kvm/ioapic.c
+> +++ b/arch/x86/kvm/ioapic.c
+> @@ -710,6 +710,32 @@ static const struct kvm_io_device_ops ioapic_mmio_ops = {
+>   	.write    = ioapic_mmio_write,
+>   };
+>   
+> +#define IOAPIC_ROUTING_ENTRY(irq) \
+> +	{ .gsi = irq, .type = KVM_IRQ_ROUTING_IRQCHIP,	\
+> +	  .u.irqchip = { .irqchip = KVM_IRQCHIP_IOAPIC, .pin = (irq) } }
+> +#define ROUTING_ENTRY1(irq) IOAPIC_ROUTING_ENTRY(irq)
+> +
+> +#define PIC_ROUTING_ENTRY(irq) \
+> +	{ .gsi = irq, .type = KVM_IRQ_ROUTING_IRQCHIP,	\
+> +	  .u.irqchip = { .irqchip = SELECT_PIC(irq), .pin = (irq) % 8 } }
+> +#define ROUTING_ENTRY2(irq) \
+> +	IOAPIC_ROUTING_ENTRY(irq), PIC_ROUTING_ENTRY(irq)
+> +
+> +static const struct kvm_irq_routing_entry default_routing[] = {
+> +	ROUTING_ENTRY2(0), ROUTING_ENTRY2(1),
+> +	ROUTING_ENTRY2(2), ROUTING_ENTRY2(3),
+> +	ROUTING_ENTRY2(4), ROUTING_ENTRY2(5),
+> +	ROUTING_ENTRY2(6), ROUTING_ENTRY2(7),
+> +	ROUTING_ENTRY2(8), ROUTING_ENTRY2(9),
+> +	ROUTING_ENTRY2(10), ROUTING_ENTRY2(11),
+> +	ROUTING_ENTRY2(12), ROUTING_ENTRY2(13),
+> +	ROUTING_ENTRY2(14), ROUTING_ENTRY2(15),
+> +	ROUTING_ENTRY1(16), ROUTING_ENTRY1(17),
+> +	ROUTING_ENTRY1(18), ROUTING_ENTRY1(19),
+> +	ROUTING_ENTRY1(20), ROUTING_ENTRY1(21),
+> +	ROUTING_ENTRY1(22), ROUTING_ENTRY1(23),
+> +};
+> +
+>   int kvm_ioapic_init(struct kvm *kvm)
+>   {
+>   	struct kvm_ioapic *ioapic;
+> @@ -731,8 +757,14 @@ int kvm_ioapic_init(struct kvm *kvm)
+>   	if (ret < 0) {
+>   		kvm->arch.vioapic = NULL;
+>   		kfree(ioapic);
+> +		return ret;
+>   	}
+>   
+> +	ret = kvm_set_irq_routing(kvm, default_routing,
+> +				  ARRAY_SIZE(default_routing), 0);
+> +	if (ret)
+> +		kvm_ioapic_destroy(kvm);
+> +
+>   	return ret;
+>   }
+>   
+> diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
+> index 33dd5666b656..f6134289523e 100644
+> --- a/arch/x86/kvm/irq.h
+> +++ b/arch/x86/kvm/irq.h
+> @@ -107,7 +107,6 @@ void __kvm_migrate_timers(struct kvm_vcpu *vcpu);
+>   
+>   int apic_has_pending_timer(struct kvm_vcpu *vcpu);
+>   
+> -int kvm_setup_default_irq_routing(struct kvm *kvm);
+>   int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
+>   			     struct kvm_lapic_irq *irq,
+>   			     struct dest_map *dest_map);
+> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+> index b85e4be2ddff..998c4a34d87c 100644
+> --- a/arch/x86/kvm/irq_comm.c
+> +++ b/arch/x86/kvm/irq_comm.c
+> @@ -334,38 +334,6 @@ bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct kvm_lapic_irq *irq,
+>   }
+>   EXPORT_SYMBOL_GPL(kvm_intr_is_single_vcpu);
+>   
+> -#define IOAPIC_ROUTING_ENTRY(irq) \
+> -	{ .gsi = irq, .type = KVM_IRQ_ROUTING_IRQCHIP,	\
+> -	  .u.irqchip = { .irqchip = KVM_IRQCHIP_IOAPIC, .pin = (irq) } }
+> -#define ROUTING_ENTRY1(irq) IOAPIC_ROUTING_ENTRY(irq)
+> -
+> -#define PIC_ROUTING_ENTRY(irq) \
+> -	{ .gsi = irq, .type = KVM_IRQ_ROUTING_IRQCHIP,	\
+> -	  .u.irqchip = { .irqchip = SELECT_PIC(irq), .pin = (irq) % 8 } }
+> -#define ROUTING_ENTRY2(irq) \
+> -	IOAPIC_ROUTING_ENTRY(irq), PIC_ROUTING_ENTRY(irq)
+> -
+> -static const struct kvm_irq_routing_entry default_routing[] = {
+> -	ROUTING_ENTRY2(0), ROUTING_ENTRY2(1),
+> -	ROUTING_ENTRY2(2), ROUTING_ENTRY2(3),
+> -	ROUTING_ENTRY2(4), ROUTING_ENTRY2(5),
+> -	ROUTING_ENTRY2(6), ROUTING_ENTRY2(7),
+> -	ROUTING_ENTRY2(8), ROUTING_ENTRY2(9),
+> -	ROUTING_ENTRY2(10), ROUTING_ENTRY2(11),
+> -	ROUTING_ENTRY2(12), ROUTING_ENTRY2(13),
+> -	ROUTING_ENTRY2(14), ROUTING_ENTRY2(15),
+> -	ROUTING_ENTRY1(16), ROUTING_ENTRY1(17),
+> -	ROUTING_ENTRY1(18), ROUTING_ENTRY1(19),
+> -	ROUTING_ENTRY1(20), ROUTING_ENTRY1(21),
+> -	ROUTING_ENTRY1(22), ROUTING_ENTRY1(23),
+> -};
+> -
+> -int kvm_setup_default_irq_routing(struct kvm *kvm)
+> -{
+> -	return kvm_set_irq_routing(kvm, default_routing,
+> -				   ARRAY_SIZE(default_routing), 0);
+> -}
+> -
+>   void kvm_scan_ioapic_irq(struct kvm_vcpu *vcpu, u32 dest_id, u16 dest_mode,
+>   			 u8 vector, unsigned long *ioapic_handled_vectors)
+>   {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index f9f798f286ce..4a9c252c9dab 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -7118,12 +7118,6 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+>   			goto create_irqchip_unlock;
+>   		}
+>   
+> -		r = kvm_setup_default_irq_routing(kvm);
+> -		if (r) {
+> -			kvm_ioapic_destroy(kvm);
+> -			kvm_pic_destroy(kvm);
+> -			goto create_irqchip_unlock;
+> -		}
+>   		/* Write kvm->irq_routing before enabling irqchip_in_kernel. */
+>   		smp_wmb();
+>   		kvm->arch.irqchip_mode = KVM_IRQCHIP_KERNEL;
 
-> Maybe a new overview section about "how to concurrency with drm/sched"?
-> That's also a good place to better highlight the existing documentation
-> for the 2nd part here.
-> 
-> > >   * @num_rqs: Number of run-queues. This may be at most DRM_SCHED_PRIORITY_COUNT,
-> > >   *	     as there's usually one run-queue per priority, but may be less.
-> > >   * @credit_limit: the number of credits this scheduler can hold from all jobs
-> > >   * @hang_limit: number of times to allow a job to hang before dropping it.
-> > >   *		This mechanism is DEPRECATED. Set it to 0.
-> > >   * @timeout: timeout value in jiffies for submitted jobs.
-> > > - * @timeout_wq: workqueue to use for timeout work. If NULL, the system_wq is used.
-> > > + * @timeout_wq: workqueue to use for timeout work. If NULL, the system_wq is
-> > > + *		used. It is recommended to pass NULL unless there is a good
-> > > + *		reason not to.
-> > 
-> > Well, that's a rather bad idea.
-> >
-
-Yea, I've found using system workqueues in driver code usually creates
-problems. In Xe, we pass in a single ordered workqueue shared among all
-queues for the TDR. GT (device) resets are also run on this ordered
-workqueue too to avoid jobs timing out in parallel. I think most drivers
-would benefit from this type of design.
-
-Matt
- 
-> > Using a the same single threaded work queue for the timeout of multiple
-> > schedulers instances has the major advantage of being able to handle
-> > their occurrence sequentially.
-> > 
-> > In other words multiple schedulers post their timeout work items on the
-> > same queue, the first one to run resets the specific HW block in
-> > question and cancels all timeouts and work items from other schedulers
-> > which use the same HW block.
-> > 
-> > It was Sima, I and a few other people who came up with this approach
-> > because both amdgpu and IIRC panthor implemented that in their own
-> > specific way, and as usual got it wrong.
-> > 
-> > If I'm not completely mistaken this approach is now used by amdgpu,
-> > panthor, xe and imagination and has proven to be rather flexible and
-> > reliable. It just looks like we never documented that you should do it
-> > this way.
-> 
-> It is documented, just not here. See the note in
-> drm_sched_backend_ops.timedout_job at the very bottom.
-> 
-> We should definitely have a lot more cross-links between the various
-> pieces of this puzzle though, that's for sure :-)
-> 
-> Cheers, Sima
-> 
-> > 
-> > Regards,
-> > Christian.
-> > 
-> > >   * @score: score atomic shared with other schedulers. May be NULL.
-> > >   * @name: name (typically the driver's name). Used for debugging
-> > >   * @dev: associated device. Used for debugging
-> > 
-> 
-> -- 
-> Simona Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
