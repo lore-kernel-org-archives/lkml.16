@@ -1,215 +1,234 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2041.outbound.protection.outlook.com [40.107.220.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0960D28F500
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749043425; cv=none; b=G4yQsrSFW+ZIbCZNu01wlniHS4/27Xq39HGPp1PEen22Gv4HgR7FTNtf6aA1SkCywc9TkJNwt1bo99kgPeUJoCYRdi5PzjcTmBO/mqe2J1d+zoX3luXym0R1C9tkK6oFj3jQ4IFGh4E0xqurB/WlgaVHo6FTOc4fMUI9CC4tXtw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749043425; c=relaxed/simple;
-	bh=QbkLHxisoYc2AWDpo32sSP+B4kbWnBVqELZ1Z69vVEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oks6rjFPzXiKNVyyal8C3JsQNcc/Dh5sXMJvY7ZuJvv2r1O9kUjZYXKWkJQIuJt+BKMKP6ITLDYwLtB7B1/8xCqNLBYv6RtfSo7he5Sk/H4GNHVfzLGVZwIkvf73HLIoHPUr/60alVv+U7TknRcCp05xJ6uO4hAlmtwZGan6h5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gHKnclNk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE2C1EFF80;
+	Wed,  4 Jun 2025 13:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749043449; cv=fail; b=fg+cAO7t4OJmo3Y6SeXoKbDPd6TO4UKIDCag5uV2a9hSgh6U2qQPULAwUIc+Lfds1pBlROG41m2yyR5lCAzudkm2LQXWqnSOeyCWzNKSVSnro0nNOzRko6ZhyqlXNlcQe/O/S/kNHfzUIgLoe5kBiDRC5x8MeAwz4ajvm98NYME=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749043449; c=relaxed/simple;
+	bh=y8WKj3IpBnojCehQHuP3pc2hNDiBb+yv+iC18X/XHw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=izhGy6n4hGo+Q/WAwcE2cok3Nh8vwx2S4iOiXzwsnzy7DjXlihYwMiiWTc7CALgYb4HWHTFFAUmSkpmhJqwA6giShHL5iJZ/R5huSPdQsTNTtOBiPf6eed5EVwrFtc8CCDMShtUXhQkMggqvLbArDuZLeYrAOlnLihYv5u1Oovc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=g3NGz/nt; arc=fail smtp.client-ip=40.107.220.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gHKnclNk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749043422;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3xww6rsG/Rs20JT8s4hDiVuCO7S3KnAU+7K5dPc6U7A=;
-	b=gHKnclNka8fxpYQnbMGbQQi7Q5miHa8hSt8XK+ERnyeZvMU6ICayOMI+/7tVgZi8zX9wUg
-	WtZ7zHnMX7K9qz35xwO1nap8QBVWVY9cZ36Tu8hVpdI5YVmS26DmnHr4WxC7eSwcWr1Y8s
-	zBXGhegxfBqvjBCKWrhXOGjYSfc8XJ0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-jKtCiRGVOzC6dmqAiT_VPw-1; Wed, 04 Jun 2025 09:23:41 -0400
-X-MC-Unique: jKtCiRGVOzC6dmqAiT_VPw-1
-X-Mimecast-MFC-AGG-ID: jKtCiRGVOzC6dmqAiT_VPw_1749043421
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451d30992bcso31645275e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:23:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749043420; x=1749648220;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3xww6rsG/Rs20JT8s4hDiVuCO7S3KnAU+7K5dPc6U7A=;
-        b=clYalO01bLvAseVy4quhTC7cKFkAqxWh0kW+HOIuJ6/frUl0smi6lzhM3B/DywxCiB
-         WaqHbENdfS98LOGwZUEfCI60NxYSs8zc5iwVVSu8oS/BhObnxWmIsNP4DU/tPOeapKZt
-         Mp91fBfAe+dHZkFBVZUiGCcvfzTFVOCFVRWi0ha/TsqiQ0je984SrS+Amtl7sJOtOvmC
-         AY8A8RnLL9VYEM18BCLUBVHOAYvWMiJN2DlbVIWS/Jmk/u50tDqzcztV1Z3Pu7TLj1eI
-         ilqVGd7SySZFOBPV7DWoWIyhEdPX+EinDhO2MyvDS2PWj8J7bbTIvm0hnbEPnFJvgUvh
-         Fa5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVa8dBJGtbT+vCvF2kfyBo58vVqTxQQHAIDu0CG5AwBQiBMPMUt4Yzq1+cKgKm9JJ3eDwr9hyzNrGfZDeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+qtFZxlh2PKIqEHXiTbdqDQsglM7uXPlIqsLmmN/Yh1Czd1CO
-	G7D06FMBX86Y91cdZ9ytbK/Hx1HOUf9N8G7agOaXR4Y90dTWJldqzPobQbQq+O2paG6GmYz6T5G
-	tIL8k8MWdnfL5XrtbhcOww4QwvBuyelv7HWlnZ5YTKhfloYk8phOrU6NoFqTFSZY31w==
-X-Gm-Gg: ASbGncttMRxnFG6aYItLVU8I0Z8FaYwP4gQScXSfY2KNG+2cyklEjHdTdNZP/YspiWG
-	5YUGC/eDG4LTV9RMx4JYP1bbHz3Y8Hiz+vidmbMgTEbl2W6UN6ySmS2DAywosBJDuyRkIWAVp4y
-	mc2MpgYK7mPXDBM4nKekI6U45eQXTFLAY8I1Ika+Svcevr0M6T9mHl5g7bghqLqdCVyd6T7nqng
-	Z4/KhgWzwrCBMkGEqPiXupXTmVagkrtLTHKNDhp3t3nR1aU3iRqUTyFc+tuFpH6K2RM59g3ipdp
-	14bmXiR6Ap4GNtR+knSC6mu88xUxyZ3mfL/90me1BiQdiIlir1/x7LtbaOgzxj6kblyheOYPAtp
-	pqbybrZ630a+y3VLzG4rHWEkdJ4zRTwD6vhEEFx0=
-X-Received: by 2002:a05:600c:35d4:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-451f0a63602mr24381295e9.2.1749043420608;
-        Wed, 04 Jun 2025 06:23:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFt1y4qRpeycuYRvcBiJBXWsI8Xumomuv0jyE3q2dCGUmvlFOrwHFLD+Jf3Br7pU3KswUcwzA==
-X-Received: by 2002:a05:600c:35d4:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-451f0a63602mr24380875e9.2.1749043420071;
-        Wed, 04 Jun 2025 06:23:40 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf? (p200300d82f1bb8006fdb1af24fbd1fdf.dip0.t-ipconnect.de. [2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b92bsm21434591f8f.9.2025.06.04.06.23.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 06:23:39 -0700 (PDT)
-Message-ID: <84cf5418-42e9-4ec5-bd87-17ba91995c47@redhat.com>
-Date: Wed, 4 Jun 2025 15:23:38 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="g3NGz/nt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=izIiOYr7t3NfRjVuzsIfnXrvZuJ9DdMA6AdsH/8JnMld4I1yJEQEi55+wY7h/WeEGiGDg8L7DkusLNDqIo8ikTgOLkzLJucw3o0hKHhHlgc6U5Wh0eIh+8YrlPrCbGh6lyGK/+WbYOEMWzAXciNCg1xfyR6MpGzMkQl5qP9HhZKx3zFo/Y24NS4e+F5MkCRQqgY577YuIvfoEH2oAsZPhUAWZ0cUfxg8oYCeIzz3yxy7+0UHXIre/YK3IhGBciMKbbpeVeevJZdT9dqf8dX9VCyKltNWOKGW5+Mt5No57zpvQS/bL+hEQlvI40/GmZ99JgZJ2yzCY/8LOZudJcARgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yvG2SHICR17o0VToEjA2yX5XHAAtl0yXYPUVp/pDNdM=;
+ b=vOu2BHgb8JDLvDiScJ9ErC+/5HuqIL3tE/0Lptpg9cpagZDdFaLw0JslTEDsibE9yZFIxTvGHDRpyloFGuxs/RaeNw5zP8FhFHmgHKSRjtvOQdjC4C58TRcqPbtP80OWYqOGvsQW0jNbsjH5yxngm1R9Hq8huJ2nk36i1xp1wstQyT6Oq/AcFcq4ETbiR0w6w753vK0ZMP8ndV5GuyIyIWS7yGwtnOGudxzegIga6LZ3zgCySujRj7pF5arsff5+5vGSJ13x8ZYdgMJF8Ny2HPxe5b42/D6kbZNCbWXnXJd+yqCV7rdxNIOfKbI25sth7HOBptTtrndLsIzt9Q47ZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yvG2SHICR17o0VToEjA2yX5XHAAtl0yXYPUVp/pDNdM=;
+ b=g3NGz/ntDDZqB1spH4sstXsU1JGMGQgIW5Bo+OHBEKbwXpq+U9I17Vk+rpqROFPlOdSKdjVBKy1XYMr1QmhE7ZoXFTimezyTEmgRdi+kP9rfgV23wR7uIPiEibNDofUmoSN8s8DZYd82HuG4Pvy8GJZf/ycEum6NxRQiz7oN6k6cHpw26vXuaztZLHm+wIbN7rvKZR+ibDL7ZqanY3ZpJCXz0rRMraY6hMEqx1LcyZwFIUJxPoRiO+VN2C7Dy/gx/2mnHCbPZhhOThYD/YqE0r2QnRkrfpwz4FjQHZkpKKj0dsR2x02zNKbeufx9/aKIkryPe5iZb4iZRabYnPvEiQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by SA1PR12MB7224.namprd12.prod.outlook.com (2603:10b6:806:2bb::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Wed, 4 Jun
+ 2025 13:24:04 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
+ 13:24:04 +0000
+Date: Wed, 4 Jun 2025 10:24:03 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	iommu@lists.linux.dev, kevin.tian@intel.com
+Subject: Re: [RFC PATCH 17/30] iommufd/device: Add TSM Bind/Unbind for TIO
+ support
+Message-ID: <20250604132403.GJ5028@nvidia.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-18-yilun.xu@linux.intel.com>
+ <yq5awm9ujouz.fsf@kernel.org>
+ <aD6UQy4KwKcdSvVE@yilunxu-OptiPlex-7050>
+ <20250603122149.GH376789@nvidia.com>
+ <yq5aplfj99x0.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <yq5aplfj99x0.fsf@kernel.org>
+X-ClientProxiedBy: YT4P288CA0041.CANP288.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d3::22) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] userfaultfd: prevent unregistering VMAs through a
- different userfaultfd
-To: Tal Zussman <tz2294@columbia.edu>,
- Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Pavel Emelyanov <xemul@parallels.com>, Andrea Arcangeli <aarcange@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-References: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
- <20250603-uffd-fixes-v1-2-9c638c73f047@columbia.edu>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250603-uffd-fixes-v1-2-9c638c73f047@columbia.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SA1PR12MB7224:EE_
+X-MS-Office365-Filtering-Correlation-Id: b6578cce-7cc2-411e-8848-08dda36b13a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NFNUTDJkclZKTXhWNms4a1ZvUmxJRmFvV2hMNWlxZExQbzRSN1czOEEwb3Ni?=
+ =?utf-8?B?R0NhdHBEVGZnYzNLZVBPeEZ2cWZXeXlMZWFNTzN0anZOcnMzTTRneStDRm9X?=
+ =?utf-8?B?cDFKamVBQlBMNlhkQVdaOTNxUU85Z1IxeEM0WXVBYkhsSmVzQ2EvMzJ2dzhW?=
+ =?utf-8?B?WEVhcEtSV3diUlNIS1JMRTcyMGNPZWR3Q0c5dVNoQzNYV3pWbURNN1I1OFFw?=
+ =?utf-8?B?WjJkK2E0bStxSWU0cTRJRXhsKzFTUmI4VGNTT1hpc3NGaHJjUk1tMnArMEF6?=
+ =?utf-8?B?UnQ5Uk1OTXhDSkFwcG43dFVNMDJZeEUxU09jRnpLblVNQzl1RjhUbng1MW0z?=
+ =?utf-8?B?VEZVTjFTbzNCUXo2VFQ3ckc5Q3h1aEpkYXNqS1paN21mdGlEVDdGM3ZiVjBO?=
+ =?utf-8?B?VXpwYVZCYjRKcnVrQk9xNDVBajhMTE1lT2FnaWxXRjFobncrZHFSK0lNTnU2?=
+ =?utf-8?B?WWNlYWVtNy82SFI4QnNRM2xkYjU4Y0puN20wZExVckdmMXFIYzJreWFYd2Fr?=
+ =?utf-8?B?dmUrOEMwdXpwb2xRamI2T0lLOXBRQ1lnWmJ1bE02VERxMmtsSUdsZ09MNkZR?=
+ =?utf-8?B?SzNrWmJDTFRKNGNZV1BYbEZmR1ZCRnBpajRWWkIwaEpTc1hYcjZSd3hiRlov?=
+ =?utf-8?B?WVkvSDhjT2Eyb3d6MjhMUlJ1SXNNRmlqdDU2c3owSkNzZ2c3cFhHc0lWOFlB?=
+ =?utf-8?B?a0l1UHE4RkFHRkJvMWNNQnFka3pzL1pwZGJEdTlDTEN1a2EvUjB0MGRhT0pC?=
+ =?utf-8?B?T1ROMXpMWEJobThhVWJHUEx1VFlEeGZIU09NTUxKU2c5TDd2eHdnVDA0Mi9U?=
+ =?utf-8?B?L25NMVM2YkF0N04rdTI3RFNuUG1TQzF1UmtkY2t5YjBjcytRdERINzF2bzlr?=
+ =?utf-8?B?SGd0c3UzQ0hreW8yTkpEWjc2U0Jsa2plczVmblZzaFhxYTdPOEd1dW16WnhS?=
+ =?utf-8?B?cnBTRjlJcXZQWXA4MFhuZWZIYnRHNm02cTBDeEtyV2FwMnFoZnMwOTNmSUxn?=
+ =?utf-8?B?N21kZHF0RlEybktiVkp4N1ZMU29ZQ3ErNkNKYkZiMHJKeWovanQyZTVFTVhk?=
+ =?utf-8?B?NlpHSUNFZDhFWVd3Z2piTGFybDdXS1hpSUNhazgwSWFzQmhTM2JjdGl2a1Fp?=
+ =?utf-8?B?L3ZveGpYRDJOUzh6MlBhcEsrN2ZtNjVoN3QwVVRvSkt4MVhKYWlMaGtvQ2hM?=
+ =?utf-8?B?b0M5S1NWbjhsSWlxbGRCMkl1KzErdmtVL3JlVGJBV3RkMWhDcWQ5d2x5SXlJ?=
+ =?utf-8?B?YzF1bHhkcWdvR2lKK0xnRi9DN1BCbUcyYTAzSmZLZ0Jma0EvU1htUjU0eW15?=
+ =?utf-8?B?VDB5VEJHVzc5R2E3eGZmWW9vSkc0clRhVnZCN0txc1F4QmhyN3ZnQUFaZFk5?=
+ =?utf-8?B?cFlqd0pLQXNiRWJZMWV5eFROUG5iRTh4MzBscTN6TVQ1SDJ1MUlxTG1kV2hU?=
+ =?utf-8?B?eDdPUjZFVlhReGhEajlEVTZmTm8wOG9Ock5FdWxFVHZQcSt2OXpXcWN2RTZU?=
+ =?utf-8?B?dHcyM0sxc2ViTTNOWitSUXlzNlRlTjJpS1VtM3VRWVZic0lNNzNKbjBkV0tL?=
+ =?utf-8?B?Um5DOXpKcFVCck00K3Btdmpac3FmUGY3TnBJL2NmRkVRTXpNOU5nSE1wUndB?=
+ =?utf-8?B?MVorbWtGbUMxUWtBVkRPZnFyYTFXNzZmejFJVzhIbk9wL2EwZ2Z0cmRTZyts?=
+ =?utf-8?B?WEhvd2JxWGNZc1RhK1ZON0dVTDZ6T01HOG55UVVlSG1VSGNFRmpYTXp3THZC?=
+ =?utf-8?B?d3FtdnE2emczMWV5OXhYTkt6MUp2d2xTbzBLalhibGhPajBXMjJlNldXVEdp?=
+ =?utf-8?B?RmU1WTh1WGE0WHdNRlJ2TWRJdE1JLzU1MTZvZElST0ozbFhRUnA0U0R1bjls?=
+ =?utf-8?B?dW44YTgzNUtCZVVOc3llTE5qdHZjVE9sM1ZXS1VuSmpTb3c9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WTg1RC9mU1RIemMwbzhENlE2RFM5YURwSVNReko0SU80L1BHVjROa1M4VVAw?=
+ =?utf-8?B?ZjR0U1l6NVdvT3E3UkRWdTVwYmJ1QWNKa2FQMU5tU0lyYWdwVHFFbnFGbVhK?=
+ =?utf-8?B?cmNnWmJRVWNnc1pLcUFnR3RwbzVUVTdtVEtsb0lWU1I0dUJwRGhkcGY4K0lW?=
+ =?utf-8?B?VTg4TGVFY2h4anI3ODQ3Umc2RzdLdVN3cXc3RDZNVEpDTWpncTlPWENOall3?=
+ =?utf-8?B?a25vOXlwOU4wU3hPemNsR0xlOWlYcktzUCs3OU5EYkdWVk9ad2tRSHlaQVU5?=
+ =?utf-8?B?a0psRkNhZXg0cXhrWFhNcStvWDgvaDFvaHJrdThzUm83K2VOc3ozUTFHYjZm?=
+ =?utf-8?B?dExMamlFUWNDWEhvTGF3c1h3QVkva1hzVWh4dU5tVFhsalRYaCswUmxIa1ph?=
+ =?utf-8?B?UlRsM01Ob0VlQi9mM3haSm1ML2ZvTnU3MXdtS0x4aktxMTlDVnlJQXhzbnIx?=
+ =?utf-8?B?Z3FJUStBd0UzMlhvRVVNTE83b1V6L2VXYmJUbGVmOExrQnlxbDZ2TlNaVktn?=
+ =?utf-8?B?eFVZdk84SU1JYnJ5NGpPSHJqalluZGdtTG91bE9oQnhZdWdPdVdkb2o4azR6?=
+ =?utf-8?B?VUYxZ1lpMGJTcW0vaTQ5clZzb0YzeFlEaTFvOXdwRFBtREI3M1FaOWpXM0x6?=
+ =?utf-8?B?WlIyK0t1dnlSL1hYUkg4eXlNcFk2STVFYTNiQ29EOFF3eGhrZ3NqRW9HMm1O?=
+ =?utf-8?B?MkxXR240VlE3bnFkNkRySmhDakdIYmh0Y0EyR0xHUndiVHpzdWVYOEJmQnpw?=
+ =?utf-8?B?Z2d0M1RNTDkySW9EeTdzQlFETTBoaStHaFdwZ1NxeFJoZXFqMXZvcTRpaTlU?=
+ =?utf-8?B?emh0OW83RGMwbnNyZ01PZHdiYVU2TloxN25tZHpnejR3c2xqcENNR2tXaThq?=
+ =?utf-8?B?NDFBdk5WK29INFhIaUtvREJRUTQyWk5TazJmT1BNQjN1eHBRbktrUzNIcGRR?=
+ =?utf-8?B?NGU4am1WSXdIemMrdnlFbzV5Z1Fsc2lOcTlGMzQ3REJCL3dhQVZ1andVMkI1?=
+ =?utf-8?B?L0dmVkl2ZnczUVhvK1U5bk5VV0dHS2Npbks4TzcxWkxGM3piU2NkZGc2TklX?=
+ =?utf-8?B?SWF2eGNmWHdTUkg0VWdoR2g3T2xLNUp2U1M2SmhWd214VWhrNkU3WTlFb24w?=
+ =?utf-8?B?V3lpZGpwdlg4MWZjNUtGL2ZYd0tUTG9mcjFHL1RhTnZFMC96NFpyTXlxQ0VT?=
+ =?utf-8?B?VDZOdUNnOGNXSnFzak82NTB3WWpoamZSOFVVanBjRHo3K2U2dWtPUitUUXB0?=
+ =?utf-8?B?WUY3ZHlsaUpMWlpielRncytzWHQwSzdML0Zmb3I5SXgvRER3WUNwSGNseWVC?=
+ =?utf-8?B?STFJMkx6aW5iVTd3ZVhwRmlhbUtIM1htVVRNeTBnVFNnZmtmNWFHZmk2TW5X?=
+ =?utf-8?B?M3BSTWlycjQrN01vVndEVWE5aEZJMC9tQzFXelUrVkVjQ0krMHNNQk93RlFQ?=
+ =?utf-8?B?aE5hbm5xVmpSMEp1MDlFbEtOWERyTWR3VlFKUkRINVRmR2o3MGRhR3A0dGhx?=
+ =?utf-8?B?cXpjTUdRUWl5eFEyR0QzUGVUbkI5cllVcmUxWTF1NnIyZzBXelJReUJiQkk2?=
+ =?utf-8?B?djhQeVZJQ1pTRnFkdkNSZlhWc1FEK3JxV05oNytiVnkrd2Rza1Baa1JmdmRt?=
+ =?utf-8?B?UG5RNDFqRnJKRXFtUXV2cVJVV3RXd0krY1NhL3FCc01IOFlWeWgvUFUwbTR0?=
+ =?utf-8?B?TWFjcElJdGFXUFcvclI4eVlpZklTdzNOSGRlL0E4SU1sYmtQSFpSeDBxUkNL?=
+ =?utf-8?B?V29rbkJUR0tUWXlxdDh4Nm9HNEY3WkdPczNaaUErUEZRZTMrT2l6SnNFRVg4?=
+ =?utf-8?B?L3A4WW16R1BDbHJwY1dlVzgydEF2YWRKU3l3Q0NzaEpQQnFtd0NmN3FuUjlJ?=
+ =?utf-8?B?ak5aU3Y5QUlzWWpILzk4aHU0T2JwYUFaUVNyQ1Q2NFVSYXZsYjBBYXNGeG9P?=
+ =?utf-8?B?eWpzR2Y3YzJsR0VjbUwyZ1NqWHpDU2V1OVNYQjRLOEpTV1N0ek1uem1xRmFG?=
+ =?utf-8?B?WWkwL0pvYjVzalBleVVQRGpXV241SzhEK3VhdUFnblhZcGFXRkw1OEpBN2ZP?=
+ =?utf-8?B?K1JvSDhWaUYwQ2Y5SlkzVUlHVFU5VStGVGFoajE5eW9JSDJXMEp1b2Rad3Bu?=
+ =?utf-8?Q?8sHNL6qIM09kc2UDdpkv3NAjG?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6578cce-7cc2-411e-8848-08dda36b13a1
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 13:24:04.4543
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5Zt/9aOit39cxdMmt8fp1jKMWHLzV/wnIqFOBaf/ROu0QfgxAT6PBJX94SeXjm9o
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7224
 
-On 04.06.25 00:14, Tal Zussman wrote:
-> Currently, a VMA registered with a uffd can be unregistered through a
-> different uffd asssociated with the same mm_struct.
+On Wed, Jun 04, 2025 at 02:10:43PM +0530, Aneesh Kumar K.V wrote:
+> Jason Gunthorpe <jgg@nvidia.com> writes:
 > 
-> Change this behavior to be stricter by requiring VMAs to be unregistered
-> through the same uffd they were registered with.
+> > On Tue, Jun 03, 2025 at 02:20:51PM +0800, Xu Yilun wrote:
+> >> > Wouldn’t it be simpler to skip the reference count increment altogether
+> >> > and just call tsm_unbind in the virtual device’s destroy callback?
+> >> > (iommufd_vdevice_destroy())
+> >> 
+> >> The vdevice refcount is the main concern, there is also an IOMMU_DESTROY
+> >> ioctl. User could just free the vdevice instance if no refcount, while VFIO
+> >> is still in bound state. That seems not the correct free order.
+> >
+> > Freeing the vdevice should automatically unbind it..
+> >
 > 
-> While at it, correct the comment for the no userfaultfd case. This seems
-> to be a copy-paste artifact from the analagous userfaultfd_register()
-> check.
+> One challenge I ran into during implementation was the dependency of
+> vfio on iommufd_device. When vfio needs to perform a tsm_unbind,
+> it only has access to an iommufd_device.
 
-I consider it a BUG that should be fixed. Hoping Peter can share his 
-opinion.
+VFIO should never do that except by destroying the idevice..
 
+> However, TSM operations like binding and unbinding are handled at the
+> iommufd_vdevice level. The issue? There’s no direct link from
+> iommufd_device back to iommufd_vdevice.
+
+Yes.
+ 
+> To address this, I modified the following structures:
 > 
-> Fixes: 86039bd3b4e6 ("userfaultfd: add new syscall to provide memory externalization")
-> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
-> ---
->   fs/userfaultfd.c | 15 +++++++++++++--
->   1 file changed, 13 insertions(+), 2 deletions(-)
+> modified   drivers/iommu/iommufd/iommufd_private.h
+> @@ -428,6 +428,7 @@ struct iommufd_device {
+>  	/* protect iopf_enabled counter */
+>  	struct mutex iopf_lock;
+>  	unsigned int iopf_enabled;
+> +	struct iommufd_vdevice *vdev;
+>  };
+
+Locking will be painful:
+
+> Updating vdevice->idev requires holding vdev->mutex (vdev_lock).
+> Updating device->vdev requires idev->igroup->lock (idev_lock).
+
+I wonder if that can work on the destory paths..
+
+You also have to prevent more than one vdevice from being created for
+an idevice, I don't think we do that today.
+
+> tsm_unbind in vdevice_destroy:
 > 
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index 22f4bf956ba1..9289e30b24c4 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -1477,6 +1477,16 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
->   		if (!vma_can_userfault(cur, cur->vm_flags, wp_async))
->   			goto out_unlock;
->   
-> +		/*
-> +		 * Check that this vma isn't already owned by a different
-> +		 * userfaultfd. This provides for more strict behavior by
-> +		 * preventing a VMA registered with a userfaultfd from being
-> +		 * unregistered through a different userfaultfd.
-> +		 */
-> +		if (cur->vm_userfaultfd_ctx.ctx &&
-> +		    cur->vm_userfaultfd_ctx.ctx != ctx)
-> +			goto out_unlock;
+> vdevice_destroy() ends up calling tsm_unbind() while holding only the
+> vdev_lock. At first glance, this seems unsafe. But in practice, it's
+> fine because the corresponding iommufd_device has already been destroyed
+> when the VFIO device file descriptor was closed—triggering
+> vfio_df_iommufd_unbind().
 
-So we allow !cur->vm_userfaultfd_ctx.ctx to allow unregistering when 
-there was nothing registered.
+This needs some kind of fixing the idevice should destroy the vdevices
+during idevice destruction so we don't get this out of order where the
+idevice is destroyed before the vdevice.
 
-A bit weird to set "found = true" in that case. Maybe it's fine, just 
-raising it ...
+This should be a separate patch as it is an immediate bug fix..
 
-> +
->   		found = true;
->   	} for_each_vma_range(vmi, cur, end);
->   	BUG_ON(!found);
-> @@ -1491,10 +1501,11 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
->   		cond_resched();
->   
->   		BUG_ON(!vma_can_userfault(vma, vma->vm_flags, wp_async));
-> +		BUG_ON(vma->vm_userfaultfd_ctx.ctx &&
-> +		       vma->vm_userfaultfd_ctx.ctx != ctx);
->   
-
-No new BUG_ON please. VM_WARN_ON_ONCE() if we really care. After all, we 
-checked this above ...
-
->   		/*
-> -		 * Nothing to do: this vma is already registered into this
-> -		 * userfaultfd and with the right tracking mode too.
-> +		 * Nothing to do: this vma is not registered with userfaultfd.
->   		 */
->   		if (!vma->vm_userfaultfd_ctx.ctx)
->   			goto skip;
-> 
-
-
--- 
-Cheers,
-
-David / dhildenb
-
+Jason
