@@ -1,197 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793C91388;
-	Wed,  4 Jun 2025 17:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749059317; cv=none; b=q5aqGCK/Qq1AM/Z81XAmq2eTkPKTdnKLtI3dSLQzuJW9HyvxDEHGCXL80LEK/eka6utMBZmWVoPQ5yLrWoWpmr2Hp/ExkGVWjYJGQjuCC9wxycCds5CaeIdgUQf+P8uvr+Sc9yjN1ZrP04mDm9uqXO9HjouoqXsuiqOldZasgFQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749059317; c=relaxed/simple;
-	bh=nojc7ekD5Ro3tMNjFvlT85R5eqNgsPcXApgFi3gVKVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UvPl1/sYM6kYaQb2XmoGUSbFOZdBdrbmwlqbgr5LhvbfeCy+W7jufCM39WOOye33/TdT/sDGtpI6yDksh/vvrOc+k90RCGfK4TuK1BNAfn7EqEbus9XEJAf8dXCfPELBzXykidyeDn3VI+cwkcmJpQDrBaNrf7svArMpXttqVxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGpX3/Y7; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68841FC7D9;
+	Wed,  4 Jun 2025 17:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749059325; cv=pass; b=WI5uDi4TTvigCZYHkCkBx9MVlJwMTZKLAKW/k+7o5f8F2hpj/RYNkQqQ4hoCnkzOyHxQ3/wI+Tgkru+NwoyasQLkrVULoyW8gNW2ew2uSVB7g2Jwe0TxjmDSd7PEsH22ZyrKVnXkafdyi2gnhgrqdp5XASqrLsNLd1DqQ97zP/Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749059325; c=relaxed/simple;
+	bh=7G96MVVNbLTeCJXjf2I3QmaRuLnsVM6myBQCmLFEhvg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tLKnJPsOh5xfHwOQ3RmzC105p0X09OhwjrL9+JJROuafDlsxwrPbhfegHAMITaBD+DO2AWhV4am9oWV75wbJ/8kPMVWxsWIUnMQAiIjn3WPpX2B+1MXa0BZNPZ0FpCNqsQE6KBxT2jMGcO9UZ8MVNcBFQQ2Moz/j/dwg48MEyYE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=Ydg3gfYK; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGpX3/Y7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2BCFC4CEED;
-	Wed,  4 Jun 2025 17:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749059317;
-	bh=nojc7ekD5Ro3tMNjFvlT85R5eqNgsPcXApgFi3gVKVA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eGpX3/Y7IAyl/T6QXYm+AOsGTZNwYpRpZKndNWf8pfU3y1JbUDHLPGEV07xIkwlzc
-	 IT++u9cjD3knWSr/YHXgQmGgNEdr4Ejs/TKzWOjbf4qIdo75Myn/5gK10oGcQt1A4S
-	 Nj8o1eF9jHDutXCP3v2+HTnWmbNtvunW5qimfsZ2KlUxLTU4cb8LNhP1O2EZvRkeWn
-	 rATzv+NKTWruG7iNOeZJj7C8l0Smp7nsv2jYZT5dmXokZ4J9qqGgmxh8Y8Zj5V5m1K
-	 kHuyHOEULcrpeSQ42VfkMvFKv/CKfaVTDoCMAWHPPC45TbPhJA6dydMTwHNcSZygJ6
-	 /KoflHKjNW/dA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2] perf bpf-filter: Improve error messages
-Date: Wed,  4 Jun 2025 10:48:35 -0700
-Message-ID: <20250604174835.1852481-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.1266.g31b7d2e469-goog
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="Ydg3gfYK"
+ARC-Seal: i=1; a=rsa-sha256; t=1749059313; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=hlqeOy8FbLIuiwIeAi3dRqxN20x8vQuLUu89fHdLag0HYFs+icUfSpYeqzIUC1xRI/k9y+gHWdCNxzJDnOeva/O30ZCZwkS+Kjf/dacrQV9eAaWbynPQDrfflfBC9MUYKqOtynA+aq3/oz5au9knmPd4m/A/Ng0v/UuZyThg/SM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749059313; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IY2YvXvO6SpBozJIZln03+FM5s6N30mas6ebICNvM5o=; 
+	b=UjyGwmOvgYaG9eqtUlBbjJ3wdMZjP2a6Z5OBeUkHHdzaWxHxtR7n+VCjBqkbeWgJf+0TGv3G4GhfIowdQ5llJtV+Lcy4+kTFxTqWmkdCPSOGRjAYfl3RUODi+60ob7jZ7vzmSpHGYOLfkYs9zaRxLrUuxnPuIBAUPI6Bo1h7edU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749059313;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=IY2YvXvO6SpBozJIZln03+FM5s6N30mas6ebICNvM5o=;
+	b=Ydg3gfYKGZFsdTO27i5dKmUwwPPdmOjfwdFoXVIP26gKoy5V7Nh7DUy93R7TCh1M
+	ehTKUWRX0R93Ch+NjwKik0n4oLELLZlPG+dLZLKqsnBUNK4kUOmDlC4KBFbmMAJSv6i
+	IOn10Jcwmfvw4wAvv5Xc4/nlQJhBOfTotQiVAfeE=
+Received: by mx.zohomail.com with SMTPS id 174905931053884.90868394515064;
+	Wed, 4 Jun 2025 10:48:30 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Pei Xiao <xiaopei01@kylinos.cn>
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: Re: [PATCH 0/2] Cleanup in rockchip_sai.c
+Date: Wed, 04 Jun 2025 19:48:27 +0200
+Message-ID: <3339020.AJdgDx1Vlc@workhorse>
+In-Reply-To: <cover.1749006565.git.xiaopei01@kylinos.cn>
+References: <cover.1749006565.git.xiaopei01@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-The BPF filter needs libbpf/BPF-skeleton support and root privilege.
-Add error messages to help users understand the problem easily.
+On Wednesday, 4 June 2025 05:13:28 Central European Summer Time Pei Xiao wrote:
+> 1.Simplify the condition logic in
+> 2.Use helper function devm_clk_get_enabled()
+> 
+> Pei Xiao (2):
+>   ASOC: rochchip: Simplify the condition logic in rockchip_sai_xfer_stop
+>   ASOC: rockchip: Use helper function devm_clk_get_enabled()
+> 
+>  sound/soc/rockchip/rockchip_sai.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+> 
+> 
 
-When it's not build with BPF support (make BUILD_BPF_SKEL=0).
+Hi,
 
-  $ sudo perf record -e cycles --filter "pid != 0" true
-  Error: BPF filter is requested but perf is not built with BPF.
-  	Please make sure to build with libbpf and BPF skeleton.
+for the v2 of this series, please To/Cc the maintainer that will actually
+be merging the patches, not just me. You can get a full list of people to
+include as addresses for your series with the ./scripts/get_maintainer.pl
+script.
 
-   Usage: perf record [<options>] [<command>]
-      or: perf record [<options>] -- <command> [<options>]
+Ideally, you'll use a tool like b4[1] to make your life easier here and
+do this for you. That way, Mark Brown won't yell at you as much, and the
+responsible people have a higher chance of seeing the patches. The b4
+tool has the `b4 prep --auto-to-cc` option for this, and it'll warn you
+before `b4 send` if you haven't --auto-to-cc'd before sending. If you
+are using your own SMTP server to send and not a b4 relay, you'll
+probably want to `b4 send --no-sign`, but a dry run with
+`b4 send -o some-dir/` is advisible beforehand so you can look over the
+e-mails being generated.
 
-          --filter <filter>
-                            event filter
+Link: https://b4.docs.kernel.org/en/latest/contributor/overview.html [1]
 
-When it supports BPF but runs without root or CAP_BPF.  Note that it
-also checks pinned BPF filters.
+Kind regards,
+Nicolas Frattaroli
 
-  $ perf record -e cycles --filter "pid != 0" -o /dev/null true
-  Error: BPF filter only works for users with the CAP_BPF capability!
-  	Please run 'perf record --setup-filter pin' as root first.
-
-   Usage: perf record [<options>] [<command>]
-      or: perf record [<options>] -- <command> [<options>]
-
-          --filter <filter>
-                            event filter
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v2) change fprintf() -> pr_err()  (Ian)
-
- tools/perf/util/bpf-filter.c | 28 ++++++++++++++++++++++++++++
- tools/perf/util/bpf-filter.h |  3 +++
- tools/perf/util/cap.c        |  1 -
- tools/perf/util/cap.h        |  5 +++++
- 4 files changed, 36 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-index a4fdf6911ec1c32e..92e2f054b45e91dd 100644
---- a/tools/perf/util/bpf-filter.c
-+++ b/tools/perf/util/bpf-filter.c
-@@ -52,6 +52,7 @@
- #include <internal/xyarray.h>
- #include <perf/threadmap.h>
- 
-+#include "util/cap.h"
- #include "util/debug.h"
- #include "util/evsel.h"
- #include "util/target.h"
-@@ -618,11 +619,38 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(enum perf_bpf_filter_term
- 	return expr;
- }
- 
-+static bool check_bpf_filter_capable(void)
-+{
-+	bool used_root;
-+
-+	if (perf_cap__capable(CAP_BPF, &used_root))
-+		return true;
-+
-+	if (!used_root) {
-+		/* Check if root already pinned the filter programs and maps */
-+		int fd = get_pinned_fd("filters");
-+
-+		if (fd >= 0) {
-+			close(fd);
-+			return true;
-+		}
-+	}
-+
-+	pr_err("Error: BPF filter only works for %s!\n"
-+	       "\tPlease run 'perf record --setup-filter pin' as root first.\n",
-+	       used_root ? "root" : "users with the CAP_BPF capability");
-+
-+	return false;
-+}
-+
- int perf_bpf_filter__parse(struct list_head *expr_head, const char *str)
- {
- 	YY_BUFFER_STATE buffer;
- 	int ret;
- 
-+	if (!check_bpf_filter_capable())
-+		return -EPERM;
-+
- 	buffer = perf_bpf_filter__scan_string(str);
- 
- 	ret = perf_bpf_filter_parse(expr_head);
-diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
-index 916ed7770b734f15..122477f2de44bb60 100644
---- a/tools/perf/util/bpf-filter.h
-+++ b/tools/perf/util/bpf-filter.h
-@@ -5,6 +5,7 @@
- #include <linux/list.h>
- 
- #include "bpf_skel/sample-filter.h"
-+#include "util/debug.h"
- 
- struct perf_bpf_filter_expr {
- 	struct list_head list;
-@@ -38,6 +39,8 @@ int perf_bpf_filter__unpin(void);
- static inline int perf_bpf_filter__parse(struct list_head *expr_head __maybe_unused,
- 					 const char *str __maybe_unused)
- {
-+	pr_err("Error: BPF filter is requested but perf is not built with BPF.\n"
-+		"\tPlease make sure to build with libbpf and BPF skeleton.\n");
- 	return -EOPNOTSUPP;
- }
- static inline int perf_bpf_filter__prepare(struct evsel *evsel __maybe_unused,
-diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
-index 69d9a2bcd40bfdd1..24a0ea7e6d97749b 100644
---- a/tools/perf/util/cap.c
-+++ b/tools/perf/util/cap.c
-@@ -7,7 +7,6 @@
- #include "debug.h"
- #include <errno.h>
- #include <string.h>
--#include <linux/capability.h>
- #include <sys/syscall.h>
- #include <unistd.h>
- 
-diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
-index 0c6a1ff55f07340a..c1b8ac033ccc5826 100644
---- a/tools/perf/util/cap.h
-+++ b/tools/perf/util/cap.h
-@@ -3,6 +3,7 @@
- #define __PERF_CAP_H
- 
- #include <stdbool.h>
-+#include <linux/capability.h>
- 
- /* For older systems */
- #ifndef CAP_SYSLOG
-@@ -13,6 +14,10 @@
- #define CAP_PERFMON	38
- #endif
- 
-+#ifndef CAP_BPF
-+#define CAP_BPF		39
-+#endif
-+
- /* Query if a capability is supported, used_root is set if the fallback root check was used. */
- bool perf_cap__capable(int cap, bool *used_root);
- 
--- 
-2.49.0.1266.g31b7d2e469-goog
 
