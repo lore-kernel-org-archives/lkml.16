@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119E628ECEE;
-	Wed,  4 Jun 2025 11:50:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416DC23A562;
+	Wed,  4 Jun 2025 11:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749037846; cv=none; b=RVF90wA9RSi7v7XHIPKILuFSkIbSC618SC3LkCbUFOWEveZpjPAlUfOMelZKqzYdhaztNA+PDOCP9EOM5gXMY9z8V+SYiWUqQcx7RgVQOvmBEBJ5UflMY7mI2X23BZM/qqRud3c4ADn1yCD0tV7iH+sxt7vAmwUZtP/T8vRFXuQ=
+	t=1749037854; cv=none; b=VPkeqy0tiALLDLwiVNTDiEJtzgBl2OZdP8g9dpOgyPfqgOmn8QDN5AzND+XesEn9MShQQV0No1KDZOX96WUWKLvY4NCITjKjks8EzA7KEt7R/ImMgNQGCFsy8XrpxZ89DARtmQMatwl/6YsyGCJHHsVJC7EE689xslEMdOaSh8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749037846; c=relaxed/simple;
-	bh=b3KW4xNg96FKJCx7KjKLvxR70JWKyUz6ER2DhpnCb0I=;
+	s=arc-20240116; t=1749037854; c=relaxed/simple;
+	bh=F9N16TAMBxsonCFLJzyb2HtE5z9rIBeHoTfahj8tkO0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EvHFNbCk4y2ggCttCVA7NmsYFMkbSoipOuKVt25DOInC6F5YEKaOWpkyYG8aNxcvTby6tW77GqSJfPFi/j4O9Rb85z++9/aS2qX8jSbQsKVmuHVkXazBqc357QfTWvAQ5DG9zjBwvQ4WKsnw2mHZeI/NV30ZsgkaAaj1Qln9aRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WHP2TRZx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eDCLGoSoxy6CgzdRQA3esbjTSmQmNMYeMjqnTX8RZqPHkvM7iPo61jxsWXrqwded3J9PJdVqPionpYc3SagIH5sIbzTNZTG/3uCe8fqTNoXElYQrFhkkFuN4yg0VIWwk8CqEbmORsgrLHnSqBKJMxuuvzoiVYhf0ZwCZSvYOzWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/tRP0fO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WHP2TRZx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9831EC4CEF0;
-	Wed,  4 Jun 2025 11:50:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/tRP0fO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3555EC4CEEF;
+	Wed,  4 Jun 2025 11:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749037845;
-	bh=b3KW4xNg96FKJCx7KjKLvxR70JWKyUz6ER2DhpnCb0I=;
+	s=k20201202; t=1749037854;
+	bh=F9N16TAMBxsonCFLJzyb2HtE5z9rIBeHoTfahj8tkO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WHP2TRZxzED39eKAvUSnPUkOLIHjeOM60OOBwOkAyA9gQr+HoVcdDQPocXTaB0i9F
-	 hXRAso0qSnhx+BGLDKWWyJouUaHn9bRwE2DFIbAwiRAkR2hO6TTWNjofQJjZj6d+tU
-	 wRKuoYqd+fuHL7hxfHpLkuGoVM4iYr6siaC0xDg19gO2dnNUbvPQW2NNi2JEQPBnji
-	 d3MtOdVUDLLm5JXbbHInSE6VDnirf57QoKW9oeuKZlnNFfOjwBYjnyrz8cp0ZrgOlD
-	 vZmDyRY0oDAFhs3tC+emAw3LfcYgpqDqkQzX8e616zquSoEXoSqFW+be3S8dfV4aZs
-	 h6Rc3PEzP5k8g==
+	b=b/tRP0fOzv6g08K5+cQx9lQ+tEqZcf+L03PJBIlDkqw9D1SG54jDnCBUecqlcipgU
+	 vWtqJ/GjfxrikInYk9FVPlfzex4uPyvM6tce53K2jXUfbqjss2fbFx+5KNDzxw4y7e
+	 CSCyJviI9WXhjyqjDmcGcuMWwW2SU4bihWmWl1HgsA0iYeBeG64lanZVTGAarOX4wV
+	 f1SNgZ34xxbk/H6FsNj3w7pYddhqpVw0KGO5NF9yQlaIXLC2DZxieOof5xHNzlLCTN
+	 R2R//uYtOz1MVGsCs3tz8ikaG5UWkXuOgbuccplNI1T+HS7jHtADLeUYkNMuxngyoO
+	 fzNLLUlgz8Nwg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -35,12 +35,12 @@ Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linuxppc-dev@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 2/5] bus: fsl-mc: increase MC_CMD_COMPLETION_TIMEOUT_MS value
-Date: Wed,  4 Jun 2025 07:50:38 -0400
-Message-Id: <20250604115042.209624-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 2/5] bus: fsl-mc: increase MC_CMD_COMPLETION_TIMEOUT_MS value
+Date: Wed,  4 Jun 2025 07:50:47 -0400
+Message-Id: <20250604115050.209756-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250604115042.209624-1-sashal@kernel.org>
-References: <20250604115042.209624-1-sashal@kernel.org>
+In-Reply-To: <20250604115050.209756-1-sashal@kernel.org>
+References: <20250604115050.209756-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.237
+X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
@@ -114,7 +114,7 @@ during firmware debugging scenarios.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/bus/fsl-mc/mc-sys.c b/drivers/bus/fsl-mc/mc-sys.c
-index 85a0225db522a..14d77dc618cc1 100644
+index 3221a7fbaf0ad..24307ed59d777 100644
 --- a/drivers/bus/fsl-mc/mc-sys.c
 +++ b/drivers/bus/fsl-mc/mc-sys.c
 @@ -19,7 +19,7 @@
