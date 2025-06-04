@@ -1,97 +1,252 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3B41ACEAF;
-	Wed,  4 Jun 2025 08:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540F01F4C8C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749026908; cv=none; b=ro9fInuRH8r9SVpfjAOaDqKcPQvaL7F/+3XH0aI0/RvWMPFw7GmcfvLlyaYvsNizy5P1tracST2fJrBdBDavzbajb7fdfDilhpEgGOQ/Dy5wLXY6fqwHf7tx5jvpP6nFwb9se8qzmXstTgGqduakrD8JKcjgKrJsetXQyn1QNrU=
+	t=1749027031; cv=none; b=ZOux7NFQkVZMO+sOBJYWkCFMp7JypMm5+Sib05VEUotw114mC4e9Y0QVsBGKEY1nxAgn2r+AcxYCzjqegCUpAyuK8dhJDpx2Re/EG7a3dtfRXyy1IDuQ18jQfllOR8L0V335eIo+MRxIWJUBl0xYlwOlYGubIhszL8NyU/cbJlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749026908; c=relaxed/simple;
-	bh=B22946g//iI1Zeum0E3UnQPVhm0Sl1Gxrt0bukW4dSc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kGq8UM7iXzJKCsBuI7PKCEHLo1WKU/2lZk7dFp5T4Qb/ZxK4utnGThtRTq4l6qyKO7IJyH2LsyrvijVqvqtQGCeUJTveyN4Y91Q6ER3al6W3OgmWnZEWaVoCtazQfJmubZDn+MRNuBiKJmElXP68K39UQ5a8DKfhhhhXdPILlWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=anElONG6; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749027031; c=relaxed/simple;
+	bh=vNneidgUjOErExbsK33KEA4rWw9xI+CA0EyMqrrw4i0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jhrHXvLnPlVPhpMdYpCHkI11CdOr4/NugP0sB2JijmUGJLx4mUW0rjqdxUuRFQFIJhQGgdGIHGkHanaaM4fmiaBGACFcok+VpkcjPEbS1Lc4h08It6VhZrC5Xqq1l6vcqtd7qC73ve57iBCWNBd116i9j3Ii1R8pJQdRkA9JCUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K296ooc4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6VOxvPUV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K296ooc4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6VOxvPUV; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="anElONG6"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2352b04c7c1so7059805ad.3;
-        Wed, 04 Jun 2025 01:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749026906; x=1749631706; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B22946g//iI1Zeum0E3UnQPVhm0Sl1Gxrt0bukW4dSc=;
-        b=anElONG6zJV+9OGPZHOrFJ0KPUn0XUxrFfaiIEMydh7kcNUtIXWCIo4iBg3WHGPFsC
-         vUf21ywOa2BbiDmQ0+WjvRb05SESDS7gaWVh23+W64AR56WvQBT8FB3W3aJ7v5EJ/Hwi
-         pJgjZKH3f5eHyZUOK0yeV6UE2PoguXVE3tqAwffiA4Qf/8oksj/AzqJLqksFyW5yE3o4
-         ZRwjIkAWU05TLBqVeLSB+KPWHH01+Z9lL+I4ZBhcQ3Xz/PPMXjlyWoK0wB/fVzAI6hVL
-         uxsvPtclumd1kSh53oPH6DwV+YYGlfVJO0GJcbC6p9Eg/2MqnGlm/Q43EA7Hak0eHzfF
-         VK3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749026907; x=1749631707;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B22946g//iI1Zeum0E3UnQPVhm0Sl1Gxrt0bukW4dSc=;
-        b=A2jCzLzxJD0NkYmnSHnwbkgx94hE0Poy3Q8AL4rz5RxWdmZcnodkQUfM2KBjXfspeK
-         Qwl3qptods3lj6Rl8apQJ/f/uvY0FksonwaXs0sqSAs540+2xfYZ00VWJV2gVKbsaYj0
-         aK1ZO3AheISf/2+w/vcTaaV+Qda29cuXiR/EapNJkK4++m9exZJ3KDZRWYvYhyTJOOdn
-         PlOKhzLePL/S/rBXRYN7kPn74F211rsgHiJENd8oUxIDlNXEjaP0m2bByRvV2IUfsAkm
-         gfD8vQr9uE4WNvPS0uhZWCQH+WELaPkFs7V4J0BFBtXlRg06Pjb072tcLb2sSQc7/iUw
-         yGqA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8Abd+5P9+iRflUMkfsS+rc+9uE1m74yXSzbZIQYbItma5WgOH/8LfJyHxUgxFbvU0LIHkjWFx+mlaB6c=@vger.kernel.org, AJvYcCWlnsjU8u43nQF2JBtijhzDo1IpwEMxIQPZzGPsgbDS6MgRQIqn7KIEqHD+XxmeiiRimsf+XxO6iDt8APhKraA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPhd4LccHhCDbrXEkXnuphROaKnonilZ2d9Xw0N25LGEz2/WCO
-	mICLd7eFb1pDp/pMYb6QYkHXzjaiwtnA2iOBZMTy0qQm8a0Il5+GtOCIfuB+b1Jo8yBVVWmUde0
-	O924ny3UFMVitkjzWKwAqaYJn1P6w++k=
-X-Gm-Gg: ASbGncuVVVEiqkOm2TIhmm315yZXGDOkA9Pkiif8/MCzM191R6OBVvJrYkyyAX/29uJ
-	MKTvMYa89MkuF8oWd6+6XFgJFXx7EH21adP5GSMHMOuW85k7TI9ifRHKjWldVM5aNRCugIfXK/N
-	eFy3Q/ONmIAiu7cLlIeQ38LO/WdU4g/SoI7ZuDMN6CkQI=
-X-Google-Smtp-Source: AGHT+IGo5kz/xDs6MHPuQ3dDfVTBUxM0wfrY+gZ2cPa0H7JewFX4CC+DfgvHavmOLx1rUE4sayDMUurW6TzmyxGZZ1w=
-X-Received: by 2002:a17:902:f684:b0:234:d778:1411 with SMTP id
- d9443c01a7336-235e11f7977mr10030555ad.11.1749026906596; Wed, 04 Jun 2025
- 01:48:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K296ooc4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6VOxvPUV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K296ooc4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6VOxvPUV"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5907221ED3;
+	Wed,  4 Jun 2025 08:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749027027; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=c+xaJ1XtXYuGiSvMuLoiWfm4N00KVZ49kTh1iM94ncA=;
+	b=K296ooc4BTLyHH6nRIdVKxPIYF2TBKp1X8C3lI38GYAE7avDBrlcRjFVPjFePxLEYpe+bE
+	o8xdiFUs9OLrF80BmSMRccOk3fqsm4va0Orlq8vZ3HyKCB/gPXex7+hsopUqfxehM+vQjC
+	uoNH9QFRPyOUQiag1W1fgFQi7hwZw5c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749027027;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=c+xaJ1XtXYuGiSvMuLoiWfm4N00KVZ49kTh1iM94ncA=;
+	b=6VOxvPUVRttI99PTfzwR3d6s2D/hDn3ompEXscafXFLfwaCcsqDAZP1mhLQzvvLeXpk3k+
+	ifyDw3yl/UsArxBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749027027; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=c+xaJ1XtXYuGiSvMuLoiWfm4N00KVZ49kTh1iM94ncA=;
+	b=K296ooc4BTLyHH6nRIdVKxPIYF2TBKp1X8C3lI38GYAE7avDBrlcRjFVPjFePxLEYpe+bE
+	o8xdiFUs9OLrF80BmSMRccOk3fqsm4va0Orlq8vZ3HyKCB/gPXex7+hsopUqfxehM+vQjC
+	uoNH9QFRPyOUQiag1W1fgFQi7hwZw5c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749027027;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=c+xaJ1XtXYuGiSvMuLoiWfm4N00KVZ49kTh1iM94ncA=;
+	b=6VOxvPUVRttI99PTfzwR3d6s2D/hDn3ompEXscafXFLfwaCcsqDAZP1mhLQzvvLeXpk3k+
+	ifyDw3yl/UsArxBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BAB9B13AD9;
+	Wed,  4 Jun 2025 08:50:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id y5BHLNIIQGhZBgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 04 Jun 2025 08:50:26 +0000
+Message-ID: <e245f11b-7543-4c97-864b-7c9c4cbe4943@suse.de>
+Date: Wed, 4 Jun 2025 10:50:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530-b4-rust_miscdevice_registrationdata-v4-0-d313aafd7e59@gmail.com>
- <20250530-b4-rust_miscdevice_registrationdata-v4-2-d313aafd7e59@gmail.com>
- <DAACCYW3QRQE.1O75L2SHJYVPM@kernel.org> <3eef5777-9190-4782-8433-7b6ad4b9acd3@gmail.com>
- <DADAEIT9E1R8.1J69W5DKYAQGY@kernel.org>
-In-Reply-To: <DADAEIT9E1R8.1J69W5DKYAQGY@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 4 Jun 2025 10:48:13 +0200
-X-Gm-Features: AX0GCFsLB4H1RcJdYLIIq7_smD_2AP3DrC79dyRAE4xTA9ppo2fCwk6B7iPTvS0
-Message-ID: <CANiq72=893T0ZHawsym358N5iexbj+5UEL_RqMA_w_dEbJ+Ujw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] rust: miscdevice: add additional data to MiscDeviceRegistration
-To: Benno Lossin <lossin@kernel.org>
-Cc: Christian Schrefl <chrisi.schrefl@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee@kernel.org>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, 
-	=?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 3/5] drm/atomic-helper: Re-order bridge chain
+ pre-enable and post-disable
+To: Aradhya Bhatia <aradhya.bhatia@linux.dev>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Devarsh Thakkar <devarsht@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
+ Udit Kumar <u-kumar1@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
+ Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+ DRI Development List <dri-devel@lists.freedesktop.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>
+References: <20250406131642.171240-1-aradhya.bhatia@linux.dev>
+ <20250406131642.171240-4-aradhya.bhatia@linux.dev>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250406131642.171240-4-aradhya.bhatia@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_TO(0.00)[linux.dev,ideasonboard.com,oss.qualcomm.com,intel.com,linaro.org,kernel.org,kwiboo.se,gmail.com,linux.intel.com,ffwll.ch];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo,linaro.org:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
 
-On Wed, Jun 4, 2025 at 1:29=E2=80=AFAM Benno Lossin <lossin@kernel.org> wro=
-te:
+
+
+Am 06.04.25 um 15:16 schrieb Aradhya Bhatia:
+> Move the bridge pre_enable call before crtc enable, and the bridge
+> post_disable call after the crtc disable.
 >
-> (the `assert_sync` function should maybe be somewhere where everyone can
-> use it)
+> The sequence of enable after this patch will look like:
+>
+> 	bridge[n]_pre_enable
+> 	...
+> 	bridge[1]_pre_enable
+>
+> 	crtc_enable
+> 	encoder_enable
+>
+> 	bridge[1]_enable
+> 	...
+> 	bridge[n]_enable
+>
+> And, the disable sequence for the display pipeline will look like:
+>
+> 	bridge[n]_disable
+> 	...
+> 	bridge[1]_disable
+>
+> 	encoder_disable
+> 	crtc_disable
+>
+> 	bridge[1]_post_disable
+> 	...
+> 	bridge[n]_post_disable
+>
+> The definition of bridge pre_enable hook says that,
+> "The display pipe (i.e. clocks and timing signals) feeding this bridge
+> will not yet be running when this callback is called".
+>
+> Since CRTC is also a source feeding the bridge, it should not be enabled
+> before the bridges in the pipeline are pre_enabled. Fix that by
+> re-ordering the sequence of bridge pre_enable and bridge post_disable.
+>
+> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
 
-+1, and likely part of the prelude too.
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-(We may want to put all these into an `assert.rs` or similar too.)
+> ---
+>   drivers/gpu/drm/drm_atomic_helper.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index 86824f769623..db5aae15e75d 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -1336,9 +1336,9 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
+>   {
+>   	encoder_bridge_disable(dev, state);
+>   
+> -	encoder_bridge_post_disable(dev, state);
+> -
+>   	crtc_disable(dev, state);
+> +
+> +	encoder_bridge_post_disable(dev, state);
+>   }
+>   
+>   /**
+> @@ -1674,10 +1674,10 @@ encoder_bridge_enable(struct drm_device *dev, struct drm_atomic_state *state)
+>   void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+>   					      struct drm_atomic_state *state)
+>   {
+> -	crtc_enable(dev, state);
+> -
+>   	encoder_bridge_pre_enable(dev, state);
+>   
+> +	crtc_enable(dev, state);
+> +
+>   	encoder_bridge_enable(dev, state);
+>   
+>   	drm_atomic_helper_commit_writebacks(dev, state);
 
-Cheers,
-Miguel
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
