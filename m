@@ -1,189 +1,136 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E320728FAB7
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB7D33DF
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749044486; cv=none; b=dkc0FX3EaOw+OCcuwAVq1sIPcwBmFrBS0VI8bbgoeweaI/k8fmBE25iPtfIuz3ZxkNuQOxt+uwPukD64Q9twJzGkSovm2a50U5vbjnw4rhsqSbr5SS8k5FndJpWeA7niKhq0WGbu8DeaswirivVBRcWgHKjWeSK8wUSmPPk2/eY=
+	t=1749044546; cv=none; b=gwI0qJM6OmBtIIMYIpH182s9qYNFiVrtSCHy1nua3bHhyJ/DMwxBwHXAWuDIYzBOkfx3NHSCuQPIre5SVkxVteUS1szN0U27jVCWDdeFUmTjwZTrUWL9pOsdmal62MzJnwNcPcdga7U3IGBMyNmptyGyVtxNUnA3fUQFFZoV4WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749044486; c=relaxed/simple;
-	bh=1kU0n2bW3hlLIxRCbwHPbQyi7Fb4CY9XVqE2C/Sy8+8=;
+	s=arc-20240116; t=1749044546; c=relaxed/simple;
+	bh=dIABzik+Xpu8YPlwTdFf/8MsdySvzM2KB+LBe47QblU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ObWeV35CuwmrLEaHmiVENa6V5TTYxk/e8pOpp6SJjh0WPR7JfXaAI1uhlW4fqYk9op0Wa2Oe569RwcLV9sWiGV+lO510bmPvou7zBeoQXn66K1V7d2QCujlV+1tk9PRoVSDE1aBTUdu3ZgegpiLO+2I+xDwk3LIClbTMkgRNIFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=K87g+iFJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=F+Msg7F8ScjJEOJBqjwIY7j2z24NCEMgJLqMtv2adXmRidrzUhka0f2m7Yuq1Co95NDW6l4U653RTr+YB3TUtvcdW2t+HnGhCbbyDADKsCPMF9JoNzjG6gbxJTecfNw1UzsHmH4VYSLPOFIjMUm3fHLGJAeS/mdwgunextXEUgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ejPz2crY; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="K87g+iFJ"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5547YaQg028363
-	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 13:41:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3/ZLOV/HNol/MkyrbMnKs/oh0VOFuPImZUzRQhw3LY8=; b=K87g+iFJ17Kk+tbC
-	74pCfHp6SL7Pp2K1xutgdSGMASlUdO+fSbB65gb8DBREgBlvfPZDzfzq2B73uvNs
-	BCyH2xbXDX2iWh6KZaJONs2C41NWZOkRGlxhqjY8CnjHVCPbx+L3oLUZvQ5+bkZ/
-	hZIjNCqkoB2CMVFSdmN/Pz+piZ4mARhPrveY7h69ngDohNQpnpbQCSHU0tOCXUwE
-	F6CxPH5YLX6tH66C8TkbqZ17K8EGg3u3kRqXVGPlK9eEEWDSWb3tNVqgcm/63k/M
-	tgy8HZrgOLFZ1AtyAdURvuaS/NNLiSJvUWdh39nEpWoKBChGEZD2MYab/GmWYj/R
-	rBE5og==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8tx89b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 13:41:23 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d09ed509aaso1025214385a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:41:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ejPz2crY"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a375e72473so3976627f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:42:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749044543; x=1749649343; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4krNLYqTu5PwEOLh0tYgHTp5VBnZZoifiHQYwqKpyGI=;
+        b=ejPz2crYxqiM5ee2GjwBptlCsRtZLdTE86Ds6mlULeCOLIxRaDeXyuGLCNRk66Ah7b
+         b2iYquU8MD+v4KJ70vTS7bPPxR5ZHt7TYZu5+yd76gYLmtL7vx68E8MKDXAAf/qSsX4U
+         xhZX8T05hPnPC9D7zeu5l2maVyqLlUPdVRoAzhFtxBLrq3LxunOFppY0uA2mPWD/ZPDi
+         Cvu0WPFc0ZQeTsqd/Sb56df7Yx9sxUXbjRzOSCDSAp7PxamDdHZm/xxYbBJTzLHG7NK2
+         hcpimXO9HvDHNNbr1WBsN6boMYDKYeTidtkRiT5vwwPOHCZp2K93ibobGRztLq24qEb3
+         ooRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749044483; x=1749649283;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3/ZLOV/HNol/MkyrbMnKs/oh0VOFuPImZUzRQhw3LY8=;
-        b=C3X86z+gi44/kbhBzeEYMDRmwLT+T9NVGzEOqCwqN20UnuXwzeDkNL1nRfZnfaTyhk
-         QsiKOm1KqH2yeICmRUQM5zmSFoc1bYA+o2vowOAcejW4lQEXCb542VpW6Mx9qmLP1FFM
-         iFEv/1sXEajU8737qptjWfRpfRNAQ5pf5Uwfb++bEPCVOLz15fQJkfi386rh4VlWgnyL
-         En37gpqV5cuCksTtaCpgmFOdRVIsAnem4gqW/kHqKDn0+K1/sdiS080yYrbAabF/tm4B
-         x6WGuam+tuynG1ocUXW3UR7dvP7cJ2AivkF04FFTnoD54MZxHQ+KDBNA2xlWJycUumX1
-         j+vA==
-X-Forwarded-Encrypted: i=1; AJvYcCVoKEueD53LPgvG8sxmeTnsDHbtjgxzzje1vL5R0vV3MdvyMrsgxklS6XE4nNdQxINsEmdejkEat+ViIoQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIoGxnaztIgU1hV394qQajx23MILk3Ca61RqLN8Iyb4RUiFtX0
-	/+Q5V22B5SmXcB+KJ637d6w3wuFPv3Y1h2twP59gSFwEZTzyF6Zq+JndRa/ECeUS2wHbuCNBKO1
-	JXojvGs0Bxylnk5uF7gAsp7YKHSNnuxCtVrMn+GqLIRlkECLSpUkIybpLpEfNYcRz5EI=
-X-Gm-Gg: ASbGncs8JdWjYGfPA6AOsnG23Sr8mvXsDtX4dVkFJ8TMF/CwHOPQtZkmbRd6ai2xfpu
-	RmzXIlDwnXqJ8Z61a5OuhZKNgCI8KvzGCbSOFltNrKROOTlu9ciox8o6S5f3xK1xGG/DJgQn+Y9
-	WXauZy2vbD3+1dmUfpFKYAsP+sC6dx+5PEZ9IWgep1/N6WkLY4jHw7U7IQ3AQlY6TizDrwjQqut
-	TBVMxdykZo9ECov5waKeqZo/yimFegLSDBK2lrg286yKpzuXLYjJ+0DjfolNK1u9NQ5H2kFAAVu
-	lWvQXlkMyaVj5aIk5DItPX19uJS82eKitsNQ7hlSjG1z5/PQw1Irbpi7lqgdK0/5YJc0a2zL6u8
-	=
-X-Received: by 2002:a05:620a:44ca:b0:7d0:9782:9b05 with SMTP id af79cd13be357-7d21997cd79mr512472085a.25.1749044482833;
-        Wed, 04 Jun 2025 06:41:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG3op8LTfjOLqxZdhVw2i4Biz6kY73hnDxhxU2RIwZnTe0rdyBP1Nv6BjhIaJZeMxqSKmPUpQ==
-X-Received: by 2002:a05:620a:44ca:b0:7d0:9782:9b05 with SMTP id af79cd13be357-7d21997cd79mr512464685a.25.1749044482199;
-        Wed, 04 Jun 2025 06:41:22 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85bd2a3asm21611731fa.90.2025.06.04.06.41.20
+        d=1e100.net; s=20230601; t=1749044543; x=1749649343;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4krNLYqTu5PwEOLh0tYgHTp5VBnZZoifiHQYwqKpyGI=;
+        b=Gl6Kl7hxJPPJeN6dP5oEfqV1/HkFiWSdl2C/5grayNdlGMHG/dimeeZqETDPdatKwx
+         Y5gbX06jzU7vd+diXW5cSCMDkMYdNcEIGnurrHjjORjAiN/6TDxvvPEKiPWDBmqd8nxf
+         MAcQZkpv4WisergFuG33X+f7fbwK719YyEMMKdrK1jQsQsA5YO8/VcIUHDpvHP/1tupo
+         g13RbcEpf5ATRlPCPjLNYIGD8+5teuGFYM/93XvzVFcr7kSqYBdrpgEGgF4KXYIBDb+t
+         zEe0r22cZh7RWaR/HmgE/ju3NoE8PyoFx3usKHkiXXm1tSVtQHs9FI5Sl1EyhwVYg0Hg
+         MVQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVolpCH55OH2gEPfU4vy9/jto6aWJ76bClpFD7xVt27vFDSA12b5V1gzQnwynMQ6B2eDQoW7Xrk6jS24EU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRDJxVR4Vg+3khkB3qwGwuC2UfWyD+T5xQ5RN/wfhtneJ9VLyP
+	UkJPP0LubX1aSbdKmqa1K9OUOcxqnyypHJ5ZkEy0QBCrg2brL+CgTkGVOvD76aLxG7o=
+X-Gm-Gg: ASbGncux048pTuBqRV636gC/MKfDQXzvSTtBC/UTZNi71HWW1/ErMu8S3hiAYTucqjH
+	hxDLkrhi2WfTAGYkKC13E/OBAvO1Nt219baVZmsE/VhE9of2BFVtTCc2+tySnAutQ13JUXHX7GF
+	d69EN1cEH2eGZArybqaG3PRc6i5LtBczWEBJ7J9lphzvrhw0j146WZngAYuSa4y3GN5WGSgzDrn
+	5CN/tGTcBX2/4CtmXGVbLSQqkZbRYmW2wTtuh7PY1SYh1fypcDVXyFX7V5By84ADSw5HkvQMGiR
+	VQh85eF3ZCINqklwix2JU7bt+Y08oHk/k3jd7+ne7PIMzFawUs4PEA==
+X-Google-Smtp-Source: AGHT+IFBf1ks7FvkIM9/KgiSH1Nm0ceyhd9C2E9/xug+Okpyo/jMkoHYpfHI27ynqCD67VSiZ+dtUg==
+X-Received: by 2002:a5d:588d:0:b0:3a4:f7dc:8a62 with SMTP id ffacd0b85a97d-3a51db2deedmr2311080f8f.0.1749044543082;
+        Wed, 04 Jun 2025 06:42:23 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e32feecsm8910312a91.47.2025.06.04.06.42.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 06:41:21 -0700 (PDT)
-Date: Wed, 4 Jun 2025 16:41:19 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Renjiang Han <quic_renjiang@quicinc.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 2/3] arm64: dts: qcom: qcs615: add venus node to
- devicetree
-Message-ID: <wyzyffaksofnubx72dy6uj6wuv5nk3bxii2ncdvb7ga3fegynj@z44aoiu4ywt6>
-References: <20250527-add-venus-for-qcs615-v7-0-cca26e2768e3@quicinc.com>
- <20250527-add-venus-for-qcs615-v7-2-cca26e2768e3@quicinc.com>
- <429b4c99-b312-4015-8678-0371eac86de4@oss.qualcomm.com>
- <6a9e7daf-c0df-42db-b02d-96d9893afcde@quicinc.com>
- <idc4476ibh4geraklzpas5536jnwvbp6xhjjaajcdcwxicorrf@myh7kyz77rxy>
- <43e1f8db-5ab1-44ce-97c8-50910704788f@quicinc.com>
- <d6udpwmocodvlsm5ljqz7zbyonj2yahtlzmm2jjjveqrm2hmkz@andh5j4jgixr>
- <9faff664-9717-4259-8b23-bc44e64f6947@quicinc.com>
- <77ea49c3-f042-4ba9-a0da-1d0e4e4088d3@oss.qualcomm.com>
+        Wed, 04 Jun 2025 06:42:22 -0700 (PDT)
+Date: Wed, 4 Jun 2025 15:42:04 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>,
+	'Michael Kelley' <mhklinux@outlook.com>,
+	'Ryo Takakura' <ryotkkr98@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Problem with nbcon console and amba-pl011 serial port
+Message-ID: <aEBNLMYVUOGzusuR@pathway.suse.cz>
+References: <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
+ <84y0u95e0j.fsf@jogness.linutronix.de>
+ <84plfl5bf1.fsf@jogness.linutronix.de>
+ <TY4PR01MB13777674C22721FCD8ACF4FCCD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
+ <aEApOPTqbVOR35F_@pathway.suse.cz>
+ <84o6v3ohdh.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <77ea49c3-f042-4ba9-a0da-1d0e4e4088d3@oss.qualcomm.com>
-X-Proofpoint-GUID: bDKk_XkzXIZQGOI5ximkCsqx8pCTqVuM
-X-Authority-Analysis: v=2.4 cv=Qspe3Uyd c=1 sm=1 tr=0 ts=68404d03 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=i_0oWf60KM-UqR_2WRwA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDEwNCBTYWx0ZWRfX79FSQCfMJjEe
- IU695IXe0TngqHFOa2uePod/vhHm1ofk+DDpVs8EhqgDKeYpDDCwbv7Si7N59bELEtEM2xCPJdB
- 7jBX1txKuUu13jcri4vYilkdfgKDfyNqn9g6VwEpzDo5KJefA03jenjp5nNZY/afF4B4OuOp9Wv
- LrL1Rtlj45U97M+2HAYPTU3n4Ts+1HL0H3bnLosVf5Uftw2cQftSSyGFzoJGErHRthBAsyKs0+9
- h/WgVqOgJkUExRQR7tLV6ofGQtH9iBFstnV1m4QAbqCjLVtVRMOPz5Ad/4CZK4xw7ME0zs+cKpq
- WidghZKGdnIMHcxEoWaZE+rt6JzWwY2BV07dw2TvUkv6hjU25b7IOISrgUniaKJUf/mNddgk4Mm
- Ft4011NVICZbqp42AbQgllhbkA5we8LexBhLQUsI40k19vpvTT69xUesv9huH+QbBXvhVmsW
-X-Proofpoint-ORIG-GUID: bDKk_XkzXIZQGOI5ximkCsqx8pCTqVuM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
- lowpriorityscore=0 suspectscore=0 impostorscore=0 malwarescore=0
- clxscore=1015 adultscore=0 phishscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506040104
+In-Reply-To: <84o6v3ohdh.fsf@jogness.linutronix.de>
 
-On Wed, Jun 04, 2025 at 03:24:25PM +0200, Konrad Dybcio wrote:
-> On 6/4/25 2:05 PM, Renjiang Han wrote:
-> > 
-> > On 6/3/2025 9:21 PM, Dmitry Baryshkov wrote:
-> >> On Thu, May 29, 2025 at 10:29:46AM +0800, Renjiang Han wrote:
-> >>> On 5/28/2025 7:04 PM, Dmitry Baryshkov wrote:
-> >>>> On Wed, May 28, 2025 at 05:13:06PM +0800, Renjiang Han wrote:
-> >>>>> On 5/27/2025 9:57 PM, Konrad Dybcio wrote:
-> >>>>>> On 5/27/25 5:32 AM, Renjiang Han wrote:
-> >>>>>>> Add the venus node to the devicetree for the qcs615 platform to enable
-> >>>>>>> video functionality. The qcs615 platform currently lacks video
-> >>>>>>> functionality due to the absence of the venus node. Fallback to sc7180 due
-> >>>>>>> to the same video core.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Renjiang Han <quic_renjiang@quicinc.com>
-> >>>>>>> ---
-> >>>>>> [...]
-> >>>>>>
-> >>>>>>> +            interconnect-names = "video-mem",
-> >>>>>>> +                         "cpu-cfg";
-> >>>>>>> +
-> >>>>>>> +            iommus = <&apps_smmu 0xe40 0x20>;
-> >>>>>> fwiw docs mention 0xe60 0x20 (which result in the exact same resulting sid)
-> >>>>> OK. Will update it with next version.
-> >>>> How would you update this?
-> >>> Thanks for your comments. I'll update it like this.
-> >>> iommus = <&apps_smmu 0xe60 0x20>;
-> >>>
-> >>> This 0xe40 SID was based on a previous project. However, after rechecking
-> >>> the documentation yesterday and confirming with colleagues, the correct
-> >>> SID value should be 0xe60. I’ve also validated it on local device, it
-> >>> works as expected. The reason 0xe40 seemed to work earlier is due to the
-> >>> mask value being 0x20, which causes the effective SID derived from 0xe40
-> >>> to be the same as 0xe60.
-> >> Using 0xe60 would be counterintuitive, as we have a non-zero masked bits
-> >> in the base value. It should be either <0xe60 0x0> or <0xe40 0x20>.
-> > 
-> > Hi Dmitry
-> > 
-> > Thank you for your comment.
-> > 
-> > I’ve followed up on this sid with a colleague from the kernel team,
-> > and based on our discussion, it seems that the sid in this case should
-> > be the result sid. The actual sid is 0xe60, and with a mask of 0x20,
-> > the resulting sid would be 0xe40. Therefore, it should be <0xe40 0x20>.
-> > 
-> > @Konrad, I’d appreciate any thoughts or suggestions you might have on it.
+On Wed 2025-06-04 13:56:34, John Ogness wrote:
+> On 2025-06-04, Petr Mladek <pmladek@suse.com> wrote:
+> > On Wed 2025-06-04 04:11:10, Toshiyuki Sato (Fujitsu) wrote:
+> >> > On 2025-06-03, John Ogness <john.ogness@linutronix.de> wrote:
+> >> > > On 2025-06-03, "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com> wrote:
+> >> > >>> 4. pr_emerg() has a high logging level, and it effectively steals the console
+> >> > >>> from the "pr/ttyAMA0" task, which I believe is intentional in the nbcon
+> >> > design.
+> >> > >>> Down in pl011_console_write_thread(), the "pr/ttyAMA0" task is doing
+> >> > >>> nbcon_enter_unsafe() and nbcon_exit_unsafe() around each character
+> >> > >>> that it outputs.  When pr_emerg() steals the console, nbcon_exit_unsafe()
+> >> > >>> returns 0, so the "for" loop exits. pl011_console_write_thread() then
+> >> > >>> enters a busy "while" loop waiting to reclaim the console. It's doing this
+> >> > >>> busy "while" loop with interrupts disabled, and because of the panic,
+> >> > >>> it never succeeds.
+> >
+> > I am a bit surprised that it never succeeds. The panic CPU takes over
+> > the ownership but it releases it when the messages are flushed. And
+> > the original owner should be able to reacquire it in this case.
 > 
-> What our docs describe as 'result sid' is literally 'base ~& mask', so if
-> we used that, setting the mask would be useless..
-> 
-> Now, some old NHLOS builds are known to cause issues if the values aren't
-> exactly what they expect (some whitelisting must be going on there).
-> 
-> I don't think this should be an issue on this platform, but let's just
-> use 0xe60 0x20 here to reflect the real values
+> The problem is that other_cpu_in_panic() will return true forever, which
+> will cause _all_ acquires to fail forever. Originally we did allow
+> non-panic to take over again after panic releases ownership. But IIRC we
+> removed that capability because it allowed us to reduce a lot of
+> complexity. And now nbcon_waiter_matches() relies on "Lower priorities
+> are ignored during panic() until reboot."
 
-Isn't 0xe40 also 'real'?
+Great catch! I forgot it. And it explains everything.
 
--- 
-With best wishes
-Dmitry
+It would be nice to mention this in the commit message or
+in the comment above nbcon_reacquire_nobuf().
+
+My updated prosal of the comment is:
+
+ * Return:	True when the context reacquired the owner ship. The caller
+ *		might try entering the unsafe state and restore the original
+ *		console device setting. It must not access the output buffer
+ *		anymore.
+ *
+ *		False when another CPU is in panic(). nbcon_try_acquire()
+ *		would never succeed and the infinite loop would	prevent
+ *		stopping this CPU on architectures without proper NMI.
+ *		The caller should bail out immediately without
+ *		touching the console device or the output buffer.
+
+Best Regards,
+Petr
