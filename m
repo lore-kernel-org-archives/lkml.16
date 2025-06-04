@@ -1,123 +1,149 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED861F9A89;
-	Wed,  4 Jun 2025 18:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749062223; cv=none; b=MUGP163BXtn4e8ApPqDSb5Fqqrv256lnam4uI7XFHDF6nKy0rNEVCMoVCA5k17d+pLsmvILn+nUeFysoRg2aiPVZzYb9aFpewpW0Rd8wAK11ANiXJUMG6BQ/tcMf1TbflCyTsyqm3Ww3oefiCNUMyZbD12so/4WryZ7Q26Ho3w4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749062223; c=relaxed/simple;
-	bh=prPLDvjco2lb3lynxL0yuGQ8j5sJ0TMMjukMXXTYtBI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=T5Khxgfdup8IUwbfaU0xEFQttY6uKrDuklIdRcE4uczxQigNPH8zAlcKlkTkOYLgo/k9eL34OHyJ77Syg2zezsYPMPlakv/jEqPj70HEld6t4kp53nuiMhw1uz6tGXN3/JhuwzFobxZoLQuZmfxYsaIk5NC0gPsVftBg1tRwwcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pBTgW1y0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a7kZkcsD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7E217548;
+	Wed,  4 Jun 2025 18:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749062305; cv=pass; b=gHK0ih45D3diTiRjnI5vsvJVJAcr6u9cRSSdNQOETv/7iXZ87f7bCsbEXh6OeuGfXlcXzY7nyXbd0i8FDEYyQPffgAP4BcIz286BehgnvA36+vXaYdM3pAiJ7k+ve30X1hpsmQWrXTqmi7jKZF8T8A7BJnw0JrqkfQ6B0MTbBBE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749062305; c=relaxed/simple;
+	bh=0E7gJuunXtlZQrr+exe7Vou5iv/2kdQNcOYMNM2bCik=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nxho2hL6PS1hUNz0l7TmmhZENvNuG2jMPmQ5zo3Apcciq1Nk6kJ4Tv/h4thjMe48di1bMgvdsLzjnZzxTy8VgWi0tvLncuoxSWDqopV7LuL8iAv9BFFlcIJsyLw1JJP2bm0c4AaITB7pifNG7azm4wK7jllHpp8Sulkh8j7gWIo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=lFCXOENq; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pBTgW1y0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a7kZkcsD"
-Date: Wed, 04 Jun 2025 18:36:57 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749062219;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IW8bHYqDV/yt9xoUe+0Zr9NpAGnHPSajQm8DSu7QLvU=;
-	b=pBTgW1y0vcVxZRbsSoKkyZkZdCdgk11ZU2lVpGfhZoVvm+DfJtwFJ40Cm5R9PlZCV3gmc5
-	w43FWEFs5oxqxAg7JmoL/QWOCTFQ6J2cu90iv3ijfGhPKiazV8OV05yGMUBBynM//7s/J/
-	wHM4V9pkz3CdfTsYcL9fzdMVngGPLXui9rj2DMswxBV1c473iMi9KtlrGaUyl0r2kf4HaS
-	QS+28Sg1LdVnUTKGe0M5stfJIH98OdeMZgMEdMKf8tcaxq6XEmPt6IUl7/fcYuJZnfedNE
-	ZquE2Ysl6jav+nmiHTCkASeNIH2Ux80FD9+fZV+rsdonx40xbvq2o7ns4WovfQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749062219;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IW8bHYqDV/yt9xoUe+0Zr9NpAGnHPSajQm8DSu7QLvU=;
-	b=a7kZkcsD8gbJzSt8w8rSqh8HfLS/NyUBTjKGu6w2hmcdEoahDRG8dYkPcaUgVlwrjSuKvM
-	590XwB9pLeSO0gAg==
-From: "tip-bot2 for Zeng Heng" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] fs/resctrl: Restore the rdt_last_cmd_clear() calls
- after acquiring rdtgroup_mutex
-Cc: Zeng Heng <zengheng4@huawei.com>, Thomas Gleixner <tglx@linutronix.de>,
- Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250603125828.1590067-1-zengheng4@huawei.com>
-References: <20250603125828.1590067-1-zengheng4@huawei.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="lFCXOENq"
+ARC-Seal: i=1; a=rsa-sha256; t=1749062290; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XpxOfDMkMTehlhbi+CGReSWqqUMLkmJnUczaQxUGlmri2hdiu3/hj2DnzxJAbaMW7Gj2P9oRvLjx1biYSoxpV0WcPjNQZHTZJdSodzQboRPeyBb1iq4+y7IDIA/jC9RV4TlFhJXLFFcofKaBRw1xu0Zgk+o/AC2HzvhqW5fjdaU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749062290; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=GgYGEkJt3VCybdxa1+YIDFMAdYlcqDVQpOv3hqdiLPM=; 
+	b=iHBThtcll7E39v7NeNOx45NsPxRMeGolvpLc9IdPQP5E0PCtiEEO17hMMFlxvfWuc60U81RpSmcUTt/6kyKTT758/EE0x0AQx46u3k7Qi0vaMUmdB6FImW1Fu8R8SIDVayVlOi7bKLU7y92ugGUhEvkQyGj0zbUjqpK0HgT4Cv8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749062290;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=GgYGEkJt3VCybdxa1+YIDFMAdYlcqDVQpOv3hqdiLPM=;
+	b=lFCXOENqlwkxoQjE2Q9bGDzFbMvHdKtwOBOlg53icWk8zBnj6ibTxwrIaTbZsrxq
+	RVBFVughZgUbhFNYqNfjHr/fVrIN+Ib+q/tmu8mBHQpb+BHBiY52Un7xwOmnzII7oIz
+	1NABwjHc+h3GFQdT+itsOmMDXN/5/Src+i54Sg+Y=
+Received: by mx.zohomail.com with SMTPS id 1749062288242553.3001727608961;
+	Wed, 4 Jun 2025 11:38:08 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Alexey Charkov <alchark@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Alexey Charkov <alchark@gmail.com>
+Subject:
+ Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
+Date: Wed, 04 Jun 2025 20:38:03 +0200
+Message-ID: <6656934.DvuYhMxLoT@workhorse>
+In-Reply-To: <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com>
+References:
+ <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
+ <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174906221776.406.2054232973321413607.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Tuesday, 3 June 2025 19:01:13 Central European Summer Time Alexey Charkov wrote:
+> List both CPU supply regulators which drive the little and big CPU
+> clusters, respectively, so that cpufreq can pick them up.
+> 
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+>  .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+> index b09e789c75c47fec7cf7e9810ab0dcca32d9404a..d9c129be55a0d997e04e6d677cdc98fb50353418 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+> @@ -207,6 +207,22 @@ vcc_3v3_ufs_s0: regulator-vcc-ufs-s0 {
+>  	};
+>  };
+>  
+> +&cpu_b0 {
+> +	cpu-supply = <&vdd_cpu_big_s0>;
+> +};
+> +
+> +&cpu_b1 {
+> +	cpu-supply = <&vdd_cpu_big_s0>;
+> +};
+> +
+> +&cpu_b2 {
+> +	cpu-supply = <&vdd_cpu_big_s0>;
+> +};
+> +
+> +&cpu_b3 {
+> +	cpu-supply = <&vdd_cpu_big_s0>;
+> +};
+> +
+>  &combphy0_ps {
+>  	status = "okay";
+>  };
+> @@ -215,6 +231,18 @@ &cpu_l0 {
+>  	cpu-supply = <&vdd_cpu_lit_s0>;
+>  };
+>  
+> +&cpu_l1 {
+> +	cpu-supply = <&vdd_cpu_lit_s0>;
+> +};
+> +
+> +&cpu_l2 {
+> +	cpu-supply = <&vdd_cpu_lit_s0>;
+> +};
+> +
+> +&cpu_l3 {
+> +	cpu-supply = <&vdd_cpu_lit_s0>;
+> +};
+> +
+>  &gmac0 {
+>  	phy-mode = "rgmii-id";
+>  	clock_in_out = "output";
+> 
+> 
 
-Commit-ID:     dd2922dcfaa3296846265e113309e5f7f138839f
-Gitweb:        https://git.kernel.org/tip/dd2922dcfaa3296846265e113309e5f7f138839f
-Author:        Zeng Heng <zengheng4@huawei.com>
-AuthorDate:    Tue, 03 Jun 2025 20:58:28 +08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 04 Jun 2025 20:32:55 +02:00
+Reviewed-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-fs/resctrl: Restore the rdt_last_cmd_clear() calls after acquiring rdtgroup_mutex
+> so that cpufreq can pick them up.
 
-A lockdep fix removed two rdt_last_cmd_clear() calls that were used to
-clear the last_cmd_status buffer but called without holding the required
-rdtgroup_mutex.
+Fwiw, even without this patch they're picked up by cpufreq-dt for me:
 
-The impacted resctrl commands are writing to the cpus or cpus_list files
-and creating a new monitor or control group. With stale data in the
-last_cmd_status buffer the impacted resctrl commands report the stale error
-on success, or append its own failure message to the stale error on
-failure.
+    user@trixie:~$ sudo cpupower frequency-info 
+      analyzing CPU 5:
+      driver: cpufreq-dt
+      CPUs which run at the same hardware frequency: 4 5 6 7
+      CPUs which need to have their frequency coordinated by software: 4 5 6 7
+      maximum transition latency: 40.0 us
+      hardware limits: 408 MHz - 2.30 GHz
+      available frequency steps:  408 MHz, 600 MHz, 816 MHz, 1.01 GHz, 1.20 GHz, 1.42 GHz, 1.61 GHz, 1.80 GHz, 2.02 GHz, 2.21 GHz, 2.30 GHz
+      available cpufreq governors: ondemand userspace performance schedutil
+      current policy: frequency should be within 408 MHz and 2.30 GHz.
+                      The governor "schedutil" may decide which speed to use
+                      within this range.
+      current CPU frequency: 1.61 GHz (asserted by call to hardware)
+    user@trixie:~$ uname -a
+    Linux trixie 6.15.0-11173-g546b1c9e93c2 #2 SMP PREEMPT Wed Jun  4 20:32:52 CEST 2025 aarch64 GNU/Linux
 
-Consequently, restore the rdt_last_cmd_clear() calls after acquiring
-rdtgroup_mutex.
+this is more correct though of course.
 
-Fixes: c8eafe149530 ("x86/resctrl: Fix potential lockdep warning")
-Signed-off-by: Zeng Heng <zengheng4@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Link: https://lore.kernel.org/all/20250603125828.1590067-1-zengheng4@huawei.com
----
- fs/resctrl/rdtgroup.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Kind regards,
+Nicolas Frattaroli
 
-diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index cc37f58..1beb124 100644
---- a/fs/resctrl/rdtgroup.c
-+++ b/fs/resctrl/rdtgroup.c
-@@ -536,6 +536,8 @@ static ssize_t rdtgroup_cpus_write(struct kernfs_open_file *of,
- 		goto unlock;
- 	}
- 
-+	rdt_last_cmd_clear();
-+
- 	if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED ||
- 	    rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
- 		ret = -EINVAL;
-@@ -3472,6 +3474,8 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
- 		goto out_unlock;
- 	}
- 
-+	rdt_last_cmd_clear();
-+
- 	/*
- 	 * Check that the parent directory for a monitor group is a "mon_groups"
- 	 * directory.
+
