@@ -1,83 +1,88 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920732C3246;
-	Wed,  4 Jun 2025 22:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6EF29A2
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 22:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749074714; cv=none; b=OeZq8GPw6iiRtZa6QbLCOZUa5imNINxk5Fvsx9z2iV2Zd7+RXUBc2d4bfnNx/SC+zJWfuXj3kGh5kD+R2iJUuQQ35BZlVlfU8Xx78J7O7TCsu7BNE1re+sbq2NY1RtSV3zh9Y3UfhD5ASK+Y6xxDU4rz388C0+sDi6+Wok9q/P8=
+	t=1749074982; cv=none; b=a7WeeXZ+E9ofGEcRIIw7sPxF2i1M5u2O8BHNZhXClwCLve8LUh58OL65mePhGTM2Fn+xwwD1wR66Td6mvV5WdxEqF8GzGJkfGJHKYP9SkyyH4DTk+zWNOWeIAiR+ePd5Artk+dT+AMgj1MDPnVnFEBEICIfeXbJP6jbQpfYhHms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749074714; c=relaxed/simple;
-	bh=Nh/C3jkigC/s5IYwTai6YLcfd9DUBEpg9k9xorz/KHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V1udoyGETmH6eDO28yafzpzy+EfRm7Nn6xPhCKx2b89f6mfUE/wqfr7Qiv7LTAIZzbdrxnHk155bMK9EimwS6g2yVSX/Fz3/FPlNrsHe0VBuw7SB7di85G9utP6RXfMp9zaSIrq/nDtH4eDeiLiDGachkRUEsOVjCChqkxZnkQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HUiB6XqF; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749074982; c=relaxed/simple;
+	bh=TjGCTN2WElX2W0wWftYpeQAE777rXI2b0T6a8Mxb63Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bkf3FMtvZ4M5NWV519NMfPCgkIGKbpUvMfQEuPlvFdl4EwKqFXEvzfy2fZ3JvdSofzREGSROplxQs1EFIX6cUXrEbSUrphRTHYOkUVqNrJk2HAOp+6CQ0xA9DCVy0CV8Sp928i0/glFIEC7vJNW3iQS6p9yypk5rxAYa0x8A7uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ep1PFRGY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HUiB6XqF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749074710;
-	bh=Nh/C3jkigC/s5IYwTai6YLcfd9DUBEpg9k9xorz/KHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HUiB6XqFFgdF60fjimTAw2GMN1B+1vgY6gDrs0juL3FXGWRXL08bKEBh/Qke//zMw
-	 jH3yUAYfCXr839Vll2/scvSCd9CSDSXcOUXN5zeXO/yutqwRWCI95JlzAUBN5NV0gr
-	 kmaNqdUhuVRg2pnMLgK4onnzfYAtK/6mXck/a/rVxhF8YDAABOwYTcUNrwMGxC9aLU
-	 8zru5C1r3tQB/D2gFuaU8DDoKEmSUpPSxR5T2JZ/ZRsEpmctbpAeLhnYXODxV17741
-	 EbWNTiYfwH/bzCDUZzCAkhyVby00kW2FNsftbp1Mv1z6OHokVH25k8rib4RyC4xpvZ
-	 trWKCK2DpDa5g==
-Received: from notapiano (unknown [IPv6:2600:4041:5b1a:9400:99d:464c:62e0:2118])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ep1PFRGY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749074979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=T2yexuRi18rJgKIKVwh54stcOMquX5XP7HKHgjkZl5A=;
+	b=Ep1PFRGYOncb8JEf1uhswJ4m05xdKOcGa28Jz69mQIBrv/53pqto0fmsaDZAUiT0teRsvP
+	vjgqGV2UBSsEcENRNGOpkk0+bK0+s0m1Lst03V5jQV+QvwEf5BaSOOwZ16fW4SHchLVcyT
+	KxHGKr3Cl4mQbL9iVTExUhaK3oMLasU=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-505-plrHPBgsNiqKFLYn_qQTJw-1; Wed,
+ 04 Jun 2025 18:09:38 -0400
+X-MC-Unique: plrHPBgsNiqKFLYn_qQTJw-1
+X-Mimecast-MFC-AGG-ID: plrHPBgsNiqKFLYn_qQTJw_1749074977
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5775D17E0FCE;
-	Thu,  5 Jun 2025 00:05:09 +0200 (CEST)
-Date: Wed, 4 Jun 2025 18:05:06 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: Re: [PATCH v2 0/3] docs: some automarkup improvements
-Message-ID: <ebeb020a-8403-441b-ab02-f017ffcb7b83@notapiano>
-References: <20250604143645.78367-1-corbet@lwn.net>
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C11CB19560AF;
+	Wed,  4 Jun 2025 22:09:36 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.89.125])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1AA0B1955D8E;
+	Wed,  4 Jun 2025 22:09:34 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH 0/3] timers: Disable memory pre-allocation of timer debug objects
+Date: Wed,  4 Jun 2025 18:09:23 -0400
+Message-ID: <20250604220926.870760-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250604143645.78367-1-corbet@lwn.net>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Wed, Jun 04, 2025 at 08:36:42AM -0600, Jonathan Corbet wrote:
-> A small set of automarkup changes to improve the visual consistency
-> of the rendered HTML documents.
-> 
-> Jonathan Corbet (3):
->   docs: automarkup: Remove some Sphinx 2 holdovers
->   docs: automarkup: Mark up undocumented entities too
->   docs: CSS: make cross-reference links more evident
+A circular locking dependency was reported by lockdep involving printk()
+called from within the memory allocator, console driver with timeout
+capability and timer code calling debug_object_activate() doing object
+pool refill by allocating memory.
 
-This is much better. Markup, links and underlines are all looking good now.
+One simple way to break this circular locking dependency is to disable
+memory allocation when timer debug objects are being handled which is
+what this series is about. The majority of the changes is in the
+debugobjects code with a one-line change in the timer code.
 
-The only other thing I noticed is that the links in the sidebar still use the
-old style, since they rely on a different CSS selector for some reason:
+I have also considered updating the console driver to not hold the lock
+when setting up timeout, but many console drivers are using timeout in
+some ways. So this problem may not specific to just a single one.
 
-  div.sphinxsidebar a {
-    text-decoration: none;
-    border-bottom: 1px dotted #999;
-  }
+Waiman Long (3):
+  debugobjects: Add ODEBUG_FLAG_NO_ALLOC to disable memory allocation
+  debugobjects: Show the state of debug_objects_enabled
+  timers: Disable memory pre-allocation of timer debug objects
 
-That makes it a bit inconsistent style-wise, so I think it'd be sensible to
-update that selector as well to follow suit.
+ include/linux/debugobjects.h |  6 ++++++
+ kernel/time/timer.c          |  1 +
+ lib/debugobjects.c           | 29 +++++++++++++++++------------
+ 3 files changed, 24 insertions(+), 12 deletions(-)
 
-In any case,
+-- 
+2.49.0
 
-Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-
-Thanks,
-Nícolas
