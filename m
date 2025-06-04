@@ -1,179 +1,219 @@
-Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71101F4CB3;
-	Wed,  4 Jun 2025 07:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE44B1EB19B
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749020985; cv=none; b=bB4GZbGNT0wu0hZJDc/4o50EUEyMy3QHWuW+5sWl8hipfSHuCpJxJ4yWXzNQa8jfcmpGll2GA0NfD/TL9Iz5ZKC52BIRJnWUX1yDm0pFEYJyNhCFYlyZQNfzqqbr7QYiU5TrN9qSoj86AZjF+ix3H8lqWf6De5wOLZcvC3DNnuk=
+	t=1749021205; cv=none; b=FK8MQ4yPlhgWMReRGQdz17IIB5Mc4lQ+2FVQ5tm4ed5FxPUCK9VBpA5CWd8ucWGiEcDTPPZS+YU+4Kt4D7MF19P/ATRUJzhft32MInBLgvjtJpm76XGXX1QGVduvf7NiGu9V//UcCRoCYwsG00tf9Z7cZJoAG+pAmk5FUfoqTnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749020985; c=relaxed/simple;
-	bh=7uDWG4rA8WTlDhGb+aYjPw74mKqr1db/jxjr+dQWTfk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AHJnbulwoUAW9c/CSuaqudvczz3e73qLxF2WyeQ7oKJiZM4+GPMPBP7g7FVfQzntJlNztUrUtKUD7R/AFVxLV90m2ul7pMNfFtdQnglwKWlwW/3dq0wWJASDiCH8EEwd9B5nHBIrM3/I+jTaJFPBtMjvI//X28BHCKOyzErtlJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=I9Acfkju; arc=none smtp.client-ip=185.233.34.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
+	s=arc-20240116; t=1749021205; c=relaxed/simple;
+	bh=3AVbLqlURSjEvnMOfjuDeMBo+P0IV4Xq272XRqwuuOs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SNPJGu8Hq+Lgo4JqiP6P5TCUsV3WLw+U3WzjoPh2MJ3+FlvIs5v34A43B7kDgO3w8obtzoKtAQU/oqDMCFKZxZQfn0d/7xZdTIU2kgtzm97MGFrdRqB9m9sd9Xo0XaOTiGMwF+WwHNGUyXbqdmnX19RF0fpic5Ul0W1E5a59hB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=x83A3Ox3; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="I9Acfkju"
-Received: from smtp.freedom.nl (unknown [10.10.4.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by dane.soverin.net (Postfix) with ESMTPS id 4bBzGg1vDYzfNQ;
-	Wed,  4 Jun 2025 07:09:31 +0000 (UTC)
-Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4bBzGf53sVz2xL4;
-	Wed,  4 Jun 2025 07:09:30 +0000 (UTC)
-Authentication-Results: smtp.freedom.nl;
-	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=I9Acfkju;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
-	s=soverin1; t=1749020971;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rVjGqA9V1/zjA+v/QKtVl39Pr2Mjw6xdVmC7444t2RY=;
-	b=I9AcfkjuTdIGPm7Uh2INzVPinOjeuGGM/jYfbGWZ9dqYIFeS/3HuGSGFy3GU0wBNExTljl
-	wpbslOU/JyHolPCL72BEFx+cEFtNhGwlUn4HWgptJkKjuUyF3IqPFRQOmxFIqd+okEpv31
-	d1qU1lxjInGJxIXhiC322B3Q7MCixePpem0m9AMMsXLDv01P2X72hJqyHgUk86Z6xuzLwS
-	SuVNsABdlzOaaKl91Y2w0n9oHqZ9IZF7UQD90LtBn+20C+uDOOHJLHQe4Evq3n7hxPdlLy
-	ot+yPCPtj1JPKQJ85uxGYNxvdStWWrW81s8s+S2rmlbpqEBs8B6sr+qBzZvPUw==
-X-CM-Analysis: v=2.4 cv=I7afRMgg c=1 sm=1 tr=0 ts=683ff12b a=smkfPCmiGCBx+NgG8pXs4w==:117 a=smkfPCmiGCBx+NgG8pXs4w==:17 a=IkcTkHD0fZMA:10 a=3WJfbomfAAAA:8 a=xq3W2uTSAAAA:8 a=8nOKJSPbo8tPU-Y5OJIA:9 a=QEXdDO2ut3YA:10 a=1cNuO-ABBywtgFSQhe9S:22 a=P5L7wpMTXyg1GfFA3Gwx:22
-X-CM-Envelope: MS4xfL2XF/JoajUOwiEWlf56vun8U+jjUQz+ySUWbCEJwkVMhzsC1OAb/b0to+wQZH/5MFvVD1Zo+R2/MnsXcKiNp9ioaxpiNCXd886s6AJ2mLQhd//fiWzd gUOwxlzUjL1A8j0V73DGoMmzvWHyQ4+ZqyQA47Wt8y+SrrS4rjsPG9bPw6oD9QnS4DFFPQt2JvvlYPNmQ+X4tILZEwsPl3bul/wVXAy102x1GWKuC0aciiev ce6BynyUv2oil43XzuXPbPX5oOTclMNRwXckZ3vPFrfPJyc1rv1SdFdVT8MqNZEH
-Message-ID: <bb65cb39-eba4-4e0f-a83c-285ab6bae753@jjverkuil.nl>
-Date: Wed, 4 Jun 2025 09:09:30 +0200
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="x83A3Ox3"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7db6aaef22so5038285276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 00:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1749021202; x=1749626002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=egAKscK3QoP1kYQu5KkN3aoibVnnNSd6rVfa6InXH/s=;
+        b=x83A3Ox3gy3vG6dzlMUWol32yCgOi7ep1cSEAVIg1T3RgOJWY0Tu2phiQ/8rK6I30x
+         xk59yLGfacN39TAuOT3hdE29jQ54ouo+QCo2pKewPMGFBZ0EhTKBDPtW0Oxbmma0dQe9
+         GmTiYjuMqe1EoKBQH5WYQ/e08Mr8poFIY9wXKOlDlkK5ARgAA5RcdKyhbHsQ2G1ASiA/
+         wQ8XPcIk3nWOPJc+CkegYB2F+j0ZEJZ2bdCvc4mtEXW5DS8dkT+5ant+GD4M9GOS7nok
+         q9nAwu0Ff824mNg/9hOOlwF12L/pzXYwmnOiqF/3j630et6pmIfJgVZwOFvl3WkgwDbk
+         ZR0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749021202; x=1749626002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=egAKscK3QoP1kYQu5KkN3aoibVnnNSd6rVfa6InXH/s=;
+        b=T5026CBlW0FYFfuFJzm6+PUT3YqiKbFwXVPeGmxxASXZBnR7WEr5/OfwyYmXjcdA5C
+         NdMX33Wi2BpPy+7cjg2kPebn4be2on4RZ8Eg9WcAcBnqXpT1KvYW7v4UU9IqKdsm+fjT
+         OXllW2t5Tcs7xC1CdXOwqAd4eGEViDGi+DQCa4rjoURNQ2MRPF/MzpEiVwnyLEsU6DBB
+         0M8J+MWORQ8jJLFucUDqAm4u/dPjs8P4hsOyBpvaoab2uFEsNOnGlF5qVgSfU5wmbEZ0
+         TKbwKGqinQ6qJf3Kiyx6RkgbzFvpCtnia8XaCAS7ZSt9rCD6t7aU25GTySDgy9MBV7uq
+         WhxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHNDIt1A0WjptTt4cZaGshPHT4XGiwgeHjmNfWn8540p/v3cJqnWYvuO5GqEOHk0kupat0Vz3cDa4E9Jo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRxeapKkjBxZJQwz/Eb8XVwMTReqhNrbS8lJf4ZYYuq0wP38JC
+	tlxqLQ/74NM/0JIqrUQq79uCodo0vhIrl8ir5A6NutdE5H1bixJBM8CX3CwURqbE5mSvTRKmpw6
+	J0gji3A45vQ==
+X-Gm-Gg: ASbGncuH3xxW/1Cqiaea+atZyjRr/QSjEXbY6AFRTEijJSmlX1OKz/iitLATDAYubpm
+	YaB0KpJfoO4Hipd68Q4CKtPTBkINTQGkIbq0BhbzfizabELYQZ4k98nbcb0E52cGrWDlLxYH/zj
+	PYs1Zj+r9pHehiSDIj8GyV6X64fY0W1GBoEZA/JjiM7URAs4+GngPCAGk0E8d5NgTUxvlamLdMb
+	2JYKKjcf0Ib8GA6KmBstPlE4wWc/HBtYJyxtxZNqdV1DjeSq/0BLDSoHhNeYGkMkPHnlSTPqyPY
+	0MNUOjuujke/DewLUyUHNBseWjcgfhALcZ7h0WJ7f5qMEvPUVJViurQwQkNs7ilCIbdFlympTp3
+	sbq8dcS7Xx7Ycq1ShoRua/5D2olZAnw==
+X-Google-Smtp-Source: AGHT+IECH36FIWR3WtlVbi9pIVrUarBTvW9M64iPEf4vW1z/5lI7aXueUFIWtfoUkZsSo9xn+ErQqA==
+X-Received: by 2002:a05:6902:448a:b0:e7f:7352:bb30 with SMTP id 3f1490d57ef6-e8179c2e503mr1883481276.18.1749021202551;
+        Wed, 04 Jun 2025 00:13:22 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e817b41605esm188431276.0.2025.06.04.00.13.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 00:13:15 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e733a6ff491so5910113276.2;
+        Wed, 04 Jun 2025 00:13:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU+r8Gra7vRQAyzegetNBGr3mYOPT300RRMyy5GnrKsFOzbgaDpbek+mxYL5qWetvi0LJBut6ioRpUw7WM=@vger.kernel.org, AJvYcCU/f+WRphs1kEiZtZ95sZ+z490KMzrN/2F/HxpqnLlu9cqz1rGJLnKopqkeA9mAKaVODenI9dqNtN0amUs3@vger.kernel.org, AJvYcCUwqT0UUCxwjrObguZdH7XL31LEyb5pYyKnnWTE+XeRBr2fxrHb9oEtK9dawR2VMqoVu42ilpesjyuu@vger.kernel.org, AJvYcCVcQZTBL5+Uq5KFTiapfho8yVoStiIi8YJhVXejaQo4MKBm4Tho4Y0dwY/avvFRDY7T304W3aaMCbE8@vger.kernel.org
+X-Received: by 2002:a05:6902:1009:b0:e7d:b06c:709d with SMTP id
+ 3f1490d57ef6-e8179dac9c2mr2086427276.37.1749021193915; Wed, 04 Jun 2025
+ 00:13:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] media: v4l2-tpg: Remove unused tpg_fillbuffer
-To: linux@treblig.org, mchehab@kernel.org, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250603225121.308402-1-linux@treblig.org>
-Content-Language: en-US, nl
-From: Hans Verkuil <hans@jjverkuil.nl>
-Autocrypt: addr=hans@jjverkuil.nl; keydata=
- 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
-In-Reply-To: <20250603225121.308402-1-linux@treblig.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spampanel-Class: ham
+References: <20250520-6-10-rocket-v5-0-18c9ca0fcb3c@tomeuvizoso.net>
+ <20250520-6-10-rocket-v5-1-18c9ca0fcb3c@tomeuvizoso.net> <CAL_Jsq+2mvUDWWvtPSryAiCNJP_=1vNRxARxWTS=-O-LTQO3Dg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+2mvUDWWvtPSryAiCNJP_=1vNRxARxWTS=-O-LTQO3Dg@mail.gmail.com>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Wed, 4 Jun 2025 09:13:03 +0200
+X-Gmail-Original-Message-ID: <CAAObsKCUusE68Bzce5fxukpOJ34M_w5vt7+gLSHZuMC8KXqtLA@mail.gmail.com>
+X-Gm-Features: AX0GCFujZUaEEoiRSaHh2B6hjHyNEBOF25EbCsvQFur0Wj0AZ2p1QcOal7DajJE
+Message-ID: <CAAObsKCUusE68Bzce5fxukpOJ34M_w5vt7+gLSHZuMC8KXqtLA@mail.gmail.com>
+Subject: Re: [PATCH v5 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/06/2025 00:51, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> The last use of tpg_fillbuffer() was removed in 2015 by
-> commit ddcaee9dd4c0 ("[media] vivid: add support for single buffer planar
-> formats")
-> 
-> Remove it.
+On Wed, May 28, 2025 at 3:41=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> On Tue, May 20, 2025 at 5:27=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.n=
+et> wrote:
+> >
+> > Add the bindings for the Neural Processing Unit IP from Rockchip.
+> >
+> > v2:
+> > - Adapt to new node structure (one node per core, each with its own
+> >   IOMMU)
+> > - Several misc. fixes from Sebastian Reichel
+> >
+> > v3:
+> > - Split register block in its constituent subblocks, and only require
+> >   the ones that the kernel would ever use (Nicolas Frattaroli)
+> > - Group supplies (Rob Herring)
+> > - Explain the way in which the top core is special (Rob Herring)
+> >
+> > v4:
+> > - Change required node name to npu@ (Rob Herring and Krzysztof Kozlowsk=
+i)
+> > - Remove unneeded items: (Krzysztof Kozlowski)
+> > - Fix use of minItems/maxItems (Krzysztof Kozlowski)
+> > - Add reg-names to list of required properties (Krzysztof Kozlowski)
+> > - Fix example (Krzysztof Kozlowski)
+> >
+> > v5:
+> > - Rename file to rockchip,rk3588-rknn-core.yaml (Krzysztof Kozlowski)
+> > - Streamline compatible property (Krzysztof Kozlowski)
+> >
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> > ---
+> >  .../bindings/npu/rockchip,rk3588-rknn-core.yaml    | 147 +++++++++++++=
+++++++++
+> >  1 file changed, 147 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn=
+-core.yaml b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-cor=
+e.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..9eb426367afcbc03c387d43=
+c4b8250cdd1b9ee86
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-core.y=
+aml
+> > @@ -0,0 +1,147 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/npu/rockchip,rk3588-rknn-core.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Neural Processing Unit IP from Rockchip
+> > +
+> > +maintainers:
+> > +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> > +
+> > +description:
+> > +  Rockchip IP for accelerating inference of neural networks, based on =
+NVIDIA's
+> > +  open source NVDLA IP.
+> > +
+> > +  There is to be a node per each core in the NPU. In Rockchip's design=
+ there
+> > +  will be one core that is special and needs to be powered on before a=
+ny of the
+> > +  other cores can be used. This special core is called the top core an=
+d should
+> > +  have the compatible string that corresponds to top cores.
+>
+> Is this really a distinction in the h/w? If you change which core is
+> the top one in the DT, does it still work?
 
-Ah, this can't be removed.
-
-This tpg code is actually also used in git://linuxtv.org/v4l-utils.git which
-copies the code from the kernel source. And there this function is in use.
-
-This function is really a helper function. I think the best approach is to move
-this out of v4l2-tpg-core.c and into v4l2-tpg.h as a static inline.
-
-That way it doesn't add to the kernel code size, but is still available when needed.
-
-Perhaps add a comment in front of this function noting that it is used in v4l-utils.
+I asked Kever about it, and he confirmed that the core 0/top is
+special in that it is able to relay register writes and share data
+with the other cores.
 
 Regards,
 
-	Hans
+Tomeu
 
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 17 -----------------
->  include/media/tpg/v4l2-tpg.h                  |  2 --
->  2 files changed, 19 deletions(-)
-> 
-> diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> index 931e5dc453b9..d51d8ba99dcb 100644
-> --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> @@ -2710,23 +2710,6 @@ void tpg_fill_plane_buffer(struct tpg_data *tpg, v4l2_std_id std,
->  }
->  EXPORT_SYMBOL_GPL(tpg_fill_plane_buffer);
->  
-> -void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std, unsigned p, u8 *vbuf)
-> -{
-> -	unsigned offset = 0;
-> -	unsigned i;
-> -
-> -	if (tpg->buffers > 1) {
-> -		tpg_fill_plane_buffer(tpg, std, p, vbuf);
-> -		return;
-> -	}
-> -
-> -	for (i = 0; i < tpg_g_planes(tpg); i++) {
-> -		tpg_fill_plane_buffer(tpg, std, i, vbuf + offset);
-> -		offset += tpg_calc_plane_size(tpg, i);
-> -	}
-> -}
-> -EXPORT_SYMBOL_GPL(tpg_fillbuffer);
-> -
->  MODULE_DESCRIPTION("V4L2 Test Pattern Generator");
->  MODULE_AUTHOR("Hans Verkuil");
->  MODULE_LICENSE("GPL");
-> diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
-> index a55088921d1d..3e3bd0889b6d 100644
-> --- a/include/media/tpg/v4l2-tpg.h
-> +++ b/include/media/tpg/v4l2-tpg.h
-> @@ -248,8 +248,6 @@ void tpg_calc_text_basep(struct tpg_data *tpg,
->  unsigned tpg_g_interleaved_plane(const struct tpg_data *tpg, unsigned buf_line);
->  void tpg_fill_plane_buffer(struct tpg_data *tpg, v4l2_std_id std,
->  			   unsigned p, u8 *vbuf);
-> -void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
-> -		    unsigned p, u8 *vbuf);
->  bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
->  void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
->  		const struct v4l2_rect *compose);
-
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: '^npu@[a-f0-9]+$'
+> > +
+> > +  compatible:
+> > +    enum:
+> > +      - rockchip,rk3588-rknn-core-top
+> > +      - rockchip,rk3588-rknn-core
+> > +
+> > +  reg:
+> > +    maxItems: 3
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: pc
+> > +      - const: cna
+> > +      - const: core
+> > +
+> > +  clocks:
+> > +    minItems: 2
+> > +    maxItems: 4
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: aclk
+> > +      - const: hclk
+> > +      - const: npu
+> > +      - const: pclk
+> > +    minItems: 2
+>
+> It is odd that the non-top cores only have bus clocks and no module
+> clock. But based on the clock names, I'm guessing the aclk/hclk are
+> not shared, but the npu and pclk are shared. Since you make the top
+> core probe first, then it will enable the shared clocks and the
+> non-top cores don't have to worry about them. If so, that is wrong as
+> it is letting the software design define the bindings.
+>
+> Rob
