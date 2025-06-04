@@ -1,67 +1,67 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F355E28C5AA
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40A328C844
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749025154; cv=none; b=NNHTep54dt9A+QA76RPq3gWlxlO/S2KPEHI4AmvmVqvTJonwuwomifm/ksmGi2DORIrzY7Bt+A/8c/ue0o/rxWUZqO/AyEf5r2p0ZbRGHgLWunjoM+VYqGZDSQULygdGrXclXTOeHQz/5UB/7aNKI0rzFl0I/Qv/DFmHDurwAcQ=
+	t=1749025156; cv=none; b=iFNmTvwJCgIUmhC6bH9LvxDDwE8zGJAWhvODb5MqIwzfYr9Ra2k5DrhSVpdOdMZqpKJVDN3HXyq+ROk5gH52WQDsOeHRQkYRylNXYslgkpjHS1IqYCEUxIrZEcwWKn7g17dGd/+qVayJiEQpqB65DWFT4cOmSufjFd69bIr7KqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749025154; c=relaxed/simple;
-	bh=c3ZhkkgovKXxuwS4xu4/Ddch1klTKWepTgclJipCla0=;
+	s=arc-20240116; t=1749025156; c=relaxed/simple;
+	bh=wvvlp9WnPiej2Anmk9dmrJ3Lso/FnNxNqVT6TYuZtPg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nNYzkN8OfrAjCKZIhHTGBsTvhUkKF+P6pTpNzM5rq244egIAZr86qF6a2YoLmTl8TxgT1Vh07ePmGlpynmE8Ns/S9qoxppSW3hGKLRth81Psmf0gUcFrRljtm8Dand9J042Xk5vzLr6HCb5Gw7EQhpPtNkP8ZSv47y/YT5VLRlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DHOEjb37; arc=none smtp.client-ip=209.85.221.48
+	 In-Reply-To:To:Cc; b=e83lVMj1zPZVuuQNYMA8oSYNBcQuYr2OfjZv7m43BspU1NevoYHWGCHBUgBtPtkAPpY7q+NNgJbtjrEwA64cGBD7Gm512+b5gDO02OjHfL5V+SDLmcfviPmNwQvketZN/dJ/uQFe2W51TmI8Redx7N4eXAN7WSg/vM/ZaU9g5z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UdMDkH58; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DHOEjb37"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a51043228eso334570f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:19:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UdMDkH58"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d41e19d0so4169895e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:19:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749025150; x=1749629950; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749025152; x=1749629952; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zbantlUERPSuY7CGMj3C60FaJaeXJoquFE5NLQDxQ7s=;
-        b=DHOEjb37epul/g/03sqeJ8KOoZmYZnbOu7NF+ha2ZbLg/LDyu+4mnAnAu7hhPboneZ
-         jHqfYLRYLnoz8TCe+8w3wStz4kg9KBFpVYt9sCF+U60sDPYyM9g8gF6rZHQRkem2xQTh
-         dHfTFY146F+1o1+oi6a6FyGITJVlZnxsVyQFXDEuOTMrYdU8CRGZgR9g0KQc0lalGDS1
-         cVEQzhY6UuXSrGiiEFtIjaWz2hR5IMd0PT4vEOSS/a/p12JCDS1MSkF3vVynRnP4u+Dg
-         Wy+0GFF05/thPGlCmiP4s/4HKsSo66QpfGELufibrPtJ1E2qlCtFZBGeMghluyl+dznE
-         bEkQ==
+        bh=4Qw6Or+h58oEqCHUts11rbHDAhUeBOhLVESvBfOylgg=;
+        b=UdMDkH584eCRFiafCT7md8NEFGzoIgoU9TmUVU3OCQWbonA5LIp0KubaflUvTV01V3
+         5XEEI4SOuukuFqqQ23Xer8CgUqD93Nbn+N//TG4pYGUa6CQ/TXD92uaiEabICRW5FRs1
+         miQSQK+sS7EEI+RNOnPSpG75cm5BsxW052xgIjRFcr3WlhHGZzBVeuTl/cHyA1j3/2s3
+         fWeNckIDU5Gy012/8mqwAEg9yALEh48SICtp2A6vvxVKV1cyn03OjpIcjNO9+mEtou9V
+         MrYmO4yEdGOf2lHMryXrf/36uz6FoORPfZoZMWyUCNZ690OWOAlpTN3/hKXDnSr45dus
+         rk5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749025150; x=1749629950;
+        d=1e100.net; s=20230601; t=1749025152; x=1749629952;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zbantlUERPSuY7CGMj3C60FaJaeXJoquFE5NLQDxQ7s=;
-        b=eBSQiHcq0WxqbreWb82T/HPspQJ4AGs8N7YlCgpuwv9Dz5JCxgjffr/ljh6pZ1jTXc
-         P9aoL4tAyJFAgX3h/v24YtbXYaJ5+1nxX0foxo3CoGrLKvf0+4IQkwcHZCaEyQewEdLW
-         IEe3R45L8PwIqRr39dxJknmTqdhpUNhdRMIvylQWGEvybEtnAVikvx7vYgrZD2Ev2v7j
-         eHT66en5qPWcr/0oEHyVa6w4/EqU3AqBUbnOnPeiv8/UEhU5uZk2D0roYVwf1FoEG0hx
-         jaKdkzHKYXc3OfZZ5utNKj+YxT0+t1IVIG6Xx6NTspciQojdaReWXlfGPwHasny66tVe
-         lGzw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyaaIlXOnv1GHlKwN+uFNPleufU6RrITiKFR0Wz1+WwJwmDpZDVK+sKvizmEPqdYRCD95Vmn49hdhITQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGsg4itwdy4yayL4M2D3RHAkaxvCqdtT5VM4zKaw6TGQerh9cJ
-	TaAqcTTuMriXyRM5KhsOwdwdCj+ciLeWfgFfleVUdVNMLM3e+YI9Mf+MQzPehjReubI=
-X-Gm-Gg: ASbGnctqOyfk7V1UmQiPo7Yl5alyvNunVJAWzbBrUnwAsw2OWN4jRSlpPxby7CqF/xS
-	jfd+ivjAit3gpXBOf8mttyxxGM7Q7V2lWHKXlJlJucV+mtjBlDlc07efpa2g4hbbUGd8uT/Ui79
-	UiHgM/TpTVqviTZ0zGdYdnMLFKxKsrtx2nfmZK5JfWPT3yjZAg5m8/SzmMYe3PMPGsAY3wS++eJ
-	+ebv5VJZLEz7qbQZLzNIiXGIbpqZh9inEYIepNzdYml45IqxBvX2iYYbM4lafRP68kKRIp1t4ac
-	tBdaw1P7BXTHoGSVHIP0fZklS7jzVoKqQzY6PKLI0B+nc69741IiHRtuhtO1pJZ7fO+ZetkaeW0
-	UqHSlCA/a/zzCbjJRWt8jeA==
-X-Google-Smtp-Source: AGHT+IEMnMgPmMwhkgUv59GGxhpUw6FqG/2zeQOKCFcAARbwyxtAv4UBiJATzShvTS7Iehn9wMKRrg==
-X-Received: by 2002:a05:600c:3510:b0:441:c5ee:cdb4 with SMTP id 5b1f17b1804b1-451f0b188b0mr5846925e9.4.1749025150206;
-        Wed, 04 Jun 2025 01:19:10 -0700 (PDT)
+        bh=4Qw6Or+h58oEqCHUts11rbHDAhUeBOhLVESvBfOylgg=;
+        b=q/Z2ek1Vhl7yWS1ouaPX2Rzki3oUOqSoZZy/Uzw5+ihVDy9szk5ByregvcALXuPAYn
+         wUOJ/mGJ+8anhjd9hyju58c2+cHEKelwtZUj8unNhwl1TF6qEp3YWQzib8oZgt0jcBwr
+         VglEzFffV38M71naZF8+OmM0MkKUXqwzf1c7GgHpQtCFXvbjNsfadycU4zJwwXwau6uT
+         Z51JRUI1E1ruKnhXaGLpnw15IuoVQbwG+CWl8V+XdbI8hFt3XuMpkmJL4U3v9HZYZH/Q
+         KcchJzDcs0/3v461/oJBp163OfH+LM7rny3rYZJoTzgFNKQdWM5mpOM76xo4njZz3/ig
+         Mi0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVmYvIMSs4ZWXbBubsWKaGISl7W4f+b5yF7u05sWK/GhkGTTsoy1Z4jK06Z/cCbw+0vH0G9K7FQjy/MtDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpMU1WH8sJH8z6RPyJ0UKCdJvZ+R4BdaA6e4TgBiacAyP8Q1qF
+	u46az3vaYmz/eqATF5rVSGPFcfU6cU6k4xxSoZw5aH0rlzwD7KDi3A4TfY2zzAxUzfY=
+X-Gm-Gg: ASbGnctpcuxU+ahMc2GlCtHlPQjAa1nuVr4q3E9Pc2PL/JSN+0lIBsBhPaxWzZR6LhX
+	MNt6XZbDEDAjK4eDKQXRImCtN2fyqRW0QXnSR64B13VnaTnwbdqhO4xHedUYZ2HQUuqVkelvFn1
+	4eb47mLS6CMVjJs/In36/7ZVcPuKEPTIj+9AXKJuNBbtiTtpGpHeZSgpYloRun67pzmpwt+Dca1
+	+0szfJk1VMuKyjGXe5UerdaV0dBH/PPMrnTfq/vzTCDZMTC1jM91PB/pHJGssjzTg/svE7B1pf3
+	PrjwSQPW86911UEEApST1n9APBtouEPdjCKU/LYcDO8d6xwhq81PXshUNzXA57jR3Rl+Hqb1+XD
+	Yz9z9nv8SMImu1x2jyviTZc65xrfKQH3P
+X-Google-Smtp-Source: AGHT+IFr04K63KesyL1eSuBlFeSsSCgX2EYimyEdtYTmwL8awlZ/SxKC+A4RpZuttfPn0Lix1L6w1A==
+X-Received: by 2002:a05:600c:4691:b0:439:a30f:2e49 with SMTP id 5b1f17b1804b1-451f0b0f3femr5244845e9.5.1749025152063;
+        Wed, 04 Jun 2025 01:19:12 -0700 (PDT)
 Received: from [172.16.23.13] (adsl-84-227-104-5.adslplus.ch. [84.227.104.5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d80065e0sm198301215e9.29.2025.06.04.01.19.08
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d80065e0sm198301215e9.29.2025.06.04.01.19.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 01:19:09 -0700 (PDT)
+        Wed, 04 Jun 2025 01:19:11 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 04 Jun 2025 10:18:25 +0200
-Subject: [PATCH 5/6] dt-bindings: power: supply: summit,smb347: Add missing
- power-supply ref
+Date: Wed, 04 Jun 2025 10:18:26 +0200
+Subject: [PATCH 6/6] dt-bindings: power: supply: Drop redundant
+ monitored-battery ref
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250604-dt-bindings-psy-monitored-battery-v1-5-7f755ff75218@linaro.org>
+Message-Id: <20250604-dt-bindings-psy-monitored-battery-v1-6-7f755ff75218@linaro.org>
 References: <20250604-dt-bindings-psy-monitored-battery-v1-0-7f755ff75218@linaro.org>
 In-Reply-To: <20250604-dt-bindings-psy-monitored-battery-v1-0-7f755ff75218@linaro.org>
 To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -84,56 +84,161 @@ Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1272;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6847;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=c3ZhkkgovKXxuwS4xu4/Ddch1klTKWepTgclJipCla0=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoQAFvgu177p43lpImNcls6Ad3F9pYIhqEV+Xnq
- xlN4h+o3jmJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEABbwAKCRDBN2bmhouD
- 13D/D/4jbwgQpcLMKS5ZuxOM26GW9d2BXw1v9VRfgGFRTPNWPC/E/IuzkyWbjclrSRCtOyV//r4
- FYzHDNOJmeVO4FEhozs0JI0xQaafc0tj2/SYFqkqMnYgXmKMWVxHCGYr5YQQ1tGhy8u9AwNnIRr
- 9JGnYQB6L/0ep7oWrm7K4+Fs10ePIvaGTYPfEezN7BupOQuZHrWTdapLcCVVAmdmgEKzzQ/D6Ho
- 64E4K1auoc26VB/DT/DMwpzIoAYkWRBetTM1wyrV4i5GCEzfyTKX2fCTXT2HIZuKUC/zcGh582t
- Qp1RPo2E5+Sn8MiIorfWTBsqi0fJA3bc2n1SYxkvSoblm+RLzSgSaFZhA4CAyXMTdbXQmHJWn/s
- p+QpkPR6O/1a0hf8Z48mnc/fw20w1b/zk6B3hU9qimBozs/jpQPQ9Hc9I8C1LTfQhokdghbQJi9
- g3TtkKoZTe+4bgvjuj4EMsb34aEVzRMDSFpN6Wh+qD3WqUdBIfheZBevEJ1vCZGki/0zvkcIM57
- SEmbPhGW4Nk/7SyEn7ySB2MCwODcEweZt0a6saJxQpRsnJcO+PfXG62wiXmUZmVUDWsnHkbsFhf
- pS+QY55iy6l3i5lL2G6bMHWC3yNDj2w6Z61jMlxTRxDpMD33YtwNezxv+fVwWf2642nUZnZaUr/
- lavpvvszyOueHnA==
+ bh=wvvlp9WnPiej2Anmk9dmrJ3Lso/FnNxNqVT6TYuZtPg=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoQAFwzXo8cYyUwoabmBWLvefsH3r3ispQ9KKAT
+ wkXG3wqen+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEABcAAKCRDBN2bmhouD
+ 16/TD/46tx0MTxmshL3kHc2fwaCy01Hx7gI5qWSrpLmh2rERkCiC01bKAEBaWXgQNIbcndgxvKF
+ qS+OaP8Y72+WrttJSDx5LXv0hna18zgX8HS8jmspWPRKfMtm1VEH7QXAWN4E2UvN0Em6x7nTmS7
+ BCPYUfBapEETbXtRsFMp+kemH9XGIGxhf+HgJ4RWr7IvN6d3vupMEPPVluronD4CPK7FcBELEI6
+ WEgoJ6bOsE1JTrevhKLVDZKzb0WoI5cEA9dy4p8YD/brFPeFerFyiTuw0nec9i7ZEDFU6gquhcr
+ 4M295gIDHDu1shtw8sHB4p/NSCRcHeaF46mpwf2rbHrtO1dLTXum+EwbpJyx8/4fdtU8J30xzHd
+ imC2rwIiZq/8QJFVv7B0PhdP9hYT34ElImTbwNr44heprzn/HzXXfRLIhme0CqwoM5h8MKvMAXJ
+ WBSjT+8oybDKVpsOsMiCg4saHZUYTneILVT13KRt0eQu5vgTXzUyqap8p+QZz1CWlW4+9tNWM2g
+ 00USR4tZXBEHqCkpbCVBV/yT7786P6ScZlT2oPr+39E5N0MiAB55oZzKYSN22D1Rg599RPdcCSS
+ XDRb4YO3P47pEofbt6eQy0nM7wU977Q57V/VxkK1GBkDbfLhUVdPNvyMW7yez+xTjdQnYHI9MLp
+ xXiJ/dOygkmAr9A==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Reference the common power supply schema to bring the definition of
-monitored-battery property.  Drop also the obvious description because
-it is duplicating what is in power-supply.yaml.
+Bindings reference the common power supply schema, which already defines
+the type (ref) for "monitored-battery" property.  Drop the redundant ref
+from individual device schemas along with obvious description also
+duplicating what is in power-supply.yaml.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../devicetree/bindings/power/supply/summit,smb347-charger.yaml      | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/power/supply/bq24190.yaml         | 1 -
+ Documentation/devicetree/bindings/power/supply/bq25980.yaml         | 4 +---
+ Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml  | 5 +----
+ .../devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml   | 4 +---
+ .../bindings/power/supply/stericsson,ab8500-chargalg.yaml           | 4 +---
+ .../devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml | 4 +---
+ .../devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml      | 4 +---
+ .../bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml | 6 +-----
+ 8 files changed, 7 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml b/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
-index 2d552becbfe6cb08c72f2a5584bdddc67443a2e4..65ed92bb05f30f91e24978d3261c7f29e4233e2b 100644
---- a/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
-@@ -23,9 +23,7 @@ properties:
-   interrupts:
-     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.yaml b/Documentation/devicetree/bindings/power/supply/bq24190.yaml
+index 307c99c077217ab4b5fac30694a4a316dd51f8e4..ac9a76fc5876bef101bfd5c44e4a759288cd1c58 100644
+--- a/Documentation/devicetree/bindings/power/supply/bq24190.yaml
++++ b/Documentation/devicetree/bindings/power/supply/bq24190.yaml
+@@ -48,7 +48,6 @@ properties:
+       battery device.
+ 
+   monitored-battery:
+-    $ref: /schemas/types.yaml#/definitions/phandle
+     description: |
+       phandle to a "simple-battery" compatible node.
+ 
+diff --git a/Documentation/devicetree/bindings/power/supply/bq25980.yaml b/Documentation/devicetree/bindings/power/supply/bq25980.yaml
+index 256adbef55ebf83f00181d07696c2182787195c1..0b5d005dc7809418073a4d8925fc4937c3a38dcd 100644
+--- a/Documentation/devicetree/bindings/power/supply/bq25980.yaml
++++ b/Documentation/devicetree/bindings/power/supply/bq25980.yaml
+@@ -73,9 +73,7 @@ properties:
+     description: |
+       Indicates that the device state has changed.
  
 -  monitored-battery:
--    description: phandle to the battery node
+-    $ref: /schemas/types.yaml#/definitions/phandle
+-    description: phandle to the battery node being monitored
++  monitored-battery: true
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml b/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+index dc697b6147b2130d6b234c26d19edbbcca5a1dff..f7bde324153d8b2144cf90dd850165c2e8d8088e 100644
+--- a/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
++++ b/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+@@ -43,10 +43,7 @@ properties:
+     minItems: 1
+     maxItems: 8 # Should be enough
+ 
+-  monitored-battery:
+-    description:
+-      Specifies the phandle of a simple-battery connected to this gauge
 -    $ref: /schemas/types.yaml#/definitions/phandle
 +  monitored-battery: true
  
-   summit,enable-usb-charging:
-     type: boolean
-@@ -94,6 +92,7 @@ properties:
-     unevaluatedProperties: false
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml
+index 525abdfb3e2d456bb4afc8e8890cf86be2545ef7..c464aa82255a6839e8416ab84b3f6fdbffb7ec1e 100644
+--- a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml
++++ b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml
+@@ -17,9 +17,7 @@ properties:
+   compatible:
+     const: stericsson,ab8500-btemp
  
- allOf:
-+  - $ref: power-supply.yaml#
-   - if:
-       properties:
-         compatible:
+-  monitored-battery:
+-    $ref: /schemas/types.yaml#/definitions/phandle
+-    description: phandle to battery node
++  monitored-battery: true
+ 
+   battery:
+     $ref: /schemas/types.yaml#/definitions/phandle
+diff --git a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-chargalg.yaml b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-chargalg.yaml
+index 10bbdcfc87b68feacf2f420cf0675f6323e9dbfa..39914b9e0cf58adffc21c28aa6bfb50e82c04757 100644
+--- a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-chargalg.yaml
++++ b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-chargalg.yaml
+@@ -17,9 +17,7 @@ properties:
+   compatible:
+     const: stericsson,ab8500-chargalg
+ 
+-  monitored-battery:
+-    $ref: /schemas/types.yaml#/definitions/phandle
+-    description: phandle to battery node
++  monitored-battery: true
+ 
+   battery:
+     $ref: /schemas/types.yaml#/definitions/phandle
+diff --git a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml
+index e33329b3af6196c8d66f0b32f57cfb14e38f22f8..994fac12c8da0632c05626caa0201524377a7a6d 100644
+--- a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml
++++ b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml
+@@ -17,9 +17,7 @@ properties:
+   compatible:
+     const: stericsson,ab8500-charger
+ 
+-  monitored-battery:
+-    $ref: /schemas/types.yaml#/definitions/phandle
+-    description: phandle to battery node
++  monitored-battery: true
+ 
+   battery:
+     $ref: /schemas/types.yaml#/definitions/phandle
+diff --git a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml
+index 6a724ca90e9965a8a0bceb6d262ecb283e1af005..92e4eb08fd6101936cf74e8aaa34760ed483cb0b 100644
+--- a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml
++++ b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml
+@@ -17,9 +17,7 @@ properties:
+   compatible:
+     const: stericsson,ab8500-fg
+ 
+-  monitored-battery:
+-    $ref: /schemas/types.yaml#/definitions/phandle
+-    description: phandle to battery node
++  monitored-battery: true
+ 
+   battery:
+     $ref: /schemas/types.yaml#/definitions/phandle
+diff --git a/Documentation/devicetree/bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml b/Documentation/devicetree/bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml
+index 3504c76a01d8df2daaf12d91bd86379807a718bd..a90d558e7f864eb8dfbf49490945fa227c91f0d4 100644
+--- a/Documentation/devicetree/bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml
++++ b/Documentation/devicetree/bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml
+@@ -26,11 +26,7 @@ properties:
+           - const: x-powers,axp813-battery-power-supply
+       - const: x-powers,axp813-battery-power-supply
+ 
+-  monitored-battery:
+-    description:
+-      Specifies the phandle of an optional simple-battery connected to
+-      this gauge.
+-    $ref: /schemas/types.yaml#/definitions/phandle
++  monitored-battery: true
+ 
+   x-powers,no-thermistor:
+     type: boolean
 
 -- 
 2.45.2
