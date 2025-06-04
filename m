@@ -1,125 +1,136 @@
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119DF216605
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 20:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712A22116F6
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 20:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749067928; cv=none; b=d/TD5rWISgxfHPQQDFQVhhWiFllgVroEw5yJDKDFES0KYX1sqE7P3wiLUYudhjvda3onnqCV2FmJQa2obAQg1fv0qtc+8io5rET+3Q2513/Pg3TKViLhE/D/jX/eOMl2agQP1RI8+rPzWeIv883ZxIpSqinXHlyH3WUC7BQZq20=
+	t=1749068105; cv=none; b=IS1BFywppQXABQopn6WPIo0MvmAElkpNMB1cLIjGOpJ9hdR2QYohfl2AQosMBj3TPoUgs3kGvDttTLyRdj52ClyzM+3OyRy/P0hf+RjTaHAFAP18/Dxeol1Cy+K0igNynqxmwajh6uBBq0Tz9Lbfcxo5bOA1cIGOFDrXYUXj/18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749067928; c=relaxed/simple;
-	bh=Yf/iHPu8H60AsxB9qOlBzBCZlW0/bPjuVXhfXOJSwAA=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=I3WkncHn/RWpP8IJtECvs8Oh+jCS42VqVk9O7c7M+mfMfKZT9gHxbgGizYQ3MzZln/SsQmJUf7y8EWW7q1dSIHNF7QPUJVnNFK1NNdmM8yCqtbdr95ueXmqj3r1zocKLfb6MxFEZPksjyVQZ522RDnV0cQG4VKycL6VK7tIXsu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QW3CdoRg; arc=none smtp.client-ip=209.85.160.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1749068105; c=relaxed/simple;
+	bh=3M80ApW25tcb4bzsgTYXk9LwcbWxkkiaP2Ghn2rZIkg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qfZ69R0GEZI4e7nLgIVIPfcAjLNRm6F/mnugk6v1PxrWVq0jCP/PIrlYe2O0Cvss4GbuKxPPmFi0eKgDzNppHbXiZgmVQngX2LA/YAl+CA9M+dESMU52kymGoDoHpagVWalDAn/unXmFdh4GL37bxAjrczk4MFX8HeeQo8Hi/nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hROKr/xx; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QW3CdoRg"
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-2d9e7fbff93so286947fac.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 13:12:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hROKr/xx"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2e404edf6b3so212365fac.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 13:15:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749067926; x=1749672726; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=l2ZfRBtkCFUyGNfWWgvViMBCRTnEKTD5lF2sn5A9h8E=;
-        b=QW3CdoRgS7be6+MpiXVr20xsSl8gq75nvx/SVIA0bhQZvSJzUSG8XdDBSXwtpR1iZi
-         PbOP8kAfNSr6FlC/PHJxH/Zo4j2EBysGEmQu+2mF+5zV1s8kGcFulctFNOqt+b5ILSmm
-         H4EM06P5uhtiGqGBTdhG27TF+rvUZ7Y++8jqw1b1722O6OrtrUiUyQ3ZY4YYd/A/VKMC
-         RzT+O5La9OIuE3R8PKZdlPFUOhvqpDnbFXSVDJRkE3TW4gL04Hul1XG/mYlzQyiO6FZ7
-         rV3tgUKhBWX9xt+zKvRwWWv5L5dj1B0Tpa9CI9N4uOteK2QvthW1eym8Nx9yZD7wVh5v
-         wgzQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749068102; x=1749672902; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pRfaLIDBj2llHsNUOJCUg2y9UIhPzulREBxN8ri02+M=;
+        b=hROKr/xx+yxFVFNvLblMV0M0Glq7ORvO35rOObPxi2T1qcZ5jI0uohCC08vf1aQouf
+         89ANJx0O4m21gde6pPJSTXbSfgqpeLgb5QjmS+dhyJdu0FHmnAugXx4RSkAVYGOCJD11
+         aXVMvvNDKg2ow6m9OSpjYX2rSDywTM8rOgdYLVCClE4ed/qgmvqU0y9RGLSitPs5mj2B
+         qeVWRMUC0PtAkWu7U9kJb6m+ejtCH51Yly6e1GPjWZ3veImWstMKIqdjTBe9DvgXfIUn
+         1tI8OyVKR7Ik0emSAdDVhQ2XAQaMNRCcjQ5RLemhF1EM8AhEqxsNqv8fQEZ7NhfIqvG9
+         JHUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749067926; x=1749672726;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+        d=1e100.net; s=20230601; t=1749068102; x=1749672902;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l2ZfRBtkCFUyGNfWWgvViMBCRTnEKTD5lF2sn5A9h8E=;
-        b=YmgNanUFxBDcBkmdWFZjymQaVtBROls0O3GsDVVqt55glhu47N4rC/swnCf08d8bID
-         Lkv9faHtEAxPrc1cv1CgwEijMvAqfCcPtEf5Qez4wstnQcbrSX/QmVM86svBQWFj4h3r
-         94MLDKa8MjL2aIpokDJFsL4hx2YQ+VjjILEqrsbPv1353YyAkdAZx5PZbFeiTfSRjFCI
-         KwNguOhujyVQdQT8USn8CEVZXAA2+hlvplW2M6CVJavCMzaK2YzdAxvvW4e0w82TqcCU
-         sR30dkp4szbAj8ShH9i5+PxlWBpQwcjC7yBBT2u7wFvURuQlDbN6Vkjyxzw22TJ8+haf
-         w/uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWuQ2JKYqjRTKnHKV8TOSDDTOiph003JgNFXm8igJTfUMm8ZFYu8YD2Xx11s57oU1wOq8XOz4EkaIGcP/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqQe0eQTX/uAimjDSurDOfogD8zZyAl3W+5RYhZkC31tJak/Ce
-	3njTcUP8I21pPTmx0WvuQ7IcwOfnXYrrmAraXHCPaL1sieAYGJPk7f0MCE1/InOY8JRFaZR46IB
-	sWvfiO6+Gc2cX/JN5wlRyXdFTCQ==
-X-Google-Smtp-Source: AGHT+IHnv4E1vDPP/ZiBUn0UZugjQZBj8858Crg/sw9WU1O9tNE8wE+e6qgJBHSzAxiHAj9ZIzvPLqoD1kotwzxLmg==
-X-Received: from oabfz25.prod.google.com ([2002:a05:6870:ed99:b0:2e9:175e:cff3])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6871:e716:b0:2d4:e29d:5297 with SMTP id 586e51a60fabf-2e9bfbe153emr3220979fac.29.1749067926258;
- Wed, 04 Jun 2025 13:12:06 -0700 (PDT)
-Date: Wed, 04 Jun 2025 20:12:05 +0000
-In-Reply-To: <gsnt1ps033ch.fsf@coltonlewis-kvm.c.googlers.com> (message from
- Colton Lewis on Tue, 03 Jun 2025 21:46:54 +0000)
+        bh=pRfaLIDBj2llHsNUOJCUg2y9UIhPzulREBxN8ri02+M=;
+        b=KLkSgjPS0EKOwuA3T+SVymUmWFszFvDEygdCf3SFdhjmGvYkGSNSq0SLiIF43rp6y7
+         HgKcRGmBI6mcyZ1U98KA+/0UwFucTFwv3GDExZb6dAPZVDUv8KNtQqIwXcJ+5J0NZrrO
+         3FVDs67pVWqvWdxCkoUCfu07qjQHXnN2P2QqtXVA396WONTQMLVBMrfl+uKR3Lexcgfa
+         Se9rH/2DBh8Jh84mlFHslJ5oyA1ccfs6IqURvsfIZ/R5ZUHieJoUa6kUHucVM25pLgyG
+         uchR5/k+8D/Ibd5JYJBrnCqWiu012VySWkJJUlHwMDF7rU7wZkHkeE0C0bhbv2pX+Aac
+         oEnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUef1muSEvgnGUq+xWkzIarIIsOQtXtww3q402I1MLO0X2wNclyz708VhejhFe9zMoSTdrzquaY5xBNF0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymcbLPrCJD3ruYPoeI7TAE26ea3T12lQuX0EOJMPTqhOQE9qHj
+	WUO2gojw2uWEoOGSyK2RAmdo5QcevtwIuaiS2igXOwVAjTUNLXO0uDf9L9iPQy0cH4h1Xv+QCzc
+	RXjXz
+X-Gm-Gg: ASbGncsG0Y8MVcFT6coYJVbK9lIVcuVNK8LYpw1w1t8JAJ6WDMX2j3KX2jAZ9HHFdIs
+	EZhOIZ3K+bofwgPjtYBVENvPm2dOZ2l0qJVLQTx2hd96EMEoZU/YxTrrun3VT9nLnfuPB4CUXRU
+	YT4oEOPdrd9M3itP79tdRYvoEvGWqJinxxdL0/o1B78vVdlxqUJJteKYnkAhASb0QMN70jTNB9f
+	/t/GKnffQ55gkugH4/C0g7h6ng4IOytXHbG1G2BckeeqQAbJWw6981mH4YfyXjr2jaMM4Bve2e3
+	tW2GTumap8iMriy03VOOBEVK/MMSgbOoYqIbcfRWtG0/aDvuzJzwzC8OvzhZnq3QlkIKYS5GVe+
+	aEu7IhQfN5pqjye8mqnoBAkvj4A==
+X-Google-Smtp-Source: AGHT+IHQmjfLAxO850YKxxC8hykPYyb6LLSUw/IxyRagifjPWTVnvXEERLoCM79G7tZdCm40eYYEow==
+X-Received: by 2002:a05:6870:200b:b0:2d4:ef88:97bb with SMTP id 586e51a60fabf-2e9bf238aaamr2633199fac.1.1749068102493;
+        Wed, 04 Jun 2025 13:15:02 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:829:fdd0:311c:c481? ([2600:8803:e7e4:1d00:829:fdd0:311c:c481])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e906457afesm2830330fac.1.2025.06.04.13.14.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 13:15:01 -0700 (PDT)
+Message-ID: <57edc6dc-bbf7-4491-a43b-c33b9466d8d0@baylibre.com>
+Date: Wed, 4 Jun 2025 15:14:59 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntplfj1d2i.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH 16/17] KVM: arm64: Add ioctl to partition the PMU when supported
-From: Colton Lewis <coltonlewis@google.com>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: oliver.upton@linux.dev, kvm@vger.kernel.org, pbonzini@redhat.com, 
-	corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 01/12] iio: adc: ad7768-1: Ensure SYNC_IN pulse
+ minimum timing requirement
+To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Cc: andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
+ marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, jonath4nns@gmail.com
+References: <cover.1749063024.git.Jonathan.Santos@analog.com>
+ <d3ee92a533cd1207cf5c5cc4d7bdbb5c6c267f68.1749063024.git.Jonathan.Santos@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <d3ee92a533cd1207cf5c5cc4d7bdbb5c6c267f68.1749063024.git.Jonathan.Santos@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> Oliver Upton <oliver.upton@linux.dev> writes:
+On 6/4/25 2:35 PM, Jonathan Santos wrote:
+> The SYNC_IN pulse width must be at least 1.5 x Tmclk, corresponding to
+> ~2.5 µs at the lowest supported MCLK frequency. Add a 3 µs delay to
+> ensure reliable synchronization timing even for the worst-case scenario.
+> 
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
 
->> On Mon, Jun 02, 2025 at 07:27:01PM +0000, Colton Lewis wrote:
->>> +	case KVM_ARM_PARTITION_PMU: {
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
->> This should be a vCPU attribute similar to the other PMUv3 controls we
->> already have. Ideally a single attribute where userspace tells us it
->> wants paritioning and specifies the PMU ID to use. None of this can be
->> changed after INIT'ing the PMU.
+> v10 Changes:
+> * New patch.
+> ---
+>  drivers/iio/adc/ad7768-1.c | 23 +++++++++++++++++++----
+>  1 file changed, 19 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> index 51134023534a..8b414a102864 100644
+> --- a/drivers/iio/adc/ad7768-1.c
+> +++ b/drivers/iio/adc/ad7768-1.c
+> @@ -252,6 +252,24 @@ static const struct regmap_config ad7768_regmap24_config = {
+>  	.max_register = AD7768_REG24_COEFF_DATA,
+>  };
+>  
+> +static int ad7768_send_sync_pulse(struct ad7768_state *st)
+> +{
+> +	/*
+> +	 * The datasheet specifies a minimum SYNC_IN pulse width of 1.5 × Tmclk,
+> +	 * where Tmclk is the MCLK period. The supported MCLK frequencies range
+> +	 * from 0.6 MHz to 17 MHz, which corresponds to a minimum SYNC_IN pulse
+> +	 * width of approximately 2.5 µs in the worst-case scenario (0.6 MHz).
+> +	 *
+> +	 * Add a delay to ensure the pulse width is always sufficient to
+> +	 * trigger synchronization.
+> +	 */
+> +	gpiod_set_value_cansleep(st->gpio_sync_in, 1);
+> +	fsleep(3);
+> +	gpiod_set_value_cansleep(st->gpio_sync_in, 0);
+> +
+> +	return 0;
 
-> Okay
+There is no other return, so this could be a void function. In this case, it is
+fine because a later patch adds another return. But in the future, be sure to
+mention that in the commit message (or below the ---) so that reviewers will
+know why without having to look ahead.
 
->>> +		struct arm_pmu *pmu;
->>> +		u8 host_counters;
->>> +
->>> +		if (unlikely(!kvm_vcpu_initialized(vcpu)))
->>> +			return -ENOEXEC;
->>> +
->>> +		if (!kvm_pmu_partition_supported())
->>> +			return -EPERM;
->>> +
->>> +		if (copy_from_user(&host_counters, argp, sizeof(host_counters)))
->>> +			return -EFAULT;
->>> +
->>> +		pmu = vcpu->kvm->arch.arm_pmu;
->>> +		return kvm_pmu_partition(pmu, host_counters);
-
->> Yeah, we really can't be changing the counters available to the ARM PMU
->> driver at this point. What happens to host events already scheduled on
->> the CPU?
-
-> Okay. I remember talking about this before.
-
->> Either the partition of host / KVM-owned counters needs to be computed
->> up front (prior to scheduling events) or KVM needs a way to direct perf
->> to reschedule events on the PMU based on the new operating constraints.
-
-> Yes. I will think about it.
-
-It would be cool to have perf reschedule events. I'm not positive how to
-do that, but it looks not too hard. Can someone comment on the
-correctness and feasibility here?
-
-1. Scan perf events and call event_sched_out on all events using the
-    counters KVM wants.
-2. Do the PMU surgery to change the available counters.
-3. Call ctx_resched to reschedule events with the available counters.
-
-There is a second option to avoid a permanent partition up front. We
-know which counters are in use through used_mask. We could check if the
-partition would claim any counters in use and fail with an error if it
-would.
+> +}
+> +
