@@ -1,225 +1,99 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7491D63C6
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202C61C84D3
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749052682; cv=none; b=ZVvsnDSoWGKvsW+2wjiGfGHLPPBT3aQpQ0QLLF6A41l2pXpIHOTYXqmtuj6fd6T9ByQNom317kZZz/bJaL51hCigeAej6JZhy/HfYFLhAsqYcmdQUXN26hzwlYq2tcc06E1fvTB9IbwOrVEo/un+klzA7cCOOv3XH9gq1k0rUVU=
+	t=1749052798; cv=none; b=PYrRcR2Gw25HRtPPoQpb4WnpHZHnjUjXsJZ4nsynDl0NFQ68unA532qJd1xzWYstr7QwSozgs1wYQgG4nzdDLRGgM7UOfAFlAmAAyQ5/jB5S0wcrUbd7nnAt/RwHN+oG3MhRUIvbwzhdR8DXwfs0EZMWP7tw0F0bLAKY/wBhs/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749052682; c=relaxed/simple;
-	bh=0ojI13sHPIQMkrRQYohZHtnXGa496cg8qn+xSF2G5MM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cw5EWhUHxO6/KaWuJZG2ShSwUrBPSFuK+4T0qkgrgTer8jQ+wMfRgfksz6jeVeKXJMJrUVVvfVGVSngw2f+Ul4bOWs4hXEvahHQDYzWqZUXKgwD/vyKIpIegVNFq2bmKdhrJ+Xh5krU4+YGmxXPw//1JpNLa0wZy5l7pS97Ltn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dqNBvphO; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749052798; c=relaxed/simple;
+	bh=WqKFJv1SYHO6yFnl3qXFauziCa37HPaucEDx/YKs/vc=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=J/1WQBk81u9Nr1LnsQj0svpE692PPgj2KnVVqTHPatRI6PNWUNA8H5oaHR0AZSHl+P42ug1PcoF+Fejo2i3U76oQqKemOEsRsPkKcL4rwmndbUf13FQ1sz6en1j7sONHF1sulP2DVqNbaHFce7ez3cHD7qAp9hvO7Vk3x0ZDHLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C6GG0BOO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dqNBvphO"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554DGuZV024325;
-	Wed, 4 Jun 2025 15:57:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=pz+EnW
-	/D+yNH/lAm96nc0b+2F4MOWXDHQcHk92rc5NI=; b=dqNBvphOMDWXYrspYqvDIU
-	wWMPFfxEUHSzA8DXllz4DhS/jH0jNd+ERl2YDnd6sUl7QMh1TZ4FN3A0MqQr8N4U
-	rYMiArAf7OQtx2KDk+VWIHGlFwhMAeXxBKE4wsq/4vpoOglJTc1NFWrfcZPy1TfE
-	jut00VjMu/VJigv0zu8TPTA2TYj3jcQo0EY2u9tHCMCFAXTsm80oWisj238DVUp8
-	rsnN1TJjguzmWEoPrlGgaKTEVXfOaj+CdSVp0VksGdrrB9t2171NDSG7GZN7NG09
-	RkOSTTo82mNlIw2BIkbO+9p5oLSOOez+rx3WV2OPf7CSMmpw/G6TgUjONvj+QWVw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471geyurxh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 15:57:37 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 554FYtZY026153;
-	Wed, 4 Jun 2025 15:57:36 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471geyurxe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 15:57:36 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 554Ff1jE028437;
-	Wed, 4 Jun 2025 15:57:35 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 470eakg9je-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 15:57:35 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 554FvXX623593548
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 4 Jun 2025 15:57:33 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6828D58067;
-	Wed,  4 Jun 2025 15:57:33 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8FA2F58052;
-	Wed,  4 Jun 2025 15:57:27 +0000 (GMT)
-Received: from [9.39.21.166] (unknown [9.39.21.166])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  4 Jun 2025 15:57:27 +0000 (GMT)
-Message-ID: <3d28858f-4ec6-43ea-8a3b-b9ce9a27bac7@linux.ibm.com>
-Date: Wed, 4 Jun 2025 21:27:25 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C6GG0BOO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749052791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mT2+8JawHf8ng4PjdszIvOlvJnF7IbRbXA1vmx0mRW4=;
+	b=C6GG0BOO/ihGnO9nkK4Km/LeE5bT+bWsPaWLgjS9wpVzYy2YXHbBSsQX7UNT94L6GBmg10
+	e9wyiaRb54ETgIVLgchQsYdLaNObs4WgiNFVwOLkpA69T0Vatm07h27YWxbLI4TzO92CAX
+	veFQWWdaL3RbX328zpovmuE2rOHyRdI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-19-owy3DbuLP02dRlJaJjlY1w-1; Wed,
+ 04 Jun 2025 11:59:50 -0400
+X-MC-Unique: owy3DbuLP02dRlJaJjlY1w-1
+X-Mimecast-MFC-AGG-ID: owy3DbuLP02dRlJaJjlY1w_1749052789
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D15A318003FD;
+	Wed,  4 Jun 2025 15:59:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.2])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9DEC830002D0;
+	Wed,  4 Jun 2025 15:59:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <1098853.1749051265@warthog.procyon.org.uk>
+References: <1098853.1749051265@warthog.procyon.org.uk> <CAHS8izMMU8QZrvXRiDjqwsBg_34s+dhvSyrU7XGMBuPF6eWyTA@mail.gmail.com> <770012.1748618092@warthog.procyon.org.uk>
+To: Mina Almasry <almasrymina@google.com>
+Cc: dhowells@redhat.com, willy@infradead.org, hch@infradead.org,
+    Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+    netdev@vger.kernel.org, linux-mm@kvack.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: Device mem changes vs pinning/zerocopy changes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/5] drivers/base/node: Optimize memory block
- registration to reduce boot time
-To: David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
-        Zi Yan <ziy@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Nilay Shroff
- <nilay@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-References: <2a0a05c2dffc62a742bf1dd030098be4ce99be28.1748452241.git.donettom@linux.ibm.com>
- <20250603200729.b7581e017e4ca63f502c795e@linux-foundation.org>
- <b355e72d-0284-4a31-84e3-ae4a79ad922f@redhat.com>
- <9f7ae0e6-4640-418d-a4db-dba594377ac2@linux.ibm.com>
- <8abecd5b-2768-49d0-afc3-561b95d77a24@redhat.com>
-Content-Language: en-US
-From: Donet Tom <donettom@linux.ibm.com>
-In-Reply-To: <8abecd5b-2768-49d0-afc3-561b95d77a24@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Pq2TbxM3 c=1 sm=1 tr=0 ts=68406cf1 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=mxs0qDoQSYin1jJoqQcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDExNyBTYWx0ZWRfX8WJCyVYxYOx4 ZwXF2L0hT9TVa9DCSZd0HnDTGnBLFWEQfIxdH7zNVM7GUVTw9QNAEgXFvI/Xf2VFj702xdpkOwZ sfqoXfWav9Rh6Q7PyjfPbaOH7gSnB9W1ScAh5rm/TsIwa5ei31ohpf9YVdbG04aMpO/YATwLmKc
- Nu4l7OGkwJONLlda7cIGo5xN4tNoU5UWs7aWuldP0AxM+oI6kN/2TY/JBbQz7cKY93NcxIWW8tW WgHpy0zclU/Ytt607VyE1rKfvJD5sP9EHB1ztXnYinqH583LpBYXATXCdNBDhJPqPJ8R/vxLle1 avaH5sAL+9Pjua1nGH/CFx6EpV7DjmpkhInXsPuhnQOvipMOn0uGoH244A9l8nkKf4KiAHjDxo9
- o+X4w74JpOyhMp51jOolPmtOZntcZfPPKt8xNLN8FXCuDhvXTNLasu1gWBqP7xtuOE954ekS
-X-Proofpoint-GUID: 9l28POHsiWfHdlg-x-L2inqY-xBTAJNz
-X-Proofpoint-ORIG-GUID: d6boryrX-Nv2vvbBUaTJBWLYcMY3GX1l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
- phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 priorityscore=1501
- mlxscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506040117
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1099956.1749052763.1@warthog.procyon.org.uk>
+Date: Wed, 04 Jun 2025 16:59:23 +0100
+Message-ID: <1099957.1749052763@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
+(Apologies, I accidentally sent the incomplete email)
 
-On 6/4/25 7:00 PM, David Hildenbrand wrote:
-> On 04.06.25 15:17, Donet Tom wrote:
->>
->> On 6/4/25 3:15 PM, David Hildenbrand wrote:
->>> On 04.06.25 05:07, Andrew Morton wrote:
->>>> On Wed, 28 May 2025 12:18:00 -0500 Donet Tom <donettom@linux.ibm.com>
->>>> wrote:
->>>>
->>>>> During node device initialization, `memory blocks` are registered 
->>>>> under
->>>>> each NUMA node. The `memory blocks` to be registered are identified
->>>>> using
->>>>> the node’s start and end PFNs, which are obtained from the node's
->>>>> pg_data
->>>>
->>>> It's quite unconventional to omit the [0/N] changelog.  This omission
->>>> somewhat messed up my processes so I added a one-liner to this.
->>>>
->>>
->>> Yeah, I was assuming that I simply did not get cc'ed on the cover
->>> letter, but there is actually none.
->>>
->>> Donet please add that in the future. git can do this using
->>> --cover-letter.
->>
->> Sure,
->>
->> I will add cover letter in next revision.
->>
->>
->>>
->>>>>
->>>>> ...
->>>>>
->>>>> Test Results on My system with 32TB RAM
->>>>> =======================================
->>>>> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
->>>>>
->>>>> Without this patch
->>>>> ------------------
->>>>> Startup finished in 1min 16.528s (kernel)
->>>>>
->>>>> With this patch
->>>>> ---------------
->>>>> Startup finished in 17.236s (kernel) - 78% Improvement
->>>>
->>>> Well someone is in for a nice surprise.
->>>>
->>>>> 2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
->>>>>
->>>>> Without this patch
->>>>> ------------------
->>>>> Startup finished in 28.320s (kernel)
->>>>
->>>> what.  CONFIG_DEFERRED_STRUCT_PAGE_INIT is supposed to make bootup
->>>> faster.
->>>
->>> Right, that's weird. Especially that it is still slower after these
->>> changes.
->>>
->>> CONFIG_DEFERRED_STRUCT_PAGE_INIT should be initializing in parallel
->>> which ... should be faster.
->>>
->>> @Donet, how many CPUs and nodes does your system have? Can you
->>> identify what is taking longer than without
->>> CONFIG_DEFERRED_STRUCT_PAGE_INIT?
->>
->>
->>
->> My system has,
->>
->> CPU      - 1528
->
-> Holy cow.
->
-> Pure speculation: are we parallelizing *too much* ? :)
->
-> That's ~95 CPUs per node on average.
+> I think you need to modify the existing sk_buff. I think adding
+> a new struct and migrating the entire net stack to use that is a bit
+> too ambitious. But up to you. Just my 2 cents here.
 
-yes
+It may come down to that, and if it does, we'll need to handle frags
+differently.  Basically, for zerocopy, the following will all apply or come to
+apply sometime in the future:
 
->
-> Staring at deferred_init_memmap(), we do have
->
->     max_threads = deferred_page_init_max_threads(cpumask);
->
-> And that calls cpumask_weight(), essentially using all CPUs on the node.
->
-> ... not sure what exactly happens if there are no CPUs for a node.
+ (1) We're going to be getting arrays of {physaddr,len} from the higher
+     layers.  I think Christoph's idea is that this makes DMA mapping easier.
+     We will need to retain this.
 
+ (2) There will be no page refcount.  We will obtain a pin (user zc) or there
+     will be a destructor (kernel zc).  If the latter, it may have to be
+     shared amongst multiple skbuffs.
 
-Okay.
+ (3) We can't assume that a frag refers to a single page - or that there's
+     even a necessarily a page struct.  And if there is a page struct, the
+     metadata isn't going to be stored in it.  The page struct will contain a
+     typed pointer to some other struct (e.g. folio).
 
-I'm still debugging what's happening. I'll update you once I find something.
+ (4) We can't assume anything about the memory type of the frag (could be
+     slab, for instance).
 
+Obviously, if we copy the data into netmem buffers, we have full control of
+that memory type.
 
->
->> Node     - 16
->
-> Are any of these memory-less?
+David
 
-
-No, there are no memory-less nodes. All nodes have around 2 TB of memory.
-
-
->
->> Memory - 31TB
->
->
->
