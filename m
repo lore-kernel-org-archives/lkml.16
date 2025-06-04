@@ -1,111 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CEA2C3246;
-	Wed,  4 Jun 2025 07:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6CB2C3246
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749021674; cv=none; b=gvnwIxs+ZP/OfPlAuOsYX7U+ct4TA4lsR8H5bFdfbZTgMcUNfR31yALBobA/UGXURaLyeKARhMFgWBxS5+xoNEoIsE0/64IM5idL9isZDla3fBg6C4mh962lAvH0tBA84NBD+mOL+X+w0Np8Vsppkxu130CDwe3FjpECDxs5ke0=
+	t=1749021886; cv=none; b=N8loxfyhUWHh4178RbjVMWMuodkDzrSAoGn07KkhduBEGCuLrMRDqrULvM+H0QmTfcDPKAZiCFwbz9wgTKj/FNZptwb1JaLL0LVsoAMSsxGds/8NctpCAj6jiLldydg1kB+V6vq6mpRbIqOn9ujyWAkpef9DvR460T4gXjXkQYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749021674; c=relaxed/simple;
-	bh=bv3plLMWlYqiLX7bbykrBWrHgekpaHQ8/VAfsukF9Y4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=pbAz7J1tuBsdoVqRhfPJ3tz0HSRDuHMJa52QqTG25hJ5Z2fidJJh3XP35o9mRIhTV6cBPD7JdXgZRbUQ5PsZkgVOeYAusupv6spBBpGPlTClXy6q3n1Zy3LNQu5l5LUffZVUbIRIz5VsUB37BHWqfe9A/Tol6d8mpNRajyqqy0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ReE5esUN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749021886; c=relaxed/simple;
+	bh=5SyUvppNuSDFqKzdDCKf9UQfWjYA+/m0ZdXQA8ZCk04=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=UjEN+dQ5gCLFVOTzU7dWEhFIbhzzbHSXWoNgA9gjBtqW1WOsaatQBc8+k5l4iy1wPrceK3Mi3M/maqSRjRQCAs4V8OBKjBAMfzp+2vsqK5ZkNpR36HR/YC9d14m/5EP95foSB9jofTdDk1JzscqqXfBq4s8hZOlMp567Mj+epBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HB/eFCnp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ReE5esUN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 978F5C4CEE7;
-	Wed,  4 Jun 2025 07:21:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HB/eFCnp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CEE1C4CEED;
+	Wed,  4 Jun 2025 07:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749021674;
-	bh=bv3plLMWlYqiLX7bbykrBWrHgekpaHQ8/VAfsukF9Y4=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=ReE5esUN24NKZGDizZih/Wi47yyBeivCQXlNEh7+dKc7W/mln6YWKC6G/WA6exjT7
-	 RPGl9TCXMD0b85groLCDhRcejg9Z9Afl3yFqCTh1ECCVHP68DDLfVficbKQWwy8GtP
-	 1ALltU25VugAwUYwpMrjMixo2W+GskAbnZ4Gimg+c6dq52wCKjt94M1P1lUr+Q0Vmm
-	 hv4IKqICYaw7SW6kKJH2pbgue6YsIzTurZclRU7ygsUvhzdOxzD2a0RgQ5r3yaGVB2
-	 3T7dGBeM4I4S4WNhiJv8vgpOQlWewseUzQavzgbRXP8NvBe5aQWNKlcg5yDE+wJ3YE
-	 AraRyj45Y625g==
+	s=k20201202; t=1749021884;
+	bh=5SyUvppNuSDFqKzdDCKf9UQfWjYA+/m0ZdXQA8ZCk04=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=HB/eFCnpX+ZayuBp8txIrg5VYlULfE/p9+roKKsskMKtDPDWg3iddFh9c0PKAwgHQ
+	 Tly9R/+1+C4r+KZn7sSpeEQYBunh1UkK8DGxqRQ0vrGw4RGfSsxB7YM/Sl4WPbQmys
+	 IufgNyTgI00B5gSiglvXfe+Hj3Ksf2yPPGz0V3zMm053tXbb5N5GUg3pgihCdWxBp8
+	 QHOnjbFKzNi19tm6jZVM5NE+CxtQ3bx1kVA6CaxC/PtPcGUqZJDc2N6/cTVmrrfi5v
+	 UiWUewSS13sxl21kkENnQQ7x2ytAbLUNOrGGU8tnls5pKMbPx5F1i2Ga/XEaHehFS7
+	 5auOw4CmWmj7g==
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 53D511200043;
+	Wed,  4 Jun 2025 03:24:43 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 04 Jun 2025 03:24:43 -0400
+X-ME-Sender: <xms:u_Q_aM0p66c7BTBlfuIYsSicCe_pViw9XN91-QilwIDc3PiTvTfObQ>
+    <xme:u_Q_aHEWoV0s6rTr_mdGh1Z8Zo48w71MXZNmxSxmsnyRP3r7ZMx5rNMRPQ01nrMTO
+    Fi-5oH7tiPLS8-pJT0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddujeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlh
+    drohhrgheqnecuggftrfgrthhtvghrnhepjeejffetteefteekieejudeguedvgfeffeei
+    tdduieekgeegfeekhfduhfelhfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhi
+    thihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrd
+    horhhgsegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpth
+    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrges
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidrug
+    gvvhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghp
+    thhtoheptghlrghuughiuhdrmhgrnhhoihhlsehngihprdgtohhmpdhrtghpthhtohepvh
+    hlrgguihhmihhrrdholhhtvggrnhesnhigphdrtghomhdprhgtphhtthhopeifvghirdhf
+    rghnghesnhigphdrtghomhdprhgtphhtthhopeigihgrohhnihhnghdrfigrnhhgsehngi
+    hprdgtohhm
+X-ME-Proxy: <xmx:u_Q_aE5sTD0Kdfr_d2GhRgaixAi4cDUozX84ZsqAQekzD2Odxix8Zw>
+    <xmx:u_Q_aF2do4Prs4IglGpFHWYGkpGD4m9Y-ATuFOpdEw4urR-6I5qIXw>
+    <xmx:u_Q_aPFSCwDMnHJ9SKYi0HZA3GHdSOkGE76ZHFR45MARKZjOFyk2WQ>
+    <xmx:u_Q_aO9yaSbSBjSKAcVGz4qq4Lo_P0Ulge5Vjb0JlDXTyFCTkfh1lw>
+    <xmx:u_Q_aEk7GsFRp93W9iXWe4RGVXQK5UWMlfvk2tVEZ-jz5CImLKGqCYQE>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2BEE3700060; Wed,  4 Jun 2025 03:24:43 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 04 Jun 2025 09:21:07 +0200
-Message-Id: <DADKFPYCQTSB.11AEFJUAXVH1R@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Danilo Krummrich"
- <dakr@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "John Hubbard"
- <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>, "Joel Fernandes"
- <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple"
- <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
- operations
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
- <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
- <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
- <DA8GTD7LT7KO.1A3LBQGEQTCEW@kernel.org> <aD1xVkggDrCvA7ve@pollux>
- <DAD9NDFY2RXV.3LDMFVUYN0IKD@kernel.org>
- <DADAXGJLZ4LP.27P0GIQB2DKD0@nvidia.com>
-In-Reply-To: <DADAXGJLZ4LP.27P0GIQB2DKD0@nvidia.com>
+MIME-Version: 1.0
+X-ThreadId: Tcd26d72acdec76a4
+Date: Wed, 04 Jun 2025 09:24:22 +0200
+From: "Arnd Bergmann" <arnd@kernel.org>
+To: "Wei Fang" <wei.fang@nxp.com>, "Vladimir Oltean" <vladimir.oltean@nxp.com>
+Cc: "Claudiu Manoil" <claudiu.manoil@nxp.com>,
+ "Clark Wang" <xiaoning.wang@nxp.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, Netdev <netdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>
+Message-Id: <b2068b86-dcbb-4fee-b091-4910e975a9b9@app.fastmail.com>
+In-Reply-To: 
+ <PAXPR04MB85104C607BF23FFFD6663ABB886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
+References: <20250603105056.4052084-1-wei.fang@nxp.com>
+ <20250603204501.2lcszfoiy5svbw6s@skbuf>
+ <PAXPR04MB85104C607BF23FFFD6663ABB886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH net] net: enetc: fix the netc-lib driver build dependency
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed Jun 4, 2025 at 1:54 AM CEST, Alexandre Courbot wrote:
-> On Wed Jun 4, 2025 at 7:53 AM JST, Benno Lossin wrote:
->> On Mon Jun 2, 2025 at 11:39 AM CEST, Danilo Krummrich wrote:
->>> On Thu, May 29, 2025 at 09:27:33AM +0200, Benno Lossin wrote:
->>>> That's also fair, but we lose the constness of `next_multiple_of`, so
->>>> you can't use `align_up` in a const function. That might confuse peopl=
-e
->>>> and then they write their own const helper function... I'd prefer we u=
-se
->>>> all functions that are available in the stdlib.
->>>
->>> Considering that, what's the suggestion for this trait?
->>>
->>> I don't think we should have a trait with align_down() and fls() only a=
-nd
->>> otherwise use next_multiple_of(), i.e. mix things up.
->>
->> Agreed.
->>
->>> I think we should either align with the Rust nomenclature - whatever th=
-is means
->>> for fls() - or implement the trait with all three methods.
->>
->> The longterm perspective would be to choose the Rust one. But I'd also
->> understand if people want the kernel's own terms used. Still I prefer
->> the Rust ones :)
+On Wed, Jun 4, 2025, at 04:44, Wei Fang wrote:
+>> Ok, so to summarize, you want nxp-netc-lib.ko to be separate from
+>> fsl-enetc-core.ko, because when you upstream the switch driver (also a
+>> consumer of ntmp.o), you want it to depend just on nxp-netc-lib.ko but
+>> not on the full fsl-enetc-core.ko.
+>> If the only reverse dependency of NXP_NETC_LIB, NXP_ENETC4, becomes m,
+>> then NXP_NETC_LIB also becomes m, but in reality, FSL_ENETC_CORE, via
+>> cbdr.o, still depends on symbols from NXP_NETC_LIB.
+>> 
+>> So you influence NXP_NETC_LIB to not become m when its only selecter is m,
+>> instead stay y.
+>> 
+>> Won't this need to change, and become even more complicated when
+>> NXP_NETC_LIB gains another selecter, the switch driver?
 >
-> My understanding is that so far we have tried to match the names of C
-> counterparts as much as possible when reimplementing stuff. I don't
-> think this particular module warrants an exception, which could cause
-> confusion to folks coming from the C part of the kernel.
+> The dependency needs to be updated as follows when switch driver is
+> added, to avoid the compilation errors.
+>
+> default y if FSL_ENETC_CORE=y && (NXP_ENETC4=m || NET_DSA_NETC_SWITCH=m)
+>
+>> 
+>> >  	help
+>> >  	  This module provides common functionalities for both ENETC and NETC
+>> >  	  Switch, such as NETC Table Management Protocol (NTMP) 2.0, common tc
+>> > --
+>> > 2.34.1
+>> >
+>> 
+>> What about this interpretation? cbdr.o uses symbols from NXP_NETC_LIB,
+>> so the Kconfig option controlling cbdr.o, aka FSL_ENETC_CORE, should
+>> select NXP_NETC_LIB. This solves the problem in a way which is more
+>> logical to me, and doesn't need to change when the switch is later added.
+>> 
+>
+> Yes, this is also a solution. I thought that LS1028A does not need the netc-lib
+> driver at all. Doing so will result in netc-lib being compiled on the LS1028A
+> platform, which may be unacceptable, so I did not do this. Since you think
+> this is better, I will apply this solution next. Thanks.
 
-There are instances of both, sometimes we have taken the Rust names,
-sometimes we have taken the C names. While wrapping a C API, we have
-mostly stuck to the C names, since that's what people are used to.
+I think this version should work, and make logical sense:
 
-But for more "core" code that's used by everyone, we often have used the
-Rust names. For example for the reference counting stuff, we have not
-used the `_get` and `_put` names, as that is done very different in Rust
-with `Drop`.
+--- a/drivers/net/ethernet/freescale/enetc/Kconfig
++++ b/drivers/net/ethernet/freescale/enetc/Kconfig
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config FSL_ENETC_CORE
+        tristate
++       select NXP_NETC_LIB if NXP_ENETC_NTMP
+        help
+          This module supports common functionality between the PF and VF
+          drivers for the NXP ENETC controller.
+@@ -22,6 +23,9 @@ config NXP_NETC_LIB
+          Switch, such as NETC Table Management Protocol (NTMP) 2.0, common tc
+          flower and debugfs interfaces and so on.
+ 
++config NXP_ENETC_NTMP
++       bool
++
+ config FSL_ENETC
+        tristate "ENETC PF driver"
+        depends on PCI_MSI
+@@ -45,7 +49,7 @@ config NXP_ENETC4
+        select FSL_ENETC_CORE
+        select FSL_ENETC_MDIO
+        select NXP_ENETC_PF_COMMON
+-       select NXP_NETC_LIB
++       select NXP_ENETC_NTMP
+        select PHYLINK
+        select DIMLIB
+        help
 
----
-Cheers,
-Benno
+FSL_ENETC selects the feature it actually wants, and FSL_ENETC_CORE
+enables the module based on the set of features that are enabled.
+The switch module can then equally enable bool symbol. Not sure
+what the best name would be for that symbol, that depends on what
+you expect to get added to NXP_NETC_LIB.
+
+     Arnd
