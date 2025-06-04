@@ -1,124 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A3817548;
-	Wed,  4 Jun 2025 04:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96981DE4CA;
+	Wed,  4 Jun 2025 04:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749011555; cv=none; b=qSQBoBsu8sNgfpRZNU9y1J5/atJjhEHXWEv4+1Sw92T3wnp8xRyUvzQE+T+HVLmE9JZ7vyRIcJt3k9669bzk7YFSZ8sUZ58fvQaoT7zNnI2cWIePCoXc87TvopqF47kIexktvoFkA1ShLGySP3Cey34eANrgd+ksscLF4+EDj70=
+	t=1749011619; cv=none; b=hmQJ1ataKC/LZ+AwVSSYouw9U73HUf020EkOXZExWwT+wMGO8a8d2vvEfCYx3iaGF5KgeuSk6z0zcYXhqHcCj1CNrFlPwBjNb27mTAp4ymLlk9PwGFVnTmiGFj3BeEz83UvU2lWfxHZ9nDLeKVkhDEEdgVPA0kQf3Q7IE6VudXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749011555; c=relaxed/simple;
-	bh=1fpC3Hybi/eVGZh4MEeqKTWPmCJz86JZI3OFCfdqyoo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U+oszMAwEtYBTz6qzlgVxD/0soBeqw59v2I1QuPM/aIGFEUps5hC50NGx7kP9q1KDb4rVL1aaMWyPsGaJwdN4AW6YJJjQbFwCo1IOWCqsmCTah4mYCpTQ0atnH6hRxfLDRNk6H6UVc+Oh9Nw/b9vCRH5OBjjaoxwQ7HbBehC4E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LbnU+Vth; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749011619; c=relaxed/simple;
+	bh=9NeDDdxV0q4sXEFhvG5y3MBDGxM6rM76CNHh5/RF2/c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=NC8D+iUZ3TqthMzUw+yLLb19gIzAgjl5oAlCMv5Qxt/X4b0tgr8c4eJHM02LsPQDaieyzKftsqT1xlexmE23x0Edq5QOPFddOXUGjuRiaW09gqVhkiaW+O9tJzfy80nZJgwVMbcq6ijfV/Qj8MEPzSmFezo1clpljITdvOcGhb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=k4r5apP8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LbnU+Vth"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749011554; x=1780547554;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1fpC3Hybi/eVGZh4MEeqKTWPmCJz86JZI3OFCfdqyoo=;
-  b=LbnU+VthNRtc4WbynW1jIQiP2Mh8bqI4jxYJ5HrG3veOqTaBWABfjRAh
-   ar2WLkDWKTcNAZDKECT2oDAQ8Bk0xAwB27tg7hgxL8cQKbC2MdbNG9NKw
-   ZSD3Y6yvN1RoBjPCeWXtLiLE3id5MPTZ9tSyG3UVHffbptHcmL9mqocLg
-   nJ6L1e2jUqgziHe4qImGbR6vZj/11EvC5xpgVRiYh3taacekJ+eCkiclF
-   QuTwalB8FwdT4eLhr9guzcqlsziLhwQ/q/5iArpOGQ0SbM6JzDsAsZk5E
-   JJ3ogA3K4DGyVr8SyahFPGSyUgnk/eRBqC4aWE7vcTKuxajTjemzFJaoW
-   Q==;
-X-CSE-ConnectionGUID: m8g6KL0ORzezSKwvO+Kvnw==
-X-CSE-MsgGUID: uKvHA1HQQD+5PFwSKlgzkA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="51217522"
-X-IronPort-AV: E=Sophos;i="6.16,208,1744095600"; 
-   d="scan'208";a="51217522"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 21:32:33 -0700
-X-CSE-ConnectionGUID: ADEZ9NkNT56f57CeRBtwIg==
-X-CSE-MsgGUID: 2PWEErnlRCa62D6QTvh1+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,208,1744095600"; 
-   d="scan'208";a="150221411"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
-  by fmviesa004.fm.intel.com with ESMTP; 03 Jun 2025 21:32:23 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-	Chandrakanth patil <chandrakanth.patil@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: megaraidlinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH RESEND] scsi: megaraid_sas: Fix invalid Node index
-Date: Wed,  4 Jun 2025 12:25:56 +0800
-Message-Id: <20250604042556.3731059-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="k4r5apP8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD94FC4CEE7;
+	Wed,  4 Jun 2025 04:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749011619;
+	bh=9NeDDdxV0q4sXEFhvG5y3MBDGxM6rM76CNHh5/RF2/c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=k4r5apP8Gx8lEe5htLA+PcDXUKwh7TZpQZgx5DX5ZFjAb+lHsV+QQC/pZDznExcu4
+	 tgEPBts+Tx2ZiHI3hZe0BW0QYQB6Q8KEZnGyfZ+lLO4l2QDJ4bWLQ4B2xUIi6J88pD
+	 cOyBO/+8jH2lK3ig/zy2cKtbEg2B0MinQpkPGiB8=
+Date: Tue, 3 Jun 2025 21:33:38 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: willy@infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, david@redhat.com, anshuman.khandual@arm.com,
+ ryan.roberts@arm.com, ziy@nvidia.com, aneesh.kumar@kernel.org
+Subject: Re: [PATCH v2] xarray: Add a BUG_ON() to ensure caller is not
+ sibling
+Message-Id: <20250603213338.7d80bbe0e021052c20e1c5f5@linux-foundation.org>
+In-Reply-To: <20250604041533.91198-1-dev.jain@arm.com>
+References: <20250604041533.91198-1-dev.jain@arm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On a system with DRAM interleave enabled, out-of-bound access
-is detected:
+On Wed,  4 Jun 2025 09:45:33 +0530 Dev Jain <dev.jain@arm.com> wrote:
 
-megaraid_sas 0000:3f:00.0: requested/available msix 128/128 poll_queue 0
-------------[ cut here ]------------
-UBSAN: array-index-out-of-bounds in ./arch/x86/include/asm/topology.h:72:28
-index -1 is out of range for type 'cpumask *[1024]'
-dump_stack_lvl+0x5d/0x80
-ubsan_epilogue+0x5/0x2b
-__ubsan_handle_out_of_bounds.cold+0x46/0x4b
-megasas_alloc_irq_vectors+0x149/0x190 [megaraid_sas]
-megasas_probe_one.cold+0xa4d/0x189c [megaraid_sas]
-local_pci_probe+0x42/0x90
-pci_device_probe+0xdc/0x290
-really_probe+0xdb/0x340
-__driver_probe_device+0x78/0x110
-driver_probe_device+0x1f/0xa0
-__driver_attach+0xba/0x1c0
-bus_for_each_dev+0x8b/0xe0
-bus_add_driver+0x142/0x220
-driver_register+0x72/0xd0
-megasas_init+0xdf/0xff0 [megaraid_sas]
-do_one_initcall+0x57/0x310
-do_init_module+0x90/0x250
-init_module_from_file+0x85/0xc0
-idempotent_init_module+0x114/0x310
-__x64_sys_finit_module+0x65/0xc0
-do_syscall_64+0x82/0x170
-entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> Suppose xas is pointing somewhere near the end of the multi-entry batch.
+> Then it may happen that the computed slot already falls beyond the batch,
+> thus breaking the loop due to !xa_is_sibling(), and computing the wrong
+> order. For example, suppose we have a shift-6 node having an order-9
+> entry => 8 - 1 = 7 siblings, so assume the slots are at offset 0 till 7 in
+> this node. If xas->xa_offset is 6, then the code will compute order as
+> 1 + xas->xa_node->shift = 7. Therefore, the order computation must start
+> from the beginning of the multi-slot entries, that is, the non-sibling
+> entry. Thus ensure that the caller is aware of this by triggering a BUG
+> when the entry is a sibling entry.
 
-Fix it accordingly.
+Why check this thing in particular?  There are a zillion things we
+could check...
 
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- drivers/scsi/megaraid/megaraid_sas_base.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> Note that this BUG_ON() is only
+> active while running selftests, so there is no overhead in a running
+> kernel.
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 5e33d411fa3d..6d4de06082d1 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -5910,7 +5910,11 @@ megasas_set_high_iops_queue_affinity_and_hint(struct megasas_instance *instance)
- 	const struct cpumask *mask;
- 
- 	if (instance->perf_mode == MR_BALANCED_PERF_MODE) {
--		mask = cpumask_of_node(dev_to_node(&instance->pdev->dev));
-+		int nid = dev_to_node(&instance->pdev->dev);
-+
-+		if (nid == NUMA_NO_NODE)
-+			nid = 0;
-+		mask = cpumask_of_node(nid);
- 
- 		for (i = 0; i < instance->low_latency_index_start; i++) {
- 			irq = pci_irq_vector(instance->pdev, i);
--- 
-2.25.1
+hm, how do we know this?  Now and in the future?  xa_get_order() and
+xas_get_order() have callers all over the place.
 
