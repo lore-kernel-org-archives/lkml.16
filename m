@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFA3322A4F6;
-	Wed,  4 Jun 2025 02:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 381C3239E76;
+	Wed,  4 Jun 2025 02:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749005594; cv=none; b=Qin4HbVP4eaIinkxIsHq95xByr9IbdrW8RSW29wQg5ag/V40jvuvybIvPc1wcEhf983EBSTpfEohypDjV0sH8cLS+bR7iagsi+Zbm55hv+hpXWUfIuUDk2je7hxPwLbj8EvCsF7i+IqhTcmOzw1IVfCfGGjif0nyHDq5ThVNnKI=
+	t=1749005595; cv=none; b=WAT9UuyHQdjFZ9ysf4ueYSXHIYD0e9WQ2pGLQPVFTsl8DMvFpTAY2kQJfhp3Anxt4vMyTNDr06YixovT+B9XJxeydw7/y92bi0MwUUFdYF9+bQOY1XXV+ntQCjpbPDrJD9Xsc6IxQXXTmoidFZ3G+lDt5YGJypigBxVhMLnbqdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749005594; c=relaxed/simple;
-	bh=7zC/36ooVLBFCzQX6UCj1AUYzrfHYBeqvMujF7ao+zY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=hqgW2pGVoTfx+oAMM98svdF8CAc7mK1F4HFfj9a+LTlpqI071h0D4/qFDbpwttONRriRfEdrch1+pIjDCO1LBSD+Ihj/v6f7Bf09u+NdS8QUG/xSpwhkZksGmXfAgYQLYVN4RDohS8NFITZs3GgppowC5Vmvp/srbLiIFIBLH4M=
+	s=arc-20240116; t=1749005595; c=relaxed/simple;
+	bh=tZsloLl0JEwlcpS7yHBiZsfV8cQCi3VTGJb67s+qCH4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=SvPRiZN+obsSac+YkO5VBpOaWwjp/Ef5E3rr1jnwKOx0yLoS8ekzcJ4JrHEdmqrz+j2KP4xxpLZgiWeqdcphvg9hDwmxrC3ICcs60ykTZaPUu05dFffekt55O59hBDhvYm8bMidYj4ePiDa7b4cLNQLVP65Q51UZEGUUHEUZfss=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-28-683fb50a2444
+X-AuditID: a67dfc5b-681ff7000002311f-65-683fb50ad98e
 From: Byungchul Park <byungchul@sk.com>
 To: willy@infradead.org,
 	netdev@vger.kernel.org
@@ -47,40 +47,40 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	bpf@vger.kernel.org,
 	vishal.moola@gmail.com
-Subject: [RFC v4 11/18] mlx4: use netmem descriptor and APIs for page pool
-Date: Wed,  4 Jun 2025 11:52:39 +0900
-Message-Id: <20250604025246.61616-12-byungchul@sk.com>
+Subject: [RFC v4 17/18] mt76: use netmem descriptor and APIs for page pool
+Date: Wed,  4 Jun 2025 11:52:45 +0900
+Message-Id: <20250604025246.61616-18-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250604025246.61616-1-byungchul@sk.com>
 References: <20250604025246.61616-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWRW0hTcRzH/e+cnbMNF6cl7aSQtIrSzGVZ/LpgQi+HQoiUHjKyqac2mpc2
-	tRkE1gTRmoqJia6Yeb/AYnmZoWLLa0qN2WyVpk2mD+V1Zt7AnOLbh++Xz/fly8NE3bgvT5GY
-	wqoSZUoJIcAF095lxwVNF+UnimwU6I0NBNQva6B63MwFfV0zgsWVHyS4u3oJKC9bwkD/OROH
-	v8ZVDFw9ThLGqiZxaMtqwcCZ10eALnMNgyfmGg5Ym3O5ULhaiUFLxjgJQ+/0BPxs2ODCpEWH
-	Q39JLQ5jueHQY9gLSwN/EHQZWziw9OwlAc9tBgImMscQ2D44cSh9nIvA2OHgwtqyngg/wDTW
-	fuMwrSWjJGMwpTJvawKZHIcNY0x12QRjWiggmZHhNoLpK17DmVazm8PotDMEM+/6jjOzHXaC
-	MTbacWbQ0EUybtP+q9QNwYV4VqlIY1XSsNsCubZ0Ck+uPKcpn3+NMlC2NAfxeTQVSv8edJA7
-	rG1q43qYoI7QDscK5mEfKoR2O3vxHCTgYdQMl3bp1zieYg91mXZZO7dknDpMr5i+Ig8LqTP0
-	REUHsT3qT9e/6dwa4m/mIzMvtlwRdZrWmb9gnlGamibpdksh2hb20e9rHHg+EhqQVx0SKRLT
-	EmQKZWiwPD1RoQmOS0owoc1zqx6tR5vRgjXSgigekngLzSNhchFXlqZOT7AgmodJfIT+AZuR
-	MF6W/pBVJcWoUpWs2oL8eLhELDy59CBeRN2VpbD3WDaZVe20HB7fNwMZPk1WVH8syjfw8wbv
-	P3UGUde954LvcPj/IoyRsRhBv4paL2i/Zgs4tmEQ81MWdQOj/RF+u8K04vNiOupKzJS9KJas
-	tZaiBv+jqrjJJE34wQVKEjrbl0f237xUH3n2VkZ+z3CYlzSWDeo+pM36Re4eIirnWGktitYL
-	TxXbJbhaLgsJxFRq2X+ipmzg2AIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWRW0hTcRzH/e9cNoeT47I82YMxkEhIE1J+mJjZg4chwxLRIsihhzacUzbv
-	YFguQnF2pUInzfuVJmu6o4iXKepKyLzONBVF8yEsL5nXzBW9ffh8+X5fvgJMXId7C5TqdFaj
-	lqskpBAXyi4XXBC2XlFcLL8HBlMzCU072VC3wBFgaGxDsLU7w4fN/kESqiq2MTB81OHw07SH
-	wfLAIh/ma1dw6HxkxWDx8RAJet0+Bg+4eh70ldsJGGkrIeDFXg0G1vwFPox1GEiYaz4iYMWm
-	x8Fe2oDDfEk4DBhPwfaHbwj6TVYebBeXk/B81EjCkm4ewWjfIg5l90sQmLocBOzvGMhwCWNp
-	mOYx7aVf+IzRnMG8q/djihyjGGNuLCQZ88YzPjM72UkyQ6/3caad2+Qx+oI1kllf/owz37sm
-	SKZq9QePMVkmcGbY2M+P9rglDE1iVcpMVhMQliBUFJR9xdNqQrKr1itRPioMKEKuApq6RBe0
-	dhJOJqlztMOxiznZkwqkNxcH8SIkFGDUGkEvG/Z5zuAEJaWXR3r4TsYpX3rXPIWcLKKC6aXq
-	LvLfqA/d1NLzd8j12M+uvfrbFVNBtJ4bx54goRG5NCJPpTozRa5UBflrkxU5amW2f2Jqihkd
-	31ebd/CUQ1tjkTZECZDETcTNhinEhDxTm5NiQ7QAk3iKfM4fK1GSPCeX1aTe0WSoWK0NnRHg
-	Ei+RNI5NEFN35elsMsumsZr/KU/g6p2P/Oe8KFulC26//uYh974i6FoTe1KqjrG/ze26Ics6
-	O9wZ2RsboRO/jCc6tqa4OffujembMW5xiSF5Q/YoCJq9miguzkqbiV3pnmlZr62ePOzN9DiI
-	8k3KHbN+qrSftqzoycPw27/de8ZXh37JuJaQoxJZaERwX3RzfG+31MJKcK1CHuiHabTyP/Wm
-	b1y6AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRW0hTcRzH/e+cnTOHi8MSO1l5WRdRaKlo/YxSezAOvRSFEvaQQw9teWXq
+	cpGwVJKGmlmR6KSZaPPGbHmZJlZqU7PyXis1RZlEeUGn5o3KrXz78P3y/bx8eZiwE3flyRJS
+	WHmCJE5E8HH+nFPpUX5DiNT3V/FJ0OhrCKheS4Nnk0YuaKoaESyvj5Jg7ewioKx0FQNNXxYO
+	K/oNDCymKRImKmZwaM1uwmDqXjcBuVmbGGQYdRzob8zjwsONcgyaVJMkDLVoCPhW84cLM+25
+	OPQUVeIwkRcKJq0LrPbOIujUN3FgNaeEgAeDWgKmsyYQDHZM4VB8Ow+Bvs3Mhc01DRHqydRX
+	fuEwzUXjJKM1pDIvdD6M2jyIMYaquwRjWCogmbFPrQTTXbiJM81GK4fJzZwnmEXLV5xZaBsh
+	GH39CM6813aSjNXgdoGK5J+KYeNkClZ+LDiKL300r0ZJ0+I0yweuCs0dUSNHHk0F0Jmz/dwd
+	Hr8zh9mYoLxos3ndzs6UH22d6sLViM/DqHkubdFscmzFbuocvaV9SdoYpw7TlY09dpGAOk6X
+	fraS/6TudHXda7vIcTsfm39s3wqpQDrXOIzZpDS1SNJmS/3/wV76jc6M5yOBFjlUIaEsQREv
+	kcUFiKXKBFmaODox3oC2v61I37piREv9l9oRxUMiJ4FxLFgq5EoUycr4dkTzMJGzwN17OxLE
+	SJQ3WXniVXlqHJvcjvbxcNEegf/qjRghdU2SwsaybBIr32k5PEdXFQo8H/7OLeiV21MVENLR
+	g4XKZcNyS2JDpOlJ32x+X5DoY/qCx/OzP3qtOSFhsfShXs8z90mxduXyW4VThH/TdPjowC5B
+	Bxs2UFfgm6+JnlbU1h64laFLcikrF5tKhuTXXXSBKrVX9NZ3dcR+h4unT0T81PREDYuym3/3
+	BEo9vMdFeLJU4ueDyZMlfwGFNgbr1wIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRW0hTcRzH/e9cNpeL05I86YM5TFFoJmr8QDERwZMP0UtEveTIQ1tuUzYd
+	TopWWuJqs4t20UkTSd1UJst0XqkpXqgwNGuaN2YTCbVME3WGOaO3D58v3+/Ll4cJ6/FgnkyZ
+	x6qUErmI5OP8s4lFJ/ivT0tPfjOFgcnWRELjZgHUzzkIMFnbEKxvfeXCWv8gCbU1GxiYRopx
+	+G3bxsAz4ObCbN0CDt0l7Ri4y4ZIMBR7MbjtaOBAX/UwAR/bjASUb7/EoF03x4WxThMJM027
+	BCw4DTgMV1pwmDWmwID5CGy8W0LQb2vnwMb9ahIej5pJmC+eRTDa58ah6pYRga3XRYB300Sm
+	iJhWywSH6aic5jJmez7zqiGa0btGMcZuLSUZ+69HXGbqczfJDD3z4kyHY43DGIpWSGbVM4kz
+	P3rHSaZ28SeHsbWO48x7cz/33KFL/KQsVi7TsKqY5Ey+tGJFj3LnxQWeD4QOLUfokT+PpuLp
+	6bvLmI9JKpJ2ubb2OZCKpdfcg7ge8XkYtULQHpOX4wsOUxn0jrmL62OcOk5b2oYJHwuoU3TN
+	lzXuv9FQurHlzf6Q/56fWnm63xVSCbTB8Ql7gPhm5GdFgTKlRiGRyRPE6mypVikrEF/JUdjR
+	3n11N3YeOtD6WLoTUTwkChA4ppKlQkKiUWsVTkTzMFGgIDRqTwmyJNpCVpVzWZUvZ9VOFMLD
+	RUGCjAtsppC6Ksljs1k2l1X9Tzk8/2AdGlmN0zzvabjpvR4dEtwWYi/tbpEXL3jMmoz0tCXF
+	k+qYt9265GtTu7pLKUuLrqjUuIGyAqQ9WnpPW2I5GHagc0ZYGF5pVTqNdanNk0EdPcry1vQu
+	4bGttMj4M/OxIAotZc+LvvObFRdbJGm7vd4QP3VS4p+ygPCKqgjxxIs7IlwtlcRGYyq15C95
+	mtG/ugIAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -91,204 +91,162 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 To simplify struct page, the effort to separate its own descriptor from
 struct page is required and the work for page pool is on going.
 
-Use netmem descriptor and APIs for page pool in mlx4 code.
+Use netmem descriptor and APIs for page pool in mt76 code.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
+Reviewed-by: Mina Almasry <almasrymina@google.com>
 ---
- drivers/net/ethernet/mellanox/mlx4/en_rx.c   | 48 +++++++++++---------
- drivers/net/ethernet/mellanox/mlx4/en_tx.c   |  8 ++--
- drivers/net/ethernet/mellanox/mlx4/mlx4_en.h |  4 +-
- 3 files changed, 32 insertions(+), 28 deletions(-)
+ drivers/net/wireless/mediatek/mt76/dma.c      |  6 ++---
+ drivers/net/wireless/mediatek/mt76/mt76.h     | 12 +++++-----
+ .../net/wireless/mediatek/mt76/sdio_txrx.c    | 24 +++++++++----------
+ drivers/net/wireless/mediatek/mt76/usb.c      | 10 ++++----
+ 4 files changed, 26 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_rx.c b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-index b33285d755b9..7cf0d2dc5011 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-@@ -62,18 +62,18 @@ static int mlx4_en_alloc_frags(struct mlx4_en_priv *priv,
- 	int i;
+diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+index 35b4ec91979e..41b529b95877 100644
+--- a/drivers/net/wireless/mediatek/mt76/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/dma.c
+@@ -820,10 +820,10 @@ mt76_add_fragment(struct mt76_dev *dev, struct mt76_queue *q, void *data,
+ 	int nr_frags = shinfo->nr_frags;
  
- 	for (i = 0; i < priv->num_frags; i++, frags++) {
--		if (!frags->page) {
--			frags->page = page_pool_alloc_pages(ring->pp, gfp);
--			if (!frags->page) {
-+		if (!frags->netmem) {
-+			frags->netmem = page_pool_alloc_netmems(ring->pp, gfp);
-+			if (!frags->netmem) {
- 				ring->alloc_fail++;
- 				return -ENOMEM;
- 			}
--			page_pool_fragment_page(frags->page, 1);
-+			page_pool_fragment_netmem(frags->netmem, 1);
- 			frags->page_offset = priv->rx_headroom;
+ 	if (nr_frags < ARRAY_SIZE(shinfo->frags)) {
+-		struct page *page = virt_to_head_page(data);
+-		int offset = data - page_address(page) + q->buf_offset;
++		netmem_ref netmem = virt_to_head_netmem(data);
++		int offset = data - netmem_address(netmem) + q->buf_offset;
  
- 			ring->rx_alloc_pages++;
- 		}
--		dma = page_pool_get_dma_addr(frags->page);
-+		dma = page_pool_get_dma_addr_netmem(frags->netmem);
- 		rx_desc->data[i].addr = cpu_to_be64(dma + frags->page_offset);
+-		skb_add_rx_frag(skb, nr_frags, page, offset, len, q->buf_size);
++		skb_add_rx_frag_netmem(skb, nr_frags, netmem, offset, len, q->buf_size);
+ 	} else {
+ 		mt76_put_page_pool_buf(data, allow_direct);
  	}
- 	return 0;
-@@ -83,10 +83,10 @@ static void mlx4_en_free_frag(const struct mlx4_en_priv *priv,
- 			      struct mlx4_en_rx_ring *ring,
- 			      struct mlx4_en_rx_alloc *frag)
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
+index 5f8d81cda6cd..16d09b6d8270 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+@@ -1795,21 +1795,21 @@ int mt76_rx_token_consume(struct mt76_dev *dev, void *ptr,
+ int mt76_create_page_pool(struct mt76_dev *dev, struct mt76_queue *q);
+ static inline void mt76_put_page_pool_buf(void *buf, bool allow_direct)
  {
--	if (frag->page)
--		page_pool_put_full_page(ring->pp, frag->page, false);
-+	if (frag->netmem)
-+		page_pool_put_full_netmem(ring->pp, frag->netmem, false);
- 	/* We need to clear all fields, otherwise a change of priv->log_rx_info
--	 * could lead to see garbage later in frag->page.
-+	 * could lead to see garbage later in frag->netmem.
- 	 */
- 	memset(frag, 0, sizeof(*frag));
+-	struct page *page = virt_to_head_page(buf);
++	netmem_ref netmem = virt_to_head_netmem(buf);
+ 
+-	page_pool_put_full_page(page->pp, page, allow_direct);
++	page_pool_put_full_netmem(netmem_get_pp(netmem), netmem, allow_direct);
  }
-@@ -440,29 +440,33 @@ static int mlx4_en_complete_rx_desc(struct mlx4_en_priv *priv,
- 	unsigned int truesize = 0;
- 	bool release = true;
- 	int nr, frag_size;
+ 
+ static inline void *
+ mt76_get_page_pool_buf(struct mt76_queue *q, u32 *offset, u32 size)
+ {
 -	struct page *page;
 +	netmem_ref netmem;
- 	dma_addr_t dma;
  
- 	/* Collect used fragments while replacing them in the HW descriptors */
- 	for (nr = 0;; frags++) {
- 		frag_size = min_t(int, length, frag_info->frag_size);
+-	page = page_pool_dev_alloc_frag(q->page_pool, offset, size);
+-	if (!page)
++	netmem = page_pool_dev_alloc_netmem(q->page_pool, offset, &size);
++	if (!netmem)
+ 		return NULL;
  
--		page = frags->page;
--		if (unlikely(!page))
-+		netmem = frags->netmem;
-+		if (unlikely(!netmem))
- 			goto fail;
- 
--		dma = page_pool_get_dma_addr(page);
-+		dma = page_pool_get_dma_addr_netmem(netmem);
- 		dma_sync_single_range_for_cpu(priv->ddev, dma, frags->page_offset,
- 					      frag_size, priv->dma_dir);
- 
--		__skb_fill_page_desc(skb, nr, page, frags->page_offset,
--				     frag_size);
-+		__skb_fill_netmem_desc(skb, nr, netmem, frags->page_offset,
-+				       frag_size);
- 
- 		truesize += frag_info->frag_stride;
- 		if (frag_info->frag_stride == PAGE_SIZE / 2) {
-+			struct page *page = netmem_to_page(netmem);
-+			atomic_long_t *pp_ref_count =
-+				netmem_get_pp_ref_count_ref(netmem);
-+
- 			frags->page_offset ^= PAGE_SIZE / 2;
- 			release = page_count(page) != 1 ||
--				  atomic_long_read(&page->pp_ref_count) != 1 ||
-+				  atomic_long_read(pp_ref_count) != 1 ||
- 				  page_is_pfmemalloc(page) ||
- 				  page_to_nid(page) != numa_mem_id();
- 		} else if (!priv->rx_headroom) {
-@@ -476,9 +480,9 @@ static int mlx4_en_complete_rx_desc(struct mlx4_en_priv *priv,
- 			release = frags->page_offset + frag_info->frag_size > PAGE_SIZE;
- 		}
- 		if (release) {
--			frags->page = NULL;
-+			frags->netmem = 0;
- 		} else {
--			page_pool_ref_page(page);
-+			page_pool_ref_netmem(netmem);
- 		}
- 
- 		nr++;
-@@ -719,7 +723,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 		int nr;
- 
- 		frags = ring->rx_info + (index << priv->log_rx_info);
--		va = page_address(frags[0].page) + frags[0].page_offset;
-+		va = netmem_address(frags[0].netmem) + frags[0].page_offset;
- 		net_prefetchw(va);
- 		/*
- 		 * make sure we read the CQE after we read the ownership bit
-@@ -748,7 +752,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 			/* Get pointer to first fragment since we haven't
- 			 * skb yet and cast it to ethhdr struct
- 			 */
--			dma = page_pool_get_dma_addr(frags[0].page);
-+			dma = page_pool_get_dma_addr_netmem(frags[0].netmem);
- 			dma += frags[0].page_offset;
- 			dma_sync_single_for_cpu(priv->ddev, dma, sizeof(*ethh),
- 						DMA_FROM_DEVICE);
-@@ -788,7 +792,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 			void *orig_data;
- 			u32 act;
- 
--			dma = page_pool_get_dma_addr(frags[0].page);
-+			dma = page_pool_get_dma_addr_netmem(frags[0].netmem);
- 			dma += frags[0].page_offset;
- 			dma_sync_single_for_cpu(priv->ddev, dma,
- 						priv->frag_info[0].frag_size,
-@@ -818,7 +822,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 				if (likely(!xdp_do_redirect(dev, &mxbuf.xdp, xdp_prog))) {
- 					ring->xdp_redirect++;
- 					xdp_redir_flush = true;
--					frags[0].page = NULL;
-+					frags[0].netmem = 0;
- 					goto next;
- 				}
- 				ring->xdp_redirect_fail++;
-@@ -828,7 +832,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 				if (likely(!mlx4_en_xmit_frame(ring, frags, priv,
- 							length, cq_ring,
- 							&doorbell_pending))) {
--					frags[0].page = NULL;
-+					frags[0].netmem = 0;
- 					goto next;
- 				}
- 				trace_xdp_exception(dev, xdp_prog, act);
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_tx.c b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-index 87f35bcbeff8..b564a953da09 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-@@ -354,7 +354,7 @@ u32 mlx4_en_recycle_tx_desc(struct mlx4_en_priv *priv,
- 	struct page_pool *pool = ring->recycle_ring->pp;
- 
- 	/* Note that napi_mode = 0 means ndo_close() path, not budget = 0 */
--	page_pool_put_full_page(pool, tx_info->page, !!napi_mode);
-+	page_pool_put_full_netmem(pool, tx_info->netmem, !!napi_mode);
- 
- 	return tx_info->nr_txbb;
+-	return page_address(page) + *offset;
++	return netmem_address(netmem) + *offset;
  }
-@@ -1191,10 +1191,10 @@ netdev_tx_t mlx4_en_xmit_frame(struct mlx4_en_rx_ring *rx_ring,
- 	tx_desc = ring->buf + (index << LOG_TXBB_SIZE);
- 	data = &tx_desc->data;
  
--	dma = page_pool_get_dma_addr(frame->page);
-+	dma = page_pool_get_dma_addr_netmem(frame->netmem);
+ static inline void mt76_set_tx_blocked(struct mt76_dev *dev, bool blocked)
+diff --git a/drivers/net/wireless/mediatek/mt76/sdio_txrx.c b/drivers/net/wireless/mediatek/mt76/sdio_txrx.c
+index 0a927a7313a6..b1d89b6f663d 100644
+--- a/drivers/net/wireless/mediatek/mt76/sdio_txrx.c
++++ b/drivers/net/wireless/mediatek/mt76/sdio_txrx.c
+@@ -68,14 +68,14 @@ mt76s_build_rx_skb(void *data, int data_len, int buf_len)
  
--	tx_info->page = frame->page;
--	frame->page = NULL;
-+	tx_info->netmem = frame->netmem;
-+	frame->netmem = 0;
- 	tx_info->map0_dma = dma;
- 	tx_info->nr_bytes = max_t(unsigned int, length, ETH_ZLEN);
- 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-index ad0d91a75184..3ef9a0a1f783 100644
---- a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-+++ b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-@@ -213,7 +213,7 @@ enum cq_type {
- struct mlx4_en_tx_info {
- 	union {
- 		struct sk_buff *skb;
+ 	skb_put_data(skb, data, len);
+ 	if (data_len > len) {
 -		struct page *page;
 +		netmem_ref netmem;
- 	};
- 	dma_addr_t	map0_dma;
- 	u32		map0_byte_count;
-@@ -246,7 +246,7 @@ struct mlx4_en_tx_desc {
- #define MLX4_EN_CX3_HIGH_ID	0x1005
  
- struct mlx4_en_rx_alloc {
--	struct page	*page;
-+	netmem_ref	netmem;
- 	u32		page_offset;
- };
+ 		data += len;
+-		page = virt_to_head_page(data);
+-		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
+-				page, data - page_address(page),
+-				data_len - len, buf_len);
+-		get_page(page);
++		netmem = virt_to_head_netmem(data);
++		skb_add_rx_frag_netmem(skb, skb_shinfo(skb)->nr_frags,
++				       netmem, data - netmem_address(netmem),
++				       data_len - len, buf_len);
++		get_netmem(netmem);
+ 	}
  
+ 	return skb;
+@@ -88,7 +88,7 @@ mt76s_rx_run_queue(struct mt76_dev *dev, enum mt76_rxq_id qid,
+ 	struct mt76_queue *q = &dev->q_rx[qid];
+ 	struct mt76_sdio *sdio = &dev->sdio;
+ 	int len = 0, err, i;
+-	struct page *page;
++	netmem_ref netmem;
+ 	u8 *buf, *end;
+ 
+ 	for (i = 0; i < intr->rx.num[qid]; i++)
+@@ -100,11 +100,11 @@ mt76s_rx_run_queue(struct mt76_dev *dev, enum mt76_rxq_id qid,
+ 	if (len > sdio->func->cur_blksize)
+ 		len = roundup(len, sdio->func->cur_blksize);
+ 
+-	page = __dev_alloc_pages(GFP_KERNEL, get_order(len));
+-	if (!page)
++	netmem = page_to_netmem(__dev_alloc_pages(GFP_KERNEL, get_order(len)));
++	if (!netmem)
+ 		return -ENOMEM;
+ 
+-	buf = page_address(page);
++	buf = netmem_address(netmem);
+ 
+ 	sdio_claim_host(sdio->func);
+ 	err = sdio_readsb(sdio->func, buf, MCR_WRDR(qid), len);
+@@ -112,7 +112,7 @@ mt76s_rx_run_queue(struct mt76_dev *dev, enum mt76_rxq_id qid,
+ 
+ 	if (err < 0) {
+ 		dev_err(dev->dev, "sdio read data failed:%d\n", err);
+-		put_page(page);
++		put_netmem(netmem);
+ 		return err;
+ 	}
+ 
+@@ -140,7 +140,7 @@ mt76s_rx_run_queue(struct mt76_dev *dev, enum mt76_rxq_id qid,
+ 		}
+ 		buf += round_up(len + 4, 4);
+ 	}
+-	put_page(page);
++	put_netmem(netmem);
+ 
+ 	spin_lock_bh(&q->lock);
+ 	q->head = (q->head + i) % q->ndesc;
+diff --git a/drivers/net/wireless/mediatek/mt76/usb.c b/drivers/net/wireless/mediatek/mt76/usb.c
+index f9e67b8c3b3c..1ea80c87a839 100644
+--- a/drivers/net/wireless/mediatek/mt76/usb.c
++++ b/drivers/net/wireless/mediatek/mt76/usb.c
+@@ -478,7 +478,7 @@ mt76u_build_rx_skb(struct mt76_dev *dev, void *data,
+ 
+ 	head_room = drv_flags & MT_DRV_RX_DMA_HDR ? 0 : MT_DMA_HDR_LEN;
+ 	if (SKB_WITH_OVERHEAD(buf_size) < head_room + len) {
+-		struct page *page;
++		netmem_ref netmem;
+ 
+ 		/* slow path, not enough space for data and
+ 		 * skb_shared_info
+@@ -489,10 +489,10 @@ mt76u_build_rx_skb(struct mt76_dev *dev, void *data,
+ 
+ 		skb_put_data(skb, data + head_room, MT_SKB_HEAD_LEN);
+ 		data += head_room + MT_SKB_HEAD_LEN;
+-		page = virt_to_head_page(data);
+-		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
+-				page, data - page_address(page),
+-				len - MT_SKB_HEAD_LEN, buf_size);
++		netmem = virt_to_head_netmem(data);
++		skb_add_rx_frag_netmem(skb, skb_shinfo(skb)->nr_frags,
++				       netmem, data - netmem_address(netmem),
++				       len - MT_SKB_HEAD_LEN, buf_size);
+ 
+ 		return skb;
+ 	}
 -- 
 2.17.1
 
