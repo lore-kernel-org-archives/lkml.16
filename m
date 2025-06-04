@@ -1,329 +1,152 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C2428C5DA;
-	Wed,  4 Jun 2025 09:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749028857; cv=fail; b=Twb6iffFF/A7gmMEUauodFO3+DUnx8KE7AuRHXLvoLTy5wKDxz7h43SXWe7Gq68woAbt8AVPo8pCbU68iLal+aLmuY/xF9kBeBlNx7m2QayqewP2RfmwgF+Mbcn2HaT6PjO92pSWkPCZjrK/PpcythlFzfTarusOZSzV+3vyu5g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749028857; c=relaxed/simple;
-	bh=wQyGRi5EML+hHHVs3RJktaYdHc/+yY5hgyMktT8i/os=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ETUxoPrfTBhO6074+weSEj7eU7nOcTT3NANkGzcpH5aFj9LVoPAbLWgbEAnhK5j6gziqVCt5BkScFrLL9n5aP1AQzadDkjP/MmbsPPDUXbpO5QeeomYFQrWsk4eTENTJzrCMKdIT5vMH3f0RahuNwxf+DzjGinH1lANttidZyvA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DDZR/hns; arc=fail smtp.client-ip=40.107.244.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B451328B7ED
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 09:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749028899; cv=none; b=I3JvwgCggpM1o6NWIumcZ0a4RsuNCI5v8Db81kTbPMl8hpuM2RRMzXL+7mEX+3QjuMoNNlvZzFcSyW731Z3kdNegDLnSgGedJiccPLg1qE3336VSvIUfYR1Jq6NFnpnpZAv++7ONqiPdvJ1VQNJ1Lzxy4Zt2dW0Pk6EmOIli3jA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749028899; c=relaxed/simple;
+	bh=iMlClG97yiqR3GPY8UpwCOs8GVYHJRmskTZc6hJT0No=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OD8EmM1m8+lo59n7eXE2q9uOkWCg9rIdZBm4XDhavhsfcb0g1bx/a1rPyJsYojQ99dnJzP9RbqU0/Sdn6UzWGyYn/w9p3Z0ULmlQKUJyuLSAcSSVUdNTJhB/+u95MXnaFjEjFq7JFd87qf9oHrLeliv+y4RfSWZJe7BFJlt6Tos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TS3dH206; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DDZR/hns"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y3YOH+QGgjm4iOHPe160IS9YCJdgMlQJJnT86qybJsilLv0J+de83Tchq6x1lqwAVvrWf9wxt2Ry5GVOQl6qynG6y2iLd/huN0krYQE1HcMSc1dHAtXPyAMGAon5jWqvKUaq2kw9LNJGJl+406kj0f0a0bkUPC8rWTTWb3XHuODi9Wd5lne0ImmzG1McWBJ8mFeBLhqV9IoKZrt1wLf+UXnE8g4povinZJ5ESAcEiYd717jflqYBm27E+aGqM5IszSUP31ElHW7K1UqeQYzDWCwEn+S8mKjLYBFyasAkrXNyKPtOMnRDOglVrK9ACkEIBRpiFXfC193RwRu20nphLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tcvVEluBvEqjJvKyHF5zA9oei/5KD7pzc60tat2l3wc=;
- b=q9ZKvI9keisHcKJnoBYa/SC+7NF8zRZcQHFjd2ENkVdvFlzDJ6B/0j0rDPseOCTsvc7ahA2VdUCzxBLgRhorSk4lju17g+nJh3Jgr5TkqeSpzjDlccs0ytBraqoLWN+QQKREn9yWIEz7Yy2SwcZGLqsl8VMf7SYbV++6REpzWQ7bUSLbtvGpDOr0HrMQeemRE5x0HDeIkmP1bXIF4VbjOEh/uy9ZTIgatBrmkd7zfy+rV3frBEg7d/C1gh0geCgEfmIiyUYIw9563Yj86G1nSGlAuV0bHBSH3XBDsTN0YRoEFBeADvj0yp+TAKjbkV35/I+E0LDeSmJ9myg5VhFxrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tcvVEluBvEqjJvKyHF5zA9oei/5KD7pzc60tat2l3wc=;
- b=DDZR/hnsTcRoV8dJd0U72lqjMmXEdJ+M9/vb5dtHjIRTNua2xc9NINqMBWClJXIcLasUoD/9E/cD5TYa0ORYW4TK9aRIrHBFZboUSTuTe+dO6mDmiRqMYsAA8/wRXg4vcsvqnXMfR8PCS05AGNmEPfUzrvZQqyw/AlqzEG00T9BEIvy8HaNRdCyeRxyMPJ16ox2ELefhAAWW2X9WQuDMBVm9WUW8CUVQIIz5KHHa9/HV0Q+k7glYiABxCG+iVttxAKjGQMhklxwemDRMDlD3lMrcJ3yEuQeCECEM9KwcIVVpWKzzTPeH9nfBJphLaEarIZm1YeZBTnKfuk2KPJxoUg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by CH3PR12MB7764.namprd12.prod.outlook.com (2603:10b6:610:14e::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Wed, 4 Jun
- 2025 09:20:51 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8769.025; Wed, 4 Jun 2025
- 09:20:51 +0000
-Message-ID: <df05edcc-083a-49ae-981b-66c87668f3bd@nvidia.com>
-Date: Wed, 4 Jun 2025 05:20:48 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [QUESTION] problems report: rcu_read_unlock_special() called in
- irq_exit() causes dead loop
-To: Qi Xi <xiqi2@huawei.com>, Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>, ankur.a.arora@oracle.com,
- Frederic Weisbecker <frederic@kernel.org>,
- "Paul E . McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- neeraj.upadhyay@kernel.org, urezki@gmail.com, rcu@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Wangshaobo (bobo)"
- <bobo.shaobowang@huawei.com>
-References: <9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com>
- <CAEXW_YRC=f6i3KOd_uhuH=xAOCG7mW7-LwtA4+_fc8FMjfRHeg@mail.gmail.com>
- <3ce6f3ce-5dfb-8c59-cb7b-4619b70f8d25@huawei.com>
- <20250603185939.GA1109523@joelnvbox>
- <066e8121-c6c5-48ac-b35a-e6430d986dff@nvidia.com>
- <a82784fd-d51e-4ea2-9d5c-43db971a3074@nvidia.com>
- <20250604013526.GA1192922@joelnvbox>
- <0f322c7b-d8b7-ff0a-5c98-26230a9fbad0@huawei.com>
- <64dfcaad-091c-4319-882b-d94515365758@huawei.com>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <64dfcaad-091c-4319-882b-d94515365758@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR18CA0018.namprd18.prod.outlook.com
- (2603:10b6:208:23c::23) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TS3dH206"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5540Ep31012594
+	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 09:21:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=R+aLR+kiZ1KGuKrMttuGRYAV
+	lykWWo5RCnMa4dfVWY0=; b=TS3dH206MqEG9+qEEwvj+nlq2yphj1svKGBNCcNU
+	V5QqVwdA7Bs0eMwXb67r5swmHRRLbHFbZwdNmWxnHq7jvRLIPUv0173H4tikgNil
+	cQZsq0sDS+yfCvmJU5j+B73XQiGlo7//F9VFBq3KOAxqUoUDcg2C+2wvNHgtWuC9
+	/89vOfS/mJSRkzt3csbEwVussOwuUVPeIU36NL8vPs8PZWUCJOp9p697q7Ljkn8/
+	jgt1GwqumbEsFJFqAMFwi0Humk9CKuifAJqHFOXcsWMUjzDLoATSTQVjmvQDWZCO
+	JlHMRUjlepSX81A14oHXMAo83SyoZ/aF6eQ8SnbjIc3NoQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 472be818ds-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:21:36 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c95e424b62so116285285a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 02:21:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749028895; x=1749633695;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R+aLR+kiZ1KGuKrMttuGRYAVlykWWo5RCnMa4dfVWY0=;
+        b=MQselyqPv5/IvdE64qUWJ6X47NcyAOLoVBavht/54Q6vfguPTs/MzbA/2gMIccLyND
+         TfAbICXQQI2HQmfU6q30r07XD9qKDZDmKAlKSvn35F6NKrrjV1DR/Vmc3vy81XN/+sMj
+         dBhMprlu68/MqgPFGIzk0ITrDhGFDd5OiwOVsjmzcCLoDDiZWk+Lr6BuQjd7Qw4IqqQX
+         VmzlGBLS3roATEk4gfxhBKCPhFyzvQTxPmr0BB7T8PKfbHY9/hnm2CWqC/fQVloJPvhi
+         OTVwNRs1ojRYJtkSdh2IuQfKX4r/Fv7GcaDBQI2yGOzU20qczhqYx43Y7xCSSynrbCVP
+         xoRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUzJ02+fKfj8L27reOY7D/yhQ7f0Mjg6g6Vof0EYTew1bVgYcsg8UCfsMDo1CaRDN8VyS1Ue5D4IP1t1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxayr6LwvUPSP2xfG2uwy5dL7ayA8/zbDfe6JLMx2cI9rexHa5I
+	k8o27H7R54WdTm1gOobDcqU/zB8KDYmWVIZwTob6XFGOiS3k4OMBn7Y+4zwMLX7GShzhRdo4ml6
+	nQNsZw566my7Gs6EpX3mJmefe31wluGjyfJVcpZmXQoeTXZfIbbOgmmEB3h6Q1CgJUsA=
+X-Gm-Gg: ASbGncvekwBoF5zwzNMr68IHuPMh0hfJRlytgZJOmkfPahRo/dWRbE0a62fyiCVoi3u
+	MdImL0vpQr17ZVukA+Zz7cDRTNzR1e6haZ4BIM3T/Vs5ykdclCqWBKnWAnspkOYwmpDRbQ/gEjx
+	nCE+ZLA8mchNuUWSnqYe7p/J1QJrF6eq/MrWen9++HAOzlmY9Wf4HzvxUesXUfhqlDuIv/uHYwd
+	be9oHktitFEWa2eaO5P/5EfinZuAI9S33pEAeqjIQA4Xz7ZZ/z9vaSLY8TZOL9IRtQQTexLWsrL
+	LNtGDUATUVP7cLSIpI32BEHUcGZJLt7kZlybEKqwxIjNhG1hnXQHqPK/eRf3PSMBJnfqXLttiu4
+	=
+X-Received: by 2002:a05:620a:4496:b0:7ce:ed0e:423c with SMTP id af79cd13be357-7d21155b3damr900235185a.9.1749028895477;
+        Wed, 04 Jun 2025 02:21:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHMv6RZWeZ/LQ6eNRt+X3KctomnYvePpW2ORiBuP4HN5BXynMs9rse1yUNywIc6fLSS3qR1Sg==
+X-Received: by 2002:a05:620a:4496:b0:7ce:ed0e:423c with SMTP id af79cd13be357-7d21155b3damr900233085a.9.1749028895133;
+        Wed, 04 Jun 2025 02:21:35 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85b1b549sm21837981fa.10.2025.06.04.02.21.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 02:21:34 -0700 (PDT)
+Date: Wed, 4 Jun 2025 12:21:32 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, krishna.chundru@oss.qualcomm.com,
+        quic_vbadigan@quicinc.com, quic_nayiluri@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nitegupt@quicinc.com,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Subject: Re: [PATCH v4 1/2] phy: qcom: qmp-pcie: Update PHY settings for
+ QCS8300 & SA8775P
+Message-ID: <p3qlrehr73i6aj43jwnavhlmm6brnkjkyos3h44bg7p6ozmgd3@ejqlcy2rpwcs>
+References: <20250604-update_phy-v4-0-d04b12bb89f2@quicinc.com>
+ <20250604-update_phy-v4-1-d04b12bb89f2@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|CH3PR12MB7764:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9de54e21-5af7-4b22-b46e-08dda3491953
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c294WlNmL24rRWtOaXozNjVob2l1d0kzTjlYeGFTQUROa2dUK0U3Vy91RjJW?=
- =?utf-8?B?ZmJMR3dMclVmSWhGUmJEYkRzeFVKYnRLNnBwaUVqMHBkeDdrU3JhcjA1TTNJ?=
- =?utf-8?B?MmZ2VUVrY3p0V21Icktldi9UYm9EelJ3a3dZbEt4SW9namU5V0Z1ZmZlSFVH?=
- =?utf-8?B?WW81Mk5zYjg4UjFVQ3lCYTF4SFlFTkoxbWRkQmZFTjVHc1U0bXRwSWh6aThQ?=
- =?utf-8?B?THJZSU1rOXJCUVZnbDUvNy90TjJDb0hBbVVJSUcyWE5XdEFKUVdrajZWMEx1?=
- =?utf-8?B?eWpHbnRicVh0dlhFbDlRamJwZStLbFRnWGVIMDRSUDZVdXhOOWFsMm5aa0h0?=
- =?utf-8?B?clVLN1NOL0xheUtvK2NCWGlzUXNKSTk2Qzdqc01KOXdUdmcvUE5lTTFaSVA1?=
- =?utf-8?B?TThmTno2VmEzMjNZWjJKL1RsRnBYTXkrUm5ZQ2ZmUC9namVvR2o0TFQ0WHM1?=
- =?utf-8?B?T0JQTEtaR01ScmE3MkI4VzhQN1Q0dVlDWklwVWpBdzdYNUNmY1orWGRYMVRo?=
- =?utf-8?B?M1ptVExZOWkzMlZHanUySTltMEx4YzFaeHRVbEl2ZERPaTRYblVhRENHRVYz?=
- =?utf-8?B?ODhzeDhsK05keDMrajFtUk5mSi9WNU40WkV0Z2Zxd0IzNUZaRkJRTmJVc001?=
- =?utf-8?B?UStRVnlmcjI3Z21mK2FtekpoaUl6WmFMWVJTcStmZ001SkxlK1NTZnptYklQ?=
- =?utf-8?B?NCtUL0s4RFNiS1IxbW5WNWlkQWRaZ1ZwL0RIT1UrSjFxR2E0cHlVbEZFKzZZ?=
- =?utf-8?B?Ulo4YTRuZWMrM3J6WXlCOFZKU3JHVU1vSXczMkZNaTNuOVRaaXQ1YXhCeG1O?=
- =?utf-8?B?amFNcVBHVlpvWEdaUGFLYTA0S2pHQkJZV2Q4dW5VV0ZVNXNscWs3YVppQklG?=
- =?utf-8?B?eXdIS2lrYXd4a0p3RTRGaFVWSkFMeDZxbDhxSDY3RTE0bkFWc3o2WEduQkRj?=
- =?utf-8?B?Uit0cXI2eDY0NEF5VWFFZ1BEQjJpSDA0aVpCSzk3U3k4azg1NGtvQWExNU03?=
- =?utf-8?B?TFZlNnhEblFyVmxoUGhQcHRVU0NMdXpVSGtvUUZXaDROYXhnRXdNZ2tIQkJi?=
- =?utf-8?B?MDRVNC9wMUlIQjlFWTNQWHZOQmJpRDBnTk9rMnNFQ29GZmk3aStTU2FUUEpV?=
- =?utf-8?B?cW1NZHdycThkeGtvczB1YzlZdG1SNk1iMEZvRlVwTHFIamdEMnJvZTdxaUF6?=
- =?utf-8?B?N2hFbkppUldzNzZseEtodDQ4SnhxdDNpMGZ4TldQSS9kKzR6S0VMVFdreXhy?=
- =?utf-8?B?OG96YUdKSUdZTjAwZWlqdjhidnpWaFo2WjFydHNtd0hLQVNQOEMwT0ljbWly?=
- =?utf-8?B?WXBrblRaZUl1azdNRXltUHJjWHQ4WmFGaWZiTXFlNkYwRm13aDJvQ3MxU0NM?=
- =?utf-8?B?TnlnRTlxdW9FWXhzemczWktHbStVZVJhNm9GSWVyVmE0WWZ1NEIwY3M1Z0lh?=
- =?utf-8?B?alVIK0tvYjRUQkJUS21TK3VQdGlEZWNJd1M5NXlRYU9ySi9ScnpVaEZiMW5N?=
- =?utf-8?B?SGNPS0VBbmJ0enY5SUI1ODlhV3RLYlVoOXlrclV3RUVyc0ZTSFJFenBjLzRT?=
- =?utf-8?B?Ym1BQUdIc2k3aWV6bDFkcENoOWJHc083ZllNdXpBb1NwOGhjTmpmdktqR1Bn?=
- =?utf-8?B?Y1dJaDN0dWhHR1BlUzZaL25kZ2xDMUxOZ0tHRWc1T3pqWFBHVWNsVXErcHlX?=
- =?utf-8?B?U3N4dkQ3OXh3UmNPNk9oMHFKU2ZWSWJaYlpvbWFycDFOaVV5MzV2ZVh6cnNs?=
- =?utf-8?B?Q3VNWUpOQXNaWnFCSlB2azJaTFZzck4wMUx4Q3c3MjBlMnFkYjRYQWwrVFcw?=
- =?utf-8?B?RWZIS1hwY2pUMDFOQmVsM3FKY0FtYlFmdGxOK0lWUko2d09MWm85ZDQ2K1dt?=
- =?utf-8?B?ekVydTlFejNMQnF2L210a0lyQmd5QzM1R0VGTDB6MUFWS2Ivb1d3czF1bVpV?=
- =?utf-8?Q?hKUWEC0YuS4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bGlWWjdFOFFLakZmbU1ndzZsbHpybW9Ud2IyeFVLVjc1eTdwRWN0ajJIY0tt?=
- =?utf-8?B?NHZlWkduQTJ1ZjBYeU4rQXBITTArblMzWlAzMlB4QW42dS9IYVZpWGY0cU84?=
- =?utf-8?B?UUNBM1NsMzNEVmUycUZiaGxxeUgwNGtONlc1blI5alBTbzU0UndDVyt0RTRN?=
- =?utf-8?B?b2ZBem1FcEYyQklRb2NMOTZQY2RxR3lJZ01xR2xrTGNTUE9VSlpTSnRZWnBX?=
- =?utf-8?B?WDdFVHhCa1FSYmp1Y2xrcTF4SC9ObnRhNzUreHA2VnhhNkpvZ3RUM21CNnJJ?=
- =?utf-8?B?ajJZeTJabGtRVUdwRjJ5MG1pZUQweHQ0bXBjRGdhVzlIMjlhdzRwNHpQUjQx?=
- =?utf-8?B?b3FYSDBGcTVrMXE4YWdMMVNMamJ0M3VnbklZUGJWZDVUS1hzalVwZ3ZLRElY?=
- =?utf-8?B?MVc2MUhiOG1RUVdMaWZlYzY0aTgvaUxqM3hzKzhhZk95U3FQZnJ3dHorMnE3?=
- =?utf-8?B?OVo5MDlrTUNJaTY0bWtzU1RzOUF2WHJ1Qy9HVTRwRS90SmJoNHphYW1IQjRK?=
- =?utf-8?B?Nm1ySGxleUxuc1dURFlPanBVL2dGQ2RvOHdSNmlXa3pLbGNnMVFOY01mZ1dv?=
- =?utf-8?B?UHQxOTB3empmZVBPU1VXNGY2YTZNZHQzeFNqRlJuczl2ZU4zYW5yYklSS0ZP?=
- =?utf-8?B?TVFTU2ZTYStaeno1MlBGenVaYnl4dTVYZ09zcXlzYlZFeDRrVDJId3ZEbllv?=
- =?utf-8?B?eFlxRVVOd29iT2lvVnhxTk5DUzRUY3FuOXhwbnFpK2plM1UrdTdORkJMT0Jj?=
- =?utf-8?B?YVlnR1B0cWVuWXZyOEc5eDArVnBJaCtLQm5hUVhQVUlSc0tKbngvSDRETWVY?=
- =?utf-8?B?Wjd2YnFmZnNKVEJOQ0Rkc01BRXpSRWlZd05YQjBOU0FOL2dkc1FCV0ZyTlNK?=
- =?utf-8?B?c1BtL3E1a2dnbVdZRm9LajZDNGNKTndMODg5cVFSdzhrVkRyZ1poeVlXaldK?=
- =?utf-8?B?aW5XQ2p3d1BZbHd6Z1JGOC9yNmdxNUljTGN5RVJielRRUFlJQVdsT1FaUDJj?=
- =?utf-8?B?WEVpdDZXc0gxdHJHWStLNHNiVFVWcGlIY1hmbVZSVmltUEIwanBaaUlINU9u?=
- =?utf-8?B?TFMxTGtTNkNyS2lBb0RFc2dmVVF6aUw1cTRJTk0veU5SWGZ6cXdnMDMvR1Vq?=
- =?utf-8?B?Sll4U1J3UWoydGRLT0R2ODRZMVVneUNSckM5U29zSmxwM0Z6RXIzZmEzb0Fq?=
- =?utf-8?B?K2dyaUtsL0p5NU5EcVBGdzlHbEs2VnBKYVJkdlYzQ2hiYlFXUXBuYUlDWUVw?=
- =?utf-8?B?Nm5hUWEvVjZjTlBJTE9ZS0I3d1o2NWpSa0pMd3F3czhaOFlCOENia0tXSEo3?=
- =?utf-8?B?cTdQTTgxZndLRW5MQ1NRc3dXcjlUd0JZV2NvWElycldSb3Z6OE9NM2lwY3NW?=
- =?utf-8?B?VzJld1hQNUV0bFQzT01NYmNLbXBMdi9WWkg0NHdwY1NNd1Z5TzNZTS9KTlIz?=
- =?utf-8?B?a2VVMUh4VXNIaitPaEtHTWltNmRpeUZ4TkxnV3VMRFk4RXBCNVp1djhOaDV2?=
- =?utf-8?B?ZE5rdmwxQ24wZzVyNjRRSmhJU1RXMVNLaXBKbW9YL09QNHhqMlRSNlNXTWJK?=
- =?utf-8?B?RERkNjNSbXc1YndGMkcxUktiMk5sSzluOTZWQUp3d0w0K20ySnFrdTZHakkv?=
- =?utf-8?B?d1BuckJnakd2cHV4cWFXaXJuQlJBTmdwdzVwVzI2MU5QYU5XVGVQUzJ0MUx2?=
- =?utf-8?B?MzE4eEJzeGxmY0xBYUpSS0pqRFlsLzZ2NTA0emcxTXgrNmJDT05vMzNSWmpw?=
- =?utf-8?B?Mlp2aVlKLzVheUFnV0Q1MUxqR3kzcTRSdGhrU2ZabDhxYVlrMGtlRkw4eGM4?=
- =?utf-8?B?dEIxUDBEbnp0LzhrcmVIYUVTWXZDanJjTWRwQ2gvVVVVV0pHM3BORFNQNHRQ?=
- =?utf-8?B?Q3VkUHlqQmdQbVhmdU1UNnp1OGthd2N2dVc3VjRtZWNxeGNXQW1HRXpLRWQ1?=
- =?utf-8?B?cWFKMkNUcmlSeU40T0crUElyVTl0b1Zpa0NMaHlqQ0Y2VDM3WDRoQ1hkZ1Ri?=
- =?utf-8?B?ekRVZm13QVNrOEQ5UUNweU5RZ0t4RmdRRkgwdDRzN2t5VUY5THlIdk1ReUZH?=
- =?utf-8?B?cXNnOEhVR2E4UDV3L1RkSVlQaDJtZzI3RVlsZEZuek0zeFFJRnI4UDEvS0hp?=
- =?utf-8?Q?DACvT+/6YR6qRnrNpuTnxhjpe?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9de54e21-5af7-4b22-b46e-08dda3491953
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 09:20:51.1187
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1/v6z9MvPGo1raNAaV+lMH/Lqv8+VHu3f4NG7LJEYmKnZduHC88yCNAdH2k0WEOwAFwf42YHMAy8wvbjIf+uJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7764
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604-update_phy-v4-1-d04b12bb89f2@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=bNYWIO+Z c=1 sm=1 tr=0 ts=68401020 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=FU6otyn0G4FSvijP6mMA:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: GX9WewTQpdyuhHD9ojUMG5hC5yG9Is_S
+X-Proofpoint-ORIG-GUID: GX9WewTQpdyuhHD9ojUMG5hC5yG9Is_S
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2OSBTYWx0ZWRfXy9FFKgHdBeMm
+ 8VPyqQIsBNIdFcIFmXwKo/UDtVRAkihdmYgdqDmmt/XmuYV7d19lU7XNij8ySvrs5YzP44gU/6z
+ olDi5o1l1HMP3O/gVjY5VXw0laO7geSEqoy49fpFyHyFYauF44HRvLeIEjVPvhTByrozvgiW66f
+ s3XvrvvwOFlaxJQS4BsO9waWUmA8PY5oa9Yo3yEsG2ARv0crq/jiRYisNIeqsOlPaq/oAfEivWD
+ dO4Aig4so2H7QZyWheTVUtskSMd/7qBHdQ8o8K+faoj6W5RuuB6iJwirP/zc/RtxI5jHVgjcd3Z
+ WpnBUsb+df7jVbtdOkd0kCkg7SS9EDRIxd3bGy5u29Lq2OPBB06JEq1r56xy9+sgap6Xq0Nl3f1
+ DcH7SBSSYWhqaW5ZpWX0o3cFcGWm6foHEl7WmgTfCUGNFCvLODROL5BmEaUoxtEcIiboc453
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 mlxscore=0 impostorscore=0 spamscore=0 clxscore=1015
+ mlxlogscore=976 adultscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506040069
 
-On 6/3/2025 11:37 PM, Qi Xi wrote:
-> Hi Joel,
+On Wed, Jun 04, 2025 at 12:05:57PM +0530, Mrinmay Sarkar wrote:
+> From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
 > 
-> The patch works as expected. Previously, the issue triggered a soft lockup
-> within ~10 minutes, but after applying the fix, the system ran stably for 30+
-> minutes without any issues.
+> Make changes to update the PHY settings to align with the latest
 
-Great to hear! Thanks for testing. I/we will roll this into a proper patch and
-will provide it once have something ready.
+Don't 'Make changes'. Just 'Update'.
 
- - Joel
-
-
+> PCIe PHY Hardware Programming Guide for both PCIe controllers
+> on the SA8775P platform.
 > 
-> Thanks,
-> Qi
+> Add the ln_shrd region for SA8775P, incorporating new register
+> writes as specified in the updated Hardware Programming Guide.
 > 
-> On 2025/6/4 11:25, Xiongfeng Wang wrote:
->> On 2025/6/4 9:35, Joel Fernandes wrote:
->>> On Tue, Jun 03, 2025 at 03:22:42PM -0400, Joel Fernandes wrote:
->>>> On 6/3/2025 3:03 PM, Joel Fernandes wrote:
->>>>> On 6/3/2025 2:59 PM, Joel Fernandes wrote:
->>>>>> On Fri, May 30, 2025 at 09:55:45AM +0800, Xiongfeng Wang wrote:
->>>>>>> Hi Joel,
->>>>>>>
->>>>>>> On 2025/5/29 0:30, Joel Fernandes wrote:
->>>>>>>> On Wed, May 21, 2025 at 5:43 AM Xiongfeng Wang
->>>>>>>> <wangxiongfeng2@huawei.com> wrote:
->>>>>>>>> Hi RCU experts,
->>>>>>>>>
->>>>>>>>> When I ran syskaller in Linux 6.6 with CONFIG_PREEMPT_RCU enabled, I got
->>>>>>>>> the following soft lockup. The Calltrace is too long. I put it in the end.
->>>>>>>>> The issue can also be reproduced in the latest kernel.
->>>>>>>>>
->>>>>>>>> The issue is as follows. CPU3 is waiting for a spin_lock, which is got by CPU1.
->>>>>>>>> But CPU1 stuck in the following dead loop.
->>>>>>>>>
->>>>>>>>> irq_exit()
->>>>>>>>>   __irq_exit_rcu()
->>>>>>>>>     /* in_hardirq() returns false after this */
->>>>>>>>>     preempt_count_sub(HARDIRQ_OFFSET)
->>>>>>>>>     tick_irq_exit()
->>>>>>>>>       tick_nohz_irq_exit()
->>>>>>>>>             tick_nohz_stop_sched_tick()
->>>>>>>>>               trace_tick_stop()  /* a bpf prog is hooked on this trace point */
->>>>>>>>>                    __bpf_trace_tick_stop()
->>>>>>>>>                       bpf_trace_run2()
->>>>>>>>>                             rcu_read_unlock_special()
->>>>>>>>>                               /* will send a IPI to itself */
->>>>>>>>>                               irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
->>>>>>>>>
->>>>>>>>> /* after interrupt is enabled again, the irq_work is called */
->>>>>>>>> asm_sysvec_irq_work()
->>>>>>>>>   sysvec_irq_work()
->>>>>>>>> irq_exit() /* after handled the irq_work, we again enter into irq_exit() */
->>>>>>>>>   __irq_exit_rcu()
->>>>>>>>>     ...skip...
->>>>>>>>>            /* we queue a irq_work again, and enter a dead loop */
->>>>>>>>>            irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
->>> The following is a candidate fix (among other fixes being
->>> considered/discussed). The change is to check if context tracking thinks
->>> we're in IRQ and if so, avoid the irq_work. IMO, this should be rare enough
->>> that it shouldn't be an issue and it is dangerous to self-IPI consistently
->>> while we're exiting an IRQ anyway.
->>>
->>> Thoughts? Xiongfeng, do you want to try it?
->> Thanks a lot for the fast response. My colleague is testing the modification.
->>  She will feedback the result.
->>
->> Thanks,
->> Xiongfeng
->>
->>> Btw, I could easily reproduce it as a boot hang by doing:
->>>
->>> --- a/kernel/softirq.c
->>> +++ b/kernel/softirq.c
->>> @@ -638,6 +638,10 @@ void irq_enter(void)
->>>  
->>>  static inline void tick_irq_exit(void)
->>>  {
->>> +	rcu_read_lock();
->>> +	WRITE_ONCE(current->rcu_read_unlock_special.b.need_qs, true);
->>> +	rcu_read_unlock();
->>> +
->>>  #ifdef CONFIG_NO_HZ_COMMON
->>>  	int cpu = smp_processor_id();
->>>  
->>> ---8<-----------------------
->>>
->>> From: Joel Fernandes <joelagnelf@nvidia.com>
->>> Subject: [PATCH] Do not schedule irq_work when IRQ is exiting
->>>
->>> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
->>> ---
->>>  include/linux/context_tracking_irq.h |  2 ++
->>>  kernel/context_tracking.c            | 12 ++++++++++++
->>>  kernel/rcu/tree_plugin.h             |  3 ++-
->>>  3 files changed, 16 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/include/linux/context_tracking_irq.h b/include/linux/context_tracking_irq.h
->>> index 197916ee91a4..35a5ad971514 100644
->>> --- a/include/linux/context_tracking_irq.h
->>> +++ b/include/linux/context_tracking_irq.h
->>> @@ -9,6 +9,7 @@ void ct_irq_enter_irqson(void);
->>>  void ct_irq_exit_irqson(void);
->>>  void ct_nmi_enter(void);
->>>  void ct_nmi_exit(void);
->>> +bool ct_in_irq(void);
->>>  #else
->>>  static __always_inline void ct_irq_enter(void) { }
->>>  static __always_inline void ct_irq_exit(void) { }
->>> @@ -16,6 +17,7 @@ static inline void ct_irq_enter_irqson(void) { }
->>>  static inline void ct_irq_exit_irqson(void) { }
->>>  static __always_inline void ct_nmi_enter(void) { }
->>>  static __always_inline void ct_nmi_exit(void) { }
->>> +static inline bool ct_in_irq(void) { return false; }
->>>  #endif
->>>  
->>>  #endif
->>> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
->>> index fb5be6e9b423..8e8055cf04af 100644
->>> --- a/kernel/context_tracking.c
->>> +++ b/kernel/context_tracking.c
->>> @@ -392,6 +392,18 @@ noinstr void ct_irq_exit(void)
->>>  	ct_nmi_exit();
->>>  }
->>>  
->>> +/**
->>> + * ct_in_irq - check if CPU is currently in a tracked IRQ context.
->>> + *
->>> + * Returns true if ct_irq_enter() has been called and ct_irq_exit()
->>> + * has not yet been called. This indicates the CPU is currently
->>> + * processing an interrupt.
->>> + */
->>> +bool ct_in_irq(void)
->>> +{
->>> +	return ct_nmi_nesting() != 0;
->>> +}
->>> +
->>>  /*
->>>   * Wrapper for ct_irq_enter() where interrupts are enabled.
->>>   *
->>> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
->>> index 3c0bbbbb686f..a3eebd4c841e 100644
->>> --- a/kernel/rcu/tree_plugin.h
->>> +++ b/kernel/rcu/tree_plugin.h
->>> @@ -673,7 +673,8 @@ static void rcu_read_unlock_special(struct task_struct *t)
->>>  			set_tsk_need_resched(current);
->>>  			set_preempt_need_resched();
->>>  			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
->>> -			    expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu)) {
->>> +			    expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu) &&
->>> +			    !ct_in_irq()) {
->>>  				// Get scheduler to re-evaluate and call hooks.
->>>  				// If !IRQ_WORK, FQS scan will eventually IPI.
->>>  				if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
->>>
+> Update pcs table for QCS8300, since both QCS8300 and SA8775P are
+> closely related and share same pcs settings.
+> 
+> Signed-off-by: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c           | 89 ++++++++++++----------
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h |  2 +
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5_20.h      |  4 +
+>  .../phy/qualcomm/phy-qcom-qmp-qserdes-ln-shrd-v5.h | 11 +++
+>  drivers/phy/qualcomm/phy-qcom-qmp.h                |  1 +
+>  5 files changed, 66 insertions(+), 41 deletions(-)
+> 
 
+The patch LGTM. With the commit message updated:
+
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
+
+-- 
+With best wishes
+Dmitry
