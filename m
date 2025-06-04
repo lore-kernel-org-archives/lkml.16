@@ -1,40 +1,61 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1558B1C861D;
-	Wed,  4 Jun 2025 23:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8DB1F1921;
+	Wed,  4 Jun 2025 23:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749078370; cv=none; b=Kal+AmAY9Ek2X9UzlTdurn0LrIj9VDf2BE2qK8FQDMLRuP+2oWrJ10iRZr790NhTEk3VhjN1IH6hoQ31O5StmG92i7hXC8CLewXdTLt9HlVQY7Vie1Zws2QaH12CcLF8YihVQwlzlzdkztd2rHxu+lJpuqFKaZ6WgaUSsEdxGk0=
+	t=1749078541; cv=none; b=DZeSzxbwWq+hmVVLjxeJcxbzfhHcKPrqwGroJ186TktIwJLv5LctqJxp/F393lZPOvxhc0paec2dnF9HIQhTrQnz1PtPSZ5vy45ppOZjtlD4Wu6wVMKlhWZSKpjVtSU9iDtRTtlVhcpA4La8WURxV832ePfGWSJ1Q1cj6/wHm5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749078370; c=relaxed/simple;
-	bh=fGU4lugVF4Bpu4xfcP91GoGT8zpqIcXZyqwfIW/XkfY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=txMUzMyOP8341eZvrejhq9dmSX3FuicvAprgLnyHqMk3LR2PsW1Z5MQ9zjqV4H1RsbCUAU0aMOSQctFarpjxgwwDTUi7qVd9m22cL42SMhLJxjrRiO4hHR8F2Bk/buVc6OySKxVSfrXXdqLVOOfXc56SFC5WpQ/3FNF3EMM96M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	s=arc-20240116; t=1749078541; c=relaxed/simple;
+	bh=TQu6ZAxAJdAOTn5kQr+Uvim5TQCSTuN8/5pMh4aAVuw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GZnCU4+HEqutoMAEMOA+foEa9YW39HDo+zJjo+CeL2fK5ksacUWl1R+Bl9fopaKoKbFWHY7KlBwxfejWd+gMtTxFc74FyVb06VVqP0OHa15GjL6RUiRuz8P7q8Rl5uv8ES9LbidTE3ul6fUOhB/Hm8d4chivK3kMz+n7OwyS0zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=U2tgMPi6; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="U2tgMPi6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749078537;
+	bh=TQu6ZAxAJdAOTn5kQr+Uvim5TQCSTuN8/5pMh4aAVuw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=U2tgMPi6iqRPjOivwztJ0MGx2nk9j5Ozrk5M7cSfSVt2njUBbgY3bLtcyQMRXPl4T
+	 9Qxl9/eOyejBYsgrh+9GszjHqJeFYkGL1iRBWO7o7EjEQ9ET/fDw69brudZRRE9OzS
+	 v1yZ1KQuouN2SheSQZW13J7ibuJ+K010Nc1UVnbAdSuefcKv4NzhO1IE9ctPTo2x9e
+	 xnP9gx/ugexA816eGovOFmyIXlVI3jtizq7oZYENoQuqFSvbrAXk3tj9qsQJXnAJRQ
+	 +YbHDMNL6Y+ZZ8zXZoJFE4RYpOEFrzdsEZORW0N6LDRidgRAcAhOVollLHPuOeHyR1
+	 rP73Gv0gXzZxA==
+Received: from [IPv6:2606:6d00:10:5285::c41] (unknown [IPv6:2606:6d00:10:5285::c41])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bCNLn14Qmz9spq;
-	Thu,  5 Jun 2025 00:59:29 +0200 (CEST)
-From: Lukas Timmermann <linux@timmermann.space>
-To: lee@kernel.org,
-	pavel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@timmermann.space
-Subject: [PATCH v3 1/2] leds: as3668: Driver for the ams Osram 4-channel i2c LED driver
-Date: Thu,  5 Jun 2025 00:58:37 +0200
-Message-ID: <20250604225838.102910-2-linux@timmermann.space>
-In-Reply-To: <20250604225838.102910-1-linux@timmermann.space>
-References: <20250604225838.102910-1-linux@timmermann.space>
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9334E17E0FE7;
+	Thu,  5 Jun 2025 01:08:55 +0200 (CEST)
+Message-ID: <870611a1e5d21fa375dd9359192641484c1c0e76.camel@collabora.com>
+Subject: Re: [PATCH v3 3/5] media: mc: add debugfs node to keep track of
+ requests
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho
+ Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin
+	 <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, 
+ Yunfei Dong <yunfei.dong@mediatek.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	kernel@collabora.com, linux-media@vger.kernel.org, Sebastian Fricke	
+ <sebastian.fricke@collabora.com>
+Date: Wed, 04 Jun 2025 19:08:53 -0400
+In-Reply-To: <aEC7jMDgRAg1cfXZ@kekkonen.localdomain>
+References: 
+	<20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com>
+	 <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-3-603db4749d90@collabora.com>
+	 <aEC7jMDgRAg1cfXZ@kekkonen.localdomain>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,281 +63,279 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4bCNLn14Qmz9spq
 
-This is the actual driver for the as3668.
+Le mercredi 04 juin 2025 à 21:33 +0000, Sakari Ailus a écrit :
+> Hi Nicolas, Hans,
+> 
+> Thanks for the update.
 
-There were no related drivers in the kernel until now, 
-so I created a new file. I've checked around for relatives 
-of the as3668 but all of them are quite different,
-which is why wrote the driver just for the as3668.
+thanks for the review, these things are precious.
 
-Signed-off-by: Lukas Timmermann <linux@timmermann.space>
+> 
+> On Wed, Jun 04, 2025 at 04:09:37PM -0400, Nicolas Dufresne wrote:
+> > From: Hans Verkuil <hverkuil@xs4all.nl>
+> > 
+> > Keep track of the number of requests and request objects of a media
+> > device. Helps to verify that all request-related memory is freed.
+> > 
+> > Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> > Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> > ---
+> >  drivers/media/mc/mc-device.c  | 30 ++++++++++++++++++++++++++++++
+> >  drivers/media/mc/mc-devnode.c |  5 +++++
+> >  drivers/media/mc/mc-request.c |  6 ++++++
+> >  include/media/media-device.h  |  9 +++++++++
+> >  include/media/media-devnode.h |  4 ++++
+> >  include/media/media-request.h |  2 ++
+> >  6 files changed, 56 insertions(+)
+> > 
+> > diff --git a/drivers/media/mc/mc-device.c b/drivers/media/mc/mc-device.c
+> > index c0dd4ae5722725f1744bc6fd6282d5c765438059..5a458160200afb540d8014fed42d8bf2dab9c8c3 100644
+> > --- a/drivers/media/mc/mc-device.c
+> > +++ b/drivers/media/mc/mc-device.c
+> > @@ -679,6 +679,23 @@ void media_device_unregister_entity(struct media_entity *entity)
+> >  }
+> >  EXPORT_SYMBOL_GPL(media_device_unregister_entity);
+> >  
+> > +#ifdef CONFIG_DEBUG_FS
+> > +/*
+> > + * Log the state of media requests.
+> > + * Very useful for debugging.
+> > + */
+> 
+> Fits on a single line.
 
----
- MAINTAINERS                |   6 ++
- drivers/leds/Kconfig       |  14 +++
- drivers/leds/Makefile      |   1 +
- drivers/leds/leds-as3668.c | 196 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 217 insertions(+)
- create mode 100644 drivers/leds/leds-as3668.c
+Ack.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c59316109e3f..5929c158a0e2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3506,6 +3506,12 @@ L:	linux-leds@vger.kernel.org
- S:	Maintained
- F:	drivers/leds/flash/leds-as3645a.c
- 
-+AS3668 LED DRIVER
-+M:	Lukas Timmermann <linux@timmermann.space>
-+L:	linux-leds@vger.kernel.org
-+S:	Maintained
-+F:	drivers/leds/leds-as3668.c
-+
- ASAHI KASEI AK7375 LENS VOICE COIL DRIVER
- M:	Tianshu Qiu <tian.shu.qiu@intel.com>
- L:	linux-media@vger.kernel.org
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index a104cbb0a001..3fe7a0e98140 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -100,6 +100,20 @@ config LEDS_ARIEL
- 
- 	  Say Y to if your machine is a Dell Wyse 3020 thin client.
- 
-+config LEDS_AS3668
-+	tristate "LED support for AMS AS3668"
-+	depends on LEDS_CLASS
-+	depends on I2C
-+	help
-+		 This option enables support for the AMS AS3668 LED controller.
-+		The AS3668 provides up to four LED channels and is controlled via
-+		the I2C bus. This driver offers basic brightness control for each
-+		channel, without support for blinking or other advanced features.
-+
-+
-+		To compile this driver as a module, choose M here: the module
-+		will be called leds-as3668.
-+
- config LEDS_AW200XX
- 	tristate "LED support for Awinic AW20036/AW20054/AW20072/AW20108"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 2f170d69dcbf..983811384fec 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_LEDS_ADP5520)		+= leds-adp5520.o
- obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
- obj-$(CONFIG_LEDS_APU)			+= leds-apu.o
- obj-$(CONFIG_LEDS_ARIEL)		+= leds-ariel.o
-+obj-$(CONFIG_LEDS_AS3668)		+= leds-as3668.o
- obj-$(CONFIG_LEDS_AW200XX)		+= leds-aw200xx.o
- obj-$(CONFIG_LEDS_AW2013)		+= leds-aw2013.o
- obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
-diff --git a/drivers/leds/leds-as3668.c b/drivers/leds/leds-as3668.c
-new file mode 100644
-index 000000000000..e3f90078f6ec
---- /dev/null
-+++ b/drivers/leds/leds-as3668.c
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ *  Osram AMS AS3668 LED Driver IC
-+ *
-+ *  Copyright (C) 2025 Lukas Timmermann <linux@timmermann.space>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/uleds.h>
-+
-+#define AS3668_MAX_LEDS 4
-+
-+/* Chip Registers */
-+#define AS3668_CHIP_ID1 0x3e
-+#define AS3668_CHIP_ID2 0x3f
-+
-+#define AS3668_CHIP_ID2_SERIAL_MASK GENMASK(7, 4)
-+#define AS3668_CHIP_ID2_REV_MASK GENMASK(3, 0)
-+
-+#define AS3668_CURRX_CONTROL 0x01
-+#define AS3668_CURR1 0x02
-+#define AS3668_CURR2 0x03
-+#define AS3668_CURR3 0x04
-+#define AS3668_CURR4 0x05
-+
-+/* Constants */
-+#define AS3668_CHIP_IDENT 0xa5
-+#define AS3668_CHIP_REV1 0x01
-+
-+struct as3668_led {
-+	struct led_classdev cdev;
-+	struct as3668 *chip;
-+	struct fwnode_handle *fwnode;
-+
-+	int num;
-+};
-+
-+struct as3668 {
-+	struct i2c_client *client;
-+	struct as3668_led leds[AS3668_MAX_LEDS];
-+};
-+
-+static int as3668_read_value(struct i2c_client *client, u8 reg)
-+{
-+	return i2c_smbus_read_byte_data(client, reg);
-+}
-+
-+static int as3668_write_value(struct i2c_client *client, u8 reg, u8 value)
-+{
-+	int err = i2c_smbus_write_byte_data(client, reg, value);
-+
-+	if (err)
-+		dev_err(&client->dev, "error writing to reg 0x%tx, returned %d", reg, err);
-+
-+	return err;
-+}
-+
-+static enum led_brightness as3668_brightness_get(struct led_classdev *cdev)
-+{
-+	struct as3668_led *led = container_of(cdev, struct as3668_led, cdev);
-+
-+	return as3668_read_value(led->chip->client, AS3668_CURR1 + led->num);
-+}
-+
-+static void as3668_brightness_set(struct led_classdev *cdev, enum led_brightness brightness)
-+{
-+	struct as3668_led *led = container_of(cdev, struct as3668_led, cdev);
-+
-+	as3668_write_value(led->chip->client, AS3668_CURR1 + led->num, brightness);
-+}
-+
-+static int as3668_dt_init(struct as3668 *as3668)
-+{
-+	struct device *dev = &as3668->client->dev;
-+	struct as3668_led *led;
-+	struct led_init_data init_data = {};
-+	int err;
-+	u32 reg;
-+	int i = 0;
-+
-+	for_each_available_child_of_node_scoped(dev_of_node(dev), child) {
-+		err = of_property_read_u32(child, "reg", &reg);
-+		if (err)
-+			dev_err(dev, "unable to read device tree led reg, err %d", err);
-+
-+		i = reg;
-+
-+		if (i < 0 || i > AS3668_MAX_LEDS) {
-+			dev_err(dev, "unsupported led reg %d\n", i);
-+			return -EOPNOTSUPP;
-+		}
-+
-+		led = &as3668->leds[i];
-+		led->fwnode = of_fwnode_handle(child);
-+
-+		led->num = i;
-+		led->chip = as3668;
-+
-+		led->cdev.max_brightness = U8_MAX;
-+		led->cdev.brightness_get = as3668_brightness_get;
-+		led->cdev.brightness_set = as3668_brightness_set;
-+
-+		init_data.fwnode = led->fwnode;
-+		init_data.default_label = ":";
-+
-+		err = devm_led_classdev_register_ext(dev, &led->cdev, &init_data);
-+		if (err) {
-+			dev_err(dev, "failed to register %d LED\n", i);
-+			return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int as3668_probe(struct i2c_client *client)
-+{
-+	u8 chip_id1, chip_id2, chip_serial, chip_rev;
-+	struct as3668 *as3668;
-+
-+	/* Check for sensible i2c address */
-+	if (client->addr != 0x42)
-+		return dev_err_probe(&client->dev, -EFAULT,
-+				     "unexpected address for as3668 device\n");
-+
-+	/* Read identifier from chip */
-+	chip_id1 = as3668_read_value(client, AS3668_CHIP_ID1);
-+
-+	if (chip_id1 != AS3668_CHIP_IDENT)
-+		return dev_err_probe(&client->dev, -ENODEV,
-+				"chip reported wrong id: 0x%tx\n", chip_id1);
-+
-+	/* Check the revision*/
-+	chip_id2 = as3668_read_value(client, AS3668_CHIP_ID2);
-+	chip_serial = FIELD_GET(AS3668_CHIP_ID2_SERIAL_MASK, chip_id2);
-+	chip_rev = FIELD_GET(AS3668_CHIP_ID2_REV_MASK, chip_id2);
-+
-+	if (chip_rev != AS3668_CHIP_REV1)
-+		dev_warn(&client->dev, "unexpected chip revision\n");
-+
-+	/* Print out information about the chip */
-+	dev_dbg(&client->dev,
-+		"chip_id: 0x%tx | chip_id2: 0x%tx | chip_serial: 0x%tx | chip_rev: 0x%tx\n",
-+		chip_id1, chip_id2, chip_serial, chip_rev);
-+
-+	as3668 = devm_kzalloc(&client->dev, struct_size(as3668, leds, AS3668_MAX_LEDS), GFP_KERNEL);
-+	as3668->client = client;
-+
-+	as3668_dt_init(as3668);
-+
-+	/* Initialize the chip */
-+	as3668_write_value(client, AS3668_CURRX_CONTROL, 0x55);
-+	as3668_write_value(client, AS3668_CURR1, 0x00);
-+	as3668_write_value(client, AS3668_CURR2, 0x00);
-+	as3668_write_value(client, AS3668_CURR3, 0x00);
-+	as3668_write_value(client, AS3668_CURR4, 0x00);
-+
-+	return 0;
-+}
-+
-+static void as3668_remove(struct i2c_client *client)
-+{
-+	as3668_write_value(client, AS3668_CURRX_CONTROL, 0x0);
-+}
-+
-+static const struct i2c_device_id as3668_idtable[] = {
-+	{"as3668"},
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, as3668_idtable);
-+
-+static const struct of_device_id as3668_match_table[] = {
-+	{.compatible = "ams,as3668"},
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, as3668_match_table);
-+
-+static struct i2c_driver as3668_driver = {
-+	.driver = {
-+		.name           = "leds_as3668",
-+		.of_match_table = as3668_match_table,
-+	},
-+	.probe          = as3668_probe,
-+	.remove         = as3668_remove,
-+	.id_table       = as3668_idtable,
-+};
-+
-+module_i2c_driver(as3668_driver);
-+
-+MODULE_AUTHOR("Lukas Timmermann <linux@timmermann.space>");
-+MODULE_DESCRIPTION("AS3668 LED driver");
-+MODULE_LICENSE("GPL");
--- 
-2.49.0
+> 
+> > +static int media_device_requests(struct seq_file *file, void *priv)
+> > +{
+> > +	struct media_device *dev = dev_get_drvdata(file->private);
+> > +
+> > +	seq_printf(file, "number of requests: %d\n",
+> > +		   atomic_read(&dev->num_requests));
+> > +	seq_printf(file, "number of request objects: %d\n",
+> > +		   atomic_read(&dev->num_request_objects));
+> 
+> Newline here?
 
+I prefer that too.
+
+> 
+> > +	return 0;
+> > +}
+> > +#endif
+> > +
+> >  void media_device_init(struct media_device *mdev)
+> >  {
+> >  	INIT_LIST_HEAD(&mdev->entities);
+> > @@ -697,6 +714,9 @@ void media_device_init(struct media_device *mdev)
+> >  		media_set_bus_info(mdev->bus_info, sizeof(mdev->bus_info),
+> >  				   mdev->dev);
+> >  
+> > +	atomic_set(&mdev->num_requests, 0);
+> > +	atomic_set(&mdev->num_request_objects, 0);
+> > +
+> >  	dev_dbg(mdev->dev, "Media device initialized\n");
+> >  }
+> >  EXPORT_SYMBOL_GPL(media_device_init);
+> > @@ -748,6 +768,15 @@ int __must_check __media_device_register(struct media_device *mdev,
+> >  
+> >  	dev_dbg(mdev->dev, "Media device registered\n");
+> >  
+> > +#ifdef CONFIG_DEBUG_FS
+> > +	if (!media_debugfs_root)
+> > +		media_debugfs_root = debugfs_create_dir("media", NULL);
+> > +	mdev->media_dir = debugfs_create_dir(dev_name(&devnode->dev),
+> > +					     media_debugfs_root);
+> > +	debugfs_create_devm_seqfile(&devnode->dev, "requests",
+> > +				    mdev->media_dir, media_device_requests);
+> > +#endif
+> 
+> I have no objection to this but it would have been great to have the Media
+> device lifetime set in first and MC device and devnode merged. But maybe
+> it's too late for that. Well, at least this won't change error handling...
+
+Since this specific patch is not required to fix the MTK VCODEC issue, I can
+delay this a little. Is that comment related to an existing patch ?
+
+> 
+> > +
+> >  	return 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(__media_device_register);
+> > @@ -824,6 +853,7 @@ void media_device_unregister(struct media_device *mdev)
+> >  
+> >  	dev_dbg(mdev->dev, "Media device unregistered\n");
+> >  
+> > +	debugfs_remove_recursive(mdev->media_dir);
+> >  	device_remove_file(&mdev->devnode->dev, &dev_attr_model);
+> >  	media_devnode_unregister(mdev->devnode);
+> >  	/* devnode free is handled in media_devnode_*() */
+> > diff --git a/drivers/media/mc/mc-devnode.c b/drivers/media/mc/mc-devnode.c
+> > index 56444edaf13651874331e7c04e86b0a585067d38..d0a8bcc11dd6350fdbc04add70f62de2c5f01178 100644
+> > --- a/drivers/media/mc/mc-devnode.c
+> > +++ b/drivers/media/mc/mc-devnode.c
+> > @@ -45,6 +45,9 @@ static dev_t media_dev_t;
+> >  static DEFINE_MUTEX(media_devnode_lock);
+> >  static DECLARE_BITMAP(media_devnode_nums, MEDIA_NUM_DEVICES);
+> >  
+> > +/* debugfs */
+> > +struct dentry *media_debugfs_root;
+> > +
+> >  /* Called when the last user of the media device exits. */
+> >  static void media_devnode_release(struct device *cd)
+> >  {
+> > @@ -236,6 +239,7 @@ int __must_check media_devnode_register(struct media_device *mdev,
+> >  	if (devnode->parent)
+> >  		devnode->dev.parent = devnode->parent;
+> >  	dev_set_name(&devnode->dev, "media%d", devnode->minor);
+> > +	dev_set_drvdata(&devnode->dev, mdev);
+> >  	device_initialize(&devnode->dev);
+> >  
+> >  	/* Part 2: Initialize the character device */
+> > @@ -313,6 +317,7 @@ static int __init media_devnode_init(void)
+> >  
+> >  static void __exit media_devnode_exit(void)
+> >  {
+> > +	debugfs_remove_recursive(media_debugfs_root);
+> >  	bus_unregister(&media_bus_type);
+> >  	unregister_chrdev_region(media_dev_t, MEDIA_NUM_DEVICES);
+> >  }
+> > diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-request.c
+> > index 398d0806d1d274eb8c454fc5c37b77476abe1e74..829e35a5d56d41c52cc583cdea1c959bcb4fce60 100644
+> > --- a/drivers/media/mc/mc-request.c
+> > +++ b/drivers/media/mc/mc-request.c
+> > @@ -75,6 +75,7 @@ static void media_request_release(struct kref *kref)
+> >  		mdev->ops->req_free(req);
+> >  	else
+> >  		kfree(req);
+> > +	atomic_dec(&mdev->num_requests);
+> >  }
+> >  
+> >  void media_request_put(struct media_request *req)
+> > @@ -326,6 +327,7 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
+> >  
+> >  	snprintf(req->debug_str, sizeof(req->debug_str), "%u:%d",
+> >  		 atomic_inc_return(&mdev->request_id), fd);
+> > +	atomic_inc(&mdev->num_requests);
+> >  	dev_dbg(mdev->dev, "request: allocated %s\n", req->debug_str);
+> >  
+> >  	fd_install(fd, filp);
+> > @@ -349,10 +351,12 @@ static void media_request_object_release(struct kref *kref)
+> >  	struct media_request_object *obj =
+> >  		container_of(kref, struct media_request_object, kref);
+> >  	struct media_request *req = obj->req;
+> > +	struct media_device *mdev = obj->mdev;
+> >  
+> >  	if (WARN_ON(req))
+> >  		media_request_object_unbind(obj);
+> >  	obj->ops->release(obj);
+> > +	atomic_dec(&mdev->num_request_objects);
+> >  }
+> >  
+> >  struct media_request_object *
+> > @@ -417,6 +421,7 @@ int media_request_object_bind(struct media_request *req,
+> >  	obj->req = req;
+> >  	obj->ops = ops;
+> >  	obj->priv = priv;
+> > +	obj->mdev = req->mdev;
+> >  
+> >  	if (is_buffer)
+> >  		list_add_tail(&obj->list, &req->objects);
+> > @@ -424,6 +429,7 @@ int media_request_object_bind(struct media_request *req,
+> >  		list_add(&obj->list, &req->objects);
+> >  	req->num_incomplete_objects++;
+> >  	ret = 0;
+> > +	atomic_inc(&obj->mdev->num_request_objects);
+> >  
+> >  unlock:
+> >  	spin_unlock_irqrestore(&req->lock, flags);
+> > diff --git a/include/media/media-device.h b/include/media/media-device.h
+> > index 53d2a16a70b0d9d6e5cc28fe1fc5d5ef384410d5..749c327e3c582c3c583e0394468321ccd6160da5 100644
+> > --- a/include/media/media-device.h
+> > +++ b/include/media/media-device.h
+> > @@ -11,6 +11,7 @@
+> >  #ifndef _MEDIA_DEVICE_H
+> >  #define _MEDIA_DEVICE_H
+> >  
+> > +#include <linux/atomic.h>
+> >  #include <linux/list.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/pci.h>
+> > @@ -106,6 +107,9 @@ struct media_device_ops {
+> >   * @ops:	Operation handler callbacks
+> >   * @req_queue_mutex: Serialise the MEDIA_REQUEST_IOC_QUEUE ioctl w.r.t.
+> >   *		     other operations that stop or start streaming.
+> > + * @num_requests: number of associated requests
+> > + * @num_request_objects: number of associated request objects
+> > + * @media_dir:	DebugFS media directory
+> >   * @request_id: Used to generate unique request IDs
+> >   *
+> >   * This structure represents an abstract high-level media device. It allows easy
+> > @@ -179,6 +183,11 @@ struct media_device {
+> >  	const struct media_device_ops *ops;
+> >  
+> >  	struct mutex req_queue_mutex;
+> > +	atomic_t num_requests;
+> > +	atomic_t num_request_objects;
+> > +
+> > +	/* debugfs */
+> > +	struct dentry *media_dir;
+> >  	atomic_t request_id;
+> >  };
+> >  
+> > diff --git a/include/media/media-devnode.h b/include/media/media-devnode.h
+> > index d27c1c646c2805171be3997d72210dd4d1a38e32..dbcabeffcb572ae707f5fe1f51ff719d451c6784 100644
+> > --- a/include/media/media-devnode.h
+> > +++ b/include/media/media-devnode.h
+> > @@ -20,9 +20,13 @@
+> >  #include <linux/fs.h>
+> >  #include <linux/device.h>
+> >  #include <linux/cdev.h>
+> > +#include <linux/debugfs.h>
+> >  
+> >  struct media_device;
+> >  
+> > +/* debugfs top-level media directory */
+> > +extern struct dentry *media_debugfs_root;
+> > +
+> >  /*
+> >   * Flag to mark the media_devnode struct as registered. Drivers must not touch
+> >   * this flag directly, it will be set and cleared by media_devnode_register and
+> > diff --git a/include/media/media-request.h b/include/media/media-request.h
+> > index 7f9af68ef19ac6de0184bbb0c0827dc59777c6dc..610ccfe8d7b20ec38e166383433f9ee208248640 100644
+> > --- a/include/media/media-request.h
+> > +++ b/include/media/media-request.h
+> > @@ -292,6 +292,7 @@ struct media_request_object_ops {
+> >   * struct media_request_object - An opaque object that belongs to a media
+> >   *				 request
+> >   *
+> > + * @mdev: Media device this object belongs to
+> 
+> This deserves at least a comment what this may be used for: generally once
+> object is unbound, it's not related to a request anymore (nor a Media
+> device). This field also adds a new Media device lifetime issue: nothing
+
+We could make it explicit by clearing the mdev pointer ?
+
+> guarantees the mdev is not disappearing at a wrong time albeit this is
+> very, very likely not user-triggerable without physically removing
+> hardware.
+
+I'm not too familiar with the subject, if the MC knows it has open request
+FD(s), why would it allow userspace from unloading its module ?
+
+> 
+> >   * @ops: object's operations
+> >   * @priv: object's priv pointer
+> >   * @req: the request this object belongs to (can be NULL)
+> > @@ -303,6 +304,7 @@ struct media_request_object_ops {
+> >   * another struct that contains the actual data for this request object.
+> >   */
+> >  struct media_request_object {
+> > +	struct media_device *mdev;
+> >  	const struct media_request_object_ops *ops;
+> >  	void *priv;
+> >  	struct media_request *req;
+> > 
