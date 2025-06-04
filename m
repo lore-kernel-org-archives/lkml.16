@@ -1,382 +1,311 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2075.outbound.protection.outlook.com [40.107.223.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB4B320F
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 18:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749063571; cv=none; b=mHpLLqUtMCgNWYJs8v6JKn3+RLDMXteOaxuzzEiarRum2sM9gLh6qkIP/CKYXquk7+rephhWLvWSszCLEf2P5/iPFB3JUsnpnM1wrH6SGdB5kTt9uKgATRCwwBbBFzsuKzZBn8sRJIoBNigZIXZClbfV4mumeeIAAFA4jpvkSWI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749063571; c=relaxed/simple;
-	bh=OnuLuPC8HOVu0UKKHW6aPk3d0V97ZUFuKUG2ycpxDW0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ex7jFi3vVLBHdeIL//oOdPkN3zax9kiXZ/8mvFGYg0M5eDrF1FBUVsN6/w53/9HCJUHJzeSMKY5JR4b59N8BgMT2E3e7XmHeSRfwcMGyZFwyizVqiH5EjdLW8mIzGAxNIcP/7uOtafSkc2HKk2oqwkJC+/eweL23D7s44rqLQIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=hNxRaABa; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4594E111BF;
+	Wed,  4 Jun 2025 18:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749063592; cv=fail; b=D0JUoFf3h63j7XiSvJfR6LOijmM+KE7NfHycdIb7SjJ6GaRAC2MTQqp1YzWasJnkDFgxGYouTmTSsKa4Z9VpL75QLWZ1NwHX+xY48v2bFd1NCN1RMGKwKjmBVkxjQP2VP72SOeRMBX77HVpdCiwPZBJF/zdFK6+U4LwfgIGTVR0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749063592; c=relaxed/simple;
+	bh=ijf2hrq94qHwZxPGOc+TBtsJ/XV+eNmmkpYdaJqIHpo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=LmDLy7hcYnJ5zL1qn6hP1HnT7WAg0OE2uI4VzFdrWCQPuNzdZY7bCq8K/dncsSlTx7bPCmoZ3AtkSti1xsCGgQh6L3QZt7IyTJFvdyS0JpJ9df2FszRTiRUv4nV+219adVGGFW3hTZS/Bhzh+NtVuU0xTt/6cTdyzfX7vWoi8d8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yBosArz4; arc=fail smtp.client-ip=40.107.223.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="hNxRaABa"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6020ff8d35dso515217a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 11:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neon.tech; s=google; t=1749063568; x=1749668368; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mbPxzU21pQPfeJMs7GIx2NLevJblWqGR9y+lEXFKe30=;
-        b=hNxRaABaHhVLlvNgUHRQS7jeYULD3LhKqYEqA1KL1n7K8so/3Cnf1alxpRGqT+rDse
-         FIXDNbTImHOrZvaa7grTFSMeZBgifEa0IW84qvZkqgPuDiBiQRx7lRuVh0rV60KJDOuW
-         B6dAuJKjm4i+DY7uG+jQJCZOXp84U89Dtw4hw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749063568; x=1749668368;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mbPxzU21pQPfeJMs7GIx2NLevJblWqGR9y+lEXFKe30=;
-        b=Bo4mPUQbockyFoUaRUJH1+uIit3w+Cd5RG9fTgGblGFDdjxPitK/awH3dwskVpesC6
-         aPlvoUHHzWBR/1Kjf1nHYUkOj8c/a2tZudY4BEqr99n/6aakCiAQiJZ5L8DVddfxA2Dq
-         E8CLuU4Av2FPIu7acJkDewE92VIxKpA+NpdEZpgK4Ymf6GebyGrV38Vnrq8ETHMatUph
-         kDswYGYKOl2IXKS0Fh3d2tPbVt1T9xkNf7bZ0aEdXMBybVkjUd9RJoA98N9x5+L3LSOX
-         +HG5Su8In+kWvmLWwBnwFJgntTtOIeGTz5mNnDAaQJwD5ADaFxuVeVS/32SMcsKnX0xn
-         1CMA==
-X-Gm-Message-State: AOJu0YytTzrGB3Ttg92auOsErkbhBK4NH9Hw8aR0nFaXu5jgc11pPMHT
-	qwn0p9gtP5RfcZ64fEKYwh7FZaNCp2VLDUZkmVmKjQJUbLzEvVU8WO3l6pwx7AgAAHk6Fchz0Fb
-	Rx3uHmGfbBg==
-X-Gm-Gg: ASbGnctvyr0csQAhQGHgJoamtOK0k3mgya7EYLZfrqiFesXVPbWT5lF8/LnFWn/G3CM
-	P5cDKePOuHTUcLdtrZtGHXkI5jkmW+EYeIe1+U1p3Fp5snuWXzk7OIv/zSslNY6CuNAoaQkxUyG
-	X+bYWsfhD3qouCmhZec7IoYh5bapf8bCE37IoK2rxnVrSvQRFdlgLqoU4lfq2RjQqYp8fn4Aq7K
-	MhkcIL1OFA3UWRe5TlmNOsPi+WdlKjLuNRTLi0PGOVOCd/2/mDkZa2rxi06JziSBa0wZDiut417
-	kbErIMPbUCdbRcGcvZVqoLQBCkUki6cCfczwP4MId5JnxwvNEP4hkcg=
-X-Google-Smtp-Source: AGHT+IEQeZeCMV1Xtu4bSCUf7oDNF/zCJS7/LznGabgtUBL2VZ1B89jxObEDiyV81YDvM9Ne5wnAzQ==
-X-Received: by 2002:a05:6402:13c8:b0:602:53:cb06 with SMTP id 4fb4d7f45d1cf-60722a80206mr569998a12.17.1749063567520;
-        Wed, 04 Jun 2025 11:59:27 -0700 (PDT)
-Received: from [192.168.86.142] ([84.65.228.220])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60699731f06sm3326811a12.27.2025.06.04.11.59.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 11:59:27 -0700 (PDT)
-Message-ID: <9f4c0972-a123-4cc3-89f2-ed3490371e65@neon.tech>
-Date: Wed, 4 Jun 2025 19:59:25 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yBosArz4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=apOX7CD9IxtA0IxKKWVNEPaAPDZulfyU1yZ2C3qDYIzH4Q50bS9vGiClOmDboro4fkZq+4AnMVy3J86ZapuywsboiM+caJHhR02sP1j3eKSDh2LlPk3kJ5lmWdTTLAajXWJrdsXVuCihgjtwk6cIxRfLBQnHGOvp+MiEWO9wgkviTf6AWWnSa+4wNhHbR8Jn1XHewJsx6aR3U+zKZ83AqC8zqH/cgo/3FTr8c29mjTYdV6EJITWlFGeS2hgEbqGD0vk8FD7p38j0V1Gj3auszTvUmruR3msWWafuVTSgAkt/lraUiwwV2mPWM3lzh1pLNMlRQYqdbi7O1JIVdXPXxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hgrERZGKBZn+Vmox3mJmIu4p6QzIe0/2gYqrYpcsRnc=;
+ b=XWLxwPoBJJbZyB1Wxc3cAIVytheoJUxDSvTxb2bmGcdPm8z80h6nAhdBTFBTWjApFKhRv9H5CXtfbYzAhd8+Wif3TZRwIRATr4rcfRSm9RVKtaZYl4wyRzCQi+aOC+1WSKH4ZPtDTM0Sj29AwBjfg+uddiVSdgNLP4XcOdylDurTXK3OY7cq7KB4fduu0Wvl4xy6bzJ1qgMFMoahHDkP1IvxQfqEzs8jlCulk1AEiNYp5L6e/YdNANgNHZjsUPjYdyVUPhFMmsCJZYG2ptb9LMfKk3i+Xv9f9DezKIc9+ZjHdFV724NLAMy1XNLF3eVJ0T0t8gfqiCPGZ2SPdIkseA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hgrERZGKBZn+Vmox3mJmIu4p6QzIe0/2gYqrYpcsRnc=;
+ b=yBosArz4gCjW0IaCRA3eNkZz4ymPOTpNwNPVDaiqnfL9VLzBtsk0vFv7srBtmiQiolZ828yyRX19bDmxcOStvLb1JxA0wlwvvHd0DeGmrIVQSB8J2FIqq6XQ6Ndfy+O+k/uPOm0INUJTvf0j4znmnAH6vJsCQLsr1AGCqzUPrFo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW4PR12MB7142.namprd12.prod.outlook.com (2603:10b6:303:220::6)
+ by DM4PR12MB6397.namprd12.prod.outlook.com (2603:10b6:8:b4::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Wed, 4 Jun
+ 2025 18:59:48 +0000
+Received: from MW4PR12MB7142.namprd12.prod.outlook.com
+ ([fe80::e5b2:cd7c:ba7d:4be3]) by MW4PR12MB7142.namprd12.prod.outlook.com
+ ([fe80::e5b2:cd7c:ba7d:4be3%3]) with mapi id 15.20.8769.025; Wed, 4 Jun 2025
+ 18:59:48 +0000
+Message-ID: <4aefad72-e8f3-4ad9-9f8f-fc32612358a0@amd.com>
+Date: Wed, 4 Jun 2025 11:59:44 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/7] Add managed SOFT RESERVE resource handling
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
+ <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Ying Huang <huang.ying.caritas@gmail.com>,
+ "Xingtao Yao (Fujitsu)" <yaoxt.fnst@fujitsu.com>,
+ Peter Zijlstra <peterz@infradead.org>, Greg KH <gregkh@linuxfoundation.org>,
+ Nathan Fontenot <nathan.fontenot@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
+ Benjamin Cheatham <benjamin.cheatham@amd.com>,
+ PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>
+References: <20250603221949.53272-1-Smita.KoralahalliChannabasappa@amd.com>
+ <a1735579-82ef-4af7-b52d-52fe2d35483c@fujitsu.com>
+Content-Language: en-US
+From: "Koralahalli Channabasappa, Smita"
+ <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <a1735579-82ef-4af7-b52d-52fe2d35483c@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BYAPR07CA0107.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::48) To MW4PR12MB7142.namprd12.prod.outlook.com
+ (2603:10b6:303:220::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
- Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-From: Em Sharnoff <sharnoff@neon.tech>
-Subject: [PATCH] x86/mm: Handle alloc failure in phys_*_init()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR12MB7142:EE_|DM4PR12MB6397:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5fcf45b6-afbb-43af-d4f5-08dda399fa5e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V3R1U3V6UmZGdXFtS2NQNEJLUmRzZ3pFQU5qOVFKOGpzQWRVUExPdEVYRzAr?=
+ =?utf-8?B?M1V1MWdoR3VaUWhxZmwvMjA1Q1RYdU9vMEU5UWlEU0d3dDA4bXc4cVVvWFBD?=
+ =?utf-8?B?eFNSb1ErZ2FVYzgzUUZvUXNOZ0s4MDJWTXdMeEVMNm5KaU90SG9GaVlrdFBZ?=
+ =?utf-8?B?ZTl6Nkk5b2I1SEozdm80ajFFS2tEK01kaExYN1Y3eTZYYVNSYXJsVks1TFlt?=
+ =?utf-8?B?WEVOeU1FQUE1OVdFenV5dzhYazE4bStlVkhtcFN3NG1na0FGTGhtY1RQWFpn?=
+ =?utf-8?B?UGtkMXA0enRRbytPaWMreTZTL0RnK3VNZElrcmFZQnlPUHdHZjNNdmZwOGFB?=
+ =?utf-8?B?bkRLMVNPcnBtclpQeUxOcU9RWXhyaHRtN3k0czB4UkdveXpNZ3I5Mjl6aFlT?=
+ =?utf-8?B?Si9zVXNiZkdiM0dEV3BsTHNXcldZaStOUlk0R0JRZmR4b3V5bDFKOS9OcUc4?=
+ =?utf-8?B?WC9lR0ZMVWVzcDNpNis5TGhTS255U21hRmpmc3NURDFpbEV4WHpWV3NEOWhF?=
+ =?utf-8?B?ckExSEVzb1BYNGcrNnlRc2ZoSzIyS0xqeDRYYUg2ODJHaS9pVXZvR3RpUysr?=
+ =?utf-8?B?bGpVc2VsSU1UQm01UDN1TkJ3cmRoRjlBUXhBMnJ6bnBBaGNsT01LdFcrSUpa?=
+ =?utf-8?B?MHh6Y2JDWWlxZEFLbGtjYU1rM29DRmlyRGVIWDdVT0hNa3NzcllkR3U4dzk4?=
+ =?utf-8?B?RjE1WDE4U0F5Vkg0T05lSzRwRDI0TllxYVllL2lnMWxPTlZaYUZQQitzOVlB?=
+ =?utf-8?B?VFpCZDVpNnJNS2RYT1FuWjJKWjY1MUFXc2lZY2JIS04yeUpic01sOFdhY0Rj?=
+ =?utf-8?B?UGxEUlcvMzVEeCtNNmRCRGxBam1nZ2FtdEtQcjE5ekZKUDBheHJsV1VnWEhz?=
+ =?utf-8?B?dkM1RWZQS09DTUJQWEZtOTlsaHZieU9Zb2xzVWF2TzZUZ0RqNlNFUURDZTN0?=
+ =?utf-8?B?dmVDbE1uYklBcTJhS01xV2dqckxqS2QvaUIrRzVsdk1PYVBGSS9ZbEoyMGZz?=
+ =?utf-8?B?SUF1Q3Y4TWllRStxRHQ0U0VWalF5TnZYRmRPa0N0Y3lzaWYrKytFVDRiNWNX?=
+ =?utf-8?B?aTVDZnBRNkVMTHlaN0Z0VmN5Q1IvYlVEeXVHQnNvejJoUjlLRlFIWDNJMUJy?=
+ =?utf-8?B?TUJiRzU4Smg3QmZiK2RmQ2NKd1VzZXFHNENrT2VQWllPd1ByaGlNNXhLT3pO?=
+ =?utf-8?B?M25UVVgzMXNEUDlpRThGUFgxRTFQTHQwLzRua2wreUQ5Z1dpcXE5Yy9QZUF6?=
+ =?utf-8?B?bmVtc1UycEd0dHl2Y3pWelFHTCt5QWNhOGt4WnR2OFRsdG4xQ0pIbkE1dUg2?=
+ =?utf-8?B?UmVQM2pVRkNoNWkzYTlNUVBiNlhpMmNmUldFZUtZVER5SXF0WnlPRU00MFRq?=
+ =?utf-8?B?STRhbnFLWkFXZUFvSlZMWDFQZ00zM0IwZ2hYQTNBeFpQb3lKdzRocGZSSGhQ?=
+ =?utf-8?B?SjNZUEhUWUVON1NWdTY3cFdONWswQ3psUm1ld0RzcGtOM1c4Y0V4NkNqMnpu?=
+ =?utf-8?B?cDFyMzhQSDdGQjc5Nk83T2xpdHVIakVtQTVEYlJ0ZmxxL0lVbll1Z1NKa25a?=
+ =?utf-8?B?MDZ3aENpaWNHaWVRZzVseEErS0xjVmNOWnlRdzdmcEZYcjRHWlpaa0dPbVNC?=
+ =?utf-8?B?ODVNakM0MFppZHVoWmtLSXZwVnkyQzlPTlBkd3ROMFVHVEhCNjdBSTUyeWZL?=
+ =?utf-8?B?RERlU3JuRUhGL2MvSkd6amx5NTgvMTJ6dE1RV0pWQzhRcHMwVFIyQjhGbGpD?=
+ =?utf-8?B?ZldSUHNPb2JVQ3VlbEprTzVIQVB2QVVuZW8zUnFPNkpjWkh1aUpQbnJ1TERS?=
+ =?utf-8?B?OW1DTGZzdjVDcU9wRThxUEJkWExMRXVxdHJ4aGViUm5Qcm53U1duZURvekVn?=
+ =?utf-8?B?QXJHN09VZXhSNTlSWXlPeGlOSmJOOUh6aUdHbUtsUnhQYW9HUGIwQUtmQ1Ru?=
+ =?utf-8?Q?txnpotEueTM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7142.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T0p3Zm5ob3BYZjRmOXhqd3lBNVk2MDFTMGxZR2tVSkRmdHlpRUdxSTRIV0hJ?=
+ =?utf-8?B?MkMxQjc3RzdDS3ZoZzBWMFRXODVYU2lPaWFFdjU2RDVBVVFEQTk4a2RMUnRX?=
+ =?utf-8?B?VkhjTElNMlhVYTNVZmI5UVRMTGlZbzI3aWdySklIdm9KMEd4ditwd0M3MTBx?=
+ =?utf-8?B?dk0wRFBDS0J2cnM0QWcrMElpU3NWU2p2NGk5RUxCcU9jWVZWV2g1SG1XT1Np?=
+ =?utf-8?B?M21EVElidG44c2lDUnl0VExEeUxHWG12K0p5RlFMSEFPeHZ6Wmd0NWxqcnp1?=
+ =?utf-8?B?ei93SkEwUUZWbWUxZHVMdE5EODZldGd2UUdmc0R0Q3ZsWmlFY3BiNkxrUGth?=
+ =?utf-8?B?Z1gxUzF5T2NaQWpsaHNTZ2VSbXRaWUdzRFMrZFRsall0U3dveHdzVkxCYld3?=
+ =?utf-8?B?a2pYeUc4YUZoYTRqK0U5VlJCTXN3UjFKL0RaeVM2WXkvSFJZNkJudmhDSDRU?=
+ =?utf-8?B?RXYyZit2T2lyWVZmdTg2d25pakVlWEFmbGhkbnJzTGFTNWlaYkZUWlVsM0lP?=
+ =?utf-8?B?VExTN3krRklUTlV4Q2F2aTV0cEtoSm5oWTFGRVd3NUY3Y3EvYk9FZnhHTWdO?=
+ =?utf-8?B?MnYxdWZmK3VZVnNnbGNyYlpHSkJoVGFLMndYZE1xNEVXNnVHRERCUEZleGV1?=
+ =?utf-8?B?M3REMHlnOTJoekd4a1NLQy93UExTbTVhY2FOR1EzRE5DczFVcUdUWU5vU2Uy?=
+ =?utf-8?B?S2g0bHFSYmZIUDBrQVNVR0NUNW44U0lFZEhCNGR4ZnRSeldTQmY4VmZ4K0Qy?=
+ =?utf-8?B?RXJNaFMzdTZwdEl4UVdFNW5uT01nckJsczgzbWhSQk9LMmxkcTEzcUVHQlEr?=
+ =?utf-8?B?NkY2aVJTZ0tYSXZQTDI0ZytzQlVka00veUt4RFdRUkUzazRRQytFOVNkY09m?=
+ =?utf-8?B?MS9PWld0by9naHBLK1krVkV2aWtlOWExTTkrZ1htSlBVcXRIOFFwakx6ZnFw?=
+ =?utf-8?B?TTRFblAwZ05ONFZNTUpUUHVYOVYvcW9aZGNzR0gzUVdBbEF1UE1qTlZiWkpK?=
+ =?utf-8?B?eGdzeGVGanRqNFBKZ1ZSanVuUUl0Smh2RzZBdmhvOFc3bysxKzJ5MjNnNkFo?=
+ =?utf-8?B?ZG9tdWozemZ2S091ajRLQ3BJcmtmWEFWRWhRTWI1VkwwQWord1hINnh4MDgz?=
+ =?utf-8?B?RmkydG8zWGNLOFlaVVdYckFuREJVV01ocno0TldPaTNMWWRkWEVmUTVzWHVm?=
+ =?utf-8?B?OWkzeE5COEQ5d2lYT0hkTk4wNEV4Nm5paFhTdHBVUEU5RmFsS1h3S3hSNGhU?=
+ =?utf-8?B?RG5ld2xiU1NlQkRhclR3amJtQmVOY2dmdmNGUmJ2S0g3amYyMFh6c2JvdjFw?=
+ =?utf-8?B?TlhBNXo4a0hCTG9XUXNzaEg2VjI1aFhOc0p5RGtQa1dMd2pQMnZ5OENkalZB?=
+ =?utf-8?B?L0M0TjY1ODhWRTZPWEs3YUd5N0NBMTdEOFptZWx6NjJjdXNSK3pZVXJDU2Nj?=
+ =?utf-8?B?UW1KTW1hQmZIdGFIaUdIKzdqQUxObi9RL1pIZkhXazJIVnBmMlVzUnBiZWlZ?=
+ =?utf-8?B?ZzQvS0xpMitjaFBBblc4ek5YS3NvKzZubjFpay85eFZIN3o3OGNZTFBHbEcw?=
+ =?utf-8?B?ejJXb0VsczBPMEpGM05TV2IrTFpVWVRtbnlkaTM5RXpLdE1PYVlsa2xZVU80?=
+ =?utf-8?B?eFJKcEFMajNJYUROa3ZTK1hIaVhaQ214TS9XUHpHZEJsSDNTazB4LzI3Z21r?=
+ =?utf-8?B?QUIzb3JpVmlnYU94Qk9GcWpzRGFaZXVqNjRTQWZ6UzFNMlVIZXZTVUYzdk1B?=
+ =?utf-8?B?L21xRG51MFBkaEsxRWIvWlQvNjh5MWpMcVJYNUltNlNrRGhtdlNtSFZuN2w1?=
+ =?utf-8?B?RGEwQUhUTzhHOVRjVG11V0ZhSk5MZHVXMFpDT3dhRVdhbzQ3cldpSjMrUWdX?=
+ =?utf-8?B?R3dPK241Q2pIcVMwTUFTanA5dE1DUDZoWWFITjZRSnI1aVY4dWM4dlpGMnFz?=
+ =?utf-8?B?THhreWljMStYTE40ZzA0c1VMZzFrNlc3aEhYb0ErVUhFdnBqRmpnVEwyUXZV?=
+ =?utf-8?B?T05qQkE4ZllOMk1qQ3NFRlhHdVdHT1VtM0dnL0c4aEM5cTQ1QThpY1djNTU2?=
+ =?utf-8?B?Vm1vUFgzQmZPcmg4QWJrMi8zZUt3TzNWZ05EdjhUUmM3cUJVOUdud3FXbis3?=
+ =?utf-8?Q?OxLSdzQEBjYuBncGuLbzkGtF5?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fcf45b6-afbb-43af-d4f5-08dda399fa5e
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7142.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 18:59:48.4087
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kL0VvLCZvmN66s/ha3R3ViY29RQjP4yRfSasmOO6YEWOb+IgfIAJLcPaN4FOEucnhR7PyBrRc/P4X39fcNLVYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6397
 
-tl;dr:
+Hi Zhijian,
 
-* When setting up page table mappings for physical addresses after boot,
-  alloc_low_page() uses GFP_ATOMIC, which is allowed to fail.
-* This isn't currently handled, and results in a null pointer
-  dereference when it occurs.
-* This allocation failure can happen during memory hotplug.
+Thanks for testing my patches.
 
-To handle failure, change phys_pud_init() and similar functions to
-return zero if allocation failed (either directly or transitively), and
-convert that to -ENOMEM in arch_add_memory().
+On 6/4/2025 1:43 AM, Zhijian Li (Fujitsu) wrote:
+> Smita,
+> 
+> Thanks for your awesome work. I just tested the scenarios you listed, and they work as expected. Thanks again.
+> (Minor comments inlined)
+> 
+> Tested-by: Li Zhijian <lizhijian@fujitsu.com>
+> 
+> 
+> To the CXL community,
+> 
+> The scenarios mentioned here essentially cover what a correct firmware may provide. However,
+> I would like to discuss one more scenario that I can simulate with a modified QEMU:
+> The E820 exposes a SOFT RESERVED region which is the same as a CFMW, but the HDM decoders are not committed. This means no region will be auto-created during boot.
+> 
+> As an example, after boot, the iomem tree is as follows:
+> 1050000000-304fffffff : CXL Window 0
+>     1050000000-304fffffff : Soft Reserved
+>       <No region>
+> 
+> In this case, the SOFT RESERVED resource is not trimmed, so the end-user cannot create a new region.
+> My question is: Is this scenario a problem? If it is, should we fix it in this patchset or create a new patch?
+> 
 
-=== Background ===
+I believe firmware should handle this correctly by ensuring that any 
+exposed SOFT RESERVED ranges correspond to committed HDM decoders and 
+result in region creation.
 
-We recently started observing these null pointer dereferences happening
-in practice (albeit quite rarely), triggered by allocation failures
-during virtio-mem hotplug.
+That said, I’d be interested in hearing what the rest of the community 
+thinks.
 
-We use virtio-mem quite heavily - adding/removing memory based on
-resource usage of customer workloads across a fleet of VMs - so it's
-somewhat expected that we have occasional allocation failures here, if
-we run out of memory before hotplug takes place.
+> 
+> 
+> 
+> On 04/06/2025 06:19, Smita Koralahalli wrote:
+>> Add the ability to manage SOFT RESERVE iomem resources prior to them being
+>> added to the iomem resource tree. This allows drivers, such as CXL, to
+>> remove any pieces of the SOFT RESERVE resource that intersect with created
+>> CXL regions.
+>>
+>> The current approach of leaving the SOFT RESERVE resources as is can cause
+>> failures during hotplug of devices, such as CXL, because the resource is
+>> not available for reuse after teardown of the device.
+>>
+>> The approach is to add SOFT RESERVE resources to a separate tree during
+>> boot.
+> 
+> No special tree at all since V3
 
-We started seeing this bug after upgrading from 6.6.64 to 6.12.26, but
-there didn't appear to be relevant changes in the codepaths involved, so
-we figured the upgrade was triggering a latent issue.
+Will make changes. I overlooked the cover letter.
 
-The possibility for this issue was also pointed out a while back:
+> 
+> 
+>> This allows any drivers to update the SOFT RESERVE resources before
+>> they are merged into the iomem resource tree. In addition a notifier chain
+>> is added so that drivers can be notified when these SOFT RESERVE resources
+>> are added to the ioeme resource tree.
+>>
+>> The CXL driver is modified to use a worker thread that waits for the CXL
+>> PCI and CXL mem drivers to be loaded and for their probe routine to
+>> complete. Then the driver walks through any created CXL regions to trim any
+>> intersections with SOFT RESERVE resources in the iomem tree.
+>>
+>> The dax driver uses the new soft reserve notifier chain so it can consume
+>> any remaining SOFT RESERVES once they're added to the iomem tree.
+>>
+>> The following scenarios have been tested:
+>>
+>> Example 1: Exact alignment, soft reserved is a child of the region
+>>
+>> |---------- "Soft Reserved" -----------|
+>> |-------------- "Region #" ------------|
+>>
+>> Before:
+>>     1050000000-304fffffff : CXL Window 0
+>>       1050000000-304fffffff : region0
+>>         1050000000-304fffffff : Soft Reserved
+>>           1080000000-2fffffffff : dax0.0
+> 
+> BTW, I'm curious how to set up a dax with an address range different from its corresponding region.
 
-> For alloc_low_pages(), I noticed the callers don’t check for allocation
-> failure. I'm a little surprised that there haven't been reports of the
-> allocation failing, because these operations could result in a lot more
-> pages getting allocated way past boot, and failure causes a NULL
-> pointer dereference.
+Hmm, this configuration was provided directly by our BIOS. The DAX 
+device was mapped to a subset of the region's address space as part of 
+the platform's firmware setup, so I did not explicitly configure it..
 
-https://lore.kernel.org/all/5aee7bcdf49b1c6b8ee902dd2abd9220169c694b.camel@intel.com/
+> 
+> 
+>>             1080000000-2fffffffff : System RAM (kmem)
+>>
+>> After:
+>>     1050000000-304fffffff : CXL Window 0
+>>       1050000000-304fffffff : region1
+>>         1080000000-2fffffffff : dax0.0
+>>           1080000000-2fffffffff : System RAM (kmem)
+>>
+>> Example 2: Start and/or end aligned and soft reserved spans multiple
+>> regions
+> 
+> Tested
+> 
+>>
+>> |----------- "Soft Reserved" -----------|
+>> |-------- "Region #" -------|
+>> or
+>> |----------- "Soft Reserved" -----------|
+>> |-------- "Region #" -------|
+> 
+> Typo? should be:
+> |----------- "Soft Reserved" -----------|
+>               |-------- "Region #" -------|
 
-For completeness, here's an example stack trace we saw (on 6.12.26):
+Yeah, Will fix.
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000000
-  ....
-  Call Trace:
-   <TASK>
-   phys_pud_init+0xa0/0x390
-   phys_p4d_init+0x93/0x330
-   __kernel_physical_mapping_init+0xa1/0x370
-   kernel_physical_mapping_init+0xf/0x20
-   init_memory_mapping+0x1fa/0x430
-   arch_add_memory+0x2b/0x50
-   add_memory_resource+0xe6/0x260
-   add_memory_driver_managed+0x78/0xc0
-   virtio_mem_add_memory+0x46/0xc0
-   virtio_mem_sbm_plug_and_add_mb+0xa3/0x160
-   virtio_mem_run_wq+0x1035/0x16c0
-   process_one_work+0x17a/0x3c0
-   worker_thread+0x2c5/0x3f0
-   ? _raw_spin_unlock_irqrestore+0x9/0x30
-   ? __pfx_worker_thread+0x10/0x10
-   kthread+0xdc/0x110
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork+0x35/0x60
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork_asm+0x1a/0x30
-   </TASK>
+> 
+>>
+>> Example 3: No alignment
+>> |---------- "Soft Reserved" ----------|
+>> 	|---- "Region #" ----|
+> 
+> Tested.
+> 
+> 
+> Thanks
+> Zhijian
 
-and the allocation failure preceding it:
-
-  kworker/0:2: page allocation failure: order:0, mode:0x920(GFP_ATOMIC|__GFP_ZERO), nodemask=(null),cpuset=/,mems_allowed=0
-  ...
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x5b/0x70
-   dump_stack+0x10/0x20
-   warn_alloc+0x103/0x180
-   __alloc_pages_slowpath.constprop.0+0x738/0xf30
-   __alloc_pages_noprof+0x1e9/0x340
-   alloc_pages_mpol_noprof+0x47/0x100
-   alloc_pages_noprof+0x4b/0x80
-   get_free_pages_noprof+0xc/0x40
-   alloc_low_pages+0xc2/0x150
-   phys_pud_init+0x82/0x390
-  ...
-
-(everything from phys_pud_init and below was the same)
-
-There's some additional context in a github issue we opened on our side:
-https://github.com/neondatabase/autoscaling/issues/1391
-
-=== Reproducing / Testing ===
-
-I was able to partially reproduce the original issue we saw by
-modifying phys_pud_init() to simulate alloc_low_page() returning null
-after boot, and then doing memory hotplug to trigger the "failure".
-Something roughly like:
-
-  - pmd = alloc_low_page();
-  + if (!after_bootmem)
-  + 	pmd = alloc_low_page();
-  + else
-  + 	pmd = 0;
-
-To test recovery, I also tried simulating just one alloc_low_page()
-failure after boot. This change seemed to handle it at a basic level
-(virito-mem hotplug succeeded with the right amount, after retrying),
-but I didn't dig further.
-
-We also plan to test this in our production environment (where we should
-see the difference after a few days); as of 2025-06-04, we haven't yet
-rolled that out.
-
-=== Rationale ===
-
-Note: This is the first time I'm looking at this code; please review
-extra critically.
-
-As far as I can tell:
-
-1. phys_*_init() should not currently return zero
-2. If phys_*_init() gives up partway through, subsequent retries will be
-   able to continue from the progress so far.
-
-So, it seems ok to give a zero return special meaning, and it seems like
-this is something that can be gracefully handled with the code as it is.
-
-Signed-off-by: Em Sharnoff <sharnoff@neon.tech>
----
- arch/x86/mm/init.c    |  6 +++++-
- arch/x86/mm/init_64.c | 50 +++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 51 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index bfa444a7dbb0..b90fe52a7d67 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -533,6 +533,7 @@ bool pfn_range_is_mapped(unsigned long start_pfn, unsigned long end_pfn)
-  * Setup the direct mapping of the physical memory at PAGE_OFFSET.
-  * This runs before bootmem is initialized and gets pages directly from
-  * the physical memory. To access them they are temporarily mapped.
-+ * Returns zero if allocation fails at any point.
-  */
- unsigned long __ref init_memory_mapping(unsigned long start,
- 					unsigned long end, pgprot_t prot)
-@@ -547,10 +548,13 @@ unsigned long __ref init_memory_mapping(unsigned long start,
- 	memset(mr, 0, sizeof(mr));
- 	nr_range = split_mem_range(mr, 0, start, end);
- 
--	for (i = 0; i < nr_range; i++)
-+	for (i = 0; i < nr_range; i++) {
- 		ret = kernel_physical_mapping_init(mr[i].start, mr[i].end,
- 						   mr[i].page_size_mask,
- 						   prot);
-+		if (!ret)
-+			return 0;
-+	}
- 
- 	add_pfn_range_mapped(start >> PAGE_SHIFT, ret >> PAGE_SHIFT);
- 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 7c4f6f591f2b..1b0140b49371 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -502,7 +502,7 @@ phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
- /*
-  * Create PMD level page table mapping for physical addresses. The virtual
-  * and physical address have to be aligned at this level.
-- * It returns the last physical address mapped.
-+ * It returns the last physical address mapped, or zero if allocation failed.
-  */
- static unsigned long __meminit
- phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
-@@ -572,7 +572,14 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
- 		}
- 
- 		pte = alloc_low_page();
-+		if (!pte)
-+			return 0;
- 		paddr_last = phys_pte_init(pte, paddr, paddr_end, new_prot, init);
-+		/*
-+		 * phys_{ppmd,pud,p4d}_init return zero if allocation failed.
-+		 * phys_pte_init makes no allocations, so should not return zero.
-+		 */
-+		BUG_ON(!paddr_last);
- 
- 		spin_lock(&init_mm.page_table_lock);
- 		pmd_populate_kernel_init(&init_mm, pmd, pte, init);
-@@ -586,7 +593,7 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
-  * Create PUD level page table mapping for physical addresses. The virtual
-  * and physical address do not have to be aligned at this level. KASLR can
-  * randomize virtual addresses up to this level.
-- * It returns the last physical address mapped.
-+ * It returns the last physical address mapped, or zero if allocation failed.
-  */
- static unsigned long __meminit
- phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
-@@ -623,6 +630,8 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
- 							   paddr_end,
- 							   page_size_mask,
- 							   prot, init);
-+				if (!paddr_last)
-+					return 0;
- 				continue;
- 			}
- 			/*
-@@ -658,12 +667,22 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
- 		}
- 
- 		pmd = alloc_low_page();
-+		if (!pmd)
-+			return 0;
- 		paddr_last = phys_pmd_init(pmd, paddr, paddr_end,
- 					   page_size_mask, prot, init);
- 
-+		/*
-+		 * We might have !paddr_last if allocation failed, but we should still
-+		 * update pud before bailing, so that subsequent retries can pick up on
-+		 * progress (here and in phys_pmd_init) without leaking pmd.
-+		 */
- 		spin_lock(&init_mm.page_table_lock);
- 		pud_populate_init(&init_mm, pud, pmd, init);
- 		spin_unlock(&init_mm.page_table_lock);
-+
-+		if (!paddr_last)
-+			return 0;
- 	}
- 
- 	update_page_count(PG_LEVEL_1G, pages);
-@@ -707,16 +726,26 @@ phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
- 			pud = pud_offset(p4d, 0);
- 			paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
- 					page_size_mask, prot, init);
-+			if (!paddr_last)
-+				return 0;
- 			continue;
- 		}
- 
- 		pud = alloc_low_page();
-+		if (!pud)
-+			return 0;
- 		paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
- 					   page_size_mask, prot, init);
- 
- 		spin_lock(&init_mm.page_table_lock);
- 		p4d_populate_init(&init_mm, p4d, pud, init);
- 		spin_unlock(&init_mm.page_table_lock);
-+
-+		/*
-+		 * Bail only after updating p4d to keep progress from pud across retries.
-+		 */
-+		if (!paddr_last)
-+			return 0;
- 	}
- 
- 	return paddr_last;
-@@ -748,10 +777,14 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
- 						   __pa(vaddr_end),
- 						   page_size_mask,
- 						   prot, init);
-+			if (!paddr_last)
-+				return 0;
- 			continue;
- 		}
- 
- 		p4d = alloc_low_page();
-+		if (!p4d)
-+			return 0;
- 		paddr_last = phys_p4d_init(p4d, __pa(vaddr), __pa(vaddr_end),
- 					   page_size_mask, prot, init);
- 
-@@ -763,6 +796,13 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
- 					  (pud_t *) p4d, init);
- 
- 		spin_unlock(&init_mm.page_table_lock);
-+
-+		/*
-+		 * Bail only after updating pgd/p4d to keep progress from p4d across retries.
-+		 */
-+		if (!paddr_last)
-+			return 0;
-+
- 		pgd_changed = true;
- 	}
- 
-@@ -777,7 +817,8 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
-  * Create page table mapping for the physical memory for specific physical
-  * addresses. Note that it can only be used to populate non-present entries.
-  * The virtual and physical addresses have to be aligned on PMD level
-- * down. It returns the last physical address mapped.
-+ * down. It returns the last physical address mapped, or zero if allocation
-+ * failed at any point.
-  */
- unsigned long __meminit
- kernel_physical_mapping_init(unsigned long paddr_start,
-@@ -981,7 +1022,8 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 
--	init_memory_mapping(start, start + size, params->pgprot);
-+	if (!init_memory_mapping(start, start + size, params->pgprot))
-+		return -ENOMEM;
- 
- 	return add_pages(nid, start_pfn, nr_pages, params);
- }
--- 
-2.39.5
+Thanks
+Smita
