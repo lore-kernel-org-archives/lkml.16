@@ -1,103 +1,168 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E13422F770;
-	Wed,  4 Jun 2025 09:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC451E3772;
+	Wed,  4 Jun 2025 09:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749030540; cv=none; b=W3VJV8LNZ5cm80ddFzVcY79sGkFeJGszNyH2d4iCLzU5BbxK0Sap6OUKmx2tq3K2WbCLDeXr4CD/Zyz0IqgKa6cfKfOHkKYd4MA5FahF1mkOfxm1IPSYB50C74tISVa8Z8tgVIsyoA+tZ5wyX02vkLaVBabrWXWnP1hP6WASue8=
+	t=1749030601; cv=none; b=FJEpgikllfavLd8KOxzDAeevYWRIpEtKnbfv0zIPbFuR7XAGjnshlx2zVUEY972XuKLveNRpa1uAGNvgARxmB62LHRWfsRNQ0iJwyYmNPw1n1Hv9u6lL4uP6a5Ooys2Vt+IxUXnJLw0I1Jwg0vzCNjaQU9fpE0Tk5rsW9WUCOT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749030540; c=relaxed/simple;
-	bh=66KZLAI+Sn3EhX8f3kJupOtyRki6+CSXzYdA/EoACIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ah8F8yXUOr0H6Q7jKFP68HEyTdbwWUE9aPlypWsaJB/bQS8Nb896WSM6IAcwLPlIiiQSNL7pOFBIGs1EvTbiYpfWP3/GfYTzyaUfMleAXrBjSz5WHEclLqj9z9NQkF8kQeqqtRbAHVntTMDD7ILM5Ru2uLdajpnMcqYx7j4yYqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XOYNRiYG; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749030601; c=relaxed/simple;
+	bh=Ab424E9k28t4IDBrmxzZpiv39b/KLWE7lhSswN4XFJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UD8lhii3n3PYd85uRkge722gBa94sLe5sH3nXzm/IN3k+QAYwLBPBccbMzCDPZabtQcMRAGqbvHZG1//aSI1c1Cb9V2IwNVPcQz+RlEn9pUe2+oSO+Ino4XckEXVVLCwzWW7/gW6GPs0FwV4AlKeMaP6UMaOUM1Q+y+gOGpvTi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ig2Owuvf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XOYNRiYG"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5549mjQp3778763;
-	Wed, 4 Jun 2025 04:48:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749030525;
-	bh=Bq4EZsLahywFgP1f+8VxyYxdSzxk7zu6x4ss6clsEj8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=XOYNRiYGr17hHOZRZ+Cx1giSNAXcFaNqGIK9Rvk/4iftOBLwP/AQ/sGCjIKoWl226
-	 /OaE/4+l1padrWTmhELfMxVCgwP4xmswve3h7QevT8QiGViy39BXFwL+P3WplQjem0
-	 +CxJsEdWv8JOrmS8A7d/x1JnuC2bScTubCz7bko0=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5549mj2f4179988
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 4 Jun 2025 04:48:45 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 4
- Jun 2025 04:48:45 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 4 Jun 2025 04:48:44 -0500
-Received: from [172.24.227.14] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.14])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5549mfEG1853766;
-	Wed, 4 Jun 2025 04:48:41 -0500
-Message-ID: <0c69137d-93ad-4843-8512-9885b9cba452@ti.com>
-Date: Wed, 4 Jun 2025 15:18:40 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ig2Owuvf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DC7AC4CEE7;
+	Wed,  4 Jun 2025 09:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749030600;
+	bh=Ab424E9k28t4IDBrmxzZpiv39b/KLWE7lhSswN4XFJ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ig2Owuvfk1TYotGhEXFMRgP7tIhEPMEP8zhQituOqKBsNEWNJ3JmRw/dOcKRd8KCC
+	 hmtstscqscz2CND9P4MWh0aysetXK6HmrZBtHwz5DIBwZOBbvtGMYH3+99qcC8sRjx
+	 VG1e/6UqOIlPY0GxyUGp+GlcXkkgLQeUmgY8KUfiHdQrxOcTi/cZ7Z36tT1S8L5Dvi
+	 sSezxPBIpJJAAU6hNRZ9LyxeSzb2qGi9pjx1EwfiZHQ4HI01GOM0uSGaP079DtZTGg
+	 VP7J8jgZ0j40VuAoBH4oG4Qs5+AWJ6JTqrfGxTAVQL7akPvOtM75IZp8pAsvJ/LG2Y
+	 31hajWnW/fwOw==
+Date: Wed, 4 Jun 2025 11:49:54 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, chrisi.schrefl@gmail.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] rust: devres: fix race in Devres::drop()
+Message-ID: <aEAWwnyP4zwwrccX@pollux>
+References: <20250603205416.49281-1-dakr@kernel.org>
+ <20250603205416.49281-4-dakr@kernel.org>
+ <aD-EiRChuScS5TK-@tardis.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] arm64: dts: ti: k3-j721e-main: Make the "scm_conf"
- node a "simple-bus"
-To: Krzysztof Kozlowski <krzk@kernel.org>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devicetree@vger.kernel.org>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <s-vadapalli@ti.com>, <rogerq@kernel.org>,
-        <afd@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250603095609.33569-1-j-choudhary@ti.com>
- <20250603095609.33569-2-j-choudhary@ti.com>
- <15da3051-c35e-4876-9185-9079493dc66c@kernel.org>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <15da3051-c35e-4876-9185-9079493dc66c@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD-EiRChuScS5TK-@tardis.local>
 
-Hello Krzysztof,
-
-On 03/06/25 16:32, Krzysztof Kozlowski wrote:
-> On 03/06/2025 11:56, Jayesh Choudhary wrote:
->> The "scm_conf" bus need not be "syscon". Now that we have "pcie*_ctrl"
->> child nodes for "ti,syscon-pcie-ctrl" property in "pcie" nodes, change
->> "scm_conf" node to "simple-bus".
->> Also remove "reg" property as it is not needed by "simple-bus".
+On Tue, Jun 03, 2025 at 04:26:01PM -0700, Boqun Feng wrote:
+> On Tue, Jun 03, 2025 at 10:48:52PM +0200, Danilo Krummrich wrote:
+> > In Devres::drop() we first remove the devres action and then drop the
+> > wrapped device resource.
+> > 
+> > The design goal is to give the owner of a Devres object control over when
+> > the device resource is dropped, but limit the overall scope to the
+> > corresponding device being bound to a driver.
+> > 
+> > However, there's a race that was introduced with commit 8ff656643d30
+> > ("rust: devres: remove action in `Devres::drop`"), but also has been
+> > (partially) present from the initial version on.
+> > 
+> > In Devres::drop(), the devres action is removed successfully and
+> > subsequently the destructor of the wrapped device resource runs.
+> > However, there is no guarantee that the destructor of the wrapped device
+> > resource completes before the driver core is done unbinding the
+> > corresponding device.
+> > 
+> > If in Devres::drop(), the devres action can't be removed, it means that
+> > the devres callback has been executed already, or is still running
+> > concurrently. In case of the latter, either Devres::drop() wins revoking
+> > the Revocable or the devres callback wins revoking the Revocable. If
+> > Devres::drop() wins, we (again) have no guarantee that the destructor of
+> > the wrapped device resource completes before the driver core is done
+> > unbinding the corresponding device.
+> > 
+> > Depending on the specific device resource, this can potentially lead to
+> > user-after-free bugs.
+> > 
 > 
-> This (possibly) affects all other users of DTS which were expecting this
-> ABI. It's not only about forward-compatibility, but other projects.
+> This all sounds reasonable, one question though: it seems to me the
+> problem exists only for the device resources that expect the device
+> being bounded, so hypothetically if the device resources can be
+> programmed against unbound devices, then the current behavior should be
+> fine?
+
+I don't think that such device resources exist from a semantical point of view.
+
+We always have to guarantee that a driver released the device resources once the
+corresponding device is unbound from the driver.
+
+However, there certainly are differences between how fatal it is if we don't do
+so.
+
+Complementing your example below, if we for instance fail to release a memory
+region in time, a subsequent driver probing the device may fail requesting the
+corresponding region.
+
+> For example, in your case, you want free_irq() to happen before
+> the device becomes unbound, which is of course reasonable, but it sounds
+> more like a design choice (or what device model we want to use), because
+> hypothetically you can program an irq that still works even if the
+> device is unbound, no?
+
+You can, just like for every other registration (e.g. class devices, such as
+misc device), but it's sub-optimal, since then we could not treat the
+registering device of the registration as &Device<Bound>, which allows direct
+access to device resources with Devres::access(). Please see also [1] and [2].
+
+We have two (safe and correct) ways to access device resources, one is the
+runtime checked access through Revocable::try_access() (which implies the RCU
+read-side critical section and atomic check); the other one is the compile-time
+checked access through providing a &Device<Bound> as cookie for directy access
+without runtime overhead.
+
+Wherever possible, we want to enable the latter, which means that registrations
+need to be properly guarded.
+
+[1] https://lore.kernel.org/lkml/20250530142447.166524-6-dakr@kernel.org/
+[2] https://lore.kernel.org/lkml/20250530142447.166524-7-dakr@kernel.org/
+
+> Again this sounds reasonable to me, just want to check my understanding
+> here.
 > 
-> Maybe this doe snot matter for you, so explain that in commit msg and
-> provide rationale why you are affecting other users.
+> Regards,
+> Boqun
 > 
-> 
-
-This should not affect other users of DTS. J784S4 already has this
-change and it serves as a validation that DT nodes are compatible
-with other projects (for example uboot driver handles it).
-Other SoCs are being modified with taking J784S4 as a working reference.
-
-Considering this, do I still need to add something? Or is it okay
-since I am not exactly affecting other projects?
-Should I add something along the lines of "similar to j784s4...."?
-
-
-Warm Regards,
-Jayesh
-
-> 
-> Best regards,
-> Krzysztof
+> > In order to fix this, implement the following logic.
+> > 
+> > In the devres callback, we're always good when we get to revoke the
+> > device resource ourselves, i.e. Revocable::revoke() returns true.
+> > 
+> > If Revocable::revoke() returns false, it means that Devres::drop(),
+> > concurrently, already drops the device resource and we have to wait for
+> > Devres::drop() to signal that it finished dropping the device resource.
+> > 
+> > Note that if we hit the case where we need to wait for the completion of
+> > Devres::drop() in the devres callback, it means that we're actually
+> > racing with a concurrent Devres::drop() call, which already started
+> > revoking the device resource for us. This is rather unlikely and means
+> > that the concurrent Devres::drop() already started doing our work and we
+> > just need to wait for it to complete it for us. Hence, there should not
+> > be any additional overhead from that.
+> > 
+> > (Actually, for now it's even better if Devres::drop() does the work for
+> > us, since it can bypass the synchronize_rcu() call implied by
+> > Revocable::revoke(), but this goes away anyways once I get to implement
+> > the split devres callback approach, which allows us to first flip the
+> > atomics of all registered Devres objects of a certain device, execute a
+> > single synchronize_rcu() and then drop all revocable objects.)
+> > 
+> > In Devres::drop() we try to revoke the device resource. If that is *not*
+> > successful, it means that the devres callback already did and we're good.
+> > 
+> > Otherwise, we try to remove the devres action, which, if successful,
+> > means that we're good, since the device resource has just been revoked
+> > by us *before* we removed the devres action successfully.
+> > 
+> > If the devres action could not be removed, it means that the devres
+> > callback must be running concurrently, hence we signal that the device
+> > resource has been revoked by us, using the completion.
+> > 
+> > This makes it safe to drop a Devres object from any task and at any point
+> > of time, which is one of the design goals.
+> > 
+> [...]
