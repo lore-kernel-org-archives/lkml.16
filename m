@@ -1,126 +1,131 @@
-Received: from h8.fbrelay.privateemail.com (h8.fbrelay.privateemail.com [162.0.218.231])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62142A87;
-	Wed,  4 Jun 2025 13:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88D142A87
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045154; cv=none; b=hL8AoYrAjHit090uLNIgrvEUGh5NJywLe4BDPK/+WiqsbCEeSC00QiX4X8ZRCRaaBNHZrA6olHl9TKPo+AAv+JWJWzGRO/GldPHWpUbkEbgS54BLKxxu/ko6n/fPp/w15QUqm3cacwb4Fq/pZnBBSdzx1q546fezF7cF8sWc/OA=
+	t=1749045359; cv=none; b=PNhi3CvWEPZ6ozJvbo025oi415l9DO63ETXMSESgIfs7n/FzoE+sLplPJ/cXLT8akAXn+E+TaVIBnM+wTgJaEUgHHYzoPvB4XsykCDWx5wJukV4BEU4m2CSqYVo9XwpEkB1Z8EXV7fTrAtPRHRCsXUzNvDblo/WE3Ol9rP6SOtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045154; c=relaxed/simple;
-	bh=J79gwTBZarVe0RuxSdrktqBoJC5jYm4za3pkIZqUA8w=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=F/OsAOukoiq96E0PMTeRYfJ3yhXIvjKzWixgZQKrZ1vr93KXjeiUvsehHYXXFuC9+L6JBc6MVQYACbP70u6FF+2/QGuy+wjOHKFm6lxXD9MWOsVWhuTx/zgaWZYS8B8TH/bJZEQnA268nY+NO7O4DYM0caLYp5wV5mmNrgMOYIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net; spf=pass smtp.mailfrom=mebeim.net; dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b=gAGNm8sf; arc=none smtp.client-ip=162.0.218.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mebeim.net
+	s=arc-20240116; t=1749045359; c=relaxed/simple;
+	bh=KyiPMuosabdU3oCmvSRf372wEEqxqO3Vn4L93cRFGZ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B6TeMHEPFXUt2s1tsciL/C9aSoTjWlkQHe8W+iPTAoHafZK8jedTbywAtztuf8qqOukyCt6VaXGy6UJ2A3Vw1opduQY074a3XQIUoHSoMk9HNbNf6YV1R3zObUbPsRd03YaV0HGNn1dLYujBT3lYDtHijEozKiUnT0b13zHdL0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NQFmVrS2; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b="gAGNm8sf"
-Received: from MTA-07-3.privateemail.com (mta-07.privateemail.com [198.54.127.57])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by h7.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4bC8CW49Fzz2xk0;
-	Wed,  4 Jun 2025 09:52:23 -0400 (EDT)
-Received: from mta-07.privateemail.com (localhost [127.0.0.1])
-	by mta-07.privateemail.com (Postfix) with ESMTP id 4bC8CM4Y08z3hhTq;
-	Wed,  4 Jun 2025 09:52:15 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mebeim.net; s=default;
-	t=1749045135; bh=J79gwTBZarVe0RuxSdrktqBoJC5jYm4za3pkIZqUA8w=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=gAGNm8sfyCZCVI3cvBf7RX5tqhyDmGogOAEXGIrCUSCP5SgSzND30lWdyj1ucoiAI
-	 VYV8MYuA6qUWmAet9oMgPLc3adBB4iQ6xCjHD8xwHIHK+rqlzlPw9yueg4J3mHB8Ut
-	 BFYyTqhQhJgBLTq72/Z1EP6L2Pqb9mV+fzew4SQAFQMf6B5GqJUKNwE+B2qaHNExFY
-	 vkHdwrdkGJCOLR84zy+RUZOecV89LFRsEgbVgUzuaa8SxuiXo1bfrMSCbPncYpxnMn
-	 xree7zyxKjXjX0jETNiYgnyYrLvv8J8M0fK6O3xvFDT418BkT2DUiKzoxYWrC72haZ
-	 sV8T7x+CG7MIA==
-Received: from APP-18 (unknown [10.50.14.242])
-	by mta-07.privateemail.com (Postfix) with ESMTPA;
-	Wed,  4 Jun 2025 09:52:05 -0400 (EDT)
-Date: Wed, 4 Jun 2025 15:52:05 +0200 (CEST)
-From: Marco Bonelli <marco@mebeim.net>
-To: Alexandre Ghiti <alex@ghiti.fr>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "terrelln@fb.com" <terrelln@fb.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Message-ID: <1338988468.1011577.1749045125350@privateemail.com>
-In-Reply-To: <c239ee1b-f201-4e7b-80f8-03a7fb02b666@ghiti.fr>
-References: <960240908.630790.1748641210849@privateemail.com>
- <1552795452.650306.1748692371190@privateemail.com>
- <c239ee1b-f201-4e7b-80f8-03a7fb02b666@ghiti.fr>
-Subject: Re: Broken 32-bit riscv debug build with ZSTD and FTRACE
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NQFmVrS2"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5545LKEP017615;
+	Wed, 4 Jun 2025 13:55:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Sm20ok
+	PBPxXIFoUn+cXS10G2Ahu6SboCq2VjfA4YNnM=; b=NQFmVrS2UU4Crl0bQXJfAW
+	KvY2B1ZibXY+4L44r7YTc57lEV5k49xFMTosdvqqk11exVFyA2kKLKr4cXH4cOrh
+	HWMMkM5V6lzfzeL14ZzUZko64gFWJAzGVtXJ+UZvaxThKyeUtQTmiL6OFx+2d7uJ
+	mLq2PHAsB6dqdXQRzfNG6xybLMXwedsO8b6ych14aFHI5PRF6eiU3z1b9/P+4+uU
+	8nXZ04mANvMH7MQ9myhHAMd4u8b4HnmE9M8JSu320pCAJiay+8ybMiEzvMg2oC84
+	PJ0IMr7cjrb3xZJPaXOMt/WFFHfmJMVeXI/11pAzxroGhvlesAZI5MbDrYesADqQ
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 472fwuje0y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 13:55:50 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 554BjlcZ028472;
+	Wed, 4 Jun 2025 13:55:50 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 470eakfrg3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 13:55:49 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 554DtmRM37880316
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 4 Jun 2025 13:55:48 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C75F2004E;
+	Wed,  4 Jun 2025 13:55:48 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A319820040;
+	Wed,  4 Jun 2025 13:55:44 +0000 (GMT)
+Received: from [9.43.126.91] (unknown [9.43.126.91])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  4 Jun 2025 13:55:44 +0000 (GMT)
+Message-ID: <0d3428c2-6a3c-4d71-bc4d-057ba926852b@linux.ibm.com>
+Date: Wed, 4 Jun 2025 19:25:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.6-Rev75
-X-Originating-Client: open-xchange-appsuite
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] kernel/rcu/tree_stall: add
+ /sys/kernel/rcu_stall_count
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Max Kellermann <max.kellermann@ionos.com>
+Cc: song@kernel.org, joel.granados@kernel.org, dianders@chromium.org,
+        cminyard@mvista.com, linux-kernel@vger.kernel.org
+References: <20250504180831.4190860-1-max.kellermann@ionos.com>
+ <20250504180831.4190860-3-max.kellermann@ionos.com>
+ <47196e67-6533-4015-95db-63a76c1c0c5c@linux.ibm.com>
+ <20250603171628.695542215c05af8727dc57a0@linux-foundation.org>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20250603171628.695542215c05af8727dc57a0@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDEwMyBTYWx0ZWRfXwVRY+XMEo8pn upygPg0w9cqeAs4KBXaHEheaFqX0Gjqum2HsscR8le6NaTWYdToKVN3HF7q7l82zFi7GBV+/am/ PuLqy511JPj7fE6VC4ZtMyOGqmsyd0SImklRcPOMAFeW+ikzEgFImBM+0CnInWhf7JF4ZDVCLBq
+ JlN0vhcMTYt2oPhTOV4Sa0ooKkoW806a6qndZ9nJgprWaa8mPpzO4vcfmu5ES6MsHypla8rtg+c Rc1dRGWY7Y0wwGb/WboiN/sCBiNsGH5lCWN+HYxDq0k19uUo6vhnAc1UJiZMomINSsCQWMsuCti LqLgOcTVSAOH3NETix0uOYuLgQJZ81Mbp0jleIZpEcf0Uviz7jfaymSTNB9qGc0DI4RCNSTK6+4
+ SQ5htfn1oaaQRrG4ENr9g7ElYxOo4BztB5cheM8pEOfC91B2GpJjqU5TpS/YJsGIYSSDkvRj
+X-Proofpoint-GUID: yPZ93pmj0JKHI3hYf75zXuJjL25iIBcu
+X-Proofpoint-ORIG-GUID: yPZ93pmj0JKHI3hYf75zXuJjL25iIBcu
+X-Authority-Analysis: v=2.4 cv=QtVe3Uyd c=1 sm=1 tr=0 ts=68405066 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=UgJECxHJAAAA:8 a=ehPtwOebbPU7iTpy3vsA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=-El7cUbtino8hM1DCn8D:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 adultscore=0 phishscore=0 impostorscore=0 malwarescore=0
+ priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 spamscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506040103
 
-> Can you attach your full config?
 
-Here it is: https://pastebin.com/raw/wL2Q38g0 - uploaded to pastebin to
-avoid clogging everyone's inbox.
 
-> I unfortunately cannot reproduce this issue locally, I tried on both 
-> v6.15 and latest linus master, with gcc 13.1.0 and gcc 14.2.0 . I made 
-> sure that I have FTRACE, ZSTD_COMPRESS and DEBUG_INFO enabled.
+On 04/06/25 05:46, Andrew Morton wrote:
+> On Tue, 3 Jun 2025 22:09:30 +0530 Sourabh Jain <sourabhjain@linux.ibm.com> wrote:
+>
+>> Hello Andrew,
+>>
+>>> +#endif
+>>> +
+>>>    		rcu_stall_notifier_call_chain(RCU_STALL_NOTIFY_NORM, (void *)j - gps);
+>>>    		if (READ_ONCE(csd_lock_suppress_rcu_stall) && csd_lock_is_stuck()) {
+>>>    			pr_err("INFO: %s detected stall, but suppressed full report due to a stuck CSD-lock.\n", rcu_state.name);
+>> It seems like this patch was not applied properly to the upstream tree.
+>>
+>> Out of the three hunks in this patch, only the first one is applied; the
+>> second
+>> and third hunks are missing.
+>>
+>> commit 2536c5c7d6ae5e1d844aa21f28b326b5e7f815ef
+>> Author: Max Kellermann <max.kellermann@ionos.com>
+>> Date:   Sun May 4 20:08:31 2025 +0200
+>>
+>>       kernel/rcu/tree_stall: add /sys/kernel/rcu_stall_count
+>>
+>>       Expose a simple counter to userspace for monitoring tools.
+> OK.  iirc there was quite a lot of churn and conflicts here :)
+>
+> Please send a fixup against latest -linus?
 
-Are you building on a x86-64 host? Maybe something in my build environment
-is relevant (not sure what it could be). I am building on x86-64 Debian 12
-with host GCC 12.2.0, target cross GCC 14.2.0 [1]. 
+Sure, I will wait for a day or two to see if Max is interested in 
+sending the fix-up patch. Otherwise, I will send it.
 
-Here is a minimal Dockerfile that reproduces the issue (docker build should
-fail on the last command when it gets to MODPOST vmlinux.symvers):
-
-	# docker build --progress=plain .
-	FROM debian:12
-
-	ENV DEBIAN_FRONTEND=noninteractive
-	RUN apt-get update && \
-		apt-get install -y \
-			build-essential git make gcc-12 binutils util-linux bc gawk flex \
-			bison dwarves tar wget
-
-	WORKDIR /work
-	RUN git clone --depth 1 --single-branch --branch v6.15 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-	RUN wget 'https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/14.2.0/x86_64-gcc-14.2.0-nolibc-riscv32-linux.tar.xz'
-	RUN tar xf x86_64-gcc-14.2.0-nolibc-riscv32-linux.tar.xz
-
-	WORKDIR /work/linux
-	ENV PATH=/work/gcc-14.2.0-nolibc/riscv32-linux/bin:$PATH
-	ENV CROSS_COMPILE=riscv32-linux-
-	ENV ARCH=riscv
-	RUN make distclean && \
-		make defconfig && \
-		make 32-bit.config && \
-		./scripts/config \
-			-e DEBUG_KERNEL \
-			-e DEBUG_INFO \
-			-e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
-			-d DEBUG_INFO_NONE \
-			-d DEBUG_INFO_REDUCED \
-			-e FTRACE && \
-		make olddefconfig
-
-	RUN make -j19 vmlinux
-
-Hope this helps. Let me know if you need any additional info or test.
-
-[1]: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/14.2.0/x86_64-gcc-14.2.0-nolibc-riscv32-linux.tar.xz
-
---
-Marco Bonelli
+Thanks,
+Sourabh Jain
