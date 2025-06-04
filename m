@@ -1,72 +1,25 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E2218E1F
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B15C18E1F
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749052886; cv=none; b=NsQ8Dd9DXU1svMgSDAs9t3NeR05VCJQCYyeIYhpUrRFxmtOA+zPNYTp2LKSyfyKT91bw0j5o/wLpH7cfeA56TRmKSgcvWsazVxC1qifiytQqDVG9F3H2nYEZrVyw52MIN7zQep3xZGplONFKVNfNZHR/z1szX8obU3pjo2kiPzo=
+	t=1749052965; cv=none; b=gN7jrBIE0GOvUjWRShbFIxWXyEhbwB6/YLSqylTkqrNHe/f/m3dLlfaw34y2CwMF3AeVDQ6Y16gLwC2ruUUrp8QaIUOMuJSYWO2swzPuvY8zSJ/1rp6pWKwtVA5weu8K+X8bkGVprSUPY2ZFqLlNmvDBUtOAX8z/btfcLsuy+GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749052886; c=relaxed/simple;
-	bh=So/HGqU97KJHHqPHYEMnLPE/RFB+cOZGCVzLOuORFyw=;
+	s=arc-20240116; t=1749052965; c=relaxed/simple;
+	bh=qZ5EHjmyeg2ocp1XLPS7/1rjthqw9EnH529CqoWDidU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GbQVQbKSVfjsAj9MWKZfyzlHBtAyRvossGVYMY1NM8GTf4J/2y0H6vbWWNQwf0nyPSzBceqMD66y89FedLgXXFlhztQogfu0nBmrHmF6/UhEROh/735U8Eg4j8o9p363PK3svbZRvT7uib7CchtXL6jNPtoEZogAe3qtm6NEN4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bd5XYboK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bd5XYboK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749052883;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=B56ZzCeADf+QuixmHfBf4Zix4sjQka+6qDzfyc/+jrI=;
-	b=Bd5XYboKulMZ9HFin3ch+5PjpON6GoXcdyJyyX47RZq82g3di8n9H+a/bxUQ647ikUbxtB
-	+6BXqK5uoQEyx/JtsH1G4I5rvlv5pLFAoXuhPmzfYF+58pXH8dfhImUGzkX+ZaUJPN0T+u
-	diZmJjUvH15h3w79JzQ+Cb2N+vodlDo=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-68-yjjlgPRZOYaJT0ji_z_hFg-1; Wed, 04 Jun 2025 12:01:21 -0400
-X-MC-Unique: yjjlgPRZOYaJT0ji_z_hFg-1
-X-Mimecast-MFC-AGG-ID: yjjlgPRZOYaJT0ji_z_hFg_1749052881
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f55ea44dso3101324f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:01:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749052881; x=1749657681;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=B56ZzCeADf+QuixmHfBf4Zix4sjQka+6qDzfyc/+jrI=;
-        b=Q0bA6sWTaUqjILjaBzNuI4E0mYHgHiSayiNEVQesBn1uVl7A2bCDONy1s6NjhHJ/qY
-         yEh7998Ab2uF5UGTBDkfLUJeUvPtoL5ZsH22DWfu/yB/pbZQ58LSFfKPZZzVMkmyZDwH
-         032qIgCbK7pYUG+baKKRfasrKd2M3K1Ev0d9Wojy1oZpOCjX27wuZRqxLlxNJHXjaGre
-         Ff7ucRxS2S/RuhoYOYpaAteqXqHVIpwzAbMXtgN4W8XgaRT4255Aa2hoPv43+w/Up16j
-         6oYyILuOoq6QfDOQpoESPX8r5BJHBnPLNOWQRXb4JI2Mo//7upWeIzBaka7ZcBQygkrl
-         +l9A==
-X-Gm-Message-State: AOJu0YzPoavUwEHNGGCUh48+HI4es4xT1q5zzuRDEem6nuM/yoycJFEk
-	fiP2UPYTp61a0bitfz3puL7w+GFIwMPNVnc4HmGiphYSn+3druLuLMkB0PUMquxeIvCU9xBvEVr
-	b8MeHF0hChCDaGu4KUNYO/j8BgtLaNHz52sTvlOSaEEvG1BzgFWGkc5pgHPvVWv3irA==
-X-Gm-Gg: ASbGncv0u441JAcPzr/XRgaF4GaoEGJSxCWhE0NxQ+TcvimcHORo814awr+5QC9qAHd
-	PR8+pOcoUQLknTyirQB2sAccX5B6uKC9vsIJ+KJFn1Dinf7XlTd9wD1WQW72uMuOhbTzQCnqd3e
-	rds3SU7TsswNxNexyqCxqnR0CLfPcyvztPKfSc58AuxWNrpeVEKTZ3mka9S5xoe9i8puyBjpAkj
-	Zj7sb6t6yF9VF7FdzhuRT47tG2/Ibp8yGmy/mv8uC/zYkLA3aQ5nk86R82tM0ScOKgpdm7iK96m
-	MTWslthcejEX4EAsk7ALzW8q0VVnCgCR+V6V0ekxjt+nxy3J8ZpDk3MfAwGuBw1Zm7WSi9qK7wg
-	7ZC1ZL1bvOTKB9zDpGjBFCh3TG4Ede1ooVdxLUQ==
-X-Received: by 2002:a05:6000:3105:b0:3a4:d4e5:498a with SMTP id ffacd0b85a97d-3a51d9744d4mr3009231f8f.42.1749052880628;
-        Wed, 04 Jun 2025 09:01:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFNcOM5E1TMCd9aCuR/EMdBHoJZu1zLwHEDg1xmViWYAlHFlrGCO/djEJ0bT20tVETFzcuA6g==
-X-Received: by 2002:a05:6000:3105:b0:3a4:d4e5:498a with SMTP id ffacd0b85a97d-3a51d9744d4mr3009114f8f.42.1749052879574;
-        Wed, 04 Jun 2025 09:01:19 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf? (p200300d82f1bb8006fdb1af24fbd1fdf.dip0.t-ipconnect.de. [2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f0097210sm22068168f8f.73.2025.06.04.09.01.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 09:01:19 -0700 (PDT)
-Message-ID: <ef0a22a9-facf-4b3a-ab44-64fb1b06aba0@redhat.com>
-Date: Wed, 4 Jun 2025 18:01:18 +0200
+	 In-Reply-To:Content-Type; b=Uq8sle432mZwqrrth0FE1vqpDCoLygmB8qm3TVa6gvER2Lbs6Hbo7PjzKuDav9egEuucKTNqVvwwihCFIkIPmLW09FhekeX7fz/xE8d+5R8vpZAKv+Or/zU6bSoaIb3cmgEL4nazArCf7YS6JbKknv/8g4Ulkp7JrgElD39xSVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E52251758;
+	Wed,  4 Jun 2025 09:02:25 -0700 (PDT)
+Received: from [10.1.27.175] (XHFQ2J9959.cambridge.arm.com [10.1.27.175])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5CF73F5A1;
+	Wed,  4 Jun 2025 09:02:40 -0700 (PDT)
+Message-ID: <99a0a2c8-d98e-4c81-9207-c55c72c00872@arm.com>
+Date: Wed, 4 Jun 2025 17:02:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,94 +27,312 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>
-References: <20250604140544.688711-1-david@redhat.com>
- <20250604151432.GC17991@ziepe.ca>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250604151432.GC17991@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v6] arm64/mm: Optimize loop to reduce redundant operations
+ of contpte_ptep_get
+Content-Language: en-GB
+To: Xavier Xia <xavier_qy@163.com>, 21cnbao@gmail.com, dev.jain@arm.com,
+ ioworker0@gmail.com
+Cc: akpm@linux-foundation.org, catalin.marinas@arm.com, david@redhat.com,
+ gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, will@kernel.org, willy@infradead.org,
+ ziy@nvidia.com, Barry Song <baohua@kernel.org>
+References: <20250510125948.2383778-1-xavier_qy@163.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250510125948.2383778-1-xavier_qy@163.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04.06.25 17:14, Jason Gunthorpe wrote:
-> On Wed, Jun 04, 2025 at 04:05:44PM +0200, David Hildenbrand wrote:
->> Especially once we hit one of the assertions in
->> sanity_check_pinned_pages(), observing follow-up assertions failing
->> in other code can give good clues about what went wrong, so use
->> VM_WARN_ON_ONCE instead.
->>
->> While at it, let's just convert all VM_BUG_ON to VM_WARN_ON_ONCE as
->> well. Add one comment for the pfn_valid() check.
->>
->> We have to introduce VM_WARN_ON_ONCE_VMA() to make that fly.
+On 10/05/2025 13:59, Xavier Xia wrote:
+> This commit optimizes the contpte_ptep_get and contpte_ptep_get_lockless
+> function by adding early termination logic. It checks if the dirty and
+> young bits of orig_pte are already set and skips redundant bit-setting
+> operations during the loop. This reduces unnecessary iterations and
+> improves performance.
 > 
-> I'm fine with this, but IMHO, using ON_ONCE is wasteful here.
+> In order to verify the optimization performance, a test function has been
+> designed. The function's execution time and instruction statistics have
+> been traced using perf, and the following are the operation results on a
+> certain Qualcomm mobile phone chip:
 > 
-> They have been BUG_ONs for ages, they really do never happen. If there
-> was ever a case to justify not using ON_ONCE this is it..
+> Test Code:
 
-Well, history told us that if one of them happens, we get a whole flood.
+nit: It would have been good to include the source for the whole program,
+including #includes and the main() function to make it quicker for others to get
+up and running.
 
-... which is usually not particularly helpful when trying to extract 
-information from a syslog :)
+> 
+> 	#define PAGE_SIZE 4096
+> 	#define CONT_PTES 16
+> 	#define TEST_SIZE (4096* CONT_PTES * PAGE_SIZE)
+> 	#define YOUNG_BIT 8
+> 	void rwdata(char *buf)
+> 	{
+> 		for (size_t i = 0; i < TEST_SIZE; i += PAGE_SIZE) {
+> 			buf[i] = 'a';
+> 			volatile char c = buf[i];
+> 		}
+> 	}
+> 	void clear_young_dirty(char *buf)
+> 	{
+> 		if (madvise(buf, TEST_SIZE, MADV_FREE) == -1) {
+> 			perror("madvise free failed");
+> 			free(buf);
+> 			exit(EXIT_FAILURE);
+> 		}
+> 		if (madvise(buf, TEST_SIZE, MADV_COLD) == -1) {
+> 			perror("madvise free failed");
+> 			free(buf);
+> 			exit(EXIT_FAILURE);
+> 		}
 
-DEBUG_VM is already "wasteful" ... ;)
+nit: MADV_FREE clears both young and dirty so I don't think MADV_COLD is
+required? (MADV_COLD only clears young I think?)
 
--- 
-Cheers,
+> 	}
+> 	void set_one_young(char *buf)
+> 	{
+> 		for (size_t i = 0; i < TEST_SIZE; i += CONT_PTES * PAGE_SIZE) {
+> 			volatile char c = buf[i + YOUNG_BIT * PAGE_SIZE];
+> 		}
+> 	}
+> 
+> 	void test_contpte_perf() {
+> 		char *buf;
+> 		int ret = posix_memalign((void **)&buf, CONT_PTES * PAGE_SIZE,
+> 				TEST_SIZE);
+> 		if ((ret != 0) || ((unsigned long)buf % CONT_PTES * PAGE_SIZE)) {
+> 			perror("posix_memalign failed");
+> 			exit(EXIT_FAILURE);
+> 		}
+> 
+> 		rwdata(buf);
+> 	#if TEST_CASE2 || TEST_CASE3
+> 		clear_young_dirty(buf);
+> 	#endif
+> 	#if TEST_CASE2
+> 		set_one_young(buf);
+> 	#endif
+> 
+> 		for (int j = 0; j < 500; j++) {
+> 			mlock(buf, TEST_SIZE);
+> 
+> 			munlock(buf, TEST_SIZE);
+> 		}
+> 		free(buf);
+> 	}
+> 
+> 	Descriptions of three test scenarios
+> 
+> Scenario 1
+> 	The data of all 16 PTEs are both dirty and young.
+> 	#define TEST_CASE2 0
+> 	#define TEST_CASE3 0
+> 
+> Scenario 2
+> 	Among the 16 PTEs, only the 8th one is young, and there are no dirty ones.
+> 	#define TEST_CASE2 1
+> 	#define TEST_CASE3 0
+> 
+> Scenario 3
+> 	Among the 16 PTEs, there are neither young nor dirty ones.
+> 	#define TEST_CASE2 0
+> 	#define TEST_CASE3 1
+> 
+> Test results
+> 
+> |Scenario 1         |       Original|       Optimized|
+> |-------------------|---------------|----------------|
+> |instructions       |    37912436160|     18731580031|
+> |test time          |         4.2797|          2.2949|
+> |overhead of        |               |                |
+> |contpte_ptep_get() |         21.31%|           4.80%|
+> 
+> |Scenario 2         |       Original|       Optimized|
+> |-------------------|---------------|----------------|
+> |instructions       |    36701270862|     36115790086|
+> |test time          |         3.2335|          3.0874|
+> |Overhead of        |               |                |
+> |contpte_ptep_get() |         32.26%|          33.57%|
+> 
+> |Scenario 3         |       Original|       Optimized|
+> |-------------------|---------------|----------------|
+> |instructions       |    36706279735|     36750881878|
+> |test time          |         3.2008|          3.1249|
+> |Overhead of        |               |                |
+> |contpte_ptep_get() |         31.94%|          34.59%|
+> 
+> For Scenario 1, optimized code can achieve an instruction benefit of 50.59%
+> and a time benefit of 46.38%.
+> For Scenario 2, optimized code can achieve an instruction count benefit of
+> 1.6% and a time benefit of 4.5%.
+> For Scenario 3, since all the PTEs have neither the young nor the dirty
+> flag, the branches taken by optimized code should be the same as those of
+> the original code. In fact, the test results of optimized code seem to be
+> closer to those of the original code.
 
-David / dhildenb
+I re-ran these tests on Apple M2 with 4K base pages + 64K mTHP.
+
+Scenario 1: reduced to 56% of baseline execution time
+Scenario 2: reduced to 89% of baseline execution time
+Scenario 3: reduced to 91% of baseline execution time
+
+I'm pretty amazed that scenario 3 got faster given it is doing the same number
+of loops.
+
+> 
+> It can be proven through test function that the optimization for
+> contpte_ptep_get is effective. Since the logic of contpte_ptep_get_lockless
+> is similar to that of contpte_ptep_get, the same optimization scheme is
+> also adopted for it.
+> 
+> Reviewed-by: Barry Song <baohua@kernel.org>
+> Signed-off-by: Xavier Xia <xavier_qy@163.com>
+
+I don't love the extra complexity, but this version is much tidier. While the
+micro-benchmark is clearly contrived, it shows that there will be cases where it
+will be faster and there are no cases where it is slower. This will probably be
+more valuable for 16K kernels because the number of PTEs in a contpte block is
+128 there:
+
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+Tested-by: Ryan Roberts <ryan.roberts@arm.com>
+
+> ---
+> Changes in v6:
+> - Move prot = pte_pgprot(pte_mkold(pte_mkclean(pte))) into the contpte_is_consistent(),
+>   as suggested by Barry.
+> - Link to v5: https://lore.kernel.org/all/20250509122728.2379466-1-xavier_qy@163.com/
+> 
+> Changes in v5:
+> - Replace macro CHECK_CONTPTE_CONSISTENCY with inline function contpte_is_consistent
+>   for improved readability and clarity, as suggested by Barry.
+> - Link to v4: https://lore.kernel.org/all/20250508070353.2370826-1-xavier_qy@163.com/
+> 
+> Changes in v4:
+> - Convert macro CHECK_CONTPTE_FLAG to an internal loop for better readability.
+> - Refactor contpte_ptep_get_lockless using the same optimization logic, as suggested by Ryan.
+> - Link to v3: https://lore.kernel.org/all/3d338f91.8c71.1965cd8b1b8.Coremail.xavier_qy@163.com/
+> ---
+>  arch/arm64/mm/contpte.c | 74 +++++++++++++++++++++++++++++++++++------
+>  1 file changed, 64 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+> index bcac4f55f9c1..71efe7dff0ad 100644
+> --- a/arch/arm64/mm/contpte.c
+> +++ b/arch/arm64/mm/contpte.c
+> @@ -169,17 +169,46 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+>  	for (i = 0; i < CONT_PTES; i++, ptep++) {
+>  		pte = __ptep_get(ptep);
+>  
+> -		if (pte_dirty(pte))
+> +		if (pte_dirty(pte)) {
+>  			orig_pte = pte_mkdirty(orig_pte);
+> -
+> -		if (pte_young(pte))
+> +			for (; i < CONT_PTES; i++, ptep++) {
+> +				pte = __ptep_get(ptep);
+> +				if (pte_young(pte)) {
+> +					orig_pte = pte_mkyoung(orig_pte);
+> +					break;
+> +				}
+> +			}
+> +			break;
+> +		}
+> +
+> +		if (pte_young(pte)) {
+>  			orig_pte = pte_mkyoung(orig_pte);
+> +			i++;
+> +			ptep++;
+> +			for (; i < CONT_PTES; i++, ptep++) {
+> +				pte = __ptep_get(ptep);
+> +				if (pte_dirty(pte)) {
+> +					orig_pte = pte_mkdirty(orig_pte);
+> +					break;
+> +				}
+> +			}
+> +			break;
+> +		}
+>  	}
+>  
+>  	return orig_pte;
+>  }
+>  EXPORT_SYMBOL_GPL(contpte_ptep_get);
+>  
+> +static inline bool contpte_is_consistent(pte_t pte, unsigned long pfn,
+> +					pgprot_t orig_prot)
+> +{
+> +	pgprot_t prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
+> +
+> +	return pte_valid_cont(pte) && pte_pfn(pte) == pfn &&
+> +			pgprot_val(prot) == pgprot_val(orig_prot);
+> +}
+> +
+>  pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
+>  {
+>  	/*
+> @@ -202,7 +231,6 @@ pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
+>  	pgprot_t orig_prot;
+>  	unsigned long pfn;
+>  	pte_t orig_pte;
+> -	pgprot_t prot;
+>  	pte_t *ptep;
+>  	pte_t pte;
+>  	int i;
+> @@ -219,18 +247,44 @@ pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
+>  
+>  	for (i = 0; i < CONT_PTES; i++, ptep++, pfn++) {
+>  		pte = __ptep_get(ptep);
+> -		prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
+>  
+> -		if (!pte_valid_cont(pte) ||
+> -		   pte_pfn(pte) != pfn ||
+> -		   pgprot_val(prot) != pgprot_val(orig_prot))
+> +		if (!contpte_is_consistent(pte, pfn, orig_prot))
+>  			goto retry;
+>  
+> -		if (pte_dirty(pte))
+> +		if (pte_dirty(pte)) {
+>  			orig_pte = pte_mkdirty(orig_pte);
+> +			for (; i < CONT_PTES; i++, ptep++, pfn++) {
+> +				pte = __ptep_get(ptep);
+> +
+> +				if (!contpte_is_consistent(pte, pfn, orig_prot))
+> +					goto retry;
+> +
+> +				if (pte_young(pte)) {
+> +					orig_pte = pte_mkyoung(orig_pte);
+> +					break;
+> +				}
+> +			}
+> +			break;
+
+I considered for a while whether it is safe for contpte_ptep_get_lockless() to
+exit early having not seen every PTE in the contpte block and confirmed that
+they are all consistent. I eventually concluded that it is, as long as all the
+PTEs that it does check are consistent I believe this is fine.
+
+> +		}
+>  
+> -		if (pte_young(pte))
+> +		if (pte_young(pte)) {
+>  			orig_pte = pte_mkyoung(orig_pte);
+> +			i++;
+> +			ptep++;
+> +			pfn++;
+> +			for (; i < CONT_PTES; i++, ptep++, pfn++) {
+> +				pte = __ptep_get(ptep);
+> +
+> +				if (!contpte_is_consistent(pte, pfn, orig_prot))
+> +					goto retry;
+> +
+> +				if (pte_dirty(pte)) {
+> +					orig_pte = pte_mkdirty(orig_pte);
+> +					break;
+> +				}
+> +			}
+> +			break;
+> +		}
+>  	}
+>  
+>  	return orig_pte;
 
