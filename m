@@ -1,138 +1,71 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9448B25A651;
-	Wed,  4 Jun 2025 22:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D33267F43
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749077984; cv=none; b=GHHLve3J6lA975v/SiiGcdjc5cSNu9WI615XPET45mHOhjYT0GvjQtJYrBIROE5gw1UF6+P8BgEeFMzuY9rgxX9p+/tfZy1rP2ch4VPw+rT713wpckTtdxJ3jF5vBxYC6UzwEAf0pD3fAFI5f4L3V0CnHHscq3q8Z+Z1NAT3vAA=
+	t=1749078093; cv=none; b=kzgV/ncR1f+T6iznKrLDdwZcCqGwcBm2T3Zt4+/J5O4d+kQde5qHb4Jm8YnoUQ1M9SJUdiAc4AoThcxNnhD55ccd/VS7WcgwuPpHP6ntgkVveHbAn9BGQd2XxSZ4E8RkaGHHjWztJ6nOeyBtsfE1PwraGJhvZFfZ3sYNLEFDFS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749077984; c=relaxed/simple;
-	bh=Fi6jyJ6Ugl0+mxnU6rh6U2MsmoS9F+6Y4PhqGitYmY0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KKeu7Zg8Gs/JiAJfd6u95RQJiNl6qHcL8hkLdo5DC++7G8Oe2AE35kFjp8Gx4CgBjZzicH+w8AOGts5SGYDauwG18OLpTyfhizYR3l2YFBrfLc/8W8hND3jEUKT6h465X+SoqPCRPricx+70kUYtlayQz94EjXQsqlXetqnLfv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bCNLq3xWfz9sqc;
-	Thu,  5 Jun 2025 00:59:31 +0200 (CEST)
-From: Lukas Timmermann <linux@timmermann.space>
-To: lee@kernel.org,
-	pavel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@timmermann.space
-Subject: [PATCH v3 2/2] dt-bindings: leds: Add new as3668 support
-Date: Thu,  5 Jun 2025 00:58:38 +0200
-Message-ID: <20250604225838.102910-3-linux@timmermann.space>
-In-Reply-To: <20250604225838.102910-1-linux@timmermann.space>
-References: <20250604225838.102910-1-linux@timmermann.space>
+	s=arc-20240116; t=1749078093; c=relaxed/simple;
+	bh=+fSMmduX2kJsgH1ngkDSXnk2QMMNes2I6KBi7bEtLjA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=W+Y/pR7yRV46KgSuyW8QSiIEEBKsX1MMaUJbJWNEZm1EtH7Jbatq0rvbzicH+TkTkIJVgrOankKto2DC6sJ1TKyUEI1cuYdafdIRLw8KEb4+Godcx2/EgcjMl5d+RRx/Q8maD5ph4SJiApynCzZhrZxp1g3WKeMcpMcmwILo0WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WaQ6qvmH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WaQ6qvmH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C89C4CEE4;
+	Wed,  4 Jun 2025 23:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749078092;
+	bh=+fSMmduX2kJsgH1ngkDSXnk2QMMNes2I6KBi7bEtLjA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WaQ6qvmH5ojYoIvtWNLC9bJK1w5sdN9M62gfDUTHx9/galg3N9ycakJCbhxd6SwLC
+	 6YbYOyfk3ck3hkJ3RYcg0tQc4ngUc4aWtajlj4IhItRSjvkDV7tpXvSQYsNsuRhzxh
+	 Gk0f6eeMqjpZXeG1a83qy7ytfPIRxm11nhMz5ZBg=
+Date: Wed, 4 Jun 2025 16:01:31 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw, Yu-Chun Lin
+ <eleanor15x@gmail.com>
+Subject: Re: [PATCH v2 1/3] lib/math/gcd: Use static key to select
+ implementation at runtime
+Message-Id: <20250604160131.d00e8a3a2230a00f3818a3a1@linux-foundation.org>
+In-Reply-To: <20250524155519.1142570-2-visitorckw@gmail.com>
+References: <20250524155519.1142570-1-visitorckw@gmail.com>
+	<20250524155519.1142570-2-visitorckw@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Document Osram as3668 LED driver devicetree bindings.
+On Sat, 24 May 2025 23:55:17 +0800 Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
 
-Signed-off-by: Lukas Timmermann <linux@timmermann.space>
----
- .../devicetree/bindings/leds/leds-as3668.yaml | 76 +++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-as3668.yaml
+> On platforms like RISC-V, the compiler may generate hardware FFS
+> instructions even if the underlying CPU does not actually support them.
+> Currently, the GCD implementation is chosen at compile time based on
+> CONFIG_CPU_NO_EFFICIENT_FFS, which can result in suboptimal behavior on
+> such systems.
+> 
+> Introduce a static key, efficient_ffs_key, to enable runtime selection
+> between the binary GCD (using ffs) and the odd-even GCD implementation.
+> This allows the kernel to default to the faster binary GCD when FFS is
+> efficient, while retaining the ability to fall back when needed.
+> 
+> ...
+>
+> @@ -54,6 +58,11 @@ unsigned long gcd(unsigned long a, unsigned long b)
+>  	if (!a || !b)
+>  		return r;
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-as3668.yaml b/Documentation/devicetree/bindings/leds/leds-as3668.yaml
-new file mode 100644
-index 000000000000..a9d698eb87d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-as3668.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-as3668.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Osram 4-channel i2c LED driver.
-+
-+maintainers:
-+  - Lukas Timmermann <linux@timmermann.space>
-+
-+description: |
-+  This IC can drive up to four separate LEDs.
-+  Having four channels suggests it could be used with a single RGBW LED.
-+
-+properties:
-+  compatible:
-+    const: ams,as3668
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+      I2C slave address
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^led@[0-3]$":
-+    type: object
-+    $ref: common.yaml#
-+    unevaluatedProperties: false
-+
-+    properties:
-+      reg:
-+        maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      led-controller@42 {
-+        compatible = "ams,as3668";
-+        reg = <0x42>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        led@0 {
-+          reg = <0x0>;
-+          function = LED_FUNCTION_STATUS;
-+          color = <LED_COLOR_ID_RED>;
-+        };
-+
-+        led@1 {
-+          reg = <0x1>;
-+          function = LED_FUNCTION_STATUS;
-+          color = <LED_COLOR_ID_GREEN>;
-+        };
-+      };
-+    };
-+
--- 
-2.49.0
+Both binary_gcd() and gcd() perform the above.  Seems unnecessary?
 
+
+I can merge this series if the riscv team are OK with it?
