@@ -1,351 +1,229 @@
-Received: from azure-sdnproxy.icoremail.net (l-sdnproxy.icoremail.net [20.188.111.126])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1177479F2;
-	Wed,  4 Jun 2025 08:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.188.111.126
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027209; cv=none; b=E9RDz+TnVn0ExOZvFrkG5ECRNg3VxkaDV4i59XMveoVyTDSbchIIbQJ8VH3hiEiEQBEM6HiYxd/EUU9bqBBkdADLkt/S7omzjbnQ8/KHZ4QgCLjInCx5G+lSXFenDo4JMI0RVzygfBhFnWbLi/Mztbh+3BUcHSmt/ufQOB845Hc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027209; c=relaxed/simple;
-	bh=0raP6kQ+xdKD/BKhewzzU6dHTKE5TG1RBJh6rBA9LCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QZ79XT9D7od1ZORL96NuQaFn1KkAumw93WVcrgYFx4uk1/IuNZXzxNHy2UtbofphZMh+/YpXdPPl3Ca0kJ1RQpAz251Th24r65KAjfUiv3FJ7TtRXtanA903TpBBMD0DF+XQpsAkNRUaUWw5n02m3JrSYQgF2nIAf+/KfudeQ4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=20.188.111.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
-	by app2 (Coremail) with SMTP id TQJkCgAnuZJ+CUBo7WKaAA--.10072S2;
-	Wed, 04 Jun 2025 16:53:20 +0800 (CST)
-From: dongxuyang@eswincomputing.com
-To: p.zabel@pengutronix.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	Xuyang Dong <dongxuyang@eswincomputing.com>
-Subject: [PATCH v2 2/2] reset: eswin: Add eic7700 reset driver
-Date: Wed,  4 Jun 2025 16:53:16 +0800
-Message-Id: <20250604085316.2211-1-dongxuyang@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
-References: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBA02820C1
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749027264; cv=fail; b=bPYF5cKwKwu7o+h+RX3aeFxYkh3Dd5h9kXf31MTlnot0c0QXHHYWHFIf6foLrPPdNVSNeUiO/Qa8Aa1B6m0/WsIIvWIwHAcil6SD6MKl+ehuZdww3OMJbLUBQa+FziEMkjsc1+rCWEM3LsExAGmXwvRxxZunuWpr/9mlRI/J6Nc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749027264; c=relaxed/simple;
+	bh=IJSqb40CQZL3G16ghcbEFs/H1ypnpl6+RS/uQ9TWDD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=uULy3stfzzPYhMbmCGYZumQoNS/prJkvTAFga5weqQlS/O3B8RyjeHJuvvt2vAhrzaZKOKK4E7iQcm6dgDlvAGEaZb9FwrvBy0lPLqADM/zypN5y58Q450x2YuEjLeKUeKAzNkASMFSEltJRf7Rs1+t1tRBmv1O0dxKrZS0/weU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kEPeIGhl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=zkWf2984; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kEPeIGhl";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="zkWf2984"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5548fwjD016659;
+	Wed, 4 Jun 2025 08:53:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=JpwTMK41ExUu0DXFUA
+	j62JWphPtJlQ/4Kqbt8+OLBD8=; b=kEPeIGhl3P2EDYnSm/Pb/v37CAvrmmxLqL
+	aP8NcbTu1KZH3o8v+P7yzYRvYWEE3mcnjCLoQk9peRcm+bXZOyGReWkXRlqs9Fu4
+	YUo7jq3oMe6rBgJsJqP0fhQhSVZZO/Di1X0XADPw3ODY6SfO6SZ+rKoazjYLZvG6
+	xw+dShSJV9iBuy5H+TBQo9+Ey6utTPEph9Vx+2kPQuc+qnoq2Z4+VQNk1OCC8OYH
+	QKgzixoRC44MsxmNgNyVH0U9/V2moIUbmtV70mSX6cY1csp15DThIFY8Kdu0ATks
+	BwLelPI6CaNWL8lQZe5y4+Esa66wtIS8pWTPZYpFqqpqRpote9wg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471g8bkgbe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 04 Jun 2025 08:53:57 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5547GSpP016388;
+	Wed, 4 Jun 2025 08:53:57 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02on2070.outbound.protection.outlook.com [40.107.212.70])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7agh8r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 04 Jun 2025 08:53:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=b1NaSRaW5qsjpQEIt78+Rq+5RYAz+en0t7T8jeF9nzlfKWbADq29sAZVU9qBXY1vi4Namha1P+eatTYpA7cVFUDBVHAnLGL2GGoU2K7d2zBZiZ2MPELERwRJiGgwijDIM/QBLLr2pTnySDXqViW/ojtorbn5zEGj2kSYGH3rMSf5t1jWJsjiimdgBICONYWnsb3SeKK4d8LACBP8UYyg8psLVOPc6uQNHVrvzyuGEAPiNPxhkio/O68g48RpJJqNBeGVmEstWW9m7CEvtHEtLnqx87/TRj5WVEjzixFGCcmFsXo5BImOJApjug3NJ0Y04QXCeeTmptUPDZ6glwEegg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JpwTMK41ExUu0DXFUAj62JWphPtJlQ/4Kqbt8+OLBD8=;
+ b=IwBHbaNgDt/j/3JStZcA2Ggb6m9slslf+1RdHgujUjVRlHCN0xoKpN98RXenqV80gFucR6T48aBS5G7dBQDhZErya0nNfcZxkzhAsDwoBkK1mjLWh3KOzq9k+mWQoLxYdj1mqrGNOyiCW5jKoLnhMnsyDtP+XSYYAkzdluNVBxnUNTROAqNB7QPnPFKN8zr69PdvWxI49xgVRMQA6rQWyGY8Or42uL76wwotx4oFW+QAaEetTZYdMrV3nOceVKAN9ORQ2ZBg1qbesgQPCa5kfGoIVBjeG6Qppxi6ol6AFgwrpBKqy6wUf2jmTlNG4o/1/v6ofyKTtD49pIVGYsuukw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JpwTMK41ExUu0DXFUAj62JWphPtJlQ/4Kqbt8+OLBD8=;
+ b=zkWf2984MPGyBk4EOvXXKY2HveNdVh1sLAddB0dtimjXMSMReRbH8v801WsRz280hooqRw0/1rM1h5BDiNL4AA0NhrztL1IyNoR0skMaWun1nau6KIUsS4O5u/7dcvGwyt6YTAmxr9+tOsBv35vCgaZlYQvQWbRr/6RHyfbsoHM=
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
+ by PH0PR10MB4662.namprd10.prod.outlook.com (2603:10b6:510:38::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.33; Wed, 4 Jun
+ 2025 08:53:54 +0000
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::f238:6143:104c:da23]) by CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::f238:6143:104c:da23%4]) with mapi id 15.20.8746.035; Wed, 4 Jun 2025
+ 08:53:54 +0000
+Date: Wed, 4 Jun 2025 17:53:41 +0900
+From: Harry Yoo <harry.yoo@oracle.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] mm, slab: restore NUMA policy support for large
+ kmalloc
+Message-ID: <aEAJlbJ9FP3e0DEh@hyeyoo>
+References: <20250602-frozen-pages-for-large-kmalloc-v2-0-84a21f2c3640@suse.cz>
+ <20250602-frozen-pages-for-large-kmalloc-v2-1-84a21f2c3640@suse.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602-frozen-pages-for-large-kmalloc-v2-1-84a21f2c3640@suse.cz>
+X-ClientProxiedBy: SEWP216CA0048.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:2bd::17) To CH3PR10MB7329.namprd10.prod.outlook.com
+ (2603:10b6:610:12c::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgAnuZJ+CUBo7WKaAA--.10072S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XFW7Kry5GrW7Gry3CFy8Xwb_yoWfArW5pF
-	WrGFW3Jr4UJr4fWw4xJryv9F4ag3Z3KFyUGrZrKw4Iyw13ta4UJF48tFyrtFyDCryDXFy5
-	KF12gayruFnxtF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
-	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHCJQUUUUU=
-X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|PH0PR10MB4662:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b0ff0ef-aacc-4962-7f1f-08dda3455576
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ozKyLBe3PiNsa37XQS9jiG80yoNnWmphQhvOF6aKDSvk/g2SEz6d5LlUulbj?=
+ =?us-ascii?Q?3IFqq2nU5XkIBx9iRVGKF95uzbqiCuATkCsYgEfi7KyB5Pv+GjOWG0XWCezR?=
+ =?us-ascii?Q?hTttM2IyH1vwjzkM5j1JR6/Ms9dUYuyTO/EnqhnhIXIkmyzNiKQpGm3cR2Kt?=
+ =?us-ascii?Q?o/tDwyZdIp/uN2UBrEzQeRjYGtLWP/zNRb1zuIg+OPErDJpIWdMCWQjM1v7U?=
+ =?us-ascii?Q?wewHZ4SRQXfWxmm+Fy3xMld/oABjdW5+Er8OLnzLJ+JRZL08UhR+GWHlnsn6?=
+ =?us-ascii?Q?TjBNqTQb/hdeqX4edboxVZG4bimFaEXSKYRzrFeuUNdr9bGXOoXP64V4Ycpn?=
+ =?us-ascii?Q?NNaWmwQeUTV/QgID8UZqQOii0i6o14VOx+C8iQjlT1+aQHKGsqGbJpuexleB?=
+ =?us-ascii?Q?sco3WNZXJHXd9TS27T21YzJ4dtvA3tyKoB81KY8zJ4m1j6GhyIWb0+e3KnEL?=
+ =?us-ascii?Q?4YM2DJOBlXUoINARR6fu+wli+Y+Pztl0taCA9ucxk1nc3rjA7zZBvbhIUAk2?=
+ =?us-ascii?Q?hJWRpzW7rrbMjiE1oHElircNiA0XdjbVJCv5zaAppCPF1q1qCY69KA25cqJT?=
+ =?us-ascii?Q?l0jIENyBfJDAlwKisqZEblUeJIQAWtwrtf2ovKkz4EskaBYjh86MTArkOba0?=
+ =?us-ascii?Q?qdJJKB6EYWyEBPgKZRH2oGEfnPYl5vn4/vDXjOvX2BSVwTGdt0vTQKKl5ixJ?=
+ =?us-ascii?Q?fAD6egmT/bK0xBIKg7QNhu27gLlajnTcdetVbqdEfnBesfv+BDNny7q55Eh3?=
+ =?us-ascii?Q?OhERu1kr1HXKMEXa1btbNZETpob0BOGtHs01+k7pBbi+uyCIVLoLsGMsCN/S?=
+ =?us-ascii?Q?4N6YNAshhWlIcF4UvTZ3D9ilONnmLixfLZFzOILYDaHCkJKD2zo75N4v5fBC?=
+ =?us-ascii?Q?OMtzc8HQKwqKsYBQdtjy2ARKk/3qbeXg7swoFz84rngcB2pyrC0XapHJz4w2?=
+ =?us-ascii?Q?OwHspbnNyBiJ47vqVf2EDdagMmq2PkgksGwuirC9+GUfL/eZRHAPl1C2HZ7H?=
+ =?us-ascii?Q?LS1dJxjPOlt4g8AANM9phLjEsO1455PDk1KlI26QT60y5Nq7kM1dSi2rTCLq?=
+ =?us-ascii?Q?t8SQsV4GPnwqI4g7k7LodA0r9PtS1BjuH22HSO4B97Dpyuo3ci1JWDp5gtxL?=
+ =?us-ascii?Q?k01B1Q5b12blWcieYS6FbqEdFdIAHfefZ75fjAhhU8985vWq4LGkpgq/RlBs?=
+ =?us-ascii?Q?neoffV8hzZQjJowyQWBVJ+M91361JBwwbKNharD4WVRtmJ1rEmuECA9f3fcW?=
+ =?us-ascii?Q?yJfQHt2xIR5BVvjJ4LnjPBU6OGdML279uSex3ZfPx5MCB+uGVhol+NGCrPr1?=
+ =?us-ascii?Q?pTsD3b4EO4iKTt0ERaQiOYmGvyrT/EbzRqGe01QMgsgDFZ9bld4IakNvEXyd?=
+ =?us-ascii?Q?07y8XQPYTUPy7D6VWW9xpX6qHTQHPhAW3rh4FGyiBr8RNe5f2A9MWkNHmBsg?=
+ =?us-ascii?Q?v4qZkeOvIvQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?K+0HpHiuLaFt8ZEwzSrVt/mhRObG5RQJPhgX49qI5u2o/MehqvQCQKX8MzHj?=
+ =?us-ascii?Q?WVYmYYQ1tSGA1KEvVzU5FG/fp09lyg4o1axSyvlytEseIzdVpuUFkvK0ZPXp?=
+ =?us-ascii?Q?XCFYMTeAtV/9YvFP7CXrlaCbdjKcI18CFbQEiG5JsLTOkLnvsL5fs5IhPaQT?=
+ =?us-ascii?Q?0tAYuTOtKs59xtoLs5qhQ03YRw/B+t1IZk908wyW8IU+I/gsAztlW1l64bIJ?=
+ =?us-ascii?Q?2+QhJBXvA/f2ktQKoe8Lxcyu0lD9PH3jwa/FVBpEufutqEN/9KJ26QjZvHIY?=
+ =?us-ascii?Q?wn6ZNVRt1fSgQcvJS4l3fGvwuJL4POIDerYiS0F7wdwBi3Ez7Rrpia6DYT8W?=
+ =?us-ascii?Q?LNOuh4Q0tM2WAxj0fIJD1uUuI8PXszQkbtGWBGCvrGn80aD1Dzq6AAf1Kjlj?=
+ =?us-ascii?Q?V1xBhU9we9VXSxpPyMkocEKybwX+QTMTMWeUb6qW0SwgoSwCSYRtxdW7erOp?=
+ =?us-ascii?Q?7IgZplKbd6ac2/qp/70xTfF5OI1IoEXWtYFPEeDGQop4rBE7l7EyMa5bn+Zb?=
+ =?us-ascii?Q?0WRvy+tCtP1puzA/VQE8rfYtMtBJBh1dHK4G3/tjoYYbee1tzuIQYi4Sbp9F?=
+ =?us-ascii?Q?0V0elEp/521xAICqCpAcHQGlla304XdLTl1JebJgWGIqW/lAYNZ9qoqiyvMz?=
+ =?us-ascii?Q?YIwCirtoquh6m6YFMQZkU3RLYPS9yc/tEWiLHCDLpjKzVjKsw7McvceHFx/p?=
+ =?us-ascii?Q?PueugCQqeN2uGeqNjuLf6lSkvXet9MszCtEqtCAFwkjF5NMFHaQjB46vtgFx?=
+ =?us-ascii?Q?7+MY7cbDUo1aoh8zMH/jVMUgqQ/jfJZWo7++Tc71IW52S7+z4x7rmQzo+ey5?=
+ =?us-ascii?Q?MVJ1199XGiu9DlBGB435yVPcvgUoZltDbSx7gt0CMgAQ7FJoRZxtxKG+qM0P?=
+ =?us-ascii?Q?SYA2nQTJOC7x2eHOtHnRtYZJMD1rsE/VARePV/fdX+zgJ8JsD8Nfi8CRvNlu?=
+ =?us-ascii?Q?tQAZ7LB2gQZQoApT0aIYm4FqfRb3fXbI2b11gt5L6bXBxqLl+QrqZ1aHL+uR?=
+ =?us-ascii?Q?mA1KRumutP+R7ga2gixuwtn2rq7a+QTB/t30YJ1S48EGh1552DLaCODROZi/?=
+ =?us-ascii?Q?wPQOEcpUvzBElaOcNmJUNEDCzxQalYyGPUvYm1ZP9UFRZsHUcAlQFETkuZWV?=
+ =?us-ascii?Q?xwGNwI91ABNSNozATZ10AXg4JzafoYnScbnky6BkMjEFGPNNfpLPujoACQSR?=
+ =?us-ascii?Q?bGzjohLQZVyEvuhS+lQqlQQMZIGRnVVDzsacon4IrAAR0nk1RBIPOdQxE4Gz?=
+ =?us-ascii?Q?E+HPL1lybxkRtMqnz83dl9UFG7kTx6b3F6B2WNkUr3IFcIxoIYqh8T5+HqI3?=
+ =?us-ascii?Q?8IzAD+Esx8mWweZu5lBJcKmhUuwoeEoFB3fttErGhnAb8as8944H7BTSv5GX?=
+ =?us-ascii?Q?JfbSMEEczg2e5iQIay9BXr5SjrTXcqz44fZfPCIB/aqy1g0Oj2HFpG6z0Xge?=
+ =?us-ascii?Q?fUOlw+xtD3lFsl2FFZPThIjUxw552+pUkLqI2jpuyWKpf45uGJdZfWWltn75?=
+ =?us-ascii?Q?OvNCdTocnirLBWM3MDLLoI5rhCnz2CE20rI2qm7ZLD0EZPnn/7KhHfHaFmgP?=
+ =?us-ascii?Q?JIdMfHP/6i6+IQFfCymGU61ldNjA6OQOxJ4G2xJP?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	6X3L7o929Ppq0ZPXbvu9rkdHiHCdPobqM6vohvGmVbOPM8r+MeSJzGvVKu7Yf7IGZQONNldaWXjbF5RE4jYw3x5crx5YuqD+y/rhrTX/xeZZ6yPHr2RJcXaIgI+2NxzpYf5Nz1ZcNBzUqD960fbCCtccgxjvNDXYkQJ0l5I1Y1HpOhRoVmnNqEk9CBtzkJY6Rimq5WYYQ7GWWLel222K2UtswA+7MIzrpEc4zlxL4k3viROQBIIUicgmYnxblFDTkvai0BGjnwg23voyAup3ZSUr9MYI9+w8j65/3UmDgfa/iVUPQDnG+OqVz3lEntLyCsiRBSSMv7X/laVJTUw6mTfCr3umTMA/00u9bRPYh9Mo6wiqGwxaCKSNDQqn9DcMwvYQha4PdwyG9kBLQK0fB/waNMA7OEs3/dO90vG0/dD6I4yt9Kf3+WcmiGjLQ4HH8wOWnP0valYijKVLRqm0KBI9BHSZluvGQncLBMw9uteM0jZQ4EHK8CcvNRXXnIFsea49TFwxIbsjU+HCO9ELSTnLbHAXQtiiN5nOzolB5p4SxXMOVPirNwyjXdX2UVKP4Lq6g804IjnLqAPqNSWMJEcB2aBEQqJQN9soYfLwULM=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b0ff0ef-aacc-4962-7f1f-08dda3455576
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 08:53:54.1717
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SvGsKi2Noby+zEufGcdqw4CQDnOjvqmUpCuU45+nkSjQn4QYyLJXGjVUpZQQpTEuwbsLfZPgDydqbFXRtUY/hg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4662
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
+ bulkscore=0 spamscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506040067
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2NyBTYWx0ZWRfX3B1AFh6YBhpE EsOd9NhavACwy48lrUUYxDzBXUvjFcVviJvR7el8F5ybHuplljS0zSyITpQ3rLeiQFHU62pBAqk N4BWbowEVWI/PHVL38YtRlqRoMJNoV8DiRmuomMfMz01cL/q9vRRTCWqxzuex+zq/Vddo3AjOZs
+ +2oLLo/LJXFmeGCmyo7m7O5OtwGAMgxODuH0okHYkRjMrDTQOn3gar+hYW3v781HziirU+qNkpL LBjdov2E/pou0GVUIByK7J5A8V5BkEP98ASjK4bmRD3KFQLtYO7fnGqSB+Th3JRVB6wf/ncVuXA Acuyz99OTuk3PryH6g0X1gxhrP3fPS59h1y8VXAjZt2cvU8zCVPK5rz7nLTGNi/ClDERt7kJ84+
+ VK3cPwGfW8LQLketryrxrwwc44LhWdEN7i5jAK6y9HMy9rSJG0Ru8cUPfPohfdmmbcTS0qFd
+X-Proofpoint-GUID: aKKnIYC6gaR2nySq1x7RCGeUohrN__N-
+X-Proofpoint-ORIG-GUID: aKKnIYC6gaR2nySq1x7RCGeUohrN__N-
+X-Authority-Analysis: v=2.4 cv=H+Dbw/Yi c=1 sm=1 tr=0 ts=684009a5 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=5Or3Sm6iuSDKPoAoRkwA:9 a=CjuIK1q_8ugA:10
 
-From: Xuyang Dong <dongxuyang@eswincomputing.com>
+On Mon, Jun 02, 2025 at 01:02:12PM +0200, Vlastimil Babka wrote:
+> The slab allocator observes the task's NUMA policy in various places
+> such as allocating slab pages. Large kmalloc() allocations used to do
+> that too, until an unintended change by c4cab557521a ("mm/slab_common:
+> cleanup kmalloc_large()") resulted in ignoring mempolicy and just
+> preferring the local node. Restore the NUMA policy support.
+> 
+> Fixes: c4cab557521a ("mm/slab_common: cleanup kmalloc_large()")
 
-Add support for reset controller in eic7700 series chips.
-Provide functionality for asserting and deasserting resets
-on the chip.
+Oops, I broke it unintentionally :(
 
-Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
-Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
----
- drivers/reset/Kconfig         |  10 ++
- drivers/reset/Makefile        |   1 +
- drivers/reset/reset-eic7700.c | 234 ++++++++++++++++++++++++++++++++++
- 3 files changed, 245 insertions(+)
- create mode 100644 drivers/reset/reset-eic7700.c
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d85be5899da6..82f829f4c9f0 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -66,6 +66,16 @@ config RESET_BRCMSTB_RESCAL
- 	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
- 	  BCM7216.
- 
-+config RESET_EIC7700
-+	bool "Reset controller driver for ESWIN SoCs"
-+	depends on ARCH_ESWIN || COMPILE_TEST
-+	default ARCH_ESWIN
-+	help
-+	  This enables the reset controller driver for ESWIN SoCs. This driver is
-+	  specific to ESWIN SoCs and should only be enabled if using such hardware.
-+	  The driver supports eic7700 series chips and provides functionality for
-+	  asserting and deasserting resets on the chip.
-+
- config RESET_EYEQ
- 	bool "Mobileye EyeQ reset controller"
- 	depends on MACH_EYEQ5 || MACH_EYEQ6H || COMPILE_TEST
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 91e6348e3351..ceafbad0555c 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
-+obj-$(CONFIG_RESET_EIC7700) += reset-eic7700.o
- obj-$(CONFIG_RESET_EYEQ) += reset-eyeq.o
- obj-$(CONFIG_RESET_GPIO) += reset-gpio.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
-diff --git a/drivers/reset/reset-eic7700.c b/drivers/reset/reset-eic7700.c
-new file mode 100644
-index 000000000000..e651016ea042
---- /dev/null
-+++ b/drivers/reset/reset-eic7700.c
-@@ -0,0 +1,234 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
-+ *
-+ * ESWIN Reset Driver
-+ *
-+ * Authors:
-+ *	Yifeng Huang <huangyifeng@eswincomputing.com>
-+ *	Xuyang Dong <dongxuyang@eswincomputing.com>
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset-controller.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+#define SYSCRG_CLEAR_BOOT_INFO_OFFSET 0x30C
-+#define CLEAR_BOOT_FLAG_BIT BIT(0)
-+#define SYSCRG_RESET_OFFSET 0x400
-+
-+/**
-+ * struct eswin_reset_data - reset controller information structure
-+ * @rcdev: reset controller entity
-+ * @dev: reset controller device pointer
-+ * @idr: idr structure for mapping ids to reset control structures
-+ * @regmap: reset controller device register map
-+ */
-+struct eswin_reset_data {
-+	struct reset_controller_dev rcdev;
-+	struct device *dev;
-+	struct idr idr;
-+	struct regmap *regmap;
-+};
-+
-+/**
-+ * struct eswin_reset_control - reset control structure
-+ * @dev_id: SoC-specific device identifier
-+ * @reset_bit: reset mask to use for toggling reset
-+ */
-+struct eswin_reset_control {
-+	u32 dev_id;
-+	u32 reset_bit;
-+};
-+
-+#define to_eswin_reset_data(p) container_of((p), struct eswin_reset_data, rcdev)
-+
-+/**
-+ * eswin_reset_set() - program a device's reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset to toggle
-+ * @assert: boolean flag to indicate assert or deassert
-+ *
-+ * This is a common internal function used to assert or deassert a device's
-+ * reset by clear and set the reset bit. The device's reset is asserted if the
-+ * @assert argument is true, or deasserted if @assert argument is false.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int eswin_reset_set(struct reset_controller_dev *rcdev, unsigned long id,
-+			   bool assert)
-+{
-+	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
-+	struct eswin_reset_control *control;
-+	int ret;
-+
-+	control = idr_find(&data->idr, id);
-+
-+	if (!control)
-+		return -EINVAL;
-+
-+	if (assert)
-+		ret = regmap_clear_bits(data->regmap, SYSCRG_RESET_OFFSET +
-+						       control->dev_id * sizeof(u32),
-+							   control->reset_bit);
-+	else
-+		ret = regmap_set_bits(data->regmap, SYSCRG_RESET_OFFSET +
-+						     control->dev_id * sizeof(u32),
-+						     control->reset_bit);
-+
-+	return ret;
-+}
-+
-+static int eswin_reset_assert(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	return eswin_reset_set(rcdev, id, true);
-+}
-+
-+static int eswin_reset_deassert(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	return eswin_reset_set(rcdev, id, false);
-+}
-+
-+static int eswin_reset_reset(struct reset_controller_dev *rcdev,
-+			     unsigned long id)
-+{
-+	int ret;
-+
-+	ret = eswin_reset_assert(rcdev, id);
-+	if (ret != 0)
-+		return ret;
-+
-+	usleep_range(10, 15);
-+	ret = eswin_reset_deassert(rcdev, id);
-+	if (ret != 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct reset_control_ops eswin_reset_ops = {
-+	.reset = eswin_reset_reset,
-+	.assert = eswin_reset_assert,
-+	.deassert = eswin_reset_deassert,
-+};
-+
-+static int eswin_reset_of_xlate_lookup_id(int id, void *p, void *data)
-+{
-+	struct of_phandle_args *reset_spec = (struct of_phandle_args *)data;
-+	struct eswin_reset_control *slot_control =
-+		(struct eswin_reset_control *)p;
-+
-+	if (reset_spec->args[0] == slot_control->dev_id &&
-+	    reset_spec->args[1] == slot_control->reset_bit)
-+		return id;
-+
-+	return 0;
-+}
-+
-+/**
-+ * eswin_reset_of_xlate() - translate a set of OF arguments to a reset ID
-+ * @rcdev: reset controller entity
-+ * @reset_spec: OF reset argument specifier
-+ *
-+ * This function performs the translation of the reset argument specifier
-+ * values defined in a reset consumer device node. The function allocates a
-+ * reset control structure for that device reset, and will be used by the
-+ * driver for performing any reset functions on that reset. An idr structure
-+ * is allocated and used to map to the reset control structure. This idr
-+ * is used by the driver to do reset lookups.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int eswin_reset_of_xlate(struct reset_controller_dev *rcdev,
-+				const struct of_phandle_args *reset_spec)
-+{
-+	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
-+	struct eswin_reset_control *control;
-+	int ret;
-+
-+	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
-+		return -EINVAL;
-+
-+	ret = idr_for_each(&data->idr, eswin_reset_of_xlate_lookup_id,
-+			   (void *)reset_spec);
-+	if (ret)
-+		return ret;
-+
-+	control = devm_kzalloc(data->dev, sizeof(*control), GFP_KERNEL);
-+	if (!control)
-+		return -ENOMEM;
-+
-+	control->dev_id = reset_spec->args[0];
-+	control->reset_bit = reset_spec->args[1];
-+
-+	return idr_alloc(&data->idr, control, 0, 0, GFP_KERNEL);
-+}
-+
-+static const struct of_device_id eswin_reset_dt_ids[] = {
-+	{
-+		.compatible = "eswin,eic7700-reset",
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static int eswin_reset_probe(struct platform_device *pdev)
-+{
-+	struct eswin_reset_data *data;
-+	struct device *dev = &pdev->dev;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->regmap = syscon_node_to_regmap(dev->of_node);
-+	if (IS_ERR(data->regmap))
-+		return dev_err_probe(dev, PTR_ERR(data->regmap), "failed to get regmap!\n");
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	data->rcdev.owner = THIS_MODULE;
-+	data->rcdev.ops = &eswin_reset_ops;
-+	data->rcdev.of_node = pdev->dev.of_node;
-+	data->rcdev.of_reset_n_cells = 2;
-+	data->rcdev.of_xlate = eswin_reset_of_xlate;
-+	data->rcdev.dev = &pdev->dev;
-+	data->dev = &pdev->dev;
-+	idr_init(&data->idr);
-+
-+	/* clear boot flag so u84 and scpu could be reseted by software */
-+	regmap_set_bits(data->regmap, SYSCRG_CLEAR_BOOT_INFO_OFFSET,
-+			CLEAR_BOOT_FLAG_BIT);
-+	msleep(50);
-+
-+	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
-+}
-+
-+static void eswin_reset_remove(struct platform_device *pdev)
-+{
-+	struct eswin_reset_data *data = platform_get_drvdata(pdev);
-+
-+	idr_destroy(&data->idr);
-+}
-+
-+static struct platform_driver eswin_reset_driver = {
-+	.probe	= eswin_reset_probe,
-+	.remove = eswin_reset_remove,
-+	.driver = {
-+		.name		= "eswin-reset",
-+		.of_match_table	= eswin_reset_dt_ids,
-+	},
-+};
-+
-+static int __init eswin_reset_init(void)
-+{
-+	return platform_driver_register(&eswin_reset_driver);
-+}
-+arch_initcall(eswin_reset_init);
+Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+
+Thanks for fixing!
+
 -- 
-2.17.1
+Cheers,
+Harry / Hyeonggon
 
+>  mm/slub.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index dc9e729e1d269b5d362cb5bc44f824640ffd00f3..11356c701f9f857a2e8cf40bf963ac3abdb5e010 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4282,7 +4282,12 @@ static void *___kmalloc_large_node(size_t size, gfp_t flags, int node)
+>  		flags = kmalloc_fix_flags(flags);
+>  
+>  	flags |= __GFP_COMP;
+> -	folio = (struct folio *)alloc_pages_node_noprof(node, flags, order);
+> +
+> +	if (node == NUMA_NO_NODE)
+> +		folio = (struct folio *)alloc_pages_noprof(flags, order);
+> +	else
+> +		folio = (struct folio *)__alloc_pages_noprof(flags, order, node, NULL);
+> +
+>  	if (folio) {
+>  		ptr = folio_address(folio);
+>  		lruvec_stat_mod_folio(folio, NR_SLAB_UNRECLAIMABLE_B,
+> 
+> -- 
+> 2.49.0
