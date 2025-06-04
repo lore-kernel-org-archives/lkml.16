@@ -1,65 +1,44 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAB028137A;
-	Wed,  4 Jun 2025 08:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CC42472B4;
+	Wed,  4 Jun 2025 08:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024480; cv=none; b=Yj3k1uA9TnYvRp23DZ0zVl5RZLpNbnEPvS/zl2wq0gJnM+pDaQMYPNcffFNWQEoS3zOKj2RcXuRelVCZ5SMDfqej/pmOjXDabFqRrx8qYRz1bLTFxGq8ZB8BAbphPw8Yce5YfcqH3FhwOxzJpNEbxnmmotahgPYGPS0Pf2uy0Gw=
+	t=1749024547; cv=none; b=pl4yBt2dHUqcDPG9a+786Ch8XySUsjWYAJjglmRzw5knKu2Rx/x8cHmM0aOQsbk+lKfcxoOlusNEZvOHp3XYCF1zBCyTE8vijD8r2Rn3PaO8rzzeXzRatmAnbJqVOCI1z69ujAIclKR9E2w+1AU7jeqZpSL8RTk+asMrMnCrUwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024480; c=relaxed/simple;
-	bh=/7JQPneGSdMcZBQxQyUWbhwLUGRX3LY+MRtNfc1CRS4=;
+	s=arc-20240116; t=1749024547; c=relaxed/simple;
+	bh=qGh3pbRgNAKZP7UMu01RjTepLuZCO7P3GANf1dJsyps=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AgOE+8UVR9UVmUDychEwsHtV8KPem23o2N6Fz/UB6/s1qOM9Y3TXgjLu/Gwit0Db6CU1DiD8mAH+zRT7ZuUENLbDII7Ok8cdZ7YXRxMWrwJq+sMgBsbT3oemdB4lcVzfUbm5WNS3k4N1nlp00EesM2fx968IDzb3F5vGDnzpCFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=IGlr3/M+; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=KWyLySFtPr1ivQyUCQkXPwBPYFOISU5mjwzNMGQtT8vtVj34I7KnQLzpA8tacyRjc4nbK9EfMbVYr8UtutPbCDiIsERJUpIBv6OeqI6aOOeuS64i9iHgG3zimVNQl/uFMGgfxmQCgaPjLT5V4HihFes1gIwTDo10lOyfi5PZpGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lyKhvucs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IGlr3/M+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+Bpzrm16WN6oSaQuwLtYmFyc8WV8CsH8T7lwcJTKxAw=; b=IGlr3/M+u/1r5P2aqJThWvquCu
-	OsYWJPLLVhBzFkejTLaGHl9pQ1vnUJdE1iFdHuXwSrfbOYpRboncUFhLXX8GBAeA+S9RvLwS0G/TI
-	0A/UTF0d70Wz1+73Y2wmlgfdGo3xjl0/CcDpNl8G6OlH3mbelHmy0Pw9Bg4XC6PqQBZHy4g7dyOnJ
-	HHc+wck/2Jrvohq4949FEKby8MA4dcuJNoWdZdEmm0vSgpJ0Shl2NotOp0OcdzSZfjmj6qTsBqOvp
-	J0bnLbe8glPR+f7Woe9wfHLBIPIqOnCfjgG0GJAwCo3kuNMnZ698xO2CHQ3oTtzUFSe93/mlAl635
-	7VRjuxWg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46960)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uMj9v-0006xS-2n;
-	Wed, 04 Jun 2025 09:07:39 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uMj9o-00010z-2v;
-	Wed, 04 Jun 2025 09:07:32 +0100
-Date: Wed, 4 Jun 2025 09:07:32 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"andrew@lunn.ch" <andrew@lunn.ch>,
-	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"xiaolei.wang@windriver.com" <xiaolei.wang@windriver.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH v2 net] net: phy: clear phydev->devlink when the link is
- deleted
-Message-ID: <aD_-xLBCswtemwee@shell.armlinux.org.uk>
-References: <20250523083759.3741168-1-wei.fang@nxp.com>
- <8b947cec-f559-40b4-a0e0-7a506fd89341@gmail.com>
- <d696a426-40bb-4c1a-b42d-990fb690de5e@quicinc.com>
- <PAXPR04MB85107D8AB628CC9814C9B230886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lyKhvucs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E2FC4CEE7;
+	Wed,  4 Jun 2025 08:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749024547;
+	bh=qGh3pbRgNAKZP7UMu01RjTepLuZCO7P3GANf1dJsyps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lyKhvucsVcbKTD31bZWi0XENE30zi2V8cMD2MFdZB2yzTf3JthNAuz1SQ328CrG7R
+	 3U82UguPTil1PRFxblteWUzXsrOZyO8dyVtrz2q/rZWYemDVCUkBMRAHDJme8nVWIb
+	 0oErXV9xLbAc5SNqOo9ghCJ43pZHo8RS5f7ow4bs=
+Date: Wed, 4 Jun 2025 10:09:04 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 5.10 000/270] 5.10.238-rc1 review
+Message-ID: <2025060406-dial-boxlike-7e57@gregkh>
+References: <20250602134307.195171844@linuxfoundation.org>
+ <6dd7aac1-4ca1-46c5-8a07-22a4851a9b34@sirena.org.uk>
+ <2025060302-reflected-tarot-acfc@gregkh>
+ <4ba58b4c-414d-480b-b02b-c1724f6761f9@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,33 +47,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PAXPR04MB85107D8AB628CC9814C9B230886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <4ba58b4c-414d-480b-b02b-c1724f6761f9@sirena.org.uk>
 
-On Wed, Jun 04, 2025 at 06:00:54AM +0000, Wei Fang wrote:
-> I think this issue is also introduced by the commit bc66fa87d4fd
-> ("net: phy: Add link between phy dev and mac dev"). I suggested
-> to change the DL_FLAG_STATELESS flag to
-> DL_FLAG_AUTOREMOVE_SUPPLIER to solve this issue, so that
-> the consumer (MAC controller) driver will be automatically removed
-> when the link is removed. The changes are as follows.
+On Tue, Jun 03, 2025 at 11:46:06AM +0100, Mark Brown wrote:
+> On Tue, Jun 03, 2025 at 12:06:34PM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Jun 03, 2025 at 10:45:34AM +0100, Mark Brown wrote:
+> 
+> > > This fails to boot with a NFS root on Raspberry Pi 3b+, due to
+> > > 558a48d4fabd70213117ec20f476adff48f72365 ("net: phy: microchip: force
+> > > IRQ polling mode for lan88xx") as was also a problem for other stables.
+> 
+> > Odd, I see it in the 5.15.y released tree, so did we get a fix for it
+> > with a different commit or should it just be dropped entirely from the
+> > 5.10.y queue?
+> 
+> There's a revert in the v5.15 tree as 2edc296e2107a003e383f87cdc7e29bddcb6b17e,
+> IIRC it went it while I was on holiday so I didn't test the release it
+> went into.
 
-I suspect this still has problems. This is fine if the PHY device is
-going away and as you say device_del() is called.
+Ah, that makes sense.  All now dropped, thanks for warning me.
 
-However, you need to consider the case where a MAC driver attaches the
-PHY during .ndo_open and releases it during .ndo_release. These will
-happen multiple times.
-
-Each time the MAC driver attaches to the PHY via .ndo_open, we will
-call device_link_add(), but the device link will not be removed when
-.ndo_release is called.
-
-Either device_link_add() will fail, or we will eat memory each time
-the device is closed and re-opened.
-
-If that is correct, then we're trading one problem for another.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+greg k-h
