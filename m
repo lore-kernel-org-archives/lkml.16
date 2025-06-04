@@ -1,67 +1,67 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B322C19CC11
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403F01DDA2D
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749050757; cv=none; b=XQk+EWOhcxzbbe1zvZtV8JsSQ0NAJkUr0i5BNZD7JgKkWC5ARQUbeAnnbfW3RY/wkfRn+72lE7S0S5Fbwyb4EFoC5p2hYu1OyPGjMQzn2wq42j9un/2ndAIK/MMx2GzoRiWdjGhCnplYaT2a6qbC0+EdV05kpsGzaAsAm2iuxZU=
+	t=1749050759; cv=none; b=O01bBpwEfgCVIRcGVkcFxO7CYnwmjD+X69W6DNMea6ocnQ+ALVHdU6hLjb57u/PwgZEQUlUfU5cU3eFS15VxdF4TBKRxl1UiASXfd93/BYIfHNGlFFuka9Cv7bsbU0YUzJgsMKPV2Yg/YIedxhi4a991MhL+D2kseJt307x43Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749050757; c=relaxed/simple;
-	bh=bSQGBA37BpSgsJdlJNGFk9NhBYGGguunmVcoDXGfnjE=;
+	s=arc-20240116; t=1749050759; c=relaxed/simple;
+	bh=xiw3+9QQT1R6rACHzAcfRAzeIULsoWcavNAe3lOvbNo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ft7z1at9u3t4Ip8HKCMWkWHdnNUweHa7t0Ck0QZe0agbPXYmgMnIs6arDMN70WLd7jMJq3ks9Bbb8qcv3C9tlrJp35iWJtD8XOxkgbHyQB4g6C5/vu3I/gfToXxiWRwHOsq+rJpw+Z+URylkKztii/Amn0umSOnDoqJAbnH57Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DGFX2T4L; arc=none smtp.client-ip=209.85.208.54
+	 In-Reply-To:To:Cc; b=LqSUnT4ToM9KBtBvsaIP2aPCtSVcT7b4zcRY2FMt913bieFEOQHwRIWik+xUzLP8KRDuzuRp4wsB7k1dP44wokWoGIheASxQQ+AQIcbKUCk7N34mIqtX+e84y0yL3qPB9o9KSdH4Mc8NWw6e/bLmfEOWwTgGBhf8wBrWQEKgOWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WMK8MFW/; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DGFX2T4L"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6049431b0e9so11192113a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:25:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WMK8MFW/"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60462e180e2so3104266a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:25:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749050752; x=1749655552; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749050753; x=1749655553; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OVsIds4atv9b1Ndpam+Ic3xTK6Dfgv1Ul4T9xSV77wk=;
-        b=DGFX2T4L2ZSmj6paX1JwvA40YP3nsWpLH0f5OAvJkqhTD7f3GyzGcU7z7Hh6IseysM
-         VXt/UXiZl19ISEP9RJ0IYYzoKAlvf4uU+oERlo7JFVfTe+Vph9NfZDfO+CaNvDlKS5wX
-         PwhmPgbVHnwPjufawdDCHegbm4pkB1HVzwMHG6kHwRKIEOgz+Pr1vZyiP9GpjnPdB4MY
-         QeoidF9MLpVKIfs8xrN0kKLs9IDTisc1LUtVJTX/AG+xflu3AXPsu7+nt4A3flDtaYzI
-         msmOm2gBJ6USXX5BK49hNtNaz3chcW0KDck5j5lPP/7121j349A1xOAECFgyg6046f1g
-         FLPQ==
+        bh=bqcmeBNmmkfD7/7jkYs7xVbtGf9PYopW68JKLRAxWfQ=;
+        b=WMK8MFW/jB1UTk5SjsLI8Pnx5mlvvop51NaNR4erhtjqe/Jln5vG1fHsZPybL3arIi
+         8nMVbNBbJobJebxhxDzshVLVxLW7FxPsP/q4Ju/JJ9LEyTOgvzeN+nRxWLpm6O5BrWiB
+         a786fS7jh6DHr4RE38zKFzVSlcDbnIY5hsMUhNvGJ+DOuGaJmcMuFnVekAHfKjKVvgRu
+         v++2ywKlQWUlmgRb1CAlPLQptYaO7ct+3cQGviIMcyWkAvM2UxWwZ2UxjgEV53Nr5NKT
+         L73Am5YQ27wD7PunsyxnnZCQ1wKprAX4XOc5xykIjA52XeiTtgkDGnYs9lKikTlrIhBu
+         MDcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749050752; x=1749655552;
+        d=1e100.net; s=20230601; t=1749050753; x=1749655553;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OVsIds4atv9b1Ndpam+Ic3xTK6Dfgv1Ul4T9xSV77wk=;
-        b=AgD4bBHUL5szGozgYyTMJJaahz3jNcvY8/ZcgiAcUMU2DMESHdOXCwQtohFCrx+v72
-         9K5oCrS8ZS0lyBqPGlG1j0HPjJKo778QQplczmjjRLI8mUZc+XmZk+Io/svb34un57J+
-         S+5alt6ggAGiyAIRDgH3Sv3evNrco29OmfJT/SpgvNI9ztIgpxDXTBzKn5cfk2BMzdy0
-         UYVXtGPIIhuxJ5SJHJ6ImHF6KEyuene4Eq7NQcqy3y+YPuh8yryHcCeR46K28E061TcE
-         dIeqQGCj6Rc/EigTUPEZaprgC5ZfxFSWDHAKd7J6RFq8ilEEde5vYUbTlCDHOjRm+ZSk
-         SXMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6rIEchv3dHtyTliwvhNXDVrOYgcyxrNvsD5NMVCEDFM6EFZ26J1JT39v9ne4P3k5WsWNWli79NADijos=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUvgIUi8HqmRyVQvyWlLCYEEW45ZWNrdnrwYhhxYIONpz2+0dX
-	K+Ly4p6BMXrUq7P8jDPUMTZKnLxfI5CTkYRtCvztUwfkyk/NQoONTk6emEGMzrigOig=
-X-Gm-Gg: ASbGncsq5gWNYqVgKjLUDXTmkCJAm/Ar/ikJq1jX41Ao1Y5NusMih9qY8LzQHH4STdz
-	CLiD6tVUnfPWlFFBpBHtro9cDHzh7K5oL0x5V7uZTnnmNWuLT7ZieIgq9RD5FjPdd855wFUa66O
-	evQfuU8Y5z9fTMFr9CgTytXJ68PQ+rYr6RPygeiqo5myr8OuGpxaiAkI1YMQ5omDOoEDEboOgJc
-	Bl3S5oO89gQtq3DsaiosdZIs/9OMtdRyU3SX5pefMMeFuN1tAqkYrlyr2uxOO1XBXJPbbqQ0L1E
-	tv7JRIf+YbVxtyRCKMPvGyYdIRPbK3qjF3jUxqy1n8fIaB0ZT2e8hgUt9RUp9c5MTdw0E2SEqCo
-	m5uftJNzPJeP/fWxyMAVnQplwRRAnqokjYZU=
-X-Google-Smtp-Source: AGHT+IGmpFLzdEaYYr7iQUhbbgsCIhZWT7QbCctj4zySD94PvS5LvY7Sr6dL7NlPVuoHoEkdg0F3SA==
-X-Received: by 2002:a05:6402:34cb:b0:606:a26c:6f50 with SMTP id 4fb4d7f45d1cf-606e944ea6bmr3149657a12.5.1749050746634;
-        Wed, 04 Jun 2025 08:25:46 -0700 (PDT)
+        bh=bqcmeBNmmkfD7/7jkYs7xVbtGf9PYopW68JKLRAxWfQ=;
+        b=f16ESy1D/myug+X745ttoons91XT32jjp90EazyP9BRmJzAXmevKtOP74zTAr/rCEb
+         c20odx83mi4OSt0fAysDYdJNQcRswIjOKazqUxM6dz7RSmMqpSQiO8Lnpdns02H2GFkS
+         poC+59M2UWIK9wsYVDxFRLlerYvhO2lKiAwLG4qLlJ8q8nSSxYHtlfEIY4zj0fZj6II0
+         +G6vNL1tTP9lUTMlj5/wnBMN2DoIfUdFPgDTMIChuvjfmWWwKGH5oV6XKGOAbY2KtjLH
+         5Pn7UxuGPM0gbt0s59V7mpaX8eilpiSRmlmt3eijQAzPnBOoaz56AQ4hwGo/tGCAX7x4
+         EILA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPrvgLQmy59hfdhP+K9h96+73EkxdthcfTZdZ3KYw4XGXojEqS7VkE83BNSQxNpCXTxu2xRhF6qC9WNnk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeJNO39Rq0Y3XUgNLKQqOgaqSq6JbHdWh1JNtNakv/b5XdDegC
+	JiKwTQJeVOtQmDG5vUVC2TR/wjxudZxKSjimN4vio0rQ54hIVrMcQy0XPvLenTl4TRc=
+X-Gm-Gg: ASbGncs6QX3KXQ15RmWWIKRTn9xRH7EwMOWKHa/jJJZm+53UPfTUgRf9htfHUi4+saE
+	8TPsF/DJ8UhOmi5ZhUuYdTlUMGHqizj9y88KzvHam/qpyfIsxvHOEfz1FLnct/ZS1n/9qM7X3oK
+	EmKphHv2VmGN0ooYzvRaN7Hxhyv9sfsBuIhE5HaZsYJ1yxzT2tbEYCnRVqUKDlJT3Kgrh55h4EM
+	Q1rLuFoS+Wn0bZPp702vY0Zo3iOR2DdMUbED6LSaoA+XE9JVWePgA6mLh2aiM1jIfmS7+f/rkQ0
+	qE4rJ4EBDoy5PFSezqK9C6E/WQDORErnTwOvkLmxkXg79GDuH79ueRrufJAMb15tGoz1jQBOu3V
+	usbi6Z8dxZN5iGNfD9H3zvOG/pBKwlXPhkOs=
+X-Google-Smtp-Source: AGHT+IGtfaNvbOgLxL63zDuI4O0A+DETos0BCLMRQDwmpSXX87hd3C1qMtwAXr3zW2EH0X8wSGXcrg==
+X-Received: by 2002:a05:6402:2547:b0:604:c4fc:70c with SMTP id 4fb4d7f45d1cf-606ea5bd9c5mr3000623a12.31.1749050753425;
+        Wed, 04 Jun 2025 08:25:53 -0700 (PDT)
 Received: from puffmais.c.googlers.com (140.20.91.34.bc.googleusercontent.com. [34.91.20.140])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-606ed984f63sm1051640a12.58.2025.06.04.08.25.46
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-606ed984f63sm1051640a12.58.2025.06.04.08.25.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 08:25:46 -0700 (PDT)
+        Wed, 04 Jun 2025 08:25:52 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Wed, 04 Jun 2025 16:25:43 +0100
-Subject: [PATCH 04/17] dt-bindings: mfd: samsung,s2mps11: add s2mpg10-pmic
- regulators
+Date: Wed, 04 Jun 2025 16:25:53 +0100
+Subject: [PATCH 14/17] regulator: s2mps11: refactor S2MPG10
+ ::set_voltage_time() for S2MPG11 reuse
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250604-s2mpg1x-regulators-v1-4-6038740f49ae@linaro.org>
+Message-Id: <20250604-s2mpg1x-regulators-v1-14-6038740f49ae@linaro.org>
 References: <20250604-s2mpg1x-regulators-v1-0-6038740f49ae@linaro.org>
 In-Reply-To: <20250604-s2mpg1x-regulators-v1-0-6038740f49ae@linaro.org>
 To: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -85,80 +85,78 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-Add a regulators node to the s2mpg10-pmic to describe the regulators
-available on this PMIC.
+The upcoming S2MPG11 support needs a similar, but different version of
+::set_voltage_time(). For S2MPG10, the downwards and upwards ramps for
+a rail are at different offsets at the same bit positions, while for
+S2MPG11 the ramps are at the same offset at different bit positions.
 
-Additionally, describe the supply inputs of the regulator rails, with
-the supply names matching the datasheet.
-
-Note 1: S2MPG10 is typically used as the main-PMIC together with an
-S2MPG11 PMIC in a main/sub configuration, hence the datasheet and the
-binding both suffix the supplies with an 'm'.
-
-Note 2: The binding needs to switch from 'additionalProperties' to
-'unevaluatedProperties', to allow adding the specific -supply
-properties for S2MPG10 only, as otherwise we'd have to resort to a
-global wildcard with negating inside each of the compatible matches.
+Refactor the existing version slightly to allow reuse.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- .../devicetree/bindings/mfd/samsung,s2mps11.yaml   | 33 +++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ drivers/regulator/s2mps11.c | 32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml b/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
-index d6b9e29147965b6d8eef786b0fb5b5f198ab69ab..0b834a02368f7867a2d093cbb3a9f374bb2acf41 100644
---- a/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
-+++ b/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
-@@ -67,7 +67,7 @@ required:
-   - compatible
-   - regulators
+diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
+index 6fe6787044c40216f7a0355119981b74a8f56e58..f427895637a32f26e2960ce7c7879632f0bc2dcb 100644
+--- a/drivers/regulator/s2mps11.c
++++ b/drivers/regulator/s2mps11.c
+@@ -562,26 +562,23 @@ static int s2mpg10_regulator_buck_enable_time(struct regulator_dev *rdev)
+ 		+ DIV_ROUND_UP(curr_uV, s2mpg10_desc->enable_ramp_rate));
+ }
  
--additionalProperties: false
-+unevaluatedProperties: false
+-static int s2mpg10_regulator_buck_set_voltage_time(struct regulator_dev *rdev,
+-						   int old_uV, int new_uV)
++static int s2mpg1x_regulator_buck_set_voltage_time(struct regulator_dev *rdev,
++						   int old_uV, int new_uV,
++						   unsigned int ramp_reg,
++						   unsigned int ramp_mask)
+ {
+-	unsigned int ramp_reg, ramp_sel, ramp_rate;
++	unsigned int ramp_sel, ramp_rate;
+ 	int ret;
  
- allOf:
-   - if:
-@@ -78,9 +78,40 @@ allOf:
-     then:
-       properties:
-         reg: false
-+
-+        regulators:
-+          $ref: /schemas/regulator/samsung,s2mpg10-regulator.yaml
-+
-         samsung,s2mps11-acokb-ground: false
-         samsung,s2mps11-wrstbi-ground: false
+ 	if (old_uV == new_uV)
+ 		return 0;
  
-+      patternProperties:
-+        "^vinb([1-9]|10)m-supply$":
-+          description:
-+            Phandle to the power supply for each buck rail of this PMIC. There
-+            is a 1:1 mapping of supply to rail, e.g. vinb1m-supply supplies
-+            buck1m.
+-	ramp_reg = rdev->desc->ramp_reg;
+-	if (old_uV > new_uV)
+-		/* The downwards ramp is at a different offset. */
+-		ramp_reg += S2MPG10_PMIC_DVS_RAMP4 - S2MPG10_PMIC_DVS_RAMP1;
+-
+ 	ret = regmap_read(rdev->regmap, ramp_reg, &ramp_sel);
+ 	if (ret)
+ 		return ret;
+ 
+-	ramp_sel &= rdev->desc->ramp_mask;
+-	ramp_sel >>= ffs(rdev->desc->ramp_mask) - 1;
++	ramp_sel &= ramp_mask;
++	ramp_sel >>= ffs(ramp_mask) - 1;
+ 	if (ramp_sel >= rdev->desc->n_ramp_values ||
+ 	    !rdev->desc->ramp_delay_table)
+ 		return -EINVAL;
+@@ -591,6 +588,21 @@ static int s2mpg10_regulator_buck_set_voltage_time(struct regulator_dev *rdev,
+ 	return DIV_ROUND_UP(abs(new_uV - old_uV), ramp_rate);
+ }
+ 
++static int s2mpg10_regulator_buck_set_voltage_time(struct regulator_dev *rdev,
++						   int old_uV, int new_uV)
++{
++	unsigned int ramp_reg;
 +
-+        "^vinl([1-9]|1[0-5])m-supply$":
-+          description: |
-+            Phandle to the power supply for one or multiple LDO rails of this
-+            PMIC. The mapping of supply to rail(s) is as follows
-+              vinl1m - ldo13m
-+              vinl2m - ldo15m
-+              vinl3m - ldo1m, ldo5m, ldo7m
-+              vinl4m - ldo3m, ldo8m
-+              vinl5m - ldo16m
-+              vinl6m - ldo17m
-+              vinl7m - ldo6m, ldo11m, ldo24m, ldo28m
-+              vinl8m - ldo12m
-+              vinl9m - ldo2m, ldo4m
-+              vinl10m - ldo9m, ldo14m, ldo18m, 19m, ldo20m, ldo25m
-+              vinl11m - ldo23m, ldo31m
-+              vinl12m - ldo29m
-+              vinl13m - ldo30m
-+              vinl14m - ldo21m
-+              vinl15m - ldo10m, ldo22m, ldo26m, ldo27m
++	ramp_reg = rdev->desc->ramp_reg;
++	if (old_uV > new_uV)
++		/* The downwards ramp is at a different offset. */
++		ramp_reg += S2MPG10_PMIC_DVS_RAMP4 - S2MPG10_PMIC_DVS_RAMP1;
 +
-       oneOf:
-         - required: [interrupts]
-         - required: [interrupts-extended]
++	return s2mpg1x_regulator_buck_set_voltage_time(rdev, old_uV, new_uV,
++						       ramp_reg,
++						       rdev->desc->ramp_mask);
++}
++
+ /*
+  * We assign both, ::set_voltage_time() and ::set_voltage_time_sel(), because
+  * only if the latter is != NULL, the regulator core will call neither during
 
 -- 
 2.49.0.1204.g71687c7c1d-goog
