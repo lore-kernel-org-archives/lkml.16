@@ -1,158 +1,153 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6045256B81;
-	Wed,  4 Jun 2025 10:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5731156B81
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 10:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749032310; cv=none; b=ueiNymQJqlrJw2DdB8vqxX9Fo1bZYDew6Q5Jlun/J1+wJoXhPVIM7QLseA2y8xfhbKkc9yoPX3TZ+iR7XZ1G/g9dRlYlohEte4rIGzI6Ip/9DLoDdrLTlQFFvH+Uo74ds/+6M+SENDw0Tyc4YAkKAyFzsUOSAK00GdfSNKB3148=
+	t=1749032380; cv=none; b=Tr77x0mH4ilq3d/IUyWeBMZE5o0WgdmJ57MIYN88ACwwBVWdunSpgu4oUP0OzbGU+sFd6kkZ6FqV06bNuYdePYCRO7wkmD6HbJvH5kOeWHgD3nHmzrm6Y1syF5LvZHOfke5FCVX6f4t9FWqh1AWyfwfVIwPtilYKluS74aCmy2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749032310; c=relaxed/simple;
-	bh=3HHpt7djO8MsGfUXUzePpCpx/Fnuo9SaY/kGssvfXMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kHostD71q/RtEBec1kDU2lcLYr2jYHzjry81tp/tHFg+EoeDJHacv+9fTba4zTW9C7z600B+psp6SDPr2A71Ca8mnF+t6eJ/wzvWMhhwAGkwHWCj2GT8Ki7/FToCm1ODnJ1ipsLyXt4xYU7tYyhJFf35RwL9TCb0+tMcBAqFit4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A8311758;
-	Wed,  4 Jun 2025 03:18:10 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D59CE3F673;
-	Wed,  4 Jun 2025 03:18:26 -0700 (PDT)
-Date: Wed, 4 Jun 2025 11:18:21 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250604101821.GC8020@e132581.arm.com>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
- <20250603144414.GC38114@noisy.programming.kicks-ass.net>
- <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1749032380; c=relaxed/simple;
+	bh=dqyE9slUR1QxgVP87pCAXxy72IefKePiX8duGwbuDm4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=I/X6IdREO5Lu6WEIYt+97u4YLs2ZwLyqEXKc0t3vtYIHUMliumclwGSWqy8+6yYLcA0Ya0dXpkDvradYLxkVxHgtyJHKhMU4INWd64J6FWepETHBTD7utSnm3XaNFxyTvfOZ4AvW+K4tNUvanf7+hy4KUQZOSJeOYQNocpFml4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=COaL8z7y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oBNLR88B; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="COaL8z7y";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oBNLR88B"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 4AF27114021A;
+	Wed,  4 Jun 2025 06:19:37 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Wed, 04 Jun 2025 06:19:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749032377;
+	 x=1749118777; bh=jzGfamnjXuCdedVs8bQG0PhMF8FNUo4KELx4ukznBgI=; b=
+	COaL8z7ywEU3KkCXoUjOZ3PU4xeaPio4ibht5ldgb9sXfv6KlvA4cnLxi5IYGEyR
+	0riG6rvZ/DrCgYAzrNW6FEZB4aAa+vRSVOJiW5EU7HdeUvT+guGUXchHbxOmEDhw
+	AcH+qEPeV+bSSwS04ziKanTm2Byw7TTp+c/zcZuq7uV4up+J28nu0LgxOZxdokPR
+	oi1SS/cjI5lMdtKUBVY3XPdG2LewiB6Hk3qeaDsZm2FcTy2zG9VKQuqBkjieKXAY
+	lVpDTAP07wmPY0SUIq0n687rrU9xFeNcrRkRim+j8VqMwXM7opTQ+TW8M54Vb3kL
+	Y2YxifR7jt0U+0/z89Jp7Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749032377; x=
+	1749118777; bh=jzGfamnjXuCdedVs8bQG0PhMF8FNUo4KELx4ukznBgI=; b=o
+	BNLR88BDvnsgqaq2Y+921FMc5FPnaWf54q0ak1+tMA7ktTfYwiXihX1qridzKkdV
+	XcVeionCH2XFA6xZRpbuSMmxda9iJw71zHeDA1zzy2xsVAGTJk+fc2zi1eqrfPYr
+	L2kR9g3Ux7o40fM8Cmrfbdxw0YXq+QjkvEUu7g3Ba0+gGD/6/Fg089+YJ2cZkH6v
+	z32pNLcrpSh55Jwois8Lk/Pk7O3BgYLMXWBKpmE7gwrApgZxYZOia3kTN91Lb7Gf
+	dDdSPaCDtYuKSwGxuDcR+IpDW96IhHbjnTKC7I9g2rI1MEMrDTOaXQrtgX/DmhiX
+	FP8wA9vAthwY125q1awKQ==
+X-ME-Sender: <xms:uR1AaDa6aoFGvp4vOQuuRws4GGuQkjbVOtaTokhc9PYjDKFImNPkCA>
+    <xme:uR1AaCbpe8NzHBhVfo9Jxtvn7PgfvPB-4ETVWthUnhpv5yxcs0bHvknZUK_7yo9fI
+    8jU7uT7y1L7I3mLI08>
+X-ME-Received: <xmr:uR1AaF_BomkHQAgmjEzSy2bspZ3L6cvC9AVXy7JkvEj9XwzzKNnswSP3C5Ezp6JKF4RNvuldKKfEvx8q3hXtwcCrebct1K1iCg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduleehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepggfgtgffkffvvefuhffofhgjsehtqhertdertdej
+    necuhfhrohhmpedfvehhrhhishhtohhphhgvrhcuufhnohifhhhilhhlfdcuoegthhhrih
+    hssehkohguvgehgedrnhgvtheqnecuggftrfgrthhtvghrnhepieejleekhfdukeeukedv
+    jedtueeuleetgedvueevtedtkeejkeeiudeggeetvedunecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomheptghhrhhisheskhhouggvheegrdhnvght
+    pdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehphh
+    hilhhiphhprdhrvghishhnvghrsehlihhnsghithdrtghomhdprhgtphhtthhopegthhhr
+    ihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehpshhtrghnnh
+    gvrhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepughrihdquggvvhgvlheslhhishht
+    shdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnh
+    gvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsihhmohhnrgesfhhf
+    fihllhdrtghhpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehphhgrshhtrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughrihdquggvvhgv
+    lhdqsghouhhntggvsheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrgh
+X-ME-Proxy: <xmx:uR1AaJobfx6tESM5eLtXUEIkuw61AFpGRbIp0iOWprpKyTT0B9sOVg>
+    <xmx:uR1AaOrgJmkhj45RwJ91OwWpPAgs3YVVovdskxIPIBBnXQpRD1lPSQ>
+    <xmx:uR1AaPSbPni4LUcKH-J9-ZQKNFd4urnq1CMSDn7ZTGpMbu1g1o5F0w>
+    <xmx:uR1AaGowU0ImgiUKztk3WPusm9Xyxlj1wtMMojEF6WPtavARjusi3Q>
+    <xmx:uR1AaEsVoPamp5bPtP2SyB3XtNY1F6fjvpVlg55PcGctvNkrah39LDBW>
+Feedback-ID: i9ec6488d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 4 Jun 2025 06:19:36 -0400 (EDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 04 Jun 2025 03:19:35 -0700
+Message-Id: <DADO8D07ZTFD.1A1L9QSSMDTXR@kode54.net>
+To: "Philipp Reisner" <philipp.reisner@linbit.com>
+Cc: =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, "Philipp
+ Stanner" <pstanner@redhat.com>, <dri-devel@lists.freedesktop.org>,
+ <linux-kernel@vger.kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Philipp Stanner" <phasta@kernel.org>,
+ "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/sched: Fix amdgpu crash upon suspend/resume
+From: "Christopher Snowhill" <chris@kode54.net>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250107140240.325899-1-philipp.reisner@linbit.com>
+ <942c02f2-6496-4406-a73b-941d096aadfb@amd.com>
+ <CADGDV=U_7CdkdEiLX9kj9yHsXhwb5zP_eGXpwmrj20cmgzMAtA@mail.gmail.com>
+ <eb5f3198-7625-40f4-bc23-cac969664e85@amd.com>
+ <582e10673bb749f18ebf8a18f46ca573df396576.camel@redhat.com>
+ <b055ff59-4653-44d9-a2e0-bb43eb158315@amd.com>
+ <DA7PC2LNU79K.28KBFOL3MGI1S@kode54.net>
+ <CADGDV=WJjcLds5T1uAst7ctOMbApnLR6ixH8wvgvKvF-YS6kog@mail.gmail.com>
+In-Reply-To: <CADGDV=WJjcLds5T1uAst7ctOMbApnLR6ixH8wvgvKvF-YS6kog@mail.gmail.com>
 
-On Wed, Jun 04, 2025 at 10:03:39AM +0200, Peter Zijlstra wrote:
+On Mon Jun 2, 2025 at 3:25 AM PDT, Philipp Reisner wrote:
+> Hi Christopher,
+>
+> Thanks for following up. The bug still annoys me from time to time.
+> It triggered last on May 8, May 12, and May 18.
+> The crash on May 18 was already with the 6.14.5 kernel.
+>
+>> Could this sleep wake issue also be caused by a similar thing to the
+>> panics and SMU hangs I was experiencing with my own issue? It's an issue
+>> known to have the same workaround for both 6000 and 7000 series users. A
+>> specific kernel commit seems to affect it as well.
+>>
+>
+> I posted the stack trace earlier in the thread. The question is, what
+> was the stack
+> trace of the issue you are referring to?
+>
+>>
+>> If you could test whether you can still reproduce the error after
+>> disabling GFXOFF states with the following kernel commandline override:
+>>
+>> amdgpu.ppfeaturemask=3D0xfff73fff
+>>
+>
+> that disables PP_OVERDRIVE_MASK, PP_GFXOFF_MASK,
+> and PP_GFX_DCS_MASK.
+>
+> IMHO, that looks like a mitigation for something different than the non-r=
+eady
+> compute schedulers that seem to be the root cause for the NULL pointer de=
+refs
+> in my case.
 
-[...]
+Indeed, it's mitigating something that leads to SMU firmware hangs. I
+made a guess, I probably guessed poorly, that your compute units may be
+failing to wake up due to a SMU hang. But you have no SMU hang log
+notices, so it's probably not that. Oh well.
 
-> > > My suggestion is not reliable. Roughly read code, except for the
-> > > PERF_EVENT_STATE_EXIT case, I think other error cases should also clean
-> > > up the cgroup pointer.  The reason is I don't see other places to
-> > > clean up the cgroup pointer for these error cases:
-> > > 
-> > >   PERF_EVENT_STATE_REVOKED
-> > >   PERF_EVENT_STATE_DEAD
-> > 
-> > Those should be done here; on the first transition into these states.
-> > 
-> > > Only in the PERF_EVENT_STATE_ERROR state, we don't need to cleanup
-> > > cgroup as this has already been handled in merge_sched_in().
-> > > 
-> > > So a correct condition would be:
-> > > 
-> > >     if (event->state > PERF_EVENT_STATE_OFF ||
-> > >         event->state <= PERF_EVENT_STATE_EXIT)
-> > >         perf_cgroup_event_disable(event, ctx);
-> > 
-> > I'm too tired to get my head straight. I'll look tomorrow.
-> 
-> 
-> Right; had a sleep. Lets do this :-)
+>
+> Anyhow, I will give it a try, and will report back if my workstation
+> does not deref
+> NULL pointers for more than three weeks with that amdgpu.ppfeaturemask se=
+t.
+>
+> Best regards,
+>  Philipp
 
-Thanks a lot for the state machine diagram.
-
-> So the normal states are:
-> 
->             ACTIVE    ---.
->                ^         |
->                |         |
->        sched_{in,out}()  |
->                |         |
->                v         |
->       ,---> INACTIVE  <--+
->       |                  |
->       |            {dis,en}able()
->   sched_in()             |
->       |       OFF     <--+
->       |                  |
->       `--->  ERROR    ---'
-> 
-> That is:
-> 
-> sched_in:     INACTIVE          -> {ACTIVE,ERROR}
-
-Strictly speaking, sched_in() can keep INACTIVE state if an event is
-rotated.
-
-> sched_out:    ACTIVE            -> INACTIVE
-> disable:      {ACTIVE,INACTIVE} -> OFF
-> enable:       {OFF,ERROR}       -> INACTIVE
-> 
-> Where OFF/ERROR are 'disable' and have this perf_cgroup_event_disable()
-> called.
-> 
-> Then we have {EXIT,REVOKED,DEAD} states which are various shades of
-> defunct events:
-> 
->  - EXIT means task that the even was assigned to died, but child events
->    still live, and further children can still be created. But the event
->    itself will never be active again. It can only transition to
->    {REVOKED,DEAD};
-> 
->  - REVOKED means the PMU the event was associated with is gone; all
->    functionality is stopped but the event is still alive. Can only
->    transition to DEAD;
-> 
->  - DEAD event really is DYING tearing down state and freeing bits.
-> 
-> And now we have the sitation that __perf_remove_from_context() can do:
-> 
->   {ACTIVE,INACTIVE,OFF,ERROR} -> {OFF,EXIT,REVOKED,DEAD}
-
-A detailed transition is:
-
-  Case 1: {ACTIVE} -> {INACTIVE} -> {OFF,EXIT,REVOKED,DEAD}
-  Case 2: {ERROR} -> {ERROR,EXIT,REVOKED,DEAD}
-  Case 3: {OFF} -> {OFF,EXIT,REVOKED,DEAD}
-
-> Where the {OFF,ERROR} -> * transition already have
-> perf_cgroup_event_disable(), but the {ACTIVE,INACTIVE} -> * part has
-> not.
-
-Just a minor concern.
-
-I noticed perf_put_aux_event() sets the ERROR state for sibling events
-of an AUX event. IIUC, the AUX event is the group leader, so we only
-need to clean up the cgroup pointer for the AUX event, and simply set
-the ERROR state for its sibling events, correct?
-
-> The condition:
-> 
->   if (event->state > PERF_EVENT_STATE_OFF)
-> 
-> captures exactly that {ACTIVE,INACTIVE} that still needs the cgroup
-> disable. Every other state is already a disabled state.
-> 
-> 
-> Agreed?
-
-Except above concern, otherwise, the conclusion makes sense to me.
-
-> Also, I should probably stick most of all this in a comment somewhere.
-
-Totally agree. The comment would be very useful!
-
-Thanks,
-Leo
