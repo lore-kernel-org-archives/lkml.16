@@ -1,119 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398E422A1FA;
-	Wed,  4 Jun 2025 12:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F83828D82F
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749039211; cv=none; b=lFFH/daFJ5Ek0lwV759T0fjonv9xQ3wqr5kq9t75LpAHGrUEfN+Ufg6WICEfqIfv1GA9Lm/mYMcv2qNt2BplIcQvZneNJnTMM1Umd/QgI30phcNuGSpH2kJcVA5sHcMFxtkTAkWwAy1YstDduFDQIaJ1qa+v0WTyvxVE1L3wIcc=
+	t=1749039223; cv=none; b=Fm/KDs8R7LHC2Agw1uEjyqmZtNS6z199nICaoIMJIGr52pniVrheRRxbyCV+4c1ls/uDSIkJrfgLXndeHOjEy9aSITpebTGu1o408LvdV7XmSMxN1fZVh/dgUAeIdXfRSZ7ttch3xSwWf9SnWVWPu7hQni//LRSXTjrQwyP/mE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749039211; c=relaxed/simple;
-	bh=EquEqI/Sw1dGVDT4hKR7XdeTsx/22cG1ATM29XKxML8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PiDgKasNAWmJENjdPmiErUnimH2nRyHbppCcEqN3jGIUmYMubaV0y+4puGRQ/G3Z9G1Kk83rIyEPHAHFAsqebHRhGwC5ZLWIZPAhfK9eDrnJjLjYllCZ/EWX5ibMLdqTToTVY7BmZ4atzI2g8bm08C6/bQVPFEmtWihbPz5yObY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVW/XwKx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVW/XwKx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3F5C4CEE7;
-	Wed,  4 Jun 2025 12:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749039210;
-	bh=EquEqI/Sw1dGVDT4hKR7XdeTsx/22cG1ATM29XKxML8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HVW/XwKxlck8KdaqhNJU+nvqkR81OWA+hhGYVSUTqxIHcaDxDATLXxbkpneGJqOkw
-	 j/qHguaCH+EjfSyMSZdmympYXXebKBuyLKTnYLRaM6SXXy4Sclvcc3t2kurFirETfj
-	 QyNSk0fYFzuMq9Mcx6J4sIx+Cylp2fi+Bl0YtczAEHAXc+ERxDS8oyycKfsoOz75/h
-	 Fxn9y2e46IOvxZF8MxY7vE0WeAEUiejV9kvU7UTfe9K10ri8avYMiRffiV421Xnh/N
-	 fP2davWLSHBHs68BeZblKzeh9krD+AK2eunj4pQdTuKm0Bhfrb2B1zTrioyHEw9zAG
-	 SzUROnnM13Ozg==
-Message-ID: <2c92d5fd-00eb-4f11-8071-1a593a1e4328@kernel.org>
-Date: Wed, 4 Jun 2025 14:13:26 +0200
+	s=arc-20240116; t=1749039223; c=relaxed/simple;
+	bh=l/tgeUW9ZxWkBuGuZhUNYwAeSn3krAwQzrrUkzZ4wj0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=fXroxaTRobhUiE+jpSQE02SfDrcentWAEPiv+ImjrzxcrypH+MmD0zu7EEpC5/gaYB6MuUSwDXrza2fqSWddYFcFmyS/YFlvs0ls8i2smJ7r2CtmQlIvtTU2vVbloiVTAemQlaztMokbl1WRmxVeU5LzbM3GIkOTcp80v4Iv5UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddc07eea46so4712705ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:13:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749039221; x=1749644021;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CzajI+MYpH3SgRs9ff/pJQ6x8nBJe2DTOmSzXzu4lqg=;
+        b=cQnxNjq6weY8sxGzrSdlM1x43+6MQ467uYrLe5icR7yRl6Tjj5FpmhSYJHdfobYxfU
+         Iu/eVOkXyq5gJgVvJcc7GnFZmiXAv0EUpg3hQfj3q4sIlMZd6q4dy+AJjjGcIXgJI8IG
+         RmJZnbc2vnfNhEkt6Q98J/81bzGgw5JZXMSt7d/3O4PXJVPm8N3jaPKJJ3mNLj7g/yNg
+         eWTe9zWMiMUiNNjmsOPKb7+iO+3EJ/m863RuGRrL4uCO0vRls29omFOoTi6kTqeIoHu4
+         Vehtf4GsDagcVpMph0GEZDpzK15I8ZD2KDm8nU4B7QkdvM4auUID5oj9DHK16Jp6iEWG
+         Q0MA==
+X-Forwarded-Encrypted: i=1; AJvYcCXOyTqi0oEvD/O+EVL6lgP+hEJXgd0UVnxoUgbepX78eEpVVzj6Sr7lUdL/YZfKwq12c5ONBG+SmhWwQEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe4tDLTq+s/yNn7ern377Ll9Dv916DCpf2bbBUhVF8VbmNlLPy
+	giIWHKnvpnTDkRJ1MsHfr7f4oJI4WWarhoC3PoKgVmW0AlwaJc9hb0W7NUY3xxbRXF7Cwug6Nyd
+	YA7HTssDYH4fMiWAzpJSVOSoauM2uyJYIDOdZ5M6a25Cu6P+YMWURKni+YhU=
+X-Google-Smtp-Source: AGHT+IEGPEDHtyiuVX0WqAOQbTgWXRbowiKe0WnfH17r6Ih6V1RLgxslPgXXOvL+SoXMwK0pVeGoy4Tc3tkL8CL2X6FaMcEtNXZs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] reset: eswin: Add eic7700 reset driver
-To: dongxuyang@eswincomputing.com, p.zabel@pengutronix.de, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
- huangyifeng@eswincomputing.com
-References: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
- <20250604085316.2211-1-dongxuyang@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250604085316.2211-1-dongxuyang@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1a87:b0:3dd:8136:a687 with SMTP id
+ e9e14a558f8ab-3ddbebd825emr25413805ab.8.1749039221210; Wed, 04 Jun 2025
+ 05:13:41 -0700 (PDT)
+Date: Wed, 04 Jun 2025 05:13:41 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68403875.a00a0220.d4325.000a.GAE@google.com>
+Subject: [syzbot] [cgroups?] BUG: unable to handle kernel paging request in css_rstat_flush
+From: syzbot <syzbot+36ca05bdc071f7ba8f75@syzkaller.appspotmail.com>
+To: cgroups@vger.kernel.org, hannes@cmpxchg.org, linux-kernel@vger.kernel.org, 
+	mkoutny@suse.com, syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 04/06/2025 10:53, dongxuyang@eswincomputing.com wrote:
-> +	.reset = eswin_reset_reset,
-> +	.assert = eswin_reset_assert,
-> +	.deassert = eswin_reset_deassert,
-> +};
-> +
-> +static int eswin_reset_of_xlate_lookup_id(int id, void *p, void *data)
-> +{
-> +	struct of_phandle_args *reset_spec = (struct of_phandle_args *)data;
+Hello,
 
-Wrong cast. Look at the type in xlate.
+syzbot found the following issue on:
+
+HEAD commit:    4cb6c8af8591 selftests/filesystems: Fix build of anon_inod..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17967ed4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=43b7075a5c42ffca
+dashboard link: https://syzkaller.appspot.com/bug?extid=36ca05bdc071f7ba8f75
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170d9970580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13e88c82580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-4cb6c8af.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/91b28032d866/vmlinux-4cb6c8af.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7cf2a9f8c096/bzImage-4cb6c8af.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+36ca05bdc071f7ba8f75@syzkaller.appspotmail.com
+
+BUG: unable to handle page fault for address: ffffed1011a4ca01
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 5ffcd067 P4D 5ffcd067 PUD 2fff7067 PMD 0 
+Oops: Oops: 0000 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5328 Comm: kworker/0:3 Not tainted 6.15.0-syzkaller-10402-g4cb6c8af8591 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: cgroup_destroy css_free_rwork_fn
+RIP: 0010:css_rstat_updated_list kernel/cgroup/rstat.c:284 [inline]
+RIP: 0010:css_rstat_flush+0x5ff/0x1fa0 kernel/cgroup/rstat.c:413
+Code: 1e 75 d1 0d 01 0f 85 e6 14 00 00 e8 1b 1e 07 00 4c 03 6c 24 20 4d 8d 7d 08 4c 89 fb 48 c1 eb 03 48 b8 00 00 00 00 00 fc ff df <80> 3c 03 00 74 08 4c 89 ff e8 e3 51 6a 00 49 83 3f 00 0f 84 5d 01
+RSP: 0018:ffffc9000d68f780 EFLAGS: 00010802
+RAX: dffffc0000000000 RBX: 1ffff11011a4ca01 RCX: ffff88801f4ea440
+RDX: 0000000000000000 RSI: ffffffff8be266a0 RDI: ffffffff8be26660
+RBP: ffffc9000d68f9b8 R08: ffffffff8fa0aaf7 R09: 1ffffffff1f4155e
+R10: dffffc0000000000 R11: fffffbfff1f4155f R12: ffff88801fc42590
+R13: ffff88808d265000 R14: 0000000000000000 R15: ffff88808d265008
+FS:  0000000000000000(0000) GS:ffff88808d265000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffed1011a4ca01 CR3: 0000000042fe0000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ css_rstat_exit+0xa9/0x320 kernel/cgroup/rstat.c:479
+ css_free_rwork_fn+0x8b/0xc50 kernel/cgroup/cgroup.c:5449
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+ kthread+0x711/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+CR2: ffffed1011a4ca01
+---[ end trace 0000000000000000 ]---
+RIP: 0010:css_rstat_updated_list kernel/cgroup/rstat.c:284 [inline]
+RIP: 0010:css_rstat_flush+0x5ff/0x1fa0 kernel/cgroup/rstat.c:413
+Code: 1e 75 d1 0d 01 0f 85 e6 14 00 00 e8 1b 1e 07 00 4c 03 6c 24 20 4d 8d 7d 08 4c 89 fb 48 c1 eb 03 48 b8 00 00 00 00 00 fc ff df <80> 3c 03 00 74 08 4c 89 ff e8 e3 51 6a 00 49 83 3f 00 0f 84 5d 01
+RSP: 0018:ffffc9000d68f780 EFLAGS: 00010802
+RAX: dffffc0000000000 RBX: 1ffff11011a4ca01 RCX: ffff88801f4ea440
+RDX: 0000000000000000 RSI: ffffffff8be266a0 RDI: ffffffff8be26660
+RBP: ffffc9000d68f9b8 R08: ffffffff8fa0aaf7 R09: 1ffffffff1f4155e
+R10: dffffc0000000000 R11: fffffbfff1f4155f R12: ffff88801fc42590
+R13: ffff88808d265000 R14: 0000000000000000 R15: ffff88808d265008
+FS:  0000000000000000(0000) GS:ffff88808d265000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffed1011a4ca01 CR3: 0000000042fe0000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess), 5 bytes skipped:
+   0:	0f 85 e6 14 00 00    	jne    0x14ec
+   6:	e8 1b 1e 07 00       	call   0x71e26
+   b:	4c 03 6c 24 20       	add    0x20(%rsp),%r13
+  10:	4d 8d 7d 08          	lea    0x8(%r13),%r15
+  14:	4c 89 fb             	mov    %r15,%rbx
+  17:	48 c1 eb 03          	shr    $0x3,%rbx
+  1b:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  22:	fc ff df
+* 25:	80 3c 03 00          	cmpb   $0x0,(%rbx,%rax,1) <-- trapping instruction
+  29:	74 08                	je     0x33
+  2b:	4c 89 ff             	mov    %r15,%rdi
+  2e:	e8 e3 51 6a 00       	call   0x6a5216
+  33:	49 83 3f 00          	cmpq   $0x0,(%r15)
+  37:	0f                   	.byte 0xf
+  38:	84 5d 01             	test   %bl,0x1(%rbp)
 
 
-> +	struct eswin_reset_control *slot_control =
-> +		(struct eswin_reset_control *)p;
-> +
-> +	if (reset_spec->args[0] == slot_control->dev_id &&
-> +	    reset_spec->args[1] == slot_control->reset_bit)
-> +		return id;
-> +
-> +	return 0;
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Best regards,
-Krzysztof
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
