@@ -1,155 +1,104 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97CE28FA87
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC9728F52F
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749040395; cv=none; b=N9uqTHbbuaK3N2bY8DPk/UkG102L3fl0RgoTtEiqnpIf9YioaIX4txWelmeG4SKKoi5Jq5UUlPMaSVhD2DBUwSz9pzl/ZaCn25dqoTmUHXCQRrHEb2kticKrZo+ynj91Qgr+q5oykYB8b36E/ZXvJV5qvIY1wlRw7NxKBvAFesY=
+	t=1749040409; cv=none; b=k8UTwZaLp+e5i55hVeUk0zdld80AZT9jd0acqZH5z83oJkcKtqhc/R1xy7RYjcgm/hdYGAgk90o2R86ue9+aiW1tmdz4OTbxe8YxC9zjIhM2r3ydPJcY+AeUGhUc7zxwRFo9x36ALAGZyh68U6TqyL2zimzo4PvKe66fdyyFSbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749040395; c=relaxed/simple;
-	bh=Iet6vLa5JxyIOQRwCEwcG2MBQCOuUEBjVBgpY9LE5gM=;
+	s=arc-20240116; t=1749040409; c=relaxed/simple;
+	bh=V0HyZf2gOux8fh6ZwdvPK3QndkbmomnelOEU2Zv5HCA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cwigtErQhOm9Hm84vmjCYfUa3s7MfSmluTFUWliRMpg8vrigg4cFU54vlAwoNAKOC20usWx0CwhLsWjd9zjQM4MqJShLr+7tigJTaFXUKPOsEguHYc8MLII+xReYGzx3xRyETz+silBPq6QiuLbYle7PJhn3cr6hU4GpQzEIjxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=o1cdBzAc; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	 To:Cc:Content-Type; b=irHH24tevBJyzy3wGdJBEIZKMT96/FoMhkukeiEmWkqjZFsAv7Zb9feaz4bWFb9+OfepRLyragWuhHW/j5zuIR8vwbVzvGFa+SiXkoYZX9N1yFHTM1zSq5FXjTkZpIQUEG7HNO5+hJ/z7llQltBBRGcPraUfPBJqvNQ1gKJx+XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hsrFCLWI; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="o1cdBzAc"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55350d0eedeso3216319e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:33:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hsrFCLWI"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso8216a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:33:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749040392; x=1749645192; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749040406; x=1749645206; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=40H+9TTXhZnTaMd2EZ6HBT4RNOeVTmMt2oQhHbe4EDQ=;
-        b=o1cdBzAchTp1XJUOFxY3DjPTJ9A3yyk3qLnu/I+xFsRwze3jOsM9Y2EiJzikQg2YzC
-         mQqeDPmGi+hZQaMNQLnZo6iNooqaJxeEKY/oewV4UNcw+nkxxY7TkCQuT8yC6iUyUj7J
-         k+R/aDxjoMVRRtZ8+9WoeNZaZb2oaEnfD0UNOxqj2xau7yU1Ba9rm+Dq3Ns2sphCVvuN
-         hxhFk3x1mT6iW39GdqjIWgSUZkkvNbF0wbw1GUhs/KKFLLOO146tvmJDFY26zo3vnCQk
-         myCyjxbsHd9kOl8fKuNLvursOzdK/2RiC7yHTskhea91johqzszR66CYQAo+AJtT/tdF
-         El1w==
+        bh=35jbq/O8qXde5Ngmc6+WbHTRIiZn6TNHGMbDQohlu8w=;
+        b=hsrFCLWIAOWhebqGyUZPtdQiZWeUYZKwaAtNcpfSAqWeVouWHi0M/5TD2Di9VQCtRP
+         jdSwt/0xs9eW8OefEDLGLkPwmFfHP7GTABu4L2uz3hpIvnhBgK1EJlVAt0pQhf0n3VA8
+         NrtqpLE6osBZTi2hIVgt7CQ4DOrl1BJRWqrwLKzxDwmocr8We8G5cV6wSN8ntgrEFvy7
+         sEuZ6YL4U/5FYU7ELSGlRr23+05RfUqhSYJTyga3RigflH6EFcC1p7Z959GF+5DYR6GD
+         CTLB3AMhptlavftfwC8J46PwFd80NW75YrtjFLCRQ6c99+rkwV8HDA3WqB3RViFUy/aZ
+         Tt9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749040392; x=1749645192;
+        d=1e100.net; s=20230601; t=1749040406; x=1749645206;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=40H+9TTXhZnTaMd2EZ6HBT4RNOeVTmMt2oQhHbe4EDQ=;
-        b=FjKY8Jj9HoTOfXJMeHvamhOw1yAGFBMjYhg462LAkqreuRY/0HPgPPhnhs7sHFMIWl
-         JqxKEyziipuCPiWvnKfLh+Tn/+C4rbIL4trvOgXio63u8OkMujFdKfR8wRJJwqkURbVv
-         I4IWzPg/qZKtqBDZmVCcFxxDAbrO/SMbJU1As7vtc+es2oMIe5RIbv/CIaMSkLpTgEo2
-         Iql80dKZEDNXVkJKPbVy5WULhJDdXtbnTnKMWioaVGnAH4+9r16xdiRSi5yyuzU0nEDl
-         8UuxkAAeGxGp7PgyLewIVog/+SDdT9B1SkLuP16+HcOSOIOnqQO07xjSMw4oLptKEAxE
-         BUQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzo6nIfjIPexHD7Pe1mBalyaM4BZ3VkoaO2qpYptsVKmegKiEzGV+qtaG6/lGxmXruhUsWcXUOrutytvs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8GidfeOQJ/1W3awA8tcCT9Spt/wmAGN4I9j2PyjRv1MwzYEhn
-	28FC3UjPyM0Vm/3//f7eQKmDJAP2TiMFheyASMC+AQaBrjIaHI7bw5EnXRJm0umtvvW4SeTIYVc
-	QqPSZpEkEQ7jp2sQtIbWe7l9N1cJFMLqNk0ky+r/mAQ==
-X-Gm-Gg: ASbGncv6+OYcSe3JKSuvOtlTYzkNK9MEW1DVHPBjtqXlOdFoNOlGeDLQrYu0JUbroCX
-	LTJ6yeHiK8G9bdEHfHaDqkbKKm21s4oMIkSW9cYyEfPfZph/19tJByhCGFA9JI1FWW2ixY3NNNa
-	3K+E48Cc7xlS56o1C9HXnCOxU+X9hSyy9NdfAB1IibrAB0ob1mA3TWiHI3qc1iipsC
-X-Google-Smtp-Source: AGHT+IFq6pmnr37tc/Op7F/Fey62yojVdrF7s5RRVTPIUfG0sHj3PJlgFBWhtvoFugeUVElYakwUgAd29fPyfsZ3DLg=
-X-Received: by 2002:a05:6512:3e20:b0:553:252f:adf8 with SMTP id
- 2adb3069b0e04-55356ae0e10mr766979e87.9.1749040391631; Wed, 04 Jun 2025
- 05:33:11 -0700 (PDT)
+        bh=35jbq/O8qXde5Ngmc6+WbHTRIiZn6TNHGMbDQohlu8w=;
+        b=vIa4bh1e1r4L2XotdAfSN8VafNI9kH0Tjx6GR/0TU+sPFEyvdzEHa0yzUTEvlMsWhy
+         qkxw7CVz3gdx0gmFlpOTS7HYYifUdtFpX6z2kdYSWr+aFNvRtJNR0o54Q0iqOYfWWu5L
+         Vs3ssy0LATyk7WdWwOtUbIidoVgjG/ZnNEHMDhgEfEnEZuCJ5z3ucK0IQf+6Hfuzto8O
+         tF6FmQJoCIkYcKR9flwfBjN+l5zIIylaVnFA8Jz8v91jqphRBDpLYz4vEq9C6kWHCtYf
+         i9sf3eyOPM5QSCOZ3L00NXdlK4+OStZCgptRGWjm5Cg4jv6EoMA3BbPFjjG353ns991K
+         Fl1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUq00uiMR40u7uCYaOWZT6rb3ZALdx7bERlyczjRflepE1Vs6CGQZfl2Xwk30dT4TQN7VqznSqJ+M2BkBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv4joHNwbYieu0+IPKzpIWXGkIgg29cCwr8DvdRgQNZ3bpxSof
+	mhP1OvtIpi5dDDhTs4a+zDbsLow+2tIGo+s8D1jU+yQv7QL79tsNAoSH+rbEt62KtmuKLVxQjeh
+	8DQFFr2leEfKhy9kJsejSrqQPQUAsOW9uB0M0zX5d
+X-Gm-Gg: ASbGnctwQxmFK8PXlArhzHLk0hEhW9/94cYTGYLDVqP+4oP00weISNyoDvMcjM8DL31
+	0hMsKbXcMpxMKznydQHP9vgbQWE1Gi7BOOTBxRquacrUQ7hb0VELArcKeRTFNjb1GHgt26EKxPS
+	7onMO+zaAaIqdJrqZIggU1tsudx+Q8inNUWYDzEJN/elj6D6nRx0pK6G/7Cqr5AimHxjOncA==
+X-Google-Smtp-Source: AGHT+IEk7Imp1OmtRA2HzCYp4F71lZI1Ku2lyPIaNKIN7oFD91XLzjJ08tylnHIxk+wRTMTPFlqyiLvnzmyaMN9jvCE=
+X-Received: by 2002:a05:6402:1485:b0:607:1323:9c2c with SMTP id
+ 4fb4d7f45d1cf-60713239d19mr4733a12.7.1749040406204; Wed, 04 Jun 2025 05:33:26
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
- <CGME20250529222408eucas1p20f62cea4c9c64bb5dda6db1fd38fb333@eucas1p2.samsung.com>
- <20250530-apr_14_for_sending-v3-6-83d5744d997c@samsung.com>
- <20250603-gleaming-mammoth-of-kindness-538add@kuoka> <c49ae9f2-3c3c-4253-be85-8fe5bbb4b42e@samsung.com>
-In-Reply-To: <c49ae9f2-3c3c-4253-be85-8fe5bbb4b42e@samsung.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 4 Jun 2025 14:33:00 +0200
-X-Gm-Features: AX0GCFuJQtZdn8gggvUkoP6l-v_fzn9vXleutgIfablo4CyL1FqiXWHXgL-Yqpk
-Message-ID: <CAMRc=Me75aGMic-GZuqCe+v=8MmmK8DCyfVZj=ELR4VuG-_qDQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/8] riscv: dts: thead: Add GPU power sequencer node
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
-	Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
+References: <20250604082449.2029156-1-guanyulin@google.com> <2025060407-geologic-excuse-9ca5@gregkh>
+In-Reply-To: <2025060407-geologic-excuse-9ca5@gregkh>
+From: Guan-Yu Lin <guanyulin@google.com>
+Date: Wed, 4 Jun 2025 20:32:00 +0800
+X-Gm-Features: AX0GCFt2T0HkBN4LrA4l1V6h8zyLMTF_heB40M61uF7A7sSq23-qzTh9t4bgM-A
+Message-ID: <CAOuDEK1471toXVEiNySQtmrRTSPwzo840Q2d5pw9M4fCOfsgTg@mail.gmail.com>
+Subject: Re: [PATCH v14 0/4] Support system sleep with offloaded usb transfers
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: mathias.nyman@intel.com, gargaditya08@live.com, kekrby@gmail.com, 
+	jeff.johnson@oss.qualcomm.com, quic_zijuhu@quicinc.com, 
+	andriy.shevchenko@linux.intel.com, ben@decadent.org.uk, broonie@kernel.org, 
+	quic_wcheng@quicinc.com, krzysztof.kozlowski@linaro.org, 
+	sumit.garg@kernel.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 8:45=E2=80=AFPM Michal Wilczynski
-<m.wilczynski@samsung.com> wrote:
+On Wed, Jun 4, 2025 at 6:56=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org>=
+ wrote:
 >
+> On Wed, Jun 04, 2025 at 08:23:06AM +0000, Guan-Yu Lin wrote:
 >
+> Is there a reason you aren't cc:ing the developers from a "big android
+> device company" that is currently testing and finding problems with this
+> patchset in their device testing?  I will require their signed-off-by or
+> tested-by in order to even consider accepting this patch series based on
+> the issues they seem to be finding with it in an
+> internal-company-bug-reporting-platform that I seem to be also copied
+> on.
 >
-> On 6/3/25 15:22, Krzysztof Kozlowski wrote:
-> > On Fri, May 30, 2025 at 12:23:53AM GMT, Michal Wilczynski wrote:
-> >> Add the device tree node for the T-HEAD TH1520 GPU power sequencer
-> >> (gpu_pwrseq) to the th1520.dtsi file.
-> >>
-> >> This node instantiates the thead,th1520-gpu-pwrseq driver, which
-> >
-> > Explain the hardware, not what drivers do.
-> >
-> >> is responsible for managing the GPU's power-on/off sequence. The node
-> >> specifies the gpu-clkgen reset, which is one of the resources
-> >> controlled by this sequencer.
-> >>
-> >> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> >> ---
-> >>  arch/riscv/boot/dts/thead/th1520.dtsi | 6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/d=
-ts/thead/th1520.dtsi
-> >> index bdbb1b985b0b76cf669a9bf40c6ec37258329056..6170eec79e919b606a2046=
-ac8f52db07e47ef441 100644
-> >> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> >> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> >> @@ -238,6 +238,12 @@ aon: aon {
-> >>              #power-domain-cells =3D <1>;
-> >>      };
-> >>
-> >> +    gpu_pwrseq: pwrseq {
-> >
-> > Node names should be generic. See also an explanation and list of
-> > examples (not exhaustive) in DT specification:
-> > https://protect2.fireeye.com/v1/url?k=3Da53ea5d3-c4434f50-a53f2e9c-74fe=
-48600158-c81092475ef416b3&q=3D1&e=3Dd333d06b-0b06-493e-a358-e29ca542dfe7&u=
-=3Dhttps%3A%2F%2Fdevicetree-specification.readthedocs.io%2Fen%2Flatest%2Fch=
-apter2-devicetree-basics.html%23generic-names-recommendation
-> >
-> >> +            compatible =3D "thead,th1520-gpu-pwrseq";
-> >> +            resets =3D <&rst TH1520_RESET_ID_GPU_CLKGEN>;
-> >> +            reset-names =3D "gpu-clkgen";
-> >
-> > What is the point of pwrseq if there is no consumer/user of it? Looks
-> > like simple placeholder and anyway maybe the future consumer should jus=
-t
-> > use reset directly.
+> thanks,
 >
-> Yeah I think you're right, I wanted to explore adding the pwrseq
-> provider in separate node per discussion in v2 [1]. But for the v4 I
-> think I'll revert to the v2 way of handling this reset [2].
->
-> [1] - https://lore.kernel.org/all/CAPDyKFpi6_CD++a9sbGBvJCuBSQS6YcpNttkRQ=
-hQMTWy1yyrRg@mail.gmail.com/
-> [2] - https://lore.kernel.org/all/20250414-apr_14_for_sending-v2-2-70c5af=
-2af96c@samsung.com/
->
+> greg k-h
 
-I think you still need to connect the GPU node with its pwrseq
-provider (which will be the aon node in this case). But you already
-have this link - the aon power domain. You can parse it in the pwrseq
-match callback to determine which GPU is powered by which AON module.
+I'm not sure if the company wants to reveal its testing right now
+since the company raised the problem with the internal system. Hence,
+we still use the internal system to communicate with them. We
+understand that "signed-off-by"/"tested-by" tags are required to merge
+the code, so we'll keep working closely with multiple companies to
+achieve this.
 
-Bart
+Regards,
+Guan-Yu
