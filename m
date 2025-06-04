@@ -1,28 +1,28 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18541AA1DA;
-	Wed,  4 Jun 2025 02:21:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886421B0439;
+	Wed,  4 Jun 2025 02:21:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749003714; cv=none; b=OQHq/KTVtWhPJ7j3yvR+TrRKVjNmNYU6hlfrXklfKZFC+wZKnAZ5nh7facmcm+Bwd2Gqi10SvaG1/7ZUV/fnqWXgyrg2N63fsICTN95mCF5Nkd/cEWvO+3W615LG7xyt++I8vsNdV5Z8pGbIiaYZRgzyKfFloa8uBiJi4Oro21Y=
+	t=1749003715; cv=none; b=PgIeGHu70EwcMmqrtrcsy7z5SmriQ9/Cvx3Jrv0bVzBuJMI3a0HKG2A6ilBoR9vueaQ1z/Xig2Ez6Gi3yV1UEHKf6HJ/my5HMb96PHvrSBA3hqcwy8HoXm6YBw3s2VrlVUkPNIdOLrr4r5fUXY8BCXYt5Xs9Ft7IAn14S1rs694=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749003714; c=relaxed/simple;
-	bh=3h309OgJJnQsDgMwm7RN2SX60By/ChS9npQbUc97mv4=;
+	s=arc-20240116; t=1749003715; c=relaxed/simple;
+	bh=Ih7Rdru8yt6ZTVp4qBpSSEBIrc9K97d3B+3mR6c1Q3A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VG/74BH+YLslQrer7uiG7S9mL8jUMXo3bK2OW+Abmc1Jwa5E9+KoLnJ5PHlZjMgBkuU4etg5qJXNy2jcoY6Ctbhe1NHyO9RScuLBuxh9NZ1sdypin/wAojiVt1k6to5KOJczIEQndiPnHpTAqP6O2gKCLcOL8fXxk39Qr5HPjT0=
+	 MIME-Version; b=okX0evbsmNQOqbSn8O6CM1BVsvldZy73rTmD66bvF61jBXzwxn0wte6QtyYWNJRfi4ePaCeQoSGq42RuZtTj5f3wT1zoNqWgJRCkQPdJO22qgQ7jJDCA3L6yG71QnEqc8iEFqS6sLpfMi9cBI6H+Lu/5goMR4+kPjXHkCxmDJsc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bBrtd2PLHzYQvMH;
-	Wed,  4 Jun 2025 10:21:45 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bBrtf6v1vzYQvNd;
+	Wed,  4 Jun 2025 10:21:46 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 5DA7E1A1932;
-	Wed,  4 Jun 2025 10:21:44 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 0499C1A0F89;
+	Wed,  4 Jun 2025 10:21:46 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl+nrT9oedfBOQ--.14997S6;
-	Wed, 04 Jun 2025 10:21:44 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl+nrT9oedfBOQ--.14997S8;
+	Wed, 04 Jun 2025 10:21:45 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-fsdevel@vger.kernel.org,
 	linux-ext4@vger.kernel.org,
@@ -46,9 +46,9 @@ Cc: linux-xfs@vger.kernel.org,
 	chengzhihao1@huawei.com,
 	yukuai3@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH 02/10] nvme: set BLK_FEAT_WRITE_ZEROES_UNMAP if device supports DEAC bit
-Date: Wed,  4 Jun 2025 10:08:42 +0800
-Message-ID: <20250604020850.1304633-3-yi.zhang@huaweicloud.com>
+Subject: [PATCH 04/10] nvmet: set WZDS and DRB if device supports BLK_FEAT_WRITE_ZEROES_UNMAP
+Date: Wed,  4 Jun 2025 10:08:44 +0800
+Message-ID: <20250604020850.1304633-5-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.46.1
 In-Reply-To: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
 References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
@@ -59,79 +59,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl+nrT9oedfBOQ--.14997S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7ury8Ar4xJF4kuF15tw48Crg_yoW8Zr4kpF
-	W3Wa42kw18Wr47C3sxZw47AFy5Gw1kGa4UKFn7K34Ygr15A34Fgr1rKa43XFWkX393uayY
-	yFWDK34kCan8XwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjTRRCJPDUUUU
+X-CM-TRANSID:gCh0CgCnCl+nrT9oedfBOQ--.14997S8
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFy7WFyUCryxtFW7JF1UWrg_yoWDKwcEv3
+	W09r4UWa1kur1kKFWa9F15ZryUKw48ZF1IqFs2qa4Sgr9rWrs5u3WvvF9Iya4UAF4rXrsx
+	uFnrXFsagrWIgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbvAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
+	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
+	F7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
+	1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
+	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
+	v20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
+	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
+	IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsG
+	vfC2KfnxnUUI43ZEXa7sRRtCztUUUUU==
 X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-When the device supports the Write Zeroes command and the DEAC bit, it
-indicates that the deallocate bit in the Write Zeroes command is
-supported, and the bytes read from a deallocated logical block are
-zeroes. This means the device supports unmap Write Zeroes, so set the
-BLK_FEAT_WRITE_ZEROES_UNMAP feature to the device's queue limit.
+Set WZDS and DRB bit to the namespace dlfeat if the underlying block
+device supports BLK_FEAT_WRITE_ZEROES_UNMAP, make the nvme target
+device supports unmaped write zeroes command.
 
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/nvme/host/core.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/nvme/target/io-cmd-bdev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index f69a232a000a..0ac3dffe2a3d 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2421,22 +2421,25 @@ static int nvme_update_ns_info_block(struct nvme_ns *ns,
- 	else
- 		lim.write_stream_granularity = 0;
+diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
+index 83be0657e6df..052da6174548 100644
+--- a/drivers/nvme/target/io-cmd-bdev.c
++++ b/drivers/nvme/target/io-cmd-bdev.c
+@@ -46,6 +46,10 @@ void nvmet_bdev_set_limits(struct block_device *bdev, struct nvme_id_ns *id)
+ 	id->npda = id->npdg;
+ 	/* NOWS = Namespace Optimal Write Size */
+ 	id->nows = to0based(bdev_io_opt(bdev) / bdev_logical_block_size(bdev));
++
++	/* Set WZDS and DRB if device supports unmapped write zeroes */
++	if (bdev_write_zeroes_unmap(bdev))
++		id->dlfeat = (1 << 3) | 0x1;
+ }
  
--	ret = queue_limits_commit_update(ns->disk->queue, &lim);
--	if (ret) {
--		blk_mq_unfreeze_queue(ns->disk->queue, memflags);
--		goto out;
--	}
--
--	set_capacity_and_notify(ns->disk, capacity);
--
- 	/*
- 	 * Only set the DEAC bit if the device guarantees that reads from
- 	 * deallocated data return zeroes.  While the DEAC bit does not
- 	 * require that, it must be a no-op if reads from deallocated data
- 	 * do not return zeroes.
- 	 */
--	if ((id->dlfeat & 0x7) == 0x1 && (id->dlfeat & (1 << 3)))
-+	if ((id->dlfeat & 0x7) == 0x1 && (id->dlfeat & (1 << 3))) {
- 		ns->head->features |= NVME_NS_DEAC;
-+		if (lim.max_write_zeroes_sectors)
-+			lim.features |= BLK_FEAT_WRITE_ZEROES_UNMAP;
-+	}
-+
-+	ret = queue_limits_commit_update(ns->disk->queue, &lim);
-+	if (ret) {
-+		blk_mq_unfreeze_queue(ns->disk->queue, memflags);
-+		goto out;
-+	}
-+
-+	set_capacity_and_notify(ns->disk, capacity);
- 	set_disk_ro(ns->disk, nvme_ns_is_readonly(ns, info));
- 	set_bit(NVME_NS_READY, &ns->flags);
- 	blk_mq_unfreeze_queue(ns->disk->queue, memflags);
+ void nvmet_bdev_ns_disable(struct nvmet_ns *ns)
 -- 
 2.46.1
 
