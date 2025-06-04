@@ -1,104 +1,99 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843F46F073;
-	Wed,  4 Jun 2025 23:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E98A6F073;
+	Wed,  4 Jun 2025 23:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749080527; cv=none; b=UKW/sNU5WftpSGIfmTOcwxC3PFVhc7q8wyO45h8MGPW0qZE8fGf8NTA7Rbd0E/ZIPaiF0RR+xV2r2GluEwEVC8hTDzSGyW6CoXDN2DcLR/cXuoSJEot4t+eMPoumqKwA7bGnFNlCPkC7wh2CTWnaWI/+DDBv4Optryv3c+JN/YA=
+	t=1749080669; cv=none; b=K0lnBvqdVcU9JsyVzUSMbol65aQKg/ocvczg/X9k7X9iC1+n5bPbYMg5lLwu1LuaepKQ3V8mmHjxyFM0cOcvC9YGV2iqwZnck1Rin/7v2bJprqSYuCg5mBbzV8Ej1Pw76qViNW6Q2FUa3YwhPv+jZApeQ0/zo1M3oBpleJwPz1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749080527; c=relaxed/simple;
-	bh=TssufhLWCeePlGG2Z0MM13Ur1COb2ebvj5gdMsFKJJA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FtnWHAeF1fUcybHVH2s+p4GhnJtz2SkgPvV+VecB2ytUOqzFXJ5IEiWRvJ2RbW47K53cBMW4zJ73L1xmK4vFY/QZfLjHmFSnpq/B3Q02SVAxv8X37mMonXEjGqqDWqwYKzwDWhnvMbfUmCDl1ICIcaEKT8NieQUuH8Q+diQxa64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k0o9ES7l; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749080669; c=relaxed/simple;
+	bh=rwcuOfT1CA5poAxzq1khNwu+dKvGPkT+ivPyW0kINuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CqThr9SZHyFwBvoHYGweC2MYedH57X3vSq5hgoZzOmZRu1L02CvYalnfmStgnIb97+FMCanju8B9pcArzvhFFkc/TX8mZioziocCOt5rCWMQP0NwdaBZt1r7ec/B2JrlyNrgBj3874bGlXjDXWKsiisE3lVIshsAosMHmqQ5YoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fc99E2FI; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0o9ES7l"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e740a09eae0so415652276.1;
-        Wed, 04 Jun 2025 16:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749080524; x=1749685324; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ogtPkHGBxY5aXjHm5ko6SRdjkhMwenqN1SLiQIlyNC0=;
-        b=k0o9ES7lPRzLFrnc8CT0juMnk5EgVSXF7hnE9BCqxg7zF4HVeEPmzY03oLfiurIhkK
-         rPshu1ku6BtsMQ0zN1IkDADkQiDtyNcZy7jweXgBVPmv8ALq348+oyfCnaxqJuGZQYZE
-         NvD3AaeCprvnfb4Yv3ItRYr8XPxgXnBNu/LIBvsGteLP0zIbYRXa7U6p25+yrDtnzfLs
-         PMyKKGz8RjTrw2klaVzh2lQlAI7C+mpZbqT3HeZ0P5xrgQlvKKL8STlGNgCkxz7dGfRo
-         zOW956I9H/9J9+aQkGNtQThkL1S61CcAQ2rqcxjbOHE4b5uwVnaViDjpP1zawG0nrVON
-         7b3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749080524; x=1749685324;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ogtPkHGBxY5aXjHm5ko6SRdjkhMwenqN1SLiQIlyNC0=;
-        b=Woc9eX3HdeQjZeg8XPM5oWUqxouMZk+8fwKd9ta9kjdPxUjyUsu1sMuK7i93RyIVF7
-         v4T9Xo/huUsP0v+LgUflbct070eNFmzaDr3p3g0Zu1yOXXR/UvIldncBj3ix5DMR3eTF
-         8WCuUdQLqKGuIaGxq1SO0oBt90YnHpGJa0D0zeOvsZ2vYT76czNv3W0n9TUvH7wCSx37
-         ENQxbqYLeQonBzqDDrkIUjKV5vMV0rECWTwcVGZgVl/3ydsqmfG63XOKelZ9PzYT3Nrn
-         RzNMbKWUg+lx1Yw4KmmI6n3H0KzVpbPvdk9MMf2Cbs8Yai7dI/Fjd18a+IWKaszV7X8b
-         GfkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzjmwhI2y34H0MiIxC/U/t3k1EX6ep/Qc1vSu2LNrb8SYGSGwPa0auLeVr59lB1aB/0ehmTJHgYWu+WDo=@vger.kernel.org, AJvYcCVMBaz2GagXf8RBcafbKLX00eWUz6zU0qjakrwBvStG4/b5kgFL6btgMghDvmfQfCJqIVBiMHho3KPjxw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx9u1z8dSe7IumOJxq0zffj3L1FO1kzDKYhHDoMGUkbeo4U+d5
-	g8fbvNycajDMtIIkqKAiwcQju1bCjfrCYAVOnQiF5sjcazL1z3Bjs1DZtfPFuw==
-X-Gm-Gg: ASbGncvugHafpg+LLfXi7MXDINyB25LnOu75FCk7qnnsDhV/sIGjnz8nGx6yKboddTS
-	AkmeUeNBRZkLvyG/dR1LRYIzp4XS0lhozLD+T0mvECAtAqTn7WZHE3nVpLC8pu6a28YOSrJi0eZ
-	lLY0Pr30VV5puBeV3a0ZluEkiYmmlCfJGdbRo1jAf4ZMS3TpKQrizBkOOo1nIpq2cxi3jSrOM40
-	5yyAvS/flSFABzVodwNB6raNqoXuwF/tLBAfk3BYfFvmDTklXPKxYuk7tnH4jjiJDq1n9ODaonO
-	aZMs5vM3xHyZDwFLUigvmi8VL18awiY55JeiyCc9SVIsD+lp/tcgkNHx8pdmcU23PDtbIk1MT98
-	vbq7jM+xpySc=
-X-Google-Smtp-Source: AGHT+IGYLFQSXYiQ1P74k/ZFrgZ+D8x/YLl+JJqMylp7u3vT/i81AKeVBGpIjDbKx265JQylSgO5jA==
-X-Received: by 2002:a05:6902:2291:b0:e81:8639:c59b with SMTP id 3f1490d57ef6-e818639ce51mr3781407276.48.1749080524378;
-        Wed, 04 Jun 2025 16:42:04 -0700 (PDT)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7f733c9f9csm3373822276.17.2025.06.04.16.42.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 16:42:03 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: Hannes Reinecke <hare@suse.de>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH] scsi/fcoe: simplify fcoe_select_cpu()
-Date: Wed,  4 Jun 2025 19:42:00 -0400
-Message-ID: <20250604234201.42509-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fc99E2FI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749080667; x=1780616667;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rwcuOfT1CA5poAxzq1khNwu+dKvGPkT+ivPyW0kINuA=;
+  b=fc99E2FI2G9dizWLNTeJehK1xMxCiifDrjLEyOEEeG7/EgdzQjdLXLoj
+   JzEGypmuVUE8lvhd6Ol2iNd5piC/v4OkA5hw8iuWQVGTyCaBpR1Nz4lMt
+   gHwgdoON+RsgvZjLr6wRZtnL84YP3ZDTjDDzHkdSlo9H0034Swsqb0Kzr
+   Ka/bpb0HrrGUQuD+sQ26bQAELE69GG3WKnwAH14lfFmM1b4dNequfjDOa
+   9f7sfQSEZQ920L02ORvoc2doOZRewMXqHYOet6JJkUXRnRn0czqLGFoI3
+   AT1Y7rGMBpifvJjrxBLfpSI/FR0LksPUIS3eV4tXIwTeTDjXKQRbfYbzr
+   g==;
+X-CSE-ConnectionGUID: D2R8QreUTcCkRUAwvSszKQ==
+X-CSE-MsgGUID: dpwj04yQRTa5s4p4d5VVNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="54975317"
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="54975317"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:44:26 -0700
+X-CSE-ConnectionGUID: WJXhXchUQsmFazAPsiwa5g==
+X-CSE-MsgGUID: OB62SZJpSyG16SNyMguRFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="146274344"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:44:26 -0700
+Date: Wed, 4 Jun 2025 16:44:25 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, bp@alien8.de,
+	kees@kernel.org, gustavoars@kernel.org, Jonathan.Cameron@huawei.com,
+	sudeep.holla@arm.com, u.kleine-koenig@baylibre.com,
+	jonathanh@nvidia.com, viro@zeniv.linux.org.uk, ira.weiny@intel.com,
+	peterz@infradead.org, sthanneeru.opensrc@micron.com,
+	gregkh@linuxfoundation.org, Benjamin.Cheatham@amd.com,
+	dave.jiang@intel.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 0/7] Enable EINJv2 Support
+Message-ID: <aEDaWWHKrM5hUt9M@agluck-desk3>
+References: <20250604223804.842501-1-zaidal@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604223804.842501-1-zaidal@os.amperecomputing.com>
 
-cpumask_next() followed by cpumask_first() opencodes
-cpumask_next_wrap(). Fix it.
+On Wed, Jun 04, 2025 at 03:37:57PM -0700, Zaid Alali wrote:
+> The goal of this update is to allow the driver to simultaneously
+> support EINJ and EINJv2. The implementation follows ACPI 6.6
+> specs[1] that enables the driver to discover system capabilities
+> through GET_ERROR_TYPE.
+> 
+> Link: https://uefi.org/specs/ACPI/6.6/18_Platform_Error_Interfaces.html#error-injection [1]
+> 
+> V8:
+> 	*Update UI to use single value files for component array.
+> 	*Update links to point to recent ACPI 6.6 spec release.
+> 	*Updated commit messages and documentation patch.
+> 	*Dropped the first two patches as they were merged via
+> 	 ACPICA project.
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
- drivers/scsi/fcoe/fcoe.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Some of the Signed-off-by tags in this series are wrong. Partially
+my fault for an offline exchange of patches with Zaid to get this
+series cleaned up.
 
-diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
-index b911fdb387f3..07eddafe52ff 100644
---- a/drivers/scsi/fcoe/fcoe.c
-+++ b/drivers/scsi/fcoe/fcoe.c
-@@ -1312,10 +1312,7 @@ static inline unsigned int fcoe_select_cpu(void)
- {
- 	static unsigned int selected_cpu;
- 
--	selected_cpu = cpumask_next(selected_cpu, cpu_online_mask);
--	if (selected_cpu >= nr_cpu_ids)
--		selected_cpu = cpumask_first(cpu_online_mask);
--
-+	selected_cpu = cpumask_next_wrap(selected_cpu, cpu_online_mask);
- 	return selected_cpu;
- }
- 
--- 
-2.43.0
+1	Could have a Reviewed-by: Tony Luck instead of Signed-off
+2	Could have a Reviewed-by: Tony Luck instead of Signed-off
+3	Could have a Reviewed-by: Tony Luck instead of Signed-off
+4	I rewrote the commit message, could have a Reviewed-by: Tony Luck instead of Signed-off
+5	My patch, but Zaid forwarded it, so it should have his Signed-off after mine
+6	Zaid's Signed-off should be after my Sign/Co-developed
+7	Zaid's Signed-off should be after my Sign/Co-developed
 
+Apart from that, all seems good in this version.
+
+-Tony
