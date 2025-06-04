@@ -1,85 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2087.outbound.protection.outlook.com [40.107.237.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499F6262D29
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 06:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749017420; cv=none; b=j/T/tYEkb8vG1vqSfC3rn7HEs6B2Z0k1+8qQEUoPrm9HwUfJMB6a6FJ3g6zuh6CUPi1+mC42F8XR8ygstqNyglsT9NuHI3x/Yfy2SwiXnBqlV1ZZRKZ387iCN7xFX7b8bf+xgZcbNeqveFWM+TjSRN6aUMchLyYk1fkPCu23kJg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749017420; c=relaxed/simple;
-	bh=Mkq5WjqNAH4fbbGhZ7xDUwFGa/5GF00cq096FZHGhH8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=u3fI1d5av94z8bGFVXJOYjunl3p0RzYaLTcH2ZkFdJCduMkv53wwfqWhLG8I0+OG3V+IQDOsIyhB0gkpc204h60h+pp3Sx6GbK1HprU+5ZPoX2e3RPrAO8TIOEyV8Ehm5/+BPGYxQXsULnd/cK+xqQJ3O2mJ69OPau26ClgS8sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W8DwReQ9; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC8427735
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 06:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749017623; cv=fail; b=YrpFjvVfQo6oLbWey2JATDOiOGVc1j+yDO5iAeyEF1U18gTe8Id8ixzl/w8v9ctAvIqG4nyNx06QnZ3fw2Ej8fhfGrWwe2dThQDtRDw2FZ3NQdGAzu7MQqW0y2eHl/uaSehrDrByL5U+dvZc3admghvdVp56Me5oTgqA9bcgCOI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749017623; c=relaxed/simple;
+	bh=OBW3ydhjxleRyHxisJVpOZKBX/fC5JIGrBrcuGCnI0g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F0WFXpLmGsh7LECkbLIJ2BGuPHI+qNqq4ABgkfDKAHpL2vDI+cHloEB3pqBQsOuAHcqhbqxtWLmpuu3MazA38xIW5mgkGblZm7vgxa5immqjA0rtdV4uQVJS2bN7eMLzWMKd8YYQx1lqjXHyKlc4wPKtdKWN91cJzCQIU6ywiAc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Mdip1T59; arc=fail smtp.client-ip=40.107.237.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W8DwReQ9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749017419; x=1780553419;
-  h=date:from:to:cc:subject:message-id;
-  bh=Mkq5WjqNAH4fbbGhZ7xDUwFGa/5GF00cq096FZHGhH8=;
-  b=W8DwReQ9x81ta4HL1AxQzJ0zo6chzeusQnU7EyBQ4IiT2wzBxJtz38aZ
-   serUqWadp0HVwR9+0PRowFp4VV79+vMQtt2UhQz/ZW3weYJMXLSgVln0j
-   LXdtqZrWZdOpQJnf+pqPsf6xQLwi31g4Jy5tGOKaReeO+MFRIo4LS8xR0
-   1BX4kzM6Svp1ZhPIFwdKWO2Jt8NQ6UIN1ZeATjROncGLjqgLYlU/bKh9K
-   YErYdQp/YIW/16f4+fXmjAxtZniOAgMNa9y/ftaOKVHDDSaztXm/QDiGt
-   fhnLsPPkmsrfb4qXx2WHH5csu+f9dqcGWDXCF3Xt3gPbKtv4HWOgmmH8F
-   Q==;
-X-CSE-ConnectionGUID: 2PuOHpnnSw6kaUlenwbYrg==
-X-CSE-MsgGUID: 42O9b6qDR6KHLCKjpq8IWA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="62436965"
-X-IronPort-AV: E=Sophos;i="6.16,208,1744095600"; 
-   d="scan'208";a="62436965"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 23:10:18 -0700
-X-CSE-ConnectionGUID: xTgSdXXrTqmzYPmTcG+GGA==
-X-CSE-MsgGUID: s14kOZFfRZmRXe1Htbeecg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,208,1744095600"; 
-   d="scan'208";a="182261889"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 03 Jun 2025 23:10:18 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uMhKJ-0002uv-1I;
-	Wed, 04 Jun 2025 06:10:15 +0000
-Date: Wed, 04 Jun 2025 14:09:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- 8b68e978718f14fdcb080c2a7791c52a0d09bc6d
-Message-ID: <202506041439.hgNEmgiK-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Mdip1T59"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iYBbW7M8eW2S64fRB/IwaIabKf+LXAQzbPZx6NTwQI65a9TFh5N6hwvzzlqMAyE8diZ+CmWLm34rsQdNcjWbzX6rO7uqEtx615N7t3N+ejqLHEgBjMNd/C+AL9TlYpPgrn9cj9CvM1qI8B5P7VpJrjoTsgbOw2cxhcMb495UG/RYdbptHJIZeFCrxPF5FLRd4EaaL1L4LAkWKGijyLg1S9/fP7jIVxwOXxUHFHuYRg8Todr7nuZ7q+9jzg9brErqGKXUBwQXaGNYUChQN8InHYKM7uxjuFzfS2JKKz9lRbqeKbxkPMAvTZPc0X8SxdvVQEoED1QEU/8Y1DQJwRuIPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Cswgiep4z4orh2z7M/pYgU2GsI+w5FOuHc3goRNqWgY=;
+ b=fm760kK3LYNDm8sIv1Psgvjrk2ZlF+NU637QPTPJesbaUsBri7X+unOoblcarSJ7tsdvwHXSdu+Uy8Ftd277AVvLmALX687Ym4L7Kvy+zYNf/rjIi6qBKSmpYvjLvTpH8DalPmibaFYEg0cj/QcxxKGsnjVr/iAEGv+tTQp6mNJInDmxeK7PszGH6n0OYw3dpwpmaEEpWnYb2pCaBM3PcJMI0a/Bv8R63AXKBof0NO3VxRSz4xUUk9FpxM41SF7Oh4F7tZZRB2jEh69QrJREeV3tkseHXTlrn6KUh/Vr3KgIWa+r+cz7vEEOUl/Dh1K7iIvQUzxN4e2doJ5iRbhu5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cswgiep4z4orh2z7M/pYgU2GsI+w5FOuHc3goRNqWgY=;
+ b=Mdip1T599O36Y2B6jCCFbfzZ52kdArkkjptoNnR6Dg3WG0fLyFldt9HKm94xXGDnZr/7fkFr0yhH9Bnp4nergnpLV2V9FjwNDYL4kzhgb1sX6eNz/PFY5LjyZKxvDPDrBOSELKeQIbZBBy2Pz/lC6/qK6iyLDz+ji060c3hPF0M=
+Received: from BN0PR07CA0013.namprd07.prod.outlook.com (2603:10b6:408:141::19)
+ by CY8PR12MB7489.namprd12.prod.outlook.com (2603:10b6:930:90::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Wed, 4 Jun
+ 2025 06:13:36 +0000
+Received: from BN1PEPF00005FFE.namprd05.prod.outlook.com
+ (2603:10b6:408:141:cafe::95) by BN0PR07CA0013.outlook.office365.com
+ (2603:10b6:408:141::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.31 via Frontend Transport; Wed,
+ 4 Jun 2025 06:13:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF00005FFE.mail.protection.outlook.com (10.167.243.230) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8792.29 via Frontend Transport; Wed, 4 Jun 2025 06:13:36 +0000
+Received: from BLRANKISONI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 4 Jun
+ 2025 01:13:33 -0500
+From: Ankit Soni <Ankit.Soni@amd.com>
+To: <iommu@lists.linux.dev>
+CC: <vasant.hegde@amd.com>, <joao.m.martins@oracle.com>,
+	<suravee.suthikulpanit@amd.com>, <joro@8bytes.org>, <will@kernel.org>,
+	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 0/2] iommu/amd: Support for HATdis and HATS features
+Date: Wed, 4 Jun 2025 06:13:23 +0000
+Message-ID: <cover.1749016436.git.Ankit.Soni@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00005FFE:EE_|CY8PR12MB7489:EE_
+X-MS-Office365-Filtering-Correlation-Id: c3b56746-5fcd-41e5-1ba2-08dda32ef0fa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?e9h+f71QDZohl+HuBSJAEF2OOJCPQkftujqllKsWC2GmnxnVIpObHgD384p4?=
+ =?us-ascii?Q?m2SDIuesQxefzuDMvPj062wuIWIjTr78pGJ17KcbUD14lP92QQjfN+AfnKC+?=
+ =?us-ascii?Q?GCw5pgu+WlHwf/1rEYGPa8K0JgUyk97BqedWV2fOZNJ9zMzTD4Z4P52o9SwX?=
+ =?us-ascii?Q?uKNxt3NuQ+NCuPHEW+z7YPDM8vgOkt1OQt0A+gyX/ti1p9INWU/dk6fmsxCi?=
+ =?us-ascii?Q?LDAXEmnPICv9EOP7g0q9aViGpokCon1k/Zs2fJHlxwCZm8rS4nAl/sIyEFbx?=
+ =?us-ascii?Q?P2XtcGbuOkowddakQxmm8whjySEE01A+JJUWIUvLlBvYeF0EvfpMfRC8ajH3?=
+ =?us-ascii?Q?hTLTP/+bQ4ex4sUwfdK/GM+HEpr9xEe0ptkHosbAk8ZLKINW8Vwg57PgELh2?=
+ =?us-ascii?Q?mr71a2JRqpA/A7egS1aFeUPpbDbmHX2MKTBbNudURnnEhSPAb84tzNNeIRjE?=
+ =?us-ascii?Q?6WHyRmbYmkwo7ozGtS1QuGgNMuwun1PY9gpHhvulkjrQp/rOzkJp8yhUEwH9?=
+ =?us-ascii?Q?IpdsCq7MxJGjS3DH8yEofqXBd5dtixcFVeq98Mu1LtgB1uGHnj3kphfYV/Km?=
+ =?us-ascii?Q?xP0oIhLSW0vezXCSJ4hfiYg1343LKlIECjVxWzuvq4W99aqDCr2B4AVh+r68?=
+ =?us-ascii?Q?QECLgBvIc8gY9jgI777Z3SYOVahvul7Fmi5ZzAmprWASRkorAPPdvMRNUeqS?=
+ =?us-ascii?Q?lPaOKz+RiQ4c51ptPRCGfIZo3A4uH5nwrh9b5UNMXXGPRkxLAVwXdHqv+ZaI?=
+ =?us-ascii?Q?+MnTEOJoWL45W8z6oluyeM5F95wU/wGbOJnhUK3mu1opsJr3G3GG0xPu19Zs?=
+ =?us-ascii?Q?xAPWOY/O/hBmclJ3gVYuGWDfYiLpxkF+XDUR+WCAPLWvI+KIjF7t3SC9qpEQ?=
+ =?us-ascii?Q?NlJNSTSx8eZPMYu3xktNZ4PuBAP0YuZeiV80Vx++KLt9YTdHuOcSltK9iazi?=
+ =?us-ascii?Q?7waW1GFqwYORqupOO20Pux6IOGGALVqBrMcbqskHbRmR+i63QhSW5UALeidI?=
+ =?us-ascii?Q?4pv1PEE5z9FjLIPVwdzNimDIuQAk3ozrK4se1ybXRGaw7uq/NOTcDL74Eryr?=
+ =?us-ascii?Q?4tyrPEFkBa0JwSZXVS7GOMISDlCX1azXg1HQDIYNzL1GzmnRGetZ7Rxjajj3?=
+ =?us-ascii?Q?GJd6rmFtAt2QBI1Niyh/lBdIh+VU1KxfeClfwsy3tSS/h96t6jsCMkhxZuD/?=
+ =?us-ascii?Q?mnTIKkDLDbMSq+tkQ4UzF/a7pHSFvoeHp2kNCRHUDOJ+CPYXhV9QzdZCRLgm?=
+ =?us-ascii?Q?zUhX1yNqXO+32xZAnsHVRxxMcBYOqlKETAG4whSCUMbBkGlischf2QUB49cv?=
+ =?us-ascii?Q?NivRr/N2B1AuVkbH5ViqjTkJLJ9YCAz0l4JFxRgwK9xr6Wz9f/IQWf0wAKWL?=
+ =?us-ascii?Q?/5pgxFSL+IVeJdQ7LcP/IkpCH26j0ComWhtTGX23YrZAWYSLewdlz+w9y0um?=
+ =?us-ascii?Q?05P5DmzVFlVXmR0TTgD51HxqRr/q1bYZ9zC9k0XMP8GCDzsamYdXV451+/za?=
+ =?us-ascii?Q?rmRRkZTuR09QZ04uBVebWH3Y7hb+dBPhrYJ3?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 06:13:36.2805
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3b56746-5fcd-41e5-1ba2-08dda32ef0fa
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00005FFE.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7489
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
-branch HEAD: 8b68e978718f14fdcb080c2a7791c52a0d09bc6d  x86/iopl: Cure TIF_IO_BITMAP inconsistencies
+This series comprises two features:
 
-elapsed time: 935m
+HATDis: When host address translation is not supported by the IOMMU,
+the IVHD->attr[HATDis] bit is set. For instance, QEMU emulated vIOMMU
+does not support dma tranlation for VFIO passthrough device.
+Support has been added to check this bit and switch to guest page table 
+mode, if supported. This feature is useful for cases where only interrupt
+remapping is required.
 
-configs tested: 8
-configs skipped: 28
+EFR[HATS]: These bits indicate the maximum level supported for host page table
+by the IOMMU. Modifications have been made to adjust the maximum host page table
+level, starting with level 4. If these bits are set to 11b, the driver will
+attempt to use the guest page table.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+If guest page table mode is not supported, the driver will fail to probe
+devices for DMA translations.
+The interrupt remapping will continue to be supported.
 
-tested configs:
-i386     allmodconfig    gcc-12
-i386      allnoconfig    gcc-12
-i386     allyesconfig    gcc-12
-i386        defconfig    clang-20
-x86_64    allnoconfig    clang-20
-x86_64   allyesconfig    clang-20
-x86_64      defconfig    gcc-11
-x86_64  rhel-9.4-rust    clang-18
+---
+v4:
+- Relocate sysfs PD_MODE_NONE check case after iommu_device_register()
+  along with return check.
+v3:
+- Add check before populating sysfs entries for iommu groups.
+v2:
+- Addressed comments from Vasant:
+	- Added/Modified comments and logs.
+	- Removed v1 page table assignment hunk.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Ankit Soni (2):
+  iommu/amd: Add HATDis feature support
+  iommu/amd: Add efr[HATS] max v1 page table level
+
+ drivers/iommu/amd/amd_iommu.h       |  2 ++
+ drivers/iommu/amd/amd_iommu_types.h |  7 ++++-
+ drivers/iommu/amd/init.c            | 47 +++++++++++++++++++++++++++--
+ drivers/iommu/amd/io_pgtable.c      |  4 +--
+ drivers/iommu/amd/iommu.c           | 15 ++++++++-
+ 5 files changed, 69 insertions(+), 6 deletions(-)
+
+-- 
+2.43.0
+
