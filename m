@@ -1,174 +1,164 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801D919FA93
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 06:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA8E1A4F12
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 06:36:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749018889; cv=none; b=nE6Us8zHcjsrIHja9FJvwYiaESvbFYjlZdMeO0kDBGFCSe/e3HBlXiHG6yA/uwIJ+8MmPJ4EPr2wrKGY4WWC6ooVs4CqMBHaB7smZM/0ASCDFSzupUZ7Ko05adP00myLhSkn/AIw1//VoaKs3HtjP9ztSh2jBlGz/i3sfcybnuw=
+	t=1749018968; cv=none; b=mKkDyE6iCwgwrzX3vQLmwPTk/WwJGC+riUZYqng4YA7sMfh0izdA4ypytKNTEgp9s7Q3u+nCRudwKm1irbOA2t1x/GOSga8YCvPvBNo0MRy47WbuEXifmJuZwfguXvFn0ida3TqhZuJhAq0zttaDSmN23HdwFm/kDvEyW73lq1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749018889; c=relaxed/simple;
-	bh=T9079cpPJMqy1lXX9Kc7OWLUoMW9Z59kC59hAowCd8E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EQfZA2KF3bg/yBwCeBSmcInm6rZd0nTKT7pnYs35F7/REI0N7dcx+FB17g1iAC33ysodlSSyYEB2nN4BqIAGvbQQL9LlncP+yCOdneAjhCAhOPxtt6+uCrYv1/tx6ofTfe+Yk95dNUFQKEW1VmEhdQuhaW4Qew2XPmcnl2yWQBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OYwo9iGN; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1749018968; c=relaxed/simple;
+	bh=sRbqQszFVTleAx2yTcV3Ny9IPMLYZEYMYcFeLar8vQI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ppaw9/ooyzyccyl8Wfjt8NSmyec8jRfeNmTcQWGkHDf3oxwHjnx/R+6NK9Y84r1lkGLxW2BIhAilawwAYvVeUVBe5VlHj3+1CzpGGSQKQV1xwh1D/kBAdDoZLO9AtM2gPbwh91Zt1HelcVx1UrrCLPpNk5wunZUP7Ayco3+YZn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PwDbAAdP; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OYwo9iGN"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553K2YK8007627
-	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 06:34:47 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PwDbAAdP"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553KF1PY004226
+	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 06:36:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	T9079cpPJMqy1lXX9Kc7OWLUoMW9Z59kC59hAowCd8E=; b=OYwo9iGNbz8rlG/f
-	Zn8yg9Zbi+SZtqFfEkFy7SOpk0YH5F6VTtbtzD9NdA6Em3959IMxHbF/YxI8mr4s
-	6bcSRPOdjpC8k9+Y4qRgqemf66HPvktkC3uhIjxzCk6ApfQiyrXpy8MqfZ9jGHhd
-	YXz4gqfAW5YWQT4VT2mIJCqEt/7aaCu5hQm/6gef25+SZTaXUp5MmWVXzSLsWjUT
-	YG4gjqYAfv+Ze5U7c+IFp3rNL4PR6Ou6WSKe4FQ12XcWStxIb9r1lqyBRfGDnXQj
-	nn0Anetm0k5cgLqrxClXbMFCL+e2eY49AOyIp//MY7IHs7fYwiQSrr72bKOTg5R7
-	hSK0Jg==
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=nA1XVRfBS7e5BMoqc+7tse
+	3XttDKcBTrmpygj5xAvdg=; b=PwDbAAdPSwJhBrL+HHTr9xuMI+VtMq4PRpDxXj
+	hQamoktthsP4GJsBtiZ2uibnZO/lPhHeuU8x3U3Sux5NEcihHN9ny684nKt9dVT1
+	tKS1ZxlDST7Ms+xVGPJwdstab6hbWjtmMSTjhOMux7Mx5Q+juo6nTVZP8CofJXYs
+	9jJz5sXYMt4vDnW9njyTQsDQN09IZk89ogo+TdhwPPetEv2IbdvClV86jOrcz5v0
+	MhsueavRiHZ6j8/0YDTvVTyMEMhRpYm6MENrUu+MaUYyCqmHiUnbycogLhZp4KTY
+	neiYuONMsTwWhiokBn68isdG2gsHYdrEUFJ+zNCc/sjPrmRw==
 Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8sw24p-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8rw3xh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:34:47 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-31315426f13so216797a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 23:34:47 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:36:06 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-311d067b3faso9668734a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 23:36:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749018887; x=1749623687;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T9079cpPJMqy1lXX9Kc7OWLUoMW9Z59kC59hAowCd8E=;
-        b=eSyjZkop5hyTOUBE4Ld8CG+JUKQjXqhPFgrWdzhlyI4Li4fvw+k8gP3E77NrbcXN0V
-         hOZuC9iiZaj9mcodPGTsiWM15zwwzqRJFmFDB0aG0QGpo/qoYBhVZ0Ufz/fnZrQfgju6
-         r59x8d82lZYi1t6mCibiZm4vafb9Gv5423jTczNlXAftULoEX+tT14AOEUiC6L3OQdwW
-         3sYvFJcxuQuhMN6QPskH0PoEoa4zYopgM50YN3i1/sTzjPXLsN0SIFa+ImRxsRniQY39
-         ar1foCJzX31p6wK2dBduKXSMxHR9tOjJtdBPK3p+2woBIHvosmKAOHX/8uTkMXIzwmIa
-         McOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRnMwrKKMJ2VIU6IP9h/+tjh8a4QHa6fMJZc/aU+sCTmWOfRt2S+4iNfgizm8uZlh7WD2rMIVqS3mqJCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd8stj8s0DhvZfid5pjPCdJxXA1tLdagqjSLGlepYO57RQhe8e
-	mbhKNFlBxGrZpXE88fGrTkrUXGtP1i/VjHk0JnvrmckyBSX0SLs6qj1NNSVdm5Hm/MmfDz5XQh8
-	ucQbY+CGqH+3//EZOWmVzYOaW/RUjQSZjhN6Juj4SQxPC+N9bQfE6X2NO5JQDBs5dwZ/971zIyt
-	ctKqz0AlNH5UeKGv/BkRHZftHT/Z2Eaj1N8t6QAfy30g==
-X-Gm-Gg: ASbGnct/NVcu4LTALkOQC6P+kkSVpetvAEr3Iqy7aKCaqjhZ2DDd+3VZLeDwomwymZJ
-	a++BKtIstGHcM5xvduVG6jTA0MSILRDHvV3IrXvE14phFa5r5EkDdHxBjDy7zDwppRcfedo7xC8
-	fQrxd/
-X-Received: by 2002:a17:90b:2c8f:b0:312:29e:9ec9 with SMTP id 98e67ed59e1d1-3130cdad261mr2945190a91.24.1749018886641;
-        Tue, 03 Jun 2025 23:34:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEIuPluBDu4u5KGnxzBhJcv5mMUkl7EBUh/65kh9bW75WRsQbbaFMAdq4P0YI8KhX6NYIyU5JJbH9xVw242LSM=
-X-Received: by 2002:a17:90b:2c8f:b0:312:29e:9ec9 with SMTP id
- 98e67ed59e1d1-3130cdad261mr2945163a91.24.1749018886254; Tue, 03 Jun 2025
- 23:34:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749018965; x=1749623765;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nA1XVRfBS7e5BMoqc+7tse3XttDKcBTrmpygj5xAvdg=;
+        b=hlTPZSeGuj7oDJodmrMDNNblxogtqgKsjV2OlttLHWEvDmZqXWObW89yBwjmP2uJ5a
+         t+xyvgZQ/qd3SbpMAXyEFKUjYg9eLFelbuHfUZxoyaB8/ZPSs+reqtx3Z00oUUhoedS/
+         kTbWKeJBGkAVDvm+A+aTVfGhUP+JaTzdD/iIHT5sG9g1unkW6v8tgJkoOVNTRRrdRN7l
+         Y91iAPU7gbkUc5vfhEIzeynJXUjAbibHEZaukrnx0kSAg2eS8kloHEfZxW0sBKhvFe2n
+         7sdqTkBmF2AUkiBzKxAtrU+k2kOWCTRMhgLsDl/5yfVTWGNzDk5UZa7reuRDWZq2Etat
+         xCXA==
+X-Gm-Message-State: AOJu0YyKe+3uPu2FSCl7uYgNRFbEdZ1wNPKbYT0lw3TcRuG35I2L6+a0
+	V7+E08eNH7Bv+xv/1UHMxL5uUl/XWLvw2iIiKjjQPkiBnNkK/l2UXzYNXY3PG96tBLCc0Mf00iK
+	1KH/kR3zHEKk32UUwNhJzEvSfKquPNfVMfAO0vMYvKQipB9BlIxkdvtku1JnppKzU1X8j5r3BGb
+	A=
+X-Gm-Gg: ASbGnct/PAFg58aiCZDYblRt1e0u0zCr37SE1CqVC5RU0O4dga9aW4Ix31VnoIaq5mN
+	4KEsyhrX+l22UDkp60FW29Bzs8lXecQMFhrYO+7v18cTd1KlRptbTf+WalUPCTksnHhTixtJbCw
+	0uJMrC+22yfPXYXe82pgwtxkRnahZK7mZlhLUGuUjJRCAYCH7ocuhtgLsX5R3xwnDtAmETWVKhR
+	IuWoo1EmtasiP5LgztEkBrmhr7/nwQUwePDz6lmzhuyJIsw7Qjj0LutmJk0e5xSWAC4HRbggr6/
+	kpOItjRAlnmg2uBxSBi3BY+rokkBrgZV0sav
+X-Received: by 2002:a17:90a:da87:b0:311:e8cc:4253 with SMTP id 98e67ed59e1d1-3130ccf5106mr2374543a91.2.1749018965154;
+        Tue, 03 Jun 2025 23:36:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGQEAfHrLHrtYb6LlLcMTBfH7t+WF1iQ8aSfV2f5M0nadfCyr8QFPZtK5Iq3ccs9ZdWu/Y/NQ==
+X-Received: by 2002:a17:90a:da87:b0:311:e8cc:4253 with SMTP id 98e67ed59e1d1-3130ccf5106mr2374515a91.2.1749018964663;
+        Tue, 03 Jun 2025 23:36:04 -0700 (PDT)
+Received: from hu-msarkar-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2c298esm8286693a91.15.2025.06.03.23.35.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 23:36:03 -0700 (PDT)
+From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+X-Google-Original-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Subject: [PATCH v4 0/2] Update PCIe PHY settings for QCS8300 and SA8775P
+Date: Wed, 04 Jun 2025 12:05:56 +0530
+Message-Id: <20250604-update_phy-v4-0-d04b12bb89f2@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250525-update_phy-v3-0-5b315cd39993@quicinc.com>
- <20250525-update_phy-v3-2-5b315cd39993@quicinc.com> <mcmpmaapzv3vbiynlrp6sijdjvj6a5j3dxzoixz6b4cxqsvbsl@ecljexn3zg2e>
- <0aef1687-0158-4d7e-8e3d-b6eafc38d049@oss.qualcomm.com> <CAMyL0qPd2HRv4nr2C9=5SgzSkuKO_1cfZbOUO2aUj3vPWnmJbA@mail.gmail.com>
- <41ac26a6-7a5a-4c11-b05c-9ce688ad1856@oss.qualcomm.com> <8972adb4-b6ae-4ea9-986a-32e59fe84c50@oss.qualcomm.com>
-In-Reply-To: <8972adb4-b6ae-4ea9-986a-32e59fe84c50@oss.qualcomm.com>
-From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
-Date: Wed, 4 Jun 2025 12:04:35 +0530
-X-Gm-Features: AX0GCFtUSo3xmhLJTp6kkLzM4r7UUUEdKvCLKhwD4KBE-wPI3JUeW_pADGCllGE
-Message-ID: <CAMyL0qOhxKq8j1UXDX4xrWa8aVZoeqrhpWSVN2dC2hDLaqJoHw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sa8775p: Remove max link speed
- property for PCIe EP
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEzpP2gC/1XM0QqCMBTG8VeRXbfYzs6oddV7RIRtM89FapuOR
+ Hz3phDo5ffB/zex6AP5yC7FxIJPFKlt8sBDwWxdNi/PyeXNQIAWWio+dK7s/aOrRw7WnQU6Byg
+ ky0EXfEXfFbvd864p9m0YVzvB8v4Z3DIJuOAOKyUNgMQTXj8DWWrs0bZvtkBJbWLQu1jlWD+V1
+ NYpY4zax/M8/wC/tlZ44wAAAA==
+X-Change-ID: 20250513-update_phy-2cd804dd2401
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org, krishna.chundru@oss.qualcomm.com,
-        quic_vbadigan@quicinc.com, quic_nayiluri@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nitegupt@quicinc.com,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Authority-Analysis: v=2.4 cv=RMizH5i+ c=1 sm=1 tr=0 ts=683fe907 cx=c_pps
- a=0uOsjrqzRL749jD1oC5vDA==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=o19W8QfZZ25Kakzi4KgA:9
- a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA1NSBTYWx0ZWRfXx2s6AvmVTfHF
- zJ6drfyXWViU9Ix8SvIFqwrwhTw0Z9I02D5537DZJvYLT7ybnRlbnFDs+cuXFRxq9kyTI+G6Z4C
- O25itbTIPPsRP7qyCMr4i15ng4qIravCOGzDbwZkThsav9kdEsulDX+3dhlEOm15AIi1asUMHDK
- QCFfFWdnXg67pgLmffQzlwo9iRcoIFrFpIbZzrrR8GW3/HhKVZMWLlCmcnIRlgvE5U1iJIhK8xD
- IReTUWbTeswOc4vh3YPBecoOgP7B04LkoWtdXDfD8mD82rr0txkD0cVS9LOEGeAbHwoNgKD5uSV
- PxHHlT+3TP4zkSE3X7yw5bDR4Nv5tK0Ox3SyJGo41ZwddylgDWGDzZiTmOlcl1sckKMzJZfdeUL
- 6JG0mMUnpFzPWQ9me9+7Fr5/34sT84l0k+GnEU7zX1SCUuM7cQHzrsWDOUQyJqaknHl0aIbB
-X-Proofpoint-GUID: CYrByVlWzKTybA84Ss9wXUK8650vF7TJ
-X-Proofpoint-ORIG-GUID: CYrByVlWzKTybA84Ss9wXUK8650vF7TJ
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+        quic_nayiluri@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nitegupt@quicinc.com, Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749018959; l=1413;
+ i=quic_msarkar@quicinc.com; s=20250423; h=from:subject:message-id;
+ bh=sRbqQszFVTleAx2yTcV3Ny9IPMLYZEYMYcFeLar8vQI=;
+ b=GCWQwRukQIyWsZ+hGbyaUbjRLBtewyIZCGZdL0bwpMgMd4OnZhqmhZU2spYQsrRYSPxMKvtii
+ 2AT3SI4Zx58Dh/IcYAGhadvcxCZlxEMqThxxpTBkh41+Lpg6ShjDwpa
+X-Developer-Key: i=quic_msarkar@quicinc.com; a=ed25519;
+ pk=5D8s0BEkJAotPyAnJ6/qmJBFhCjti/zUi2OMYoferv4=
+X-Proofpoint-ORIG-GUID: _niyEFySLmClHmYS7GgxMITPs6V2-iDZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA1NSBTYWx0ZWRfX2a/Cb0zg07FO
+ zy86kUwP1kjvnBEqRz3WmWf+yGemJxPW8Eeadrj7qQEQup6RIPpk0GkyH6GOWviahQt/zIvwP4J
+ gpoXYc4NezcKWyw1pjD4uo3VK17UWPjKslBgr6tuz72eUi0QU+0r1dpWVti4ruIlcM/HETcYoQ6
+ 8vBFcKp2kGJzX+xBSz5Elr+Yf+owycsBeh9t2bfQV8U4fD592UXXrQHAvboffXtpQFmhsHdB7ds
+ 6WknUeNtZxpBI+WtiKTtAFJKtbFkC341WmJnLIhyw6BhLgMNgcQvVX7QOIVVGinF3sCYSmKdDpq
+ N9W9gOzWdxTR+Jr2rxnVgHcHTLCAStnyjhj4QMsTTbrD1QmKSVBpBfNsRFbkmYN6XH4LY0adSpM
+ eSFxYkSO/JCa3kjv+D1GFs1GhbmDTS1xQB4ANS0uDcwNOBXQ5WNdamSLxEVtFh2AJOphaX4R
+X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=683fe956 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=vWfPPh_LAE0cc4QMUwIA:9 a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: _niyEFySLmClHmYS7GgxMITPs6V2-iDZ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-04_01,2025-06-03_02,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 suspectscore=0 adultscore=0 mlxlogscore=762 mlxscore=0
- clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
+ bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 spamscore=0 mlxlogscore=546 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2506040055
 
-On Fri, May 30, 2025 at 4:26=E2=80=AFPM Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> wrote:
->
-> On 5/30/25 12:50 PM, Konrad Dybcio wrote:
-> > On 5/30/25 7:38 AM, Mrinmay Sarkar wrote:
-> >> On Tue, May 27, 2025 at 4:06=E2=80=AFPM Konrad Dybcio
-> >> <konrad.dybcio@oss.qualcomm.com> wrote:
-> >>>
-> >>> On 5/25/25 3:29 PM, Dmitry Baryshkov wrote:
-> >>>> On Sun, May 25, 2025 at 11:27:18AM +0530, Mrinmay Sarkar wrote:
-> >>>>> From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
-> >>>>>
-> >>>>> The maximum link speed was previously restricted to Gen3 due to the
-> >>>>> absence of Gen4 equalization support in the driver.
-> >>>>>
-> >>>>> Add change to remove max link speed property, Since Gen4 equalizati=
-on
-> >>>>> support has already been added into the driver.
-> >>>>
-> >>>> As Gen4 equalization is already supported by the XYZ driver remove t=
-he
-> >>>> max-link-speed property.
-> >>>>
-> >>>> "Add change to remove" is a bit clumsy.
-> >>>
-> >>> I'm more worried about this node not having these gen4 eq settings
-> >>> (i.e. the part talking about driver support landing is true, but it's
-> >>> unused without the presets being explicitly defined in eq-presets-16g=
-ts)
-> >>>
-> >>> Konrad
-> >>
-> >> Hi Konrad,
-> >>
-> >> Actually stability issue was resolved by this patch series:
-> >> https://lore.kernel.org/linux-pci/20240911-pci-qcom-gen4-stability-v7-=
-3-743f5c1fd027@linaro.org/
-> >> and I don't think we need to define eq-presets-16gts for this.
-> >
-> > Okay, so there's multiple parts to it..
-> >
-> > I was referring to this series
-> >
-> > https://lore.kernel.org/all/20250328-preset_v6-v9-0-22cfa0490518@oss.qu=
-alcomm.com/
-> >
-> > Please check if you need this as well
->
-> If not, we can get this merged as-is
->
-> Konrad
+This Series is to update PCIe PHY settings as per latest
+hardware programming guide and remove max link speed dt 
+property for SA8775P PCIe EP.
 
-Actually the series you are referring to is not required.
+Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+---
+V3 -> V4:
+- update commit message in patch 2 as per review comment.
+- Link to v3: https://lore.kernel.org/r/20250525-update_phy-v3-0-5b315cd39993@quicinc.com
 
-Thanks,
-Mrinmay
+V2 -> V3:
+- update subject in patch 1 as per review comment
+Link to v2: https://lore.kernel.org/r/20250514-update_phy-v2-0-d4f319221474@quicinc.com
+
+v1 -> v2:
+- Update commit message as per the review comments.
+- Remove max-link-speed DT property.
+
+---
+Mrinmay Sarkar (2):
+      phy: qcom: qmp-pcie: Update PHY settings for QCS8300 & SA8775P
+      arm64: dts: qcom: sa8775p: Remove max link speed property for PCIe EP
+
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              |  2 -
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c           | 89 ++++++++++++----------
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h |  2 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5_20.h      |  4 +
+ .../phy/qualcomm/phy-qcom-qmp-qserdes-ln-shrd-v5.h | 11 +++
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |  1 +
+ 6 files changed, 66 insertions(+), 43 deletions(-)
+---
+base-commit: edef457004774e598fc4c1b7d1d4f0bcd9d0bb30
+change-id: 20250513-update_phy-2cd804dd2401
+
+Best regards,
+-- 
+Mrinmay Sarkar <quic_msarkar@quicinc.com>
+
