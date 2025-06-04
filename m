@@ -1,213 +1,192 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9C2175A5;
-	Wed,  4 Jun 2025 19:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600741FFC5F;
+	Wed,  4 Jun 2025 19:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749064303; cv=none; b=KaYbRhZINkg9osI44jZetCMqU+eSTS5UCkKL6x+j0ANSFVZn0P5xOauz8lgBfPOMK1dqTPjbMTEHkACiwmJgLBxS8GCwAStDONR90GhXcPpDJtBqcNH9AxfrDo5/xo8EivVHXeYh+i/RXN6Bd387IGf9GyJm//ke5dp1AUmsgqc=
+	t=1749064368; cv=none; b=BNmUU7F/2CjSd+7j8d/efw58F4/YXsbf0m8MaA4Bv0nKtPOWeJ4HAbaHG8hOSehIpJ0/j891co4PB0//DaVWg0Rpnk4HEVAaB9Rp9I6Hagf4czfXBGUVLJvpQedBZxR/ulvJeZ2Bzk2KtpucRQewF3p+Q93Wf6r7Azmi5dNPLI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749064303; c=relaxed/simple;
-	bh=Ksjn+bV45i0A9pWDjuu7EeJglLRGYHw1mTFGii9v/S8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YsZEZGeXoLuw21H3wGM0YCzI2Yfpsezdjtq+Evm/xMJ/U4hFPfs93omRF2fqYbDZ3/Kv7kVDimqF+tbGPYd7G5Ofo/0Lo84S3WJx8Yzsoj85pgqnp4zgJaKFEHPamp974vJ6ZlfO1MBsvU8fp+EgD5JyNoo9TCl3nztkaCAGPhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=ZLWeHm8T; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1749064368; c=relaxed/simple;
+	bh=0vus+DnA+getFsaWB+zVr2atIZzQTgmvU5AdXkeDlXo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S2TsD51jjogBp6OSowhvyPS2KDspVGEBmSct4sFfh966yOLaPh/rSgtJFhggTHGj5ggYL0HtrzxvxK/yOT2xpR+qJZmhM6F1x4jHaFRe++ohHPIUegM0tVABrk6TCDq1R6U6cUi+VDJX5n72YZrJXlERYoA78sdI0IEhyS6TinA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X7U8Odtd; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="ZLWeHm8T"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uMtWU-008zin-8O; Wed, 04 Jun 2025 21:11:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=HqjKTGpDcvQPnWOU38KH5Qrtb2k6G5HRlDi/DrOBjL8=; b=ZLWeHm8TTlvp9wvbq4hTVuTT2y
-	adNm+N9/8tfgRXt6b0/D9y1J1AfhASRyn2u79a2xBMsNfrqUUikNVcdAalbvKaoxAmBhhE4wzVRcc
-	IWLMPhfF7MaQa2mYYgnvjftTG8p6HP8Dq9qqR0y3rWeUtXSs/bvdQ85Lb2DahwkxEvALD/S0BT/S0
-	Lq/6vMsg/tueKD+fmmqz/w2TTnl11/XatsrBw6f1r5YjbTAYsrP7yj2WkGIRxNm/d3VgtCtjBfduj
-	zm6clatigKJb973ckW5njspOT5w843dmJib3lnI/+yzHPsGfi6ioCRuOdW/NK6FyxVn8UqigloidY
-	v6JddLZA==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uMtWS-0000r5-Sb; Wed, 04 Jun 2025 21:11:37 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uMtWQ-00Dqjl-OK; Wed, 04 Jun 2025 21:11:34 +0200
-Message-ID: <77c48b6d-4539-4d01-bd7f-7b5415b7b995@rbox.co>
-Date: Wed, 4 Jun 2025 21:11:33 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X7U8Odtd"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a4bb155edeso1487191cf.2;
+        Wed, 04 Jun 2025 12:12:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749064365; x=1749669165; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v68ILt8xt28THMlmyuKMfaQcpvhx4IXAkUL4p7ZYZOA=;
+        b=X7U8OdtdR4wN7Tx8pGP+GfsGYfSDe5yT0JYU/5KSsqfoAeIBgGMGlXQoELU0EFSoy7
+         V+U+p5AGWQuGWbVPSGQas1+Lw5sHNlRCDV1pJe9gGxFWWTF2zUtlB0P87inbELBor4vy
+         K5DSULJ42g2yHEYG4JVOve1O+3xGtgE3balHlw5CFjPJKJgtYyK96GLw/mGC5cbwyVdW
+         7A1AWsa2CtLNXhlxU9zsuRIg90N5migkITBXm4wDKOjI6eNfvCFXU/hEApoQkX+0cmUp
+         5PniFgbe2x3HhaIG8OC7Vzc7AFWx5uZGu5VFsjI8oY/UVNqGgWBfZdE2m/vnV6fUZ9Z4
+         IVyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749064365; x=1749669165;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v68ILt8xt28THMlmyuKMfaQcpvhx4IXAkUL4p7ZYZOA=;
+        b=ZBiBgMIysbEs/aVsxFxupVhWcJ4DKb2vIMjFw5uk2rGPXT/JTPnZG/zoQA1jkaVU5e
+         5v+lwuIXcS6bFh7hlcf2UYKykx8Vhmbx6a6e4bg0dvwVQYudffi2dhzGMQLOZjCPJrHI
+         KLi2iRpl1Vhu4ax5GOJmJ/SAadqueESaQvHUgUhEEKsw1o9qZCNphxZ2IYmGESKgIl7d
+         fvmM+BZ3pNtysaBjFBwF+5E3Tm60Azb9chHK+Sg+7PR8VNy7UIZNdnJNLIRFpdqxEA4w
+         cQOd91kxviap2e3/j5rd4MyQBHovxVQngy0j+wncoQuo1jtTcu0GIzEmXf2AKZhEIwDX
+         +T1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUZGRGC2m0YOx53WUOt22Pvmp2SnHrCWG+2rBdoBO3lAtnvtyh7S7I53Wp1P2RG1DGQWAWFLBYN135Teyg3@vger.kernel.org, AJvYcCVaZO/35UGhi6YKFLizCxal0RlF0eFrlLVguyTkjGXJQQa4IbBvEbqLTArf2vD9Covs2oYZUIRzbzBv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1Fm7Elue88RSz79JiY7pnPvEBqbT/XaedyrCAMW7k/gyKpzV+
+	jTaF0BlWsZENUph8LLUrj7w0r+iV4nW0zpEZwqo2jXyQEEZ1Pvd3j3L3tAkYuA/Js/h0wZqYLxm
+	F12oM/U8gDUtQLOTOrGDR4J2eAEUYClqyjrM+zo7BY6Bk
+X-Gm-Gg: ASbGncsyX2941Qy2l4N6tjNARRaenkURcnNd5v3t0z8kJ3G425CpwH8Bo+/4SyG0Vpm
+	vWEtFHmYHNphBlA4OCFrwMI+j1YKp2YZSz+CyAStQv6iY2H/ILHub969uT2QbA1bgsLS0xH0VYF
+	f0UCns+F5eS4j10sW+oF8QypuhlkSaykN6RgtrcbnccwbIYnuL7mUNfjO0OtC23x4arQ==
+X-Google-Smtp-Source: AGHT+IHkGcI9KV0dFs+7Hj/zh+wdAmNhv6TFy7eW9sMjhV5X2zUe4MTyLbGWK9esEy06HGIELxjaKcjO6066Mlf9nY0=
+X-Received: by 2002:ac8:5cd5:0:b0:48c:c121:7e27 with SMTP id
+ d75a77b69052e-4a5a584733cmr74376181cf.50.1749064365064; Wed, 04 Jun 2025
+ 12:12:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next v2 3/3] vsock/test: Cover more CIDs in
- transport_uaf test
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250528-vsock-test-inc-cov-v2-0-8f655b40d57c@rbox.co>
- <20250528-vsock-test-inc-cov-v2-3-8f655b40d57c@rbox.co>
- <ocuwnpdoo7yxoqiockcs7yopoayg5x4b747ksvy4kmk3ds6lb3@f7zgcx7gigt5>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <ocuwnpdoo7yxoqiockcs7yopoayg5x4b747ksvy4kmk3ds6lb3@f7zgcx7gigt5>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
+ <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com> <6656934.DvuYhMxLoT@workhorse>
+In-Reply-To: <6656934.DvuYhMxLoT@workhorse>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Wed, 4 Jun 2025 23:12:35 +0400
+X-Gm-Features: AX0GCFspbBIHwcLfNzc6-jDHvamdNprrbgOXqKsRv_8yqqyAsKIYJM_cipXfo4o
+Message-ID: <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/4/25 11:37, Stefano Garzarella wrote:
-> On Wed, May 28, 2025 at 10:44:43PM +0200, Michal Luczaj wrote:
->> +static bool test_stream_transport_uaf(int cid)
->> {
->> 	int sockets[MAX_PORT_RETRIES];
->> 	struct sockaddr_vm addr;
->> -	int fd, i, alen;
->> +	socklen_t alen;
->> +	int fd, i, c;
->> +	bool ret;
->> +
->> +	/* Probe for a transport by attempting a local CID bind. Unavailable
->> +	 * transport (or more specifically: an unsupported transport/CID
->> +	 * combination) results in EADDRNOTAVAIL, other errnos are fatal.
->> +	 */
->> +	fd = vsock_bind_try(cid, VMADDR_PORT_ANY, SOCK_STREAM);
->> +	if (fd < 0) {
->> +		if (errno != EADDRNOTAVAIL) {
->> +			perror("Unexpected bind() errno");
->> +			exit(EXIT_FAILURE);
->> +		}
->>
->> -	fd = vsock_bind(VMADDR_CID_ANY, VMADDR_PORT_ANY, SOCK_STREAM);
->> +		return false;
->> +	}
->>
->> 	alen = sizeof(addr);
->> 	if (getsockname(fd, (struct sockaddr *)&addr, &alen)) {
->> @@ -1735,38 +1746,73 @@ static void test_stream_transport_uaf_client(const struct test_opts *opts)
->> 		exit(EXIT_FAILURE);
->> 	}
->>
->> +	/* Drain the autobind pool; see __vsock_bind_connectible(). */
->> 	for (i = 0; i < MAX_PORT_RETRIES; ++i)
->> -		sockets[i] = vsock_bind(VMADDR_CID_ANY, ++addr.svm_port,
->> -					SOCK_STREAM);
->> +		sockets[i] = vsock_bind(cid, ++addr.svm_port, SOCK_STREAM);
->>
->> 	close(fd);
->> -	fd = socket(AF_VSOCK, SOCK_STREAM, 0);
->> +	fd = socket(AF_VSOCK, SOCK_STREAM | SOCK_NONBLOCK, 0);
-> 
-> Why we need this change?
+On Wed, Jun 4, 2025 at 10:38=E2=80=AFPM Nicolas Frattaroli
+<nicolas.frattaroli@collabora.com> wrote:
+>
+> On Tuesday, 3 June 2025 19:01:13 Central European Summer Time Alexey Char=
+kov wrote:
+> > List both CPU supply regulators which drive the little and big CPU
+> > clusters, respectively, so that cpufreq can pick them up.
+> >
+> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> > ---
+> >  .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 28 ++++++++++++++=
+++++++++
+> >  1 file changed, 28 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arc=
+h/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+> > index b09e789c75c47fec7cf7e9810ab0dcca32d9404a..d9c129be55a0d997e04e6d6=
+77cdc98fb50353418 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+> > @@ -207,6 +207,22 @@ vcc_3v3_ufs_s0: regulator-vcc-ufs-s0 {
+> >       };
+> >  };
+> >
+> > +&cpu_b0 {
+> > +     cpu-supply =3D <&vdd_cpu_big_s0>;
+> > +};
+> > +
+> > +&cpu_b1 {
+> > +     cpu-supply =3D <&vdd_cpu_big_s0>;
+> > +};
+> > +
+> > +&cpu_b2 {
+> > +     cpu-supply =3D <&vdd_cpu_big_s0>;
+> > +};
+> > +
+> > +&cpu_b3 {
+> > +     cpu-supply =3D <&vdd_cpu_big_s0>;
+> > +};
+> > +
+> >  &combphy0_ps {
+> >       status =3D "okay";
+> >  };
+> > @@ -215,6 +231,18 @@ &cpu_l0 {
+> >       cpu-supply =3D <&vdd_cpu_lit_s0>;
+> >  };
+> >
+> > +&cpu_l1 {
+> > +     cpu-supply =3D <&vdd_cpu_lit_s0>;
+> > +};
+> > +
+> > +&cpu_l2 {
+> > +     cpu-supply =3D <&vdd_cpu_lit_s0>;
+> > +};
+> > +
+> > +&cpu_l3 {
+> > +     cpu-supply =3D <&vdd_cpu_lit_s0>;
+> > +};
+> > +
+> >  &gmac0 {
+> >       phy-mode =3D "rgmii-id";
+> >       clock_in_out =3D "output";
+> >
+> >
+>
+> Reviewed-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+>
+> > so that cpufreq can pick them up.
+>
+> Fwiw, even without this patch they're picked up by cpufreq-dt for me:
+>
+>     user@trixie:~$ sudo cpupower frequency-info
+>       analyzing CPU 5:
+>       driver: cpufreq-dt
+>       CPUs which run at the same hardware frequency: 4 5 6 7
+>       CPUs which need to have their frequency coordinated by software: 4 =
+5 6 7
+>       maximum transition latency: 40.0 us
+>       hardware limits: 408 MHz - 2.30 GHz
+>       available frequency steps:  408 MHz, 600 MHz, 816 MHz, 1.01 GHz, 1.=
+20 GHz, 1.42 GHz, 1.61 GHz, 1.80 GHz, 2.02 GHz, 2.21 GHz, 2.30 GHz
+>       available cpufreq governors: ondemand userspace performance schedut=
+il
+>       current policy: frequency should be within 408 MHz and 2.30 GHz.
+>                       The governor "schedutil" may decide which speed to =
+use
+>                       within this range.
+>       current CPU frequency: 1.61 GHz (asserted by call to hardware)
+>     user@trixie:~$ uname -a
+>     Linux trixie 6.15.0-11173-g546b1c9e93c2 #2 SMP PREEMPT Wed Jun  4 20:=
+32:52 CEST 2025 aarch64 GNU/Linux
 
-It's for the (void)connect() below (not the connect() expecting early
-EADDRNOTAVAIL, the second one). We're not connecting to anything anyway, so
-there's no point entering the main `while (sk->sk_state != TCP_ESTABLISHED`
-loop in vsock_connect().
+Frequencies are fine, but I don't think the more power hungry big CPU
+cluster gets any voltage scaling without it. Once I try to load the
+system enough that the governor decides to bump the big cluster
+frequency up, the regulator stays at 850000 microvolts, causing random
+reboots when the whole cluster starts starving. With the patch,
+voltage oscillates between 700000-737000 microvolts in idle and jumps
+up to 950000 under load, and the system seems stable.
 
->> 	if (fd < 0) {
->> 		perror("socket");
->> 		exit(EXIT_FAILURE);
->> 	}
->>
->> -	if (!vsock_connect_fd(fd, addr.svm_cid, addr.svm_port)) {
->> -		perror("Unexpected connect() #1 success");
->> +	/* Assign transport, while failing to autobind. Autobind pool was
->> +	 * drained, so EADDRNOTAVAIL coming from __vsock_bind_connectible() is
->> +	 * expected.
->> +	 */
->> +	addr.svm_port = VMADDR_PORT_ANY;
+Here's what I used to monitor the voltage (there must be a better way
+to do it, but it works):
+sige5 ~ # watch cat `grep -r . /sys/class/regulator/*/name | grep
+vdd_cpu_big_s0 | sed -e 's/name.*//'`/microvolts
 
-(Ugh, this line looks useless...)
+And in another terminal:
+sige5 ~ # stress-ng -c8
 
->> +	if (!connect(fd, (struct sockaddr *)&addr, alen)) {
->> +		fprintf(stderr, "Unexpected connect() success\n");
->> +		exit(EXIT_FAILURE);
->> +	} else if (errno == ENODEV) {
->> +		/* Handle unhappy vhost_vsock */
-> 
-> Why it's unhappy? No peer?
+This might warrant a note in the commit message I guess :)
 
-It's the case of test_stream_transport_uaf(VMADDR_CID_HOST) when only
-vhost_vsock transport is loaded. Before we even reach (and fail)
-vsock_auto_bind(), vsock_assign_transport() fails earlier: `new_transport`
-gets set to `transport_g2h` (NULL) and then it's `if (!new_transport)
-return -ENODEV`. So the idea was to swallow this errno and let the caller
-report that nothing went through.
+Thanks for your review and testing!
 
-I guess we can narrow this down to `if (errno == ENODEV && cid ==
-VMADDR_CID_HOST)`.
-
->> +		ret = false;
->> +		goto cleanup;
->> +	} else if (errno != EADDRNOTAVAIL) {
->> +		perror("Unexpected connect() errno");
->> 		exit(EXIT_FAILURE);
->> 	}
->>
->> -	/* Vulnerable system may crash now. */
->> -	if (!vsock_connect_fd(fd, VMADDR_CID_HOST, VMADDR_PORT_ANY)) {
->> -		perror("Unexpected connect() #2 success");
->> -		exit(EXIT_FAILURE);
->> +	/* Reassign transport, triggering old transport release and
->> +	 * (potentially) unbinding of an unbound socket.
->> +	 *
->> +	 * Vulnerable system may crash now.
->> +	 */
->> +	for (c = VMADDR_CID_HYPERVISOR; c <= VMADDR_CID_HOST + 1; ++c) {
->> +		if (c != cid) {
->> +			addr.svm_cid = c;
->> +			(void)connect(fd, (struct sockaddr *)&addr, alen);
->> +		}
->> 	}
->>
->> +	ret = true;
->> +cleanup:
->> 	close(fd);
->> 	while (i--)
->> 		close(sockets[i]);
->>
->> -	control_writeln("DONE");
->> +	return ret;
->> }
->>
->> -static void test_stream_transport_uaf_server(const struct test_opts *opts)
->> +/* Test attempts to trigger a transport release for an unbound socket. This can
->> + * lead to a reference count mishandling.
->> + */
->> +static void test_stream_transport_uaf_client(const struct test_opts *opts)
->> {
->> -	control_expectln("DONE");
->> +	bool tested = false;
->> +	int cid, tr;
->> +
->> +	for (cid = VMADDR_CID_HYPERVISOR; cid <= VMADDR_CID_HOST + 1; ++cid)
->> +		tested |= test_stream_transport_uaf(cid);
->> +
->> +	tr = get_transports();
->> +	if (!tr)
->> +		fprintf(stderr, "No transports detected\n");
->> +	else if (tr == TRANSPORT_VIRTIO)
->> +		fprintf(stderr, "Setup unsupported: sole virtio transport\n");
->> +	else if (!tested)
->> +		fprintf(stderr, "No transports tested\n");
->> }
->>
->> static void test_stream_connect_retry_client(const struct test_opts *opts)
->> @@ -2034,7 +2080,6 @@ static struct test_case test_cases[] = {
->> 	{
->> 		.name = "SOCK_STREAM transport release use-after-free",
->> 		.run_client = test_stream_transport_uaf_client,
->> -		.run_server = test_stream_transport_uaf_server,
-> 
-> Overall LGTM. I was not able to apply, so I'll test next version.
-
-Bummer, I'll make sure to rebase.
-
-Thanks,
-Michal
-
+Best regards,
+Alexey
