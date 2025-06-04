@@ -1,139 +1,203 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE671E501C
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B3717A30A
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749039572; cv=none; b=aXeOLwA0QGZgyElNDfG/78Z+KBkGLqUMgBCDH9UkRXhPyukLK+aHQ6Lktgq39VagQKE44zKkIPih7ZQt6we7QC5hyaLFo+PFCDdIS27vuDG7X3hgaFgHr+lxtbFrt000p/J+aVK+BcyZ143u2dH1xeAlO7ON2nBZlfrKAGgBQp0=
+	t=1749039658; cv=none; b=e8mnHIztFk7m9cR160we7Uo2UIQRRDiHbuLfmucvI7jnEolhs+NoNeqK13rjrCozRTXgCNm5qVRm1nD+sNttLfxo5TU5VgSJder3ZyJrtNmABjeQS3yuuV1jxqopGZs6KOaCfxW8Ou6AGC0BrxW/jOO3gV/glEgQ1apFFah5hpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749039572; c=relaxed/simple;
-	bh=vsTAjMsXxruZD6EGEeDMJx5KZQVmoGJlBxqecOUMPhg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H4yhP1iyWJ3eIQtXVOQOjvYIzg3r/rdPBLFHJzE42FTUHDDyNCYab41DKDQU70X9TksQs0b/UnvG8y5F0ALT6V4AZaEocuU7LN6/ju8nPcY3o9uHCX0QV9rULmjAh6Wl8bB+dHdHdZeqxaA/S1zo73BgOKuDjN4m8tAg9YKd330=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=yyGRU1qp; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1749039658; c=relaxed/simple;
+	bh=UJO8fx4zrjzUtoGazJLMeF4iUYaNpSkc62UBtLsRXWY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BjF54rhAxc5SzRqVow5O79I7BPLfpzT2RCmx27QhP509eP++3e3DuVHHqxsIjBQcwATOZis4TYjzdnOc3/rlDNSb4mDwts5yLY5PMwfqOknQ44Af0UnljscQmrWhr0fJMW9HXm1909o4UGELqxCp33L3OPhhBB3nJHrjknxtYzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com; spf=pass smtp.mailfrom=vayavyalabs.com; dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b=NMkVPZiv; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vayavyalabs.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="yyGRU1qp"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so43014845e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:19:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b="NMkVPZiv"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so6381914a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1749039568; x=1749644368; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7va4B4zo5RMoE8/q1VOrd2uGJHuIadY3crtc+x7HSIs=;
-        b=yyGRU1qpBsaMLBUCgCWNDyAK8xEwbdz5so70/sFtDet0Ccql7H/LSW5A+WjC3xLsKM
-         ZKRtmTIVBCnJqApyDK45Yl/pVIKEf8y8C6xdy+fwUxXRBNSSHtSZKGwAKn+LFhDulA+c
-         9SjfIeMB9FN1n8Q+T/2zMfdA8qb4KQbpKyAiMCyaEs/1/yPDcZs+rWorZOf/xMsrxAcK
-         eaaRlC5OLN0eitm650Xh4kJ+CO/sj/lAOzljGcBGF5QI937h1R+V+rOulnJQZEWudnSI
-         gX4CyMoKbmz+OpafNdEHWzwV1qQisiyVEf9k641WzIoV/t1aOiLeMpYh58pgwa4uqpoh
-         J/6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749039568; x=1749644368;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=vayavyalabs.com; s=google; t=1749039655; x=1749644455; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7va4B4zo5RMoE8/q1VOrd2uGJHuIadY3crtc+x7HSIs=;
-        b=k21CvZuhVHO2iGKPOtuWdww2ztKYpt+JQYG+AOXsiWSSvrRPHyHQe5KdhS7+XA1PHX
-         BetNNM2ThIVBHKLliMc2vXie8UeeJITa860I+vuZGjRSiBIdcQ0VGgT/LDRKIne+3j4f
-         +6nR95qLHdUssHi8Z8JWf+BeObgiAgN6W3WyME1OPS/Gq19kvNf2q2otSE+fQbF4eVBQ
-         2h8LD2nICpVYwmdKnMbE3CFFDnTb/9+fQsCnIPQFlbVfREqedw9opl+KIZMiZn8QIpDP
-         sXSDpdYzx58fBRBMvuOuQTMZTY/RJrM+ZZwVqUZyz4gU9ctE76clGzeaiWgt2lqBEgKQ
-         3jMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVB6vR57z6/IPdfP4HPCyQieGQGCx+aOyLqiIunS7J38o0i1nNSGjRruNPoWXrgBY4ao7cUvz3n/uNDbWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMwHVa67zBin8MjTJXeJVMftmdhrnOGJt//pgdXibBJ62Se4yC
-	IaZ4r7wMFVzk91rzHN1lIrV5KqhdV8drjctW9MEyUW79UvE7gtVuUdSpWWRnD2hzVlU=
-X-Gm-Gg: ASbGncuemLBZSWGnjireuJ5II7RuDIqgtSzLTVl5xurMCZdjerHnrXHUL5Zw2znwQxu
-	8Se41+nisZFE2G2ewXryXmUokyVcHMa0Woxa932+a1V7UvlRfDtarS2r4iObceK6EzC3O7kZ8J5
-	IH/sTy8rJSmaESaAMrp8B22+3WobC5VJWFct9Z29lJbeOVdBG0e7VavkGVHM/8jumCYSFGaudrI
-	ftnjw60dpEvQs9aHcnIbGPknNHo9DtDtBIycQaxfkwEdjKdueDy5G1mvCrl6JPYfJk/92g1pdlM
-	FTFsRNfNpXUVentyYmrtKliA9naOLbxJdsBGlOyVREv6vJWg
-X-Google-Smtp-Source: AGHT+IGVrF4O5T3Kqh+fUs3JsLlwaWKguUlwDSvf4RuehBTzNd19MRzE14XOKWLjuavmnFq2+KnyhA==
-X-Received: by 2002:a05:600c:6297:b0:442:d9f2:ded8 with SMTP id 5b1f17b1804b1-451f0aa7fb6mr21810695e9.15.1749039568246;
-        Wed, 04 Jun 2025 05:19:28 -0700 (PDT)
-Received: from localhost ([2a02:8071:6401:180:da11:6260:39d6:12c])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a5215e4c4asm1456495f8f.17.2025.06.04.05.19.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 05:19:27 -0700 (PDT)
-Date: Wed, 4 Jun 2025 08:19:23 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>,
-	Mike Rapoport <rppt@kernel.org>, Barry Song <21cnbao@gmail.com>,
-	linux-mm@kvack.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	Pedro Falcato <pfalcato@suse.de>, tj@cmpxchg.org
-Subject: Re: [DISCUSSION] proposed mctl() API
-Message-ID: <20250604121923.GB1431@cmpxchg.org>
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
- <aDh9LtSLCiTLjg2X@casper.infradead.org>
- <20250529211423.GA1271329@cmpxchg.org>
- <0aeb6d8b-2abb-43a7-b47d-448f37f8a3bf@suse.cz>
+        bh=Ztn23ugr0Et0nrkznY5+W0yWLUSMNK7u22fb8u5+6Hs=;
+        b=NMkVPZivcRBwtpL9R+33KwuaB+8SNvHkf2nNNgHoUFVcjzLjbkjDrZONUuGCM2wGku
+         KAoBJDWybfEdwheXsoq1yV+fmEDyIlb+ML55J9Jk/Qd4wVVZI++HhF972M+6gq6LnyaH
+         TCWXS0+ieU+yvH0gJnoYcvyEkZaZkUJehc6qU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749039655; x=1749644455;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ztn23ugr0Et0nrkznY5+W0yWLUSMNK7u22fb8u5+6Hs=;
+        b=PHjfWF0u29duaw9hhrQ+4i+IIWdE1AkPLFGZZjUMdHk/Y0jfncOwXwCYlOzYlnYPCt
+         zKdYBOVX09H8OpcHH9hl9D0OOjSFd3BzmaO5EeMdd9Leg8q19RK8YoMdnVB0jqA/ANUB
+         tfYtEPo4/hTbHxiVZLcibCLl78GMhJ0pwHKoeQwxp7Bor2wmP7/sNhxyXtYaHVvTV4gV
+         2hJS0wsCepPpME8NIG6mMnO0nj+JhXbG4Ia6MZ0ezEVSYIxsSGiesDtau6TpKsejp0Q5
+         shQhb0j0M7fdB3ETPuZUZjVHUmIAKOf+TdzsY4bKEss3bltvmZy1NcztV2oQoCFoVWqh
+         kvNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQIPXsuwc84iF38PNKyeDdD/UJ7vaQj8NpichOQW9fBQ0HiB6nls+1dJZB4+VSvgkp1M2kaqa3kcVQ7as=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIM1sCvoAbRJMVhJnKt1UgQj2sWqw5wlZOlTPUPTS+NwjXHVaM
+	ryY6bPaCRMqmhj36c2hHC4rl2a/mAWHBPY3Ldnq35CEiUAUqHx6UpSc6SJFOdUi418cOwLq/CaS
+	ezWeBq7jhX3JZibBOBoYQE0mQ9EsCB/6SMCWK+SFvM26jnO8afEIcwbk=
+X-Gm-Gg: ASbGncu7DYDD6WGb6WHGw5Z1MmO8iASL9Rr9d0/JYkce3mqSGqcMFbHKDOJZALFXJbI
+	pFNV8f01s9s+AxaK/J35zph8E8sATy7yoygM1NJLc2D8HXQ3lJ5SGmSuatoREEuFhB+kymIvqvu
+	tIEDRcNQG3byXNP8YLnWA+l+HrPSD1LsPuZw==
+X-Google-Smtp-Source: AGHT+IEGMdIOkMV/uQ7zUK4UFRQ/YPtl1qy/zuPQpsLGtSK7QRRT2HbpWbVUamoQWNHk/kCuifvCQu4eWbBNQYRgwmA=
+X-Received: by 2002:a05:6902:1207:b0:e7f:66d2:702b with SMTP id
+ 3f1490d57ef6-e8179dacd59mr3554043276.35.1749039645410; Wed, 04 Jun 2025
+ 05:20:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0aeb6d8b-2abb-43a7-b47d-448f37f8a3bf@suse.cz>
+References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
+ <20250602053231.403143-2-pavitrakumarm@vayavyalabs.com> <fae97f84-bdb9-42de-b292-92d2b262f16a@kernel.org>
+ <CALxtO0mpQtqPB0h_Wff2dLGo=Mxk02JJQkK4rn+=TuScNdSfxQ@mail.gmail.com> <3570be5b-cb20-4259-9a9b-959098b902d0@kernel.org>
+In-Reply-To: <3570be5b-cb20-4259-9a9b-959098b902d0@kernel.org>
+From: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+Date: Wed, 4 Jun 2025 17:50:33 +0530
+X-Gm-Features: AX0GCFsFCDL3Q847lJwuNMF8LuDkhE19L7HG54evtY5CFetlay22p3RmnolgEVg
+Message-ID: <CALxtO0mH=GwhQxQBsmMQYd+qgAue9WxXN1XWo9BncVJvJk6d8A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: crypto: Document support for SPAcc
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com, 
+	manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com, 
+	Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 30, 2025 at 12:31:35PM +0200, Vlastimil Babka wrote:
-> On 5/29/25 23:14, Johannes Weiner wrote:
-> > On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
-> >> Barry's problem is that we're all nervous about possibly regressing
-> >> performance on some unknown workloads.  Just try Barry's proposal, see
-> >> if anyone actually compains or if we're just afraid of our own shadows.
-> > 
-> > I actually explained why I think this is a terrible idea. But okay, I
-> > tried the patch anyway.
-> > 
-> > This is 'git log' on a hot kernel repo after a large IO stream:
-> > 
-> >                                      VANILLA                      BARRY
-> > Real time                 49.93 (    +0.00%)         60.36 (   +20.48%)
-> > User time                 32.10 (    +0.00%)         32.09 (    -0.04%)
-> > System time               14.41 (    +0.00%)         14.64 (    +1.50%)
-> > pgmajfault              9227.00 (    +0.00%)      18390.00 (   +99.30%)
-> > workingset_refault_file  184.00 (    +0.00%)    236899.00 (+127954.05%)
-> > 
-> > Clearly we can't generally ignore page cache hits just because the
-> > mmaps() are intermittent.
-> > 
-> > The whole point is to cache across processes and their various
-> > apertures into a common, long-lived filesystem space.
-> > 
-> > Barry knows something about the relationship between certain processes
-> > and certain files that he could exploit with MADV_COLD-on-exit
-> > semantics. But that's not something the kernel can safely assume. Not
-> > without defeating the page cache for an entire class of file accesses.
-> 
-> I've just read the previous threads about Barry's proposal and if doing this
-> always isn't feasible, I'm wondering if memcg would be a better interface to
-> opt-in for this kind of behavior than both prctl or mctl. I think at least
-> conceptually it fits what memcg is doing? The question is if the
-> implementation would be feasible, and if android puts apps in separate memcgs...
+Hi Krzysztof.
+  Appreciate your inputs. My comments are embedded below.
 
-CCing Tejun.
+Warm regards,
+PK
 
-Cgroups has been trying to resist flag settings like these. The cgroup
-tree is a nested hierarchical structure designed for dividing up
-system resources. But flag properties don't have natural inheritance
-rules. What does it mean if the parent group says one thing and the
-child says another? Which one has precedence?
+On Tue, Jun 3, 2025 at 5:34=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+>
+> On 03/06/2025 13:45, Pavitrakumar Managutte wrote:
+> > Hi Krzysztof,
+> >   Thanks for the inputs, my comments are embedded below.
+> >
+> > Warm regards,
+> > PK
+> >
+> > On Mon, Jun 2, 2025 at 11:28=E2=80=AFAM Krzysztof Kozlowski <krzk@kerne=
+l.org> wrote:
+> >>
+> >> On 02/06/2025 07:32, Pavitrakumar Managutte wrote:
+> >>> Add DT bindings related to the SPAcc driver for Documentation.
+> >>> DWC Synopsys Security Protocol Accelerator(SPAcc) Hardware Crypto
+> >>> Engine is a crypto IP designed by Synopsys.
+> >>>
+> >>> Co-developed-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+> >>> Signed-off-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+> >>> Signed-off-by: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+> >>> Acked-by: Ruud Derwig <Ruud.Derwig@synopsys.com>
+> >>
+> >> Where was this Ack given? It's not on the lists, it's not public, so i=
+t
+> >> cannot be after your SoB.
+> >
+> > PK: Yes, its not on the mailing list. I will remove that.
+>
+> If it was given in private, then happened for sure before you sent the
+> patch, so it should be above your SoB.
 
-Hence the proposal to make it a per-process property that propagates
-through fork() and exec(). This also enables the container usecase (by
-setting the flag in the container launching process), without there
-being any confusion what the *effective* setting for any given process
-in the system is.
+PK: Sure, I will fix that. Yes, that was an internal Ack.
+
+>
+> ...
+>
+> >>> +
+> >>> +  snps,vspacc-id:
+> >>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >>> +    description: |
+> >>> +      Virtual SPAcc instance identifier.
+> >>> +      The SPAcc hardware supports multiple virtual instances (determ=
+ined by
+> >>> +      ELP_SPACC_CONFIG_VSPACC_CNT parameter), and this ID is used to=
+ identify
+> >>> +      which virtual instance this node represents.
+> >>
+> >> No, IDs are not accepted.
+> >
+> > PK: This represents the specific virtual SPAcc that is being used in
+> > the current configuration. It is used to index into the register banks
+> > and the context memories of the virtual SPAcc that is being used. The
+> > SPAcc IP can be configured as dedicated virtual SPAccs in
+> > heterogeneous environments.
+>
+> OK. Why registers are not narrowed to only this instance? It feels like
+> you provide here full register space for multiple devices and then
+> select the bank with above ID.
+
+PK: No, we cant narrow the registers to only this instance since its
+is just a single SPAcc with multiple virtual SPAcc instances. The same
+set of registers(aka register banks) and context memories are
+repeated, but sit at different offset addresses (i*4000 +
+register-offsets). The crypto hardware engine inside is shared by all
+the virtual SPAccs. This is very much for a heterogeneous computing
+scenario.
+
+>
+>
+> > This was also discssed with Rob Herring and updated from
+> > "vpsacc-index" to "vspacc-id" based on Rob's inputs
+> > https://lore.kernel.org/linux-crypto/CALxtO0mkmyaDYta0tfx9Q1qi_GY0OwUoF=
+DDVmcL15UH_fEZ25w@mail.gmail.com/
+>
+> Yeah, it is still ID and thus look at his comment about proper
+> justification.
+
+PK: Agreed
+
+>
+> >
+> >>
+> >>> +    minimum: 0
+> >>> +    maximum: 7
+> >>> +
+> >>> +  snps,spacc-internal-counter:
+> >>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >>> +    description: |
+> >>> +      Hardware counter that generates an interrupt based on a count =
+value.
+> >>> +      This counter starts ticking when there is a completed job sitt=
+ing on
+> >>> +      the status fifo to be serviced. This makes sure that no jobs a=
+re
+> >>> +      starved of processing.
+> >>
+> >> Not a DT property.
+> >
+> > PK: This is a hardware counter which starts ticking when a processed
+> > job is sitting on the STAT FIFO. This makes sure a JOB does not stay
+> > in STATUS FIFO unprocessed.
+> >
+> > This was called watchdog timer - wdtimer, which we renamed to
+> > "spacc-internal-counter" based on your inputs.
+> > https://lore.kernel.org/linux-crypto/CALxtO0k4RkopERap_ykrMTZ4Qtdzm8hEP=
+JGLCQ2pknQGjfQ4Eg@mail.gmail.com/
+>
+> I suggested to use watchdog schema if this device has a watchdog feature.
+>
+> Why would you configure here different values for the same hardware in
+> different boards?
+
+PK: Agreed, it does not make sense to have this here in DT. I am
+moving this as a Kconfig option.
+
+>
+>
+>
+> Best regards,
+> Krzysztof
