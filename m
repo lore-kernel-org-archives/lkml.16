@@ -1,183 +1,279 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2082.outbound.protection.outlook.com [40.107.92.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CB342AA9
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749053776; cv=none; b=WLkhLXvSMBhEtguIHVrya+lyLNARWl25hluhyXkyIfV37/PT6sckayq4yln2RGRBRvnz8SowqZ/NEfU3rqHdU1iPbg9PDMzP02HzuOd9uuupRFBCsKZcwTKIctT0kCFv50r/zf8djj5MkEiNvCA9QuWq19jQk4UEa9sd4CSoxBE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749053776; c=relaxed/simple;
-	bh=weHQwns0gJTioruMnZ6e+lbjxPJy1R3/J0uJNHbei/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GfSFVsSwbPyxs3F4ds1nQB8V4MO6P+tXxKSW+1kfQPBFYCYHdjKX99yBO5bIBXkm9Yj8Mz8XMhji1408VHYBmUV3cnjZbOeNvkK1l10RXuy26FiGYlK8M6q6bU6aXYxJbLsJl/Z1KsrW7ArXZdfXZXmo9w+S8v0JseDrGbOMu3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JW3s5E4w; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GiDYZjk3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qvVMw7e2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ib421YMQ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78908339A1
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749053787; cv=fail; b=PH4ZjgiV0pHTIuyeEyc44P6f+oScgSLbGB6bJ6FyUffimDeYKWbSvqjr/V5yuMHBqd6XISO9nhWCkbo/cvmLx4d7pF4x3xZEBxE0VbepotQjy8HuEd/ZH9q+eUmDN+cLpmtQANit3oR1LMlNrUerk1UKUSBP3UOtHtqHGyf+TrI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749053787; c=relaxed/simple;
+	bh=USfJuYM9dRU7iG77RUpC0Hm3coLzmOLl3ktUGw0MEsQ=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=X4arQZtS1qzF0yaRNB0qQZ1g5TZxUMiyljlmayvUbZvlcpnJYTGV046naPkJ1FMRd6tQfDoqDRoc7Zpf69FFjq7kFcdo8Z6umSuU4XmVpKnM4hp4dfMCUBMa56hjQ3p90wJltWlMHHsNF72+PzlxGATTTQTF4ycDZA/ya4kb5Hg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UGutifWO; arc=fail smtp.client-ip=40.107.92.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JW3s5E4w";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GiDYZjk3";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qvVMw7e2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ib421YMQ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DEB912033D;
-	Wed,  4 Jun 2025 16:16:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749053773; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YmdkHicZ9vMglOkN9sId8WADOZ0AiEKxD+HKkXswifw=;
-	b=JW3s5E4w/Lq8bnMW7jFK4SnNpKvFd6SXiT2E5iKZJSsFk75BrW0vJSwSpL+o9geysesFIf
-	8saaOt3PhJj/bYi16+BZ2p1pDIfcTU8d1K2D3QaLnzWK5VPGEC1BnBxbqzedDmyKkKumrP
-	fdkwgF/NfXZ7iHY5+9MW07K1gZkegVY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749053773;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YmdkHicZ9vMglOkN9sId8WADOZ0AiEKxD+HKkXswifw=;
-	b=GiDYZjk3W/3b75T4+UMWn/ckf3lpcrUELe7rDdgSyeE4QJz59fduZu9ndYMV0lTLB5KTTg
-	Bmea3lFDHcTYpoDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=qvVMw7e2;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Ib421YMQ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749053772; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YmdkHicZ9vMglOkN9sId8WADOZ0AiEKxD+HKkXswifw=;
-	b=qvVMw7e2XoaVcUE2le8pfxYUhFk5XJfc1fLEqRPChbEQ2ko9L3bWU7sSua9U3yYkZChYj8
-	FNONXjiWXRwXRKKeKdoHyUTZKRyxn09x4R/J2yhO1uyyB3090bijaEwEhX+tbGjTrOH3Op
-	xYOYUD2e1+7+hOltBZXxlfOYTr16prI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749053772;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YmdkHicZ9vMglOkN9sId8WADOZ0AiEKxD+HKkXswifw=;
-	b=Ib421YMQE2vfLRFvp8nrk30gIIOH/ThJCJEgYSbQgQYBc+TNJ5/X5OaqRLUMRx9BRpn374
-	J2mCcWDj3aWdxTBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D13C13A63;
-	Wed,  4 Jun 2025 16:16:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GNQYBExxQGhiIAAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 04 Jun 2025 16:16:12 +0000
-Date: Wed, 4 Jun 2025 17:16:10 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Jann Horn <jannh@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org, Peter Xu <peterx@redhat.com>, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory
- snapshot
-Message-ID: <gm6gm4hmojfhgwjgyzxfzxjlr7yz2gtkspdocsufzxydyfc4ri@n5iynjdpoe33>
-References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
- <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
- <t5uqs6kbzmcl2sjplxa5tqy6luinuysi7lfimbademagop7323@gveunpi3eqyo>
- <CAG48ez29awjpSXnupQGyxCLoLds72QcYtbhmkAyLT2dCqFzA5Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UGutifWO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x8bZ/t92FSoUF7lGf+390WJAvpM39s2s+wyXHAib689DUe6ivkgYZiHbbJotiwwlq3/bEbMH1yuP6Ml3Kve0zRw9njw3hAnTU94T+zQXbW459Sb/1/d3lsU2cTAQegoZpq29s/byYMrOf2xSwytsVqpJcAEbggs87ZRleI6e83143j4l3mCNYRPw51YvpUjYE+3CSd92gZh/6iP93BnZpnaOYwNS9H0Uoqh11RDA2T0ScpQC8s0LIweUQdF4mOIUs5RchiPKuUqPsRyw2Zee6RyFqvblske0T05Nmwt/WSu7HheJlRslOgDv8aGQr6H9AJq/tAK+5AbR1BQ1AaRA5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UtEJOoCK5XOWa3zUVY2KraHUJcWk8fEzPHPiSC7r29s=;
+ b=XGwBKzlaixNuTOT1NWJOPVj+vP0dKF1SFCR81/B4ISn24Kbi9EJ6cAqH3I9hunp/foPH/Pgn2ngwcb7ZNGcOCg+r0AvikRvHjU2nOp4/ODl/NUso4nOmkBA1PCuRQEDQVm0KN4ccG37GntRWlvd9QBK0W85yehwwKMLz07Py1eWbXYhqE8equikWgUN+hnucxFzIlvu5q8Joplv3xFDUJKB5Otgy1zOIiHU4cv2lFIwV+0CPk+9I+BH7gX1g/ePhlPX9t5VeO1lV7+UC2G+m5go6Ago94H3ZVmOx1Qg/UNE0ERMVXJjTsvC5NIdQ6ZkwM1ojDHzbSC1AedM+LNErRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UtEJOoCK5XOWa3zUVY2KraHUJcWk8fEzPHPiSC7r29s=;
+ b=UGutifWOHvl65m/1AupnzkIJdCFVVziMrlBuZCS9uQCa4EuwjUb3Shr2vacUVd/+5tneOPYdti8XtrYeqCBuyLQtWEZpFTi07KPtp8wZpTU1NicCIjBVla4m03wUA3eW0HOH7NPZ5Ivu4OZjqUdN6GywcHRb5H3jFZHkUm6Lbh0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN9PR12MB5163.namprd12.prod.outlook.com (2603:10b6:408:11c::7)
+ by CH1PPF73CDB1C12.namprd12.prod.outlook.com (2603:10b6:61f:fc00::615) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.30; Wed, 4 Jun
+ 2025 16:16:22 +0000
+Received: from BN9PR12MB5163.namprd12.prod.outlook.com
+ ([fe80::61ca:6d43:a98d:3b7f]) by BN9PR12MB5163.namprd12.prod.outlook.com
+ ([fe80::61ca:6d43:a98d:3b7f%4]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
+ 16:16:22 +0000
+Message-ID: <58921dc3-aa6e-41bc-90d3-d25a4a2cce8b@amd.com>
+Date: Wed, 4 Jun 2025 21:46:16 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 7/8] iommu/amd: Add debugfs support to dump IRT Table
+To: Vasant Hegde <vasant.hegde@amd.com>, joro@8bytes.org,
+ suravee.suthikulpanit@amd.com, will@kernel.org, robin.murphy@arm.com,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+References: <20250407173500.1827-1-dheerajkumar.srivastava@amd.com>
+ <20250407173500.1827-8-dheerajkumar.srivastava@amd.com>
+ <a7d4929b-f7ff-4ce5-800e-79df3816d9d6@amd.com>
+Content-Language: en-US
+From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
+In-Reply-To: <a7d4929b-f7ff-4ce5-800e-79df3816d9d6@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0182.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:be::18) To BN9PR12MB5163.namprd12.prod.outlook.com
+ (2603:10b6:408:11c::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez29awjpSXnupQGyxCLoLds72QcYtbhmkAyLT2dCqFzA5Q@mail.gmail.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: DEB912033D
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-1.61 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_SPAM_SHORT(2.20)[0.733];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -1.61
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5163:EE_|CH1PPF73CDB1C12:EE_
+X-MS-Office365-Filtering-Correlation-Id: db83357f-09d0-42e2-dce7-08dda383259d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bmFNQ0EzcURQUWt0MXFST3FFdXAxTVVXMitoQ2hna3RyUXE2VkxzYmovSGdk?=
+ =?utf-8?B?aDl5MFYxVGY4eU9iNmdrM2dwMG5jaDR2d2F0dittTjFDdk5KdjJ1dXRRcElC?=
+ =?utf-8?B?RVZEbjdzRkxPcGUyZDh0WmE3TWJNbGNIa0U0RHlLQmZnNHU2SldQbWFFVzk3?=
+ =?utf-8?B?YzZ2N1k3Rlk0K0xJM3NxSHNINGlRWlFGcnMrWVRRNWJ5MXkvdDFmRzhiZUZz?=
+ =?utf-8?B?eURPU1kyN1ora0NWdnpBODBZbUJLVFdTdFNHY21RYzdkZWRoZFhwa09GSXhz?=
+ =?utf-8?B?TlQrVEFBQVBja1hES050V0xkMGhHRldtYXlPampmZWJLL1dXalgzZ1B3OFVl?=
+ =?utf-8?B?eDM4MWhua1pLODJkM0VlWHIrUXZwRjlpR2paQmx5ZnkyRTNpN3M4OU9lUk50?=
+ =?utf-8?B?cVRuUjNYTGV2Y0NzTmQrRWdKZWs2WUhIc1haUHk3RkZQMmRXaXZJWG9xUHl6?=
+ =?utf-8?B?ZlZ3SmtqQmsyRnRSWlZxR2hxWWlQUkRUelN2YjBkQ2d6M1FTOUgrNzRyNWhF?=
+ =?utf-8?B?M0hSc2tpNWR4VHpDTkEwRkZIREw1YmRGSHNRWkFVenhkVXhwbVdmeGlvS2Fj?=
+ =?utf-8?B?UU1sMXM4SjJJazJUZGpUR0pjMGxJczlHdmlWUnhvQWtvR2RwVHRYOExqNVRU?=
+ =?utf-8?B?QlFOdWRmV2c1ZzRMeUpVOHFub0srR1RnZG1lMXEyMDh3Mkt6dFJ0WWtOa1A2?=
+ =?utf-8?B?Q2VCTlByWndtVzdvczNVejRqUERaa3JQUGFqZkxRb0Q4ZzF1Ymh2eitpSHMr?=
+ =?utf-8?B?ZzBmRUdJOTI5bVRKZkxVUjBaV1hhdFpNK2FzZStYMlVNTG1udnF5bTNlSXZQ?=
+ =?utf-8?B?QVkrd2ZUL1ArWEV6UVdmU3Bhc3NKaHdvN0JWYWxxd29qL0ZMOHE4c1VZRWtN?=
+ =?utf-8?B?YU8yZ2RiWW1ZSkNnODh0Qi9vaU9BWmU0UW1HaGJ1VnBDa1dqSkM0OXZrMmk1?=
+ =?utf-8?B?eUg0eDMvNU1DVWRFR21McjRwaklzd0JCN3oxb2p2S2RTbVdReHFkSGVVWFFL?=
+ =?utf-8?B?ckRjeDd2YzZXM0Nxdjl6dU9lcGtZRnBBRkViOXhmQy9JVXF0SDV6K2M3WUJt?=
+ =?utf-8?B?VVNHeUIwbEJzSUtFVkhnc3oyMEZkZTNFUFVsdWFFMHp0RTBSem5MdGpodmpP?=
+ =?utf-8?B?UWFlYVNhY1hxbE05clptS2tEK0VNMnRFNW1sTjNQMndPMGpQWEFFaDdMbExV?=
+ =?utf-8?B?RDB4bXV3bjZZMzVuWUVjN1V0amM0WHFvdThqNE5ZMWxWUGxWV0VhOU1nUkFE?=
+ =?utf-8?B?SURIeWNTa0I4Ym5qaGhLS2d0V3hScmVkcTBpYW9zVjlHdkdtZDNtb1FmZUZ3?=
+ =?utf-8?B?ZTd4aDA0Q0NLa0E2ZklzM2dUc0F0NjZmajg4OHl1Z0RLZDE0VzRuclJUZlhU?=
+ =?utf-8?B?T083Wk9ySG9VVzNaLys5aVhMT0tUUVJUdFA5dGcyMVBNS0pLREw4c3A0aTI1?=
+ =?utf-8?B?L3JyNkQ3dnJ5RkRmTjJ3TXhLaFdNclIrcG9rV2Z2Z0lKblFPZzdDZlZlcUE0?=
+ =?utf-8?B?bkQwYzh2UXNWdjNKQnFlTHRxWlRTUUlUOGJGNldOOGE2MjVGT0hRNGs3VkpD?=
+ =?utf-8?B?N0JVeENydE0xWWVTL29sWEcyeGRuZUx0KzdGbjVKTTBEVG9lSmg4ZkZpNTg4?=
+ =?utf-8?B?T3pISmE2QXRLQTNPTENVcFBZNkNwZy9JK3JVREpJMnJPWUhZN0V5bGNudmR3?=
+ =?utf-8?B?azhoUktiYUllMzFuQWNLaTRaTG9PS1NwWUk4cGhaUDcyaExoZE5NaVFRbFRo?=
+ =?utf-8?B?SUR0aFRTcU1Qay9mQjV5ZkhsZkpVamxhSmtRM2NsbUxkMjZPV0dHR254K1o0?=
+ =?utf-8?B?cHM1djdQRllCd2ZUYWg5eWVnaVRVOEFLeGdWb3RWLzhnajVKeW5Hc0V1b3Js?=
+ =?utf-8?B?elMxMWU0RVNmS1BJMHhReWFvY01sNVYxNjY5UEdvVVhaRUk4VGptZ1Z0UTUw?=
+ =?utf-8?Q?yra1w11V3sg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NGxCNU8rOG83RHBVZjRoUU5WWDBlTUJqUkNLZXFJZUMvT3FDa3JvMFIyUUx4?=
+ =?utf-8?B?aFAzbEo3aGFBSElucGJXME45ZzlLU0VQMlFzV2J2OUYvclRmK1FhUEZlQm4r?=
+ =?utf-8?B?aG9icjVRbHB1TTJnMDNIdGswbEVaVGRtOUNWdDRpOGVsQ0I1Y1dxd0YzaGtW?=
+ =?utf-8?B?SVlmbnVDSnd1ZnpoWVE3RG1PMWtFekFEcm1ENkRmZWxnOE85eGVxTjMxYWZz?=
+ =?utf-8?B?VUpVUDZKODB0aWNiV294WWV1Y0ZHTWJjZnRhM1BQV0I5alNlckV1eEhqYzM3?=
+ =?utf-8?B?UVVobnV5MWZFZ1l4Ri9aK1lVa2owbFFuNFVjMUJOSU1tZ0pkVE1KL2lCRWoy?=
+ =?utf-8?B?V2tWdFA1UVNwMTgvZ1p6Q2hiQ0cvY04vTGJhWm8xTEhUK0ZmaHB3RDJHOCt5?=
+ =?utf-8?B?NzYxUWdpdWVBeXlpK1c3d2FVNGRQMUY3WnZVU2JxTWVnYTFwY0VsZU1uL0JO?=
+ =?utf-8?B?Wmptd2xPMEY5eFM3Mm8xZVJ5LzBLK0pwS2RrRTkyTGYvRVVTSWlWbHBaamxV?=
+ =?utf-8?B?NkFiZjZKNlQvVFZTa3Z6YlN4MkRiQzRNSERSMHBNVkZGakZlc2RzQkFlR21M?=
+ =?utf-8?B?WjFSS0hFZVBQcXJ3bGYwRGcwK3M4YnBwQnJZM3lRc29iYzR6ejl5TFMvTTNR?=
+ =?utf-8?B?RVQ0RVc0eEE0aC9uVUxFK1Y3NFFkR1h0Ti9DQno5U0NTN2Q1b1JwQlgwbWtC?=
+ =?utf-8?B?MENPY0xiL2RBMG1NZ3A0MUtzdUJKYmxKd1lDNTlQUGJSY2JzUy8zdEErakNl?=
+ =?utf-8?B?QlBOMUxlNVJ3Y2Q2MmtRNDJZaGxXT1AzRlBtYm5EVlNkSDR0eEI4TVVlc3Bl?=
+ =?utf-8?B?eFRoR09rVmFSSFNBQld5VHNacHh5SDZXZDhDUEtiMUlzbkpDM2tld3U0K0Rj?=
+ =?utf-8?B?dnN2MXBiV0xnSi9PRHBteXR6N0MxVjd5ZWlIQUE5UFIwZEhCQmNPN1MybVJH?=
+ =?utf-8?B?aXVXZ1N6NFVrM1J2MVlLK29SanJoaXU1b2ZVdGg1a3VwK0pPTTIxMDIyU0ty?=
+ =?utf-8?B?NWlZWDgveVhSZlVNNlJtZGg2bjFkNm8vcjIrSndiU1BjTk0xZis3MG5QNmJm?=
+ =?utf-8?B?dWZwQmhxQmg0UU1qWDVuZEFrR2kzVEpLaTFZa295S1J2eDN1RmZGUEZJNldW?=
+ =?utf-8?B?WDFBUnhpUjExNW5jQzB2Y3czcW44K2V0b295dEM1RGlqZW5IbzcrNFp1WmZr?=
+ =?utf-8?B?UCtDcDlFa0pRYWdjaG5UNjQ4TzNWOXVSem1uZk9lbnI2WUU2RUVNTXU5cW51?=
+ =?utf-8?B?SnBaSm45elVQR3VqbFBieW9TL0thdUhTV2pGa1NiMFM4dUtuNXNBYTFNMHhv?=
+ =?utf-8?B?TXZNU0ZkZ0NZZUQ2d3ROaE1ENDR5cmQ0N0cxdGpxSU00S1Z0S1dUNjR4cGta?=
+ =?utf-8?B?N3lJaDFISkhwV0RoZjJ3blNLK3hUNGJ6eldWRTR5N1FkV0txWmx6RVdHbTk3?=
+ =?utf-8?B?d2tKbnd1V3VIaUpJQ2VTM1pjeXhMTlEvK0FPVDg2d0t6dUFJUE9VRzNwdjFt?=
+ =?utf-8?B?RzNwaTMyZ3lFRlRXdVZGWVRSU3ljb25aUWpMMzBFd1hvRkw3djA2cS9JcDFL?=
+ =?utf-8?B?SVVBOExhRURoTTVhaHdaay9yV0s1RXZQbEdCbjM0S1c0bjhjZnZ2VVJvSEE2?=
+ =?utf-8?B?RkdOYmdnRmZaeHZDWEU3L1FVZjRyOWN6ZkR4SWtkUkJrT1RFV3dMTWlNTk9L?=
+ =?utf-8?B?UEhoY3l1NWtmSDc4ZlZ0MFZsZkhrSFNWRWppbkZvL0dWVjJNVk5USUh6aGY4?=
+ =?utf-8?B?eldyVVVQSzBaVzVzUkRvWW12dTRTTUwrcXBxQ28xUkZBTlZIbGRjSFJpZTBP?=
+ =?utf-8?B?RjVlbWZPaHZxbEpLQThUaDRTYUhNK0NqSkhZdUlXSSs2MXB2Qml0b3ZHaUE4?=
+ =?utf-8?B?d2JmVGpYYWU1dWphS1JkRE5PZjc5cEhYS1VoOEQyRVlGTDFqLzRNRzFucWtT?=
+ =?utf-8?B?YVNyTDZjdWdReVh2dU9Xa3dyREp4dDUza0FqMjRFWnN6Z0l6TkNSVjcvVit6?=
+ =?utf-8?B?Z0xVbGlSczFuTGxpTVMvT2tHTWROZTFSWVFxQmQ5ZEYxRDV3TG1LeUxaNE1w?=
+ =?utf-8?B?TjZCVFZKbmJnVmNZZVVwSFZiTGl4Q1ZGc2xKVVEzbE9nY0N6KzVYNE01V3RM?=
+ =?utf-8?Q?uZnKj2JL23MO0wyVhwY4NjEEJ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db83357f-09d0-42e2-dce7-08dda383259d
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5163.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 16:16:22.7340
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WJdzjfznxvonsPcORKG6O6Iiu7eVc+hvsrJJteL6Fvzr0Pztqil9QZ+O01CgF9zFSTR6h59VUY3t729LCx+Ocg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF73CDB1C12
 
-On Wed, Jun 04, 2025 at 05:41:47PM +0200, Jann Horn wrote:
-> On Tue, Jun 3, 2025 at 10:32 PM Pedro Falcato <pfalcato@suse.de> wrote:
-> > On Tue, Jun 03, 2025 at 08:21:02PM +0200, Jann Horn wrote:
-> > > When fork() encounters possibly-pinned pages, those pages are immediately
-> > > copied instead of just marking PTEs to make CoW happen later. If the parent
-> > > is multithreaded, this can cause the child to see memory contents that are
-> > > inconsistent in multiple ways:
-> > >
-> > > 1. We are copying the contents of a page with a memcpy() while userspace
-> > >    may be writing to it. This can cause the resulting data in the child to
-> > >    be inconsistent.
-> >
-> > This is an interesting problem, but we'll get to it later.
-> >
-> > > 2. After we've copied this page, future writes to other pages may
-> > >    continue to be visible to the child while future writes to this page are
-> > >    no longer visible to the child.
-> > >
-> >
-> > Yes, and this is not fixable. It's also a problem for the regular write-protect
-> > pte path where inevitably only a part of the address space will be write-protected.
+Hi Vasant,
+
+Thanks for reviewing the patch.
+
+On 5/1/2025 3:36 PM, Vasant Hegde wrote:
 > 
-> I don't understand what you mean by "inevitably only a part of the
-> address space will be write-protected". Are you talking about how
-> shared pages are kept shared between parent in child? Or are you
-> talking about how there is a point in time at which part of the
-> address space is write-protected while another part is not yet
-> write-protected? In that case: Yes, that can happen, but that's not a
-> problem.
 > 
-> > This would only be fixable if e.g we suspended every thread on a multi-threaded fork.
+> On 4/7/2025 11:04 PM, Dheeraj Kumar Srivastava wrote:
+>> In cases where we have an issue in the device interrupt path with IOMMU
+>> interrupt remapping enabled, dumping valid IRT table entries for the device
+>> is very useful and good input for debugging the issue.
+>>
+>> eg.
+>> -> To dump irte entries for a particular device
+>>     #echo "c4:00.0" > /sys/kernel/debug/iommu/amd/devid
+>>     #cat /sys/kernel/debug/iommu/amd/irqtbl | less
+>>
+>>     or
+>>
+>>     #echo "0000:c4:00.0" > /sys/kernel/debug/iommu/amd/devid
+>>     #cat /sys/kernel/debug/iommu/amd/irqtbl | less
+>>
+>> Signed-off-by: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
+>> ---
+>>   drivers/iommu/amd/debugfs.c | 106 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 106 insertions(+)
+>>
+>> diff --git a/drivers/iommu/amd/debugfs.c b/drivers/iommu/amd/debugfs.c
+>> index c6ff47561afb..28fe546e0bc0 100644
+>> --- a/drivers/iommu/amd/debugfs.c
+>> +++ b/drivers/iommu/amd/debugfs.c
+>> @@ -11,6 +11,7 @@
+>>   #include <linux/pci.h>
+>>   
+>>   #include "amd_iommu.h"
+>> +#include "../irq_remapping.h"
+>>   
+>>   static struct dentry *amd_iommu_debugfs;
+>>   
+>> @@ -254,6 +255,109 @@ static int iommu_devtbl_show(struct seq_file *m, void *unused)
+>>   }
+>>   DEFINE_SHOW_ATTRIBUTE(iommu_devtbl);
+>>   
+>> +static void dump_128_irte(struct seq_file *m, struct irq_remap_table *table, u16 int_tab_len)
+>> +{
+>> +	struct irte_ga *ptr, *irte;
+>> +	int index;
+>> +
+>> +	for (index = 0; index < int_tab_len; index++) {
+>> +		ptr = (struct irte_ga *)table->table;
+>> +		irte = &ptr[index];
+>> +
+>> +		if (AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) &&
+>> +		    !irte->lo.fields_vapic.valid)
+>> +			continue;
+>> +		else if (!irte->lo.fields_remap.valid)
+>> +			continue;
+>> +		seq_printf(m, "IRT[%04d] %016llx %016llx\n", index, irte->hi.val, irte->lo.val);
+>> +	}
+>> +}
+>> +
+>> +static void dump_32_irte(struct seq_file *m, struct irq_remap_table *table, u16 int_tab_len)
+>> +{
+>> +	union irte *ptr, *irte;
+>> +	int index;
+>> +
+>> +	for (index = 0; index < int_tab_len; index++) {
+>> +		ptr = (union irte *)table->table;
+>> +		irte = &ptr[index];
+>> +
+>> +		if (!irte->fields.valid)
+>> +			continue;
+>> +		seq_printf(m, "IRT[%04d] %08x\n", index, irte->val);
+>> +	}
+>> +}
+>> +
+>> +static void dump_irte(struct seq_file *m, u16 devid, struct amd_iommu_pci_seg *pci_seg)
+>> +{
+>> +	struct dev_table_entry *dev_table;
+>> +	struct irq_remap_table *table;
+>> +	struct amd_iommu *iommu;
+>> +	unsigned long flags;
+>> +	u16 int_tab_len;
+>> +
+>> +	table = pci_seg->irq_lookup_table[devid];
+>> +	if (!table) {
+>> +		seq_printf(m, "IRQ lookup table not set for %04x:%02x:%02x:%x\n",
+>> +			   pci_seg->id, PCI_BUS_NUM(devid), PCI_SLOT(devid), PCI_FUNC(devid));
+>> +		return;
+>> +	}
+>> +
+>> +	iommu = pci_seg->rlookup_table[devid];
+>> +	if (!iommu)
+>> +		return;
+>> +
+>> +	dev_table = get_dev_table(iommu);
+>> +	if (!dev_table) {
+>> +		seq_puts(m, "Device table not found");
+>> +		return;
+>> +	}
+>> +
+>> +	int_tab_len = 1 << ((dev_table[devid].data[2] >> 1) & 0xfULL);
 > 
-> No, I think it is fine to keep threads running in parallel on a
-> multi-threaded fork as long as all the writes they do are guaranteed
-> to also be observable in the child. Such writes are no different from
-> writes performed before fork().
+> This is hard to read. Please use the macros like FIELD_GET
 > 
-> It would only get problematic if something in the parent first wrote
-> to page A, which has already been copied to the child (so the child no
-> longer sees the write) and then wrote to page B, which is CoWed (so
-> the child would see the write). I prevent this scenario by effectively
-> suspending the thread that tries to write to page A until the fork is
-> over (by making it block on the mmap lock in the fault handling path).
+>> +	if (int_tab_len > 2048)
+> 
+> s/2048/MAX_IRQS_PER_TABLE_2K/
+
+Sure I will use macros to fetch and validate IRT table length from DTE.
+
+Thanks
+Dheeraj
+
+> 
+> 
+> -Vasant
+> 
 > 
 
-Ah yes, I see my mistake - we write lock all VMAs as we dup them, so
-the problem I described can't happen. Thanks for the explanation :)
-
--- 
-Pedro
