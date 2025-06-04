@@ -1,116 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D6917B50F;
-	Wed,  4 Jun 2025 22:47:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3FB1547C9
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 22:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749077248; cv=none; b=DY1URyr9FR7K/a6mesA6xkW6UxM82VGjRGsh6pFo5J80523sk7LVFpgH+o1697eK3rTNkQCWnl4gbWCarXjgqZqIrLTeHOT8etyq2vAFYKaTN8h4ZHBgQxHrlEmz0Oy1HXzPLTwsxATZYuw9SN7QkzVmEDyy0+H5L+S91GbSZ94=
+	t=1749077275; cv=none; b=DrERTMRAIoA93pBJq8oY9VmLSZnOqjcVtJRdtroprwV31/HHPjIn+Ut492/p35Id9EoSR2nXc4sPCDZa1S4WQOY8CdPCXfzAm9IkG0nYc1N/H053TwPONTJrZMjDMUyIGT2h5jVbi0buaBsBZldv7R3CTI1VQQhijiodBHF/X4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749077248; c=relaxed/simple;
-	bh=MS9MhLppLKcfcpEmcrATxZ8g/tCqKaCDKhcnaCJwas4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cG/D0kGIb1dK5NYwWnSZIj7Gyi8E8KcmZTunlvVPkFPjFySkzSp61gVSjoWEYC4EhPghSw5uj9+cDWYE+NuTprHz1BaG2APUyICFyIIyEPCvO4f+inCW6ogmCmRWOTc9vaeWrvHbVvtgXCjoAgUflBfUT0tNLKVkMsdF3SaBHKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayzB/0nY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749077275; c=relaxed/simple;
+	bh=lTyIl3tFEZAFEhIjI5VOgHghdPUqVQ2X+80AE0ergFE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=P/Q2bfrxjVPWngYUGiJyBwZ3uu5xDOldidqLuUKhtiUATbxtftJMrfqtX08y/iKnEDmjwI2w/IKT8UcKVlcAFwDa/l716J2msW6xpyAYKlpxIsCTUIBcpOMQw1WREpyRJQ0K0Hw+BSaGzOW89bxwg/7AEWJNVwbeYpa/6QXxMxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=zsYONRVJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ayzB/0nY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 503B9C4CEE4;
-	Wed,  4 Jun 2025 22:47:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749077247;
-	bh=MS9MhLppLKcfcpEmcrATxZ8g/tCqKaCDKhcnaCJwas4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ayzB/0nYz4HKTTJN3/MwNxbFV57n8BOybrpAAbBTgRtUO0oL0kr4bI09lTp0nzdOe
-	 HvQRrsQou8e+hilGbo2NjLkavgPDDC9Ik8NzUz7kTuG6V8/3+g5u2uCx/pgRKLTuXS
-	 GvjvnyTEc2+N7n9U2WipHn6SGqxAwIPh5e5z4a/1xbRwh3A4labv+dA35x7gYftHbC
-	 7vBDmZhLoR7qZ4bx5wM1cH2eDoPOZSHbAR5+NnP57dEFR3mwxgbl0vsG4VTP856bhT
-	 nJ+Hb13yat+NWj8YQ7mxuTCMa4eCW4k9CHQRWeaLwHk1sYagQq/sULV+IwzOpCII4T
-	 TFothl8KGzq2Q==
-Date: Wed, 4 Jun 2025 12:47:26 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Tiffany Yang <ynaffit@google.com>
-Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	kernel-team@android.com, John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Chen Ridong <chenridong@huawei.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [RFC PATCH] cgroup: Track time in cgroup v2 freezer
-Message-ID: <aEDM_s7y8xMKJHph@slm.duckdns.org>
-References: <20250603224304.3198729-3-ynaffit@google.com>
- <aD9_V1rSqqESFekK@slm.duckdns.org>
- <dbx8y0u7i9e6.fsf@ynaffit-andsys.c.googlers.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="zsYONRVJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E8AC4CEE4;
+	Wed,  4 Jun 2025 22:47:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749077275;
+	bh=lTyIl3tFEZAFEhIjI5VOgHghdPUqVQ2X+80AE0ergFE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=zsYONRVJWIbFLTEWTOey1C+KZduSzpXfe9px2qj9Z47nLJjO9uITUTfcOFg7N0CSc
+	 Y0osN/dCiKZR954vBcc5lcKwNXCgKbZkyOQ/TdInhViPXF9s/ANuyNLs9zFEB8X0WO
+	 wUWOSJgOfEVR1Ujh18EPzbc7USrYQGIGts1qYk4o=
+Date: Wed, 4 Jun 2025 15:47:54 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: yangge1116@126.com
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 21cnbao@gmail.com,
+ david@redhat.com, baolin.wang@linux.alibaba.com, muchun.song@linux.dev,
+ osalvador@suse.de, liuzixing@hygon.cn
+Subject: Re: [PATCH V2] mm/hugetlb: remove unnecessary holding of
+ hugetlb_lock
+Message-Id: <20250604154754.a30e327c3f1640173c8b9cb8@linux-foundation.org>
+In-Reply-To: <1748317010-16272-1-git-send-email-yangge1116@126.com>
+References: <1748317010-16272-1-git-send-email-yangge1116@126.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dbx8y0u7i9e6.fsf@ynaffit-andsys.c.googlers.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello, Tiffany.
+On Tue, 27 May 2025 11:36:50 +0800 yangge1116@126.com wrote:
 
-On Wed, Jun 04, 2025 at 07:39:29PM +0000, Tiffany Yang wrote:
-...
-> Thanks for taking a look! In this case, I would argue that the value we
-> are accounting for (time that a task has not been able to run because it
-> is in the cgroup v2 frozen state) is task-specific and distinct from the
-> time that the cgroup it belongs to has been frozen.
+> From: Ge Yang <yangge1116@126.com>
 > 
-> A cgroup is not considered frozen until all of its members are frozen,
-> and if one task then leaves the frozen state, the entire cgroup is
-> considered no longer frozen, even if its other members stay in the
-> frozen state. Similarly, even if a task is migrated from one frozen
-> cgroup (A) to another frozen cgroup (B), the time cgroup B has been
-> frozen would not be representative of that task even though it is a
-> member.
+> In the isolate_or_dissolve_huge_folio() function, after acquiring the
+> hugetlb_lock, it is only for the purpose of obtaining the correct hstate,
+> which is then passed to the alloc_and_dissolve_hugetlb_folio() function.
 > 
-> There is also latency between when each task in a cgroup is marked as
-> to-be-frozen/unfrozen and when it actually enters the frozen state, so
-> each descendant task has a different frozen time. For watchdogs that
-> elapse on a per-task basis, a per-cgroup time-in-frozen value would
-> underreport the actual time each task spent unable to run. Tasks that
-> miss a deadline might incorrectly be considered misbehaving when the
-> time they spent suspended was not correctly accounted for.
+> The alloc_and_dissolve_hugetlb_folio() function itself also acquires the
+> hugetlb_lock. We can have the alloc_and_dissolve_hugetlb_folio() function
+> obtain the hstate by itself, so that the isolate_or_dissolve_huge_folio()
+> function no longer needs to acquire the hugetlb_lock. In addition, we keep
+> the folio_test_hugetlb() check within the isolate_or_dissolve_huge_folio()
+> function. By doing so, we can avoid disrupting the normal path by vainly
+> holding the hugetlb_lock.
 > 
-> Please let me know if that answers your question or if there's something
-> I'm missing. I agree that it would be cleaner/preferable to keep this
-> accounting under a cgroup-specific umbrella, so I hope there is some way
-> to get around these issues, but it doesn't look like cgroup fs has a
-> good way to keep task-specific stats at the moment.
+> The replace_free_hugepage_folios() function has the same issue, and we
+> should address it as well.
+> 
 
-I'm not sure freezing/frozen distinction is that meaningful. If each cgroup
-tracks total durations for both states, most threads should be able to rely
-on freezing duration delta, right? There shouldn't be significant time gap
-between freezing starting and most threads being frozen although the cgroup
-may not reach full frozen state due to e.g. NFS and what not.
+This change addresses a possible performance issue which was introduced
+by 113ed54ad276 ("mm/hugetlb: fix kernel NULL pointer dereference when
+replacing free hugetlb folios").  113ed54ad276 was added recently and
+was cc:stable.
 
-As long as threads are not migrated across cgroups, it should be able to do
-something like:
+David said:
+https://lkml.kernel.org/r/87521d93-cc03-480d-a2ef-3ef8c84481c9@redhat.com
 
-1. Read /proc/self/cgroup to determine the current cgroup.
-2. Read and remember freezing duration $CGRP/cgroup.stat.
-3. Do time taking operation.
-4. Read $CGRP/cgrp.stat and calculate delta and deduct that from time taken.
 
-Would that work?
-
-Thanks.
-
--- 
-tejun
+Question is, will that bugfix's performance impact be sufficiently
+serious for us to also backport this new patch?
