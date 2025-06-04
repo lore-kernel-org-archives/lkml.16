@@ -1,176 +1,145 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD47938384
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 14:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC6B217F3D;
+	Wed,  4 Jun 2025 14:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045746; cv=none; b=D/PGUll7T0dklWBPJogP6LL3T4M17pedAQ2YfqotdT/IsTTsseLOx9tbLHEJJUzh05x5iRZMrTM0hdWn+mffnYNMNjSreE5Ic1PbvLA9wwsYFXxhle1tJl40Vxx5/vG75ounL4g243WZmvgsyw540K20mNq1M8T7hG0Iv+XAKJI=
+	t=1749045792; cv=none; b=LEST9FOPO+hx42UVlHpa5CSsIm30kIGDL7iZCMQGF4mUzGoxsYK9SzGLZfWOvLek/fJpoSeaNx4on44qdpeii/uy82eaorVHlCSCruSfDXU2F0/JL8ETX8wOmmwmgVahFzhEF+xSqKsOxZIo1nRxCO6/e4bisu9BKdPK03taOeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045746; c=relaxed/simple;
-	bh=SF2TUI7mUMzc/jSBFlCExxvSiZraFWQni6zRHWJeB4A=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=O2OdaqmPFAyWC8pKW4uL/Vf/PiiFjr7TkBAmNkz47UOm2qQLYRMcAXB0/zF5Ed7Wyco9rH4a4bdBKF+ppckD8f9qIxQszdfMnFdyYjOu12O05OxkCV0R0aXZHethl7KV7QaFUkpMZty3MccVit5FRK821kcu2uAF+ktJTAdKTOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cE35S6Gl; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749045792; c=relaxed/simple;
+	bh=jOX0OWkMHthLxZlqAHJmk7epo+raL1mcgxAKeKQDmJE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=i4WwVlSsnLqKtOiuM6Nag1ii/7X0WoI5W9TdZGcYiHWgy7yh7BEnTmEiMDu/QqIFoilLOR3EuIhhysyvCbUNsbzR/MGM1hEuzjkfLREbFsU/5rbzJ2Ydc76TCTCDRWDeOABg/2XBQFnUfmv2yf20MaZS0yGvbUU4CtTP4hputbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMpQ2oB8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cE35S6Gl"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ea0e890ccso6660221a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 07:02:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749045744; x=1749650544; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4H4b6gj2RPA1NSrnkWfDydCjI09ZASRQKphvEZK2b8s=;
-        b=cE35S6GlhsRDrfcQ4WEL/rCkHwGVKBsIoIaWsj4cFbPq+IozhwD5kY+6X2L+AR8x8w
-         InGzc1vW/cJWKxHrahvIQnghy8uki7b6+RESwHb7olNIzlKsLtELGhuKPygNomX9KhPy
-         GQEBmZYCaa38LlbsG36e/iLJQKuQ2cQ80TNPdPt4lIWfG7EPcH5nE/B8NaeCqtBcuhb4
-         T4UWqwGlhYxMZS97dhtbTwHOfdoEuZDOC6roBfgEzmjUSt7UksSiSZ4W2/I/sSfcfHFl
-         9aiH512lsLaHVmq6cWVDBW1PyCWG3/F/EB8VPmkfLvdA/3X96Udd4kDlfFkM5X7yNxwk
-         ruWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749045744; x=1749650544;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4H4b6gj2RPA1NSrnkWfDydCjI09ZASRQKphvEZK2b8s=;
-        b=hwt1MrxfkYklHc9wJYl/y8Lf9XcEad/UGZfto8ZCD9Nsuf1BnNzI3HWZdL5x9rxkl9
-         fUwbDIA+6uuJ+yK1rspvY44blomcZlVeKwIq5sJNMhI/ORJDoUnBwQU3nnGIiStHQEcw
-         NVEGl/htLY9de6k40/S+AMrmb6A/HGxA1xOS68Mgol4SktduAJRTrmbRhB6aq5R9W/ih
-         9fgEPyk91uXkXbuTVlVvAt6BKw7371h1P5Dv9almYrzZRbg3i+tENl+NVM8/BvM7fuf9
-         c7m/r7aW9byWau60fGThpaE3h52JfQp4JcOXXhHOpHIsmDeuZJtzwO8CeiwxgtHxHntB
-         1gKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIUAXNZHcPYj/owNGG7Tu9qdHw0lG5SRyUVuvrLYcGWqaVM6rtf5acR5i4TOHeT8j35X56CvwnhAb1+yw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3BAMDLy40cHfk6QJ3QkK0H0eNd457L/BHE+scH2JjL1kCSvYE
-	SKb58qmPrGbje2JzSD63PiU40s34WHrcbuTgHmcgXV5BkZMvyv4du6BVqqgiKXSuYmRTfp+c7J9
-	Z3y865g==
-X-Google-Smtp-Source: AGHT+IHaoqvtVI0Yz46iIwHy/iA5qtPYPdu+XqdbPfhM44STMOd9JolDoyV7EuaxX4Sn5kzKGTMBLEw92Is=
-X-Received: from pjbrj10.prod.google.com ([2002:a17:90b:3e8a:b0:313:221f:6571])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5587:b0:311:d05c:936
- with SMTP id 98e67ed59e1d1-3130cd31f24mr5027744a91.17.1749045744042; Wed, 04
- Jun 2025 07:02:24 -0700 (PDT)
-Date: Wed, 4 Jun 2025 07:02:22 -0700
-In-Reply-To: <aC-otXnBwHsdZ7B4@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMpQ2oB8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23BCCC4CEE4;
+	Wed,  4 Jun 2025 14:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749045791;
+	bh=jOX0OWkMHthLxZlqAHJmk7epo+raL1mcgxAKeKQDmJE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=lMpQ2oB8JJwDA44NsSUC2mXhaRvVTGDAzPpvPYQ9gh9wTzDypJL9GP8ph9GgVEE7k
+	 YGkZDtwjWg8xAzJ1t49FxyMkEAJK604mQ3i4iHlxNYP+lfVzOgsA22/Y6gVN1dyPFf
+	 /mIlaw/wgqZaoqCx32WdRk48Bd2a/Lo1NAptc1rmyzO8wHADrkQdUKXrZu6uGBJq+Q
+	 aSn4aWRGrx0BuhpRrZ2X3RY47pp1+tDt7GgSUcFs5PutSNlMDZpChNc4oSsGj5buie
+	 b4OYxa5rH++46A1JlUYv9M1xHVXb0pKWA5A5y5Or6E8xR7pdBICjNL0D4P9riEPLSF
+	 n7L1R0URIJt7Q==
+Message-ID: <dcaea307-bbd8-4b6a-ad6c-04f6a2d8e473@kernel.org>
+Date: Wed, 4 Jun 2025 16:03:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250522005555.55705-1-mlevitsk@redhat.com> <20250522005555.55705-4-mlevitsk@redhat.com>
- <aC-XmCl9SVX39Hgl@google.com> <aC-otXnBwHsdZ7B4@google.com>
-Message-ID: <aEBR7mbg-iTYdCtJ@google.com>
-Subject: Re: [PATCH v5 3/5] KVM: nVMX: check vmcs12->guest_ia32_debugctl value
- given by L2
-From: Sean Christopherson <seanjc@google.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Chao Gao <chao.gao@intel.com>, 
-	Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/5] dt-bindings: iio: adc: add ad7405
+To: "Ioan-daniel, Pop" <Pop.Ioan-daniel@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ "Sa, Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "Cuciurean, Sergiu" <Sergiu.Cuciurean@analog.com>,
+ "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+ "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>,
+ Olivier Moysan <olivier.moysan@foss.st.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Tobias Sperling <tobias.sperling@softing.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>,
+ "Schmitt, Marcelo" <Marcelo.Schmitt@analog.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>,
+ "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250602134349.1930891-1-pop.ioan-daniel@analog.com>
+ <20250602134349.1930891-5-pop.ioan-daniel@analog.com>
+ <c69e4bc3-c665-46ef-8452-b399aa76b815@kernel.org>
+ <PH0PR03MB6335ECFCD0C0DEF0230E25B6D16CA@PH0PR03MB6335.namprd03.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <PH0PR03MB6335ECFCD0C0DEF0230E25B6D16CA@PH0PR03MB6335.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025, Sean Christopherson wrote:
-> +Jim
+On 04/06/2025 15:05, Ioan-daniel, Pop wrote:
+>>
+>> On 02/06/2025 15:43, Pop Ioan Daniel wrote:
+>>> Add devicetree bindings for ad7405/adum770x family.
+>>>
+>>> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+>>> ---
+>>> changes in v5:
+>>>  - create an example based on adi,ad7625.yaml that is very similar to this
+>> part
+>>>  - do not add Reviewed-by tag due to the change that I've made.
+>>
+>> Which change? I see ZERO differences against version which was reviewed.
 > 
-> On Thu, May 22, 2025, Sean Christopherson wrote:
-> > On Wed, May 21, 2025, Maxim Levitsky wrote:
-> > > Check the vmcs12 guest_ia32_debugctl value before loading it, to avoid L2
-> > > being able to load arbitrary values to hardware IA32_DEBUGCTL.
-> > > 
-> > > Reviewed-by: Chao Gao <chao.gao@intel.com>
-> > > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > > ---
-> > >  arch/x86/kvm/vmx/nested.c | 3 ++-
-> > >  arch/x86/kvm/vmx/vmx.c    | 2 +-
-> > >  arch/x86/kvm/vmx/vmx.h    | 1 +
-> > >  3 files changed, 4 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > > index e073e3008b16..00f2b762710c 100644
-> > > --- a/arch/x86/kvm/vmx/nested.c
-> > > +++ b/arch/x86/kvm/vmx/nested.c
-> > > @@ -3146,7 +3146,8 @@ static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
-> > >  		return -EINVAL;
-> > >  
-> > >  	if ((vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS) &&
-> > > -	    CC(!kvm_dr7_valid(vmcs12->guest_dr7)))
-> > > +	    (CC(!kvm_dr7_valid(vmcs12->guest_dr7)) ||
-> > > +	     CC(vmcs12->guest_ia32_debugctl & ~vmx_get_supported_debugctl(vcpu, false))))
-> > 
-> > This is a breaking change.  For better or worse (read: worse), KVM's ABI is to
-> > drop BTF and LBR if they're unsupported (the former is always unsupported).
-> > Failure to honor that ABI means L1 can't excplitly load what it think is its
-> > current value into L2.
-> > 
-> > I'll slot in a path to provide another helper for checking the validity of
-> > DEBUGCTL.  I think I've managed to cobble together something that isn't too
-> > horrific (options are a bit limited due to the existing ugliness).
-> 
-> And then Jim ruined my day.  :-)
-> 
-> As evidenced by this hilarious KUT testcase, it's entirely possible there are
-> existing KVM guests that are utilizing/abusing DEBUGCTL features.
-> 
-> 	/*
-> 	 * Optional RTM test for hardware that supports RTM, to
-> 	 * demonstrate that the current volume 3 of the SDM
-> 	 * (325384-067US), table 27-1 is incorrect. Bit 16 of the exit
-> 	 * qualification for debug exceptions is not reserved. It is
-> 	 * set to 1 if a debug exception (#DB) or a breakpoint
-> 	 * exception (#BP) occurs inside an RTM region while advanced
-> 	 * debugging of RTM transactional regions is enabled.
-> 	 */
-> 	if (this_cpu_has(X86_FEATURE_RTM)) {
-> 		vmcs_write(ENT_CONTROLS,
-> 			   vmcs_read(ENT_CONTROLS) | ENT_LOAD_DBGCTLS);
-> 		/*
-> 		 * Set DR7.RTM[bit 11] and IA32_DEBUGCTL.RTM[bit 15]
-> 		 * in the guest to enable advanced debugging of RTM
-> 		 * transactional regions.
-> 		 */
-> 		vmcs_write(GUEST_DR7, BIT(11));
-> 		vmcs_write(GUEST_DEBUGCTL, BIT(15));
-> 		single_step_guest("Hardware delivered single-step in "
-> 				  "transactional region", starting_dr6, 0);
-> 		check_db_exit(false, false, false, &xbegin, BIT(16),
-> 			      starting_dr6);
-> 	} else {
-> 		vmcs_write(GUEST_RIP, (u64)&skip_rtm);
-> 		enter_guest();
-> 	}
-> 
-> For RTM specifically, disallowing DEBUGCTL.RTM but allowing DR7.RTM seems a bit
-> silly.  Unless there's a security concern, that can probably be fixed by adding
-> support for RTM.  Note, there's also a virtualization hole here, as KVM doesn't
-> vet DR7 beyond checking that bits 63:32 are zero, i.e. a guest could set DR7.RTM
-> even if KVM doesn't advertise support.  Of course, closing that hole would require
-> completely dropping support for disabling DR interception, since VMX doesn't
-> give per-DR controls.
->
-> For the other bits, I don't see a good solution.  The only viable options I see
-> are to silently drop all unsupported bits (maybe with a quirk?), or enforce all
-> bits and cross our fingers that no L1 VMM is running guests with those bits set
-> in GUEST_DEBUGCTL.
+> Hi! The difference is in the io-backends assignment:
 
-Paolo and I discussed this in PUCK this morning.
+Change in the binding. You just pasted example. What change did you make
+to invalidate review?
 
-We agree trying to close the DR7 virtualization hole would be futile, and that we
-should add support for DEBUGCTL.RTM to avoid breaking use of that specific bit.
+> examples:
+> +  - |
+> +    adc {
+> +        compatible = "adi,ad7405";
+> +        clocks = <&axi_clk_gen 0>;
+> +        vdd1-supply = <&vdd1>;
+> +        vdd2-supply = <&vdd2>;
+> +        io-backends = <&axi_adc>;
+> +    };
+> +...
 
-For the other DEBUGCTL bits, none of them actually work (although, somewhat
-amusingly, FREEZE_WHILE_SMM would "work" for real SMIs, which aren't visible to
-L1), so we're going to roll the dice, cross our fingers that no existing workload
-is setting those bits only in vmcs12.GUEST_DEBUGCTL, and enforce
-vmx_get_supported_debugctl() at VM-Enter without any quirk.
 
-  6   TR: Setting this bit to 1 enables branch trace messages to be sent.
-  7   BTS: Setting this bit enables branch trace messages (BTMs) to be logged in a BTS buffer.
-  8   BTINT: When clear, BTMs are logged in a BTS buffer in circular fashion.
-  9   BTS_OFF_OS: When set, BTS or BTM is skipped if CPL = 0.
-  10  BTS_OFF_USR: When set, BTS or BTM is skipped if CPL > 0.
-  11  FREEZE_LBRS_ON_PMI: When set, the LBR stack is frozen on a PMI request.
-  12  FREEZE_PERFMON_ON_PMI: When set, each ENABLE bit of the global counter control MSR are frozen on a PMI request.
-  13  ENABLE_UNCORE_PMI: When set, enables the logical processor to receive and generate PMI on behalf of the uncore.
-  14  FREEZE_WHILE_SMM: When set, freezes perfmon and trace messages while in SMM.
+Best regards,
+Krzysztof
