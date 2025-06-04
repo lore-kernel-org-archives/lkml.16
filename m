@@ -1,138 +1,196 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D50290094;
-	Wed,  4 Jun 2025 14:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0332D70810;
+	Wed,  4 Jun 2025 14:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749046594; cv=none; b=tIyRQ17sYXjnxUIUwXOgf3DxUgDyMeYVS5ufK8QQcv5U/EETHPajz2BQzqi9cx5Tp2KjzgZWewUEiAgaR3c6EcUQFze2zcSJvrhCmnHFkTv0iGlP57PaYF54tocaQFILt2ULpAyw+ucz9gs3ch0pvG3lulu6l9xeLPLe3bXOrb0=
+	t=1749046613; cv=none; b=mcs3vFSqanAxXuQt0CI8POG0agfhg9txlU2I/OZnsBM3va14Jh44w+TVaxfPNOvILEaegC1RLBtdvpTntq1O6652U7SdK5ceMbfv2A5fOgSrHOIHMDb+mV1sJXMuL+wsrchPXI6t8PlxSOrtc5aY1UzX1PDke+ZKwU6F2XHgaIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749046594; c=relaxed/simple;
-	bh=QVGHxv5yv8Xa1quyiBjHI4r3pwDZnDe3cLJmy+ls+ds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u6ObLGg7MSWI3IjU/9cS02uShrrLxRf9jd1oDg8TDNiaYddZdrjOYgEO3bPZF4Plgu+SQxu5AP64p4Zz11TnFdpjsOjO02xbbNrevDni4u+tUkFMJfJSVO3jtYqwNjoAl+cHs7AWId2NjEjd2I76sVrSziIzIuVXcuA8WlcNDpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=vutKBtro; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749046613; c=relaxed/simple;
+	bh=/YWykEisRQ2WmTIDjG72mSa5eF+TJ63K3gwljHiPuBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bf73hQtT+BCvcwky9gYL1w+Msnc/ELY/CWLYm/dBVbWu5idwEl3gWKRxNRkjYZh/6vDMit7w1SpNqnuOkiPPlZCHCB7EG5DtWW7rSz0mxGCZt12h654rYlobJ4cnr27fNT5EuqO6gM/boWYD/LNwVjGmfd96/ZmEY4KxD4bZYnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YiqDS7o5; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="vutKBtro"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749046581; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=sl7zkIjY2EtL4gQUaLHHsUyVaTgNOPl8UyCODnHq/ts=;
-	b=vutKBtro0b0lToHaUdzBqdVefNiQji7KMrNS9jtAh+jwlWKeLW29Qn6jN/MjBTugufHK9B8zbWdYn9oUCTBfW/HKgHXtHQnmUdVyn3GIeVBofNtof2xUOGoXq9SKMvH5ehLH9sbFvBblAxpnpoYgAQWTrU934YePJa7oF6j5v6I=
-Received: from 192.168.0.105(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wd4ZSft_1749046579 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 04 Jun 2025 22:16:19 +0800
-Message-ID: <d2b76402-7e1a-4b2d-892a-2e8ffe1a37a9@linux.alibaba.com>
-Date: Wed, 4 Jun 2025 22:16:18 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YiqDS7o5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QNl5vGajRvJwYB9vPMZwKE2YZ8Aq0k/Jqe04/75BEQQ=; b=YiqDS7o5oRM1rJDLzzov6oLFeh
+	XiW5LbKWoWlihyb1MEdtj2n6iZyd9dkUbopJnh0GUbx3Y5AMT57huRJctGlaf5KA7Xt+7tgLposOn
+	UsXCRNTbhgHXiRBJabcBVBDzSvvqbcSHV6HGQSTw1sLnl/kshU+h5mhvket7tvG02PQllQXvLFR59
+	QiKC7oYTu0t9ynzaCLDn2ZGBIfEDUZ7Vj2ZtyeARJQADCMR6DagT9CjkTzI3bwmDlsUGyZXL/C3M5
+	KWqD5mMBlTe4qJWkc+KIt1yJ/8ck2zVYh5ZsyTONE4Zj+VveA8+EHGGkIlNMWPJOLZvXLQr8Cvsb1
+	AtZ7SQcA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMov3-00000000uH8-2nkQ;
+	Wed, 04 Jun 2025 14:16:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8337F300787; Wed,  4 Jun 2025 16:16:40 +0200 (CEST)
+Date: Wed, 4 Jun 2025 16:16:40 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Message-ID: <20250604141640.GL38114@noisy.programming.kicks-ass.net>
+References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+ <20250603140040.GB8020@e132581.arm.com>
+ <20250603144414.GC38114@noisy.programming.kicks-ass.net>
+ <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+ <20250604101821.GC8020@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
-To: Vlastimil Babka <vbabka@suse.cz>, Shakeel Butt <shakeel.butt@linux.dev>,
- Michal Hocko <mhocko@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
- surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
- sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
- <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
- <aDm1GCV8yToFG1cq@tiehlicka>
- <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
- <aD6vHzRhwyTxBqcl@tiehlicka>
- <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
- <aD7OM5Mrg5jnEnBc@tiehlicka>
- <7307bb7a-7c45-43f7-b073-acd9e1389000@linux.alibaba.com>
- <aD8LKHfCca1wQ5pS@tiehlicka>
- <obfnlpvc4tmb6gbd4mw7h7jamp3kouyhnpl4cusetyctswznod@yr6dyrsbay6w>
- <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
- <1aa7c368-c37f-4b00-876c-dcf51a523c42@suse.cz>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <1aa7c368-c37f-4b00-876c-dcf51a523c42@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604101821.GC8020@e132581.arm.com>
 
+On Wed, Jun 04, 2025 at 11:18:21AM +0100, Leo Yan wrote:
+> On Wed, Jun 04, 2025 at 10:03:39AM +0200, Peter Zijlstra wrote:
 
-
-On 2025/6/4 21:46, Vlastimil Babka wrote:
-> On 6/4/25 14:46, Baolin Wang wrote:
->>> Baolin, please run stress-ng command that stresses minor anon page
->>> faults in multiple threads and then run multiple bash scripts which cat
->>> /proc/pidof(stress-ng)/status. That should be how much the stress-ng
->>> process is impacted by the parallel status readers versus without them.
->>
->> Sure. Thanks Shakeel. I run the stress-ng with the 'stress-ng --fault 32
->> --perf -t 1m' command, while simultaneously running the following
->> scripts to read the /proc/pidof(stress-ng)/status for each thread.
+> > And now we have the sitation that __perf_remove_from_context() can do:
+> > 
+> >   {ACTIVE,INACTIVE,OFF,ERROR} -> {OFF,EXIT,REVOKED,DEAD}
 > 
-> How many of those scripts?
-
-1 script, but will start 32 threads to read each stress-ng thread's 
-status interface.
-
->>   From the following data, I did not observe any obvious impact of this
->> patch on the stress-ng tests when repeatedly reading the
->> /proc/pidof(stress-ng)/status.
->>
->> w/o patch
->> stress-ng: info:  [6891]          3,993,235,331,584 CPU Cycles
->>            59.767 B/sec
->> stress-ng: info:  [6891]          1,472,101,565,760 Instructions
->>            22.033 B/sec (0.369 instr. per cycle)
->> stress-ng: info:  [6891]                 36,287,456 Page Faults Total
->>             0.543 M/sec
->> stress-ng: info:  [6891]                 36,287,456 Page Faults Minor
->>             0.543 M/sec
->>
->> w/ patch
->> stress-ng: info:  [6872]          4,018,592,975,968 CPU Cycles
->>            60.177 B/sec
->> stress-ng: info:  [6872]          1,484,856,150,976 Instructions
->>            22.235 B/sec (0.369 instr. per cycle)
->> stress-ng: info:  [6872]                 36,547,456 Page Faults Total
->>             0.547 M/sec
->> stress-ng: info:  [6872]                 36,547,456 Page Faults Minor
->>             0.547 M/sec
->>
->> =========================
->> #!/bin/bash
->>
->> # Get the PIDs of stress-ng processes
->> PIDS=$(pgrep stress-ng)
->>
->> # Loop through each PID and monitor /proc/[pid]/status
->> for PID in $PIDS; do
->>       while true; do
->>           cat /proc/$PID/status
->> 	usleep 100000
+> A detailed transition is:
 > 
-> Hm but this limits the reading to 10 per second? If we want to simulate an
-> adversary process, it should be without the sleeps I think?
+>   Case 1: {ACTIVE} -> {INACTIVE} -> {OFF,EXIT,REVOKED,DEAD}
 
-OK. I drop the usleep, and I still can not see obvious impact.
+It can also start with INACTIVE, but yeah..
+ 
+>   Case 2: {ERROR} -> {ERROR,EXIT,REVOKED,DEAD}
+>   Case 3: {OFF} -> {OFF,EXIT,REVOKED,DEAD}
 
-w/o patch:
-stress-ng: info:  [6848]          4,399,219,085,152 CPU Cycles 
-          67.327 B/sec
-stress-ng: info:  [6848]          1,616,524,844,832 Instructions 
-          24.740 B/sec (0.367 instr. per cycle)
-stress-ng: info:  [6848]                 39,529,792 Page Faults Total 
-           0.605 M/sec
-stress-ng: info:  [6848]                 39,529,792 Page Faults Minor 
-           0.605 M/sec
+> 
+> > Where the {OFF,ERROR} -> * transition already have
+> > perf_cgroup_event_disable(), but the {ACTIVE,INACTIVE} -> * part has
+> > not.
+> 
+> Just a minor concern.
+> 
+> I noticed perf_put_aux_event() sets the ERROR state for sibling events
+> of an AUX event. 
 
-w/patch:
-stress-ng: info:  [2485]          4,462,440,381,856 CPU Cycles 
-          68.382 B/sec
-stress-ng: info:  [2485]          1,615,101,503,296 Instructions 
-          24.750 B/sec (0.362 instr. per cycle)
-stress-ng: info:  [2485]                 39,439,232 Page Faults Total 
-           0.604 M/sec
-stress-ng: info:  [2485]                 39,439,232 Page Faults Minor 
-           0.604 M/sec
+There is also perf_remove_sibling_event(), which can cause ERROR.
+
+> IIUC, the AUX event is the group leader, so we only
+> need to clean up the cgroup pointer for the AUX event, and simply set
+> the ERROR state for its sibling events, correct?
+
+Not sure; I forever forget how the AUX events are supposed to work :-/
+
+It might be prudent to do something like so:
+
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f34c99f8ce8f..e6583747838a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2149,8 +2149,9 @@ perf_aux_output_match(struct perf_event *event, struct perf_event *aux_event)
+ }
+ 
+ static void put_event(struct perf_event *event);
+-static void event_sched_out(struct perf_event *event,
+-			    struct perf_event_context *ctx);
++static void __event_disable(struct perf_event *event,
++			    struct perf_event_context *ctx,
++			    enum perf_event_state state);
+ 
+ static void perf_put_aux_event(struct perf_event *event)
+ {
+@@ -2183,8 +2184,7 @@ static void perf_put_aux_event(struct perf_event *event)
+ 		 * state so that we don't try to schedule it again. Note
+ 		 * that perf_event_enable() will clear the ERROR status.
+ 		 */
+-		event_sched_out(iter, ctx);
+-		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
++		__event_disable(event, ctx, PERF_EVENT_STATE_ERROR);
+ 	}
+ }
+ 
+@@ -2242,18 +2242,6 @@ static inline struct list_head *get_event_list(struct perf_event *event)
+ 				    &event->pmu_ctx->flexible_active;
+ }
+ 
+-/*
+- * Events that have PERF_EV_CAP_SIBLING require being part of a group and
+- * cannot exist on their own, schedule them out and move them into the ERROR
+- * state. Also see _perf_event_enable(), it will not be able to recover
+- * this ERROR state.
+- */
+-static inline void perf_remove_sibling_event(struct perf_event *event)
+-{
+-	event_sched_out(event, event->ctx);
+-	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+-}
+-
+ static void perf_group_detach(struct perf_event *event)
+ {
+ 	struct perf_event *leader = event->group_leader;
+@@ -2289,8 +2277,15 @@ static void perf_group_detach(struct perf_event *event)
+ 	 */
+ 	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
+ 
++		/*
++		 * Events that have PERF_EV_CAP_SIBLING require being part of
++		 * a group and cannot exist on their own, schedule them out
++		 * and move them into the ERROR state. Also see
++		 * _perf_event_enable(), it will not be able to recover this
++		 * ERROR state.
++		 */
+ 		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
+-			perf_remove_sibling_event(sibling);
++			__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
+ 
+ 		sibling->group_leader = sibling;
+ 		list_del_init(&sibling->sibling_list);
+@@ -2562,6 +2557,19 @@ static void perf_remove_from_context(struct perf_event *event, unsigned long fla
+ 	event_function_call(event, __perf_remove_from_context, (void *)flags);
+ }
+ 
++static void __event_disable(struct perf_event *event,
++			    struct perf_event_context *ctx,
++			    enum perf_event_state state)
++{
++	if (event == event->group_leader)
++		group_sched_out(event, ctx);
++	else
++		event_sched_out(event, ctx);
++
++	perf_event_set_state(event, state);
++	perf_cgroup_event_disable(event, ctx);
++}
++
+ /*
+  * Cross CPU call to disable a performance event
+  */
+@@ -2575,15 +2583,7 @@ static void __perf_event_disable(struct perf_event *event,
+ 
+ 	perf_pmu_disable(event->pmu_ctx->pmu);
+ 	ctx_time_update_event(ctx, event);
+-
+-	if (event == event->group_leader)
+-		group_sched_out(event, ctx);
+-	else
+-		event_sched_out(event, ctx);
+-
+-	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
+-	perf_cgroup_event_disable(event, ctx);
+-
++	__event_disable(event, ctx, PERF_EVENT_STATE_OFF);
+ 	perf_pmu_enable(event->pmu_ctx->pmu);
+ }
+ 
