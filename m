@@ -1,156 +1,220 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C0A28F51C;
-	Wed,  4 Jun 2025 13:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79E728F935
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045393; cv=none; b=PnCREEZBGB/AGsaDf42HMxxrSRcZkHvwd69RSKhEptc0MgBz73GvRvi+NxsoflcFv/07EkRytW2tfgPtRyKn0flZPAPlmDRl43g2UUB+gkWQjo1I6w5EIKWXIb46GagCSl1/B/i7nkrIgYfkisMqI3i+MmrBZYDHAV/GsIfcEhs=
+	t=1749045486; cv=none; b=r8emm4zr1TZrUuGS9zk+PxhXMCweWQUBPXpy9ovP5faamGwd/3i32RbygwfFBg6+ozM9+REVkB1Nx9XJw0ecY0iDmaD/I5uVZxjDd/ciux4HysLaHghle/vRnbYXN8RSCWnpuSVjAauGl7BESYoclrIuHS2H+EwUz0I66l/R5wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045393; c=relaxed/simple;
-	bh=hNaIjnP9UQIXqs9XzN5BySAC1EeT1gYOVTmbEjhso3w=;
+	s=arc-20240116; t=1749045486; c=relaxed/simple;
+	bh=QRXYHY3k9SKVaoLTElRZshkhV3csk41wh+DXOlD/xiQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fpr7W71uQk4b1q2yYmq6aq0qNjzwpwnobambXLbnpYCHy7rgq2NsVAdds21iMltq4IV3UHHH+lwh1MU11/H7yRw0HDv4Nb0PbEM+v8EaP23O9KP3g2B+ruU3ZCpxP4j3uiYUhdDMCK02MyrHBj2dk9DTLNVxuRmvgSEU0ZEEs+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tX5i7gfV; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Cm2z9MqvTYNkJrgq2V7enB4/SUtTFc/Q6V9LPGw+E4mV9dyxGfQj2b+cScf8CIv/6rnhbt2C72dzCZGERrd5fTLSme4x5qw4GnP8nNwTzDg+vLw+N5IT6IKUlPGeNvoQjy1yiygMn3ekKXxFsJSqBSKF2hHA5xqfqx8y6RQ7JIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSlvmc5U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tX5i7gfV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF15C4CEE7;
-	Wed,  4 Jun 2025 13:56:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSlvmc5U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48EE4C4CEF2
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749045393;
-	bh=hNaIjnP9UQIXqs9XzN5BySAC1EeT1gYOVTmbEjhso3w=;
+	s=k20201202; t=1749045486;
+	bh=QRXYHY3k9SKVaoLTElRZshkhV3csk41wh+DXOlD/xiQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tX5i7gfV/An0o+OVPNY+A2Ngdo4eZD2cKGN+XVYmr9KtKpr9kxuomMtKfA5+gFeSG
-	 vygJBmnirp8AaBVUBkv8sNJ4daJQH/AQewxPpMagVRCCZ4YhHozBbU+JFrQsNdC+wz
-	 cYn8FcZt2f3YQuPIpnj4M9q1IOXthHh+6YaKN0A6U2ZtTMlTw6bUmfncjC9TdyIbas
-	 8uziFl4hKDealqfUt2A1E3lpMlCMij9e/QYRBfCFiTy+rTxYzq1v78cdgvFPsZ+71p
-	 O0c1mF/9UsdfBEu0Vk+AWQAgAiAIhw7HBgnhcr5K56huHTHvGaA0JoS1HQz03hvVlq
-	 ViYwVV0wdUHHg==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60700a745e5so1078173a12.3;
-        Wed, 04 Jun 2025 06:56:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV0TAmQvHclJDNFYcmErt93y0zHKbwQE2lWS2XNA6Kam4hK6umsvMwzuMzj+gy1W0ud+C0jJVX1Q99a1mw=@vger.kernel.org, AJvYcCVJQQvlR8JiVlclaA2SdbNRY6R3slOewrKmWhDsPay5hK+siid+ec58pqOiOudfaWxhVsmvhE3U@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUu2aay2ZLMgqmeeFm8OYwLpp64pPRc0JB7gP8dKFBJOXyYep5
-	jAs3OwZiAxgRg1IpJYTJwKWLLrxyt4Fd39UCVwlsVrywJn7b6AswAz/wVmaJWlfwCUn9o1oxrby
-	4vn2Fs5c1TaJzXgmQYfUVViZPGqoMfX0=
-X-Google-Smtp-Source: AGHT+IEpDdOfH7JSv9qoSDGd0z3t6ymqMnmQbNlmw+p25nqvJV9s6gLViUbiEfnbyljEN/038PRobbX/6ph/Dv/+ZLM=
-X-Received: by 2002:a05:6402:524d:b0:607:1b7a:b989 with SMTP id
- 4fb4d7f45d1cf-6071b7abda8mr281358a12.12.1749045391972; Wed, 04 Jun 2025
- 06:56:31 -0700 (PDT)
+	b=kSlvmc5UV/fAMKvoYTu89L4yT7pJpL6XY+Dtwsck1IoVfEuNBz3kZh79EKzgTZ4Jo
+	 RnKD0pkEFoU+YD9EN1EdByM48mmyfeenyUT8Thq/W1ff2AGFxdOs13IvdtJbcT1OeW
+	 ZM/lg2KQgXN0lHOBkjgYkMVHN6xZ01myRXVqMPzYKrSlSsPnnEsJ1ZmoJ+MD4a8bOk
+	 Ch8EX8PK5RLC56eZpkkX4xu7/wNA7RF2aiysvuv9bN4cEafixJwAqNxNGaOPiUefF4
+	 54XCHaDb5NyQzc7gAJykVoxjKdWHXz1SLbpp0GhSOMU3fFoxGWyn5rt9eAeL+uR6k4
+	 o1N/uValiBfzQ==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-602039559d8so12979714a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:58:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVWMXmBYqhDklmWyp42VaDe4Mz1Obj9f2wiQpFBbNmGo5oW4nI99xL08+DqGJnBrxWfQCSIFTWVS6NdCp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlH10y7zcwheF+DlMDcT7jTLafkiOdbmWpvSnPSnamunjVq8Qo
+	rhLhttrslXWYOYl9uEZoXBhBFpIdkbYLPTLliiieEIobAlZN46Zd6WR0kvDahEBMXloN557+N34
+	UkvL49o5xiHivZMmKloib+Gqo7YvaAQc=
+X-Google-Smtp-Source: AGHT+IEBYJAM+K0rj2+spRhzULHWaeKMSJzGwvvpMAeB0yguZc1nfk4ig2PEKpq0Mb7MT9uKBmXBl3Ukizgy5R+1c3A=
+X-Received: by 2002:a05:6402:348e:b0:601:f3f1:f10e with SMTP id
+ 4fb4d7f45d1cf-606e98b0c7fmr3019199a12.5.1749045484519; Wed, 04 Jun 2025
+ 06:58:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531113851.21426-1-ziyao@disroot.org> <20250531113851.21426-2-ziyao@disroot.org>
- <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com> <aD6Zz8L9WJRXvwaW@pie.lan>
-In-Reply-To: <aD6Zz8L9WJRXvwaW@pie.lan>
+References: <20250531113851.21426-1-ziyao@disroot.org> <20250531113851.21426-3-ziyao@disroot.org>
+ <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com> <aD6e0JLntUC6BdH7@pie.lan>
+In-Reply-To: <aD6e0JLntUC6BdH7@pie.lan>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 4 Jun 2025 21:56:20 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6j1OT9D8ZBtyEP=Mu5+m=t0ebUvuC=gVeNsoPizwK1TQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvuz6tVp6jU6zQuxGpjxaWdrfNqx3hl5IIjC66LsSXVYjnimt4J7d3OKdw
-Message-ID: <CAAhV-H6j1OT9D8ZBtyEP=Mu5+m=t0ebUvuC=gVeNsoPizwK1TQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform/loongarch: laptop: Get brightness setting
- from EC on probe
+Date: Wed, 4 Jun 2025 21:57:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4yt2Rdu5-8QsDyXpLo5v8jHSDmBB0nBO+4-pKzfbYJHA@mail.gmail.com>
+X-Gm-Features: AX0GCFvFtnwLjh5Ih6ITY7Ya5PF5l-bEs8ErSYvVmN0nCXxUeNlxcWJrZ3JdK00
+Message-ID: <CAAhV-H4yt2Rdu5-8QsDyXpLo5v8jHSDmBB0nBO+4-pKzfbYJHA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/loongarch: laptop: Support backlight power control
 To: Yao Zi <ziyao@disroot.org>
 Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
 	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>, stable@vger.kernel.org
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 2:44=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+On Tue, Jun 3, 2025 at 3:06=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
 >
-> On Tue, Jun 03, 2025 at 12:11:48PM +0800, Huacai Chen wrote:
+> On Tue, Jun 03, 2025 at 12:16:57PM +0800, Huacai Chen wrote:
 > > On Sat, May 31, 2025 at 7:39=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrot=
 e:
 > > >
-> > > Previously 1 is unconditionally taken as current brightness value. Th=
-is
-> > > causes problems since it's required to restore brightness settings on
-> > > resumption, and a value that doesn't match EC's state before suspensi=
-on
-> > > will cause surprising changes of screen brightness.
-> > laptop_backlight_register() isn't called at resuming, so I think your
-> > problem has nothing to do with suspend (S3).
+> > > loongson_laptop_turn_{on,off}_backlight() are designed for controllin=
+g
+> > > power of the backlight, but they aren't really used in the driver
+> > > previously.
+> > >
+> > > Unify these two functions since they only differ in arguments passed =
+to
+> > > ACPI method, and wire up loongson_laptop_backlight_update() to update
+> > > power state of the backlight as well. Tested on TongFang L860-T2 3A50=
+00
+> > > laptop.
+> > >
+> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > > ---
+> > >  drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-----------=
+--
+> > >  1 file changed, 19 insertions(+), 34 deletions(-)
+> > >
+> > > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/p=
+latform/loongarch/loongson-laptop.c
+> > > index 828bd62e3596..f01e53b1c84d 100644
+> > > --- a/drivers/platform/loongarch/loongson-laptop.c
+> > > +++ b/drivers/platform/loongarch/loongson-laptop.c
+> > > @@ -56,8 +56,6 @@ static struct input_dev *generic_inputdev;
+> > >  static acpi_handle hotkey_handle;
+> > >  static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
+> > >
+> > > -int loongson_laptop_turn_on_backlight(void);
+> > > -int loongson_laptop_turn_off_backlight(void);
+> > >  static int loongson_laptop_backlight_update(struct backlight_device =
+*bd);
+> > >
+> > >  /* 2. ACPI Helpers and device model */
+> > > @@ -354,6 +352,22 @@ static int ec_backlight_level(u8 level)
+> > >         return level;
+> > >  }
+> > >
+> > > +static int ec_backlight_set_power(bool state)
+> > > +{
+> > > +       int status;
+> > > +       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
+> > > +       struct acpi_object_list args =3D { 1, &arg0 };
+> > > +
+> > > +       arg0.integer.value =3D state;
+> > > +       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
+> > > +       if (ACPI_FAILURE(status)) {
+> > > +               pr_info("Loongson lvds error: 0x%x\n", status);
+> > > +               return -EIO;
+> > > +       }
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > >  static int loongson_laptop_backlight_update(struct backlight_device =
+*bd)
+> > >  {
+> > >         int lvl =3D ec_backlight_level(bd->props.brightness);
+> > > @@ -363,6 +377,8 @@ static int loongson_laptop_backlight_update(struc=
+t backlight_device *bd)
+> > >         if (ec_set_brightness(lvl))
+> > >                 return -EIO;
+> > >
+> > > +       ec_backlight_set_power(bd->props.power =3D=3D BACKLIGHT_POWER=
+_ON ? true : false);
+> > It is better to check the status before setting, because the EC
+> > firmware may not be as robust as needed, a checking can reduce
+> > interactions between kernel and EC.
+> >
+> > There is an example: dp_aux_backlight_update_status() in
+> > drivers/gpu/drm/display/drm_dp_helper.c.
 >
-> It does have something to do with it. In loongson_hotkey_resume() which
-> is called when leaving S3 (suspension), the brightness is restored
-> according to props.brightness,
+> It's reasonable and I'll take it.
 >
->         bd =3D backlight_device_get_by_type(BACKLIGHT_PLATFORM);
->         if (bd) {
->                 loongson_laptop_backlight_update(bd) ?
->                 pr_warn("Loongson_backlight: resume brightness failed") :
->                 pr_info("Loongson_backlight: resume brightness %d\n", bd-=
->props
-> .brightness);
->         }
+> > > +
+> > >         return 0;
+> > >  }
+> > >
+> > > @@ -394,6 +410,7 @@ static int laptop_backlight_register(void)
+> > >
+> > >         props.brightness =3D ec_get_brightness();
+> > >         props.max_brightness =3D status;
+> > > +       props.power =3D BACKLIGHT_POWER_ON;
+> > >         props.type =3D BACKLIGHT_PLATFORM;
+> > >
+> > >         backlight_device_register("loongson_laptop",
+> > > @@ -402,38 +419,6 @@ static int laptop_backlight_register(void)
+> > >         return 0;
+> > >  }
+> > >
+> > > -int loongson_laptop_turn_on_backlight(void)
+> > > -{
+> > > -       int status;
+> > > -       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
+> > > -       struct acpi_object_list args =3D { 1, &arg0 };
+> > > -
+> > > -       arg0.integer.value =3D 1;
+> > > -       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
+> > > -       if (ACPI_FAILURE(status)) {
+> > > -               pr_info("Loongson lvds error: 0x%x\n", status);
+> > > -               return -ENODEV;
+> > > -       }
+> > > -
+> > > -       return 0;
+> > > -}
+> > > -
+> > > -int loongson_laptop_turn_off_backlight(void)
+> > > -{
+> > > -       int status;
+> > > -       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
+> > > -       struct acpi_object_list args =3D { 1, &arg0 };
+> > > -
+> > > -       arg0.integer.value =3D 0;
+> > > -       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
+> > > -       if (ACPI_FAILURE(status)) {
+> > > -               pr_info("Loongson lvds error: 0x%x\n", status);
+> > > -               return -ENODEV;
+> > > -       }
+> > > -
+> > > -       return 0;
+> > > -}
+> > I prefer to keep them, in downstream kernels there are users of them,
+> > I don't want to add them back if one day those users are upstream.
 >
-> and without this patch, props.brightness is always set to 1 when the
-> driver probes, but actually (at least with the firmware on my laptop)
-> the screen brightness is set to 80 instead of 1 on cold boot, IOW, a
-> brightness value that doesn't match hardware state is set to
-> props.brightness.
+> These two functions are mostly identical, and I think unifying them
+> together should be the right way to go. If this makes sense, users
+> introduced in the future should also adapt it, instead of keeping
+> redundant code in the current mainline kernel.
 >
-> On resumption, loongson_hotkey_resume() restores the brightness
-> settings according to props.brightness. But as the value isn't what is
-> used by hardware before suspension. the screen brightness will look very
-> different (1 v.s. 80) comparing to the brightness before suspension.
+> If there're new users of the API out of the loongson3_laptop module in
+> the future, it's still easy to rename ec_backlight_set_power() and
+> export it.
 >
-> Some dmesg proves this as well, without this patch it says
->
->         loongson_laptop: Loongson_backlight: resume brightness 1
->
-> but before suspension, reading
-> /sys/class/backlight/loongson3_laptop/actual_brightness yields 80.
-OK, that makes sense. But the commit message can still be improved, at
-least replace suspension/resumption with suspend/resume. You can grep
-them at Documentation/power.
+> For these two points, I disagree on keeping these two symbols.
+OK, please add a check before communicating with EC, and then send V2
+as soon as possible.
 
 Huacai
 
 >
-> > But there is really a problem about hibernation (S4): the brightness
-> > is 1 during booting, but when switching to the target kernel, the
-> > brightness may jump to the old value.
-> >
-> > If the above case is what you meet, please update the commit message.
-> >
 > > Huacai
 >
 > Thanks,
 > Yao Zi
 >
-> > >
-> > > Let's get brightness from EC and take it as the current brightness on
-> > > probe of the laptop driver to avoid the surprising behavior. Tested o=
-n
-> > > TongFang L860-T2 3A5000 laptop.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver=
-")
-> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > ---
-> > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/p=
-latform/loongarch/loongson-laptop.c
-> > > index 99203584949d..828bd62e3596 100644
-> > > --- a/drivers/platform/loongarch/loongson-laptop.c
-> > > +++ b/drivers/platform/loongarch/loongson-laptop.c
-> > > @@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
-> > >         if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
-> > >                 return -EIO;
-> > >
-> > > -       props.brightness =3D 1;
-> > > +       props.brightness =3D ec_get_brightness();
-> > >         props.max_brightness =3D status;
-> > >         props.type =3D BACKLIGHT_PLATFORM;
-> > >
+> > > -
+> > >  static int __init event_init(struct generic_sub_driver *sub_driver)
+> > >  {
+> > >         int ret;
 > > > --
 > > > 2.49.0
 > > >
 > > >
+> >
+>
