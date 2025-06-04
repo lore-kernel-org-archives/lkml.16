@@ -1,93 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3602818E1F
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 14:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35BD18E1F;
+	Wed,  4 Jun 2025 14:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749048976; cv=none; b=dpEyhffypelYu+rD4R0/raermIq5Egh+PYyyCeAVNy5yWrFPnW2a/i4X4wR/UbJ1tyd8DNSoF8O3HdRhjkIlU6VAqYaQbxsBMHB0TYZ295NKu/cTaKM+74BklTm0f9HO0ufVghQfOb3HFdG+ujl+NjBDoZslUg2pm6Q0c7bPT5o=
+	t=1749049014; cv=none; b=eNK2V2ZFkpFK5DIw6eCbAH7Xg75PRNx/1jOSqeqxCYlPU59WtxwoNrEfssm2IBdQFjftq8IC39p4+M2h4+hcz0ufvgiCuLojiV2wKgzEo64OpYAlEzS/Jw3PMI7yiuIGN5PA1OMLZfkQ9+193L0td4+0y4qFVIwst7k6qU0lIRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749048976; c=relaxed/simple;
-	bh=7QokJdcqmNVhOdBHvR2ZqEXOlnZq2JyXuqgX7+oE/ZY=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=hxnG1K9aiI5AHgEXWswsjNGmyYq3dIbq7/BR1ua2+72CyqrrICtCua0SC5bINydoY4guIZdJyX+Ywi9ldlDSUARObZMuhiPTq75S/wbmj+EwEgRfb9vA4F4DilpV7UstW5kaISSViI9SIa64f9XwcbeqswOCIaEIl8KLNQzENcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JQj00Jkn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749049014; c=relaxed/simple;
+	bh=wddeUE2/c/FxnoHyLrTHZUffTHhKBZE1KhO8uBpo/Ac=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FGu9GcKoXNPofnayYWbfiAw+NLH61QXnxKB4ikD9i5fHYclRjGUf/sjMR+NJ3A5n6Ljp6Z761VL8b9bqFsOSvTNF0t9yC4wi3AnN3qFd7M1CncaZsseGjYjm9whW/O9cDMNnkE7NY1RiGnJc/2ClqBu4yHiBHD72YmG91WpCzyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpdMCkGw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JQj00Jkn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749048974;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z2h/EO0JQWU8btMtwutjXCkhqTordcpnOBoYcUhw0Ow=;
-	b=JQj00JknTHh2UtFxTIWQ2Xsq3V8VGNbfyAZ+6tzWL9T11SKmHsocn81jGt7uuTs+oDud3X
-	cwxacpWRfutF32QHQnfbJ+fXfRGjEjrKsxYfOPqFmMtpZRNd5A6WzNHrXBoMm8sQiDZAFE
-	/mDUcaqjyv/lSzLUo9wj0npH+hd9/xI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-381-KRYDtLh5ML2VEw7kggBwTQ-1; Wed,
- 04 Jun 2025 10:56:09 -0400
-X-MC-Unique: KRYDtLh5ML2VEw7kggBwTQ-1
-X-Mimecast-MFC-AGG-ID: KRYDtLh5ML2VEw7kggBwTQ_1749048968
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09F181801BE9;
-	Wed,  4 Jun 2025 14:56:08 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.2])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D591E180045C;
-	Wed,  4 Jun 2025 14:56:03 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <aDnTsvbyKCTkZbOR@mini-arch>
-References: <aDnTsvbyKCTkZbOR@mini-arch> <770012.1748618092@warthog.procyon.org.uk>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: dhowells@redhat.com, Mina Almasry <almasrymina@google.com>,
-    willy@infradead.org, hch@infradead.org,
-    Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
-    netdev@vger.kernel.org, linux-mm@kvack.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: Device mem changes vs pinning/zerocopy changes
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpdMCkGw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24C50C4CEE4;
+	Wed,  4 Jun 2025 14:56:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749049014;
+	bh=wddeUE2/c/FxnoHyLrTHZUffTHhKBZE1KhO8uBpo/Ac=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SpdMCkGw7xuSOebdrjOZyyo1Isa+ob+WBpHXijcGf3x3ke2GkkcbuuCweEI2ZejKV
+	 a94JUxvoGoGmhXMI2wcUVX38q3WXHUD5nTsc41naDYFiIbSybcrmP02WDX+MFzqN3+
+	 dtlV0VJcdwIlCbuTR7lUPKf9ZJ05X8NdQzbuCvox9VfL4gKPeM6lYT1VtF/oOpC6a4
+	 2qSC9Q9OKf1wgJZorBfSrFEJsdQ+VQMGGdQA2OhJKG5vtw7mexp3gr0NRncO21aX8/
+	 UNn9syZJHFy6uOE70qD65ekNk9iW5OzSSvYrfeBpq5aNoCP7zwMZKWLaOm8g7B3PPZ
+	 zfvNbT7p2xQXw==
+Date: Wed, 4 Jun 2025 16:56:49 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, "
+ =?UTF-8?B?TsOtY29sYXM=?= F. R. A. Prado" <nfraprado@collabora.com>
+Subject: Re: [PATCH v2 1/3] docs: automarkup: Remove some Sphinx 2 holdovers
+Message-ID: <20250604165649.5a66cb6b@sal.lan>
+In-Reply-To: <20250604143645.78367-2-corbet@lwn.net>
+References: <20250604143645.78367-1-corbet@lwn.net>
+	<20250604143645.78367-2-corbet@lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1097884.1749048961.1@warthog.procyon.org.uk>
-Date: Wed, 04 Jun 2025 15:56:01 +0100
-Message-ID: <1097885.1749048961@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Stanislav Fomichev <stfomichev@gmail.com> wrote:
+Em Wed,  4 Jun 2025 08:36:43 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> >  (1) Separate fragment lifetime management from sk_buff.  No more wangling
-> >      of refcounts in the skbuff code.  If you clone an skb, you stick an
-> >      extra ref on the lifetime management struct, not the page.
+> Remove a few declarations that are no longer doing anything now that we
+> have left Sphinx 2 behind.
 > 
-> For device memory TCP we already have this: net_devmem_dmabuf_binding
-> is the owner of the frags. And when we reference skb frag we reference
-> only this owner, not individual chunks: __skb_frag_ref -> get_netmem ->
-> net_devmem_get_net_iov (ref on the binding).
->
-> Will it be possible to generalize this to cover MSG_ZEROCOPY and splice
-> cases? From what I can tell, this is somewhat equivalent of your net_txbuf.
+> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 
-Yes and no.  The net_devmem stuff that's now upstream still manages refs on a
-per-skb-frag basis.  What I'm looking to do is to move it out of the skb and
-into a separate struct so that the ref on a chunk of memory can be shared
-between several skb-frags, quite possibly spread between several skbs.
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-This is especially important for various types of zerocopy memory where we
-won't actually be allowed to take refs.
-
-David
-
+> ---
+> v2: Remove RE_generic_type as suggested by Mauro
+> 
+>  Documentation/sphinx/automarkup.py | 18 ++----------------
+>  1 file changed, 2 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
+> index fd633f7a0bc3..7828aeac92e7 100644
+> --- a/Documentation/sphinx/automarkup.py
+> +++ b/Documentation/sphinx/automarkup.py
+> @@ -22,12 +22,6 @@ from kernel_abi import get_kernel_abi
+>  #
+>  RE_function = re.compile(r'\b(([a-zA-Z_]\w+)\(\))', flags=re.ASCII)
+>  
+> -#
+> -# Sphinx 2 uses the same :c:type role for struct, union, enum and typedef
+> -#
+> -RE_generic_type = re.compile(r'\b(struct|union|enum|typedef)\s+([a-zA-Z_]\w+)',
+> -                             flags=re.ASCII)
+> -
+>  #
+>  # Sphinx 3 uses a different C role for each one of struct, union, enum and
+>  # typedef
+> @@ -150,20 +144,12 @@ def markup_func_ref_sphinx3(docname, app, match):
+>      return target_text
+>  
+>  def markup_c_ref(docname, app, match):
+> -    class_str = {# Sphinx 2 only
+> -                 RE_function: 'c-func',
+> -                 RE_generic_type: 'c-type',
+> -                 # Sphinx 3+ only
+> -                 RE_struct: 'c-struct',
+> +    class_str = {RE_struct: 'c-struct',
+>                   RE_union: 'c-union',
+>                   RE_enum: 'c-enum',
+>                   RE_typedef: 'c-type',
+>                   }
+> -    reftype_str = {# Sphinx 2 only
+> -                   RE_function: 'function',
+> -                   RE_generic_type: 'type',
+> -                   # Sphinx 3+ only
+> -                   RE_struct: 'struct',
+> +    reftype_str = {RE_struct: 'struct',
+>                     RE_union: 'union',
+>                     RE_enum: 'enum',
+>                     RE_typedef: 'type',
