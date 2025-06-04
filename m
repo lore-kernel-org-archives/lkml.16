@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35BD18E1F;
-	Wed,  4 Jun 2025 14:56:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B7B18E1F;
+	Wed,  4 Jun 2025 14:57:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749049014; cv=none; b=eNK2V2ZFkpFK5DIw6eCbAH7Xg75PRNx/1jOSqeqxCYlPU59WtxwoNrEfssm2IBdQFjftq8IC39p4+M2h4+hcz0ufvgiCuLojiV2wKgzEo64OpYAlEzS/Jw3PMI7yiuIGN5PA1OMLZfkQ9+193L0td4+0y4qFVIwst7k6qU0lIRw=
+	t=1749049069; cv=none; b=kQ5PxhzU9G9b42o/tYMdsWk/BCv2HeSzAn+HPFcSCvTYzDTiR1rB3LVacME+R3y63YYo0b+F4nzVs9Azt2UID3OZ8FSoUmLf1i5BYMRZwKmO7jVw84UML+XlAgtNE1O3DH7DXVjNqRJuQ8SmbVQUTbO2Wcw2rsHXeWZ5ngzr/VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749049014; c=relaxed/simple;
-	bh=wddeUE2/c/FxnoHyLrTHZUffTHhKBZE1KhO8uBpo/Ac=;
+	s=arc-20240116; t=1749049069; c=relaxed/simple;
+	bh=mQMGrZaQWboBnhe7ng9WBOI3t0w8RIrA3712YW+wFOc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FGu9GcKoXNPofnayYWbfiAw+NLH61QXnxKB4ikD9i5fHYclRjGUf/sjMR+NJ3A5n6Ljp6Z761VL8b9bqFsOSvTNF0t9yC4wi3AnN3qFd7M1CncaZsseGjYjm9whW/O9cDMNnkE7NY1RiGnJc/2ClqBu4yHiBHD72YmG91WpCzyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpdMCkGw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=SusGeUge9eG2QEGu7FD5p2UgszNDNOb3OD1/0k+cBPU0E98EOb6aDGQq471vTGrtu+h/n79Kz9gon0JpzXLf7tFlf/0FPrS4LGdrVBGS60E9Jla/Wudk/seLAlwa/qFaMvX7oIjuxN7wyDF9Goh2ajGoIZBY7JWiopeNoGDvVIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zy/8A0UY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpdMCkGw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24C50C4CEE4;
-	Wed,  4 Jun 2025 14:56:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zy/8A0UY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 094A6C4CEE4;
+	Wed,  4 Jun 2025 14:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749049014;
-	bh=wddeUE2/c/FxnoHyLrTHZUffTHhKBZE1KhO8uBpo/Ac=;
+	s=k20201202; t=1749049069;
+	bh=mQMGrZaQWboBnhe7ng9WBOI3t0w8RIrA3712YW+wFOc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SpdMCkGw7xuSOebdrjOZyyo1Isa+ob+WBpHXijcGf3x3ke2GkkcbuuCweEI2ZejKV
-	 a94JUxvoGoGmhXMI2wcUVX38q3WXHUD5nTsc41naDYFiIbSybcrmP02WDX+MFzqN3+
-	 dtlV0VJcdwIlCbuTR7lUPKf9ZJ05X8NdQzbuCvox9VfL4gKPeM6lYT1VtF/oOpC6a4
-	 2qSC9Q9OKf1wgJZorBfSrFEJsdQ+VQMGGdQA2OhJKG5vtw7mexp3gr0NRncO21aX8/
-	 UNn9syZJHFy6uOE70qD65ekNk9iW5OzSSvYrfeBpq5aNoCP7zwMZKWLaOm8g7B3PPZ
-	 zfvNbT7p2xQXw==
-Date: Wed, 4 Jun 2025 16:56:49 +0200
+	b=Zy/8A0UYa69f6nsxUJzS2JnymS1QStujgeASAek+SnS5M0rda8HS5Da24HbUtGS12
+	 TDD3l+DNmID6C3FAtnbNfl4J1fcfewP0QuQb5ybwDtDTn3PYqiWlemSLtVX9YMhTm1
+	 f74NVhjgqJMHf5RwP9TMECmum0dEri0n3QIcM79XpHgU5aX5ctPdZm+qnIMAihW9A5
+	 T3MBcML1rAcrGh2Eql6ysKqKYfl93fUNmVCfB7tivsl0kp7MNsS783UKMERdkGXnKZ
+	 TBUB9O/1u6wJ0j41/WKVxAlBd1t2Sj3gWzNO6HOVA5yiodZmI6OAphnTEXxGjEX/Cq
+	 IkCIJNMNnyU0Q==
+Date: Wed, 4 Jun 2025 16:57:44 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, "
  =?UTF-8?B?TsOtY29sYXM=?= F. R. A. Prado" <nfraprado@collabora.com>
-Subject: Re: [PATCH v2 1/3] docs: automarkup: Remove some Sphinx 2 holdovers
-Message-ID: <20250604165649.5a66cb6b@sal.lan>
-In-Reply-To: <20250604143645.78367-2-corbet@lwn.net>
+Subject: Re: [PATCH v2 2/3] docs: automarkup: Mark up undocumented entities
+ too
+Message-ID: <20250604165744.68d98975@sal.lan>
+In-Reply-To: <20250604143645.78367-3-corbet@lwn.net>
 References: <20250604143645.78367-1-corbet@lwn.net>
-	<20250604143645.78367-2-corbet@lwn.net>
+	<20250604143645.78367-3-corbet@lwn.net>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,59 +47,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Em Wed,  4 Jun 2025 08:36:43 -0600
+Em Wed,  4 Jun 2025 08:36:44 -0600
 Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> Remove a few declarations that are no longer doing anything now that we
-> have left Sphinx 2 behind.
+> The automarkup code generates markup and a cross-reference link for
+> functions, structs, etc. for which it finds kerneldoc documentation.
+> Undocumented entities are left untouched; that creates an inconsistent
+> reading experience and has caused some writers to go to extra measures to
+> cause the markup to happen.
+> 
+> Mark up detected C entities regardless of whether they are documented.
 > 
 > Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 
 Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
 > ---
-> v2: Remove RE_generic_type as suggested by Mauro
+> v2: Split out the CSS changes into a separate patch
 > 
->  Documentation/sphinx/automarkup.py | 18 ++----------------
->  1 file changed, 2 insertions(+), 16 deletions(-)
+>  Documentation/sphinx/automarkup.py | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
 > diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
-> index fd633f7a0bc3..7828aeac92e7 100644
+> index 7828aeac92e7..e67eb8e19c22 100644
 > --- a/Documentation/sphinx/automarkup.py
 > +++ b/Documentation/sphinx/automarkup.py
-> @@ -22,12 +22,6 @@ from kernel_abi import get_kernel_abi
->  #
->  RE_function = re.compile(r'\b(([a-zA-Z_]\w+)\(\))', flags=re.ASCII)
+> @@ -235,8 +235,13 @@ def add_and_resolve_xref(app, docname, domain, reftype, target, contnode=None):
 >  
-> -#
-> -# Sphinx 2 uses the same :c:type role for struct, union, enum and typedef
-> -#
-> -RE_generic_type = re.compile(r'\b(struct|union|enum|typedef)\s+([a-zA-Z_]\w+)',
-> -                             flags=re.ASCII)
+>      if xref:
+>          return xref
 > -
->  #
->  # Sphinx 3 uses a different C role for each one of struct, union, enum and
->  # typedef
-> @@ -150,20 +144,12 @@ def markup_func_ref_sphinx3(docname, app, match):
->      return target_text
+> -    return None
+> +    #
+> +    # We didn't find the xref; if a container node was supplied,
+> +    # mark it as a broken xref
+> +    #
+> +    if contnode:
+> +        contnode.set_class("broken_xref")
+> +    return contnode
 >  
->  def markup_c_ref(docname, app, match):
-> -    class_str = {# Sphinx 2 only
-> -                 RE_function: 'c-func',
-> -                 RE_generic_type: 'c-type',
-> -                 # Sphinx 3+ only
-> -                 RE_struct: 'c-struct',
-> +    class_str = {RE_struct: 'c-struct',
->                   RE_union: 'c-union',
->                   RE_enum: 'c-enum',
->                   RE_typedef: 'c-type',
->                   }
-> -    reftype_str = {# Sphinx 2 only
-> -                   RE_function: 'function',
-> -                   RE_generic_type: 'type',
-> -                   # Sphinx 3+ only
-> -                   RE_struct: 'struct',
-> +    reftype_str = {RE_struct: 'struct',
->                     RE_union: 'union',
->                     RE_enum: 'enum',
->                     RE_typedef: 'type',
+>  #
+>  # Variant of markup_abi_ref() that warns whan a reference is not found
