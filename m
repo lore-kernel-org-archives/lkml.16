@@ -1,42 +1,67 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CBD28EA41
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36A528F519;
+	Wed,  4 Jun 2025 12:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749040848; cv=none; b=XuZtUEYDUclTS6IJFzyihRrFiJsG/14MUvEhPVbsFgmmwdeZ+dTYwVr3xAnJeQvxMVQjOlDRGYqLoItVGkrKObTxywbwAqP+OdLu8U1IuRIzHAGZqO9a4S56sHM+HWrERXRBqOlvzpxifGMSSuWclR2sW2MpthEMzwPqqWDI3u4=
+	t=1749040850; cv=none; b=JjFQmg+ZkCzcU9xdSgs9///G+FC5KwEpcubPSELoUzGXlPgiV3y7mXxzCcU3pNpvScAJMzfDIZ+F5jVOkgk3VU+JRhqNXv6AOwQU1PqExXDyINgt5szI481hTCZwuqXUnf/YvimjrvoRj9IoolIOEdKU3SULz8fuPxM+u+jmHrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749040848; c=relaxed/simple;
-	bh=JZodZ9P1TWqjuyQ7ANQr6qONcAswGVx2ceY2TIRVpsc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=We1V+N6ncn+yBL+IxCiYCGqsrx8SFdX/7HlTjDtRKmr/2WmlvkNoWThWlyElRdBRtiu6wjLxOH9Sx2CH857+DiC1EEyooTSwCfpcZBTib2+a2G92Z6KblqmoVI3qk0cc5VE9pmR0NBwNgpaoyQCpXuu5yp9sRMbogvA1cghPStI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=a4gbI2uK; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749040850; c=relaxed/simple;
+	bh=N8uiVae6oE1XXvRHce8cbIz1nvFVH2qSLdUR8H3ZAP0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jLISFQFgb65V8PFxYcTxWMUSasLlL1dT0oYBMED1vB8D9QTc5U13Gcm9TK+bWjfwd3OYRoRky1VwNXJnEuUnlvatRylS2YlJa74/MvckjbBJKNP7y5XLW18OtPCUeKDMaYEiZyXHKRbanUn+ULqJFvF5cCHtHCcL9e7ziZ9CHN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Py/AWMKV; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a4gbI2uK"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250604124043euoutp0135d754fbb7f8fbdb550b60b297388614~F12FYaDck1443714437euoutp01r
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:40:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250604124043euoutp0135d754fbb7f8fbdb550b60b297388614~F12FYaDck1443714437euoutp01r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749040843;
-	bh=kAukIWR6u4Jom32Pa8uBS4iyUUF+BImaglA4PV9oEzQ=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=a4gbI2uKh9qSnXTOnisyHBycy4qQuffoUBlkfZVmQG43tehnzN4fdakk6Y0isqje/
-	 tqqU+P3e1u06PJ0Qzx2wVKoxUwR9kowkZGrAOL+XMoBDH2Qq7UffB8MS3ZIZBPjRpy
-	 olmcUWBNOqbeovuk1A1whOHyaiVBG+9DqWHXci+E=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250604124042eucas1p18959bb4cf78c93c05cdaad2ee125c276~F12Eqw0oR1319513195eucas1p1z;
-	Wed,  4 Jun 2025 12:40:42 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250604124041eusmtip29c8ca08943a9ca4c8ebeb77dd5466bfd~F12DrZDyv0267302673eusmtip2e;
-	Wed,  4 Jun 2025 12:40:41 +0000 (GMT)
-Message-ID: <a68e3bee-f4ad-4d73-a5a8-e39772c41711@samsung.com>
-Date: Wed, 4 Jun 2025 14:40:41 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Py/AWMKV"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-234b9dfb842so63824745ad.1;
+        Wed, 04 Jun 2025 05:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749040848; x=1749645648; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=YcEj/aWZNhqGZpBtE8sRSulKBrrHvintUVW8xwBX/OU=;
+        b=Py/AWMKViHuAtW8TZz3hhYp/9otIMUiqDPo/V+6Dk4yNcwHEabinT4F7SU83Kdcri7
+         UDEI0YPDxcbP6wZwU/eheM0Koal5DO8ydRkpcg3Z5XoIRb7Qw1MgZG227w0pRzhFQxam
+         T5l6llkaJFKpF/7JIu2DeM8TttsGOEZiMGtC30ZKVqbmCL11gnTRM6vgUp7cLq2usxwf
+         QlzhOPiow8YQrQGudut63MWCuqEFD3Ja8xQ8HUL10Jl0oMg2SABRuckiiD6mTtYoMKx7
+         OgFN8faO7+bgOPKS7ghCPZeEsBkUoEmqn5OEYcNAdFQmdA5OhLa1glIJ/Dw0to3V/2Fw
+         1flg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749040848; x=1749645648;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YcEj/aWZNhqGZpBtE8sRSulKBrrHvintUVW8xwBX/OU=;
+        b=LgVS48X4PU0j3E1avlRUFYJfWPKgqMBpnslaYPNosUpZqIgUiZMe0VWm6ysTmwB/Ca
+         Q6Hmse6h7OcwPpaWoVupdIXDfFS0qD1RtEepuW6jVI0Rt2R7Qfkur8Q5oNBRRfcJGI2/
+         Kh0AwjK0UT6iwioX8HCCx9Mg+0PeyjszKvwbtvhBVEVLG2SNc2bybShiev1ezYn5HosQ
+         3d3KrPinNB9y3xNHslf+aft0YRbk+Q02HIVvGkCQtzR2K+mAcdX5XPidyyeTaXjTaUA+
+         QwdrIJliTKWKB/NHiTAq5ZBDBRm2y4kHH7yLC8iSVANZc5AH8yiert9llaXfY0m7v6Kt
+         YCmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUD4VanUPzOCOh3dZed971yaOGqcQ+LbYHKvHpm1yg/D8YTiwJ1xNKIYhEEEKG6IdnxNWcb9w8BEAQR@vger.kernel.org, AJvYcCVEWokfpd+wnS4seIYOkIAF2d+qMqUqdcdQJ6CC6fxFoRBEVERh5MwtF0S2hUasVraXWLbSPDG79R4zJA==@vger.kernel.org, AJvYcCVUwurfT9NpOkImFYR3sX+S6ACrIch+RU4yb1MZ/Ae36as4fuIpUFEQjXAW+F/veXdZt+Ic+um6PuDmfO8=@vger.kernel.org, AJvYcCVl4QwRjZ7cbMVJtQ6b4ichJ98AoJxkGDrPzFHGvEgH/2AG0CErk6+JPUJweTavvDv/xQi/qeRq@vger.kernel.org, AJvYcCWHkwml0ipQ9/xbT00haEwC6UWSeThx+ueat4pRUK1i8b+Cy8wBjMz8gg/ieqXetZkQgV6E4qV1EfzG@vger.kernel.org, AJvYcCWlSIhTuWJZjnhaj3yz19a8b3slwceF1krBvvaSySU93olsXv3haF6rkLv5f2BpVjbmyj7hQKLqyLPgFpgvpOA=@vger.kernel.org, AJvYcCWmuI13FNiRBf9sPuUmBtrHINGlETz6YOSnCIMFtPcqadG4q3FfhbFcDhablaUoJ3cWcaxGykUYeIY=@vger.kernel.org, AJvYcCXBlZtuxxZCQKekiOa10rwZBYJh/teFXrAbcTHBtODTFIazthnigVE4tDGdwNCtciZqh/tVsXP5X8bn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznub9MmIqACUPcW9xfsr3JslSbYKxQk5hqy6aSBfg+QV2/uYhS
+	1AG7yWhII9gtdJg5M76PNstG77SkFcyKlpIhdBf3d3KrH5yeEolF2g76
+X-Gm-Gg: ASbGnctEry1mhQB+5mHi+vxaBeyfP2cPXUiilk2KUHSl/Ch4qVvpBQfLNpJPeHrbB+p
+	kK4xXIROKmsJozaGoctMwehXVuNGfwmaRExtFjhktddytvq8m5FW2+brH1U1lth9Kom5MV0Z4Ej
+	6GFjYBiziUBIKAc34rGG7g/q3JE5lJTW5fvuu+A5syTZqNTcnCEdbGuIhgbG3Vwcxi9cmEb4xlT
+	tRI1uXI806MPfZyuPC16tb+V2UpbsnZcemE5RK7ntXuNNYtj9CcH4avr6AbfxVyk8HE6mL0x8x4
+	DfjxoNdTrICiJK1ulCRVxz9oRUiPXZsnovLE6HZu/UOgnAUl25+DbbhDeFZQMkTMCpZFS2W5rys
+	qbWayYz1YMmfe7uqzAMh+W7d1
+X-Google-Smtp-Source: AGHT+IERU/kiPfbUxJ4S1Wpefai0KxefbnmPlZ3YVymeooCAaPKk9C+duebTa/GriRuybAh8KfqKEQ==
+X-Received: by 2002:a17:902:7c12:b0:234:98eb:8eda with SMTP id d9443c01a7336-235e11cb8e4mr32732355ad.28.1749040847880;
+        Wed, 04 Jun 2025 05:40:47 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d22d0dsm102769895ad.257.2025.06.04.05.40.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 05:40:47 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <12098259-32c4-4524-813e-38aeced837a0@roeck-us.net>
+Date: Wed, 4 Jun 2025 05:40:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,109 +69,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/8] riscv: dts: thead: th1520: Add IMG BXM-4-64 GPU
- node
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
-	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
-	Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Oliver Neukum <oneukum@suse.com>, a0282524688@gmail.com, lee@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+ mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, wim@linux-watchdog.org, jdelvare@suse.com,
+ alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+ linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
+References: <20250604041418.1188792-1-tmyu0@nuvoton.com>
+ <20250604041418.1188792-2-tmyu0@nuvoton.com>
+ <b4c15a6b-0906-4fea-b218-4467afdd8345@suse.com>
 Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <CAPDyKFpYfZNthdRN=pCv4FEdFCzrKEH4aFBy4ew-xLKtpbJ5Tg@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250604124042eucas1p18959bb4cf78c93c05cdaad2ee125c276
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250529222410eucas1p2e1d41a2fc717caef1aed51367a7db944
-X-EPHeader: CA
-X-CMS-RootMailID: 20250529222410eucas1p2e1d41a2fc717caef1aed51367a7db944
-References: <CGME20250529222410eucas1p2e1d41a2fc717caef1aed51367a7db944@eucas1p2.samsung.com>
-	<20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
-	<20250530-apr_14_for_sending-v3-7-83d5744d997c@samsung.com>
-	<CAPDyKFpYfZNthdRN=pCv4FEdFCzrKEH4aFBy4ew-xLKtpbJ5Tg@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAmgrMyQFCSbODQkACgkQyx8mb86fmYGcWRAA
+ oRwrk7V8fULqnGGpBIjp7pvR187Yzx+lhMGUHuM5H56TFEqeVwCMLWB2x1YRolYbY4MEFlQg
+ VUFcfeW0OknSr1s6wtrtQm0gdkolM8OcCL9ptTHOg1mmXa4YpW8QJiL0AVtbpE9BroeWGl9v
+ 2TGILPm9mVp+GmMQgkNeCS7Jonq5f5pDUGumAMguWzMFEg+Imt9wr2YA7aGen7KPSqJeQPpj
+ onPKhu7O/KJKkuC50ylxizHzmGx+IUSmOZxN950pZUFvVZH9CwhAAl+NYUtcF5ry/uSYG2U7
+ DCvpzqOryJRemKN63qt1bjF6cltsXwxjKOw6CvdjJYA3n6xCWLuJ6yk6CAy1Ukh545NhgBAs
+ rGGVkl6TUBi0ixL3EF3RWLa9IMDcHN32r7OBhw6vbul8HqyTFZWY2ksTvlTl+qG3zV6AJuzT
+ WdXmbcKN+TdhO5XlxVlbZoCm7ViBj1+PvIFQZCnLAhqSd/DJlhaq8fFXx1dCUPgQDcD+wo65
+ qulV/NijfU8bzFfEPgYP/3LP+BSAyFs33y/mdP8kbMxSCjnLEhimQMrSSo/To1Gxp5C97fw5
+ 3m1CaMILGKCmfI1B8iA8zd8ib7t1Rg0qCwcAnvsM36SkrID32GfFbv873bNskJCHAISK3Xkz
+ qo7IYZmjk/IJGbsiGzxUhvicwkgKE9r7a1rOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAmgrMyQFCSbODQkACgkQyx8mb86fmYHlgg/9
+ H5JeDmB4jsreE9Bn621wZk7NMzxy9STxiVKSh8Mq4pb+IDu1RU2iLyetCY1TiJlcxnE362kj
+ njrfAdqyPteHM+LU59NtEbGwrfcXdQoh4XdMuPA5ADetPLma3YiRa3VsVkLwpnR7ilgwQw6u
+ dycEaOxQ7LUXCs0JaGVVP25Z2hMkHBwx6BlW6EZLNgzGI2rswSZ7SKcsBd1IRHVf0miwIFYy
+ j/UEfAFNW+tbtKPNn3xZTLs3quQN7GdYLh+J0XxITpBZaFOpwEKV+VS36pSLnNl0T5wm0E/y
+ scPJ0OVY7ly5Vm1nnoH4licaU5Y1nSkFR/j2douI5P7Cj687WuNMC6CcFd6j72kRfxklOqXw
+ zvy+2NEcXyziiLXp84130yxAKXfluax9sZhhrhKT6VrD45S6N3HxJpXQ/RY/EX35neH2/F7B
+ RgSloce2+zWfpELyS1qRkCUTt1tlGV2p+y2BPfXzrHn2vxvbhEn1QpQ6t+85FKN8YEhJEygJ
+ F0WaMvQMNrk9UAUziVcUkLU52NS9SXqpVg8vgrO0JKx97IXFPcNh0DWsSj/0Y8HO/RDkGXYn
+ FDMj7fZSPKyPQPmEHg+W/KzxSSfdgWIHF2QaQ0b2q1wOSec4Rti52ohmNSY+KNIW/zODhugJ
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <b4c15a6b-0906-4fea-b218-4467afdd8345@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 6/3/25 14:27, Ulf Hansson wrote:
-> On Fri, 30 May 2025 at 00:24, Michal Wilczynski
-> <m.wilczynski@samsung.com> wrote:
+On 6/4/25 03:11, Oliver Neukum wrote:
+> On 04.06.25 06:14, a0282524688@gmail.com wrote:
+>> From: Ming Yu <tmyu0@nuvoton.com>
 >>
->> Add a device tree node for the IMG BXM-4-64 GPU present in the T-HEAD
->> TH1520 SoC used by the Lichee Pi 4A board. This node enables support for
->> the GPU using the drm/imagination driver.
+>> The Nuvoton NCT6694 provides an USB interface to the host to
+>> access its features.
 >>
->> By adding this node, the kernel can recognize and initialize the GPU,
->> providing graphics acceleration capabilities on the Lichee Pi 4A and
->> other boards based on the TH1520 SoC.
+>> Sub-devices can use the USB functions nct6694_read_msg() and
+>> nct6694_write_msg() to issue a command. They can also request
+>> interrupt that will be called when the USB device receives its
+>> interrupt pipe.
 >>
->> Add fixed clock gpu_mem_clk, as the MEM clock on the T-HEAD SoC can't be
->> controlled programatically.
->>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>> Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
 >> ---
->>  arch/riscv/boot/dts/thead/th1520.dtsi | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>
->> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
->> index 6170eec79e919b606a2046ac8f52db07e47ef441..ee937bbdb7c08439a70306f035b1cc82ddb4bae2 100644
->> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
->> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
->> @@ -225,6 +225,13 @@ aonsys_clk: clock-73728000 {
->>                 #clock-cells = <0>;
->>         };
->>
->> +       gpu_mem_clk: mem-clk {
->> +               compatible = "fixed-clock";
->> +               clock-frequency = <0>;
->> +               clock-output-names = "gpu_mem_clk";
->> +               #clock-cells = <0>;
->> +       };
+...
+>> +static void usb_int_callback(struct urb *urb)
+>> +{
+>> +    struct nct6694 *nct6694 = urb->context;
+>> +    unsigned int *int_status = urb->transfer_buffer;
+>> +    int ret;
 >> +
->>         stmmac_axi_config: stmmac-axi-config {
->>                 snps,wr_osr_lmt = <15>;
->>                 snps,rd_osr_lmt = <15>;
->> @@ -504,6 +511,21 @@ clk: clock-controller@ffef010000 {
->>                         #clock-cells = <1>;
->>                 };
->>
->> +               gpu: gpu@ffef400000 {
->> +                       compatible = "thead,th1520-gpu", "img,img-bxm-4-64",
->> +                                    "img,img-rogue";
->> +                       reg = <0xff 0xef400000 0x0 0x100000>;
->> +                       interrupt-parent = <&plic>;
->> +                       interrupts = <102 IRQ_TYPE_LEVEL_HIGH>;
->> +                       clocks = <&clk_vo CLK_GPU_CORE>,
->> +                                <&gpu_mem_clk>,
->> +                                <&clk_vo CLK_GPU_CFG_ACLK>;
->> +                       clock-names = "core", "mem", "sys";
->> +                       power-domains = <&aon TH1520_GPU_PD>;
->> +                       power-domain-names = "a";
+>> +    switch (urb->status) {
+>> +    case 0:
+>> +        break;
+>> +    case -ECONNRESET:
+>> +    case -ENOENT:
+>> +    case -ESHUTDOWN:
+>> +        return;
+>> +    default:
+>> +        goto resubmit;
+>> +    }
+>> +
+>> +    while (*int_status) {
+>> +        int irq = __ffs(*int_status);
+>> +
+>> +        generic_handle_irq_safe(irq_find_mapping(nct6694->domain, irq));
+>> +        *int_status &= ~BIT(irq);
+>> +    }
 > 
-> If the power-domain-names are really needed, please pick a
-> useful/descriptive name.
-
-Yeah they are required. Even though this convention doesn't seem to be
-enforced by the dt-binding it seems like it's hard-coded into the driver
-330e76d31697 ("drm/imagination: Add power domain control"). So I don't
-think I have any choice here.
-
-> 
-> [...]
-> 
-> Kind regards
-> Uffe
+> Does modifying the byte have any benefit?
 > 
 
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+Not sure if I understand the question, and assuming your question is regarding
+*int_status: *int_status!=0 is the loop invariant, so, yes, modifying it does
+have a benefit.
+
+I'd be more concerned that transfer_buffer is the raw buffer, and that data
+read from it is not endianness converted. That makes me wonder if and how the
+code would work on a big endian system.
+
+Guenter
+
