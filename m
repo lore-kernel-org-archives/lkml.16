@@ -1,145 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195001F94A;
-	Wed,  4 Jun 2025 15:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D911917F1;
+	Wed,  4 Jun 2025 15:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749050280; cv=none; b=T/iEsI/ddt5znXUbHbyc5SMh2ObXWd0T6W9SYJKFJzAlf3d5iDYlJnz0ejOgZb1+WQ33xFwpQQAhNTZ4B6AN1rRt2d/Q9zKsS2luWaaKJ3qu98HI/WVwZtMvvkFhuw9AjvTmXkT0kSveylVhrQFZsVn92onl8ftCudVUNRsc3W8=
+	t=1749050284; cv=none; b=NYB6FLCzBhJ9lJKYBXd4NX02x8gCuXMfAAMJJ9gl9UUusHvasZ/RHJmSUjmGitBMd5d0/7cF2c96wAx8kwzLOTkF89m3Nl/x0JNlDzpUrhm+F9bdHjW2Xi4+pF+Si+qqYPR5SMB+vAZCMQS6HBMZy+4n3VmY32qFr+Mq+ETGltQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749050280; c=relaxed/simple;
-	bh=EjP0tX3z/aTAdpLBP8CzAHIQr7J/MGL6tjjJP89Xo24=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=a1McS5mywiHYBQ09ueltECj4hqp+U2BvIe6AS1bK9c8jkEgZfGdwN47HdonsJBmK4fLErwahX6j0sF4tSSb5UB3FSXE09l0+HcKj2bO8lpQ385mJOR+B2adLou85pr7ZVVPDImqlx2HoDLHoA4kMiBUaYBQujvcsXyfEOf+HV5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cifnpytl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cifnpytl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E704BC4CEE4;
-	Wed,  4 Jun 2025 15:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749050279;
-	bh=EjP0tX3z/aTAdpLBP8CzAHIQr7J/MGL6tjjJP89Xo24=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=cifnpytlG90RGruI6sDOS7EhPallxy0BNw64RpE0xSzYWipShW0QF1ZHjyBscGuLh
-	 k7eDwaFPh+XMIXF/iuKyEQxOH7ySWyZvdVMi+u7kNfwqdl6ObTUX4Gts59QmX3wcRh
-	 Nncq6rP6+SIT9KRtdrDP1wIrfXFxTfXogFevDZkA1P3Hn8f18LdD+Cyb0wc1D8Tx1M
-	 /ngsQ1Ldztt2JiQynqjsrzohetey34v53vyDSo2Eyk0rDrgydfhBNIO/+xH9EgHkaC
-	 IwEY/TvqZ6RWa3x/ah4pnO52kMq3sYmNyRmNcS5YV9JKqnQ8kkTcMR//9MxvtKwCR6
-	 O5z+/9CQvTBwQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: pratyush@kernel.org,  jasonmiu@google.com,  graf@amazon.com,
-  changyuanl@google.com,  rppt@kernel.org,  dmatlack@google.com,
-  rientjes@google.com,  corbet@lwn.net,  rdunlap@infradead.org,
-  ilpo.jarvinen@linux.intel.com,  kanie@linux.alibaba.com,
-  ojeda@kernel.org,  aliceryhl@google.com,  masahiroy@kernel.org,
-  akpm@linux-foundation.org,  tj@kernel.org,  yoann.congal@smile.fr,
-  mmaurer@google.com,  roman.gushchin@linux.dev,  chenridong@huawei.com,
-  axboe@kernel.dk,  mark.rutland@arm.com,  jannh@google.com,
-  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
-  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
-  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
-  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
-  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
-  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
-  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
-  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
-  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
-  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
-  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
-  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
-  stuart.w.hayes@gmail.com
-Subject: Re: [RFC v2 04/16] luo: luo_core: Live Update Orchestrator
-In-Reply-To: <20250515182322.117840-5-pasha.tatashin@soleen.com>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
-	<20250515182322.117840-5-pasha.tatashin@soleen.com>
-Date: Wed, 04 Jun 2025 17:17:50 +0200
-Message-ID: <mafs01przv8m9.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1749050284; c=relaxed/simple;
+	bh=s5zmxv3LU0w+4sopd0Re0HC/bbjNa73HY3q0HOETc+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qscfGIBr5oIVE0VSwq1OGnGPFJ7IBGYMAF4zP0/DCLgd0BIargl4QVn+Kf9pD2QQPdc3ZB+Djyb0h3vcyWXCF7TWCX15POY90TROWzRTeAUmFB9ceKf3oS5aQbnuSo1e1FaJixQqsT0gaH+U68Dm2k+c2ANZeYl5Rmedy4UHyxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D9601758;
+	Wed,  4 Jun 2025 08:17:44 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAB493F59E;
+	Wed,  4 Jun 2025 08:18:00 -0700 (PDT)
+Date: Wed, 4 Jun 2025 16:17:56 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Message-ID: <20250604151756.GD8020@e132581.arm.com>
+References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+ <20250603140040.GB8020@e132581.arm.com>
+ <20250603144414.GC38114@noisy.programming.kicks-ass.net>
+ <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+ <20250604101821.GC8020@e132581.arm.com>
+ <20250604135801.GK38114@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604135801.GK38114@noisy.programming.kicks-ass.net>
 
-On Thu, May 15 2025, Pasha Tatashin wrote:
-
-> Introduce LUO, a mechanism intended to facilitate kernel updates while
-> keeping designated devices operational across the transition (e.g., via
-> kexec). The primary use case is updating hypervisors with minimal
-> disruption to running virtual machines. For userspace side of hypervisor
-> update we have copyless migration. LUO is for updating the kernel.
->
-> This initial patch lays the groundwork for the LUO subsystem.
->
-> Further functionality, including the implementation of state transition
-> logic, integration with KHO, and hooks for subsystems and file
-> descriptors, will be added in subsequent patches.
->
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+On Wed, Jun 04, 2025 at 03:58:01PM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 04, 2025 at 11:18:21AM +0100, Leo Yan wrote:
+> 
+> > Totally agree. The comment would be very useful!
+> 
+> I have the below. Let me go read your email in more than 2 seconds to
+> see if I should amend things.
+> 
+> I'm not sure doing the INACTIVE->INACTIVE cycle in the ASCII art is
+> going to make it clearer, might leave that off. But yeah, possible.
+> 
 > ---
-[...]
-> +/**
-> + * luo_freeze() - Initiate the final freeze notification phase for live update.
+> 
+> Subject: perf: Add comment to enum perf_event_state
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Wed Jun  4 10:21:38 CEST 2025
+> 
+> Better describe the event states.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  include/linux/perf_event.h |   42 ++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 40 insertions(+), 2 deletions(-)
+> 
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -635,8 +635,46 @@ struct perf_addr_filter_range {
+>  	unsigned long			size;
+>  };
+>  
+> -/**
+> - * enum perf_event_state - the states of an event:
+> +/*
+> + * The normal states are:
 > + *
-> + * Attempts to transition the live update orchestrator state from
-> + * %LIVEUPDATE_STATE_PREPARED to %LIVEUPDATE_STATE_FROZEN. This function is
-> + * typically called just before the actual reboot system call (e.g., kexec)
-> + * is invoked, either directly by the orchestration tool or potentially from
-> + * within the reboot syscall path itself.
+> + *            ACTIVE    --.
+> + *               ^        |
+> + *               |        |
+> + *       sched_{in,out}() |
+> + *               |        |
+> + *               v        |
+> + *      ,---> INACTIVE  --+ <-.
+> + *      |                 |   |
+> + *      |                {dis,en}able()
+> + *   sched_in()           |   |
+> + *      |       OFF    <--' --+
+> + *      |                     |
+> + *      `--->  ERROR    ------'
 > + *
-> + * Based on the outcome of the notification process:
-> + * - If luo_do_freeze_calls() returns 0 (all callbacks succeeded), the state
-> + * is set to %LIVEUPDATE_STATE_FROZEN using luo_set_state(), indicating
-> + * readiness for the imminent kexec.
-> + * - If luo_do_freeze_calls() returns a negative error code (a callback
-> + * failed), the state is reverted to %LIVEUPDATE_STATE_NORMAL using
-> + * luo_set_state() to cancel the live update attempt.
-
-Would we end up with a more robust serialization in subsystems or
-filesystems if we do not allow freeze to fail? Then they would be forced
-to ensure they have everything in order by the time the system goes into
-prepared state, and only need to make small adjustments in the freeze
-callback.
-
+> + * That is:
 > + *
-> + * @return  0: Success. Negative error otherwise. State is reverted to
-> + * %LIVEUPDATE_STATE_NORMAL in case of an error during callbacks.
-> + */
-> +int luo_freeze(void)
-> +{
-> +	int ret;
-> +
-> +	if (down_write_killable(&luo_state_rwsem)) {
-> +		pr_warn("[freeze] event canceled by user\n");
-> +		return -EAGAIN;
-> +	}
-> +
-> +	if (!is_current_luo_state(LIVEUPDATE_STATE_PREPARED)) {
-> +		pr_warn("Can't switch to [%s] from [%s] state\n",
-> +			luo_state_str[LIVEUPDATE_STATE_FROZEN],
-> +			LUO_STATE_STR);
-> +		up_write(&luo_state_rwsem);
-> +
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = luo_do_freeze_calls();
-> +	if (!ret)
-> +		luo_set_state(LIVEUPDATE_STATE_FROZEN);
-> +	else
-> +		luo_set_state(LIVEUPDATE_STATE_NORMAL);
-> +
-> +	up_write(&luo_state_rwsem);
-> +
-> +	return ret;
-> +}
-[...]
+> + * sched_in:       INACTIVE          -> {ACTIVE,ERROR}
+> + * sched_out:      ACTIVE            -> INACTIVE
+> + * disable:        {ACTIVE,INACTIVE} -> OFF
+> + * enable:         {OFF,ERROR}       -> INACTIVE
+> + *
+> + * Where {OFF,ERROR} are disabled states.
+> + *
+> + * Then we have the {EXIT,REVOKED,DEAD} states which are various shades of
+> + * defunct events:
+> + *
+> + *  - EXIT means task that the even was assigned to died, but child events
+> + *    still live, and further children can still be created. But the event
+> + *    itself will never be active again. It can only transition to
+> + *    {REVOKED,DEAD};
+> + *
+> + *  - REVOKED means the PMU the event was associated with is gone; all
+> + *    functionality is stopped but the event is still alive. Can only
+> + *    transition to DEAD;
+> + *
+> + *  - DEAD event really is DYING tearing down state and freeing bits.
+> + *
 
--- 
-Regards,
-Pratyush Yadav
+LGTM:
+
+Reviewed-by: Leo Yan <leo.yan@arm.com>
+
+>   */
+>  enum perf_event_state {
+>  	PERF_EVENT_STATE_DEAD		= -5,
