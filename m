@@ -1,252 +1,268 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2053.outbound.protection.outlook.com [40.107.92.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3884414
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 00:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748995333; cv=none; b=kIu9K45cJwqwaFi/gp/KPoigI9aJxaqCXFJNhNYu3IkClQ6RYOO9+Y4byK8oAiC0QQe2KIp+PKlvhniR/lNqUq6m5SG2pttAdNCGUUAu5dXpshHQ8tkz6Ak0PLt0DabujEQTNReGdB71M3uxKN5rlWtyD+WcUjMfArxaPUMQS5k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748995333; c=relaxed/simple;
-	bh=qvJBhahKOOF54t2U2LU5cR7iRRPjLipXPejMChFrNRI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XbJNx480Ujgfdpxk1vafpxi3ZFdotS41mxvgCAKvHQ3cFV9Dd5bBlL1fu8BAxDcQq9kiAGWiPcsJUjmVVXQIFZdLZTSWWpIEGDnTxarl7nKJjgS26f5RjfSMjs+FGVGsJjZxRguaGqbBTpeZvPSkwvZmJZqoGnkqJpTV5FvsObs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0+A6aeeM; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE520163;
+	Wed,  4 Jun 2025 00:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748995546; cv=fail; b=A3dhwKT4UwNz2jHU6za41swi/VJIqHSTpCze6hsDONLPhHocliTqzydaTiHg4GSWH9ZFyfGLWxlsaNdR4VW0+ZyvYN+kNiDnNW0W9AsSf5b5HAMWFelBMjl4HAB4LHCTSHd44YSSnsdTk3Wu10WzSGaDXNLDFHoTcOQbreJR9TU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748995546; c=relaxed/simple;
+	bh=wckZkNxhH9GPL4XtdTf2HQsx1ruVXCaxjuG9gzettNs=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=pOjXWonI0UI/Qgj+PCl1vjv3bl9SSRo3PqyH2MTJyJM1zSJq3Bf/ikMJN3Fyt/dj+/wSHgMVCgK7+YB7iiUB643Sr/1qEvvkd0XBL8pSVu+kFUSmV7SAmwyuSzoMK9ZKw1zwRNjN5Xszo6FTeUVwxV1QEBZI/7xOEiOHA0+GlgY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=A0ecVM5w; arc=fail smtp.client-ip=40.107.92.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0+A6aeeM"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3dd89a85414so87885ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 17:02:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748995330; x=1749600130; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aby5cmVrQJBl2moPBZcclJIR+UepgzcsOR17H1jYn0o=;
-        b=0+A6aeeMN4LsVL4OeE6iKcWGH3+oypky0S4TP7yhcsYdXiA/0UMpccYiWYtZVxPz3r
-         YAPKXf2Vzv/5G+pTAv05tnqgWEsVO91pePY6+J8pG8CWTE/pj3/xlXfeGWgG7/hc+2Ix
-         BVvnV+PMK93JdlHrPT8pQANNNwPY68Ged4FN7YID11lWHFgjdIFrv4rgne8aXMxxoqyY
-         QCwZHlwuSuoONNkFfqbXopkETCS2OGc2DchzR8Q5mBtS3WGicL21e6b5D2AYae6tSAOT
-         oIfPjqy5dcv2IKx3b1TL2M/d4RkNbRersmvTWRD6cKQ31QBKRY65i2xJER18810fK5kq
-         I6uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748995330; x=1749600130;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aby5cmVrQJBl2moPBZcclJIR+UepgzcsOR17H1jYn0o=;
-        b=F1kNtzCKTgTi6t1AR5OUA/uWjTcXRlNP0uNWOscwC+3OQAODRIehyJebIr1OvoiKdI
-         ZS3Myf/RW4rFkPkLpaS2UEDbQv0lkfW0h7MWYXNvLTCRMaUEWeHouf55M+iMrfeSrYHy
-         DalLscBlukxFTCbx7VoaqHXXPx0EQX67PWZZPuQfBtEZRXOk5O36E1fFpfOnjYVgqAAV
-         ARqqksjsR4UiVFT2Puk7q1I3sAv6GPxb+4IXEbytp9/DJtx8ItrRc8UDRykRBhUh1UW7
-         vWwGfObNVLxfH9l47OfmF+50nJbRT1roaYlfm6TU7lUjSqCVwMRwcDFlGPtWPEFqiVan
-         ASxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyjLY16VAE61l6+aMLi9sS5JdobfzqB6FWtSvK0gbiYcEQXaZzO9TOisJoFL4XXgXURMXbkGXwGDyjg50=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZlKAAIcxNkXiBbQQT5/XrO9Yher14fIOMeo2gy90+GHIRhWPb
-	zgsVUy9sOHbXo3P8iIRySwi/6Xxz0d5S1TzxOOZ/+uJKje2XAhMmK2PP1uPM3L6TPapVCWZi6eo
-	6kk63j4d8qeBWJHxomL3Zi4GyHikDuUEsYdPflhvK
-X-Gm-Gg: ASbGncty7RPPQHeKJddMKDcc5ou+e3W3oyp1FaIf4pJePHIA84kanbqGSHk+khPXp6y
-	0mWx3HvddwtYHY4/Wkdbpoya4MyRcZMihvSaH1NHxk3GeTFdOg/oTvd2VANjEUFtHGcFLjsLmdQ
-	CXgMgfML7y3tOIUxj6y+Wx8vbOJiy/Wng3p62gCi+nlYjM9L5zBtmks52hDibzuZh6kZ65EtNn
-X-Google-Smtp-Source: AGHT+IGRBEaC9iljAUrrLAP2akvAi/AW9ctkLZcvCkKUrr7Y+LLqUYiret7dfOge83jwcDp5fvbmIbLEqBUrIzZ2+KM=
-X-Received: by 2002:a05:6e02:2206:b0:3dd:a7a1:9ee8 with SMTP id
- e9e14a558f8ab-3ddbe7f1abdmr1623805ab.24.1748995330188; Tue, 03 Jun 2025
- 17:02:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="A0ecVM5w"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ueO4h2AJnJJ1U2gjw07XkH6/Se0LCQe8ztfZunMtq8S/kAIkVesQWa5/bvl5HOOksT+jgzFOKE9EfQsJ9I6Jz1haKvj0boFGsCzp2Bih9/YBydRm8R7fRnBzoT20Y9IaeoDOhqsXTs8myn+WnAFm2x1UY+5S6PwCn1qSQPksjuUcSUTO2lyLdZsfqO77V7UTJh4wq8Xpy47p1KyOea6ce7+YABCvDleyQxrsFb2P0E2+bK6lnDtRs0e92GvWFQxOxhx2YjIsJmvN9Hxrzuu4IHXidwMKcdMtpu2ComasKW/Xar+/BPdJmuApA3etOhPw+NQTuKb8z+z5D6GLlY+FoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A3TQlKCmmaR3pyD3eUhRtgvBdFeWGK0VaFKPIqLOJsI=;
+ b=b6CPNGv/2Q0cqLh5aqcbyNSuervoaxOkZ7H++sNq558bF3J7zR7Sf6JcUhEbqw0AaK37g9M4M1VfzyQoDt+yskAQJRAL0vOuVkHehe/blDdBVUCPqid8mctaUgWRYDvUnFZSSDomG+VdysBiozhjPp59NWrvxU/Xw2JXsw1uGV0eGp4/6dEmuK+k2p1mCO5zBBm9xY6BNbpvgs+1pad+R5Z9dBdT1t4QhOoP7jvVjaZMsy9Bux1GMCJq/vqcLJY5eOpAq8nBl3PgqQg1vYsCyr2rhj6QmjYYTCIjq1sbaXEr+dv46g9iferUurZIb9itP62LRvCKCuf3iYRbD3NPsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A3TQlKCmmaR3pyD3eUhRtgvBdFeWGK0VaFKPIqLOJsI=;
+ b=A0ecVM5wREq126mWypoGsK4rzgBzbsy8JXMxEMiacy/tocvgROYfUUn2w4bU/OlpvGfc+/rdYU/PF0hfod8maVSRowQsRKStBJOxEnEdFbIpq1LqqANb5PLmdfWLOvFdzw7S76jaTFLu9oFpxklwhAb7dGC6bYLZxqSf2nLFpo2nQvy/1NC3vvBaUf2x/M8nYP82kkDCxZrBk4G8qQvJT7iDTffA6tkkfWn37TBSyGbmA/beZ1egQMhPWxDz22J0dLDVGsBJOIYyE7l8kDMKhBSW9BoRKix6YTt8c3AfWNpFo6FSWuEsdCdlARncTxZZsE5nFwi5pSTLTG/9zMLVzw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by SA1PR12MB7248.namprd12.prod.outlook.com (2603:10b6:806:2be::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.25; Wed, 4 Jun
+ 2025 00:05:40 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
+ 00:05:40 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 04 Jun 2025 09:05:34 +0900
+Message-Id: <DADB6892Z31G.12LB1BVSGTEAQ@nvidia.com>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
+ operations
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Benno Lossin" <lossin@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
+ <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
+ <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
+ <DA8GTD7LT7KO.1A3LBQGEQTCEW@kernel.org>
+ <DAC2L6ZKR6U2.WOMERUJIOENK@nvidia.com>
+ <DAD9TNUBUGPN.1ED519FYR29U4@kernel.org>
+In-Reply-To: <DAD9TNUBUGPN.1ED519FYR29U4@kernel.org>
+X-ClientProxiedBy: PN4PR01CA0075.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26d::12) To MN2PR12MB3997.namprd12.prod.outlook.com
+ (2603:10b6:208:161::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425214008.176100-1-irogers@google.com> <CAP-5=fXiYHbe9gd_TNyy=txzrd+ONxecnpZr+uPeOnF5XxunGw@mail.gmail.com>
- <aD586_XkeOH2_Fes@google.com> <CAP-5=fUXJ6fW4738Fnx9AK2mPeA74ZpYKv=Ui6wYLWXE3KRRTQ@mail.gmail.com>
- <aD94FJN4Pjsx7exP@google.com> <CAP-5=fX98m+PPkHR2+KdjtJfc0ONMwkjeoCLzjwG_O=5j50=5g@mail.gmail.com>
- <aD-IJRi0n1WGmOFP@google.com>
-In-Reply-To: <aD-IJRi0n1WGmOFP@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 3 Jun 2025 17:01:59 -0700
-X-Gm-Features: AX0GCFvUrVl-ePFUGbaUjGrjB9pfUjpYtIeqIcvZHSiHt1ERAxwnL_yWNobnNoU
-Message-ID: <CAP-5=fUEYqHLYwGWn_BUdk2rZngEVH79=96yVdQT0P+vR6=tQw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] Move uid filtering to BPF filters
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SA1PR12MB7248:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f26421d-099d-4bab-9f2f-08dda2fb8a5e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|1800799024|376014|7416014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TitHQ3JVcVJUQU83UmRyeVdTdDltVUhLcEdIMDVrQnJ6b1FjL0tVeHVnRjZH?=
+ =?utf-8?B?SU5SREZJU3ZVcVQ2RTQ0ZU04bkNaTWJlMmEySVFsUU9XY2pmWUtEQnJiQmFp?=
+ =?utf-8?B?N09WRTVuSVVObFpaOHdFZlM1M2pjb05DZlgzU2pzSzFoNDJDVlM5OGduWS9l?=
+ =?utf-8?B?d05ZQmQxRnlPNGZGUTVqbzZCTzIxcU5mQnhPQlFpNDllMm1PdEhqYmZLY2Jh?=
+ =?utf-8?B?SE90cVNMVjNjcjVjS0FKaEsxR3dZek9JVWExNXRoTjFYNm56aTZ3UHpMM25y?=
+ =?utf-8?B?aTU5ZEF6Uk9TbkRsZW9peUxlQ2V4ZWVMZktCREREUDdyWEYzcUFUQ3BzS0ZP?=
+ =?utf-8?B?YjBzNTBnbVlRbkEwWnA5R0VjM05ld05PQW82c0F3dktyQzFtV0NVM09hL3Jt?=
+ =?utf-8?B?SW1keTZhalpHWG5tSTFUbUFJa2sxVGluQUo0N3VLSVZrbE5GcWNRNnp1K0F2?=
+ =?utf-8?B?RWExZ3l3N0RET3ZzbzBPbzJYVkFHSnRtSWlpczEwVTRKOWlQRGdaWDdYVEJs?=
+ =?utf-8?B?MitCb0sxakM0bDVjM2RTTDBKMlV0Rlk5VTgveDk4NjUvanpmc00xUzJybjg3?=
+ =?utf-8?B?bW5YL25NUzRrd2JidncrWk9QV1p1TURjcFo4TXNieEtSakV2eTRRTGJ5WXNS?=
+ =?utf-8?B?YnAzdFZjWXBHdk1DcTUvUkRWUWZlbk1rNVNhVkhyWVluNjFKeGZHcW1xY2Yw?=
+ =?utf-8?B?SS8vTXVORWxoZnpWNENCcXdkNTBvZWlYNlFWYTg5MEVHWGRCdTNCSTQ0R3Zk?=
+ =?utf-8?B?RjJ2dlFwTTNJVVZiSDcvV2U3VllzVUlCVUNBOXZ1LzIvMDl3UHFmVTVYbUZV?=
+ =?utf-8?B?RmsveTQ2eFNUK3JkckRzeEoxRmpuMWZURHllejJqNTFBd0p5bkJOaDZUZ2tK?=
+ =?utf-8?B?U1M0Rm44UHNZWFM0amU1eU04S0Z1N0R3QmxaVHN1bXdVUFJZOEhGV0JYUi9Y?=
+ =?utf-8?B?ZzlsYTd5b1kwS0pnb05DUTZGYVBEdVpqcGFWNElOUmlsa0lodjY2ekpkWWFP?=
+ =?utf-8?B?aWswUWpLeE5YdFp2aTFhZ3B4TTNoRCt6THN4SFpEd3VDcWh4K25nMFNMbDdX?=
+ =?utf-8?B?dE5lSnBIM2hJaUJEeEdyWXMvZXozNnIvTE9QV3ZnSGo4Y0FnbDVHdGhKZW9i?=
+ =?utf-8?B?WjVNeWxsVkFUZjd5RFVweUc1TEI1R2xUT2dDeG1xVmZKdmtOMkxxcnRNMDhl?=
+ =?utf-8?B?RUZkWEliQ3ZrRDE2M2dhemNQWkgveTBLNkFvNHpsbisvZjBONmhlK1E3V1NL?=
+ =?utf-8?B?c0xvRjRIalVXbHNwaDJ1NWd4T2JnYWozc01jYnN6TXQxUWFtUytZZWRabUNx?=
+ =?utf-8?B?M256b2ZvTTZhMDc4MndtYzNCS2pNcFQwYWRBbFZHL0NmOEpES2RYNTRYQ3lW?=
+ =?utf-8?B?QVNWZFBmTkwxVGh3a0dHWURtaXByVGJackRGL3FtN0tmdktoZDFBUWFpNFk4?=
+ =?utf-8?B?aWM4cWllSVJXWUtCU3VYQkREZzE1RHE1bCsvNzd1M0lCQUVTempuTDBVUFVB?=
+ =?utf-8?B?NWlHZTlYMnhaQlNxeFRqN213V3pOV0V1STNYRTdBSG1xaEFvZ0dYclM3bVhL?=
+ =?utf-8?B?RGJzcDJpa2swUlB5cHZJYllneWc2amQ4L1FITWFFeUMxbHowL1dwK21mcFRp?=
+ =?utf-8?B?b3RkdGg3T1pWaktjRitNZnpkTzVyd3RLekFOMlRFL2RGQ2VubFA5dGxMWDlF?=
+ =?utf-8?B?YlNEeEY3Q2lYTnZqLzhRbVBNbllORUlGV3BxWHdRK3hLSmNUSVo0cnV4SGF2?=
+ =?utf-8?B?UHZXWG0weDl0UnN2L3JhN3ZiYjdtVjhGR3RxM3U5V01SdWJrVXBMSU1PTjNH?=
+ =?utf-8?B?YXpFckVLMXZabDJLRy8ycldwa015MTRUQlczVGY2alVNemFMZVZRKzRnSmow?=
+ =?utf-8?B?dlJMRG9kTHNtTnFrSno4aUhlUUgyL2NjZnQzdUhhNk5hcyt3NG1NNlNJVkRY?=
+ =?utf-8?B?YlJnZUs2R0N5QkowRFl0NUhXM3l6MUJQR0Q3OWFDbklCQ20ydGxyT1pGaFlW?=
+ =?utf-8?B?a05YdHVVS0pRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(376014)(7416014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NE96ZUhxUDBURXVhUFZFOWx1OWVNeUtlaW4raHFBSGlzejQrMWZsWkpsQ082?=
+ =?utf-8?B?WFpIVC92R0Q1YWJ3SDZxd29qMmovK2ozS3M0L3RRY3ZJTWE5Zi9UbERCTnd5?=
+ =?utf-8?B?LzZNdllhL2xibktCQjgwdkw1TzFjR2ZWK1IvMENtaGVmcWZBcGFkbUNSMkl5?=
+ =?utf-8?B?ZXZKQ0YzUE12TkZtTVVCaGJOZ1FKY3JBTUxxUTV2N0ZOL0RXckFialZXMDFj?=
+ =?utf-8?B?RGZVTWp2b2hOTkJPdW9Zd2FkYWZBSlVmQ2REcE9lKzNzbDNWTTlUZzV0cUYx?=
+ =?utf-8?B?WnJoeG9xZ1N3ZVNvNWowZ25lL3ZOODArRW1xVGNHenNNS3RZbUZVbWJxTzZq?=
+ =?utf-8?B?SUlHMFJDNytaKzJ1aXlXRlBpYjFzMjJpWnMzdnovVVl1WGdqdzdNM01meTdw?=
+ =?utf-8?B?c01DRWgvTnlGa3d1TEI5YUtyUExwVG5kcGxxVUFnS21rb1o0VVExV0ZjaEhG?=
+ =?utf-8?B?S01uZGhodTd5RXNSOGRUeUhoOUI0dVJDWTk4ak5Sa0xiNXRrWWFULzYwOXVw?=
+ =?utf-8?B?QXZ5L1NQQ2dhYlpBMmdCVURlaFBGbko2OVYwV0tIODZPWkFxR1F2QXd0TlJC?=
+ =?utf-8?B?RkZUY0FMK3V0MVBPcVJwMXI0WmVjVmQ4UTB5MU54NVU1cXRiUFg4TlNXejFD?=
+ =?utf-8?B?NUE2dG82OFViMC93RzJ1b0FDR0dNSUpDQ1pBVCtPQXB6d01aV0t0YytCZlRj?=
+ =?utf-8?B?K0dZRE40akpHdTlpS0FRZHVSRjczLzFuaW55cEhmcmpoV3dtUWh1ZEIwd2py?=
+ =?utf-8?B?djhacUhrNy9kV1JsT1pGaTVRVkFLUGJ5UnRaZFNyOEVxQ0tvSHkrWFlZd25U?=
+ =?utf-8?B?S204MDRad0hGU3ZtSnB1VTJpSC8zTVVna0h2TzdPVEZid3NXN2ZkMmZubXJa?=
+ =?utf-8?B?MlZBOFlWZno0V3hyOTh3U0VvbW5TblVRWnkxVVlCbUZzbEZrcmRjMmVBb3c1?=
+ =?utf-8?B?U091WTNoWFNLNjJyNnh6WHZvdEh6M3lRdFNENlNESDVEcVhMeG9PSUJiTUUw?=
+ =?utf-8?B?Uk1XSkVDejdwLzZkSXBVY2Y3Sk5VVmQ3TXY4c0c4aXhwa1lZMlFieS9MbUVR?=
+ =?utf-8?B?QTBpRmhwdzlaM0tpdXlhQVEyNXVIZ3pxSnJmeUE5VlBkNmJONWNXSm5adnkv?=
+ =?utf-8?B?OVNYZ1pxU09aRVdsc2E4MjFrQk5TeW9lQkQ5dEYvZ0dVbGFFQWJpU1cwWXhw?=
+ =?utf-8?B?K2VQSUNGNWh3b0JiNWQ1QjJBMXVGbysvU1NwTzZ5NHZtbGhsQS8zbzZvRENr?=
+ =?utf-8?B?cVpPazJSTlByMjZUNUFtMnNWYU5PYi8rZGJDdXN4dGhTNlU5RlRSdFBhZllt?=
+ =?utf-8?B?aGRXYXg3RnJMenRHTzFQRUFVVHJYTWJhUnJYMXVmcExjZDh4Z0Vqb1JBd3RI?=
+ =?utf-8?B?QlpLVW5tVm9yUW43KytwUDM2UkpCT25pZU54c1lCaVlKSlJFNlh1OWw0bDhQ?=
+ =?utf-8?B?OVRjTUdNZzEwQ1A5dnVSaDdNMndlYXhORUJDY21wQ05XeFY1SXBGalVmbUsw?=
+ =?utf-8?B?d2FEclpGYUNYL1BzYVpraE1QdndySkM3cmtVQ1Ixdis0RVFsMmNoclBYK2ZR?=
+ =?utf-8?B?TjF1YW1HU0p0M212N1hBOEVyVUdhcFZVd1hNQ0tvaEplZDZocEtnOGsvSksw?=
+ =?utf-8?B?cjE0cnlKbXBFUmtsa3hQeUlqVHNBRGx0WXVMb3VTNytHL0dRSlkwdzQ1bnFn?=
+ =?utf-8?B?eGExaDVxY29QODY5WXVZSXM2S2MvL0JVaDAvT0Mrb1AvcDFPdmVPT1RxMURl?=
+ =?utf-8?B?bVdGSy9wQnRObkpwWXowa3Y4NUJ4dzVFdk0yVy9qb2pjQVpEQlR5NnpIVnFN?=
+ =?utf-8?B?TEpwZldXRFBmK2lPODF2ZkhzQzVzOXVJL1RUWWZXOFdBYWUxSWg3Rm9vRTFM?=
+ =?utf-8?B?ZVlOQTVpQlBPVHRuWm1qK0hXcWdKbjZQcnNBZmlYbjNJRFBVcU4wMjVkVVFI?=
+ =?utf-8?B?UFhtMk8zdHdwL3A3cjBoNmZ3bnRlSGE4eGtZMWc3OEVYaFBSUndXRCtLUzBj?=
+ =?utf-8?B?WDl1b1NPZ0F2QXJHZVljT09FYUx3bHBneHkzNjAyalJjMjgvdkZVcnQrNjls?=
+ =?utf-8?B?YVEwb1o2WnB1U21zV2ZRazR2WW5UR0lvRWEwQ3pkZUUxQlNhNi9lci9lTEkx?=
+ =?utf-8?B?VHlGSHcyRmpFb2x2bm12alMvSm1pZjNhNVd0WWs2cEdGUkNXSUJYT0xCeDUy?=
+ =?utf-8?Q?4rBb5J3ZSwRNLBHS1S2wsUzPBGD7SdRYvjJpt59BYMrY?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f26421d-099d-4bab-9f2f-08dda2fb8a5e
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3997.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 00:05:40.3822
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UU+DYIk0mm3oSh6vFv89PngFHQAhBjv9/VOtWKzvj5eed5lA+95VGkDvUM+bTRNQwRxPt3u+ISqpDVqmPaBi8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7248
 
-On Tue, Jun 3, 2025 at 4:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
+On Wed Jun 4, 2025 at 8:02 AM JST, Benno Lossin wrote:
+> On Mon Jun 2, 2025 at 3:09 PM CEST, Alexandre Courbot wrote:
+>> On Thu May 29, 2025 at 4:27 PM JST, Benno Lossin wrote:
+>>> On Thu May 29, 2025 at 3:18 AM CEST, Alexandre Courbot wrote:
+>>>> On Thu May 29, 2025 at 5:17 AM JST, Benno Lossin wrote:
+>>>>> On Wed May 21, 2025 at 8:44 AM CEST, Alexandre Courbot wrote:
+>>>>>> +    /// Align `self` up to `alignment`.
+>>>>>> +    ///
+>>>>>> +    /// `alignment` must be a power of 2 for accurate results.
+>>>>>> +    ///
+>>>>>> +    /// Wraps around to `0` if the requested alignment pushes the r=
+esult above the type's limits.
+>>>>>> +    ///
+>>>>>> +    /// # Examples
+>>>>>> +    ///
+>>>>>> +    /// ```
+>>>>>> +    /// use kernel::num::NumExt;
+>>>>>> +    ///
+>>>>>> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
+>>>>>> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
+>>>>>> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
+>>>>>> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
+>>>>>> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
+>>>>>> +    /// ```
+>>>>>> +    fn align_up(self, alignment: Self) -> Self;
+>>>>>
+>>>>> Isn't this `next_multiple_of` [1] (it also allows non power of 2
+>>>>> inputs).
+>>>>>
+>>>>> [1]: https://doc.rust-lang.org/std/primitive.u32.html#method.next_mul=
+tiple_of
+>>>>
+>>>> It is, however the fact that `next_multiple_of` works with non powers =
+of
+>>>> two also means it needs to perform a modulo operation. That operation
+>>>> might well be optimized away by the compiler, but ACAICT we have no wa=
+y
+>>>> of proving it will always be the case, hence the always-optimal
+>>>> implementation here.
+>>>
+>>> When you use a power of 2 constant, then I'm very sure that it will get
+>>> optimized [1]. Even with non-powers of 2, you don't get a division [2].
+>>> If you find some code that is not optimized, then sure add a custom
+>>> function.
+>>>
+>>> [1]: https://godbolt.org/z/57M9e36T3
+>>> [2]: https://godbolt.org/z/9P4P8zExh
+>>
+>> That's impressive and would definitely work well with a constant. But
+>> when the value is not known at compile-time, the division does occur
+>> unfortunately: https://godbolt.org/z/WK1bPMeEx
+>>
+>> So I think we will still need a kernel-optimized version of these
+>> alignment functions.
 >
-> On Tue, Jun 03, 2025 at 04:22:53PM -0700, Ian Rogers wrote:
-> > On Tue, Jun 3, 2025 at 3:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
-> > > On Mon, Jun 02, 2025 at 11:26:12PM -0700, Ian Rogers wrote:
-> > > > On Mon, Jun 2, 2025 at 9:41=E2=80=AFPM Namhyung Kim <namhyung@kerne=
-l.org> wrote:
-> > > > >
-> > > > > Hi Ian,
-> > > > >
-> > > > > On Tue, May 27, 2025 at 01:39:21PM -0700, Ian Rogers wrote:
-> > > > > > On Fri, Apr 25, 2025 at 2:40=E2=80=AFPM Ian Rogers <irogers@goo=
-gle.com> wrote:
-> > > > > > >
-> > > > > > > Rather than scanning /proc and skipping PIDs based on their U=
-IDs, use
-> > > > > > > BPF filters for uid filtering. The /proc scanning in thread_m=
-ap is
-> > > > > > > racy as the PID may exit before the perf_event_open causing p=
-erf to
-> > > > > > > abort. BPF UID filters are more robust as they avoid the race=
-. The
-> > > > > > > /proc scanning also misses processes starting after the perf
-> > > > > > > command. Add a helper for commands that support UID filtering=
- and wire
-> > > > > > > up. Remove the non-BPF UID filtering support given it doesn't=
- work.
-> > > > > > >
-> > > > > > > v3: Add lengthier commit messages as requested by Arnaldo. Re=
-base on
-> > > > > > >     tmp.perf-tools-next.
-> > > > > > >
-> > > > > > > v2: Add a perf record uid test (Namhyung) and force setting
-> > > > > > >     system-wide for perf trace and perf record (Namhyung). En=
-sure the
-> > > > > > >     uid filter isn't set on tracepoint evsels.
-> > > > > > >
-> > > > > > > v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-iro=
-gers@google.com/
-> > > > > >
-> > > > > > Ping. Thanks,
-> > > > >
-> > > > > I'm ok with preferring BPF over /proc scanning, but still hesitat=
-e to
-> > > > > remove it since some people don't use BPF.  Can you please drop t=
-hat
-> > > > > part and make parse_uid_filter() conditional on BPF?
-> > > >
-> > > > Hi Namhyung,
-> > > >
-> > > > The approach of scanning /proc fails as:
-> > > > 1) processes that start after perf starts will be missed,
-> > > > 2) processes that terminate between being scanned in /proc and
-> > > > perf_event_open will cause perf to fail (essentially the -u option =
-is
-> > > > just sugar to scan /proc and then provide the processes as if they
-> > > > were a -p option - such an approach doesn't need building into the
-> > > > tool).
-> > >
-> > > Yeah, I remember we had this discussion before.  I think (1) is not t=
-rue
-> > > as perf events will be inherited to children (but there is a race).
-> >
-> > If you log in from another terminal? Anything that creates a new
-> > process for that user but isn't inherited will be missed, which isn't
-> > merely a race.
->
-> As long as the another terminal is owned by the same user, any new
-> process from the terminal will inherit events, no?
->
-> >
-> > >  And
-> > > (2) is a real problem but it's also about a race and it can succeed.
-> > >
-> > > Maybe we could change it to skip failed events when the target is a
-> > > user but that's not the direction you want.
-> >
-> > We could have other events and try to discover new processes via them,
-> > do things like dummy events to cover races. It is just a lot of
-> > complexity for something that is a trivial amount of BPF. In something
-> > like 10 years nobody has bothered to fix this up.
->
-> I don't want any complex solution for this.  Let's not touch this.
->
-> >
-> > > >
-> > > > This patch series adds a test [1] and perf test has lots of process=
-es
-> > > > starting and exiting, matching condition (2) above*. If this series
-> > > > were changed to an approach that uses BPF and falls back on /proc
-> > > > scanning then the -u option would be broken for both reasons above =
-but
-> > > > also prove a constant source of test flakes.
-> > > >
-> > > > Rather than give the users something both frustrating to use (keeps
-> > > > quitting due to failed opens) and broken (missing processes) I thin=
-k
-> > > > it is better to quit perf at that point informing the user they nee=
-d
-> > > > more permissions to load the BPF program. This also makes the -u
-> > > > option testable.
-> > > >
-> > > > So the request for a change I don't think is sensible as it provide=
-s a
-> > > > worse user and testing experience. There is also the cognitive load=
- of
-> > > > having the /proc scanning code in the code base, whereas the BPF
-> > > > filter is largely isolated.
-> > >
-> > > But I think the problem is that it has different requirements - BPF a=
-nd
-> > > root privilege.  So it should be used after checking the requirements
-> > > and fail or fallback.
-> > >
-> > > Does it print proper error messages if not?  With that we can depreca=
-te
-> > > the existing behavior and remove it later.
-> >
-> > For `perf top` with TUI you get an error message in a box of:
-> > ```
-> > failed to set filter "BPF" on event cpu_atom/cycles/P with 1
-> > (Operation not permitted)
-> > ```
-> > With --stdio you get:
-> > ```
-> > libbpf: Error in bpf_object__probe_loading(): -EPERM. Couldn't load
-> > trivial BPF program. Make sure your kernel supports BPF
-> > (CONFIG_BPF_SYSCALL=3Dy) and/or that RLIMIT_MEMLOCK is set to big enoug=
-h
-> > value.
-> > libbpf: failed to load object 'sample_filter_bpf'
-> > libbpf: failed to load BPF skeleton 'sample_filter_bpf': -EPERM
-> > Failed to load perf sample-filter BPF skeleton
-> > failed to set filter "BPF" on event cpu_atom/cycles/P with 1
-> > (Operation not permitted)
-> > ```
-> > This matches the existing behavior if you put a filter on an event.
->
-> But that's different as user directly asked the BPF filter.
-> The following message would be better (unless you fallback to the old
-> behavior).
->
-> "-u/--uid option is using BPF filter but perf is not built with BPF.
-> Please make sure to build with libbpf and bpf skeletons."
->
-> and/or
->
-> "-u/--uid option is using BPF filter which requires root privilege."
->
-> You may check if the filter program and map is pinned already.
+> Hmm what exactly is the use-case for a variable align amount? Could you
+> store it in const generics?
 
-I don't disagree that these error messages would be better, shouldn't
-the existing BPF filter code also produce these more user friendly
-error messages? Once it does that we can adapt it when the caller is
-the '-u' option so that the error message doesn't imply '--filter' was
-used?
+Say you have an IOMMU with support for different pages sizes, the size
+of a particular page can be decided at runtime.
 
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
 >
+> If not, there are also these two variants that are more efficient:
+>
+> * option: https://godbolt.org/z/ecnb19zaM
+> * unsafe: https://godbolt.org/z/EqTaGov71
+>
+> So if the compiler can infer it from context it still optimizes it :)
+
+I think the `Option` (and subsequent `unwrap`) is something we want to
+avoid on such a common operation.
+
+>
+> But yeah to be extra sure, you need your version. By the way, what
+> happens if `align` is not a power of 2 in your version?
+
+It will just return `(self + (self - 1)) & (alignment - 1)`, which will
+likely be a value you don't want.
+
+So yes, for this particular operation we would prefer to only use powers
+of 2 as inputs - if we can ensure that then it solves most of our
+problems (can use `next_multiple_of`, no `Option`, etc).
+
+Maybe we can introduce a new integer type that, similarly to `NonZero`,
+guarantees that the value it stores is a power of 2? Users with const
+values (90+% of uses) won't see any difference, and if working with a
+runtime-generated value we will want to validate it anyway...
+
+(I can already hear you saying "send that to upstream Rust!" ^_^;)
