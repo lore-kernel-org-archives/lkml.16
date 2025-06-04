@@ -1,202 +1,233 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F53F16E863
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFB616E863
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749022778; cv=none; b=M7roJd3zOBhEJhr8mu9D61ghypRuyjhfJMr/cRGqI0q2qCOomL4zwhABPkZNCviait/1b1RLqwMJNNWq0ODXlwcaHsC2dP9b1+jq83ydJsrmFUaxCx5ed0SgYwC+oyryBoRu47acmq2jlP2mpVRdFf3nrXGOGI/WUVzFYDRCYp0=
+	t=1749022833; cv=none; b=q5/xBaKasfQHo62IFNtA8VtJfGBgA/F7R9+M4VAX4D0PrsLvxgD0P1xHT4JCggC7fUyHb+9B04fHa95y4aDFYRsT6TdIT1RtTSvEPypzFim7DSW9JqCel6rcu60IYOMF84WN4LOn2Fmzxj3+VfVC/f+EMI9nq+26UbxkhCksa/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749022778; c=relaxed/simple;
-	bh=7jSMxyf92K/bwklFm/f10ExBA1OzjYYjju9IFN0lnrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RPesu9iWFm2abkCgCPhwVbkNb8ulWykSOI9xndWP3PxTMYEGnJhyqtRlULVSqnghI+Es8LuDTPKbOwLENydhdQ7i06+sqjVOlbQLYi6rh5Xz5Sr5T+RVghZ4iKMfiI3XE7/+WKJb0dBg/5lUGU1LGi2QZxuJ65rtF6gi5zLugxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Up9l/8ey; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749022833; c=relaxed/simple;
+	bh=1qcwXgW33nS3BMVGkjxB3msLwKyZmt06U/NLNmM9Wa0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WigBH6/6xZaeW5weVAh6sCyOd0LmEu6PJVqO87rsspAxhHWOnSm8kq34+2LvE4d2TuKRXT+Tdjjzlju9svSoebXFDX4vIX3+5GwIokzmJLvItaf8NdMhXh80J4v6Whva4Kn17uxYo0ExMp6tNmzAn9FTN3H3bgtO2z25l5Mz9KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OxVEDYUs; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UZIaHJ3R; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OxVEDYUs; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UZIaHJ3R; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Up9l/8ey"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749022776;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vEeoKlp6F3sCfv0THwxJPcjcYZSfLkHHDxNn+gbXPaA=;
-	b=Up9l/8eypwgdqjt83lTBwudzWbPIb/6gbAVwWyfmXnyLIsb1HgFfeYUv6t9dbtZjR2n5Dq
-	rdsoX2ziceuZs2Y4D7NV4riBbNtzIiNMNZKgTAy3vFhCnVW3i27N44+5eMPmqSroFPZvqk
-	ic4JspNzaaCZaG+0LBY/GsUp1JC6w2s=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-543-Q6BQVOYCP_ifFgzhjpfcog-1; Wed, 04 Jun 2025 03:39:34 -0400
-X-MC-Unique: Q6BQVOYCP_ifFgzhjpfcog-1
-X-Mimecast-MFC-AGG-ID: Q6BQVOYCP_ifFgzhjpfcog_1749022774
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4eec544c6so2906297f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 00:39:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749022773; x=1749627573;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vEeoKlp6F3sCfv0THwxJPcjcYZSfLkHHDxNn+gbXPaA=;
-        b=Nv1bixjAA2Un15dUjAF7rVCu5XwqDLe+pPuMOwt79HMAEozgqvtlHVKoN9Nab1PMRn
-         DxoJHhqquhBBjpmSR4+69o1wBm75b7BHAAKIexiMhjJNtUjhK0QLP45KHNY8kzJo+N1e
-         4k1JlHjJKk76mBQNoZauoj1DBDoNsyW12PpsfqEco/ukCFaFCxE6Ih3sNeKxPyuqhr7E
-         5U0GRtM+nWoOENv0x6NipCsE/O1RAzJ0ygq+Lbz4+gf72zvgUAw9RJCy+buZLl+r6je4
-         RGNM+57vkDroNG+hEY5x2Q20KqZA6prOpiG2QOGKGcVM/DaBwXehDrkrNlcmFYrjgJft
-         cNeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzEtNUGzn9n3cdSPnG93YscEC4uncebpUycLYUWMVLLNSt2p+oEacZxdGqSIW2KFQDW/NlF0OUBzJfC+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXGtdDnmALO5Nxd1cHS8SuS6aTpPdNI5NhI3CKD9Q+Rt+SuMYM
-	cd3IRyABrSV+PBtAKPOujzHwv+1BdOhQPEUGzjpa1oFLEIgPnrLUg8hfUVR2mJjvRPjMoj8b5xt
-	0UImpDQE+AH100C2ruFROkFe7gPzH1NDSApRUdjY7dMF44CIfKuNuMHzUkunfY5wnPQ==
-X-Gm-Gg: ASbGncv3etdR4ovO3PZohOm72wQJT/YkPV939H7cSCp2KadcBKeLHReMUT0GUmSSRb5
-	ZAKIKRfYYhtUFZ/aL4F7+6lOvJ5V0pRYmYeoReXzBwHvbeKYGPV3TEh7DqvzWBiM2rqdr9qCOXB
-	qvPkHDBTEfWFguAmKvE9F/2QF6SyKiTUPLRSGSiLfKv/bEnjdG9yjX9C/fITbIva+rmsvHQrGyn
-	j34j0PwHk7UEHfwYnR1JFkZCbSDxyNl/cMOCEoIPHECinp+DQVt6IVOWPNxERgjeWVcO4JX06nd
-	ILfRCIie88JN7eYGSoQkLyo2DmlH2OkIbCTDEnF9oA==
-X-Received: by 2002:a05:6000:430a:b0:3a3:652d:1638 with SMTP id ffacd0b85a97d-3a51d96673fmr1049765f8f.48.1749022773624;
-        Wed, 04 Jun 2025 00:39:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHtjE45p1dQbMhXKznJNQhD9gzd16Gald/ROfCnxrA2ljBjwOkDtYt1uC7/AKZ2m2XTHTCIeQ==
-X-Received: by 2002:a05:6000:430a:b0:3a3:652d:1638 with SMTP id ffacd0b85a97d-3a51d96673fmr1049729f8f.48.1749022773213;
-        Wed, 04 Jun 2025 00:39:33 -0700 (PDT)
-Received: from [192.168.3.141] (p4fe0f831.dip0.t-ipconnect.de. [79.224.248.49])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00972f3sm21121625f8f.69.2025.06.04.00.39.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 00:39:32 -0700 (PDT)
-Message-ID: <51ec4269-b132-4163-9cb5-766042a3769d@redhat.com>
-Date: Wed, 4 Jun 2025 09:39:30 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OxVEDYUs";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UZIaHJ3R";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OxVEDYUs";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UZIaHJ3R"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out2.suse.de (Postfix) with ESMTP id C0D1E203E5;
+	Wed,  4 Jun 2025 07:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749022829; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=56cQPDkweYJVMIO8Oci9vsmGNfnHiTtULArO7sVXI0E=;
+	b=OxVEDYUsfzYZ8xLXAyKnAep5+KO8k1PveIDBEEmCWHTQ4eS8oThZT0+ho+B5Wb1NmHnGW/
+	MH6K6tJXSf730OJJUAsmL1esZW6+iYIjlDSn1Gb0NBGikfEClqbPI8KDiECcHXFoLYIeGN
+	RenGbSrvnINQqRQdV9GAd3eCOvFhYEk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749022829;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=56cQPDkweYJVMIO8Oci9vsmGNfnHiTtULArO7sVXI0E=;
+	b=UZIaHJ3RHQIdgYLYuU4/PIRCCWguUqwjEreL+bp2SSgkwji2YmH80JvHeYeKO8HT6ILLiv
+	wndEVd0nFMHoSfDg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749022829; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=56cQPDkweYJVMIO8Oci9vsmGNfnHiTtULArO7sVXI0E=;
+	b=OxVEDYUsfzYZ8xLXAyKnAep5+KO8k1PveIDBEEmCWHTQ4eS8oThZT0+ho+B5Wb1NmHnGW/
+	MH6K6tJXSf730OJJUAsmL1esZW6+iYIjlDSn1Gb0NBGikfEClqbPI8KDiECcHXFoLYIeGN
+	RenGbSrvnINQqRQdV9GAd3eCOvFhYEk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749022829;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=56cQPDkweYJVMIO8Oci9vsmGNfnHiTtULArO7sVXI0E=;
+	b=UZIaHJ3RHQIdgYLYuU4/PIRCCWguUqwjEreL+bp2SSgkwji2YmH80JvHeYeKO8HT6ILLiv
+	wndEVd0nFMHoSfDg==
+Date: Wed, 4 Jun 2025 09:40:29 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+To: David Hildenbrand <david@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v4 4/5] kdump: wait for DMA to finish when using CMA
+Message-ID: <aD_4bT1AJv7aKhxy@dwarf.suse.cz>
+References: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
+ <aDoVO4H4CpXPjAdI@dwarf.suse.cz>
+ <da52a835-6a4b-4f11-acac-f4ef995da7e1@redhat.com>
+ <aD8b7Q8Z9sC8meGU@dwarf.suse.cz>
+ <d7cbbab2-8fe0-4a10-8b06-e47da955865e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] mm/pagewalk: split walk_page_range_novma() into
- kernel/user parts
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Barry Song <baohua@kernel.org>, "Liam R . Howlett"
- <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
- Oscar Salvador <osalvador@suse.de>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Jann Horn <jannh@google.com>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-mm@kvack.org
-References: <20250603192213.182931-1-lorenzo.stoakes@oracle.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250603192213.182931-1-lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d7cbbab2-8fe0-4a10-8b06-e47da955865e@redhat.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
+X-Spam-Level: 
 
-On 03.06.25 21:22, Lorenzo Stoakes wrote:
-> The walk_page_range_novma() function is rather confusing - it supports two
-> modes, one used often, the other used only for debugging.
+On Tue, Jun 03, 2025 at 06:25:57PM +0200, David Hildenbrand wrote:
+> On 03.06.25 17:59, Jiri Bohac wrote:
+> I'd phrase it more like "Pages residing in CMA areas can usually not get
+> long-term pinned, so long-term pinning is typically not a concern. BUGs in
+> the kernel might still lead to long-term pinning of such pages if everything
+> goes wrong."
+
+...
+
+> > If you want, I have no problem changing this to:
+> > +	mdelay(cma_dma_timeout_sec * 1000);
 > 
-> The first mode is the common case of traversal of kernel page tables, which
-> is what nearly all callers use this for.
+> Probably good enough. Or just hard-code 10s and call it a day. :)
 
-... and what people should be using it for 🙂
+Thanks for your comments, David. This would be the v5 of this
+patch:
 
-> 
-> Secondly it provides an unusual debugging interface that allows for the
-> traversal of page tables in a userland range of memory even for that memory
-> which is not described by a VMA.
-> 
-> This is highly unusual and it is far from certain that such page tables
-> should even exist, but perhaps this is precisely why it is useful as a
-> debugging mechanism.
-> 
-> As a result, this is utilised by ptdump only. Historically, things were
-> reversed - ptdump was the only user, and other parts of the kernel evolved
-> to use the kernel page table walking here.
-> 
-> Since we have some complicated and confusing locking rules for the novma
-> case, it makes sense to separate the two usages into their own functions.
-> 
-> Doing this also provide self-documentation as to the intent of the caller -
-> are they doing something rather unusual or are they simply doing a standard
-> kernel page table walk?
-> 
-> We therefore maintain walk_page_range_novma() for this single usage, and
-> document the function as such.
+Subject: [PATCH v5 4/5] kdump: wait for DMA to finish when using CMA
 
-If we have to keep this dangerous interface, it should probably be
+When re-using the CMA area for kdump there is a risk of pending DMA
+into pinned user pages in the CMA area.
 
-walk_page_range_debug() or walk_page_range_dump()
+Pages residing in CMA areas can usually not get long-term pinned and
+are instead migrated away from the CMA area, so long-term pinning is
+typically not a concern. (BUGs in the kernel might still lead to
+long-term pinning of such pages if everything goes wrong.)
 
-> 
-> Note that ptdump uses the precise same function for kernel walking as a
-> convenience, so we permit this but make it very explicit by having
-> walk_page_range_novma() invoke walk_page_range_kernel() in this case.
-> 
-> We introduce walk_page_range_kernel() for the far more common case of
-> kernel page table traversal.
+Pages pinned without FOLL_LONGTERM remain in the CMA and may possibly
+be the source or destination of a pending DMA transfer.
 
-I wonder if we should give it a completely different name scheme to
-highlight that this is something completely different.
+Although there is no clear specification how long a page may be pinned
+without FOLL_LONGTERM, pinning without the flag shows an intent of the
+caller to only use the memory for short-lived DMA transfers, not a transfer
+initiated by a device asynchronously at a random time in the future.
 
-walk_kernel_page_table_range()
+Add a delay of CMA_DMA_TIMEOUT_SEC seconds before starting the kdump
+kernel, giving such short-lived DMA transfers time to finish before
+the CMA memory is re-used by the kdump kernel.
 
-etc.
+Set CMA_DMA_TIMEOUT_SEC to 10 seconds - chosen arbitrarily as both
+a huge margin for a DMA transfer, yet not increasing the kdump time
+too significantly.
 
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+
+---
+Changes since v4:
+- reworded the paragraph about long-term pinning
+- simplified crash_cma_clear_pending_dma()
+
+---
+Changes since v3:
+- renamed CMA_DMA_TIMEOUT_SEC to CMA_DMA_TIMEOUT_MSEC, change delay to 10 seconds
+- introduce a cma_dma_timeout_sec initialized to CMA_DMA_TIMEOUT_SEC
+  to make the timeout trivially tunable if needed in the future
+
+---
+ include/linux/crash_core.h |  3 +++
+ kernel/crash_core.c        | 15 +++++++++++++++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 44305336314e..805a07042c96 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -56,6 +56,9 @@ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+ /* Alignment required for elf header segment */
+ #define ELF_CORE_HEADER_ALIGN   4096
+ 
++/* Default value for cma_dma_timeout_sec */
++#define CMA_DMA_TIMEOUT_SEC 10
++
+ extern int crash_exclude_mem_range(struct crash_mem *mem,
+ 				   unsigned long long mstart,
+ 				   unsigned long long mend);
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 335b8425dd4b..540fd75a4a0d 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -21,6 +21,7 @@
+ #include <linux/reboot.h>
+ #include <linux/btf.h>
+ #include <linux/objtool.h>
++#include <linux/delay.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -33,6 +34,11 @@
+ /* Per cpu memory for storing cpu states in case of system crash. */
+ note_buf_t __percpu *crash_notes;
+ 
++/* time to wait for possible DMA to finish before starting the kdump kernel
++ * when a CMA reservation is used
++ */
++unsigned int cma_dma_timeout_sec = CMA_DMA_TIMEOUT_SEC;
++
+ #ifdef CONFIG_CRASH_DUMP
+ 
+ int kimage_crash_copy_vmcoreinfo(struct kimage *image)
+@@ -97,6 +103,14 @@ int kexec_crash_loaded(void)
+ }
+ EXPORT_SYMBOL_GPL(kexec_crash_loaded);
+ 
++static void crash_cma_clear_pending_dma(void)
++{
++	if (!crashk_cma_cnt)
++		return;
++
++	mdelay(cma_dma_timeout_sec * 1000);
++}
++
+ /*
+  * No panic_cpu check version of crash_kexec().  This function is called
+  * only when panic_cpu holds the current CPU number; this is the only CPU
+@@ -119,6 +133,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
+ 			crash_setup_regs(&fixed_regs, regs);
+ 			crash_save_vmcoreinfo();
+ 			machine_crash_shutdown(&fixed_regs);
++			crash_cma_clear_pending_dma();
+ 			machine_kexec(kexec_crash_image);
+ 		}
+ 		kexec_unlock();
 
 -- 
-Cheers,
-
-David / dhildenb
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
