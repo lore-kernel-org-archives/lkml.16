@@ -1,225 +1,183 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2070.outbound.protection.outlook.com [40.107.101.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B23111BF;
-	Wed,  4 Jun 2025 19:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749066992; cv=fail; b=a1yLoYoclnID9XtgMmsF/xkSbRkcQVtGMNm06Hcbo2VRmLU2dvM0YodmPL/K5XjL2jvm6SZZJg2AfxHTH55CCDnzSverO7CuPi/PE4YHdBAmExBikJ+NV5b9LLQsbcSiTl+RMpycvzc6pOCPCQYLT61DcQnBJiTp0LZnc/xnu3w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749066992; c=relaxed/simple;
-	bh=UqKNzEhwQUj6YWf+BeW2Jp/7N6y3IjkNrVKFd9mwjok=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BX78EKKV/O2vnJHq9nQAjxO88heIq/OwqPAZgPclsdDLpJRv85VlfJpOQMrpjYjxDnPXYGgROe4KIxqQcFD/ex5KpfLrQU2T6rxizJowLcf6wtZn/UsmNrFJw/XM/cJRLfp5pu1Rpni+omZOU2GL1uRvp56uiaeIMC2fejL4zy8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AOB7THtn; arc=fail smtp.client-ip=40.107.101.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCC8111BF
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 19:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749067151; cv=none; b=jMNdh6YEaD61i2E7vQFEyVRi9SFR7XCZ6q5ZHJYHH4DCSVQ7svUbOO2KLYSNlGjVjIon20ZPjZFBv+WExxE2eqcElOF4nEO0HgcX4jZIB0PxshtYAu2MDt2pZfL5Xv5RDBzifdTmQynHJBf35qBOSXdj4Y3MpIAfch/R0/bvT+k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749067151; c=relaxed/simple;
+	bh=OdV7wnjZVRHaR6N4t2ya2kUm/FdUGYihu6Izt9TCuzc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=St712rFw0PGqpViUsPfL80TcmBvt3a3BuE0HbRtt0dqyTK4hpCiXwLuoNHg9QE7o895CNqgQBkveH0UJPGU4jYv/8+ZoFTulzTorhCg2l/mDt1gxzSBewPHyTeIePlyxwSRxdaPj7uzO7Q/U1QwPEhstpVy6Z+j0Lgtk+R2p2mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uFrXulzg; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AOB7THtn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aqwj4g+DIohZv/K+E1QPsQiRLqqKm1YKD7AmXXWRQLq2tXnp3hLuvwX2FsKdnSPmTBAKVU/tIC87mHRD+xdRQ5X/0Mrm+4fv9OHgJnsFh4NzTtPpZW+jCZ6AGt7pbEZouEsMUNAyvWGKMj2LE3sObGPKl0xwsp+h3yvTII/jZ3VZw5YP5TWyLErVQZvcrpZj8oDWdM3lmcn1t954adlBTGYZwWP2IWe0Ayj4jxLcNEICf1JtU7/JXLzaImUP/n9b22tKxM7F1GvdIvwzDLVG+ohdtBT6v49q2u9gfVswPUuIwJ+i0gQGl/Uj6eCJEsAulIFEGfoPuVGuJJvTejh2kg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HqrRYagQO0A/3kjoscxlGaj7ErrJxlVi0C132e6VRMc=;
- b=ym/hnWMBxMnpELR/A+JgKWlFgGomvv4uCgaxO5/AE9L1yXXjbOlMt5uUO93IiM16KFkEDb25qC5EACPcaPYcmSF+X+3uxD/ZNC2nzNpn2CGUVngeGRDhpE7KLY3r5vU7EIYDiNqSI+8LqZuuKrQFZSPDG0hmieBRyWv0mrMvHOaxL8QyQz4NC3gow3/KtEe5x+VphT6ARW/5R1XW0v8nvZaeGboV2LLfTA2ib4K/pbPxcRwAtSbDYEJ6ShVaZWIaRkRYrsKus0On62QUb7VocoxHDr8hanNCYIzeGt/CQDFHuTG2+9s4TbgeReCxlGqMBUxELsuimbvvJkNdXT7rqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HqrRYagQO0A/3kjoscxlGaj7ErrJxlVi0C132e6VRMc=;
- b=AOB7THtnKLkHR4jDV7pcUBxXDWS7QdLcjiYWBzQdjydH6b8Hoa2xUBM9ErwiU6h2eoTz77XMjs9SZF3DLJn8Vg0LquUUGUVbFpodoomLeCa6bFJDzJDvhOR78swMD5MP8WTXjmx9/nWUREiUrH+YWMwr/lpX3pgHrAqf7C125zI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6222.namprd12.prod.outlook.com (2603:10b6:208:3c2::19)
- by DM4PR12MB9071.namprd12.prod.outlook.com (2603:10b6:8:bd::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Wed, 4 Jun
- 2025 19:56:26 +0000
-Received: from MN0PR12MB6222.namprd12.prod.outlook.com
- ([fe80::4044:a263:92a1:6b3e]) by MN0PR12MB6222.namprd12.prod.outlook.com
- ([fe80::4044:a263:92a1:6b3e%7]) with mapi id 15.20.8769.037; Wed, 4 Jun 2025
- 19:56:26 +0000
-Message-ID: <e13cace9-1ab3-4c22-88f7-0d020423c430@amd.com>
-Date: Wed, 4 Jun 2025 14:56:22 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/7] cxl/region: Avoid null pointer dereference in
- is_cxl_region()
-To: Dave Jiang <dave.jiang@intel.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Ying Huang <huang.ying.caritas@gmail.com>,
- Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
- Greg KH <gregkh@linuxfoundation.org>, Terry Bowman <terry.bowman@amd.com>,
- Robert Richter <rrichter@amd.com>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>,
- PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>,
- Zhijian Li <lizhijian@fujitsu.com>
-References: <20250603221949.53272-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250603221949.53272-2-Smita.KoralahalliChannabasappa@amd.com>
- <3464d8cb-e53c-4e6b-b810-49e51c98e902@intel.com>
-From: Nathan Fontenot <nathan.fontenot@amd.com>
-Content-Language: en-US
-Organization: AMD
-In-Reply-To: <3464d8cb-e53c-4e6b-b810-49e51c98e902@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0206.namprd04.prod.outlook.com
- (2603:10b6:806:126::31) To MN0PR12MB6222.namprd12.prod.outlook.com
- (2603:10b6:208:3c2::19)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uFrXulzg"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-70e73d3c474so4024967b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 12:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749067149; x=1749671949; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DVUipMfAQTFFEBKRK6PeLLuTW7OSUDebUckMstatPOg=;
+        b=uFrXulzgoMlxWN7vKpTYol88hb2vQovZKRivGk6s/7v4qZPwl+e2bvMDaGifmI9wKV
+         9/Xel2yB8EQDxt4O3evUf9ipxgewMD92KCWQkt8ARd3KUUNg1uNIQpIXUPxaO3GF3LDL
+         ZWF4o+2+919Vco9XaCw2ccQqj40Vcn3ZN8xRjkxMN0JoEOz9aJoKrdA0o27far68+6cR
+         R26u6kMkQ6tVIBzfD8d2U+26rbOeNIWQrJ4fvubmIpKivWYJ/vCOgHImK//iENpFEsXI
+         qjwQWV5fUEVt+uWxgq2KYHYy8hzEk+hZB1C7ynAhnd5MFE5CdkOcUW27p/yTf0loDWat
+         QNwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749067149; x=1749671949;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DVUipMfAQTFFEBKRK6PeLLuTW7OSUDebUckMstatPOg=;
+        b=uAKhCRKPt9c7QScABM8xQETxd7ou9qOcvzS9pdeg8numtqT8yjziLpbS3N+EBrjoqE
+         8wrtPsX7E5vbn4BPV0QZohXq0aHxZLQOqCFrHcWs7bo3kqwZWJuLPolVvexq9bfz/gay
+         hQEOFmwzXMp2wEprAfa1vnahebJP2/4aF3lQw3f26Mc5irVKhZfM5rv8Ss8Wbtq94dCF
+         yaSuDAZtF8ddUGe5jjetEggzJfyxXqZO1fAVBp852vXURzFlGklqgAtmnoBDl0dV7TsM
+         qiNaFx59foa2l1upkRpZqluKMOXJfODcnhhtLITV/penexDytJlXxQmaeddlsbb0Xnhj
+         j3AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX51WtenzmhHixR4t/ayoR1V96qupMekOAmLtt4Km2vVr2iutvVmE72I9gXVN5RUuVu7b0AvWVIOSLPtuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGNdSmMhHQhfdxVYxfkqToEGEqTsWR74YN9a69ZJlsvC5EwWRk
+	hFGZFvCiw6cb+CL+RXMSxE9D6NtmzWJs26FNO7CvNWTpGI5PIh6yuC8DoMuo6VqSv/iXgfgF+uc
+	OC3vpxUyhzQ==
+X-Google-Smtp-Source: AGHT+IGfzzT31kg7FhZRLoDoK09j4b9KCvU0orsCk+2ZZXg47QZ/7Kk2ui6u5TE1mMlTlHPBIA4X5c+Djab1
+X-Received: from ywbcl30.prod.google.com ([2002:a05:690c:c1e:b0:6fb:b96f:b3da])
+ (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:690c:23c5:b0:70e:7706:8263
+ with SMTP id 00721157ae682-710d9a6e74emr55846997b3.12.1749067148853; Wed, 04
+ Jun 2025 12:59:08 -0700 (PDT)
+Date: Wed,  4 Jun 2025 19:58:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6222:EE_|DM4PR12MB9071:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e4c70f9-0605-4f4b-e937-08dda3a1e3b6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YUtKcTc1N3BEaHAyeS9Ic2JGOWxaZGpxQ3c4REorQXdwMTNLR1Zoc3NsUGRw?=
- =?utf-8?B?TWk5OFQxMU1RQUU2S3VvM3BLN2k1SU1yVmZRSlJWd3hUVExPbUtORXRzSGJs?=
- =?utf-8?B?NnNSdW04b3psMmkrVWZqbWFYam8rdnJueFBqNnF1OW44SDBldjI2SGgxWGdF?=
- =?utf-8?B?eXNZZUdhdGhPSjBJS0hkKzB4bFduRlE3NFM2NFZLTXBNbHdkMnc1bFo0NEVK?=
- =?utf-8?B?MmRPYUdGT2FTNlp5K250REtMQW1aMjJtUzJzSGxLM2Y4Zk9NSERibkQ1K0kv?=
- =?utf-8?B?RWEzbytSLzhUQjlGTWw3UHhzREVTYXJ5KzRmWFFrVEorTk8zaDVYTndoOUQ1?=
- =?utf-8?B?VDBGcmJDYlM3TXFJcnpKYlBnc1RsTWpaQ1c0bTBIRTVyNURqVGRCY2NpcTNi?=
- =?utf-8?B?VUtxTFhCTmFyV3BLYVNybnZoVzNlaDgvdDRVL1RmdkQ1ZUtNRmtUN3k1eE43?=
- =?utf-8?B?MGROZU5FNGxDcG5WQTVJZDNZemp5SE5OS3VaYjZXRmFpVWgxTUROdlhzMXNH?=
- =?utf-8?B?anBSOGh5UWx4QUVsdHp0LzM0K0QzZ1NxNXRiUlloQy9BRk5sTjJIMllQaFdQ?=
- =?utf-8?B?UVFhRUVhTE9lbUJzS3VDaUdJenBZMjZZZGx2Q3pVR05iQUdWUVlrQXV6NkxP?=
- =?utf-8?B?d1ZwdDMzR2R2NmN1NTFzNjhsaWVsZWJSR0ZHNWV3ZjBtQjVDNjJ6QlhZU1dN?=
- =?utf-8?B?UDVvMkNjcjJwcU0yNXJVNUxCY3JOWEJ0aDBrblZwdDFEMDFUOGh5Z2M1aEsv?=
- =?utf-8?B?alY4cUgvQUlNWVRaUGpleWNuQW5GRWswRHlhTWhCNmdxY2s5N2tZRVV5Qldq?=
- =?utf-8?B?bXoyb1Qrc3VEb1hlL0ZlczdKaHp1YVpXaUN1cHUyNERhR2pFVjB6Sng0VEFG?=
- =?utf-8?B?U3lHbG8rV25CRVdIdGo1ZWNOVVVrb2ZBZmdIWmlFQmJjTDEyNEhuaXhWcDA5?=
- =?utf-8?B?T1Rtd296SlhNSVhEQWhuOVlob1ZvRU81T3IwdDdCZ0Nzc0grUTlGeTVDVFZL?=
- =?utf-8?B?b0pNSkUvUmxNVXpEYVZVVVp5ODNrNWtKNHhCSWV5eDBwSEE1a0g5T053TlVs?=
- =?utf-8?B?RmN3Wks2UlYzaldGakdyZy92aTNXRHZabEw5WW9lby9Sb0V4R3RHcjZXbGpK?=
- =?utf-8?B?NHRYSjdTWDJnSTc5T1JpQkVrZitSU0JVWWJnUyttbndnemkzT2RNTXpPcE1G?=
- =?utf-8?B?bEU3dm5jblJ5OGJnbmpzQjZxRmFwN1dIQ2E2aTdLMmVsZU9LcEd4eGYwN0V3?=
- =?utf-8?B?UE9Ebm1mcEZGUTFvM3BqWlYvUEY2MjRUc0FEYUVrekowMmEwekE4ODlqcTVJ?=
- =?utf-8?B?N0NqWnNKZVQ2MGVsSUo3cTh6ZGFUNTRzQlZRd25maTJBcXpRR3I0enlpbk5o?=
- =?utf-8?B?Z25KSEgrU0ZMbCsyeFF0SGlLLzNQM2ZCWkx3bkNuSXJSeWRCYWhCa1E4VjZ6?=
- =?utf-8?B?WjR5VDRvaDQ1Z2cvY2JqWEhjak92OXFrbG1IWi93b3pMZEc1TWlZSnFkMVNQ?=
- =?utf-8?B?SzkzeVU1elFDOCs2YVhoM2pDRmxOTStDcG5CYlBMUkN6bGNvTFZMVkhKTExV?=
- =?utf-8?B?KzJNbGNOSjl1Zy9vbTVNcVVCci8xQkVEMUl5YlEvdEV0b1g2eTUrOGdPcVVR?=
- =?utf-8?B?QmRlN2tTVEhMUERiNXB5WWFsbzhuTGlPWXBDdUxxNnVDT2xNaDBOdHA2VUQ3?=
- =?utf-8?B?RTZ3NHRrcTVPTnZpYkNON0pzZEVrVWhtcGdGQ09FNEF4RGYwdHkrMFNiU0ds?=
- =?utf-8?B?ZHpkYTh3MlJVZXZwVUVKUkhrU0lnM3JLS081c3Q2RjcrVlZpajFhb21qN3ly?=
- =?utf-8?B?SEtGeWRSUUdZOXliTXFLSitidEVQWGhqUDU5M0tOSFpaK3d3WnlZM3FjYVlB?=
- =?utf-8?B?SkNpL05uN3B2T25QSHlaeFVSeVErZzhIeEE1QjlEQ1dHZ1NNbXViNXowMkhi?=
- =?utf-8?Q?CFekoWNhB/U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6222.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Uyt4UFRaZ0tPbnZzUGR3NVQvVHZBcXFKQVFadVZVRUorR2JsQTlzSmxlQkpQ?=
- =?utf-8?B?bXUzTUwzcHNsTzNaOUtGWkg4NUpUMUs5QnlrWDVsZEw2MDc4aXBFcDFuUnE3?=
- =?utf-8?B?eHp1OHA5Y2xsaWJ4bmNUZHhscEFYekxkVno2OHhYNXdERFg2TDNRaTBFVzJu?=
- =?utf-8?B?dTdrQ2NVaFc5ZENZWnROQnBMSHFiWitSOFVEdHNNYlhUN0FWY0d2R1FKR25l?=
- =?utf-8?B?cjJQaTZrbnI2ZzBZdmdXWEhmM2tiRTUzU3pDWTJFVXBScGc0Z0dZUS9BKzIx?=
- =?utf-8?B?cjJQZzlDWWdBSjRxYnRnY1NueGVaSHJhblJRUiticmtNN1VKSXRFdUEwbGJa?=
- =?utf-8?B?dEVzSmdjbStMWGFSdXhoVE96Z3FHR1Z4U2gxL0RkTkdMcVZHUHdjY2Q0UWlo?=
- =?utf-8?B?WUhad090ZFlFOS9ITjNqSFBTOHh4QXJJTkdTeStzelBrSnNMR0wxcm9RbmJu?=
- =?utf-8?B?M0JENG54U2xBSzVIQ2NzL2xvN0NRMGYxMjZDWmF3bGUzN0pGeFlzcHp6T1FC?=
- =?utf-8?B?M2JQMEgwTDBNZlgxQjd3U041UWJaekhxSHBKcGhGN212UGUreUhVc2NiMWs1?=
- =?utf-8?B?Z3pGTUNMNTRlMzU4VFdZWTFMTE5VbkU4TTRpODNlQTNWQlUzYUxGQ1QrRDBF?=
- =?utf-8?B?VFU4Zjd4bjFGSG5vcndnTXo1KzJya2lsS25vdWVjS3lWVm5xYjh6Ylltc0NL?=
- =?utf-8?B?MnhuekVoVHBpZCs5QmE0Q1dpQVY0d2s4L1NoNVJVWndNN1BQcW4reGVnRHQ4?=
- =?utf-8?B?eVdKc2JWcVlodUR3QnRBclNmclZaeFN0dFNYcmtqYXZsOVBKQlpETktqSThT?=
- =?utf-8?B?eEI1aW9CdlBBYlY5ekRLcHhXek12b0Zqa2lUelgzUkZiNngwd3JjSVdqZHZC?=
- =?utf-8?B?MnpKdG5hTWVpYkVFRUl3TENybUZ4eittbldmVVhlZFQ1OGZBN1o0TFF5VmxV?=
- =?utf-8?B?dzQzdDZjUjR3Ukw3a0duWHd3aWRqOFU1NExtWGE4OXVyL3UrTTVmUU5uci9i?=
- =?utf-8?B?N0VETFZLRnNWUHVWRXVKSUJGWEVLUHoxNDd1M3JvdXEvUk5oMmlqaWpXOWsr?=
- =?utf-8?B?N2JZZUhvZ0JxQm1rK2h1bFpwWFNrVURTZWZ5L1VYRmlYZm1ZdjUxRVFWaFVH?=
- =?utf-8?B?NU1JUWpJMlM2TEQ5RUgweEpsdkNpOUI3TmlWdy9yNkQ1RmJ1R1hkbE1ZY2lB?=
- =?utf-8?B?eXVIM3BTSDZ0VTBUc3NOWGF3alZZR0VPcElBaGorVDBTZ1czQ0NGQWdzenA1?=
- =?utf-8?B?UG1YdUlzc25TWWY1cDBzaGIxc3NTWS96aEY0bFJlcHBWNjFQMytqdHpoVmJW?=
- =?utf-8?B?alQ0YTdWSjg5VGpKekVObHdTcFJ3UHdTdUVEQXlXWngvc2FaRVZmS0RvZkY5?=
- =?utf-8?B?d2IzOWw5c0Y1alNDRGpjc3IrSE5Tam5IQ2w4SkJvY1VGWWVrdDYzTmhNVSs3?=
- =?utf-8?B?UlB0cmJrY0NCRVhLOU5XNHpGYkxYUUZ2UTU1bUNBSTRJMmtqZmgybGVFVGFL?=
- =?utf-8?B?WGVjZGgrVEE0QU9uUitNdWRFa1E1TTJ6VHVKcEwrSTVmcTNaejgxQ2lJdjBr?=
- =?utf-8?B?WDBKUXhQYmt4SE12MGg2ZnVBSWNwOUF6U2c4UUF5MUh0ZnJMQ29VL3VpUXJv?=
- =?utf-8?B?Vm9yRXJXT0hnOElIbDJ5N2tqVTBLTnZFT0x2TVVOTVdMSG1iUTJyZUc5Si9E?=
- =?utf-8?B?YVA4bDQzNForaFA5b3kzeGFHWnVCSW1ldStqZnJPSlJvaElnNW9wU08zTWpH?=
- =?utf-8?B?SlE0Rk42ZmdYODVxK2ZXNy9tV0lnZGFjd2JBZ3M2NlFxN1dIRWx1ODZHa1Fp?=
- =?utf-8?B?d1RQaVNtY3lpSEZlWmNIalYwM2RkeUFTYjVDaFNteGVEQXA5RUcxaXBCNVVj?=
- =?utf-8?B?ZTdLSU8xcDVXZXZqODhDbGZmZzhBbkpJZDdQbmR4UHlvUDdsNldNdmhhNysx?=
- =?utf-8?B?dFQ2SUF2NFdNeE1QcVh4M2o5MWswVVIxalpZTHNHd0VqWGR6ME5pUGYyQk1m?=
- =?utf-8?B?Uytxa2FlNWd0Z3NRUS92MXZQZmNTenRNYUVLTWZNUzk2ZWxvdmNYL3lEeEVS?=
- =?utf-8?B?L25BZFoybzlvdGhJUGtraEZ6UlhrMW5NYS81Lzk5aVJoRG0zTHhCSlkxd2hN?=
- =?utf-8?Q?+4NcLqkMEx10G05YLJ+VS6YgQ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e4c70f9-0605-4f4b-e937-08dda3a1e3b6
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6222.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 19:56:26.3829
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: utmuX9vxORd0XIueRTJMAauKbzMcC0BSU1VSqnk5hboGQBfck2mHKtRW8oU/nsHMn0sMvPxr78P83yLXxO+u/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB9071
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
+Message-ID: <20250604195846.193159-1-zecheng@google.com>
+Subject: [RFC PATCH 0/3] sched/fair: Optimize cfs_rq and sched_entity
+ allocation for better data locality
+From: Zecheng Li <zecheng@google.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Xu Liu <xliuprof@google.com>, 
+	Blake Jones <blakejones@google.com>, Josh Don <joshdon@google.com>, linux-kernel@vger.kernel.org, 
+	Zecheng Li <zecheng@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/3/2025 6:49 PM, Dave Jiang wrote:
-> 
-> 
-> On 6/3/25 3:19 PM, Smita Koralahalli wrote:
->> Add a NULL check in is_cxl_region() to prevent potential null pointer
->> dereference if a caller passes a NULL device. This change ensures the
->> function safely returns false instead of triggering undefined behavior
->> when dev is NULL.
-> 
-> Don't think this change is necessary. The code paths should not be hitting any NULL region devices unless it's a programming error.
+Accessing cfs_rq and sched_entity instances incurs many cache misses.
+This series of patches aims to reduce these cache misses. A struct
+cfs_rq instance is per CPU and per task_group. Each task_group instance
+(and the root runqueue) holds cfs_rq instances per CPU. Additionally,
+there are corresponding struct sched_entity instances for each cfs_rq
+instance (except the root). Currently, both cfs_rq and sched_entity
+instances are allocated in NUMA-local memory using kzalloc_node, and
+tg->cfs_rq and tg->se are arrays of pointers.
 
-I originally added this to the patchset during some initial development to handle possible
-NULL dev pointers when updating soft reserve resources, see cxl_region_softreserv_update()
-in patch 5/7.
+Original memory layout:
 
-In the current form of the that routine it appears we shouldn't execute the while loop
-if dev is NULL so this could get from the patch set.
+	tg->cfs_rq =3D kcalloc(nr_cpu_ids, sizeof(cfs_rq), GFP_KERNEL);
+	tg->se =3D kcalloc(nr_cpu_ids, sizeof(se), GFP_KERNEL);
 
--Nathan 
+	+----+       +-----------------+
+	| tg | ----> | cfs_rq pointers |
+	+----+       +-----------------+
+	                |     |     |
+	                v     v     v
+	            cfs_rq cfs_rq cfs_rq
 
-> 
->>
->> Co-developed-by: Nathan Fontenot <Nathan.Fontenot@amd.com>
->> Signed-off-by: Nathan Fontenot <Nathan.Fontenot@amd.com>
->> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
->> ---
->>  drivers/cxl/core/region.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index c3f4dc244df7..109b8a98c4c7 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -2333,7 +2333,7 @@ const struct device_type cxl_region_type = {
->>  
->>  bool is_cxl_region(struct device *dev)
->>  {
->> -	return dev->type == &cxl_region_type;
->> +	return dev && dev->type == &cxl_region_type;
->>  }
->>  EXPORT_SYMBOL_NS_GPL(is_cxl_region, "CXL");
->>  
-> 
+	+----+       +--------------------+
+	| tg | ----> | sched_entity ptrs  |
+	+----+       +--------------------+
+	                |     |     |
+	                v     v     v
+	                se    se    se
+
+Layout after Optimization:
+
+	+--------+      | CPU 0  |	| CPU 1  |	| CPU 2  |
+	|   tg   |      | percpu |	| percpu |	| percpu |
+	|        |         ...             ...             ...
+	| percpu |  ->  | cfs_rq |	| cfs_rq |	| cfs_rq |
+	| offset |      |   se   |	|   se   |	|   se   |
+	+--------+      +--------+	+--------+	+--------+
+
+The optimization includes two parts:
+
+1) Embed sched_entity to cfs_rq.
+
+- This benefits loading the sched_entity for the parent runqueue.
+Currently it incurs pointer chasing, i.e., cfs_rq->tg->se[cpu]. After
+embedding, the sched_entity fields can be loaded with simple offset
+computations. As a tradeoff, the root task_group instance needs to
+allocate memory for its sched_entity, which is not needed before
+optimization. In the worst case, this will increase #CPU *
+sizeof(sched_entity) RAM usage, which is small.
+
+2) Allocate cfs_rq using percpu allocator.
+
+- Accesses to cfs_rq instances in hot paths are mostly iterating through
+multiple task_groups for the same CPU. Therefore, the new percpu layout
+can reuse the base pointer, and they are more likely to reside in the
+CPU cache than the per-task_group pointer arrays.
+
+- This optimization also reduces the memory needed for the array of
+pointers.
+
+To measure the impact of the patch series, we construct a tree structure
+hierarchy of cgroups, with =E2=80=9Cwidth=E2=80=9D and =E2=80=9Cdepth=E2=80=
+=9D parameters controlling
+the number of children per node and the depth of the tree. Each leaf
+cgroup runs a schbench workload and gets an 80% quota of the total CPU
+quota divided by number of leaf cgroups (in other words, the target CPU
+load is set to 80%) to exercise the throttling functions. Bandwidth
+control period is set to 10ms. We run the benchmark on Intel and AMD
+machines; each machine has hundreds of threads.
+
+Tests were conducted on Kernel 6.15.
+
+| Kernel LLC Misses | depth 3 width 10    | depth 5 width 4     |
++-------------------+---------------------+---------------------+
+| AMD-orig          | [2218.98, 2241.89]M | [2599.80, 2645.16]M |
+| AMD-opt           | [1957.62, 1981.55]M | [2380.47, 2431.86]M |
+| Change            | -11.69%             | -8.248%             |
+| Intel-orig        | [1580.53, 1604.90]M | [2125.37, 2208.68]M |
+| Intel-opt         | [1066.94, 1100.19]M | [1543.77, 1570.83]M |
+| Change            | -31.96%             | -28.13%             |
+
+There's also a 25% improvement on kernel IPC on the AMD system. On
+Intel, the improvement is 3% despite a greater LLC miss reduction.
+
+Other workloads without CPU share limits, while also running in a cgroup
+hierarchy with O(1000) instances, show no obvious regression:
+
+sysbench, hackbench - lower is better; ebizzy - higher is better.
+
+workload  | base                  | opt                   | metric
+----------+-----------------------+-----------------------+------------
+sysbench  | 63.55, [63.04, 64.05] | 64.36, [62.97, 65.75] | avg latency
+hackbench | 36.95, [35.45, 38.45] | 37.12, [35.81, 38.44] | time
+ebizzy    | 610.7, [569.8, 651.6] | 613.5, [592.1, 635.0] | record/s
+
+Zecheng Li (3):
+  sched/fair: Embed sched_entity into cfs_rq
+  sched/fair: Remove task_group->se pointer
+  sched/fair: Allocate cfs_rq structs per-cpu
+
+ kernel/sched/core.c  | 40 ++++++++-------------
+ kernel/sched/debug.c |  2 +-
+ kernel/sched/fair.c  | 83 ++++++++++++++++----------------------------
+ kernel/sched/sched.h | 40 ++++++++++++++++-----
+ 4 files changed, 76 insertions(+), 89 deletions(-)
+
+
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+--=20
+2.50.0
 
