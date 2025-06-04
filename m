@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DFC246775
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9496E268C42
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024729; cv=none; b=sDZBchRkTIsxmXPc02dNBNVrD6NRunCbt7rAT2uo2jApLZ90lcB96O6WE55gay1hK/Ns4hJtqWm6muaKg9JzkyucizMosvZ0REEhqnibxUDGE0R2WiEILVlKIKebHuYxl49BQ/1+ExxkywJn6aFr0oXdc0npWxNPRyaMUGiJVXs=
+	t=1749024769; cv=none; b=DMgF31uR7rQQJSEU543tMYZ73wZAYc8JCogMsEli/T1ljXwW7i8lDWb7QmnBuoWExhSwrGzn0f9iWULQPe7vHmgbTnMhHFh5rhQhGfSfyalWG/s6Vzrr+Mj3UfWzsu56xgxJ60YCPZM1xx3dFe6tm9hyLSg/PlsFCH7BczG2Xdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024729; c=relaxed/simple;
-	bh=t8KeIKFB5yQ7SrkWbHIp/AM3ev/QqUKReUp0LCpI3IY=;
+	s=arc-20240116; t=1749024769; c=relaxed/simple;
+	bh=Ypq6eX9nIlsTs5MECKnoooKGIl+6jVwGnBOhyPBVB9I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T2RWNhmvRxCUXpyofT1iSH43AaccfS5fnCP2Kr97xkgKXXIf+5CBP2zhCjX/kBcBV93yh3i59FLzO4G+tpDBN1uuWSw8K1ZUzX7e1ao48kcHg4nJTjABwPazcdiOl/hsrZJPkuBqKApZqCeihOl/2W1/XI8Xry4Aqa0y8pl811Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OSrEMNLX; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=IpVa6zJ/DmVjsXFSFzFYHuxjEwTXY7ehWByjsr4PVmF9QhECBHxjsEAPiSnlqtGM+OJ5gX9Dom0vHOYOMbmVn0MR7sNHUTJe8xs67687c0A5xFisbVZDl6LdNLqhqAX8jFjHkvsejWIv0If4Ict517gHR/WslKJV3JdB/ZeN9/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VWaHO4hw; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OSrEMNLX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VWaHO4hw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749024725;
+	s=mimecast20190719; t=1749024766;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Q/oyWnHrsYxO2IOtFBYyqoAFyVJDzUogmyhp5eVWIF8=;
-	b=OSrEMNLXiihZGnrB3nb28X0u9Ba9jT22l73jJqc4dyxFPEBtBiEyfLvVAA69WAhECFhrQX
-	0aTsv9EJwkIU951Z5r55xbXZftt7w/MMstmIvrgTaK2gGedAksXsn0gLvL391tSYI60j4i
-	b+hdF01k+XbT4eYLTd06li1PjF4vUoY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=wvgVOukUEEpNaUkwE3gsYqCFfAQ70mfdaWg/jB4/Ezc=;
+	b=VWaHO4hws27QArKyeUeOQcLcHjWNqDbTisv5nj8YwADYIbgFH4hOdB8v10F7Z24xmSqLlH
+	1EWwHkNb9KPuW0lTcR5NrLE0qd8nc6moDjLslZWOUFngPLgmt6ZG0khODxg+pQkoc4WsSE
+	ZqGyDE4PcVdu4AtCqdxePP04dHkR4hw=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-544-YKbsjfFTPTqaFeJh5ZNK9A-1; Wed, 04 Jun 2025 04:12:04 -0400
-X-MC-Unique: YKbsjfFTPTqaFeJh5ZNK9A-1
-X-Mimecast-MFC-AGG-ID: YKbsjfFTPTqaFeJh5ZNK9A_1749024723
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f8fd1847so1956727f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:12:04 -0700 (PDT)
+ us-mta-592-yAG1qAseOfy1WRcMhRIBhw-1; Wed, 04 Jun 2025 04:12:43 -0400
+X-MC-Unique: yAG1qAseOfy1WRcMhRIBhw-1
+X-Mimecast-MFC-AGG-ID: yAG1qAseOfy1WRcMhRIBhw_1749024763
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so5675065e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:12:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749024723; x=1749629523;
+        d=1e100.net; s=20230601; t=1749024762; x=1749629562;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Q/oyWnHrsYxO2IOtFBYyqoAFyVJDzUogmyhp5eVWIF8=;
-        b=kG0bY+FM4HyCNy6/HuVjaDWVXmlmRAhaVdj13Twwa4d69SiJ4rfsza/ynz6BwIFPSR
-         2RCGQCdizE4mpBbQb5vuy90Jr921akDqLv/EFu8XzqFtwPJzU+EUWWU2+51LBfyNO6gv
-         LwhphhAbUsgrGap2jLtzajm1T0szvnnFu3E9CRGeyj4MPtG2hFYfMiqmUSleO9WmH7cD
-         PTSNxfoaQAtH4V8gFEKHuZEypjxQQ2X+aPFOcoW9kWcvmpBV7YjNvSjL/gQAUuqymn30
-         Ktm2smjIkm2csSB3Wi3JyT+c+TkA07OpoO+TC1apr8WjoZnpNVg4MLKTbKcurNlAhFk0
-         OTIg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1vIpR/bTFXnjrpjJo1qtdtJvp5lsIfdtdgCwN0m8R8RGyseK4Bre1M6fQtFe0K9snb/pWi3uP0HrScLI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9L3xraYHK9+r0Zn3KGKFghH/U76xoinRfG88QPoNrXqbqaCfk
-	zrAs1bsdIZCgSivaseTowtOXXeMTDIABaTgP/H09OAruK7OUymoTN8upIa5smXswp4JenvwMmSi
-	MOhW6yQa8Ot8Gjg+IelwDQRFkCCOYluoOsUyIgt1ZsUO5vvj+UNhWzQyhPwazs6jFMA==
-X-Gm-Gg: ASbGncv49H+UzGB87FZ4+UUe0XBhDFfctaVhf2h7XBXootOhTm5u1r/GX8H6eRVbpGO
-	8Qr0LF6edDZjXJMHXw1/IcWrymxuB9LPylsrE8qYJqODcjpQkXZ4AEGmnSW1Mvs4W6zMNLXIimH
-	1pgctyWB4g3OFKs5R4KIHfbdn8IPJ7r82cGb9FEr3jAQGk8CWxcWtcolrkkQE4wTyYG1x1ZBF4M
-	zGPGZpJUPx2YRg1smJhyTuHBOEvOKXFZ7tsB9QQnrqtf9lU0GLjn595f9nYU72cFJ8kRtw38TSv
-	IiPBkvBwzHLDFhzEgfs1oZJX9CzZSyqBnqINwva+5pNbZW718n0fKMNfZ3l44kvk6hhyvYRcAdA
-	+7zSvQo5iA1hQTQVBqaFatm4UktNpO2IDshXtRGk=
-X-Received: by 2002:a05:6000:402a:b0:3a4:f939:b53 with SMTP id ffacd0b85a97d-3a51d95828amr1385004f8f.38.1749024723024;
-        Wed, 04 Jun 2025 01:12:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGt9dIwbsj877kD59TvSQrz8WsOJWhY1mPM9yhJ0fJzZUKCo/KdtMaLdHCMhQdAh8eRiEshIQ==
-X-Received: by 2002:a05:6000:402a:b0:3a4:f939:b53 with SMTP id ffacd0b85a97d-3a51d95828amr1384974f8f.38.1749024722557;
-        Wed, 04 Jun 2025 01:12:02 -0700 (PDT)
+        bh=wvgVOukUEEpNaUkwE3gsYqCFfAQ70mfdaWg/jB4/Ezc=;
+        b=E1+/UV1MWMFDqxHdOmtvbSSNHVODTtpdP32zhvIbhAM7s0UQCzakSYAgbmOzDc3xB4
+         TUc1tRU1GfdyJPRHnVSjzbreMUq2h1/UA0ydi5AXVpQxSAVwxXgujrTigXwO+l+l/I+a
+         vNykRxcH4b+HS+DV6S6izx8xLjiIat6SWP1fBVHgTLcLkyyiCIO9Cr5JF6s/LB2FMI2p
+         MHdzcsfiywT/igbv57DgA51NvxzN4jjsF7SD5PBzChEa5BrMZeFXKH9UW8eTgW4jVkE8
+         +QqQt6kMNzWRSiAIE7VjB3BgIPPiQYQ04pO+ORNfWP8mmdb4vFDQ588u9C9l+ysc5p3c
+         0Szg==
+X-Forwarded-Encrypted: i=1; AJvYcCWK2Asy2j7Zv+A4Jf4RcUNaTxkNPsyDvT46VbFBumIkCqLnCzxmSI1Ga1pvk13mavx5wo5KowJ5mt0+SH0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmDfOT6oa0mHMgFJr/QrxXoHPgpFcfne89twTiXTEghwSLoo04
+	lYomVhPlFuKK0LqK5AXfNDX9Mbstpp8xQpPqzlFqDRVXSGWMLKuMCRr5exiijt16PB7u8AeJffW
+	bos2NkQ9KAPr9jQYXveoP4IJqw1xCWsIYZnuZvOfbsE879OBbYg1SBYTvgoHQbB0eUw==
+X-Gm-Gg: ASbGncuILP95SRjjZYih7Cll94n5IONZZwWuZmqDTWVDv5HxLW9tpjr8UGusjiYEzWz
+	nJWdrYP21/EvWQPVlHkVVQqEFcM5lCinqxZbKSeaNlfYO+aCJ90kSoWE6F81i7+vBhwkZFSM2eS
+	BSvAVVeG/WPZtjC23uLRWMuAGmbm5nE0Ni471elQdDCGXSaKp2ZPNKLj/EsxVXQtpag+Le+CaHZ
+	M6sE60Uf7TEMd3DvfT5iA5Qo9+oGHGs0r+d+i3Au70gdUrsVHYNJSMUZsam3s+QLdxPiE2dSMjI
+	DZBt2NuiK/xMmE8xV/aF0XrnQKSx6GHxes9KAIZbmOlQQH0zKskgx883+ho3oHsOiD9eW5ltO3k
+	9emvb4RIhFgdlCummuSdlqYbxEczii+PaaW1a8EQ=
+X-Received: by 2002:a05:600c:1c9c:b0:43b:c0fa:f9dd with SMTP id 5b1f17b1804b1-451f0f9ed22mr12282665e9.25.1749024762607;
+        Wed, 04 Jun 2025 01:12:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFzb/FDz43e8wFgbzlacj4yn5C2qA7eJyJaco03PXI5pILsFZJQX31j60ijcZDaWL3tTDSZDQ==
+X-Received: by 2002:a05:600c:1c9c:b0:43b:c0fa:f9dd with SMTP id 5b1f17b1804b1-451f0f9ed22mr12282135e9.25.1749024762069;
+        Wed, 04 Jun 2025 01:12:42 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf? (p200300d82f1bb8006fdb1af24fbd1fdf.dip0.t-ipconnect.de. [2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00a017esm20388061f8f.89.2025.06.04.01.12.01
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8edebsm188022035e9.6.2025.06.04.01.12.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 01:12:02 -0700 (PDT)
-Message-ID: <5023a912-1ee9-4082-8656-56e004623367@redhat.com>
-Date: Wed, 4 Jun 2025 10:12:00 +0200
+        Wed, 04 Jun 2025 01:12:41 -0700 (PDT)
+Message-ID: <764d452d-446a-4b5e-aa03-e0d901126931@redhat.com>
+Date: Wed, 4 Jun 2025 10:12:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,13 +75,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] gup: optimize longterm pin_user_pages() for large
- folio
-To: lizhe.67@bytedance.com, akpm@linux-foundation.org, jgg@ziepe.ca,
- jhubbard@nvidia.com, peterx@redhat.com
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, dev.jain@arm.com,
- muchun.song@linux.dev
-References: <20250604031536.9053-1-lizhe.67@bytedance.com>
+Subject: Re: [PATCH RESEND] mm/pagewalk: split walk_page_range_novma() into
+ kernel/user parts
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Barry Song <baohua@kernel.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Jann Horn <jannh@google.com>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mm@kvack.org
+References: <20250603192213.182931-1-lorenzo.stoakes@oracle.com>
+ <51ec4269-b132-4163-9cb5-766042a3769d@redhat.com>
+ <aD_-qdg2OvKQIyRg@kernel.org>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -129,154 +142,51 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250604031536.9053-1-lizhe.67@bytedance.com>
+In-Reply-To: <aD_-qdg2OvKQIyRg@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 04.06.25 05:15, lizhe.67@bytedance.com wrote:
-> From: Li Zhe <lizhe.67@bytedance.com>
+On 04.06.25 10:07, Mike Rapoport wrote:
+> On Wed, Jun 04, 2025 at 09:39:30AM +0200, David Hildenbrand wrote:
+>> On 03.06.25 21:22, Lorenzo Stoakes wrote:
+>>> The walk_page_range_novma() function is rather confusing - it supports two
+>>> modes, one used often, the other used only for debugging.
+>>>
+>>> The first mode is the common case of traversal of kernel page tables, which
+>>> is what nearly all callers use this for.
+>>
+>> ... and what people should be using it for 🙂
+>>
+>>>
+>>> Secondly it provides an unusual debugging interface that allows for the
+>>> traversal of page tables in a userland range of memory even for that memory
+>>> which is not described by a VMA.
+>>>
+>>> This is highly unusual and it is far from certain that such page tables
+>>> should even exist, but perhaps this is precisely why it is useful as a
+>>> debugging mechanism.
+>>>
+>>> As a result, this is utilised by ptdump only. Historically, things were
+>>> reversed - ptdump was the only user, and other parts of the kernel evolved
+>>> to use the kernel page table walking here.
+>>>
+>>> Since we have some complicated and confusing locking rules for the novma
+>>> case, it makes sense to separate the two usages into their own functions.
+>>>
+>>> Doing this also provide self-documentation as to the intent of the caller -
+>>> are they doing something rather unusual or are they simply doing a standard
+>>> kernel page table walk?
+>>>
+>>> We therefore maintain walk_page_range_novma() for this single usage, and
+>>> document the function as such.
+>>
+>> If we have to keep this dangerous interface, it should probably be
+>>
+>> walk_page_range_debug() or walk_page_range_dump()
 > 
-> In the current implementation of the longterm pin_user_pages() function,
-> we invoke the collect_longterm_unpinnable_folios() function. This function
-> iterates through the list to check whether each folio belongs to the
-> "longterm_unpinnabled" category. The folios in this list essentially
-> correspond to a contiguous region of user-space addresses, with each folio
-> representing a physical address in increments of PAGESIZE. If this
-> user-space address range is mapped with large folio, we can optimize the
-> performance of function pin_user_pages() by reducing the frequency of
-> memory accesses using READ_ONCE. This patch leverages this approach to
-> achieve performance improvements.
-> 
-> The performance test results obtained through the gup_test tool from the
-> kernel source tree are as follows. We achieve an improvement of over 70%
-> for large folio with pagesize=2M. For normal page, we have only observed
-> a very slight degradation in performance.
-> 
-> Without this patch:
-> 
->      [root@localhost ~] ./gup_test -HL -m 8192 -n 512
->      TAP version 13
->      1..1
->      # PIN_LONGTERM_BENCHMARK: Time: get:13623 put:10799 us#
->      ok 1 ioctl status 0
->      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
->      [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
->      TAP version 13
->      1..1
->      # PIN_LONGTERM_BENCHMARK: Time: get:129733 put:31753 us#
->      ok 1 ioctl status 0
->      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-> 
-> With this patch:
-> 
->      [root@localhost ~] ./gup_test -HL -m 8192 -n 512
->      TAP version 13
->      1..1
->      # PIN_LONGTERM_BENCHMARK: Time: get:4075 put:10792 us#
->      ok 1 ioctl status 0
->      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
->      [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
->      TAP version 13
->      1..1
->      # PIN_LONGTERM_BENCHMARK: Time: get:130727 put:31763 us#
->      ok 1 ioctl status 0
->      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-> 
-> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> ---
-> Changelogs:
-> 
-> v1->v2:
-> - Modify some unreliable code.
-> - Update performance test data.
-> 
-> v1 patch: https://lore.kernel.org/all/20250530092351.32709-1-lizhe.67@bytedance.com/
-> 
->   mm/gup.c | 37 +++++++++++++++++++++++++++++--------
->   1 file changed, 29 insertions(+), 8 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 84461d384ae2..57fd324473a1 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2317,6 +2317,31 @@ static void pofs_unpin(struct pages_or_folios *pofs)
->   		unpin_user_pages(pofs->pages, pofs->nr_entries);
->   }
->   
-> +static struct folio *pofs_next_folio(struct folio *folio,
-> +				struct pages_or_folios *pofs, long *index_ptr)
-> +{
-> +	long i = *index_ptr + 1;
-> +
-> +	if (!pofs->has_folios) {
+> We can also move it from include/linux/pagewalk.h to mm/internal.h
 
-&& folio_test_large(folio)
-
-To avoid all that for small folios.
-
-> +		unsigned long start_pfn = folio_pfn(folio);> +		unsigned long end_pfn = start_pfn + folio_nr_pages(folio);
-
-I guess both could be const
-
-> +> +		for (; i < pofs->nr_entries; i++) {
-> +			unsigned long pfn = page_to_pfn(pofs->pages[i]);
-> +
-> +			/* Is this page part of this folio? */
-> +			if ((pfn < start_pfn) || (pfn >= end_pfn))
-
-
-No need for the inner ()
-
-> +				break;
-> +		}
-> +	}
-> +
-> +	if (unlikely(i == pofs->nr_entries))
-> +		return NULL;
-> +	*index_ptr = i;> +
-> +	return pofs_get_folio(pofs, i);
-
-We're now doing two "pofs->has_folios" checks. Maybe the compiler is
-smart enough to figure that out.
-
-> +}
-> +
->   /*>    * Returns the number of collected folios. Return value is always >= 0.
->    */
-> @@ -2324,16 +2349,12 @@ static void collect_longterm_unpinnable_folios(
->   		struct list_head *movable_folio_list,
->   		struct pages_or_folios *pofs)
->   {
-> -	struct folio *prev_folio = NULL;
->   	bool drain_allow = true;
-> -	unsigned long i;
-> -
-> -	for (i = 0; i < pofs->nr_entries; i++) {
-> -		struct folio *folio = pofs_get_folio(pofs, i);
-> +	long i = 0;
-> +	struct folio *folio;
-
-Please keep the reverse christmas tree where we have it. Why
-the change from "unsigned long" -> "long" ?
-
->   
-> -		if (folio == prev_folio)
-> -			continue;
-> -		prev_folio = folio;
-> +	for (folio = pofs_get_folio(pofs, 0); folio;
-> +			folio = pofs_next_folio(folio, pofs, &i)) {
-
-Please indent as
-
-for (folio = pofs_get_folio(pofs, 0); folio;
-      folio = pofs_next_folio(folio, pofs, &i)) {
-
-But the usage of "0" and "&i" is a bit suboptimal.
-
-for (folio = pofs_get_folio(pofs, i); folio;
-      folio = pofs_next_folio(folio, pofs, &i)) {
-
-Might be better.
+Agreed.
 
 -- 
 Cheers,
