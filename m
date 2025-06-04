@@ -1,64 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB49136124
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 02:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3DA256D;
+	Wed,  4 Jun 2025 02:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749004285; cv=none; b=UUz46JggZUMkl8UsnnWgqQocc7wSkSyE8WN+mcIhuKtkrfcu6vxot+Lz42FPl3dQRDYft+Z2wvA4i8kiPZAfn9fh4/J3gqlC/OHR9W+ScUsB5fL9Piq5ZhOjTAp4wcFfIbP1/YGHmft3rgbKpyhd7wjw6JvEVTVfJh1OXQ95UgE=
+	t=1749004453; cv=none; b=J3B6CtWsnu4Oyu4o84sEC9mm3vM8yhJmH7fUktoaI9xashKYNxsSCDMmgtxSZEXw7aJXgauAGBeotIMKFrqMXNNxu3nLt2itz+Rry/wCHCrfMheK5+thIucx8djrhjSPiyf6YLQH5KFBZy0UPKpOvurNM409Lm3cJbDjBts3H2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749004285; c=relaxed/simple;
-	bh=jW0BB3cinE6IAbLWfjdG0dhsOZS2FBUM95QJu8mydeg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=QV6weAsmaPIk6/L9cSnFyXeirvfX/sj1QuiQLd+aed9pYiFa1mMvbiM62AhAVY2C3e0nIjFZyCEhw/HGA2K5U16cDAqd//9STYtZMEOlbyuFvyaNozPkgv91iTnxRruRRLx7AMW+ioaLOreE1X1LAelBoc4W1LX0ilbAKX7+xY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=L+koj556; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749004453; c=relaxed/simple;
+	bh=zepWt2RZ4hWKu/KqmHyrs5XqMgYRVOEWvT4Om4rKGig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UQg+whlcILwlkJ+gPA4qCdK1UDR3UpnZiXHnfvNt0RJUe3KMnEn59d7FhLUVhI2AnfvaTDmzIs9sF385Gu5p8C+7tiN0eK2Dsa4FXCjgPvpIDWkMy4BlNTp+cc7j8RQw7eA1XlgbBkw5puYdWmxu9J4Tqg5CeZTlWka/SFkpdZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lXailgKh; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="L+koj556"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B418BC4CEED;
-	Wed,  4 Jun 2025 02:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749004285;
-	bh=jW0BB3cinE6IAbLWfjdG0dhsOZS2FBUM95QJu8mydeg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=L+koj556a3Hdo3NxRJNxXR3wCvNhvnxpXaUUzD04FzN3C5+e77h69NgMuLxkms1WX
-	 Df/Gozu/l+1MC0Jm5MMvMt8kcqS0eFqQe7VH0QZMmxxtmQ11oKP8Kk8fCNnVNV2m5M
-	 TTD6T9J8C9RZvdcKKW6X8mNs64YGluqUSbaWgTDM=
-Date: Tue, 3 Jun 2025 19:31:24 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Xavier <xavier_qy@163.com>
-Cc: will@kernel.org, ryan.roberts@arm.com, 21cnbao@gmail.com,
- dev.jain@arm.com, ioworker0@gmail.com, catalin.marinas@arm.com,
- david@redhat.com, gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, willy@infradead.org, ziy@nvidia.com,
- "Barry Song" <baohua@kernel.org>
-Subject: Re: [PATCH v6] arm64/mm: Optimize loop to reduce redundant
- operations of contpte_ptep_get
-Message-Id: <20250603193124.347804cb5a19c9941a354ff4@linux-foundation.org>
-In-Reply-To: <6f9842a2.7c3c.19734ce1860.Coremail.xavier_qy@163.com>
-References: <20250510125948.2383778-1-xavier_qy@163.com>
-	<6f9842a2.7c3c.19734ce1860.Coremail.xavier_qy@163.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lXailgKh"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5540FTUB014030;
+	Wed, 4 Jun 2025 02:34:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9SxqiXKxDMmI9Vmg3y5eU8Av30gwyPM61lvUKB9sEXg=; b=lXailgKhR21oxyPS
+	mLYjljcxeJG0PAqUFFDlIIMm6gMhy+O6+t7DyMckD0i4QMbDhBWYFUmwJnntuLz2
+	Abnohjq0wK5cxz8pkRaQ2XBCwWfCMJs6uBNyJzlGGkO+yMuVKuzknmN4EljV8tTM
+	Tmtj2Glp4F5R90FQIM6Z0uL5eXi3mhKKWbGX1zVSOOSZOzYf5BlmTppcKvJpqY6y
+	KuBQ15CfwcFALxwQGTXchhn7tF4P5rKqU5OQSvUI1+e0MqT10z5epuvJ/w5PDE3t
+	CnMMEQFMAJw4G9lpEjtIyqL6avQEyNwM+FDOGER9SpqqjbE+vT26XQ0sOL1h/eNe
+	9UgGPQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 472be80991-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 02:34:05 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5542Y5wb016558
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 4 Jun 2025 02:34:05 GMT
+Received: from [10.133.33.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 3 Jun 2025
+ 19:34:02 -0700
+Message-ID: <01634993-80b1-496e-8453-e94b2efe658c@quicinc.com>
+Date: Wed, 4 Jun 2025 10:34:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
+To: Johan Hovold <johan@kernel.org>, Baochen Qiang <quic_bqiang@quicinc.com>
+CC: Johan Hovold <johan+linaro@kernel.org>,
+        Jeff Johnson
+	<jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250526114803.2122-1-johan+linaro@kernel.org>
+ <20250526114803.2122-2-johan+linaro@kernel.org>
+ <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
+ <aD1axxSAJsbUfnHH@hovoldconsulting.com>
+ <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
+ <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
+Content-Language: en-US
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
+In-Reply-To: <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=bNYWIO+Z c=1 sm=1 tr=0 ts=683fb09d cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=guktzepORQuorFk3vWcA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: gEqu6_MnKceFmAMGtPABnQnjpc__fJH4
+X-Proofpoint-ORIG-GUID: gEqu6_MnKceFmAMGtPABnQnjpc__fJH4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDAxOSBTYWx0ZWRfX+xj2gKnC1S9y
+ ChUclQ7Tpuv725l+xwWaToUL7KHX+DpDDQJX7Dg+oK+V1tp8eGRPxjAsmKePULgR2PaeISN1LEU
+ Oj+5+vZBo28MfhM4tBLLIMViyxlVxxm6vpP1k6dUKA3K/eiNwvK/yLE+UD2lRP+HmYCt2NKHXUZ
+ XlfDgsgmEAfYeTgJ+8LXR+Ep3RTWy0h0OnwjCYeMmTbOgBXL8kSgtVqArxvwPu+plCPfRwpF37m
+ 1/B8AdHK+rUf0ohpFh3HLITfXmwzf+8LTgnnReHAIWAW6K5oGMU6T1b7UR7vgfAc3KbKCTMgjfI
+ CntG/WkNzCCooK/UUX/YipK/96aSOxa8M/mwLQJ7iVdk+UMRileF/+oXyeUchHO/trmuJgAJW/2
+ WS/zGC4lXGmyRVnSjUUnmYtvAWepnTqdvBBM17qubT2q7dvGI1zSxncRM+kElYCU7Gp8ypc/
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_01,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 mlxscore=0 impostorscore=0 spamscore=0 clxscore=1011
+ mlxlogscore=625 adultscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506040019
 
-On Tue, 3 Jun 2025 16:00:11 +0800 (CST) Xavier  <xavier_qy@163.com> wrote:
 
-> It has been three weeks since the submission of Patch v6. I take the liberty of
-> asking whether you still have any comments or suggestions on this version,
-> and whether the test data indicates that it is ready for merging. I sincerely
-> look forward to your valuable feedback and guidance.
 
-It was late in the 6.15-rcX cycle and I was hoping that arm people
-would handle this.
+On 6/3/2025 7:51 PM, Johan Hovold wrote:
+> On Tue, Jun 03, 2025 at 06:52:37PM +0800, Baochen Qiang wrote:
+>> On 6/2/2025 4:03 PM, Johan Hovold wrote:
+> 
+>>> No, the barrier is needed between reading the head pointer and accessing
+>>> descriptor fields, that's what matters.
+>>>
+>>> You can still end up with reading stale descriptor data even when
+>>> ath11k_hal_srng_dst_get_next_entry() returns non-NULL due to speculation
+>>> (that's what happens on the X13s).
+>>
+>> The fact is that a dma_rmb() does not even prevent speculation, no matter where it is
+>> placed, right?
+> 
+> It prevents the speculated load from being used.
+> 
+>> If so the whole point of dma_rmb() is to prevent from compiler reordering
+>> or CPU reordering, but is it really possible?
+>>
+>> The sequence is
+>>
+>> 	1# reading HP
+>> 		srng->u.dst_ring.cached_hp = READ_ONCE(*srng->u.dst_ring.hp_addr);
+>>
+>> 	2# validate HP
+>> 		if (srng->u.dst_ring.tp == srng->u.dst_ring.cached_hp)
+>> 			return NULL;
+>>
+>> 	3# get desc
+>> 		desc = srng->ring_base_vaddr + srng->u.dst_ring.tp;
+>>
+>> 	4# accessing desc
+>> 		ath11k_hal_desc_reo_parse_err(... desc, ...)
+>>
+>> Clearly each step depends on the results of previous steps. In this case the compiler/CPU
+>> is expected to be smart enough to not do any reordering, isn't it?
+> 
+> Steps 3 and 4 can be done speculatively before the load in step 1 is
+> complete as long as the result is discarded if it turns out not to be
+> needed.
+> 
 
-It would be better if the patches had cc:linux-mm@kvack.org.
+If the condition in step 2 is true and step 3 speculatively loads 
+descriptor from TP before step 1, could this cause issues?
 
-I'll grab it and shall include it in -next after -rc1.  If ARM people
-want to grab it, please do so and I'll autodrop the mm.git copy.
+We previously had extensive discussions on this topic in the 
+https://lore.kernel.org/linux-wireless/ecfe850c-b263-4bee-b888-c34178e690fc@quicinc.com/ 
+thread. On my platform, dma_rmb() did not work as expected. The issue 
+only disappeared after disabling PCIe endpoint relaxed ordering in 
+firmware side. So it seems that HP was updated (Memory write) before 
+descriptor (Memory write), which led to the problem.
+
+
+
+
 
