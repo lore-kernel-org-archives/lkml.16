@@ -1,412 +1,299 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5E7219A72
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C1E139B
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749072140; cv=none; b=YYvHZlN9PezpA36BTIgHmpapfRWiYtywn0uvVrO+pnh99bCOX9XftT895iBq75CO3hCpDNrLYhetoOTk5ToXFlgKfyTXa6ojBRxgKjwe967/pifwKv/7IOKM/ZDxFLp7WjxC2FC/FqW9V95r0+4jIk5uvgiR3XL45ietQmJaMJg=
+	t=1749072218; cv=none; b=ZfDDMPL8XV8z+CYG32Hf5frFXmWWAalY2/mfEoFMN/0gWTiaFOIOb1hEjfW5b5uE2L1Tv6GBVXOH0XUtUQEbpUcB0BL4C51wZDhO/zxx6p8EXBgK0rzPVqOdc/BbptdeXi0YMbHaiP9mbFOSTD5F2/aES3zAvyc+iEsQAVolTNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749072140; c=relaxed/simple;
-	bh=CPqNXOtS5x3av3658c+mXymxlY+uGP6E3aqM8g3/wZg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e8gwnkJ8HsO+iJfpryCEf6Ci1Y0eG+cuJ7EJqIF4nhziQIKassqWjgKedKkMGhRgJOvqpnLzk2Xe7lRdPA1jBnPwQb1M0v9pJc3GSRoGgPzKAKNvYqvpjAYhNIuMAFoMNVt6y29wFKb9U+akJVL2Xe1rEq3pgNrgegwqpLCGsus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g1rPMrop; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749072218; c=relaxed/simple;
+	bh=4S10gW2wt3Usw1eY6iH4D3RuLj5PdEfnJJKHo9LJi6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JSgFvDk1kxRRqQb+hdQc5o9D0EMSQ/H43nkSo1cqZjAl05Vp8NfMICy8w4PiSZLi8eDkZqqSH0PO1Sdr+Db5eR/i5pTdTA+2AArH9XRhubUbBkDd8VkOd6a3qCFMi30Sm0i///oLs9IYpCqrzXgGo+XWNpN5hZeHSOxQLiSLPdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R0WX9NI+; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g1rPMrop"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749072138; x=1780608138;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CPqNXOtS5x3av3658c+mXymxlY+uGP6E3aqM8g3/wZg=;
-  b=g1rPMropsE0Ix3CgT76iJpKC2hTAYPHzTK+qFkEUPDClsHUGGetpbx2X
-   6WD3NqVECllRs88C6FmtUAUUN5y2Qn9Z3EuKgYgPEP426EfdHBGOzcsEI
-   HN7ZXVTUc5rWbwHmtdFb5v7t3DESk6VRF0QsT2hG06WL1igNd5rWwZVLV
-   rJDnzzt0tpvZwU1LBjZTLNAc2JNP6cQxuxC4e+pjYH6ls8ucZAkENQwQg
-   1a9KVmPCdUXTgJGix9bqJqb7X3Zc858VgD84ew4J3+juQXbH+E4dQIl89
-   69qOT3/y9N3FaHcIws729DzFiWBev5Znd2927qOdX8uG13qPP2t770MFA
-   Q==;
-X-CSE-ConnectionGUID: mvbpGwdsQU6dlqBhXazSSA==
-X-CSE-MsgGUID: ThSUaakET5mXxBn572KMSA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="76572778"
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="76572778"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:22:15 -0700
-X-CSE-ConnectionGUID: GzSWHOCzSJO+M9yHYMvHkA==
-X-CSE-MsgGUID: h2637UetS2+lv/ZDi3NcKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="150094202"
-Received: from agluck-desk3.sc.intel.com ([172.25.103.51])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:22:15 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Babu Moger <babu.moger@amd.com>,
-	Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v5 4/4 UPDATED] x86,fs/resctrl: Prepare for more monitor events
-Date: Wed,  4 Jun 2025 14:22:08 -0700
-Message-ID: <20250604212208.49080-5-tony.luck@intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250604212208.49080-1-tony.luck@intel.com>
-References: <20250604212208.49080-1-tony.luck@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R0WX9NI+"
+Date: Wed, 4 Jun 2025 17:23:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749072203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=mkV9b8O+6559TIf0+Ma+w1OI88MqcmuriotQpPbTw/Q=;
+	b=R0WX9NI+oV+nyQiYmfggYH9bcblA/PDrxpwY1yX1hAPZw8OyMoJTN9jlMhhFdUEx8sNOe0
+	bcNt0hrsKQRfW84LrE2vNFjUdNPRhyZ5jRGNxS07uNBz33Qk16o0oO88JSon1cqRnGTeMo
+	Vq+5Le4Tl8FOuVyj3HIU9f6i5BhcgQg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] bcachefs changes for 6.16, part 2
+Message-ID: <xtigikvqorbxtpy2rh52fobvunp7yrwkfpj4muwaogr4ijxl4j@s327kfvhpi3v>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
-There's a rule in computer programming that objects appear zero,
-once, or many times. So code accordingly.
+Linus - there's also a small merge conflict, due to the timer renaming;
+the relevant code has been deleted here.
 
-There are two MBM events and resctrl is coded with a lot of
+The following changes since commit 9caea9208fc3fbdbd4a41a2de8c6a0c969b030f9:
 
-        if (local)
-                do one thing
-        if (total)
-                do a different thing
+  bcachefs: Don't mount bs > ps without TRANSPARENT_HUGEPAGE (2025-05-23 22:00:07 -0400)
 
-Change the rdt_mon_domain and rdt_hw_mon_domain structures to hold arrays
-of pointers to per event data instead of explicit fields for total and
-local bandwidth.
+are available in the Git repository at:
 
-Simplify by coding for many events using loops on which are enabled.
+  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-06-04
 
-Move resctrl_is_mbm_event() to <linux/resctrl.h> so it can be used more
-widely. Also provide a for_each_mbm_event_id() helper macro.
+for you to fetch changes up to 3d11125ff624b540334f7134d98b94f3b980e85d:
 
-Cleanup variable names in functions touched to consistently use
-"eventid" for those with type enum resctrl_event_id.
+  bcachefs: add cond_resched() to handle_overwrites() (2025-06-04 16:45:41 -0400)
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- include/linux/resctrl.h                | 18 +++++++---
- include/linux/resctrl_types.h          |  3 ++
- arch/x86/kernel/cpu/resctrl/internal.h |  9 ++---
- arch/x86/kernel/cpu/resctrl/core.c     | 38 ++++++++++----------
- arch/x86/kernel/cpu/resctrl/monitor.c  | 36 +++++++++----------
- fs/resctrl/monitor.c                   | 13 ++++---
- fs/resctrl/rdtgroup.c                  | 48 ++++++++++++--------------
- 7 files changed, 88 insertions(+), 77 deletions(-)
+----------------------------------------------------------------
+bcachefs updates for 6.16, part 2
 
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index 8404089f18ad..ee2090ef2936 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -161,8 +161,9 @@ struct rdt_ctrl_domain {
-  * @hdr:		common header for different domain types
-  * @ci:			cache info for this domain
-  * @rmid_busy_llc:	bitmap of which limbo RMIDs are above threshold
-- * @mbm_total:		saved state for MBM total bandwidth
-- * @mbm_local:		saved state for MBM local bandwidth
-+ * @mbm_states:		Per-event pointer to the MBM event's saved state.
-+ *			An MBM event's state is an array of struct mbm_state
-+ *			indexed by RMID on x86 or combined CLOSID, RMID on Arm.
-  * @mbm_over:		worker to periodically read MBM h/w counters
-  * @cqm_limbo:		worker to periodically read CQM h/w counters
-  * @mbm_work_cpu:	worker CPU for MBM h/w counters
-@@ -172,8 +173,7 @@ struct rdt_mon_domain {
- 	struct rdt_domain_hdr		hdr;
- 	struct cacheinfo		*ci;
- 	unsigned long			*rmid_busy_llc;
--	struct mbm_state		*mbm_total;
--	struct mbm_state		*mbm_local;
-+	struct mbm_state		*mbm_states[QOS_NUM_L3_MBM_EVENTS];
- 	struct delayed_work		mbm_over;
- 	struct delayed_work		cqm_limbo;
- 	int				mbm_work_cpu;
-@@ -376,6 +376,16 @@ bool resctrl_is_mon_event_enabled(enum resctrl_event_id eventid);
- 
- bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
- 
-+static inline bool resctrl_is_mbm_event(enum resctrl_event_id eventid)
-+{
-+	return (eventid >= QOS_L3_MBM_TOTAL_EVENT_ID &&
-+		eventid <= QOS_L3_MBM_LOCAL_EVENT_ID);
-+}
-+
-+#define for_each_mbm_event_id(eventid)				\
-+	for (eventid = QOS_L3_MBM_TOTAL_EVENT_ID;		\
-+	     eventid <= QOS_L3_MBM_LOCAL_EVENT_ID; eventid++)
-+
- /**
-  * resctrl_arch_mon_event_config_write() - Write the config for an event.
-  * @config_info: struct resctrl_mon_config_info describing the resource, domain
-diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
-index 2dadbc54e4b3..d98351663c2c 100644
---- a/include/linux/resctrl_types.h
-+++ b/include/linux/resctrl_types.h
-@@ -51,4 +51,7 @@ enum resctrl_event_id {
- 	QOS_NUM_EVENTS,
- };
- 
-+#define QOS_NUM_L3_MBM_EVENTS	(QOS_L3_MBM_LOCAL_EVENT_ID - QOS_L3_MBM_TOTAL_EVENT_ID + 1)
-+#define MBM_STATE_IDX(evt)	((evt) - QOS_L3_MBM_TOTAL_EVENT_ID)
-+
- #endif /* __LINUX_RESCTRL_TYPES_H */
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 5e3c41b36437..44ef0d94131e 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -54,15 +54,16 @@ struct rdt_hw_ctrl_domain {
-  * struct rdt_hw_mon_domain - Arch private attributes of a set of CPUs that share
-  *			      a resource for a monitor function
-  * @d_resctrl:	Properties exposed to the resctrl file system
-- * @arch_mbm_total:	arch private state for MBM total bandwidth
-- * @arch_mbm_local:	arch private state for MBM local bandwidth
-+ * @arch_mbm_states:	arch private state for each MBM event
-+ * @arch_mbm_states:	Per-event pointer to the MBM event's saved state.
-+ *			An MBM event's state is an array of struct arch_mbm_state
-+ *			indexed by RMID on x86 or combined CLOSID, RMID on Arm.
-  *
-  * Members of this structure are accessed via helpers that provide abstraction.
-  */
- struct rdt_hw_mon_domain {
- 	struct rdt_mon_domain		d_resctrl;
--	struct arch_mbm_state		*arch_mbm_total;
--	struct arch_mbm_state		*arch_mbm_local;
-+	struct arch_mbm_state		*arch_mbm_states[QOS_NUM_L3_MBM_EVENTS];
- };
- 
- static inline struct rdt_hw_ctrl_domain *resctrl_to_arch_ctrl_dom(struct rdt_ctrl_domain *r)
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 8ff76b9bd09b..18fabbbed090 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -365,8 +365,8 @@ static void ctrl_domain_free(struct rdt_hw_ctrl_domain *hw_dom)
- 
- static void mon_domain_free(struct rdt_hw_mon_domain *hw_dom)
- {
--	kfree(hw_dom->arch_mbm_total);
--	kfree(hw_dom->arch_mbm_local);
-+	for (int i = 0; i < QOS_NUM_L3_MBM_EVENTS; i++)
-+		kfree(hw_dom->arch_mbm_states[i]);
- 	kfree(hw_dom);
- }
- 
-@@ -400,25 +400,27 @@ static int domain_setup_ctrlval(struct rdt_resource *r, struct rdt_ctrl_domain *
-  */
- static int arch_domain_mbm_alloc(u32 num_rmid, struct rdt_hw_mon_domain *hw_dom)
- {
--	size_t tsize;
--
--	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID)) {
--		tsize = sizeof(*hw_dom->arch_mbm_total);
--		hw_dom->arch_mbm_total = kcalloc(num_rmid, tsize, GFP_KERNEL);
--		if (!hw_dom->arch_mbm_total)
--			return -ENOMEM;
--	}
--	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID)) {
--		tsize = sizeof(*hw_dom->arch_mbm_local);
--		hw_dom->arch_mbm_local = kcalloc(num_rmid, tsize, GFP_KERNEL);
--		if (!hw_dom->arch_mbm_local) {
--			kfree(hw_dom->arch_mbm_total);
--			hw_dom->arch_mbm_total = NULL;
--			return -ENOMEM;
--		}
-+	size_t tsize = sizeof(*hw_dom->arch_mbm_states[0]);
-+	enum resctrl_event_id eventid;
-+	int idx;
-+
-+	for_each_mbm_event_id(eventid) {
-+		if (!resctrl_is_mon_event_enabled(eventid))
-+			continue;
-+		idx = MBM_STATE_IDX(eventid);
-+		hw_dom->arch_mbm_states[idx] = kcalloc(num_rmid, tsize, GFP_KERNEL);
-+		if (!hw_dom->arch_mbm_states[idx])
-+			goto cleanup;
- 	}
- 
- 	return 0;
-+cleanup:
-+	while (--idx >= 0) {
-+		kfree(hw_dom->arch_mbm_states[idx]);
-+		hw_dom->arch_mbm_states[idx] = NULL;
-+	}
-+
-+	return -ENOMEM;
- }
- 
- static int get_domain_id_from_scope(int cpu, enum resctrl_scope scope)
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 07f8ab097cbe..0add57b29a4d 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -161,18 +161,14 @@ static struct arch_mbm_state *get_arch_mbm_state(struct rdt_hw_mon_domain *hw_do
- 						 u32 rmid,
- 						 enum resctrl_event_id eventid)
- {
--	switch (eventid) {
--	case QOS_L3_OCCUP_EVENT_ID:
--		return NULL;
--	case QOS_L3_MBM_TOTAL_EVENT_ID:
--		return &hw_dom->arch_mbm_total[rmid];
--	case QOS_L3_MBM_LOCAL_EVENT_ID:
--		return &hw_dom->arch_mbm_local[rmid];
--	default:
--		/* Never expect to get here */
--		WARN_ON_ONCE(1);
-+	struct arch_mbm_state *state;
-+
-+	if (!resctrl_is_mbm_event(eventid))
- 		return NULL;
--	}
-+
-+	state = hw_dom->arch_mbm_states[MBM_STATE_IDX(eventid)];
-+
-+	return state ? &state[rmid] : NULL;
- }
- 
- void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
-@@ -201,14 +197,16 @@ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
- void resctrl_arch_reset_rmid_all(struct rdt_resource *r, struct rdt_mon_domain *d)
- {
- 	struct rdt_hw_mon_domain *hw_dom = resctrl_to_arch_mon_dom(d);
--
--	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID))
--		memset(hw_dom->arch_mbm_total, 0,
--		       sizeof(*hw_dom->arch_mbm_total) * r->num_rmid);
--
--	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID))
--		memset(hw_dom->arch_mbm_local, 0,
--		       sizeof(*hw_dom->arch_mbm_local) * r->num_rmid);
-+	enum resctrl_event_id eventid;
-+	int idx;
-+
-+	for_each_mbm_event_id(eventid) {
-+		if (!resctrl_is_mon_event_enabled(eventid))
-+			continue;
-+		idx = MBM_STATE_IDX(eventid);
-+		memset(hw_dom->arch_mbm_states[idx], 0,
-+		       sizeof(struct arch_mbm_state) * r->num_rmid);
-+	}
- }
- 
- static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr, unsigned int width)
-diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
-index 73328cfbadc6..d4d211b7b5d3 100644
---- a/fs/resctrl/monitor.c
-+++ b/fs/resctrl/monitor.c
-@@ -346,15 +346,14 @@ static struct mbm_state *get_mbm_state(struct rdt_mon_domain *d, u32 closid,
- 				       u32 rmid, enum resctrl_event_id evtid)
- {
- 	u32 idx = resctrl_arch_rmid_idx_encode(closid, rmid);
-+	struct mbm_state *state;
- 
--	switch (evtid) {
--	case QOS_L3_MBM_TOTAL_EVENT_ID:
--		return &d->mbm_total[idx];
--	case QOS_L3_MBM_LOCAL_EVENT_ID:
--		return &d->mbm_local[idx];
--	default:
-+	if (!resctrl_is_mbm_event(evtid))
- 		return NULL;
--	}
-+
-+	state = d->mbm_states[MBM_STATE_IDX(evtid)];
-+
-+	return state ? &state[idx] : NULL;
- }
- 
- static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
-diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index 73d16e96cc3b..fbc23bfae46a 100644
---- a/fs/resctrl/rdtgroup.c
-+++ b/fs/resctrl/rdtgroup.c
-@@ -127,12 +127,6 @@ static bool resctrl_is_mbm_enabled(void)
- 		resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID));
- }
- 
--static bool resctrl_is_mbm_event(int e)
--{
--	return (e >= QOS_L3_MBM_TOTAL_EVENT_ID &&
--		e <= QOS_L3_MBM_LOCAL_EVENT_ID);
--}
--
- /*
-  * Trivial allocator for CLOSIDs. Use BITMAP APIs to manipulate a bitmap
-  * of free CLOSIDs.
-@@ -4020,8 +4014,10 @@ static void rdtgroup_setup_default(void)
- static void domain_destroy_mon_state(struct rdt_mon_domain *d)
- {
- 	bitmap_free(d->rmid_busy_llc);
--	kfree(d->mbm_total);
--	kfree(d->mbm_local);
-+	for (int i = 0; i < QOS_NUM_L3_MBM_EVENTS; i++) {
-+		kfree(d->mbm_states[i]);
-+		d->mbm_states[i] = NULL;
-+	}
- }
- 
- void resctrl_offline_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d)
-@@ -4081,32 +4077,34 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
- static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_mon_domain *d)
- {
- 	u32 idx_limit = resctrl_arch_system_num_rmid_idx();
--	size_t tsize;
-+	size_t tsize = sizeof(*d->mbm_states[0]);
-+	enum resctrl_event_id eventid;
-+	int idx;
- 
- 	if (resctrl_is_mon_event_enabled(QOS_L3_OCCUP_EVENT_ID)) {
- 		d->rmid_busy_llc = bitmap_zalloc(idx_limit, GFP_KERNEL);
- 		if (!d->rmid_busy_llc)
- 			return -ENOMEM;
- 	}
--	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID)) {
--		tsize = sizeof(*d->mbm_total);
--		d->mbm_total = kcalloc(idx_limit, tsize, GFP_KERNEL);
--		if (!d->mbm_total) {
--			bitmap_free(d->rmid_busy_llc);
--			return -ENOMEM;
--		}
--	}
--	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID)) {
--		tsize = sizeof(*d->mbm_local);
--		d->mbm_local = kcalloc(idx_limit, tsize, GFP_KERNEL);
--		if (!d->mbm_local) {
--			bitmap_free(d->rmid_busy_llc);
--			kfree(d->mbm_total);
--			return -ENOMEM;
--		}
-+
-+	for_each_mbm_event_id(eventid) {
-+		if (!resctrl_is_mon_event_enabled(eventid))
-+			continue;
-+		idx = MBM_STATE_IDX(eventid);
-+		d->mbm_states[idx] = kcalloc(idx_limit, tsize, GFP_KERNEL);
-+		if (!d->mbm_states[idx])
-+			goto cleanup;
- 	}
- 
- 	return 0;
-+cleanup:
-+	bitmap_free(d->rmid_busy_llc);
-+	while (--idx >= 0) {
-+		kfree(d->mbm_states[idx]);
-+		d->mbm_states[idx] = NULL;
-+	}
-+
-+	return -ENOMEM;
- }
- 
- int resctrl_online_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d)
--- 
-2.49.0
+- More stack usage improvements (~600 bytes).
 
+- Define CLASS()es for some commonly used types, and convert most
+  rcu_read_lock() uses to the new lock guards
+
+- New introspection:
+  - Superblock error counters are now available in sysfs: previously,
+    they were only visible with 'show-super', which doesn't provide a
+    live view
+  - New tracepoint, error_throw(), which is called any time we return an
+    error and start to unwind
+
+- Repair
+  - check_fix_ptrs() can now repair btree node roots
+  - We can now repair when we've somehow ended up with the journal using
+    a superblock bucket
+
+- Revert some leftovers from the aborted directory i_size feature, and
+  add repair code: some userspace programs (e.g. sshfs) were getting
+  confused.
+
+It seems in 6.15 there's a bug where i_nlink on the vfs inode has been
+getting incorrectly set to 0, with some unfortunate results;
+list_journal analysis showed bch2_inode_rm() being called (by
+bch2_evict_inode()) when it clearly should not have been.
+
+- bch2_inode_rm() now runs "should we be deleting this inode?" checks
+  that were previously only run when deleting unlinked inodes in
+  recovery.
+
+- check_subvol() was treating a dangling subvol (pointing to a missing
+  root inode) like a dangling dirent, and deleting it. This was the
+  really unfortunate one: check_subvol() will now recreate the root
+  inode if necessary.
+
+This took longer to debug than it should have, and we lost several
+filesystems unnecessarily, becuase users have been ignoring the release
+notes and blindly running 'fsck -y'. Debugging required reconstructing
+what happened through analyzing the journal, when ideally someone would
+have noticed 'hey, fsck is asking me if I want to repair this: it
+usually doesn't, maybe I should run this in dry run mode and check
+what's going on?'.
+
+As a reminder, fsck errors are being marked as autofix once we've
+verified, in real world usage, that they're working correctly; blindly
+running 'fsck -y' on an experimental filesystem is playing with fire.
+
+Up to this incident we've had an excellent track record of not losing
+data, so let's try to learn from this one.
+
+This is a community effort, I wouldn't be able to get this done without
+the help of all the people QAing and providing excellent bug reports and
+feedback based on real world usage. But please don't ignore advice and
+expect me to pick up the pieces.
+
+If an error isn't marked as autofix, and it /is/ happening in the wild,
+that's also something I need to know about so we can check it out and
+add it to the autofix list if repair looks good. I haven't been getting
+those reports, and I should be; since we don't have any sort of
+telemetry yet I am absolutely dependent on user reports.
+
+Now I'll be spending the weekend working on new repair code to see if I
+can get a filesystem back for a user who didn't have backups.
+
+----------------------------------------------------------------
+Kent Overstreet (68):
+      bcachefs: fix REFLINK_P_MAY_UPDATE_OPTIONS
+      bcachefs: Fix missing BTREE_UPDATE_internal_snapshot_node
+      bcachefs: Ensure we print output of run_recovery_pass if it errors
+      bcachefs: bch2_kthread_io_clock_wait_once()
+      bcachefs: Fix lost rebalance wakeups
+      bcachefs: Fix missing commit in check_dirents
+      bcachefs: Move unicode message to after the startup message
+      bcachefs: Don't rewind to run a recovery pass we already ran
+      bcachefs: Journal read error message improvements
+      bcachefs: Fix infinite loop in journal_entry_btree_keys_to_text()
+      bcachefs: trace_io_move_pred
+      bcachefs: io_move_evacuate_bucket tracepoint, counter
+      bcachefs: Catch data_update_done events in trace_io_move_start_fail
+      bcachefs: Fix incorrect multiple dev check in journal write path
+      bcachefs: Fix misaligned bucket check in journal space calculations
+      bcachefs: Add missing error logging in delete_dead_inodes()
+      bcachefs: Kill bkey_buf in btree_path_down()
+      bcachefs: btree_node_missing_err()
+      bcachefs: factor out break_cycle_fail()
+      bcachefs: Don't stack allocate bch_writepage_state
+      bcachefs: kill replicas_sectors arg to __trigger_extent()
+      bcachefs: Tweak bch2_data_update_init() for stack usage
+      bcachefs: bch2_alloc_v4_to_text()
+      bcachefs: reduce stack usage in alloc_sectors_start()
+      bcachefs: Move devs_sorted to alloc_request
+      bcachefs: Include b->ob.nr in cached_btree_node_to_text()
+      bcachefs: bch2_check_fix_ptrs() can now repair btree roots
+      bcachefs: sysfs/errors
+      bcachefs: Add missing printbuf_reset() in bch2_check_dirent_inode_dirent()
+      bcachefs: Mark bch_errcode helpers __attribute__((const))
+      bcachefs: Use bch2_err_matches() for BCH_ERR_fsck_(fix|ignore)
+      bcachefs: Don't unlock trans before data_update_init()
+      bcachefs: Runtime self healing for keys for deleted snapshots
+      bcachefs: bch2_dev_journal_bucket_delete()
+      bcachefs: bch2_get_snapshot_overwrites()
+      bcachefs: __bch2_insert_snapshot_whiteouts() refactoring
+      bcachefs: bch2_str_hash_check_key() may now be called without snapshots_seen
+      bcachefs: bch2_readdir() now calls str_hash_check_key()
+      bcachefs: Improve error printing in btree_node_check_topology()
+      bcachefs: Journal keys are retained until shutdown, or journal replay finishes
+      bcachefs: darray_find(), darray_find_p()
+      bcachefs: sysfs trigger_emergency_read_only
+      bcachefs: sysfs trigger_journal_commit
+      bcachefs: CLASS(printbuf)
+      bcachefs: CLASS(darray)
+      bcachefs: CLASS(btree_trans)
+      bcachefs: Replace rcu_read_lock() with guards
+      bcachefs: Add better logging to fsck_rename_dirent()
+      bcachefs: Convert BUG() to error
+      bcachefs: Delete redundant fsck_err()
+      bcachefs: Kill un-reverted directory i_size code
+      bcachefs: Repair code for directory i_size
+      bcachefs: bch_err_throw()
+      bcachefs: bch2_require_recovery_pass()
+      bcachefs: BCH_RECOVERY_PASS_NO_RATELIMIT
+      bcachefs: Make check_key_has_snapshot safer
+      bcachefs: Run snapshot deletion out of system_long_wq
+      bcachefs: Run check_dirents second time if required
+      bcachefs: Redo bch2_dirent_init_name()
+      bcachefs: Fix bch2_fsck_rename_dirent() for casefold
+      bcachefs: Fix dirent_casefold_mismatch repair
+      bcachefs: Fix oops in btree_node_seq_matches()
+      bcachefs: Add flags to subvolume_to_text()
+      bcachefs: delete dead code from may_delete_deleted_inode()
+      bcachefs: Run may_delete_deleted_inode() checks in bch2_inode_rm()
+      bcachefs: Fix subvol to missing root repair
+      bcachefs: Make journal read log message a bit quieter
+      bcachefs: add cond_resched() to handle_overwrites()
+
+Nathan Chancellor (1):
+      bcachefs: Fix -Wc23-extensions in bch2_check_dirents()
+
+ fs/bcachefs/alloc_background.c            |  79 ++++-----
+ fs/bcachefs/alloc_background.h            |   9 +-
+ fs/bcachefs/alloc_foreground.c            | 108 ++++++------
+ fs/bcachefs/alloc_foreground.h            |   8 +-
+ fs/bcachefs/backpointers.c                |  72 ++++----
+ fs/bcachefs/backpointers.h                |   5 +-
+ fs/bcachefs/bcachefs.h                    |  72 ++++----
+ fs/bcachefs/btree_cache.c                 |  24 +--
+ fs/bcachefs/btree_gc.c                    |  57 +++---
+ fs/bcachefs/btree_io.c                    |  43 +++--
+ fs/bcachefs/btree_iter.c                  |  78 ++++-----
+ fs/bcachefs/btree_iter.h                  |  31 ++--
+ fs/bcachefs/btree_journal_iter.c          |  19 +-
+ fs/bcachefs/btree_key_cache.c             |  28 ++-
+ fs/bcachefs/btree_locking.c               |  56 +++---
+ fs/bcachefs/btree_node_scan.c             |   2 +
+ fs/bcachefs/btree_trans_commit.c          |  36 ++--
+ fs/bcachefs/btree_types.h                 |   2 +
+ fs/bcachefs/btree_update.c                |  59 ++-----
+ fs/bcachefs/btree_update.h                |  14 +-
+ fs/bcachefs/btree_update_interior.c       | 104 ++++++-----
+ fs/bcachefs/btree_write_buffer.c          |   6 +-
+ fs/bcachefs/buckets.c                     | 163 ++++++++++-------
+ fs/bcachefs/buckets.h                     |  12 +-
+ fs/bcachefs/buckets_waiting_for_journal.c |   3 +-
+ fs/bcachefs/chardev.c                     |   9 +-
+ fs/bcachefs/checksum.c                    |   8 +-
+ fs/bcachefs/clock.c                       |  47 ++---
+ fs/bcachefs/clock.h                       |   1 +
+ fs/bcachefs/compress.c                    |  20 +--
+ fs/bcachefs/darray.h                      |  46 ++++-
+ fs/bcachefs/data_update.c                 | 174 ++++++++++--------
+ fs/bcachefs/debug.c                       |  30 ++--
+ fs/bcachefs/dirent.c                      | 169 +++++++++---------
+ fs/bcachefs/dirent.h                      |  16 +-
+ fs/bcachefs/disk_accounting.c             |  38 ++--
+ fs/bcachefs/disk_accounting.h             |   6 +-
+ fs/bcachefs/disk_groups.c                 |  37 ++--
+ fs/bcachefs/ec.c                          | 108 ++++++------
+ fs/bcachefs/errcode.c                     |   4 +-
+ fs/bcachefs/errcode.h                     |  15 +-
+ fs/bcachefs/error.c                       |  93 +++++-----
+ fs/bcachefs/error.h                       |  12 +-
+ fs/bcachefs/extents.c                     |  63 +++----
+ fs/bcachefs/fs-io-buffered.c              |  30 ++--
+ fs/bcachefs/fs-io-pagecache.c             |   2 +-
+ fs/bcachefs/fs-io.c                       |  12 +-
+ fs/bcachefs/fs-ioctl.c                    |   4 +-
+ fs/bcachefs/fs.c                          |  40 +++--
+ fs/bcachefs/fsck.c                        | 149 +++++++++-------
+ fs/bcachefs/fsck.h                        |   6 +
+ fs/bcachefs/inode.c                       |  86 +++++----
+ fs/bcachefs/inode.h                       |   9 -
+ fs/bcachefs/io_misc.c                     |   2 +-
+ fs/bcachefs/io_read.c                     |  35 ++--
+ fs/bcachefs/io_read.h                     |   6 +-
+ fs/bcachefs/io_write.c                    |  26 ++-
+ fs/bcachefs/journal.c                     | 117 ++++++++++---
+ fs/bcachefs/journal.h                     |   5 +-
+ fs/bcachefs/journal_io.c                  | 281 ++++++++++++++++++------------
+ fs/bcachefs/journal_io.h                  |   1 +
+ fs/bcachefs/journal_reclaim.c             |  44 ++---
+ fs/bcachefs/journal_sb.c                  |   2 +-
+ fs/bcachefs/journal_seq_blacklist.c       |   4 +-
+ fs/bcachefs/lru.c                         |   6 +-
+ fs/bcachefs/migrate.c                     |   4 +-
+ fs/bcachefs/move.c                        | 132 +++++++++-----
+ fs/bcachefs/movinggc.c                    |  26 ++-
+ fs/bcachefs/movinggc.h                    |   3 +-
+ fs/bcachefs/namei.c                       |  21 +--
+ fs/bcachefs/printbuf.h                    |   8 +
+ fs/bcachefs/quota.c                       |   6 +-
+ fs/bcachefs/rebalance.c                   |  27 +--
+ fs/bcachefs/rebalance.h                   |   8 +-
+ fs/bcachefs/rebalance_types.h             |   1 +
+ fs/bcachefs/recovery.c                    |   6 +-
+ fs/bcachefs/recovery_passes.c             |  92 ++++++++--
+ fs/bcachefs/recovery_passes.h             |   5 +
+ fs/bcachefs/recovery_passes_format.h      |   2 +
+ fs/bcachefs/reflink.c                     |   9 +-
+ fs/bcachefs/replicas.c                    |  35 ++--
+ fs/bcachefs/sb-counters_format.h          |   1 +
+ fs/bcachefs/sb-downgrade.c                |   2 +-
+ fs/bcachefs/sb-errors.c                   |  22 +++
+ fs/bcachefs/sb-errors.h                   |   1 +
+ fs/bcachefs/sb-errors_format.h            |   4 +-
+ fs/bcachefs/sb-members.c                  |  21 +--
+ fs/bcachefs/sb-members.h                  |  32 ++--
+ fs/bcachefs/six.c                         |   7 +-
+ fs/bcachefs/snapshot.c                    | 148 +++++++++-------
+ fs/bcachefs/snapshot.h                    |  85 ++++-----
+ fs/bcachefs/str_hash.c                    | 243 +++++++++++++++++---------
+ fs/bcachefs/str_hash.h                    |  24 ++-
+ fs/bcachefs/subvolume.c                   |  45 +++--
+ fs/bcachefs/super-io.c                    |   8 +-
+ fs/bcachefs/super.c                       | 106 ++++++-----
+ fs/bcachefs/sysfs.c                       |  24 +++
+ fs/bcachefs/trace.h                       |  69 ++++++--
+ 98 files changed, 2323 insertions(+), 1757 deletions(-)
