@@ -1,109 +1,201 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EA8748F
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 10:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F40280339;
+	Wed,  4 Jun 2025 10:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749031449; cv=none; b=Ma/RpwR/NaOjoplm3rOT1Y9B/guVhMXtIB9IIDhFSAv1JdhoCHk0+nrV4+z1YK0+3nLVGYamqr1n3O2fHZdj5zMQAjk4/fTJRdWi06dpEMTOxufV9XfGdm72brEzeeS+y61mhh8ufoixkQ1wT/xShoZZszeq/M2jv+Zi93lD4/M=
+	t=1749031541; cv=none; b=e+nWbfrY2nVa+JKIzHVLh0okbzmrzfsSkq3q9ff/lM7gU3KTb5I4NSWm+jIywKFJ2r0TpN1B1SFw4mGuUJoi4Pa4ufkf1DdRbXK4Wig+ryy/xarKJMkVUgqAeX2qB9wtz/BInoXrruSlZu7Q+6ewE2uT73zsIbmaKowKWNPnD3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749031449; c=relaxed/simple;
-	bh=seIrY0Gby6UPJGXQDaLd+t1ObaudYSJ3nxhZrP8pwDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BEFC2Mko3M7N5eyx3qRZ31LuhRVie0PmsnvK2TUR+aA533eAVd/s2bmp67Ens+QkpHOCzeRuDmiTNMTBkMKRLVX+yRJEmSVExwfU9z/rINkpvv2Mxtm4QWsV6Cpa3R0a8W7+01kYvRxaodtZgf+9iB+JcW18wt/u/EteIttfKMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TdqsUA0A; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749031541; c=relaxed/simple;
+	bh=CcTfuyjqSM12x50F8W1XyXrsWuiAPxaoahPzB/aeJmc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aQ87C7gwMBFSxktq2weOvTvr2V3EHoqeZo4D/upDPGuRc6I+IwFIynYfvDZIvVVSTkZDI3jju50aHp/AIlSzYoNET+6olR3oc4XwjoETwfieMfTgFkgI3jINiLwwtmncxrw+5GZG5MQtFNyZEVGinNOCF+idMN/7jSiq6WUOmpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PXU03Ir8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TdqsUA0A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749031446;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XnIkrheePomCWgtSzx9cRRzzCoqZnIbbmr/u3ys8YZ8=;
-	b=TdqsUA0AGRcFk/Y9TM+nlr1DSjCHTzMQZHHNLStKMaztAJTjHxnCLH9HRj3KHbnManhNhV
-	F2bXbpU88HXC2vmgqBRwKFMRvn0l4sLoH252ic7SifgnKLZoXt3OceZHKRsI41j5zUWNAs
-	TSq6g8rC/SI/QOybvt1ZF4ajjElog4s=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-176-xJiOGo6cNt2zgbeHtccfuA-1; Wed, 04 Jun 2025 06:04:05 -0400
-X-MC-Unique: xJiOGo6cNt2zgbeHtccfuA-1
-X-Mimecast-MFC-AGG-ID: xJiOGo6cNt2zgbeHtccfuA_1749031444
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-451deff247cso3686465e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 03:04:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749031444; x=1749636244;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XnIkrheePomCWgtSzx9cRRzzCoqZnIbbmr/u3ys8YZ8=;
-        b=D8vsSPUMbREFrJdVk8PrJs1cL5CFYDl5XcqfCA/pxtfefWZM6T87m7D3OwQWfd/1CN
-         YP8RfDxhjqlXabfiBEh8s4fH6e9xpIAqA72Jsnkv2xr24QzKKnBkNoIZEWR6Ll4Lp9tc
-         giui4seRbO5xUNPtPAImEpXvIX5mf+KF2loQEyDiaWI1VkcfwnIZBUIQCghEvJafT6n8
-         SXTfP12E4sjYK9O9oDJdqH9gNaKfQ4Yurk1nDJj27CuV7O9lq2LYXgUKlU0xE4oivyLn
-         SYlT/Qm6H7/MsznvzQdJxINzHmQxMpn1uTABWYoBEIedq/MGpKL7tyS0KtnsbNdUDl/+
-         CcMg==
-X-Gm-Message-State: AOJu0Yx/gwn7FaZm2sZeqaq1/scYG3bBauV3+BVojfoitsO9AlXhtZRL
-	d3qLfFeHs1x61jQoDUw44XkhiFCmaLGktWjlczzSNTZ3Dv9C8Q1Wbx70R0a+31/dwS2NGa1WPCq
-	rmFseWenmupzqEm9j7VKXDmx4RnGqoZG18bKxNghG1Z5EChC/lfx9FSHqpg0s8JLwMw==
-X-Gm-Gg: ASbGnct6/O3SXtsJucBgHxl/vEfURkzukpKVn9AUx/bN2bVHHLM17rMobiHsnTbOrB8
-	/f5raEEmPnd3qE5UrTmAGaO8kptKc/bfOlhKHRvIejo3cW0QKPRBWVJBgylIylJQQNvaVFuLLQP
-	XWJXrvIwGUaTb5EbDz68swEcJOlQt8l9rvpIMclimanzozGsW9A3up+245ctmYPRmHCVcq3YFAB
-	B5V1X2dKfbKYQ3bgRPXpLQrtODlFPCoFvjJXR/HzWDbqZG7TUJWE9h7jKMBNmpl2XPdZrJpnLDX
-	Js9Oh95MYGVla6rQCrWcHU5tBCJgralgQ1Ctd3tiiOPxXreOJ6G+
-X-Received: by 2002:a05:600c:a4b:b0:442:d9fb:d9a5 with SMTP id 5b1f17b1804b1-451efe974c2mr18272245e9.9.1749031443833;
-        Wed, 04 Jun 2025 03:04:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEanHcVyh1FY7biXgLM1BeG/aTZ81EZcXqzt0tAJ++LQpzUI+38SEUMpUWcen4rJLqfhMG5vg==
-X-Received: by 2002:a05:600c:a4b:b0:442:d9fb:d9a5 with SMTP id 5b1f17b1804b1-451efe974c2mr18271985e9.9.1749031443438;
-        Wed, 04 Jun 2025 03:04:03 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.57.104])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8000d8csm192945285e9.24.2025.06.04.03.04.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 03:04:02 -0700 (PDT)
-Date: Wed, 4 Jun 2025 12:04:01 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Subject: Re: [PATCH v2 04/10] sched/debug: Fix updating of ppos on server
- write ops
-Message-ID: <aEAaEc0-WAnklXjh@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250602180110.816225-1-joelagnelf@nvidia.com>
- <20250602180110.816225-5-joelagnelf@nvidia.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PXU03Ir8"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5548d3Ql004284;
+	Wed, 4 Jun 2025 10:05:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LLWn+M7Jb3tl19nO3TgCdp05g80bpe8bTMMZoETnm2Y=; b=PXU03Ir8zSvNrplc
+	go2gEUMB7tWONFsOvQ4viPgwwLQCBqTeLr0ioCBXLKX7KGEwEmG9dec0lrVC+TpZ
+	DFbcCqqB93ykpzgvAgiD7655+Y/IUzzlpQPDFdKMb0+vs7kdPhwYqIGkfiMd3GwV
+	zfROOOuTVb/uc8jAnBkzwgnaV15H85cRjGi26wMdCg/ehBjexd2vVDMf7mOOlFA8
+	y3v+TCYWPU5W2ZKJnlZREvgmVCDQy10Nqni+IU7MzZcJSrAFQAE9TDAdRxghW6ep
+	TFQECwHEgF/L7h85Om1BMxo1MXUo3eys/MPN3BgUqYtooWTind0yx+oDC9B8BWwA
+	WsWwoA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8rwpja-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 10:05:30 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 554A5TEm005531
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 4 Jun 2025 10:05:29 GMT
+Received: from [10.239.31.134] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Jun 2025
+ 03:05:24 -0700
+Message-ID: <43a6e141-adab-42e9-9966-ec54cb91a6de@quicinc.com>
+Date: Wed, 4 Jun 2025 18:05:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602180110.816225-5-joelagnelf@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
+ link_down reset
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Ziyue Zhang
+	<quic_ziyuzhan@quicinc.com>
+CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>,
+        <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>, <kw@linux.com>,
+        <conor+dt@kernel.org>, <vkoul@kernel.org>, <kishon@kernel.org>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_krichai@quicinc.com>,
+        <quic_vbadigan@quicinc.com>
+References: <20250529035416.4159963-1-quic_ziyuzhan@quicinc.com>
+ <20250529035416.4159963-3-quic_ziyuzhan@quicinc.com>
+ <drr7cngryldptgzbmac7l2xpryugbrnydke3alq5da2mfvmgm5@nwjsqkef7ypc>
+ <e8d1b60c-97fe-4f50-8ead-66711f1aa3a7@quicinc.com>
+ <34dnpaz3gl5jctcohh5kbf4arijotpdlxn2eze3oixrausyev3@4qso3qg5zn4t>
+Content-Language: en-US
+From: Qiang Yu <quic_qianyu@quicinc.com>
+In-Reply-To: <34dnpaz3gl5jctcohh5kbf4arijotpdlxn2eze3oixrausyev3@4qso3qg5zn4t>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: kr1ygYF-xldh2_nW38WLv7Xgzahp8F7z
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA3NiBTYWx0ZWRfXydctOvOa9SmP
+ /qo4oM6jGlGtQACfZRJfoYKTaT+0JMovEgzeaLABBzhhxSoeNFrgazYh/bLrGlaPROVjgG6VElB
+ jEcJGd7ennwLg94abgN2FMZP5TaYC3ZtN08IG1fWFyaOKWQh17I1yR1Gx0ad8BCMJfFRvwf5GjP
+ AIu9eD+6PMgzpGaI6DvCPzZsm+7WvqmwKd39DDeTn5jeS8dODGTJtWcaV+bjIP6Q/MqGI1l1xUI
+ xnCrjAfMsaba9rtNIAjl7BRbOsnGbWrb//JpxgKl1fj0Z+8zLX3wNtR2FpdffEvDVZOhEGbCbWG
+ HYV5sXx+phgwwmYtipQIaa7mKWb2pX/SLTiMntx7YU2a62RAQt+goxFDevDnC88x+c2fe66VbXz
+ lfEa5xAF/86c4Ckt4viy9KwCvZjwtLfdslPcbkC44R6zEJeKkNK+9+Ixzxbogc8ckbl9jQpL
+X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=68401a6a cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=JfrnYn6hAAAA:8
+ a=COk6AnOGAAAA:8 a=gDmLj3BAQhsnJV4uteAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=1CNFftbPRP8L7MoqJWF3:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: kr1ygYF-xldh2_nW38WLv7Xgzahp8F7z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ clxscore=1011 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 spamscore=0 mlxlogscore=999 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506040076
 
-Hi Joel,
 
-On 02/06/25 14:01, Joel Fernandes wrote:
-> Updating "ppos" on error conditions does not make much sense. The pattern
-> is to return the error code directly without modifying the position, or
-> modify the position on success and return the number of bytes written.
-> 
-> Since on success, the return value of apply is 0, there is no point in
-> modifying ppos either. Fix it by removing all this and just returning
-> error code or number of bytes written on success.
+On 6/4/2025 5:15 PM, Dmitry Baryshkov wrote:
+> On Wed, Jun 04, 2025 at 03:58:33PM +0800, Ziyue Zhang wrote:
+>> On 6/3/2025 9:11 PM, Dmitry Baryshkov wrote:
+>>> On Thu, May 29, 2025 at 11:54:14AM +0800, Ziyue Zhang wrote:
+>>>> Each PCIe controller on sa8775p supports 'link_down'reset on hardware,
+>>>> document it.
+>>> I don't think it's possible to "support" reset in hardware. Either it
+>>> exists and is routed, or it is not.
+>> Hi Dmitry,
+>>
+>> I will change the commit msg to
+>> 'Each PCIe controller on sa8775p includes 'link_down'reset on hardware,
+>> document it.'
+>> "Supports" implies that the PCIe controller has an active role in enabling
+>> or managing the reset functionality—it suggests that the controller is designed
+>> to accommodate or facilitate this feature.
+>>  "Includes" simply states that the reset functionality is present in the
+>> hardware—it exists, whether or not it's actively managed or configurable.
+>> So I think change it to includes will be better.
+>>
+>> BRs
+>> Ziyue
+>>
+>>>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+>>>> ---
+>>>>   .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml  | 13 +++++++++----
+>>>>   1 file changed, 9 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>> index e3fa232da2ca..805258cbcf2f 100644
+>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>> @@ -61,11 +61,14 @@ properties:
+>>>>         - const: global
+>>>>     resets:
+>>>> -    maxItems: 1
+>>>> +    minItems: 1
+>>>> +    maxItems: 2
+>>> Shouldn't we just update this to maxItems:2 / minItems:2 and drop
+>>> minItems:1 from the next clause?
+>> Hi Dmitry,
+>>
+>> link_down reset is optional. In many other platforms, like sm8550
+>> and x1e80100, link_down reset is documented as a optional reset.
+>> PCIe will works fine without link_down reset. So I think setting it
+>> as optional is better.
+> You are describing a hardware. How can a reset be optional in the
+> _hardware_? It's either routed or not.
 
-Looks like patches 04, 05 and 07 are standalone fixes. If that is indeed
-the case maybe we could move them to the start of this series so that
-they can picked up independently (or split them to a separate series)?
+I feel a bit confused. According to the theory above, everything seems to
+be non-optional when describing hardware, such as registers, clocks,
+resets, regulators, and interrupts—all of them either exist or do not.
 
-Thanks,
-Juri
+Seems like I misunderstand the concept of 'optional'? Is 'optional' only
+used for compatibility across different platforms?
+
+Additionally, we have documented the PCIe global interrupt as optional. I
+was taught that, in the PCIe driver, this interrupt is retrieved using the
+platform_get_irq_byname_optional API, so it can be documented as optional.
+However, this still seems to contradict the theory mentioned earlier.
+
+>> BRs
+>> Ziyue
+>>
+>>>>     reset-names:
+>>>> +    minItems: 1
+>>>>       items:
+>>>> -      - const: pci
+>>>> +      - const: pci # PCIe core reset
+>>>> +      - const: link_down # PCIe link down reset
+>>>>   required:
+>>>>     - interconnects
+>>>> @@ -161,8 +164,10 @@ examples:
+>>>>               power-domains = <&gcc PCIE_0_GDSC>;
+>>>> -            resets = <&gcc GCC_PCIE_0_BCR>;
+>>>> -            reset-names = "pci";
+>>>> +            resets = <&gcc GCC_PCIE_0_BCR>,
+>>>> +                     <&gcc GCC_PCIE_0_LINK_DOWN_BCR>;
+>>>> +            reset-names = "pci",
+>>>> +                          "link_down";
+>>>>               perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>>>               wake-gpios = <&tlmm 0 GPIO_ACTIVE_HIGH>;
+>>>> -- 
+>>>> 2.34.1
+>>>>
+>>>>
+>>>> -- 
+>>>> linux-phy mailing list
+>>>> linux-phy@lists.infradead.org
+>>>> https://lists.infradead.org/mailman/listinfo/linux-phy
+
+-- 
+With best wishes
+Qiang Yu
 
