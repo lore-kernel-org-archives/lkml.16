@@ -1,86 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73AB1C861D
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0266E214813
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749078139; cv=none; b=PVm/R3U6aN7k/KYS1KcaQ4ftFZ4YboYtifWHSYB8IQaqAo6AJmSfNS9a/0gg6LsjQwFuIYudGu3UbEr51uYryuUB1WYX7gDiVL38bECp7zT3rpF3KcRqr4ss2bymj/PZN/dTeqlCmoeXLIXki/2b5gc/ur3Ydyk/ok86sW1QTys=
+	t=1749078263; cv=none; b=Zffuf5r7SoQs2I4Co16cgasvBxfxX1py6fOcwN9RRB0rw3ZFYMiZnLe2atqT8aIIcHQzK0B7LaacxAACK2/QaggIQpS3vgRxTIn6AIT6tSuzz0z1cjHi7jXIErjmmmgioTUTw8fF/dzuEhiSNxTpdNrQ6krN4rAv42EoOs/81dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749078139; c=relaxed/simple;
-	bh=7HVnavcozlAGqUoew8jM2OzrVTESgvO41Oq+UN60Jl4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=d8TV5i6ViRoyjK7RqX1wjSxWQzeSuBcCPy5WfojeAgfI7bGj7oqRU6eTK5o4Au4Z6a0OrHvFik+aqU5xPHwrSGRfPPPDghIyCYxQHj5k4GVG/TacEyql10MSOudNrh9t1mK9mEABebv3vTGA8kHiLi6QHKk/nxBeDXEinrSqDOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DEzKvAfk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749078263; c=relaxed/simple;
+	bh=exRGgbwr9yCyeN9A0lefWzXikKL4jaZ58HpeXk6pkoc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NWSyI+RW0A5vzoLWckWI7fqRvuvY3vl60B5uCyUfQm4h/f8Ar6UD1llDv/FinZqE9NWztUgEeAw0tKZM7eCw0RNIJOMA8//NguezbVeEKLYa1T7ZrWaopSXaqXtT2N4ck+w2GgjWTWo342IR3uxI14yC9dAJk2CY9pTFBIjXFws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rn2j89AA; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DEzKvAfk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCCAEC4CEE4;
-	Wed,  4 Jun 2025 23:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749078137;
-	bh=7HVnavcozlAGqUoew8jM2OzrVTESgvO41Oq+UN60Jl4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DEzKvAfkv9zRmp2q7hwsbAEplUDcrJY8ti9x8ZSb6l1hEvYmslm/gV17/k9EJLXnS
-	 7BaVNnfVakmAdcgkANIHALTtyFp1URH6vMiN/4OAPSieJ+QUksgM4cNGFSP6cXRPIC
-	 rNvSnMq8MQjhaMyvHlH4QP4apbw0EJXuyc6BJmCM=
-Date: Wed, 4 Jun 2025 16:02:16 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw, Yu-Chun Lin
- <eleanor15x@gmail.com>
-Subject: Re: [PATCH v2 3/3] riscv: Optimize gcd() performance on RISC-V
- without Zbb extension
-Message-Id: <20250604160216.d93f5b06030342ad5dfea0a8@linux-foundation.org>
-In-Reply-To: <20250524155519.1142570-4-visitorckw@gmail.com>
-References: <20250524155519.1142570-1-visitorckw@gmail.com>
-	<20250524155519.1142570-4-visitorckw@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rn2j89AA"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-87dffa24b5cso140833241.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 16:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749078261; x=1749683061; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AmWygWroaE3CgfzylRy20SRQE724eqiHcqgPFBV3jdc=;
+        b=rn2j89AA1+ggWl/NrdUsr4E2vTn+Im0wURmdRqbt1JlGT9hd17tdubdhDHU7FDkHib
+         wCTmK9VhgFrAFR3OBFsWSS6QhtaGsJ3vXZGFzTCaiFLWd73sX84uTzc4GxX7vsSX7Mfs
+         zVZBj8SCaUQIWqt17oDDMC/hNEsK90426Uor6rKrOyFVZDhAZxkbECjIzVCRv8KLYnwy
+         1sTIIMPtfORJRyBB4Zk4br9BSdsFY4qGdtiKaT0gj9Yy4zb2/7UQPKtO8mQl/eMIa8Vj
+         mc8qcgK9Y3Y06FCyzX4r5Bkx0kHK0hm8xjZfw1p5Nc4br8/w7bFH2nfyM2H5+sdwJ33D
+         8JWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749078261; x=1749683061;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AmWygWroaE3CgfzylRy20SRQE724eqiHcqgPFBV3jdc=;
+        b=Ru8K/KbhyRpxZTQhYzZAN4HCz6PAJIw9fYhrF7DblYNCml8JxjZB8GZ0iJu5L6VIs1
+         GdLzDI8P7MLD90bvBNAOwUYkhfJyXe6+alIV9vjRr+XbRJdEIWG77rgoRtdAtJz8G005
+         yluXUmFz/sSZRyfVyEpnAj6aX4aLTEk3M9TNFbFYtJITlgotf5qq3QgC9JOWiQEy8r7k
+         sZCfPqHZE3NZuNELihUExUih/r5kx4YkGaHqiP5iXzzDSbGfJICUadcLlrWNaq9IsVC9
+         r0c2ra0OUxO5cIA6rV9B5S8dSeSeG9ip5k3nuY7EB+fZfk7NC59Kb/w6ZVxYg8gckcB+
+         Fv6g==
+X-Forwarded-Encrypted: i=1; AJvYcCXtKuZnc4hSz8kR+fX9DdQ6sFB0Ss6PQK2iDCH7zmjR2EN/wJgzhHrV5/YSVbkdGCU/Z2U1Tr+4BXeo6A0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYlQrJWNp+wxWGTAwKYAlQJRpuNROh4eSMvAfUQmeB8jYA7AUy
+	4cB3Ue+Ik8aHiEN7XxZVc/QEPTLyc0Uzc+aq6Tq8AQkY8KYkEYoaiaJjb+A6VwhKD9SlSmMd9LQ
+	eEc31kQPVFyfD8soa38kTVcGevk3jtOnpoGk5sEui
+X-Gm-Gg: ASbGncsFZ3IfQ4bp82oC2p6T7mxvKFvRi8ba/6EQsocsNw5x2ybvP5VSrgW3nmlyY98
+	jvTHZO6YvIo9QOxZszYarf630v7oGy1s0Pg+nm3ETJf9LCnNbtxfsOxTkh71AfzLcInX3JUqtBn
+	2EIIfNmgXoyWanNelamKBRSX35ZCtuzWqtXqGmb44ftaA=
+X-Google-Smtp-Source: AGHT+IHMQ0HEf1QGjZKS2FKHFK7WceR4QcvBJZVnXk0gSCJXLZWNY34EB7jNoARv3FwK/IDiJPQd/DA4fgwGFkmqZWo=
+X-Received: by 2002:a05:6102:4406:b0:4e6:e126:6238 with SMTP id
+ ada2fe7eead31-4e746ce24bcmr4227663137.3.1749078260388; Wed, 04 Jun 2025
+ 16:04:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-3-blakejones@google.com> <aD9Xxhwqpm8BDeKe@google.com>
+ <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
+ <aD9sxuFwwxwHGzNi@google.com> <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
+ <aD9yte49C_BM5oA9@google.com> <CAP_z_Cg0ZCfvEFpJpvhuRcUkjV_paCODw2J61D3YQMm7dg0aGg@mail.gmail.com>
+ <aEC9UqkKeEj4on3M@google.com> <aEDEw7bCDAtEXfGC@x1>
+In-Reply-To: <aEDEw7bCDAtEXfGC@x1>
+From: Blake Jones <blakejones@google.com>
+Date: Wed, 4 Jun 2025 16:04:09 -0700
+X-Gm-Features: AX0GCFuBtJRBiLPJLWcckQqQphG1Vff1V02DcY2BL7rNUhiI2R9BuvLLkZ8arFw
+Message-ID: <CAP_z_CjQktMSMVhgX1gBkBh+0sAnWwAjUfBgJ1he1oaR7ULeRg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 24 May 2025 23:55:19 +0800 Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
-
-> The binary GCD implementation uses FFS (find first set), which benefits
-> from hardware support for the ctz instruction, provided by the Zbb
-> extension on RISC-V. Without Zbb, this results in slower
-> software-emulated behavior.
-> 
-> Previously, RISC-V always used the binary GCD, regardless of actual
-> hardware support. This patch improves runtime efficiency by disabling
-> the efficient_ffs_key static branch when Zbb is either not enabled in
-> the kernel (config) or not supported on the executing CPU. This selects
-> the odd-even GCD implementation, which is faster in the absence of
-> efficient FFS.
-> 
-> This change ensures the most suitable GCD algorithm is chosen
-> dynamically based on actual hardware capabilities.
-> 
-> ...
+On Wed, Jun 4, 2025 at 3:12=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+> So, the comment in:
 >
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -21,6 +21,7 @@
->  #include <linux/efi.h>
->  #include <linux/crash_dump.h>
->  #include <linux/panic_notifier.h>
-> +#include <linux/jump_label.h>
->  
->  #include <asm/acpi.h>
->  #include <asm/alternative.h>
-> @@ -51,6 +52,8 @@ atomic_t hart_lottery __section(".sdata")
->  ;
->  unsigned long boot_cpu_hartid;
->  
-> +DECLARE_STATIC_KEY_TRUE(efficient_ffs_key);
+> tools/perf/util/bpf-event.c
+>
+> Is:
+>
+>  * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
+>  * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
+>  * one PERF_RECORD_KSYMBOL is generated for each sub program.
+>
+> which is not so nicely worded tho :-\
+>
+> "One KSYMBOL per program", followed by "one KSYMBOL per sub program".
+>
+> But that matches the referenced:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/k=
+ernel/events/core.c?h=3Dv6.15#n9825
 
-Please let's get this into a header file, visible to the definition
-site and to all users.
+Indeed, we get one KSYMBOL per subprogram, but one BPF_EVENT per program.
+(I found that the term "subprogram" is used inconsistently; sometimes it
+includes the main program, while other times it doesn't. In the case of
+that comment, and the function perf_event__synthesize_one_bpf_prog, it does
+include the main program, which has sub_id =3D 0.)
 
+> So, for these bpf_metadata_ variables, would that be strictly per
+> program or would it be perf 'sub program'?
+
+These BPF metadata records would be generated for each subprogram.
+
+My goal here is to allow PERF_RECORD_SAMPLE events with IPs in BPF code
+to be associated with any metadata that describes that code. As the
+comment points out, each subprogram gets its own PERF_RECORD_KSYMBOL event,
+and that event indicates where the subprogram's starting and ending
+addresses are. With one PERF_RECORD_BPF_METADATA event per subprogram, it's
+then straightforward to associate the metadata with a range of IPs.
+
+If I only generated the metadata records per program rather than per
+subprogram, I could only associate them with a PERF_RECORD_BPF_EVENT event.
+That event has the full program's tag, but it doesn't have a list of the
+subprogram tags for that program. So it doesn't have enough information on
+its own to construct the relevant list of virtual address ranges. And I'd
+be quite concerned about assuming that the BPF_EVENT events immediately
+follow their related KSYMBOL events, especially for events generated while
+the system was generating SAMPLE events.
+
+Blake
+
+> Couldn't get an answer from looking at tools/bpf/bpftool/prog.c, but
+> seems to be with progs, not subprogs, i.e. just the PERF_RECORD_KSYMBOL
+> associated with progs (not subprogs) will have those variables.
+>
+> But then it seems those variables _are_ associated with at least one
+> PERF_RECORD_KSYMBOL, right?
