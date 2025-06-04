@@ -1,130 +1,137 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190674C7C
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB54B1A725A;
+	Wed,  4 Jun 2025 15:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749052165; cv=none; b=t/TMcRY3vk6cBC56qAVHJPDfbnyuzw5ndvaATS1qagYM94MNBsamnRTHdfwxGTQZUiTv56RJS5czQCMRnfgW2aezI5ph4S9Y4aAfYClaPra+Wf+D4AFf+VsD/yMDSnC3VpLvj276GhnbeuHM/UdsF06uzNd1uHclyCGr1fHT2UY=
+	t=1749052177; cv=none; b=Rv+EkCAFLABXC5xiJcQX7uU1MB6dWvbKQuzOcqZS7i2GvHTqq7bdsnAcIAEP3+NMH94pnjkoXwSxVoWJU1rER7xodq2zXRC8fhJH098cMgIko0fEy2XcIDB3qN7b5SwHk5S/tRx4430XaFjqx2C2QDBqV3xsanuYbfJUOScDlls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749052165; c=relaxed/simple;
-	bh=E355dxQOrr/PVcwroKhZnO7dWd/iZ1NHGiq889Ab9X0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fXKudo2p7HXhr2LP3pRHqR5BrYRobGqo8e3P2EZ3DFDUGg9Cp9zQiLAio86MqRwuaYv8rxmLZKIAV8ltQAKMfuXFebO5/cz2ArT26LRdNKRF4Xejca3OUUNvrj5Q9vZ4xmJJelR4TBLpNY3XuIz30CNbrwundvyWjkdiWHVZveM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vb2N4Nwz; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749052177; c=relaxed/simple;
+	bh=vhhKf47KqG9CLznJkMhmlMXu58zLzVz7VvXyLhONGz8=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=EYzpKvpi2sfY0Nr549878U7WI3OIZAky8Pus1k7hwu2vQ7olZPvNB9nnsFssMs1hzOo/q1ErIDJRwBCPZZ+uk3nnL6LGpMcE+vjmDyc9l7kGdCxXoGjnudYxbNbhsvoP56EIitJnGcbLtOaJyj5Q7GeISB6xn6yEudU/D3RLy0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=wIzbmFq6; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vb2N4Nwz"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-312436c2224so5576a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:49:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749052163; x=1749656963; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=APQsb45khTfPV4BXCtKSSbtPEml4hNZfBir9V5yfOUU=;
-        b=vb2N4NwzMmDUdRJy9eacC+fhVRJa7mVGnOlspJTZ9O3Xss488uiMNaRIKJd40aD849
-         Rm7SeSHbpi81siSGLq22lVAqEUKmgs8T4M1DQAbIvwycXvsG4iu1mtIKR652yA8VDA3v
-         Ndywt+Zw9NfRQjGbH+BDghFF+insHeaksYyGfKaQiav18JgGA0diVfgG8oVnZBz60mtI
-         tLPl4iYbrECgKPPDbPzQHKYX68SIEQjaB/RWrQA4gDd2paYFFM+9BkSI7E0qedC3svN/
-         TbB32QhsCMcTAUmiExOyO+zRBVIocf5DLW0RiwC/CBUUpC2uRTk4JwcdDsDFvjHVm9bB
-         jPDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749052163; x=1749656963;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=APQsb45khTfPV4BXCtKSSbtPEml4hNZfBir9V5yfOUU=;
-        b=htionW+9A8EM2A4DZkRafcj7cxipXStQXqTCMYQjzwyujgnDPqXSmi6QgyXZU4t8CW
-         SUiX2J+rsVnpB6c+INdYEeOxQ2Sbc2h/gwhhggvDOWAUnAIB9EnT2iA/knt+bHjdjP0O
-         aP7gMNQoe8ntN4dbWxcdBtvDV+kv851etSBZgnA0MWgR4iBA4RwMfEPPL33eSe48/mT3
-         xMr/3/2eB99LFmBu5yz/Lb0nlek9BFn5JBVjufY9zhRkY9GkjQUPDOsdShgxHjY53Bmf
-         LqTUOctb4TimvM/GMIMOqXLXDNSljpYIc164sMA8+Xr6IZOb7mQJprP8p68wYdhs855N
-         PzLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYLu4hxQPnmkjufHoleFm2t8R9Um5Q6ySmS7qFqgKL6upm8OxxAr2bDozkFkdLzm6HUphkLk6JuD5TZ4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZH/IIoiJnHXEz+pdK5CyugO+N23DoCHUB3Idpq/e0NZKzow4T
-	jAmu2mpy3XM0NjKjLa4LEwjsv2wJmEI/TVsRq45HUNoDrH851lugjB3nMmIxsWC18H2BTsUhn4a
-	4hfu0mg==
-X-Google-Smtp-Source: AGHT+IEhBYHH0jG1lNTT5kDcZ2O2I2zO4DfrveKxEVf0tri6G7bWBC1AeFJUjRv/5iW3hgKOjhXeD0GyTU4=
-X-Received: from pjboe5.prod.google.com ([2002:a17:90b:3945:b0:312:4274:c4ce])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a:b0:311:bdea:dca0
- with SMTP id 98e67ed59e1d1-3130ce0458fmr6517554a91.33.1749052163390; Wed, 04
- Jun 2025 08:49:23 -0700 (PDT)
-Date: Wed, 4 Jun 2025 08:49:21 -0700
-In-Reply-To: <688ba3c4-bf8a-47f1-ad14-85a23399582c@redhat.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="wIzbmFq6"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554D6Q50023428;
+	Wed, 4 Jun 2025 11:49:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=gqvAslu0+W4zDZ/S9EiQb6vrEwe
+	o7vsyczUj4kc+3Jc=; b=wIzbmFq6/iMbAe4IovKqZOBzFM7F3QxqRotxCc7+0Oa
+	PttM+qVrSvBH92heJUSRnVxBIF00Sfa8ejvR3VPQ/yUcf2m+HyyxTPXB5AXI1zON
+	3nsVDnD4fhaU/DgIozZZUb5xTOB9C3oWQ3tihiWG+D1uvyVU05SyW/RPBrXv5Cfm
+	MOLMqPGZNlWjCTduh62bqAX0DIu3Gzsmba6nTVjKkSAAw0XTRF2Z1avWHlIK1IFR
+	mwRWywEEnk1Gjozm9KRlseAV4Esy6v72GqSO0H7Um5vrinK28Aj4kf8+RPBgci7O
+	/kxbjh24sbHCsT7MQzJ5M5Kwa5azp4L+UJYdHuCrxXA==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 472k2u1w5a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 11:49:18 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 554FnH0u039301
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 4 Jun 2025 11:49:17 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Wed, 4 Jun 2025 11:49:17 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Wed, 4 Jun 2025 11:49:17 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Wed, 4 Jun 2025 11:49:17 -0400
+Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.51])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 554Fn5K3003109;
+	Wed, 4 Jun 2025 11:49:08 -0400
+From: Jorge Marques <jorge.marques@analog.com>
+Subject: [PATCH 0/2] Add ADI I3C Controller
+Date: Wed, 4 Jun 2025 17:48:56 +0200
+Message-ID: <20250604-adi-i3c-master-v1-0-0488e80dafcb@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250529234013.3826933-1-seanjc@google.com> <20250529234013.3826933-9-seanjc@google.com>
- <688ba3c4-bf8a-47f1-ad14-85a23399582c@redhat.com>
-Message-ID: <aEBrAbhRFkou4Mvj@google.com>
-Subject: Re: [PATCH 08/28] KVM: nSVM: Use dedicated array of MSRPM offsets to
- merge L0 and L1 bitmaps
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>, Chao Gao <chao.gao@intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOhqQGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDMwMT3cSUTN1M42Td3MTiktQiXaNEU0MTi2RTi2QTcyWgpoKi1LTMCrC
+ B0bG1tQBTDA5QYAAAAA==
+X-Change-ID: 20250604-adi-i3c-master-2a5148c58c47
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Frank Li
+	<Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-i3c@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jorge Marques <jorge.marques@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749052145; l=1126;
+ i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
+ bh=vhhKf47KqG9CLznJkMhmlMXu58zLzVz7VvXyLhONGz8=;
+ b=9P83OD6xgp4adz+K/0eFSLadmPKclk9TLhzw1VCYW49YrWsCt9ffojNeAw7M9hHSXFfXvRRdL
+ H7bw+qbwuYBBZry/12hi6LiIf93nSTJd1hinZ2hzNLWWqcoQ2D4/9De
+X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
+ pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: 1dSFb5FUc3d1PfrHpKDBUqlFOBIORX27
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDExOSBTYWx0ZWRfX2bpw6Qp8wjEN
+ xoMePeKPZOXa2QaMqQ6uhklumG7/3GsKZu+SZZFG2ekP2zlbFHgF3p05Jl6nbw24qvAo8Eot/Fk
+ i8U3S6iygMgLLiHHu2rLu3xeqya0q5Ssg81ansEOWXXedEBbTWdJJbG04pei26BqOBCdvawQykR
+ UzBDfARYYi5HPC5Vq9llY9eibttMySoRdcYoZsnzko/43M4PGps4VWTc3luX1Uj3AVvQnnUAw73
+ 5AuAG20AB2ZURRtJkJHs9Bj0NN4mu7n8171AOFw0O9dQv+Qm9YNOwVw7LpeqzOX2IcEghD0jZpH
+ 1yxb/2PUEUh9BNiv0lnXTGc6qYTcdgiITrru+VuuRlhIafLLW024Ka94eve/hJ7uwa9/j8CuvCr
+ n2IMYJv5reGcFQBt5CFmVwGU0HXqtzQtr0ng1KNlFQZV1/QFikm7pEjCBjqe+tod5QQUijV3
+X-Proofpoint-ORIG-GUID: 1dSFb5FUc3d1PfrHpKDBUqlFOBIORX27
+X-Authority-Analysis: v=2.4 cv=Fv4F/3rq c=1 sm=1 tr=0 ts=68406afe cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=wI1k2SEZAAAA:8 a=gAnH3GRIAAAA:8
+ a=AbWnsF95IPDzd2HxxOMA:9 a=QEXdDO2ut3YA:10 a=6HWbV-4b7c7AdzY24d_u:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 impostorscore=0 suspectscore=0 mlxlogscore=820 spamscore=0
+ malwarescore=0 phishscore=0 clxscore=1011 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506040119
 
-On Wed, Jun 04, 2025, Paolo Bonzini wrote:
-> On 5/30/25 01:39, Sean Christopherson wrote:
-> > Use a dedicated array of MSRPM offsets to merge L0 and L1 bitmaps, i.e. to
-> > merge KVM's vmcb01 bitmap with L1's vmcb12 bitmap.  This will eventually
-> > allow for the removal of direct_access_msrs, as the only path where
-> > tracking the offsets is truly justified is the merge for nested SVM, where
-> > merging in chunks is an easy way to batch uaccess reads/writes.
-> > 
-> > Opportunistically omit the x2APIC MSRs from the merge-specific array
-> > instead of filtering them out at runtime.
-> > 
-> > Note, disabling interception of XSS, EFER, PAT, GHCB, and TSC_AUX is
-> > mutually exclusive with nested virtualization, as KVM passes through the
-> > MSRs only for SEV-ES guests, and KVM doesn't support nested virtualization
-> > for SEV+ guests.  Defer removing those MSRs to a future cleanup in order
-> > to make this refactoring as benign as possible.
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >   arch/x86/kvm/svm/nested.c | 72 +++++++++++++++++++++++++++++++++------
-> >   arch/x86/kvm/svm/svm.c    |  4 +++
-> >   arch/x86/kvm/svm/svm.h    |  2 ++
-> >   3 files changed, 67 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> > index 89a77f0f1cc8..e53020939e60 100644
-> > --- a/arch/x86/kvm/svm/nested.c
-> > +++ b/arch/x86/kvm/svm/nested.c
-> > @@ -184,6 +184,64 @@ void recalc_intercepts(struct vcpu_svm *svm)
-> >   	}
-> >   }
-> > +static int nested_svm_msrpm_merge_offsets[9] __ro_after_init;
-> > +static int nested_svm_nr_msrpm_merge_offsets __ro_after_init;
-> > +
-> > +int __init nested_svm_init_msrpm_merge_offsets(void)
-> > +{
-> > +	const u32 merge_msrs[] = {
-> 
-> "static const", please.
+I3C Controller is subset of the I3C-basic specification to interface
+peripherals through I3C and I2C. The controller RTL is FPGA
+synthesizable and documentation is provided at
+https://analogdevicesinc.github.io/hdl/library/i3c_controller
 
-Ugh, I was thinking the compiler would be magical enough to not generate code to
-fill an on-stack array at runtime, but that's not the case.
+The main target for the I3C Controller IP is low-cost FPGAs.
+In this version the driver supports IBI (only the MDB), I3C and I2C
+transfers.
 
-AFAICT, tagging it __initdata works, so I'll do this to hopefully ensure the
-memory is discarded after module load.
+Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+---
+Jorge Marques (2):
+      dt-bindings: i3c: Add adi-i3c-master
+      i3c: master: Add driver for Analog Devices I3C Controller IP
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index fb4808cf4711..af530f45bf64 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -205,7 +205,7 @@ static int svm_msrpm_offset(u32 msr)
- 
- int __init nested_svm_init_msrpm_merge_offsets(void)
- {
--       const u32 merge_msrs[] = {
-+       static const u32 __initdata merge_msrs[] = {
-                MSR_STAR,
-                MSR_IA32_SYSENTER_CS,
-                MSR_IA32_SYSENTER_EIP,
+ .../devicetree/bindings/i3c/adi,i3c-master.yaml    |   63 ++
+ MAINTAINERS                                        |    6 +
+ drivers/i3c/master/Kconfig                         |   11 +
+ drivers/i3c/master/Makefile                        |    1 +
+ drivers/i3c/master/adi-i3c-master.c                | 1063 ++++++++++++++++++++
+ 5 files changed, 1144 insertions(+)
+---
+base-commit: 00286d7d643d3c98e48d9cc3a9f471b37154f462
+change-id: 20250604-adi-i3c-master-2a5148c58c47
+
+Best regards,
+-- 
+Jorge Marques <jorge.marques@analog.com>
+
