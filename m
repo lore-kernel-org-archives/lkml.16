@@ -1,394 +1,224 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB28202C45
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 19:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749064370; cv=fail; b=h7kliUWwSiRGArmzRTUfqBC6Ap1Nz7JOUmMrg98Eaed1lSCVZkJKDLVmH6lyXirm499XFCFA9N4s7nwNnftKvd2VUAknYefATs2vb8K3ZgonwXCU99QHddv6fP0qUflRvgO2Vc1E7kdaiKOcEaqdAHGfS/0mwnoYhNIuSnzul18=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749064370; c=relaxed/simple;
-	bh=MAG5V+b5CIq3ZP0QnQQtNFEdkVpHfJe86x6kCLszHe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IrRhiLxETcDEtf7RE1Tn/To866Ghj8B8DrEyftvuXOfqAIgoBwlM1ywW2HGd6cq9p5MFcYkn/vmcoZf4kGn9QPDD5A6sgQAMDk8PtvTcK1nlSTqyVYTRCuFG+cZIP5hVNe5L4ubgedaVXahT1slAKKdu3kGLNndr/0lzEJwXZZY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EHYsHWz9; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=nFByIohZ; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2991F4703
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 19:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749064408; cv=none; b=iP1GKr083K0CB68kVeFLdjwwQrE0EDO4l3ijmOP5GYi6pXlOT1xj1jvkJ0pwim4p5NdycItN8lfro6Q66H1dYRg6j5n2EM1aRF7FQAztbxb/sJqdkF7eRiV1Ix44Lev5X9dzTQ8TB4NDOnukxqIMDbA3LOIA57as1XIDigGe+4o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749064408; c=relaxed/simple;
+	bh=Db2JDrEUFmXYyu/uDF6PlGRgyfAd3kmhH7T21wqyCzo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jopHi1gYGt0s4ZIDMq83rCDpVHNgG77tzo+R8i6tThiJlqddW55tcJCxJLie8k2xHgN8kyRf1ZYMDy4e4+uy9SZuTatAieqXo9BRCDSKCu8cPUF9t6+//P0jaUAYex2F3GtdQV2OLCfup/Dcuj85SLcZCGvpwcy+mzKRg0z7o8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VstnK9hE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EHYsHWz9";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="nFByIohZ"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554Ie6mA019961;
-	Wed, 4 Jun 2025 19:12:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=0GqruRF+DpzKwaUrwQ
-	+bqMnYW/vbyPwCBFZsgGuV6og=; b=EHYsHWz9q4yHTT3aRLYjowL2AdgHLnszY3
-	EnNo8gyMPqrD14AAV3JbGt6qTO74vtkOPTDRNpmXigHA/TlW81ZmeD6LJCD0DlYW
-	g6xt+58Ab7Aof5zERzFKekKSRwjMnWCSJ2tim5ONs8aAb5Zn9fIk/WeeEzKTYZgf
-	kVmiczVxZfUkx6ghrekg0Opwpokkg6AEfwcjlggXIUKti8bbLpqWvHoMV76Gqhxa
-	i4ZlVkRWESNlHFKnn8qvLZ2oYZ02hlbBvOBcfPvBo8EAFaS1QumnxFZGhJXd4Xa4
-	DsBVCAoLJBBgxTzbRZI8ONwSwHMnB50Q569ktuLXuA7SgANjpCFw==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471gahcshn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 04 Jun 2025 19:12:30 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 554J2cZi033829;
-	Wed, 4 Jun 2025 19:12:29 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10on2046.outbound.protection.outlook.com [40.107.93.46])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7b5v3v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 04 Jun 2025 19:12:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y6amKSkyIx4VApbIWWHAUFg7Agq3Rrga8FpxW/gQxMGmZQDJFMmmZaICAKFCZ4k2sRoatSbB5zuKcxXcD1n9EqS5P0fGXrwrQGrK5toSQrgQanmdVwx4xX0TVVPkJZGRrp2vxtZ0/wFn8pZwzl65oP+alfpnB7b2CvnufDb8mG/xswt6vy+FybgA2nTWzgrJ0y0QDwypwtC2NuFnqOLrw4+8PU+usdVduSbatb5CmfC+tmnAvcUP0nieHG6RF5P6B6DBBDjVaOPBJg/jBELQnYnAuXk7b1ZkrIhHC+aXidcphsuIjhdvxxUbbqhK7GLFY1kXlJogrijBfUA9AQ0Icw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0GqruRF+DpzKwaUrwQ+bqMnYW/vbyPwCBFZsgGuV6og=;
- b=kJ4PjJBgB79EOExlJiXqp5PXsnp5cJBYsREEp4Z1NAtaN7r9wEbwoM1+6mseaGGO7DLl0vtjNkQhZ0LhYe6KMjEqJ/mY8R3V8IT5gm2JVARAMe5H9KswhAwmVH5idBxvcWk0CM7f/k6fGYjvciDdpj3PuvBNJfvvddSOesHe+oRAj1Un4yVixg5gdmgBFsHPaXnMkuFbZdXJEbQ6UXIQ710DcbQI9vKJWtyITEBivuZJ/M9+7Ax7WbxEgSH3ACWVETW0XLTPvXxiZBPXfBubn4QFjpm8Cr1W/PnoLxawtrtibutXwdnXDIJchWlrjhKRXcB0RJZQcc4QKvg0Zee+1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0GqruRF+DpzKwaUrwQ+bqMnYW/vbyPwCBFZsgGuV6og=;
- b=nFByIohZWxx8DGSlxyQmSpkVPZaWamVWg4tnVy1A6FdGYuNSzjER2wqx/sfWSYhU4VfaMZam5iJDpYKkv9tY9oDtCthoJr020LU8XU/NFrWSPuidwT8wEERGzvRZT31+kGNehnee2ju8bERe2+uQYW59BMtzGe4ilZXrTVpo36s=
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
- by SA1PR10MB7661.namprd10.prod.outlook.com (2603:10b6:806:386::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.41; Wed, 4 Jun
- 2025 19:12:25 +0000
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c%6]) with mapi id 15.20.8813.020; Wed, 4 Jun 2025
- 19:12:24 +0000
-Date: Wed, 4 Jun 2025 15:12:20 -0400
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-Message-ID: <ipscls57c234tnkiivnkssiehkxygsgqja3z772qmvnjaatg3h@77pcu5lra6eo>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>
-References: <20250604140544.688711-1-david@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604140544.688711-1-david@redhat.com>
-User-Agent: NeoMutt/20240425
-X-ClientProxiedBy: YQBPR0101CA0333.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:6b::26) To PH0PR10MB5777.namprd10.prod.outlook.com
- (2603:10b6:510:128::16)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VstnK9hE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749064405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=burzST/eJ5Z7UGznQOvQVsG6FQZbixtkHRYAS7pvlM8=;
+	b=VstnK9hEZWfdSpfV6ykV89QRGFp/IA+9h/IjdarTwzjRFp8Sq0KddsosM/YX0g7+p8BF7N
+	Tet3Ym90MqC9kE/o48VOxynqLo8Qh3pTcbItkz6O3gOb1Nmlr3brVzwz7AjgeveqL6HF6S
+	gqFtffW0FxPRzgDXJrWKaeBPNuMLOCI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-458-mMeo6g50PNSvDWMAWRMmaA-1; Wed, 04 Jun 2025 15:13:24 -0400
+X-MC-Unique: mMeo6g50PNSvDWMAWRMmaA-1
+X-Mimecast-MFC-AGG-ID: mMeo6g50PNSvDWMAWRMmaA_1749064403
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442dc702850so657265e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 12:13:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749064403; x=1749669203;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=burzST/eJ5Z7UGznQOvQVsG6FQZbixtkHRYAS7pvlM8=;
+        b=OUghZdYSTR7LTkzccE8lmEHKwmPOE8wJZQlAnFqHHJkK+DS3SVism2s2HSso6bXg+r
+         Eoc2sE7UsY+9W3nc1c5DMUqi2y8ssSXhTeHuY78u1xi/paOpjY/pN8il4SYUbePKvN+K
+         wOcMv2eQu456C7Gb/soVVHng1MRUbXfd2KVUKj/oRpmhqzSDsB/hHENhhPaimd0GmalO
+         L3EnoHMZB3JIfw33HOr/9M0s66V1za1ZxAocXzlezZqPmoTUvpvnF9x/eqT3wht48xIq
+         QbzlWZx8rjQ2wW8D7SJWPix6tRZNdzbu+IrxhErHitWPPGkbbDvwH9kLRUyAx1mqpW5d
+         Ftpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdhWp1YN+OKJIYhxfxBafj8V25J060ViY9ihZJF2doD3ab0Pr91BskA+m6xn5GdMKihh7Y7Zb1kp96xa0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy42LbhtO6yyUzq5xZWNyI2llhN9xbIt3LH50DI2H5d8HgjDSGT
+	hm98CejGzTzmIstAzFXAdSP5dmRuHtHV2dajNjRIuSwAtXiJoCY/XraiyrG2g5jspyaQ79stDkU
+	4L7lh/hJORW5vub6XyoKT0svMlt3seUMhxicx3pvHFdKx14OzwDyq4ad3RgdBiNmZIQ==
+X-Gm-Gg: ASbGncter6acbJQyo271OzzS+N9hUL5NuEgFXR3uIsg/j0kX6nykRqAbvUsd0DjlEHE
+	w1LBn1Q/Bwxr8S0aUwyBllpit/EGe9qES/q6M8s/7lfscP7MqWVSrvsIj49WC5QDThvdwhiQkQ8
+	Ln8FZHQcc+mIWi/rVx+EKA+/C2O0lbjYx1O0wdrDodTAf3E26MRDUjNMO/uDWnqgCKJ3aBIoipH
+	5h4SX5eDcQVx/QeZuhKgg59DMta3nqhVhmkcEA5HnJrlTm/i4e3AYuJZEhsKSGLteF+cWLQFEWQ
+	F/53gRfh7h3URg==
+X-Received: by 2002:a05:600c:8b58:b0:442:e9ec:4654 with SMTP id 5b1f17b1804b1-451f0a9b604mr37174565e9.8.1749064403030;
+        Wed, 04 Jun 2025 12:13:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBnAuhK8aMrK4WTMzaAHJs7iK560ZZF9epfXYo6P3+2qPcCX8WKi9YUFiOzsz53nW/hgwS+Q==
+X-Received: by 2002:a05:600c:8b58:b0:442:e9ec:4654 with SMTP id 5b1f17b1804b1-451f0a9b604mr37174415e9.8.1749064402563;
+        Wed, 04 Jun 2025 12:13:22 -0700 (PDT)
+Received: from [192.168.10.81] ([151.49.64.79])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4f009fdbasm22133731f8f.85.2025.06.04.12.13.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 12:13:21 -0700 (PDT)
+Message-ID: <c48de0c5-7dd4-4c3d-9f15-3cf0714793b9@redhat.com>
+Date: Wed, 4 Jun 2025 21:13:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|SA1PR10MB7661:EE_
-X-MS-Office365-Filtering-Correlation-Id: 671bdead-2db7-4ed1-c209-08dda39bbd12
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IR4C9cx3r+cMgAKnW9heZkuGy4mYHOmhebeuxeseohhNe2lkJOzUnsfSW2ru?=
- =?us-ascii?Q?DRsexcNlM+vm/qYXhwPvjK65XhL2CguU94AAOvkNSSYIJsNCPbr0u8h6l1VR?=
- =?us-ascii?Q?ZFu0BcdjN3dvicSC9gIqUW87PCHvVJv31NnuE9H7Rw531U66UWkdyULy5Zpb?=
- =?us-ascii?Q?16lTDo+MEmb3kSONAr+islTVzGtRvra1bbR3sOSJN3f3cvgMT5BDt45x/Qjr?=
- =?us-ascii?Q?qfHxCMjxuIbwz44R+mQy6cDwGU0i8pokUm86rQ8WAgeA3ki5omZbk/Hm72AW?=
- =?us-ascii?Q?SUGXt6K7SSMCGGQykbhy4tUU6swWDu5Fc4x7iLjpiGrM9EEtZXRkYUlwcIZm?=
- =?us-ascii?Q?qdv1OEMogif3RxDjBqO5Fzkwa49YVK/kCVotgvgtF/75C6WawwJjwhwH6Ds/?=
- =?us-ascii?Q?zE5KSg+uVcs4FP0O4ZnW43vK/qPyY7M0aTZHWDI1FWTTAmBgp23n9cHYRTSe?=
- =?us-ascii?Q?UFwQbIZk0eQcjHqWkoYRcEbNBWwX5PEzya6NfphW+80FtrqtSQM4FSKn1jG3?=
- =?us-ascii?Q?VpiUo3vO7wsUWinlNZvcqovgWMmc6Xy9Bq2pikHDLfWbQ0RYwotoYjUaY9H5?=
- =?us-ascii?Q?qJMYQQ1C0EZcxk9oywH61qgouCcwvH7mEU0+73wdDt62AYCTWk0d50npkaVH?=
- =?us-ascii?Q?p17y5isj04HTleA8U//eXpxknzUj/d3HVYlkNSaYI7pgxxvWiCpma+9idsJc?=
- =?us-ascii?Q?Id2C+HiHBxpJIPaC1n/SnCpXxVMlnMLi0D09+4AAVuO88buUxcM8lfShLJ9Y?=
- =?us-ascii?Q?smL5YPg2SUScYn81IiF0nszwX6zql/gU6EC/nX0YGpIBcmEkayaLTKXyeXzR?=
- =?us-ascii?Q?V8+C6Vy8RL5R8/WqT2LSevVxoHPncZ5P3ZTdpOvKtZgpfYR6fWe0ZfnITddY?=
- =?us-ascii?Q?6b5/VzB52xBQaKYnj5tYaj7a+NuKxhi5Rqa0po74dO1rdqklM6GKDQAdosLq?=
- =?us-ascii?Q?63MAoZmRx+qetf7CkVYTWoBGyWfglvChSY42QmUoWmOJm/jTnKA4OSxI2T/p?=
- =?us-ascii?Q?FcCDXHEVJsRy4HhADx0hVrpQd4d6EHKJg0ckXQ8dtfvUOPwjP5WEYUzcS/3C?=
- =?us-ascii?Q?keTY8dv9dDgQYgmGmlssamWfxPryi/LW3vqhvDjnYWR750u9/YLGEhd67jtI?=
- =?us-ascii?Q?ZOjSJq7qkB1KpOJdr/LHxZHhp7sh3Vw+ZZ0VtZBzxgjGOyoidPxb23Wmy3Xv?=
- =?us-ascii?Q?or6Qj7Rrhz3EEPfhvKR+IqNjB6RDwW3MUiI+nKp/jHRUp7bNPrBHy5zfj8Dq?=
- =?us-ascii?Q?qh8sKM+hLdmtoqj6y/M7UEwHRylhWmoTib9W7BwNC+6dPyyBceaiKenjQEUc?=
- =?us-ascii?Q?JlscSpl5AdGcza+HLjC0qR2xNyMnVzislwILuyMC43IuCy8RuxkMJdzaDaLK?=
- =?us-ascii?Q?kPc0Fy27EgMAO7Bn3/r4o7u0KyBBzFCBOuk6urz/uLXrVBXl2ByoieO4zznl?=
- =?us-ascii?Q?nxdzH/6swOs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Q/9z6XVBg5EA1f1jQCKtgsJkX6SNqwl6Q9CkgkhpBrJkghiwjgWeWRITUxnl?=
- =?us-ascii?Q?ZfWhp7lYT0LBBZSjgv40xPJfaOmpZ75bsG7Cw44Mw9DWejO1J/KVNVy5p11P?=
- =?us-ascii?Q?8LAKyuhZo0ELmdv/gwdw0/W6z77ladt2qTAgeLXeZUl70ibW28O3k54SYgMp?=
- =?us-ascii?Q?RMoPBJOkF9i3it5AF6N0MQ5guFa7yosKHWx9cShb4bvXZNUNEiOUhpGzvWfA?=
- =?us-ascii?Q?49BgrdK4eLDmLepDS2Xy4isEs6bUfwHw2GNanW2+l69UhJ3s12sDkBfXjnJz?=
- =?us-ascii?Q?Kc6kuN1aMaJweNeCeSW880fxiCYyQrzULzc7hxqvK7yNIFGhQIxYEgOqXdxw?=
- =?us-ascii?Q?3qJ0EZBs2g6IFNRg6VRoY1cHGjkzZkWV7Uqpsgk13aWEzfWp7ZM+C6hHr91i?=
- =?us-ascii?Q?AmqAOSylUWbLtO7Bv+cpgl/hcUv1hg5yW5pX0kQ0B98hdvn7Dgv1Q553hRPr?=
- =?us-ascii?Q?D3sgV02KVK6tBHFbybDwAuEN5XwdsbrhWL6nx9YswEhxgyKvzAf+yDZ32uuO?=
- =?us-ascii?Q?hE1itzVeAEVA18xC2U0UPGcCsR1sIwSNvcFNC2fcsNSWxj1QQRnGigJ74Rxd?=
- =?us-ascii?Q?1Gj2DqEZC/cc45pFHgT+cz3vEZpnoyNH2dBEkQ4zKYqBBF0cyHTuTo9CeLP3?=
- =?us-ascii?Q?c17Cjiw22Ygzj5Qifx/MVc5ozkjzohFIdDghXoRpKdhcJG64TdR3a6qUnOoi?=
- =?us-ascii?Q?kIDFVj0jIMoq3PZKT3H8Oe/Yzk3gKF9hjAH6p9bEzE0BQP/TZl5QqT0BjepE?=
- =?us-ascii?Q?vmt/HWadOJCjPfTXu/5gJVGRQHs4i6clNuONusqGm0rnA77JKO7zOS3T7vAi?=
- =?us-ascii?Q?wwltI2icX8aQQgaQVeAuQX3zXbiDzcSD5+RbfNdZitBQ9ZPOWUnfjWnKV5OR?=
- =?us-ascii?Q?Z+4x6Olg9eVbI4l32/1ylPmA9eSapvUl2pwwXSclSj8tCNAEHqZI+EbO2G+Z?=
- =?us-ascii?Q?uuCAXAjY5BrntXAdgxoMrovzHqJSqtG9ftDR2InG5Oh0g4obKfpE8kUcDRc0?=
- =?us-ascii?Q?cV2xin0b7FT/msiMRwwd3dFmDHSAU6cXh6cRK74aHda1UsRLcA1ZyEUkYNVB?=
- =?us-ascii?Q?Kl4QuJKs9SXf42oJooMEgSOQL+q1++Qt0EpoWkGozgbiIO3pI7af5FQv6O4d?=
- =?us-ascii?Q?1+KyFGEGFF4IUQ7PvS7TLfz0VE6LAWsSzZMpZLlH68Mm5V4FXnUcp6iDDGDQ?=
- =?us-ascii?Q?YIlUso+VYKfvjcdqhhsSheD1TWxIjMYoIJjHpirgfaAreHE+XgeizTgd3YFL?=
- =?us-ascii?Q?4NMCzSFtWdVX5wlvSrws3gsXRUP6xKaahCqRAnIbZlsU+7AAhYpOhn+FaKUg?=
- =?us-ascii?Q?2foAP8ik5Our0pwlOfRD8umce/tA9clj4myrn1nasyywEPuHPt/houGhm4bo?=
- =?us-ascii?Q?DncTpATv4ppdmTEBEwXaUgUCq5ZLp+t1z67VPOeqa4VXdrqGzmyLLGjD4Hc0?=
- =?us-ascii?Q?5Iif8i9qLNmqbJux97dMfCZbwGlIz+mvW5cYVrhDlule5mBCj8vYyHNAyrb4?=
- =?us-ascii?Q?4PAKrFUIW4GOclS5C278Me/VfgPGDjAnO8Jc2b6msEtxXVeEmcofz3tMXgr0?=
- =?us-ascii?Q?2OfjOzRThhjTl7vT+Pi2tWk2KgOVtBbax7yo94A4?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	XrtL22rDFSc8CJoVKMkSA8NYOZNMVdwbJzF2/L3YFty8SAve6v0t2WnSrGgMXG4W5fojMT7MuJeNBhbO8yKaCtihhrK2fL7Gl6cV57FXZ9zSVllPeslXtEVMo26f4octqUMTeLk3Hm0myQ+hc2LV2VvRO1zfTP+TjGXidUSG2JkbCH5A6z0uKEbpLhQ1Z3HK3C15E7IQhANtYcac+F3UPaRbL+Vef9ldRx8FWd6UNFAx/z7wNAd8Ym4VKpsNvEMJwodzwODD9pN+YcK/3kbnjX6HCxht8DkbIxz/woPBHO/Z5LH4mXN0/MovDVp5qLg7LbYzTCZOo9bzs5dE+N5IEzELKnOHZL9DnryX5ncoZBU3TadnjH1W9saOI1avE/ITtqhZMYwco5wohq+K08XsyLdEsri457nGRCJdel+0Lu8nnGaEbZRlLb39YehfOOPp7wO1X/aPhWAiVHLWT93qae/KPCHCfEY8K3he23NZBWs9nuhS2G7h3ByCJsDPOdzblrxDn6IMUMQZKzuHdwzPHeFhtMOwFhGQ6Q2+f6JiIElvEDQwukPJzaRcu9kGwfMqjOstiOuE/takSxrQ+D4EP/DjIDcd6yyeFgwnYcwkxUQ=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 671bdead-2db7-4ed1-c209-08dda39bbd12
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 19:12:24.5787
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VfoCsD1YcjYPvoS3ckltDGvEHZsv8hv9GsBEjEusqTxXOWOYnTDerD5dX530EPMakJtTwwp3keNEyYJ8huirnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7661
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_04,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506040150
-X-Authority-Analysis: v=2.4 cv=aqqyCTZV c=1 sm=1 tr=0 ts=68409a9e b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=20KFwNOVAAAA:8 a=Z4Rwk6OoAAAA:8 a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=iox4zFpeAAAA:8 a=9jRdOu3wAAAA:8 a=Ikd4Dj_1AAAA:8
- a=jLtvaRDhEtiH42pHbnIA:9 a=CjuIK1q_8ugA:10 a=HkZW87K1Qel5hWWM3VKY:22 a=WzC6qhA0u3u7Ye7llzcV:22 a=ZE6KLimJVUuLrTuGpvhn:22 cc=ntf awl=host:13207
-X-Proofpoint-GUID: bx1KYolMuupE_KrnpNmtKAknph2VMTvG
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDE1MSBTYWx0ZWRfXzUpOoF8obLX7 IfdeLldF3ep8Ipk7aKvAdS9CKZVCF1cz6suFa2Lo4sL8Q70zbIUtzIhP9QuRAApZx+dDgn1Ocxc sq8HKKC3ez0Lc5ivYoUVn0BEulXPPj8dTW3N4fuxMF9KKEYW4ain38dAEpX/PCyU17zd3mABAi3
- pdOT3xS+2pGQeaZ4d+A7dAwPO/kOYfxnDdYOa2DbIFwTjxQJuSXbRvTxHdtrGfVB1Dfxe7pI9xx 3mg4jnCGMrwWrSWQs3awl+iq9GnWzQYcuWCcxSIvv5ztviGW+2gc6ftf9ydSx4NtjOlq/vP1rEE RbQmszu/BbHk9YcCI8mtsBHZt2/at0j8u+F/t/U8FIFhXVoRXsILgwRWfVVQLoqCN16eaNHBO1y
- 0EVy1rELAyLM50CQOqptInLq3HmWAC/IZ/uN+pBXelmuDn/Wxof2CZAam/b7kkYB9iN3sA/m
-X-Proofpoint-ORIG-GUID: bx1KYolMuupE_KrnpNmtKAknph2VMTvG
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/28] KVM: SVM: Add helpers for accessing MSR bitmap that
+ don't rely on offsets
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
+ Chao Gao <chao.gao@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20250529234013.3826933-1-seanjc@google.com>
+ <20250529234013.3826933-12-seanjc@google.com>
+ <1392db34-0c37-49db-8ece-68c02ff3520d@redhat.com>
+ <aECD09sxnFAA2Te5@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <aECD09sxnFAA2Te5@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-* David Hildenbrand <david@redhat.com> [250604 10:06]:
-> Especially once we hit one of the assertions in
-> sanity_check_pinned_pages(), observing follow-up assertions failing
-> in other code can give good clues about what went wrong, so use
-> VM_WARN_ON_ONCE instead.
+On 6/4/25 19:35, Sean Christopherson wrote:
+> On Wed, Jun 04, 2025, Paolo Bonzini wrote:
+>> Replying here for patches 11/25/26.  None of this is needed, just write a
+>> function like this:
+>>
+>> static inline u32 svm_msr_bit(u32 msr)
+>> {
+>> 	u32 msr_base = msr & ~(SVM_MSRS_PER_RANGE - 1);
 > 
-> While at it, let's just convert all VM_BUG_ON to VM_WARN_ON_ONCE as
-> well. Add one comment for the pfn_valid() check.
+> Ooh, clever.
 > 
-> We have to introduce VM_WARN_ON_ONCE_VMA() to make that fly.
+>> 	if (msr_base == SVM_MSRPM_RANGE_0_BASE_MSR)
+>> 		return SVM_MSRPM_BIT_NR(0, msr);
+>> 	if (msr_base == SVM_MSRPM_RANGE_1_BASE_MSR)
+>> 		return SVM_MSRPM_BIT_NR(1, msr);
+>> 	if (msr_base == SVM_MSRPM_RANGE_2_BASE_MSR)
+>> 		return SVM_MSRPM_BIT_NR(2, msr);
+>> 	return MSR_INVALID;
 > 
-> Drop the BUG_ON after mmap_read_lock_killable(), if that ever returns
-> something > 0 we're in bigger trouble. Convert the other BUG_ON's into
-> VM_WARN_ON_ONCE as well, they are in a similar domain "should never
-> happen", but more reasonable to check for during early testing.
+> I initially had something like this, but I don't like the potential for typos,
+> e.g. to fat finger something like:
 > 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Peter Xu <peterx@redhat.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 	if (msr_base == SVM_MSRPM_RANGE_2_BASE_MSR)
+> 		return SVM_MSRPM_BIT_NR(1, msr);
+> 
+> Which is how I ended up with the (admittedly ugly) CASE macros.  [...]
+> Actually, better idea!  Hopefully.  With your masking trick, there's no need to
+> do subtraction to get the offset within a range, which means getting the bit/byte
+> number for an MSR can be done entirely programmatically. And if we do that, then> the SVM_MSRPM_RANGE_xxx_BASE_MSR defines can go away, and the (very 
+trivial)
+> copy+paste that I dislike also goes away.
+> 
+> Completely untested, but how about this?
+> 
+> 	#define SVM_MSRPM_OFFSET_MASK (SVM_MSRS_PER_RANGE - 1)
+> 
+> 	static __always_inline int svm_msrpm_bit_nr(u32 msr)
 
-seems okay, besides the one nit.
+(yeah, after hitting send I noticed that msr->msrpm would have been better)
 
-Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+> 	{
+> 		int range_nr;
+> 
+> 		switch (msr & ~SVM_MSRPM_OFFSET_MASK) {
+> 		case 0:
+> 			range_nr = 0;
+> 			break;
+> 		case 0xc0000000:
+> 			range_nr = 1;
+> 			break;
+> 		case 0xc0010000:
+> 			range_nr = 2;
+> 			break;
+> 		default:
+> 			return -EINVAL;
+> 		}
 
-> ---
-> 
-> Wanted to do this for a long time, but my todo list keeps growing ...
-> 
-> Based on mm/mm-unstable
-> 
-> ---
->  include/linux/mmdebug.h | 12 ++++++++++++
->  mm/gup.c                | 41 +++++++++++++++++++----------------------
->  2 files changed, 31 insertions(+), 22 deletions(-)
-> 
-> diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
-> index a0a3894900ed4..14a45979cccc9 100644
-> --- a/include/linux/mmdebug.h
-> +++ b/include/linux/mmdebug.h
-> @@ -89,6 +89,17 @@ void vma_iter_dump_tree(const struct vma_iterator *vmi);
->  	}								\
->  	unlikely(__ret_warn_once);					\
->  })
-> +#define VM_WARN_ON_ONCE_VMA(cond, vma)		({			\
-> +	static bool __section(".data..once") __warned;			\
-> +	int __ret_warn_once = !!(cond);					\
-> +									\
-> +	if (unlikely(__ret_warn_once && !__warned)) {			\
-> +		dump_vma(vma);						\
-> +		__warned = true;					\
-> +		WARN_ON(1);						\
-> +	}								\
-> +	unlikely(__ret_warn_once);					\
-> +})
->  #define VM_WARN_ON_VMG(cond, vmg)		({			\
->  	int __ret_warn = !!(cond);					\
->  									\
-> @@ -115,6 +126,7 @@ void vma_iter_dump_tree(const struct vma_iterator *vmi);
->  #define VM_WARN_ON_FOLIO(cond, folio)  BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ON_ONCE_FOLIO(cond, folio)  BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ON_ONCE_MM(cond, mm)  BUILD_BUG_ON_INVALID(cond)
-> +#define VM_WARN_ON_ONCE_VMA(cond, vma)  BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ON_VMG(cond, vmg)  BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
-> diff --git a/mm/gup.c b/mm/gup.c
-> index e065a49842a87..3c3931fcdd820 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -64,11 +64,11 @@ static inline void sanity_check_pinned_pages(struct page **pages,
->  		    !folio_test_anon(folio))
->  			continue;
->  		if (!folio_test_large(folio) || folio_test_hugetlb(folio))
-> -			VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page), page);
-> +			VM_WARN_ON_ONCE_PAGE(!PageAnonExclusive(&folio->page), page);
->  		else
->  			/* Either a PTE-mapped or a PMD-mapped THP. */
-> -			VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page) &&
-> -				       !PageAnonExclusive(page), page);
-> +			VM_WARN_ON_ONCE_PAGE(!PageAnonExclusive(&folio->page) &&
-> +					     !PageAnonExclusive(page), page);
->  	}
->  }
->  
-> @@ -760,8 +760,8 @@ static struct page *follow_huge_pmd(struct vm_area_struct *vma,
->  	if (!pmd_write(pmdval) && gup_must_unshare(vma, flags, page))
->  		return ERR_PTR(-EMLINK);
->  
-> -	VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> -			!PageAnonExclusive(page), page);
-> +	VM_WARN_ON_ONCE_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> +			     !PageAnonExclusive(page), page);
->  
->  	ret = try_grab_folio(page_folio(page), 1, flags);
->  	if (ret)
-> @@ -899,8 +899,8 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  		goto out;
->  	}
->  
-> -	VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> -		       !PageAnonExclusive(page), page);
-> +	VM_WARN_ON_ONCE_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> +			     !PageAnonExclusive(page), page);
->  
->  	/* try_grab_folio() does nothing unless FOLL_GET or FOLL_PIN is set. */
->  	ret = try_grab_folio(folio, 1, flags);
-> @@ -1180,7 +1180,7 @@ static int faultin_page(struct vm_area_struct *vma,
->  	if (unshare) {
->  		fault_flags |= FAULT_FLAG_UNSHARE;
->  		/* FAULT_FLAG_WRITE and FAULT_FLAG_UNSHARE are incompatible */
-> -		VM_BUG_ON(fault_flags & FAULT_FLAG_WRITE);
-> +		VM_WARN_ON_ONCE(fault_flags & FAULT_FLAG_WRITE);
->  	}
->  
->  	ret = handle_mm_fault(vma, address, fault_flags, NULL);
-> @@ -1760,10 +1760,7 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
->  		}
->  
->  		/* VM_FAULT_RETRY or VM_FAULT_COMPLETED cannot return errors */
-> -		if (!*locked) {
-> -			BUG_ON(ret < 0);
-> -			BUG_ON(ret >= nr_pages);
-> -		}
-> +		VM_WARN_ON_ONCE(!*locked && (ret < 0 || ret >= nr_pages));
+I actually was going to propose something very similar, I refrained only 
+because I wasn't sure if there would be other remaining uses of 
+SVM_MSRPM_RANGE_?_BASE_MSR.  The above is nice.
 
-nit, we are losing accuracy on the value of ret here.  I doubt it makes
-much of a difference though.
+> 		return range_nr * SVM_MSRPM_BYTES_PER_RANGE * BITS_PER_BYTE +
+> 		       (msr & SVM_MSRPM_OFFSET_MASK) * SVM_BITS_PER_MSR)
 
->  
->  		if (ret > 0) {
->  			nr_pages -= ret;
-> @@ -1808,7 +1805,6 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
->  
->  		ret = mmap_read_lock_killable(mm);
->  		if (ret) {
-> -			BUG_ON(ret > 0);
->  			if (!pages_done)
->  				pages_done = ret;
->  			break;
-> @@ -1819,11 +1815,11 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
->  				       pages, locked);
->  		if (!*locked) {
->  			/* Continue to retry until we succeeded */
-> -			BUG_ON(ret != 0);
-> +			VM_WARN_ON_ONCE(ret != 0);
->  			goto retry;
->  		}
->  		if (ret != 1) {
-> -			BUG_ON(ret > 1);
-> +			VM_WARN_ON_ONCE(ret > 1);
->  			if (!pages_done)
->  				pages_done = ret;
->  			break;
-> @@ -1885,10 +1881,10 @@ long populate_vma_page_range(struct vm_area_struct *vma,
->  	int gup_flags;
->  	long ret;
->  
-> -	VM_BUG_ON(!PAGE_ALIGNED(start));
-> -	VM_BUG_ON(!PAGE_ALIGNED(end));
-> -	VM_BUG_ON_VMA(start < vma->vm_start, vma);
-> -	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
-> +	VM_WARN_ON_ONCE(!PAGE_ALIGNED(start));
-> +	VM_WARN_ON_ONCE(!PAGE_ALIGNED(end));
-> +	VM_WARN_ON_ONCE_VMA(start < vma->vm_start, vma);
-> +	VM_WARN_ON_ONCE_VMA(end   > vma->vm_end, vma);
->  	mmap_assert_locked(mm);
->  
->  	/*
-> @@ -1957,8 +1953,8 @@ long faultin_page_range(struct mm_struct *mm, unsigned long start,
->  	int gup_flags;
->  	long ret;
->  
-> -	VM_BUG_ON(!PAGE_ALIGNED(start));
-> -	VM_BUG_ON(!PAGE_ALIGNED(end));
-> +	VM_WARN_ON_ONCE(!PAGE_ALIGNED(start));
-> +	VM_WARN_ON_ONCE(!PAGE_ALIGNED(end));
->  	mmap_assert_locked(mm);
->  
->  	/*
-> @@ -2908,7 +2904,8 @@ static int gup_fast_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
->  		} else if (pte_special(pte))
->  			goto pte_unmap;
->  
-> -		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
-> +		/* If it's not marked as special it must have a valid memmap. */
-> +		VM_WARN_ON_ONCE(!pfn_valid(pte_pfn(pte)));
->  		page = pte_page(pte);
->  
->  		folio = try_grab_folio_fast(page, 1, flags);
+Or this too:
+
+   return ((range_nr * SVM_MSRS_PER_RANGE)
+           + (msr & SVM_MSRPM_OFFSET_MASK)) * SVM_BITS_PER_MSR;
+
+depending on personal taste.  A few less macros, a few more parentheses.
+
+That removes the enjoyment of seeing everything collapse into a single 
+LEA instruction (X*2+CONST), as was the case with SVM_MSRPM_BIT_NR.  But 
+I agree that these versions are about as nice as the code can be made.
+
+> The open coded literals aren't pretty, but VMX does the same thing, precisely
+> because I didn't want any code besides the innermost helper dealing with the
+> msr => offset math.
+
+>>> +#define BUILD_SVM_MSR_BITMAP_HELPERS(ret_type, action, bitop)			\
+>>> +	__BUILD_SVM_MSR_BITMAP_HELPER(ret_type, action, bitop, read,  0)	\
+>>> +	__BUILD_SVM_MSR_BITMAP_HELPER(ret_type, action, bitop, write, 1)
+>>> +
+>>> +BUILD_SVM_MSR_BITMAP_HELPERS(bool, test, test)
+>>> +BUILD_SVM_MSR_BITMAP_HELPERS(void, clear, __clear)
+>>> +BUILD_SVM_MSR_BITMAP_HELPERS(void, set, __set)
+>> Yes it's a bit duplication, but no need for the nesting, just do:
 > 
-> base-commit: 2d0c297637e7d59771c1533847c666cdddc19884
-> -- 
-> 2.49.0
-> 
+> I don't have a super strong preference, but I do want to be consistent between
+> VMX and SVM, and VMX has the nesting (unsurprisingly, also written by me).  And
+> for that, the nested macros add a bit more value due to reads vs writes being in
+> entirely different areas of the bitmap.
+
+Yeah, fair enough.  Since it's copied from VMX it makes sense.
+
+Paolo
+
