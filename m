@@ -1,226 +1,235 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA27216605;
-	Wed,  4 Jun 2025 02:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8380B230D14;
+	Wed,  4 Jun 2025 02:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749005811; cv=none; b=VXNTWxy8pIactNj3tgIwz151hH49UMuuYMGxLXayZ9XoXm4FfKufRy9Vb8ZjHqgHunQoMTi1DjfapkS2vXKcGOmRItLKzF18nq39YHS4vCMKxWRkxLHhvXopOEwP2qfOth1o0URft42yWbr08N+IK7sjfPDAmC4C0i339rzV6ao=
+	t=1749005880; cv=none; b=ai19N1ebMCRm7CKTbutt9u4rjPCSIU3R+30yiX36S4URnBFpjn3xwwRX757NcvcNi5pYDpNVE7+q8rS8T3RKXKPyrF0pKwJ1hfr/l2UVY84QDINDl4zCyY+I4SSq4Lyk2TApt1L89/J+pQuvi2e/Q6vTNHHHR093t+R/kTQwFQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749005811; c=relaxed/simple;
-	bh=9ADNWried8jflnHLRDx186uAkTp4IyX00tCTcIjR754=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eBGaAfHgK0MbH3CdJWMSg2/jOMjSPjT0JctdUJc/MYgd/wn8kdpPagv01ZukFNySAPjAxsnwFHnw62ay/L82V7axAQJSpK2KEd38QkPG9HuLMs5ch4fY2DsAYvkkkc+maBCDNlvaJ7D2TzRD9HGXmeAnSJ7a/1vIc3XZG4POaHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ry5W4Pg0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749005880; c=relaxed/simple;
+	bh=+kWzTcHBzf1aWzkd8t80rJRxvNyHpEOLoaEfIgMWrfE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZMDTS4eDPXxNIAkhRkVIfzbVtKjrrhivh6nV5fTWYzYuiwJQhlBg7A98e56Ta+LloaTwkuLBub0bWpmx2Ge2AhH3+4snAPija7FIXrIxGSj0b52h4DTliwIOfUPFoCAfXCNCh/5ejv0B9Mqt3JDUYuswjF/6+Zq2VeQcf2E91DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xd/67w2F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ry5W4Pg0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=1+gC4E8VWHE9PGcJadHKddNRK0r0Jr+nTzO4YDbUhM8=; b=ry5W4Pg0sUCX5eeqe6bN55Axow
-	baO70AknOxnRoArfgroiLNCmk+65aLqidvM1S9KFlSh/TdjpZECN+/9kgSdH0imMJM0/zJj6kzZ8R
-	2R/P+ENkj+UMMyRxIHfcRfcjb3D/OVdP5EPflz1iHxwphqN73Oh8Sh5K3U08QLG56rHoHpj4pmPvX
-	5hPoFwY/206CLFN0aunwsOCgqjikXhACGEoyoSNyanwo/OkGTQI3/dzWS4g5gRxGeqq7V/BudQEm0
-	3XetiJLZVX12WzH/JGRD14jKIpb0ZGvTVkh6/J+QRnWHfAfk5Jei17yQt6jBVbl8DRs8NeXUMwZwQ
-	0swV/6lA==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMeIl-00000002gNf-2hWz;
-	Wed, 04 Jun 2025 02:56:27 +0000
-Message-ID: <7992a607-c06f-4739-a0cd-52b5e06100b2@infradead.org>
-Date: Tue, 3 Jun 2025 19:56:22 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xd/67w2F"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F2003C4CEED;
+	Wed,  4 Jun 2025 02:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749005880;
+	bh=+kWzTcHBzf1aWzkd8t80rJRxvNyHpEOLoaEfIgMWrfE=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Xd/67w2FGFzhKoecDXaBGboCpchiPTFDJ160nqIuMS1Q096tGdCFiQ9RhdHIHZjaV
+	 Wu/b8BFqtRLbm9fcmtGhlbNyytanKqlibllPSZOG15wWK9nZ0TtjhbXmUNKxoIyDXh
+	 Hq+GobjFY5GZ42FXmyJE89ml+hWHUPRI03GA7dQet3mLAIFRFHxqGulwua6akIpyLd
+	 mC6FLLHfiFO5CmP7X6F1dhwIqh3iYPP7wiSS8sqtBCACPUL9cFS9biealVkqCG+xwp
+	 y6flQepgPU0ZBCiJoGNm3mPRRvA+aWuQWKV/vbF2xCQJ+yTHowY1ia8zGTlnL2gVBK
+	 /zLluGj07Dsqw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E070FC5AD49;
+	Wed,  4 Jun 2025 02:57:59 +0000 (UTC)
+From: Mingcong Bai via B4 Relay <devnull+jeffbai.aosc.io@kernel.org>
+Subject: [PATCH v2 0/5] drm/xe: enable driver usage on non-4KiB kernels
+Date: Wed, 04 Jun 2025 10:57:54 +0800
+Message-Id: <20250604-upstream-xe-non-4k-v2-v2-0-ce7905da7b08@aosc.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v3 01/15] Documentation: hyperv: Confidential
- VMBus
-To: Roman Kisel <romank@linux.microsoft.com>, alok.a.tiwari@oracle.com,
- arnd@arndb.de, bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
- decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
- kys@microsoft.com, mingo@redhat.com, mhklinux@outlook.com,
- tglx@linutronix.de, wei.liu@kernel.org, linux-arch@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, x86@kernel.org
-Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-References: <20250604004341.7194-1-romank@linux.microsoft.com>
- <20250604004341.7194-2-romank@linux.microsoft.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250604004341.7194-2-romank@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADK2P2gC/x3MTQqAIBBA4avErBuQ6QfqKtHCbKwhstCSILx70
+ vJbvPdCYC8coC9e8BwlyOEyqCzArNotjDJnAylqVKsqvM9wedY7PozucFhvGAlrbSw1lekmO0N
+ uT89Wnv87jCl9WgHjAWcAAAA=
+X-Change-ID: 20250603-upstream-xe-non-4k-v2-4acf253c9bfd
+To: Lucas De Marchi <lucas.demarchi@intel.com>, 
+ =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, 
+ Francois Dugast <francois.dugast@intel.com>, 
+ =?utf-8?q?Zbigniew_Kempczy=C5=84ski?= <zbigniew.kempczynski@intel.com>, 
+ =?utf-8?q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>, 
+ Mauro Carvalho Chehab <mauro.chehab@linux.intel.com>, 
+ Matthew Brost <matthew.brost@intel.com>, 
+ Zhanjun Dong <zhanjun.dong@intel.com>, 
+ Matt Roper <matthew.d.roper@intel.com>, 
+ Alan Previn <alan.previn.teres.alexis@intel.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Mateusz Naklicki <mateusz.naklicki@intel.com>
+Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ Kexy Biscuit <kexybiscuit@aosc.io>, Shang Yatsen <429839446@qq.com>, 
+ Mingcong Bai <jeffbai@aosc.io>, Wenbin Fang <fangwenbin@vip.qq.com>, 
+ Haien Liang <27873200@qq.com>, Jianfeng Liu <liujianfeng1994@gmail.com>, 
+ Shirong Liu <lsr1024@qq.com>, Haofeng Wu <s2600cw2@126.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749005878; l=6957;
+ i=jeffbai@aosc.io; s=20250604; h=from:subject:message-id;
+ bh=+kWzTcHBzf1aWzkd8t80rJRxvNyHpEOLoaEfIgMWrfE=;
+ b=8vLx3q8e3BZJxJ9aZzsi7/ARRfa8W/HOCMhz7n7nEEXlakwDOZJxYlSWjxQ5WFl0/eD1i4DDJ
+ YtWI0ZZPdoOAeby8AdcKMBxTEHKgBZNySUkxLe0wHfVdPD+xatwl0RJ
+X-Developer-Key: i=jeffbai@aosc.io; a=ed25519;
+ pk=MJdgklflDF+Xz9x2Lp+ogEnEyk8HRosMGiqLgWbFctY=
+X-Endpoint-Received: by B4 Relay for jeffbai@aosc.io/20250604 with
+ auth_id=422
+X-Original-From: Mingcong Bai <jeffbai@aosc.io>
+Reply-To: jeffbai@aosc.io
 
-Hi--
+This patch series attempts to enable the use of xe DRM driver on non-4KiB
+kernel page platforms. This involves fixing the ttm/bo interface, as well
+as parts of the userspace API to make use of kernel `PAGE_SIZE' for
+alignment instead of the assumed `SZ_4K', it also fixes incorrect usage of
+`PAGE_SIZE' in the GuC and ring buffer interface code to make sure all
+instructions/commands were aligned to 4KiB barriers (per the Programmer's
+Manual for the GPUs covered by this DRM driver).
 
-On 6/3/25 5:43 PM, Roman Kisel wrote:
-> Define what the confidential VMBus is and describe what advantages
-> it offers on the capable hardware.
-> 
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> ---
->  Documentation/virt/hyperv/coco.rst | 125 ++++++++++++++++++++++++++++-
->  1 file changed, 124 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/virt/hyperv/coco.rst b/Documentation/virt/hyperv/coco.rst
-> index c15d6fe34b4e..b4904b64219d 100644
-> --- a/Documentation/virt/hyperv/coco.rst
-> +++ b/Documentation/virt/hyperv/coco.rst
-> @@ -178,7 +178,7 @@ These Hyper-V and VMBus memory pages are marked as decrypted:
->  
->  * VMBus monitor pages
->  
-> -* Synthetic interrupt controller (synic) related pages (unless supplied by
-> +* Synthetic interrupt controller (SynIC) related pages (unless supplied by
->    the paravisor)
->  
->  * Per-cpu hypercall input and output pages (unless running with a paravisor)
-> @@ -258,3 +258,126 @@ normal page fault is generated instead of #VC or #VE, and the page-fault-
->  based handlers for load_unaligned_zeropad() fixup the reference. When the
->  encrypted/decrypted transition is complete, the pages are marked as "present"
->  again. See hv_vtom_clear_present() and hv_vtom_set_host_visibility().
-> +
-> +Confidential VMBus
-> +------------------
-> +
-> +The confidential VMBus enables the confidential guest not to interact with the
-> +untrusted host partition and the untrusted hypervisor. Instead, the guest relies
-> +on the trusted paravisor to communicate with the devices processing sensitive
-> +data. The hardware (SNP or TDX) encrypts the guest memory and the register state
-> +while measuring the paravisor image using the platform security processor to
-> +ensure trusted and confidential computing.
-> +
-> +Confidential VMBus provides a secure communication channel between the guest and
-> +the paravisor, ensuring that sensitive data is protected from  hypervisor-level
-                                                                ^^
-                                                              s/  / /
+This issue was first discovered and reported by members of the LoongArch
+user communities, whose hardware commonly ran on 16KiB-page kernels. The
+patch series began on an unassuming branch of a downstream kernel tree
+maintained by Shang Yatsen.[^1]
 
-> +access through memory encryption and register state isolation.
-> +
-> +The unencrypted data never leaves the VM so neither the host partition nor the
-> +hypervisor can access it at all. In addition to that, the guest only needs to
-> +establish a VMBus connection with the paravisor for the channels that process
-> +sensitive data, and the paravisor abstracts the details of communicating with
-> +the specific devices away.
-> +
-> +Confidential VMBus is an extension of Confidential Computing (CoCo) VMs
-> +(a.k.a. "Isolated" VMs in Hyper-V terminology). Without Confidential VMBus,
-> +guest VMBus device drivers (the "VSC"s in VMBus terminology) communicate
-> +with VMBus servers (the VSPs) running on the Hyper-V host. The
-> +communication must be through memory that has been decrypted so the
-> +host can access it. With Confidential VMBus, one or more of the VSPs reside
-> +in the trusted paravisor layer in the guest VM. Since the paravisor layer also
-> +operates in encrypted memory, the memory used for communication with
-> +such VSPs does not need to be decrypted and thereby exposed to the
-> +Hyper-V host. The paravisor is responsible for communicating securely
-> +with the Hyper-V host as necessary. In some cases (e.g. time synchonization,
-> +key-value pairs exchange) the unencrypted data doesn't need to be communicated
-> +with the host at all, and a conventional VMBus connection suffices.
-> +
-> +Here is the data flow for a conventional VMBus connection and the Confidential
-> +VMBus connection (C stands for the client or VSC, S for the server or VSP):
-> +
-> ++---- GUEST ----+       +----- DEVICE ----+        +----- HOST -----+
-> +|               |       |                 |        |                |
-> +|               |       |                 |        |                |
-> +|               |       |                 ==========                |
-> +|               |       |                 |        |                |
-> +|               |       |                 |        |                |
-> +|               |       |                 |        |                |
-> ++----- C -------+       +-----------------+        +------- S ------+
-> +       ||                                                   ||
-> +       ||                                                   ||
-> ++------||------------------ VMBus --------------------------||------+
-> +|                     Interrupts, MMIO                              |
-> ++-------------------------------------------------------------------+
-> +
-> ++---- GUEST --------------- VTL0 ------+               +-- DEVICE --+
-> +|                                      |               |            |
-> +| +- PARAVISOR --------- VTL2 -----+   |               |            |
-> +| |     +-- VMBus Relay ------+    ====+================            |
-> +| |     |   Interrupts, MMIO  |    |   |               |            |
-> +| |     +-------- S ----------+    |   |               +------------+
-> +| |               ||               |   |
-> +| +---------+     ||               |   |
-> +| |  Linux  |     ||    OpenHCL    |   |
-> +| |  kernel |     ||               |   |
-> +| +---- C --+-----||---------------+   |
-> +|       ||        ||                   |
-> ++-------++------- C -------------------+               +------------+
-> +        ||                                             |    HOST    |
-> +        ||                                             +---- S -----+
-> ++-------||----------------- VMBus ---------------------------||-----+
-> +|                     Interrupts, MMIO                              |
-> ++-------------------------------------------------------------------+
-> +
-> +An implementation of the VMBus relay that offers the Confidential VMBus channels
-> +is available in the OpenVMM project as a part of the OpenHCL paravisor. Please
-> +refer to https://openvmm.dev/ and https://github.com/microsoft/openvmm for more
-> +information about the OpenHCL paravisor.
-> +
-> +A guest that is running with a paravisor must determine at runtime if
-> +Confidential VMBus is supported by the current paravisor. It does so by first
-> +trying to establish a Confidential VMBus connection with the paravisor using
-> +standard mechanisms where the memory remains encrypted. If this succeeds,
-> +then the guest can proceed to use Confidential VMBus. If it fails, then the
-> +guest must fallback to establishing a non-Confidential VMBus connection with
-> +the Hyper-V host.
-> +
-> +Confidential VMBus is a characteristic of the VMBus connection as a whole,
-> +and of each VMBus channel that is created. When a Confidential VMBus
-> +connection is established, the paravisor provides the guest the message-passing
-> +path that is used for VMBus device creation and deletion, and it provides a
-> +per-CPU synthetic interrupt controller (SynIC) just like the SynIC that is
-> +offered by the Hyper-V host. Each VMBus device that is offered to the guest
-> +indicates the degree to which it participates in Confidential VMBus. The offer
-> +indicates if the device uses encrypted ring buffers, and if the device uses
-> +encrypted memory for DMA that is done outside the ring buffer. These settings
-> +may be different for different devices using the same Confidential VMBus
-> +connection.
+It worked well but remained sparsely documented, a lot of the work done
+here relied on Shang Yatsen's original patch.
 
-Various lines throughout:
-Please try to keep line lengths to <= 80 characters foe people who read
-documentation in a terminal window.
+AOSC OS then picked it up[^2] to provide Intel Xe/Arc support for users of
+its LoongArch port, for which I worked extensively on. After months of
+positive user feedback and from encouragement from Kexy Biscuit, my
+colleague at the community, I decided to examine its potential for
+upstreaming, cross-reference kernel and Intel documentation to better
+document and revise this patch.
 
-> +Although these settings are separate, in practice it'll always be encrypted
-> +ring buffer only or both encrypted ring buffer and external data. If a channel
-> +is offered by the paravisor with confidential VMBus, the ring buffer can always
-> +be encrypted since it's strictly for communication between the VTL2 paravisor
-> +and the VTL0 guest. However, other memory regions are often used for e.g. DMA,
-> +so they need to be accessible by the underlying hardware, and must be unencrypted
-> +(unless the device supports encrypted memory). Currently, there are no any VSPs
+Now that this series has been tested good (for boot up, OpenGL, and
+playback of a standardised set of video samples[^3] on the following
+platforms (motherboard + GPU model):
 
-                                                                       not
+- x86-64, 4KiB kernel page:
+    - MS-7D42 + Intel Arc A580
+    - COLORFIRE B760M-MEOW WIFI D5 + Intel Arc B580
+- LoongArch, 16KiB kernel page:
+    - XA61200 + GUNNIR DG1 Blue Halberd (Intel DG1)
+    - XA61200 + GUNNIR Iris Xe Index 4 (Intel DG1)
+    - XA61200 + GUNNIR Intel Iris Xe Max Index V2 (Intel DG1)
+    - XA61200 + GUNNIR Intel Arc A380 Index 6G (Intel Arc A380)
+    - XA61200 + ASRock Arc A380 Challenger ITX OC (Intel Arc A380)
+    - XA61200 + Intel Arc A580
+    - XA61200 + GUNNIR Intel Arc A750 Photon 8G OC (Intel Arc A750)
+    - XA61200 + Intel Arc B580
+    - XB612B0 + GUNNIR Intel Iris Xe Max Index V2 (Intel DG1)
+    - XB612B0 + GUNNIR Intel Arc A380 Index 6G (Intel Arc A380)
+    - ASUS XC-LS3A6M + GUNNIR Intel Arc B580 INDEX 12G (Intel Arc B580)
 
-> +in OpenHCL that support encrypted external memory, but we will use it in the
-> +future.
-> +
-> +Because some devices on a Confidential VMBus may require decrypted ring buffers
-> +and DMA transfers, the guest must interact with two SynICs -- the one provided
-> +by the paravisor and the one provided by the Hyper-V host when Confidential
-> +VMBus is not offered. Interrupts are always signaled by the paravisor SynIC, but
-> +the guest must check for messages and for channel interrupts on both SynICs.
-> +
-> +In the case of a confidential VM, regular SynIC access by the guest is
-> +intercepted by the paravisor (this includes various MSRs such as the SIMP and
-> +SIEFP, as well as hypercalls like HvPostMessage and HvSignalEvent). If the guest
-> +actually wants to communicate with the hypervisor, it has to use special mechanisms
-> +(GHCB page on SNP, or tdcall on TDX). Messages will always be one or the other:
-> +with confidential VMBus, all messages use the paravisor SynIC, otherwise they all
-> +use the hypervisor SynIC. For interrupt signaling, though, some channels may be
-> +running on the host (non-confidential, using the VMBus relay) and use the hypervisor
-> +SynIC, and some on the paravisor and use its SynIC. The RelIDs are coordinated by
-> +the OpenHCL VMBus server and are guaranteed to be unique regardless of whether
-> +the channel originated on the host or the paravisor.
+On these platforms, basic functionalities tested good but the driver was
+unstable with occasional resets (I do suspect however, that this platform
+suffers from PCIe coherence issues, as instability only occurs under heavy
+VRAM I/O load):
 
+- AArch64, 4KiB/64KiB kernel pages:
+    - ERUN-FD3000 (Phytium D3000) + GUNNIR Intel Iris Xe Max Index V2
+      (Intel DG1)
+    - ERUN-FD3000 (Phytium D3000) + GUNNIR Intel Arc A380 Index 6G
+      (Intel Arc A380)
+    - ERUN-FD3000 (Phytium D3000) + GUNNIR Intel Arc A750 Photon 8G OC
+      (Intel Arc A750)
+
+I think that this patch series is now ready for your comment and review.
+Please forgive me if I made any simple mistake or used wrong terminologies,
+but I have never worked on a patch for the DRM subsystem and my experience
+is still quite thin.
+
+But anyway, just letting you all know that Intel Xe/Arc works on non-4KiB
+kernel page platforms (and honestly, it's great to use, especially for
+games and media playback)!
+
+[^1]: https://github.com/FanFansfan/loongson-linux/tree/loongarch-xe
+[^2]: We maintained Shang Yatsen's patch until our v6.13.3 tree, until
+      we decided to test and send this series upstream,
+      https://github.com/AOSC-Tracking/linux/tree/aosc/v6.13.3
+[^3]: Delicious hot pot!
+      https://repo.aosc.io/ahvl/sample-videos-20250223.tar.zst
+
+---
+Matthew(s), Lucas, and Francois:
+
+Thanks again for your patience and review.
+
+I recently had a job change and it put me off this series for months, but
+I'm back (and should be a lot more responsive now) - sorry! Let's get this
+ball rolling again.
+
+I was unfortunately unable to revise 1/5 from v1 as you requested, neither
+of your suggestions to allow allocation of VRAM smaller than page size
+worked... So I kept that part as is.
+
+As for the your comment in 5/5, I'm not sure about what the right approach
+to implement a SZ_64K >= PAGE_SIZE assert was, as there are many other
+instances of similar ternary conditional operators in the xe code. Correct
+me if I'm wrong but I felt that it might be better handled in a separate
+patch series?
+
+---
+Changes in v2:
+
+- Define `GUC_ALIGN' and use them in GuC code to improve clarity.
+- Update documentation on `DRM_XE_QUERY_CONFIG_MIN_ALIGNMENT'.
+- Rebase, and other minor changes.
+- Link to v1:
+  https://lore.kernel.org/all/20250226-xe-non-4k-fix-v1-0-80f23b5ee40e@aosc.io/
+
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Thomas Hellström <thomas.hellstrom@linux.intel.com>
+To: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+To: Maxime Ripard <mripard@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+To: David Airlie <airlied@gmail.com>
+To: Simona Vetter <simona@ffwll.ch>
+To: José Roberto de Souza <jose.souza@intel.com>
+To: Francois Dugast <francois.dugast@intel.com>
+To: Matthew Brost <matthew.brost@intel.com>
+To: Alan Previn <alan.previn.teres.alexis@intel.com>
+To: Zhanjun Dong <zhanjun.dong@intel.com>
+To: Matt Roper <matthew.d.roper@intel.com>
+To: Mateusz Naklicki <mateusz.naklicki@intel.com>
+Cc: Mauro Carvalho Chehab <mauro.chehab@linux.intel.com>
+Cc: Zbigniew Kempczyński <zbigniew.kempczynski@intel.com>
+Cc: intel-xe@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Suggested-by: Kexy Biscuit <kexybiscuit@aosc.io>
+Co-developed-by: Shang Yatsen <429839446@qq.com>
+Signed-off-by: Shang Yatsen <429839446@qq.com>
+Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+
+---
+Mingcong Bai (5):
+      drm/xe/bo: fix alignment with non-4KiB kernel page sizes
+      drm/xe/guc: use GUC_SIZE (SZ_4K) for alignment
+      drm/xe/regs: fix RING_CTL_SIZE(size) calculation
+      drm/xe: use 4KiB alignment for cursor jumps
+      drm/xe/query: use PAGE_SIZE as the minimum page alignment
+
+ drivers/gpu/drm/xe/regs/xe_engine_regs.h |  2 +-
+ drivers/gpu/drm/xe/xe_bo.c               |  8 ++++----
+ drivers/gpu/drm/xe/xe_guc.c              |  4 ++--
+ drivers/gpu/drm/xe/xe_guc.h              |  3 +++
+ drivers/gpu/drm/xe/xe_guc_ads.c          | 32 ++++++++++++++++----------------
+ drivers/gpu/drm/xe/xe_guc_capture.c      |  8 ++++----
+ drivers/gpu/drm/xe/xe_guc_ct.c           |  2 +-
+ drivers/gpu/drm/xe/xe_guc_log.c          |  5 +++--
+ drivers/gpu/drm/xe/xe_guc_pc.c           |  4 ++--
+ drivers/gpu/drm/xe/xe_migrate.c          |  4 ++--
+ drivers/gpu/drm/xe/xe_query.c            |  2 +-
+ include/uapi/drm/xe_drm.h                |  7 +++++--
+ 12 files changed, 44 insertions(+), 37 deletions(-)
+---
+base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
+change-id: 20250603-upstream-xe-non-4k-v2-4acf253c9bfd
+
+Best regards,
 -- 
-~Randy
+Mingcong Bai <jeffbai@aosc.io>
+
 
