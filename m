@@ -1,132 +1,147 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BB0284B56;
-	Wed,  4 Jun 2025 08:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289F12638A3;
+	Wed,  4 Jun 2025 08:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749026340; cv=none; b=tZBJj34SVm5/udJ/iNWSeSr9xnKqAXtm4euoTo0mR02ggiwj4xd2JHBkaz/RdtUUuPIwBjhhhawbrYbQVSR5dspDxUBvswqV6ZSkKuH+yNdOBnbgbgWaeGHMsVsMIWHebfLHp3+Z8Qce5o1Z6j7KQRUg/2aKikHKlvixZxjVMHA=
+	t=1749026348; cv=none; b=mhYRhfeG9fUidValFUoSpqFO9xG0OylZ8RsR4Da3J3jhR/KjHlByFznWN/BSwKfc1RYdtxa9mHeF/G/T+sTOdJQ+WL6V3zNeLzG76+8GFjNqx1QNGdyfCOEtTJWJbigR0PKnx9BEKSq1WlDaOh6a7aUI7yEa/A0z3ftmG7s2iMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749026340; c=relaxed/simple;
-	bh=J/oOFTUxS5oATS/ezUWe2LloW5xWGBZn4Z+S46WH7uo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=dal7qvU0pAkLbU26fqDORhA/tb/AsEWpL4fVxnQZHFKBYsYNFKJwmGQSX5mngiP0aeX4y0Ab5FGNcUjGrxoqw9tMYskBSFp6asibIT1sIkvALgJZPPq7ja6PBTyYet4T7ENRgP90pCxXAxh2CSHsSqecWhUih/rewg1HHSBnefM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=VE9R3vhu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qce+ATV8; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1749026348; c=relaxed/simple;
+	bh=TrSKCb5/EH4IQccVNmxWPdRPEdzJVs8FV7rzgkAQSp4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Idt18it3BrcRZR+cGXjxvyj9zynfiy1s42jZ3mTj1A9y2rMbJa31rOD+SuiaW3e0Mn+ZRrE7mv4n6sOqWtnUZe90r8+zccptr414qIVth42kcDbiY17EG4N0QKp5cmeXK86rQRTgjU1alC5WkfDcZMbkK7uCmpSqqgy2h0BXvMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ac7oM1fh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="VE9R3vhu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qce+ATV8"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 9EEC72540126;
-	Wed,  4 Jun 2025 04:38:57 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Wed, 04 Jun 2025 04:38:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749026337;
-	 x=1749112737; bh=n5JAJEL2oW4vd7E9p4FbaR7i6iB6+wvOYm4qzAl4WN8=; b=
-	VE9R3vhuln2wknGNiHJ+5Og/KQglay9qXjlo9mwy2+4TWSB0bm8mW1rabJHuTs6r
-	T8z3kodpBmioUO8PtBK0Aa531IYURE5OxzmCADegNFKhJOYPMk7r/an6tGiszHus
-	4JfnwEotoZYPIxbQzgJSdJuagErNLwlhTmCf9mxj7gapMPeaHeeKdSZI1SGxfnko
-	XoGnLiUk98ADqRtR7KI+REnj/FHXbWIYEgndOWWl84OIivSc0BsZPbFdqqpuzOhZ
-	wgHV9hSwq7WAlbZwfKEDrV/BWGaIlofUmd7cW7TU6k+XMyG65pIVX3VSs+7tYOV9
-	rwsR5i6Whrf/frs6V6ye9g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749026337; x=
-	1749112737; bh=n5JAJEL2oW4vd7E9p4FbaR7i6iB6+wvOYm4qzAl4WN8=; b=Q
-	ce+ATV8TSeTSqeXU0Ek+s1CyaB6I3j8F2GhjsH2DF16QTeI092GbCVYsoiMtiQ8n
-	IES4GJwj11VODQMt3m3/+GpN5ntGCVwasWHo33kIM04GGA16mSKYgnPkVh/HNJCv
-	XOnksuvNIE1kHL6tSuEiAidWxU3yF6N43/gOFJenC3aZlAyDMpxeJxwbFjv8Kv8L
-	0ABuY6mS3AOAYs/zV9+CPTh0DFGUR3bPnw7V9j9pCr5FHp5FpYra2OUk1LX+E+mI
-	VGtS5D3o38+2Wczq/6fH54xPChtXcHP+uKrDk38Vm4Rw0d8oyb8dRLjpK1NYGQ3j
-	6cmOYRgAsX6NfWT++d7DA==
-X-ME-Sender: <xms:IAZAaKC_iQ8roRrkXmBaA-PFQS92Ny4zk77d95ZVBOMieWyJTaFb0g>
-    <xme:IAZAaEhzRg8F0huJYZhmtjImx3YaAAyV8QmOTApRH8Fp3jvoefn3KLnwqC-lj_tT8
-    aNbaE_UdTw3SLhsVtw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepledp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlvgigrghnughrvgdrthhorhhguh
-    gvsehfohhsshdrshhtrdgtohhmpdhrtghpthhtohepfhgrsghivghnrdguvghsshgvnhhn
-    vgesfhhoshhsrdhsthdrtghomhdprhgtphhtthhopehlihhonhgvlhdruggvsghivghvvg
-    esfhhoshhsrdhsthdrtghomhdprhgtphhtthhopehmtghoqhhuvghlihhnrdhsthhmfedv
-    sehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhi
-    nhhugidqshhtmhefvdesshhtqdhmugdqmhgrihhlmhgrnhdrshhtohhrmhhrvghplhihrd
-    gtohhmpdhrtghpthhtoheplhhinhhugidqtghrhihpthhosehvghgvrhdrkhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhg
-X-ME-Proxy: <xmx:IAZAaNkdUnrakb0WjI41MEgPWwJtVzJpg9ci5ztvzeQrQ0Vpoi4dfw>
-    <xmx:IAZAaIwXt9JaRH5T3EEvl6WkhdKTI52SnWWA_fTECz8OYol20reEZQ>
-    <xmx:IAZAaPSScJAgL3xtSkiM7_z8yD_57gmOzgKxp1QGf7IYQVzLlRqF1A>
-    <xmx:IAZAaDZmzDXZVLBTDtmuUfGp29jMLCxGFfI-Yv9HGdHTGQqCcL1J3Q>
-    <xmx:IQZAaOkxTPu1ZofEuTyzRW42FoeBsuNZw-A10CpHyzd3vLOrgZJpNb8h>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BF76C700061; Wed,  4 Jun 2025 04:38:56 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ac7oM1fh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D20ADC4CEF0;
+	Wed,  4 Jun 2025 08:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749026348;
+	bh=TrSKCb5/EH4IQccVNmxWPdRPEdzJVs8FV7rzgkAQSp4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ac7oM1fhdXJ0L3ZiV6VhiB+LtYZ6kj4RDE9hvNN+gsaLUxaBexFI+hQFrv0PJiEzZ
+	 CD/cBuNA1n+tvK2tB/CyhKRnS5C+cWt9zER3AhIWTjFIksZ5f09965jSPrWVdeAMz6
+	 H7QTMKCBFf+pjbejVmjVvMuaT6vP8330aWNhGuDPvxz+46A2KWF8AERWuRAzLfD6ZG
+	 0jW29V47nrRfIJdfa08SXbiPA0a5fZQViexdozardSvVvH4iTEbERSbYuBm0czEyvA
+	 bYG1lHKRUHTrkU9h1rW3Yt0X8KRwakMxUiTzDumWT40fgETcT/D3ekEMg8NeYvja0S
+	 z8IAVfaP1nopg==
+Message-ID: <6fd8b288-2719-424b-92d2-3dcfe03bbaef@kernel.org>
+Date: Wed, 4 Jun 2025 10:39:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tbb2e10097ecee1e7
-Date: Wed, 04 Jun 2025 10:38:20 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Eric Biggers" <ebiggers@kernel.org>, linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org, "Ard Biesheuvel" <ardb@kernel.org>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>,
- "Fabien Dessenne" <fabien.dessenne@foss.st.com>,
- "Lionel DEBIEVE" <lionel.debieve@foss.st.com>,
- "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
- linux-stm32@st-md-mailman.stormreply.com
-Message-Id: <0c760b4f-4f52-4384-b663-3b08e4f92448@app.fastmail.com>
-In-Reply-To: <20250601193441.6913-1-ebiggers@kernel.org>
-References: <20250601193441.6913-1-ebiggers@kernel.org>
-Subject: Re: [PATCH v2] crypto: stm32 - remove crc32 and crc32c support
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC net-next v2] page_pool: import Jesper's page_pool
+ benchmark
+To: Mina Almasry <almasrymina@google.com>,
+ =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, Ilias Apalodimas
+ <ilias.apalodimas@linaro.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20250525034354.258247-1-almasrymina@google.com>
+ <87iklna61r.fsf@toke.dk>
+ <CAHS8izOSW8dZpqgKT=ZxqpctVE3Y9AyR8qXyBGvdW0E8KFgonA@mail.gmail.com>
+ <87h615m6cp.fsf@toke.dk>
+ <CAHS8izNDSTkmC32aRA9R=phqRfZUyz06Psc=swOpfVW5SW4R_w@mail.gmail.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <CAHS8izNDSTkmC32aRA9R=phqRfZUyz06Psc=swOpfVW5SW4R_w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 1, 2025, at 21:34, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
->
-> Remove the crc32 and crc32c support from the stm32 driver.  Since it's
-> not wired up to the CRC library, almost no CRC user in the kernel can
-> actually be taking advantage of it, so it's effectively dead code.
->
-> Support for this hardware could be migrated to the CRC library, but
-> there doesn't seem to be much point.  This CRC engine is present only on
-> a couple older SoCs that lacked CRC instructions.
->
-> Even on those SoCs, it's probably not worthwhile.  This driver has to
-> deal with things like locking and runtime power management that do not
-> exist in software CRC code and are a source of bugs (as is clear from
-> the commit log) and add significant overhead to the processing of short
-> messages, which are common.  The patch that originally added this driver
-> seemed to justify it based purely on a microbenchmark on Cortex-M7 on
-> long messages, not a real use case.  These days, if this driver were to
-> be used at all it would likely be on Cortex-A7 instead.  This CRC engine
-> is also not supported by QEMU, making the driver not easily testable.
->
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-As far as I can tell, the CRC unit was present on the original
-24 MHz STM32F1 (Cortex-M3), where it probably had some merit, and
-later chips including the STM32MP1 (Cortex-A7) just incorporated
-the block for compatibility.
+On 28/05/2025 21.46, Mina Almasry wrote:
+> On Wed, May 28, 2025 at 2:28 AM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+>>
+>> Mina Almasry <almasrymina@google.com> writes:
+>>
+>>> On Mon, May 26, 2025 at 5:51 AM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+>>>>> Fast path results:
+>>>>> no-softirq-page_pool01 Per elem: 11 cycles(tsc) 4.368 ns
+>>>>>
+>>>>> ptr_ring results:
+>>>>> no-softirq-page_pool02 Per elem: 527 cycles(tsc) 195.187 ns
+>>>>>
+>>>>> slow path results:
+>>>>> no-softirq-page_pool03 Per elem: 549 cycles(tsc) 203.466 ns
+>>>>> ```
+>>>>>
+>>>>> Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+>>>>> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+>>>>> Cc: Jakub Kicinski <kuba@kernel.org>
+>>>>> Cc: Toke Høiland-Jørgensen <toke@toke.dk>
+>>>>>
+>>>>> Signed-off-by: Mina Almasry <almasrymina@google.com>
+>>>>
+>>>> Back when you posted the first RFC, Jesper and I chatted about ways to
+>>>> avoid the ugly "load module and read the output from dmesg" interface to
+>>>> the test.
+>>>>
+>>>
+>>> I agree the existing interface is ugly.
+>>>
+>>>> One idea we came up with was to make the module include only the "inner"
+>>>> functions for the benchmark, and expose those to BPF as kfuncs. Then the
+>>>> test runner can be a BPF program that runs the tests, collects the data
+>>>> and passes it to userspace via maps or a ringbuffer or something. That's
+>>>> a nicer and more customisable interface than the printk output. And if
+>>>> they're small enough, maybe we could even include the functions into the
+>>>> page_pool code itself, instead of in a separate benchmark module?
+>>>>
+>>>> WDYT of that idea? :)
+>>>
+>>> ...but this sounds like an enormous amount of effort, for something
+>>> that is a bit ugly but isn't THAT bad. Especially for me, I'm not that
+>>> much of an expert that I know how to implement what you're referring
+>>> to off the top of my head. I normally am open to spending time but
+>>> this is not that high on my todolist and I have limited bandwidth to
+>>> resolve this :(
+>>>
+>>> I also feel that this is something that could be improved post merge.
+>>> I think it's very beneficial to have this merged in some form that can
+>>> be improved later. Byungchul is making a lot of changes to these mm
+>>> things and it would be nice to have an easy way to run the benchmark
+>>> in tree and maybe even get automated results from nipa. If we could
+>>> agree on mvp that is appropriate to merge without too much scope creep
+>>> that would be ideal from my side at least.
+>>
+>> Right, fair. I guess we can merge it as-is, and then investigate whether
+>> we can move it to BPF-based (or maybe 'perf bench' - Cc acme) later :)
+> 
+> Thanks for the pliability. Reviewed-bys and comments welcome.
+> 
+> Additionally Signed-off-by from Jesper is needed I think. Since most
+> of this code is his, I retained his authorship. Jesper, whenever this
+> looks good to me, a signed-off-by would be good and I would carry it
+> to future versions. Changing authorship to me is also fine by me but I
+> would think you want to retain the credit.
 
-      Arnd
+Okay, I think Ilias'es comment[1] and ACK convinced me, let us merge
+this as-is.  We have been asking people to run it over several years
+before accepting patches. We shouldn't be pointing people to use
+out-of-tree tests for accepting patches.
+
+It is not perfect, but it have served us well for benchmarking in the
+last approx 10 years (5 years for page_pool test).  It is isolated as a
+selftest under (tools/testing/selftests/net/bench/page_pool/).
+
+Realistically we are all too busy inventing a new "perfect" benchmark
+for page_pool. That said, I do encourage others with free cycles to
+integrated a better benchmark test into `perf bench`.  Then we can just
+remove this module again.
+
+Signed-off-by: Jesper Dangaard Brouer <hawk@kernel.org>
+
+  [1] 
+https://lore.kernel.org/all/CAC_iWjLmO4XZ_+PBaCNxpVCTmGKNBsLGyeeKS2ptRrepn1u0SQ@mail.gmail.com/
+
+Thanks Mina for pushing this forward,
+--Jesper
