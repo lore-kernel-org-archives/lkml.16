@@ -1,119 +1,237 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C432C327E;
-	Wed,  4 Jun 2025 12:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D8479F2;
+	Wed,  4 Jun 2025 12:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749039809; cv=none; b=PjcxCTBMMGhUyY27h4tbyUh+gelkEVZcM+0CvNkUir7qnF9KZ4+2ZpYGrA+XKnykjElKYhRIZAOBwcCxraWM5NDLrCfh+7EI109AT1y0IaVtUAvYq97yVU7BFllBFKZDgSQ0+n5tatj0huNbhPB+0m0q7zNH4Qt//s3NGXhJqiY=
+	t=1749039964; cv=none; b=UCeCBhcGUqROL924r0vICVLDVCubPw/n0mNnJ/a4CxWhMfGh7aQcfCddXLxGpwoAWtGJ0rU9RBv0Cqce7nRR5FApcnkhIvCO48fWJQP67gcUFcRe5ImlYR1Hk+yUaVopgv8qg7/ev/sinY1o+X/XoJKyqzkVu1kjbEfEkNMNMl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749039809; c=relaxed/simple;
-	bh=QaTyjEznJ1R5sNay9RQIac7K2Sj38RK5k3TLtoVPbzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ki2ruQ0jessNEVNfN95IiCJ8ra7iB2rgMFUAs5PAYUcPG6ABJQYFrrmkqUozhM8YzU8M4bCLHAL30X+TjVAHgiW0zLBCnh/0TSfoY9NdiV/qXXENiA8r65UWo2KX2wU2BkX3yrRM35eZUSKbLGywDqNWrwVG5RcFkW4SxceVd/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Db0ompKE; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1749039964; c=relaxed/simple;
+	bh=EFkzfqm1FA/pnUlUVk4/tkPBvTq7nP68gf7IeW/2B0w=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UG89XT2Bw6lIDS3BslQkDDoYiPKNX4NXWQwqyXJqUy0gdsNQjEKpOh4ElQQs/CyS4JAMoA4DPpo6t3hZ/gAIqJ2k8VzwqBTBnZHIpZS9cfh2iA7KlIKofs/muOJ/r7MjpqOebMeaNDPMr32Uf1Q9r02+qhU2edMgSab/HSdCbf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EhXTjvaC; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Db0ompKE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=7XWieguazqtxUMRi6G7yUlfR8Tu1/VnAzgOfOXGtr7c=; b=Db
-	0ompKEjd/bvN9l1Nb/8IXd21AkXSBrYqRkJVu6UzHiWEXh3fFqWo8NlaMkhFdMbtgZ4Vol0lgGMEi
-	7VIeePYWVWilUfF6UoVrFgd1U1/rTaJQTWvnfTyzCwZIl+Ak2hxdbiFxk140Lpb7MgTZVVQCTS3hX
-	iFgyrNvRoMtfgnM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uMn9A-00EgC3-M8; Wed, 04 Jun 2025 14:23:08 +0200
-Date: Wed, 4 Jun 2025 14:23:08 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	"Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-Message-ID: <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
- <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EhXTjvaC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749039963; x=1780575963;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=EFkzfqm1FA/pnUlUVk4/tkPBvTq7nP68gf7IeW/2B0w=;
+  b=EhXTjvaCdoJe9SUD5eQ4XyGVolhq4qgixu37m1PL4IJMWTod9TUmUCwU
+   DWGarE/CrPzfe9EZ95lOkVSw62jiiWiDjYHAY/UllnxvKtM/9XtKCY5Yd
+   gOajgiS4U5gr/ZxM4wCwrQvgQhyTMJj65pzf+iRO83NaTdHZZ21sOna1P
+   p9H3gErjAY/fonh68MVHxMD7+/ze3fgKc3sKhW3IeWAZkfpKMQtbritgf
+   anRoN9vtYtkVYZgXWYHVM0vNIYtz2N++toROl0YiOVWlOYNRa/u8Uf+yz
+   YRaQL+iUqa2yva/aSq5SLIDhiJzXlafCJQ9DcK5NeSkZ7tsNY2TDryW7a
+   g==;
+X-CSE-ConnectionGUID: jcoZAIqSTn+BhpTBx2+JbQ==
+X-CSE-MsgGUID: pARAJ2wITsOF+G5YykbbxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="53745738"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="53745738"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 05:26:02 -0700
+X-CSE-ConnectionGUID: lH/3sueOTVeh6pK8IT9H7Q==
+X-CSE-MsgGUID: 4OTG5hFBSAutbZbNmejlmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="145133647"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.124])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 05:25:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 4 Jun 2025 15:25:52 +0300 (EEST)
+To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
+cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+    Maxime Ripard <mripard@kernel.org>, 
+    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v9 5/6] PCI: Allow drivers to control VF BAR size
+In-Reply-To: <20250527120637.665506-6-michal.winiarski@intel.com>
+Message-ID: <a6dd1c15-7c0c-bb60-9784-f3a18bc8b765@linux.intel.com>
+References: <20250527120637.665506-1-michal.winiarski@intel.com> <20250527120637.665506-6-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
+Content-Type: multipart/mixed; boundary="8323328-318291348-1749039952=:979"
 
-> > -      # RX and TX delays are added by the MAC when required
-> > +      # RX and TX delays are provided by the PCB. See below
-> 
-> This really sounds like a breaking change that changes the meaning of
-> the definition of this item instead of simply rewording.
-> 
-> Everything written according to the original description is broken by
-> this change.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Please give some examples. What has broken, which was not already
-broken. There has been a lot of discussion about this over the last
-year, so please do some careful research about what has been said, and
-try not to repeat past discussion.
+--8323328-318291348-1749039952=:979
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-The whole point of this change is this is often wrongly interpreted,
-and there are a lot of broken .dts files. By including a lot of text,
-explaining both the pure OS agnostic DT meaning, and how Linux systems
-should implement it, i hope i have made it less ambiguous.
+On Tue, 27 May 2025, Micha=C5=82 Winiarski wrote:
 
-> Although these PHYs are able to implement (or not to implement) the
-> delay, it's not promised that this could be overriden by the kernel
-> instead of being set up as strap pins.
+> Drivers could leverage the fact that the VF BAR MMIO reservation is
+> created for total number of VFs supported by the device by resizing the
+> BAR to larger size when smaller number of VFs is enabled.
+>=20
+> Add a pci_iov_vf_bar_set_size() function to control the size and a
+> pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
+> allow up to num_vfs to be successfully enabled with the current
+> underlying reservation size.
+>=20
+> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> ---
+>  drivers/pci/iov.c   | 73 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h |  6 ++++
+>  2 files changed, 79 insertions(+)
+>=20
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index f34173c70b32a..ac4375954c947 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -8,11 +8,15 @@
+>   */
+> =20
+>  #include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/log2.h>
+>  #include <linux/pci.h>
+> +#include <linux/sizes.h>
+>  #include <linux/slab.h>
+>  #include <linux/export.h>
+>  #include <linux/string.h>
+>  #include <linux/delay.h>
+> +#include <asm/div64.h>
+>  #include "pci.h"
+> =20
+>  #define VIRTFN_ID_LEN=0917=09/* "virtfn%u\0" for 2^32 - 1 */
+> @@ -1313,3 +1317,72 @@ int pci_sriov_configure_simple(struct pci_dev *dev=
+, int nr_virtfn)
+>  =09return nr_virtfn;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_sriov_configure_simple);
+> +
+> +/**
+> + * pci_iov_vf_bar_set_size - set a new size for a VF BAR
+> + * @dev: the PCI device
+> + * @resno: the resource number
+> + * @size: new size as defined in the spec (0=3D1MB, 31=3D128TB)
+> + *
+> + * Set the new size of a VF BAR that supports VF resizable BAR capabilit=
+y.
+> + * Unlike pci_resize_resource(), this does not cause the resource that
+> + * reserves the MMIO space (originally up to total_VFs) to be resized, w=
+hich
+> + * means that following calls to pci_enable_sriov() can fail if the reso=
+urces
+> + * no longer fit.
+> + *
+> + * Return: 0 on success, or negative on failure.
+> + */
+> +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
+> +{
+> +=09u32 sizes;
+> +=09int ret;
+> +
+> +=09if (!pci_resource_is_iov(resno))
+> +=09=09return -EINVAL;
+> +
+> +=09if (pci_iov_is_memory_decoding_enabled(dev))
+> +=09=09return -EBUSY;
+> +
+> +=09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
+> +=09if (!sizes)
+> +=09=09return -ENOTSUPP;
+> +
+> +=09if (!(sizes & BIT(size)))
+> +=09=09return -EINVAL;
+> +
+> +=09ret =3D pci_rebar_set_size(dev, resno, size);
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09pci_iov_resource_set_size(dev, resno, pci_rebar_size_to_bytes(size));
+> +
+> +=09return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_set_size);
+> +
+> +/**
+> + * pci_iov_vf_bar_get_sizes - get VF BAR sizes allowing to create up to =
+num_vfs
+> + * @dev: the PCI device
+> + * @resno: the resource number
+> + * @num_vfs: number of VFs
+> + *
+> + * Get the sizes of a VF resizable BAR that can accommodate @num_vfs wit=
+hin
+> + * the currently assigned size of the resource @resno.
+> + *
+> + * Return: A bitmask of sizes in format defined in the spec (bit 0=3D1MB=
+,
+> + * bit 31=3D128TB).
+> + */
+> +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs=
+)
+> +{
+> +=09u64 vf_len =3D pci_resource_len(dev, resno);
+> +=09u32 sizes;
+> +
+> +=09if (!num_vfs)
+> +=09=09return 0;
+> +
+> +=09do_div(vf_len, num_vfs);
+> +=09sizes =3D (roundup_pow_of_two(vf_len + 1) - 1) >> ilog2(SZ_1M);
+> +
+> +=09return sizes & pci_rebar_get_possible_sizes(dev, resno);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_get_sizes);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index ab62bcb5f99c6..cc633b1a13d51 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2437,6 +2437,8 @@ int pci_sriov_set_totalvfs(struct pci_dev *dev, u16=
+ numvfs);
+>  int pci_sriov_get_totalvfs(struct pci_dev *dev);
+>  int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn);
+>  resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno);
+> +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size);
+> +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs=
+);
+>  void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe);
+> =20
+>  /* Arch may override these (weak) */
+> @@ -2489,6 +2491,10 @@ static inline int pci_sriov_get_totalvfs(struct pc=
+i_dev *dev)
+>  #define pci_sriov_configure_simple=09NULL
+>  static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev,=
+ int resno)
+>  { return 0; }
+> +static inline int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno=
+, int size)
+> +{ return -ENODEV; }
+> +static inline u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resn=
+o, int num_vfs)
+> +{ return 0; }
+>  static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool pr=
+obe) { }
+>  #endif
+> =20
+>=20
 
-If you want the kernel to not touch the PHY, use
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-phy-mode = 'internal'
+--=20
+ i.
 
-> In addition, the Linux kernel contains a "Generic PHY" driver for any
-> 802.1 c22 PHYs to work, without setting any delays.
-
-genphy is best effort, cross your fingers, it might work if you are
-luckily. Given the increasing complexity of PHYs, it is becoming less
-and less likely to work. From a Maintainers perspective, i only care
-if the system works with the proper PHY driver for the
-hardware. Anything else is unmaintainable.
-
-> > +#
-> > +# There are a small number of cases where the MAC has hard coded
-> > +# delays which cannot be disabled. The 'phy-mode' only describes the
-> > +# PCB.  The inability to disable the delays in the MAC does not
-> > change
-> > +# the meaning of 'phy-mode'. It does however mean that a 'phy-mode'
-> > of
-> > +# 'rgmii' is now invalid, it cannot be supported, since both the PCB
-> > +# and the MAC and PHY adding delays cannot result in a functional
-> > +# link. Thus the MAC should report a fatal error for any modes which
-> 
-> Considering compatibilty, should this be just a warning (which usually
-> means a wrong phy-mode setup) instead of a fatal error?
-
-As i said, there are a large number of broken DT blobs. In order to
-fix them, but not break backwards compatibility, some MAC and PHY
-drivers are going to have to check the strapping/bootloader
-configuration and issue a warning if phy-mode seems wrong, telling the
-user to update there DT blob. So, yes it is just a warning for systems
-that are currently broken, but i would consider it an error for
-correctly implemented systems.
-
-	Andrew
+--8323328-318291348-1749039952=:979--
