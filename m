@@ -1,225 +1,357 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF58B22259C;
-	Wed,  4 Jun 2025 21:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749072612; cv=none; b=FBJs1skJwxdVZzRP9/q2FznqzEmQ83UlRJybQByH0Ix2qBsKUvp3mOAfZX91v00uAStErRwj7Xbgf7a8SGcKad2B38c5zJB/osIIkCv8mnKArO+JLHQ06uDF8mD6HnkDNGrQrNKfNrsZY9rT8hm01nU5gncl2xaxjraNHhJ7uZc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F64221F38;
+	Wed,  4 Jun 2025 21:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749072612; cv=fail; b=mPdF9d2DAwwbXjXAOfDfa1qSXwMWDVuUYTSuMhmMVhB0GSIA3JQzpJJFk+rnriL7LIwPYQmBptmSFq3Y5aQKgjNil9bCGPJKmVeWgKijNwFEfdVIHf8Ba0Q++miNzX0CdOtHTsCEJS2QQ8ZR09UT5n6L32RwbuVlkEJaVlZpKo4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749072612; c=relaxed/simple;
-	bh=mcgIqsoxQ0DUFCqqcvzlt1vRTae271UHuYTxdWHyoDQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMaBWBvT1q8ha/P14dWeG6VyOzsY0UDd/CdCJbPjp7MWmqQFyw+6ZtA0gBXEPHdYUFvr6+5uFiUCM6u2xJOPXrB6Dc2KV0XH3VIjH62zdMcKOwn0L6/U5p0Mwl/wVbs11w+Y5vDRQ4a5bKxKO6vBvX+sLElpn5VMeqP/L3J6Vlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4ZRL+Jz; arc=none smtp.client-ip=10.30.226.201
+	bh=BuqPGj5+684djJPJD++4yI2bE/KxHWmx+ZvtXN2bdK4=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rO1tTn+7urvKZILD17hRqLnlGHWC86iPVgvihHJr5QMKIOW89ZzlvYAHBZgwBm0jJRPoaJh/QLLPDnPEq/kCTxxioZ0rZ4GEEJRI7Lw5gnxD9w+gsKpjsamjKhKOhRzg9mji5NRAus7Ij9ShPu4Lk3H7La8NyXUkpbX16qb/4qw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DDiElLie; arc=fail smtp.client-ip=40.107.237.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4ZRL+Jz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F12C4CEE4;
-	Wed,  4 Jun 2025 21:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749072612;
-	bh=mcgIqsoxQ0DUFCqqcvzlt1vRTae271UHuYTxdWHyoDQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C4ZRL+JzEWKy4eZ/OBlu1bUqAPDBx1RazS7BtJ56+HSVD+PE3OUuwZHhZSHz66nF2
-	 1TJEQsa6iPft8rS0nUQB0IJl41LXFhT2pubE1Xc8+d/L7CojPjOX+5XRoN7s1jttPO
-	 2DQJEJDRKw6XHcm6t2hgWmtRsjHAYYKrNFPKo01kKQyqueVwyNnensTk8423FK236P
-	 D/N4ZO31Jdqabh4DD6hz6A8tcEbJEOP/3aaYsXMDavEXcLc0yxwEF6M6PgcH+bTxcm
-	 3EuTMzy1DwGVFcIKwmPudKP2KkXGOx7BB67mohPF2tPhSQ8Oc0G6yU35w1uJY4okHR
-	 GD8X+rox1wngA==
-Date: Wed, 4 Jun 2025 14:30:10 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf bpf-filter: Improve error messages
-Message-ID: <aEC64oiBI3U-619x@google.com>
-References: <20250604174835.1852481-1-namhyung@kernel.org>
- <CAP-5=fWap82Wjx2EBTESFsTxSikkJ3TW7B_jSjhUkgfheQu_xw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DDiElLie"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ymmaBCC/qJkVUE7ru6XVW2Mwb0nhlW3ZDTKe3lC0G6h0c45YqQJAeL6wusLcc6JsL/OvkTRVaUUL1b1G2XUHxvp16i4ALrS0ELBo2VAnBDuedo3JBMEa38diFA0jxR8lXhwTT8tpuGpHueEWpcVtHqfuurPyxFNAGJ8TZA4KzIgO4nYOPdBs5LBdDlVVppI4W6N67/bt7Nn4AsgnG/lzChoN+QRovwEme5XLoAVtIEHyCvuzrtH6cxD87Yso1qW1vmUduqLtVaKdK+BFmZBT1s8Tsa9gvZt0rvUhryvDmLhskD5BWEpSzG87VM28Si05Kt0W7+BBmdITEJetG5dLNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PrhJUILrl3WBxuSbluHn8DHtIWpr1PLimBykJctHK48=;
+ b=CIgluE6kwxIRWCg9MxWlFPQQtA2h2sweZqv47ySAmCzLhW/+H3VUTJBT8/6xXNSllAKk7CuiaAb2dXmjsYqC+XJdRBDhfobg3dYj3S3nze3OD/52gVzz8bDEouSCRJ+plj0FELQGJFwnry3Ep5reH1gMJcKNL3D7Br3BBGhExIyLQNQbewIqkWmKpQx50rT3zMS7O3cLkSshDGSyEMfX2pfbcGU/dci+K17bCEyXL8o2XsOXKVhUrojG0tSRTMjFH+3pnmsY+yBmTJOtR+BP1kmFSbuDTLV4UWrJIRGf+ghG75ALPqW1Empt2V4MEkVju1zt67aehuYZm7airEKX4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PrhJUILrl3WBxuSbluHn8DHtIWpr1PLimBykJctHK48=;
+ b=DDiElLie67FyErce/XkautnRRphISioJv+oUihsrC/jEtlx5vIWimX8iu0KkHbtx1pxeFpxj0ASUmXhS+ZaHMbkrAimRgzcuNwOOGWb0Jr65TMDW8PijZHY+2fiF0HQQExpwruDInZwubC27Opmhp/D8K/YCKCj9vLQAcumUogg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ MN0PR12MB6199.namprd12.prod.outlook.com (2603:10b6:208:3c4::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Wed, 4 Jun
+ 2025 21:30:05 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
+ 21:30:05 +0000
+Message-ID: <c4f88c14-293a-4fd7-8a65-03ee3cfec93e@amd.com>
+Date: Wed, 4 Jun 2025 16:30:00 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 02/16] PCI/AER: Report CXL or PCIe bus error type in
+ trace logging
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-3-terry.bowman@amd.com>
+ <0619c83f-84d9-4dcd-866d-d6df1da4d1c9@linux.intel.com>
+ <7d9030bf-8d27-4c9e-b995-89ce1a63dd6c@amd.com>
+ <1222c005-9d0c-4f02-a1d6-02c14b61673b@linux.intel.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <1222c005-9d0c-4f02-a1d6-02c14b61673b@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR08CA0004.namprd08.prod.outlook.com
+ (2603:10b6:805:66::17) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWap82Wjx2EBTESFsTxSikkJ3TW7B_jSjhUkgfheQu_xw@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|MN0PR12MB6199:EE_
+X-MS-Office365-Filtering-Correlation-Id: df37360d-8a43-4b2e-f059-08dda3aef8a8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|1800799024|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Z2tYTmlPT2lkUnlIclJ3UzlyYTlHK2o5N3ZZM3RPejI5T3N4bGpNSTc2bDNw?=
+ =?utf-8?B?NVFSbEwvSHBJM01OUGl3U3VKUk5iN2VJaExRNUEyM0FnMEV6ZnF6MmpRZlkw?=
+ =?utf-8?B?THllMGMrakgyakJ0MjdBTEU2cUtlR0M2VEwrcWZxbURYOEdOMzBodkEvaTlP?=
+ =?utf-8?B?dUxBdU5xV3NYM1dpeHA3ZVdwbm0vRDNONUxwdkpBM3pEUjZ1dUR2SHlvUGRK?=
+ =?utf-8?B?TmVKV01tdlI5ODg2WG1sWVo1RkR2OVdUcXhHK3VzYWgrWmhIWmdmakU3K1lI?=
+ =?utf-8?B?MzFxUDc2NUR3bjdYbG9ScU1JUE1vTFZ6cmRWQ3dEYTJncGc2V3NVV2tlQTE0?=
+ =?utf-8?B?VExleERBcXZrYlY4OGxsSTlzd1NBekhhWGk2UE5UTEt6K1hTMnRkZ2JwRGdJ?=
+ =?utf-8?B?bWtIRXgvYTA5SDFQd0dMcExOV1d6amwrTUVtVkRRdVZ5bE1OMDRjL3Mrc0JO?=
+ =?utf-8?B?Ymt6QTRqVSs5cDFNam9XWmNOOXY5aysyZGRnT2dNOHJBbGhmMjlPQzI5NHpG?=
+ =?utf-8?B?RExJM0F0Z3p3NHRSQjhESUtVRy91bmowNkRTNFlXOW1pM0czRUZPdFBwZTBK?=
+ =?utf-8?B?WW15MFRzaW0zVENaMzhId1p5d00xUFpOYWtoL3FQa1R2YzFST0JIMUhFQ0gy?=
+ =?utf-8?B?UEhlRGdHWjUzZlYrV0pIbHVpZmVLT3BJWHZ1Ukd5QWhrOXlVTWM1MWZwQlBO?=
+ =?utf-8?B?dFhMQkpvRFZrUURtZEM4R1JOaWlkWW9LVks4Q3ZGb0RFMmYvamZTUWlNdk9q?=
+ =?utf-8?B?UGg5QURFNGtLQXdkWmlpOXcweFdrUDEycmtVdTIvV1NDU05ZUldmdHdscEZ6?=
+ =?utf-8?B?QlUzM2hsekI3YWl1ZkJYeWc0VHNwZEdQM3duNjVVL1pSbHdPdFBMK3BhdjBa?=
+ =?utf-8?B?b094ZEdqSXN2S25OVzlMS0g5MkZOWmVIZVcvaGF5UG14UEswSzY4bmJMZG1v?=
+ =?utf-8?B?aHhXY09UZ05OMHZQb0JQckd1ZkFldm51SWZIakxZcVhaUTNEcVg3bGp3ZEJT?=
+ =?utf-8?B?dzBWQmFPckI5azYzeElmVkxXMWtMaGRwQ0JOQ2NxakN1bURDdUNFQmx0TWRK?=
+ =?utf-8?B?M2srbytyVE5XR1U5KzI3dGMxUTZ6cEw0ZkhMWmNQMHdneHZRNU1zTVB1ZGFJ?=
+ =?utf-8?B?czNHd2RBcmpYWXF0SHo4UlNpaEFndkowZ3NHNzJ0OTl1SDFTWHV1N1oxMGdu?=
+ =?utf-8?B?ZnZGRjhLV2s5WmoraVRSN3EzRjFEeURvR0NBK3g4YmRzczlNRWhXMTVBN3BL?=
+ =?utf-8?B?TGJJVER5U0ZhMWZmQ1VidU9TeElMZHBJSkF0aytJMzVlTE9aVnArV2N6TVJR?=
+ =?utf-8?B?U2IxRDFZTW1aZVhFUGFMZDBuUkVqUlA3Q1Z4bG5BYnpOd2xNWmtaK0JoYVBy?=
+ =?utf-8?B?RFdyTVYwT0o2ay8yK2ZkdWxHTFVvV2dYUVp5TkhVTzQxZVV4MTZUWTF4M3Bz?=
+ =?utf-8?B?WVo0blBCeENmQWlTMUZJMk1JTEJBaExBbzlqNDd4YTdZaC82Y2ZMMjE2N1ov?=
+ =?utf-8?B?RzVob2ozTWo1a0U0VzVMUS9BSk1uMjkrZXZYQzlEZzd5aWswYm1qVlhXWFRp?=
+ =?utf-8?B?bFRPWEE5QS92dU9YRGZ1S0YzSUdVR3NTRi9kQ1NMZEFZZzgrTmlGdFI2Rk90?=
+ =?utf-8?B?QjhJVWphQWtkaUdHZUVQZ2lGVVdNSWphZ1YxMCs2RS9FcEMyaGZydzFwUUFw?=
+ =?utf-8?B?NkI5RGRBcjRUQ1ZuZkkwTTFRUmxFSjVvcWRuMW9vMms1bHFpRUNpRjNwNExQ?=
+ =?utf-8?B?QWVvRGFEbkczbzBmVEorcnU5RzZNWEdNeWdYQUF0SHhUUVJNd2xUNFBsT3JS?=
+ =?utf-8?B?TzlHZzFQam9YOUJVUUIrOW02UUFuM2VCRkxhdEF4ZWNTYWxIek81WjE2dXgv?=
+ =?utf-8?B?WS9SOXFhOE5SRElVRmpqVlVWQm1GSDZXc01uM2pZSUVoc3NOcUp1R2lHRjE0?=
+ =?utf-8?B?a1BoTWxBak5iTjFnbjM0L1RaVzFDaTZ5MTNSWjc1eWdoSFU0NW1qMXExSXBs?=
+ =?utf-8?B?MTN6M2JSdXd3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VFo1V3g2dTNBemRBZUhqU3ZybStkUXZFc2k3TE1yQ0RqcTl4TCsvVVVaTGhj?=
+ =?utf-8?B?MThxd296V0ZJZU91OXlhMTgzN0xRRnYxR2grZ254QWhZdnRwSnpMWXpvbTlM?=
+ =?utf-8?B?VmFZUjhTeUdTc3dUajg1Zm5pcEdDUmg4Vlo0Z3Y5cEp3T0dvMzVOcWVVMmlr?=
+ =?utf-8?B?SlRobU5YRGczWjQydjNVSzI5cS9GaXBtdkRmZ3RnOHNZeDhoSXRLOTI1RWNO?=
+ =?utf-8?B?RVBFTlY3RzQxc296cFhkbWlvNGZ0dnQyNDd1U3poU0FSU0YxMHZaRVZuYnph?=
+ =?utf-8?B?dGo4aC94OVc2YmQyc1liZm42c0FsNUQ0clNBek1BN3NBVzI0UWhlUk4xVWdZ?=
+ =?utf-8?B?OTVPbGdlM3VTUVNiblZvZXRod0JaYW5ESVhmSjZ6RVJwdW44TkRabnhWK3RP?=
+ =?utf-8?B?cDdtb3N6K3UzUWI4MW1PN0s5M0E1cHhOUlk5bS9pRDhDVXdHQVNXb1BNbzcw?=
+ =?utf-8?B?U2hjNDdpVXllQnlBNTNlbElTdEplcWMwd1JDVUEwVEo0SVdBaHpHUy9HZmVM?=
+ =?utf-8?B?WC9aNHkvZnF3cmhseXpDSS9FbDhwbktLdlRvd2pBc29xL2Y3WjdOeFJWem4r?=
+ =?utf-8?B?eGY0czVzcFBmSkc0TWY4YVI2ZE5VeVZyaFNDdmpNcDdta3dQeGxZZUdoeDVS?=
+ =?utf-8?B?WUo3T2ozMXhrVkl0VCtWUXVSc1c4RlhveE9aclVZZHVzbmFEc2hmcXlqZm1E?=
+ =?utf-8?B?c1BodUlKZ2pzNjV2MS93dmFaNjdVRms1QTdCYnJhZlJ5eEtVSXM3MGpUZGRG?=
+ =?utf-8?B?eVBacGQ2Vi9hWldxdmNCK2IwblVpVkduckRhK2hlbDk5d2MwUTVPYTFBSzlk?=
+ =?utf-8?B?WU1FZXBpbDVKc3JRbWZXb3VRZnppVHIyRml2aXd4UUtacU1xdlRkQThGMG1i?=
+ =?utf-8?B?dGFHaDUxR3VTUzVtMDdYUGtXZlZ3TitqeGdTbGtRM0NwWXgxVFZoTkp4YzlL?=
+ =?utf-8?B?cERMZjdoZlJ2cG1hZXdxeU05UGRhNjlKZUpYd0gwVklONGhTWS83eG5zV3Ey?=
+ =?utf-8?B?RUhWWXVyZUZCaDBkNFdBbGFONXRha2JpS0IyY0ZNVEJaNm5ETHFyUUJRMmJX?=
+ =?utf-8?B?L1R0Nm55U3Rna0tsUnFrZGpUdTQyTmkza2ZVSlhSMEtjTXZsVXRRbnZ1VFhk?=
+ =?utf-8?B?bDVnL1JScGg3SThtS2RQTno5QUVyb0FxdnArVFdVQXl0Ukt3R3dlaFNhUGcx?=
+ =?utf-8?B?VW5YU3NZUUtveWNxTGxXeWhKd1hIUEdsaXVHSkptR2k5c0p1c1RmeStGNWdj?=
+ =?utf-8?B?WW5KdG41ZG5reTFxTXZ2d2xuWXpxQytGM2RhTXlvU2ZlbkRiR1dmaXZFK1Yy?=
+ =?utf-8?B?THZqM0RvclkvWkNUMnB6VGNwL3RtMHJVZ0dIaTJUdmxzTlJDdW9meXJHMjRM?=
+ =?utf-8?B?S1NLenQ2V0lrcC9zTmVTOXptY0xEVWExamxaMFRYZ0NBMlR0VGNhK2VrQUU4?=
+ =?utf-8?B?QlcrY09nYlFjMVBhZWVUQkc0K2N3a0hxQmtQdlBkWk5QSTNHdS9HZHlyQVdJ?=
+ =?utf-8?B?NDRKWG9aM0I2bFJ6dDFYVWMvRG9ZNlBIWnpkNVVjNVdBWGphQzlEcGFKMFdo?=
+ =?utf-8?B?WTFHVlZBb2RaZlkyNVdFeGV2a2NNSE9tSzZlRkRKRkN3NDZBa01XeVYzV25X?=
+ =?utf-8?B?anY2eVhhTHZUdjBkdTJXbWp0c0FhdUN0TzgzN1RoTW5qb1oyV0VLdEU5MzVW?=
+ =?utf-8?B?NmpnVDZWQ1NzRDlwWTg5ZWFWSVVqR2lTZUU3VWFJYi9uMGMrc3JRS1U0bmc1?=
+ =?utf-8?B?MExWZHNUSzRtKzU1dlBPWVVzMWVkbFpFNkZOeElNdDdaWWJqMzhtYndyY1Qw?=
+ =?utf-8?B?ZHJNekFOUFl4RTBTN2dOUElOOEZKOEJLWUVLVHRQa0cxZE5zWkpMZDV6RDk3?=
+ =?utf-8?B?VjAyc2ZkeWczUjI1QXlLNEkxMWt0bXpaS0M1SnZlWkJTL3NWZEJhZGZSQ1B5?=
+ =?utf-8?B?b1ErTklod1Y0a3dCbFoydnRERHhVbC9Fa09JMk05QllybUFnUFFRaHUyaEZU?=
+ =?utf-8?B?UDdqK0VJZFl3QlBQM210L1UrZTNFS2RQNEowTXRmaXFIWDF6ZHJrT2lnWXo3?=
+ =?utf-8?B?bWJiNW5vczNZSnJkWGJLT2lHY3pvRzRmREkzZk1pRUxpdjY0REZZVUFCdk1t?=
+ =?utf-8?Q?0kuK0BnfhhWiJnx5g0i0MG0V3?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df37360d-8a43-4b2e-f059-08dda3aef8a8
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 21:30:04.9575
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gGcDGBJDxc48e0fumzSyV8Do5VJ6VMWpAzsNxN0wrNpisTbsxJrz59jKT96MIRZ03gCFJCGo7s96EUe+tKFM1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6199
 
-On Wed, Jun 04, 2025 at 10:59:57AM -0700, Ian Rogers wrote:
-> On Wed, Jun 4, 2025 at 10:48 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The BPF filter needs libbpf/BPF-skeleton support and root privilege.
-> > Add error messages to help users understand the problem easily.
-> >
-> > When it's not build with BPF support (make BUILD_BPF_SKEL=0).
-> >
-> >   $ sudo perf record -e cycles --filter "pid != 0" true
-> >   Error: BPF filter is requested but perf is not built with BPF.
-> >         Please make sure to build with libbpf and BPF skeleton.
-> >
-> >    Usage: perf record [<options>] [<command>]
-> >       or: perf record [<options>] -- <command> [<options>]
-> >
-> >           --filter <filter>
-> >                             event filter
-> >
-> > When it supports BPF but runs without root or CAP_BPF.  Note that it
-> > also checks pinned BPF filters.
-> >
-> >   $ perf record -e cycles --filter "pid != 0" -o /dev/null true
-> >   Error: BPF filter only works for users with the CAP_BPF capability!
-> >         Please run 'perf record --setup-filter pin' as root first.
-> >
-> >    Usage: perf record [<options>] [<command>]
-> >       or: perf record [<options>] -- <command> [<options>]
-> >
-> >           --filter <filter>
-> >                             event filter
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On 6/4/2025 2:24 PM, Sathyanarayanan Kuppuswamy wrote:
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks for your review!
-
+> On 6/4/25 7:32 AM, Bowman, Terry wrote:
+>>
+>> On 6/3/2025 5:02 PM, Sathyanarayanan Kuppuswamy wrote:
+>>> On 6/3/25 10:22 AM, Terry Bowman wrote:
+>>>> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
+>>>> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
+>>>> Type' for CXL device errors.
+>>>>
+>>>> This requires the AER can identify and distinguish between PCIe errors and
+>>>> CXL errors.
+>>>>
+>>>> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+>>>> aer_get_device_error_info() and pci_print_aer().
+>>>>
+>>>> Update the aer_event trace routine to accept a bus type string parameter.
+>>>>
+>>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>>>> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>>>> ---
+>>>>    drivers/pci/pci.h       |  6 ++++++
+>>>>    drivers/pci/pcie/aer.c  | 18 ++++++++++++------
+>>>>    include/ras/ras_event.h |  9 ++++++---
+>>>>    3 files changed, 24 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>>> index b81e99cd4b62..d6296500b004 100644
+>>>> --- a/drivers/pci/pci.h
+>>>> +++ b/drivers/pci/pci.h
+>>>> @@ -588,6 +588,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+>>>>    struct aer_err_info {
+>>>>    	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+>>>>    	int error_dev_num;
+>>>> +	bool is_cxl;
+>>> Do you really need this member ? Why not just use pcie_is_cxl() in aer_err_bus()?
+>> This was added per Dan's request instead of using pcie_is_cxl().[1]
+>>
+>> [1] https://lore.kernel.org/linux-cxl/67abe1903a8ed_2d1e2942f@dwillia2-xfh.jf.intel.com.notmuch/
+>>
+>> -Terry
 > 
-> > ---
-> > v2) change fprintf() -> pr_err()  (Ian)
-> >
-> >  tools/perf/util/bpf-filter.c | 28 ++++++++++++++++++++++++++++
-> >  tools/perf/util/bpf-filter.h |  3 +++
-> >  tools/perf/util/cap.c        |  1 -
-> >  tools/perf/util/cap.h        |  5 +++++
-> >  4 files changed, 36 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-> > index a4fdf6911ec1c32e..92e2f054b45e91dd 100644
-> > --- a/tools/perf/util/bpf-filter.c
-> > +++ b/tools/perf/util/bpf-filter.c
-> > @@ -52,6 +52,7 @@
-> >  #include <internal/xyarray.h>
-> >  #include <perf/threadmap.h>
-> >
-> > +#include "util/cap.h"
-> >  #include "util/debug.h"
-> >  #include "util/evsel.h"
-> >  #include "util/target.h"
-> > @@ -618,11 +619,38 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(enum perf_bpf_filter_term
-> >         return expr;
-> >  }
-> >
-> > +static bool check_bpf_filter_capable(void)
-> > +{
-> > +       bool used_root;
-> > +
-> > +       if (perf_cap__capable(CAP_BPF, &used_root))
-> > +               return true;
-> > +
-> > +       if (!used_root) {
-> > +               /* Check if root already pinned the filter programs and maps */
-> > +               int fd = get_pinned_fd("filters");
-> > +
-> > +               if (fd >= 0) {
-> > +                       close(fd);
-> > +                       return true;
-> > +               }
-> > +       }
-> > +
-> > +       pr_err("Error: BPF filter only works for %s!\n"
-> > +              "\tPlease run 'perf record --setup-filter pin' as root first.\n",
-> > +              used_root ? "root" : "users with the CAP_BPF capability");
-> > +
-> > +       return false;
-> > +}
-> > +
-> >  int perf_bpf_filter__parse(struct list_head *expr_head, const char *str)
-> >  {
-> >         YY_BUFFER_STATE buffer;
-> >         int ret;
-> >
-> > +       if (!check_bpf_filter_capable())
-> > +               return -EPERM;
-> > +
-> >         buffer = perf_bpf_filter__scan_string(str);
-> >
-> >         ret = perf_bpf_filter_parse(expr_head);
-> > diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
-> > index 916ed7770b734f15..122477f2de44bb60 100644
-> > --- a/tools/perf/util/bpf-filter.h
-> > +++ b/tools/perf/util/bpf-filter.h
-> > @@ -5,6 +5,7 @@
-> >  #include <linux/list.h>
-> >
-> >  #include "bpf_skel/sample-filter.h"
-> > +#include "util/debug.h"
-> 
-> nit: I'd generally avoid the util/ prefix here as bpf-filter.h and
-> debug.h are in the same directory. The compiler first looks in the
-> same directory before using include paths:
-> https://gcc.gnu.org/onlinedocs/cpp/Search-Path.html
-> So including this way is saying please search using the include paths
-> which is weird when the files are in the same directory. I know the
-> style in the code base is inconsistent with this, but I wish it
-> wasn't.
+> It looks like it is added to accommodate some future use cases. May be add some info about it in the aer_err_info struct. Just looking at the code, that member value mirrors pci_dev->is_cxl and where ever you read info->cxl, you can also read the value from pci_dev->is_cxl.
 
-I see your point.  But I thought it's more flexible to file move and
-for people to find out where the file is.
+Right. pci_dev::is_cxl is currently only updated at device creation but could be tied 
+to alternate protocol training and link status changes.
 
-Thanks,
-Namhyung
- 
-> >
-> >  struct perf_bpf_filter_expr {
-> >         struct list_head list;
-> > @@ -38,6 +39,8 @@ int perf_bpf_filter__unpin(void);
-> >  static inline int perf_bpf_filter__parse(struct list_head *expr_head __maybe_unused,
-> >                                          const char *str __maybe_unused)
-> >  {
-> > +       pr_err("Error: BPF filter is requested but perf is not built with BPF.\n"
-> > +               "\tPlease make sure to build with libbpf and BPF skeleton.\n");
-> >         return -EOPNOTSUPP;
-> >  }
-> >  static inline int perf_bpf_filter__prepare(struct evsel *evsel __maybe_unused,
-> > diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
-> > index 69d9a2bcd40bfdd1..24a0ea7e6d97749b 100644
-> > --- a/tools/perf/util/cap.c
-> > +++ b/tools/perf/util/cap.c
-> > @@ -7,7 +7,6 @@
-> >  #include "debug.h"
-> >  #include <errno.h>
-> >  #include <string.h>
-> > -#include <linux/capability.h>
-> >  #include <sys/syscall.h>
-> >  #include <unistd.h>
-> >
-> > diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
-> > index 0c6a1ff55f07340a..c1b8ac033ccc5826 100644
-> > --- a/tools/perf/util/cap.h
-> > +++ b/tools/perf/util/cap.h
-> > @@ -3,6 +3,7 @@
-> >  #define __PERF_CAP_H
-> >
-> >  #include <stdbool.h>
-> > +#include <linux/capability.h>
-> >
-> >  /* For older systems */
-> >  #ifndef CAP_SYSLOG
-> > @@ -13,6 +14,10 @@
-> >  #define CAP_PERFMON    38
-> >  #endif
-> >
-> > +#ifndef CAP_BPF
-> > +#define CAP_BPF                39
-> > +#endif
-> > +
-> >  /* Query if a capability is supported, used_root is set if the fallback root check was used. */
-> >  bool perf_cap__capable(int cap, bool *used_root);
-> >
-> > --
-> > 2.49.0.1266.g31b7d2e469-goog
-> >
+Terry
+
+>>>>    
+>>>>    	unsigned int id:16;
+>>>>    
+>>>> @@ -604,6 +605,11 @@ struct aer_err_info {
+>>>>    	struct pcie_tlp_log tlp;	/* TLP Header */
+>>>>    };
+>>>>    
+>>>> +static inline const char *aer_err_bus(struct aer_err_info *info)
+>>>> +{
+>>>> +	return info->is_cxl ? "CXL" : "PCIe";
+>>>> +}
+>>>> +
+>>>>    int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>>>>    void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>>>>    
+>>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>>>> index a1cf8c7ef628..adb4b1123b9b 100644
+>>>> --- a/drivers/pci/pcie/aer.c
+>>>> +++ b/drivers/pci/pcie/aer.c
+>>>> @@ -698,13 +698,14 @@ static void __aer_print_error(struct pci_dev *dev,
+>>>>    
+>>>>    void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>>>>    {
+>>>> +	const char *bus_type = aer_err_bus(info);
+>>>>    	int layer, agent;
+>>>>    	int id = pci_dev_id(dev);
+>>>>    	const char *level;
+>>>>    
+>>>>    	if (!info->status) {
+>>>> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+>>>> -			aer_error_severity_string[info->severity]);
+>>>> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+>>>> +			bus_type, aer_error_severity_string[info->severity]);
+>>>>    		goto out;
+>>>>    	}
+>>>>    
+>>>> @@ -713,8 +714,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>>>>    
+>>>>    	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+>>>>    
+>>>> -	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+>>>> -		   aer_error_severity_string[info->severity],
+>>>> +	aer_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
+>>>> +		   bus_type, aer_error_severity_string[info->severity],
+>>>>    		   aer_error_layer[layer], aer_agent_string[agent]);
+>>>>    
+>>>>    	aer_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+>>>> @@ -729,7 +730,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>>>>    	if (info->id && info->error_dev_num > 1 && info->id == id)
+>>>>    		pci_err(dev, "  Error of this Agent is reported first\n");
+>>>>    
+>>>> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+>>>> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
+>>>>    			info->severity, info->tlp_header_valid, &info->tlp);
+>>>>    }
+>>>>    
+>>>> @@ -763,6 +764,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+>>>>    void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>>>    		   struct aer_capability_regs *aer)
+>>>>    {
+>>>> +	const char *bus_type;
+>>>>    	int layer, agent, tlp_header_valid = 0;
+>>>>    	u32 status, mask;
+>>>>    	struct aer_err_info info;
+>>>> @@ -784,6 +786,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>>>    	info.status = status;
+>>>>    	info.mask = mask;
+>>>>    	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+>>>> +	info.is_cxl = pcie_is_cxl(dev);
+>>>> +
+>>>> +	bus_type = aer_err_bus(&info);
+>>>>    
+>>>>    	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+>>>>    	__aer_print_error(dev, &info);
+>>>> @@ -797,7 +802,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>>>    	if (tlp_header_valid)
+>>>>    		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>>>>    
+>>>> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+>>>> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
+>>>>    			aer_severity, tlp_header_valid, &aer->header_log);
+>>>>    }
+>>>>    EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+>>>> @@ -1215,6 +1220,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>>>>    	/* Must reset in this function */
+>>>>    	info->status = 0;
+>>>>    	info->tlp_header_valid = 0;
+>>>> +	info->is_cxl = pcie_is_cxl(dev);
+>>>>    
+>>>>    	/* The device might not support AER */
+>>>>    	if (!aer)
+>>>> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+>>>> index 14c9f943d53f..080829d59c36 100644
+>>>> --- a/include/ras/ras_event.h
+>>>> +++ b/include/ras/ras_event.h
+>>>> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
+>>>>    
+>>>>    TRACE_EVENT(aer_event,
+>>>>    	TP_PROTO(const char *dev_name,
+>>>> +		 const char *bus_type,
+>>>>    		 const u32 status,
+>>>>    		 const u8 severity,
+>>>>    		 const u8 tlp_header_valid,
+>>>>    		 struct pcie_tlp_log *tlp),
+>>>>    
+>>>> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
+>>>> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
+>>>>    
+>>>>    	TP_STRUCT__entry(
+>>>>    		__string(	dev_name,	dev_name	)
+>>>> +		__string(	bus_type,	bus_type	)
+>>>>    		__field(	u32,		status		)
+>>>>    		__field(	u8,		severity	)
+>>>>    		__field(	u8, 		tlp_header_valid)
+>>>> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
+>>>>    
+>>>>    	TP_fast_assign(
+>>>>    		__assign_str(dev_name);
+>>>> +		__assign_str(bus_type);
+>>>>    		__entry->status		= status;
+>>>>    		__entry->severity	= severity;
+>>>>    		__entry->tlp_header_valid = tlp_header_valid;
+>>>> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
+>>>>    		}
+>>>>    	),
+>>>>    
+>>>> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
+>>>> -		__get_str(dev_name),
+>>>> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
+>>>> +		__get_str(dev_name), __get_str(bus_type),
+>>>>    		__entry->severity == AER_CORRECTABLE ? "Corrected" :
+>>>>    			__entry->severity == AER_FATAL ?
+>>>>    			"Fatal" : "Uncorrected, non-fatal",
+>>
+
