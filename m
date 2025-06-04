@@ -1,77 +1,48 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44991F4631
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 17:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD401DF748;
+	Wed,  4 Jun 2025 17:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749057741; cv=none; b=iAjoX0fGKusSDa1//65aq2r5Meoszxo+H61st4CSwvqGHiAgRSjkt3QN+SXhpkcVUMjj8ua4HLrs2uySF7ZiTpecwUzEVd9EhdcNTZV2623pbY3PUsbLJmP0IzWhMEr597f7Nj9qvIl1d1UbVYKUN5Amt01659heQsCSfxf3xvM=
+	t=1749057761; cv=none; b=HZqXYSH58feFkHvDlunyjznytakfwjwUC6lMLkRUW4qGG8HH4o+sp1ylbWmbBWYe9XzBwraYYAgkHrInCbxkKxe/mZv4Sa5PvYCPp5GYUknZSlLzhZNZmkYutxAXMbMRECV2xkYvfyDNZTF9eztaO1o0uc+c4Ahs98OoXM4dLYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749057741; c=relaxed/simple;
-	bh=sKSYyUTmKbFRcwzxl/2agtBhqQgXK9AN08QzSiogKtM=;
+	s=arc-20240116; t=1749057761; c=relaxed/simple;
+	bh=ZlRUFj0GYPcvTtwRaPSKjGOIbkYz5m5DUWyk7cUFG8E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P5j4SFbDILAM1+ueZZS/FDjlSVYZ/BXBu8vNEE6ANFKUywmuti45OVZbWLwfhmg4/RWqYtt643+cXJ/ffDdEjCN4b2rztKJLQ4G70fgyo9KRyp5UFs1GLlZJ+1jvXy/nSU9yreSTXlEAMKqCxRh8t0QFriY3KqJqzhZqmpOFGpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tqI6fcgw; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=p8LUeuKXAJxILjC7Vks2QHHZcd9R0hnnmqda1iES9zh5tisF9CZ389H0te5t6o771iAa6Viy42t4MVqwGozc8eJHasJooTx2arwz2XhBatrT9ghinS+GxfFLblSzyC/yULEOPKH/AVjGE/cukIsYHzkFqM4y+gBrlZ+T8C9qdbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqT+LeMT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tqI6fcgw"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so1154496b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 10:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749057739; x=1749662539; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eRFhhLJjI4zA7koH9NNbXkaz3+o0i9nOOHT1b6Am9B4=;
-        b=tqI6fcgwECZShrNWkE7HO9IkhId5FzM7tdTO5DuK1q6LT82Fpqtn56uQBj2Qmw+mX2
-         4n0shTp+6KoDbxNUPUwYgfD4u0Kee9qEt7PyMwTqGxJRM0k2fmJ9dezCq8o/OE5sq30D
-         XWCYhJQjKBDtogm6A8aFM6RZN3Z8EWQUQ7LiGk63MciQJ4sRVUu+zzRzFKm92eNLZgXs
-         eHwMr2cvUYmVVU9PK8St56UimKPnO/yKeqOjneYztOemYbC+z7G0AiplxZiu5BhczGww
-         grFYlDP5l4Hhr+lJZJhhu2B+f+UEo+d0CyQ+hhZSfZtksPdrfkbYXFi8MFIqisks/ok9
-         7ykg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749057739; x=1749662539;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eRFhhLJjI4zA7koH9NNbXkaz3+o0i9nOOHT1b6Am9B4=;
-        b=ArnbZ3h9gGMuErTxTTsjDw1Z7S55NorOcVzavtS1deqplCH7x+Qc3LftkQYjBK/Koy
-         5RBwoMOl3NrylX72ksSV0JW95VJdJk8+oC2vUsIR4A4EDQGWk8nJYclLqSAp7/Hbz/r6
-         07Bh1F4POnJdwbkAKcdc+aFGzrbC7wnba+lHjVgIGCV+No0NmPJbUIYKSXAfe3lLEQ28
-         LlSuyLuEbktQdePJSr0QCkdji3kcz6bNPS6kMKqAZOfzfWNP4uP157+Qy5PowKMmYxgF
-         xe0/9ds8gzxQBcwaXCnoKLmClBuRc/f6vKyU8UzzYlJ5UqoPNxyb4KLbvL/p9W3INbjr
-         MgxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSeJC5P+jpiFobruin252DcDt6N5rTATAS3cqAe6ya5wJ4FnnN9HkAt48DmZ0lIeoZ/x75zyrjwF6jFTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHCXgF1PlWFUh040uunl8armA5LA6MePuPm7+wN816MEja6bbc
-	WAGmtI/1PNkQc8sY7/jI4bPxE67EukDRA9f5l7OOjUuNNkgYShBCBkvIIt2eyPUIRw==
-X-Gm-Gg: ASbGncuegbPPUJfXMiOWu2ddmY7HYtiEk437J4QMTCkHKswRaafo1QM28SRJeWtsL0a
-	SaY/rU7bFHLoMM5Qg0FgsOAWtRAnhTVtNJAp7laCL08sbJ5Q5NZwgBjYj3YeQsRtRe/PtYj2x8G
-	B8jsE8yBiPD07JOwScyra/vOYemAJdrnXty12At/WKN/MEJhTN3JidTNXeyotmL4Mu05CdeRkuv
-	RHz6FvGzyKTmKgntnlheMHI5KIiZpzx+bBSHf0ckWfA/NClXBhkZj5nDFbG7hfr6rREX8tcwY6M
-	9XlbpDMiZtRjs0uW+RhwUvkcRJ1O49AFe4HhaQMejFdMO6/YZzWv37B8bMnN/A==
-X-Google-Smtp-Source: AGHT+IEfy4DmIHTrKSJlkqSXJHSlJ3gLkmiP8MmaPN6LL/v90GBnAH1FIJiiM09/woNRLt0+WHE+iQ==
-X-Received: by 2002:a05:6a00:3b0d:b0:736:b400:b58f with SMTP id d2e1a72fcca58-7481814420fmr375938b3a.0.1749057738824;
-        Wed, 04 Jun 2025 10:22:18 -0700 (PDT)
-Received: from thinkpad ([120.60.60.253])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff7e3bsm11735265b3a.175.2025.06.04.10.22.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 10:22:18 -0700 (PDT)
-Date: Wed, 4 Jun 2025 22:52:12 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, 
-	linux-arm-kernel@lists.infradead.org, Anand Moon <linux.amoon@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
- driver for PCI slots
-Message-ID: <zzm2nyrm4nw5di7afe5nxte3hxbx3dvorjg74rsjhl3jlaywp4@x7icn3epnh67>
-References: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
- <CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqT+LeMT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9778AC4CEE4;
+	Wed,  4 Jun 2025 17:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749057760;
+	bh=ZlRUFj0GYPcvTtwRaPSKjGOIbkYz5m5DUWyk7cUFG8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GqT+LeMTP3xW02EwM0DOgoJfU9/RmQzI0SMO5dHiEivtGwh038BiwoJsc0gzcQ+yy
+	 CJy2cZ+gOg6LWh7e8kxQT0d/6WVjv9UcOH1A7bKTWIDAG3yPawGWRU6pXsthg7T7HG
+	 giUWeUFeatGVAodEFpPDRMsmgCc2Nil50jfRjBDSXPKle+GJH6uo53WFdImnXiV1z8
+	 qT9k0tN5Fpn47y39OdXAhYcc9SKzwkL5nuHSv8941JfVBURcHFu7r8ZqAtR6CeeeEr
+	 /Z31SpOEA99dPcPMmO+DWs+NlybiQspRTpctORr5R7xfnB59FK2LnmC4NrWqMBslkV
+	 Db/iGjvimN+NQ==
+Date: Wed, 4 Jun 2025 19:22:32 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, repnop@google.com, 
+	Jeff Layton <jlayton@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, m@maowtm.org
+Subject: Re: [PATCH v2 bpf-next 3/4] bpf: Introduce path iterator
+Message-ID: <20250604-mitnahm-dreharbeiten-a13527b04b78@brauner>
+References: <20250603065920.3404510-1-song@kernel.org>
+ <20250603065920.3404510-4-song@kernel.org>
+ <CAADnVQLjvJCFjTiWpsBmfbyH5i88oq7yxjvaf+Th7tQANouA_Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,98 +52,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com>
+In-Reply-To: <CAADnVQLjvJCFjTiWpsBmfbyH5i88oq7yxjvaf+Th7tQANouA_Q@mail.gmail.com>
 
-On Wed, Jun 04, 2025 at 10:40:25AM +0200, Geert Uytterhoeven wrote:
-> Hi Marek,
-> 
-> Thanks for your patch!
-> 
-> On Sat, 31 May 2025 at 00:55, Marek Vasut
-> <marek.vasut+renesas@mailbox.org> wrote:
-> > Add the ability to enable optional slot clock into the pwrctrl driver.
-> > This is used to enable slot clock in split-clock topologies, where the
-> > PCIe host/controller supply and PCIe slot supply are not provided by
-> > the same clock. The PCIe host/controller clock should be described in
-> > the controller node as the controller clock, while the slot clock should
-> > be described in controller bridge/slot subnode.
+On Tue, Jun 03, 2025 at 08:13:18AM -0700, Alexei Starovoitov wrote:
+> On Mon, Jun 2, 2025 at 11:59 PM Song Liu <song@kernel.org> wrote:
 > >
-> > Example DT snippet:
-> > &pcicontroller {
-> >     clocks = <&clk_dif 0>;             /* PCIe controller clock */
+> > Introduce a path iterator, which reliably walk a struct path toward
+> > the root. This path iterator is based on path_walk_parent. A fixed
+> > zero'ed root is passed to path_walk_parent(). Therefore, unless the
+> > user terminates it earlier, the iterator will terminate at the real
+> > root.
 > >
-> >     pci@0,0 {
-> >         #address-cells = <3>;
-> >         #size-cells = <2>;
-> >         reg = <0x0 0x0 0x0 0x0 0x0>;
-> >         compatible = "pciclass,0604";
-> >         device_type = "pci";
-> >         clocks = <&clk_dif 1>;         /* PCIe slot clock */
+> > Signed-off-by: Song Liu <song@kernel.org>
+> > ---
+> >  kernel/bpf/Makefile    |  1 +
+> >  kernel/bpf/helpers.c   |  3 +++
+> >  kernel/bpf/path_iter.c | 58 ++++++++++++++++++++++++++++++++++++++++++
+> >  kernel/bpf/verifier.c  |  5 ++++
+> >  4 files changed, 67 insertions(+)
+> >  create mode 100644 kernel/bpf/path_iter.c
+> >
+> > diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
+> > index 3a335c50e6e3..454a650d934e 100644
+> > --- a/kernel/bpf/Makefile
+> > +++ b/kernel/bpf/Makefile
+> > @@ -56,6 +56,7 @@ obj-$(CONFIG_BPF_SYSCALL) += kmem_cache_iter.o
+> >  ifeq ($(CONFIG_DMA_SHARED_BUFFER),y)
+> >  obj-$(CONFIG_BPF_SYSCALL) += dmabuf_iter.o
+> >  endif
+> > +obj-$(CONFIG_BPF_SYSCALL) += path_iter.o
+> >
+> >  CFLAGS_REMOVE_percpu_freelist.o = $(CC_FLAGS_FTRACE)
+> >  CFLAGS_REMOVE_bpf_lru_list.o = $(CC_FLAGS_FTRACE)
+> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> > index b71e428ad936..b190c78e40f6 100644
+> > --- a/kernel/bpf/helpers.c
+> > +++ b/kernel/bpf/helpers.c
+> > @@ -3397,6 +3397,9 @@ BTF_ID_FLAGS(func, bpf_iter_dmabuf_next, KF_ITER_NEXT | KF_RET_NULL | KF_SLEEPAB
+> >  BTF_ID_FLAGS(func, bpf_iter_dmabuf_destroy, KF_ITER_DESTROY | KF_SLEEPABLE)
+> >  #endif
+> >  BTF_ID_FLAGS(func, __bpf_trap)
+> > +BTF_ID_FLAGS(func, bpf_iter_path_new, KF_ITER_NEW | KF_SLEEPABLE)
+> > +BTF_ID_FLAGS(func, bpf_iter_path_next, KF_ITER_NEXT | KF_RET_NULL | KF_SLEEPABLE)
+> > +BTF_ID_FLAGS(func, bpf_iter_path_destroy, KF_ITER_DESTROY | KF_SLEEPABLE)
+> >  BTF_KFUNCS_END(common_btf_ids)
+> >
+> >  static const struct btf_kfunc_id_set common_kfunc_set = {
+> > diff --git a/kernel/bpf/path_iter.c b/kernel/bpf/path_iter.c
+> > new file mode 100644
+> > index 000000000000..0d972ec84beb
+> > --- /dev/null
+> > +++ b/kernel/bpf/path_iter.c
 > 
-> I assume this should be documented in
-> dtschema/schemas/pci/pci-bus-common.yaml, too?
+> I think Christian's preference was to keep
+> everything in fs/bpf_fs_kfuncs.c
 
-You are right.
-
-> 
-> >         vpcie3v3-supply = <&reg_3p3v>;
-> >         ranges;
-> >     };
-> > };
-> >
-> > Example clock topology:
-> >  ____________                    ____________
-> > |  PCIe host |                  | PCIe slot  |
-> > |            |                  |            |
-> > |    PCIe RX<|==================|>PCIe TX    |
-> > |    PCIe TX<|==================|>PCIe RX    |
-> > |            |                  |            |
-> > |   PCIe CLK<|======..  ..======|>PCIe CLK   |
-> > '------------'      ||  ||      '------------'
-> >                     ||  ||
-> >  ____________       ||  ||
-> > |  9FGV0441  |      ||  ||
-> > |            |      ||  ||
-> > |   CLK DIF0<|======''  ||
-> > |   CLK DIF1<|==========''
-> > |   CLK DIF2<|
-> > |   CLK DIF3<|
-> > '------------'
-> >
-> > Reviewed-by: Anand Moon <linux.amoon@gmail.com>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> 
-> > --- a/drivers/pci/pwrctrl/slot.c
-> > +++ b/drivers/pci/pwrctrl/slot.c
-> 
-> > @@ -30,6 +31,7 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
-> >  {
-> >         struct pci_pwrctrl_slot_data *slot;
-> >         struct device *dev = &pdev->dev;
-> > +       struct clk *clk;
-> >         int ret;
-> >
-> >         slot = devm_kzalloc(dev, sizeof(*slot), GFP_KERNEL);
-> > @@ -50,6 +52,13 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
-> >                 goto err_regulator_free;
-> >         }
-> >
-> > +       clk = devm_clk_get_optional_enabled(dev, NULL);
-> > +       if (IS_ERR(clk)) {
-> > +               ret = dev_err_probe(dev, PTR_ERR(clk),
-> > +                                   "Failed to enable slot clock\n");
-> > +               goto err_regulator_disable;
-> > +       }
-> 
-> You are adding this block in the middle of the regulator handling.
-> Please move it below, under the devm_add_action_or_reset() call
-> (which is handled wrong, I have sent a patch[1]).
-> 
-
-Good catch!
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Yes. And since that also adds new fs helpers I want to take that through
+the VFS tree, please. I'll provide a stable branch as we do with all
+other subsystems.
