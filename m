@@ -1,131 +1,157 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED876217F3D
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 14:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6F029009A;
+	Wed,  4 Jun 2025 14:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045921; cv=none; b=rLSDtzhVyqOogu+2d0hFydupCgVf+gC8M9lrEbg6Xt+89K7OToaio3uzGiypZ0D0eEIGVTxVk8CryRaIJSTwep9EkvupCw7pXjjMQdEl5nDus9VqrePhqCNY5/SlHKt5kOtis/I5bpsFgCLdg3rCXa447wd2f0TeNrA51Xt5x0U=
+	t=1749045952; cv=none; b=t50tOZu0ftmpvjlU5xIcBOwBYWktx9axzSXQ+f8DdEC6vSpdm38M0wOxsMjLVGyaAlPU1tvoecxORffrbVbqBMHzo9x37AZsZu4F17z6oY/2ET+/FLTD0uGL9+aT3iG9gzQ3SXzxZ+e3ONJVemcRYP8x4uQ6NvwZaypDPXr2SJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045921; c=relaxed/simple;
-	bh=mEwl9cjLTVI7sQBAMbLWgpBd5baQ5Bc1TVQKwpPImzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQfXJXLx9aU6HpQ9m1uqJjcwZTncx8eHhgA0xYDl0+iYgkNc3zgV+RkbrhrG2kSZXsvZub6L6vJEkXraW7Vk3go9q7mUcPDwyMFlSxOqtqdzu25/7E7SOupAJC1L9Zrrmmf2qq8NRdxG8qnyIC70HxcHZ3wfWLk1bGQ4EU3vwjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RgdB7Q9a; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749045952; c=relaxed/simple;
+	bh=IIEwGMNU/iJrUu7/3CwdVOUWTk7lAwMeHyQc/py9Ccg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UPkMg4FOtMNv0UrQPYHkfA5YROY5kzo8s5otfIOLlnwdT/Pxd6+chJSrrKCihokwCorBZrGOZRHUY7f6iy6OVKEK4BUDIjdeTe/0/92hwGTzDBgsNBW578e3Ax0rCS9RBLx9+qR2o6CpFueZU1RabN2HiZKk95aG2WT2P1479D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXv44fZ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgdB7Q9a"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b2c4476d381so953098a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 07:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749045918; x=1749650718; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v6Jziq1CHUFj2h2WHZH1SsgeKe9ouBnoMuGPhTV1Jhc=;
-        b=RgdB7Q9aBvBDEQc0Js6RMYRtRabxKA/gjMISdZ2UigIbaZvBNA+KjTnDXOSUwaeO+o
-         AxnkR5Oa4UgIvmknZ0gO+BETpLlv+fRiiKbw4HuQXZJiinY/0vUCslfptaQfzVDpzo1T
-         XWy9PTCrVSrYS5lIPgZwM73xGTcUp84RyL6jC5h8AVnJIIVZo/DE/KG82iLzhXlbld55
-         idrYWPvRLWTfgTYtvr1/WNmCYO+gThLIJ85Cn9S8RPppepAV0iHI7SGjrfZ3cas14zUy
-         A5xH1x7+KfLjEpa+FODwKE2bJ7dpA9UqskWD2aavIflCyEfDCkQkIxE9WPcJNCldrxtN
-         SnGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749045918; x=1749650718;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v6Jziq1CHUFj2h2WHZH1SsgeKe9ouBnoMuGPhTV1Jhc=;
-        b=nTBWI1upgUs5es4b5NUFr0UvoiWhaohkZ5pVfldt3/AbiglN6r5k4T/MoAyNcSNVLF
-         E2lNu93GrilatQXPDfwotSFsVxOZTTjZvVbg4TwBzIETnqOCms95s6ubZ8M6OCO0s9Ty
-         vz9Xk1KPOerHmHLHB92vaSiiadXtxuyyVYDTVwOUSDnEm0eOeluFZaligEEXrs5zgOWf
-         txw4fKvvTtPMkon+1IKQ6mwknnVIuYcFCK2Pctp9r0wH92xrEsUUir8ALU6NHR1js3Q9
-         1BrbjxHuP3Zy49EUpbOI9n0HyeFhFnpBfl1s3uFQfyzm3eyYTzfZkY+hsKdeHwvqE9GB
-         eXCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXERQ6Q7c9gJ2kwBfpFj+vCByey9SFBF/Eqyc4pXbHDkYzdW1YSmiB8YCP7X8DzUF8/w0hgfafbQi6UKOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDV9rhn/aljLkqmMQ2Hhd+126Nb3EHr8Fp5H25mL63feRcvO0W
-	hDwkE22hSE1AiAVYKafnAmtAqqgu+BKnQwT4rL2OcKlSFMoGJtkmGc20
-X-Gm-Gg: ASbGnct7ZiaPsarYC0/CJtuo6bx9Yg3qy0d9+gmaLbCxAbOElPvlIhh1G4Iw7Vr2bAC
-	9OPO26uUtMe3AbkhLnZNuz437WpvTPPcYl/vmdiXhdon9jakqeDaIExV5kkaZaOGlBPB4Zjv7Ca
-	/OSnM95OkvwxeFEzYZ+owvMzFGoqXwkDIUP3P9B6M9qU6ewOzDo+adPrBdiktzHr+mJt64SqQEF
-	k/4md0a3sDkdVx/DzmKNADX+pz6J39w1fStQ3PWepioQh3106f4HKT2drRVduO8cYQXrDQAvzNf
-	SgyVxJA66ywubOZl2mRFsMKMZC3H9UqG6IscWNJca98hLaVCYKY5Y87xMZ1Nq6QRLqYYLXOT
-X-Google-Smtp-Source: AGHT+IGia8s6X3GZlBFPLsgqEqQgiGPPVpTkPceVeeAMoSe4mGLufOBweHuJTtcLa/zr9tCg2atx1g==
-X-Received: by 2002:a05:6a21:a8e:b0:218:2ee9:2c67 with SMTP id adf61e73a8af0-21d0cad48cdmr10623686637.9.1749045917873;
-        Wed, 04 Jun 2025 07:05:17 -0700 (PDT)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb36961sm8754616a12.43.2025.06.04.07.05.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 07:05:17 -0700 (PDT)
-Date: Wed, 4 Jun 2025 10:05:15 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched_ext: idle: Skip cross-node search with !CONFIG_NUMA
-Message-ID: <aEBSm7Lm9Gx_anMo@yury>
-References: <20250603082201.173642-1-arighi@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXv44fZ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFF0C4AF0B;
+	Wed,  4 Jun 2025 14:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749045951;
+	bh=IIEwGMNU/iJrUu7/3CwdVOUWTk7lAwMeHyQc/py9Ccg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YXv44fZ0Sr4s/P77xwDWM3bl+et2NQKht5j2jXoEX7yG3Eb/UtkVmKaiHHWaUB9v8
+	 pJXXUkBke75VXdJPUmIfxipVu2+83CiMConF36hFMxRKyHRv0QCZA+JIwmG3dQRuVA
+	 8kZdxz6G/aiqVvfTX1Aq0GmkXa7fPXDY6Qt39+1VB7XnuKf6KyD28IGbCpp50cL2XD
+	 lsqvyCGCnbs5z+dx7GYJ6ZxRvM4Y+jmot4hjUu7Y2/vdmkEBUq/PdCfg8GdtunYAd2
+	 +WCBSbOFnVHpLgVnXQByT23u1jd31PlAqg5NZbDroRwqAgNwoduwYrZong1X+jdoQx
+	 PnsL1rGIH027A==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so7993658a12.2;
+        Wed, 04 Jun 2025 07:05:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXAWuVDXx3s83CKNpi5fz2Km7U+kcX94RBZ69rE0AFlM4Hkz+yV7QBBFJl9t7nakkSp0VPA4cDG@vger.kernel.org, AJvYcCXCa7IhxRjpJRYPnf3k3Au1eeVP8o5ix9TF1qDmTIBUY4ijepj71UZ4ubjovAYY7nT1GjuDvGVgrkdd5pQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxteLgmecjqUXL9rpUnUDHUqZyYYde5iSJId3SxMqmCrDnyGrAs
+	X9oHpVfp9dzwq8gN8KMz/sAaMFTXtauWqunvwfaXofD4t26C0l8GLNY6Tn6pZsQCH8DMtnRrjW+
+	72p2Xd7lh2Y7nVFGuko4pdOiRbqaYxKE=
+X-Google-Smtp-Source: AGHT+IHzLrFJ0tDCiOZ2aUxsctyLKXzDo7JOd/wEZA10wfKlrAyYi5vIntUo8b7ssgCiiur5CYeoKuJbXK6hT8b9IDw=
+X-Received: by 2002:a05:6402:2351:b0:607:1973:2082 with SMTP id
+ 4fb4d7f45d1cf-6071973209cmr498604a12.11.1749045950321; Wed, 04 Jun 2025
+ 07:05:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603082201.173642-1-arighi@nvidia.com>
+References: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
+In-Reply-To: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 4 Jun 2025 22:05:37 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvKA_KKer2m4iG2-t1TsphfY807WvqIwtlUIzYSRATglAOWgOM5PL3hSDQ
+Message-ID: <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: vDSO: correctly use asm parameters in syscall wrappers
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: WANG Xuerui <kernel@xen0n.name>, "Theodore Ts'o" <tytso@mit.edu>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrea!
+On Tue, Jun 3, 2025 at 7:49=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> The syscall wrappers use the "a0" register for two different register
+> variables, both the first argument and the return value. The "ret"
+> variable is used as both input and output while the argument register is
+> only used as input. Clang treats the conflicting input parameters as
+> undefined behaviour and optimizes away the argument assignment.
+>
+> The code seems to work by chance for the most part today but that may
+> change in the future. Specifically clock_gettime_fallback() fails with
+> clockids from 16 to 23, as implemented by the upcoming auxiliary clocks.
+>
+> Switch the "ret" register variable to a pure output, similar to the other
+> architectures' vDSO code. This works in both clang and GCC.
+Hmmm, at first the constraint is "=3Dr", during the progress of
+upstream, Xuerui suggested me to use "+r" instead [1].
+[1]  https://lore.kernel.org/linux-arch/5b14144a-9725-41db-7179-c059c41814c=
+f@xen0n.name/
 
-On Tue, Jun 03, 2025 at 10:22:01AM +0200, Andrea Righi wrote:
-> In the idle CPU selection logic, attempting cross-node searches adds
-> unnecessary complexity when CONFIG_NUMA is disabled.
-> 
-> Since there's no meaningful concept of nodes in this case, simplify the
-> logic by restricting the idle CPU search to the current node only.
-> 
-> Fixes: 48849271e6611 ("sched_ext: idle: Per-node idle cpumasks")
-> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+Huacai
+
+>
+> Link: https://lore.kernel.org/lkml/20250602102825-42aa84f0-23f1-4d10-89fc=
+-e8bbaffd291a@linutronix.de/
+> Link: https://lore.kernel.org/lkml/20250519082042.742926976@linutronix.de=
+/
+> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
+> Fixes: 18efd0b10e0f ("LoongArch: vDSO: Wire up getrandom() vDSO implement=
+ation")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 > ---
->  kernel/sched/ext_idle.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
-> index 66da03cc0b338..8660d9ae40169 100644
-> --- a/kernel/sched/ext_idle.c
-> +++ b/kernel/sched/ext_idle.c
-> @@ -138,6 +138,7 @@ static s32 pick_idle_cpu_in_node(const struct cpumask *cpus_allowed, int node, u
->  		goto retry;
->  }
->  
-> +#ifdef CONFIG_NUMA
-
-It would be more natural if you move this inside the function body,
-and not duplicate the function declaration.
-
->  /*
->   * Tracks nodes that have not yet been visited when searching for an idle
->   * CPU across all available nodes.
-> @@ -186,6 +187,13 @@ static s32 pick_idle_cpu_from_online_nodes(const struct cpumask *cpus_allowed, i
->  
->  	return cpu;
->  }
-> +#else
-> +static inline s32
-> +pick_idle_cpu_from_online_nodes(const struct cpumask *cpus_allowed, int node, u64 flags)
-> +{
-> +	return -EBUSY;
-> +}
-
-This is misleading errno. The system is nut busy, it is disabled. If
-it was a syscall, I would say you should return ENOSYS. ENODATA is
-another candidate. Or you have a special policy for the subsystem/
-
-The above pick_idle_cpu_in_node() doesn't have CONFIG_NUMA protection
-as well. Is it safe against CONFIG_NUMA?
-
-> +#endif
->  
->  /*
->   * Find an idle CPU in the system, starting from @node.
-> -- 
-> 2.49.0
+>  arch/loongarch/include/asm/vdso/getrandom.h    | 2 +-
+>  arch/loongarch/include/asm/vdso/gettimeofday.h | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/vdso/getrandom.h b/arch/loongarch=
+/include/asm/vdso/getrandom.h
+> index 48c43f55b039b42168698614d0479b7a872d20f3..a81724b69f291ee49dd1f46b1=
+2d6893fc18442b8 100644
+> --- a/arch/loongarch/include/asm/vdso/getrandom.h
+> +++ b/arch/loongarch/include/asm/vdso/getrandom.h
+> @@ -20,7 +20,7 @@ static __always_inline ssize_t getrandom_syscall(void *=
+_buffer, size_t _len, uns
+>
+>         asm volatile(
+>         "      syscall 0\n"
+> -       : "+r" (ret)
+> +       : "=3Dr" (ret)
+>         : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
+>         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
+>           "memory");
+> diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loonga=
+rch/include/asm/vdso/gettimeofday.h
+> index 88cfcf13311630ed5f1a734d23a2bc3f65d79a88..f15503e3336ca1bdc9675ec6e=
+17bbb77abc35ef4 100644
+> --- a/arch/loongarch/include/asm/vdso/gettimeofday.h
+> +++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
+> @@ -25,7 +25,7 @@ static __always_inline long gettimeofday_fallback(
+>
+>         asm volatile(
+>         "       syscall 0\n"
+> -       : "+r" (ret)
+> +       : "=3Dr" (ret)
+>         : "r" (nr), "r" (tv), "r" (tz)
+>         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
+>           "$t8", "memory");
+> @@ -44,7 +44,7 @@ static __always_inline long clock_gettime_fallback(
+>
+>         asm volatile(
+>         "       syscall 0\n"
+> -       : "+r" (ret)
+> +       : "=3Dr" (ret)
+>         : "r" (nr), "r" (clkid), "r" (ts)
+>         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
+>           "$t8", "memory");
+> @@ -63,7 +63,7 @@ static __always_inline int clock_getres_fallback(
+>
+>         asm volatile(
+>         "       syscall 0\n"
+> -       : "+r" (ret)
+> +       : "=3Dr" (ret)
+>         : "r" (nr), "r" (clkid), "r" (ts)
+>         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
+>           "$t8", "memory");
+>
+> ---
+> base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
+> change-id: 20250603-loongarch-vdso-syscall-f585a99bea03
+>
+> Best regards,
+> --
+> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+>
