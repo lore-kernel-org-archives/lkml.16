@@ -1,73 +1,108 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95435261575
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 04:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCC42F22;
+	Wed,  4 Jun 2025 04:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749012218; cv=none; b=Yjr2qUPjoyDLFkfSqk1ZCX6np9lWtNiAFpiG543Uq2z9kFhyD4sBnBI3TXE+n+QsbgXzJSjzHrOB+jZnnLW4fedBahhPou6KrLu8paeDJyv1BgJAU07aRldRX96ojU32pi8eT7fNLb8WpCPlnurSVM8+5s6ztiSO3sco/s5CGFc=
+	t=1749012357; cv=none; b=W4K0Kay7KQIUkA6vQui4nizOHJQTlkYFpsko19hx43zOpNJiEc9VyTr5lPOBYn8wjEUrUZGGh9e/86e85Q4VxWfpPulhKsqpeZHTcQdBFyclTq+vw3AFuE6RQGYS0RPuIhuYFLfoiFU0BFB2eUj2aA0fmk9oteOdtIJZO7bCKKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749012218; c=relaxed/simple;
-	bh=fqYLWp56ZjaljQVflD6EZiR64LHSxqZRiEXkA31t9o8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ngGfHPbF0SFa6eOq2aURH92umH9N5IgFAIR2e8HCUG3jc86jCtSFnQG1crm4wUr0czblcwMrezVowAAR+sEx5E60PzG4IhckBmRi1EqBx/1CCz+kjwyTKeaUEUng0K+/f1NZ6SITfDc1yRx0uBtyEcRdk5nsjB7IJq1T437zV8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=vJjCcqm8; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1749012357; c=relaxed/simple;
+	bh=2nR/AVBnhgaCsM5plCAiVN0s7r1Lp9wYRCr3fVwRARc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=EQEkvlIo0PJC0DFs0qDlPN2srB10+SW+Y299vp1R/p+1Pjrjvh3jS68wsO/8TcQuktoUAPunLzf8SeeKF3KhiilI2QLXjwKq9+TeKW56bZutwTq6lIWUhIWI3ORnctow3/OYW43L8tk+MkA34fSRXzgQbVJ6ckeAJURQRktOXfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a8NW/ZY0; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="vJjCcqm8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9yCSG9dCZxhjXtytnEcC+2OnyRrTmhcinCS2NQg1evQ=; b=vJjCcqm8o4qFstdheGQ933DAdF
-	NLpBLMU+xCAgsfDvEJFR4YfF97VUU1Gu7GIEyh+/zPSAhuf1sb7Lse743/Rr6Nk5jMH5rTRBtd2LA
-	VyTt01/yC9BVkZVWi6zVTSQOc36w4VNX8+2w0S4kDknub6N04A+80UlBIacQdROM/ZHHlRmPVLtBw
-	6dxIeLPUqEBeQ08fOy49uiVyUcoyTdBHbAs1sTbhtcc2H67dHU9slVD0ZKptMBYxjEj5FLyxvuPWk
-	ieXjnhPTyz/C3+Frq8Aexsvw696ENOc61wHZgiSErJTbwrlwOOFBWjiyb2/tI9GdPlOaQVv+EwdRl
-	OFoECzqA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMfyP-000000033x9-2XbX;
-	Wed, 04 Jun 2025 04:43:33 +0000
-Date: Wed, 4 Jun 2025 05:43:33 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Luka <luka.2016.cs@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [BUG] unable to handle kernel paging request in process_one_work
- in Linux 6.12
-Message-ID: <20250604044333.GG299672@ZenIV>
-References: <CALm_T+3=v=zMnYCMOjunYRU3anKrbOeWmsi=3jnS88gsH3qSPg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8NW/ZY0"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5535652f42cso692841e87.2;
+        Tue, 03 Jun 2025 21:45:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749012353; x=1749617153; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Cmo8IB9RnvjYfffSXXFK9NWF3lZt8OAu2EuACFlrmoE=;
+        b=a8NW/ZY0W909cArsc5tWAy0kMC6JN+4xIqcWAuApRPr1Hw93J+2DZr2NvIUTIpQVD+
+         WWKVzZLwTR7rSB6x8GD0h8uaNW6n4DB+dfsoRrjPlyKp1UeH/Uvhmu9DhzGgzmSJRweH
+         F23Aht1wHtYWIArUiuNUjvdciPqtWpkC+dzT1vbGZXzTRI8nGTo1RTTqHT02ev+TAPVt
+         cgi3zM+HnhnRgDOCiTNetBonNyedenLATkMSWoIARwE+9YYNraBpYcGBn5VrO9tiacDF
+         TM8lXZuvntC/4ZBNVbFdKKT58o5ooHkqvFp6v1o33EiTkCmNlazIQ1CMeXg2DcNc4wv+
+         5nXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749012353; x=1749617153;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Cmo8IB9RnvjYfffSXXFK9NWF3lZt8OAu2EuACFlrmoE=;
+        b=mirbdEB87EPp89jOjez8SR/0zIi5jmCg+9sxQrrkemsyLwVTfo5dLhhQJDcGtsXK51
+         dX1U6MNooyKsnGdvAuJbJj0aJDrUspNbNRf0dpx9fMbV5syXwfjkypMb2YUKYjdVSTMM
+         JJa+N/mFHOa/1M+96czTQOzvuBZKz9l9vvlphYsJp4pZcd4+Q6nzLopvnwRThwHoiAAi
+         zocY6QEdYsrAc3tCztF8v6jjZ4S3qmf68MMFvlE87kaKOp3Qn2A+flb4tiiEbKaVPtty
+         Ia8FU3xNNAAs/7/8pjLhS4hCAIrndehH0/XhCpXRhq2/qL4zhBOwYSIRzvEPBKyeAuUf
+         1/ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUQTZlJFkbdw75m3Uk+sNvdeYqD083uUvjGMOsSA7JPJQfVvIQQ2iZ75sePuMPjRZZPtGkch+Pg0gUqAwI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3uTV6MSmgSLZchghO/8ZaWCF9ZHWdn51z0zfIhDG0VO0o7Ea8
+	E2kBmMDz0Yq64RYTvgTQM4FoWTmgl6CLDfqW6NInGbTOGHcPGBKo6OSnWK1804iJSuxz3t1VM+j
+	zIhZBbS/Ms+CXRGeOmeQthZfz3TlrYJzFyN/j
+X-Gm-Gg: ASbGncuKubH18BK44/QNnWHhWzTfuz9Aj4TRiOQujuB2v+nv1IHw1F27h8O52toLgDC
+	W0vjW0HkPYiyBfLrPIQjxPbzrexMZ9Hhip37keYvHk11dJ/7NtIEVGSc8qBP8lgvVMxnguhzRnG
+	KcTWHeDb+yE9mwfi7knZYydBK2mOd9fF2BKNI=
+X-Google-Smtp-Source: AGHT+IF0W8BUZP1+OcZD1UzD0skxIcoZ3vLq57Z6fbCBM6rnAAVnLFLzC6Tpb9ZtviU8BYI7bH80e1d+pF30uIqtR10=
+X-Received: by 2002:a05:6512:3a84:b0:553:35ad:2f45 with SMTP id
+ 2adb3069b0e04-55356df1cc1mr367501e87.50.1749012352640; Tue, 03 Jun 2025
+ 21:45:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALm_T+3=v=zMnYCMOjunYRU3anKrbOeWmsi=3jnS88gsH3qSPg@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+From: Luka <luka.2016.cs@gmail.com>
+Date: Wed, 4 Jun 2025 12:45:41 +0800
+X-Gm-Features: AX0GCFsMIJQXypb6lUIeMm3RMYr7pxdEgIFaok0PMEtywdLI3oqB-v3h6pqjWsA
+Message-ID: <CALm_T+3-6MGiNKRdMedJFTtspM=U+gsgOXy9Mn3pD5jc0shD0w@mail.gmail.com>
+Subject: [BUG] WARNING in simple_rmdir in Linux kernel v6.12
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 04, 2025 at 12:06:56PM +0800, Luka wrote:
-> Bug Report: https://hastebin.com/share/yacupoheje.css
-> 
-> Entire Log: https://hastebin.com/share/inasotiyuz.perl
-> 
-> 
-> Thank you very much for your time and attention. I sincerely apologize
-> that I am currently unable to provide a reproducer for this issue.
-> However, I am actively working on reproducing the problem, and I will
-> make sure to share any findings or reproducing steps with you as soon
-> as they are available.
-> 
-> I greatly appreciate your efforts in maintaining the Linux kernel and
-> your attention to this matter.
+Dear Kernel Maintainers,
 
-On the off-chance you are for real: anything that requires any kind
-of javashit interpreter is a non-starter.  I'm not wasting my time
-decoding that "language" and I'm sure as hell not going to trust anything
-browser-like to run code from an unknown source without getting buggered.
-Ain't happening.
+I am writing to report a potential vulnerability identified in the
+upstream Linux Kernel version v6.12, corresponding to the following
+commit in the mainline repository:
 
-If you want that stuff to be looked at, post in plain text.
+Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
+
+This issue was discovered during the testing of the Android 16 AOSP
+kernel, which is based on Linux kernel version 6.12, specifically from
+the AOSP kernel branch:
+
+AOSP kernel branch: android16-6.12
+Manifest path: kernel/common.git
+Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
+
+Although this kernel branch is used in Android 16 development, its
+base is aligned with the upstream Linux v6.12 release. I observed this
+issue while conducting stability and fuzzing tests on the Android 16
+platform and identified that the root cause lies in the upstream
+codebase.
+
+
+Bug Location: simple_rmdir+0x74/0x168 fs/libfs.c:781
+
+Bug Report: https://hastebin.com/share/akadefefek.css
+
+Entire Log: https://hastebin.com/share/ojebiyetah.perl
+
+
+Thank you very much for your time and attention. I sincerely apologize
+that I am currently unable to provide a reproducer for this issue.
+However, I am actively working on reproducing the problem, and I will
+make sure to share any findings or reproducing steps with you as soon
+as they are available.
+
+I greatly appreciate your efforts in maintaining the Linux kernel and
+your attention to this matter.
+
+Best regards,
+Luka
