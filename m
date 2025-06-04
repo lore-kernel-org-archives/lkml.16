@@ -1,206 +1,183 @@
-Received: from mx0b-002c1b01.pphosted.com (mx0b-002c1b01.pphosted.com [148.163.155.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C20E1DD9AD;
-	Wed,  4 Jun 2025 16:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.155.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749053649; cv=fail; b=uKF/sncp2mi+5EqtK8FwrS8mjGY5U4lQLqC8qbpG+l54pYqFMMVJ9lOoziy0Bqd3cbRs0vQqn5qm0SuepHEJKJXj27ViWleEHZTViE3g8Me6wa1BarQsy7t+CNwTCj5sbs6MSKlou3bQBnzVll4WuAl2Z8F14P5X0YEnvRySDJo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749053649; c=relaxed/simple;
-	bh=UP6tlCvpTy5sEFqAOyJSqFwxhT7c/bLmUNmVVsNCMlo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ucbof6+0xfQ6hezrubwgB+aTfkiBPau/b9dGze2OawKl2THhZCzESvxd6IYgp9QXUYDG4hF2b5ZvKXm/bzpj0qQxR/1JSz60FEA/vHrSczKVT38FmALc+0qgeTOdvIpwQuWKtXIZMmI9WwsEhs1rTgzGCwIH8H9wqYNWgZa/UTI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com; spf=pass smtp.mailfrom=nutanix.com; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=y5c61R8n; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=NOeMsgvD; arc=fail smtp.client-ip=148.163.155.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nutanix.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CB342AA9
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749053776; cv=none; b=WLkhLXvSMBhEtguIHVrya+lyLNARWl25hluhyXkyIfV37/PT6sckayq4yln2RGRBRvnz8SowqZ/NEfU3rqHdU1iPbg9PDMzP02HzuOd9uuupRFBCsKZcwTKIctT0kCFv50r/zf8djj5MkEiNvCA9QuWq19jQk4UEa9sd4CSoxBE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749053776; c=relaxed/simple;
+	bh=weHQwns0gJTioruMnZ6e+lbjxPJy1R3/J0uJNHbei/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GfSFVsSwbPyxs3F4ds1nQB8V4MO6P+tXxKSW+1kfQPBFYCYHdjKX99yBO5bIBXkm9Yj8Mz8XMhji1408VHYBmUV3cnjZbOeNvkK1l10RXuy26FiGYlK8M6q6bU6aXYxJbLsJl/Z1KsrW7ArXZdfXZXmo9w+S8v0JseDrGbOMu3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JW3s5E4w; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GiDYZjk3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qvVMw7e2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ib421YMQ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="y5c61R8n";
-	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="NOeMsgvD"
-Received: from pps.filterd (m0127843.ppops.net [127.0.0.1])
-	by mx0b-002c1b01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554C1UHp024982;
-	Wed, 4 Jun 2025 08:57:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	proofpoint20171006; bh=1xV75CvoLZTM3uQRrHrxZP7xw5k7EoMnnodfjlQAi
-	Ug=; b=y5c61R8nSQe7RzB2uMoU8MUB98c/5ql3BI3tDh258E/eY3NX5CsjudJuQ
-	wbfNJNM3AsycnCVCcQJ3ipVTpjJ3vGLDQFXoTXzYynyBP8VqjSuW0fJybhcuwzze
-	kuAHwgZ2weHOrq3YAWjbMP6K1ZEeZIBm54WSBMIVhJhTW3fGY71tt89DfY4FK3ov
-	P4rBNZu5iPOHlr7n/L099lzMJRDPJ47O3D1fdu3eFymmRGjvzeZaPri/Wa7mNV5z
-	24UM+Px6VDT+uqdAsliJD1MHkOV0eTJKw1OnENVY2zEHWBkMJ322uHxXNrDdaMLE
-	Y3cDairaWW3FB3Fpxc4A7KcRFFL2w==
-Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazon11023085.outbound.protection.outlook.com [40.107.201.85])
-	by mx0b-002c1b01.pphosted.com (PPS) with ESMTPS id 471g88nmqv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 08:57:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vUCJatttTBljeRLw7KSslxtvM/E1Py7YuKKAPHkfIr98005I/mFUZ0TLQdIZx0MibA5BpbDVD47XsBq3QYMBYtw9PpKLKvO59d2kkU7A0li3MLHMXlCBpfP8i9+MpsDfbSObR//rw+JCMue1alJ2zLpVfi0LWTEKxvgKz+8fLEM1lDTOz51nLcLPjTcTms9ndzhTuprWzihGPoRAOxiVHbmwQDskr4WCZhByu4MZrRn+RLhdmHH8zFaT5Uyi/F4rklhoQJISuXczkeZR3S+ZS5qsOu9aSqPMlcHNZA1IaxidMw7XYkj3f7ti9ohRvrqy2M5cW0665tuy8HZr+iCPMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1xV75CvoLZTM3uQRrHrxZP7xw5k7EoMnnodfjlQAiUg=;
- b=H+3sHWWoq6LKnoC9Ywo40B4Uz78eLnJ0b96WtJa2FU7o5O8btSpN5VUqOKQ2AW3JYiMIrgzSaYiNLH4S6xGZUk0UQ8JRyCUCD77qs6xdGSaL5tARcdWIc/LPth8Lhm3tFa/bLuFViNnHnmVUvadoTPFH8uc0pkPen+nbRGdOeZLqUueQj2wbJ42a9BcT83zd2J5BUiU9b2PDGO5UlA63ZrVtLpof5HGjip72InUdWIpb4DD+ZGBh3hwrMSyX67PP8cLKdx2fbedZHvkLklo3dojye4pmzrq9zhkgy3PCcen6pgabayiTX8qxU/Jqzitd7pZmNx0ElrmtxKOJ0mE7Cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
- dkim=pass header.d=nutanix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1xV75CvoLZTM3uQRrHrxZP7xw5k7EoMnnodfjlQAiUg=;
- b=NOeMsgvDXb3yNtmy4lqnXDELybodaTMv0TP+YBPQ8B4MnExP7gsNNMTFP8CfLsoM9br1IQwrP/ktfLUUUS90R4225qr+FvZ6FjwB53EAMNYN6SCqxmPEm3nLKn0tT2zuKAVkzdSphkOhLw3OgDy+6vyFpVY4GviojWBmY77ookuGsOSNJSyHlKRkRo7JDP0JwNZBzeKBr2/EjH6eWXzGF0uADLIHrFrHa/h5N0rn0alRtqCuy/xJNV02qAyhUM692Q1164TFqD6xIDGjp3BJcan6ItwQIuaecQsA/5HX+JQPt/zDBm2Lg/er2gFfUJxYYbfsyrIweLDamcxeC0c60A==
-Received: from DS0PR02MB9101.namprd02.prod.outlook.com (2603:10b6:8:137::22)
- by MN2PR02MB7008.namprd02.prod.outlook.com (2603:10b6:208:201::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.19; Wed, 4 Jun
- 2025 15:57:35 +0000
-Received: from DS0PR02MB9101.namprd02.prod.outlook.com
- ([fe80::ca92:757d:a9c6:6ca3]) by DS0PR02MB9101.namprd02.prod.outlook.com
- ([fe80::ca92:757d:a9c6:6ca3%6]) with mapi id 15.20.8813.018; Wed, 4 Jun 2025
- 15:57:35 +0000
-Message-ID: <0ed1eec4-512a-4831-a9be-8ad8bd00fcf1@nutanix.com>
-Date: Wed, 4 Jun 2025 16:57:31 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: x86/mmu: Exempt nested EPT page tables from !USER,
- CR0.WP=0 logic
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jon Kohler <jon@nutanix.com>, Paolo Bonzini <pbonzini@redhat.com>
-References: <20250602234851.54573-1-seanjc@google.com>
-Content-Language: en-US
-From: Sergey Dyasli <sergey.dyasli@nutanix.com>
-In-Reply-To: <20250602234851.54573-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PH8P221CA0062.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:510:349::14) To DS0PR02MB9101.namprd02.prod.outlook.com
- (2603:10b6:8:137::22)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JW3s5E4w";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GiDYZjk3";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qvVMw7e2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ib421YMQ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DEB912033D;
+	Wed,  4 Jun 2025 16:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749053773; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YmdkHicZ9vMglOkN9sId8WADOZ0AiEKxD+HKkXswifw=;
+	b=JW3s5E4w/Lq8bnMW7jFK4SnNpKvFd6SXiT2E5iKZJSsFk75BrW0vJSwSpL+o9geysesFIf
+	8saaOt3PhJj/bYi16+BZ2p1pDIfcTU8d1K2D3QaLnzWK5VPGEC1BnBxbqzedDmyKkKumrP
+	fdkwgF/NfXZ7iHY5+9MW07K1gZkegVY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749053773;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YmdkHicZ9vMglOkN9sId8WADOZ0AiEKxD+HKkXswifw=;
+	b=GiDYZjk3W/3b75T4+UMWn/ckf3lpcrUELe7rDdgSyeE4QJz59fduZu9ndYMV0lTLB5KTTg
+	Bmea3lFDHcTYpoDw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=qvVMw7e2;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Ib421YMQ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749053772; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YmdkHicZ9vMglOkN9sId8WADOZ0AiEKxD+HKkXswifw=;
+	b=qvVMw7e2XoaVcUE2le8pfxYUhFk5XJfc1fLEqRPChbEQ2ko9L3bWU7sSua9U3yYkZChYj8
+	FNONXjiWXRwXRKKeKdoHyUTZKRyxn09x4R/J2yhO1uyyB3090bijaEwEhX+tbGjTrOH3Op
+	xYOYUD2e1+7+hOltBZXxlfOYTr16prI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749053772;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YmdkHicZ9vMglOkN9sId8WADOZ0AiEKxD+HKkXswifw=;
+	b=Ib421YMQE2vfLRFvp8nrk30gIIOH/ThJCJEgYSbQgQYBc+TNJ5/X5OaqRLUMRx9BRpn374
+	J2mCcWDj3aWdxTBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D13C13A63;
+	Wed,  4 Jun 2025 16:16:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id GNQYBExxQGhiIAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 04 Jun 2025 16:16:12 +0000
+Date: Wed, 4 Jun 2025 17:16:10 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Jann Horn <jannh@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org, Peter Xu <peterx@redhat.com>, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory
+ snapshot
+Message-ID: <gm6gm4hmojfhgwjgyzxfzxjlr7yz2gtkspdocsufzxydyfc4ri@n5iynjdpoe33>
+References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
+ <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
+ <t5uqs6kbzmcl2sjplxa5tqy6luinuysi7lfimbademagop7323@gveunpi3eqyo>
+ <CAG48ez29awjpSXnupQGyxCLoLds72QcYtbhmkAyLT2dCqFzA5Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR02MB9101:EE_|MN2PR02MB7008:EE_
-X-MS-Office365-Filtering-Correlation-Id: 494be67a-ac22-42ed-8517-08dda38085a1
-x-proofpoint-crosstenant: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YlpIc2VpVmpKNXk3bHVJN3hjY1pUdVpIZDRWQVZaQlpobU1ONkhheVJVUCtB?=
- =?utf-8?B?Tk8zZXRKakZIbTJ4ZDNvMjlLcXROQ0F3M3E5Mm90Y2I3WW9pcGlPbVZkU3Vz?=
- =?utf-8?B?ejJhd3ZCaktveXFMMWloSG1RT1BxNUliVXk4eFlCZ2NaaWJlMjRvb1lrbnk4?=
- =?utf-8?B?L2hFcWNJVG9ERk0rdTdYcEtVZWJieVZsMGNxb0xqN05WaFFLZnE2RlVIcEJE?=
- =?utf-8?B?ZHk2eFdKSE1rVnN0b2lDZE1tR2tuTWZYQ081ZnB2ODRlQkFUcW1ZaHBjYmRZ?=
- =?utf-8?B?Y1FTQ0NmNGVtMEN0dEpLeVlrUXNtOW43WU51T2JoWTdCcGU1WEFyRHNRODRV?=
- =?utf-8?B?N2F5Uk0xTVhKc3ZCcEZyUHZlQ204Ykcyb2FnTUdUUEVZUFAySXVXM2JMUmZV?=
- =?utf-8?B?dHhlRHR3d05IZkh2MGt2SURaVTFkeFM2L3BCS2RwYkRLWVQxa3VweDBjWUhZ?=
- =?utf-8?B?RzlkRTBrMlNrYlhZbHlFaFJQU3gxZ096cDZTNm1lcStGcHFMRCtOcnhNLytE?=
- =?utf-8?B?eVU1cGNIMmlGNjRjaVpmdDBSYXJtdnlGWjVUMWR3c0o2OVl6dTZ4Tzc2QUNm?=
- =?utf-8?B?cUVaSFJXRzI3NDhsUVZQWU4wcHFjaUkrUmMrSUZ2SHBFekhzYk03V2pVUzFZ?=
- =?utf-8?B?SVNkSkU4Q29qd1Z5aG02c0tZbkxZR2ZhdUh5NmxBd0hiU2IyWTJ6bVBGMGFo?=
- =?utf-8?B?a3JDRkk4SkxRUUowSHVqMjJrQ3NVdzFDQXQ5b2lJOE1LUnY4Wk1VWVBEcGhx?=
- =?utf-8?B?bTF1NnB6M052WDlXNSs5TGx5MTg1Qzk4dGttVmcyREd6S0tjTHVuTUhYWXM0?=
- =?utf-8?B?QlFHcDZ0UDJaMnROZWFPVWdxaXRDNjlieXNXcTBrbzFNNWNLckxLQVpvcVho?=
- =?utf-8?B?V21mNzBDOUVRNFBYZWt0VmpwNHZuRUY4Ym9Gb01Xa2VaQkVBTXVxZkFxYUY3?=
- =?utf-8?B?MkpydnN6QkQ4cnpwUmNlSnJnY0d2dUcyNHUwN09EYVJ1VEVSR2d6a0xQM0ZF?=
- =?utf-8?B?dEVGdVh1NFl4WmphNEx2R3Y4OUFPL3NsRnVVdG1vQk5pdzNFcUxuSWVPRDRL?=
- =?utf-8?B?eU0rTFgxN1lxSmc1bTVmMHdVeGkzQ0xrVHlYZ1RlS291VXZyTXVkNXQ0OWdr?=
- =?utf-8?B?MzZNM09ueWFpNDU3dzJDbkIvbVdHZFNIYlFUY3l5Ukt6NmIvdHJVcXRQR0wz?=
- =?utf-8?B?cXVTR3EyOVZvQ2VwMmNUaXFFSFpIcTZVV050R2ovZ0NRekJINGVDbkpaYXBK?=
- =?utf-8?B?TThjMnE1bnlqa2h3czY2NzlyK1d0WlhuUWY2UFVwZkhuRllkOXJmUU83UkFN?=
- =?utf-8?B?VUFlaVhqYkJKRXJQUzRhM3dnRE94M1RuL2ZnVzE5VEtFQTJ3dElzMEpudHhx?=
- =?utf-8?B?bkZkY1ljRkdESjNjdHR4REQxQk1HQ3FuaVlRREo0STlhajZTZUtSOGo2MXVR?=
- =?utf-8?B?ckRKM01STWgzSCtFUTNpekMvRDRiQjd3UzJoYWVnaHVyZUdSK3paQ1pnc0NI?=
- =?utf-8?B?M0NGalFBM1ZISkY1Zjl1K3FzWFh1dVpCSWZRRnhhbWJNenFDMkg0K0pIeGRI?=
- =?utf-8?B?WFZCTHdGWHJRSjJkRmx0RmQweklXcis2RlRxczVIV1M0dTBhOUtEZGs2UEJa?=
- =?utf-8?B?dGxkcjA1VVB1b2FwV0M1emdST1BFdTMrMEltcVAvK0lwNE9sK21QNzdieVBq?=
- =?utf-8?B?NGVLb28veUloQUhMN1M3WVd1R1FCd0N6M1pDWE1QcGV4a3Y1YkdxSTdydVps?=
- =?utf-8?B?VERqYm1DRmVPL1kxSzFlVWx4OHBMQlpUcXVDcXZMSmVDVUFRUVpyOEhMM1I1?=
- =?utf-8?B?b25KU3d5bjhSODNpYVE5Tit0WDlPbHNlTEFWTytGOUtCUUd6RGh6ZU8wNTJS?=
- =?utf-8?B?OGVhTzNReTdOaTMwMTlDTDVxREx3L0J4blVlMWRpNUE4Um5Kd2xMWlpIbFY5?=
- =?utf-8?Q?+UIiuomxgAY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR02MB9101.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a1ZjSW9EMldJMXJCYnBiaFBGQ1ZuVllkUzdtOHZxZTV3ZW1pb0w2MFNpTWF5?=
- =?utf-8?B?VUZvakFSZjVyOUlqbzNGMTNRSlljMStpcG9NdHRYWjJYK1JCVTdUMjZ0cDQ4?=
- =?utf-8?B?SDdweHcwRVh1eFdRVEpTUHBCS2dEcytUUk9SWDB4NGlBZ0R0azlHc3AxUFdQ?=
- =?utf-8?B?SVdIeTBOUUFndlljVzBwTVliakJDVkdabmhVUDlCRDgzZ0h5RWpqdEt5bWJj?=
- =?utf-8?B?WW51U3BvbEFTZFduaVdWT0JUUkJ6RnI5UEEveVVwTkl3aXMvN2VZbGczUzBs?=
- =?utf-8?B?ZGk3bERMeHZGelFtMW0zM0s5MWxKVjlWY1Uxb1VtV0dsMFBUOU9MVWhTcm1S?=
- =?utf-8?B?aGZKbjN1b2haeTdRWVYwdjBObmw0VnZsYWtRby9oVE40M0xRMG9PY0dnUTlZ?=
- =?utf-8?B?ZFRoVXowQ1JMYWVQRlM2SWlOV3BjOHBhVzNieHFXZHoyeEpDZGtoS0lia241?=
- =?utf-8?B?OTdrWTNPa0QrNjMxTTE4UHlPV1Vqdm9Pb09QVWYzVythd043VTcwd2NVT3pF?=
- =?utf-8?B?VnFLTWNadm1qVis3dDRJM0dnTlZXamVzdms1OU5GWDQ5N1dCalRMN25zd29H?=
- =?utf-8?B?UXZKUnV0RU9SOTYwdVJuOE9YZXJheFhhTDRKa3EzZjNvUm1ETXhweG1lOGlj?=
- =?utf-8?B?YXVYRjBDc2tVV2JXSTZyV2FMY2ltc1VqZEZqUlpuM0tla1JZck40bEp0eXM3?=
- =?utf-8?B?UVBHZ2JrZjBNRC91czhlN3VhSEwvajlLcklpNW1Edk51eFJ6U1c4WHdjamJL?=
- =?utf-8?B?TjNDM0h0aVJUOVhTOUlIeDZoZ1hJYUZYN2xTMVVUOC9KckNwTDJuOGlNcWZJ?=
- =?utf-8?B?Ulp0VTlJaDdScFNSaFZodmQ1Wmx6TkZKdVAxK1d0TUFJYWRrYVY4TFVoYlNr?=
- =?utf-8?B?UnE1N0NlMHJRNE9qaExKbUZ5VE50NWFJTHArQTFTZ3luNTJRYjI0Zno4Vm8y?=
- =?utf-8?B?L0h4S0FFZXkvYk9lT0RoMHBDdXFyS0hiWTRBTVdKZjNjTXU2KzhudGYrNUFL?=
- =?utf-8?B?RmJTOGJnbTJETVlsYm9vSnpzeW5EYmh4QTBZa09qT01RRWd6Uy8xdTJ6eGp4?=
- =?utf-8?B?REVRQVRkUVZBb3hmclUzNko5L3pPWGtHbTQ1VkVreStsTmJKcnJSalRMNjBN?=
- =?utf-8?B?bEZwUXAyWHRDdEJOTjE4QnMrOGZwNTJlQXcxTHg2UWVNbk83K1JtdEdZSFVC?=
- =?utf-8?B?NjF2WDBLZUprcDh2V1VvS0tpcUxla0RjMUpQNU1CZEExcE80QWhjNFFXUzJW?=
- =?utf-8?B?cDRZTWlVNjM5eC9pVkliNHBYdTZsN2FsKzRjYml3djd5eXI2V1NlWkxKN1lt?=
- =?utf-8?B?SGNaZll0Tm9kdnoyR040dFFBckpqdGNWWFJVczlTVHFqbzBrNWN0ODBwUGNi?=
- =?utf-8?B?RE82QS9CNnBOc2Jkb240cFM2dUloRGYxTkFPOUVqWUJJS3R4UWFZN2N0aHZZ?=
- =?utf-8?B?MGg1aDRBSWZzN3Era3NjaFpWTnprc2V3K0lNYVBvOTk0ZUJIcW1PZ2xWUHlZ?=
- =?utf-8?B?V3g1eXVLNUlEbUozSTFrdmVRMGtYUW1aSDU3RkJDa1RnaWhWRkorR2ZIbWg2?=
- =?utf-8?B?cG5yWCt2TVVVQUhvVm1XakRIVmgyb0M4WTFiRkF4UzRPWVhER3V3aEZqSlB5?=
- =?utf-8?B?OU5zRUZlWlVrTWpnS21EejYrU0hZdnEwN0dCQmxZOHVWaWtGTW5pMEFpaGFQ?=
- =?utf-8?B?TGF6ZVUrejNsWGVnWHpaZU5TajhBa3lteHl2ZzIrQTZWV1pYRExGV3FlTDdL?=
- =?utf-8?B?czY0amlhWklUbHpscEQxVzFXWmg4MnBVOUZ3Q2w2SEtDOHVGN05vS0dHTDVU?=
- =?utf-8?B?N2ZBQjVqazhIZnlXdGRHZ1gvdjZPZEFXd0F6cEJ3YzlNeUlIdmtwZjU2ZkZz?=
- =?utf-8?B?UXNnU011MTl0THJTUUM4TElnVE42cGlNT2tsclJtUkxMZ0ZOdUE0MjBMY0to?=
- =?utf-8?B?UllRK2wzbEFSMU5CK2hoUUloeUEzQ0VydWdQeC91dE05M0VTSlc5MVU0cHRF?=
- =?utf-8?B?cXJObElnNDJrL0IvazhJVVlhcEZKODZYNzNocThOM21XaUMwWjhOa3kxL2Jy?=
- =?utf-8?B?elF1OUR3d254NkVhV0tvU3JRZ1pMSmZoVml0K2lLYi9lYXF4djIxemFDdzNw?=
- =?utf-8?B?eE0xRHMwU3hpRFNiVVlyN1p0NlFGMk5PTk5vSDg5eVE1MEJrbGtzalNQYmpy?=
- =?utf-8?B?N0E9PQ==?=
-X-OriginatorOrg: nutanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 494be67a-ac22-42ed-8517-08dda38085a1
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR02MB9101.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 15:57:35.2466
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bb047546-786f-4de1-bd75-24e5b6f79043
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vEfrOAQOYoRUHOwh1JEMWufzqbb+hREaT7ba2MM3v0GwgCQ3yJElDylQve2qHD2oJcV9CKGYn16A0OG6GNzWBnvxkvtd/SMpGZ3FTQMUsFw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB7008
-X-Authority-Analysis: v=2.4 cv=K5kiHzWI c=1 sm=1 tr=0 ts=68406cf2 cx=c_pps a=hLZKniPSsdZe/G0VmHakBw==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=0kUYKlekyDsA:10 a=64Cc0HZtAAAA:8 a=1XWaLZrsAAAA:8 a=I1SYLbdxCI6kIEYJAuMA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: EROlx7gofjMnoU7lwvZZAJBnZ6zg6EXD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDEyMSBTYWx0ZWRfX5ooS4clchWYw XACjyQxzLTWER4fsrYGmd8QYZdzZjfvdjD3OxOXCmZmrPBrNhIj4Siq5VD2YycWRK7k+Vu7jd8V a3ZOOvtxbTGEKbIbWY6QsaeBdhnGAxy/sYFm2wKF8aBXJsZizKYQupPzqjcLKfCCxqDZ7iO1nIk
- iO2+d2W1OBqUrrQnn80rOuZ7YDFss4OxZCLw8ldCU5HnoC9zhJCFYAJXMDxf+tlo51EzzH4seME 6BsAsaDjn1iNZME1PWs2Ea+QGHVncAdtmVAvDHYxR/AvYybfv6nsjbj1vpvrPk05SSyfqusUy9i QLQE8fNyFk6JtnBIKibxXb4GsE5p13xmQaADGtr3l4mEsvobGMXSBIUVCtm1X236q50YOEQEzmF
- 9XpTQFnjG/TeUyjT2JvxsXPvgl3oFFgW1wVRBLJ6ZxNvmNVhWcxVd0Z9ftu7o5R5OJaDwNDO
-X-Proofpoint-GUID: EROlx7gofjMnoU7lwvZZAJBnZ6zg6EXD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez29awjpSXnupQGyxCLoLds72QcYtbhmkAyLT2dCqFzA5Q@mail.gmail.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: DEB912033D
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-1.61 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_SPAM_SHORT(2.20)[0.733];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -1.61
+X-Spam-Level: 
 
-On 03/06/2025 00:48, Sean Christopherson wrote:
-> Exempt nested EPT shadow pages tables from the CR0.WP=0 handling of
-> supervisor writes, as EPT doesn't have a U/S bit and isn't affected by
-> CR0.WP (or CR4.SMEP in the exception to the exception).
+On Wed, Jun 04, 2025 at 05:41:47PM +0200, Jann Horn wrote:
+> On Tue, Jun 3, 2025 at 10:32 PM Pedro Falcato <pfalcato@suse.de> wrote:
+> > On Tue, Jun 03, 2025 at 08:21:02PM +0200, Jann Horn wrote:
+> > > When fork() encounters possibly-pinned pages, those pages are immediately
+> > > copied instead of just marking PTEs to make CoW happen later. If the parent
+> > > is multithreaded, this can cause the child to see memory contents that are
+> > > inconsistent in multiple ways:
+> > >
+> > > 1. We are copying the contents of a page with a memcpy() while userspace
+> > >    may be writing to it. This can cause the resulting data in the child to
+> > >    be inconsistent.
+> >
+> > This is an interesting problem, but we'll get to it later.
+> >
+> > > 2. After we've copied this page, future writes to other pages may
+> > >    continue to be visible to the child while future writes to this page are
+> > >    no longer visible to the child.
+> > >
+> >
+> > Yes, and this is not fixable. It's also a problem for the regular write-protect
+> > pte path where inevitably only a part of the address space will be write-protected.
 > 
-> Opportunistically refresh the comment to explain what KVM is doing, as
-> the only record of why KVM shoves in WRITE and drops USER is buried in
-> years-old changelogs.
+> I don't understand what you mean by "inevitably only a part of the
+> address space will be write-protected". Are you talking about how
+> shared pages are kept shared between parent in child? Or are you
+> talking about how there is a point in time at which part of the
+> address space is write-protected while another part is not yet
+> write-protected? In that case: Yes, that can happen, but that's not a
+> problem.
 > 
-> Cc: Jon Kohler <jon@nutanix.com>
-> Cc: Sergey Dyasli <sergey.dyasli@nutanix.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > This would only be fixable if e.g we suspended every thread on a multi-threaded fork.
+> 
+> No, I think it is fine to keep threads running in parallel on a
+> multi-threaded fork as long as all the writes they do are guaranteed
+> to also be observable in the child. Such writes are no different from
+> writes performed before fork().
+> 
+> It would only get problematic if something in the parent first wrote
+> to page A, which has already been copied to the child (so the child no
+> longer sees the write) and then wrote to page B, which is CoWed (so
+> the child would see the write). I prevent this scenario by effectively
+> suspending the thread that tries to write to page A until the fork is
+> over (by making it block on the mmap lock in the fault handling path).
+> 
 
-Thank you for the patch, LGTM.
+Ah yes, I see my mistake - we write lock all VMAs as we dup them, so
+the problem I described can't happen. Thanks for the explanation :)
 
-Reviewed-by: Sergey Dyasli <sergey.dyasli@nutanix.com>
-
-Sergey
+-- 
+Pedro
