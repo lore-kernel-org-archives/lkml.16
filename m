@@ -1,48 +1,33 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B29C28E611;
-	Wed,  4 Jun 2025 11:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F5A2C3261;
+	Wed,  4 Jun 2025 11:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749036401; cv=none; b=lgDI2RfcQiqn3p6RJ0zTA3ax52ZWu5AtjCVF/KGXJR0XZ9LPPl6RDgs0AnnaQdXiEm3FGoF1Md0Us2XCsue7JrgyMNc6/pmBB1dlXMcAIUxUU69K3JlTQDIITGe/je/S1PB98PxtCX9DMMHbAo8OZDzHgLl9qFryTQVtkCJQoio=
+	t=1749036556; cv=none; b=k5lhD/TYaddcO8OJPZrsEh5yYD1ev3enwT7dTE7X4mN7LAAPKfhJ5GkAm9F27b9Eag45hMkpIxOPlDh8YR7U3R/vkZr4DRZyLNKtt5yDVWuOVExgwKumjdqfUagO7XTWMcLZHSUJUuNLIT6gbrnoPbqVEtigwLHS85po2Pp3uYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749036401; c=relaxed/simple;
-	bh=E84Gx9daW4oGLDSIvgjc8THpf725mJjQEx4bw6Z0Be8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qC82U4dMos/WLqvpLVkvq5B0+AbekvHJc+SFdi4uqPb8MRWHnlf5KaDsOyg9SC1rSTLZg344iBvdE/iodbDIit7iIV++SkjkDuUeEWTlS3Py1d8sB/kcxslnFe17JY68AJ4A22ZnhUiNCbxX2I5d4oxE6JbNFlj0+/Ql6ewkQn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XgNsJO2t; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749036556; c=relaxed/simple;
+	bh=FMbpwrcMsbvsG7V7LiHvP4zL0l+No3TsOeEeyaxVZiQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fvxMyn55iB9xrX+Ur8yNNxh96c26QLUiQI06jzW5xgxHEoiLGqPZl+2AnpUSHY3w2CVAmzKhlvfUFE4ZLYrW51OXb+9nRUKMjzqW7lE+8x+I9VSYcxX3w0TWSuflPlZRj06Pktx/R9T2DCO/3jCQyd5VKszvCxgHWzya5r4Ucu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2Bg19LN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XgNsJO2t"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5549ugSE014378;
-	Wed, 4 Jun 2025 11:26:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VHGAL1P7Wq3Zkiic8U0OX71CgaWKBP0Jugo1QllVrGU=; b=XgNsJO2tg9TijcCu
-	+SurFLfaSK1bEMAQG1wEM1q9k+U+ldq/Tm9CRJzuHTti05sIj58i4vkjER0WR9Js
-	ZinXkSoWquqowuMxLgurx0ti9VIOBNWK37VqgdiMtDHX+SOMBbyyD7vEmbxIQsR7
-	2lNayyKNyjNWfowcVPC/YIIMvtJpuqZceaVEf7DyzQgTIAuzyxpNlMVeVXlYyVwi
-	QlzqjLQ+4vlwQ1jDrYHZD5cFZCd2StMrLYEZa7w+3I9Vk6M7xh3O6PEhcBLieWgt
-	y16O2MmM4S53suwandT8gTLclTTJbVkRaYTtOlMNbWIlFi1o/sDqAuI/Copimh58
-	6IT8kg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 472be81je6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 11:26:32 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 554BQVCj014741
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 4 Jun 2025 11:26:31 GMT
-Received: from [10.217.219.221] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Jun 2025
- 04:26:27 -0700
-Message-ID: <80b21999-f69a-4546-8b8a-2acb59df3fa1@quicinc.com>
-Date: Wed, 4 Jun 2025 16:55:34 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2Bg19LN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416B2C4CEE7;
+	Wed,  4 Jun 2025 11:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749036556;
+	bh=FMbpwrcMsbvsG7V7LiHvP4zL0l+No3TsOeEeyaxVZiQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y2Bg19LNfdhwHjTFfRUB/s4mxacX0gaBix3KUcvv/lDnmiBLFQY32mNrCwtzoBb+l
+	 JI8RR4VzHLEk0HDnWceWtEu8AdwFDHLXDT7PXA0+BArj8RFz2uxi3w1h+ltYChLxSX
+	 eOBbx/YFohlg5oOqtcEzg8zjQ1J60MdjzVLbfUIep+XOFWKXYb9afD/pRDlP3WRygk
+	 polOc65+Xtr2XgL4uv6Jrry8jpisIqZ83f+MJbz3lIqrtL7w47y/tuz/6zrX+0N1Ct
+	 XAi7qYxX+w5nxxlEIVBZlyNYqPHxOZkFelGvyNxQ1QT6s6MitjGFqS5Q7Su5Gw2EvS
+	 cpX4ZJnk7HXmA==
+Message-ID: <1ab9d9d5-fe0c-4ed3-b059-7be8465d79c6@kernel.org>
+Date: Wed, 4 Jun 2025 13:29:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,157 +35,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] phy: qcom: qmp-combo: introduce QPHY_MODE
-To: Neil Armstrong <neil.armstrong@linaro.org>, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-0-a03e68d7b8fc@linaro.org>
- <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-3-a03e68d7b8fc@linaro.org>
+Subject: Re: [PATCH v2 1/1] dt-bindings: nvmem: convert lpc1857-eeprom.txt to
+ yaml format
+To: Frank Li <Frank.Li@nxp.com>, Srinivas Kandagatla <srini@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: imx@lists.linux.dev
+References: <20250603152836.1069326-1-Frank.Li@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Udipto Goswami <quic_ugoswami@quicinc.com>
-In-Reply-To: <20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-3-a03e68d7b8fc@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250603152836.1069326-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=bNYWIO+Z c=1 sm=1 tr=0 ts=68402d68 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=KKAkSRfTAAAA:8 a=RblEnPfGN_9KTdTLSikA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: t9hUoPdx06CgKfI_iLyS4mLnRWnXttXj
-X-Proofpoint-ORIG-GUID: t9hUoPdx06CgKfI_iLyS4mLnRWnXttXj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA4NyBTYWx0ZWRfXwQgi2ygkPGdH
- v4sTBD8JayKDcj6BWZoU8l8/FGSAsa9wFt7FCbk8UXqgfNTSR/Imp6yHgH0MZGLvWyBYXhpdmYp
- IqZpA67fpTIRRxyTfhHU+lhqBF8S/sY1xTq35m0rdlUcshODxHS4pPa1Ale+RUIY7Je9AmZtF51
- ylWEue9EOKbtafLZPm2r3Vyu/Xh4JHuaCqckUk7NqOt5oIRnE0uGd2dI01BBPKA9fYtc7qx0OiK
- Ghk4bHI8SaqHK51aE85TJJWUJvtV4+4dF/zgcD88xyw1iXL+YXJWmmBt5oUk6XlJ2zc3+x7cCkP
- qIboMcJ3hEpVTDwLqM5UnF7yAnBgpirOjmOnHu4f7FiyuvqNxY6Am/lnMt1NPiXYl2Volzwl/Hh
- vXPFjCWgNUlJkPPiXza9sgygtO77D4IfYb9oLz7ltwZlrdR/xfE0rh/HkRN8kUWmq4IQu8vU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- suspectscore=0 mlxscore=0 impostorscore=0 spamscore=0 clxscore=1011
- mlxlogscore=999 adultscore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506040087
 
-
-
-On 5/27/2024 2:12 PM, Neil Armstrong wrote:
-> Introduce an enum for the QMP Combo PHY modes, use it in the
-> QMP commmon phy init function and default to COMBO mode.
+On 03/06/2025 17:28, Frank Li wrote:
+> Convert lpc1857-eeprom.txt to yaml format.
 > 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->   drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 41 +++++++++++++++++++++++++++----
->   1 file changed, 36 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> index 183cd9cd1884..788e4c05eaf2 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> @@ -61,6 +61,12 @@
->   
->   #define PHY_INIT_COMPLETE_TIMEOUT		10000
->   
-> +enum qphy_mode {
-> +	QPHY_MODE_COMBO = 0,
 
-Hi Neil,
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I have a doubt here, shouldn't this be aligned with what typec_altmode has ?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/usb/typec_altmode.h?h=v6.15#n113
-
-This patch marks COMBO mode as 0
-when the mux_set when called from pmic_glink_altmode.c
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/soc/qcom/pmic_glink_altmode.c?h=v6.15#n160
-
-the state will start from 2 if i'm not wrong ?
-
-For the similar implmentation I referring to fsa4480.c which seems to be 
-using the enums from typec_altmode.c therefore asking.
-
-
-Thanks,
--Udipto
-
-> +	QPHY_MODE_DP_ONLY,
-> +	QPHY_MODE_USB_ONLY,
-> +};
-> +
->   /* set of registers with offsets different per-PHY */
->   enum qphy_reg_layout {
->   	/* PCS registers */
-> @@ -1503,6 +1509,7 @@ struct qmp_combo {
->   
->   	struct mutex phy_mutex;
->   	int init_count;
-> +	enum qphy_mode init_mode;
->   
->   	struct phy *usb_phy;
->   	enum phy_mode mode;
-> @@ -2589,12 +2596,33 @@ static int qmp_combo_com_init(struct qmp_combo *qmp, bool force)
->   	if (qmp->orientation == TYPEC_ORIENTATION_REVERSE)
->   		val |= SW_PORTSELECT_VAL;
->   	writel(val, com + QPHY_V3_DP_COM_TYPEC_CTRL);
-> -	writel(USB3_MODE | DP_MODE, com + QPHY_V3_DP_COM_PHY_MODE_CTRL);
->   
-> -	/* bring both QMP USB and QMP DP PHYs PCS block out of reset */
-> -	qphy_clrbits(com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
-> -			SW_DPPHY_RESET_MUX | SW_DPPHY_RESET |
-> -			SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
-> +	switch (qmp->init_mode) {
-> +	case QPHY_MODE_COMBO:
-> +		writel(USB3_MODE | DP_MODE, com + QPHY_V3_DP_COM_PHY_MODE_CTRL);
-> +
-> +		/* bring both QMP USB and QMP DP PHYs PCS block out of reset */
-> +		qphy_clrbits(com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
-> +				SW_DPPHY_RESET_MUX | SW_DPPHY_RESET |
-> +				SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
-> +		break;
-> +
-> +	case QPHY_MODE_DP_ONLY:
-> +		writel(DP_MODE, com + QPHY_V3_DP_COM_PHY_MODE_CTRL);
-> +
-> +		/* bring QMP DP PHY PCS block out of reset */
-> +		qphy_clrbits(com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
-> +				SW_DPPHY_RESET_MUX | SW_DPPHY_RESET);
-> +		break;
-> +
-> +	case QPHY_MODE_USB_ONLY:
-> +		writel(USB3_MODE, com + QPHY_V3_DP_COM_PHY_MODE_CTRL);
-> +
-> +		/* bring QMP USB PHY PCS block out of reset */
-> +		qphy_clrbits(com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
-> +				SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
-> +		break;
-> +	}
->   
->   	qphy_clrbits(com, QPHY_V3_DP_COM_SWI_CTRL, 0x03);
->   	qphy_clrbits(com, QPHY_V3_DP_COM_SW_RESET, SW_RESET);
-> @@ -3603,6 +3631,9 @@ static int qmp_combo_probe(struct platform_device *pdev)
->   	if (ret)
->   		goto err_node_put;
->   
-> +	/* Set PHY_MODE as combo by default */
-> +	qmp->init_mode = QPHY_MODE_COMBO;
-> +
->   	qmp->usb_phy = devm_phy_create(dev, usb_np, &qmp_combo_usb_phy_ops);
->   	if (IS_ERR(qmp->usb_phy)) {
->   		ret = PTR_ERR(qmp->usb_phy);
-> 
-
+Best regards,
+Krzysztof
