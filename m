@@ -1,259 +1,329 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292561D5CC4;
-	Wed,  4 Jun 2025 18:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749061792; cv=none; b=BkK+pDCPVgiC+P1Dy+CBNOcjPhD+Dfba6vXuo/YyxsmlJS7grFmAvElL+b3Ez88Qh3h2fpgW4sH7KYCl2l/iBokV4tW9VSnuy9HHzX8Fm67rPupk/QWCiBbD3+JQQNnR10QSJ1U9fczYlvDaGy/LtbZvzsi53si/cqGX+0OStv0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749061792; c=relaxed/simple;
-	bh=PXhhNODjG+cNsHNAcTpDxpcRWqKbXa6CHcvSPuhg5MM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HJnwdvF1+kwHfITGOFHtsHv4j3WdDR/vVcZ/lpLk9WksQ3zK+Z3A/r5YmVu6JkB5D0l2p10lePY9dd4MW+zRNAb1OrqNvUEDrv3/jWwkhrvlTNl7iG/MKbK8zPJBaEb3lIME8w2Pgajx4bwkpuT2PVZaJibKRKzGCB/anZ/nWrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M9Dzfw50; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95643C17;
+	Wed,  4 Jun 2025 18:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749061869; cv=fail; b=EB2hanp6qiegl4TWORykLQyxUxC47LxdKdeMX/r8XKwpsN41WTQca3Dm3CrEPDzPsR1XNzdNp8EdnN5jggf+9A0PSsyvcszN5g0ZWIn2M0Gm/Zf+r53I2tjqD3K2BNiIr5vehgOrJjKVACPsJG6xa/7HLiLaaAImf7K8Krg45xw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749061869; c=relaxed/simple;
+	bh=OOTAktXE/81BO0S5rOee+6mX4oTW/b1myS3MeoBbkIk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=B42qxhSLJOpNLm8qkBv6O0I3aSu/MX6FefwuwPDgRCZsuRiOCTxSkL7DaR5jnwDmcEYvNTFT7fkyTKUUoNNx7uZhwvyERw1MelCKmfLWN8UGrCGUe1cWYbKTOt/WUBcqxD9uc0b/KSrN+J0rWlIdQ1DyPpVU++g3pffIj4roZVI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LUYcoqHY; arc=fail smtp.client-ip=40.107.220.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9Dzfw50"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so188557a91.3;
-        Wed, 04 Jun 2025 11:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749061790; x=1749666590; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=qBOjMHTgyBfthw0tiIniALs2SFPGVC9Hhjqg9y5VsQU=;
-        b=M9Dzfw50H7KG6lkT93PPe+WzDiXzRQJ4YbNdVRitWlYO3AG9yVKC3oAB5PWamQXpxU
-         iCtX/PlH9q1LJ0jt7rZvw/5x74OckzFqj99hz9xtiPCCCQyxPVYiTAzlpGQS/DRu8Ofd
-         5Xsza/XIUO4x+Ofszwc2a1kUOrbvK8d9OC9NNnmLHO7pH1j6Oef06MswRJ1n2VQC5Qpi
-         H4IkZX4dYlsnMToUmF/OC1HJF/68ctRgJtmLoq5qDl5ufLZCloQoL+mkFSrA9pgnGSct
-         yyH8ImvJU83BTgQqSjLf3dRDznONlDw2TuHTHsBzpEWnDpAv/aSPcEzmWBTRW8v0ruiE
-         nWaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749061790; x=1749666590;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qBOjMHTgyBfthw0tiIniALs2SFPGVC9Hhjqg9y5VsQU=;
-        b=cy8yNluLF2PjTFO2WXSggV5iVB5IsM9KS07Ypjnmrg+8Uh5ur2bHn0qmfvQO4G2AAL
-         c3+n84sUpCRXZsRfqANPeHqN0+ho+NP3AF3inPHS3FqadxXdmnoZF77+1TFgClOxqU+H
-         pqwP4MnhidHVQz0Q8IORPyw2moKJf6b9+D1s/Sxt5CxvceLzpdkI+fcyGaMbxqii9PHs
-         VnbhJKaif+a9nQvoXUdz5Qoss/TrsxuXpgNFqEo09cuIK+xvlUwWSOOWknDuJgY/Tkvv
-         SLJ+TbjFiIter4YTali51tv3srYLUbWW+bUWDfVfRHSiTziCFvU/HFRVrmMB+kWlyjp7
-         fowg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpLb3Lmnl0HMqK2HFmJLToHJiwIcuOf40KHLgMvk0CFqEJxxtj4hTn8gWtRL2WOy0ZJZtj0jV2JUDXdPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ7j307YJYYUkkgFPzUvfOWjGRAg7g3lw+mAwKiPGmtiP5l8LU
-	8Hqet5TOk45vpuoGkk5JhRmYacmJz+1ub9I3B3YjxHKvnWjObuxvSWAo
-X-Gm-Gg: ASbGnctXABJmu3Ka1ce6JhC2M0PoFgBpKUrrkCZmzpAhnefqZWz51mFLzC8KdUOhWIo
-	UCxG4yWjJWZN2PdvhMsO9kKjGzs43JpuH5CZ3b3/jf3MnifSKk+bbR4b0kGkWNSea97MhvLZ5jE
-	7jwHDpx0MzEP/7PYZd0ELnqHJ/3bmSyjI8EoLSKpzVJ/GSWWq6qNx+/krYkwh2OPF4+4Su2Otqu
-	pGR92sB+gJ1Y2BSwjYO+qj5JDpXzuOi5JKAos9IyrJu1QtnQyo9Sa2Aew9YjVjHEiNPfmFlo1ns
-	6nBLolft7HBSeIs8LKmbhNImhkhJfqXMfGvxx1mvAOg8Pd7zx1jVf3C6PWStreOr397M65i5W9e
-	fqhU=
-X-Google-Smtp-Source: AGHT+IHgXXIILR3WmLPSIeFXhuYxVqOuCyJSD5UAr00UNN9VGJr7ID5l5RzwQwieEltc73vttdrpPg==
-X-Received: by 2002:a17:90b:3d07:b0:312:def0:e2dc with SMTP id 98e67ed59e1d1-3130ccf6f89mr5559806a91.7.1749061790274;
-        Wed, 04 Jun 2025 11:29:50 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf53a9sm106955545ad.196.2025.06.04.11.29.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 11:29:49 -0700 (PDT)
-Message-ID: <630fc4c2-dacb-45c8-9cca-0b843365b212@gmail.com>
-Date: Wed, 4 Jun 2025 11:29:47 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LUYcoqHY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mOPJDRClKeaFoGhjwi9DBaX1FCnHwzodGjnQyrA12uOHhMISMXUF8xeEHjbsefl7easaqadOufWjWgOS0H5vcD/9svrxoFBAqm/DRQ9KGpAQgP9+QU1yfp372t2uysVmCXYqGFeLGQJbgqQuMauN49cByt/kA0Ui3LLuW61bdu6weM96bqmLGU1ToNgJakp6IpEmY13I9Ktq3ZxIYrixwqOT4h3/NU6tTvFoCQJnB1+wJ3r8g3K+5VGN0yVToIxG0FXZLDYlTysijg471nlimn+Xl+Q+f9viO1RpjvtOoLK1qFAXWkCjlgqksSjZnCNdvJgv6X4vyPjSAKWB+MgJUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q6WVT7ZonISx8YsH0SDre9TfjJaeOgYI90XiutnTJF8=;
+ b=J61/L5p27w+F8wnxd1XrZX4E4YadGT08Yt+Iz+O7B+v2OtBOO5oM2u0bp2w22WpXts0FjrZVmPjhQ01dg3alq/yFxziFtMVzSG1UPYQSu1PySP2LeME9byM4LOw1M1pDrGC80XGxcqC8lxAjeZPcbUax+LZw7vMo0ntN6CV47OM6y1dLtM9kSbMHqjarfFeVBrRCn2A+ofZEvMH+wz76bhQLJffxkYB94ZBe/dbLzllG7ipljWNPgtLiEJrzcOmy4NTD3gwZHw5WhL03moGU2vD5XqkwDO4oE4w9a7VLJ+dfh4vqbUt8rmvvTftETWLpyNPVwci2giGLUESWH9rMUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q6WVT7ZonISx8YsH0SDre9TfjJaeOgYI90XiutnTJF8=;
+ b=LUYcoqHYHZITF5Z2+LowPaibHwna9XE/PT/66oBMT7NoWT4SOm2PpVDy841fB3o+L1tX53fSctSs4MQnV37L5oJPQZVLmVUyKLm7uFhUkU1MYAy+PbDoMsAAscAN86wsqrKDuY6kfx5MfSBW9YC3EePZzvQobwJjTQ4spUWuUdE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW4PR12MB7142.namprd12.prod.outlook.com (2603:10b6:303:220::6)
+ by SA3PR12MB9130.namprd12.prod.outlook.com (2603:10b6:806:37f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Wed, 4 Jun
+ 2025 18:31:03 +0000
+Received: from MW4PR12MB7142.namprd12.prod.outlook.com
+ ([fe80::e5b2:cd7c:ba7d:4be3]) by MW4PR12MB7142.namprd12.prod.outlook.com
+ ([fe80::e5b2:cd7c:ba7d:4be3%3]) with mapi id 15.20.8769.025; Wed, 4 Jun 2025
+ 18:31:03 +0000
+Message-ID: <e0d8a32e-d11b-425d-bd4b-3d28add3f5d0@amd.com>
+Date: Wed, 4 Jun 2025 11:31:00 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/7] cxl/acpi: Add background worker to wait for
+ cxl_pci and cxl_mem probe
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
+ <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Ying Huang <huang.ying.caritas@gmail.com>,
+ Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Nathan Fontenot <nathan.fontenot@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
+ Benjamin Cheatham <benjamin.cheatham@amd.com>,
+ PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>,
+ Zhijian Li <lizhijian@fujitsu.com>
+References: <20250603221949.53272-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250603221949.53272-5-Smita.KoralahalliChannabasappa@amd.com>
+ <d9435456-9ae8-4fbe-a67b-e557e2787b0c@intel.com>
+Content-Language: en-US
+From: "Koralahalli Channabasappa, Smita"
+ <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <d9435456-9ae8-4fbe-a67b-e557e2787b0c@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR07CA0009.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::22) To MW4PR12MB7142.namprd12.prod.outlook.com
+ (2603:10b6:303:220::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.10 000/270] 5.10.238-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
- linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
- akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
- patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
- jonathanh@nvidia.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250602134307.195171844@linuxfoundation.org>
- <4c608184-5a64-4814-a70a-d2395662d437@gmail.com>
- <52e321d9-2695-4677-b8bf-4be99fc0d681@gmail.com>
- <2025060344-kiwi-anagram-fc9e@gregkh>
- <b60e753c-eb13-46af-9365-1b33ae2e7859@gmail.com>
- <2025060412-cursor-navigate-126d@gregkh>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <2025060412-cursor-navigate-126d@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR12MB7142:EE_|SA3PR12MB9130:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6e074024-f86b-4af2-bb3a-08dda395f630
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VHMybnAyTC9HcXpxa2tsU0VySmNwZGNrUE9tckFidGgwMnpGV3ByUVVDeWhR?=
+ =?utf-8?B?NFhGdE0rdlFxbWVKTy9oMVc4Z1FKK3JjVjJFeGlIZmpTVU5vcThaMjNPZ3VS?=
+ =?utf-8?B?OTNFcEdldzRwTE1tZjd4SXBVZ0pzQ1loOGpwYWgybC9zTzhZRXR6MWJNUmha?=
+ =?utf-8?B?Z2I2Qy93ekczV1pNUHZlaVl0cW1xbllqV0dTT0FRNU5YaW5sQis4RjM2M0Zp?=
+ =?utf-8?B?WHh3THdOWnFxZnY4Q3ZaeVlYSGJRQVI2alVXNTFWMERBSVNPT2pLT2l5Z3BT?=
+ =?utf-8?B?RE1qbGtQT044VWlpRFBRN0ZadFV1eVRRRDZIajZkcXBQc0ppcHgremU3YThs?=
+ =?utf-8?B?WS9IWUVtUHB5N2NERlBHUzdKTUJMMlUxQkZncTg4VU1zOHVQOHM1bWUxWkJS?=
+ =?utf-8?B?a0xOSk5mVlFSaHBTM2F6QTNJNm94MjBSZG9vTTY4TWcySU5PZnFkVFJiRWtk?=
+ =?utf-8?B?V25EVVZhVnl2VE0xVmdKMDUxY2ZPZU9PL2pyaUlaa1k4RExzZFNOc2Y5d0pF?=
+ =?utf-8?B?aTdQYkMybkJOOW96NmxTUXZQVWFhTXB6NDE4V0YzSUo2UnhBOTNGU1JSWkNI?=
+ =?utf-8?B?NWJmMnNCczFqUGd0YUYyYmxwWHV2WHY3Y0Rla3FkeEVXUWFMZG1iRG50N3l0?=
+ =?utf-8?B?amorTXZnMHNtSEE1czZkQWpwYy9KdFcvRi9VNWQva2V0M1JNQ3AxM0pwcU44?=
+ =?utf-8?B?R3k5QThpUUpyelQ0RU5uT0IxcFE2YUNpOG5xK2tRbi9sNVVybUc3c1EvcG4x?=
+ =?utf-8?B?Z1hRazlEeGxKME92ZlBFLzVQcDc5S3hvYTIvRHlPZTZOSWhaMFI1N08vcFFn?=
+ =?utf-8?B?akRZWDJzV1M4RFN5NWxqRDRkUlV6MndidGxSdmV6aGNWclJZVDZhdGx1WGt1?=
+ =?utf-8?B?M0o0WjErUnYxSGZwOCt4ZnU2QXRpcktiUTFXd01hUDc5ajc3bDlvL2IrOFM5?=
+ =?utf-8?B?M0hBZHdiWk9xekVLTzJ3RHdudnNib1ZPVmZQWEpSLzRra1UwSEdyUW80OGNk?=
+ =?utf-8?B?a0R6eURRK1lVcUFwclZxenYyZjQ5aitmbTB4VXRoUUZaMHQzQ0VQaU1IaFVQ?=
+ =?utf-8?B?Umx5RzdyTHo1MU1lRnV0bFJoMStkRkRDOTRFZGl5TWZ6MWdzem1NejdHQStS?=
+ =?utf-8?B?a0V2b05KbUozRkluOUc2azM3R2E4VU5aYkN0MUxuMlNUanF0ckhPSGZmSldk?=
+ =?utf-8?B?cjlHeXppR1dpeUNmbC9USDVOZGlWLzlIL09oT2h6U1JNeGgvMFhYQVdNWGt4?=
+ =?utf-8?B?ZnRwS2hVbUg4TE8wWFIvbXJKTzFsOUxydGg0a3paTmUyUFBCS0NLS0tuQXdS?=
+ =?utf-8?B?TURnNHJxRC8xY3BYbUF5a2hqVmFoUDJWbjFvQkNTRmJWOUtrQ3ZRWGthOTdx?=
+ =?utf-8?B?bWhWT0RHYmF1SndmNHE5czBzMGlxc2VhM0lPRzFUY1lFWmNxV0lIMGpkdmNX?=
+ =?utf-8?B?REkvTjlWMXdiaTU1dkpHQlVOTnBpK1JjZVV6YnV6Q1JXVWJIL0FMejNmQmxR?=
+ =?utf-8?B?L0h6ckJLOGczeDNSMElCMVdoM3ZBSXkydTJ6TjFHVktuRVRQQUs2cHdjcEZN?=
+ =?utf-8?B?N3kzMHVwRXI0TVk0bjJmOG1yand6cUxTQjZOSlNPRndqQ2swWFgyTmZpWkZJ?=
+ =?utf-8?B?VklIbWdkY1hyS3QzRHhza3J3bDhHMlFvMDl6eUNQTmdjVmk2QUVFcDY3Y2hq?=
+ =?utf-8?B?SjdTNTlGM2RaRUhLVkRJZktnSDVtOTUvT2FlK2JybXJHOEEraHZXWVJUTHlV?=
+ =?utf-8?B?UUhRYWxmbFM1V0I4amV6dDFVM0RQVWVKb2RiNDJSVWJKc1BtNUUyUHFjNDVL?=
+ =?utf-8?B?NkdnZGVqTG03eUR6ZmJ5anc5U2VyRmhvQ05NVnJEV1UwV2xmeGVPc3ZhcWh3?=
+ =?utf-8?B?eG5nZ0ZjY0lETTVYaFRuTjBHL0RTNE0xeTZtZXRHS0tvUTZGQmZwRFk5cVli?=
+ =?utf-8?Q?t6Uhi0cLjPU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7142.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?c3dRL1BLb1hOaDRuL3U2ZHBjNDdDT25lYUtONm5vVXg4SHVJUTdXL3U0UnAw?=
+ =?utf-8?B?US9kNFEwQkhyZWJNa1BKV041bUhtVGVSbHF0bUFvTVFHMDhmZ0gwRFdHdjZP?=
+ =?utf-8?B?Q1pmbmNOYjY2VWxsSHpFVHFsZlAxbDhQL0VzVVNqcDRwV2hzMHd0OWdaWWJx?=
+ =?utf-8?B?Y0tGNHA5WGFMQURCa2lxMUdTMG5VTjUrbjl0UEVKM1JZS0M1SHl6N2NUUmpx?=
+ =?utf-8?B?S3NVVVdicldUazVhL2lqN2xqaXV2NXlBNk5BVzhESFRjMkIxKytpcE5ML0g3?=
+ =?utf-8?B?L2o2MG1iNWpKakhWKy80aktqVjA3K0RDVnRwQ09nMnFjTlNkMDJTRVR6SkZq?=
+ =?utf-8?B?OHNWejRGMmtNV0NzV2NmS3N6UzZJT0tGbzFEUGxyY2xMZVFhbiswUGUyTkVD?=
+ =?utf-8?B?NVExM3d3ZnRCVjhnMStwbnBXc1B4MzRZZUhTbHU0WnVkWWwwajhnNU9TSkVD?=
+ =?utf-8?B?RExMZU5TWUFXQWxiNE04QUcyRFI5MWdoc0NxK0o1aWltWmhJSCtRY21Xc21H?=
+ =?utf-8?B?OG1DYmJ6U1IxaFFSMHIrQmRPeFNORXVoZEtxdFNpRVlZMVJqeW8yaUVVbHBt?=
+ =?utf-8?B?NEptOGVHWTRQWVMvdXU0SFBWZnh6cWRJUmtMRHV2bWZvUEt4QUlReXZ0RXFF?=
+ =?utf-8?B?SElqZTN4QXFLcCtXdHM3ZE5BUXA1cWQybVQ2Nm9BNmE3MXJTbEt3c3VpU2Er?=
+ =?utf-8?B?TzFPZGp0RUl5UFMyNEhCOXlHUGdZakcxSGwzVTBmd2FmQmFUNkRjQUxzd2JU?=
+ =?utf-8?B?VHhVR2wrMkZwNGtlUGUraXprWlR4WlNHM0pnNU1NcG4yNVVTSzZlNjA4ekZK?=
+ =?utf-8?B?SGYzdmp0T1FJVDEzbE5iNVFqN1dWOHNkemVBN1VKK203azdHc2dYREhvN1RI?=
+ =?utf-8?B?Nm5ReHFzRjljZ3dpSDFCNkFsSHM4TnhLNE04dXZpWFJLT3pQUEtlMlgzNkln?=
+ =?utf-8?B?eEZmcTdXaUNrc3A0a2Roc0xTTVdJL2tFUzJGYmlDSlZKTEF0RTM4SVI3MDZM?=
+ =?utf-8?B?c2Rsem1HMXhWR05iMnc0OWd6dGt1RlY4NWdSYVNVeFBkenZZQWh0K1kzYk1i?=
+ =?utf-8?B?aERUZUJiR2R5d0NnWks0a2tlSVB4NGg1RXlJb2pZNDRlUXRxTEd4MGNhQU9k?=
+ =?utf-8?B?UlkrUkZia0JaalRGbCtYVFd0YXZqWk1leDZUTXpXdElieWR0dkZVUkcxY2g4?=
+ =?utf-8?B?N1RrVTVrU3B5dUJTSDB4SFRaQks0bDJaZ0VyQmtSQ3N3cjdjdXhzMFFkWkor?=
+ =?utf-8?B?d244THU2cFlLL0s3cmhVVC9BU0NEOVo5WFIxQkgzbEFRaUtydWJVUlN5TVF0?=
+ =?utf-8?B?aDZoZkJRMXNQYTNvcnBUWDZnK3ZnMWFJWGhaY2tkRUZ0c3RpZk0vUTdVSFZ5?=
+ =?utf-8?B?SmtZMkkydEtEUk44bGRaeU5zTDB1VmFzN1JnektnZ3dWZmZ3YkI0SUF6OGNh?=
+ =?utf-8?B?TlZVTVE1WE9CWmprc0k1SlJrR3MyckFMSG9nNVlIckZFOXBub3JyMFNEcjVH?=
+ =?utf-8?B?SnhlQkhpWmk5dWlDVkxKQk1MdlV3RHFVLzJWZkdsaTRWTmt1SVBuaHhwd2NJ?=
+ =?utf-8?B?cW80WWJ3Nmhtc0ZSOENITWNuc2NlMXFXVklRNHZLZ0pvQnFKZ0czWmRyRlVK?=
+ =?utf-8?B?QUJVejRCeG5VTHp0cXNCRW1HL2JiMGNvRFp6ZHhscnBuNXR2dDFyR1h5YzJV?=
+ =?utf-8?B?bGNIa0tCK29zWXFWNktIeVJRb2hhOU1uWjlubFJnZWVJT0pNSC9tbWY3ODBI?=
+ =?utf-8?B?MjVKK3Q3Z05VdWlMSWNqMUVTYjBwUER0WmtaeXNnTVdKUnRtN0M4Ymx4ZlA2?=
+ =?utf-8?B?RjVEZytHN0VMTXY5NEgrb2p6Z2UyQVRPb21ENFNScURoQXM1UjBSelVqQW84?=
+ =?utf-8?B?WGNNQkJNaVJsOHJzTUpIV3YrTGh0L1RwVVk5dDlWRXo1U2FJb2VlalV4STBK?=
+ =?utf-8?B?eTBBOGdGbGU3WXFOclpjRElBcG0vckVrTCtZSjNrcGM1cW1Temk2WEJyL045?=
+ =?utf-8?B?S24wS1cyaVpiNUFLR3JNMEpGYjZRTERqdXRudjljaHVYRm1PRXhOZWFIWlBB?=
+ =?utf-8?B?d3V6TkRIMEpaS0xFLzJ2SDY5VlU0eU1hMlUxdVBnRmsxYTE0ODJKRjUwVHNj?=
+ =?utf-8?Q?sPBEPdteG4j6HqQHdNckMwQ0o?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e074024-f86b-4af2-bb3a-08dda395f630
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7142.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 18:31:03.6246
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C4LF33MHAr8oBSKWPH9MufYz0PTJgA+7HjYuS6OFf/2iBRScNV4LJy363ZqlQn0vLBW1OODXeKebNTtsyTdT9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9130
 
-On 6/4/25 01:06, Greg Kroah-Hartman wrote:
-> On Tue, Jun 03, 2025 at 09:00:58AM -0700, Florian Fainelli wrote:
->> On 6/3/25 00:58, Greg Kroah-Hartman wrote:
->>> On Mon, Jun 02, 2025 at 09:50:24AM -0700, Florian Fainelli wrote:
->>>> On 6/2/25 09:49, Florian Fainelli wrote:
->>>>> On 6/2/25 06:44, Greg Kroah-Hartman wrote:
->>>>>> This is the start of the stable review cycle for the 5.10.238 release.
->>>>>> There are 270 patches in this series, all will be posted as a response
->>>>>> to this one.  If anyone has any issues with these being applied, please
->>>>>> let me know.
->>>>>>
->>>>>> Responses should be made by Wed, 04 Jun 2025 13:42:20 +0000.
->>>>>> Anything received after that time might be too late.
->>>>>>
->>>>>> The whole patch series can be found in one patch at:
->>>>>>       https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/
->>>>>> patch-5.10.238-rc1.gz
->>>>>> or in the git tree and branch at:
->>>>>>       git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-
->>>>>> rc.git linux-5.10.y
->>>>>> and the diffstat can be found below.
->>>>>>
->>>>>> thanks,
->>>>>>
->>>>>> greg k-h
->>>>>
->>>>> On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on
->>>>> BMIPS_GENERIC:
->>>>>
->>>>> Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
->>>>>
->>>>> Similar build warning as reported for 5.4, due to the same commit:
->>>>>
->>>>> commit b47e6abc7dc5772ecb45383d9956f9fcb7fdf33c
->>>>> Author: Jeongjun Park <aha310510@gmail.com>
->>>>> Date:   Tue Apr 22 20:30:25 2025 +0900
->>>>>
->>>>>        tracing: Fix oob write in trace_seq_to_buffer()
->>>>>
->>>>>        commit f5178c41bb43444a6008150fe6094497135d07cb upstream.
->>>>>
->>>>> In file included from ./include/linux/kernel.h:15,
->>>>>                     from ./include/asm-generic/bug.h:20,
->>>>>                     from ./arch/arm/include/asm/bug.h:60,
->>>>>                     from ./include/linux/bug.h:5,
->>>>>                     from ./include/linux/mmdebug.h:5,
->>>>>                     from ./include/linux/mm.h:9,
->>>>>                     from ./include/linux/ring_buffer.h:5,
->>>>>                     from kernel/trace/trace.c:15:
->>>>> kernel/trace/trace.c: In function 'tracing_splice_read_pipe':
->>>>> ./include/linux/minmax.h:20:35: warning: comparison of distinct pointer
->>>>> types lacks a cast
->>>>>       20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
->>>>>          |                                   ^~
->>>>> ./include/linux/minmax.h:26:18: note: in expansion of macro '__typecheck'
->>>>>       26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
->>>>>          |                  ^~~~~~~~~~~
->>>>> ./include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
->>>>>       36 |         __builtin_choose_expr(__safe_cmp(x, y), \
->>>>>          |                               ^~~~~~~~~~
->>>>> ./include/linux/minmax.h:45:25: note: in expansion of macro '__careful_cmp'
->>>>>       45 | #define min(x, y)       __careful_cmp(x, y, <)
->>>>>          |                         ^~~~~~~~~~~~~
->>>>> kernel/trace/trace.c:6688:43: note: in expansion of macro 'min'
->>>>>     6688 | min((size_t)trace_seq_used(&iter->seq),
->>>>>          |                                           ^~~
->>>>>
->>>>
->>>> And also this one:
->>>>
->>>> commit e0a3a33cecd3ce2fde1de4ff0e223dc1db484a8d
->>>> Author: Eric Dumazet <edumazet@google.com>
->>>> Date:   Wed Mar 5 13:05:50 2025 +0000
->>>>
->>>>       tcp: bring back NUMA dispersion in inet_ehash_locks_alloc()
->>>>
->>>>       [ Upstream commit f8ece40786c9342249aa0a1b55e148ee23b2a746 ]
->>>>
->>>>
->>>> on ARM64:
->>>>
->>>> In file included from ./include/linux/kernel.h:15,
->>>>                    from ./include/linux/list.h:9,
->>>>                    from ./include/linux/module.h:12,
->>>>                    from net/ipv4/inet_hashtables.c:12:
->>>> net/ipv4/inet_hashtables.c: In function 'inet_ehash_locks_alloc':
->>>> ./include/linux/minmax.h:20:35: warning: comparison of distinct pointer
->>>> types lacks a cast
->>>>      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
->>>>         |                                   ^~
->>>> ./include/linux/minmax.h:26:18: note: in expansion of macro '__typecheck'
->>>>      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
->>>>         |                  ^~~~~~~~~~~
->>>> ./include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
->>>>      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
->>>>         |                               ^~~~~~~~~~
->>>> ./include/linux/minmax.h:52:25: note: in expansion of macro '__careful_cmp'
->>>>      52 | #define max(x, y)       __careful_cmp(x, y, >)
->>>>         |                         ^~~~~~~~~~~~~
->>>> net/ipv4/inet_hashtables.c:946:19: note: in expansion of macro 'max'
->>>>     946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE /
->>>> locksz);
->>>>         |                   ^~~
->>>>
->>>
->>> For both of these, I'll just let them be as they are ok, it's just the
->>> mess of our min/max macro unwinding causes these issues.
->>>
->>> Unless they really bother someone, and in that case, a patch to add the
->>> correct type to the backport to make the noise go away would be greatly
->>> appreciated.
+On 6/3/2025 4:45 PM, Dave Jiang wrote:
+> 
+> 
+> On 6/3/25 3:19 PM, Smita Koralahalli wrote:
+>> Introduce a waitqueue mechanism to coordinate initialization between the
+>> cxl_pci and cxl_mem drivers.
 >>
->> Yeah that's a reasonable resolution, I will try to track down the missing
->> patches for minmax.h so we are warning free for the stable kernels.
+>> Launch a background worker from cxl_acpi_probe() that waits for both
+>> drivers to complete initialization before invoking wait_for_device_probe().
+>> Without this, the probe completion wait could begin prematurely, before
+>> the drivers are present, leading to missed updates.
+>>
+>> Co-developed-by: Nathan Fontenot <Nathan.Fontenot@amd.com>
+>> Signed-off-by: Nathan Fontenot <Nathan.Fontenot@amd.com>
+>> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+>> ---
+>>   drivers/cxl/acpi.c         | 23 +++++++++++++++++++++++
+>>   drivers/cxl/core/suspend.c | 21 +++++++++++++++++++++
+>>   drivers/cxl/cxl.h          |  2 ++
+>>   3 files changed, 46 insertions(+)
+>>
+>> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+>> index cb14829bb9be..978f63b32b41 100644
+>> --- a/drivers/cxl/acpi.c
+>> +++ b/drivers/cxl/acpi.c
+>> @@ -813,6 +813,24 @@ static int pair_cxl_resource(struct device *dev, void *data)
+>>   	return 0;
+>>   }
+>>   
+>> +static void cxl_softreserv_mem_work_fn(struct work_struct *work)
+>> +{
+>> +	/* Wait for cxl_pci and cxl_mem drivers to load */
+>> +	cxl_wait_for_pci_mem();
+>> +
+>> +	/*
+>> +	 * Wait for the driver probe routines to complete after cxl_pci
+>> +	 * and cxl_mem drivers are loaded.
+>> +	 */
+>> +	wait_for_device_probe();
+>> +}
+>> +static DECLARE_WORK(cxl_sr_work, cxl_softreserv_mem_work_fn);
+>> +
+>> +static void cxl_softreserv_mem_update(void)
+>> +{
+>> +	schedule_work(&cxl_sr_work);
+>> +}
+>> +
+>>   static int cxl_acpi_probe(struct platform_device *pdev)
+>>   {
+>>   	int rc;
+>> @@ -887,6 +905,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+>>   
+>>   	/* In case PCI is scanned before ACPI re-trigger memdev attach */
+>>   	cxl_bus_rescan();
+>> +
+>> +	/* Update SOFT RESERVE resources that intersect with CXL regions */
+>> +	cxl_softreserv_mem_update();
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> @@ -918,6 +940,7 @@ static int __init cxl_acpi_init(void)
+>>   
+>>   static void __exit cxl_acpi_exit(void)
+>>   {
+>> +	cancel_work_sync(&cxl_sr_work);
+>>   	platform_driver_unregister(&cxl_acpi_driver);
+>>   	cxl_bus_drain();
+>>   }
+>> diff --git a/drivers/cxl/core/suspend.c b/drivers/cxl/core/suspend.c
+>> index 72818a2c8ec8..c0d8f70aed56 100644
+>> --- a/drivers/cxl/core/suspend.c
+>> +++ b/drivers/cxl/core/suspend.c
+>> @@ -2,12 +2,15 @@
+>>   /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+>>   #include <linux/atomic.h>
+>>   #include <linux/export.h>
+>> +#include <linux/wait.h>
+>>   #include "cxlmem.h"
+>>   #include "cxlpci.h"
+>>   
+>>   static atomic_t mem_active;
+>>   static atomic_t pci_loaded;
+>>   
+>> +static DECLARE_WAIT_QUEUE_HEAD(cxl_wait_queue);
+>> +
+>>   bool cxl_mem_active(void)
+>>   {
+>>   	if (IS_ENABLED(CONFIG_CXL_MEM))
+>> @@ -19,6 +22,7 @@ bool cxl_mem_active(void)
+>>   void cxl_mem_active_inc(void)
+>>   {
+>>   	atomic_inc(&mem_active);
+>> +	wake_up(&cxl_wait_queue);
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cxl_mem_active_inc, "CXL");
+>>   
+>> @@ -28,8 +32,25 @@ void cxl_mem_active_dec(void)
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cxl_mem_active_dec, "CXL");
+>>   
+>> +static bool cxl_pci_loaded(void)
+>> +{
+>> +	if (IS_ENABLED(CONFIG_CXL_PCI))
+>> +		return atomic_read(&pci_loaded) != 0;
+>> +
+>> +	return false;
+>> +}
+>> +
+>>   void mark_cxl_pci_loaded(void)
+>>   {
+>>   	atomic_inc(&pci_loaded);
+>> +	wake_up(&cxl_wait_queue);
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(mark_cxl_pci_loaded, "CXL");
+>> +
+>> +void cxl_wait_for_pci_mem(void)
+>> +{
+>> +	if (!wait_event_timeout(cxl_wait_queue, cxl_pci_loaded() &&
+>> +				cxl_mem_active(), 30 * HZ))
 > 
-> I tried in the past, it's non-trivial.  What would be easier is to just
-> properly cast the variables in the places where this warning is showing
-> up to get rid of that warning.  We've done that in some backports in the
-> past as well.
+> I'm trying to understand why cxl_pci_loaded() is needed. cxl_mem_active() goes above 0 when a cxl_mem_probe() instance succeeds. cxl_mem_probe() being triggered implies that an instance of cxl_pci_probe() has been called since cxl_mem_probe() is triggered from devm_cxl_add_memdev() with memdev being added and cxl_mem driver also have been loaded. So does cxl_mem_active() not imply cxl_pci_loaded() and makes it unnecessary?
+
+Yeah you are right. I will remove this check.
+
+Thanks
+Smita
 > 
-> good luck!
+> DJ
+> 
+> 
+>> +		pr_debug("Timeout waiting for cxl_pci or cxl_mem probing\n");
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_wait_for_pci_mem, "CXL");
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index a9ab46eb0610..1ba7d39c2991 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -902,6 +902,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+>>   
+>>   bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
+>>   
+>> +void cxl_wait_for_pci_mem(void);
+>> +
+>>   /*
+>>    * Unit test builds overrides this to __weak, find the 'strong' version
+>>    * of these symbols in tools/testing/cxl/.
+> 
 
-I see now that in 5.4.295-rc1 you have backported:
-
-commit 36d6c6cd65043d553126b934bf1fcb79dcb58499
-Author: Pan Taixi <pantaixi@huaweicloud.com>
-Date:   Mon May 26 09:37:31 2025 +0800
-
-     tracing: Fix compilation warning on arm32
-
-     commit 2fbdb6d8e03b70668c0876e635506540ae92ab05 upstream.
-
-
-which takes care of resolving the warning, thanks!
--- 
-Florian
