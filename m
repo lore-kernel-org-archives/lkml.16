@@ -1,123 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE94B1F4CB3;
-	Wed,  4 Jun 2025 07:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71101F4CB3;
+	Wed,  4 Jun 2025 07:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749020941; cv=none; b=KqRzx5BQZrOqNmCvweGvLic86RTOSaA2T4xhsut3ZR7bJp9x9oAVDxJUH/4hc1P4p/tLrurZiCXtobx5NfUilK7Y8rbXDZlNCFDa+NVWbwOtw3homwwV8KmApw4SROoDpGqw7fe4jmC6sP2wbt0THHCh/+rBZx7t4SJxwpfK9M4=
+	t=1749020985; cv=none; b=bB4GZbGNT0wu0hZJDc/4o50EUEyMy3QHWuW+5sWl8hipfSHuCpJxJ4yWXzNQa8jfcmpGll2GA0NfD/TL9Iz5ZKC52BIRJnWUX1yDm0pFEYJyNhCFYlyZQNfzqqbr7QYiU5TrN9qSoj86AZjF+ix3H8lqWf6De5wOLZcvC3DNnuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749020941; c=relaxed/simple;
-	bh=iD+RZcjbKVDtFg3DEp6r0Fsk0DPdKsjlbg4GlDqQuaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iDtslKfiOMerFDfXQPw9cBNJ8neJV99Tq8KTaEUyHNcA5uP+2mra3Dcudp0MtnOm4Ss+aeOLryDyBRk2T8zQfb0VuAU3y1wWxUWyp9Tmu/MG88csmZ1TQy6NLM4nKNhxkWOJzMq/FIiwFxOCiemApW92A7WIH2JsQKd0kKBSL+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TteEiU4z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749020985; c=relaxed/simple;
+	bh=7uDWG4rA8WTlDhGb+aYjPw74mKqr1db/jxjr+dQWTfk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AHJnbulwoUAW9c/CSuaqudvczz3e73qLxF2WyeQ7oKJiZM4+GPMPBP7g7FVfQzntJlNztUrUtKUD7R/AFVxLV90m2ul7pMNfFtdQnglwKWlwW/3dq0wWJASDiCH8EEwd9B5nHBIrM3/I+jTaJFPBtMjvI//X28BHCKOyzErtlJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=I9Acfkju; arc=none smtp.client-ip=185.233.34.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TteEiU4z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42222C4CEE7;
-	Wed,  4 Jun 2025 07:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749020940;
-	bh=iD+RZcjbKVDtFg3DEp6r0Fsk0DPdKsjlbg4GlDqQuaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TteEiU4zeIjPp6LGl1PUi2UAQNWfbXR3tbndvdF73evDvvVAig3ccB4cbaYN717KC
-	 tDEEsSq2SfsXG6xwJiWTyq8TXj8b1WLQoHZjd1tz+aAPKUzd9NgiHFTr6Uo15q5NfZ
-	 gAn+qvOPE7KFeEfG6VxxCicJyVCIlnkkzbTKU33Ue/C/4hCTOdaxYWSeOvnQG1NYT+
-	 uXtnGU+P/SDZT3qwmcBGUCgxPiyW5q9GIpw9KLvngmBg7awa56DnotkAwAs1oaX5WB
-	 vs/ZrXBBJxd8ZOW1hhz1nlbqWBvTpJ0kv07DscoVlpx1/cvK93UiaaaScD7asGmBza
-	 1nwroc3D2VNkw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uMiCu-000000004XS-40bA;
-	Wed, 04 Jun 2025 09:06:41 +0200
-Date: Wed, 4 Jun 2025 09:06:40 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Miaoqing Pan <quic_miaoqing@quicinc.com>
-Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
-Message-ID: <aD_wgACEfm1_1GNz@hovoldconsulting.com>
-References: <20250526114803.2122-1-johan+linaro@kernel.org>
- <20250526114803.2122-2-johan+linaro@kernel.org>
- <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
- <aD1axxSAJsbUfnHH@hovoldconsulting.com>
- <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
- <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
- <01634993-80b1-496e-8453-e94b2efe658c@quicinc.com>
- <7025db40-dda0-4cbb-80bd-09bd590584da@quicinc.com>
+	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="I9Acfkju"
+Received: from smtp.freedom.nl (unknown [10.10.4.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by dane.soverin.net (Postfix) with ESMTPS id 4bBzGg1vDYzfNQ;
+	Wed,  4 Jun 2025 07:09:31 +0000 (UTC)
+Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4bBzGf53sVz2xL4;
+	Wed,  4 Jun 2025 07:09:30 +0000 (UTC)
+Authentication-Results: smtp.freedom.nl;
+	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=I9Acfkju;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
+	s=soverin1; t=1749020971;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rVjGqA9V1/zjA+v/QKtVl39Pr2Mjw6xdVmC7444t2RY=;
+	b=I9AcfkjuTdIGPm7Uh2INzVPinOjeuGGM/jYfbGWZ9dqYIFeS/3HuGSGFy3GU0wBNExTljl
+	wpbslOU/JyHolPCL72BEFx+cEFtNhGwlUn4HWgptJkKjuUyF3IqPFRQOmxFIqd+okEpv31
+	d1qU1lxjInGJxIXhiC322B3Q7MCixePpem0m9AMMsXLDv01P2X72hJqyHgUk86Z6xuzLwS
+	SuVNsABdlzOaaKl91Y2w0n9oHqZ9IZF7UQD90LtBn+20C+uDOOHJLHQe4Evq3n7hxPdlLy
+	ot+yPCPtj1JPKQJ85uxGYNxvdStWWrW81s8s+S2rmlbpqEBs8B6sr+qBzZvPUw==
+X-CM-Analysis: v=2.4 cv=I7afRMgg c=1 sm=1 tr=0 ts=683ff12b a=smkfPCmiGCBx+NgG8pXs4w==:117 a=smkfPCmiGCBx+NgG8pXs4w==:17 a=IkcTkHD0fZMA:10 a=3WJfbomfAAAA:8 a=xq3W2uTSAAAA:8 a=8nOKJSPbo8tPU-Y5OJIA:9 a=QEXdDO2ut3YA:10 a=1cNuO-ABBywtgFSQhe9S:22 a=P5L7wpMTXyg1GfFA3Gwx:22
+X-CM-Envelope: MS4xfL2XF/JoajUOwiEWlf56vun8U+jjUQz+ySUWbCEJwkVMhzsC1OAb/b0to+wQZH/5MFvVD1Zo+R2/MnsXcKiNp9ioaxpiNCXd886s6AJ2mLQhd//fiWzd gUOwxlzUjL1A8j0V73DGoMmzvWHyQ4+ZqyQA47Wt8y+SrrS4rjsPG9bPw6oD9QnS4DFFPQt2JvvlYPNmQ+X4tILZEwsPl3bul/wVXAy102x1GWKuC0aciiev ce6BynyUv2oil43XzuXPbPX5oOTclMNRwXckZ3vPFrfPJyc1rv1SdFdVT8MqNZEH
+Message-ID: <bb65cb39-eba4-4e0f-a83c-285ab6bae753@jjverkuil.nl>
+Date: Wed, 4 Jun 2025 09:09:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7025db40-dda0-4cbb-80bd-09bd590584da@quicinc.com>
+Subject: Re: [PATCH] media: v4l2-tpg: Remove unused tpg_fillbuffer
+To: linux@treblig.org, mchehab@kernel.org, linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250603225121.308402-1-linux@treblig.org>
+Content-Language: en-US, nl
+From: Hans Verkuil <hans@jjverkuil.nl>
+Autocrypt: addr=hans@jjverkuil.nl; keydata=
+ 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
+In-Reply-To: <20250603225121.308402-1-linux@treblig.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spampanel-Class: ham
 
-On Wed, Jun 04, 2025 at 01:32:08PM +0800, Miaoqing Pan wrote:
-> On 6/4/2025 10:34 AM, Miaoqing Pan wrote:
-> > On 6/3/2025 7:51 PM, Johan Hovold wrote:
-> >> On Tue, Jun 03, 2025 at 06:52:37PM +0800, Baochen Qiang wrote:
-> >>> On 6/2/2025 4:03 PM, Johan Hovold wrote:
-> >>
-> >>>> No, the barrier is needed between reading the head pointer and 
-> >>>> accessing
-> >>>> descriptor fields, that's what matters.
-> >>>>
-> >>>> You can still end up with reading stale descriptor data even when
-> >>>> ath11k_hal_srng_dst_get_next_entry() returns non-NULL due to 
-> >>>> speculation
-> >>>> (that's what happens on the X13s).
-> >>>
-> >>> The fact is that a dma_rmb() does not even prevent speculation, no 
-> >>> matter where it is
-> >>> placed, right?
-> >>
-> >> It prevents the speculated load from being used.
-> >>
-> >>> If so the whole point of dma_rmb() is to prevent from compiler 
-> >>> reordering
-> >>> or CPU reordering, but is it really possible?
-> >>>
-> >>> The sequence is
-> >>>
-> >>>     1# reading HP
-> >>>         srng->u.dst_ring.cached_hp = READ_ONCE(*srng- 
-> >>> >u.dst_ring.hp_addr);
-> >>>
-> >>>     2# validate HP
-> >>>         if (srng->u.dst_ring.tp == srng->u.dst_ring.cached_hp)
-> >>>             return NULL;
-> >>>
-> >>>     3# get desc
-> >>>         desc = srng->ring_base_vaddr + srng->u.dst_ring.tp;
-> >>>
-> >>>     4# accessing desc
-> >>>         ath11k_hal_desc_reo_parse_err(... desc, ...)
-> >>>
-> >>> Clearly each step depends on the results of previous steps. In this 
-> >>> case the compiler/CPU
-> >>> is expected to be smart enough to not do any reordering, isn't it?
-> >>
-> >> Steps 3 and 4 can be done speculatively before the load in step 1 is
-> >> complete as long as the result is discarded if it turns out not to be
-> >> needed.
-
-> > If the condition in step 2 is true and step 3 speculatively loads 
-> > descriptor from TP before step 1, could this cause issues?
+On 04/06/2025 00:51, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
-> Sorry for typo, if the condition in step 2 is false and step 3 
-> speculatively loads descriptor from TP before step 1, could this cause 
-> issues?
+> The last use of tpg_fillbuffer() was removed in 2015 by
+> commit ddcaee9dd4c0 ("[media] vivid: add support for single buffer planar
+> formats")
+> 
+> Remove it.
 
-Almost correct; the descriptor can be loaded (from TP) before the head
-pointer is loaded and thus before the condition in step 2 has been
-evaluated. And if the condition in step 2 later turns out to be false,
-step 4 may use stale data from before the head pointer was updated.
+Ah, this can't be removed.
 
-Johan
+This tpg code is actually also used in git://linuxtv.org/v4l-utils.git which
+copies the code from the kernel source. And there this function is in use.
+
+This function is really a helper function. I think the best approach is to move
+this out of v4l2-tpg-core.c and into v4l2-tpg.h as a static inline.
+
+That way it doesn't add to the kernel code size, but is still available when needed.
+
+Perhaps add a comment in front of this function noting that it is used in v4l-utils.
+
+Regards,
+
+	Hans
+
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 17 -----------------
+>  include/media/tpg/v4l2-tpg.h                  |  2 --
+>  2 files changed, 19 deletions(-)
+> 
+> diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> index 931e5dc453b9..d51d8ba99dcb 100644
+> --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> @@ -2710,23 +2710,6 @@ void tpg_fill_plane_buffer(struct tpg_data *tpg, v4l2_std_id std,
+>  }
+>  EXPORT_SYMBOL_GPL(tpg_fill_plane_buffer);
+>  
+> -void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std, unsigned p, u8 *vbuf)
+> -{
+> -	unsigned offset = 0;
+> -	unsigned i;
+> -
+> -	if (tpg->buffers > 1) {
+> -		tpg_fill_plane_buffer(tpg, std, p, vbuf);
+> -		return;
+> -	}
+> -
+> -	for (i = 0; i < tpg_g_planes(tpg); i++) {
+> -		tpg_fill_plane_buffer(tpg, std, i, vbuf + offset);
+> -		offset += tpg_calc_plane_size(tpg, i);
+> -	}
+> -}
+> -EXPORT_SYMBOL_GPL(tpg_fillbuffer);
+> -
+>  MODULE_DESCRIPTION("V4L2 Test Pattern Generator");
+>  MODULE_AUTHOR("Hans Verkuil");
+>  MODULE_LICENSE("GPL");
+> diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
+> index a55088921d1d..3e3bd0889b6d 100644
+> --- a/include/media/tpg/v4l2-tpg.h
+> +++ b/include/media/tpg/v4l2-tpg.h
+> @@ -248,8 +248,6 @@ void tpg_calc_text_basep(struct tpg_data *tpg,
+>  unsigned tpg_g_interleaved_plane(const struct tpg_data *tpg, unsigned buf_line);
+>  void tpg_fill_plane_buffer(struct tpg_data *tpg, v4l2_std_id std,
+>  			   unsigned p, u8 *vbuf);
+> -void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
+> -		    unsigned p, u8 *vbuf);
+>  bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
+>  void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
+>  		const struct v4l2_rect *compose);
+
