@@ -1,245 +1,188 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40A328C844
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467742690D4;
+	Wed,  4 Jun 2025 08:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749025156; cv=none; b=iFNmTvwJCgIUmhC6bH9LvxDDwE8zGJAWhvODb5MqIwzfYr9Ra2k5DrhSVpdOdMZqpKJVDN3HXyq+ROk5gH52WQDsOeHRQkYRylNXYslgkpjHS1IqYCEUxIrZEcwWKn7g17dGd/+qVayJiEQpqB65DWFT4cOmSufjFd69bIr7KqQ=
+	t=1749025185; cv=none; b=bQdqC2SzZmwmWorzCtv5feJ9b4WkLGBrTHlo98iVPfnW4Es+oK4L/FBEm+jaHfFF5S2ifBkqBpJwUGUfYpsvZZEMUttC8hMI1/31vIL236Agqsy2WJBCFhjcbhBwL4osOstyZo+yl+xuNv8gepH1rfWL5/R4zmEPJrinqo378hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749025156; c=relaxed/simple;
-	bh=wvvlp9WnPiej2Anmk9dmrJ3Lso/FnNxNqVT6TYuZtPg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=e83lVMj1zPZVuuQNYMA8oSYNBcQuYr2OfjZv7m43BspU1NevoYHWGCHBUgBtPtkAPpY7q+NNgJbtjrEwA64cGBD7Gm512+b5gDO02OjHfL5V+SDLmcfviPmNwQvketZN/dJ/uQFe2W51TmI8Redx7N4eXAN7WSg/vM/ZaU9g5z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UdMDkH58; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749025185; c=relaxed/simple;
+	bh=ah/1l7NWZGuXZNkxhxl003S1bcdw6wA8ArbLwrkGtMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hjQ4IxGnoWdXLamxaON3jbIOQZebVlrDxtHp/QjACfXAYTgFoz2myVU3L9kvWrDbwnY9usk0LVq6xhVZrTHdGoTUMn3apM+IUfVNOSvxMV7H7KDtXkj1aLgos6Hr9stXDzLEDgsJ4D8kHva4g6y2nOVyMJGVVO5+aoaSN/R6HmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N7z1itmJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UdMDkH58"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d41e19d0so4169895e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:19:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749025152; x=1749629952; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4Qw6Or+h58oEqCHUts11rbHDAhUeBOhLVESvBfOylgg=;
-        b=UdMDkH584eCRFiafCT7md8NEFGzoIgoU9TmUVU3OCQWbonA5LIp0KubaflUvTV01V3
-         5XEEI4SOuukuFqqQ23Xer8CgUqD93Nbn+N//TG4pYGUa6CQ/TXD92uaiEabICRW5FRs1
-         miQSQK+sS7EEI+RNOnPSpG75cm5BsxW052xgIjRFcr3WlhHGZzBVeuTl/cHyA1j3/2s3
-         fWeNckIDU5Gy012/8mqwAEg9yALEh48SICtp2A6vvxVKV1cyn03OjpIcjNO9+mEtou9V
-         MrYmO4yEdGOf2lHMryXrf/36uz6FoORPfZoZMWyUCNZ690OWOAlpTN3/hKXDnSr45dus
-         rk5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749025152; x=1749629952;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4Qw6Or+h58oEqCHUts11rbHDAhUeBOhLVESvBfOylgg=;
-        b=q/Z2ek1Vhl7yWS1ouaPX2Rzki3oUOqSoZZy/Uzw5+ihVDy9szk5ByregvcALXuPAYn
-         wUOJ/mGJ+8anhjd9hyju58c2+cHEKelwtZUj8unNhwl1TF6qEp3YWQzib8oZgt0jcBwr
-         VglEzFffV38M71naZF8+OmM0MkKUXqwzf1c7GgHpQtCFXvbjNsfadycU4zJwwXwau6uT
-         Z51JRUI1E1ruKnhXaGLpnw15IuoVQbwG+CWl8V+XdbI8hFt3XuMpkmJL4U3v9HZYZH/Q
-         KcchJzDcs0/3v461/oJBp163OfH+LM7rny3rYZJoTzgFNKQdWM5mpOM76xo4njZz3/ig
-         Mi0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVmYvIMSs4ZWXbBubsWKaGISl7W4f+b5yF7u05sWK/GhkGTTsoy1Z4jK06Z/cCbw+0vH0G9K7FQjy/MtDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpMU1WH8sJH8z6RPyJ0UKCdJvZ+R4BdaA6e4TgBiacAyP8Q1qF
-	u46az3vaYmz/eqATF5rVSGPFcfU6cU6k4xxSoZw5aH0rlzwD7KDi3A4TfY2zzAxUzfY=
-X-Gm-Gg: ASbGnctpcuxU+ahMc2GlCtHlPQjAa1nuVr4q3E9Pc2PL/JSN+0lIBsBhPaxWzZR6LhX
-	MNt6XZbDEDAjK4eDKQXRImCtN2fyqRW0QXnSR64B13VnaTnwbdqhO4xHedUYZ2HQUuqVkelvFn1
-	4eb47mLS6CMVjJs/In36/7ZVcPuKEPTIj+9AXKJuNBbtiTtpGpHeZSgpYloRun67pzmpwt+Dca1
-	+0szfJk1VMuKyjGXe5UerdaV0dBH/PPMrnTfq/vzTCDZMTC1jM91PB/pHJGssjzTg/svE7B1pf3
-	PrjwSQPW86911UEEApST1n9APBtouEPdjCKU/LYcDO8d6xwhq81PXshUNzXA57jR3Rl+Hqb1+XD
-	Yz9z9nv8SMImu1x2jyviTZc65xrfKQH3P
-X-Google-Smtp-Source: AGHT+IFr04K63KesyL1eSuBlFeSsSCgX2EYimyEdtYTmwL8awlZ/SxKC+A4RpZuttfPn0Lix1L6w1A==
-X-Received: by 2002:a05:600c:4691:b0:439:a30f:2e49 with SMTP id 5b1f17b1804b1-451f0b0f3femr5244845e9.5.1749025152063;
-        Wed, 04 Jun 2025 01:19:12 -0700 (PDT)
-Received: from [172.16.23.13] (adsl-84-227-104-5.adslplus.ch. [84.227.104.5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d80065e0sm198301215e9.29.2025.06.04.01.19.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 01:19:11 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 04 Jun 2025 10:18:26 +0200
-Subject: [PATCH 6/6] dt-bindings: power: supply: Drop redundant
- monitored-battery ref
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N7z1itmJ"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553Leo8u010362;
+	Wed, 4 Jun 2025 08:19:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GiAicXB4orilSgc1wX/z9RXRyEqhVTBQmfR4VXtHObc=; b=N7z1itmJMHTn3rAj
+	27gmg/+4fzLbfWOxev4iwyJjzYVaxuBgFYxBzglxsrYvrM59IRO7m4Oy0kxPWY4f
+	jeNkBHs3R7htogMGQZQO8zIyd1edO0O9RJezY6f8qNcoLkevtafqTEGi7n/3IAiI
+	xaqWWVyuh+30qkaoYa7tYm7/MV3hfbj7FgKLWfVxwcXV1YjfXXv79WaP2V10unnp
+	y+ZlpSObXwT484MtnD+QRgbi70eZYC8Df5dcbDEPDUuVQHJqjXpWUsymKxH3xCY4
+	9eTBDxA7riBCkTCRdfiUAGfVQBfdrJTErWnnrvxzk4D9NmJenpLzIhB6IK5aajYU
+	edfSWg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8ynb2v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 08:19:35 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5548JYEN018737
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 4 Jun 2025 08:19:34 GMT
+Received: from [10.133.33.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Jun 2025
+ 01:19:33 -0700
+Message-ID: <e7db7936-1bcf-4179-88e8-c3f6b1b072bf@quicinc.com>
+Date: Wed, 4 Jun 2025 16:19:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] wifi: ath12k: fix dest ring-buffer corruption
+To: Johan Hovold <johan+linaro@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+CC: Remi Pommarel <repk@triplefau.lt>, <linux-wireless@vger.kernel.org>,
+        <ath12k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250526115137.2490-1-johan+linaro@kernel.org>
+ <20250526115137.2490-2-johan+linaro@kernel.org>
+Content-Language: en-US
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
+In-Reply-To: <20250526115137.2490-2-johan+linaro@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250604-dt-bindings-psy-monitored-battery-v1-6-7f755ff75218@linaro.org>
-References: <20250604-dt-bindings-psy-monitored-battery-v1-0-7f755ff75218@linaro.org>
-In-Reply-To: <20250604-dt-bindings-psy-monitored-battery-v1-0-7f755ff75218@linaro.org>
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
- Casey Connolly <casey.connolly@linaro.org>, 
- Jakob Hauser <jahau@rocketmail.com>, David Heidelberg <david@ixit.cz>, 
- Dmitry Osipenko <digetx@gmail.com>, Tobias Schrammm <t.schramm@manjaro.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6847;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=wvvlp9WnPiej2Anmk9dmrJ3Lso/FnNxNqVT6TYuZtPg=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoQAFwzXo8cYyUwoabmBWLvefsH3r3ispQ9KKAT
- wkXG3wqen+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEABcAAKCRDBN2bmhouD
- 16/TD/46tx0MTxmshL3kHc2fwaCy01Hx7gI5qWSrpLmh2rERkCiC01bKAEBaWXgQNIbcndgxvKF
- qS+OaP8Y72+WrttJSDx5LXv0hna18zgX8HS8jmspWPRKfMtm1VEH7QXAWN4E2UvN0Em6x7nTmS7
- BCPYUfBapEETbXtRsFMp+kemH9XGIGxhf+HgJ4RWr7IvN6d3vupMEPPVluronD4CPK7FcBELEI6
- WEgoJ6bOsE1JTrevhKLVDZKzb0WoI5cEA9dy4p8YD/brFPeFerFyiTuw0nec9i7ZEDFU6gquhcr
- 4M295gIDHDu1shtw8sHB4p/NSCRcHeaF46mpwf2rbHrtO1dLTXum+EwbpJyx8/4fdtU8J30xzHd
- imC2rwIiZq/8QJFVv7B0PhdP9hYT34ElImTbwNr44heprzn/HzXXfRLIhme0CqwoM5h8MKvMAXJ
- WBSjT+8oybDKVpsOsMiCg4saHZUYTneILVT13KRt0eQu5vgTXzUyqap8p+QZz1CWlW4+9tNWM2g
- 00USR4tZXBEHqCkpbCVBV/yT7786P6ScZlT2oPr+39E5N0MiAB55oZzKYSN22D1Rg599RPdcCSS
- XDRb4YO3P47pEofbt6eQy0nM7wU977Q57V/VxkK1GBkDbfLhUVdPNvyMW7yez+xTjdQnYHI9MLp
- xXiJ/dOygkmAr9A==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2NCBTYWx0ZWRfX1Iu+GA69DAkS
+ fhJHV3QONBIivJtj3GbobWzxVk90yv4qnyIaTeUTQ5jTxYXLRjv+1vCrZcbuRRI0zFK2+5Dgmik
+ E50jXCe1Z56yYbfwwEEjpuz1WMgZOR473RJeIDXJfbKPjKnHk1J+769Xs/GqkkIynqfqoLtiI9i
+ yRRlMmyFvl/ENyPlcpxzr4oLzomuy6fFjdr9aVrD5cOZmsmOergTozvrmCFtlN6EwD2UISAjrsc
+ GzhYEjRuwV7YhxAhuibcVj8oYlKBDTnFsPFcdaho5FsXE26mmlYAF4jRBoM2IPvv3EemwWWVVk/
+ nI/BKX/gsRm7CxYHGFWiyL795A9BMxYFb3Gpn3Y9HXmfhwx+5NMa33QnYTdQoKKJ5TGh+pK5BL1
+ aUBENQ3umHmzlqwlHuXycWLC/9VR0N8zeu0vgrBjB0iqfeZORR8aXwfchZM1mcJ/VjydE6yH
+X-Proofpoint-ORIG-GUID: qek3o-R4C2fC3tZ1clUGeUly7_pfAhiV
+X-Proofpoint-GUID: qek3o-R4C2fC3tZ1clUGeUly7_pfAhiV
+X-Authority-Analysis: v=2.4 cv=T/uMT+KQ c=1 sm=1 tr=0 ts=68400197 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=qEKYatp5oTCtzB8XyWEA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=893 suspectscore=0 impostorscore=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 clxscore=1011 spamscore=0 malwarescore=0 phishscore=0
+ adultscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506040064
 
-Bindings reference the common power supply schema, which already defines
-the type (ref) for "monitored-battery" property.  Drop the redundant ref
-from individual device schemas along with obvious description also
-duplicating what is in power-supply.yaml.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/power/supply/bq24190.yaml         | 1 -
- Documentation/devicetree/bindings/power/supply/bq25980.yaml         | 4 +---
- Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml  | 5 +----
- .../devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml   | 4 +---
- .../bindings/power/supply/stericsson,ab8500-chargalg.yaml           | 4 +---
- .../devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml | 4 +---
- .../devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml      | 4 +---
- .../bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml | 6 +-----
- 8 files changed, 7 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.yaml b/Documentation/devicetree/bindings/power/supply/bq24190.yaml
-index 307c99c077217ab4b5fac30694a4a316dd51f8e4..ac9a76fc5876bef101bfd5c44e4a759288cd1c58 100644
---- a/Documentation/devicetree/bindings/power/supply/bq24190.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/bq24190.yaml
-@@ -48,7 +48,6 @@ properties:
-       battery device.
- 
-   monitored-battery:
--    $ref: /schemas/types.yaml#/definitions/phandle
-     description: |
-       phandle to a "simple-battery" compatible node.
- 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq25980.yaml b/Documentation/devicetree/bindings/power/supply/bq25980.yaml
-index 256adbef55ebf83f00181d07696c2182787195c1..0b5d005dc7809418073a4d8925fc4937c3a38dcd 100644
---- a/Documentation/devicetree/bindings/power/supply/bq25980.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/bq25980.yaml
-@@ -73,9 +73,7 @@ properties:
-     description: |
-       Indicates that the device state has changed.
- 
--  monitored-battery:
--    $ref: /schemas/types.yaml#/definitions/phandle
--    description: phandle to the battery node being monitored
-+  monitored-battery: true
- 
- required:
-   - compatible
-diff --git a/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml b/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
-index dc697b6147b2130d6b234c26d19edbbcca5a1dff..f7bde324153d8b2144cf90dd850165c2e8d8088e 100644
---- a/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
-@@ -43,10 +43,7 @@ properties:
-     minItems: 1
-     maxItems: 8 # Should be enough
- 
--  monitored-battery:
--    description:
--      Specifies the phandle of a simple-battery connected to this gauge
--    $ref: /schemas/types.yaml#/definitions/phandle
-+  monitored-battery: true
- 
- required:
-   - compatible
-diff --git a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml
-index 525abdfb3e2d456bb4afc8e8890cf86be2545ef7..c464aa82255a6839e8416ab84b3f6fdbffb7ec1e 100644
---- a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml
-@@ -17,9 +17,7 @@ properties:
-   compatible:
-     const: stericsson,ab8500-btemp
- 
--  monitored-battery:
--    $ref: /schemas/types.yaml#/definitions/phandle
--    description: phandle to battery node
-+  monitored-battery: true
- 
-   battery:
-     $ref: /schemas/types.yaml#/definitions/phandle
-diff --git a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-chargalg.yaml b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-chargalg.yaml
-index 10bbdcfc87b68feacf2f420cf0675f6323e9dbfa..39914b9e0cf58adffc21c28aa6bfb50e82c04757 100644
---- a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-chargalg.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-chargalg.yaml
-@@ -17,9 +17,7 @@ properties:
-   compatible:
-     const: stericsson,ab8500-chargalg
- 
--  monitored-battery:
--    $ref: /schemas/types.yaml#/definitions/phandle
--    description: phandle to battery node
-+  monitored-battery: true
- 
-   battery:
-     $ref: /schemas/types.yaml#/definitions/phandle
-diff --git a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml
-index e33329b3af6196c8d66f0b32f57cfb14e38f22f8..994fac12c8da0632c05626caa0201524377a7a6d 100644
---- a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-charger.yaml
-@@ -17,9 +17,7 @@ properties:
-   compatible:
-     const: stericsson,ab8500-charger
- 
--  monitored-battery:
--    $ref: /schemas/types.yaml#/definitions/phandle
--    description: phandle to battery node
-+  monitored-battery: true
- 
-   battery:
-     $ref: /schemas/types.yaml#/definitions/phandle
-diff --git a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml
-index 6a724ca90e9965a8a0bceb6d262ecb283e1af005..92e4eb08fd6101936cf74e8aaa34760ed483cb0b 100644
---- a/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml
-@@ -17,9 +17,7 @@ properties:
-   compatible:
-     const: stericsson,ab8500-fg
- 
--  monitored-battery:
--    $ref: /schemas/types.yaml#/definitions/phandle
--    description: phandle to battery node
-+  monitored-battery: true
- 
-   battery:
-     $ref: /schemas/types.yaml#/definitions/phandle
-diff --git a/Documentation/devicetree/bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml b/Documentation/devicetree/bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml
-index 3504c76a01d8df2daaf12d91bd86379807a718bd..a90d558e7f864eb8dfbf49490945fa227c91f0d4 100644
---- a/Documentation/devicetree/bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/x-powers,axp20x-battery-power-supply.yaml
-@@ -26,11 +26,7 @@ properties:
-           - const: x-powers,axp813-battery-power-supply
-       - const: x-powers,axp813-battery-power-supply
- 
--  monitored-battery:
--    description:
--      Specifies the phandle of an optional simple-battery connected to
--      this gauge.
--    $ref: /schemas/types.yaml#/definitions/phandle
-+  monitored-battery: true
- 
-   x-powers,no-thermistor:
-     type: boolean
+On 5/26/2025 7:51 PM, Johan Hovold wrote:
+> Add the missing memory barriers to make sure that destination ring
+> descriptors are read after the head pointers to avoid using stale data
+> on weakly ordered architectures like aarch64.
+> 
+> Note that this may fix the empty descriptor issue recently worked around
+> by commit 51ad34a47e9f ("wifi: ath12k: Add drop descriptor handling for
+> monitor ring").
+> 
+> Tested-on: WCN7850 hw2.0 WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+> 
+> Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
+> Cc: stable@vger.kernel.org	# 6.3
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>   drivers/net/wireless/ath/ath12k/dp_mon.c |  3 +++
+>   drivers/net/wireless/ath/ath12k/dp_rx.c  | 12 ++++++++++++
+>   drivers/net/wireless/ath/ath12k/dp_tx.c  |  3 +++
+>   3 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/ath/ath12k/dp_mon.c b/drivers/net/wireless/ath/ath12k/dp_mon.c
+> index d22800e89485..90a7763502c8 100644
+> --- a/drivers/net/wireless/ath/ath12k/dp_mon.c
+> +++ b/drivers/net/wireless/ath/ath12k/dp_mon.c
+> @@ -3258,6 +3258,9 @@ int ath12k_dp_mon_srng_process(struct ath12k *ar, int *budget,
+>   	spin_lock_bh(&srng->lock);
+>   	ath12k_hal_srng_access_begin(ab, srng);
+>   
+> +	/* Make sure descriptor is read after the head pointer. */
+> +	dma_rmb();
+> +
+>   	while (likely(*budget)) {
+>   		*budget -= 1;
+>   		mon_dst_desc = ath12k_hal_srng_dst_peek(ab, srng);
+> diff --git a/drivers/net/wireless/ath/ath12k/dp_rx.c b/drivers/net/wireless/ath/ath12k/dp_rx.c
+> index 75bf4211ad42..68fceb4201d7 100644
+> --- a/drivers/net/wireless/ath/ath12k/dp_rx.c
+> +++ b/drivers/net/wireless/ath/ath12k/dp_rx.c
+> @@ -2753,6 +2753,9 @@ int ath12k_dp_rx_process(struct ath12k_base *ab, int ring_id,
+>   try_again:
+>   	ath12k_hal_srng_access_begin(ab, srng);
+>   
+> +	/* Make sure descriptor is read after the head pointer. */
+> +	dma_rmb();
+> +
+>   	while ((desc = ath12k_hal_srng_dst_get_next_entry(ab, srng))) {
+>   		struct rx_mpdu_desc *mpdu_info;
+>   		struct rx_msdu_desc *msdu_info;
+> @@ -3599,6 +3602,9 @@ int ath12k_dp_rx_process_err(struct ath12k_base *ab, struct napi_struct *napi,
+>   
+>   	ath12k_hal_srng_access_begin(ab, srng);
+>   
+> +	/* Make sure descriptor is read after the head pointer. */
+> +	dma_rmb();
+> +
+>   	while (budget &&
+>   	       (reo_desc = ath12k_hal_srng_dst_get_next_entry(ab, srng))) {
+>   		drop = false;
+> @@ -3941,6 +3947,9 @@ int ath12k_dp_rx_process_wbm_err(struct ath12k_base *ab,
+>   
+>   	ath12k_hal_srng_access_begin(ab, srng);
+>   
+> +	/* Make sure descriptor is read after the head pointer. */
+> +	dma_rmb();
+> +
+>   	while (budget) {
+>   		rx_desc = ath12k_hal_srng_dst_get_next_entry(ab, srng);
+>   		if (!rx_desc)
+> @@ -4122,6 +4131,9 @@ void ath12k_dp_rx_process_reo_status(struct ath12k_base *ab)
+>   
+>   	ath12k_hal_srng_access_begin(ab, srng);
+>   
+> +	/* Make sure descriptor is read after the head pointer. */
+> +	dma_rmb();
+> +
+>   	while ((hdr = ath12k_hal_srng_dst_get_next_entry(ab, srng))) {
+>   		tag = le64_get_bits(hdr->tl, HAL_SRNG_TLV_HDR_TAG);
+>   
+> diff --git a/drivers/net/wireless/ath/ath12k/dp_tx.c b/drivers/net/wireless/ath/ath12k/dp_tx.c
+> index ced232bf4aed..3124eafa0201 100644
+> --- a/drivers/net/wireless/ath/ath12k/dp_tx.c
+> +++ b/drivers/net/wireless/ath/ath12k/dp_tx.c
+> @@ -853,6 +853,9 @@ void ath12k_dp_tx_completion_handler(struct ath12k_base *ab, int ring_id)
+>   
+>   	ath12k_hal_srng_access_begin(ab, status_ring);
+>   
+> +	/* Make sure descriptor is read after the head pointer. */
+> +	dma_rmb();
+> +
+>   	while (ATH12K_TX_COMPL_NEXT(tx_ring->tx_status_head) != tx_ring->tx_status_tail) {
+>   		desc = ath12k_hal_srng_dst_get_next_entry(ab, status_ring);
+>   		if (!desc)
 
--- 
-2.45.2
-
+Reviewed-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
