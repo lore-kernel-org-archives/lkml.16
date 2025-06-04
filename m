@@ -1,404 +1,276 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011047.outbound.protection.outlook.com [52.101.70.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C88E2AE6A
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 03:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749007091; cv=none; b=sGW3sRNCjJt1pabqxpGkKWSzOxkhopmpbyT9KSC9wfEOcp8tdpcXESK+iKFHzuyXnVHuQVdQZZ6cI19EnLjan6s55VPuROU6Htq/rV6IDlHXDuwRKRszN1UKMFhH0o9REAgA4OMNG36T6C8WwXW4O2SKlzy7y9TcsDhc19pJ2W0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749007091; c=relaxed/simple;
-	bh=8vPu1JLTppgypZ9PVkTdVO/4c1jM1bySPSp3J65LxLc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EqKX39DhDegcmr4aU4FNut/spuhtGmvHoMgOnR+zu2SzsXb1i8mmafeBmTCWaXfX4jdzJbAvru/N+1bpoOm8GEJIkL3VTMK39Xg9x4PdvHpQEcB99Lfjev8dhLoqRU8+9xTJsSSkEu/9Ww5RnXtEI8lwozMuaB0IR3p/4/bltvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 8620fc9640f211f0b29709d653e92f7d-20250604
-X-CID-CACHE: Type:Local,Time:202506041104+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:7554a784-75bf-49c4-86d3-2d7ceffb29ba,IP:0,U
-	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:25
-X-CID-META: VersionHash:6493067,CLOUDID:703a7164edea27775e5ee36df04c02ce,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|51,EDM:5,IP:n
-	il,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LE
-	S:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 8620fc9640f211f0b29709d653e92f7d-20250604
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <xialonglong@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 668851048; Wed, 04 Jun 2025 11:18:02 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id 54B6316001CC7;
-	Wed,  4 Jun 2025 11:18:02 +0800 (CST)
-X-ns-mid: postfix-683FBAE9-963627654
-Received: from kylin-pc.. (unknown [172.25.130.133])
-	by node4.com.cn (NSMail) with ESMTPA id 960B416001A01;
-	Wed,  4 Jun 2025 03:18:01 +0000 (UTC)
-From: Longlong Xia <xialonglong@kylinos.cn>
-To: akpm@linux-foundation.org,
-	xu.xin16@zte.com.cn
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Longlong Xia <xialonglong@kylinos.cn>
-Subject: [PATCH 2/2] mm/ksm: Rename ksm_merging_pages to ksm_process_sharing
-Date: Wed,  4 Jun 2025 11:17:55 +0800
-Message-ID: <20250604031758.4150209-3-xialonglong@kylinos.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250604031758.4150209-1-xialonglong@kylinos.cn>
-References: <20250604031758.4150209-1-xialonglong@kylinos.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCC91DA21;
+	Wed,  4 Jun 2025 03:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749007198; cv=fail; b=EbuhkeGQh2mj5ejjlPgaCWJGi7VqGYNUxogt+f+jgKBEUZ/u4aqN5q1wb1s+BF1WkMI1Kk15K8w5zEvVavRTrN6iCp/0hf15VC4xcSnLYHV4AoY7fyPtJtpIvxpwtTT7iShYPCM9D4OclBBOvbzFI+Tku2sckKP/RXxNkk0U650=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749007198; c=relaxed/simple;
+	bh=WbfMLoEa+JH9EeVxg6O7Zcl1ptVd0+sEy/tlCLd1iCU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Vc1t9x6al6M5mSVgbo9cChJqbHmKOizkJKnmpNvF8Cx/KiTOi+a1ekQCewgs18khhmT5oBfNgpmJcLk+6rXjImzAt4RbI5lgSFU47TDG+z5fgOvjtN+NaDWqibZEgaWbL5ASOyRSngzWzwOY9TtWrR+4Ki0WF0tmC4xmGFeWBxg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=OfMoNyMi; arc=fail smtp.client-ip=52.101.70.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="OfMoNyMi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=efZ83OucKsW17V4DsougpAkAxm1wud2ZNfuCR7RUTHPq6vWehBqw5hsYybYK96SZM0yLdIQBZMPSThkP9ABLUep5dr2NLWpzbAb0Q/KGbbdQ2WIsM+AZ+kLO8qgpg4eDX1RvsZZf130YjH2xcgrUxdaK5dDrIb8NnQ6UadM8cUt8X6oIqDYyLsTGD+L6njYSvVF4P7LOJUIL37CdflhHWP+86qaGOVJnzl8Y3fW3dGTVXI/Qx2LVB+QCsbOuisQCUxR+ZOtigKllHQWxdSt+3ts5c+2qnHLlFAZv8MQQurU6RwqFDyuTRIrjanAFde02MONF6bvD/7YonrhIKBlMRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ql9iWjnVGDohSwlk9rcqjImOKxbZtilwXuShfpV3aQg=;
+ b=sQ6QnAi9VHxiF4mYED5v9ItxG3Sw1cSSBxpOuiZqd7w8yNjETZaFAjNtG18C9OiGc4oB1vd5t+otQ4827YGQ8o6O7ETY2HfKIAvhkoAe4lE/BWYVIhcF0eRaXKyXPLlp0+hVqdf0U702GzXcZpNq9JHoFU6YLus4ndfz5tRr751XEktv5xr2lrlsgmLmKi1CJfgXwPsHBtDPMrmNKQqAlcegy0IjwP7r0scIFXrmgxMGbQ+n/8epc8xGTDDbQb0bSDOPicKFDFDR999k+mwhGdQrqQzo1NxNUcuhe2rOXMF/hkPO3ZyorCKpd5r0KEFSP12j5CQIuxKrNlOCv1nPwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ql9iWjnVGDohSwlk9rcqjImOKxbZtilwXuShfpV3aQg=;
+ b=OfMoNyMiUWIguLFvlecwLOpADIrw8ZcUnK8MyzRHxE2PhfOk95YX0vJLl+7uKd5pVDhq3FxFB0Ii1lSmYyCsOLwWgaLzps83y3eHovLpTHdfwbTKmzeMq1FpVDueRL5AJQn0z3IePJNLzVTmPxGJD64A4Fj5SUhEWXPeqsy2n0iXrsYvfqFUv89sqlMDxC0SslWn5EJdPCovx7IuA6/QDV4k4xkNq2NmTyISFRsVTPDUZSPCCDusKa4WFzNBb0vP9V6JVwi5Qd/VdaXakq4z426ZpjAmKSxwuopkCRj5GecvgvaxO7RyFjZDqf70yFtZHMAf3aFZe2vd4IfFAgml9g==
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by DU4PR04MB10767.eurprd04.prod.outlook.com (2603:10a6:10:580::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Wed, 4 Jun
+ 2025 03:19:52 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
+ 03:19:52 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Hiago De Franco <hiagofranco@gmail.com>, Mathieu Poirier
+	<mathieu.poirier@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>
+CC: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>, Hiago De Franco
+	<hiago.franco@toradex.com>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>, "Iuliana Prodan (OSS)"
+	<iuliana.prodan@oss.nxp.com>, "Rafael J . Wysocki" <rafael@kernel.org>
+Subject: RE: [PATCH v4 3/3] remoteproc: imx_rproc: detect and attach to
+ pre-booted remote cores
+Thread-Topic: [PATCH v4 3/3] remoteproc: imx_rproc: detect and attach to
+ pre-booted remote cores
+Thread-Index: AQHb08EqHErDcF6d5U2TRnVBdQP9NrPyV0Zg
+Date: Wed, 4 Jun 2025 03:19:52 +0000
+Message-ID:
+ <PAXPR04MB84594F9ABDF0728D9A71FAFE886CA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+References: <20250602131906.25751-1-hiagofranco@gmail.com>
+ <20250602131906.25751-4-hiagofranco@gmail.com>
+In-Reply-To: <20250602131906.25751-4-hiagofranco@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|DU4PR04MB10767:EE_
+x-ms-office365-filtering-correlation-id: e485fa79-8c43-40f2-0327-08dda316abee
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?AcJlTR6l8VCcTS/n1LD9MwF/hWJyAUl2Fkfjj/2a+C4/Gs2aVUbS6XMktqlq?=
+ =?us-ascii?Q?a8WPGeXcozT8vaYKhjmvM3HPAXPoIi2O/sMGQVfojgzyUkvGfI4vnMNM0B+e?=
+ =?us-ascii?Q?ggEu7A8avAlRIyFDjNWilnvT6oeCitORxR6vJ1HR+ZGUqUGSZqNjvd9Z7Hsr?=
+ =?us-ascii?Q?4rbe5bNUJiad0L+o3vOgXwT9NzDbmBqZkuj94uxiCyUUxiJfLn5wDprMKPcZ?=
+ =?us-ascii?Q?Ug4FsRYeTHPVMKzbOo1hZfKMY9nffBLyfRVsL6V0GcQdTrDIThPK9cisaM1J?=
+ =?us-ascii?Q?qH0oKvibT72JcEhJjgGnldLKkDwhTwXEODoQR9liJ6CT/mAl8Zg+EGcudH5v?=
+ =?us-ascii?Q?iUQmGbDokWSMUIuvS1t9Yaab0XYrD1BsoOayl6ZHDWH3hD/Bw1oQP+4V7txG?=
+ =?us-ascii?Q?Lr0qme0J3GspPmJETajGfMZMjs/OciD5Tc6NQ7sXlND6/5o6ZWZmRsZ2y9/1?=
+ =?us-ascii?Q?ZqaYDRmdv66VKVNaL41IE3Pf00iTfRLGWKdUwvHzEcyQzpBe61yG+Y55NErb?=
+ =?us-ascii?Q?eb7ubUTzPKAj0SLYlvJca3S04SUSy1cMTLynsNRBVkrfHG2luRgRSEYM/do+?=
+ =?us-ascii?Q?q6F/u0TlDjhu03THy/bf67bo4p9Sz5MmtV9HB777x6j5mWSH+1YG8RLTR1wO?=
+ =?us-ascii?Q?eDthY00ou1p6uK11F2e4cMCol/9AvMVnCMliywc34Wnm+YMy5KSnq0RXF0Tf?=
+ =?us-ascii?Q?vzOeMUeWaL0x3ccLhk7ENBj3O+nXKc+qX7gsRi3M6nrHeFMgWd4gzkJpkGvn?=
+ =?us-ascii?Q?0WFet8zgCrijZxyhJRt5c0m8CjkNmgZ5Y6aLgPL4ZNv00alDsdfNI7eQmj6t?=
+ =?us-ascii?Q?LYBc3ekf4zTl/IDhA1XMFHmNDLicamfIcuWzzlIXh1c8P7zikPAbCFRB8rDs?=
+ =?us-ascii?Q?J8iKNvo7DpTAUQ97qmrp3V0rrJSXEoeB3D4A/82bXLQsAjcuYJdkMdSSZrO1?=
+ =?us-ascii?Q?0b9453jI+vC7lD5PacY/iVPAp1DI3SQoDBl/LpUxz0xKmcDiKhJKyv4sax2b?=
+ =?us-ascii?Q?UDqBMGalSb5xkSa/gfcZtwG9zqWJFVtBXfLdM2lLLUBD3aAunIqNEKgcbOlA?=
+ =?us-ascii?Q?aizkanUBI3sp2yTavvf/hVA5vwLfmsHo73M43s+FsO9FaR2H2fy8B9mRGT/W?=
+ =?us-ascii?Q?ryk4Yi0uaAiLRVWIGDfd/QdRQhcVJRTEtMDpwwQw/9AY95BiLEjqeSuR4MZx?=
+ =?us-ascii?Q?5dnvOnW3s638XEsq1raYjo7GksM9KgPSLZkpNkkBJ/k1jCkHSt7iwgoMGGsX?=
+ =?us-ascii?Q?zBOkY3awgqHtlgAn5RXRyg+W6llMcuTLjbj6B2q4TfMxR1o0wwrJmYMC7TWr?=
+ =?us-ascii?Q?t1V4mMJ8OFP1OwFPBD661FLPgYTH2Y7Vy3FdP7MVcnZJKr2pgS+X3MBhFfeU?=
+ =?us-ascii?Q?zPLBSuXA+SaGgp9r3Z35dRVMiNsINzcyTqOn9pD5bkoll/TMG7KY+HCpmD6c?=
+ =?us-ascii?Q?ItsqmLR4ikjK7mOlF+iAHe0X5sKtUFpRn+t19kLDDacQ3iEzb4SS3vsTN7Ix?=
+ =?us-ascii?Q?nAqNXc0CP0wBPcE=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?lser6MUE9ateQ386c5AeOjaBXUOcImb7yUOzmP8f3hwo95/4SFO+D59zURZJ?=
+ =?us-ascii?Q?yvIv0A6m1IJpeST3LwCNTtdXrucVRoNczH6uU7vGBmasq+co9wLUzD7xG7wx?=
+ =?us-ascii?Q?tmhDCEnEOmjYd37sm5CPpen6X/lAE0z2mviR5rpXgkZ2QPxktJEB7O7Ymo/J?=
+ =?us-ascii?Q?Jl/FcGe1MO2p9PvoGp1NkZ87nnuw3NYvMGD0LgXz1/aKo0gS6w7MmVgZ72c9?=
+ =?us-ascii?Q?hsHqCyxyZ1Jn4/88M8kXZc0hnFuuhRWSWpDo1j8MaRcBl8Wj1cYYJbPRBaUG?=
+ =?us-ascii?Q?ljAE9vC1hj9xlbNLqTsBU6F8rOgGiqv9D6h7irwpZCFTNqQeI8guJYHIFtXi?=
+ =?us-ascii?Q?9G0rKshnk3hRhqTZyz+Y4TFDiacHjlxhzJhu+VqxfePWirsy3AwTkLzTY1CU?=
+ =?us-ascii?Q?JcVowVchcm84HG5BEm7QE4AGzi6JBOxg8uSw1xarIj096gJMqKGfMOlmSmdV?=
+ =?us-ascii?Q?Beax4kNqN0r69HMc2Z9o0xpLZjYjt/uYj9uRLji+DikeCVWtggKOdSq7JkJl?=
+ =?us-ascii?Q?Z7lUBiuYOgRwsqXY70R6jhlQfFMJ/Yy47+CqkfNAvbKsHkn336Lm9ahhGRyg?=
+ =?us-ascii?Q?DhxdUB1A8dUdWtaFQIEzGIy2tcd0nPCjdDcxrqKr7qZQ3mzc/xF5GjgaHA4d?=
+ =?us-ascii?Q?VrLWPjazsh0pjm1vIpqVqwKxy3tGYu5LuD5SvP8lfgUVy4ZysHcZD76Em8Tr?=
+ =?us-ascii?Q?DBklZ88shrTmVgtVnGxDKikz5TA+0UyyiJPhq6B8eHfsRfz5EtN0734QDBoJ?=
+ =?us-ascii?Q?nPOLekGiEZt6T+x5F03HeK41t4njjwUFZwSme7foa1iA2U7Ci//1djMxfhBI?=
+ =?us-ascii?Q?tl4GB7woHnZXTBWZzi1KbdIm+pWdphuYIE6hoYTWi/ZNSa/Ec8+5qrPVOAtC?=
+ =?us-ascii?Q?tvj5F+l2nQljmcqOKuEU3zHcIPATE/ApdL5yuju3Ub4/9rIUdZoFLuXI1wcl?=
+ =?us-ascii?Q?MPVCjImiU40mPIZH25dcBXB/FwAZxpTWyWGJBPwsYX70854bWLW0sMdRkyCj?=
+ =?us-ascii?Q?f/UQP/yUChL1OsPJYSKlL6tdrjJpnVEXVnoJlAx2x+mQlVzbg3EKnsEtRff1?=
+ =?us-ascii?Q?RSvK3Nupn2vVXXHqwyMwpyYzHP7Mv4y+4ZnlrCxXQQI7ulWKw79+py+mzsXY?=
+ =?us-ascii?Q?rlaF3YsNVRf9s6+L2efQE9KQFbzggMNNHsn8UkFQ3bGt+lPte/g986+Tynx3?=
+ =?us-ascii?Q?pltZNrsDDW+mdN9Sa7tITZuJVFxa2k+vIET6yHh/f9hv43HSxIW/sVPzA9o/?=
+ =?us-ascii?Q?foev32AYn0aeXqZ2ikcs0Hs1+R/RH6fPPUOqK9aoYULt6D6dooiKr1Qh1/RD?=
+ =?us-ascii?Q?jCekm/boY7vEMYA5Dujq7kOEUXAWQJdvhGuGoOj5kWK8lG5uDBthQ6dB+Pzr?=
+ =?us-ascii?Q?MbeRjfp88RGkWlLfNW/qejndLHkVZyJCG73FYJyeLo0z+QhCrsWuh8bYBihP?=
+ =?us-ascii?Q?9oIHoU7P+qwqq85hfTIKbmdmWoUyfCp1QFUiq7DqRWXG/mSElhL189N1MtME?=
+ =?us-ascii?Q?bdwEn3wt1H8gR9WGVA+Xbwa7gPELvIZfKvE4up7B97cwtklshhGNC5lsrCqm?=
+ =?us-ascii?Q?cZbUVHI2bFO8bFL1nQM=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e485fa79-8c43-40f2-0327-08dda316abee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2025 03:19:52.5547
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4Cd0ySiUCBWQN9prb2TyPuELex78BJywSYOljXfTmAun73Rr1Qifv7y+txpaiBW471scoz48MYDInddB8gw/LA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10767
 
-Renamed ksm_merging_pages to ksm_process_sharing to better
-reflect its role in representing the number of sharing pages
-for each process.
+> Subject: [PATCH v4 3/3] remoteproc: imx_rproc: detect and attach to
+> pre-booted remote cores
+>=20
+> From: Hiago De Franco <hiago.franco@toradex.com>
+>=20
+> When the remote core is started before Linux boots (e.g., by the
+> bootloader), the driver currently is not able to attach because it only
+> checks for cores running in different partitions. If the core was kicked
+> by the bootloader, it is in the same partition as Linux and it is already
+> up and running.
+>=20
+> This adds power mode verification through dev_pm_genpd_is_on(),
+> enabling the driver to detect when the remote core is already running
+> and properly attach to it if all the power domain devices are on.
+>=20
+> To accomplish this, we need to avoid passing any attach_data or flags
+> to dev_pm_domain_attach_list(), letting the platform device become a
+> consumer of the power domain provider. With that the current power
+> state of the genpds will not change, allowing the detection of the
+> remote core power state.
+>=20
+> We enable and sync the device runtime PM during probe to make sure
+> the power domains are correctly managed when the core is controlled
+> by the kernel.
+>=20
+> Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+> ---
+> v4: Changed to use the new dev_pm_genpd_is_on() function instead,
+> as suggested by Ulf. This will now get the power status of the two
+> remote cores power domains to decided if imx_rpoc needs to attach or
+> not. In order to do that, pm_runtime_enable() and
+> pm_runtime_get_sync() were introduced and pd_data was removed.
+> v3: Unchanged.
+> v2: Dropped unecessary include. Removed the imx_rproc_is_on
+> function, as suggested.
+> v1:
+> ---
+>  drivers/remoteproc/imx_rproc.c | 29 ++++++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/remoteproc/imx_rproc.c
+> b/drivers/remoteproc/imx_rproc.c index
+> 627e57a88db2..6f9680142704 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/of_reserved_mem.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/reboot.h>
+>  #include <linux/regmap.h>
+>  #include <linux/remoteproc.h>
+> @@ -890,10 +891,8 @@ static int imx_rproc_partition_notify(struct
+> notifier_block *nb,  static int imx_rproc_attach_pd(struct imx_rproc
+> *priv)  {
+>  	struct device *dev =3D priv->dev;
+> -	int ret;
+> -	struct dev_pm_domain_attach_data pd_data =3D {
+> -		.pd_flags =3D PD_FLAG_DEV_LINK_ON,
+> -	};
+> +	int ret, i;
+> +	bool detached =3D true;
+>=20
+>  	/*
+>  	 * If there is only one power-domain entry, the platform driver
+> framework @@ -902,7 +901,22 @@ static int
+> imx_rproc_attach_pd(struct imx_rproc *priv)
+>  	if (dev->pm_domain)
+>  		return 0;
+>=20
+> -	ret =3D dev_pm_domain_attach_list(dev, &pd_data, &priv-
+> >pd_list);
+> +	ret =3D dev_pm_domain_attach_list(dev, NULL, &priv->pd_list);
+> +	/*
+> +	 * If all the power domain devices are already turned on, the
+> remote
+> +	 * core is already up when the kernel booted (e.g. kicked by
+> the
+> +	 * bootloader). In this case attach to it.
+> +	 */
+> +	for (i =3D 0; i < ret; i++) {
+> +		if (!dev_pm_genpd_is_on(priv->pd_list->pd_devs[i])) {
+> +			detached =3D false;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (detached)
+> +		priv->rproc->state =3D RPROC_DETACHED;
+> +
+>  	return ret < 0 ? ret : 0;
+>  }
+>=20
+> @@ -1146,6 +1160,11 @@ static int imx_rproc_probe(struct
+> platform_device *pdev)
+>  		}
+>  	}
+>=20
+> +	if (dcfg->method =3D=3D IMX_RPROC_SCU_API) {
+> +		pm_runtime_enable(dev);
+> +		pm_runtime_get_sync(dev);
 
-Signed-off-by: Longlong Xia <xialonglong@kylinos.cn>
----
- Documentation/admin-guide/mm/ksm.rst                   |  6 +++---
- Documentation/filesystems/proc.rst                     |  6 +++---
- .../translations/zh_CN/admin-guide/mm/ksm.rst          |  8 ++++----
- .../translations/zh_TW/admin-guide/mm/ksm.rst          |  8 ++++----
- fs/proc/base.c                                         | 10 +++++-----
- include/linux/mm_types.h                               |  2 +-
- mm/ksm.c                                               |  8 ++++----
- tools/testing/selftests/mm/ksm_functional_tests.c      | 10 +++++-----
- 8 files changed, 29 insertions(+), 29 deletions(-)
+Need put and disable in imx_rproc_remove.
 
-diff --git a/Documentation/admin-guide/mm/ksm.rst b/Documentation/admin-g=
-uide/mm/ksm.rst
-index ad8e7a41f3b5..02b165dfba79 100644
---- a/Documentation/admin-guide/mm/ksm.rst
-+++ b/Documentation/admin-guide/mm/ksm.rst
-@@ -256,18 +256,18 @@ several times, which are unprofitable memory consum=
-ed.
- 	process_profit =3D~ ksm_saved_pages * sizeof(page) -
- 			  ksm_rmap_items * sizeof(rmap_item).
-=20
--   where ksm_saved_pages equals to the sum of ``ksm_merging_pages`` and
-+   where ksm_saved_pages equals to the sum of ``ksm_process_sharing`` an=
-d
-    ``ksm_zero_pages``, both of which are shown under the directory
-    ``/proc/<pid>/ksm_stat``, and ksm_rmap_items is also shown in
-    ``/proc/<pid>/ksm_stat``. The process profit is also shown in
-    ``/proc/<pid>/ksm_stat`` as ksm_process_profit.
-=20
- From the perspective of application, a high ratio of ``ksm_rmap_items`` =
-to
--``ksm_merging_pages`` means a bad madvise-applied policy, so developers =
-or
-+``ksm_process_sharing`` means a bad madvise-applied policy, so developer=
-s or
- administrators have to rethink how to change madvise policy. Giving an e=
-xample
- for reference, a page's size is usually 4K, and the rmap_item's size is
- separately 32B on 32-bit CPU architecture and 64B on 64-bit CPU architec=
-ture.
--so if the ``ksm_rmap_items/ksm_merging_pages`` ratio exceeds 64 on 64-bi=
-t CPU
-+so if the ``ksm_rmap_items/ksm_process_sharing`` ratio exceeds 64 on 64-=
-bit CPU
- or exceeds 128 on 32-bit CPU, then the app's madvise policy should be dr=
-opped,
- because the ksm profit is approximately zero or negative.
-=20
-diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesyste=
-ms/proc.rst
-index 2a17865dfe39..08840f027b60 100644
---- a/Documentation/filesystems/proc.rst
-+++ b/Documentation/filesystems/proc.rst
-@@ -2290,7 +2290,7 @@ Example
-     / # cat /proc/self/ksm_stat
-     ksm_rmap_items 0
-     ksm_zero_pages 0
--    ksm_merging_pages 0
-+    ksm_process_sharing 0
-     ksm_process_profit 0
-     ksm_merge_any: no
-     ksm_mergeable: no
-@@ -2312,12 +2312,12 @@ ksm_zero_pages
- When /sys/kernel/mm/ksm/use_zero_pages is enabled, it represent how many
- empty pages are merged with kernel zero pages by KSM.
-=20
--ksm_merging_pages
-+ksm_process_sharing
- ^^^^^^^^^^^^^^^^^
-=20
- It represents how many pages of this process are involved in KSM merging
- (not including ksm_zero_pages). It is the same with what
--/proc/<pid>/ksm_merging_pages shows.
-+/proc/<pid>/ksm_process_sharing shows.
-=20
- ksm_process_profit
- ^^^^^^^^^^^^^^^^^^
-diff --git a/Documentation/translations/zh_CN/admin-guide/mm/ksm.rst b/Do=
-cumentation/translations/zh_CN/admin-guide/mm/ksm.rst
-index 0029c4fd2201..8fb9e1452954 100644
---- a/Documentation/translations/zh_CN/admin-guide/mm/ksm.rst
-+++ b/Documentation/translations/zh_CN/admin-guide/mm/ksm.rst
-@@ -164,16 +164,16 @@ KSM=E5=8F=AF=E4=BB=A5=E9=80=9A=E8=BF=87=E5=90=88=E5=
-=B9=B6=E7=9B=B8=E5=90=8C=E7=9A=84=E9=A1=B5=E9=9D=A2=E6=9D=A5=E8=8A=82=E7=9C=
-=81=E5=86=85=E5=AD=98=EF=BC=8C=E4=BD=86=E4=B9=9F=E4=BC=9A=E6=B6=88=E8=80=97=
-=E9=A2=9D=E5=A4=96=E7=9A=84
-=20
- 2) =E5=8D=95=E4=B8=80=E8=BF=9B=E7=A8=8B=E4=B8=ADKSM=E7=9A=84=E6=94=B6=E7=
-=9B=8A=E4=B9=9F=E5=8F=AF=E4=BB=A5=E9=80=9A=E8=BF=87=E4=BB=A5=E4=B8=8B=E8=BF=
-=91=E4=BC=BC=E7=9A=84=E8=AE=A1=E7=AE=97=E5=BE=97=E5=88=B0::
-=20
--       process_profit =3D~ ksm_merging_pages * sizeof(page) -
-+       process_profit =3D~ ksm_process_sharing * sizeof(page) -
-                          ksm_rmap_items * sizeof(rmap_item).
-=20
--   =E5=85=B6=E4=B8=ADksm_merging_pages=E6=98=BE=E7=A4=BA=E5=9C=A8 ``/pro=
-c/<pid>/`` =E7=9B=AE=E5=BD=95=E4=B8=8B=EF=BC=8C=E8=80=8Cksm_rmap_items
-+   =E5=85=B6=E4=B8=ADksm_process_sharing=E6=98=BE=E7=A4=BA=E5=9C=A8 ``/p=
-roc/<pid>/`` =E7=9B=AE=E5=BD=95=E4=B8=8B=EF=BC=8C=E8=80=8Cksm_rmap_items
-    =E6=98=BE=E7=A4=BA=E5=9C=A8 ``/proc/<pid>/ksm_stat`` =E3=80=82
-=20
--=E4=BB=8E=E5=BA=94=E7=94=A8=E7=9A=84=E8=A7=92=E5=BA=A6=E6=9D=A5=E7=9C=8B=
-=EF=BC=8C ``ksm_rmap_items`` =E5=92=8C ``ksm_merging_pages`` =E7=9A=84=E9=
-=AB=98=E6=AF=94=E4=BE=8B=E6=84=8F
-+=E4=BB=8E=E5=BA=94=E7=94=A8=E7=9A=84=E8=A7=92=E5=BA=A6=E6=9D=A5=E7=9C=8B=
-=EF=BC=8C ``ksm_rmap_items`` =E5=92=8C ``ksm_process_sharing`` =E7=9A=84=E9=
-=AB=98=E6=AF=94=E4=BE=8B=E6=84=8F
- =E5=91=B3=E7=9D=80=E4=B8=8D=E5=A5=BD=E7=9A=84madvise-applied=E7=AD=96=E7=
-=95=A5=EF=BC=8C=E6=89=80=E4=BB=A5=E5=BC=80=E5=8F=91=E8=80=85=E6=88=96=E7=AE=
-=A1=E7=90=86=E5=91=98=E5=BF=85=E9=A1=BB=E9=87=8D=E6=96=B0=E8=80=83=E8=99=91=
-=E5=A6=82=E4=BD=95=E6=94=B9=E5=8F=98madvis=E7=AD=96
- =E7=95=A5=E3=80=82=E4=B8=BE=E4=B8=AA=E4=BE=8B=E5=AD=90=E4=BE=9B=E5=8F=82=
-=E8=80=83=EF=BC=8C=E4=B8=80=E4=B8=AA=E9=A1=B5=E9=9D=A2=E7=9A=84=E5=A4=A7=E5=
-=B0=8F=E9=80=9A=E5=B8=B8=E6=98=AF4K=EF=BC=8C=E8=80=8Crmap_item=E7=9A=84=E5=
-=A4=A7=E5=B0=8F=E5=9C=A832=E4=BD=8DCPU=E6=9E=B6=E6=9E=84=E4=B8=8A=E5=88=86
--=E5=88=AB=E6=98=AF32B=EF=BC=8C=E5=9C=A864=E4=BD=8DCPU=E6=9E=B6=E6=9E=84=E4=
-=B8=8A=E6=98=AF64B=E3=80=82=E6=89=80=E4=BB=A5=E5=A6=82=E6=9E=9C ``ksm_rma=
-p_items/ksm_merging_pages``
-+=E5=88=AB=E6=98=AF32B=EF=BC=8C=E5=9C=A864=E4=BD=8DCPU=E6=9E=B6=E6=9E=84=E4=
-=B8=8A=E6=98=AF64B=E3=80=82=E6=89=80=E4=BB=A5=E5=A6=82=E6=9E=9C ``ksm_rma=
-p_items/ksm_process_sharing``
- =E7=9A=84=E6=AF=94=E4=BE=8B=E5=9C=A864=E4=BD=8DCPU=E4=B8=8A=E8=B6=85=E8=BF=
-=8764=EF=BC=8C=E6=88=96=E8=80=85=E5=9C=A832=E4=BD=8DCPU=E4=B8=8A=E8=B6=85=
-=E8=BF=87128=EF=BC=8C=E9=82=A3=E4=B9=88=E5=BA=94=E7=94=A8=E7=A8=8B=E5=BA=8F=
-=E7=9A=84madvise=E7=AD=96=E7=95=A5=E5=BA=94
- =E8=AF=A5=E8=A2=AB=E6=94=BE=E5=BC=83=EF=BC=8C=E5=9B=A0=E4=B8=BAksm=E6=94=
-=B6=E7=9B=8A=E5=A4=A7=E7=BA=A6=E4=B8=BA=E9=9B=B6=E6=88=96=E8=B4=9F=E5=80=BC=
-=E3=80=82
-=20
-diff --git a/Documentation/translations/zh_TW/admin-guide/mm/ksm.rst b/Do=
-cumentation/translations/zh_TW/admin-guide/mm/ksm.rst
-index 1b4944b3cf61..3bcefda97827 100644
---- a/Documentation/translations/zh_TW/admin-guide/mm/ksm.rst
-+++ b/Documentation/translations/zh_TW/admin-guide/mm/ksm.rst
-@@ -164,16 +164,16 @@ KSM=E5=8F=AF=E4=BB=A5=E9=80=9A=E9=81=8E=E5=90=88=E4=
-=BD=B5=E7=9B=B8=E5=90=8C=E7=9A=84=E9=A0=81=E9=9D=A2=E4=BE=86=E7=AF=80=E7=9C=
-=81=E5=85=A7=E5=AD=98=EF=BC=8C=E4=BD=86=E4=B9=9F=E6=9C=83=E6=B6=88=E8=80=97=
-=E9=A1=8D=E5=A4=96=E7=9A=84
-=20
- 2) =E5=96=AE=E4=B8=80=E9=80=B2=E7=A8=8B=E4=B8=ADKSM=E7=9A=84=E6=94=B6=E7=
-=9B=8A=E4=B9=9F=E5=8F=AF=E4=BB=A5=E9=80=9A=E9=81=8E=E4=BB=A5=E4=B8=8B=E8=BF=
-=91=E4=BC=BC=E7=9A=84=E8=A8=88=E7=AE=97=E5=BE=97=E5=88=B0::
-=20
--       process_profit =3D~ ksm_merging_pages * sizeof(page) -
-+       process_profit =3D~ ksm_process_sharing * sizeof(page) -
-                          ksm_rmap_items * sizeof(rmap_item).
-=20
--   =E5=85=B6=E4=B8=ADksm_merging_pages=E9=A1=AF=E7=A4=BA=E5=9C=A8 ``/pro=
-c/<pid>/`` =E7=9B=AE=E9=8C=84=E4=B8=8B=EF=BC=8C=E8=80=8Cksm_rmap_items
-+   =E5=85=B6=E4=B8=ADksm_process_sharing=E9=A1=AF=E7=A4=BA=E5=9C=A8 ``/p=
-roc/<pid>/`` =E7=9B=AE=E9=8C=84=E4=B8=8B=EF=BC=8C=E8=80=8Cksm_rmap_items
-    =E9=A1=AF=E7=A4=BA=E5=9C=A8 ``/proc/<pid>/ksm_stat`` =E3=80=82
-=20
--=E5=BE=9E=E6=87=89=E7=94=A8=E7=9A=84=E8=A7=92=E5=BA=A6=E4=BE=86=E7=9C=8B=
-=EF=BC=8C ``ksm_rmap_items`` =E5=92=8C ``ksm_merging_pages`` =E7=9A=84=E9=
-=AB=98=E6=AF=94=E4=BE=8B=E6=84=8F
-+=E5=BE=9E=E6=87=89=E7=94=A8=E7=9A=84=E8=A7=92=E5=BA=A6=E4=BE=86=E7=9C=8B=
-=EF=BC=8C ``ksm_rmap_items`` =E5=92=8C ``ksm_process_sharing`` =E7=9A=84=E9=
-=AB=98=E6=AF=94=E4=BE=8B=E6=84=8F
- =E5=91=B3=E7=9D=80=E4=B8=8D=E5=A5=BD=E7=9A=84madvise-applied=E7=AD=96=E7=
-=95=A5=EF=BC=8C=E6=89=80=E4=BB=A5=E9=96=8B=E7=99=BC=E8=80=85=E6=88=96=E7=AE=
-=A1=E7=90=86=E5=93=A1=E5=BF=85=E9=A0=88=E9=87=8D=E6=96=B0=E8=80=83=E6=85=AE=
-=E5=A6=82=E4=BD=95=E6=94=B9=E8=AE=8Amadvis=E7=AD=96
- =E7=95=A5=E3=80=82=E8=88=89=E5=80=8B=E4=BE=8B=E5=AD=90=E4=BE=9B=E5=8F=83=
-=E8=80=83=EF=BC=8C=E4=B8=80=E5=80=8B=E9=A0=81=E9=9D=A2=E7=9A=84=E5=A4=A7=E5=
-=B0=8F=E9=80=9A=E5=B8=B8=E6=98=AF4K=EF=BC=8C=E8=80=8Crmap_item=E7=9A=84=E5=
-=A4=A7=E5=B0=8F=E5=9C=A832=E4=BD=8DCPU=E6=9E=B6=E6=A7=8B=E4=B8=8A=E5=88=86
--=E5=88=A5=E6=98=AF32B=EF=BC=8C=E5=9C=A864=E4=BD=8DCPU=E6=9E=B6=E6=A7=8B=E4=
-=B8=8A=E6=98=AF64B=E3=80=82=E6=89=80=E4=BB=A5=E5=A6=82=E6=9E=9C ``ksm_rma=
-p_items/ksm_merging_pages``
-+=E5=88=A5=E6=98=AF32B=EF=BC=8C=E5=9C=A864=E4=BD=8DCPU=E6=9E=B6=E6=A7=8B=E4=
-=B8=8A=E6=98=AF64B=E3=80=82=E6=89=80=E4=BB=A5=E5=A6=82=E6=9E=9C ``ksm_rma=
-p_items/ksm_process_sharing``
- =E7=9A=84=E6=AF=94=E4=BE=8B=E5=9C=A864=E4=BD=8DCPU=E4=B8=8A=E8=B6=85=E9=81=
-=8E64=EF=BC=8C=E6=88=96=E8=80=85=E5=9C=A832=E4=BD=8DCPU=E4=B8=8A=E8=B6=85=
-=E9=81=8E128=EF=BC=8C=E9=82=A3=E9=BA=BC=E6=87=89=E7=94=A8=E7=A8=8B=E5=BA=8F=
-=E7=9A=84madvise=E7=AD=96=E7=95=A5=E6=87=89
- =E8=A9=B2=E8=A2=AB=E6=94=BE=E6=A3=84=EF=BC=8C=E5=9B=A0=E7=88=B2ksm=E6=94=
-=B6=E7=9B=8A=E5=A4=A7=E7=B4=84=E7=88=B2=E9=9B=B6=E6=88=96=E8=B2=A0=E5=80=BC=
-=E3=80=82
-=20
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index c667702dc69b..91582e829818 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -3249,14 +3249,14 @@ static int proc_pid_patch_state(struct seq_file *=
-m, struct pid_namespace *ns,
- #endif /* CONFIG_LIVEPATCH */
-=20
- #ifdef CONFIG_KSM
--static int proc_pid_ksm_merging_pages(struct seq_file *m, struct pid_nam=
-espace *ns,
-+static int proc_pid_ksm_process_sharing(struct seq_file *m, struct pid_n=
-amespace *ns,
- 				struct pid *pid, struct task_struct *task)
- {
- 	struct mm_struct *mm;
-=20
- 	mm =3D get_task_mm(task);
- 	if (mm) {
--		seq_printf(m, "%lu\n", mm->ksm_merging_pages);
-+		seq_printf(m, "%lu\n", mm->ksm_process_sharing);
- 		mmput(mm);
- 	}
-=20
-@@ -3272,7 +3272,7 @@ static int proc_pid_ksm_stat(struct seq_file *m, st=
-ruct pid_namespace *ns,
- 	if (mm) {
- 		seq_printf(m, "ksm_rmap_items %lu\n", mm->ksm_rmap_items);
- 		seq_printf(m, "ksm_zero_pages %ld\n", mm_ksm_zero_pages(mm));
--		seq_printf(m, "ksm_merging_pages %lu\n", mm->ksm_merging_pages);
-+		seq_printf(m, "ksm_process_sharing %lu\n", mm->ksm_process_sharing);
- 		seq_printf(m, "ksm_process_profit %ld\n", ksm_process_profit(mm));
- 		seq_printf(m, "ksm_merge_any: %s\n",
- 				test_bit(MMF_VM_MERGE_ANY, &mm->flags) ? "yes" : "no");
-@@ -3421,7 +3421,7 @@ static const struct pid_entry tgid_base_stuff[] =3D=
- {
- 	ONE("seccomp_cache", S_IRUSR, proc_pid_seccomp_cache),
- #endif
- #ifdef CONFIG_KSM
--	ONE("ksm_merging_pages",  S_IRUSR, proc_pid_ksm_merging_pages),
-+	ONE("ksm_process_sharing",  S_IRUSR, proc_pid_ksm_process_sharing),
- 	ONE("ksm_stat",  S_IRUSR, proc_pid_ksm_stat),
- #endif
- };
-@@ -3758,7 +3758,7 @@ static const struct pid_entry tid_base_stuff[] =3D =
-{
- 	ONE("seccomp_cache", S_IRUSR, proc_pid_seccomp_cache),
- #endif
- #ifdef CONFIG_KSM
--	ONE("ksm_merging_pages",  S_IRUSR, proc_pid_ksm_merging_pages),
-+	ONE("ksm_process_sharing",  S_IRUSR, proc_pid_ksm_process_sharing),
- 	ONE("ksm_stat",  S_IRUSR, proc_pid_ksm_stat),
- #endif
- };
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index d6b91e8a66d6..c3383701c2a7 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -1175,7 +1175,7 @@ struct mm_struct {
- 		 * Represent how many pages of this process are involved in KSM
- 		 * merging (not including ksm_zero_pages).
- 		 */
--		unsigned long ksm_merging_pages;
-+		unsigned long ksm_process_sharing;
- 		/*
- 		 * Represent how many pages are checked for ksm merging
- 		 * including merged and not merged.
-diff --git a/mm/ksm.c b/mm/ksm.c
-index fa4e1618b671..fbcecd0fc1fd 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -824,7 +824,7 @@ static void remove_node_from_stable_tree(struct ksm_s=
-table_node *stable_node)
- 	hlist_for_each_entry(rmap_item, &stable_node->hlist, hlist) {
- 		if (rmap_item->hlist.next) {
- 			ksm_pages_sharing--;
--			rmap_item->mm->ksm_merging_pages--;
-+			rmap_item->mm->ksm_process_sharing--;
- 			trace_ksm_remove_rmap_item(stable_node->kpfn, rmap_item, rmap_item->m=
-m);
- 		} else
- 			ksm_pages_shared--;
-@@ -976,7 +976,7 @@ static void remove_rmap_item_from_tree(struct ksm_rma=
-p_item *rmap_item)
-=20
- 		if (!hlist_empty(&stable_node->hlist)) {
- 			ksm_pages_sharing--;
--			rmap_item->mm->ksm_merging_pages--;
-+			rmap_item->mm->ksm_process_sharing--;
- 		} else
- 			ksm_pages_shared--;
-=20
-@@ -2201,7 +2201,7 @@ static void stable_tree_append(struct ksm_rmap_item=
- *rmap_item,
-=20
- 	if (rmap_item->hlist.next) {
- 		ksm_pages_sharing++;
--		rmap_item->mm->ksm_merging_pages++;
-+		rmap_item->mm->ksm_process_sharing++;
- 	} else
- 		ksm_pages_shared++;
- }
-@@ -3286,7 +3286,7 @@ bool ksm_process_mergeable(struct mm_struct *mm)
-=20
- long ksm_process_profit(struct mm_struct *mm)
- {
--	return (long)(mm->ksm_merging_pages + mm_ksm_zero_pages(mm)) * PAGE_SIZ=
-E -
-+	return (long)(mm->ksm_process_sharing + mm_ksm_zero_pages(mm)) * PAGE_S=
-IZE -
- 		mm->ksm_rmap_items * sizeof(struct ksm_rmap_item);
- }
- #endif /* CONFIG_PROC_FS */
-diff --git a/tools/testing/selftests/mm/ksm_functional_tests.c b/tools/te=
-sting/selftests/mm/ksm_functional_tests.c
-index b61803e36d1c..48037e6cc55d 100644
---- a/tools/testing/selftests/mm/ksm_functional_tests.c
-+++ b/tools/testing/selftests/mm/ksm_functional_tests.c
-@@ -41,7 +41,7 @@ static int mem_fd;
- static int ksm_fd;
- static int ksm_full_scans_fd;
- static int proc_self_ksm_stat_fd;
--static int proc_self_ksm_merging_pages_fd;
-+static int proc_self_ksm_process_sharing_fd;
- static int ksm_use_zero_pages_fd;
- static int pagemap_fd;
- static size_t pagesize;
-@@ -105,10 +105,10 @@ static long get_my_merging_pages(void)
- 	char buf[10];
- 	ssize_t ret;
-=20
--	if (proc_self_ksm_merging_pages_fd < 0)
--		return proc_self_ksm_merging_pages_fd;
-+	if (proc_self_ksm_process_sharing_fd < 0)
-+		return proc_self_ksm_process_sharing_fd;
-=20
--	ret =3D pread(proc_self_ksm_merging_pages_fd, buf, sizeof(buf) - 1, 0);
-+	ret =3D pread(proc_self_ksm_process_sharing_fd, buf, sizeof(buf) - 1, 0=
-);
- 	if (ret <=3D 0)
- 		return -errno;
- 	buf[ret] =3D 0;
-@@ -671,7 +671,7 @@ static void init_global_file_handles(void)
- 	if (pagemap_fd < 0)
- 		ksft_exit_skip("open(\"/proc/self/pagemap\") failed\n");
- 	proc_self_ksm_stat_fd =3D open("/proc/self/ksm_stat", O_RDONLY);
--	proc_self_ksm_merging_pages_fd =3D open("/proc/self/ksm_merging_pages",
-+	proc_self_ksm_process_sharing_fd =3D open("/proc/self/ksm_process_shari=
-ng",
- 						O_RDONLY);
- 	ksm_use_zero_pages_fd =3D open("/sys/kernel/mm/ksm/use_zero_pages", O_R=
-DWR);
- }
---=20
-2.43.0
+BTW: Has this patchset tested with M4 in a separate partition,
+saying M4 image packed in flash.bin?
+
+Regards,
+Peng
+> +	}
+> +
+>  	ret =3D rproc_add(rproc);
+>  	if (ret) {
+>  		dev_err(dev, "rproc_add failed\n");
+> --
+> 2.39.5
+>=20
 
