@@ -1,368 +1,201 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D82221DBD;
-	Wed,  4 Jun 2025 20:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FC8231854
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 20:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749067810; cv=none; b=lAkXfvRHy/itZa9Xrc/6l6Jwh7/UPA4J2ms7Ks6FS01S9foqMQZMoH2kRpSmI0u5ysAf5fhT9ULaPH3jqTfxWrNQLLV2tp2AzW2McTq53ixnXQ4b3eZNAX98IP6C/l+HbznwCEMxNZH9WqAoiGYIymgy3Mq8InaG5yMBzdnSkEM=
+	t=1749067813; cv=none; b=LUOoVNCD1AjU/Y9uw0JHH3AkGW4uB4vPtIIJJWi7SzBV6J12ZWOYESU6oMgAngOPyzq4lU8xxckjPZcoRaBrn86hXlxTVNjjIWxmFa65NqO/r9Knz5gcKJBCdyMF7PhuplevwfYqssyApiUI5r1iVvm8gIMaCcvEpzLwHaeaVHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749067810; c=relaxed/simple;
-	bh=4sGxas2P+my+BbRd+bOFWMBu0iKNppblQO7l3Z/Y3+8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PmFUWv2TtAsh7nV7dAQnOgPZCkFTWYid8EnBfrXTbjtqi78hLHiL1gVBvdwGubZnUVb5P/JZ4QQLWYIAhwtDq7zctnTdDaTyJCpDa4C5Ziy7b/MFRT1fz4r5WryB48BqbrqFRY5PDDaOSrpAwg0CoREw1PRv4ic9cUB/tN/PAjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Jr8JvoE4; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749067813; c=relaxed/simple;
+	bh=npOsTPElb+7lFo0mivlFSkNlSYrnaISXvTaP0g9wdAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rtt5EEUFbht2c5Qe2OV6B+mw9iMHwVAi0rm3gVd9vTph1dppJ97iOW8sFwHOYH1Ib8vduRNZ7XSpoZlArXQwyB111s7cezXsbjEuqSZqWUE23TSHLybwECUgp8DJUIU80ASZfNAjWJZgUl4bC6nrRLRe6JO2/4Dqp3Z7htqfZEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eMbViv9J; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Jr8JvoE4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749067806;
-	bh=4sGxas2P+my+BbRd+bOFWMBu0iKNppblQO7l3Z/Y3+8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Jr8JvoE4wZCTdgW81NBJnkbsM9smtAdTBRKS9IbhHHGJ8Iu9JFKkGT/SdBmakIVcJ
-	 7Hl4lVSa9wrcW66hgV1tmCAY++DLVoFfCWCfZBeUar+7KBSJrwO3yxkiFJOcwWf22Y
-	 UXL7tCdDeW2NEfMz2RNhr75Cp6FgqhXnPJxNtiWI7Sjf+R64S+8kMMHN29COe/Djc4
-	 lSRCIqRd4rvm2LfkbugaEjXOttNclykvBP6dHykmoYUu0U16BusJKuGJ7238TCj1iD
-	 nLypdN4i3bXouzxZ4jTkCA4lFRePzSQg9Do3v6087uqI/i1F69vtrB04cd6kr34Ksz
-	 vCRn5BeqtSVwQ==
-Received: from [192.168.13.145] (unknown [IPv6:2606:6d00:10:5285::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2690117E3730;
-	Wed,  4 Jun 2025 22:10:04 +0200 (CEST)
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Date: Wed, 04 Jun 2025 16:09:38 -0400
-Subject: [PATCH v3 4/5] media: vcodec: Implement manual request completion
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eMbViv9J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749067809;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q9BN5xXgT88bSXulA/FeIPqelXeL/Un5XhFATUvSjD8=;
+	b=eMbViv9JVVNarVfqr7Lwb4/oWsz4yrqyOMyPKqsPbjosxka57mmyB+dt66qR9dfGYxAo9k
+	LA6VSNhqtz7vgEliiXop0HoSQj6sK7eCC+5/efUTe8xQsNH5hof9AAPW2wFBpAiJt4WsHV
+	skkcPU2H0hbdj89BrJNZVUX9iD8GK7I=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-588-nyUVFMc4Pl6uT-vMO_jwRA-1; Wed, 04 Jun 2025 16:10:08 -0400
+X-MC-Unique: nyUVFMc4Pl6uT-vMO_jwRA-1
+X-Mimecast-MFC-AGG-ID: nyUVFMc4Pl6uT-vMO_jwRA_1749067808
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6fad4f82182so4424116d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 13:10:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749067808; x=1749672608;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q9BN5xXgT88bSXulA/FeIPqelXeL/Un5XhFATUvSjD8=;
+        b=jjPEcR9ap+EJFfQGVH2W1/PpEl+c0MZWGa6MmP5CqfHDLb38L9tPq8URQ8OPtK0cgq
+         rDgN59QAwIicmfgM4G5ea+CzDIe4DBM2LACi9Ppqx0Buu7DBAhhNDjJnaSsgzk8e4Hol
+         7kgyWOKbQBWjeQNAjwBgMRrjVKV60qrImwMu/+q5yseg00G6TBuG7iscSlm9S1NxZcJP
+         vNeSZAb8oXehtGVmzjOZPJxXFwpO65EO3X7dfT7Xo8UaES8TvuRylSe+uHlwnsxVSTz1
+         RlDV63NwASAT629G+tlzZtt4x8lNmZX8qxXPyZk+V8qm45NJk31hvUKb9wPcTxgIaMDU
+         Z3rA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1FEi9WRpRRFW1mbZiZnSiMKkkMI5nOHRjQkQ2nzjRNfvcJrncm8BMVZhD9DA8fJ/hhFlyBqxGXWkUSuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqLQzUgSlHenrgB/rtvQRw0JCViAh/QQs5svkN1QOf52oG5JTK
+	0YvYQPHJtoFtPJ8W1Gpaf/LhhDZz4Th06hCNxMT6uWj9PWpf4Eq7QcKc554gAogFRWVWsBMr24t
+	dahEjrvX2ilkG9gWvcxxlxYVvuqSpvUqeYsu4VyghYyMgs8pjkJ7VWqwHiOM9ij+O1A==
+X-Gm-Gg: ASbGncvqcbqjwu6sFgCOWSHsU0mVtZjoD0O18ZcwqGjLD+MM+HHNmx8Fs/fBn+VR0vu
+	CcPdHHKNtASbxBWhUUikYZgAMs5eSshj1iGyo5zm47+7gCy+oPxF8ChKkTJ3JuASR7BpyAR5SGS
+	qd4bK6obWzOEDy8pvyJ3JOXY8Wq6BnhPTlSOke1hew36Dv9Hj2i89IRu3OviT27nh/RR2k7BAMS
+	jTama7R1hXfGPOXaD2ViwX6SwL2dccNnWkzz2VJAVBF5ClgSL2Hew6MHUlQBQBqq9cZRihgJGFF
+	fmg=
+X-Received: by 2002:ad4:5ecd:0:b0:6fa:cdc9:8b02 with SMTP id 6a1803df08f44-6faf6f9e8f2mr61152116d6.16.1749067807565;
+        Wed, 04 Jun 2025 13:10:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE405MytDVz3s6Kc/HX1eBXRVHVZoZtFmEhwF86+X8cjETvPQ/GL8LxPX1fmGW9kIB8AVLnFg==
+X-Received: by 2002:ad4:5ecd:0:b0:6fa:cdc9:8b02 with SMTP id 6a1803df08f44-6faf6f9e8f2mr61151716d6.16.1749067807154;
+        Wed, 04 Jun 2025 13:10:07 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d5b59asm105134686d6.65.2025.06.04.13.10.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 13:10:06 -0700 (PDT)
+Date: Wed, 4 Jun 2025 16:10:04 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Jann Horn <jannh@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm/memory: Document how we make a coherent memory
+ snapshot
+Message-ID: <aECoHDM3l2dKTfDw@x1.local>
+References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
+ <20250603-fork-tearing-v1-2-a7f64b7cfc96@google.com>
+ <aEB8fFEXKPR54LdA@x1.local>
+ <CAG48ez3cgG-PikyO7a84CFdPFvPY9BSNJOZ7wZVQ7Q9Qju_6Ng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-4-603db4749d90@collabora.com>
-References: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com>
-In-Reply-To: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin <tiffany.lin@mediatek.com>, 
- Andrew-CT Chen <andrew-ct.chen@mediatek.com>, 
- Yunfei Dong <yunfei.dong@mediatek.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, kernel@collabora.com, 
- linux-media@vger.kernel.org, 
- Sebastian Fricke <sebastian.fricke@collabora.com>, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez3cgG-PikyO7a84CFdPFvPY9BSNJOZ7wZVQ7Q9Qju_6Ng@mail.gmail.com>
 
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
+On Wed, Jun 04, 2025 at 08:11:08PM +0200, Jann Horn wrote:
+> On Wed, Jun 4, 2025 at 7:04 PM Peter Xu <peterx@redhat.com> wrote:
+> > On Tue, Jun 03, 2025 at 08:21:03PM +0200, Jann Horn wrote:
+> > > It is not currently documented that the child of fork() should receive a
+> > > coherent snapshot of the parent's memory, or how we get such a snapshot.
+> > > Add a comment block to explain this.
+> > >
+> > > Signed-off-by: Jann Horn <jannh@google.com>
+> > > ---
+> > >  kernel/fork.c | 34 ++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 34 insertions(+)
+> > >
+> > > diff --git a/kernel/fork.c b/kernel/fork.c
+> > > index 85afccfdf3b1..f78f5df596a9 100644
+> > > --- a/kernel/fork.c
+> > > +++ b/kernel/fork.c
+> > > @@ -604,6 +604,40 @@ static void dup_mm_exe_file(struct mm_struct *mm, struct mm_struct *oldmm)
+> > >  }
+> > >
+> > >  #ifdef CONFIG_MMU
+> > > +/*
+> > > + * Anonymous memory inherited by the child MM must, on success, contain a
+> > > + * coherent snapshot of corresponding anonymous memory in the parent MM.
+> >
+> > Should we better define what is a coherent snapshot?  Or maybe avoid using
+> > this term which seems to apply to the whole mm?
+> >
+> > I think it's at least not a snapshot of whole mm at a specific time,
+> > because as long as there can be more than one concurrent writers (hence, it
+> > needs to be at least 3 threads in the parent process, 1 in charge of fork),
+> > this can happen:
+> >
+> >   parent writer 1      parent writer 2    parent fork thr
+> >   ---------------      ---------------    ---------------
+> >                                           wr-protect P1
+> >   write P1                                                  <---- T1
+> >   (trapped, didn't happen)
+> >                        write PN                             <---- T2
+> >                        (went through)
+> >                                           ...
+> >                                           wr-protect PN
+> >
+> > The result of above would be that child process will see a mixture of old
+> > P1 (at timestamp T1) but updated P2 (timestamp T2).  I don't think it's
+> > impossible that the userapp could try to serialize "write P1" and "write
+> > PN" operations in a way that it would also get a surprise seeing in the
+> > child PN updated but P1 didn't.
+> 
+> If the write at T1 hits a page fault, then it doesn't actually happen
+> at T1. The write instruction starts doing something at T1, but it does
+> not fully retire, and the architectural register state does not
+> change, and in particular the instruction pointer does not advance
+> past this instruction; just like when speculative execution is aborted
+> after a branch misprediction, except that the CPU raises an exception
+> and we enter the page fault handler. The write actually happens when
+> the instruction is executed a second time after page fault handling
+> has completed after the mmap lock is dropped. (Unless something during
+> page fault handling raises a signal, in which case the instruction
+> might never architecturally execute.)
 
-Rework how requests are completed in the MediaTek VCodec driver, by
-implementing the new manual request completion feature, which allows to
-keep a request open while allowing to add new bitstream data.
-This is useful in this case, because the hardware has a LAT and a core
-decode work, after the LAT decode the bitstream isn't required anymore
-so the source buffer can be set done and the request stays open until
-the core decode work finishes.
+Fair enough.  So maybe that's something like a best-effort whole mm
+snapshot anytime happened during the fork() but before releasing mmap write
+lock.
 
-Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
-Co-developed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
----
- .../mediatek/vcodec/decoder/mtk_vcodec_dec.c       |   4 +-
- .../mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h   |  29 +++++
- .../vcodec/decoder/mtk_vcodec_dec_stateless.c      | 140 ++++++++++++++++-----
- 3 files changed, 140 insertions(+), 33 deletions(-)
+Your comment did mention one exception on the kernel, is it still pretty
+easy to happen?  I'm thinking this use case of trying to load some data
+from a O_DIRECT fd and then set the var to show it's loaded:
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-index 98838217b97d45ed2b5431fdf87c94e0ff79fc57..036ad191a9c3e644fe99b4ce25d6a089292f1e57 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-@@ -889,8 +889,10 @@ void vb2ops_vdec_stop_streaming(struct vb2_queue *q)
- 					src_buf->vb2_buf.req_obj.req;
- 				v4l2_m2m_buf_done(src_buf,
- 						VB2_BUF_STATE_ERROR);
--				if (req)
-+				if (req) {
- 					v4l2_ctrl_request_complete(req, &ctx->ctrl_hdl);
-+					media_request_manual_complete(req);
-+				}
- 			}
- 		}
- 		return;
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-index aececca7ecf8936bb2b3b55c99354af983746b30..6f9728a95720a257dee9201463c5e275d0586a94 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-@@ -64,6 +64,19 @@ enum mtk_vdec_hw_arch {
- 	MTK_VDEC_LAT_SINGLE_CORE,
- };
- 
-+/**
-+ * enum mtk_vdec_request_state - Stages of processing a request
-+ * @MTK_VDEC_REQUEST_RECEIVED: Hardware prepared for the LAT decode
-+ * @MTK_VDEC_REQUEST_LAT_DONE: LAT decode finished, the bitstream is not
-+ *		      needed anymore
-+ * @MTK_VDEC_REQUEST_CORE_DONE: CORE decode finished
-+ */
-+enum mtk_vdec_request_state {
-+	MTK_VDEC_REQUEST_RECEIVED = 0,
-+	MTK_VDEC_REQUEST_LAT_DONE = 1,
-+	MTK_VDEC_REQUEST_CORE_DONE = 2,
-+};
-+
- /**
-  * struct vdec_pic_info  - picture size information
-  * @pic_w: picture width
-@@ -128,6 +141,17 @@ struct mtk_vcodec_dec_pdata {
- 	bool uses_stateless_api;
- };
- 
-+/**
-+ * struct mtk_vcodec_dec_request - Media request private data.
-+ *
-+ * @req_state: Request completion state
-+ * @req: Media Request structure
-+ */
-+struct mtk_vcodec_dec_request {
-+	enum mtk_vdec_request_state req_state;
-+	struct media_request req;
-+};
-+
- /**
-  * struct mtk_vcodec_dec_ctx - Context (instance) private data.
-  *
-@@ -319,6 +343,11 @@ static inline struct mtk_vcodec_dec_ctx *ctrl_to_dec_ctx(struct v4l2_ctrl *ctrl)
- 	return container_of(ctrl->handler, struct mtk_vcodec_dec_ctx, ctrl_hdl);
- }
- 
-+static inline struct mtk_vcodec_dec_request *req_to_dec_req(struct media_request *req)
-+{
-+	return container_of(req, struct mtk_vcodec_dec_request, req);
-+}
-+
- /* Wake up context wait_queue */
- static inline void
- wake_up_dec_ctx(struct mtk_vcodec_dec_ctx *ctx, unsigned int reason, unsigned int hw_id)
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-index d873159b9b3069fe3460502c2751f2e8b2714f44..eea0050eacc1c41abd8e0a1cd546c1ecce90a311 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-@@ -242,10 +242,61 @@ static const struct v4l2_frmsize_stepwise stepwise_fhd = {
- 	.step_height = 16
- };
- 
-+static const char *state_to_str(enum mtk_vdec_request_state state)
-+{
-+	switch (state) {
-+	case MTK_VDEC_REQUEST_RECEIVED:
-+		return "RECEIVED";
-+	case MTK_VDEC_REQUEST_LAT_DONE:
-+		return "LAT_DONE";
-+	case MTK_VDEC_REQUEST_CORE_DONE:
-+		return "CORE_DONE";
-+	default:
-+		return "UNKNOWN";
-+	}
-+}
-+
-+static void mtk_vcodec_dec_request_complete(struct mtk_vcodec_dec_ctx *ctx,
-+					    enum mtk_vdec_request_state state,
-+					    enum vb2_buffer_state buffer_state,
-+					    struct media_request *src_buf_req)
-+{
-+	struct mtk_vcodec_dec_request *req = req_to_dec_req(src_buf_req);
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
-+
-+	mutex_lock(&ctx->lock);
-+
-+	if (req->req_state >= state) {
-+		mutex_unlock(&ctx->lock);
-+		return;
-+	}
-+
-+	switch (req->req_state) {
-+	case MTK_VDEC_REQUEST_RECEIVED:
-+		v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-+		src_buf = v4l2_m2m_src_buf_remove(ctx->m2m_ctx);
-+		v4l2_m2m_buf_done(src_buf, buffer_state);
-+		if (state == MTK_VDEC_REQUEST_LAT_DONE)
-+			break;
-+		fallthrough;
-+	case MTK_VDEC_REQUEST_LAT_DONE:
-+		dst_buf = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx);
-+		v4l2_m2m_buf_done(dst_buf, buffer_state);
-+		media_request_manual_complete(src_buf_req);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	mtk_v4l2_vdec_dbg(3, ctx, "Switch state from %s to %s.\n",
-+			  state_to_str(req->req_state), state_to_str(state));
-+	req->req_state = state;
-+	mutex_unlock(&ctx->lock);
-+}
-+
- static void mtk_vdec_stateless_cap_to_disp(struct mtk_vcodec_dec_ctx *ctx, int error,
- 					   struct media_request *src_buf_req)
- {
--	struct vb2_v4l2_buffer *vb2_dst;
- 	enum vb2_buffer_state state;
- 
- 	if (error)
-@@ -253,17 +304,7 @@ static void mtk_vdec_stateless_cap_to_disp(struct mtk_vcodec_dec_ctx *ctx, int e
- 	else
- 		state = VB2_BUF_STATE_DONE;
- 
--	vb2_dst = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx);
--	if (vb2_dst) {
--		v4l2_m2m_buf_done(vb2_dst, state);
--		mtk_v4l2_vdec_dbg(2, ctx, "free frame buffer id:%d to done list",
--				  vb2_dst->vb2_buf.index);
--	} else {
--		mtk_v4l2_vdec_err(ctx, "dst buffer is NULL");
--	}
--
--	if (src_buf_req)
--		v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-+	mtk_vcodec_dec_request_complete(ctx, MTK_VDEC_REQUEST_CORE_DONE, state, src_buf_req);
- }
- 
- static struct vdec_fb *vdec_get_cap_buffer(struct mtk_vcodec_dec_ctx *ctx)
-@@ -306,6 +347,7 @@ static void vb2ops_vdec_buf_request_complete(struct vb2_buffer *vb)
- 	struct mtk_vcodec_dec_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
- 
- 	v4l2_ctrl_request_complete(vb->req_obj.req, &ctx->ctrl_hdl);
-+	media_request_manual_complete(vb->req_obj.req);
- }
- 
- static void mtk_vdec_worker(struct work_struct *work)
-@@ -318,7 +360,8 @@ static void mtk_vdec_worker(struct work_struct *work)
- 	struct mtk_vcodec_mem *bs_src;
- 	struct mtk_video_dec_buf *dec_buf_src;
- 	struct media_request *src_buf_req;
--	enum vb2_buffer_state state;
-+	enum mtk_vdec_request_state req_state;
-+	enum vb2_buffer_state buf_state;
- 	bool res_chg = false;
- 	int ret;
- 
-@@ -351,37 +394,43 @@ static void mtk_vdec_worker(struct work_struct *work)
- 			  ctx->id, bs_src->va, &bs_src->dma_addr, bs_src->size, vb2_src);
- 	/* Apply request controls. */
- 	src_buf_req = vb2_src->req_obj.req;
--	if (src_buf_req)
--		v4l2_ctrl_request_setup(src_buf_req, &ctx->ctrl_hdl);
--	else
-+	if (WARN_ON(!src_buf_req)) {
-+		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
- 		mtk_v4l2_vdec_err(ctx, "vb2 buffer media request is NULL");
-+		return;
-+	}
-+	v4l2_ctrl_request_setup(src_buf_req, &ctx->ctrl_hdl);
- 
- 	ret = vdec_if_decode(ctx, bs_src, NULL, &res_chg);
--	if (ret && ret != -EAGAIN) {
-+
-+	if (ret == -EAGAIN) {
-+		buf_state = VB2_BUF_STATE_DONE;
-+		req_state = MTK_VDEC_REQUEST_RECEIVED;
-+	} else if (ret) {
- 		mtk_v4l2_vdec_err(ctx,
--				  "[%d] decode src_buf[%d] sz=0x%zx pts=%llu ret=%d res_chg=%d",
-+				  "[%d] decode src_buf[%d] sz=0x%zx pts=%llu res_chg=%d ret=%d",
- 				  ctx->id, vb2_src->index, bs_src->size,
--				  vb2_src->timestamp, ret, res_chg);
-+				  vb2_src->timestamp, res_chg, ret);
- 		if (ret == -EIO) {
- 			mutex_lock(&ctx->lock);
- 			dec_buf_src->error = true;
- 			mutex_unlock(&ctx->lock);
- 		}
--	}
- 
--	state = ret ? VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE;
--	if (!IS_VDEC_LAT_ARCH(dev->vdec_pdata->hw_arch) ||
--	    ctx->current_codec == V4L2_PIX_FMT_VP8_FRAME) {
--		v4l2_m2m_buf_done_and_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx, state);
--		if (src_buf_req)
--			v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-+		buf_state = VB2_BUF_STATE_ERROR;
-+		req_state = MTK_VDEC_REQUEST_CORE_DONE;
- 	} else {
--		if (ret != -EAGAIN) {
--			v4l2_m2m_src_buf_remove(ctx->m2m_ctx);
--			v4l2_m2m_buf_done(vb2_v4l2_src, state);
--		}
--		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
-+		buf_state = VB2_BUF_STATE_DONE;
-+
-+		if (!IS_VDEC_LAT_ARCH(dev->vdec_pdata->hw_arch) ||
-+		    ctx->current_codec == V4L2_PIX_FMT_VP8_FRAME)
-+			req_state = MTK_VDEC_REQUEST_CORE_DONE;
-+		else
-+			req_state = MTK_VDEC_REQUEST_LAT_DONE;
- 	}
-+
-+	mtk_vcodec_dec_request_complete(ctx, req_state, buf_state, src_buf_req);
-+	v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
- }
- 
- static void vb2ops_vdec_stateless_buf_queue(struct vb2_buffer *vb)
-@@ -709,6 +758,22 @@ static int mtk_vcodec_dec_ctrls_setup(struct mtk_vcodec_dec_ctx *ctx)
- 	return 0;
- }
- 
-+static struct media_request *fops_media_request_alloc(struct media_device *mdev)
-+{
-+	struct mtk_vcodec_dec_request *req;
-+
-+	req = kzalloc(sizeof(*req), GFP_KERNEL);
-+
-+	return &req->req;
-+}
-+
-+static void fops_media_request_free(struct media_request *mreq)
-+{
-+	struct mtk_vcodec_dec_request *req = req_to_dec_req(mreq);
-+
-+	kfree(req);
-+}
-+
- static int fops_media_request_validate(struct media_request *mreq)
- {
- 	const unsigned int buffer_cnt = vb2_request_buffer_cnt(mreq);
-@@ -729,9 +794,20 @@ static int fops_media_request_validate(struct media_request *mreq)
- 	return vb2_request_validate(mreq);
- }
- 
-+static void fops_media_request_queue(struct media_request *mreq)
-+{
-+	struct mtk_vcodec_dec_request *req = req_to_dec_req(mreq);
-+
-+	media_request_mark_manual_completion(mreq);
-+	req->req_state = MTK_VDEC_REQUEST_RECEIVED;
-+	v4l2_m2m_request_queue(mreq);
-+}
-+
- const struct media_device_ops mtk_vcodec_media_ops = {
-+	.req_alloc      = fops_media_request_alloc,
-+	.req_free      = fops_media_request_free,
- 	.req_validate	= fops_media_request_validate,
--	.req_queue	= v4l2_m2m_request_queue,
-+	.req_queue	= fops_media_request_queue,
- };
- 
- static void mtk_vcodec_add_formats(unsigned int fourcc,
+  bool data_read=0
+  read(...);
+  data_read=1;
+
+Then IIUC this can happen:
+
+    parent thread 1                        parent fork thr
+    ---------------                        ---------------
+    read(...)
+      using O_DIRECT on priv-anon buffers P1
+      pin_user_pages
+                                           fork() happens
+                                             Sees P1 pinned
+                                             P1 early COW (child sees no data loaded)
+      memcpy()
+    set data_read=1
+    (data_read can be a global private var on P2)
+                                             P2 wr-protected (child sees data_read=1)
+
+Hence in child even if it sees data_read=1 it is possible the buffer may be
+uninitialized, or the buffer is partly loaded, still racing with the kernel
+early COW.
+
+I'm not sure if I understand it correct this time as you discussed in the
+comment. If so, should we still not emphasize too much on the kernel
+providing coherent mm snapshot, at least emphasize the best-effort part
+(both in comment of patch 2, but also in patch subjects)?  After all, it
+seems it isn't straightforward for any userapp to see when that coherency
+will be violated.
+
+From that POV, maybe it's better we should still suggest the undefined
+behavior, even if it'll recover the old behavior some existing use case?
+
+Thanks,
 
 -- 
-2.49.0
+Peter Xu
 
