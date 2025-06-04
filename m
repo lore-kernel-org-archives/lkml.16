@@ -1,299 +1,225 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C1E139B
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF58B22259C;
+	Wed,  4 Jun 2025 21:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749072218; cv=none; b=ZfDDMPL8XV8z+CYG32Hf5frFXmWWAalY2/mfEoFMN/0gWTiaFOIOb1hEjfW5b5uE2L1Tv6GBVXOH0XUtUQEbpUcB0BL4C51wZDhO/zxx6p8EXBgK0rzPVqOdc/BbptdeXi0YMbHaiP9mbFOSTD5F2/aES3zAvyc+iEsQAVolTNs=
+	t=1749072612; cv=none; b=FBJs1skJwxdVZzRP9/q2FznqzEmQ83UlRJybQByH0Ix2qBsKUvp3mOAfZX91v00uAStErRwj7Xbgf7a8SGcKad2B38c5zJB/osIIkCv8mnKArO+JLHQ06uDF8mD6HnkDNGrQrNKfNrsZY9rT8hm01nU5gncl2xaxjraNHhJ7uZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749072218; c=relaxed/simple;
-	bh=4S10gW2wt3Usw1eY6iH4D3RuLj5PdEfnJJKHo9LJi6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JSgFvDk1kxRRqQb+hdQc5o9D0EMSQ/H43nkSo1cqZjAl05Vp8NfMICy8w4PiSZLi8eDkZqqSH0PO1Sdr+Db5eR/i5pTdTA+2AArH9XRhubUbBkDd8VkOd6a3qCFMi30Sm0i///oLs9IYpCqrzXgGo+XWNpN5hZeHSOxQLiSLPdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R0WX9NI+; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749072612; c=relaxed/simple;
+	bh=mcgIqsoxQ0DUFCqqcvzlt1vRTae271UHuYTxdWHyoDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FMaBWBvT1q8ha/P14dWeG6VyOzsY0UDd/CdCJbPjp7MWmqQFyw+6ZtA0gBXEPHdYUFvr6+5uFiUCM6u2xJOPXrB6Dc2KV0XH3VIjH62zdMcKOwn0L6/U5p0Mwl/wVbs11w+Y5vDRQ4a5bKxKO6vBvX+sLElpn5VMeqP/L3J6Vlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4ZRL+Jz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R0WX9NI+"
-Date: Wed, 4 Jun 2025 17:23:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749072203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=mkV9b8O+6559TIf0+Ma+w1OI88MqcmuriotQpPbTw/Q=;
-	b=R0WX9NI+oV+nyQiYmfggYH9bcblA/PDrxpwY1yX1hAPZw8OyMoJTN9jlMhhFdUEx8sNOe0
-	bcNt0hrsKQRfW84LrE2vNFjUdNPRhyZ5jRGNxS07uNBz33Qk16o0oO88JSon1cqRnGTeMo
-	Vq+5Le4Tl8FOuVyj3HIU9f6i5BhcgQg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs changes for 6.16, part 2
-Message-ID: <xtigikvqorbxtpy2rh52fobvunp7yrwkfpj4muwaogr4ijxl4j@s327kfvhpi3v>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4ZRL+Jz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F12C4CEE4;
+	Wed,  4 Jun 2025 21:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749072612;
+	bh=mcgIqsoxQ0DUFCqqcvzlt1vRTae271UHuYTxdWHyoDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C4ZRL+JzEWKy4eZ/OBlu1bUqAPDBx1RazS7BtJ56+HSVD+PE3OUuwZHhZSHz66nF2
+	 1TJEQsa6iPft8rS0nUQB0IJl41LXFhT2pubE1Xc8+d/L7CojPjOX+5XRoN7s1jttPO
+	 2DQJEJDRKw6XHcm6t2hgWmtRsjHAYYKrNFPKo01kKQyqueVwyNnensTk8423FK236P
+	 D/N4ZO31Jdqabh4DD6hz6A8tcEbJEOP/3aaYsXMDavEXcLc0yxwEF6M6PgcH+bTxcm
+	 3EuTMzy1DwGVFcIKwmPudKP2KkXGOx7BB67mohPF2tPhSQ8Oc0G6yU35w1uJY4okHR
+	 GD8X+rox1wngA==
+Date: Wed, 4 Jun 2025 14:30:10 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf bpf-filter: Improve error messages
+Message-ID: <aEC64oiBI3U-619x@google.com>
+References: <20250604174835.1852481-1-namhyung@kernel.org>
+ <CAP-5=fWap82Wjx2EBTESFsTxSikkJ3TW7B_jSjhUkgfheQu_xw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWap82Wjx2EBTESFsTxSikkJ3TW7B_jSjhUkgfheQu_xw@mail.gmail.com>
 
-Linus - there's also a small merge conflict, due to the timer renaming;
-the relevant code has been deleted here.
+On Wed, Jun 04, 2025 at 10:59:57AM -0700, Ian Rogers wrote:
+> On Wed, Jun 4, 2025 at 10:48 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The BPF filter needs libbpf/BPF-skeleton support and root privilege.
+> > Add error messages to help users understand the problem easily.
+> >
+> > When it's not build with BPF support (make BUILD_BPF_SKEL=0).
+> >
+> >   $ sudo perf record -e cycles --filter "pid != 0" true
+> >   Error: BPF filter is requested but perf is not built with BPF.
+> >         Please make sure to build with libbpf and BPF skeleton.
+> >
+> >    Usage: perf record [<options>] [<command>]
+> >       or: perf record [<options>] -- <command> [<options>]
+> >
+> >           --filter <filter>
+> >                             event filter
+> >
+> > When it supports BPF but runs without root or CAP_BPF.  Note that it
+> > also checks pinned BPF filters.
+> >
+> >   $ perf record -e cycles --filter "pid != 0" -o /dev/null true
+> >   Error: BPF filter only works for users with the CAP_BPF capability!
+> >         Please run 'perf record --setup-filter pin' as root first.
+> >
+> >    Usage: perf record [<options>] [<command>]
+> >       or: perf record [<options>] -- <command> [<options>]
+> >
+> >           --filter <filter>
+> >                             event filter
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-The following changes since commit 9caea9208fc3fbdbd4a41a2de8c6a0c969b030f9:
+Thanks for your review!
 
-  bcachefs: Don't mount bs > ps without TRANSPARENT_HUGEPAGE (2025-05-23 22:00:07 -0400)
+> 
+> > ---
+> > v2) change fprintf() -> pr_err()  (Ian)
+> >
+> >  tools/perf/util/bpf-filter.c | 28 ++++++++++++++++++++++++++++
+> >  tools/perf/util/bpf-filter.h |  3 +++
+> >  tools/perf/util/cap.c        |  1 -
+> >  tools/perf/util/cap.h        |  5 +++++
+> >  4 files changed, 36 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+> > index a4fdf6911ec1c32e..92e2f054b45e91dd 100644
+> > --- a/tools/perf/util/bpf-filter.c
+> > +++ b/tools/perf/util/bpf-filter.c
+> > @@ -52,6 +52,7 @@
+> >  #include <internal/xyarray.h>
+> >  #include <perf/threadmap.h>
+> >
+> > +#include "util/cap.h"
+> >  #include "util/debug.h"
+> >  #include "util/evsel.h"
+> >  #include "util/target.h"
+> > @@ -618,11 +619,38 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(enum perf_bpf_filter_term
+> >         return expr;
+> >  }
+> >
+> > +static bool check_bpf_filter_capable(void)
+> > +{
+> > +       bool used_root;
+> > +
+> > +       if (perf_cap__capable(CAP_BPF, &used_root))
+> > +               return true;
+> > +
+> > +       if (!used_root) {
+> > +               /* Check if root already pinned the filter programs and maps */
+> > +               int fd = get_pinned_fd("filters");
+> > +
+> > +               if (fd >= 0) {
+> > +                       close(fd);
+> > +                       return true;
+> > +               }
+> > +       }
+> > +
+> > +       pr_err("Error: BPF filter only works for %s!\n"
+> > +              "\tPlease run 'perf record --setup-filter pin' as root first.\n",
+> > +              used_root ? "root" : "users with the CAP_BPF capability");
+> > +
+> > +       return false;
+> > +}
+> > +
+> >  int perf_bpf_filter__parse(struct list_head *expr_head, const char *str)
+> >  {
+> >         YY_BUFFER_STATE buffer;
+> >         int ret;
+> >
+> > +       if (!check_bpf_filter_capable())
+> > +               return -EPERM;
+> > +
+> >         buffer = perf_bpf_filter__scan_string(str);
+> >
+> >         ret = perf_bpf_filter_parse(expr_head);
+> > diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
+> > index 916ed7770b734f15..122477f2de44bb60 100644
+> > --- a/tools/perf/util/bpf-filter.h
+> > +++ b/tools/perf/util/bpf-filter.h
+> > @@ -5,6 +5,7 @@
+> >  #include <linux/list.h>
+> >
+> >  #include "bpf_skel/sample-filter.h"
+> > +#include "util/debug.h"
+> 
+> nit: I'd generally avoid the util/ prefix here as bpf-filter.h and
+> debug.h are in the same directory. The compiler first looks in the
+> same directory before using include paths:
+> https://gcc.gnu.org/onlinedocs/cpp/Search-Path.html
+> So including this way is saying please search using the include paths
+> which is weird when the files are in the same directory. I know the
+> style in the code base is inconsistent with this, but I wish it
+> wasn't.
 
-are available in the Git repository at:
+I see your point.  But I thought it's more flexible to file move and
+for people to find out where the file is.
 
-  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-06-04
-
-for you to fetch changes up to 3d11125ff624b540334f7134d98b94f3b980e85d:
-
-  bcachefs: add cond_resched() to handle_overwrites() (2025-06-04 16:45:41 -0400)
-
-----------------------------------------------------------------
-bcachefs updates for 6.16, part 2
-
-- More stack usage improvements (~600 bytes).
-
-- Define CLASS()es for some commonly used types, and convert most
-  rcu_read_lock() uses to the new lock guards
-
-- New introspection:
-  - Superblock error counters are now available in sysfs: previously,
-    they were only visible with 'show-super', which doesn't provide a
-    live view
-  - New tracepoint, error_throw(), which is called any time we return an
-    error and start to unwind
-
-- Repair
-  - check_fix_ptrs() can now repair btree node roots
-  - We can now repair when we've somehow ended up with the journal using
-    a superblock bucket
-
-- Revert some leftovers from the aborted directory i_size feature, and
-  add repair code: some userspace programs (e.g. sshfs) were getting
-  confused.
-
-It seems in 6.15 there's a bug where i_nlink on the vfs inode has been
-getting incorrectly set to 0, with some unfortunate results;
-list_journal analysis showed bch2_inode_rm() being called (by
-bch2_evict_inode()) when it clearly should not have been.
-
-- bch2_inode_rm() now runs "should we be deleting this inode?" checks
-  that were previously only run when deleting unlinked inodes in
-  recovery.
-
-- check_subvol() was treating a dangling subvol (pointing to a missing
-  root inode) like a dangling dirent, and deleting it. This was the
-  really unfortunate one: check_subvol() will now recreate the root
-  inode if necessary.
-
-This took longer to debug than it should have, and we lost several
-filesystems unnecessarily, becuase users have been ignoring the release
-notes and blindly running 'fsck -y'. Debugging required reconstructing
-what happened through analyzing the journal, when ideally someone would
-have noticed 'hey, fsck is asking me if I want to repair this: it
-usually doesn't, maybe I should run this in dry run mode and check
-what's going on?'.
-
-As a reminder, fsck errors are being marked as autofix once we've
-verified, in real world usage, that they're working correctly; blindly
-running 'fsck -y' on an experimental filesystem is playing with fire.
-
-Up to this incident we've had an excellent track record of not losing
-data, so let's try to learn from this one.
-
-This is a community effort, I wouldn't be able to get this done without
-the help of all the people QAing and providing excellent bug reports and
-feedback based on real world usage. But please don't ignore advice and
-expect me to pick up the pieces.
-
-If an error isn't marked as autofix, and it /is/ happening in the wild,
-that's also something I need to know about so we can check it out and
-add it to the autofix list if repair looks good. I haven't been getting
-those reports, and I should be; since we don't have any sort of
-telemetry yet I am absolutely dependent on user reports.
-
-Now I'll be spending the weekend working on new repair code to see if I
-can get a filesystem back for a user who didn't have backups.
-
-----------------------------------------------------------------
-Kent Overstreet (68):
-      bcachefs: fix REFLINK_P_MAY_UPDATE_OPTIONS
-      bcachefs: Fix missing BTREE_UPDATE_internal_snapshot_node
-      bcachefs: Ensure we print output of run_recovery_pass if it errors
-      bcachefs: bch2_kthread_io_clock_wait_once()
-      bcachefs: Fix lost rebalance wakeups
-      bcachefs: Fix missing commit in check_dirents
-      bcachefs: Move unicode message to after the startup message
-      bcachefs: Don't rewind to run a recovery pass we already ran
-      bcachefs: Journal read error message improvements
-      bcachefs: Fix infinite loop in journal_entry_btree_keys_to_text()
-      bcachefs: trace_io_move_pred
-      bcachefs: io_move_evacuate_bucket tracepoint, counter
-      bcachefs: Catch data_update_done events in trace_io_move_start_fail
-      bcachefs: Fix incorrect multiple dev check in journal write path
-      bcachefs: Fix misaligned bucket check in journal space calculations
-      bcachefs: Add missing error logging in delete_dead_inodes()
-      bcachefs: Kill bkey_buf in btree_path_down()
-      bcachefs: btree_node_missing_err()
-      bcachefs: factor out break_cycle_fail()
-      bcachefs: Don't stack allocate bch_writepage_state
-      bcachefs: kill replicas_sectors arg to __trigger_extent()
-      bcachefs: Tweak bch2_data_update_init() for stack usage
-      bcachefs: bch2_alloc_v4_to_text()
-      bcachefs: reduce stack usage in alloc_sectors_start()
-      bcachefs: Move devs_sorted to alloc_request
-      bcachefs: Include b->ob.nr in cached_btree_node_to_text()
-      bcachefs: bch2_check_fix_ptrs() can now repair btree roots
-      bcachefs: sysfs/errors
-      bcachefs: Add missing printbuf_reset() in bch2_check_dirent_inode_dirent()
-      bcachefs: Mark bch_errcode helpers __attribute__((const))
-      bcachefs: Use bch2_err_matches() for BCH_ERR_fsck_(fix|ignore)
-      bcachefs: Don't unlock trans before data_update_init()
-      bcachefs: Runtime self healing for keys for deleted snapshots
-      bcachefs: bch2_dev_journal_bucket_delete()
-      bcachefs: bch2_get_snapshot_overwrites()
-      bcachefs: __bch2_insert_snapshot_whiteouts() refactoring
-      bcachefs: bch2_str_hash_check_key() may now be called without snapshots_seen
-      bcachefs: bch2_readdir() now calls str_hash_check_key()
-      bcachefs: Improve error printing in btree_node_check_topology()
-      bcachefs: Journal keys are retained until shutdown, or journal replay finishes
-      bcachefs: darray_find(), darray_find_p()
-      bcachefs: sysfs trigger_emergency_read_only
-      bcachefs: sysfs trigger_journal_commit
-      bcachefs: CLASS(printbuf)
-      bcachefs: CLASS(darray)
-      bcachefs: CLASS(btree_trans)
-      bcachefs: Replace rcu_read_lock() with guards
-      bcachefs: Add better logging to fsck_rename_dirent()
-      bcachefs: Convert BUG() to error
-      bcachefs: Delete redundant fsck_err()
-      bcachefs: Kill un-reverted directory i_size code
-      bcachefs: Repair code for directory i_size
-      bcachefs: bch_err_throw()
-      bcachefs: bch2_require_recovery_pass()
-      bcachefs: BCH_RECOVERY_PASS_NO_RATELIMIT
-      bcachefs: Make check_key_has_snapshot safer
-      bcachefs: Run snapshot deletion out of system_long_wq
-      bcachefs: Run check_dirents second time if required
-      bcachefs: Redo bch2_dirent_init_name()
-      bcachefs: Fix bch2_fsck_rename_dirent() for casefold
-      bcachefs: Fix dirent_casefold_mismatch repair
-      bcachefs: Fix oops in btree_node_seq_matches()
-      bcachefs: Add flags to subvolume_to_text()
-      bcachefs: delete dead code from may_delete_deleted_inode()
-      bcachefs: Run may_delete_deleted_inode() checks in bch2_inode_rm()
-      bcachefs: Fix subvol to missing root repair
-      bcachefs: Make journal read log message a bit quieter
-      bcachefs: add cond_resched() to handle_overwrites()
-
-Nathan Chancellor (1):
-      bcachefs: Fix -Wc23-extensions in bch2_check_dirents()
-
- fs/bcachefs/alloc_background.c            |  79 ++++-----
- fs/bcachefs/alloc_background.h            |   9 +-
- fs/bcachefs/alloc_foreground.c            | 108 ++++++------
- fs/bcachefs/alloc_foreground.h            |   8 +-
- fs/bcachefs/backpointers.c                |  72 ++++----
- fs/bcachefs/backpointers.h                |   5 +-
- fs/bcachefs/bcachefs.h                    |  72 ++++----
- fs/bcachefs/btree_cache.c                 |  24 +--
- fs/bcachefs/btree_gc.c                    |  57 +++---
- fs/bcachefs/btree_io.c                    |  43 +++--
- fs/bcachefs/btree_iter.c                  |  78 ++++-----
- fs/bcachefs/btree_iter.h                  |  31 ++--
- fs/bcachefs/btree_journal_iter.c          |  19 +-
- fs/bcachefs/btree_key_cache.c             |  28 ++-
- fs/bcachefs/btree_locking.c               |  56 +++---
- fs/bcachefs/btree_node_scan.c             |   2 +
- fs/bcachefs/btree_trans_commit.c          |  36 ++--
- fs/bcachefs/btree_types.h                 |   2 +
- fs/bcachefs/btree_update.c                |  59 ++-----
- fs/bcachefs/btree_update.h                |  14 +-
- fs/bcachefs/btree_update_interior.c       | 104 ++++++-----
- fs/bcachefs/btree_write_buffer.c          |   6 +-
- fs/bcachefs/buckets.c                     | 163 ++++++++++-------
- fs/bcachefs/buckets.h                     |  12 +-
- fs/bcachefs/buckets_waiting_for_journal.c |   3 +-
- fs/bcachefs/chardev.c                     |   9 +-
- fs/bcachefs/checksum.c                    |   8 +-
- fs/bcachefs/clock.c                       |  47 ++---
- fs/bcachefs/clock.h                       |   1 +
- fs/bcachefs/compress.c                    |  20 +--
- fs/bcachefs/darray.h                      |  46 ++++-
- fs/bcachefs/data_update.c                 | 174 ++++++++++--------
- fs/bcachefs/debug.c                       |  30 ++--
- fs/bcachefs/dirent.c                      | 169 +++++++++---------
- fs/bcachefs/dirent.h                      |  16 +-
- fs/bcachefs/disk_accounting.c             |  38 ++--
- fs/bcachefs/disk_accounting.h             |   6 +-
- fs/bcachefs/disk_groups.c                 |  37 ++--
- fs/bcachefs/ec.c                          | 108 ++++++------
- fs/bcachefs/errcode.c                     |   4 +-
- fs/bcachefs/errcode.h                     |  15 +-
- fs/bcachefs/error.c                       |  93 +++++-----
- fs/bcachefs/error.h                       |  12 +-
- fs/bcachefs/extents.c                     |  63 +++----
- fs/bcachefs/fs-io-buffered.c              |  30 ++--
- fs/bcachefs/fs-io-pagecache.c             |   2 +-
- fs/bcachefs/fs-io.c                       |  12 +-
- fs/bcachefs/fs-ioctl.c                    |   4 +-
- fs/bcachefs/fs.c                          |  40 +++--
- fs/bcachefs/fsck.c                        | 149 +++++++++-------
- fs/bcachefs/fsck.h                        |   6 +
- fs/bcachefs/inode.c                       |  86 +++++----
- fs/bcachefs/inode.h                       |   9 -
- fs/bcachefs/io_misc.c                     |   2 +-
- fs/bcachefs/io_read.c                     |  35 ++--
- fs/bcachefs/io_read.h                     |   6 +-
- fs/bcachefs/io_write.c                    |  26 ++-
- fs/bcachefs/journal.c                     | 117 ++++++++++---
- fs/bcachefs/journal.h                     |   5 +-
- fs/bcachefs/journal_io.c                  | 281 ++++++++++++++++++------------
- fs/bcachefs/journal_io.h                  |   1 +
- fs/bcachefs/journal_reclaim.c             |  44 ++---
- fs/bcachefs/journal_sb.c                  |   2 +-
- fs/bcachefs/journal_seq_blacklist.c       |   4 +-
- fs/bcachefs/lru.c                         |   6 +-
- fs/bcachefs/migrate.c                     |   4 +-
- fs/bcachefs/move.c                        | 132 +++++++++-----
- fs/bcachefs/movinggc.c                    |  26 ++-
- fs/bcachefs/movinggc.h                    |   3 +-
- fs/bcachefs/namei.c                       |  21 +--
- fs/bcachefs/printbuf.h                    |   8 +
- fs/bcachefs/quota.c                       |   6 +-
- fs/bcachefs/rebalance.c                   |  27 +--
- fs/bcachefs/rebalance.h                   |   8 +-
- fs/bcachefs/rebalance_types.h             |   1 +
- fs/bcachefs/recovery.c                    |   6 +-
- fs/bcachefs/recovery_passes.c             |  92 ++++++++--
- fs/bcachefs/recovery_passes.h             |   5 +
- fs/bcachefs/recovery_passes_format.h      |   2 +
- fs/bcachefs/reflink.c                     |   9 +-
- fs/bcachefs/replicas.c                    |  35 ++--
- fs/bcachefs/sb-counters_format.h          |   1 +
- fs/bcachefs/sb-downgrade.c                |   2 +-
- fs/bcachefs/sb-errors.c                   |  22 +++
- fs/bcachefs/sb-errors.h                   |   1 +
- fs/bcachefs/sb-errors_format.h            |   4 +-
- fs/bcachefs/sb-members.c                  |  21 +--
- fs/bcachefs/sb-members.h                  |  32 ++--
- fs/bcachefs/six.c                         |   7 +-
- fs/bcachefs/snapshot.c                    | 148 +++++++++-------
- fs/bcachefs/snapshot.h                    |  85 ++++-----
- fs/bcachefs/str_hash.c                    | 243 +++++++++++++++++---------
- fs/bcachefs/str_hash.h                    |  24 ++-
- fs/bcachefs/subvolume.c                   |  45 +++--
- fs/bcachefs/super-io.c                    |   8 +-
- fs/bcachefs/super.c                       | 106 ++++++-----
- fs/bcachefs/sysfs.c                       |  24 +++
- fs/bcachefs/trace.h                       |  69 ++++++--
- 98 files changed, 2323 insertions(+), 1757 deletions(-)
+Thanks,
+Namhyung
+ 
+> >
+> >  struct perf_bpf_filter_expr {
+> >         struct list_head list;
+> > @@ -38,6 +39,8 @@ int perf_bpf_filter__unpin(void);
+> >  static inline int perf_bpf_filter__parse(struct list_head *expr_head __maybe_unused,
+> >                                          const char *str __maybe_unused)
+> >  {
+> > +       pr_err("Error: BPF filter is requested but perf is not built with BPF.\n"
+> > +               "\tPlease make sure to build with libbpf and BPF skeleton.\n");
+> >         return -EOPNOTSUPP;
+> >  }
+> >  static inline int perf_bpf_filter__prepare(struct evsel *evsel __maybe_unused,
+> > diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
+> > index 69d9a2bcd40bfdd1..24a0ea7e6d97749b 100644
+> > --- a/tools/perf/util/cap.c
+> > +++ b/tools/perf/util/cap.c
+> > @@ -7,7 +7,6 @@
+> >  #include "debug.h"
+> >  #include <errno.h>
+> >  #include <string.h>
+> > -#include <linux/capability.h>
+> >  #include <sys/syscall.h>
+> >  #include <unistd.h>
+> >
+> > diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
+> > index 0c6a1ff55f07340a..c1b8ac033ccc5826 100644
+> > --- a/tools/perf/util/cap.h
+> > +++ b/tools/perf/util/cap.h
+> > @@ -3,6 +3,7 @@
+> >  #define __PERF_CAP_H
+> >
+> >  #include <stdbool.h>
+> > +#include <linux/capability.h>
+> >
+> >  /* For older systems */
+> >  #ifndef CAP_SYSLOG
+> > @@ -13,6 +14,10 @@
+> >  #define CAP_PERFMON    38
+> >  #endif
+> >
+> > +#ifndef CAP_BPF
+> > +#define CAP_BPF                39
+> > +#endif
+> > +
+> >  /* Query if a capability is supported, used_root is set if the fallback root check was used. */
+> >  bool perf_cap__capable(int cap, bool *used_root);
+> >
+> > --
+> > 2.49.0.1266.g31b7d2e469-goog
+> >
