@@ -1,113 +1,133 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDBD2185A6;
-	Wed,  4 Jun 2025 09:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76F382864
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 09:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749029507; cv=none; b=uepEsVQKAInKfsilZLKe0qB2AAO5INVuai7Ks7X2y9VD2z/NWEAGkcds7U4UztcO6aSKwf/NIj0gqO5AZ3Ev2qielWbiUh6Wp71vnvrdKH4/Py6wf+e05Q40/Txh5bHlRfE6S57HGI3mSRqlETVWWWq44Ohrs1tlAdwfGfJ1DQw=
+	t=1749029655; cv=none; b=FtAbNqzPJeJPsJD2ebpELwdgZ7ZGL790SPw+x4lL/1qnrSSoaLFrP9oOiV3vWN5jXcGhzQr3SQ0h/zqxeB66k68m1NIWT97NDu/6fS+f4eeyMYWEsWdQ61Zog060VzYSWmHXUZhl/ZrCvABzeDK/ewLROLpYIXqA2HjxWz9EGzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749029507; c=relaxed/simple;
-	bh=6HhoIgPukMJS5T7rxs113ykfa+EUpJTQgiJW9H1eZlw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J4srCEv5vEWw+rmuxgOagxvyEaTHNJuJ4k5QvpaE0Vkvn917lsUClf/qboo3quA+vAIEFMYwWk/XJJzkmrxuj8rTB17JUpQRnGe9RlfjioWEicaG224ZdRjIQaKMHltp3ALTsWDXUJIi7wCHz/MjbO+d4r+OZTulINK3zz9C8pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=kBzgqvCq; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=qMjaYYAo reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1749029655; c=relaxed/simple;
+	bh=Dh5sETOJ4BWJWxUEg/0zRr64l54+54tYBCHbntJjB7g=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=YcqULp9Oio4kElijkkqAlm93vVMYDzEX4dfjv4cLWibEY7uTJvNOsfCIbfVQ3uUyjF4iY8QYQ1S5HfCqq1Nz/tXLjzM1GHmT9XqvPrZW+Kw5iHQZQZa5nK7W+M0Luxi6/Y3NXyFce4NJElXBcFBh67aun6OVldn6wMo83o0PkQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=OIq/AXZR; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="kBzgqvCq";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="qMjaYYAo"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="OIq/AXZR"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b2f1032e1c4so1067951a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 02:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1749029504; x=1780565504;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ND5I1wqWQVSRJHCCfO9DhtqF0hOCpub/kFuUDNFnLtY=;
-  b=kBzgqvCqLxxcik0xYO5FV/6RbeZ6t0XOX9naRjEf6uX8mpeSWQHFeFRA
-   tAkqR9HCWDN9SCubOmnqsXJgVRMIaluwwqC9wk+PwaFaxFq7ZbZtdL7V7
-   4FPCsRI51EZm92HF7QqQ3KKDgEEJg4cJW7+PFJ+sZiG7vU5DxHhi7BurE
-   9GkWp+FMg6w8FaN4sGANfxv3/ZXJE+W+hB2NME3DBPe9cFu/OPQnvlPjz
-   0lbOSBm/c6u9edmlcHCQa2v/X0V6NrdPA+LEXMhpvJ7IT/WvZdrGuX6v+
-   uxkEAsbFM9OHGjRfv5N1s6cOZxH2kCxEfraeOMG2uveQVKdSjftndRsZQ
-   A==;
-X-CSE-ConnectionGUID: F7Ph8sD+Q/e2bF0tYrF90g==
-X-CSE-MsgGUID: iBNkwfGuQi6WVFYwDypSOg==
-X-IronPort-AV: E=Sophos;i="6.16,208,1744063200"; 
-   d="scan'208";a="44448632"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 04 Jun 2025 11:31:35 +0200
-X-CheckPoint: {68401277-2E-28ACC837-DD1065DB}
-X-MAIL-CPID: 598B4D6943D72BDFD2099B674382E52C_2
-X-Control-Analysis: str=0001.0A006372.6840129B.0081,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A093E170BCF;
-	Wed,  4 Jun 2025 11:31:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1749029491;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ND5I1wqWQVSRJHCCfO9DhtqF0hOCpub/kFuUDNFnLtY=;
-	b=qMjaYYAoyG2iSRnPM1FeM2/C1cqDqsX8Qx2OVv6BTNz1GKdkHLAErgvW2kruonHN1pPwMW
-	L0JXZ9IGa3Vr9aEKQNjiGfeBYPVl627s38q47LhP5rr67xMY/ufw4KG+r+xNGFSAFFzDME
-	dvDJIKKHZcTLqnHfWxG2MV4LS5stcpe4kNLmWg3w9MWHNo29YhpEcS5nV2B+ceBxjgosYP
-	7CETJ29D0JaGDBTdgGZFdZ7wLUB1MLEjLVP3NIedg2Bt2vi9LF5oOpFVQXGU5GlzWvlE3N
-	XIwdkCyeyN5QGrDLQXX9adHt2sHjY56QtES0MjIVclsXnw+/ilsQpeuBrCP3aQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Markus Niebel <Markus.Niebel@ew.tq-group.com>,
-	linux@ew.tq-group.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Stein <alexander.stein@ew.tq-group.com>
-Subject: [PATCH 1/1] arm64: dts: freescale: imx93-tqma9352: add memory node
-Date: Wed,  4 Jun 2025 11:31:21 +0200
-Message-ID: <20250604093122.203929-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+        d=sifive.com; s=google; t=1749029653; x=1749634453; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C53yfP9noFGLpJoOWOCdlk5vVbd4Mts66+R+0j9vNf4=;
+        b=OIq/AXZRWq3kf/iUwdy1RnKW4BVkz3WRFVLCIIFC6XyluyQbSYiXvNbAa5jeDR0tcg
+         isONXb/JP4qJY5NxYbrtKQsVExh/6BGs73/WQo9qA3HtXhZigQLbiSWzIOfw/Fd2YsHX
+         4DX8ZH1o8dGOWpai3i4JmM4rHZZ6+4QgZWeCotV14XYlF0AzufnyTq4Zrnbb30mg7eme
+         3rghYJISIWZp7s1yNvIZIZxLNBOsK+wnBZ7A4uM5qS5zSOVdkc7+mVWG16339DgzPHh3
+         w7wIpdwXzXYw6KZ0nkLL2dRrDebCpr/QlUa3Z2mNocOqnKZNaqYWmQ7oaxXsP/oky58B
+         5zfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749029653; x=1749634453;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C53yfP9noFGLpJoOWOCdlk5vVbd4Mts66+R+0j9vNf4=;
+        b=H1vEqd0biaNUDxWFxhdPz+F+8kAyW4K1MZ0btAvrdgRfNH7JOwExnMn+PRky6q7cT+
+         qe/45feEx2vIyFIDBydoooiagnWptsJ8uxlEhTOq2knxkvRpiChPCw4OrfpbbrJAan3N
+         Sn5qxXcw7QEBrn7vT2foRT6cy3N8MCNTqeBFA9avKnmB1YRhiSQMiE+4gfn4g2YbsNzc
+         MjzbwkkpvatD1QBNWDDrvbf2vvK4l4BRH+//1jewovDqEHXZvyLJJfa5c/HPn+Kh28s5
+         8/9eViirAoO6cQsE5ScmU7td0zDHxIUyqpDzA3o5Lpbh8jbOLfdfD96HzRHtXhj6R3P9
+         k0cg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgYrw8n3JtNLN2Rmm4HA7bRuDc6QA8zwPG/hxDChhISwEpI/jua5B9KmDr046nVhmeZOfdLf3TkP9nPZ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6DV/TDDTpixloJcz40MvGKk1Pz8wNleXAAwdrDSsXS0jaezTO
+	GeDBwshYZ1oGKW9U5yAIx2hINp0zchy7aIzwNxBaghiDUAmQtBWJ2FnUWr8SvlekomE=
+X-Gm-Gg: ASbGncsugzVKlldAWGrhJWV1EZGTP00LNwCnv0DXjgQXh/yjt+HwQgzUuwvfjisRjHa
+	XdovztN/QAZbDKkrYw65iDxgQb+81XKDDgcY3eU3IBsn3fsXjubOkT3+2Q5oocBcwxV3mkFKSKG
+	NT6jxAmApKdbBzOF1cnGO9q+2/NXDJ6OHFPuF0lbbzwGjvn/DXuSrmYkiOhiM6cRwGXvTzNDgvM
+	UEJRL9pSgl33VP6bh0bVjvnOYo1+ZCQH7MyV/5cKuOaljrbaQB6lDl8ziR2zN90dxACDxkJKCZx
+	cG2nmvyXpBKUfNIAjpp5zFpEhwtMb8XMkRP4NIwIiObNvQCydzfPXvSyVbccKlL7cj9xpAOPQyg
+	vmm5XZ826
+X-Google-Smtp-Source: AGHT+IEFYjc4Tz4Dt5YRmUTvWxmINOOTd2yv6xcgMuml1Fa440dGfF+Zaiu6SCzXijeP68QhevG6tw==
+X-Received: by 2002:a05:6a21:99a0:b0:215:e60b:3bcf with SMTP id adf61e73a8af0-21d22bcd4c6mr3584522637.30.1749029652910;
+        Wed, 04 Jun 2025 02:34:12 -0700 (PDT)
+Received: from hsinchu26.internal.sifive.com ([210.176.154.34])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb0280csm8406411a12.4.2025.06.04.02.34.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 02:34:12 -0700 (PDT)
+From: Zong Li <zong.li@sifive.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	debug@rivosinc.com,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Zong Li <zong.li@sifive.com>
+Subject: [PATCH v2] riscv: traps: handle uprobe event in software-check exception
+Date: Wed,  4 Jun 2025 17:34:03 +0800
+Message-Id: <20250604093403.10916-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Handle the uprobe event first before handling the CFI violation in
+software-check exception handler. Because when the landing pad is
+activated, if the uprobe point is set at the lpad instruction at
+the beginning of a function, the system triggers a software-check
+exception instead of an ebreak exception due to the exception
+priority, then uprobe can't work successfully.
 
-Although the bootloader should fixup with real memory size,
-add memory node here with smallest assembled size for
-readability.
-
-Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Co-developed-by: Deepak Gupta <debug@rivosinc.com>
+Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+Signed-off-by: Zong Li <zong.li@sifive.com>
 ---
- arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi b/arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi
-index 53e9ee6e9ca3b..3a23e2eb9febe 100644
---- a/arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi
-@@ -11,6 +11,12 @@ /{
- 	model = "TQ-Systems i.MX93 TQMa93xxLA/TQMa93xxCA SOM";
- 	compatible = "tq,imx93-tqma9352", "fsl,imx93";
- 
-+	memory@80000000 {
-+		device_type = "memory";
-+		/* our minimum RAM config will be 1024 MiB */
-+		reg = <0x00000000 0x80000000 0 0x40000000>;
-+	};
+Changed in v2:
+- Handle uprobe events only in the forward CFI case
+- Move uprobe handling from do_trap_software_check to handle_user_cfi_violation
+
+ arch/riscv/kernel/traps.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index d7b5fd576011..3aa5ecda29a8 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -369,17 +369,25 @@ void do_trap_ecall_u(struct pt_regs *regs)
+ /* handle cfi violations */
+ bool handle_user_cfi_violation(struct pt_regs *regs)
+ {
+-	bool ret = false;
+ 	unsigned long tval = csr_read(CSR_TVAL);
+-
+-	if ((tval == CFI_TVAL_FCFI_CODE && cpu_supports_indirect_br_lp_instr()) ||
+-	    (tval == CFI_TVAL_BCFI_CODE && cpu_supports_shadow_stack())) {
++	bool is_fcfi = (tval == CFI_TVAL_FCFI_CODE && cpu_supports_indirect_br_lp_instr());
++	bool is_bcfi = (tval == CFI_TVAL_BCFI_CODE && cpu_supports_shadow_stack());
 +
- 	reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
++	/*
++	 * Handle uprobe event frist. The probe point can be a valid target
++	 * of indirect jumps or calls, in this case, forward cfi violation
++	 * will be triggered instead of breakpoint exception.
++	 */
++	if (is_fcfi && probe_breakpoint_handler(regs))
++		return true;
++
++	if (is_fcfi || is_bcfi) {
+ 		do_trap_error(regs, SIGSEGV, SEGV_CPERR, regs->epc,
+ 			      "Oops - control flow violation");
+-		ret = true;
++		return true;
+ 	}
+ 
+-	return ret;
++	return false;
+ }
+ 
+ /*
 -- 
-2.43.0
+2.17.1
 
