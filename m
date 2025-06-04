@@ -1,112 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12E0149DE8;
-	Wed,  4 Jun 2025 09:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDBD2185A6;
+	Wed,  4 Jun 2025 09:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749029482; cv=none; b=lpSAuhnV/8I0x9VMafNCA3HR34y4E3tSca32sZESzAty9SvVcNQBbAf2au6xLN1u7XolNPxD10Xcn+0Q8BdtGpr6o8ThD/VZvkt3oB9x0qFMLd0xOr7j7HP5n0f8V7TIVsFmC3Rp3dOwehM0Ifx6G9CPu04m4glx+FVOTWch8CE=
+	t=1749029507; cv=none; b=uepEsVQKAInKfsilZLKe0qB2AAO5INVuai7Ks7X2y9VD2z/NWEAGkcds7U4UztcO6aSKwf/NIj0gqO5AZ3Ev2qielWbiUh6Wp71vnvrdKH4/Py6wf+e05Q40/Txh5bHlRfE6S57HGI3mSRqlETVWWWq44Ohrs1tlAdwfGfJ1DQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749029482; c=relaxed/simple;
-	bh=bFpcIRD0c9LLof/PdetkL//XZfkCKEYyMCBz7/VsI9w=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=oNOmHJhbYe1D0ZSy3lnmmRmn29SH5E7IDtxKt4z1iN+7+rTWYERI0Odsw+ALrUDGmQaQLMccV84e72CYpAxnkvQvoQPvNTV6yvBDQWGqp2tsgA0HFtknJ9laCug4enc9r46Lce2ihO8YjpScCVfaK044LCKuPvA0DHVy8SX7GdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EeK3BH+a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749029507; c=relaxed/simple;
+	bh=6HhoIgPukMJS5T7rxs113ykfa+EUpJTQgiJW9H1eZlw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J4srCEv5vEWw+rmuxgOagxvyEaTHNJuJ4k5QvpaE0Vkvn917lsUClf/qboo3quA+vAIEFMYwWk/XJJzkmrxuj8rTB17JUpQRnGe9RlfjioWEicaG224ZdRjIQaKMHltp3ALTsWDXUJIi7wCHz/MjbO+d4r+OZTulINK3zz9C8pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=kBzgqvCq; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=qMjaYYAo reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EeK3BH+a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9880C4CEE7;
-	Wed,  4 Jun 2025 09:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749029480;
-	bh=bFpcIRD0c9LLof/PdetkL//XZfkCKEYyMCBz7/VsI9w=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=EeK3BH+aJ+XWU1a3l4QB95KyiU+D7WPU8LeXxP7FMOPHgwt2idLBk9tx481VLlj13
-	 Ae0thqA3Q0QzlcVDpdaQ+Teq+Y72yj+gXRwnB8ZzNBSFFIroXJe76lKs4hoSlEWQzB
-	 Bzu3I1wx0YAxon4Dgiwto2MmL716AP49cg4hLph0X1GVSaYUwBCltsMlKFIyN2cqrs
-	 dh3qH5Z4xidGt9vDBnfSPPn3A8j2QPWMCrO0M8zP49hv/RdtBs+Z+MchCsz/7Wip+w
-	 3YEDCMk8HYrtfC6xq/AxSP3JRpkSvglOHBBoMYrona6An5GnTtDsQyX9c6qGG0EYn9
-	 ttb8B/9Ia94Rw==
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id F1D851200043;
-	Wed,  4 Jun 2025 05:31:18 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Wed, 04 Jun 2025 05:31:18 -0400
-X-ME-Sender: <xms:ZhJAaH2tUo-POMQlVMJS1JdxoZbRQHDzZm6q6NkQWRCFrPLXGzZ6EQ>
-    <xme:ZhJAaGFIROvgUhZHDZ45bAEUCuWrYQnParvOPuzvufupm7IO2SeKs9kTgwWoikRS_
-    GMt_fwnVW-i8IPntik>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlh
-    drohhrgheqnecuggftrfgrthhtvghrnhepjeejffetteefteekieejudeguedvgfeffeei
-    tdduieekgeegfeekhfduhfelhfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhi
-    thihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrd
-    horhhgsegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpth
-    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidrug
-    gvvhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghp
-    thhtoheptghlrghuughiuhdrmhgrnhhoihhlsehngihprdgtohhmpdhrtghpthhtohepvh
-    hlrgguihhmihhrrdholhhtvggrnhesnhigphdrtghomhdprhgtphhtthhopeifvghirdhf
-    rghnghesnhigphdrtghomhdprhgtphhtthhopeigihgrohhnihhnghdrfigrnhhgsehngi
-    hprdgtohhm
-X-ME-Proxy: <xmx:ZhJAaH5P5lNIpPXLwG00cpYGVd9F08GLP6paESxLjOKmfrD2WyzXwA>
-    <xmx:ZhJAaM14hnX2ZSvIHVDTxDADfiIHSX-2aOyqdqqUEGHaPaTBQL9RYQ>
-    <xmx:ZhJAaKFhCTpisa6eaCocpL43Nks27xKOfFJBYZhX_aESGHx2yq5dRw>
-    <xmx:ZhJAaN_TB0MxrKs2QNqUOfN4OhiBCDNm4ZOMI_WrxHKJBWu1lUke0w>
-    <xmx:ZhJAaHkh4bgY52R2t8wjkBm8alDUUHkG4rn_3efDjkaYuG_qS3Vchm4M>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C8E7E700060; Wed,  4 Jun 2025 05:31:18 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="kBzgqvCq";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="qMjaYYAo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1749029504; x=1780565504;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ND5I1wqWQVSRJHCCfO9DhtqF0hOCpub/kFuUDNFnLtY=;
+  b=kBzgqvCqLxxcik0xYO5FV/6RbeZ6t0XOX9naRjEf6uX8mpeSWQHFeFRA
+   tAkqR9HCWDN9SCubOmnqsXJgVRMIaluwwqC9wk+PwaFaxFq7ZbZtdL7V7
+   4FPCsRI51EZm92HF7QqQ3KKDgEEJg4cJW7+PFJ+sZiG7vU5DxHhi7BurE
+   9GkWp+FMg6w8FaN4sGANfxv3/ZXJE+W+hB2NME3DBPe9cFu/OPQnvlPjz
+   0lbOSBm/c6u9edmlcHCQa2v/X0V6NrdPA+LEXMhpvJ7IT/WvZdrGuX6v+
+   uxkEAsbFM9OHGjRfv5N1s6cOZxH2kCxEfraeOMG2uveQVKdSjftndRsZQ
+   A==;
+X-CSE-ConnectionGUID: F7Ph8sD+Q/e2bF0tYrF90g==
+X-CSE-MsgGUID: iBNkwfGuQi6WVFYwDypSOg==
+X-IronPort-AV: E=Sophos;i="6.16,208,1744063200"; 
+   d="scan'208";a="44448632"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 04 Jun 2025 11:31:35 +0200
+X-CheckPoint: {68401277-2E-28ACC837-DD1065DB}
+X-MAIL-CPID: 598B4D6943D72BDFD2099B674382E52C_2
+X-Control-Analysis: str=0001.0A006372.6840129B.0081,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A093E170BCF;
+	Wed,  4 Jun 2025 11:31:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1749029491;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ND5I1wqWQVSRJHCCfO9DhtqF0hOCpub/kFuUDNFnLtY=;
+	b=qMjaYYAoyG2iSRnPM1FeM2/C1cqDqsX8Qx2OVv6BTNz1GKdkHLAErgvW2kruonHN1pPwMW
+	L0JXZ9IGa3Vr9aEKQNjiGfeBYPVl627s38q47LhP5rr67xMY/ufw4KG+r+xNGFSAFFzDME
+	dvDJIKKHZcTLqnHfWxG2MV4LS5stcpe4kNLmWg3w9MWHNo29YhpEcS5nV2B+ceBxjgosYP
+	7CETJ29D0JaGDBTdgGZFdZ7wLUB1MLEjLVP3NIedg2Bt2vi9LF5oOpFVQXGU5GlzWvlE3N
+	XIwdkCyeyN5QGrDLQXX9adHt2sHjY56QtES0MjIVclsXnw+/ilsQpeuBrCP3aQ==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: Markus Niebel <Markus.Niebel@ew.tq-group.com>,
+	linux@ew.tq-group.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Stein <alexander.stein@ew.tq-group.com>
+Subject: [PATCH 1/1] arm64: dts: freescale: imx93-tqma9352: add memory node
+Date: Wed,  4 Jun 2025 11:31:21 +0200
+Message-ID: <20250604093122.203929-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tcd26d72acdec76a4
-Date: Wed, 04 Jun 2025 11:30:58 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Vladimir Oltean" <vladimir.oltean@nxp.com>
-Cc: "Wei Fang" <wei.fang@nxp.com>, "Claudiu Manoil" <claudiu.manoil@nxp.com>,
- "Clark Wang" <xiaoning.wang@nxp.com>,
- "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, Netdev <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>
-Message-Id: <effd3e84-8aa7-4c06-ae36-effbf3b4f87d@app.fastmail.com>
-In-Reply-To: <20250604091111.oo2o2xd2zeqqisaf@skbuf>
-References: <20250603105056.4052084-1-wei.fang@nxp.com>
- <20250603204501.2lcszfoiy5svbw6s@skbuf>
- <PAXPR04MB85104C607BF23FFFD6663ABB886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
- <b2068b86-dcbb-4fee-b091-4910e975a9b9@app.fastmail.com>
- <20250604091111.oo2o2xd2zeqqisaf@skbuf>
-Subject: Re: [PATCH net] net: enetc: fix the netc-lib driver build dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, Jun 4, 2025, at 11:11, Vladimir Oltean wrote:
-> On Wed, Jun 04, 2025 at 09:24:22AM +0200, Arnd Bergmann wrote:
->> On Wed, Jun 4, 2025, at 04:44, Wei Fang wrote:
+From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
 
-> Thanks, this seems to be the best proposal thus far. IMO it is also easy
-> to maintain and it also fully satisfies the imposed requirements. I checked
-> that when FSL_ENETC_CORE goes to m, NXP_NETC_LIB also goes to m, and
-> when it remains y, the latter also remains y. Note, FSL_ENETC_CORE only
-> goes to m when all its selecters are m. More importantly, when
-> NXP_ENETC4=n, NXP_NETC_LIB is also n. The drivers seem to build in all
-> cases.
->
-> Will you send a patch with this proposal, or should Wei do it with a
-> Suggested-by?
+Although the bootloader should fixup with real memory size,
+add memory node here with smallest assembled size for
+readability.
 
-I'd prefer Wei to send it as a tested patch with my Suggested-by.
-I've also tested this version overnight on my randconfig build
-system.
+Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+---
+ arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-     Arnd
+diff --git a/arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi b/arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi
+index 53e9ee6e9ca3b..3a23e2eb9febe 100644
+--- a/arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx93-tqma9352.dtsi
+@@ -11,6 +11,12 @@ /{
+ 	model = "TQ-Systems i.MX93 TQMa93xxLA/TQMa93xxCA SOM";
+ 	compatible = "tq,imx93-tqma9352", "fsl,imx93";
+ 
++	memory@80000000 {
++		device_type = "memory";
++		/* our minimum RAM config will be 1024 MiB */
++		reg = <0x00000000 0x80000000 0 0x40000000>;
++	};
++
+ 	reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+-- 
+2.43.0
+
