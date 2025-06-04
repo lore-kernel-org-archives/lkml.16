@@ -1,105 +1,178 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F9521B8F6
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2D71D435F;
+	Wed,  4 Jun 2025 07:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749023073; cv=none; b=O0WWktvk+1D4d7LqGEaEJ/Dh12c6k2yelfOycBLpx6OWgFIAtD/IqqwI7b356oUvHLESwzo5e5tcqiCIibFFMLezd9Ky8J/O6Aqpp/TYwgADcRDhXnTue+rNVSCG7XkqseMj2OW4sAGXOFGClByDpDWNs7YMcArUSUSRD6YYNPQ=
+	t=1749023128; cv=none; b=aY9uRFP86pVNSO3b6X6pyCCSgNQ8ENg4PvX64dPUgsG1G608ms5LIvLvTbHnxlOLLAEuDy+NYyy2yhxI53WRuegJ7xxws4/n9GQXAoLUvch6BhsZM8KoUYb42y6VqsL0AhMMX0BQHc2ocBkMyOG9IszAtap+vH/AjDVLkDo2hcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749023073; c=relaxed/simple;
-	bh=rS4JiRRDodTQxUGGyvj3N5RMtvNKe9VqQw6VZxlU2Y0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OqpsyGMEDjJArgn88RmCictF2/QZ+UFK9uPzQRIt/rb99rzICMt3SzDu6Zp9eQec0YKenJpDUVHsMv5BjbwubZryQmw0Pb+K3/+cPwGPabdr4ScFK3f7zar8LogFWWEtZmSM1KX2nC5qcr5pg92CbvzjSuT0l+YPFATSxV7N8GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WaD0a/mv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749023128; c=relaxed/simple;
+	bh=jmZaSvIHE6oNYDUB7dI4l1oC0WsSrtvbVjeVWoBGMlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=G+0vDDJB17nz8C236kSaLOwOe08yjOCjiCyi4+ncGNwtCJ8zskTneugsWYHD1TT57oNn8t/2bZf5KguMZKWVQhOuSnLnS4tVeFzTsYKqCtDmZL8NdTajgCB86cC+6zxYddLachdys9iETvXDfSLFQ9eUu/8DPjWxISEahbdRMJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ho0rxPkI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WaD0a/mv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95780C4CEE7;
-	Wed,  4 Jun 2025 07:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749023073;
-	bh=rS4JiRRDodTQxUGGyvj3N5RMtvNKe9VqQw6VZxlU2Y0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WaD0a/mvWfIyFxA73vUJIsGE+SIUMbiJ0g+OHDVU+irwHJiEZ3eTdg2GVDH1SBoNx
-	 xo5xZQqZFD7h2NXKOx4SqLjjuZ0bEH+GExX/SSqYJUq+K3Vx4l651kL/ZfKi8OX8Du
-	 6TlM6tjKZhIlX9f8m9VggBQYkuBWamDv9G8PUMDY=
-Date: Wed, 4 Jun 2025 09:44:26 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Giovanni Gherdovich <giovanni.gherdovich@suse.com>
-Cc: Andre Przywara <andre.przywara@arm.com>, cve@kernel.org,
-	linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: CVE-2025-37832: cpufreq: sun50i: prevent out-of-bounds access
-Message-ID: <2025060418-reappoint-outward-d414@gregkh>
-References: <2025050824-CVE-2025-37832-e235@gregkh>
- <1db6d340-bfae-4d81-a1d1-dcbd7bc1294f@suse.com>
- <2025053006-multitask-profanity-3590@gregkh>
- <2025053010-legible-destiny-23d3@gregkh>
- <805e1a14-7f07-47f0-ba86-f326e4ecea01@suse.com>
- <20250602135141.0b332772@donnerap.manchester.arm.com>
- <4b34814a-355a-49cf-8cc0-73cf843ed560@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ho0rxPkI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E01EC4CEE7;
+	Wed,  4 Jun 2025 07:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749023127;
+	bh=jmZaSvIHE6oNYDUB7dI4l1oC0WsSrtvbVjeVWoBGMlw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ho0rxPkIEY1BB6Ps7bUo3NCmatG4/6qWFPtUuObLY4KLaOhYsxx9GneA78q+OHNRx
+	 QcnK71NvNtEPgU/DmDyM4hJbV3+dmsJ4nMBhXzKxGadDOXbOGorLqDHO2dt6oj48Hm
+	 49wz5eIlznt/jCm2/ZhYPBLhvK9tKD+On91ZxhJatZliKCZouojybvkeRwfDFyXjZo
+	 Xfnqq9bAUGlQg+GocwhNuFaOyEshpI01XQ0LU60rIQOMklUL3DkbxbR8PnGmutsdsz
+	 Bdn/duR7+TCFiew6IgeWifgMxRHign+wOqlIywscJ+9Oj8bu/5323cIaaV5YF/uzYU
+	 L6ZwZE9hgZr7g==
+Date: Wed, 4 Jun 2025 09:45:23 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Luka <luka.2016.cs@gmail.com>
+Subject: Re: [Bug] possible deadlock in vfs_rmdir in Linux kernel v6.12
+Message-ID: <20250604-quark-gastprofessor-9ac119a48aa1@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4b34814a-355a-49cf-8cc0-73cf843ed560@suse.com>
+In-Reply-To: <CALm_T+2FtCDm4R5y-7mGyrY71Ex9G_9guaHCkELyggVfUbs1=w@mail.gmail.com>
+ <CALm_T+0j2FUr-tY5nvBqB6nvt=Dc8GBVfwzwchtrqOCoKw3rkQ@mail.gmail.com>
+ <CALm_T+3H5axrkgFdpAt23mkUyEbOaPyehAbdXbhgwutpyfMB7w@mail.gmail.com>
 
-On Mon, Jun 02, 2025 at 06:28:31PM +0200, Giovanni Gherdovich wrote:
-> Hello,
-> 
-> On Mon Jun 2, 2025 14:51, Andre Przywara wrote:
-> > 
-> > Hi,
-> > 
-> > I don't think this qualifies as a CVE, the issue was more theoretical. But
-> > I don't have much experience with what deserves a CVE and what not, so I
-> > can just present some insights:
-> > 
-> > > > > On Fri, May 30, 2025 at 03:57:35PM +0200, Giovanni Gherdovich wrote:
-> > > > > > On Thu May 8, 2025 08:39, Greg Kroah-Hartman wrote:
-> > > > > > > A KASAN enabled kernel reports an out-of-bounds access when handling the
-> > > > > > > nvmem cell in the sun50i cpufreq driver:
-> > > > > > > [...]
-> > > > > > 
-> > > > > > The invalid data that may be read comes from a ROM in the SoC,
-> > > > > > programmed by the vendor, and is only used to configure CPU frequency
-> > > > > > and voltage in the cpufreq framework.
-> > 
-> > So "potentially invalid data read from the ROM" is an issue the we have
-> > regardless, this patch doesn't change that. And you cannot put arbitrary
-> > voltages or frequencies in the OTP fuses, the value read is just used to
-> > select one of the OPPs defined in the DT. If you want to attack the
-> > system by heavily overclocking or baking it with a high voltage, you can
-> > just change the limits in the DT. Not sure if that's easier or harder than
-> > accessing the hardware, though.
-> 
-> I see. Right, my initial comment regarding the ROM content was missing
-> the core of the problem.
-> 
-> > But more importantly, looking at this particular patch: This effectively
-> > limits the access size of the value we read from the SID OTP driver, from
-> > always 4 bytes to what the DT says, typically 2 bytes. But we actually
-> > mask the value in the code anyway later at the moment, so the upper 16
-> > bits are always discarded.
-> > Which means that as it stands at the moment, there is no real change in
-> > what values are used. I just did the change as it was clearly incorrect,
-> > and I wanted to prevent any issues, in case of code changes later.
-> 
-> Ok, thanks for clarifying that in the present form, the code behaves
-> the same before and after the fix (the upper 16 bits discarded
-> anyway). Your fix improves the code and makes it future-proof.
-> 
-> Greg:
-> 
-> given this information, and Andre (developer of the change) saying at the
-> beginning of his message that he thinks the bug shouldn't be a CVE, do
-> you think the CVE can be revoked?
+Konstantin, this looks actively malicious.
+Can we do something about this list-wise?
 
-Now revoked, thanks!
+On Wed, Jun 04, 2025 at 12:38:36PM +0800, Luka wrote:
+> Dear Kernel Maintainers,
+> 
+> I am writing to report a potential vulnerability identified in the
+> upstream Linux Kernel version v6.12, corresponding to the following
+> commit in the mainline repository:
+> 
+> Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
+> 
+> This issue was discovered during the testing of the Android 16 AOSP
+> kernel, which is based on Linux kernel version 6.12, specifically from
+> the AOSP kernel branch:
+> 
+> AOSP kernel branch: android16-6.12
+> Manifest path: kernel/common.git
+> Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
+> 
+> Although this kernel branch is used in Android 16 development, its
+> base is aligned with the upstream Linux v6.12 release. I observed this
+> issue while conducting stability and fuzzing tests on the Android 16
+> platform and identified that the root cause lies in the upstream
+> codebase.
+> 
+> 
+> Bug Location: vfs_rmdir+0x118/0x488 fs/namei.c:4329
+> 
+> Bug Report: https://hastebin.com/share/vobatolola.bash
+> 
+> Entire Log: https://hastebin.com/share/efajodumuh.perl
+> 
+> 
+> Thank you very much for your time and attention. I sincerely apologize
+> that I am currently unable to provide a reproducer for this issue.
+> However, I am actively working on reproducing the problem, and I will
+> make sure to share any findings or reproducing steps with you as soon
+> as they are available.
+> 
+> I greatly appreciate your efforts in maintaining the Linux kernel and
+> your attention to this matter.
+> 
+> Best regards,
+> Luka
 
-greg k-h
+On Wed, Jun 04, 2025 at 12:21:40PM +0800, Luka wrote:
+> Dear Kernel Maintainers,
+> 
+> I am writing to report a potential vulnerability identified in the
+> upstream Linux Kernel version v6.12, corresponding to the following
+> commit in the mainline repository:
+> 
+> Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
+> 
+> This issue was discovered during the testing of the Android 16 AOSP
+> kernel, which is based on Linux kernel version 6.12, specifically from
+> the AOSP kernel branch:
+> 
+> AOSP kernel branch: android16-6.12
+> Manifest path: kernel/common.git
+> Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
+> 
+> Although this kernel branch is used in Android 16 development, its
+> base is aligned with the upstream Linux v6.12 release. I observed this
+> issue while conducting stability and fuzzing tests on the Android 16
+> platform and identified that the root cause lies in the upstream
+> codebase.
+> 
+> 
+> Bug Location: may_delete+0x72c/0x730 fs/namei.c:3066
+> 
+> Bug Report: https://hastebin.com/share/amuhawituy.scss
+> 
+> Entire Log: https://hastebin.com/share/oponarusih.perl
+> 
+> 
+> Thank you very much for your time and attention. I sincerely apologize
+> that I am currently unable to provide a reproducer for this issue.
+> However, I am actively working on reproducing the problem, and I will
+> make sure to share any findings or reproducing steps with you as soon
+> as they are available.
+> 
+> I greatly appreciate your efforts in maintaining the Linux kernel and
+> your attention to this matter.
+> 
+> Best regards,
+> Luka
+
+On Wed, Jun 04, 2025 at 12:12:26PM +0800, Luka wrote:
+> Dear Kernel Maintainers,
+> 
+> I am writing to report a potential vulnerability identified in the
+> upstream Linux Kernel version v6.12, corresponding to the following
+> commit in the mainline repository:
+> 
+> Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
+> 
+> This issue was discovered during the testing of the Android 16 AOSP
+> kernel, which is based on Linux kernel version 6.12, specifically from
+> the AOSP kernel branch:
+> 
+> AOSP kernel branch: android16-6.12
+> Manifest path: kernel/common.git
+> Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
+> 
+> Although this kernel branch is used in Android 16 development, its
+> base is aligned with the upstream Linux v6.12 release. I observed this
+> issue while conducting stability and fuzzing tests on the Android 16
+> platform and identified that the root cause lies in the upstream
+> codebase.
+> 
+> 
+> Bug Location: fs_bdev_sync+0x2c/0x68 fs/super.c:1434
+> 
+> Bug Report: https://hastebin.com/share/pihohaniwi.bash
+> 
+> Entire Log: https://hastebin.com/share/orufevoquj.perl
+> 
+> 
+> Thank you very much for your time and attention. I sincerely apologize
+> that I am currently unable to provide a reproducer for this issue.
+> However, I am actively working on reproducing the problem, and I will
+> make sure to share any findings or reproducing steps with you as soon
+> as they are available.
+> 
+> I greatly appreciate your efforts in maintaining the Linux kernel and
+> your attention to this matter.
+> 
+> Best regards,
+> Luka
