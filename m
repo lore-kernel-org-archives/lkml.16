@@ -1,69 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96981DE4CA;
-	Wed,  4 Jun 2025 04:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC03617548
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 04:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749011619; cv=none; b=hmQJ1ataKC/LZ+AwVSSYouw9U73HUf020EkOXZExWwT+wMGO8a8d2vvEfCYx3iaGF5KgeuSk6z0zcYXhqHcCj1CNrFlPwBjNb27mTAp4ymLlk9PwGFVnTmiGFj3BeEz83UvU2lWfxHZ9nDLeKVkhDEEdgVPA0kQf3Q7IE6VudXw=
+	t=1749011830; cv=none; b=j1PgGnUULP2Pfqd3lGdEmycZDhJuXcH46PaqGmlntxcR8BxoYgSHCHS5WIl58PxgUV5F2258E5yl9IVSotZzqXErV21VxIc2T1unUBms9wpmU4/J/dd8xD7aNAqheDa+h1APPfS6BUalT/JM9FKvJzZTOjhsicpwE8WAJKwpi5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749011619; c=relaxed/simple;
-	bh=9NeDDdxV0q4sXEFhvG5y3MBDGxM6rM76CNHh5/RF2/c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=NC8D+iUZ3TqthMzUw+yLLb19gIzAgjl5oAlCMv5Qxt/X4b0tgr8c4eJHM02LsPQDaieyzKftsqT1xlexmE23x0Edq5QOPFddOXUGjuRiaW09gqVhkiaW+O9tJzfy80nZJgwVMbcq6ijfV/Qj8MEPzSmFezo1clpljITdvOcGhb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=k4r5apP8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="k4r5apP8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD94FC4CEE7;
-	Wed,  4 Jun 2025 04:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749011619;
-	bh=9NeDDdxV0q4sXEFhvG5y3MBDGxM6rM76CNHh5/RF2/c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=k4r5apP8Gx8lEe5htLA+PcDXUKwh7TZpQZgx5DX5ZFjAb+lHsV+QQC/pZDznExcu4
-	 tgEPBts+Tx2ZiHI3hZe0BW0QYQB6Q8KEZnGyfZ+lLO4l2QDJ4bWLQ4B2xUIi6J88pD
-	 cOyBO/+8jH2lK3ig/zy2cKtbEg2B0MinQpkPGiB8=
-Date: Tue, 3 Jun 2025 21:33:38 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Dev Jain <dev.jain@arm.com>
-Cc: willy@infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, anshuman.khandual@arm.com,
- ryan.roberts@arm.com, ziy@nvidia.com, aneesh.kumar@kernel.org
-Subject: Re: [PATCH v2] xarray: Add a BUG_ON() to ensure caller is not
- sibling
-Message-Id: <20250603213338.7d80bbe0e021052c20e1c5f5@linux-foundation.org>
-In-Reply-To: <20250604041533.91198-1-dev.jain@arm.com>
-References: <20250604041533.91198-1-dev.jain@arm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749011830; c=relaxed/simple;
+	bh=ixNUukO6d1iFGOjZM8/9VZ08LhFuGbVaEeq28aUcrG0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YpOU2WH3iKUntlWdZ9K/LVxY/vAWFW79WUje6wgS14BnDfNNKaYriMPWlPAS/wCkogxMIZQsoIRDW7EyqaIb5sraCcn2LWkhldybWgWwSLzoFV6a00RWYzh2eXqOHPr3Ud6Ovn2uaxL3xQdcMlEQ4ez373pCvQWdibQ+fVR91yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD46E1758;
+	Tue,  3 Jun 2025 21:36:49 -0700 (PDT)
+Received: from [10.163.60.247] (unknown [10.163.60.247])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E011D3F673;
+	Tue,  3 Jun 2025 21:36:59 -0700 (PDT)
+Message-ID: <d6f18e51-47a4-498c-ad66-60fa2d8efbfc@arm.com>
+Date: Wed, 4 Jun 2025 10:06:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: rename CONFIG_PAGE_BLOCK_ORDER to
+ CONFIG_PAGE_BLOCK_ORDER_CEIL.
+To: Zi Yan <ziy@nvidia.com>, david@redhat.com
+Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org,
+ isaacmanjarres@google.com, jyescas@google.com, kaleshsingh@google.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ lorenzo.stoakes@oracle.com, masahiroy@kernel.org, mhocko@suse.com,
+ minchan@kernel.org, rppt@kernel.org, surenb@google.com,
+ tjmercier@google.com, vbabka@suse.cz
+References: <20250603154843.1565239-1-ziy@nvidia.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250603154843.1565239-1-ziy@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed,  4 Jun 2025 09:45:33 +0530 Dev Jain <dev.jain@arm.com> wrote:
+On 6/3/25 21:18, Zi Yan wrote:
+> The config is in fact an additional upper limit of pageblock_order, so
+> rename it to avoid confusion.
 
-> Suppose xas is pointing somewhere near the end of the multi-entry batch.
-> Then it may happen that the computed slot already falls beyond the batch,
-> thus breaking the loop due to !xa_is_sibling(), and computing the wrong
-> order. For example, suppose we have a shift-6 node having an order-9
-> entry => 8 - 1 = 7 siblings, so assume the slots are at offset 0 till 7 in
-> this node. If xas->xa_offset is 6, then the code will compute order as
-> 1 + xas->xa_node->shift = 7. Therefore, the order computation must start
-> from the beginning of the multi-slot entries, that is, the non-sibling
-> entry. Thus ensure that the caller is aware of this by triggering a BUG
-> when the entry is a sibling entry.
+Agreed. This new config has been similar to existing 'pageblock_order'
+that might cause confusion. Hence renaming makes sense. But instead of
+PAGE_BLOCK_ORDER_CEIL should it be rather PAGE_BLOCK_ORDER_MAX ?
 
-Why check this thing in particular?  There are a zillion things we
-could check...
+> 
+> Fixes: e13e7922d034 ("mm: add CONFIG_PAGE_BLOCK_ORDER to select page block order")
 
-> Note that this BUG_ON() is only
-> active while running selftests, so there is no overhead in a running
-> kernel.
+Does it really need a "Fixes: " tag given there is no problem to fix ?
 
-hm, how do we know this?  Now and in the future?  xa_get_order() and
-xas_get_order() have callers all over the place.
-
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> ---
+>  include/linux/mmzone.h          | 14 +++++++-------
+>  include/linux/pageblock-flags.h |  8 ++++----
+>  mm/Kconfig                      | 15 ++++++++-------
+>  3 files changed, 19 insertions(+), 18 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 283913d42d7b..523b407e63e8 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -38,19 +38,19 @@
+>  #define NR_PAGE_ORDERS (MAX_PAGE_ORDER + 1)
+>  
+>  /* Defines the order for the number of pages that have a migrate type. */
+> -#ifndef CONFIG_PAGE_BLOCK_ORDER
+> -#define PAGE_BLOCK_ORDER MAX_PAGE_ORDER
+> +#ifndef CONFIG_PAGE_BLOCK_ORDER_CEIL
+> +#define PAGE_BLOCK_ORDER_CEIL MAX_PAGE_ORDER
+>  #else
+> -#define PAGE_BLOCK_ORDER CONFIG_PAGE_BLOCK_ORDER
+> -#endif /* CONFIG_PAGE_BLOCK_ORDER */
+> +#define PAGE_BLOCK_ORDER_CEIL CONFIG_PAGE_BLOCK_ORDER_CEIL
+> +#endif /* CONFIG_PAGE_BLOCK_ORDER_CEIL */
+>  
+>  /*
+>   * The MAX_PAGE_ORDER, which defines the max order of pages to be allocated
+> - * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_ORDER,
+> + * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_ORDER_CEIL,
+>   * which defines the order for the number of pages that can have a migrate type
+>   */
+> -#if (PAGE_BLOCK_ORDER > MAX_PAGE_ORDER)
+> -#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_ORDER
+> +#if (PAGE_BLOCK_ORDER_CEIL > MAX_PAGE_ORDER)
+> +#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_ORDER_CEIL
+>  #endif
+>  
+>  /*
+> diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
+> index e73a4292ef02..e7a86cd238c2 100644
+> --- a/include/linux/pageblock-flags.h
+> +++ b/include/linux/pageblock-flags.h
+> @@ -41,18 +41,18 @@ extern unsigned int pageblock_order;
+>   * Huge pages are a constant size, but don't exceed the maximum allocation
+>   * granularity.
+>   */
+> -#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER)
+> +#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER_CEIL)
+>  
+>  #endif /* CONFIG_HUGETLB_PAGE_SIZE_VARIABLE */
+>  
+>  #elif defined(CONFIG_TRANSPARENT_HUGEPAGE)
+>  
+> -#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)
+> +#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER_CEIL)
+>  
+>  #else /* CONFIG_TRANSPARENT_HUGEPAGE */
+>  
+> -/* If huge pages are not used, group by PAGE_BLOCK_ORDER */
+> -#define pageblock_order		PAGE_BLOCK_ORDER
+> +/* If huge pages are not used, group by PAGE_BLOCK_ORDER_CEIL */
+> +#define pageblock_order		PAGE_BLOCK_ORDER_CEIL
+>  
+>  #endif /* CONFIG_HUGETLB_PAGE */
+>  
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index eccb2e46ffcb..3b27e644bd1f 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -1017,8 +1017,8 @@ config ARCH_FORCE_MAX_ORDER
+>  # the default page block order is MAX_PAGE_ORDER (10) as per
+>  # include/linux/mmzone.h.
+>  #
+> -config PAGE_BLOCK_ORDER
+> -	int "Page Block Order"
+> +config PAGE_BLOCK_ORDER_CEIL
+> +	int "Page Block Order Upper Limit"
+>  	range 1 10 if ARCH_FORCE_MAX_ORDER = 0
+>  	default 10 if ARCH_FORCE_MAX_ORDER = 0
+>  	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER != 0
+> @@ -1026,12 +1026,13 @@ config PAGE_BLOCK_ORDER
+>  	help
+>  	  The page block order refers to the power of two number of pages that
+>  	  are physically contiguous and can have a migrate type associated to
+> -	  them. The maximum size of the page block order is limited by
+> -	  ARCH_FORCE_MAX_ORDER.
+> +	  them. The maximum size of the page block order is at least limited by
+> +	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER.
+>  
+> -	  This config allows overriding the default page block order when the
+> -	  page block order is required to be smaller than ARCH_FORCE_MAX_ORDER
+> -	  or MAX_PAGE_ORDER.
+> +	  This config adds a new upper limit of default page block
+> +	  order when the page block order is required to be smaller than
+> +	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER or other limits
+> +	  (see include/linux/pageblock-flags.h for details).
+>  
+>  	  Reducing pageblock order can negatively impact THP generation
+>  	  success rate. If your workloads uses THP heavily, please use this
