@@ -1,101 +1,102 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300BB2475C2
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BEA26B094;
+	Wed,  4 Jun 2025 08:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024674; cv=none; b=TUtZHHy/RRJLooG7jMqOeVHOXOVA3OJgYJU6VhvUrXcFZbB4gDdpzbQLWWr6S0RNSjIlMbhBGBKjO/VFHQNcAv/3eAcL9+GkUCaA6la0CHpJhoLeFOrpLsl7J3vOQvPuBjAF2QhsmZivRyzRnsCT0xCyfYscsrdb/WSrTWtp99I=
+	t=1749024688; cv=none; b=ZtOxQqA/JPcoKwMliXRDxOOZz1Q4xax2DMAA0Q4zVMd4yc6mnmbTedZGX63IjI7O5fH7AxFy1LsC+JU9w4uSDcU0Hl2xtDuaa+J5LMFzTg/uNuBklCCVCQnGVdQP2xFxWGj9mtkyTGae9IpcC1D2yT1OHd7yG419w4lXNJIkvGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024674; c=relaxed/simple;
-	bh=7wZBTAGrNfSHVUSbIrH62aYt/z7Oh7TmDhSzaHHOK/E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=e9rbTUEoz+poc8CQkUBrGx/KuWt2KnTopSqG7NbmxTojfCvsCw5fdlhf1Chj1aKYlFS7PKPnZvinBj5Lni9PJSbr8uYMIwRICdIzbcPJDQ02cZQ9JGNrp/lHV2N1apalS6gTtX5bMO0pSbRY2ehlg4MmNkiqKl904wmw06K59Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=I2dRidDR; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749024688; c=relaxed/simple;
+	bh=T/MaLDCc69sWgtYeEkn1C8Q0Fx3OYUU721H41ImDug8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wq24P6FeVgIBmIEVrfkaR3VLMktHOftBbzEnCk4DR2MkJxid6lSqkT+rqPBFkAoUwWrtk7dbYXenGAa+LFTZTluvGzMyZ1jhJOaAsSe6J51zmMC1UglxtNujUFgVaRsLHCAHzzSs48cTw/BPhuZ/aaVm13JQ0bMqOQB6iSgFzXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=NH7HcVWW; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="I2dRidDR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=2QALGxwPi385gRG5AfiZexaj+frrv2bP+KaEk0aGjIA=;
-	b=I2dRidDR1O0cg2pbCDUuhmErWUmYKSzL7DbkT4UXwn/s1nNYKT+Zmocc2yObVC
-	j0JajyBQdzYfo2KuSFGEs4pE3KLYaRbiFK64IYvUjkkbmkj9swALk0UPFhPcAM6V
-	aZ0tW8IIcxfJ3qRCEuJfqSdpwwm0skKfCRhotL2QuxaOM=
-Received: from liubaolin-VMware-Virtual-Platform.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD3X+GG_z9odVJMGA--.1635S2;
-	Wed, 04 Jun 2025 16:10:47 +0800 (CST)
-From: Baolin Liu <liubaolin12138@163.com>
-To: lee@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	liubaolin12138@163.com,
-	Baolin Liu <liubaolin@kylinos.cn>
-Subject: [PATCH v1] mfd: Remove unused of_node variables
-Date: Wed,  4 Jun 2025 16:10:43 +0800
-Message-Id: <20250604081043.802659-1-liubaolin12138@163.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NH7HcVWW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WHzBxjsH020GxBtBRNdihpHGR375f1xb06ZuyU5mJTo=; b=NH7HcVWWDTwypRgVjtyHW316n1
+	SFMPuslv/eMdHYEckdjcuxLq15RYtwo7YmXwDWY+Hm9ArxMvEYnQQuXUN5MDEFqiKto3m2bBf85he
+	9qPSZ+VXi0dWdAY5ueq9kVaTUD+67bxUXJaGuTMPtrn1BaExp/MaQBAEeXuAAH0255lqtkaMPD1qu
+	oUe0F+mq5sTSu9I8H1QPzWB9o5kB64kCPrVABb57xebPh6c+LpnQmKrOgumGQ/cnFCJEVZJo0ZuJz
+	Hp4hVmzcTcTIytZV6zvWK64IR4sNG7tUtdBX78dOM5hzv48YeTvlNbjpAKaBZX6ONz+J5S7J1NgCG
+	r3pyT2xQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55740)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uMjDU-0006y3-1m;
+	Wed, 04 Jun 2025 09:11:20 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uMjDS-000127-23;
+	Wed, 04 Jun 2025 09:11:18 +0100
+Date: Wed, 4 Jun 2025 09:11:18 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>,
+	'Michael Kelley' <mhklinux@outlook.com>,
+	"pmladek@suse.com" <pmladek@suse.com>,
+	'Ryo Takakura' <ryotkkr98@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Problem with nbcon console and amba-pl011 serial port
+Message-ID: <aD__pjZ_o7QMbXhC@shell.armlinux.org.uk>
+References: <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
+ <84y0u95e0j.fsf@jogness.linutronix.de>
+ <84sekh5cki.fsf@jogness.linutronix.de>
+ <TY4PR01MB13777DAC71E234B9E58CC6C0DD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
+ <84wm9sne7w.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3X+GG_z9odVJMGA--.1635S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uw1xGr47tw13WF47XFWrXwb_yoW8CFykpF
-	ZxGFy5Ar4UJa1DuayvkrWDuFy5t3WrG3y0kF1xCasa9r43Aa4kKFyYqry8XF15CFWxJFy3
-	tFZ7tFy8CF4FkaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JU0hF7UUUUU=
-X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/1tbiUhFiymg-qOnzQQACsN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84wm9sne7w.fsf@jogness.linutronix.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-From: Baolin Liu <liubaolin@kylinos.cn>
+On Wed, Jun 04, 2025 at 09:50:03AM +0206, John Ogness wrote:
+> You are correct. I wasn't aware that the clock framework had a usage
+> counter to allow recursive calls. Sorry for the noise.
 
-Clean up unused device tree node variables to eliminate compiler warnings:
-`warning: unused variable ‘node’`
+It's documented:
 
-No functional changes.
+/**
+ * clk_disable - inform the system when the clock source is no longer required.
+ * @clk: clock source
+ *
+ * Inform the system that a clock source is no longer required by
+ * a driver and may be shut down.
+ *
+ * May be called from atomic contexts.
+ *
+ * Implementation detail: if the clock source is shared between
+ * multiple drivers, clk_enable() calls must be balanced by the
+ * same number of clk_disable() calls for the clock source to be
+ * disabled.
+ */
 
-Signed-off-by: Baolin Liu <liubaolin@kylinos.cn>
----
- drivers/mfd/88pm860x-core.c | 1 -
- drivers/mfd/max8925-core.c  | 1 -
- drivers/mfd/twl4030-irq.c   | 1 -
- 3 files changed, 3 deletions(-)
+similarly for clk_unprepare(). It has to be this way if you think about
+the fact that clock sources are not unique to clock consumers, otherwise
+the first clock consumer to disable a clock will disrupt other
+consumers of that same clock.
 
-diff --git a/drivers/mfd/88pm860x-core.c b/drivers/mfd/88pm860x-core.c
-index 488e346047c1..750f9db95386 100644
---- a/drivers/mfd/88pm860x-core.c
-+++ b/drivers/mfd/88pm860x-core.c
-@@ -573,7 +573,6 @@ static int device_irq_init(struct pm860x_chip *chip,
- 	unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
- 	int data, mask, ret = -EINVAL;
- 	int nr_irqs, irq_base = -1;
--	struct device_node *node = i2c->dev.of_node;
- 
- 	mask = PM8607_B0_MISC1_INV_INT | PM8607_B0_MISC1_INT_CLEAR
- 		| PM8607_B0_MISC1_INT_MASK;
-diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
-index 78b16c67a5fc..9d6358337d97 100644
---- a/drivers/mfd/max8925-core.c
-+++ b/drivers/mfd/max8925-core.c
-@@ -656,7 +656,6 @@ static int max8925_irq_init(struct max8925_chip *chip, int irq,
- {
- 	unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
- 	int ret;
--	struct device_node *node = chip->dev->of_node;
- 
- 	/* clear all interrupts */
- 	max8925_reg_read(chip->i2c, MAX8925_CHG_IRQ1);
-diff --git a/drivers/mfd/twl4030-irq.c b/drivers/mfd/twl4030-irq.c
-index 232c2bfe8c18..c95a73186112 100644
---- a/drivers/mfd/twl4030-irq.c
-+++ b/drivers/mfd/twl4030-irq.c
-@@ -676,7 +676,6 @@ int twl4030_init_irq(struct device *dev, int irq_num)
- 	static struct irq_chip	twl4030_irq_chip;
- 	int			status, i;
- 	int			irq_base, irq_end, nr_irqs;
--	struct			device_node *node = dev->of_node;
- 
- 	/*
- 	 * TWL core and pwr interrupts must be contiguous because
+It's been that way since I created the clk API, which predates CCF.
+
 -- 
-2.39.2
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
