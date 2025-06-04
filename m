@@ -1,446 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F6D18E1F;
-	Wed,  4 Jun 2025 16:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D00D15665C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749052847; cv=none; b=rcQAVdB8ToVRm2ingzGBhn2Q0Su+mSE+Tyb9Mz0E8f4bjK/RBYF/fqsZXNmT7xGjoD/6f3p5Y2kXR6yYYgjmCcB4lI1dbY+XJsy/hkvD8UMhZkFaiveza1Ruv6deSaQH8zMA/N+MabBEFIE19Mxv98zIjYUrM8V35LRG9+XfMYc=
+	t=1749052872; cv=none; b=C5OnbKZyImML0wic0JazTxVLpKPf4AMHytijN0ZrmzvngDZ0f52gjNd4Mz6Lc8C/PSb66qnlIwsyXvQP5IUK4bjIeQqngQb2DP2nI+m9kRxI8u9Po8iCiNyxQ+VeIa/Rzx/6ZQyB74x4HrQ7pTOwdLHuphjtiQz8mh0HCH68D0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749052847; c=relaxed/simple;
-	bh=LseHE7CfIFuvvOh+U0FuajD9jbePBoOdvRtrH+xsXB8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fylNBakek8ZGMQ5cUCBQdT/T7gamg0qF+oXnl6+R5WJ8aHmSJ+KU6lYD9kZl3ivU+I0MnyFO/wmDsUlnWfHHSu806/yet4qF2FRLrQJfL5KcxvjTrx3iJOGXcgxW1soduIRxahBnMm39aDSeY3wruSYiifEk31By42kgniBC47M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEPttlt9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749052872; c=relaxed/simple;
+	bh=ZNaiqJz3y1AytvrDmYno/j8yL7gmDpOSKywYWodv1CE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f1CcBKxOWbxEpSHrQTy1QMGjDDYdPz5hRiOOCbL3tm2Ttbh1Qtd/h7NdqgJ45hgWZAsH10HZxlwOzVGIsxewJCRs3b8EUqkg30DMeO3GjbF8cS2znYjXrug/kmDvpIXunehGfYpwZCUPDignsOmPx/Y0z0qRceMCILrKEZ6RIDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cxXIqpF/; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEPttlt9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDB4C4CEED;
-	Wed,  4 Jun 2025 16:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749052846;
-	bh=LseHE7CfIFuvvOh+U0FuajD9jbePBoOdvRtrH+xsXB8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=lEPttlt9GFYQAihZiE9qokni6J8/wqL3E19DZR/6mX9ZuSBXulAhtBuhzXgAS1zgG
-	 LOdP7zAgrx4pOv5aJitJYeAypb3BW4+i7ZXF/NLQTfEpA5u1buGgswV3+Sa+hkjyZK
-	 R3MT9YqpvjYzCda0EmTR830WibZ8YhoSz5CCeMmBkZY7zG1hWIrytoV/Rhkv4zRL5N
-	 Q0Wa4YFhUHzgvqjylLUjcxRqbY2k9FygCEyVWlkTOg2f1LXQo1g0n3BgwuAINt/G2v
-	 OgfetaDbCH7inlGBeGqgUJYJ8rQwbRL+e+BaVde3d3UVaUhpxBr48Acp/ByH78SVcC
-	 nzDnYzj55739A==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: pratyush@kernel.org,  jasonmiu@google.com,  graf@amazon.com,
-  changyuanl@google.com,  rppt@kernel.org,  dmatlack@google.com,
-  rientjes@google.com,  corbet@lwn.net,  rdunlap@infradead.org,
-  ilpo.jarvinen@linux.intel.com,  kanie@linux.alibaba.com,
-  ojeda@kernel.org,  aliceryhl@google.com,  masahiroy@kernel.org,
-  akpm@linux-foundation.org,  tj@kernel.org,  yoann.congal@smile.fr,
-  mmaurer@google.com,  roman.gushchin@linux.dev,  chenridong@huawei.com,
-  axboe@kernel.dk,  mark.rutland@arm.com,  jannh@google.com,
-  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
-  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
-  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
-  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
-  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
-  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
-  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
-  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
-  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
-  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
-  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
-  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
-  stuart.w.hayes@gmail.com
-Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
-In-Reply-To: <20250515182322.117840-6-pasha.tatashin@soleen.com>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
-	<20250515182322.117840-6-pasha.tatashin@soleen.com>
-Date: Wed, 04 Jun 2025 18:00:37 +0200
-Message-ID: <mafs0sekfts2i.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cxXIqpF/"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so169445ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:01:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749052868; x=1749657668; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mY3VE9czFQShKHXxZIP9vZtbMEDzffpXg7Q/CD6REI8=;
+        b=cxXIqpF/ZDCtiHFTvEgqfM8TFUn9gF/6P1FlR9g2/VNLPqxOB5oTuiU91X8z+uifqG
+         wLDlLWqzoNqyB9lR/2ArCHziTusiSYv6yAksJJ101Ih9EW3VjjRU3osrDbgYoybQ/NrQ
+         4d0CWmVlY/q5lfC71AkfzetQ1M7a1401QAy4cuz9Kgf5JxSAS6YJ/d5O30NfIUj59K8b
+         H829CR2B4E2Tx6IPJgI3+m5K+bHmWCc7iSoOvLfjAQiXBm3PJ/oN+NPfZ+H1knL9cEnU
+         XLltSE8YUUNDZ0b2fVXgsjIG69bNfSWIO8jMSnrw/exgmZdunfwOARTjsAlC6ra8Oc0D
+         Dlpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749052868; x=1749657668;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mY3VE9czFQShKHXxZIP9vZtbMEDzffpXg7Q/CD6REI8=;
+        b=P5msY4T7a4MG1GH2OJF3RI8PnatYqfn8Wd9EHoVBCqYS3hj0IqJj60rV0Ej7/p6gX4
+         4S/q8E3xAVj/+b3wlFOsag1ApznsUbfCYKNWO7VTKh7rkffH9pi4RiOkRmTztkTY/A6A
+         occ1DotQ43UtF96lOZ+soCZLUaP0PO3R21h/2kb70rCe1zWR6+fPNECX9tRHQqNd+2s6
+         T5DMMgAlC0GwG9+fXqfNJ3dRsrr89f+OsjTcikVhOG8c/yV1pwnKvqlIN27HxjJ91Gde
+         dwlrcR+PUy6tnBWk+r033m2FE2GnZWogEWb2rpGE+rkLAIE01ejjcdx4fGSzutpCEx0r
+         SLfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwws7YGRH34FuoVKeKcHxvBiyhv65wCavP1LHV5sStnoUd1qO5sXYemsCrYGwrQbm0256OwhHojdDzGe8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2D7PqflLtAANfpTzTQ/hIuuS0nQ4x9FUoNw9YWeTXeNvK/0Cj
+	yMwSrKgM/b1wS4w3kOoNZo/ewVGWkeE7/2Wlq3nLX3b95zeT9mAIZQxEE6Fd9Wr7uOV4gQcqibL
+	THl0FTXNheqa0gn3djKKNuqWsTFBEn0ugU6tQkUzO
+X-Gm-Gg: ASbGnctOI8RiqFvn8RALWKApZX/YeZQcggsKVpUn58Z5w3KfhH53XhOhhCymscrcMpG
+	yhEa2yfxBEoENHs6RxPdMZhOQcVhXl6Jmw1fb8K2Cs2RFBVWBMeiAhfEaGHiL1h6p9SM9zSwPmm
+	VzUcXWOFOLelNTWuwF2cJ2aAM9ovujbs6pjKorouzLJwMNB83Prsok7oWwrGJZfBUYk0+D8Xc+6
+	V8V9s2JWg==
+X-Google-Smtp-Source: AGHT+IG58E6QDHHMSgG62IIRKhYq/xB75dJaFUT7r81uMOGD1R9JRmeQRMlDFC4MLC5KlZ6EIiSSMdQcueXWylyXmEw=
+X-Received: by 2002:a05:6e02:3712:b0:3dc:7e01:6f6a with SMTP id
+ e9e14a558f8ab-3ddbe7f1920mr4326265ab.26.1749052868151; Wed, 04 Jun 2025
+ 09:01:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250604054234.23608-1-namhyung@kernel.org>
+In-Reply-To: <20250604054234.23608-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 4 Jun 2025 09:00:56 -0700
+X-Gm-Features: AX0GCFsPBzBYxeEG_xn9wHFKD76SA0WA2zT1oLAKGF42jZeceXnvQLoTylM5ZMY
+Message-ID: <CAP-5=fUwjAwyhKc=RGfKnZoPz9iKiVyKfBOYxm7EuP2QRsnhgw@mail.gmail.com>
+Subject: Re: [PATCH] perf bpf-filter: Improve error messages
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15 2025, Pasha Tatashin wrote:
-
-> Integrate the LUO with the KHO framework to enable passing LUO state
-> across a kexec reboot.
+On Tue, Jun 3, 2025 at 10:42=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> This patch introduces the following changes:
-> - During the KHO finalization phase allocate FDT blob.
-> - Populate this FDT with a LUO compatibility string ("luo-v1") and the
->   current LUO state (`luo_state`).
-> - Implement a KHO notifier
+> The BPF filter needs libbpf/BPF-skeleton support and root privilege.
+> Add error messages to help users understand the problem easily.
 >
-> LUO now depends on `CONFIG_KEXEC_HANDOVER`. The core state transition
-> logic (`luo_do_*_calls`) remains unimplemented in this patch.
+> When it's not build with BPF support (make BUILD_BPF_SKEL=3D0).
 >
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+>   $ sudo perf record -e cycles --filter "pid !=3D 0" true
+>   Error: BPF filter is requested but perf is not built with BPF.
+>         Please make sure to build with libbpf and BPF skeleton.
+>
+>    Usage: perf record [<options>] [<command>]
+>       or: perf record [<options>] -- <command> [<options>]
+>
+>           --filter <filter>
+>                             event filter
+>
+> When it supports BPF but runs without root or CAP_BPF.  Note that it
+> also checks pinned BPF filters.
+>
+>   $ perf record -e cycles --filter "pid !=3D 0" -o /dev/null true
+>   Error: BPF filter only works for users with the CAP_BPF capability!
+>         Please run 'perf record --setup-filter pin' as root first.
+>
+>    Usage: perf record [<options>] [<command>]
+>       or: perf record [<options>] -- <command> [<options>]
+>
+>           --filter <filter>
+>                             event filter
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  drivers/misc/liveupdate/luo_core.c | 222 ++++++++++++++++++++++++++++-
->  1 file changed, 219 insertions(+), 3 deletions(-)
+>  tools/perf/util/bpf-filter.c | 28 ++++++++++++++++++++++++++++
+>  tools/perf/util/bpf-filter.h |  3 +++
+>  tools/perf/util/cap.c        |  1 -
+>  tools/perf/util/cap.h        |  5 +++++
+>  4 files changed, 36 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/misc/liveupdate/luo_core.c b/drivers/misc/liveupdate/luo_core.c
-> index 919c37b0b4d1..a76e886bc3b1 100644
-> --- a/drivers/misc/liveupdate/luo_core.c
-> +++ b/drivers/misc/liveupdate/luo_core.c
-> @@ -36,9 +36,12 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/err.h>
-> +#include <linux/kexec_handover.h>
->  #include <linux/kobject.h>
-> +#include <linux/libfdt.h>
->  #include <linux/liveupdate.h>
->  #include <linux/rwsem.h>
-> +#include <linux/sizes.h>
->  #include <linux/string.h>
->  #include "luo_internal.h"
->  
-> @@ -55,6 +58,12 @@ const char *const luo_state_str[] = {
->  
->  bool luo_enabled;
->  
-> +static void *luo_fdt_out;
-> +static void *luo_fdt_in;
-> +#define LUO_FDT_SIZE		SZ_1M
-> +#define LUO_KHO_ENTRY_NAME	"LUO"
-> +#define LUO_COMPATIBLE		"luo-v1"
-> +
->  static int __init early_liveupdate_param(char *buf)
->  {
->  	return kstrtobool(buf, &luo_enabled);
-> @@ -79,6 +88,60 @@ static inline void luo_set_state(enum liveupdate_state state)
->  	__luo_set_state(state);
+> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+> index a4fdf6911ec1c32e..92e2f054b45e91dd 100644
+> --- a/tools/perf/util/bpf-filter.c
+> +++ b/tools/perf/util/bpf-filter.c
+> @@ -52,6 +52,7 @@
+>  #include <internal/xyarray.h>
+>  #include <perf/threadmap.h>
+>
+> +#include "util/cap.h"
+>  #include "util/debug.h"
+>  #include "util/evsel.h"
+>  #include "util/target.h"
+> @@ -618,11 +619,38 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__=
+new(enum perf_bpf_filter_term
+>         return expr;
 >  }
->  
-> +/* Called during the prepare phase, to create LUO fdt tree */
-> +static int luo_fdt_setup(struct kho_serialization *ser)
+>
+> +static bool check_bpf_filter_capable(void)
 > +{
-> +	void *fdt_out;
-> +	int ret;
+> +       bool used_root;
 > +
-> +	fdt_out = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
-> +					   get_order(LUO_FDT_SIZE));
-
-Why not alloc_folio()? KHO already deals with folios so it seems
-simpler. The kho_{un,}preserve_folio() functions exist exactly for these
-kinds of allocations, so LUO also ends up being a first user. You also
-won't end up needing kho_unpreserve_phys() and all the __pa() calls.
-
-> +	if (!fdt_out) {
-> +		pr_err("failed to allocate FDT memory\n");
-> +		return -ENOMEM;
-> +	}
+> +       if (perf_cap__capable(CAP_BPF, &used_root))
+> +               return true;
 > +
-> +	ret = fdt_create_empty_tree(fdt_out, LUO_FDT_SIZE);
-
-You are using FDT read/write functions throughout the series to create
-new FDTs. The sequential write functions are generally more efficient
-since they are meant for creating new FDT blobs. The read/write
-functions are better for modifying an existing FDT blob.
-
-Is there a particular reason you do this?
-
-When using FDT SW functions, the creation of the tree would be something
-like:
-
-        fdt_create()
-        fdt_finish_reservemap()
-        fdt_begin_node()
-
-        // Add stuff to FDT
-
-        fdt_end_node()
-        fdt_finish()
-
-In this patch, the FDT does not change much after creation so it doesn't
-look like it matters much, but in later patches, the FDT is passed to
-luo_files_fdt_setup() and luo_subsystems_fdt_setup() which probably
-modify the FDT a fair bit.
-
-> +	if (ret)
-> +		goto exit_free;
+> +       if (!used_root) {
+> +               /* Check if root already pinned the filter programs and m=
+aps */
+> +               int fd =3D get_pinned_fd("filters");
 > +
-> +	ret = fdt_setprop(fdt_out, 0, "compatible", LUO_COMPATIBLE,
-> +			  strlen(LUO_COMPATIBLE) + 1);
-
-fdt_setprop_string() instead? Or if you change to FDT SW,
-fdt_property_string().
-
-> +	if (ret)
-> +		goto exit_free;
+> +               if (fd >=3D 0) {
+> +                       close(fd);
+> +                       return true;
+> +               }
+> +       }
 > +
-> +	ret = kho_preserve_phys(__pa(fdt_out), LUO_FDT_SIZE);
-> +	if (ret)
-> +		goto exit_free;
+> +       pr_err("Error: BPF filter only works for %s!\n"
+> +              "\tPlease run 'perf record --setup-filter pin' as root fir=
+st.\n",
+> +              used_root ? "root" : "users with the CAP_BPF capability");
 > +
-> +	ret = kho_add_subtree(ser, LUO_KHO_ENTRY_NAME, fdt_out);
-> +	if (ret)
-> +		goto exit_unpreserve;
-> +	luo_fdt_out = fdt_out;
-> +
-> +	return 0;
-> +
-> +exit_unpreserve:
-> +	kho_unpreserve_phys(__pa(fdt_out), LUO_FDT_SIZE);
-> +exit_free:
-> +	free_pages((unsigned long)fdt_out, get_order(LUO_FDT_SIZE));
-> +	pr_err("failed to prepare LUO FDT: %d\n", ret);
-> +
-> +	return ret;
+> +       return false;
 > +}
 > +
-> +static void luo_fdt_destroy(void)
-> +{
-> +	kho_unpreserve_phys(__pa(luo_fdt_out), LUO_FDT_SIZE);
-> +	free_pages((unsigned long)luo_fdt_out, get_order(LUO_FDT_SIZE));
-> +	luo_fdt_out = NULL;
-> +}
-> +
-> +static int luo_do_prepare_calls(void)
-> +{
-> +	return 0;
-> +}
-> +
->  static int luo_do_freeze_calls(void)
+>  int perf_bpf_filter__parse(struct list_head *expr_head, const char *str)
 >  {
->  	return 0;
-> @@ -88,11 +151,111 @@ static void luo_do_finish_calls(void)
+>         YY_BUFFER_STATE buffer;
+>         int ret;
+>
+> +       if (!check_bpf_filter_capable())
+> +               return -EPERM;
+> +
+>         buffer =3D perf_bpf_filter__scan_string(str);
+>
+>         ret =3D perf_bpf_filter_parse(expr_head);
+> diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
+> index 916ed7770b734f15..187e5bbcc5910d78 100644
+> --- a/tools/perf/util/bpf-filter.h
+> +++ b/tools/perf/util/bpf-filter.h
+> @@ -2,6 +2,7 @@
+>  #ifndef PERF_UTIL_BPF_FILTER_H
+>  #define PERF_UTIL_BPF_FILTER_H
+>
+> +#include <stdio.h>
+>  #include <linux/list.h>
+>
+>  #include "bpf_skel/sample-filter.h"
+> @@ -38,6 +39,8 @@ int perf_bpf_filter__unpin(void);
+>  static inline int perf_bpf_filter__parse(struct list_head *expr_head __m=
+aybe_unused,
+>                                          const char *str __maybe_unused)
 >  {
+> +       fprintf(stderr, "Error: BPF filter is requested but perf is not b=
+uilt with BPF.\n"
+> +               "\tPlease make sure to build with libbpf and BPF skeleton=
+.\n");
+
+Generally LGTM. This needs to be a pr_err otherwise nothing will be
+displayed with TUI.
+
+Thanks,
+Ian
+
+>         return -EOPNOTSUPP;
 >  }
->  
-> -int luo_prepare(void)
-> +static void luo_do_cancel_calls(void)
-> +{
-> +}
+>  static inline int perf_bpf_filter__prepare(struct evsel *evsel __maybe_u=
+nused,
+> diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
+> index 69d9a2bcd40bfdd1..24a0ea7e6d97749b 100644
+> --- a/tools/perf/util/cap.c
+> +++ b/tools/perf/util/cap.c
+> @@ -7,7 +7,6 @@
+>  #include "debug.h"
+>  #include <errno.h>
+>  #include <string.h>
+> -#include <linux/capability.h>
+>  #include <sys/syscall.h>
+>  #include <unistd.h>
+>
+> diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
+> index 0c6a1ff55f07340a..c1b8ac033ccc5826 100644
+> --- a/tools/perf/util/cap.h
+> +++ b/tools/perf/util/cap.h
+> @@ -3,6 +3,7 @@
+>  #define __PERF_CAP_H
+>
+>  #include <stdbool.h>
+> +#include <linux/capability.h>
+>
+>  /* For older systems */
+>  #ifndef CAP_SYSLOG
+> @@ -13,6 +14,10 @@
+>  #define CAP_PERFMON    38
+>  #endif
+>
+> +#ifndef CAP_BPF
+> +#define CAP_BPF                39
+> +#endif
 > +
-> +static int __luo_prepare(struct kho_serialization *ser)
->  {
-> +	int ret;
-> +
-> +	if (down_write_killable(&luo_state_rwsem)) {
-> +		pr_warn("[prepare] event canceled by user\n");
-> +		return -EAGAIN;
-> +	}
-> +
-> +	if (!is_current_luo_state(LIVEUPDATE_STATE_NORMAL)) {
-> +		pr_warn("Can't switch to [%s] from [%s] state\n",
-> +			luo_state_str[LIVEUPDATE_STATE_PREPARED],
-> +			LUO_STATE_STR);
-> +		ret = -EINVAL;
-> +		goto exit_unlock;
-> +	}
-> +
-> +	ret = luo_fdt_setup(ser);
-> +	if (ret)
-> +		goto exit_unlock;
-> +
-> +	ret = luo_do_prepare_calls();
-> +	if (ret)
-> +		goto exit_unlock;
-
-With subsystems/filesystems support in place, this can fail. But since
-luo_fdt_setup() called kho_add_subtree(), the debugfs file stays around,
-and later calls to __luo_prepare() fail because the next
-kho_add_subtree() tries to create a debugfs file that already exists. So
-you would see an error like below:
-
-    [  767.339920] debugfs: File 'LUO' in directory 'sub_fdts' already present!
-    [  767.340613] luo_core: failed to prepare LUO FDT: -17
-    [  767.341071] KHO: Failed to convert KHO state tree: -17
-    [  767.341593] luo_core: Can't switch to [normal] from [normal] state
-    [  767.342175] KHO: Failed to abort KHO finalization: -22
-
-You probably need a kho_remove_subtree() that can be called from the
-error paths.
-
-Note that __luo_cancel() is called because failure in a KHO finalize
-notifier calls the abort notifiers.
-
-This is also something to fix, since if prepare fails, all other KHO
-users who are already serialized won't even get to abort.
-
-This weirdness happens because luo_prepare() and luo_cancel() control
-the KHO state machine, but then also get controlled by it via the
-notifier callbacks. So the relationship between then is not clear.
-__luo_prepare() at least needs access to struct kho_serialization, so it
-needs to come from the callback. So I don't have a clear way to clean
-this all up off the top of my head.
-
-I suppose one way to fix this would be to move the state check to
-luo_cancel() instead. It would probably fix this problem but won't
-actually do anything about the murky hierarchy between KHO and LUO.
-
-> +
-> +	luo_set_state(LIVEUPDATE_STATE_PREPARED);
-> +
-> +exit_unlock:
-> +	up_write(&luo_state_rwsem);
-> +
-> +	return ret;
-> +}
-> +
-> +static int __luo_cancel(void)
-> +{
-> +	if (down_write_killable(&luo_state_rwsem)) {
-> +		pr_warn("[cancel] event canceled by user\n");
-> +		return -EAGAIN;
-> +	}
-> +
-> +	if (!is_current_luo_state(LIVEUPDATE_STATE_PREPARED) &&
-> +	    !is_current_luo_state(LIVEUPDATE_STATE_FROZEN)) {
-> +		pr_warn("Can't switch to [%s] from [%s] state\n",
-> +			luo_state_str[LIVEUPDATE_STATE_NORMAL],
-> +			LUO_STATE_STR);
-> +		up_write(&luo_state_rwsem);
-> +
-> +		return -EINVAL;
-> +	}
-> +
-> +	luo_do_cancel_calls();
-> +	luo_fdt_destroy();
-> +	luo_set_state(LIVEUPDATE_STATE_NORMAL);
-> +
-> +	up_write(&luo_state_rwsem);
-> +
->  	return 0;
->  }
->  
-> +static int luo_kho_notifier(struct notifier_block *self,
-> +			    unsigned long cmd, void *v)
-> +{
-> +	int ret;
-> +
-> +	switch (cmd) {
-> +	case KEXEC_KHO_FINALIZE:
-> +		ret = __luo_prepare((struct kho_serialization *)v);
-> +		break;
-> +	case KEXEC_KHO_ABORT:
-> +		ret = __luo_cancel();
-> +		break;
-> +	default:
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	return notifier_from_errno(ret);
-> +}
-> +
-> +static struct notifier_block luo_kho_notifier_nb = {
-> +	.notifier_call = luo_kho_notifier,
-> +};
-> +
-> +/**
-> + * luo_prepare - Initiate the live update preparation phase.
-> + *
-> + * This function is called to begin the live update process. It attempts to
-> + * transition the luo to the ``LIVEUPDATE_STATE_PREPARED`` state.
-> + *
-> + * If the calls complete successfully, the orchestrator state is set
-> + * to ``LIVEUPDATE_STATE_PREPARED``. If any  call fails a
-> + * ``LIVEUPDATE_CANCEL`` is sent to roll back any actions.
-> + *
-> + * @return 0 on success, ``-EAGAIN`` if the state change was cancelled by the
-> + * user while waiting for the lock, ``-EINVAL`` if the orchestrator is not in
-> + * the normal state, or a negative error code returned by the calls.
-> + */
-> +int luo_prepare(void)
-> +{
-> +	return kho_finalize();
-> +}
-> +
->  /**
->   * luo_freeze() - Initiate the final freeze notification phase for live update.
->   *
-> @@ -188,9 +351,23 @@ int luo_finish(void)
->  	return 0;
->  }
->  
-> +/**
-> + * luo_cancel - Cancel the ongoing live update from prepared or frozen states.
-> + *
-> + * This function is called to abort a live update that is currently in the
-> + * ``LIVEUPDATE_STATE_PREPARED`` state.
-> + *
-> + * If the state is correct, it triggers the ``LIVEUPDATE_CANCEL`` notifier chain
-> + * to allow subsystems to undo any actions performed during the prepare or
-> + * freeze events. Finally, the orchestrator state is transitioned back to
-> + * ``LIVEUPDATE_STATE_NORMAL``.
-> + *
-> + * @return 0 on success, or ``-EAGAIN`` if the state change was cancelled by the
-> + * user while waiting for the lock.
-> + */
->  int luo_cancel(void)
->  {
-> -	return 0;
-> +	return kho_abort();
->  }
->  
->  void luo_state_read_enter(void)
-> @@ -205,7 +382,46 @@ void luo_state_read_exit(void)
->  
->  static int __init luo_startup(void)
->  {
-> -	__luo_set_state(LIVEUPDATE_STATE_NORMAL);
-> +	phys_addr_t fdt_phys;
-> +	int ret;
-> +
-> +	if (!kho_is_enabled()) {
-> +		if (luo_enabled)
-> +			pr_warn("Disabling liveupdate because KHO is disabled\n");
-> +		luo_enabled = false;
-> +		return 0;
-> +	}
-> +
-> +	ret = register_kho_notifier(&luo_kho_notifier_nb);
-> +	if (ret) {
-> +		luo_enabled = false;
-
-You set luo_enabled to false here, but none of the LUO entry points like
-luo_prepare() or luo_freeze() actually check it. So LUO will appear work
-just fine even when it hasn't initialized properly.
-
-> +		pr_warn("Failed to register with KHO [%d]\n", ret);
-
-I guess you don't return here so a previous liveupdate can still be
-recovered, even though we won't be able to make the next one. If so, a
-comment would be nice to point this out.
-
-> +	}
-> +
-> +	/*
-> +	 * Retrieve LUO subtree, and verify its format.  Panic in case of
-> +	 * exceptions, since machine devices and memory is in unpredictable
-> +	 * state.
-> +	 */
-> +	ret = kho_retrieve_subtree(LUO_KHO_ENTRY_NAME, &fdt_phys);
-> +	if (ret) {
-> +		if (ret != -ENOENT) {
-> +			panic("failed to retrieve FDT '%s' from KHO: %d\n",
-> +			      LUO_KHO_ENTRY_NAME, ret);
-> +		}
-> +		__luo_set_state(LIVEUPDATE_STATE_NORMAL);
-> +
-> +		return 0;
-> +	}
-> +
-> +	luo_fdt_in = __va(fdt_phys);
-> +	ret = fdt_node_check_compatible(luo_fdt_in, 0, LUO_COMPATIBLE);
-> +	if (ret) {
-> +		panic("FDT '%s' is incompatible with '%s' [%d]\n",
-> +		      LUO_KHO_ENTRY_NAME, LUO_COMPATIBLE, ret);
-> +	}
-> +
-> +	__luo_set_state(LIVEUPDATE_STATE_UPDATED);
->  
->  	return 0;
->  }
-
--- 
-Regards,
-Pratyush Yadav
+>  /* Query if a capability is supported, used_root is set if the fallback =
+root check was used. */
+>  bool perf_cap__capable(int cap, bool *used_root);
+>
+> --
+> 2.49.0
+>
