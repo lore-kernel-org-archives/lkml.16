@@ -1,111 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0FF1DFF8
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390071DFF8
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749039494; cv=none; b=M+OHNSXkM5UJjunjvwuTuRcGIxAOJyz+d+FAslU6tMLI27KXOd+xB+GDzTZnQhfTjg+adH4CARLmE8YxaLbv7ARhqLpFxUzKmN/CMVm4gSJWBHqTVgprfegKm2VsHkVVX0wFsFL8/XB2JO5aoS3PvPvbW2xojest5TlrGfMkUYE=
+	t=1749039521; cv=none; b=W0hj3LAR8MEQR1N4rc+ak5IAA2DlriEpjC7MGlh3oP51ekgJOFYdwl+1NSTLzajJ7pgO/CkvF7d0JTYyCYOtoMykQIgcytjVURZh7F9ztDQpyYFfzy0sJOXQacI2mHjnmsLHzjBBSr6qyR7Q185AuJGI47WWL1TEFB2EvxgUGCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749039494; c=relaxed/simple;
-	bh=JfaoRG57LFIS/dd8Kog1/eQFr8Bx0dcUrQuHslbLOmY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XlOAQrL9lX4fi01Ij/yXtjBsgLdiiWt3SauGN+yN3zuqGY36wkfUU7HWPHoNbtV948s5VH5UvxDI+nxUQ1OQn9LajNnAOtI3b/OtIWvrdo2ONoG+yvbyA9jjZ8HgLXRzXLTq46mV+A6B3BCZ+cHmQ+O6xPmVNhP4ICSCWmF+zHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RnFsKzpb; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749039521; c=relaxed/simple;
+	bh=fmtvIVhEcf9Ds3pRf4w4H1KHrmA1PIgMPMheepuFKek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F+6TAlzQTmRu7l6Z6zKH4eG1jXyBZ4CXnudTX9v2tUpuFucXXBlXPlL+URaU1E2AmZnmwD1JHIMrpwUA6plP6WRotYBpukbH5JityApe2H3hJSZDzBLwEZ/gznaYLtJEenEJQyVQSsfUm532Cz9kaQmE8S2KFQyBIryMt2CWDgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O/CFyTCp; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RnFsKzpb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749039494; x=1780575494;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=JfaoRG57LFIS/dd8Kog1/eQFr8Bx0dcUrQuHslbLOmY=;
-  b=RnFsKzpbKJohUcvz3prwX3oeZ2xjFZrgDRLurwQDX9/Lvd/m7NxLCvRb
-   9CSOFjUWERbrTAn59lRz2ZBT8U4pfOKP4ev5xbvPYakkPBALglCfOuHtm
-   IFCVDIgEyRnKMur09pW2UBvxc158xe9KGrbUBytdo+ACYWf1rDms91Q2w
-   NrmsBoeP/+SP+2OwfyjUpGWl9vagYYE/sKcyJDT4k0sqIFISD8um+M02w
-   3sKa5x/TzfIOcFMPZRVcc1ZWtaW4MMZ4LRrrzrWSwdT9ZygHtyFrR/VP5
-   C5opfO1ziO2uaLNGdc8D1QexgZUw3/oD+u3xSfbXSMl7rQwXC+i8MU8aC
-   w==;
-X-CSE-ConnectionGUID: 44BJiRqrTt6YOaOEgI00tw==
-X-CSE-MsgGUID: jB+jOGzqScuPPlhrFL+0rQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51188742"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="51188742"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 05:18:13 -0700
-X-CSE-ConnectionGUID: vUOPYx5oQuixYIIMdrWXhg==
-X-CSE-MsgGUID: x63ZjyzkTBO+WtX82pS7Bw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="182345818"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO [10.245.245.121]) ([10.245.245.121])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 05:18:09 -0700
-Message-ID: <3262455c0ac3bff64522fff47c0281943c9f76ea.camel@linux.intel.com>
-Subject: Re: [PATCH] mm: Fix compile error when CONFIG_SHMEM is not set
-From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Hugh Dickins <hughd@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Matthew Wilcox	
- <willy@infradead.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-mm@kvack.org,  Andrew Morton <akpm@linux-foundation.org>, Christian
- Koenig <christian.koenig@amd.com>, Huang Rui	 <ray.huang@amd.com>, Matthew
- Auld <matthew.auld@intel.com>, Matthew Brost	 <matthew.brost@intel.com>,
- dri-devel@lists.freedesktop.org, Maarten Lankhorst	
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>
-Date: Wed, 04 Jun 2025 14:18:06 +0200
-In-Reply-To: <20250604080409.448a27e4@gandalf.local.home>
-References: <20250602170500.48713a2b@gandalf.local.home>
-		<20250602171458.7ceabb1c@gandalf.local.home>
-		<aD4boBrdZXtz_5kL@casper.infradead.org>
-		<fc2b6a94-bd2d-a5d9-c935-381a1613f47e@google.com>
-		<20250603102959.20c85adb@gandalf.local.home>
-		<aD8iL4cFoXpIVK_0@casper.infradead.org>
-		<20250603132736.554f611d@gandalf.local.home>
-		<CAHk-=whb2rMUCGsaNQC4pkCikJ7iX2_Tc1ye5_a6R9-vAkd2Cg@mail.gmail.com>
-		<20250603140632.168190f9@gandalf.local.home>
-		<dca861b8-a29d-b2b3-eba7-32aaf2b8eff7@google.com>
-	 <20250604080409.448a27e4@gandalf.local.home>
-Organization: Intel Sweden AB, Registration Number: 556189-6027
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/CFyTCp"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so2146232f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:18:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749039518; x=1749644318; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6aP3zhLVOba0eQWQTz2JY5uYi9PhSFybgMarblmIhkQ=;
+        b=O/CFyTCppKoT0z0NDKqLqbqrLEC/5l+xWSwf0xkeViD66gRo+z/1UBDDPF8LCkR962
+         bXrMJz33A2M5TzsH0IJMnB5bo/mWNGTdjeWSsBlsVIBOj5qc3YbpXh8ruiU5BWekKlNt
+         gH41uM1lk7dK8kJ1yJ89vaLmBk89JRcg4NY7kQQops0PBRweSLSULgnIqwlONTIkllbA
+         8xqMmbS/S+efeirltRq5Qfb+HD8UJC00BhGA+Z0GbLJwp0NtleUWhEqCD8BVe08vZxqg
+         R9p40sLbLXxxMpP8nJzAIZChyvwYKOd3d6ztnYkby89yl8JKnTrcSj9xHpGlybZKT5gL
+         2o6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749039518; x=1749644318;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6aP3zhLVOba0eQWQTz2JY5uYi9PhSFybgMarblmIhkQ=;
+        b=UtdjVh6dSj7MKDOuvDgGIb9nGa5ZC3e8616D+8zHunRAnaD9t8hNMzgFHd26Ofr9Sd
+         IqgtN39kqFqz5XYlcfhg+si+qL/rqhI3BUm/f0Wl547I40pOEzt7v/ym8R8LsIm80I58
+         NGdMnyrZq/Ad373ScgP/Y3xcr164DdzAC20+uWHS5Cg0Y2mxGGuKIEFrYDysSoExrG7L
+         iYgdOjffrpiY2CnQBmW59/IruV9ZYm9abFMYfkA35T8dhn1Cia9Kii0tGc5LfrTuoZX/
+         bi/LltKVlHA8hNcAmSulxsAfGgpVS4Jtit6FtswSDwpVo4W/nvsQ7/G6HjVmJn/o3npC
+         Lu9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUegub5KrTHiyYBWvMwLabkSbxysN2peg5mKutWPgB8X321uhflEYmO8FVV/B49gTavJTPMjJaDEuBwPzw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7P3mG1cRdDDJBOIAE1ZoEaTeL0nC8AFihOgbTcSKS6yEW+C/r
+	Ccwr6t1wn20B919ps7TmvO8+K43FQBDc1Cvh0NxH/Q1OdtaU6CZOTTaH
+X-Gm-Gg: ASbGncv5T7MAyvgNp+2Nlj0+7uytq+kiybQhSBiHObVt+zTr8+dUqhSKDd0RUWFQmro
+	4Z7qsj7zr62/A8M9UHi/22fZ5mjk3IqVxyKoFwdZH3sZKQElb95WQ74xBzSfMpzeUg3ifNzB9hP
+	yO2UWYSbCQQYcH2DG7OIQ8m9s6u0SzIJ5fb5wEyKgYK8byl9LrAoqnhFgd0UeyLrNlfWs7Qqwyl
+	Kgn3q7dqI/ixmHRigs7WXLiBKT4QVGK07Qe1GoAb6OFwJTJZ+OOIhLpDaG+v3hjeI4mcieF9R3l
+	gFOS/pGKJfQAEVEMr7ifoHDLJoQRMPPjZhST/178w9j61t/nhibFsk97Oj0Ajw==
+X-Google-Smtp-Source: AGHT+IH6AazEjXzmMzLSskspefSjG9nYKH55Ex9FS8UbAAtLGVLMQkNvhM4d8ZC2XtdvoWCGB3vYCw==
+X-Received: by 2002:a05:6000:310e:b0:3a4:ef00:a7b9 with SMTP id ffacd0b85a97d-3a51d8f5fe6mr1835839f8f.12.1749039518213;
+        Wed, 04 Jun 2025 05:18:38 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.159.167])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe73eebsm21317356f8f.44.2025.06.04.05.18.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 05:18:37 -0700 (PDT)
+Message-ID: <67be78c8-d276-4edc-a101-51f168e200da@gmail.com>
+Date: Wed, 4 Jun 2025 15:18:36 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-On Wed, 2025-06-04 at 08:04 -0400, Steven Rostedt wrote:
-> On Wed, 4 Jun 2025 00:03:18 -0700 (PDT)
-> Hugh Dickins <hughd@google.com> wrote:
->=20
-> > I vote for the "select SHMEM", but Thomas and dri-devel and Linus
-> > should decide.
->=20
-> I only tried "depends on SHMEM" which did not work, but it looks like
-> "select SHMEM" should.
-
-I agree. The whole ttm_backup implementation is based on backing things
-up to shmem objects so IMO it perfectly makes sense to "select SHMEM".
-
-Let me know if you want me to send a patch for that.
-
-In the very unlikely case someone would ever want a config without
-SHMEM but with TTM, they'd have to live without the ttm_backup and we'd
-create a separate config for that.
-
-/Thomas
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/its: Always return a writable page for dynamic thunks
+To: Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org
+Cc: pawan.kumar.gupta@linux.intel.com, peterz@infradead.org,
+ linux-kernel@vger.kernel.org, dave.hansen@linux.intel.com
+References: <20250604104715.700149-1-nik.borisov@suse.com>
+From: Nikolay Borisov <n.borisov.lkml@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250604104715.700149-1-nik.borisov@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
->=20
-> I prefer this solution too.
->=20
-> Thanks,
->=20
-> -- Steve
 
+On 6/4/25 13:47, Nikolay Borisov wrote:
+> its_alloc unconditionally allocates and return a ROX page, but setting
+> it RW is predicated on its_mod being set. This can cause a #GP on the
+> memset in its_allocate_thunk() if its_mod is not set.
+> 
+> Since the function always returns a page, ensure it's always set
+> writable so it can be initialized properly.
+> 
+> Fixes: 872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches")
+> Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
+> ---
+>   arch/x86/kernel/alternative.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index ecfe7b497cad..191e909636a5 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -199,6 +199,8 @@ static void *its_alloc(void)
+>   	if (!page)
+>   		return NULL;
+>   
+> +	execmem_make_temp_rw(page, PAGE_SIZE);
+> +
+>   #ifdef CONFIG_MODULES
+>   	if (its_mod) {
+>   		void *tmp = krealloc(its_mod->its_page_array,
+> @@ -210,7 +212,6 @@ static void *its_alloc(void)
+>   		its_mod->its_page_array = tmp;
+>   		its_mod->its_page_array[its_mod->its_num_pages++] = page;
+>   
+> -		execmem_make_temp_rw(page, PAGE_SIZE);
+>   	}
+>   #endif /* CONFIG_MODULES */
+>   
+
+Ok, this actually works in the upstream kernel thanks to 
+d6d1e3e6580ca35071ad474381f053cbf1fb6414 meaning at the time retpolines 
+are processed the execmem cache is actually writable...
