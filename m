@@ -1,200 +1,261 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601D2202C44;
-	Wed,  4 Jun 2025 19:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749065032; cv=pass; b=pZtIp+fP/VlrDnWbA3zHx7tzopQPYdyvhNquwANomh8WvnStP5OJdFZ+YJOXqVW/jhgJAIbcKfUs1f1eQfHNNeVAD1h/0iWm9QSrykljLGZJ3uyeO0EgQuymKzD+dU6y6ob/YiPi8e5C62CB5KFQ6Yd8hHuFOKajUAfeVCmkXLI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749065032; c=relaxed/simple;
-	bh=syUhhHsipbTpBl9ygoyFFcUTcxOfTKqtwlEB/vlrEMw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mtlUCqIjC6WAZ6taTYLRhF/fz8rE0QmOJYD6gg2hiu/Hew+aP3+21jfPn320og3gWSMs9iqXvluIr9FFh9F4K0I0oLqdDSy/Mk9RfHHIvGHlpvvqhOW+SVPWQFHybbTpZYe7tvKrUn7PQXRSm69vmnzwUe+JG0YMRBcRZpVW0ro=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=JY/fdBxk; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA44202C44;
+	Wed,  4 Jun 2025 19:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749065100; cv=none; b=G/PVjvTOneVUhEj/6SmQPhSxeoJQdB9YdlxtEXKcJx2IeS4HgmBosIvkXNiyOQDY2dHq8ON2oHr4FTaQ8K+U/MhgVVK1XOQDegvd3sn7KLcsGHM97KQ5nVczdJNxCKWGQiUimCqKznIl7U7cVFc0y/P4e2VGSfTnh2OGMcx3nc0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749065100; c=relaxed/simple;
+	bh=tPpFxpWzaDWm+hf9MmIM5r/dXEEWVX48e5lRnpReTBs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cE0eTsxjhFKUUaIHLvykdsgaYXSP0Tjs51BnB5eUQHltT/168QdumrkBM7kvLSzBvtThnrw5H4f1lmm0QfKQRYAf++d0zTRzmVrSooZhUTuic7d20+bhorYgsnjbYyMe7HlJ7e/LWZvfqtd5W70FmpPW8LRt2rwXuKdMuwk49+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bxB96D5j; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="JY/fdBxk"
-ARC-Seal: i=1; a=rsa-sha256; t=1749065007; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Z5hbGG59HyjhN4Hd22Jpqs9Ye08p54dElHM8fk57RTIt4kGKjVEGHtkUyWMBAReaKMfcONZOSQCMYf4szBIykeFhqzTLGsi9r8P/ysQMPxjCO/cB6TiRQAdGgwciuvjLOKXoyRfuKHV8y0bWLZwUVZ4W3w7WeCmaedbInRAgSZ8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749065007; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=kXSt0WPyJdE3zC65/zXJeztOuAlaCmnXB8Js7D/bSQ8=; 
-	b=CzddvxqDRy00+fEBSWx2h9T1AYu1jW9D8OhJd9Of+OBPljLjFP8PbUUFrOMCk3/LSqpCBW47tqzXJ8sDF3DIKmDsbQP1/aKlorOBpIM6zFE29ej5Hu9np+5G2w8p7QrW7UTlnhBYbuEctpIy0kefb7vCPmVyde3wXIOTu8Z3wNo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749065007;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=kXSt0WPyJdE3zC65/zXJeztOuAlaCmnXB8Js7D/bSQ8=;
-	b=JY/fdBxk20i7dBX4AV6BwwBbylRllfJ7eG4LIG3LUuyWeXebMSn2xFRv8XQ+10Eq
-	FJ23Odtpp3AEdcchXi3utD9u5+rhKjRCTjVhQm7MObnOVGREGod7+14LS7JqWutepCm
-	EyxkkBSXrY2dT0Qrg4FYgryIZVRmuoXSznnfbXe4=
-Received: by mx.zohomail.com with SMTPS id 1749065006388272.56864063119986;
-	Wed, 4 Jun 2025 12:23:26 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
-Date: Wed, 04 Jun 2025 21:23:23 +0200
-Message-ID: <23482965.EfDdHjke4D@workhorse>
-In-Reply-To:
- <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com>
-References:
- <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <6656934.DvuYhMxLoT@workhorse>
- <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bxB96D5j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749065099; x=1780601099;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=tPpFxpWzaDWm+hf9MmIM5r/dXEEWVX48e5lRnpReTBs=;
+  b=bxB96D5j6MAwqagsVJL12S+rgL5VuTnET/tjEDpbznvc58klkwE3gz+s
+   Aurq+BEUAfTdqRVs/zI83H3wB3on0N9+COUKVy0md1Fv3QHNhw8JRvO9o
+   QjqnrbZBPS2358Q6AahDLcn6tl9SmAtmAqLOzV+fiNYre6OV/o2cmUF2a
+   wla8eBuzz1wAAW2YvyAb+XQ3Sqv+ebSi8I4M5T6YO5T0avENSuj3ccSm1
+   qWF/fIyAHt+muVDDFYu6GA6L99XaoKr4Ds4J2bxa1gR42Qy978xygbimN
+   s1Juu5cPKvU8Qv5YJ8v99atSuRTiYkoAFMgGRFfyq46A5lSNGRMxGiZfx
+   Q==;
+X-CSE-ConnectionGUID: qsGVskO9SsK4SBU9dXHq1w==
+X-CSE-MsgGUID: Hl1atIijTy2OpiZhs+EljA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51034683"
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="51034683"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 12:24:58 -0700
+X-CSE-ConnectionGUID: B8HNFdpaSOac6/6J87MKMQ==
+X-CSE-MsgGUID: ZTYNDUU7SEuOGsCf26OuVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="176241872"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 12:24:58 -0700
+Received: from [10.124.221.106] (unknown [10.124.221.106])
+	by linux.intel.com (Postfix) with ESMTP id 55F0C20B5736;
+	Wed,  4 Jun 2025 12:24:56 -0700 (PDT)
+Message-ID: <1222c005-9d0c-4f02-a1d6-02c14b61673b@linux.intel.com>
+Date: Wed, 4 Jun 2025 12:24:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 02/16] PCI/AER: Report CXL or PCIe bus error type in
+ trace logging
+To: "Bowman, Terry" <terry.bowman@amd.com>,
+ PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-3-terry.bowman@amd.com>
+ <0619c83f-84d9-4dcd-866d-d6df1da4d1c9@linux.intel.com>
+ <7d9030bf-8d27-4c9e-b995-89ce1a63dd6c@amd.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <7d9030bf-8d27-4c9e-b995-89ce1a63dd6c@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wednesday, 4 June 2025 21:12:35 Central European Summer Time Alexey Char=
-kov wrote:
-> On Wed, Jun 4, 2025 at 10:38=E2=80=AFPM Nicolas Frattaroli
-> <nicolas.frattaroli@collabora.com> wrote:
-> >
-> > On Tuesday, 3 June 2025 19:01:13 Central European Summer Time Alexey Ch=
-arkov wrote:
-> > > List both CPU supply regulators which drive the little and big CPU
-> > > clusters, respectively, so that cpufreq can pick them up.
-> > >
-> > > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > > ---
-> > >  .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 28 ++++++++++++=
-++++++++++
-> > >  1 file changed, 28 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/a=
-rch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-> > > index b09e789c75c47fec7cf7e9810ab0dcca32d9404a..d9c129be55a0d997e04e6=
-d677cdc98fb50353418 100644
-> > > --- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-> > > +++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-> > > @@ -207,6 +207,22 @@ vcc_3v3_ufs_s0: regulator-vcc-ufs-s0 {
-> > >       };
-> > >  };
-> > >
-> > > +&cpu_b0 {
-> > > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > > +};
-> > > +
-> > > +&cpu_b1 {
-> > > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > > +};
-> > > +
-> > > +&cpu_b2 {
-> > > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > > +};
-> > > +
-> > > +&cpu_b3 {
-> > > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > > +};
-> > > +
-> > >  &combphy0_ps {
-> > >       status =3D "okay";
-> > >  };
-> > > @@ -215,6 +231,18 @@ &cpu_l0 {
-> > >       cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > >  };
-> > >
-> > > +&cpu_l1 {
-> > > +     cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > > +};
-> > > +
-> > > +&cpu_l2 {
-> > > +     cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > > +};
-> > > +
-> > > +&cpu_l3 {
-> > > +     cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > > +};
-> > > +
-> > >  &gmac0 {
-> > >       phy-mode =3D "rgmii-id";
-> > >       clock_in_out =3D "output";
-> > >
-> > >
-> >
-> > Reviewed-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> >
-> > > so that cpufreq can pick them up.
-> >
-> > Fwiw, even without this patch they're picked up by cpufreq-dt for me:
-> >
-> >     user@trixie:~$ sudo cpupower frequency-info
-> >       analyzing CPU 5:
-> >       driver: cpufreq-dt
-> >       CPUs which run at the same hardware frequency: 4 5 6 7
-> >       CPUs which need to have their frequency coordinated by software: =
-4 5 6 7
-> >       maximum transition latency: 40.0 us
-> >       hardware limits: 408 MHz - 2.30 GHz
-> >       available frequency steps:  408 MHz, 600 MHz, 816 MHz, 1.01 GHz, =
-1.20 GHz, 1.42 GHz, 1.61 GHz, 1.80 GHz, 2.02 GHz, 2.21 GHz, 2.30 GHz
-> >       available cpufreq governors: ondemand userspace performance sched=
-util
-> >       current policy: frequency should be within 408 MHz and 2.30 GHz.
-> >                       The governor "schedutil" may decide which speed t=
-o use
-> >                       within this range.
-> >       current CPU frequency: 1.61 GHz (asserted by call to hardware)
-> >     user@trixie:~$ uname -a
-> >     Linux trixie 6.15.0-11173-g546b1c9e93c2 #2 SMP PREEMPT Wed Jun  4 2=
-0:32:52 CEST 2025 aarch64 GNU/Linux
->=20
-> Frequencies are fine, but I don't think the more power hungry big CPU
-> cluster gets any voltage scaling without it. Once I try to load the
-> system enough that the governor decides to bump the big cluster
-> frequency up, the regulator stays at 850000 microvolts, causing random
-> reboots when the whole cluster starts starving. With the patch,
-> voltage oscillates between 700000-737000 microvolts in idle and jumps
-> up to 950000 under load, and the system seems stable.
 
-Okay, that sounds pretty serious and in this case you should add the
-following tag at the end of the commit message, usually as the first
-thing after the line break:
+On 6/4/25 7:32 AM, Bowman, Terry wrote:
+>
+> On 6/3/2025 5:02 PM, Sathyanarayanan Kuppuswamy wrote:
+>> On 6/3/25 10:22 AM, Terry Bowman wrote:
+>>> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
+>>> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
+>>> Type' for CXL device errors.
+>>>
+>>> This requires the AER can identify and distinguish between PCIe errors and
+>>> CXL errors.
+>>>
+>>> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+>>> aer_get_device_error_info() and pci_print_aer().
+>>>
+>>> Update the aer_event trace routine to accept a bus type string parameter.
+>>>
+>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>>> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>>> ---
+>>>    drivers/pci/pci.h       |  6 ++++++
+>>>    drivers/pci/pcie/aer.c  | 18 ++++++++++++------
+>>>    include/ras/ras_event.h |  9 ++++++---
+>>>    3 files changed, 24 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>> index b81e99cd4b62..d6296500b004 100644
+>>> --- a/drivers/pci/pci.h
+>>> +++ b/drivers/pci/pci.h
+>>> @@ -588,6 +588,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+>>>    struct aer_err_info {
+>>>    	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+>>>    	int error_dev_num;
+>>> +	bool is_cxl;
+>> Do you really need this member ? Why not just use pcie_is_cxl() in aer_err_bus()?
+> This was added per Dan's request instead of using pcie_is_cxl().[1]
+>
+> [1] https://lore.kernel.org/linux-cxl/67abe1903a8ed_2d1e2942f@dwillia2-xfh.jf.intel.com.notmuch/
+>
+> -Terry
 
-  Fixes: 40f742b07ab2 ("arm64: dts: rockchip: Add rk3576-armsom-sige5 board=
-")
-
-That way, our stable kernel robot overlords will pick it up and
-backport it to the kernels that already contain the mentioned commit.
-
->=20
-> Here's what I used to monitor the voltage (there must be a better way
-> to do it, but it works):
-> sige5 ~ # watch cat `grep -r . /sys/class/regulator/*/name | grep
-> vdd_cpu_big_s0 | sed -e 's/name.*//'`/microvolts
->=20
-> And in another terminal:
-> sige5 ~ # stress-ng -c8
->=20
-> This might warrant a note in the commit message I guess :)
-
-Yes, definitely mention stuff like this in the commit message.
-
->=20
-> Thanks for your review and testing!
->=20
-> Best regards,
-> Alexey
->=20
-
-Kind regards,
-Nicolas Frattaroli
-
+It looks like it is added to accommodate some future use cases. May be add some info about it in the aer_err_info struct. Just looking at the code, that member value mirrors pci_dev->is_cxl and where ever you read info->cxl, you can also read the value from pci_dev->is_cxl.
+>>>    
+>>>    	unsigned int id:16;
+>>>    
+>>> @@ -604,6 +605,11 @@ struct aer_err_info {
+>>>    	struct pcie_tlp_log tlp;	/* TLP Header */
+>>>    };
+>>>    
+>>> +static inline const char *aer_err_bus(struct aer_err_info *info)
+>>> +{
+>>> +	return info->is_cxl ? "CXL" : "PCIe";
+>>> +}
+>>> +
+>>>    int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>>>    void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>>>    
+>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>>> index a1cf8c7ef628..adb4b1123b9b 100644
+>>> --- a/drivers/pci/pcie/aer.c
+>>> +++ b/drivers/pci/pcie/aer.c
+>>> @@ -698,13 +698,14 @@ static void __aer_print_error(struct pci_dev *dev,
+>>>    
+>>>    void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>>>    {
+>>> +	const char *bus_type = aer_err_bus(info);
+>>>    	int layer, agent;
+>>>    	int id = pci_dev_id(dev);
+>>>    	const char *level;
+>>>    
+>>>    	if (!info->status) {
+>>> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+>>> -			aer_error_severity_string[info->severity]);
+>>> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+>>> +			bus_type, aer_error_severity_string[info->severity]);
+>>>    		goto out;
+>>>    	}
+>>>    
+>>> @@ -713,8 +714,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>>>    
+>>>    	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+>>>    
+>>> -	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+>>> -		   aer_error_severity_string[info->severity],
+>>> +	aer_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
+>>> +		   bus_type, aer_error_severity_string[info->severity],
+>>>    		   aer_error_layer[layer], aer_agent_string[agent]);
+>>>    
+>>>    	aer_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+>>> @@ -729,7 +730,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>>>    	if (info->id && info->error_dev_num > 1 && info->id == id)
+>>>    		pci_err(dev, "  Error of this Agent is reported first\n");
+>>>    
+>>> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+>>> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
+>>>    			info->severity, info->tlp_header_valid, &info->tlp);
+>>>    }
+>>>    
+>>> @@ -763,6 +764,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+>>>    void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>>    		   struct aer_capability_regs *aer)
+>>>    {
+>>> +	const char *bus_type;
+>>>    	int layer, agent, tlp_header_valid = 0;
+>>>    	u32 status, mask;
+>>>    	struct aer_err_info info;
+>>> @@ -784,6 +786,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>>    	info.status = status;
+>>>    	info.mask = mask;
+>>>    	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+>>> +	info.is_cxl = pcie_is_cxl(dev);
+>>> +
+>>> +	bus_type = aer_err_bus(&info);
+>>>    
+>>>    	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+>>>    	__aer_print_error(dev, &info);
+>>> @@ -797,7 +802,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>>    	if (tlp_header_valid)
+>>>    		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>>>    
+>>> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+>>> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
+>>>    			aer_severity, tlp_header_valid, &aer->header_log);
+>>>    }
+>>>    EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+>>> @@ -1215,6 +1220,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>>>    	/* Must reset in this function */
+>>>    	info->status = 0;
+>>>    	info->tlp_header_valid = 0;
+>>> +	info->is_cxl = pcie_is_cxl(dev);
+>>>    
+>>>    	/* The device might not support AER */
+>>>    	if (!aer)
+>>> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+>>> index 14c9f943d53f..080829d59c36 100644
+>>> --- a/include/ras/ras_event.h
+>>> +++ b/include/ras/ras_event.h
+>>> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
+>>>    
+>>>    TRACE_EVENT(aer_event,
+>>>    	TP_PROTO(const char *dev_name,
+>>> +		 const char *bus_type,
+>>>    		 const u32 status,
+>>>    		 const u8 severity,
+>>>    		 const u8 tlp_header_valid,
+>>>    		 struct pcie_tlp_log *tlp),
+>>>    
+>>> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
+>>> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
+>>>    
+>>>    	TP_STRUCT__entry(
+>>>    		__string(	dev_name,	dev_name	)
+>>> +		__string(	bus_type,	bus_type	)
+>>>    		__field(	u32,		status		)
+>>>    		__field(	u8,		severity	)
+>>>    		__field(	u8, 		tlp_header_valid)
+>>> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
+>>>    
+>>>    	TP_fast_assign(
+>>>    		__assign_str(dev_name);
+>>> +		__assign_str(bus_type);
+>>>    		__entry->status		= status;
+>>>    		__entry->severity	= severity;
+>>>    		__entry->tlp_header_valid = tlp_header_valid;
+>>> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
+>>>    		}
+>>>    	),
+>>>    
+>>> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
+>>> -		__get_str(dev_name),
+>>> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
+>>> +		__get_str(dev_name), __get_str(bus_type),
+>>>    		__entry->severity == AER_CORRECTABLE ? "Corrected" :
+>>>    			__entry->severity == AER_FATAL ?
+>>>    			"Fatal" : "Uncorrected, non-fatal",
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
