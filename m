@@ -1,252 +1,338 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2052.outbound.protection.outlook.com [40.107.92.52])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6779339A1;
-	Wed,  4 Jun 2025 21:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749072725; cv=fail; b=eSsLkYAI4xkLAld9mVnph03I65eMuHKGUQBwbCdULreY8kXNx6eusDg9zg1HaKqvjGdVeT3ektM0Co8zBI3iVqitHq/SSQeWTio3lhDu40cBw+w37uhhJClD+b0MQ+osUbzfUtnjr93bJGGRygxgXWJd7sHHEwphdfw7VsdP5rM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749072725; c=relaxed/simple;
-	bh=pQehkr0QxMGCAW0e7cJuDyXuMra29KvjbtcnL3H6J38=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AtEO3f/3sk/aJy7WPBbjC7RkdmTKZLX176EuLf2DhIP+lRmgg5GVsne3TCNqUgQbWlZf8ywtb0cqTShluW6L1AcK0hFm6Nxp8U7PYDxLkI7GCZS6bAevyTUZjgLjJ7TOkgQmU1d5wBFAEu4cmYnlnjZxh0PN/kKYK9BRInHw/po=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jF8MIvsE; arc=fail smtp.client-ip=40.107.92.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB567339A1;
+	Wed,  4 Jun 2025 21:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749072789; cv=none; b=pFjn8FnceaNmZE5BUbe12Xw/JQMoEh240rcd03CSUTyvPMzBcqsXyA2vHHB4rWsjAadjrLMeKiHgF5RMKgIxoyi5YWnC6OUlgUuQEAH9ApDXNnk7HLN47qE9n90eVx3HZgpsTTe6uODa1TajSaWtuZODM3WFpVxpRlz8+8XcDQM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749072789; c=relaxed/simple;
+	bh=O7vyp2UPZdtMd+kT/CGPsJnzViBUVjVC9sOrwdwPN/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ddUMKfP39B8PlqwXzMr/18LcngD9c36aMCXG18TJoe1Rk05+NlmLtHuVlpZTMEDszWZMyY0ze8SKO2IkGg2VGiKiJnLYycfbCFBlLtrYVJSUT6fnXg0R5bHEKoeC5oT87rIaAGZvgyxAlqKIJNX1D6jkX6enx/D3c2ky/xrJEPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QTQTwGvL; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jF8MIvsE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZsZ4q9felOm3VaStHClvqcmMYE8nvwAvHDzBANGMETCVzfKCRxf0IL17nqZPe8bQUHJ8lGl+3BUD+EUewF2LQkmx8j9Io2v2IZpntk7VezLlMKPHt95u8ytypWJv7H28iVUJfOMlZF937UFJhyTpPR92vlE0d6WyMCGXdwjBmHMhpMzONr7jvvL0gJGGybzKwsqaDHITzGblq4QIbyoqA5ZiIgHLJp/DvJD/DPSnYqZDrQoTgq4STC9ZRoVruj8ER/roK7vik87kyTzl3qIyNM3KMhCZU0exdpien9uEOKZt9HoBHSf8/UD5eySs1XtI9VfMKj7bsYJD47KUtcHoAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JofnGBD8+A0mIxTF8+P72AOhQyBdtSSQsQbpWUdZVPw=;
- b=S8Zjhnu3Hs6VeefdXWVyWOJ69Vb6C4zXCORjyxV6l+NgModMBBN67b2dLhLwhG6tcr5si9vPhGEYY00HQDncRMzwesf6iYNqIiRdAQJLflXx7Ih2j0XxCZgWjMdevmFsTinLgd11CAA57yrRtkXWM8/FMkcc9oLPsMcIqr5PHSbHVV3hVKH+tWc2Py2z5rZ/mhLy62C/a8XYkHQUSo7aggj9fqeIHU1ZineurnlzBdR4ZkHybtklf79X9ynKD1w1Aze3wnMYFt5sOQa3LpUfta3/m8eg5+FXm6l+cC4Z46f24oa5ThAH0beDT9yb/4pY2rtKq/n9tk4RSXH3RI1uug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JofnGBD8+A0mIxTF8+P72AOhQyBdtSSQsQbpWUdZVPw=;
- b=jF8MIvsEM/SIvIoxiphB7FWxOEMCZt3liYQCnmP06sIA195bGtH4UbL2NW+sEh4SzSpYyA9SRd5JWf/W6uR38ytqR8ejOXzsOXg/4KaymiOSv34uR14IbGMIZWPUm02Tp67Ou9xSGVsg5RWJXkJTGVdHEbH70HVs5XchQmrqGms=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21)
- by DS4PR12MB9657.namprd12.prod.outlook.com (2603:10b6:8:27f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Wed, 4 Jun
- 2025 21:31:59 +0000
-Received: from BL3PR12MB9049.namprd12.prod.outlook.com
- ([fe80::c170:6906:9ef3:ecef]) by BL3PR12MB9049.namprd12.prod.outlook.com
- ([fe80::c170:6906:9ef3:ecef%5]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
- 21:31:59 +0000
-Message-ID: <57aeb651-b7d3-49c2-a4ad-056529f62a62@amd.com>
-Date: Wed, 4 Jun 2025 16:31:56 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: ccp: Fix SNP panic notifier unregistration
-To: Tom Lendacky <thomas.lendacky@amd.com>, john.allen@amd.com,
- herbert@gondor.apana.org.au, davem@davemloft.net
-Cc: aik@amd.com, dionnaglaze@google.com, michael.roth@amd.com,
- linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250602191017.60936-1-Ashish.Kalra@amd.com>
- <8cd27c20-6439-deec-f09c-e4f6f789761c@amd.com>
-Content-Language: en-US
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-In-Reply-To: <8cd27c20-6439-deec-f09c-e4f6f789761c@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7P220CA0021.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:806:123::26) To BL3PR12MB9049.namprd12.prod.outlook.com
- (2603:10b6:208:3b8::21)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QTQTwGvL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749072788; x=1780608788;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=O7vyp2UPZdtMd+kT/CGPsJnzViBUVjVC9sOrwdwPN/E=;
+  b=QTQTwGvLGWSqz6hoaDqlBZO+UMbP+PWnwZoAydaMclBKKj3ZAqaECxBL
+   o5UE8shFp5M/ydid+7rt7Xi5Y+b3wG0bmxpXY/FE+/CkYC528uWfRtXK1
+   tJNOtpg8IHQOT6RDNJGygDKTWnitbXW2ICUxt4x9IQVYy4tTn03Uip3Ap
+   EqYOjLnPLqV1jxX3SCqqIzqk1Vh59gAySvQEKOU6NM/cd97Ti9cAxyq3r
+   x+CDLS4rfQ5vIs0zheJ+5swwwqPawffGE3JAUThDcn2bY8hWj7SGx19uE
+   BlGYMzE8pzb4BwzX/pkRPjTZ6P6+/X6HYrEuoirjbI+1d/OA2O3274psC
+   Q==;
+X-CSE-ConnectionGUID: aaLT+jKNQBmckh9lONPpkQ==
+X-CSE-MsgGUID: 1HMHyEwBQKeDUUaA34NIzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51037571"
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="51037571"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:33:07 -0700
+X-CSE-ConnectionGUID: q5l7A0fLTUinKKQu0uEbng==
+X-CSE-MsgGUID: cAOQcKgvSuaRNTkQw0B+IA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="176264994"
+Received: from oandoniu-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.208])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:33:04 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 7707F11FBD1;
+	Thu,  5 Jun 2025 00:33:00 +0300 (EEST)
+Date: Wed, 4 Jun 2025 21:33:00 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Tiffany Lin <tiffany.lin@mediatek.com>,
+	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+	Yunfei Dong <yunfei.dong@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, kernel@collabora.com,
+	linux-media@vger.kernel.org,
+	Sebastian Fricke <sebastian.fricke@collabora.com>
+Subject: Re: [PATCH v3 3/5] media: mc: add debugfs node to keep track of
+ requests
+Message-ID: <aEC7jMDgRAg1cfXZ@kekkonen.localdomain>
+References: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com>
+ <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-3-603db4749d90@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR12MB9049:EE_|DS4PR12MB9657:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c066f84-4286-4725-cc0a-08dda3af3cda
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Zjd5S0tJYXBsWERWMmFENnRUc2VGWDdQQkxoTElPbUk2WDdJSmliQ0xsL2ZT?=
- =?utf-8?B?QXcyclJUeHdHNjhkWXZjQytvS1hIelBRZU16VHFUTnkvZFowcGQ2MUNoT2lJ?=
- =?utf-8?B?QmhWSUhDSXRsM2VETmc5QVFaT29UVTJjcENUbVZ2T0dPU0hCQkx5WldlTyta?=
- =?utf-8?B?U3lOeUVzMThsOXFpdEhZdk9tVktMWXFwVEVmSmVhNkpYSWVvM3k0b0lvRUYz?=
- =?utf-8?B?aWV0UHRVOE0vekJpa0pQaVV5YndNbHVIVTRORFVxQnNhNmsxNGF5UjdnNm5m?=
- =?utf-8?B?U2k0MjVJeHlCUng3U0JOQ25uU1JFK0U0RzVwVWUzUlk5QjNzc3RFOXBubytI?=
- =?utf-8?B?OTU3dkI1bXl6MWFpSWp5d0ZvQW5zcFdEbVdHNFNYOXhhbjNIVHNEY3JBL1cr?=
- =?utf-8?B?LzdLVDB6d3d2MzNZVENXMEdGcE5vbjNyeUlrMERGcG5VNzgzMHQxNkZ1bDhX?=
- =?utf-8?B?Q09JYUVCQkh1K0dGTjU1Y1VCMDNlTktMdTV0WE1UK1BIMUtVN2Jld1NrT0c2?=
- =?utf-8?B?aWt4bjV4VnlMTGM2LytBeStFS1BabFZ4THN5N2k2eGFvSEh2emxkTlkrYmI0?=
- =?utf-8?B?UzRrcWk0YlZ1T3NibWY2T3VUdmFyQVdqTXMzYVFoRFhmNHMzK29JUHArMUlT?=
- =?utf-8?B?ZU5WRVlFam5FbjJUZ2ZmQkFpM0tkTnJYZW5UVGNoRVFhTDVsUlR1TnE3bC9B?=
- =?utf-8?B?bTM3aGpZc00raWw1a0VvRTh3N241L0NNWVhxbG54S1picjk1ZXM2VEtVUURG?=
- =?utf-8?B?bWZQSzRaWGlsLzVlc1JrSm56S25tbWtLUTh5YUl2bFNqcUVDSG9Gc0FlNStj?=
- =?utf-8?B?enpWek1HU3lmVEhzUzZmNGVFcGt1SW9XMVV1M29UU1cwWkVYZWdkYzYyVmxD?=
- =?utf-8?B?MFpUWGhUYm5vajhBNUpWOGZqN21nOEROUFR4VEFTL0RIU0h1SWdYQXRlcGtX?=
- =?utf-8?B?YXZFZDVzQ0cwYjZQMHR2U1l6WDhXYWdyd1R2UXV0blRnVTMzaXdkMHFnclN2?=
- =?utf-8?B?elBQMEw1Z2xjMkIrTGtra1M2a1k1K3pjcmtDN3VvblUvNmRIMFZqYXVSZVZM?=
- =?utf-8?B?OS9KS0REUHk2QWJNb2ZlVWtjblFnRkllTFNKTm1BME9Sd3AraVdzNVcvbVE1?=
- =?utf-8?B?V1lZWFJMYWxPTGhzYXVpR0hiQnRnaVQrRVhxTWt0bjFCeWdWZnlQYUpkTGty?=
- =?utf-8?B?MllpQWVsZnl6dWRHbEZGZnQzSXNkNUdtNndlTjl3YzB3WCtMRVRPZEVJTHJL?=
- =?utf-8?B?L0w2T2dUSlFkM2Y5MHRMRUxjTjMxamJHZll2NDd1RjZRWWw0RXQycit0M1JR?=
- =?utf-8?B?U2NBNWY4Vm1IUGVzekpiYXNkSjJFWnhWaDJzTWE1c1p5U2RQRHdXK3MxM2NN?=
- =?utf-8?B?RHRrMExtZjJUZ004RlBMcmlBcmR6ODhURTdsdkdYdHZ4dGxSdVlRZ0w2YVMz?=
- =?utf-8?B?d2NXSE9nTG1MbTFVaWp2UWxlSFVEbGtBeTV3T2NlZW5aaGYxYXZrUDFXWDI0?=
- =?utf-8?B?ZE80WTFnL0krS293TWQ5bGpQRk9kWjluRHRyQnNZUXZidS9aaUpBalljRjNH?=
- =?utf-8?B?aWtneXlySnNxWXI3dEFFRkorSlZ3WFpYNXJaS1pNME5hZGkyK1ZySG9mc25m?=
- =?utf-8?B?bVlJaDMzWlBLdTJtekxSeEI3Z3p3aUtiemJQQXkwZjNKcldZTVh2cXdrU2ow?=
- =?utf-8?B?cmFtQmZya0tsUGNvUFQwZ01YMGpDSG41MEJFZGxPamp2bVBpZzh4cjBwUjFo?=
- =?utf-8?B?QXczRGhzS1gzbXROSmY0aC9sajN3cUVSNDhMRHlZU1hSSzFoWFBGNDhyNFcw?=
- =?utf-8?B?YnEzQmtkOEt2RCtnd2tHelJ0L0dKZ05ubGlzOUxtcHFmYlc1T2xBZXNCdTZE?=
- =?utf-8?B?Z25sWDlOdDArNnN1QWRXaDN6M1ZFc0pyZTZ6ejR4MnVFRXdiNHhyUU1RVXZD?=
- =?utf-8?Q?rgywHbVA7no=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB9049.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VUxCcGM2SkFzRjB0VGxhNk9jTkt5Rjh1Tm5KcEUrZ28raWtpZWxNRDBGZ2Rv?=
- =?utf-8?B?TS9WcjRyRE5pem5TTWVCZll0NVI5N0FyVVlUUzQyOWtyN2pjV0l4RDE5WTJU?=
- =?utf-8?B?dkNWbFg0YTl2Y2twaTBvSFpURUc3SUFxb0YvTEFINW5kSW4vYnpGc09NbWJx?=
- =?utf-8?B?dVVNRUpTK28yeEJPMDY1VmRQbEwxcHlCaE8yL3J1WEU4NmdHdG93dHM0MVNs?=
- =?utf-8?B?Q0l5a0pVd05KOFZDWGVTWFJ4M0Z1dE9VL0pTRVdPTmR3aE1WZlhqZ2ozdXBw?=
- =?utf-8?B?UThZWVo3ZHZFaEg4elE1enNOdXdzdE05bjgvR002SllBalFBQytsVFBabXVJ?=
- =?utf-8?B?R2ovejhVU0oxNS83MjRHVzllMk9xSThucFVSZmcvSXgwSHlwYlM4U1BHR2g3?=
- =?utf-8?B?clBUTnJWempadStSbjNCcUlxZGZiMVd1d3RxUlRjZWVtYjFUOEdXUDl3VzY5?=
- =?utf-8?B?ekdCaVlTd3AzV3oxZGZUUmdETStSWVE4NnQxVHFZSzlKaE05Q2Q4T3pzM2Nx?=
- =?utf-8?B?OHRPenlpSk9sOGUybUJYdXpQUWRCOW1ta25zT3ZEM2ZweXN2K2pveFZWN1Zn?=
- =?utf-8?B?ZjhuSkQwUk1jY0tLaWxaWC9naWhwaStrVjQ5Nmt4QjZpTXFVaDY1UzE3WXdY?=
- =?utf-8?B?V2ZuWWFRb1BLOHhsOExTTGhhaWJ3akNjVUIyNzhVSVFyWHg2by91SW15b0U0?=
- =?utf-8?B?eTdIYnRYVU02VjZYa1JFbUFNeXV2VG11KzdvVmFEdmtsUS9VNlVBYkQ0UG9D?=
- =?utf-8?B?d05XeER0d1ErajZkakMwVWYrOGNHeGM3WjQ4Tkp0YmxNbzNYMjZDNzVzMlQw?=
- =?utf-8?B?TUdhZGRqTUdrZXNQTDNoeFhINDVuQnFnbklDTnZGdWMrcWZoVGVxakg1NlA5?=
- =?utf-8?B?TTVBQXgvS05EY2FHZTFqQnN3dmsvQWNKNzVCMTNrbXpBQzUyTUt6MWFNSnZJ?=
- =?utf-8?B?QkdwcW9hcTVBYmRNelg4V1RUVjljQ210WHcxMVIrYTZGaUJuSSthRWNoa1hW?=
- =?utf-8?B?T0t5c0JFMVU1OXJiS2lUMmJoSHFtdW9HQ0pOZUN1MUJXdUE5OXpYRW14Mjl3?=
- =?utf-8?B?SklCSkNMam8rTVQ5Yk13ODRDWkppYTNIM1NySHNyb3N2cFlYYkVPZ2VUcU9C?=
- =?utf-8?B?QXJZSTNqb1VjR214US91K1doVnRMaXVJaVZaRThCcEJpSUJMTTZMZGVvakNN?=
- =?utf-8?B?RUF2Y2tFb0hSUjhFVk15UFJkWUVwRGgwRnhzb3U0WE02UG8waUFadFJ1QW8r?=
- =?utf-8?B?MUlhdWJ6RFBrcFFkWTRURlNBRWl2Rjh1Z3FPQVQ5cnBKV01sSmRHV0pyU2sw?=
- =?utf-8?B?R1F6eVY3QnNCaWJPVXRXaU5YY3ZLRzhySzVrNGpzUlFTWUxYUjRndDlUNXQz?=
- =?utf-8?B?eWtEREZ2UE15dnJya3hUTm5EajB0UWVuQktLVENwejFqdExsOWpta1BNclk2?=
- =?utf-8?B?cS9rREhiZVdHWG1RaU56S1ZlY3YzVERaL0FtUmNHM3UyTjY2OG5vY2V4WFVx?=
- =?utf-8?B?TjNhTjNlMTNET3V1Q0tmRGw2RkViaXJhVU13K3kxTyswdDcya2krdHpBdkFW?=
- =?utf-8?B?NjZQMVA2cDMwYjl0REc3c0xsUXdkVEd2V1BHd3ROenhOSXRycHdVRXpJa2hh?=
- =?utf-8?B?dzRwS3NPK2tLWlhTN1R4dHk0S3VtZWNnRDhSM0luMHZaeXltNVlqVlVzcVBO?=
- =?utf-8?B?cXhnVk9nV0wwaG1SdStkakx6eVdFczVsRXlISldwWDNsR2JUS0Z6ODI3eTl1?=
- =?utf-8?B?RFVQLzZGWHRrWmtyaWR4eVFNZm1jV3JNeUdQNi80WVljcGlhQmc3b3FCeUlj?=
- =?utf-8?B?cWw0bjdNeCtxRmlxMkNJWHhCR0VuS2Q0dTR5UDEreVZvTUt3bFh1ZFVVZkho?=
- =?utf-8?B?emFnNVd4Mkc0b3ZGNEZuai9MYkJ6UzhQdVR0dm1tbkNBRXVrSUNkVE9DZUhv?=
- =?utf-8?B?ZVlaZkc0TWY5aE9mN3g2OHU1QmxacXpybkxHWUxRTDlGQXF0Sk4ycy84ZVJy?=
- =?utf-8?B?TGtMY2FGcVJzQkRXa1I3RklZayt0cUVVWXpsR2dPWmQwc3lwcWlCUmR3Qy9L?=
- =?utf-8?B?eGZ5UjJDajJkTm9ZWktacjVBM2x1Q1B4c3RWT2cvSFVMTExHR3FjZVNRQjZM?=
- =?utf-8?Q?PpS60fv1wyH5w02ptMDTw/hLg?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c066f84-4286-4725-cc0a-08dda3af3cda
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB9049.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 21:31:59.3725
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: c3TT9raCADf6WW5ZX8Am0ZJ8tezF2FPs831yyyjdv+y5mYVEUxXQ51W3N8HtSFojd+6L+Otk3Q+b8tdgS/NA3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9657
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-3-603db4749d90@collabora.com>
 
-Hello Tom,
+Hi Nicolas, Hans,
 
-On 6/4/2025 10:57 AM, Tom Lendacky wrote:
-> On 6/2/25 14:10, Ashish Kalra wrote:
->> From: Ashish Kalra <ashish.kalra@amd.com>
->>
->> Panic notifiers are invoked with RCU read lock held and when the
->> SNP panic notifier tries to unregister itself from the panic
->> notifier callback itself it causes a deadlock as notifier
->> unregistration does RCU synchronization.
+Thanks for the update.
+
+On Wed, Jun 04, 2025 at 04:09:37PM -0400, Nicolas Dufresne wrote:
+> From: Hans Verkuil <hverkuil@xs4all.nl>
 > 
-> You mean that during a panic, __sev_snp_shutdown_locked() is trying to
-> unregister the notifier?
-
-Yes.
-
-This is the code path :
-
-snp_shutdown_on_panic() ->
-__sev_firmware_shutdown() ->
-__sev_snp_shutdown_locked() ->
-atomic_notifier_chain_unregister(.., &snp_panic_notifier)
-
-So atomic_notifier_chain_unregister() is being invoked from the panic notifier (context) itself.
-
+> Keep track of the number of requests and request objects of a media
+> device. Helps to verify that all request-related memory is freed.
 > 
-> Wouldn't it be better to check if a panic is in progress and not try to
-> perform the unregister?
-
-Yes, actually it will be easier to do that by simply checking the panic parameter in
-__sev_snp_shutdown_locked().
-
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> ---
+>  drivers/media/mc/mc-device.c  | 30 ++++++++++++++++++++++++++++++
+>  drivers/media/mc/mc-devnode.c |  5 +++++
+>  drivers/media/mc/mc-request.c |  6 ++++++
+>  include/media/media-device.h  |  9 +++++++++
+>  include/media/media-devnode.h |  4 ++++
+>  include/media/media-request.h |  2 ++
+>  6 files changed, 56 insertions(+)
 > 
-> Or, is snp_panic_notifier() resilient enough to just always have it
-> registered / unregistered on module load/unload?
+> diff --git a/drivers/media/mc/mc-device.c b/drivers/media/mc/mc-device.c
+> index c0dd4ae5722725f1744bc6fd6282d5c765438059..5a458160200afb540d8014fed42d8bf2dab9c8c3 100644
+> --- a/drivers/media/mc/mc-device.c
+> +++ b/drivers/media/mc/mc-device.c
+> @@ -679,6 +679,23 @@ void media_device_unregister_entity(struct media_entity *entity)
+>  }
+>  EXPORT_SYMBOL_GPL(media_device_unregister_entity);
+>  
+> +#ifdef CONFIG_DEBUG_FS
+> +/*
+> + * Log the state of media requests.
+> + * Very useful for debugging.
+> + */
+
+Fits on a single line.
+
+> +static int media_device_requests(struct seq_file *file, void *priv)
+> +{
+> +	struct media_device *dev = dev_get_drvdata(file->private);
+> +
+> +	seq_printf(file, "number of requests: %d\n",
+> +		   atomic_read(&dev->num_requests));
+> +	seq_printf(file, "number of request objects: %d\n",
+> +		   atomic_read(&dev->num_request_objects));
+
+Newline here?
+
+> +	return 0;
+> +}
+> +#endif
+> +
+>  void media_device_init(struct media_device *mdev)
+>  {
+>  	INIT_LIST_HEAD(&mdev->entities);
+> @@ -697,6 +714,9 @@ void media_device_init(struct media_device *mdev)
+>  		media_set_bus_info(mdev->bus_info, sizeof(mdev->bus_info),
+>  				   mdev->dev);
+>  
+> +	atomic_set(&mdev->num_requests, 0);
+> +	atomic_set(&mdev->num_request_objects, 0);
+> +
+>  	dev_dbg(mdev->dev, "Media device initialized\n");
+>  }
+>  EXPORT_SYMBOL_GPL(media_device_init);
+> @@ -748,6 +768,15 @@ int __must_check __media_device_register(struct media_device *mdev,
+>  
+>  	dev_dbg(mdev->dev, "Media device registered\n");
+>  
+> +#ifdef CONFIG_DEBUG_FS
+> +	if (!media_debugfs_root)
+> +		media_debugfs_root = debugfs_create_dir("media", NULL);
+> +	mdev->media_dir = debugfs_create_dir(dev_name(&devnode->dev),
+> +					     media_debugfs_root);
+> +	debugfs_create_devm_seqfile(&devnode->dev, "requests",
+> +				    mdev->media_dir, media_device_requests);
+> +#endif
+
+I have no objection to this but it would have been great to have the Media
+device lifetime set in first and MC device and devnode merged. But maybe
+it's too late for that. Well, at least this won't change error handling...
+
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(__media_device_register);
+> @@ -824,6 +853,7 @@ void media_device_unregister(struct media_device *mdev)
+>  
+>  	dev_dbg(mdev->dev, "Media device unregistered\n");
+>  
+> +	debugfs_remove_recursive(mdev->media_dir);
+>  	device_remove_file(&mdev->devnode->dev, &dev_attr_model);
+>  	media_devnode_unregister(mdev->devnode);
+>  	/* devnode free is handled in media_devnode_*() */
+> diff --git a/drivers/media/mc/mc-devnode.c b/drivers/media/mc/mc-devnode.c
+> index 56444edaf13651874331e7c04e86b0a585067d38..d0a8bcc11dd6350fdbc04add70f62de2c5f01178 100644
+> --- a/drivers/media/mc/mc-devnode.c
+> +++ b/drivers/media/mc/mc-devnode.c
+> @@ -45,6 +45,9 @@ static dev_t media_dev_t;
+>  static DEFINE_MUTEX(media_devnode_lock);
+>  static DECLARE_BITMAP(media_devnode_nums, MEDIA_NUM_DEVICES);
+>  
+> +/* debugfs */
+> +struct dentry *media_debugfs_root;
+> +
+>  /* Called when the last user of the media device exits. */
+>  static void media_devnode_release(struct device *cd)
+>  {
+> @@ -236,6 +239,7 @@ int __must_check media_devnode_register(struct media_device *mdev,
+>  	if (devnode->parent)
+>  		devnode->dev.parent = devnode->parent;
+>  	dev_set_name(&devnode->dev, "media%d", devnode->minor);
+> +	dev_set_drvdata(&devnode->dev, mdev);
+>  	device_initialize(&devnode->dev);
+>  
+>  	/* Part 2: Initialize the character device */
+> @@ -313,6 +317,7 @@ static int __init media_devnode_init(void)
+>  
+>  static void __exit media_devnode_exit(void)
+>  {
+> +	debugfs_remove_recursive(media_debugfs_root);
+>  	bus_unregister(&media_bus_type);
+>  	unregister_chrdev_region(media_dev_t, MEDIA_NUM_DEVICES);
+>  }
+> diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-request.c
+> index 398d0806d1d274eb8c454fc5c37b77476abe1e74..829e35a5d56d41c52cc583cdea1c959bcb4fce60 100644
+> --- a/drivers/media/mc/mc-request.c
+> +++ b/drivers/media/mc/mc-request.c
+> @@ -75,6 +75,7 @@ static void media_request_release(struct kref *kref)
+>  		mdev->ops->req_free(req);
+>  	else
+>  		kfree(req);
+> +	atomic_dec(&mdev->num_requests);
+>  }
+>  
+>  void media_request_put(struct media_request *req)
+> @@ -326,6 +327,7 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
+>  
+>  	snprintf(req->debug_str, sizeof(req->debug_str), "%u:%d",
+>  		 atomic_inc_return(&mdev->request_id), fd);
+> +	atomic_inc(&mdev->num_requests);
+>  	dev_dbg(mdev->dev, "request: allocated %s\n", req->debug_str);
+>  
+>  	fd_install(fd, filp);
+> @@ -349,10 +351,12 @@ static void media_request_object_release(struct kref *kref)
+>  	struct media_request_object *obj =
+>  		container_of(kref, struct media_request_object, kref);
+>  	struct media_request *req = obj->req;
+> +	struct media_device *mdev = obj->mdev;
+>  
+>  	if (WARN_ON(req))
+>  		media_request_object_unbind(obj);
+>  	obj->ops->release(obj);
+> +	atomic_dec(&mdev->num_request_objects);
+>  }
+>  
+>  struct media_request_object *
+> @@ -417,6 +421,7 @@ int media_request_object_bind(struct media_request *req,
+>  	obj->req = req;
+>  	obj->ops = ops;
+>  	obj->priv = priv;
+> +	obj->mdev = req->mdev;
+>  
+>  	if (is_buffer)
+>  		list_add_tail(&obj->list, &req->objects);
+> @@ -424,6 +429,7 @@ int media_request_object_bind(struct media_request *req,
+>  		list_add(&obj->list, &req->objects);
+>  	req->num_incomplete_objects++;
+>  	ret = 0;
+> +	atomic_inc(&obj->mdev->num_request_objects);
+>  
+>  unlock:
+>  	spin_unlock_irqrestore(&req->lock, flags);
+> diff --git a/include/media/media-device.h b/include/media/media-device.h
+> index 53d2a16a70b0d9d6e5cc28fe1fc5d5ef384410d5..749c327e3c582c3c583e0394468321ccd6160da5 100644
+> --- a/include/media/media-device.h
+> +++ b/include/media/media-device.h
+> @@ -11,6 +11,7 @@
+>  #ifndef _MEDIA_DEVICE_H
+>  #define _MEDIA_DEVICE_H
+>  
+> +#include <linux/atomic.h>
+>  #include <linux/list.h>
+>  #include <linux/mutex.h>
+>  #include <linux/pci.h>
+> @@ -106,6 +107,9 @@ struct media_device_ops {
+>   * @ops:	Operation handler callbacks
+>   * @req_queue_mutex: Serialise the MEDIA_REQUEST_IOC_QUEUE ioctl w.r.t.
+>   *		     other operations that stop or start streaming.
+> + * @num_requests: number of associated requests
+> + * @num_request_objects: number of associated request objects
+> + * @media_dir:	DebugFS media directory
+>   * @request_id: Used to generate unique request IDs
+>   *
+>   * This structure represents an abstract high-level media device. It allows easy
+> @@ -179,6 +183,11 @@ struct media_device {
+>  	const struct media_device_ops *ops;
+>  
+>  	struct mutex req_queue_mutex;
+> +	atomic_t num_requests;
+> +	atomic_t num_request_objects;
+> +
+> +	/* debugfs */
+> +	struct dentry *media_dir;
+>  	atomic_t request_id;
+>  };
+>  
+> diff --git a/include/media/media-devnode.h b/include/media/media-devnode.h
+> index d27c1c646c2805171be3997d72210dd4d1a38e32..dbcabeffcb572ae707f5fe1f51ff719d451c6784 100644
+> --- a/include/media/media-devnode.h
+> +++ b/include/media/media-devnode.h
+> @@ -20,9 +20,13 @@
+>  #include <linux/fs.h>
+>  #include <linux/device.h>
+>  #include <linux/cdev.h>
+> +#include <linux/debugfs.h>
+>  
+>  struct media_device;
+>  
+> +/* debugfs top-level media directory */
+> +extern struct dentry *media_debugfs_root;
+> +
+>  /*
+>   * Flag to mark the media_devnode struct as registered. Drivers must not touch
+>   * this flag directly, it will be set and cleared by media_devnode_register and
+> diff --git a/include/media/media-request.h b/include/media/media-request.h
+> index 7f9af68ef19ac6de0184bbb0c0827dc59777c6dc..610ccfe8d7b20ec38e166383433f9ee208248640 100644
+> --- a/include/media/media-request.h
+> +++ b/include/media/media-request.h
+> @@ -292,6 +292,7 @@ struct media_request_object_ops {
+>   * struct media_request_object - An opaque object that belongs to a media
+>   *				 request
+>   *
+> + * @mdev: Media device this object belongs to
+
+This deserves at least a comment what this may be used for: generally once
+object is unbound, it's not related to a request anymore (nor a Media
+device). This field also adds a new Media device lifetime issue: nothing
+guarantees the mdev is not disappearing at a wrong time albeit this is
+very, very likely not user-triggerable without physically removing
+hardware.
+
+>   * @ops: object's operations
+>   * @priv: object's priv pointer
+>   * @req: the request this object belongs to (can be NULL)
+> @@ -303,6 +304,7 @@ struct media_request_object_ops {
+>   * another struct that contains the actual data for this request object.
+>   */
+>  struct media_request_object {
+> +	struct media_device *mdev;
+>  	const struct media_request_object_ops *ops;
+>  	void *priv;
+>  	struct media_request *req;
 > 
 
-For registration it makes more sense to do that only if SNP is being initialized and as part of
-__sev_snp_init_locked(), for unregistration see notes below.
+-- 
+Regards,
 
-> Also, wouldn't a better check be snp_panic_notifier.next != NULL during
-> sev_pci_exit()?
-
-Actually i can't use snp_initialized here as it will always be false.
-
-But i also can't use snp_panic_notifier.next != NULL, because if it has already been unregistered then
-snp_panic_notifier.next may be non-NULL as unregister() would have chained it to the next notifier
-on the chain.
-
-Actually i can simply call atomic_notifier_chain_unregister() unconditionally during module unload as it
-handles the case of the specific notifier already unregistered and/or not added to the chain.
-
-Thanks,
-Ashish
- 
-> 
-> Thanks,
-> Tom
-> 
->>
->> Fix SNP panic notifier to unregister itself during module unload
->> if SNP is initialized.
->>
->> Fixes: 19860c3274fb ("crypto: ccp - Register SNP panic notifier only if SNP is enabled")
->> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
->> ---
->>  drivers/crypto/ccp/sev-dev.c | 7 ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
->> index 8fb94c5f006a..942d93da1136 100644
->> --- a/drivers/crypto/ccp/sev-dev.c
->> +++ b/drivers/crypto/ccp/sev-dev.c
->> @@ -1787,9 +1787,6 @@ static int __sev_snp_shutdown_locked(int *error, bool panic)
->>  	sev->snp_initialized = false;
->>  	dev_dbg(sev->dev, "SEV-SNP firmware shutdown\n");
->>  
->> -	atomic_notifier_chain_unregister(&panic_notifier_list,
->> -					 &snp_panic_notifier);
->> -
->>  	/* Reset TMR size back to default */
->>  	sev_es_tmr_size = SEV_TMR_SIZE;
->>  
->> @@ -2562,4 +2559,8 @@ void sev_pci_exit(void)
->>  		return;
->>  
->>  	sev_firmware_shutdown(sev);
->> +
->> +	if (sev->snp_initialized)
->> +		atomic_notifier_chain_unregister(&panic_notifier_list,
->> +						 &snp_panic_notifier);
->>  }
-
+Sakari Ailus
