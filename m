@@ -1,193 +1,266 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2798D111BF
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0788111BF;
+	Wed,  4 Jun 2025 21:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749071007; cv=none; b=Tv9YHBeAg9X4BW2bOve15pDPnbGbxjUrJ9UyKeobhNGHVXvAxUchv+MCNNTI93KUSUxb2t85pmJ2ujAHKLlWqkUysU2kjLEptL1mthGqT5O58DmQrJzhXqHyerpofdn9UsUeEXvwdpndk89xb9vQiV5rNq4wpdpb12sOD8vgJPY=
+	t=1749071088; cv=none; b=Gmav+1LU30zUNrmc9VmPbRP+ZwP+u+HkacYkh9QpZhBsT24z/o5AM0bfSc67e/IPis6sIFiMj5u4RAket21yxANDKnLygm1U56gxLuAe3WVq6lQEb/YPbMjDbipQRA3FJGQ1eVQUlYSvsjThq0YxcusV7reBH4FY8fkDYwjqcL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749071007; c=relaxed/simple;
-	bh=Fybfpl+9NRRoM+EOI6O4wAg0E8lwrxs97y3QuiCUKKc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Vtf+ox9ko0f4bADRs9YiLVIvUND+iLZuTVK2rVlBBKVsp8hUJ9dK7j78qsyUA4KMSFBP8N4tniiqj7AdM1f1bIqPjMaDnZB5Etu7zwttXLQY6vWb9GpUAIoHs2Werr+vLTVpSL5wcYUf2D8m0BCalRia5sy3UI9pw8vfYAOLYng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PwwqrDkO; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749071088; c=relaxed/simple;
+	bh=Ax0LaVdVrMdodaXbxHS1uMp0e5JdIRTqR6F8VUnG4bM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hDZWp6vLA6CiiKsD+sfyEBwI4cuqlc4JleaVzCtPV0nXOo9j5p8VSgBkHNQKWqm5hJ5cXlMDt/IZz/3nKekiAMprRVtanL0Wi/LJjPBllFbZjbyqZjeROio4xMo6cm+CCpfATjUZfxRBD9XQ09PWxR31d1ZsAQvyMM4omgSzPwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h1mFWi87; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PwwqrDkO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h1mFWi87"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749071005; x=1780607005;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=Fybfpl+9NRRoM+EOI6O4wAg0E8lwrxs97y3QuiCUKKc=;
-  b=PwwqrDkOdDf4lur1GQn0OCPyRUP81u6VmqjzHw3zAOlrfDsiJXjUfGwS
-   aItTJzD/QC9ED5jQ10uYmtV9CzHNcFOU1qbibxzcsMvwqKqpqHoqaytWv
-   Gtd7t5Eiy473/6SCjh8rRNzQKXHAleW4LxGDp9fmWN+AftKssoYFOn3z4
-   1Zg73YAVou2LQMdPUUMRSkrzLqoiN+yOcL7A6hGCkHgpFprwIdeh6sPXc
-   vdRhg+HIwLmmjPdl84xdWH7ubU2jVRku+KTdGiQmkcoDWp7/xEoqNBZHK
-   iC1188LqpT5CtaUq8lncHJYogJHz/R+yjL+7flfb0T5scAZUfpjKDOetq
+  t=1749071087; x=1780607087;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ax0LaVdVrMdodaXbxHS1uMp0e5JdIRTqR6F8VUnG4bM=;
+  b=h1mFWi87s18vOb4PIqCEjWpfYxdD1hnRHOAFH8PZ5e5vus0Wekp2oJQr
+   xaydTSfXv8Wbc3nZ0MaqIJBRLymzrrVgLTB2/knrdxlUD3guLrCP2DYxa
+   C1VAY9eajzW49Ee6M1y1vY6n78NYdFcf3Y9kDXSACl0R09ZAfMLYoZDgD
+   Uc52ymrO5zDBfxfJNJ4WVqV2rmQxcfIKGy/ToGhx2b09dJzGWbDhmr8a4
+   KgfqToHpsEUVu5RC3Uc+KUHWzNPckxcrYDjGt1eGXcKbVVW9pnx8i/v/B
+   G768VWYobL9BtMKcHn7IYKRQ+vm5+MApQlkto+/8p6uwoH3FiG6QhzBeo
    g==;
-X-CSE-ConnectionGUID: mBXzsYO2S6+0VWtvLDlLYw==
-X-CSE-MsgGUID: zpDlbaokQiOHbPRrsp412A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="62530236"
+X-CSE-ConnectionGUID: G5gngbptS8eRN0WW/Ls5iQ==
+X-CSE-MsgGUID: LxFS1ORZRSmvyBP3TOU8tA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="54971356"
 X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="62530236"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:03:24 -0700
-X-CSE-ConnectionGUID: eCszTzyTRlSkawbUpvgRjA==
-X-CSE-MsgGUID: wuNqWI6ITYWCMQl6HrIc3g==
+   d="scan'208";a="54971356"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:04:46 -0700
+X-CSE-ConnectionGUID: 9nD5U/QeTjKVSwVuA2BoHA==
+X-CSE-MsgGUID: o9yLbTW1Tli1Atn+6utNZw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="176178606"
-Received: from jekeller-desk.jf.intel.com ([10.166.241.15])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:03:24 -0700
-From: Jacob Keller <jacob.e.keller@intel.com>
-Date: Wed, 04 Jun 2025 14:03:15 -0700
-Subject: [PATCH] drm/nouveau/bl: Use kasprintf for interface name
+   d="scan'208";a="150458314"
+Received: from oandoniu-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.208])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 14:04:42 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 5809A11F83C;
+	Thu,  5 Jun 2025 00:04:39 +0300 (EEST)
+Date: Wed, 4 Jun 2025 21:04:39 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Tiffany Lin <tiffany.lin@mediatek.com>,
+	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+	Yunfei Dong <yunfei.dong@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, kernel@collabora.com,
+	linux-media@vger.kernel.org,
+	Sebastian Fricke <sebastian.fricke@collabora.com>
+Subject: Re: [PATCH v3 1/5] media: mc: add manual request completion
+Message-ID: <aEC05991kEIIifDB@kekkonen.localdomain>
+References: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com>
+ <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-1-603db4749d90@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250604-jk-nouveua-drm-bl-snprintf-fix-v1-1-79b1593ad664@intel.com>
-X-B4-Tracking: v=1; b=H4sIAJO0QGgC/x2NMQ6DMAwAv4I811JqGoZ+peoQEqc1bQ1yACEh/
- k7U8W6426GwCRe4NzsYr1Jk1ArXSwPxHfTFKKkykCPvOnfD4YM6LisvAZP9sP9i0clE54xZNow
- Ugycf2kQZamQyrvo/eDyP4wR50NWVcAAAAA==
-X-Change-ID: 20250604-jk-nouveua-drm-bl-snprintf-fix-c2ca525a3d2f
-To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Ben Skeggs <bskeggs@redhat.com>, Pierre Moreau <pierre.morrow@free.fr>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
- Philip Li <philip.li@intel.com>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>, 
- Jacob Keller <jacob.e.keller@intel.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-1-603db4749d90@collabora.com>
 
-The nouveau_get_backlight_name() function generates a unique name for the
-backlight interface, appending an id from 1 to 99 for all backlight devices
-after the first.
+Hi Nicolas,
 
-GCC 15 (and likely other compilers) produce the following
--Wformat-truncation warning:
+Thanks for the update.
 
-nouveau_backlight.c: In function ‘nouveau_backlight_init’:
-nouveau_backlight.c:56:69: error: ‘%d’ directive output may be truncated writing between 1 and 10 bytes into a region of size 3 [-Werror=format-truncation=]
-   56 |                 snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight%d", nb);
-      |                                                                     ^~
-In function ‘nouveau_get_backlight_name’,
-    inlined from ‘nouveau_backlight_init’ at nouveau_backlight.c:351:7:
-nouveau_backlight.c:56:56: note: directive argument in the range [1, 2147483647]
-   56 |                 snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight%d", nb);
-      |                                                        ^~~~~~~~~~~~~~~~
-nouveau_backlight.c:56:17: note: ‘snprintf’ output between 14 and 23 bytes into a destination of size 15
-   56 |                 snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight%d", nb);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On Wed, Jun 04, 2025 at 04:09:35PM -0400, Nicolas Dufresne wrote:
+> From: Hans Verkuil <hverkuil@xs4all.nl>
+> 
+> By default when the last request object is completed, the whole
+> request completes as well.
+> 
+> But sometimes you want to delay this completion to an arbitrary point in
+> time so add a manual complete mode for this.
+> 
+> In req_queue the driver marks the request for manual completion by
+> calling media_request_mark_manual_completion, and when the driver
+> wants to manually complete the request it calls
+> media_request_manual_complete().
+> 
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> ---
+>  drivers/media/mc/mc-request.c | 38 ++++++++++++++++++++++++++++++++++++--
+>  include/media/media-request.h | 38 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 73 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-request.c
+> index 5edfc2791ce7c7485def5db675bbf53ee223d837..398d0806d1d274eb8c454fc5c37b77476abe1e74 100644
+> --- a/drivers/media/mc/mc-request.c
+> +++ b/drivers/media/mc/mc-request.c
+> @@ -54,6 +54,7 @@ static void media_request_clean(struct media_request *req)
+>  	req->access_count = 0;
+>  	WARN_ON(req->num_incomplete_objects);
+>  	req->num_incomplete_objects = 0;
+> +	req->manual_completion = false;
+>  	wake_up_interruptible_all(&req->poll_wait);
+>  }
+>  
+> @@ -313,6 +314,7 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
+>  	req->mdev = mdev;
+>  	req->state = MEDIA_REQUEST_STATE_IDLE;
+>  	req->num_incomplete_objects = 0;
+> +	req->manual_completion = false;
+>  	kref_init(&req->kref);
+>  	INIT_LIST_HEAD(&req->objects);
+>  	spin_lock_init(&req->lock);
+> @@ -459,7 +461,7 @@ void media_request_object_unbind(struct media_request_object *obj)
+>  
+>  	req->num_incomplete_objects--;
+>  	if (req->state == MEDIA_REQUEST_STATE_QUEUED &&
+> -	    !req->num_incomplete_objects) {
+> +	    !req->num_incomplete_objects && !req->manual_completion) {
+>  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
+>  		completed = true;
+>  		wake_up_interruptible_all(&req->poll_wait);
+> @@ -488,7 +490,7 @@ void media_request_object_complete(struct media_request_object *obj)
+>  	    WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
+>  		goto unlock;
+>  
+> -	if (!--req->num_incomplete_objects) {
+> +	if (!--req->num_incomplete_objects && !req->manual_completion) {
+>  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
+>  		wake_up_interruptible_all(&req->poll_wait);
+>  		completed = true;
+> @@ -499,3 +501,35 @@ void media_request_object_complete(struct media_request_object *obj)
+>  		media_request_put(req);
+>  }
+>  EXPORT_SYMBOL_GPL(media_request_object_complete);
+> +
+> +void media_request_manual_complete(struct media_request *req)
+> +{
+> +	unsigned long flags;
 
-The warning started appearing after commit ab244be47a8f ("drm/nouveau:
-Fix a potential theorical leak in nouveau_get_backlight_name()") This fix
-for the ida usage removed the explicit value check for ids larger than 99.
-The compiler is unable to intuit that the ida_alloc_max() limits the
-returned value range between 0 and 99.
+I'd declare flags as last.
 
-The warning has gone unfixed for some time, with at least one kernel test
-robot report. The code breaks W=1 builds, which is especially frustrating
-with the introduction of CONFIG_WERROR.
+> +	bool completed = false;
+> +
+> +	if (WARN_ON(!req))
+> +		return;
+> +	if (WARN_ON(!req->manual_completion))
+> +		return;
 
-Refactor the function to avoid the fixed-length buffer entirely. Use
-kasprintf to allocate a buffer of appropriate size. This avoids the need
-for BL_NAME_SIZE and resolves the -Wformat-truncation warning, fixing W=1
-builds.
+I think I'd use WARN_ON_ONCE() consistently: this is a driver (or
+framework) bug and telling once about it is very probably enough.
 
-Compile tested only.
+> +
+> +	spin_lock_irqsave(&req->lock, flags);
+> +	if (WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
+> +		goto unlock;
+> +
+> +	req->manual_completion = false;
+> +	/*
+> +	 * It is expected that all other objects in this request are
+> +	 * completed when this function is called. WARN if that is
+> +	 * not the case.
+> +	 */
+> +	if (!WARN_ON(req->num_incomplete_objects)) {
+> +		req->state = MEDIA_REQUEST_STATE_COMPLETE;
+> +		wake_up_interruptible_all(&req->poll_wait);
+> +		completed = true;
+> +	}
 
-Fixes: ab244be47a8f ("drm/nouveau: Fix a potential theorical leak in nouveau_get_backlight_name()")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202312050324.0kv4PnfZ-lkp@intel.com/
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
----
-This could also be fixed by simply increasing BL_NAME_SIZE to 24, making it
-large enough to fit any size integer into its format string, or by checking
-the return value of snprintf.
----
- drivers/gpu/drm/nouveau/nouveau_backlight.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+A newline would be nice here.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_backlight.c b/drivers/gpu/drm/nouveau/nouveau_backlight.c
-index d47442125fa183146135f3725eae161c68e2a900..d3cf69fe2eeb33c24ee698db19b34a56a72f51cb 100644
---- a/drivers/gpu/drm/nouveau/nouveau_backlight.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_backlight.c
-@@ -42,22 +42,21 @@
- #include "nouveau_acpi.h"
- 
- static struct ida bl_ida;
--#define BL_NAME_SIZE 15 // 12 for name + 2 for digits + 1 for '\0'
- 
--static bool
--nouveau_get_backlight_name(char backlight_name[BL_NAME_SIZE],
--			   struct nouveau_backlight *bl)
-+static char *
-+nouveau_get_backlight_name(struct nouveau_backlight *bl)
- {
- 	const int nb = ida_alloc_max(&bl_ida, 99, GFP_KERNEL);
- 
- 	if (nb < 0)
--		return false;
--	if (nb > 0)
--		snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight%d", nb);
--	else
--		snprintf(backlight_name, BL_NAME_SIZE, "nv_backlight");
-+		return NULL;
-+
- 	bl->id = nb;
--	return true;
-+
-+	if (nb > 0)
-+		return kasprintf(GFP_KERNEL, "nv_backlight%d", nb);
-+	else
-+		return kasprintf(GFP_KERNEL, "nv_backlight");
- }
- 
- static int
-@@ -293,9 +292,9 @@ nouveau_backlight_init(struct drm_connector *connector)
- 	struct nouveau_backlight *bl;
- 	struct nouveau_encoder *nv_encoder = NULL;
- 	struct nvif_device *device = &drm->client.device;
--	char backlight_name[BL_NAME_SIZE];
- 	struct backlight_properties props = {0};
- 	const struct backlight_ops *ops;
-+	char *backlight_name;
- 	int ret;
- 
- 	if (apple_gmux_present()) {
-@@ -348,7 +347,8 @@ nouveau_backlight_init(struct drm_connector *connector)
- 		goto fail_alloc;
- 	}
- 
--	if (!nouveau_get_backlight_name(backlight_name, bl)) {
-+	backlight_name = nouveau_get_backlight_name(bl);
-+	if (!backlight_name) {
- 		NV_ERROR(drm, "Failed to retrieve a unique name for the backlight interface\n");
- 		goto fail_alloc;
- 	}
-@@ -356,6 +356,7 @@ nouveau_backlight_init(struct drm_connector *connector)
- 	props.type = BACKLIGHT_RAW;
- 	bl->dev = backlight_device_register(backlight_name, connector->kdev,
- 					    nv_encoder, ops, &props);
-+	kfree(backlight_name);
- 	if (IS_ERR(bl->dev)) {
- 		if (bl->id >= 0)
- 			ida_free(&bl_ida, bl->id);
+> +unlock:
+> +	spin_unlock_irqrestore(&req->lock, flags);
+> +	if (completed)
+> +		media_request_put(req);
+> +}
+> +EXPORT_SYMBOL_GPL(media_request_manual_complete);
+> diff --git a/include/media/media-request.h b/include/media/media-request.h
+> index d4ac557678a78372222704400c8c96cf3150b9d9..7f9af68ef19ac6de0184bbb0c0827dc59777c6dc 100644
+> --- a/include/media/media-request.h
+> +++ b/include/media/media-request.h
+> @@ -56,6 +56,9 @@ struct media_request_object;
+>   * @access_count: count the number of request accesses that are in progress
+>   * @objects: List of @struct media_request_object request objects
+>   * @num_incomplete_objects: The number of incomplete objects in the request
+> + * @manual_completion: if true, then the request won't be marked as completed
+> + * when @num_incomplete_objects reaches 0. Call media_request_manual_complete()
+> + * to complete the request after @num_incomplete_objects == 0.
+>   * @poll_wait: Wait queue for poll
+>   * @lock: Serializes access to this struct
+>   */
+> @@ -68,6 +71,7 @@ struct media_request {
+>  	unsigned int access_count;
+>  	struct list_head objects;
+>  	unsigned int num_incomplete_objects;
+> +	bool manual_completion;
+>  	wait_queue_head_t poll_wait;
+>  	spinlock_t lock;
+>  };
+> @@ -218,6 +222,38 @@ media_request_get_by_fd(struct media_device *mdev, int request_fd);
+>  int media_request_alloc(struct media_device *mdev,
+>  			int *alloc_fd);
+>  
+> +/**
+> + * media_request_mark_manual_completion - Enable manual completion
+> + *
+> + * @req: The request
+> + *
+> + * Mark that the request has to be manually completed by calling
+> + * media_request_manual_complete().
+> + *
+> + * This function shall be called in the req_queue callback.
+> + */
+> +static inline void
+> +media_request_mark_manual_completion(struct media_request *req)
+> +{
+> +	req->manual_completion = true;
+> +}
+> +
+> +/**
+> + * media_request_manual_complete - Mark the request as completed
+> + *
+> + * @req: The request
+> + *
+> + * This function completes a request that was marked for manual completion by an
+> + * earlier call to media_request_mark_manual_completion(). The request's
+> + * @manual_completion flag is reset to false.
 
----
-base-commit: 90b83efa6701656e02c86e7df2cb1765ea602d07
-change-id: 20250604-jk-nouveua-drm-bl-snprintf-fix-c2ca525a3d2f
+s/flag/field/
 
-Best regards,
+> + *
+> + * All objects contained in the request must have been completed previously. It
+> + * is an error to call this function otherwise. If such an error occurred, the
+> + * function will WARN and the object completion will be delayed until
+> + * @num_incomplete_objects is 0.
+> + */
+> +void media_request_manual_complete(struct media_request *req);
+> +
+>  #else
+>  
+>  static inline void media_request_get(struct media_request *req)
+> @@ -336,7 +372,7 @@ void media_request_object_init(struct media_request_object *obj);
+>   * @req: The media request
+>   * @ops: The object ops for this object
+>   * @priv: A driver-specific priv pointer associated with this object
+> - * @is_buffer: Set to true if the object a buffer object.
+> + * @is_buffer: Set to true if the object is a buffer object.
+>   * @obj: The object
+>   *
+>   * Bind this object to the request and set the ops and priv values of
+> 
+
 -- 
-Jacob Keller <jacob.e.keller@intel.com>
+Regards,
 
+Sakari Ailus
