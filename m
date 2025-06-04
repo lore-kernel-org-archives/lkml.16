@@ -1,124 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D696E38384;
-	Wed,  4 Jun 2025 15:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017CD19E7D0
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749051789; cv=none; b=g2CPtXxzxrLaPCTo1VDAs2vOoWuhM1mceGYnrJCC1iL2ZRsBs3BrCCYZxdhhOt+uY9vgX8eS1cZFJSV3yCkYlsbqo5bb8mHaO/SWCmJHeCG+sQqu6W/UDdTtUkax84wa96BScQzFG+pvm4XRF9tp5ff4Y9CuysihhYc7eaWjw2E=
+	t=1749051867; cv=none; b=paKk1hQD6b3VmvvWJkLq4vl9WyudptuT9vaYYLKjkPkm9nGqDXpC0Xh7TCFbbjnCxDc3DDRcqG3fgktnkp9S9o9nwZunSUslUOadpU2lR7UFXBTvkw//rvAO6RwHFjzn0/s4CAarXxYDqsuCMQfv2oGP94bwxXe1/CvcWHGqCrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749051789; c=relaxed/simple;
-	bh=KBvw1K5sntUXh/9Sm7OBz9ypq0dkXEpUOjGj1PVTgew=;
+	s=arc-20240116; t=1749051867; c=relaxed/simple;
+	bh=f7lRk+b2SIr/M1jbrfGzBguI5XqViR8QimvPyjso0UY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TCOn+3tIAE5OVwXeRmjY5PEVjZjgX11CF9w/F+ZHZOxY45juktRJb5jmZ5+Lcn3Vvow/GhgrHxrBO7rx6YIU6ZVW6d8cW9IY8uHS3MwdiEx3rP5ywwCnEQ/Wetv4YqhQTX0iaCx0yZ+um90ng+3CXxp6tnckdjJJTULkSmiAaic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NGCUjSWm; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DwbRl1XvRRuvB6oEDvkCBScVKIz3UW41osLJURuMHS1jmm7UdgWlIIPv6fpW+bigwqSytzSr3+klhe4SoEfu0hQypy39ohhAuUuxMxvikTkrZwc1rCh0IYafzyCefQAnA6CSIpA5uj0pOTz8QtOCC6vE6sSSr3bbHT0y3/YJepk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jq9sFDO+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FDqwOq0l; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r74BRPCk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6plmO64f; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NGCUjSWm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749051787; x=1780587787;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=KBvw1K5sntUXh/9Sm7OBz9ypq0dkXEpUOjGj1PVTgew=;
-  b=NGCUjSWmDbOruvhDnh5hgI5IFBax/CYRayIHn3YjYEDQq55HAOIQlRkB
-   oTcfe5LzQzWBnjBqyxoDqxeV4Vol+l1gI0jRMN7TL7hdyjAb8FwiOAU2r
-   0w0A/yNW0iDrNVa01RGu201zm3ydsz1oOhcFpOWF5076qhlNlKDMS89H7
-   2F6NOwC3qDQq7UsMzSzL72aF9csMEOhSequT5AaSn7JoTiNHJU2r5FAna
-   FqCp07DJX9m8daQfLWx5oBzXBknzsQsb6CWksgfE5pZslayvhJ/61dvBH
-   z4zLeHo/KmEnfwUNR2mNYKbeed8P1y2mjCIg7a6DFUDnpiGLGfkW/ffDO
-   Q==;
-X-CSE-ConnectionGUID: WGPZyiQmSPK+tGc/HfVUsQ==
-X-CSE-MsgGUID: 94z7YzrQQ4ieGv868V0LFw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="54805232"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="54805232"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 08:43:06 -0700
-X-CSE-ConnectionGUID: Hv+B9f7XStyUfmL40SnJng==
-X-CSE-MsgGUID: mdH1lAQOTdeUENpSGK9z6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="145557168"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 08:42:50 -0700
-Date: Wed, 4 Jun 2025 18:42:47 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Denis Benato <benato.denis96@gmail.com>, mahesh@linux.ibm.com,
-	oohall@gmail.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
-	aravind.iddamsetty@linux.intel.com,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
- device
-Message-ID: <aEBpdwMfxp5M4Hxr@black.fi.intel.com>
-References: <552d75b2-2736-419f-887e-ce2692616578@kernel.org>
- <ee1117cf-6367-4e9a-aa85-ccfc6c63125d@gmail.com>
- <6f23d82c-10cc-4d70-9dce-41978b05ec9a@kernel.org>
- <aCzNL9uXGbBSdF2S@black.fi.intel.com>
- <fea86161-2c47-4b0f-ac07-b3f9b0f10a03@kernel.org>
- <aC2UzG-eycjqYQep@black.fi.intel.com>
- <CAJZ5v0gRFwKhq21ima3kT0zzFLk4=47ivvzJqARksV7nYHTJAQ@mail.gmail.com>
- <CAJZ5v0h9--jFVBtQ5F7Gee3Cy8P3TeSLdiHEWykQ=EsZdoffmg@mail.gmail.com>
- <aDnpfKvLwRZsKxhH@black.fi.intel.com>
- <CAJZ5v0gjA2B4AnaYpfYpaNDo49k4LM2FGSrPFFuOCJ62bCMmkA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jq9sFDO+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FDqwOq0l";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r74BRPCk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6plmO64f"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D7FBA1FEF2;
+	Wed,  4 Jun 2025 15:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749051864; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FCC2WWItBuBB5emvqTSf3LdL7WM1Hvu7mLAtMLGblgE=;
+	b=Jq9sFDO+OXExv9H/ECrc3/kkj4FEJjvBUv/KUMLSokDTT/tDPCbBehkplqPUEzATPxyt2k
+	ZhWaZEB4Vk9YAMSMw1U3sgHguTHD6xy+6NLrX8TqDGW5XPABmnDnbx7kJtSfw3bmDXQMmS
+	JT4+rS97ATsiwIayfbWr3lv+n44wPCg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749051864;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FCC2WWItBuBB5emvqTSf3LdL7WM1Hvu7mLAtMLGblgE=;
+	b=FDqwOq0lhb+b0Cel/nEtVwKCGhCq4IkCXU9OfHh+mlszveJzsP62aqjmNR5Kjchn7eCb/i
+	0kB4asU3ZXg3+MAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=r74BRPCk;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=6plmO64f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749051863; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FCC2WWItBuBB5emvqTSf3LdL7WM1Hvu7mLAtMLGblgE=;
+	b=r74BRPCktuxJVMtT86wnDKlCv9NvFGtd5toUKsd69F7Cl5Ql8P6yxv2f9S429HSCLHCWO0
+	yr6b8r6fGdw95ebKYO0Akeomnef1rhkwk8jWl3iu/h8wcQjBlHx2+rudYiyWv2jUSa17aA
+	sN7SwfP2Jm0x05b2L0xU9rLXg0v1vpo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749051863;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FCC2WWItBuBB5emvqTSf3LdL7WM1Hvu7mLAtMLGblgE=;
+	b=6plmO64fjxDstv+2auLmT/Tkp0J4X35NypvAXEoohnGzTMJ0E64QMzJ7nZck2xsXqmcK5x
+	teWTEy9uyJLB8gAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C0C511369A;
+	Wed,  4 Jun 2025 15:44:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hskGL9dpQGgxFQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 04 Jun 2025 15:44:23 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id E96B1A095C; Wed,  4 Jun 2025 17:44:22 +0200 (CEST)
+Date: Wed, 4 Jun 2025 17:44:22 +0200
+From: Jan Kara <jack@suse.cz>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Luka <luka.2016.cs@gmail.com>
+Subject: Re: [Bug] possible deadlock in vfs_rmdir in Linux kernel v6.12
+Message-ID: <bfyuxaa7cantq2fvrgizsawyclaciifxub3lortq5oox44vlsd@rxwrvg2avew7>
+References: <CALm_T+2FtCDm4R5y-7mGyrY71Ex9G_9guaHCkELyggVfUbs1=w@mail.gmail.com>
+ <CALm_T+0j2FUr-tY5nvBqB6nvt=Dc8GBVfwzwchtrqOCoKw3rkQ@mail.gmail.com>
+ <CALm_T+3H5axrkgFdpAt23mkUyEbOaPyehAbdXbhgwutpyfMB7w@mail.gmail.com>
+ <20250604-quark-gastprofessor-9ac119a48aa1@brauner>
+ <20250604-alluring-resourceful-salamander-6561ff@lemur>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gjA2B4AnaYpfYpaNDo49k4LM2FGSrPFFuOCJ62bCMmkA@mail.gmail.com>
+In-Reply-To: <20250604-alluring-resourceful-salamander-6561ff@lemur>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D7FBA1FEF2
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TAGGED_RCPT(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,vger.kernel.org,gmail.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Score: -2.51
+X-Spam-Level: 
 
-On Fri, May 30, 2025 at 07:49:26PM +0200, Rafael J. Wysocki wrote:
-> On Fri, May 30, 2025 at 7:23 PM Raag Jadav <raag.jadav@intel.com> wrote:
-> > On Fri, May 23, 2025 at 05:23:10PM +0200, Rafael J. Wysocki wrote:
-> > > On Wed, May 21, 2025 at 1:27 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > On Wed, May 21, 2025 at 10:54 AM Raag Jadav <raag.jadav@intel.com> wrote:
-> > > > > On Tue, May 20, 2025 at 01:56:28PM -0500, Mario Limonciello wrote:
-> > > > > > On 5/20/2025 1:42 PM, Raag Jadav wrote:
-> > > > > > > On Tue, May 20, 2025 at 12:39:12PM -0500, Mario Limonciello wrote:
-
-...
-
-> > > > > > From the driver perspective it does have expectations that the parts outside
-> > > > > > the driver did the right thing.  If the driver was expecting the root port
-> > > > > > to be powered down at suspend and it wasn't there are hardware components
-> > > > > > that didn't power cycle and that's what we're seeing here.
-> > > > >
-> > > > > Which means the expectation set by the driver is the opposite of the
-> > > > > purpose of this patch, and it's going to fail if any kind of error is
-> > > > > detected under root port during suspend.
-> > > >
-> > > > And IMV this driver's expectation is questionable at least.
-> > > >
-> > > > There is no promise whatsoever that the device will always be put into
-> > > > D3cold during system suspend.
-> > >
-> > > For instance, user space may disable D3cold for any PCI device via the
-> > > d3cold_allowed attribute in sysfs.
-> > >
-> > > If the driver cannot handle this, it needs to be fixed.
-> >
-> > Thanks for confirming. So should we consider this patch to be valid
-> > and worth moving forward?
+On Wed 04-06-25 10:45:49, Konstantin Ryabitsev wrote:
+> On Wed, Jun 04, 2025 at 09:45:23AM +0200, Christian Brauner wrote:
+> > Konstantin, this looks actively malicious.
+> > Can we do something about this list-wise?
 > 
-> It doesn't do anything that would be invalid in principle IMV.
-> 
-> You need to consider one more thing, though: It may be necessary to
-> power-cycle the device in order to kick it out of the erroneous state
-> and the patch effectively blocks this if I'm not mistaken.
-> 
-> But admittedly I'm not sure if this really matters.
+> Malicious in what sense? Is it just junk, or is it attempting to have
+> maintainers perform some potentially dangerous operation?
 
-Wouldn't something like bus reset (SBR) be more predictable?
+Well, useless it is for certain but links like:
 
-Raag
+Bug Report: https://hastebin.com/share/pihohaniwi.bash
+
+Entire Log: https://hastebin.com/share/orufevoquj.perl
+
+are rather suspicious and suggest there's more in there than just a lack of
+knowledge (but now that I've tried the suffixes seem to be automatically
+added by some filetype detection logic in the hastebin.com site itself so
+more likely this is not malicious after all). FWIW I've downloaded one of
+the files through wget and looked into it and it seems to have a reasonable
+content and does not seem malicious but it is difficult to be sure in the
+maze of HTML and JS...
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
