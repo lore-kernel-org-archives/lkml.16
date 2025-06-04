@@ -1,132 +1,225 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A657F9
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 00:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBC9746E;
+	Wed,  4 Jun 2025 00:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748995820; cv=none; b=hu8ARgahT7hDXWe7gxKR3P0HbbXxyA4QqyGz3gqRNNhf/3OBHJdygkvQUCzzWnPmbKxNjEoX4jOvinjNvnu1K6kHS6v4x95TLWwDtmoyvBdqC3sjOBsWWuj9MTfCKVfCrSqMr/tvidrMKb5+TLrXvDXc7yu+f56dcuwtB5RQA4U=
+	t=1748995825; cv=none; b=aPmPfT5bIxV95Evi+mAinaUPLzZyV8ZmEEcVaw4hJiMW+8DYIO0h9JIdcfVtgAG0JOOMo2BplCv2rRCTgDAbBDiZVPPot7Xa/ApnXeV23hXHQAqMceYpteInZyVD/Fvlo+tUH54GbE/Nuq8UhVWJu0jfFDYDS5hTgFb9WVXO8Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748995820; c=relaxed/simple;
-	bh=euBdrbs6b7CGc1XbpBBv0ZF6753p4h21n3PSCsN5nIg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=czV79oydD9Dn45H6C0bZMqx7nq+hg1qrojere2C/sx21r+ZEiKC8PlR+7o/5gqFgkSxHiCMKnQhWJwyMmHZU41LkwcBRuUinZAKEg8WR1WFIL/NLNt8BJfmhRTFbGTQ/nlR1VZBbLGWnMvHs/Wn6TaMYQm5BsaSbUDI26RxPLYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zCSvPv4q; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748995825; c=relaxed/simple;
+	bh=lUCmBlhPTd1XgwJtMI94eo6D+Fh3+d2k+hPOvppvuZM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G77ebIpitBwebKF1ADPx6K+uKR3nrth+/I3HUuja21inS8PfVKVgGh9o7FWZDY7p/zkrWX62Hn+eBt+OBr4L1CDhOhDtCZzqaWeLwsr2Hb9fFMPWz67/CbAssgQx92F3gQqLmYHdHUeXQnShx+q3HZ4I0+6YDIN7ihWF/w1pMZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTWk8mym; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zCSvPv4q"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b26e73d375aso6814287a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 17:10:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748995818; x=1749600618; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gOfI6BunB5EjpKnjOgGcW4vcCGSHarmNLnezDicVUWU=;
-        b=zCSvPv4qyQ17ood9k/tU9nf+TW75qc+Xnk8RI/WGdcYW+/KWo94R+Fp+53QctMwZPH
-         DkZH4PywKbyqnsnpaxg9NOEu36MtxqUalkrt+9tgI87IC0thk6MdtbMDxkl9nB3yAbUL
-         ucDyDCLtNyKklQjez/jdo4bXBrHQC5Aa1nLRnXimOwVaHKnP2REL5ycIpJfho+K643Jx
-         QGyFZj+1SyCPV6sCNLRkb2c9Bbq2iu6cFNFKB3VczbQgV/QAq4858OjHM24sxlLcQmR3
-         5kQG4qthn3eUV/Tmjrnvf8bIQIHBdXJei3B6qZYWGcDYQt9S8MURWscCgAVcRWqP1xOt
-         3rlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748995818; x=1749600618;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gOfI6BunB5EjpKnjOgGcW4vcCGSHarmNLnezDicVUWU=;
-        b=vZaAwYd+HHiHaABh9qTafQaHQLT8ALz4PYIrs//4ZrJbQOHu8Xt150YqMYLEGlLzZ9
-         FbW2d5vjudc1kKEqeh2wLA4j/S+dlsaCgcXNxnIfXH+QCARv2jTUvuys/ReTkHAKv19S
-         /Ch3B2HlhZmWXIpT/MjXoUyBWwboG5gf9/M+QvwK1/M7eEPQwH/5RJiYWGisnsFBRIEa
-         TuaDLq95OBzgd5xA+3m9UkF3Uis9t7rTeeGB4C0NlNg4dEFcOo7Ndqrog0pbkEr9/Pw3
-         ngnSTcmsnMIXbm0OgTWhugO4swge77shw+C6kfnBNHL3aLScRoTtCKNylaCbCL5XwvZs
-         y5Ag==
-X-Gm-Message-State: AOJu0Yy+Uk2DzrBCixv3KlmqDlzw1I9rX+qrRTvjUizE3JNVatAEC4S2
-	ODwmO/bSXHgnirnKz7RVNnXg0ttsLtA3W1aJEU7tjofjUsVXHRsJoov1+VIWRgFvFTDM1yH6PAN
-	s1vw3lQ==
-X-Google-Smtp-Source: AGHT+IEZyiSLy8Ge+hshHc76Ex2llg0LkSoj5004GpA5PILdPk6C5xY+TyGEuIWbmybjXt5bCyuflXVgFX4=
-X-Received: from pgbfy27.prod.google.com ([2002:a05:6a02:2a9b:b0:b2c:433b:f32b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9190:b0:21a:c058:9b8e
- with SMTP id adf61e73a8af0-21d22bcd433mr1259933637.34.1748995818077; Tue, 03
- Jun 2025 17:10:18 -0700 (PDT)
-Date: Tue, 3 Jun 2025 17:10:16 -0700
-In-Reply-To: <20250401161106.790710-3-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTWk8mym"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 022FFC4CEED;
+	Wed,  4 Jun 2025 00:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748995824;
+	bh=lUCmBlhPTd1XgwJtMI94eo6D+Fh3+d2k+hPOvppvuZM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KTWk8mym9EejIBDNEZJkrKS3hvOuWk2dU/gvLWcYV5TW2tfN53+LXxmMM2nZlXYWe
+	 BzudSRG9CiSFNb4a8GV/P2J9AOMjS6eORRPCZuvS1hNxaNO4vZxc4KOd6bUby6vHyy
+	 K+g/XUIbMQMO4pn0qrJQYbgRithrK0JjU21AK1xhttJfeLIx0HcXnuVD/cawkyNK/D
+	 QJ8GooY8AoT9/mgivSUA8KR/F7mluXEflrVjqmGV6RjzQ4TbP3+8sQ8JGtUooWtStW
+	 VzSMjsZ3d5FCPxGVRaOrodevPMzLQg/afZ4/Ycp6dIi3FNz6pIKKOhsXn7kDuZJb8f
+	 1GPjbNYYFTnOA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v4] tracing: ring_buffer: Rewind persistent ring buffer when reboot
+Date: Wed,  4 Jun 2025 09:10:21 +0900
+Message-ID:  <174899582116.955054.773265393511190051.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250401161106.790710-1-pbonzini@redhat.com> <20250401161106.790710-3-pbonzini@redhat.com>
-Message-ID: <aD-O6EBMqPwLzgd_@google.com>
-Subject: Re: [PATCH 02/29] KVM: API definitions for plane userspace exit
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, roy.hopkins@suse.com, 
-	thomas.lendacky@amd.com, ashish.kalra@amd.com, michael.roth@amd.com, 
-	jroedel@suse.de, nsaenz@amazon.com, anelkz@amazon.de, 
-	James.Bottomley@hansenpartnership.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025, Paolo Bonzini wrote:
-> Copy over the uapi definitions from the Documentation/ directory.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  include/uapi/linux/kvm.h | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 1e0a511c43d0..b0cca93ebcb3 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -135,6 +135,16 @@ struct kvm_xen_exit {
->  	} u;
->  };
->  
-> +struct kvm_plane_event_exit {
-> +#define KVM_PLANE_EVENT_INTERRUPT    1
-> +	__u16 cause;
-> +	__u16 pending_event_planes;
-> +	__u16 target;
-> +	__u16 padding;
-> +	__u32 flags;
-> +	__u64 extra[8];
-> +};
-> +
->  struct kvm_tdx_exit {
->  #define KVM_EXIT_TDX_VMCALL     1
->          __u32 type;
-> @@ -262,7 +272,8 @@ struct kvm_tdx_exit {
->  #define KVM_EXIT_NOTIFY           37
->  #define KVM_EXIT_LOONGARCH_IOCSR  38
->  #define KVM_EXIT_MEMORY_FAULT     39
-> -#define KVM_EXIT_TDX              40
-> +#define KVM_EXIT_PLANE_EVENT      40
-> +#define KVM_EXIT_TDX              41
->  
->  /* For KVM_EXIT_INTERNAL_ERROR */
->  /* Emulate instruction failed. */
-> @@ -295,7 +306,13 @@ struct kvm_run {
->  	/* in */
->  	__u8 request_interrupt_window;
->  	__u8 HINT_UNSAFE_IN_KVM(immediate_exit);
-> -	__u8 padding1[6];
-> +
-> +	/* in/out */
-> +	__u8 plane;
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-We should add padding before or after "plane"; there's a 1-byte hole here that's
-hard to spot at first glance (ran pahole just to verify my eyeballs):
+Rewind persistent ring buffer pages which have been read in the
+previous boot. Those pages are highly possible to be lost before
+writing it to the disk if the previous kernel crashed. In this
+case, the trace data is kept on the persistent ring buffer, but
+it can not be read because its commit size has been reset after
+read.
+This skips clearing the commit size of each sub-buffer and
+recover it after reboot.
 
-  struct kvm_run {
-	__u8                       request_interrupt_window; /*     0     1 */
-	__u8                       immediate_exit__unsafe; /*     1     1 */
-	__u8                       plane;                /*     2     1 */
+Note: If you read the previous boot data via trace_pipe, that
+is not accessible in that time. But reboot without clearing (or
+reusing) the read data, the read data is recovered again in the
+next boot.
+Thus, when you read the previous boot data, clear it by
+`echo > trace`.
 
-	/* XXX 1 byte hole, try to pack */
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Changes in v4:
+  - Clear ring buffer data page when the data page swaps to
+    spare page (splice case).
+ Changes in v3:
+  - Fix a label name to better one. (skip_rewind)
+  - Fix comments.
+  - Fix rewound log message and show only if rewound pages.
+  - Fix to adjust cpu_buffer->pages correctly.
+  - Fix a buffer overflow.
+ Changes in v2:
+  - Stop rewind if timestamp is not older.
+  - Rewind reader page and reset all indexes.
+  - Make ring_buffer_read_page() not clear the commit size.
+---
+ kernel/trace/ring_buffer.c |  103 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 100 insertions(+), 3 deletions(-)
 
-	__u16                      suspended_planes;     /*     4     2 */
-	__u16                      req_exit_planes;      /*     6     2 */
-  }
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index e24509bd0af5..facbe6103714 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
+ 	*bpage = list_entry(p, struct buffer_page, list);
+ }
+ 
++static inline void rb_dec_page(struct buffer_page **bpage)
++{
++	struct list_head *p = rb_list_head((*bpage)->list.prev);
++
++	*bpage = list_entry(p, struct buffer_page, list);
++}
++
+ static struct buffer_page *
+ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+@@ -1866,10 +1873,11 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
+ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
+-	struct buffer_page *head_page;
++	struct buffer_page *head_page, *orig_head;
+ 	unsigned long entry_bytes = 0;
+ 	unsigned long entries = 0;
+ 	int ret;
++	u64 ts;
+ 	int i;
+ 
+ 	if (!meta || !meta->head_buffer)
+@@ -1885,8 +1893,98 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
+ 	local_set(&cpu_buffer->reader_page->entries, ret);
+ 
+-	head_page = cpu_buffer->head_page;
++	orig_head = head_page = cpu_buffer->head_page;
++	ts = head_page->page->time_stamp;
++
++	/*
++	 * Try to rewind the head so that we can read the pages which already
++	 * read in the previous boot.
++	 */
++	if (head_page == cpu_buffer->tail_page)
++		goto skip_rewind;
++
++	rb_dec_page(&head_page);
++	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
++
++		/* Rewind until tail (writer) page. */
++		if (head_page == cpu_buffer->tail_page)
++			break;
++
++		/* Ensure the page has older data than head. */
++		if (ts < head_page->page->time_stamp)
++			break;
++
++		ts = head_page->page->time_stamp;
++		/* Ensure the page has correct timestamp and some data. */
++		if (!ts || rb_page_commit(head_page) == 0)
++			break;
+ 
++		/* Stop rewind if the page is invalid. */
++		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
++		if (ret < 0)
++			break;
++
++		/* Recover the number of entries and update stats. */
++		local_set(&head_page->entries, ret);
++		if (ret)
++			local_inc(&cpu_buffer->pages_touched);
++		entries += ret;
++		entry_bytes += rb_page_commit(head_page);
++	}
++	if (i)
++		pr_info("Ring buffer [%d] rewound %d pages\n", cpu_buffer->cpu, i);
++
++	/* The last rewound page must be skipped. */
++	if (head_page != orig_head)
++		rb_inc_page(&head_page);
++
++	/*
++	 * If the ring buffer was rewound, then inject the reader page
++	 * into the location just before the original head page.
++	 */
++	if (head_page != orig_head) {
++		struct buffer_page *bpage = orig_head;
++
++		rb_dec_page(&bpage);
++		/*
++		 * Insert the reader_page before the original head page.
++		 * Since the list encode RB_PAGE flags, general list
++		 * operations should be avoided.
++		 */
++		cpu_buffer->reader_page->list.next = &orig_head->list;
++		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
++		orig_head->list.prev = &cpu_buffer->reader_page->list;
++		bpage->list.next = &cpu_buffer->reader_page->list;
++
++		/* Make the head_page the reader page */
++		cpu_buffer->reader_page = head_page;
++		bpage = head_page;
++		rb_inc_page(&head_page);
++		head_page->list.prev = bpage->list.prev;
++		rb_dec_page(&bpage);
++		bpage->list.next = &head_page->list;
++		rb_set_list_to_head(&bpage->list);
++		cpu_buffer->pages = &head_page->list;
++
++		cpu_buffer->head_page = head_page;
++		meta->head_buffer = (unsigned long)head_page->page;
++
++		/* Reset all the indexes */
++		bpage = cpu_buffer->reader_page;
++		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
++		bpage->id = 0;
++
++		for (i = 1, bpage = head_page; i < meta->nr_subbufs;
++		     i++, rb_inc_page(&bpage)) {
++			meta->buffers[i] = rb_meta_subbuf_idx(meta, bpage->page);
++			bpage->id = i;
++		}
++
++		/* We'll restart verifying from orig_head */
++		head_page = orig_head;
++	}
++
++ skip_rewind:
+ 	/* If the commit_buffer is the reader page, update the commit page */
+ 	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
+ 		cpu_buffer->commit_page = cpu_buffer->reader_page;
+@@ -5342,7 +5440,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	 */
+ 	local_set(&cpu_buffer->reader_page->write, 0);
+ 	local_set(&cpu_buffer->reader_page->entries, 0);
+-	local_set(&cpu_buffer->reader_page->page->commit, 0);
+ 	cpu_buffer->reader_page->real_end = 0;
+ 
+  spin:
 
-Probably pad before, so that "plane" is just before the xxx_planes fields?
