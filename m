@@ -1,87 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9805A2900B7;
-	Wed,  4 Jun 2025 14:35:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBFF28FABD;
+	Wed,  4 Jun 2025 14:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749047752; cv=none; b=DK1UZ/VyTALGS248AqqqL1JRrQOPm/dR8A0Xyw4jHSRnFmrnpjxX0mFlSeYXEgPNZRZac4REuGMk6/bugzJ1sURaDeNezdCtbmVqTbGb1CuNodvA213CecDsmts716CdtnPheS7AUETrimi9vtpBEWRfFRNIr2XkXXin+UP73PQ=
+	t=1749047772; cv=none; b=d2mdjn8RvPv42LheeaLHFrzTK3wylrtRH6VZhIHZM8z6tOnAARGmugxEk1NnHG87RMUvWAgklu1HJARztN9MfK8qvHYWsaYx+on5inFZb4vNMUBubbIoyyClP2b8i0e0YPJQe9QPMNnd5Vm0AueymdSty86Qao4zDOirrCldDzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749047752; c=relaxed/simple;
-	bh=5t5I2NI/JMw2bEnJTqzhPKY9bh0Wo+3tCVbzxMva+CQ=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=aTq61p5kqUYb5+DS65EdAT0MQ9ytztl3IDZ/TVUwaFp8KCNoKudI4EnbO0bMmGU3oQDxgxSiZD6Js9fZZIcI9SiFjUnPhDbNUHVpBf3QDV6Ec/UDdk7AWgCC14Rockaux1Mu7/hvXGIxQAAPEd1Q+d6XlKMKI9c2Q2hcJ4e43Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H23h20oS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749047772; c=relaxed/simple;
+	bh=iInHrdEOEAauKbKtOoFyyL5VvQglkhpPuAxPB+SSYRM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=B/i+mLv6f242f4gT3dgYLpUK3Yi6lQTX7hJ/IHsVCBMzsWxL9CrE6otidtUM/Zdq7BJnfyu5rpJ5xIg9nq+2hB6jQtFhEIiqxUYC84PRyJVL/bbxsscLBc/mTU7Unbev/w1pzHjPPBKdynLREkqC69v0s5k++86QNUn8uDgSnuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7BBpsxB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H23h20oS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA53C4CEE4;
-	Wed,  4 Jun 2025 14:35:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7BBpsxB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A39C4CEF0;
+	Wed,  4 Jun 2025 14:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749047752;
-	bh=5t5I2NI/JMw2bEnJTqzhPKY9bh0Wo+3tCVbzxMva+CQ=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=H23h20oSkr5wnFXM8TFWBPGBAlo37cL9WeSh/3XpfRiqO85sbEluXHlyKDm6X+t4c
-	 QxYRJ3LVtLul3FRNiRQzBU33RJVk/E2DSICZKHACGdrVOiF0pwy7YNX/utROFlN0xO
-	 hkh/cOB0+K4gsRhr9bQV1KcPc3R+vMucXPoCviDd9Rz11hGxrmIj3xgQMPN3Gq0XXD
-	 ydSmYx9TTcSovNlXaONNOmh7clCqKil33EG5EoalAZWs4zpkpwGdPjU8Em9EZe46Nn
-	 ywAnKMrukcXgt2qVw3z+13ID6t4yYshD2Wy7cImNWDX/CVuTRNOUQPq88FigswQ5op
-	 ybAzCNkTM9Ehg==
-Date: Wed, 04 Jun 2025 09:35:49 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1749047771;
+	bh=iInHrdEOEAauKbKtOoFyyL5VvQglkhpPuAxPB+SSYRM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=b7BBpsxBFbfZopvrATcBzQ6LEpTB3Ytqoa4O7+fND8JRpXi75bW/rkuia0QVNfYYT
+	 COPnyyO7obEnPzcFZ8VAfRx313MarloovuChc5bgnXwNchWxDYVB/bLeDZn6iVegYK
+	 LoCAwP6TYLcogkHvJgC/TU2kfoqyPAmTfC4CljmK/scFgNeJ/WwPyIxkdpkt0xePKU
+	 OcrDFEBBJLWPxWOn2rDyqy31kMcSi6Wt9FlS+CXnd+QhWfsurl9RbPLcjsQRJB8/6U
+	 wGw71xQ+TMRGSGq4hReLvRiTFUeJCebkBktCI5TB0RUkbRBV4J+4zrgbhn3zYoBG+x
+	 XtcxxJ3lMXkmg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1uMpDt-000000006nO-3W0M;
+	Wed, 04 Jun 2025 16:36:09 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
+	Baochen Qiang <quic_bqiang@quicinc.com>,
+	linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 4/5] wifi: ath11k: fix source ring-buffer corruption
+Date: Wed,  4 Jun 2025 16:34:56 +0200
+Message-ID: <20250604143457.26032-5-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250604143457.26032-1-johan+linaro@kernel.org>
+References: <20250604143457.26032-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, conor+dt@kernel.org, krzk+dt@kernel.org, 
- jassisinghbrar@gmail.com, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, joel@jms.id.au, linux-kernel@vger.kernel.org, 
- andrew@codeconstruct.com.au
-To: Jammy Huang <jammy_huang@aspeedtech.com>
-In-Reply-To: <20250604125558.1614523-2-jammy_huang@aspeedtech.com>
-References: <20250604125558.1614523-1-jammy_huang@aspeedtech.com>
- <20250604125558.1614523-2-jammy_huang@aspeedtech.com>
-Message-Id: <174904774987.4021667.10220150728052993146.robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series
- SoC
+Content-Transfer-Encoding: 8bit
 
+Add the missing memory barrier to make sure that LMAC source ring
+descriptors are written before updating the head pointer to avoid
+passing stale data to the firmware on weakly ordered architectures like
+aarch64.
 
-On Wed, 04 Jun 2025 20:55:57 +0800, Jammy Huang wrote:
-> Introduce the mailbox module for AST27XX series SoC, which is responsible
-> for interchanging messages between asymmetric processors.
-> 
-> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
-> ---
->  .../mailbox/aspeed,ast2700-mailbox.yaml       | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
-> 
+Note that non-LMAC rings use MMIO write accessors which have the
+required write memory barrier.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
 
-yamllint warnings/errors:
+Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+Cc: stable@vger.kernel.org      # 5.6
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/net/wireless/ath/ath11k/hal.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.example.dtb: mailbox@12c1c200 (aspeed,ast2700-mailbox): reg: [[0, 314688000], [0, 512]] is too long
-	from schema $id: http://devicetree.org/schemas/mailbox/aspeed,ast2700-mailbox.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250604125558.1614523-2-jammy_huang@aspeedtech.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
+index b1f5a927dddd..927ed2bc3fbf 100644
+--- a/drivers/net/wireless/ath/ath11k/hal.c
++++ b/drivers/net/wireless/ath/ath11k/hal.c
+@@ -862,7 +862,11 @@ void ath11k_hal_srng_access_end(struct ath11k_base *ab, struct hal_srng *srng)
+ 		if (srng->ring_dir == HAL_SRNG_DIR_SRC) {
+ 			srng->u.src_ring.last_tp =
+ 				*(volatile u32 *)srng->u.src_ring.tp_addr;
+-			*srng->u.src_ring.hp_addr = srng->u.src_ring.hp;
++			/* Make sure descriptor is written before updating the
++			 * head pointer.
++			 */
++			dma_wmb();
++			WRITE_ONCE(*srng->u.src_ring.hp_addr, srng->u.src_ring.hp);
+ 		} else {
+ 			srng->u.dst_ring.last_hp = *srng->u.dst_ring.hp_addr;
+ 			*srng->u.dst_ring.tp_addr = srng->u.dst_ring.tp;
+@@ -871,6 +875,10 @@ void ath11k_hal_srng_access_end(struct ath11k_base *ab, struct hal_srng *srng)
+ 		if (srng->ring_dir == HAL_SRNG_DIR_SRC) {
+ 			srng->u.src_ring.last_tp =
+ 				*(volatile u32 *)srng->u.src_ring.tp_addr;
++			/* Assume implementation use an MMIO write accessor
++			 * which has the required wmb() so that the descriptor
++			 * is written before the updating the head pointer.
++			 */
+ 			ath11k_hif_write32(ab,
+ 					   (unsigned long)srng->u.src_ring.hp_addr -
+ 					   (unsigned long)ab->mem,
+-- 
+2.49.0
 
