@@ -1,159 +1,249 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010005.outbound.protection.outlook.com [52.101.229.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8402422A4DA
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 11:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749038035; cv=none; b=VBDLfvZT+ksDiH/WtkV5RlnVseCdXE+BrIEWXrRi5Kcl1jMtyQoq/dE8bDeA1rqBTBPg6Ae6as4GYLxQ9iX52pQLQMkzMss6RiS6mL8QIf8hdl1SeVEJMzqMOMufEatZQSDGqvg7phO0VbKpbd80sRzSlr2iqRu0/JyZYPj6K/E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749038035; c=relaxed/simple;
-	bh=hF0QbYOloZlOwVAlSYgg34GUEd0zSnKsf9/kU9hggk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=jTKMaTkuNRKH/VAgGXn2l8KIAa6vaMvK26uH32wBBIp/SAhCSBRsS3qGJexSTNVLCgnCgbq54sFhIcBHQK2E3pyhGg5n4wn2HE7nl6fvNzA95/gvebLODTO9GAcsV7w4UhNOltcEq/Fg40OfIGtG02HPfD0M+8BoefudEZRnqQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=VUQivGpu; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2884D22A4DA;
+	Wed,  4 Jun 2025 11:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749038075; cv=fail; b=hPDKyUdzqXPghyYVNmEOcxAEs4fPuIqkOY6lnRxEstLpXA51oahGBP+6f09AD4l3K17ApkXfoeE7tTgGkRo5jaqpXEn2IYW+zzK4pS/2uUuwDlr85qQURQg5ADEdUuVPJKYcifvQVSN1eedqH+bzRgzR/zKin4q1x6Htfm8VBbk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749038075; c=relaxed/simple;
+	bh=JoiHtbcWA0zSIzldxrzfQ1yopb1Ux/xjeQ2sZ9geIyU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Br9XLfzlU/EwQXDvA26fXqUaZa6B5vphPi1NhB4izHM3DwlIdN570/VOYILLfXPamr3anc92m5KxlXjRzcu9q3N1+Vwky7aBh+VUSfw/fjF323sulI+R2l6OUsQ68wwPwbqqEVfxrF4FYo56jA/UlbBMzQVzrhheREhDpdza8no=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=Bm3iMoNc; arc=fail smtp.client-ip=52.101.229.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VUQivGpu"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250604115351euoutp01400ab7bcac9fb7fbce4c5fd28b3e2d19~F1NK6axSO2313223132euoutp01k
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 11:53:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250604115351euoutp01400ab7bcac9fb7fbce4c5fd28b3e2d19~F1NK6axSO2313223132euoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749038031;
-	bh=s/0qhETp0/O5tfeuPDSpC29l+QS4DsX1qeaGhsBy0I4=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=VUQivGpuXwfTvpBVWD1oWFdPgrlPaqvo8usOtfrEEyMhn3X9zaHLn/ZJvzMCOaNVm
-	 tThqy1WUXxJeweaD4C6PA2Tr6afc9y6mcEVGtHV1cW7xjKehfa9S0SRk67bkRDLdcy
-	 4vmdhCVu7nbznSCVPy1xyUByvCZtPorTzTysaG3M=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250604115351eucas1p2029645aec0becbaea4623fed73756400~F1NKR_He42239722397eucas1p2f;
-	Wed,  4 Jun 2025 11:53:51 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250604115349eusmtip2988a156336ef42213eda6e883df452af~F1NJJo9GR1421814218eusmtip2Y;
-	Wed,  4 Jun 2025 11:53:49 +0000 (GMT)
-Message-ID: <a6a29e58-8613-47f0-9e5c-d125da7ddb49@samsung.com>
-Date: Wed, 4 Jun 2025 13:53:49 +0200
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="Bm3iMoNc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=amDHOsBWuknTsSPtkCzmA96iJlUuop+anMOmhEwJz9wXyV0Wx/JizU1vicGLx2/jB08GouCqvyGTqft/V9as/sMYsWDfzUe8NpZ4spqL5NnhYcARD0/nivYPRqO666JryNlgvx+DKIYkqFqa+J+VW/hMj1RM6+Nr3qz1haV/UM0RpOBgnTIIj1eKBrKF354ZKWvs6SyXveBrT+K917ohkOqOYhGBEPaot+ypVcWbon7hQVZSginxtDU4/f4KHgCXKSm5slG78DypsShY5pxzS23dkbiCSkim+H+JdMMmqo/Uk09p/b6Dsi6APHZvhQ5FanWI8HAQVF2YbHKidWFh/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sMvmqWZGWCKdJcGFjkYWMbd1en9FJ+RgAIo1JkEl4bQ=;
+ b=eqio0dP8pq4V8uhF7v+qrj0qn9gCkQeM2DhvuyzwJC/fhyucKOpT/MouOohgBHq8WVQj/H4BofC/eUG/LpyDZokcTOdgYunwu1vrmj4VByIL552iJ5ZaILdXNiI4XiL3qiDInHPY2qUf/cTWnrZzzXTNp+4I7rMk/8yDzZvKUVBcfPSSJSqAAZm9kBlMu0ECWCkBG7lgYHDIjj6BEtknB1D51Nx8oUz1p8m9quBYE+N8wKIYfkThW29owLS1n6o/8R8F1I4okXS86sfe1F0bXqKJn8GgNimQ+/yocn2UB29NinpTENONS+riDR9QueHfPiOCwNUlYERkvZEWsldBJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sMvmqWZGWCKdJcGFjkYWMbd1en9FJ+RgAIo1JkEl4bQ=;
+ b=Bm3iMoNcCnh6MLPmGuZgfdXK9oE55og5t5UIsEMxZ8VQAURtWeKzq9S+mkgP9N2q8xzF/c1LiN21klggdb3TyKRPag9E0QbVQrZxlqZ8Za5MLrWEtpFT3O6kkckoYMXPMZ+RnxBTw6L+Se09uIakXAxbWlAcsJVN+vYrn9jdzMA=
+Received: from OS3PR01MB8319.jpnprd01.prod.outlook.com (2603:1096:604:1a2::11)
+ by TYCPR01MB9894.jpnprd01.prod.outlook.com (2603:1096:400:220::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.19; Wed, 4 Jun
+ 2025 11:54:28 +0000
+Received: from OS3PR01MB8319.jpnprd01.prod.outlook.com
+ ([fe80::3bc8:765f:f19e:16d5]) by OS3PR01MB8319.jpnprd01.prod.outlook.com
+ ([fe80::3bc8:765f:f19e:16d5%5]) with mapi id 15.20.8813.018; Wed, 4 Jun 2025
+ 11:54:28 +0000
+From: Chris Brandt <Chris.Brandt@renesas.com>
+To: Hugo Villeneuve <hugo@hugovil.com>, Biju Das <biju.das.jz@bp.renesas.com>,
+	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
+	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
+	"simona@ffwll.ch" <simona@ffwll.ch>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hugo
+ Villeneuve <hvilleneuve@dimonoff.com>
+Subject: RE: [PATCH v3 2/2] drm: renesas: rz-du: Set DCS maximum return packet
+ size
+Thread-Topic: [PATCH v3 2/2] drm: renesas: rz-du: Set DCS maximum return
+ packet size
+Thread-Index: AQHbyydYZROipDs4Mk6V13hnElvTOLPy9BEw
+Date: Wed, 4 Jun 2025 11:54:28 +0000
+Message-ID:
+ <OS3PR01MB831999C4A5A32FE11CC04A078A6CA@OS3PR01MB8319.jpnprd01.prod.outlook.com>
+References: <20250522143911.138077-1-hugo@hugovil.com>
+ <20250522143911.138077-3-hugo@hugovil.com>
+In-Reply-To: <20250522143911.138077-3-hugo@hugovil.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OS3PR01MB8319:EE_|TYCPR01MB9894:EE_
+x-ms-office365-filtering-correlation-id: 7e1b19a7-88d3-4f0c-bbea-08dda35e8f8f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018|7053199007;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Fmyj1KikUkKi0mSHJe3gVwH+DGW0Q90mzj+6dph6S2kDuOSu4ZEVwVG2XSw4?=
+ =?us-ascii?Q?eOURvMvE+Oca+rSRTUZtQgEwT/EwiYKCT8RDqCvYPpkm8oIwbWL5SX7SLBXO?=
+ =?us-ascii?Q?aSbO0PN6Rvlci08P3Ik4jIiIT2oQq37lc5xrGys4+Tf+oVVuEIcxgH3sN9TT?=
+ =?us-ascii?Q?CkeI3+2CQvNDCZaU8GYQzKla+6cVg8sYMZ3PDtKDpZT+Hm3lfsotR0zLHJZn?=
+ =?us-ascii?Q?56o3pXKlZPJpgKBUtcc6bTXS4BUv4S0c2oVeEG4LzaRzOK5uc3rbEcrPzOm5?=
+ =?us-ascii?Q?0vkPgVyvN4hA+hzXacSIYmbI+o2F0NL8IJ6glyq2fTzy0KL+MReCSitsFvko?=
+ =?us-ascii?Q?bDncfH69wWh2igDJrmfbRGd6ihtRgstMYeol9d00gY67yZb2ixQy1Up6o09R?=
+ =?us-ascii?Q?ofKp7gJltj0OZXnMq5tKsifxFODatxkMJGdgWeSAfG5CHuunC871S3x/RvT8?=
+ =?us-ascii?Q?JF2j4TDtI7qy1XgGLgnSJAnz8CEB7xt6vfNr6RkW6Zekz5RDmCZ+nhmgBVh5?=
+ =?us-ascii?Q?653c3lUuVe4xysg/kK5UX08wG6+fzFvk2AL9WYcpIVPd+wSra5F//LtymX5k?=
+ =?us-ascii?Q?2+MKAq0nE/BBF/paQ9ngEgdot6xcSyLZNJdniMbEOBRLmaQXxQiFuOZSH4Jb?=
+ =?us-ascii?Q?nkQ7/g7xxhxHPMgmm2z/rNef2YD9aOF9ZnHuBFHQVUuuKVOSpQzFlmvh+Sw/?=
+ =?us-ascii?Q?JZouGeix4BuGHHeDDYSXQERev6Nlj2QXOovZehqOuj00udwlz8M/qsZEVQYE?=
+ =?us-ascii?Q?jJBFGAAM9oo7Z4iac+HegDWk0/SzSsdn3TsYqX0Mh3KGpdQtCKGhUhCYoKf6?=
+ =?us-ascii?Q?MweLFJ1UsZSPFfk+lDyyp7jKuR0jwdqQWUBv6mZ0bHaUpEygVUViwub6RCtd?=
+ =?us-ascii?Q?qgK9dq4HFOiHxSIhFgAjXg1Cnrg0yBeN+WXLC6V5UWBICzYKwF0bSWFCA8Xf?=
+ =?us-ascii?Q?E8H5YRcqGPoY/gg7znMByax/qF/HbGUA/QM5HRR35FKnt/MtCZ0x3I3zGEWL?=
+ =?us-ascii?Q?PDCW8L19BIsz5y/oCNDbEpyBWUo5drTjub3sdyvopgObVLCPTmUaPrln9nCQ?=
+ =?us-ascii?Q?LEfVWD1263+ewE9K3l7CQGiNhVig3D3TM5HGQufw22GlcZpaG/+BPM8gbGFG?=
+ =?us-ascii?Q?IGm0VLW9z7WVjuJtN3F7xcq1z7bC8hx03ojOOCaHJx2eN1OyWITvUHJF92e2?=
+ =?us-ascii?Q?OGdg3l38H9K5t44KK/pjUz8oSD/2v0PLgcpNHa1OjjNGEf6fqvyoELyHjdoI?=
+ =?us-ascii?Q?dOlsyyp02s7iMXjnLIKJRfIonr1O0Lkjie2ZmVxQubbcyvjvzRZ+KOq2UkVT?=
+ =?us-ascii?Q?Y0RdQzSIiR2xIL3Ke63zwj2kSAS3Q2v1SkPC4E/ciIuB53l0hsYVqlvDb/N2?=
+ =?us-ascii?Q?tvQS+Y7NmiEDBML3EbIvLpYejXEIWqAtSQAY9QnfKFzyUB/SEAuViUOP3Kaa?=
+ =?us-ascii?Q?rZvFDv3QFEUtRKsnZ6Qvd8NTNyf2T98CKHx5/8VPJSwmZB/LOG28BA=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB8319.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018)(7053199007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?qJrOxUX4UT/drBrsUumTFKN9YHxz0wrfXP33SonwSOv3Ss+DfRN8hqNwU53z?=
+ =?us-ascii?Q?u36QWghhdfaP9wFPrC9gmaUyy0eyD4u/HpbkpBStjAh38+5Kt1YZh/U1DhHY?=
+ =?us-ascii?Q?lL5AqGROK4PcL8nO2hcoXpK/rnz0WH4Bq1VywrdUHQVDgyFGjm02nkO9mId6?=
+ =?us-ascii?Q?7WqzkBfEpAJBx4Ehh40b+fe3I96pmMKytDviEQ0cC6UMv02mbZ4HP0JitUrR?=
+ =?us-ascii?Q?f2Rk8Z7Tz6A1o59Uj0xEFqL+8tFhL5QD3Hp5lANUkMOFzf+aieeiKgIRiuPg?=
+ =?us-ascii?Q?yJ9ydYuHkbxwMcJYUTx4hSvZxZcZd4AV+rSFQaEFfmjNoUJAujuM4rsSXZUO?=
+ =?us-ascii?Q?FCRV8SGHpdKA6NJs0vRF9m6VczNFYaNBv3QzCKovOr/XjPbwqm2l3GVHD6l1?=
+ =?us-ascii?Q?1bojtEl+68Rzpy3I+vws8oJLpfC7HQ/IYUxcNA40dqxoZJUfJQWYcv7rR1XF?=
+ =?us-ascii?Q?K9xJed+8VTxanPWlDEXqAIGFzLCmvBM6U+cPHeuEfg4DFdoq4T0SAZTQrhn2?=
+ =?us-ascii?Q?nT5omN2VJj1ngsocrO1H/UGSaLM2cfYHAb1dv1dD9GH9Q8Iho0BtqB9BVCfa?=
+ =?us-ascii?Q?bbSSJ3ar9yliZl5Yfs1mKec0+4BSt9nOSbEhZdtDSV2As+61DPemy3etYtRH?=
+ =?us-ascii?Q?ankg1scbsC7RttOudaexppMjQhJG1aLVCmwWHtLhNZlgBxTdi0wFd6BZWwQB?=
+ =?us-ascii?Q?7wxfFWYi7bFYh3ZVxP5lHfUe4xJ9MDgOf5Yb28BXbej3l3iuswJ2j5RU8HEw?=
+ =?us-ascii?Q?S/aN3qSzhBbgPb6mhnjpGfiQoFc2cnWlf7rfxe1xckUCo+lGKbT3eZkPtSNA?=
+ =?us-ascii?Q?033ApZ7atHR9sDzdpXnUjjKrrCq+tED/xXCfESDGA3dBAGv2pQLpAbgpk/Ve?=
+ =?us-ascii?Q?OOdLypGO6LJKxMfAQT54QSOnatmFEaftz3atD5mnqEeUj5JsbHNUitAw2KWW?=
+ =?us-ascii?Q?BRTFr51MKW6ClRZWjYtfQN4Ks5upxoDwMLerg5rjL3NljOLFEfZ2euvIG7XC?=
+ =?us-ascii?Q?kkD1fwKMlxIBpsib5bNwB40yaM+08fnRry8w4hJxoxCCgUZjRWvtdBM21rsN?=
+ =?us-ascii?Q?BT4mN0mzAYP5NPcVNlhGaYesdyCDkqOeWP5YY1MrtlXykG9mwzs5ZakGTWzK?=
+ =?us-ascii?Q?+wc9XHWmps1sxj6P4dLPPrXqXksYdTzeA5pN9Y55w2rBF2QI6WjTBwOjsPr8?=
+ =?us-ascii?Q?+Cp/AZIK3LF3ScFmlvsvJAbO/KkNn3fItZj3/z2anFORetvQnDv8K796sJYe?=
+ =?us-ascii?Q?LuTaHcOAJKFuYxLTdjsROsEw3r/P0yEaMu+Prz7eiVkqBbYta1u4TLoMXHZf?=
+ =?us-ascii?Q?iHFXlBJaxpGbH+84NHCD9lo+1cevWkzsJQ8Z0NaHj8da+fEEuwmMWcncuEV6?=
+ =?us-ascii?Q?BfP+8CahJgC6XCeh8s2cRHgDIzK+r4DrC4yCsRfcihHvtJ74Y7UMAH0igKqC?=
+ =?us-ascii?Q?TqbNHmgRIJmVQgW3KTdnVwrUL3pFSl1z6Fid3X2KX/gvWQbRayrPQLMyaqwF?=
+ =?us-ascii?Q?E1xLbH5ouwkUFsHwuAlKGBHo1HseYxNMh5kLv3sBDiNxZjY/rIr04ZBiTPPz?=
+ =?us-ascii?Q?SnGj4qmBNRxcEnanO7onTu6AS9K4pKgPqhldPLgw?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/8] drm/imagination: Use pwrseq for TH1520 GPU power
- management
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
-	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
-	Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <e5a0bee2-ff74-47cf-ad2c-0c78b57ae6cf@kernel.org>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250604115351eucas1p2029645aec0becbaea4623fed73756400
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1
-X-EPHeader: CA
-X-CMS-RootMailID: 20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1
-References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
-	<CGME20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1@eucas1p1.samsung.com>
-	<20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
-	<20250603-whispering-jaybird-of-thunder-f87867@kuoka>
-	<d42a8c49-7ad2-49ef-bd9c-1e3d9981b58e@samsung.com>
-	<e5a0bee2-ff74-47cf-ad2c-0c78b57ae6cf@kernel.org>
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB8319.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e1b19a7-88d3-4f0c-bbea-08dda35e8f8f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2025 11:54:28.7029
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WFks0g8Uod6970pX1e0AfvgDMwdoky4e4TI6+sNIKoxv91YGTzdQ03Wl/8fg09b+49uokEh5gABFLSEq2/NF4E/eHLDQOlbql3bEnYW9nHs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB9894
+
+Hi Hugo,
+
+I'm fine with the code, but maybe it should go in a different location.
+
+Since it's a register setup, it should probably go in rzg2l_mipi_dsi_startu=
+p() with the others.
+
+Additionally, since it is required to make rzg2l_mipi_dsi_host_transfer() o=
+perate properly, my suggestion
+is to add this to your previous patch instead of making it separate.
+Otherwise, it's like you are submitting one patch with a known bug, then im=
+mediately fixing it with a second patch.
+
+This also would prevent the merge conflict with my patch that also modifies=
+ rzg2l_mipi_dsi_atomic_enable().
+
+Chris
 
 
+-----Original Message-----
+From: Hugo Villeneuve <hugo@hugovil.com>=20
+Sent: Thursday, May 22, 2025 10:39 AM
+To: Biju Das <biju.das.jz@bp.renesas.com>; maarten.lankhorst@linux.intel.co=
+m; mripard@kernel.org; tzimmermann@suse.de; airlied@gmail.com; simona@ffwll=
+.ch
+Cc: dri-devel@lists.freedesktop.org; linux-renesas-soc@vger.kernel.org; lin=
+ux-kernel@vger.kernel.org; hugo@hugovil.com; Hugo Villeneuve <hvilleneuve@d=
+imonoff.com>; Chris Brandt <Chris.Brandt@renesas.com>
+Subject: [PATCH v3 2/2] drm: renesas: rz-du: Set DCS maximum return packet =
+size
 
-On 6/4/25 08:36, Krzysztof Kozlowski wrote:
-> On 03/06/2025 21:43, Michal Wilczynski wrote:
->>>> +	 * and resets. Otherwise, we fall back to managing them ourselves.
->>>> +	 */
->>>> +	pvr_dev->pwrseq = devm_pwrseq_get(dev, "gpu-power");
->>>> +	if (IS_ERR(pvr_dev->pwrseq)) {
->>>> +		int pwrseq_err = PTR_ERR(pvr_dev->pwrseq);
->>>> +
->>>> +		/*
->>>> +		 * If the error is -EPROBE_DEFER, it's because the
->>>> +		 * optional sequencer provider is not present
->>>> +		 * and it's safe to fall back on manual power-up.
->>>
->>> It is safe but why it is desirable? The rule is rather to defer the
->>> probe, assuming this is probe path.
->>
->> Yeah this is probe path.
->>
->> The GPU node will depend on the AON node, which will be the sole
->> provider for the 'gpu-power' sequencer (based on the discussion in patch
->> 1).
->>
->> Therefore, if the AON/pwrseq driver has already completed its probe, and
->> devm_pwrseq_get() in the GPU driver subsequently returns -EPROBE_DEFER
->> (because pwrseq_get found 'no match' on the bus for 'gpu-power'), the
->> interpretation is that the AON driver did not register this optional
->> sequencer. Since AON is the only anticipated source, it implies the
->> sequencer won't become available later from its designated provider.
-> 
-> I don't understand why you made this assumption. AON could be a module
-> and this driver built-in. AON will likely probe later.
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-You're absolutely right that AON could be a module and would generally
-probe later in that scenario. However, the GPU device also has a
-'power-domains = <&aon TH1520_GPU_PD>' dependency. If the AON driver (as
-the PM domain provider) were a late probing module, the GPU driver's
-probe would hit -EPROBE_DEFER when its power domain is requested
-which happens before attempting to get other resources like a power
-sequencer.
+The default value of 1 will result in long read commands payload not being =
+saved to memory.
 
-So, if the GPU driver's code does reach the devm_pwrseq_get(dev,
-"gpu-power") call, it strongly implies the AON driver has already
-successfully probed.
+Fix by setting this value to the DMA buffer size.
 
-This leads to the core challenge with the optional 'gpu-power'
-sequencer: Even if the AON driver has already probed, if it then chooses
-not to register the "gpu-power" sequence (because it's an optional
-feature), pwrseq_get() will still find "no device matched" on the
-pwrseq_bus and return EPROBE_DEFER.
+Cc: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+---
+ drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c      | 10 ++++++++++
+ drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h |  4 ++++
+ 2 files changed, 14 insertions(+)
 
-If the GPU driver defers here, as it normally should for -EPROBE_DEFER,
-it could wait indefinitely for an optional sequence that its
-already probed AON provider will not supply.
+diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/d=
+rm/renesas/rz-du/rzg2l_mipi_dsi.c
+index a048d473db00b..745aae63af9d8 100644
+--- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
++++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+@@ -549,6 +549,7 @@ static void rzg2l_mipi_dsi_atomic_enable(struct drm_bri=
+dge *bridge,
+ 	const struct drm_display_mode *mode;
+ 	struct drm_connector *connector;
+ 	struct drm_crtc *crtc;
++	u32 value;
+ 	int ret;
+=20
+ 	connector =3D drm_atomic_get_new_connector_for_encoder(state, bridge->enc=
+oder); @@ -561,6 +562,15 @@ static void rzg2l_mipi_dsi_atomic_enable(struct=
+ drm_bridge *bridge,
+=20
+ 	rzg2l_mipi_dsi_set_display_timing(dsi, mode);
+=20
++	/*
++	 * The default value of 1 will result in long read commands payload
++	 * not being saved to memory. Set to the DMA buffer size.
++	 */
++	value =3D rzg2l_mipi_dsi_link_read(dsi, DSISETR);
++	value &=3D ~DSISETR_MRPSZ;
++	value |=3D FIELD_PREP(DSISETR_MRPSZ, RZG2L_DCS_BUF_SIZE);
++	rzg2l_mipi_dsi_link_write(dsi, DSISETR, value);
++
+ 	ret =3D rzg2l_mipi_dsi_start_hs_clock(dsi);
+ 	if (ret < 0)
+ 		goto err_stop;
+diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h b/drivers/=
+gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+index 0e432b04188d0..26d8a37ee6351 100644
+--- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
++++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+@@ -81,6 +81,10 @@
+ #define RSTSR_SWRSTLP			(1 << 1)
+ #define RSTSR_SWRSTHS			(1 << 0)
+=20
++/* DSI Set Register */
++#define DSISETR				0x120
++#define DSISETR_MRPSZ			GENMASK(15, 0)
++
+ /* Rx Result Save Slot 0 Register */
+ #define RXRSS0R				0x240
+ #define RXRSS0R_RXPKTDFAIL		BIT(28)
+--
+2.39.5
 
-Anyway I think you're right, that this is probably confusing and we
-shouldn't rely on this behavior.
-
-To solve this, and to allow the GPU driver to correctly handle
--EPROBE_DEFER when a sequencer is genuinely expected, I propose using a
-boolean property on the GPU's DT node, e.g.
-img,gpu-expects-power-sequencer. If the GPU node provides this property
-it means the pwrseq 'gpu-power' is required.
-
-I didn't want to use this approach at first, as it seemed to me like the
-pwrseq API had a hands-off approach for the DT with its matching logic,
-but it seems unavoidable at this point.
-
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
-
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
