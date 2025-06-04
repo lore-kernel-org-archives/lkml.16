@@ -1,763 +1,200 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E981D5175
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8581DDA2D
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749050760; cv=none; b=c8wNYxLdpaq0l93FjijIJ3ZpRB2COjl+pkVeKoSiRMQvjZW6krIT32/8oSzyXqCcx2hJGW2ZeEgD64DPlfwKQHlfqnZjwxQhovo/v0aQs6C1ZQG4KPgih/F0sf1oEHQZBfsST8auEgXj5Th4zSSvxrjRufNeCJR15jALrRlt1N4=
+	t=1749050767; cv=none; b=Xhytecu76CuBeloJ5QlZSASOR5k1BPseuEEnHylV8ewO4WNjvh7irqK/rG1xQ8PxZxC1a0lO13HTDS6eZz2sUGG6VosnCtSnpu6tyK2rPs2TWoKBGTOrm9KE/R0id5GhrNVNnSOhowfVX4MU3nAE71ZHlCU2S6dpVmjzjHaGmO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749050760; c=relaxed/simple;
-	bh=89g6kCobF3HR6J6w5n/pC7Io3EZ/ilt2DgZlXtsx9ns=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qZGyL/pbm/bx9TYEHB16o8E0ocWOB3FnZBciXbEmWKFXoSG2msZrujN1COdFijdhJe1EuyVH003rWqiW19QoJWwiH8EhZChNKAS+LICRUV12p1MAkwAMSrsJP+H0PfvdHza75S/bPZwh2ZiTkIdurpHPo+VHPaarEcXoW3v5j7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ezlajlm8; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1749050767; c=relaxed/simple;
+	bh=GBI1kOt6UTntFPnDAiCPurA9pwJ2CkH4038SpVinQWI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WbINJqyfl1SZ24Oxu/6qZEwAPomn+qrvVg6lQCVLfYG56E9Z1yRSNcQRxdDLevZej7di2yvUmF5CKu69hJtAhOvkyeiOvn3TIldoke1iXoh1QUlL/geWbEAYj2ueP4MhBL4Y4Vdp1Cywp/K5WBGnh0LAqcLPAU/DDV2lBeeSRko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oskc130A; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ezlajlm8"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-604f26055c6so2214510a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:25:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oskc130A"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-441ab63a415so76416495e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749050753; x=1749655553; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1749050764; x=1749655564; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IEGYDV2khNy4gA3s7OfWJd0YI0OOgwREUGVpObDem1A=;
-        b=ezlajlm8vAdIPoYtIbuJqPue5w7aApxzV8LNf0JL4qA+sOuot5gcCDLrzcltngfT7W
-         Oj33GBD54oVWcE+1To4vBAxma6BcMVbQFuITMbawym4Uv5LemVFWVVnYApQ0/Mk7Wbkh
-         nFjXtwh6YKexAgEO50zJlRigv5/x+g+cnwqdSjUdFjrOIf5NgPn84bC1bAe2W0XJxakw
-         NkkE1CfXgao3dKs85WUnFGDD9nu4K8D4WYarEkTXjAddvRq/81+lYPPh8ZbdmsSgtGU6
-         VZhTgw8gtqLpWmjXQO+J5dolmfPuEsvX1FcziHtVwh42JdDL1nyvlVFVuOe1uFtBTz0R
-         4mkA==
+        bh=B0lcqU7F4Smj0GWpb9honM7MK06fJTYKjPwZgoAkico=;
+        b=oskc130AdxRjqmMxXoOYbUC9bGSUPpgyU+EUCAQJNRLzRcrcp3J5VzA4j+Z5dgFfqP
+         OnNfb8D2pFYO1i/JJ8PxF2rkgjmejY0ZKCKsgMnrXcTlBW7LCIjHQ7bJ89PHUsXZ5cGn
+         aj8BOLqXTpHPcdnGeRjZH/5LIcosaNh3D4XMLv+W+jsfokUjaoD7w4QlKR32tMaEeRnW
+         EmBgBwY0keBv81BOAmDBNT4oYNGhJnqSjDoDK+xxwKqWbfCKBM9IIkz0bi73lYZa85oY
+         SOoFLwj+ryq6nKGqStanRlJXodVDWj0qoVIIaLXeNMd07gxGyZN+eEZTkcKXp9kgCvUW
+         g07g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749050753; x=1749655553;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IEGYDV2khNy4gA3s7OfWJd0YI0OOgwREUGVpObDem1A=;
-        b=IrixNyudhqE3nowEd5ENSJ4u+yHdvWE8mkiFf/8imbcKq13Vh+hUJKtGiDebl6zZ4/
-         Gv0TPqGIGwWOz3LohfHwyo9s4TtVoa1LkHTmU5uU4c2IuWfmVaUFPl+PotdpsCNAb8/z
-         0FGqm/HSpU/kxIiLxi7fLQwqhJqcatfvwyuPojxi/AzprcVLm8tFDWg6Fq/lbphlOBB3
-         LaRLXExnTYlxoqD2Vs0MU498BcX5Ys+K+YeapHrgH9mjAwmfpUGhFt8Snnsv2OBpYIZq
-         xhVYTNyiDITgiJNLwhtE37wWGbxGkJfOkF54IO+xMk644kHQS4A0XWtZvjvxlVaN+lS0
-         mrxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdK3VlcHFiw/l0xoShVHmuTNHZZ/PIqZJCAd5ee4ZYwt6Lek3bYCPR68kKfGRKlXSQknxvuzoVCQ22vrc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTPbHUxMecyBGCSoGPlJSuabSrqKn+dilziN8njOVg6KdEosvj
-	G6Ac3oKnjXtmCQMYzeZW2eMLAgmrogEGlbOFSotkDP50bFN1+jHQ/mDXc6GzdrDfi+U=
-X-Gm-Gg: ASbGnctdRL3HuCyDMpEq7hcAWs4sHAHJM1WtJSP9vmHlnfQI3bLuwCmOUfOmb10fPNt
-	Q6T5e9FP+RjyJPcjfkd6QdTrLuGrxRpuTNhY1zIgJxJcRViov0Bm45hvzbVEJnDd+W5pLHHhFnH
-	oxxfRjw8LteAzXcEURlKn6xmxCPHSfFrT6EYI8lM7IQ8bOGQkg3a+GBq/kBHjtoNgm3cs/kvdXu
-	SI0hMhEqD/AkZNWfkaSnJZ5XTQEpjiLABunXp39Y0LNPKNU66cbWOc94lmUZCtwmCck0bCMjdJI
-	85p+bAWAHyAbRwS2ooRI09r+Vu64Zkb2npjbNRS4m3nAfCm4qMTEFgko2UFKLRN4ge+5FxNDxw4
-	G1Rk9fuIy36guKEQJXZD9e7g2n+nnTPf/ICw=
-X-Google-Smtp-Source: AGHT+IF4GtmRZR1zAYaVAYqk931R2ALis05PVJfS7nUbUxre+k8POSxyxX9zkmikgkd1i/jh5IT9Ng==
-X-Received: by 2002:a05:6402:2351:b0:607:1ebd:da75 with SMTP id 4fb4d7f45d1cf-6071ebdda91mr338186a12.15.1749050752754;
-        Wed, 04 Jun 2025 08:25:52 -0700 (PDT)
-Received: from puffmais.c.googlers.com (140.20.91.34.bc.googleusercontent.com. [34.91.20.140])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-606ed984f63sm1051640a12.58.2025.06.04.08.25.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 08:25:52 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Wed, 04 Jun 2025 16:25:52 +0100
-Subject: [PATCH 13/17] regulator: s2mps11: add S2MPG10 regulator
+        d=1e100.net; s=20230601; t=1749050764; x=1749655564;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=B0lcqU7F4Smj0GWpb9honM7MK06fJTYKjPwZgoAkico=;
+        b=Igoj+oyB+z/3NYRKYQ6G3C0eHEkbISssNBoIJxmNdawe47+hcBV7R4gaHeeV2AvUuL
+         GV3N8KjkB7O+el/inI9+lVFN45iVK4VAcQbTueLy8jH7fSejXgDiYIJrlhPAy7CAa4QR
+         a5cCj84ZffbLigXDHq7PEcj0WYldC75VV+QdjyCW5BFGa7LZFVwMRHhxWR9o9IUCr23l
+         snG2GTNHVWzSERfKTfuEtvMK+0OFCfdyeQ7fYiCwxvIQJ3lhOjSCBFcQtBwwHdcCFUif
+         /7GgH6TmOPNOaww91/6zrrGDNg3JGhHcuvvODEeIfWAlOJOwbSCj/RDjnT7juxNHYIXF
+         p8aw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsblFnXFm934SyzJmJHBe0hwq3AspwbAf7AAMvyZUKOlPq/QiXIsDwYzI7S8cHo/yj3tdwCjHv9HZnYP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnLhOjQLXYfRRYv8/AKIuzWDtbK2TQMgGPh5oDAnfKrYdfV+No
+	zfRdsayvfXppBvfRep7NRt4J1ZV2j6hPO0SZsE1j6ayXujXMB+8lyYXe9xHV3xQDexA=
+X-Gm-Gg: ASbGncvgHWwUq22Mgi7OYSRL5aLH5/xaCJGj0B+YmRaWr+eRSwnXWjLBZwbV05kxkmB
+	S/2BIKDu2mBbzbD8+9g0yZQ5C6P5Avzwg6S2zAgenJhP7i/78z+EsX6rf+7zNrJExY7PArXJgq2
+	QgwH0XWPXBD+x6iop5HxYpNpgSLFe9Tig9xhMV0/6mEN4O+xbufV8qy25UB6jPz4TteIUe6m61u
+	67ibLd+jLzN1bEay35IgP7mIWAvwbESEkSqrICmtpUjTK84xHZy2mWWUggmzsP2XGdx0BohUUum
+	bZMjFYbLF1E3sFIjgsJ7OiHhifw7kCRUMAKn3zYV0F0w4WPC3zbNwyHiBsltGwF1cqns6O8d3IQ
+	VExJpIJuD6gVtmFc2iXH3gwd2JQ==
+X-Google-Smtp-Source: AGHT+IHSHAjhdXAKFOooiLdh3xOijEcwpDuXOWN1lz1ky8KfmORabIgw+h1ADRjlvhvZfDXR1mvoYw==
+X-Received: by 2002:a7b:c41a:0:b0:43c:ed61:2c26 with SMTP id 5b1f17b1804b1-451f6502b42mr12017605e9.17.1749050764240;
+        Wed, 04 Jun 2025 08:26:04 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:fef9:cf1c:18f:2ab8? ([2a01:e0a:3d9:2080:fef9:cf1c:18f:2ab8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00a0421sm22296664f8f.97.2025.06.04.08.26.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 08:26:03 -0700 (PDT)
+Message-ID: <35789b5b-76a3-472f-adef-cc47f6d23dd4@linaro.org>
+Date: Wed, 4 Jun 2025 17:26:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250604-s2mpg1x-regulators-v1-13-6038740f49ae@linaro.org>
-References: <20250604-s2mpg1x-regulators-v1-0-6038740f49ae@linaro.org>
-In-Reply-To: <20250604-s2mpg1x-regulators-v1-0-6038740f49ae@linaro.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Peter Griffin <peter.griffin@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v2] phy: use per-PHY lockdep keys
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Abel Vesa <abel.vesa@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250530-phy-subinit-v2-1-09dfe80e82a8@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250530-phy-subinit-v2-1-09dfe80e82a8@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The S2MPG10 PMIC is a Power Management IC for mobile applications with
-buck converters, various LDOs, power meters, RTC, clock outputs, and
-additional GPIOs interfaces.
+On 30/05/2025 18:08, Dmitry Baryshkov wrote:
+> If the PHY driver uses another PHY internally (e.g. in case of eUSB2,
+> repeaters are represented as PHYs), then it would trigger the following
+> lockdep splat because all PHYs use a single static lockdep key and thus
+> lockdep can not identify whether there is a dependency or not and
+> reports a false positive.
+> 
+> Make PHY subsystem use dynamic lockdep keys, assigning each driver a
+> separate key. This way lockdep can correctly identify dependency graph
+> between mutexes.
+> 
+>   ============================================
+>   WARNING: possible recursive locking detected
+>   6.15.0-rc7-next-20250522-12896-g3932f283970c #3455 Not tainted
+>   --------------------------------------------
+>   kworker/u51:0/78 is trying to acquire lock:
+>   ffff0008116554f0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
+> 
+>   but task is already holding lock:
+>   ffff000813c10cf0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
+> 
+>   other info that might help us debug this:
+>    Possible unsafe locking scenario:
+> 
+>          CPU0
+>          ----
+>     lock(&phy->mutex);
+>     lock(&phy->mutex);
+> 
+>    *** DEADLOCK ***
+> 
+>    May be due to missing lock nesting notation
+> 
+>   4 locks held by kworker/u51:0/78:
+>    #0: ffff000800010948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x18c/0x5ec
+>    #1: ffff80008036bdb0 (deferred_probe_work){+.+.}-{0:0}, at: process_one_work+0x1b4/0x5ec
+>    #2: ffff0008094ac8f8 (&dev->mutex){....}-{4:4}, at: __device_attach+0x38/0x188
+>    #3: ffff000813c10cf0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
+> 
+>   stack backtrace:
+>   CPU: 0 UID: 0 PID: 78 Comm: kworker/u51:0 Not tainted 6.15.0-rc7-next-20250522-12896-g3932f283970c #3455 PREEMPT
+>   Hardware name: Qualcomm CRD, BIOS 6.0.240904.BOOT.MXF.2.4-00528.1-HAMOA-1 09/ 4/2024
+>   Workqueue: events_unbound deferred_probe_work_func
+>   Call trace:
+>    show_stack+0x18/0x24 (C)
+>    dump_stack_lvl+0x90/0xd0
+>    dump_stack+0x18/0x24
+>    print_deadlock_bug+0x258/0x348
+>    __lock_acquire+0x10fc/0x1f84
+>    lock_acquire+0x1c8/0x338
+>    __mutex_lock+0xb8/0x59c
+>    mutex_lock_nested+0x24/0x30
+>    phy_init+0x4c/0x12c
+>    snps_eusb2_hsphy_init+0x54/0x1a0
+>    phy_init+0xe0/0x12c
+>    dwc3_core_init+0x450/0x10b4
+>    dwc3_core_probe+0xce4/0x15fc
+>    dwc3_probe+0x64/0xb0
+>    platform_probe+0x68/0xc4
+>    really_probe+0xbc/0x298
+>    __driver_probe_device+0x78/0x12c
+>    driver_probe_device+0x3c/0x160
+>    __device_attach_driver+0xb8/0x138
+>    bus_for_each_drv+0x84/0xe0
+>    __device_attach+0x9c/0x188
+>    device_initial_probe+0x14/0x20
+>    bus_probe_device+0xac/0xb0
+>    deferred_probe_work_func+0x8c/0xc8
+>    process_one_work+0x208/0x5ec
+>    worker_thread+0x1c0/0x368
+>    kthread+0x14c/0x20c
+>    ret_from_fork+0x10/0x20
+> 
+> Fixes: 3584f6392f09 ("phy: qcom: phy-qcom-snps-eusb2: Add support for eUSB2 repeater")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
 
-It has 10 buck and 31 LDO rails. Several of these can either be
-controlled via software or via external signals, e.g. input pins
-connected to a main processor's GPIO pins.
+Commented the wrong version:
+In fact, other drivers were using sub-phys before:
+./amlogic/phy-meson-axg-pcie.c
+./amlogic/phy-meson-axg-mipi-dphy.c
 
-This commit implements support for these rails.
+(yeah I know, my bad !)
 
-Additional data needs to be stored for each regulator, e.g. the input
-pin for external control, or a rail-specific ramp-rate for when
-enabling a buck-rail. Therefore, probe() is updated slightly to make
-that possible.
+so it should be:
+Fixes: e2463559ff1d ("phy: amlogic: Add Amlogic AXG PCIE PHY Driver")
 
-The rails are instantiated as separate driver instances for bucks and
-LDOs, because S2MPG10 is typically used with an S2MPG11 sub-PMIC where
-some bucks of one typically supply at least some of the LDOs of the
-other.
-
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
- drivers/regulator/s2mps11.c         | 561 +++++++++++++++++++++++++++++++++++-
- include/linux/mfd/samsung/s2mpg10.h |   3 +
- 2 files changed, 561 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index ff9124c998c685d9c598570148dca074e671a99b..6fe6787044c40216f7a0355119981b74a8f56e58 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -3,6 +3,7 @@
- // Copyright (c) 2012-2014 Samsung Electronics Co., Ltd
- //              http://www.samsung.com
- 
-+#include <dt-bindings/regulator/samsung,s2mpg10-regulator.h>
- #include <linux/bug.h>
- #include <linux/cleanup.h>
- #include <linux/err.h>
-@@ -16,6 +17,7 @@
- #include <linux/regulator/machine.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/mfd/samsung/core.h>
-+#include <linux/mfd/samsung/s2mpg10.h>
- #include <linux/mfd/samsung/s2mps11.h>
- #include <linux/mfd/samsung/s2mps13.h>
- #include <linux/mfd/samsung/s2mps14.h>
-@@ -42,6 +44,21 @@ struct s2mps11_info {
- 	DECLARE_BITMAP(suspend_state, S2MPS_REGULATOR_MAX);
- };
- 
-+#define to_s2mpg10_regulator_desc(x) container_of((x), struct s2mpg10_regulator_desc, desc)
-+
-+struct s2mpg10_regulator_desc {
-+	struct regulator_desc desc;
-+
-+	/* Ramp rate during enable, valid for bucks only. */
-+	unsigned int enable_ramp_rate;
-+
-+	/* Registers for external control of rail. */
-+	unsigned int pctrlsel_reg;
-+	unsigned int pctrlsel_mask;
-+	/* Populated from DT. */
-+	unsigned int pctrlsel_val;
-+};
-+
- static int get_ramp_delay(int ramp_delay)
- {
- 	unsigned char cnt = 0;
-@@ -388,6 +405,492 @@ static int s2mps11_of_parse_cb(struct device_node *np,
- 	return s2mps11_of_parse_gpiod(np, desc, config);
- }
- 
-+static int s2mpg10_of_parse_cb(struct device_node *np,
-+			       const struct regulator_desc *desc,
-+			       struct regulator_config *config)
-+{
-+	const struct s2mps11_info *s2mps11 = config->driver_data;
-+	struct s2mpg10_regulator_desc *s2mpg10_desc = to_s2mpg10_regulator_desc(desc);
-+	u32 ext_control;
-+
-+	if (s2mps11->dev_type != S2MPG10)
-+		return 0;
-+
-+	if (of_property_read_u32(np, "samsung,ext-control", &ext_control))
-+		return 0;
-+
-+	switch (s2mps11->dev_type) {
-+	case S2MPG10:
-+		switch (desc->id) {
-+		case S2MPG10_BUCK1 ... S2MPG10_BUCK7:
-+		case S2MPG10_BUCK10:
-+		case S2MPG10_LDO3 ... S2MPG10_LDO19:
-+			if (ext_control > S2MPG10_PCTRLSEL_TCXO_ON2)
-+				return -EINVAL;
-+			break;
-+
-+		case S2MPG10_LDO20:
-+			if (ext_control > S2MPG10_PCTRLSEL_LDO20M_OFF)
-+				return -EINVAL;
-+			break;
-+
-+		default:
-+			return -EINVAL;
-+		}
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * If the regulator should be configured for external control, then:
-+	 * 1) the PCTRLSELx register needs to be set accordingly
-+	 * 2) regulator_desc::enable_val needs to be:
-+	 *    a) updated and
-+	 *    b) written to the hardware
-+	 * 3) we switch to the ::ops that don't provide ::enable() and
-+	 *    ::disable() implementations
-+	 *
-+	 * Points 1) and 2b) will be handled in _probe(), after
-+	 * devm_regulator_register() returns, so that we can properly act on
-+	 * failures, since the regulator core ignores most return values from
-+	 * this parse callback.
-+	 */
-+	s2mpg10_desc->pctrlsel_val = ext_control;
-+	s2mpg10_desc->pctrlsel_val <<= (ffs(s2mpg10_desc->pctrlsel_mask) - 1);
-+
-+	s2mpg10_desc->desc.enable_val = S2MPG10_PMIC_CTRL_ENABLE_EXT;
-+	s2mpg10_desc->desc.enable_val <<= (ffs(desc->enable_mask) - 1);
-+
-+	++s2mpg10_desc->desc.ops;
-+
-+	return s2mps11_of_parse_gpiod(np, desc, config);
-+}
-+
-+static int s2mpg10_enable_ext_control(struct s2mps11_info *s2mps11,
-+				      struct regulator_dev *rdev)
-+{
-+	const struct s2mpg10_regulator_desc *s2mpg10_desc;
-+	int ret;
-+
-+	switch (s2mps11->dev_type) {
-+	case S2MPG10:
-+		s2mpg10_desc = to_s2mpg10_regulator_desc(rdev->desc);
-+		break;
-+
-+	default:
-+		return 0;
-+	}
-+
-+	ret = regmap_update_bits(rdev_get_regmap(rdev),
-+				 s2mpg10_desc->pctrlsel_reg,
-+				 s2mpg10_desc->pctrlsel_mask,
-+				 s2mpg10_desc->pctrlsel_val);
-+	if (ret)
-+		return dev_err_probe(rdev_get_dev(rdev), ret,
-+				     "failed to configure pctrlsel for %s\n",
-+				     rdev->desc->name);
-+
-+	ret = regulator_enable_regmap(rdev);
-+	if (ret)
-+		return dev_err_probe(rdev_get_dev(rdev), ret,
-+				     "failed to enable regulator %s\n",
-+				     rdev->desc->name);
-+
-+	return 0;
-+}
-+
-+/* ops for regulators without ramp control */
-+static const struct regulator_ops s2mpg10_reg_ldo_ops[] = {
-+	{
-+		.list_voltage		= regulator_list_voltage_linear_range,
-+		.map_voltage		= regulator_map_voltage_linear_range,
-+		.is_enabled		= regulator_is_enabled_regmap,
-+		.enable			= regulator_enable_regmap,
-+		.disable		= regulator_disable_regmap,
-+		.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+		.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+		.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-+	}, {
-+		.list_voltage		= regulator_list_voltage_linear_range,
-+		.map_voltage		= regulator_map_voltage_linear_range,
-+		.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+		.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+		.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-+	}
-+};
-+
-+/* ops for regulators that have ramp control */
-+static const struct regulator_ops s2mpg10_reg_ldo_ramp_ops[] = {
-+	{
-+		.list_voltage		= regulator_list_voltage_linear_range,
-+		.map_voltage		= regulator_map_voltage_linear_range,
-+		.is_enabled		= regulator_is_enabled_regmap,
-+		.enable			= regulator_enable_regmap,
-+		.disable		= regulator_disable_regmap,
-+		.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+		.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+		.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-+		.set_ramp_delay		= regulator_set_ramp_delay_regmap,
-+	}, {
-+		.list_voltage		= regulator_list_voltage_linear_range,
-+		.map_voltage		= regulator_map_voltage_linear_range,
-+		.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+		.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+		.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-+		.set_ramp_delay		= regulator_set_ramp_delay_regmap,
-+	}
-+};
-+
-+static int s2mpg10_regulator_buck_enable_time(struct regulator_dev *rdev)
-+{
-+	const struct s2mpg10_regulator_desc * const s2mpg10_desc =
-+		to_s2mpg10_regulator_desc(rdev->desc);
-+	const struct regulator_ops * const ops = rdev->desc->ops;
-+	int vsel, curr_uV;
-+
-+	vsel = ops->get_voltage_sel(rdev);
-+	if (vsel < 0)
-+		return vsel;
-+
-+	curr_uV = ops->list_voltage(rdev, vsel);
-+	if (curr_uV < 0)
-+		return curr_uV;
-+
-+	return (rdev->desc->enable_time
-+		+ DIV_ROUND_UP(curr_uV, s2mpg10_desc->enable_ramp_rate));
-+}
-+
-+static int s2mpg10_regulator_buck_set_voltage_time(struct regulator_dev *rdev,
-+						   int old_uV, int new_uV)
-+{
-+	unsigned int ramp_reg, ramp_sel, ramp_rate;
-+	int ret;
-+
-+	if (old_uV == new_uV)
-+		return 0;
-+
-+	ramp_reg = rdev->desc->ramp_reg;
-+	if (old_uV > new_uV)
-+		/* The downwards ramp is at a different offset. */
-+		ramp_reg += S2MPG10_PMIC_DVS_RAMP4 - S2MPG10_PMIC_DVS_RAMP1;
-+
-+	ret = regmap_read(rdev->regmap, ramp_reg, &ramp_sel);
-+	if (ret)
-+		return ret;
-+
-+	ramp_sel &= rdev->desc->ramp_mask;
-+	ramp_sel >>= ffs(rdev->desc->ramp_mask) - 1;
-+	if (ramp_sel >= rdev->desc->n_ramp_values ||
-+	    !rdev->desc->ramp_delay_table)
-+		return -EINVAL;
-+
-+	ramp_rate = rdev->desc->ramp_delay_table[ramp_sel];
-+
-+	return DIV_ROUND_UP(abs(new_uV - old_uV), ramp_rate);
-+}
-+
-+/*
-+ * We assign both, ::set_voltage_time() and ::set_voltage_time_sel(), because
-+ * only if the latter is != NULL, the regulator core will call neither during
-+ * DVS if the regulator is disabled. If the latter is NULL, the core always
-+ * calls the ::set_voltage_time() callback, which would give incorrect results
-+ * if the regulator is off.
-+ * At the same time, we do need ::set_voltage_time() due to differing upwards
-+ * and downwards ramps and we can not make that code dependent on the regulator
-+ * enable state, as that would break regulator_set_voltage_time() which
-+ * expects a correct result no matter the enable state.
-+ */
-+static const struct regulator_ops s2mpg10_reg_buck_ops[] = {
-+	{
-+		.list_voltage		= regulator_list_voltage_linear_range,
-+		.map_voltage		= regulator_map_voltage_linear_range,
-+		.is_enabled		= regulator_is_enabled_regmap,
-+		.enable			= regulator_enable_regmap,
-+		.disable		= regulator_disable_regmap,
-+		.enable_time		= s2mpg10_regulator_buck_enable_time,
-+		.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+		.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+		.set_voltage_time	= s2mpg10_regulator_buck_set_voltage_time,
-+		.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-+		.set_ramp_delay		= regulator_set_ramp_delay_regmap,
-+	}, {
-+		.list_voltage		= regulator_list_voltage_linear_range,
-+		.map_voltage		= regulator_map_voltage_linear_range,
-+		.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+		.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+		.set_voltage_time	= s2mpg10_regulator_buck_set_voltage_time,
-+		.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-+		.set_ramp_delay		= regulator_set_ramp_delay_regmap,
-+	}
-+};
-+
-+#define regulator_desc_s2mpg10_ldo_cmn(_num, _supply, _ops, _vrange,	\
-+		_vsel_reg_sfx, _vsel_mask, _en_reg, _en_mask,		\
-+		_ramp_delay, _r_reg, _r_mask, _r_table,	_r_table_sz) {	\
-+	.name		= "ldo"#_num"m",				\
-+	.supply_name	= _supply,					\
-+	.of_match	= of_match_ptr("ldo"#_num"m"),			\
-+	.regulators_node = of_match_ptr("regulators"),			\
-+	.of_parse_cb	= s2mpg10_of_parse_cb,				\
-+	.id		= S2MPG10_LDO##_num,				\
-+	.ops		= &_ops[0],					\
-+	.type		= REGULATOR_VOLTAGE,				\
-+	.owner		= THIS_MODULE,					\
-+	.linear_ranges	= _vrange,					\
-+	.n_linear_ranges = ARRAY_SIZE(_vrange),				\
-+	.n_voltages	= _vrange##_count,				\
-+	.vsel_reg	= S2MPG10_PMIC_L##_num##M_##_vsel_reg_sfx,	\
-+	.vsel_mask	= _vsel_mask,					\
-+	.enable_reg	= S2MPG10_PMIC_##_en_reg,			\
-+	.enable_mask	= _en_mask,					\
-+	.ramp_delay	= _ramp_delay,					\
-+	.ramp_reg	= _r_reg,					\
-+	.ramp_mask	= _r_mask,					\
-+	.ramp_delay_table = _r_table,					\
-+	.n_ramp_values	= _r_table_sz,					\
-+	.enable_time	= 130, /* startup 20+-10 + ramp 30..100μs */	\
-+}
-+
-+#define s2mpg10_regulator_desc_ldo_cmn(_num, _supply, _vrange, _ops,	\
-+		_vsel_reg_sfx, _vsel_mask, _en_reg, _en_mask,		\
-+		_ramp_delay, _r_reg, _r_mask, _r_table,	_r_table_sz,	\
-+		_pc_reg, _pc_mask)					\
-+	{								\
-+		.desc = regulator_desc_s2mpg10_ldo_cmn(_num, _supply,	\
-+				_ops,					\
-+				_vrange, _vsel_reg_sfx, _vsel_mask,	\
-+				_en_reg, _en_mask,			\
-+				_ramp_delay, _r_reg, _r_mask, _r_table,	\
-+				_r_table_sz),				\
-+		.pctrlsel_reg = _pc_reg,				\
-+		.pctrlsel_mask = _pc_mask,				\
-+	}
-+
-+/* standard LDO via LxM_CTRL */
-+#define s2mpg10_regulator_desc_ldo(_num, _supply, _vrange)		\
-+	s2mpg10_regulator_desc_ldo_cmn(_num, _supply, _vrange,		\
-+		s2mpg10_reg_ldo_ops, CTRL, GENMASK(5, 0),		\
-+		L##_num##M_CTRL, BIT(7),				\
-+		0, 0, 0, NULL, 0,					\
-+		0, 0)							\
-+
-+/* standard LDO via LxM_CTRL but non-standard vsel mask */
-+#define s2mpg10_regulator_desc_ldo_vmsk(_num, _supply, _vrange,		\
-+					_vsel_mask)			\
-+	s2mpg10_regulator_desc_ldo_cmn(_num, _supply, _vrange,		\
-+		s2mpg10_reg_ldo_ops, CTRL, _vsel_mask,			\
-+		L##_num##M_CTRL, BIT(7),				\
-+		0, 0, 0, NULL, 0,					\
-+		0, 0)
-+
-+/* standard LDO but possibly GPIO controlled */
-+#define s2mpg10_regulator_desc_ldo_gpio(_num, _supply, _vrange,		\
-+					_pc_reg, _pc_mask)		\
-+	s2mpg10_regulator_desc_ldo_cmn(_num, _supply, _vrange,		\
-+		s2mpg10_reg_ldo_ops, CTRL, GENMASK(5, 0),		\
-+		L##_num##M_CTRL, GENMASK(7, 6),				\
-+		0, 0, 0, NULL, 0,					\
-+		S2MPG10_PMIC_##_pc_reg, _pc_mask)
-+
-+/* LDO with ramp support and possibly GPIO controlled */
-+#define s2mpg10_regulator_desc_ldo_ramp(_num, _supply, _vrange,		\
-+		_en_mask, _r_reg_sfx, _pc_reg, _pc_mask)		\
-+	s2mpg10_regulator_desc_ldo_cmn(_num, _supply, _vrange,		\
-+		s2mpg10_reg_ldo_ramp_ops, CTRL1, GENMASK(6, 0),		\
-+		LDO_CTRL2, _en_mask,					\
-+		6250, S2MPG10_PMIC_##_r_reg_sfx, GENMASK(1, 0),		\
-+		s2mpg10_ldo_ramp_table,					\
-+		ARRAY_SIZE(s2mpg10_ldo_ramp_table),			\
-+		S2MPG10_PMIC_##_pc_reg, _pc_mask)
-+
-+#define s2mpg10_buck_to_ramp_mask(n) (GENMASK(1, 0) << (((n) % 4) * 2))
-+
-+/*
-+ * The ramp_delay during enable is fixed (12.5mV/μs), while the ramp during
-+ * DVS can be adjusted. Linux can adjust the ramp delay via DT, in which case
-+ * the regulator core will modify the regulator's constraints and call our
-+ * .set_ramp_delay() which updates the DVS ramp in ramp_reg.
-+ * For enable, our .enable_time() unconditionally uses enable_ramp_rate
-+ * (12.5mV/μs) while our ::set_voltage_time() takes the value in ramp_reg
-+ * into account.
-+ */
-+#define regulator_desc_s2mpg10_buck(_num, _vrange, _r_reg) {		\
-+	.name		= "buck"#_num"m",				\
-+	.supply_name	= "vinb"#_num"m",				\
-+	.of_match	= of_match_ptr("buck"#_num"m"),			\
-+	.of_parse_cb	= s2mpg10_of_parse_cb,				\
-+	.regulators_node = of_match_ptr("regulators"),			\
-+	.id		= S2MPG10_BUCK##_num,				\
-+	.ops		= &s2mpg10_reg_buck_ops[0],			\
-+	.type		= REGULATOR_VOLTAGE,				\
-+	.owner		= THIS_MODULE,					\
-+	.linear_ranges	= _vrange,					\
-+	.n_linear_ranges = ARRAY_SIZE(_vrange),				\
-+	.n_voltages	= _vrange##_count,				\
-+	.vsel_reg	= S2MPG10_PMIC_B##_num##M_OUT1,			\
-+	.vsel_mask	= 0xff,						\
-+	.enable_reg	= S2MPG10_PMIC_B##_num##M_CTRL,			\
-+	.enable_mask	= GENMASK(7, 6),				\
-+	.ramp_reg	= S2MPG10_PMIC_##_r_reg,			\
-+	.ramp_mask	= s2mpg10_buck_to_ramp_mask(S2MPG10_BUCK##_num	\
-+						    - S2MPG10_BUCK1),	\
-+	.ramp_delay_table = s2mpg10_buck_ramp_table,			\
-+	.n_ramp_values	= ARRAY_SIZE(s2mpg10_buck_ramp_table),		\
-+	.enable_time	= 30, /* + V/enable_ramp_rate */		\
-+}
-+
-+#define s2mpg10_regulator_desc_buck_cm(_num, _vrange, _r_reg)		\
-+	.desc = regulator_desc_s2mpg10_buck(_num, _vrange, _r_reg),	\
-+	.enable_ramp_rate = 12500
-+
-+#define s2mpg10_regulator_desc_buck_gpio(_num, _vrange, _r_reg,		\
-+					 _pc_reg, _pc_mask)		\
-+	{								\
-+		s2mpg10_regulator_desc_buck_cm(_num, _vrange, _r_reg),	\
-+		.pctrlsel_reg = S2MPG10_PMIC_##_pc_reg,			\
-+		.pctrlsel_mask = _pc_mask,				\
-+	}
-+
-+#define s2mpg10_regulator_desc_buck(_num, _vrange, _r_reg)		\
-+	{								\
-+		s2mpg10_regulator_desc_buck_cm(_num, _vrange, _r_reg),	\
-+	}
-+
-+#define S2MPG10_VOLTAGE_RANGE(_prefix, _idx, _start_uV, _min_uV,	\
-+			      _max_uV, _step_uV)			\
-+static const struct linear_range _prefix##_vranges##_idx[] = {		\
-+	REGULATOR_LINEAR_RANGE(_min_uV,					\
-+			       ((_min_uV) - (_start_uV)) / (_step_uV),	\
-+			       ((_max_uV) - (_start_uV)) / (_step_uV),	\
-+			       _step_uV)				\
-+};									\
-+static const unsigned int _prefix##_vranges##_idx##_count =		\
-+	((((_max_uV) - (_start_uV)) / (_step_uV)) + 1)
-+
-+/* voltage range for s2mpg10 LDO 1, 11, 12 */
-+S2MPG10_VOLTAGE_RANGE(s2mpg10_ldo, 1, 300000, 700000, 1300000, STEP_12_5_MV);
-+
-+/* voltage range for s2mpg10 LDO 2, 4, 9, 14, 18, 19, 20, 23, 25, 29, 30, 31 */
-+S2MPG10_VOLTAGE_RANGE(s2mpg10_ldo, 2, 700000, 1600000, 1950000, STEP_25_MV);
-+
-+/* voltage range for s2mpg10 LDO 3, 5, 6, 8, 16, 17, 24, 28 */
-+S2MPG10_VOLTAGE_RANGE(s2mpg10_ldo, 3, 725000, 725000, 1300000, STEP_12_5_MV);
-+
-+/* voltage range for s2mpg10 LDO 7 */
-+S2MPG10_VOLTAGE_RANGE(s2mpg10_ldo, 7, 300000, 450000, 1300000, STEP_12_5_MV);
-+
-+/* voltage range for s2mpg10 13, 15 */
-+S2MPG10_VOLTAGE_RANGE(s2mpg10_ldo, 13, 300000, 450000, 950000, STEP_12_5_MV);
-+
-+/* voltage range for s2mpg10 LDO 10 */
-+S2MPG10_VOLTAGE_RANGE(s2mpg10_ldo, 10, 1800000, 1800000, 3350000, STEP_25_MV);
-+
-+/* voltage range for s2mpg10 LDO 21, 22, 26, 27 */
-+S2MPG10_VOLTAGE_RANGE(s2mpg10_ldo, 21, 1800000, 2500000, 3300000, STEP_25_MV);
-+
-+/* possible ramp values for s2mpg10 LDO 11, 12, 13, 15 */
-+static const unsigned int s2mpg10_ldo_ramp_table[] = {
-+	STEP_6_25_MV, STEP_12_5_MV
-+};
-+
-+/* voltage range for s2mpg10 BUCK 1, 2, 3, 4, 5, 7, 8, 9, 10 */
-+S2MPG10_VOLTAGE_RANGE(s2mpg10_buck, 1, 200000, 450000, 1300000, STEP_6_25_MV);
-+
-+/* voltage range for s2mpg10 BUCK 6 */
-+S2MPG10_VOLTAGE_RANGE(s2mpg10_buck, 6, 200000, 450000, 1350000, STEP_6_25_MV);
-+
-+static const unsigned int s2mpg10_buck_ramp_table[] = {
-+	STEP_6_25_MV, STEP_12_5_MV, STEP_25_MV
-+};
-+
-+static const struct s2mpg10_regulator_desc s2mpg10_regulators_ldos[] = {
-+	s2mpg10_regulator_desc_ldo_vmsk(1, "vinl3m", s2mpg10_ldo_vranges1,
-+					GENMASK(6, 0)),
-+	s2mpg10_regulator_desc_ldo(2, "vinl9m", s2mpg10_ldo_vranges2),
-+	s2mpg10_regulator_desc_ldo_gpio(3, "vinl4m", s2mpg10_ldo_vranges3,
-+					PCTRLSEL5, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_ldo_gpio(4, "vinl9m", s2mpg10_ldo_vranges2,
-+					PCTRLSEL5, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_ldo_gpio(5, "vinl3m", s2mpg10_ldo_vranges3,
-+					PCTRLSEL6, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_ldo_gpio(6, "vinl7m", s2mpg10_ldo_vranges3,
-+					PCTRLSEL6, GENMASK(7, 4)),
-+	/*
-+	 * Possibly GPIO controlled, but non-standard (greater) V-range and
-+	 * enable reg & mask.
-+	 */
-+	s2mpg10_regulator_desc_ldo_cmn(7, "vinl3m", s2mpg10_ldo_vranges7,
-+				       s2mpg10_reg_ldo_ops,
-+				       CTRL, GENMASK(6, 0),
-+				       LDO_CTRL1, GENMASK(4, 3),
-+				       0, 0, 0, NULL, 0,
-+				       S2MPG10_PMIC_PCTRLSEL7, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_ldo_gpio(8, "vinl4m", s2mpg10_ldo_vranges3,
-+					PCTRLSEL7, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_ldo_gpio(9, "vinl10m", s2mpg10_ldo_vranges2,
-+					PCTRLSEL8, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_ldo_gpio(10, "vinl15m", s2mpg10_ldo_vranges10,
-+					PCTRLSEL8, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_ldo_ramp(11, "vinl7m", s2mpg10_ldo_vranges1,
-+					GENMASK(1, 0), DVS_SYNC_CTRL3,
-+					PCTRLSEL9, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_ldo_ramp(12, "vinl8m", s2mpg10_ldo_vranges1,
-+					GENMASK(3, 2), DVS_SYNC_CTRL4,
-+					PCTRLSEL9, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_ldo_ramp(13, "vinl1m", s2mpg10_ldo_vranges13,
-+					GENMASK(5, 4), DVS_SYNC_CTRL5,
-+					PCTRLSEL10, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_ldo_gpio(14, "vinl10m", s2mpg10_ldo_vranges2,
-+					PCTRLSEL10, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_ldo_ramp(15, "vinl2m", s2mpg10_ldo_vranges13,
-+					GENMASK(7, 6), DVS_SYNC_CTRL6,
-+					PCTRLSEL11, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_ldo_gpio(16, "vinl5m", s2mpg10_ldo_vranges3,
-+					PCTRLSEL11, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_ldo_gpio(17, "vinl6m", s2mpg10_ldo_vranges3,
-+					PCTRLSEL12, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_ldo_gpio(18, "vinl10m", s2mpg10_ldo_vranges2,
-+					PCTRLSEL12, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_ldo_gpio(19, "vinl10m", s2mpg10_ldo_vranges2,
-+					PCTRLSEL13, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_ldo_gpio(20, "vinl10m", s2mpg10_ldo_vranges2,
-+					PCTRLSEL13, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_ldo(21, "vinl14m", s2mpg10_ldo_vranges21),
-+	s2mpg10_regulator_desc_ldo(22, "vinl15m", s2mpg10_ldo_vranges21),
-+	s2mpg10_regulator_desc_ldo(23, "vinl11m", s2mpg10_ldo_vranges2),
-+	s2mpg10_regulator_desc_ldo(24, "vinl7m", s2mpg10_ldo_vranges3),
-+	s2mpg10_regulator_desc_ldo(25, "vinl10m", s2mpg10_ldo_vranges2),
-+	s2mpg10_regulator_desc_ldo(26, "vinl15m", s2mpg10_ldo_vranges21),
-+	s2mpg10_regulator_desc_ldo(27, "vinl15m", s2mpg10_ldo_vranges21),
-+	s2mpg10_regulator_desc_ldo(28, "vinl7m", s2mpg10_ldo_vranges3),
-+	s2mpg10_regulator_desc_ldo(29, "vinl12m", s2mpg10_ldo_vranges2),
-+	s2mpg10_regulator_desc_ldo(30, "vinl13m", s2mpg10_ldo_vranges2),
-+	s2mpg10_regulator_desc_ldo(31, "vinl11m", s2mpg10_ldo_vranges2)
-+};
-+
-+static const struct s2mpg10_regulator_desc s2mpg10_regulators_bucks[] = {
-+	s2mpg10_regulator_desc_buck_gpio(1, s2mpg10_buck_vranges1, DVS_RAMP1,
-+					 PCTRLSEL1, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_buck_gpio(2, s2mpg10_buck_vranges1, DVS_RAMP1,
-+					 PCTRLSEL1, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_buck_gpio(3, s2mpg10_buck_vranges1, DVS_RAMP1,
-+					 PCTRLSEL2, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_buck_gpio(4, s2mpg10_buck_vranges1, DVS_RAMP1,
-+					 PCTRLSEL2, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_buck_gpio(5, s2mpg10_buck_vranges1, DVS_RAMP2,
-+					 PCTRLSEL3, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_buck_gpio(6, s2mpg10_buck_vranges6, DVS_RAMP2,
-+					 PCTRLSEL3, GENMASK(7, 4)),
-+	s2mpg10_regulator_desc_buck_gpio(7, s2mpg10_buck_vranges1, DVS_RAMP2,
-+					 PCTRLSEL4, GENMASK(3, 0)),
-+	s2mpg10_regulator_desc_buck(8, s2mpg10_buck_vranges1, DVS_RAMP2),
-+	s2mpg10_regulator_desc_buck(9, s2mpg10_buck_vranges1, DVS_RAMP3),
-+	s2mpg10_regulator_desc_buck_gpio(10, s2mpg10_buck_vranges1, DVS_RAMP3,
-+					 PCTRLSEL4, GENMASK(7, 4))
-+};
-+
- static const struct regulator_ops s2mps11_ldo_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
-@@ -1271,6 +1774,18 @@ static int s2mps11_handle_ext_control(struct s2mps11_info *s2mps11,
- 		ret = s2mps14_pmic_enable_ext_control(s2mps11, rdev);
- 		break;
- 
-+	case S2MPG10:
-+		/*
-+		 * If desc.enable_val is != 0, then external control was
-+		 * requested. We can not test s2mpg10_desc::ext_control,
-+		 * because 0 is a valid value.
-+		 */
-+		if (!rdev->desc->enable_val)
-+			return 0;
-+
-+		ret = s2mpg10_enable_ext_control(s2mps11, rdev);
-+		break;
-+
- 	default:
- 		return 0;
- 	}
-@@ -1286,6 +1801,7 @@ static int s2mps11_pmic_probe(struct platform_device *pdev)
- 	unsigned int rdev_num;
- 	int i, ret;
- 	const struct regulator_desc *regulators;
-+	const struct s2mpg10_regulator_desc *s2mpg10_regulators = NULL;
- 
- 	s2mps11 = devm_kzalloc(&pdev->dev, sizeof(struct s2mps11_info),
- 				GFP_KERNEL);
-@@ -1294,6 +1810,30 @@ static int s2mps11_pmic_probe(struct platform_device *pdev)
- 
- 	s2mps11->dev_type = platform_get_device_id(pdev)->driver_data;
- 	switch (s2mps11->dev_type) {
-+	case S2MPG10:
-+		/*
-+		 * Add 1, because our core driver subtracted 1 via
-+		 * devm_mfd_add_devices().
-+		 */
-+		switch (pdev->id + 1) {
-+		case S2MPG10_REGULATOR_CELL_ID_BUCKS:
-+			rdev_num = ARRAY_SIZE(s2mpg10_regulators_bucks);
-+			s2mpg10_regulators = s2mpg10_regulators_bucks;
-+			break;
-+		case S2MPG10_REGULATOR_CELL_ID_LDOS:
-+			rdev_num = ARRAY_SIZE(s2mpg10_regulators_ldos);
-+			s2mpg10_regulators = s2mpg10_regulators_ldos;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		/*
-+		 * Can not use ARRAY_SIZE() here, as it doesn't reflect the
-+		 * highest regulator id.
-+		 */
-+		BUILD_BUG_ON((enum s2mpg10_regulators) S2MPS_REGULATOR_MAX <
-+			     S2MPG10_REGULATOR_MAX);
-+		break;
- 	case S2MPS11X:
- 		rdev_num = ARRAY_SIZE(s2mps11_regulators);
- 		regulators = s2mps11_regulators;
-@@ -1339,14 +1879,28 @@ static int s2mps11_pmic_probe(struct platform_device *pdev)
- 	config.driver_data = s2mps11;
- 	for (i = 0; i < rdev_num; i++) {
- 		struct regulator_dev *regulator;
-+		const struct regulator_desc *rdesc = &regulators[i];
-+
-+		if (s2mpg10_regulators) {
-+			struct s2mpg10_regulator_desc *s2mpg10_desc;
-+
-+
-+			s2mpg10_desc = devm_kmemdup(&pdev->dev,
-+						    &s2mpg10_regulators[i],
-+						    sizeof(*s2mpg10_desc),
-+						    GFP_KERNEL);
-+			if (!s2mpg10_desc)
-+				return -ENOMEM;
-+
-+			rdesc = &s2mpg10_desc->desc;
-+		}
- 
- 		regulator = devm_regulator_register(&pdev->dev,
--						&regulators[i], &config);
-+						    rdesc, &config);
- 		if (IS_ERR(regulator))
- 			return dev_err_probe(&pdev->dev, PTR_ERR(regulator),
- 					     "regulator init failed for %d/%s\n",
--					     regulators[i].id,
--					     regulators[i].name);
-+					     rdesc->id, rdesc->name);
- 
- 		ret = s2mps11_handle_ext_control(s2mps11, regulator);
- 		if (ret < 0)
-@@ -1357,6 +1911,7 @@ static int s2mps11_pmic_probe(struct platform_device *pdev)
- }
- 
- static const struct platform_device_id s2mps11_pmic_id[] = {
-+	{ "s2mpg10-regulator", S2MPG10},
- 	{ "s2mps11-regulator", S2MPS11X},
- 	{ "s2mps13-regulator", S2MPS13X},
- 	{ "s2mps14-regulator", S2MPS14X},
-diff --git a/include/linux/mfd/samsung/s2mpg10.h b/include/linux/mfd/samsung/s2mpg10.h
-index 3e8bc65078472518c5e77f8bd199ee403eda18ea..f2e2c7923ad8116816ff5cae3b0c0eb98af2e42b 100644
---- a/include/linux/mfd/samsung/s2mpg10.h
-+++ b/include/linux/mfd/samsung/s2mpg10.h
-@@ -295,6 +295,9 @@ enum s2mpg10_pmic_reg {
- 	S2MPG10_PMIC_LDO_SENSE4,
- };
- 
-+/* rail controlled externally, based on PCTRLSELx */
-+#define S2MPG10_PMIC_CTRL_ENABLE_EXT BIT(0)
-+
- /* Meter registers (type 0xa00) */
- enum s2mpg10_meter_reg {
- 	S2MPG10_METER_CTRL1,
-
--- 
-2.49.0.1204.g71687c7c1d-goog
+With the Fixes changed:
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
