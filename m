@@ -1,54 +1,55 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A89239561
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 04:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA1079CD;
+	Wed,  4 Jun 2025 04:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749010032; cv=none; b=Zw8qSyWkUDFSnJkJlAaO2phQsuQpAEJgJptZWR8mL3YgnSmbF0HU38aJf/jV7DZB2AEYXn6GK2JQ2pIdcZRYkyBz75qw2WILSj3Z5bgoxdX+4kGMQc44tPLMChBd5BTr26VSqhWw8htLV0pe+RJ9HgJb7uEGvklQhJnb0Al82+o=
+	t=1749010169; cv=none; b=mXKs87gd5Yl0gttlqzWC28Cl9t33CsMH9c22ifst8ZheZCnz8fjGzZd1bierNLbxLLxN0TQkBcKtgxoCh8pMgJpQqcYALnIkWmCtohfzMLkxtVeWCd57aBORGGW+ilAMXWvIzVUtvqgabJLx2hIAsH4Vit9jWRu68xxY+xL8/wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749010032; c=relaxed/simple;
-	bh=EHrmer8hwyV/Bhd0c9McNTUXPwjyu8F3CTmUnB8pv4Y=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Mm/oWG7h7n1NvOwWiqpv185zhVPujaqlU/PSIKgFnIQUt+kMNnuMo0lZnrob33cEnkDgaq3Axzvrfp0K+SZ0605yhRG6LBWUtpLCDyQPUBMUaZ3a/pW3aJpRv9szbTCu7tKkg/OAGAB/cL7/7bThtpDnQnAA0iz3+5xFOh1wHb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L5/xpMFx; arc=none smtp.client-ip=209.85.208.171
+	s=arc-20240116; t=1749010169; c=relaxed/simple;
+	bh=2/YFNC/jk47tx7SqyCaNcTGaW1v9hrr0ZhmxiLDk4IE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=lmwjC0lyueSkXDYgSS6O81sVEiRgoYLTXKkScNxSy0ml0NpPFO+0clst7rZVhSjpIhfGqV4zqnahhmto8KFhPLSSyUcothTO/rsQ1wLLZwiQO48rbZcnTcb7fkzzqy+bCKEoX8rkjri+30wA6ETX3HO6Y547WNvCjMTXgnF26Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M6pVgtTC; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5/xpMFx"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32a72cb7e4dso67628671fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 21:07:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6pVgtTC"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso52700871fa.0;
+        Tue, 03 Jun 2025 21:09:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749010028; x=1749614828; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749010166; x=1749614966; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=M9l5n5/W+kR/Nj9vZ46RWfDMpxQ9l06cH6RjR/L8d8Y=;
-        b=L5/xpMFxZeq/BIxp1nnZM3DX9yq/myIs5ferfNSwAeqDKU7o8IL6PII/vZkkfuxuqt
-         5C+aeDSNNU0PrXJpZUB4F1zkkhnYCbkOf3jQL4IEnT0iptyM/ni/yF9o3mQ3TWJWrzk1
-         ZVTjEb4gk1AWmU2ESjnMBtPAokci0akgAgsyvIQMnGtdzah8SzKwjGXIJvO06Qx/qUuG
-         A6D6B6/F0CAEpJMq/SnajgDPQn0g6y5wCmYy5sxAm8yAimN7mzIPbf3kSjhWREcLIZds
-         Edwqz8nfbYq1BrO31WIveYz0hCWpIgip2PDm4shVoueNLT+zcSRzsA86KViokBLcDVMf
-         bkDQ==
+        bh=BjxjoBh5mEnviEwlFUKxBIqZ+w5uVC8kt2sr+b29Zv4=;
+        b=M6pVgtTC6hmvx9KbmvE2xQ5mEFuOHJsH4p3VZmJTDrHQhfhFobMn+uhmqUTO1kP4BO
+         G2npfQGmBmUqMLWztWSFL9QFQ4yotHrAWcmATxbaHGdqksvbK7T/f15AaWoKmO+uNf1t
+         4UE971gt8ov6tG3RXzKwa/axQpGkWCveKntHu42o/jdFKQ0clt6JLmhXBRlpZyMsBnud
+         2GcFTN7y56vAoOkaXAscfNNLxthlT/+0kxKYOqxq4u+b6TmFj58B3cGhmK/Lu37LYnH9
+         BDV9q93rbUIPnSNRtVJz1MjNWbgTrMH/P1msOpik8G1LV69raMmjyZGvuXoH0acAkYUK
+         4j/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749010028; x=1749614828;
+        d=1e100.net; s=20230601; t=1749010166; x=1749614966;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=M9l5n5/W+kR/Nj9vZ46RWfDMpxQ9l06cH6RjR/L8d8Y=;
-        b=KWYJLJRKz3FPV73AMyf8AprWU8/t9l5RMNa+qsvT0oFAQH83LZ7d1j3hGwSeClwgTy
-         vbIfxCer9xI0AZFMI5048BBM7+ZHHrqHSUKow5VCCcu6fwJcaVGMY9/xL+GBD3NG7TPN
-         DbOufU+ml4C4H+EoOHqUS1oE71aWECjNp91mOML+xk3qBHERIG/0i4O5PBKSDoF00TXJ
-         py9lLxkn4rAo8HswgHkMEAhpNOCYxZCzqOA0x+WNQMUM2mq7eB9TgPSi2NsDJ0mq1jDM
-         sIZu+L/Rt4ffMFet9jJbNg5HdQq//4aaN1yCAtGQZ8m8b1P1DTWL4KDxGSYcOEWabm2i
-         Kz5Q==
-X-Gm-Message-State: AOJu0Yz+kGtTXYwxuswlyS3ZNf6ToOazGISSWFVwX2XfZcekTxR3QGBM
-	YV2eFSOIp7cf+izxF8jitr8TERFabPCKpU/YA57x4gtD5QseIpNFIPOk5HK5QG9qLUnYP6hHHQO
-	fO987VfyU4CtNrQfHhjgAzmTBRKjnMQ8=
-X-Gm-Gg: ASbGncuq0uh4nyjdAiwfyCKKsup4aM2mIkrHUUE3Wy/Psn0YCiGB7w3K198S2BcdTPg
-	xSYZTj5misaI+IWarbo8GZOVR5roW6KREIiFfvdbGnqtH7f0jEW3IrEihyrEcEKDhC9/MgLksH2
-	Mjr4MsfXlpuLjaC+Mmrq2XKgZDmIIOsnjGOsY=
-X-Google-Smtp-Source: AGHT+IEti+9ceQuBt7q1dVNTnpXUuUSNY0J4nDOPhEFz0fePlyXbKb3Hhefge9lD/E+NCCaIphuKs1nBJHy3scN5VIE=
-X-Received: by 2002:a2e:a586:0:b0:32a:85ad:2148 with SMTP id
- 38308e7fff4ca-32ac7204645mr3427661fa.8.1749010027554; Tue, 03 Jun 2025
- 21:07:07 -0700 (PDT)
+        bh=BjxjoBh5mEnviEwlFUKxBIqZ+w5uVC8kt2sr+b29Zv4=;
+        b=NjDiSp2X6ZHg5OYL/xtXuoYrQo8lTxJux9PoGLmVSVpGx14t0v2UUSxy2hNBNVdNps
+         YgI0IvC1rf746ar2REPY8/d63cxh8z/PgogA2Yt0rnc7YK+qfam/Pt0uyAxkTIXSeHh2
+         IuR2/LaFnbfdq1yIBNVt5LeOfASjkqvNnMHjCHqXM1nnkzYnQPEbKif/F3H0u0cctmZP
+         4oym32TAK5C9nGx1usCnPECRX8xdDIrm1Ts/bnlmK/YyiPXNs4AbZlqz134QpAhpEUVe
+         cH4Eca3Qcv7/ZK1GJwADB3hGZFNm/xsPuhfJ68LKj2U3Moz2hT35vG/rUIh3TFdB5wCe
+         hhOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHhiU+Y53ltaS8ffrlxZJG6k6dneTHOs4mQLvu2GkVnSvWDhf05OGU+zvvNJrvmvKoRRFE29gMP+Jt1f4=@vger.kernel.org, AJvYcCV3e2QT0yb9/IhpBlgT5LzL5C5TAk3HU+v61ul4FyGCSAHKue16/7hZfRRs1vMrVGCpcE5ED7RI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjF9SyNCROdnTaluh+7mGVclx19LB0DZzpkRr9ZMPq0IJS9wHk
+	WDQZAhKI6dWvSoGAGE/3SSJfBXDxRLdoFr/ibKMvi0FGOQzzFFHRb75AKNKtQN27ciR9mE9eiI0
+	o5TfHRBOZHVIUibfTEbvTzmmY81yK9gg=
+X-Gm-Gg: ASbGncs9QqEj/VkwcA6hAHeOTthPurINAI1naZ/whVpyxm/A5FnDTo/Ih0WDUuEz6OX
+	QlAdoCnSWbYNidA305+JAQGZ4yK4KTXcQQkmzIx5FhFJqThZzeZuHJTwXiCuE4HP4RRWH0ToXyD
+	eVPwuharCNnePpAS6fYLRu5qFaFTl0pQ85lZh9k7qH0JR82w==
+X-Google-Smtp-Source: AGHT+IH6rrAqUQnEtG2z3eAW+kJco5Iy6BdAdeJ6ut/+9Jks/OD8XvT+0K/DThWSsnqUZhTuAszUtv/L25TXuOALiUg=
+X-Received: by 2002:a2e:bc24:0:b0:32a:7e4c:e915 with SMTP id
+ 38308e7fff4ca-32ac7267453mr3758421fa.29.1749010165279; Tue, 03 Jun 2025
+ 21:09:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,13 +57,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: Luka <luka.2016.cs@gmail.com>
-Date: Wed, 4 Jun 2025 12:06:56 +0800
-X-Gm-Features: AX0GCFvu0X7KJTFLiJblf4LqinpJt6Fg2W5T5KFb5ESFyS8PjbXzFtORzQYnlbk
-Message-ID: <CALm_T+3=v=zMnYCMOjunYRU3anKrbOeWmsi=3jnS88gsH3qSPg@mail.gmail.com>
-Subject: [BUG] unable to handle kernel paging request in process_one_work in
- Linux 6.12
-To: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org
+Date: Wed, 4 Jun 2025 12:09:13 +0800
+X-Gm-Features: AX0GCFs7QTrUdeEp-Aa3e1TxVh3ak-t_cXS8oq4lhLDJQFkCAf5wGqWxTuiC0RM
+Message-ID: <CALm_T+01euHRJ-G-_jvQx6M5rDEULOW+PYx1GTAH79XKiVsF0g@mail.gmail.com>
+Subject: [BUG] rcu detected stall in wg_packet_encrypt_worker in Linux v6.12
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: wireguard@lists.zx2c4.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 Dear Kernel Maintainers,
@@ -88,11 +91,12 @@ platform and identified that the root cause lies in the upstream
 codebase.
 
 
-Bug Location: process_one_work+0x474/0xd04 kernel/workqueue.c:3213
+Bug Location: wg_packet_encrypt_worker+0x278/0x1064
+drivers/net/wireguard/send.c:297
 
-Bug Report: https://hastebin.com/share/yacupoheje.css
+Bug Report: https://hastebin.com/share/tuyiwegowi.php
 
-Entire Log: https://hastebin.com/share/inasotiyuz.perl
+Entire Log: https://hastebin.com/share/nubazamaca.perl
 
 
 Thank you very much for your time and attention. I sincerely apologize
