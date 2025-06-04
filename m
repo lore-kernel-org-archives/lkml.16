@@ -1,131 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416DC23A562;
-	Wed,  4 Jun 2025 11:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD1C221FD2
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 11:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749037854; cv=none; b=VPkeqy0tiALLDLwiVNTDiEJtzgBl2OZdP8g9dpOgyPfqgOmn8QDN5AzND+XesEn9MShQQV0No1KDZOX96WUWKLvY4NCITjKjks8EzA7KEt7R/ImMgNQGCFsy8XrpxZ89DARtmQMatwl/6YsyGCJHHsVJC7EE689xslEMdOaSh8o=
+	t=1749037926; cv=none; b=fGxhqrChpVFQhC3u7YE19mREYYZXoXgU7Tg2OiT2guP6bqUuyyk0jcoz8qu9jsYqSXzqqusGvFBF8UUxmlUB4a2s9ekt3K8j7J1C9aoMvrMV9/I8oMCg9m7lbf11BPp0U/ajF7zJDB/u/1bKAjL0+VQ5Wr879dzX9nhD1ZsgbeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749037854; c=relaxed/simple;
-	bh=F9N16TAMBxsonCFLJzyb2HtE5z9rIBeHoTfahj8tkO0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eDCLGoSoxy6CgzdRQA3esbjTSmQmNMYeMjqnTX8RZqPHkvM7iPo61jxsWXrqwded3J9PJdVqPionpYc3SagIH5sIbzTNZTG/3uCe8fqTNoXElYQrFhkkFuN4yg0VIWwk8CqEbmORsgrLHnSqBKJMxuuvzoiVYhf0ZwCZSvYOzWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/tRP0fO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/tRP0fO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3555EC4CEEF;
-	Wed,  4 Jun 2025 11:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749037854;
-	bh=F9N16TAMBxsonCFLJzyb2HtE5z9rIBeHoTfahj8tkO0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b/tRP0fOzv6g08K5+cQx9lQ+tEqZcf+L03PJBIlDkqw9D1SG54jDnCBUecqlcipgU
-	 vWtqJ/GjfxrikInYk9FVPlfzex4uPyvM6tce53K2jXUfbqjss2fbFx+5KNDzxw4y7e
-	 CSCyJviI9WXhjyqjDmcGcuMWwW2SU4bihWmWl1HgsA0iYeBeG64lanZVTGAarOX4wV
-	 f1SNgZ34xxbk/H6FsNj3w7pYddhqpVw0KGO5NF9yQlaIXLC2DZxieOof5xHNzlLCTN
-	 R2R//uYtOz1MVGsCs3tz8ikaG5UWkXuOgbuccplNI1T+HS7jHtADLeUYkNMuxngyoO
-	 fzNLLUlgz8Nwg==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Sasha Levin <sashal@kernel.org>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 2/5] bus: fsl-mc: increase MC_CMD_COMPLETION_TIMEOUT_MS value
-Date: Wed,  4 Jun 2025 07:50:47 -0400
-Message-Id: <20250604115050.209756-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250604115050.209756-1-sashal@kernel.org>
-References: <20250604115050.209756-1-sashal@kernel.org>
+	s=arc-20240116; t=1749037926; c=relaxed/simple;
+	bh=ucaxpTfhki9xe5KaqJ1uJvOYxJGMYvSNnfGlyjDEFeI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ZmJwiaiNaWlyNYoFKcg3LypxNEaqfkPA/6refkbT5/tTVfNvkCxmBEBA/OyaMwqf5VDadHFHwlwUPX0d6tl1yin7RwklCN22bQwi4W/EbHY0x4RCRY25oh8b4sAp8+DGEezESamRh4CJ8iSKjiJmIcG15a0BbWH5JJvW8twUX/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddc1af1e5bso8246245ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 04:52:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749037923; x=1749642723;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uYNeylFd+Wd9wnCJ8dYejfviKEpOERMeuHn0zm+K+kg=;
+        b=GjxYC9bpJKTaUCWxDuBuO/UIAOZRqjvSwEU5DQ6S0dz/RS4xTA/fcphP6RZ8AZ1L6r
+         J0XoMmvwT873qVbNqvvZ4GQL+YQLjwUar7FV1KX0DwLELasKO2e+QuVqthzafwyQd7cQ
+         lEGTcA/xB2XPTWHv/dW3wth6tYnJilu099TciIQC0qd7S7wqm1ZwnsN/1FHItxqX2jLX
+         adnTgHEXeVBuBgGIsxiSGUi4YOE9bYOZCCihXbCLnWkyXO4H5k5sv60IMmXidp5DAbAC
+         uriUyemUwv4m3HnI8LHZV8iY7BWIeTruKICCTEb9PQonoerUeUYMZWkcx3aqiUZcyIG2
+         Eejw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWj06GK0cblG0dkNJJZUvfGgk9pREY8Tpf+Pkb0MYcpqdf5lUtkeLmQJy2COmSOJDaaSWX1Y8Ze9vYh1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/+fDz9beXZ/1NTYAcvLbolQ77+ELq0NDlXuM/oRbqCy59qaMA
+	7m20q5kWM82iA627qI6QS2cUPTz6tI1ItQpDmxeqZS9vHPWlPw/OF/hi2xIk/e9fxcJLgpq82j/
+	z30jC2qbl9eevQ64EX19U/1K2nnaYxGuYhCalEedXVLgXmhwmTY/IzAf//Og=
+X-Google-Smtp-Source: AGHT+IHaPThA9cKn4GyiJP/w3G4JQGITHzNmy5URcA8wMh53KvQ/Goo8sDp7ZHuT9i3BSO/KaMyV2LsGE5mvmAN9Kgtoj6WZwXxF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.293
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:3086:b0:3da:71ea:91c2 with SMTP id
+ e9e14a558f8ab-3ddbfcbc6admr24944905ab.22.1749037923627; Wed, 04 Jun 2025
+ 04:52:03 -0700 (PDT)
+Date: Wed, 04 Jun 2025 04:52:03 -0700
+In-Reply-To: <43284d2b-be67-41ca-877f-0fc580c20754@yandex.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68403363.a00a0220.d8eae.0089.GAE@google.com>
+Subject: Re: [syzbot] [jfs?] kernel BUG in jfs_truncate_nolock
+From: syzbot <syzbot+630f6d40b3ccabc8e96e@syzkaller.appspotmail.com>
+To: dmantipov@yandex.ru, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Hello,
 
-[ Upstream commit 23d060136841c58c2f9ee8c08ad945d1879ead4b ]
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-In case the MC firmware runs in debug mode with extensive prints pushed
-to the console, the current timeout of 500ms is not enough.
-Increase the timeout value so that we don't have any chance of wrongly
-assuming that the firmware is not responding when it's just taking more
-time.
+Reported-by: syzbot+630f6d40b3ccabc8e96e@syzkaller.appspotmail.com
+Tested-by: syzbot+630f6d40b3ccabc8e96e@syzkaller.appspotmail.com
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Link: https://lore.kernel.org/r/20250408105814.2837951-7-ioana.ciornei@nxp.com
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+Tested on:
 
-Based on my analysis of the commit and the surrounding code context,
-here is my assessment: **YES** This commit should be backported to
-stable kernel trees. **Detailed Analysis:** **1. Bug Fix Nature:** This
-commit addresses a real timeout issue where legitimate MC firmware
-operations can fail due to an inadequate timeout value. The commit
-message explicitly states that "In case the MC firmware runs in debug
-mode with extensive prints pushed to the console, the current timeout of
-500ms is not enough." **2. Code Change Analysis:** The change is minimal
-and surgical: - Changes a single timeout constant from 500ms to 15000ms
-(15 seconds) - Only affects `drivers/bus/fsl-mc/mc-sys.c:22` - No
-architectural changes or new functionality added - The timeout is used
-in both `mc_polling_wait_preemptible()` and `mc_polling_wait_atomic()`
-functions that handle MC command completion **3. Risk Assessment:** The
-change has minimal risk: - Increasing a timeout value is generally safe
-and doesn't change behavior for successful operations - Only affects
-systems with Freescale/NXP DPAA2 Management Complex hardware - The
-original 500ms timeout was clearly insufficient for legitimate use cases
-- Similar to successful backports in the reference commits (e.g.,
-Similar Commit #1 and #3 which both increased timeouts) **4. Impact and
-Importance:** - Fixes a real user-facing issue where MC commands fail
-with timeouts during firmware debug scenarios - The FSL-MC bus is
-critical infrastructure for DPAA2 networking architecture on NXP ARM
-SoCs - Timeout failures can cause device initialization problems and
-system instability - The `mc_send_command()` function is used
-extensively throughout the FSL-MC subsystem for all hardware
-communication **5. Comparison with Similar Commits:** - Very similar to
-Similar Commit #1 (UCSI timeout increase from 1s to 5s) - **Status:
-YES** - Very similar to Similar Commit #3 (MLX5 timeout decrease from 2
-hours to 60s) - **Status: YES** - Both of these were timeout adjustments
-that got backported successfully **6. Subsystem Scope:** The change is
-contained within the FSL-MC bus driver subsystem and only affects NXP
-DPAA2 hardware platforms, making it a safe candidate for stable trees.
-**7. Explicit Stable Tree Criteria:** This meets the stable tree
-criteria: - Fixes an important bug affecting real users - Small and
-contained change with minimal regression risk - No new features or
-architectural changes - Addresses a timeout issue that can cause system
-functionality problems The commit represents a classic example of a
-safe, important bug fix that should be backported to help users
-experiencing MC command timeouts in production environments, especially
-during firmware debugging scenarios.
+commit:         5abc7438 Merge tag 'nfs-for-6.16-1' of git://git.linux..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=16927c82580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=82e79780b034d72f
+dashboard link: https://syzkaller.appspot.com/bug?extid=630f6d40b3ccabc8e96e
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10cc780c580000
 
- drivers/bus/fsl-mc/mc-sys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/bus/fsl-mc/mc-sys.c b/drivers/bus/fsl-mc/mc-sys.c
-index 3221a7fbaf0ad..24307ed59d777 100644
---- a/drivers/bus/fsl-mc/mc-sys.c
-+++ b/drivers/bus/fsl-mc/mc-sys.c
-@@ -19,7 +19,7 @@
- /**
-  * Timeout in milliseconds to wait for the completion of an MC command
-  */
--#define MC_CMD_COMPLETION_TIMEOUT_MS	500
-+#define MC_CMD_COMPLETION_TIMEOUT_MS	15000
- 
- /*
-  * usleep_range() min and max values used to throttle down polling
--- 
-2.39.5
-
+Note: testing is done by a robot and is best-effort only.
