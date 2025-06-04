@@ -1,140 +1,96 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052F820E03C
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 19:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F071A2393;
+	Wed,  4 Jun 2025 19:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749065973; cv=none; b=J5zKs3WpJhfunsWbjc8qi4M+Iz24Z7pRGjX7vgl/un204p5UFHVwqGydhzqiJZkEWZDN0HFZ/BEsT8qWpBfjMErpyYZ8m2dUi1dm1MQ+LJ9DJftjAzc0zdoqWNyzjWojDk0w0UmWk/lj6eCVkAyRJciL1McwCrSiqftghFip8Yc=
+	t=1749065994; cv=none; b=o31Bp5tm46dqlvLJ6yJvznmmIoO+UgDorkiXzpxJYbpIco8LQfzBj0shrEI8fFtlxKL/uP4VnW47uIC8u7KazoJuEGaon3xRWBWnEnzS40ru0x+BW5INal2F/rhzpbHw52sg2nNy5M9gdmINjn9vdZhroLzRvezfwhAov1U+jCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749065973; c=relaxed/simple;
-	bh=uqrrh5XKhj0JhJlvb7JWbUd5mMKx4NAS1ZTa4avFBd8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NPwKP62j80iX34P2uswSuo1PuI5tZ+qVWseV+2bmyH1JT7SLJlVe1mscbb/HluLBHyTAMdA6Ju6hbWoRMfWDLiU1ImLxDs43RdpV5V1mVMHs3JJeH8+dr4hphWNkJr5+1Qc26lhHqb0McArWWVFn9alnc5sdPMIT6xDUEZeTu/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W5RvQoip; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749065994; c=relaxed/simple;
+	bh=h85K3/PQXQ6HKASsGnciD90T1y1zgHXaf+mjcY7s5eI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=uIse2tbUZvCzv2CT8GSuyD6tLBTo4L9xxNvehg0lPkfw/X43OHNWN5qZozoZzQKB3BvDvM6xS/LIklQ74tzpDdr9FM1u8RCn5PTSSNEmP5vpb2/bKw1Vl0I++fRSLUzBkMWBceh77mmcepDrgE5LO8eXdJ0Aj5aZ40Q6j+ppgMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ch2nhSE4; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W5RvQoip"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso250687b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 12:39:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ch2nhSE4"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e8134dee405so281269276.1;
+        Wed, 04 Jun 2025 12:39:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749065971; x=1749670771; darn=vger.kernel.org;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WSxWqox5bdiWzZ5tn/4s8/4uvycqiAbImkblkNnSipg=;
-        b=W5RvQoipny5k8mRsT1J6bTVWx1MFL8QGoOk0sehkgeBzzAty+hy+//w+g9R30otO0H
-         7r44Y5FqsyLzz8ixUYh0I6KEc+NH7eXP5jKrlHGv0E1TjKVow+NHJtxEk6ijN2u6jMFm
-         nMU6Jbw5hPKxopJmjjoBUmTzh1y1IpGAqiGvFeYOLdDUJ8Zpt8BCO1voaoqn1d2KGnjw
-         taHHoPmCX5+MKWj9Ipshl4u9MvcY41XyqiM+XWdzHApm/NIzc747ZjT/eVMujojHQ4nV
-         Wb8CjC2VY/sfLcg/t5Dg65lNrzVCRzoKKruW77XNzYoRQHTTVldQsG9NLqCEIUKlat3b
-         KWBQ==
+        d=gmail.com; s=20230601; t=1749065992; x=1749670792; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L+J3xnyodfbGpSJfZCd6DwgmfJZJ1xgvVAIbtDVDgYY=;
+        b=Ch2nhSE420GrSnGHANqLW4KrioHY2rvGEXWxo2plL3jdfRimy7QsvjlhX0rWERb4kP
+         EMKagju+udhO9TdYeAL1Oy+EunLWS3VrRBclDu6uk3+FqEVGGypsB1L2nqUYPyI1sc8z
+         srMMLOPsie3Y9j37X0tgV/fnId6oPIJQ2/mvDutQDMsBRpAaftYgIITumX+AFEfq9CP2
+         BHNmeXCWqEsBoqsiv3yNJ9mXuaY72P9VgSqCjgK2s1qnin2BJMiYwbtn/haJI9PkZwZe
+         xybS5YpA23Oqd+fZE1RapenUEloZ5w7uE/frNNRRr2/mfTxJ94qdwUmvU+W2/CyO/Sc3
+         AY1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749065971; x=1749670771;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WSxWqox5bdiWzZ5tn/4s8/4uvycqiAbImkblkNnSipg=;
-        b=ON7V3cUqdV5mNh1Uz4eFzg9vhxYqReLEn2g8zOjajubD5VcpLOqPWZJLXJlo6psxOQ
-         4Od/ATCCulw+1mn+RY0mY0oSk2TsifoQKHG1XxGcmpw0Op1Xuprj2D78SefWcbQa9Uw2
-         Wt26qB1NcwGTjtMvu7KELXdyi7O/khC2NM9B2TKVaKwlbvQxdUj8rY0BIC9X15fM0uel
-         vGrML4Wh3uPKQGVgg1tdVTdrTEGfBrpID/I+XcDAbX6K1DY7hFuQ96c4rf6O61XMZ1n3
-         UreyM13PCq6Ag7zArzkrLEUFIHi75T6r73iGoB0LpeW5rixmqo/RRvsBvDQdKvoKIt1h
-         56LQ==
-X-Gm-Message-State: AOJu0Yz01BZOLTiFoekPqaZY9n+I/NAdk4AG3InLYMobK+Ps7Bu2BVOa
-	MlW/F1Y+tG8xGxUxbeh+wdAOG+zBilATY+2Wuv07qFUbnDUwZT90+BwjKCUOT9e8rg==
-X-Gm-Gg: ASbGnctTJljJ9u67s4mBO7jX35p+MrNrmXogeQj1Xmhv3p7xwOlarwBEsqj0vm1KOUh
-	zFQoirzHWIA32Bm2fyBPBJTlEJuEM0GpolQSGna7i+Wah4tFkV7uwtYqJRsVI3zIuqkUp6TOLx/
-	6v+vK37SX3oVcFLMPAHp5AH7pJyN1sgHi7Dg0JoqTfm1ghasAPnK6d81HaOzXK5VY7+BeCiJJ3/
-	J8xANZpLnF7Jp0fMFNO1vZ1ejALXAblxm6Ajlnb3f8/6701MgAqNtaWfsJv8reMiU/2nWc8sTat
-	Eeo5qnAbuEOmwHS+g4wK09HdtiCY1xaH9N6WRPoy1NQx8MI8VtRvNTylX7o5ru3VnEMn3Ro6ZTr
-	jwMToLyt28/XLNt2RtPHMj9h+4zkdpDA14/cKQytdLMPR1QOau57M7JvrR4M=
-X-Google-Smtp-Source: AGHT+IEUUgzAKKhwwQ9XugqEZgLxNnWmGOGv4hdFCRqrrqKmlL/qaqsBWbsCyy4gSxXaS0EWkVrpPg==
-X-Received: by 2002:a05:6a00:4fc2:b0:736:34a2:8a20 with SMTP id d2e1a72fcca58-7480b46113bmr5411347b3a.21.1749065970983;
-        Wed, 04 Jun 2025 12:39:30 -0700 (PDT)
-Received: from ynaffit-andsys.c.googlers.com (163.192.16.34.bc.googleusercontent.com. [34.16.192.163])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeab4acsm11479575b3a.43.2025.06.04.12.39.29
+        d=1e100.net; s=20230601; t=1749065992; x=1749670792;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L+J3xnyodfbGpSJfZCd6DwgmfJZJ1xgvVAIbtDVDgYY=;
+        b=YBc2f3eMQBKq6uPZd64jX7HuAywdi32bzCSp44CmWZl+/wGunBHnYfmeyKy854Or1Q
+         LuxHkGOsKqUxNoFbWMMrDRxR2Yjrk/bgCu7xpLyjxkG2g4tXOA51PXEvIdOwhZ+cSmM0
+         oFTaJ8XpDEaLhOHRmpQlsYhrYvckWl5QjmaJsfm0aAcHt8mf9b/ATXa6IfLsCbTo7/Uy
+         SGB45h9AD5Trwh6ECOry6eTr4scmC+Fr0mNs3Ql40BKjtMC0OjoC4IT71u+aDZsKpq3k
+         O5ow3lo+mfhVgVH18Cu/lZB9h+nhY66qCyVRVlbNVf4887YoZeZzzG4Cyble9SB4Y/Qy
+         o9Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+Mhq3RUoLN6A2y26oBHNMFMvH7U2AaqSgbNuvf20supefz4QPyFDtj9M1FMynDwK8J2wLsD51l9J2AC8=@vger.kernel.org, AJvYcCXIRUI/C7LZ2cprd2BXbcSZyOSIhOOYHALGszixELqg22UIdmcihPYnqgwxJAM5N5CEP1AK3qCA4XpS3g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIDzIWSYL30nDOYLZHbXzH4tPF0rUAf78+5gs3j08RWOO/F+1r
+	s/wX/5RXfR/nTkei+tkoBBK+vudRQiGFgoORL31ZIU1ot+CTxf5xDhff
+X-Gm-Gg: ASbGncuewDHd8O6U7kmjnm38IOREb79kng3tfnC34STk7WHd12Kz4ZWatdz7LYiprVG
+	cn6EMbmcu0mirTD9u903epE+0U0slTve8e58s1tH/WK8ovsaSltiJqKLRV6RqKr4aU4Z4YFzBDf
+	7nH4YVcbo+Rz10ACCqMpTl+Qwf+M/hn1tPYVDCKfHmAfzQgo6cC4NntpzsBHhznB2+I/DIKWmRT
+	r/oPJODz5Pjtx1EGjO5dEMBWj5SJEbIXBZEiQs9puyfQVKwY/Wo1ciUDAygjZ6rmR/kVs/w+sFS
+	GFKL8+IkxnRXTyO9DyE53c0WbFzYqBNSbJuj2UcgVFOabGdx3z0MGwJ5eebVDCBC82aSpqvRov8
+	1l8as63neRnQ=
+X-Google-Smtp-Source: AGHT+IEVQv6vNxHNeQQu3wOYaeVBjA2cv7P5yNh4XsGY0ymKZp/JmOZKdoUfkRdeeLQSl2w9J1N6AA==
+X-Received: by 2002:a05:6902:2582:b0:e81:88a0:af75 with SMTP id 3f1490d57ef6-e8188a0b317mr844306276.4.1749065992080;
+        Wed, 04 Jun 2025 12:39:52 -0700 (PDT)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7f733ed0e6sm3304384276.32.2025.06.04.12.39.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 12:39:30 -0700 (PDT)
-From: Tiffany Yang <ynaffit@google.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org,  cgroups@vger.kernel.org,
-  kernel-team@android.com,  John Stultz <jstultz@google.com>,  Thomas
- Gleixner <tglx@linutronix.de>,  Stephen Boyd <sboyd@kernel.org>,
-  Anna-Maria Behnsen <anna-maria@linutronix.de>,  Frederic Weisbecker
- <frederic@kernel.org>,  Johannes Weiner <hannes@cmpxchg.org>,  Michal
- =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,  "Rafael J. Wysocki"
- <rafael@kernel.org>,
-  Pavel Machek <pavel@kernel.org>,  Roman Gushchin
- <roman.gushchin@linux.dev>,  Chen Ridong <chenridong@huawei.com>,  Ingo
- Molnar <mingo@redhat.com>,  Peter Zijlstra <peterz@infradead.org>,  Juri
- Lelli <juri.lelli@redhat.com>,  Vincent Guittot
- <vincent.guittot@linaro.org>,  Dietmar Eggemann
- <dietmar.eggemann@arm.com>,  Steven Rostedt <rostedt@goodmis.org>,  Ben
- Segall <bsegall@google.com>,  Mel Gorman <mgorman@suse.de>,  Valentin
- Schneider <vschneid@redhat.com>
-Subject: Re: [RFC PATCH] cgroup: Track time in cgroup v2 freezer
-In-Reply-To: <aD9_V1rSqqESFekK@slm.duckdns.org> (Tejun Heo's message of "Tue,
-	3 Jun 2025 13:03:51 -1000")
-References: <20250603224304.3198729-3-ynaffit@google.com>
-	<aD9_V1rSqqESFekK@slm.duckdns.org>
-User-Agent: mu4e 1.12.8; emacs 30.1
-Date: Wed, 04 Jun 2025 19:39:29 +0000
-Message-ID: <dbx8y0u7i9e6.fsf@ynaffit-andsys.c.googlers.com>
+        Wed, 04 Jun 2025 12:39:51 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] RDMA: hfi1: cpumasks usage fixes
+Date: Wed,  4 Jun 2025 15:39:36 -0400
+Message-ID: <20250604193947.11834-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Tejun Heo <tj@kernel.org> writes:
+The driver uses cpumasks API in a non-optimal way; partially because of
+absence of proper functions. Fix this and nearby logic.
 
-> On Tue, Jun 03, 2025 at 10:43:05PM +0000, Tiffany Yang wrote:
->> The cgroup v2 freezer controller allows user processes to be dynamically
->> added to and removed from an interruptible frozen state from
->> userspace. This feature is helpful for application management, as it
->> allows background tasks to be frozen to prevent them from being
->> scheduled or otherwise contending with foreground tasks for resources.
->> Still, applications are usually unaware of their having been placed in
->> the freezer cgroup, so any watchdog timers they may have set will fire
->> when they exit. To address this problem, I propose tracking the per-task
->> frozen time and exposing it to userland via procfs.
->
-> Just on a glance, it feels rather odd to be tracking this per task given
-> that the state is per cgroup. Can you account this per cgroup?
->
-> Thanks.
+Yury Norov [NVIDIA] (7):
+  cpumask: add cpumask_clear_cpus()
+  RDMA: hfi1: fix possible divide-by-zero in find_hw_thread_mask()
+  RDMA: hfi1: simplify find_hw_thread_mask()
+  RDMA: hfi1: simplify init_real_cpu_mask()
+  RDMA: hfi1: use rounddown in find_hw_thread_mask()
+  RDMA: hfi1: simplify hfi1_get_proc_affinity()
+  RDMI: hfi1: drop cpumask_empty() call in hfi1/affinity.c
 
-Hi Tejun!
-
-Thanks for taking a look! In this case, I would argue that the value we
-are accounting for (time that a task has not been able to run because it
-is in the cgroup v2 frozen state) is task-specific and distinct from the
-time that the cgroup it belongs to has been frozen.
-
-A cgroup is not considered frozen until all of its members are frozen,
-and if one task then leaves the frozen state, the entire cgroup is
-considered no longer frozen, even if its other members stay in the
-frozen state. Similarly, even if a task is migrated from one frozen
-cgroup (A) to another frozen cgroup (B), the time cgroup B has been
-frozen would not be representative of that task even though it is a
-member.
-
-There is also latency between when each task in a cgroup is marked as
-to-be-frozen/unfrozen and when it actually enters the frozen state, so
-each descendant task has a different frozen time. For watchdogs that
-elapse on a per-task basis, a per-cgroup time-in-frozen value would
-underreport the actual time each task spent unable to run. Tasks that
-miss a deadline might incorrectly be considered misbehaving when the
-time they spent suspended was not correctly accounted for.
-
-Please let me know if that answers your question or if there's something
-I'm missing. I agree that it would be cleaner/preferable to keep this
-accounting under a cgroup-specific umbrella, so I hope there is some way
-to get around these issues, but it doesn't look like cgroup fs has a
-good way to keep task-specific stats at the moment.
+ drivers/infiniband/hw/hfi1/affinity.c | 96 +++++++++++----------------
+ include/linux/cpumask.h               | 12 ++++
+ 2 files changed, 49 insertions(+), 59 deletions(-)
 
 -- 
-Tiffany Y. Yang
+2.43.0
+
