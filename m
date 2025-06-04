@@ -1,165 +1,282 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB76290BB0;
-	Wed,  4 Jun 2025 14:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3C7290098
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 14:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045955; cv=none; b=SM+lBIIPvuLMTvFZ/kwxeIfJI2Zn1HWJ+lbUi2EL8I7mcJbGnrEX5zdCfevYVbhpnsad6Y/l+8aImx2Vio+m7RBwYHATSWy/GtYZcPTA4+PEr3wrIQZmvmuLM3OPUcdFdhCJlOBRdBi75J0TM7t7vq/BfPRlIx4FLObpZV3MtgQ=
+	t=1749045956; cv=none; b=LEGHw30XUxVftp2hmR+ULDsINlYVZh1mCPc29MWW00v3HCsN1RMuWxh/vHh7+fFgWCr+S4uKrW6/6D8fVMFohTM9P+ekASboWo2o3zUWec0VbBFILU+gjcA0ilzGSsA3KH9sEYN6ugE800meZ4DLGZn/19D8LFhrvWTApYmgPXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045955; c=relaxed/simple;
-	bh=Ak2W+o8IxIKSA2WZaZODaZ0/CBGDnqt8Ha3K2Qh6peE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6yTRjsuYSPtdNZ048f8gzE+yHoIplqUN86WdXHVZ4JPk5+/wUX9cX8YR2k3UsXQ4aIAdbIOogzG1Wu1zLMnl39BoVeVpVnCeJ/t/z3XqGQj0Aelih74RRMBrwJXLbVBHUzdcaR5nlBpxckWWFweZXxRX8r1z5toKnhud6ykyRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7F781758;
-	Wed,  4 Jun 2025 07:05:34 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 562883F5A1;
-	Wed,  4 Jun 2025 07:05:49 -0700 (PDT)
-Date: Wed, 4 Jun 2025 15:05:43 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Baisheng Gao <baisheng.gao@unisoc.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
-	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
-Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
- sample
-Message-ID: <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
-References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
+	s=arc-20240116; t=1749045956; c=relaxed/simple;
+	bh=gVK2x7ewP/8uQNxMtsG5EaKhriyU7xBAW3layZKbYN0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OC1ecYkxERgHLIpijry4GGDLg8HYlATxIM7bhgr3f6DK5tZmfI5ThvxDl+immVcway97aHmd3Z2bAuim2h83WeFXQqoOqLcL6HRL8ksU9acSCxWUvdRn1Uls1f7IBJrzsBR/rDD3xq0tEL3b+k1WvHjT31xAuYiDu1WjQWQYGT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dTqimwbu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dTqimwbu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749045950;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ceQ8MrBEyOYSLsVlLloLQm5cGgLaPimBF5PhfObg4oc=;
+	b=dTqimwbuJRJzSctTKOxTGmPqh8h/fp3TfK9niShpcZ/AzxOhCHjq2AeaQNhmLDj0swFICc
+	zu+GsDNyFo3QpRIVKMRUV8DMy5Rs/uei1asBZ4iTdQ4KzMK+OXJxK9NreAC3mI/bx7bV0Y
+	Z/RltqlFRVfTRHmxSHLMP3ovv1zMErI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-519-UGTFNHICOcSxrTo_1N6BJQ-1; Wed, 04 Jun 2025 10:05:47 -0400
+X-MC-Unique: UGTFNHICOcSxrTo_1N6BJQ-1
+X-Mimecast-MFC-AGG-ID: UGTFNHICOcSxrTo_1N6BJQ_1749045947
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d50eacafso37990645e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 07:05:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749045947; x=1749650747;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ceQ8MrBEyOYSLsVlLloLQm5cGgLaPimBF5PhfObg4oc=;
+        b=LB5Rv7PrPO8M3MYg8Pa0nWJkjlxYFWn+3ExzAZMAjiu2FL7lXWcEhX6moFLYGxlkvc
+         lI5HPVDfo/LtS25V2I7FJaGAv6lAfQfs28MBc4kyp2/K+VUl6UW1cqB84xNvwQiTsIPk
+         teXl8sNPaXt1PSD+J8kKX6aynvhcTtcgLw1vtjshax9Frk+kU0kgahx7OiIqSSku4nRq
+         /clMb9sSe5c1yG4h4rPF94qahWiehefJrAlP3NykNvTnEvVDfJtok3Bpa6baIFkem+YH
+         SzxJkXxm07Xu9TNMfzURFTDFAItIcWaNX/hXs3oojc2jlD33WrzTsx5B2zw/CixxDcuu
+         YV1g==
+X-Gm-Message-State: AOJu0YyPyShrUYxAd6Ufj75yFwD+Wt5st9b3iLe57Fnr0KSJD/fYtmcj
+	nHeew3ELgIUL0ny4iIKYOsaOoChvScSOG1/lbenJP0Ik4jGP/3kaP0Di4bffmDAj3TinW8kgaQm
+	SseWNDW6XDZAkAiYpG0I3+jzFD+qz0Inm2godgkZpFpT/28ZL/R7fdD4Q6QTleTpi4D+7Oa4fkV
+	60YSjoTBCX3QV9CgX1Lk/JshT6Zahl6iUbkzYXKLTHmX0AkhJ/
+X-Gm-Gg: ASbGncvl4uDe5vfWrl+MI2hSkSTrypSREFNnZzHYISgMW+XwgFXBUOkvg6wCzyEjIp0
+	8XkpAWauxi1ESkq9f4DYFUcYtvHXQVlCRtAgCREo/QiCEKN9oAb441qpKjp8gnrfIK98V7eBfdZ
+	+kYDPbzT/atIj5NE9plNifrbhbQt1KY1/nU56tIK9WCDtIf79yjFoUX4mUFfhgr3NO/m2/w5zAr
+	jRaQuPcKLeG1IeetYjrc2ZSJsIZNW7AnxmNb7M/87tQkIk1p4C5Y2R2Qd72xx7GmbQRo/a8/l6n
+	LNRSkr92Q0z+jNmmTZ6AeCTBUBOB55sA9QjoxWRjsgUb6cmSQ/iGEch65D+01kdUpn5RhXRm
+X-Received: by 2002:a05:600c:4a27:b0:450:d614:cb with SMTP id 5b1f17b1804b1-451f0e547a4mr16907085e9.33.1749045946528;
+        Wed, 04 Jun 2025 07:05:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHYe6tbzgwHaqVnJry21P3Q8c38NZTtjrZN6NtysuRTvfJy+CJBRQzZRfgenFSVCPefI/EKxA==
+X-Received: by 2002:a05:600c:4a27:b0:450:d614:cb with SMTP id 5b1f17b1804b1-451f0e547a4mr16906525e9.33.1749045945863;
+        Wed, 04 Jun 2025 07:05:45 -0700 (PDT)
+Received: from localhost (p200300d82f1bb8006fdb1af24fbd1fdf.dip0.t-ipconnect.de. [2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d7fc2725sm201643215e9.37.2025.06.04.07.05.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 07:05:45 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>
+Subject: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
+Date: Wed,  4 Jun 2025 16:05:44 +0200
+Message-ID: <20250604140544.688711-1-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250424025429.10942-1-baisheng.gao@unisoc.com>
 
-On Thu, Apr 24, 2025 at 10:54:29AM +0800, Baisheng Gao wrote:
-> In order to fix the race condition between exit_mmap and
-> perf_output_sample below, forbidding to copy the user stack
-> of an exiting process.
-> 
->  Internal error: synchronous external abort: ffffffff96000010 [#1]
->   PREEMPT SMP
+Especially once we hit one of the assertions in
+sanity_check_pinned_pages(), observing follow-up assertions failing
+in other code can give good clues about what went wrong, so use
+VM_WARN_ON_ONCE instead.
 
-That ESR value (0x96000010, which got sign-extended somewhere), is a
-synchronous external abort, not on translation table walk.
+While at it, let's just convert all VM_BUG_ON to VM_WARN_ON_ONCE as
+well. Add one comment for the pfn_valid() check.
 
-That means that some memory access was translated to some PA where the
-endpoint responded with an error (and it strongly implies you're poking
-MMIO or a PA terminated early by the interconnect).
+We have to introduce VM_WARN_ON_ONCE_VMA() to make that fly.
 
->  CPU: 3 PID: 2651 Comm: binder:2649_1 Tainted: G        W  OE
->   5.15.149-android13-8-00008-gbe074b05e5af-ab12096863 #1
->  Hardware name: Spreadtrum UMS9230 1H10 SoC (DT)
->  pstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->  pc : __arch_copy_from_user+0x180/0x218
->  lr : arch_perf_out_copy_user+0xb0/0x17c
->  sp : ffffffc00801baf0
->  x29: ffffffc00801baf0 x28: ffffffc00801bbf8 x27: ffffffc00801bbe8
->  x26: 0000000000000000 x25: 0000000000001000 x24: 000000000000feb8
->  x23: 00000000000005f0 x22: ffffff80613c8000 x21: ffffff8143102a10
->  x20: 0000007c239643c0 x19: 00000000000005f0 x18: ffffffc00801d058
->  x17: ffffffc16e677000 x16: ffffffc008018000 x15: 0000007c239643c0
->  x14: 0000000000000002 x13: 0000000000000003 x12: ffffffc008000000
->  x11: ffffff8000090000 x10: ffffffc008090000 x9 : 0000007fffffffff
->  x8 : 0000007c239643c0 x7 : 000000000000feb8 x6 : ffffff8143102a10
->  x5 : ffffff8143103000 x4 : 0000000000000000 x3 : ffffff8093cad140
->  x2 : 0000000000000570 x1 : 0000007c239643c0 x0 : ffffff8143102a10
->  Call trace:
->   __arch_copy_from_user+0x180/0x218
->   perf_output_sample+0x14e4/0x1904
->   perf_event_output_forward+0x90/0x130
->   __perf_event_overflow+0xc8/0x17c
->   perf_swevent_hrtimer+0x124/0x290
->   __run_hrtimer+0x134/0x4a0
->   hrtimer_interrupt+0x2e4/0x560
->   arch_timer_handler_phys+0x5c/0xa0
->   handle_percpu_devid_irq+0xc0/0x374
->   handle_domain_irq+0xd8/0x160
->   gic_handle_irq.34215+0x58/0x26c
->   call_on_irq_stack+0x3c/0x70
->   do_interrupt_handler+0x44/0xa0
->   el1_interrupt+0x34/0x64
->   el1h_64_irq_handler+0x1c/0x2c
->   el1h_64_irq+0x7c/0x80
->   release_pages+0xac/0x9b4
->   tlb_finish_mmu+0xb0/0x238
->   exit_mmap+0x1b8/0x538
->   __mmput+0x40/0x274
->   mmput+0x40/0x134
->   exit_mm+0x3bc/0x72c
+Drop the BUG_ON after mmap_read_lock_killable(), if that ever returns
+something > 0 we're in bigger trouble. Convert the other BUG_ON's into
+VM_WARN_ON_ONCE as well, they are in a similar domain "should never
+happen", but more reasonable to check for during early testing.
 
-The mmput() here happens after current->mm was set to NULL and the task
-entered lazy TLB mode.
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Peter Xu <peterx@redhat.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
 
-AFAICT, either:
+Wanted to do this for a long time, but my todo list keeps growing ...
 
-* Something has gone wrong such that the CPU is still using the
-  translation tables of the exiting task, and those are in some
-  inconsistent state.
+Based on mm/mm-unstable
 
-* Due to lazymm, the active_mm belongs to some other tas, and perf is
-  sampling from that other task's VA space (which does not correlate at
-  all with the pt_regs). That other task happens to have some MMIO
-  mapped.
+---
+ include/linux/mmdebug.h | 12 ++++++++++++
+ mm/gup.c                | 41 +++++++++++++++++++----------------------
+ 2 files changed, 31 insertions(+), 22 deletions(-)
 
-... either of which is a pretty horrid bug.
+diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
+index a0a3894900ed4..14a45979cccc9 100644
+--- a/include/linux/mmdebug.h
++++ b/include/linux/mmdebug.h
+@@ -89,6 +89,17 @@ void vma_iter_dump_tree(const struct vma_iterator *vmi);
+ 	}								\
+ 	unlikely(__ret_warn_once);					\
+ })
++#define VM_WARN_ON_ONCE_VMA(cond, vma)		({			\
++	static bool __section(".data..once") __warned;			\
++	int __ret_warn_once = !!(cond);					\
++									\
++	if (unlikely(__ret_warn_once && !__warned)) {			\
++		dump_vma(vma);						\
++		__warned = true;					\
++		WARN_ON(1);						\
++	}								\
++	unlikely(__ret_warn_once);					\
++})
+ #define VM_WARN_ON_VMG(cond, vmg)		({			\
+ 	int __ret_warn = !!(cond);					\
+ 									\
+@@ -115,6 +126,7 @@ void vma_iter_dump_tree(const struct vma_iterator *vmi);
+ #define VM_WARN_ON_FOLIO(cond, folio)  BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ON_ONCE_FOLIO(cond, folio)  BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ON_ONCE_MM(cond, mm)  BUILD_BUG_ON_INVALID(cond)
++#define VM_WARN_ON_ONCE_VMA(cond, vma)  BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ON_VMG(cond, vmg)  BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
+diff --git a/mm/gup.c b/mm/gup.c
+index e065a49842a87..3c3931fcdd820 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -64,11 +64,11 @@ static inline void sanity_check_pinned_pages(struct page **pages,
+ 		    !folio_test_anon(folio))
+ 			continue;
+ 		if (!folio_test_large(folio) || folio_test_hugetlb(folio))
+-			VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page), page);
++			VM_WARN_ON_ONCE_PAGE(!PageAnonExclusive(&folio->page), page);
+ 		else
+ 			/* Either a PTE-mapped or a PMD-mapped THP. */
+-			VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page) &&
+-				       !PageAnonExclusive(page), page);
++			VM_WARN_ON_ONCE_PAGE(!PageAnonExclusive(&folio->page) &&
++					     !PageAnonExclusive(page), page);
+ 	}
+ }
+ 
+@@ -760,8 +760,8 @@ static struct page *follow_huge_pmd(struct vm_area_struct *vma,
+ 	if (!pmd_write(pmdval) && gup_must_unshare(vma, flags, page))
+ 		return ERR_PTR(-EMLINK);
+ 
+-	VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
+-			!PageAnonExclusive(page), page);
++	VM_WARN_ON_ONCE_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
++			     !PageAnonExclusive(page), page);
+ 
+ 	ret = try_grab_folio(page_folio(page), 1, flags);
+ 	if (ret)
+@@ -899,8 +899,8 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 		goto out;
+ 	}
+ 
+-	VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
+-		       !PageAnonExclusive(page), page);
++	VM_WARN_ON_ONCE_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
++			     !PageAnonExclusive(page), page);
+ 
+ 	/* try_grab_folio() does nothing unless FOLL_GET or FOLL_PIN is set. */
+ 	ret = try_grab_folio(folio, 1, flags);
+@@ -1180,7 +1180,7 @@ static int faultin_page(struct vm_area_struct *vma,
+ 	if (unshare) {
+ 		fault_flags |= FAULT_FLAG_UNSHARE;
+ 		/* FAULT_FLAG_WRITE and FAULT_FLAG_UNSHARE are incompatible */
+-		VM_BUG_ON(fault_flags & FAULT_FLAG_WRITE);
++		VM_WARN_ON_ONCE(fault_flags & FAULT_FLAG_WRITE);
+ 	}
+ 
+ 	ret = handle_mm_fault(vma, address, fault_flags, NULL);
+@@ -1760,10 +1760,7 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
+ 		}
+ 
+ 		/* VM_FAULT_RETRY or VM_FAULT_COMPLETED cannot return errors */
+-		if (!*locked) {
+-			BUG_ON(ret < 0);
+-			BUG_ON(ret >= nr_pages);
+-		}
++		VM_WARN_ON_ONCE(!*locked && (ret < 0 || ret >= nr_pages));
+ 
+ 		if (ret > 0) {
+ 			nr_pages -= ret;
+@@ -1808,7 +1805,6 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
+ 
+ 		ret = mmap_read_lock_killable(mm);
+ 		if (ret) {
+-			BUG_ON(ret > 0);
+ 			if (!pages_done)
+ 				pages_done = ret;
+ 			break;
+@@ -1819,11 +1815,11 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
+ 				       pages, locked);
+ 		if (!*locked) {
+ 			/* Continue to retry until we succeeded */
+-			BUG_ON(ret != 0);
++			VM_WARN_ON_ONCE(ret != 0);
+ 			goto retry;
+ 		}
+ 		if (ret != 1) {
+-			BUG_ON(ret > 1);
++			VM_WARN_ON_ONCE(ret > 1);
+ 			if (!pages_done)
+ 				pages_done = ret;
+ 			break;
+@@ -1885,10 +1881,10 @@ long populate_vma_page_range(struct vm_area_struct *vma,
+ 	int gup_flags;
+ 	long ret;
+ 
+-	VM_BUG_ON(!PAGE_ALIGNED(start));
+-	VM_BUG_ON(!PAGE_ALIGNED(end));
+-	VM_BUG_ON_VMA(start < vma->vm_start, vma);
+-	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
++	VM_WARN_ON_ONCE(!PAGE_ALIGNED(start));
++	VM_WARN_ON_ONCE(!PAGE_ALIGNED(end));
++	VM_WARN_ON_ONCE_VMA(start < vma->vm_start, vma);
++	VM_WARN_ON_ONCE_VMA(end   > vma->vm_end, vma);
+ 	mmap_assert_locked(mm);
+ 
+ 	/*
+@@ -1957,8 +1953,8 @@ long faultin_page_range(struct mm_struct *mm, unsigned long start,
+ 	int gup_flags;
+ 	long ret;
+ 
+-	VM_BUG_ON(!PAGE_ALIGNED(start));
+-	VM_BUG_ON(!PAGE_ALIGNED(end));
++	VM_WARN_ON_ONCE(!PAGE_ALIGNED(start));
++	VM_WARN_ON_ONCE(!PAGE_ALIGNED(end));
+ 	mmap_assert_locked(mm);
+ 
+ 	/*
+@@ -2908,7 +2904,8 @@ static int gup_fast_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
+ 		} else if (pte_special(pte))
+ 			goto pte_unmap;
+ 
+-		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
++		/* If it's not marked as special it must have a valid memmap. */
++		VM_WARN_ON_ONCE(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+ 
+ 		folio = try_grab_folio_fast(page, 1, flags);
 
-Loooking at 5.15.149 and current HEAD (5abc7438f1e9), do_exit() calls
-exit_mm() before perf_event_exit_task(), so it looks
-like perf could sample from another task's mm.
+base-commit: 2d0c297637e7d59771c1533847c666cdddc19884
+-- 
+2.49.0
 
-Yuck.
-
-Peter, does the above sound plausible to you?
-
-Mark.
-
->   do_exit+0x294/0x1160
->   do_group_exit+0xc8/0x174
->   get_signal+0x830/0x95c
->   do_signal+0x9c/0x2a8
->   do_notify_resume+0x98/0x1ac
->   el0_svc+0x5c/0x84
->   el0t_64_sync_handler+0x88/0xec
->   el0t_64_sync+0x1b8/0x1bc
-> 
-> Signed-off-by: Baisheng Gao <baisheng.gao@unisoc.com>
-> ---
->  kernel/events/core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index e93c19565914..9c9b571b812d 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7867,7 +7867,8 @@ void perf_output_sample(struct perf_output_handle *handle,
->                 }
->         }
-> 
-> -       if (sample_type & PERF_SAMPLE_STACK_USER) {
-> +       if (sample_type & PERF_SAMPLE_STACK_USER &&
-> +                       !(current->flags & PF_EXITING)) {
->                 perf_output_sample_ustack(handle,
->                                           data->stack_user_size,
->                                           data->regs_user.regs);
-> --
-> 2.34.1
-> 
-> ________________________________
->  This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-> 本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
