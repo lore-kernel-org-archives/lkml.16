@@ -1,144 +1,220 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D61B2C324C
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 01:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C143D2C324C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 01:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749000322; cv=none; b=FxzXK6vKzeF29telZ5L8FORVyL219ZWCzOr2MmDuYfNWUDJzbT8dyj8cy/Bd72XV9aKvaqR0YqfUKx3O2VbLo+gk4uUfVEB+M+kCPeQFaXx6ABraOvt/s+Bl8vvUNxGxscYjLkpISHm6ypZ8Sa0PwD5p+7ZVLPT33o3QY52IzvY=
+	t=1749000442; cv=none; b=cNfTRlZUTF1fKMTMKPQuBUPf0H+lXb2B1y6IeJGl/D00P1eHukcyqh91tsMt6+QypZu6D8r6CgOVSut/+48aKK4lcQTekLFmxEimV7nPQ+GH/sNjtmwhMsElt1TNOXmKMjt6hgq/OH5YONI7h8BUf3FNY9+zR9l1rHo2tL6whL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749000322; c=relaxed/simple;
-	bh=g2r+Ba1QAt+YM8xg3Fwra2yvocMgFFXJ2o5forxCBGc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=R1to8R0v4V/XPdTRYRhfzn/h+RJIn8gJQpb8N4L+lnlmWydnRXm6h4InQDsGWQbd7LhA0JsqD06+dW0IvPo045VSif1AENRJ7vIF4z61bN5Zh0ehDcl64VWnAcheflTOElZ5/NHLLUjQ/EVoM8H2h/3p4WHVlKRHGx7/ZqSWXwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VloGbC87; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749000442; c=relaxed/simple;
+	bh=zj+kNdMecZ1mWILUvz4WG8GAQb/rm/mvr7EU/CCZ8DI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=erwx925NhX0Tpv6cDParoE9o/xUayLu7JytodqZrORR+kQvQIKo5VK6Mx1LuBCrTidQpA1XRUYo1lZk5HLYoMutFQm0GZr96mkCNIXzRgV/62gEpF4Af2ut4oMGfBqtTZfZ7YpMGP3gOoavzNik82x3ZECU4+5P9ErmhzA3uN5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FiMEPWcI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VloGbC87"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553L26VF004284
-	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 01:25:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=M3/v6Y73KXv0yCJspzzRlk
-	SY6Vn19Q/RVvapwzQt4J4=; b=VloGbC87YtoOyMY/KtbqP+m7GAMTTBHwiFjeah
-	jL3sIG1OT3qGMd5lgmbf8mjrJg2jIutEmp19gKRQ926TxPGaqaKsmOrVCwh5FlgZ
-	utx9O6r1WuY4seI9vKLByPi4BSZiW6ujNfhwdSDmSe9HjHpOp4Q6VnuPx+b/hPXw
-	v+9dhpuAGT7aNWO1m7rL4RF/zTa6QJKSzH9jKyUSrVikEbQUFinSvQKkgCCCfZ6m
-	kqs/n+RiyjRHgEzS9U3RoEDqg9oD2hoMXbtZmrFwngWFOWD5EqgNTJPgG3ub99eF
-	HqO9XRdwcOo6BYv+tPk8H+M8NSqkgNWD/QclOzxitEkY3aLg==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8rved8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:25:17 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-235089528a0so3097255ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 18:25:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FiMEPWcI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749000438;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BVmJXGHCgwooCqymme55wOEwxwtQ0yZmHm9VDK+DDWs=;
+	b=FiMEPWcI1myBY4wOs3/HanZaJbN5Mgdem+ditHx8t0gyxyHlexv1G4UD3Jh87sqbgFRkIj
+	iKY9rdemcTeP2mhXCaiiMmrQroNebtxOMa2UlkBTHjtY5zHXlAuqQVyYKZbTBBZ/7gdnQJ
+	TU4R8ym7NySQXWpFIJeBtZit2Dxiqhw=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-467-6B--Hj6yNlubc2byGe5N5g-1; Tue, 03 Jun 2025 21:27:17 -0400
+X-MC-Unique: 6B--Hj6yNlubc2byGe5N5g-1
+X-Mimecast-MFC-AGG-ID: 6B--Hj6yNlubc2byGe5N5g_1749000436
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-7462aff55bfso5034694b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 18:27:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749000317; x=1749605117;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M3/v6Y73KXv0yCJspzzRlkSY6Vn19Q/RVvapwzQt4J4=;
-        b=W0YqXizpRmni4WZZJzRjO3dbPITEJFa1tbTlch4cwyyOcHX7yn15MRfbiKiYlMwZjy
-         OnA72cUW63InpD2x0wMDVbIrWHSke8J+prjTNXL0Ldmr9Q0bG0Wl5C83b9wqGSMJ8sk8
-         6g/SdamZUrCqNCo4EUbOIhU9yeEW93ElXsMQYwOBnPo16uc2BKN3+yNzKhVFukZ0OlGt
-         9DhbFa2N4mv1ZG587FSx10Z3L17EXNgZt1wF9YdSh4ejfVBQLNLxrvgeh0L+rd4+Eetx
-         qgOz4V1/+7mQyL9GWVVDYsTLiW/cK1AOubAgto30Sogctuy4p5aKhTQ/os6/t0K8ZAFK
-         A0CQ==
-X-Gm-Message-State: AOJu0Yw0B0Bm52Er/wbY4OTr0XQJPk2s389SazQRr9VPWUXV481b+Q21
-	/Ar0DkG3CRlJFcR03BsKJFsoSBVKKGjvTLQzcCHLPVY5DHXgLSQGpQdfhRA545jNSCXuD1u7/94
-	m8S+wGetidfM44QIJgPsw3PGMgw3S+t4hHRGpHlDXRYBsg23DYuKKbGAPT3we47YhEOc=
-X-Gm-Gg: ASbGncsuAcRw9XFCNYgWG9Z4RkDgzDjIQKd4Adg4aXSZufLTnDP9SdkasOltnFMKgdr
-	FQE2c4wbATQ83PEQvkcyBJDNc/NzECFsj/2gLV+cVgJNnGvyy2ZfkH2UY3M1DlWUA3AO+yJJ6nr
-	Qo3VsrrwcleOFqvPzodNip7qAKjBxvMg+csZCXgQl0HHRaVVZx6wbmB9w0mbfGsc1xlI6oXmgN/
-	p/H2IR1SqNK/R53jfDM7tMoVVFMPa9HwAFDCSCsDpbOZjB2zbS1z0bIY7uFxbqUym3BkXvyIpfi
-	9SQl5WlEj6hfYLOk0r2TNYzEgJuM2BNiuBG5GWDoZhMAFx8UqNJvdnYj8bD1K3mEJxnUuRSy
-X-Received: by 2002:a17:903:987:b0:224:7a4:b31 with SMTP id d9443c01a7336-235e0864d97mr15437305ad.6.1749000316748;
-        Tue, 03 Jun 2025 18:25:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH6vx0Rx+pVAzR4wKXDbhOR7l+98amousJG/LTizpBENOfDNJ87n3AFYMQyb017kIodte7M7g==
-X-Received: by 2002:a17:903:987:b0:224:7a4:b31 with SMTP id d9443c01a7336-235e0864d97mr15437115ad.6.1749000316301;
-        Tue, 03 Jun 2025 18:25:16 -0700 (PDT)
-Received: from jesszhan-linux.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d14c9asm93205035ad.231.2025.06.03.18.25.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 18:25:15 -0700 (PDT)
-From: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Date: Tue, 03 Jun 2025 18:18:35 -0700
-Subject: [PATCH] MAINTAINERS: Update my email address for DRM Panel reviews
+        d=1e100.net; s=20230601; t=1749000436; x=1749605236;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BVmJXGHCgwooCqymme55wOEwxwtQ0yZmHm9VDK+DDWs=;
+        b=HKT4myVdiMkfhAr0JSrYcMNPEzc+lJzcvMAJwF6U8Y1gWnHZGKGIfZort+OO9iWJwO
+         OX1+NjXnwAkYUHE6wZxaWXWfRjNVvMyJAm9TaVsEyk2kWNVNyBIWUdLxGdMG97eBeOLw
+         IkGAiRPa7bEMmBGs0hVrfGo8WfFeLYED4SE0UJWGd/qrXJj+0HIEWYRCKLhZ4NedI7og
+         igUroC0OiCUvhxoqjHXwhMs6REMS2qL/5uExSYGMPr/MLiq3jXdaGFjQGLlYaf4Xq5zy
+         0d33nAmO6/TJf/Rqx8ClU/xmttSAQ5nkeN+N+L6C9tRG147rtpnUiHc+6Zr8xjE9qZ1E
+         +AJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXdEnSgrFTP0zkGNYX6VxpKo8QOqWkglJausM0JrtB4A0ad79ku2TafS06lzbA4+iCkaSSHedejtSBtZY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXB2yjiPhy/+J2s192VaqacEEjJYLdbDZwjcp4vA62bisrjXx1
+	AAqtxeGdwIEZlG67uBiuebEDWVG/nZo4b3mwLJmhWVZO4hb5E4Yvccr4YP2b/ZxsdVtffUC5jHO
+	xHGq9s8MEvV/M3IV5MesT/w2DypK+302ErOUwnzqEqlS5eyQ2Dmo0LV7tvyk3Rrw57K04hUXWrC
+	TyA54IoizHSygY0axZ94BvCySRFRj/fhP0mD/9ltai
+X-Gm-Gg: ASbGncv451CVr4hUjrd5l4p3SEooGJvJIg471Z4uCifctOczAzQJ6IzR881XsgmIx+0
+	WT8C0ckYxUpDWc0RZaZEnzI3ec2QvVmpBJYO7dMQGSQb2hNmSqgo5/jSqL18r4mjwLascXg==
+X-Received: by 2002:a05:6a00:218e:b0:746:cc71:cc0d with SMTP id d2e1a72fcca58-7480b48d71emr1594628b3a.12.1749000436442;
+        Tue, 03 Jun 2025 18:27:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFU7UshbqAmiFChVYE6GtmnkwbH2sxix2Z0rwMiDn2wsmE31jBilsjSxpe70S1Y+X8iIvmuRFYjW8X4WKcP5fA=
+X-Received: by 2002:a05:6a00:218e:b0:746:cc71:cc0d with SMTP id
+ d2e1a72fcca58-7480b48d71emr1594593b3a.12.1749000436015; Tue, 03 Jun 2025
+ 18:27:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250603-panel-maintainer-update-v1-1-224aaa222d99@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAOqeP2gC/x2MwQqDMBAFf0X27MKaUqH9FfGwuM92oY0h0VKQ/
- HtDD3OYw8xJBdlR6N6dlPHx4ltsMvQdLU+ND7BbcwoSrjLKhZNGvPitHvcGMh/JdAebhXG9iRp
- EqdUpY/Xv/zzNtf4AWET1Q2kAAAA=
-X-Change-ID: 20250603-panel-maintainer-update-dd26f90ade0a
-To: linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-X-Mailer: b4 0.15-dev-64971
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749000315; l=838;
- i=jessica.zhang@oss.qualcomm.com; s=20230329; h=from:subject:message-id;
- bh=g2r+Ba1QAt+YM8xg3Fwra2yvocMgFFXJ2o5forxCBGc=;
- b=msvEVXKVr/hqu+zF5YxiqQfizAsR8W6oRg6b3nlp0JtXhk/fqzs/3XEq69SVX5a+Ey+eRdN9p
- QC3v20BhmMSD/svriVmwGJu0nWFBlCyCEUgv6WIfYm2HDh3TBfUHWbx
-X-Developer-Key: i=jessica.zhang@oss.qualcomm.com; a=ed25519;
- pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
-X-Proofpoint-ORIG-GUID: 3uV1vYUQuVuRbvo8l9ZO2EryfFOf8lAH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDAwOCBTYWx0ZWRfXwYWaK8U/8okn
- Ia6LW3izMWF/KkGu92NMTVS3D8ZnCM/UhiCnAX41RX7wfWqIOLcsUFgb8hFzhKW58wiJRoVJsOi
- 7y8kRlXJnTE+JzZssR3WNEJumFDAnmIWsvhMWU2t+gmxsDFfq5ojpUfJyQpzqjd5igVstqU3ucX
- mnK2d+lXRjqIiKrHr4mg3pPciaN3qUTJt8entJypAMXOdyQKqROW5Hn8VHBTGIigV1Z4pUCZgHk
- G0sXFb1MIkDy3QU6na2xt+pc6NiLDIkL0nujcS7DuYaJHkLZsv3iHc8/0+4ioSaEht7H9p43qjq
- crm46ynBfV4Q5BGqLB2Sw1Nud2sS8JevbWsMQOZ6+amjiOeXDybYNT00FEWsPpsUP8k82VCLy72
- owHlukWoArcUU564oeglHq7vJgpvZDm2FMoka+f4DtnN66SBKNxNl3KpBRWYW+QyPJ1aAAY+
-X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=683fa07d cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=e5mUnYsNAAAA:8 a=EUspDBNiAAAA:8
- a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=R8mIhofpJBCv9TGkB80A:9 a=QEXdDO2ut3YA:10
- a=GvdueXVYPmCkWapjIL-Q:22 a=Vxmtnl_E_bksehYqCbjh:22 a=cvBusfyB2V15izCimMoJ:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 3uV1vYUQuVuRbvo8l9ZO2EryfFOf8lAH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_01,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
- impostorscore=0 spamscore=0 mlxlogscore=983 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506040008
+References: <20250530-rss-v12-0-95d8b348de91@daynix.com> <20250530-rss-v12-3-95d8b348de91@daynix.com>
+In-Reply-To: <20250530-rss-v12-3-95d8b348de91@daynix.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 4 Jun 2025 09:27:05 +0800
+X-Gm-Features: AX0GCFuYlEXU2HjXeMTaDnRIvTFcw3ocyvQ95aagHgYzrm-PLm8iX2G4BD1kF-4
+Message-ID: <CACGkMEvVf0LrquZcWSv3vp-r44sTj0ZDnjwbwB20N0aU35+vxw@mail.gmail.com>
+Subject: Re: [PATCH net-next v12 03/10] tun: Allow steering eBPF program to
+ fall back
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+	Yuri Benditovich <yuri.benditovich@daynix.com>, Andrew Melnychenko <andrew@daynix.com>, 
+	Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update my email with *.qualcomm.com address
+On Fri, May 30, 2025 at 12:50=E2=80=AFPM Akihiko Odaki <akihiko.odaki@dayni=
+x.com> wrote:
+>
+> This clarifies a steering eBPF program takes precedence over the other
+> steering algorithms.
 
-Signed-off-by: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Let's give an example on the use case for this.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ac8da9a3baa3..e94d21953227 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8208,7 +8208,7 @@ F:	drivers/gpu/drm/clients/drm_log.c
- 
- DRM PANEL DRIVERS
- M:	Neil Armstrong <neil.armstrong@linaro.org>
--R:	Jessica Zhang <quic_jesszhan@quicinc.com>
-+R:	Jessica Zhang <jessica.zhang@oss.qualcomm.com>
- L:	dri-devel@lists.freedesktop.org
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>
+> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> ---
+>  Documentation/networking/tuntap.rst |  7 +++++++
+>  drivers/net/tun.c                   | 28 +++++++++++++++++-----------
+>  include/uapi/linux/if_tun.h         |  9 +++++++++
+>  3 files changed, 33 insertions(+), 11 deletions(-)
+>
+> diff --git a/Documentation/networking/tuntap.rst b/Documentation/networki=
+ng/tuntap.rst
+> index 4d7087f727be..86b4ae8caa8a 100644
+> --- a/Documentation/networking/tuntap.rst
+> +++ b/Documentation/networking/tuntap.rst
+> @@ -206,6 +206,13 @@ enable is true we enable it, otherwise we disable it=
+::
+>        return ioctl(fd, TUNSETQUEUE, (void *)&ifr);
+>    }
+>
+> +3.4 Reference
+> +-------------
+> +
+> +``linux/if_tun.h`` defines the interface described below:
+> +
+> +.. kernel-doc:: include/uapi/linux/if_tun.h
+> +
+>  Universal TUN/TAP device driver Frequently Asked Question
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> index d8f4d3e996a7..9133ab9ed3f5 100644
+> --- a/drivers/net/tun.c
+> +++ b/drivers/net/tun.c
+> @@ -476,21 +476,29 @@ static u16 tun_automq_select_queue(struct tun_struc=
+t *tun, struct sk_buff *skb)
+>         return txq;
+>  }
+>
+> -static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff =
+*skb)
+> +static bool tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff=
+ *skb,
+> +                                 u16 *ret)
+>  {
+>         struct tun_prog *prog;
+>         u32 numqueues;
+> -       u16 ret =3D 0;
+> +       u32 prog_ret;
+> +
+> +       prog =3D rcu_dereference(tun->steering_prog);
+> +       if (!prog)
+> +               return false;
+>
+>         numqueues =3D READ_ONCE(tun->numqueues);
+> -       if (!numqueues)
+> -               return 0;
+> +       if (!numqueues) {
+> +               *ret =3D 0;
+> +               return true;
+> +       }
+>
+> -       prog =3D rcu_dereference(tun->steering_prog);
+> -       if (prog)
+> -               ret =3D bpf_prog_run_clear_cb(prog->prog, skb);
+> +       prog_ret =3D bpf_prog_run_clear_cb(prog->prog, skb);
+> +       if (prog_ret =3D=3D TUN_STEERINGEBPF_FALLBACK)
+> +               return false;
 
----
-base-commit: 0f6afbb2ae6c9bd2acd5acf75762fec68bc6fab0
-change-id: 20250603-panel-maintainer-update-dd26f90ade0a
+This seems to break the uAPI. So I think we need a new ioctl to enable
+the behaviour
 
-Best regards,
--- 
-Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+>
+> -       return ret % numqueues;
+> +       *ret =3D (u16)prog_ret % numqueues;
+> +       return true;
+>  }
+>
+>  static u16 tun_select_queue(struct net_device *dev, struct sk_buff *skb,
+> @@ -500,9 +508,7 @@ static u16 tun_select_queue(struct net_device *dev, s=
+truct sk_buff *skb,
+>         u16 ret;
+>
+>         rcu_read_lock();
+> -       if (rcu_dereference(tun->steering_prog))
+> -               ret =3D tun_ebpf_select_queue(tun, skb);
+> -       else
+> +       if (!tun_ebpf_select_queue(tun, skb, &ret))
+>                 ret =3D tun_automq_select_queue(tun, skb);
+>         rcu_read_unlock();
+>
+> diff --git a/include/uapi/linux/if_tun.h b/include/uapi/linux/if_tun.h
+> index 287cdc81c939..980de74724fc 100644
+> --- a/include/uapi/linux/if_tun.h
+> +++ b/include/uapi/linux/if_tun.h
+> @@ -115,4 +115,13 @@ struct tun_filter {
+>         __u8   addr[][ETH_ALEN];
+>  };
+>
+> +/**
+> + * define TUN_STEERINGEBPF_FALLBACK - A steering eBPF return value to fa=
+ll back
+> + *
+> + * A steering eBPF program may return this value to fall back to the ste=
+ering
+> + * algorithm that should have been used if the program was not set. This=
+ allows
+> + * selectively overriding the steering decision.
+> + */
+> +#define TUN_STEERINGEBPF_FALLBACK -1
+
+Not a native speaker, consider it works more like XDP_PASS, would it
+be better to use "TUN_STERRING_PASS"?
+
+Thanks
+
+> +
+>  #endif /* _UAPI__IF_TUN_H */
+>
+> --
+> 2.49.0
+>
 
