@@ -1,140 +1,127 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F235224AF2;
-	Wed,  4 Jun 2025 23:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED612224AF2
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749079325; cv=none; b=QOk0oZMmaJZYpjYBF255bnzncSv50ZvhaBaz1oJKTpGkuxdlwerejvfMCh0UexhthpybzvAito7mSyZUdqXur1fPWlC1EEX4n87itAq/dkz5WF6LpcXiSPK11nSZs47H24Hduy+AzCM0wll+lxjYgj/lRNCwr/gUyVnPO2m99tw=
+	t=1749079442; cv=none; b=g+SR72eSZ/O/n2fS1RVRe3jhE+Uve/FcE24S8TKX3adCpeR98mLM7sWHhUvsF/L3qCyndda6veLN/+NSntGyE1/pb5C7S+aW2j9MPzIov+d7UvItGw0XMepkQFrDyqzB+bursPjwokfPyUwzgSvzXixdysadvsEHZWZWI7a4r8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749079325; c=relaxed/simple;
-	bh=DavXPLOA4qBd5zWmNksvx+nP6XzrqdzB4n6SWig+8aI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qNaKpHj23MT+oO9VDQd8lD8waEOb9yPfMLJ7kSPdYOLhBhSIPIoYWWfJwWVVAixPnIVWphSLuH80wbc0d97zHo9LDk5aIqW9KaDvGHWbcyaDXATGoRaj0jkzp+6fpnYUNAIfAPpvSGL411IpK835y73OHeH5uAaCwLI0yvzQuMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Md8K6/ql; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749079442; c=relaxed/simple;
+	bh=rv9HHNsytFm+P/QHtVS3Ly+xoyU2WHqZE++hOxHUaF4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d0e1X7T/Tftv4zFdbPOagywfiI7diC/M1NaV4Wb3vbYPdaZNl0Yyu7BG+11NCYe/Y0M3ZFlVIKm8kbE7WmCAvnV2fcV64L5gb/fQZ28fF2qGEkAuthTZ4xBavsrcZl4ai5Sn1DmDu4teSw2TxotJRHLAYX6NmX/VOX+4ohyNfyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JbxHHMuL; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Md8K6/ql"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-442f9043f56so1810025e9.0;
-        Wed, 04 Jun 2025 16:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749079322; x=1749684122; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KwwXcq9SvqSxAwcrttqQ535pq1SI2qaKboj674NPGys=;
-        b=Md8K6/qlv7yH+KUkzCxAuz+yHf9AUCFvRG2QIAh24SzuHxcZqG2NzjLXGErui94SFW
-         kS8eGf0IFrH8BnfY/wMmhHbI1LI+NW6nWEz1aupMn5O4WLDzhZeylXVX6C1W5sB36wGH
-         hbYdECdP6QJjUVlUvS2R8XZw1kTTxo7FZmJyviXHtQ8nGPftdfaXxzANT++BHmzkI/WV
-         E9R/BoFwXQIsGC0tmK6gFEnHr3e0UY13HEdYfxRmgoKoRfv3P2bSRbr4ZBH3nbv9411W
-         tSzLVyXbdAhQdnQ1nRbvW90/kU3AxHPdtMGGkiOyJ64aKl7gdLq3vQD4qLFZWHrwpkIP
-         mfow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749079322; x=1749684122;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KwwXcq9SvqSxAwcrttqQ535pq1SI2qaKboj674NPGys=;
-        b=CQhTVB83452YBRmf/89+6F9yxkDJ8Xy1riiSZK/Iw5LjA6D5VUEQzGBuMqo+Dd0zAO
-         tVnvihzvaVF6wM+7AET4BYWMTeBY5nJ9Jdfd2idZIwrLsomiiUELvOxKd+Fx8G+IlZcK
-         qXChsVrw9dKeah48hNxIpqQB75WrrzKeoilaiSVGGT6eZ+Q8x5927Zo8P6rxerE27ouu
-         RtySklYXZiZtD97ml16+XCIZtOrDgpZHbuC34QLzmhyNES29AwJQzBmBbaEhgB3EOkFQ
-         WM1I8drwh6rzrmXMKkRMJrpXtLQ8t0r47ME62ob4lzV+61ms0fRJM4JqvBU6FLQkzd02
-         ClRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAmFbFW39gl8uh6yaLuHRR0jaXju6Ql6E14Ftcrh60HpXpTbjgUrHB6NzsaCGtYfC9kmcXCJEpcfp4ww8RBitz1w==@vger.kernel.org, AJvYcCWws7sDP7D7LHDU82XnBXlYSdyCQmjWb/TDLp1PH+1Us4hFHB5WSmlXCCWqkGIzA5obdDIbLVXmYFupR0k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRNuHtVnu+MN7gu/dMzSj0ty5EJvGz87LXN07VO5ZJyXOL1lDj
-	4Q2iQDWyGDJ+p0OksvR4q6lDJIzW3nLcNuxSuJVx89JVWNnRsV/HnbPtgADM3K7JefmN2UEG3qM
-	Gl6AaIUN9Hf8THAT93RSMp93XJjomb7g=
-X-Gm-Gg: ASbGncukabOtACQUcZ2juI0vmMjuqi4JXyciPe/WK03sorVDdOwFhJmqr6sdhWbagzp
-	PxHx0o6ua2TLWCzmCNe7N+PlIi5VCqlkkoRz0ylvsd7Dj/0LMgrR+c4j0fC217T7w6GuwoAbLaf
-	UP73U3iFnzWW9DWbKDApvzk60TIk5puZko4mnRva6Afz+WU9FZ
-X-Google-Smtp-Source: AGHT+IESbyuxQraVYPxC7wpdKWHwDK9pwgCCWfCOD7IoCQsTYj+Al+j0Kzzq3CvQmANW2Q3K2lnOCzTfeKnvHVH7vkE=
-X-Received: by 2002:a05:600c:350b:b0:43d:17f1:2640 with SMTP id
- 5b1f17b1804b1-451f0b209d8mr41552955e9.26.1749079322021; Wed, 04 Jun 2025
- 16:22:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JbxHHMuL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749079441; x=1780615441;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rv9HHNsytFm+P/QHtVS3Ly+xoyU2WHqZE++hOxHUaF4=;
+  b=JbxHHMuLu3yg4wYbE13ksYsC6eHA0ngTwEUeBHQs4pDtYi5g4sPoxhDP
+   mGpkbKcsCHskNz6KBEqBVzDPpu5DAEiQLts8fDan6oklXJsr7cfgCXLZi
+   N0if7HzEvvHEU2op9QjOkDAfnZ8rFDOG4Cyzn1+ym3aXRIUQx2MA+awjV
+   E3h0v1UdAZ30+ejZ9/z5ZcgXWIyTH5gdqICHce5N3tQWxm8JNf9HWEaYE
+   xUSIqWrLPQfcwSuCAvK03C3uVcy63A6Q7k090mpZYdC3pMBixKuiUjPtY
+   1lGiqt+8Wu5yIfIs2MvHegw0KLikUicpIlw8nXu9ai+ACjwldIHZsJKHL
+   w==;
+X-CSE-ConnectionGUID: PqyELTZwS/eAKpiLSC5zKA==
+X-CSE-MsgGUID: 14kdgHFvRNiSyYH905mkcw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51329141"
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="51329141"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:24:00 -0700
+X-CSE-ConnectionGUID: PyfrpkbBRfWzaVNRqdR/eA==
+X-CSE-MsgGUID: vzXfWAeSTdOxTF4IY+vZQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
+   d="scan'208";a="145223628"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.229]) ([10.125.110.229])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:23:59 -0700
+Message-ID: <5876fb5f-dc8c-401a-833a-a33265ff1fc1@intel.com>
+Date: Wed, 4 Jun 2025 16:23:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
-In-Reply-To: <20250604171554.3909897-1-kan.liang@linux.intel.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 4 Jun 2025 16:21:50 -0700
-X-Gm-Features: AX0GCFvq1shVE6kWYl-CEbSodT79t9asLkPcyvM5S6YpTFccl-wiy-eQ6M8qwhk
-Message-ID: <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
-Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
-To: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	Aishwarya TCV <aishwarya.tcv@arm.com>, Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/virt/tdx: Add ENDBR for low level SEAMCALL assembly
+ functions
+To: "Huang, Kai" <kai.huang@intel.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+ "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
+Cc: "samitolvanen@google.com" <samitolvanen@google.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "x86@kernel.org" <x86@kernel.org>
+References: <20250604003848.13154-1-kai.huang@intel.com>
+ <55e5b3f8-3e17-4962-af2f-75c98ccd414f@intel.com>
+ <f442380c2d8cc51b38105c6316cbe224a248fdfe.camel@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <f442380c2d8cc51b38105c6316cbe224a248fdfe.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 4, 2025 at 10:16=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
-> below perf command.
->   perf record -a -e cpu-clock -- sleep 2
->
-> The issue is introduced by the generic throttle patch set, which
-> unconditionally invoke the event_stop() when throttle is triggered.
->
-> The cpu-clock and task-clock are two special SW events, which rely on
-> the hrtimer. The throttle is invoked in the hrtimer handler. The
-> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
-> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
-> be used to stop the timer.
->
-> There may be two ways to fix it.
-> - Introduce a PMU flag to track the case. Avoid the event_stop in
->   perf_event_throttle() if the flag is detected.
->   It has been implemented in the
->   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.i=
-ntel.com/
->   The new flag was thought to be an overkill for the issue.
-> - Add a check in the event_stop. Return immediately if the throttle is
->   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
->   method to stop the timer.
->
-> The latter is implemented here.
->
-> Move event->hw.interrupts =3D MAX_INTERRUPTS before the stop(). It makes
-> the order the same as perf_event_unthrottle(). Except the patch, no one
-> checks the hw.interrupts in the stop(). There is no impact from the
-> order change.
->
-> Reported-by: Leo Yan <leo.yan@arm.com>
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm=
-.com/
-> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jcc=
-djysza7tlc5fef@ktp4rffawgcw/
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293=
-@linux.ibm.com/
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+On 6/4/25 16:16, Huang, Kai wrote:
+> Could you also let me know whether I should keep the Fixes tag, and the
+> history in the changelog?
 
-It seems the patch fixes one issue and introduces another ?
+Yeah, I think you should keep the Fixes: tag, unless I'm missing something.
 
-Looks like the throttle event is sticky.
-Once it's reached the perf_event no longer works ?
-Repro:
-test_progs -t perf_branches/perf_branches_no_hw
-#250/2   perf_branches/perf_branches_no_hw:OK
-
-test_progs -t stacktrace_build_id_nmi
-#393     stacktrace_build_id_nmi:OK
-
-test_progs -t perf_branches/perf_branches_no_hw
-perf_branches/perf_branches_no_hw:FAIL
-
-Maybe it's an unrelated bug.
+As for the history lesson, you can just say that you think that the TDX
+code was OK when merged, but wasn't converted with the rest of the
+Fixes: commit. That's all you need.
