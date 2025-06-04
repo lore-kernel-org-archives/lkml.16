@@ -1,191 +1,186 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD55224677D
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A3728C007
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749025499; cv=none; b=a4oBowQU2uSd2iayxR+HQCR9DxtPbnr2553CT9htvdftaKCrMdlLQBsLJbLvLvFo3zzSLUfidnLr7wFDf1ZUdNizPiPnsIjLv/0sR68delo13VD2n6zZ5FX6ZIdrDZRsysoodM1rm7KoXFEbgSrr82lWsjwTEySZ7i7/D+olYqE=
+	t=1749025507; cv=none; b=XcZlWmguqTNSJF1xpZrUL6rA4CxH7vFP9Iqjiq/7PSZTctVcO+16Zh1baS4hA1ApwvyWQGd/STzjk5CQMxfY+9MTsDum0oY7bYoy0Sg845fCjudGd5cD7xhwA922FaZ98KNQhADGV14VEogXURzrVk8wB8DyiYfutLfgC+aCjZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749025499; c=relaxed/simple;
-	bh=v7m5UbwJ3SjYF5H5l7QgqpE/OOXsuONm1Zx3lX/tmKY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=lgK0WO2iYwLsGkwOl96kVGKBRvZ/U7RfZMbcMGWIcMcf8IjpcG4qp6QO7i64GDctrrjXpzSIazGVev2ecfrZwF3RmRQeUnmReI7ZD63bG4z20mgyhcspnR0IyoW3SDyIxzi+LMLU/nbpbsY68yg9naxRXAzY83FNJBB1tcW7BMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=AwV4yb5t; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1749025507; c=relaxed/simple;
+	bh=E+ctp5Kf/i4Vkucx3SYkHv1ekiPgitLob8eYzy5uk/A=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=TVwHU6GAmpgnJfuRLh2JvjxGLo1A4ZPoeP/iuEH4VahlrYtK9tzlBc7ghO4BWaVLPMOL7uBregnSqGi5fSlFmZJMhdMTB6BypGOfxbzaSslQlU6igi3nmlDwXl74qgyewjHZXLnrWcny0xBAVsrjq/AUrlkflr0B1nbWAHUGztc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lh1XKtDx; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="AwV4yb5t"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lh1XKtDx"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235e3f93687so4761805ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:25:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749025503; x=1749630303; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BR/cqEY4np4yUPPU0CUL00J0wezf5HZmGTl9XyHaXUk=;
+        b=Lh1XKtDx/fkQLu3uh+h+kdmG3+lSIX8EEp2p7+1cVcb3moW5oMsWNjr99poImHrHu5
+         5kkaVub5pFF/H1y+nfG6kDVvlifq+9gvQSjXPg2hznBNjhEY3cTx3d/HKv4FOxeqY0hl
+         nUg0UtrVp5tNgY94hBgrnbtq+ttDPdWP+iaU+yp67KnSBdpUP8Aqt8SYk2yoUlDiXVUd
+         QuDjpuwnw5fz/AOsX1YNuDWuw2NiSIfqb1FAK2CRdTKLznznC44Qj7hKeKXQAGijC8cQ
+         JBkYyuWe56YtUeKLAdbIpHT1Mo2IA3b9pzXHr2s3LpRtblRUfUnMlR8svejNWzYxAhZb
+         A9qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749025503; x=1749630303;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BR/cqEY4np4yUPPU0CUL00J0wezf5HZmGTl9XyHaXUk=;
+        b=Wn0AgCdPE86EkpvUOH0U1+jiQl88UT1DVeUtiauI2dXpG6R7J/MRDkOoxsj9gqLH4e
+         oZa6+opwvWAp64W5A2jKdL6u9kXp4FcV46bKsLexBqMl/gl1OfLuI5j5Gbp09gwXoGmo
+         ptjHGd5UI18FGrxCvkCSHbeXqpZxmJfHzE+N4HHNxZaqUysRkMGZHJ2iDfAFjRC5Aw/Q
+         eaij+IUTHY8baK9Fe78XaovwCuk4chhQPJZhf5T6AaxMAVSE8VKfYrmZgB2SRICpIVRa
+         ZOQo2cRcITfSvnsP3PF4oWP5GQLtdNGkawg7JwydFTlMnEsaIU/eaiZEVukd6qekxG6w
+         WbAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgaJhMMnQCveJEw+LJIWnbhoa+60wtxzQLqLAyYAarNYY58kl99OpmEV8BTyYLpMgw9xR2o/3gdMRcUdA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6vlrY/HA3C5OysGsUcUgNymvGsi/uzMz9ZiOfhhx3oH3p9Clj
+	VYSSmnZHGOGY8jeikwxbuUsQMou46eDWO6uzNsIfJ86Uyt6P97Dbs+QP/rJCSZvSmS+a+zbwcm6
+	lyF7BDDXIb+IBLtdUvQ==
+X-Google-Smtp-Source: AGHT+IGJiuIlt5+Y4kHcki1caySgyQkGIABrznkydsidONCfyonDF8tyBnPrVY+m2CsPNRKAhiwmnN0YzQM616k=
+X-Received: from pgh11.prod.google.com ([2002:a05:6a02:4e0b:b0:b2c:df7b:f167])
+ (user=guanyulin job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:6bc7:b0:235:ca87:37ae with SMTP id d9443c01a7336-235e1201315mr22269695ad.41.1749025503391;
+ Wed, 04 Jun 2025 01:25:03 -0700 (PDT)
+Date: Wed,  4 Jun 2025 08:23:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1749025484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kIUCb4+mj18vL7IVMw6tRgCs2/j5HRPHEfYTkdiaDeM=;
-	b=AwV4yb5tbzT5syvc27hSpLLoViY4TIGoZg4e8D2mJMfFv5YY5nTSd29CLmW3612NtL140i
-	EKKmgmYn7lJQj9bcUKyFbUeLHBuL2hSggdJ4FmqsbPz6RQtVJU8RU8p3CHVtfDBKOJg6di
-	HtZ+awSorAM5H6wSi/9l8p9Mx/KTacLaVME0keuXQfzFd6ZqoK6kmP+MLHIBtfOP0DOUXe
-	SOgr3RXz9LY3/oCGBNUva+/H/1rddijwVJMqyRxJcQ4S+VNjja1t27oNDqwPKcmF2NGdqf
-	ZVwVL9XVM3ZbHrK0Jwfk2rhVhy5x/LNlI8eP0NK9YphZnaTjlMjR9Qx5XCI7bg==
-Content-Type: multipart/signed;
- boundary=1972edf4972f0b592376148b0cb4a49b288a246b0dc77c2d96218fcc198e;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Wed, 04 Jun 2025 10:24:33 +0200
-Message-Id: <DADLSAEF1YPO.V0CQK084KFFO@cknow.org>
-To: "Nicolas Frattaroli" <nicolas.frattaroli@collabora.com>, "Chanwoo Choi"
- <cw00.choi@samsung.com>, "MyungJoo Ham" <myungjoo.ham@samsung.com>,
- "Kyungmin Park" <kyungmin.park@samsung.com>, "Heiko Stuebner"
- <heiko@sntech.de>, "Sascha Hauer" <s.hauer@pengutronix.de>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, "Sebastian Reichel"
- <sebastian.reichel@collabora.com>
-Cc: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-rockchip@lists.infradead.org>, <kernel@collabora.com>,
- <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/2] PM / devfreq: rockchip-dfi: add support for LPDDR5
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-References: <20250530-rk3588-dfi-improvements-v1-0-6e077c243a95@collabora.com> <20250530-rk3588-dfi-improvements-v1-2-6e077c243a95@collabora.com>
-In-Reply-To: <20250530-rk3588-dfi-improvements-v1-2-6e077c243a95@collabora.com>
-X-Migadu-Flow: FLOW_OUT
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250604082449.2029156-1-guanyulin@google.com>
+Subject: [PATCH v14 0/4] Support system sleep with offloaded usb transfers
+From: Guan-Yu Lin <guanyulin@google.com>
+To: gregkh@linuxfoundation.org, mathias.nyman@intel.com, gargaditya08@live.com, 
+	kekrby@gmail.com, jeff.johnson@oss.qualcomm.com, quic_zijuhu@quicinc.com, 
+	andriy.shevchenko@linux.intel.com, ben@decadent.org.uk, broonie@kernel.org, 
+	quic_wcheng@quicinc.com, krzysztof.kozlowski@linaro.org, 
+	sumit.garg@kernel.org
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Guan-Yu Lin <guanyulin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
---1972edf4972f0b592376148b0cb4a49b288a246b0dc77c2d96218fcc198e
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Wesley Cheng and Mathias Nyman's USB offload design enables a co-processor
+to handle some USB transfers, potentially allowing the system to sleep
+(suspend-to-RAM) and save power. However, Linux's System Sleep model halts
+the USB host controller when the main system isn't managing any USB
+transfers. To address this, the proposal modifies the system to recognize
+offloaded USB transfers and manage power accordingly. This way, offloaded
+USB transfers could still happen during system sleep (Suspend-to-RAM).
 
-Hi Nicolas,
+This involves two key steps:
+1. Transfer Status Tracking: Propose offload_usage and corresponding apis
+drivers could track USB transfers on the co-processor, ensuring the
+system is aware of any ongoing activity.
+2. Power Management Adjustment:  Modifications to the USB driver stack
+(xhci host controller driver, and USB device drivers) allow the system to
+sleep (Suspend-to-RAM) without disrupting co-processor managed USB
+transfers. This involves adding conditional checks to bypass some power
+management operations in the System Sleep model.
 
-On Fri May 30, 2025 at 3:38 PM CEST, Nicolas Frattaroli wrote:
-> <snip>
-> Downstream has some special case handling for a hardware version where
-> not just the control bits differ, but also the register. Since I don't
-> know whether that hardware version is in any production silicon, it's
-> left unimplemented for now, with an error message urging users to report
-> if they have such a system.
-> <snip>
-> ---
->  drivers/devfreq/event/rockchip-dfi.c | 84 ++++++++++++++++++++++++++++--=
-------
->  include/soc/rockchip/rk3588_grf.h    |  8 +++-
->  include/soc/rockchip/rockchip_grf.h  |  1 +
->  3 files changed, 73 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/event=
-/rockchip-dfi.c
-> index 54effb63519653d20b40eed88681330983399a77..5a2c9badcc64c552303c2f55c=
-52e5420dec5ffc1 100644
-> --- a/drivers/devfreq/event/rockchip-dfi.c
-> +++ b/drivers/devfreq/event/rockchip-dfi.c
-> @@ -34,15 +34,18 @@
-> =20
->  /* DDRMON_CTRL */
->  #define DDRMON_CTRL	0x04
-> +#define DDRMON_CTRL_LPDDR5		BIT(6)
->  #define DDRMON_CTRL_DDR4		BIT(5)
->  #define DDRMON_CTRL_LPDDR4		BIT(4)
->  #define DDRMON_CTRL_HARDWARE_EN		BIT(3)
->  #define DDRMON_CTRL_LPDDR23		BIT(2)
->  #define DDRMON_CTRL_SOFTWARE_EN		BIT(1)
->  #define DDRMON_CTRL_TIMER_CNT_EN	BIT(0)
-> -#define DDRMON_CTRL_DDR_TYPE_MASK	(DDRMON_CTRL_DDR4 | \
-> +#define DDRMON_CTRL_DDR_TYPE_MASK	(DDRMON_CTRL_LPDDR5 | \
-> +					 DDRMON_CTRL_DDR4 | \
->  					 DDRMON_CTRL_LPDDR4 | \
->  					 DDRMON_CTRL_LPDDR23)
-> +#define DDRMON_CTRL_LP5_BANK_MODE_MASK	GENMASK(8, 7)
-> =20
->  #define DDRMON_CH0_WR_NUM		0x20
->  #define DDRMON_CH0_RD_NUM		0x24
-> @@ -116,13 +119,60 @@ struct rockchip_dfi {
->  	int buswidth[DMC_MAX_CHANNELS];
->  	int ddrmon_stride;
->  	bool ddrmon_ctrl_single;
-> +	u32 lp5_bank_mode;
-> +	bool lp5_ckr;	/* true if in 4:1 command-to-data clock ratio mode */
->  	unsigned int count_multiplier;	/* number of data clocks per count */
->  };
-> =20
-> +static int rockchip_dfi_ddrtype_to_ctrl(struct rockchip_dfi *dfi, u32 *c=
-trl,
-> +					u32 *mask)
-> +{
-> +	u32 ddrmon_ver;
-> +
-> +	*mask =3D DDRMON_CTRL_DDR_TYPE_MASK;
-> +
-> +	switch (dfi->ddr_type) {
-> +	case ROCKCHIP_DDRTYPE_LPDDR2:
-> +	case ROCKCHIP_DDRTYPE_LPDDR3:
-> +		*ctrl =3D DDRMON_CTRL_LPDDR23;
-> +		break;
-> +	case ROCKCHIP_DDRTYPE_LPDDR4:
-> +	case ROCKCHIP_DDRTYPE_LPDDR4X:
-> +		*ctrl =3D DDRMON_CTRL_LPDDR4;
-> +		break;
-> +	case ROCKCHIP_DDRTYPE_LPDDR5:
-> +		ddrmon_ver =3D readl_relaxed(dfi->regs);
-> +		if (ddrmon_ver < 0x40) {
-> +			*ctrl =3D DDRMON_CTRL_LPDDR5 | dfi->lp5_bank_mode;
-> +			*mask |=3D DDRMON_CTRL_LP5_BANK_MODE_MASK;
-> +			break;
-> +		}
-> +
-> +		/*
-> +		 * As it is unknown whether the unpleasant special case
-> +		 * behaviour used by the vendor kernel is needed for any
-> +		 * shipping hardware, ask users to report if they have
-> +		 * some of that hardware.
-> +		 */
-> +		dev_err(&dfi->edev->dev,
-> +			"unsupported DDRMON version 0x%04X, please let linux-rockchip know!\n=
-",
-> +			ddrmon_ver);
-> +		return -EOPNOTSUPP;
+changelog
+----------
+Changes in v14:
+- Introduce CONFIG_USB_OFFLOAD for control usb offload related features.
+- Specify __must_hold marco on usb_offload_check().
+- Cosmetics changes on coding style.
 
-I'm guessing you mean the linux-rockchip mailing list here? If so, I
-think it's better to make that explicit as 'Joe User' who may run into
-this issue may not be aware of that mailing list. The 'linux' and
-'rockchip' name combo is used in quite a few places.
 
-Cheers,
-  Diederik
+Changes in v13:
+- Ensure offload_usage is modified only when the device is neither
+  suspended nor marked as "offload_at_suspend".
+- Move lock manipulations into usb_offload_get()/usb_offload_put().
+- Cosmetics changes on coding style.
 
-> +	default:
-> +		dev_err(&dfi->edev->dev, "unsupported memory type 0x%X\n",
-> +			dfi->ddr_type);
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int rockchip_dfi_enable(struct rockchip_dfi *dfi)
->  {
->  	void __iomem *dfi_regs =3D dfi->regs;
->  	int i, ret =3D 0;
-> +	u32 ctrl;
-> +	u32 ctrl_mask;
-> =20
->  	mutex_lock(&dfi->mutex);
-> =20
-> @@ -136,8 +186,11 @@ static int rockchip_dfi_enable(struct rockchip_dfi *=
-dfi)
-> <snip>
+Changes in v12:
+- Rebase on TOT.
+- Cosmetics changes on coding style.
 
---1972edf4972f0b592376148b0cb4a49b288a246b0dc77c2d96218fcc198e
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v11:
+- Use USB subsystem wrappers in usb_offload_get()/usb_offload_put().
+- Refine logics and add comment in usb_suspend_both()/usb_resume_both().
 
------BEGIN PGP SIGNATURE-----
+Changes in v10:
+- Remove unnecessary operations in dwc3 driver.
+- Introduce CONFIG_USB_XHCI_SIDEBAND_SUSPEND to enable/disable offloaded
+  usb transfers during system Suspend-to-RAM.
+- Modify the approach to detect offloaded USB transfers when the system
+  resumes from Suspend-to-RAM.
+- Mark sideband activity when sideband interrupters are created/removed.
+- Cosmetics changes on coding style.
 
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaEACzAAKCRDXblvOeH7b
-bkQFAP9OdpwIz44YKR7NNVr+icHxXxEQIuDgPcumEG5WTaLrKwD+MC8hHdbqvimT
-4XQkVUDdf7DZ/YqAZuzo8OI31a6LOA0=
-=z1X1
------END PGP SIGNATURE-----
+Changes in v9:
+- Remove unnecessary white space change.
 
---1972edf4972f0b592376148b0cb4a49b288a246b0dc77c2d96218fcc198e--
+Changes in v8:
+- Change the runtime pm api to correct the error handling flow.
+- Not flushing endpoints of actively offloaded USB devices to avoid
+  possible USB transfer conflicts.
+
+Changes in v7:
+- Remove counting mechanism in struct usb_hcd. The USB device's offload
+  status will be solely recorded in each related struct usb_device.
+- Utilizes `needs_remote_wakeup` attribute in struct usb_interface to
+  control the suspend flow of USB interfaces and associated USB endpoints.
+  This addresses the need to support interrupt transfers generated by
+  offloaded USB devices while the system is suspended.
+- Block any offload_usage change during USB device suspend period.
+
+Changes in v6:
+- Fix build errors when CONFIG_USB_XHCI_SIDEBAND is disabled.
+- Explicitly specify the data structure of the drvdata refereced in
+  dwc3_suspend(), dwc3_resume().
+- Move the initialization of counters to the patches introducing them.
+
+Changes in v5:
+- Walk through the USB children in usb_sideband_check() to determine the
+  sideband activity under the specific USB device. 
+- Replace atomic_t by refcount_t.
+- Reduce logs by using dev_dbg & remove __func__.
+
+Changes in v4:
+- Isolate the feature into USB driver stack.
+- Integrate with series "Introduce QC USB SND audio offloading support"
+
+Changes in v3:
+- Integrate the feature with the pm core framework.
+
+Changes in v2:
+- Cosmetics changes on coding style.
+
+[v3] PM / core: conditionally skip system pm in device/driver model
+[v2] usb: host: enable suspend-to-RAM control in userspace
+[v1] [RFC] usb: host: Allow userspace to control usb suspend flows
+---
+
+Guan-Yu Lin (4):
+  usb: xhci-plat: separate dev_pm_ops for each pm_event
+  usb: offload: add apis for offload usage tracking
+  xhci: sideband: add api to trace sideband usage
+  usb: host: enable USB offload during system sleep
+
+ drivers/usb/core/Kconfig          |  10 +++
+ drivers/usb/core/Makefile         |   1 +
+ drivers/usb/core/driver.c         |  50 +++++++++--
+ drivers/usb/core/offload.c        | 136 ++++++++++++++++++++++++++++++
+ drivers/usb/core/usb.c            |   1 +
+ drivers/usb/host/Kconfig          |  11 +++
+ drivers/usb/host/xhci-plat.c      |  42 ++++++++-
+ drivers/usb/host/xhci-plat.h      |   1 +
+ drivers/usb/host/xhci-sideband.c  |  38 +++++++++
+ include/linux/usb.h               |  18 ++++
+ include/linux/usb/xhci-sideband.h |   9 ++
+ 11 files changed, 307 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/usb/core/offload.c
+
+-- 
+2.49.0.1204.g71687c7c1d-goog
+
