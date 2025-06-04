@@ -1,246 +1,166 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4CA26D4C1
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4002882B7
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024770; cv=none; b=JB8HLOPeo5LGFqX8wWOQj3pBP4hp6Djh8h14pEpmgEFg6AEUGuXcWbBThQwSrXxtm+2adb7gf/M+TJ9lZpjj7vgwb5hVCN2w7dSpzBxapNw34geRFv8FQaMcdDwwUGCy8wUrgLsmnQ7Awqd3iOp05BD4TH+tXVwCITCXTlAC/6U=
+	t=1749024830; cv=none; b=hnDj0SaD9pFy11X/dHNuUjg0MVJnUKBLhWP9/KaCmbhYtuXh13nT5SFC2AN0FOczCOkrkWvkASPiacJzTzExQ6Vuqnao65/oGKsAu99FpSOBw9Xi53tLyWmoYY/8OtJqAnDoj4EkyLWsrH2fF9Zr902hsHOSQp5rYVJfEJXZduE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024770; c=relaxed/simple;
-	bh=bayr7l71aJK8xCvnToyVAKFE87Idmum4Q2rTzSbXuJo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jtsWGFzzJ8m1YrHSE6KaVa2f/nnnpxt2t5U4/KCY3xg/UG6qP6rSk24OjdsaxLiaVsIjBaaOBIn0SCBUot9fqiP34kmBr074KtaJ913WhDD7C6yxwvGrU+wXJ/oAb+AtTHVyLoVCcMUTIlm4z/sJ28T4a7urdQaOJvWPWtRV2CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QhfMbTe3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hsNOwS8i; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QhfMbTe3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hsNOwS8i; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749024830; c=relaxed/simple;
+	bh=9EuaxNn4F/P0VCc8ElrEiPrOC/ZsczRwYp+EpxBMY/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gXdoWckVCfnFZeoxFEka/IhtVzg/7OJphZ5wH0t0co8TEBYSQ9ksWhMkYKouXHJqOAu7OzvuZ/HkBUX3SG4KfS0hSUj3l91SO5pJIZaNeZwiMXFx8U2fb5PIkhuHaP7uN3EmjWXDGWBvN0rWmh+r5FmAIHF56Ts7hwn3zHCeMm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PiHdZMQO; arc=none smtp.client-ip=209.85.167.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QhfMbTe3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hsNOwS8i";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QhfMbTe3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hsNOwS8i"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7986D2020C;
-	Wed,  4 Jun 2025 08:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749024766; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GehkjeXbUaVabMARjI8MzX+XYRRUc1ZTqrpmk77LOr8=;
-	b=QhfMbTe30Rwek73ksQG2t0gY1NtsBG8m+qkcNnNTfWvX8whcx8B3oyxMCH5ZL59fkJGPBk
-	ucBf8lyjTJj1FewA1QiLLMUppdRpocTtP3CiBBpwKHVqG3VrORPqJHjIfNytF0rnpVpqPE
-	v/x/IMMxjzyiRSl7DrEI0pp0FIhaJeA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749024766;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GehkjeXbUaVabMARjI8MzX+XYRRUc1ZTqrpmk77LOr8=;
-	b=hsNOwS8iLZwX6U7w8jV8ZtZg89TtoXPhFlxG+oQabjN/05IplQmo/iOjgfAClBbtKnIAgX
-	q/MdGtILqg9SsJCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749024766; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GehkjeXbUaVabMARjI8MzX+XYRRUc1ZTqrpmk77LOr8=;
-	b=QhfMbTe30Rwek73ksQG2t0gY1NtsBG8m+qkcNnNTfWvX8whcx8B3oyxMCH5ZL59fkJGPBk
-	ucBf8lyjTJj1FewA1QiLLMUppdRpocTtP3CiBBpwKHVqG3VrORPqJHjIfNytF0rnpVpqPE
-	v/x/IMMxjzyiRSl7DrEI0pp0FIhaJeA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749024766;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GehkjeXbUaVabMARjI8MzX+XYRRUc1ZTqrpmk77LOr8=;
-	b=hsNOwS8iLZwX6U7w8jV8ZtZg89TtoXPhFlxG+oQabjN/05IplQmo/iOjgfAClBbtKnIAgX
-	q/MdGtILqg9SsJCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1652E13A63;
-	Wed,  4 Jun 2025 08:12:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qthLBP7/P2hhdgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 04 Jun 2025 08:12:46 +0000
-Message-ID: <9a93813c-4d7c-45ef-b5a2-0ad37e7a078a@suse.de>
-Date: Wed, 4 Jun 2025 10:12:45 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PiHdZMQO"
+Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-55220699ba8so8248398e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:13:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749024827; x=1749629627; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=s5jKqaMBmZ5K9NxEtrcLo8cB7aHjlOI5ttRZ4HzQ6Uw=;
+        b=PiHdZMQOMxgzLOpLCSRwbuNsMg+1AtAfwiWeO5fjxqPKntnvUDHNrST4bcmcuew2sl
+         2kg7qKvDbe+3Yt187MrjA7LNZczm4daTOEJdMCSpHIwM43gdzDMB/zXW92b1AgMaxgBv
+         oJE9XHoke0LmUXfWGfEbK4FVGhyfJr5ZxK9r5BuuJgDwsvkKBKq041TAKkEjb0Q1GHo+
+         nwuBYaaQEFFoaSmhcvnp2y4PVTnPFmdOFVmsCf8KGSm2Tpm5dSldPp2f2C9AxX1z1rRv
+         bfHlE8fP8zKaHpGCkKVc6BJ08256RrkAcPWgHplucIW/IzTvHWhHX/gDIeRNSLKiLK/6
+         RWgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749024827; x=1749629627;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s5jKqaMBmZ5K9NxEtrcLo8cB7aHjlOI5ttRZ4HzQ6Uw=;
+        b=GsQzm2i9nAKscjm2fHSA42aA7a4KhIBfXHAjzwxu8NjozyueiRjBUm5Fe5wQbzfir/
+         D5LLfzVsgV0bjSqwwncm2EuBmPhgeAGYH4+s3A5dguGtt55eBPeePb5bkTfixMmUAmuM
+         pLrYeZVvommf3vZ0xNVHNR+GNyngX3AALivfdmMZO0aaRKGBh49ZHn+SFLx1AofMPnwX
+         1azMqe/2QfMvgjI9J0gCdNZ3+Qlrcz5jeELuS1B+DUMtu04hQ2arOU/1KXfThofgWAKn
+         AU2SFVXlUNMILvvfsNF+QnL/iwHhkAEqo1ErrejYBAWhe6BLAwptj5ANT1NmZL8HAaLk
+         vL/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWI4EtRk6cLrGOEVgIJOjONgBJAyESjtfme71YKEM8PpLfJwImT9aAiGWnMk45QgTCOpAN5WWw8n/LOUN8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrRfAaBJuwJpzgkoOEwjGk2jgIinIhI+GIMPXS3E6/AUVoj53P
+	uEOvsOZxGZu96gsbkSGhGly/2eJl8D9vNAsrTzJJsqKT8S6/I8yXPOui7VcenxJwZm3MXgwTR3D
+	xjcW12/KlAScrcAiGxk44B0ifubSpJXc=
+X-Gm-Gg: ASbGncv2j+hwCeu/JDaLOmVGcQBFSsnJdgNzHWpVuWZYY+vugNF3MmlCZgbYPeh+6M+
+	xj2zueDUbYFAtvTAdapnX0+CaHI1UpeiorUJdPH3AuY3xw4ESUoNoMkmRKKhwrWINu41fNr0E5k
+	J4pZrHufvmacRH7erx1YFvc9IpaA9Ke9pKhA==
+X-Google-Smtp-Source: AGHT+IFglZOqYp/USUtZBKC/m1jE/LC+xzuUZ56Jpfv0ouaSKqPaU052xnDq6lrSVQxYpDLR/sMeX8rfkgODMroG7T8=
+X-Received: by 2002:a05:6512:b1b:b0:553:2c65:f1d1 with SMTP id
+ 2adb3069b0e04-55356aef588mr579203e87.13.1749024826741; Wed, 04 Jun 2025
+ 01:13:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
- memory framebuffers
-To: Michael Kelley <mhklinux@outlook.com>,
- David Hildenbrand <david@redhat.com>, "simona@ffwll.ch" <simona@ffwll.ch>,
- "deller@gmx.de" <deller@gmx.de>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc: "weh@microsoft.com" <weh@microsoft.com>, "hch@lst.de" <hch@lst.de>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20250523161522.409504-1-mhklinux@outlook.com>
- <20250523161522.409504-4-mhklinux@outlook.com>
- <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
- <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <c0b91a50-d3e7-44f9-b9c5-9c3b29639428@suse.de>
- <SN6PR02MB4157871127ED95AD24EDF96DD46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <SN6PR02MB4157871127ED95AD24EDF96DD46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.29
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.19)[-0.950];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de,outlook.com];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FREEMAIL_TO(0.00)[outlook.com,redhat.com,ffwll.ch,gmx.de,microsoft.com,kernel.org,linux-foundation.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email]
-X-Spam-Level: 
+References: <20250407134712.93062-1-hupu.gm@gmail.com> <CANDhNCosvML9XKH8HV1QBXKzxt3zMWxzsPSUfYxoyPCORf6Krw@mail.gmail.com>
+ <CADHxFxS+qpmD8r1uxru+VWLj=K616=jLKbBgUR3Ed7ZBY1gidg@mail.gmail.com>
+ <CANDhNCqgCGtWubkuMpn=GdfLwP6d5kMEvbhoQL4oef5yf_74ug@mail.gmail.com>
+ <CANDhNCqv0iFMJanxj4uTyOHGUGxfCqb18Ku+w5y9JFKRm0M=Rg@mail.gmail.com>
+ <CADHxFxQoNOBCOMDsh0iNrdD=ke=YweVZgZrTWbBQRA8SYy9McA@mail.gmail.com>
+ <CADHxFxRd66FB6=wgY2-NLxqiMGZui+um+h2LUe4+hwXabdUpVg@mail.gmail.com> <CANDhNCq+xE4dpecHio2x6TJXMXxhQjrDk1oCon=NR2b+k0Y9yQ@mail.gmail.com>
+In-Reply-To: <CANDhNCq+xE4dpecHio2x6TJXMXxhQjrDk1oCon=NR2b+k0Y9yQ@mail.gmail.com>
+From: hupu <hupu.gm@gmail.com>
+Date: Wed, 4 Jun 2025 16:13:34 +0800
+X-Gm-Features: AX0GCFsKvQFOkmlaLmK2ASadm4LLnW5OqOEaE67BQ2CBM6cUt7yapygCKvtPTy8
+Message-ID: <CADHxFxSVdt_oG=J=aJDfkOcYEBScUxKV=NZNUvgtkAj6sbWvGA@mail.gmail.com>
+Subject: Re: [RFC 1/1] sched: Skip redundant operations for proxy tasks
+ needing return migration
+To: John Stultz <jstultz@google.com>
+Cc: peterz@infradead.org, linux-kernel@vger.kernel.org, juri.lelli@redhat.com, 
+	vschneid@redhat.com, mingo@redhat.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, hupu@transsion.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi
-
-Am 03.06.25 um 19:50 schrieb Michael Kelley:
-> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Monday, June 2, 2025 11:25 PM
->> Hi
->>
->> Am 03.06.25 um 03:49 schrieb Michael Kelley:
->> [...]
->>>> Will the VMA have VM_PFNMAP or VM_MIXEDMAP set? PFN_SPECIAL is a
->>>> horrible hack.
->>>>
->>>> In another thread, you mention that you use PFN_SPECIAL to bypass the
->>>> check in vm_mixed_ok(), so VM_MIXEDMAP is likely not set?
->>> The VMA has VM_PFNMAP set, not VM_MIXEDMAP.  It seemed like
->>> VM_MIXEDMAP is somewhat of a superset of VM_PFNMAP, but maybe that's
->>> a wrong impression. vm_mixed_ok() does a thorough job of validating the
->>> use of __vm_insert_mixed(), and since what I did was allowed, I thought
->>> perhaps it was OK. Your feedback has set me straight, and that's what I
->>> needed. :-)
->>>
->>> But the whole approach is moot with Alistair Popple's patch set that
->>> eliminates pfn_t. Is there an existing mm API that will do mkwrite on a
->>> special PTE in a VM_PFNMAP VMA? I didn't see one, but maybe I missed
->>> it. If there's not one, I'll take a crack at adding it in the next version of my
->>> patch set.
->> What is the motivation behind this work? The driver or fbdev as a whole
->> does not have much of a future anyway.
->>
->> I'd like to suggest removing hyperv_fb entirely in favor of hypervdrm?
->>
-> Yes, I think that's the longer term direction. A couple months ago I had an
-> email conversation with Saurabh Sengar from the Microsoft Linux team where
-> he raised this idea. I think the Microsoft folks will need to drive the deprecation
-> process, as they need to coordinate with the distro vendors who publish
-> images for running on local Hyper-V and in the Azure cloud. And my
-> understanding is that the Linux kernel process would want the driver to
-> be available but marked "deprecated" for a year or so before it actually
-> goes away.
-
-We (DRM upstream) recently considered moving some fbdev drivers to 
-drivers/staging or marking them with !DRM if a DRM driver is available. 
-Hyverv_fb would be a candidate.
-
-At least at SUSE, we ship hypervdrm instead of hyperv_fb. This works 
-well on the various generations of the hyperv system. Much of our 
-userspace would not be able to use hyperv_fb anyway.
+Hi John
+Thank you for your response.
 
 >
-> I do have some concerns about the maturity of the hyperv_drm driver
-> "around the edges". For example, somebody just recently submitted a
-> patch to flush output on panic. I have less familiarity hyperv_drm vs.
-> hyperv_fb, so some of my concern is probably due to that. We might
-> need to do review of hyperv_drm and see if there's anything else to
-> deal with before hyperv_fb goes away.
-
-The panic output is a feature that we recently added to the kernel. It 
-allows a DRM driver to display a final error message in the case of a 
-kernel panic (think of blue screens on Windows). Drivers require a 
-minimum of support to make it work. That's what the hypervdrm patches 
-were about.
-
-Best regards
-Thomas
-
+> This looks identical to the version above, or am I missing something?
 >
-> This all got started when I was looking at a problem with hyperv_fb,
-> and I found several other related problems, some of which also existed
-> in hyperv_drm. You've seen several small'ish fixes from me and Saurabh
-> as a result, and this issue with mmap()'ing /dev/fb0 is the last one of that
-> set. This fix is definitely a bit bigger, but it's the right fix. On the flip side,
-> if we really get on a path to deprecate hyperv_fb, there are hack fixes for
-> the mmap problem that are smaller and contained to hyperv_fb. I would
-> be OK with a hack fix in that case.
->
-> Michael
 
--- 
+I sincerely apologize for the confusion caused by my unclear
+explanation. The complete patch for version 2.0 is as follows. In this
+patch, I relocated the `proxy_needs_return()` check to execute after
+`sched_delayed` processing but before the `wakeup_preempt()` judgment.
+This optimization allows skipping redundant `wakeup_preempt()`
+operations when a donor task must migrate back to its original CPU, as
+it becomes unnecessary in such cases.
+
+
+
+Subject: [RFC] sched: Skip redundant operations when donor needs return.
+
+Move the proxy_needs_return() check earlier in ttwu_runnable()
+to minimize unnecessary operations, particularly in cases
+where a donor task needs to migrate back to its original CPU.
+
+Signed-off-by: hupu <hupu.gm@gmail.com>
+---
+ kernel/sched/core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+ mode change 100644 => 100755 kernel/sched/core.c
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+old mode 100644
+new mode 100755
+index 06e9924d3f77..2c863ad53173
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4164,6 +4164,10 @@ static int ttwu_runnable(struct task_struct *p,
+int wake_flags)
+  proxy_remove_from_sleeping_owner(p);
+  enqueue_task(rq, p, ENQUEUE_NOCLOCK | ENQUEUE_DELAYED);
+  }
++ if (proxy_needs_return(rq, p)) {
++ _trace_sched_pe_return_migration(p);
++ goto out;
++ }
+  if (!task_on_cpu(rq, p)) {
+  /*
+  * When on_rq && !on_cpu the task is preempted, see if
+@@ -4171,10 +4175,6 @@ static int ttwu_runnable(struct task_struct *p,
+int wake_flags)
+  */
+  wakeup_preempt(rq, p, wake_flags);
+  }
+- if (proxy_needs_return(rq, p)) {
+- _trace_sched_pe_return_migration(p);
+- goto out;
+- }
+  ttwu_do_wakeup(p);
+  ret = 1;
+  }
 --
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.17.1
 
+
+
+> Hrm. Can you walk me through the specific case you're thinking about here?
+>
+> Is the idea something like:  a mutex blocked task (not sched_delayed)
+> gets migrated to a rq, where it acts as a donor so that a lock holder
+> can be run.
+> If the lock holder sleeps, it might be set as sched_delayed, but the
+> donor will be dequeued from the rq and enqueued onto the sched_delayed
+> sleeping owner.
+>
+> And the concern is that in doing this, the donor's lag from the rq it
+> was migrated to won't be preserved (since it isn't set as
+> sched_delayed)?
+>
+> I'll need to think on this a bit, as I don't quite have my head around
+> how mutex blocked tasks might also end up sched_delayed.
+>
+
+I need to add some debugging logs to further investigate this issue.
+This may take a bit of time, and I will get back to you shortly.
+
+Thanks.
+hupu
