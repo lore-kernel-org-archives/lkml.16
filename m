@@ -1,182 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D8E28F935;
-	Wed,  4 Jun 2025 13:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E205829116C;
+	Wed,  4 Jun 2025 13:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749042495; cv=none; b=upCjdpMH5kK7Reupd3hDgDQMVn51S/ZFvOaOlcJJZYnlD61RnA0S56rfVxeX9FbIuhQa2JD+XwPJF8trlP5gwUSocIAnXuiIRO3CuElLoea/porRCMNNJT09mCiawOfZ7EOcwuEZZ5NJc26w625bIjNXvLl958+cPnstR3QLYac=
+	t=1749042509; cv=none; b=GwxauFBnYjeHHhLq2W83i5s7sPPbGBoKzdgN+hw8cXlk/2GcCBhN5uSav2Fddi9GqV+5AcxcEODEEbCosTsmlQSy1KFqRStYlhFMao5EYkk5T2wxeYKHTlNKHqRa6XF/s/xP2rdbZmGQWt8EMFkQokTx6Pe/Kw5frc2ArZBSJ98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749042495; c=relaxed/simple;
-	bh=UR8I1JXHlwp7wjKuuuJEtkxlyaVUMaHRzGq+2e6KiGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hRC5sDUp2JA7Z2PlAEM9hzBH6xp5XLlK2iILW4Xhhgsvqj86bBlNthJkV4wd/CflfvFb7gQv244fxaer9H4KlHIi9HLYLvr47mNyOpziw0Big+lKuKrhrztdlk2buX5bEq738y5h9fUqTzcxzu3DAogu7U+T1WtbGwweFXa+rkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=w/FfYPHH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749042509; c=relaxed/simple;
+	bh=IaJDoPzg8QMLk1GnLprh5fIDI9FLXNfYV4TC6NqsKEE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VRjTbqT1sl/2TO7NxXmWjJt7s6PsoqMevyieOj4NIvZQeJdqU9LaOvrI6x+BB1eAbNAF1hClXj3jjEfE8zGtjVenZnz7fyQ7nItDVp06Of5Mo5szp3yzrzQSAjFs4Q60fo4dqT6D/Ixd2Cd1cvI06wLoxH9kTosdCycrrYV/Iz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HmLm0Bld; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="w/FfYPHH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36D0EC4CEEF;
-	Wed,  4 Jun 2025 13:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749042493;
-	bh=UR8I1JXHlwp7wjKuuuJEtkxlyaVUMaHRzGq+2e6KiGQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=w/FfYPHHYWVSrXYZacCXq9qNRGndclMtlgep61STtrVV7mLhzeSiRdR5VSlVNyP2H
-	 1EzSXgY6XWa7MXLvVljnX/e1slQRyekluSbx/K2bQJpeaLZZOmnioTlAPm9q2B+oUF
-	 FHqFNM+VXYixPp4ba7B+N9De5+wuIZ2O8I2zH/90=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	torvalds@linux-foundation.org,
-	stable@vger.kernel.org
-Cc: lwn@lwn.net,
-	jslaby@suse.cz,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 6.15.1
-Date: Wed,  4 Jun 2025 15:08:09 +0200
-Message-ID: <2025060455-steering-surfboard-abe4@gregkh>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmLm0Bld"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e740a09eae0so5999688276.1;
+        Wed, 04 Jun 2025 06:08:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749042506; x=1749647306; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tC9iYEXmlPpatd1qYNBGszNIrKERHR8YSkcQ5CjfbMM=;
+        b=HmLm0BldqO7Ek7jmM2TV8l+PnxkE8GY6sOAEjtYY2JNREhuH9ByKmot6YaO4qnt+NE
+         FwMyDdBkij2cKObnWIixaGP7+8PIRxT7aZk6TMwfW9zb1vOgRXlguY0oyotpAUWUaIvZ
+         NGkq6TNMlEEjDCnUhpGkH+VvLJFcYTnAb9qvKC8HCcnLh1+Wp0XVl2nnPCa2KeeVjEnr
+         aQR+tQxDlnwwKWi8eCktPm7bIrKOcFTm8Yey8P7n02FBfXdEdWRRUcGVyX7XuTBRGkWw
+         E8OLdokfJ19yH9gKTzzxEgLoaxRaoCyv7hvveAV8qLEXiI3ssUy0DhAD5lOheTg3+i4f
+         VRAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749042506; x=1749647306;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tC9iYEXmlPpatd1qYNBGszNIrKERHR8YSkcQ5CjfbMM=;
+        b=Mf+YkkI7GahbbKx711DfuGfM5FwX76CLWFl0hqgBJs7ff2IwJsg3r0Jga6m+1F9vnK
+         8/K0J2zgvVEEbhUfXhhGDzzLjMtplLUnY8jh6rQc9wIliYkDASv4jBlvVtv2opqUE69B
+         5zUz/uNAx33jGRAGybwS2lx0UCZoZvCYQadJidYkgfzXbPLgp4VdcD0AemGTpjM52eBS
+         wt64n0noLhyTF0g5XjsSdm0Oj9z9NJ1Q0vZpx/eXtSBG5IXi8YrTrFKZkA9EgA6AMsWN
+         Bl4ERvJkUfE/GF1HVLha6NPIXs4sQg92J8Cdj4p9c85/cmvwXi3uvAA6KxSpdzo4QpPR
+         Tx5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXhuCSMtK1ThGALKPL7kTWia0dTu//wcXL90Mtn7U53fzzoJcjsqKdFfyQGwg9Z7W0eriE3EtMmTWoFfvs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd++VKZPw9JjPyy/Afy1OtlWZV/RIybI6byBRsmmhhKMO+d78b
+	tNj4EIVj7Q3BDwFxZGNplS56u+W5227JOtvv2icqwwt2vkb/UB+ZcOZJNukYZhN5YWC3r+ByRUt
+	sV2MtV7HrfQ7J/HLd2MgxzS3cj+zyoqAjA1QrQDw=
+X-Gm-Gg: ASbGncthO5G9qK841YYt1XcjFR7pRBEwkcwkFuIauEAdxhQquK+TvbP2BrxoM+pW6ND
+	1g320izw/HFgjCQqh5S9WPOQ8hbjMW82yLFYJd+mvtvkhi2ULGXnE47cXx279kJKOpqf08F503l
+	ekla4/okoFWz0rl4G+XSjm1v19+xEM0Yo=
+X-Google-Smtp-Source: AGHT+IF7alnMbrbqO9NpYJkpsB5jxOjXxEiktzWLUbq/kLNxP6YnbLIfTtGPBT1xFbh0wT4mofPVUoUINuQKSsuFkGw=
+X-Received: by 2002:a05:6902:10c1:b0:e81:7e16:aac1 with SMTP id
+ 3f1490d57ef6-e817e16e42bmr2304215276.35.1749042505640; Wed, 04 Jun 2025
+ 06:08:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250603221416.74523-1-stefano.radaelli21@gmail.com>
+ <54c4a279-a528-4657-8319-c9374add54b7@lunn.ch> <CAK+owoihxp-2xAvFfVthvNELshti_3V-pFgD7D7jzd1XqiLgGQ@mail.gmail.com>
+ <d5f891d7-d24a-4f85-b59d-313b925c4495@lunn.ch>
+In-Reply-To: <d5f891d7-d24a-4f85-b59d-313b925c4495@lunn.ch>
+From: Stefano Radaelli <stefano.radaelli21@gmail.com>
+Date: Wed, 4 Jun 2025 15:08:09 +0200
+X-Gm-Features: AX0GCFs1swEQiYv2NQSRcTQZ_03Yg7U17iAxPh_wyGwxwshbS1HFhm1xVLPn_sI
+Message-ID: <CAK+owog69JktbsBhHZj7ULYXmH_bZ-CO8=QEMqBVc0mjp8jz6g@mail.gmail.com>
+Subject: Re: [v1] arm64: dts: freescale: imx93-var-som: update eqos support
+ for MaxLinear PHY
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-I'm announcing the release of the 6.15.1 kernel.
+Hi Andrew,
 
-All users of the 6.15 kernel series must upgrade.
+To clarify more precisely: hw team told me that the required 2 ns
+RGMII delays are
+implemented directly in hardware inside the SOM itself, through passive delay
+elements (filters) placed on the RX and TX lines. There is no reliance on PHY
+strap settings or any kind of delay configuration via registers.
 
-The updated 6.15.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.15.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+This means:
+- The delays are fixed and cannot be changed via software.
+- From the point of view of any carrier board, the interface is
+already timing-compliant.
 
-thanks,
+Given that, using phy-mode = "rgmii" in the DTS is intentional and
+correct, since the
+necessary internal delays are already guaranteed by the SOM hardware design.
 
-greg k-h
+Let me know if further clarification would be helpful, would it help if I add a
+clarification about this in the commit message for v2?
 
-------------
+Best regards,
+Stefano
 
- Makefile                                                 |    2 
- arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi           |    4 
- arch/arm64/boot/dts/qcom/ipq9574.dtsi                    |    2 
- arch/arm64/boot/dts/qcom/sa8775p.dtsi                    |  248 +-----------
- arch/arm64/boot/dts/qcom/sm8350.dtsi                     |    2 
- arch/arm64/boot/dts/qcom/sm8450.dtsi                     |    2 
- arch/arm64/boot/dts/qcom/sm8550.dtsi                     |    2 
- arch/arm64/boot/dts/qcom/sm8650.dtsi                     |    2 
- arch/arm64/boot/dts/qcom/x1e001de-devkit.dts             |    6 
- arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts  |    4 
- arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts    |    2 
- arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts    |   14 
- arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts |    7 
- arch/arm64/boot/dts/qcom/x1e80100-qcp.dts                |    6 
- arch/arm64/boot/dts/qcom/x1e80100.dtsi                   |  309 +++++++--------
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi            |   40 +
- arch/arm64/boot/dts/rockchip/rk3576.dtsi                 |    2 
- arch/arm64/boot/dts/ti/k3-am62-main.dtsi                 |    2 
- arch/arm64/boot/dts/ti/k3-am62a-main.dtsi                |    2 
- arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi   |    2 
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso      |    3 
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso      |    2 
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso |    2 
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi                 |    2 
- arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts         |   13 
- arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso |   35 +
- arch/arm64/boot/dts/ti/k3-j721e-sk.dts                   |   31 +
- arch/arm64/boot/dts/ti/k3-j722s-evm.dts                  |    8 
- arch/arm64/boot/dts/ti/k3-j722s-main.dtsi                |    4 
- arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi |    2 
- drivers/iommu/iommu.c                                    |   34 +
- drivers/perf/arm-cmn.c                                   |   11 
- fs/coredump.c                                            |   65 ++-
- fs/pidfs.c                                               |    1 
- include/linux/coredump.h                                 |    1 
- include/linux/iommu.h                                    |    2 
- net/sched/sch_hfsc.c                                     |    9 
- 37 files changed, 446 insertions(+), 439 deletions(-)
-
-Abel Vesa (1):
-      arm64: dts: qcom: x1e80100: Fix PCIe 3rd controller DBI size
-
-Alok Tiwari (1):
-      arm64: dts: qcom: sm8350: Fix typo in pil_camera_mem node
-
-Christian Brauner (3):
-      pidfs: move O_RDWR into pidfs_alloc_file()
-      coredump: fix error handling for replace_fd()
-      coredump: hand a pidfd to the usermode coredump helper
-
-Greg Kroah-Hartman (1):
-      Linux 6.15.1
-
-Johan Hovold (5):
-      arm64: dts: qcom: x1e001de-devkit: mark l12b and l15b always-on
-      arm64: dts: qcom: x1e80100-dell-xps13-9345: mark l12b and l15b always-on
-      arm64: dts: qcom: x1e80100-hp-x14: mark l12b and l15b always-on
-      arm64: dts: qcom: x1e80100-qcp: mark l12b and l15b always-on
-      arm64: dts: qcom: x1e80100-yoga-slim7x: mark l12b and l15b always-on
-
-Judith Mendez (4):
-      arm64: dts: ti: k3-am62-main: Set eMMC clock parent to default
-      arm64: dts: ti: k3-am62a-main: Set eMMC clock parent to default
-      arm64: dts: ti: k3-am62p-j722s-common-main: Set eMMC clock parent to default
-      arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
-
-Juerg Haefliger (1):
-      arm64: dts: qcom: x1e80100-hp-omnibook-x14: Enable SMB2360 0 and 1
-
-Karthik Sanagavarapu (1):
-      arm64: dts: qcom: sa8775p: Remove cdsp compute-cb@10
-
-Ling Xu (1):
-      arm64: dts: qcom: sa8775p: Remove extra entries from the iommus property
-
-Lukasz Czechowski (1):
-      arm64: dts: rockchip: fix internal USB hub instability on RK3399 Puma
-
-Niravkumar L Rabara (1):
-      arm64: dts: socfpga: agilex5: fix gpio0 address
-
-Pedro Tammela (1):
-      net_sched: hfsc: Address reentrant enqueue adding class to eltree twice
-
-Robin Murphy (5):
-      perf/arm-cmn: Fix REQ2/SNP2 mixup
-      perf/arm-cmn: Initialise cmn->cpu earlier
-      perf/arm-cmn: Add CMN S3 ACPI binding
-      iommu: Avoid introducing more races
-      iommu: Handle yet another race around registration
-
-Sebastian Reichel (1):
-      arm64: dts: rockchip: Add missing SFC power-domains to rk3576
-
-Siddharth Vadapalli (3):
-      arm64: dts: ti: k3-j722s-evm: Enable "serdes_wiz0" and "serdes_wiz1"
-      arm64: dts: ti: k3-j722s-main: Disable "serdes_wiz0" and "serdes_wiz1"
-      arm64: dts: ti: k3-j784s4-j742s2-main-common: Fix length of serdes_ln_ctrl
-
-Stephan Gerhold (13):
-      arm64: dts: qcom: ipq9574: Add missing properties for cryptobam
-      arm64: dts: qcom: sa8775p: Add missing properties for cryptobam
-      arm64: dts: qcom: sm8450: Add missing properties for cryptobam
-      arm64: dts: qcom: sm8550: Add missing properties for cryptobam
-      arm64: dts: qcom: sm8650: Add missing properties for cryptobam
-      arm64: dts: qcom: x1e001de-devkit: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e80100-asus-vivobook-s15: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e80100-hp-omnibook-x14: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e80100-qcp: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e80100: Fix video thermal zone
-      arm64: dts: qcom: x1e80100: Apply consistent critical thermal shutdown
-      arm64: dts: qcom: x1e80100: Add GPU cooling
-
-Yemike Abhilash Chandra (7):
-      arm64: dts: ti: k3-am62x: Remove clock-names property from IMX219 overlay
-      arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in IMX219 overlay
-      arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in OV5640 overlay
-      arm64: dts: ti: k3-am68-sk: Fix regulator hierarchy
-      arm64: dts: ti: k3-j721e-sk: Add DT nodes for power regulators
-      arm64: dts: ti: k3-j721e-sk: Remove clock-names property from IMX219 overlay
-      arm64: dts: ti: k3-j721e-sk: Add requiried voltage supplies for IMX219
-
+Il giorno mer 4 giu 2025 alle ore 14:01 Andrew Lunn <andrew@lunn.ch> ha scritto:
+>
+>
+> 61;8001;1cOn Wed, Jun 04, 2025 at 09:37:39AM +0200, Stefano Radaelli wrote:
+> > Hi Andrew,
+> >
+> > I double-checked with our hardware team, and it turns out that all required
+> > RGMII delays are already handled by the hardware on the SOM (trace
+> > tuning + PHY config).
+>
+> What do you mean by PHY config?
+>
+> The four RGMII modes you can use with phy-mode are purely about the
+> PCB. If you have the PHY strapped to add delays, what does not count
+> for PCB, and if you are not careful, future software could reconfigure
+> it.
+>
+>         Andrew
