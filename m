@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F5A2C3261;
-	Wed,  4 Jun 2025 11:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9D828E5EF;
+	Wed,  4 Jun 2025 11:29:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749036556; cv=none; b=k5lhD/TYaddcO8OJPZrsEh5yYD1ev3enwT7dTE7X4mN7LAAPKfhJ5GkAm9F27b9Eag45hMkpIxOPlDh8YR7U3R/vkZr4DRZyLNKtt5yDVWuOVExgwKumjdqfUagO7XTWMcLZHSUJUuNLIT6gbrnoPbqVEtigwLHS85po2Pp3uYU=
+	t=1749036566; cv=none; b=qbM24bFRKSagCncJ7ZvDpWPO+WRX141i53r43YTh/Qw1LZ8k2KDZjEHaZX9JjNTrD635pQKaeloZDif3/F1ewNkeHOJ1/T9Xx6CcqL3OGnom+C0C+IgT+I9BtvW6RYOW1+I2l1htpfLd+yGiGPAH+rFtbyPHeoF6qDXTjg9WmDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749036556; c=relaxed/simple;
-	bh=FMbpwrcMsbvsG7V7LiHvP4zL0l+No3TsOeEeyaxVZiQ=;
+	s=arc-20240116; t=1749036566; c=relaxed/simple;
+	bh=d2BIPMNimzjXbgSV6A0P6u4TSLLraPPLngeklZCCS+8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fvxMyn55iB9xrX+Ur8yNNxh96c26QLUiQI06jzW5xgxHEoiLGqPZl+2AnpUSHY3w2CVAmzKhlvfUFE4ZLYrW51OXb+9nRUKMjzqW7lE+8x+I9VSYcxX3w0TWSuflPlZRj06Pktx/R9T2DCO/3jCQyd5VKszvCxgHWzya5r4Ucu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2Bg19LN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=FVVgpPeI+nQ4PfYvtYR6zMmVB8NFb2UkhfMD5Ye4RW9URm/wf9RYFRztAW2zVgA6mK1m6wDRbrx/sJsB4QyerBCp3EU/ruXcqCcVS2Lxwyq0NDztBlTfl2RXQPt17bG3ZCwfKjKedLD97MPlvtg2r/WBMztPSpQM9WDhQ4BigOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qCld74uj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2Bg19LN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416B2C4CEE7;
-	Wed,  4 Jun 2025 11:29:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qCld74uj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C18BC4CEE7;
+	Wed,  4 Jun 2025 11:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749036556;
-	bh=FMbpwrcMsbvsG7V7LiHvP4zL0l+No3TsOeEeyaxVZiQ=;
+	s=k20201202; t=1749036566;
+	bh=d2BIPMNimzjXbgSV6A0P6u4TSLLraPPLngeklZCCS+8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y2Bg19LNfdhwHjTFfRUB/s4mxacX0gaBix3KUcvv/lDnmiBLFQY32mNrCwtzoBb+l
-	 JI8RR4VzHLEk0HDnWceWtEu8AdwFDHLXDT7PXA0+BArj8RFz2uxi3w1h+ltYChLxSX
-	 eOBbx/YFohlg5oOqtcEzg8zjQ1J60MdjzVLbfUIep+XOFWKXYb9afD/pRDlP3WRygk
-	 polOc65+Xtr2XgL4uv6Jrry8jpisIqZ83f+MJbz3lIqrtL7w47y/tuz/6zrX+0N1Ct
-	 XAi7qYxX+w5nxxlEIVBZlyNYqPHxOZkFelGvyNxQ1QT6s6MitjGFqS5Q7Su5Gw2EvS
-	 cpX4ZJnk7HXmA==
-Message-ID: <1ab9d9d5-fe0c-4ed3-b059-7be8465d79c6@kernel.org>
-Date: Wed, 4 Jun 2025 13:29:08 +0200
+	b=qCld74uj1bdGLZvkMJaf+A8oQK0B+MBUAmM/eTkAhSfJHfYsdGVjnR9AsxXuVgeEc
+	 NEh3h132u/4CgE4wLt4BuCvWolfFTjeuaJZRS/4TmZI87KFnLfiuD2+ciLcl8i/Wms
+	 jt5+6dcVmIuTgt4GXxtMvoKOAfEqyrDeGYpAumthMjX6bSk69qN00tT3GaLwgIhLFO
+	 x3rMhPJnPtpcokt2XOrhnp1ZghyWqtSYc6AnhbJMp9BTExv3/SPV43q3RqRmOwDX89
+	 DHzeqepI1u0epFvuBYrRBLHVmvZrkhvTc9J0h2rcAhtZm4KDHmgz7dtKPZDz0J458z
+	 NKJgh5Umh3w3A==
+Message-ID: <71a7422a-f139-404f-8759-54dc1510b571@kernel.org>
+Date: Wed, 4 Jun 2025 13:29:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] dt-bindings: nvmem: convert lpc1857-eeprom.txt to
- yaml format
-To: Frank Li <Frank.Li@nxp.com>, Srinivas Kandagatla <srini@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
+Subject: Re: [PATCH v2 1/1] dt-bindings: trivial-devices: Add compatible
+ string synaptics,synaptics_i2c
+To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+ Noah Wang <noahwang.wang@outlook.com>,
+ Naresh Solanki <naresh.solanki@9elements.com>,
+ Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>,
+ Michal Simek <michal.simek@amd.com>, Grant Peltier
+ <grantpeltier93@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
  "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
  <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: imx@lists.linux.dev
-References: <20250603152836.1069326-1-Frank.Li@nxp.com>
+Cc: imx@lists.linux.dev, wahrenst@gmx.net
+References: <20250603151239.1065763-1-Frank.Li@nxp.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,17 +98,24 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250603152836.1069326-1-Frank.Li@nxp.com>
+In-Reply-To: <20250603151239.1065763-1-Frank.Li@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 03/06/2025 17:28, Frank Li wrote:
-> Convert lpc1857-eeprom.txt to yaml format.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
+On 03/06/2025 17:12, Frank Li wrote:
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 5d2a7a8d3ac6c..5b9c7ab6d8185 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -1496,6 +1496,9 @@ patternProperties:
+>    "^synopsys,.*":
+>      description: Synopsys, Inc. (deprecated, use snps)
+>      deprecated: true
+> +  "^synaptics,.*":
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Please place it in alphabetical order.
+
 
 Best regards,
 Krzysztof
