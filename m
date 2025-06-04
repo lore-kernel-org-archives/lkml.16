@@ -1,200 +1,172 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BC3146D6A
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA91438384
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749051749; cv=none; b=qBGN/mlxeOJFYHUSP7sA4xDzi3ta0uF/bkekwg17I6bwJe0Nf6dgCTJl1RXgRzKjQDo4TLxVQPP+yX+rz5ilriUlgajVh+k+r+xrRHqyYx9+ORKMC0UlWy1lgT58d54NSxZdyR6uPMZZri4uk5oAlwrBR5gECRoyYAACzahH5XQ=
+	t=1749051773; cv=none; b=Frd9kllHg+ywcHfWuKOcQifIYHrx6SSuXbUMGWzRUjEy0NuCmRsLCUMren/Fuz6n/m1xG8ja6TgrAZkuZIRyzZiMoItvgimyLRq3lovjwHGnScumrjgzB/G8xCciPD7drJ+QvGNEp4P83rdub7k8eMMAaw2O1ko3V386xwqMro0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749051749; c=relaxed/simple;
-	bh=hhP/A7RLvwyRKQC/O9VmZbiaAZnWTJN7KauhrQU2JQE=;
+	s=arc-20240116; t=1749051773; c=relaxed/simple;
+	bh=Qhrjv6hZn1nxtaluhsK7WsV/D9fLlQ6PICV6uLJb4Ac=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n6a7Xm2AcCqXTZ/wejHiLS8mvAcL3nheeAS9Cs0jK8Cz9H+Ftw0OPZn1FhnPztW9KQQXT1NgSYOHWLafWTGFujrYXllim8ffNpReCA4HJAIR+qOt6Xkg0JZYolxE/p0xB0oOYGxB+DW839FY2VWwjBY03XhnYPek9CgNR/p5WSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qk3leJ1s; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=LCxiByOUhdtF9BBPii6IsSsQL5UOWybGg43cDGxbAIyrPviXYepbvT0SJzsEsVqIJr2y2d9M6pgLMusdo2p46JXHp1aQ/dW2j9JXXZKkdOJGVNAwTS7lqeu3hLXWIXTjabgN8sNves8QtoZ42YM206VmHE130vSbSXbkrhPkkEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gWiZVUlL; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qk3leJ1s"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso10882a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:42:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gWiZVUlL"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad88d77314bso1249613266b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:42:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749051746; x=1749656546; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G7t9vtmyioTV7HgLglXfMiupzKVCAToEG32ldpNqXxc=;
-        b=qk3leJ1sLkzmXV1+gxW6N3B+/brtpW9ZXyXW+pvebFw8FeomAjHD6tRA+znmnCmNjB
-         A4U0idLE1xOmZxTP4Pw3FAtHNEyHG/VVvP5RuKIV2C83sr3QmsfbxK6QcVn1XRdnuQ/L
-         OzXKCGKH8d40pfH/xh0zUJhUSYZxpVpnvHqo4/g9TkOCWGENd/YxfVHHucz/M/YTWzHs
-         o28gLU8V7QzEL67I2P2ysSUrzjWq4eNpsW3TpPiLFuOLdhOiKkJZ+40QMGBf5n6P3b1T
-         XCHPzZc3aQE56Qf/1jyebCDtVB9ccwPU0yj1PiRO/0cBUW5crH5KX7/1euysXqYwGhrT
-         igOw==
+        d=linux-foundation.org; s=google; t=1749051769; x=1749656569; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=72BR0mnOxHdy2FcQxO8/Op0YCccM3iuq7r9CRzFPZg4=;
+        b=gWiZVUlLggnsgXVifPLmrLnlLRfOiNjVA2EpNYUwB5CwPjp7cuzucRhIbL8w4/Qsq2
+         bRAwvZJbtyUvsuduQS5qqerwYmlmb7bioqa1ZzQPqWp5GyDw1U7oStiSVMd8cETpvMYk
+         czbnUqBNM3IiD2KW04LRO8/d/qqPIOFnFblf0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749051746; x=1749656546;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G7t9vtmyioTV7HgLglXfMiupzKVCAToEG32ldpNqXxc=;
-        b=IbhTMI4i31/EUcYkY3bAxXBbfU9tudsJBgGTuDQR6GK7RxkjR3V6s241V/lO3DYvPZ
-         gCjgly3H8f38dw3bcmJvIHRXwTNKV0JmdJfpncbNmc5MBaPDAXLJKP8iNfiMo+PVxN32
-         fmjWc+ixWqijsgsSlMY+fo2qU3J/teVyPJ6tQEm3QUTCgrLihIuFlhfAU/gf+n+7E4QQ
-         uc9wn5yMuP7VCC1RujekWByUgJHkUrh/dGEvsiK3qK5KUrj59zyvay2OVg98B8XnN5Lf
-         MXk1qbqeLjXTJqA/c6vvFHidLhGI24h3Lvefp8JvR32C7VtHgvxBN72Q1b+OL/rerva7
-         /i3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXt4SOALzUFs64XPxBHwRWn2RmNMGyIz4S00M/5wMp2O01pZitGaF8pNK7IwTB056IH5agj9CkW5K7D5+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO5drh+WL0N9jDNCXcpb7xC+xh8PFGhaNmbaU1Q96AOBQG9ycE
-	S17vmJl/1KmGoGrGj2qb2djGZnEqTwfoFIlJD3NdMY2Zszd/fppzWl2TEZmsmDnTHa56k6XY+TT
-	hRxevMWQ1RX0/RfwG/kdgLJe2MWDolxY+/Ya4C3l8
-X-Gm-Gg: ASbGnctn6nDwfc2m7pQJO8AoIj8WP6NVi7UoNBmlEv2pysuSv//pInYB6hbLGTMSPpF
-	ry2LyZjeCdg3ZZghsdjBnboeIeljVS99GDk1is4Bv1M58nOdRjLDXUsE5s1/Bh7KWX0/1BXExrZ
-	VTbNzzbqK7wGBL5URxhH4eBftWeV4IMVGzCEy8s3sCarX26MxYVFAIyw8k0BFcA46JqMR+X16Lk
-	VV2jtoj
-X-Google-Smtp-Source: AGHT+IGfPx1qQPMXmJnjVKhaEVQluNKuo3ENlcH6cBs0pacjJK5V/ek72eM4MKfZg2Ho+J1PAnctmEkhuhZRW6TjsQE=
-X-Received: by 2002:a50:ee0d:0:b0:606:efc1:949b with SMTP id
- 4fb4d7f45d1cf-606efc199femr93289a12.3.1749051745229; Wed, 04 Jun 2025
- 08:42:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749051769; x=1749656569;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=72BR0mnOxHdy2FcQxO8/Op0YCccM3iuq7r9CRzFPZg4=;
+        b=JJVfgS+WLhtGuiNwGZV9/2UnXo97CCgsPkfBeTKhrES+bxr6pYqB4uJ8q9xYKEfnsQ
+         HylpnrHEka8/caWU0XejjI47LMr5BOtrctpXe2Kq/I8w7cPYO4K5QjMKcqk3cJZgRokI
+         UKLbmGvMfOqI+HyXKvKCIZhUQsL5atfAmfw5PzqMWmPCYMIF/wo3wK8upphRECSJcUdr
+         73dkkP+yhpffzNYG2ZjJoOMCar7/j8f+thlVkopV3sDMNWRp1uSuuE/D0zxwzphcLSe8
+         OVwbc2nuip2KwehiG240X2mU040gaovnSTcgyTJ/9ziN/2Fuq8JM1tFqePgFM+2CCDim
+         mD+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWKsJWaUyAQsyBaWpoIGbsqNgsI8dlqvCmEpNGH4wawfMPg0Mnlj0cLUavvbU1/F8SYePyV6CPd8WidiD0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxcezw7HYnHT5puINQy0SayujrQQ3xkzJ33psGRv+qAwDmVxToA
+	xKrIXXeR4jDvk8mx0N6TI7tBcRgGE8fIyOULlbaiJ720gAYE/K5CamQYXW2h+LeURRT2rVaPFkz
+	DTneiK01zrQ==
+X-Gm-Gg: ASbGncs+ya5ujWGFYKmvFTyc653CRe4rqvZQB6Rc4xLX+frM8t+Am3tokjElo9B2svx
+	Y+dPM05sxXnepKEoB6kz7QzJW/z+SuRxiVAY0/K+3kUoHWVuLI6UK/UgrN2JWL1UkYp5xSNhbzN
+	FZ2QZLwvlaPrE1I0Vpx+3RHHk0iLi9eclDaXn5lrG+VoCsLnOj9gbNJuyMiIV8N4fVrjmf/eyaY
+	y418P/2+mO4snoaAvmmqGu7vLmoOI8ambJmQ8g26gS/P/sk3df5JYgnPvXuUCd6EJBsDJqE1T/X
+	VMYE4s+h7RRqDFdeJ9O5Nc85koM/r2zxC4b2Pkk9bU+fYGRO9iNLyxl6zXTfYP1U1848l6NoQX3
+	vyKHSmVkyaiiw9zply69YvlU6Nw==
+X-Google-Smtp-Source: AGHT+IGwhafMrrrIAtnQfakYUC96IEg8QQZ+VS364EFr7wPvCQcJeclUz4PDIwBgVksVZERA0mZwhA==
+X-Received: by 2002:a17:906:3b4b:b0:add:fa4e:8a7a with SMTP id a640c23a62f3a-addfa4e9117mr204254266b.34.1749051768798;
+        Wed, 04 Jun 2025 08:42:48 -0700 (PDT)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82e846sm1111034766b.70.2025.06.04.08.42.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 08:42:47 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso3195216a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:42:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWj5QvleocpInTOqvwWRfk8c1TV2858RoPtyWo5S8EpcplTlctoPhAUNJZ9nALdjCLLV3jNOw3EJ9OJyr4=@vger.kernel.org
+X-Received: by 2002:a05:6402:50cd:b0:602:ddbe:480f with SMTP id
+ 4fb4d7f45d1cf-606e944ffdbmr3318338a12.9.1749051767165; Wed, 04 Jun 2025
+ 08:42:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
- <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com> <t5uqs6kbzmcl2sjplxa5tqy6luinuysi7lfimbademagop7323@gveunpi3eqyo>
-In-Reply-To: <t5uqs6kbzmcl2sjplxa5tqy6luinuysi7lfimbademagop7323@gveunpi3eqyo>
-From: Jann Horn <jannh@google.com>
-Date: Wed, 4 Jun 2025 17:41:47 +0200
-X-Gm-Features: AX0GCFsCvblCWcy9XKdf8MqurIoG-ndCCsP0NcLQgarcwuDEBT9XXvHYP38LsIc
-Message-ID: <CAG48ez29awjpSXnupQGyxCLoLds72QcYtbhmkAyLT2dCqFzA5Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory snapshot
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+References: <20250604140544.688711-1-david@redhat.com> <fb548cd0-4a6a-4e90-92b8-24c7b35df416@lucifer.local>
+In-Reply-To: <fb548cd0-4a6a-4e90-92b8-24c7b35df416@lucifer.local>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 4 Jun 2025 08:42:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjO1xL_ZRKUG_SJuh6sPTQ-6Lem3a3pGoo26CXEsx_w0g@mail.gmail.com>
+X-Gm-Features: AX0GCFsf8ms4gV6ZUTVFCM9XPKVFpcGv2mCqTXaG91B4GGR1O9kNamR8xKRlH28
+Message-ID: <CAHk-=wjO1xL_ZRKUG_SJuh6sPTQ-6Lem3a3pGoo26CXEsx_w0g@mail.gmail.com>
+Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
 	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org, Peter Xu <peterx@redhat.com>, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+	Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+	Peter Xu <peterx@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 10:32=E2=80=AFPM Pedro Falcato <pfalcato@suse.de> wr=
-ote:
-> On Tue, Jun 03, 2025 at 08:21:02PM +0200, Jann Horn wrote:
-> > When fork() encounters possibly-pinned pages, those pages are immediate=
-ly
-> > copied instead of just marking PTEs to make CoW happen later. If the pa=
-rent
-> > is multithreaded, this can cause the child to see memory contents that =
-are
-> > inconsistent in multiple ways:
-> >
-> > 1. We are copying the contents of a page with a memcpy() while userspac=
-e
-> >    may be writing to it. This can cause the resulting data in the child=
- to
-> >    be inconsistent.
+On Wed, 4 Jun 2025 at 07:49, Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 >
-> This is an interesting problem, but we'll get to it later.
->
-> > 2. After we've copied this page, future writes to other pages may
-> >    continue to be visible to the child while future writes to this page=
- are
-> >    no longer visible to the child.
-> >
->
-> Yes, and this is not fixable. It's also a problem for the regular write-p=
-rotect
-> pte path where inevitably only a part of the address space will be write-=
-protected.
+> Linus's point of view is that we shouldn't use them _at all_ right? So
+> maybe even this situation isn't one where we'd want to use one?
 
-I don't understand what you mean by "inevitably only a part of the
-address space will be write-protected". Are you talking about how
-shared pages are kept shared between parent in child? Or are you
-talking about how there is a point in time at which part of the
-address space is write-protected while another part is not yet
-write-protected? In that case: Yes, that can happen, but that's not a
-problem.
+So I think BUG_ON() basically grew from
 
-> This would only be fixable if e.g we suspended every thread on a multi-th=
-readed fork.
+ (a) laziness. Not a good reason.
 
-No, I think it is fine to keep threads running in parallel on a
-multi-threaded fork as long as all the writes they do are guaranteed
-to also be observable in the child. Such writes are no different from
-writes performed before fork().
+ (b) we historically had a model where we'd just kill processes on
+fatal errors, particularly page faults
 
-It would only get problematic if something in the parent first wrote
-to page A, which has already been copied to the child (so the child no
-longer sees the write) and then wrote to page B, which is CoWed (so
-the child would see the write). I prevent this scenario by effectively
-suspending the thread that tries to write to page A until the fork is
-over (by making it block on the mmap lock in the fault handling path).
+That (b) in particular *used* to work quite well for recovery - a
+couple of decades ago ago.  A kernel bug would print out the
+backtrace, and then kill the process (literally with do_exit()) and
+try to run something else.
 
-> > This means the child could theoretically see incoherent states where
-> > allocator freelists point to objects that are actually in use or stuff =
-like
-> > that. A mitigating factor is that, unless userspace already has a deadl=
-ock
-> > bug, userspace can pretty much only observe such issues when fancy lock=
-less
-> > data structures are used (because if another thread was in the middle o=
-f
-> > mutating data during fork() and the post-fork child tried to take the m=
-utex
-> > protecting that data, it might wait forever).
-> >
->
-> Ok, so the issue here is that atomics + memcpy (or our kernel variants) w=
-ill
-> possibly observe tearing. This is indeed a problem, and POSIX doesn't _re=
-ally_
-> tell us anything about this. _However_:
->
-> POSIX says:
-> > Any locks held by any thread in the calling process that have been set =
-to be process-shared
-> > shall not be held by the child process. For locks held by any thread in=
- the calling process
-> > that have not been set to be process-shared, any attempt by the child p=
-rocess to perform
-> > any operation on the lock results in undefined behavior (regardless of =
-whether the calling
-> > process is single-threaded or multi-threaded).
->
-> The interesting bit here is "For locks held by any thread [...] any attem=
-pt by
-> the child [...] results in UB". I don't think it's entirely far-fetched t=
-o say
-> the spirit of the law is that atomics may also be UB (just like a lock[1]=
- that was
-> held by a separate thread, then unlocked mid-concurrent-fork is in a UB s=
-tate).
+It was wonderfully useful in that you'd get an oops, and the system
+would continue, but that *thread* wouldn't continue.
 
-I think interpreting atomic operations as locks is far-fetched. Also,
-POSIX is a sort of minimal bar, and if we only implemented things
-explicitly required by POSIX, we might not have a particularly useful
-operating system.
+And decades ago, it worked quite well, because the system was much
+simpler, and the likelihood that we held any critical locks was
+generally pretty low.
 
-Besides, I think things specified by the C standard override whatever
-POSIX says, and C23 specifies that there are atomic operations, and I
-haven't seen anything in C23 that restricts availability of those to
-before fork().
+But then SMP happened, and at first it wasn't a huge deal: we had one
+special lock, and the exit path would just clean *that* lock up, and
+life continued to be good.
 
-> In any way, I think the bottom-line is that fork memory snapshot coherenc=
-y is
-> a fallacy. It's really impossible to reach without adding insane constrai=
-nts
-> (like the aforementioned thread suspending + resume). It's not even possi=
-ble
-> when going through normal write-protect paths that have been conceptually=
- stable since
-> the BSDs in the 1980s (due to the write-protect-a-page-at-a-time-problem)=
-.
+But that was literally over two decades ago, and none of the above
+actually ever used BUG_ON(). The page fault code would literally do
 
-No, Linux already had memory snapshot coherency before commit
-70e806e4e645 ("mm: Do early cow for pinned pages during fork() for
-ptes"). Write-protecting a page at a time does not cause coherency
-issues, because letting a concurrent thread write into such memory
-during fork() is no different from letting it do so before fork() from
-a memory coherency perspective, as long as fork() write-locks memory
-management for the process.
+        die("Oops", regs, error_code);
+
+on a fatal page fault. A "BUG_ON()" didn't even exist back then, and
+die() looked like this:
+
+        console_verbose();
+        spin_lock_irq(&die_lock);
+        printk("%s: %04lx\n", str, err & 0xffff);
+        show_registers(regs);
+
+        spin_unlock_irq(&die_lock);
+        do_exit(SIGSEGV);
+
+which tried to simply serialize the error output, and then kill the process.
+
+When it worked, it worked quite well.
+
+(And yes, page faults are very relevant, because this is what BUG
+looked like back then:
+
+    #define BUG() *(int *)0 = 0
+
+so it all depended on that page fault printing out the state and exiting)
+
+But as you can well imagine, it worked increasingly badly with
+increasing complexity and locking depth.
+
+When you come from that kind of "kill the process on errors" and you
+then realize that you can't really do that any more, you end up with
+BUG_ON().
+
+The BUG_ON() thing was introduced in 2.5.0, and initially came from
+debug code in the block layer rewrite.
+
+And in that particular context, it actually made sense: this was new
+code that changed the block elevator, and if that code got it wrong,
+you were pretty much *guaranteed* disk corruption.
+
+But then it became a pattern. And I think that pattern is basically never good.
+
+I really think that the *ONLY* situation where BUG() is valid is when
+you absolutely *know* that corruption will happen, and you cannot
+continue.
+
+Very much *not* some kind of "this is problematic, and who knows what
+corruption it might cause".  But "I *know* I can't continue without
+major system because the hardware is broken sh*t".
+
+In other words, don't use it. Ever. Unless you can explain exactly why
+without any handwaving.
+
+Cloud providers or others can do "panic-on-warn" if they want to stop
+the machine at the first sign of trouble.
+
+                  Linus
