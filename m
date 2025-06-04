@@ -1,71 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9734AEE0;
-	Wed,  4 Jun 2025 15:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31964AEE0;
+	Wed,  4 Jun 2025 15:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749049935; cv=none; b=CxFy6jiHk5gtECKqAc1+HUo6lmxzYfdKabaq88O4xRYENZMGhhIbp2WF4g2qdSUJskY9ehRdlQFeF5Q71+Pd8sfoScAHWN6TPKHsrLDVu/I3wUqaQX9fcXX39keATDRXlLTFtvJ/OFW9sfdaP2j1I7yoca/dwqVcrkfn1eYuOXc=
+	t=1749050028; cv=none; b=hSHmEopB1tiMCrcFnX0n/qOqD6pva4eQoi9nf8/DtdIuoVw+AgqHgVDrLrX9GS+rrsjKo3F9wbJ9u1V4IUF3vO1MvL1XLpfs72v7HFb05Uk/WbARoHUnf0XJlOzqsvsjHB+bQD2E5AINn9wJR3lOl8dYjOqlr9pL1Bxs7SlOWd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749049935; c=relaxed/simple;
-	bh=kq+m0QIAuhIHtYetcNnPRrO7LimxMJSYLr9rALJScj4=;
+	s=arc-20240116; t=1749050028; c=relaxed/simple;
+	bh=8dAZHusb5t2w59SgkutsFjrgtEw1nAA1a6Jg2vrQV5Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CHbdQKkuAx9rxe+vhJ9clJvubUGIpTs3XjmIEm9QhLdM2DbRFvfuQXzC+8UpjSummpFKG57UXpLnV3jDyMr/sWDCvQL4T5FcZeqwiQMd5hrKWg0UaOzTgV4bwsMgBHm8FvSk8BwpUikHY9HYJ3bFzVIy2nzt14DkFwP8CLnXwYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OfCl6ftF; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=F3ZBPqRAUOEHLLLhWX1TNY9IE29KLagfdoY1aGxhyNGDx2W2emvYdviCeNKwHmSpEmi4IXq2LK4S2kwOm6qC1a3p+MljCBLilQZsv6mItQxsukriw1/Chw2p39J20erHvfBjkYtULkfrIgsb6Pjx3r/3E4kU6/NrRoS8yrCtCiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=m38/as1G; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OfCl6ftF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749049934; x=1780585934;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kq+m0QIAuhIHtYetcNnPRrO7LimxMJSYLr9rALJScj4=;
-  b=OfCl6ftFd+Cp/dI08G0qG8txLoZl9dLE9Ob6HeuwHvG0FvZpa1y1p8AD
-   qbBrgQylWSZXN83/RNqbi/XcdQhDzhRjuqeE87WkgEO7i20VmCceu4PMT
-   dff6d99vTmoRBQJdEJ6rkRBm4auyyVGEga62ZnJLShaEZgoohk3mKXlyE
-   p49+SUqo7a2RKPRPmlRJ3RXSffMsxnsgTonQgOplKoB0tEWxnKXNUNWeC
-   xZ9/rIm2ijPYfZbKJbROFkfI3PFpmo1E2FsK96r5fylopXrWNA2wvb8uS
-   KgNczbPnh1NvZU3oEws5x1M5KpdGfYpUm7wL9n9UGt+tPUPR8x+Mznw2h
-   Q==;
-X-CSE-ConnectionGUID: 3z+f9kVoRN2NQLtcvbiy3w==
-X-CSE-MsgGUID: R18cy9dWSHWtl4R3z8UwMg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="61801497"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="61801497"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 08:12:13 -0700
-X-CSE-ConnectionGUID: CcnZPyNVRBCEQq/AqSlGAQ==
-X-CSE-MsgGUID: lW6TtIWQSMmXLN2UgyyDFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="145179148"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 08:12:14 -0700
-Date: Wed, 4 Jun 2025 08:17:20 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Michael Kelley <mhklinux@outlook.com>, linux-acpi@vger.kernel.org,
-	Wei Liu <wei.liu@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Yunhong Jiang <yunhong.jiang@linux.intel.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Chris Oo <cho@microsoft.com>, Ricardo Neri <ricardo.neri@intel.com>,
-	linux-hyperv@vger.kernel.org,
-	Haiyang Zhang <haiyangz@microsoft.com>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="m38/as1G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=q6OKa9Bkbeq4QpUjqQVjbZ+Iqs4t8ntQfpdJAOPX7Vc=; b=m38/as1GRwuEE/yLC+KrimAYLN
+	p5Up5uPCb0ci1r27PA7kzZouknOp+tn2vZc+nNydEmWtumnypEZYwYvZ8Hhl/Ii4/+/m08Jx5yO8c
+	q/uzfxVyk1WbcynBj15QrlowY7Ez2XH//58JJL9eZHAw+FxgORYT/5ir59n/UledaC6Y=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uMpoF-00Egtl-Pm; Wed, 04 Jun 2025 17:13:43 +0200
+Date: Wed, 4 Jun 2025 17:13:43 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Stefano Radaelli <stefano.radaelli21@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	x86@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 03/10] dt-bindings: reserved-memory: Wakeup Mailbox
- for Intel processors
-Message-ID: <20250604151720.GC29325@ranerica-svr.sc.intel.com>
-References: <20250603-rneri-wakeup-mailbox-v4-0-d533272b7232@linux.intel.com>
- <20250603-rneri-wakeup-mailbox-v4-3-d533272b7232@linux.intel.com>
- <174900070284.2624702.4580450009482590306.robh@kernel.org>
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [v1] arm64: dts: freescale: imx93-var-som: update eqos support
+ for MaxLinear PHY
+Message-ID: <1d755cbf-4dee-4784-98b7-e72061219e3f@lunn.ch>
+References: <20250603221416.74523-1-stefano.radaelli21@gmail.com>
+ <54c4a279-a528-4657-8319-c9374add54b7@lunn.ch>
+ <CAK+owoihxp-2xAvFfVthvNELshti_3V-pFgD7D7jzd1XqiLgGQ@mail.gmail.com>
+ <d5f891d7-d24a-4f85-b59d-313b925c4495@lunn.ch>
+ <CAK+owog69JktbsBhHZj7ULYXmH_bZ-CO8=QEMqBVc0mjp8jz6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,77 +54,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <174900070284.2624702.4580450009482590306.robh@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAK+owog69JktbsBhHZj7ULYXmH_bZ-CO8=QEMqBVc0mjp8jz6g@mail.gmail.com>
 
-On Tue, Jun 03, 2025 at 08:31:42PM -0500, Rob Herring (Arm) wrote:
+On Wed, Jun 04, 2025 at 03:08:09PM +0200, Stefano Radaelli wrote:
+> Hi Andrew,
 > 
-> On Tue, 03 Jun 2025 17:15:15 -0700, Ricardo Neri wrote:
-> > Add DeviceTree bindings to enumerate the wakeup mailbox used in platform
-> > firmware for Intel processors.
-> > 
-> > x86 platforms commonly boot secondary CPUs using an INIT assert, de-assert
-> > followed by Start-Up IPI messages. The wakeup mailbox can be used when this
-> > mechanism is unavailable.
-> > 
-> > The wakeup mailbox offers more control to the operating system to boot
-> > secondary CPUs than a spin-table. It allows the reuse of same wakeup vector
-> > for all CPUs while maintaining control over which CPUs to boot and when.
-> > While it is possible to achieve the same level of control using a spin-
-> > table, it would require to specify a separate `cpu-release-addr` for each
-> > secondary CPU.
-> > 
-> > The operation and structure of the mailbox is described in the
-> > Multiprocessor Wakeup Structure defined in the ACPI specification. Note
-> > that this structure does not specify how to publish the mailbox to the
-> > operating system (ACPI-based platform firmware uses a separate table). No
-> > ACPI table is needed in DeviceTree-based firmware to enumerate the mailbox.
-> > 
-> > Add a `compatible` property that the operating system can use to discover
-> > the mailbox. Nodes wanting to refer to the reserved memory usually define a
-> > `memory-region` property. /cpus/cpu* nodes would want to refer to the
-> > mailbox, but they do not have such property defined in the DeviceTree
-> > specification. Moreover, it would imply that there is a memory region per
-> > CPU.
-> > 
-> > Co-developed-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> > Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> > ---
-> > Changes since v3:
-> >  - Removed redefinitions of the mailbox and instead referred to ACPI
-> >    specification as per discussion on LKML.
-> >  - Clarified that DeviceTree-based firmware do not require the use of
-> >    ACPI tables to enumerate the mailbox. (Rob)
-> >  - Described the need of using a `compatible` property.
-> >  - Dropped the `alignment` property. (Krzysztof, Rafael)
-> >  - Used a real address for the mailbox node. (Krzysztof)
-> > 
-> > Changes since v2:
-> >  - Implemented the mailbox as a reserved-memory node. Add to it a
-> >    `compatible` property. (Krzysztof)
-> >  - Explained the relationship between the mailbox and the `enable-mehod`
-> >    property of the CPU nodes.
-> >  - Expanded the documentation of the binding.
-> > 
-> > Changes since v1:
-> >  - Added more details to the description of the binding.
-> >  - Added requirement a new requirement for cpu@N nodes to add an
-> >    `enable-method`.
-> > ---
-> >  .../reserved-memory/intel,wakeup-mailbox.yaml      | 48 ++++++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> > 
+> To clarify more precisely: hw team told me that the required 2 ns
+> RGMII delays are
+> implemented directly in hardware inside the SOM itself, through passive delay
+> elements (filters) placed on the RX and TX lines. There is no reliance on PHY
+> strap settings or any kind of delay configuration via registers.
 > 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> yamllint warnings/errors:
-> ./Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mailbox.yaml:20:111: [warning] line too long (113 > 110 characters) (line-length)
+> This means:
+> - The delays are fixed and cannot be changed via software.
+> - From the point of view of any carrier board, the interface is
+> already timing-compliant.
 
+Great. Please add a comment in the DT explaining this. 99% of the time
+'rgmii' is wrong, but this is the 1%. We should make it clear this is
+not just another cut/paste error, but very intentional and correct
+because of the PCB design.
 
-I did see this warning. I also see that none of the existing schema with
-links break them into multiple lines.
+There is a patch to checkpatch.pl i want to introduce in the next
+development cycle which will look for 'rgmii', and if found, look on
+the line before for a comment including the word 'PCB'. If it finds
+'rgmii' without such a comment it will issue a warning. So it would be
+nice to avoid that in your correct case.
 
-Now I see that the yamllint configuration has allow-non-breakable-words: true
-
-I will put the link in separate line.
+     Andrew
