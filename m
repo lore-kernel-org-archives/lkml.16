@@ -1,67 +1,74 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A152E22A1FA
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B66928F921
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749043688; cv=none; b=MNbISu6FtD+AfdvcTUu1X3CcpiyV5QZQ8AQKIaaimPRgJZcD62uvixJQCJgsw+tIbKcergCfOBgFC+RPXrfG5j6tEyFB8Ny2AtkP/x73jK0TdOJ1zCEZjJxY2jBPLOfeOlIDO70lIIy7RTfJWFbe7dNiwHBvVqwE9Yp8T4tAJG4=
+	t=1749043813; cv=none; b=YiCp2HKT0nClVRP3nWSAZyZo3WJGqLW/567l6TJhk6SovT8Uq9EqHwezDVwOa10MBbzNSGbLiHEEvTuBYjwF0Tz9QdMoVBzTI3MDl1U8zE3S+nLvb7Nu/HJc1rkmg6qJ9KKd5zjtMeBHtLQzm0i6pmn6gednyemMawEuithMeeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749043688; c=relaxed/simple;
-	bh=VA7VOLwtuK5bEKGScb94N6sOsfOefVtC5RnXa5yWuQA=;
+	s=arc-20240116; t=1749043813; c=relaxed/simple;
+	bh=DJDT9AInBT4ZBXbnpZMDD3OPwVP1JNHKWyTYB41+vgw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sXeD5jJMV69XwmBPpVYgCsfystY2WR+AJMsxcNP1036NBArIAcIwFb6IM9p6t8f+69UICh8BQRPCKLcp8WGCqgRpP7FsWJEND16RKDGz8rKKChBFuq/F85q+hwQtJT6tII8AVhG2lSPetzG3+Ck8voCB7QskUchnbMJqjZmScgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=R0bw2sZX; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=i1UO+V8miSeFnFCfyl8f42v3uPu6H1MR8EhLnKWlQynHomWu4D+X97ZCZC+hHRBk0u3Qk+on3mN8ZUj78BbKfrK/8NV+JfDYMCsqtq2uN1Z6F/twE2+pIBOhl5WTDcgIoUKOyeK/HBTljzqTzH3JWjRbtifNBVWpA4ArxAmmQUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P7OjiSZA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="R0bw2sZX"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5545LKpO017568;
-	Wed, 4 Jun 2025 13:27:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=SvJHtp
-	wU5FS2FH2sEMqFtRQCjQKN+NWI1URkJw+uf/s=; b=R0bw2sZXalP3XqKFeDpVzu
-	+TcPYlnNHzVQjJHMjUrxeSElXJ29OS40ej9JPJhXsbFjXiimbOIQfXyB9fvBgpgn
-	uIwVnezweKWoU+wjzJr4FkxC4NYEgJWMxmYcMSqRxErIlVfC3ha0VTJ5Xt/+E08A
-	uOZpAeLjSwKlLHVxLvPJ73ztIwzm/z41zAt+fs65EupYx6B6NDxSnBBODp4cXeXC
-	Fn+38DBD8/utOII8cM4smO+su3D6S50opeNwAldphKH/dEjMqL477ozTLJbxudTO
-	p77oRyI8gXGGKvjgcAXDm78sNyp70UfMjLTlDaHVtJqCm11UkawcIG6oUxGAR0hQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 472fwuj9bs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 13:27:43 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 554CSsEt002771;
-	Wed, 4 Jun 2025 13:27:42 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 472fwuj9bp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 13:27:42 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 554C6lla022517;
-	Wed, 4 Jun 2025 13:27:41 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 470c3tg2vu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 13:27:41 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 554DReDo66978170
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 4 Jun 2025 13:27:40 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE36A58068;
-	Wed,  4 Jun 2025 13:27:40 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 22F4558052;
-	Wed,  4 Jun 2025 13:27:35 +0000 (GMT)
-Received: from [9.39.21.166] (unknown [9.39.21.166])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  4 Jun 2025 13:27:34 +0000 (GMT)
-Message-ID: <de209828-d237-4912-905b-8c7de7e5734d@linux.ibm.com>
-Date: Wed, 4 Jun 2025 18:57:33 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P7OjiSZA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749043811;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wM730wYdKzGLtqTwQp0WD4PZQ3ILvslvUEZgXXpTyII=;
+	b=P7OjiSZArcKxSBVMjw0eKvG5inYAcNzvIJQ0Ct+VSHTEud1loUEv3BYwBT+VU/0fpeJxsW
+	5gN2y/zfh48QVlmKLSyTXPwjZnan4wIBjHquER/BDg3YCq4htYzZDzGpcfNiJX59AWMHBU
+	Si381pV6UFqGsgbek+hASAhUIiWWfEI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-445-WEylEPTzMIyld6opMeS5VQ-1; Wed, 04 Jun 2025 09:30:09 -0400
+X-MC-Unique: WEylEPTzMIyld6opMeS5VQ-1
+X-Mimecast-MFC-AGG-ID: WEylEPTzMIyld6opMeS5VQ_1749043807
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d57a0641so46685915e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:30:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749043807; x=1749648607;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wM730wYdKzGLtqTwQp0WD4PZQ3ILvslvUEZgXXpTyII=;
+        b=OSmPKytkTkdQapCD4p9g1lQao1alQMqP8i5++f6WwwgKop965tm8BHllgxpjv3Il0E
+         1GpSCs3xzyajfC1LFwxH9aT8t6ayRKqnSyO4B/ET+dqjsNlyNzjaCDUX4xXFlSTgG0lA
+         nhYABI5SgM95fPnFz3c52mjgJGCy/HREpZIL6fBSh6Yd1CBT6DzSRd9ZsP3GHl2nNfZh
+         omBzGTbu4nLNUbYK2E+CKtFmHBLC7rMHvkvaF7yILtk07rcATsaWBCp+LKbJU7goQn69
+         Rk2w0f27V3wH6W77ziBFUB6N7wKFW4KKZCcezFk7q1vTXPxzOkHeAFFDcjU1cxdCYciY
+         i2Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCVppcWdFULkbion1Xr1TGuXLpra7d4/DSGJWNeLGrDyV9GNPfLXYyg1HLJEYdvNzaa2tShkEX6iBJEO6bw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGuMTDm+ld4Ln2LT4q/5QbOxTUiOAcC4r7SqCp+rj43MoH3JRt
+	Edf8UyrCa1GcYaSfbaw4mCf+aQSzWnVyCobzvllQ6pmkImkl+kF4Us4XeG3LzjzaAu0xLPwqtfB
+	wzcUdLtWN/uUCFTy6VuNeN2+Ufor0dxij/FgiolcHiELDNk4HjVsnfWExSzC8sFVbBMmOJgnsfq
+	EU
+X-Gm-Gg: ASbGncsG6aZUcXZaC5gvPwY2t9UfCwZ/bHveg8UAkt5VUoT8ftup9LxluSdRQ5OM6Hf
+	1QZq3s90fuMXtL7mreq7Hu9J8alSmFyrofSs/VZEG2GPzVqEZmUavPyWmKOt5byqIVWi9o5sHVQ
+	NVI4T2eQgbxtzdcFU//MITm3WMFeEG3NErN677w6VFdGkcQMze1CSMEMtRbkd16CnVG4YBoCal8
+	orXBz+14yljynOnk/j+AKg6hsQjUiwpQLDmA1iTVP5YuBnIQoW6Zd6yxanJ3q9G/xxouO7pKd/f
+	d8/0Ua4vx60/isPgJxk1Msq0nOOsfcdmOR1NMbixxcLHJDYwXA3P9lEWqb5T7O22YeSwYKRhrCx
+	cFm92a29Hu8D7H7ld0QzfwGl0qCBYhucgbg35PX0=
+X-Received: by 2002:a05:600c:3484:b0:450:c20d:64c3 with SMTP id 5b1f17b1804b1-451f50a2126mr15328895e9.18.1749043807372;
+        Wed, 04 Jun 2025 06:30:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpnyxfH8Pv/rAsTwh7fWe/qdlsqtP0waH+CRL3dgCTNExEMwgjRrMrmo08vFsHutGjTeZV9A==
+X-Received: by 2002:a05:600c:3484:b0:450:c20d:64c3 with SMTP id 5b1f17b1804b1-451f50a2126mr15328525e9.18.1749043806909;
+        Wed, 04 Jun 2025 06:30:06 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf? (p200300d82f1bb8006fdb1af24fbd1fdf.dip0.t-ipconnect.de. [2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8eceasm200932785e9.7.2025.06.04.06.30.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 06:30:06 -0700 (PDT)
+Message-ID: <8abecd5b-2768-49d0-afc3-561b95d77a24@redhat.com>
+Date: Wed, 4 Jun 2025 15:30:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,173 +78,168 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v7 1/5] drivers/base/node: Optimize memory block
  registration to reduce boot time
-To: David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
-        Zi Yan <ziy@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Nilay Shroff
+To: Donet Tom <donettom@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+ Zi Yan <ziy@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Nilay Shroff
  <nilay@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
 References: <2a0a05c2dffc62a742bf1dd030098be4ce99be28.1748452241.git.donettom@linux.ibm.com>
- <96f7d3a2-2d85-442c-a9f7-e558d4a2ba06@redhat.com>
+ <20250603200729.b7581e017e4ca63f502c795e@linux-foundation.org>
+ <b355e72d-0284-4a31-84e3-ae4a79ad922f@redhat.com>
+ <9f7ae0e6-4640-418d-a4db-dba594377ac2@linux.ibm.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Donet Tom <donettom@linux.ibm.com>
-In-Reply-To: <96f7d3a2-2d85-442c-a9f7-e558d4a2ba06@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <9f7ae0e6-4640-418d-a4db-dba594377ac2@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA5OSBTYWx0ZWRfXxiJQTUViqBo6 OtNBqFwnEI9WPhS5L1uY2nsJCC7M8xU0oaFcjoM/T0Nx35L1QAe77bXRfMyP3EcFz8qGEl935Xp T30qAwnCUj/+cWKSapXi644sUy+Ns7rXss6dgmCFQ7kbY4xTakQxBph5taxdEREEd/abcn5FY6Z
- 2NzHZkF6kgkq1pCiFe/g/a8xjxjtSGzhJ+9nEOiD13z6Dgm9nRGkGQ+fIfgPj/8cxleIzGuLntz ZL0y3XGAPJnQofHSG996UrJW4AbwkiNykVonVOouz6yT3IcI4GsiKn3a2aWlfg6JF+HVp4pqvT/ HAO6s91DERzqTQ/se6qmV+1AbA88qyj/e3/hFMtoJiZMvnzxNBuZzQCjMAmiWOkMJo4y6WF0B6B
- WjbCXuHSn/jkOSq4maxnKEhpjmX6ekNYoD0ImSu0g2G17zWhOP2OTHVRkQSLwEds8BRGVcSe
-X-Proofpoint-GUID: FBl9wL6YPj3JybCsg8I_1eEkECyG6JgZ
-X-Proofpoint-ORIG-GUID: CxxGID8KN88eUD0mhbUT-kQgr7rrf0OX
-X-Authority-Analysis: v=2.4 cv=QtVe3Uyd c=1 sm=1 tr=0 ts=684049cf cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=Ikd4Dj_1AAAA:8 a=VnNF1IyMAAAA:8
- a=4TbcEkYQSb79-EmCaOUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- bulkscore=0 adultscore=0 phishscore=0 impostorscore=0 malwarescore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 spamscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506040099
+
+On 04.06.25 15:17, Donet Tom wrote:
+> 
+> On 6/4/25 3:15 PM, David Hildenbrand wrote:
+>> On 04.06.25 05:07, Andrew Morton wrote:
+>>> On Wed, 28 May 2025 12:18:00 -0500 Donet Tom <donettom@linux.ibm.com>
+>>> wrote:
+>>>
+>>>> During node device initialization, `memory blocks` are registered under
+>>>> each NUMA node. The `memory blocks` to be registered are identified
+>>>> using
+>>>> the node’s start and end PFNs, which are obtained from the node's
+>>>> pg_data
+>>>
+>>> It's quite unconventional to omit the [0/N] changelog.  This omission
+>>> somewhat messed up my processes so I added a one-liner to this.
+>>>
+>>
+>> Yeah, I was assuming that I simply did not get cc'ed on the cover
+>> letter, but there is actually none.
+>>
+>> Donet please add that in the future. git can do this using
+>> --cover-letter.
+> 
+> Sure,
+> 
+> I will add cover letter in next revision.
+> 
+> 
+>>
+>>>>
+>>>> ...
+>>>>
+>>>> Test Results on My system with 32TB RAM
+>>>> =======================================
+>>>> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
+>>>>
+>>>> Without this patch
+>>>> ------------------
+>>>> Startup finished in 1min 16.528s (kernel)
+>>>>
+>>>> With this patch
+>>>> ---------------
+>>>> Startup finished in 17.236s (kernel) - 78% Improvement
+>>>
+>>> Well someone is in for a nice surprise.
+>>>
+>>>> 2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
+>>>>
+>>>> Without this patch
+>>>> ------------------
+>>>> Startup finished in 28.320s (kernel)
+>>>
+>>> what.  CONFIG_DEFERRED_STRUCT_PAGE_INIT is supposed to make bootup
+>>> faster.
+>>
+>> Right, that's weird. Especially that it is still slower after these
+>> changes.
+>>
+>> CONFIG_DEFERRED_STRUCT_PAGE_INIT should be initializing in parallel
+>> which ... should be faster.
+>>
+>> @Donet, how many CPUs and nodes does your system have? Can you
+>> identify what is taking longer than without
+>> CONFIG_DEFERRED_STRUCT_PAGE_INIT?
+> 
+> 
+> 
+> My system has,
+> 
+> CPU      - 1528
+
+Holy cow.
+
+Pure speculation: are we parallelizing *too much* ? :)
+
+That's ~95 CPUs per node on average.
+
+Staring at deferred_init_memmap(), we do have
+
+	max_threads = deferred_page_init_max_threads(cpumask);
+
+And that calls cpumask_weight(), essentially using all CPUs on the node.
+
+... not sure what exactly happens if there are no CPUs for a node.
+
+> Node     - 16
+
+Are any of these memory-less?
+
+> Memory - 31TB
 
 
-On 6/4/25 3:08 PM, David Hildenbrand wrote:
-> On 28.05.25 19:18, Donet Tom wrote:
->> During node device initialization, `memory blocks` are registered under
->> each NUMA node. The `memory blocks` to be registered are identified 
->> using
->> the node’s start and end PFNs, which are obtained from the node's 
->> pg_data
->>
->> However, not all PFNs within this range necessarily belong to the same
->> node—some may belong to other nodes. Additionally, due to the
->> discontiguous nature of physical memory, certain sections within a
->> `memory block` may be absent.
->>
->> As a result, `memory blocks` that fall between a node’s start and end
->> PFNs may span across multiple nodes, and some sections within those 
->> blocks
->> may be missing. `Memory blocks` have a fixed size, which is architecture
->> dependent.
->>
->> Due to these considerations, the memory block registration is currently
->> performed as follows:
->>
->> for_each_online_node(nid):
->>      start_pfn = pgdat->node_start_pfn;
->>      end_pfn = pgdat->node_start_pfn + node_spanned_pages;
->>      for_each_memory_block_between(PFN_PHYS(start_pfn), 
->> PFN_PHYS(end_pfn))
->>          mem_blk = memory_block_id(pfn_to_section_nr(pfn));
->> pfn_mb_start=section_nr_to_pfn(mem_blk->start_section_nr)
->>          pfn_mb_end = pfn_start + memory_block_pfns - 1
->>          for (pfn = pfn_mb_start; pfn < pfn_mb_end; pfn++):
->>              if (get_nid_for_pfn(pfn) != nid):
->>                  continue;
->>              else
->>                  do_register_memory_block_under_node(nid, mem_blk,
->> MEMINIT_EARLY);
->>
->> Here, we derive the start and end PFNs from the node's pg_data, then
->> determine the memory blocks that may belong to the node. For each
->> `memory block` in this range, we inspect all PFNs it contains and check
->> their associated NUMA node ID. If a PFN within the block matches the
->> current node, the memory block is registered under that node.
->>
->> If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, get_nid_for_pfn() 
->> performs
->> a binary search in the `memblock regions` to determine the NUMA node ID
->> for a given PFN. If it is not enabled, the node ID is retrieved directly
->> from the struct page.
->>
->> On large systems, this process can become time-consuming, especially 
->> since
->> we iterate over each `memory block` and all PFNs within it until a 
->> match is
->> found. When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, the additional
->> overhead of the binary search increases the execution time 
->> significantly,
->> potentially leading to soft lockups during boot.
->>
->> In this patch, we iterate over `memblock region` to identify the
->> `memory blocks` that belong to the current NUMA node. `memblock regions`
->> are contiguous memory ranges, each associated with a single NUMA 
->> node, and
->> they do not span across multiple nodes.
->>
->> for_each_memory_region(r): // r => region
->>    if (!node_online(r->nid)):
->>      continue;
->>    else
->>      for_each_memory_block_between(r->base, r->base + r->size - 1):
->>        do_register_memory_block_under_node(r->nid, mem_blk, 
->> MEMINIT_EARLY);
->>
->> We iterate over all memblock regions, and if the node associated with 
->> the
->> region is online, we calculate the start and end memory blocks based 
->> on the
->> region's start and end PFNs. We then register all the memory blocks 
->> within
->> that range under the region node.
->>
->> Test Results on My system with 32TB RAM
->> =======================================
->> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
->>
->> Without this patch
->> ------------------
->> Startup finished in 1min 16.528s (kernel)
->>
->> With this patch
->> ---------------
->> Startup finished in 17.236s (kernel) - 78% Improvement
->>
->> 2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
->>
->> Without this patch
->> ------------------
->> Startup finished in 28.320s (kernel)
->>
->> With this patch
->> ---------------
->> Startup finished in 15.621s (kernel) - 46% Improvement
->>
->> Acked-by: David Hildenbrand <david@redhat.com>
->> Acked-by: Oscar Salvador <osalvador@suse.de>
->> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> Acked-by: Zi Yan <ziy@nvidia.com>
->> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
->>
->> ---
->
-> [...]
->
->>   #ifdef CONFIG_NUMA
->>   void memory_block_add_nid(struct memory_block *mem, int nid,
->>                 enum meminit_context context);
->> @@ -188,5 +206,4 @@ void memory_block_add_nid(struct memory_block 
->> *mem, int nid,
->>    * can sleep.
->>    */
->>   extern struct mutex text_mutex;
->> -
->
-> ^ Nit: unrelated change?
 
+-- 
+Cheers,
 
-Thank you David
-
-I’ll make the change and send the next revision.
-
+David / dhildenb
 
