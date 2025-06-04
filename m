@@ -1,105 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D338D433B3;
-	Wed,  4 Jun 2025 07:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996331804A;
+	Wed,  4 Jun 2025 07:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749022624; cv=none; b=S4WIcvRjyz4ca3000GY0/OGJwburUtB2ZInvBoHsCZUqgoHnv5ZRnzx1tmilcW+/Aa65j8AzqeJrb0fGSxSOsPqNYjr2GhiKcv53dyNQrvjIjshoBaEVT0hSCSZ1Dayght5PeX3OFrLtBJkdEPLJDEIY+nj+quMPEW4xCTw3l/Q=
+	t=1749022667; cv=none; b=axQYaKWIFUOERUy3+pmQi81Bjwdga624E9Mg0NnxaS0pbzo4bonBu/KoBo4BDqedc/YqlRkW0+DlGKtb1PfA5vQgHen3MchqWPqebFSnry7jc6AZt0TQSfrWsBYaIwCFmh+YkIYntuwUTMCpmkrZr9yoTgVGADiec/lDQe1Zats=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749022624; c=relaxed/simple;
-	bh=d6bzrrrHM9j+n2fqUEXXHj0ikP00VzbiVopQRHoGd60=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=ipsXdls4WN9TwWrdbWX0McE+rLHbeU7CG/SR1BNEh59iWhxFaBk1Vq0WoHFPpkT0hjU6Bkyv0xCmh8SVEDMmlKgaV6VSvvmRA99Cig4k5C6Bqjh48lo5ImXaD7sBr00G1/vzhbup5M8xwa6hvhjtCHVLuUTmpIHub8VJlddncpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9HRAtjC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749022667; c=relaxed/simple;
+	bh=AeBrh+oy5xsCDpXg0d0Om6EvKGdC7MCU1OdkXqLTmac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iyqwxpOzwZRY2aF4Zl/yoq/1lZdO8ATRUQ15ogcs42D7j+lMV+SKw8OoQmoHs1N7kKXe60kAef66yoLgnhQvRmDqkLpjzuQp+y+PN/I/PmtRX7EFokn15nfCdx3N0P3HYeee3A+NW/0XuhRg6/d4gfcOs11vdJkISZ646rHH51k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nEs+0H0B; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z9HRAtjC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CA7C4CEE7;
-	Wed,  4 Jun 2025 07:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749022624;
-	bh=d6bzrrrHM9j+n2fqUEXXHj0ikP00VzbiVopQRHoGd60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z9HRAtjCX0So+q71FA402PK6WvgvjerkUDf1gnEz62bZkcvU0hbVDD1JtlQG1s1SR
-	 4uzuSx4ZK6On0hVPmHNar2GGrLmRKiaWSeXGTvZRGDFSu9b08fP5awzek9hQ/dVwcL
-	 kQOKlcIMVsoVaVgnyrgVglOy/cP5N/difcqj7TjkeycDVzKndntIY1jdmVUAL2uSJK
-	 87gA2rVn3/QUPsVzM/ivWzLRdFT0UvzMyjwE04myrK+u+mR3rzsYdOweCJfLOwCU8u
-	 huUNF2qXGPvkET9UEuz75upFBr+KiV8EeDqyPbJiau6wSlLpbXZe4Zd40ULA1ae52v
-	 L6vhm/XdbjEmA==
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nEs+0H0B"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553KjETM000708;
+	Wed, 4 Jun 2025 07:37:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HKX4WDJqubHxp7Yn6Vt7HnreGzdd0WNVbOxinOMb4No=; b=nEs+0H0BGadvCB3Y
+	nwwUUy8Nikf5/TJbqAJZg73SYdNIdnhJHB/Z6ob2ilUlV/+uVwBTEAsWL1kwL86/
+	VY8R1CB2oNaE1bTFefnhozJN6RyXS3Npiw6N0SX9pLmOcelrtXVi0JEtwAqyfM8F
+	cWnmJtnPbp5EQEV8Eq3aQ0ZcsT+cUVYyfXvj7ge+p6ZaW7M08yLLYNf7DFIG9eha
+	HOkDm2aG5RXdyKStrfolkC3QT3td2hLWv12+otsdFlVEm++AEY+9iKVXGlFEb8XL
+	famucgZiKfZLctkAM/CXotXWrUlhwXm/MjaNe90EnvsVkP45LCgBgcIdkI3NpYOB
+	BWPQHA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8q5845-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 07:37:24 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5547bND3005620
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 4 Jun 2025 07:37:23 GMT
+Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Jun 2025
+ 00:37:18 -0700
+Message-ID: <c2b9dfbf-9163-4df5-bd0d-25c5bb43cfb5@quicinc.com>
+Date: Wed, 4 Jun 2025 13:07:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 04 Jun 2025 09:36:59 +0200
-Message-Id: <DADKRV2K4A5I.3UAZF5O9EW6R8@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-X-Mailer: aerc 0.20.1
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com> <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com> <D9W5IX9Z7QMU.3DL48O2KYTN1Z@kernel.org> <aD3BN7-MAyYq2NAX@google.com>
-In-Reply-To: <aD3BN7-MAyYq2NAX@google.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V6 00/10] Refactor ufs phy powerup sequence
+To: "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Vinod Koul
+	<vkoul@kernel.org>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>,
+        <James.Bottomley@HansenPartnership.com>, <bvanassche@acm.org>,
+        <andersson@kernel.org>, <neil.armstrong@linaro.org>,
+        <konrad.dybcio@oss.qualcomm.com>, <dmitry.baryshkov@oss.qualcomm.com>,
+        <quic_rdwivedi@quicinc.com>, <quic_cang@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
+References: <20250526153821.7918-1-quic_nitirawa@quicinc.com>
+ <yq1a56xiir9.fsf@ca-mkp.ca.oracle.com>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <yq1a56xiir9.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: R5W1pYtVDuT2Wkt5a18owf9FwqP_-su4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2MCBTYWx0ZWRfX4U4OUDfnd8XZ
+ 3DQ/sN3MXN9sqoZJUV8eCj2ylWg75+1Pr48k/Ub8YO4CV5Jksalhm+EOCOqeKvl2Gm9tl7qID2W
+ yOA/LmeAlpjEIG+XJ0ld0jMERkKIxMXDuZQlWKuVBx9KFEdXlFsOkbwuC0XT5e8/Ob8yQ9s+jQL
+ hOuQbgBKAHXS0vWgiOLia9GGansxi6xFzXQP/MAQFvvVG3RdFu6MlQKKbGId2iyMZtEs6rDXYg9
+ BuXY9Dy9NvO1C47FbjwNK/htNWW674BnASV39D5AgMcLR9cONcpPKp8YH2VnXRvmXniFfD6Lxzl
+ 7cd6sP/gxdy289aGgTCvk5S4JsdMNVNSdgNOE5DWPUyJmtbkmW3rBrHxvdYR7v8EyqZoOlMAuLj
+ g3wrposRtic3jZYSghOTjwGdK7vnKkgRH9m9dnPWDepnjjSO/Xt4kJ/0563l8NvpfWgpDyq6
+X-Proofpoint-ORIG-GUID: R5W1pYtVDuT2Wkt5a18owf9FwqP_-su4
+X-Authority-Analysis: v=2.4 cv=PrmTbxM3 c=1 sm=1 tr=0 ts=683ff7b4 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=MvDHQgU3c1KqSIzCRgcA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 adultscore=0
+ suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506040060
 
-On Mon Jun 2, 2025 at 5:20 PM CEST, Alice Ryhl wrote:
-> On Wed, May 14, 2025 at 10:04:43PM +0200, Benno Lossin wrote:
->> On Wed May 14, 2025 at 9:20 PM CEST, Daniel Almeida wrote:
->> > +                )
->> > +            });
->> > +
->> > +            if res.is_err() {
->> > +                // SAFETY: We are returning an error, so we can destr=
-oy the slot.
->> > +                unsafe { core::ptr::drop_in_place(addr_of_mut!((*slot=
-).handler)) };
->> > +            }
->> > +
->> > +            res
->> > +        };
->> > +
->> > +        // SAFETY:
->> > +        // - if this returns Ok, then every field of `slot` is fully
->> > +        // initialized.
->> > +        // - if this returns an error, then the slot does not need to=
- remain
->> > +        // valid.
->> > +        unsafe { pin_init_from_closure(closure) }
->>=20
->> Please don't use `pin_init_from_closure`, instead do this:
->>=20
->>     pin_init!(Self {
->>         irq,
->>         handler,
->>         _pin: PhantomPinned
->>     })
->>     .pin_chain(|this| {
->>         // SAFETY: TODO: correct FFI safety requirements
->>         to_result(unsafe {
->>             bindings::request_irq(...)
->>         })
->>     })
->>=20
->> The `pin_chain` function is exactly for this use-case, doing some
->> operation that might fail after initializing & it will drop the value
->> when the closure fails.
->
-> No, that doesn't work. Using pin_chain will call free_irq if the call to
-> request_irq fails, which is incorrect.
 
-Good catch. That's a bit annoying then... I wonder if there is a
-primitive missing in pin-init that could help with this... Any ideas?
 
----
-Cheers,
-Benno
+On 5/28/2025 7:45 AM, Martin K. Petersen wrote:
+> 
+> Nitin,
+> 
+>>        Patch 1 is a fix for existing issues, which doesn't have any
+>>        dependencies on any other changes.
+
+Hi Martin and Vinod,
+
+For the remaining patches (Patch 2 - Patch 10), since Patch 2 (SCSI 
+Patch) depends on PHY patches, can these patches be merged through the 
+PHY tree?
+
+Regards,
+Nitin
+
+
+
+
+> 
+> Applied patch 1 to 6.16/scsi-staging, thanks!
+> 
+
