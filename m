@@ -1,200 +1,139 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE98A6FC3
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 00:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E80079CD
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 00:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748997107; cv=none; b=b6tKX6RPPF8Z4BSQmXjYCHazWxEeJdfqgngGPj3jw+OqlsaZ1KQ8YXeUujfm7UwVrvy35DABi7TTjPXhj+WfXeHUGmTgWktyDGEGHbLOOMF4ODDcbTxwuzOtRVG6ZowouNFgJkP7ib/+5/PyyeIv68aADDc+xZSl+8rpJmHpQcU=
+	t=1748997454; cv=none; b=mN2koc3Z/9cSDxLulcnSbOAvCKwY7kRvXNZzIVre2w5TsyQPlWV9bPENTv82ZCmgZpiy9o/oHXfDhV0yweg0Zu8rQ7F761y4bFR5L1CL6OHQzEDBysmvYVpG73QcB7CQL2zRKgDHA/8uQQaI7pIjwQE41QmbMyqT7Pq4NFopZkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748997107; c=relaxed/simple;
-	bh=Y8P8ekuWQTrstTqgqgBrAMIigYehAZBJN5IKXdgoKKE=;
+	s=arc-20240116; t=1748997454; c=relaxed/simple;
+	bh=FIhhwRMnEvPjuGUpf9qf+tqZDLEP9lZKLjQ3YYZd4as=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jk9QAQxVnVbsKLtHM8dZ4MN7TMpkZ4yElWAp2nPmhwp/33tVTzfSZg6KUwCeGKS2PcSRYOW3D+4Oice18MBEJL59TDBgxFFSnTOpmRqniIzcq6oXptItC1jVjzS+qieE10kxOkY1Od7svMMLXCIxJQEYfEwKGjIMh1kjpnCM+oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pEPJ2IZA; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=UHAsLGLSSXofxQ+XYWViEAjgoqpD7xaHGHGevWsPUBMksV/7SkGN5nkrUttys9x7hn/AwTG6j5wRvNEKLdTBFeJ+Jbm3SywXt2MI/ctKUG2oSX/Bzuu5gHzbd7uMvaYTjGXgFOtgx4EBvURFIrlWp2i7lXNZE7Hh06DpsgZ6XSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IeyVi1Bx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pEPJ2IZA"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3dd89a85414so96175ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 17:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748997105; x=1749601905; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YFyU6o5bbTPzDuRugXqSPb0fdFrTDPydzDyGunNiVuY=;
-        b=pEPJ2IZAIr3WGtw3jJq6I2mOemOBFbof+qWlStqXZLJ+4qqh9MhS4T1xV7pz+4a7um
-         N+0S6V8rxjDC/YVLidCinC4yipTKBStpHqjSqVPezOA4ZltmP17drWECZUzh9K2EEZ/5
-         ddFDT38nOuNaL7PzmGmXZvN5K8UHO8QHVMzE5fc76ig+8OYsK6t3CwT3ErqUB0QBT0nK
-         gHLZ+U8LWHyFFojFORS2SvLbk++ihTwWy+H/3NQdlUDXtlRO5tDgRndHNNydA+t7/Ca8
-         RKCjUUGF9z3vGbzA4X1hvl9O92kYuedJ+JUyWKZKgFWpcR+Te2924jm5y252+HUXPutj
-         E4Ig==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IeyVi1Bx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748997452;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TCJQT/kav5ff3pRxvzcaTAEwPIznqrXjhdq5yD+vQEE=;
+	b=IeyVi1BxRcWuhlZAvHSmxFJmdP5hBXqbCxwsPS8J0plqYgBA+U7TgZcdGD+Yd+vWoWudlP
+	Ha1TejpBZ8g1yBzqaku97nhAzVHc4LesjiZ8bxSKx31UrgukMPrkIxpKs9AyFROtcaZgER
+	HZkzUR99jlSltGRmTPxIpJWFdzj2NzA=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-619-99UiBA0lOkKJyFnpKB9UFA-1; Tue, 03 Jun 2025 20:37:30 -0400
+X-MC-Unique: 99UiBA0lOkKJyFnpKB9UFA-1
+X-Mimecast-MFC-AGG-ID: 99UiBA0lOkKJyFnpKB9UFA_1748997449
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-310efe825ccso6228259a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 17:37:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748997105; x=1749601905;
+        d=1e100.net; s=20230601; t=1748997449; x=1749602249;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YFyU6o5bbTPzDuRugXqSPb0fdFrTDPydzDyGunNiVuY=;
-        b=ctJi9laAs+G37+hEv33XEkppGP0Zq5+lCT1OH8P4/C9sA4KvK6LXFBz6L5ZJOyFcjJ
-         ZbIz3E1oMxz984lD6EHlAYFJfznR/zzZP9rZHolWvdpb+SdDC2i0fVxeUQ2vgHyQR3RI
-         NmpQAn8fof7bU4SQ8bLu6wGX3j/8AC48wSt87YLeecY+9mPS2cH0JAlVagedNjN3wOlK
-         89LqsYJszDOFTDG6lEv67XY5TaL8wiyPip5GGUWJJX19qxYAtRy9vnn+prGVtPPrCXHZ
-         UDJMYtHHg90Vn8mPYhfDDu8ZzVliJnCParByemDf4Q2RUDDi5XwVeDgrHlc22I92je9o
-         8qiQ==
-X-Gm-Message-State: AOJu0Yzo5mycP4cdu/ilLLfUHNJQMK0pQhRYbj+AXwyPceHZhwHPaeOL
-	8NCXxTNv2Qnq9tT0RT6iKOeWguI7FUQbekcfCVncL9/DW2gMadhpJAHfAN93/PBq5jCRScgC69U
-	5GL6pMF0OUEmvT4AjImW85E6wk0++aeI574zzxGlR
-X-Gm-Gg: ASbGncvRT5VVnARZ3x1VZYQ+HEOFIKrDlvPjRrQgyhGs+Tev/kWoH5+6pPfPfkUaKPI
-	d9AgkaAMxi6SJWdZYz1XU8UFmgPpkebVnsX7VJgpqSjlrDnsiRctiMDmi0Ud5RNYZC2HnV11ajE
-	jU/vcPPQD/vt+9JgiCEbXHavBITBCYhCpzrAorrlGOp05sbdy8I/S9XbpGUGNmCUeJ7HJzy2/8
-X-Google-Smtp-Source: AGHT+IGN1RzMt774VMiAKYM+BFCQtMMsQ/NFjgCEHHcR1j4hf5n4Qujv8UMtHZZGwpMckBzrcS+lu40QAR+LWD3VAO8=
-X-Received: by 2002:a05:6e02:260c:b0:3dd:b688:1b1a with SMTP id
- e9e14a558f8ab-3ddbe78db44mr1907205ab.10.1748997104576; Tue, 03 Jun 2025
- 17:31:44 -0700 (PDT)
+        bh=TCJQT/kav5ff3pRxvzcaTAEwPIznqrXjhdq5yD+vQEE=;
+        b=sYyrXEJyPDUkVj5IefZHxGbCHAwoEaNnHYs/0ngELo7d0CndMho9GSOlVi3/slDyFb
+         ZPvdTqipNFqlBTGurwURijufvrKBrMAeFVweAOO+B3K8gf/+GCeqqMyjDI1/VDCGmQrP
+         FDLS8ekC3zFZG0ZMj3cH1xhfCcVDsU389KY8T62p5NqICDNJZTAbBzUxNnVQ80J2Zd/D
+         BIt4jbQxhb/dL+OvlVzKquhx+bgzr5K5fOib96rzIuE+4dllhYgghm9TCPGCyjvsDFb7
+         rWHKDfB07T62qShkdXGsouCDBX0w1V6SO+22NFNMAgydU9X2YaOo4DhthfSvL9wQe9vu
+         E3Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgdNYogzn+ygJu+iTSXfaRDekT44X0qPchawo5Is/pBrHTY0UrhJT9u+bmYc+6oo+82v5DMTr32uDDBl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxesDOhD4swl06lgslKnm3uln7p1wQmf4nINhv6E+9qp4K0U07V
+	9Q0vp4tLISC8rZLTyZxMEsQt0UC+cK9YnHvG6h7kj3SRl8hZN2ndP9RV/tR+rTwBZd+b7uYrwWz
+	CjwRB+ysNhPEYedPVnMIRF3vqQTkeHuHnJr8X5iUDO6QHSqXsNAsNL0o5jTSIE3ISesJCczin7M
+	3xDai6PY9W2f7sHWRIUVFsAm/5CLw5AxkdEmxanDRV
+X-Gm-Gg: ASbGncuRcQkMrTa6hIuW5YZxYsoeBIyCbIvnLX/DvQFt/HoDD3216xZKk357SUhyt/J
+	NyneBdMsHyPgEugUQlPg9Xb2BxC4ZnUikYXFkCOqfrDpSVHRRflMle3CzkMvMY9NYab30+w==
+X-Received: by 2002:a17:90b:51c4:b0:311:c1ec:7d0c with SMTP id 98e67ed59e1d1-3130cd65aaemr1426540a91.27.1748997449159;
+        Tue, 03 Jun 2025 17:37:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHQeODWbQfUbRlPw0j1gKXQJysD64GEXXnB2RuYnjq0y+PzQoFeIG5PN3PQdqbkgUndiDNUyG9oiwKSrJbbewE=
+X-Received: by 2002:a17:90b:51c4:b0:311:c1ec:7d0c with SMTP id
+ 98e67ed59e1d1-3130cd65aaemr1426509a91.27.1748997448759; Tue, 03 Jun 2025
+ 17:37:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521224513.1104129-1-ctshao@google.com> <CAJpZYjV_XquU785dhOPVGM7k9N_6QV+1OxenXLj4-fbDCj=yWg@mail.gmail.com>
-In-Reply-To: <CAJpZYjV_XquU785dhOPVGM7k9N_6QV+1OxenXLj4-fbDCj=yWg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 3 Jun 2025 17:31:33 -0700
-X-Gm-Features: AX0GCFtzXLKwBtN12F6R483HTnfj7EEsTmE5CJFeSewNOo0eXBMIidccxIFKn9o
-Message-ID: <CAP-5=fWcW8Fhe8rwUxOdHWbxF0V9CM40p0J3O97X391LxVT9nQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test: Restrict uniquifying test to machines with uncore_imc
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
+References: <20250603150613.83802-1-minhquangbui99@gmail.com>
+In-Reply-To: <20250603150613.83802-1-minhquangbui99@gmail.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 4 Jun 2025 08:37:16 +0800
+X-Gm-Features: AX0GCFt_tMiNdtyDIBlXvuQJILPten36fjn0u2OKQnhU-6uwjA7mU6t1xM2SrDY
+Message-ID: <CACGkMEuHDLJiw=VdX38xqkaS-FJPTAU6+XUNwfGkNZGfp+6tKg@mail.gmail.com>
+Subject: Re: [PATCH net] virtio-net: drop the multi-buffer XDP packet in zerocopy
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 9:21=E2=80=AFAM Chun-Tse Shao <ctshao@google.com> wr=
-ote:
+On Tue, Jun 3, 2025 at 11:07=E2=80=AFPM Bui Quang Minh <minhquangbui99@gmai=
+l.com> wrote:
 >
-> Ping.
+> In virtio-net, we have not yet supported multi-buffer XDP packet in
+> zerocopy mode when there is a binding XDP program. However, in that
+> case, when receiving multi-buffer XDP packet, we skip the XDP program
+> and return XDP_PASS. As a result, the packet is passed to normal network
+> stack which is an incorrect behavior. This commit instead returns
+> XDP_DROP in that case.
 >
-> Thanks,
-> CT
+> Fixes: 99c861b44eb1 ("virtio_net: xsk: rx: support recv merge mode")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> ---
+>  drivers/net/virtio_net.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 >
-> On Wed, May 21, 2025 at 3:45=E2=80=AFPM Chun-Tse Shao <ctshao@google.com>=
- wrote:
-> >
-> > The test would fail if target machine does not have `uncore_imc` device=
-s.
-> > Since event uniquifying behavior is similar among different
-> > architectures, we are restricting the test to only run on machines with
-> > `uncore_imc` devices.
-> >
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > ---
-> >  tools/perf/tests/shell/stat+event_uniquifying.sh | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/p=
-erf/tests/shell/stat+event_uniquifying.sh
-> > index 5ec35c52b7d9..5a51fbaa13bb 100755
-> > --- a/tools/perf/tests/shell/stat+event_uniquifying.sh
-> > +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-> > @@ -9,7 +9,8 @@ perf_tool=3Dperf
-> >  err=3D0
-> >
-> >  test_event_uniquifying() {
-> > -  # We use `clockticks` to verify the uniquify behavior.
-> > +  # We use `clockticks` in `uncore_imc` to verify the uniquify behavio=
-r.
-> > +  pmu=3D"uncore_imc"
-> >    event=3D"clockticks"
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index e53ba600605a..4c35324d6e5b 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1309,9 +1309,14 @@ static struct sk_buff *virtnet_receive_xsk_merge(s=
+truct net_device *dev, struct
+>         ret =3D XDP_PASS;
 
-I'm a little concerned the test will only run on Intel server CPUs.
-Another event that is on a lot of PMUs and needs uniquify is "temp1"
-by way of the hwmon PMUs. Essentially the first temperature event on a
-hwmon PMU will always have a temp1 name.
+It would be simpler to just assign XDP_DROP here?
 
-```
-$ perf list temp1
+Or if you wish to stick to the way, we can simply remove this assignment.
 
-List of pre-defined events (to be used in -e or -M):
+>         rcu_read_lock();
+>         prog =3D rcu_dereference(rq->xdp_prog);
+> -       /* TODO: support multi buffer. */
+> -       if (prog && num_buf =3D=3D 1)
+> -               ret =3D virtnet_xdp_handler(prog, xdp, dev, xdp_xmit, sta=
+ts);
+> +       if (prog) {
+> +               /* TODO: support multi buffer. */
+> +               if (num_buf =3D=3D 1)
+> +                       ret =3D virtnet_xdp_handler(prog, xdp, dev, xdp_x=
+mit,
+> +                                                 stats);
+> +               else
+> +                       ret =3D XDP_DROP;
+> +       }
+>         rcu_read_unlock();
+>
+>         switch (ret) {
+> --
+> 2.43.0
+>
 
+Thanks
 
-hwmon:
- temp1
-      [Temperature in unit acpitz named temp1. Unit: hwmon_acpitz]
- temp_core_12 OR temp14
-      [Temperature in unit coretemp named Core 12. crit=3D100'C,max=3D80'C
-crit_alarm=3D0'C. Unit:
-       hwmon_coretemp]
- temp_core_16 OR temp18
-      [Temperature in unit coretemp named Core 16. crit=3D100'C,max=3D80'C
-crit_alarm=3D0'C. Unit:
-       hwmon_coretemp]
- temp_core_8 OR temp10
-      [Temperature in unit coretemp named Core 8. crit=3D100'C,max=3D80'C
-crit_alarm=3D0'C. Unit:
-       hwmon_coretemp]
- temp_package_id_0 OR temp1
-      [Temperature in unit coretemp named Package id 0.
-crit=3D100'C,max=3D80'C crit_alarm=3D0'C. Unit:
-       hwmon_coretemp]
- temp1
-      [Temperature in unit iwlwifi_1 named temp1. Unit: hwmon_iwlwifi_1]
- temp_composite OR temp1
-      [Temperature in unit nvme named Composite.
-alarm=3D0'C,crit=3D84.85'C,max=3D80.85'C,
-       min=3D-273.15'C. Unit: hwmon_nvme]
- temp1
-      [Temperature in unit spd5118 named temp1.
-crit=3D85'C,enable=3D0.001'C,lcrit=3D0'C,max=3D55'C,
-       min=3D0'C crit_alarm=3D0'C,lcrit_alarm=3D0'C,min_alarm=3D0'C. Unit:
-hwmon_spd5118]
-$ perf stat -e temp1 true
-
-Performance counter stats for 'true':
-
-18,446,744,073,709,284.00 'C   hwmon_acpitz/temp1/
-
-            40.00 'C   hwmon_coretemp/temp1/
-            30.00 'C   hwmon_iwlwifi_1/temp1/
-            38.85 'C   hwmon_nvme/temp1/
-            43.75 'C   hwmon_spd5118/temp1/
-
-      0.001488897 seconds time elapsed
-
-      0.000000000 seconds user
-      0.001568000 seconds sys
-```
-
-Thanks,
-Ian
-
-> >
-> >    # If the `-A` option is added, the event should be uniquified.
-> > @@ -43,11 +44,17 @@ test_event_uniquifying() {
-> >    echo "stat event uniquifying test"
-> >    uniquified_event_array=3D()
-> >
-> > +  # Skip if the machine does not have `uncore_imc` device.
-> > +  if ! ${perf_tool} list pmu | grep -q ${pmu}; then
-> > +    echo "Target does not support pmu ${pmu} [Skipped]"
-> > +    return
-> > +  fi
-> > +
-> >    # Check how many uniquified events.
-> >    while IFS=3D read -r line; do
-> >      uniquified_event=3D$(echo "$line" | awk '{print $1}')
-> >      uniquified_event_array+=3D("${uniquified_event}")
-> > -  done < <(${perf_tool} list -v ${event} | grep "\[Kernel PMU event\]"=
-)
-> > +  done < <(${perf_tool} list -v ${event} | grep ${pmu})
-> >
-> >    perf_command=3D"${perf_tool} stat -e $event -A -o ${stat_output} -- =
-true"
-> >    $perf_command
-> > --
-> > 2.49.0.1143.g0be31eac6b-goog
-> >
