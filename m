@@ -1,129 +1,112 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A9C47F4A
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 20:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EF113AD05;
+	Wed,  4 Jun 2025 20:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749068389; cv=none; b=ZJmQoIIajXmIhnh/wYU5gN7wbQhsOD5usOEHxABzt31Cl314P2ybeY3sJyU0PHpEpY3ufs6y+HnNFuuliRaTIBfk8mO6dyrU8a70tgtE30VAypmYgOptKNEFW5y3wyA+nl1PzNwSkwID+aO37acSoLZUNuJSa+GRCkl5ZaaD+7s=
+	t=1749068594; cv=none; b=fBXrVWLZ4kywEfTRzscJSUKrNSuG20nWQUMWc5/NzTX0ByX+Yb9N0ROQj7ZlScHjPq8Dw9QCi4MYJ9VKdS8MD1M1yz9f2hyV93mr6FqsgsMN4GmejjYCAP6601nu50R2ZrnQL8F++GqED6SffVWitCUBszVn7RpYPNhHpnfdaU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749068389; c=relaxed/simple;
-	bh=tAtxHC7qZ7jeSHnLePLhJjlc91XZnhHCHLoD7E41dog=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MEzw8fHYasEb1MY9z1tLzgOH6/usgjxjqK1LNzIFgG9+31YDUmXBmEaAHCZeCc27A2ka3pwQsmlEdGEh9Scx2+AXOGOF9c7IGiflNYo4CZ5Y9K6ebj+B6BifBBEPOLNdcuDaheHhkiuiDewY5us2NTgw5Sdiu5sC7/mBJQejYrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NQftJ4EJ; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
+	s=arc-20240116; t=1749068594; c=relaxed/simple;
+	bh=5GFhbHqFprf6AI7bpRC7glklZOYiHyJKzCGuN9tSXF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VlGrA2BV2+LnbZEpcrncWhtWxCD06Isg2PBFKv1QnDzUQ/kP/CNfvTgYzh7RgCQOg7GDodaXXmexax5GSZ1oF3G8i9qUutGTsWamgHWiY2181Cr4OUEEFq0aW6IROkFG9X/rms1dS6JBj5R2eWmp6HJr5+VkXiwKiIHvCsOv5Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQFxG6UP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NQftJ4EJ"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742b6705a52so371541b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 13:19:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749068387; x=1749673187; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=P60/9rRjl/n0+ugli5ZClLozb1vi4680ihN8tmN7rvc=;
-        b=NQftJ4EJXW8gN0pBerUozWf0IY8cQz5R82SDidbzZ6oNaVd7dETyoutiatgX69YJgx
-         fxUVmdGQvqpFhq0CkhXSSJap3sQD3TDpC1oQqU7jcV/Tj8luS3KLyEZ71MgxPVFaT0Ir
-         0R1ZUOc7SmP/9l8gDkP9KK7z2/ygwmJ+LK9UYgenZwzYsHdT031Um+LDgLd/huuAWgXK
-         UiXy2AmrKFkuRBH/czEKzNo05+iSSiAbL7CufWQRoEeQ+5b6NSA59QK9Kzs5DP5m7919
-         HMsVVkcbAwvPfgvub0r4/wmCUXV1qdr08MEfYbCcHwNsNH74lNVJUczero4T3kkPBXYY
-         iOJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749068387; x=1749673187;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=P60/9rRjl/n0+ugli5ZClLozb1vi4680ihN8tmN7rvc=;
-        b=mPjKksURSAsGINdU/W2shjbkDobM/I9AGgh551E8Kik6XNUl7mJi8d6qBlpeM1s71F
-         UAcV9hJzNYTxwlNSKfLDsw3zF+UrO5PUUGOX5rtILUTexkNysFV4+V/69mFx0A97bj2x
-         oD5pNl3DFkwwkWztwfKn7QYW/lrTOyjR6SYBYcRimql7fQRksR5ID3Hsi3oEzV/cjc7k
-         1yHujVfaBbtmUkhYK9OMfxBrpPOwTd4LEbYzjFcAuk6+9+j2qaOocUT2Ct0fZXL7Tt3B
-         DKfvOyTKBjr1Ng6U0n+RKji7y+1lHnyrhMRexWlPSvwn1Zl+PqXR+ol93uuTCHIWSQif
-         dfUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbCkCi0Nin3w4c++0xnmhJxQ/X40EX7oahtOXYeLkbV5+Esa6zuzMQifRUdLdEYra09YMErkD5Nk9v2i4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn0FLgBdO7IwIKYkIg3sAfNay7sNgq0hlHbeT2B9tlweWFbhhb
-	WulpepGWzuxVwtPaV09SMgmwYqINixxGPjDVpE2Ac6ekQzSeOK/OYzsOQwUiNOKCQ86KaBF1oy8
-	Ey4x7C6FQauM66NLGVOrjNTpyHg==
-X-Google-Smtp-Source: AGHT+IGwdJMuQrwY53X+i859MrqAreWMi6S6yxe7x3iwv7BiRCwF47VgcwDIpRVNYc5qyOGVVzWpTKTh2aB7BOoHMA==
-X-Received: from pfwp30.prod.google.com ([2002:a05:6a00:26de:b0:746:22b3:4c0d])
- (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:3c85:b0:736:5664:53f3 with SMTP id d2e1a72fcca58-7480b42473cmr5159660b3a.15.1749068386754;
- Wed, 04 Jun 2025 13:19:46 -0700 (PDT)
-Date: Wed,  4 Jun 2025 20:19:38 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQFxG6UP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37247C4CEE4;
+	Wed,  4 Jun 2025 20:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749068593;
+	bh=5GFhbHqFprf6AI7bpRC7glklZOYiHyJKzCGuN9tSXF4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lQFxG6UP3Zn447X6eKMhgJY9o7q9BOtJYaQtUZQK881d8Xqao0SDklxonXgKbm/Vi
+	 CUPdpGxmzsBQyb3MZCHxf/af40CVu1AYpzrDQKB/4hqJMsGaA7nR42DiyXMNEWXAmF
+	 SQ7zEQBOZe0FIhqIzcztS0EfhLOeZJAMMlb/CPFluzxLymhJETgIcffgDv5wMv9Yv2
+	 uFELbAXfnVPgT7q7eTUJgqspIcY3kyDASOLLkcYNvd/Z0FrzfFhoo/kvySTHX8L+iN
+	 rp9zQSvc9VSkwyDnF+azqrfR5RVkDBT52V4vrqEKikFdlAJvrC9BkV0mJyU9f3gGmD
+	 jmxz7klL6Iqmw==
+Date: Wed, 4 Jun 2025 15:23:11 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: .mailmap: update Rob Clark's email address
+Message-ID: <gqlhinly7mkos5ejypbhjzyefcrevok4unz7qlmwngx742p37n@hiuyb55tbncb>
+References: <20250604175600.89902-1-robdclark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1266.g31b7d2e469-goog
-Message-ID: <20250604201938.1409219-1-hramamurthy@google.com>
-Subject: [PATCH net] gve: Fix stuck TX queue for DQ queue format
-From: Harshitha Ramamurthy <hramamurthy@google.com>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, jeroendb@google.com, hramamurthy@google.com, 
-	andrew+netdev@lunn.ch, willemb@google.com, pkaligineedi@google.com, 
-	joshwash@google.com, thostet@google.com, jfraker@google.com, 
-	awogbemila@google.com, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604175600.89902-1-robdclark@gmail.com>
 
-From: Praveen Kaligineedi <pkaligineedi@google.com>
+On Wed, Jun 04, 2025 at 10:55:58AM -0700, Rob Clark wrote:
+> From: Rob Clark <robin.clark@oss.qualcomm.com>
+> 
+> Remap historical email addresses to @oss.qualcomm.com.
+> 
+> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
 
-gve_tx_timeout was calculating missed completions in a way that is only
-relevant in the GQ queue format. Additionally, it was attempting to
-disable device interrupts, which is not needed in either GQ or DQ queue
-formats.
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-As a result, TX timeouts with the DQ queue format likely would have
-triggered early resets without kicking the queue at all.
+Welcome,
+Bjorn
 
-This patch drops the check for pending work altogether and always kicks
-the queue after validating the queue has not seen a TX timeout too
-recently.
-
-Fixes: 87a7f321bb6a ("gve: Recover from queue stall due to missed IRQ")
-Co-developed-by: Tim Hostetler <thostet@google.com>
-Signed-off-by: Tim Hostetler <thostet@google.com>
-Signed-off-by: Praveen Kaligineedi <pkaligineedi@google.com>
-Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
----
- drivers/net/ethernet/google/gve/gve_main.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
-index c3791cf..0c6328b 100644
---- a/drivers/net/ethernet/google/gve/gve_main.c
-+++ b/drivers/net/ethernet/google/gve/gve_main.c
-@@ -1921,7 +1921,6 @@ static void gve_tx_timeout(struct net_device *dev, unsigned int txqueue)
- 	struct gve_notify_block *block;
- 	struct gve_tx_ring *tx = NULL;
- 	struct gve_priv *priv;
--	u32 last_nic_done;
- 	u32 current_time;
- 	u32 ntfy_idx;
- 
-@@ -1941,17 +1940,10 @@ static void gve_tx_timeout(struct net_device *dev, unsigned int txqueue)
- 	if (tx->last_kick_msec + MIN_TX_TIMEOUT_GAP > current_time)
- 		goto reset;
- 
--	/* Check to see if there are missed completions, which will allow us to
--	 * kick the queue.
--	 */
--	last_nic_done = gve_tx_load_event_counter(priv, tx);
--	if (last_nic_done - tx->done) {
--		netdev_info(dev, "Kicking queue %d", txqueue);
--		iowrite32be(GVE_IRQ_MASK, gve_irq_doorbell(priv, block));
--		napi_schedule(&block->napi);
--		tx->last_kick_msec = current_time;
--		goto out;
--	} // Else reset.
-+	netdev_info(dev, "Kicking queue %d", txqueue);
-+	napi_schedule(&block->napi);
-+	tx->last_kick_msec = current_time;
-+	goto out;
- 
- reset:
- 	gve_schedule_reset(priv);
--- 
-2.49.0.805.g082f7c87e0-goog
-
+> ---
+>  .mailmap    | 2 ++
+>  MAINTAINERS | 6 +++---
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/.mailmap b/.mailmap
+> index 6a6aa09e244b..b72a164280ea 100644
+> --- a/.mailmap
+> +++ b/.mailmap
+> @@ -633,6 +633,8 @@ Richard Genoud <richard.genoud@bootlin.com> <richard.genoud@gmail.com>
+>  Richard Leitner <richard.leitner@linux.dev> <dev@g0hl1n.net>
+>  Richard Leitner <richard.leitner@linux.dev> <me@g0hl1n.net>
+>  Richard Leitner <richard.leitner@linux.dev> <richard.leitner@skidata.com>
+> +Rob Clark <robin.clark@oss.qualcomm.com> <robdclark@chromium.org>
+> +Rob Clark <robin.clark@oss.qualcomm.com> <robdclark@gmail.com>
+>  Robert Foss <rfoss@kernel.org> <robert.foss@linaro.org>
+>  Rocky Liao <quic_rjliao@quicinc.com> <rjliao@codeaurora.org>
+>  Rodrigo Siqueira <siqueira@igalia.com> <rodrigosiqueiramelo@gmail.com>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ee57fc5d48f8..5dd1a3234cc5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7567,7 +7567,7 @@ F:	Documentation/devicetree/bindings/display/panel/panel-mipi-dbi-spi.yaml
+>  F:	drivers/gpu/drm/tiny/panel-mipi-dbi.c
+>  
+>  DRM DRIVER for Qualcomm Adreno GPUs
+> -M:	Rob Clark <robdclark@gmail.com>
+> +M:	Rob Clark <robin.clark@oss.qualcomm.com>
+>  R:	Sean Paul <sean@poorly.run>
+>  R:	Konrad Dybcio <konradybcio@kernel.org>
+>  L:	linux-arm-msm@vger.kernel.org
+> @@ -7586,7 +7586,7 @@ F:	drivers/gpu/drm/msm/registers/adreno/
+>  F:	include/uapi/drm/msm_drm.h
+>  
+>  DRM DRIVER for Qualcomm display hardware
+> -M:	Rob Clark <robdclark@gmail.com>
+> +M:	Rob Clark <robin.clark@oss.qualcomm.com>
+>  M:	Abhinav Kumar <quic_abhinavk@quicinc.com>
+>  M:	Dmitry Baryshkov <lumag@kernel.org>
+>  R:	Sean Paul <sean@poorly.run>
+> @@ -20287,7 +20287,7 @@ F:	drivers/soc/qcom/icc-bwmon.c
+>  F:	drivers/soc/qcom/trace_icc-bwmon.h
+>  
+>  QUALCOMM IOMMU
+> -M:	Rob Clark <robdclark@gmail.com>
+> +M:	Rob Clark <robin.clark@oss.qualcomm.com>
+>  L:	iommu@lists.linux.dev
+>  L:	linux-arm-msm@vger.kernel.org
+>  S:	Maintained
+> -- 
+> 2.49.0
+> 
+> 
