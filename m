@@ -1,187 +1,125 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9851171A1;
-	Wed,  4 Jun 2025 09:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6F6224B01;
+	Wed,  4 Jun 2025 09:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027779; cv=none; b=WGpAXcQNie7aAzoDALmyForHEguh+xDDLyHy0K6T6AZTQIORrJ0fgGX8wXf8+PqjS7+1iIjlkKIYzwjm74bI7ZCS2AgJ0dvTvJdrV9IxYdxR6EvpWiLorc/o5e1layoVWeQ/B0RqJCFUl6OqM1xlklx0qrGxzkmN4wTb++8F8NM=
+	t=1749027833; cv=none; b=OB7VERvHWHr36ym+0vNL3DCIxAqeVY+DjjXZsyI8RKQX55bpoW45jr+oa5WDJC+QnD02XGa19CAwTLa1kTqXaWZpLJWCybti8PZ4i013pJftWm620CyYSNXtH4VRU9LrAG/Sz+Ea6seNTWcET+Xk8YlqszJmvZAa6iLhmQiQzMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027779; c=relaxed/simple;
-	bh=ACscrL2viB9MccNiRSmG7exlusg6hWuddEnoY03JguA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=fMQu8aMhTi36HgwKuG3G7c9lZT/DM2KAeZ7CBPpuLpZCBf0epHua08rHnnNackZKmmVJCaXA8f4fS5dhXIYIyPbEKHvBBl823pZLOS1Dy6P9Lyo7SaqP4jOJo19YgQYxyTdHQ7LVYJ9Vlhnm+owaVBuWlGErBdBZ1iq8bWAa4C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n6lAo/+1; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749027833; c=relaxed/simple;
+	bh=A5ufNgaB5QqNQve2lIwPQhyGKgxomX8BNHHcVwPsIFs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zva6UlwBOqZ/AhHiCLEMpOL1Pm/8u4ACR2KmedoqtAHP8mttO0B0WoAOqUyeR/QGEah0PpM/wD/1rZx9UPPxYubzJ7Uo3CX1eBI8cVlmE4cO5b40qYhIUDEdI0cXdK9AbnBroLAUOuyjfv6tVA3WY1MxzPHqq/ee7tVX+c5G2Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpZEoFCF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n6lAo/+1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 83E82432FC;
-	Wed,  4 Jun 2025 09:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749027769;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2Nmq+6v2A71B0bX8QqGblVfzuVcGFArdbHQL7ep/nDU=;
-	b=n6lAo/+16LWdc57oz+Z5OQbqq5O62F1rsRLiGS2p6TFSfAjyskbkQtbhDEsZm1KdNCoX0S
-	ng17QFnHMgV0DQUmociuS/rHsZLZsGJetjsJ6NFsM1vOioue2IrKX/PXoaZz2QKGB1L3X2
-	ecnLSxmzffTC0quPLldjqPasHXpNPmMoqpi/x8t91vxrWfji/OeEnsihZ6dC99WzDo+J3s
-	WnZ0TzE5fZD9tN/wijK3T18zor9d7kBJHiFcGPpI+eDK3izPQiW/6fGSkhPIXiyNPhEX04
-	pQuHsQO6MB+4XF3FEo9sUOjA23gLZWYAiIHE+0QGRs6OChIvpQttLy7ANz/GfQ==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpZEoFCF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 802A0C4CEF0;
+	Wed,  4 Jun 2025 09:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749027832;
+	bh=A5ufNgaB5QqNQve2lIwPQhyGKgxomX8BNHHcVwPsIFs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mpZEoFCF9+3magtF+MmP4NkwPLFkCHbG+qizXSpelm8g4UiQEpyrtx8OBRuVlXgn7
+	 LDjwJizxZyfOWqFAEje9brNnBl2dVeZIx2MtcGVcHdTBGT9PdqKAr78kp5lZKnSoqC
+	 ePcCiAhS4YvQmJM6SINMQF2K5HNia92pbhMvQ0xD8kC3ZD7kcP9D5V/1w1Pe7Wa60E
+	 y+327IDKU4AE9Ny9CzQYtx/Cfe7zzpVej2OuX5sCpp8PF09gO82+TiD19NdAXui03R
+	 6yRCk/7b4SilakfjME/Pb4XCS6Je/Qpl9O1Jsn+Ezzhew6eSWRS7EWdYRVHoFX9rw/
+	 GNjIoWyhT0zNw==
+Message-ID: <df534020-f34c-4d23-85c4-eb9c241e5c7b@kernel.org>
+Date: Wed, 4 Jun 2025 11:03:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: eswin: Documentation for
+ eic7700 SoC
+To: dongxuyang@eswincomputing.com, p.zabel@pengutronix.de, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
+ huangyifeng@eswincomputing.com
+References: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
+ <20250604085235.2153-1-dongxuyang@eswincomputing.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250604085235.2153-1-dongxuyang@eswincomputing.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 04 Jun 2025 11:02:44 +0200
-Message-Id: <DADMLIVHMSSO.3AXSI5216WCT6@bootlin.com>
-Subject: [Question] attributes encoding in BTF
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>, "Andrii
- Nakryiko" <andrii.nakryiko@gmail.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
- <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
- <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
- <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
- <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
- <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Catalin
- Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan" <shuah@kernel.org>, "Maxime
- Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
- <alexandre.torgue@foss.st.com>, "Florent Revest" <revest@chromium.org>,
- "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
- <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>, <dwarves@vger.kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
- <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
- <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
- <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
- <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
-In-Reply-To: <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkuffhvfevofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetueeljeefkeejheduudfgffdvhfegffdvleeggeefvdeikefhleeuhefgtefgudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefvddprhgtphhtthhopegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhhiihdrnhgrkhhrhihikhhosehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlsehiohhgvggrrhgsohigr
- dhnvghtpdhrtghpthhtohepjhhohhhnrdhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrthhinhdrlhgruheslhhinhhugidruggvvhdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhm
-X-GND-Sasl: alexis.lothore@bootlin.com
+Content-Transfer-Encoding: 7bit
 
-Hi all,
-a simpler version of this series has been merged, and so I am now taking a
-look at the issue I have put aside in the merged version: dealing with more
-specific data layout for arguments passed on stack. For example, a function
-can pass small structs on stack, but this need special care when generating
-the corresponding bpf trampolines. Those structs have specific alignment
-specified by the target ABI, but it can also be altered with attributes
-packing the structure or modifying the alignment.
+On 04/06/2025 10:52, dongxuyang@eswincomputing.com wrote:
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: eswin,eic7700-reset
+> +      - const: syscon
 
-Some platforms already support structs on stack (see
-tracing_struct_many_args test), but as discussed earlier, those may suffer
-from the same kind of issue mentioned above.
+Hm? Did you just add it for the driver? If so, then no, drop. Use
+standard MMIO regmap (if you want regmap).
 
-On Wed Apr 23, 2025 at 9:24 PM CEST, Alexis Lothor=C3=A9 wrote:
-> Hi Andrii,
->
-> On Wed Apr 23, 2025 at 7:15 PM CEST, Andrii Nakryiko wrote:
->> On Thu, Apr 17, 2025 at 12:14=E2=80=AFAM Alexis Lothor=C3=A9
->> <alexis.lothore@bootlin.com> wrote:
->>>
->>> Hi Andrii,
->>>
->>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
+> +      - const: simple-mfd
 
-[...]
+Why did this appear? Changelog is silent on this and it makes no sense
+here. No children.
 
->> I'd suggest looking at btf__align_of() in libbpf (tools/lib/bpf/btf.c)
->> to see how we calculate alignment there. It seems to work decently
->> enough. It won't cover any arch-specific extra rules like double
->> needing 16-byte alignment (I vaguely remember something like that for
->> some architectures, but I might be misremembering), or anything
->> similar. It also won't detect (I don't think it's possible without
->> DWARF) artificially increased alignment with attribute((aligned(N))).
->
-> Thanks for the pointer, I'll take a look at it. The more we discuss this
-> series, the less member size sounds relevant for what I'm trying to achie=
-ve
-> here.
->
-> Following Xu's comments, I have been thinking about how I could detect th=
-e
-> custom alignments and packing on structures, and I was wondering if I cou=
-ld
-> somehow benefit from __attribute__ encoding in BTF info ([1]). But
-> following your hint, I also see some btf_is_struct_packed() in
-> tools/lib/bpf/btf_dump.c that could help. I'll dig this further and see i=
-f
-> I can manage to make something work with all of this.
-
-Andrii's comment above illustrates well my current issue: when functions
-pass arguments on stack, we are missing info for some of them to correctly
-build trampolines, especially for struct, which can have attributes like
-__attribute__((packed)) or __attribute__((align(x))). [1] seems to be a
-recent solution implemented for BTF to cover this need. IIUC it encodes any
-arbitratry attribute affecting a data type or function, so if I have some
-struct like this one in my kernel or a module:
-
-struct foo {
-    short b
-    int a;
-} __packed;
-
-I would expect the corresponding BTF data to have some BTF_KIND_DECL_TAG
-describing the "packed" attribute for the corresponding structure, but I
-fail to find any of those when running:
-
-$ bpftool btf dump file vmlinux format raw
-
-In there I see some DECL_TAG but those are mostly 'bpf_kfunc', I see not
-arbitrary attribute like 'packed' or 'aligned(x)'.
-
-What I really need to do in the end is to be able to parse those alignments
-attributes info in the kernel at runtime when generating trampolines, but I
-hoped to be able to see them with bpftool first to validate the concept.
-
-I started taking a look further at this and stumbled upon [2] in which Alan
-gives many more details about the feature, so I did the following checks:
-- kernel version 6.15.0-rc4 from bpf-next_base: it contains the updated
-  Makefile.btf calling pahole with `--btf_features=3Dattributes`
-- pahole v1.30
-  $ pahole --supported_btf_features
-  encode_force,var,float,decl_tag,type_tag,enum64,optimized_func,consistent=
-_func,decl_tag_kfuncs,reproducible_build,distilled_base,global_var,attribut=
-es
-  This pahole comes from my distro pkg manager, but I have also done the
-  same test with a freshly built pahole, while taking care of pulling the
-  libbpf submodule.
-- bpftool v7.6.0
-    bpftool v7.6.0
-    using libbpf v1.6
-    features: llvm, skeletons
-
-Could I be missing something obvious ? Or did I misunderstand the actual
-attribute encoding feature ?
-
-Thanks,
-
-Alexis
-
-[1] https://lore.kernel.org/bpf/20250130201239.1429648-1-ihor.solodrai@linu=
-x.dev/
-[2] https://lore.kernel.org/all/CA+icZUW31vpS=3DR3zM6G4FMkzuiQovqtd+e-8ihws=
-K_A-QtSSYg@mail.gmail.com/
-
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#reset-cells':
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#reset-cells'
+> +
+Best regards,
+Krzysztof
