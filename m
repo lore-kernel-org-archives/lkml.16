@@ -1,177 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9140928F51B
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987541C9DC6
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749049783; cv=none; b=Pw9xDA8aDTT81x8xSpOX8Z08zJyocmjNC3tXdtxWOD8Uxj68r7GdEB+Q24E5zZZl3QT8PPjkyAB5YOuYteh6tizIXsrGxePPlOGvJ4Bl6AWwF5BBclQ4izxjoxjhxXs01hxOKTJpN63t3KjBBSeXJBdPMRxnNl/o4T4/pU6qMjo=
+	t=1749049799; cv=none; b=KcFWgltWXU7l4AKl1RZKxE0LSLVgs9epC+yhx2xrPgQ2DNHaeI795gUFflNsmBzu51sf6/deAbRJ/CUhzicwgQHQ377IbVqno9nlGMlz1qhO4pJSWrNB2Obu43v2SZZ9LXGqFK7x+h2iDJy5x01brUJvCAXZybNTUT2TxxcSgBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749049783; c=relaxed/simple;
-	bh=MStiwnmTKTIxDYoiFZ0DxSnXZqv5tV3Q2Nw8sIyap1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j7zB33/ng0KNBNx0LXxhKH8ubz8D2JQD3j+dEfE/6BwNvT3vZYzJb0fLh4CiL4Xh0OUYNZk6D4Imi6AJKqOL+g9GG9rrEp4r5YcZnMkqcLglXgcB6dRuGSrFT0BklDVT9YVPUdVdW/UrkNl6HrScT/kLn16SxOif2DAC2Rb19c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hzOQ2KLr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749049799; c=relaxed/simple;
+	bh=zdu+2ETAGAUTf6aB9sj7/U9Uy8zeZ3qBo7VIpRAhIaE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ykj5n+nw+1SdHb3DmFNrAG5EwbW8LVN9pw9o2GCdQHt0ZB+QjBdIvqpV2XSox614uhEvE2cGaHTZM9zb35e+yW7ZgT/Ri82BRWcClPFdS7GhbLBSO1Aq3QDifk2WeO6ce8nawUAaae0KDOkOkMi42remtLtX9mmDyYKNGssmTsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=KifjrDEx; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hzOQ2KLr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749049780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K0Z14f5Dv0sEBCQzCT+N5xWNS5ySL+Tzir6TJSSZ+3Q=;
-	b=hzOQ2KLrlpDOZ1hXZQf0AD6fcXY3j7jIkzh6D9aEwmPbinWIRAkGLLplLKt0cxN8JJZj55
-	4WYEblgqbglTSB2vqRLK8L9Ka9i91M7XbGtpBQ/Pw+34gXtFPowQS5m2VZPjrJMBz3AIqN
-	NLVwH/G271VLnexk2Q/d0x8PBLfh6TY=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-631-RISzvFFuOyKZxk0zCkyARQ-1; Wed, 04 Jun 2025 11:09:37 -0400
-X-MC-Unique: RISzvFFuOyKZxk0zCkyARQ-1
-X-Mimecast-MFC-AGG-ID: RISzvFFuOyKZxk0zCkyARQ_1749049777
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6facf4cf5e1so84465946d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:09:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749049777; x=1749654577;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K0Z14f5Dv0sEBCQzCT+N5xWNS5ySL+Tzir6TJSSZ+3Q=;
-        b=rAWOo47gL1k6z8dVxuwuffEH7LpIfHWSvkvAYyZgo0/5PHfb6WhYGQHkYlHD0UO6f1
-         sdLBpXzjEgfsVtXSWXB31db5e7vhn0eo67aIsUxUR7AduEKLRew8sRAoTZQdUxtuDt4L
-         k+qnwmBQI3gd9203IGXPPoxhvX+V3wTVAZT7ge2LixKpcHS9kVMN11qdcgDOPLKxSd1C
-         3S1BrrYBmaXMA/jR0w1zeUCHMGKF+R/vVeLOntkHJukg5DgbP2c/YV6fKoirQ7ia+BAZ
-         mSXGHRje2YwBzIPPdbTqeO77u1WQUmJ1iuucDQfIaRLyezBvdDX3NhmgxaCcEiPVKbKE
-         Ioag==
-X-Forwarded-Encrypted: i=1; AJvYcCXIS31mnKcwVAQch5Ok7PWRF50MgUUdoo7+qubxfjH1HLyUBHSRUyy7a9xocVeXViRfvcDP0V+FAsD+LGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6oz7zqPiWmSd9VOYJZqFhrf5g3IVQfEzkozZitmu6SAWWE93O
-	m7YSMf1zF2XNJxWOLh6bPCHC76k+L6BgM0doFuiriUyPSA3ZJ/HomMYf4yI5a5ia0t3bmlYHQj+
-	8DnX/lA3RDaBgdDA4M6qh9uINgo1TV2D4d0+NDiKbO2uyiPi+mgnjeqLoPjMgZ8+0lw==
-X-Gm-Gg: ASbGncuP7+3oiugPTWGKorOfSgAB916S5UoxiEqGLzFiRh/H2WSx3dENRUDvvMOmCNo
-	1gBNWdnKAoJA3q5gLQafFkEw+g8KJblaGj0/jHC1tCHH6Ac5PbXRa0K76ziQF5MIbxbKPr4CPeY
-	OIrc5D5l/U/WkJH+opMXDEmGdcL/9Co+PZOsvXPHdqKp5PpEYq4axCfNhxPDNTiP4wKKLjXyq/R
-	FAjOvGc7uzWAIZzpGw1KArMTp0L41zTNF42wc6uYxq0Siuu/2jG/Rw7B1rVML/w5kuZMaB7yAiF
-	XJk=
-X-Received: by 2002:a05:6214:5086:b0:6fa:ce1e:3a4a with SMTP id 6a1803df08f44-6faf6f9312emr40237106d6.6.1749049776243;
-        Wed, 04 Jun 2025 08:09:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFSDUs50177E/rrZpx+xC+0iIv+BIQc1aieeX4oFfx7XS0nPA0qJB8ecAAJUv8L53J89ePgrw==
-X-Received: by 2002:a05:6214:5086:b0:6fa:ce1e:3a4a with SMTP id 6a1803df08f44-6faf6f9312emr40235876d6.6.1749049774940;
-        Wed, 04 Jun 2025 08:09:34 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6e00d42sm99700586d6.85.2025.06.04.08.09.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 08:09:34 -0700 (PDT)
-Date: Wed, 4 Jun 2025 11:09:31 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Tal Zussman <tz2294@columbia.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Pavel Emelyanov <xemul@parallels.com>,
-	Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/3] userfaultfd: prevent unregistering VMAs through a
- different userfaultfd
-Message-ID: <aEBhqz1UgpP8d9hG@x1.local>
-References: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
- <20250603-uffd-fixes-v1-2-9c638c73f047@columbia.edu>
- <84cf5418-42e9-4ec5-bd87-17ba91995c47@redhat.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="KifjrDEx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1749049795;
+	bh=q8h9kR1SVvQAsWuLnRY9YRkZHJsMjxdtRkk78Wgjdw4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=KifjrDExQCQTOpSkL0e//z15yMT5tQHomdzwY0IsE/kFg+gnlj8Sh7M/magBS4m3B
+	 kO71Sukk0TpN+u0jKY1BRwYlsZp5UU7Yvq/WQ39ZSLDlKOnFkh+0Df0iTRovWI5DEs
+	 XRtr7n5YcP+oQ8J3OLqCdkH7wf51FrunXFWVNRy0=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 80F9465F62;
+	Wed,  4 Jun 2025 11:09:53 -0400 (EDT)
+Message-ID: <5065dcf8fe1995859874196aa9ea5c0bff056ae3.camel@xry111.site>
+Subject: [PATCH] RISC-V: vDSO: Correct inline assembly constraints in the
+ getrandom syscall wrapper
+From: Xi Ruoyao <xry111@xry111.site>
+To: Alexandre Ghiti <alex@ghiti.fr>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+	 <thomas.weissschuh@linutronix.de>, Nathan Chancellor <nathan@kernel.org>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, Paul Walmsley
+	 <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Guo Ren
+	 <guoren@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 04 Jun 2025 23:09:52 +0800
+In-Reply-To: <57a1ced6-406b-4197-96ca-6b83d99ca1a0@ghiti.fr>
+References: <20250411024600.16045-1-xry111@xry111.site>
+	 <20250411095103-2aad099a-e4a1-4efb-8374-dd27bf05b668@linutronix.de>
+	 <a2477829-f3a5-4763-89f3-8c2c1f4716b8@ghiti.fr>
+	 <7f840a23ab8865d7f205caec56817c660e237d64.camel@xry111.site>
+	 <71f093d5-4823-4bc6-b9ee-23433bd8c60c@ghiti.fr>
+	 <0f0eb024d7ed062141a8aa048017e6f7ef7c1fd4.camel@xry111.site>
+	 <57a1ced6-406b-4197-96ca-6b83d99ca1a0@ghiti.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <84cf5418-42e9-4ec5-bd87-17ba91995c47@redhat.com>
 
-On Wed, Jun 04, 2025 at 03:23:38PM +0200, David Hildenbrand wrote:
-> On 04.06.25 00:14, Tal Zussman wrote:
-> > Currently, a VMA registered with a uffd can be unregistered through a
-> > different uffd asssociated with the same mm_struct.
-> > 
-> > Change this behavior to be stricter by requiring VMAs to be unregistered
-> > through the same uffd they were registered with.
-> > 
-> > While at it, correct the comment for the no userfaultfd case. This seems
-> > to be a copy-paste artifact from the analagous userfaultfd_register()
-> > check.
-> 
-> I consider it a BUG that should be fixed. Hoping Peter can share his
-> opinion.
+As recently pointed out by Thomas, if a register is forced for two
+different register variables, among them one is used as "+" (both input
+and output) and another is only used as input, Clang would treat the
+conflicting input parameters as undefined behaviour and optimize away
+the argument assignment.
 
-Agree it smells like unintentional, it's just that the man page indeed
-didn't mention what would happen if the userfaultfd isn't the one got
-registered but only requesting them to be "compatible".
+Per an example in the GCC documentation, for this purpose we can use "=3D"
+(only output) for the output, and "0" for the input for that we must
+reuse the same register as the output.  I'm not sure if using a simple
+"r" for the input is safe or not here, so just follow the documentation.
 
-DESCRIPTION
-       Unregister a memory address range from userfaultfd.  The pages in
-       the range must be “compatible” (see UFFDIO_REGISTER(2const)).
+Link: https://lore.kernel.org/all/20250603-loongarch-vdso-syscall-v1-1-6d12=
+d6dfbdd0@linutronix.de/
+Link: https://gcc.gnu.org/onlinedocs/gcc-15.1.0/gcc/Local-Register-Variable=
+s.html
+Cc: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ arch/riscv/include/asm/vdso/getrandom.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-So it sounds still possible if we have existing userapp creating multiple
-userfaultfds (for example, for scalability reasons on using multiple
-queues) to manage its own mm address space, one uffd in charge of a portion
-of VMAs, then it can randomly take one userfaultfd to do unregistrations.
-Such might break.
+diff --git a/arch/riscv/include/asm/vdso/getrandom.h b/arch/riscv/include/a=
+sm/vdso/getrandom.h
+index 8dc92441702a..0d84a38e79da 100644
+--- a/arch/riscv/include/asm/vdso/getrandom.h
++++ b/arch/riscv/include/asm/vdso/getrandom.h
+@@ -18,8 +18,8 @@ static __always_inline ssize_t getrandom_syscall(void *_b=
+uffer, size_t _len, uns
+ 	register unsigned int flags asm("a2") =3D _flags;
+=20
+ 	asm volatile ("ecall\n"
+-		      : "+r" (ret)
+-		      : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
++		      : "=3Dr" (ret)
++		      : "r" (nr), "0" (buffer), "r" (len), "r" (flags)
+ 		      : "memory");
+=20
+ 	return ret;
 
-> 
-> > 
-> > Fixes: 86039bd3b4e6 ("userfaultfd: add new syscall to provide memory externalization")
-> > Signed-off-by: Tal Zussman <tz2294@columbia.edu>
-> > ---
-> >   fs/userfaultfd.c | 15 +++++++++++++--
-> >   1 file changed, 13 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> > index 22f4bf956ba1..9289e30b24c4 100644
-> > --- a/fs/userfaultfd.c
-> > +++ b/fs/userfaultfd.c
-> > @@ -1477,6 +1477,16 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
-> >   		if (!vma_can_userfault(cur, cur->vm_flags, wp_async))
-> >   			goto out_unlock;
-> > +		/*
-> > +		 * Check that this vma isn't already owned by a different
-> > +		 * userfaultfd. This provides for more strict behavior by
-> > +		 * preventing a VMA registered with a userfaultfd from being
-> > +		 * unregistered through a different userfaultfd.
-> > +		 */
-> > +		if (cur->vm_userfaultfd_ctx.ctx &&
-> > +		    cur->vm_userfaultfd_ctx.ctx != ctx)
-> > +			goto out_unlock;
-> 
-> So we allow !cur->vm_userfaultfd_ctx.ctx to allow unregistering when there
-> was nothing registered.
-> 
-> A bit weird to set "found = true" in that case. Maybe it's fine, just
-> raising it ...
-
-This part should be ok, as found is defined as:
-
-	/*
-	 * Search for not compatible vmas.
-	 */
-	found = false;
-
-So it's still compatible VMA even if not registered.
-
-It's just that I'm not yet sure how this change benefits the kernel
-(besides the API can look slightly cleaner).  There seems to still have a
-low risk of breaking userapps.  It could be a matter of whether there can
-be any real security concerns.
-
-If not, maybe we don't need to risk such a change for almost nothing (I
-almost never think "API cleaness" a goal when it's put together with
-compatilibities).
-
-Thanks,
-
--- 
-Peter Xu
-
+base-commit: dc5240f09bca7b5fc72ad8894d6b9321bce51139
+--=20
+2.49.0
