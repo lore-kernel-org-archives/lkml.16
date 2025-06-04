@@ -1,228 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F5D145B3E
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 03:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749007975; cv=fail; b=uX+vg5pq7T84pYf0NTtJy3/B9XFKs/vkytnfb3sWASnTncl4WuRt25e3wNC+mlU9vmcw2i3B6Sk2tGyZDOrowEnCw/hE8cMGit/lg90cLGy51OclQtEX4Xt9lP4oUYMo4zDgCwzK/RusTAC/YZoscbWX7AO6K6gBiGVg7etfIEQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749007975; c=relaxed/simple;
-	bh=OCFS6aTfqJhmYVtNzJ+p3P1nZblHPa0ER+ZxnfY6/O8=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=I6IE0x+V3Lz8X4V/LBFgL80zkNFKKzmk5d9YGXIMJ3Qh88Di4QJTc7CYbM4zs7g4ayfeJxClRCk45PdP9rzSRDsFsgC2xUrXeSjUUTkCPVsYGRZ0SE3UB8sG5u9K56k4D9kLIA2rvdE+IlpxSegcVWmlUIp+ln9dFmR59JYWRCw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SnQl+vYB; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61F515665C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 03:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749008126; cv=none; b=Yvr6DaUkmPs6RYBBkIgtRyS9XuERluDtJ5VL4t0GAgHPdF3WRkyeRW8IZ8suIX8uj/tJD9QQq9it7z7t07voczxrXWw9xUFyK4OYSBeTdW9B3qNMVffczMEoNisIFQ5L1G6x80DFqeIu8ZczP6IyEbVD62xKmojTDu8mCCO+h2o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749008126; c=relaxed/simple;
+	bh=hgsoK6RQCmY70/2eE5JluAaKNndCfa8R+nvWxZE+fk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LoE2PcGYrINi9ycz4BJ4m25GzcRELhpcTeFOgrbPgsC29OAXspbLmHntm7bXpVBmRf2ue3P23oEmbmTipFc2bVVGOb5I5po/2cVQ9TbklahzrObeyWTQZajDuZFbD5zefY0HpSm7yr4fjPe/KSFLIJOHDWGpfEFpkAKZkFdaQ4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gY7sp7M8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SnQl+vYB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749007974; x=1780543974;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=OCFS6aTfqJhmYVtNzJ+p3P1nZblHPa0ER+ZxnfY6/O8=;
-  b=SnQl+vYBrdkcxffr4XYHsePBn8QpGBv8Mdn1RbwFZQpjDbMW1bUR+oNi
-   X2Ti/RM65SeGTb5v9H1vYfG2ZUmJc5DKncbUp+3W0R92h+MoadmfHQTAP
-   KYwDmlFfV4HInkqn/yiuHJEbxbZ9WBusiAAEiuIR/0m9qjej0JZ2bhN/l
-   6Rb4izamc5C60UlEcPQm1x+pUeAnUsTwBVYO6FOcCaxRcKKkkETPpZR8+
-   Esahjp47aV4FO/YWziQja4O94sX4olewIZxxk83T/IeX20kys/p0W+rON
-   IbPWTMxX+Vp5wKwGh0PDivIfGvYrqy0XHV3rhHI5ogjPxUqxUmRB0Ouww
-   w==;
-X-CSE-ConnectionGUID: PfpDTFGoSPa0NAle3dulhg==
-X-CSE-MsgGUID: j1GeeXzMQDS9yckkinsx1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="73602993"
-X-IronPort-AV: E=Sophos;i="6.16,208,1744095600"; 
-   d="scan'208";a="73602993"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 20:32:53 -0700
-X-CSE-ConnectionGUID: yMUedhQCRLWxYYiqKlkxtA==
-X-CSE-MsgGUID: 4mE3AIS3QK+OPWdsvSdanQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,208,1744095600"; 
-   d="scan'208";a="150209892"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 20:32:52 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 3 Jun 2025 20:32:52 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 3 Jun 2025 20:32:52 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.48) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Tue, 3 Jun 2025 20:32:52 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YuEgR+MaCk2yB9PpAnONzFJmCftkrl7pDen715/dC0GxRWZ2EBosqlwsMGHbNpH5Osg2M4D1Bx1HAZ21fg213cJjS0AxFBNAYLe6tR3Xuy1T5Y7r1tcrlEp3VscGmaDhmsINhpdgr73C2C1A06HNCdYD3tZ1mJFgszZn9CBJeMHjvL/QfPcfcIqve75ITd2fbBNGPFZWER9pkRnHFnl1oZremH2P69a8tleP214Rc1htke5jOwoJ2p50P9NeLT1oezQiHGR0mZXpwNFlFBG1RISUxFGE1KE1s+BPZS7tMaqBhL/uG9oaGLLubib1AlfcxHUtIr+RON25GtYkqkW+ow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CuU0+4GpETvCQpnpnh+H1QG0Vmx3it9kw3BwYVEA7Og=;
- b=ypDkrg5L+1XI3c9tYFdWpcOjVWP+/chFEoKQ1IURnLnACYFPEUO4S0OIJTAhsfdhqOVqUws50ogWIsfms4Yv/OWCru7B/I4eABdN1XkE92jdlHql2Rxvk7tlLJst+kJzzM9d5piC70ra0bZJrYffvHc7ccv59lcn5KPJM9lMkkhM4D0Cy8wz++TZlI/NKe1U7prSGgvti74B92MBxnh4f0tStNgG1dJxV+iz/VRhw24bgGvHSafIRWNzoiIDpAdlAFlQJanz/1hm4BTinzc7Op2VYaHp6YsM5C0HdqREDM0gzRVVQohOD54+CNuEqiJ2Fm8zucwaLYvS13qcIanP4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by CY5PR11MB6511.namprd11.prod.outlook.com (2603:10b6:930:41::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Wed, 4 Jun
- 2025 03:32:50 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
- 03:32:50 +0000
-Message-ID: <ec532d7c-df13-46ad-a4aa-1b9c553cd14b@intel.com>
-Date: Tue, 3 Jun 2025 20:32:48 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/29] x86,fs/resctrl: Refactor domain_remove_cpu_mon()
- ready for new domain types
-To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
- Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
-	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
-	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
-	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>
-CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<patches@lists.linux.dev>
-References: <20250521225049.132551-1-tony.luck@intel.com>
- <20250521225049.132551-10-tony.luck@intel.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250521225049.132551-10-tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0091.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::6) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gY7sp7M8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749008123;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PO4T1rnPlmKykDehCYP0m1kIchCQnr8l4c6LLtP6l80=;
+	b=gY7sp7M8Tj5U0LJ3MQPILuos0ZA9bLX4/nw4w/SbugYOMNz3J9rLc6IaIYCSdqjRxrwIsD
+	tZBKLBUzb+rQ/gCy/y0gDu3glL8b+W36czQasmY8QNX7VtV0hbJnJKNARzu2MzKVCQQIrg
+	9Mn1LHKVwRUtnnu3gRdy3kwdkS7Kh6g=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-_P7QOU3DPRufc4fMiPje9A-1; Tue, 03 Jun 2025 23:35:21 -0400
+X-MC-Unique: _P7QOU3DPRufc4fMiPje9A-1
+X-Mimecast-MFC-AGG-ID: _P7QOU3DPRufc4fMiPje9A_1749008121
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-231d13ac4d4so90640155ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 20:35:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749008120; x=1749612920;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PO4T1rnPlmKykDehCYP0m1kIchCQnr8l4c6LLtP6l80=;
+        b=T3hBrflXK7KJFRb2dNu8EVwcm0S6znLArevLerZoZe/3D1l9bPeYqL1HREL5njfQgU
+         P0a5FBNXgG6xNbVphZFDXHHHjUxDa15/qGv97XCHRi4kRjkyEfFOGFjQpuvR/AdDjyc2
+         PpRmDx9yZ5bKKHzUZRvyI6n+COqoE0Z+p6h0NyTfFzh/32ermQxuJa+44NmxPnPMsiEn
+         LC1g5Hvh/MmXts9f2hJxr3q8FjS64Lg6XTN39/sBgkfOKhevA0WCRJuqszk5nit2LNwb
+         xEnUrW49rOaLstv/qay7hMemIZ3OYuDrBMwZvs+YoQP36v0WJFDP24UfrebBa3a6k6Uk
+         esQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkb7ULpW8BVTrSryeBaJJi5PHBQNFEo6Ot2tT8wYzRXVhuYXfKqPKTf6zBVn+oGOJ1l7xOkKNoVFgnB9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy147PXCkgxalxYp5F7XPJkKd1JNv8+Wy/SmgieN4gyKhL2pTlf
+	yQ/Ho9vbsUX4dIy53j45gvnWDGRUVTx+GKTcrvIqh7U6SCVQG+8HhsLoIGcoGWVKIukRqdCSmtM
+	ZMUUKkUWUTv9VJzHtCxvhRbYgTJpmh9RefSeClvon/Kz5Fv71sHqrfKk/fbkE5+wSvQ==
+X-Gm-Gg: ASbGnctqaFNz4c4i5WABF8RN3DO4TVAOAp2mB1xVbDaw7H/Xs2RE7I3+fWXzJQkSifv
+	+TL6qPMhNu3+A5Lo7Cq9gmZKkCXhVeBVwXMRESyzldp/JBMqw3dI8MBKLEquLkhSqzhGJVcNANK
+	Nesiv3sIjnR/Pty0mQ7iKLSqWBDz0aL7bzPL/LGzi6LPKhydBKV23eduqhaI+fdIpYPOjH5lIdt
+	ReM9iwiMPPbnDLqbMeQLUj8ltqQc0fwOBLl1qAY5NbfYIIDwdqb+MD8FOk7UDXHM3APOoz4n6Wz
+	eDjyFhCtUHEy6g==
+X-Received: by 2002:a17:902:c944:b0:234:ade3:dde7 with SMTP id d9443c01a7336-235e1129185mr15703645ad.13.1749008120634;
+        Tue, 03 Jun 2025 20:35:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGR2MuyzmZwUzZOpzOGpfnKsGH/Q7AqQUA7K47C8uCXumRKpRcoVETmeg7zWutgFqvbeD0vDw==
+X-Received: by 2002:a17:902:c944:b0:234:ade3:dde7 with SMTP id d9443c01a7336-235e1129185mr15703375ad.13.1749008120217;
+        Tue, 03 Jun 2025 20:35:20 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3130690562fsm743828a91.17.2025.06.03.20.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 20:35:19 -0700 (PDT)
+Date: Wed, 4 Jun 2025 11:34:34 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Baoquan He <bhe@redhat.com>, linux-integrity@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de, 
+	ruyang@redhat.com, chenste@linux.microsoft.com
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+Message-ID: <hn455nyrp65bb23ltub4tet6ixfcggshgerxm2bhun4ubv2iau@eanh3ka67irf>
+References: <20250515233953.14685-1-bhe@redhat.com>
+ <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+ <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+ <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
+ <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|CY5PR11MB6511:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ba307f0-a136-4781-ea85-08dda3187b51
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|921020;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?c2ZFVlUyZkExbkpscXRvU0c4blViaWtwQzFzR05CRmh6WVZHRHE1RmE3K0po?=
- =?utf-8?B?NG4rS004d3VaN1dzQUZUeHI3ZEdseUwyL1RjOFB3RWQ5TTlocjdyZ0xhSkM0?=
- =?utf-8?B?MG1WbW00Z1ZjbHdHKys4RlY1SmpmaUFtWjNrUnRwRVRiNzVscGltRE1PWUtw?=
- =?utf-8?B?NXR5VWVQR1FLNkFLcEY4ZmlJMGRqOUY2bDdjSDJYbkhGczRWdGtzQXdDRFpW?=
- =?utf-8?B?eHhjK1ZvSWdtL2NBV2NKMGF3SUEwQWw4YW5aMWxUVHl6TGowOHFCMFNxNHlR?=
- =?utf-8?B?UC9tUnE3YXpwUWpwNXdBay9yNEhNU1R2d1dHTGl0emgxT2pPaGRqbzRLWGlN?=
- =?utf-8?B?aE1NN29oeFE4VWNMcXZzR2toMFVSa2NOOGlSS0R6andqcmY5eFJINFJKMmlq?=
- =?utf-8?B?OUVyNnZTSlluL0lHVDFRUll5MkJMUkMxMlRmUmhmb0N5VXpTQ2JlWmNZalFv?=
- =?utf-8?B?OGxJejBxWmNaeUJyN29MQWdsTDdUVWd1aDlLcjFQaU11RHp5S29kdHlRcUxk?=
- =?utf-8?B?UnZQSzZoMWJRblNYODBjNWl4Y3lsWGFGVUVJUmo2Q3M3cy9GeGtRY2ZPd3k1?=
- =?utf-8?B?Q04wWExrbmwyVVRUMzJyNDZBRlZ0MDVhNkJucGU3RDd0b3E5bjh5aGhkWXJl?=
- =?utf-8?B?QUM3TUpJazZkdlVDenlGUVovTDJ2YUd0OGd5Yi9FeG9XajZ0Uzh5N1BjNUFh?=
- =?utf-8?B?bDhLOE9kR09PZDFwZmVnbDM5OG5TSkdjU0VrN2Z1VjFCT2NuNk1NakFUOFZP?=
- =?utf-8?B?Z2xYelZUT0JGLzlDM3Vhcno3am11VDQ0UjlETHBVZW9USDdWbHRLbVhnOXlv?=
- =?utf-8?B?dUxSTTQ5OUZFMzJKbGFRS2wvcFdkL2VTNGduL0M4YlJ2cTdheXl3b3Eydllk?=
- =?utf-8?B?dmErSXFraTl3RmxSSkxSMDBua1k3YVhBeWpTcEpPMEVrd0VwWEt4SmJmbERT?=
- =?utf-8?B?MUVHODMwMHg3Z0VvdjBPNjE2V0U5ajhwMC9VRW5GYmNQa08welBYTHVTOTJR?=
- =?utf-8?B?VHhPWjEzUGpVTUsyL3hQK0JMekRiWVQrNS9JMWZ2RXlaSHlxTHM0T3hnZERU?=
- =?utf-8?B?YUVWbW1YdmdDSnVyR0daaEtSRXBZbEVNbFlidmV3NWdUQjFIand6ZjJuYm5K?=
- =?utf-8?B?L2xhaHlaZ2k2dlhWY0JTb0dzWnJEKzIvbmNqMXRUYkNDckRLTW12a0NLWFlj?=
- =?utf-8?B?Z0xoekV0RlcwTjE1VnZiRXRod1JUYWl4SFRkUTJlT0p1QnFQcGEwTXg1K2Vw?=
- =?utf-8?B?SVFIdDN6dDBSZ0ZpZkFBRW8xQUxxYVU5SHNrR2ZNQnpMRytDbVFZdmhUTDFX?=
- =?utf-8?B?SHh6cGtPOC83MHRBRFBwd3I1aXlXclh4NS9SL29RNUxsR1J6cEd0cjdHMjVj?=
- =?utf-8?B?TEhyK3dSeTBZeTB4WWlMVmJsVzRua09lSm4zbmtySEtsME16VjZxYjdqUjVF?=
- =?utf-8?B?TndXNTViQkJ1TnFYZE9GL2xRa3RLRCtJU3VCKzdHNU1tSCsrV2prTDhBcVpi?=
- =?utf-8?B?bEprUUloajBjVW8vYXdmaDZNcFAvWUMyMEFFeUtNcllEcVFsT2lCTmVPaUZw?=
- =?utf-8?B?Vmo1blVVdTdjRnlNTnZNMWUxdVBHVEgvYU5QRXQxY2hkV3dacjRLQVhJY2lW?=
- =?utf-8?B?TitmZmI2NVBJNGk0QTdzQ1RRM2hzSkxsMkxSY3hPYVdVaGNXbDZlK0tVMC9n?=
- =?utf-8?B?Y29KWGlySm5DVytkbmw3NGovTWg3TzhLT2QvRVRiQzRPUGVzTHR2WFFld2dp?=
- =?utf-8?B?WVNiL1poR0JqWE8xekRxY3d1VmUwMU93OE9iMHFaU1lpaWVrQ3E1YXlzU05G?=
- =?utf-8?B?T3MzUTgwR1lCU1VDUUVQTjRRbzZqZHRac0NjSEcrWXBPaFAxU05nVGs5Wm9Y?=
- =?utf-8?B?b0NRNTczMVhRN2FDTEY2OE1LZXV5VzNBb2MrZTBmOFdwTS9rclMzT1RvWWFi?=
- =?utf-8?B?dTFxWk4wZUY2QXdENzZWb2VPU2d3RTdpYXd1NE9EZ3BqaVZUQ1g4NHFEbXpi?=
- =?utf-8?B?MGdzRGNsR3V3PT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dXlEejkra0NBa2NYV082VGdnZTR6NHFTQnljWjlLZUxBSXJPYTNMandqM0to?=
- =?utf-8?B?bWZlUHNxWmpvVUlpS0oybnloalJ6cHRoZFAxaG5HZ2xxSnlwUnNrTHAvd3B5?=
- =?utf-8?B?UkMxbmdTZ1BHNkJiNjVQai9SL0lLQ3NBdFduRkN3V2hvSWtLSFkyNExNOGlC?=
- =?utf-8?B?VWFJVnl6cjJudUV5UjNUM1RsdmgvcWRsUzRleGkxK1hMcVJIUi9HQ212UE5z?=
- =?utf-8?B?elo0VDZ4ZEZqeXg2MWNjYVhTMCtETk1qMGhpRVBCRXlaT2RJWXdDbjgvYlUw?=
- =?utf-8?B?Q3RjUFhEdEhhQnRWNWpDcjZJYmRUdWtFWTUzb2tHbCtjOTFlVGRMNC9ocXJ6?=
- =?utf-8?B?cnNUZStoS0ZsSmdNVVUveFpueUJYdmVXanNZcXhickZKVm9vU214L2U2NEYx?=
- =?utf-8?B?TmZGYk1IZjhaSEVYTVFDTyt5Skg1NXVLMlo5YVFlYjdaSUVteENJWThCbUc0?=
- =?utf-8?B?bnNONHh1ejNJYkpIQXloZCt6UnlSM2hLV1ZnYXlkZXplTWVEaFNyaWd2Q0V5?=
- =?utf-8?B?SzlXUmNKOUtFdk9CSHpJSkFxbG1NYjk4VDFPaTJIRUc2eVNkRWd6MElLNG80?=
- =?utf-8?B?ZVFTQnBxNklBS0Mreks2TFlIa3B1YzVDTHdWdHN5dUg2L1NEQUN1SkxycDJv?=
- =?utf-8?B?V0c1YlBNV0VwSnUzMnhtN09wdWJaY1h6bUw3NUNVMTVrNXJUcThTalRGV0ts?=
- =?utf-8?B?citxNXFzRnp0T1FqZE1kYWJ2Nk44Y0lwcEVDOE9pblRBYVpSVFZ6c2oySGJp?=
- =?utf-8?B?c2IrTXRpLzFacW1FWSsxRXA2ZHljOWhvaW1iaFg3RmFJaWRIdjdXVElCTEtk?=
- =?utf-8?B?Vis5VjlvWDRBODhvUDYrdEU2VmU2My9RRzJ4S0xSNmwvRVNLb3ZxZG9telpQ?=
- =?utf-8?B?djRkYzg4UTNpVEdCbCtUZEdaOXZjakRoZ2t2R1djcnkwenJjTWN1V2JmY0la?=
- =?utf-8?B?VEcrVVU3K084UnpIT0V0ZzJQYnRtVVdMNjd1YXppUStOZTVURnRaQjRaOGRv?=
- =?utf-8?B?TldIMFdtSEZqMlBxcGpYSnc0aWVGWm15Skp4ZDdVU0dLUzNON3RZblIxTDJU?=
- =?utf-8?B?RGlXbXV2ZlhBQzYzU2JXd1R3WlZCRnBLN3AzQjBqckVvRVVjMXRSNmFuTjlR?=
- =?utf-8?B?eCtralorWUhMcHlLaVBOcFZONW8vTytuZjQyMlZHclZMR2pBSFBla2dDRERl?=
- =?utf-8?B?TnhVdCtGclMwWTlrWFpGNGt1UVEyaXdrZGtGRFhzM2ZFOVFCQlU1TVFEOVRX?=
- =?utf-8?B?Z0NWeHJQbmNoaUxLdXdhUklwYkV2ajZ5SXhQTDdlSWJHUEthOWc3N1Y0T3Ay?=
- =?utf-8?B?OGZmTE9rTFIzSTFLWTNITmVyVUN3MHJtQnpBN0pySnM4UExHM1g3Y1NSMmRV?=
- =?utf-8?B?WFJOMzZhVTdhckpDeVdia0ZqOVF2MEEvTHpPR3B2MGwrY25mZnBqSnAvdUln?=
- =?utf-8?B?aTZEYzhPYkd1VXBIMVByYnJNeUxMRnhHU21PbFR6K1NzMS9EdmJJOXZyc0Fu?=
- =?utf-8?B?dDFaMFBnbnUyRkdEdUJzbDRRNTRESldoaU92a1REWjhKNjhyUUpsZFZjMVQw?=
- =?utf-8?B?UTR0bkM5cXpQNmRUYWdvTFk0Z1F4YUM5MHZ0MU02eEJDalNFbVoyS1R1UEdl?=
- =?utf-8?B?cmhPdHNURVVKdW9qWE92MW9oVndkbWg3RjBYVjRqR1VIZFpaTHVBaGhDSWNn?=
- =?utf-8?B?eDZMMGRldEpWdk8ydllWU1NVU1RaUmczSWVoK2xGVWxTL1UzYXJGNWMyOVMx?=
- =?utf-8?B?Tk41Q2Fnb0krOFMyaWxxUFR2bjhuNFlqdlNGMUNzbVRQcStmMXRzWG1WY2tm?=
- =?utf-8?B?bnlGemtFNHh6ZEJlN2pyRzRqb3pvS0duai9FVmVEMDZEUlYvSk1YVC9lSmdZ?=
- =?utf-8?B?TjBtSUp4enZPU2RFYmhldk9sUjZwaTR2U0JaM3NuTnk4c04yRlBoYWFDM2VG?=
- =?utf-8?B?OWwvcm4xMktpeVNRWU41TVhyN2lVN1U5dGVrbTR1b2xLNngyY0FiZmF5eGtk?=
- =?utf-8?B?d1M3a0xXSXhNL3REOENOcFlIdHl6WUVvL1ZTRE9NTTU2SElqVmdiTVNja09o?=
- =?utf-8?B?SmU0NVR5QzJlN3hRNmJWQyt4WHBoTnJXOHpJRC9hV0VtcE5vYzNvQTUyT1FK?=
- =?utf-8?B?b3lrM0FtUElOTWIvTWMyTGZ5WDRjemo5dGdZbUVubU9YcEZ5K245QnVBTzN3?=
- =?utf-8?B?amc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ba307f0-a136-4781-ea85-08dda3187b51
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 03:32:50.1314
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JWC/U8yO3zOwQbTlg3LxNHBKZ2+6+12hhfPCFFs61JISdlBkCDp8xWOd3IUzdqdM778MErsusg8lSFUXelfjM8Oesz06T/Af1bXjWR5/c/s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6511
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
 
-Hi Tony,
+On Thu, May 22, 2025 at 07:08:04AM -0400, Mimi Zohar wrote:
+>On Thu, 2025-05-22 at 11:24 +0800, Baoquan He wrote:
+>> On 05/21/25 at 08:54am, Mimi Zohar wrote:
+>> > On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
+>> > > CC kexec list.
+>> > >
+>> > > On 05/16/25 at 07:39am, Baoquan He wrote:
+>> > > > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
+>> > > > extra memory. It would be very helpful to allow IMA to be disabled for
+>> > > > kdump kernel.
+>>
+>> Thanks a lot for careufl reviewing and great suggestions.
+>>
+>> >
+>> > The real question is not whether kdump needs "IMA", but whether not enabling
+>> > IMA in the kdump kernel could be abused.  The comments below don't address
+>> > that question but limit/emphasize, as much as possible, turning IMA off is
+>> > limited to the kdump kernel.
+>>
+>> Are you suggesting removing below paragraph from patch log because they
+>> are redundant? I can remove it in v2 if yes.
+>
+>"The comments below" was referring to my comments on the patch, not the next
+>paragraph.  "don't address that question" refers to whether the kdump kernel
+>could be abused.
+>
+>We're trying to close integrity gaps, not add new ones.  Verifying the UKI's
+>signature addresses the integrity of the initramfs.  What about the integrity of
+>the kdump initramfs (or for that matter the kexec initramfs)?  If the kdump
+>initramfs was signed, IMA would be able to verify it before the kexec.
 
-On 5/21/25 3:50 PM, Tony Luck wrote:
-> @@ -4041,6 +4041,9 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
->  	if (resctrl_mounted && resctrl_arch_mon_capable())
->  		rmdir_mondata_subdir_allrdtgrp(r, d);
->  
-> +	if (r->rid != RDT_RESOURCE_L3)
-> +		goto done;
+Hi Mimi,
 
-resctrl does not use "do" or "done" terms in goto.
-"grep goto fs/resctrl/rdtgroup.c" to get a summary of terms used by this file.
-Typical is "out" or "out_<term>" where <term> is work jumped to, for example,
-using "out_unlock" here will match other code.
+I thought you were asking that the commit message should address the
+question why disabling IMA should be limited to the kdump kernel. It
+turns out I misunderstood your concern.
 
-> +
->  	if (resctrl_is_mbm_enabled())
->  		cancel_delayed_work(&d->mbm_over);
->  	if (resctrl_is_mon_event_enabled(QOS_L3_OCCUP_EVENT_ID) && has_busy_rmid(d)) {
-> @@ -4057,7 +4060,7 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
->  	}
->  
->  	domain_destroy_mon_state(d);
-> -
-> +done:
->  	mutex_unlock(&rdtgroup_mutex);
->  }
->  
+Currently there is no way provided to verify the kdump initramfs as a
+whole file or to verify individual files in the kdump initramfs.
 
-Reinette
+As you have already known, the kdump initramfs is always generated on
+the fly and will be re-generated when the dumping target changes or
+some important files change. We try to generate a minimal initramfs in
+order to save memory. So yes, it's impossible to sign it as a whole file
+beforehand. 
+
+And since xattrs like security.ima are not supported in the kdump
+initramfs, we have no way to use IMA to verify individual file's
+integrity.  In fact, we have to stop IMA from working otherwise it's
+very likely kdump will break.
+
+So far, I'm not aware of any bug report that complains kdump stops
+working because of IMA. So it indicates very few users are trying to use
+IMA in kdump.
+
+If users do have concerns on the integrity of kdump initramfs, I think
+we can advice users to make sure the deployed IMA policy will verify the
+integrity of the files while they are being collected and copied into
+the kdump initramfs by tools like dracut.
+
+-- 
+Best regards,
+Coiby
+
