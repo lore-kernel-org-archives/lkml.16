@@ -1,85 +1,105 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFD51804A;
-	Wed,  4 Jun 2025 07:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F9521B8F6
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749023049; cv=none; b=m2KAmSbFx/da4VaTIwZRayLRtn2/mpXnMHhawHhVYf3ttPxVC2QwJps9/BdTMWBAMh3tuQLwmKjeYvUK0NQJkP/4euiUOvYCCpAj3NocNKRGt2iFIzRxpQYRTK5wmOqIeQuvnu4cg0Gjgrn4S+T3qZATK9U9McUF0wtnRHb/8/s=
+	t=1749023073; cv=none; b=O0WWktvk+1D4d7LqGEaEJ/Dh12c6k2yelfOycBLpx6OWgFIAtD/IqqwI7b356oUvHLESwzo5e5tcqiCIibFFMLezd9Ky8J/O6Aqpp/TYwgADcRDhXnTue+rNVSCG7XkqseMj2OW4sAGXOFGClByDpDWNs7YMcArUSUSRD6YYNPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749023049; c=relaxed/simple;
-	bh=Y8IlbtWYCUHsgHWTbxdx5RxNUgfxB5HeIUE7rJx4f4o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=r6VfIQBrXkPwJ5x6latfTitSM20HlnT7M1GVcjoN3bX/RZAy4o6N1cZuNsXJXvlhK+m+EnW95HSlNfllCn4eYDoGVqFimV3/w1rGjdrb3uV9Vr/IgkEbhUvg4aTjHrNgq50oLgtasKDloNF1TDpIa5zik4/x+LjFj4nod6nHRxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fyiT0v0J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rzXxhYCz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749023073; c=relaxed/simple;
+	bh=rS4JiRRDodTQxUGGyvj3N5RMtvNKe9VqQw6VZxlU2Y0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OqpsyGMEDjJArgn88RmCictF2/QZ+UFK9uPzQRIt/rb99rzICMt3SzDu6Zp9eQec0YKenJpDUVHsMv5BjbwubZryQmw0Pb+K3/+cPwGPabdr4ScFK3f7zar8LogFWWEtZmSM1KX2nC5qcr5pg92CbvzjSuT0l+YPFATSxV7N8GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WaD0a/mv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fyiT0v0J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rzXxhYCz"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749023044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lryDCpxFt+jlR1Yqmf+dLIaEjF0R9KXXz2DDNZQ5zYM=;
-	b=fyiT0v0JK6oTqwCg0TWPk1rhXkFYY+LsS3HY0+sLcHnZ414OpM6yIttBfLbxrqpc0HSW8Z
-	SxzcsT6yNU+hWBrh0kGshX4bkmQvnJBOxZUkQAcJl8TReAn5x+iB0DkAM9vektU16ZnQsm
-	X+/uBKWzZ3m8X6SgQxoVpoOUgtNvKpTFXG6Y8mjxamO6xvcw1nW4wOa9dRTn75huVulZGI
-	16Uqp4dJCEDPg+z5wGSAXtdU/DxmMKQnUVQWe+Ued+STb+KfmMbT7lTKmkJ6svbWlNtZlJ
-	iSThdMN+WtdxIwaWQLSdFuufT9oY+BVFoWg9TELSloc73ZNy1qz7ArJ9LmQR/Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749023044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lryDCpxFt+jlR1Yqmf+dLIaEjF0R9KXXz2DDNZQ5zYM=;
-	b=rzXxhYCzZcixFqbWBYMcUcQG0diMkiwQ+vuvpy5eB82H35PoovQCM0r/9KTlH6sCVQVWXn
-	FdDihW0QdOLv1BDQ==
-To: "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>
-Cc: 'Michael Kelley' <mhklinux@outlook.com>, "pmladek@suse.com"
- <pmladek@suse.com>, 'Ryo Takakura' <ryotkkr98@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org"
- <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "Toshiyuki Sato (Fujitsu)"
- <fj6611ie@fujitsu.com>
-Subject: RE: Problem with nbcon console and amba-pl011 serial port
-In-Reply-To: <TY4PR01MB13777DAC71E234B9E58CC6C0DD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
-References: <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
- <84y0u95e0j.fsf@jogness.linutronix.de>
- <84sekh5cki.fsf@jogness.linutronix.de>
- <TY4PR01MB13777DAC71E234B9E58CC6C0DD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
-Date: Wed, 04 Jun 2025 09:50:03 +0206
-Message-ID: <84wm9sne7w.fsf@jogness.linutronix.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WaD0a/mv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95780C4CEE7;
+	Wed,  4 Jun 2025 07:44:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749023073;
+	bh=rS4JiRRDodTQxUGGyvj3N5RMtvNKe9VqQw6VZxlU2Y0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WaD0a/mvWfIyFxA73vUJIsGE+SIUMbiJ0g+OHDVU+irwHJiEZ3eTdg2GVDH1SBoNx
+	 xo5xZQqZFD7h2NXKOx4SqLjjuZ0bEH+GExX/SSqYJUq+K3Vx4l651kL/ZfKi8OX8Du
+	 6TlM6tjKZhIlX9f8m9VggBQYkuBWamDv9G8PUMDY=
+Date: Wed, 4 Jun 2025 09:44:26 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Giovanni Gherdovich <giovanni.gherdovich@suse.com>
+Cc: Andre Przywara <andre.przywara@arm.com>, cve@kernel.org,
+	linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: CVE-2025-37832: cpufreq: sun50i: prevent out-of-bounds access
+Message-ID: <2025060418-reappoint-outward-d414@gregkh>
+References: <2025050824-CVE-2025-37832-e235@gregkh>
+ <1db6d340-bfae-4d81-a1d1-dcbd7bc1294f@suse.com>
+ <2025053006-multitask-profanity-3590@gregkh>
+ <2025053010-legible-destiny-23d3@gregkh>
+ <805e1a14-7f07-47f0-ba86-f326e4ecea01@suse.com>
+ <20250602135141.0b332772@donnerap.manchester.arm.com>
+ <4b34814a-355a-49cf-8cc0-73cf843ed560@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4b34814a-355a-49cf-8cc0-73cf843ed560@suse.com>
 
-On 2025-06-04, "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com> wrote:
->> Unrelated to this particular report, I am looking at commit 2eb2608618ce
->> ("serial: amba-pl011: Implement nbcon console") and I do not think it
->> implements atomic printing correctly.
->> 
->> pl011_console_write_atomic() assumes uap->clk is disabled when it is
->> called. However, if it took over ownership from the printing kthread,
->> the uap->clk is already enabled. And then after printing its line it
->> disables uap->clk, even though the interrupted printing kthread expects
->> uap->clk to still be enabled once it regains ownership.
->
-> I believe the Common Clock Framework manages the enable count for clocks.
-> Specifically, uap->clk->core->enable_count is incremented by clk_enable
-> and decremented by clk_disable.
-> Wouldn't the clock remain enabled until enable_count reaches 0?
+On Mon, Jun 02, 2025 at 06:28:31PM +0200, Giovanni Gherdovich wrote:
+> Hello,
+> 
+> On Mon Jun 2, 2025 14:51, Andre Przywara wrote:
+> > 
+> > Hi,
+> > 
+> > I don't think this qualifies as a CVE, the issue was more theoretical. But
+> > I don't have much experience with what deserves a CVE and what not, so I
+> > can just present some insights:
+> > 
+> > > > > On Fri, May 30, 2025 at 03:57:35PM +0200, Giovanni Gherdovich wrote:
+> > > > > > On Thu May 8, 2025 08:39, Greg Kroah-Hartman wrote:
+> > > > > > > A KASAN enabled kernel reports an out-of-bounds access when handling the
+> > > > > > > nvmem cell in the sun50i cpufreq driver:
+> > > > > > > [...]
+> > > > > > 
+> > > > > > The invalid data that may be read comes from a ROM in the SoC,
+> > > > > > programmed by the vendor, and is only used to configure CPU frequency
+> > > > > > and voltage in the cpufreq framework.
+> > 
+> > So "potentially invalid data read from the ROM" is an issue the we have
+> > regardless, this patch doesn't change that. And you cannot put arbitrary
+> > voltages or frequencies in the OTP fuses, the value read is just used to
+> > select one of the OPPs defined in the DT. If you want to attack the
+> > system by heavily overclocking or baking it with a high voltage, you can
+> > just change the limits in the DT. Not sure if that's easier or harder than
+> > accessing the hardware, though.
+> 
+> I see. Right, my initial comment regarding the ROM content was missing
+> the core of the problem.
+> 
+> > But more importantly, looking at this particular patch: This effectively
+> > limits the access size of the value we read from the SID OTP driver, from
+> > always 4 bytes to what the DT says, typically 2 bytes. But we actually
+> > mask the value in the code anyway later at the moment, so the upper 16
+> > bits are always discarded.
+> > Which means that as it stands at the moment, there is no real change in
+> > what values are used. I just did the change as it was clearly incorrect,
+> > and I wanted to prevent any issues, in case of code changes later.
+> 
+> Ok, thanks for clarifying that in the present form, the code behaves
+> the same before and after the fix (the upper 16 bits discarded
+> anyway). Your fix improves the code and makes it future-proof.
+> 
+> Greg:
+> 
+> given this information, and Andre (developer of the change) saying at the
+> beginning of his message that he thinks the bug shouldn't be a CVE, do
+> you think the CVE can be revoked?
 
-You are correct. I wasn't aware that the clock framework had a usage
-counter to allow recursive calls. Sorry for the noise.
+Now revoked, thanks!
 
-John
+greg k-h
