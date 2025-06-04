@@ -1,149 +1,351 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE9528B7E1;
-	Wed,  4 Jun 2025 08:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+Received: from azure-sdnproxy.icoremail.net (l-sdnproxy.icoremail.net [20.188.111.126])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1177479F2;
+	Wed,  4 Jun 2025 08:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.188.111.126
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027187; cv=none; b=GhgUiB8ZtX9ICkyeDAfmn2usM4+A4Evbhg+9pHj5wokBnD3XJN7IFuneChFxIhDKobJwsknrTl98W2/Dv8818hQGj8Miava9doBZf9XnGCTP1dUpUhIk6LmLCc/40kURr/ie8zX6V5P8Cui2t290CNoM8E7eUZ+vnKEyg8kAlSo=
+	t=1749027209; cv=none; b=E9RDz+TnVn0ExOZvFrkG5ECRNg3VxkaDV4i59XMveoVyTDSbchIIbQJ8VH3hiEiEQBEM6HiYxd/EUU9bqBBkdADLkt/S7omzjbnQ8/KHZ4QgCLjInCx5G+lSXFenDo4JMI0RVzygfBhFnWbLi/Mztbh+3BUcHSmt/ufQOB845Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027187; c=relaxed/simple;
-	bh=2mLmpUCes52p/QBWu3WTp8hFc3VJZP5x4b4BAFPXNKY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rY2lqk9q3b+fUU8kOTWyljtvsfgtl4VLDblrQaEQIIkRbLVXksv1LYGLU+J33WiKYB9GSaJYWWthn6PjNTUuhfnchizkogOjjIYmBj9uI5twCvh/iIWUIp9mBdEzTOsxORiBJrZsZaG6CZgOrVYc4LADVcA5Ivc0lNcXSLxXoaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YOay6inI; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YOay6inI"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442ea341570so45716745e9.1;
-        Wed, 04 Jun 2025 01:53:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749027184; x=1749631984; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GLM7LBm37WJqJap/lEtkbB8hYDWJRhXgHcZgsy5d+m4=;
-        b=YOay6inIoT0QwFwhuzoxbwrzFx++4aOIj3vOTISw9Di/bpbCKYHgF7xqjIQHn/wtSG
-         JvY6NOK52rSEEayfHhvhrrQka6pSKNF5QMsHxfUvHZt5etEB0xzq91NucAMLoM9+XLy1
-         8X+IptqV9wvIyhkO17Wr5wabQnTwBmMD8vT/E5xtHGr/5vXxzvhozZ2ifGioq+ocIMT+
-         9082T8Sgj5P4OWVR7NoZ5w3Lhmq50JEN+bZcnTCXaeJ92psskQc/HiNxTqKwA9ujGrzU
-         hzWJhcA1zKcn+v6wO+hlxx8wQ7j3opxN+32Qdxha5shZZOa4b3fkQ6PPjEowIWGPGDK6
-         Ysbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749027184; x=1749631984;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GLM7LBm37WJqJap/lEtkbB8hYDWJRhXgHcZgsy5d+m4=;
-        b=o6cWS/6duHdeHfawoPa6MhVUJwmaeSnNwrekzIdkYhZRjcaolS75OQ12v1IxBpdTIa
-         p4JST7FPhG92YfSIEudsVkKSXhupQa4iNL9oz88PztqzljLHp9o7TSnScRolb7lMwBF1
-         L7r8KlmJzb9wwA6jSCRtd7TTKldVN5sOFL/Eqxr9HD+OGYGQYug1UmOBtFqzXRwOjutw
-         N2ewpD3fP2uBreCYmUig2w8ptjO1P1tTtKL3TLkK+Mce9xc2NCHfsGayYTrhqKRpYmYN
-         S/+pDNMEKLr5WZ/NVE/Bhs3FFbG5MUCaaV7vrKJVRdqi1D+/UJSNjiYo0y5OCl1SfXEv
-         OidQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDbs48AQoZz+xJm08FsXmLI2/bnzczks/tg5Ia87lIO9MCMOhwG8Gc7WddSzuSR2GCHRA=@vger.kernel.org, AJvYcCVTQM6QnpwFKKyWxTdOJMPB6u8ss2nnpd5k1qgc9IarSfcxcHvZOXUIJgmPf1bLL3BdWW6WdlgPhUlDGJTTrFPD@vger.kernel.org, AJvYcCWANMLzCCHUFuh18syVHGcisPVtqW8W9rn7lui7Jm722koca1Hv38zRXS+eRjQ0UjvJGIHI5rE5Sr/K+WSC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAoOXyYFAy9MRx52vMOUd8TI+weseNvaAT/YeciGVW1uFlq0WZ
-	dsFd6r7o5ha8F21y9UbIToRCr8ccPqrAN6qDJAqe4P43bIwv5kTGN06A
-X-Gm-Gg: ASbGncsM6qao3Q4SbZi15+XXTac6UUtSGpIKYhsveIjtwRTlwWyr/iymShGhqrHvxUT
-	MlNh+sKAOZo7FG3PyeXAxJF+5mHKrfO97okgL/KAHOTnKJVt+0njk8gGLu+9ziCVBrrKi3soipw
-	TRfyzah87BgAjrFZTeGh7sUmDcyRkdm7jmVbxML9GvTDehGEfQFf+DE2uq7UeG31zkQtA2VZLcV
-	ba0wuO7p8Vz1D6jF+1FdOz2gG49kTZTf/WabaQcCRV+1zpgecUXG8/miYQePZT5OTAZc0PKvCjK
-	/qnqwPaMfysXZxt7VJKxpcekeWTYkXn2BpRHvEI=
-X-Google-Smtp-Source: AGHT+IEimdhpyVCbWCs8OZcEOw5A8tU+m2ddmRqylRHVPijI8dxrP/UOu9X8Wnc/BPaO81v0RDpm7w==
-X-Received: by 2002:a05:600c:6749:b0:43c:f6c6:578c with SMTP id 5b1f17b1804b1-451f0ab417fmr15621325e9.15.1749027183601;
-        Wed, 04 Jun 2025 01:53:03 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fa2566sm186916685e9.13.2025.06.04.01.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 01:53:03 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 4 Jun 2025 10:53:00 +0200
-To: Rong Tao <rtoax@foxmail.com>
-Cc: andrii@kernel.org, eddyz87@gmail.com, rongtao@cestc.cn,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Shuah Khan <shuah@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Amery Hung <ameryhung@gmail.com>,
-	Juntong Deng <juntong.deng@outlook.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	"open list:BPF [SELFTESTS] (Test Runners & Infrastructure)" <bpf@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	"moderated list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
-	"moderated list:ARM/STM32 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next] selftests/bpf: Fix compile error of
- bin_attribute::read/write()
-Message-ID: <aEAJbBH00yL2iTgn@krava>
-References: <tencent_A6502A28AF21A3CA88B106F3421159869708@qq.com>
+	s=arc-20240116; t=1749027209; c=relaxed/simple;
+	bh=0raP6kQ+xdKD/BKhewzzU6dHTKE5TG1RBJh6rBA9LCw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QZ79XT9D7od1ZORL96NuQaFn1KkAumw93WVcrgYFx4uk1/IuNZXzxNHy2UtbofphZMh+/YpXdPPl3Ca0kJ1RQpAz251Th24r65KAjfUiv3FJ7TtRXtanA903TpBBMD0DF+XQpsAkNRUaUWw5n02m3JrSYQgF2nIAf+/KfudeQ4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=20.188.111.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app2 (Coremail) with SMTP id TQJkCgAnuZJ+CUBo7WKaAA--.10072S2;
+	Wed, 04 Jun 2025 16:53:20 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: p.zabel@pengutronix.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v2 2/2] reset: eswin: Add eic7700 reset driver
+Date: Wed,  4 Jun 2025 16:53:16 +0800
+Message-Id: <20250604085316.2211-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
+References: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_A6502A28AF21A3CA88B106F3421159869708@qq.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgAnuZJ+CUBo7WKaAA--.10072S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3XFW7Kry5GrW7Gry3CFy8Xwb_yoWfArW5pF
+	WrGFW3Jr4UJr4fWw4xJryv9F4ag3Z3KFyUGrZrKw4Iyw13ta4UJF48tFyrtFyDCryDXFy5
+	KF12gayruFnxtF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHCJQUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-On Wed, Jun 04, 2025 at 01:53:22PM +0800, Rong Tao wrote:
-> From: Rong Tao <rongtao@cestc.cn>
-> 
-> Since commit 97d06802d10a ("sysfs: constify bin_attribute argument of
-> bin_attribute::read/write()"), make bin_attribute parameter of
-> bin_attribute::read/write() const.
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-hi,
-there's already fix for this in bpf/master
+Add support for reset controller in eic7700 series chips.
+Provide functionality for asserting and deasserting resets
+on the chip.
 
-thanks,
-jirka
+Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
+Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
+---
+ drivers/reset/Kconfig         |  10 ++
+ drivers/reset/Makefile        |   1 +
+ drivers/reset/reset-eic7700.c | 234 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 245 insertions(+)
+ create mode 100644 drivers/reset/reset-eic7700.c
 
-> 
-> Signed-off-by: Rong Tao <rongtao@cestc.cn>
-> ---
->  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> index e6c248e3ae54..e9e918cdf31f 100644
-> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> @@ -385,7 +385,7 @@ int bpf_testmod_fentry_ok;
->  
->  noinline ssize_t
->  bpf_testmod_test_read(struct file *file, struct kobject *kobj,
-> -		      struct bin_attribute *bin_attr,
-> +		      const struct bin_attribute *bin_attr,
->  		      char *buf, loff_t off, size_t len)
->  {
->  	struct bpf_testmod_test_read_ctx ctx = {
-> @@ -465,7 +465,7 @@ ALLOW_ERROR_INJECTION(bpf_testmod_test_read, ERRNO);
->  
->  noinline ssize_t
->  bpf_testmod_test_write(struct file *file, struct kobject *kobj,
-> -		      struct bin_attribute *bin_attr,
-> +		      const struct bin_attribute *bin_attr,
->  		      char *buf, loff_t off, size_t len)
->  {
->  	struct bpf_testmod_test_write_ctx ctx = {
-> @@ -567,7 +567,7 @@ static void testmod_unregister_uprobe(void)
->  
->  static ssize_t
->  bpf_testmod_uprobe_write(struct file *file, struct kobject *kobj,
-> -			 struct bin_attribute *bin_attr,
-> +			 const struct bin_attribute *bin_attr,
->  			 char *buf, loff_t off, size_t len)
->  {
->  	unsigned long offset = 0;
-> -- 
-> 2.49.0
-> 
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index d85be5899da6..82f829f4c9f0 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -66,6 +66,16 @@ config RESET_BRCMSTB_RESCAL
+ 	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
+ 	  BCM7216.
+ 
++config RESET_EIC7700
++	bool "Reset controller driver for ESWIN SoCs"
++	depends on ARCH_ESWIN || COMPILE_TEST
++	default ARCH_ESWIN
++	help
++	  This enables the reset controller driver for ESWIN SoCs. This driver is
++	  specific to ESWIN SoCs and should only be enabled if using such hardware.
++	  The driver supports eic7700 series chips and provides functionality for
++	  asserting and deasserting resets on the chip.
++
+ config RESET_EYEQ
+ 	bool "Mobileye EyeQ reset controller"
+ 	depends on MACH_EYEQ5 || MACH_EYEQ6H || COMPILE_TEST
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 91e6348e3351..ceafbad0555c 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
+ obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+ obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+ obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
++obj-$(CONFIG_RESET_EIC7700) += reset-eic7700.o
+ obj-$(CONFIG_RESET_EYEQ) += reset-eyeq.o
+ obj-$(CONFIG_RESET_GPIO) += reset-gpio.o
+ obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+diff --git a/drivers/reset/reset-eic7700.c b/drivers/reset/reset-eic7700.c
+new file mode 100644
+index 000000000000..e651016ea042
+--- /dev/null
++++ b/drivers/reset/reset-eic7700.c
+@@ -0,0 +1,234 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
++ *
++ * ESWIN Reset Driver
++ *
++ * Authors:
++ *	Yifeng Huang <huangyifeng@eswincomputing.com>
++ *	Xuyang Dong <dongxuyang@eswincomputing.com>
++ */
++
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/reset-controller.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++#define SYSCRG_CLEAR_BOOT_INFO_OFFSET 0x30C
++#define CLEAR_BOOT_FLAG_BIT BIT(0)
++#define SYSCRG_RESET_OFFSET 0x400
++
++/**
++ * struct eswin_reset_data - reset controller information structure
++ * @rcdev: reset controller entity
++ * @dev: reset controller device pointer
++ * @idr: idr structure for mapping ids to reset control structures
++ * @regmap: reset controller device register map
++ */
++struct eswin_reset_data {
++	struct reset_controller_dev rcdev;
++	struct device *dev;
++	struct idr idr;
++	struct regmap *regmap;
++};
++
++/**
++ * struct eswin_reset_control - reset control structure
++ * @dev_id: SoC-specific device identifier
++ * @reset_bit: reset mask to use for toggling reset
++ */
++struct eswin_reset_control {
++	u32 dev_id;
++	u32 reset_bit;
++};
++
++#define to_eswin_reset_data(p) container_of((p), struct eswin_reset_data, rcdev)
++
++/**
++ * eswin_reset_set() - program a device's reset
++ * @rcdev: reset controller entity
++ * @id: ID of the reset to toggle
++ * @assert: boolean flag to indicate assert or deassert
++ *
++ * This is a common internal function used to assert or deassert a device's
++ * reset by clear and set the reset bit. The device's reset is asserted if the
++ * @assert argument is true, or deasserted if @assert argument is false.
++ *
++ * Return: 0 for successful request, else a corresponding error value
++ */
++static int eswin_reset_set(struct reset_controller_dev *rcdev, unsigned long id,
++			   bool assert)
++{
++	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
++	struct eswin_reset_control *control;
++	int ret;
++
++	control = idr_find(&data->idr, id);
++
++	if (!control)
++		return -EINVAL;
++
++	if (assert)
++		ret = regmap_clear_bits(data->regmap, SYSCRG_RESET_OFFSET +
++						       control->dev_id * sizeof(u32),
++							   control->reset_bit);
++	else
++		ret = regmap_set_bits(data->regmap, SYSCRG_RESET_OFFSET +
++						     control->dev_id * sizeof(u32),
++						     control->reset_bit);
++
++	return ret;
++}
++
++static int eswin_reset_assert(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	return eswin_reset_set(rcdev, id, true);
++}
++
++static int eswin_reset_deassert(struct reset_controller_dev *rcdev,
++				unsigned long id)
++{
++	return eswin_reset_set(rcdev, id, false);
++}
++
++static int eswin_reset_reset(struct reset_controller_dev *rcdev,
++			     unsigned long id)
++{
++	int ret;
++
++	ret = eswin_reset_assert(rcdev, id);
++	if (ret != 0)
++		return ret;
++
++	usleep_range(10, 15);
++	ret = eswin_reset_deassert(rcdev, id);
++	if (ret != 0)
++		return ret;
++
++	return 0;
++}
++
++static const struct reset_control_ops eswin_reset_ops = {
++	.reset = eswin_reset_reset,
++	.assert = eswin_reset_assert,
++	.deassert = eswin_reset_deassert,
++};
++
++static int eswin_reset_of_xlate_lookup_id(int id, void *p, void *data)
++{
++	struct of_phandle_args *reset_spec = (struct of_phandle_args *)data;
++	struct eswin_reset_control *slot_control =
++		(struct eswin_reset_control *)p;
++
++	if (reset_spec->args[0] == slot_control->dev_id &&
++	    reset_spec->args[1] == slot_control->reset_bit)
++		return id;
++
++	return 0;
++}
++
++/**
++ * eswin_reset_of_xlate() - translate a set of OF arguments to a reset ID
++ * @rcdev: reset controller entity
++ * @reset_spec: OF reset argument specifier
++ *
++ * This function performs the translation of the reset argument specifier
++ * values defined in a reset consumer device node. The function allocates a
++ * reset control structure for that device reset, and will be used by the
++ * driver for performing any reset functions on that reset. An idr structure
++ * is allocated and used to map to the reset control structure. This idr
++ * is used by the driver to do reset lookups.
++ *
++ * Return: 0 for successful request, else a corresponding error value
++ */
++static int eswin_reset_of_xlate(struct reset_controller_dev *rcdev,
++				const struct of_phandle_args *reset_spec)
++{
++	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
++	struct eswin_reset_control *control;
++	int ret;
++
++	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
++		return -EINVAL;
++
++	ret = idr_for_each(&data->idr, eswin_reset_of_xlate_lookup_id,
++			   (void *)reset_spec);
++	if (ret)
++		return ret;
++
++	control = devm_kzalloc(data->dev, sizeof(*control), GFP_KERNEL);
++	if (!control)
++		return -ENOMEM;
++
++	control->dev_id = reset_spec->args[0];
++	control->reset_bit = reset_spec->args[1];
++
++	return idr_alloc(&data->idr, control, 0, 0, GFP_KERNEL);
++}
++
++static const struct of_device_id eswin_reset_dt_ids[] = {
++	{
++		.compatible = "eswin,eic7700-reset",
++	},
++	{ /* sentinel */ }
++};
++
++static int eswin_reset_probe(struct platform_device *pdev)
++{
++	struct eswin_reset_data *data;
++	struct device *dev = &pdev->dev;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->regmap = syscon_node_to_regmap(dev->of_node);
++	if (IS_ERR(data->regmap))
++		return dev_err_probe(dev, PTR_ERR(data->regmap), "failed to get regmap!\n");
++
++	platform_set_drvdata(pdev, data);
++
++	data->rcdev.owner = THIS_MODULE;
++	data->rcdev.ops = &eswin_reset_ops;
++	data->rcdev.of_node = pdev->dev.of_node;
++	data->rcdev.of_reset_n_cells = 2;
++	data->rcdev.of_xlate = eswin_reset_of_xlate;
++	data->rcdev.dev = &pdev->dev;
++	data->dev = &pdev->dev;
++	idr_init(&data->idr);
++
++	/* clear boot flag so u84 and scpu could be reseted by software */
++	regmap_set_bits(data->regmap, SYSCRG_CLEAR_BOOT_INFO_OFFSET,
++			CLEAR_BOOT_FLAG_BIT);
++	msleep(50);
++
++	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
++}
++
++static void eswin_reset_remove(struct platform_device *pdev)
++{
++	struct eswin_reset_data *data = platform_get_drvdata(pdev);
++
++	idr_destroy(&data->idr);
++}
++
++static struct platform_driver eswin_reset_driver = {
++	.probe	= eswin_reset_probe,
++	.remove = eswin_reset_remove,
++	.driver = {
++		.name		= "eswin-reset",
++		.of_match_table	= eswin_reset_dt_ids,
++	},
++};
++
++static int __init eswin_reset_init(void)
++{
++	return platform_driver_register(&eswin_reset_driver);
++}
++arch_initcall(eswin_reset_init);
+-- 
+2.17.1
+
