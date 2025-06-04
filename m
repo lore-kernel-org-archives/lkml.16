@@ -1,157 +1,213 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DBF231828;
-	Wed,  4 Jun 2025 03:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9AF29A2;
+	Wed,  4 Jun 2025 03:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749007440; cv=none; b=EotZwPUhR4BEdYk8BI7enw+WKvMXHrtPss3GSdB6TL3597qkso8I5JYJspziFllZ2YOaxZEbcMRLZBt7q7CCIpT7E6C6If0gaIe9MqdgyDFXz+AtHd/QrCSgx6aeJQ57r1boQpX/iUQNRtZkJ34Xz5r8zo0yvL1twBup0RPVa2Y=
+	t=1749007569; cv=none; b=iAlzJ7wDCUllJZRMs4ZPy7TFRG7XfWj0bg8TEi03yp3hD05S/RjvHXlpuV1FeGqm9w2MByNQwG3C6i2szgRPe/MdDULjwz9ZudN40L2jwNSZvQJ7wk1CTFKRIo5e3Udmp9R0bjtOOHQplIXADd/1KhiMrBG9D6ZLcWHw60NjtwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749007440; c=relaxed/simple;
-	bh=KKCtxcNKDurQedRm8dJ/mP8QxHRVX5UPgpzxDkDohe8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y7K8UMwUDjZ4iJ7Lb0XCE4LZnRBYNZsonFSKqV9Ooz+DnK31XEK9/yQc4lagOY5yzgesTlOBk+WGcfQGPxynlO7AGyWMpEVvtMKXTZ7+HoRnx058+L7TBBu4Wn8iRNFn6uyQe3W+wq33ZhjfsqHMMhmKuryKc5zlFcYOeUSir7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bBtGJ4Hq3zKHND7;
-	Wed,  4 Jun 2025 11:23:52 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id F16FF1A118D;
-	Wed,  4 Jun 2025 11:23:50 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP1 (Coremail) with SMTP id cCh0CgC3GntEvD9ondLUOA--.11688S6;
-	Wed, 04 Jun 2025 11:23:50 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	davidcc@google.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH v2 2/2] perf/core: Fix WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0) in perf_cgroup_switch
-Date: Wed,  4 Jun 2025 03:39:24 +0000
-Message-Id: <20250604033924.3914647-3-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250604033924.3914647-1-luogengkun@huaweicloud.com>
-References: <20250604033924.3914647-1-luogengkun@huaweicloud.com>
+	s=arc-20240116; t=1749007569; c=relaxed/simple;
+	bh=gntv/jhjWZpou/8HjRtmuBWNkBcHD3Xn/7v5XKPVgwE=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=oHnUa0H3li03pxuc3/zhccFjGrbX55NCUSi4BjoD6ZoxbQb0zn/ybUUIP6SEkpC0KIcaVi6LrMyLj36INSBbOKCuTmbvk7ekzMuO+Z57CjuEGNW3lTqhF12/f/4FAveGR6KPJvLDWDEr62TFhxl6xqC6hAh3L/tCTNHVg9XbRl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4bBtHR71DFz1fy4h;
+	Wed,  4 Jun 2025 11:24:51 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id A44241402CD;
+	Wed,  4 Jun 2025 11:26:02 +0800 (CST)
+Received: from kwepemq500009.china.huawei.com (7.202.195.53) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 4 Jun 2025 11:25:52 +0800
+Received: from [10.174.179.5] (10.174.179.5) by kwepemq500009.china.huawei.com
+ (7.202.195.53) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 4 Jun
+ 2025 11:25:51 +0800
+Subject: Re: [QUESTION] problems report: rcu_read_unlock_special() called in
+ irq_exit() causes dead loop
+To: Joel Fernandes <joelagnelf@nvidia.com>
+CC: Joel Fernandes <joel@joelfernandes.org>, <ankur.a.arora@oracle.com>,
+	Frederic Weisbecker <frederic@kernel.org>, "Paul E . McKenney"
+	<paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	<neeraj.upadhyay@kernel.org>, <urezki@gmail.com>, <rcu@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <xiqi2@huawei.com>, "Wangshaobo (bobo)"
+	<bobo.shaobowang@huawei.com>
+References: <9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com>
+ <CAEXW_YRC=f6i3KOd_uhuH=xAOCG7mW7-LwtA4+_fc8FMjfRHeg@mail.gmail.com>
+ <3ce6f3ce-5dfb-8c59-cb7b-4619b70f8d25@huawei.com>
+ <20250603185939.GA1109523@joelnvbox>
+ <066e8121-c6c5-48ac-b35a-e6430d986dff@nvidia.com>
+ <a82784fd-d51e-4ea2-9d5c-43db971a3074@nvidia.com>
+ <20250604013526.GA1192922@joelnvbox>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <0f322c7b-d8b7-ff0a-5c98-26230a9fbad0@huawei.com>
+Date: Wed, 4 Jun 2025 11:25:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20250604013526.GA1192922@joelnvbox>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgC3GntEvD9ondLUOA--.11688S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF4DWr17XF1kuF1rZF1kXwb_yoW5GF47pa
-	n7CrW29ws5XF90qay5t34vq3W0qa1Fqa95Wr1jkw4ayrW5Xr1fXF4xCw43JF15AFn7JFy3
-	trZ0vr15C34UKaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQv14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AK
-	xVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQXo7UUUUU=
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemq500009.china.huawei.com (7.202.195.53)
 
-There may be concurrency between perf_cgroup_switch and
-perf_cgroup_event_disable. Consider the following scenario: after a new
-perf cgroup event is created on CPU0, the new event may not trigger
-a reprogramming, causing ctx->is_active to be 0. In this case, when CPU1
-disables this perf event, it executes __perf_remove_from_context->
-list _del_event->perf_cgroup_event_disable on CPU1, which causes a race
-with perf_cgroup_switch running on CPU0.
 
-The following describes the details of this concurrency scenario:
 
-CPU0						CPU1
+On 2025/6/4 9:35, Joel Fernandes wrote:
+> On Tue, Jun 03, 2025 at 03:22:42PM -0400, Joel Fernandes wrote:
+>>
+>>
+>> On 6/3/2025 3:03 PM, Joel Fernandes wrote:
+>>>
+>>>
+>>> On 6/3/2025 2:59 PM, Joel Fernandes wrote:
+>>>> On Fri, May 30, 2025 at 09:55:45AM +0800, Xiongfeng Wang wrote:
+>>>>> Hi Joel,
+>>>>>
+>>>>> On 2025/5/29 0:30, Joel Fernandes wrote:
+>>>>>> On Wed, May 21, 2025 at 5:43 AM Xiongfeng Wang
+>>>>>> <wangxiongfeng2@huawei.com> wrote:
+>>>>>>>
+>>>>>>> Hi RCU experts,
+>>>>>>>
+>>>>>>> When I ran syskaller in Linux 6.6 with CONFIG_PREEMPT_RCU enabled, I got
+>>>>>>> the following soft lockup. The Calltrace is too long. I put it in the end.
+>>>>>>> The issue can also be reproduced in the latest kernel.
+>>>>>>>
+>>>>>>> The issue is as follows. CPU3 is waiting for a spin_lock, which is got by CPU1.
+>>>>>>> But CPU1 stuck in the following dead loop.
+>>>>>>>
+>>>>>>> irq_exit()
+>>>>>>>   __irq_exit_rcu()
+>>>>>>>     /* in_hardirq() returns false after this */
+>>>>>>>     preempt_count_sub(HARDIRQ_OFFSET)
+>>>>>>>     tick_irq_exit()
+>>>>>>>       tick_nohz_irq_exit()
+>>>>>>>             tick_nohz_stop_sched_tick()
+>>>>>>>               trace_tick_stop()  /* a bpf prog is hooked on this trace point */
+>>>>>>>                    __bpf_trace_tick_stop()
+>>>>>>>                       bpf_trace_run2()
+>>>>>>>                             rcu_read_unlock_special()
+>>>>>>>                               /* will send a IPI to itself */
+>>>>>>>                               irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+>>>>>>>
+>>>>>>> /* after interrupt is enabled again, the irq_work is called */
+>>>>>>> asm_sysvec_irq_work()
+>>>>>>>   sysvec_irq_work()
+>>>>>>> irq_exit() /* after handled the irq_work, we again enter into irq_exit() */
+>>>>>>>   __irq_exit_rcu()
+>>>>>>>     ...skip...
+>>>>>>>            /* we queue a irq_work again, and enter a dead loop */
+>>>>>>>            irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+>>>>>>
+> 
+> The following is a candidate fix (among other fixes being
+> considered/discussed). The change is to check if context tracking thinks
+> we're in IRQ and if so, avoid the irq_work. IMO, this should be rare enough
+> that it shouldn't be an issue and it is dangerous to self-IPI consistently
+> while we're exiting an IRQ anyway.
+> 
+> Thoughts? Xiongfeng, do you want to try it?
 
-perf_cgroup_switch:
-   ...
-   # cpuctx->cgrp is not NULL here
-   if (READ_ONCE(cpuctx->cgrp) == NULL)
-   	return;
+Thanks a lot for the fast response. My colleague is testing the modification.
+ She will feedback the result.
 
-						perf_remove_from_context:
-						   ...
-						   raw_spin_lock_irq(&ctx->lock);
-						   ...
-						   # ctx->is_active == 0 because reprogramm is not
-						   # tigger, so CPU1 can do __perf_remove_from_context
-						   # for CPU0
-						   __perf_remove_from_context:
-						         perf_cgroup_event_disable:
-							    ...
-							    if (--ctx->nr_cgroups)
-							    ...
+Thanks,
+Xiongfeng
 
-   # this warning will happened because CPU1 changed
-   # ctx.nr_cgroups to 0.
-   WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
-
-To fix this problem, expand the lock-holding critical section in
-perf_cgroup_switch.
-
-Fixes: db4a835601b7 ("perf/core: Set cgroup in CPU contexts for new cgroup events")
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
----
- kernel/events/core.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 280d42b40b34..1e442897ebde 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -931,20 +931,20 @@ static void perf_cgroup_switch(struct task_struct *task)
- 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
- 	struct perf_cgroup *cgrp;
- 
-+	cgrp = perf_cgroup_from_task(task, NULL);
-+	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 	/*
- 	 * cpuctx->cgrp is set when the first cgroup event enabled,
- 	 * and is cleared when the last cgroup event disabled.
- 	 */
- 	if (READ_ONCE(cpuctx->cgrp) == NULL)
--		return;
-+		goto unlock;
- 
- 	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
- 
--	cgrp = perf_cgroup_from_task(task, NULL);
- 	if (READ_ONCE(cpuctx->cgrp) == cgrp)
--		return;
-+		goto unlock;
- 
--	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 	perf_ctx_disable(&cpuctx->ctx, true);
- 
- 	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
-@@ -962,6 +962,7 @@ static void perf_cgroup_switch(struct task_struct *task)
- 	ctx_sched_in(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
- 
- 	perf_ctx_enable(&cpuctx->ctx, true);
-+unlock:
- 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
- }
- 
--- 
-2.34.1
-
+> 
+> Btw, I could easily reproduce it as a boot hang by doing:
+> 
+> --- a/kernel/softirq.c
+> +++ b/kernel/softirq.c
+> @@ -638,6 +638,10 @@ void irq_enter(void)
+>  
+>  static inline void tick_irq_exit(void)
+>  {
+> +	rcu_read_lock();
+> +	WRITE_ONCE(current->rcu_read_unlock_special.b.need_qs, true);
+> +	rcu_read_unlock();
+> +
+>  #ifdef CONFIG_NO_HZ_COMMON
+>  	int cpu = smp_processor_id();
+>  
+> ---8<-----------------------
+> 
+> From: Joel Fernandes <joelagnelf@nvidia.com>
+> Subject: [PATCH] Do not schedule irq_work when IRQ is exiting
+> 
+> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> ---
+>  include/linux/context_tracking_irq.h |  2 ++
+>  kernel/context_tracking.c            | 12 ++++++++++++
+>  kernel/rcu/tree_plugin.h             |  3 ++-
+>  3 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/context_tracking_irq.h b/include/linux/context_tracking_irq.h
+> index 197916ee91a4..35a5ad971514 100644
+> --- a/include/linux/context_tracking_irq.h
+> +++ b/include/linux/context_tracking_irq.h
+> @@ -9,6 +9,7 @@ void ct_irq_enter_irqson(void);
+>  void ct_irq_exit_irqson(void);
+>  void ct_nmi_enter(void);
+>  void ct_nmi_exit(void);
+> +bool ct_in_irq(void);
+>  #else
+>  static __always_inline void ct_irq_enter(void) { }
+>  static __always_inline void ct_irq_exit(void) { }
+> @@ -16,6 +17,7 @@ static inline void ct_irq_enter_irqson(void) { }
+>  static inline void ct_irq_exit_irqson(void) { }
+>  static __always_inline void ct_nmi_enter(void) { }
+>  static __always_inline void ct_nmi_exit(void) { }
+> +static inline bool ct_in_irq(void) { return false; }
+>  #endif
+>  
+>  #endif
+> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
+> index fb5be6e9b423..8e8055cf04af 100644
+> --- a/kernel/context_tracking.c
+> +++ b/kernel/context_tracking.c
+> @@ -392,6 +392,18 @@ noinstr void ct_irq_exit(void)
+>  	ct_nmi_exit();
+>  }
+>  
+> +/**
+> + * ct_in_irq - check if CPU is currently in a tracked IRQ context.
+> + *
+> + * Returns true if ct_irq_enter() has been called and ct_irq_exit()
+> + * has not yet been called. This indicates the CPU is currently
+> + * processing an interrupt.
+> + */
+> +bool ct_in_irq(void)
+> +{
+> +	return ct_nmi_nesting() != 0;
+> +}
+> +
+>  /*
+>   * Wrapper for ct_irq_enter() where interrupts are enabled.
+>   *
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 3c0bbbbb686f..a3eebd4c841e 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -673,7 +673,8 @@ static void rcu_read_unlock_special(struct task_struct *t)
+>  			set_tsk_need_resched(current);
+>  			set_preempt_need_resched();
+>  			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
+> -			    expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu)) {
+> +			    expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu) &&
+> +			    !ct_in_irq()) {
+>  				// Get scheduler to re-evaluate and call hooks.
+>  				// If !IRQ_WORK, FQS scan will eventually IPI.
+>  				if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
+> 
