@@ -1,172 +1,141 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87F01946DA;
-	Wed,  4 Jun 2025 08:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D0C218ADE
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749025125; cv=none; b=fTTzM0UQAx8nCBxf+EM4OTxEsHLC0po7ygYcdznj5VBi85SV7mqpCPWu0zAOaOJlJw8VjT5+LeB67cT3/AeGQl1CBAKPj9bDsCxW5+PUltrf6xWD7Mi20eY4aedn5DywfoHDjYUKpEnhLAwGjGT0M2kYFrTGjx8IkhWUiSGqFs8=
+	t=1749025143; cv=none; b=o3q4AEA2aKSq+y5MQgwtNrUIF3Ft5zBdroZ5b9CsiudbR59KGkhUTIXpW4rZpqXABrVJagLxKMsanpL0jaiOZUyBJcIDACRLKJHmM7WaGPqpY0ISY+kyl9c+/1RVToxc0rMI5GH7GUWYZuvoaIqsq129R4R5YAoXCYMujoN0Gxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749025125; c=relaxed/simple;
-	bh=ivhstX9IHoCz1LW/zKxbn8swTYpIdKTorWpMNnS86S8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ePgHOcRmjxI6iEC5BHRi2NIhE0gQozR3CiCXcDfY0HIUOG+X7EBpmCwPxEe5uTKt5hMEbckceIl5hlOgyTOq7iE328cSuCTgvtmEWxljvXTr8jDvA0TQdmJF+p+Jyp3d2RljaGjW/y3j6IViaCx0fgWV2d9ol7U+PzEZKDAbjZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RBkmRJ7O; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749025143; c=relaxed/simple;
+	bh=EslNEbGkoEtGZPgNzSbXr84zl40yV8m1mM0v265VQvE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AGkxz9gTUAJ+xV4ECJTZUB1xR0AkFd9BzpZ1+91gM7U+WG2nYcB6BMO2TixcYmmIS1OKq1QBkkeI3hWd1B7iRQrApj9eyRJuRK/h1nxJSBXyuB56Md0GJ3iTUTeJy61k4RnU3T8kxLWAZ+wosE7JD8Saod7bK2//zCx4to3QHZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mIGpYvuO; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RBkmRJ7O"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553L0T5t007388;
-	Wed, 4 Jun 2025 08:18:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	a+qlb57xxwaTCuFL52/E3275a9Fzz22EbNv/H6BVDLI=; b=RBkmRJ7OeMZ7gRWo
-	4KhEh7RW5NB+MOVVPvpXSo+QNKJ3a6DkjCdtxzYxNIqUKtkRwzJJNT7ZO1L9zXvf
-	pMGzG71O1PhjKVcs2x69CwfYSKSJdgBdzP3LWUMTRq2T33FiHOcZhmPGs4zJI7IF
-	WxwNIgafx7BxYKL7Mlkk4JKZQZQGW1DFnUAyyJep81bCi/+qld/m44ME3OG6Xiz2
-	q/fDPHHri5uWlClr9fYVOv+Us1h+lWMJFhGzgdBPrdxAMxrHBo1RkegbniwGLZ/T
-	OeOR2y+oNB7SgKQZJTbFdZfM/RpMGtMqfFeBAOq7GJGSDMcv17IPhgiVGUYXdBbQ
-	+Kbh5w==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8swaks-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 08:18:38 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5548IbBs023995
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 4 Jun 2025 08:18:37 GMT
-Received: from [10.133.33.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Jun 2025
- 01:18:35 -0700
-Message-ID: <94d95c9b-2fd7-45b1-b9ae-664d651071cc@quicinc.com>
-Date: Wed, 4 Jun 2025 16:18:32 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mIGpYvuO"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4e6a0c274so630815f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:19:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749025140; x=1749629940; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IMiMkiTF0Z00OlwzviIMPLOkZdxr4W49dCOYPK/ZpVY=;
+        b=mIGpYvuOHCjKomlYTQ4uMwwrTevmSOc2ukO3WhCaV+9k+1q4fM57HMI0k9w3sMOWdW
+         a9FepbbOSkA7SPSdFhlP09gVt13hivgMKF9ihPA8vQKqv89QlBOFhH8F7cVgd2HNPrg4
+         wcGPQGCY4LSGIFdZiKLwo8B6/F5F3bUE7my7R67F3qmgztVK5EOKNE0Do98Xg1OuPQG4
+         fD+iyPcfEMYHOy3NPYPEY2xqv3Cfh4SlWWKA1GX8z+XgQDxdBfk7bCYGj4EtfxyUTrCS
+         lrEPzf9IFpJJPGoU3BhtCz97KYIRUASVwWNjH4YQ5bIJxple+m28MqRDvShx6KtVIoCj
+         PPkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749025140; x=1749629940;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IMiMkiTF0Z00OlwzviIMPLOkZdxr4W49dCOYPK/ZpVY=;
+        b=jZd0qERBovHPh3zUuQDz1uO9St/vG9gWNqZ2y/3MldKSc7imNlvnXRkat9VwFxOtf6
+         u9pIh5UBaQL6DbxP5rq/8XuAZk71AikqbRhSAxyrnGeNWZDCofh76SWtxCHwtK3+078X
+         dP9K7ZsOjAh4JP4grtWWaQVQISBBC4kV83/aW9P9Op79Y8sADO1US/VIp3+8o+b+dxSt
+         dZiyznkT6OUGLsb7TftG6qJNxDLhp8S6kM32pgWM88T3+dTqhbYNSWZYh2a2g9dFk0Ax
+         RcWOLrNcRlbGHTn8qqWK+YbkZFN29nXRLvyv7k+5TWcuHn/nnpJ7tfzEX89DcuOfZ8Z1
+         zGCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWu5628f/X9fL7FMhTn761bNdsaKF4ff3UInL7boRucI98FjefWHF1tktChuA0GhojJRfpWu/MWAajca9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqJxMgdMTWUZCKkMx7Y8Do3mPSoTfO/Ndj8cYiE9zNVsFOIWz5
+	qz9SUtbmDji0RLm8xRrMr9vP+Q6gN9j3qZqREKCukU2vElS/VjiLx36TLBir6O+e7Fo=
+X-Gm-Gg: ASbGncvMlffoq+uGpvFJZcB9n6+6xwCUr8BnejQcrFH65CnlsG1GpGc4spNu5CxgKKg
+	gLeYrd8rw5LOTfDIAiCuySmSU356N6ZTWU8z5yaRxFr4eR4XhJCezwrxrfZRsZlCQ6UB05CrkY4
+	yEgXxh/lC4STrI8Tm2Dl8LzCnxckd4ENtY80Z33uy55SSVLXHoeVeQm5BecF4jp3FB8yHFkZr1g
+	voX83daegHOV0uvi0DGrArT9VtiYWYJ+Dy7dCkiK3OZ1Q4PhvAvk/DTAAgRiRscgxbFWdKrqQj5
+	Dxr1PzcpZF2/kTouM9OguwJG4YvnF1MVGUKc8+dsKZHABsm0ufKx6Rxg/UOmlfXHPEbKyJWr4SU
+	djaJMsi3W5y+J70zMBgjrJA==
+X-Google-Smtp-Source: AGHT+IGQDltAdK05Fw11inWndjZRxULWek/GxMwsA6OXvhVhdjJ8bm9JYWwetuY8H/FAb8SLNfuwKg==
+X-Received: by 2002:a05:6000:1a86:b0:3a4:dd00:9ac3 with SMTP id ffacd0b85a97d-3a51d9789b1mr540032f8f.12.1749025139734;
+        Wed, 04 Jun 2025 01:18:59 -0700 (PDT)
+Received: from [172.16.23.13] (adsl-84-227-104-5.adslplus.ch. [84.227.104.5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d80065e0sm198301215e9.29.2025.06.04.01.18.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 01:18:59 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/6] dt-bindings: power: supply: Few cleanups around
+ monitored-battery
+Date: Wed, 04 Jun 2025 10:18:20 +0200
+Message-Id: <20250604-dt-bindings-psy-monitored-battery-v1-0-7f755ff75218@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
-To: Johan Hovold <johan@kernel.org>
-CC: Baochen Qiang <quic_bqiang@quicinc.com>,
-        Johan Hovold
-	<johan+linaro@kernel.org>,
-        Jeff Johnson <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250526114803.2122-1-johan+linaro@kernel.org>
- <20250526114803.2122-2-johan+linaro@kernel.org>
- <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
- <aD1axxSAJsbUfnHH@hovoldconsulting.com>
- <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
- <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
- <01634993-80b1-496e-8453-e94b2efe658c@quicinc.com>
- <7025db40-dda0-4cbb-80bd-09bd590584da@quicinc.com>
- <aD_wgACEfm1_1GNz@hovoldconsulting.com>
- <79b4bac1-6e55-408c-a334-006eded4229f@quicinc.com>
- <aD_-zt755Jr_LsWM@hovoldconsulting.com>
-Content-Language: en-US
-From: Miaoqing Pan <quic_miaoqing@quicinc.com>
-In-Reply-To: <aD_-zt755Jr_LsWM@hovoldconsulting.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=RMizH5i+ c=1 sm=1 tr=0 ts=6840015e cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=3_NjuXynapyhKrkUQyEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2NCBTYWx0ZWRfXyisOzIPuB7Dm
- ng6rMzjM7MgNzW96wtZtp62LdWw35OorI6YgJdnmQVZe2hx+GWXHGj28A5FTN549UKbV8E7C2fc
- 0GsT/SAiikWo/KPvvj38mEUmIrgQKlx+a+H3pnQtPZj1W+y7QvDo0yEn/BjUd+iejZzM/x8CxiT
- xB/ztP/5/1c++tadyIVM9+rdCMcSmErn5Fq2NuEEIETOE/NytakmdUwiAK0KEx4O7nhQnXwMxA+
- Izeq+8CI28sMqngClKDQk1wb5Vr9Yw5nHDpSU01b85lpUqquZDXMPiMXAlwqAmS3gVhk0m47aBr
- T+vLJgM2QhSZDRHBUndvK1FhFZlv+yfu/cjxHnhBGTWHc3mLqWCnQKtDMWWPzsU5bVnp9lGhh+C
- vVnAS/3NKoRYPEQdvtOZIh96/T0nJWVEwMl3Ou1UcwRieTpH3Wrv+ePPmdCNSvV9rXYJNQ6k
-X-Proofpoint-GUID: W_8y7Pib7JpzMR6Zj-Qj5nLBrlt1jASV
-X-Proofpoint-ORIG-GUID: W_8y7Pib7JpzMR6Zj-Qj5nLBrlt1jASV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 suspectscore=0 adultscore=0 mlxlogscore=602 mlxscore=0
- clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506040064
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEwBQGgC/x2NQQqDMBAAvyJ7diEaLaVfKR5Msto9dCO7oVTEv
+ xu8DMxl5gAjZTJ4NQco/dg4S5WubSB+ZlkJOVWH3vWje7gBU8HAklhWw812/GbhkpUShrkU0h3
+ 908cYKv3YQe1sSgv/78d7Os8L1ghAF3MAAAA=
+X-Change-ID: 20250604-dt-bindings-psy-monitored-battery-383ccb383351
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
+ Casey Connolly <casey.connolly@linaro.org>, 
+ Jakob Hauser <jahau@rocketmail.com>, David Heidelberg <david@ixit.cz>, 
+ Dmitry Osipenko <digetx@gmail.com>, Tobias Schrammm <t.schramm@manjaro.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1930;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=EslNEbGkoEtGZPgNzSbXr84zl40yV8m1mM0v265VQvE=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoQAFP0q6p3Md047rFs8XK9lvNwEHiD07KFK1wf
+ aKho7OfiNOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEABTwAKCRDBN2bmhouD
+ 10kAD/9+ewY94g516RgISR2hTlXUOvV1mN4U2JDYN0SqKKHDmKhhBY2u1RcUQ2NU9mdDCiQmuES
+ AiChnX+LznSGTSV/Fls4v7KJJ/dypq6wZdj1gj0U6iQLkkzymLCyIWUa5JEK+8571B7nmLSN5UQ
+ x+P6QAUe87VM4rRg9M0rkMf8W+HxGzoF1Xwpurc+Xix81+3tzQB0ZzTj+oAJiWVRD+c+DLzrgHa
+ qgRddcHN/8BnYMRFe3CZz49PyALOigaaPRcnoD/ufic/uWRx/xWgNLdJ0jPANx640WCnEmCHz5r
+ ynrwbZuoAGcfQGt1etu+OSxGZWSufd486M/+oEiUYr3XZg03Wmko5G2biwTtBZNVQVIhIf8q0iI
+ uV041jbic4CSHpL8GHpLoGuTuHrVdSEK4tKu+G13CKQQT7FR7FSJNE2pguj4tBGTVuifbybMCWT
+ bGt67GHwmxFoMqs7JL01a7Rb+pptMbbvr6znG+RBunHrYLSTRcokDt/vj+vf7MtguCQRBHx95bu
+ ASkdck1Boudvhdt+rqCkR51K9JAU2slJveMMIX3diTmGB9XcYuO8ZZLrbPTs+x3w7Q2ayHS0etR
+ GbkwQWAHa6uj1schUY0nCGnVKGGfAPTXdaU86MLtIHzusWYN5MuxVLocMNiqDgyNoHw1rW1LH7w
+ PPsYXMAofsbSIZg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
+Reference the common power supply schema to bring the definition of
+monitored-battery property allowing to drop redundant pieces.
 
+Best regards,
+Krzysztof
 
-On 6/4/2025 4:07 PM, Johan Hovold wrote:
-> On Wed, Jun 04, 2025 at 03:57:57PM +0800, Miaoqing Pan wrote:
->> On 6/4/2025 3:06 PM, Johan Hovold wrote:
->>> On Wed, Jun 04, 2025 at 01:32:08PM +0800, Miaoqing Pan wrote:
->>>> On 6/4/2025 10:34 AM, Miaoqing Pan wrote:
->>>>> On 6/3/2025 7:51 PM, Johan Hovold wrote:
->>>>>> On Tue, Jun 03, 2025 at 06:52:37PM +0800, Baochen Qiang wrote:
-> 
->>>>>>> The sequence is
->>>>>>>
->>>>>>>       1# reading HP
->>>>>>>           srng->u.dst_ring.cached_hp = READ_ONCE(*srng-
->>>>>>>> u.dst_ring.hp_addr);
->>>>>>>
->>>>>>>       2# validate HP
->>>>>>>           if (srng->u.dst_ring.tp == srng->u.dst_ring.cached_hp)
->>>>>>>               return NULL;
->>>>>>>
->>>>>>>       3# get desc
->>>>>>>           desc = srng->ring_base_vaddr + srng->u.dst_ring.tp;
->>>>>>>
->>>>>>>       4# accessing desc
->>>>>>>           ath11k_hal_desc_reo_parse_err(... desc, ...)
->>>>>>>
->>>>>>> Clearly each step depends on the results of previous steps. In this
->>>>>>> case the compiler/CPU
->>>>>>> is expected to be smart enough to not do any reordering, isn't it?
->>>>>>
->>>>>> Steps 3 and 4 can be done speculatively before the load in step 1 is
->>>>>> complete as long as the result is discarded if it turns out not to be
->>>>>> needed.
->>>
->>>>> If the condition in step 2 is true and step 3 speculatively loads
->>>>> descriptor from TP before step 1, could this cause issues?
->>>>
->>>> Sorry for typo, if the condition in step 2 is false and step 3
->>>> speculatively loads descriptor from TP before step 1, could this cause
->>>> issues?
->>>
->>> Almost correct; the descriptor can be loaded (from TP) before the head
->>> pointer is loaded and thus before the condition in step 2 has been
->>> evaluated. And if the condition in step 2 later turns out to be false,
->>> step 4 may use stale data from before the head pointer was updated.
->>
->> Actually, there's a missing step between step 3 and step 4: TP+1.
->>
->> TP+1:
->> 	srng->u.dst_ring.tp += srng->entry_size
-> 
-> Sure, but that is not relevant for the issue at hand.
-> 
->> TP is managed by the CPU and points to the current first unprocessed
->> descriptor, while HP and the descriptor are asynchronously updated by
->> DMA. So are you saying that the descriptor obtained through speculative
->> loading has not yet been updated, or is in the process of being updated?
-> 
-> Exactly.
-> 
-> Johan
+---
+Krzysztof Kozlowski (6):
+      dt-bindings: power: supply: bq2515x: Add missing power-supply ref
+      dt-bindings: power: supply: bq256xx: Add missing power-supply ref
+      dt-bindings: power: supply: qcom,pmi8998: Add missing power-supply ref
+      dt-bindings: power: supply: richtek,rt5033: Add missing power-supply ref
+      dt-bindings: power: supply: summit,smb347: Add missing power-supply ref
+      dt-bindings: power: supply: Drop redundant monitored-battery ref
 
-Thanks, make sense.
+ Documentation/devicetree/bindings/power/supply/bq24190.yaml        | 1 -
+ Documentation/devicetree/bindings/power/supply/bq2515x.yaml        | 7 ++++---
+ Documentation/devicetree/bindings/power/supply/bq256xx.yaml        | 5 ++---
+ Documentation/devicetree/bindings/power/supply/bq25980.yaml        | 4 +---
+ Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml | 5 +----
+ .../devicetree/bindings/power/supply/qcom,pmi8998-charger.yaml     | 7 ++++---
+ .../devicetree/bindings/power/supply/richtek,rt5033-charger.yaml   | 4 +++-
+ .../devicetree/bindings/power/supply/stericsson,ab8500-btemp.yaml  | 4 +---
+ .../bindings/power/supply/stericsson,ab8500-chargalg.yaml          | 4 +---
+ .../bindings/power/supply/stericsson,ab8500-charger.yaml           | 4 +---
+ .../devicetree/bindings/power/supply/stericsson,ab8500-fg.yaml     | 4 +---
+ .../devicetree/bindings/power/supply/summit,smb347-charger.yaml    | 5 ++---
+ .../power/supply/x-powers,axp20x-battery-power-supply.yaml         | 6 +-----
+ 13 files changed, 22 insertions(+), 38 deletions(-)
+---
+base-commit: 3be1a7a31fbda82f3604b6c31e4f390110de1b46
+change-id: 20250604-dt-bindings-psy-monitored-battery-383ccb383351
 
-Reviewed-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
-
-
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
