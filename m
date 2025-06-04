@@ -1,124 +1,139 @@
-Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A2F2C327E
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.28.40.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE671E501C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749039539; cv=none; b=O824y1M4NQ1+5ZxBGfGyZSY6pTfOITzb35zpkeWy+VxrQn67dK4ix9AvT3b7eGUfwfH+jHT/kJBmW/cwnchPWZxCaH7a7vGcWWL6FBV9FFz7iOV8uHQwvZX0c3Eo1mZE+ZwHu6BPy7sWU0G+FsEumI9dzVr198a65a6Zyn7k5+U=
+	t=1749039572; cv=none; b=aXeOLwA0QGZgyElNDfG/78Z+KBkGLqUMgBCDH9UkRXhPyukLK+aHQ6Lktgq39VagQKE44zKkIPih7ZQt6we7QC5hyaLFo+PFCDdIS27vuDG7X3hgaFgHr+lxtbFrt000p/J+aVK+BcyZ143u2dH1xeAlO7ON2nBZlfrKAGgBQp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749039539; c=relaxed/simple;
-	bh=Sy31JKM7/PuGbGxr+JNLABhQ28VTKAgZaYvANIAsQbc=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SBwtqo77x5qh0sNrDWSCddk09nxWyBsiOgE7mLs09gHwm/2iEiN523BHzbTQvKu0JUMo/NRUBzYGiRYCeNAZr5BPovn58e9aeNO1Q69nJj8aMyZK0Qb9R7rXYZPNl8M0ENMFpvxXqQyeuDo/AftrL5/38IVOfDGsfCPcfs2zIZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz; spf=pass smtp.mailfrom=nabijaczleweli.xyz; dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b=jOz0/JQo; arc=none smtp.client-ip=139.28.40.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
+	s=arc-20240116; t=1749039572; c=relaxed/simple;
+	bh=vsTAjMsXxruZD6EGEeDMJx5KZQVmoGJlBxqecOUMPhg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H4yhP1iyWJ3eIQtXVOQOjvYIzg3r/rdPBLFHJzE42FTUHDDyNCYab41DKDQU70X9TksQs0b/UnvG8y5F0ALT6V4AZaEocuU7LN6/ju8nPcY3o9uHCX0QV9rULmjAh6Wl8bB+dHdHdZeqxaA/S1zo73BgOKuDjN4m8tAg9YKd330=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=yyGRU1qp; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="jOz0/JQo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-	s=202505; t=1749039526;
-	bh=Sy31JKM7/PuGbGxr+JNLABhQ28VTKAgZaYvANIAsQbc=;
-	h=Date:From:To:Subject:From;
-	b=jOz0/JQoLIBUK8liTs01m0dsoHA9nmCOzzd2YnCWxq7vJbka/KHFfMx0nTnOlB+u7
-	 eic7ysSeK8YU+Sn7+w9TCzGs7qJBWcl/3Z8cY4wV9Zqj4odAro3p3I2HkSL6nrzK5i
-	 uk4RC8KvbrAqFR7FwVidupRCyoBJazD0owbW6P0hTW85JiedWLe5jgU2P1FBpGhcHG
-	 d5EEPo3JEwM7q8QrVVH44Ry7L3hH8NlIqea+/tKoSC2eyZ7afKy2kCirKZOFzV2Vr3
-	 +wKykvImJYUwqsbfvYXFnPGqP5phLcXjoGYPPWnFAbuRrnw3nXLbOzH/yTHc6SiMiT
-	 r8rdjjTOca4LA==
-Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 4C1C62C4A;
-	Wed,  4 Jun 2025 14:18:46 +0200 (CEST)
-Date: Wed, 4 Jun 2025 14:18:46 +0200
-From: 
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-To: Michal Simek <monstr@monstr.eu>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] microblaze: fix typos in Kconfig
-Message-ID: <2pg4pexvl2guyww56tnjrt3hjsb6bqtccmpkzt42sqz3igcq56@tarta.nabijaczleweli.xyz>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="yyGRU1qp"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so43014845e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 05:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1749039568; x=1749644368; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7va4B4zo5RMoE8/q1VOrd2uGJHuIadY3crtc+x7HSIs=;
+        b=yyGRU1qpBsaMLBUCgCWNDyAK8xEwbdz5so70/sFtDet0Ccql7H/LSW5A+WjC3xLsKM
+         ZKRtmTIVBCnJqApyDK45Yl/pVIKEf8y8C6xdy+fwUxXRBNSSHtSZKGwAKn+LFhDulA+c
+         9SjfIeMB9FN1n8Q+T/2zMfdA8qb4KQbpKyAiMCyaEs/1/yPDcZs+rWorZOf/xMsrxAcK
+         eaaRlC5OLN0eitm650Xh4kJ+CO/sj/lAOzljGcBGF5QI937h1R+V+rOulnJQZEWudnSI
+         gX4CyMoKbmz+OpafNdEHWzwV1qQisiyVEf9k641WzIoV/t1aOiLeMpYh58pgwa4uqpoh
+         J/6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749039568; x=1749644368;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7va4B4zo5RMoE8/q1VOrd2uGJHuIadY3crtc+x7HSIs=;
+        b=k21CvZuhVHO2iGKPOtuWdww2ztKYpt+JQYG+AOXsiWSSvrRPHyHQe5KdhS7+XA1PHX
+         BetNNM2ThIVBHKLliMc2vXie8UeeJITa860I+vuZGjRSiBIdcQ0VGgT/LDRKIne+3j4f
+         +6nR95qLHdUssHi8Z8JWf+BeObgiAgN6W3WyME1OPS/Gq19kvNf2q2otSE+fQbF4eVBQ
+         2h8LD2nICpVYwmdKnMbE3CFFDnTb/9+fQsCnIPQFlbVfREqedw9opl+KIZMiZn8QIpDP
+         sXSDpdYzx58fBRBMvuOuQTMZTY/RJrM+ZZwVqUZyz4gU9ctE76clGzeaiWgt2lqBEgKQ
+         3jMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVB6vR57z6/IPdfP4HPCyQieGQGCx+aOyLqiIunS7J38o0i1nNSGjRruNPoWXrgBY4ao7cUvz3n/uNDbWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMwHVa67zBin8MjTJXeJVMftmdhrnOGJt//pgdXibBJ62Se4yC
+	IaZ4r7wMFVzk91rzHN1lIrV5KqhdV8drjctW9MEyUW79UvE7gtVuUdSpWWRnD2hzVlU=
+X-Gm-Gg: ASbGncuemLBZSWGnjireuJ5II7RuDIqgtSzLTVl5xurMCZdjerHnrXHUL5Zw2znwQxu
+	8Se41+nisZFE2G2ewXryXmUokyVcHMa0Woxa932+a1V7UvlRfDtarS2r4iObceK6EzC3O7kZ8J5
+	IH/sTy8rJSmaESaAMrp8B22+3WobC5VJWFct9Z29lJbeOVdBG0e7VavkGVHM/8jumCYSFGaudrI
+	ftnjw60dpEvQs9aHcnIbGPknNHo9DtDtBIycQaxfkwEdjKdueDy5G1mvCrl6JPYfJk/92g1pdlM
+	FTFsRNfNpXUVentyYmrtKliA9naOLbxJdsBGlOyVREv6vJWg
+X-Google-Smtp-Source: AGHT+IGVrF4O5T3Kqh+fUs3JsLlwaWKguUlwDSvf4RuehBTzNd19MRzE14XOKWLjuavmnFq2+KnyhA==
+X-Received: by 2002:a05:600c:6297:b0:442:d9f2:ded8 with SMTP id 5b1f17b1804b1-451f0aa7fb6mr21810695e9.15.1749039568246;
+        Wed, 04 Jun 2025 05:19:28 -0700 (PDT)
+Received: from localhost ([2a02:8071:6401:180:da11:6260:39d6:12c])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a5215e4c4asm1456495f8f.17.2025.06.04.05.19.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 05:19:27 -0700 (PDT)
+Date: Wed, 4 Jun 2025 08:19:23 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>,
+	Mike Rapoport <rppt@kernel.org>, Barry Song <21cnbao@gmail.com>,
+	linux-mm@kvack.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	Pedro Falcato <pfalcato@suse.de>, tj@cmpxchg.org
+Subject: Re: [DISCUSSION] proposed mctl() API
+Message-ID: <20250604121923.GB1431@cmpxchg.org>
+References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
+ <aDh9LtSLCiTLjg2X@casper.infradead.org>
+ <20250529211423.GA1271329@cmpxchg.org>
+ <0aeb6d8b-2abb-43a7-b47d-448f37f8a3bf@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jd3zt4wx6ib2ttjj"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20231221-2-4202cf-dirty
+In-Reply-To: <0aeb6d8b-2abb-43a7-b47d-448f37f8a3bf@suse.cz>
 
+On Fri, May 30, 2025 at 12:31:35PM +0200, Vlastimil Babka wrote:
+> On 5/29/25 23:14, Johannes Weiner wrote:
+> > On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
+> >> Barry's problem is that we're all nervous about possibly regressing
+> >> performance on some unknown workloads.  Just try Barry's proposal, see
+> >> if anyone actually compains or if we're just afraid of our own shadows.
+> > 
+> > I actually explained why I think this is a terrible idea. But okay, I
+> > tried the patch anyway.
+> > 
+> > This is 'git log' on a hot kernel repo after a large IO stream:
+> > 
+> >                                      VANILLA                      BARRY
+> > Real time                 49.93 (    +0.00%)         60.36 (   +20.48%)
+> > User time                 32.10 (    +0.00%)         32.09 (    -0.04%)
+> > System time               14.41 (    +0.00%)         14.64 (    +1.50%)
+> > pgmajfault              9227.00 (    +0.00%)      18390.00 (   +99.30%)
+> > workingset_refault_file  184.00 (    +0.00%)    236899.00 (+127954.05%)
+> > 
+> > Clearly we can't generally ignore page cache hits just because the
+> > mmaps() are intermittent.
+> > 
+> > The whole point is to cache across processes and their various
+> > apertures into a common, long-lived filesystem space.
+> > 
+> > Barry knows something about the relationship between certain processes
+> > and certain files that he could exploit with MADV_COLD-on-exit
+> > semantics. But that's not something the kernel can safely assume. Not
+> > without defeating the page cache for an entire class of file accesses.
+> 
+> I've just read the previous threads about Barry's proposal and if doing this
+> always isn't feasible, I'm wondering if memcg would be a better interface to
+> opt-in for this kind of behavior than both prctl or mctl. I think at least
+> conceptually it fits what memcg is doing? The question is if the
+> implementation would be feasible, and if android puts apps in separate memcgs...
 
---jd3zt4wx6ib2ttjj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+CCing Tejun.
 
-optimalize -> optimize, these configs turn the functions on instead of
-allowing them to be turned on, consistent pluralisation
+Cgroups has been trying to resist flag settings like these. The cgroup
+tree is a nested hierarchical structure designed for dividing up
+system resources. But flag properties don't have natural inheritance
+rules. What does it mean if the parent group says one thing and the
+child says another? Which one has precedence?
 
-Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
----
-v1: <f6e465fee5a824a67be1ae7c3bc1b72adcf9471f.1746558529.git.nabijaczleweli=
-@nabijaczleweli.xyz>
-
- arch/microblaze/Kconfig.platform | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/microblaze/Kconfig.platform b/arch/microblaze/Kconfig.pla=
-tform
-index 7795f90dad86..9cf9007ed69a 100644
---- a/arch/microblaze/Kconfig.platform
-+++ b/arch/microblaze/Kconfig.platform
-@@ -8,10 +8,10 @@
- menu "Platform options"
-=20
- config OPT_LIB_FUNCTION
--	bool "Optimalized lib function"
-+	bool "Optimized lib function"
- 	default y
- 	help
--	  Allows turn on optimalized library function (memcpy and memmove).
-+	  Turns on optimized library functions (memcpy and memmove).
- 	  They are optimized by using word alignment. This will work
- 	  fine if both source and destination are aligned on the same
- 	  boundary. However, if they are aligned on different boundaries
-@@ -19,13 +19,13 @@ config OPT_LIB_FUNCTION
- 	  on MicroBlaze systems without a barrel shifter.
-=20
- config OPT_LIB_ASM
--	bool "Optimalized lib function ASM"
-+	bool "Optimized lib function ASM"
- 	depends on OPT_LIB_FUNCTION && (XILINX_MICROBLAZE0_USE_BARREL =3D 1)
- 	depends on CPU_BIG_ENDIAN
- 	default n
- 	help
--	  Allows turn on optimalized library function (memcpy and memmove).
--	  Function are written in asm code.
-+	  Turns on optimized library functions (memcpy and memmove).
-+	  They are written in assembly.
-=20
- # Definitions for MICROBLAZE0
- comment "Definitions for MICROBLAZE0"
---=20
-2.39.5
-
---jd3zt4wx6ib2ttjj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmhAOaUACgkQvP0LAY0m
-WPEF+w/+IABKwNG/sgvDUZLq1GDAcfnfdvb73L37OkutIx9axla48J8NiGfgc0n9
-xwapfclYkMjQiEDcY7SRvpGQFrLdFKACEA1Yd90oChuRJHBNtueLpbkEfod5uOXf
-USWM0iztkjsdsGkVeY6FNHd6ZZXNymSWfaSD8qmkP33jFNK+pp0NZvqsWnFl8Jh8
-oZLTWx3WOnneMsKRqjdx8KNrkqf+GHYXrdNi8fJUDam8kGnNbZgKH2pyzsZbP7zJ
-5KxmolZY+FvLEhsFlikm4gA8VQq7KXZzeqRuus6FXwcnIHJpjr18yBoTRCGO+/Y3
-pcEjAH3Sy0kkkNxbXGaHqBPGlnJIopsRfEEHFizZVgFf+f+oEK0NwZrPJUtBeVZw
-t2kDfeYPcKhTs6YOUiC22vvSLJ0lhl5InimrVgxeW+AxUcFqLEO9CalEEjiX+1+m
-vaj6Im2Odeq1Mv9rqTMzO73gYEm2sE2Ht/2Ka0uh4ZtTAwXrg3fBrWDGKrDpYa2h
-N4D/w/eXTUcLKPZ43t9imqI02NCi9jXCDZHLcaqnH1SkkKdI+nZM+HnxAqgRuEU7
-xSu45s4gHiik80q09/KJ5RUcCVLAAvEOIUXVe8GtO65blY2EFA8Bjg5Olx24bLfQ
-QriAU3fy4O6P/PsH5ojzb8+jW7e8Q+vOSW3Ic+tbAxPbZyH/6fY=
-=TYbJ
------END PGP SIGNATURE-----
-
---jd3zt4wx6ib2ttjj--
+Hence the proposal to make it a per-process property that propagates
+through fork() and exec(). This also enables the container usecase (by
+setting the flag in the container launching process), without there
+being any confusion what the *effective* setting for any given process
+in the system is.
