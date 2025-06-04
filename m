@@ -1,91 +1,107 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CC928EA4F;
-	Wed,  4 Jun 2025 11:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C77028EA6D;
+	Wed,  4 Jun 2025 11:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749036910; cv=none; b=l1iYbZegW8mzxUYBWm1NiH8uNfr4moKxSc9Q2cMfnbP4s7prmRjRPKzvKdvykNfw3G09/dpXjq0lgUuPWL5TtxhbUiSneJEuSKdFU84Oyw9sV/CzL2JuuPVF91LQDVqt5yVX7Vu6kuRvDxoAVi8Vj9VtvhsNh7vBG5EbBGb64WU=
+	t=1749036928; cv=none; b=HlbYhZHfdS2QFUCSsc8JWiu4FUj4svfM0J/FeGKs/zWmei3xIVo6/MrqzfyBIVoQ7vkOOgTNpnDDWl4WIZxSgl2JbtiMu0uokm+mfy6iiB6gsUq4nqYQGj4JbxFR8qiwd9oiBFZCMu9p/0Z15ByPx2S6vGXiqIEh/m/i+mF76LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749036910; c=relaxed/simple;
-	bh=eC4zQahnbIG0zimMI3qqobsDEY2WS5TdQDTeDCRi8Wg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=REzUZ3p4Z1I+TJ6U//25S21s0Wi08z2xX3AhZZ01Bh9jv9ExSGJP7aFN2WDcefIq1bc0+CvjE7mn16KU+HsQ5nYjtr7DVp5ZuscpLTKHxk1Hj6gix34ryhaJfanJvbr/NOgS7FDG/oPl3b/X1VUG2wsmAdA6t41a44Zf7Uk9LIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kyS8n5/l; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749036928; c=relaxed/simple;
+	bh=wXSTBOc9hfPvgHW6k38UqyP60yWHejz7Bu4vESAaYGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tw2KvT8JJ6dXxxrEU8fGv0UpagKTU2gHzDPzLJvqXk+F13YJKzkBRpV9QX03M8/btwlHuF4pOQ7g4cRI/PRP5XoJ3BK2iYa9DiY38GxGZU3q+mh1y2vjQS4vJUHGZfHigu9QajAhZe1BdhIsjxAIY1WFq2pQ2+LHDJH92WrYUAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byI6xZ56; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyS8n5/l"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-311ef4fb43dso5075431a91.3;
-        Wed, 04 Jun 2025 04:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749036908; x=1749641708; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eC4zQahnbIG0zimMI3qqobsDEY2WS5TdQDTeDCRi8Wg=;
-        b=kyS8n5/lFtYIhTAfZj8SKO86ZbmOe1vveEClx6G79N+BpGpfx4T/v9MclbaJfNIitZ
-         m5J/7rXMH3pHbn8ZPVunvsxi/o69ArBrlyQWgvl/trAqwmHjkkUzmWJ9KTXElG9iKHEz
-         mD96tQCQLtUbZRRMTZ4+xhMuFj4pz6Dpdi/o/z3JhbDiftt2nd9riQTiKveMYq1jPTSc
-         jgQtf6/jKhfJPx4Dvu1M/y6st/nsczNpqaWWWJC3qYGciCATdq2N1xsQe+Br86x7A7ob
-         eW5zv44y1FAn4RNIR8eT/8Cdp1tdP7vKWq1xok1Q1lEgxSxLcRJYTX+awNJ2qCZ6Y6H7
-         biCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749036908; x=1749641708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eC4zQahnbIG0zimMI3qqobsDEY2WS5TdQDTeDCRi8Wg=;
-        b=MTTMsdi/0hEISF1/HvQCS8j2UyVoLXJO/jT1x0Lr0orrNQDt9NAwb1rUPvOvH1Qjwo
-         zkfttrQoQEujCU+ip3XF+lECfDb7q7i5U3AKWNexcVd4xyy7e1xd03qajnl2IwXafQgy
-         bXA1UP0EZXUPRpG2AHhzsEYVDawsY5iFyvqq/LB18V9H4mBcH4WaUlR+UyQqzP7fgROW
-         7dMzlgmfCrvQaGD9+oFw7CsN9e4oBut+fAMbN4it+km4ExFFZkOaVTgwXxUGKf+ma4oV
-         +RcXM4E141DUsrmy+K7AJkZsffgEytrzln5SIjgiu3P+UdEnjHkvAChr/5izLMa6EHi0
-         RINw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4uVmfyIZ7I9MWw9we7mqGZUTbEDXPF1al8voOiD/a7un9yR5Rhqy950NfyriNx8gOl9wmu1jf74aNg/nVmowVTg==@vger.kernel.org, AJvYcCWq4VLa03IIpLujgkyOPVZxYwDC66qUcKhLWzU+leUgAtk3UfSZNpeIemwWrLqPm9n6CXyPYOYdZ6vv@vger.kernel.org, AJvYcCXGKqfWC7o9qVBsM44WS5cZCzCjJISS9pb4S1as2vH6cN5U4ZxzoJgF9nozxgfF8BUGmVQxNLIisENP9EB7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw67XfbOJhwMbtWlXsbssjOdAOHc9xXGmm3LUitC1t/773xTXzB
-	uHo3rYURUyTfmXdWrUaDmO3VjzuyAUVFUqLrnYqtFAzb6KyRu4UXRuN+xLMHQfZ+tvkDsRMs+be
-	BNHjyjmuR5TgHVwKDx6BRzxsAB1mYDFE=
-X-Gm-Gg: ASbGncu00tRfkOo2SYyA5bNoT1tRMAUn7joYpgSRLBbwXapO+RIOtbI/Jm60h8UJLlK
-	6MPrShH8kr9kd4z2EARjkL9jftDzQnEuaYigNezJj5LqGhbT3XoDe0Ebq8SM7YCpBYo1e2KNeUK
-	PAnLMXrUlWaONGeJcvpp5gTuMURRxmZA==
-X-Google-Smtp-Source: AGHT+IGwIGTmxieNXznAoBW8LEiVl/ryKLqB13xhYIunkErEyJpECY1o6OzL5PMiS9fUTOhNK6TrQ2RtqRozCxKlADg=
-X-Received: by 2002:a17:90b:390c:b0:311:a561:86f3 with SMTP id
- 98e67ed59e1d1-3130ccf65dcmr3679787a91.6.1749036908156; Wed, 04 Jun 2025
- 04:35:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byI6xZ56"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6247CC4CEE7;
+	Wed,  4 Jun 2025 11:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749036927;
+	bh=wXSTBOc9hfPvgHW6k38UqyP60yWHejz7Bu4vESAaYGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=byI6xZ56+XQ73QaQFzVyf3xS+xcl4WnFhC/Yo9S8+yMrqTI4Tje/ARheZJsjWSCo4
+	 eiAMaihUpAUlyLoo7oRPmdDK1iXVNdFUQ5hUh4Q8Vpcy1EP/viiRDFSudIa2c6ao8U
+	 y71BzzlcWn1e9GRCjG6jbztgcYfhv0Pf5vpDSkQHdzNarlQgEBFiusi23mznCKwtqE
+	 iEJRvZNtc56L6zyNxnPw/2/AfvOIY5mIOAdWyVg8H0wlHbbzf8jFb08t3oTz7ALID/
+	 QbdpU4UhBjYKGyUB2RGa71VkswRBtb7OZRyXzzvEWepJN5sl4PHAJUA0/xQ3Dngxjt
+	 /HNxqs4IaZx1A==
+Date: Wed, 4 Jun 2025 12:35:21 +0100
+From: Mark Brown <broonie@kernel.org>
+To: samuel.kayode@savoirfairelinux.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pm@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>,
+	Abel Vesa <abelvesa@linux.com>, Robin Gong <b38343@freescale.com>,
+	Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v4 3/6] regulator: pf1550: add support for regulator
+Message-ID: <eb1fb4e2-42aa-4795-bc6c-dbcf1fa04f11@sirena.org.uk>
+References: <20250603-pf1550-v4-0-bfdf51ee59cc@savoirfairelinux.com>
+ <20250603-pf1550-v4-3-bfdf51ee59cc@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604-imx95-rproc-1-v1-0-a6e5f512731c@nxp.com> <20250604-imx95-rproc-1-v1-3-a6e5f512731c@nxp.com>
-In-Reply-To: <20250604-imx95-rproc-1-v1-3-a6e5f512731c@nxp.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Wed, 4 Jun 2025 14:37:04 +0300
-X-Gm-Features: AX0GCFuTyob7yQ_CjnB1akDwMMdIK7thx9Xx1AgvnXPVg4AWe6fnJ67XkMM0Idc
-Message-ID: <CAEnQRZAm_-zr6W4KffXCjzWqBZ2G8TYmMvgF_ABPWhTZNNZGbQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] remoteproc: imx_rproc: Add support for i.MX95
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Iuliana Prodan <iuliana.prodan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
-	linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7ow0kNdE51Zb6Qp/"
+Content-Disposition: inline
+In-Reply-To: <20250603-pf1550-v4-3-bfdf51ee59cc@savoirfairelinux.com>
+X-Cookie: Non-sequiturs make me eat lampshades.
 
-On Wed, Jun 4, 2025 at 5:37=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
-> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> Add imx_rproc_cfg_imx95_m7 and address(TCM and DDR) mapping
-> Add i.MX95 of_device_id entry
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+--7ow0kNdE51Zb6Qp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Jun 03, 2025 at 02:27:47PM -0400, Samuel Kayode via B4 Relay wrote:
+
+> +static int pf1550_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
+> +{
+> +	int id = rdev_get_id(rdev);
+> +	unsigned int ramp_bits = 0;
+> +	int ret;
+> +
+> +	if (id > PF1550_VREFDDR)
+> +		return -EACCES;
+> +
+> +	if (ramp_delay > 0) {
+> +		ramp_delay = 6250 / ramp_delay;
+> +		ramp_bits = ramp_delay >> 1;
+> +	}
+
+I'm not seeing validation of the maximum ramp_delay value here?
+
+> +	switch (irq_type) {
+> +	case PF1550_PMIC_IRQ_SW1_LS:
+> +		event = REGULATOR_EVENT_OVER_CURRENT;
+> +	case PF1550_PMIC_IRQ_SW1_HS:
+> +		event = REGULATOR_EVENT_OVER_CURRENT;
+> +	case PF1550_PMIC_IRQ_LDO1_FAULT:
+> +		event = REGULATOR_EVENT_OVER_CURRENT;
+
+You appear to be flagging all these events as over current events which
+doesn't seem entirely plausible.
+
+--7ow0kNdE51Zb6Qp/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhAL3gACgkQJNaLcl1U
+h9BP0gf7BQBYj/vVLKsA5wseOvzZSYmWZEKxie9t4vNLf1wwUtWrL8QpfAW6AMuA
+zTuTdnQpclS9lZMHtfcdUfLpgEma4S59VuiMDIt7EcjE16R7NvjFppzaRG+rSLHG
+EsaPxW4w2VV7m+oLjGKTMJYxFpBbcldcwNgXKlLsSPnC/tY2x7x1jymSJYuZ93UX
+Z13o6DQjL+9Ku3brZKjPubVwnAnUU8/hY5W9gbNj+Q1yZHReSwNU2Rbre4qOxCRJ
+YsRk1x4xVMcD8E9xDK3iNpk+1Uf3aC2heiSRy2k1tpNCR9AKYqH+pJ3FN61Xc/QP
+cIetZ86IqOH4t8q/Y6lLqNCxEE526A==
+=7Ooj
+-----END PGP SIGNATURE-----
+
+--7ow0kNdE51Zb6Qp/--
