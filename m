@@ -1,149 +1,137 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB76028ECC9
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 11:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20E28D8ED;
+	Wed,  4 Jun 2025 11:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749037117; cv=none; b=Xin6UU09rY8/8okA3AZt68UeqTVR4RhBt1EQADI5MTQfupo6Lq20/4iToAjc+/5mL38NBlGe573ixs3jPZLzc7rGeSPt7Xc+yNWjlu9G6iuzxlsB7Y3eNmJfRYtI2NMzm+aqitYwj6ngMG1ZdAmYbaOrCuAotVG65g/t2qZmTyU=
+	t=1749037194; cv=none; b=hTx+vHI0vPhE27r8U9n8BR3HYjy8HydhKk4RkSy0M6/677matXiZtMQNQItxfRMTmAngmSrbfXulshvGZ9rzG80fMor6HNI7oKYiup4k0Rfg9l6eyr2WP3FddamFf5JNgTAytQ3krEZFc+w/Os+Rzl+MgcYvWS4VKgPy+Vd+/CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749037117; c=relaxed/simple;
-	bh=bkWYBN0z7L5PXWrZDWUNaAzGfO2efcEkm/tCxSovQGc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hv045OFPASdvNwYQ6U6l/bx+UEiM6laVVVAH6e2hvbA9XSV1Tc7D0KkDZe/YT13jVGgKqm8VwMEiZ9fpFZuvt50jvRmC4DPwIIA7hmxHnIHPwfh9gYytwD/IKa81Xp6c1YtTRxjg4ehfWasURxo7HMa20Asogp7Mtq2tflHvLkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 554BbvWC063964;
-	Wed, 4 Jun 2025 19:37:57 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4bC59374gHz2NZDyW;
-	Wed,  4 Jun 2025 19:35:03 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Wed, 4 Jun 2025 19:37:55 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
-        <Hao_hao.Wang@unisoc.com>, <baocong.liu@unisoc.com>
-Subject: [PATCH v2] f2fs: compress: fix UAF of f2fs_inode_info in f2fs_free_dic
-Date: Wed, 4 Jun 2025 19:37:39 +0800
-Message-ID: <1749037059-4243-1-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+	s=arc-20240116; t=1749037194; c=relaxed/simple;
+	bh=ufZGYSMjuWeE0gmaN3weztdJUrBUeABeoB5cfpDXF9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YbElBr7Bg4gFZL6O2i0OMyFqbxZg6pC90oCCXBttOmMmPbTxqLjj2UPhdAtBYunUqWjPkOZYPRXRGkBcl8/+ylmiQusOGtPZBwyY3RjUHIzhST7QiZGjXiaGQQoD2Q3Bcsk1oiyyvirpU9Kt9PqWoEp1ZT7lXBjMhSrrczGmXJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qa7IBXXJ; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qa7IBXXJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749037192; x=1780573192;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ufZGYSMjuWeE0gmaN3weztdJUrBUeABeoB5cfpDXF9c=;
+  b=Qa7IBXXJ1MzG4ZhQY2/jh9zRWDTnD/QSKCwuYzGs2wg0D0+RqksM+zjy
+   3RXMhEarpMTAs2n/qe6RHuUpragMW0DRW7cDyksQKaYcqCdYI4d+sbLFz
+   PsA/HI76RnhvuwZ8456LdNEavQNvJMmS6PkkGNXkMXOD6zewhmvSxbCIu
+   a2BD7XL3ujEy69atTcDaAtxuDn+6JMDv0fKQhly1J8ktfZ9x3egcGQ7vO
+   8UNINKoZLrwVozt3jkMrF9gSWigNtmoYe7NS8ag9qVRZziQRWgo1s2J8E
+   +Rbj+t7+kqQTTkFXtZZQg6JQlMehiKRB3H0HMvQxFesRvcI3EDl2phqKG
+   w==;
+X-CSE-ConnectionGUID: ZvTCTuzCTMOniRW/Xc8S1g==
+X-CSE-MsgGUID: 7zyYtGSXT1qgggdyvJo0DA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="54776197"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="54776197"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 04:39:52 -0700
+X-CSE-ConnectionGUID: 4gH2R/qmRh+J8XxmpdEsLA==
+X-CSE-MsgGUID: f0YM29GmS/uxrFTQImlS1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="149950623"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 04:39:52 -0700
+Date: Wed, 4 Jun 2025 04:44:59 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	Ricardo Neri <ricardo.neri@intel.com>,
+	Yunhong Jiang <yunhong.jiang@linux.intel.com>
+Subject: Re: [PATCH v4 02/10] x86/acpi: Move acpi_wakeup_cpu() and helpers to
+ smpwakeup.c
+Message-ID: <20250604114459.GA29325@ranerica-svr.sc.intel.com>
+References: <20250603-rneri-wakeup-mailbox-v4-0-d533272b7232@linux.intel.com>
+ <20250603-rneri-wakeup-mailbox-v4-2-d533272b7232@linux.intel.com>
+ <CAJZ5v0geZAnLRkeunW06JKE1gyDcd15EGzqJ_A-cZHO_koJVAw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 554BbvWC063964
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0geZAnLRkeunW06JKE1gyDcd15EGzqJ_A-cZHO_koJVAw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-The decompress_io_ctx may be released asynchronously after
-I/O completion. If this file is deleted immediately after read,
-and the kworker of processing post_read_wq has not been executed yet
-due to high workloads, It is possible that the inode(f2fs_inode_info)
-is evicted and freed before it is used f2fs_free_dic.
+On Wed, Jun 04, 2025 at 11:12:53AM +0200, Rafael J. Wysocki wrote:
+> On Wed, Jun 4, 2025 at 2:18 AM Ricardo Neri
+> <ricardo.neri-calderon@linux.intel.com> wrote:
+> >
+> > The bootstrap processor uses acpi_wakeup_cpu() to indicate to firmware that
+> > it wants to boot a secondary CPU using a mailbox as described in the
+> > Multiprocessor Wakeup Structure of the ACPI specification.
+> >
+> > The platform firmware may implement the mailbox as described in the ACPI
+> > specification but enumerate it using a DeviceTree graph. An example of
+> > this is OpenHCL paravisor.
+> >
+> > Move the code used to setup and use the mailbox for CPU wakeup out of the
+> > ACPI directory into a new smpwakeup.c file that both ACPI and DeviceTree
+> > can use.
+> >
+> > No functional changes are intended.
+> >
+> > Co-developed-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> > Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > ---
+> > Changes since v3:
+> >  - Create a new file smpwakeup.c instead of relocating it to smpboot.c.
+> >    (Rafael)
+> >
+> > Changes since v2:
+> >  - Only move to smpboot.c the portions of the code that configure and
+> >    use the mailbox. This also resolved the compile warnings about unused
+> >    functions that Michael Kelley reported.
+> >  - Edited the commit message for clarity.
+> >
+> > Changes since v1:
+> >  - None.
+> > ---
+> >  arch/x86/Kconfig                   |  7 ++++
+> >  arch/x86/kernel/Makefile           |  1 +
+> >  arch/x86/kernel/acpi/madt_wakeup.c | 76 ----------------------------------
+> >  arch/x86/kernel/smpwakeup.c        | 83 ++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 91 insertions(+), 76 deletions(-)
+> >
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index cb0f4af31789..82147edb355a 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -1113,6 +1113,13 @@ config X86_LOCAL_APIC
+> >         depends on X86_64 || SMP || X86_UP_APIC || PCI_MSI
+> >         select IRQ_DOMAIN_HIERARCHY
+> >
+> > +config X86_MAILBOX_WAKEUP
+> > +       def_bool y
+> > +       depends on OF || ACPI_MADT_WAKEUP
+> 
+> At this point the dependency on OF is premature.  IMV it should be
+> added in a later patch.
 
-    The UAF case as below:
-    Thread A                                      Thread B
-    - f2fs_decompress_end_io
-     - f2fs_put_dic
-      - queue_work
-        add free_dic work to post_read_wq
-                                                   - do_unlink
-                                                    - iput
-                                                     - evict
-                                                      - call_rcu
-    This file is deleted after read.
-
-    Thread C                                 kworker to process post_read_wq
-    - rcu_do_batch
-     - f2fs_free_inode
-      - kmem_cache_free
-     inode is freed by rcu
-                                             - process_scheduled_works
-                                              - f2fs_late_free_dic
-                                               - f2fs_free_dic
-                                                - f2fs_release_decomp_mem
-                                      read (dic->inode)->i_compress_algorithm
-
-This patch use __iget before f2fs_free_dic and iput after free the dic.
-
-Cc: Daeho Jeong <daehojeong@google.com>
-Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in softirq")
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
----
-v2: use __iget/iput function
----
- fs/f2fs/compress.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index b3c1df9..3f0c18d 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct decompress_io_ctx *dic,
- }
- 
- static void f2fs_free_dic(struct decompress_io_ctx *dic,
--		bool bypass_destroy_callback);
-+		bool bypass_destroy_callback, bool late_free);
- 
- struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
- {
-@@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
- 	return dic;
- 
- out_free:
--	f2fs_free_dic(dic, true);
-+	f2fs_free_dic(dic, true, false);
- 	return ERR_PTR(ret);
- }
- 
- static void f2fs_free_dic(struct decompress_io_ctx *dic,
--		bool bypass_destroy_callback)
-+		bool bypass_destroy_callback, bool late_free)
- {
- 	int i;
- 
-@@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
- 	}
- 
- 	page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
-+	if (late_free)
-+		iput(dic->inode);
- 	kmem_cache_free(dic_entry_slab, dic);
- }
- 
-@@ -1783,16 +1785,20 @@ static void f2fs_late_free_dic(struct work_struct *work)
- 	struct decompress_io_ctx *dic =
- 		container_of(work, struct decompress_io_ctx, free_work);
- 
--	f2fs_free_dic(dic, false);
-+	f2fs_free_dic(dic, false, true);
- }
- 
- static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task)
- {
- 	if (refcount_dec_and_test(&dic->refcnt)) {
- 		if (in_task) {
--			f2fs_free_dic(dic, false);
-+			f2fs_free_dic(dic, false, false);
- 		} else {
- 			INIT_WORK(&dic->free_work, f2fs_late_free_dic);
-+			/* to avoid inode is evicted simultaneously */
-+			spin_lock(&dic->inode->i_lock);
-+			__iget(dic->inode);
-+			spin_unlock(&dic->inode->i_lock);
- 			queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
- 					&dic->free_work);
- 		}
--- 
-1.9.1
-
+I see your point. Sure, I will the dependency in a later patch.
