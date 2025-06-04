@@ -1,215 +1,124 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3EE1F4C87
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 17:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CC31624C5;
+	Wed,  4 Jun 2025 17:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749058044; cv=none; b=UIxBl0jbzBD+2LrbOtg/eNFDjJA3lkAHlkPNgXmTMMHxPOmDiySUShasOY1KwNwrd6Hxo/6ziCPrWX0cDc+QzPt1u+rw7phYgZPd9m2umRpWkeL3DES1Vrn4S/LHn+GAgd/B9iJ39BvW8GWPfMuhGTrDXp0YDWbOLSQIXA3NvEg=
+	t=1749058183; cv=none; b=oU1zSpwUJhRUBW6laclMHSF2CF9W/fi6EGXz5lmDw9K7Ey6INqT7iEuxDt+fYatZSqZemCcE3COrhCR2iov1v3hzAIMfP96ZOoa8nGUExXe5sc3KefAYCldvVmiNk8+eo3kadDbEq4q5/NnOAMPk5SSsu207eKSt40dg4N3hNVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749058044; c=relaxed/simple;
-	bh=WkrEjRTp7ONtQhwntim4NbZfLp3T6Zg6YR+mnF+dMEA=;
+	s=arc-20240116; t=1749058183; c=relaxed/simple;
+	bh=XzZe6OOeeDNRioBftXUcmPJ+uulMqlqV40mme1XLHCM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KUGBJ+BaucPEuwkWnhRPLb8ulil2pltpBk6D86Du6Cr5SpTFRetUxBRcCyILMgewdrKgT6kVZafWEIdFckanwg9vEYQnBb0Cy/E8j+P4cg+q2fRvpxMrW8Dt949JZ++mWo+yfwhcI/75fUea9Z3ZXqyXPK9DEUgcocGpGEigNvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qhc2Xxnv; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mM6wvFQO4fSwIQJCAy3g/EX0MRgTiofMdDanIaXvwAzcVtUt0OrbJq84NAK+rhuak1DD/v/aQK21ns63IOv480lmf/5+bgBz3A9GRB7jUxVxM45covSDSMaWSdc5YZdZBzDbu3ytM+pDdV1epGt6RU9aottEKoJr4DW0F1u8+YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hQYdw7lA; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qhc2Xxnv"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2345c60507bso723305ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 10:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749058041; x=1749662841; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q7B9otxjjw86LIN97ls2HG35KDJxQJSkzx4ZMv9DYuA=;
-        b=Qhc2XxnvYhc2xbBFlt4/ZtiyFaSJj9HROLP8Lk3fk9k1i31htYcyGGfpKu4jjTRyzc
-         Lu9hvXd+oqAA+psnRWZP5335+oeAG4iO33bAkq7Q/ZRZSblkLPYdNabLeAKAt54G8rYj
-         e9k2eeks3aBOOUurbZ8FRhcPRUHLi3PWvg0036RMbXrUuU/3kErWNg6BvTgzLdUG/Ogn
-         Yjr2R6i7OkUribCXksS4PqPL5TX20SrWt5qkn0pr5Fgw/+2KPGdl5vOtpfP6PJosiV5r
-         8M7f7I72PEUjiMzA5kwogebwlnegqkkPOW8GbHFedk064XZeu6auR+iaSusfm9mOX5bL
-         chMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749058041; x=1749662841;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q7B9otxjjw86LIN97ls2HG35KDJxQJSkzx4ZMv9DYuA=;
-        b=ftSCClYQiJNyFthNFr0GuJQf0vwISdGaxwNH+G0Ait9Soyf68shunC89lE9TTB0q2w
-         cQ3URuvgOLQ/d8QlwpQomgyN9JVnXsfxPgRNK/6ctAbrzsReQ8j3D6E4OgqifcBpJJcq
-         2GdUpCoi3cCPE+6aKNL6dnc4Nz+TA/ZfrFlpDT7LjB5tKHU5gZ1y6uWfZ+a/ZJaOaMlN
-         EDOkabCMoejwGllYSuT8Pd9ryih+Y8jn3Kb287616aly6ttL7LSUEqRvx1QMAKxwedq3
-         l4nr5JeMnmwMz4bd523ROV9w7py1rfQR5uSIzma52UWexJlE7P8/RnxAxcKIB0PIenkx
-         5w4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXu1JlBgfSzAxg3/fLFKvRy2kMwhNI1+fFgei0QPJcqWethkgVmttgxZJZjPuZ6ro7ifrU3wMwxVc2bLjU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6lcodupcmXV9a2OSHCCR8a4jJSxvZj1qeqqOrF38dangz7uI3
-	b4dIri2EqQjAySKgiuvXRE+/Vk6qqKRyIlMUx19qfhtMPVv2adIglvhnijvJbLUZnw==
-X-Gm-Gg: ASbGncu+IVWMZso5KmM9wzYaudj2W8rO2+b4YIbmZZ2ZnWyNsMl0KHPdHxwQ5M5DpZD
-	1az+8ZAiEqWo1YhRt3PQkIQ5HRBqm6Xl0EY6qXfBFpYCzmnAUNUF3tlK53vHLrF9CQ4qXLHL/eX
-	4yYOtLoijHSFVSivPMjDuThp4EY3qwabd/x8Tftz9XNoav/px9TmRxHHIvrbn2vY0xEAVBUHqUG
-	dJ4GrEKRhe6OvE3C9I6gGLw+unZGPZCaDzz20d9YgdIZmvrlkFPt42RfL6p3QL57WOm3s/2cglx
-	7SWtv89SYH+t3bmIWTeeqvrvbMrr9Uh8RTZyr5ttbfTUBw6u6rohY9h4P50Wow==
-X-Google-Smtp-Source: AGHT+IH1DWvZbMUTKY0iYBnPsO3u5V0VrOXZgYbT6v4V4ZwUlpiIxHERxxyfrv3KJRUYnHRg6IZfnA==
-X-Received: by 2002:a17:902:dacb:b0:234:d10d:9f9f with SMTP id d9443c01a7336-235e11fc8bfmr52595515ad.40.1749058041460;
-        Wed, 04 Jun 2025 10:27:21 -0700 (PDT)
-Received: from thinkpad ([120.60.60.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd92f8sm106368255ad.88.2025.06.04.10.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 10:27:21 -0700 (PDT)
-Date: Wed, 4 Jun 2025 22:57:13 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-arm-kernel@lists.infradead.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: r8a779g3: Describe split
- PCIe clock on V4H Sparrow Hawk
-Message-ID: <gfr63eotna6javssbrxj6lxifo3o3gypv62t5kg3tzjcyp6zbn@skh6th5vggwb>
-References: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
- <20250530225504.55042-3-marek.vasut+renesas@mailbox.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hQYdw7lA"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554Co0hF024220;
+	Wed, 4 Jun 2025 17:29:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=U1Rh8hSr2JGOrgxgvwJ65HXvRaSDZT
+	Wj5VRhM0KpukQ=; b=hQYdw7lAp7zgpTAOOt2O/x38dPQej0s7gU/wKaPmtrcueo
+	CLS4sd4XHXU1HjfH8lSJsi/M9nSiiBlCCHNroY5wFG+gUBUzZl/+VBL9L4pZi003
+	qy4hnuZuu9O4YQPte4UCwpJXJXRwjUNe2aYjscftz7B2pU37jyRbzX5AnEkDQvOn
+	Ujm3exvZ3Qc9z58a9uEDbl3CF6c9ep9CRQXcm3149snq5caZ1eeijthzLMaM2WXT
+	+R844LCIdW8FzS5+y0LdKiYwhLVWryrCAM5+Wimb5E83yScaD5QvKnQRZ1Pu8th2
+	ZIX6/NLMQqdtNS/VQqzW+ISdDk5qlaIFfiThIgLw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471geyv9vb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 17:29:38 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 554FNqxd031650;
+	Wed, 4 Jun 2025 17:29:37 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 470cg011np-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 17:29:37 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 554HTX4I20251000
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 4 Jun 2025 17:29:33 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6B1C520049;
+	Wed,  4 Jun 2025 17:29:33 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 255F720040;
+	Wed,  4 Jun 2025 17:29:33 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  4 Jun 2025 17:29:33 +0000 (GMT)
+Date: Wed, 4 Jun 2025 19:29:31 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/mm: Fix in_atomic() handling in
+ do_secure_storage_access()
+Message-ID: <aECCe9bIZORv+yef@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250603134936.1314139-1-hca@linux.ibm.com>
+ <aEB0BfLG9yM3Gb4u@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <20250604184855.44793208@p-imbrenda>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250530225504.55042-3-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250604184855.44793208@p-imbrenda>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Pq2TbxM3 c=1 sm=1 tr=0 ts=68408282 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=-A1ZjbFOm4VmdGGBjvIA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDEzMSBTYWx0ZWRfX7BIsRoynUm5d /Tso7FE2J2zVrk3CrqhjYugwPE5KzauvECsYpM+XsH1/0xc0ItxZpB9eCAKpY486FdRH6QO6/Lx Wkir/E0IfaeTJexwwAZCxdJm+Vv10XyPoMDnEM4fyPVBDrxvzkOv1ppFOe4cUy4UiuLgyYRZnV7
+ dBe3kiEYv/WlyaLoTbI3hrQhgEcyLv1BlhP1/kViwEamR7fbURYOvsJyb5HRS9cLXLrtBXTEWa8 8khVQYqxNR9zA8zaUIiuApwqPQNaRJSTNZQ/DTbP3JKWIPTMl4zIwFCRNgrt0+UPjMDGDlepydc IUiojjuXbQZB3d4IsYRjTMpnzJuFKCM6EMKqA9sZKpoL1K8xxVyJhpJ/AXk547CcP4Ly7Z894Er
+ VqVOABp2iU3iRpD50ZUW38+4VHciFXXEA5QOXkZ3e2oryenOQNOSlyi//E50O4JO3LyaeTl5
+X-Proofpoint-GUID: eqfojr6jxJoD4kQQUvoEJuKk5GB4e-eG
+X-Proofpoint-ORIG-GUID: eqfojr6jxJoD4kQQUvoEJuKk5GB4e-eG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=594
+ phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 priorityscore=1501
+ mlxscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506040131
 
-On Sat, May 31, 2025 at 12:53:21AM +0200, Marek Vasut wrote:
-> The V4H Sparrow Hawk board supplies PCIe controller input clock and PCIe
-> bus clock from separate outputs of Renesas 9FGV0441 clock generator chip.
-> Describe this split bus configuration in the board DT. The topology looks
-> as follows:
+On Wed, Jun 04, 2025 at 06:48:55PM +0200, Claudio Imbrenda wrote:
+> > > @@ -441,6 +441,8 @@ void do_secure_storage_access(struct pt_regs *regs)
+> > >  		if (rc)
+> > >  			BUG();
+> > >  	} else {
+> > > +		if (faulthandler_disabled())
+> > > +			return handle_fault_error_nolock(regs, 0);
+> > >  
+> > 
+> > This could trigger WARN_ON_ONCE() in handle_fault_error_nolock():
+> > 
+> > 		if (WARN_ON_ONCE(!si_code))
+> > 			si_code = SEGV_MAPERR;
+> > 
+> > Would this warning be justified in this case (aka user_mode(regs) ==
+> > true)?
 > 
->  ____________                    _____________
-> | R-Car PCIe |                  | PCIe device |
-> |            |                  |             |
-> |    PCIe RX<|==================|>PCIe TX     |
-> |    PCIe TX<|==================|>PCIe RX     |
-> |            |                  |             |
-> |   PCIe CLK<|======..  ..======|>PCIe CLK    |
-> '------------'      ||  ||      '-------------'
->                     ||  ||
->  ____________       ||  ||
-> |  9FGV0441  |      ||  ||
-> |            |      ||  ||
-> |   CLK DIF0<|======''  ||
-> |   CLK DIF1<|==========''
-> |   CLK DIF2<|
-> |   CLK DIF3<|
-> '------------'
+> I think so, because if we are in usermode, we should never trigger
+> faulthandler_disabled()
+
+I think I do not get you. We are in a system call and also in_atomic(),
+so faulthandler_disabled() is true and handle_fault_error_nolock(regs, 0)
+is called (above).
+
 > 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
-> ---
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Conor Dooley <conor+dt@kernel.org>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-renesas-soc@vger.kernel.org
-> ---
-> V2: Use pciec0_rp/pciec1_rp phandles to refer to root port moved to core r8a779g0.dtsi
-> ---
->  .../dts/renesas/r8a779g3-sparrow-hawk.dts     | 31 +++++++++++++++++--
->  1 file changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
-> index b8698e07add56..9ba23129e65ec 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
-> @@ -130,6 +130,13 @@ mini_dp_con_in: endpoint {
->  		};
->  	};
->  
-> +	/* Page 26 / PCIe.0/1 CLK */
-> +	pcie_refclk: clk-x8 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <25000000>;
-> +	};
-> +
->  	reg_1p2v: regulator-1p2v {
->  		compatible = "regulator-fixed";
->  		regulator-name = "fixed-1.2V";
-> @@ -404,6 +411,14 @@ i2c0_mux2: i2c@2 {
->  			reg = <2>;
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> +
-> +			/* Page 26 / PCIe.0/1 CLK */
-> +			pcie_clk: clk@68 {
-> +				compatible = "renesas,9fgv0441";
-> +				reg = <0x68>;
-> +				clocks = <&pcie_refclk>;
-> +				#clock-cells = <1>;
-> +			};
->  		};
->  
->  		i2c0_mux3: i2c@3 {
-> @@ -487,26 +502,38 @@ msiof1_snd_endpoint: endpoint {
->  
->  /* Page 26 / 2230 Key M M.2 */
->  &pcie0_clkref {
-> -	clock-frequency = <100000000>;
-> +	status = "disabled";
->  };
->  
->  &pciec0 {
-> +	clocks = <&cpg CPG_MOD 624>, <&pcie_clk 0>;
->  	reset-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
->  	status = "okay";
->  };
->  
-> +&pciec0_rp {
-> +	clocks = <&pcie_clk 1>;
-> +	vpcie3v3-supply = <&reg_3p3v>;
-> +};
-> +
->  /* Page 25 / PCIe to USB */
->  &pcie1_clkref {
-> -	clock-frequency = <100000000>;
-> +	status = "disabled";
->  };
->  
->  &pciec1 {
-> +	clocks = <&cpg CPG_MOD 625>, <&pcie_clk 2>;
->  	/* uPD720201 is PCIe Gen2 x1 device */
->  	num-lanes = <1>;
->  	reset-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
->  	status = "okay";
->  };
->  
-> +&pciec1_rp {
-> +	clocks = <&pcie_clk 3>;
-> +	vpcie3v3-supply = <&reg_3p3v>;
-> +};
-> +
->  &pfc {
->  	pinctrl-0 = <&scif_clk_pins>;
->  	pinctrl-names = "default";
-> -- 
-> 2.47.2
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> > 
+> > >  		mm = current->mm;
+> > >  		mmap_read_lock(mm);
+> > >  		vma = find_vma(mm, addr);  
