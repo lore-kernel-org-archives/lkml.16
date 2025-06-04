@@ -1,44 +1,40 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1304429A2;
-	Wed,  4 Jun 2025 03:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 021D729A2;
+	Wed,  4 Jun 2025 03:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749007628; cv=none; b=o8tYLUpqRLuc/XGS5VXI+OPADkGbGRqGwlrrbTg8mDMFoUyZNgrWJ8k1Yuvpfdkx3GP1KXXTy/dR+LEd59ziysgJdn8rHBomM7FSqD/NpbBSgUNxl7F6LN8cJZzxr/0MDFvAIWRZwbwmSpwPAEPXmKjPDlHJxT8teD8H19SF+g8=
+	t=1749007643; cv=none; b=KLumlIlmWRaIF+J7UJ6/vXzfIcDtHyg9kALcpdFLquWSxFsKX5ZH06tQgEoZIwM8Sp6ZCFXGPFPk9aXM2XVj3X+rcnRjnbSXOu18aBFcbq70yWZ1zfPMGbEBT7KdR8uvrZU2pMlMedBynrjSXabuMyDcQiLMy2EWqLOqfyxAgWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749007628; c=relaxed/simple;
-	bh=6nK4UI+rfEwQrrPlJbASJnM+/ETWUIhZsX797PL5+Dg=;
+	s=arc-20240116; t=1749007643; c=relaxed/simple;
+	bh=L739ankpOODrb0fgXoxcqqKEaECRiZEI57Fnw+a3DXU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C5pCtdjuCjkM7KUuq9ZenKVJKPmOBvVOFcs6eS3I/z92CixlkWOPwfCT20XXEjLbTLfouXsNo+dXBoGJcdFO4OjWy9PN1Zg7DOcLTm9tAmez7uy12j8ljxj8ChkZUiJZnopnamkAy2z7qerlz12awuiyX4egcMayHAvGNR2EPOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Usv5xFx1; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=l55AnTluGMP+8K7U7HvV5Xa0NjkjBo6n8pYho5CpBnRjphcKAn0yCvH/UGQPcVKAVprdgZEdzYF2TTa/Xpe4I8PPb2VCkmzx3/PajtuxYevm3stintVnKshq/Zvx/OWH58ekGQME2RNxAH1tbsjrgRmXBrZOxEzAyIyVB0/S6gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VnEzoKzx; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Usv5xFx1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=R9BSVQ3bOfkR1CxKAYmpHqWwWy4CcNGdJn7y05g5hkI=; b=Usv5xFx11aYHrRsnIzga314HZe
-	GdglkANuACY1d1gboesrT4gZL61GuTDb6DeyUOttxsdxYibHdR4Wg1/hCRyqnVkWZpi/dfc/Uh/9+
-	32pO6UPQEGo2VTZJOeqopS3btYYOQcmxK951S6vQ1LkZGWBvBsjtv/rfrpkvqduRUosE8Yh8Q96vQ
-	ShBPiRaVBsREAlYCEY/ZIw/WdY9BRoSC468G6LKjJStIfMY2y09OsqejaAPYZoXM/ifMsKO0p2a9v
-	HgGxHWr1z0KMBvz78GRzqN5cnnMyInflNwjbkDxELHl/xw3ym9JQ0fX3NMLTv8MjP55Z0B8M7cVLE
-	bCZAVf8A==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMemO-00000002hsa-1lCu;
-	Wed, 04 Jun 2025 03:27:04 +0000
-Date: Wed, 4 Jun 2025 04:27:04 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Luka <luka.2016.cs@gmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Bug] unable to handle kernel access to user memory in step_into
- in Linux v6.12
-Message-ID: <aD-9CGebRbqhu6_w@casper.infradead.org>
-References: <CALm_T+11u3jn-OPi_TPogwsUYE_iRdgZY=pjG8-OzTa4uR3dkw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VnEzoKzx"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 69CAF211658D; Tue,  3 Jun 2025 20:27:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 69CAF211658D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749007641;
+	bh=IGK1+y6vAvC4yF9XTkE5Ky7qInkd4kQfnxz5ym+8224=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VnEzoKzxf/uapaR09G3w1stJu4kQl6PRmk6zbdcmNuLeyuNWcYWvStveQNSw68NLh
+	 klECQPpyE+OWDb2n4Zx9rE055pHuE5mAPf8pSO1ZoUMUWwjdyrFHFXqlCl82Vd8Hel
+	 wHG4GBak0vcnkcwK4Q4NRXqpCn8rsWSm+uh9PuEU=
+Date: Tue, 3 Jun 2025 20:27:21 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Hardik Garg <hargar@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, ssengar@microsoft.com,
+	romank@linux.microsoft.com, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@kernel.org,
+	apais@microsoft.com
+Subject: Re: Subject: [PATCH v2] vmbus: retrieve connection-id from DeviceTree
+Message-ID: <20250604032721.GA31886@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,11 +43,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALm_T+11u3jn-OPi_TPogwsUYE_iRdgZY=pjG8-OzTa4uR3dkw@mail.gmail.com>
+In-Reply-To: <096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, Jun 04, 2025 at 11:05:45AM +0800, Luka wrote:
-> Bug Report: https://hastebin.com/share/yatanasoxe.css
+On Tue, Jun 03, 2025 at 02:01:00PM -0700, Hardik Garg wrote:
+> The connection-id determines which hypervisor communication channel the
+> guest should use to talk to the VMBus host. This patch adds support to
+> read this value from the DeviceTree where it exists as a property under
+> the vmbus node with the compatible ID "microsoft,message-connection-id".
+> The property name follows the format <vendor>,<field> where
+> "vendor": "microsoft" and "field": "message-connection-id"
 > 
-> Entire Log: https://hastebin.com/share/qaluketepi.perl
+> Reading from DeviceTree allows platforms to specify their preferred
+> communication channel, making it more flexible. If the property is
+> not found in the DeviceTree, use the default connection ID
+> (VMBUS_MESSAGE_CONNECTION_ID or VMBUS_MESSAGE_CONNECTION_ID_4
+> based on protocol version).
+> 
+> Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
+> ---
+> v2:
+> - Rebased on hyperv-next branch as requested by maintainers
+> - Added details about the property name format in the commit message
 
-Uh, nice try.  I'm not clicking on anything with an extension like that.
+Property need to be documented in Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
+
+- Saurabh
+
+> 
