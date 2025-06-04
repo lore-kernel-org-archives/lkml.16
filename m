@@ -1,306 +1,220 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F414C7C
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 14:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D6128FFF7
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 14:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749047216; cv=none; b=MFmcuBS/RQj0nYpx5M8hT8SgTdQdPhk9HTK6en+XlXuyOrSSxEZI3OeLXYwvRgWwGIDc4VSsS/+lqDZ4Gq6v5j45vyTX/OIA92wvv4W4kQurr3uJmXQMXeokZy+bdsh2htTnwnXXk6S0UYvr3/pQX72+KywsODjxbZK83EhO0FQ=
+	t=1749047243; cv=none; b=WZalbVnCZHlOdFsP9qHj6o95ZjFEucwxffQvnf6YmqQJNuTNBrVzxhgbSWI9Bv1A0W7RMEfsYZop6kAvgTAJJOstYlXLUtkBWe8n3IjTLrnlXLNpNUZuNn8BMEBN9tHG+2zlBeveTAViC1Mb3nCRp0ZnbBZYDYR9UlvKAE/VZVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749047216; c=relaxed/simple;
-	bh=NM0DCuaQUITzAzptwZ0C59YK5/JvpXmYWeeJVeRCoso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KTyccWOxdAyYrzSHzC2KLG2gOH8dKzpYSSMPwhA460I7WAaao6LEY4CA67AadP9+cIyGKEeyesSio0fAvBWz1HAdKrIxEYzA9q0oEqH0/HzNQgCf195v1eKESb1OHt/pEORe3yXqLCURrhzkKuUJcV3psTAZlONK8rjjD8n/gRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IQUFsPCz; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749047243; c=relaxed/simple;
+	bh=crfGotMOeFabhGGa373/ZOYwQMqUlJ3giwh95Cp+Aqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CPElLFrlY2KtARJdHcRv0EMGqJaFvFYEgJNOcVgT426B/y1sWdQZsviR5vkG7IaDFy+jQKMSpGCpMaG/KOJ/FRkjamIoPfe3nWLq85QaVe3BESG3i+ij3v+p/HaH+vecB50XNrBkvuHIwTZ1W5TYBOUvBo6rwzBqE4Y1KLhAwwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jDBARidu; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5Fai4zf1; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uDlhWiDH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=SU1jb+Wa; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IQUFsPCz"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47e9fea29easo449911cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 07:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749047213; x=1749652013; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IAp/1HGbBLv6qtx/n8Ypumuz56YxupYXz6XcmTVLY0A=;
-        b=IQUFsPCzTrTdqTmcXCpnzd4Kdq789uDcB4lXavBsqjXve+k6fsNMrUX5Jihlg4dxFC
-         g+Reut3rJvfQSA0P0lBtXKAmpOr1VFjspgdmZTyOh76pgS3Ng9QSLXq71gSbjp1uA0jB
-         z/PXk/oSsD1B2OarPXQsH9KPpxV61io/Re0B4oFB7vp0WoEP+OpU0AjUAyKe0KXa7Tzc
-         pH2EVriBhIaQ4A5kakATq2BnlJvCIYdfxw+NJUhbqyV6kCQxRd9xyAj6/hDL4ei9pCd2
-         ovM0ULAEXUyDGqI9l2M+nXH01WF04iFmYhi7WD6JLFj1ucKejD/81QurLAbeQd2jfihH
-         XvYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749047213; x=1749652013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IAp/1HGbBLv6qtx/n8Ypumuz56YxupYXz6XcmTVLY0A=;
-        b=BEqg5e0tJXDpZ/wcvZMEHaNoul9Lsl4fbt52RPBzDOZFCtfJqPz2VDlx8eEqVVt/Uw
-         hXaJpeuZwNiiXJJFTfmFv172+da0/apBoYqWb+CnEDuaXD22VmNWQmzJzptSD0xoZhFt
-         BDGU2e9pIU2pCladpGHeVZ/k47K4Sg5Xtdp4pqrusk2HcU08FDHrZcYht6p4QzyNMN7H
-         ANBi0pL2K7ROXRww7azts8KWwdcFYnTnOIS8K7VH2vz6srfxaZjyOVZ1lVtCdeVP3XAn
-         Q1u8NOogfmm4kmil3cijQEjo0hU4Wq9r53fiUUM3tEA84Nd3Bl0KSR6n37lplcic+WDX
-         wnsg==
-X-Forwarded-Encrypted: i=1; AJvYcCXWX2gR1q23Lt/2+r13ZpyU+sXQqTFjnqLYhPlJvie6rZf8It8Jiz/hQ/zoNdoIaftb3aNDnmPjdQBjjlU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA5V2od3eCDIxa777a5S8kIu/7v18RgqCutfQRiagZJHBtDREX
-	FprVHilN3iUOxLMvZuaiT9MbKOKVx3iCW2uFyAUBFVDuBFJhUM/FwLeoouFGeREyGGDo0WeKmIG
-	Z+3eE8Fv/2ZO2tv3q7E2DBYS1Gp9HsYNk/QQA06V5
-X-Gm-Gg: ASbGncs37RSUVkf4qxXTkw+nyRhp3yCK4BaqB1+1Qv4tSmPKgMD87sT/C4lO1PNFgQr
-	zOSg+JfoaPlDP4SYNoSvLCKpoAukGTfsBe+ytwCWIhRJIi4VARMJS9AH2XvMzic2+1Xre5AvfHC
-	fUhohe9cu4gAd14+pNhEG0fpNBA7/ym0ABvL8pRZ1djwfh4Jktjby87vmvq19ZwLHwR/x15QoU
-X-Google-Smtp-Source: AGHT+IFzdOA+3P2PyHFB0pEDLQ0XnMtUkTcxsnX3H6Bkc6gXrGQls44k6HcVZWeCRhjdatLqR5+P87mlE7vGBQH6TYo=
-X-Received: by 2002:ac8:650e:0:b0:4a5:a8b7:6c12 with SMTP id
- d75a77b69052e-4a5a8b770d4mr1977241cf.26.1749047212170; Wed, 04 Jun 2025
- 07:26:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jDBARidu";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5Fai4zf1";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uDlhWiDH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="SU1jb+Wa"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 114A21FF11;
+	Wed,  4 Jun 2025 14:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749047240; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BQrpsvaXV6ZPq62t2PJsuMtlrmV31qEz+8MHBADCl8s=;
+	b=jDBARidueX4ktUkfaVeBff1pxZa0kSSTd2qCXFgDKDXA5ZTF13WcMvshatjaojIw1Ak5oB
+	Sa2BQjkaGJHZAWp7MaW65RtSuKtwwpXf7O68RQ04PgIO50M+jayOgNvwUZaYkH/JCcK0Y2
+	7QHC5vGE13tPCmBsTg95xDDbYUPfXJU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749047240;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BQrpsvaXV6ZPq62t2PJsuMtlrmV31qEz+8MHBADCl8s=;
+	b=5Fai4zf1Lv4UjTlHyl8SfdhCWi+zBItkO3LgrW/qWxFZI+hDb8B1NOFWCqucW0KzMM7GSj
+	2OqZ4GFycqP11WDQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=uDlhWiDH;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=SU1jb+Wa
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749047239; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BQrpsvaXV6ZPq62t2PJsuMtlrmV31qEz+8MHBADCl8s=;
+	b=uDlhWiDHzJMp1AIvJ36B2UZISuL0r1NDK59Ry7VnOBrf1uCfSXdXk8xev3CZIknrxjD2Kv
+	TmSL7jGOZvjZaC7iKsZvFfku1uztxVy94lVjsnUM6A4bo+NpAZHvtcg+/3R0nTZQ1Vwazh
+	wd49dZP+qvK0D0wqMUCDAFy33o4ETq4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749047239;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BQrpsvaXV6ZPq62t2PJsuMtlrmV31qEz+8MHBADCl8s=;
+	b=SU1jb+WabCODPXMr5rbOSSwVHvcdMfO6KxDbe0X3u+xXMFEXIbtf7V2nhv2xpeqVVJNvsE
+	km25iBShfr6D+sDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EA03D13A63;
+	Wed,  4 Jun 2025 14:27:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id NpjJOMZXQGh0dwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 04 Jun 2025 14:27:18 +0000
+Message-ID: <a5319627-c32e-46de-8616-39fbbd2d369e@suse.cz>
+Date: Wed, 4 Jun 2025 16:27:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604140544.688711-1-david@redhat.com> <202d338d-30f6-4f3b-bddc-b0818a940732@suse.cz>
-In-Reply-To: <202d338d-30f6-4f3b-bddc-b0818a940732@suse.cz>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 4 Jun 2025 07:26:40 -0700
-X-Gm-Features: AX0GCFvHLF0qLYBnBbkp2Yp92Lpgzy-k84kOFcNhayBjADpHAViy2MHD967dpb8
-Message-ID: <CAJuCfpHyj+9dSfiqRg6dSUZax3wk3kqK1iR+kMT+sac4n4qBtQ@mail.gmail.com>
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, 
-	Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
+Content-Language: en-US
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Michal Hocko <mhocko@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
+ surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
+ sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
+ <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
+ <aDm1GCV8yToFG1cq@tiehlicka>
+ <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
+ <aD6vHzRhwyTxBqcl@tiehlicka>
+ <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
+ <aD7OM5Mrg5jnEnBc@tiehlicka>
+ <7307bb7a-7c45-43f7-b073-acd9e1389000@linux.alibaba.com>
+ <aD8LKHfCca1wQ5pS@tiehlicka>
+ <obfnlpvc4tmb6gbd4mw7h7jamp3kouyhnpl4cusetyctswznod@yr6dyrsbay6w>
+ <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
+ <1aa7c368-c37f-4b00-876c-dcf51a523c42@suse.cz>
+ <d2b76402-7e1a-4b2d-892a-2e8ffe1a37a9@linux.alibaba.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <d2b76402-7e1a-4b2d-892a-2e8ffe1a37a9@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 114A21FF11
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.cz:mid];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-On Wed, Jun 4, 2025 at 7:22=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wro=
-te:
->
-> On 6/4/25 16:05, David Hildenbrand wrote:
-> > Especially once we hit one of the assertions in
-> > sanity_check_pinned_pages(), observing follow-up assertions failing
-> > in other code can give good clues about what went wrong, so use
-> > VM_WARN_ON_ONCE instead.
-> >
-> > While at it, let's just convert all VM_BUG_ON to VM_WARN_ON_ONCE as
-> > well. Add one comment for the pfn_valid() check.
-> >
-> > We have to introduce VM_WARN_ON_ONCE_VMA() to make that fly.
-> >
-> > Drop the BUG_ON after mmap_read_lock_killable(), if that ever returns
-> > something > 0 we're in bigger trouble. Convert the other BUG_ON's into
-> > VM_WARN_ON_ONCE as well, they are in a similar domain "should never
-> > happen", but more reasonable to check for during early testing.
-> >
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-> > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > Cc: Mike Rapoport <rppt@kernel.org>
-> > Cc: Suren Baghdasaryan <surenb@google.com>
-> > Cc: Michal Hocko <mhocko@suse.com>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: Peter Xu <peterx@redhat.com>
-> > Signed-off-by: David Hildenbrand <david@redhat.com>
->
-> Makes sense, BUG_ONs bad.
->
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+On 6/4/25 16:16, Baolin Wang wrote:
+>>>
+>>> # Get the PIDs of stress-ng processes
+>>> PIDS=$(pgrep stress-ng)
+>>>
+>>> # Loop through each PID and monitor /proc/[pid]/status
+>>> for PID in $PIDS; do
+>>>       while true; do
+>>>           cat /proc/$PID/status
+>>> 	usleep 100000
+>> 
+>> Hm but this limits the reading to 10 per second? If we want to simulate an
+>> adversary process, it should be without the sleeps I think?
+> 
+> OK. I drop the usleep, and I still can not see obvious impact.
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+Thanks, that's reassuring.
 
->
-> > ---
-> >
-> > Wanted to do this for a long time, but my todo list keeps growing ...
-> >
-> > Based on mm/mm-unstable
-> >
-> > ---
-> >  include/linux/mmdebug.h | 12 ++++++++++++
-> >  mm/gup.c                | 41 +++++++++++++++++++----------------------
-> >  2 files changed, 31 insertions(+), 22 deletions(-)
-> >
-> > diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
-> > index a0a3894900ed4..14a45979cccc9 100644
-> > --- a/include/linux/mmdebug.h
-> > +++ b/include/linux/mmdebug.h
-> > @@ -89,6 +89,17 @@ void vma_iter_dump_tree(const struct vma_iterator *v=
-mi);
-> >       }                                                               \
-> >       unlikely(__ret_warn_once);                                      \
-> >  })
-> > +#define VM_WARN_ON_ONCE_VMA(cond, vma)               ({               =
-       \
-> > +     static bool __section(".data..once") __warned;                  \
-> > +     int __ret_warn_once =3D !!(cond);                                =
- \
-> > +                                                                     \
-> > +     if (unlikely(__ret_warn_once && !__warned)) {                   \
-> > +             dump_vma(vma);                                          \
-> > +             __warned =3D true;                                       =
- \
-> > +             WARN_ON(1);                                             \
-> > +     }                                                               \
-> > +     unlikely(__ret_warn_once);                                      \
-> > +})
-> >  #define VM_WARN_ON_VMG(cond, vmg)            ({                      \
-> >       int __ret_warn =3D !!(cond);                                     =
- \
-> >                                                                       \
-> > @@ -115,6 +126,7 @@ void vma_iter_dump_tree(const struct vma_iterator *=
-vmi);
-> >  #define VM_WARN_ON_FOLIO(cond, folio)  BUILD_BUG_ON_INVALID(cond)
-> >  #define VM_WARN_ON_ONCE_FOLIO(cond, folio)  BUILD_BUG_ON_INVALID(cond)
-> >  #define VM_WARN_ON_ONCE_MM(cond, mm)  BUILD_BUG_ON_INVALID(cond)
-> > +#define VM_WARN_ON_ONCE_VMA(cond, vma)  BUILD_BUG_ON_INVALID(cond)
-> >  #define VM_WARN_ON_VMG(cond, vmg)  BUILD_BUG_ON_INVALID(cond)
-> >  #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
-> >  #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index e065a49842a87..3c3931fcdd820 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -64,11 +64,11 @@ static inline void sanity_check_pinned_pages(struct=
- page **pages,
-> >                   !folio_test_anon(folio))
-> >                       continue;
-> >               if (!folio_test_large(folio) || folio_test_hugetlb(folio)=
-)
-> > -                     VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page), =
-page);
-> > +                     VM_WARN_ON_ONCE_PAGE(!PageAnonExclusive(&folio->p=
-age), page);
-> >               else
-> >                       /* Either a PTE-mapped or a PMD-mapped THP. */
-> > -                     VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page) &=
-&
-> > -                                    !PageAnonExclusive(page), page);
-> > +                     VM_WARN_ON_ONCE_PAGE(!PageAnonExclusive(&folio->p=
-age) &&
-> > +                                          !PageAnonExclusive(page), pa=
-ge);
-> >       }
-> >  }
-> >
-> > @@ -760,8 +760,8 @@ static struct page *follow_huge_pmd(struct vm_area_=
-struct *vma,
-> >       if (!pmd_write(pmdval) && gup_must_unshare(vma, flags, page))
-> >               return ERR_PTR(-EMLINK);
-> >
-> > -     VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> > -                     !PageAnonExclusive(page), page);
-> > +     VM_WARN_ON_ONCE_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> > +                          !PageAnonExclusive(page), page);
-> >
-> >       ret =3D try_grab_folio(page_folio(page), 1, flags);
-> >       if (ret)
-> > @@ -899,8 +899,8 @@ static struct page *follow_page_pte(struct vm_area_=
-struct *vma,
-> >               goto out;
-> >       }
-> >
-> > -     VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> > -                    !PageAnonExclusive(page), page);
-> > +     VM_WARN_ON_ONCE_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> > +                          !PageAnonExclusive(page), page);
-> >
-> >       /* try_grab_folio() does nothing unless FOLL_GET or FOLL_PIN is s=
-et. */
-> >       ret =3D try_grab_folio(folio, 1, flags);
-> > @@ -1180,7 +1180,7 @@ static int faultin_page(struct vm_area_struct *vm=
-a,
-> >       if (unshare) {
-> >               fault_flags |=3D FAULT_FLAG_UNSHARE;
-> >               /* FAULT_FLAG_WRITE and FAULT_FLAG_UNSHARE are incompatib=
-le */
-> > -             VM_BUG_ON(fault_flags & FAULT_FLAG_WRITE);
-> > +             VM_WARN_ON_ONCE(fault_flags & FAULT_FLAG_WRITE);
-> >       }
-> >
-> >       ret =3D handle_mm_fault(vma, address, fault_flags, NULL);
-> > @@ -1760,10 +1760,7 @@ static __always_inline long __get_user_pages_loc=
-ked(struct mm_struct *mm,
-> >               }
-> >
-> >               /* VM_FAULT_RETRY or VM_FAULT_COMPLETED cannot return err=
-ors */
-> > -             if (!*locked) {
-> > -                     BUG_ON(ret < 0);
-> > -                     BUG_ON(ret >=3D nr_pages);
-> > -             }
-> > +             VM_WARN_ON_ONCE(!*locked && (ret < 0 || ret >=3D nr_pages=
-));
-> >
-> >               if (ret > 0) {
-> >                       nr_pages -=3D ret;
-> > @@ -1808,7 +1805,6 @@ static __always_inline long __get_user_pages_lock=
-ed(struct mm_struct *mm,
-> >
-> >               ret =3D mmap_read_lock_killable(mm);
-> >               if (ret) {
-> > -                     BUG_ON(ret > 0);
-> >                       if (!pages_done)
-> >                               pages_done =3D ret;
-> >                       break;
-> > @@ -1819,11 +1815,11 @@ static __always_inline long __get_user_pages_lo=
-cked(struct mm_struct *mm,
-> >                                      pages, locked);
-> >               if (!*locked) {
-> >                       /* Continue to retry until we succeeded */
-> > -                     BUG_ON(ret !=3D 0);
-> > +                     VM_WARN_ON_ONCE(ret !=3D 0);
-> >                       goto retry;
-> >               }
-> >               if (ret !=3D 1) {
-> > -                     BUG_ON(ret > 1);
-> > +                     VM_WARN_ON_ONCE(ret > 1);
-> >                       if (!pages_done)
-> >                               pages_done =3D ret;
-> >                       break;
-> > @@ -1885,10 +1881,10 @@ long populate_vma_page_range(struct vm_area_str=
-uct *vma,
-> >       int gup_flags;
-> >       long ret;
-> >
-> > -     VM_BUG_ON(!PAGE_ALIGNED(start));
-> > -     VM_BUG_ON(!PAGE_ALIGNED(end));
-> > -     VM_BUG_ON_VMA(start < vma->vm_start, vma);
-> > -     VM_BUG_ON_VMA(end   > vma->vm_end, vma);
-> > +     VM_WARN_ON_ONCE(!PAGE_ALIGNED(start));
-> > +     VM_WARN_ON_ONCE(!PAGE_ALIGNED(end));
-> > +     VM_WARN_ON_ONCE_VMA(start < vma->vm_start, vma);
-> > +     VM_WARN_ON_ONCE_VMA(end   > vma->vm_end, vma);
-> >       mmap_assert_locked(mm);
-> >
-> >       /*
-> > @@ -1957,8 +1953,8 @@ long faultin_page_range(struct mm_struct *mm, uns=
-igned long start,
-> >       int gup_flags;
-> >       long ret;
-> >
-> > -     VM_BUG_ON(!PAGE_ALIGNED(start));
-> > -     VM_BUG_ON(!PAGE_ALIGNED(end));
-> > +     VM_WARN_ON_ONCE(!PAGE_ALIGNED(start));
-> > +     VM_WARN_ON_ONCE(!PAGE_ALIGNED(end));
-> >       mmap_assert_locked(mm);
-> >
-> >       /*
-> > @@ -2908,7 +2904,8 @@ static int gup_fast_pte_range(pmd_t pmd, pmd_t *p=
-mdp, unsigned long addr,
-> >               } else if (pte_special(pte))
-> >                       goto pte_unmap;
-> >
-> > -             VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
-> > +             /* If it's not marked as special it must have a valid mem=
-map. */
-> > +             VM_WARN_ON_ONCE(!pfn_valid(pte_pfn(pte)));
-> >               page =3D pte_page(pte);
-> >
-> >               folio =3D try_grab_folio_fast(page, 1, flags);
-> >
-> > base-commit: 2d0c297637e7d59771c1533847c666cdddc19884
->
+> w/o patch:
+> stress-ng: info:  [6848]          4,399,219,085,152 CPU Cycles 
+>           67.327 B/sec
+> stress-ng: info:  [6848]          1,616,524,844,832 Instructions 
+>           24.740 B/sec (0.367 instr. per cycle)
+> stress-ng: info:  [6848]                 39,529,792 Page Faults Total 
+>            0.605 M/sec
+> stress-ng: info:  [6848]                 39,529,792 Page Faults Minor 
+>            0.605 M/sec
+> 
+> w/patch:
+> stress-ng: info:  [2485]          4,462,440,381,856 CPU Cycles 
+>           68.382 B/sec
+> stress-ng: info:  [2485]          1,615,101,503,296 Instructions 
+>           24.750 B/sec (0.362 instr. per cycle)
+> stress-ng: info:  [2485]                 39,439,232 Page Faults Total 
+>            0.604 M/sec
+> stress-ng: info:  [2485]                 39,439,232 Page Faults Minor 
+>            0.604 M/sec
+
