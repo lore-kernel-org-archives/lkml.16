@@ -1,142 +1,89 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291241E5B9A;
-	Wed,  4 Jun 2025 08:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12322BAF4
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749025813; cv=none; b=ihlwMCzzUhem96YpL2zwAGecUthaswZ8QPpyJnWMiVD3F0biQYmVb6HnzqfkG/HPiAHVT7mySwePbAw30oHrdTFfLMRHU9UwfGjGvrlOEgOfyjZ6YFWOpJpDs7WDanrPFFHQR01dJ8X8cMIF93cARGflcY3qHcLwK4HTY9EVI/s=
+	t=1749025907; cv=none; b=LDKso8PsJlfygOxeYv2FfkmzHf2Rfl6lk0hOb0kiJlghcO+96SxLHzOxXeJNXefB8Ufndc4euatOyHOyWxmHjemI3Fvtmk7pvCCQR3wuBqq1GMjd9mj3p2TehOKOjJXLI26bJAehhTEPHBjiWFgeaAj5oMhVGB4ikAGh3u/iUDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749025813; c=relaxed/simple;
-	bh=ohZZM1a6GvrHLJsy9rYguqwft3kwfIMUGK9qwr9AwcM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=GwHmiPxLZVa2fOYG8z8qxbarWTGW8AOvADmIAYFY1EnGgXRyeu51ION489OVng7d8FgXtqsbMNu1xHNwGPYrGfLkR3hNDLPS6WPQ53H3KmLBoC9n8DphQB5+xmSkj6Uv6b8QB6GI2oPgPnIZcS+jjsvb2i7mDfbkwRBdTlFhkz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=3kNO32/T; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=B0dCDgh2; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1749025907; c=relaxed/simple;
+	bh=d65MstfFvuzOXxquIWVaVULj0QYTs91IuDc3ZONuqOs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Z1IUEu1qLfXDJ286G9PQiC+AkDTdnWfcVdE1uLf91QaY3T8K0tOnH3lpQUxNFYObQmTBv0GVf1c00UMom6Gp7i9MasK4gpDgJPiBv0A48oYKLy5Ada/YjeCoah2RaxLLqY6FQ6Id0mWPVIirSdHTre85uxMIK5f0oeMSQKqE4dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CLy9I11u; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QN/ZIwAX; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="3kNO32/T";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B0dCDgh2"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 4486C2540157;
-	Wed,  4 Jun 2025 04:30:09 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Wed, 04 Jun 2025 04:30:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749025809;
-	 x=1749112209; bh=MHdehtHnGKHci8D3hzf9Adc0daDGyBQ3ajk9ljXsHgE=; b=
-	3kNO32/TcODFKI1v6gjUoiKkIELbDMeGR9ZLiIQgoDlEOH1St5wDItMNjXVK8LDw
-	RxJvS+cULZTADz5G1PPbfUmEtoTfUa6pd0J1LuXY7WIuxfKuIF5bq7NiBSs3XuaA
-	Eb9qM10vfjCgRampbhVbbjzvmvuN6GWGnZ6lxmaxtl8gf0gn26Skh/9NYcT1BaRA
-	Ex7CTOY0eDOcw6CfEqtebgel11PYoNj7a0JK+ogE77aLaec/GPUaZyXjU85l2J/j
-	oRP4dpwwvzJ14MPQ7vDl3pFBMCY0pDzdCQV5Ab8XOHkFyepQsYFNVrJcmdnc+qkZ
-	pz+4ZlBcfYJaWqITpugpjg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749025809; x=
-	1749112209; bh=MHdehtHnGKHci8D3hzf9Adc0daDGyBQ3ajk9ljXsHgE=; b=B
-	0dCDgh2OtvY4Aclx8250zOMOYLF0UeyXxPM6Mlll1yRGzf0+heHX871Rf0xRNSQX
-	XD3UkQ1+3B2VhdzC+EfByMjcofSpq/y6nvFZVo6aoGGQUb+5d4yZXhpm9dXhEMMq
-	VVdUKFG8yAJaVhtkbiTGehvenJO35jlKgOaesahW+oyPfOlQ35FFu1fkTpv6RzB4
-	bo0jLmxRIxrPnnTNtv9fBVDDW+/h8IOhEHZfdNoZ+6lm/sWVbfJG5hj7DHRvU1Px
-	UMgDbDFllZqPEbfkLXoEli2m4ahzZ8jHZm8IuBcDs9YHu8w5fVRnK8v/WjOKbDQ9
-	KW+b6qbkeX/6WLNZUiPqw==
-X-ME-Sender: <xms:EARAaMCZtHCy87h6hlVNQ8B_ycPZmlgjsmE-hfBRkGGtUUZFzoUdHA>
-    <xme:EARAaOgS_sNB8FIDAR_afIVMw_GjehpZEYs42WqO-V4wtBwvVp21apyyG7ptROAZv
-    GOoXIGyjoydahQeDmU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepiedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrh
-    hmrdgtohhmpdhrtghpthhtohephihurhihrdhkhhhruhhsthgrlhgvvhesrghrmhdrtgho
-    mhdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    gsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrphhi
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
-    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:EARAaPnUak2Os3Qh_HjnaGbKIoYCWKk7aUo1TjfJGDUkTFP9XDVXfg>
-    <xmx:EARAaCzQQ3ogJyrrOPNzq9354x8vRdAIa2Ocq0StLAWD4Iq3BN9dNg>
-    <xmx:EARAaBTvukgQQFp3xYMki_rzZ3BgPmNhuRk6swSP3u7s8yp1MaHblA>
-    <xmx:EARAaNZfuimUtp_XJmOS14RlhasuhMizFSZGG8ANRUETcn0woU2uyg>
-    <xmx:EQRAaIxkVikd7fmK_pBX6AwTSZuzyTebm69kimRXGC9u4Fk3xSgcS-Wi>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C756D700061; Wed,  4 Jun 2025 04:30:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CLy9I11u";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QN/ZIwAX"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749025903;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d65MstfFvuzOXxquIWVaVULj0QYTs91IuDc3ZONuqOs=;
+	b=CLy9I11uUkHUoiLMNCiMfZgRvMZYKwO56zSjtE2suePuugkT313N9CHUvtmdn/OAJXoAOl
+	74J0Wo08dFhwJdTCRrYvGcS+pDa2ZRJvaKoqwqq1mM4tRNFggjAGnfapYT9KdEptmk1HSa
+	yHK1Sg6OVVOoZUx67oPZ1QhFknK0xhJ4E/sdAP74bGhvLldR6nBYaYmZpYT21Bp3GGusK2
+	RQ5E71bqtgAw+uNsOhoU58H8SqxTQCHjGSXQdOY7qit625Colz8swiICqEoUg6hmq4vceb
+	/oPNlxHJ/TOBs773cZLA76hUrufYmZixbk1En4GODYDEkmWqlSN3fAU15sDtYA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749025904;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d65MstfFvuzOXxquIWVaVULj0QYTs91IuDc3ZONuqOs=;
+	b=QN/ZIwAXPkroA1wzqBT0aDMNdXXdbNxfTD+attYp6//myNqdBhIG3BdjKeZW68Gj9vBi65
+	uG259TgMGXY49xBw==
+To: Vlastimil Babka <vbabka@suse.cz>, syzbot
+ <syzbot+23de6daeb71241d36a18@syzkaller.appspotmail.com>,
+ Liam.Howlett@oracle.com, akpm@linux-foundation.org, jannh@google.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ lorenzo.stoakes@oracle.com, pfalcato@suse.de,
+ syzkaller-bugs@googlegroups.com
+Cc: Suren Baghdasaryan <surenb@google.com>, Lorenzo Stoakes
+ <lorenzo.stoakes@oracle.com>, Peter Zijlstra <peterz@infradead.org>, Petr
+ Mladek <pmladek@suse.com>
+Subject: Re: [syzbot] [mm?] possible deadlock in __vma_start_write
+In-Reply-To: <f03916ab-19fc-4832-b564-58d3c885011d@suse.cz>
+References: <68387feb.a70a0220.29d4a0.0830.GAE@google.com>
+ <f03916ab-19fc-4832-b564-58d3c885011d@suse.cz>
+Date: Wed, 04 Jun 2025 10:37:43 +0206
+Message-ID: <84qzzzoqkw.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tda9afeb4aa183f99
-Date: Wed, 04 Jun 2025 10:29:48 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yury Khrustalev" <yury.khrustalev@arm.com>, linux-kernel@vger.kernel.org
-Cc: "Christian Brauner" <brauner@kernel.org>,
- "Mark Brown" <broonie@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- linux-api@vger.kernel.org
-Message-Id: <71c9bd77-85fd-4f00-a36a-8621640ebbb5@app.fastmail.com>
-In-Reply-To: <aCs65ccRQtJBnZ_5@arm.com>
-References: <aCs65ccRQtJBnZ_5@arm.com>
-Subject: Re: Extending clone_args for clone3()
 Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
-On Mon, May 19, 2025, at 16:06, Yury Khrustalev wrote:
+On 2025-06-04, Vlastimil Babka <vbabka@suse.cz> wrote:
+> After consulting PeterZ on IRC, he said:
 >
-> This seems fragile and may call for writing cumbersome code. In essence,
-> we will have to have clone30(), clone31(), clone32()... wrappers which
-> probably defeats the point of why clone3 was added:
+>> so the thing complains about: vmlock <- mapping.invalidate_lock <- bcachefs_btree <- console_lock <- &helper->lock <- dev->mode_config.idr_mutex <- mm->mmap_lock <- vmlock
 >
+> so bcachefs is doing printk which wants console_lock, and in
+> drm console a possible lock chain exists that can lead to mmap lock
 >
->   if (clone32_supported && clone32(...) == -1 && errno == E2BIG)
->     {
->       clone32_supported = false;
->       /* ... */
->     }
->   else if (clone31_supported && clone31(...) == -1 && errno == E2BIG)
->     {
->       clone12_supported = false;
->       /* ... */
->     }
->  ...
->
-> Is there a neat way to work around this? What was the idea for extending
-> clone_args in practice?
->
-> I suppose we can't rely on kernel version because support for extended
-> clone_args can be backported. In any case, we'd have to do a syscall
-> for this (it would probably be great to have kernel version in auxv).
+> To me it seems all rather theoretical, but not sure where and how we could safely
+> break this chain.
+> Hopefully one day console_lock goes away? :)
 
-I don't think there is a generic way to handle extended syscalls
-from libc, it really depends on the specific feature it's trying
-to use that requires the additional fields to be nonzero: some features
-may have a reasonable fallback implementation in libc, other features
-still require an error to be passed back to the caller.
+It is a known problem that any caller holding a lock used by a
+registered legacy console will result in printk() deadlocking. This is
+particularly a problem with the port->lock and power management.
 
-As I understand the shadow stack feature, we want this to be enabled
-whenever the kernel and hardware supports it, completely transparent
-to an application, right?
+One workaround is to enable CONFIG_PREEMPT_RT. ;-)
 
-I think ideally we'd check for HWCAP_GCS on arm64 or the equivalent
-feature on other architectures and expect clone3 to support the
-longer argument whenever that is set, but it looks like that would
-break on current kernels that already support HWCAP_GCS but not
-the clone3 argument.
+A year ago (exactly) there was patch [0] providing a "threadprintk" boot
+argument that would also work around this problem.
 
-Adding one more hwcap flag would be ugly, but that seems to be
-the easiest way. That way, glibc can just test for the new hwcap
-flag only use the extra clone3 word if all prerequisites (hardware
-support, kernel gcs support, clone3 argument support) are there.
+However, the only real solution is to convert the legacy consoles to
+nbcon. This is work in progress.
 
-     Arnd
+John
+
+[0] https://lore.kernel.org/lkml/20240603232453.33992-17-john.ogness@linutronix.de
