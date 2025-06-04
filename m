@@ -1,57 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6D07E1;
-	Wed,  4 Jun 2025 08:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88C927C175;
+	Wed,  4 Jun 2025 08:07:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024439; cv=none; b=i24vYb0dGPxEcJHBW9coRHSD50zKiOpM1+02mPomCGdOATYbVnK1iYyScx3G7PjWl3SIisyB32C++p01elqzAHJ2jFtjH2Mg/mlOICfxmkAP/a2yaLmvl9mvLiVW8JgW4pdGKI9liZlt+nLNRu4mLuf+T/HCMcblXu9p+gHVKgk=
+	t=1749024466; cv=none; b=H12m6MxxzYQ8ciwU1v3tvU8WL0bVnriT7y/Guy/LRJ7gEHQW/5MdJsrqBZzh/prscTvOf7apEVOaPKRHg0vmIQO5AmnHpa0i0E06glgj7fYpou2ntIHyt8LrtDCHNpOD2byqZJtvTow3R0I+1GL+I1L46cyDChcEpW+pNcLBkdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024439; c=relaxed/simple;
-	bh=yhf7uIemDFvOFZs2ab9B2tbrEfAJeioCFyGpvougiYw=;
+	s=arc-20240116; t=1749024466; c=relaxed/simple;
+	bh=udKDE2z3Dh+zqzXfzXV5t59Ts2YA2zBXT9lPczBGBS4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ahKfMNXmK2xVEVfdyWf4AU3cQ6hIAVlLDhgSxUR3T/6+chfg2taFgSj39WJsGTdE+RVIO60GKbzGhheeJ3DFvAl+8BBZBKnPOiMd9PZ5q3SEvAFBq745RHJ0GwTwxJvVCWrV9kuz39sg1HCW7MNfCfjGzi97Uyd7YpY0iGBGoRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UkoN+a3z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pxt6EIdQgqglw60zvLx2tzPYvxKs8LOUb3k+KdkioNnbbq9JWwq/GEuwyKHYKpUy0kWvbp4e4c15W7BjHauNvx9WzVgtDNA5XEzEwSgsmOsgkRuc6ug38viXAdgnXmx5HuM3Lzorymi7B26IOlAs86OkzlkShP9owdzdNuePSJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3YIPlYL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UkoN+a3z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A0AC4CEE7;
-	Wed,  4 Jun 2025 08:07:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3YIPlYL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45DBFC4CEE7;
+	Wed,  4 Jun 2025 08:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749024437;
-	bh=yhf7uIemDFvOFZs2ab9B2tbrEfAJeioCFyGpvougiYw=;
+	s=k20201202; t=1749024466;
+	bh=udKDE2z3Dh+zqzXfzXV5t59Ts2YA2zBXT9lPczBGBS4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UkoN+a3zAHKzxBIHiRC/IlPuT0QSuatYT+VGDnR+NiAJTDjSYu7ZxSKc6OtO3Sjnm
-	 p9OKsigQudSpIeAXqCHw/58NONlyuoRuEXMP3isFFcNjqKiLC1mfn0HvwTt6lVdy2J
-	 W5V6zRyyi7KgHPk9CsPgnCjTZSvT9Y6yl9RO+baEI1r3bqZC8IO3brMlu8pGr5dQlB
-	 JJuNJ+yyDgAz/Ro7+eGjf3MrBrzlv9RVLswj2/I0pUN8Ae1nA0CzPMWIV49FLAj2dX
-	 ovNfHEuBbIS2qc7uGqlkuB7GuYGHvg9vuitN6/j5zZhFB8kPoIC4zmvLHgUU15nvUt
-	 qEKucBZNRJ20g==
-Date: Wed, 4 Jun 2025 11:07:05 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Barry Song <baohua@kernel.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Jann Horn <jannh@google.com>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH RESEND] mm/pagewalk: split walk_page_range_novma() into
- kernel/user parts
-Message-ID: <aD_-qdg2OvKQIyRg@kernel.org>
-References: <20250603192213.182931-1-lorenzo.stoakes@oracle.com>
- <51ec4269-b132-4163-9cb5-766042a3769d@redhat.com>
+	b=h3YIPlYLvNMuU/TEmJORHLVoAKjDkiS4dNNtm9kp1I8H+iv70L6zFAhK/z0GMrfMV
+	 fooH7ILEVwS/0hX6w5gBlkSNwwvIntzKx2XWZJEadN3B7HIb1Caw/VrL5zyNLaPHD3
+	 CWaWQkFUTbnHf/DbH+vZn3YKbpgmnTgxAf/OrvrsvA5lxd2dfotlkMgFgemItEg9pD
+	 QrXgvoge4tcVUcIH33FC0HqNG9BI6VdL/uVjV5HDTsyUAYSj+XgBBSAY25LPAd0Eyo
+	 1sKVXm3+0PYAyOokrAEVLCHMRWlAlVAKt3gdSUnRM/9Y/s4RJRAp1/Dpoe3PAOEMxo
+	 E6aq92l0R2ONA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uMj9y-000000003m2-1ilT;
+	Wed, 04 Jun 2025 10:07:43 +0200
+Date: Wed, 4 Jun 2025 10:07:42 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Miaoqing Pan <quic_miaoqing@quicinc.com>
+Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
+Message-ID: <aD_-zt755Jr_LsWM@hovoldconsulting.com>
+References: <20250526114803.2122-1-johan+linaro@kernel.org>
+ <20250526114803.2122-2-johan+linaro@kernel.org>
+ <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
+ <aD1axxSAJsbUfnHH@hovoldconsulting.com>
+ <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
+ <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
+ <01634993-80b1-496e-8453-e94b2efe658c@quicinc.com>
+ <7025db40-dda0-4cbb-80bd-09bd590584da@quicinc.com>
+ <aD_wgACEfm1_1GNz@hovoldconsulting.com>
+ <79b4bac1-6e55-408c-a334-006eded4229f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,69 +59,63 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <51ec4269-b132-4163-9cb5-766042a3769d@redhat.com>
+In-Reply-To: <79b4bac1-6e55-408c-a334-006eded4229f@quicinc.com>
 
-On Wed, Jun 04, 2025 at 09:39:30AM +0200, David Hildenbrand wrote:
-> On 03.06.25 21:22, Lorenzo Stoakes wrote:
-> > The walk_page_range_novma() function is rather confusing - it supports two
-> > modes, one used often, the other used only for debugging.
-> > 
-> > The first mode is the common case of traversal of kernel page tables, which
-> > is what nearly all callers use this for.
-> 
-> ... and what people should be using it for 🙂
-> 
-> > 
-> > Secondly it provides an unusual debugging interface that allows for the
-> > traversal of page tables in a userland range of memory even for that memory
-> > which is not described by a VMA.
-> > 
-> > This is highly unusual and it is far from certain that such page tables
-> > should even exist, but perhaps this is precisely why it is useful as a
-> > debugging mechanism.
-> > 
-> > As a result, this is utilised by ptdump only. Historically, things were
-> > reversed - ptdump was the only user, and other parts of the kernel evolved
-> > to use the kernel page table walking here.
-> > 
-> > Since we have some complicated and confusing locking rules for the novma
-> > case, it makes sense to separate the two usages into their own functions.
-> > 
-> > Doing this also provide self-documentation as to the intent of the caller -
-> > are they doing something rather unusual or are they simply doing a standard
-> > kernel page table walk?
-> > 
-> > We therefore maintain walk_page_range_novma() for this single usage, and
-> > document the function as such.
-> 
-> If we have to keep this dangerous interface, it should probably be
-> 
-> walk_page_range_debug() or walk_page_range_dump()
+On Wed, Jun 04, 2025 at 03:57:57PM +0800, Miaoqing Pan wrote:
+> On 6/4/2025 3:06 PM, Johan Hovold wrote:
+> > On Wed, Jun 04, 2025 at 01:32:08PM +0800, Miaoqing Pan wrote:
+> >> On 6/4/2025 10:34 AM, Miaoqing Pan wrote:
+> >>> On 6/3/2025 7:51 PM, Johan Hovold wrote:
+> >>>> On Tue, Jun 03, 2025 at 06:52:37PM +0800, Baochen Qiang wrote:
 
-We can also move it from include/linux/pagewalk.h to mm/internal.h
- 
+> >>>>> The sequence is
+> >>>>>
+> >>>>>      1# reading HP
+> >>>>>          srng->u.dst_ring.cached_hp = READ_ONCE(*srng-
+> >>>>>> u.dst_ring.hp_addr);
+> >>>>>
+> >>>>>      2# validate HP
+> >>>>>          if (srng->u.dst_ring.tp == srng->u.dst_ring.cached_hp)
+> >>>>>              return NULL;
+> >>>>>
+> >>>>>      3# get desc
+> >>>>>          desc = srng->ring_base_vaddr + srng->u.dst_ring.tp;
+> >>>>>
+> >>>>>      4# accessing desc
+> >>>>>          ath11k_hal_desc_reo_parse_err(... desc, ...)
+> >>>>>
+> >>>>> Clearly each step depends on the results of previous steps. In this
+> >>>>> case the compiler/CPU
+> >>>>> is expected to be smart enough to not do any reordering, isn't it?
+> >>>>
+> >>>> Steps 3 and 4 can be done speculatively before the load in step 1 is
+> >>>> complete as long as the result is discarded if it turns out not to be
+> >>>> needed.
 > > 
-> > Note that ptdump uses the precise same function for kernel walking as a
-> > convenience, so we permit this but make it very explicit by having
-> > walk_page_range_novma() invoke walk_page_range_kernel() in this case.
+> >>> If the condition in step 2 is true and step 3 speculatively loads
+> >>> descriptor from TP before step 1, could this cause issues?
+> >>
+> >> Sorry for typo, if the condition in step 2 is false and step 3
+> >> speculatively loads descriptor from TP before step 1, could this cause
+> >> issues?
 > > 
-> > We introduce walk_page_range_kernel() for the far more common case of
-> > kernel page table traversal.
+> > Almost correct; the descriptor can be loaded (from TP) before the head
+> > pointer is loaded and thus before the condition in step 2 has been
+> > evaluated. And if the condition in step 2 later turns out to be false,
+> > step 4 may use stale data from before the head pointer was updated.
 > 
-> I wonder if we should give it a completely different name scheme to
-> highlight that this is something completely different.
+> Actually, there's a missing step between step 3 and step 4: TP+1.
 > 
-> walk_kernel_page_table_range()
-> 
-> etc.
-> 
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
+> TP+1:
+> 	srng->u.dst_ring.tp += srng->entry_size
 
--- 
-Sincerely yours,
-Mike.
+Sure, but that is not relevant for the issue at hand.
+
+> TP is managed by the CPU and points to the current first unprocessed 
+> descriptor, while HP and the descriptor are asynchronously updated by 
+> DMA. So are you saying that the descriptor obtained through speculative 
+> loading has not yet been updated, or is in the process of being updated?
+
+Exactly.
+
+Johan
