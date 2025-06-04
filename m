@@ -1,66 +1,66 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9644B28C007
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D9528C2A3
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749025148; cv=none; b=abdAlkCl08asy++kandnkzbGFja0YXkKzHiyG+glpJPFTu/HNAgvaPhIRVDj179oAQnnRoWQ8VHebafxFAI+aYp9NnbHa+MdcDTYlEEJiyRijfM6QBlyPYSFGQ2UjNuVLn10Lb4GBT69ZzHrA5YBLUrdoQP/+OcmK+ffz/+kyyQ=
+	t=1749025150; cv=none; b=Aq/ldSdMzRGLR0ygZVdwH30J5A5opkyOHkE6UnEYlY4pZ2M47K1sMyKmj6/3jhodtA4ereAqrTETB1sQuWzdUPUKIlZduMzaDT5AK8WqziNWPzhHTquZl8Mn+MOlSyhhUHHV82TkA+NVf3sI7ln+N0hLkPPZQcHWZSZdBMB6LBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749025148; c=relaxed/simple;
-	bh=IFPSQadsyVuWCW6Z7V8p02U+SDBLDJJCiSS1/YNnx0w=;
+	s=arc-20240116; t=1749025150; c=relaxed/simple;
+	bh=DRCW62SWNyHDxET2rFNq/PrtoM5W1wDR8OS8EcSqkBo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=F0cBa9sPfrBpY+ETbHB7ziZ2B3C+iQSmrIPlBojy1dyo5UNAm/IdBixKO4z+MOPPQ/eHIurEgMnj7gbFnUwq6zlDyN9gxpWS4N+KplojshjMYD4qp11aVgvc69DaFMxjaqv4thQ0KdJLBBnWnlrB5w4RHFBuCs2cfOTsBnVqWT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X0oCrcmE; arc=none smtp.client-ip=209.85.221.44
+	 In-Reply-To:To:Cc; b=BJ/CV/Z6sei/9KX1CdhxksQpjaYnd5l9wJS3SfqsTxandghk91LB76t4xHiSg1C3HFjBhQApmlLxpyEpkq+LesaIJqoLM5/PqWKRCqnFtEOULRjgf4f639b7DpSix2d4VqIOMl4tIU9vtDQtbweeA2Q8oMyJMQUtu0hdpyO7zlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qc+ILPPR; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X0oCrcmE"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a4ef892ab2so836556f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:19:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qc+ILPPR"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cc429478so3741715e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:19:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749025144; x=1749629944; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749025147; x=1749629947; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=nReq3x3mLzJIoYpqfUUoq+5kM01IVYNH/nG0bWa6R4A=;
-        b=X0oCrcmEPVZUAJHlrLrL0uVWrdpd7zuI9i/sTWHWrogW/gV+zbeg/ScWPeavMO44Wr
-         4GpBbhExUJ/CFMJThQ3HZ8Gj0CjHpKLPhpi9odjxM+x597cbpahqtDREtH414bz59/KK
-         jew3L/nnUbWugM5i1rK8q1/kpl9nKue19KOAJnc82H/ngswsIKj0Z4vEDhpRtJufu1yR
-         NZpLSontTWca8tYWpcDcAdn/8JE8eH1syxn2XHySgzzjdF+Tf9hNB1sHKRgpkKKEZL1c
-         R8354tbaUL6CT0loc/GYaT6z7JQXAqOZSH799z0Ib2mdwzyMkrGaPm7KQjkfTFnN8x8E
-         RbwA==
+        bh=/ktjNH4EI2pmLPKIOf3AQOMvDxxrVNBtl13gKtpvYvc=;
+        b=Qc+ILPPRs4ChZECCDSkNvit5vJp0sqLRdNHWSsMOEO7MlqFiaHnEw20VAut756Nvp+
+         B+gtRP+KElCykPfpumYt0i7TA8sp8/zFfUFQGQ4NTFWDR/gpS+ny6N7THK4Brciqjgoc
+         GfFEQ0bZ1YIK7hqt764yV0Gq8FxsLizMk5RRy3DbsFlrULMSFpd0M1gsbatyHZdYgEG6
+         Ijzd5ouGEWquF+LOX1MNDaDY8G1JprEhrp9witK5nXzoeW/n93X7LVsW8Ht0oEbiHs+H
+         2Gdd/kZ35F3L5jLkK2ENFHrwThRUCFgTLFIREZBu3Hn4enVEdX/Jf+nbUMi/W18s9K64
+         FwyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749025144; x=1749629944;
+        d=1e100.net; s=20230601; t=1749025147; x=1749629947;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nReq3x3mLzJIoYpqfUUoq+5kM01IVYNH/nG0bWa6R4A=;
-        b=HH1exVNmGg6NE8BRGD4X2ykXQAcOvltet+OqLMWhzzF0lNoMtt/73BCjkpvfOT1USK
-         17X5blSb1qpJ4YQhrOq+DnuTQemfEmEY601ms6mGXnO2oUCkbcqIDlyFlstWVvCskhQp
-         lGxiL+D7qqn8cfD9BKTsgegfCu0swRsjBksyMRL4dcluB/jYN/tbOZKc0oxBGOeEW4CN
-         a4JTyLfwKX19nG21qxlkpgT15OdQBB15Sd+06LT+hB7JXu92wkt8+Mrdlnx5l9IwAMVi
-         rt62c+Ri2Hjxd+ciSYxyVd0X1yuSlbnjF30ZY035T/tM7nxrYngbfMdugSMqvs4ymciN
-         r2/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWxHTw4kZ56LhZAUzySQAetL2ikwqfFmq9PD2oDnqx7t7lNu17sadiQSblAeggzUtYd1qB2C+wPaxdz6T4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysAbUY3x4rAh3CNK3jQWprDbDMvvuGqHGbA4YmzGYraZtfwvza
-	3tSLis1zQUp6bHutPJPcACvxlKN1ywCsZEVCLRt0DMzQDLEEJURRdfkWA91IdLSi91U=
-X-Gm-Gg: ASbGncvKGcduFxoY4vK5XmkV+yTqdw6Hl7t1WPySZTARMHiBTqnFqz7EFvKsD1p1uLc
-	lFCMk8BykcQOmeSFufglIF53Nf8Nbtb0Di/ZMDKzlDecpASD5no4OcWyr3V9AN6kugJN1lEwyjo
-	ZfDhC5M40VPCyKpUqTVVjzmvHZAK1Bagb9cgvMOnKiUFGZ+sdlrnegsOfFTswpj6kxUQXw8nJ0k
-	RUJpl5ri9c7/slf/ujMtYJn13J7Sizi2kfDHrtwzSwKsQnheUc0SDgeGddUhRnQGOjxNPzr3BFy
-	k1kGXPRzxFQ4Li30G9HLGB7lerw3uPmT/l0SCl3iCcekXtGw/QY+3ryo+lF97R+QM2vSvhHszLQ
-	WuoBTWJzKrj73t53iWypyUg==
-X-Google-Smtp-Source: AGHT+IEnpaG3oOnE5poQ7IhYHb4mJQYoQzycH8HVLkPkIolvUsneNNj+/e2xIJDxjFFpSDJlDnn4Yg==
-X-Received: by 2002:a05:6000:22c2:b0:3a3:61ab:86c2 with SMTP id ffacd0b85a97d-3a51d91f3abmr476032f8f.7.1749025143751;
-        Wed, 04 Jun 2025 01:19:03 -0700 (PDT)
+        bh=/ktjNH4EI2pmLPKIOf3AQOMvDxxrVNBtl13gKtpvYvc=;
+        b=FrLUI9V8zSfSYMMDODKUfpV4piAKDzgJCjUcPt14gj6mB2g+p+PbsGD+nAvDHZg83y
+         XKVbklPhDZheqS3lCBEInLOBv48bETwgromFrPV4B2TVdWHeLGKnjEH57rUtZtGExwsL
+         XesjBhC3r/dBygwyWhcQlo+QMK3BQYq0A6yPnuXhALVucrw2oWo8dmlX6dJLeCNeZtFD
+         ePdkrwXJ/mOXkdYhmGxhjvw8YWFxo20f6aKyo3DfPCXXLF1Saz7Wu09kiEPgWoU6XGRc
+         CYePxcyNoNk3v3p6tOJ/mU2buEJZE8pRbG1xp9lhlQdTpaX7OOlZ1Moj+Qn/3RE2DAaO
+         lYbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVfGDldReayvwWx+HN3Tmm00PZ/gCtCCvzTh/fTA6SNwleRwIr/6P3Lh3YlWazjGG6c+lOIxVemJiV7T4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgReh6hNu9Yann8civ9zArvXl6i+/7K740WMG5xHzyd/fUrPZw
+	/4gjMgMoNkBRi5oFQPZszePHYZPuDyeWRP1mjsKppjKMWeyG/L0L2pwvX1lmJMuCVCs=
+X-Gm-Gg: ASbGncveTlKgO6XInpn8/vvxvMYW/fOxW/yRdyZ/vyTc7Hxo54Ok69sm4dpB4AjkZVm
+	w7rEISVVyZUdKrxRtd606x4jwztRH1Mx7NI3fqg5xKkrVhx5RLfhLs+ZnhhHk2xqs5VJoCe6sR2
+	bOrmN7BtWuM7sbOc2svaXQvnyb/Myx0Q5dbiHpwklg1VkkCNJdL5fTsm0PqsfrvV7PQCnBSGErP
+	48nIbibsQZzkbG1jFFC7tuSYUkgieaIPxgME5fVfWwVv5rnurf1X0Gq+dHyJyWmBPORN/A5HeEm
+	fnsfcA5H5aO6Sz2KWsrAI7rmmD5SVqxYeIvSNbkOw4W6bU7ysn7oDLIPHWW1OAdueA1oKbO9SuC
+	4niYAaK8HidCC0+VzTBjRaEOPwXxHt/so
+X-Google-Smtp-Source: AGHT+IHWm1t7JTduLCpEoovyXlPtAsvMlQvSAMC4g4tbCLcRWUMOIPSIrFdKmi3brpTFPumrCqI1UA==
+X-Received: by 2002:a05:600c:4f95:b0:43b:bbb9:e25f with SMTP id 5b1f17b1804b1-451f0b2a98fmr5259025e9.6.1749025146624;
+        Wed, 04 Jun 2025 01:19:06 -0700 (PDT)
 Received: from [172.16.23.13] (adsl-84-227-104-5.adslplus.ch. [84.227.104.5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d80065e0sm198301215e9.29.2025.06.04.01.19.01
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d80065e0sm198301215e9.29.2025.06.04.01.19.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 01:19:03 -0700 (PDT)
+        Wed, 04 Jun 2025 01:19:05 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 04 Jun 2025 10:18:22 +0200
-Subject: [PATCH 2/6] dt-bindings: power: supply: bq256xx: Add missing
+Date: Wed, 04 Jun 2025 10:18:23 +0200
+Subject: [PATCH 3/6] dt-bindings: power: supply: qcom,pmi8998: Add missing
  power-supply ref
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250604-dt-bindings-psy-monitored-battery-v1-2-7f755ff75218@linaro.org>
+Message-Id: <20250604-dt-bindings-psy-monitored-battery-v1-3-7f755ff75218@linaro.org>
 References: <20250604-dt-bindings-psy-monitored-battery-v1-0-7f755ff75218@linaro.org>
 In-Reply-To: <20250604-dt-bindings-psy-monitored-battery-v1-0-7f755ff75218@linaro.org>
 To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -84,21 +84,21 @@ Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1203;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1274;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=IFPSQadsyVuWCW6Z7V8p02U+SDBLDJJCiSS1/YNnx0w=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoQAFt+N0m7bsLQZOmwggjQtogl4sB3RDEZ0sn3
- fGkgQYDMG6JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEABbQAKCRDBN2bmhouD
- 1yI5D/sGIwA3M2n3+O93qzfaEWgmsvbOlurGNsIa9pV3XL8/c1U5CK615Uy7BXilJWUzHkrxEhX
- oddQI78jJyL0SY6RyNSurUstOkjwo75i8z08q1mp0/G3+uIHp/rsByB0DjcxIg40ftCqwDlPDVg
- NdZqF5egykcSiBw9s93kuj4dgwfJnTiVu83UsSYPzeOhobXZojRwpDcN629DKTZyqGV0SXKz+Vw
- UrranoW6RM1EtBDqH31/TntkQ3+0QJvwoqB6wouPeVNPwAZHl48rD5t6RYXHROukrTFGJFhey1w
- faE88+sCcxhg0PcZ8XIQBwzMES9Gb/evF8cs8WmSgWIcCSCoSHQObWBqj8r2e+bwGg5uF+cO07D
- XwGhODz77Nkk95uJJS/VUrxnusOq8+JVgzMWA9/iYU8qx44AgeXfGWe7Ie0ZtbN42m/m8qE5Zx9
- KFaWDkP3ssuYwmmr0VogY3W3KtCCT0cwjRtW/YCFXuvxRdFfsmWY18JYcTjDhBhNZNhsnvr8gWt
- SXNv3x9N0btDGaBK/ghoWblHJyC6ZSm/TiBOI+IVz9OshtG5fyFIcvIzUJWJUdpaAxF2jNVUsO1
- BII256yDOrwQHK9pb2rKYf/APmB4I6VNzflscrIanY9YusdLqMCepO0l71eu/RJfB6eV1UQNIbL
- 85o5hNP635Z+Y0A==
+ bh=DRCW62SWNyHDxET2rFNq/PrtoM5W1wDR8OS8EcSqkBo=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoQAFuPmVgnuMmnev9C1JSBsF8VSMqeNc7xtVnS
+ fpipQ7xoU2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEABbgAKCRDBN2bmhouD
+ 12azD/4iAT6oNIAIzb6/VKQxJCe6lad3LVoCw0neiAfXBAGTnPfN13L+Tfu3yLSVdB0SA4pfaQP
+ 2Vx8uWbRCAA1qK5WJapiYh5ThU1jTWqfy0CvHt7ouDaUU5OHOioIabiNhf9blOpSEjgzYcE7Kj/
+ gBOa3P4B38K/c1D0v4beEm1aiD4OIn5YOHMvvUPZaR5XqNltd8WttUaBtXawS0Sk2uCm9OM895q
+ IPfHWvepoVVB0o7qKyb6WVr2w7G2Et+cuoKIMlVjEIAXa4N6koEbbjOM6awFWvskkoEcrnjXX13
+ 6OsqjkOCz735ncp3PQtLKxa9ojG523pF0pDuZOgbkGafQwtfMv4re1Kphg/MWsLwaHkYnn/n9LK
+ Gl4ek3iGTkOp95BnlNH5XKIMwGwH3dBQi3no+xHXbvf96TH9XoNklTGAcNqavw157ddD+jVqG9h
+ gFuAENcmWgUH5WLivB0P/0tbL28bqDbRfaul5HgrqJC9SnKU9DvVtCyH/sxGL+bEDtE/x3cp/5z
+ MNg0AEpe//PLiwPyX43Ne6/HlWLnrLPJ2wXn2phUBTzEV2eRw+owaxrM8F3QuIcX+/836H+7FA7
+ kvZMBJYNmtwgGYscz4+AOOSp8OIWfh9y0mf3o//+RPogkAEFihUpTE1ZOzQ3/f1F0WEEtY059KP
+ wU/htQ9+PLCGBnw==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
@@ -108,32 +108,34 @@ it is duplicating what is in power-supply.yaml.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- Documentation/devicetree/bindings/power/supply/bq256xx.yaml | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/power/supply/qcom,pmi8998-charger.yaml     | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-index a76afe3ca29922fe73da12126f9e107a4fef270d..8cee37b9879e2a7db9aa5514e9f065eb9a6a6ead 100644
---- a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-+++ b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-@@ -58,9 +58,7 @@ properties:
-     minimum: 100000
-     maximum: 3200000
+diff --git a/Documentation/devicetree/bindings/power/supply/qcom,pmi8998-charger.yaml b/Documentation/devicetree/bindings/power/supply/qcom,pmi8998-charger.yaml
+index 90c7dc7632c58dc5cbfb3abcde8e730882bfd936..70f5cd6eaeabe822babf567d92b1d7f9124f3680 100644
+--- a/Documentation/devicetree/bindings/power/supply/qcom,pmi8998-charger.yaml
++++ b/Documentation/devicetree/bindings/power/supply/qcom,pmi8998-charger.yaml
+@@ -38,9 +38,7 @@ properties:
+       - const: usbin_i
+       - const: usbin_v
  
 -  monitored-battery:
+-    description: phandle to the simple-battery node
 -    $ref: /schemas/types.yaml#/definitions/phandle
--    description: phandle to the battery node being monitored
 +  monitored-battery: true
  
-   interrupts:
-     maxItems: 1
-@@ -78,6 +76,7 @@ required:
+ required:
+   - compatible
+@@ -51,6 +49,9 @@ required:
+   - io-channel-names
    - monitored-battery
  
- allOf:
++allOf:
 +  - $ref: power-supply.yaml#
-   - if:
-       properties:
-         compatible:
++
+ additionalProperties: false
+ 
+ examples:
 
 -- 
 2.45.2
