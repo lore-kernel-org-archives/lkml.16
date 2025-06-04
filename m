@@ -1,170 +1,201 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F0779F2;
-	Wed,  4 Jun 2025 08:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3065C1ACEAF
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027338; cv=none; b=nvWF8tzT6V8s6huirZzJMFRmBH/mIX1lrTjK1EYlO5v19AvrxG0UmNmZTN9tkijeO9ECTKjDlV6X0AdXlOhePSYPTnaLg/Q5i+G+bdqyo/rGyxuscBV1DU2c7SsEBFIF+JsuqVk9orXza3zKCxA7yFAFCptPbZCZ2Tuj+QBUq6U=
+	t=1749027427; cv=none; b=MNzuafeYH2eLuhsPvDsgeyIprKn3232FlW1/yhHbU19Z9YyYLVcZIrrqd9Lxt2kpB2BP4AT46tVok1eDtE7Sf8rGJKEyvksGS93dYf3JGk3zK71XhkGevcWMqDGniMs1mASUvnLt6LnHimBaHvypWO52Y6UFdZh7rUJqU5bf2Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027338; c=relaxed/simple;
-	bh=M2eroH/EanGDU+uButZJmOE/AZ7YGxC5tOaqpyqs3hY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bSpWSRq/rADAVNlKDnXDS5dy0afrwOAuBfwquKsZxbFROmLRKVQ05L6GLL4obYsmSky16x/HSq5bNg3X/wbsWVipkzk4Ps7t43cgNfJfKKWwZFBSOI4N0omjLR2G4Gndirv3fgMxQlKfhMaJIuG1g1Lp1JSUEH3HK6y6JeCgbBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=GOnowtxm; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749027427; c=relaxed/simple;
+	bh=FR/PDZpcbKETks37LYZvAODVAqnYiko/ZQvS9GhslYc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MRfca6pCNjYa/lsStBtjG1bQ1QFB5en7xLSuxjVF7uz6f/wF83kkoDKJsHNwA6MLV59u9Qol2zDwgRfoGdjUVT8pyng/JJe7zR9JOh6vfhLsotxuOV6Kb/v93Eh/Dmporued8GBYKZovlOyf93sAJsHQAFD8vlUiDo/8AjC1U68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pj4hXoeo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="GOnowtxm"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749027327; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=I6plCDd0PtEKYAK7XU1ocWnzvfgBCeiJIYFym8cuaoE=;
-	b=GOnowtxmJpgfqWI/U3Eqd2RWeapsvfQ5Vtesy8rol01ajew5bStCl1zLtqVXrSTvZPbAYxEPn4B2DGTftOLdYBCJxQX2JBHOeN+uEWrn6RiZhyPnF74Ahn9xe3NAn2JYsH2PDsE/aBBfDSTsVL2DP/qtVW+tQOesAlKnb9/EGAg=
-Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wd3pyvU_1749027325 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 04 Jun 2025 16:55:26 +0800
-Message-ID: <22b3a299-b148-46ec-804e-2f6cbb3d5de1@linux.alibaba.com>
-Date: Wed, 4 Jun 2025 16:55:25 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pj4hXoeo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DC2CC4CEE7;
+	Wed,  4 Jun 2025 08:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749027426;
+	bh=FR/PDZpcbKETks37LYZvAODVAqnYiko/ZQvS9GhslYc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pj4hXoeoQdEd279Rgc2eZYEFUm9VJtjJR4p870zHs9Pj9pwBki+w/4Y/tYA9xfqKU
+	 emI03mq9MKYRuADVkQJPbpT/OOACVuYuq7Wo9aGzxhXfgxXAp1C/8gtGgp4Ajvidzk
+	 vPkhJIlg1JN0dBcIgz+CPrrENDW7PKFj9O0y3piR+KkkS3qZop/bVAHrUIUdWchU3n
+	 bFWnAkL91g5Gmvr8rKUFKWCNJn4HYXT8C4IAkkgin0M8awHYO5xRVIq3v9nRx8hXbY
+	 jfv23XAHuYtIxJBu1mm8rZAyTri37Sug40FLHkd70aKfpkpYPM2KML1biZ9fPsGyPW
+	 PUi4DiIO13jbQ==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	stable@kernel.org
+Subject: [PATCH v2] f2fs: fix to zero post-eof page
+Date: Wed,  4 Jun 2025 16:57:00 +0800
+Message-ID: <20250604085700.2454694-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
- enable and reset paths
-To: Dave Jiang <dave.jiang@intel.com>,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>, fenghuay@nvidia.com,
- vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
- <20250522063329.51156-2-xueshuai@linux.alibaba.com>
- <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
- <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
- <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
- <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
- <874ix5bhkz.fsf@intel.com> <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+fstest reports a f2fs bug:
 
+generic/363 42s ... [failed, exit status 1]- output mismatch (see /share/git/fstests/results//generic/363.out.bad)
+    --- tests/generic/363.out   2025-01-12 21:57:40.271440542 +0800
+    +++ /share/git/fstests/results//generic/363.out.bad 2025-05-19 19:55:58.000000000 +0800
+    @@ -1,2 +1,78 @@
+     QA output created by 363
+     fsx -q -S 0 -e 1 -N 100000
+    +READ BAD DATA: offset = 0xd6fb, size = 0xf044, fname = /mnt/f2fs/junk
+    +OFFSET      GOOD    BAD     RANGE
+    +0x1540d     0x0000  0x2a25  0x0
+    +operation# (mod 256) for the bad data may be 37
+    +0x1540e     0x0000  0x2527  0x1
+    ...
+    (Run 'diff -u /share/git/fstests/tests/generic/363.out /share/git/fstests/results//generic/363.out.bad'  to see the entire diff)
+Ran: generic/363
+Failures: generic/363
+Failed 1 of 1 tests
 
-在 2025/6/3 22:32, Dave Jiang 写道:
-> 
-> 
-> On 5/27/25 7:21 PM, Vinicius Costa Gomes wrote:
->> Shuai Xue <xueshuai@linux.alibaba.com> writes:
->>
->>> 在 2025/5/23 22:54, Dave Jiang 写道:
->>>>
->>>>
->>>> On 5/22/25 10:20 PM, Shuai Xue wrote:
->>>>>
->>>>>
->>>>> 在 2025/5/22 22:55, Dave Jiang 写道:
->>>>>>
->>>>>>
->>>>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
->>>>>>> A device reset command disables all WQs in hardware. If issued while a WQ
->>>>>>> is being enabled, it can cause a mismatch between the software and hardware
->>>>>>> states.
->>>>>>>
->>>>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
->>>>>>> send a reset command and clear the state (wq->state) of all WQs. It then
->>>>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
->>>>>>> ensure consistency between the software and hardware states.
->>>>>>>
->>>>>>> However, a race condition exists between the WQ enable path and the
->>>>>>> reset/recovery path. For example:
->>>>>>>
->>>>>>> A: WQ enable path                   B: Reset and recovery path
->>>>>>> ------------------                 ------------------------
->>>>>>> a1. issue IDXD_CMD_ENABLE_WQ
->>>>>>>                                       b1. issue IDXD_CMD_RESET_DEVICE
->>>>>>>                                       b2. clear wq->state
->>>>>>>                                       b3. check wq_enable_map bit, not set
->>>>>>> a2. set wq->state = IDXD_WQ_ENABLED
->>>>>>> a3. set wq_enable_map
->>>>>>>
->>>>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
->>>>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
->>>>>>> leading to an inconsistency between wq->state (software) and the actual
->>>>>>> hardware state (IDXD_WQ_DISABLED).
->>>>>>
->>>>>>
->>>>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
->>>>>>
->>>>>> DJ
->>>>>
->>>>> Yep, how about add a spin lock to enable wq and reset device path.
->>>>>
->>>>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
->>>>> index 38633ec5b60e..c0dc904b2a94 100644
->>>>> --- a/drivers/dma/idxd/device.c
->>>>> +++ b/drivers/dma/idxd/device.c
->>>>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
->>>>>    }
->>>>>    EXPORT_SYMBOL_GPL(idxd_wq_enable);
->>>>>    
->>>>> +/*
->>>>> + * This function enables a WQ in hareware and updates the driver maintained
->>>>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
->>>>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
->>>>> + * otherwise disable the WQ without the driver's state being properly
->>>>> + * updated.
->>>>> + *
->>>>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
->>>>> + * called after the WQ has been explicitly disabled, so no concurrency
->>>>> + * issues arise.
->>>>> + */
->>>>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
->>>>> +{
->>>>> +       struct idxd_device *idxd = wq->idxd;
->>>>> +       int ret;
->>>>> +
->>>>> +       spin_lock(&idxd->dev_lock);
->>>>
->>>> Let's start using the new cleanup macro going forward:
->>>> guard(spinlock)(&idxd->dev_lock);
->>>>
->>>> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
->>>> guard(device)(idxd_confdev(idxd));
->>>
->>> Then we need to replace the lock from spinlock to mutex lock?
->>
->> We still need a (spin) lock that we could hold in interrupt contexts.
->>
->>>
->>>>
->>>> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
->>>> guard(device)(wq_confdev(wq));
->>>>
->>>> If you are up for it that is.
->>>
->>> We creates a hierarchy: pdev -> idxd device -> wq device.
->>> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
->>>
->>>       (wq_confdev(wq))->parent = idxd_confdev(idxd);
->>>
->>> Is it safe to grap lock of idxd_confdev(idxd) under hold
->>> lock of wq_confdev(wq)?
->>>
->>> We have mounts of code use spinlock of idxd->dev_lock under
->>> hold of wq->wq_lock.
->>>
->>
->> I agree with Dave that the locking could be simplified, but I don't
->> think that we should hold this series because of that. That
->> simplification can be done later.
-> 
-> I agree. Just passing musing on the current code.
+The root cause is user can update post-eof page via mmap, however, f2fs missed
+to zero post-eof page in below operations, so, once it expands i_size, then it
+will include dummy data locates previous post-eof page, so during below
+operations, we need to zero post-eof page.
 
-Got it, do I need to send a separate patch for Patch 2?
+Operations which can include dummy data after previous i_size after expanding
+i_size:
+- write
+- mapwrite
+- truncate
+- fallocate
+ * preallocate
+ * zero_range
+ * insert_range
+ * collapse_range
+- clone_range (doesn’t support in f2fs)
+- copy_range (doesn’t support in f2fs)
 
-Thanks.
-Shuai
+Cc: stable@kernel.org
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+v2:
+- cover f2fs_zero_post_eof_page w/ invalidate_lock
+ fs/f2fs/file.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 6bd3de64f2a8..ee5e662d2a4c 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -35,6 +35,17 @@
+ #include <trace/events/f2fs.h>
+ #include <uapi/linux/f2fs.h>
+ 
++static void f2fs_zero_post_eof_page(struct inode *inode, loff_t new_size)
++{
++	loff_t old_size = i_size_read(inode);
++
++	if (old_size > new_size)
++		return;
++
++	/* zero or drop pages only in range of [old_size, new_size] */
++	truncate_pagecache(inode, old_size);
++}
++
+ static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
+ {
+ 	struct inode *inode = file_inode(vmf->vma->vm_file);
+@@ -103,8 +114,13 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+ 
+ 	f2fs_bug_on(sbi, f2fs_has_inline_data(inode));
+ 
++	filemap_invalidate_lock(inode->i_mapping);
++	f2fs_zero_post_eof_page(inode, (folio->index + 1) << PAGE_SHIFT);
++	filemap_invalidate_unlock(inode->i_mapping);
++
+ 	file_update_time(vmf->vma->vm_file);
+ 	filemap_invalidate_lock_shared(inode->i_mapping);
++
+ 	folio_lock(folio);
+ 	if (unlikely(folio->mapping != inode->i_mapping ||
+ 			folio_pos(folio) > i_size_read(inode) ||
+@@ -1109,6 +1125,8 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 		f2fs_down_write(&fi->i_gc_rwsem[WRITE]);
+ 		filemap_invalidate_lock(inode->i_mapping);
+ 
++		if (attr->ia_size > old_size)
++			f2fs_zero_post_eof_page(inode, old_size);
+ 		truncate_setsize(inode, attr->ia_size);
+ 
+ 		if (attr->ia_size <= old_size)
+@@ -1227,6 +1245,10 @@ static int f2fs_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+ 	if (ret)
+ 		return ret;
+ 
++	filemap_invalidate_lock(inode->i_mapping);
++	f2fs_zero_post_eof_page(inode, offset + len);
++	filemap_invalidate_unlock(inode->i_mapping);
++
+ 	pg_start = ((unsigned long long) offset) >> PAGE_SHIFT;
+ 	pg_end = ((unsigned long long) offset + len) >> PAGE_SHIFT;
+ 
+@@ -1510,6 +1532,8 @@ static int f2fs_do_collapse(struct inode *inode, loff_t offset, loff_t len)
+ 	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 	filemap_invalidate_lock(inode->i_mapping);
+ 
++	f2fs_zero_post_eof_page(inode, offset + len);
++
+ 	f2fs_lock_op(sbi);
+ 	f2fs_drop_extent_tree(inode);
+ 	truncate_pagecache(inode, offset);
+@@ -1631,6 +1655,10 @@ static int f2fs_zero_range(struct inode *inode, loff_t offset, loff_t len,
+ 	if (ret)
+ 		return ret;
+ 
++	filemap_invalidate_lock(mapping);
++	f2fs_zero_post_eof_page(inode, offset + len);
++	filemap_invalidate_unlock(mapping);
++
+ 	pg_start = ((unsigned long long) offset) >> PAGE_SHIFT;
+ 	pg_end = ((unsigned long long) offset + len) >> PAGE_SHIFT;
+ 
+@@ -1762,6 +1790,8 @@ static int f2fs_insert_range(struct inode *inode, loff_t offset, loff_t len)
+ 	/* avoid gc operation during block exchange */
+ 	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 	filemap_invalidate_lock(mapping);
++
++	f2fs_zero_post_eof_page(inode, offset + len);
+ 	truncate_pagecache(inode, offset);
+ 
+ 	while (!ret && idx > pg_start) {
+@@ -1819,6 +1849,10 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+ 	if (err)
+ 		return err;
+ 
++	filemap_invalidate_lock(inode->i_mapping);
++	f2fs_zero_post_eof_page(inode, offset + len);
++	filemap_invalidate_unlock(inode->i_mapping);
++
+ 	f2fs_balance_fs(sbi, true);
+ 
+ 	pg_start = ((unsigned long long)offset) >> PAGE_SHIFT;
+@@ -4860,6 +4894,10 @@ static ssize_t f2fs_write_checks(struct kiocb *iocb, struct iov_iter *from)
+ 	err = file_modified(file);
+ 	if (err)
+ 		return err;
++
++	filemap_invalidate_lock(inode->i_mapping);
++	f2fs_zero_post_eof_page(inode, iocb->ki_pos + iov_iter_count(from));
++	filemap_invalidate_unlock(inode->i_mapping);
+ 	return count;
+ }
+ 
+-- 
+2.49.0
+
