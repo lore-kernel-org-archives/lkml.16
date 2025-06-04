@@ -1,74 +1,194 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A69D13A3ED;
-	Wed,  4 Jun 2025 15:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9036B18B47E;
+	Wed,  4 Jun 2025 15:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749051032; cv=none; b=rS1Ldh33QfzUHrIyTP4kpdiXXk53TvCbz53H3rxjouYZBkXC+f/ZL2zLSNd13bieumGu0ao1BEWinla0L861K7YnX3pw9Dr88x6Ze5cJynEbD3X/qFpXBXmVjYwTUmlaGn/PF+YR8uLm0O9ZtlqV4lu/Fl7LAZdv5lrlYfJCwZs=
+	t=1749051075; cv=none; b=iLI3RX8bbplynwN+frUr33S8gqJuSqjBmTz3tC6YgQia1L9NEwx92A6k53aOC6tjkJKFdnOqFuNBDnyiXaU0/GpGdYzzHE+KLSLQAqU+KzLb2tPkx55Foq7ezOdPzOxlfttWZ94iBqs/qPsBwJvwmCUI7T8m1loYWEWuHcylzow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749051032; c=relaxed/simple;
-	bh=Vi54+MTJC05Rofk/bnZBllkeyCAg+RDLF5sCSBzbJX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IhZ/4An49FnljHR7w+O2evvCJ3oL9sGPeX0wBMCuguWUq63MmaDN/YzhwbWYC6RWckJbXY58LL7xBlQpZ5IWzwzEZ5f1AYDqmcROLnYUMWmXMd6Qx7leW13QOTPt4hYzZYufcA5cDlnnN9w/FxCkyQKltkaySIl3AXKiMuhQV7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: XAn1vIKZSOugyxDDoxv91A==
-X-CSE-MsgGUID: 9WauvoQcTZWIxlFkCMrSUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="61405822"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="61405822"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 08:30:30 -0700
-X-CSE-ConnectionGUID: TCxxyYDtQAC0rXI23RcsiA==
-X-CSE-MsgGUID: 6aKuB2ElR7OU4wLhtq26/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="176180957"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 08:30:18 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uMq4D-00000003abB-1jJd;
-	Wed, 04 Jun 2025 18:30:13 +0300
-Date: Wed, 4 Jun 2025 18:30:13 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] iio: adc: ti-ads131e08: Fix spelling mistake
- "tweek" -> "tweak"
-Message-ID: <aEBmhUv-xpNgmv6v@smile.fi.intel.com>
-References: <20250603165706.126031-1-colin.i.king@gmail.com>
+	s=arc-20240116; t=1749051075; c=relaxed/simple;
+	bh=xjwQ85hYcU1ZrPH6YnswDzMKpczKMUcTOpAQm5SeA+8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XpmkHcqmtthetSrGinZLCXtNTJilwv4M9Ux2Xxez1XP5Ii80DRlXz40BvuifTmR9yYQxtysQm9wIu6S/1TmQ5v7AHeJ9BYj7AllIeA0uleuMSmML+ej/sR+Nod9YwOiUXpRxT/4gBdH/Bpo3tNTULs01Kt73vG3s89K3gl3dYM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFZ1SKoC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFZ1SKoC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB9DC4CEE4;
+	Wed,  4 Jun 2025 15:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749051074;
+	bh=xjwQ85hYcU1ZrPH6YnswDzMKpczKMUcTOpAQm5SeA+8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RFZ1SKoCh5NLJ8Hir4XT3wS2hpvE9PKPaoXUwqK6A8Y6cyWPWxoiDHP0B3g97Ezw2
+	 oHmbFqVnwwa+1BujyqnxsP0HYVzTaaMYo6TvJmShbXRzO+7+74vAELoOyv7PXZfuuE
+	 vt8jqfGmV1yKX96vfbSYofPX1rrlrfdapV5NS/Q9kHfzwJkebOYVcgEkUqSvslFs+P
+	 qRMsf01mcU1aGfLgFUgwkHhPDv1PbR2dnAGoC4JMZ/2/DoRmTpjTQvOwvN9RywAc3o
+	 6IFzqzEnCBgdXkssXygB6MpnW+faE9oMjEnP1y9MXt03hRF5mZd6hxekaJkATa9hr4
+	 fyxQftlHoBWTQ==
+Received: from [149.88.19.236] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uMq59-003Fww-Fx;
+	Wed, 04 Jun 2025 16:31:11 +0100
+Date: Wed, 04 Jun 2025 16:31:08 +0100
+Message-ID: <87a56ned6r.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu
+ <yuzenghui@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 06/11] KVM: arm64: Add trap configs for PMSDSFR_EL1
+In-Reply-To: <2fb1965b-bef9-4a8e-a1c7-c8a77d957b23@linaro.org>
+References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
+	<20250529-james-perf-feat_spe_eft-v2-6-a01a9baad06a@linaro.org>
+	<867c1ze4pg.wl-maz@kernel.org>
+	<2fb1965b-bef9-4a8e-a1c7-c8a77d957b23@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603165706.126031-1-colin.i.king@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 149.88.19.236
+X-SA-Exim-Rcpt-To: james.clark@linaro.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, corbet@lwn.net, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, Jun 03, 2025 at 05:57:06PM +0100, Colin Ian King wrote:
-> There is a spelling mistake in variable tweek_offset and in comment
-> blocks. Fix these.
+On Tue, 03 Jun 2025 10:50:23 +0100,
+James Clark <james.clark@linaro.org> wrote:
+> 
+> 
+> 
+> On 29/05/2025 5:56 pm, Marc Zyngier wrote:
+> > On Thu, 29 May 2025 12:30:27 +0100,
+> > James Clark <james.clark@linaro.org> wrote:
+> >> 
+> >> SPE data source filtering (SPE_FEAT_FDS) adds a new register
+> >> PMSDSFR_EL1, add the trap configs for it.
+> >> 
+> >> Signed-off-by: James Clark <james.clark@linaro.org>
+> >> ---
+> >>   arch/arm64/kvm/emulate-nested.c | 1 +
+> >>   arch/arm64/kvm/sys_regs.c       | 1 +
+> >>   2 files changed, 2 insertions(+)
+> >> 
+> >> diff --git a/arch/arm64/kvm/emulate-nested.c b/arch/arm64/kvm/emulate-nested.c
+> >> index 0fcfcc0478f9..05d3e6b93ae9 100644
+> >> --- a/arch/arm64/kvm/emulate-nested.c
+> >> +++ b/arch/arm64/kvm/emulate-nested.c
+> >> @@ -1169,6 +1169,7 @@ static const struct encoding_to_trap_config encoding_to_cgt[] __initconst = {
+> >>   	SR_TRAP(SYS_PMSIRR_EL1,		CGT_MDCR_TPMS),
+> >>   	SR_TRAP(SYS_PMSLATFR_EL1,	CGT_MDCR_TPMS),
+> >>   	SR_TRAP(SYS_PMSNEVFR_EL1,	CGT_MDCR_TPMS),
+> >> +	SR_TRAP(SYS_PMSDSFR_EL1,	CGT_MDCR_TPMS),
+> >>   	SR_TRAP(SYS_TRFCR_EL1,		CGT_MDCR_TTRF),
+> >>   	SR_TRAP(SYS_TRBBASER_EL1,	CGT_MDCR_E2TB),
+> >>   	SR_TRAP(SYS_TRBLIMITR_EL1,	CGT_MDCR_E2TB),
+> >> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> >> index 5dde9285afc8..9f544ac7b5a6 100644
+> >> --- a/arch/arm64/kvm/sys_regs.c
+> >> +++ b/arch/arm64/kvm/sys_regs.c
+> >> @@ -2956,6 +2956,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+> >>   	{ SYS_DESC(SYS_PMBLIMITR_EL1), undef_access },
+> >>   	{ SYS_DESC(SYS_PMBPTR_EL1), undef_access },
+> >>   	{ SYS_DESC(SYS_PMBSR_EL1), undef_access },
+> >> +	{ SYS_DESC(SYS_PMSDSFR_EL1), undef_access },
+> > 
+> > PMSDSFR_EL1 has an offset in the VNCR page (0x858), and must be
+> > described as such. This is equally true for a bunch of other
+> > SPE-related registers, so you might as well fix those while you're at
+> > it.
+> > 
+> > Thanks,
+> > 
+> > 	M.
+> > 
+> 
+> I got a bit stuck with what that would look like with registers that
+> are only undef in case there was something that I missed, but do I
+> just document the offsets?
+> 
+> +++ b/arch/arm64/include/asm/vncr_mapping.h
+> @@ -87,6 +87,8 @@
+>  #define VNCR_PMSICR_EL1         0x838
+>  #define VNCR_PMSIRR_EL1         0x840
+>  #define VNCR_PMSLATFR_EL1       0x848
+> +#define VNCR_PMSNEVFR_EL1       0x850
+> +#define VNCR_PMSDSFR_EL1        0x858
+>
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+This should be enough.
 
-Datasheet doesn't give any special term for this, so I think the patch
-is correct. OTOH, the dictionary defines tweek as "A form of atmospherics
-(radio interference) produced when the high-frequency components reach
-the receiver before the low-frequency components." which is somehow might be
-related (like high byte goes before low or vise versa).
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -596,6 +596,16 @@ enum vcpu_sysreg {
+>         VNCR(ICH_HCR_EL2),
+>         VNCR(ICH_VMCR_EL2),
+> 
+> +       /* SPE Registers */
+> +       VNCR(PMBLIMITR_EL1),
+> +       VNCR(PMBPTR_EL1),
+> +       VNCR(PMBSR_EL1),
+> +       VNCR(PMSCR_EL1),
+> +       VNCR(PMSEVFR_EL1),
+> +       VNCR(PMSICR_EL1),
+> +       VNCR(PMSIRR_EL1),
+> +       VNCR(PMSLATFR_EL1),
+
+I don't see a point in having those until we actually have SPE support
+for guests, if ever, as these will potentially increase the size of
+the vcpu sysreg array for no good reason.
+
+> And then sys_reg_descs[] remain as "{ SYS_DESC(SYS_PMBLIMITR_EL1),
+> undef_access }," rather than EL2_REG_VNCR() because we don't actually
+> want to change to bad_vncr_trap()?
+
+This seem OK for now. We may want to refine this in the future though,
+as these registers cannot trap when NV is enabled. Yes, this is a bug
+in the architecture.
+
+> There are some other parts about fine grained traps and res0 bits for
+> NV, but they all already look to be setup correctly. Except
+> HDFGRTR2_EL2.nPMSDSFR_EL1, but it's inverted, none of the FGT2 traps
+> are configured currently and PMSDSFR_EL1 is already trapped by
+> MDCR_EL2 anyway.
+
+Can you elaborate on that? We have:
+
+	SR_FGT(SYS_PMSDSFR_EL1,		HDFGRTR2, nPMSDSFR_EL1, 0),
+
+which seems to match the spec.
+
+We also have full support for FEAT_FGT2 already (even if we have no
+support for the stuff they trap).
+
+Thanks,
+
+	M.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jazz isn't dead. It just smells funny.
