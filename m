@@ -1,154 +1,200 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14D779CD
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 00:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE98A6FC3
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 00:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748997008; cv=none; b=ly2A0AsP46YCq9nZAc2DtxK50Zl/T5xs87iA6zu2OcGXyP2iF++vkocLbGueP03jZccbP1Pl+9vnH2H9AV+z1FgMhqN8AzATUS/pibuZ4NrNnOqIXcObkSSGlP1HRRQ3x7jbHXm5Jnohp+GoAvBPvonaig1aTdSjpo4TMzZ7Ns4=
+	t=1748997107; cv=none; b=b6tKX6RPPF8Z4BSQmXjYCHazWxEeJdfqgngGPj3jw+OqlsaZ1KQ8YXeUujfm7UwVrvy35DABi7TTjPXhj+WfXeHUGmTgWktyDGEGHbLOOMF4ODDcbTxwuzOtRVG6ZowouNFgJkP7ib/+5/PyyeIv68aADDc+xZSl+8rpJmHpQcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748997008; c=relaxed/simple;
-	bh=f4c6fEeLwQa0PlBjC7pBJS6ckl1xuWN5vfHmd22qkEI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FC6oJOdsK6g3Z0imaSwjVzPhPM1P0UuFG2yuKZNFdIIPF34DF0Bwq7lb/cmGoq0ZMZ/uhHe1ys+4xrCc0exRDmfx33jfkhpfEFEhfOvmeHyuvYhxNz0YcbEgFQNI63PrGzDxtZR8vGAFofKu5u1fDms+wQd3/Y/5J/CVXt2zglg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WEPUnmjl; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748997107; c=relaxed/simple;
+	bh=Y8P8ekuWQTrstTqgqgBrAMIigYehAZBJN5IKXdgoKKE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jk9QAQxVnVbsKLtHM8dZ4MN7TMpkZ4yElWAp2nPmhwp/33tVTzfSZg6KUwCeGKS2PcSRYOW3D+4Oice18MBEJL59TDBgxFFSnTOpmRqniIzcq6oXptItC1jVjzS+qieE10kxOkY1Od7svMMLXCIxJQEYfEwKGjIMh1kjpnCM+oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pEPJ2IZA; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WEPUnmjl"
-Message-ID: <6138a043-5b5b-46af-ba8b-01dac55dee23@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748997001;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8MZYMhTjyXQwSFJY/e0Bg+aJ/DYLC4LmKmte6yFXBpM=;
-	b=WEPUnmjl01eoxpfj2bo/wjnCnhorQhBLZ1U6kM9OBHA8kNJHz74sZvC5bbf9Xq5wG8FEwv
-	2RVwYAOiBOU0zVcu1kuuJpmJnm5Ki55YySE0AfXWX4gcRbFoRZDZsm2tjcyYXSTjjwAR5F
-	F+e/j1567odazU5Fm1OHqh6K6+KqGGI=
-Date: Tue, 3 Jun 2025 17:29:55 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pEPJ2IZA"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3dd89a85414so96175ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 17:31:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748997105; x=1749601905; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YFyU6o5bbTPzDuRugXqSPb0fdFrTDPydzDyGunNiVuY=;
+        b=pEPJ2IZAIr3WGtw3jJq6I2mOemOBFbof+qWlStqXZLJ+4qqh9MhS4T1xV7pz+4a7um
+         N+0S6V8rxjDC/YVLidCinC4yipTKBStpHqjSqVPezOA4ZltmP17drWECZUzh9K2EEZ/5
+         ddFDT38nOuNaL7PzmGmXZvN5K8UHO8QHVMzE5fc76ig+8OYsK6t3CwT3ErqUB0QBT0nK
+         gHLZ+U8LWHyFFojFORS2SvLbk++ihTwWy+H/3NQdlUDXtlRO5tDgRndHNNydA+t7/Ca8
+         RKCjUUGF9z3vGbzA4X1hvl9O92kYuedJ+JUyWKZKgFWpcR+Te2924jm5y252+HUXPutj
+         E4Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748997105; x=1749601905;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YFyU6o5bbTPzDuRugXqSPb0fdFrTDPydzDyGunNiVuY=;
+        b=ctJi9laAs+G37+hEv33XEkppGP0Zq5+lCT1OH8P4/C9sA4KvK6LXFBz6L5ZJOyFcjJ
+         ZbIz3E1oMxz984lD6EHlAYFJfznR/zzZP9rZHolWvdpb+SdDC2i0fVxeUQ2vgHyQR3RI
+         NmpQAn8fof7bU4SQ8bLu6wGX3j/8AC48wSt87YLeecY+9mPS2cH0JAlVagedNjN3wOlK
+         89LqsYJszDOFTDG6lEv67XY5TaL8wiyPip5GGUWJJX19qxYAtRy9vnn+prGVtPPrCXHZ
+         UDJMYtHHg90Vn8mPYhfDDu8ZzVliJnCParByemDf4Q2RUDDi5XwVeDgrHlc22I92je9o
+         8qiQ==
+X-Gm-Message-State: AOJu0Yzo5mycP4cdu/ilLLfUHNJQMK0pQhRYbj+AXwyPceHZhwHPaeOL
+	8NCXxTNv2Qnq9tT0RT6iKOeWguI7FUQbekcfCVncL9/DW2gMadhpJAHfAN93/PBq5jCRScgC69U
+	5GL6pMF0OUEmvT4AjImW85E6wk0++aeI574zzxGlR
+X-Gm-Gg: ASbGncvRT5VVnARZ3x1VZYQ+HEOFIKrDlvPjRrQgyhGs+Tev/kWoH5+6pPfPfkUaKPI
+	d9AgkaAMxi6SJWdZYz1XU8UFmgPpkebVnsX7VJgpqSjlrDnsiRctiMDmi0Ud5RNYZC2HnV11ajE
+	jU/vcPPQD/vt+9JgiCEbXHavBITBCYhCpzrAorrlGOp05sbdy8I/S9XbpGUGNmCUeJ7HJzy2/8
+X-Google-Smtp-Source: AGHT+IGN1RzMt774VMiAKYM+BFCQtMMsQ/NFjgCEHHcR1j4hf5n4Qujv8UMtHZZGwpMckBzrcS+lu40QAR+LWD3VAO8=
+X-Received: by 2002:a05:6e02:260c:b0:3dd:b688:1b1a with SMTP id
+ e9e14a558f8ab-3ddbe78db44mr1907205ab.10.1748997104576; Tue, 03 Jun 2025
+ 17:31:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version to
- 3.0
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
- Andrew Jones <ajones@ventanamicro.com>
-Cc: Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Mayuresh Chitale <mchitale@ventanamicro.com>,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org,
- linux-riscv <linux-riscv-bounces@lists.infradead.org>
-References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
- <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
- <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
- <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
- <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
- <20250526-224478e15ee50987124a47ac@orel>
- <ace8be22-3dba-41b0-81f0-bf6d661b4343@linux.dev>
- <20250528-ff9f6120de39c3e4eefc5365@orel>
- <1169138f-8445-4522-94dd-ad008524c600@linux.dev>
- <DA8KL716NTCA.2QJX4EW2OI6AL@ventanamicro.com>
- <2bac252c-883c-4f8a-9ae1-283660991520@linux.dev>
- <DA9G60UI0ZLC.1KIWBXCTX0427@ventanamicro.com>
- <0dcd01cd-419f-4225-b22c-cbaf82718235@linux.dev>
- <DACVBRLJ5MMV.1COZ83HBMUD6A@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <DACVBRLJ5MMV.1COZ83HBMUD6A@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250521224513.1104129-1-ctshao@google.com> <CAJpZYjV_XquU785dhOPVGM7k9N_6QV+1OxenXLj4-fbDCj=yWg@mail.gmail.com>
+In-Reply-To: <CAJpZYjV_XquU785dhOPVGM7k9N_6QV+1OxenXLj4-fbDCj=yWg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 3 Jun 2025 17:31:33 -0700
+X-Gm-Features: AX0GCFtzXLKwBtN12F6R483HTnfj7EEsTmE5CJFeSewNOo0eXBMIidccxIFKn9o
+Message-ID: <CAP-5=fWcW8Fhe8rwUxOdHWbxF0V9CM40p0J3O97X391LxVT9nQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test: Restrict uniquifying test to machines with uncore_imc
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 6/3/25 4:40 AM, Radim Krčmář wrote:
-> 2025-05-30T12:29:30-07:00, Atish Patra <atish.patra@linux.dev>:
->> On 5/30/25 4:09 AM, Radim Krčmář wrote:
->>> 2025-05-29T11:44:38-07:00, Atish Patra <atish.patra@linux.dev>:
->>>> On 5/29/25 3:24 AM, Radim Krčmář wrote:
->>>>> I originally gave up on the idea, but I feel kinda bad for Drew now, so
->>>>> trying again:
->>>> I am sorry if some of my replies came across in the wrong way. That was
->>>> never
->>>> the intention.
->>> I didn't mean to accuse you, my apologies.  I agree with Drew's
->>> positions, so to expand on a question that wasn't touched in his mail:
->>>
->>>>> Even if userspace wants SBI for the M-mode interface, security minded
->>>> This is probably a 3rd one ? Why we want M-mode interface in the user
->>>> space ?
->>> It is about turning KVM into an ISA accelerator.
->>>
->>> A guest thinks it is running in S/HS-mode.
->>> The ecall instruction traps to M-mode.  RISC-V H extension doesn't
->>> accelerate M-mode, so we have to emulate the trap in software.
->> We don't need to accelerate M-mode. That's the beauty of the RISC-V H
->> extension.
-> (It is a gap to me. :])
-RISC-V H extension is designed to virtualize S-mode and U-mode. Not M-mode.
-I don't think retrofitting M-mode virtualization has absolutely any 
-benefit. It has
-many challenges that will probably result in poor performance. It can be 
-a hobby project
-but I am not sure if it can be adopted in production.
-
-Are there any similar use cases in other ISAs ? Does anybody support 
-virtualizaing EL3 in ARM64 ?
-
->> The ISA is designed in such a way that the SBI is the interface between
->> the supervisor environment (VS/HS)
->> and the supervisor execution environment (HS/M).
-> The ISA says nothing about the implementation of said interface.
+On Tue, Jun 3, 2025 at 9:21=E2=80=AFAM Chun-Tse Shao <ctshao@google.com> wr=
+ote:
 >
-> Returning 42 in x21 as a response to an ecall with 0x10 in a7 and 0x3 in
-> a6 is perfectly valid RISC-V implementation that KVM currently cannot
-> virtualize.
-
-If the concern is only supporting an older version of SBI version, we 
-can support that with onereg
-interface today. I think I already agreed on that earlier in this thread 
-and revise this series to have
-it ready for review.
-
-
->>> The ISA doesn't say that M-mode means SBI.  We try really hard to have
->>> SBI on all RISC-V, but I think KVM is taking it a bit too far.
->>>
->>> We can discuss how best to describe SBI, so userspace can choose to
->>> accelerate the M-mode in KVM, but I think that the ability to emulate
->>> M-mode in userspace should be provided.
->> I am still trying to understand the advantages of emulating the M-mode
->> in the user space.
->> Can you please elaborate ?
-> This thread already has a lot of them, so to avoid repeating them, I
-> have to go into quite niche use-cases:
-> When developing M-mode software on RISC-V (when RISC-V has more useful
-> implementations than QEMU), a developer might want to accelerate the
-> S/U-modes in KVM.
-> It is also simpler to implement an old SBI interface (especially with
-> bugs/quirks) if virtualization just executes the old M-mode binary.
+> Ping.
 >
-> Why must KVM prevent userspace from virtualizing RISC-V?
+> Thanks,
+> CT
+>
+> On Wed, May 21, 2025 at 3:45=E2=80=AFPM Chun-Tse Shao <ctshao@google.com>=
+ wrote:
+> >
+> > The test would fail if target machine does not have `uncore_imc` device=
+s.
+> > Since event uniquifying behavior is similar among different
+> > architectures, we are restricting the test to only run on machines with
+> > `uncore_imc` devices.
+> >
+> > Suggested-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> > ---
+> >  tools/perf/tests/shell/stat+event_uniquifying.sh | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/p=
+erf/tests/shell/stat+event_uniquifying.sh
+> > index 5ec35c52b7d9..5a51fbaa13bb 100755
+> > --- a/tools/perf/tests/shell/stat+event_uniquifying.sh
+> > +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
+> > @@ -9,7 +9,8 @@ perf_tool=3Dperf
+> >  err=3D0
+> >
+> >  test_event_uniquifying() {
+> > -  # We use `clockticks` to verify the uniquify behavior.
+> > +  # We use `clockticks` in `uncore_imc` to verify the uniquify behavio=
+r.
+> > +  pmu=3D"uncore_imc"
+> >    event=3D"clockticks"
 
-If there is a valid use case that can be put into production or
-if you have any prototype that it has better performance then we can 
-have it.
-In absence of either, isn't it better to spend our energy on things that 
-actually matter
-right now and improve RISC-V virtualization performance rather than 
-something that
-may or may not be possible in the very far future.
+I'm a little concerned the test will only run on Intel server CPUs.
+Another event that is on a lot of PMUs and needs uniquify is "temp1"
+by way of the hwmon PMUs. Essentially the first temperature event on a
+hwmon PMU will always have a temp1 name.
 
->> I am assuming you are not hinting Nested virtualization which can be
->> achieved with existing
->> ISA provided mechanisms and accelerated by SBI NACL.
-> Right, I am talking about virtualization of RISC-V, because I don't have
-> a crystal ball to figure out what users will want.
+```
+$ perf list temp1
+
+List of pre-defined events (to be used in -e or -M):
+
+
+hwmon:
+ temp1
+      [Temperature in unit acpitz named temp1. Unit: hwmon_acpitz]
+ temp_core_12 OR temp14
+      [Temperature in unit coretemp named Core 12. crit=3D100'C,max=3D80'C
+crit_alarm=3D0'C. Unit:
+       hwmon_coretemp]
+ temp_core_16 OR temp18
+      [Temperature in unit coretemp named Core 16. crit=3D100'C,max=3D80'C
+crit_alarm=3D0'C. Unit:
+       hwmon_coretemp]
+ temp_core_8 OR temp10
+      [Temperature in unit coretemp named Core 8. crit=3D100'C,max=3D80'C
+crit_alarm=3D0'C. Unit:
+       hwmon_coretemp]
+ temp_package_id_0 OR temp1
+      [Temperature in unit coretemp named Package id 0.
+crit=3D100'C,max=3D80'C crit_alarm=3D0'C. Unit:
+       hwmon_coretemp]
+ temp1
+      [Temperature in unit iwlwifi_1 named temp1. Unit: hwmon_iwlwifi_1]
+ temp_composite OR temp1
+      [Temperature in unit nvme named Composite.
+alarm=3D0'C,crit=3D84.85'C,max=3D80.85'C,
+       min=3D-273.15'C. Unit: hwmon_nvme]
+ temp1
+      [Temperature in unit spd5118 named temp1.
+crit=3D85'C,enable=3D0.001'C,lcrit=3D0'C,max=3D55'C,
+       min=3D0'C crit_alarm=3D0'C,lcrit_alarm=3D0'C,min_alarm=3D0'C. Unit:
+hwmon_spd5118]
+$ perf stat -e temp1 true
+
+Performance counter stats for 'true':
+
+18,446,744,073,709,284.00 'C   hwmon_acpitz/temp1/
+
+            40.00 'C   hwmon_coretemp/temp1/
+            30.00 'C   hwmon_iwlwifi_1/temp1/
+            38.85 'C   hwmon_nvme/temp1/
+            43.75 'C   hwmon_spd5118/temp1/
+
+      0.001488897 seconds time elapsed
+
+      0.000000000 seconds user
+      0.001568000 seconds sys
+```
+
+Thanks,
+Ian
+
+> >
+> >    # If the `-A` option is added, the event should be uniquified.
+> > @@ -43,11 +44,17 @@ test_event_uniquifying() {
+> >    echo "stat event uniquifying test"
+> >    uniquified_event_array=3D()
+> >
+> > +  # Skip if the machine does not have `uncore_imc` device.
+> > +  if ! ${perf_tool} list pmu | grep -q ${pmu}; then
+> > +    echo "Target does not support pmu ${pmu} [Skipped]"
+> > +    return
+> > +  fi
+> > +
+> >    # Check how many uniquified events.
+> >    while IFS=3D read -r line; do
+> >      uniquified_event=3D$(echo "$line" | awk '{print $1}')
+> >      uniquified_event_array+=3D("${uniquified_event}")
+> > -  done < <(${perf_tool} list -v ${event} | grep "\[Kernel PMU event\]"=
+)
+> > +  done < <(${perf_tool} list -v ${event} | grep ${pmu})
+> >
+> >    perf_command=3D"${perf_tool} stat -e $event -A -o ${stat_output} -- =
+true"
+> >    $perf_command
+> > --
+> > 2.49.0.1143.g0be31eac6b-goog
+> >
