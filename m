@@ -1,62 +1,62 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEED71E47AD
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA3E21D018
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749072091; cv=none; b=CDuLjJZeXzsd1lOmZ/9iWOi757l8/uIvUEMapgGblZiJ0nTf3tEk5NFlK/zT39idrQLxwL872lDX/TqodBRm/7rEWbmcEugcR8qBKvPJElpOrU0csbbkKVeE+W+anohcEKps72jIbfsibGJu23qnwCb9jLRzmwne/GY3pYxDhg4=
+	t=1749072093; cv=none; b=nwP1/lBlzf5wKWKHQsuipBlCekjsEnDtdbjlxPSmpHZphQ1il/8cZg/WY6GkKP+WEgczs3JgWIONpQ4MFOf9TqnofHz3Izoe63gHqgrwwFU8E/K/ZClfXaMct2d4x6c7vWb2mdDHC1a0RataBfV37YvbGNcpZgPC/B3F1frB52c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749072091; c=relaxed/simple;
-	bh=BK+1SY+Abxoz7hiEYp4R+owxezJqIWEq5orq4X2XWNI=;
+	s=arc-20240116; t=1749072093; c=relaxed/simple;
+	bh=vjzzopack8I4k/m/kpKdg/2RSq7jGGFEH9F9qiwZB1c=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G6YA1ye9gDq7IA1+zkmbNx/BVsyNK7rOFq04M0oz9Hngc/tkDbPvGxbwZgu6yIePN4x6gFWRpCyJhV0ZPrVvDVEB/2mou+Swhazm75sOiZMPiANE+eyZSfj3k1HwNMy3q1hIi+tE+I9r3m8+biwgAdFBiN4Hq5I7risoTk3Eyjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tie7wQUG; arc=none smtp.client-ip=209.85.128.176
+	 MIME-Version; b=KzXd/cHk/6v8ptLN5sfBRgyIcd05H7tjQb/5FP5p1p0t9pW7gWP4lbBfwBd8M28SBg8NHLoKhBc3bqoQyuqQuM/bvWKZjQZqphCe+W/c14IJuvqIYQ6sm4G6DaBgxF8rPLTJF7NhrDaKkAiPZIE7f0KkGEGYq3YJkCxn8zhJ240=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eHWIMZBT; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tie7wQUG"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70f862dbeaeso4169137b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 14:21:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHWIMZBT"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e102eada9so3898677b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 14:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749072088; x=1749676888; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749072090; x=1749676890; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=I0fLbUkQjg6oBk00ANTn3zhMmirJmjJ7KF7dIZyS7A0=;
-        b=Tie7wQUGKupBmr2iRFdQ8Bsxuj0rM6132v4RUAU9Im2Xkq3rzH7YoacIyvIH8y5e6b
-         W2ekFkd1S4ADiujvP8yIQOR99qsKIteYwl1Q5cL4OW1bQlrn5Cz7seXvefVlelD1Oi27
-         IQOiXP7aEE3qky42lJGWR9kU2T67RlEqoYkoEJZMmW3dwSeQpi8Ee4ZOC0h7C0/YHJNN
-         pGvngOveNkQj3Ew3JVghuEk4CDk4NnecZVdGFrLG/D7P0lDj6etZn7pHmMT7pn6wLo7j
-         t92O4jYzJRsMrgJqB3ba+bfkdx35WXvO5SoYBaWpuTIPg/SM278sQE1suD3PUGRJkQJ3
-         ps6Q==
+        bh=mCjiiCRB5X+ASYeG/IGBi0ZaM45gz31jONUYysHS3Ts=;
+        b=eHWIMZBT8h7aEeEVI5VgQ6u55kUgY8VbJPWBkx/ZvlqWuB0e+j1Iqk95h+ec79TtDF
+         l036s3kBUkMK4x4k7oE1AR/Y9AdIH0nOggwElhZOTcNkYe6r1ZYUfve9/j14aBHdUJvk
+         RLV8TwawmJSqIFrQT92s2kMEpDY/q1LbNn3tzpCRpqWNHel9IatZ6VBI2G3fNuhmxt6Y
+         xJyCX2WqZshS8+4gkzMW3p0KF+b1eXL6PGYZiDrapqgfZQyoPcYKIViBIOE5QPaQVWlC
+         LIImeP2ARhD+EGkI8DT32HuEy9POsVAeT49ct5B8MA0x0P2WtHNj6gSB04uh9KeXFfy+
+         znEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749072088; x=1749676888;
+        d=1e100.net; s=20230601; t=1749072090; x=1749676890;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I0fLbUkQjg6oBk00ANTn3zhMmirJmjJ7KF7dIZyS7A0=;
-        b=rzsDspElmbvIsN8GQlHMVwXomrkpJBmwkcfNjWuLvp0cIi75FR+pZzorwLPHAO0Lqd
-         uY/i+Afb4FIEP97noqUIBE4S40pLPd9vemkl9AF4IY6y+01yGHxZ8hi3RRbD/STmNaJe
-         aBcnjaur4YUCJP9ORN+lGypld4wc22iduKBwPqzrQ0chn90idJgtdhR5rEjpGhBfHugs
-         JrzYyQMjpzbnjsNXZ17it/91lpPCOnA38qqiI8xmzu1Nl6rQRRRx7Wxi7/55Fw0uY+hL
-         iyRpMO11f722awKjEbNKm48Mi5PYao+pwQSFO/fB1XejnaT9t6frDAXeHCJRuwiLpd34
-         sKSA==
-X-Gm-Message-State: AOJu0Yy4TAoJOhGZTSEr8El6jLQLxGqovqXht/asXSgUYo3kniBZA3j6
-	ugzZUTEs9PT5vdsa14YsT6NFqf24JJqipUou3d1GtSrf7cydrifwZ8VgcQL7Tw==
-X-Gm-Gg: ASbGncsh8eRHS2apW+UT6J6vA4IFowRrVeOYVc2SE5bka87MmJSgODzZolMy3B4LoBT
-	DENNlV9V8N9mOpUt27HAWa6kLol+LtVC47ZIrsYU/0fIz1j8Ol2ns8QMLGFCRQ9wuN0/1L0RZ3/
-	C2D30BWhQFxPEZ4R5W2ErX96kojuAkmXtS5BBlsTkCEgokNY1o1MZQZscYhiCSjK99XeUUjVAhj
-	y3HQ30G649j2ERNw+kHBOEBh/SnSB+Zjc1112AQiC4shLU5wV8LV8jRLvYC9m3jWAvyPZgMEnGc
-	FbRgGR415E7bIC7Q8mFYiBYwBk28hFYp3vYtVKhCRtKwLVDjS3Og1vsV+MNHb7qwxdpx6f2fYTm
-	xIBvNKIt6GP0IKQZBI1AtSw==
-X-Google-Smtp-Source: AGHT+IE0c6xhdnyjsmDqNhD7sNfOQJbrLaexN6B2Ln+EHdv8nj90nt1QtXP+WootdiiTFN1FjNrKeQ==
-X-Received: by 2002:a05:690c:25ca:b0:710:e8a8:7768 with SMTP id 00721157ae682-710e8a87c5bmr12278467b3.31.1749072088560;
-        Wed, 04 Jun 2025 14:21:28 -0700 (PDT)
+        bh=mCjiiCRB5X+ASYeG/IGBi0ZaM45gz31jONUYysHS3Ts=;
+        b=gpukVkR2lh4HZ+a0Pq3MXw8pxejtKzaz+DWn7UJjjwJN7Th5A1aCyLaY0KgfJTFGx/
+         q1GSjYgQeoOAJw+qbNAGtNPrsDG/OgAWO1G1+3dVJj1UjMJwWurPMbTSpnkn3kF2Kp9u
+         M6DJeW2jK0ewJPiVLJdhAuWzQCFWlNkyKPuq8DDypv6570/sYzTeKV87eNK1Ig+Jk1ZJ
+         slFpYg1RZEcCtpXHU4Na8KwpFWFNzNeeTCjS2b7GWrvgH0YaIimmzW6aTeUB+FCofphr
+         1XWvmxzq3y0Um/P9dkDAIdG0q+vSH5HjWW7OGnpNpmKdCfClsUl31eBVqlMvF3PRZSDs
+         42lw==
+X-Gm-Message-State: AOJu0YxpTWiw3Vj5UnZS67sl8f6K1t1NHRip+PaGDYPw+ZYCOavDJoT0
+	oDLwf0tcftu1jUgB+dhQKLShroD4AgDCLkyojqHogKYyGhxfWOax3llLCsbOkw==
+X-Gm-Gg: ASbGnct4rT9ZhA9x22i2wOhPpGp763TSbz9JcZduJ4CnAf11aqOf3Kc2PlsNnFaTIwU
+	QEFsG9ub6YuJy8k8sJHEEqvtU9uqRjLtaSIk2SbvrtXf3XuUgW/FGjV1SIJ5t81aqA+4X4bkO8z
+	wHocbNEAbdFkmMq4IJnYLB/YheVWIA426UqZU/uTV5m7VkrvsdCpLpnibMyxSntTtETgNzdUy64
+	rmNXorCUXfCLf2SBLUb6f6rySIa9xfCoredqC4cHR/hFaflvOFnDt2EXhgd1vyEMGjlEVV7a/T9
+	iYJ4GSJ1v83yKYPyybfwQyJkNpNdwpcHS6gKPgECqtFrbe+R82wcQ9JIa+zAnqCI7Gix6lxqjod
+	TtptBNwX82OfVHb84DOM9Bg==
+X-Google-Smtp-Source: AGHT+IFGEFG42O18ggB3SfyLdVuuv2qQru1F89BNl0E92j8q9obO7eJetkyv2QNQmL5/KnXZg04hJA==
+X-Received: by 2002:a05:690c:6305:b0:70d:f420:7ab4 with SMTP id 00721157ae682-710d9fb647amr59422067b3.29.1749072089862;
+        Wed, 04 Jun 2025 14:21:29 -0700 (PDT)
 Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8ac0f423sm31416157b3.60.2025.06.04.14.21.27
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8abee777sm31663287b3.40.2025.06.04.14.21.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 14:21:28 -0700 (PDT)
+        Wed, 04 Jun 2025 14:21:29 -0700 (PDT)
 From: Yury Norov <yury.norov@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	Yury Norov <yury.norov@gmail.com>,
@@ -65,9 +65,9 @@ To: linux-kernel@vger.kernel.org,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 1/3] bitmap: generalize node_random()
-Date: Wed,  4 Jun 2025 17:21:21 -0400
-Message-ID: <20250604212125.25656-2-yury.norov@gmail.com>
+Subject: [PATCH 2/3] cpumask: introduce cpumask_random()
+Date: Wed,  4 Jun 2025 17:21:22 -0400
+Message-ID: <20250604212125.25656-3-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250604212125.25656-1-yury.norov@gmail.com>
 References: <20250604212125.25656-1-yury.norov@gmail.com>
@@ -81,91 +81,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
-Generalize node_random and make it available to general bitmaps and
-cpumasks users.
+Propagate find_random_bit() to cpumask API.
 
 Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 ---
- include/linux/find.h     |  2 ++
- include/linux/nodemask.h | 16 +---------------
- lib/find_bit.c           | 17 ++++++++++++++++-
- 3 files changed, 19 insertions(+), 16 deletions(-)
+ include/linux/cpumask.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/linux/find.h b/include/linux/find.h
-index 5a2c267ea7f9..98c61838002c 100644
---- a/include/linux/find.h
-+++ b/include/linux/find.h
-@@ -44,6 +44,8 @@ unsigned long _find_next_bit_le(const unsigned long *addr, unsigned
- 				long size, unsigned long offset);
- #endif
- 
-+unsigned long find_random_bit(const unsigned long *addr, unsigned long size);
-+
- #ifndef find_next_bit
- /**
-  * find_next_bit - find the next set bit in a memory region
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index f08ae71585fa..1cedc7132b76 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -492,21 +492,7 @@ static __always_inline int num_node_state(enum node_states state)
- static __always_inline int node_random(const nodemask_t *maskp)
- {
- #if defined(CONFIG_NUMA) && (MAX_NUMNODES > 1)
--	int w, bit;
--
--	w = nodes_weight(*maskp);
--	switch (w) {
--	case 0:
--		bit = NUMA_NO_NODE;
--		break;
--	case 1:
--		bit = first_node(*maskp);
--		break;
--	default:
--		bit = find_nth_bit(maskp->bits, MAX_NUMNODES, get_random_u32_below(w));
--		break;
--	}
--	return bit;
-+	return find_random_bit(maskp->bits, MAX_NUMNODES);
- #else
- 	return 0;
- #endif
-diff --git a/lib/find_bit.c b/lib/find_bit.c
-index 06b6342aa3ae..2118ea23bed8 100644
---- a/lib/find_bit.c
-+++ b/lib/find_bit.c
-@@ -18,6 +18,7 @@
- #include <linux/math.h>
- #include <linux/minmax.h>
- #include <linux/swab.h>
-+#include <linux/random.h>
- 
- /*
-  * Common helper for find_bit() function family
-@@ -287,7 +288,21 @@ unsigned long _find_next_bit_le(const unsigned long *addr,
- 	return FIND_NEXT_BIT(addr[idx], swab, size, offset);
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index ede95bbe8b80..4d3505acb5e0 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -354,6 +354,18 @@ unsigned int cpumask_next_wrap(int n, const struct cpumask *src)
+ 	return find_next_bit_wrap(cpumask_bits(src), small_cpumask_bits, n + 1);
  }
- EXPORT_SYMBOL(_find_next_bit_le);
--
- #endif
  
-+unsigned long find_random_bit(const unsigned long *addr, unsigned long size)
++/**
++ * cpumask_random - get random cpu in *src.
++ * @src: cpumask pointer
++ *
++ * Return: random set bit, or >= nr_cpu_ids if @src is empty.
++ */
++static __always_inline
++unsigned int cpumask_random(const struct cpumask *src)
 +{
-+	int w = bitmap_weight(addr, size);
-+
-+	switch (w) {
-+	case 0:
-+		return size;
-+	case 1:
-+		return find_first_bit(addr, size);
-+	default:
-+		return find_nth_bit(addr, size, get_random_u32_below(w));
-+	}
++	return find_random_bit(cpumask_bits(src), nr_cpu_ids);
 +}
-+EXPORT_SYMBOL(find_random_bit);
 +
- #endif /* __BIG_ENDIAN */
+ /**
+  * for_each_cpu - iterate over every cpu in a mask
+  * @cpu: the (optionally unsigned) integer iterator
 -- 
 2.43.0
 
