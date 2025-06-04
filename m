@@ -1,71 +1,71 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051061DDC08
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E2C270542
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749079556; cv=none; b=MgKx2TAzBIJpKC0BynIY3HgFZggyXbJNfWVfkRTK8j1VAuQqGu+FA3O108fxy1kFFQSLGcNowzW/m5iveQduOn11ykR1JAOWmqHKsh1He+zSmuL2IpvvE/JL+pw107tLbIU9iF24uCgbHXXxjklHJMF4Q00LH0mrhTbPPDF5/7A=
+	t=1749079557; cv=none; b=g/vpAT/A/Oac8zFpxOGTsUpRXf1msr6JHcgsib8nOy5fetIO73GV56NljqoT+NL7C1BF9O15DmMMQ0EL+z6myKVJDPGKmPVGAM1Y93vXW7vZFg6kcfPviuKQbxj96qhhsJ3ZS6dnK8Gb5s6J7To8JMiDZQNY9avibKkMLkDPDdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749079556; c=relaxed/simple;
-	bh=aNWUmxufhSQLQrBnFlE6ppLVsbEWf2/wWffhXN99rwI=;
+	s=arc-20240116; t=1749079557; c=relaxed/simple;
+	bh=SOMXEMyfljyF0iAAfVBGlx56si47T0lOo/QgJ/MFF2A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SkjQQRaaYoKfOX3AXl66LgEisvqKg0e2XXZWWmYSrlSZuUiySW2q7DJHRDY7yXGr6/fSyT2r1FoXvMn6Bh3hbfF1PST5FWdkFKLd1p67WMWyFVIZ5S2YOC2Ny3Wuh2gyPsds4ydj5HqfQFUbTTZRZJI+Gps9OBRFBbvNccLRM3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PAWM4KZ+; arc=none smtp.client-ip=209.85.128.177
+	 MIME-Version; b=PopW0LX0qUJ/LaI+/08Cr39FaL9E2CxhHAFZbCNEDM0MI1bG/FWUKJfPOTT8LyJBSObEKDRfsIkz9t9IIDnVSQMxWCwHZ/gm4tjnBf7Iq0Q7gRmiSS2xQ7ujL+RnmuDyi7ousFraX2IAfzWFuDIUHiS6wZ9Tk9onhf9/XYM5aFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJHXDY0s; arc=none smtp.client-ip=209.85.219.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAWM4KZ+"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70e5e6ab7b8so4610497b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 16:25:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJHXDY0s"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e7dc83224d5so1440865276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 16:25:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749079554; x=1749684354; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749079555; x=1749684355; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7gG+ZEjZcQCNcIRG3cnncfztX67FBxlYy1K2/YgyWq8=;
-        b=PAWM4KZ+c0NgyeGS5BGI0z000cRLNEfp7S6dhkukWv+jiZH8uIMjzPXmh8sjY/OLSe
-         +QxvejS2to+PFK2IJ5xL/u22CtOGhtZ0HFM+XA4Vf1fjTg8/7TvuEOnQTZTrbYB2GumS
-         iuJJx26p7ey8FVxIE6Y0mINNtKPMAhiGit/7uyKQdk5oO7dh9KdBKg49w3uYhVPEo37O
-         U7QsdCJIC6gHhelYftgEJNZov5qYNATY0k4dmo18fJ2PJWVi688vxB8rtAEHQcLDCU8y
-         Qe8mC4oNhTsL8o5oJgoIRcgc50ey9aarJMrwPkbBgkkdJKv4I61o6b7jyLOjJ9Et0r7Y
-         3/1Q==
+        bh=k2DRd0KKsntFWDvsPq/TUA9Er2c1Qv95Qf8sEiaIsXI=;
+        b=IJHXDY0slKKrP608g2cCJj8rml8m6MOhwmnPn7Zfz9obJD8n40DdYva2KZA+RDxSBq
+         x6LfKJ2MShwdrJLIqR7RLZC/Se0tVfHzXs6AWPVSrI/FoLq7M5aKBtjSuSibPo5F4Ss/
+         VDGlOIL5sjj1omXccapy0U6YN8PgLXI1PvkOW2dh1ww/I6vv9TMzI0w9DVMrGiVMtHiI
+         bYnRk5g5itQLlEB0EksG/iz+dj4q/iDts+5yl513V/VJ87+EJl0geCfYqeOHolAp3sis
+         kJcrUkAl/JPfwAj/ZAbuPmyfRdNle6zCE6/LbZpJAPDeZ1R6ZDG5o+mf/Sp4f1/ek6LX
+         hsJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749079554; x=1749684354;
+        d=1e100.net; s=20230601; t=1749079555; x=1749684355;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7gG+ZEjZcQCNcIRG3cnncfztX67FBxlYy1K2/YgyWq8=;
-        b=IB8E0V+g2Wrw91Ss07biOUuln1/J+mA11OBUrExsTman+iPueed435PkhlgBDFrS7S
-         eh0+3DwP/dxz4qVI4MqTaWZjrx2lCajNDRw96QGD88zIUuNXl9Omi124bjJQPGi3OiqD
-         Wk5Y8rKiALqk7jDXqxxyKri/lW+YZIlB/1YlWcBlVMIVDE3+iqrEE9M9MS/TfTmqR1CM
-         rL69NYE6w1xsXw7RCStCy8WYp47J6MRPASA9mODYzfOuBP4nHFUBEGADp9Z0RgcQAcCg
-         6vdw5UnFnVDlD+BcJIUHK2oMy2rD0uzqSORRBECxIgfTFb64oHS9FZl7EnHl9maLkHqi
-         VGvg==
-X-Gm-Message-State: AOJu0YwkExuJtGuiCm/zpXXDUzBFtOSFA4Zo3pQN//rhx3xTEngUQGSK
-	QSYXNcT8mzCtxpnBbdm1gOfatp4cG7MzKl5HHCvbzsHPp6sojhkFuQUQy7uD3A==
-X-Gm-Gg: ASbGnctK6WTqj2MWchMUUcqxd4269MRXejY8SvUbtrmkUTCt3hDU28AQrmFHINjuP9l
-	ZmmR7mUBtE0n5rR0gwIV8NTjtv0J+aqF630gYjnR/Ge9nXvW/fZn1JzRysK5/YM5WE/KDbkFB4Z
-	Akd+Hh6zF35J/jy9O8wIvPcA9XVCyItBW/FrpAofJi+6F07uhkR/pzmeSVOIp4rk4BAR8rY9o3U
-	49Ue2Lswr/R99QkDwdvp7MaGyfWN93M35S66vNK1PbqGMbCgzruMXsd5MWDE0fJTr5EpDV1XNAC
-	HT7QGwcMWRKW7Xvina/DQxEtriGMvmGyzm/bIGXG6IadiP0lLsZKSQOhoUVhuGmKriqDwR1S6RK
-	alpnaxAAoXyBq2lATMX+0Ew==
-X-Google-Smtp-Source: AGHT+IG9YlaGTFMDtvExKnIXSCm5Z6XTxWt/SVGG5f7HlM1J3/m10UYuymBbHMQv3DKHSPFiIdBeIg==
-X-Received: by 2002:a05:690c:7008:b0:70e:7638:a3a9 with SMTP id 00721157ae682-710da1cea1amr71466467b3.18.1749079553930;
-        Wed, 04 Jun 2025 16:25:53 -0700 (PDT)
+        bh=k2DRd0KKsntFWDvsPq/TUA9Er2c1Qv95Qf8sEiaIsXI=;
+        b=XH/zFF00W3g8L6lruNiyCOK26v6wzH41u9Jro4futqS6r8icEZpwebpyp+K7GkK5TC
+         s3ga2Jrntoyrs0U4fyqiMsnbrfzwtEseGk+3mUz4o5XluMSI7bVPyEfGwGfndU1lJ/Ld
+         vpqslYD7CCp7888DEedEvTUnX51nbKpgIZDYRY53WaoD8IPGRNQH3Q8+wHzB07/NqBcx
+         pAw//n8MVd+QbYPhv6qmyUPUNgxD58u/ZvMmQAXyUN06wWdaYGfLaBqVZIca1y7C0Z4F
+         xTaUGQz1haSLIk5JmDz3AJN0QX51pQtYeKAqYRbtgmlilsFLaXWEPPKDBW8rP1Mi3CK0
+         r4Hg==
+X-Gm-Message-State: AOJu0Yxsa3Y9e2VNTDjve3kf7xbj7LoNGhmoVUN1IijhR9A1yVKHe06M
+	onP0TH63S9nY8AT7UQTw7z/8cOAE6NhkDc2JHSKZPlV1LfDdx+aPCBtW4fFl8Q==
+X-Gm-Gg: ASbGncta75RvSsEMS+y67t1X6g41ls1L+ft7UCJnVFN9P/Ydcvf3IqLk5ifMKQe7XBC
+	8FLeISDyH6oxDw69VtuGpD3//wsVSDsPfaYKnaIl5WXqrudGsy5fP5L+YYA3SiakDyFmDzs5Ams
+	iBNwutnrSysNfR8taQV5EyQjm2p3DXuoNa5beHXHA0coz95s0NsuE9b5wwjORyz38bnYOT7vAPX
+	05in/xvIP2OdGWPzbBdKOEZrLHEBzPheAOAvhn6bEDk+G2dujojhbxcVtQdtjUlaSeR0tpZm5qV
+	HkYrSCBtGcT4QHcDWCEInH8vCeqOOc6AIWcY2IO59lY5pZKI2EnVUfhqKo0gaaBdOXWSITeomr/
+	KCsPvH2juq7tMRYM+SY2gKQ==
+X-Google-Smtp-Source: AGHT+IFcPUsklFgYAAbvMkabCX9s6waLCDSa9y7wG/Zrs8h0D5zV0/LraLhKziO56+NkuiIVJF4Ygw==
+X-Received: by 2002:a05:6902:2e0c:b0:e7d:75e8:d909 with SMTP id 3f1490d57ef6-e81882ab37emr2144633276.7.1749079555220;
+        Wed, 04 Jun 2025 16:25:55 -0700 (PDT)
 Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8ad01703sm32192297b3.115.2025.06.04.16.25.53
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e8183c6eae7sm313987276.29.2025.06.04.16.25.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 16:25:53 -0700 (PDT)
+        Wed, 04 Jun 2025 16:25:54 -0700 (PDT)
 From: Yury Norov <yury.norov@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	John Stultz <jstultz@google.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Stephen Boyd <sboyd@kernel.org>
 Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Subject: [PATCH 1/2] clocksource: fix opencoded cpumask_any_but() in clocksource_verify_choose_cpus()
-Date: Wed,  4 Jun 2025 19:25:47 -0400
-Message-ID: <20250604232550.40491-2-yury.norov@gmail.com>
+Subject: [PATCH 2/2] clocksource: fix opencoded cpumask_next_wrap()
+Date: Wed,  4 Jun 2025 19:25:48 -0400
+Message-ID: <20250604232550.40491-3-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250604232550.40491-1-yury.norov@gmail.com>
 References: <20250604232550.40491-1-yury.norov@gmail.com>
@@ -79,8 +79,8 @@ Content-Transfer-Encoding: 8bit
 
 From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
-cpumask_any_but() is more verbose than cpumask_first() followed by
-cpumask_next(). Use it in clocksource_verify_choose_cpus().
+cpumask_next_wrap() is more verbose and efficient comparing to
+cpumask_next() followed by cpumask_first().
 
 Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 ---
@@ -88,20 +88,20 @@ Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 4b005b2f3ef5..2e24ce884272 100644
+index 2e24ce884272..0aef0e349e49 100644
 --- a/kernel/time/clocksource.c
 +++ b/kernel/time/clocksource.c
-@@ -323,9 +323,7 @@ static void clocksource_verify_choose_cpus(void)
- 		return;
+@@ -584,9 +584,7 @@ static void clocksource_watchdog(struct timer_list *unused)
+ 	 * Cycle through CPUs to check if the CPUs stay synchronized
+ 	 * to each other.
+ 	 */
+-	next_cpu = cpumask_next(raw_smp_processor_id(), cpu_online_mask);
+-	if (next_cpu >= nr_cpu_ids)
+-		next_cpu = cpumask_first(cpu_online_mask);
++	next_cpu = cpumask_next_wrap(raw_smp_processor_id(), cpu_online_mask);
  
- 	/* Make sure to select at least one CPU other than the current CPU. */
--	cpu = cpumask_first(cpu_online_mask);
--	if (cpu == smp_processor_id())
--		cpu = cpumask_next(cpu, cpu_online_mask);
-+	cpu = cpumask_any_but(cpu_online_mask, smp_processor_id());
- 	if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
- 		return;
- 	cpumask_set_cpu(cpu, &cpus_chosen);
+ 	/*
+ 	 * Arm timer if not already pending: could race with concurrent
 -- 
 2.43.0
 
