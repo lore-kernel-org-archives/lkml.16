@@ -1,127 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73249227E94
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 22:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70A129A2;
+	Wed,  4 Jun 2025 22:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749074989; cv=none; b=p8Dl5LZJ5bYjv86+U0ln+bwNumhpT6N8qCciogWE2wfrUwJgCOBCvg1fYpkbCkleX5tvRbJMjXMOyUG+3TsyUQe4uhLrSslg/Dyk3qljIlCERIMJa4tdAL2sB4KFw9kHWl64/ugtPgbeCbjlKK7ICE1o0J7DOTsRMMxuSSrd9Z4=
+	t=1749075143; cv=none; b=UgUCiBANBw43q/wiNLYVi8JvQL0GeonIH34oGzsBwilf04TwqAGS9rfFlN0oOCfCQwxWc0Nd3U5eOv8+qCjqrPE+WbzEWO1CR4bQclUkcm+gmEmSUEnWcLp3qEtiKBIgEwGbHELjW90X0KdT5EW0u/D7OcNuTXD4U/PLTFkMjYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749074989; c=relaxed/simple;
-	bh=Lmu043ttmoNqgiYahD+6aywyp8FaBNBKAT+/DxnS4+s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AVCVJpQgXLsB+d6YjTym/Wy6KTWmDEp8K8j5JJFBXB4IZxG3lh9J66OJpNQTb90no/LZ+WdIi49zqDiSNwSsNi6+BttirC/0U4QCy3OuwMeJPbrakmVH/ZUp3w2P0iz2JOEbZhC1ozPCEnlV6t29exFX+pNgzhYMU8Z5uv5HjnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SK1RWynk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749075143; c=relaxed/simple;
+	bh=ZgNC/tzUGjuhabSWLf9s/V5Dj4iYLMJ7BsfBi8LCeDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mXlxBfkTp7hI6am1UQYy8hwqeM3pFNkjwaRmA7lDAwDEaAF8kiUEJdmdvAtoBfg7S2l3mTZHPkYKk7M70As4GNR8LCByWQFpVmM5nI5b4ZUBVUhpyzVJT/UaGrXI9azLip6O+2X7aJIYxqJQAFpo+SO4RIHOPPR+onMVI41lRZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTNYLMal; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SK1RWynk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749074986;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=InNfZwJnSoubR+c9L0hThUN+6+PZmB6lqdOn6p8BxJI=;
-	b=SK1RWynk522Lv7FQJ3EnKvcVql6tYtnlnKb1RwQv2WUtj62ON7ErMdYVPJKJWoD7u1DtEo
-	tDvjYtiTqp2xjx6pZHxKAWuptGKGTceW6uUV008SEZ94TzDYr4Fca0p2FN7fjAhbLPXi8Y
-	IvGgkj5rwqFFmpM7sGHhmODptOQsw5g=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-351-R3xdR5y9PCSQqYDwzXRpTw-1; Wed,
- 04 Jun 2025 18:09:43 -0400
-X-MC-Unique: R3xdR5y9PCSQqYDwzXRpTw-1
-X-Mimecast-MFC-AGG-ID: R3xdR5y9PCSQqYDwzXRpTw_1749074982
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0888D180035E;
-	Wed,  4 Jun 2025 22:09:42 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.89.125])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8BBE41955DDA;
-	Wed,  4 Jun 2025 22:09:40 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH 3/3] timers: Disable memory pre-allocation of timer debug objects
-Date: Wed,  4 Jun 2025 18:09:26 -0400
-Message-ID: <20250604220926.870760-4-longman@redhat.com>
-In-Reply-To: <20250604220926.870760-1-longman@redhat.com>
-References: <20250604220926.870760-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTNYLMal"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7931C4CEE4;
+	Wed,  4 Jun 2025 22:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749075142;
+	bh=ZgNC/tzUGjuhabSWLf9s/V5Dj4iYLMJ7BsfBi8LCeDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QTNYLMalq6elO/8yeakwihsxnK3xe5UkzqTnVdvj9JT74aJBxwpgy1Foz0W+0aoXj
+	 uZ3cbrt51gg0ovSDbusEIHfxRm1CiA7O19bpk/sC1M/4ZKRtoBLFKShyXV9S6ajM6+
+	 Q5QjVH8AAMxJqXMbNlQfQAESEXBmZtBKXxPJHRVBOJNpFXyP3uW3o0VXpPv4KQ8hdA
+	 XWTltp1U/6wqSQMnRagDlQJlYDY/l/foDyVLSJ02/Wkga+MhhIPC1ygW+418vVYkvm
+	 lR5Hp9HDqTuqZ1OpViq/XiN5etrqzbBv0L95mmk9Tdz9CVGno+7ds6Zdh+NVVjGCts
+	 IN744KBfKdVEA==
+Date: Wed, 4 Jun 2025 19:12:19 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Blake Jones <blakejones@google.com>, Song Liu <song@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	James Clark <james.clark@linaro.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
+Message-ID: <aEDEw7bCDAtEXfGC@x1>
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-3-blakejones@google.com>
+ <aD9Xxhwqpm8BDeKe@google.com>
+ <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
+ <aD9sxuFwwxwHGzNi@google.com>
+ <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
+ <aD9yte49C_BM5oA9@google.com>
+ <CAP_z_Cg0ZCfvEFpJpvhuRcUkjV_paCODw2J61D3YQMm7dg0aGg@mail.gmail.com>
+ <aEC9UqkKeEj4on3M@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <aEC9UqkKeEj4on3M@google.com>
 
-A circular locking dependency lockdep splat was hit recently with a
-debug kernel. The dependency chain (in reverse order) is:
+On Wed, Jun 04, 2025 at 02:40:34PM -0700, Namhyung Kim wrote:
+> On Tue, Jun 03, 2025 at 03:29:35PM -0700, Blake Jones wrote:
+> > On Tue, Jun 3, 2025 at 3:10 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > Hmmm. Is that documented and tested anywhere? Offhand it sounds like an
+> > > > implementation detail that I wouldn't feel great about depending on -
+> > > > certainly not without a strong guarantee that it wouldn't change.
 
-  -> #3 (&zone->lock){-.-.}-{2:2}:
-  -> #2 (&base->lock){-.-.}-{2:2}:
-  -> #1 (&console_sch_key){-.-.}-{2:2}:
-  -> #0 (console_owner){..-.}-{0:0}:
+> > > Good point.  Maybe BPF folks have some idea?
 
-The last one is from calling printk() within the rmqueue_bulk() call in
-mm/page_alloc.c. The "base->lock" is from lock_timer_base() and first
-one is due to calling add_timer_on() leading to debug_object_activate()
-doing actual memory allocation acquiring the zone lock.
+> > > Anyway the current code generates them together in a function.
 
-The console_sch_key comes from a s390 console driver in driver/s390/cio.
-The console_sch_key -> timer dependency happens because the console
-driver is setting a timeout value while holding its lock. Apparently it
-is pretty common for a console driver to use timer for timeout or other
-timing purposes. So this may happen to other console drivers as well.
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c?h=v6.15#n9825
 
-One way to break this circular locking dependency is to disallow any
-memory allocation when a timer debug object is being handled. Do this by
-setting the ODEBUG_FLAG_NO_ALLOC flag in the timer_debug_descr structure.
+> > It certainly does, yeah. But I don't want to have that become another
+> > instance of https://www.hyrumslaw.com/.
 
-The figures below show the number of times the debug_objects_fill_pool()
-function has reached the statement right before and after the no_alloc
-check in initial bootup and after running a parallel kernel build on
-a 2-socket 96-threads x86-64 system.
+> Thanks for sharing this.
 
-			 Before      After     non-timer %
-		 	 ------      -----     -----------
-  Initial bootup	  150,730     148,198     98.3%
-  Parallel kernel build 5,974,464   5,893,116     98.6%
+> I'm curious about the semantics of the KSYMBOL and BPF_EVENT.  And I
+> feel like there should be a connection between them.
 
-So from object pre-allocation perspective, timer debug objects represent
-just a small slice of the total number of debug objects to be processed.
+So, the comment in:
 
-The allocation of debug_object to the global pool happens when its object
-count falls below the (256 + 16 * num_possible_cpus) threshold. Even
-then, there may still be free objects available in the percpu pool. So
-the chance that debug_objects gets disabled because it is running out
-of free debug_object should be minimal.
+tools/perf/util/bpf-event.c
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/time/timer.c | 1 +
- 1 file changed, 1 insertion(+)
+Is:
 
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 553fa469d7cc..e0be64591e43 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -775,6 +775,7 @@ static bool timer_fixup_assert_init(void *addr, enum debug_obj_state state)
- 
- static const struct debug_obj_descr timer_debug_descr = {
- 	.name			= "timer_list",
-+	.flags			= ODEBUG_FLAG_NO_ALLOC,
- 	.debug_hint		= timer_debug_hint,
- 	.is_static_object	= timer_is_static_object,
- 	.fixup_init		= timer_fixup_init,
--- 
-2.49.0
+ * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
+ * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
+ * one PERF_RECORD_KSYMBOL is generated for each sub program.
 
+which is not so nicely worded tho :-\
+
+"One KSYMBOL per program", followed by "one KSYMBOL per sub program".
+
+But that matches the referenced:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c?h=v6.15#n9825
+
+So, for these bpf_metadata_ variables, would that be strictly per
+program or would it be perf 'sub program'?
+
+Couldn't get an answer from looking at tools/bpf/bpftool/prog.c, but
+seems to be with progs, not subprogs, i.e. just the PERF_RECORD_KSYMBOL
+associated with progs (not subprogs) will have those variables.
+
+But then it seems those variables _are_ associated with at least one
+PERF_RECORD_KSYMBOL, right?
+
+- Arnaldo
+
+> Song and Jiri, what do you think?
+
+> Thanks,
+> Namhyung
+
+> > > > Can you say more about why the duplicated records concern you?
+> > >
+> > > More data means more chance to lost something.  I don't expect this is
+> > > gonna be a practical concern but in general we should pursue less data.
+> > 
+> > That makes sense. In this case, it will only show up for BPF programs that
+> > define "bpf_metadata_" variables (which is already an opt-in action), and
+> > the number of variables a given program defines is likely to be quite small.
+> > So I think the cost of the marginal increase in data generated is outweighed
+> > by the usability and reliability benefits of being able to match these events
+> > 1:1 with the KSYMBOL events. If this proves to be a problem in practice,
+> > it can be revisited.
