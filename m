@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5976284D02;
-	Wed,  4 Jun 2025 01:05:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473941A5BA0;
+	Wed,  4 Jun 2025 01:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748999134; cv=none; b=hg+ZiRFG0keesSj3rpMc1mT/6hUluOAW+qCcU2jAXJ6TTPWaF94mdBN6YR2QlCafOYd65kfQ/5W3mB5RiX15TQr58Sr/RJZ+CGZdjhgwxXt2MqZET8fFGJCXK74porBQL+unhPsQj5YUbQv95K0f+NDI1aaUr/lH8cE2ruwA+tQ=
+	t=1748999190; cv=none; b=u5qQaORev7a6tnHpGQz/v5rImrhbrlXPIq6u64OyHq19yXPTzBlNReD7lnV//Glk7P9azR7owHvA50WosGRk4o2UcZs7mE6m3XOkxinbbD3vFtkyMsEqbJ/TQgvf428TXnyD1SQ5IyG04BurAhlyisPhW79NnY91vJChQLWTRek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748999134; c=relaxed/simple;
-	bh=sTr+czi8H5o5+cE59kBVVJbF4lBVkGlhby/Bbqi5gO8=;
+	s=arc-20240116; t=1748999190; c=relaxed/simple;
+	bh=q7JYVPVG2dRLlDqWkJSfnGRBlhdWxwq+TInUPdY3o64=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f+NxTpb9StMbezKq/Ikps3UkwxwfPLtdnx4XnDN0PvwKew5yHuLyJlBcacBu7TmZzL7HiEWkAP2iApYRiAEXaqo6BFAxAxBmhgWXiRh/x05MFSLL/JI/ryxFCTje9pCeKHIG4mhougyI9bHA0uRqbHU0Zub0eNN5E3r+7NQoCIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EglhJB6H; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=PFvF4I9ePmimsRJ+UVPqN5JbhG0/yQhQYtv2uXdXq14x04hbBzjFz4bgDja6A7A4+IsnBsESWhOlx0Qqy2hyeHIg2b90CiHtzcx+cWa/YKiEQaqtSf4HjuU+nIjdTkcNghmRb7BOiRlGHK4TjCHHsnhZWFafFfQ22PKD6kMTLKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMhwNPq3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EglhJB6H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C88C4CEED;
-	Wed,  4 Jun 2025 01:05:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMhwNPq3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6662C4CEEF;
+	Wed,  4 Jun 2025 01:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748999134;
-	bh=sTr+czi8H5o5+cE59kBVVJbF4lBVkGlhby/Bbqi5gO8=;
+	s=k20201202; t=1748999190;
+	bh=q7JYVPVG2dRLlDqWkJSfnGRBlhdWxwq+TInUPdY3o64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EglhJB6H9jJKtFVcN0CMwmxuJ1sDu7Hep+mXsdn6jVefTy/4xjwHWxBliW+pzRqgM
-	 zlKmjSzPlGlfW5plhd19kJ9TEhEG6sf/fy+VYAJW3SPrpcqiTgZIQWSKxf5hpsGdJj
-	 mpnpPyAXDdxHtlWlsqqiYmYNRIAo8R/u8DNIzX4qbAWNBmDMM1cmWEbPSSzezyC83w
-	 jxlr8rzHyvimg6RiNgAgq/yuprdqxC+SZkAOJ470gDsqepDHlKWu8dlpBnpCckQ/Mj
-	 X6J+megIlVp1vsXkf//m5Q53A48pnRPdmbyL7CaUh6sycISBSF5pmJH5PY+F7Dmo4u
-	 otHEGBQ2A3d1A==
+	b=GMhwNPq3YNTYhv8Edqq4LTeDb5E92FsdNtPzGxUO+/DpiROetHGS1FIBfB+Z8Ptum
+	 +/+pKCgxQ36t04fYQdCxA3ANLFO/gv5E63Nk78mwRyYVp21lCvbin1IlaQ4jD7709q
+	 +Om8Itk2jsTobJOHme2LUUujE0647HmtXLQ4u8uFMT7aH5o/RTU69+CcUJ1cbsJUZ5
+	 /O0C1VwfF6zzUSmztrDfa1LHVib+la3ckx/UhP7/TsiJfeRdXuOyyeFxWXKhljxnOh
+	 Fx9WphGcxFx1LCJomQ40KsZlEZo6g0u/NaTW6EOtf+FQMSVXTviCcgwlviIDs2lmRB
+	 gx5tSML0hQPMw==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -39,12 +39,12 @@ Cc: Henk Vergonet <henk.vergonet@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.15 05/33] wifi: mt76: mt76x2: Add support for LiteOn WN4516R,WN4519R
-Date: Tue,  3 Jun 2025 21:04:56 -0400
-Message-Id: <20250604010524.6091-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 05/27] wifi: mt76: mt76x2: Add support for LiteOn WN4516R,WN4519R
+Date: Tue,  3 Jun 2025 21:05:58 -0400
+Message-Id: <20250604010620.6819-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250604010524.6091-1-sashal@kernel.org>
-References: <20250604010524.6091-1-sashal@kernel.org>
+In-Reply-To: <20250604010620.6819-1-sashal@kernel.org>
+References: <20250604010620.6819-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.184
+X-stable-base: Linux 5.10.237
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
@@ -141,7 +141,7 @@ affecting other devices.
  2 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c b/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
-index 9369515f36a3a..4e14548d27215 100644
+index 82a193aac09d7..95c548f45bdf8 100644
 --- a/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
 +++ b/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
 @@ -17,6 +17,8 @@ static const struct usb_device_id mt76x2u_device_table[] = {
@@ -154,7 +154,7 @@ index 9369515f36a3a..4e14548d27215 100644
  	{ USB_DEVICE(0x0846, 0x9053) },	/* Netgear A6210 */
  	{ USB_DEVICE(0x045e, 0x02e6) },	/* XBox One Wireless Adapter */
 diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/usb_init.c b/drivers/net/wireless/mediatek/mt76/mt76x2/usb_init.c
-index 85dcdc22fbebf..41b9a99665822 100644
+index ffc2deba29ac6..c845e83897659 100644
 --- a/drivers/net/wireless/mediatek/mt76/mt76x2/usb_init.c
 +++ b/drivers/net/wireless/mediatek/mt76/mt76x2/usb_init.c
 @@ -191,6 +191,7 @@ int mt76x2u_register_device(struct mt76x02_dev *dev)
