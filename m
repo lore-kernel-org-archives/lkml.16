@@ -1,169 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6CB2C3246
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E7722DA17;
+	Wed,  4 Jun 2025 07:24:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749021886; cv=none; b=N8loxfyhUWHh4178RbjVMWMuodkDzrSAoGn07KkhduBEGCuLrMRDqrULvM+H0QmTfcDPKAZiCFwbz9wgTKj/FNZptwb1JaLL0LVsoAMSsxGds/8NctpCAj6jiLldydg1kB+V6vq6mpRbIqOn9ujyWAkpef9DvR460T4gXjXkQYQ=
+	t=1749021888; cv=none; b=ikKlO79bTeaw/f7s4KyB3k7wrwLFSyF2g5XERNnAoSd3mrnJ5u9IbibvUsxmLeON6lTf0jVENlVs96zf9VpnMKD8UonvWJ5s3tRzynHjoCfkjbj6F79XEkynrjPW3DxZcCq/BAF9WHM1ClmJhBzhb1GJwDnvP5Zi+xqO5mgqdWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749021886; c=relaxed/simple;
-	bh=5SyUvppNuSDFqKzdDCKf9UQfWjYA+/m0ZdXQA8ZCk04=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=UjEN+dQ5gCLFVOTzU7dWEhFIbhzzbHSXWoNgA9gjBtqW1WOsaatQBc8+k5l4iy1wPrceK3Mi3M/maqSRjRQCAs4V8OBKjBAMfzp+2vsqK5ZkNpR36HR/YC9d14m/5EP95foSB9jofTdDk1JzscqqXfBq4s8hZOlMp567Mj+epBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HB/eFCnp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749021888; c=relaxed/simple;
+	bh=d5VGZY3wjHIhKCGDSeV6VZbiBPYwu9t4ayf8AO8OlwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t/uNeO0tEagujOPUnteyJffivUmpFoBFjo305mmyAtnM4hMecE9S9xqh/2QSMmytvWY40c8eAFS1sdS9DWO0LJ5Rn4eoyI3HOshQLDC0D2L2mEFmpBtfBSSeeTH4obd2+9stFpKHx1GxNXob4nVsPHGZOJV4m2Efv8bgiccQbsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odyy8wQ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HB/eFCnp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CEE1C4CEED;
-	Wed,  4 Jun 2025 07:24:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odyy8wQ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD61C4CEE7;
+	Wed,  4 Jun 2025 07:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749021884;
-	bh=5SyUvppNuSDFqKzdDCKf9UQfWjYA+/m0ZdXQA8ZCk04=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=HB/eFCnpX+ZayuBp8txIrg5VYlULfE/p9+roKKsskMKtDPDWg3iddFh9c0PKAwgHQ
-	 Tly9R/+1+C4r+KZn7sSpeEQYBunh1UkK8DGxqRQ0vrGw4RGfSsxB7YM/Sl4WPbQmys
-	 IufgNyTgI00B5gSiglvXfe+Hj3Ksf2yPPGz0V3zMm053tXbb5N5GUg3pgihCdWxBp8
-	 QHOnjbFKzNi19tm6jZVM5NE+CxtQ3bx1kVA6CaxC/PtPcGUqZJDc2N6/cTVmrrfi5v
-	 UiWUewSS13sxl21kkENnQQ7x2ytAbLUNOrGGU8tnls5pKMbPx5F1i2Ga/XEaHehFS7
-	 5auOw4CmWmj7g==
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 53D511200043;
-	Wed,  4 Jun 2025 03:24:43 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Wed, 04 Jun 2025 03:24:43 -0400
-X-ME-Sender: <xms:u_Q_aM0p66c7BTBlfuIYsSicCe_pViw9XN91-QilwIDc3PiTvTfObQ>
-    <xme:u_Q_aHEWoV0s6rTr_mdGh1Z8Zo48w71MXZNmxSxmsnyRP3r7ZMx5rNMRPQ01nrMTO
-    Fi-5oH7tiPLS8-pJT0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddujeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlh
-    drohhrgheqnecuggftrfgrthhtvghrnhepjeejffetteefteekieejudeguedvgfeffeei
-    tdduieekgeegfeekhfduhfelhfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhi
-    thihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrd
-    horhhgsegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpth
-    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidrug
-    gvvhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghp
-    thhtoheptghlrghuughiuhdrmhgrnhhoihhlsehngihprdgtohhmpdhrtghpthhtohepvh
-    hlrgguihhmihhrrdholhhtvggrnhesnhigphdrtghomhdprhgtphhtthhopeifvghirdhf
-    rghnghesnhigphdrtghomhdprhgtphhtthhopeigihgrohhnihhnghdrfigrnhhgsehngi
-    hprdgtohhm
-X-ME-Proxy: <xmx:u_Q_aE5sTD0Kdfr_d2GhRgaixAi4cDUozX84ZsqAQekzD2Odxix8Zw>
-    <xmx:u_Q_aF2do4Prs4IglGpFHWYGkpGD4m9Y-ATuFOpdEw4urR-6I5qIXw>
-    <xmx:u_Q_aPFSCwDMnHJ9SKYi0HZA3GHdSOkGE76ZHFR45MARKZjOFyk2WQ>
-    <xmx:u_Q_aO9yaSbSBjSKAcVGz4qq4Lo_P0Ulge5Vjb0JlDXTyFCTkfh1lw>
-    <xmx:u_Q_aEk7GsFRp93W9iXWe4RGVXQK5UWMlfvk2tVEZ-jz5CImLKGqCYQE>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2BEE3700060; Wed,  4 Jun 2025 03:24:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1749021887;
+	bh=d5VGZY3wjHIhKCGDSeV6VZbiBPYwu9t4ayf8AO8OlwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=odyy8wQ5ON02zPffOE2SJpBxUwUYz5rmT5lsE2yOgNbb2cDXnIwb0ACfUhTX9uK8c
+	 bqVyvG+X44TOpZ6BjZz+yFBUGipEXDmEzroDs9BVd6rU1kd+cBPUWr4UygZJrRyDew
+	 2CvhfHn6EhiRYyOc99eZpfidTitTHMZs/OH+xzIToCaZNP4v3VLaXeHt8xZCAG+AR1
+	 HygqPF1tjl1zS5OKj2rvtKGX5HTGDoSj7qKMgGJEKYXjlNWHRkXg0QWLSlkBw8asQD
+	 FH64MJHBBiUK2uTUApfPhWXBcE6MzA63npN2mN7MtdGj9u9vf32BHi+hkcr+OfHtVx
+	 QFPWrpJi2/V7A==
+Date: Wed, 4 Jun 2025 09:24:38 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Peter Maydell <peter.maydell@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, andre.przywara@arm.com,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, suzuki.poulose@arm.com
+Subject: Re: [PATCH v4 01/26] dt-bindings: interrupt-controller: Add Arm GICv5
+Message-ID: <aD/0tuak7Hja8k4g@lpieralisi>
+References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
+ <20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org>
+ <aDhWlytLCxONZdF9@lpieralisi>
+ <CAFEAcA_3YLMSy+OsSsRayaRciQ1+jjh-dGzEjrh2Wa8BqdmqrA@mail.gmail.com>
+ <aD6ouVAXy5qcZtM/@lpieralisi>
+ <CAL_JsqJ5N2ZUBeAes=wexq=EstRSZ5=heF1_6crAw76yZ9uXog@mail.gmail.com>
+ <CAFEAcA-JrS0BiT66iin-pRVFadrY-pnJZ8TkDNxcjErknSCnUA@mail.gmail.com>
+ <CAL_JsqL7x53an2-MaLHP5tfVXb4JxT8ORUMaA8pL-gMsWLJqkA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tcd26d72acdec76a4
-Date: Wed, 04 Jun 2025 09:24:22 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Wei Fang" <wei.fang@nxp.com>, "Vladimir Oltean" <vladimir.oltean@nxp.com>
-Cc: "Claudiu Manoil" <claudiu.manoil@nxp.com>,
- "Clark Wang" <xiaoning.wang@nxp.com>,
- "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, Netdev <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>
-Message-Id: <b2068b86-dcbb-4fee-b091-4910e975a9b9@app.fastmail.com>
-In-Reply-To: 
- <PAXPR04MB85104C607BF23FFFD6663ABB886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
-References: <20250603105056.4052084-1-wei.fang@nxp.com>
- <20250603204501.2lcszfoiy5svbw6s@skbuf>
- <PAXPR04MB85104C607BF23FFFD6663ABB886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
-Subject: Re: [PATCH net] net: enetc: fix the netc-lib driver build dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqL7x53an2-MaLHP5tfVXb4JxT8ORUMaA8pL-gMsWLJqkA@mail.gmail.com>
 
-On Wed, Jun 4, 2025, at 04:44, Wei Fang wrote:
->> Ok, so to summarize, you want nxp-netc-lib.ko to be separate from
->> fsl-enetc-core.ko, because when you upstream the switch driver (also a
->> consumer of ntmp.o), you want it to depend just on nxp-netc-lib.ko but
->> not on the full fsl-enetc-core.ko.
->> If the only reverse dependency of NXP_NETC_LIB, NXP_ENETC4, becomes m,
->> then NXP_NETC_LIB also becomes m, but in reality, FSL_ENETC_CORE, via
->> cbdr.o, still depends on symbols from NXP_NETC_LIB.
->> 
->> So you influence NXP_NETC_LIB to not become m when its only selecter is m,
->> instead stay y.
->> 
->> Won't this need to change, and become even more complicated when
->> NXP_NETC_LIB gains another selecter, the switch driver?
->
-> The dependency needs to be updated as follows when switch driver is
-> added, to avoid the compilation errors.
->
-> default y if FSL_ENETC_CORE=y && (NXP_ENETC4=m || NET_DSA_NETC_SWITCH=m)
->
->> 
->> >  	help
->> >  	  This module provides common functionalities for both ENETC and NETC
->> >  	  Switch, such as NETC Table Management Protocol (NTMP) 2.0, common tc
->> > --
->> > 2.34.1
->> >
->> 
->> What about this interpretation? cbdr.o uses symbols from NXP_NETC_LIB,
->> so the Kconfig option controlling cbdr.o, aka FSL_ENETC_CORE, should
->> select NXP_NETC_LIB. This solves the problem in a way which is more
->> logical to me, and doesn't need to change when the switch is later added.
->> 
->
-> Yes, this is also a solution. I thought that LS1028A does not need the netc-lib
-> driver at all. Doing so will result in netc-lib being compiled on the LS1028A
-> platform, which may be unacceptable, so I did not do this. Since you think
-> this is better, I will apply this solution next. Thanks.
+On Tue, Jun 03, 2025 at 02:11:34PM -0500, Rob Herring wrote:
+> On Tue, Jun 3, 2025 at 10:37 AM Peter Maydell <peter.maydell@linaro.org> wrote:
+> >
+> > On Tue, 3 Jun 2025 at 16:15, Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Tue, Jun 3, 2025 at 2:48 AM Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > > >
+> > > > On Thu, May 29, 2025 at 02:17:26PM +0100, Peter Maydell wrote:
+> > > > > secure.txt says:
+> > > > > # The general principle of the naming scheme for Secure world bindings
+> > > > > # is that any property that needs a different value in the Secure world
+> > > > > # can be supported by prefixing the property name with "secure-". So for
+> > > > > # instance "secure-foo" would override "foo".
+> > >
+> > > Today I would say a 'secure-' prefix is a mistake. To my knowledge,
+> > > it's never been used anyways. But I don't have much visibility into
+> > > what secure world firmware is doing.
+> >
+> > QEMU uses it for communicating with the secure firmware if
+> > you run secure firmware on the virt board. It's done that
+> > since we introduced that binding. Indeed that use case is *why*
+> > the binding is there. It works fine for the intended purpose,
+> > which is "most devices are visible in both S and NS, but a few
+> > things are S only (UART, a bit of RAM, secure-only flash").
+> 
+> I meant "secure-" as a prefix allowed on *any* property, not
+> "secure-status" specifically, which is the only thing QEMU uses
+> AFAICT. IOW, I don't think we should be creating secure-reg,
+> secure-interrupts, secure-clocks, etc.
 
-I think this version should work, and make logical sense:
+Reading secure.txt, what does it mean "device present and usable in
+the secure world" ?
 
---- a/drivers/net/ethernet/freescale/enetc/Kconfig
-+++ b/drivers/net/ethernet/freescale/enetc/Kconfig
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- config FSL_ENETC_CORE
-        tristate
-+       select NXP_NETC_LIB if NXP_ENETC_NTMP
-        help
-          This module supports common functionality between the PF and VF
-          drivers for the NXP ENETC controller.
-@@ -22,6 +23,9 @@ config NXP_NETC_LIB
-          Switch, such as NETC Table Management Protocol (NTMP) 2.0, common tc
-          flower and debugfs interfaces and so on.
- 
-+config NXP_ENETC_NTMP
-+       bool
-+
- config FSL_ENETC
-        tristate "ENETC PF driver"
-        depends on PCI_MSI
-@@ -45,7 +49,7 @@ config NXP_ENETC4
-        select FSL_ENETC_CORE
-        select FSL_ENETC_MDIO
-        select NXP_ENETC_PF_COMMON
--       select NXP_NETC_LIB
-+       select NXP_ENETC_NTMP
-        select PHYLINK
-        select DIMLIB
-        help
+So:
 
-FSL_ENETC selects the feature it actually wants, and FSL_ENETC_CORE
-enables the module based on the set of features that are enabled.
-The switch module can then equally enable bool symbol. Not sure
-what the best name would be for that symbol, that depends on what
-you expect to get added to NXP_NETC_LIB.
+status = "disabled"
+secure-status = "okay"
 
-     Arnd
+basically means that the device in question allows secure-only MMIO
+access, is that what it says ?
+
+If that's the case and we really want to have all config frames
+in a single DT, would it be reasonable to have an IRS/ITS DT node
+per-frame ?
+
+Then yes, the secure- tag is not enough any longer (because we have to
+cope with 4 interrupt domains) but that's a separate problem - again,
+this would leave the current reviewed bindings unchanged.
+
+Other than that as I mentioned we could use (? aka clutching at straws)
+reg-names but I don't think it is correct to have in the DT address
+space that the CPU is not allowed to address.
+
+Lorenzo
