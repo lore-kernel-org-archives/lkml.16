@@ -1,196 +1,159 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0332D70810;
-	Wed,  4 Jun 2025 14:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD3870810;
+	Wed,  4 Jun 2025 14:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749046613; cv=none; b=mcs3vFSqanAxXuQt0CI8POG0agfhg9txlU2I/OZnsBM3va14Jh44w+TVaxfPNOvILEaegC1RLBtdvpTntq1O6652U7SdK5ceMbfv2A5fOgSrHOIHMDb+mV1sJXMuL+wsrchPXI6t8PlxSOrtc5aY1UzX1PDke+ZKwU6F2XHgaIE=
+	t=1749046640; cv=none; b=GhecgNakvgXcuAwiWLWbo+Qw0Blp3VtayZyrPO+x5Xor09f48AM26KKeBnYge3U5pysk7P7IeiWzQKhvFsfSFzA0PaZdrwxOMt/MPQ0XYquGufAgm8uCSJ1G8lM1Hm5mYI9duqkqkSOxFVLMcQTZ06qGWjk/2dRI5cGA278lG1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749046613; c=relaxed/simple;
-	bh=/YWykEisRQ2WmTIDjG72mSa5eF+TJ63K3gwljHiPuBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bf73hQtT+BCvcwky9gYL1w+Msnc/ELY/CWLYm/dBVbWu5idwEl3gWKRxNRkjYZh/6vDMit7w1SpNqnuOkiPPlZCHCB7EG5DtWW7rSz0mxGCZt12h654rYlobJ4cnr27fNT5EuqO6gM/boWYD/LNwVjGmfd96/ZmEY4KxD4bZYnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YiqDS7o5; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749046640; c=relaxed/simple;
+	bh=N3zAS7KbRmxSSWpgx3DYsurs4M4ohLgCBpXoeWFUkw0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=udv7KiIuiohS5PjCDNv39iJGo4T+rSmXHlVwoIqDLMDwVjXVTe2aErOZx9DbjIN4lKFARHQSLpfYzWViV1Iu+cFJlqD8Jj33HcLXNHRnGrRggF1Jbtc3/Hubtr/pOOr3ps6Ud8pfLNl9IcMduc7NKTTE/EJ27N36iu2jdkBhdIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DO5iJMat; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YiqDS7o5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QNl5vGajRvJwYB9vPMZwKE2YZ8Aq0k/Jqe04/75BEQQ=; b=YiqDS7o5oRM1rJDLzzov6oLFeh
-	XiW5LbKWoWlihyb1MEdtj2n6iZyd9dkUbopJnh0GUbx3Y5AMT57huRJctGlaf5KA7Xt+7tgLposOn
-	UsXCRNTbhgHXiRBJabcBVBDzSvvqbcSHV6HGQSTw1sLnl/kshU+h5mhvket7tvG02PQllQXvLFR59
-	QiKC7oYTu0t9ynzaCLDn2ZGBIfEDUZ7Vj2ZtyeARJQADCMR6DagT9CjkTzI3bwmDlsUGyZXL/C3M5
-	KWqD5mMBlTe4qJWkc+KIt1yJ/8ck2zVYh5ZsyTONE4Zj+VveA8+EHGGkIlNMWPJOLZvXLQr8Cvsb1
-	AtZ7SQcA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMov3-00000000uH8-2nkQ;
-	Wed, 04 Jun 2025 14:16:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8337F300787; Wed,  4 Jun 2025 16:16:40 +0200 (CEST)
-Date: Wed, 4 Jun 2025 16:16:40 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250604141640.GL38114@noisy.programming.kicks-ass.net>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
- <20250603144414.GC38114@noisy.programming.kicks-ass.net>
- <20250604080339.GB35970@noisy.programming.kicks-ass.net>
- <20250604101821.GC8020@e132581.arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DO5iJMat"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749046638; x=1780582638;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=N3zAS7KbRmxSSWpgx3DYsurs4M4ohLgCBpXoeWFUkw0=;
+  b=DO5iJMatiaPgo0B+pKqysW/ezQSUbW/50nyWb6orpugLeqrvpCWYO348
+   EoXB5f2eqKw6WVfn+bHtqSi659XwvBHhVASD/TCxOEiXjrXPedgCJRkyd
+   M7seKPOm7rEk8nz6pGTocx6o7uGZyWUYdxcLEHbqFWaYSvixk8qGPBfTz
+   3fgI9vMnGN0aDt/53lYNrHDSboLw1xCV7bKYzmCBG6R1hXFbkJbLHlvq/
+   bEBzqRT4sK25M04lJkQYlKcxm3NVUbfkg7TYMOJCPXR/MWjf57rFAgLTl
+   1QO/FYXQdw7ePbSCzwpMUUWJ8ruaulP8Bj89fKkxK4MIbZ6iXK1y91MBc
+   Q==;
+X-CSE-ConnectionGUID: rWzHQ6hdT+uRNpUeFdz49g==
+X-CSE-MsgGUID: fqTOauj6QgOI6NVqdudaeg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="62489080"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="62489080"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:17:17 -0700
+X-CSE-ConnectionGUID: zm8arlrJTxmzd+YMP9V39w==
+X-CSE-MsgGUID: 231SeiXeTnuDl2uDP9aoOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="145169480"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmviesa007.fm.intel.com with ESMTP; 04 Jun 2025 07:17:15 -0700
+Message-ID: <459184db-6fc6-453b-933d-299f827bdc55@linux.intel.com>
+Date: Wed, 4 Jun 2025 17:17:14 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604101821.GC8020@e132581.arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] usb: xhci: Skip xhci_reset in xhci_resume if xhci
+ is being removed
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: "mathias.nyman@intel.com" <mathias.nyman@intel.com>,
+ Roy Luo <royluo@google.com>,
+ "quic_ugoswami@quicinc.com" <quic_ugoswami@quicinc.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "michal.pecio@gmail.com" <michal.pecio@gmail.com>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250522190912.457583-1-royluo@google.com>
+ <20250522190912.457583-2-royluo@google.com>
+ <20250523230633.u46zpptaoob5jcdk@synopsys.com>
+ <b982ff0e-1ae8-429d-aa11-c3e81a9c14e5@linux.intel.com>
+ <20250529011745.xkssevnj2u44dxqm@synopsys.com>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20250529011745.xkssevnj2u44dxqm@synopsys.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 04, 2025 at 11:18:21AM +0100, Leo Yan wrote:
-> On Wed, Jun 04, 2025 at 10:03:39AM +0200, Peter Zijlstra wrote:
-
-> > And now we have the sitation that __perf_remove_from_context() can do:
-> > 
-> >   {ACTIVE,INACTIVE,OFF,ERROR} -> {OFF,EXIT,REVOKED,DEAD}
+On 29.5.2025 4.17, Thinh Nguyen wrote:
+> On Mon, May 26, 2025, Mathias Nyman wrote:
+>> On 24.5.2025 2.06, Thinh Nguyen wrote:
+>>> Hi Mathias, Roy,
+>>>
+>>> On Thu, May 22, 2025, Roy Luo wrote:
+>>>> xhci_reset() currently returns -ENODEV if XHCI_STATE_REMOVING is
+>>>> set, without completing the xhci handshake, unless the reset completes
+>>>> exceptionally quickly. This behavior causes a regression on Synopsys
+>>>> DWC3 USB controllers with dual-role capabilities.
+>>>>
+>>>> Specifically, when a DWC3 controller exits host mode and removes xhci
+>>>> while a reset is still in progress, and then attempts to configure its
+>>>> hardware for device mode, the ongoing, incomplete reset leads to
+>>>> critical register access issues. All register reads return zero, not
+>>>> just within the xHCI register space (which might be expected during a
+>>>> reset), but across the entire DWC3 IP block.
+>>>>
+>>>> This patch addresses the issue by preventing xhci_reset() from being
+>>>> called in xhci_resume() and bailing out early in the reinit flow when
+>>>> XHCI_STATE_REMOVING is set.
+>>>>
+>>>> Cc: stable@vger.kernel.org
+>>>> Fixes: 6ccb83d6c497 ("usb: xhci: Implement xhci_handshake_check_state() helper")
+>>>> Suggested-by: Mathias Nyman <mathias.nyman@intel.com>
+>>>> Signed-off-by: Roy Luo <royluo@google.com>
+>>>> ---
+>>>>    drivers/usb/host/xhci.c | 5 ++++-
+>>>>    1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+>>>> index 90eb491267b5..244b12eafd95 100644
+>>>> --- a/drivers/usb/host/xhci.c
+>>>> +++ b/drivers/usb/host/xhci.c
+>>>> @@ -1084,7 +1084,10 @@ int xhci_resume(struct xhci_hcd *xhci, bool power_lost, bool is_auto_resume)
+>>>>    		xhci_dbg(xhci, "Stop HCD\n");
+>>>>    		xhci_halt(xhci);
+>>>>    		xhci_zero_64b_regs(xhci);
+>>>> -		retval = xhci_reset(xhci, XHCI_RESET_LONG_USEC);
+>>>> +		if (xhci->xhc_state & XHCI_STATE_REMOVING)
+>>>> +			retval = -ENODEV;
+>>>> +		else
+>>>> +			retval = xhci_reset(xhci, XHCI_RESET_LONG_USEC);
+>>>
+>>> How can this prevent the xhc_state from changing while in reset? There's
+>>> no locking in xhci-plat.
+>>
+>> Patch 2/2, which is the revert of 6ccb83d6c497 prevents xhci_reset() from
+>> aborting due to xhc_state flags change.
+>>
+>> This patch makes sure xHC is not reset twice if xhci is resuming due to
+>> remove being called. (XHCI_STATE_REMOVING is set).
 > 
-> A detailed transition is:
+> Wouldn't it still be possible for xhci to be removed in the middle of
+> reset on resume? The watchdog may still timeout afterward if there's an
+> issue with reset right?
 > 
->   Case 1: {ACTIVE} -> {INACTIVE} -> {OFF,EXIT,REVOKED,DEAD}
 
-It can also start with INACTIVE, but yeah..
- 
->   Case 2: {ERROR} -> {ERROR,EXIT,REVOKED,DEAD}
->   Case 3: {OFF} -> {OFF,EXIT,REVOKED,DEAD}
+Probably yes, but that problem is the same if we only revert 6ccb83d6c497.
 
+>> Why intentionally bring back the Qcom watchdog issue by only reverting
+>> 6ccb83d6c497 ?. Can't we solve both in one go?
 > 
-> > Where the {OFF,ERROR} -> * transition already have
-> > perf_cgroup_event_disable(), but the {ACTIVE,INACTIVE} -> * part has
-> > not.
-> 
-> Just a minor concern.
-> 
-> I noticed perf_put_aux_event() sets the ERROR state for sibling events
-> of an AUX event. 
+> I feel that the fix is doesn't cover all the scenarios, that's why I
+> suggest the revert for now and wait until the fix is properly tested
+> before applying it to stable?
 
-There is also perf_remove_sibling_event(), which can cause ERROR.
+Ok, we have different views on this.
 
-> IIUC, the AUX event is the group leader, so we only
-> need to clean up the cgroup pointer for the AUX event, and simply set
-> the ERROR state for its sibling events, correct?
+I think we should avoid causing as much known regression as possible even
+if the patch  might not cover all scenarios.
 
-Not sure; I forever forget how the AUX events are supposed to work :-/
+By reverting 6ccb83d6c497 we fix a SNPS DWC3 regression, but at the same
+time bring back the Qcom issue, so cause another regression.
 
-It might be prudent to do something like so:
+We can avoid the main part or the Qcom regression by adding this patch as
+issue is with (long) xhci reset during resume if xhci is being removed, and
+driver always resumes xhci during ->remove callback.
 
+If we discover the patch is not perfect then we fix it
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f34c99f8ce8f..e6583747838a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2149,8 +2149,9 @@ perf_aux_output_match(struct perf_event *event, struct perf_event *aux_event)
- }
- 
- static void put_event(struct perf_event *event);
--static void event_sched_out(struct perf_event *event,
--			    struct perf_event_context *ctx);
-+static void __event_disable(struct perf_event *event,
-+			    struct perf_event_context *ctx,
-+			    enum perf_event_state state);
- 
- static void perf_put_aux_event(struct perf_event *event)
- {
-@@ -2183,8 +2184,7 @@ static void perf_put_aux_event(struct perf_event *event)
- 		 * state so that we don't try to schedule it again. Note
- 		 * that perf_event_enable() will clear the ERROR status.
- 		 */
--		event_sched_out(iter, ctx);
--		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-+		__event_disable(event, ctx, PERF_EVENT_STATE_ERROR);
- 	}
- }
- 
-@@ -2242,18 +2242,6 @@ static inline struct list_head *get_event_list(struct perf_event *event)
- 				    &event->pmu_ctx->flexible_active;
- }
- 
--/*
-- * Events that have PERF_EV_CAP_SIBLING require being part of a group and
-- * cannot exist on their own, schedule them out and move them into the ERROR
-- * state. Also see _perf_event_enable(), it will not be able to recover
-- * this ERROR state.
-- */
--static inline void perf_remove_sibling_event(struct perf_event *event)
--{
--	event_sched_out(event, event->ctx);
--	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
--}
--
- static void perf_group_detach(struct perf_event *event)
- {
- 	struct perf_event *leader = event->group_leader;
-@@ -2289,8 +2277,15 @@ static void perf_group_detach(struct perf_event *event)
- 	 */
- 	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
- 
-+		/*
-+		 * Events that have PERF_EV_CAP_SIBLING require being part of
-+		 * a group and cannot exist on their own, schedule them out
-+		 * and move them into the ERROR state. Also see
-+		 * _perf_event_enable(), it will not be able to recover this
-+		 * ERROR state.
-+		 */
- 		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
--			perf_remove_sibling_event(sibling);
-+			__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
- 
- 		sibling->group_leader = sibling;
- 		list_del_init(&sibling->sibling_list);
-@@ -2562,6 +2557,19 @@ static void perf_remove_from_context(struct perf_event *event, unsigned long fla
- 	event_function_call(event, __perf_remove_from_context, (void *)flags);
- }
- 
-+static void __event_disable(struct perf_event *event,
-+			    struct perf_event_context *ctx,
-+			    enum perf_event_state state)
-+{
-+	if (event == event->group_leader)
-+		group_sched_out(event, ctx);
-+	else
-+		event_sched_out(event, ctx);
-+
-+	perf_event_set_state(event, state);
-+	perf_cgroup_event_disable(event, ctx);
-+}
-+
- /*
-  * Cross CPU call to disable a performance event
-  */
-@@ -2575,15 +2583,7 @@ static void __perf_event_disable(struct perf_event *event,
- 
- 	perf_pmu_disable(event->pmu_ctx->pmu);
- 	ctx_time_update_event(ctx, event);
--
--	if (event == event->group_leader)
--		group_sched_out(event, ctx);
--	else
--		event_sched_out(event, ctx);
--
--	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
--	perf_cgroup_event_disable(event, ctx);
--
-+	__event_disable(event, ctx, PERF_EVENT_STATE_OFF);
- 	perf_pmu_enable(event->pmu_ctx->pmu);
- }
- 
+Thanks
+Mathias
