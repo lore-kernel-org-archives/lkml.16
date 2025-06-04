@@ -1,104 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9212D25F968
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 03:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id B818770838;
+	Wed,  4 Jun 2025 03:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749008655; cv=none; b=I5RgUkhndHnYj63SOl71ywtcshvdfjHpiTuMGn32fwL7jPnylBfPv/YJWTU9X8mFNmEcTMolgOBw5J6MIpeaF2ZgeHPour/zChptjzDv0SzxA3yshi0iUihluXDejXxO0Y6/oyP/sdGVWlVZvV3iinsYgWn3qyQ/JnH6NgMiT1M=
+	t=1749008935; cv=none; b=sIWQlYcMoNQVA4RfvO52Q576zeZKfnfxSLD0P2yAMXz/gSE7xjFZXNioOCImal4gxYWUkjpenwrHF0XkODvVr+1ZWyflomQgRoKXgUwWJ6Mbjoeg5Age3fRgOP90HnpNc7DsyvdtK00njlb5wDbeen9MnaTc5eJTHZWiFvE4Du8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749008655; c=relaxed/simple;
-	bh=BbZ9Q/nSUbSTJzvV4QKRTDB8TX7GZOe3HXqU9MTNjPk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=b6IZ8DRz2Fzk6KkG+3xpBvSlfcPJuRv1JwEcvOiYUww97TsCFV8jY2xx38AGNDJjtyhQVHiu7o4sSYlaCyXae8eodHdvx2qNK+15uLs7WlotjFRDWPWymjapHUB92uACFUEZw3vwtRARKhvf2cDlhUhSPwXOVwMETRREQBaWEZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cJi1R5/a; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cJi1R5/a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93F27C4CEE7;
-	Wed,  4 Jun 2025 03:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749008654;
-	bh=BbZ9Q/nSUbSTJzvV4QKRTDB8TX7GZOe3HXqU9MTNjPk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cJi1R5/aIPln+w9qGzHl/DWn683Q6nxxiPcT/3R/fCYrk0kzHS7vHZnSaS2fAul42
-	 rf4jBfuCevApSLpY+BJLYo1N6p6upSXY7zWSVPYYlBoMmxUywR+92+eVct5jlDPhxm
-	 5QE2YUH/2Iw0a5E8vfFTTCMvkDVOulUDWx5KEex4=
-Date: Tue, 3 Jun 2025 20:44:14 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: lizhe.67@bytedance.com
-Cc: david@redhat.com, jgg@ziepe.ca, jhubbard@nvidia.com, peterx@redhat.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, dev.jain@arm.com,
- muchun.song@linux.dev
-Subject: Re: [PATCH v2] gup: optimize longterm pin_user_pages() for large
- folio
-Message-Id: <20250603204414.f2963e4a094e360cad7f966e@linux-foundation.org>
-In-Reply-To: <20250604031536.9053-1-lizhe.67@bytedance.com>
-References: <20250604031536.9053-1-lizhe.67@bytedance.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749008935; c=relaxed/simple;
+	bh=p1azAzD1JQm81XfjGQoJVYO2dhg0xi6TF9uyuTGkfnw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ri1eeYXZbGXitgJ1RMhAJnS2b6vza8qGOqStRB8mfVS1c7Ue60PA+XU1Ghwdb6UMAho829CcmuXO50rCbkDgpE3Dk/3ZYh8XylZf3J4cfSXq+dQOposbV3diNQk3GpnQK6dSic5mHrsC95TPF065DPMKFN1vGaABZSWDX02kf/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id E26EB6018DA57;
+	Wed,  4 Jun 2025 11:48:35 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neil@brown.name,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Cc: Su Hui <suhui@nfschina.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH v2] nfsd: Change the type of ek_fsidtype from int to u8 and use kstrtou8
+Date: Wed,  4 Jun 2025 11:47:26 +0800
+Message-Id: <20250604034725.450911-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed,  4 Jun 2025 11:15:36 +0800 lizhe.67@bytedance.com wrote:
+The valid values for ek_fsidtype are actually 0-7 so it's better to
+change the type to u8. Also using kstrtou8() to relpace simple_strtoul(),
+kstrtou8() is safer and more suitable for u8.
 
-> From: Li Zhe <lizhe.67@bytedance.com>
-> 
-> In the current implementation of the longterm pin_user_pages() function,
-> we invoke the collect_longterm_unpinnable_folios() function. This function
-> iterates through the list to check whether each folio belongs to the
-> "longterm_unpinnabled" category. The folios in this list essentially
-> correspond to a contiguous region of user-space addresses, with each folio
-> representing a physical address in increments of PAGESIZE. If this
-> user-space address range is mapped with large folio, we can optimize the
-> performance of function pin_user_pages() by reducing the frequency of
-> memory accesses using READ_ONCE. This patch leverages this approach to
-> achieve performance improvements.
-> 
-> The performance test results obtained through the gup_test tool from the
-> kernel source tree are as follows. We achieve an improvement of over 70%
-> for large folio with pagesize=2M. For normal page, we have only observed
-> a very slight degradation in performance.
-> 
-> Without this patch:
-> 
->     [root@localhost ~] ./gup_test -HL -m 8192 -n 512
->     TAP version 13
->     1..1
->     # PIN_LONGTERM_BENCHMARK: Time: get:13623 put:10799 us#
->     ok 1 ioctl status 0
->     # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
->     [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
->     TAP version 13
->     1..1
->     # PIN_LONGTERM_BENCHMARK: Time: get:129733 put:31753 us#
->     ok 1 ioctl status 0
->     # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-> 
-> With this patch:
-> 
->     [root@localhost ~] ./gup_test -HL -m 8192 -n 512
->     TAP version 13
->     1..1
->     # PIN_LONGTERM_BENCHMARK: Time: get:4075 put:10792 us#
->     ok 1 ioctl status 0
->     # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
->     [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
->     TAP version 13
->     1..1
->     # PIN_LONGTERM_BENCHMARK: Time: get:130727 put:31763 us#
->     ok 1 ioctl status 0
->     # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+Signed-off-by: Su Hui <suhui@nfschina.com>
+Suggested-by: NeilBrown <neil@brown.name>
+---
+v2:
+ - change the type of ek_fsidtype to u8 and using kstrtou8.
+v1:
+ - https://lore.kernel.org/all/20250527092548.1931636-1-suhui@nfschina.com/
 
-I see no READ_ONCE()s in the patch and I had to go off and read the v1
-review to discover that the READ_ONCE is invoked in
-page_folio()->_compound_head().  Please help us out by including such
-details in the changelogs.
+ps: I don't add the v1 patch's review tag because it's very different
+between v1 and v2.
 
-Is it credible that a humble READ_ONCE could yield a 3x improvement in
-one case?  Why would this happen?
+ fs/nfsd/export.c | 8 +++-----
+ fs/nfsd/export.h | 2 +-
+ fs/nfsd/trace.h  | 4 ++--
+ 3 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 88ae410b4113..cadfc2bae60e 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -82,8 +82,7 @@ static int expkey_parse(struct cache_detail *cd, char *mesg, int mlen)
+ 	int len;
+ 	struct auth_domain *dom = NULL;
+ 	int err;
+-	int fsidtype;
+-	char *ep;
++	u8 fsidtype;
+ 	struct svc_expkey key;
+ 	struct svc_expkey *ek = NULL;
+ 
+@@ -109,10 +108,9 @@ static int expkey_parse(struct cache_detail *cd, char *mesg, int mlen)
+ 	err = -EINVAL;
+ 	if (qword_get(&mesg, buf, PAGE_SIZE) <= 0)
+ 		goto out;
+-	fsidtype = simple_strtoul(buf, &ep, 10);
+-	if (*ep)
++	if (kstrtou8(buf, 10, &fsidtype))
+ 		goto out;
+-	dprintk("found fsidtype %d\n", fsidtype);
++	dprintk("found fsidtype %u\n", fsidtype);
+ 	if (key_len(fsidtype)==0) /* invalid type */
+ 		goto out;
+ 	if ((len=qword_get(&mesg, buf, PAGE_SIZE)) <= 0)
+diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
+index 4d92b99c1ffd..b9c0adb3ce09 100644
+--- a/fs/nfsd/export.h
++++ b/fs/nfsd/export.h
+@@ -88,7 +88,7 @@ struct svc_expkey {
+ 	struct cache_head	h;
+ 
+ 	struct auth_domain *	ek_client;
+-	int			ek_fsidtype;
++	u8			ek_fsidtype;
+ 	u32			ek_fsid[6];
+ 
+ 	struct path		ek_path;
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index 3c5505ef5e3a..b244c6b3e905 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -344,7 +344,7 @@ TRACE_EVENT(nfsd_exp_find_key,
+ 		 int status),
+ 	TP_ARGS(key, status),
+ 	TP_STRUCT__entry(
+-		__field(int, fsidtype)
++		__field(u8, fsidtype)
+ 		__array(u32, fsid, 6)
+ 		__string(auth_domain, key->ek_client->name)
+ 		__field(int, status)
+@@ -367,7 +367,7 @@ TRACE_EVENT(nfsd_expkey_update,
+ 	TP_PROTO(const struct svc_expkey *key, const char *exp_path),
+ 	TP_ARGS(key, exp_path),
+ 	TP_STRUCT__entry(
+-		__field(int, fsidtype)
++		__field(u8, fsidtype)
+ 		__array(u32, fsid, 6)
+ 		__string(auth_domain, key->ek_client->name)
+ 		__string(path, exp_path)
+-- 
+2.30.2
 
