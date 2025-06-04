@@ -1,71 +1,70 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11020126.outbound.protection.outlook.com [52.101.69.126])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013062.outbound.protection.outlook.com [40.107.159.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6C414C5B0;
-	Wed,  4 Jun 2025 09:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.126
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B136428C5C0;
+	Wed,  4 Jun 2025 09:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.62
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749028269; cv=fail; b=kg0zCpCy7VZNzxA9CPq7qRVg79M2jUAylODd9HmfLQLJgntNQSJ9ixn6gk3thtdpf7CoQXLRrj8fq87I466Ybx1AVTPJRP1baByrDYprtHQUaGfou4MIPsCFLIrM4jiK6pnMSM9nMTDGdKmT1WT80MBlsiii9p6Tp2zwu6xjUWE=
+	t=1749028285; cv=fail; b=p6PY0lfToRvze3yWq+9UkW5OoZ33x+2Pi1KqMyPWqW6WPgd1rooeJvD3tImxnRGOrvY3AC3/gLpTCfDSWe5wDNuLW2hrBv7G+305OC4pagP7O2u/Kc1vB6ZLKeTSlPs0Uwm4X5dzel3rScZ0UFQYNkh3ANfH3wg6fjuzLsCw7hE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749028269; c=relaxed/simple;
-	bh=2yuUcv043zh5aPwHbWW8PDxSBqfOdzBCvYhR0xpU08Y=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=X0iWstLqFO7CZ/+A232czyXJ3JfwYjGvLZGBCdqfnPKTWrF//QW0+VicMxrmsYvp8uh+Gq5GNouq/jUDlKtxdJgz/JSqEHFSL8BReFKUhEqV3ngOumwTeyMxjSxjKuAr/zpPtCFTj4j+vlS+1YktzVPGjZY1vbZtZhcAdRW2/wU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; dkim=pass (1024-bit key) header.d=prodrive-technologies.com header.i=@prodrive-technologies.com header.b=UURW2Rt8; arc=fail smtp.client-ip=52.101.69.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
+	s=arc-20240116; t=1749028285; c=relaxed/simple;
+	bh=gHycmTpFhFQMXDtIoNBrrQwCvsgIrqrqljjzJYf1P4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jCQ7o45COXKXj+3p3+b5gT2R6RQCldU/BD0ckiTlBwJxb/KGO85QR00TNCQRIjs3trJBXk9DhbxRBe8hN3A7WNXMUZ6Gk+FAAImqAMQIq/LRlves7eR3tOCsr9hn7zQmL7/ZWWEvHo8A66alOwGNBRy4GTNuE0Momy+m1bwFCjg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Hbccwess; arc=fail smtp.client-ip=40.107.159.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=prodrive-technologies.com header.i=@prodrive-technologies.com header.b="UURW2Rt8"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Hbccwess"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xGrlM7UndNli7sxgewy3XyfXXqIE8BDnY7jKFur5iXxsORb8BtXj0XiTcpVz5BWDz5pGHS3AZaHVZIZ58d+bexeECGfmcZTlTUqcBvoxo3fJwdtBdvAUV8vTKNsl/GdVg7Wnd/RSCg5i9pkfff4lkzEWUuxteD0nlEahWQfef/HZBKr429vkHZe7/vHa+hHfVmcH8wmiUnD5Oz3oC+iHm/fsvJHOZwB2XMMwX+m6A2P7cLjS/3OcCLCcLa8I2xy1WOOjKbr6/GvJpLydQWuGchKSbaqmrl/zk2R++LP6WH/3FPWlFPWe8LXXTjHsZTDYwC67boO1Si5nOJQRHNX+VA==
+ b=IGWUJgm6co1rWyQbPCFk2myuinSCivjiWMFum4I+QwTlDMS7uVk3QWSgJdF8uRIhQxlMGkB8kR4R9mhg5Q1peOkwYsTiT5h04QeJ9GsiSpxLzMbbz3/zYpschqv/jmOCL/NrraWMiYZBvv0vOVyKt1kyj9l6VuNRAUFxpM1qTtPtHlLWtZySTTx5QA1G9NL3HcH4A7qZdb1DmUOGyvHRJdq3dOnJmgUbfr0bsIlAh5LmWqpzUs9ul2LisQsplyTc/JsUecH7EynuH7nWJjDCu63tHIAlPnqQ/UVXbGOaurk65H7JL5e1nwfc/xKspQs4Ek+u65mIPPZWx81h03upnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SMA6an4pApqcdKIpmq/GV3XFf3TP90ORHBCQp7q5V6w=;
- b=FhmiWJ8IkURF7iGNmkMVRBJjJN/OB46IWYSUrUgthpeJkZUdwfxauvk0waf7CXGDbIO9/PgPfGTyHDFzDWqbGhACiz5ZBQMi9t1+cKuN1T9YHV22PvWC/1ZRuzMGZYdJU6Cat9wabsBDerHIaHyK1T8hbMm2VWIxdx00Pkbft5s7esbiB5mw6Ghy9hmxgh/qxdvGYfR2DMsKCcrnsad2fZtQgCcQ/GliVJhkmJ908dUwYCrMKa8qqc7xyH0LATKJjXj3AsBPonmW+E45sCl3YNY1rvaEQWQ4QS1UYaOk4HJGzhraLem85de01eVqN0rAFupeQKX/J9Xl4qJYh4dC1g==
+ bh=tJlvia4hKSF+zZN5jjwNuYuxL1SPSWQM30qYj7SQ+rg=;
+ b=tenXxZDyys7hO+AAo+z+Kbz6r7PwGd/iunD43NO9iPfRmy4VuC75np4cS/SNWV32pFo9502kGCunn2Up//AUeY+Bw9CbB8CgZ0N9uJW4eGjsuVD2C+mUAhnutSdRaOx+PIVKnPyK0XtHLfZ23aZXFpzhzSurQStWIpVSEi4FfWzuHgJHJPC9mS6wDAJ+cpNkXfILP1UImN94R+hrxbRJEeWFIUI1biOt/DWqobkisxTIwi6FnFCZTps5EoeiwaBbkqBXNPtTb+aiJzcTAJTlIzl+ZzPGCwGDHijzAIc72uy2DPCexl2SgecYzgE0pPf4+FlfrvsviTEYScI4tvJK8A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prodrive-technologies.com; dmarc=pass action=none
- header.from=prodrive-technologies.com; dkim=pass
- header.d=prodrive-technologies.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=prodrive-technologies.com; s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SMA6an4pApqcdKIpmq/GV3XFf3TP90ORHBCQp7q5V6w=;
- b=UURW2Rt889HipYW/YTpmDkaX5OUKIX4svXQX2iyXgvWr7mlbl6pnjhZUn2K2Pe2uOdlGmUDNgC7UQ2nvUiCn/O68ge/eLRSZOrrbRoQATST/JogPAINo4OokfnDnSOmYgS374VT427BMC73RPGMPEznCoeLZ4pJ5PawU4QJOUIA=
+ bh=tJlvia4hKSF+zZN5jjwNuYuxL1SPSWQM30qYj7SQ+rg=;
+ b=Hbccwess3Ik8Nd8LEmDhBAXAx7/jI2YokOdHRGjrUmU3r5nj2phS8uEjnzePBY/aMhe5G9DqH7kT/XEaTDKbMGv4V3w7TZrcISj23dM8YOucwIQ1JrWiylUShYOJFyhz9S3ga9rMt292oSEhQtRcuK+bLKDUcPSI6qDfqz8ULfLUxoVxkFlfBvNnU6GZ7vTu95JW9rF89vnIn24syKxG6i531R4mUWiuVACbjyzDTcKwVRtsDaeO+Py0xNGgISMLJDFLbEhTfJK1FRJpvICh/7A1F+lVIOVgF2mTDa8YdDmyCOBs3z3oL4GAhp3feKkygTMt6jBqBmccgHr7yIHtxA==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=prodrive-technologies.com;
-Received: from AS8PR02MB9532.eurprd02.prod.outlook.com (2603:10a6:20b:5a8::17)
- by GV2PR02MB8848.eurprd02.prod.outlook.com (2603:10a6:150:b7::7) with
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by PA1PR04MB10528.eurprd04.prod.outlook.com (2603:10a6:102:445::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.17; Wed, 4 Jun
- 2025 09:10:58 +0000
-Received: from AS8PR02MB9532.eurprd02.prod.outlook.com
- ([fe80::4636:d263:14f1:bced]) by AS8PR02MB9532.eurprd02.prod.outlook.com
- ([fe80::4636:d263:14f1:bced%4]) with mapi id 15.20.8792.026; Wed, 4 Jun 2025
- 09:10:58 +0000
-Message-ID: <4d3f3552-de42-430a-afaf-b852784817ee@prodrive-technologies.com>
-Date: Wed, 4 Jun 2025 11:10:57 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: regulator: add pca9450: Add
- regulator-allowed-modes
-To: Krzysztof Kozlowski <krzk@kernel.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250525071823.819342-1-martijn.de.gouw@prodrive-technologies.com>
- <aced65a2-937e-494d-a3bd-aa9b295f73b7@prodrive-technologies.com>
- <5ea091c6-7e78-4945-81b4-9b5c427d2e4d@kernel.org>
- <194f6c85-ad28-4217-b014-54bc64c6a9ca@prodrive-technologies.com>
- <ab813159-14e1-434f-8055-80486f5d6b3f@kernel.org>
-Content-Language: en-US
-From: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
-In-Reply-To: <ab813159-14e1-434f-8055-80486f5d6b3f@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4P251CA0030.EURP251.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d3::18) To AS8PR02MB9532.eurprd02.prod.outlook.com
- (2603:10a6:20b:5a8::17)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Wed, 4 Jun
+ 2025 09:11:16 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%3]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
+ 09:11:15 +0000
+Date: Wed, 4 Jun 2025 12:11:11 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Wei Fang <wei.fang@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Netdev <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH net] net: enetc: fix the netc-lib driver build dependency
+Message-ID: <20250604091111.oo2o2xd2zeqqisaf@skbuf>
+References: <20250603105056.4052084-1-wei.fang@nxp.com>
+ <20250603204501.2lcszfoiy5svbw6s@skbuf>
+ <PAXPR04MB85104C607BF23FFFD6663ABB886CA@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <b2068b86-dcbb-4fee-b091-4910e975a9b9@app.fastmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2068b86-dcbb-4fee-b091-4910e975a9b9@app.fastmail.com>
+X-ClientProxiedBy: VI1P195CA0091.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:802:59::44) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,136 +72,168 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB9532:EE_|GV2PR02MB8848:EE_
-X-MS-Office365-Filtering-Correlation-Id: de13f035-8e7e-4eb2-a09d-08dda347b807
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|PA1PR04MB10528:EE_
+X-MS-Office365-Filtering-Correlation-Id: b03f4188-d01b-48bc-de2b-08dda347c1d6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZjQ4VTJ2aTAwVlp1K3FmV3pndGJFZVdFbkJndjI2Q3d2QWxkSFViV0RRWjBP?=
- =?utf-8?B?cmp0NmdEVERJSW50L1V4WWRMTUJkN0dSa08zVzVDRjBqME9aQVNyYy95c2FE?=
- =?utf-8?B?OVF5cHFTU1psdldVRUpYbU91ZXJ5M3ovR2hrZDB2cHJHS3orU2c0aUduejJp?=
- =?utf-8?B?ZEtIWjhUbzR1M0VCUTFERWdZSElldVZ6c1hNSCtTRXp4ZlpsbTJyTDQrYjZt?=
- =?utf-8?B?RmFmMmUyRzBrVjJXNXJPOXYzcHJsa0s2bUVYR0ZaTG1lMWhIUmJFbnc0d2JE?=
- =?utf-8?B?QURjQWpTVkVEbjhzUjRrUEpYL2NLbERudU9tUjhvNlNHSDhsRmV6bG43SS8x?=
- =?utf-8?B?NkM1bnFaaHE4b3Nkam5uSGlnMkVmbjVkdDZiS3pld2ZJQnZycklDUHNGdEZn?=
- =?utf-8?B?eUEyNVQyQ05WZW5qeXpQL2RXVWNmdUFQMVhzaTF2TUM1OUpDOWZxNUFBdnYr?=
- =?utf-8?B?SWo5QUlxZzZxWkFFUC9pUFZCT2dXV3JZQ2hPZjVSeVhvVnlKUytTUVlHK3gv?=
- =?utf-8?B?U0hUM0plTlk2eTVlZi9WQkM1czcvR2JzWmI1UVB6WUZ4ZzhjVnhlVEw1R1l5?=
- =?utf-8?B?Vi9CSnVBcWtNdlJsUmFsMDd5cEhGU2ZoWkwzKytTRi9HamJGMTc1dEhHamJC?=
- =?utf-8?B?T0VheWYwM2Z1LzRqSUxrcjZTbEhRU2FHQmdaSTd4bnpLd0wvM2FMOHNYMTcz?=
- =?utf-8?B?ODdJbFpBL2Z2WHQ2TUt4cnR1NlFpZGNiSTMvZ0tBOUxmazRLTGpCb2t0a3dK?=
- =?utf-8?B?aTFJaGcrSTF0MUJqTE5PWmdNTG5KSUtyM2VWcmFYUFlvb3lQYWVZdDFaREhz?=
- =?utf-8?B?ZmFBc1czRDQ5WVBSY0Z0enZCS21tdVV0Z3pIWGxWY3pRV1Jjak0vL2tFdUJP?=
- =?utf-8?B?SkpNKytFekdZU2RDZmdtVE1adzR1dHBUWGkvaWtpYjlYWTZCOVlSZDlRN1VB?=
- =?utf-8?B?QktTTTN6Ujh0d2ZhYW1KYU1YeFNKZkVBSGM0bXZsc1dMWVBaazZLN0VFcmZt?=
- =?utf-8?B?Skg1SE91aGlZUm1BOXFoSnA5WjkrWEVIQ1JkditOcWZJSmU4alNyRkllK1Rx?=
- =?utf-8?B?WnVQUmxiaFhVTkFqY014QjhVTVJmdVgraDJ5TVowM1pRNnUvVmZVMUozTGVh?=
- =?utf-8?B?SHV3Y3dGRXQ0TzBXSGxsbGUyM0YxZlBvTXZXd0V4VGZHcTd3OFhZeWF5ZXpG?=
- =?utf-8?B?ZzhqRGdmYVVqOWduUU12K201bDQ2aERLMGZmaTZ4Rkt2STdRV1ZIMnlmSXJE?=
- =?utf-8?B?MVp6QWhUUW5pWGtKZ3d0N29PcjJ5eVVDSmdPeDBDNE4wcVlQaG1uMU9OVlNC?=
- =?utf-8?B?WFZGL1Z6N09aT0piSFNDNEtUckJCQTJycU5LNm1ZdnEyeXBmZm9CbTg0NGVS?=
- =?utf-8?B?VFhhOHNtVHpYYVB2UEdYS0NaWmRzKytiVnZPZ1NCcThSSnFvcVgyaGxKdnZD?=
- =?utf-8?B?eFBXQWpEVy9Mcmk1TGVqT2VyckxYdHBHY1FTczh3MytUSVpsYXpVTVAwbi9N?=
- =?utf-8?B?MUpEVzFkRlVWR2R0a2xhbXBaN2V5VVQvRGtxenBCZ3d5SFZnWW1lSXJhNjJh?=
- =?utf-8?B?U3NXdnB1TERaRTNwOVZWVzArRm0rMTMrYXpNc3dCNWE3V0tqY00rL3YvbVU5?=
- =?utf-8?B?S09xbncyTFk5VUVJZnlIREF0VlNGTW91N0I4MXZpejhmamJBcTJKcG5BWmwz?=
- =?utf-8?B?S1ZreVhySm1RYmJJR3ZRV1RXZmVNckt4bnRZdUpVL012dnFPYnNqL0FHNXpK?=
- =?utf-8?B?TVA3cnJ6RXlTSVdLdEJoT3FXNERISy9pRVRPUkxlZExmQUJ3Z3hVbklSbmJN?=
- =?utf-8?B?bGNFN2NEVU1iVWZlQlpJdnN2TnRndEtENCtSRzZTajFTemVTMzZwQWIvRXBH?=
- =?utf-8?B?L3JJRXdyUXBNN1Q2NEFMNGl2QlRYaCsreTVzcG43RURuNSt4MU54ajNENnVq?=
- =?utf-8?Q?0ONOQmlo9oY=3D?=
+	=?us-ascii?Q?xb2qyYMEQQpvZryaf5FGmgzERJ1p1Uv2HS3NOCmulrl4pztvjxJ1RciMzGP9?=
+ =?us-ascii?Q?whSzY42Ntu8KRnbbzt1KxN6Odf8+lFTViOCY+zDDs1SFa1HxR3pbFZjuumHz?=
+ =?us-ascii?Q?2omsYun+gFM/xqICjPcS7Ux0op/gVR5+06/tb/BnMcFXdJYTWvjJmozcWLvX?=
+ =?us-ascii?Q?JxKVHWdY8ZviZymQVT6dlUqvoXQhOls1bWWoJB+ZkoU/o6z6EQk9mfFZf4Th?=
+ =?us-ascii?Q?/gJPG0jwW4Z/1bUZm6EATlbRFVQQ76eDjmFnIVd0KL8YPgecMqtw952c0L5E?=
+ =?us-ascii?Q?nV+TCeg2Oz5QNXMijiYJyH5ISFdH15FlSeH2ZHLf8ZWmt0rmz28wVwYgsv79?=
+ =?us-ascii?Q?FBNngd9D2RsXcWrX+bhFm/EqNja3U/PJznh96i9SjS7OkG+V7DOdXyKpgH3n?=
+ =?us-ascii?Q?9xp3hkF53RoQPs5N9F+sWB/C1HZWODEFK3UP+LT0N5As5lbzwvYCII1cTZev?=
+ =?us-ascii?Q?RjxGg+R+qIvfWRdM7B7Mr9U7rGHWMhAJa25ILO6u36P7hoshztaP7eReFINl?=
+ =?us-ascii?Q?bAAhR0k0v1GVYA2loCP7kvvj6+gTIyzR3QtA01mkFFaflONNq0SlWVFZ3Fwv?=
+ =?us-ascii?Q?S3CVY303rpc0ac32yOe8zKhQwICR3BwZgQAgOQEwBacTjaJMzAIazfnbQ79D?=
+ =?us-ascii?Q?pZX8r2p1UbytUc4j5jCPML5x1+wT3MShrjoeAC80J1A6lKrGp/dpRP36UxFH?=
+ =?us-ascii?Q?ixGJNXr5wqT7pBLsBCinXoJ78W1Ati2WE2gyG5Xa5D/GpEqBahaHyhnwvhGg?=
+ =?us-ascii?Q?XmLUieQZbz2EezEeY93GWBNg+M9Zv2XAr4Hk2IlNbpMs18BV0G3x1AAQkKoE?=
+ =?us-ascii?Q?pUQRZJlueWRE1MyFmqmGjhfkoJEPBOVCWxVWfhPUN5u2Wb0D2RW43qpc8rVT?=
+ =?us-ascii?Q?CClRPCCgvAOiQdlTKWpocZt832jYUFd7nwiqoe0IBJ/8pq6waH4jvH8CFcX5?=
+ =?us-ascii?Q?v24RaB9WsxA33ivzsG3c0cy3RS0aBNjyd6jF6K1/Q7x33O2jHa9TLqC/3b2u?=
+ =?us-ascii?Q?J1D3hNLhd7IK01XvOEkjHKZ86kmmDkhMXcZv33eojR/nLnjQxCcdTRuVcI/h?=
+ =?us-ascii?Q?rA/qntjQsRAEYRxqulfy99JSwendE+2/XaUEoEHPM32JhEx/MeSvMK82akTa?=
+ =?us-ascii?Q?Z98VoGDpgpzOEGHLitCgNTZ56RUjXEaBN5Eya1b/OoOU12elwCP9zm4KE5k5?=
+ =?us-ascii?Q?tCvlQtsvqUZqh6q6Gg2+GXna3xjCLEzXmrTxlylu4YYoomS8Dkwe3NGAzL6w?=
+ =?us-ascii?Q?N7V2T8FjxDxEP923j5EKQx1Lp0q6OUuo/aCjY9oOlFwBV1Wh5EwLgnyinIoN?=
+ =?us-ascii?Q?rNhDU/QnFGbP45NNr5exGbQSBdIoLW6daadVS316iQo7PXRwEK8uu8UZGMuv?=
+ =?us-ascii?Q?LrCY7wD5Rma+ySZEcrDxP2GW7z7I/hFpkaJAivj0YeCM/W7FmhnhdEXR2hn5?=
+ =?us-ascii?Q?AyPimS181Eo=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR02MB9532.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OWNBMVlMaTlScW5oR3RqR0JybkJ0YURwc0RiWCtyclQ2Q0orclFFM1huT3R5?=
- =?utf-8?B?cmw3TG5MSVFaZGsrRnpjbERVN1AzbUxDOHVlc0N6b0tYN0xpNFVQRkdvU0Ir?=
- =?utf-8?B?aFAyOFp1cUFsSTk2OTZkcFhROTYwTTUydUlRaTdRSUlBYWNScWkvTkI4QkVo?=
- =?utf-8?B?Rlk0eXlzSThaMTNpeHNhZm55a2JUc3lzUXdqWGhoWlBNQjNBcEs2S1NGZkd4?=
- =?utf-8?B?cm1tMjBjNkdFNGhDaUtKVkRwUUx0QjZiTVZNSFJUb3ltaFFHMHR4dzJmb1kr?=
- =?utf-8?B?c2c1L0NRR2NNK0E0VU5tNlRhb0crL1IwNm4xNmtyM0VzcHpsdVZEUmhyOWUr?=
- =?utf-8?B?S0szVXVndTRDV0JBQUNLNWNvbmhUdkxKc0paWnVVTGtYMkcrTTdtNzMzR2Yr?=
- =?utf-8?B?c1ZKdHpPSkFTV3lPS2kxNFE5Q2tVWXR6V0s1Zm5CQ0FDekRRSWZpVEZXZitv?=
- =?utf-8?B?ZWxabHh1NVV6MXBQaUgyTnN4NDh5Qll0YTZNbThqcW1SUmNqajFnRGJ1NVZ4?=
- =?utf-8?B?bEl4cWxPTFI4SUh3N21Dd2F2RitoN2NYaFB3MEFGSENnMkdXNlFsbjZyWUZV?=
- =?utf-8?B?Z0M4alI4WktPSit4ZFpOaXF2Q1NxN1dpWkgxZGtxWTNQVDFENlB3dStJN1lW?=
- =?utf-8?B?Tk95cW5JTzFJN21QQTk5S21zbkxnMWtDUjFTK2V2M2R1NW53alozeE8zcHVF?=
- =?utf-8?B?VWVxSCt2SU13cFZsT0hZRGNTSTh0TjNTdDFjV3p1cXhrZmFadFFNNk1HWDc4?=
- =?utf-8?B?a0F5L0Rwcy9BSlVLcytaVTEzQUgxNVZzenJlWVE4SmY2RGN3bUhhRXVQRUNM?=
- =?utf-8?B?UEl6d1dmbkhDeUZMNUphS2VCQWJkZHdjQzZTUHpieVVHT0lTb00vTTNOMkwy?=
- =?utf-8?B?dVNYMmRiV0VCUjFtMzU5bFJtOXYvQVk2dTdlVFN6RzFGeDJQZU5hYU9UaC9x?=
- =?utf-8?B?Q1o1dWFhU05LekpldXRRSS81M1lYeUNkbHNoREhEalJ1ZDZKQStuSmtSWjJy?=
- =?utf-8?B?WFlabTNmWWdtakpnWWN1TmpHZVJtbHdSV201Sms1TkZ4MlJXU245NXlINkNQ?=
- =?utf-8?B?MHAzbXJDakRHVkIzMElXNEVRaXFrVHVYb2RzNjArR21LUTFnck1mMkFTbGR0?=
- =?utf-8?B?cTVJcmFsT3JTQWlzeEZVVStUQVFWd3JnZE1qejRCOEJEanJWUmFKdXhHamhx?=
- =?utf-8?B?d21HbnBGQmJDR0UyK3VVeG5MTUxBU3FvV1JjZVFEVjV6NnhLSWZaRUY3NUda?=
- =?utf-8?B?N1A2MGZ4TC84TTBGeFlMeHVtUDBIY1h3Y0hqWjNXWGl4WmloWjN2aGc5a3J1?=
- =?utf-8?B?MElVM1pHV21acFpyejZNeUEyNUUrNEV0akxyRlh0WitIdlJ3NWF2R21Xa1dK?=
- =?utf-8?B?b1FzV3lnYThzOUhYdnRoZ2l5cVdsNk9ubTU2RjVSVGlwVTZFdXZ0elppNHhX?=
- =?utf-8?B?TFRhdklBZ0txZzdhcEZtZE0vdWpyTHdPREN2UUxsbDBIZDVPeFk3UUs5THM5?=
- =?utf-8?B?akcxamxmMjU2TTBTQXFmZFZzS2c1N0IwM0hjT3JrWUt4YTZKUElEaU9DNmFV?=
- =?utf-8?B?b0R0UlFMMk1SeWQ1RWd6YjBjd04xYlJhdG10UEI5Qkh4NnNXVGQ0ZHFJd24v?=
- =?utf-8?B?MjBYeU9jZS84VkFVS1hJYnVlUFcyWmlGcVVXZnlYTGdtY2RjWDF5ZzN5Zk5X?=
- =?utf-8?B?ODhXUzlONFlzc2M4aktFUHlacEc1MnFBSndaaGdJM2R4dDBZaG5aS0tLczAy?=
- =?utf-8?B?R0tCNWViQjlySnZDUHNQK3JxMEhQVk5TK3JMWU5WVGhqSHoxN2JFVG83dkQ4?=
- =?utf-8?B?R1RMcUM1bWpWcVRrVW85VmpZUXBSZTI5Z3JPOEx5QWNDVnRUYlpRSXFPcmJi?=
- =?utf-8?B?L0Ntby9Nd0pVS2tSdW1Pcy9MWnJyR1NOTTFpVXNIQWI1VWx6bGxDMWFrazdw?=
- =?utf-8?B?bXBwaWY1SHZOcTB5cXRkT2ZtYklLaVdmQjU2SnN6STFFenFhcW56K2pZR1o2?=
- =?utf-8?B?emMvTTBUbFlJSUh1V1hMTnNzSTU5QWdTdW50bWRGV2FaeTdMckZnaG50a25r?=
- =?utf-8?B?RFB4OGd4QThBUXlyS1RaaGV0NGc2T2R1aSs5ZTk4UmlkNTJjZ0FObjlPTTlz?=
- =?utf-8?B?dHpkYnRXK1JlL3YvTXFCKzc5empiRXk1NFo1bjJKOFdwQldkT0cvbUMvdjJk?=
- =?utf-8?Q?DSXvM763vDO3G7OjgpnyvfYAUnmsR/OFbmhsmx7B/Sjt?=
-X-OriginatorOrg: prodrive-technologies.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de13f035-8e7e-4eb2-a09d-08dda347b807
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB9532.eurprd02.prod.outlook.com
+	=?us-ascii?Q?lbl54WVszFrw39mQgBm9bY+U5d9fz+JtUS/BId/gXAOq+T9JgZJm65+rN1ky?=
+ =?us-ascii?Q?jTLDSC/Sqw5lgwtpDxcEXNd6a3M2FRRBRN1GRvc1U+wpCS6BBRQU9XgIxknv?=
+ =?us-ascii?Q?URSclj0IAI3owPd7U+T5Zv0FXsHemhe6dqW1X/LW1wnTKUFDn6ONhsy3bOxM?=
+ =?us-ascii?Q?gBtUIKtLtkpyeC1jTElBt0qratjGnRggVCcMLRDubDnAh4yBw+wZNvVYcsby?=
+ =?us-ascii?Q?z1fTbMzkkV4IwPuZPbms8/pJBUmJ98zbZljy91ZVQGZ3PwZkCOwnViRkImSS?=
+ =?us-ascii?Q?YSbpbzeaqL5Ts/pSeaClroVTaAc6ripjz5nU8peycDUkrLSXvcYsflT32ihF?=
+ =?us-ascii?Q?MePzbeQ21Dn+F/oerlhTvCn3Os2Gx+2Q0w3pCXWnS4OSrid1tREPUhvTZXSX?=
+ =?us-ascii?Q?am9LzQ8gdFC+cMjlZSjUF3I4ZD0fHb56NNDTHffND1oSEhxx81EtPTkaArCW?=
+ =?us-ascii?Q?VlhoMf+xiK6I+nQp5aZBJ/DWuRMrNxCgz9kYd2kOsn/yVLIoyPvtoXFaPQdI?=
+ =?us-ascii?Q?+poN4GIC9YyQpcxIoDTfF6daG3cPwHKrAGJad6aPmzuxOUch54ON8GupSWHd?=
+ =?us-ascii?Q?O0HGepQf60w+DD+gTTAAc5dQdEWBOPDHmSplUdIiBf3H0/5Dydp82ZG0Vxjo?=
+ =?us-ascii?Q?1CtrX33SyVEIMIKw9NYjm5MxrrQklM2qBzPQbQsxt7hCTXihecb9zAI/NKel?=
+ =?us-ascii?Q?CV98s4A6ufgPm3nWBixme76T/191VcU6A0Mr9YYPvQC+W6aHs7iAK/QsbQgs?=
+ =?us-ascii?Q?aIlkKv00ABwdaeyVofcigZVYzZDtc9DObFnij5lpL/BxLBP0EOEnj1V41lGN?=
+ =?us-ascii?Q?yQTEWyTiMHiG5/aScWlt0O3zWX/6U3tCWUtMxp9e37lz11rtAPkfjokPUy1k?=
+ =?us-ascii?Q?3Em62VUFq+XUV0RUMhuxz1rQxp5FM4pGLkzGTHxPtYgEVoakxxGpg0PE0NKG?=
+ =?us-ascii?Q?qjyBv2dBmvF6B16HmoEpM7CyEuh3186+AKuelZOGLEOVTzMSQeKu59gGyP0N?=
+ =?us-ascii?Q?t2cU2TFU+OwMSXCn6SP/ZKEN3YZzYRIdyXlY6ESASjaaDYRbymAN6bRKTVfc?=
+ =?us-ascii?Q?fDbTRtrf5yxHPwIpdF1FuhfQBPYQmywjgxDXmQEkGQBSvmBEcaLbufxxBLrd?=
+ =?us-ascii?Q?ZZQjKwz384GK063o3/twkbGUzMdiMdkswPSjrilSl49FK59lm+2J8uH0YJhS?=
+ =?us-ascii?Q?YjWYYENyLTjNEtwgXhxJFNB6xaqUObitW3+Op6ELx7cS/10tMwDPSK7ijJQZ?=
+ =?us-ascii?Q?0Y/jdGT+U3oLCgRzpfVQ5lnJCVbqgk4esrEQcTZGopGR+y6I6AMKo++IWQXB?=
+ =?us-ascii?Q?kr+GCYlBO84E360a6UfkfKo7moyUjA5wmyqOQTondEzzzbgKwwy4lOpVtuG8?=
+ =?us-ascii?Q?lmbW39AaIeAREjocSiQO1PMxD15/IhomvtE08yBwz0uZZdu+Rf0BrCskIM/0?=
+ =?us-ascii?Q?ZMSsDwBcta458ekPB2P4sdNt80xDnFQFNkZBLA51y3y5E7oSpr80WU3RnVt7?=
+ =?us-ascii?Q?rOeWolfj54c6dHGlqCuraevrPkRVV5QL8nyWbXrJ3yZ77KjIVO96XxBCfzCf?=
+ =?us-ascii?Q?lTP95ic2DvHLvI7wYyyJSwdNO9JGyc2X7YNdXGmoKqAZAIIKv5poVr9L8VdT?=
+ =?us-ascii?Q?vw=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b03f4188-d01b-48bc-de2b-08dda347c1d6
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 09:10:58.3711
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 09:11:14.9822
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 612607c9-5af7-4e7f-8976-faf1ae77be60
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aLqRd1FzPFj5qt0mLUUEMaEbsoSCIiAtFYFvnYqf4oVH5KPVStti4tH5WZdw0IMmf5yA9DRdiFPJc5K1bNEQaV6SZv+zlImg0cFkljNBX+WrIFdleuY0qpbnscewpBo3BjKy0q7GsU2aLf9mPnBujA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR02MB8848
+X-MS-Exchange-CrossTenant-UserPrincipalName: PZsyCQ3f79pzuSvlUaPHSZO/nvjxJk7W8QN0jlEWarhGTsnC6gUaH8lLy4PBjfQPB4v+GEK8jwbHwXQvN4qrIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10528
 
-
-
-On 6/4/2025 11:07 AM, Krzysztof Kozlowski wrote:
-> On 04/06/2025 10:58, Martijn de Gouw wrote:
->>
->>
->> On 6/4/2025 10:27 AM, Krzysztof Kozlowski wrote:
->>> On 04/06/2025 09:04, Martijn de Gouw wrote:
->>>> Hi,
->>>>
->>>> On 5/25/2025 9:18 AM, Martijn de Gouw wrote:
->>>>> Make the PWM mode on the buck controllers configurable from devicetree.
->>>>> Some boards require forced PWM mode to keep the supply ripple within
->>>>> acceptable limits under light load conditions.
->>>>>
->>>>> Signed-off-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
->>>>> ---
->>>>> Changes in v3:
->>>>>   - Fix typo in the examples
->>>>> Changes in v2:
->>>>>   - Add the header to the binding patch
->>>>>   - Improve commit message
->>>>>
->>>>>  .../regulator/nxp,pca9450-regulator.yaml       | 14 ++++++++++++++
->>>>>  .../regulator/nxp,pca9450-regulator.h          | 18 ++++++++++++++++++
->>>>>  2 files changed, 32 insertions(+)
->>>>
->>>> Does this patch need additional changes?
->>>
->>> What is wrong with the email you already received? What do you exactly
->>> need from us?
->>
->> V2 was merged rather quickly, on V3 there was only the Acked-by: Conor Dooley. So it's safe to assume V3 is now waiting to be merged?
+On Wed, Jun 04, 2025 at 09:24:22AM +0200, Arnd Bergmann wrote:
+> On Wed, Jun 4, 2025, at 04:44, Wei Fang wrote:
+> >> Ok, so to summarize, you want nxp-netc-lib.ko to be separate from
+> >> fsl-enetc-core.ko, because when you upstream the switch driver (also a
+> >> consumer of ntmp.o), you want it to depend just on nxp-netc-lib.ko but
+> >> not on the full fsl-enetc-core.ko.
+> >> If the only reverse dependency of NXP_NETC_LIB, NXP_ENETC4, becomes m,
+> >> then NXP_NETC_LIB also becomes m, but in reality, FSL_ENETC_CORE, via
+> >> cbdr.o, still depends on symbols from NXP_NETC_LIB.
+> >> 
+> >> So you influence NXP_NETC_LIB to not become m when its only selecter is m,
+> >> instead stay y.
+> >> 
+> >> Won't this need to change, and become even more complicated when
+> >> NXP_NETC_LIB gains another selecter, the switch driver?
+> >
+> > The dependency needs to be updated as follows when switch driver is
+> > added, to avoid the compilation errors.
+> >
+> > default y if FSL_ENETC_CORE=y && (NXP_ENETC4=m || NET_DSA_NETC_SWITCH=m)
+> >
+> >> 
+> >> >  	help
+> >> >  	  This module provides common functionalities for both ENETC and NETC
+> >> >  	  Switch, such as NETC Table Management Protocol (NTMP) 2.0, common tc
+> >> > --
+> >> > 2.34.1
+> >> >
+> >> 
+> >> What about this interpretation? cbdr.o uses symbols from NXP_NETC_LIB,
+> >> so the Kconfig option controlling cbdr.o, aka FSL_ENETC_CORE, should
+> >> select NXP_NETC_LIB. This solves the problem in a way which is more
+> >> logical to me, and doesn't need to change when the switch is later added.
+> >> 
+> >
+> > Yes, this is also a solution. I thought that LS1028A does not need the netc-lib
+> > driver at all. Doing so will result in netc-lib being compiled on the LS1028A
+> > platform, which may be unacceptable, so I did not do this. Since you think
+> > this is better, I will apply this solution next. Thanks.
 > 
-> So this was ping for merging of entire patchset, not that patch? There
-> is little point in pinging frequent and during the merge window -
-> usually nothing can happen now.
+> I think this version should work, and make logical sense:
+> 
+> --- a/drivers/net/ethernet/freescale/enetc/Kconfig
+> +++ b/drivers/net/ethernet/freescale/enetc/Kconfig
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  config FSL_ENETC_CORE
+>         tristate
+> +       select NXP_NETC_LIB if NXP_ENETC_NTMP
+>         help
+>           This module supports common functionality between the PF and VF
+>           drivers for the NXP ENETC controller.
+> @@ -22,6 +23,9 @@ config NXP_NETC_LIB
+>           Switch, such as NETC Table Management Protocol (NTMP) 2.0, common tc
+>           flower and debugfs interfaces and so on.
+>  
+> +config NXP_ENETC_NTMP
+> +       bool
+> +
+>  config FSL_ENETC
+>         tristate "ENETC PF driver"
+>         depends on PCI_MSI
+> @@ -45,7 +49,7 @@ config NXP_ENETC4
+>         select FSL_ENETC_CORE
+>         select FSL_ENETC_MDIO
+>         select NXP_ENETC_PF_COMMON
+> -       select NXP_NETC_LIB
+> +       select NXP_ENETC_NTMP
+>         select PHYLINK
+>         select DIMLIB
+>         help
+> 
+> FSL_ENETC selects the feature it actually wants, and FSL_ENETC_CORE
+> enables the module based on the set of features that are enabled.
+> The switch module can then equally enable bool symbol. Not sure
+> what the best name would be for that symbol, that depends on what
+> you expect to get added to NXP_NETC_LIB.
+> 
+>      Arnd
 
-Clear, thanks!
+Thanks, this seems to be the best proposal thus far. IMO it is also easy
+to maintain and it also fully satisfies the imposed requirements. I checked
+that when FSL_ENETC_CORE goes to m, NXP_NETC_LIB also goes to m, and
+when it remains y, the latter also remains y. Note, FSL_ENETC_CORE only
+goes to m when all its selecters are m. More importantly, when
+NXP_ENETC4=n, NXP_NETC_LIB is also n. The drivers seem to build in all
+cases.
 
-Regards, Martijn
+Will you send a patch with this proposal, or should Wei do it with a
+Suggested-by?
