@@ -1,267 +1,275 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAD92153EA
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 10:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D9C2236F0
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 10:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749032467; cv=none; b=cYq6yIW3xup0l7hv+JDWsrEc4LGqmBmzBlqmsUtI4sbtEOIPRDVVNVZRZCPvxA3+X5jvP95aZe3x0KpQy/fMxjNsffAHkLP7JjMhAiFC0UeU5+cBDxDvgt4rF0E6X3YMEXitXO87Xsy+0BsEPXlHxQYTc0dgvtWNavM762ierTI=
+	t=1749032552; cv=none; b=eLMSGFFNHnsmxRoiuks3G+PjbNHoz3CM/1FHbkv+8jE7Xz+yxbFN6ED9WC7cjGiVKEXWOiohWFGmhN6pHrUlBtOQRAkmqPLTDuqTCSIWLbGwiTLMmEVxWk7aEjcaGSWbhpWteUuT9FXxu3MC5y2ejmfDqjdRepnu9Ay9cf42yLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749032467; c=relaxed/simple;
-	bh=fr2U+QjdTUfwEtNfL8gz/GPmo2b3XjHY/ERjpu0d+HM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cqr5ERiOmYMgyHpArIOsrJqYgHu1xVWD/ucWHLcpia+dGyZgWBsUpirPwU08B05RLhisaIYhv2/JobRPQZJCuk2RhT7Bk2/Uq3TknTt4WHCrzjcNTuzihy+ebe7dNLSQict2RQ8ZTmzkydbefWzJJ+fZMlQkXtYc610micdpnU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nDm4AHKU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WHdEUh1n; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nDm4AHKU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WHdEUh1n; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749032552; c=relaxed/simple;
+	bh=Qz5W+vvradWz8G1yGaxhcXNSB9TzaaANhMo6byS0QGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=DOgxqOlTILn9veHeIdvFMMe5Sy0PjSrhTtFmu61iPk7RuUlXRtvKtoi+kVeQXAD+lmp56Ogu2SJvSLn2Wx01SffVmaAZO/T62Pn0N0Gxsb5FzBMVOJj2HWJUWBpoUfALQcWZmayM4LmgBwI1NcxTaxG98Tu7Uzj925S1oOL7Bt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Z60bS6rZ; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nDm4AHKU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WHdEUh1n";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nDm4AHKU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WHdEUh1n"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 565BA5F993;
-	Wed,  4 Jun 2025 09:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749031002; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1jjyZmVb2kI0wJ/xwBd+UN6NcrjIdsAAEgibBT83Kx4=;
-	b=nDm4AHKUVbsQhlSq/U90NBb1bblcevUHw4674wIXVoEjVtlYPEN07cOI/0cAHk0SaziQgs
-	Msacas3qAilmtwhwGocAhgupoEg5S4SHjexOhy0vxhh2XelNBoNl4Y01LFlhaLlLZV1ACN
-	xTK/3B5kN9vezkH4a54aO2NA+gbSi5k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749031002;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1jjyZmVb2kI0wJ/xwBd+UN6NcrjIdsAAEgibBT83Kx4=;
-	b=WHdEUh1nWrWg3bcwwuBdeF+QRyGtFm9jDfeWDb3u3jgh4ls9UM7ai8UcJw8DeIP+jupdnB
-	ADVbo4Cfps0ImPCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=nDm4AHKU;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=WHdEUh1n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749031002; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1jjyZmVb2kI0wJ/xwBd+UN6NcrjIdsAAEgibBT83Kx4=;
-	b=nDm4AHKUVbsQhlSq/U90NBb1bblcevUHw4674wIXVoEjVtlYPEN07cOI/0cAHk0SaziQgs
-	Msacas3qAilmtwhwGocAhgupoEg5S4SHjexOhy0vxhh2XelNBoNl4Y01LFlhaLlLZV1ACN
-	xTK/3B5kN9vezkH4a54aO2NA+gbSi5k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749031002;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1jjyZmVb2kI0wJ/xwBd+UN6NcrjIdsAAEgibBT83Kx4=;
-	b=WHdEUh1nWrWg3bcwwuBdeF+QRyGtFm9jDfeWDb3u3jgh4ls9UM7ai8UcJw8DeIP+jupdnB
-	ADVbo4Cfps0ImPCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 35C1113AD9;
-	Wed,  4 Jun 2025 09:56:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +cLEDFoYQGjAHAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 04 Jun 2025 09:56:42 +0000
-Message-ID: <6fffd2fe-0cee-405f-af78-b57b5e5d02e8@suse.cz>
-Date: Wed, 4 Jun 2025 11:56:42 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z60bS6rZ"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250604102221epoutp03ce3d137257c69dfeb46ba9a06da04897~Fz9SB_QMj1578015780epoutp03l
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 10:22:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250604102221epoutp03ce3d137257c69dfeb46ba9a06da04897~Fz9SB_QMj1578015780epoutp03l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749032541;
+	bh=5PFJKOcCJULULXlfEo0K6/6CMfBVPePa/hBz4dur49c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Z60bS6rZdi0hWnk0sSxuIcUwZq7U8bml6F/zXGZL9fEBhyHqaq7fDze/nW+lE24dm
+	 OghcnvaKeBad/vT4zhggvzlTGIybJSCTtTWwftVdZbzwMjSf2ybJaI2vgrhGWd+cfA
+	 VZ+EHGpXsILXfPXvbhoXTu4LwfsH8Dgoee766ufk=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250604102220epcas2p1cf5f69cfed7f307bb22bda90b73cce9f~Fz9RHCVZR1135311353epcas2p1Z;
+	Wed,  4 Jun 2025 10:22:20 +0000 (GMT)
+Received: from epcas2p2.samsung.com (unknown [182.195.36.90]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4bC3Y82q3dz6B9m7; Wed,  4 Jun
+	2025 10:22:20 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250604102219epcas2p4e13cbdf67accf9389272d1889e073898~Fz9QDGduJ0169101691epcas2p4Y;
+	Wed,  4 Jun 2025 10:22:19 +0000 (GMT)
+Received: from tiffany (unknown [10.229.95.142]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250604102219epsmtip2cea4cb3046f85c7514d67452e731543e~Fz9QAFh431738217382epsmtip2j;
+	Wed,  4 Jun 2025 10:22:19 +0000 (GMT)
+Date: Wed, 4 Jun 2025 19:20:31 +0900
+From: Hyesoo Yu <hyesoo.yu@samsung.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: janghyuck.kim@samsung.com, zhaoyang.huang@unisoc.com,
+	jaewon31.kim@gmail.com, Andrew Morton <akpm@linux-foundation.org>, Jason
+	Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu
+	<peterx@redhat.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: gup: fail migration when no migratable page to
+ prevent CMA pinning
+Message-ID: <20250604102031.GA4060485@tiffany>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/vmstat: Fix build with MEMCG=y and VM_EVENT_COUNTERS=n
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
- surenb@google.com, mhocko@suse.com, hannes@cmpxchg.org,
- shakeel.butt@linux.dev, muchun.song@linux.dev, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
- Konstantin Khlebnikov <koct9i@gmail.com>
-References: <20250604095111.533783-1-kirill.shutemov@linux.intel.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20250604095111.533783-1-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 565BA5F993
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[oracle.com,kernel.org,google.com,suse.com,cmpxchg.org,linux.dev,kvack.org,vger.kernel.org,infradead.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.51
-X-Spam-Level: 
+In-Reply-To: <fa9d72ac-1b46-4a09-8f29-af97f2ca6e2e@redhat.com>
+X-CMS-MailID: 20250604102219epcas2p4e13cbdf67accf9389272d1889e073898
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----6COtjJDFSqE3oSvckRkzJ3gMdAJ_hz7naVTtDv8sVOxgD1sZ=_290f2_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+cpgsPolicy: CPGSC10-234,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250604095242epcas2p17032a1133b03be2d24c8ebcff94d1d55
+References: <CGME20250604095242epcas2p17032a1133b03be2d24c8ebcff94d1d55@epcas2p1.samsung.com>
+	<20250604095049.4052078-1-hyesoo.yu@samsung.com>
+	<fa9d72ac-1b46-4a09-8f29-af97f2ca6e2e@redhat.com>
 
-On 6/4/25 11:51, Kirill A. Shutemov wrote:
-> When compiling with MEMCG enabled but VM_EVENT_COUNTERS disabled,
-> BUILD_BUG_ON() is triggered in vmstat_start because the vmstat_text
-> array is larger than NR_VMSTAT_ITEMS.
-> 
-> This issue arises because some elements of the vmstat_text array are
-> present when either MEMCG or VM_EVENT_COUNTERS is enabled, but
-> NR_VMSTAT_ITEMS only accounts for these elements if VM_EVENT_COUNTERS is
-> enabled.
-> 
-> The recent change in the BUILD_BUG_ON() check made it more strict,
-> disallowing extra elements in the array, which revealed the issue.
-> 
-> Instead of adjusting the NR_VMSTAT_ITEMS definition to account for
-> MEMCG, make MEMCG select VM_EVENT_COUNTERS. VM_EVENT_COUNTERS is
-> enabled in most configurations anyway.
-> 
-> There is no need to backport this fix to stable trees. Without the
-> strict BUILD_BUG_ON(), the issue is not harmful. The elements in
-> question would only be read by the memcg code, not by /proc/vmstat.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Fixes: ebc5d83d0443 ("mm/memcontrol: use vmstat names for printing statistics")
+------6COtjJDFSqE3oSvckRkzJ3gMdAJ_hz7naVTtDv8sVOxgD1sZ=_290f2_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Well in that case I think we should put Fixes: to the BUILD_BUG_ON() change.
-And if it's not yet a stable sha1, squash that together with this?
-It doesn't seem ebc5d83d0443 alone needs this fix.
-
-> Cc: Konstantin Khlebnikov <koct9i@gmail.com>
-
-Otherwise,
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-> ---
->  include/linux/vmstat.h | 4 ++--
->  init/Kconfig           | 1 +
->  mm/vmstat.c            | 4 ++--
->  3 files changed, 5 insertions(+), 4 deletions(-)
+On Wed, Jun 04, 2025 at 12:07:21PM +0200, David Hildenbrand wrote:
+> On 04.06.25 11:50, Hyesoo Yu wrote:
+> > Commit 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
+> > caused CMA pages to become pinned in some cases when handling longterm GUP.
+> > This happened because migration would return success immediately if no pages
+> > were in the movable_page_list, without retrying.
+> > 
+> > However, CMA pages can be temporarily off the LRU (e.g., in pagevecs), and
 > 
-> diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
-> index b2ccb6845595..c287998908bf 100644
-> --- a/include/linux/vmstat.h
-> +++ b/include/linux/vmstat.h
-> @@ -507,7 +507,7 @@ static inline const char *lru_list_name(enum lru_list lru)
->  	return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
->  }
->  
-> -#if defined(CONFIG_VM_EVENT_COUNTERS) || defined(CONFIG_MEMCG)
-> +#if defined(CONFIG_VM_EVENT_COUNTERS)
->  static inline const char *vm_event_name(enum vm_event_item item)
->  {
->  	return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-> @@ -516,7 +516,7 @@ static inline const char *vm_event_name(enum vm_event_item item)
->  			   NR_VM_STAT_ITEMS +
->  			   item];
->  }
-> -#endif /* CONFIG_VM_EVENT_COUNTERS || CONFIG_MEMCG */
-> +#endif /* CONFIG_VM_EVENT_COUNTERS */
->  
->  #ifdef CONFIG_MEMCG
->  
-> diff --git a/init/Kconfig b/init/Kconfig
-> index ab83abe0fd9d..dd332cac6036 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -989,6 +989,7 @@ config MEMCG
->  	select PAGE_COUNTER
->  	select EVENTFD
->  	select SLAB_OBJ_EXT
-> +	select VM_EVENT_COUNTERS
->  	help
->  	  Provides control over the memory footprint of tasks in a cgroup.
->  
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 27dc37168cfd..c3114b8826e4 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1301,7 +1301,7 @@ const char * const vmstat_text[] = {
->  	[I(NR_MEMMAP_BOOT_PAGES)]		= "nr_memmap_boot_pages",
->  #undef I
->  
-> -#if defined(CONFIG_VM_EVENT_COUNTERS) || defined(CONFIG_MEMCG)
-> +#if defined(CONFIG_VM_EVENT_COUNTERS)
->  	/* enum vm_event_item counters */
->  #define I(x) (NR_VM_ZONE_STAT_ITEMS + NR_VM_NUMA_EVENT_ITEMS + \
->  	     NR_VM_NODE_STAT_ITEMS + NR_VM_STAT_ITEMS + x)
-> @@ -1498,7 +1498,7 @@ const char * const vmstat_text[] = {
->  #endif
->  #endif
->  #undef I
-> -#endif /* CONFIG_VM_EVENT_COUNTERS || CONFIG_MEMCG */
-> +#endif /* CONFIG_VM_EVENT_COUNTERS */
->  };
->  #endif /* CONFIG_PROC_FS || CONFIG_SYSFS || CONFIG_NUMA || CONFIG_MEMCG */
->  
+> A better example might be concurrent isolation. Just imagine two of these
+> longterm pinnings racing.
+> 
 
+I will change the example below.
+
+CMA pages may be temporarily off the LRU due to concurrent isolation, for example
+when multiple longterm GUP requests are racing.
+
+
+> > therefore not appear in movable_page_list, even though they can be migrated
+> > later. Before commit 1aaf8c, the kernel would retry migration in such cases,
+> > which helped avoid accidental CMA pinning.
+> > 
+> > The commit 1aaf8c aimed to support an out-of-tree use case (like pKVM), where
+> > longterm GUP was applied to non-LRU CMA pages. But allowing CMA pinning
+> > in general for this corner case could lead to more fragmentation and
+> > reliability issues. So this patch prevents that.
+> > 
+> > Instead of retrying, this patch explicitly fails the migration attempt
+> > (-EBUSY) if no movable pages are found and unpinnable pages remain.
+> > This avoids infinite loops and gives user a clear signal to retry,
+> > rather then spinning inside kernel.
+> 
+> Hmmm, that means we will return EBUSY to the caller. Are all users actually
+> prepared to deal with that?
+> 
+> So far we only returned EBUSY in this corner-case
+> migrate_device_coherent_folio() that most callers never actually trigger.
+> 
+> Maybe we should do EAGAIN for now (old way of doing it?), and look into
+> doing EBUSY separately.
+> 
+
+Thank you for the feedback. I agree. I'll keep this patch focused on resolving
+the CMA pinning issue using -EAGAIN. Handling -EBUSY can be considered separately.
+
+> > 
+> > Fixes: 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
+> > Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
+> > ---
+> >   mm/gup.c | 49 ++++++++++++++++++++++++++-----------------------
+> >   1 file changed, 26 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index e065a49842a8..446938aedcc9 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -2303,12 +2303,13 @@ static void pofs_unpin(struct pages_or_folios *pofs)
+> >   /*
+> >    * Returns the number of collected folios. Return value is always >= 0.
+> >    */
+> 
+> Comment should be removed.
+> 
+
+Got it. I'll remove the comment.
+
+> > -static void collect_longterm_unpinnable_folios(
+> > +static bool collect_longterm_unpinnable_folios(
+> >   		struct list_head *movable_folio_list,
+> >   		struct pages_or_folios *pofs)
+> >   {
+> >   	struct folio *prev_folio = NULL;
+> >   	bool drain_allow = true;
+> > +	bool any_unpinnable = false;
+> >   	unsigned long i;
+> >   	for (i = 0; i < pofs->nr_entries; i++) {
+> > @@ -2321,6 +2322,8 @@ static void collect_longterm_unpinnable_folios(
+> >   		if (folio_is_longterm_pinnable(folio))
+> >   			continue;
+> > +		any_unpinnable = true;
+> > +
+> >   		if (folio_is_device_coherent(folio))
+> >   			continue;
+> > @@ -2342,6 +2345,8 @@ static void collect_longterm_unpinnable_folios(
+> >   				    NR_ISOLATED_ANON + folio_is_file_lru(folio),
+> >   				    folio_nr_pages(folio));
+> >   	}
+> > +
+> > +	return any_unpinnable;
+> >   }
+> >   /*
+> > @@ -2353,8 +2358,13 @@ static int
+> >   migrate_longterm_unpinnable_folios(struct list_head *movable_folio_list,
+> >   				   struct pages_or_folios *pofs)
+> >   {
+> > -	int ret;
+> > +	int ret = -EAGAIN;
+> >   	unsigned long i;
+> > +	struct migration_target_control mtc = {
+> > +		.nid = NUMA_NO_NODE,
+> > +		.gfp_mask = GFP_USER | __GFP_NOWARN,
+> > +		.reason = MR_LONGTERM_PIN,
+> > +	};
+> 
+> Reverse xmas tree while we're at it.
+> 
+> But, can we do this cleanup here separately, and not as part of the fix?
+> 
+
+I'll prepare a separate patch for the cleanup.
+
+> >   	for (i = 0; i < pofs->nr_entries; i++) {
+> >   		struct folio *folio = pofs_get_folio(pofs, i);
+> > @@ -2370,6 +2380,7 @@ migrate_longterm_unpinnable_folios(struct list_head *movable_folio_list,
+> >   			gup_put_folio(folio, 1, FOLL_PIN);
+> >   			if (migrate_device_coherent_folio(folio)) {
+> > +				pofs_unpin(pofs);
+> >   				ret = -EBUSY;
+> >   				goto err;
+> >   			}
+> > @@ -2388,27 +2399,11 @@ migrate_longterm_unpinnable_folios(struct list_head *movable_folio_list,
+> >   		pofs_clear_entry(pofs, i);
+> >   	}
+> > -	if (!list_empty(movable_folio_list)) {
+> > -		struct migration_target_control mtc = {
+> > -			.nid = NUMA_NO_NODE,
+> > -			.gfp_mask = GFP_USER | __GFP_NOWARN,
+> > -			.reason = MR_LONGTERM_PIN,
+> > -		};
+> > -
+> > -		if (migrate_pages(movable_folio_list, alloc_migration_target,
+> > -				  NULL, (unsigned long)&mtc, MIGRATE_SYNC,
+> > -				  MR_LONGTERM_PIN, NULL)) {
+> > -			ret = -ENOMEM;
+> > -			goto err;
+> > -		}
+> > -	}
+> > -
+> > -	putback_movable_pages(movable_folio_list);
+> > -
+> > -	return -EAGAIN;
+> > +	if (migrate_pages(movable_folio_list, alloc_migration_target, NULL,
+> > +			  (unsigned long)&mtc, MIGRATE_SYNC, MR_LONGTERM_PIN, NULL))
+> > +		ret = -ENOMEM;
+> >   err:
+> > -	pofs_unpin(pofs);
+> >   	putback_movable_pages(movable_folio_list);
+> >   	return ret;
+> > @@ -2417,11 +2412,19 @@ migrate_longterm_unpinnable_folios(struct list_head *movable_folio_list,
+> >   static long
+> >   check_and_migrate_movable_pages_or_folios(struct pages_or_folios *pofs)
+> >   {
+> > +	bool any_unpinnable;
+> > +
+> >   	LIST_HEAD(movable_folio_list);
+> > -	collect_longterm_unpinnable_folios(&movable_folio_list, pofs);
+> > -	if (list_empty(&movable_folio_list))
+> > +	any_unpinnable = collect_longterm_unpinnable_folios(&movable_folio_list, pofs);
+> > +
+> > +	if (list_empty(&movable_folio_list)) {
+> > +		if (any_unpinnable) {
+> 
+> /*
+>  * If we find any longterm unpinnable page that we failed to
+>  * isolated for migration, it might be because someone else
+>  * concurrently isolated it. Make the caller retry until it
+>  * succeeds.
+>  */
+> 
+> 
+
+I will add the comment.
+
+> > +			pofs_unpin(pofs);
+> > +			return -EBUSY;
+> > +		}
+> >   		return 0;
+> > +	}
+> >   	return migrate_longterm_unpinnable_folios(&movable_folio_list, pofs);
+> >   }
+> 
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
+
+Thanks,
+Regards. 
+
+------6COtjJDFSqE3oSvckRkzJ3gMdAJ_hz7naVTtDv8sVOxgD1sZ=_290f2_
+Content-Type: text/plain; charset="utf-8"
+
+
+------6COtjJDFSqE3oSvckRkzJ3gMdAJ_hz7naVTtDv8sVOxgD1sZ=_290f2_--
