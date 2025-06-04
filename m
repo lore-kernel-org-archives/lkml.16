@@ -1,196 +1,381 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926EF746E;
-	Wed,  4 Jun 2025 01:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CA31E871
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 01:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748999673; cv=none; b=jurrOkpOK56Ks7B7bRJ9awlU5xEIZ0bUsejpFOHbWIkU3Qup04IrfD+Pz+RAjLGFI1R87f40F145g3fs0sBmNx8GPxXjYYuH4xFVXi1/ev04v5duGrO5FAgHexlyU3fx5Q7hVktLkI3bqmvj0uA7zZk9PdDjcNCfwBKbekmUD5E=
+	t=1748999926; cv=none; b=HL8XFXEdJPDUM2do+yslSaXRsK185ZIo1xyTt2MhfN9IZ2uhpQE9p4wd53ckJNlh7X4D07S7kxFzxpuyOTwXIJO/Rjvh5gwPYqS2+6sSicFWFMxJP1umQZsbuFl8tVu5dm3pfeXKWUB5da5aKIz2Sv/7Fyy5Igw5HO/+5Fk/BlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748999673; c=relaxed/simple;
-	bh=52I+rIIkcGx0tQWOqBUyrsOzqLA+368eas7GzximvAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D80+4HoOjAut5Pg753n3LpZPGJ2F6P/QBzC7vxBqk3LS7VQm4c4jXYqiuN58NdGB9K54uIt3+KzF4OCsd8pofGeGhaAmqIahvK2R9WtqmJUDM3GGl7Jywb4mGeqfloVLnfdKthUfRUa5Ggb3lGg3kxA4JTvKyfQ3g99j7FBzhoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC36C4CEED;
-	Wed,  4 Jun 2025 01:14:32 +0000 (UTC)
-Date: Tue, 3 Jun 2025 21:15:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: patches@lists.linux.dev, stable@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.15 070/118] tracing: Only return an adjusted
- address if it matches the kernel address
-Message-ID: <20250603211547.32aed8e9@gandalf.local.home>
-In-Reply-To: <20250604005049.4147522-70-sashal@kernel.org>
-References: <20250604005049.4147522-1-sashal@kernel.org>
-	<20250604005049.4147522-70-sashal@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748999926; c=relaxed/simple;
+	bh=TU5raU8CLI5e3LMHuVmzVjSuFh7aCubUMZ1v6HP3ni4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WM0S3gUwQL3m+ZxQIbToYDBwWA299LiKEdw93IbiFwcpJEcL8JSeaV96WqsezK+ANI7Q6osMQ6Mu1iJjLXKvDuaFtM7kro5kQgJ/p3lu0P2bhI99IoEOBIdEbqOOuEontWB6ic24lIFRMmqvb0FJ3K5gYTSUsdFhOZ+7Tj8i42k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UinGPSTj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UinGPSTj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748999923;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FGSicdZ/oCg5lp+er2IEvl27RXvIulGaT4Ab9/IfYPs=;
+	b=UinGPSTjeYwTNToKFpXOba9gtkV/Af3cAJ2Xc4fmR1zEJxkkk0wrlUNwQ9fjaqcjHmDZiy
+	4HD/vBgPYku4OjR0hZ+Mi+GOzlgQaej2eruCI1SJBx0TzGZL6XeH3RWkwh8rEWOxZ1xcfd
+	moWNf4Y1JWLIcQFSmGTcD9JYe1tIYMk=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-658-ZcZgtDDdOfy0ct4yQLCbhg-1; Tue, 03 Jun 2025 21:18:42 -0400
+X-MC-Unique: ZcZgtDDdOfy0ct4yQLCbhg-1
+X-Mimecast-MFC-AGG-ID: ZcZgtDDdOfy0ct4yQLCbhg_1748999921
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7401179b06fso4795607b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 18:18:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748999921; x=1749604721;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FGSicdZ/oCg5lp+er2IEvl27RXvIulGaT4Ab9/IfYPs=;
+        b=WGpbdEQuOIql/8qZz3xA7/nKsXquU+blAPh8+nn7CBnL0O2XuIYaeRxrufhIsV2OLD
+         Iw/zrEScgYyxMucwsvpU23yCu4wZGftrTTs93XWutK6g3L2BpWH9P1FNwbV2tUggpIu5
+         pII1dWoFMHwJLH7QPkYoi0486UDAReNxqgR74RdMhqLXBi1RFEIFFyD/TqrvwLtvPYpV
+         ZORk9uhnKLP9wW5Z6Q5HJHapdZBhctgPVafe6Y1mdJJkLJYsWae7QH8sTWHgAvowfnTJ
+         J+j3SunwGQ9Jb6L/Tn9pns9C1Rz2w1JDsY7oooV+e8ejhf2IdSK1KX3bCM3duJc3wKez
+         k46A==
+X-Forwarded-Encrypted: i=1; AJvYcCVMiOcCz7/CZOYUWnog4wuDPfav3ECNdqQETZEjiYZhvHNu/Spl+Do/Sfc8NbrYyQmH4gyDwfS5AiOImkE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlNuvDihC2EuhoHxkiSx2bKexw6LqttFbwj2GMB4w5ssEVcE2+
+	jUF9fnARlTWh4OrFx67LuM/9AVBYctU62vG8zh0IQjV67C0OnFwcz9+8+uHfXq4CwaqbPC1wMSs
+	TorTL+0vQdot01UXUQpf8L86qFrGtoqfv6yrn0sT5p2vDfKLtH5lC5YuFPY3nxu3cM9BHcrYf6f
+	Q1FOeiTj2b0I3N9TnuCQrUfxZ8fLX2obNP7phqzv4a
+X-Gm-Gg: ASbGncuaKdyH6Ndgfcru7zChoBFGx1KRFQAXaHnPEByDrrlxrQF+mNMA0ObopOKJJW0
+	h0eSjtMeGYsPM+cCJJWqjcIFflwppAp74U5cAbI1HpDhkuJXR8QlYQKNU1twWbG8BMB1NlQ==
+X-Received: by 2002:a05:6a21:15c9:b0:203:addb:5a29 with SMTP id adf61e73a8af0-21d2478a934mr804214637.40.1748999921382;
+        Tue, 03 Jun 2025 18:18:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9x2Jsz+oEkjdyApeUA+CuoK8myNpbDW4bJgTDO/ZV8ngn2BsxLUd0KXN3ouD9XKiPa4r78geNfVRdh7nw+0I=
+X-Received: by 2002:a05:6a21:15c9:b0:203:addb:5a29 with SMTP id
+ adf61e73a8af0-21d2478a934mr804171637.40.1748999920971; Tue, 03 Jun 2025
+ 18:18:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250530-rss-v12-0-95d8b348de91@daynix.com> <20250530-rss-v12-1-95d8b348de91@daynix.com>
+ <CACGkMEufffSj1GQMqwf598__-JgNtXRpyvsLtjSbr3angLmJXg@mail.gmail.com> <95cb2640-570d-4f51-8775-af5248c6bc5a@daynix.com>
+In-Reply-To: <95cb2640-570d-4f51-8775-af5248c6bc5a@daynix.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 4 Jun 2025 09:18:29 +0800
+X-Gm-Features: AX0GCFuo2dPa7ucM1Nh8rfxdTLetjqqveALggfJbyBjhCoXiIN_FHhv1NK0hF9M
+Message-ID: <CACGkMEu6fZaErFEu7_UFsykXRL7Z+CwmkcxmvJHC+eN_j0pQvg@mail.gmail.com>
+Subject: Re: [PATCH net-next v12 01/10] virtio_net: Add functions for hashing
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+	Yuri Benditovich <yuri.benditovich@daynix.com>, Andrew Melnychenko <andrew@daynix.com>, 
+	Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue,  3 Jun 2025 20:50:01 -0400
-Sasha Levin <sashal@kernel.org> wrote:
+On Tue, Jun 3, 2025 at 1:31=E2=80=AFPM Akihiko Odaki <akihiko.odaki@daynix.=
+com> wrote:
+>
+> On 2025/06/03 12:19, Jason Wang wrote:
+> > On Fri, May 30, 2025 at 12:50=E2=80=AFPM Akihiko Odaki <akihiko.odaki@d=
+aynix.com> wrote:
+> >>
+> >> They are useful to implement VIRTIO_NET_F_RSS and
+> >> VIRTIO_NET_F_HASH_REPORT.
+> >>
+> >> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> >> Tested-by: Lei Yang <leiyang@redhat.com>
+> >> ---
+> >>   include/linux/virtio_net.h | 188 +++++++++++++++++++++++++++++++++++=
+++++++++++
+> >>   1 file changed, 188 insertions(+)
+> >>
+> >> diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
+> >> index 02a9f4dc594d..426f33b4b824 100644
+> >> --- a/include/linux/virtio_net.h
+> >> +++ b/include/linux/virtio_net.h
+> >> @@ -9,6 +9,194 @@
+> >>   #include <uapi/linux/tcp.h>
+> >>   #include <uapi/linux/virtio_net.h>
+> >>
+> >> +struct virtio_net_hash {
+> >> +       u32 value;
+> >> +       u16 report;
+> >> +};
+> >> +
+> >> +struct virtio_net_toeplitz_state {
+> >> +       u32 hash;
+> >> +       const u32 *key;
+> >> +};
+> >> +
+> >> +#define VIRTIO_NET_SUPPORTED_HASH_TYPES (VIRTIO_NET_RSS_HASH_TYPE_IPv=
+4 | \
+> >> +                                        VIRTIO_NET_RSS_HASH_TYPE_TCPv=
+4 | \
+> >> +                                        VIRTIO_NET_RSS_HASH_TYPE_UDPv=
+4 | \
+> >> +                                        VIRTIO_NET_RSS_HASH_TYPE_IPv6=
+ | \
+> >> +                                        VIRTIO_NET_RSS_HASH_TYPE_TCPv=
+6 | \
+> >> +                                        VIRTIO_NET_RSS_HASH_TYPE_UDPv=
+6)
+> >> +
+> >> +#define VIRTIO_NET_RSS_MAX_KEY_SIZE 40
+> >> +
+> >> +static inline void virtio_net_toeplitz_convert_key(u32 *input, size_t=
+ len)
+> >> +{
+> >> +       while (len >=3D sizeof(*input)) {
+> >> +               *input =3D be32_to_cpu((__force __be32)*input);
+> >> +               input++;
+> >> +               len -=3D sizeof(*input);
+> >> +       }
+> >> +}
+> >> +
+> >> +static inline void virtio_net_toeplitz_calc(struct virtio_net_toeplit=
+z_state *state,
+> >> +                                           const __be32 *input, size_=
+t len)
+> >> +{
+> >> +       while (len >=3D sizeof(*input)) {
+> >> +               for (u32 map =3D be32_to_cpu(*input); map; map &=3D (m=
+ap - 1)) {
+> >> +                       u32 i =3D ffs(map);
+> >> +
+> >> +                       state->hash ^=3D state->key[0] << (32 - i) |
+> >> +                                      (u32)((u64)state->key[1] >> i);
+> >> +               }
+> >> +
+> >> +               state->key++;
+> >> +               input++;
+> >> +               len -=3D sizeof(*input);
+> >> +       }
+> >> +}
+> >> +
+> >> +static inline u8 virtio_net_hash_key_length(u32 types)
+> >> +{
+> >> +       size_t len =3D 0;
+> >> +
+> >> +       if (types & VIRTIO_NET_HASH_REPORT_IPv4)
+> >> +               len =3D max(len,
+> >> +                         sizeof(struct flow_dissector_key_ipv4_addrs)=
+);
+> >> +
+> >> +       if (types &
+> >> +           (VIRTIO_NET_HASH_REPORT_TCPv4 | VIRTIO_NET_HASH_REPORT_UDP=
+v4))
+> >> +               len =3D max(len,
+> >> +                         sizeof(struct flow_dissector_key_ipv4_addrs)=
+ +
+> >> +                         sizeof(struct flow_dissector_key_ports));
+> >> +
+> >> +       if (types & VIRTIO_NET_HASH_REPORT_IPv6)
+> >> +               len =3D max(len,
+> >> +                         sizeof(struct flow_dissector_key_ipv6_addrs)=
+);
+> >> +
+> >> +       if (types &
+> >> +           (VIRTIO_NET_HASH_REPORT_TCPv6 | VIRTIO_NET_HASH_REPORT_UDP=
+v6))
+> >> +               len =3D max(len,
+> >> +                         sizeof(struct flow_dissector_key_ipv6_addrs)=
+ +
+> >> +                         sizeof(struct flow_dissector_key_ports));
+> >> +
+> >> +       return len + sizeof(u32);
+> >> +}
+> >> +
+> >> +static inline u32 virtio_net_hash_report(u32 types,
+> >> +                                        const struct flow_keys_basic =
+*keys)
+> >> +{
+> >> +       switch (keys->basic.n_proto) {
+> >> +       case cpu_to_be16(ETH_P_IP):
+> >> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT)) {
+> >> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_TCP &&
+> >> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv4))
+> >> +                               return VIRTIO_NET_HASH_REPORT_TCPv4;
+> >> +
+> >> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_UDP &&
+> >> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv4))
+> >> +                               return VIRTIO_NET_HASH_REPORT_UDPv4;
+> >> +               }
+> >> +
+> >> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv4)
+> >> +                       return VIRTIO_NET_HASH_REPORT_IPv4;
+> >> +
+> >> +               return VIRTIO_NET_HASH_REPORT_NONE;
+> >> +
+> >> +       case cpu_to_be16(ETH_P_IPV6):
+> >> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT)) {
+> >> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_TCP &&
+> >> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv6))
+> >> +                               return VIRTIO_NET_HASH_REPORT_TCPv6;
+> >> +
+> >> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_UDP &&
+> >> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv6))
+> >> +                               return VIRTIO_NET_HASH_REPORT_UDPv6;
+> >> +               }
+> >> +
+> >> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv6)
+> >> +                       return VIRTIO_NET_HASH_REPORT_IPv6;
+> >> +
+> >> +               return VIRTIO_NET_HASH_REPORT_NONE;
+> >> +
+> >> +       default:
+> >> +               return VIRTIO_NET_HASH_REPORT_NONE;
+> >> +       }
+> >> +}
+> >> +
+> >> +static inline void virtio_net_hash_rss(const struct sk_buff *skb,
+> >> +                                      u32 types, const u32 *key,
+> >> +                                      struct virtio_net_hash *hash)
+> >> +{
+> >> +       struct virtio_net_toeplitz_state toeplitz_state =3D { .key =3D=
+ key };
+> >> +       struct flow_keys flow;
+> >> +       struct flow_keys_basic flow_basic;
+> >> +       u16 report;
+> >> +
+> >> +       if (!skb_flow_dissect_flow_keys(skb, &flow, 0)) {
+> >> +               hash->report =3D VIRTIO_NET_HASH_REPORT_NONE;
+> >> +               return;
+> >> +       }
+> >> +
+> >> +       flow_basic =3D (struct flow_keys_basic) {
+> >> +               .control =3D flow.control,
+> >> +               .basic =3D flow.basic
+> >> +       };
+> >> +
+> >> +       report =3D virtio_net_hash_report(types, &flow_basic);
+> >> +
+> >> +       switch (report) {
+> >> +       case VIRTIO_NET_HASH_REPORT_IPv4:
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >> +                                        (__be32 *)&flow.addrs.v4addrs=
+,
+> >> +                                        sizeof(flow.addrs.v4addrs));
+> >> +               break;
+> >> +
+> >> +       case VIRTIO_NET_HASH_REPORT_TCPv4:
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >> +                                        (__be32 *)&flow.addrs.v4addrs=
+,
+> >> +                                        sizeof(flow.addrs.v4addrs));
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.=
+ports,
+> >> +                                        sizeof(flow.ports.ports));
+> >> +               break;
+> >> +
+> >> +       case VIRTIO_NET_HASH_REPORT_UDPv4:
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >> +                                        (__be32 *)&flow.addrs.v4addrs=
+,
+> >> +                                        sizeof(flow.addrs.v4addrs));
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.=
+ports,
+> >> +                                        sizeof(flow.ports.ports));
+> >> +               break;
+> >> +
+> >> +       case VIRTIO_NET_HASH_REPORT_IPv6:
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >> +                                        (__be32 *)&flow.addrs.v6addrs=
+,
+> >> +                                        sizeof(flow.addrs.v6addrs));
+> >> +               break;
+> >> +
+> >> +       case VIRTIO_NET_HASH_REPORT_TCPv6:
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >> +                                        (__be32 *)&flow.addrs.v6addrs=
+,
+> >> +                                        sizeof(flow.addrs.v6addrs));
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.=
+ports,
+> >> +                                        sizeof(flow.ports.ports));
+> >> +               break;
+> >> +
+> >> +       case VIRTIO_NET_HASH_REPORT_UDPv6:
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >> +                                        (__be32 *)&flow.addrs.v6addrs=
+,
+> >> +                                        sizeof(flow.addrs.v6addrs));
+> >> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.=
+ports,
+> >> +                                        sizeof(flow.ports.ports));
+> >> +               break;
+> >> +
+> >> +       default:
+> >> +               hash->report =3D VIRTIO_NET_HASH_REPORT_NONE;
+> >> +               return;
+> >
+> > So I still think we need a comment here to explain why this is not an
+> > issue if the device can report HASH_XXX_EX. Or we need to add the
+> > support, since this is the code from the driver side, I don't think we
+> > need to worry about the device implementation issues.
+>
+> This is on the device side, and don't report HASH_TYPE_XXX_EX.
+>
+> >
+> > For the issue of the number of options, does the spec forbid fallback
+> > to VIRTIO_NET_HASH_REPORT_NONE? If not, we can do that.
+>
+> 5.1.6.4.3.4 "IPv6 packets with extension header" says:
+>  > If VIRTIO_NET_HASH_TYPE_TCP_EX is set and the packet has a TCPv6
+>  > header, the hash is calculated over the following fields:
+>  > - Home address from the home address option in the IPv6 destination
+>  >   options header. If the extension header is not present, use the
+>  >   Source IPv6 address.
+>  > - IPv6 address that is contained in the Routing-Header-Type-2 from the
+>  >   associated extension header. If the extension header is not present,
+>  >   use the Destination IPv6 address.
+>  > - Source TCP port
+>  > - Destination TCP port
+>
+> Therefore, if VIRTIO_NET_HASH_TYPE_TCP_EX is set, the packet has a TCPv6
+> and an home address option in the IPv6 destination options header is
+> present, the hash is calculated over the home address. If the hash is
+> not calculated over the home address in such a case, the device is
+> contradicting with this section and violating the spec. The same goes
+> for the other HASH_TYPE_XXX_EX types and Routing-Header-Type-2.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
->=20
-> [ Upstream commit 00d872dd541cdf22230510201a1baf58f0147db9 ]
->=20
-> The trace_adjust_address() will take a given address and examine the
-> persistent ring buffer to see if the address matches a module that is
-> listed there. If it does not, it will just adjust the value to the core
-> kernel delta. But if the address was for something that was not part of
-> the core kernel text or data it should not be adjusted.
->=20
-> Check the result of the adjustment and only return the adjustment if it
-> lands in the current kernel text or data. If not, return the original
-> address.
->=20
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Link: https://lore.kernel.org/20250506102300.0ba2f9e0@gandalf.local.home
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->=20
+Just to make sure we are one the same page. I meant:
 
-I guess the following blurb is new.
+1) If the hash is not calculated over the home address (in the case of
+IPv6 destination destination), it can still report
+VIRTIO_NET_RSS_HASH_TYPE_IPv6. This is what you implemented in your
+series. So the device can simply fallback to e.g TCPv6 if it can't
+understand all or part of the IPv6 options.
+2) the VIRTIO_NET_SUPPORTED_HASH_TYPES is not checked against the
+tun_vnet_ioctl_sethash(), so userspace may set
+VIRTIO_NET_HASH_TYPE_TCP_EX regardless of what has been returned by
+tun_vnet_ioctl_gethashtypes(). In this case they won't get
+VIRTIO_NET_HASH_TYPE_TCP_EX.
+3) implementing part of the hash types might complicate the migration
+or at least we need to describe the expectations of libvirt or other
+management in this case. For example, do we plan to have a dedicated
+Qemu command line like:
 
-> **YES** This commit should be backported to stable kernel trees based on
+-device virtio-net-pci,hash_report=3Don,supported_hash_types=3DX,Y,Z?
 
-Hmm, I'm not so sure the analysis is correct.
+Thanks
 
-> the following comprehensive analysis: ## Security Analysis ### 1.
-> **Critical Security Fix** The commit addresses a significant security
-> vulnerability in the `trace_adjust_address()` function. The change on
-> lines 6148-6149 adds crucial validation: ```c raddr =3D addr +
-> tr->text_delta; return __is_kernel(raddr) || is_kernel_core_data(raddr)
-> || is_kernel_rodata(raddr) ? raddr : addr; ``` **Before the fix**: The
-> function would blindly return `addr + tr->text_delta` without validating
-> whether the resulting address falls within legitimate kernel memory
-
-If you look at the code, it will return the address regardless if it is
-within the kernel memory or not.
-
-This is called when reading addresses that are in the persistent ring
-buffer from a previous boot.
-
-Before the "fix":
-
-  It would always add the text_delta to the address.
-
-The issue without that is that it could be adjusting a pointer that was to
-allocated memory. It makes no sense to do this. The reason for doing this
-adjustment is because a lot of reads of addresses use "%pS", and we care
-only about getting a proper kallsyms of the address.
-
-Thus what is done is:
-
-		raddr =3D addr + tr->text_delta;
-		return __is_kernel(raddr) || is_kernel_core_data(raddr) ||
-			is_kernel_rodata(raddr) ? raddr : addr;
-
-Which does the adjustment, and if it falls into kernel memory or data
-return that adjustment, otherwise return the original address. The reason
-is that by returning the adjusted memory, it may fall into a module that we
-do not want to print kallsyms for.
-
-> regions. **After the fix**: The function validates that adjusted
-> addresses only point to valid kernel sections (text, core data, or read-
-> only data). If the adjusted address doesn't fall within these legitimate
-> regions, it returns the original address unchanged. ### 2. **KASLR
-> Protection** This fix is particularly important for KASLR (Kernel
-> Address Space Layout Randomization) security: - **Information Disclosure
-
-It doesn't risk any KASLR information. All addresses used by
-trace_adjust_address() is from a pointer that existed in a previous boot.
-The adjustment is pretty meaningless if it's not in kernel text or data.
-
-> Risk**: Without validation, the function could return addresses pointing
-> to arbitrary memory locations, potentially leaking kernel address layout
-> information - **KASLR Bypass**: Invalid address adjustments could reveal
-> the kernel's memory layout, defeating KASLR protections - **Cross-boot
-> attacks**: The persistent ring buffer functionality could be exploited
-> to extract address information from previous boot sessions ### 3.
-> **Memory Safety** The validation prevents potential memory corruption
-> scenarios: - **Out-of-bounds access**: Ensures addresses used for symbol
-> resolution and string dereferencing are within valid kernel regions -
-> **Kernel crashes**: Prevents dereferencing of invalid addresses that
-> could cause kernel panics - **Information leakage**: Stops potential
-> disclosure of arbitrary kernel memory contents ### 4. **Limited Risk of
-> Regression** This is a defensive fix that only affects the tracing
-> subsystem: - **Minimal impact**: Only changes behavior when addresses
-> would be invalid anyway - **Backwards compatible**: Legitimate addresses
-> continue to work as before - **Contained scope**: Limited to persistent
-> ring buffer functionality ### 5. **Alignment with Stable Tree Criteria**
-> The commit meets all the criteria for stable tree backporting: - =E2=9C=85
-> **Important bug fix**: Addresses a security vulnerability - =E2=9C=85 **S=
-mall
-> and contained**: Only adds validation logic, doesn't change architecture
-> - =E2=9C=85 **Minimal regression risk**: Defensive change that only affec=
-ts
-> invalid cases - =E2=9C=85 **Clear benefit**: Improves kernel security wit=
-hout
-> breaking functionality - =E2=9C=85 **Non-feature**: Pure security fix, not
-> adding new functionality ### 6. **Real-world Impact** This vulnerability
-> could be exploited in environments where: - Persistent tracing is
-> enabled across reboots - Attackers have access to trace output - Systems
-
-Yes persistent tracing is enabled across reboots and the address is from a
-previous boot. It does return the actual address of the current boot to use
-with %pS when it was on the kernel text or data address. When it isn't
-(likely a module address) the adjustment is meaningless and may give bad
-trace output at most.
-
-If an attacker has access to trace output KASLR is already lost, as
-function tracing records raw addresses and exposes everything KASLR, which
-is why reading these files is a privilege operation.
-
-I won't argue against backporting, but I just wanted to state this analysis
-may not be correct.
-
--- Steve
-
-
-> rely on KASLR for security The fix ensures that the tracing subsystem
-> cannot be used as a vector for kernel address space information
-> disclosure or memory corruption attacks. **Conclusion**: This is a clear
-> security fix that should be backported to maintain the security
-> integrity of stable kernel releases.
->=20
->  kernel/trace/trace.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 5b8db27fb6ef3..01572ef79802f 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -6032,6 +6032,7 @@ unsigned long trace_adjust_address(struct trace_arr=
-ay *tr, unsigned long addr)
->  	struct trace_module_delta *module_delta;
->  	struct trace_scratch *tscratch;
->  	struct trace_mod_entry *entry;
-> +	unsigned long raddr;
->  	int idx =3D 0, nr_entries;
-> =20
->  	/* If we don't have last boot delta, return the address */
-> @@ -6045,7 +6046,9 @@ unsigned long trace_adjust_address(struct trace_arr=
-ay *tr, unsigned long addr)
->  	module_delta =3D READ_ONCE(tr->module_delta);
->  	if (!module_delta || !tscratch->nr_entries ||
->  	    tscratch->entries[0].mod_addr > addr) {
-> -		return addr + tr->text_delta;
-> +		raddr =3D addr + tr->text_delta;
-> +		return __is_kernel(raddr) || is_kernel_core_data(raddr) ||
-> +			is_kernel_rodata(raddr) ? raddr : addr;
->  	}
-> =20
->  	/* Note that entries must be sorted. */
+>
+> Regards,
+> Akihiko Odaki
+>
 
