@@ -1,59 +1,58 @@
-Received: from out162-62-57-87.mail.qq.com (out162-62-57-87.mail.qq.com [162.62.57.87])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C801FCFF1
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 06:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDB01FCFF1;
+	Wed,  4 Jun 2025 06:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749020126; cv=none; b=lq+8g7jIKsY+tcvkKkcZrD5Ek5DGw3D+CtfhG+Jtww81wjcDfj+V/DMjEOZe+pX51LWtFRyWq94OG6reJdk5SzVkWr41Bbh1OV+f7RU2qQPGR1M3jmothzmBssiwOKjKMx2eJ9xfTrAYgbQgM+dBA2NoWu/PFTkUR9S70ou1m08=
+	t=1749020167; cv=none; b=cUWxDcXWd6VpH8p3dBpkKCNDRuc6eOp0cTbZ9gkHbCDONZAuafP2T89zjBGyMvrOuEdeb7pHBj2BNReyxgJPsDnpLqhgR2h6wCn93fUdwPPWZqXlNAuch6/6xR1Mvz8UPLX1zFpwWza/Hdf0L6yt0+HFS9UUEzwudtzrN2th8nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749020126; c=relaxed/simple;
-	bh=Ju08hNn8gHoXOpTMVK4Z8FCTFpXkWRJkIzp0MZh7vGw=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=e1i94eWwWT2W3F2x3nruNESy8mZYq+m5gZ8mg2EIlheOAHSzn7uoR4sr2lZs541UAiAvMSehFvgJyYu1DjBfRJUSQb3CCeZm5mTFsVrJnbx3cWIeRqkyttoC5p0r+kWitM1lGcV3akMiDicVqMUvOyzCD4vcCWaupBVlglCYkeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=n87TDXcu; arc=none smtp.client-ip=162.62.57.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="n87TDXcu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1749020116; bh=VZ4xNFAFJzzlvtqh/27P/VRB0oLM2LE76YUTjoDpWg0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=n87TDXcuwS6Qy8+DnX/ISRSdU0zoYihNaE/8BYRFVOu0aONTbFX9IkSjXz8mCgkSG
-	 n4bPJ0/VV5CA9wXNqMz0fjpqCgsBseknsvsht+Uhx1+5BludvusM9rfK9/5mF/UEC+
-	 aFpsU+Zmn6udLS5FxPGbItGD/68ckbruu8XM9dBM=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id C4406278; Wed, 04 Jun 2025 14:49:04 +0800
-X-QQ-mid: xmsmtpt1749019744tojud1zcu
-Message-ID: <tencent_35CC9554E896EE32CDD479766DB42D056D0A@qq.com>
-X-QQ-XMAILINFO: NQR8mRxMnur9i1RN+f7HC5UAoqLTSIGdXzpKHLAodfScGmZ1xcAdUZjNdV/TnZ
-	 pyzED9jgLibRE5PqSPTBfLVOLu9Y98BQr5g9wTghxNqZHaR3dQrW20sjfl3cb46S4qxGPbNdL1hV
-	 JjZyh7Ck2xSiWXRk+EmZBhM6AYMkbhfeUPdcnOuLuyfUlyHSFTEjDQvfqu+KDGpOLmE3OOZbNroH
-	 1WfloOsanLVNhKjUYdmvNumc+Yf4DhRDlXQmrZ2DJPRQcYaZSNj6jAuPTheFl6hgA83hNFPPtB11
-	 qfTV+fRHZQwo46wPe95wxMsm14JPELWmTcmNmRR1/lssZRcoSlKI/PihGi/ZLfK2s+gDCe90kivG
-	 liDiqkzd62l42AcVF/ki4MpsDp+VPXw9PR0g+vZx75bnKJUcGP9n88umsNmzE4bxcHTvtP8Fy6Wz
-	 xNLV0L3kbMVsCrfy0OQWrwlr/cVcXrXqpoJ1nzNRl4BTiJGiYDBN66M3CmD6YrjEWv47cPWM/BqX
-	 li3Y2IczAC2id6SyVBZxT+foO/VvNmOpu3UoA90d8ekhzVDqBKExgV6ZKYAxAIF3HbeeHxZb2Tn6
-	 g+29GYafOsvE9ShLN0FLoKRwCkoccVvlwRf811a8Mphl7Nsr2J/VrhJpWlS4CsvUkRFjVl0UkR0P
-	 IuLjS9KkhlHvjRNi9IbrCREG1vJy8pJraK0HopwcdENuRqMtxJwjQYNHlSC8yEjIMC2CmnlCwBwj
-	 j3riQVlzSWfEkDz4RCKVzMw8gDlKE3CNveVSLuaWi/GDzzRn/5pTkuSPxqNO2wVw8Wbu3Ilk16VB
-	 bSdu1DWCXJJlhiFqJVVNbE1OpjLyueJe3hU8ZlimgH4pfQ3rFSuogSnXbkfmocc1vUb8bAF+jCBC
-	 aX/UAUyK8eVwB4YvkOSUCSbs3avpmYOvDr0O7KlzyqxGEmaKL+A6xeTlgiPpnythnurd3FgWj1cE
-	 +Kw/0+MMDvRV9UN2VOX5i98Bn4ooqI
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+630f6d40b3ccabc8e96e@syzkaller.appspotmail.com
-Cc: jfs-discussion@lists.sourceforge.net,
+	s=arc-20240116; t=1749020167; c=relaxed/simple;
+	bh=NmoUD4o1/acS/X92p+/3dD2O+lx5anNx9KqfLXTVtsw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OIFLp0SrTfcYTL2RVr7xWhydsjdVHnuopAEN3MzrpC8KPeG2qoq71LsuA3dZHdvR4BpWh3t+HNKfygAfFCmW/aR2t5qHLk052k697IaGx0ZF8H76djHerRW+sKVdnhLkSVtymfpA8dm7DCcTENvQ77PGs6wlzfypSEFFfQanQTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: f4b41e86411011f0b29709d653e92f7d-20250604
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:11c5b19d-2e59-44ff-9c3e-2bb34db830f2,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-INFO: VERSION:1.1.45,REQID:11c5b19d-2e59-44ff-9c3e-2bb34db830f2,IP:0,URL
+	:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:20
+X-CID-META: VersionHash:6493067,CLOUDID:c275b237e792ae232df6132bdbb1a343,BulkI
+	D:250604145555B1X420DL,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102,TC:n
+	il,Content:0|50,EDM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: f4b41e86411011f0b29709d653e92f7d-20250604
+X-User: xiaopei01@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <xiaopei01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1197149827; Wed, 04 Jun 2025 14:55:52 +0800
+From: Pei Xiao <xiaopei01@kylinos.cn>
+To: mst@redhat.com,
+	virtualization@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	shaggy@kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] jfs: Regular file curruption check
-Date: Wed,  4 Jun 2025 14:48:43 +0800
-X-OQ-MSGID: <20250604064842.3129343-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <683eb35e.a00a0220.d8eae.0062.GAE@google.com>
-References: <683eb35e.a00a0220.d8eae.0062.GAE@google.com>
+	kvm@vger.kernel.org
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: [PATCH] vhost:  Use ERR_CAST inlined function instead of ERR_PTR(PTR_ERR(...))
+Date: Wed,  4 Jun 2025 14:55:48 +0800
+Message-Id: <1a8499a5da53e4f72cf21aca044ae4b26db8b2ad.1749020055.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,31 +61,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The reproducer builds a corrupted file on disk with a negative i_size value.
-Add a check when opening this file to avoid subsequent operation failures.
+cocci warning:
+./kernel/vhost_task.c:148:9-16: WARNING: ERR_CAST can be used with tsk
 
-Reported-by: syzbot+630f6d40b3ccabc8e96e@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=630f6d40b3ccabc8e96e
-Tested-by: syzbot+630f6d40b3ccabc8e96e@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Use ERR_CAST inlined function instead of ERR_PTR(PTR_ERR(...)).
+
+Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
 ---
- fs/jfs/file.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/vhost_task.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jfs/file.c b/fs/jfs/file.c
-index 01b6912e60f8..742cadd1f37e 100644
---- a/fs/jfs/file.c
-+++ b/fs/jfs/file.c
-@@ -44,6 +44,9 @@ static int jfs_open(struct inode *inode, struct file *file)
- {
- 	int rc;
+diff --git a/kernel/vhost_task.c b/kernel/vhost_task.c
+index 2f844c279a3e..8c4a82c0bdbe 100644
+--- a/kernel/vhost_task.c
++++ b/kernel/vhost_task.c
+@@ -111,7 +111,7 @@ EXPORT_SYMBOL_GPL(vhost_task_stop);
+  * @arg: data to be passed to fn and handled_kill
+  * @name: the thread's name
+  *
+- * This returns a specialized task for use by the vhost layer or ERR_PTR() on
++ * This returns a specialized task for use by the vhost layer or ERR_CAST() on
+  * failure. The returned task is inactive, and the caller must fire it up
+  * through vhost_task_start().
+  */
+@@ -145,7 +145,7 @@ struct vhost_task *vhost_task_create(bool (*fn)(void *),
+ 	tsk = copy_process(NULL, 0, NUMA_NO_NODE, &args);
+ 	if (IS_ERR(tsk)) {
+ 		kfree(vtsk);
+-		return ERR_PTR(PTR_ERR(tsk));
++		return ERR_CAST(tsk);
+ 	}
  
-+	if (S_ISREG(inode->i_mode) && inode->i_size < 0)
-+		return -EIO;
-+
- 	if ((rc = dquot_file_open(inode, file)))
- 		return rc;
- 
+ 	vtsk->task = tsk;
 -- 
-2.43.0
+2.25.1
 
