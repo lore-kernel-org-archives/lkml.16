@@ -1,120 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E7722DA17;
-	Wed,  4 Jun 2025 07:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AFE233D9C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749021888; cv=none; b=ikKlO79bTeaw/f7s4KyB3k7wrwLFSyF2g5XERNnAoSd3mrnJ5u9IbibvUsxmLeON6lTf0jVENlVs96zf9VpnMKD8UonvWJ5s3tRzynHjoCfkjbj6F79XEkynrjPW3DxZcCq/BAF9WHM1ClmJhBzhb1GJwDnvP5Zi+xqO5mgqdWE=
+	t=1749021891; cv=none; b=OW0YCzzPFeGXbzNRF4fr4mFTULdyD+b5Kb+tPxDles6GDvetCtJsCDkvP0XC1vyvDmR1Ge+SwnwZ9jojf2/niJq3zXheiRoI/tbEMdAH186z10wsR/8W5SDK+qj9v4njOiCsb1XdF2WPZmRa2GTwKEjKgO8BAUWk7y8pDAeu3XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749021888; c=relaxed/simple;
-	bh=d5VGZY3wjHIhKCGDSeV6VZbiBPYwu9t4ayf8AO8OlwU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/uNeO0tEagujOPUnteyJffivUmpFoBFjo305mmyAtnM4hMecE9S9xqh/2QSMmytvWY40c8eAFS1sdS9DWO0LJ5Rn4eoyI3HOshQLDC0D2L2mEFmpBtfBSSeeTH4obd2+9stFpKHx1GxNXob4nVsPHGZOJV4m2Efv8bgiccQbsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odyy8wQ5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749021891; c=relaxed/simple;
+	bh=eJaM9PF91eHJBG8Hc+d7PGAX8a/KIWNyoS3YQxQ6GVM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iLCH9huAO0V0wHLb5VfhyMuM5d2JN5GbCulLq8F1KbeHjUs52OVZ96yXFkJE/ZZMcye7Ie8dEqJ4rMZGOS6fc8CvuCsQXaioD1+cXivJ5QiKWfGRVSxIoXBI/4xenZQNJ9/caesD6xFMYI1Ds0cv6wjBu4MxO1Laqg1n9Nfsltw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=ktpO+2cZ; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odyy8wQ5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD61C4CEE7;
-	Wed,  4 Jun 2025 07:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749021887;
-	bh=d5VGZY3wjHIhKCGDSeV6VZbiBPYwu9t4ayf8AO8OlwU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=odyy8wQ5ON02zPffOE2SJpBxUwUYz5rmT5lsE2yOgNbb2cDXnIwb0ACfUhTX9uK8c
-	 bqVyvG+X44TOpZ6BjZz+yFBUGipEXDmEzroDs9BVd6rU1kd+cBPUWr4UygZJrRyDew
-	 2CvhfHn6EhiRYyOc99eZpfidTitTHMZs/OH+xzIToCaZNP4v3VLaXeHt8xZCAG+AR1
-	 HygqPF1tjl1zS5OKj2rvtKGX5HTGDoSj7qKMgGJEKYXjlNWHRkXg0QWLSlkBw8asQD
-	 FH64MJHBBiUK2uTUApfPhWXBcE6MzA63npN2mN7MtdGj9u9vf32BHi+hkcr+OfHtVx
-	 QFPWrpJi2/V7A==
-Date: Wed, 4 Jun 2025 09:24:38 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Peter Maydell <peter.maydell@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, andre.przywara@arm.com,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, suzuki.poulose@arm.com
-Subject: Re: [PATCH v4 01/26] dt-bindings: interrupt-controller: Add Arm GICv5
-Message-ID: <aD/0tuak7Hja8k4g@lpieralisi>
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
- <20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org>
- <aDhWlytLCxONZdF9@lpieralisi>
- <CAFEAcA_3YLMSy+OsSsRayaRciQ1+jjh-dGzEjrh2Wa8BqdmqrA@mail.gmail.com>
- <aD6ouVAXy5qcZtM/@lpieralisi>
- <CAL_JsqJ5N2ZUBeAes=wexq=EstRSZ5=heF1_6crAw76yZ9uXog@mail.gmail.com>
- <CAFEAcA-JrS0BiT66iin-pRVFadrY-pnJZ8TkDNxcjErknSCnUA@mail.gmail.com>
- <CAL_JsqL7x53an2-MaLHP5tfVXb4JxT8ORUMaA8pL-gMsWLJqkA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="ktpO+2cZ"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-747c2cc3419so3708212b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 00:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1749021888; x=1749626688; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gtGbzLUDxU2IB9qPjKURq38VfX8ZCpDlPYi0PWx3MpY=;
+        b=ktpO+2cZ3s8p7tfhy9ELVkKdk/xSniXFRRelWOEdFg0wPZ4Kwb9xZXmIRUkubTIP7l
+         2TzQZk6SwGnnUesNwOPjxD5RFupY84UNFqHi+YSuHdYrbIQxDlKEMMFgiLoRCWP6wl2a
+         ImxS/klFMWYaRglpqEKcKOZQa1hS5bv1S9tfWPadOi9AkAkia8N6YCNN9hbaaHHcCcFE
+         rhp0OiyvloswvQXlUw4BW5MtZOFC4G1BDVLd7h32EP5YpaS7t/JGctxM7WJ+zSNF502S
+         5uHgvcOQShcsX8Merrk8GvbW+hQ8Nka1batBN2LUFCiDtD1D7tX2cwp1gZ0kl0pK9byD
+         YPMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749021888; x=1749626688;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gtGbzLUDxU2IB9qPjKURq38VfX8ZCpDlPYi0PWx3MpY=;
+        b=J/LjyiU/yQ+n9X/kmA9Xv+UqMtO0qQbTB3u4mOCMGRgbUnnLiitrawwubo+9Fe2jh/
+         c6qSGUjFJUJnCNZaTO06h4T5yBgWCNFydWIZUlUKQlFDdTiGIyQKFe4IBVlsfxfxo+Bj
+         rJcCfnyrftBPDBpy/kxTv4jy98YDx9SgvGdOZwaMp5TmNL0EnI3HexiCZKP4kVfKjGWW
+         4OMxLgwimoxuNqXXlhJFzUiQedXGk/3lr4/AmtJMoIvCKbJe+I9vNNUB/Z/rg95rtYhF
+         875/O3SJ8g/XIh7uLk/gJsAyuWYzFQuBT4Md1THJjyYCpuYYh8WCX8dTd/Gqky8Rz77T
+         +vcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMojv9UefplJrrXOOo9HYc2/YUbKLAd8y5SwClCBHCh+FcnZm/ebRIeLxt46s/crHDoCFHs0RDZFq+k+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpvVXcydUXEWBXdBoA48k7/KE4VH2n+1dHwZV9T1xDuGRz+q4S
+	mQqnKnCC773utr+pi+I9tKjBMmZBlyeiTWLArt3FSCuxE69NITKTQAOHAgZiaq++Odw=
+X-Gm-Gg: ASbGnctt/oeurGBxbOOYfwBYhbdtjQggNy/0xOZ/j8d3V6vDD0JRNGL13yQJwdk27FD
+	9Uen6hzU6VQAqt9JZTCHAeCavzoxjuGl5wRzwkurM8XtU/egufu1kXnK1RcCHfONXaybZoAwfsQ
+	WeOweifGtKI/DqORgfILdNhV+icxTjCJZ0G5Yd8JG6jTrBIPoyf4tPVSUjg9kdh2rryO9RQ+pgZ
+	ScDeS3dZjf91u7Bj3pNZHOLuuPRq4p6gPTBcLL3ywUE1v0Iy78CjtU+4AlAOXRSDzUmNa5F7pTZ
+	0djEVyTE7Ezp82aAR/7m7C2XJtr/TzXgyMKvvSIYF1CBuNwEbBAtEeJ18M3E5k8P
+X-Google-Smtp-Source: AGHT+IHXDTL1GYPRjqoXaAf0lXb/mQXNX5irqPQDyrCtJl+J8aEBhNquD8+cbiWqUJBWAylgDPuoqQ==
+X-Received: by 2002:a05:6a20:6a03:b0:216:1c88:df46 with SMTP id adf61e73a8af0-21d22909953mr3036667637.0.1749021887895;
+        Wed, 04 Jun 2025 00:24:47 -0700 (PDT)
+Received: from [157.82.203.223] ([157.82.203.223])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affd478bsm10590024b3a.155.2025.06.04.00.24.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 00:24:47 -0700 (PDT)
+Message-ID: <517d5838-3313-4b31-b96d-d471b062cd1a@daynix.com>
+Date: Wed, 4 Jun 2025 16:24:42 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v12 03/10] tun: Allow steering eBPF program to
+ fall back
+To: Jason Wang <jasowang@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, kvm@vger.kernel.org,
+ virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org,
+ Yuri Benditovich <yuri.benditovich@daynix.com>,
+ Andrew Melnychenko <andrew@daynix.com>,
+ Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com,
+ Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
+References: <20250530-rss-v12-0-95d8b348de91@daynix.com>
+ <20250530-rss-v12-3-95d8b348de91@daynix.com>
+ <CACGkMEvVf0LrquZcWSv3vp-r44sTj0ZDnjwbwB20N0aU35+vxw@mail.gmail.com>
+Content-Language: en-US
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+In-Reply-To: <CACGkMEvVf0LrquZcWSv3vp-r44sTj0ZDnjwbwB20N0aU35+vxw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqL7x53an2-MaLHP5tfVXb4JxT8ORUMaA8pL-gMsWLJqkA@mail.gmail.com>
 
-On Tue, Jun 03, 2025 at 02:11:34PM -0500, Rob Herring wrote:
-> On Tue, Jun 3, 2025 at 10:37 AM Peter Maydell <peter.maydell@linaro.org> wrote:
-> >
-> > On Tue, 3 Jun 2025 at 16:15, Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Tue, Jun 3, 2025 at 2:48 AM Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > > >
-> > > > On Thu, May 29, 2025 at 02:17:26PM +0100, Peter Maydell wrote:
-> > > > > secure.txt says:
-> > > > > # The general principle of the naming scheme for Secure world bindings
-> > > > > # is that any property that needs a different value in the Secure world
-> > > > > # can be supported by prefixing the property name with "secure-". So for
-> > > > > # instance "secure-foo" would override "foo".
-> > >
-> > > Today I would say a 'secure-' prefix is a mistake. To my knowledge,
-> > > it's never been used anyways. But I don't have much visibility into
-> > > what secure world firmware is doing.
-> >
-> > QEMU uses it for communicating with the secure firmware if
-> > you run secure firmware on the virt board. It's done that
-> > since we introduced that binding. Indeed that use case is *why*
-> > the binding is there. It works fine for the intended purpose,
-> > which is "most devices are visible in both S and NS, but a few
-> > things are S only (UART, a bit of RAM, secure-only flash").
+On 2025/06/04 10:27, Jason Wang wrote:
+> On Fri, May 30, 2025 at 12:50 PM Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+>>
+>> This clarifies a steering eBPF program takes precedence over the other
+>> steering algorithms.
 > 
-> I meant "secure-" as a prefix allowed on *any* property, not
-> "secure-status" specifically, which is the only thing QEMU uses
-> AFAICT. IOW, I don't think we should be creating secure-reg,
-> secure-interrupts, secure-clocks, etc.
+> Let's give an example on the use case for this.
+> 
+>>
+>> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+>> ---
+>>   Documentation/networking/tuntap.rst |  7 +++++++
+>>   drivers/net/tun.c                   | 28 +++++++++++++++++-----------
+>>   include/uapi/linux/if_tun.h         |  9 +++++++++
+>>   3 files changed, 33 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/Documentation/networking/tuntap.rst b/Documentation/networking/tuntap.rst
+>> index 4d7087f727be..86b4ae8caa8a 100644
+>> --- a/Documentation/networking/tuntap.rst
+>> +++ b/Documentation/networking/tuntap.rst
+>> @@ -206,6 +206,13 @@ enable is true we enable it, otherwise we disable it::
+>>         return ioctl(fd, TUNSETQUEUE, (void *)&ifr);
+>>     }
+>>
+>> +3.4 Reference
+>> +-------------
+>> +
+>> +``linux/if_tun.h`` defines the interface described below:
+>> +
+>> +.. kernel-doc:: include/uapi/linux/if_tun.h
+>> +
+>>   Universal TUN/TAP device driver Frequently Asked Question
+>>   =========================================================
+>>
+>> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+>> index d8f4d3e996a7..9133ab9ed3f5 100644
+>> --- a/drivers/net/tun.c
+>> +++ b/drivers/net/tun.c
+>> @@ -476,21 +476,29 @@ static u16 tun_automq_select_queue(struct tun_struct *tun, struct sk_buff *skb)
+>>          return txq;
+>>   }
+>>
+>> -static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
+>> +static bool tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb,
+>> +                                 u16 *ret)
+>>   {
+>>          struct tun_prog *prog;
+>>          u32 numqueues;
+>> -       u16 ret = 0;
+>> +       u32 prog_ret;
+>> +
+>> +       prog = rcu_dereference(tun->steering_prog);
+>> +       if (!prog)
+>> +               return false;
+>>
+>>          numqueues = READ_ONCE(tun->numqueues);
+>> -       if (!numqueues)
+>> -               return 0;
+>> +       if (!numqueues) {
+>> +               *ret = 0;
+>> +               return true;
+>> +       }
+>>
+>> -       prog = rcu_dereference(tun->steering_prog);
+>> -       if (prog)
+>> -               ret = bpf_prog_run_clear_cb(prog->prog, skb);
+>> +       prog_ret = bpf_prog_run_clear_cb(prog->prog, skb);
+>> +       if (prog_ret == TUN_STEERINGEBPF_FALLBACK)
+>> +               return false;
+> 
+> This seems to break the uAPI. So I think we need a new ioctl to enable
+> the behaviour
 
-Reading secure.txt, what does it mean "device present and usable in
-the secure world" ?
+I assumed it is fine to repurpose one of the 32-bit integer values since 
+32-bit integer is too big to specify the queue number, but it may not be 
+fine. I don't have a concrete use case either.
 
-So:
+Perhaps it is safer to note that TUNSETSTEERINGEBPF takes precedence 
+over TUNSETVNETRSS to allow such an extension in the future (but without 
+implementing one now).
 
-status = "disabled"
-secure-status = "okay"
+> 
+>>
+>> -       return ret % numqueues;
+>> +       *ret = (u16)prog_ret % numqueues;
+>> +       return true;
+>>   }
+>>
+>>   static u16 tun_select_queue(struct net_device *dev, struct sk_buff *skb,
+>> @@ -500,9 +508,7 @@ static u16 tun_select_queue(struct net_device *dev, struct sk_buff *skb,
+>>          u16 ret;
+>>
+>>          rcu_read_lock();
+>> -       if (rcu_dereference(tun->steering_prog))
+>> -               ret = tun_ebpf_select_queue(tun, skb);
+>> -       else
+>> +       if (!tun_ebpf_select_queue(tun, skb, &ret))
+>>                  ret = tun_automq_select_queue(tun, skb);
+>>          rcu_read_unlock();
+>>
+>> diff --git a/include/uapi/linux/if_tun.h b/include/uapi/linux/if_tun.h
+>> index 287cdc81c939..980de74724fc 100644
+>> --- a/include/uapi/linux/if_tun.h
+>> +++ b/include/uapi/linux/if_tun.h
+>> @@ -115,4 +115,13 @@ struct tun_filter {
+>>          __u8   addr[][ETH_ALEN];
+>>   };
+>>
+>> +/**
+>> + * define TUN_STEERINGEBPF_FALLBACK - A steering eBPF return value to fall back
+>> + *
+>> + * A steering eBPF program may return this value to fall back to the steering
+>> + * algorithm that should have been used if the program was not set. This allows
+>> + * selectively overriding the steering decision.
+>> + */
+>> +#define TUN_STEERINGEBPF_FALLBACK -1
+> 
+> Not a native speaker, consider it works more like XDP_PASS, would it
+> be better to use "TUN_STERRING_PASS"?
 
-basically means that the device in question allows secure-only MMIO
-access, is that what it says ?
+That sounds indeed better to me.
 
-If that's the case and we really want to have all config frames
-in a single DT, would it be reasonable to have an IRS/ITS DT node
-per-frame ?
-
-Then yes, the secure- tag is not enough any longer (because we have to
-cope with 4 interrupt domains) but that's a separate problem - again,
-this would leave the current reviewed bindings unchanged.
-
-Other than that as I mentioned we could use (? aka clutching at straws)
-reg-names but I don't think it is correct to have in the DT address
-space that the CPU is not allowed to address.
-
-Lorenzo
+Regards,
+Akihiko Odaki
