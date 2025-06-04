@@ -1,260 +1,113 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281D3224AF2;
-	Wed,  4 Jun 2025 23:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E19224AF2;
+	Wed,  4 Jun 2025 23:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749079175; cv=none; b=P7DeGoCnGAxagX6NUsKL4aQnBf06AMNewA2Ep6z1kDtiKu7rgLyn1mMguPm/tjcpvukK8RPVUMYEW2mQiWEIZTWvCnDtZBuQKL1Iu13pdUEIam7eaRr3tWBr0zPaX5i3AySMECsmtOhnLbIlQER3AieBWowUzGMFjrCjDDEjZDQ=
+	t=1749079262; cv=none; b=OgsB6gisj+bC9iQZhBLe2vuN4qYzo0LmUwo+pxFaL4VWELKB96ZyGw1bIBBveS9SWihmS0l5HCFicrhg3dFvUJzIi22AD1uini652M2GPZhbUFwbyGAamisA7d60m92BuojPVV70G+0jjcHD1YgA0qjPoAKcoiQo8uI/qKo5NVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749079175; c=relaxed/simple;
-	bh=mTRCvc258jkudvZvomecwN9xV5gLl5CSYCwEsxmMdMM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BCceDa4jlYrQ2bYa40Rxe3QiHvoPtL2sfqZVE2sM0nf40ooQewm1hU4a+QoXw252xjjdKpBofK2wa8jHvSI+fgbF2+AIeF39RcKYaGZ04F01lWSufDEdyhVbZJDKj5+d3X8Bd8eeAjKj/IWoSoVZjRX+f+Eu8K7JRlDCeRPVN5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RMKiTRxs; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749079262; c=relaxed/simple;
+	bh=6BGMLTyI9Ec3Kg+cz9cQUC2Bo3OQ73n6D16zPOw6tag=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bzm9aUee7XTeLFonSlx1b99u7UxuHJ2fml2IZEFi2DWiR9tRivdQk4T+uzLfO0bnfpeC4gk6s3I4KG4IIyNK85k/4YEpLPITDz7kNEQFIarFWtpYsomFbmG9TiyU7bk/GMhJsJfpfsI658wy9BWkF/IZrCos8sO+W1kWnF+vCcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Neb5tKoA; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RMKiTRxs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749079170;
-	bh=mTRCvc258jkudvZvomecwN9xV5gLl5CSYCwEsxmMdMM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RMKiTRxsYuw/7GqgTwTKf2FGIC6xn9hC8jXJpdjWoeRNyZzpy4VWbA/EGF6h9TTMb
-	 Ul+bq6Aawq37SBSD1Yod370/JmRXw4XG4Vrphip81LTQXi9DpeqgfcK0A/QDN/Il9x
-	 RUy/nogkNeFbkdbEdJPxVRMc+i52pMEqKqSDVZdjCUxgAnpKNZvH58LKmVKuu3CnZX
-	 8Nf3viuXiISMThnhBHtAjVtDpocVI1FdVA4EKYuMO3n3pNYY0dmdjth3ekn8jmiKwf
-	 hT4bxc6zKtZ/XvocozUJb3CKLRlt7AL5/nbXjy/A6s/j9bsybJ+br7aw7sa9QTIRvt
-	 RJdqC61qIuGxg==
-Received: from [IPv6:2606:6d00:10:5285::c41] (unknown [IPv6:2606:6d00:10:5285::c41])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id B824F17E0C87;
-	Thu,  5 Jun 2025 01:19:28 +0200 (CEST)
-Message-ID: <1ccaaec7f782afc71bae5c3b0f60a786a907555c.camel@collabora.com>
-Subject: Re: [PATCH v3 1/5] media: mc: add manual request completion
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho
- Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin
-	 <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, 
- Yunfei Dong <yunfei.dong@mediatek.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	kernel@collabora.com, linux-media@vger.kernel.org, Sebastian Fricke	
- <sebastian.fricke@collabora.com>
-Date: Wed, 04 Jun 2025 19:19:27 -0400
-In-Reply-To: <aEC05991kEIIifDB@kekkonen.localdomain>
-References: 
-	<20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com>
-	 <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-1-603db4749d90@collabora.com>
-	 <aEC05991kEIIifDB@kekkonen.localdomain>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Neb5tKoA"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32aabfd3813so3410191fa.3;
+        Wed, 04 Jun 2025 16:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749079258; x=1749684058; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UcMlhn223WOqcIHrp/y1AR8lknYH1/5nhJEfUOf9IMI=;
+        b=Neb5tKoAVeSdJ6gKM6u/QX7Bg2/6Mv6EMJ229sjeWjwCe3QRdXznsARtscO3KLyV2j
+         r7SambjyclkPWKt5vIwALVP3dwo2DJmXPZ8RvODaXiPw2vDWmQW4hfnwZT3zZTC4rTnp
+         ugDl/N56U/O48GEAJmquyTtEd7SGB1M1ptEwA4cUWWY6rwGiogMncOhxy8DEnQFzcVo4
+         Qa0rEmrUF5wmzMoFId5zHafUtWi/6kcsZmJ2YNAxwqW4X1yF1g09yBl1tvVjfhEBnK8a
+         0N9uTUhtW7DqsIUwMKeqvYSZa5Qn7ohWj+D+y7ziHBSI6pamw76dAdK2RNyJUah5gNzp
+         DbWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749079258; x=1749684058;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UcMlhn223WOqcIHrp/y1AR8lknYH1/5nhJEfUOf9IMI=;
+        b=BFeL459vKQUJRMpV+NgQjIEHGKuVAXVHRx7/dQ8iRv0IIsRBZP34JbdkA+Ui3d02YI
+         SyU49NlxH8hCxs2WTRFLK7ydq5oRd4xAbfS69t+SE7qOeAkOOJYLZCj2p0XjN21RViQN
+         pEjn56xBYbDRiLtx5JPum4GB0c4Pn3czTYvwjPngjPzPOV4HYDr9GTor1xnwLs6pnu8Y
+         oQOM6QdBu31BFldYz2JK+gzGkvom5howDP4qRH/bK19F/hUbOTP3t6jY4O8APDhnbM2s
+         prquLyEKFGYJwQi3M1KCu+cWcfDEljQ59T9pdVoMw3QMXpFQ1KuniBIe9n4cFJzu9rfQ
+         Kg7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWMpvBaFRBpzcqUWVCtgQ2RCuWbvJvZ/zUbogYK0mRPUAMG9HRBN5AUM/6J268Og/nX6+cg0RpqRM8U@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+pldaXSYRj2H4O/Y5o13jmNjn99Ewyfql7sqUkO9sQu71KCXM
+	HlnTQkOqQfQwyqT3z5ExNcDeRkS5BWJSwUFv+z5biYyeFniTJtU8kY8VMZ9QZGQMuClybErHLhx
+	CqEK4tyvmrAo45v3CL9TUvhtY9F6hfBsgUzEK
+X-Gm-Gg: ASbGnctrPsYSPLmeLG1uoWAa/kI66/fKRoKNBG1YXS7Il3lVph0fdlouwYF9YE4+gE4
+	jP9sAO6Jb2R9gLnIx3a7zmhCQP2wbMe0kXQeG0e9eSacmyUTGU+Xc5Qf60wuTLSCstUu38AICpi
+	6cthsD1xdmE20bh25gK2HiGCl8TmamQuZXEvt5jyQph9SYpSBH5K0eshc1NUjXup7Fsdg=
+X-Google-Smtp-Source: AGHT+IFL2Qw6EsGAEuRXuJAmoNr5yp53DHvRWgBZPHf+Ix91ruEjntk+8gIX1QcwGtGYq7Hoaf+2qRbanUVs+n+qBwI=
+X-Received: by 2002:a05:651c:221a:b0:32a:739d:fac with SMTP id
+ 38308e7fff4ca-32ac71f622emr15383591fa.36.1749079258404; Wed, 04 Jun 2025
+ 16:20:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Steve French <smfrench@gmail.com>
+Date: Wed, 4 Jun 2025 18:20:46 -0500
+X-Gm-Features: AX0GCFuI4gwd-C54TyFnZ12WsmWNzGe6gNjA5_gF8xWRTIxrxe0mf7oAXH5PbUM
+Message-ID: <CAH2r5muDAU9fFmkDERtE_Dvrt2HgC4s9t1wH-uHG6B4vQH39iw@mail.gmail.com>
+Subject: [GIT PULL] ksmbd sever fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
+	Namjae Jeon <linkinjeon@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Le mercredi 04 juin 2025 à 21:04 +0000, Sakari Ailus a écrit :
-> Hi Nicolas,
-> 
-> Thanks for the update.
-> 
-> On Wed, Jun 04, 2025 at 04:09:35PM -0400, Nicolas Dufresne wrote:
-> > From: Hans Verkuil <hverkuil@xs4all.nl>
-> > 
-> > By default when the last request object is completed, the whole
-> > request completes as well.
-> > 
-> > But sometimes you want to delay this completion to an arbitrary point in
-> > time so add a manual complete mode for this.
-> > 
-> > In req_queue the driver marks the request for manual completion by
-> > calling media_request_mark_manual_completion, and when the driver
-> > wants to manually complete the request it calls
-> > media_request_manual_complete().
-> > 
-> > Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> > Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > ---
-> >  drivers/media/mc/mc-request.c | 38 ++++++++++++++++++++++++++++++++++++--
-> >  include/media/media-request.h | 38 +++++++++++++++++++++++++++++++++++++-
-> >  2 files changed, 73 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-request.c
-> > index 5edfc2791ce7c7485def5db675bbf53ee223d837..398d0806d1d274eb8c454fc5c37b77476abe1e74 100644
-> > --- a/drivers/media/mc/mc-request.c
-> > +++ b/drivers/media/mc/mc-request.c
-> > @@ -54,6 +54,7 @@ static void media_request_clean(struct media_request *req)
-> >  	req->access_count = 0;
-> >  	WARN_ON(req->num_incomplete_objects);
-> >  	req->num_incomplete_objects = 0;
-> > +	req->manual_completion = false;
-> >  	wake_up_interruptible_all(&req->poll_wait);
-> >  }
-> >  
-> > @@ -313,6 +314,7 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
-> >  	req->mdev = mdev;
-> >  	req->state = MEDIA_REQUEST_STATE_IDLE;
-> >  	req->num_incomplete_objects = 0;
-> > +	req->manual_completion = false;
-> >  	kref_init(&req->kref);
-> >  	INIT_LIST_HEAD(&req->objects);
-> >  	spin_lock_init(&req->lock);
-> > @@ -459,7 +461,7 @@ void media_request_object_unbind(struct media_request_object *obj)
-> >  
-> >  	req->num_incomplete_objects--;
-> >  	if (req->state == MEDIA_REQUEST_STATE_QUEUED &&
-> > -	    !req->num_incomplete_objects) {
-> > +	    !req->num_incomplete_objects && !req->manual_completion) {
-> >  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
-> >  		completed = true;
-> >  		wake_up_interruptible_all(&req->poll_wait);
-> > @@ -488,7 +490,7 @@ void media_request_object_complete(struct media_request_object *obj)
-> >  	    WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
-> >  		goto unlock;
-> >  
-> > -	if (!--req->num_incomplete_objects) {
-> > +	if (!--req->num_incomplete_objects && !req->manual_completion) {
-> >  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
-> >  		wake_up_interruptible_all(&req->poll_wait);
-> >  		completed = true;
-> > @@ -499,3 +501,35 @@ void media_request_object_complete(struct media_request_object *obj)
-> >  		media_request_put(req);
-> >  }
-> >  EXPORT_SYMBOL_GPL(media_request_object_complete);
-> > +
-> > +void media_request_manual_complete(struct media_request *req)
-> > +{
-> > +	unsigned long flags;
-> 
-> I'd declare flags as last.
-> 
-> > +	bool completed = false;
-> > +
-> > +	if (WARN_ON(!req))
-> > +		return;
-> > +	if (WARN_ON(!req->manual_completion))
-> > +		return;
-> 
-> I think I'd use WARN_ON_ONCE() consistently: this is a driver (or
-> framework) bug and telling once about it is very probably enough.
+Please pull the following changes since commit
+0ff41df1cb268fc69e703a08a57ee14ae967d0ca:
 
-Just to be sure, you only mean for the two checks above ? Or did
-you mean for the entire function ?
+  Linux 6.15 (2025-05-25 16:09:23 -0700)
 
-> 
-> > +
-> > +	spin_lock_irqsave(&req->lock, flags);
+are available in the Git repository at:
 
-In practice, if you call this specific function from two places at the same
-time you have a bug, but I realize that moving the the warning on the check
-manual_completion inside that lock would massively help detect that case.
+  git://git.samba.org/ksmbd.git tags/6.16-rc-ksmbd-server-fixes
 
-What do you think ?
+for you to fetch changes up to dc3e0f17f74558e8a2fce00608855f050de10230:
 
-> > +	if (WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
-> > +		goto unlock;
-> > +
-> > +	req->manual_completion = false;
-> > +	/*
-> > +	 * It is expected that all other objects in this request are
-> > +	 * completed when this function is called. WARN if that is
-> > +	 * not the case.
-> > +	 */
-> > +	if (!WARN_ON(req->num_incomplete_objects)) {
-> > +		req->state = MEDIA_REQUEST_STATE_COMPLETE;
-> > +		wake_up_interruptible_all(&req->poll_wait);
-> > +		completed = true;
-> > +	}
-> 
-> A newline would be nice here.
-> 
-> > +unlock:
-> > +	spin_unlock_irqrestore(&req->lock, flags);
-> > +	if (completed)
-> > +		media_request_put(req);
-> > +}
-> > +EXPORT_SYMBOL_GPL(media_request_manual_complete);
-> > diff --git a/include/media/media-request.h b/include/media/media-request.h
-> > index d4ac557678a78372222704400c8c96cf3150b9d9..7f9af68ef19ac6de0184bbb0c0827dc59777c6dc 100644
-> > --- a/include/media/media-request.h
-> > +++ b/include/media/media-request.h
-> > @@ -56,6 +56,9 @@ struct media_request_object;
-> >   * @access_count: count the number of request accesses that are in progress
-> >   * @objects: List of @struct media_request_object request objects
-> >   * @num_incomplete_objects: The number of incomplete objects in the request
-> > + * @manual_completion: if true, then the request won't be marked as completed
-> > + * when @num_incomplete_objects reaches 0. Call media_request_manual_complete()
-> > + * to complete the request after @num_incomplete_objects == 0.
-> >   * @poll_wait: Wait queue for poll
-> >   * @lock: Serializes access to this struct
-> >   */
-> > @@ -68,6 +71,7 @@ struct media_request {
-> >  	unsigned int access_count;
-> >  	struct list_head objects;
-> >  	unsigned int num_incomplete_objects;
-> > +	bool manual_completion;
-> >  	wait_queue_head_t poll_wait;
-> >  	spinlock_t lock;
-> >  };
-> > @@ -218,6 +222,38 @@ media_request_get_by_fd(struct media_device *mdev, int request_fd);
-> >  int media_request_alloc(struct media_device *mdev,
-> >  			int *alloc_fd);
-> >  
-> > +/**
-> > + * media_request_mark_manual_completion - Enable manual completion
-> > + *
-> > + * @req: The request
-> > + *
-> > + * Mark that the request has to be manually completed by calling
-> > + * media_request_manual_complete().
-> > + *
-> > + * This function shall be called in the req_queue callback.
-> > + */
-> > +static inline void
-> > +media_request_mark_manual_completion(struct media_request *req)
-> > +{
-> > +	req->manual_completion = true;
-> > +}
-> > +
-> > +/**
-> > + * media_request_manual_complete - Mark the request as completed
-> > + *
-> > + * @req: The request
-> > + *
-> > + * This function completes a request that was marked for manual completion by an
-> > + * earlier call to media_request_mark_manual_completion(). The request's
-> > + * @manual_completion flag is reset to false.
-> 
-> s/flag/field/
-> 
-> > + *
-> > + * All objects contained in the request must have been completed previously. It
-> > + * is an error to call this function otherwise. If such an error occurred, the
-> > + * function will WARN and the object completion will be delayed until
-> > + * @num_incomplete_objects is 0.
-> > + */
-> > +void media_request_manual_complete(struct media_request *req);
-> > +
-> >  #else
-> >  
-> >  static inline void media_request_get(struct media_request *req)
-> > @@ -336,7 +372,7 @@ void media_request_object_init(struct media_request_object *obj);
-> >   * @req: The media request
-> >   * @ops: The object ops for this object
-> >   * @priv: A driver-specific priv pointer associated with this object
-> > - * @is_buffer: Set to true if the object a buffer object.
-> > + * @is_buffer: Set to true if the object is a buffer object.
-> >   * @obj: The object
-> >   *
-> >   * Bind this object to the request and set the ops and priv values of
-> > 
+  ksmbd: allow a filename to contain special characters on SMB3.1.1
+posix extension (2025-05-27 10:25:12 -0500)
+
+----------------------------------------------------------------
+four smb3 server fixes
+- Fix for special character handling when mounting with "posix"
+- Fix for mounts from Mac for fs that don't provide unique inode numbers
+- Two cleanup patches (e.g. for crypto calls)
+-----------------------------------------------------------------
+Eric Biggers (2):
+      ksmbd: use SHA-256 library API instead of crypto_shash API
+      ksmbd: remove unnecessary softdep on crc32
+
+Namjae Jeon (2):
+      ksmbd: provide zero as a unique ID to the Mac client
+      ksmbd: allow a filename to contain special characters on
+SMB3.1.1 posix extension
+
+ fs/smb/server/Kconfig      |  1 +
+ fs/smb/server/auth.c       | 34 ---------------------
+ fs/smb/server/auth.h       |  2 --
+ fs/smb/server/connection.h |  1 +
+ fs/smb/server/crypto_ctx.c |  8 -----
+ fs/smb/server/crypto_ctx.h |  4 ---
+ fs/smb/server/server.c     |  1 -
+ fs/smb/server/smb2pdu.c    | 72 +++++++++++++++++++++++++++------------------
+ fs/smb/server/smb2pdu.h    |  3 ++
+ fs/smb/server/vfs.c        | 20 +++----------
+ 10 files changed, 53 insertions(+), 93 deletions(-)
+
+-- 
+Thanks,
+
+Steve
