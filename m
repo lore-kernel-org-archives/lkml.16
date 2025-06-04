@@ -1,127 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED612224AF2
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B171DC9BB
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749079442; cv=none; b=g+SR72eSZ/O/n2fS1RVRe3jhE+Uve/FcE24S8TKX3adCpeR98mLM7sWHhUvsF/L3qCyndda6veLN/+NSntGyE1/pb5C7S+aW2j9MPzIov+d7UvItGw0XMepkQFrDyqzB+bursPjwokfPyUwzgSvzXixdysadvsEHZWZWI7a4r8U=
+	t=1749079555; cv=none; b=HmvJG+7EUItdfarFlatD1rCpBeZ8/mc2FFrkiVPNcHhsyc6UzMKQ54o2GldqYsmtr2tbQe49FR2NX9tdVBA6KSoup5P3b9YTeQWV2HiHaXKdGdRn3xOve3SGuD7/dOLqGFmWH4WUSo/F1vde9+hmvYDp8TQZCRVtsA9YylMJd+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749079442; c=relaxed/simple;
-	bh=rv9HHNsytFm+P/QHtVS3Ly+xoyU2WHqZE++hOxHUaF4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0e1X7T/Tftv4zFdbPOagywfiI7diC/M1NaV4Wb3vbYPdaZNl0Yyu7BG+11NCYe/Y0M3ZFlVIKm8kbE7WmCAvnV2fcV64L5gb/fQZ28fF2qGEkAuthTZ4xBavsrcZl4ai5Sn1DmDu4teSw2TxotJRHLAYX6NmX/VOX+4ohyNfyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JbxHHMuL; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749079555; c=relaxed/simple;
+	bh=Vwu4TJ/HvFXdXHkNqXk/zVSddth2RQ3EoD1ZjKR/Xuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j0MK09BgP/yCy35WvyZGyVjgimddRX+l0vAndK42pMhYwOMW9XImczpg7G6sJORG+5zh7HKsCoI677kcWCPGfQ3EV6CsjQ20AmkpSUuyRPceHUvTGmAeQwsBfXuBcSCT1MRRdOR/vBUcPm1qhd7vY+cHX0m3PJ1uwRtHQ+bwR5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mqlLCa7g; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JbxHHMuL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749079441; x=1780615441;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rv9HHNsytFm+P/QHtVS3Ly+xoyU2WHqZE++hOxHUaF4=;
-  b=JbxHHMuLu3yg4wYbE13ksYsC6eHA0ngTwEUeBHQs4pDtYi5g4sPoxhDP
-   mGpkbKcsCHskNz6KBEqBVzDPpu5DAEiQLts8fDan6oklXJsr7cfgCXLZi
-   N0if7HzEvvHEU2op9QjOkDAfnZ8rFDOG4Cyzn1+ym3aXRIUQx2MA+awjV
-   E3h0v1UdAZ30+ejZ9/z5ZcgXWIyTH5gdqICHce5N3tQWxm8JNf9HWEaYE
-   xUSIqWrLPQfcwSuCAvK03C3uVcy63A6Q7k090mpZYdC3pMBixKuiUjPtY
-   1lGiqt+8Wu5yIfIs2MvHegw0KLikUicpIlw8nXu9ai+ACjwldIHZsJKHL
-   w==;
-X-CSE-ConnectionGUID: PqyELTZwS/eAKpiLSC5zKA==
-X-CSE-MsgGUID: 14kdgHFvRNiSyYH905mkcw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51329141"
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="51329141"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:24:00 -0700
-X-CSE-ConnectionGUID: PyfrpkbBRfWzaVNRqdR/eA==
-X-CSE-MsgGUID: vzXfWAeSTdOxTF4IY+vZQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="145223628"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.229]) ([10.125.110.229])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:23:59 -0700
-Message-ID: <5876fb5f-dc8c-401a-833a-a33265ff1fc1@intel.com>
-Date: Wed, 4 Jun 2025 16:23:59 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqlLCa7g"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70e3980757bso3955497b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 16:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749079552; x=1749684352; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kM/3Db02CilzNEun5cvgT1m6Xyu3oxCMObMXqf4IsrQ=;
+        b=mqlLCa7gOUmRC/vqjX6XMY+KbqZJM1xu+jlwdyQ2dlhU8oTQM5mKwyFLr3ww6XAqrJ
+         x+vLADKFTGuUsEZXiBetDwCLQ7AfkapqTu8pVUp/tSE72dwLbgLea8a+keivHOK45Ueu
+         xW6mvXwVfd1tvVP0LkKtfILHEz0dDBCpcqvmGl3Ch6i5vLXhD7jrD2on62WEEh/DP3wr
+         ReptYnwE2h8MEDXv2bUccpbc2sGbSQZJ2WiKeE7h219czACa+WcngDNHgSQt/RGMACMH
+         7elOjQfm7beVJ6pGpbzSdkOJqaRS/xOheIEzBVeCKgmNQVEfPOL9u+TNIayHK6zIR+Mt
+         qsNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749079552; x=1749684352;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kM/3Db02CilzNEun5cvgT1m6Xyu3oxCMObMXqf4IsrQ=;
+        b=Af4lCAhlfDld+6XT9VSWThlg62tstPRWdpN/BGhPKdLzqI9Oefoymnlnq/dKUpVa3P
+         DpzBiy3wRh8Ce6GewXTo/Eucb8P75KQ8Z6xaEArKAAe5xaGIDn5p6ZWTNbDics7Oj8jE
+         e/kexAPDHD3xmeuRhPDddQ1T8Baszn5EQdWtKg+AhfmRvfQZW06Xcn8t/h7JaIKoAgl2
+         Z+6WuXSiZtMhYLNL05cEklpbe09XT71bJU0ipbXYMpc6PsExQJV6KjynUIljssTjdNN+
+         btZQ3iZdta1mNfcXlo4tQ96wmIqiR2Ku+wAdrOyaQfwvFjNLAYPQ1n2FZZn0vAz3dp4p
+         D6YA==
+X-Gm-Message-State: AOJu0YyFElJY3LcJTc8DyCdCr1HejQgZnEHQOIcaNi2mUmD3xDNvVrQl
+	8j+4z6NL7blBJX4w83gkAjcmH+pBex8RlPr/Yz7xWfZKsr8SMaKnOyQoe0gZTQ==
+X-Gm-Gg: ASbGnctIx80be5frDtQmYt1xgdNG85o0qP9cwesOPeeBezX5NDn+qYZPzrIjDcCs8+e
+	QBV0zEvu8dRvBTdNmJoDbfatW8PBtVwmbR2QK9qnU2EA71YzvgtAzSpTNHbxIdduyXD+crI23W0
+	hqPUfevoeaCEnSTyYOOvwHlFXEfB1gE0kF3jyRDvLOkgbHTj/OU2tzaCyV+Tv2GhM0SJf8Gr0AR
+	xJHkPowtLc3uRM1Ro+74YeYGo8PiGufTCbtY8r0Fq66UjUkML5VcRVkcEmSSjgz2ZCXq9YpOGkM
+	X/U5Ev8aoZtW4y2Y7oFeBkDVwM1qcLrq+JR/MYs7hjDkUeG5eGKjcWAVtZb3lysfT97k005FHrV
+	K12NaFthW4hI=
+X-Google-Smtp-Source: AGHT+IEqQ6aeB9JspUZcphGc0fYJ7NSXL3yLfPKnkJgCb5esBZXUjB4GymNOZNZpBp3CAmiGC0jHqw==
+X-Received: by 2002:a05:690c:6e8c:b0:70e:7e33:fbd6 with SMTP id 00721157ae682-710e7ed8674mr21882667b3.17.1749079552517;
+        Wed, 04 Jun 2025 16:25:52 -0700 (PDT)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8abeed16sm32164577b3.48.2025.06.04.16.25.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 16:25:51 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+Subject: [PATCH 0/2] clocksource: use better cpumask API where appropriate
+Date: Wed,  4 Jun 2025 19:25:46 -0400
+Message-ID: <20250604232550.40491-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/virt/tdx: Add ENDBR for low level SEAMCALL assembly
- functions
-To: "Huang, Kai" <kai.huang@intel.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
- "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
-Cc: "samitolvanen@google.com" <samitolvanen@google.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "x86@kernel.org" <x86@kernel.org>
-References: <20250604003848.13154-1-kai.huang@intel.com>
- <55e5b3f8-3e17-4962-af2f-75c98ccd414f@intel.com>
- <f442380c2d8cc51b38105c6316cbe224a248fdfe.camel@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <f442380c2d8cc51b38105c6316cbe224a248fdfe.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/4/25 16:16, Huang, Kai wrote:
-> Could you also let me know whether I should keep the Fixes tag, and the
-> history in the changelog?
+From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
-Yeah, I think you should keep the Fixes: tag, unless I'm missing something.
+The dedicated API works better and improves on readability.
 
-As for the history lesson, you can just say that you think that the TDX
-code was OK when merged, but wasn't converted with the rest of the
-Fixes: commit. That's all you need.
+Yury Norov [NVIDIA] (2):
+  clocksource: fix opencoded cpumask_any_but() in
+    clocksource_verify_choose_cpus()
+  clocksource: fix opencoded cpumask_next_wrap()
+
+ kernel/time/clocksource.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+-- 
+2.43.0
+
