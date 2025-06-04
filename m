@@ -1,48 +1,53 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD90B42A87;
-	Wed,  4 Jun 2025 19:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF2B42A87;
+	Wed,  4 Jun 2025 19:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749063825; cv=none; b=GCW8Dk//E+SFTunynjjvmUF6h1n3ORWTuRfktZC0Px77fnvi49jlfv5semJ/nL3+sxF5CGR76IY4xacHbAV8wfI5Kd2ki/gXEV8caIKnXDYuRuRGfzDLx3yNWtK2BhoJUpBpHAFD/v2VfylS3ySDeM9zneUNtF2amR/V+uWl8Cc=
+	t=1749063994; cv=none; b=Gp7vEcSPa0ng9uaea3uGBIooNX1UDtMJLLZf7zGL1DUJ+T5azHnLciJshxUKlTRcroczu13Uf/da2xvTnPc0CSzADKWwMaaG0560LtP67d8u1VF4N4TV+htOKddbC8fxc5k+OKfA5hWVYqbnVqILD39T0gBUHzWgtAF8gYo74LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749063825; c=relaxed/simple;
-	bh=SSj0a4S8JWpcVi82OUcXIiFFPHSMfq7dSD4fpm8a/0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QBFBDWrmVTdFm2o1qqESf5fdTe2y6junWs++khuKxGZRxnKscxE6Nlqa0s6vyZObXCsQDb4CT4iEFqfXJlsqB2Q1V/3wR6W30fYLCahQy+eYVTJI318dZCYXwVuNJ1Rneq2COZi+j/GQZAZf0lbniNmugN0uxOBhAJSgEpxGdtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EP8diKj9; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749063994; c=relaxed/simple;
+	bh=oTJQbjZdKSQ2DkZeSh/a6PJn+voxYBOhyKY16f4KEks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=udwqLDX5z1HbugEcUgnCj/KXZ8o64QWhQgEWoROuc0usip6JBBEFQGc2GXKB79XcshmPUE5GPPrbt4yh2q2gZrRVGq1SMbQuxlOSkuteSP+NNNkIkH4JYn0ymZ3XpvsQegbRdyXj76aNbkL3SaDGu5pSSPIWZ9z6+dNj2PX1Mbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YhQ3lyi+; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EP8diKj9"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 554J3MYI897878;
-	Wed, 4 Jun 2025 14:03:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749063802;
-	bh=Hu/CStfhLTfYqP6nHqBde5DQUaGmbLCwbgur7Xid0WE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=EP8diKj9O6TG7m21CFVcddkbSdMEEynTIAk75cyWBVwnEkK8Bu4IEati/nSY5uuYU
-	 VP7LqqjsUXfEGdJhuqTZfILUJSmzdEAe84j+i/fPeSqRm0S4cUEygEXxdnCllx6E+E
-	 qUnwysfBt7BdNxJxpkDRzV3IzZoWVlrWWSrDYhWQ=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 554J3Mdx566029
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 4 Jun 2025 14:03:22 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 4
- Jun 2025 14:03:21 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 4 Jun 2025 14:03:21 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 554J3LR42513033;
-	Wed, 4 Jun 2025 14:03:21 -0500
-Message-ID: <967bc855-76f3-4598-853c-d65ce142995d@ti.com>
-Date: Wed, 4 Jun 2025 14:03:20 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YhQ3lyi+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749063993; x=1780599993;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=oTJQbjZdKSQ2DkZeSh/a6PJn+voxYBOhyKY16f4KEks=;
+  b=YhQ3lyi+eNNtv0hKbNy4K1vc60HXbPKs6uZdRIpoJauKx2Vo9+RirNVq
+   BdJ/Rgsco1BS+26Flc8pc9zn7jtMaSJOvo7ey2IMv155iI6M3ByjRNtDm
+   bsx6XXs2k8kmepFzzPy5XxlBhT0XwyyS6ZxSETStSxeMKt6Td8iWsGp4V
+   9m7YNL2nJfQUqOJq+bV3ktJFgKHlKO/7TG+e3PGqJPnUugjOEOaTQH6m4
+   f3+fA74qYrA/4Nk5xigU9pJdjPgknjsGuO21jQanygCPmNC8qRFd8yL/v
+   uxLVAW/xO2d4tMeWXl6B6JSRjmjapbJ7GjGIH2kg2UveAnWc+57IN08BK
+   g==;
+X-CSE-ConnectionGUID: 3/s/nXOKRYWEDwrjNjasCw==
+X-CSE-MsgGUID: E7prVIuNQYiS7VHg2svZgA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51082830"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="51082830"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 12:06:30 -0700
+X-CSE-ConnectionGUID: PlLh5Hz0TLSt9BwHxLTB9A==
+X-CSE-MsgGUID: jOI0W7EqQPibvWrZQtrURg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="182480307"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 12:06:30 -0700
+Received: from [10.124.221.106] (unknown [10.124.221.106])
+	by linux.intel.com (Postfix) with ESMTP id 7844B20B5736;
+	Wed,  4 Jun 2025 12:06:28 -0700 (PDT)
+Message-ID: <bd3d4af2-aeff-4135-87e9-60b18f290d0e@linux.intel.com>
+Date: Wed, 4 Jun 2025 12:06:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,245 +55,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Discussion] Global vs Local devicetree overlays for addon board
- + connector setups
-To: Ayush Singh <ayush@beagleboard.org>, <xypron.glpk@gmx.de>,
-        Jason Kridner
-	<jkridner@beagleboard.org>,
-        Deepak Khatri <lorforlinux@beagleboard.org>,
-        Dhruva Gole <d-gole@ti.com>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Luca Ceresoli <luca.ceresoli@bootlin.com>,
-        Pantelis Antoniou
-	<pantelis.antoniou@gmail.com>,
-        Herve Codina <herve.codina@bootlin.com>
-CC: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-	<devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <b1990c97-8751-4964-a3e8-9598f4cfac2a@beagleboard.org>
+Subject: Re: [PATCH v9 01/16] PCI/CXL: Add pcie_is_cxl()
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-2-terry.bowman@amd.com>
 Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <b1990c97-8751-4964-a3e8-9598f4cfac2a@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250603172239.159260-2-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-
-On 4/30/25 7:07 AM, Ayush Singh wrote:
-> Hello everyone,
-> 
-> 
-> This mailing thread is dedicated to discussing what approach should be taken regarding overlays for addon board + connector setups. It is loosely a continuation of [0], so feel free to go through it.
-> 
-> 
-> Introduction
-> *************
-> 
-> To provide a background, the goal is to have a common way to support setups involving addon board + connector. Some examples are as follows:
-> 
-> - MikroBUS [1]
-> 
-> - PocketBeagle 2 [2]: After discussion in [0], it seems that even board headers should be treated as a addon board + connector problem.
-> 
-> 
-> There are 2 main approaches currently floating around. They serve as examples of Global and Local approaches. However, the main discussion topic is global vs local rather than the specific approaches.
-> 
-
-This is far too reductive, local vs global is only a minor detail as part
-of a couple proposed solutions to a much larger topic. There are much more
-fundamental issues around add-on boards to be worked out before we get to
-this level of detail.
-
-> 
-> 1. __symbols__ based approach [3]
-> 
-> 
-> This was originally proposed by Andre Davis [3]. It defines an overlay with just special names in `__symbols__`, which is used along with an overlay for the addon-board, which makes use of the node names defined in the connector `__symbols__` overlay. Please take a look at the original patch series since it provides a working example of how it can be used [3].
-> 
-> 
-> It has a few nice benefits such as it works pretty well with existing infrastructure, and does not need much in the way of new functionality. However, for this discussion thread, I want to consolidate the discussion regarding how this approach directly adds the devices to the appropriate nodes, Eg. An SPI device in addon board will be added to the appropriate SPI controller, etc. This means the changes are made to the global tree.
-> 
-
-This is how devices are already added, if you add a SPI device you
-put it under the SPI controller. There is no "global tree", there
-is just one device tree to represent the device, and it has a well
-established ways of hierarchically representing devices.
-
-> 
-> 2. export-symbols based approach [4]
-> 
-> 
-> This approach was originally proposed by Herve Codina [5]. It defines a special node (local to the connector) say `export-symbols`. This node takes precedence over global `__symbols__`, and thus is used to define standard names for nodes used in addon board overlay. Please look at [4] to get a more in-depth explanation.
-> 
-> 
-> The main difference here is that all the addon board overlay changes are isolated to the connector node in the devicetree. Eg: an I2C device in addon board will be added to the connector node (as defined in i2c bus extension patch series [6]). This means the changes are made to the connector node and not the global tree.
-> 
-> 
-> This approach needs extra plumbing (like i2c bus extension [6], something similar for SPI, etc) to make the whole approach work. Only GPIO and PWM with Nexus node can use this approach right now.
-> 
-
-This is the more fundamental issue: do you want to work within the existing
-device tree framework, or do you want to make something new. `export-symbols`
-is only the tip of the iceberg of new things that will be needed.
-
-This "extra plumbing" is bus extensions in DT for every wired bus type.
-Countless new Nexus nodes, connector definitions, pinmuxing, and bindings
-for the same. And then changes to DT overlay tooling including all the
-infrastructure that uses overlays in many external projects, which IMHO is
-the largest issue here.
-
-My core point here is this, imagine you take a BeagleBone and plug in
-a cape. This statically combined device in your hand can be completely
-described using existing DT today. For any solution we come up with for
-doing this dynamically, the resulting DT should look the same as if
-it was done for the combined device by hand ahead of time. The combined
-Beagle+cape device is exactly the same device no matter what time you
-plug in the cape. So why should the DT that describes this combined
-device be different in the two cases?
-
-> 
-> Basic Requirements
-> 
-> *********************
-> 
-> 
-> Here are some basic functionality that the chosen approach can do for it to be viable for the connector + addon board setups:
-> 
-> 
-> 1. Dynamic device addition/removal from userspace
-> 
-
-I'm going to suggest we ignore the removal part. Not because it is too
-difficult to solve, but because it is impossible to solve.
-
-A huge amount of drivers and devices do not actually allow for removal.
-
-The reason is because there is no need, hot-pluggable busses are the
-exception, not the rule. The rare cases like USB are built to handle
-this both in hardware and software. None of the connectors we have
-talked about are actually hot-pluggable! I2C, SPI, etc.. none of
-these are hot-pluggable. Even if you get away with yanking the cape
-off a BeagleBone while it is running once or twice, it is violating
-the electrical specifications and you will eventually break something.
-
-If we don't focus on the (non-valid) removal part, so many other parts
-solutions become viable again. Right now we have no good way to even
-*add* an add-on board, even statically, so let's not let "perfect" be
-the enemy of good..
-
-> 
-> A lot of connectors + addon board setups do not have any dynamic discovery addition. This is compounded when talking about treating the whole header in SBCs like PocketBeagle 2 as a connector, since people would want to wire LEDs and stuff to individual pins. So a mechanism using sysfs or configfs is required
-> 
-> 
-> 2. Dynamic device addition/removal by driver using EEPROM or something else
-> 
-> 
-> Some setups (MikroBUS boards with 1-wire EEPROM, Beagle capes) have EEPROMs that contain board information which can be used to detect which overlay should be applied.
-> 
-> 
-> Main Discussion
-> 
-> *****************
-> 
-> The main topic I wish to discuss if global devicetree overlays are okay for addon-board setups. Let me outline some reasons for I prefer the local devicetree overlays approach:
-> 
-> 
-> 1. Addon board removal on multiple connector setups
-> 
-> 
-> Say connector A added an I2C device to the controller, then connector B added an I2C device to the same controller. I am not sure how well removing overlays out-of-order works.
-> 
-
-I don't follow here. Multiple of the same I2C device are still identifiable
-even on the same controller. Their IDs give them away, and even if not, this
-would be trivially solved with a little bit of meta-data tracking in the
-driver model layer.
-
-> 
-> 2. Who owns the device
-> 
-> 
-> Say there are 2 connectors A and B. Both connectors share an I2C controller. Let both connectors have the same device attached. In case of `__symbols__` based approach, both connectors would technically be successful in applying the overlays, rather than one of the overlays failing.
-> 
-
-How does the connector solution help here? Seems the `__symbols__` way would make
-it easier to detect as both devices would need added to the same controller node,
-which would be the point to detect such conflicts. Were each connector would have
-no way to communicate that the resource is double-booked.
-
-> 
-> 3. How to register the newly added devices
-> 
-> 
-> I am a bit unsure about this one since I will have to check if the kernel tries to register new devices automatically after applying the overlay. For local setups, I was using `devm_of_platform_populate` on the connector device.
-> 
-
-Easy to solve for either method, we can always re-run the device registration loop
-after applying an overlay if it doesn't already.
-
-> 
-> 4. Security
-> 
-> 
-> I think local modification is more secure than global tree modification. A completely local solution should be as secure from devicetree perspective as USB. But I am not an expert.
-> 
-> 
-> Drawbacks of local setups
-> 
-> ***************************
-> 
-> 
-> 1. Needs a lot of surrounding work.
-> 
-> 
-> I2C bus extension is needed for I2C devices to work, something similar for SPI. At least ADC, PWM and GPIO should be covered with just nexus nodes.
-> 
-> 
-> Closing Thoughts
-> 
-> ******************
-> 
-> 
-> I would really like to reach consensus regarding weather the addon-board overlays should be global or local. This will help to give a direction regarding what should be improved, and hopefully make future development move faster. Once a bit of consensus has been reached, we can discuss specific implementations.
-> 
 
 
-There is one big benefit of evil vendor trees: you can test things out like
-this before sending things upstream. You are working with the Beagle folks,
-and that has to be the most perfect testing ground for add-on board overlay
-solutions.
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> CXL and AER drivers need the ability to identify CXL devices.
+>
+> Add set_pcie_cxl() with logic checking for CXL Flexbus DVSEC presence. The
+> CXL Flexbus DVSEC presence is used because it is required for all the CXL
+> PCIe devices.[1]
+>
+> Add boolean 'struct pci_dev::is_cxl' with the purpose to cache the CXL
+> Flexbus presence.
+>
+> Add function pcie_is_cxl() to return 'struct pci_dev::is_cxl'.
+>
+> [1] CXL 3.1 Spec, 8.1.1 PCIe Designated Vendor-Specific Extended
+>      Capability (DVSEC) ID Assignment, Table 8-2
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> ---
 
-So I would suggest you take the solution you like the most and implement it
-in the Beagle ecosystem. Try it out and find the pros and cons first hand,
-see if it can even work in the first place.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Asking everyone to all reach a consensus on the "right" solution by
-talking it out is not going to happen here. This has been an open issue
-for way too long for it to be that easy :)
+>   drivers/pci/probe.c           | 10 ++++++++++
+>   include/linux/pci.h           |  6 ++++++
+>   include/uapi/linux/pci_regs.h |  8 +++++++-
+>   3 files changed, 23 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 364fa2a514f8..aa29b4b98ad1 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1691,6 +1691,14 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
+>   		dev->is_thunderbolt = 1;
+>   }
+>   
+> +static void set_pcie_cxl(struct pci_dev *dev)
+> +{
+> +	u16 dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
+> +					      PCI_DVSEC_CXL_FLEXBUS);
+> +	if (dvsec)
+> +		dev->is_cxl = 1;
+> +}
+> +
+>   static void set_pcie_untrusted(struct pci_dev *dev)
+>   {
+>   	struct pci_dev *parent = pci_upstream_bridge(dev);
+> @@ -2021,6 +2029,8 @@ int pci_setup_device(struct pci_dev *dev)
+>   	/* Need to have dev->cfg_size ready */
+>   	set_pcie_thunderbolt(dev);
+>   
+> +	set_pcie_cxl(dev);
+> +
+>   	set_pcie_untrusted(dev);
+>   
+>   	if (pci_is_pcie(dev))
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 51e2bd6405cd..bff3009f9ff0 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -455,6 +455,7 @@ struct pci_dev {
+>   	unsigned int	is_hotplug_bridge:1;
+>   	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
+>   	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+> +	unsigned int	is_cxl:1;               /* Compute Express Link (CXL) */
+>   	/*
+>   	 * Devices marked being untrusted are the ones that can potentially
+>   	 * execute DMA attacks and similar. They are typically connected
+> @@ -746,6 +747,11 @@ static inline bool pci_is_vga(struct pci_dev *pdev)
+>   	return false;
+>   }
+>   
+> +static inline bool pcie_is_cxl(struct pci_dev *pci_dev)
+> +{
+> +	return pci_dev->is_cxl;
+> +}
+> +
+>   #define for_each_pci_bridge(dev, bus)				\
+>   	list_for_each_entry(dev, &bus->devices, bus_list)	\
+>   		if (!pci_is_bridge(dev)) {} else
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index ba326710f9c8..c50ffa75d5fc 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1215,9 +1215,15 @@
+>   /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
+>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
+>   
+> -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
+> +/* Compute Express Link (CXL r3.2, sec 8.1)
+> + *
+> + * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
+> + * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
+> + * registers on downstream link-up events.
+> + */
+>   #define PCI_DVSEC_CXL_PORT				3
+>   #define PCI_DVSEC_CXL_PORT_CTL				0x0c
+>   #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+> +#define PCI_DVSEC_CXL_FLEXBUS				7
+>   
+>   #endif /* LINUX_PCI_REGS_H */
 
-Andrew
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-> 
-> [0]: https://lore.kernel.org/linux-devicetree/d42100cb-eaa0-487f-aaaa-6d8f87bc0705@beagleboard.org/T/#m09b2ebe28b6202b2a926970150caf718eff6d9ac
-> 
-> [1]: https://www.mikroe.com/mikrobus
-> 
-> [2]: https://www.beagleboard.org/boards/pocketbeagle-2
-> 
-> [3]: https://lore.kernel.org/lkml/20240702164403.29067-1-afd@ti.com/
-> 
-> [4]: https://lore.kernel.org/devicetree-spec/dbe566ea-447f-4f91-a0b2-f464374955f4@beagleboard.org/T/#m591e737b48ebe96aafa39d87652e07eef99dff90
-> 
-> [5]: https://lore.kernel.org/all/20241209151830.95723-1-herve.codina@bootlin.com/
-> 
-> [6]: https://lore.kernel.org/devicetree-spec/20250401081041.114333-1-herve.codina@bootlin.com/T/#t
-> 
-> 
-> 
-> Best Regards,
-> 
-> Ayush Singh
-> 
