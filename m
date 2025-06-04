@@ -1,150 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659AB1DE89A
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A5E1F2C44
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749056168; cv=none; b=RdsfwJ+bNU3dakg9wpCaMfkCkvfmIYrMvN7tK31Jb/LFw1ZNU9ec49FX8JsSK/+WtKvfroy0uwMlBqWL0WR7y9+lRwqd5QZyifTjKjxrKSfIwAIGfbmFFQYUegpVSz9YRldxJhYU9DwLheSb4DtM8mjqJ1kf0QgkSRDXJcA3pqE=
+	t=1749056202; cv=none; b=HTWNAqCj0Wva+BlKuWZ3gCTAIxOW+3o52UJT3/dFVhTz/KP49OleVFSq/wGobSTc/WVrqdiKgjec6zmzHhVMq+FzPU2os59oECfBBDogLnwE6cULWqhBhGp2Wuf5ccZV6cosMSOsj+4fOrRsp7N40DBSOcFpOTZdjj6o55cUsG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749056168; c=relaxed/simple;
-	bh=guOI/IMUZQ9iLqAt5X6Xtn9qc6QdSHzu5FrWDlK72OE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FEwbrPhcRvGydzMMH2NCGQ3ypJ48XPq0lPzCRC83xu/cNoe8OzmpMIW3RZM5PMZKQ1ZHBLoXd1pjwj2vOQrZ7UzE+f/6Z+Nxq7ZwSB74eFlinVX2HAvPb7XaZQILwFCzeKHcI3giSvFxR+RDcmeaPO3CdCSNTxGkc1FmS43Txwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M2cfcRLB; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1749056202; c=relaxed/simple;
+	bh=hHWkN+1W3r8pcWm5IykqgahYA5ORV1Tz/OpKi1g0bhg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ujboKMvBLkbp6d29QuyJhnW02D7XzsKttj8sfDPUDJAT9KhwaxgEAtL1lBKjk+/bwrV32Pt+76mHz2J/5qMSL5PLCWHqp3oSTRqgRPphNvESWSOLXum3HypIva0zbVm5wTfWsgIELur5Bdfw+/4EZ9Bh36kHGRi7Ubi54Mzfuq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FDNhrA2t; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M2cfcRLB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDNhrA2t"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749056166;
+	s=mimecast20190719; t=1749056198;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=I9PhEN/LIEN/gLsXY9mpqwVLXpzLhsWCN/lzXheaQis=;
-	b=M2cfcRLBlqfGo0brHMN4nGZfp9ieS90r2jwSfszbo3pQ4zYgfFlggL7aGlKa5EfBMyFycM
-	dk1qA4pAWewpr+yY9Zynf+XbIO0FJK61kzK0uJw0XNxP6bPzI3ykk4Cjt0fKT+W1vkaaRV
-	zLcVdqh6aCiMIZ7nDiKQlEaG/+0SL7I=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=2I81AuUlYQ9366SJCkTTKCrVJZ04owtIVy2X3Og2iB4=;
+	b=FDNhrA2tBSuNsYVdsr+ntslc40l//cJPdwjELnunNdTvwWlzRmLXNJr0/pNnoqowpA0f2/
+	ExQJ4rQ7dyXaEKSKYZTbTjQrLB5h+2Ou2f7AyhHdw9/LOBR5gITCF7Fu/Z2ndev4CS2eL5
+	fVtJEo6/sYaXDw4vSdJXJ/kkqp4rXlI=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-581-Bzgc3vrpO2iHpFEXfRzTJA-1; Wed, 04 Jun 2025 12:56:05 -0400
-X-MC-Unique: Bzgc3vrpO2iHpFEXfRzTJA-1
-X-Mimecast-MFC-AGG-ID: Bzgc3vrpO2iHpFEXfRzTJA_1749056164
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4eeed54c2so20982f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:56:05 -0700 (PDT)
+ us-mta-590-tpyY9lqCOZ6WIiBppIvszQ-1; Wed, 04 Jun 2025 12:56:37 -0400
+X-MC-Unique: tpyY9lqCOZ6WIiBppIvszQ-1
+X-Mimecast-MFC-AGG-ID: tpyY9lqCOZ6WIiBppIvszQ_1749056196
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ad89a3bcc62so10975466b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:56:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749056164; x=1749660964;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I9PhEN/LIEN/gLsXY9mpqwVLXpzLhsWCN/lzXheaQis=;
-        b=jJ57wfi1+nAci5ui8WzJ9vTdnqrXrz71Rn+S7OtwyxVRPxLx5JJc9MVsLzpdMHXETf
-         d+r/w5eold8A2aTKsY3XU973hb4gqiqDyrdB/wWer5N9xGLLBsefIRj5rLnuCoZK0qGc
-         Xz8O6A4YvS6OgbvcCeim5VkuIEgtipsjtC+ZqSjAO7rvpUM6P3j9Y4XXbRubGtLtVSOu
-         pS6QAl6ESa+/JIRsNA09MNwH+u4xZhBZDF1SqV15muieRHFTmnRzPieyBmjAMKXbZHMv
-         JAu1cCc7mf5iJDzo5NcacAKujdXaEoidB45PJmyafKpv0Nj0wjwbYRAA0YYzhEJ0BAb8
-         RAdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuZYLbE9zIPmEXtuTUxNSRooQ83wGWjTOsjtbLPBS7zWX98O6109cEXdKvSltYh6WtWSM2F0gMKjltPCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5rSU2zvJqV0HlHbmrsLKfdqn5TGEjqceCQzhq8avebZsY4jqg
-	7GwdM2MymMHcprlnr1uccGaYH1tflKlwViQ16VxwF0PgAo4JQIl6nhXxDKYlV+4IsdWXhAptuLS
-	rGu4oywwTNosprBmDHAK4/1QOiYfpCo9qeQTB+h609hTUtbLiRgggrMKyZCBNqNSbNw==
-X-Gm-Gg: ASbGncv60HamC4vSdlAIioOCJff9yohbEOefZ/VDP1WeUnb9x32EqKofcKhFw7XyUTX
-	bUEIFGLafXkHHswIXldUiPME5z+b3LWXyat3abtAEuJSYXa1AQB6TVA5touJfnA57fxeUonruyB
-	cMAdY5f8fw67gNc9S11XbSm+dPGxvVtO2FCh+vAw0AszdFr+l1yv1GUO4gcjqeR2UR38YDxJ5iY
-	LxPTz78Cqw6IJa5ZS9bXC2dkRxLK4EWplWb5+AjkdBjV3Ys2vT4UYaEs1Uz52jASsPymoviXlmY
-	KqeSu3apF4H9dw==
-X-Received: by 2002:a5d:64c7:0:b0:3a4:dc0a:5c03 with SMTP id ffacd0b85a97d-3a51d96a1ffmr3221286f8f.39.1749056164121;
-        Wed, 04 Jun 2025 09:56:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGS1/rFeCnYX1T3YAOENXA746Vcb7+JQHLYtoc/dOzG7V2U1TM7oVk/frUr9KrMyDQeVAs/Lw==
-X-Received: by 2002:a5d:64c7:0:b0:3a4:dc0a:5c03 with SMTP id ffacd0b85a97d-3a51d96a1ffmr3221265f8f.39.1749056163705;
-        Wed, 04 Jun 2025 09:56:03 -0700 (PDT)
-Received: from [192.168.10.81] ([151.49.64.79])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-451f82879d8sm1959195e9.1.2025.06.04.09.56.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 09:56:02 -0700 (PDT)
-Message-ID: <69a46b99-83af-4913-b5ec-e993d2edde35@redhat.com>
-Date: Wed, 4 Jun 2025 18:56:02 +0200
+        d=1e100.net; s=20230601; t=1749056196; x=1749660996;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2I81AuUlYQ9366SJCkTTKCrVJZ04owtIVy2X3Og2iB4=;
+        b=k3th6Ff02FUbhIdC/Pxy0SzgobMN67TzE0v8SbFnhI7ERMzhixtbcCr9g1JPYPI3sy
+         WetYV0omzfUlWTppZ+VBeg2wXn4+gf4dHN9mFCrVz6Pm+M14OXrJqf5ZhW0EnJjnVWv6
+         gZwxaZbRFW0+kWxva/5pjx89vYnwfEZQQml4ppFelX6N/UGYk7klQWJ4uWwPGBLO4y7L
+         G/2j7Ph4MxwBrv+jjKo9lXWuUpSkyQRo6jHkO9M5iYjE/DF2cjwcZFPPXV+/r3JQIwaP
+         NvDrUDGoc68wzbF8oM3r68fogUbDbojwZmtCodTOI8vVTOw9gS136hD9CAVCEPK+6Cmq
+         z9MQ==
+X-Gm-Message-State: AOJu0YyQoTlyiby05EcwpmQG+8R1xz7+ttT+T4u0Le0BTkDB5fFRAy7E
+	P8x6rcAw5/4O90vUbUpNt+t1Qxaig4a6rUkzlG0pzfuV6SKvXwHow/CL8E+WALTEn5H5FjvRiUP
+	V78m43XWw7KWT+HI1RFqhmq+7IdUFphdFq45zToo8TrWCWOmH/wWAY1KEfNtJ3nSLzQ==
+X-Gm-Gg: ASbGncv+OtUEhKwkBrlvBuRRXNv2DKntp+g68A/d1Y09YRo49iyJo5hhKQxKtH2cqm1
+	i7fMo71pROb1L5EZyo9fSC18T8ZhL6FUQbchSxIIQ+KpmDaPHGCZqPjC+43vL4hYszlTxI5HvZN
+	b8UbYGlJvtf053R6A9A9ZTDdyZ6ivl2wGUu1Ir6es1dKl6SJ9DDEif1PmvC78sPISuomRnruXNM
+	QURIjG3ugV1hrI8AlDJBrh7xsRFpm9I2Eh8+oG5oQ5cB6xQdx5oZDWjNqEio4T8Pd0nKfUXeVq4
+	aCZSgAi6
+X-Received: by 2002:a17:907:9410:b0:ad5:eff:db32 with SMTP id a640c23a62f3a-addf8fbbcbamr374232566b.48.1749056195764;
+        Wed, 04 Jun 2025 09:56:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFyDZZleVWiVesfO9YTAhzLK2xLG6f1Ssys6/5lTY37/ymkAbmNiWcQtPEP0I7NoOuKWqtMkg==
+X-Received: by 2002:a17:907:9410:b0:ad5:eff:db32 with SMTP id a640c23a62f3a-addf8fbbcbamr374230266b.48.1749056195333;
+        Wed, 04 Jun 2025 09:56:35 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad39f08sm1135981966b.144.2025.06.04.09.56.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 09:56:34 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 06E6B1AA9164; Wed, 04 Jun 2025 18:56:34 +0200 (CEST)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
+ netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+ ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+ akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
+ andrew+netdev@lunn.ch, asml.silence@gmail.com, tariqt@nvidia.com,
+ edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+ leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+Subject: Re: [RFC v4 13/18] netmem: remove __netmem_get_pp()
+In-Reply-To: <20250604025246.61616-14-byungchul@sk.com>
+References: <20250604025246.61616-1-byungchul@sk.com>
+ <20250604025246.61616-14-byungchul@sk.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Wed, 04 Jun 2025 18:56:33 +0200
+Message-ID: <87msanv41q.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/15] KVM: x86: Add I/O APIC kconfig, delete irq_comm.c
-To: Sean Christopherson <seanjc@google.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250519232808.2745331-1-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20250519232808.2745331-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 5/20/25 01:27, Sean Christopherson wrote:
-> This series is prep work for the big device posted IRQs overhaul[1], in which
-> Paolo suggested getting rid of arch/x86/kvm/irq_comm.c[2].  As I started
-> chipping away bits of irq_comm.c to make the final code movement to irq.c as
-> small as possible, I realized that (a) a rather large amount of irq_comm.c was
-> actually I/O APIC code and (b) this would be a perfect opportunity to further
-> isolate the I/O APIC code.
-> 
-> So, a bit of hacking later and voila, CONFIG_KVM_IOAPIC.  Similar to KVM's SMM
-> and Xen Kconfigs, this is something we would enable in production straightaway,
-> if we could magically fast-forwarded our kernel, as fully disabling I/O APIC
-> emulation puts a decent chunk of guest-visible surface entirely out of reach.
-> 
-> Side topic, Paolo's recollection that irq_comm.c was to hold common APIs between
-> x86 and Itanium was spot on.  Though when I read Paolo's mail, I parsed "ia64"
-> as x86-64.  I got quite a good laugh when I eventually realized that he really
-> did mean ia64 :-)
+Byungchul Park <byungchul@sk.com> writes:
 
-I totally did!
+> There are no users of __netmem_get_pp().  Remove it.
+>
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> Reviewed-by: Mina Almasry <almasrymina@google.com>
 
-Looks good, other than the small comments here and there that you 
-received and my "preference" for keeping kvm_setup_default_irq_routing() 
-a separate function.
-
-Thanks,
-
-Paolo
+Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
 
