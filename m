@@ -1,40 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79E728F935
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA97028F51C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045486; cv=none; b=r8emm4zr1TZrUuGS9zk+PxhXMCweWQUBPXpy9ovP5faamGwd/3i32RbygwfFBg6+ozM9+REVkB1Nx9XJw0ecY0iDmaD/I5uVZxjDd/ciux4HysLaHghle/vRnbYXN8RSCWnpuSVjAauGl7BESYoclrIuHS2H+EwUz0I66l/R5wU=
+	t=1749045487; cv=none; b=r9BolriEHl3hgAbNTs8q9AFPecjDJYaGuAyNMI2C3sAyuFK6oLK4vXNJnKbnxFq0wamrESujQV1jNjLCxFthbj7LfeQbzBcXa609rwRJydq+InYZgGY3bk5W6AJACROMFHqbR1A4cJ5SMZKfUL2FijI2JSoTxls2oSOViyuvHMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045486; c=relaxed/simple;
-	bh=QRXYHY3k9SKVaoLTElRZshkhV3csk41wh+DXOlD/xiQ=;
+	s=arc-20240116; t=1749045487; c=relaxed/simple;
+	bh=zRFxwlOuzhqwZx7qzxl80h5Bo/0p7oc7WIbfN8Qjlw4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cm2z9MqvTYNkJrgq2V7enB4/SUtTFc/Q6V9LPGw+E4mV9dyxGfQj2b+cScf8CIv/6rnhbt2C72dzCZGERrd5fTLSme4x5qw4GnP8nNwTzDg+vLw+N5IT6IKUlPGeNvoQjy1yiygMn3ekKXxFsJSqBSKF2hHA5xqfqx8y6RQ7JIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSlvmc5U; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Q+Q18UYuasyY4bU700hhcNPmKmWdx/H5O1CsxvMsiEIrhbfBs3lKKxELayqflsV8Gc6z+9KGyD7w+f9gAePoCvCzIOxpZ+Fi5nnH8r2EAwl5eXAC8gsWl0LGx2LJVJg+exmb0Hb/oT5KUVei1xhjxvtKq1p+TaOKZGQA6WCjzWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NRoq57/T; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSlvmc5U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48EE4C4CEF2
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:58:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749045486;
-	bh=QRXYHY3k9SKVaoLTElRZshkhV3csk41wh+DXOlD/xiQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kSlvmc5UV/fAMKvoYTu89L4yT7pJpL6XY+Dtwsck1IoVfEuNBz3kZh79EKzgTZ4Jo
-	 RnKD0pkEFoU+YD9EN1EdByM48mmyfeenyUT8Thq/W1ff2AGFxdOs13IvdtJbcT1OeW
-	 ZM/lg2KQgXN0lHOBkjgYkMVHN6xZ01myRXVqMPzYKrSlSsPnnEsJ1ZmoJ+MD4a8bOk
-	 Ch8EX8PK5RLC56eZpkkX4xu7/wNA7RF2aiysvuv9bN4cEafixJwAqNxNGaOPiUefF4
-	 54XCHaDb5NyQzc7gAJykVoxjKdWHXz1SLbpp0GhSOMU3fFoxGWyn5rt9eAeL+uR6k4
-	 o1N/uValiBfzQ==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-602039559d8so12979714a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:58:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVWMXmBYqhDklmWyp42VaDe4Mz1Obj9f2wiQpFBbNmGo5oW4nI99xL08+DqGJnBrxWfQCSIFTWVS6NdCp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlH10y7zcwheF+DlMDcT7jTLafkiOdbmWpvSnPSnamunjVq8Qo
-	rhLhttrslXWYOYl9uEZoXBhBFpIdkbYLPTLliiieEIobAlZN46Zd6WR0kvDahEBMXloN557+N34
-	UkvL49o5xiHivZMmKloib+Gqo7YvaAQc=
-X-Google-Smtp-Source: AGHT+IEBYJAM+K0rj2+spRhzULHWaeKMSJzGwvvpMAeB0yguZc1nfk4ig2PEKpq0Mb7MT9uKBmXBl3Ukizgy5R+1c3A=
-X-Received: by 2002:a05:6402:348e:b0:601:f3f1:f10e with SMTP id
- 4fb4d7f45d1cf-606e98b0c7fmr3019199a12.5.1749045484519; Wed, 04 Jun 2025
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NRoq57/T"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e7dc3df7ac3so6848859276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:58:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749045485; x=1749650285; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IFWXnsIMSq1bn0DUFYmY7z6V87/rRA1du54TZxFaV2Y=;
+        b=NRoq57/TUbyB7bb5VxHVyq24yoAGAr1hQ99CQFtbu6trcUZRoVYF23HAk6hj45wG3D
+         xLe1YFmQwsOHaa9BMDXe14VjCzh96PvvR5MUJNO+l+6aOU9AEcCfRV2eQXWBsinrtB8e
+         kA7MBL8cGEHkE2KlegjBelu5eMfxydvNaMguOW2laDNBFcNSQkSll6Nkz7IEey4Guwd4
+         e7qStXO29JO3J6kXMPCMFiM0TYqmMgOpi4u+EEWdWhHwSKZ+J4Mg4WdzGWZyTRTfZQ6f
+         rs2D2tVO5bqTuHr7m4Q8BaMd++fXkMlFMTwk1Z5gYK51QjoqSP0HG8sQltH7IStlAGTI
+         g0Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749045485; x=1749650285;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IFWXnsIMSq1bn0DUFYmY7z6V87/rRA1du54TZxFaV2Y=;
+        b=G6v+rgWeeE9Mdz1SK9GTmj1t3XT2HW6nnkPZNvhAYDv5qX0XhPGuPQ26UacYXiT+AJ
+         +kfMrG4EVoFFnJe7SmZfIOwNX7vkGviJ/2KdD8RmE7II/pfVpeWW6cam2yx4tjfRB/q0
+         7HP1Fav+hHYSTheN+xCQUMJYpIcpUPysFMT7ISkqB2E/HAZRYMZYp7ktVxRSlxPNAv+8
+         xDw8kJMgr5One4dL9pJ+IABNQgw8+88rvbdWmqKCgqco4gbpmzY2GEWupO4DdvuzeOEs
+         UjoxvG9+gy1vYSs9QUMr8mozgkfSeel8Q6ib1yg7mImESPcEKgtfudG0NYhdBt4AFqFW
+         uqsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWY/HdqQfCWNAA2D6MOABxBFDrBXB/Ij4jAjb20dV/44A/9twscgnyPgFcnn8GR/ijiTwn9tpMDv/ve4F8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysOKHZ7pHxleH5U5JDgWM4xvLOyuOyIWEBwGGi+9rZpMR2kuOZ
+	pdFjkcQBn6si9/SUqWfPe3LP9UQky2Zo3jBFtxtylGEiV2fFcSiA5aS59fX3KvsVcqG7WFe+bU1
+	dHqXLrtvu/viFpqE54CuHwCtgOzUuCok5F004DcLsaw==
+X-Gm-Gg: ASbGncvqtN95LzqQTV0fCWfsw9fEAmCFgy65ZeKtCVdJBNUS3TmTMtiWWfqTd8HhChP
+	qfkrlzsVZY6qND71ExPYRUPnU4PHDoBtiZRLz/JrcVp5VvLhdQP3s3BVyhTTTCD8VA8wTsbGoOs
+	Jx/cnTpHV2wxdM7H+HfmRii3IDC9QyMbcnVQ==
+X-Google-Smtp-Source: AGHT+IGXFY8gppNCB1I6k87GeD/bmWPUV8R4mMgK2i7dZCLcfF2RhkUBwoySiJMKIOMWeHJraaSZXAxgR7paTZPeyFU=
+X-Received: by 2002:a05:6902:1383:b0:e81:2447:6b74 with SMTP id
+ 3f1490d57ef6-e817a0011f4mr3409868276.43.1749045484537; Wed, 04 Jun 2025
  06:58:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,179 +58,102 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531113851.21426-1-ziyao@disroot.org> <20250531113851.21426-3-ziyao@disroot.org>
- <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com> <aD6e0JLntUC6BdH7@pie.lan>
-In-Reply-To: <aD6e0JLntUC6BdH7@pie.lan>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 4 Jun 2025 21:57:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4yt2Rdu5-8QsDyXpLo5v8jHSDmBB0nBO+4-pKzfbYJHA@mail.gmail.com>
-X-Gm-Features: AX0GCFvFtnwLjh5Ih6ITY7Ya5PF5l-bEs8ErSYvVmN0nCXxUeNlxcWJrZ3JdK00
-Message-ID: <CAAhV-H4yt2Rdu5-8QsDyXpLo5v8jHSDmBB0nBO+4-pKzfbYJHA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/loongarch: laptop: Support backlight power control
-To: Yao Zi <ziyao@disroot.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+References: <CGME20250529222410eucas1p2e1d41a2fc717caef1aed51367a7db944@eucas1p2.samsung.com>
+ <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
+ <20250530-apr_14_for_sending-v3-7-83d5744d997c@samsung.com>
+ <CAPDyKFpYfZNthdRN=pCv4FEdFCzrKEH4aFBy4ew-xLKtpbJ5Tg@mail.gmail.com> <a68e3bee-f4ad-4d73-a5a8-e39772c41711@samsung.com>
+In-Reply-To: <a68e3bee-f4ad-4d73-a5a8-e39772c41711@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 4 Jun 2025 15:57:28 +0200
+X-Gm-Features: AX0GCFsKqqHfcoyjgQNY4Bx0T-G_vnaUmkhnEv_Xdt_09WriRo8KoB3SpnFxVUU
+Message-ID: <CAPDyKFo8scYL59+ELgawop30habZad0Xsd6bKGLXtSF+UNd9Ng@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] riscv: dts: thead: th1520: Add IMG BXM-4-64 GPU node
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 3:06=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+On Wed, 4 Jun 2025 at 14:40, Michal Wilczynski <m.wilczynski@samsung.com> wrote:
 >
-> On Tue, Jun 03, 2025 at 12:16:57PM +0800, Huacai Chen wrote:
-> > On Sat, May 31, 2025 at 7:39=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrot=
-e:
-> > >
-> > > loongson_laptop_turn_{on,off}_backlight() are designed for controllin=
-g
-> > > power of the backlight, but they aren't really used in the driver
-> > > previously.
-> > >
-> > > Unify these two functions since they only differ in arguments passed =
-to
-> > > ACPI method, and wire up loongson_laptop_backlight_update() to update
-> > > power state of the backlight as well. Tested on TongFang L860-T2 3A50=
-00
-> > > laptop.
-> > >
-> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > ---
-> > >  drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-----------=
---
-> > >  1 file changed, 19 insertions(+), 34 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/p=
-latform/loongarch/loongson-laptop.c
-> > > index 828bd62e3596..f01e53b1c84d 100644
-> > > --- a/drivers/platform/loongarch/loongson-laptop.c
-> > > +++ b/drivers/platform/loongarch/loongson-laptop.c
-> > > @@ -56,8 +56,6 @@ static struct input_dev *generic_inputdev;
-> > >  static acpi_handle hotkey_handle;
-> > >  static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
-> > >
-> > > -int loongson_laptop_turn_on_backlight(void);
-> > > -int loongson_laptop_turn_off_backlight(void);
-> > >  static int loongson_laptop_backlight_update(struct backlight_device =
-*bd);
-> > >
-> > >  /* 2. ACPI Helpers and device model */
-> > > @@ -354,6 +352,22 @@ static int ec_backlight_level(u8 level)
-> > >         return level;
-> > >  }
-> > >
-> > > +static int ec_backlight_set_power(bool state)
-> > > +{
-> > > +       int status;
-> > > +       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
-> > > +       struct acpi_object_list args =3D { 1, &arg0 };
-> > > +
-> > > +       arg0.integer.value =3D state;
-> > > +       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> > > +       if (ACPI_FAILURE(status)) {
-> > > +               pr_info("Loongson lvds error: 0x%x\n", status);
-> > > +               return -EIO;
-> > > +       }
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > >  static int loongson_laptop_backlight_update(struct backlight_device =
-*bd)
-> > >  {
-> > >         int lvl =3D ec_backlight_level(bd->props.brightness);
-> > > @@ -363,6 +377,8 @@ static int loongson_laptop_backlight_update(struc=
-t backlight_device *bd)
-> > >         if (ec_set_brightness(lvl))
-> > >                 return -EIO;
-> > >
-> > > +       ec_backlight_set_power(bd->props.power =3D=3D BACKLIGHT_POWER=
-_ON ? true : false);
-> > It is better to check the status before setting, because the EC
-> > firmware may not be as robust as needed, a checking can reduce
-> > interactions between kernel and EC.
+>
+>
+> On 6/3/25 14:27, Ulf Hansson wrote:
+> > On Fri, 30 May 2025 at 00:24, Michal Wilczynski
+> > <m.wilczynski@samsung.com> wrote:
+> >>
+> >> Add a device tree node for the IMG BXM-4-64 GPU present in the T-HEAD
+> >> TH1520 SoC used by the Lichee Pi 4A board. This node enables support for
+> >> the GPU using the drm/imagination driver.
+> >>
+> >> By adding this node, the kernel can recognize and initialize the GPU,
+> >> providing graphics acceleration capabilities on the Lichee Pi 4A and
+> >> other boards based on the TH1520 SoC.
+> >>
+> >> Add fixed clock gpu_mem_clk, as the MEM clock on the T-HEAD SoC can't be
+> >> controlled programatically.
+> >>
+> >> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> >> ---
+> >>  arch/riscv/boot/dts/thead/th1520.dtsi | 22 ++++++++++++++++++++++
+> >>  1 file changed, 22 insertions(+)
+> >>
+> >> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+> >> index 6170eec79e919b606a2046ac8f52db07e47ef441..ee937bbdb7c08439a70306f035b1cc82ddb4bae2 100644
+> >> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+> >> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+> >> @@ -225,6 +225,13 @@ aonsys_clk: clock-73728000 {
+> >>                 #clock-cells = <0>;
+> >>         };
+> >>
+> >> +       gpu_mem_clk: mem-clk {
+> >> +               compatible = "fixed-clock";
+> >> +               clock-frequency = <0>;
+> >> +               clock-output-names = "gpu_mem_clk";
+> >> +               #clock-cells = <0>;
+> >> +       };
+> >> +
+> >>         stmmac_axi_config: stmmac-axi-config {
+> >>                 snps,wr_osr_lmt = <15>;
+> >>                 snps,rd_osr_lmt = <15>;
+> >> @@ -504,6 +511,21 @@ clk: clock-controller@ffef010000 {
+> >>                         #clock-cells = <1>;
+> >>                 };
+> >>
+> >> +               gpu: gpu@ffef400000 {
+> >> +                       compatible = "thead,th1520-gpu", "img,img-bxm-4-64",
+> >> +                                    "img,img-rogue";
+> >> +                       reg = <0xff 0xef400000 0x0 0x100000>;
+> >> +                       interrupt-parent = <&plic>;
+> >> +                       interrupts = <102 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                       clocks = <&clk_vo CLK_GPU_CORE>,
+> >> +                                <&gpu_mem_clk>,
+> >> +                                <&clk_vo CLK_GPU_CFG_ACLK>;
+> >> +                       clock-names = "core", "mem", "sys";
+> >> +                       power-domains = <&aon TH1520_GPU_PD>;
+> >> +                       power-domain-names = "a";
 > >
-> > There is an example: dp_aux_backlight_update_status() in
-> > drivers/gpu/drm/display/drm_dp_helper.c.
+> > If the power-domain-names are really needed, please pick a
+> > useful/descriptive name.
 >
-> It's reasonable and I'll take it.
->
-> > > +
-> > >         return 0;
-> > >  }
-> > >
-> > > @@ -394,6 +410,7 @@ static int laptop_backlight_register(void)
-> > >
-> > >         props.brightness =3D ec_get_brightness();
-> > >         props.max_brightness =3D status;
-> > > +       props.power =3D BACKLIGHT_POWER_ON;
-> > >         props.type =3D BACKLIGHT_PLATFORM;
-> > >
-> > >         backlight_device_register("loongson_laptop",
-> > > @@ -402,38 +419,6 @@ static int laptop_backlight_register(void)
-> > >         return 0;
-> > >  }
-> > >
-> > > -int loongson_laptop_turn_on_backlight(void)
-> > > -{
-> > > -       int status;
-> > > -       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
-> > > -       struct acpi_object_list args =3D { 1, &arg0 };
-> > > -
-> > > -       arg0.integer.value =3D 1;
-> > > -       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> > > -       if (ACPI_FAILURE(status)) {
-> > > -               pr_info("Loongson lvds error: 0x%x\n", status);
-> > > -               return -ENODEV;
-> > > -       }
-> > > -
-> > > -       return 0;
-> > > -}
-> > > -
-> > > -int loongson_laptop_turn_off_backlight(void)
-> > > -{
-> > > -       int status;
-> > > -       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
-> > > -       struct acpi_object_list args =3D { 1, &arg0 };
-> > > -
-> > > -       arg0.integer.value =3D 0;
-> > > -       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> > > -       if (ACPI_FAILURE(status)) {
-> > > -               pr_info("Loongson lvds error: 0x%x\n", status);
-> > > -               return -ENODEV;
-> > > -       }
-> > > -
-> > > -       return 0;
-> > > -}
-> > I prefer to keep them, in downstream kernels there are users of them,
-> > I don't want to add them back if one day those users are upstream.
->
-> These two functions are mostly identical, and I think unifying them
-> together should be the right way to go. If this makes sense, users
-> introduced in the future should also adapt it, instead of keeping
-> redundant code in the current mainline kernel.
->
-> If there're new users of the API out of the loongson3_laptop module in
-> the future, it's still easy to rename ec_backlight_set_power() and
-> export it.
->
-> For these two points, I disagree on keeping these two symbols.
-OK, please add a check before communicating with EC, and then send V2
-as soon as possible.
+> Yeah they are required. Even though this convention doesn't seem to be
+> enforced by the dt-binding it seems like it's hard-coded into the driver
+> 330e76d31697 ("drm/imagination: Add power domain control"). So I don't
+> think I have any choice here.
 
-Huacai
+Well, unless there is a DT doc describing the power-domain-names it's
+perfectly fine to change the driver too.
 
->
-> > Huacai
->
-> Thanks,
-> Yao Zi
->
-> > > -
-> > >  static int __init event_init(struct generic_sub_driver *sub_driver)
-> > >  {
-> > >         int ret;
-> > > --
-> > > 2.49.0
-> > >
-> > >
-> >
->
+Moreover, it looks like 330e76d31697 is a brand new commit, just in
+linux-next, so not even included in a release yet.
+
+Kind regards
+Uffe
