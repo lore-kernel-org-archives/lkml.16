@@ -1,272 +1,277 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABB37261C
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 18:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089E7149C55
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 18:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749061002; cv=none; b=Y25IAT1eoLe9aCzNtn0ipFeEozu9XMpkpc/2D06eYD9/y1Q3wtHUNw/BMIKKDfJbj11CCIXrYJo8buatbnHzWtdFDIddaqpMVCYYSlHi5O/ipVM1YOfj/yazJ3p2c0B3DTP7pXezS7yS9PnCSKVdzjV6diYbFEffLwdoTmGte/g=
+	t=1749061056; cv=none; b=tSJ2707YFXE31jsXD7yyD4l5md8ox8nuUYb1VPeji82YWW97LLPh+87hKPIxlvcCV/7yTArVOfd/SuRChkK74DDNeH8Ujlali727FHy4JJLqwKbt2pCJ5nrr76+6TS6XAuVsO1U+wtJWY/IXSuonUWe8UL90ulBeTvd9meHhuZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749061002; c=relaxed/simple;
-	bh=zK7vdQyIbPYAAsJhypTmzLbKX/Zy6KY0Nmx8W/IIUy0=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PrPJWX2rali98z3rvEDeJIqJK2qp1Ckgr3czH9piOeHWViXDyzc2+9AZZ5dfzyXkODD0jgu3g/mSLQ319xXCTAjBOqlQjB5ThPw2xbTGLBpx9XSlly8BzAdktBROtQXUNC3/bDjrgW8tS2VWxWqQ5jIjr/qsjOslLdePRN8OLTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VATsoje6; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749061056; c=relaxed/simple;
+	bh=psoh91nI2uI0Sy15561N6TGZ7CCZ0e/7pFH5VDdguCY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jvNRDAY8lJAnK5HLoAf0lon0YgIauSIk+HhF9u/hopyj01FOEzdvqRwTAiiO62kYiGZwuJs4/1p4HyiCcLHtH1ZebP4LY/Zppq5TvJYZC9NWJ8/9F77yEcX7CVtKmPJZt/DmfVSaRJtMFdvpy55p49mMp9niNrXmw7qQZ4ZkNzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c40QDRH+; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VATsoje6"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a5123c1533so54637f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 11:16:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c40QDRH+"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-602c3f113bbso126515a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 11:17:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749060998; x=1749665798; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ttjgH0cT0DxWlBa65PV80AJpjnePegqRqixNcnWRFlI=;
-        b=VATsoje6CxxeN7Wm4X30j9EGIuK+iuZa9hbkJiRBe4pbVSknbj/f4TTxPHLnuQXqV6
-         +HndxBKZNwIQAY4qc07W9YW8tdVw8rIMd+t8x58DsFMKzh04UIjksO5Yx4VRM5rFO8Ij
-         LrEUxuSVLxZz9pTRLuXh+flP7qF7g2rZEtwOP4D9AjlI562eKOWu+OJN+Jwdyfk01srQ
-         bkmm6VAl2QhivKEgY5a1jlutVbGVt6Ui82Xri9ThXXtYBScsFm9VQpHVdZr7+I6hHxXw
-         YwCAVHwEOtZ8C8VGT0V1Vyr3kc4i9gw3sS9PxkkpmtPnexGJnkppDvO+2tSjHkyZXghQ
-         UdAw==
+        d=google.com; s=20230601; t=1749061052; x=1749665852; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lj/ZRM00Y6bck08t7l8DzmjqoE1Rg6EPcxweeTc+cRY=;
+        b=c40QDRH+22d6Vb+dLa9JAyCadQjzz8TWWI/+xtM4PRnKRdyLCtul9H2PA2cw0wFjDy
+         8Mi5JLtbf/5bBlZv15800JQ4F2atvHRJ8OxnVZfV+PXfAHXVNzz7JCMqfRaKSYGfXswa
+         4kZpBlqKWrObb19JF/WauAKZMdlh0KeAJ34utdKOkwbUh/F/1UQVdGIX0q9sivL2C+ah
+         OhNlLL76TWN94+Rsu2Bg5kLJ6xNN5oBTNfV9Gjqd+HBpLk0OFt/zBaJGGCp09ciEEauM
+         g64fQidv59OvNFVPtaZ0irdHX4+zZkyS4AwfIjs1ANz87BKG5pPSGTA2MCt9oFfIe50+
+         9GLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749060998; x=1749665798;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ttjgH0cT0DxWlBa65PV80AJpjnePegqRqixNcnWRFlI=;
-        b=nq6l2gmIc5CThr9JoJ/bTKPfe+MOHyebq0jPNdEMU/HaQF1TU/BBfmnhlAeaI8YvgU
-         Kvy2MnldmOVRjgMC76bJKJF6HYkoy6OMDeVDJrqi1poLSWk6nMCOgKXmZ7fBEQHeFxzn
-         uFkJnRGAO0KWznpq6swIYyGoKcYWgq5pQ27z4JzjohNvO8ENr0UEzgYKRTPqGMVTHCGe
-         VYVZV1KfBrhxwcG45t3S7x57RKRuONENqwsCbyAYk6cUAUjhv0ofvXOA+S3pSCdwk1bk
-         m1nhTzwq18O3ZGSmyMd70P9vZMOOIrxQj5F01n9deO1d+f8TLF4uvlzwco2V2Xn3NgdR
-         D0dg==
-X-Forwarded-Encrypted: i=1; AJvYcCVT+Qd9mTPx8clSXHta7RiY7NKjTQqRrb/y79VlQDR/+LIO2u0Ix6Q93sIrDfDkNPLzPXYbjEaBkcsGrPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/5pq1HjA2Q5ScCUJy+ekU1RQXs0D/6EjbuLhakwzT7IbFRRaL
-	oQ7BRoe6tI5lzllodhjyHfANW3zg68NP0H4IzO+xv46I5VPsiO+ciNfb6hIrudrCv6M=
-X-Gm-Gg: ASbGncs7K0TDvPh9V0eOP3mIWQpQp3srDVgAtpASqFLwfVHO0AEb6j6VpqS5PqF2sNR
-	vUy7S4Dh25rUX+owui2yZLBgz4c0nfsfKGhpt2/O+rujf689bK99fel3UOHgY60QYWGOh6c9KOh
-	zgP1h/W1oNz8SgnEJ0lGV+WaRBXk5+kSi2JfuD6atER7eX4rV9wiY8tguLrP3Dg6VTuJjMKS9mz
-	j/7tSRRte+CCIX+5ExFMTvaAWTaKIceAAqd2pF4+j0Dyl+w/5G5SjDPeyFPSi2mDB0EoiG4FO5S
-	YQvp9S/M95sIDRU52qfufE2eOZNYP+dxt1GJkQCPxae1rt2pntNtkKQaUbcsuPkDon6fXaeyPIt
-	NcDVYdB86v4O51l4QWMamWO7mEA==
-X-Google-Smtp-Source: AGHT+IEcknHa0jklsTHK2Sa0FI3Bf5pRVp6W6gGePL7R94mxRH5Vo6lZGA6amhcBYAnFzViV8qqrDQ==
-X-Received: by 2002:a5d:5f48:0:b0:3a4:ead4:5ea4 with SMTP id ffacd0b85a97d-3a51d930f6cmr3665520f8f.24.1749060997959;
-        Wed, 04 Jun 2025 11:16:37 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:fef9:cf1c:18f:2ab8? ([2a01:e0a:3d9:2080:fef9:cf1c:18f:2ab8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6d0dbsm21967626f8f.40.2025.06.04.11.16.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 11:16:37 -0700 (PDT)
-Message-ID: <c09fda8d-a023-47f7-a89b-80a368d06193@linaro.org>
-Date: Wed, 4 Jun 2025 20:16:36 +0200
+        d=1e100.net; s=20230601; t=1749061052; x=1749665852;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lj/ZRM00Y6bck08t7l8DzmjqoE1Rg6EPcxweeTc+cRY=;
+        b=iiCdV8iEKc+D42+hDzumnc9OB9aKXMwNLhV+ZXhXqn2dCn/IsYDi5JnJu5/nfQGYPW
+         J0zpbwxuib+oqceSvTCk0bY6oeBJTNYDMKcOA1alnwXg8LAB5qvmDD3a7obn8ZFhEaVb
+         U6mI/IUBeVULeFjO7pPIks40HFUgRzoFt6thzCPxnhYcIxpD5FOt0xpXjm8CUMAQO2PB
+         TsD7zIpVu2e04WW71YuFsMOfWpejII/2uef6DyGf8btmwhevSvwJjjEYoAxZbkSTpNxy
+         JGlwdWC+lv7sXQzAcT16cPjGX4D1vVRBDvElf+77GAYsser+Jxoe2NDXsNJy2l4he7UK
+         iLYg==
+X-Forwarded-Encrypted: i=1; AJvYcCWCHb01DsCQNCJEWm7Kxg/r4S7p7PzkhnLTi0Pei0BaMdl81IpcSzplEO0tA46fNs2NjY6sxY7cOsRfUgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/C2h/+OmvCwQ3LF4DX5aG1Y8jWheViSU7mkKtIZ1JWPAuAgH+
+	v1ll6XhGCT/xAwNIGZD9wL3DQSkA2u/cd4sVkvapX+e9Z9/QBnPAWvlRGC5b1azzcgxdDd39Iua
+	LJ9cG9AzLvKXO0oKF/okY5Qn58ixzRrEeUKhK4n1Yi3uvsWygTnPu+o51W/g/8w==
+X-Gm-Gg: ASbGncuMqDigCkoblg6T74NycmE9XNWw7A66JWbFH7nxbSOLUXCKWw5fwA2K2LGXAy5
+	R6wfC8a7jEhTt4Lp8sFFGRZ/zcgom1zR1wvBrSAzjk/et62RJEHk98acOGUA1KorXj3rDlyZX1L
+	PuF/RCvHpY2olb8XF291DyPhadr4oMWcyTkHad5JKgyUYDpfJQT3fpFURCD53kG4e+GzmVTx8=
+X-Google-Smtp-Source: AGHT+IEEYnFIfamNc0xCTG14sb0jyvopHlMsu5d+GsAMF5NnKMqT1Fw2V2XC4qCaskaDO8Sd+9KklLkmaA/Y7an7mAA=
+X-Received: by 2002:a17:906:f295:b0:ade:5ba:40e6 with SMTP id
+ a640c23a62f3a-ade05ba425bmr78144366b.18.1749061052080; Wed, 04 Jun 2025
+ 11:17:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v1 1/2] PCI: qcom: Add equalization settings for 8.0 GT/s
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>, lpieralisi@kernel.org,
- kwilczynski@kernel.org, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- bhelgaas@google.com, krzk+dt@kernel.org, abel.vesa@linaro.org, kw@linux.com,
- conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com,
- Qiang Yu <qiang.yu@oss.qualcomm.com>
-References: <20250604091946.1890602-1-quic_ziyuzhan@quicinc.com>
- <20250604091946.1890602-2-quic_ziyuzhan@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250604091946.1890602-2-quic_ziyuzhan@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250521225307.743726-1-yuzhuo@google.com> <20250521225307.743726-3-yuzhuo@google.com>
+ <aC9lXhPFcs5fkHWH@x1>
+In-Reply-To: <aC9lXhPFcs5fkHWH@x1>
+From: Yuzhuo Jing <yuzhuo@google.com>
+Date: Wed, 4 Jun 2025 11:17:20 -0700
+X-Gm-Features: AX0GCFupmXsRt1tE_ch4UHdMNbeRq4klRtHqLWhzFMfMGav7I8d9s-ouD80bzCs
+Message-ID: <CADQikVDs3msXqZ6tyoXR0WeN4D_9snxWyk2kXeDw5iAs+BHFuw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] perf tools: Add sha1 utils
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Liang Kan <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
+	James Clark <james.clark@linaro.org>, Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>, 
+	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
+	Wei Yang <richard.weiyang@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Arnaldo,
 
-On 04/06/2025 11:19, Ziyue Zhang wrote:
-> Adding lane equalization setting for 8.0 GT/s to enhance link stability
-> and fix AER correctable errors reported on some platforms (eg. SA8775P).
-> 
-> GEN3 and GEN4 require the same equalization setting. This setting is
-> programmed into a group of shadow registers, which can be switched to
-> configure equalization for different GEN speeds by writing 00b, 01b
-> to `RATE_SHADOW_SEL`.
-> 
-> Hence program equalization registers in a loop using link speed as index,
-> so that equalization setting can be programmed for both GEN3 and GEN4.
-> 
-> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> ---
->   drivers/pci/controller/dwc/pcie-designware.h  |  1 -
->   drivers/pci/controller/dwc/pcie-qcom-common.c | 55 ++++++++++---------
->   drivers/pci/controller/dwc/pcie-qcom-common.h |  2 +-
->   drivers/pci/controller/dwc/pcie-qcom.c        |  3 +-
->   4 files changed, 32 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index ce9e18554e42..388306991467 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -127,7 +127,6 @@
->   #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
->   #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
->   #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
-> -#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT	0x1
->   
->   #define GEN3_EQ_CONTROL_OFF			0x8A8
->   #define GEN3_EQ_CONTROL_OFF_FB_MODE		GENMASK(3, 0)
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
-> index 3aad19b56da8..48040f20b29c 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-common.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
-> @@ -8,43 +8,46 @@
->   #include "pcie-designware.h"
->   #include "pcie-qcom-common.h"
->   
-> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
-> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci)
->   {
->   	u32 reg;
-> +	u16 i;
->   
->   	/*
->   	 * GEN3_RELATED_OFF register is repurposed to apply equalization
-> -	 * settings at various data transmission rates through registers namely
-> -	 * GEN3_EQ_*. The RATE_SHADOW_SEL bit field of GEN3_RELATED_OFF
-> +	@@ -19,32 +21,34 @@ void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
->   	 * determines the data rate for which these equalization settings are
->   	 * applied.
->   	 */
-> -	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-> -	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-> -	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-> -	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
-> -			  GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT);
-> -	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
-> +	for (i = PCIE_SPEED_8_0GT; i <= (pcie_link_speed[pci->max_link_speed] < PCIE_SPEED_32_0GT ?
-> +		 pcie_link_speed[pci->max_link_speed] : PCIE_SPEED_16_0GT); i++) {
+Thanks for testing the patches!
 
-This is pretty hard to read, please simplify like:
+> In file included from util/sha1_generic.c:18:
+> util/sha1_base.h: In function =E2=80=98sha1_base_do_finalize=E2=80=99:
+> util/sha1_base.h:77:21: error: comparison of integer expressions of diffe=
+rent signedness: =E2=80=98unsigned int=E2=80=99 and =E2=80=98int=E2=80=99 [=
+-Werror=3Dsign-compare]
+>    77 |         if (partial > bit_offset) {
+>       |                     ^
+> cc1: all warnings being treated as errors
 
-u16 speed, max_speed = PCIE_SPEED_16_0GT;
+Oh, I didn't see that on my GCC 14.2.  A quick fix would work:
 
-if (pcie_link_speed[pci->max_link_speed] < PCIE_SPEED_32_0GT)
-	max_speed = pcie_link_speed[pci->max_link_speed];
-
-for (speed = PCIE_SPEED_8_0GT; speed < max_speedl; ++speed) {
-	blah;
-}
+--- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
++++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
+@@ -71,7 +69,7 @@
+ static inline int sha1_base_do_finalize(struct sha1_state *sctx,
+                                        sha1_block_fn *block_fn)
+ {
+-       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
++       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
+        __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
+        unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
 
 
-> +		reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-> +		reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-> +		reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-> +		reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
-> +			  i - PCIE_SPEED_8_0GT);
-> +		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
->   
-> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
-> -	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
-> -		GEN3_EQ_FMDC_N_EVALS |
-> -		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
-> -		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
-> -	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
-> -		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
-> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
-> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
-> -	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
-> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
-> +		reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
-> +			GEN3_EQ_FMDC_N_EVALS |
-> +			GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
-> +			GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
-> +		reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
-> +			FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
-> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
-> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
-> +		dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
->   
-> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
-> -	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
-> -		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
-> -		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
-> -		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
-> -	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
-> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
-> +		reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
-> +			GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
-> +			GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
-> +			GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
-> +		dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
-> +	}
->   }
-> -EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_equalization);
-> +EXPORT_SYMBOL_GPL(qcom_pcie_common_set_equalization);
->   
->   void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci)
->   {
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
-> index 7d88d29e4766..7f5ca2fd9a72 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-common.h
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
-> @@ -8,7 +8,7 @@
->   
->   struct dw_pcie;
->   
-> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci);
-> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci);
->   void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci);
->   
->   #endif
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index c789e3f85655..51eac2dc6222 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -298,8 +298,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
->   {
->   	struct qcom_pcie *pcie = to_qcom_pcie(pci);
->   
-> +	qcom_pcie_common_set_equalization(pci);
+To test it, I added -Werror=3Dsign-compare to my local Makefile.config to
+force the error.
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index d19d1f132726..9909611be301 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -225,9 +225,9 @@ endif
+
+ # Treat warnings as errors unless directed not to
+ ifneq ($(WERROR),0)
+-  CORE_CFLAGS +=3D -Werror
+-  CXXFLAGS +=3D -Werror
+-  HOSTCFLAGS +=3D -Werror
++  CORE_CFLAGS +=3D -Werror=3Dsign-compare -Werror
++  CXXFLAGS +=3D -Werror=3Dsign-compare -Werror
++  HOSTCFLAGS +=3D -Werror=3Dsign-compare -Werror
+ endif
+
+ ifndef DEBUG
+
+
+While testing with "make -C tools/perf -f tests/make make_debug", I saw
+similar compile errors in libjvmti.c:
+
+jvmti/libjvmti.c: In function =E2=80=98copy_class_filename=E2=80=99:
+jvmti/libjvmti.c:148:39: error: comparison of integer expressions of
+different signedness: =E2=80=98int=E2=80=99 and =E2=80=98long unsigned int=
+=E2=80=99
+[-Werror=3Dsign-compare]
+  148 |                         for (i =3D 0; i < (size_t)(p - class_sign);=
+ i++)
+      |                                       ^
+jvmti/libjvmti.c:155:31: error: comparison of integer expressions of
+different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {a=
+ka =E2=80=98long unsigned int=E2=80=99}
+[-Werror=3Dsign-compare]
+  155 |                 for (j =3D 0; i < (max_length - 1) && file_name
+&& j < strlen(file_name); j++, i++)
+      |                               ^
+jvmti/libjvmti.c:155:68: error: comparison of integer expressions of
+different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {a=
+ka =E2=80=98long unsigned int=E2=80=99}
+[-Werror=3Dsign-compare]
+  155 |                 for (j =3D 0; i < (max_length - 1) && file_name
+&& j < strlen(file_name); j++, i++)
+      |                                                                    =
+^
+
+I've just sent a separate patch to the mailing list:
+https://lore.kernel.org/lkml/20250604173632.2362759-1-yuzhuo@google.com/T/
+
+
+> Humm that part is the same as in the kernel...
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3Df =
+include/crypto/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {print =
+$3}')
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypto/=
+sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /tm=
+p/original
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3Df =
+tools/perf/util/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {print=
+ $3}')
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypto/=
+sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /tm=
+p/copy
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ diff -u /tmp/original /tmp/copy
+> --- /tmp/original       2025-05-22 14:48:31.338406860 -0300
+> +++ /tmp/copy   2025-05-22 14:48:58.401603439 -0300
+> @@ -1,3 +1,7 @@
 > +
->   	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
-> -		qcom_pcie_common_set_16gt_equalization(pci);
->   		qcom_pcie_common_set_16gt_lane_margining(pci);
->   	}
->   
+> +       return 0;
+> +}
+> +
+>  static inline int sha1_base_do_finalize(struct shash_desc *desc,
+>                                         sha1_block_fn *block_fn)
+>  {
+> @@ -13,10 +17,3 @@
+>
+>                 block_fn(sctx, sctx->buffer, 1);
+>         }
+> -
+> -       memset(sctx->buffer + partial, 0x0, bit_offset - partial);
+> -       *bits =3D cpu_to_be64(sctx->count << 3);
+> -       block_fn(sctx, sctx->buffer, 1);
+> -
+> -       return 0;
+> -}
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
 
-Thanks,
-Neil
+There were some other fixes that I made only to the perf tree version,
+while maintaining verbatim for other parts.  Here's a script that
+retains and compares only the copied parts.
+
+  # Ignore everything after sha1_transform
+  diff -u -B -I "^#include " <(sed -n
+'/EXPORT_SYMBOL(sha1_transform)/q;p' lib/crypto/sha1.c)
+tools/perf/util/sha1.c
+  diff -u -B -I "^#include " -I "sha1_zero_message_hash" -I "^struct
+sha1_state;$" -I "^void sha1_init(__u32 \*buf);$" \
+      <(sed 's/shash_desc/sha1_state/g;' include/crypto/sha1.h)
+tools/perf/util/sha1.h
+  diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
+      <(sed 's/shash_desc \*desc/sha1_state *sctx/g;
+/shash_desc_ctx(desc)/d' include/crypto/sha1_base.h)
+tools/perf/util/sha1_base.h
+  # Ignore everything after crypto_sha1_finup
+  diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
+      <(sed -n -e '/const u8
+sha1_zero_message_hash/,/EXPORT_SYMBOL_GPL(sha1_zero_message_hash)/d'
+\
+               -e 's/shash_desc/sha1_state/g;
+/EXPORT_SYMBOL(crypto_sha1_finup)/q;p' crypto/sha1_generic.c) \
+      tools/perf/util/sha1_generic.c
+
+And the changes are as below (including the quick fix above), with one
+changing the sign and integer type and another fixing type mismatch from
+const u8 * to const char *.
+
+Should we send another patch to the kernel tree version to fix the sign
+error, or we add rules to allow perf tree only changes?
+
+--- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
++++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
+@@ -71,7 +69,7 @@
+ static inline int sha1_base_do_finalize(struct sha1_state *sctx,
+                                        sha1_block_fn *block_fn)
+ {
+-       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
++       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
+        __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
+        unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
+
+@@ -95,7 +93,7 @@
+        __be32 *digest =3D (__be32 *)out;
+        int i;
+
+-       for (i =3D 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
++       for (i =3D 0; i < SHA1_DIGEST_SIZE / (int)sizeof(__be32); i++)
+                put_unaligned_be32(sctx->state[i], digest++);
+
+        memzero_explicit(sctx, sizeof(*sctx));
+--- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
++++ tools/perf/util/sha1_generic.c      2025-05-16 10:52:59.219531034 -0700
+@@ -27,7 +23,7 @@
+        u32 temp[SHA1_WORKSPACE_WORDS];
+
+        while (blocks--) {
+-               sha1_transform(sst->state, src, temp);
++               sha1_transform(sst->state, (const char *)src, temp);
+                src +=3D SHA1_BLOCK_SIZE;
+        }
+        memzero_explicit(temp, sizeof(temp));
+
+Thanks!
+
+Best regards,
+Yuzhuo
