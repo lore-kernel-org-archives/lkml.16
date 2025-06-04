@@ -1,128 +1,171 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB7623958A
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE65086353;
+	Wed,  4 Jun 2025 07:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749023584; cv=none; b=ErKJ6IEBFN9blig39MHH42FXNK6VBTj3dW023BHPxkHQEoQ3GjHyYqnK0Lk8Tg8ajdoqcCrOrxKkLfoaF1xqsid9ofDQOTqB6uNaxDktbImKtWoN68IN+RvQcdLO67KBzJCJniu0A/+10NXQc0dQGIctBO8uXtoW/7lfM8yiC6c=
+	t=1749023850; cv=none; b=BxxnvF13mxJL7xxeUyXUHlL3L5G9l/EYAAO5HPfekfvw/T/GDzea80XfDNZ/pBXHBENJt0tgPOs9TLkWGtglX33+A0625GI28nTWTpa7QvkbCdboGyPBNc5yW4Fk7H90/j4jU+vSwsS72F78DPHNNoKpQNbYg19jGOAA33+HnOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749023584; c=relaxed/simple;
-	bh=l/Ro4mZ8dDIKFbrOGvx80He/T2LpzxUhaJa9FI86v6c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K/E7z6LGKKyyHU1yfG4ckHfZWtuwCihJNqcXYzZrLWeOIBdpICIRuoK5rTnPNS95j51+McyBEkH1Z8322nq8LGFCXV7KMSGR/gT8MWynoq9GKO8LDk6LjZxs2UaEiKdw3wRWNfuxB7a2rODM0ENm2y7hM52cMfK9N8AqvB2Joo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu; spf=none smtp.mailfrom=monstr.eu; dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b=jKbRq4YW; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=monstr.eu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b="jKbRq4YW"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e8175f45e26so1073372276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 00:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20230601.gappssmtp.com; s=20230601; t=1749023579; x=1749628379; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rbLBkbI9xD1tF8dYtnQkUOxiQTgT1jXbV49JvFHG5rY=;
-        b=jKbRq4YWafpuMbmbW3ut7YmuKAno5soFkNQq0h72zVOgUTpQzaZXW72WLjd00C68dk
-         F7zrccRBY2Y0LEKqQV02hIMilDVG69rzjfyA8Vd+G/WPXQJb9ZgsBG/GHIX3LwKL7dyp
-         yoTGvHmMA2YclvMglfOmggxM8nqeH7f730EvZpkSmnLz/kVxM0LYMRxzsHv4Ht5N3Eev
-         rhOdVYeCnE0lqd4ugMs5DsNp4vm3255Dsm3EjkOGSvnxZMPTgbMqpXZjAIilGmkpBc+E
-         Q9UwShK2iSOU5yl5guMuzLbsqgyUjSqYGjUlEIElXXN7hGt2fxS4xQC+ZsH/8sRAi43n
-         a5Eg==
+	s=arc-20240116; t=1749023850; c=relaxed/simple;
+	bh=tJXVBVdAr9NhlM8lUyKuJcoeS79GxUPwpAXu3Lrwklg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=i/z8be9VqXEuCtK1mP6+UUPr5WPxxOfCHI/56aP2i03j8onR3NnSDv/BW6pyZ1kX9Le/2BHQT44UxBYlJ0sdx4oMaDlEDfAiIitcjFb6Q8leAWIBs2TGVoJOiJLrTq5f5YGqUybJeT/6pDH+SIkJlQtRetYDPWBSqOAZhFeTBVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso13650051a12.1;
+        Wed, 04 Jun 2025 00:57:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749023579; x=1749628379;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rbLBkbI9xD1tF8dYtnQkUOxiQTgT1jXbV49JvFHG5rY=;
-        b=W/B7HoST6MN1DnNTwW1Ru/pOo/qtnmRJ2cYIaOOMapPmnfqEL4Ozb6OSLOWd2njUhm
-         pqBkCDoyDuMl+7Z/qUSTfZYv9iQJ7CdoRCky5wLsdKt9jDiXm3ligqqPQUiQ5rzMlApp
-         1eFdTubFDP7YcWx6b9ZSWlfVTFUMMj2RO0y+ELewVHbaMTz7eA4S3VTn3+Bdx9ZRGW7F
-         bMiAk4IYXGY4weZpA9MkSq+XJY7lWsqPuMZY2FE5tUQjksYsVor43CBd/s7OdDoHJgmx
-         ynCjmj88oj1h0khAevBs1EB8BNTiPcb3DX4NNEHMq5azZdE1h8iy+bjeKp1U7DOfFRSY
-         w7Ww==
-X-Gm-Message-State: AOJu0YxBmhwQZ0gSgwVa3jV41SB+LM60UKxFU2005wG+7yI/VB4ChD3K
-	X/6FRrphXXsP/jPtK1QWOmjGYbopFpUpd4uXqUjew6gyN4n3kigkxjO6DsvD98iUv7bcsmA943H
-	sRKB9F2rTmd/hmZmoK47+dGfNEF2O+ORNKXQWVu+g8wZ2yJFUQDkr9NgqVek=
-X-Gm-Gg: ASbGnctOCH744u/t6tH+rR4/gUYDqz72oTX9HhN6ZCGVgYSlewozkzLOREhduDCkoFF
-	6fcEY3vTLGM0mcOeRX1m77FuGH8mONuAow7mABFEIkh+2jvFQeL085EfYX6XYRXPCGOBgkTkkU0
-	Js8v94AwaHDW3FUw9ON+kRhDRPrCImikliZQ==
-X-Google-Smtp-Source: AGHT+IF3An6q3gAiKoPc6XLAMlvASTm5moux+wih2fPYgkRv/0M86k0dfWN0bMZRucqZKqAP7SRIMiyiC6+bpFcLe8g=
-X-Received: by 2002:a05:6902:1083:b0:e81:7690:247f with SMTP id
- 3f1490d57ef6-e8179c0e6b8mr2385819276.15.1749023578950; Wed, 04 Jun 2025
- 00:52:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749023843; x=1749628643;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uxxYGGPVhEVYQnWDmi0qjryVI8On5yy5JrIx7t0q32E=;
+        b=pnBhEpkOtscVtcBQdjbOKrNR2csOK5yiYY5EXTgikPijsQpoUlwvCTtoQaZh6CTsTf
+         jS3zOp/S84T4T/hy8bo58DRc4QFK4i88kydJLkagn47YZ99SBUXLMnqJpep5YVLTqhS0
+         +EXU5N5oPsmphmFOVtHVYbSkzS5HGNRBkXSn56ZnsVbFpNO9AhvlDGZd8wWz+lt/3Jyf
+         BYpAG48iMxZRFQlVqhyptsrWaZl/HG8Qlss5nnYA2XtHF4d/6QkTwFo+qxfO/i1f5/Fc
+         Edi9QIhi70R1mY2KjB/SpFQ7UWye/Hv8gKe0Itb5rnaSc+24gFYZO6brIa7Hsqby0LM7
+         q21w==
+X-Forwarded-Encrypted: i=1; AJvYcCUVsxAaRo5TErwHc7W4gyUOhOIYE1lBYJcY1C/FRqtSrvz7au5NC4QNQnHgftBw7KKYNECjG2+m6/nZwQhs@vger.kernel.org, AJvYcCWslylCbpjRUR6BTh9hrMsw7t3wPNEG9RFN8FVnR2MyLe+OY/f7OW73OkbL9NAGEh9KhuFKQ6qBXef50Tg=@vger.kernel.org, AJvYcCXghq4jGc6n7h1vzZjrzeJ9S++gQGCdnPVzshCfejptDPrVt80YyBU85f3eJv9hQJYenO42eIMMBlQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6aIW2xV67STV7Hsmfrp+0fYFTmdEunNT4kQrMyzs28XwclHEp
+	zFw0CZKVCupxbhrBjcU6dSSGLZkIihsqjq66pzaZc7vfGQl3QM3tZ9m9vTa9Jp1J
+X-Gm-Gg: ASbGncuEOab1G37aMjLJ6UY/Cya0Z91BIPrVXrFnVeA7b1iQAd4IT5ZVCQ26j9ZBEJ2
+	lLI2NzDd7TwQd/HvnxBTkef2gW46z30AjZMOtVkxEu1oCG6g0FE1P11/S2CT3OcPsyCLAu1ww4b
+	qpLkhoerWr+fk0tFUhPiTvTE7up73Bie43B4kmvd+78d14O8DFoxca+1MgynpYFQpUyDgBQznto
+	7jVLOq01yAEn1MyRiqfxTUwqmhigJmducxt3b43RSkhd16cOzZLl3LA1EIGoD/xItgGQnSJZP+g
+	rD0/Sqr0uQ0Qom113BQWoNr3nv0Yrvg1l23cXTjmWtR+sFgFcY2+J3NOD4WnX2oCZc8BxG/Hupx
+	3c+qOmyyzVA==
+X-Google-Smtp-Source: AGHT+IEZtmjhfMvdiTBqQ3KrjPtemiMa58uAXN8NL9Oz74jU+f3Xz3Mbx/uxfwFliJgWoAvBATYWXg==
+X-Received: by 2002:a05:6402:40ca:b0:601:89d4:968e with SMTP id 4fb4d7f45d1cf-606f0ed4379mr1469272a12.27.1749023843024;
+        Wed, 04 Jun 2025 00:57:23 -0700 (PDT)
+Received: from [10.42.0.1] (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-606fb36a160sm348569a12.45.2025.06.04.00.57.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 00:57:22 -0700 (PDT)
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Subject: [PATCH v6 00/10] New DRM accel driver for Rockchip's RKNN NPU
+Date: Wed, 04 Jun 2025 09:57:13 +0200
+Message-Id: <20250604-6-10-rocket-v6-0-237ac75ddb5e@tomeuvizoso.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f6e465fee5a824a67be1ae7c3bc1b72adcf9471f.1746558529.git.nabijaczleweli@nabijaczleweli.xyz>
-In-Reply-To: <f6e465fee5a824a67be1ae7c3bc1b72adcf9471f.1746558529.git.nabijaczleweli@nabijaczleweli.xyz>
-From: Michal Simek <monstr@monstr.eu>
-Date: Wed, 4 Jun 2025 09:52:47 +0200
-X-Gm-Features: AX0GCFs0LWDHTJlf0a_TzGhXKhh6cse2vHenR0alQKIUrDuEUB1MBd_nYmqvpLI
-Message-ID: <CAHTX3d+o5wOhDFa_yom_KGB+nyMDDvxcfdUCn-1cRyvkUR1B6w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] microblaze: optimalize -> optimize
-To: =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-Cc: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFn8P2gC/23OwWrDMBAE0F8JOldltZaUuKf8R8lBXq0aUWoVy
+ RFNg/+9cqA0pj7OwDzmJgrnyEW87G4ic40lprEF+7QTdHbjG8voWxYIqMEqlFYqkDnRO0+y75T
+ 1HEhp2ou2+Mwc4tddez21fI5lSvl6x6ta2m2nKgkSLLA+MDs0cJzSB19q/E4lPY88iUWr+CsYQ
+ DRrAZvgtR8ouOWP2ha6P8Eouxa6Juxb7ahvuh+2Bf0o9GtBLx+sD8EOmsDxtmAeBIS1YJqgDtS
+ Tg0BDR/+FeZ5/AKJhlVG0AQAA
+X-Change-ID: 20240612-6-10-rocket-9316defc14c7
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Kever Yang <kever.yang@rock-chips.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
 
-Hi
+This series adds a new driver for the NPU that Rockchip includes in its
+newer SoCs, developed by them on the NVDLA base.
 
-=C3=BAt 6. 5. 2025 v 21:10 odes=C3=ADlatel Ahelenia Ziemia=C5=84ska
-<nabijaczleweli@nabijaczleweli.xyz> napsal:
->
-> Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xy=
-z>
-> ---
->  arch/microblaze/Kconfig.platform | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/microblaze/Kconfig.platform b/arch/microblaze/Kconfig.p=
-latform
-> index 7795f90dad86..2d18edde4823 100644
-> --- a/arch/microblaze/Kconfig.platform
-> +++ b/arch/microblaze/Kconfig.platform
-> @@ -11,7 +11,7 @@ config OPT_LIB_FUNCTION
->         bool "Optimalized lib function"
->         default y
->         help
-> -         Allows turn on optimalized library function (memcpy and memmove=
-).
-> +         Allows turn on optimized library function (memcpy and memmove).
+In its current form, it supports the specific NPU in the RK3588 SoC.
 
-here should be "functions" too
+The userspace driver is part of Mesa and an initial draft can be found at:
 
->           They are optimized by using word alignment. This will work
->           fine if both source and destination are aligned on the same
->           boundary. However, if they are aligned on different boundaries
-> @@ -24,7 +24,7 @@ config OPT_LIB_ASM
->         depends on CPU_BIG_ENDIAN
->         default n
->         help
-> -         Allows turn on optimalized library function (memcpy and memmove=
-).
-> +         Allows turn on optimized library function (memcpy and memmove).
->           Function are written in asm code.
->
->  # Definitions for MICROBLAZE0
-> --
-> 2.39.5
+https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/29698
 
-As Jonathan said. Send it separately and also the commit message
-shouldn't be empty.
+Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+---
+Changes in v6:
+- Make all cores depend on pclk and npu clocks
+- Fix BO sync direction logic
+- Misc. cleanups
+- Link to v5: https://lore.kernel.org/r/20250520-6-10-rocket-v5-0-18c9ca0fcb3c@tomeuvizoso.net
 
-Thanks,
-Michal
+Changes in v5:
+- Use bulk clk API
+- Rename bindings file
+- Syntax improvement to bindings
+- Link to v4: https://lore.kernel.org/r/20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net
 
+Changes in v4:
+- Several fixes to DT bindings.
+- Link to v3: https://lore.kernel.org/r/20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net
 
+Changes in v3:
+- Reference in the device tree only the register blocks that are
+  actually used.
+- Several style and robustness fixes suggested in the mailing list.
+- Added patches from Nicolas Frattaroli that add support to the NPU for
+  the Rock 5B board.
+- Link to v2: https://lore.kernel.org/r/20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+Changes in v2:
+- Drop patch adding the rk3588 compatible to rockchip-iommu (Sebastian Reichel)
+- Drop patch adding support for multiple power domains to rockchip-iommu (Sebastian Reichel)
+- Link to v1: https://lore.kernel.org/r/20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net
+
+---
+Nicolas Frattaroli (2):
+      arm64: dts: rockchip: add pd_npu label for RK3588 power domains
+      arm64: dts: rockchip: enable NPU on ROCK 5B
+
+Tomeu Vizoso (8):
+      dt-bindings: npu: rockchip,rknn: Add bindings
+      arm64: dts: rockchip: Add nodes for NPU and its MMU to rk3588-base
+      arm64: dts: rockchip: Enable the NPU on quartzpro64
+      accel/rocket: Add registers header
+      accel/rocket: Add a new driver for Rockchip's NPU
+      accel/rocket: Add IOCTL for BO creation
+      accel/rocket: Add job submission IOCTL
+      accel/rocket: Add IOCTLs for synchronizing memory accesses
+
+ Documentation/accel/index.rst                      |    1 +
+ Documentation/accel/rocket/index.rst               |   19 +
+ .../bindings/npu/rockchip,rk3588-rknn-core.yaml    |  144 +
+ MAINTAINERS                                        |   10 +
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi      |   89 +-
+ .../arm64/boot/dts/rockchip/rk3588-quartzpro64.dts |   30 +
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    |   56 +
+ drivers/accel/Kconfig                              |    1 +
+ drivers/accel/Makefile                             |    1 +
+ drivers/accel/rocket/Kconfig                       |   25 +
+ drivers/accel/rocket/Makefile                      |   10 +
+ drivers/accel/rocket/rocket_core.c                 |   80 +
+ drivers/accel/rocket/rocket_core.h                 |   59 +
+ drivers/accel/rocket/rocket_device.c               |   31 +
+ drivers/accel/rocket/rocket_device.h               |   30 +
+ drivers/accel/rocket/rocket_drv.c                  |  300 ++
+ drivers/accel/rocket/rocket_drv.h                  |   17 +
+ drivers/accel/rocket/rocket_gem.c                  |  208 +
+ drivers/accel/rocket/rocket_gem.h                  |   31 +
+ drivers/accel/rocket/rocket_job.c                  |  694 +++
+ drivers/accel/rocket/rocket_job.h                  |   50 +
+ drivers/accel/rocket/rocket_registers.h            | 4425 ++++++++++++++++++++
+ include/uapi/drm/rocket_accel.h                    |  145 +
+ 23 files changed, 6455 insertions(+), 1 deletion(-)
+---
+base-commit: a6d708809579ed3d902465785666085ff07a1d7c
+change-id: 20240612-6-10-rocket-9316defc14c7
+
+Best regards,
+-- 
+Tomeu Vizoso <tomeu@tomeuvizoso.net>
+
