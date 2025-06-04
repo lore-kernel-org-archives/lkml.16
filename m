@@ -1,144 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38F528FFCB;
-	Wed,  4 Jun 2025 14:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9125628FFCB;
+	Wed,  4 Jun 2025 14:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749048909; cv=none; b=ICwpzzsJldL5Ya37/JhvZT4V5TM2NMNzu5iBo85Yqr8oGbAPzf/wd544c98hIlO8R3n6iPFQNkqR3TucLgc4wb18y9DI8R89Q5rr74xvnY0Z6uhYP5NG6t3inQgzr5Q3dHLHGiFlthRatEjbx2TbCqnhxMdAy8sEppHIcQWTDpk=
+	t=1749048919; cv=none; b=hOd3TfyLWip36pgCPFZgATP+K00lqaMRebJ2h+wVy8EsZT6aSbv6ikJ4uIh7EnZJLp88W8zoq3AaUmLOmvSimFe4aVtThx3MHxwS3I8w62MB5wg8HvXCTo9VjEc6Zj+Mzdp5pTcipk/dB2x8UjQHIu28jhTY4aT5Bpk0xco617w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749048909; c=relaxed/simple;
-	bh=HOlvILzQbzz5g/GGLiJxW+I2MtTR7FvGq/Gxnu+WYDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LAEETUyZg56riBWVkFKPxKgf6xDk7jCwt7KXvHe3mlxquc+k+gN54diZ33GmX1pzgCGdJMoVnAkjpd7P/ZhwV8koctUyAWNmKi/D9u8EJZReYvZoXGP+ApjJHxuzhK4d0g80jN6F4P29KSlXbRrPHZjGh9iRneaIfr2GHIkjflQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6D3D1758;
-	Wed,  4 Jun 2025 07:54:49 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38F4D3F59E;
-	Wed,  4 Jun 2025 07:55:04 -0700 (PDT)
-Date: Wed, 4 Jun 2025 15:55:01 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Baisheng Gao <baisheng.gao@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
-	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
-Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
- sample
-Message-ID: <aEBeRfScZKD-7h5u@J2N7QTR9R3>
-References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
- <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
- <20250604142437.GM38114@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1749048919; c=relaxed/simple;
+	bh=U1XJE14dmK7zk8SqMJr1ydY/J2fqolOgpBQJC2LkLhs=;
+	h=From:To:Cc:Date:Message-Id:MIME-Version:Subject; b=bDJGxgO+UW1kNt9TzAd8uTGITikylYYFwzjMPtITpb5uXnqvVs61qWiDEjqwd6dp+HgZAQyGHE+qRMvsoTemfdS4YOfHkbQ9Wl0t/ksv89ycj4kL9vkqpJOnCOAZBi/CthWoUA4Td1ZKEe/cFt4Nh3FuLljpjPk6hyD+ox4Gzys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=pwmdBUqr; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="pwmdBUqr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
+	:From:subject:date:message-id:reply-to;
+	bh=L5Uci1aNRqDvpavMZwVGQCSAcmTvjFdTlpswIPgwNFM=; b=pwmdBUqrSi/2JKlNzyeLA+or1f
+	d5iYtvyEaGKbHR4oF9weAoUlLJTFx0XX023Gns/VQdo0aSAZ6SdmfDB6K+rWh7WX1Lx3+w4cTsvm5
+	yShd1SYN2tGTlMBpt0FsldkDMFFAJhs8B6AtPhzOzKDQk/Pwbl22Oq2awsfI8/I2kk7g=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:60436 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1uMpWG-0000LY-Ud; Wed, 04 Jun 2025 10:55:09 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: biju.das.jz@bp.renesas.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	hugo@hugovil.com,
+	chris.brandt@renesas.com,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Date: Wed,  4 Jun 2025 10:53:05 -0400
+Message-Id: <20250604145306.1170676-1-hugo@hugovil.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604142437.GM38114@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+Subject: [PATCH v4 0/1] drm: rcar-du: rzg2l_mipi_dsi: add MIPI DSI command support
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-On Wed, Jun 04, 2025 at 04:24:37PM +0200, Peter Zijlstra wrote:
-> On Wed, Jun 04, 2025 at 03:05:43PM +0100, Mark Rutland wrote:
-> 
-> > Loooking at 5.15.149 and current HEAD (5abc7438f1e9), do_exit() calls
-> > exit_mm() before perf_event_exit_task(), so it looks
-> > like perf could sample from another task's mm.
-> > 
-> > Yuck.
-> > 
-> > Peter, does the above sound plausible to you?
-> 
-> Yuck indeed. And yeah, we should probably re-arrange things there.
-> 
-> Something like so?
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-That should plumb the hole for task-bound events, yep.
+Hello,
+this patch series add support for sending MIPI DSI command packets to the
+Renesas RZ/G2L MIPI DSI driver.
 
-I think we might need something in the perf core for cpu-bound events, assuming
-those can also potentially make samples.
+Tested on a custom board with a SolidRun RZ/G2L SOM, with two different LCD
+panels using the jd9365da and st7703 drivers.
 
-From a quick scan of perf_event_sample_format:
+Tested short and long writes.
 
-	PERF_SAMPLE_IP			// safe
-	PERF_SAMPLE_TID			// safe
-	PERF_SAMPLE_TIME		// safe
-	PERF_SAMPLE_ADDR		// ???
-	PERF_SAMPLE_READ		// ???
-	PERF_SAMPLE_CALLCHAIN		// may access mm
-	PERF_SAMPLE_ID			// safe
-	PERF_SAMPLE_CPU			// safe
-	PERF_SAMPLE_PERIOD		// safe
-	PERF_SAMPLE_STREAM_ID		// ???
-	PERF_SAMPLE_RAW			// ???
-	PERF_SAMPLE_BRANCH_STACK	// safe
-	PERF_SAMPLE_REGS_USER		// safe
-	PERF_SAMPLE_STACK_USER		// may access mm
-	PERF_SAMPLE_WEIGHT		// ???
-	PERF_SAMPLE_DATA_SRC		// ???
-	PERF_SAMPLE_IDENTIFIER		// safe
-	PERF_SAMPLE_TRANSACTION		// ???
-	PERF_SAMPLE_REGS_INTR		// safe
-	PERF_SAMPLE_PHYS_ADDR		// safe; handles mm==NULL && addr < TASK_SIZE
-	PERF_SAMPLE_AUX			// ???
-	PERF_SAMPLE_CGROUP		// safe
-	PERF_SAMPLE_DATA_PAGE_SIZE	// partial; doesn't check addr < TASK_SIZE
-	PERF_SAMPLE_CODE_PAGE_SIZE	// partial; doesn't check addr < TASK_SIZE
-	PERF_SAMPLE_WEIGHT_STRUCT	// ???
+Tested read of 1 byte, 2 bytes and long reads. Note that to test long reads,
+most LCD panels need to be sent a DCS configuration command to increase the
+maximum packet size, which is set to 1 byte by default (at least on the two
+panels that I tested).
 
-... I think all the dodgy cases use mm somehow, so maybe the perf core
-should check for current->mm?
+Thank you.
 
-> 
-> ---
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 38645039dd8f..3407c16fc5a3 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -944,6 +944,15 @@ void __noreturn do_exit(long code)
->  	taskstats_exit(tsk, group_dead);
->  	trace_sched_process_exit(tsk, group_dead);
->  
-> +	/*
-> +	 * Since samping can touch ->mm, make sure to stop everything before we
+Link: [v1] https://lore.kernel.org/all/20250520164034.3453315-1-hugo@hugovil.com
+Link: [v3] https://lore.kernel.org/all/20250522143911.138077-1-hugo@hugovil.com
+Link: [dep1] https://lore.kernel.org/all/20250521210335.3149065-1-chris.brandt@renesas.com/raw
 
-Typo: s/samping/sampling/
+Changes for V4:
+- Rebased on drm-misc-next, since this series depends on [dep1]
+- Move init of DCS maximum return packet size to rzg2l_mipi_dsi_startup()
+- Reworded comment for DCS maximum return packet size
+- Merged patches 1 and 2
 
-> +	 * tear it down.
-> +	 *
-> +	 * Also flushes inherited counters to the parent - before the parent
-> +	 * gets woken up by child-exit notifications.
-> +	 */
-> +	perf_event_exit_task(tsk);
-> +
->  	exit_mm();
->  
->  	if (group_dead)
-> @@ -959,14 +968,6 @@ void __noreturn do_exit(long code)
->  	exit_task_work(tsk);
->  	exit_thread(tsk);
->  
-> -	/*
-> -	 * Flush inherited counters to the parent - before the parent
-> -	 * gets woken up by child-exit notifications.
-> -	 *
-> -	 * because of cgroup mode, must be called before cgroup_exit()
-> -	 */
-> -	perf_event_exit_task(tsk);
-> -
->  	sched_autogroup_exit_task(tsk);
->  	cgroup_exit(tsk);
->  
+Changes for V3:
+- No code change, resending after fixing mail server config resulting in
+  only cover letter being sent
 
-Otherwise, that looks good to me!
+Changes for V2:
+- Change commit message prefix to "drm: renesas: rz-du: "
+- Reorder variables in rzg2l_mipi_dsi_read_response()
+- Remove unused macros
+- Add missing bitfield include (kernel test robot)
 
-Mark.
+Hugo Villeneuve (1):
+  drm: renesas: rz-du: Implement MIPI DSI host transfers
+
+ .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 186 ++++++++++++++++++
+ .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  54 +++++
+ 2 files changed, 240 insertions(+)
+
+
+base-commit: 685c407f168cb49a12cc703230d1e2d62767bfd2
+-- 
+2.39.5
+
