@@ -1,266 +1,154 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DC820B7FB
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 17:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764D520E71E;
+	Wed,  4 Jun 2025 17:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749057391; cv=none; b=hGv+FgAcRuuOud+iJ0tRro/ZmbP5DoMuMIlQOkNvUZbvVg+3fGNS3MMxBgDKGnv9RRts6qsD0o/8pAz+hkLSqzhw+X9YTLnC1DjD6maXgCU+x3stHHDG9hjy2EzyDh9+cJk37CofdL7/4P7rR8PEBz7tuSz7QG4lBDWRmhoDcEY=
+	t=1749057396; cv=none; b=S+gQZ/5LAbDKTO9CytwWCyuVbVHBxEfWHVMQjY8iQaGdj+U/7kEhtiJDf1z8RFMLEiV55FXoKXbU37HICffw8ILOa5rnTqL1gCqr6wX2cMoXb4aQK4wbk0ih0YQwRIGukMqtp1e9KDwvQyEOQNpn5tH/ybtAKj++QzGXCdyOm3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749057391; c=relaxed/simple;
-	bh=IVp1L32E8a9jVUlfHVcjufgvP6ZGHAk+tTWTIvB9zVo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mk6f/HlHRzxuzW6obv/1kaM77Gp2okutaJ9kUfGlVzZWk0czJB676HxCsrZBKazuWX4Os0pzBK/tOQcc8nVUSXHSe2kP6t1k1aGao11PCTqV10pVJFl9Y7YShkW95rde+a6vvBiEmwm/Znws5I1g23T6jmjT2sb6I89CMcT01V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kqvIZqTZ; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1749057396; c=relaxed/simple;
+	bh=kjLd+ddb6deYgxmwwC4dNdpjsazgtApHNAXz/v7lLt8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PCB4sC2ppWu5qPbetl2eP3aTS4fV2SejgaeGc2ij1FrA37arYUSFc/aiCeeZKddmhmkeL25L2gzwEvdAKsrJv2ul7hfNBk7D/wppOrYnZxqUto+p6/HW5Q8qpGY0xJB5H2GGXLbUO9rzRgi0bgfELWCDg12H1vNvkUJQDA4ALZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=legGlQyY; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kqvIZqTZ"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-313132d1f7aso64097a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 10:16:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1749057388; x=1749662188; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eyCgE0sNHOlyx9zGD2XlqTc9W1j01DyA5vw9LyX8zMs=;
-        b=kqvIZqTZatOoyu1PyIJLrGP6XCJWDAtFZjHiKv1I6lTPhV1Cmb9siv/86P4uTi3p+f
-         IIxCKY5Mu5dwGnEhmF8W/9mq+a2WAqYCd3njHCSKUEV9ccCW0nuCqStJAAm22CK3a6mA
-         3CYzyxYPSP+gmRQhg2QQPM18i3Df/S2PcLfiJu6u9goA1O4qEEP/QvAkym7H0i0//4O8
-         by7JJIpcmjfgwlNDZp798rU5EdP6k4V7LKjlguSOeFbvOxhWldV9GLnC0VEmM1q7ucKH
-         URRchOe7/hqsi7RWRXcFrZmOxrnohW+uBggvrRLGkdDGkOfDMrIb8/pvN47yhvBkw6Iy
-         x8FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749057388; x=1749662188;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eyCgE0sNHOlyx9zGD2XlqTc9W1j01DyA5vw9LyX8zMs=;
-        b=F1fgCdoOQ/Ha5b6XOkKTl3gg9uVDzCZbppvzYarpj58vskUixgrBUKJ+gsB3k8CBxY
-         aR7cQDhhY6Rk7/nCPOmFKgqTiTWNvKlHHrApVLw3yDayyRMIz8pInS8JyRbyvhOEGlmK
-         bHpP4SX1CD+D3lOxWOZ3mcTKxU0TVTuzqqbX/OYmR60wyYBnB63f0OWwHp25iuSVeLw5
-         ynnyIBtOLYnVw8JZFLgcE7mh5L6rxPZx/apXGcqAJQbsZJfHwOXzGPBVhAHdSyWa+duI
-         r7gGE6XT6xNSQyKdThKrySYpfkU53avnoti7cQ7mw27KBmHrfiWik7lBZtAHx0Iq9c85
-         vw2w==
-X-Gm-Message-State: AOJu0Ywk+pdgKuYKnLJl9z78qCCgJ01sROrDBFDft96+x1ikA7zQuWGe
-	8pZ6kuMR+2U9JD27OElGGOsLKT01iawo0YhkimsShtEpc/4mAhtJv+Cz/BE7i91Xix0=
-X-Gm-Gg: ASbGncsxa6tZJMNSfX9jPKlxn8JIFiBBRlVc8a1l+T2HEjNeSjcYe+XVZp2XF20ChJZ
-	n3vneh7a7R+6Q6QTT6uHeRKCNPsxiAn9ib6KrMUfb7Z18Y/qQ7fJd1nJioSuKB616w4Cx8pIUJT
-	aAzEm1LtZrwB973qklaQHd/DYFm77FV7H37UNhNTwAZVEf+yAcYtSvhx+fNiYlxijZAACnLyrml
-	8PbKxDu8mgrqnoYGDGa6ZTBI0TJF6mjAoSV33AHDsTml9XvHYGqbecUuhIMpgrmMtQdUXqvbea6
-	b+fNJRbYMKzi8wUjIoK7IS16UGISKbUZK6rrDScPXyJ9nqkPWkrddzYur+dBs4Df5/lIpfI9
-X-Google-Smtp-Source: AGHT+IHMOq/u2tFRTZvHKVb54drs49US8l1H7uubvUaLV8NV+WZds+TZeiMTNEPUQiklHTteNj9xxw==
-X-Received: by 2002:a17:90b:1d51:b0:313:2464:ad20 with SMTP id 98e67ed59e1d1-3132464ad44mr2126953a91.13.1749057388336;
-        Wed, 04 Jun 2025 10:16:28 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2e9c9fsm9178972a91.30.2025.06.04.10.16.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 10:16:27 -0700 (PDT)
-From: Deepak Gupta <debug@rivosinc.com>
-Date: Wed, 04 Jun 2025 10:15:29 -0700
-Subject: [PATCH v17 05/27] riscv: usercfi state for task and save/restore
- of CSR_SSP on trap entry/exit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="legGlQyY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749057395; x=1780593395;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kjLd+ddb6deYgxmwwC4dNdpjsazgtApHNAXz/v7lLt8=;
+  b=legGlQyYqZ7wxYWTwPRMTZaVe0QEqWVC8quKGA/qgUVoDIbU/M2aKNzy
+   I4C1XB0ujiNene7+hUzIXrPsU36IH0m4KX0P7eKcXYBTkzVLx0ma3WE8b
+   mqqBD7gGrG7ftne46kQOvooCNzE6DJvEIQp5Ghg2RXfQe0PYEj/jXhclk
+   uta3xWHgFzP5Yd5fCUzvNNMPQpDqNq8rrEYXlinCYwfjTwUv50sSls3Pj
+   fkJdh7d1mBk5DOVQCWIBRr45rYpVLv8imJ103XHNurNcmnnPipKo0MvyX
+   /a9/B3P/ywjsStUMopEAikoyJz5Z4OLqzG/YF10rIh8iECxMmdY5eiNH8
+   A==;
+X-CSE-ConnectionGUID: bR2ajoBlTrag82TUZHL8QA==
+X-CSE-MsgGUID: +Wyx6HpCSta1UpApgE6Ihg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="73688075"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="73688075"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 10:16:30 -0700
+X-CSE-ConnectionGUID: FJy0HTRgQwOQUcGRKNBd1Q==
+X-CSE-MsgGUID: kUg5iJ9+TZO17cpeoK7Jdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="145594823"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa008.fm.intel.com with ESMTP; 04 Jun 2025 10:16:28 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	irogers@google.com,
+	mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: eranian@google.com,
+	ctshao@google.com,
+	tmricht@linux.ibm.com,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Leo Yan <leo.yan@arm.com>,
+	Aishwarya TCV <aishwarya.tcv@arm.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Subject: [PATCH V3] perf: Fix the throttle error of some clock events
+Date: Wed,  4 Jun 2025 10:15:54 -0700
+Message-Id: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250604-v5_user_cfi_series-v17-5-4565c2cf869f@rivosinc.com>
-References: <20250604-v5_user_cfi_series-v17-0-4565c2cf869f@rivosinc.com>
-In-Reply-To: <20250604-v5_user_cfi_series-v17-0-4565c2cf869f@rivosinc.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Vlastimil Babka <vbabka@suse.cz>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
- Christian Brauner <brauner@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
- Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
- Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>, 
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com, 
- andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com, 
- atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com, 
- alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org, 
- rick.p.edgecombe@intel.com, rust-for-linux@vger.kernel.org, 
- Zong Li <zong.li@sifive.com>, Deepak Gupta <debug@rivosinc.com>
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
-Carves out space in arch specific thread struct for cfi status and shadow
-stack in usermode on riscv.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-This patch does following
-- defines a new structure cfi_status with status bit for cfi feature
-- defines shadow stack pointer, base and size in cfi_status structure
-- defines offsets to new member fields in thread in asm-offsets.c
-- Saves and restore shadow stack pointer on trap entry (U --> S) and exit
-  (S --> U)
+Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+below perf command.
+  perf record -a -e cpu-clock -- sleep 2
 
-Shadow stack save/restore is gated on feature availiblity and implemented
-using alternative. CSR can be context switched in `switch_to` as well but
-soon as kernel shadow stack support gets rolled in, shadow stack pointer
-will need to be switched at trap entry/exit point (much like `sp`). It can
-be argued that kernel using shadow stack deployment scenario may not be as
-prevalant as user mode using this feature. But even if there is some
-minimal deployment of kernel shadow stack, that means that it needs to be
-supported. And thus save/restore of shadow stack pointer in entry.S instead
-of in `switch_to.h`.
+The issue is introduced by the generic throttle patch set, which
+unconditionally invoke the event_stop() when throttle is triggered.
 
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
-Reviewed-by: Zong Li <zong.li@sifive.com>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+The cpu-clock and task-clock are two special SW events, which rely on
+the hrtimer. The throttle is invoked in the hrtimer handler. The
+event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+be used to stop the timer.
+
+There may be two ways to fix it.
+- Introduce a PMU flag to track the case. Avoid the event_stop in
+  perf_event_throttle() if the flag is detected.
+  It has been implemented in the
+  https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+  The new flag was thought to be an overkill for the issue.
+- Add a check in the event_stop. Return immediately if the throttle is
+  invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+  method to stop the timer.
+
+The latter is implemented here.
+
+Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+the order the same as perf_event_unthrottle(). Except the patch, no one
+checks the hw.interrupts in the stop(). There is no impact from the
+order change.
+
+Reported-by: Leo Yan <leo.yan@arm.com>
+Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/riscv/include/asm/processor.h   |  1 +
- arch/riscv/include/asm/thread_info.h |  3 +++
- arch/riscv/include/asm/usercfi.h     | 23 +++++++++++++++++++++++
- arch/riscv/kernel/asm-offsets.c      |  4 ++++
- arch/riscv/kernel/entry.S            | 28 ++++++++++++++++++++++++++++
- 5 files changed, 59 insertions(+)
 
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index e3aba3336e63..d851bb5c6da0 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -14,6 +14,7 @@
- 
- #include <asm/ptrace.h>
- #include <asm/hwcap.h>
-+#include <asm/usercfi.h>
- 
- #define arch_get_mmap_end(addr, len, flags)			\
- ({								\
-diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
-index f5916a70879a..e066f41176ca 100644
---- a/arch/riscv/include/asm/thread_info.h
-+++ b/arch/riscv/include/asm/thread_info.h
-@@ -73,6 +73,9 @@ struct thread_info {
- 	 */
- 	unsigned long		a0, a1, a2;
- #endif
-+#ifdef CONFIG_RISCV_USER_CFI
-+	struct cfi_state	user_cfi_state;
-+#endif
- };
- 
- #ifdef CONFIG_SHADOW_CALL_STACK
-diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/usercfi.h
-new file mode 100644
-index 000000000000..94b214c295c0
---- /dev/null
-+++ b/arch/riscv/include/asm/usercfi.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ * Copyright (C) 2024 Rivos, Inc.
-+ * Deepak Gupta <debug@rivosinc.com>
-+ */
-+#ifndef _ASM_RISCV_USERCFI_H
-+#define _ASM_RISCV_USERCFI_H
-+
-+#ifndef __ASSEMBLY__
-+#include <linux/types.h>
-+
-+#ifdef CONFIG_RISCV_USER_CFI
-+struct cfi_state {
-+	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
-+	unsigned long user_shdw_stk; /* Current user shadow stack pointer */
-+	unsigned long shdw_stk_base; /* Base address of shadow stack */
-+	unsigned long shdw_stk_size; /* size of shadow stack */
-+};
-+
-+#endif /* CONFIG_RISCV_USER_CFI */
-+
-+#endif /* __ASSEMBLY__ */
-+
-+#endif /* _ASM_RISCV_USERCFI_H */
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
-index 16490755304e..f33945432f8f 100644
---- a/arch/riscv/kernel/asm-offsets.c
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -49,6 +49,10 @@ void asm_offsets(void)
- #endif
- 
- 	OFFSET(TASK_TI_CPU_NUM, task_struct, thread_info.cpu);
-+#ifdef CONFIG_RISCV_USER_CFI
-+	OFFSET(TASK_TI_CFI_STATE, task_struct, thread_info.user_cfi_state);
-+	OFFSET(TASK_TI_USER_SSP, task_struct, thread_info.user_cfi_state.user_shdw_stk);
-+#endif
- 	OFFSET(TASK_THREAD_F0,  task_struct, thread.fstate.f[0]);
- 	OFFSET(TASK_THREAD_F1,  task_struct, thread.fstate.f[1]);
- 	OFFSET(TASK_THREAD_F2,  task_struct, thread.fstate.f[2]);
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 33a5a9f2a0d4..c4bfe2085c41 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -91,6 +91,32 @@
- 	REG_L	a0, TASK_TI_A0(tp)
- .endm
- 
-+/*
-+ * If previous mode was U, capture shadow stack pointer and save it away
-+ * Zero CSR_SSP at the same time for sanitization.
-+ */
-+.macro save_userssp tmp, status
-+	ALTERNATIVE("nops(4)",
-+		__stringify(				\
-+		andi \tmp, \status, SR_SPP;		\
-+		bnez \tmp, skip_ssp_save;		\
-+		csrrw \tmp, CSR_SSP, x0;		\
-+		REG_S \tmp, TASK_TI_USER_SSP(tp);	\
-+		skip_ssp_save:),
-+		0,
-+		RISCV_ISA_EXT_ZICFISS,
-+		CONFIG_RISCV_USER_CFI)
-+.endm
-+
-+.macro restore_userssp tmp
-+	ALTERNATIVE("nops(2)",
-+		__stringify(				\
-+		REG_L \tmp, TASK_TI_USER_SSP(tp);	\
-+		csrw CSR_SSP, \tmp),
-+		0,
-+		RISCV_ISA_EXT_ZICFISS,
-+		CONFIG_RISCV_USER_CFI)
-+.endm
- 
- SYM_CODE_START(handle_exception)
- 	/*
-@@ -147,6 +173,7 @@ SYM_CODE_START(handle_exception)
- 
- 	REG_L s0, TASK_TI_USER_SP(tp)
- 	csrrc s1, CSR_STATUS, t0
-+	save_userssp s2, s1
- 	csrr s2, CSR_EPC
- 	csrr s3, CSR_TVAL
- 	csrr s4, CSR_CAUSE
-@@ -236,6 +263,7 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
- 	 * structures again.
- 	 */
- 	csrw CSR_SCRATCH, tp
-+	restore_userssp s3
- 1:
- #ifdef CONFIG_RISCV_ISA_V_PREEMPTIVE
- 	move a0, sp
+Changes since V2:
+- Apply a different way to fix the issue.
+  Remove all Tested-by since a different way is applied
+- Update the change log
+- Add more Reported-by
 
+ kernel/events/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f34c99f8ce8f..46441c23475d 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+ 
+ static void perf_event_throttle(struct perf_event *event)
+ {
+-	event->pmu->stop(event, 0);
+ 	event->hw.interrupts = MAX_INTERRUPTS;
++	event->pmu->stop(event, 0);
+ 	if (event == event->group_leader)
+ 		perf_log_throttle(event, 0);
+ }
+@@ -11749,7 +11749,12 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	if (is_sampling_event(event)) {
++	/*
++	 * The throttle can be triggered in the hrtimer handler.
++	 * The HRTIMER_NORESTART should be used to stop the timer,
++	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
++	 */
++	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
+ 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+ 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
+ 
 -- 
-2.43.0
+2.38.1
 
