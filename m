@@ -1,110 +1,70 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CE728F53F;
-	Wed,  4 Jun 2025 14:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB53290BDA
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 14:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045844; cv=none; b=mzSAKPYDAt4XZQXv5CnR7O0rdzilZDCB82X6ZKxiz5b2jN2rqVAbM2DQp42LWIbUXbHmu0xUoNtz36ZleMejzejmup2g+n57kKEB3GzGQSa9+vIz140Eup+ooBh/6y7Oovo0AQRqOGdMhiaJV4Ox4qklQ9fsI9JtehvB4st93ls=
+	t=1749045848; cv=none; b=JBI9phirrJTHgR5tnZrWJB+vBykronMjaUn5e7peCBKYtAqyGxma54TpC6UZpHuQgQ3Mm1vIrYZ4pE4sfkmh7NX09Ei8eyD9ZhBNsVkNgt1Qx64jJK4rJsWUK8Jnx8DRddToVRj1bNZ54NqUifMRA+Pa1wTzYEYAduqe7M3R+ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045844; c=relaxed/simple;
-	bh=/vwiZTWzmPgsj0KUENqU6UhJJnC2/Rz+pMduVn1+OWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=By6iZe7GSowrlYjM8cgruLo9hg2qMcvtUq9b755e/2YqYVi02/l977A6Qm1LoU7Iu+4qR7txWmXdbdABHXdmxv2I6QNBDx/ADYvTlxTMr2ech4PhXQ1M5+g3N5sN4PD7jSSo5kcGnrZ7Wys4l9oOGJH2wv0oCu/cbUGy1zPWU1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=jrVdRHgc; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="jrVdRHgc"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8127D3D85613;
-	Wed,  4 Jun 2025 10:03:54 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id PCGfP4LjU-ST; Wed,  4 Jun 2025 10:03:54 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id F2EEA3D88020;
-	Wed,  4 Jun 2025 10:03:53 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com F2EEA3D88020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1749045834; bh=kkcJ9urY/imVZiy9fJFRtQMpM50BrSYPIVeR4sQD1Hw=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=jrVdRHgcehZn4jD9LQREdvY2QkR2bdcP5AxpqN/c/xDLQ67GvSyoGJBnMEn87WYAh
-	 6Kv/xomV1Sc2vQp3WHGPkFMs7S97ehE+XhNEG06x6NVoM5v/fdomWUOlyVPLkjHaeQ
-	 giyyieJvU4bQuvgS8ZFgcAVhc6nLp3LDRBBX4ioNhFvV8EpgS3AdRBCDy178FDKowf
-	 r4xCy6i6JBDJf3wxi97P/ptbK6+pbSPBK4O+WDuBimC5URjJdiy9qJnTSVrwU/qeaT
-	 R+plU7E/MazZBGksAJgdKCDlUtqNVHE49Z5A3mI95nYHnIBxwzq4RjWvvOhX/Dd/kI
-	 xfHXe859l7t9g==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id vay_oKC6Iaut; Wed,  4 Jun 2025 10:03:53 -0400 (EDT)
-Received: from fedora (unknown [192.168.51.254])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id AAD153D85613;
-	Wed,  4 Jun 2025 10:03:53 -0400 (EDT)
-Date: Wed, 4 Jun 2025 10:03:52 -0400
-From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pm@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>,
-	Abel Vesa <abelvesa@linux.com>, Robin Gong <b38343@freescale.com>,
-	Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v4 3/6] regulator: pf1550: add support for regulator
-Message-ID: <aEBSSHA8bxw2igAW@fedora>
-References: <20250603-pf1550-v4-0-bfdf51ee59cc@savoirfairelinux.com>
- <20250603-pf1550-v4-3-bfdf51ee59cc@savoirfairelinux.com>
- <eb1fb4e2-42aa-4795-bc6c-dbcf1fa04f11@sirena.org.uk>
+	s=arc-20240116; t=1749045848; c=relaxed/simple;
+	bh=nzgbldK+LmxvjUeVLvaDW0e8O8bz+ASstGXZPtdI26I=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=jh4K0EvdPZM0FhsRgV6Prg/+vbyu8iKWz1mE7kfZk7qb5HgyTZYPQ7cXyaRPiBoFg6Vi6+qzEaywoxCmtOXVqrwUmnJVzryTpzERaUTUtENvnD7HfGJZYT+aUE3IHpgpUao9KYtKrPp93IwuiNT4PiFDCPPvjC/j2nFoHy6T/5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddc2752859so2839545ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 07:04:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749045846; x=1749650646;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0o845Z4tiKBe/x4yb7kJ9IJMxcXX3Frj5AVPiha4+cU=;
+        b=krWNiAMzcnTN0Gaxe64ob657QQmoxkUDAcJhZk6dXWofhuWKF96qnbdevO5YKzZLuJ
+         jL7esVGLa7ASBB5CK3iNPOTHD34ksZlW/3T9GnKycKC1LWgYvkQIXjbubZGZ4nqhYLAz
+         oqrKHpJUJ+Aau6TBWpGOA4BC8kIe1gO5fg0cTJt+OsEF8Vwig/Fz472PBaQWBgRvkyhR
+         G965paQdLHMUNH83QIgLYi89+J32LSpqFmEd5VZhjTOMXEZzwtEOJPT9gMPt+uA1Ln+F
+         hYHO8kB4lK1uGlr16kkbbkocrhP3u8H2c7N2ILaQclgfnj1N6b08UeksJTCtW2DEknCz
+         wPew==
+X-Forwarded-Encrypted: i=1; AJvYcCWFJ/6aKBf4KY+KWqgWjfighJPLIBd+ApO2ywD89bv+Qyq255yTgwK9jAqXKKq/pqyBcChg0rolIKBY6Fw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVX6ZMoKpeyygrTb4v7HHbS4deo3PAHdpI6Gh90vkrJ9ONSJQW
+	qXXcZbTAVwRdRK2876nH+P8HbsYeL8uc5+Wq5+UiMqxJsaXiDOKEG+RJOLqNmoP599afcDlBwp1
+	+9BWxK8gwJVDmW9QM4FixOeNghV7SjnET7Va8R/S53SM2D2apaQ4dbiD0WhQ=
+X-Google-Smtp-Source: AGHT+IFxKwBcWsEivYBDYj/AVNiSpkOyEV8LXmdDUfMx3DUplBU+OBSyFW8NznBpKZ5T7Bd0AiS+8ve3dK2TX0v3oTpjDEFlFgZ+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb1fb4e2-42aa-4795-bc6c-dbcf1fa04f11@sirena.org.uk>
+X-Received: by 2002:a05:6e02:174d:b0:3dc:7660:9efe with SMTP id
+ e9e14a558f8ab-3ddbed0d6fdmr38320925ab.9.1749045846140; Wed, 04 Jun 2025
+ 07:04:06 -0700 (PDT)
+Date: Wed, 04 Jun 2025 07:04:06 -0700
+In-Reply-To: <CAGR7w82+NvTjNtc-Bvf0A02BFqZPPrXTr3e9iqaBTLoLyRwF6g@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68405256.a00a0220.d8eae.008a.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] KASAN: slab-out-of-bounds Read in bch2_sb_members_v2_to_text
+From: syzbot <syzbot+5138f00559ffb3cb3610@syzkaller.appspotmail.com>
+To: abhinav.ogl@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 04, 2025 at 12:35:21PM +0100, Mark Brown wrote:
-> On Tue, Jun 03, 2025 at 02:27:47PM -0400, Samuel Kayode via B4 Relay wrote:
-> 
-> > +static int pf1550_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
-> > +{
-> > +	int id = rdev_get_id(rdev);
-> > +	unsigned int ramp_bits = 0;
-> > +	int ret;
-> > +
-> > +	if (id > PF1550_VREFDDR)
-> > +		return -EACCES;
-> > +
-> > +	if (ramp_delay > 0) {
-> > +		ramp_delay = 6250 / ramp_delay;
-> > +		ramp_bits = ramp_delay >> 1;
-> > +	}
-> 
-> I'm not seeing validation of the maximum ramp_delay value here?
->
-Thanks, that would be addressed in the next version.
-> > +	switch (irq_type) {
-> > +	case PF1550_PMIC_IRQ_SW1_LS:
-> > +		event = REGULATOR_EVENT_OVER_CURRENT;
-> > +	case PF1550_PMIC_IRQ_SW1_HS:
-> > +		event = REGULATOR_EVENT_OVER_CURRENT;
-> > +	case PF1550_PMIC_IRQ_LDO1_FAULT:
-> > +		event = REGULATOR_EVENT_OVER_CURRENT;
-> 
-> You appear to be flagging all these events as over current events which
-> doesn't seem entirely plausible.
-It does seem like it but the manual describes these interrupts as "current limit
-interrupt". The interrupts ending in _LS are "low-side current limit interrupt",
-_HS are "high-side current limit interrupt" and _FAULT are "current limit fault
-interrupt".
+Hello,
 
-Thanks,
-Sam
+syzbot tried to test the proposed patch but the build/boot failed:
+
+fs/bcachefs/sb-members.c:68:44: error: no member named 'size' in 'struct bch_sb_field'
+
+
+Tested on:
+
+commit:         911483b2 Add linux-next specific files for 20250604
+git tree:       linux-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e7902c752bef748
+dashboard link: https://syzkaller.appspot.com/bug?extid=5138f00559ffb3cb3610
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17ac940c580000
+
