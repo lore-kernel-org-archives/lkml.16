@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D33267F43
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:01:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73AB1C861D
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749078093; cv=none; b=kzgV/ncR1f+T6iznKrLDdwZcCqGwcBm2T3Zt4+/J5O4d+kQde5qHb4Jm8YnoUQ1M9SJUdiAc4AoThcxNnhD55ccd/VS7WcgwuPpHP6ntgkVveHbAn9BGQd2XxSZ4E8RkaGHHjWztJ6nOeyBtsfE1PwraGJhvZFfZ3sYNLEFDFS4=
+	t=1749078139; cv=none; b=PVm/R3U6aN7k/KYS1KcaQ4ftFZ4YboYtifWHSYB8IQaqAo6AJmSfNS9a/0gg6LsjQwFuIYudGu3UbEr51uYryuUB1WYX7gDiVL38bECp7zT3rpF3KcRqr4ss2bymj/PZN/dTeqlCmoeXLIXki/2b5gc/ur3Ydyk/ok86sW1QTys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749078093; c=relaxed/simple;
-	bh=+fSMmduX2kJsgH1ngkDSXnk2QMMNes2I6KBi7bEtLjA=;
+	s=arc-20240116; t=1749078139; c=relaxed/simple;
+	bh=7HVnavcozlAGqUoew8jM2OzrVTESgvO41Oq+UN60Jl4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=W+Y/pR7yRV46KgSuyW8QSiIEEBKsX1MMaUJbJWNEZm1EtH7Jbatq0rvbzicH+TkTkIJVgrOankKto2DC6sJ1TKyUEI1cuYdafdIRLw8KEb4+Godcx2/EgcjMl5d+RRx/Q8maD5ph4SJiApynCzZhrZxp1g3WKeMcpMcmwILo0WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WaQ6qvmH; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=d8TV5i6ViRoyjK7RqX1wjSxWQzeSuBcCPy5WfojeAgfI7bGj7oqRU6eTK5o4Au4Z6a0OrHvFik+aqU5xPHwrSGRfPPPDghIyCYxQHj5k4GVG/TacEyql10MSOudNrh9t1mK9mEABebv3vTGA8kHiLi6QHKk/nxBeDXEinrSqDOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DEzKvAfk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WaQ6qvmH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C89C4CEE4;
-	Wed,  4 Jun 2025 23:01:32 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DEzKvAfk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCCAEC4CEE4;
+	Wed,  4 Jun 2025 23:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749078092;
-	bh=+fSMmduX2kJsgH1ngkDSXnk2QMMNes2I6KBi7bEtLjA=;
+	s=korg; t=1749078137;
+	bh=7HVnavcozlAGqUoew8jM2OzrVTESgvO41Oq+UN60Jl4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WaQ6qvmH5ojYoIvtWNLC9bJK1w5sdN9M62gfDUTHx9/galg3N9ycakJCbhxd6SwLC
-	 6YbYOyfk3ck3hkJ3RYcg0tQc4ngUc4aWtajlj4IhItRSjvkDV7tpXvSQYsNsuRhzxh
-	 Gk0f6eeMqjpZXeG1a83qy7ytfPIRxm11nhMz5ZBg=
-Date: Wed, 4 Jun 2025 16:01:31 -0700
+	b=DEzKvAfkv9zRmp2q7hwsbAEplUDcrJY8ti9x8ZSb6l1hEvYmslm/gV17/k9EJLXnS
+	 7BaVNnfVakmAdcgkANIHALTtyFp1URH6vMiN/4OAPSieJ+QUksgM4cNGFSP6cXRPIC
+	 rNvSnMq8MQjhaMyvHlH4QP4apbw0EJXuyc6BJmCM=
+Date: Wed, 4 Jun 2025 16:02:16 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
 To: Kuan-Wei Chiu <visitorckw@gmail.com>
 Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
  alex@ghiti.fr, linux-riscv@lists.infradead.org,
  linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw, Yu-Chun Lin
  <eleanor15x@gmail.com>
-Subject: Re: [PATCH v2 1/3] lib/math/gcd: Use static key to select
- implementation at runtime
-Message-Id: <20250604160131.d00e8a3a2230a00f3818a3a1@linux-foundation.org>
-In-Reply-To: <20250524155519.1142570-2-visitorckw@gmail.com>
+Subject: Re: [PATCH v2 3/3] riscv: Optimize gcd() performance on RISC-V
+ without Zbb extension
+Message-Id: <20250604160216.d93f5b06030342ad5dfea0a8@linux-foundation.org>
+In-Reply-To: <20250524155519.1142570-4-visitorckw@gmail.com>
 References: <20250524155519.1142570-1-visitorckw@gmail.com>
-	<20250524155519.1142570-2-visitorckw@gmail.com>
+	<20250524155519.1142570-4-visitorckw@gmail.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,26 +46,41 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 24 May 2025 23:55:17 +0800 Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
+On Sat, 24 May 2025 23:55:19 +0800 Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
 
-> On platforms like RISC-V, the compiler may generate hardware FFS
-> instructions even if the underlying CPU does not actually support them.
-> Currently, the GCD implementation is chosen at compile time based on
-> CONFIG_CPU_NO_EFFICIENT_FFS, which can result in suboptimal behavior on
-> such systems.
+> The binary GCD implementation uses FFS (find first set), which benefits
+> from hardware support for the ctz instruction, provided by the Zbb
+> extension on RISC-V. Without Zbb, this results in slower
+> software-emulated behavior.
 > 
-> Introduce a static key, efficient_ffs_key, to enable runtime selection
-> between the binary GCD (using ffs) and the odd-even GCD implementation.
-> This allows the kernel to default to the faster binary GCD when FFS is
-> efficient, while retaining the ability to fall back when needed.
+> Previously, RISC-V always used the binary GCD, regardless of actual
+> hardware support. This patch improves runtime efficiency by disabling
+> the efficient_ffs_key static branch when Zbb is either not enabled in
+> the kernel (config) or not supported on the executing CPU. This selects
+> the odd-even GCD implementation, which is faster in the absence of
+> efficient FFS.
+> 
+> This change ensures the most suitable GCD algorithm is chosen
+> dynamically based on actual hardware capabilities.
 > 
 > ...
 >
-> @@ -54,6 +58,11 @@ unsigned long gcd(unsigned long a, unsigned long b)
->  	if (!a || !b)
->  		return r;
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/efi.h>
+>  #include <linux/crash_dump.h>
+>  #include <linux/panic_notifier.h>
+> +#include <linux/jump_label.h>
+>  
+>  #include <asm/acpi.h>
+>  #include <asm/alternative.h>
+> @@ -51,6 +52,8 @@ atomic_t hart_lottery __section(".sdata")
+>  ;
+>  unsigned long boot_cpu_hartid;
+>  
+> +DECLARE_STATIC_KEY_TRUE(efficient_ffs_key);
 
-Both binary_gcd() and gcd() perform the above.  Seems unnecessary?
+Please let's get this into a header file, visible to the definition
+site and to all users.
 
-
-I can merge this series if the riscv team are OK with it?
