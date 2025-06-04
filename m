@@ -1,127 +1,110 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D911917F1;
-	Wed,  4 Jun 2025 15:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4C42F56;
+	Wed,  4 Jun 2025 15:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749050284; cv=none; b=NYB6FLCzBhJ9lJKYBXd4NX02x8gCuXMfAAMJJ9gl9UUusHvasZ/RHJmSUjmGitBMd5d0/7cF2c96wAx8kwzLOTkF89m3Nl/x0JNlDzpUrhm+F9bdHjW2Xi4+pF+Si+qqYPR5SMB+vAZCMQS6HBMZy+4n3VmY32qFr+Mq+ETGltQ=
+	t=1749050359; cv=none; b=fmcnJU0rUG5wAiaAIpBdGHpfx60dSoSKUs2JoXNRRyEOwyD5xyhkO9tFaQaEOlBfepg4i+rj2wucbdf0wa7nABUcU9lEnTAlogu59497a6B3rs3GodIm0mm9L1QjYp3f65iaaOD1i67NQB+L/EB+rTMfI/Vxb/drjnQdJv704Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749050284; c=relaxed/simple;
-	bh=s5zmxv3LU0w+4sopd0Re0HC/bbjNa73HY3q0HOETc+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qscfGIBr5oIVE0VSwq1OGnGPFJ7IBGYMAF4zP0/DCLgd0BIargl4QVn+Kf9pD2QQPdc3ZB+Djyb0h3vcyWXCF7TWCX15POY90TROWzRTeAUmFB9ceKf3oS5aQbnuSo1e1FaJixQqsT0gaH+U68Dm2k+c2ANZeYl5Rmedy4UHyxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D9601758;
-	Wed,  4 Jun 2025 08:17:44 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAB493F59E;
-	Wed,  4 Jun 2025 08:18:00 -0700 (PDT)
-Date: Wed, 4 Jun 2025 16:17:56 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250604151756.GD8020@e132581.arm.com>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
- <20250603144414.GC38114@noisy.programming.kicks-ass.net>
- <20250604080339.GB35970@noisy.programming.kicks-ass.net>
- <20250604101821.GC8020@e132581.arm.com>
- <20250604135801.GK38114@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1749050359; c=relaxed/simple;
+	bh=F5H+kEb4qmnHuAE7ZDH5mZyO1eDuOcngv0I1ktHsl7k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OtlAbbc220TxnwbcwIK9kU/tNZitk9LyhznNjvTRUHOJZoDYlLDGBPUXDVHlX/f5OwvLJJPO8GZgEp7NTIYD3zlHW3JFDUw24ikcw9a7P4DfiRX4gHPcQc5RFBZZtxKh84NX2VN/c1RrPbkzw5TIW3WRdELYPhZVYujsePIBOhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R57Y0X2g; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R57Y0X2g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B084DC4CEE4;
+	Wed,  4 Jun 2025 15:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749050359;
+	bh=F5H+kEb4qmnHuAE7ZDH5mZyO1eDuOcngv0I1ktHsl7k=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=R57Y0X2g/XsqFKtG2NT6XPCygBiTqilUdCdksF08H0AZ3SyVxDMJLj1XON+7Yz0oE
+	 FSCfAfQrYazhHLWDKq/YqtZ7uRzjqt+ArBQadROON8lHHiBGoKGL9OaeE5TH/8Py//
+	 JGCZCKcb+l0cz35o8LV9Wur0xgqggn53+Shw5qQA9WKO+OjYFzsjSwx5tbGkhtceyj
+	 I9FcdsQ8NdWe9Ayc1HZUSQnbmzNrClSqLgkFOV8N7ZKpWUaQRgT/kdUTwYL5tg7T8l
+	 UetSlbtE06pUYM++2hcammzC5lxjP7g9kusnaywf85OGz/3wmvri/lzh8L0ROga0SR
+	 SRtOQbJl7ThZA==
+Message-ID: <e27f3ea6-943d-4d78-b4d6-85d0dd521fe7@kernel.org>
+Date: Wed, 4 Jun 2025 17:19:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604135801.GK38114@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series
+ SoC
+To: Jammy Huang <jammy_huang@aspeedtech.com>, jassisinghbrar@gmail.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+ andrew@codeconstruct.com.au, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20250604125558.1614523-1-jammy_huang@aspeedtech.com>
+ <20250604125558.1614523-2-jammy_huang@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250604125558.1614523-2-jammy_huang@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 04, 2025 at 03:58:01PM +0200, Peter Zijlstra wrote:
-> On Wed, Jun 04, 2025 at 11:18:21AM +0100, Leo Yan wrote:
-> 
-> > Totally agree. The comment would be very useful!
-> 
-> I have the below. Let me go read your email in more than 2 seconds to
-> see if I should amend things.
-> 
-> I'm not sure doing the INACTIVE->INACTIVE cycle in the ASCII art is
-> going to make it clearer, might leave that off. But yeah, possible.
-> 
-> ---
-> 
-> Subject: perf: Add comment to enum perf_event_state
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Wed Jun  4 10:21:38 CEST 2025
-> 
-> Better describe the event states.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/perf_event.h |   42 ++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 40 insertions(+), 2 deletions(-)
-> 
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -635,8 +635,46 @@ struct perf_addr_filter_range {
->  	unsigned long			size;
->  };
->  
-> -/**
-> - * enum perf_event_state - the states of an event:
-> +/*
-> + * The normal states are:
-> + *
-> + *            ACTIVE    --.
-> + *               ^        |
-> + *               |        |
-> + *       sched_{in,out}() |
-> + *               |        |
-> + *               v        |
-> + *      ,---> INACTIVE  --+ <-.
-> + *      |                 |   |
-> + *      |                {dis,en}able()
-> + *   sched_in()           |   |
-> + *      |       OFF    <--' --+
-> + *      |                     |
-> + *      `--->  ERROR    ------'
-> + *
-> + * That is:
-> + *
-> + * sched_in:       INACTIVE          -> {ACTIVE,ERROR}
-> + * sched_out:      ACTIVE            -> INACTIVE
-> + * disable:        {ACTIVE,INACTIVE} -> OFF
-> + * enable:         {OFF,ERROR}       -> INACTIVE
-> + *
-> + * Where {OFF,ERROR} are disabled states.
-> + *
-> + * Then we have the {EXIT,REVOKED,DEAD} states which are various shades of
-> + * defunct events:
-> + *
-> + *  - EXIT means task that the even was assigned to died, but child events
-> + *    still live, and further children can still be created. But the event
-> + *    itself will never be active again. It can only transition to
-> + *    {REVOKED,DEAD};
-> + *
-> + *  - REVOKED means the PMU the event was associated with is gone; all
-> + *    functionality is stopped but the event is still alive. Can only
-> + *    transition to DEAD;
-> + *
-> + *  - DEAD event really is DYING tearing down state and freeing bits.
-> + *
+On 04/06/2025 14:55, Jammy Huang wrote:
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    mailbox@12c1c200 {
+> +        compatible = "aspeed,ast2700-mailbox";
+> +        reg = <0x0 0x12c1c200 0x0 0x200>;
 
-LGTM:
+Last time I asked to test, you responded you will test. What happened?
+You did not test. This is just disappointing.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-
->   */
->  enum perf_event_state {
->  	PERF_EVENT_STATE_DEAD		= -5,
+Best regards,
+Krzysztof
