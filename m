@@ -1,111 +1,146 @@
-Received: from mail.stoffel.org (mail.stoffel.org [172.104.24.175])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1B028EA73;
-	Wed,  4 Jun 2025 12:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.24.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA22913AD1C;
+	Wed,  4 Jun 2025 12:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749040478; cv=none; b=nJESt7x8U/NHDt75K2znyM7yC3rC1EQqPdPRz4lIDCeL1K8VNIVrXbHB15dVO5ZBa5QqDpW2/gk8Aad/YAWSLXuQDwvdyJLSI7+RXmoLF/33HTGUav+o9u09yr4Q8qNPwqelafooKfR6AsAk+gb+OkWQNYjjSxKNp/GYfp86kXY=
+	t=1749040523; cv=none; b=j/jPy9N6QI2NAYbK4GxGeSwZswL9XPxgIvQtJvftx94Hk3nHuoQyjhQebgPPRoSwJF3kAPVqg5uhdTsJ87gujY99BPf3j7Cv+LQkP78we3lZiuZ3HoaSTd3kWXL9pGrEZWLiguiRT/uXzLtLAtQiRkhJR4hyBQnuAOYyhCeg8o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749040478; c=relaxed/simple;
-	bh=3rt8h5n8yYtwwyAoB+3rT9wHFljX3vMTDPW/1JK5jIc=;
-	h=MIME-Version:Content-Type:Message-ID:Date:From:To:Cc:Subject:
-	 In-Reply-To:References; b=SV+qHyZL+ywSRZ6DqNFv9bKllwZd2NLPEW26x4B1iESBGSaaZTZoGwDaPdtE7uaZIHyvRxK6Qtl7tB7Po2y5kwyAoe5CtUmhmgsimOulzmFhGqhJIFkrwO3wq59fUXVEqXJkl2wArZjo56vveeH+lbvn3LxRlP0YJN3SHcgvdf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org; spf=pass smtp.mailfrom=stoffel.org; arc=none smtp.client-ip=172.104.24.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stoffel.org
-Received: from quad.stoffel.org (syn-097-095-183-072.res.spectrum.com [97.95.183.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mail.stoffel.org (Postfix) with ESMTPSA id 6CB071E38B;
-	Wed,  4 Jun 2025 08:34:35 -0400 (EDT)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-	id 1EC26A1041; Wed,  4 Jun 2025 08:34:35 -0400 (EDT)
+	s=arc-20240116; t=1749040523; c=relaxed/simple;
+	bh=pzB2r9AuYbhlH2cLpCTOjuhSRLK5nxjnZ5tOE00lqPg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ckVb4fD48QT/wrP8Xu52WpQnDtQcQ3P1rLa0xIeohwW2DDNx7qgsl3V9kvb2OGa21pJQyuPX4KlQkEq6QYKj/Vdf0CTpR1ZGij+ztoe05rbLyWwE01+0Av0bXMMAXwgnJ/8M49YzQz3bacKSIUXvPT5ib9GERlBp8ExPgy6hwCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EUKZNTVg; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EUKZNTVg"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554AhpJE023156;
+	Wed, 4 Jun 2025 12:35:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lQCzdXCBuvZMUMNTaFYO+4zUpBo1D8sZNSPcz5eyBuI=; b=EUKZNTVgKiyjvYzE
+	RPfhObsr/zSb1B9xa5WRVtia5wGxvfC/d2KCFjBjRikm9YqJ2THKmoA7Y87qV6ln
+	PSLiHjeLp5P4EnP/YJ6MgYcuaJG9QLs9sU/tzwMd//W5ejxJZDKMAIgkj2ceKJ3a
+	spY4/JB0UoXU+OP+oTlUXHE3icZxgZGlhPU2LY1vcM2hf0/VB0RinpONRY3ENEXb
+	wuZpBDwgvp3DyqPruxzsgTOQX4xJXaEsUiL3SqYm6YOSZDt3Gdpu0/5nnOZk62sa
+	djB271O7TgmlNGg2RuLx7GjdVxNqXdVvZez+2miv9YiUkAp5nD0O1CTa9jgQnSmm
+	joblEQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 472mn008ux-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 12:35:12 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 554CZBko016918
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 4 Jun 2025 12:35:11 GMT
+Received: from [10.50.19.162] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Jun 2025
+ 05:35:07 -0700
+Message-ID: <4504e16a-f4c4-1f68-fa91-d3641a3decbe@quicinc.com>
+Date: Wed, 4 Jun 2025 18:05:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] media: venus: Fix MSM8998 frequency table
+To: Konrad Dybcio <konradybcio@kernel.org>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Marc Gonzalez <mgonzalez@freebox.fr>,
+        Pierre-Hugues Husson <phhusson@freebox.fr>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+CC: Marijn Suijten <marijn.suijten@somainline.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+References: <20250531-topic-venus_98_tbl-v1-1-68e5523a39dc@oss.qualcomm.com>
+Content-Language: en-US
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250531-topic-venus_98_tbl-v1-1-68e5523a39dc@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <26688.15707.98922.15948@quad.stoffel.home>
-Date: Wed, 4 Jun 2025 08:34:35 -0400
-From: "John Stoffel" <john@stoffel.org>
-To: David Niklas <simd@vfemail.net>
-Cc: Linux RAID <linux-raid@vger.kernel.org>,
-    linux-kernel@vger.kernel.org
-X-Clacks-Overhead: GNU Terry Pratchett
-Subject: Re: Need help increasing raid scan efficiency.
-In-Reply-To: <20250602210514.7acd5325@Zen-II-x12.niklas.com>
-References: <20250602210514.7acd5325@Zen-II-x12.niklas.com>
-X-Mailer: VM 8.3.x under 28.2 (x86_64-pc-linux-gnu)
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: AgF96cHK_rht01NW1ZGMCujyOSyIvlAU
+X-Proofpoint-GUID: AgF96cHK_rht01NW1ZGMCujyOSyIvlAU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA5NSBTYWx0ZWRfXzGDt6pi+M68Z
+ EhaCAqazL25NGYD/aDQSfzVZMuMzncSMK6esvvFbxNDFfNJSN4pG/qE+6h5y5lyxS9cbXb9C+4U
+ OJgTBi18RH2WjAvfIUFKrkW1stkdFOMkS6dTfZeP6/Dka/EV21Qc2Z2NRnhF8aGRvZYHqwiPOFe
+ Zg3XU8ys64hhE2SXMKtkjNMquAHpNDgIkvNVeOt3n+Wpigb6/3goGjlF5TL+g8mjyh50m+qhMM/
+ ksZdTO7gQSYzldwHMjxtsrlp6IGiEx3NVj1TDyVKbhq6vvjIX5+7TBdmTZfJK300HBJhU0/xv4T
+ IcZ9lPF/3RhGlZah5gUIckh3quz4/DS21f5h4IZeu2qpYazov8SwYMqO0j0vzFH1lQMetfcg68w
+ lvcY490Wuhk9TZ5MJDsWrgaem440kt5VJ9LI7KiVK1tJvUIjxS+uQBVdmed+zRCvq3X3hI6M
+X-Authority-Analysis: v=2.4 cv=Y8/4sgeN c=1 sm=1 tr=0 ts=68403d80 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
+ a=HQS51YnNDeexhmgAX-4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0 phishscore=0
+ clxscore=1011 impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
+ malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506040095
 
->>>>> "David" == David Niklas <simd@vfemail.net> writes:
 
-> My PC suffered a rather nasty case of HW failure recently where the
-> MB would break the CPU and RAM. I ended up with different data on
-> different members of my RAID6 array.
+On 5/31/2025 5:52 PM, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> Fill in the correct data for the production SKU.
+> 
+> Fixes: 193b3dac29a4 ("media: venus: add msm8998 support")
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/media/platform/qcom/venus/core.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index d305d74bb152d21133c4dfa23805b17274426a5c..2bb514c322692475ed58198e17f906f894d81cf4 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -709,11 +709,11 @@ static const struct venus_resources msm8996_res = {
+>  };
+>  
+>  static const struct freq_tbl msm8998_freq_table[] = {
+> -	{ 1944000, 465000000 },	/* 4k UHD @ 60 (decode only) */
+> -	{  972000, 465000000 },	/* 4k UHD @ 30 */
+> -	{  489600, 360000000 },	/* 1080p @ 60 */
+> -	{  244800, 186000000 },	/* 1080p @ 30 */
+> -	{  108000, 100000000 },	/* 720p @ 30 */
+> +	{ 1728000, 533000000 },	/* 4k UHD @ 60 (decode only) */
+> +	{ 1036800, 444000000 },	/* 2k @ 120 */
+> +	{  829440, 355200000 },	/* 4k @ 44 */
+> +	{  489600, 269330000 },/* 4k @ 30 */
+> +	{  108000, 200000000 },	/* 1080p @ 60 */
+What has ideally changed in production SKU which led to this change. Pls add
+this info.
 
-Ouch, this is not good.  But you have RAID6, so it should be ok...
-
-> I wanted to scan through the drives and take some checksums of
-> various files in an attempt to ascertain which drives took the most
-> data corruption damage, to try and find the date that the damage
-> started occurring (as it was unclear when exactly this began), and
-> to try and rescue some of the data off of the good pairs.
-
-What are you comparing the checksums too?  Just because you assemble
-drives 1 and 2 and read the filesystem, then assemble drives 3 and 4
-into another array, how do you know which checksum is correct if they
-differ?  
-
-> So I setup the array into read-only mode and started the array with
-> only two of the drives. Drives 0 and 1. Then I proceeded to try and
-> start a second pair, drives 2 and 3, so that I could scan them
-> simultaneously.  With the intent of then switching it over to 0 and
-> 2 and 1 and 3, then 0 and 3 and 1 and 2.
-
-I'm not sure this is really going to work how you think.... 
-
-> This failed with the error message:
-> # mdadm --assemble -o --run /dev/md128 /dev/sdc /dev/sdd
-> mdadm: Found some drive for array that is already active: /dev/md127
-
-This is not un-expected.  You already have md127 setup using the same
-UUID, and mdadm is doing the right thing to refuse to assemble a
-different array name with the same underlying UUID.  
-
-But if you have four drives, you've got four sets of checksums to
-calculate for each file, which is going to take time.  And I think
-just doing it one pair of disks at a time is the safest way.  Your
-data is important to you, obviously, but how much is it worth?  
-
-Can you afford to get some replacement disks, or even just a single
-large disk and them dump all your files onto a new single disk to try
-and save what you have, even if it's corrupted?  
-
-> Any ideas as to how I can get mdadm to run the array as I requested
-> above? I did try --force, but mdadm refused to listen.
-
-And for good reason.  You might be able to do an overlayfs on each
-pair, then go in and change the UUID of the second pair to something
-different, and then start the array with a new name and disk member
-UUIDs.  
-
-But it's alot of hacking for probably not much payout.
-
-Have you found a file with corruption?  If so, have you done a quick
-test where you do the four pairs of the array assembled and checked
-just that one single file to see if the checksum differs?  
-
-And again, if it does differ, how do you decide what is the correct
-data?  
-
-I would strongly suspect that the data is corrupted no matter what.  
-
-In any case, good luck!  Maybe the raid6check tool will help, but I'd
-rather try to at least use your most recent backup as a check.  
-
-John
+Regards,
+Vikash
+>  };
+>  
+>  static const struct reg_val msm8998_reg_preset[] = {
+> 
+> ---
+> base-commit: 2a628f951ed54c30a232230b5b58349d2a8dbb11
+> change-id: 20250531-topic-venus_98_tbl-5765675a4ce5
+> 
+> Best regards,
