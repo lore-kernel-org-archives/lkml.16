@@ -1,203 +1,149 @@
-Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45C3E28B7E1;
-	Wed,  4 Jun 2025 08:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE9528B7E1;
+	Wed,  4 Jun 2025 08:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027181; cv=none; b=i7sGsRFlpV925r5KqqtpWpyW8r6qJr9YMLuMFCo/YFmZWdgO2XlylVDfmfNQdsE8MVUZZgRzrrxZy/njP/2qILfo3tGIFVhjsyd7XYsvsoD5uHntB5s6AeKMycwcZP/295WhPT8qNc+f022Q8EbmyUXGYOVtLA86+m8SmpagNMM=
+	t=1749027187; cv=none; b=GhgUiB8ZtX9ICkyeDAfmn2usM4+A4Evbhg+9pHj5wokBnD3XJN7IFuneChFxIhDKobJwsknrTl98W2/Dv8818hQGj8Miava9doBZf9XnGCTP1dUpUhIk6LmLCc/40kURr/ie8zX6V5P8Cui2t290CNoM8E7eUZ+vnKEyg8kAlSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027181; c=relaxed/simple;
-	bh=qFpva0TmfGMoqQwfYpHpQh703G/IXdwn7pLxD30Dac4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=H2zb35M+zT0slvaKoBqxNP4vQf5l85p/MGueyZR3oV3Wu3VJimAikWLMfr0dBahSktvQCqQgkZueaKmgiYpUAtmg7RN5g+n744Oxnq+HueKYuelxp2QYkIniFVcPBPjCMfdEO1jxzhXdPbgji+Lpeqm1ecE9plnx44BwAqazHrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.79.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
-	by app2 (Coremail) with SMTP id TQJkCgD3lpVVCUBo0WKaAA--.53474S2;
-	Wed, 04 Jun 2025 16:52:39 +0800 (CST)
-From: dongxuyang@eswincomputing.com
-To: p.zabel@pengutronix.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	Xuyang Dong <dongxuyang@eswincomputing.com>
-Subject: [PATCH v2 1/2] dt-bindings: reset: eswin: Documentation for eic7700 SoC
-Date: Wed,  4 Jun 2025 16:52:35 +0800
-Message-Id: <20250604085235.2153-1-dongxuyang@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
-References: <20250604085124.2098-1-dongxuyang@eswincomputing.com>
+	s=arc-20240116; t=1749027187; c=relaxed/simple;
+	bh=2mLmpUCes52p/QBWu3WTp8hFc3VJZP5x4b4BAFPXNKY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rY2lqk9q3b+fUU8kOTWyljtvsfgtl4VLDblrQaEQIIkRbLVXksv1LYGLU+J33WiKYB9GSaJYWWthn6PjNTUuhfnchizkogOjjIYmBj9uI5twCvh/iIWUIp9mBdEzTOsxORiBJrZsZaG6CZgOrVYc4LADVcA5Ivc0lNcXSLxXoaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YOay6inI; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YOay6inI"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442ea341570so45716745e9.1;
+        Wed, 04 Jun 2025 01:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749027184; x=1749631984; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GLM7LBm37WJqJap/lEtkbB8hYDWJRhXgHcZgsy5d+m4=;
+        b=YOay6inIoT0QwFwhuzoxbwrzFx++4aOIj3vOTISw9Di/bpbCKYHgF7xqjIQHn/wtSG
+         JvY6NOK52rSEEayfHhvhrrQka6pSKNF5QMsHxfUvHZt5etEB0xzq91NucAMLoM9+XLy1
+         8X+IptqV9wvIyhkO17Wr5wabQnTwBmMD8vT/E5xtHGr/5vXxzvhozZ2ifGioq+ocIMT+
+         9082T8Sgj5P4OWVR7NoZ5w3Lhmq50JEN+bZcnTCXaeJ92psskQc/HiNxTqKwA9ujGrzU
+         hzWJhcA1zKcn+v6wO+hlxx8wQ7j3opxN+32Qdxha5shZZOa4b3fkQ6PPjEowIWGPGDK6
+         Ysbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749027184; x=1749631984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GLM7LBm37WJqJap/lEtkbB8hYDWJRhXgHcZgsy5d+m4=;
+        b=o6cWS/6duHdeHfawoPa6MhVUJwmaeSnNwrekzIdkYhZRjcaolS75OQ12v1IxBpdTIa
+         p4JST7FPhG92YfSIEudsVkKSXhupQa4iNL9oz88PztqzljLHp9o7TSnScRolb7lMwBF1
+         L7r8KlmJzb9wwA6jSCRtd7TTKldVN5sOFL/Eqxr9HD+OGYGQYug1UmOBtFqzXRwOjutw
+         N2ewpD3fP2uBreCYmUig2w8ptjO1P1tTtKL3TLkK+Mce9xc2NCHfsGayYTrhqKRpYmYN
+         S/+pDNMEKLr5WZ/NVE/Bhs3FFbG5MUCaaV7vrKJVRdqi1D+/UJSNjiYo0y5OCl1SfXEv
+         OidQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDbs48AQoZz+xJm08FsXmLI2/bnzczks/tg5Ia87lIO9MCMOhwG8Gc7WddSzuSR2GCHRA=@vger.kernel.org, AJvYcCVTQM6QnpwFKKyWxTdOJMPB6u8ss2nnpd5k1qgc9IarSfcxcHvZOXUIJgmPf1bLL3BdWW6WdlgPhUlDGJTTrFPD@vger.kernel.org, AJvYcCWANMLzCCHUFuh18syVHGcisPVtqW8W9rn7lui7Jm722koca1Hv38zRXS+eRjQ0UjvJGIHI5rE5Sr/K+WSC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAoOXyYFAy9MRx52vMOUd8TI+weseNvaAT/YeciGVW1uFlq0WZ
+	dsFd6r7o5ha8F21y9UbIToRCr8ccPqrAN6qDJAqe4P43bIwv5kTGN06A
+X-Gm-Gg: ASbGncsM6qao3Q4SbZi15+XXTac6UUtSGpIKYhsveIjtwRTlwWyr/iymShGhqrHvxUT
+	MlNh+sKAOZo7FG3PyeXAxJF+5mHKrfO97okgL/KAHOTnKJVt+0njk8gGLu+9ziCVBrrKi3soipw
+	TRfyzah87BgAjrFZTeGh7sUmDcyRkdm7jmVbxML9GvTDehGEfQFf+DE2uq7UeG31zkQtA2VZLcV
+	ba0wuO7p8Vz1D6jF+1FdOz2gG49kTZTf/WabaQcCRV+1zpgecUXG8/miYQePZT5OTAZc0PKvCjK
+	/qnqwPaMfysXZxt7VJKxpcekeWTYkXn2BpRHvEI=
+X-Google-Smtp-Source: AGHT+IEimdhpyVCbWCs8OZcEOw5A8tU+m2ddmRqylRHVPijI8dxrP/UOu9X8Wnc/BPaO81v0RDpm7w==
+X-Received: by 2002:a05:600c:6749:b0:43c:f6c6:578c with SMTP id 5b1f17b1804b1-451f0ab417fmr15621325e9.15.1749027183601;
+        Wed, 04 Jun 2025 01:53:03 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fa2566sm186916685e9.13.2025.06.04.01.53.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 01:53:03 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 4 Jun 2025 10:53:00 +0200
+To: Rong Tao <rtoax@foxmail.com>
+Cc: andrii@kernel.org, eddyz87@gmail.com, rongtao@cestc.cn,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Shuah Khan <shuah@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Amery Hung <ameryhung@gmail.com>,
+	Juntong Deng <juntong.deng@outlook.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	"open list:BPF [SELFTESTS] (Test Runners & Infrastructure)" <bpf@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"moderated list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
+	"moderated list:ARM/STM32 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next] selftests/bpf: Fix compile error of
+ bin_attribute::read/write()
+Message-ID: <aEAJbBH00yL2iTgn@krava>
+References: <tencent_A6502A28AF21A3CA88B106F3421159869708@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgD3lpVVCUBo0WKaAA--.53474S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF1UKry8Zw1kuFykuryDJrb_yoWrAw47pF
-	4kCFyDtr1DKFWIgw4FvF1SkF13Jwn3Wr1DXr4UZF47JF1Utw1vya4YgFs5JF98ZFs3GrW3
-	WFykXw18Zr9rAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
-	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUXJ5wUUUUU=
-X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_A6502A28AF21A3CA88B106F3421159869708@qq.com>
 
-From: Xuyang Dong <dongxuyang@eswincomputing.com>
+On Wed, Jun 04, 2025 at 01:53:22PM +0800, Rong Tao wrote:
+> From: Rong Tao <rongtao@cestc.cn>
+> 
+> Since commit 97d06802d10a ("sysfs: constify bin_attribute argument of
+> bin_attribute::read/write()"), make bin_attribute parameter of
+> bin_attribute::read/write() const.
 
-Add device tree binding documentation and header file for the ESWIN
-eic7700 reset controller module.
+hi,
+there's already fix for this in bpf/master
 
-Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
-Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
----
- .../bindings/reset/eswin,eic7700-reset.yaml   | 41 +++++++++++
- .../dt-bindings/reset/eswin,eic7700-reset.h   | 73 +++++++++++++++++++
- 2 files changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
- create mode 100644 include/dt-bindings/reset/eswin,eic7700-reset.h
+thanks,
+jirka
 
-diff --git a/Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml b/Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
-new file mode 100644
-index 000000000000..85ad5fec9430
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
-@@ -0,0 +1,41 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/reset/eswin,eic7700-reset.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ESWIN EIC7700 SoC reset controller
-+
-+maintainers:
-+  - Yifeng Huang <huangyifeng@eswincomputing.com>
-+  - Xuyang Dong <dongxuyang@eswincomputing.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: eswin,eic7700-reset
-+      - const: syscon
-+      - const: simple-mfd
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#reset-cells':
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#reset-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/reset/eswin,eic7700-reset.h>
-+
-+    reset-controller@51828000 {
-+        compatible = "eswin,eic7700-reset", "syscon", "simple-mfd";
-+        reg = <0x51828000 0x80000>;
-+        #reset-cells = <2>;
-+    };
-diff --git a/include/dt-bindings/reset/eswin,eic7700-reset.h b/include/dt-bindings/reset/eswin,eic7700-reset.h
-new file mode 100644
-index 000000000000..7ba31db86141
---- /dev/null
-+++ b/include/dt-bindings/reset/eswin,eic7700-reset.h
-@@ -0,0 +1,73 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
-+ *
-+ * Device Tree binding constants for EIC7700 reset controller.
-+ *
-+ * Authors:
-+ *	Yifeng Huang <huangyifeng@eswincomputing.com>
-+ *	Xuyang Dong <dongxuyang@eswincomputing.com>
-+ */
-+
-+#ifndef __DT_ESWIN_EIC7700_RESET_H__
-+#define __DT_ESWIN_EIC7700_RESET_H__
-+
-+#define SNOC_RST_CTRL 0
-+#define GPU_RST_CTRL 1
-+#define DSP_RST_CTRL 2
-+#define D2D_RST_CTRL 3
-+#define DDR_RST_CTRL 4
-+#define TCU_RST_CTRL 5
-+#define NPU_RST_CTRL 6
-+#define HSPDMA_RST_CTRL 7
-+#define PCIE_RST_CTRL 8
-+#define I2C_RST_CTRL 9
-+#define FAN_RST_CTRL 10
-+#define PVT_RST_CTRL 11
-+#define MBOX_RST_CTRL 12
-+#define UART_RST_CTRL 13
-+#define GPIO_RST_CTRL 14
-+#define TIMER_RST_CTRL 15
-+#define SSI_RST_CTRL 16
-+#define WDT_RST_CTRL 17
-+#define LSP_CFGRST_CTRL 18
-+#define U84_RST_CTRL 19
-+#define SCPU_RST_CTRL 20
-+#define LPCPU_RST_CTRL 21
-+#define VC_RST_CTRL 22
-+#define JD_RST_CTRL 23
-+#define JE_RST_CTRL 24
-+#define VD_RST_CTRL 25
-+#define VE_RST_CTRL 26
-+#define G2D_RST_CTRL 27
-+#define VI_RST_CTRL 28
-+#define DVP_RST_CTRL 29
-+#define ISP0_RST_CTRL 30
-+#define ISP1_RST_CTRL 31
-+#define SHUTTER_RST_CTRL 32
-+#define VO_PHYRST_CTRL 33
-+#define VO_I2SRST_CTRL 34
-+#define VO_RST_CTRL 35
-+#define BOOTSPI_RST_CTRL 36
-+#define I2C1_RST_CTRL 37
-+#define I2C0_RST_CTRL 38
-+#define DMA1_RST_CTRL 39
-+#define FPRT_RST_CTRL 40
-+#define HBLOCK_RST_CTRL 41
-+#define SECSR_RST_CTRL 42
-+#define OTP_RST_CTRL 43
-+#define PKA_RST_CTRL 44
-+#define SPACC_RST_CTRL 45
-+#define TRNG_RST_CTRL 46
-+#define RESERVED 47
-+#define TIMER0_RST_CTRL 48
-+#define TIMER1_RST_CTRL 49
-+#define TIMER2_RST_CTRL 50
-+#define TIMER3_RST_CTRL 51
-+#define RTC_RST_CTRL 52
-+#define MNOC_RST_CTRL 53
-+#define RNOC_RST_CTRL 54
-+#define CNOC_RST_CTRL 55
-+#define LNOC_RST_CTRL 56
-+
-+#endif /*endif __DT_ESWIN_EIC7700_RESET_H__*/
---
-2.17.1
-
+> 
+> Signed-off-by: Rong Tao <rongtao@cestc.cn>
+> ---
+>  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> index e6c248e3ae54..e9e918cdf31f 100644
+> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> @@ -385,7 +385,7 @@ int bpf_testmod_fentry_ok;
+>  
+>  noinline ssize_t
+>  bpf_testmod_test_read(struct file *file, struct kobject *kobj,
+> -		      struct bin_attribute *bin_attr,
+> +		      const struct bin_attribute *bin_attr,
+>  		      char *buf, loff_t off, size_t len)
+>  {
+>  	struct bpf_testmod_test_read_ctx ctx = {
+> @@ -465,7 +465,7 @@ ALLOW_ERROR_INJECTION(bpf_testmod_test_read, ERRNO);
+>  
+>  noinline ssize_t
+>  bpf_testmod_test_write(struct file *file, struct kobject *kobj,
+> -		      struct bin_attribute *bin_attr,
+> +		      const struct bin_attribute *bin_attr,
+>  		      char *buf, loff_t off, size_t len)
+>  {
+>  	struct bpf_testmod_test_write_ctx ctx = {
+> @@ -567,7 +567,7 @@ static void testmod_unregister_uprobe(void)
+>  
+>  static ssize_t
+>  bpf_testmod_uprobe_write(struct file *file, struct kobject *kobj,
+> -			 struct bin_attribute *bin_attr,
+> +			 const struct bin_attribute *bin_attr,
+>  			 char *buf, loff_t off, size_t len)
+>  {
+>  	unsigned long offset = 0;
+> -- 
+> 2.49.0
+> 
