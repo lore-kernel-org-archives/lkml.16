@@ -1,142 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C152327A1;
-	Wed,  4 Jun 2025 02:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE92171A1;
+	Wed,  4 Jun 2025 02:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749005881; cv=none; b=KtPLpSk9QFSb/1wRrZFcRh9di5dSpMbNn4tdnulhIohPfkvlECgQ8zrn1Jeu3PPs/JqtglvnnaQKvRZ3TDImKuQPVRhdAyqI8Kl7IVoM7oWfFI/MHxW5Oik2rkxbR4yQxTBpmdI1Uago5sWpS83OGF/c0A4UQOzRkv4szW+V6qg=
+	t=1749005966; cv=none; b=EOtcN0HEHJngiBr0x3lkPAGdA41YvemLRjVQlLlVBz0diY1+yzi4KBFzli5s1rQnoPp34YU0SQ4SKbKl47SiVe/3uHB3/ZRFPIbUPVYPqxSZNTogb1J61+IagME9vQll4xD4Qv/tb04efRRyvWfTMFblLfMDn4kHB0Q/3gJKF7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749005881; c=relaxed/simple;
-	bh=fYjZRivWn2Fn+oWmzNXQqN7xuN63eEwOfSVBHQpA9yc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IUdGE3ZH9p+i+0vXldrVRb4C2EIumK1MTu33jF9FR8Az5kofRo/ULiYye9zo2YdO6m/5MpuqDysgdilC5R6l1VCldGZwJXb7tCIOA9IQw8bzcxK+tSHQrUpDf1XXYtECgLtKMbQ6LvKhFmpa4TFpqsF3RXtDdjHykp9CpTXMa10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tzmOPzlc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749005966; c=relaxed/simple;
+	bh=TzIfJSQiYccDaSYxU14uxVmwdxaEmC/dXhnVn6Nzsp4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=V+jqy59rQeMHw2lfditLd1EtNRfILM+OBZWLMlHJC/7PjINzDrEgjuRGTWYsRaE20k4StEQcDnWiQZ74Z1FfhGBk3qNK4REQ3F5Vt0e1dl6zGbs6AMJol2XxrFsnw7ERmTxmbidleJzTSEqlEBOCoXG3VwWOFVXhn0JoUT+3p0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RfVfYm+K; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tzmOPzlc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 60BD9C4CEF8;
-	Wed,  4 Jun 2025 02:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749005880;
-	bh=fYjZRivWn2Fn+oWmzNXQqN7xuN63eEwOfSVBHQpA9yc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=tzmOPzlcgHGjZGee02gOEJaooaeiPs6Hq2uTgVrRFWafpP9RNER3zkljIebv6FXa+
-	 hTZBI6iBod0WT/TKZ706Yrggh57ak3c4oKk3Ht6d4xA4Xi7FhVKoMsEqnSokqq/ZGB
-	 xXxiqhYOtAavbpQE6eBTb7WH7iNVWnellAU088j5ZL4LXbaUCJkBg6p9pdp+cKw92v
-	 jasip2nA3BEg7RIFwBqIbO/024UCyV7JlAN5FrRzhGu3LjZMaGkPl8qnQoZc7Iyz+M
-	 hn5BAxZAUlN4qMgGkl+4zHr3q7VqP5RfbPizwkr0Dl354YkKH8U7Q3jPvAidLEk/Cx
-	 35AJUACPOtEGQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55682C61CE7;
-	Wed,  4 Jun 2025 02:58:00 +0000 (UTC)
-From: Mingcong Bai via B4 Relay <devnull+jeffbai.aosc.io@kernel.org>
-Date: Wed, 04 Jun 2025 10:57:59 +0800
-Subject: [PATCH v2 5/5] drm/xe/query: use PAGE_SIZE as the minimum page
- alignment
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfVfYm+K"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32925727810so55703061fa.0;
+        Tue, 03 Jun 2025 19:59:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749005963; x=1749610763; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rt+D3Uf3eUUD4HW5vfHTNtXXx2j8DsAepkcRUcCnZqM=;
+        b=RfVfYm+KQyOu7kVFxgwTYXRanrRAp836XE07K6k8r8gy86XBSQTkfZljPJbQYcplR7
+         7/swiIDqY9yLl+kr+W3MKyfm2LOFM1TzsTaIN25ZiQX4RXvC4H69FskffeM5v96CkaFk
+         6MOoustvJNLiDr4lYpIfKKE2rUtE41SMi/sSZWk7aQYNvM8TtKh46lx7DZeMJHGKLbPF
+         T2TT6Xn9/Kff4o/7RExFrF0Knatt/0LWUh0/vpNsvQo8W/nNm1HeQgTjLJ/H+17mDFil
+         N62EidjBo8osHqU/90gFnSM7zCbewIbqBumOZoz0FTRd1Wi+ZyEog2guD4JhwC+q4MQn
+         tLxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749005963; x=1749610763;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rt+D3Uf3eUUD4HW5vfHTNtXXx2j8DsAepkcRUcCnZqM=;
+        b=a3PFRRWfNJgAnnMic9vPr32MFqMpy0HmBAXzW5ez8Y5pFZW6nZ7a87hOD8283uG6bi
+         ZbOnDKF89g62bSZ4D0fEALCqjNMAztzurDqsxVj02aI+w79bVcS4dnjnKzZ0Ci+m7jn9
+         WTk0V1ilaMmijQV4Elum62aW5ANDllqQg4Aj6bwDdBzo28gNBqSDkM9vrOuBR/J/9Kio
+         CG++F8wt+9JYm/Ehx0CY8qq6VAb/U4xNdBslqjHcK/cozrNW2LoA49q6aGHrMYFHMqb9
+         UGL4dzw8G3jbkQOnUizCf7uGgXIow6ZCEXF7HHmlstpYqy81JcbeFSOeYJhL4GESsJ7d
+         iPVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWil84wrJODySdXRC2klcZa0j6UsoEBW49zpe6p5aGzx5mRQHWiPh/jYI6u3HvOwHBWmCc/2eHPdAdu19A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxpkR0/zStfH8oEYMD4r0VuDZsPaEgAg3tNaT3eyLi3PZ9Rx6E
+	PGtzpU8dzvQCBv0EyNTJOp7Z1u77OhRI90IUPHqh1lkP/Q1nPcu3dR0TsvHuzW6i8SDqiR0Fy5O
+	qY0KeqxkHqsZuc3OChiQ7Xl1DvGJatfU4ubgi
+X-Gm-Gg: ASbGncupaoF8t8rbVRdNOM+ErAZZxgIVyAs3ofc5Pa8JTj+7ehp3d98gU7djBOtvGIr
+	MyhLGEeg9Gy/ZO5H2XG6EsdIzFqMs8DUir+IQ2zaRoCcbBYP0XSkXD5FBHYMDLpPhDoYGs6ITvp
+	ZD+x4x4THIYH/QfkWGrBsPhZN0aWuerHN2bvt1n4q7JFBwHw==
+X-Google-Smtp-Source: AGHT+IGpADhxpISd06wLlevlEELZzMgnCLmJDRqqFzQ5oL0RY4VTWQo9W0dhgghHlRtrb6AuTYX9Hap9KM2OapJnhvA=
+X-Received: by 2002:a2e:8a87:0:b0:32a:6ccf:a48b with SMTP id
+ 38308e7fff4ca-32ac7258d5bmr2066341fa.38.1749005962528; Tue, 03 Jun 2025
+ 19:59:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250604-upstream-xe-non-4k-v2-v2-5-ce7905da7b08@aosc.io>
-References: <20250604-upstream-xe-non-4k-v2-v2-0-ce7905da7b08@aosc.io>
-In-Reply-To: <20250604-upstream-xe-non-4k-v2-v2-0-ce7905da7b08@aosc.io>
-To: Lucas De Marchi <lucas.demarchi@intel.com>, 
- =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Francois Dugast <francois.dugast@intel.com>, 
- =?utf-8?q?Zbigniew_Kempczy=C5=84ski?= <zbigniew.kempczynski@intel.com>, 
- =?utf-8?q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>, 
- Mauro Carvalho Chehab <mauro.chehab@linux.intel.com>, 
- Matthew Brost <matthew.brost@intel.com>, 
- Zhanjun Dong <zhanjun.dong@intel.com>, 
- Matt Roper <matthew.d.roper@intel.com>, 
- Alan Previn <alan.previn.teres.alexis@intel.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Mateusz Naklicki <mateusz.naklicki@intel.com>
-Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Kexy Biscuit <kexybiscuit@aosc.io>, Shang Yatsen <429839446@qq.com>, 
- Mingcong Bai <jeffbai@aosc.io>, Wenbin Fang <fangwenbin@vip.qq.com>, 
- Haien Liang <27873200@qq.com>, Jianfeng Liu <liujianfeng1994@gmail.com>, 
- Shirong Liu <lsr1024@qq.com>, Haofeng Wu <s2600cw2@126.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749005878; l=3034;
- i=jeffbai@aosc.io; s=20250604; h=from:subject:message-id;
- bh=gWL8RWOcZ+T5Uids7FBARXCOIx0PC8BeNHiC9X6HMCs=;
- b=SYj4MCax89jyQea100fjLf4kZD36vhAK0FGEdfap8OjkmEqmBIJy1U6DSXpbD8+A6LNaB4VOa
- HFLJ8fi3pqUCLJqcyuS8rHEFY0aR/tgQFeec9DKh2shI8/4m+0UoZyq
-X-Developer-Key: i=jeffbai@aosc.io; a=ed25519;
- pk=MJdgklflDF+Xz9x2Lp+ogEnEyk8HRosMGiqLgWbFctY=
-X-Endpoint-Received: by B4 Relay for jeffbai@aosc.io/20250604 with
- auth_id=422
-X-Original-From: Mingcong Bai <jeffbai@aosc.io>
-Reply-To: jeffbai@aosc.io
+From: Luka <luka.2016.cs@gmail.com>
+Date: Wed, 4 Jun 2025 10:59:10 +0800
+X-Gm-Features: AX0GCFtnwCBZSk-d3y4Qa__7ovIgMlNq_oO-1gBs3-9Di2fZqeckIHPco1_CooE
+Message-ID: <CALm_T+1JyGaNwvZGfue7hDt7q4pk1wdgC6R47GyCZ3exLBSqwg@mail.gmail.com>
+Subject: [Bug] soft lockup in blk_rq_timed_out_timer in Linux v6.12
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Mingcong Bai <jeffbai@aosc.io>
+Dear Kernel Maintainers,
 
-As this component hooks into userspace API, it should be assumed that it
-will play well with non-4KiB/64KiB pages.
+I am writing to report a potential vulnerability identified in the
+upstream Linux Kernel version v6.12, corresponding to the following
+commit in the mainline repository:
 
-Use `PAGE_SIZE' as the final reference for page alignment instead.
+Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
 
-Cc: stable@vger.kernel.org
-Fixes: dd08ebf6c352 ("drm/xe: Introduce a new DRM driver for Intel GPUs")
-Fixes: 801989b08aff ("drm/xe/uapi: Make constant comments visible in kernel doc")
-Tested-by: Mingcong Bai <jeffbai@aosc.io>
-Tested-by: Wenbin Fang <fangwenbin@vip.qq.com>
-Tested-by: Haien Liang <27873200@qq.com>
-Tested-by: Jianfeng Liu <liujianfeng1994@gmail.com>
-Tested-by: Shirong Liu <lsr1024@qq.com>
-Tested-by: Haofeng Wu <s2600cw2@126.com>
-Link: https://github.com/FanFansfan/loongson-linux/commit/22c55ab3931c32410a077b3ddb6dca3f28223360
-Link: https://t.me/c/1109254909/768552
-Co-developed-by: Shang Yatsen <429839446@qq.com>
-Signed-off-by: Shang Yatsen <429839446@qq.com>
-Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
----
- drivers/gpu/drm/xe/xe_query.c | 2 +-
- include/uapi/drm/xe_drm.h     | 7 +++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+This issue was discovered during the testing of the Android 16 AOSP
+kernel, which is based on Linux kernel version 6.12, specifically from
+the AOSP kernel branch:
 
-diff --git a/drivers/gpu/drm/xe/xe_query.c b/drivers/gpu/drm/xe/xe_query.c
-index 2dbf4066d86ff225eee002d352e1233c8d9519b9..fe94a7781fa04fb277d5cc8b973b145293d3d066 100644
---- a/drivers/gpu/drm/xe/xe_query.c
-+++ b/drivers/gpu/drm/xe/xe_query.c
-@@ -346,7 +346,7 @@ static int query_config(struct xe_device *xe, struct drm_xe_device_query *query)
- 	config->info[DRM_XE_QUERY_CONFIG_FLAGS] |=
- 			DRM_XE_QUERY_CONFIG_FLAG_HAS_LOW_LATENCY;
- 	config->info[DRM_XE_QUERY_CONFIG_MIN_ALIGNMENT] =
--		xe->info.vram_flags & XE_VRAM_FLAGS_NEED64K ? SZ_64K : SZ_4K;
-+		xe->info.vram_flags & XE_VRAM_FLAGS_NEED64K ? SZ_64K : PAGE_SIZE;
- 	config->info[DRM_XE_QUERY_CONFIG_VA_BITS] = xe->info.va_bits;
- 	config->info[DRM_XE_QUERY_CONFIG_MAX_EXEC_QUEUE_PRIORITY] =
- 		xe_exec_queue_device_get_max_priority(xe);
-diff --git a/include/uapi/drm/xe_drm.h b/include/uapi/drm/xe_drm.h
-index 9c08738c3b918ee387f51a68ba080057c6d5716f..f92eb8c3317a09baad4550024bb3beea02850010 100644
---- a/include/uapi/drm/xe_drm.h
-+++ b/include/uapi/drm/xe_drm.h
-@@ -397,8 +397,11 @@ struct drm_xe_query_mem_regions {
-  *      has low latency hint support
-  *    - %DRM_XE_QUERY_CONFIG_FLAG_HAS_CPU_ADDR_MIRROR - Flag is set if the
-  *      device has CPU address mirroring support
-- *  - %DRM_XE_QUERY_CONFIG_MIN_ALIGNMENT - Minimal memory alignment
-- *    required by this device, typically SZ_4K or SZ_64K
-+ *  - %DRM_XE_QUERY_CONFIG_MIN_ALIGNMENT - Minimal memory alignment required
-+ *    by this device and the CPU. The minimum page size for the device is
-+ *    usually SZ_4K or SZ_64K, while for the CPU, it is PAGE_SIZE. This value
-+ *    is calculated by max(min_gpu_page_size, PAGE_SIZE). This alignment is
-+ *    enforced on buffer object allocations and VM binds.
-  *  - %DRM_XE_QUERY_CONFIG_VA_BITS - Maximum bits of a virtual address
-  *  - %DRM_XE_QUERY_CONFIG_MAX_EXEC_QUEUE_PRIORITY - Value of the highest
-  *    available exec queue priority
+AOSP kernel branch: android16-6.12
+Manifest path: kernel/common.git
+Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
 
--- 
-2.49.0
+Although this kernel branch is used in Android 16 development, its
+base is aligned with the upstream Linux v6.12 release. I observed this
+issue while conducting stability and fuzzing tests on the Android 16
+platform and identified that the root cause lies in the upstream
+codebase.
 
+Bug Location:  blk_rq_timed_out_timer+0x40/0x58 block/blk-core.c:392
 
+Bug Report: https://hastebin.com/share/luqeturafo.bash
+
+Entire Log: https://hastebin.com/share/oxihuwisek.perl
+
+Thank you very much for your time and attention. I sincerely apologize
+that I am currently unable to provide a reproducer for this issue.
+However, I am actively working on reproducing the problem, and I will
+make sure to share any findings or reproducing steps with you as soon
+as they are available.
+
+I greatly appreciate your efforts in maintaining the Linux kernel and
+your attention to this matter.
+
+Best regards,
+Luka
