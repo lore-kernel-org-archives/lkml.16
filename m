@@ -1,136 +1,194 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525CF132122
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 17:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F2419DF8D
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 17:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749058275; cv=none; b=QCF/czZEB1UfxWkZWkB3FamHBMqF/yAwpy2XGQ3tdHXRbEbI3lI2iPT2SwkvWKEs3KgXT/gwx18Sq1cymZWJslX65ATr/LXQcQNPEEI+v7f/JYbZJvFvrlUuCC5fXdlumf1zaVFspXjWc3drSsbUL9cCFXJ1h35qZZ+9L/nREU8=
+	t=1749058305; cv=none; b=bw32N2RWY2wR85ELEAhyAY3Ea3mu+Rs70dPMb0hAEMC0G8OPNYEXc9BldvShKKCDf1FhWIAfsKgm3fK51pSQ89G61wFnGEpNWRPUeIToIk1Vdkbs2YKHRJchXk+xnoh0+by3304j/aLHFPB9+YyYafnurQSw1VxqK23JzJdPzZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749058275; c=relaxed/simple;
-	bh=q3sM5ckkqu3S1pmAwhJML99ONUvr7j4/sHrWjEGrst4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y1N8lHD+gzbyn2hkQbdfjO6ZWH/6oTzQN3/uWgmo3p8eQSjWGpD0XaEslk3s93aE9EEPFJKJKyENAW+YTtwn8UbAoxByNQf4c789hc5f8JKca928RXhm63BojwRWOJTAW0GhUhpRBq7YHZ9i++rYFT+Ru10mg8DwSpfTShAGCkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JzhMZbfn; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749058305; c=relaxed/simple;
+	bh=MWXRvUe9Er4znH/AsHQZLrU5RXMXc/v8wZVtsMhvu7c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ApwWL8Fj4TpkshQoDv3CngkyPtk7Pw/G1AzyPWmnpx86XPi69B8VMiKJddAMwB2BfNeCW1RUMW+Is9YORG6dZ6rGXal4nwgSSAKHzLJgy+9rRzw9E/tMB6cEGbdMaEOIHxrN9pyTfo16DptPPABGz5uwvUHRZDNrwaSlUlsPFlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WJQ/VWxP; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JzhMZbfn"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22c336fcdaaso718635ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 10:31:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749058273; x=1749663073; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xOObWxm0mCeJEpZwglb2CEVZr9rm6jEf/VR9UY9bUP8=;
-        b=JzhMZbfnuYM+p039M/njIQ0ic2qUG/QZfO9DZZS7yP0TmyXg7knaNKGmUC11M4ZWMM
-         iMb7psbuW29PNZR2Ekai5Y4wLJ3qCjI2dDD/i5IR5PknNt3uW7wRk4cu/GXz/Uxbm01k
-         qK8QW0dKDejMbE1/FUNJmTDcEInqhO0unPHfkjvILPAwL2ktLpvxhQekeRSulqKWAzaO
-         1dyKiQk1ah5ULVN6LhGsQdFpX+Gn0arGYCCSfaevyO4W1NFUARfD3GR+1mgoVNFRLOeO
-         7sQWg6dJjTGI54eFoo1aZSp5zGMa93ZgA0eDnGTcl+Us/FZo0evtpcGY+oRQLVllNXD6
-         M1ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749058273; x=1749663073;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xOObWxm0mCeJEpZwglb2CEVZr9rm6jEf/VR9UY9bUP8=;
-        b=OYe86UD3v/3Di+sOO2lIksC1l7M7Hfm9BZfv7EiDG+zc3kenc32vhaeR/dYcxHnMJj
-         4ARssTTcKAJksOtqXi84A6N31jPGN8Uk4v3FGKU9YTIYzTr1ihlmwB2GGl/UPub30Lqg
-         WSqStJf8yBA2ghnmxdmnpcCIQyxwT7WAkCX3Gkq1ppFfZaJLyNWf7X2M2dk95gwdF64T
-         8C6AuD5S+lUdnb0ZQWZiIoRea0OIjI+9itnofAfqajzKiDAu/aVUzxu3BkEE1yOon2Ue
-         V3BveqW3eT04kKoXegEUwCyE5d84Lwh3rI6mt2g8TkmTJknXeerLXyV62qbCBrH8lUGi
-         /gqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+k9TFlcw4X6Bk1Dw8nZmvaWkryYBMgbNP37A1s5XRm5/iEHQiKsdfCPONyQxQwCfO73MrE5KAyazMF40=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2Hgq63oXpEd7fuBkDID8fCwsmEk4SisyuZmLVmrNuuMPJc2uk
-	uGO6UVJWmlRSbuqFjrV/lRKDe1Cwg81mLWQEaRd+k5ivOBMuobj6epkDzzeBJM92iA==
-X-Gm-Gg: ASbGncutWLoXy3U3EL7w1GFBAtFwSfwti2ZsPop5pl4oUJ20kdCHxSE0j7LmlrG4edG
-	HtegCbtDNbMyhaSxUwywedT3Ye2EnY68vxW0BHG6SIQhCQT48K/ijcTAod3rh5+dhweDWetRsQ7
-	zWNMkhtoGdIusywm/Aqpo0sL1igZ4zJeAfHxLQp5Bm9wEKb/oCCuuUC/fGK6eS2DG3C1eRt8jsN
-	jVEqLIX5CgAvrMaJ2BXZhmgedaUZ9UOlPHu0yY9XdwK7jCkIEBWZvgZgU0hFjn5KZXeqK/hqHO7
-	GaaGkFmud6uaYeCnZ6DJfhBOwcn9+9JA6a3yD0hB+GSgZmdCHIN0HjaQPIb1NA==
-X-Google-Smtp-Source: AGHT+IGIJbSx2qDc2q2Gt3qbCZCgqmWW4FPwxtFTdbgDTBwo3IdO7XqHuYRl/uF5BzOmzUrf40UoSQ==
-X-Received: by 2002:a17:903:1c9:b0:235:6e7:8df2 with SMTP id d9443c01a7336-235e11fcb67mr57141715ad.41.1749058273586;
-        Wed, 04 Jun 2025 10:31:13 -0700 (PDT)
-Received: from thinkpad ([120.60.60.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf50c9sm106668185ad.162.2025.06.04.10.31.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 10:31:13 -0700 (PDT)
-Date: Wed, 4 Jun 2025 23:01:02 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, 
-	linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: r8a779g3: Describe split
- PCIe clock on V4H Sparrow Hawk
-Message-ID: <egtsvxsfc5c2s4hrwucsqk3s5dv7xsi6ghrnf6jd3mvf3zvskb@z7hvehbd33t5>
-References: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
- <20250530225504.55042-3-marek.vasut+renesas@mailbox.org>
- <CAMuHMdUVYzaUyP=OUOST8SK66_BpubOh0WCXcaVWBy=RxBrquA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WJQ/VWxP"
+Message-ID: <9a2ba0ad-b34d-42f8-89a6-d9a44f007bdc@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749058290;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cblBX32hBSMGN1bRDDUz9lTIgViFoNWr1i8Qx9BOzE8=;
+	b=WJQ/VWxP668jiRTd22ItARHZuzMoQhmaB3SO9vl1+6W071uWHgtq0WoRfz95O3x72EkcxN
+	nK2Fw6Mj7kwzdJRBT7BaXuujz/MetlaBuXdFjGnGGXFy27OLanDhT1Kr6hd6AZ1ws9O/2i
+	NQA4CGWnOHunrOES5pTIOxAnVt98148=
+Date: Wed, 4 Jun 2025 10:31:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [Question] attributes encoding in BTF
+To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Florent Revest <revest@chromium.org>,
+ Bastien Curutchet <bastien.curutchet@bootlin.com>, ebpf@linuxfoundation.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ dwarves@vger.kernel.org
+References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
+ <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
+ <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
+ <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+ <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
+ <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
+ <DADMLIVHMSSO.3AXSI5216WCT6@bootlin.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ihor Solodrai <ihor.solodrai@linux.dev>
+In-Reply-To: <DADMLIVHMSSO.3AXSI5216WCT6@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdUVYzaUyP=OUOST8SK66_BpubOh0WCXcaVWBy=RxBrquA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 04, 2025 at 11:24:17AM +0200, Geert Uytterhoeven wrote:
-> Hi Marek,
+On 6/4/25 2:02 AM, Alexis LothorÃ© wrote:
+> Hi all,
+> a simpler version of this series has been merged, and so I am now taking a
+> look at the issue I have put aside in the merged version: dealing with more
+> specific data layout for arguments passed on stack. For example, a function
+> can pass small structs on stack, but this need special care when generating
+> the corresponding bpf trampolines. Those structs have specific alignment
+> specified by the target ABI, but it can also be altered with attributes
+> packing the structure or modifying the alignment.
 > 
-> On Sat, 31 May 2025 at 00:55, Marek Vasut
-> <marek.vasut+renesas@mailbox.org> wrote:
-> > The V4H Sparrow Hawk board supplies PCIe controller input clock and PCIe
-> > bus clock from separate outputs of Renesas 9FGV0441 clock generator chip.
-> > Describe this split bus configuration in the board DT. The topology looks
-> > as follows:
-> >
-> >  ____________                    _____________
-> > | R-Car PCIe |                  | PCIe device |
-> > |            |                  |             |
-> > |    PCIe RX<|==================|>PCIe TX     |
-> > |    PCIe TX<|==================|>PCIe RX     |
-> > |            |                  |             |
-> > |   PCIe CLK<|======..  ..======|>PCIe CLK    |
-> > '------------'      ||  ||      '-------------'
-> >                     ||  ||
-> >  ____________       ||  ||
-> > |  9FGV0441  |      ||  ||
-> > |            |      ||  ||
-> > |   CLK DIF0<|======''  ||
-> > |   CLK DIF1<|==========''
-> > |   CLK DIF2<|
-> > |   CLK DIF3<|
-> > '------------'
-> >
-> > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> Some platforms already support structs on stack (see
+> tracing_struct_many_args test), but as discussed earlier, those may suffer
+> from the same kind of issue mentioned above.
 > 
-> Thanks for your patch!
+> On Wed Apr 23, 2025 at 9:24 PM CEST, Alexis Lothoré wrote:
+>> Hi Andrii,
+>>
+>> On Wed Apr 23, 2025 at 7:15 PM CEST, Andrii Nakryiko wrote:
+>>> On Thu, Apr 17, 2025 at 12:14 AM Alexis Lothoré
+>>> <alexis.lothore@bootlin.com> wrote:
+>>>>
+>>>> Hi Andrii,
+>>>>
+>>>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
 > 
-> > V2: Use pciec0_rp/pciec1_rp phandles to refer to root port moved to core r8a779g0.dtsi
+> [...]
 > 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>> I'd suggest looking at btf__align_of() in libbpf (tools/lib/bpf/btf.c)
+>>> to see how we calculate alignment there. It seems to work decently
+>>> enough. It won't cover any arch-specific extra rules like double
+>>> needing 16-byte alignment (I vaguely remember something like that for
+>>> some architectures, but I might be misremembering), or anything
+>>> similar. It also won't detect (I don't think it's possible without
+>>> DWARF) artificially increased alignment with attribute((aligned(N))).
+>>
+>> Thanks for the pointer, I'll take a look at it. The more we discuss this
+>> series, the less member size sounds relevant for what I'm trying to achieve
+>> here.
+>>
+>> Following Xu's comments, I have been thinking about how I could detect the
+>> custom alignments and packing on structures, and I was wondering if I could
+>> somehow benefit from __attribute__ encoding in BTF info ([1]). But
+>> following your hint, I also see some btf_is_struct_packed() in
+>> tools/lib/bpf/btf_dump.c that could help. I'll dig this further and see if
+>> I can manage to make something work with all of this.
 > 
-> I understand this has a hard dependency on [PATCH v2 1/3] (and on
-> enabling CONFIG_PCI_PWRCTRL_SLOT), so I cannot apply this before that
-> patch is upstream?
+> Andrii's comment above illustrates well my current issue: when functions
+> pass arguments on stack, we are missing info for some of them to correctly
+> build trampolines, especially for struct, which can have attributes like
+> __attribute__((packed)) or __attribute__((align(x))). [1] seems to be a
+> recent solution implemented for BTF to cover this need. IIUC it encodes any
+> arbitratry attribute affecting a data type or function, so if I have some
+> struct like this one in my kernel or a module:
+> 
+> struct foo {
+>      short b
+>      int a;
+> } __packed;
+> 
+> I would expect the corresponding BTF data to have some BTF_KIND_DECL_TAG
+> describing the "packed" attribute for the corresponding structure, but I
+> fail to find any of those when running:
+> 
+> $ bpftool btf dump file vmlinux format raw
+> 
+> In there I see some DECL_TAG but those are mostly 'bpf_kfunc', I see not
+> arbitrary attribute like 'packed' or 'aligned(x)'.
+> 
+> What I really need to do in the end is to be able to parse those alignments
+> attributes info in the kernel at runtime when generating trampolines, but I
+> hoped to be able to see them with bpftool first to validate the concept.
+> 
+> I started taking a look further at this and stumbled upon [2] in which Alan
+> gives many more details about the feature, so I did the following checks:
+> - kernel version 6.15.0-rc4 from bpf-next_base: it contains the updated
+>    Makefile.btf calling pahole with `--btf_features=attributes`
+> - pahole v1.30
+>    $ pahole --supported_btf_features
+>    encode_force,var,float,decl_tag,type_tag,enum64,optimized_func,consistent_func,decl_tag_kfuncs,reproducible_build,distilled_base,global_var,attributes
+>    This pahole comes from my distro pkg manager, but I have also done the
+>    same test with a freshly built pahole, while taking care of pulling the
+>    libbpf submodule.
+> - bpftool v7.6.0
+>      bpftool v7.6.0
+>      using libbpf v1.6
+>      features: llvm, skeletons
+> 
+> Could I be missing something obvious ? Or did I misunderstand the actual
+> attribute encoding feature ?
+
+Hi Alexis.
+
+The changes recently landed in pahole and libbpf re attributes had a 
+very narrow goal: passing through particular attributes for some BPF 
+kfuncs from the kernel source to vmlinux.h
+
+BTF now has a way of encoding any attribute (as opposed to only bpf 
+type/decl tags) by setting type/decl tag kind flag [1]. So it is 
+possible to represent attributes like packed and aligned in BTF.
+
+However, the BTF tags need to be generated by something, in case of 
+vmlinux by pahole. Pahole generates BTF by parsing DWARF. And, as far as 
+I understand, attributes are not (can not be?) represented in DWARF in a 
+generic way, it really depends on specifics of the attribute.
+
+In order to support packed/aligned, pahole needs to know how to figure 
+them out from DWARF input and add the tags to BTF. And this does not 
+happen right now, which is why you don't see anything in bpftool output.
+
+[1] 
+https://lore.kernel.org/bpf/20250130201239.1429648-1-ihor.solodrai@linux.dev/
+
+> 
+> Thanks,
+> 
+> Alexis
+> 
+> [1] https://lore.kernel.org/bpf/20250130201239.1429648-1-ihor.solodrai@linux.dev/
+> [2] https://lore.kernel.org/all/CA+icZUW31vpS=R3zM6G4FMkzuiQovqtd+e-8ihwsK_A-QtSSYg@mail.gmail.com/
 > 
 
-TBH, this patch is describing the binding properly. So even though the driver
-change is necessary to make the device functional, I don't see it as a hard
-dependency. But since people care about functionality, if both driver and DTS
-changes go into the same release, it should be fine IMO.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
