@@ -1,43 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2231827713;
-	Wed,  4 Jun 2025 02:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF85B256D;
+	Wed,  4 Jun 2025 02:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749004603; cv=none; b=uNIvUW9gujAb86ESLjjUI75NkMY0KgQDV/sAErAorPGRjql9XJ26hZjkTFdrKN4xvWDuRNGnaspLuULSev62e4gIYBY1yczOPyCcmsNirvwIBJKlXDX29MHdvdmPHW1qNcSchvsXFlp2JLEcg+a84BIx/jSxZaS/ez3ECa5LDX0=
+	t=1749004706; cv=none; b=RDKhKB0WWxXPK9YqA4hu8eUQkNSTQGYyNedk6Qy+UTFAioXbQ6m2Tjhpslbwi1zWO9G0dM7+AkiTNTC0T+E5D+hxUbxuhGrubcTzHW6F88Y5WYT7j3ICVVt1//sHbrIsG1fc/Z0M/Okml5MZYy6UzE9ZGkeTdxB+47j8t/BIOQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749004603; c=relaxed/simple;
-	bh=IGuNb1E0mXd8jgBnyXrO0bwJQS/mqrkSYujfMnWNrNM=;
+	s=arc-20240116; t=1749004706; c=relaxed/simple;
+	bh=5LknMU9rKRcy1V8M/qjdNcpnPrDlru7bTCB1snpWuss=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=K4Yej6VeQ49B3jJQEC1fJPXHdb+aG4h3QE82brfNrSnDqoIvwgfC5hkUCfHuNlhH++tNH4Tk7RMhCinSeUtqghbopLUMRg1avZdYHmpA3XkODH7aLKI133/4kPSw9p2pufsLEZOy8/asGe7ZPtmQIHH+GqSf8NLoUDp5qdM5MBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=a7jqy7Wr; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=HQn7qMVSoU/i3w633m5910n/Ro2NybS5uYfUxOSyqPxVitiDlFyHS87HbxdfBpt05kJsvMzILLP3HENwQ05clK8VPB6S5DUqiZ9qk7do8QPoujkDeOr4C7netOeLBD2ZAi758h4Y6sFVlSf6YBdaaFKR05DhYsH8D3ek2Caflas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cVDEXVN4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="a7jqy7Wr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E32AC4CEED;
-	Wed,  4 Jun 2025 02:36:42 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cVDEXVN4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89BABC4CEEF;
+	Wed,  4 Jun 2025 02:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749004602;
-	bh=IGuNb1E0mXd8jgBnyXrO0bwJQS/mqrkSYujfMnWNrNM=;
+	s=korg; t=1749004705;
+	bh=5LknMU9rKRcy1V8M/qjdNcpnPrDlru7bTCB1snpWuss=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=a7jqy7Wr7DpKsld7VzW16igjr/MD5vDgfNYkJBWO6MSWHiGJEMTS8M6l8hDoFzBJm
-	 kwGVrWkmB8EFcaScnDRaEwfEVlhQqWqcp3Pux3uxvibB2nxuLjsxXfct7elaXwZY/P
-	 wi1cYrfbjCA+WzA5zVX/M1yRPGjP32Dt/NT0InmM=
-Date: Tue, 3 Jun 2025 19:36:41 -0700
+	b=cVDEXVN4YyJdlsmQA7dMICujsUpBPH9NR59vj/MT7X38O3W19IporL5kJnoQbOUHA
+	 77NxCWDe7rZ7oSLnFLw+ZRQwr7FrU1jVQXkj2y7U8Vf04ON3mgM3kZjN+s/VbvWKTJ
+	 s0oSTLtTonnbwNwB6PH7Uo6bXB5WUapfie4/rQ74=
+Date: Tue, 3 Jun 2025 19:38:24 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
-To: Pu Lehui <pulehui@huaweicloud.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, mhiramat@kernel.org,
- oleg@redhat.com, peterz@infradead.org, Liam.Howlett@oracle.com,
- vbabka@suse.cz, jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, pulehui@huawei.com
-Subject: Re: [PATCH v1 3/4] selftests/mm: Extract read_sysfs and write_sysfs
- into vm_util
-Message-Id: <20250603193641.f24bf13623565d2b02ae86ce@linux-foundation.org>
-In-Reply-To: <8ea3ec70-dbe7-424f-b07f-add7c1cb1852@huaweicloud.com>
-References: <20250529155650.4017699-1-pulehui@huaweicloud.com>
-	<20250529155650.4017699-4-pulehui@huaweicloud.com>
-	<f1dfdffa-23b3-4d4a-8912-3a35e65963e4@lucifer.local>
-	<8ea3ec70-dbe7-424f-b07f-add7c1cb1852@huaweicloud.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, Krzysztof
+ Karas <krzysztof.karas@intel.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Qasim Ijaz <qasdev00@gmail.com>, Nathan Chancellor <nathan@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+ <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH v13 0/9] ref_tracker: add ability to register a debugfs
+ file for a ref_tracker_dir
+Message-Id: <20250603193824.f0ba97cd26e7ed4152a91921@linux-foundation.org>
+In-Reply-To: <20250603192949.3a7fc085@kernel.org>
+References: <20250603-reftrack-dbgfs-v13-0-7b2a425019d8@kernel.org>
+	<20250603192949.3a7fc085@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,20 +56,17 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 3 Jun 2025 15:17:49 +0800 Pu Lehui <pulehui@huaweicloud.com> wrote:
+On Tue, 3 Jun 2025 19:29:49 -0700 Jakub Kicinski <kuba@kernel.org> wrote:
 
+> > I think the i915 driver is doing something it shouldn't with these
+> > objects. They seem to be initialized more than once, which could lead
+> > to leaked ref_tracker objects. It would be good for one of the i915
+> > maintainers to comment on whether this is a real problem.
 > 
-> 
-> > Not a big deal though, perhaps a bit out of scope here, more of a nice-to-have.
-> 
-> ...
->
-> Yep, we can do it more. But, actually, I am not sure about the merge 
-> process of mm module. Do I need to resend the whole series or just the 
-> diff below?
-> 
+> I still see the fs crashes:
+> https://netdev-3.bots.linux.dev/vmksft-packetdrill-dbg/results/149560/2-tcp-slow-start-slow-start-app-limited-pkt/stderr
+> I'll hide this series from patchwork for now. We will pull from Linus
+> on Thu, I'll reactivate it and let's see if the problem was already
+> fixed.
 
-A little diff like this is great, although this one didn't apply for me.
-
-But if we're to get this series into 6.16-rc1, now is not the time to
-be changing it.  Please send out a formal patch after -rc1?
+Ah.  I dropped the copy from mm.git.
