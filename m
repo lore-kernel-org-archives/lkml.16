@@ -1,100 +1,130 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3D61DFDBB;
-	Wed,  4 Jun 2025 16:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0087C1487F6;
+	Wed,  4 Jun 2025 16:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749055477; cv=none; b=Jm8IFMltM5RFbgKfAuOx1eXHxOsbLxam+PbJqV6wD6Kdy9nhEPC1zU0qjZrMoXjgJD/5VaxyFaHYDLoPLjRHib/uH5y8yIKWYiGhqhpyrxY+Zai6tqHoXt0v9lvIUzjvlX3mZJTdpt+6+35A1zO7U65d9/U07myLWNY8RwpqF6s=
+	t=1749055747; cv=none; b=PaKPpL+dF8Ul4GWFClyuvoT5uE50KMctcbslEXuXobWJtoZmJjJKPtVjTKlL1HYO/iEVFajmb3AquQsOgFX1YC5tHWy85JdJnWf+Gm4B/T3wE+K0mJW1eOS10nJfJTT/NBviS1b63jSQQGGbtN+X2XmA4+TwAnnZ+azNbMykJHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749055477; c=relaxed/simple;
-	bh=wFMCMbJITuoovSp6CQHXf/DpRmcuSqQ1RVhHc0lV4rE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=szGbH43v4PUnG4/Rus8/InPJpxV4DNA6i/Tla9U9vUEgBs/cQYzElMscIdOKoIUEWu1txEC4LGYBa2SeiqIPROdi0QHQ6yQjxp1HHG/++XQAqVzYona05X+fFVyJXk2UrYLSSiE/14KNvvg73HHLXvFcxfIfDptTttnpyscWwoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7tMonCT; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749055747; c=relaxed/simple;
+	bh=n11zh9YiiUxBI/UWsmUihybLUSm6s7qq0XhQ8nMz0RY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XbAAuzjB2oTelcLy/PlfYOD8Z5z1chrWU90YRvKFAqHmwVTF3lD+dZXIJAN3hZyNsSrr9U7DgFuWovUver1iHlv4cYJNXHJgFjkAqSmnkIRzwVQXuhtoB3+T76j9A9toCq2SJ1lR/C7dENMAGR76OPeA4Z+CBTFGMzKbcj6Uwhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nNoswRFS; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7tMonCT"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5533302b49bso8654028e87.2;
-        Wed, 04 Jun 2025 09:44:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749055474; x=1749660274; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wFMCMbJITuoovSp6CQHXf/DpRmcuSqQ1RVhHc0lV4rE=;
-        b=C7tMonCTwoD0eOI8Yd1pSJVvuRXz0eGiyC1b2idGozB/7yvgfcO9WW05YUWXk5RIxa
-         bKfyvARQ/ZobkF1HZYSmm/EWe5kvj7csArrn5pYaT4Y1tKxI6JUGcMBGKn3Ux1VSBja2
-         N+WBJ1O/x9E7QOX5enDecFFcAb7g83RJTxC5/I7szEGj3zr1K6aL6qp7HTtY7pf60wTR
-         vHr5tHj4xAVE+UQUo/jyaGbd7LvOb1MwNaKp0/jaACMXmG1bCWsaVBtzUQpRTqCjTVLH
-         EmNFwAUDqi6XUM4ElJKTvFDd+nZRtV7/5cwUZyZrF6pyyhgeTjrLeppC///vEq8NVkKt
-         a5VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749055474; x=1749660274;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wFMCMbJITuoovSp6CQHXf/DpRmcuSqQ1RVhHc0lV4rE=;
-        b=iRtaRGaKkk28OMgJgtaQbSSqdWgnMlJiOSGDJ9FrwDjF8uTm1M2nQNN2szxpzx3RpE
-         VvyyZ7LhrPfID7NJ8q5hrx5p4yWvAv+lUWHyNFl9PV6fU5fs8QfE9cH/YpjqbRiAxohg
-         BZ921uuUoIaHm3gxQl0QRXLkkajD4q0xGdkwVMx/7bC8txWNdQRPDC5ktfHf9DgIZ7N2
-         wVAi70fBrzTRqKyKlJWUh1S2rFjHbhR3X1UO5jA7RG7wajVwqJvuIp85SP05t+x+Soge
-         naysqQbb2GRAAoPEMijLy7cfAPIDVUAxb8bf27FhFghHcNI/1MFPjh+LVLKpvoiIzwwF
-         3R6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUEgOBow22FWOVYgZzZyRzR2WMrRmTkPY43YbAw7fNIcYtXjlETAAeZwpQQw8/dEl9OT87OJE4HSZ1QPuw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycElDVqG/I6sjjfBz2xk9eb9WsLPHFfMA21g/Ud9A4jai0Gt2i
-	SAaLAY1vb5/PmrN8o4lT3CSUP28lbmhkcNlp5AbPiz+FgX1wjVqEI00iI4/VNi6nanF+R3DHeYt
-	CHKF0dzeM9qY+8fx0QkNQvr9yu8A7GinflEl3
-X-Gm-Gg: ASbGncvef4yL5JTuajuuC7J1ku3jum5OkWVlfYarx1Lk2LUwEqPPi3FfDVQ//fXmevZ
-	S5XKaizZTeCDhHqPOELfkLSSXvy0VljU70SnWMtl9ve2J2XBT/Obi9L3p8adB1Uyq0YHyvmWGhF
-	zbuRTc90k1l74BnR9jXaXbYFRfthA3DOYmrvjWplUhWculeWQ5EeGVhxDDo+ObVpGVdudUt5xxx
-	vSfFNqtuKXONA==
-X-Google-Smtp-Source: AGHT+IF/YsIUFahxFoeFKA3DR2RVxvuZILJjjOA/b6Zn6AHVPsWFoSWcKKxSdkTyVWeKMDIAuj3FRHVXkASKTjwKFFY=
-X-Received: by 2002:a05:6512:b86:b0:553:25b2:357d with SMTP id
- 2adb3069b0e04-55357bd6f7fmr943933e87.52.1749055473351; Wed, 04 Jun 2025
- 09:44:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nNoswRFS"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554Cd8Ev029660;
+	Wed, 4 Jun 2025 16:49:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=oUOEtN
+	vQ8pY/J5z+Im9aP1U/jEGj+Nn/6nZ08QyR1gg=; b=nNoswRFSofGj6jiH1f+Wp2
+	vpU6dQkl75KAOnoD25ItFzb3xLveZU5sXvlvwpeox6IbPqqn1a4+LWv+wu8TehmL
+	AbR4xbYWUMIGucF/A2v56j83WkcDcUx6tLQwyBpLKg6CkInm9KJqrf/3AxFzky+d
+	oLhTFxdHbsoYVY7a/zn9Lsby+yM9IrEHAgiXOlW6IfzP2BuJymMumlgmEjvMxOFu
+	YTGJHjWyxxIs35sq1T9b4yFhqJv2omSg+XAr9SI+BC6oY4UCLcypnQvz+FfzGAMa
+	ABXYtZrrOh/IbWU98nOzmpsVO0Owo+cCpKCb5EWocnE7ZazUJY87v8xpBZvmmseg
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471geyv1jh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 16:49:03 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 554FX1W2019937;
+	Wed, 4 Jun 2025 16:49:02 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 470d3p0r88-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 16:49:01 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 554GmvoO59310456
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 4 Jun 2025 16:48:57 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C395A20043;
+	Wed,  4 Jun 2025 16:48:57 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 71DCE20040;
+	Wed,  4 Jun 2025 16:48:57 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.152.224.66])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  4 Jun 2025 16:48:57 +0000 (GMT)
+Date: Wed, 4 Jun 2025 18:48:55 +0200
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Janosch Frank
+ <frankja@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/mm: Fix in_atomic() handling in
+ do_secure_storage_access()
+Message-ID: <20250604184855.44793208@p-imbrenda>
+In-Reply-To: <aEB0BfLG9yM3Gb4u@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250603134936.1314139-1-hca@linux.ibm.com>
+	<aEB0BfLG9yM3Gb4u@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604153510.55689-1-stefano.radaelli21@gmail.com>
-In-Reply-To: <20250604153510.55689-1-stefano.radaelli21@gmail.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Wed, 4 Jun 2025 13:44:22 -0300
-X-Gm-Features: AX0GCFtSAkrZTNsALuZF7FxrEF2hbsck5XT79hM6Y37nNbT0k-G0Qzh3cVE1Gmw
-Message-ID: <CAOMZO5BYBMq=5ir8WQBEH=h6SPpm4MiUrDoDJvJEH6ioUCB11g@mail.gmail.com>
-Subject: Re: [v2] arm64: dts: freescale: imx93-var-som: update eqos support
- for MaxLinear PHY
-To: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, othacehe@gnu.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: G2iT3uC2J9R6Zm1NoMnzWw990neAQgQs
+X-Authority-Analysis: v=2.4 cv=DYMXqutW c=1 sm=1 tr=0 ts=684078ff cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=oF2f3jwwvDOvwd7SqYoA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: G2iT3uC2J9R6Zm1NoMnzWw990neAQgQs
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDEyNiBTYWx0ZWRfXwt/clli9/hF6 +v/8tZHdYnY4AUwQ0xxWArvChe+H33lBTUjgU/+/ePA50Jq3gK6CmRJ5vM4gR7k7NSCN1ME88dt YMbLabE9fQOCzwOwaWToSSWCdBzBSHeWgLl2VRz+beSYYHVibAcEOSXDtM1uKCkdDNUZm7wYJlM
+ 2Tt037ogMksfnTn1DGlBCh/r0i44a3XB2nJ0VzHR1DVlICtsiwctZEq8WmBm+85nn4+NVpOmtcX ngC/qC0vi9ZNthAADC801UT/jzvwJPaDZiTQclcIcKrsafF00HhUTBGeOy/JtRbjnE+9dianOl6 4on0HEUe1o+8xVxxagc2j0393l+1lXchYp8eRPahHrl90Q6AF3FDlvc00YP10JslOt62vNOcdf4
+ u1Mp0EV+IZm/bKw4hbi8AhOV/If59xn74KMm08Q9bnb//KFDLQnWBqBTJEfQJbmAZPMXw2b8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 mlxscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 mlxlogscore=596 adultscore=0
+ malwarescore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506040126
 
-Hi Stefano,
+On Wed, 4 Jun 2025 18:27:49 +0200
+Alexander Gordeev <agordeev@linux.ibm.com> wrote:
 
-Nitpik: The subject line of your path should be:
+> On Tue, Jun 03, 2025 at 03:49:36PM +0200, Heiko Carstens wrote:
+> > diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+> > index 3829521450dd..e1ad05bfd28a 100644
+> > --- a/arch/s390/mm/fault.c
+> > +++ b/arch/s390/mm/fault.c
+> > @@ -441,6 +441,8 @@ void do_secure_storage_access(struct pt_regs *regs)
+> >  		if (rc)
+> >  			BUG();
+> >  	} else {
+> > +		if (faulthandler_disabled())
+> > +			return handle_fault_error_nolock(regs, 0);
+> >  
+> 
+> This could trigger WARN_ON_ONCE() in handle_fault_error_nolock():
+> 
+> 		if (WARN_ON_ONCE(!si_code))
+> 			si_code = SEGV_MAPERR;
+> 
+> Would this warning be justified in this case (aka user_mode(regs) ==
+> true)?
 
-Subject: [PATCH v2] arm64: dts: ....
+I think so, because if we are in usermode, we should never trigger
+faulthandler_disabled()
 
-and not only
+> 
+> >  		mm = current->mm;
+> >  		mmap_read_lock(mm);
+> >  		vma = find_vma(mm, addr);  
 
-Subject: [v2] rm64: dts: ....
-
-On Wed, Jun 4, 2025 at 12:36=E2=80=AFPM Stefano Radaelli
-<stefano.radaelli21@gmail.com> wrote:
->
-> Variscite has updated the Ethernet PHY on the VAR-SOM-MX93 from the
-> Murata CYW43353 to the MaxLinear MXL86110, as documented in the
-
-Murata CYW43353 is a Wifi chip, not an Ethernet PHY.
-
-I think you meant:
-
-"from the ADIN1300BCPZ to the MaxLinear MXL86110"
