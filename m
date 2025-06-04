@@ -1,50 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAC317548
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 18:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D761517548;
+	Wed,  4 Jun 2025 18:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749062413; cv=none; b=YtYF9VojEU0wD1jsEwgAt6hpZpgTOyLZuNAkthQ6BHXvB1dipEUJmvQOr/oU2IV5Rw1fe8xkTNdOUX2hlj2Twx+n843v3zon3XtMXxCRfZ2UAnC+qyw4Ln8f3M0UDz2yjQJCjRhtF+D8sVtAVuGicDfjg42SvrYXgdtVwbue5vs=
+	t=1749062545; cv=none; b=RS85vU7YASFBX0GqdLIIbdq/9MJhhtCLQRIOdKL8ueyKwCg57fTR871iQC1DQAdtWbj+GSEDEDOddRCTNB4hqDWnOPjOryHCqnO41BHV2zmTc+bVWhfzhikLo+j8aCsxmOmHwna/QgVu4VdtZzBPZgBTFGTKlejUmAPjozqVyTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749062413; c=relaxed/simple;
-	bh=xz37oLBvqypll8TTBNnLwbPbNL9K5iS+LM17+HG5IWE=;
+	s=arc-20240116; t=1749062545; c=relaxed/simple;
+	bh=+2X/bgyITqz/4nEEgb7clgtjFWt00lfOkFLk11U/WvU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ksEXlHdeqKBf2eirDjeNB8tUyrCBqFssIlxYIOWj0C3kcIMPvgX0buQielD+C0Md397JyhCqyv0sHoR+lnA21VNk2e1VIByKWFc63UBEpbrtAt8CgaiZJeAtnk9pBIp3GmHNlslWoXc9idzEao2VlttpCf3vTBHfV8FZBpp0LpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s0LIejYf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ucGYoy/fy7TdN7qW5gv18jNqb2DZVUKX2QQoCTRAT0tXBopapJVjZHTs7dsIMYTETQZb1iG8e4MH+KRSGmINvaGMOFo6jhe/i5w5drzLJrj6aJdNPbBVs0yLBC8i1YAOY+3bj4fbnD/FEoojAQ1PqFwY9QdHW4uZsNvjFHJ/W+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=o2e9H9Fo; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s0LIejYf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 118C0C4CEE4;
-	Wed,  4 Jun 2025 18:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749062412;
-	bh=xz37oLBvqypll8TTBNnLwbPbNL9K5iS+LM17+HG5IWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s0LIejYfNUwQS8maO0y0opgW5ifLBU/38vGTdtm5Uw1PoXAc+G0X3tP62WknYXQYR
-	 /nzcqsWIBbrS+QAP3hbsF5LV0sCS7hpYqS1F2yocZfkDD/ecp8516eXoMaWJV7kt8S
-	 eGfzl6sSruQcD/sNyWmfXUVQhWhlIe2osHVaoTjoG10BmQ3N+1vKC72kLNywewkkew
-	 JMGRvQf3zlM/eYIhl+YiX7vNe0Lw/qNoXsPRJ8xErp6dt7avIB+JKgw1Ge02LX1nJ6
-	 k6PBNU0FWg1VxCMNn5TPk1EIfwqTUsB6AX+WIhEisJw2YduRFDQd5K6FyxIBmZrAFj
-	 wKu2McXgFYy5Q==
-Date: Wed, 4 Jun 2025 08:40:11 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Subject: Re: [PATCH v2 06/10] sched/debug: Add support to change sched_ext
- server params
-Message-ID: <aECTCyILPeWF1gvX@slm.duckdns.org>
-References: <20250602180110.816225-1-joelagnelf@nvidia.com>
- <20250602180110.816225-7-joelagnelf@nvidia.com>
- <aEAZo3_g-OMVEgc-@jlelli-thinkpadt14gen4.remote.csb>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o2e9H9Fo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=UYCq4nc4AwozKNajBZ2RohKtwW3tkU8YAfBAV4718q4=; b=o2e9H9FoOO7MAp+0kndaY4zIQl
+	bgJQgafG1lhYqm+qBZWFTg3cUIFtiMYD/6xZuAC3dsaxcIho6/lM/1U5rSQsoJryKbnGm45WVLdzM
+	kDN6UHxNXF93v3NkqOB/UWSjZGyWqZg8T0g4NgJ3w7b4vc+S63gyRGAg2SdECXvlrgspXh4Jc+CyV
+	8NlZRSKsC3Y3YphNJSq9No/ByeLDu/nqHbiPawtEEobdlXKFqFK23siTrYyFp8IUpBvHOr0S21+Tc
+	TJv1OHWNB8ZSn44HaJ4E7sRhw+aHh6NhA12cnN2Aa0FggHFFFK6psOTcpjs9L+ESyB2TVzNnoNYsx
+	/CFH8riQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMt3z-00000003OmV-2tly;
+	Wed, 04 Jun 2025 18:42:11 +0000
+Date: Wed, 4 Jun 2025 19:42:11 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Michal Hocko <mhocko@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>,
+	joel.granados@kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] mm: kvmalloc: make kmalloc fast path real fast path
+Message-ID: <aECTg4r_a-Rp8cqP@casper.infradead.org>
+References: <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
+ <Z-y50vEs_9MbjQhi@harry>
+ <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
+ <Z-0gPqHVto7PgM1K@dread.disaster.area>
+ <Z-0sjd8SEtldbxB1@tiehlicka>
+ <zeuszr6ot5qdi46f5gvxa2c5efy4mc6eaea3au52nqnbhjek7o@l43ps2jtip7x>
+ <Z-43Q__lSUta2IrM@tiehlicka>
+ <Z-48K0OdNxZXcnkB@tiehlicka>
+ <Z-7m0CjNWecCLDSq@tiehlicka>
+ <Z_XI6vBE8v_cIhjZ@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,32 +60,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEAZo3_g-OMVEgc-@jlelli-thinkpadt14gen4.remote.csb>
+In-Reply-To: <Z_XI6vBE8v_cIhjZ@dread.disaster.area>
 
-On Wed, Jun 04, 2025 at 12:02:11PM +0200, Juri Lelli wrote:
-> Hi Joel,
-> 
-> On 02/06/25 14:01, Joel Fernandes wrote:
-> > When a sched_ext server is loaded, tasks in CFS are converted to run in
-> > sched_ext class. Modify the ext server parameters as well along with the
-> > fair ones.
+On Wed, Apr 09, 2025 at 11:10:02AM +1000, Dave Chinner wrote:
+> On Thu, Apr 03, 2025 at 09:51:44PM +0200, Michal Hocko wrote:
+> > Add Andrew
 > > 
-> > Re-use the existing interface to modify both ext and fair servers to
-> > keep number of interfaces less (as it is, we have a per-cpu interface).
+> > Also, Dave do you want me to redirect xlog_cil_kvmalloc to kvmalloc or
+> > do you preffer to do that yourself?
 > 
-> We have a bit of code duplication, don't we? I wonder if we can do
-> anything early on to prevent mis-alignment between servers in the
-> future.
+> I'll do it when the kvmalloc patches evntually land and I can do
+> back to back testing to determine if the new kvmalloc code behaves
+> as expected...
 > 
-> Also, is a single shared interface enough? Is the assumption that either
-> all tasks are FAIR or SCX always guaranteed?
+> Please cc me on the new patches you send that modify the kvmalloc
+> behaviour.
 
-It's not a guarantee but at least all the current use cases are like that.
-No objection to splitting the interface tho. In fact, for SCX, it may make
-more sense to just make it part of sched_ext_ops, so that each scheduler can
-specify what they want.
+FWIW, this has now landed in Linus' tree as 46459154f997:
 
-Thanks.
+                if (!(flags & __GFP_RETRY_MAYFAIL))
+-                       flags |= __GFP_NORETRY;
++                       flags &= ~__GFP_DIRECT_RECLAIM;
 
--- 
-tejun
