@@ -1,224 +1,118 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CDF4C7C
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2FE4C7C;
+	Wed,  4 Jun 2025 13:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749044780; cv=none; b=iLfN4zkEAAFwXdT1P48Iy+0qDLO2+wpeCC3MLZnmMjyfyni+bXiAOCTBMXt6pppYsdijtCzxI/bdcZKOQFOY9J6ZxcFwjx8qqmcI+zUEV9EivuByOwzjCw9y7J2NbmJIzDOXSnF+h5LNCGzHM2VGqvxik2Z46IdgQ9B1vbWb3Pg=
+	t=1749044861; cv=none; b=hA4bOztoyzESmbINId5Xlm8Y0dV/rdR1lp8+Db+LHtPbOtwUFbv/wKcN6ZvE7Yu6y80yLdUCotIfTC41CZW4nWtTZ2pHJiP+9Al6mgWoDDRW568pyCcTTqKC+yQ3eUY1KCD+KEoje4zFlx6XrK//H+1kEM+O1AEXtL+IvCspu88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749044780; c=relaxed/simple;
-	bh=YJPOsL22ThpRGTAEU8zCPpChahGMKoCsqZagO3a+IMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O0eERdxu7/PTehL0B55E+uQWAFH2+jEFTKBwA/Cr6GaUHZVlotd3sfcryrLfYDUI7NPZ/xF8RVTd82Q9OO2Kj3CwSE85cGWr6KKlwDALRk9UbIy3CgO/Mza3ZQoERpVxqYOdx1MOoGVuQfPeszJXQ3e8kesV/th1HitmdAcObc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yZGh7dyN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=T99duzdA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yZGh7dyN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=T99duzdA; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749044861; c=relaxed/simple;
+	bh=qAWE4ZHvfBr8J312bFyemArwB1AHHgZ8BFzkRR7+v30=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=n0Mg/0FfX0g3wUVXjVIGdlD8E0WRgy5NM0SJ6r2Vo7u/ETmHPJjH7ynPhMaTAOnxqTTtm7ZoocYnoeYqlJGiHjZ6RfrdIJo2L2a+VXVK/Ea0myjzST5n+9MXbXhd25T14Sbu563I0AQdKMrbpx7Hre4xMADK892qOnLfZXCeGFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iSPx61pu; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yZGh7dyN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="T99duzdA";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yZGh7dyN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="T99duzdA"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iSPx61pu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749044857;
+	bh=qAWE4ZHvfBr8J312bFyemArwB1AHHgZ8BFzkRR7+v30=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=iSPx61pu5tgpGOmLaiVA37WIJDdHSlCglJ/lyW3CP9UNjbR6gLyO6gDnwVBFTg9q0
+	 W8TCw3zcHNG8Zomc6hu3akBb6JEJuQ62UM1nGuhbTDnmoVHxiio1DDHLFlNbC7BwHM
+	 swjYb17yxteN65Hic0TDuduoSxY1F2ICw6wyOMg3oEUIJWkC8LEZfXoVKuAc9PSvaa
+	 zevhXDccaHcaFGkclWjrqjL4R3thck4We+IJGC9QSDl2cYFU+NzYDjTCjl3DFnvd9U
+	 Ren8K2RGYeCnG9Ivp/U1roEPdIgtOkcVAUBGOh1nNHtGpZokgbIQx0Vvakkj1DVIII
+	 GKmzy+OwFR45Q==
+Received: from [IPv6:2606:6d00:10:5285::5ac] (unknown [IPv6:2606:6d00:10:5285::5ac])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BA9C51F7E3;
-	Wed,  4 Jun 2025 13:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749044775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Cs31b9zVXZaeOwnSQ6nLcuIEQJuLmUfOSWuYO7gkuL8=;
-	b=yZGh7dyNbUA7BrgsEqQbtrnHLDJ3j0WWnUyF/riXUWJZq9tsifTTMHwiCOBsHqsS7RnnS1
-	vrriw6lscswHAQ5ead4+eSZxJ1MNrmRp4JCiIg7WierHw9ko4tIGwoKT8sP9q13WKyQC3R
-	v8VYfVElPUrgfQ2RP+tgi3SH7h3O0H4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749044775;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Cs31b9zVXZaeOwnSQ6nLcuIEQJuLmUfOSWuYO7gkuL8=;
-	b=T99duzdAdlq1noE6JJF8h/vDYXrjG/ipbxDbNOTxZ4HYLWHWOfL8VyZo0OAqH8Y8d/AqhR
-	puyNuH5jhrUpcKCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749044775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Cs31b9zVXZaeOwnSQ6nLcuIEQJuLmUfOSWuYO7gkuL8=;
-	b=yZGh7dyNbUA7BrgsEqQbtrnHLDJ3j0WWnUyF/riXUWJZq9tsifTTMHwiCOBsHqsS7RnnS1
-	vrriw6lscswHAQ5ead4+eSZxJ1MNrmRp4JCiIg7WierHw9ko4tIGwoKT8sP9q13WKyQC3R
-	v8VYfVElPUrgfQ2RP+tgi3SH7h3O0H4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749044775;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Cs31b9zVXZaeOwnSQ6nLcuIEQJuLmUfOSWuYO7gkuL8=;
-	b=T99duzdAdlq1noE6JJF8h/vDYXrjG/ipbxDbNOTxZ4HYLWHWOfL8VyZo0OAqH8Y8d/AqhR
-	puyNuH5jhrUpcKCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 98FA213A63;
-	Wed,  4 Jun 2025 13:46:15 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CCSLJCdOQGhzaQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 04 Jun 2025 13:46:15 +0000
-Message-ID: <1aa7c368-c37f-4b00-876c-dcf51a523c42@suse.cz>
-Date: Wed, 4 Jun 2025 15:46:15 +0200
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 18B2D17E0C87;
+	Wed,  4 Jun 2025 15:47:35 +0200 (CEST)
+Message-ID: <1318bd68f2d60b9d44cb22bd90b92399311f0b00.camel@collabora.com>
+Subject: Re: [PATCH v2 2/7] media: chips-media: wave5: Improve performance
+ of decoder
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: "jackson.lee" <jackson.lee@chipsnmedia.com>, "mchehab@kernel.org"	
+ <mchehab@kernel.org>, "hverkuil-cisco@xs4all.nl"
+ <hverkuil-cisco@xs4all.nl>,  "bob.beckett@collabora.com"	
+ <bob.beckett@collabora.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>,
+ "lafley.kim" <lafley.kim@chipsnmedia.com>,  "b-brnich@ti.com"	
+ <b-brnich@ti.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, Nas Chung	
+ <nas.chung@chipsnmedia.com>
+Date: Wed, 04 Jun 2025 09:47:34 -0400
+In-Reply-To: <SE1P216MB13033207BDFE2A6BCC48999EED6CA@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+References: <20250522072606.51-1-jackson.lee@chipsnmedia.com>
+			 <20250522072606.51-3-jackson.lee@chipsnmedia.com>
+		 <3afbd0253fabcf9f8795ab2231107e2e9da012cc.camel@collabora.com>
+		 <SE1P216MB1303C1D1C2A9FA165A01B71AED64A@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+	 <03a87e1c9e8f77887c2457b9c3fcbf0c6a6cf287.camel@collabora.com>
+	 <SE1P216MB13033207BDFE2A6BCC48999EED6CA@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
-Content-Language: en-US
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Michal Hocko <mhocko@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
- surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
- sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
- <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
- <aDm1GCV8yToFG1cq@tiehlicka>
- <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
- <aD6vHzRhwyTxBqcl@tiehlicka>
- <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
- <aD7OM5Mrg5jnEnBc@tiehlicka>
- <7307bb7a-7c45-43f7-b073-acd9e1389000@linux.alibaba.com>
- <aD8LKHfCca1wQ5pS@tiehlicka>
- <obfnlpvc4tmb6gbd4mw7h7jamp3kouyhnpl4cusetyctswznod@yr6dyrsbay6w>
- <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.29
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.19)[-0.968];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On 6/4/25 14:46, Baolin Wang wrote:
->> Baolin, please run stress-ng command that stresses minor anon page
->> faults in multiple threads and then run multiple bash scripts which cat
->> /proc/pidof(stress-ng)/status. That should be how much the stress-ng
->> process is impacted by the parallel status readers versus without them.
+Le mercredi 04 juin 2025 à 04:09 +0000, jackson.lee a écrit :
+> > Running in loop anything is never the right approach. The device_run()
+> > should be run when a useful event occur and filtered by the job_ready()
+> > ops. I believe I'm proposing some hint how to solve this design issue. The
+> > issue is quite clear with the follow up patch trying to reduce the CPU
+> > usage due to spinning.
 > 
-> Sure. Thanks Shakeel. I run the stress-ng with the 'stress-ng --fault 32 
-> --perf -t 1m' command, while simultaneously running the following 
-> scripts to read the /proc/pidof(stress-ng)/status for each thread.
+> 
+> 
+> Thanks for your feedback.
+> But there is one thing to say to you.
+> After receiving EOS from application, we have to periodically run the device_run
+> to send the DEC_PIC command so that VPU can trigger interrupt  until getting all 
+> decoded frames and EOS from Get_Result command.
+> So even if we sent EOS to VPU once, we should run the device_run function continuously,
+> the above code was added. If the job_ready returns false to prevent running the
+> device_run after sending EOS to VPU, then GStreamer pipeline will not be terminated 
+> normally because of not receiving all decoded frames.
 
-How many of those scripts?
+This, in my opinion, boils down to a small flaw, either in the firmware or the driver.
+This is why there was this code:
 
->  From the following data, I did not observe any obvious impact of this 
-> patch on the stress-ng tests when repeatedly reading the 
-> /proc/pidof(stress-ng)/status.
-> 
-> w/o patch
-> stress-ng: info:  [6891]          3,993,235,331,584 CPU Cycles 
->           59.767 B/sec
-> stress-ng: info:  [6891]          1,472,101,565,760 Instructions 
->           22.033 B/sec (0.369 instr. per cycle)
-> stress-ng: info:  [6891]                 36,287,456 Page Faults Total 
->            0.543 M/sec
-> stress-ng: info:  [6891]                 36,287,456 Page Faults Minor 
->            0.543 M/sec
-> 
-> w/ patch
-> stress-ng: info:  [6872]          4,018,592,975,968 CPU Cycles 
->           60.177 B/sec
-> stress-ng: info:  [6872]          1,484,856,150,976 Instructions 
->           22.235 B/sec (0.369 instr. per cycle)
-> stress-ng: info:  [6872]                 36,547,456 Page Faults Total 
->            0.547 M/sec
-> stress-ng: info:  [6872]                 36,547,456 Page Faults Minor 
->            0.547 M/sec
-> 
-> =========================
-> #!/bin/bash
-> 
-> # Get the PIDs of stress-ng processes
-> PIDS=$(pgrep stress-ng)
-> 
-> # Loop through each PID and monitor /proc/[pid]/status
-> for PID in $PIDS; do
->      while true; do
->          cat /proc/$PID/status
-> 	usleep 100000
+-
+-	/*
+-	 * During a resolution change and while draining, the firmware may flush
+-	 * the reorder queue regardless of having a matching decoding operation
+-	 * pending. Only terminate the job if there are no more IRQ coming.
+-	 */
+-	wave5_vpu_dec_give_command(inst, DEC_GET_QUEUE_STATUS, &q_status);
+-	if (q_status.report_queue_count == 0 &&
+-	    (q_status.instance_queue_count == 0 || dec_info.sequence_changed)) {
+-		dev_dbg(inst->dev->dev, "%s: finishing job.\n", __func__);
+-		pm_runtime_mark_last_busy(inst->dev->dev);
+-		pm_runtime_put_autosuspend(inst->dev->dev);
+-		v4l2_m2m_job_finish(inst->v4l2_m2m_dev, m2m_ctx);
+-	}
 
-Hm but this limits the reading to 10 per second? If we want to simulate an
-adversary process, it should be without the sleeps I think?
+Which you removed in this patch, as it makes it impossible to utilise the HW queues.
+In the specific case you described, if my memory is right, the CMD_STOP (EOS in your
+terms) comes in race with the queue being consumed, leading to possibly having no
+event to figure-out when we are done with that sequenece.
 
->      done &
-> done
+V4L2 M2M is all event based, and v4l2_m2m_job_finish() is one of those. But in the
+new implementation, this event no longer correlate with the HW being idle.
+This is fine, don't read me wrong. It now matches the driver being ready to try and
+queue more work.
 
+So my question is, is there a way to know, at CMD_STOP call, that the HW
+has gone idle, and that no more events will allow handling the EOS case?
+
+Nicolas
