@@ -1,393 +1,270 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AB61B414A
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 04:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749010441; cv=fail; b=E/XS34zDhJqd5N7zmBHnaXWcJb+tvvaY8Eguk9u5b8Vc+rgBQy4x7hNYdqU1iQJYfvkorwO7PyG847AN7qUDd5Iw+V8qi3tqr6gWP6UzHm0aroQwzo/pTTuj4rJE8AJCkY5cmk3MD0Z12R/+NnCDqdoTnKELpZxt2swFi4MsHFk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749010441; c=relaxed/simple;
-	bh=P7HU8IJg5W/owP7vbwGCdJZInHYJ1wMx00nT9hHdsRs=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=U4JNwo8oxpZ8/Z7UBEvWxOAYpBHZXsqH6IzQzZ314UlffCX0icnW4BYcWkpVTrGJOmmbmXR6foycFfGbFpIyYbEx6BtYyQ92E5dHqrA6Y9h8mtzgMebjpFbehb2cEeKQcR+iX9jTsd+LsTJjnY/Vdh1vQeQ91XTBeMOHddeOcCQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BW2Dz2fI; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88551876;
+	Wed,  4 Jun 2025 04:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749010480; cv=none; b=ggjYwg5Mv8LtruUXHCuyqJIX/HjCdhM1rnrj/Gstnb0e7qAvdWAaxVWJIUg9YiKL1YKAP4LpOuel+dLS3Umagx45jFO1VDFSo26dkttUeyBKR00ZPMFAnpREFjm+ihm0qdN4IXjOyHsNNYH8RQb4oMoPTNd6n3vqmgs/ebE1VZA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749010480; c=relaxed/simple;
+	bh=Ooc4rwgOmVTDBYoJuDOLjlichD6bq6i6WP/iNrY6I+Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lU0Y0MJd2/z+kKkOXcz7cnPWuHJv5PxwhKmJPv7rjoZIOkTidyJoNkTgziXO2awwtLgbl9ztQkqDwfFuqw3s/WHSfMzpfdD73gIAU6ZKoQl17VH0eFofak1+Mzz3mhbLpPlWpY6WNjh2AVZ/1fY3jTZBND1XTPN30mCCdnOVd74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4PbTDGn; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BW2Dz2fI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749010440; x=1780546440;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=P7HU8IJg5W/owP7vbwGCdJZInHYJ1wMx00nT9hHdsRs=;
-  b=BW2Dz2fIj0zIQTZLcf88LqXdwoK5LxV4VuAVIJLDOri+kfro3LHWzUmU
-   sYHaJIGx1iTjrs5ktUPbub2gIjNW2TwMcNlKjzG6+anEs5qyJu6nT/toY
-   rCDoP9wnPab8V8zhTAqNPSCkXF0xIkFSeaFsGEOqpnUupIIV+nhe0WNdW
-   bizNu7NGaNsCWYSjIiCkYQcnq+2iH8Ed7HBIRW+WYziATV8WkL7bW27Kz
-   uc4zHza5UcZ/XYPVjilQgbFHuitUKh9AHNnBt+TUe/J790nt8P7DBTzS0
-   8KQs96vGCMvSw58e7hKP72ho1Jv40jxtjyMuVQaFTQjnbgVlYeC5svKjU
-   Q==;
-X-CSE-ConnectionGUID: WvHuMLYhQgm0AuMGTpsGmQ==
-X-CSE-MsgGUID: 2pRZvvSGThaxu8kIoGANWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="50942515"
-X-IronPort-AV: E=Sophos;i="6.16,208,1744095600"; 
-   d="scan'208";a="50942515"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 21:13:59 -0700
-X-CSE-ConnectionGUID: Fk1v8SvJQDa3F6AQ3m2v6w==
-X-CSE-MsgGUID: wAeguXIUQiuWlHkM8t9dmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,208,1744095600"; 
-   d="scan'208";a="144929965"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 21:13:59 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 3 Jun 2025 21:13:58 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 3 Jun 2025 21:13:58 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.42)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Tue, 3 Jun 2025 21:13:57 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pcf7zlzJPmLwA52auV+dUS5ckfLAj8uqlRWN+h1eic+N5s4jhCpVl67AftoFdnVwDV+2xQWPpDfvGtKsgdJdBSnYnMfFezR7b4LaUTWLvgmsk8WvqJCusf5HxGKx5D6Bab9pVZL5yzbXQaGypABaOe7ZlSJbc+5+KBmE7/A0XRAZ95DB79LtvRpD0hnsKJ3Qpp6O6HEgMXjg5UvKzbr1MFei2NZeFLXjOPRRZwQZ26E3TC3EJCxidFWaYTo6IA2SlPpCNJbCsdtxbkK2qqq0//h47g1Nty80sOHDURW/J4gho8gOO9TwPc5R/Unk50TGShButeDarXyuixVNytIPBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PWwlmZWPG2P0PPSJmmBfpM28WfQyhnvhAdvlD6H+zfE=;
- b=kj6Wm3/9YNSo7cDaUHE2HDtcxVq4F2KNRWBRbiGCUqG/YaX49NlOq1TTwG2Y/kVFZGLJ2WELPGc6qfclusYwLtG/mDgbDwy+VpZLyEVsMW163NIoiEWIn/9Hn0erjU8Zjt6AfEFWETmknxGxVb5Me37I69GtNrBU7CC2V3C2c+UYdDiGz0dMkm8Cb3pNpe9xmnB7U+2DRRMyowFcTp8rTNrMZV4CwQtDIdqxMJda8lPKfP+gLcwHwRL3+4IPK6yIm+yRx5sCUhBFmwIiiXVOKSjciTLtMMaxgws1dxQVfWopa5H2rwZDUOq3VG+sCOrAE6sAdkU0S4mh/lppyGHE8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by DM3PR11MB8714.namprd11.prod.outlook.com (2603:10b6:0:b::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8792.34; Wed, 4 Jun 2025 04:13:55 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
- 04:13:55 +0000
-Message-ID: <f1249675-a3dd-4222-a3df-a20b9db3047b@intel.com>
-Date: Tue, 3 Jun 2025 21:13:53 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 25/29] x86/resctrl: Handle number of RMIDs supported by
- telemetry resources
-To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
- Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
-	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
-	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
-	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>
-CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<patches@lists.linux.dev>
-References: <20250521225049.132551-1-tony.luck@intel.com>
- <20250521225049.132551-26-tony.luck@intel.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250521225049.132551-26-tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0067.namprd13.prod.outlook.com
- (2603:10b6:a03:2c4::12) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4PbTDGn"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-747c2cc3419so3611303b3a.2;
+        Tue, 03 Jun 2025 21:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749010478; x=1749615278; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Re6lT76sWJRhrAsHMS8iwF2V7EMeEh3m0ySCqASUFZE=;
+        b=S4PbTDGnqztYVvdVWO6HMqn2qVJAiOFceQ5qMGJ1iPHtmVJ9sCsGIWx3BwvxPirMCa
+         ajLaYA7Fu7CrW0HaBIB7HQtuMRsmPpfTkGhgp9OObx/sL6KoSeB9DYPd6v4C4Kq4audX
+         +Z4084l/1Dql0/GNefV9qe5PsCWAQivKEg+HR5uYAQGarjc6HcSH99elWrRpNged1Onv
+         lWVWyxHNmIDgpSHA9GpRgQu8JjsN+V1uFEO778UV+GvRCuYjM6W1dLtJ4LsU9cHlN7l9
+         k0XtJwJdcm6xNPhJxsGd7yjiRNHKsRam3+4VdMzu9qP0upcqHZRcTgiqjqfgYYlsb/dS
+         WRLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749010478; x=1749615278;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Re6lT76sWJRhrAsHMS8iwF2V7EMeEh3m0ySCqASUFZE=;
+        b=w+GENjVrpCYBY42+eP2N0RAFuvYpmpLVSg4itH5CeKEDN2zbmxSQbFoz9E0XoJ/Rnw
+         CsRBcAIN7Zl7x1vC8Rxpqlso7LmfJmGbrDIga8uizySAOXmdMEtHmcNknoEeS4fHhihW
+         pLFFs0fcSomSph/g7XtuYBG+tNPPQ3zjMIKGrTIseWoiSgLzqn9odLI1Gbe7DflMdjLi
+         Kd5CUdztuf9YHLiK40yPi3Q0DU5wNQwlSkFxCaw92grbuKTC7wLyXo7Hx+kbod4g/yYP
+         zIwLLXDo8RWZbryTtU+9YQSN/6tgoQQQz6egZ7iZIfdCvKA2PQu++wrh59E0q3SXh8cg
+         zsoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaEDBG3YXZUfe8UE9NB0EVGuCS/zdtEl2rsAtR4adVKIBFFwuEQSPj4O0UsbLwe6+vpJDtmKQb5quC@vger.kernel.org, AJvYcCUu4j6jq+AmxUPt1Pvrh+ZZ6kdGBs7VGJJn3RwD/2y0e//Fl355NM4ftbmtMzjQvMpGB5JzTNcPUHT4@vger.kernel.org, AJvYcCVBGYpa48G+o8rYl8sUPMzyQ2UeqRCHGESaRdsTooYig4zpW/jus0rCqoyomdhtJQdOYO3NEv+2B0wHQvM=@vger.kernel.org, AJvYcCVb6EB+ik7qGk7P97MtyROw2cc9jnoZMFE4ByMnjQ5HNA80SH2T5yyMFx1rc8DIqrjTrJSC10KR@vger.kernel.org, AJvYcCVfv2o7EstlY63i2CGRgjFgbI+rpp41zHqfGQIzLWTNzfEC9QuWcj4JSaq02uI8rEoboEl8Q6XifxJKXSAyD2o=@vger.kernel.org, AJvYcCWBzyvlIpcRMtZFHzxtOVJTycRObLlXdczX5gu+4JK/PVZU6xIJu3xxHFRvm24gOWCcQKnasfau/w2m@vger.kernel.org, AJvYcCWEfvigujY2BjvstQHVG3TSWMMHImg2N561fcQrgWoERv2p5qPCykzhUEsEJCjHF3VWCgDS6kerO3S6UQ==@vger.kernel.org, AJvYcCWdKvJYAAYK0tKjt1hhN9iutFK0++sImKW97WXK5PuL+Ck5M/bwUB/jWzzM9MJaBhX1/Fh81111kaA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXxJZLuhl7ROSmR+Ib2NMnW86liczynwHyniyY2xcwfj9YWPvb
+	h1lWBGCaUnp88anAEMVXDSQWrIw6iT6Ksbbs6c7S9XxcwMfx3/mA4RukFK50kA==
+X-Gm-Gg: ASbGncs3b2c91KZc7vJKTbA4DCt6YRBsz+NwcOe5HaTpEigvJdQWe5gl9CC98G8k5tq
+	2x8lk4ZdZu78aPUEsYF1/aZ/8C/b2wOKuEZMR791VH1EFLq5OIG2WZFu5XtPdsqYVJWxxii8Dqv
+	AqqcQeWmCvhVeqEy0w2LG0xmFDt+fNIU08hyHgv5pYtmZURYmtU16UvPk8TnNY8+JICDpNKzKfq
+	qeiDrnl37cyGLKB3meTBA9i1Jf+AUGRRsdRG2uJfn7yjxAfNT+1JRwPjM2NEiRT/eNIPz1SzEK6
+	B+WHPhzV/mq+4diZGe0IfmC5KdVd0KkvEN2GuSbn5PsyiWY2El29vcBAv+QnDmkq/I0gF2Erx3B
+	AOOlmAIBSSaf2Ow==
+X-Google-Smtp-Source: AGHT+IGifg/pS/ZS1sqlaZZ8vkXGObbubcKsP52DwMiQOH5lHDepvI08orbmJwJuJ3JzlZPkQmzCPg==
+X-Received: by 2002:a05:6a21:9208:b0:215:dc32:ffac with SMTP id adf61e73a8af0-21d22b41c1emr1747628637.26.1749010478053;
+        Tue, 03 Jun 2025 21:14:38 -0700 (PDT)
+Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff755bsm10526057b3a.179.2025.06.03.21.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 21:14:37 -0700 (PDT)
+From: a0282524688@gmail.com
+X-Google-Original-From: tmyu0@nuvoton.com
+To: lee@kernel.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andi.shyti@kernel.org,
+	mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	jdelvare@suse.com,
+	alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: [PATCH v12 0/7] Add Nuvoton NCT6694 MFD drivers
+Date: Wed,  4 Jun 2025 12:14:11 +0800
+Message-Id: <20250604041418.1188792-1-tmyu0@nuvoton.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|DM3PR11MB8714:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1637e9d5-4de1-4fe8-e0a9-08dda31e3876
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|921020;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?KzFIV0pQNDU4RU03ZkJoWHRqakxKSEdWV1hQVU00aGdZandDMWFPTTJ3NWp1?=
- =?utf-8?B?TnB6TmJXbjdVdGdTOENXYWI5b2JEWnhwUUExUGtGaENuVWxtdWtROHRaM2Nm?=
- =?utf-8?B?dWM0cUV2Yy9lNW92SzByMjVKK01MNGF3T0RSSnF4Z2xXNk5hT0RkYUxGT1Bn?=
- =?utf-8?B?K3ZxR3BwRFBJdjdha0lBc1pIU0NWZ1B6ZVFrRTJQMWNad1JYeThDNTliUmU4?=
- =?utf-8?B?MGNVc0JIOE45QldZRzlJMzdwc2NSbk9jaUlnS3hGN0lKQ1hocE1RS3B3MnJJ?=
- =?utf-8?B?NW9HNG5HOGwyTFpWNGcwVmNmM1VCeGVBQVpxTnlrWVlENUp6TGJNMlgralBE?=
- =?utf-8?B?c0pwRmhUQ04yRVBqV3dPOTZkcnM0dlJPUVVDTjNWUDdIWnZBcnYwWlpCVHlv?=
- =?utf-8?B?Z3dqZGJreW53Zzkzb2VIR2JxSXAzWlVBWHFEaG1wYmtDakRTQTl6QWxKUmxN?=
- =?utf-8?B?bG1ZSDVXaElLMDVad2taWVY3NnJ3M04veUtEbFEyb2JzeUpjdHFxYXRCZDVQ?=
- =?utf-8?B?UWdDV251MHR3UTZuTXdzd3JXQ2tJUVJ1Si80SHdKTzNnbDhQSEUvN01rNTVQ?=
- =?utf-8?B?bDNGQktzT0hGVFBVWWV0UWhSV3E5dkNXblFGOEhXTkRVUkNCVFhtb01UNmQz?=
- =?utf-8?B?QlJwM1NlRmtKVXlLd05DdUwxNUhjLzRsQmFiUStqUHdtSVpHS3EwRDlIY3Fh?=
- =?utf-8?B?RGUzdlBja2FuKzA0d2pyaGdpTHBrWHd1a3lRL2UybjVLRkJpUS9UaVVDUnFE?=
- =?utf-8?B?SjVWZ1prZ3M3L1dHSFpWdjIrZllLdGUvbGhCVkJoRTJvallhMFpTWEEwU25R?=
- =?utf-8?B?ZEpmd01JSkh4cTJ2NFVkNytvZ2NoOVJOVXZPR1g0UWhBSE9PSnhYSlo1YVdU?=
- =?utf-8?B?c0RHRFVHeGpVUEVFdkMxVVJ2em95VFBWa1RjejJRaWpnOHA3SWd1L0R0eExi?=
- =?utf-8?B?ZDN5cXVLelFlcXJpcXF5cjRET1lXTWl4YVV1amJSa1V0OUpNTFhFenUwQ0wx?=
- =?utf-8?B?TERoOGlkalUvQ0l2M3pTOFk1ZHp4NkpaNlBnV2txckFkelBKWGtUMnl5VnJz?=
- =?utf-8?B?cGMzZURranpURDRRS3hYRGRxUHRPTXpPZUhBMVlrUzRkNjRXR2ZWSFVaT0VK?=
- =?utf-8?B?eFRTaThpc3BvWDl6QlBVR1h1ek4wYVRrRkMxdEZoaWE0NThsUkFDUDFoKzdo?=
- =?utf-8?B?ZWdubmcwYjNudkxMaGdvVlVuTmNUb2c2MXVJcUJGN1B5VDMrSmxiRXRwOWcr?=
- =?utf-8?B?SnZWb3F5azZyTDE5Q2lVV2dBbzN5bFhROHg2V2xrbWE5Mnl6VDE3dTM1WWVo?=
- =?utf-8?B?TlgvTE43em90MTZhRjA3YSs1MlFmK1NLbjNzQVJ1TE5ySUt0R1EzeUpNdWx3?=
- =?utf-8?B?cXVNZmI5Y3AvbjJsYll1cWZVOGg5MktQZW93c1RSeVhLOVROa3ZDQmdpcXN4?=
- =?utf-8?B?aE5pcEc3QURzN0RwMzkya0M2QUJaNlFWa1E2QTdRMHRPSldvM1RJQW5sUDZs?=
- =?utf-8?B?b1ZWRXdzdEZYU1VtaHpSNDBlRDQvN3RIOHdzeG9CUzQ5K3ovd1FtKzRadUlY?=
- =?utf-8?B?ZEJFTXI3NTJ5QUhSdnlOOVFvTnFoR2tRQnFFak5LaTN0bk9nRTRya3p2cHJX?=
- =?utf-8?B?a214ZHk0S1NGUTI5dFlvSXNIS2FMU2FVTStqZ0tvN1VySzFPc2pINzhvZzNq?=
- =?utf-8?B?QmpkNDdEWURNYnAxVkJqTktYU08yRm96ejh1L1dGekRLY3V3S2d4eGJ0SGxa?=
- =?utf-8?B?bDBGLzJocEFtRHozQnZCb042ZGMwQXhHaWlaM1MvQzhOOWlQTmZlL0VtdXQv?=
- =?utf-8?B?RW5LVVZjSER1aWtacm9UUlBuNWhvUUdTNXRoNUhXekxoeWlTdTYrSjZGNW1r?=
- =?utf-8?B?VEhpazhadE11TEdKSldtSkZkQjB0NlNUMHBubkxabU5RcGFOanBvek0yMzVo?=
- =?utf-8?B?dkkzeW5sWlJPZ0VIQ2tGZ3RPckRPTGMvVFJoTDNMVlRGZ3FHcHVVVG1tdlUv?=
- =?utf-8?B?MVo1VVZrcmlnPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TnMwL3A3VjNRdXlkaVMxc1RHanB0czdLd3dMRVB3RmlmSThWbG0zQ3NUclRV?=
- =?utf-8?B?aGZqcjFxVTdqckNzT25mV0czdU9idDhYa0Z0SUhXdWxjaHprckJpbllyb2hw?=
- =?utf-8?B?T2RNayttb1YrQUR5aVdqWUVEMzJ6Y3dabEFLOUJtRUhTQmdWMitDdndzUjBZ?=
- =?utf-8?B?dUw5bFo0TkdFOHNhR1k2dG1VZ0dsSCtzNC9URE9yM0d4RjZZVTU0ZkpuZVlD?=
- =?utf-8?B?bWtwck1nWmpGS0RtTmNYZS9XWFByVjVWVzlHajMvbDRhSXFCKzhiRThnZU1R?=
- =?utf-8?B?OS9wbVc2SzV2aTVTamhMNW82WEcrUExBUTVjMm14SU9jSDJMV2FIcG4xQ1B0?=
- =?utf-8?B?eFRIbm9UUlJTY3FQNHZ5Z0NSUlpITmYybzZlNGc5Z2xoWUtOZVY1Ynh3VW54?=
- =?utf-8?B?QWdSaTBSSnZIRVBVbURRR01LS0pFNitYNndiLzlxa3huWFBLRHc1UVVZR2M5?=
- =?utf-8?B?SUJVTWdoRFF0QzJwV0ViN0xzWm5yQkpSN05UMUNZZzNsc0pnekhXYUdSSjRC?=
- =?utf-8?B?WUdwbnRGY29kSVlXYXVPeGpOaDA1N0VySHJCeDVHVE5ieDZmcW1FTEZpUUsx?=
- =?utf-8?B?aXVaa3U2Z2dkQmFueEtmQ2EyeU4zdmtEU3BrZTU4U3RUY1FaNGVpWHJYME9Z?=
- =?utf-8?B?RWVQTlIrNVhyV2FjZlpOWmlGR2RPNGF1Tzg3N0Y4NkVOSTVxRHBLMHJRNTA0?=
- =?utf-8?B?ZHRaVjZybHFLaFRTTEs1UU5UTVJCTEJ1VmhXTE14MFdtcmh0NkMzdFFtZVpI?=
- =?utf-8?B?SHN6akRJalJRQUFzajltd0FsYm5IWVgrN2ZrWGdoRUx2Sk9iNlhOekF4K3hw?=
- =?utf-8?B?M25TdU1sQThtVzJJRnRsSDBaQ2FIY1NpVlFzbmFkUjZwTkVYY05MN3VVS0Np?=
- =?utf-8?B?ci9FSUdlY0hyWUdudVBod0ZlOXVCdnFWOUh6MEN2NEw0eWhDcEs5QldWSkk5?=
- =?utf-8?B?RG5Cck9jWjc0all1MnA4MGIyNjF1ZDZzWjlySzdrTGQzVFlzQ0Nnd0grR0dw?=
- =?utf-8?B?ZVBwanJvR1k4MUlnVWhEYW9WTDQ3SFdqYzJESUtVOCtnSXdaRXVXR1RlcEZz?=
- =?utf-8?B?OWJCeUZJTWtrRlNoVHJhMUN2bjkrR0VqNnBpdEk2L2FNSmpCMWd5NjB1Zktu?=
- =?utf-8?B?ZHFTSEYrQ0FHb1oxcXdlblFWNSs1SzRFRlBWWG5CdmVIb3ZzSllVUVdTMkM2?=
- =?utf-8?B?N25BNHZsQzQ3UmNITW40OC9TOWo5UzdOK1YrKy9vL0x6a01GNUh3MHNrbUJk?=
- =?utf-8?B?bU1ONVpSQ2N4bk1RQlRZcVRQeE1mOXVxaThrb2NvRll1T2ZIOXhabVJCbUR0?=
- =?utf-8?B?anNRR3ZXSm5rOHNaT3VxT1g4NGc5aW01M0d5cDQzQ2dXSnpkOEE3KzVHbHEv?=
- =?utf-8?B?VndCTWEyOHExblA1bkZWYnRGUXQ5OXpDTlFJL1Fta2cybTdsb0dhcy8yNi9B?=
- =?utf-8?B?U21VM3ZmUTZHZWF3dVZOOEVHbGVGbnpLREtVRVNsc3B1MHVrR1JjZ0E2a0hq?=
- =?utf-8?B?MmRuTGpuMzVid1ZjVFliMitCYk9vZHFCSHZtSDlZSEZMc0w4ZFhuMVY2NHJu?=
- =?utf-8?B?U01JNjAzUVR1a1h2dzVwY2lWUFN1MHJTQVE1SnVkWDAwMEs4RlN5bUdwU2lF?=
- =?utf-8?B?ZlJ0MnVKQklEd3ozdE1VWkFrTkNJR2pNU21vTTZyVmVOODFzUFRYYjI0aWhz?=
- =?utf-8?B?RE40R1NWN0M5TkhBQkcxNjkwN2d0NEFabWY1RTI4d0pUQWRUaWdMbUJjbXh1?=
- =?utf-8?B?RzUzY2F6QWU0SklFQnJnOTU3dHkvM3loZzJaMVBZcWViMHNTVTgyaWRCUm9M?=
- =?utf-8?B?MXRTenZpb01TUkFFZmFqejcyZHNsVFBVOHB3eEw2dEVWTGpCMmh1SzVxdXRP?=
- =?utf-8?B?MmMvYkJHZkF4ekRnY2VzQVR1RGpuc0RjVWNxeXFjSzNORVUvbENXZGt1NEVX?=
- =?utf-8?B?SStnelk0eWFyRFdCOWNNL2Y0WU5QMmF0cXdJQnRhYXRES2xJdWttcnRjN0tm?=
- =?utf-8?B?QkIvSDU5Qm5scW1nS1p3d3hqb0p6YVQwTmMxV0c2OUN2c3YweTdnVytsdTVO?=
- =?utf-8?B?c2VJZFBLMSt5dkVtQVdrbGFzRUgxRFZTeWVpaXlaVnNTa1dqYmtnMUExb3R4?=
- =?utf-8?B?QUhQNDBRZHdnZ1YzWGwvM0FhcWZvUVNtb0VHWm5Na21VR1Y2WG5BeXNxa3Nj?=
- =?utf-8?B?VVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1637e9d5-4de1-4fe8-e0a9-08dda31e3876
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 04:13:54.9274
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Li6TxoH2GN2xfZzTzjopyGRxP9FNyPny5MPo0CcPOIE7bz9RnuhBPNsEo6URn2V9rNOsgPcRLTqNJcfhO0yyIYliybFTsjNNTHkKDDHlux4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR11MB8714
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Hi Tony,
+From: Ming Yu <tmyu0@nuvoton.com>
 
-On 5/21/25 3:50 PM, Tony Luck wrote:
-> There are now three meanings for "number of RMIDs":
-> 
-> 1) The number for legacy features enumerated by CPUID leaf 0xF. This
-> is the maximum number of distinct values that can be loaded into the
-> IA32_PQR_ASSOC MSR. Note that systems with Sub-NUMA Cluster mode enabled
-> will force scaling down the CPUID enumerated value by the number of SNC
-> nodes per L3-cache.
-> 
-> 2) The number of registers in MMIO space for each event. This
-> is enumerated in the XML files and is the value initialized into
-> event_group::num_rmids. This will be overwritten with a lower
-> value if hardware does not support all these registers at the
-> same time (see next case).
-> 
-> 3) The number of "h/w counters" (this isn't a strictly accurate
-> description of how things work, but serves as a useful analogy that
-> does describe the limitations) feeding to those MMIO registers. This
-> is enumerated in telemetry_region::num_rmids returned from the call to
-> intel_pmt_get_regions_by_feature()
-> 
-> Event groups with insufficient "h/w counter" to track all RMIDs are
+This patch series introduces support for Nuvoton NCT6694, a peripheral
+expander based on USB interface. It models the chip as an MFD driver
+(1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
+WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
 
-I'd like to highlight that the above sentence follows a section with
-heading "There are now three meanings for "number of RMIDs":" ... following
-such a section with a sentence that then refers to "all RMIDs" is bound
-to make reader wonder which of the three RMIDs are being talked about.
+The MFD driver implements USB device functionality to issue
+custom-define USB bulk pipe packets for NCT6694. Each child device can
+use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
+a command. They can also request interrupt that will be called when the
+USB device receives its interrupt pipe.
 
-Perhaps something like "Event groups with insufficient "h/w counter" to
-track all values that can be loaded into the IA32_PQR_ASSOC MSR ..."
+The following introduces the custom-define USB transactions:
+	nct6694_read_msg - Send bulk-out pipe to write request packet
+			   Receive bulk-in pipe to read response packet
+			   Receive bulk-in pipe to read data packet
 
-> difficult for users to use, since the system may reassign "h/w counters"
-> as any time. This means that users cannot reliably collect two consecutive
-> event counts to compute the rate at which events are occurring.
-> 
-> Ignore such under-resourced event groups unless the user explicitly
-> requests to enable them using the "rdt=" Linux boot argument.
-> 
-> Scan all enabled event groups and assign the RDT_RESOURCE_PERF_PKG
-> resource "num_rmids" value to the smallest of these values to ensure
-> that all resctrl groups have equal monitor capabilities.
-> 
-> N.B. Changed type of rdt_resource::num_rmids to u32 to match.
-> 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  include/linux/resctrl.h                 |  2 +-
->  arch/x86/kernel/cpu/resctrl/internal.h  |  2 ++
->  arch/x86/kernel/cpu/resctrl/intel_aet.c | 27 +++++++++++++++++++++++++
->  arch/x86/kernel/cpu/resctrl/monitor.c   |  2 ++
->  4 files changed, 32 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-> index 4ba51cb598e1..b7e15abcde23 100644
-> --- a/include/linux/resctrl.h
-> +++ b/include/linux/resctrl.h
-> @@ -286,7 +286,7 @@ struct rdt_resource {
->  	int			rid;
->  	bool			alloc_capable;
->  	bool			mon_capable;
-> -	int			num_rmid;
-> +	u32			num_rmid;
->  	enum resctrl_scope	ctrl_scope;
->  	enum resctrl_scope	mon_scope;
->  	struct resctrl_cache	cache;
-> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-> index 524f3c183900..795534b9b9d2 100644
-> --- a/arch/x86/kernel/cpu/resctrl/internal.h
-> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
-> @@ -18,6 +18,8 @@
->  
->  #define RMID_VAL_UNAVAIL		BIT_ULL(62)
->  
-> +extern int rdt_num_system_rmids;
-> +
->  /*
->   * With the above fields in use 62 bits remain in MSR_IA32_QM_CTR for
->   * data to be returned. The counter width is discovered from the hardware
-> diff --git a/arch/x86/kernel/cpu/resctrl/intel_aet.c b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> index c1fc85dbf0d8..1b41167ad976 100644
-> --- a/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> +++ b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> @@ -14,6 +14,7 @@
->  #include <linux/cleanup.h>
->  #include <linux/cpu.h>
->  #include <linux/io.h>
-> +#include <linux/minmax.h>
->  #include <linux/resctrl.h>
->  #include <linux/slab.h>
->  
-> @@ -57,6 +58,9 @@ struct pmt_event {
->   *			telemetry regions.
->   * @pkginfo:		Per-package MMIO addresses of telemetry regions belonging to this group
->   * @guid:		Unique number per XML description file.
-> + * @num_rmids:		Number of RMIDS supported by this group. Will be adjusted downwards
+	nct6694_write_msg - Send bulk-out pipe to write request packet
+			    Send bulk-out pipe to write data packet
+			    Receive bulk-in pipe to read response packet
+			    Receive bulk-in pipe to read data packet
 
-"Will be adjusted" -> "Adjusted"
+Changes since version 11:
+- Use platform_device's id to replace IDA
+- Modify the irq_domain_add_simple() to irq_domain_create_simple() in
+  nct6694.c
+- Update struct data_bittiming_params related part in nct6694_canfd.c
+- Fix the typo in the header in nct6694-hwmon.c
 
-> + *			if enumeration from intel_pmt_get_regions_by_feature() indicates
-> + *			fewer RMIDs can be tracked simultaneously.
->   * @mmio_size:		Number of bytes of MMIO registers for this group.
->   * @num_events:		Number of events in this group.
->   * @evts:		Array of event descriptors.
-> @@ -69,6 +73,7 @@ struct event_group {
->  
->  	/* Remaining fields initialized from XML file. */
->  	u32				guid;
-> +	u32				num_rmids;
->  	size_t				mmio_size;
->  	int				num_events;
->  	struct pmt_event		evts[] __counted_by(num_events);
-> @@ -81,6 +86,7 @@ struct event_group {
->  static struct event_group energy_0x26696143 = {
->  	.name		= "energy",
->  	.guid		= 0x26696143,
-> +	.num_rmids	= 576,
->  	.mmio_size	= (576 * 2 + 3) * 8,
->  	.num_events	= 2,
->  	.evts				= {
-> @@ -96,6 +102,7 @@ static struct event_group energy_0x26696143 = {
->  static struct event_group perf_0x26557651 = {
->  	.name		= "perf",
->  	.guid		= 0x26557651,
-> +	.num_rmids	= 576,
->  	.mmio_size	= (576 * 7 + 3) * 8,
->  	.num_events	= 7,
->  	.evts				= {
-> @@ -253,6 +260,15 @@ static bool get_pmt_feature(enum pmt_feature_id feature)
->  			if ((*peg)->guid == p->regions[i].guid) {
->  				if (rdt_is_option_force_disabled((*peg)->name))
->  					return false;
-> +				/*
-> +				 * Ignore event group with insufficient RMIDs unless the
+Changes since version 10:
+- Add change log for each patch
+- Fix mfd_cell to MFD_CELL_NAME() in nct6694.c
+- Implement IDA to allocate id in gpio-nct6694.c, i2c-nct6694.c,
+  nct6694_canfd.c and nct6694_wdt.c
+- Add header <linux/bitfield.h> in nct6694_canfd.c
+- Add support to config tdc in nct6694_canfd.c
+- Add module parameters to configure WDT's timeout and pretimeout value
+  in nct6694_wdt.c
 
-"insufficient RMIDs" -> "fewer RMIDs than can be loaded into the IA32_PQR_ASSOC MSR"?
-Please feel free to improve.
+Changes since version 9:
+- Add devm_add_action_or_reset() to dispose irq mapping
+- Add KernelDoc to exported functions in nct6694.c
 
-> +				 * user used the rdt= boot option to specifically ask
-> +				 * for it to be enabled.
-> +				 */
-> +				if (p->regions[i].num_rmids < rdt_num_system_rmids &&
-> +				    !rdt_is_option_force_enabled((*peg)->name))
-> +					return false;
-> +				(*peg)->num_rmids = min((*peg)->num_rmids, p->regions[i].num_rmids);
->  				ret = configure_events(*peg, p);
->  				if (!ret) {
->  					(*peg)->pfg = no_free_ptr(p);
-> @@ -272,11 +288,22 @@ static bool get_pmt_feature(enum pmt_feature_id feature)
->   */
->  bool intel_aet_get_events(void)
->  {
-> +	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_PERF_PKG].r_resctrl;
-> +	struct event_group **eg;
->  	bool ret1, ret2;
->  
->  	ret1 = get_pmt_feature(FEATURE_PER_RMID_ENERGY_TELEM);
->  	ret2 = get_pmt_feature(FEATURE_PER_RMID_PERF_TELEM);
->  
-> +	for (eg = &known_event_groups[0]; eg < &known_event_groups[NUM_KNOWN_GROUPS]; eg++) {
-> +		if (!(*eg)->pfg)
-> +			continue;
-> +		if (r->num_rmid)
-> +			r->num_rmid = min(r->num_rmid, (*eg)->num_rmids);
-> +		else
-> +			r->num_rmid = (*eg)->num_rmids;
-> +	}
-> +
->  	return ret1 || ret2;
->  }
->  
-> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-> index c99aa9dacfd8..9cd37be262a2 100644
-> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
-> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-> @@ -32,6 +32,7 @@ bool rdt_mon_capable;
->  
->  #define CF(cf)	((unsigned long)(1048576 * (cf) + 0.5))
->  
-> +int rdt_num_system_rmids;
->  static int snc_nodes_per_l3_cache = 1;
->  
->  /*
-> @@ -350,6 +351,7 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
->  	resctrl_rmid_realloc_limit = boot_cpu_data.x86_cache_size * 1024;
->  	hw_res->mon_scale = boot_cpu_data.x86_cache_occ_scale / snc_nodes_per_l3_cache;
->  	r->num_rmid = (boot_cpu_data.x86_cache_max_rmid + 1) / snc_nodes_per_l3_cache;
-> +	rdt_num_system_rmids = r->num_rmid;
->  	hw_res->mbm_width = MBM_CNTR_WIDTH_BASE;
->  
->  	if (mbm_offset > 0 && mbm_offset <= MBM_CNTR_WIDTH_OFFSET_MAX)
+Changes since version 8:
+- Modify the signed-off-by with my work address
+- Rename all MFD cell names to "nct6694-xxx"
+- Add irq_dispose_mapping() in the error handling path and in the remove
+  function
+- Fix some comments in nct6694.c and in nct6694.h
+- Add module parameters to configure I2C's baudrate in i2c-nct6694.c
+- Rename all function names nct6694_can_xxx to nct6694_canfd_xxx in
+  nct6694_canfd.c
+- Fix nct6694_canfd_handle_state_change() in nct6694_canfd.c
+- Fix nct6694_canfd_start() to configure NBTP and DBTP in nct6694_canfd.c
+- Add can_set_static_ctrlmode() in nct6694_canfd.c
+
+Changes since version 7:
+- Add error handling for devm_mutex_init()
+- Modify the name of the child devices CAN1 and CAN2 to CAN0 and CAN1.
+- Fix multiline comments to net-dev style in nct6694_canfd.c
+
+Changes since version 6:
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+- Fix warnings in nct6694_canfd.c
+- Move the nct6694_can_priv's bec to the end in nct6694_canfd.c
+- Fix warning in nct6694_wdt.c
+- Fix temp_hyst's data type to signed variable in nct6694-hwmon.c
+
+Changes since version 5:
+- Modify the module name and the driver name consistently
+- Fix mfd_cell to MFD_CELL_NAME() and MFD_CELL_BASIC()
+- Drop unnecessary macros in nct6694.c
+- Update private data and drop mutex in nct6694_canfd.c
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+
+Changes since version 4:
+- Modify arguments in read/write function to a pointer to cmd_header
+- Modify all callers that call the read/write function
+- Move the nct6694_canfd.c to drivers/net/can/usb/
+- Fix the missing rx offload function in nct6694_canfd.c
+- Fix warngings in nct6694-hwmon.c
+
+Changes since version 3:
+- Modify array buffer to structure for each drivers
+- Fix defines and comments for each drivers
+- Add header <linux/bits.h> and use BIT macro in nct6694.c and
+  gpio-nct6694.c
+- Modify mutex_init() to devm_mutex_init()
+- Add rx-offload helper in nct6694_canfd.c
+- Drop watchdog_init_timeout() in nct6694_wdt.c
+- Modify the division method to DIV_ROUND_CLOSEST() in nct6694-hwmon.c
+- Drop private mutex and use rtc core lock in rtc-nct6694.c
+- Modify device_set_wakeup_capable() to device_init_wakeup() in
+  rtc-nct6694.c
+
+Changes since version 2:
+- Add MODULE_ALIAS() for each child driver
+- Modify gpio line names be a local variable in gpio-nct6694.c
+- Drop unnecessary platform_get_drvdata() in gpio-nct6694.c
+- Rename each command in nct6694_canfd.c
+- Modify each function name consistently in nct6694_canfd.c
+- Modify the pretimeout validation procedure in nct6694_wdt.c
+- Fix warnings in nct6694-hwmon.c
+
+Changes since version 1:
+- Implement IRQ domain to handle IRQ demux in nct6694.c
+- Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API in nct6694.c
+- Add each driver's command structure
+- Fix USB functions in nct6694.c
+- Fix platform driver registration in each child driver
+- Sort each driver's header files alphabetically
+- Drop unnecessary header in gpio-nct6694.c
+- Add gpio line names in gpio-nct6694.c
+- Fix errors and warnings in nct6694_canfd.c
+- Fix TX-flow control in nct6694_canfd.c
+- Fix warnings in nct6694_wdt.c
+- Drop unnecessary logs in nct6694_wdt.c
+- Modify start() function to setup device in nct6694_wdt.c
+- Add voltage sensors functionality in nct6694-hwmon.c
+- Add temperature sensors functionality in nct6694-hwmon.c
+- Fix overwrite error return values in nct6694-hwmon.c
+- Add write value limitation for each write() function in nct6694-hwmon.c
+- Drop unnecessary logs in rtc-nct6694.c
+- Fix overwrite error return values in rtc-nct6694.c
+- Modify to use dev_err_probe API in rtc-nct6694.c
 
 
-Reinette
+Ming Yu (7):
+  mfd: Add core driver for Nuvoton NCT6694
+  gpio: Add Nuvoton NCT6694 GPIO support
+  i2c: Add Nuvoton NCT6694 I2C support
+  can: Add Nuvoton NCT6694 CANFD support
+  watchdog: Add Nuvoton NCT6694 WDT support
+  hwmon: Add Nuvoton NCT6694 HWMON support
+  rtc: Add Nuvoton NCT6694 RTC support
+
+ MAINTAINERS                         |  12 +
+ drivers/gpio/Kconfig                |  12 +
+ drivers/gpio/Makefile               |   1 +
+ drivers/gpio/gpio-nct6694.c         | 479 ++++++++++++++
+ drivers/hwmon/Kconfig               |  10 +
+ drivers/hwmon/Makefile              |   1 +
+ drivers/hwmon/nct6694-hwmon.c       | 949 ++++++++++++++++++++++++++++
+ drivers/i2c/busses/Kconfig          |  10 +
+ drivers/i2c/busses/Makefile         |   1 +
+ drivers/i2c/busses/i2c-nct6694.c    | 174 +++++
+ drivers/mfd/Kconfig                 |  15 +
+ drivers/mfd/Makefile                |   2 +
+ drivers/mfd/nct6694.c               | 386 +++++++++++
+ drivers/net/can/usb/Kconfig         |  11 +
+ drivers/net/can/usb/Makefile        |   1 +
+ drivers/net/can/usb/nct6694_canfd.c | 820 ++++++++++++++++++++++++
+ drivers/rtc/Kconfig                 |  10 +
+ drivers/rtc/Makefile                |   1 +
+ drivers/rtc/rtc-nct6694.c           | 297 +++++++++
+ drivers/watchdog/Kconfig            |  11 +
+ drivers/watchdog/Makefile           |   1 +
+ drivers/watchdog/nct6694_wdt.c      | 291 +++++++++
+ include/linux/mfd/nct6694.h         |  98 +++
+ 23 files changed, 3593 insertions(+)
+ create mode 100644 drivers/gpio/gpio-nct6694.c
+ create mode 100644 drivers/hwmon/nct6694-hwmon.c
+ create mode 100644 drivers/i2c/busses/i2c-nct6694.c
+ create mode 100644 drivers/mfd/nct6694.c
+ create mode 100644 drivers/net/can/usb/nct6694_canfd.c
+ create mode 100644 drivers/rtc/rtc-nct6694.c
+ create mode 100644 drivers/watchdog/nct6694_wdt.c
+ create mode 100644 include/linux/mfd/nct6694.h
+
+-- 
+2.34.1
 
