@@ -1,115 +1,255 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCB41C6FF9;
-	Wed,  4 Jun 2025 17:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6FC1F30C3
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 17:35:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749058497; cv=none; b=nL9zovYYqqJl00C/Z8Ku2Ew8Hw00ArkM9OFJ6Qb8XJE8zI15eywlvvb7OVcAY0NResnsuOBEscF9Ecowo1bl/2XNlkS/rLDw/Wo2R7LCTacVfyDpbRxUn7Iibb4o5dizVTIti4dOqvJGosx5UATeTHBeFBwht6dm0nGSS42qwg0=
+	t=1749058519; cv=none; b=cs+zYYtMtwPUx0SV2D4f4+tPXnxsFYp0yC8bBcqGwV8RATJrUvzkuwcRArY1Cezqn5I4ceKGijQ1FoSmiw+yX8ojkGuYSDmdBlDJriovU+d85bp9eajDgVVWvYUmRlXpkmtmTaGcLqzmEhkavxe4NZN+5HLHnJYzIfSsivAF94I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749058497; c=relaxed/simple;
-	bh=FdL78BSlYjtCFfvh1e2vA01YHaqveYiFkAeewDTJreo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Rlx1VS2hBl7DG8ksn1J9z3TWh5cWyeMcDI3HWbB88P0gt5VVO1h4BiOKEo4MXIPtnmvhbv+xmvIHO1Uv/LNSh7Fq+DTkDtvGQdRwSW7/0x7hSPRR1x9CU0/yyxj+6JnTmpxQnSKcX4AWYwjfCJ2ZLkTWCbAoZrt+FhkW0hy8fZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=nRc4g47L; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1749058519; c=relaxed/simple;
+	bh=zzxwxQCDKAB4dboxV2rmHCeBL+5T0U4Nw6SEwvA2beQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=IHReHI4ZPPZZV+lOsYdvoxJW/yor5dG9K4lBwIWmpoAhINob1Gs77LYlziCpXrS5hgFGf+O2ohx+saKbRhTLV+0KHBWAIwjCTG7JZigO646tltgUtzcximgRvpBO2TMYYI22RPNlRyaUDAz76YAI+h6UySHDjorlrXKpxpMUHRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S00XEt76; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="nRc4g47L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1749058494;
-	bh=FdL78BSlYjtCFfvh1e2vA01YHaqveYiFkAeewDTJreo=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=nRc4g47LH0Qbd3jP7GOMxitKRYMO4otAu9eM7AoX5uAk8zok1FkIHht/H9vU0fyI1
-	 uwxqUp3JJTP0vAKXvWXHwRHubwrC0y4UmiI3qyjdPvQ3/KZ0SX4GtMe4tTQ+QUGl+e
-	 g/889a10Ip8FiAdd3Bmt5I2dvJk8foMN0OcRguhU=
-Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 03EE31C0396;
-	Wed, 04 Jun 2025 13:34:53 -0400 (EDT)
-Message-ID: <f0b37bc55ed3c02569c74f0fbdb6afa8efd329e2.camel@HansenPartnership.com>
-Subject: Re: [PATCH RFC 0/1] module: Optionally use .platform keyring for
- signatures verification
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Eric Snowberg <eric.snowberg@oracle.com>, Vitaly Kuznetsov
-	 <vkuznets@redhat.com>
-Cc: "linux-security-module@vger.kernel.org"
- <linux-security-module@vger.kernel.org>, "linux-integrity@vger.kernel.org"
- <linux-integrity@vger.kernel.org>, "linux-modules@vger.kernel.org"
- <linux-modules@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
- <linux-doc@vger.kernel.org>, "keyrings@vger.kernel.org"
- <keyrings@vger.kernel.org>, David Howells <dhowells@redhat.com>, David
- Woodhouse <dwmw2@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Luis
- Chamberlain <mcgrof@kernel.org>,  Petr Pavlu <petr.pavlu@suse.com>, Sami
- Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
- Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,  Paul Moore
- <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
- <serge@hallyn.com>,  Peter Jones <pjones@redhat.com>, Robert Holmes
- <robeholmes@gmail.com>, Jeremy Cline <jcline@redhat.com>,  Coiby Xu
- <coxu@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>
-Date: Wed, 04 Jun 2025 13:34:53 -0400
-In-Reply-To: <0FD18D05-6114-4A25-BD77-C32C1D706CC3@oracle.com>
-References: <20250602132535.897944-1-vkuznets@redhat.com>
-	 <0FD18D05-6114-4A25-BD77-C32C1D706CC3@oracle.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S00XEt76"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-312436c2224so137382a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 10:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749058516; x=1749663316; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t5pH19kUin7kuIgMaTOqCzsDR1YIA5s6PqreVVlqrfc=;
+        b=S00XEt76I0O2wA1Jls5cKqrxYWLkxXgPg/YxxBd6wYSi6q1JsXrCZXMfZDN/VCljFL
+         4gUFmMaA5+pzmM6cRl/LwAxKf4rgTTDNoRq1c3sb3kgQCwIaUyUHh9o94D4We1A9lj9E
+         Jm5Z7ESfEfNzC/yD05SQSBugNMnNYRfPbZWZTQzq6qeH+d7TxnkFtFX1B0R23lkOKIuP
+         NYWOUfisZ/EivYcKOeeHnNpq6Mg+9cUB7OGffUccRwB+r8X1gcqBUjOZK02D0WYJEuaz
+         nu9NL5ahqFqkcg4ovFS5vGPKVa56gK0/X8IK/iUm+Q2bng7pdVmhQY+7Zm+cQBMm+IZl
+         R9kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749058516; x=1749663316;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t5pH19kUin7kuIgMaTOqCzsDR1YIA5s6PqreVVlqrfc=;
+        b=OInBOJXrreU3yFPd3yfptIazFl2qnpHU0jJZlVE0/VVAqiXYEjhP+/KMfiZiqQdyWF
+         DGdWp/2HLBtKHxzqDCe0XU2nuYUjv74GADvT/jgCy9Ow6qeuE6XX6ZW4KI1DfTSzJy26
+         +XvKf4LpcM/aIfQZ5OdAnjSTwslo+1BeEJSfYKt6rnE4IT1hgEXo/53ZKmAnzPnm3XWZ
+         1RlZ5CALyt1YmbMG2Z8nMuZ95GJOBzGlE8v5vXX5Wo7toSoEhzbfbSCcSIg5sVf+n/o5
+         QnZ9VlmuuJtS7k4QjdS47OZFrJaEF3fPavJgeusCJn//4kgceIDcjyQd8dcS5s5ywDmM
+         PJ/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXzZ2IYSZZBJZDviFD4KHdPZQWd36yQ9rGgR3ZjehUCJj6qWRHuAbKMMFRNubS2z+hYbq9beOIQgoBmQsY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcHJacObt/A5pgSsP0/GfiE9oGfKqoECyiEsq/5B2Btpged8K7
+	iLlaXcAPVNRqH+d5C7MEIfH9SC3ChaAgtXHSEJ+//a9RAQJWpeuNSsDRV3of9FcyUWbbyPtqJ0P
+	XY00R7Q==
+X-Google-Smtp-Source: AGHT+IEh644nHLMZG8iruWmlaHBNnlnTbIkx/itMwt/c/NwkFBDlRPw5quOq+bS+v13cY3D6K+I2B/zINw8=
+X-Received: from pjbmf11.prod.google.com ([2002:a17:90b:184b:b0:2fc:3022:36b8])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da87:b0:311:e8cc:4253
+ with SMTP id 98e67ed59e1d1-3130ccf5106mr4607756a91.2.1749058516652; Wed, 04
+ Jun 2025 10:35:16 -0700 (PDT)
+Date: Wed, 4 Jun 2025 10:35:15 -0700
+In-Reply-To: <1392db34-0c37-49db-8ece-68c02ff3520d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250529234013.3826933-1-seanjc@google.com> <20250529234013.3826933-12-seanjc@google.com>
+ <1392db34-0c37-49db-8ece-68c02ff3520d@redhat.com>
+Message-ID: <aECD09sxnFAA2Te5@google.com>
+Subject: Re: [PATCH 11/28] KVM: SVM: Add helpers for accessing MSR bitmap that
+ don't rely on offsets
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>, Chao Gao <chao.gao@intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 2025-06-04 at 17:01 +0000, Eric Snowberg wrote:
-> > On Jun 2, 2025, at 7:25=E2=80=AFAM, Vitaly Kuznetsov <vkuznets@redhat.c=
-om>=20
-> > The use-case: virtualized and cloud infrastructure generally
-> > provide an ability to customize SecureBoot variables, in
-> > particular, it is possible to bring your own SecureBoot 'db'. This
-> > may come handy when a user wants to load a third party kernel
-> > module (self built or provided by a third party vendor) while still
-> > using a distro provided kernel. Generally, distro provided kernels
-> > sign modules with an ephemeral key and discard the private part
-> > during the build. While MOK can sometimes be used to sign something
-> > out-of-tree, it is a tedious process requiring either a manual
-> > intervention with shim or a 'certmule' (see
-> > https://blogs.oracle.com/linux/post/the-machine-keyring). In
-> > contrast, the beauty of using SecureBoot 'db' in this scenario is
-> > that for public clouds and virtualized infrastructure it is
-> > normally a property of the OS image (or the whole
-> > infrastructure/host) and not an individual instance; this means
-> > that all instances created from the same template will have 'db'
-> > keys in '.platform' by default.
->=20
-> Hasn=E2=80=99t this approach been rejected multiple times in the past?
+On Wed, Jun 04, 2025, Paolo Bonzini wrote:
+> On 5/30/25 01:39, Sean Christopherson wrote:
+> > diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> > index 47a36a9a7fe5..e432cd7a7889 100644
+> > --- a/arch/x86/kvm/svm/svm.h
+> > +++ b/arch/x86/kvm/svm/svm.h
+> > @@ -628,6 +628,50 @@ static_assert(SVM_MSRS_PER_RANGE == 8192);
+> >   #define SVM_MSRPM_RANGE_1_BASE_MSR	0xc0000000
+> >   #define SVM_MSRPM_RANGE_2_BASE_MSR	0xc0010000
+> > +#define SVM_MSRPM_FIRST_MSR(range_nr)	\
+> > +	(SVM_MSRPM_RANGE_## range_nr ##_BASE_MSR)
+> > +#define SVM_MSRPM_LAST_MSR(range_nr)	\
+> > +	(SVM_MSRPM_RANGE_## range_nr ##_BASE_MSR + SVM_MSRS_PER_RANGE - 1)
+> > +
+> > +#define SVM_MSRPM_BIT_NR(range_nr, msr)						\
+> > +	(range_nr * SVM_MSRPM_BYTES_PER_RANGE * BITS_PER_BYTE +			\
+> > +	 (msr - SVM_MSRPM_RANGE_## range_nr ##_BASE_MSR) * SVM_BITS_PER_MSR)
+> > +
+> > +#define SVM_MSRPM_SANITY_CHECK_BITS(range_nr)					\
+> > +static_assert(SVM_MSRPM_BIT_NR(range_nr, SVM_MSRPM_FIRST_MSR(range_nr) + 1) ==	\
+> > +	      range_nr * 2048 * 8 + 2);						\
+> > +static_assert(SVM_MSRPM_BIT_NR(range_nr, SVM_MSRPM_FIRST_MSR(range_nr) + 7) ==	\
+> > +	      range_nr * 2048 * 8 + 14);
+> > +
+> > +SVM_MSRPM_SANITY_CHECK_BITS(0);
+> > +SVM_MSRPM_SANITY_CHECK_BITS(1);
+> > +SVM_MSRPM_SANITY_CHECK_BITS(2);
+> 
+> Replying here for patches 11/25/26.  None of this is needed, just write a
+> function like this:
+> 
+> static inline u32 svm_msr_bit(u32 msr)
+> {
+> 	u32 msr_base = msr & ~(SVM_MSRS_PER_RANGE - 1);
 
-Well not rejected, just we always thought that people (like me) who
-take control of their secure boot systems are a tiny minority who can
-cope with being different.  I have to say the embedding of all the
-variable manipulations in shim made it quite hard.  However you can use
-the efitools KeyTool to get a graphical method for adding MoK keys even
-in the absence of shim.
+Ooh, clever.
 
-The question is, is there a growing use case for db users beyond the
-exceptions who own their own keys on their laptop, in which case we
-should reconsider this.
+> 	if (msr_base == SVM_MSRPM_RANGE_0_BASE_MSR)
+> 		return SVM_MSRPM_BIT_NR(0, msr);
+> 	if (msr_base == SVM_MSRPM_RANGE_1_BASE_MSR)
+> 		return SVM_MSRPM_BIT_NR(1, msr);
+> 	if (msr_base == SVM_MSRPM_RANGE_2_BASE_MSR)
+> 		return SVM_MSRPM_BIT_NR(2, msr);
+> 	return MSR_INVALID;
 
-Regards,
+I initially had something like this, but I don't like the potential for typos,
+e.g. to fat finger something like:
 
-James
+	if (msr_base == SVM_MSRPM_RANGE_2_BASE_MSR)
+		return SVM_MSRPM_BIT_NR(1, msr);
 
+Which is how I ended up with the (admittedly ugly) CASE macros.  Would you be ok
+keeping that wrinkle?  E.g.
+
+	#define SVM_MSR_BIT_NR_CASE(range_nr, msr)					\
+	case SVM_MSRPM_RANGE_## range_nr ##_BASE_MSR:					\
+		return range_nr * SVM_MSRPM_BYTES_PER_RANGE * BITS_PER_BYTE +		\
+		       (msr - SVM_MSRPM_RANGE_## range_nr ##_BASE_MSR) * SVM_BITS_PER_MSR);
+
+	static __always_inline int svm_msrpm_bit_nr(u32 msr)
+	{
+		switch (msr & ~(SVM_MSRS_PER_RANGE - 1)) {
+		SVM_BUILD_MSR_BITMAP_CASE(0, msr)
+		SVM_BUILD_MSR_BITMAP_CASE(1, msr)
+		SVM_BUILD_MSR_BITMAP_CASE(2, msr)
+		default:
+			return -EINVAL;
+		}
+	}
+
+Actually, better idea!  Hopefully.  With your masking trick, there's no need to
+do subtraction to get the offset within a range, which means getting the bit/byte
+number for an MSR can be done entirely programmatically.  And if we do that, then
+the SVM_MSRPM_RANGE_xxx_BASE_MSR defines can go away, and the (very trivial)
+copy+paste that I dislike also goes away.
+
+Completely untested, but how about this?
+
+	#define SVM_MSRPM_OFFSET_MASK (SVM_MSRS_PER_RANGE - 1)
+
+	static __always_inline int svm_msrpm_bit_nr(u32 msr)
+	{
+		int range_nr;
+
+		switch (msr & ~SVM_MSRPM_OFFSET_MASK) {
+		case 0:
+			range_nr = 0;
+			break;
+		case 0xc0000000:
+			range_nr = 1;
+			break;
+		case 0xc0010000:
+			range_nr = 2;
+			break;
+		default:
+			return -EINVAL;
+		}
+
+		return range_nr * SVM_MSRPM_BYTES_PER_RANGE * BITS_PER_BYTE +
+		       (msr & SVM_MSRPM_OFFSET_MASK) * SVM_BITS_PER_MSR)
+	}
+
+	static inline svm_msrpm_byte_nr(u32 msr)
+	{
+		return svm_msrpm_bit_nr(msr) / BITS_PER_BYTE;
+	}
+
+The open coded literals aren't pretty, but VMX does the same thing, precisely
+because I didn't want any code besides the innermost helper dealing with the
+msr => offset math.
+
+> }
+> 
+> and you can throw away most of the other macros.  For example:
+> 
+> > +#define SVM_BUILD_MSR_BITMAP_CASE(bitmap, range_nr, msr, bitop, bit_rw)		\
+> > +	case SVM_MSRPM_FIRST_MSR(range_nr) ... SVM_MSRPM_LAST_MSR(range_nr):	\
+> > +		return bitop##_bit(SVM_MSRPM_BIT_NR(range_nr, msr) + bit_rw, bitmap);
+> 
+> ... becomes a lot more lowercase:
+> 
+> static inline rtype svm_##action##_msr_bitmap_##access(
+> 	unsigned long *bitmap, u32 msr)
+> {
+> 	u32 bit = svm_msr_bit(msr);
+> 	if (bit == MSR_INVALID)
+> 		return true;
+> 	return bitop##_bit(bit + bit_rw, bitmap);
+
+Yeah, much cleaner.
+
+> }
+> 
+> 
+> In patch 25, also, you just get
+> 
+> static u32 svm_msrpm_offset(u32 msr)
+> {
+> 	u32 bit = svm_msr_bit(msr);
+> 	if (bit == MSR_INVALID)
+> 		return MSR_INVALID;
+> 	return bit / BITS_PER_BYTE;
+> }
+> 
+> And you change everything to -EINVAL in patch 26 to kill MSR_INVALID.
+> 
+> Another nit...
+> 
+> > +#define BUILD_SVM_MSR_BITMAP_HELPERS(ret_type, action, bitop)			\
+> > +	__BUILD_SVM_MSR_BITMAP_HELPER(ret_type, action, bitop, read,  0)	\
+> > +	__BUILD_SVM_MSR_BITMAP_HELPER(ret_type, action, bitop, write, 1)
+> > +
+> > +BUILD_SVM_MSR_BITMAP_HELPERS(bool, test, test)
+> > +BUILD_SVM_MSR_BITMAP_HELPERS(void, clear, __clear)
+> > +BUILD_SVM_MSR_BITMAP_HELPERS(void, set, __set)
+> Yes it's a bit duplication, but no need for the nesting, just do:
+
+I don't have a super strong preference, but I do want to be consistent between
+VMX and SVM, and VMX has the nesting (unsurprisingly, also written by me).  And
+for that, the nested macros add a bit more value due to reads vs writes being in
+entirely different areas of the bitmap.
+
+#define BUILD_VMX_MSR_BITMAP_HELPERS(ret_type, action, bitop)		       \
+	__BUILD_VMX_MSR_BITMAP_HELPER(ret_type, action, bitop, read,  0x0)     \
+	__BUILD_VMX_MSR_BITMAP_HELPER(ret_type, action, bitop, write, 0x800)
+
+BUILD_VMX_MSR_BITMAP_HELPERS(bool, test, test)
+BUILD_VMX_MSR_BITMAP_HELPERS(void, clear, __clear)
+BUILD_VMX_MSR_BITMAP_HELPERS(void, set, __set)
+
+That could be mitigated to some extent by adding a #define to communicate the
+offset, but IMO the nested macros are less ugly than that.
+
+> BUILD_SVM_MSR_BITMAP_HELPERS(bool, test,  test,    read,  0)
+> BUILD_SVM_MSR_BITMAP_HELPERS(bool, test,  test,    write, 1)
+> BUILD_SVM_MSR_BITMAP_HELPERS(void, clear, __clear, read,  0)
+> BUILD_SVM_MSR_BITMAP_HELPERS(void, clear, __clear, write, 1)
+> BUILD_SVM_MSR_BITMAP_HELPERS(void, set,   __set,   read,  0)
+> BUILD_SVM_MSR_BITMAP_HELPERS(void, set,   __set,   write, 1)
+> 
+> Otherwise, really nice.
+> 
+> Paolo
+> 
