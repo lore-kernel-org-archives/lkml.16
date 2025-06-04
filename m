@@ -1,157 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC03617548
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 04:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B401B17548;
+	Wed,  4 Jun 2025 04:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749011830; cv=none; b=j1PgGnUULP2Pfqd3lGdEmycZDhJuXcH46PaqGmlntxcR8BxoYgSHCHS5WIl58PxgUV5F2258E5yl9IVSotZzqXErV21VxIc2T1unUBms9wpmU4/J/dd8xD7aNAqheDa+h1APPfS6BUalT/JM9FKvJzZTOjhsicpwE8WAJKwpi5Y=
+	t=1749011932; cv=none; b=IF9dBp1oBN0EcMgFuJ9hMcqtiFfEdc9t6nwsrZVcln6gvlRbl993K+YqUdVNsqiTdWQF/mmjH5y1/cgcx7ToVzx0+EFRk3URdSBxPpF7L8Np7LXFKKxHraZzWpJQ9zkRF+THpNBLWx9/nnbV6T+3UsINDqdg5Hu3iRODLANVBH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749011830; c=relaxed/simple;
-	bh=ixNUukO6d1iFGOjZM8/9VZ08LhFuGbVaEeq28aUcrG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YpOU2WH3iKUntlWdZ9K/LVxY/vAWFW79WUje6wgS14BnDfNNKaYriMPWlPAS/wCkogxMIZQsoIRDW7EyqaIb5sraCcn2LWkhldybWgWwSLzoFV6a00RWYzh2eXqOHPr3Ud6Ovn2uaxL3xQdcMlEQ4ez373pCvQWdibQ+fVR91yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD46E1758;
-	Tue,  3 Jun 2025 21:36:49 -0700 (PDT)
-Received: from [10.163.60.247] (unknown [10.163.60.247])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E011D3F673;
-	Tue,  3 Jun 2025 21:36:59 -0700 (PDT)
-Message-ID: <d6f18e51-47a4-498c-ad66-60fa2d8efbfc@arm.com>
-Date: Wed, 4 Jun 2025 10:06:54 +0530
+	s=arc-20240116; t=1749011932; c=relaxed/simple;
+	bh=v9tNt8ij2w7sSqJu9RrCFKxSy6NqX61bmrvuP+9UCfU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=P5sMYpwC20/DtY0Z5PReJwRGtb8XbEfqIA6SWnM3kVZLYns/3GyopXY0sXxjKruNKX00fql8vMJOhtF5GlR3Wlb+gp0oC47ygvQzIJK5VvIz7qvEM+hMywmBaZJsUHTCbe6dZfhM/CTMPxLqYviNt04rB6shi9jmGP53UkHC86o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFtLK7ge; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFtLK7ge"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54b10594812so7641112e87.1;
+        Tue, 03 Jun 2025 21:38:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749011929; x=1749616729; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fYpfOOzFinNSdkDJtOkYZ/tqAPzBbFEjtvj0zSUUXAU=;
+        b=LFtLK7gepXXt+LnPp8Rnd3iv/zwblVlhXKX+vizz+3d9mqyXo9n5e5akCY2qTC3K3e
+         P0BVefNRUo9eFS+Sat2NTW9oIK0mfoCohF0wWKrFv2TSvhrZBhvU4YO48ZHBEzSJLhgI
+         Qrg9p63cPvPmTci83b+2RFtyUhqDEZ/JkIIV4iuaDK4guB/90gRigOoe9Qwvpwm3ZnO0
+         CAyiLKK6wY9ckScoi5FsdqbEocyWb6sBXtL+OWLb8qFoSNe/NQMDVr/fX56Da4EhiX9O
+         ssHoHsq6BtQ9n76IabuyM2GDXPFYhBlOBVpE1pFGk7gDyRCyV4gkeGpNJMrCVcbVU09r
+         zW5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749011929; x=1749616729;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fYpfOOzFinNSdkDJtOkYZ/tqAPzBbFEjtvj0zSUUXAU=;
+        b=FSJIGrZ4D7/vYNMII4Ssg7ewxuvy4Q7bCIy+4JwnOusUqh2gAYMh6dy0U2DYtldibb
+         S5cuXpH3TZSsLuXawnsUFMHV/1tJYkI4Ge/C+P4xItIpvIivV2Ku7i/Pxy6SoIUznoii
+         wZuZos17nEJw7VOre3nZpgNsYaMeEtQ9L+LpWNmuPD5wqeuY0h9XU+HP603sQ3G1O3E3
+         Rpkj3wR5gwwQ/10ts++HunXq9HT9/m8RKJl/gFJzjtXjShB0k1mTLr6ze3U/tdgV4GwN
+         rnADHgXXcxVkjeTIwpKqLjE9+8OLahCd0hgh1O1JH9Mf+hga16ZSNPCV4gf7TOb708Z5
+         ubVA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+Z3D08U0vbHyry/rDXjiefFM8nlSDdAhtrIJqhRbRUOGCVErpeXY26H/39lDsRnAZnfMlaMQFD5UU0iGQ@vger.kernel.org, AJvYcCX/yDXIOBGGM8o0m1Xl2Y0qWYgnm9jpBP9xWift8p7R2FVscka/EJcczvf1UUFJCNv7OUGWPSVEpv88N7ey@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlaJoaLiYB1zcZc0wPJsIXYzY9CYgZGXlxfakcHzIhNF4f1dWX
+	4id7KguROv3L/az2R15n3rMECGGhDE0h/wQxSZLttRyXOEnYgfM/EUlFnjeAUO/RZ5tmhBZDzIt
+	y9Dmd/uqhqSXYJCZA6tOL5QWCXyfPFJw=
+X-Gm-Gg: ASbGncse8DvEo+vvIXfgRxPENPGarWGz3l+XfYOkSJqmGwuvnEILq13OEu6tuEhh8BS
+	adlwbJDiSrma4adVG1b0xieuIonIKyasiDq7ttuywWrhPer/U+39N64G9rhf2vVR3FTXwp45xNK
+	GVKJqYZkmDlMfXwkKOpU9SKEphpbF1WpXXsBftqh/UHcGjaw==
+X-Google-Smtp-Source: AGHT+IFmyb5s6d1fvYe/ZUSr9OFpQHJ62AZP9FgQTYRXYaPphQpFPC3gUVwPGipTeeb4nY/wnrwBQIkeedjewMsQ3VM=
+X-Received: by 2002:a2e:a588:0:b0:32a:8855:f1fc with SMTP id
+ 38308e7fff4ca-32ac7247968mr3719491fa.26.1749011928628; Tue, 03 Jun 2025
+ 21:38:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: rename CONFIG_PAGE_BLOCK_ORDER to
- CONFIG_PAGE_BLOCK_ORDER_CEIL.
-To: Zi Yan <ziy@nvidia.com>, david@redhat.com
-Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org,
- isaacmanjarres@google.com, jyescas@google.com, kaleshsingh@google.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- lorenzo.stoakes@oracle.com, masahiroy@kernel.org, mhocko@suse.com,
- minchan@kernel.org, rppt@kernel.org, surenb@google.com,
- tjmercier@google.com, vbabka@suse.cz
-References: <20250603154843.1565239-1-ziy@nvidia.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250603154843.1565239-1-ziy@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Luka <luka.2016.cs@gmail.com>
+Date: Wed, 4 Jun 2025 12:38:36 +0800
+X-Gm-Features: AX0GCFsuydeZr9stWvdQ0Yo1i2lw2RvSKn-of8aPJ6t_UtyDEj5VIUA5MZ9No_Q
+Message-ID: <CALm_T+2FtCDm4R5y-7mGyrY71Ex9G_9guaHCkELyggVfUbs1=w@mail.gmail.com>
+Subject: [Bug] possible deadlock in vfs_rmdir in Linux kernel v6.12
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/3/25 21:18, Zi Yan wrote:
-> The config is in fact an additional upper limit of pageblock_order, so
-> rename it to avoid confusion.
+Dear Kernel Maintainers,
 
-Agreed. This new config has been similar to existing 'pageblock_order'
-that might cause confusion. Hence renaming makes sense. But instead of
-PAGE_BLOCK_ORDER_CEIL should it be rather PAGE_BLOCK_ORDER_MAX ?
+I am writing to report a potential vulnerability identified in the
+upstream Linux Kernel version v6.12, corresponding to the following
+commit in the mainline repository:
 
-> 
-> Fixes: e13e7922d034 ("mm: add CONFIG_PAGE_BLOCK_ORDER to select page block order")
+Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
 
-Does it really need a "Fixes: " tag given there is no problem to fix ?
+This issue was discovered during the testing of the Android 16 AOSP
+kernel, which is based on Linux kernel version 6.12, specifically from
+the AOSP kernel branch:
 
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> ---
->  include/linux/mmzone.h          | 14 +++++++-------
->  include/linux/pageblock-flags.h |  8 ++++----
->  mm/Kconfig                      | 15 ++++++++-------
->  3 files changed, 19 insertions(+), 18 deletions(-)
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 283913d42d7b..523b407e63e8 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -38,19 +38,19 @@
->  #define NR_PAGE_ORDERS (MAX_PAGE_ORDER + 1)
->  
->  /* Defines the order for the number of pages that have a migrate type. */
-> -#ifndef CONFIG_PAGE_BLOCK_ORDER
-> -#define PAGE_BLOCK_ORDER MAX_PAGE_ORDER
-> +#ifndef CONFIG_PAGE_BLOCK_ORDER_CEIL
-> +#define PAGE_BLOCK_ORDER_CEIL MAX_PAGE_ORDER
->  #else
-> -#define PAGE_BLOCK_ORDER CONFIG_PAGE_BLOCK_ORDER
-> -#endif /* CONFIG_PAGE_BLOCK_ORDER */
-> +#define PAGE_BLOCK_ORDER_CEIL CONFIG_PAGE_BLOCK_ORDER_CEIL
-> +#endif /* CONFIG_PAGE_BLOCK_ORDER_CEIL */
->  
->  /*
->   * The MAX_PAGE_ORDER, which defines the max order of pages to be allocated
-> - * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_ORDER,
-> + * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_ORDER_CEIL,
->   * which defines the order for the number of pages that can have a migrate type
->   */
-> -#if (PAGE_BLOCK_ORDER > MAX_PAGE_ORDER)
-> -#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_ORDER
-> +#if (PAGE_BLOCK_ORDER_CEIL > MAX_PAGE_ORDER)
-> +#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_ORDER_CEIL
->  #endif
->  
->  /*
-> diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
-> index e73a4292ef02..e7a86cd238c2 100644
-> --- a/include/linux/pageblock-flags.h
-> +++ b/include/linux/pageblock-flags.h
-> @@ -41,18 +41,18 @@ extern unsigned int pageblock_order;
->   * Huge pages are a constant size, but don't exceed the maximum allocation
->   * granularity.
->   */
-> -#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER)
-> +#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER_CEIL)
->  
->  #endif /* CONFIG_HUGETLB_PAGE_SIZE_VARIABLE */
->  
->  #elif defined(CONFIG_TRANSPARENT_HUGEPAGE)
->  
-> -#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)
-> +#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER_CEIL)
->  
->  #else /* CONFIG_TRANSPARENT_HUGEPAGE */
->  
-> -/* If huge pages are not used, group by PAGE_BLOCK_ORDER */
-> -#define pageblock_order		PAGE_BLOCK_ORDER
-> +/* If huge pages are not used, group by PAGE_BLOCK_ORDER_CEIL */
-> +#define pageblock_order		PAGE_BLOCK_ORDER_CEIL
->  
->  #endif /* CONFIG_HUGETLB_PAGE */
->  
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index eccb2e46ffcb..3b27e644bd1f 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -1017,8 +1017,8 @@ config ARCH_FORCE_MAX_ORDER
->  # the default page block order is MAX_PAGE_ORDER (10) as per
->  # include/linux/mmzone.h.
->  #
-> -config PAGE_BLOCK_ORDER
-> -	int "Page Block Order"
-> +config PAGE_BLOCK_ORDER_CEIL
-> +	int "Page Block Order Upper Limit"
->  	range 1 10 if ARCH_FORCE_MAX_ORDER = 0
->  	default 10 if ARCH_FORCE_MAX_ORDER = 0
->  	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER != 0
-> @@ -1026,12 +1026,13 @@ config PAGE_BLOCK_ORDER
->  	help
->  	  The page block order refers to the power of two number of pages that
->  	  are physically contiguous and can have a migrate type associated to
-> -	  them. The maximum size of the page block order is limited by
-> -	  ARCH_FORCE_MAX_ORDER.
-> +	  them. The maximum size of the page block order is at least limited by
-> +	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER.
->  
-> -	  This config allows overriding the default page block order when the
-> -	  page block order is required to be smaller than ARCH_FORCE_MAX_ORDER
-> -	  or MAX_PAGE_ORDER.
-> +	  This config adds a new upper limit of default page block
-> +	  order when the page block order is required to be smaller than
-> +	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER or other limits
-> +	  (see include/linux/pageblock-flags.h for details).
->  
->  	  Reducing pageblock order can negatively impact THP generation
->  	  success rate. If your workloads uses THP heavily, please use this
+AOSP kernel branch: android16-6.12
+Manifest path: kernel/common.git
+Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
+
+Although this kernel branch is used in Android 16 development, its
+base is aligned with the upstream Linux v6.12 release. I observed this
+issue while conducting stability and fuzzing tests on the Android 16
+platform and identified that the root cause lies in the upstream
+codebase.
+
+
+Bug Location: vfs_rmdir+0x118/0x488 fs/namei.c:4329
+
+Bug Report: https://hastebin.com/share/vobatolola.bash
+
+Entire Log: https://hastebin.com/share/efajodumuh.perl
+
+
+Thank you very much for your time and attention. I sincerely apologize
+that I am currently unable to provide a reproducer for this issue.
+However, I am actively working on reproducing the problem, and I will
+make sure to share any findings or reproducing steps with you as soon
+as they are available.
+
+I greatly appreciate your efforts in maintaining the Linux kernel and
+your attention to this matter.
+
+Best regards,
+Luka
