@@ -1,201 +1,202 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D3826FA50;
-	Wed,  4 Jun 2025 08:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AF22040B6
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024840; cv=none; b=e5ImA12FTN6zQmsOTm8/RdDPoZE2NPviuFCN0epqaA1SRA6MqivPCEX+bVmkbyKsUhHQQdySth2YeeqDcpSQNC3UtgPo3wlGmlMKNljGHn6Ge5SH5C4qnGUGi/kSP7MTHpwWd5k6qKVRud3crYo7dXEf3/ZH5YLvDYctpx0gKoM=
+	t=1749024924; cv=none; b=nVf2l1FmU6GsYrzEUTV/H/NLz1Iey6rpWGuQ2fgRv2ydcjWn9fMb2HYp2JZaP0dWTWYyMkiIOjiDpzaha/cQgXHIgQA6oreQ92EtaBlNDgGwYm8flnCMyKpJngSSizMDycMhuLYwrVWS7WJ6OPtUHHmROyLFA/HnyWkuW+uPLCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024840; c=relaxed/simple;
-	bh=sx7dt9fASGXFnof0E6le4fHW/32v2bXW+fx07LKwKcc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PgAxdnnaFdVKMS3eUDMolwSr6CWEjClYem8eHu9SJ2xVLHlQYht3HMYIiFWVdA/8u+ufFFaFBh1k8chmt3NbTCUCgSot4Pxb4JDbm/Sv21ce8ULP5CFpsuuMjVBkK/0wIGa94ZmdZzNjKVM7xXax3/8WhkT0q6itOIG2XZaslfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bC0cT6nfyz2Cddv;
-	Wed,  4 Jun 2025 16:10:01 +0800 (CST)
-Received: from kwepemg500008.china.huawei.com (unknown [7.202.181.45])
-	by mail.maildlp.com (Postfix) with ESMTPS id 09155180042;
-	Wed,  4 Jun 2025 16:13:50 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.71) by kwepemg500008.china.huawei.com
- (7.202.181.45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 4 Jun
- 2025 16:13:49 +0800
-Message-ID: <ffb669b5-dc98-4264-a92d-5ad1baa4e06e@huawei.com>
-Date: Wed, 4 Jun 2025 16:13:48 +0800
+	s=arc-20240116; t=1749024924; c=relaxed/simple;
+	bh=cHxGZ4oCqEP6ZY34NFekAOLYkHp3zwwYssV0hJQJZJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGWbRtvVyc54AR1jB4NXHxE8QwBNk0waPjbqLjqpSMZPFez6EViVgScv1ABkmXbMto32kHXp/yEji6RrOkAEnBbfVFjKMl8zDuSxhpsjBdcHrD/boUiEX6HWcRtg3ye93bYd7K/TIqII15iPWSfWWgvAn8zUzASBRi3Z1Ib0phE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pkp+qUwe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=o4F20NPK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pkp+qUwe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=o4F20NPK; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pkp+qUwe";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o4F20NPK";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pkp+qUwe";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o4F20NPK"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 38872224FC;
+	Wed,  4 Jun 2025 08:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749024921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1sbQj5PaZtpmNrKn+KyxsA3+QUNkgR2OaWn0POMIpmM=;
+	b=Pkp+qUwe9p2KF745I9PvH0wF9lx56fdLblQEFPHNZ5WhN9EVh3U0200sZ+ncvQtq9b5kB/
+	l/pbbyt22fPP48U1QuP43wzoyNUvDbIY13cIDpfZdBIDBIYyhd/QIrpJz5NOtMTapNmYJ1
+	JBHviq8i34zYgtZsY16A9OiqYbgbAaw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749024921;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1sbQj5PaZtpmNrKn+KyxsA3+QUNkgR2OaWn0POMIpmM=;
+	b=o4F20NPKmaZZSdW/WXnZ97tGnBJnGdkOz0Uc+/RHhrYRfSWMhXn0ouYQXL4ospwIMFmF5T
+	zPaiKxaaFl+pw7DQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749024921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1sbQj5PaZtpmNrKn+KyxsA3+QUNkgR2OaWn0POMIpmM=;
+	b=Pkp+qUwe9p2KF745I9PvH0wF9lx56fdLblQEFPHNZ5WhN9EVh3U0200sZ+ncvQtq9b5kB/
+	l/pbbyt22fPP48U1QuP43wzoyNUvDbIY13cIDpfZdBIDBIYyhd/QIrpJz5NOtMTapNmYJ1
+	JBHviq8i34zYgtZsY16A9OiqYbgbAaw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749024921;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1sbQj5PaZtpmNrKn+KyxsA3+QUNkgR2OaWn0POMIpmM=;
+	b=o4F20NPKmaZZSdW/WXnZ97tGnBJnGdkOz0Uc+/RHhrYRfSWMhXn0ouYQXL4ospwIMFmF5T
+	zPaiKxaaFl+pw7DQ==
+Date: Wed, 4 Jun 2025 10:15:21 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+To: David Hildenbrand <david@redhat.com>, Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org
+Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v5 4/5] kdump: wait for DMA to finish when using CMA
+Message-ID: <aEAAmXiF1FrpBKgf@dwarf.suse.cz>
+References: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
+ <aDoVO4H4CpXPjAdI@dwarf.suse.cz>
+ <da52a835-6a4b-4f11-acac-f4ef995da7e1@redhat.com>
+ <aD8b7Q8Z9sC8meGU@dwarf.suse.cz>
+ <d7cbbab2-8fe0-4a10-8b06-e47da955865e@redhat.com>
+ <aD_4bT1AJv7aKhxy@dwarf.suse.cz>
+ <72d1df17-1e2d-44ce-95eb-fe79db3f4e05@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] ext4: move mb_last_[group|start] to ext4_inode_info
-To: Jan Kara <jack@suse.cz>, <adilger.kernel@dilger.ca>
-CC: <linux-ext4@vger.kernel.org>, <tytso@mit.edu>,
-	<linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <libaokun@huaweicloud.com>, Baokun Li
-	<libaokun1@huawei.com>
-References: <20250523085821.1329392-1-libaokun@huaweicloud.com>
- <20250523085821.1329392-3-libaokun@huaweicloud.com>
- <afjkyrm4y5mp5p72ew3ddqma7v4gkmjqdkcloeaidcj55ruami@zfkn6dzgqfwh>
- <6200e067-0ad1-4dc4-9694-05ee1e977f4c@huawei.com>
- <5oqysbekjn7vazkzrh4lgtg25vqqxgrugvld6av7r2nx7dbghr@kk4yidjw735c>
-Content-Language: en-US
-From: Baokun Li <libaokun1@huawei.com>
-In-Reply-To: <5oqysbekjn7vazkzrh4lgtg25vqqxgrugvld6av7r2nx7dbghr@kk4yidjw735c>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemg500008.china.huawei.com (7.202.181.45)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72d1df17-1e2d-44ce-95eb-fe79db3f4e05@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On 2025/6/2 23:44, Jan Kara wrote:
-> Hello!
->
-> On Fri 30-05-25 17:31:48, Baokun Li wrote:
->> On 2025/5/29 20:56, Jan Kara wrote:
->>> On Fri 23-05-25 16:58:19, libaokun@huaweicloud.com wrote:
->>>> From: Baokun Li <libaokun1@huawei.com>
->>>>
->>>> After we optimized the block group lock, we found another lock
->>>> contention issue when running will-it-scale/fallocate2 with multiple
->>>> processes. The fallocate's block allocation and the truncate's block
->>>> release were fighting over the s_md_lock. The problem is, this lock
->>>> protects totally different things in those two processes: the list of
->>>> freed data blocks (s_freed_data_list) when releasing, and where to start
->>>> looking for new blocks (mb_last_[group|start]) when allocating.
->>>>
->>>> Moreover, when allocating data blocks, if the first try (goal allocation)
->>>> fails and stream allocation is on, it tries a global goal starting from
->>>> the last group we used (s_mb_last_group). This can make things faster by
->>>> writing blocks close together on the disk. But when many processes are
->>>> allocating, they all fight over s_md_lock and might even try to use the
->>>> same group. This makes it harder to merge extents and can make files more
->>>> fragmented. If different processes allocate chunks of very different sizes,
->>>> the free space on the disk can also get fragmented. A small allocation
->>>> might fit in a partially full group, but a big allocation might have
->>>> skipped it, leading to the small IO ending up in a more empty group.
->>>>
->>>> So, we're changing stream allocation to work per inode. First, it tries
->>>> the goal, then the last group where that inode successfully allocated a
->>>> block. This keeps an inode's data closer together. Plus, after moving
->>>> mb_last_[group|start] to ext4_inode_info, we don't need s_md_lock during
->>>> block allocation anymore because we already have the write lock on
->>>> i_data_sem. This gets rid of the contention between allocating and
->>>> releasing blocks, which gives a huge performance boost to fallocate2.
->>>>
->>>> Performance test data follows:
->>>>
->>>> CPU: HUAWEI Kunpeng 920
->>>> Memory: 480GB
->>>> Disk: 480GB SSD SATA 3.2
->>>> Test: Running will-it-scale/fallocate2 on 64 CPU-bound containers.
->>>> Observation: Average fallocate operations per container per second.
->>>>
->>>>                         base     patched
->>>> mb_optimize_scan=0    6755     23280 (+244.6%)
->>>> mb_optimize_scan=1    4302     10430 (+142.4%)
->>>>
->>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->>> Good spotting with the s_md_lock contention here. But your changes don't
->>> quite make sense to me. The idea of streaming allocation in mballoc is to
->>> have an area of filesystem for large files to reduce fragmentation.  When
->>> you switch to per-inode, this effect of packing large files together goes
->>> away. Futhermore for each inode either all allocations will be very likely
->>> streaming or not streaming (the logic uses file size) so either your
->>> per-inode target will be unused or just another constantly used copy of
->>> goal value.
->> Sorry, I didn't intend to  break streaming allocation's semantics.
->> A precise definition of streaming allocation is not found in the
->> existing code, documentation, or historical records. Consequently,
->> my previous understanding of it was somewhat inaccurate.
->>
->> I previously thought it was used to optimize the efficiency of linear
->> traversal. For instance, if 500 inodes are created in group 0 and each
->> file is sequentially filled to 1GB, each file's goal, being empty, would
->> be group 1 (the second group in the inode's flex_bg).
->>
->> Without a global goal and in the absence of non-linear traversal,
->> after the first inode is filled, the second inode would need to traverse
->> groups 1 through 8 to find its first free block.
->>
->> This inefficiency escalates, eventually requiring the 500th inode to
->> potentially traverse almost 4000 block groups to find its first available
->> block.
-> I see. But doesn't ext4_mb_choose_next_group() usually select group from
-> which allocation can succeed instead of linearly scanning through all the
-> groups? The linear scan is just a last resort as far as I remember.
-Yes, that's right. I was referring to how streaming allocation worked
-before mb_optimize_scan was introduced, when we only had linear traversal.
+When re-using the CMA area for kdump there is a risk of pending DMA
+into pinned user pages in the CMA area.
 
-Because mb_optimize_scan's traversal is unordered, it doesn't encounter
-this problem. But linear traversal is still needed when criteria are
-CR_GOAL_LEN_SLOW or CR_ANY_FREE, or when s_mb_max_linear_groups is
-specified.
-> Anyway
-> I'm not 100% sure what was the original motivation for the streaming goal.
-> Maybe Andreas would remember since he was involved in the design.  What I
-> wrote is mostly derived from the general understanding of mballoc operating
-> principles but I could be wrong.
-Hey Andreas, do you happen to remember what the initial thinking was
-behind bringing in the streaming goal (EXT4_MB_STREAM_ALLOC)?
->> I initially believed it could be split to the inode level to reduce
->> traversal time and file fragmentation. However, as you pointed out,
->> its purpose is to cluster large files, not data blocks within a file.
->> Given this, splitting it to the inode level no longer makes sense.
->>> So I can see two sensible solutions here:
->>> a) Drop streaming allocations support altogether.
->> As mentioned above, it can also greatly improve the efficiency of linear
->> traversal, so we can't simply remove it.
->>> b) Enhance streaming allocation support to avoid contention between
->>> processes allocating in parallel and freeing. Frankly, there's no strong
->>> reason why reads & writes of streaming allocation goal need to use a
->>> spinlock AFAICS.
->> Yes, since it's just a hint, we don't need a lock at all, not even
->> fe_start, we just need the last fe_group.
->>> We could just store a physical block number and use
->>> atomic64 accessors for it? Also having single goal value is just causing
->>> more contention on group locks for parallel writers that end up using it
->>> (that's the problem I suspect you were hitting the most).
->> Spot on! We did try a single, lockless atomic64 variable, and just as
->> you pointed out, all processes started traversing from the very same
->> group, which just cranked up the contention, dropping OPS to just 6745.
->>>    So perhaps we
->>> can keep multiple streaming goal slots in the superblock (scale the count
->>> based on CPU count & filesystem group count) and just pick the slot based
->>> on inode number hash to reduce contention?
->>>
->>> 								Honza
->> That's a brilliant idea, actually!
->>
->> Since most containers are CPU-pinned, this would naturally cluster a single
->> container's data blocks together. I believe we can also apply this to inode
->> allocation, so a container's inodes and data are all in a single region,
->> significantly reducing interference between containers.
->>
->> My gratitude for your valuable suggestion!
->> I'm going to try out the CPU bucketing approach.
-> Cool, let's see how it works out :).
+Pages residing in CMA areas can usually not get long-term pinned and
+are instead migrated away from the CMA area, so long-term pinning is
+typically not a concern. (BUGs in the kernel might still lead to
+long-term pinning of such pages if everything goes wrong.)
 
-Initially, I tried defining a per-CPU variable where each process would
-use the goal corresponding to its current CPU. In CPU-pinned scenarios,
-this resulted in almost no interference between CPUs. However, when
-writing to the same file sequentially in a non-CPU-pinned environment,
-the data blocks could become highly fragmented.
+Pages pinned without FOLL_LONGTERM remain in the CMA and may possibly
+be the source or destination of a pending DMA transfer.
 
-Therefore, I switched to defining a regular array whose length is the
-number of CPUs rounded up to the nearest power of 2. By taking the inode
-number modulo the array length, we can get the corresponding goal. This
-guarantees that the same file consistently uses the same goal. Its
-performance is largely similar to inode i_mb_last_group, but it's more
-memory-efficient. I'll be switching to this method in the next version.
+Although there is no clear specification how long a page may be pinned
+without FOLL_LONGTERM, pinning without the flag shows an intent of the
+caller to only use the memory for short-lived DMA transfers, not a transfer
+initiated by a device asynchronously at a random time in the future.
 
-Thanks again for your suggestion!
+Add a delay of CMA_DMA_TIMEOUT_SEC seconds before starting the kdump
+kernel, giving such short-lived DMA transfers time to finish before
+the CMA memory is re-used by the kdump kernel.
 
+Set CMA_DMA_TIMEOUT_SEC to 10 seconds - chosen arbitrarily as both
+a huge margin for a DMA transfer, yet not increasing the kdump time
+too significantly.
 
-Cheers,
-Baokun
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+
+---
+Changes since v4:
+- reworded the paragraph about long-term pinning
+- simplified crash_cma_clear_pending_dma()
+- dropped cma_dma_timeout_sec variable
+
+---
+Changes since v3:
+- renamed CMA_DMA_TIMEOUT_SEC to CMA_DMA_TIMEOUT_MSEC, change delay to 10 seconds
+- introduce a cma_dma_timeout_sec initialized to CMA_DMA_TIMEOUT_SEC
+  to make the timeout trivially tunable if needed in the future
+
+---
+ kernel/crash_core.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 335b8425dd4b..a4ef79591eb2 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -21,6 +21,7 @@
+ #include <linux/reboot.h>
+ #include <linux/btf.h>
+ #include <linux/objtool.h>
++#include <linux/delay.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -33,6 +34,11 @@
+ /* Per cpu memory for storing cpu states in case of system crash. */
+ note_buf_t __percpu *crash_notes;
+ 
++/* time to wait for possible DMA to finish before starting the kdump kernel
++ * when a CMA reservation is used
++ */
++#define CMA_DMA_TIMEOUT_SEC 10
++
+ #ifdef CONFIG_CRASH_DUMP
+ 
+ int kimage_crash_copy_vmcoreinfo(struct kimage *image)
+@@ -97,6 +103,14 @@ int kexec_crash_loaded(void)
+ }
+ EXPORT_SYMBOL_GPL(kexec_crash_loaded);
+ 
++static void crash_cma_clear_pending_dma(void)
++{
++	if (!crashk_cma_cnt)
++		return;
++
++	mdelay(CMA_DMA_TIMEOUT_SEC * 1000);
++}
++
+ /*
+  * No panic_cpu check version of crash_kexec().  This function is called
+  * only when panic_cpu holds the current CPU number; this is the only CPU
+@@ -119,6 +133,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
+ 			crash_setup_regs(&fixed_regs, regs);
+ 			crash_save_vmcoreinfo();
+ 			machine_crash_shutdown(&fixed_regs);
++			crash_cma_clear_pending_dma();
+ 			machine_kexec(kexec_crash_image);
+ 		}
+ 		kexec_unlock();
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
