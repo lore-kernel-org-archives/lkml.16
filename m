@@ -1,228 +1,178 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE8928ECFD
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B695128F50C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749043167; cv=none; b=ZUbqRcZYhm70Tmkq8ESB3N7f1bHVGqJgoa1LQ+Y0vF9CuFJloI/k71r1aKvcqIHP/ANN1MY1p/5FSesa3NVAS5T3b2R7AIBqGbcG2BwJoXiY7vLuecgWV6+t5QHbhNGzT8KU/MWUfmyS6L1Cv72YV9yRnmkLidi2XGm5Qy/pM6o=
+	t=1749043182; cv=none; b=ll70fjS751YDvymrWxXLVC1qbFFeqknHHaRm1eF3h4sOC0zW6gWZYBKLyWEsTrfjKsI5rXZcFCgYlEv36zsXBT+c+k4FKiltz0oq/iQglY5xuyo0I/XKMJO0iJEUZj1K0RmVWlwMphEzxaxNU0WFrZbNbJN7K+3v4R/ySbiGrzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749043167; c=relaxed/simple;
-	bh=wTGQA2MQdl24nKqbtgv4fmUZIT+gcMlYHT8VuLVGmyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JMeru2pVeNkNFlpKGgPQWdgbOPKYjDHlaCllVRYTOiGW8dysQrYCSehORCgcGpju0U24Uli/bH8jvGdR9KriUs2VN0sCxjbcpJgOGxMEplD/vOVO6CgTr9jCX/TG1jmSFBCyOY9+sEhywRHbG+urjnQ/QpXq5y5L/2bB4AyGW9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hPftu2LN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749043182; c=relaxed/simple;
+	bh=bBv7kKtPz698obUpmM8o/T8D8HSJkDBTP2nZQaX4/qY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UgavWwuf64I8E9Ej6abH2Xt/6f2HY+029q530gQfV3+N1SFpOyKbkAOal7I0DFYIT8esTs3w9J+vPAkUG0dfahagAdDQkgMuohE71EaV+BEQDb6GDBpNhSkrQiaA020MwtK2nJQxUzgz1XdbcC/aOMqFIujBk/mq9F+JisBQIbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KIUbitAA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hPftu2LN"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5548A6rU006553
-	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 13:19:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AswgeJqCiwnzTJPIuOWk5TVVklGP7eakncy9+WM5WK0=; b=hPftu2LNVjzuOYgD
-	QJLJSz8nBlytT11l5owXfIWEpJNojejLBK84ukSOs7+9yh9+q39+jmsjdLxKwIBC
-	Kt0J1UDIZva9G+acYtDQ9+B0hHlop22mmQAI7kmJbYJCsfufLORoce9gNAlR8h8E
-	6uIxS4p11HlvdiUNplzVqllCuOmlU4SHjWcxM23fxZe9xxvx+IK+QXNL3Lwg1i69
-	YPTjTai975aW/25RBnkjnpE/CzmEQT3BVC1tRP2q/ea6ex7JsGndZDfXcDeVRkNZ
-	+woW3yYpJKV9MZqdtNR2BxPpQ+gDCqGu8nfi+K9pmQtTTnn1TI8r+hiXkI+4OEDp
-	b+u03g==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8sx531-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 13:19:25 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d2107d6b30so294825785a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:19:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KIUbitAA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749043179;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Yi685aC5CqrR/61sFlwzZ6HBvbWgdnrQT0rYDI85PAk=;
+	b=KIUbitAAUEcHCMPRs6fzVaP5C/7NzQbBO6sRNqDCKXsaUxDzlAy9r1OMbOdCsNGlAK7N1F
+	v285OaPC059U45Zl1H0jgvTQqXyk4Q50GxeUIQ3niZb65JsOa5VJboE7UxlEkbNUlmbkLL
+	9f0zv74udXBpyKsYX2YyAfEN21r7kbA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-574-Ob6d-P8nPmyoh1doq36zLw-1; Wed, 04 Jun 2025 09:19:38 -0400
+X-MC-Unique: Ob6d-P8nPmyoh1doq36zLw-1
+X-Mimecast-MFC-AGG-ID: Ob6d-P8nPmyoh1doq36zLw_1749043177
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4517abcba41so27188985e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:19:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749043164; x=1749647964;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AswgeJqCiwnzTJPIuOWk5TVVklGP7eakncy9+WM5WK0=;
-        b=TyHrZeVDuaBmCftwtDpjHSMHZQiUMKIQCMP7C7Jg4n26IiJaLmvE5xhR6Ak2by+7p9
-         QWWrScb/je/n7sg3XQaXwfUeQsHVuSr1OVqmiwbVNpbzaRBcLsicl78v/KOSvj9TS2Ao
-         ytqALPuZ41js7gdOTB0Kz3jgMIlqEK7GiDZSCb9F+M32aiO/6j6mFDIu7eyALajXal5s
-         Iqpb+nje611KAGy1jjtLdDm9HgFUVNig0V+MbbEY5Ej1/VO9IeG5F3EyASDSkuv+bSZV
-         eMvs7L/JV7tmpWrhrCvKZHIFR5sXEtiXe6BTpQCxcn5gJsJx9Ifrd2jXCBhVIUIPaYhc
-         HHDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVY/pTvNOqMOGRs+Y4iwXoLUI+P+4Xvv++sCt+VsJTfqu2Cx+ElZ/PeFNSveoeUKFAuu3MSn9TNP1YIwKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3cPWuA5WR9rQmJy5xht6feDngjnpvYz2tiM/H30RFeZxltN1O
-	p6jRkfcIMvTTg0sLyQ4FYsMyoeBeHqV3FfPsLVVFeL4Tq+p6VgCatu3u0Ns0vFsZOqO20ZbtzX/
-	UKRtk/Aql+qg1ukkZ1iBBIrSMLCQGQtVdTZ6NKTpXeU5Z9OAjHmzpB881XzVx55bFHgg=
-X-Gm-Gg: ASbGncvdGNa3zlkKMPGbJQPOPVv17raKbo8D5Tg84wve0WHp8BlkkBGWbFFzHHCSVGt
-	IIXOqMLDk8liTR02Wf611UZ4k7duS5doPa5v8cXFIIiDoCDDffR0SA+xIG0y3kQjGCIrv333H3F
-	kI4z56n0TtvkzvQDrJ67SUshQyyvg8pExDLY2970CGyferd/pFgO1sIAugATdvecyCVQ1tibW/n
-	3N8h5b8M2xjR7ASoGd3KXN9Rs9Eloa8yYv7DHaY0M/4CR+Jycu7uPVWQmg4tnf0VCF5FvlITBg4
-	1jWu7ifMkulj4hsKizT/Jy5XyagTK4bM911WkxQ3xj3sC/g+7ZtNwb4Z+SkXwd1KetIxX4H2h74
-	=
-X-Received: by 2002:a05:620a:17a8:b0:7ce:e010:88bb with SMTP id af79cd13be357-7d21a680f7fmr325496285a.22.1749043163542;
-        Wed, 04 Jun 2025 06:19:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFxd2DF9ZZitPuPShjI9mgm9ONIB9V2QAlo0khxT5DcL/JlA3x9QRIZjM9V+8DeFW1VeyZ+ng==
-X-Received: by 2002:a05:620a:17a8:b0:7ce:e010:88bb with SMTP id af79cd13be357-7d21a680f7fmr325489785a.22.1749043162859;
-        Wed, 04 Jun 2025 06:19:22 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85bd25cbsm23502601fa.89.2025.06.04.06.19.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 06:19:21 -0700 (PDT)
-Date: Wed, 4 Jun 2025 16:19:20 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: Ziyue Zhang <quic_ziyuzhan@quicinc.com>, lpieralisi@kernel.org,
-        kwilczynski@kernel.org, manivannan.sadhasivam@linaro.org,
-        robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
-        neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com,
-        conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_krichai@quicinc.com,
-        quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v1 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
- link_down reset
-Message-ID: <mzubbiwkfshplawugahzbtilibnq3wiy6bqetfarbv4kxw46rs@eranz4lm4bu5>
-References: <20250529035416.4159963-1-quic_ziyuzhan@quicinc.com>
- <20250529035416.4159963-3-quic_ziyuzhan@quicinc.com>
- <drr7cngryldptgzbmac7l2xpryugbrnydke3alq5da2mfvmgm5@nwjsqkef7ypc>
- <e8d1b60c-97fe-4f50-8ead-66711f1aa3a7@quicinc.com>
- <34dnpaz3gl5jctcohh5kbf4arijotpdlxn2eze3oixrausyev3@4qso3qg5zn4t>
- <43a6e141-adab-42e9-9966-ec54cb91a6de@quicinc.com>
+        d=1e100.net; s=20230601; t=1749043177; x=1749647977;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Yi685aC5CqrR/61sFlwzZ6HBvbWgdnrQT0rYDI85PAk=;
+        b=r5Gkiqc0QMh79TNPGILMVFlQnuhevf6kLN+9LWcLaWVRogQC3lzXOAK5QhO8+vKetT
+         z2k8nZ3KG3GTKOCK6TsUe/uxJAb+9V5eq23SQetNQZdVhMzUbvVZC0CDKqz7LuzRL+s/
+         F7PmhcPdms9TCYpnosDbgB+vpTd54n6iLkq4m6F7KUS+l6Vj90Pi8CWeKYxRp6dwq+kr
+         Ld/eslNfyM3mw19Ju0qV9SXE7kssHZzypIgtE5ekxpSkY0FVa8bTIT7IyQy6UrktEK6g
+         YCAQg4Y5pZar6RWOUBuutKYzz628zMfwoUoOYwoPBmdOHzfjsnMVOZVDMlJPPlJxKT/q
+         X++w==
+X-Forwarded-Encrypted: i=1; AJvYcCUulN/TxQESNmADa6tgTSNRT9DbeWI5TFZE5rsrdjW/iL9IxP1Z8piRZcPQA1Pcbv5xeE9vO5QEpM4M+yA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCDrY66Gt5BY4yMYtQiZTy6Nnp5cClXsCy1kRGSYjgVml859Fv
+	Mr5yA+CUZcnoiu11mzXHAYWUQgBl/OSvNAD1qmvjUfhTQiYJn+REtSQbnR98glQnaOQOVaULQQM
+	HqYjWS5C9BIK3YGr9jl1BIzepjVWib74tn5zDp6Iea1/SwAUDgpn+rET86x2sp2MgFw==
+X-Gm-Gg: ASbGncu9DConFOw5qf/66CT9cs+FdPxI4lVn1b5kEdEEFpJ0WVPT4tr0veFam/vk//m
+	RRRtU7jHver+eCUEZ0HePaY48TEmEU/y4TMIGhFWLYdoPb+1K8OX4R+Yu8I0o8vjOtCHTmdWnqR
+	c2sWFvPHkf330pOz70ojGQRDNDEWQUulFgqlF1yHaoDxM3DSlbMslh7/trYuDIzNUEbGqztwE4i
+	d9qYeQkFFVWhPdJgbF8euVzdYtUqGJFGvqrByZshjLmlIs8WeyrXVMZz+L/BNUEuG8OS1QT8tj+
+	3bCvRzvHym7Rbra1HPWh3nUNWc5x1bQsIc0FS2v9TGgkBETRMvwFnWNZCC1KtdqpkFvMKm+IimM
+	okJpVn57tMw3d5V4ReZSOeeX+LupF26V6xat3prA=
+X-Received: by 2002:a05:600c:8289:b0:442:dc6f:2f11 with SMTP id 5b1f17b1804b1-451f0b2e6c3mr21071395e9.25.1749043176810;
+        Wed, 04 Jun 2025 06:19:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEy7QaodTgFfDdSvAX72kgMU9zSqScxhzC4fy0RcSCtYfpotJJP4oPdfjuXqIvNkRFSL6q9SQ==
+X-Received: by 2002:a05:600c:8289:b0:442:dc6f:2f11 with SMTP id 5b1f17b1804b1-451f0b2e6c3mr21071215e9.25.1749043176474;
+        Wed, 04 Jun 2025 06:19:36 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf? (p200300d82f1bb8006fdb1af24fbd1fdf.dip0.t-ipconnect.de. [2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f1afebsm199548075e9.0.2025.06.04.06.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 06:19:36 -0700 (PDT)
+Message-ID: <5de3da6b-7c5f-4d40-b3a7-f6a0f5cbc6da@redhat.com>
+Date: Wed, 4 Jun 2025 15:19:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <43a6e141-adab-42e9-9966-ec54cb91a6de@quicinc.com>
-X-Proofpoint-ORIG-GUID: YLHKuQNDGRKk2Exp8ue8fKK1PDqlM3Sd
-X-Authority-Analysis: v=2.4 cv=EPcG00ZC c=1 sm=1 tr=0 ts=684047dd cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=JfrnYn6hAAAA:8 a=COk6AnOGAAAA:8 a=b_c0941waCFHaVHBhDUA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
- a=1CNFftbPRP8L7MoqJWF3:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: YLHKuQNDGRKk2Exp8ue8fKK1PDqlM3Sd
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDEwMSBTYWx0ZWRfX5XvuWOysn2Vz
- Cw8VuCH+v7MqGWmnT2i4z22bChHvPiz20csW3UoNwtPtHRCh33zks7mL1uv+FaBwuHVJ+5JgD1h
- KkAXQBbsvePuHA3pOl225w7J6Buno1MGc/bhvlb4JQkqgF1YBEUleXEVX3ZK2OKu7oZVLEp/NJG
- rS3rUw5ACICDvlp5lpyzafjoJJRYk2EBCtRhubWUeaRAPq+hj0L1og+FB2CeFh/0Y2bjq3r1enI
- F4XM3xXiVbRomH8JnDmQHZCepqmXIoPJgalfMsfNEJU12UbsItZEQQxZX6nOpoVaKerNgnh1zOy
- VbmBoyxW4/xRucgJM2xboxNmxOnJ07sZr668v2TZ2ZELySQPdz3nSZrxDie3K5OrhEwEqwbN4pj
- RYplEH2MGPTQFkZjsDk489gM7etqp7xqd/1lPLClf4DsTUEmq4VYa66PiHfcTRjcnumd507x
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_03,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 mlxscore=0
- clxscore=1015 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506040101
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] userfaultfd: correctly prevent registering
+ VM_DROPPABLE regions
+To: Tal Zussman <tz2294@columbia.edu>,
+ Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Pavel Emelyanov <xemul@parallels.com>, Andrea Arcangeli <aarcange@redhat.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+References: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
+ <20250603-uffd-fixes-v1-1-9c638c73f047@columbia.edu>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250603-uffd-fixes-v1-1-9c638c73f047@columbia.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 04, 2025 at 06:05:21PM +0800, Qiang Yu wrote:
+On 04.06.25 00:14, Tal Zussman wrote:
+> vma_can_userfault() masks off non-userfaultfd VM flags from vm_flags.
+> The vm_flags & VM_DROPPABLE test will then always be false, incorrectly
+> allowing VM_DROPPABLE regions to be registered with userfaultfd.
 > 
-> On 6/4/2025 5:15 PM, Dmitry Baryshkov wrote:
-> > On Wed, Jun 04, 2025 at 03:58:33PM +0800, Ziyue Zhang wrote:
-> >> On 6/3/2025 9:11 PM, Dmitry Baryshkov wrote:
-> >>> On Thu, May 29, 2025 at 11:54:14AM +0800, Ziyue Zhang wrote:
-> >>>> Each PCIe controller on sa8775p supports 'link_down'reset on hardware,
-> >>>> document it.
-> >>> I don't think it's possible to "support" reset in hardware. Either it
-> >>> exists and is routed, or it is not.
-> >> Hi Dmitry,
-> >>
-> >> I will change the commit msg to
-> >> 'Each PCIe controller on sa8775p includes 'link_down'reset on hardware,
-> >> document it.'
-> >> "Supports" implies that the PCIe controller has an active role in enabling
-> >> or managing the reset functionality—it suggests that the controller is designed
-> >> to accommodate or facilitate this feature.
-> >>  "Includes" simply states that the reset functionality is present in the
-> >> hardware—it exists, whether or not it's actively managed or configurable.
-> >> So I think change it to includes will be better.
-> >>
-> >> BRs
-> >> Ziyue
-> >>
-> >>>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> >>>> ---
-> >>>>   .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml  | 13 +++++++++----
-> >>>>   1 file changed, 9 insertions(+), 4 deletions(-)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-> >>>> index e3fa232da2ca..805258cbcf2f 100644
-> >>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-> >>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-> >>>> @@ -61,11 +61,14 @@ properties:
-> >>>>         - const: global
-> >>>>     resets:
-> >>>> -    maxItems: 1
-> >>>> +    minItems: 1
-> >>>> +    maxItems: 2
-> >>> Shouldn't we just update this to maxItems:2 / minItems:2 and drop
-> >>> minItems:1 from the next clause?
-> >> Hi Dmitry,
-> >>
-> >> link_down reset is optional. In many other platforms, like sm8550
-> >> and x1e80100, link_down reset is documented as a optional reset.
-> >> PCIe will works fine without link_down reset. So I think setting it
-> >> as optional is better.
-> > You are describing a hardware. How can a reset be optional in the
-> > _hardware_? It's either routed or not.
+> Additionally, vm_flags is not guaranteed to correspond to the actual
+> VMA's flags. Fix this test by checking the VMA's flags directly.
 > 
-> I feel a bit confused. According to the theory above, everything seems to
-> be non-optional when describing hardware, such as registers, clocks,
-> resets, regulators, and interrupts—all of them either exist or do not.
+> Link: https://lore.kernel.org/linux-mm/5a875a3a-2243-4eab-856f-bc53ccfec3ea@redhat.com/
+> Fixes: 9651fcedf7b9 ("mm: add MAP_DROPPABLE for designating always lazily freeable mappings")
+> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
+> ---
+>   include/linux/userfaultfd_k.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Seems like I misunderstand the concept of 'optional'? Is 'optional' only
-> used for compatibility across different platforms?
-> 
-> Additionally, we have documented the PCIe global interrupt as optional. I
-> was taught that, in the PCIe driver, this interrupt is retrieved using the
-> platform_get_irq_byname_optional API, so it can be documented as optional.
-> However, this still seems to contradict the theory mentioned earlier.
+> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+> index 75342022d144..f3b3d2c9dd5e 100644
+> --- a/include/linux/userfaultfd_k.h
+> +++ b/include/linux/userfaultfd_k.h
+> @@ -218,7 +218,7 @@ static inline bool vma_can_userfault(struct vm_area_struct *vma,
+>   {
+>   	vm_flags &= __VM_UFFD_FLAGS;
+>   
+> -	if (vm_flags & VM_DROPPABLE)
+> +	if (vma->vm_flags & VM_DROPPABLE)
+>   		return false;
+>   
+>   	if ((vm_flags & VM_UFFD_MINOR) &&
 
-I'd say, it should not be defined as optional.
+Nice catch!
 
-> 
-> >> BRs
-> >> Ziyue
-> >>
-> >>>>     reset-names:
-> >>>> +    minItems: 1
-> >>>>       items:
-> >>>> -      - const: pci
-> >>>> +      - const: pci # PCIe core reset
-> >>>> +      - const: link_down # PCIe link down reset
-> >>>>   required:
-> >>>>     - interconnects
-> >>>> @@ -161,8 +164,10 @@ examples:
-> >>>>               power-domains = <&gcc PCIE_0_GDSC>;
-> >>>> -            resets = <&gcc GCC_PCIE_0_BCR>;
-> >>>> -            reset-names = "pci";
-> >>>> +            resets = <&gcc GCC_PCIE_0_BCR>,
-> >>>> +                     <&gcc GCC_PCIE_0_LINK_DOWN_BCR>;
-> >>>> +            reset-names = "pci",
-> >>>> +                          "link_down";
-> >>>>               perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-> >>>>               wake-gpios = <&tlmm 0 GPIO_ACTIVE_HIGH>;
-> >>>> -- 
-> >>>> 2.34.1
-> >>>>
-> >>>>
-> >>>> -- 
-> >>>> linux-phy mailing list
-> >>>> linux-phy@lists.infradead.org
-> >>>> https://lists.infradead.org/mailman/listinfo/linux-phy
-> 
-> -- 
-> With best wishes
-> Qiang Yu
-> 
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
-With best wishes
-Dmitry
+Cheers,
+
+David / dhildenb
+
