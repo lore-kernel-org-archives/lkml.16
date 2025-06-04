@@ -1,73 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F04082864
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 09:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1BE28C84F
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 09:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749029921; cv=none; b=oeJm87ns5qUpXFtU/ch1xXtVE0IzVIYBf7u05/MyBgoStWYPCJlEbL757tyCTgtlTiucVRBi44wF8uLVR0vot82P9YDtISHPsEYHB6MEqfQw9AXHDq1o9Xw2jnMu0GWLyaMN92+vWzDW0YMn+DxFBU9vKihZI3l0tt8/3BUvygg=
+	t=1749030023; cv=none; b=l5tOcHUk6iFj6Htr1/fdP8/T7iObKMPHKx285dd8/O+9B0tnEjqM1poT3z2X+T02UPZwT18iRNA0OPGfEgxD3MXMFCrnItacu5jg81Uukr0L2FSVnhoXgqbMOXeFGh1+rEuh8Q18Lgql3QyHpswSK4Y/xpAW21SII2IbCRTzDvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749029921; c=relaxed/simple;
-	bh=bPEijz33OCflh30HN6mHlgTbhPKyHpd+EHrFxoyoVug=;
+	s=arc-20240116; t=1749030023; c=relaxed/simple;
+	bh=1Oq+QK6DtW3S+GpXlQ6xHnSJKU+GIAlR+6vmh4nl108=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PLDK4ZC+ihBR6+6tg2yWZLXUJu0vbJfwCxZgjPX8QSgjqFDrsgfZd4NKS5tLFztM4raShe9vxYychT6q69Qq+AcYFHhh9u2K4xzmdX3ikEuE5rMG3lt32ptLhLq0LhALm7mHWenQ0kt6aw8oPxPr80WdCFR6UxWR2fvPQ7xPxxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eUasG4cH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=qjBD6kIzl8sEkh22aWiHrocX8oJIwJGvzdFfIJgAt/kr0HLtkGM/hDpmQ4bb+lls9ceTaQ3S445AbNCToePEvTVVVZlP+VxujQgOx+9KTS08HFP53hahyGIJ96wMx3Hyi3pCkbTFVtpwb/NTrnmBtWjlSU+XLW2RtAg6+C8cCa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WuZJA+Cm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eUasG4cH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749029919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gpx6tDJBl4ZRNXlwEZ3goLD9Mt+7BJdqf7MbNFs2CXM=;
-	b=eUasG4cHpU/hJC6BukWLzg/YzIMwF/teLRcjLvl2ia8Wv2bnzpn7/N2fdMcT+ZFUBBYTkM
-	NfGkV68r9DedKKnQrWp6vXAhxIMr8Zq8vba3s3ykUaqszpEVqQ9/C3wLjeg6izRgbw5R03
-	g5IISD2d41AeARL8pgsnmrQAezEL4hc=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-262-DJ61s4Y7NsmBwLYXlDmjog-1; Wed, 04 Jun 2025 05:38:37 -0400
-X-MC-Unique: DJ61s4Y7NsmBwLYXlDmjog-1
-X-Mimecast-MFC-AGG-ID: DJ61s4Y7NsmBwLYXlDmjog_1749029917
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450cf229025so18710745e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 02:38:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WuZJA+Cm"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5548FBni004226
+	for <linux-kernel@vger.kernel.org>; Wed, 4 Jun 2025 09:40:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ehfJf/B06kDJTwICFuLMnBb1b7Hu+mMt7DmuRM99TgU=; b=WuZJA+CmnISg0IGm
+	U/O0RkM8c/iieR5oUzJ3HzpVAX4shqOyIIndJXKX7hGtTtyIEc8SGXDyL55N36Lz
+	vjc2851eI+jeJfIscrWvr7jn+1gS/o0l2WgjYukUBhdEbysZgiLPhBEphMBT7cF3
+	igb+8ITdJgvQjPjaZ9BUeKJgNhGKn/2FpvQwuE3ZCPP21D4j2xsMame6FAwmdzHQ
+	mEKNN7mIVD64fkKBx2+H/sq6bJRig05ULB19AtusL4nfWfmkw3f5mrhZ/RhQzMfV
+	1uax2kC4wLwz6nD3HXYssQr97uwYk2MdyGSjSZs5xeUvisGREzaFtx/ziJTFe8ZI
+	NDtLng==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8rwma5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:40:21 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2358ddcb1e3so52177385ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 02:40:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749029916; x=1749634716;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gpx6tDJBl4ZRNXlwEZ3goLD9Mt+7BJdqf7MbNFs2CXM=;
-        b=RZJeNPICyDBlVDuLZQMJUlHc60KbqtzJbrKOqxIGY+nvaYDz99STOg1CGreOM3m+ex
-         hZEUUplstvtrDDwFm6VP9IlKZhaBrfph/a4zOVHhQ8gqzRwFS2vCyZdS4j5oCB/D3GXm
-         gCX4JmmC2U9gWyl+ssYW5pQFfj8CIxJUospCFNfkVYRQZ8tNyWVt7bUT89uY+pbi7bFt
-         19ZJJD86U1HzjBAkAkyk1E3pPx1tsqAdQc/f+f0RCq/sOe3rSI9Ayvc4k8Ts1h78JATL
-         MjVLsaQ+1x1a7q8KmkiOQ2dTijH1BsuFj9WMIpr/IhLy3vnRhUOOCuAYp6ucYBQ8fDnK
-         CffA==
-X-Forwarded-Encrypted: i=1; AJvYcCXwV0atatLLNbKDV+f0Ckjx4d/iJOzMNrau1UzpeA9l4Snnvmpr28KJ7DRKvpadFR5f6IkrbJ/RQWEFGAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSZiENUXmakPXJ1uK3IKI3ZC3elu2S64n1dDXVflj/txZEnmt1
-	4OXGe2jXD1Kha7DfGmlm5WLVw1oBTnJ5rrtbKZS/IBGSbARh0gMZLx84thBXL84rYFRV5b+ZMwc
-	ls0Yc8uJVpYZZHcsEVBIBPjtcML+ley7Sxl54v22vtqkWEP66B6D3XWSg2Xr7STgmbQ==
-X-Gm-Gg: ASbGnctaEtfVGDH1pykRc16g5zJ7J2eF6rYvi9kyvIhAuCjOtTjCbVfCSlGLspL0r0G
-	td+Y6+yDvY5urz8kdEhx0W67cJbMlpk3piGL1FKZqBo/S+skndQfVL+Afv0nSdgzp6uGtJoiFK5
-	sV6YnLBwP8tM5LzFBXTZA6lIz6j+ktHFD3KRCuy1c1Q4lU9+Tvq/QZ8c6nVVQUQ32bmELfnlDkT
-	uUqA9BEdvScSzF69urStS0RItNo3JWblFBBiA54mzDFVZ8N7Uu0k5v3eQkSBAytcWFa5vVW3Ory
-	cgbeVNSUQ7rngC6vQLBtlXAloAo4ubeBYOcKt1XisTqFekepeGgjH/NP+fMpsPAYlrkjE2O2B4C
-	M/bgNoej8uH2EyWbunYC0r0PhWqCOS9Ti9mE1ggw=
-X-Received: by 2002:a05:600c:4f50:b0:43d:fa59:a685 with SMTP id 5b1f17b1804b1-451f0b3d1fcmr15529475e9.33.1749029916576;
-        Wed, 04 Jun 2025 02:38:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFhDvqnvGf6Bfa5YlLoHbj4qrKSXz6KWAdlhxSHlVgnJQCckFPOWc4xRbzkQI0ut0NbKaKj9A==
-X-Received: by 2002:a05:600c:4f50:b0:43d:fa59:a685 with SMTP id 5b1f17b1804b1-451f0b3d1fcmr15529125e9.33.1749029916092;
-        Wed, 04 Jun 2025 02:38:36 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf? (p200300d82f1bb8006fdb1af24fbd1fdf.dip0.t-ipconnect.de. [2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fa23f4sm200336965e9.14.2025.06.04.02.38.34
+        d=1e100.net; s=20230601; t=1749030020; x=1749634820;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ehfJf/B06kDJTwICFuLMnBb1b7Hu+mMt7DmuRM99TgU=;
+        b=TzWuLwaGUeRqxlVt87+juTb4aiJMhi7yaZ/q/399yqBk5CiyXg7xQZGft8pjQrnFaT
+         pkQJr5fayNi9AeZjN6ahCbccrIHlPElCXD6GEay5hKqlV7uFMp98bYIAv2mxN4A5b2CO
+         IULIpqYYS73+YUI8iuospfWHF1qPss07IP5WTyBiuC30ZK9Cz1juOtRsD4mn66WHV3uS
+         bLwzWj2pa5OxbGn1X1QAb0vGS91o9V7IrfoQqM/R+sUe2yhA+PzqDg7kd63c7mXTJPmX
+         vskP8RN9rm4n/J1XWAXb4nGwd2KZA8bJkGzaDLibwNSBe1XTPDnPUEzaRvoM9+N5o1g2
+         sc7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVh+LXPQRkx4/O7aCOHhYkwPh2W27OOVGR0RSnOFh8ddxG1kUKiPnzBFyzNTvwNBCU0f1YVsF51TpISUA8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtPnNW/y/NNpbF28P2pzesOUqGNtDQJaKSz7jCzYUXXd22VsI+
+	7ugBKP80osMVuIafYDA+vcbp7dUkr+VyIS6DxBcS/DQXhUR91Xd9JH5NqW2NrT2EWg8pFB37F9p
+	g7oIc0AgtrGSUGFIPxD3IS2nqOu7uDa8awm74/tK4zNBMRuHabwdDZ7gJ0wyaHFd0gGiqMFFgos
+	o=
+X-Gm-Gg: ASbGncutHMvIew3rXkVvbtxuPE1tlhjYGwH1Ax2g58o3W5rwl0Y1pRUk7KmvoS12DgU
+	xAnBR8Mg7QkYWPNaVFdipoL0HgrlZzeHXYBxI1mWJxJ2vrPUQPr6FDXQv/4NDRNuJMuoJtowjBW
+	OhqiiX72lrJT+QRvS+BkOiCqRHpjVoIwxDTb3+mE83K/11HyjkIrkciNaFUjtisCU5WEqPqPZT4
+	zowU6/hp3WAJhlNIVtjfOaSkYaT/Auy27sKSGbkULxKJfJ5f/CHrm6Iz4tdzYff+9ZvghwnTyYU
+	GuXU/irpE1X418xnKqgkTxm/d3FV2WpxZ9pObl8zianq9DGIyC0e1UWbNIBGTVfaKD8RCbQ4LgE
+	c
+X-Received: by 2002:a17:902:e80e:b0:234:a139:11fa with SMTP id d9443c01a7336-235e112921emr28649595ad.3.1749030020019;
+        Wed, 04 Jun 2025 02:40:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG1vhO7ZAlz+m9O2qFjGc4Yn7BJiMc/2wBHTuo17Wh8+4LWBA/1mZhmuYZdb7VBXfY2r5zHiA==
+X-Received: by 2002:a17:902:e80e:b0:234:a139:11fa with SMTP id d9443c01a7336-235e112921emr28649175ad.3.1749030019581;
+        Wed, 04 Jun 2025 02:40:19 -0700 (PDT)
+Received: from [10.133.33.130] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd8d6dsm99932015ad.119.2025.06.04.02.40.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 02:38:35 -0700 (PDT)
-Message-ID: <96f7d3a2-2d85-442c-a9f7-e558d4a2ba06@redhat.com>
-Date: Wed, 4 Jun 2025 11:38:34 +0200
+        Wed, 04 Jun 2025 02:40:18 -0700 (PDT)
+Message-ID: <9f332148-57ef-4716-8866-36c702a9aeb6@oss.qualcomm.com>
+Date: Wed, 4 Jun 2025 17:40:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,183 +76,216 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/5] drivers/base/node: Optimize memory block
- registration to reduce boot time
-To: Donet Tom <donettom@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
- Oscar Salvador <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Nilay Shroff
- <nilay@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-References: <2a0a05c2dffc62a742bf1dd030098be4ce99be28.1748452241.git.donettom@linux.ibm.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 6/8] dt-bindings: soc: qcom: pmic-glink: Move X1E80100
+ out of fallbacks
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sebastian Reichel
+ <sre@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+        David Collins <david.collins@oss.qualcomm.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, kernel@oss.qualcomm.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
+ <20250530-qcom_battmgr_update-v2-6-9e377193a656@oss.qualcomm.com>
+ <4e093835-af3b-4a84-b42f-fa7d3a6f60a1@kernel.org>
+ <14cba9ae-e3bb-46e8-a800-be5d979b2e06@oss.qualcomm.com>
+ <b07200a2-4e7b-480e-a683-d116e7da8de8@kernel.org>
+ <c4be4b97-6104-45e3-b555-6691e369c3a4@oss.qualcomm.com>
+ <bcf487c9-e522-44a3-b094-daf98823a195@kernel.org>
+ <a840aa80-75ef-4527-bc17-226ba5157a85@oss.qualcomm.com>
+ <898e998f-11b2-4b08-9580-263046c0615a@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <2a0a05c2dffc62a742bf1dd030098be4ce99be28.1748452241.git.donettom@linux.ibm.com>
+From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+In-Reply-To: <898e998f-11b2-4b08-9580-263046c0615a@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: tnuUtpyaJd1OgM4MZrP8U_acNkjRkTKB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA3MiBTYWx0ZWRfX46iRVKrW3vPc
+ pEH3EFz0wAdzk/LQSjizaO8q03Jxs6qu12AU/8ZNEGW/MYVoMVWdtC+aDyoXH59ZLVyYAbuE8/V
+ CXd3UKegO9EZxPTVGMJ+zaMKKAqHl+WIwxVpk1j4NqLvBvj/AcSHYD9aAqyrXh1ecVHFFDerRb/
+ P+gGV6R7dNBXJx74/Q1tk3JwfKPpYqsgw7P05wLOsh98Hsi5lLNvYmYAshcInp+N1hZ6+YmKFuR
+ MHOdofMVinLja2kAKrjmRD6ToSTVL+UJrghsGKqSOonIDpyfohkffByTJTi998uBBmCe9kdLd0b
+ WuMeA78Uei52Unw+DBm2P77uzkkVJcpYN2mS68ZXqQUFpCafHscACa4ol7jW6k+FVlfZk7K8H+p
+ dYgJyED2ULuFL5PvGhl6vPT1vNCnJ1eYl6mooB9RPJdPBME5MB5UOrq3ZiMU8Zwum/SrvZm4
+X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=68401485 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=OiBcQO-rpwxFLkUKu48A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-GUID: tnuUtpyaJd1OgM4MZrP8U_acNkjRkTKB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 spamscore=0 mlxlogscore=999 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506040072
 
-On 28.05.25 19:18, Donet Tom wrote:
-> During node device initialization, `memory blocks` are registered under
-> each NUMA node. The `memory blocks` to be registered are identified using
-> the node’s start and end PFNs, which are obtained from the node's pg_data
-> 
-> However, not all PFNs within this range necessarily belong to the same
-> node—some may belong to other nodes. Additionally, due to the
-> discontiguous nature of physical memory, certain sections within a
-> `memory block` may be absent.
-> 
-> As a result, `memory blocks` that fall between a node’s start and end
-> PFNs may span across multiple nodes, and some sections within those blocks
-> may be missing. `Memory blocks` have a fixed size, which is architecture
-> dependent.
-> 
-> Due to these considerations, the memory block registration is currently
-> performed as follows:
-> 
-> for_each_online_node(nid):
->      start_pfn = pgdat->node_start_pfn;
->      end_pfn = pgdat->node_start_pfn + node_spanned_pages;
->      for_each_memory_block_between(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn))
->          mem_blk = memory_block_id(pfn_to_section_nr(pfn));
->          pfn_mb_start=section_nr_to_pfn(mem_blk->start_section_nr)
->          pfn_mb_end = pfn_start + memory_block_pfns - 1
->          for (pfn = pfn_mb_start; pfn < pfn_mb_end; pfn++):
->              if (get_nid_for_pfn(pfn) != nid):
->                  continue;
->              else
->                  do_register_memory_block_under_node(nid, mem_blk,
->                                                          MEMINIT_EARLY);
-> 
-> Here, we derive the start and end PFNs from the node's pg_data, then
-> determine the memory blocks that may belong to the node. For each
-> `memory block` in this range, we inspect all PFNs it contains and check
-> their associated NUMA node ID. If a PFN within the block matches the
-> current node, the memory block is registered under that node.
-> 
-> If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, get_nid_for_pfn() performs
-> a binary search in the `memblock regions` to determine the NUMA node ID
-> for a given PFN. If it is not enabled, the node ID is retrieved directly
-> from the struct page.
-> 
-> On large systems, this process can become time-consuming, especially since
-> we iterate over each `memory block` and all PFNs within it until a match is
-> found. When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, the additional
-> overhead of the binary search increases the execution time significantly,
-> potentially leading to soft lockups during boot.
-> 
-> In this patch, we iterate over `memblock region` to identify the
-> `memory blocks` that belong to the current NUMA node. `memblock regions`
-> are contiguous memory ranges, each associated with a single NUMA node, and
-> they do not span across multiple nodes.
-> 
-> for_each_memory_region(r): // r => region
->    if (!node_online(r->nid)):
->      continue;
->    else
->      for_each_memory_block_between(r->base, r->base + r->size - 1):
->        do_register_memory_block_under_node(r->nid, mem_blk, MEMINIT_EARLY);
-> 
-> We iterate over all memblock regions, and if the node associated with the
-> region is online, we calculate the start and end memory blocks based on the
-> region's start and end PFNs. We then register all the memory blocks within
-> that range under the region node.
-> 
-> Test Results on My system with 32TB RAM
-> =======================================
-> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
-> 
-> Without this patch
-> ------------------
-> Startup finished in 1min 16.528s (kernel)
-> 
-> With this patch
-> ---------------
-> Startup finished in 17.236s (kernel) - 78% Improvement
-> 
-> 2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
-> 
-> Without this patch
-> ------------------
-> Startup finished in 28.320s (kernel)
-> 
-> With this patch
-> ---------------
-> Startup finished in 15.621s (kernel) - 46% Improvement
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Oscar Salvador <osalvador@suse.de>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
-> 
-> ---
 
-[...]
+On 6/3/2025 5:34 PM, Krzysztof Kozlowski wrote:
+> On 03/06/2025 09:41, Fenglin Wu wrote:
+>> On 6/3/2025 3:06 PM, Krzysztof Kozlowski wrote:
+>>> On 03/06/2025 08:59, Fenglin Wu wrote:
+>>>> On 6/3/2025 2:47 PM, Krzysztof Kozlowski wrote:
+>>>>> On 03/06/2025 08:42, Fenglin Wu wrote:
+>>>>>> On 6/2/2025 3:40 PM, Krzysztof Kozlowski wrote:
+>>>>>>> On 30/05/2025 09:35, Fenglin Wu via B4 Relay wrote:
+>>>>>>>> From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+>>>>>>>>
+>>>>>>>> Move X1E80100 out of the fallbacks of SM8550 in pmic-glink support.
+>>>>>>> Why?
+>>>>>>>
+>>>>>>> Do not describe what you do here, it's obvious. We see it from the diff.
+>>>>>>>
+>>>>>>>
+>>>>>>> Best regards,
+>>>>>>> Krzysztof
+>>>>>> Previously, in qcom_battmgr driver, x1e80100 was specified with a match
+>>>>>> data the same as sc8280xp, also sm8550 was treated a fallback of sm8350
+>>>>>> without the need of a match data.
+>>>>>>
+>>>>>> In ucsi_glink driver, sm8550 had a match data and x1e80100 was treated
+>>>>>> as a fallback of sm8550. There was no issues to make x1e80100 as a
+>>>>>> fallback of sm8550 from both qcom_battmgr and ucsi_glink driver perspective.
+>>>>>>
+>>>>>> In patch [5/8] in this series, in qcom_battmgr driver, it added charge
+>>>>>> control functionality for sm8550 and x1e80100 differently hence
+>>>>>> different match data was specified for them, and it makes x1e80100 ad
+>>>>>> sm8550 incompatible and they need to be treated differently.
+>>>>> So you break ABI and that's your problem to fix. You cannot make devices
+>>>>> incompatible without good justification.
+>>>> I would say x1e80100 and sm8550 are different and incompatible from a
+>>>> battery management firmware support perspective. The x1e80100 follows
+>>>> the sc8280xp as a compute platform, whereas the sm8550 follows the
+>>>> sm8350 as a mobile platform.
+>>> Not correct arguments for compatibility.
+>>>
+>>>> The difference between them was initially ignored because the sm8550
+>>>> could use everything that the sm8350 has, and no match data needed to be
+>>>> specified for it. However, now the sm8550 has new features that the
+>>>> sm8350 doesn't have, requiring us to treat it differently, thus the
+>>>> incompatibility was acknowledged.
+>>> So they are perfectly compatible.
+>>>
+>>> I really do not understand what we are discussing here. Explain in
+>>> simple terms of DT spec: what is incompatible that SW cannot use one
+>>> interface to handle the other?
+>> 1. x1e80100 was a fallback of sc8280xp, it used "sc8280xp_bat_psy_desc"
+>
+> No, that's not true. Read the binding again:
+>
+>                - qcom,x1e80100-pmic-glink
+>             - const: qcom,sm8550-pmic-glink
+>
+> No fallback to sc8280xp.
+>
+>
+>> when registering the power supply device.
+>>
+>> 2. sm8550 was a fallback of sm8350, and they all used
+>
+> Also not true. The remaining fallback is not sm8350.
+>
+>
+>> "sm8350_bat_psy_desc" when registering the power supply device.
+>>
+>> 3. x1e80100 and sm8550 they are incompatible as they are using different
+>> data structure of "xxx_bat_psy_desc"  and other “psy_desc" too, such as,
+>> ac/usb/wls.
+> Look at the driver and bindings now - they are compatible. It looks like
+> you made it incompatible and now you claim the "they are incompatible".
+> No, you did it. Look at the driver.
+>
+>
+>
+>> 4. For charge control functionality, it's only supported in the battery
+>> management firmware in x1e80100 and sm8550 platforms. And the change in
+>> battmgr driver (patch [5/8]) adds the support by using 2 additional
+>> power supply properties, which eventually need to be added in the
+>> "properties" data member of "xxx_bat_psy_desc" when registering power
+>> supply devices. Hence, "x1e80100_bat_psy_desc" and "sm8550_bat_psy_desc"
+>> are created and used separately when registering power supply device
+>> according to the "variant" value defined in the match data.
+>>
+>> The main code change is in [5/8], I am pasting a snippet which might
+>> help to explain this a little bit:
+>>
+>> -       if (battmgr->variant == QCOM_BATTMGR_SC8280XP) {
+>> -               battmgr->bat_psy = devm_power_supply_register(dev,
+>> &sc8280xp_bat_psy_desc, &psy_cfg);
+>> +       if (battmgr->variant == QCOM_BATTMGR_SC8280XP ||
+>> battmgr->variant == QCOM_BATTMGR_X1E80100) {
+>> +               if (battmgr->variant == QCOM_BATTMGR_X1E80100)
+>> +                       psy_desc = &x1e80100_bat_psy_desc;
+>> +               else
+>> +                       psy_desc = &sc8280xp_bat_psy_desc;
+>> +
+>> +               battmgr->bat_psy = devm_power_supply_register(dev,
+>> psy_desc, &psy_cfg);
+>>                   if (IS_ERR(battmgr->bat_psy))
+>>                           return dev_err_probe(dev,
+>> PTR_ERR(battmgr->bat_psy),
+>
+> This explains nothing to me. I think you did not get my questions at all
+> and just want to push whatever you have in drivers.
+>
+> Such ping pongs are just tiring, so go back to my previous email, read
+> it carefully and try harder to understand what compatibility means.
+>
+>
+> NAK, you are affecting the users and ABI with justification "I make it
+> now incompatible, so it is incompatible".
+>
+> Best regards,
+> Krzysztof
 
->   #ifdef CONFIG_NUMA
->   void memory_block_add_nid(struct memory_block *mem, int nid,
->   			  enum meminit_context context);
-> @@ -188,5 +206,4 @@ void memory_block_add_nid(struct memory_block *mem, int nid,
->    * can sleep.
->    */
->   extern struct mutex text_mutex;
-> -
+Thanks for the explanation with patience. I misunderstood the fallback 
+behavior.
 
-^ Nit: unrelated change?
+I was worried about if the compatible string matching would work 
+correctly if both the device node and the driver declared multiple 
+identical compatible strings.
 
--- 
-Cheers,
+I understand now and even if the device node and the driver have defined 
+multiple identical compatible strings, the best match which is the most 
+specific compatible string will be found.
 
-David / dhildenb
+So in the example below, for X1E80100-CRD, the battmgr driver will 
+always match to "qcom,x1e80100-pmic-glink" which is the most specific 
+compatible string defined at the beginning of the device node compatible 
+string, and the compatibility has not been broken.
+
+In qcom_battmgr driver:
+
+static const struct of_device_id qcom_battmgr_of_variants[] = {
+         ...
+         { .compatible = "qcom,x1e80100-pmic-glink", .data = (void 
+*)QCOM_BATTMGR_X1E80100 },
+         { .compatible = "qcom,sm8550-pmic-glink", .data = (void 
+*)QCOM_BATTMGR_SM8550 },
+         ...
+};
+
+In x1-crd.dtsi:
+
+pmic-glink {
+           compatible = "qcom,x1e80100-pmic-glink",
+                      "qcom,sm8550-pmic-glink",
+                      "qcom,pmic-glink";
+         ...
+
+}
+
+Let me know if my understanding is correct. I will drop patch 
+[6/8],[7/8],[8/8] in next version.
+
+Thanks
 
