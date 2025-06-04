@@ -1,77 +1,72 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C282B9A9;
-	Wed,  4 Jun 2025 06:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A30B2B9A9
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 06:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749019523; cv=none; b=IjNIvq+NmCRcl416H9byz41wZqH1T/rLDMJEvDOz1JnB5zdZ9hut3mXY81zu81pHDyPklqi4MFbs3Yw6vJtq/f0MEVgeQkd03x/Bjt0YI0aeFXemJujpWee9BxTG7pLXwtXiDGOO+WTWMRloAkUsqTbeUEsKLKza0lVps7R0u3s=
+	t=1749019625; cv=none; b=osfDl+Nsg0A7yktmXUg4bYoe/z26oBdZl4yEKYebDLFGTClJ57wNH6Sk7wJMhEX5+OvY07+sFnb19jNI0uTu7BVtbSbdzqsxRWOPeMNwPD2gIm08L7MbUrfu/s5Bh+1Jy/zbA+JzIfEKBRtHHPOs7qqcTW0GO2K0hPtcCsfEgc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749019523; c=relaxed/simple;
-	bh=U0qSZcX1eMnzSURPmjzrUaCB0idOWAKgNjSiFCilZYQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qwUpNicOWIaYW2zwjcSBEI50rqklbnQOzxASJI/m6x4O53pP1uwEHOrgUFyyD70kD0bljHiAz++VgTfbNlAWRSZ+M1DEW+XjtBRhNboRfNjl/v37o6w5ulLdNvbjn28tY+h2H/+2DRXOBctQt3jNmEoKKOa1XuHWRdfhmIZjUQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eh/a/ukK; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eh/a/ukK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=ruGokqO2UBHjwJNIqqtEBXmDU7VQB8+HzDDuFNiwg8w=; b=eh/a/ukK6jQSx8HH/Hh/ayNuve
-	gA3UbB2Gej7KlpBwHW4ib3+gJcLAnwZ3+Ul11/ylQ/o9eRsui6lWA+LfUzYvSve2cRgb7os19keR2
-	mJO1tiqO1ZX29RJJ7kmQ8y/cdqZam2TjH/Owl6+jdBqI6ie/eFz5kVd9rEXErATuknNWyG/7k0m48
-	3aR+Mac564KavIfSWAiYzcFzvtXxWdE6Yx9J94pc4/SJkQPcBLWpJwu7qoSfwoKmSr1UkhdpmoLU5
-	pIecMpqOvV78Br5CpAScXJLQjJ/E0atF6tkqNyvN0Bhjkd4qB6kai9ROslvm8gsc+nT9Mjt9FYExi
-	e4i8V6lQ==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMhsC-00000002ppD-3h1e;
-	Wed, 04 Jun 2025 06:45:17 +0000
-Message-ID: <c15ba8f1-4bf4-4b14-ba79-440a3b17a021@infradead.org>
-Date: Tue, 3 Jun 2025 23:45:14 -0700
+	s=arc-20240116; t=1749019625; c=relaxed/simple;
+	bh=eDXdk+GkyMxGhiDh/2RyCdw+SdD+p1FjgmgPrmlrSiQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=kbDGIcm0EAXu492GUhDrRjEdC2zT7Z4mvpa9mr6FjXaMQaSzW/gPmRZUAYIj3z/IK9dPpTXM3TR88WDXs920oE8UjSOh+j8Qk2YCY/p4ZFUeOFxV5QFcMXhzYYHv1vBhYKziwfI9OzBjrNvk9vpUmjfw08ucAyvU4wumEw9DSDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3dd7e0c7195so63667725ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 23:47:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749019623; x=1749624423;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h3NrKKTZ0Zs2zDwDxnycgMiwtoHzwdTv/6ei+AkKJlc=;
+        b=dKkLgJnfgVC0gi36lTywDGSRbwJrpsRrZCc8ronoks8NYzn0e8bjFVTe/DQ36598xF
+         OKtV/kbFtAmGE0BImxozTnrVcxOiHsrhF9OEMA4e1WuTkShL1PQUaGQy+LpHjl+6ZusJ
+         LKBy3ZZ/rjKt6bnWZS7Xfcy1IL0sNiexJzwTTO2GoNysEnSQwbWHlC0IcauTvUdZnQL+
+         eJkdjOJuT86oZSAg6nOUQtRdNqIsLz2i0FppvVI/Ss/aqQeiXNqVfCCyFHt6aTjWNQRh
+         v8fCT+s5gSr8OY2kgC2QGlFTS6x13nkT0F6H+FLzquhgApSYKN7VQz6Q7k8BxVD9zQIX
+         8lLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHph3fkgMf0El7GhDclVAj2vIUPujg/aidgOwF3CtuVbaD4ApoYy33W7pHhunWS1F6iZiS7MRsvMkAVz0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXSAA3mKy/5+vyvbwu9fwfef5e37l86YI6s0LrQnO+yJ5OyDtn
+	33AZTnpfhxDtCPL2ZjKHRO8R8+04EOd70388X23l8kb8aQkDnCcuZ77YM0ZAoUWBmUVluDpCYMM
+	RFPF4YujBKn//ynnqf6G0gBr7e8UUUXmNRLUgEUcxs2YMgvV3w0qgANfWevE=
+X-Google-Smtp-Source: AGHT+IHfB12PChVwVdRSgVENmMnygOcWXaMpEE0qQTWQbF6p3crjXgOMQmeevgdvR6px1T2ccKGOm0RO2hqH2EXDMiYTMfVWW3OR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for Jun 4 (fs/bcachefs/dirent.o)
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>, linux-bcachefs@vger.kernel.org
-References: <20250604140235.2f14220f@canb.auug.org.au>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250604140235.2f14220f@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:2169:b0:3dd:a13c:b663 with SMTP id
+ e9e14a558f8ab-3ddbee3d73dmr15524255ab.14.1749019623244; Tue, 03 Jun 2025
+ 23:47:03 -0700 (PDT)
+Date: Tue, 03 Jun 2025 23:47:03 -0700
+In-Reply-To: <tencent_F2697FA3B36447577E176326C65365E37905@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683febe7.a00a0220.d8eae.007b.GAE@google.com>
+Subject: Re: [syzbot] [jfs?] kernel BUG in jfs_truncate_nolock
+From: syzbot <syzbot+630f6d40b3ccabc8e96e@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On 6/3/25 9:02 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Please do not add any material destined for v6.17 to you rlinux-next
-> included branches until after v6.16-rc1 has been released.
-> 
-> Changes since 20250603:
-> 
-> The bacahefs tree lost its build failure.
-> 
+Reported-by: syzbot+630f6d40b3ccabc8e96e@syzkaller.appspotmail.com
+Tested-by: syzbot+630f6d40b3ccabc8e96e@syzkaller.appspotmail.com
 
-I am seeing on x86_64 when
-# CONFIG_UNICODE is not set:
+Tested on:
 
-ld: fs/bcachefs/dirent.o: in function `bch2_dirent_init_name':
-dirent.c:(.text+0x13bb): undefined reference to `utf8_casefold'
+commit:         5abc7438 Merge tag 'nfs-for-6.16-1' of git://git.linux..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1673bc82580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=82e79780b034d72f
+dashboard link: https://syzkaller.appspot.com/bug?extid=630f6d40b3ccabc8e96e
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15f3140c580000
 
-
-
--- 
-~Randy
-
+Note: testing is done by a robot and is best-effort only.
