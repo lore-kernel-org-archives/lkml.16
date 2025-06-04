@@ -1,79 +1,74 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4CA148832;
-	Wed,  4 Jun 2025 15:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A69D13A3ED;
+	Wed,  4 Jun 2025 15:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749051018; cv=none; b=b9eWPggKb9+8TkORa1qA2jL94T5LBe7DIi7JUIEYsJGaKWjF/JxfD8BCSZ3eo2c+AIlzCuPX9St/ME+Ny5tEu4yufoDapa+F5sHjC0tUOt97ppWDOpjDm8QjXeGxB65ZFfzqrTED6QQOjgAJKbiXXpTno0iQdKVf6Qu9zZgEePk=
+	t=1749051032; cv=none; b=rS1Ldh33QfzUHrIyTP4kpdiXXk53TvCbz53H3rxjouYZBkXC+f/ZL2zLSNd13bieumGu0ao1BEWinla0L861K7YnX3pw9Dr88x6Ze5cJynEbD3X/qFpXBXmVjYwTUmlaGn/PF+YR8uLm0O9ZtlqV4lu/Fl7LAZdv5lrlYfJCwZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749051018; c=relaxed/simple;
-	bh=IntO0/FbgwhgBAN77s9LpsP+6ciHFlDY2+k3/nq5G/0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Y2pTv81BJuPKeFdbEm7hrBizyHlqGLt8SevGA1k6MLJGXiWEnZ9HmqnEvw4M7JSFw5anBs08eMd1m21r51Wq1bU1dAO8SeCaJ8KbzyvuA8/xLWLrDXiusj+u68j+1U42ZJFn+Ig4PfQUMoTYtYcOTLn/mFiVDOiHISiXrxV9X7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=CWJt10XU; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CWJt10XU"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 554FTfWR079172
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 4 Jun 2025 08:29:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 554FTfWR079172
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749050983;
-	bh=06DGrvhu1rhRSkUp5M4yyd9dVBhB/k8I9ffulUUuiZ4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=CWJt10XUfOPx1/nx9ZCg8yilsk+XhK7WFpAKz7w3Pr/GVmjyx931ADKMUVWGo0Cf9
-	 BK9swHAH6bLOv/AKCFf89kclJ1EVrzrOE5ozFO583Wit4qvaHJslPf69jO+Xb10G/y
-	 HDSkkCzpr8N1DBmV8tHNlTC8h/mVHLiic7FH6lWq0osexW4hVU8viTdhORNcLc+p/i
-	 dwHVhQJyhp+6OyOsKaysK8dMKK1zQmc1U0WCq3uvvRuPwkrwsLOyzkXBvK/6OA+No7
-	 f3TRDnipWQlRTtZnqnOhpWwXoiRZ3Q3qSirfp4/fq7x4AzXRpbjWyBI3ueoLvzfcrm
-	 Vu0ZiW4gOySHw==
-Date: Wed, 04 Jun 2025 08:29:42 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Xin Li <xin@zytor.com>, Sohil Mehta <sohil.mehta@intel.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-CC: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jacob Pan <jacob.pan@linux.microsoft.com>,
-        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_9/9=5D_x86/nmi=3A_Print_source_inf?=
- =?US-ASCII?Q?ormation_with_the_unknown_NMI_console_message?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <31507dc8-b1dc-4df3-bc0c-6958b4218746@zytor.com>
-References: <20250513203803.2636561-1-sohil.mehta@intel.com> <20250513203803.2636561-10-sohil.mehta@intel.com> <31507dc8-b1dc-4df3-bc0c-6958b4218746@zytor.com>
-Message-ID: <CC71F714-803B-44F3-A46D-308B75FB3FD0@zytor.com>
+	s=arc-20240116; t=1749051032; c=relaxed/simple;
+	bh=Vi54+MTJC05Rofk/bnZBllkeyCAg+RDLF5sCSBzbJX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IhZ/4An49FnljHR7w+O2evvCJ3oL9sGPeX0wBMCuguWUq63MmaDN/YzhwbWYC6RWckJbXY58LL7xBlQpZ5IWzwzEZ5f1AYDqmcROLnYUMWmXMd6Qx7leW13QOTPt4hYzZYufcA5cDlnnN9w/FxCkyQKltkaySIl3AXKiMuhQV7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: XAn1vIKZSOugyxDDoxv91A==
+X-CSE-MsgGUID: 9WauvoQcTZWIxlFkCMrSUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="61405822"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="61405822"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 08:30:30 -0700
+X-CSE-ConnectionGUID: TCxxyYDtQAC0rXI23RcsiA==
+X-CSE-MsgGUID: 6aKuB2ElR7OU4wLhtq26/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="176180957"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 08:30:18 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uMq4D-00000003abB-1jJd;
+	Wed, 04 Jun 2025 18:30:13 +0300
+Date: Wed, 4 Jun 2025 18:30:13 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] iio: adc: ti-ads131e08: Fix spelling mistake
+ "tweek" -> "tweak"
+Message-ID: <aEBmhUv-xpNgmv6v@smile.fi.intel.com>
+References: <20250603165706.126031-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603165706.126031-1-colin.i.king@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On June 3, 2025 9:55:32 AM PDT, Xin Li <xin@zytor=2Ecom> wrote:
->On 5/13/2025 1:38 PM, Sohil Mehta wrote:
->> +	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
->> +		pr_emerg_ratelimited("NMI-source bitmap is 0x%lx\n", fred_event_data=
-(regs));
->
->"0x%04lx"?
+On Tue, Jun 03, 2025 at 05:57:06PM +0100, Colin Ian King wrote:
+> There is a spelling mistake in variable tweek_offset and in comment
+> blocks. Fix these.
 
-Seems unnecessary to me to zero-pad it; it just makes small numbers harder=
- to read=2E We don't even use vector 12+ at this time, do we?
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
+Datasheet doesn't give any special term for this, so I think the patch
+is correct. OTOH, the dictionary defines tweek as "A form of atmospherics
+(radio interference) produced when the high-frequency components reach
+the receiver before the low-frequency components." which is somehow might be
+related (like high byte goes before low or vise versa).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
