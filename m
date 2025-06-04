@@ -1,82 +1,99 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A857220E6E3;
-	Wed,  4 Jun 2025 11:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83B756B81;
+	Wed,  4 Jun 2025 11:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749035089; cv=none; b=lA78ePho2Id7Z/69eVjpuL+lTUunPygsdSEKwMezxyNRjA0fr/ehLi0u8gUCXv5Fg6rysW7REkZNGUiSQ2+n1YOyhU2xypEJmuZ7f0C0s1qXyXxVsQFezsnH3OAMM6+YDB1RnMy48YoeCaBBhl+aFvPlHIFawZUHnm50ITrtjyk=
+	t=1749035130; cv=none; b=b3+lgpTNtMwU8DjVFKsvHP4dzlgkx3kAX3qQMXFsgsQl1CYlHnUTLo4EWDgYbd1du7nMvYPvDCZiiWdbaENu/b8ahKYdE+tFC+ySTSrB238uT4UOB75IMSiDUgim0XRh1QAoelxjGYmCU7fZg8WZMH46FHVD4S/3Hz2htqWzPNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749035089; c=relaxed/simple;
-	bh=vrFDCiqXDMtRHbVFVsT+31iDGAdDQ3ptGNMH7XKEI9Q=;
+	s=arc-20240116; t=1749035130; c=relaxed/simple;
+	bh=cg0T1yIQI7Ucejk4Gmh/4YQZt5t7iZ3WyH3OyMfASgw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fCLLqMyhBIo+g89+7MGIE0oeyFb3bmo6WTcvlERZuaEUwwCzDX367MMAuCAo0L19jT696Z+B9PNU/zAC0Fl1vnp18x0uaeb7wwxjAjsX7We0spP99Hzk9rTVrlmC9F6mmwlFyZVV7gLzWFXmISSXrHkUfl+5v9feLbHjuww7IfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tdJExIWU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BALc2CPn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=k9PVAqBRfKJmm70vEioVYDf5PEe4BV/v500sixHSkp+lNJsnuvtF7ynR6uwBN3J/mpLGRHjp1+jRJuvFA4ksmVO/OGdjQgvitAN9nSWTaLKyXt2nXwlmXgFvT19ve127abTH1uc4374Cpx9N3v8X8NbjQ9QLAn2u18SirVKo/eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vyvx8Ew2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tdJExIWU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BALc2CPn"
-Date: Wed, 4 Jun 2025 13:04:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749035079;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vrFDCiqXDMtRHbVFVsT+31iDGAdDQ3ptGNMH7XKEI9Q=;
-	b=tdJExIWU24fpA6+s2PVmEwF5OlREnTVG04LlBr5mh1rW3r0KA8BuSnXw2xtJv5AAPx1YGU
-	A3sC9mL/+kbvrqAeREt4EAgIvVdf9q6bzYnmoIeoz3Ez4ovzgC/RencTsBcdiKirHuSmUn
-	uQYmKQjOE912jmRQHAcfSSYGYv1ZYrqSQkTlJaH/bJuYch4yp8aRTeJ12oA7L78WkIn5TT
-	/2ATA7mG2kECBxOIg10rlQtCM0vjNigf+dCQ9m1dgG/FYMTgDi93uaYGkisyfqGzlCEGVk
-	2E1g+yOxtae8npQ/oWYtUJzPv05T9/DlXtEkI8EsglQAxzbmEny+gkHHtoqqvQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749035079;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vrFDCiqXDMtRHbVFVsT+31iDGAdDQ3ptGNMH7XKEI9Q=;
-	b=BALc2CPnWzOjlqX0PqN8Lvuavq2pw1hJQ+kR+d7cuTD0L5ptSNoho+3HXS69mZsPEHzjml
-	L/2JsK5jDYvsnFAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com
-Subject: Re: [linus:master] [rds]  c50d295c37:
- BUG:unable_to_handle_page_fault_for_address
-Message-ID: <20250604110438.rer2bMSx@linutronix.de>
-References: <202506041623.e45e4f7d-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vyvx8Ew2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3162C4CEE7;
+	Wed,  4 Jun 2025 11:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749035130;
+	bh=cg0T1yIQI7Ucejk4Gmh/4YQZt5t7iZ3WyH3OyMfASgw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vyvx8Ew2CRsTvABqXjBD2PDGfEkQeZfMXE2RMWvgldcItEE7Awc99YdCCJqzkruPg
+	 AxphnFJauUA7oIuZKGY19P81rZQyYDzMAhe7PBQ1B2fgW5M6NX9TC5OgxfPTico+R2
+	 5uEbStFKtnDG76ucSmEEB7HOy4lMN5VCvQZ89ovTYcAusJBqStYckBZ7+jIuKlILmI
+	 nStTOwil5DY2tRKvyyAVaSI9wumTHHf655ERj1yVQJISKer3IYn7lvxFTq6dELezNu
+	 IYqgPN3OO7neFEDPPOY8QqRzRDWnA+9j5/GCQwSVAaRwjqfz7bIHSK5j4ZBlB7wfQZ
+	 9oI4OJEoshAAg==
+Date: Wed, 4 Jun 2025 12:05:25 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Yury Khrustalev <yury.khrustalev@arm.com>, linux-kernel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, linux-api@vger.kernel.org
+Subject: Re: Extending clone_args for clone3()
+Message-ID: <069a9c63-3cb4-4fc4-9566-bfffb6d07cc5@sirena.org.uk>
+References: <aCs65ccRQtJBnZ_5@arm.com>
+ <71c9bd77-85fd-4f00-a36a-8621640ebbb5@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LuHmAmRYU6fI7wQl"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <202506041623.e45e4f7d-lkp@intel.com>
+In-Reply-To: <71c9bd77-85fd-4f00-a36a-8621640ebbb5@app.fastmail.com>
+X-Cookie: Non-sequiturs make me eat lampshades.
 
-On 2025-06-04 16:42:37 [+0800], kernel test robot wrote:
->=20
-> Hello,
-Hi,
 
-> kernel test robot noticed "BUG:unable_to_handle_page_fault_for_address" o=
-n:
->=20
-> commit: c50d295c37f2648a8d9e8a572fedaad027d134bb ("rds: Use nested-BH loc=
-king for rds_page_remainder")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-=E2=80=A6
-> the issue does not always happen, 45 times out of 200 runs as below. but =
-parent
-> keeps clean.
+--LuHmAmRYU6fI7wQl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I can reproduce this quite reliably. Looking=E2=80=A6
+On Wed, Jun 04, 2025 at 10:29:48AM +0200, Arnd Bergmann wrote:
 
-Sebastian
+> As I understand the shadow stack feature, we want this to be enabled
+> whenever the kernel and hardware supports it, completely transparent
+> to an application, right?
+
+Slightly more involved, but roughly.  The application and all libraries
+linked into it should be built targeting shadow stacks (most binaries
+will already be compatible but it's possible they wouldn't be so we
+can't just asssume that) then if everything is compatible shadow stacks
+will be enabled transparently by libc if the system supports them.
+
+> I think ideally we'd check for HWCAP_GCS on arm64 or the equivalent
+> feature on other architectures and expect clone3 to support the
+> longer argument whenever that is set, but it looks like that would
+> break on current kernels that already support HWCAP_GCS but not
+> the clone3 argument.
+
+> Adding one more hwcap flag would be ugly, but that seems to be
+> the easiest way. That way, glibc can just test for the new hwcap
+> flag only use the extra clone3 word if all prerequisites (hardware
+> support, kernel gcs support, clone3 argument support) are there.
+
+We'd also have to add something similar for x86 since that's had the
+support even longer, and the RISC-V series looks like it's getting near
+to being merged too so we'll likely have the same problem there given
+that the clone3() series is not progressing super fast.
+
+--LuHmAmRYU6fI7wQl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhAKHUACgkQJNaLcl1U
+h9BwdQf+MCEl2EhpjZORAr4HEpjhBRMRrwiL5qIKtHRy52EhAgX/Uni52uItWG9G
+67x2Mdaqk4ow2SkawYCT3aTxpccLCmQuXu/hEcvwE0d+MDe8HAhA3CH4kphgTy1d
+3l1LF7Nyz+bwMhRX9FxE2UEAw4cWssEt85vOdCwaA9piZ1mPO7kAKM9zEGg1JnjI
+D3USaqin4rRGqEZDbNW5MVit52App8J1IRHtG2YJn+nYkekp0tl0IH9tFPDJ5bVH
+Z7fQgIbdR4SOebI3WhD7z2Uq4rDTPnJJHoMOmluHuyBi7po9dhZCNQ3XopGiCC/8
+97EyU3KMT/Hdm3w1PRFgPVzMMIeG4g==
+=SyAz
+-----END PGP SIGNATURE-----
+
+--LuHmAmRYU6fI7wQl--
