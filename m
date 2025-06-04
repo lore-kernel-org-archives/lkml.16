@@ -1,86 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731D623C4EE;
-	Wed,  4 Jun 2025 08:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850FC280318;
+	Wed,  4 Jun 2025 08:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024165; cv=none; b=XddAhxs5rOjgc34D3h3TOXuS/lnojS3ogGMGozNHuJUOBCBd7MYhM4hp/8tJ8bphA+2HIpN8jJnU/Nyhrc3JeJc1xwRpSr5LLvwXinNQy7u8Xy+cab/hQDZD7vwdkhf4u6FeLr0Gof9VYWL7ROqoZ+6uDu+NQnwLCWQwjaB/Mo8=
+	t=1749024183; cv=none; b=tAywn9VfQw+Ve0Vnv0vtCQhGwANvYC8QYIzwvkHLuUlLvHgYObcP4NcWsox4tLS8nw3sGOHhilrcUAGFDv1anrtwA7hm/iH+7IbAhundcxpx5LHE/owwGOddVFp+Qd6aCyrtnQTxk8CPMaTHTAMeOg+wVx0KkvP4Mkw74BP6bpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024165; c=relaxed/simple;
-	bh=Jaqas4siZfyHC3zJUwFjJctoaJZnY6E7zLbs1Uswva0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LtiQQwH8m6zJdhkFOBEdJ9EdSS6MYpZwPGN5RlZhrv5cfKn9qmY1S1VTOPHFmR5j4cp1AYQI9gJSmPIdKjHpGis/uWZultCBNJKAKryp/afb4akJ6lv7+jbPhDLfvmd9ehoInz0dRSeOEwuG7NsehIaNs8r8vlcEQ5tqm8SSpzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGe/uAgs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749024183; c=relaxed/simple;
+	bh=ARzsw3DVFJI/KaBVV9iAx3tCbPwv0HsIM0Gn+bEYd3o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UtM26E4wa5/2zl+SA59ANjh1NPF94pntvcy+ggAcrltSRObftAymlqrKKITHQrFYixI7ob4NTNbzTiCw7iyX1etSExNVJLscntVYfIPWVn42FGXmkKtzTd8pgM0QxmM/L74fGbBKofkcYhefYVftUaSu06fyLioX2eXPRCG59JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ESUGD/pU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGe/uAgs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEEDAC4CEE7;
-	Wed,  4 Jun 2025 08:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749024162;
-	bh=Jaqas4siZfyHC3zJUwFjJctoaJZnY6E7zLbs1Uswva0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pGe/uAgsPIRQU2B2h16hQJgTBzIEgOdiEF4FKsN4XNIriqHqJ6kHgQ5iHr0a/PtrJ
-	 IWvt7c4eSRh4Kerl88SEGyp1StCq/y/k9wKYlkPhswytp+CavJA5CjU/RBkWT9s4N3
-	 iMZnrGVoEHbgIa2pAnyGl3mhSigAg5flocJoCgPQfPagn8sjGi41L+UG30Bcld5sZ3
-	 h9OfBVajv5cf+1tQSBKURhDx7qksnrUdvtzKX5Nl5MTF8atMqODyrjtZwM1anCwNoq
-	 Qx9UXNB1Uteet4o7SEmkC5nVPPkjw9g0gXuOV4APy+1USZpTdRR29AscXKceq9l5iE
-	 4JcGR7i8WmDHA==
-Date: Wed, 4 Jun 2025 10:02:21 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, bfoster@redhat.com, 
-	binbin.wu@linux.intel.com, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com, 
-	keirf@google.com, kent.overstreet@linux.dev, kirill.shutemov@intel.com, 
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
-	maz@kernel.org, mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev, 
-	palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com, 
-	pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com, pgonda@google.com, 
-	pvorel@suse.cz, qperret@google.com, quic_cvanscha@quicinc.com, 
-	quic_eberman@quicinc.com, quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, 
-	quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, 
-	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org, 
-	steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com, 
-	tabba@google.com, thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz, 
-	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Subject: Re: [PATCH 1/2] fs: Provide function that allocates a secure
- anonymous inode
-Message-ID: <20250604-rational-stunk-9427c610c219@brauner>
-References: <cover.1748890962.git.ackerleytng@google.com>
- <c03fbe18c3ae90fb3fa7c71dc0ee164e6cc12103.1748890962.git.ackerleytng@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ESUGD/pU"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553KpFxF006543;
+	Wed, 4 Jun 2025 08:02:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=lQHwoMaMS3p
+	BddPuGOSS8QoVRj/CJIKqPEmiKPR9kwM=; b=ESUGD/pUVt9p2Fd1+JnPE8DSvTp
+	z1Ly/GEHwN/Vlo+k9uEXXexBLGXSRQICsV5ax10u//6J96REJoqZKVd8Y3fQ7YFM
+	zwrL3OEFjJx7DxXOq4skKGDXfS1yBZ2AKw2oFp8nb8XTNBNF7kKthcF604MtvzdK
+	mzyB4ZWqoWDUuciRPS5aSGuYhNo0v6S7UUGuHvEzpfO11l2atOvbdCxh6VrcySlf
+	zcIsHLPvHK1m5obSIJnZTAkIS/uOZGy7t16dV+55pcX/A7LvEkOZIvAi+/WuBHn1
+	mVS0X1mmlcOs4GURBjhgJAuKmzfzgTDuCps0SE9Myr9dg3tSByYto91E7rw==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8swa7x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 08:02:47 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55482jWh003948;
+	Wed, 4 Jun 2025 08:02:45 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 46ytumens1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 08:02:45 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55482iRl003943;
+	Wed, 4 Jun 2025 08:02:44 GMT
+Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 55482hB7003916
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 08:02:44 +0000
+Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 4635958)
+	id 7AC4340D26; Wed,  4 Jun 2025 16:02:42 +0800 (CST)
+From: Wenbin Yao <quic_wenbyao@quicinc.com>
+To: catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, andersson@kernel.org,
+        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, kishon@kernel.org, sfr@canb.auug.org.au,
+        linux-phy@lists.infradead.org
+Cc: krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com, quic_cang@quicinc.com,
+        qiang.yu@oss.qualcomm.com, quic_wenbyao@quicinc.com,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: [PATCH v4 2/5] arm64: dts: qcom: x1e80100: add bus topology for PCIe domain 3
+Date: Wed,  4 Jun 2025 16:02:34 +0800
+Message-Id: <20250604080237.494014-3-quic_wenbyao@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250604080237.494014-1-quic_wenbyao@quicinc.com>
+References: <20250604080237.494014-1-quic_wenbyao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c03fbe18c3ae90fb3fa7c71dc0ee164e6cc12103.1748890962.git.ackerleytng@google.com>
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dSNcxvieKdWve-Kt8ZH-TWmqtoHavTOg
+X-Authority-Analysis: v=2.4 cv=EPcG00ZC c=1 sm=1 tr=0 ts=683ffda7 cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=ZDVFxM84AbWdf4itxYgA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: dSNcxvieKdWve-Kt8ZH-TWmqtoHavTOg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2MyBTYWx0ZWRfX9VAlZbggzGFK
+ EcqjROSaieZ7UawfipqoPHwU099pTj90FiOolb1UedeMEuBO/+Y6Hrak9Rvxt2YzDYhz3kzTlZO
+ wIOkK7PuMmKjgEL23y1ETTmF3PmcXhmlJfH+WN9wQj4PPVZmAHNRErGnBOnAUlr8m/EtD97Vkt7
+ gHxMb06RZr4UpZbbdGdyZiY3RkaIJKaAqT87E85uttH0RQAJG4ehiUOEsldmQNp6HS07VCj3FYz
+ jK3aKBjl+jmyH9SWNqNJ3CaUfX1vpmI7hhIjNxAw2bCmibjuI4gaRlhOx6BHoJpRnwqaqbqJsE2
+ bK1yZ/aPRUsxtCbgk9f/AKO3V7b0y7u8ZcRhxGATjvsSawfGOjsMxa4/XhZQrtqWn7f9jawYUK4
+ pOKzOf1kSAFaBvtl/9G3AEUhqffBRpMp0ZfzTIbyMBX6uMom8JCodIU922vWfoHfVGkSKt8b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 mlxscore=0
+ clxscore=1015 mlxlogscore=942 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506040063
 
-On Mon, Jun 02, 2025 at 12:17:54PM -0700, Ackerley Tng wrote:
-> The new function, alloc_anon_secure_inode(), returns an inode after
-> running checks in security_inode_init_security_anon().
-> 
-> Also refactor secretmem's file creation process to use the new
-> function.
-> 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
+From: Qiang Yu <qiang.yu@oss.qualcomm.com>
 
-Once -rc1 is out I'll pull the VFS bits and provide a branch that
-remains stable for the duration of v6.16 development that can be pulled.
+Add pcie3_port node to represent the PCIe bridge of PCIe3 so that PCI slot
+voltage rails can be described under this node in the board's dts.
+
+Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+index a8eb4c5fe..195404ccf 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+@@ -3306,6 +3306,17 @@ opp-128000000 {
+ 					opp-peak-kBps = <15753000 1>;
+ 				};
+ 			};
++
++			pcie3_port: pcie@0 {
++				device_type = "pci";
++				compatible = "pciclass,0604";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie3_phy: phy@1be0000 {
+-- 
+2.34.1
+
