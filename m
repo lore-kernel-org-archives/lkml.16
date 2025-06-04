@@ -1,87 +1,151 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8564E28E610;
-	Wed,  4 Jun 2025 11:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AE128DF15
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 11:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749034812; cv=none; b=g7pfxw4lwi0QhWW1mv66Yq96HEvBw4Frr9xUF0FNjDYb65S3MeKqGV3VOHlH0Lt6pT1yyPDzQW0lMI5ILpvzms8Ud885qi5t9Z0EY5BRHQY/NrIoB2qXBB4Ms9b1KIbSSe9p0ETw9FXJME3kjQfYGbVqH7hD4+0EIJEGF+es55Q=
+	t=1749034844; cv=none; b=TjnGm0dK9yrwakEDIhBQADYaLeUv/+J1zBAP55g4MGRRgH56mBSIqu2LFagAsYUcxUv3RsamNGBVG7sYpbBgyOMb1ByQTbis3xsymVdsnAJhunQJpC5xboLCrakSW15LAIPPOAWyMebyb78m8/82Hx9KyBZHJfkq+QMjuqBkOaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749034812; c=relaxed/simple;
-	bh=Schw2RsYLQNpi+xEERdg/mqlrK2JYXvaTEsebGb49Qo=;
-	h=From:Content-Type:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=anSyolsIVfXow+E49868S2ZT/chg0/Wb5UFjh2F55blx37dePxBKL5m/VAEwgD9BVmEIhOOx6V1+ZjmdLneCLOQeVUjQn9C0lDdpKLzyqS55qYjJD7u2PcEajH5mSXaxyNX4UGhCc1srGGRXzJTwGnMPNu93zfaA5+vV2ZtNHhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BZ2MRuyK; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZ2MRuyK"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fadd3ad18eso41105676d6.2;
-        Wed, 04 Jun 2025 04:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749034809; x=1749639609; darn=vger.kernel.org;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Schw2RsYLQNpi+xEERdg/mqlrK2JYXvaTEsebGb49Qo=;
-        b=BZ2MRuyKYoHD8j+DnuImZItXZQ3K8DKvbsQt62JPHfNF02NjNOAX6BzTTtydTgdT5G
-         nS4tC94c58sPEaEW+OJoFZoYs0+s+C8tNLYqpl9AYG8s5aIBN7bnftYjJ8Fqp0BoOIx4
-         slFXTw8ChywA/pz0jrbWNGvHwg1rct8tpDJso1DHkble7l8mJ314UTrrWdozLonk/kaa
-         2+0P4xubQmEHpE3/piEhfaI4nQblCLuKGIo99nqVyMG3pBACELG0HAxGlqG/HuygqrI5
-         qXyLBXu5HPs7i/cxyxjhlY4vHGvyT9sMtrza5uqM+BwkJAWQ1wNUFPc2dmKcr0yswYja
-         9ARw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749034809; x=1749639609;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Schw2RsYLQNpi+xEERdg/mqlrK2JYXvaTEsebGb49Qo=;
-        b=rIu1At9fVPdw47ykXecSZ9kMxUqiDRGF8q65qsD73qjTlg50WhTGAv/S6yiVQ4gKMQ
-         eCeSXdOJ2nTplaNualTyru7lnneuo6BmFa8iYuC5kVY42EfjDzlSSAjLdvCaEsotsW+B
-         rxQ0II/FLRizladPsEnQTUoE220zeMD8SWVHV27liKukWi2VJNL/5Iu+446yb8aeOtyp
-         gpufPQDDygGONo72nkWSFyqowYs3npPcZ0S/X3TiGsNiMYwIPVfPZGP2N1khNtAQmxPf
-         x6KfaKMJMUIH9NDgUiNDF+Zc+DeTD2NLjjiGE0KstxovGechzqQC2pXpYFlAjmR+/jLf
-         9U5g==
-X-Forwarded-Encrypted: i=1; AJvYcCU5tMW+MZAi0UF/KeERsOUWicdZz9rFMc8lx0tmG8OJrbQVI/p5+f+Yo5z2p39d6BTaFwF8YuEfXkESqqM=@vger.kernel.org, AJvYcCWmwiDXNUw9pNgtKCQa1Q0ibvU5SkKzX6eEEYqkZ60Qk58Ti62G/9kf2jqS0JzVwoOWN7mKtWRJjfmxlBzz6qs=@vger.kernel.org, AJvYcCWubQjVnxcBCjJzYS8MF6y0+zlQWEoc3j0q5bReFlazmoEJEY8tNZ1yX77EDmfsbsTcrxd3mA4rHQjYyw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYGa6v5z2CBTquYErqSoKtzpqp2mk0MYIu1yotm5YKla3enP+6
-	oldmlMTxDvy6WOXDdrrewyk7xs/I88/R5a7dlLfb+JdtQyJlFwEeD1MP
-X-Gm-Gg: ASbGncvjRbMaDbJAL9I3clIO4kLqC2a36kjitQDG0WbqFPYOlZEguWxEV6hPhESqVvJ
-	bB5Qmzosr7tD0YZIyeQABqP1YEmPFPYDdITxDRx0MmV5Q/y0XIcchkLdJ6bZJkrRdhe4G5aoFe1
-	tdAUDhMkrjj5g0ghIudDaFGEx9egovnqw+0cKrYMoLU3kP/8QJVzMYfXQCu43jFfgsdejvWGfjF
-	cb+W4p5v47lACb8Y9+O+OVcRORjLWhKnL46D9Mw73iplV4f8Dk6Ncm1RidgT6xkfmCS1f7zmXbh
-	iQLcKQT2m4EZWXnFflkvfM+w16zCeuR1IgxKkSv06Ld1bMusXBnWT4KXqM8i3BbwR9yzE1WhnJL
-	8Ky94QUuzy5tUqi2vZDXoUkVx2TpVvONTk8xktbbrWw==
-X-Google-Smtp-Source: AGHT+IEqSF8mjarZ/kRpcwxU9I19cNQnsgHots4Mmgea27/PfoN1l+IsQDKOfP8c8Ri0J7J4W7BS0g==
-X-Received: by 2002:ad4:5ce2:0:b0:6fa:bb44:fddf with SMTP id 6a1803df08f44-6faf6e87e98mr35729696d6.16.1749034808945;
-        Wed, 04 Jun 2025 04:00:08 -0700 (PDT)
-Received: from smtpclient.apple (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fafb6899dasm3364456d6.21.2025.06.04.04.00.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 04:00:08 -0700 (PDT)
-From: Rudraksha Gupta <guptarud@gmail.com>
-X-Google-Original-From: Rudraksha Gupta <GuptaRud@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1749034844; c=relaxed/simple;
+	bh=v/veQCLfrMcIRAj6dJqLlBlutbTVZR6wTEh4vNB9rjU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AtzlArl8lLLvJKsTMDfvXWqdTPlUJ6oUahdSh2bfv0HDqqXUCyGuFfHP2iAISDj1UJXQX2pdy0iqz4WsHfXhb/+vEWK/Dd8jE8XlBgx6hpPKEr1//Iw1UWs1XtaqLP6yb3nxoIL4d/qQknfGd3i/RfR8Ak0GjuyK2mjaMjvXLI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1uMlrD-0000Jr-37; Wed, 04 Jun 2025 13:00:31 +0200
+Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1uMlrC-001mPi-2B;
+	Wed, 04 Jun 2025 13:00:30 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1uMlrC-001JDN-1w;
+	Wed, 04 Jun 2025 13:00:30 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Wed, 04 Jun 2025 13:00:30 +0200
+Subject: [PATCH] clk: scmi: Fix children encountered before parents case
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: REGRESSION: armv7 build mismatched types
-Date: Wed, 4 Jun 2025 03:59:56 -0700
-Message-Id: <C830877D-1EC4-4F94-947B-8B5CD7E09546@gmail.com>
-References: <CANiq72kghKg7FU=W_yO_q9VuCf=smiyzvrcU8oOFG2FFFsOQiA@mail.gmail.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
- Thorsten Leemhuis <linux@leemhuis.info>, linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-In-Reply-To: <CANiq72kghKg7FU=W_yO_q9VuCf=smiyzvrcU8oOFG2FFFsOQiA@mail.gmail.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-X-Mailer: iPhone Mail (20H360)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250604-clk-scmi-children-parent-fix-v1-1-be206954d866@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAE0nQGgC/x2MQQ5AMBAAvyJ7tkk1KviKOFQtNihpRSSNv9u4T
+ DJzmASRAlOENksQ6ObIhxcp8gzcYv1MyKM4aKWNqlSJblsxup3RLbyNgTyeVnjhxA+WxtZNoYd
+ 6sApkcQaS/O+7/n0/xXveK24AAAA=
+X-Change-ID: 20250604-clk-scmi-children-parent-fix-45a8912b8ba0
+To: Sudeep Holla <sudeep.holla@arm.com>, 
+ Cristian Marussi <cristian.marussi@arm.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>
+Cc: arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sascha Hauer <s.hauer@pengutronix.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749034830; l=2736;
+ i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
+ bh=v/veQCLfrMcIRAj6dJqLlBlutbTVZR6wTEh4vNB9rjU=;
+ b=p/7n0aM4JHmJA90LjJcorfb/OkVNPqsasWKC6s95WollCc5lkgTOdCrSA0J7PxaGnLV6Ujqk3
+ BPOxZ5yBsoACaD1Fsr6qlqo0jsefBvPwUw34LZMz5myarg0YgOSshMj
+X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
+ pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Perfect! Works for me now, thanks :)
+When it comes to clocks with parents the SCMI clk driver assumes that
+parents are always initialized before their children which might not
+always be the case.
 
-Thanks,
-Rudraksha
+During initialization of the parent_data array we have:
+
+	sclk->parent_data[i].hw = hws[sclk->info->parents[i]];
+
+hws[sclk->info->parents[i]] will not yet be initialized when children
+are encountered before their possible parents. Solve this by allocating
+all struct scmi_clk as an array first and populating all hws[] upfront.
+
+Fixes: 65a8a3dd3b95f ("clk: scmi: Add support for clock {set,get}_parent")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/clk/clk-scmi.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+index 15510c2ff21c0335f5cb30677343bd4ef59c0738..f258ad7dda73e3c50c3ce567a8e22b3d2ec9836b 100644
+--- a/drivers/clk/clk-scmi.c
++++ b/drivers/clk/clk-scmi.c
+@@ -404,6 +404,7 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
+ 	const struct scmi_handle *handle = sdev->handle;
+ 	struct scmi_protocol_handle *ph;
+ 	const struct clk_ops *scmi_clk_ops_db[SCMI_MAX_CLK_OPS] = {};
++	struct scmi_clk *sclks;
+ 
+ 	if (!handle)
+ 		return -ENODEV;
+@@ -430,18 +431,24 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
+ 	transport_is_atomic = handle->is_transport_atomic(handle,
+ 							  &atomic_threshold_us);
+ 
++	sclks = devm_kcalloc(dev, count, sizeof(*sclks), GFP_KERNEL);
++	if (!sclks)
++		return -ENOMEM;
++
+ 	for (idx = 0; idx < count; idx++) {
+-		struct scmi_clk *sclk;
+-		const struct clk_ops *scmi_ops;
++		struct scmi_clk *sclk = &sclks[idx];
+ 
+-		sclk = devm_kzalloc(dev, sizeof(*sclk), GFP_KERNEL);
+-		if (!sclk)
+-			return -ENOMEM;
++		hws[idx] = &sclk->hw;
++	}
++
++	for (idx = 0; idx < count; idx++) {
++		struct scmi_clk *sclk = &sclks[idx];
++		const struct clk_ops *scmi_ops;
+ 
+ 		sclk->info = scmi_proto_clk_ops->info_get(ph, idx);
+ 		if (!sclk->info) {
+ 			dev_dbg(dev, "invalid clock info for idx %d\n", idx);
+-			devm_kfree(dev, sclk);
++			hws[idx] = NULL;
+ 			continue;
+ 		}
+ 
+@@ -479,13 +486,11 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
+ 		if (err) {
+ 			dev_err(dev, "failed to register clock %d\n", idx);
+ 			devm_kfree(dev, sclk->parent_data);
+-			devm_kfree(dev, sclk);
+ 			hws[idx] = NULL;
+ 		} else {
+ 			dev_dbg(dev, "Registered clock:%s%s\n",
+ 				sclk->info->name,
+ 				scmi_ops->enable ? " (atomic ops)" : "");
+-			hws[idx] = &sclk->hw;
+ 		}
+ 	}
+ 
+
+---
+base-commit: 5abc7438f1e9d62e91ad775cc83c9594c48d2282
+change-id: 20250604-clk-scmi-children-parent-fix-45a8912b8ba0
+
+Best regards,
+-- 
+Sascha Hauer <s.hauer@pengutronix.de>
+
