@@ -1,129 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC2D1E47AD;
-	Wed,  4 Jun 2025 20:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1889820459A
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 20:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749070584; cv=none; b=qsdLMiBpdrJMrMZPAbM5+ZhrKNnEJkCXhMD1F/LQbp2aq9gCQdJrEr/wnC/yH3yBnmYtexRWGjnHK5f/hLM86xqBI6oww0DDyM6M6s7soPDl1swK8SYq5SsxXj2/ngBqyuaKPUMYxmy4nftFIhusC0oZ0UBUlKxx5VBII/aatRA=
+	t=1749070711; cv=none; b=ivxAxULWboiu6kYtmVYhEU1ZlEWGljikrOuq3S85rlOD2p6R2loW1E3jnI/2C5OQkHdF3xds8s66zXvFoxRRTlJyve72Dy67uepj1l30owWUOMEY7K0PPfYqequL2epIFdWbQK5FETawPKtcionkRofPKeFmoz6LRo7tKikwxWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749070584; c=relaxed/simple;
-	bh=Xrqp4qshtj+SrwBUZQ6jlW6C4TgbY0f+Gxe9VE3u0CM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p3N/R0ya8kiKlDX7+gklTwD7e2KsCfGhXidGl15pYb76Q2KgzHep2kDt3Yc8R2pMdiPlTxNsUWAFFlZ+c0+1fV5Pqfsy7d1uTnrcvZwZ5m2zySZ84Sy4V2sGTdnldffcGk9T31ELOhXQmk2kLw+QTqfdh0qNTFYvE5BHzn/zOcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffOLn00/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749070711; c=relaxed/simple;
+	bh=RoPbyZBxENrNdcPnruV3adrDN3KizO26jpCbgNiF/fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CNjjPnWVulVClIkKa4JA8qTQvIK+CsRyqJv++NckiAJq8VoPYg/jla7BLulzj2NfiAjelrDlVH5oCDqu/RkfbyzMINghYbTP5/+GznsKPG/Px5sEdof61q0e4gVON3OH83GiMFUYOoh1+ZMc7QJyruqZjDqwt1A7t/7+NYwnIyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xeKrlC9z; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffOLn00/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FAACC4CEE4;
-	Wed,  4 Jun 2025 20:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749070584;
-	bh=Xrqp4qshtj+SrwBUZQ6jlW6C4TgbY0f+Gxe9VE3u0CM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ffOLn00/Fi1eLYMq8xonnGIUQ2AsEk1k2hn+xcR4W+Qcr+3pcUQ8/34gdM3EHdHr1
-	 f39V/UjMTM0PZ9ChkBX2Y6SMTXDaXvTOjojZ+GeyyUQuBPoqlqykJH6GRnh58PddUW
-	 zgQGtH3rvVgi3gc4PeQTZYdyqfF3Fmk6RWW4q3wRRbSxKKuAAHPNr0USNXeTYncnfc
-	 6mRYxz7er6KQuObqq/UKdTVdIYzJXathq5G9SGXZiGDjq2AZFIAESrnPHGw610JkL/
-	 /fY/sF/BExRhHBZ7qodlOvpIGz12ZaB/zq82rA147OXjNLBNiPWePl3185sa79mc9x
-	 krSmKMAL/XjTw==
-From: SeongJae Park <sj@kernel.org>
-To: SeongJae Park <sj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v2 1/4] mm/damon: introduce DAMON_STAT module
-Date: Wed,  4 Jun 2025 13:56:19 -0700
-Message-Id: <20250604205619.18929-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250604183127.13968-2-sj@kernel.org>
-References: 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xeKrlC9z"
+Date: Wed, 4 Jun 2025 13:57:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749070695;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AOW1xdrjziPgqyySMNuIr3SaQxi8OEOWfnwiMMxBaSE=;
+	b=xeKrlC9zIC3ZmPVYMgcrLAAdA1ixnF5cvvgJyn8+c3/RJLlbX+/MB67tAaFBuiw+t0TcX3
+	bT5MXuHNghyhuS4IXUcX8DCQblIYjCBZmsxRaWOO1Pg4L6QzKGiQwcYAuFS5Krli8PlayG
+	Kps59HH5Y5EsnRyEyCt7qGrhtUhWWRg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net,
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 06/17] KVM: arm64: Introduce method to partition the PMU
+Message-ID: <aECzTYoj1F6WHAUC@linux.dev>
+References: <aD9w3Kj4-YoizKv5@linux.dev>
+ <gsntsekf1d58.fsf@coltonlewis-kvm.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <gsntsekf1d58.fsf@coltonlewis-kvm.c.googlers.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed,  4 Jun 2025 11:31:24 -0700 SeongJae Park <sj@kernel.org> wrote:
+On Wed, Jun 04, 2025 at 08:10:27PM +0000, Colton Lewis wrote:
+> Thank you Oliver for the additional explanation.
+> 
+> Oliver Upton <oliver.upton@linux.dev> writes:
+> 
+> > On Tue, Jun 03, 2025 at 09:32:41PM +0000, Colton Lewis wrote:
+> > > Oliver Upton <oliver.upton@linux.dev> writes:
+> 
+> > > > On Mon, Jun 02, 2025 at 07:26:51PM +0000, Colton Lewis wrote:
+> > > > >   static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu *vcpu)
+> > > > >   {
+> > > > > +	u8 hpmn = vcpu->kvm->arch.arm_pmu->hpmn;
+> > > > > +
+> > > > >   	preempt_disable();
+> 
+> > > > >   	/*
+> > > > >   	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
+> > > > >   	 * to disable guest access to the profiling and trace buffers
+> > > > >   	 */
+> > > > > -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
+> > > > > -					 *host_data_ptr(nr_event_counters));
+> > > > > -	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
+> > > > > +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, hpmn);
+> > > > > +	vcpu->arch.mdcr_el2 |= (MDCR_EL2_HPMD |
+> > > > > +				MDCR_EL2_TPM |
+> 
+> > > > This isn't safe, as there's no guarantee that kvm_arch::arm_pmu is
+> > > > pointing that the PMU for this CPU. KVM needs to derive HPMN from some
+> > > > per-CPU state, not anything tied to the VM/vCPU.
+> 
+> > > I'm confused. Isn't this function preparing to run the vCPU on this
+> > > CPU? Why would it be pointing at a different PMU?
+> 
+> > Because arm64 is a silly ecosystem and system designers can glue
+> > together heterogenous CPU implementations. The arm_pmu that KVM is
+> > pointing at might only match a subset of CPUs, but vCPUs migrate at the
+> > whim of the scheduler (and userspace).
+> 
+> That means the arm_pmu field might at any time point to data that
+> doesn't represent the current CPU. I'm surprised that's not swapped out
+> anywhere. Seems like it would be useful to have an arch struct be a
+> reliable source of information about the current arch.
 
-[...]
-> --- /dev/null
-> +++ b/mm/damon/stat.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Shows data access monitoring resutls in simple metrics.
-> + */
-> +
-> +#define pr_fmt(fmt) "damon-stat: " fmt
-> +
-> +#include <linux/damon.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/sort.h>
-> +
-> +#ifdef MODULE_PARAM_PREFIX
-> +#undef MODULE_PARAM_PREFIX
-> +#endif
-> +#define MODULE_PARAM_PREFIX "damon_stat."
-> +
-> +static int damon_stat_enabled_store(
-> +		const char *val, const struct kernel_param *kp);
-> +
-> +static const struct kernel_param_ops enabled_param_ops = {
-> +	.set = damon_stat_enabled_store,
-> +	.get = param_get_bool,
-> +};
-> +
-> +static bool enabled __read_mostly = CONFIG_DAMON_STAT_ENABLED_DEFAULT;
+There's no way to accomplish that. It is per-VM data, and you could have
+vCPUs on a mix of physical CPUs.
 
-Oops, I forgot using IS_ENABLED() here.  Andrew, could you please add below
-fixup?
+This is mitigated somewhat when the VMM explicitly selects a PMU
+implementation, as we prevent vCPUs from actually entering the guest on
+an unsupported CPU (see ON_SUPPORTED_CPU flag).
 
+> > There are two *very* distinct functions w.r.t. partitioning:
+> 
+> >   1) Partitioning of a particular arm_pmu that says how many counters the
+> >   host can use
+> 
+> >   2) VMM intentions to present a subset of the KVM-owned counter
+> >   partition to its guest
+> 
+> > #1 is modifying *global* state, we really can't mess with that in the
+> > context of a single VM...
+> 
+> I see the distinction more clearly now. Since KVM can only control the
+> number of counters presented to the guest through HPMN, why would the
+> VMM ever choose a subset? If the host PMU is globally partitioned to not
+> use anything in the guest range, presenting fewer counters to a guest is
+> just leaving some counters in the middle of the range unused.
+
+You may not want to give a 'full' PMU to all VMs running on a system,
+but some OSes (Windows) expect to have at least the fixed CPU cycle
+counter present. In this case the VMM would deliberately expose fewer
+counters. FEAT_HPMN0 didn't get added to the architecture by accident...
 
 Thanks,
-SJ
-
-===== >8 =====
-From bc2a2c580f6f89f3f7d4f92c2bde3f4a4fac3409 Mon Sep 17 00:00:00 2001
-From: SeongJae Park <sj@kernel.org>
-Date: Wed, 4 Jun 2025 13:48:30 -0700
-Subject: [PATCH] mm/damon/stat: use IS_ENABLED() for enabled initial value
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-The initial value of enabled parameter is set as
-CONFIG_DAMON_STAT_ENABLED_DEFAULT, so get below build error when the
-config is not enabled.  Fix it using IS_ENABLED().
-
-    mm/damon/stat.c:27:37: error: ‘CONFIG_DAMON_STAT_ENABLED_DEFAULT’ undeclared here (not in a function)
-       27 | static bool enabled __read_mostly = CONFIG_DAMON_STAT_ENABLED_DEFAULT;
-          |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- mm/damon/stat.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/mm/damon/stat.c b/mm/damon/stat.c
-index 7ef13ea22221..3686f67befc3 100644
---- a/mm/damon/stat.c
-+++ b/mm/damon/stat.c
-@@ -24,7 +24,8 @@ static const struct kernel_param_ops enabled_param_ops = {
-        .get = param_get_bool,
- };
-
--static bool enabled __read_mostly = CONFIG_DAMON_STAT_ENABLED_DEFAULT;
-+static bool enabled __read_mostly = IS_ENABLED(
-+               CONFIG_DAMON_STAT_ENABLED_DEFAULT);
- module_param_cb(enabled, &enabled_param_ops, &enabled, 0600);
- MODULE_PARM_DESC(enabled, "Enable of disable DAMON_STAT");
-
---
-2.39.5
+Oliver
