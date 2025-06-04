@@ -1,124 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outbound.qs.icloud.com (p-east3-cluster6-host7-snip4-10.eps.apple.com [57.103.85.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3300A247296;
-	Wed,  4 Jun 2025 09:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB802171A1
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 09:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.85.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027609; cv=none; b=kzJnhu96Ual3fFRk8OmzEgOs5p+5E2k0gWXxz+JY0EGZld+Oys32PRbTkkb+q7sV1QLtE12xVKMtVTXj90/MfM/HzPUfZ+mLOEJ2+4jUU5GmAd2nMD0uSehIyvnOgILdoKnzeu0Ee1K7d+R145YRjSbublToOxfY3jAcMX1y7UI=
+	t=1749027678; cv=none; b=u1hnS9kbpKq6aU8zjeirOfxn7Tnt9+Hynr1LDdVht23ueFzByxENOU0GPrrHRIf8Igu/x4BQxDT4eK/wkCkGKyAnsSID9I3PZZtbQuuEDnT531a427f3QxTrMJipK39BVza01DZ8rRFZi45ec5zj5/8Bwy216pcDHh1PqGLZJCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027609; c=relaxed/simple;
-	bh=JHeR87LeBvTOD+NcJ7rkJFug+cKe5v03755b/Yn77RY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lz/eGM2TwjyWWDbV6xTtZmVpGcl+Ru5AsbNtPLW+ggOtnNpF6njm8yCHBRVn+d4gWcCer6270B69fVNHk7ALS4MnN8b05UWQkAd+3NyvJ7jBV1u/6/KEHFSXmNA+2N1l5y5mPMKf5zrPFNvgvuhshHyPnFIeT6SnDqp6dE7MwvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNMi0PRV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749027678; c=relaxed/simple;
+	bh=iuL1JT5nTcgFDeToCkLLShncc97SpGrqDVx4yf4GM7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D4hTfYeJAVhrh/lM5Q+kz/z7E5JwZ58j6OXhTge+QNIdztzaDVMdUal9Epqvp/y20td3q1a3BtWV4msGsqoOPEmU8WB9hlCEf2kMZSv8w6VpZQh5ijlxCWRm1J8Pvl8wYPmKYUIs74qOfx2bqYGPjMIGrqGn9lmB7KWVweOSVHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me; spf=pass smtp.mailfrom=etehtsea.me; dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b=huS+KKUM; arc=none smtp.client-ip=57.103.85.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etehtsea.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNMi0PRV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67319C4CEE7;
-	Wed,  4 Jun 2025 08:59:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749027608;
-	bh=JHeR87LeBvTOD+NcJ7rkJFug+cKe5v03755b/Yn77RY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=YNMi0PRVBrQL7TUZfEAggFUQ4cYerIUDHHQvXVQ4Ql7w6vrNZ2Q+4XcAYwCt1QDYw
-	 1eJo1GcCdFQI/aDuDsgi7yZqP3ooz5vQOCtHW2UFhSnYtVDbartpf//xtFic2nNvGc
-	 7Hy3/KWhXsNA3huwmTLjAG9GPwRMsIkjND6zyKaDnmxnpA0YbF6/XoFTSudZgMh/HG
-	 7r/WM6InNriNEyLQ6Ll4pfLVhKjCZfNR0v2Z968XGgwjSPXzMonP2yIIVDKKgMSkRr
-	 nRkrE+KcTPlA2UsqKlOe4qOUYuQLLwY4Z5+bEf2vVmovEaqg8begmD8Ec3aY3eqyF5
-	 K39U0EXJ7q5Gg==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 Q)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>, Xu Yilun <yilun.xu@linux.intel.com>
-Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
-	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
-	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
-	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
-	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
-	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
-	iommu@lists.linux.dev, kevin.tian@intel.com
-Subject: Re: [RFC PATCH 17/30] iommufd/device: Add TSM Bind/Unbind for TIO
- support
-In-Reply-To: <20250603122149.GH376789@nvidia.com>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-18-yilun.xu@linux.intel.com>
- <yq5awm9ujouz.fsf@kernel.org> <aD6UQy4KwKcdSvVE@yilunxu-OptiPlex-7050>
- <20250603122149.GH376789@nvidia.com>
-Date: Wed, 04 Jun 2025 14:10:43 +0530
-Message-ID: <yq5aplfj99x0.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b="huS+KKUM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=etehtsea.me; s=sig1;
+	bh=1+Yrgh6Z4uyJ/+tbV7dwmp0mh5zinPbKsKU8zEJOQ44=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
+	b=huS+KKUMXZFNne46uxDYoH2TR2b4rsBMdH4bZYwhzuRPOAK5oEn7fAMzN2Bjgsr4K
+	 Ii37TpCfis0bay6sNYvrbTdBswO6TnDxsOBfdUmnmnEqFQfq0bUkMd2gkWGkyfRtNj
+	 XSj4UvTR86eDIABeFDbSpJ4izmgB3N1X9eKBkDyXaeX5cPwx8g7dPhaB3cQDfwL4+A
+	 ifj05fcA7c+0MZsSMxvRZwFwbWrETI2ebICVZElPbMzP7BQx+PldPPdIg6o22xWddX
+	 pQJV6diBqHF03+BkUdw1GaPGJeCqRF7K5MXJZFigun/406jgsnJbpSjLL7ZrJgRMl/
+	 k4eTYmrJNETow==
+Received: from outbound.qs.icloud.com (localhost [127.0.0.1])
+	by outbound.qs.icloud.com (Postfix) with ESMTPS id C17A018002A8;
+	Wed,  4 Jun 2025 09:01:10 +0000 (UTC)
+Received: from localhost (qs-asmtp-me-k8s.p00.prod.me.com [17.57.155.37])
+	by outbound.qs.icloud.com (Postfix) with ESMTPSA id EC35618002AF;
+	Wed,  4 Jun 2025 09:01:07 +0000 (UTC)
+From: Konstantin Shabanov <mail@etehtsea.me>
+To: Sandy Huang <hjc@rock-chips.com>,
+	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Konstantin Shabanov <mail@etehtsea.me>,
+	Dan Callaghan <djc@djc.id.au>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V5 RESEND] drm/rockchip: Reject AFBC for res >2560 on rk3399
+Date: Wed,  4 Jun 2025 09:00:53 +0000
+Message-ID: <20250604090054.7070-1-mail@etehtsea.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: ZL3YM8dNqYDIvFCJ8br2ljtNZ7Y0DHdP
+X-Proofpoint-ORIG-GUID: ZL3YM8dNqYDIvFCJ8br2ljtNZ7Y0DHdP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 mlxscore=0 clxscore=1030 spamscore=0
+ adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.22.0-2503310001 definitions=main-2506040067
 
-Jason Gunthorpe <jgg@nvidia.com> writes:
+As it isn't supported by rk3399. From the datasheet[1]
+("1.2.10 Video IN/OUT", "Display Interface", p. 17):
 
-> On Tue, Jun 03, 2025 at 02:20:51PM +0800, Xu Yilun wrote:
->> > Wouldn=E2=80=99t it be simpler to skip the reference count increment a=
-ltogether
->> > and just call tsm_unbind in the virtual device=E2=80=99s destroy callb=
-ack?
->> > (iommufd_vdevice_destroy())
->>=20
->> The vdevice refcount is the main concern, there is also an IOMMU_DESTROY
->> ioctl. User could just free the vdevice instance if no refcount, while V=
-FIO
->> is still in bound state. That seems not the correct free order.
->
-> Freeing the vdevice should automatically unbind it..
->
+  Support AFBC function co-operation with GPU
+    * support 2560x1600 UI
 
-One challenge I ran into during implementation was the dependency of
-vfio on iommufd_device. When vfio needs to perform a tsm_unbind,
-it only has access to an iommufd_device.
+Signed-off-by: Konstantin Shabanov <mail@etehtsea.me>
+Reported-by: Dan Callaghan <djc@djc.id.au>
+Closes: https://gitlab.freedesktop.org/mesa/mesa/-/issues/7968
 
-However, TSM operations like binding and unbinding are handled at the
-iommufd_vdevice level. The issue? There=E2=80=99s no direct link from
-iommufd_device back to iommufd_vdevice.
+[1]: https://opensource.rock-chips.com/images/d/d7/Rockchip_RK3399_Datasheet_V2.1-20200323.pdf
+---
+ V4 -> V5: Extract AFBC support check into drv
+ V3 -> V4: Correct redundant header inclusion
+ V2 -> V3: Run check only on rk3399
+ V1 -> V2: Move the check to the fb_create callback
 
-To address this, I modified the following structures:
+ AFBC check is implemented in a similar manner as in the malidp driver.
+ Resend of the https://lore.kernel.org/all/20250521160556.14346-2-mail@etehtsea.me/.
+ 
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 16 ++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h |  2 ++
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |  3 +++
+ 3 files changed, 21 insertions(+)
 
-modified   drivers/iommu/iommufd/iommufd_private.h
-@@ -428,6 +428,7 @@ struct iommufd_device {
- 	/* protect iopf_enabled counter */
- 	struct mutex iopf_lock;
- 	unsigned int iopf_enabled;
-+	struct iommufd_vdevice *vdev;
- };
-=20
- static inline struct iommufd_device *
-@@ -613,6 +614,7 @@ struct iommufd_vdevice {
- 	struct iommufd_object obj;
- 	struct iommufd_ctx *ictx;
- 	struct iommufd_viommu *viommu;
-+	struct iommufd_device *idev;
- 	struct device *dev;
- 	struct mutex	mutex;	/* mutex to synchronize updates to tsm_bound */
- 	u64 id; /* per-vIOMMU virtual ID */
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+index 180fad5d49ad..9fb04022b2f3 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+@@ -42,6 +42,8 @@
+ #define DRIVER_MAJOR	1
+ #define DRIVER_MINOR	0
+ 
++#define RK3399_AFBC_MAX_WIDTH		2560
++
+ static const struct drm_driver rockchip_drm_driver;
+ 
+ /*
+@@ -350,6 +352,20 @@ int rockchip_drm_endpoint_is_subdriver(struct device_node *ep)
+ 	return false;
+ }
+ 
++bool rockchip_verify_afbc_framebuffer_size(struct drm_device *dev,
++					   const struct drm_mode_fb_cmd2 *mode_cmd)
++{
++	if (of_machine_is_compatible("rockchip,rk3399") &&
++	    mode_cmd->width > RK3399_AFBC_MAX_WIDTH) {
++		DRM_DEBUG_KMS("AFBC is not supported for the width %d (max %d)\n",
++			      mode_cmd->width,
++			      RK3399_AFBC_MAX_WIDTH);
++		return false;
++	}
++
++	return true;
++}
++
+ static void rockchip_drm_match_remove(struct device *dev)
+ {
+ 	struct device_link *link;
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
+index c183e82a42a5..5dabceaa4fd6 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
+@@ -86,6 +86,8 @@ int rockchip_drm_wait_vact_end(struct drm_crtc *crtc, unsigned int mstimeout);
+ int rockchip_drm_encoder_set_crtc_endpoint_id(struct rockchip_encoder *rencoder,
+ 					      struct device_node *np, int port, int reg);
+ int rockchip_drm_endpoint_is_subdriver(struct device_node *ep);
++bool rockchip_verify_afbc_framebuffer_size(struct drm_device *dev,
++					   const struct drm_mode_fb_cmd2 *mode_cmd);
+ extern struct platform_driver cdn_dp_driver;
+ extern struct platform_driver dw_hdmi_rockchip_pltfm_driver;
+ extern struct platform_driver dw_hdmi_qp_rockchip_pltfm_driver;
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+index 5829ee061c61..f0527f12f568 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+@@ -52,6 +52,9 @@ rockchip_fb_create(struct drm_device *dev, struct drm_file *file,
+ 	}
+ 
+ 	if (drm_is_afbc(mode_cmd->modifier[0])) {
++		if (!rockchip_verify_afbc_framebuffer_size(dev, mode_cmd))
++			return ERR_PTR(-EINVAL);
++
+ 		ret = drm_gem_fb_afbc_init(dev, mode_cmd, afbc_fb);
+ 		if (ret) {
+ 			drm_framebuffer_put(&afbc_fb->base);
 
-These fields are updated during tsm_bind and tsm_unbind, so they must be
-protected by the appropriate locks:
+base-commit: 685c407f168cb49a12cc703230d1e2d62767bfd2
+-- 
+2.49.0
 
-Updating vdevice->idev requires holding vdev->mutex (vdev_lock).
-Updating device->vdev requires idev->igroup->lock (idev_lock).
-
-tsm_unbind in vdevice_destroy:
-
-vdevice_destroy() ends up calling tsm_unbind() while holding only the
-vdev_lock. At first glance, this seems unsafe. But in practice, it's
-fine because the corresponding iommufd_device has already been destroyed
-when the VFIO device file descriptor was closed=E2=80=94triggering
-vfio_df_iommufd_unbind().
-
-I=E2=80=99ve added an in-code comment to explain why tsm_unbind() is safe h=
-ere
-without acquiring the idev_lock. Hope that is ok.
-
--aneesh
