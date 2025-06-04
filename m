@@ -1,149 +1,214 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DBD28FFF6;
-	Wed,  4 Jun 2025 14:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3681DFF8;
+	Wed,  4 Jun 2025 15:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749049178; cv=none; b=BE7Kki/V2AQYjlTBhLPHga45sTgpVuNxRkDnLlidcEOTwN767rDEGzRO0uBxzHW27y/kKKJqc4uhW0rnbHJIVbaMoxBue1G7maTRqwEB6O9/5HqI1mk2fvs0W+tBNI9XDGVBvFOk76Ha2lnjl+7dXFWx4sopemRT8gggDnYRfAA=
+	t=1749049231; cv=none; b=qdrjw6o0dQe7DUfa2utQcPuk87XV3fWcrfrEcTnhp43NO94IoUJKYjY+NXwkRaPfGSYYswoVqBBMzVIS+bxESfhvbgVkqzrJPdyCFkAxeYjCOe675wD6KGsr0EhxnCubM/P0NM2RFVWlel5s/pEJ+16KlU9lUq7VGg9TenUZbkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749049178; c=relaxed/simple;
-	bh=wJsLEtGGSfzQUfeRpedxvZPZVDcyW+G0Ky8PAJCKb/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qEZkUhNy12C/p9AtvFLvFDZ1F82RWAqfQ4jJ4T9dU03p/OIKrzNQqNy5EytY9OYCg0ULOIulkFKm8ZAQ1HAqt2GmIVIJtqNTmG85kNSRZMZLoqtZC0A0agwin4VJMfX4IEt8aaEYvagDTzqgy+PMvscRA4AyqRdOYj5w4uvktbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZvhgSFbo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749049231; c=relaxed/simple;
+	bh=tFfAHcuK1W9KZi2uebnSCQzC+lwDGxGFdWFkTKf2Z6I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hL0bLMMnQmtONhOdr7FIiR3+b8m4k6KIcFm6ONNQfJgBbGlWi0hIJmwRwNoB5SrVXj5sj7PhKI9HEkFUxD/nKLfGGBJynyHQcWwDGC41EpUBH/GtSoCrV7hLaMw64Vr++npoEcX3l4w0qGm7N1GiO+ZG7yvqXUhAOlRQH1rmkGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBlukFFj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZvhgSFbo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 575E7C4CEEF;
-	Wed,  4 Jun 2025 14:59:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBlukFFj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9152C4CEE4;
+	Wed,  4 Jun 2025 15:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749049178;
-	bh=wJsLEtGGSfzQUfeRpedxvZPZVDcyW+G0Ky8PAJCKb/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZvhgSFbo5OA0fTglMBFbVarnMtKITK18FMO5UmtdmrI906yOD+zuwukrmEwfWushX
-	 wvbzdnTfVYCy2MVV7s6QmlMYgMgPjdyGnETxZKnyPa61eN73UfverYxcNRxKIXzRVK
-	 lndH4lqa5cwiIP1X2z8n2Aawj+zqA5xuKLqjAvuwH3VqCgm+2xKbxUHwJSgBc/hBUa
-	 ToAL+ElA6Okw7UJbnMS3RTHC9UAc3rT+6klp9LUn0Uc24L7ikdhcWzrkYyFoVwuW5V
-	 xAaahjWLOwgQt33Ea3Lt0IB8K8wVTcLrgDri490DmJV5LmwWQPPHRDr6rZRG7XiUTl
-	 OH8ez2iGYuV/A==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uMpaZ-000000007f1-1W6J;
-	Wed, 04 Jun 2025 16:59:36 +0200
-Date: Wed, 4 Jun 2025 16:59:35 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Qiang Yu <quic_qianyu@quicinc.com>,
-	Wenbin Yao <quic_wenbyao@quicinc.com>, catalin.marinas@arm.com,
-	will@kernel.org, linux-arm-kernel@lists.infradead.org,
-	andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, vkoul@kernel.org, kishon@kernel.org,
-	sfr@canb.auug.org.au, linux-phy@lists.infradead.org,
-	krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com, quic_cang@quicinc.com,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>
-Subject: Re: [PATCH v3 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
-Message-ID: <aEBfV2M-ZqDF7aRz@hovoldconsulting.com>
-References: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
- <20250508081514.3227956-6-quic_wenbyao@quicinc.com>
- <aBxpMuFGKgWrw1TV@hovoldconsulting.com>
- <5fd4abe7-3621-4119-9482-de823b247b0d@quicinc.com>
- <aBx9LB_qQIvA0bj8@hovoldconsulting.com>
- <55a85622-fe33-4b5f-81b2-4a4270fab680@oss.qualcomm.com>
- <aDRw2rJ39t9W10YG@hovoldconsulting.com>
- <7f525932-570e-4c81-a3f2-6d2e26b02233@oss.qualcomm.com>
+	s=k20201202; t=1749049231;
+	bh=tFfAHcuK1W9KZi2uebnSCQzC+lwDGxGFdWFkTKf2Z6I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=SBlukFFjpJ1mIv0NLRqQpI74YVsrOObNpomOPkCc7NlBRH9jGWvdX3wC8Nt1z6JtB
+	 gJ0+N1rihS2+NMjjNr6bNhfxulu4wiJIKPMzh6MVjsPPECsidDpjepDyLS1X8Qleys
+	 9iQHhQuYQ4odYKySw2Bkt+ywB5ctGUYHtedjp/LOpmmUsUS8RyjSmNIO5Jou+Itspd
+	 aGNeZbJ+8bIAhIB8bySQlr8eZYenT3OvlZllsBm9bI3D53D/NnaVNbnjOqMciBQ5Z0
+	 B/UewvPiREBuKskP2z5+L++/1X++z4Nowo0ZKRpIabW0pxcBum+1PqpqOcr2yh1j4q
+	 UrqicyP2DUbeQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: pratyush@kernel.org,  jasonmiu@google.com,  graf@amazon.com,
+  changyuanl@google.com,  rppt@kernel.org,  dmatlack@google.com,
+  rientjes@google.com,  corbet@lwn.net,  rdunlap@infradead.org,
+  ilpo.jarvinen@linux.intel.com,  kanie@linux.alibaba.com,
+  ojeda@kernel.org,  aliceryhl@google.com,  masahiroy@kernel.org,
+  akpm@linux-foundation.org,  tj@kernel.org,  yoann.congal@smile.fr,
+  mmaurer@google.com,  roman.gushchin@linux.dev,  chenridong@huawei.com,
+  axboe@kernel.dk,  mark.rutland@arm.com,  jannh@google.com,
+  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
+  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
+  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
+  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
+  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
+  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
+  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
+  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
+  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
+  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
+  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
+  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
+  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
+  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
+  stuart.w.hayes@gmail.com
+Subject: Re: [RFC v2 03/16] kho: add kho_unpreserve_folio/phys
+In-Reply-To: <20250515182322.117840-4-pasha.tatashin@soleen.com>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+	<20250515182322.117840-4-pasha.tatashin@soleen.com>
+Date: Wed, 04 Jun 2025 17:00:22 +0200
+Message-ID: <mafs05xhbv9fd.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f525932-570e-4c81-a3f2-6d2e26b02233@oss.qualcomm.com>
+Content-Type: text/plain
 
-On Tue, May 27, 2025 at 12:50:21PM +0200, Konrad Dybcio wrote:
-> On 5/26/25 3:47 PM, Johan Hovold wrote:
-> > On Thu, May 22, 2025 at 10:03:18PM +0200, Konrad Dybcio wrote:
-> >> On 5/8/25 11:45 AM, Johan Hovold wrote:
-> >>> On Thu, May 08, 2025 at 04:50:30PM +0800, Qiang Yu wrote:
-> >>>> On 5/8/2025 4:20 PM, Johan Hovold wrote:
-> > 
-> >>>>> This still looks wrong and you never replied to why these supplies
-> >>>>> shouldn't be handled by the tcsr clock driver that supplies these
-> >>>>> clocks:
-> >>>>>
-> >>>>> 	https://lore.kernel.org/lkml/aBHUmXx6N72_sCH9@hovoldconsulting.com/
-> >>>
-> >>>> Sorry, I thought Konrad had convinced you.
-> >>>
-> >>> IIRC, he just said you guys were told to add the QREF supply to the PHY.
-> >>> That's not an argument.
-> >>>
-> >>>> If the TCSR driver manages these supplies, would it be possible for tscr
-> >>>> driver to recognize when it needs to turn vdda-qref on or off for a
-> >>>> specific PCIe port?
-> >>>
-> >>> Sure, just add a lookup table to the driver and enable the required
-> >>> supplies when a ref clock is enabled.
-> >>>
-> >>> As I mentioned in the other thread, the T14s has the following QREF
-> >>> supplies:
-> >>>
-> >>> 	
-> >>> 	VDD_A_QREFS_1P2_A
-> >>> 	VDD_A_QREFS_1P2_B
-> >>>
-> >>> 	VDD_A_QREFS_0P875_A
-> >>> 	VDD_A_QREFS_0P875_B
-> >>> 	VDD_A_QREFS_0P875_0
-> >>> 	VDD_A_QREFS_0P875_2
-> >>> 	VDD_A_QREFS_0P875_3
-> >>>
-> >>> and it's not clear how these maps to the various consumer ref clocks,
-> >>> including the PCIe ones:
-> >>>
-> >>> 	#define TCSR_PCIE_2L_4_CLKREF_EN
-> >>> 	#define TCSR_PCIE_2L_5_CLKREF_EN
-> >>> 	#define TCSR_PCIE_8L_CLKREF_EN
-> >>> 	#define TCSR_PCIE_4L_CLKREF_EN
-> >>>
-> >>> That mapping can be done by the TCSR clock driver (which would also take
-> >>> care of the 1.2 V supplies).
-> >>
-> >> So we had an internal discussion about this and while it may work, it
-> >> would only do so for some SoCs, and maybe only on the surface, as the
-> >> wiring behind it is rather peculiar..
-> > 
-> > Care to expand on why it cannot be made to work generally?
-> 
-> "-ENODATA".. many connections are difficult to unambiguously decipher
-> 
-> > 
-> > Also, what would the mapping of the above QREF supplies to PCIe PHYs
-> > even look like?
-> 
-> I'm not sure I have a clear answer..
+On Thu, May 15 2025, Pasha Tatashin wrote:
 
-How would anyone know how to use a binding like this if you guys with
-access to internal docs can't even answer how the QREF supplies maps to
-the PHYs for a given SoC?
+> From: Changyuan Lyu <changyuanl@google.com>
+>
+> Allow users of KHO to cancel the previous preservation by adding the
+> necessary interfaces to unpreserve folio.
+>
+> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> Co-developed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  include/linux/kexec_handover.h | 12 +++++
+>  kernel/kexec_handover.c        | 84 ++++++++++++++++++++++++++++------
+>  2 files changed, 83 insertions(+), 13 deletions(-)
+>
+[...]
+> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+> index 8ff561e36a87..eb305e7e6129 100644
+> --- a/kernel/kexec_handover.c
+> +++ b/kernel/kexec_handover.c
+> @@ -101,26 +101,33 @@ static void *xa_load_or_alloc(struct xarray *xa, unsigned long index, size_t sz)
+>  	return elm;
+>  }
+>  
+> -static void __kho_unpreserve(struct kho_mem_track *track, unsigned long pfn,
+> -			     unsigned long end_pfn)
+> +static void __kho_unpreserve_order(struct kho_mem_track *track, unsigned long pfn,
+> +				   unsigned int order)
+>  {
+>  	struct kho_mem_phys_bits *bits;
+>  	struct kho_mem_phys *physxa;
+> +	const unsigned long pfn_high = pfn >> order;
+>  
+> -	while (pfn < end_pfn) {
+> -		const unsigned int order =
+> -			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
+> -		const unsigned long pfn_high = pfn >> order;
+> +	physxa = xa_load(&track->orders, order);
+> +	if (!physxa)
+> +		return;
+>  
+> -		physxa = xa_load(&track->orders, order);
+> -		if (!physxa)
+> -			continue;
+> +	bits = xa_load(&physxa->phys_bits, pfn_high / PRESERVE_BITS);
+> +	if (!bits)
+> +		return;
+>  
+> -		bits = xa_load(&physxa->phys_bits, pfn_high / PRESERVE_BITS);
+> -		if (!bits)
+> -			continue;
+> +	clear_bit(pfn_high % PRESERVE_BITS, bits->preserve);
+> +}
+>  
+> -		clear_bit(pfn_high % PRESERVE_BITS, bits->preserve);
+> +static void __kho_unpreserve(struct kho_mem_track *track, unsigned long pfn,
+> +			     unsigned long end_pfn)
+> +{
+> +	unsigned int order;
+> +
+> +	while (pfn < end_pfn) {
+> +		order = min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
 
-> >> Plus, not all QREF consumers have a clock expressed in TCSR as of
-> >> right now.
-> > 
-> > Is that because there is no corresponding bit in the TCSR or simply
-> > because it has not been described yet?
-> 
-> Unfortunately, the former.. Some IPs have a non-TCSR ref clock and
-> some are presumably implicitly fed by BI_TCXO
+This is fragile. If the preserve call spans say 4 PFNs, then it gets
+preserved as a order 2 allocation, but if the PFNs are unpreserved
+one-by-one, __kho_unpreserve_order() will unpreserve from the order 0
+xarray, which will end up doing nothing, leaking those pages.
 
-I think you need to provide a lot more detail here so we can determine
-how best best to proceed. We shouldn't accept made up PHY supplies
-without a proper motivation just because that's how it's done
-downstream.
+It should either look through all orders to find the PFN, or at least
+have a requirement in the API that the same phys and size combination as
+the preserve call must be given to unpreserve.
 
-Johan
+> +
+> +		__kho_unpreserve_order(track, pfn, order);
+>  
+>  		pfn += 1 << order;
+>  	}
+> @@ -607,6 +614,29 @@ int kho_preserve_folio(struct folio *folio)
+>  }
+>  EXPORT_SYMBOL_GPL(kho_preserve_folio);
+>  
+> +/**
+> + * kho_unpreserve_folio - unpreserve a folio.
+> + * @folio: folio to unpreserve.
+> + *
+> + * Instructs KHO to unpreserve a folio that was preserved by
+> + * kho_preserve_folio() before.
+> + *
+> + * Return: 0 on success, error code on failure
+> + */
+> +int kho_unpreserve_folio(struct folio *folio)
+> +{
+> +	const unsigned long pfn = folio_pfn(folio);
+> +	const unsigned int order = folio_order(folio);
+> +	struct kho_mem_track *track = &kho_out.ser.track;
+> +
+> +	if (kho_out.finalized)
+> +		return -EBUSY;
+> +
+> +	__kho_unpreserve_order(track, pfn, order);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(kho_unpreserve_folio);
+> +
+>  /**
+>   * kho_preserve_phys - preserve a physically contiguous range across kexec.
+>   * @phys: physical address of the range.
+> @@ -652,6 +682,34 @@ int kho_preserve_phys(phys_addr_t phys, size_t size)
+>  }
+>  EXPORT_SYMBOL_GPL(kho_preserve_phys);
+>  
+> +/**
+> + * kho_unpreserve_phys - unpreserve a physically contiguous range across kexec.
+> + * @phys: physical address of the range.
+> + * @size: size of the range.
+> + *
+> + * Instructs KHO to unpreserve the memory range from @phys to @phys + @size
+> + * across kexec.
+> + *
+> + * Return: 0 on success, error code on failure
+> + */
+> +int kho_unpreserve_phys(phys_addr_t phys, size_t size)
+> +{
+> +	struct kho_mem_track *track = &kho_out.ser.track;
+> +	unsigned long pfn = PHYS_PFN(phys);
+> +	unsigned long end_pfn = PHYS_PFN(phys + size);
+> +
+> +	if (kho_out.finalized)
+> +		return -EBUSY;
+> +
+> +	if (!PAGE_ALIGNED(phys) || !PAGE_ALIGNED(size))
+> +		return -EINVAL;
+> +
+> +	__kho_unpreserve(track, pfn, end_pfn);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(kho_unpreserve_phys);
+> +
+>  int __kho_abort(void)
+>  {
+>  	int err;
+
+-- 
+Regards,
+Pratyush Yadav
