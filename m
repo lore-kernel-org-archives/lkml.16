@@ -1,80 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F3D2260C
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 04:48:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FCE52F88;
+	Wed,  4 Jun 2025 04:53:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749012493; cv=none; b=WHREQZ9oD8ELJimvMKE9CNfmcfVqLIKzQTxTqflGXBSOR62OlN4C40aJiq4sjc9se6v0dDfmcuEG1qiZFw6kqzuuOswPEZlScyIVAaLN7ar6lMTelioSzcowF8BdW0h988z6P8q2gz9hWHDHHQ5BEp5JYEVG7eOl0SXeTnU6AHo=
+	t=1749012797; cv=none; b=mrhk2akGirNjjrc+fWRWmnFdH2RdW/vnf8XXAiKzuRVtoucwXUW16k/vjgGwxz1TfVSIETj3B6fWwGnSQG0KulgArjJ+k8yLlOs0rjZNaXu5Aaxjb1m2t6qgm67Th3+25jvYzLpoTArPN4f9JYonJtxtqunXHl00gNVcuGrFMZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749012493; c=relaxed/simple;
-	bh=rQPkHVKCvmw5LrOb/v/cqXm3uOUme0k0Brv2OsGkKZ8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=stWcQOTvR7T9YPSJZJTfL2yxHEIga4cEkS/D0pl3YXWuBak3b3CKzpP2tptFTHcWxCaa4l5m04DtX+rXW+CsGXG5BuQ1vOLS30Rrt9SXzL28YCDfZ4SN8hosiYTHEiHERUMiC6+3jmeXf+Ql9FLdFTCoJ2aRJIViVkxspd+SigQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dSHRJ2H4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749012797; c=relaxed/simple;
+	bh=SrbhwDJ+nDiTeZtiQ2Xu90AmIf8S7vfq2Mx1a4BsWOE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ByfKNTT5wYfA44qRilg19mVTOt+xZmdGnm4rij/a9seNAFSIjxFMQqFBgEEKuhbhBf4V7rzhSkjNpSrBMZUlg7GQL7056sFbcz8wueG1UpdkPQq6AxAuOAB+0Nyp0g46SAeQI69bSlZOUoxGF5czXieQ34cHKfVlGde3E5Sh7a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UeXXy0Xx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dSHRJ2H4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9864C4CEE7;
-	Wed,  4 Jun 2025 04:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749012492;
-	bh=rQPkHVKCvmw5LrOb/v/cqXm3uOUme0k0Brv2OsGkKZ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dSHRJ2H4ZMsx/7L5DpIKOCKBHMpa7KlEFV/K/XifwAh7BqyKRFr+FsfeVeMuU3hqE
-	 Kkx5Tiyhc2FGo135XrT2vRO2Nqqhf69Zwmp0NuQ+AD0C2lX2emi5VkqIEhT6tHg854
-	 3wovHiUPqv3mv08ISGdMGGIktHL5AVGEG9R2sEWM=
-Date: Tue, 3 Jun 2025 21:48:12 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Luka <luka.2016.cs@gmail.com>
-Cc: Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [BUG] WARNING in shmem_rmdir in Linux kernel v6.12
-Message-Id: <20250603214812.3c0e774ffa4700f47bd1340f@linux-foundation.org>
-In-Reply-To: <CALm_T+1tHV6QmeykRwch602TzgJet+1dOWe25VSV6dw_Xo0SyQ@mail.gmail.com>
-References: <CALm_T+1tHV6QmeykRwch602TzgJet+1dOWe25VSV6dw_Xo0SyQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UeXXy0Xx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F7CFC4CEE7;
+	Wed,  4 Jun 2025 04:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749012795;
+	bh=SrbhwDJ+nDiTeZtiQ2Xu90AmIf8S7vfq2Mx1a4BsWOE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UeXXy0Xx0YTxNjZS3OiXi/uS+SXd+/008O56xAO3O7wxAK1FvNy5QIgdQVDYclGAp
+	 +f4PT3AmzoMCuIjSxHERufBI/B/X7GRA/Ix2cNOy0V0BRuwvu/We8cJ3r0fyy/8Y2+
+	 Bq45WVKuM90ETJBnkV+u1z/IVtNY5YO8xqaeo5FfdMUQo3ZgFKBt5toyfLFFOxs4Mk
+	 Oqj8U/ZIctQzLA7q6QW4lG/ONxH0rehm+NvN2yLkBHesFcAcLKPbDLPpuyuaQIi6JR
+	 T1cghqzvev+SOGmi2xatmmuNDD9gHQa65rpzOvTMzZAoqQE0go7b4jVpq7Q8VKPG5N
+	 fj8NECJ0us7yA==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54acc0cd458so7849403e87.0;
+        Tue, 03 Jun 2025 21:53:14 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwzvhphjAlu474jO9cO+P09t4/MnVXKcOTHOYu0S1ZuO9Cwo6cu
+	b7OOWYHU9s7p8Nl3GGfeps/8GP6qduclKVwj265j6PEqPv/cVz0+IKDoQjivLkZEL4ko1v63DJh
+	sgnB631JPtfCwJWKEGUgy87iHdMOkogs=
+X-Google-Smtp-Source: AGHT+IGQJyq7onKIxKh9qDRFyhxty3f5kTIY0Fs3AHW9pl2tG2XFZjxqQ/dccU5w9D8Ql4+zyfEBLpeCkUs5tMjG9Jk=
+X-Received: by 2002:a05:6512:2399:b0:553:2ca4:39e2 with SMTP id
+ 2adb3069b0e04-55356df2526mr350087e87.52.1749012793583; Tue, 03 Jun 2025
+ 21:53:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250601133230.4085512-1-masahiroy@kernel.org> <20250601133230.4085512-3-masahiroy@kernel.org>
+In-Reply-To: <20250601133230.4085512-3-masahiroy@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 4 Jun 2025 13:52:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATH7Lewi+-3T3R5X1CVRbBGGsVQEdLJ2FqQP+8RRAOHkw@mail.gmail.com>
+X-Gm-Features: AX0GCFv7SIfQaRCDgH4byQtWjC0CW1agBSw-Knm4H8zESxxOrlMOItTFOns_5M4
+Message-ID: <CAK7LNATH7Lewi+-3T3R5X1CVRbBGGsVQEdLJ2FqQP+8RRAOHkw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] scripts/misc-check: check missing #include
+ <linux/export.h> when W=1
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 4 Jun 2025 12:43:01 +0800 Luka <luka.2016.cs@gmail.com> wrote:
+On Sun, Jun 1, 2025 at 10:32=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
+>
+> The problem was described in commit 5b20755b7780 ("init: move THIS_MODULE
+> from <linux/export.h> to <linux/init.h>").
+>
+> To summarize it again here: <linux/export.h> is included by most C files,
+> even though only some of them actually export symbols. This is because
+> some headers, such as include/linux/{module.h,linkage}, needlessly
+> include <linux/export.h>.
+>
+> I have added a more detailed explanation in the comments of
+> scripts/misc-check.
+>
+> This problem will be fixed in two steps:
+>
+>  1. Add #include <linux/export.h> to C files that use EXPORT_SYMBOL()
+>  2. Remove #include <linux/export.h> from header files that do not use
+>     EXPORT_SYMBOL()
+>
+> This commit addresses step 1; scripts/misc-check will warn about *.[ch]
+> files that use EXPORT_SYMBOL() but do not include <linux/export.h>.
+> This check is only triggered when the kernel is built with W=3D1.
+>
+> We need to fix 4000+ files. I hope others will help with this effort.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+> Changes in v2:
+>  - Fix out-of-tree build
+>
+>  scripts/misc-check | 43 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>
+> diff --git a/scripts/misc-check b/scripts/misc-check
+> index 21551d721079..edc0e44d96de 100755
+> --- a/scripts/misc-check
+> +++ b/scripts/misc-check
+> @@ -9,4 +9,47 @@ check_tracked_ignored_files () {
+>                 sed 's/$/: warning: ignored by one of the .gitignore file=
+s/' >&2
+>  }
+>
+> +# Check for missing #include <linux/export.h>
+> +#
+> +# The rule for including <linux/export.h> is very simple:
+> +# Include <linux/export.h> only when you use EXPORT_SYMBOL(). That's it.
+> +#
+> +# However, some headers include <linux/export.h> even though they are co=
+mpletely
+> +# unrelated to EXPORT_SYMBOL().
+> +#
+> +# One example is include/linux/module.h. Please note <linux/module.h> an=
+d
+> +# <linux/export.h> are orthogonal. <linux/module.h> should be included b=
+y files
+> +# that can be compiled as modules. In other words, <linux/module.h> shou=
+ld be
+> +# included by EXPORT_SYMBOL consumers. In contrast, <linux/export.h> sho=
+uld be
+> +# included from EXPORT_SYMBOL providers, which may or may not be modular=
+.
+> +# Hence, include/linux/module.h should *not* include <linux/export.h>.
+> +#
+> +# Another example is include/linux/linkage.h, which is completely unrela=
+ted to
+> +# EXPORT_SYMBOL(). Worse, it is included by most C files, which means, m=
+ost C
+> +# files end up including <linux/export.h>, even though only some of them
+> +# actually export symbols. Hence, include/linux/linkage.h should *not* i=
+nclude
+> +# <linux/export.h>.
+> +#
+> +# Before fixing such headers, we must ensure that C files using EXPORT_S=
+YMBOL()
+> +# include <linux/export.h> directly, since many C files currently rely o=
+n
+> +# <linux/export.h> being included indirectly (likely, via <linux/linkage=
+> etc.).
+> +#
+> +# Therefore, this check.
+> +#
+> +# The problem is simple - the warned files use EXPORT_SYMBOL(), but do n=
+ot
+> +# include <linux/export.h>. Please add #include <linux/export.h> to them=
+.
+> +#
+> +# If the included headers are sorted alphabetically, please insert
+> +# <linux/export.h> in the appropriate position to maintain the sort orde=
+r.
+> +# For this reason, this script only checks missing <linux/export.h>, but
+> +# does not automatically fix it.
+> +check_missing_include_linux_export_h () {
+> +
+> +       git -C "${srctree:-.}" grep --files-with-matches -E 'EXPORT_SYMBO=
+L((_NS)?(_GPL)?|_GPL_FOR_MODULES)\(.*\)' \
+> +           -- '*.[ch]' :^tools/ :^include/linux/export.h |
+> +       xargs git -C "${srctree:-.}" grep --files-without-match '#include=
+[[:space:]]*<linux/export\.h>' |
+> +       xargs printf "%s: warning: EXPORT_SYMBOL() is used, but #include =
+<linux/export.h> is missing\n" >&2
 
-> Dear Kernel Maintainers,
-> 
-> I am writing to report a potential vulnerability identified in the
-> upstream Linux Kernel version v6.12, corresponding to the following
-> commit in the mainline repository:
-> 
-> Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
-> 
-> This issue was discovered during the testing of the Android 16 AOSP
-> kernel, which is based on Linux kernel version 6.12, specifically from
-> the AOSP kernel branch:
-> 
-> AOSP kernel branch: android16-6.12
-> Manifest path: kernel/common.git
-> Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
-> 
-> Although this kernel branch is used in Android 16 development, its
-> base is aligned with the upstream Linux v6.12 release. I observed this
-> issue while conducting stability and fuzzing tests on the Android 16
-> platform and identified that the root cause lies in the upstream
-> codebase.
 
-Please just include all the bug info in the email.
+xargs needs the -r option.
 
-> 
-> Bug Location: shmem_rmdir+0x48/0x84 mm/shmem.c:3733
-> 
-> Bug Report: https://hastebin.com/share/jazumewiya.css
-> 
-> Entire Log: https://hastebin.com/share/uyuyaheken.perl
 
-Those links don't work for me.  "We're sorry, but the contents of the
-bin could not be found, or it has been deleted"
 
+diff --git a/scripts/misc-check b/scripts/misc-check
+index 51a5841673f7..c421c6cad476 100755
+--- a/scripts/misc-check
++++ b/scripts/misc-check
+@@ -47,8 +47,8 @@ check_missing_include_linux_export_h () {
+
+        git -C "${srctree:-.}" grep --files-with-matches -E
+'EXPORT_SYMBOL((_NS)?(_GPL)?|_GPL_FOR_MODULES)\(.*\)' \
+            -- '*.[ch]' :^tools/ :^include/linux/export.h |
+-       xargs git -C "${srctree:-.}" grep --files-without-match
+'#include[[:space:]]*<linux/export\.h>' |
+-       xargs printf "%s: warning: EXPORT_SYMBOL() is used, but
+#include <linux/export.h> is missing\n" >&2
++       xargs -r git -C "${srctree:-.}" grep --files-without-match
+'#include[[:space:]]*<linux/export\.h>' |
++       xargs -r printf "%s: warning: EXPORT_SYMBOL() is used, but
+#include <linux/export.h> is missing\n" >&2
+ }
+
+ # If you do not use EXPORT_SYMBOL(), please do not include <linux/export.h=
+>.
+
+
+--=20
+Best Regards
+Masahiro Yamada
