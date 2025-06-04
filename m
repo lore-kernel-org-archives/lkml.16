@@ -1,283 +1,170 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2042.outbound.protection.outlook.com [40.107.220.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A30D111BF
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749071679; cv=fail; b=Rex3AsPCCoHp32tx0FIRvngnTJxcAU4bBv1pgH6sIRciymE27uv93pWtvdtzg73O0kfsYJ0L0uWTMRA+zAaSfK/bgHJloItE6SpJR3UEzWuEKJHgr8rG16ppYrUyfKGwzZLb1VAfxK9Tc3q09vaq+XpeJ8xm5LJ5MnTSPHmXsOk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749071679; c=relaxed/simple;
-	bh=Z6vRVoTEFxw//we5ENqzsHdyrBlcfh+QXHjJm5I0iRI=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ZkfoopspwMc3RQcEmCuXi6P+s37ZlkklSjsXnQH5W9yWwUfQ0fjX3NQY8k2R083tpIwWswH7YMMN0afUbWeRdRyQCIhTb6P2mJ+JLg2OT7zWRdrsjh5b/50FQx5va0rayfWOc3x2mmJ4SrcLPGinYqy0X9G8kCnfO3b3FbEl6Vs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Hahm4H2S; arc=fail smtp.client-ip=40.107.220.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0E0433B3
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749071844; cv=none; b=vBocmknqRCfZkV+ryuhhzTSaxU3iGPro9tzccO4IwvG17KjJavoHgmAB3M0O2vbGbL1sBbFJ8ckb3Hk84rostC1zbUBhqyjY693qP/q6kGy6aombCaG5y3iObrXZ4mJxy1mir5lOtztL/Z3zx+rRLJTWkyS02koRXvmLULzhhCg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749071844; c=relaxed/simple;
+	bh=CXCvGL5hSf5ngZ4A2BceMmShZkAeoCIwyR3G4t932uk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JLnwpwmNeIkFcokzc7o8SVky1nQzdnnZwkCEEHjtG1ScbBayV6iH5hN5nsKdzZAi+efMhQh4nEaJ0q+B0qjph19lOsSm9bIZ7W96tKDkd7tyS/kRq0XRmZBnI7Ch+zLNk/vrgZ1RvvOqh14JXz3D+ippErrGITfSFyuzPS+7578=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=THqChL2T; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Hahm4H2S"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Nt08qRudeGd/KvhxjPGnUS8nfKQU8PMUdzglnjQgzRmisUfAN4Q/+N7Og/zciuGNxzhmc486UWJuT4KAy+cPJHYl2kj9Qg22pzCUTiUA68kjoHAQi13aXYEcSTrb/7pNnpPvM7j6aF4f2ZBlk9N1Q5IUfuiPCB7lya0xos+p31qeqUdSUW0hQvCigmTefD5AQkaa2XA4EggK4D9GsjIJLIQJe5Tw5tAtu++FjTPNK2n0O+DBdxS7Fv3oqruW/dU4lHCvhdxhzqyxM/GHXOZTHpIz8+s5krn3StrE3KIYTMZneXC9x8iV6SgW/uMzz4XT5G9xg+jv9M9lkk0TR7pcJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ftda8YoFNbQgU+/g34TsFysXCcABjB6iTs2PiWe/Wuk=;
- b=yf8uJoSjhNzkTdB3s6WqgKoAwiNKz6uUi5bno/wqnuDxbBOXL5WP87jTUjTaPrhPphLEUvCL/B44cwYlDqFIJom/IzcUsfZf5jIEEtL8nYxRB0KLKsLEpafytsDucZ01jFHo8fPqGBszKxAmtXhXAL1dU5Co/X7tcOy1ZUmjM9/abIZSx78fZM5AvtIQG1K3M/ihm13Ix1HSj3v4MddaWoRS2kocBlRiG8puZfqOx3+vHD9Os2MHrkxLEdspC6nBwScBP8/U4j2GXezyUBQ1okDVjJg+kMNH/D4dHN6S41tsJpVt+BUZ9lec9nJd83Xd23tjLPj6GOS5mBrAEgLTkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ftda8YoFNbQgU+/g34TsFysXCcABjB6iTs2PiWe/Wuk=;
- b=Hahm4H2SncwebcGGgBKfAQoKZzvd4gQ+vvhBPAo13BWDsLbRvif4+YcYfGUdhz+1ZHzV19kdqn2VNOeHPvGNDbt005x97DQ39Vq/sgHaem60xIPHmWhN9d8NRIqy+IRauJr7i0iZs8eUpFw2hJzxM/7CRKWyKamYLrWo0CWhkoXLWuxbugNbSvB/kktt3Ni6IL2/SqjaZe5rZdWCM74aNswrG9+rlDT0tLd5difAsPSaYmAmxfEy3WORC3jfRNcdNj1qjR4Yut+OtUtsngMxprdP0EcOJwb1tO09RAmjspjhUhNaILqDIpCFW6Nv0BFAci/aI57OqpV4k7zOO9mFvQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- CY5PR12MB6599.namprd12.prod.outlook.com (2603:10b6:930:41::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8792.34; Wed, 4 Jun 2025 21:14:33 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
- 21:14:33 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: david@redhat.com
-Cc: Liam.Howlett@oracle.com,
-	akpm@linux-foundation.org,
-	isaacmanjarres@google.com,
-	jyescas@google.com,
-	kaleshsingh@google.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lorenzo.stoakes@oracle.com,
-	masahiroy@kernel.org,
-	mhocko@suse.com,
-	minchan@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	tjmercier@google.com,
-	vbabka@suse.cz,
-	ziy@nvidia.com,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v2] mm: rename CONFIG_PAGE_BLOCK_ORDER to CONFIG_PAGE_BLOCK_MAX_ORDER.
-Date: Wed,  4 Jun 2025 17:14:27 -0400
-Message-ID: <20250604211427.1590859-1-ziy@nvidia.com>
-X-Mailer: git-send-email 2.47.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1P222CA0011.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:208:2c7::16) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="THqChL2T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749071841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3eaIlD6SgIwBKzFRuDf45UmSCQNYGCKtzx7DOTC83A8=;
+	b=THqChL2ThGEpA70BM0FfBVlZLdnIyz+tRD3UJxT1Ifr7QiQLQEYogc8bGJZov92e8Kb9xx
+	K2YGTOLFzI5facoMqgO2xKdpP1vqyPiYkPhZkFNCDvZwLsCdQFT7yVlHAbK+OEbnmD5YYE
+	4e1Ap/JSnWJt/+ovhZsyY9Q6FkaIxps=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-605-YnxkDavSO_-_TLlHsXZPKA-1; Wed, 04 Jun 2025 17:17:18 -0400
+X-MC-Unique: YnxkDavSO_-_TLlHsXZPKA-1
+X-Mimecast-MFC-AGG-ID: YnxkDavSO_-_TLlHsXZPKA_1749071837
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a1f6c5f4f2so160039f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 14:17:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749071837; x=1749676637;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3eaIlD6SgIwBKzFRuDf45UmSCQNYGCKtzx7DOTC83A8=;
+        b=k8HtEw0bU067qv5gRG16DKnBvk5HkFhxBgjAjUQUyZWuEYBrkenzevFrDtTBML8med
+         mHAxEW/yrTuZho3qq5RaK4lVLuqH1Cco0WSJCHWhhCKxcLRFZunMdE4si9rLCxQ9vp/1
+         pkUiZwdf4vgslM/UY0pePpcELYIfwHVpfr9Drqzs3HBLgFj9gkwEdH6VXRWisMy4d6qV
+         YCtmjBiPNLwRAiN2SsmnH8EcVuadfxiKHh3lPDcH/aOLxcxihNFxdSrxtuvnw2yw48Ue
+         SAFPBJSc8Pw778AY2zuK4mRc+PhRxPinYVwIY+FUuWPyyhVwmWbCP7QJSLgCv9oSJlmx
+         3mhg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8N7gSszoc8we8bQYMKouVME4o9aZeS6GmZzswlbayvNJJ3kHxx9aGBadiQXOYn7ByaYyDH0tA4gHSZI8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5vLd+8SzcdQRRVPf6gPx89kY7EBWb3wufPwtvbyEGGypcY8ZD
+	Jx9KAUMZRJ1Eg4YyEcLFd3hKEnYjzeXVacWi+4exp0yn+Q5gJ1ur6AxEhEBYvEA5bfQTMHxPA+D
+	BaHllx9lsPmQK/u5nIQ9wtRcxcFY98IgFAE4HRpQpKmGMQ8xIPhMeHSsQPf+YlG33zQ==
+X-Gm-Gg: ASbGncva/JL228+p00IISnSUPRBkM9YCfyunj9iVwso/hOyoE8T+UJGeuEcoKuS+bSb
+	CXQueG/ozu6as3kg79G8tAoOwZHlHlRByiDkjcGHxWfuIAa7F7JZ0Vv9kHiORQH0woNV00EjzJ1
+	1AdqKO6bGB9ej0D4cO94tlKklR2LEO6hTJpZ3DceiYaSXYkJLmMYYhCDsm9DZ0Sfd7t0/lfna1W
+	S2hpKKOpTwjq3TsyK80NIEW/poV+D3EUwMnACdH4xwj6+3ep7vO6n0fsN6uQZFkWxREPVywaBKk
+	AzQy+yROT87HAmy12rP3sgrsPGPtVAH3g37Dx/3nJcMypnvDbS8YzibD0guvqzCf3DkxT9g=
+X-Received: by 2002:a05:6000:2512:b0:3a4:d274:1d9b with SMTP id ffacd0b85a97d-3a51d92f84amr3541716f8f.25.1749071837469;
+        Wed, 04 Jun 2025 14:17:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG/w3mTJC6PzaXkAlaJcofTyt+hL5Id0Z9sQ5spOyW0fO3Rb3p4l0Y62I6sWoWE4eFRofNvzg==
+X-Received: by 2002:a05:6000:2512:b0:3a4:d274:1d9b with SMTP id ffacd0b85a97d-3a51d92f84amr3541694f8f.25.1749071836994;
+        Wed, 04 Jun 2025 14:17:16 -0700 (PDT)
+Received: from rh (p200300f6af1bce00e6fe5f11c0a7f4a1.dip0.t-ipconnect.de. [2003:f6:af1b:ce00:e6fe:5f11:c0a7:f4a1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c842sm22506811f8f.29.2025.06.04.14.17.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 14:17:16 -0700 (PDT)
+Date: Wed, 4 Jun 2025 23:17:15 +0200 (CEST)
+From: Sebastian Ott <sebott@redhat.com>
+To: Zenghui Yu <yuzenghui@huawei.com>
+cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+    Colton Lewis <coltonlewis@google.com>, 
+    Ricardo Koller <ricarkol@google.com>, Joey Gouly <joey.gouly@arm.com>, 
+    Suzuki K Poulose <suzuki.poulose@arm.com>, Shuah Khan <shuah@kernel.org>, 
+    linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] KVM: arm64: selftests: arch_timer_edge_cases
+ fixes
+In-Reply-To: <9b9f7099-4e81-9b74-a1ac-37cd4965675b@redhat.com>
+Message-ID: <77f07e94-82a2-5dc4-2483-e2ecff151e66@redhat.com>
+References: <20250527142434.25209-1-sebott@redhat.com> <adf8b877-7ca2-f60b-fb59-578c70d0e3c0@huawei.com> <9b9f7099-4e81-9b74-a1ac-37cd4965675b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|CY5PR12MB6599:EE_
-X-MS-Office365-Filtering-Correlation-Id: e2933f5c-bc65-49ad-2445-08dda3accd5a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HJNMRZfhPdXdQiLOFK4oVJoq2ty1IepNWo6loCKGbUkIMYqyNmqsI9bsQQCd?=
- =?us-ascii?Q?QDN9pVKgWJo8xWzKVoyJcEfzHRhQdQGK3HqvRLI/PwEu7HGUT0fKryb8WcKw?=
- =?us-ascii?Q?qCqzx72EePZbBXanfAqPRYDGsgfym+YPb4gRBRqnRk4qtHzBfRilKJI1Kfm6?=
- =?us-ascii?Q?DoRF7jrKxQqxPwab1/AWx6XfFhxFsgLR+e8NhMx8qNLTBCnhLjjY3wC146XT?=
- =?us-ascii?Q?NChrC2+TRVc45bagOAET6jHxTvLy41pC6C5gq7S3AULDcHzhFFehvceLWSMg?=
- =?us-ascii?Q?VwHfsiayGtaEYp9Rl4f7w5EpO3IWoPfXbGM/VqsS+eW7IOVYrrzTCPZFk2KR?=
- =?us-ascii?Q?3QzDXlUDBCAHaWDfc8aBR4Yvk1qjjywGvaxGECCJTZ00DR7lOAIHEwaJvmNa?=
- =?us-ascii?Q?qjnH+UBzEIub+CACqsd7nMrIzhvgSfXdaXxYjjgXKmj0OXQTFE/9my33yvuH?=
- =?us-ascii?Q?0jemM0h1ztdNjIrr5iXRAHRZDdbweWMBRIVd8X77XHzUzch5UfUhTjwC+MLO?=
- =?us-ascii?Q?9g+d10B0hZzAl9Je7m23Cfz0xOMTGKt0xY5FNKbvFEGpbOnyEUDXxvzq4+wV?=
- =?us-ascii?Q?Y3cQZ5r3MgczmxTX0s87hJkz2MPSt0vr7Cm8lf37LbaUt2sMDDQTCfm5Gc/T?=
- =?us-ascii?Q?IDEag6+uTSmNy9diyhTJVtMO/uNEpq9iVPDXzlNoIVngMgHcyVrnrOSM9/Oj?=
- =?us-ascii?Q?s81Nz1xAWDBzwu32JbVUO/Fcs5SfpM2cby6+HSJVGQPIifvn7p7ZVkbQw/wo?=
- =?us-ascii?Q?2Ze5Z/XrFyu+8nHZdZjUUapx4eZzWq1YJ5P6soj2B9Sj0AIWI1vK8UNFYx4R?=
- =?us-ascii?Q?X+1rUkwP5QtWcra7x88JtqKiTEMB4f07EUWdbo/MV7YHY02oM/WLljihdY1f?=
- =?us-ascii?Q?Ki3Idh0zUZyPpc3LMlufrSPdt/+m9kPXbaBlO/IVCWR75djjgNOzkdDVdffp?=
- =?us-ascii?Q?2ZFgoTc0VAWrFtZHEeQXbCG63Yqo74YVNk+PJha4g3pVIQXjrQtbaqo81en8?=
- =?us-ascii?Q?EqbJhWfd6a7ynYrQJt5sLDE+Esp6jyq+VwEvwM0AEOv85uZ6dcv5zyAtLtQK?=
- =?us-ascii?Q?16Q2LDDCxQdWSEKVEkzRjfJIjFe/IE17dBVqsvYE5gOvNxTa/M2v7557paF5?=
- =?us-ascii?Q?Gqoq4zNJdpFYnHk00/sWZNjZ+gOWBOd21L/hkJoTq2/WXVwxmV3bkXMAEfun?=
- =?us-ascii?Q?kxC9v4J6cgopmF4KVKnRMoHWLe8cIiA8nffGoQYH6jxjbs+XKaRVFaIsb+Wq?=
- =?us-ascii?Q?xUhyL2UdezZTNxPdt286lD8ocOUY5e4sQUlbXIYELkh+6IljpujiYH1aQ0HI?=
- =?us-ascii?Q?bZ2mB+r3PGb6IxLluzMDl4tNQBkTAy+IWvZ3aaqO/rVEdw2IvdI3hS2cbubV?=
- =?us-ascii?Q?dLmkLnmkBY5TQ78y56mdN0Et0PiXNPr9T9yyckmgjyf+yHGAn5Vsch58m713?=
- =?us-ascii?Q?88swW4BlS6IWzaDNUTHH750T5vi84hKK?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?W7vLUwmgKvYCjznD4qgVyogIfhS5H8hjp0L7h+8+QtmwyEzvXCJPil034ug6?=
- =?us-ascii?Q?QNTqiKHvHcYu1QEdy2Ap+6i04o8GwztgitABWsmdkefUPWoaoHNEXn+xMjOB?=
- =?us-ascii?Q?/Djo5J99TQ4SAhxA+EmQqe4nBQwhWr1Xm4bCHXIK4MCWRTHcyyBuIEj00jam?=
- =?us-ascii?Q?Dlb3CmRlCRG/cnHiEvR5ID7CQfiXKyAQ6ALCPxA9jsVEZuSssFPihQxuLlns?=
- =?us-ascii?Q?m/AkHiKEkrX+QxEiYr+99isIFyrEx4MfbB/dyUfjlgTLURAerLIXXH9c1bb/?=
- =?us-ascii?Q?Xjdt7Ap2WD8L38fxs2Rk8Q0oVUlg/GNzSc53m98ozOvhurTrsHNAmpGyr5fy?=
- =?us-ascii?Q?ml67TQdQ1C6748Sz+/NVXc3H0yDANjY+/BCGhTYbPh1ONL6mKfUJhPU2dfNL?=
- =?us-ascii?Q?6W68FDge7/QdrRytxvLKHTexTxkGgvZ40hDj2SeKEDm4B3kOTciRIntL2HdZ?=
- =?us-ascii?Q?KxH8B8KJqFMzL1j3Ke7kJOPWbuD1eHoEbhzSuxFM39NKaJ5eL5aqp0QDuJQi?=
- =?us-ascii?Q?OLzjdWkIRFG5cf5gaj1ci+Z2x6rvnTnsWjASoyoBR3ygXBe/9fB15xrGrtwf?=
- =?us-ascii?Q?YNIBbMTZAdaew/WSZELVeTJUtQLZDEBhm76qUqmlAKsIW0w8NcVr/i5JO5ZV?=
- =?us-ascii?Q?rwrMIsKeZi+ZsPdh9J9yNsEXOkmtWhQ1rAk/RdMYHDeHsf0aYTHCVytYLNbI?=
- =?us-ascii?Q?KKmZobr+scdjaQFuRwDuTCcd/E17w2YFdHJVtF/cWfOWIFadml+CO0n81CBl?=
- =?us-ascii?Q?45LCfIZ75tANsEUCCMqWO4aXuI3nqcrkdPA7E8YWb4cxhohKMDQSNfWrlRiu?=
- =?us-ascii?Q?3bdxC73yHDKZ6CUMAGNxvYHf1QKJAvjdzW3V0KDloE2OmKd3L6fW9NdDRHeo?=
- =?us-ascii?Q?IRCZTQiEXZvTap5q9Q3J32CrQfO5AfWyjs2kieqNFNAWtcYBzQfr1xTrfXXe?=
- =?us-ascii?Q?22OI8dZA5BW6SjqsFPJfeJ9g8f1Ds4epd4pV2hkc9MyCCsvmfFSWcABj/o8N?=
- =?us-ascii?Q?EbexCFWpnC76PvYLT45PxOsVC+5mzwkTlba0NfwO0HTeLkVHvSI0Ogr4KSZE?=
- =?us-ascii?Q?FqAENN8iC4brC5BJCGVaE/fodXpE3LSCjr0mKYM5LuGGR+GzvrORsa+yMAri?=
- =?us-ascii?Q?aCuvEcNCuuDokqcVmmCBnnxK6tO9QbP42TVpyvUZpTb8srR5+Y89ppzxXAn1?=
- =?us-ascii?Q?YCdE/lRIA4yFBCj1wrgoyHPjQZLkML/CO8pywe7Bnv4RhCaFRMmoJuERzLID?=
- =?us-ascii?Q?kd/7V0TJWqwqURG7EKqcNUWmvtVb/1QwyzAxWvynXWtdpy1/oaQ7BaU9UHap?=
- =?us-ascii?Q?nX64lrG8senFas4fujowENLmIyarmKnvvkTCQaC4tGWMqsBeHI4kIO1JAJhY?=
- =?us-ascii?Q?jLk323SLoi0gSAfEX7KN1nxO6Hoow5j65l+9hGYlfEjMTaCQ2OQWoiuVAdfD?=
- =?us-ascii?Q?7qJZ6tskCSNTtVsynUNbM2yL+B805g6tb0fWzYriMmwZSCVTzjNQwhKsBPH2?=
- =?us-ascii?Q?NvdIXSApxstCWC2ojHqMduI2r0KdbCSc8nqf1hHMan6Cs3PkGaKR3cXC4AKo?=
- =?us-ascii?Q?LeiA5NuDfOro95RNpjLwy2dC/st99596yc85weOG?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2933f5c-bc65-49ad-2445-08dda3accd5a
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 21:14:33.2899
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DXBZ4u0QtX/FHzPBJrJdjM6d2IBkKugApvL0Bfmpo3wIDJcPftJMTRkHP1lbaWCD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6599
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-The config is in fact an additional upper limit of pageblock_order, so
-rename it to avoid confusion.
+On Wed, 4 Jun 2025, Sebastian Ott wrote:
+> On Tue, 3 Jun 2025, Zenghui Yu wrote:
+>>  On 2025/5/27 22:24, Sebastian Ott wrote:
+>>>  Some small fixes for arch_timer_edge_cases that I stumbled upon
+>>>  while debugging failures for this selftest on ampere-one.
+>>>
+>>>  Changes since v1: modified patch 3 based on suggestions from Marc.
+>>>
+>>>  I've done some tests with this on various machines - seems to be all
+>>>  good, however on ampere-one I now hit this in 10% of the runs:
+>>>  ==== Test Assertion Failure ====
+>>>    arm64/arch_timer_edge_cases.c:481: timer_get_cntct(timer) >= DEF_CNT +
+>>>    (timer_get_cntfrq() * (uint64_t)(delta_2_ms) / 1000)
+>>>    pid=166657 tid=166657 errno=4 - Interrupted system call
+>>>       1  0x0000000000404db3: test_run at arch_timer_edge_cases.c:933
+>>>       2  0x0000000000401f9f: main at arch_timer_edge_cases.c:1062
+>>>       3  0x0000ffffaedd625b: ?? ??:0
+>>>       4  0x0000ffffaedd633b: ?? ??:0
+>>>       5  0x00000000004020af: _start at ??:?
+>>>    timer_get_cntct(timer) >= DEF_CNT + msec_to_cycles(delta_2_ms)
+>>>
+>>>  This is not new, it was just hidden behind the other failure. I'll
+>>>  try to figure out what this is about (seems to be independent of
+>>>  the wait time)..
+>>
+>>  Not sure if you have figured it out. I can easily reproduce it on my box
+>>  and I *guess* it is that we have some random XVAL values when we enable
+>>  the timer..
+>
+> Yes, I think so, too.
+>
+>>  test_reprogramming_timer()
+>>  {
+>>   local_irq_disable();
+>>   reset_timer_state(timer, DEF_CNT);
+>
+> My first attempt was to also initialize cval here
 
-Signed-off-by: Zi Yan <ziy@nvidia.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: Juan Yescas <jyescas@google.com>
----
-From v1[1]:
-1. used a new name: PAGE_BLOCK_MAX_ORDER,
-2. added the missing PAGE_BLOCK_ORDER rename in mm/mm_init.c[2]
-3. dropped the Fixes tag.
+Forgot to mention that I did this because my tests have shown
+that the interrupt didn't only trigger early (like before the
+reprogrammed delta) but instantly. This seemed to work but I think
+the order in set_tval_irq() is the actual issue.
 
-[1] https://lore.kernel.org/linux-mm/20250603154843.1565239-1-ziy@nvidia.com/
-[2] https://lore.kernel.org/linux-mm/202506042058.XgvABCE0-lkp@intel.com/
 
- include/linux/mmzone.h          | 14 +++++++-------
- include/linux/pageblock-flags.h |  8 ++++----
- mm/Kconfig                      | 15 ++++++++-------
- mm/mm_init.c                    |  2 +-
- 4 files changed, 20 insertions(+), 19 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 283913d42d7b..5bec8b1d0e66 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -38,19 +38,19 @@
- #define NR_PAGE_ORDERS (MAX_PAGE_ORDER + 1)
- 
- /* Defines the order for the number of pages that have a migrate type. */
--#ifndef CONFIG_PAGE_BLOCK_ORDER
--#define PAGE_BLOCK_ORDER MAX_PAGE_ORDER
-+#ifndef CONFIG_PAGE_BLOCK_MAX_ORDER
-+#define PAGE_BLOCK_MAX_ORDER MAX_PAGE_ORDER
- #else
--#define PAGE_BLOCK_ORDER CONFIG_PAGE_BLOCK_ORDER
--#endif /* CONFIG_PAGE_BLOCK_ORDER */
-+#define PAGE_BLOCK_MAX_ORDER CONFIG_PAGE_BLOCK_MAX_ORDER
-+#endif /* CONFIG_PAGE_BLOCK_MAX_ORDER */
- 
- /*
-  * The MAX_PAGE_ORDER, which defines the max order of pages to be allocated
-- * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_ORDER,
-+ * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_MAX_ORDER,
-  * which defines the order for the number of pages that can have a migrate type
-  */
--#if (PAGE_BLOCK_ORDER > MAX_PAGE_ORDER)
--#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_ORDER
-+#if (PAGE_BLOCK_MAX_ORDER > MAX_PAGE_ORDER)
-+#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_MAX_ORDER
- #endif
- 
- /*
-diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
-index e73a4292ef02..6297c6343c55 100644
---- a/include/linux/pageblock-flags.h
-+++ b/include/linux/pageblock-flags.h
-@@ -41,18 +41,18 @@ extern unsigned int pageblock_order;
-  * Huge pages are a constant size, but don't exceed the maximum allocation
-  * granularity.
-  */
--#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER)
-+#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_MAX_ORDER)
- 
- #endif /* CONFIG_HUGETLB_PAGE_SIZE_VARIABLE */
- 
- #elif defined(CONFIG_TRANSPARENT_HUGEPAGE)
- 
--#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)
-+#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_MAX_ORDER)
- 
- #else /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
--/* If huge pages are not used, group by PAGE_BLOCK_ORDER */
--#define pageblock_order		PAGE_BLOCK_ORDER
-+/* If huge pages are not used, group by PAGE_BLOCK_MAX_ORDER */
-+#define pageblock_order		PAGE_BLOCK_MAX_ORDER
- 
- #endif /* CONFIG_HUGETLB_PAGE */
- 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 65089552e124..3afac26d3594 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1017,8 +1017,8 @@ config ARCH_FORCE_MAX_ORDER
- # the default page block order is MAX_PAGE_ORDER (10) as per
- # include/linux/mmzone.h.
- #
--config PAGE_BLOCK_ORDER
--	int "Page Block Order"
-+config PAGE_BLOCK_MAX_ORDER
-+	int "Page Block Order Upper Limit"
- 	range 1 10 if ARCH_FORCE_MAX_ORDER = 0
- 	default 10 if ARCH_FORCE_MAX_ORDER = 0
- 	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER != 0
-@@ -1026,12 +1026,13 @@ config PAGE_BLOCK_ORDER
- 	help
- 	  The page block order refers to the power of two number of pages that
- 	  are physically contiguous and can have a migrate type associated to
--	  them. The maximum size of the page block order is limited by
--	  ARCH_FORCE_MAX_ORDER.
-+	  them. The maximum size of the page block order is at least limited by
-+	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER.
- 
--	  This config allows overriding the default page block order when the
--	  page block order is required to be smaller than ARCH_FORCE_MAX_ORDER
--	  or MAX_PAGE_ORDER.
-+	  This config adds a new upper limit of default page block
-+	  order when the page block order is required to be smaller than
-+	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER or other limits
-+	  (see include/linux/pageblock-flags.h for details).
- 
- 	  Reducing pageblock order can negatively impact THP generation
- 	  success rate. If your workloads use THP heavily, please use this
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index f2944748f526..02f41e2bdf60 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -1509,7 +1509,7 @@ static inline void setup_usemap(struct zone *zone) {}
- /* Initialise the number of pages represented by NR_PAGEBLOCK_BITS */
- void __init set_pageblock_order(void)
- {
--	unsigned int order = PAGE_BLOCK_ORDER;
-+	unsigned int order = PAGE_BLOCK_MAX_ORDER;
- 
- 	/* Check that pageblock_nr_pages has not already been setup */
- 	if (pageblock_order)
--- 
-2.47.2
+>
+>>
+>>   /* Program the timer to DEF_CNT + delta_1_ms. */
+>>   set_tval_irq(timer, msec_to_cycles(delta_1_ms), CTL_ENABLE);
+>>
+>>  	[...]
+>>  }
+>>
+>>  set_tval_irq()
+>>  {
+>>   timer_set_ctl(timer, ctl);
+>>
+>>   // There is a window that we enable the timer with *random* XVAL
+>>   // values and we may get the unexpected interrupt.. And it's
+>>   // unlikely that KVM can be aware of TVAL's change (and
+>>   // re-evaluate the interrupt's pending state) before hitting the
+>>   // GUEST_ASSERT().
+>>
+>>   timer_set_tval(timer, tval_cycles);
+>
+> Yes, I stumbled over this as well. I've always assumed that this order is
+> becauase of this from the architecture "If CNTV_CTL_EL0.ENABLE is 0, the 
+> value returned is UNKNOWN." However re-reading that part today I realized
+> that this only concerns register reads.
+>
+> Maybe somone on cc knows why it's in that order?
+>
+> I'm currently testing this with the above swapped and it's looking good,
+> so far.
+>
+>>  }
+>>
+>>  I'm not familiar with the test so I'm not 100% sure that this is the
+>>  root cause. But I hope this helps with your analysis ;-) .
+>
+> It did, thanks!
+>
+> Sebastian
+>
 
