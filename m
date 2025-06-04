@@ -1,121 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9D828E5EF;
-	Wed,  4 Jun 2025 11:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DF12B9BC
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 11:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749036566; cv=none; b=qbM24bFRKSagCncJ7ZvDpWPO+WRX141i53r43YTh/Qw1LZ8k2KDZjEHaZX9JjNTrD635pQKaeloZDif3/F1ewNkeHOJ1/T9Xx6CcqL3OGnom+C0C+IgT+I9BtvW6RYOW1+I2l1htpfLd+yGiGPAH+rFtbyPHeoF6qDXTjg9WmDg=
+	t=1749036698; cv=none; b=XOhal4Yew7lRVZM9RmjGR2jGPMdIqzdzA8drswylHhp4ONRmeZFw6lu2n+KKLqkwGEorbq/uKsNKKK+IfkMZARaAzH9qbXCsCsndN8QIJn/x5c6qvwPsUdoapuKpTc+iKBtVVhEzSIuKmCBdFPQhwFj1hV87RZEv6O16ybP0Sp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749036566; c=relaxed/simple;
-	bh=d2BIPMNimzjXbgSV6A0P6u4TSLLraPPLngeklZCCS+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FVVgpPeI+nQ4PfYvtYR6zMmVB8NFb2UkhfMD5Ye4RW9URm/wf9RYFRztAW2zVgA6mK1m6wDRbrx/sJsB4QyerBCp3EU/ruXcqCcVS2Lxwyq0NDztBlTfl2RXQPt17bG3ZCwfKjKedLD97MPlvtg2r/WBMztPSpQM9WDhQ4BigOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qCld74uj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749036698; c=relaxed/simple;
+	bh=xsT7df1iosQgc0GDXxlbzLg0Z/QlQnax8MazA18G5ak=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IEBqJH4GeS1dg5AewTxPLyCD7idfVxjR5IB/ZtnAlCVq0l3WTnZGyizP1c+AIuKfeCnyaXVc9WIm9GWTkzP5uBKJJcAEvh5q7+OeYClxTnPHHZ+Vo20qyelNx5Id7LYeLg/3j3G23EeBNmeklgd0zH72JW7qotnR9xhyldqfYDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aCdqXEl/; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qCld74uj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C18BC4CEE7;
-	Wed,  4 Jun 2025 11:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749036566;
-	bh=d2BIPMNimzjXbgSV6A0P6u4TSLLraPPLngeklZCCS+8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qCld74uj1bdGLZvkMJaf+A8oQK0B+MBUAmM/eTkAhSfJHfYsdGVjnR9AsxXuVgeEc
-	 NEh3h132u/4CgE4wLt4BuCvWolfFTjeuaJZRS/4TmZI87KFnLfiuD2+ciLcl8i/Wms
-	 jt5+6dcVmIuTgt4GXxtMvoKOAfEqyrDeGYpAumthMjX6bSk69qN00tT3GaLwgIhLFO
-	 x3rMhPJnPtpcokt2XOrhnp1ZghyWqtSYc6AnhbJMp9BTExv3/SPV43q3RqRmOwDX89
-	 DHzeqepI1u0epFvuBYrRBLHVmvZrkhvTc9J0h2rcAhtZm4KDHmgz7dtKPZDz0J458z
-	 NKJgh5Umh3w3A==
-Message-ID: <71a7422a-f139-404f-8759-54dc1510b571@kernel.org>
-Date: Wed, 4 Jun 2025 13:29:11 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aCdqXEl/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749036264;
+	bh=xsT7df1iosQgc0GDXxlbzLg0Z/QlQnax8MazA18G5ak=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aCdqXEl/DCOyBnn9BxAS+/b2YaPf/UGyGV6m4yy3uYyL6uM8bs/bKMvFm6arFV+c5
+	 MuMLWDBM+bdLAs5W1PVV6itr/Jzgv+RhgaRdfOga6lXLo+szBR+TkBXlvcLqwwDgtP
+	 gsfXvC0OJuYXiDqOEq70RnPjB6TFedF7JnLcYVvqIP+FYn+kHHfl/emDUlozDMq3Nv
+	 yGgT5UoYRvqg4N6EsuRwqgEfZLHrMjzLYr5nMxN98SJhkTFjVXjnT58+eEp/ID4p+B
+	 QeJ4Zp/8Nxv+6JYddH7Tdhnf3Q9Ll6+ii15J15buKhq7KFtqxjE5QeGsrzEDxNDdTS
+	 AfKOcf+rATNLg==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 120D517E010B;
+	Wed,  4 Jun 2025 13:24:24 +0200 (CEST)
+Date: Wed, 4 Jun 2025 13:24:18 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Ashley Smith <ashley.smith@collabora.com>
+Cc: "Liviu Dudau" <liviu.dudau@arm.com>, "Steven Price"
+ <steven.price@arm.com>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "kernel"
+ <kernel@collabora.com>, "open list:ARM MALI PANTHOR DRM DRIVER"
+ <dri-devel@lists.freedesktop.org>, "open list"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/2] drm/panthor: Reset queue slots if termination
+ fails
+Message-ID: <20250604132418.6685ff7c@collabora.com>
+In-Reply-To: <1973a637a7f.b61987aa482053.3031227813632792112@collabora.com>
+References: <20250603094952.4188093-1-ashley.smith@collabora.com>
+	<20250603094952.4188093-2-ashley.smith@collabora.com>
+	<aD7X-O8ykIGZjHjc@e110455-lin.cambridge.arm.com>
+	<1973a637a7f.b61987aa482053.3031227813632792112@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] dt-bindings: trivial-devices: Add compatible
- string synaptics,synaptics_i2c
-To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
- Noah Wang <noahwang.wang@outlook.com>,
- Naresh Solanki <naresh.solanki@9elements.com>,
- Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>,
- Michal Simek <michal.simek@amd.com>, Grant Peltier
- <grantpeltier93@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: imx@lists.linux.dev, wahrenst@gmx.net
-References: <20250603151239.1065763-1-Frank.Li@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250603151239.1065763-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 03/06/2025 17:12, Frank Li wrote:
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 5d2a7a8d3ac6c..5b9c7ab6d8185 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -1496,6 +1496,9 @@ patternProperties:
->    "^synopsys,.*":
->      description: Synopsys, Inc. (deprecated, use snps)
->      deprecated: true
-> +  "^synaptics,.*":
+On Wed, 04 Jun 2025 11:01:27 +0100
+Ashley Smith <ashley.smith@collabora.com> wrote:
 
+> On Tue, 03 Jun 2025 12:09:44 +0100 Liviu Dudau <liviu.dudau@arm.com>
+> wrote:
+>  > On Tue, Jun 03, 2025 at 10:49:31AM +0100, Ashley Smith wrote:   
+>  > > This fixes a bug where if we timeout after a suspend and the
+>  > > termination fails, due to waiting on a fence that will never be
+>  > > signalled for example, we do not resume the group correctly. The
+>  > > fix forces a reset for groups that are not terminated correctly.
+>  > >   
+>  >  
+>  > I have a question on the commit message: you're describing a
+>  > situation where a fence will *never* be signalled. Is that a real
+>  > example? I thought this is not supposed to ever happen! Or are you
+>  > trying to say that the fence signalling happens after the timeout?
+>  >  
+> 
+> This covers cases where a fence is never signalled.
 
-Please place it in alphabetical order.
+Fence not being signaled in time is covered by the job timeout. What
+you're fixing here is the FW not responding to a CSG SUSPEND/TERMINATE
+request, which is different.
 
+> It shouldn't
+> happen, but we have found this in some situations with a FW hang.
 
-Best regards,
-Krzysztof
+This ^.
+
+> Since queue_suspend_timeout() is only called on state update, if a
+> suspend/terminate fails due to a FW hang for example this will leave
+> delayed work, possibly leading to an incorrect queue_timeout_work().
+
+Nah, that's not true until the second patch in this series is applied,
+because drm_sched_stop(), which is called in the
+panthor_sched_pre_reset() path, takes care of suspending the drm_sched
+timer. What's still problematic if we don't call cs_slot_reset_locked()
+here is that we don't re-initialize the FW CS slots, and since
+cs_slot_prog_locked() is only called on active queues, we might end up
+with an unused CS slot that still has values from the previous user of
+this slot. Not sure how harmful this is in practice, but it's certainly
+not great.
+
+The true reason we have a Fixes tag is because the second patch has
+a Fixes tag too, and it relies on the new driver timer being stopped
+even if the FW hangs on a TERMINATE request (queue_suspend_timeout() is
+called in cs_slot_reset_locked()). So, either we merge the two patches
+back, like was done in v2, or we have to flag both as Fixes.
