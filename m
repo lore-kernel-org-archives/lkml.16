@@ -1,108 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22A81E47B4
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3821E8348
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749056113; cv=none; b=hcjgHJSYoRDQ1axmorU21yemx7LMh9jOs67/o45mNgjs29EsZHl5+cjeaU9gIpcVtgCaj/cVfvoxJ4/ZYQQBlEvu0C/xs4zsvewESra9RpWzLsfW12D59dX3gUM0vdzhrNvZCm7q/8i4LIWDLYMxF/QyqpAxmuFXdKdzZby/s2Y=
+	t=1749056121; cv=none; b=Tg+wdrfFPX9XlRI3Y18/z6XVwsISLvduTqAwKV9b0U6FlDIRk6IYXCZHpml/JM89m8wirVtHs4WQav03O39F6hmDfyENIguM8qdbX7Gpt0cApLG7k48jReDwVBhopKl8jvPnYBYrXNOkviD/0clLMNNmFBm4eFSUHKSZgq72/7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749056113; c=relaxed/simple;
-	bh=91TmU08FsImP3F4T6u8nGlGa+H7u7HZ0VJLL7es6Lfk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cOo68m6pB+N/ykuaoJctt+SGHocnYj8jjISn/pg/1JWiVn98b8B5idS2XF9i6R49TGjp/i/32mgofDvkGEJq4JNSfwNd9KB2TMdgi14+bJXbAZqVUIqViNmcMOlXvH5eioYNuiiv/RTXGUXpFnX01ItBsDyjWvgqXelqYdp4kFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VA99ODXP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749056121; c=relaxed/simple;
+	bh=AM+A6P9w2wkT0X0Ss8sfC+rK4sLbZj/SNTI2K8QsSFg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EZkzcWsE1l/e6fKzTDJlREq/arFkfIM6BHzE8dWLylZedYphIUphTDe5kG2Blaf6nVKZ+fQpGACBbiYiud+g8TTrUqQ8g2ZcHr4BWfPvSzAM2YL4fVq8QNaJS9Wg+B21CzunUUxtacQQkbLVSCOEIxpHAoz+sqOGjhhk6jEDzSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riotgames.com; spf=pass smtp.mailfrom=riotgames.com; dkim=pass (1024-bit key) header.d=riotgames.com header.i=@riotgames.com header.b=iXdqDuZl; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riotgames.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riotgames.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VA99ODXP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749056110;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=91TmU08FsImP3F4T6u8nGlGa+H7u7HZ0VJLL7es6Lfk=;
-	b=VA99ODXPXg6zqh4kZPT4CCBZfPIsmXUIYv/vYl5Ka5kITWH2qhcGFISvbHwK9S/b6DBN/j
-	dwYzyl3VJnIDjJ1JFiwgPH4MFngGY5fKnvhKrgob/k/6By/D8KcF6g8NL7BItoAqdbOxhS
-	ZCG+ueBQHnQPyPuvzGZN33Jl/D0Hoy0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-xfuiS45KMgWIgT7tYrC9uA-1; Wed, 04 Jun 2025 12:55:09 -0400
-X-MC-Unique: xfuiS45KMgWIgT7tYrC9uA-1
-X-Mimecast-MFC-AGG-ID: xfuiS45KMgWIgT7tYrC9uA_1749056108
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ad51ceda1d9so110249866b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:55:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=riotgames.com header.i=@riotgames.com header.b="iXdqDuZl"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3122a63201bso74642a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riotgames.com; s=riotgames; t=1749056119; x=1749660919; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AM+A6P9w2wkT0X0Ss8sfC+rK4sLbZj/SNTI2K8QsSFg=;
+        b=iXdqDuZlBH4gDyQQxyUTHepKQrLj73ZDyIYN5fhnC0YHLzKnBYRsD+LyXnLyYHPjlO
+         GPaiBxrQQ5epRK0oeJc4kP/t7aY7HhHVENHyLD03QmoSxF77odqBo2osHWJcmvtUhXAX
+         hhBi4s3uRpKFvQcyfJtSGAHBEvVmPcyoxENhw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749056108; x=1749660908;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749056119; x=1749660919;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=91TmU08FsImP3F4T6u8nGlGa+H7u7HZ0VJLL7es6Lfk=;
-        b=EZzrrY+W+CgVYu0jrnzcGLjrtoKRso2/GsEEow5f15kUmOOcA2pOVnldhe5uyNx6jF
-         HgDCQL/NvOvbU3BY+boi9qXFXd1SeUr2umSukZcB4f/d1MMG9aA/YPjUTP5N9u1axdNY
-         KYIcMGXYGXjwNSrgoi6qsUGoP2miMN7oGbLZjepCIM/+6o0ZkA7p85GG9Bus5ol/MDYy
-         KgU4EfUnk43P7Pv8D9aWTKTfECOAwUn3I1k+miOQDg3hphcvqHBLhrIjYmPoaII290l6
-         q/UGZZFBLs++FM3V7Y9/EDFFKPMTzdwk7ejWWkr8JrqFjzIqeY/Lqv6oO90Q8IBMWUR3
-         7oyA==
-X-Gm-Message-State: AOJu0YwBMXlhDuVxTU8NAJ1CYGSHNtTas1SbwPQKfQlav4AtsfjrIwB9
-	34k3ZqWvvLToAdJXXYji8mHEdhu+wS0bOizTDIw733XAabT0eL1vD8IW1ScEt5POLgfqztgZ6GF
-	vb0q41/6M7AUjR8ksbV3G8OMsdcuwTC4hCW1YrH4yCQnqbuhYCa4OonUdQRlPYRwemg==
-X-Gm-Gg: ASbGncu8tcIApQ5Bs5ndKMkVWROkrB1yxzd+XUtKRyByVU+dMjDpP9qKwDgfmfEzmyN
-	5jrYCz0PbN8ZgfK4fnqbR3rR+8esiuynzpTM+crIBt7fPV9+r7yv3BQ1m4EwL+Ronl4xqOKGO9j
-	8tWxY0j+FwHGRHBFuybHISGbEgOjYSrrf2mhcIG22bFmtYPGvDjyAtmw/EkBNK/qAKIssrpEpmy
-	7FlbIq2uN5jp2Eiz7/4p7Lr8uouMy8yJz81CwFqLeb863952tHIoZ68XLLzOUilwQTmRdg5Irxu
-	QyHSL6D2
-X-Received: by 2002:a17:907:3e08:b0:ad8:ace9:e280 with SMTP id a640c23a62f3a-ade075bc502mr29799866b.5.1749056108273;
-        Wed, 04 Jun 2025 09:55:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHBc27ssHQiTtB4EgXSQkSof2j5qNISk4hB2PmUnwayLy3gFqhE1o5UG3eo/R6RPx6tePP/GQ==
-X-Received: by 2002:a17:907:3e08:b0:ad8:ace9:e280 with SMTP id a640c23a62f3a-ade075bc502mr29794366b.5.1749056107818;
-        Wed, 04 Jun 2025 09:55:07 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d84d1f7sm1118264566b.74.2025.06.04.09.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 09:55:07 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 6A2151AA915E; Wed, 04 Jun 2025 18:55:06 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
- netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
- ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
- akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
- andrew+netdev@lunn.ch, asml.silence@gmail.com, tariqt@nvidia.com,
- edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
- leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Subject: Re: [RFC v4 08/18] page_pool: rename __page_pool_release_page_dma()
- to __page_pool_release_netmem_dma()
-In-Reply-To: <20250604025246.61616-9-byungchul@sk.com>
-References: <20250604025246.61616-1-byungchul@sk.com>
- <20250604025246.61616-9-byungchul@sk.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Wed, 04 Jun 2025 18:55:06 +0200
-Message-ID: <87v7pbv445.fsf@toke.dk>
+        bh=AM+A6P9w2wkT0X0Ss8sfC+rK4sLbZj/SNTI2K8QsSFg=;
+        b=bj0EECofGu48JQS/MxiFYkTNlYNz9ksu/eAJZ+nU99heoPH3GfQ7zWwkATEzsx5GRE
+         2rSMh2uvFigZur2+1pnapdLwmRJnlUfKw0e7ncCQs0yuMOltNolChN92BWtt4TYHBHLr
+         ooEpIxo8CV5WPm37rlJkQig6jrius5mTCNKqgcwo2XXV6Rn/KDyllWXvOcj9yQy0I94H
+         kNsfiJlmOtspxl7WEfGsZaNYyFnQoRzfFuULo8X3z2dGhDHt08UueiFq867sSxqjP/yK
+         MN8xUzmVQesXG6QoS+Es2Cc2TUmPK+psA9KRSSl8D8S6F9raJxfE3RX/tTMOewGCHiYx
+         4eGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOrCwCqU/t5yj96J0zQYtZEvGusu2Qndu11Sso5XH5WxPy78KyyfbrSYtnz9EaUL8TDXj2peYx8Ao27tM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyzTUgKL+r4KHr4mIuQfhmwNoDOS2vNpc7e/6Zt3zXMTyJq7mO
+	tou9r1icwasnnnpTRHvbYX/NSymH/WhChFMef6mNAe9C7wmSBG+K+KMIOlzgKvumbs0p1g3l7BB
+	eFHaiDO5npVE2UkTjjYzA0x6yp0Jfdvdrq+vB+Hi70Q==
+X-Gm-Gg: ASbGncvPRiB4/eJEblDt0PCgTMlac1LTmFhOCkAdpaw3+qySzn61+r1eFA1PtcNwzty
+	opw9MB3rlEtQB4NxQ0R+12/vbgJbNN9vJTIanWgcDrJSg0A36fdl6AYnSzZx2BowgNdUPK5DtjK
+	AWAkb4qn0fPAQfVeoXv5/4BsE8FYxskYjd
+X-Google-Smtp-Source: AGHT+IHSFm7AlkobZVkgSc2uHdOWwSJZnf8VUDuCELETibH45kd+R/oYzSGq4wkai7atxPvVDpyDGYc+gyHX+9/SSX8=
+X-Received: by 2002:a17:90b:3d02:b0:312:e9d:4002 with SMTP id
+ 98e67ed59e1d1-3130cdad8e7mr5604061a91.28.1749056118925; Wed, 04 Jun 2025
+ 09:55:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250603150613.83802-1-minhquangbui99@gmail.com>
+In-Reply-To: <20250603150613.83802-1-minhquangbui99@gmail.com>
+From: Zvi Effron <zeffron@riotgames.com>
+Date: Wed, 4 Jun 2025 09:55:06 -0700
+X-Gm-Features: AX0GCFuTjwtD_LQoMjFITQPds6k3nNGJ-eA3Q34d-mo_X9J99JpFJ2MIxKJ-Rd8
+Message-ID: <CAC1LvL0xTSv9sBRYnD-ykDqQr+Reg7yB0uwAR158-+aAm1J1Ew@mail.gmail.com>
+Subject: Re: [PATCH net] virtio-net: drop the multi-buffer XDP packet in zerocopy
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Byungchul Park <byungchul@sk.com> writes:
-
-> Now that __page_pool_release_page_dma() is for releasing netmem, not
-> struct page, rename it to __page_pool_release_netmem_dma() to reflect
-> what it does.
+On Tue, Jun 3, 2025 at 8:09=E2=80=AFAM Bui Quang Minh <minhquangbui99@gmail=
+.com> wrote:
 >
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
-> Reviewed-by: Mina Almasry <almasrymina@google.com>
+> In virtio-net, we have not yet supported multi-buffer XDP packet in
+> zerocopy mode when there is a binding XDP program. However, in that
+> case, when receiving multi-buffer XDP packet, we skip the XDP program
+> and return XDP_PASS. As a result, the packet is passed to normal network
+> stack which is an incorrect behavior. This commit instead returns
+> XDP_DROP in that case.
 
-Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+Does it make more sense to return XDP_ABORTED? This seems like an unexpecte=
+d
+exception case to me, but I'm not familiar enough with virtio-net's multibu=
+ffer
+support.
 
+>
+> Fixes: 99c861b44eb1 ("virtio_net: xsk: rx: support recv merge mode")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> ---
+> drivers/net/virtio_net.c | 11 ++++++++---
+> 1 file changed, 8 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index e53ba600605a..4c35324d6e5b 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1309,9 +1309,14 @@ static struct sk_buff *virtnet_receive_xsk_merge(s=
+truct net_device *dev, struct
+> ret =3D XDP_PASS;
+> rcu_read_lock();
+> prog =3D rcu_dereference(rq->xdp_prog);
+> - /* TODO: support multi buffer. */
+> - if (prog && num_buf =3D=3D 1)
+> - ret =3D virtnet_xdp_handler(prog, xdp, dev, xdp_xmit, stats);
+> + if (prog) {
+> + /* TODO: support multi buffer. */
+> + if (num_buf =3D=3D 1)
+> + ret =3D virtnet_xdp_handler(prog, xdp, dev, xdp_xmit,
+> + stats);
+> + else
+> + ret =3D XDP_DROP;
+> + }
+> rcu_read_unlock();
+>
+> switch (ret) {
+> --
+> 2.43.0
+>
+>
