@@ -1,52 +1,52 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B20C7261C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B622286338;
 	Wed,  4 Jun 2025 00:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748996288; cv=none; b=OP3JzaLnaFF+U6vRO3yXWy4Zz6cuzAFQIxKi5jPPSOlPge9N0rLWEcWJWOEVeq2XpZbgt/Y5Eu47RuTk2/GCfZml7oa8oA5NhseEl2SSmSXOqK4jTpvQmbcPA8hWylRlPvPfX/h5jiuPosiLv7ZJbZoUXyLpGSbJyuk34LJIqXU=
+	t=1748996289; cv=none; b=l5r7TdfU5KN8AIFK2CUIDmcaWseazSxnxl6WBzOLV1E7343aXRMqUp0mgFi22gy77CsrbAq7ozBZoQ+pHQUxwr/LZSohqYkDJWlRdqFXKXhh7qW9avkT4ww2FfOkoRcXD356U1dYSt8nExe6cCbbyBIwibJeNiHu+pWXCaI9y1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748996288; c=relaxed/simple;
-	bh=V4sR4hWtPVMZ3ywoOFOkbkpBj99xQxKorVINhU2PHmw=;
+	s=arc-20240116; t=1748996289; c=relaxed/simple;
+	bh=YMzG5+AadCckxPwzHaVnWjL9Y7atDKDPkNrr/M1BYpQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QeOpsDnQWLA9zUsUoPM66oJj2GfVpVAu+lCj8mRxytF+XuM/FjzDz/cckZUbIlB8ppFiCq+Mym1PyTxyQinI9ikpaVzmk7AJJ+FDSaKjUikEl+x8xDkwt/HUFMtUeDUsYUk+E/o2u43JjozdH9uFTFGyHjAEJMvgNd2x76BUzys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J93voas7; arc=none smtp.client-ip=198.175.65.13
+	 In-Reply-To:To:Cc; b=U+STvnulgPklDf0F4mLzwBPpeD8iMsqPQP+c/FIY0wW2XKiAWQnUdGuuSoxZZ/IPPheAVr0xPvwDgx/c9/XzTKyGxnFEq2eD6nmNELGmyjo7jZL4+HcCiFi0lD+rGolqH2c1u3UPsstReLWvGVtZ2URV80/+W0eMvbXPeArdgy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S1tWAsgK; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J93voas7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S1tWAsgK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1748996288; x=1780532288;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=V4sR4hWtPVMZ3ywoOFOkbkpBj99xQxKorVINhU2PHmw=;
-  b=J93voas7xz+e/dLn3+jO6thWXtyb+4jYMA108VDkpvnTzOlXHznZkM2g
-   y1rOrFmtjgpiEv+VFoMQow/IUiFLrgtRuAUcWlnRE2Tx3peFALyuHezGR
-   aMcPzXqxq6gI6IU/n+Z33DUIXeqcxm+B3DESIPgpuuE0jPy5nlH/cuP9s
-   98hALq12W5Hccvbge3erajDWAxTVM73veGUg4mrWC1KXKsmsqo3k8pfm8
-   M0Pm7CH8QBx2VmtHHm7fm0nr/Mnpphu+BZM2DrI6au+qlKK8cTmKKB2hW
-   WZrmA2KNIsVW14qw4sRBFQ0vEHLRqL2Mgslloyz1FmQfzPAC5heQoplIR
-   w==;
-X-CSE-ConnectionGUID: IdJP7aNFR+qa62rIc+Rscw==
-X-CSE-MsgGUID: x0bSJUzxQPK5PaeZ3Ww20Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="62112969"
+  bh=YMzG5+AadCckxPwzHaVnWjL9Y7atDKDPkNrr/M1BYpQ=;
+  b=S1tWAsgK04q3WWG6yx5I1kaI3yDrnO7/+YD7NrdtdtWKfwwnJLfHHG8V
+   +kAwecBz3Cb3e05Eaz8Mau4q8culDiIFbVAsR4atsGvlglOopNiWdWOJo
+   6p+F1uieCj0TP926b1lSPEut5bQQlrLXne9EwG3ZziR5f9XChk4olDGng
+   Vc06WV6drC5tQq0SMxY9LEeEQ1bIomL+4/ai9orK1JjGopRciVK3uSbJO
+   mvA/JtI0L7Lm0HpmvGs/nas4KzVc36qb7i3JdlIxNZ3wnHj/wiwQHBSXl
+   qKUhJfIWnxm/vpUTF9oSjgrnmrW9/O7TiJu+6YU/0hlqlJFbvBtVTNa6H
+   g==;
+X-CSE-ConnectionGUID: tyX2Q5dWRwaaWZ0o+zE6kQ==
+X-CSE-MsgGUID: e8/VatTDSzyHRMJ24k8qEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="62112974"
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="62112969"
+   d="scan'208";a="62112974"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 17:18:02 -0700
-X-CSE-ConnectionGUID: 6YWKi+xaQEibtUd3ry2T2Q==
-X-CSE-MsgGUID: va9ZTG5wTDKXle8JBnGjBA==
+X-CSE-ConnectionGUID: +0ZBoGqeTXaj2BQXnK6DtQ==
+X-CSE-MsgGUID: A4Uf1QcFSAm91jlrxnwHeA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="149904480"
+   d="scan'208";a="149904486"
 Received: from unknown (HELO [172.25.112.21]) ([172.25.112.21])
   by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 17:18:01 -0700
 From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Date: Tue, 03 Jun 2025 17:15:20 -0700
-Subject: [PATCH v4 08/10] x86/smpwakeup: Add a helper get the address of
- the wakeup mailbox
+Date: Tue, 03 Jun 2025 17:15:22 -0700
+Subject: [PATCH v4 10/10] x86/hyperv/vtl: Use the wakeup mailbox to boot
+ secondary CPUs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250603-rneri-wakeup-mailbox-v4-8-d533272b7232@linux.intel.com>
+Message-Id: <20250603-rneri-wakeup-mailbox-v4-10-d533272b7232@linux.intel.com>
 References: <20250603-rneri-wakeup-mailbox-v4-0-d533272b7232@linux.intel.com>
 In-Reply-To: <20250603-rneri-wakeup-mailbox-v4-0-d533272b7232@linux.intel.com>
 To: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -73,62 +73,63 @@ Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
  Ricardo Neri <ricardo.neri@intel.com>, 
  Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748996287; l=1666;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748996287; l=1828;
  i=ricardo.neri-calderon@linux.intel.com; s=20250602;
- h=from:subject:message-id; bh=V4sR4hWtPVMZ3ywoOFOkbkpBj99xQxKorVINhU2PHmw=;
- b=YbzLXOrL8hy7jvbbqW4L3osjtuRhbSMmRT94LsT01Vh/TDKPLYC0KwlfS0L7vAp0K0UmNuoaX
- SlZyoAkkZbPA3rMXeVf/r6Oywxko8sgCM5ZUMkfv6Ziu8nhoyWeELmE
+ h=from:subject:message-id; bh=YMzG5+AadCckxPwzHaVnWjL9Y7atDKDPkNrr/M1BYpQ=;
+ b=AQX0mRFsZ9dxNlLT540Y7TjjN7bcbmpsiw30cxH6/zwuFQYEkgAnS0GiAk8Dh5iKMQ9me49xK
+ sZKwsKJ+V7rDO57ChwsHvsuwtp/BntEe8NCaEPcH4LfK3UiIp3PYsuZ
 X-Developer-Key: i=ricardo.neri-calderon@linux.intel.com; a=ed25519;
  pk=NfZw5SyQ2lxVfmNMaMR6KUj3+0OhcwDPyRzFDH9gY2w=
 
-A Hyper-V VTL level 2 guest on a TDX environment needs to map the
-physical page of the ACPI Multiprocessor Wakeup Structure as private
-(encrypted). It needs to know the physical address of this structure.
-Add a helper function.
+The hypervisor is an untrusted entity for TDX guests. It cannot be used
+to boot secondary CPUs. The function hv_vtl_wakeup_secondary_cpu() cannot
+be used.
+
+Instead, the virtual firmware boots the secondary CPUs and places them in
+a state to transfer control to the kernel using the wakeup mailbox.
+
+The kernel updates the APIC callback wakeup_secondary_cpu_64() to use
+the mailbox if detected early during boot (enumerated via either an ACPI
+table or a DeviceTree node).
 
 Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Suggested-by: Michael Kelley <mhklinux@outlook.com>
 Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
 Changes since v3:
- - Renamed function to acpi_get_mp_wakeup_mailbox_paddr().
  - Added Reviewed-by tag from Michael. Thanks!
 
 Changes since v2:
- - Introduced this patch
+ - Unconditionally use the wakeup mailbox in a TDX confidential VM.
+   (Michael).
+ - Edited the commit message for clarity.
 
 Changes since v1:
- - N/A
+ - None
 ---
- arch/x86/include/asm/smp.h  | 1 +
- arch/x86/kernel/smpwakeup.c | 5 +++++
- 2 files changed, 6 insertions(+)
+ arch/x86/hyperv/hv_vtl.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index 77dce560a70a..158e8979342e 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -148,6 +148,7 @@ static inline struct cpumask *cpu_l2c_shared_mask(int cpu)
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 995d1de7a9be..f3d4f06d1f17 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -299,7 +299,15 @@ int __init hv_vtl_early_init(void)
+ 		panic("XSAVE has to be disabled as it is not supported by this module.\n"
+ 			  "Please add 'noxsave' to the kernel command line.\n");
  
- void acpi_setup_mp_wakeup_mailbox(u64 addr);
- struct acpi_madt_multiproc_wakeup_mailbox *acpi_get_mp_wakeup_mailbox(void);
-+u64 acpi_get_mp_wakeup_mailbox_paddr(void);
+-	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
++	/*
++	 * TDX confidential VMs do not trust the hypervisor and cannot use it to
++	 * boot secondary CPUs. Instead, they will be booted using the wakeup
++	 * mailbox if detected during boot. See setup_arch().
++	 *
++	 * There is no paravisor present if we are here.
++	 */
++	if (!hv_isolation_type_tdx())
++		apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
  
- #else /* !CONFIG_SMP */
- #define wbinvd_on_cpu(cpu)     wbinvd()
-diff --git a/arch/x86/kernel/smpwakeup.c b/arch/x86/kernel/smpwakeup.c
-index e34ffbfffaf5..1d24ca97bdf8 100644
---- a/arch/x86/kernel/smpwakeup.c
-+++ b/arch/x86/kernel/smpwakeup.c
-@@ -81,3 +81,8 @@ struct acpi_madt_multiproc_wakeup_mailbox *acpi_get_mp_wakeup_mailbox(void)
- {
- 	return acpi_mp_wake_mailbox;
+ 	return 0;
  }
-+
-+u64 acpi_get_mp_wakeup_mailbox_paddr(void)
-+{
-+	return acpi_mp_wake_mailbox_paddr;
-+}
 
 -- 
 2.43.0
