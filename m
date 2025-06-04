@@ -1,99 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202C61C84D3
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4471AA1D5;
+	Wed,  4 Jun 2025 16:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749052798; cv=none; b=PYrRcR2Gw25HRtPPoQpb4WnpHZHnjUjXsJZ4nsynDl0NFQ68unA532qJd1xzWYstr7QwSozgs1wYQgG4nzdDLRGgM7UOfAFlAmAAyQ5/jB5S0wcrUbd7nnAt/RwHN+oG3MhRUIvbwzhdR8DXwfs0EZMWP7tw0F0bLAKY/wBhs/4=
+	t=1749052806; cv=none; b=dZLw48DJ5ObA5hV96bWFSsynPdtTKvBeMd/sDvAVRq4lXHBi4XSKI+bRWtZYMC9DX8JboMk7YhFA24IR7QEfOZW0pV2dLEUuLd6LNklYMGZMXJfVyHN6lje0IR2HcrMhmKKPaclshzGXAsOCsoIfAcwxiAzqEc3LKEh5iZJopKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749052798; c=relaxed/simple;
-	bh=WqKFJv1SYHO6yFnl3qXFauziCa37HPaucEDx/YKs/vc=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=J/1WQBk81u9Nr1LnsQj0svpE692PPgj2KnVVqTHPatRI6PNWUNA8H5oaHR0AZSHl+P42ug1PcoF+Fejo2i3U76oQqKemOEsRsPkKcL4rwmndbUf13FQ1sz6en1j7sONHF1sulP2DVqNbaHFce7ez3cHD7qAp9hvO7Vk3x0ZDHLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C6GG0BOO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749052806; c=relaxed/simple;
+	bh=UzvBQLQCA432LkL2VATkkRNLH1FaLFVPSbFrU4w1PHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HPDF0oYx+5d4Vp7NFQDkT8oH1ZO9riCYWUa6Vm5PmegjeohzWpVrYbFb/HibiZzA0I0YZ71Hi4aYWB4JujckseS5b4iRSnyLO3SLt5uyvJIWwhyztLT3aHgum1VA3Zte97R/yhE0SqcyE/edqYCBYR2RTW90iq81rt8RRHPNLm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aW1OegFc; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C6GG0BOO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749052791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mT2+8JawHf8ng4PjdszIvOlvJnF7IbRbXA1vmx0mRW4=;
-	b=C6GG0BOO/ihGnO9nkK4Km/LeE5bT+bWsPaWLgjS9wpVzYy2YXHbBSsQX7UNT94L6GBmg10
-	e9wyiaRb54ETgIVLgchQsYdLaNObs4WgiNFVwOLkpA69T0Vatm07h27YWxbLI4TzO92CAX
-	veFQWWdaL3RbX328zpovmuE2rOHyRdI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-19-owy3DbuLP02dRlJaJjlY1w-1; Wed,
- 04 Jun 2025 11:59:50 -0400
-X-MC-Unique: owy3DbuLP02dRlJaJjlY1w-1
-X-Mimecast-MFC-AGG-ID: owy3DbuLP02dRlJaJjlY1w_1749052789
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D15A318003FD;
-	Wed,  4 Jun 2025 15:59:26 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.2])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9DEC830002D0;
-	Wed,  4 Jun 2025 15:59:24 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <1098853.1749051265@warthog.procyon.org.uk>
-References: <1098853.1749051265@warthog.procyon.org.uk> <CAHS8izMMU8QZrvXRiDjqwsBg_34s+dhvSyrU7XGMBuPF6eWyTA@mail.gmail.com> <770012.1748618092@warthog.procyon.org.uk>
-To: Mina Almasry <almasrymina@google.com>
-Cc: dhowells@redhat.com, willy@infradead.org, hch@infradead.org,
-    Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
-    netdev@vger.kernel.org, linux-mm@kvack.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: Device mem changes vs pinning/zerocopy changes
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aW1OegFc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SWCQk9cOoPmhCdT7cITTNHLcak2SqK86sZK5++8eMD8=; b=aW1OegFcb6ZnekRMsNtjRq9hEd
+	YOwjC8yuF6NhmFJfV9ZcSep5jL+C1NyXp5QRXuH7RSOqCXnaoRXMGeZPNzkJBZi9gv5a1MNDFZXUa
+	25YyMV+IGwq72wr4CkFMUzJSXgh+ciwa4Y1j/XT/adYKnFmqrlHPU3MmjgIexiUEF9c63yx31mYxu
+	fbF0C6OG0uSIKPzDk8V+JIx5cPEbd7P2ciab/tVESEQsSAiuCJjRntlJaO5TSzcjoTRGhR8mmVYhA
+	+TSpd3ey+Rn2b8Gbm6MrdqYlLGV2kCt6PkAx+t/A/uJaSbXMchhzWuHz3PJlk9AnQjXKDo65W4JkQ
+	cpJccaZQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMqWs-00000000uix-0INF;
+	Wed, 04 Jun 2025 15:59:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 21BAC300787; Wed,  4 Jun 2025 17:59:49 +0200 (CEST)
+Date: Wed, 4 Jun 2025 17:59:49 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Message-ID: <20250604155949.GK39944@noisy.programming.kicks-ass.net>
+References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+ <20250603140040.GB8020@e132581.arm.com>
+ <20250603144414.GC38114@noisy.programming.kicks-ass.net>
+ <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+ <20250604101821.GC8020@e132581.arm.com>
+ <20250604141640.GL38114@noisy.programming.kicks-ass.net>
+ <20250604154639.GE8020@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1099956.1749052763.1@warthog.procyon.org.uk>
-Date: Wed, 04 Jun 2025 16:59:23 +0100
-Message-ID: <1099957.1749052763@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604154639.GE8020@e132581.arm.com>
 
-(Apologies, I accidentally sent the incomplete email)
+On Wed, Jun 04, 2025 at 04:46:39PM +0100, Leo Yan wrote:
+> On Wed, Jun 04, 2025 at 04:16:40PM +0200, Peter Zijlstra wrote:
+> 
+> [...]
+> 
+> > It might be prudent to do something like so:
+> 
+> Thanks for the patch.
+> 
+> > +static void __event_disable(struct perf_event *event,
+> > +			    struct perf_event_context *ctx,
+> > +			    enum perf_event_state state)
+> > +{
+> > +	if (event == event->group_leader)
+> > +		group_sched_out(event, ctx);
+> 
+> I am a bit struggle for this code line. It disables all events in a
+> group, but only clear cgroup pointer for group leader but miss to clear
+> for sibling events.
+> 
+> If the cgroup pointer is only used for group leader, maybe we only
+> maintain (set and clear) the cgroup pointer for the leader?
 
-> I think you need to modify the existing sk_buff. I think adding
-> a new struct and migrating the entire net stack to use that is a bit
-> too ambitious. But up to you. Just my 2 cents here.
+Hmm, so yeah, that is weird indeed.
 
-It may come down to that, and if it does, we'll need to handle frags
-differently.  Basically, for zerocopy, the following will all apply or come to
-apply sometime in the future:
+So perf_cgroup_event_enable() is called in list_add_event(), which is
+perf_install_in_context() and that should be every single event.
 
- (1) We're going to be getting arrays of {physaddr,len} from the higher
-     layers.  I think Christoph's idea is that this makes DMA mapping easier.
-     We will need to retain this.
-
- (2) There will be no page refcount.  We will obtain a pin (user zc) or there
-     will be a destructor (kernel zc).  If the latter, it may have to be
-     shared amongst multiple skbuffs.
-
- (3) We can't assume that a frag refers to a single page - or that there's
-     even a necessarily a page struct.  And if there is a page struct, the
-     metadata isn't going to be stored in it.  The page struct will contain a
-     typed pointer to some other struct (e.g. folio).
-
- (4) We can't assume anything about the memory type of the frag (could be
-     slab, for instance).
-
-Obviously, if we copy the data into netmem buffers, we have full control of
-that memory type.
-
-David
+So yeah, I'm thinking we're having more bugs here still :-(
 
