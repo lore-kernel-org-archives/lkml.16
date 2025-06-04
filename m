@@ -1,70 +1,74 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B171DC9BB
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051061DDC08
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749079555; cv=none; b=HmvJG+7EUItdfarFlatD1rCpBeZ8/mc2FFrkiVPNcHhsyc6UzMKQ54o2GldqYsmtr2tbQe49FR2NX9tdVBA6KSoup5P3b9YTeQWV2HiHaXKdGdRn3xOve3SGuD7/dOLqGFmWH4WUSo/F1vde9+hmvYDp8TQZCRVtsA9YylMJd+c=
+	t=1749079556; cv=none; b=MgKx2TAzBIJpKC0BynIY3HgFZggyXbJNfWVfkRTK8j1VAuQqGu+FA3O108fxy1kFFQSLGcNowzW/m5iveQduOn11ykR1JAOWmqHKsh1He+zSmuL2IpvvE/JL+pw107tLbIU9iF24uCgbHXXxjklHJMF4Q00LH0mrhTbPPDF5/7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749079555; c=relaxed/simple;
-	bh=Vwu4TJ/HvFXdXHkNqXk/zVSddth2RQ3EoD1ZjKR/Xuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j0MK09BgP/yCy35WvyZGyVjgimddRX+l0vAndK42pMhYwOMW9XImczpg7G6sJORG+5zh7HKsCoI677kcWCPGfQ3EV6CsjQ20AmkpSUuyRPceHUvTGmAeQwsBfXuBcSCT1MRRdOR/vBUcPm1qhd7vY+cHX0m3PJ1uwRtHQ+bwR5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mqlLCa7g; arc=none smtp.client-ip=209.85.128.172
+	s=arc-20240116; t=1749079556; c=relaxed/simple;
+	bh=aNWUmxufhSQLQrBnFlE6ppLVsbEWf2/wWffhXN99rwI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SkjQQRaaYoKfOX3AXl66LgEisvqKg0e2XXZWWmYSrlSZuUiySW2q7DJHRDY7yXGr6/fSyT2r1FoXvMn6Bh3hbfF1PST5FWdkFKLd1p67WMWyFVIZ5S2YOC2Ny3Wuh2gyPsds4ydj5HqfQFUbTTZRZJI+Gps9OBRFBbvNccLRM3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PAWM4KZ+; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqlLCa7g"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70e3980757bso3955497b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 16:25:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAWM4KZ+"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70e5e6ab7b8so4610497b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 16:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749079552; x=1749684352; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kM/3Db02CilzNEun5cvgT1m6Xyu3oxCMObMXqf4IsrQ=;
-        b=mqlLCa7gOUmRC/vqjX6XMY+KbqZJM1xu+jlwdyQ2dlhU8oTQM5mKwyFLr3ww6XAqrJ
-         x+vLADKFTGuUsEZXiBetDwCLQ7AfkapqTu8pVUp/tSE72dwLbgLea8a+keivHOK45Ueu
-         xW6mvXwVfd1tvVP0LkKtfILHEz0dDBCpcqvmGl3Ch6i5vLXhD7jrD2on62WEEh/DP3wr
-         ReptYnwE2h8MEDXv2bUccpbc2sGbSQZJ2WiKeE7h219czACa+WcngDNHgSQt/RGMACMH
-         7elOjQfm7beVJ6pGpbzSdkOJqaRS/xOheIEzBVeCKgmNQVEfPOL9u+TNIayHK6zIR+Mt
-         qsNA==
+        d=gmail.com; s=20230601; t=1749079554; x=1749684354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7gG+ZEjZcQCNcIRG3cnncfztX67FBxlYy1K2/YgyWq8=;
+        b=PAWM4KZ+c0NgyeGS5BGI0z000cRLNEfp7S6dhkukWv+jiZH8uIMjzPXmh8sjY/OLSe
+         +QxvejS2to+PFK2IJ5xL/u22CtOGhtZ0HFM+XA4Vf1fjTg8/7TvuEOnQTZTrbYB2GumS
+         iuJJx26p7ey8FVxIE6Y0mINNtKPMAhiGit/7uyKQdk5oO7dh9KdBKg49w3uYhVPEo37O
+         U7QsdCJIC6gHhelYftgEJNZov5qYNATY0k4dmo18fJ2PJWVi688vxB8rtAEHQcLDCU8y
+         Qe8mC4oNhTsL8o5oJgoIRcgc50ey9aarJMrwPkbBgkkdJKv4I61o6b7jyLOjJ9Et0r7Y
+         3/1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749079552; x=1749684352;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kM/3Db02CilzNEun5cvgT1m6Xyu3oxCMObMXqf4IsrQ=;
-        b=Af4lCAhlfDld+6XT9VSWThlg62tstPRWdpN/BGhPKdLzqI9Oefoymnlnq/dKUpVa3P
-         DpzBiy3wRh8Ce6GewXTo/Eucb8P75KQ8Z6xaEArKAAe5xaGIDn5p6ZWTNbDics7Oj8jE
-         e/kexAPDHD3xmeuRhPDddQ1T8Baszn5EQdWtKg+AhfmRvfQZW06Xcn8t/h7JaIKoAgl2
-         Z+6WuXSiZtMhYLNL05cEklpbe09XT71bJU0ipbXYMpc6PsExQJV6KjynUIljssTjdNN+
-         btZQ3iZdta1mNfcXlo4tQ96wmIqiR2Ku+wAdrOyaQfwvFjNLAYPQ1n2FZZn0vAz3dp4p
-         D6YA==
-X-Gm-Message-State: AOJu0YyFElJY3LcJTc8DyCdCr1HejQgZnEHQOIcaNi2mUmD3xDNvVrQl
-	8j+4z6NL7blBJX4w83gkAjcmH+pBex8RlPr/Yz7xWfZKsr8SMaKnOyQoe0gZTQ==
-X-Gm-Gg: ASbGnctIx80be5frDtQmYt1xgdNG85o0qP9cwesOPeeBezX5NDn+qYZPzrIjDcCs8+e
-	QBV0zEvu8dRvBTdNmJoDbfatW8PBtVwmbR2QK9qnU2EA71YzvgtAzSpTNHbxIdduyXD+crI23W0
-	hqPUfevoeaCEnSTyYOOvwHlFXEfB1gE0kF3jyRDvLOkgbHTj/OU2tzaCyV+Tv2GhM0SJf8Gr0AR
-	xJHkPowtLc3uRM1Ro+74YeYGo8PiGufTCbtY8r0Fq66UjUkML5VcRVkcEmSSjgz2ZCXq9YpOGkM
-	X/U5Ev8aoZtW4y2Y7oFeBkDVwM1qcLrq+JR/MYs7hjDkUeG5eGKjcWAVtZb3lysfT97k005FHrV
-	K12NaFthW4hI=
-X-Google-Smtp-Source: AGHT+IEqQ6aeB9JspUZcphGc0fYJ7NSXL3yLfPKnkJgCb5esBZXUjB4GymNOZNZpBp3CAmiGC0jHqw==
-X-Received: by 2002:a05:690c:6e8c:b0:70e:7e33:fbd6 with SMTP id 00721157ae682-710e7ed8674mr21882667b3.17.1749079552517;
-        Wed, 04 Jun 2025 16:25:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749079554; x=1749684354;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7gG+ZEjZcQCNcIRG3cnncfztX67FBxlYy1K2/YgyWq8=;
+        b=IB8E0V+g2Wrw91Ss07biOUuln1/J+mA11OBUrExsTman+iPueed435PkhlgBDFrS7S
+         eh0+3DwP/dxz4qVI4MqTaWZjrx2lCajNDRw96QGD88zIUuNXl9Omi124bjJQPGi3OiqD
+         Wk5Y8rKiALqk7jDXqxxyKri/lW+YZIlB/1YlWcBlVMIVDE3+iqrEE9M9MS/TfTmqR1CM
+         rL69NYE6w1xsXw7RCStCy8WYp47J6MRPASA9mODYzfOuBP4nHFUBEGADp9Z0RgcQAcCg
+         6vdw5UnFnVDlD+BcJIUHK2oMy2rD0uzqSORRBECxIgfTFb64oHS9FZl7EnHl9maLkHqi
+         VGvg==
+X-Gm-Message-State: AOJu0YwkExuJtGuiCm/zpXXDUzBFtOSFA4Zo3pQN//rhx3xTEngUQGSK
+	QSYXNcT8mzCtxpnBbdm1gOfatp4cG7MzKl5HHCvbzsHPp6sojhkFuQUQy7uD3A==
+X-Gm-Gg: ASbGnctK6WTqj2MWchMUUcqxd4269MRXejY8SvUbtrmkUTCt3hDU28AQrmFHINjuP9l
+	ZmmR7mUBtE0n5rR0gwIV8NTjtv0J+aqF630gYjnR/Ge9nXvW/fZn1JzRysK5/YM5WE/KDbkFB4Z
+	Akd+Hh6zF35J/jy9O8wIvPcA9XVCyItBW/FrpAofJi+6F07uhkR/pzmeSVOIp4rk4BAR8rY9o3U
+	49Ue2Lswr/R99QkDwdvp7MaGyfWN93M35S66vNK1PbqGMbCgzruMXsd5MWDE0fJTr5EpDV1XNAC
+	HT7QGwcMWRKW7Xvina/DQxEtriGMvmGyzm/bIGXG6IadiP0lLsZKSQOhoUVhuGmKriqDwR1S6RK
+	alpnaxAAoXyBq2lATMX+0Ew==
+X-Google-Smtp-Source: AGHT+IG9YlaGTFMDtvExKnIXSCm5Z6XTxWt/SVGG5f7HlM1J3/m10UYuymBbHMQv3DKHSPFiIdBeIg==
+X-Received: by 2002:a05:690c:7008:b0:70e:7638:a3a9 with SMTP id 00721157ae682-710da1cea1amr71466467b3.18.1749079553930;
+        Wed, 04 Jun 2025 16:25:53 -0700 (PDT)
 Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8abeed16sm32164577b3.48.2025.06.04.16.25.51
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8ad01703sm32192297b3.115.2025.06.04.16.25.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 16:25:51 -0700 (PDT)
+        Wed, 04 Jun 2025 16:25:53 -0700 (PDT)
 From: Yury Norov <yury.norov@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	John Stultz <jstultz@google.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Stephen Boyd <sboyd@kernel.org>
 Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Subject: [PATCH 0/2] clocksource: use better cpumask API where appropriate
-Date: Wed,  4 Jun 2025 19:25:46 -0400
-Message-ID: <20250604232550.40491-1-yury.norov@gmail.com>
+Subject: [PATCH 1/2] clocksource: fix opencoded cpumask_any_but() in clocksource_verify_choose_cpus()
+Date: Wed,  4 Jun 2025 19:25:47 -0400
+Message-ID: <20250604232550.40491-2-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250604232550.40491-1-yury.norov@gmail.com>
+References: <20250604232550.40491-1-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,16 +79,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
-The dedicated API works better and improves on readability.
+cpumask_any_but() is more verbose than cpumask_first() followed by
+cpumask_next(). Use it in clocksource_verify_choose_cpus().
 
-Yury Norov [NVIDIA] (2):
-  clocksource: fix opencoded cpumask_any_but() in
-    clocksource_verify_choose_cpus()
-  clocksource: fix opencoded cpumask_next_wrap()
+Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+---
+ kernel/time/clocksource.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
- kernel/time/clocksource.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 4b005b2f3ef5..2e24ce884272 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -323,9 +323,7 @@ static void clocksource_verify_choose_cpus(void)
+ 		return;
+ 
+ 	/* Make sure to select at least one CPU other than the current CPU. */
+-	cpu = cpumask_first(cpu_online_mask);
+-	if (cpu == smp_processor_id())
+-		cpu = cpumask_next(cpu, cpu_online_mask);
++	cpu = cpumask_any_but(cpu_online_mask, smp_processor_id());
+ 	if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
+ 		return;
+ 	cpumask_set_cpu(cpu, &cpus_chosen);
 -- 
 2.43.0
 
