@@ -1,78 +1,154 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0FD1D5ABA
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1B24C7C;
+	Wed,  4 Jun 2025 15:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749052196; cv=none; b=lZMXxAMr1fo0i5X1rc9vIfEHLFDfZeM6/Ogs6h3mRUQRtGsLut4Ko0qoX1Z7f3Pyg0+Ny7NJDnoG0lZcGEOtSv/7x4zEnrpKYwvq6dUo3MdTs7cNRr2SBkvMtVIQad8uRRfntXdF5sHXiNOGg9tP3halWsC+2pZ5WR94MwYJYzw=
+	t=1749052568; cv=none; b=BxzYu7AxJq+1hQnKuUpSTjqO2DNKtFcjYokV9vVsepFiUZOMktjJy9vZctXTXAIT8LFQT5/0ffyItisd9HDdGwFr0/8p5HvAl1LbkjysDv7SE3iA41bdLRrHR27aMvDE/MpsoRQ2V1tBNL0EDSs57fDnVlPd0zm5ssGgUM98hoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749052196; c=relaxed/simple;
-	bh=6G5JxN/BVDCcwydBLM00eHdMpYDGWh6mGgRQXDJ2llg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=seJ8pyH6G4xXQDg7o29sCibgQwYWS3qMELPn6qkVqczdPcZ6EOk4QWUXT+/1w3hMELb6xILLHMPN1OB4mkIQ3auKipbIYYnFVBT+68/5AuIPQOtOp3ko002fuAVO7dHpvLajhoRbFsvImq5MCrnrOD5ANGJJMAF2YWtphaBxU2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KzcHHVug; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749052568; c=relaxed/simple;
+	bh=acLawW878StXvnWA+xjn0w4gxzlzkiefGpw3iDr4dkw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bVUr4bNq5GHw4huU5SJliTT2+1Dom2fl5DKjgvFxhOVuIIa05w+6vEIraIykEhZJlTbsAoZonlMq773VRqHyjNYAoxc9A4aIhQLje7VLWiOVtbU39NTBccsAeGm+6K3FoPUf+cxtKjLRaLD/rcMi/OIW/grIN1XvanGSCSthHBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prTlrsWi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KzcHHVug"
-Date: Wed, 4 Jun 2025 08:49:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749052192;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=va3tPoFKvEZvnM+DL5DLzHoxmXtQwY1XyzpbkHe61Io=;
-	b=KzcHHVugoFfkefRf47HU3usVKdW0NqhvWH9TCHKIPBCJm9OajrSbQyqBMxB/46I1yHYkcp
-	UhtddbC8ziUjBCE0lZxtHO6EHO3InWGXbm8PaGzYPplYwCUWyTjcKWPU+tg7ASo7wui0uk
-	m9fd3AX2hvu2o2bmlX2XZUx7QgpbgnA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
-	vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
-	hannes@cmpxchg.org, muchun.song@linux.dev, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, 
-	Konstantin Khlebnikov <koct9i@gmail.com>
-Subject: Re: [PATCH] mm/vmstat: Fix build with MEMCG=y and VM_EVENT_COUNTERS=n
-Message-ID: <hwn7s3xjgpfdtvjtnywvv4wwqqxh3ojha7nblp7vy4zfee4epb@25rgcpyhebb5>
-References: <20250604095111.533783-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prTlrsWi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 973F9C4CEE4;
+	Wed,  4 Jun 2025 15:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749052567;
+	bh=acLawW878StXvnWA+xjn0w4gxzlzkiefGpw3iDr4dkw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=prTlrsWiHcJqPPXwDnLSeFSH1u1eaZofMsODN2b4qWWr9lvdVJOIvAfnitx4UhVcY
+	 VXLHYyg1hEIgdjJPAr9PQQGyslvB3yAXfpiRkDy8nPPPMzzxi2KT0QQqoQmuSJQqji
+	 wRkh3SIK73BAoVJ6YuYyw1pTcxZhkRs65TI1zpw5PyRIBaa9jDx3uvWAQzkFNmdguH
+	 gcGEBitSnUEhKLrhYAA/5hnLyFS+GtWn4ZrMa1ZXOicI9ztcIU7TG5PCX1LgGrxZdc
+	 AVsKDHCGncCvFQrJkFYUOlPrV8mjePvB6QU/Gg6WvwJ4FcnhtDrhqq+dr3zacyZbWn
+	 3LJGOcZH2Sk3A==
+Received: from [149.88.19.236] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uMqTF-003GGp-8I;
+	Wed, 04 Jun 2025 16:56:05 +0100
+Date: Wed, 04 Jun 2025 16:56:02 +0100
+Message-ID: <878qm7ec19.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	andre.przywara@arm.com,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	suzuki.poulose@arm.com
+Subject: Re: [PATCH v4 01/26] dt-bindings: interrupt-controller: Add Arm GICv5
+In-Reply-To: <aD/0tuak7Hja8k4g@lpieralisi>
+References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
+	<20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org>
+	<aDhWlytLCxONZdF9@lpieralisi>
+	<CAFEAcA_3YLMSy+OsSsRayaRciQ1+jjh-dGzEjrh2Wa8BqdmqrA@mail.gmail.com>
+	<aD6ouVAXy5qcZtM/@lpieralisi>
+	<CAL_JsqJ5N2ZUBeAes=wexq=EstRSZ5=heF1_6crAw76yZ9uXog@mail.gmail.com>
+	<CAFEAcA-JrS0BiT66iin-pRVFadrY-pnJZ8TkDNxcjErknSCnUA@mail.gmail.com>
+	<CAL_JsqL7x53an2-MaLHP5tfVXb4JxT8ORUMaA8pL-gMsWLJqkA@mail.gmail.com>
+	<aD/0tuak7Hja8k4g@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604095111.533783-1-kirill.shutemov@linux.intel.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 149.88.19.236
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, robh@kernel.org, peter.maydell@linaro.org, krzk+dt@kernel.org, tglx@linutronix.de, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, andre.przywara@arm.com, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Jun 04, 2025 at 12:51:11PM +0300, Kirill A. Shutemov wrote:
-> When compiling with MEMCG enabled but VM_EVENT_COUNTERS disabled,
-> BUILD_BUG_ON() is triggered in vmstat_start because the vmstat_text
-> array is larger than NR_VMSTAT_ITEMS.
-> 
-> This issue arises because some elements of the vmstat_text array are
-> present when either MEMCG or VM_EVENT_COUNTERS is enabled, but
-> NR_VMSTAT_ITEMS only accounts for these elements if VM_EVENT_COUNTERS is
-> enabled.
-> 
-> The recent change in the BUILD_BUG_ON() check made it more strict,
-> disallowing extra elements in the array, which revealed the issue.
-> 
-> Instead of adjusting the NR_VMSTAT_ITEMS definition to account for
-> MEMCG, make MEMCG select VM_EVENT_COUNTERS. VM_EVENT_COUNTERS is
-> enabled in most configurations anyway.
-> 
-> There is no need to backport this fix to stable trees. Without the
-> strict BUILD_BUG_ON(), the issue is not harmful. The elements in
-> question would only be read by the memcg code, not by /proc/vmstat.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Fixes: ebc5d83d0443 ("mm/memcontrol: use vmstat names for printing statistics")
-> Cc: Konstantin Khlebnikov <koct9i@gmail.com>
+On Wed, 04 Jun 2025 08:24:38 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+>=20
+> On Tue, Jun 03, 2025 at 02:11:34PM -0500, Rob Herring wrote:
+> > On Tue, Jun 3, 2025 at 10:37=E2=80=AFAM Peter Maydell <peter.maydell@li=
+naro.org> wrote:
+> > >
+> > > On Tue, 3 Jun 2025 at 16:15, Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Tue, Jun 3, 2025 at 2:48=E2=80=AFAM Lorenzo Pieralisi <lpieralis=
+i@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, May 29, 2025 at 02:17:26PM +0100, Peter Maydell wrote:
+> > > > > > secure.txt says:
+> > > > > > # The general principle of the naming scheme for Secure world b=
+indings
+> > > > > > # is that any property that needs a different value in the Secu=
+re world
+> > > > > > # can be supported by prefixing the property name with "secure-=
+". So for
+> > > > > > # instance "secure-foo" would override "foo".
+> > > >
+> > > > Today I would say a 'secure-' prefix is a mistake. To my knowledge,
+> > > > it's never been used anyways. But I don't have much visibility into
+> > > > what secure world firmware is doing.
+> > >
+> > > QEMU uses it for communicating with the secure firmware if
+> > > you run secure firmware on the virt board. It's done that
+> > > since we introduced that binding. Indeed that use case is *why*
+> > > the binding is there. It works fine for the intended purpose,
+> > > which is "most devices are visible in both S and NS, but a few
+> > > things are S only (UART, a bit of RAM, secure-only flash").
+> >=20
+> > I meant "secure-" as a prefix allowed on *any* property, not
+> > "secure-status" specifically, which is the only thing QEMU uses
+> > AFAICT. IOW, I don't think we should be creating secure-reg,
+> > secure-interrupts, secure-clocks, etc.
+>=20
+> Reading secure.txt, what does it mean "device present and usable in
+> the secure world" ?
+>=20
+> So:
+>=20
+> status =3D "disabled"
+> secure-status =3D "okay"
+>=20
+> basically means that the device in question allows secure-only MMIO
+> access, is that what it says ?
+>=20
+> If that's the case and we really want to have all config frames
+> in a single DT, would it be reasonable to have an IRS/ITS DT node
+> per-frame ?
+>=20
+> Then yes, the secure- tag is not enough any longer (because we have to
+> cope with 4 interrupt domains) but that's a separate problem - again,
+> this would leave the current reviewed bindings unchanged.
 
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+No, this is the same problem, and we need a way to address it.
+"secure-*" doesn't cut it in a system with FEAT_RME, where resources
+are only available to a single Physical Address Space (PAS). So we
+need a way to qualify these resources with a PAS.
+
+Either that, or we have to restrict DT to describe the view of a
+single PAS. Which Peter will understandably be unhappy about.
+
+Thanks,
+
+	M.
+
+--=20
+Jazz isn't dead. It just smells funny.
