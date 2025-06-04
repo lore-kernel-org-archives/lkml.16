@@ -1,137 +1,140 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA921C6FF9;
-	Wed,  4 Jun 2025 17:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9215E1C6FF9;
+	Wed,  4 Jun 2025 17:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749058859; cv=none; b=g5fE2LgCSt/qUvsx0temb/AlunQH0viJMZ8nbDxi/WUWkCIIdj8tjPGCwCKxcNbFcPEobxDaS04vIH5ORPq7BR/SWtqUReKyCfI+oHtQ6udAvxfC4eb994Ngsb586wZ4pJK4q7kbR7B9ixwBjRj30vDBNPNlBm6WWQnjyZqvp4k=
+	t=1749058910; cv=none; b=SRjfBvbxAUdIhV9AGcbJeESXrR1KpCfTMv3ebvNq0BTGBSQl2MJXIfFhcKtquLsSt+RLclQ/2GTaqK8x9GI4ydQEuVrx0Ft2mOFu3mFe9/IGGy78qW8YnQSQqLuGkQ/pFIviwDsXZGado3AlgHMTZQjN+/1Bf8/4SAA+hiqgzxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749058859; c=relaxed/simple;
-	bh=Nra+dhh/un1enXJEwkzf8yVfu9/3bzI8NXWu4QqUfK4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kptpKEVPfCZ6rsN9Fdm4azGhCOqeEoOacovKvniffvRbicDSz87HloVveovBelXmIwIVvwhAdUyCXWAqG0W4T6YR5taUx6mziPYwcrBmjqBQ2FJ5DiqQJSMuWJ9A3IO1750XhyxvWaJitVh0Uj4zGBRQLb24xtCqogFqB14uKWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dk8xZkiJ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749058910; c=relaxed/simple;
+	bh=SBlx4OclKtfbCBO5SGOY4UbWjGPwcDJ/xhSdtW+BsSo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NDkkW5xA8Q/9L6IYG6mPM2iKVrk+7XvHI+h9PW2Jj1nlj2z/8e0dgCymmawkOXRUGPHiD+MlXG3JTmWkULAqnjWNvFeia+9ewL/NfBxbPlI+eDL+PWA7ZjW4lQiyQCgC7PRExF9iLG9Wrzqrxlnbf6INyP00FjE4byoTVecANBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jKdq541i; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dk8xZkiJ"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554CwnTp030628;
-	Wed, 4 Jun 2025 17:40:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=D9zGtM
-	OPnxfjJ4yT2VnaaZ7E7CBv4whP5dz2XV+hYzU=; b=dk8xZkiJSbKp+LtXEjRsn3
-	FVrjTcdayz/b9pWby3W4TKSPCyu0z/ZFLtjZkjQ71sUc/li8ZL1HVrCYyXbPzdNQ
-	urhWjv+Og1aGXCv+91QO81+0vRMUSuUMbJPznJqje5oz+CsF9fOw2IKnzQy40PXx
-	N6ZTVff4YhefMXKXHpfIyWgMGpPx3F1cxdi6+dGF6n396fFTaeyi232YlA724Vxc
-	JGn3piEGStSUicHft8+gTgL+HTYHOoN5qEVCwOyPAw/FOXHkDqfvIqNOL2sjDs52
-	IBDP4H5Sg3W2eGflrx5cFPEwad9xbI0hZ1yqzOb0pEVn01elLBWEkAlUln3GB7Qw
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471geyv92x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 17:40:54 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 554FcGnP019873;
-	Wed, 4 Jun 2025 17:40:53 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 470d3p0xms-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Jun 2025 17:40:53 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 554HenXC52822356
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 4 Jun 2025 17:40:49 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BDE5220049;
-	Wed,  4 Jun 2025 17:40:49 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5D61920040;
-	Wed,  4 Jun 2025 17:40:49 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  4 Jun 2025 17:40:49 +0000 (GMT)
-Date: Wed, 4 Jun 2025 19:40:43 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Janosch Frank
- <frankja@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/mm: Fix in_atomic() handling in
- do_secure_storage_access()
-Message-ID: <20250604194043.0ab9535e@p-imbrenda>
-In-Reply-To: <aECCe9bIZORv+yef@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250603134936.1314139-1-hca@linux.ibm.com>
-	<aEB0BfLG9yM3Gb4u@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-	<20250604184855.44793208@p-imbrenda>
-	<aECCe9bIZORv+yef@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jKdq541i"
+Received: from [100.64.97.8] (unknown [20.29.225.195])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 88804201FF4E;
+	Wed,  4 Jun 2025 10:41:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 88804201FF4E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749058902;
+	bh=BrACxwElUc8bZrub7/AT5Z18iJFYeBGEOkSTuTx9Hcg=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=jKdq541iXquM5zMmFvpleVp43GzUz9GDrsBjuxRFzFzQOU6w8EzxEsxPt1J76Kq8U
+	 75SzTD9aDjoicQHVfLY/Miig9MLBivXiodfvaq5WI36rIQV+Bp6WjzZRW8HfuymmpV
+	 q9h3OfA7YiK4KQwngQmDbGUaBdfM7Jxmm6BuHYzw=
+Message-ID: <8e6a80f8-765c-408a-bdae-0de1008dfce1@linux.microsoft.com>
+Date: Wed, 4 Jun 2025 10:41:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Cc: eahariha@linux.microsoft.com, "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
+ <arnd@arndb.de>, "x86@kernel.org" <x86@kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
+ hypercall arguments
+To: Michael Kelley <mhklinux@outlook.com>
+References: <20250415180728.1789-1-mhklinux@outlook.com>
+ <20250415180728.1789-2-mhklinux@outlook.com>
+ <f2ccf839-1ce3-4827-997e-809ec9d3b021@linux.microsoft.com>
+ <SN6PR02MB4157FEE08571B84B6CEBFC92D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <1643d6a8-7d4f-4d6e-aeab-f43963644a1f@linux.microsoft.com>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <1643d6a8-7d4f-4d6e-aeab-f43963644a1f@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: E8Ar--Ui4USO9h2xLhi8XWWMb6GPSt8g
-X-Authority-Analysis: v=2.4 cv=DYMXqutW c=1 sm=1 tr=0 ts=68408527 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=fv93bDPwWRkgOFLX7wEA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: E8Ar--Ui4USO9h2xLhi8XWWMb6GPSt8g
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDEzNiBTYWx0ZWRfXxGsxVqSlpPK8 5rbqT+A3sNsv1EtGSqkvdaaGQt0CKbjQx8HWrGDDlQ5TCHeYig2aQyfJ5F+uPsJl1xqYLViFYiI R0Y6WRTq4t4nh+9tI0B7hWlhQSWnbP7ARl+l6iR7yVIQtEQVf8T+JKC2KKVsqWYWnc3SXdZWX0i
- bFOJarIYX8RCm4bhm00GdBPUZ3/F+OMmOB/R1Ieotq0XxpZKJN4hSvO5BSk7mXuL1bBnNzP079R 6CAQqEU9AftXcDKLgWLcvrFFm4jpCp1ESMR3/9fpQyhdaLl9gvmHIB2dbTei4E6N8/5ykadYcwg xpawsqmoa/VWX3gKFq1ZahuEcqcrk+oEwrgYLaU/S1L12Sh4LyUpW1ZTOfiULgsmm6ChoeAXk+c
- vV2tGi960Ilt3rZWPVNswt51Yry9DHTX/4UBbhQRWi30rKE3cxCaz0Q1ABTugctIpD1+pZEI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_04,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 mlxscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 mlxlogscore=696 adultscore=0
- malwarescore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506040136
 
-On Wed, 4 Jun 2025 19:29:31 +0200
-Alexander Gordeev <agordeev@linux.ibm.com> wrote:
+Hi Michael,
 
-> On Wed, Jun 04, 2025 at 06:48:55PM +0200, Claudio Imbrenda wrote:
-> > > > @@ -441,6 +441,8 @@ void do_secure_storage_access(struct pt_regs *regs)
-> > > >  		if (rc)
-> > > >  			BUG();
-> > > >  	} else {
-> > > > +		if (faulthandler_disabled())
-> > > > +			return handle_fault_error_nolock(regs, 0);
-> > > >    
-> > > 
-> > > This could trigger WARN_ON_ONCE() in handle_fault_error_nolock():
-> > > 
-> > > 		if (WARN_ON_ONCE(!si_code))
-> > > 			si_code = SEGV_MAPERR;
-> > > 
-> > > Would this warning be justified in this case (aka user_mode(regs) ==
-> > > true)?  
-> > 
-> > I think so, because if we are in usermode, we should never trigger
-> > faulthandler_disabled()  
+On 4/21/2025 4:27 PM, Easwar Hariharan wrote:
+> On 4/21/2025 2:24 PM, Michael Kelley wrote:
+>> From: Easwar Hariharan <eahariha@linux.microsoft.com> Sent: Monday, April 21, 2025 1:41 PM
+>>>>
 > 
-> I think I do not get you. We are in a system call and also in_atomic(),
-> so faulthandler_disabled() is true and handle_fault_error_nolock(regs, 0)
-> is called (above).
-
-what is the psw in regs?
-is it not the one that was being used when the exception was triggered?
-
+> <snip>
 > 
-> >   
-> > >   
-> > > >  		mm = current->mm;
-> > > >  		mmap_read_lock(mm);
-> > > >  		vma = find_vma(mm, addr);    
+>>>>
+>>>
+>>> This is very cool, thanks for taking the time! I think the function naming
+>>> could be more intuitive, e.g. hv_setup_*_args(). I'd not block it for that reason,
+>>> but would be super happy if you would update it. What do you think?
+>>>
+>>
+>> I'm not particularly enamored with my naming scheme, but it was the
+>> best I could come up with. My criteria were:
+>>
+>> * Keep the length reasonably short to not make line length problems
+>>    any worse
+>> * Distinguish the input args only, input & output args, and array versions
+> 
+> I think the in/inout/array scheme you have does this nicely
+> 
+>> * Use the standard "hv_" prefix for Hyper-V related code
+>>
+>> Using "setup" instead of "hvcall" seems like an improvement to me, and
+>> it is 1 character shorter.  The "hv" prefix would be there, but they wouldn't
+>> refer specifically to hypercalls. I would not add "_args" on the end because
+>> that's another 5 characters in length. So we would have:
+>>
+>> * hv_setup_in()
+>> * hv_setup_inout()
+>> * hv_setup_in_array()
+>> * hv_setup_inout_array()
+>> * hv_setup_in_batch_size() [??]
+>>
+>> Or maybe, something like this, or similar, which picks up the "args" string,
+>> but not "setup":
+>>
+>> * hv_hcargs_in()
+>> * hv_hcargs_inout()
+>> * hv_hcargs_in_array()
+>> * hv_hcargs_inout_array()
+>> * hv_hcargs_in_batch_size() [??]
+>>
+>> I'm very open to any other ideas because I'm not particularly
+>> happy with the hv_hvcall_* approach.
+> 
+> Between the two presented here, I prefer option 1, with the "setup" verb because it tells you
+> inline what the function will do. I agree that the "args" is unnecessary because most
+> hypercall args are named hv_{input, output}_* and are clearly arguments to hv_do_hypercall()
+> and friends.
+> 
+> Since hv_setup*() will normally be followed shortly after by hv_do_hypercall(), I don't
+> see a problem with not referring specifically to hypercalls, it should be clear in context.
+> 
+> For hv_hvcall_in_batch_size(), I think it serves a fundamentally different function than the
+> other wrappers and doesn't need to follow the "setup" pattern. Instead it could be named 
+> hv_get_input_batch_size() for the same length and similarly tell you its purpose inline.
+> 
+> I am continuing to review the rest of the series, sorry for the delay, and thank you for your
+> patience!
+> 
 
+Sorry this took so long, commercial work took up all of my focus the past few weeks. The rest
+of the patches look good to me. If you could follow up with a v4 for the function naming,
+Wei can pick this up for the 6.17 merge window.
+
+Thanks,
+Easwar (he/him)
