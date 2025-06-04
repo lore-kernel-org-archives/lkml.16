@@ -1,67 +1,67 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410AB27FD40
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46FD26A1AF
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 08:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749023987; cv=none; b=cohkLv4Wd2alg9qhGadFu44XagAGbKlGXOyJeUCdv9DDxCMYBqAxmhnqg9fpYSmzNkER5ddPAPBPAxqxhGvDiLmK9fO2fJP0KAAZzVKF0be3iobzhJe6gWbIc0FpvR71Hfb3DLP6bsPdL3tONc8gtvn+hokrYeEM1n1VTiFm5OU=
+	t=1749024010; cv=none; b=syFzglnvIKP8aGEEXP29bduzY+vNVN60IOFlrdV6QBgaVPtLStfYrMNzjIHzSXWlI+6pxh6wFtDMHhwG0rgVvax3JQcd38+YApt60QB7Q9RAydeMCaUDZDLqrIoKa8BobP2MQovq6qlcOoAcc5xBtBy3XaCcd+PSbMKfh9iFDvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749023987; c=relaxed/simple;
-	bh=TJ5otxNsHhue9kp4JXa7XfPZv5e97Dox5cS+GSYrlT8=;
+	s=arc-20240116; t=1749024010; c=relaxed/simple;
+	bh=vGjfsWAwsHZ3yBIMOtSLUXwOxrgx+hmNf3Sgv3inK5Y=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=e1GTjXTzZ8T+wbS3ehEXsbdhqGXczs889aPfDsVmSx43lFJiJe7brBYPY5xLOOHsjLeaLGOWhAARRYid38XMmMyGHkGLmE/syatDby0b3N9clqsRuqSy8O7qgfrRAxCmirRwd3O0b0+GhuXCW7fG9IN4GseDPOD07w9hXxOrbR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mXAO13eg; arc=none smtp.client-ip=209.85.221.54
+	 In-Reply-To:Content-Type; b=L3Q7xPUGPwjZtY0QAMuxzI1lBD/IvOUArpKL6Gvu4J+Qap5VA7KjS2FMiXp5mjo5fS5gzPMq7b6YMDIYcbHEk2Q8Lq6qxgOth/KvuJKAbpcosSupxGkrj2LLCovsxVzB0ZAAnw4XA6z0zDeKn+ds8LZMQN2kvAgsw88T47SaAno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Lr/Rhvst; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXAO13eg"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so458403f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 00:59:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lr/Rhvst"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so43592685e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 01:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749023983; x=1749628783; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749024006; x=1749628806; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=wDUJHOjsk0PN4jC3b9Kzo/hTk1CO4cybzs8qYU3UL94=;
-        b=mXAO13egYSdDdYCLlH3DzfjX/zrDbwDRxYdcXmq1CzIuDRguKcochKQGFZUEvHcutA
-         +jemyVbGkBjQjZt/w2L9XtkTqk3WT5Oryt4eAx5bdbLjs6q5sggJvzt+dwwUKkYEJFYE
-         7WaI7ewbyZAOucteFxqMKM7G9oz8U/Rfr08w7ZcIjEgnCo2wF6QTGJBthIUHYYGQnSVo
-         S9HhnVp49i3teaS4wC6vQe4b+WNyhB9bFqdPAPzg08X9GUO8PuG9b3s3JSXi5Gaf/Z0L
-         qH8dPU+fbBEDEd8l7lCh3saBu9c6K9Ai77ZP8BKT6jWrtdHTRm9lXeeHDY32v9rMKkaZ
-         0Jsw==
+        bh=bGCMzlor+Gxz4pn8XEPLv1l0Q92r4Vwo/GqwNEaOS60=;
+        b=Lr/RhvstH2cHNYwcquX1T9v0yqt1RY+oNLz/eSIuWDlIkj4g5+euFTifWPnkcSD3nU
+         aZVn+1QOkEi5LUQGUdF6o0k55XtYoa75DRk4UvU1HJgaB8lZJZ397g1S1PSUadyinPI+
+         ACyCJMvq7hORG3VfB5aboPp1fcnG0iQUrvMnROHsHGbtMJ93G337oD0n7XI4LHgybYmD
+         6biQAGhA/gbVgtBPMK/DOQacdKinvSh37Dgaus4FhMikjY54H3uAbyU+YxgEuH7MOzD1
+         3U6m3JKQ5yufPic1UxDHOo72D2sX72u+Cif8rYtG445nt5fVq+gQXg4mhiiScJ8aesp4
+         PiFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749023983; x=1749628783;
+        d=1e100.net; s=20230601; t=1749024006; x=1749628806;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=wDUJHOjsk0PN4jC3b9Kzo/hTk1CO4cybzs8qYU3UL94=;
-        b=LPQykQFLGHSsx7tDqCDWYf9hg67yQsmKf8GWZ62b4oUG3+YoNdI0wil9z1hfNPufR+
-         eTPRp6waZIRjbbKlmbTjmSv9KXfGdCHBS9gwXgsvfmmrburAl3VqA+tkKhLRccj5UPHw
-         hxsQI8/i26bh3b6l+Jyo/usa0x5tz4PNa00d8hzkV0ysFO6AKwZtqOeEDUUn4mgl+vSk
-         6ValTG1vO8U6ivHoODA/9Ao77BXAM8vUAw1EXu/N1qctA/pg+EScK3mr41OIsOzUSmwJ
-         DQ/6pDt18aBGB8EdNKWqI3KXpYX90VqmkOekT/ibZTZQ9W0KcYkQZpg4KZJpdzEuGUh7
-         Sqxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUN1/BjvpVi1Tsg/UenqHE+T+YQER37akNiyCcD09LBMILlbPLDADN1uEYE7xeu9/fcIeRXb9V+aB7ncOg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhoR61FvEcEmbB3pnwNkL1wcX3KAMT1BMT+S29pMcq2KUdlhgx
-	KXS05sJbf6xxIVp6iFZG3LuS3VEk688dFqRriJRpgVNmAHd8bfPn9Xiqo579IExNoLs=
-X-Gm-Gg: ASbGncvxlBytXkk9lkmz5fNBfhrqfcrsRJz+qiMcliSP/8o3kEDdI3bchmCJoPvd4zI
-	T1SVex9Ey3+z6FOv97t/iuI+oDI07dzvZ2qG745RxeMvoh1BAMRCUli6y7IujmATxKwhs16k4Nu
-	fFki77g1Jybs+Erpvx/nq4v6Z4Kg4gkdjHVJZHuDzsNlyfqAyGh3MjkId7IDwN/p8v1kkpYR4YE
-	gcDb303UEmh9DvbVYmp9T/0dFvaVKX4qIl4qrpAkPKqk+yDBCx9Rs4MrXLIr1g+SmoT3FSzQVpH
-	uVf4IMOOGKtPIIsB8wrFlez0B8CPbNItK1U6YiAFTAlI5EXRwANCqMHQ9KzeZrR/Bo7oBrTYhnL
-	n/HyMeuct1z1LN6vGi7xlRfSuBw==
-X-Google-Smtp-Source: AGHT+IEDZ3/g9hD5+uGWHuQy8gvoJHTUxKeNTODioWLsBtUDdVVJGD+TwYyLZLT16loC4wLG5RZzDQ==
-X-Received: by 2002:a05:6000:2511:b0:3a5:1241:afde with SMTP id ffacd0b85a97d-3a51d512446mr1448546f8f.9.1749023983473;
-        Wed, 04 Jun 2025 00:59:43 -0700 (PDT)
+        bh=bGCMzlor+Gxz4pn8XEPLv1l0Q92r4Vwo/GqwNEaOS60=;
+        b=m4SdkjLcN1IkZcKvSQ40sOpi+tPoofQxoL4LtpbhMZ/rIR/JF3HVJJiLk1zH4G08q7
+         n2uRcjZ+RdfchQqqq98tv8j/UrG3HYY6Sokr/eYedh8Smi5Q9Uh1XnCkJiP3B2hsRn1m
+         9BzC23inv7fbHYZk3UOLmGkHjauSQ0USKVRhn/PK0eEM0t6tU7PYVavOWYZ9f2SyBhMZ
+         08EuHaVgcYygmGL8h9tAqKPFYqp4gu2naa3Ozygm4cGuy5LLzynBdeiGkPmzGTTaYOV6
+         tO2Odrxd78xLHxFgjXJqHehtumTVDj2oMWr9G4GJxhphSPGufH+Kb4l6uTbAfd4/ML8W
+         lmJg==
+X-Forwarded-Encrypted: i=1; AJvYcCXeuOTpgYDj3KXaTIT49WUMnjYaCwNjzl4QiRfvgksV3ITgkHNhQJ5sGQF38xoImtn756J+2ERHAhkE5PY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7aJrElymBfQitrrte1kGdzbgOJzlD705raz6Hw5bMw+n1xv1J
+	grGKyOj4z+9vUoteo16M88PVQFjHE3scC5f2nzw56NwMOr987SapDwpt9C/BRVDUPv4=
+X-Gm-Gg: ASbGncvRWOl7U/hqJLyHfOeCqvvvcn2zEiD9yi29qHi0wDXyeCrl/F7Ezy2zCE0SqYV
+	Cs22taymt8G1bYY7jN9qO9mKQXkhNhSZSBuwlZKVvWsTLOf3dYKQPPeNsrSdQ+XeHRHujbUvZHF
+	dzEtcW7HNdPz1yHGoJmkU01yfxaualrqwikzt47oRiQsndElS9FtLRpVxxKKAqETKbDeXj0lAE/
+	Q7Xu4OJmvkHWTC2dZ4z1B8qzFgMEGIMD9iVoqRtEz1QMGV1usUTW3bjyBc2QG+cGeNCDHSAY6KD
+	l82r3Kt+A5d5rIuK2GYeQR06MAJEyIuaCtUrX7WhQmeHvFq19EBxnCiYIdJUf1BYjfhg7ERh0XP
+	/gChfhfRq4wO/ytas0fzJRxyf8g==
+X-Google-Smtp-Source: AGHT+IGLk1TPgg+eYfU6DNCv4bWwu3geZXiU4ukwWnIImgNZScCTFNfSxyS0vnstUIQnEi4Fku/y7w==
+X-Received: by 2002:a05:600c:4f8b:b0:450:d37d:7c with SMTP id 5b1f17b1804b1-451f0b105d0mr11385875e9.21.1749024005774;
+        Wed, 04 Jun 2025 01:00:05 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:fef9:cf1c:18f:2ab8? ([2a01:e0a:3d9:2080:fef9:cf1c:18f:2ab8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f0097813sm21105303f8f.72.2025.06.04.00.59.42
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fc1b60sm194686905e9.34.2025.06.04.01.00.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 00:59:43 -0700 (PDT)
-Message-ID: <6b47f616-178c-44c9-a086-ee5dc4d1ae2c@linaro.org>
-Date: Wed, 4 Jun 2025 09:59:42 +0200
+        Wed, 04 Jun 2025 01:00:05 -0700 (PDT)
+Message-ID: <50d1c481-e431-4544-a034-f7d0e78ff272@linaro.org>
+Date: Wed, 4 Jun 2025 10:00:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,16 +71,18 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sm8550: Correct the max voltage for
- vreg_l6n_3p3
-To: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, david.collins@oss.qualcomm.com,
- jishnu.prakash@oss.qualcomm.com
-References: <20250604-sm8550-correct-vreg_l6n_3p3-voltage-v1-1-18cd01a69ac6@oss.qualcomm.com>
+Subject: Re: [PATCH 09/10] arm64: dts: qcom: sm8550: Explicitly describe the
+ IPA IMEM slice
+To: Konrad Dybcio <konradybcio@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org,
+ Sai Prakash Ranjan <quic_saipraka@quicinc.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250523-topic-ipa_mem_dts-v1-0-f7aa94fac1ab@oss.qualcomm.com>
+ <20250523-topic-ipa_mem_dts-v1-9-f7aa94fac1ab@oss.qualcomm.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -107,122 +109,55 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250604-sm8550-correct-vreg_l6n_3p3-voltage-v1-1-18cd01a69ac6@oss.qualcomm.com>
+In-Reply-To: <20250523-topic-ipa_mem_dts-v1-9-f7aa94fac1ab@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 04/06/2025 08:27, Kamal Wadhwa wrote:
-> Voltage regulator 'vreg_l6n_3p3' max-microvolt prop is currently
-> configured at 3304000uV in different sm8550 board files. However this
-> is not a valid voltage value for 'pmic5_pldo502ln' type voltage
-> regulators.
+On 23/05/2025 01:18, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > 
-> Check below the max value(3200mV) in the regulator summary for min/max
-> used as 2800mV/3304mV in DT:-
+> As part of stepping away from crazy hardcoding in the driver, move
+> define the slice explicitly and pass it to the IPA node.
 > 
-> logs:
-> 
-> [    0.294781] vreg_l6n_3p3: Setting 2800000-3304000uV
-> 
-> regulator summary:
-> 
-> regulator     use open bypass  opmode   voltage current  min     max
-> ---------------------------------------------------------------------
-> ..
-> vreg_l6n_3p3   0    0    0     normal   2800mV   0mA  2800mV  3200mV
-> ..
-> 
-> Correct the max value to 3200000uV, so that it is aligned to voltages
-> allowed by the regulator.
-> 
-> Also, correct the phandle name of 'vreg_l6n_3p3' to 'vreg_l6n_3p2',
-> so it reflect this change in settings.
-> 
-> Signed-off-by: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > ---
->   arch/arm64/boot/dts/qcom/sm8550-hdk.dts         | 6 +++---
->   arch/arm64/boot/dts/qcom/sm8550-mtp.dts         | 6 +++---
->   arch/arm64/boot/dts/qcom/sm8550-qrd.dts         | 6 +++---
->   arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts | 6 +++---
->   4 files changed, 12 insertions(+), 12 deletions(-)
+>   arch/arm64/boot/dts/qcom/sm8550.dtsi | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> index 29bc1ddfc7b25f203c9f3b530610e45c44ae4fb2..fe46699804b3a8fb792edc06b58b961778cd8d70 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> @@ -857,10 +857,10 @@ vreg_l5n_1p8: ldo5 {
->   			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> index 71a7e3b57ecedd86d798e71b781451fe11f9c1ce..17d755daba4141d3a8716cd6ff4483c34dc0f660 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> @@ -2659,6 +2659,8 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+>   			qcom,smem-state-names = "ipa-clock-enabled-valid",
+>   						"ipa-clock-enabled";
+>   
+> +			sram = <&ipa_modem_tables>;
+> +
+>   			status = "disabled";
 >   		};
 >   
-> -		vreg_l6n_3p3: ldo6 {
-> -			regulator-name = "vreg_l6n_3p3";
-> +		vreg_l6n_3p2: ldo6 {
-> +			regulator-name = "vreg_l6n_3p2";
->   			regulator-min-microvolt = <2800000>;
-> -			regulator-max-microvolt = <3304000>;
-> +			regulator-max-microvolt = <3200000>;
->   			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> @@ -4737,6 +4739,20 @@ data-pins {
+>   			};
 >   		};
 >   
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-> index 5648ab60ba4c4bfaf5baa289969898277ee57cef..1e95a2849146e3eeea9f68085ac504e32b63fdaf 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-> @@ -624,10 +624,10 @@ vreg_l5n_1p8: ldo5 {
->   			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->   		};
->   
-> -		vreg_l6n_3p3: ldo6 {
-> -			regulator-name = "vreg_l6n_3p3";
-> +		vreg_l6n_3p2: ldo6 {
-> +			regulator-name = "vreg_l6n_3p2";
->   			regulator-min-microvolt = <2800000>;
-> -			regulator-max-microvolt = <3304000>;
-> +			regulator-max-microvolt = <3200000>;
->   			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->   		};
->   
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-> index 3a6cb279130489168f8d20a6e27808647debdb41..5a33d7d7ac923c7c0bf6aeb51d0db728e65883ac 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-> @@ -700,10 +700,10 @@ vreg_l5n_1p8: ldo5 {
->   			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->   		};
->   
-> -		vreg_l6n_3p3: ldo6 {
-> -			regulator-name = "vreg_l6n_3p3";
-> +		vreg_l6n_3p2: ldo6 {
-> +			regulator-name = "vreg_l6n_3p2";
->   			regulator-min-microvolt = <2800000>;
-> -			regulator-max-microvolt = <3304000>;
-> +			regulator-max-microvolt = <3200000>;
->   			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->   		};
->   
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts b/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-> index 7d29a57a2b540708fa88fb59e821406f400a3174..073040fbd7ba215169adbe3862d3e1f6d2c786e0 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-> @@ -485,10 +485,10 @@ vreg_l5n_1p8: ldo5 {
->   			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->   		};
->   
-> -		vreg_l6n_3p3: ldo6 {
-> -			regulator-name = "vreg_l6n_3p3";
-> +		vreg_l6n_3p2: ldo6 {
-> +			regulator-name = "vreg_l6n_3p2";
->   			regulator-min-microvolt = <2800000>;
-> -			regulator-max-microvolt = <3304000>;
-> +			regulator-max-microvolt = <3200000>;
->   			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->   		};
->   
+> +		sram@14680000 {
+> +			compatible = "qcom,sm8350-imem", "syscon", "simple-mfd";
+> +			reg = <0 0x14680000 0 0x2c000>;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			ranges = <0 0 0x14680000 0x2c000>;
+> +
+> +			ipa_modem_tables: modem-tables@8000 {
+> +				reg = <0x8000 0x2000>;
+> +			};
+> +		};
+> +
+>   		apps_smmu: iommu@15000000 {
+>   			compatible = "qcom,sm8550-smmu-500", "qcom,smmu-500", "arm,mmu-500";
+>   			reg = <0 0x15000000 0 0x100000>;
 > 
-> ---
-> base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
-> change-id: 20250603-sm8550-correct-vreg_l6n_3p3-voltage-cba298bc0294
-> 
-> Best regards,
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
