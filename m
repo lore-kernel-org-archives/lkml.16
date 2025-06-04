@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBFF28FABD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33830290D98;
 	Wed,  4 Jun 2025 14:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749047772; cv=none; b=d2mdjn8RvPv42LheeaLHFrzTK3wylrtRH6VZhIHZM8z6tOnAARGmugxEk1NnHG87RMUvWAgklu1HJARztN9MfK8qvHYWsaYx+on5inFZb4vNMUBubbIoyyClP2b8i0e0YPJQe9QPMNnd5Vm0AueymdSty86Qao4zDOirrCldDzs=
+	t=1749047772; cv=none; b=tooKKPTcVoS8TEtEl7oE9cHzblmTBfNogECe3JRCoogPH74UMc+GDx7ypwn+OzWFo/qIT6DMwjRBQHrsOBlpiHT/fxW/N9hZNxazlXad4wSlmICKUDVoFA83aa6TU+UOJxPTounNldrZG+Fh+3tEf4jj4Y9vGo2P2StSc37tdeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749047772; c=relaxed/simple;
-	bh=iInHrdEOEAauKbKtOoFyyL5VvQglkhpPuAxPB+SSYRM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B/i+mLv6f242f4gT3dgYLpUK3Yi6lQTX7hJ/IHsVCBMzsWxL9CrE6otidtUM/Zdq7BJnfyu5rpJ5xIg9nq+2hB6jQtFhEIiqxUYC84PRyJVL/bbxsscLBc/mTU7Unbev/w1pzHjPPBKdynLREkqC69v0s5k++86QNUn8uDgSnuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7BBpsxB; arc=none smtp.client-ip=10.30.226.201
+	bh=bBea28t9w+SP1kNsex5/pyeXu82UeQzcQARI9RSlSM4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Etra8fjndHO7si73KZmiW/Pli3SqjdqGH0NZ7QDDmPtkuoGYpDHnXGWZWjVti0VHyyw0CmU2izMUUVm9yGCDc/jWbmZNAFDHLok1zFJbR4+narHskcgVpnUEQGfIt7clCYE3ktk/zfga/EDfsvkSfGu0WuyCptsli5OE5MWVPno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUkq26Bs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7BBpsxB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A39C4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUkq26Bs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B409FC4CEF2;
 	Wed,  4 Jun 2025 14:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749047771;
-	bh=iInHrdEOEAauKbKtOoFyyL5VvQglkhpPuAxPB+SSYRM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b7BBpsxBFbfZopvrATcBzQ6LEpTB3Ytqoa4O7+fND8JRpXi75bW/rkuia0QVNfYYT
-	 COPnyyO7obEnPzcFZ8VAfRx313MarloovuChc5bgnXwNchWxDYVB/bLeDZn6iVegYK
-	 LoCAwP6TYLcogkHvJgC/TU2kfoqyPAmTfC4CljmK/scFgNeJ/WwPyIxkdpkt0xePKU
-	 OcrDFEBBJLWPxWOn2rDyqy31kMcSi6Wt9FlS+CXnd+QhWfsurl9RbPLcjsQRJB8/6U
-	 wGw71xQ+TMRGSGq4hReLvRiTFUeJCebkBktCI5TB0RUkbRBV4J+4zrgbhn3zYoBG+x
-	 XtcxxJ3lMXkmg==
+	bh=bBea28t9w+SP1kNsex5/pyeXu82UeQzcQARI9RSlSM4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dUkq26BsEXCfX18Btfq6dPJlC2IbQpDL6jXDEumT+Gx5glJFMW4x2LqrNW14t+eHT
+	 tV4OvgxC83dt1vyxXUPBVby5KIq/++XnNQkef+xl2b2D7OpbGzVLV5QCINhYHW+ABI
+	 maXCX+aRn0SMC4+g+zLGOS/1k9mAKHooFCMI+dnCrjWhEkOS0NCbMZzaeFzHkOvVgc
+	 gQjgUy1R8GxDImMQHcjYwetRb2r1a7h9ELMZqeSH3itKuoMekmfxI9GenySvWtNRwg
+	 HptPzz/9psi13fW39DOc7rqArk5EtJajnjIKbYPG8O0c8a9a+U/T4j5LpqRo17X5Bc
+	 i9aRyVIgSesPg==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1uMpDt-000000006nO-3W0M;
+	id 1uMpDs-000000006nG-3IZb;
 	Wed, 04 Jun 2025 16:36:09 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Jeff Johnson <jjohnson@kernel.org>
@@ -37,14 +36,11 @@ Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
 	linux-wireless@vger.kernel.org,
 	ath11k@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 4/5] wifi: ath11k: fix source ring-buffer corruption
-Date: Wed,  4 Jun 2025 16:34:56 +0200
-Message-ID: <20250604143457.26032-5-johan+linaro@kernel.org>
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v2 0/5] wifi: ath11k: fix dest ring-buffer corruption
+Date: Wed,  4 Jun 2025 16:34:52 +0200
+Message-ID: <20250604143457.26032-1-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250604143457.26032-1-johan+linaro@kernel.org>
-References: <20250604143457.26032-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,51 +49,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the missing memory barrier to make sure that LMAC source ring
-descriptors are written before updating the head pointer to avoid
-passing stale data to the firmware on weakly ordered architectures like
-aarch64.
+As a follow up to commits:
 
-Note that non-LMAC rings use MMIO write accessors which have the
-required write memory barrier.
+	6d037a372f81 ("wifi: ath11k: fix ring-buffer corruption")
+	ab52e3e44fe9 ("wifi: ath11k: fix rx completion meta data corruption")
 
-Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
+add the remaining missing memory barriers to make sure that destination
+ring descriptors are read after the head pointers to avoid using stale
+data on weakly ordered architectures like aarch64.
 
-Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-Cc: stable@vger.kernel.org      # 5.6
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- drivers/net/wireless/ath/ath11k/hal.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Also switch back to plain accesses for the descriptor fields which is
+sufficient after the memory barrier.
 
-diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
-index b1f5a927dddd..927ed2bc3fbf 100644
---- a/drivers/net/wireless/ath/ath11k/hal.c
-+++ b/drivers/net/wireless/ath/ath11k/hal.c
-@@ -862,7 +862,11 @@ void ath11k_hal_srng_access_end(struct ath11k_base *ab, struct hal_srng *srng)
- 		if (srng->ring_dir == HAL_SRNG_DIR_SRC) {
- 			srng->u.src_ring.last_tp =
- 				*(volatile u32 *)srng->u.src_ring.tp_addr;
--			*srng->u.src_ring.hp_addr = srng->u.src_ring.hp;
-+			/* Make sure descriptor is written before updating the
-+			 * head pointer.
-+			 */
-+			dma_wmb();
-+			WRITE_ONCE(*srng->u.src_ring.hp_addr, srng->u.src_ring.hp);
- 		} else {
- 			srng->u.dst_ring.last_hp = *srng->u.dst_ring.hp_addr;
- 			*srng->u.dst_ring.tp_addr = srng->u.dst_ring.tp;
-@@ -871,6 +875,10 @@ void ath11k_hal_srng_access_end(struct ath11k_base *ab, struct hal_srng *srng)
- 		if (srng->ring_dir == HAL_SRNG_DIR_SRC) {
- 			srng->u.src_ring.last_tp =
- 				*(volatile u32 *)srng->u.src_ring.tp_addr;
-+			/* Assume implementation use an MMIO write accessor
-+			 * which has the required wmb() so that the descriptor
-+			 * is written before the updating the head pointer.
-+			 */
- 			ath11k_hif_write32(ab,
- 					   (unsigned long)srng->u.src_ring.hp_addr -
- 					   (unsigned long)ab->mem,
+New in v2 are two patches that adds the missing barriers also for source
+rings and when updating the tail pointer for destination rings.
+
+To avoid leaking ring details from the "hal" (lmac or non-lmac), the
+barriers are added to the ath11k_hal_srng_access_end() helper. For
+symmetry I therefore moved also the dest ring barriers into
+ath11k_hal_srng_access_begin() and made the barrier conditional.
+
+[ Due to this change I did not add Miaoqing's reviewed-by tag. ]
+
+Johan
+
+
+Changes in v2:
+ - add tested-on tags to plain access patches
+ - move destination barriers into begin helper
+ - fix source ring corruption (new patch)
+ - fix dest ring corruption when ring is full (new patch)
+
+
+Johan Hovold (5):
+  wifi: ath11k: fix dest ring-buffer corruption
+  wifi: ath11k: use plain access for descriptor length
+  wifi: ath11k: use plain accesses for monitor descriptor
+  wifi: ath11k: fix source ring-buffer corruption
+  wifi: ath11k: fix dest ring-buffer corruption when ring is full
+
+ drivers/net/wireless/ath/ath11k/ce.c    |  3 ---
+ drivers/net/wireless/ath/ath11k/dp_rx.c | 25 +++++++-----------
+ drivers/net/wireless/ath/ath11k/hal.c   | 35 +++++++++++++++++++++----
+ 3 files changed, 39 insertions(+), 24 deletions(-)
+
 -- 
 2.49.0
 
