@@ -1,151 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 936403594B
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 07:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457F42248A0;
+	Wed,  4 Jun 2025 07:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749023529; cv=none; b=qQ6Ii3ep7GkbqvGHsaSmAGdVp3nw5/c+6vOy/Nq638C64TRHfhy7VSgNB1tzwj0DiqSxob8QBYWd9ZH2XI2EJb6zDbpbi1LzgcPUtrAMUYUMCm4Pnyvg0Y/tUxmrMY4fspz7TP8JacFUjElib8bfJfCidlWr44RS5Ca2CWEXCxM=
+	t=1749023543; cv=none; b=GQRE1Y9csLKZ4a2raSjYUFQwrBYBawUFQqRSHkRKSHB0C8t7kh27+ilfo2ARlfy198fFkWw3bWlyLpHHj8vJbCAjLDqQ0oUtONHj0gRg3UHxzXyQBkI4K2zOfzJpCtnX2QSqhGsuTdcNxsVfu2C2zAsGDq/5ltiIB5San7H6P9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749023529; c=relaxed/simple;
-	bh=qJ0wFIVX2OeX7gq8a3RPVL4Iey2nHPYZzcgONfx/JYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nBZGv+byZfogISxm9ntXPOZtRZAPyCrL/1DmX5d8FOscNURh9S4wfuIDvsc2d/isfoJN8an980bNNIhB051nVK+7pWGYhFx3tU3arC7NPjDL0VmrV/zNNj3bWyE1CbufkjxJEsH2+PWE685HVRsBOyvYSdfkW8JBF4q69zlbuZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEDE31758;
-	Wed,  4 Jun 2025 00:51:49 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A64BF3F673;
-	Wed,  4 Jun 2025 00:52:05 -0700 (PDT)
-Date: Wed, 4 Jun 2025 08:52:02 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Luka <luka.2016.cs@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [Bug] task hung in ret_from_fork in Linux v6.12
-Message-ID: <aD_7IrjJUMRUCoP8@J2N7QTR9R3>
-References: <CALm_T+3nBU3CTxFp6NCO9mU74ZrMFeyyTqUYf-TuUajY8RtLwA@mail.gmail.com>
+	s=arc-20240116; t=1749023543; c=relaxed/simple;
+	bh=zyxXGaBMfIPnjIZy5o+hkiN3erFrYjY2CZBtiUW5JxM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WGhVUWO1jOnYPo13c7fgrWYaY07BqzM3L+GeSCnUDmD1rGSZDJf8Jo8HW5dkyc8ZzpBaTaog+N7aLM4j8p43dL1TSH94Uk4x3uV6UuR3JgYAqjdiSLSgQT+kuIbiHNVgXQiN0m67YRfZZNNbScP1F8s7ddae2mecW1Q4tXJy0DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BBG70Qvg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=psY2YnPH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BBG70Qvg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="psY2YnPH"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749023540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CaUBwKIEL6gYu/LhMMd/q2hSFrXFhJp+PTp1JhKEikg=;
+	b=BBG70Qvg7fI5r/SBmAdFEu06d3IMuZuMq4Vi4Lo91jbiWSPT7QqEEJh+PcnjWMELb3Szjd
+	L9oSzQStJ7sR+vBQx+M43+ranfV/BjiI3awSQP82ZKk4QSDrp5WFux8msZCeTqaMftxl0/
+	6cxj49JeWUEZ4ROxvGj2ICjVObu4OTzq0j3CLK4BBtpOOHtzYqtcT0DP4VQV/zr69m6Q3D
+	6RzjW/qdVIxatvS5ptEDE2r8axsDlRqcQ17JGFSRQcoND5lznMW1HqvdUREBSI6T/aZSUZ
+	W1WH6SbYnCQAXv+iKOO1e4IkPBoEODztXQfXDnCPlFL5p7RZE86kcUppeJTxYw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749023540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CaUBwKIEL6gYu/LhMMd/q2hSFrXFhJp+PTp1JhKEikg=;
+	b=psY2YnPHoLBZUoEQmkEOMxqILHQXXXfL7mmtNEiRqoU8yoAAegO6WTHBsHdrhrRw0Wlcp3
+	ZOLksnkr5Bqu+jDg==
+To: "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>, 'Michael Kelley'
+ <mhklinux@outlook.com>
+Cc: "pmladek@suse.com" <pmladek@suse.com>, 'Ryo Takakura'
+ <ryotkkr98@gmail.com>, Russell King <linux@armlinux.org.uk>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org"
+ <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "Toshiyuki Sato (Fujitsu)"
+ <fj6611ie@fujitsu.com>
+Subject: RE: Problem with nbcon console and amba-pl011 serial port
+In-Reply-To: <TY4PR01MB13777674C22721FCD8ACF4FCCD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
+References: <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
+ <84y0u95e0j.fsf@jogness.linutronix.de>
+ <84plfl5bf1.fsf@jogness.linutronix.de>
+ <TY4PR01MB13777674C22721FCD8ACF4FCCD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
+Date: Wed, 04 Jun 2025 09:58:19 +0206
+Message-ID: <84tt4wndu4.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALm_T+3nBU3CTxFp6NCO9mU74ZrMFeyyTqUYf-TuUajY8RtLwA@mail.gmail.com>
+Content-Type: text/plain
 
-On Wed, Jun 04, 2025 at 12:16:53PM +0800, Luka wrote:
-> Dear Kernel Maintainers,
-> 
-> I am writing to report a potential vulnerability identified in the
-> upstream Linux Kernel version v6.12, corresponding to the following
-> commit in the mainline repository:
-> 
-> Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
+On 2025-06-04, "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com> wrote:
+> This is a proposed fix to force termination by returning false from
+> nbcon_reacquire_nobuf when a panic occurs within pl011_console_write_thread.
+>  (I believe this is similar to what John suggested in his previous reply.)
+>
+> While I couldn't reproduce the issue using sysrq-trigger in my environment
+>  (It seemed that the panic was being executed before the thread processing),
+> I did observe nbcon_reacquire_nobuf failing to complete when injecting an
+> NMI (SError) during pl011_console_write_thread. 
+> Applying this fix seems to have resolved the "SMP: failed to stop secondary
+> CPUs" issue.
+>
+> This patch is for test.
+> Modifications to imx and other drivers, as well as adding __must_check, 
+> will likely be required.
+>
+> Michael, could you please test this fix in your environment?
+>
+> Regards,
+> Toshiyuki Sato
+>
+> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+> index 11d650975..c3a2b22e6 100644
+> --- a/drivers/tty/serial/amba-pl011.c
+> +++ b/drivers/tty/serial/amba-pl011.c
+> @@ -2577,8 +2577,10 @@ pl011_console_write_thread(struct console *co, struct nbcon_write_context *wctxt
+>  		}
+>  	}
+>  
+> -	while (!nbcon_enter_unsafe(wctxt))
+> -		nbcon_reacquire_nobuf(wctxt);
+> +	while (!nbcon_enter_unsafe(wctxt)) {
 
-In the bug report linked below, the kernel identifies itself as:
+I realize this is just a test patch. But for the real patch, there needs
+to be some comment here about bailing out. On panic, the driver is
+leaving the clock enabled and not restoring REG_CR. At a quick glance
+this appears to be a bug. So the comment is needed to make it clear that
+the driver is exiting on purpose without proper completion. And perhaps
+also mentioning why this is safe during panic. Thanks.
 
-  6.12.18-android16-1-maybe-dirty-4k #1
+> +		if (!nbcon_reacquire_nobuf(wctxt))
+> +			return;
+> +	}
+>  
+>  	while ((pl011_read(uap, REG_FR) ^ uap->vendor->inv_fr) & uap->vendor->fr_busy)
+>  		cpu_relax();
 
-... which strongly suggests that (in addition to uncommitted changes),
-the kernel is based on the v6.12.18 table kernel, i.e. commit:
-
-  105a31925e2d (tag v6.12.18)
-
-... in the upstream stable tree.
-
-Please note that between v6.12 and v6.12.18 there are 3929 commits, any
-of which could be significant to this issue.
-
-As with the other report I replied on:
-
-  https://lore.kernel.org/linux-arm-kernel/aD_zu4GNfOKxXXQk@J2N7QTR9R3/T/#t
-
-... I do not think you are providing accurate details.
-
-> This issue was discovered during the testing of the Android 16 AOSP
-> kernel, which is based on Linux kernel version 6.12, specifically from
-> the AOSP kernel branch:
-> 
-> AOSP kernel branch: android16-6.12
-> Manifest path: kernel/common.git
-> Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
-> 
-> Although this kernel branch is used in Android 16 development, its
-> base is aligned with the upstream Linux v6.12 release. I observed this
-> issue while conducting stability and fuzzing tests on the Android 16
-> platform and identified that the root cause lies in the upstream
-> codebase.
-
-Based on the information provided so far, I don't think this is true.
-You have not identified the root cause, and you have not demonstrated
-that the issue exists in the upstream tag you mention above.
-
-Why do you believe that the root cause lies in the upstream codebase?
-
-It's not clear which kernel specifically you're running, but I'm fairly
-confident that it's not built from a recent commit in the android16-6.12
-branch.
-
-If the "v6.12.18" prefix in the kernel tree is accurate, then your
-kernel is no newer than commit:
-
-  b3fb80bdc64b ("Merge 6.12.19 into android16-6.12")
-
-... in the android16-6.12 branch, and there are 1000+ commits since
-then.
-
-[...]
-
-> Bug Location: ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
-
-This is misleading; ret_from_fork() has nothing to do with this hang.
-
-Is this something you've guessed at yourself, or is this what syzkaller
-reported to you?
-
-In the linked bug, the kernel reports:
-
-| INFO: task kworker/2:7:5593 blocked for more than 143 seconds.
-|       Tainted: G            E      6.12.18-android16-1-maybe-dirty-4k #1
-| "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-| task:kworker/2:7     state:D stack:0     pid:5593  tgid:5593  ppid:2      flags:0x00000008
-| Call trace:
-|  __switch_to+0x424/0x798 proc/self/cwd/common/arch/arm64/kernel/process.c:617
-|  context_switch proc/self/cwd/common/kernel/sched/core.c:5911 [inline]
-|  __schedule+0xa48/0x1018 proc/self/cwd/common/kernel/sched/core.c:7737
-|  __schedule_loop proc/self/cwd/common/kernel/sched/core.c:7818 [inline]
-|  schedule+0x54/0xdc proc/self/cwd/common/kernel/sched/core.c:7833
-|  schedule_preempt_disabled+0x2c/0x4c proc/self/cwd/common/kernel/sched/core.c:7890
-|  kthread+0x180/0x25c proc/self/cwd/common/kernel/kthread.c:382
-|  ret_from_fork+0x10/0x20 proc/self/cwd/common/arch/arm64/kernel/entry.S:860
-
-Note that ret_from_fork() is the assembly stub used to start any kernel
-thread. Here it just means that a new kthread was started, and that has
-blocked for some reaason in TASK_UNINTERRUPTIBLE state.
-
-Whatever it's blocked on is due to code elsewhere.
-
-Mark.
-
-> 
-> Bug Report: https://hastebin.com/share/xiyapaboxu.shell
-> 
-> Entire Log: https://hastebin.com/share/kibohuxobi.yaml
-> 
-> 
-> Thank you very much for your time and attention. I sincerely apologize
-> that I am currently unable to provide a reproducer for this issue.
-> However, I am actively working on reproducing the problem, and I will
-> make sure to share any findings or reproducing steps with you as soon
-> as they are available.
-> 
-> I greatly appreciate your efforts in maintaining the Linux kernel and
-> your attention to this matter.
-> 
-> Best regards,
-> Luka
-> 
+John Ogness
