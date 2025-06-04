@@ -1,184 +1,73 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CB122D9F7
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 20:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822351940A1;
+	Wed,  4 Jun 2025 20:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749067850; cv=none; b=oX1otDFhhge9IxpkXEC5jqpiSo1AJZpOV0hD2Igi7/9J7cgdk3pjPg9bEU0B1NkGO8GnekPWrDbecb0aOntKmDEeZpS7mVUk7Yj7x0ey7IBODvhEOo+sybfAItIer3KUw10MaEF/UAyMXn1o96PkQ6pA53zFXOxL6EJFN9FOgmY=
+	t=1749067885; cv=none; b=Z4U/MENFc/fAv3rSJktgzIemWA2EU8CTsAswDtGU+xd2nvH6+nPfIbCG+eZJekLnG5k01weif0QGA8to2SPqPSm+j4/YojK/6SpEQGVM/kNsylp4/bdQxsK/1ab/b7JS9rFc5Z9Jm07/kTTHfhx5SqkovVbXrG56Ay6SGU6cm6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749067850; c=relaxed/simple;
-	bh=mS4fz7cgO9m1HSXc8SA6kSBVkdgVjgUeW9KFvTjpWvk=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=K8xdXe7kAN5s6v4RHP9mPdClb9NcJswXeWU0sdB3q+wcdW/vIYinzxasRxcdPihcoFO1MSWDBHe6ETeVZU16PgINBj9B2fb8T2thqOFpsH8qAPt1/amEYj+6Uv/a23flcHiP8o/xAldELcu7g/KxGND5xcQNJ+K81o8JRIkNtMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j/vQ3yr+; arc=none smtp.client-ip=209.85.166.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1749067885; c=relaxed/simple;
+	bh=GB3QGY/bYwuT0G9fFt7gKi7UU4WWertHJDQO/gjWrWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzMeabZplScz/PieV0FXO1D7D1iYV0eqZXvn3/OsqjBXKeBdt1xEomFRmsgV0YuRnyRfoktkCAKkX9cBs6mZk1HVXS0ubiQ49mt5ANI1Y+9KKq9Bi/0TEPPEVViOLX532Bvx+RukPOO5Maxb/Hux/LLMoQ6HLCcRu/AxV+m4Dlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cnuCQFnH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j/vQ3yr+"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3ddb4dcebfaso4764045ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 13:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749067848; x=1749672648; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=l0gzEZMaKBz+geZl5pxHGq7kFzj0QyinBj1xrmpUWk4=;
-        b=j/vQ3yr+c0Qu7EdPzMYn3NKNhi1yp0gPzMpyng81GqmpwUFHaYeZKjAAMM1v6eD4b8
-         WLzWeJD3o4R6iBybZ6o0CdVHLh9p71HyzkWKYl5lV0+n2T9gNu62Ti5EJxcceqq1QUbU
-         TLgJpMOSvAVYOKPpVBzAPEr1gxrAb/HIrebUKawbuxLfrbwYOQ/JMQ/j4NDhwBGkoafg
-         3geVMCu/hRsYt7UDnDdkAfPpplVqD/NuWhTAfvS8DYNBSX+IR86CkuNEAG7zjzTHlL6d
-         p/kQ47K5GEfMvxtfnXnf5kUknQxj/xHdAGDMzrPoJgnfgs5Dd2GchdBzmYBlr5FrddZV
-         CBTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749067848; x=1749672648;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l0gzEZMaKBz+geZl5pxHGq7kFzj0QyinBj1xrmpUWk4=;
-        b=uFf1F4gj4MYmegOhcrDX9VQpXOfJpAN2b8HpRCFChDnp9lN/Sj19Bsjr5u+0zQsvw9
-         LAWBPVGI84iDssz840S4RbZXe+iDZyvat7h0vS2F4J9vhc2NwJueIyHTVhTu+RWgcCqy
-         jps1tmDnAN1nxOf8Zs0tiu3gXv2vElyKq+T+Y+jTMJ+N92iPsJCNUiGSqTY0PvYl7s1/
-         WMGW/2jWKPY74Fvy3qwy8fgNw/Z/Z59if294/wPZ3iBz6JhyTSKKI6WVq3VoRmGm1E5y
-         e05ejTuW+uMW0KmMR1+rPsbBNaU8E9TzHLDWoFMbbcXMUus2uItGlAZSXvDgZ18tW72Q
-         Y1KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRPOpqPoRGFpuunL81OrQiN0kRlljggU5iljVgZz5p5to+n/K0dUwVhQg1uqfeywi5XeK8OuPIYMb1yn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQiEJUtDcCU02fBTG5QcHRzdYre94hhAiHUV+25tzY0h0yU/50
-	F0mpb3r5SlJ3sJbXbUe8+AAoFTJu8IT9ktKalTh2tqyubDGtNIFWZrzt206lerVXDDtIcBJHhbb
-	y8UaKqbim7Fgir3KtHuW8H1f5Rw==
-X-Google-Smtp-Source: AGHT+IEebJ+gdBmXEWqe1Fe3czqgQNBwW10WesxaqzS4IgnDmyZIhGpgkmk6gkpNi9jz//MbXeTmhCWS5OjtRGNtmg==
-X-Received: from ilfj26.prod.google.com ([2002:a05:6e02:221a:b0:3dd:7629:ec3a])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:3e06:b0:3dc:87c7:a5b5 with SMTP id e9e14a558f8ab-3ddbfc344efmr50438865ab.3.1749067847917;
- Wed, 04 Jun 2025 13:10:47 -0700 (PDT)
-Date: Wed, 04 Jun 2025 20:10:47 +0000
-In-Reply-To: <aD91vp8QXdIjs1Nh@linux.dev> (message from Oliver Upton on Tue, 3
- Jun 2025 15:22:54 -0700)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cnuCQFnH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB100C4CEE4;
+	Wed,  4 Jun 2025 20:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749067884;
+	bh=GB3QGY/bYwuT0G9fFt7gKi7UU4WWertHJDQO/gjWrWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cnuCQFnHQog3Yy2zL0mN9Rm6DYshRfpgEz5hEYSEW8/NTlSE6fqjcluypojM9jXTv
+	 MqLJ5baQLpwuXlvQlIa/2AN00aoarL0X8nZ/vTOv6BjlpWEkQH9v8UXnyKKJFb3gtS
+	 CEPq+2hBMvXityes9yvxlLeyVC5AwHZoM4OQgHxA=
+Date: Wed, 4 Jun 2025 16:11:21 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Luka <luka.2016.cs@gmail.com>
+Subject: Re: [Bug] possible deadlock in vfs_rmdir in Linux kernel v6.12
+Message-ID: <20250604-daft-nondescript-junglefowl-0abd5a@lemur>
+References: <CALm_T+2FtCDm4R5y-7mGyrY71Ex9G_9guaHCkELyggVfUbs1=w@mail.gmail.com>
+ <CALm_T+0j2FUr-tY5nvBqB6nvt=Dc8GBVfwzwchtrqOCoKw3rkQ@mail.gmail.com>
+ <CALm_T+3H5axrkgFdpAt23mkUyEbOaPyehAbdXbhgwutpyfMB7w@mail.gmail.com>
+ <20250604-quark-gastprofessor-9ac119a48aa1@brauner>
+ <20250604-alluring-resourceful-salamander-6561ff@lemur>
+ <bfyuxaa7cantq2fvrgizsawyclaciifxub3lortq5oox44vlsd@rxwrvg2avew7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntqzzz1d4o.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH 10/17] KVM: arm64: Writethrough trapped PMEVTYPER register
-From: Colton Lewis <coltonlewis@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bfyuxaa7cantq2fvrgizsawyclaciifxub3lortq5oox44vlsd@rxwrvg2avew7>
 
-Oliver Upton <oliver.upton@linux.dev> writes:
+On Wed, Jun 04, 2025 at 05:44:22PM +0200, Jan Kara wrote:
+> > Malicious in what sense? Is it just junk, or is it attempting to have
+> > maintainers perform some potentially dangerous operation?
+> 
+> Well, useless it is for certain but links like:
+> 
+> Bug Report: https://hastebin.com/share/pihohaniwi.bash
+> 
+> Entire Log: https://hastebin.com/share/orufevoquj.perl
+> 
+> are rather suspicious and suggest there's more in there than just a lack of
+> knowledge (but now that I've tried the suffixes seem to be automatically
+> added by some filetype detection logic in the hastebin.com site itself so
+> more likely this is not malicious after all). FWIW I've downloaded one of
+> the files through wget and looked into it and it seems to have a reasonable
+> content and does not seem malicious but it is difficult to be sure in the
+> maze of HTML and JS...
 
-> On Mon, Jun 02, 2025 at 07:26:55PM +0000, Colton Lewis wrote:
->> With FGT in place, the remaining trapped registers need to be written
->> through to the underlying physical registers as well as the virtual
->> ones. Failing to do this means delaying when guest writes take effect.
+Yes, hence my question. I think it's just a bad medium. It's actually the kind
+of thing that bugzilla is okay to use for -- create a bug with attachments and
+report it to the list, so maybe the original author can use that instead of
+pastebin sites?
 
->> Signed-off-by: Colton Lewis <coltonlewis@google.com>
->> ---
->>   arch/arm64/kvm/sys_regs.c | 27 +++++++++++++++++++++++++--
->>   1 file changed, 25 insertions(+), 2 deletions(-)
-
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index d368eeb4f88e..afd06400429a 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -18,6 +18,7 @@
->>   #include <linux/printk.h>
->>   #include <linux/uaccess.h>
->>   #include <linux/irqchip/arm-gic-v3.h>
->> +#include <linux/perf/arm_pmu.h>
->>   #include <linux/perf/arm_pmuv3.h>
-
->>   #include <asm/arm_pmuv3.h>
->> @@ -942,7 +943,11 @@ static bool pmu_counter_idx_valid(struct kvm_vcpu  
->> *vcpu, u64 idx)
->>   {
->>   	u64 pmcr, val;
-
->> -	pmcr = kvm_vcpu_read_pmcr(vcpu);
->> +	if (kvm_vcpu_pmu_is_partitioned(vcpu))
->> +		pmcr = read_pmcr();
-
-> Reading PMCR_EL0 from EL2 is not going to have the desired effect.
-> PMCR_EL0.N only returns HPMN when read from the guest.
-
-Okay. I'll change that.
-
->> +	else
->> +		pmcr = kvm_vcpu_read_pmcr(vcpu);
->> +
->>   	val = FIELD_GET(ARMV8_PMU_PMCR_N, pmcr);
->>   	if (idx >= val && idx != ARMV8_PMU_CYCLE_IDX) {
->>   		kvm_inject_undefined(vcpu);
->> @@ -1037,6 +1042,22 @@ static bool access_pmu_evcntr(struct kvm_vcpu  
->> *vcpu,
->>   	return true;
->>   }
-
->> +static void writethrough_pmevtyper(struct kvm_vcpu *vcpu, struct  
->> sys_reg_params *p,
->> +				   u64 reg, u64 idx)
->> +{
->> +	u64 evmask = kvm_pmu_evtyper_mask(vcpu->kvm);
->> +	u64 val = p->regval & evmask;
->> +
->> +	__vcpu_sys_reg(vcpu, reg) = val;
->> +
->> +	if (idx == ARMV8_PMU_CYCLE_IDX)
->> +		write_pmccfiltr(val);
->> +	else if (idx == ARMV8_PMU_INSTR_IDX)
->> +		write_pmicfiltr(val);
->> +	else
->> +		write_pmevtypern(idx, val);
->> +}
->> +
-
-> How are you preventing the VM from configuring an event counter to count
-> at EL2?
-
-I had thought that's what kvm_pmu_evtyper_mask() did since masking with
-that is what kvm_pmu_set_counter_event_type() writes to the vCPU register.
-
-> I see that you're setting MDCR_EL2.HPMD (which assumes FEAT_PMUv3p1) but
-> due to an architecture bug there's no control to prohibit the cycle
-> counter until FEAT_PMUv3p5 (MDCR_EL2.HCCD).
-
-I'll fix that.
-
-> Since you're already trapping PMCCFILTR you could potentially configure
-> the hardware value in such a way that it filters EL2.
-
-Sure.
-
->>   static bool access_pmu_evtyper(struct kvm_vcpu *vcpu, struct  
->> sys_reg_params *p,
->>   			       const struct sys_reg_desc *r)
->>   {
->> @@ -1063,7 +1084,9 @@ static bool access_pmu_evtyper(struct kvm_vcpu  
->> *vcpu, struct sys_reg_params *p,
->>   	if (!pmu_counter_idx_valid(vcpu, idx))
->>   		return false;
-
->> -	if (p->is_write) {
->> +	if (kvm_vcpu_pmu_is_partitioned(vcpu) && p->is_write) {
->> +		writethrough_pmevtyper(vcpu, p, reg, idx);
-
-> What about the vPMU event filter?
-
-I'll check that too.
-
->> +	} else if (p->is_write) {
->>   		kvm_pmu_set_counter_event_type(vcpu, p->regval, idx);
->>   		kvm_vcpu_pmu_restore_guest(vcpu);
->>   	} else {
->> --
->> 2.49.0.1204.g71687c7c1d-goog
-
-
-> Thanks,
-> Oliver
+-K
