@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590D1290BB1;
-	Wed,  4 Jun 2025 13:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D43290D9A;
+	Wed,  4 Jun 2025 13:07:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749042457; cv=none; b=Eqg6G9Pl/9K8Fd4R4Bo9kVJjXK+CeWTlx/vsBev2YRroSXRwq1jHy4Z8COTjWAFialRxSLXKSwPltSd6vjfjehVO7Wv+5bFb7WNm1fnuANOqSi8t4NmTq3/OsyVcQGYtxjmheNTNs5AcSg07k8XfEnLWd4wEo+Jx8xhIvar8+LM=
+	t=1749042465; cv=none; b=KpdyBQsvziWemb16DMrCKiJmVUmP8nh/Yzm8U/hwHOfH1kPXn684zLCGWpkjow4RFdMPyDAYxuklXs0nRU/BUsC90YLXaGUFl9jCSNXOVvh1WTuMa/9nTlzL/qMsP8W70kwYONjQxgP7qJA+lKL8LJF7qEFyZg47oQJ5St21zBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749042457; c=relaxed/simple;
-	bh=43OWA7Qeiq8r1g4FO5Z6ePoi9K1B6Ho251GSgks6Oyg=;
+	s=arc-20240116; t=1749042465; c=relaxed/simple;
+	bh=5wRPi6cU+Md6vZ13A5JitznyWYikQyVq5lfv9do3vg8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HP/bq2JDvRmc4MIo6UGIfgbX+1OL0rEX1sJz0LOJXV85DLvjdrZoJPutO/Puvur2yXQeRJH5FuG5mDoxYCyttUY4z9YAWW3tpbGqrl/ovaa33ilU9/sSHkJ6ToS9lMqPgM/UAsgKG/DwM4NhztyeCkdJvKrs/RtX+40JBFDCnkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EKuBFW8B; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nrp3vMevvulC/+gP3LHAOErjonWH36W3JnrYMv8KP6pEOzQ/nVTq7SfJjaK0SWTZnT/qIgB2qqIWv445GNCj7/mDxZCZk5mXzNT6/gmIawF1Kx7aGDlTa2ALOfI3+eVbOrGcZFK2T+oY+HsO9HHuIAhCAZmm5kSred7UJuT8Ubg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1SIEPWu8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EKuBFW8B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7256AC4CEEF;
-	Wed,  4 Jun 2025 13:07:36 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1SIEPWu8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E08CC4CEE7;
+	Wed,  4 Jun 2025 13:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749042457;
-	bh=43OWA7Qeiq8r1g4FO5Z6ePoi9K1B6Ho251GSgks6Oyg=;
+	s=korg; t=1749042465;
+	bh=5wRPi6cU+Md6vZ13A5JitznyWYikQyVq5lfv9do3vg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EKuBFW8B8PUkCyLPG2q0yLT1b6uHMmmUeobWVcbCBf2im8VIjFd6EIgaQHUlCkIrm
-	 cr2U/vpNdVk5foOjzQdlRsFC8Emp+egtX1PSTKFQRT41zvMOzQUVMipDF5NXMDNeP9
-	 tbvmnFpauwVpFxwf2ZRltzOYB5Qc2rhwNqjcZ9Fc=
+	b=1SIEPWu8HeOuCO5uIb/kJ/lh1y5MVLzTwjKa1MKFFtuCJq0Y39LVwgyLmYDgv8DUC
+	 ybPI4gJhB/+Qclw12FWxs1KwTYBFk30dhpCfERhv03pF+QS3Q6sSivx6bfUVR8mefG
+	 8Neie4vx7aK6DbZdEYLH3ZZgpL4bmr/UzAs2GS7U=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -31,12 +31,12 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.12.32
-Date: Wed,  4 Jun 2025 15:07:28 +0200
-Message-ID: <2025060428-daily-hydrant-6faa@gregkh>
+Subject: Re: Linux 6.14.10
+Date: Wed,  4 Jun 2025 15:07:33 +0200
+Message-ID: <2025060433-saga-deport-f96d@gregkh>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <2025060428-exile-lubricate-e455@gregkh>
-References: <2025060428-exile-lubricate-e455@gregkh>
+In-Reply-To: <2025060433-cyclic-dares-5e34@gregkh>
+References: <2025060433-cyclic-dares-5e34@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,23 +46,39 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 diff --git a/Makefile b/Makefile
-index 18c2a7cf9e91..1e6a6c66403f 100644
+index 884279eb952d..0f3aad52b3de 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
  VERSION = 6
- PATCHLEVEL = 12
--SUBLEVEL = 31
-+SUBLEVEL = 32
+ PATCHLEVEL = 14
+-SUBLEVEL = 9
++SUBLEVEL = 10
  EXTRAVERSION =
  NAME = Baby Opossum Posse
  
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+index 51c6e19e40b8..7d9394a04302 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+@@ -222,9 +222,9 @@ i3c1: i3c@10da1000 {
+ 			status = "disabled";
+ 		};
+ 
+-		gpio0: gpio@ffc03200 {
++		gpio0: gpio@10c03200 {
+ 			compatible = "snps,dw-apb-gpio";
+-			reg = <0xffc03200 0x100>;
++			reg = <0x10c03200 0x100>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			resets = <&rst GPIO0_RESET>;
 diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-index 08a82a5cf667..81ccd0600c5a 100644
+index 942290028972..3c02351fbb15 100644
 --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
 +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-@@ -261,6 +261,8 @@ cryptobam: dma-controller@704000 {
+@@ -378,6 +378,8 @@ cryptobam: dma-controller@704000 {
  			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
  			#dma-cells = <1>;
  			qcom,ee = <1>;
@@ -72,10 +88,19 @@ index 08a82a5cf667..81ccd0600c5a 100644
  		};
  
 diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 8a21448c0fa8..b28fa598cebb 100644
+index 3394ae2d1300..2329460b2103 100644
 --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -4012,15 +4012,7 @@ compute-cb@1 {
+@@ -2413,6 +2413,8 @@ cryptobam: dma-controller@1dc4000 {
+ 			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
+ 			#dma-cells = <1>;
+ 			qcom,ee = <0>;
++			qcom,num-ees = <4>;
++			num-channels = <20>;
+ 			qcom,controlled-remotely;
+ 			iommus = <&apps_smmu 0x480 0x00>,
+ 				 <&apps_smmu 0x481 0x00>;
+@@ -4903,15 +4905,7 @@ compute-cb@1 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <1>;
  						iommus = <&apps_smmu 0x2141 0x04a0>,
@@ -92,7 +117,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4028,15 +4020,7 @@ compute-cb@2 {
+@@ -4919,15 +4913,7 @@ compute-cb@2 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <2>;
  						iommus = <&apps_smmu 0x2142 0x04a0>,
@@ -109,7 +134,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4044,15 +4028,7 @@ compute-cb@3 {
+@@ -4935,15 +4921,7 @@ compute-cb@3 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <3>;
  						iommus = <&apps_smmu 0x2143 0x04a0>,
@@ -126,7 +151,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4060,15 +4036,7 @@ compute-cb@4 {
+@@ -4951,15 +4929,7 @@ compute-cb@4 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <4>;
  						iommus = <&apps_smmu 0x2144 0x04a0>,
@@ -143,7 +168,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4076,15 +4044,7 @@ compute-cb@5 {
+@@ -4967,15 +4937,7 @@ compute-cb@5 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <5>;
  						iommus = <&apps_smmu 0x2145 0x04a0>,
@@ -160,7 +185,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4092,15 +4052,7 @@ compute-cb@6 {
+@@ -4983,15 +4945,7 @@ compute-cb@6 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <6>;
  						iommus = <&apps_smmu 0x2146 0x04a0>,
@@ -177,7 +202,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4108,15 +4060,7 @@ compute-cb@7 {
+@@ -4999,15 +4953,7 @@ compute-cb@7 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <7>;
  						iommus = <&apps_smmu 0x2147 0x04a0>,
@@ -194,7 +219,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4124,15 +4068,7 @@ compute-cb@8 {
+@@ -5015,15 +4961,7 @@ compute-cb@8 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <8>;
  						iommus = <&apps_smmu 0x2148 0x04a0>,
@@ -211,7 +236,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4140,31 +4076,7 @@ compute-cb@9 {
+@@ -5031,31 +4969,7 @@ compute-cb@9 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <9>;
  						iommus = <&apps_smmu 0x2149 0x04a0>,
@@ -244,7 +269,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4172,15 +4084,7 @@ compute-cb@11 {
+@@ -5063,15 +4977,7 @@ compute-cb@11 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <11>;
  						iommus = <&apps_smmu 0x214b 0x04a0>,
@@ -261,7 +286,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  				};
-@@ -4240,15 +4144,7 @@ compute-cb@1 {
+@@ -5131,15 +5037,7 @@ compute-cb@1 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <1>;
  						iommus = <&apps_smmu 0x2941 0x04a0>,
@@ -278,7 +303,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4256,15 +4152,7 @@ compute-cb@2 {
+@@ -5147,15 +5045,7 @@ compute-cb@2 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <2>;
  						iommus = <&apps_smmu 0x2942 0x04a0>,
@@ -295,7 +320,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4272,15 +4160,7 @@ compute-cb@3 {
+@@ -5163,15 +5053,7 @@ compute-cb@3 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <3>;
  						iommus = <&apps_smmu 0x2943 0x04a0>,
@@ -312,7 +337,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4288,15 +4168,7 @@ compute-cb@4 {
+@@ -5179,15 +5061,7 @@ compute-cb@4 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <4>;
  						iommus = <&apps_smmu 0x2944 0x04a0>,
@@ -329,7 +354,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4304,15 +4176,7 @@ compute-cb@5 {
+@@ -5195,15 +5069,7 @@ compute-cb@5 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <5>;
  						iommus = <&apps_smmu 0x2945 0x04a0>,
@@ -346,7 +371,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4320,15 +4184,7 @@ compute-cb@6 {
+@@ -5211,15 +5077,7 @@ compute-cb@6 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <6>;
  						iommus = <&apps_smmu 0x2946 0x04a0>,
@@ -363,7 +388,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4336,15 +4192,7 @@ compute-cb@7 {
+@@ -5227,15 +5085,7 @@ compute-cb@7 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <7>;
  						iommus = <&apps_smmu 0x2947 0x04a0>,
@@ -380,7 +405,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4352,15 +4200,7 @@ compute-cb@8 {
+@@ -5243,15 +5093,7 @@ compute-cb@8 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <8>;
  						iommus = <&apps_smmu 0x2948 0x04a0>,
@@ -397,7 +422,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4368,15 +4208,7 @@ compute-cb@9 {
+@@ -5259,15 +5101,7 @@ compute-cb@9 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <9>;
  						iommus = <&apps_smmu 0x2949 0x04a0>,
@@ -414,7 +439,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4384,15 +4216,7 @@ compute-cb@10 {
+@@ -5275,15 +5109,7 @@ compute-cb@10 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <10>;
  						iommus = <&apps_smmu 0x294a 0x04a0>,
@@ -431,7 +456,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4400,15 +4224,7 @@ compute-cb@11 {
+@@ -5291,15 +5117,7 @@ compute-cb@11 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <11>;
  						iommus = <&apps_smmu 0x294b 0x04a0>,
@@ -448,7 +473,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4416,15 +4232,7 @@ compute-cb@12 {
+@@ -5307,15 +5125,7 @@ compute-cb@12 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <12>;
  						iommus = <&apps_smmu 0x294c 0x04a0>,
@@ -465,7 +490,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  						dma-coherent;
  					};
  
-@@ -4432,15 +4240,7 @@ compute-cb@13 {
+@@ -5323,15 +5133,7 @@ compute-cb@13 {
  						compatible = "qcom,fastrpc-compute-cb";
  						reg = <13>;
  						iommus = <&apps_smmu 0x294d 0x04a0>,
@@ -483,7 +508,7 @@ index 8a21448c0fa8..b28fa598cebb 100644
  					};
  				};
 diff --git a/arch/arm64/boot/dts/qcom/sm8350.dtsi b/arch/arm64/boot/dts/qcom/sm8350.dtsi
-index 46adf10e5fe4..404473fa491a 100644
+index 69da30f35baa..f055600d6cfe 100644
 --- a/arch/arm64/boot/dts/qcom/sm8350.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sm8350.dtsi
 @@ -455,7 +455,7 @@ cdsp_secure_heap: memory@80c00000 {
@@ -496,10 +521,10 @@ index 46adf10e5fe4..404473fa491a 100644
  			no-map;
  		};
 diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-index d664a88a018e..58ed68f534e5 100644
+index 9c809fc5fa45..419df72cd04b 100644
 --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-@@ -4553,6 +4553,8 @@ cryptobam: dma-controller@1dc4000 {
+@@ -5283,6 +5283,8 @@ cryptobam: dma-controller@1dc4000 {
  			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
  			#dma-cells = <1>;
  			qcom,ee = <0>;
@@ -509,10 +534,10 @@ index d664a88a018e..58ed68f534e5 100644
  			iommus = <&apps_smmu 0x584 0x11>,
  				 <&apps_smmu 0x588 0x0>,
 diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index 9ecf4a7fc328..cfdd30009015 100644
+index eac8de4005d8..ac3e00ad4177 100644
 --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -1952,6 +1952,8 @@ cryptobam: dma-controller@1dc4000 {
+@@ -1957,6 +1957,8 @@ cryptobam: dma-controller@1dc4000 {
  			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
  			#dma-cells = <1>;
  			qcom,ee = <0>;
@@ -522,10 +547,10 @@ index 9ecf4a7fc328..cfdd30009015 100644
  			iommus = <&apps_smmu 0x480 0x0>,
  				 <&apps_smmu 0x481 0x0>;
 diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-index 416cfb71878a..fddf979de38d 100644
+index 86684cb9a932..c8a2a76a98f0 100644
 --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-@@ -2495,6 +2495,8 @@ cryptobam: dma-controller@1dc4000 {
+@@ -2533,6 +2533,8 @@ cryptobam: dma-controller@1dc4000 {
  				 <&apps_smmu 0x481 0>;
  
  			qcom,ee = <0>;
@@ -534,11 +559,27 @@ index 416cfb71878a..fddf979de38d 100644
  			qcom,controlled-remotely;
  		};
  
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts b/arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts
-index b2cf080cab56..ce3fa29de7b4 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts
-@@ -314,8 +314,8 @@ vreg_l1j_0p8: ldo1 {
+diff --git a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+index 5e3970b26e2f..f5063a0df9fb 100644
+--- a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
++++ b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+@@ -507,6 +507,7 @@ vreg_l12b_1p2: ldo12 {
+ 			regulator-min-microvolt = <1200000>;
+ 			regulator-max-microvolt = <1200000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
+ 		};
+ 
+ 		vreg_l13b_3p0: ldo13 {
+@@ -528,6 +529,7 @@ vreg_l15b_1p8: ldo15 {
+ 			regulator-min-microvolt = <1800000>;
+ 			regulator-max-microvolt = <1800000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
+ 		};
+ 
+ 		vreg_l16b_2p9: ldo16 {
+@@ -745,8 +747,8 @@ vreg_l1j_0p8: ldo1 {
  
  		vreg_l2j_1p2: ldo2 {
  			regulator-name = "vreg_l2j_1p2";
@@ -549,11 +590,102 @@ index b2cf080cab56..ce3fa29de7b4 100644
  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
  		};
  
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts b/arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts
+index 53781f9b13af..f53067463b76 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts
++++ b/arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts
+@@ -330,8 +330,8 @@ vreg_l1j_0p8: ldo1 {
+ 
+ 		vreg_l2j_1p2: ldo2 {
+ 			regulator-name = "vreg_l2j_1p2";
+-			regulator-min-microvolt = <1200000>;
+-			regulator-max-microvolt = <1200000>;
++			regulator-min-microvolt = <1256000>;
++			regulator-max-microvolt = <1256000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts b/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts
+index 86e87f03b0ec..90f588ed7d63 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts
++++ b/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts
+@@ -359,6 +359,7 @@ vreg_l12b_1p2: ldo12 {
+ 			regulator-min-microvolt = <1200000>;
+ 			regulator-max-microvolt = <1200000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
+ 		};
+ 
+ 		vreg_l13b_3p0: ldo13 {
+@@ -380,6 +381,7 @@ vreg_l15b_1p8: ldo15 {
+ 			regulator-min-microvolt = <1800000>;
+ 			regulator-max-microvolt = <1800000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
+ 		};
+ 
+ 		vreg_l17b_2p5: ldo17 {
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
+index cd860a246c45..929da9ecddc4 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
++++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
+@@ -633,6 +633,7 @@ vreg_l12b_1p2: ldo12 {
+ 			regulator-min-microvolt = <1200000>;
+ 			regulator-max-microvolt = <1200000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
+ 		};
+ 
+ 		vreg_l13b_3p0: ldo13 {
+@@ -654,6 +655,7 @@ vreg_l15b_1p8: ldo15 {
+ 			regulator-min-microvolt = <1800000>;
+ 			regulator-max-microvolt = <1800000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
+ 		};
+ 
+ 		vreg_l16b_2p9: ldo16 {
+@@ -871,8 +873,8 @@ vreg_l1j_0p8: ldo1 {
+ 
+ 		vreg_l2j_1p2: ldo2 {
+ 			regulator-name = "vreg_l2j_1p2";
+-			regulator-min-microvolt = <1200000>;
+-			regulator-max-microvolt = <1200000>;
++			regulator-min-microvolt = <1256000>;
++			regulator-max-microvolt = <1256000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+@@ -1352,18 +1354,22 @@ &remoteproc_cdsp {
+ 	status = "okay";
+ };
+ 
++&smb2360_0 {
++	status = "okay";
++};
++
+ &smb2360_0_eusb2_repeater {
+ 	vdd18-supply = <&vreg_l3d_1p8>;
+ 	vdd3-supply = <&vreg_l2b_3p0>;
++};
+ 
++&smb2360_1 {
+ 	status = "okay";
+ };
+ 
+ &smb2360_1_eusb2_repeater {
+ 	vdd18-supply = <&vreg_l3d_1p8>;
+ 	vdd3-supply = <&vreg_l14b_3p0>;
+-
+-	status = "okay";
+ };
+ 
+ &swr0 {
 diff --git a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-index e9ed723f9038..07c2fdfe7ce1 100644
+index a3d53f2ba2c3..744a66ae5bdc 100644
 --- a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
 +++ b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-@@ -266,6 +266,7 @@ vreg_l12b_1p2: ldo12 {
+@@ -290,6 +290,7 @@ vreg_l12b_1p2: ldo12 {
  			regulator-min-microvolt = <1200000>;
  			regulator-max-microvolt = <1200000>;
  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
@@ -561,7 +693,7 @@ index e9ed723f9038..07c2fdfe7ce1 100644
  		};
  
  		vreg_l14b_3p0: ldo14 {
-@@ -280,8 +281,8 @@ vreg_l15b_1p8: ldo15 {
+@@ -304,8 +305,8 @@ vreg_l15b_1p8: ldo15 {
  			regulator-min-microvolt = <1800000>;
  			regulator-max-microvolt = <1800000>;
  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
@@ -571,7 +703,7 @@ index e9ed723f9038..07c2fdfe7ce1 100644
  	};
  
  	regulators-1 {
-@@ -484,8 +485,8 @@ vreg_l1j_0p8: ldo1 {
+@@ -508,8 +509,8 @@ vreg_l1j_0p8: ldo1 {
  
  		vreg_l2j_1p2: ldo2 {
  			regulator-name = "vreg_l2j_1p2";
@@ -583,10 +715,10 @@ index e9ed723f9038..07c2fdfe7ce1 100644
  		};
  
 diff --git a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-index af76aa034d0e..9062eb6766f2 100644
+index ec594628304a..f06f45478846 100644
 --- a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
 +++ b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-@@ -356,6 +356,7 @@ vreg_l12b_1p2: ldo12 {
+@@ -437,6 +437,7 @@ vreg_l12b_1p2: ldo12 {
  			regulator-min-microvolt = <1200000>;
  			regulator-max-microvolt = <1200000>;
  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
@@ -594,7 +726,7 @@ index af76aa034d0e..9062eb6766f2 100644
  		};
  
  		vreg_l13b_3p0: ldo13 {
-@@ -377,6 +378,7 @@ vreg_l15b_1p8: ldo15 {
+@@ -458,6 +459,7 @@ vreg_l15b_1p8: ldo15 {
  			regulator-min-microvolt = <1800000>;
  			regulator-max-microvolt = <1800000>;
  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
@@ -602,7 +734,7 @@ index af76aa034d0e..9062eb6766f2 100644
  		};
  
  		vreg_l16b_2p9: ldo16 {
-@@ -594,8 +596,8 @@ vreg_l1j_0p8: ldo1 {
+@@ -675,8 +677,8 @@ vreg_l1j_0p8: ldo1 {
  
  		vreg_l2j_1p2: ldo2 {
  			regulator-name = "vreg_l2j_1p2";
@@ -614,10 +746,141 @@ index af76aa034d0e..9062eb6766f2 100644
  		};
  
 diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 91e4fbca19f9..5a5abd5fa658 100644
+index 4936fa5b98ff..5aeecf711340 100644
 --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
 +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -6682,15 +6682,19 @@ mem-critical {
+@@ -20,6 +20,7 @@
+ #include <dt-bindings/soc/qcom,gpr.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ #include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -3125,7 +3126,7 @@ pcie3: pcie@1bd0000 {
+ 			device_type = "pci";
+ 			compatible = "qcom,pcie-x1e80100";
+ 			reg = <0x0 0x01bd0000 0x0 0x3000>,
+-			      <0x0 0x78000000 0x0 0xf1d>,
++			      <0x0 0x78000000 0x0 0xf20>,
+ 			      <0x0 0x78000f40 0x0 0xa8>,
+ 			      <0x0 0x78001000 0x0 0x1000>,
+ 			      <0x0 0x78100000 0x0 0x100000>,
+@@ -8457,8 +8458,8 @@ trip-point0 {
+ 				};
+ 
+ 				aoss0-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -8483,7 +8484,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8509,7 +8510,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8535,7 +8536,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8561,7 +8562,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8587,7 +8588,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8613,7 +8614,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8639,7 +8640,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8665,7 +8666,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8683,8 +8684,8 @@ trip-point0 {
+ 				};
+ 
+ 				cpuss2-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -8701,8 +8702,8 @@ trip-point0 {
+ 				};
+ 
+ 				cpuss2-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -8719,7 +8720,7 @@ trip-point0 {
+ 				};
+ 
+ 				mem-critical {
+-					temperature = <125000>;
++					temperature = <115000>;
+ 					hysteresis = <0>;
+ 					type = "critical";
+ 				};
+@@ -8727,15 +8728,19 @@ mem-critical {
  		};
  
  		video-thermal {
@@ -627,21 +890,681 @@ index 91e4fbca19f9..5a5abd5fa658 100644
  
  			trips {
  				trip-point0 {
+-					temperature = <125000>;
 +					temperature = <90000>;
 +					hysteresis = <2000>;
 +					type = "hot";
 +				};
 +
 +				video-critical {
- 					temperature = <125000>;
++					temperature = <115000>;
  					hysteresis = <1000>;
 -					type = "passive";
 +					type = "critical";
  				};
  			};
  		};
+@@ -8751,8 +8756,8 @@ trip-point0 {
+ 				};
+ 
+ 				aoss0-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -8777,7 +8782,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8803,7 +8808,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8829,7 +8834,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8855,7 +8860,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8881,7 +8886,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8907,7 +8912,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8933,7 +8938,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8959,7 +8964,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -8977,8 +8982,8 @@ trip-point0 {
+ 				};
+ 
+ 				cpuss2-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -8995,8 +9000,8 @@ trip-point0 {
+ 				};
+ 
+ 				cpuss2-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -9013,8 +9018,8 @@ trip-point0 {
+ 				};
+ 
+ 				aoss0-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -9039,7 +9044,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9065,7 +9070,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9091,7 +9096,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9117,7 +9122,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9143,7 +9148,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9169,7 +9174,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9195,7 +9200,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9221,7 +9226,7 @@ trip-point1 {
+ 				};
+ 
+ 				cpu-critical {
+-					temperature = <110000>;
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9239,8 +9244,8 @@ trip-point0 {
+ 				};
+ 
+ 				cpuss2-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -9257,8 +9262,8 @@ trip-point0 {
+ 				};
+ 
+ 				cpuss2-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -9275,8 +9280,8 @@ trip-point0 {
+ 				};
+ 
+ 				aoss0-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -9293,8 +9298,8 @@ trip-point0 {
+ 				};
+ 
+ 				nsp0-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -9311,8 +9316,8 @@ trip-point0 {
+ 				};
+ 
+ 				nsp1-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -9329,8 +9334,8 @@ trip-point0 {
+ 				};
+ 
+ 				nsp2-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -9347,33 +9352,34 @@ trip-point0 {
+ 				};
+ 
+ 				nsp3-critical {
+-					temperature = <125000>;
+-					hysteresis = <0>;
++					temperature = <115000>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+ 		};
+ 
+ 		gpuss-0-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 5>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss0_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss0_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
+-					temperature = <125000>;
++				gpu-critical {
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9381,25 +9387,26 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-1-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 6>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss1_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss1_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
+-					temperature = <125000>;
++				gpu-critical {
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9407,25 +9414,26 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-2-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 7>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss2_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss2_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
+-					temperature = <125000>;
++				gpu-critical {
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9433,25 +9441,26 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-3-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 8>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss3_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss3_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
+-					temperature = <125000>;
++				gpu-critical {
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9459,25 +9468,26 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-4-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 9>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss4_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss4_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
+-					temperature = <125000>;
++				gpu-critical {
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9485,25 +9495,26 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-5-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 10>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss5_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss5_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
+-					temperature = <125000>;
++				gpu-critical {
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9511,25 +9522,26 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-6-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 11>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss6_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss6_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
+-					temperature = <125000>;
++				gpu-critical {
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9537,25 +9549,26 @@ trip-point2 {
+ 		};
+ 
+ 		gpuss-7-thermal {
+-			polling-delay-passive = <10>;
++			polling-delay-passive = <200>;
+ 
+ 			thermal-sensors = <&tsens3 12>;
+ 
+-			trips {
+-				trip-point0 {
+-					temperature = <85000>;
+-					hysteresis = <1000>;
+-					type = "passive";
++			cooling-maps {
++				map0 {
++					trip = <&gpuss7_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++			};
+ 
+-				trip-point1 {
+-					temperature = <90000>;
++			trips {
++				gpuss7_alert0: trip-point0 {
++					temperature = <95000>;
+ 					hysteresis = <1000>;
+-					type = "hot";
++					type = "passive";
+ 				};
+ 
+-				trip-point2 {
+-					temperature = <125000>;
++				gpu-critical {
++					temperature = <115000>;
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+@@ -9574,7 +9587,7 @@ trip-point0 {
+ 
+ 				camera0-critical {
+ 					temperature = <115000>;
+-					hysteresis = <0>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+@@ -9592,7 +9605,7 @@ trip-point0 {
+ 
+ 				camera0-critical {
+ 					temperature = <115000>;
+-					hysteresis = <0>;
++					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
+ 			};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index 995b30a7aae0..dd5a9bca26d1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -60,16 +60,6 @@ vcc3v3_sys: regulator-vcc3v3-sys {
+ 		vin-supply = <&vcc5v0_sys>;
+ 	};
+ 
+-	vcc5v0_host: regulator-vcc5v0-host {
+-		compatible = "regulator-fixed";
+-		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&vcc5v0_host_en>;
+-		regulator-name = "vcc5v0_host";
+-		regulator-always-on;
+-		vin-supply = <&vcc5v0_sys>;
+-	};
+-
+ 	vcc5v0_sys: regulator-vcc5v0-sys {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc5v0_sys";
+@@ -521,10 +511,10 @@ pmic_int_l: pmic-int-l {
+ 		};
+ 	};
+ 
+-	usb2 {
+-		vcc5v0_host_en: vcc5v0-host-en {
++	usb {
++		cy3304_reset: cy3304-reset {
+ 			rockchip,pins =
+-			  <4 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
++			  <4 RK_PA3 RK_FUNC_GPIO &pcfg_output_high>;
+ 		};
+ 	};
+ 
+@@ -591,7 +581,6 @@ u2phy1_otg: otg-port {
+ 	};
+ 
+ 	u2phy1_host: host-port {
+-		phy-supply = <&vcc5v0_host>;
+ 		status = "okay";
+ 	};
+ };
+@@ -603,6 +592,29 @@ &usbdrd3_1 {
+ &usbdrd_dwc3_1 {
+ 	status = "okay";
+ 	dr_mode = "host";
++	pinctrl-names = "default";
++	pinctrl-0 = <&cy3304_reset>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	hub_2_0: hub@1 {
++		compatible = "usb4b4,6502", "usb4b4,6506";
++		reg = <1>;
++		peer-hub = <&hub_3_0>;
++		reset-gpios = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
++		vdd-supply = <&vcc1v2_phy>;
++		vdd2-supply = <&vcc3v3_sys>;
++
++	};
++
++	hub_3_0: hub@2 {
++		compatible = "usb4b4,6500", "usb4b4,6504";
++		reg = <2>;
++		peer-hub = <&hub_2_0>;
++		reset-gpios = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
++		vdd-supply = <&vcc1v2_phy>;
++		vdd2-supply = <&vcc3v3_sys>;
++	};
+ };
+ 
+ &usb_host1_ehci {
 diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-index 60c6814206a1..3f3a31eced97 100644
+index 7d355aa73ea2..0c286f600296 100644
 --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
 +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
 @@ -552,8 +552,6 @@ sdhci0: mmc@fa10000 {
@@ -654,7 +1577,7 @@ index 60c6814206a1..3f3a31eced97 100644
  		mmc-ddr-1_8v;
  		mmc-hs200-1_8v;
 diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-index 56945d29e015..45d68a0d1b59 100644
+index a1daba7b1fad..455ccc770f16 100644
 --- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
 +++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
 @@ -575,8 +575,6 @@ sdhci0: mmc@fa10000 {
@@ -667,7 +1590,7 @@ index 56945d29e015..45d68a0d1b59 100644
  		mmc-hs200-1_8v;
  		ti,clkbuf-sel = <0x7>;
 diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-index 9b6f51379108..77fe2b27cb58 100644
+index 6e3beb5c2e01..f9b5c97518d6 100644
 --- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
 +++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
 @@ -564,8 +564,6 @@ sdhci0: mmc@fa10000 {
@@ -727,7 +1650,7 @@ index 4eaf9d757dd0..b6bfdfbbdd98 100644
  		#address-cells = <1>;
  		#size-cells = <0>;
 diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 1f1af7ea2330..0534b5348347 100644
+index 94a812a1355b..5ebf7ada6e48 100644
 --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
 +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
 @@ -449,6 +449,8 @@ sdhci0: mmc@4f80000 {
@@ -740,7 +1663,7 @@ index 1f1af7ea2330..0534b5348347 100644
  		dma-coherent;
  		status = "disabled";
 diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-index d5ceab79536c..b40496097f82 100644
+index 11522b36e0ce..5fa70a874d7b 100644
 --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
 +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
 @@ -44,6 +44,17 @@ vusb_main: regulator-vusb-main5v0 {
@@ -831,7 +1754,7 @@ index 47bb5480b5b0..4eb3cffab032 100644
  		port {
  			csi2_cam1: endpoint {
 diff --git a/arch/arm64/boot/dts/ti/k3-j721e-sk.dts b/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
-index 6285e8d94dde..c8d7eb1814f0 100644
+index 69b3d1ed8a21..9fd32f020010 100644
 --- a/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
 +++ b/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
 @@ -184,6 +184,17 @@ vsys_3v3: fixedregulator-vsys3v3 {
@@ -873,7 +1796,7 @@ index 6285e8d94dde..c8d7eb1814f0 100644
  	transceiver1: can-phy1 {
  		compatible = "ti,tcan1042";
  		#phy-cells = <0>;
-@@ -608,6 +633,12 @@ J721E_WKUP_IOPAD(0xd4, PIN_OUTPUT, 7) /* (G26) WKUP_GPIO0_9 */
+@@ -613,6 +638,12 @@ J721E_WKUP_IOPAD(0xd4, PIN_OUTPUT, 7) /* (G26) WKUP_GPIO0_9 */
  		>;
  	};
  
@@ -887,10 +1810,10 @@ index 6285e8d94dde..c8d7eb1814f0 100644
  		pinctrl-single,pins = <
  			J721E_WKUP_IOPAD(0xa0, PIN_INPUT, 0) /* (J29) WKUP_UART0_RXD */
 diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-index a00f4a7d20d9..710f80a14b64 100644
+index adee69607fdb..2503580254ad 100644
 --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
 +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-@@ -720,6 +720,10 @@ &serdes_ln_ctrl {
+@@ -815,6 +815,10 @@ &serdes_ln_ctrl {
  		      <J722S_SERDES1_LANE0_PCIE0_LANE0>;
  };
  
@@ -901,7 +1824,7 @@ index a00f4a7d20d9..710f80a14b64 100644
  &serdes0 {
  	status = "okay";
  	serdes0_usb_link: phy@0 {
-@@ -731,6 +735,10 @@ serdes0_usb_link: phy@0 {
+@@ -826,6 +830,10 @@ serdes0_usb_link: phy@0 {
  	};
  };
  
@@ -913,7 +1836,7 @@ index a00f4a7d20d9..710f80a14b64 100644
  	status = "okay";
  	serdes1_pcie_link: phy@0 {
 diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-index ed6f4ba08afc..ec8fcf9d16d6 100644
+index 6da7b3a2943c..43204084568c 100644
 --- a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
 +++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
 @@ -32,6 +32,8 @@ serdes_wiz0: phy@f000000 {
@@ -935,7 +1858,7 @@ index ed6f4ba08afc..ec8fcf9d16d6 100644
  			compatible = "ti,j721e-serdes-10g";
  			reg = <0x0f010000 0x00010000>;
 diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-index 2bf4547485e1..013c0d25d348 100644
+index 1944616ab357..1fc0a11c5ab4 100644
 --- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
 +++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
 @@ -77,7 +77,7 @@ pcie1_ctrl: pcie1-ctrl@4074 {
@@ -948,10 +1871,10 @@ index 2bf4547485e1..013c0d25d348 100644
  			mux-reg-masks = <0x0 0x3>, <0x4 0x3>, /* SERDES0 lane0/1 select */
  					<0x8 0x3>, <0xc 0x3>, /* SERDES0 lane2/3 select */
 diff --git a/arch/um/Makefile b/arch/um/Makefile
-index 00b63bac5eff..3317d87e2092 100644
+index 1d36a613aad8..9ed792e565c9 100644
 --- a/arch/um/Makefile
 +++ b/arch/um/Makefile
-@@ -151,5 +151,6 @@ MRPROPER_FILES += $(HOST_DIR)/include/generated
+@@ -154,5 +154,6 @@ MRPROPER_FILES += $(HOST_DIR)/include/generated
  archclean:
  	@find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
  		-o -name '*.gcov' \) -type f -print | xargs rm -f
@@ -990,10 +1913,10 @@ index e49a19fea3bd..dc882fc9fa9e 100644
  	tpm_buf_read(buf, offset, sizeof(value), &value);
  
 diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 22aa2bab3693..19a58c4ecef3 100644
+index cd57067e8218..6d12033649f8 100644
 --- a/drivers/dma/idxd/cdev.c
 +++ b/drivers/dma/idxd/cdev.c
-@@ -225,7 +225,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+@@ -222,7 +222,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
  	struct idxd_wq *wq;
  	struct device *dev, *fdev;
  	int rc = 0;
@@ -1002,7 +1925,7 @@ index 22aa2bab3693..19a58c4ecef3 100644
  	unsigned int pasid;
  	struct idxd_cdev *idxd_cdev;
  
-@@ -322,7 +322,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+@@ -317,7 +317,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
  	if (device_user_pasid_enabled(idxd))
  		idxd_xa_pasid_remove(ctx);
  failed_get_pasid:
@@ -1050,10 +1973,10 @@ index e89f299f2140..dcecb7a25911 100644
  	ret = gpiod_set_consumer_name(data->ad.desc, buf);
  	if (ret)
 diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_translation_helper.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_translation_helper.c
-index 55014c152116..7e3d506bb79b 100644
+index 0c8ec30ea672..731fbd4bc600 100644
 --- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_translation_helper.c
 +++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_translation_helper.c
-@@ -887,7 +887,7 @@ static void populate_dml21_plane_config_from_plane_state(struct dml2_context *dm
+@@ -910,7 +910,7 @@ static void populate_dml21_plane_config_from_plane_state(struct dml2_context *dm
  }
  
  //TODO : Could be possibly moved to a common helper layer.
@@ -1062,7 +1985,7 @@ index 55014c152116..7e3d506bb79b 100644
  {
  	int i, j;
  
-@@ -895,10 +895,12 @@ static bool dml21_wrapper_get_plane_id(const struct dc_state *context, const str
+@@ -918,10 +918,12 @@ static bool dml21_wrapper_get_plane_id(const struct dc_state *context, const str
  		return false;
  
  	for (i = 0; i < context->stream_count; i++) {
@@ -1079,7 +2002,7 @@ index 55014c152116..7e3d506bb79b 100644
  			}
  		}
  	}
-@@ -921,14 +923,14 @@ static unsigned int map_stream_to_dml21_display_cfg(const struct dml2_context *d
+@@ -944,14 +946,14 @@ static unsigned int map_stream_to_dml21_display_cfg(const struct dml2_context *d
  	return location;
  }
  
@@ -1096,7 +2019,7 @@ index 55014c152116..7e3d506bb79b 100644
  		ASSERT(false);
  		return -1;
  	}
-@@ -1013,7 +1015,7 @@ bool dml21_map_dc_state_into_dml_display_cfg(const struct dc *in_dc, struct dc_s
+@@ -1037,7 +1039,7 @@ bool dml21_map_dc_state_into_dml_display_cfg(const struct dc *in_dc, struct dc_s
  			dml_dispcfg->plane_descriptors[disp_cfg_plane_location].stream_index = disp_cfg_stream_location;
  		} else {
  			for (plane_index = 0; plane_index < context->stream_status[stream_index].plane_count; plane_index++) {
@@ -1105,7 +2028,7 @@ index 55014c152116..7e3d506bb79b 100644
  
  				if (disp_cfg_plane_location < 0)
  					disp_cfg_plane_location = dml_dispcfg->num_planes++;
-@@ -1024,7 +1026,7 @@ bool dml21_map_dc_state_into_dml_display_cfg(const struct dc *in_dc, struct dc_s
+@@ -1048,7 +1050,7 @@ bool dml21_map_dc_state_into_dml_display_cfg(const struct dc *in_dc, struct dc_s
  				populate_dml21_plane_config_from_plane_state(dml_ctx, &dml_dispcfg->plane_descriptors[disp_cfg_plane_location], context->stream_status[stream_index].plane_states[plane_index], context, stream_index);
  				dml_dispcfg->plane_descriptors[disp_cfg_plane_location].stream_index = disp_cfg_stream_location;
  
@@ -1115,7 +2038,7 @@ index 55014c152116..7e3d506bb79b 100644
  
  				/* apply forced pstate policy */
 diff --git a/drivers/gpu/drm/amd/display/dc/link/link_dpms.c b/drivers/gpu/drm/amd/display/dc/link/link_dpms.c
-index c4e03482ba9a..aa2800129767 100644
+index ec7de9c01fab..e95ec72b4096 100644
 --- a/drivers/gpu/drm/amd/display/dc/link/link_dpms.c
 +++ b/drivers/gpu/drm/amd/display/dc/link/link_dpms.c
 @@ -148,6 +148,7 @@ void link_blank_dp_stream(struct dc_link *link, bool hw_init)
@@ -1148,7 +2071,7 @@ index c4e03482ba9a..aa2800129767 100644
  	}
  
 diff --git a/drivers/gpu/drm/xe/regs/xe_gt_regs.h b/drivers/gpu/drm/xe/regs/xe_gt_regs.h
-index 5404de2aea54..c160b015d178 100644
+index d0ea8a55fd9c..ab95d3545a72 100644
 --- a/drivers/gpu/drm/xe/regs/xe_gt_regs.h
 +++ b/drivers/gpu/drm/xe/regs/xe_gt_regs.h
 @@ -157,6 +157,7 @@
@@ -1160,10 +2083,10 @@ index 5404de2aea54..c160b015d178 100644
  
  #define COMMON_SLICE_CHICKEN3				XE_REG(0x7304, XE_REG_OPTION_MASKED)
 diff --git a/drivers/gpu/drm/xe/xe_lrc.c b/drivers/gpu/drm/xe/xe_lrc.c
-index 2d4e38b3bab1..ce6d2167b94a 100644
+index 2a953c4f7d5d..5d7629bb6b8d 100644
 --- a/drivers/gpu/drm/xe/xe_lrc.c
 +++ b/drivers/gpu/drm/xe/xe_lrc.c
-@@ -874,7 +874,7 @@ static void *empty_lrc_data(struct xe_hw_engine *hwe)
+@@ -864,7 +864,7 @@ static void *empty_lrc_data(struct xe_hw_engine *hwe)
  
  static void xe_lrc_set_ppgtt(struct xe_lrc *lrc, struct xe_vm *vm)
  {
@@ -1172,7 +2095,7 @@ index 2d4e38b3bab1..ce6d2167b94a 100644
  
  	xe_lrc_write_ctx_reg(lrc, CTX_PDP0_UDW, upper_32_bits(desc));
  	xe_lrc_write_ctx_reg(lrc, CTX_PDP0_LDW, lower_32_bits(desc));
-@@ -905,6 +905,7 @@ static int xe_lrc_init(struct xe_lrc *lrc, struct xe_hw_engine *hwe,
+@@ -895,6 +895,7 @@ static int xe_lrc_init(struct xe_lrc *lrc, struct xe_hw_engine *hwe,
  	int err;
  
  	kref_init(&lrc->refcount);
@@ -1180,7 +2103,7 @@ index 2d4e38b3bab1..ce6d2167b94a 100644
  	lrc->flags = 0;
  	lrc_size = ring_size + xe_gt_lrc_size(gt, hwe->class);
  	if (xe_gt_has_indirect_ring_state(gt))
-@@ -923,7 +924,6 @@ static int xe_lrc_init(struct xe_lrc *lrc, struct xe_hw_engine *hwe,
+@@ -913,7 +914,6 @@ static int xe_lrc_init(struct xe_lrc *lrc, struct xe_hw_engine *hwe,
  		return PTR_ERR(lrc->bo);
  
  	lrc->size = lrc_size;
@@ -1204,10 +2127,10 @@ index 71ecb453f811..cd38586ae989 100644
  	/** @flags: LRC flags */
  #define XE_LRC_FLAG_INDIRECT_RING_STATE		0x1
 diff --git a/drivers/gpu/drm/xe/xe_wa.c b/drivers/gpu/drm/xe/xe_wa.c
-index 0a1905f8d380..aea6034a8107 100644
+index 65bfb2f894d0..56257430b364 100644
 --- a/drivers/gpu/drm/xe/xe_wa.c
 +++ b/drivers/gpu/drm/xe/xe_wa.c
-@@ -783,6 +783,10 @@ static const struct xe_rtp_entry_sr lrc_was[] = {
+@@ -801,6 +801,10 @@ static const struct xe_rtp_entry_sr lrc_was[] = {
  	  XE_RTP_RULES(GRAPHICS_VERSION(2001), ENGINE_CLASS(RENDER)),
  	  XE_RTP_ACTIONS(SET(CHICKEN_RASTER_1, DIS_CLIP_NEGATIVE_BOUNDING_BOX))
  	},
@@ -1218,8 +2141,31 @@ index 0a1905f8d380..aea6034a8107 100644
  
  	/* Xe3_LPG */
  	{ XE_RTP_NAME("14021490052"),
+diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
+index a02969fd5068..08acc707938d 100644
+--- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
++++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
+@@ -83,6 +83,9 @@ static int amd_sfh_hid_client_deinit(struct amd_mp2_dev *privdata)
+ 		case ALS_IDX:
+ 			privdata->dev_en.is_als_present = false;
+ 			break;
++		case SRA_IDX:
++			privdata->dev_en.is_sra_present = false;
++			break;
+ 		}
+ 
+ 		if (cl_data->sensor_sts[i] == SENSOR_ENABLED) {
+@@ -235,6 +238,8 @@ static int amd_sfh1_1_hid_client_init(struct amd_mp2_dev *privdata)
+ cleanup:
+ 	amd_sfh_hid_client_deinit(privdata);
+ 	for (i = 0; i < cl_data->num_hid_devices; i++) {
++		if (cl_data->sensor_idx[i] == SRA_IDX)
++			continue;
+ 		devm_kfree(dev, cl_data->feature_report[i]);
+ 		devm_kfree(dev, in_data->input_report[i]);
+ 		devm_kfree(dev, cl_data->report_descr[i]);
 diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 92baa34f42f2..c6424f625948 100644
+index 288a2b864cc4..1062731315a2 100644
 --- a/drivers/hid/hid-ids.h
 +++ b/drivers/hid/hid-ids.h
 @@ -41,6 +41,10 @@
@@ -1246,11 +2192,72 @@ index 5d7a418ccdbe..73979643315b 100644
  	{ HID_USB_DEVICE(USB_VENDOR_ID_AFATECH, USB_DEVICE_ID_AFATECH_AF9016), HID_QUIRK_FULLSPEED_INTERVAL },
  	{ HID_USB_DEVICE(USB_VENDOR_ID_AIREN, USB_DEVICE_ID_AIREN_SLIMPLUS), HID_QUIRK_NOGET },
  	{ HID_USB_DEVICE(USB_VENDOR_ID_AKAI_09E8, USB_DEVICE_ID_AKAI_09E8_MIDIMIX), HID_QUIRK_NO_INIT_REPORTS },
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 3a2804a98203..6e59b2c4c39b 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -273,6 +273,8 @@ int iommu_device_register(struct iommu_device *iommu,
+ 		err = bus_iommu_probe(iommu_buses[i]);
+ 	if (err)
+ 		iommu_device_unregister(iommu);
++	else
++		WRITE_ONCE(iommu->ready, true);
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(iommu_device_register);
+@@ -2801,31 +2803,39 @@ bool iommu_default_passthrough(void)
+ }
+ EXPORT_SYMBOL_GPL(iommu_default_passthrough);
+ 
+-const struct iommu_ops *iommu_ops_from_fwnode(const struct fwnode_handle *fwnode)
++static const struct iommu_device *iommu_from_fwnode(const struct fwnode_handle *fwnode)
+ {
+-	const struct iommu_ops *ops = NULL;
+-	struct iommu_device *iommu;
++	const struct iommu_device *iommu, *ret = NULL;
+ 
+ 	spin_lock(&iommu_device_lock);
+ 	list_for_each_entry(iommu, &iommu_device_list, list)
+ 		if (iommu->fwnode == fwnode) {
+-			ops = iommu->ops;
++			ret = iommu;
+ 			break;
+ 		}
+ 	spin_unlock(&iommu_device_lock);
+-	return ops;
++	return ret;
++}
++
++const struct iommu_ops *iommu_ops_from_fwnode(const struct fwnode_handle *fwnode)
++{
++	const struct iommu_device *iommu = iommu_from_fwnode(fwnode);
++
++	return iommu ? iommu->ops : NULL;
+ }
+ 
+ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode)
+ {
+-	const struct iommu_ops *ops = iommu_ops_from_fwnode(iommu_fwnode);
++	const struct iommu_device *iommu = iommu_from_fwnode(iommu_fwnode);
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 
+-	if (!ops)
++	if (!iommu)
+ 		return driver_deferred_probe_check_state(dev);
++	if (!dev->iommu && !READ_ONCE(iommu->ready))
++		return -EPROBE_DEFER;
+ 
+ 	if (fwspec)
+-		return ops == iommu_fwspec_ops(fwspec) ? 0 : -EINVAL;
++		return iommu->ops == iommu_fwspec_ops(fwspec) ? 0 : -EINVAL;
+ 
+ 	if (!dev_iommu_get(dev))
+ 		return -ENOMEM;
 diff --git a/drivers/net/can/kvaser_pciefd.c b/drivers/net/can/kvaser_pciefd.c
-index 020e5897812f..3cf100780599 100644
+index 4f177ca1b998..efc40125593d 100644
 --- a/drivers/net/can/kvaser_pciefd.c
 +++ b/drivers/net/can/kvaser_pciefd.c
-@@ -1670,24 +1670,28 @@ static int kvaser_pciefd_read_buffer(struct kvaser_pciefd *pcie, int dma_buf)
+@@ -1673,24 +1673,28 @@ static int kvaser_pciefd_read_buffer(struct kvaser_pciefd *pcie, int dma_buf)
  	return res;
  }
  
@@ -1285,7 +2292,7 @@ index 020e5897812f..3cf100780599 100644
  }
  
  static void kvaser_pciefd_transmit_irq(struct kvaser_pciefd_can *can)
-@@ -1715,29 +1719,22 @@ static irqreturn_t kvaser_pciefd_irq_handler(int irq, void *dev)
+@@ -1718,29 +1722,22 @@ static irqreturn_t kvaser_pciefd_irq_handler(int irq, void *dev)
  	struct kvaser_pciefd *pcie = (struct kvaser_pciefd *)dev;
  	const struct kvaser_pciefd_irq_mask *irq_mask = pcie->driver_data->irq_mask;
  	u32 pci_irq = ioread32(KVASER_PCIEFD_PCI_IRQ_ADDR(pcie));
@@ -1319,7 +2326,7 @@ index 020e5897812f..3cf100780599 100644
  
  	return IRQ_HANDLED;
  }
-@@ -1757,13 +1754,22 @@ static void kvaser_pciefd_teardown_can_ctrls(struct kvaser_pciefd *pcie)
+@@ -1760,13 +1757,22 @@ static void kvaser_pciefd_teardown_can_ctrls(struct kvaser_pciefd *pcie)
  	}
  }
  
@@ -1343,7 +2350,7 @@ index 020e5897812f..3cf100780599 100644
  
  	pcie = devm_kzalloc(&pdev->dev, sizeof(*pcie), GFP_KERNEL);
  	if (!pcie)
-@@ -1829,8 +1835,7 @@ static int kvaser_pciefd_probe(struct pci_dev *pdev,
+@@ -1832,8 +1838,7 @@ static int kvaser_pciefd_probe(struct pci_dev *pdev,
  		  KVASER_PCIEFD_SRB_ADDR(pcie) + KVASER_PCIEFD_SRB_IEN_REG);
  
  	/* Enable PCI interrupts */
@@ -1353,7 +2360,7 @@ index 020e5897812f..3cf100780599 100644
  	/* Ready the DMA buffers */
  	iowrite32(KVASER_PCIEFD_SRB_CMD_RDB0,
  		  KVASER_PCIEFD_SRB_ADDR(pcie) + KVASER_PCIEFD_SRB_CMD_REG);
-@@ -1844,8 +1849,7 @@ static int kvaser_pciefd_probe(struct pci_dev *pdev,
+@@ -1847,8 +1852,7 @@ static int kvaser_pciefd_probe(struct pci_dev *pdev,
  	return 0;
  
  err_free_irq:
@@ -1363,7 +2370,7 @@ index 020e5897812f..3cf100780599 100644
  	free_irq(pcie->pci->irq, pcie);
  
  err_pci_free_irq_vectors:
-@@ -1868,35 +1872,26 @@ static int kvaser_pciefd_probe(struct pci_dev *pdev,
+@@ -1871,35 +1875,26 @@ static int kvaser_pciefd_probe(struct pci_dev *pdev,
  	return ret;
  }
  
@@ -1412,10 +2419,10 @@ index 020e5897812f..3cf100780599 100644
  	pci_release_regions(pdev);
  	pci_disable_device(pdev);
 diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index a21e7c0afbfd..61788a43cb86 100644
+index cac67babe455..114110740716 100644
 --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
 +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2699,7 +2699,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
+@@ -2775,7 +2775,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
  							port->slave.mac_addr);
  			if (!is_valid_ether_addr(port->slave.mac_addr)) {
  				eth_random_addr(port->slave.mac_addr);
@@ -1424,11 +2431,112 @@ index a21e7c0afbfd..61788a43cb86 100644
  			}
  		}
  
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index a27149e37a98..8863c9fcb4aa 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2059,7 +2059,21 @@ static bool nvme_update_disk_info(struct nvme_ns *ns, struct nvme_id_ns *id,
+ 		if (id->nsfeat & NVME_NS_FEAT_ATOMICS && id->nawupf)
+ 			atomic_bs = (1 + le16_to_cpu(id->nawupf)) * bs;
+ 		else
+-			atomic_bs = (1 + ns->ctrl->subsys->awupf) * bs;
++			atomic_bs = (1 + ns->ctrl->awupf) * bs;
++
++		/*
++		 * Set subsystem atomic bs.
++		 */
++		if (ns->ctrl->subsys->atomic_bs) {
++			if (atomic_bs != ns->ctrl->subsys->atomic_bs) {
++				dev_err_ratelimited(ns->ctrl->device,
++					"%s: Inconsistent Atomic Write Size, Namespace will not be added: Subsystem=%d bytes, Controller/Namespace=%d bytes\n",
++					ns->disk ? ns->disk->disk_name : "?",
++					ns->ctrl->subsys->atomic_bs,
++					atomic_bs);
++			}
++		} else
++			ns->ctrl->subsys->atomic_bs = atomic_bs;
+ 
+ 		nvme_update_atomic_write_disk_info(ns, id, lim, bs, atomic_bs);
+ 	}
+@@ -2201,6 +2215,17 @@ static int nvme_update_ns_info_block(struct nvme_ns *ns,
+ 	nvme_set_chunk_sectors(ns, id, &lim);
+ 	if (!nvme_update_disk_info(ns, id, &lim))
+ 		capacity = 0;
++
++	/*
++	 * Validate the max atomic write size fits within the subsystem's
++	 * atomic write capabilities.
++	 */
++	if (lim.atomic_write_hw_max > ns->ctrl->subsys->atomic_bs) {
++		blk_mq_unfreeze_queue(ns->disk->queue, memflags);
++		ret = -ENXIO;
++		goto out;
++	}
++
+ 	nvme_config_discard(ns, &lim);
+ 	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
+ 	    ns->head->ids.csi == NVME_CSI_ZNS)
+@@ -3031,7 +3056,6 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 		kfree(subsys);
+ 		return -EINVAL;
+ 	}
+-	subsys->awupf = le16_to_cpu(id->awupf);
+ 	nvme_mpath_default_iopolicy(subsys);
+ 
+ 	subsys->dev.class = &nvme_subsys_class;
+@@ -3441,7 +3465,7 @@ static int nvme_init_identify(struct nvme_ctrl *ctrl)
+ 		dev_pm_qos_expose_latency_tolerance(ctrl->device);
+ 	else if (!ctrl->apst_enabled && prev_apst_enabled)
+ 		dev_pm_qos_hide_latency_tolerance(ctrl->device);
+-
++	ctrl->awupf = le16_to_cpu(id->awupf);
+ out_free:
+ 	kfree(id);
+ 	return ret;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index f39823cde62c..ac17e650327f 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -638,7 +638,8 @@ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
+ 
+ 	blk_set_stacking_limits(&lim);
+ 	lim.dma_alignment = 3;
+-	lim.features |= BLK_FEAT_IO_STAT | BLK_FEAT_NOWAIT | BLK_FEAT_POLL;
++	lim.features |= BLK_FEAT_IO_STAT | BLK_FEAT_NOWAIT |
++		BLK_FEAT_POLL | BLK_FEAT_ATOMIC_WRITES;
+ 	if (head->ids.csi == NVME_CSI_ZNS)
+ 		lim.features |= BLK_FEAT_ZONED;
+ 
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 7be92d07430e..3804f91b1942 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -410,6 +410,7 @@ struct nvme_ctrl {
+ 
+ 	enum nvme_ctrl_type cntrltype;
+ 	enum nvme_dctype dctype;
++	u16 awupf; /* 0's based value. */
+ };
+ 
+ static inline enum nvme_ctrl_state nvme_ctrl_state(struct nvme_ctrl *ctrl)
+@@ -442,11 +443,11 @@ struct nvme_subsystem {
+ 	u8			cmic;
+ 	enum nvme_subsys_type	subtype;
+ 	u16			vendor_id;
+-	u16			awupf;	/* 0's based awupf value. */
+ 	struct ida		ns_ida;
+ #ifdef CONFIG_NVME_MULTIPATH
+ 	enum nvme_iopolicy	iopolicy;
+ #endif
++	u32			atomic_bs;
+ };
+ 
+ /*
 diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index cd8a10f6accf..37fd1a8ace12 100644
+index abd097eba662..28f560f86e91 100644
 --- a/drivers/nvme/host/pci.c
 +++ b/drivers/nvme/host/pci.c
-@@ -3701,6 +3701,8 @@ static const struct pci_device_id nvme_id_table[] = {
+@@ -3742,6 +3742,8 @@ static const struct pci_device_id nvme_id_table[] = {
  		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
  	{ PCI_DEVICE(0x1e49, 0x0041),   /* ZHITAI TiPro7000 NVMe SSD */
  		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
@@ -1437,8 +2545,43 @@ index cd8a10f6accf..37fd1a8ace12 100644
  	{ PCI_DEVICE(0xc0a9, 0x540a),   /* Crucial P2 */
  		.driver_data = NVME_QUIRK_BOGUS_NID, },
  	{ PCI_DEVICE(0x1d97, 0x2263), /* Lexar NM610 */
+diff --git a/drivers/nvme/target/pci-epf.c b/drivers/nvme/target/pci-epf.c
+index fbc167f47d8a..17c0e5ee731a 100644
+--- a/drivers/nvme/target/pci-epf.c
++++ b/drivers/nvme/target/pci-epf.c
+@@ -596,9 +596,6 @@ static bool nvmet_pci_epf_should_raise_irq(struct nvmet_pci_epf_ctrl *ctrl,
+ 	struct nvmet_pci_epf_irq_vector *iv = cq->iv;
+ 	bool ret;
+ 
+-	if (!test_bit(NVMET_PCI_EPF_Q_IRQ_ENABLED, &cq->flags))
+-		return false;
+-
+ 	/* IRQ coalescing for the admin queue is not allowed. */
+ 	if (!cq->qid)
+ 		return true;
+@@ -625,7 +622,8 @@ static void nvmet_pci_epf_raise_irq(struct nvmet_pci_epf_ctrl *ctrl,
+ 	struct pci_epf *epf = nvme_epf->epf;
+ 	int ret = 0;
+ 
+-	if (!test_bit(NVMET_PCI_EPF_Q_LIVE, &cq->flags))
++	if (!test_bit(NVMET_PCI_EPF_Q_LIVE, &cq->flags) ||
++	    !test_bit(NVMET_PCI_EPF_Q_IRQ_ENABLED, &cq->flags))
+ 		return;
+ 
+ 	mutex_lock(&ctrl->irq_lock);
+@@ -656,7 +654,9 @@ static void nvmet_pci_epf_raise_irq(struct nvmet_pci_epf_ctrl *ctrl,
+ 	}
+ 
+ 	if (ret)
+-		dev_err(ctrl->dev, "Failed to raise IRQ (err=%d)\n", ret);
++		dev_err_ratelimited(ctrl->dev,
++				    "CQ[%u]: Failed to raise IRQ (err=%d)\n",
++				    cq->qid, ret);
+ 
+ unlock:
+ 	mutex_unlock(&ctrl->irq_lock);
 diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index 30506c43776f..ff17e0f95fbb 100644
+index ef959e66db7c..0ba0f545b118 100644
 --- a/drivers/perf/arm-cmn.c
 +++ b/drivers/perf/arm-cmn.c
 @@ -727,8 +727,8 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
@@ -1488,10 +2631,10 @@ index 30506c43776f..ff17e0f95fbb 100644
  };
  MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
 diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index dc6e01dff5c7..9b99fdd43f5f 100644
+index 920abf6fa9bd..28a4235bfd5f 100644
 --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
 +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@ -328,6 +328,8 @@ static const struct ropll_config ropll_tmds_cfg[] = {
+@@ -325,6 +325,8 @@ static const struct ropll_config ropll_tmds_cfg[] = {
  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
  	{ 650000, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
@@ -1533,7 +2676,7 @@ index cb5454fbe2c8..b505d89860b4 100644
  }
  
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index ae992ac1ab4a..6d5300c54a42 100644
+index a0eae24ca9e6..162809140f68 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
 @@ -17,13 +17,13 @@
@@ -1610,7 +2753,7 @@ index ae992ac1ab4a..6d5300c54a42 100644
  };
  
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index dea40da86755..0528af4ed8d6 100644
+index 2ff38ca9ddb4..d0376ee1f8ce 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
 @@ -232,6 +232,7 @@ enum tpacpi_hkey_event_t {
@@ -1621,7 +2764,7 @@ index dea40da86755..0528af4ed8d6 100644
  	TP_HKEY_EV_ALARM_SENSOR_HOT	= 0x6021, /* sensor too hot */
  	TP_HKEY_EV_ALARM_SENSOR_XHOT	= 0x6022, /* sensor critically hot */
  	TP_HKEY_EV_THM_TABLE_CHANGED	= 0x6030, /* windows; thermal table changed */
-@@ -3778,6 +3779,10 @@ static bool hotkey_notify_6xxx(const u32 hkey, bool *send_acpi_ev)
+@@ -3780,6 +3781,10 @@ static bool hotkey_notify_6xxx(const u32 hkey, bool *send_acpi_ev)
  		pr_alert("THERMAL EMERGENCY: battery is extremely hot!\n");
  		/* recommended action: immediate sleep/hibernate */
  		break;
@@ -1632,7 +2775,7 @@ index dea40da86755..0528af4ed8d6 100644
  	case TP_HKEY_EV_ALARM_SENSOR_HOT:
  		pr_crit("THERMAL ALARM: a sensor reports something is too hot!\n");
  		/* recommended action: warn user through gui, that */
-@@ -11472,6 +11477,8 @@ static int __must_check __init get_thinkpad_model_data(
+@@ -11481,6 +11486,8 @@ static int __must_check __init get_thinkpad_model_data(
  		tp->vendor = PCI_VENDOR_ID_IBM;
  	else if (dmi_name_in_vendors("LENOVO"))
  		tp->vendor = PCI_VENDOR_ID_LENOVO;
@@ -1642,7 +2785,7 @@ index dea40da86755..0528af4ed8d6 100644
  		return 0;
  
 diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
-index 2ee6755b43f5..3019f57e6584 100644
+index fcbe864c9b7d..4b070377e3d1 100644
 --- a/drivers/spi/spi-sun4i.c
 +++ b/drivers/spi/spi-sun4i.c
 @@ -264,6 +264,9 @@ static int sun4i_spi_transfer_one(struct spi_controller *host,
@@ -1665,7 +2808,7 @@ index 2ee6755b43f5..3019f57e6584 100644
  	return 0;
  
 diff --git a/fs/coredump.c b/fs/coredump.c
-index 2b8c36c9660c..64894ba6efca 100644
+index 4ebec51fe4f2..d56f5421e62c 100644
 --- a/fs/coredump.c
 +++ b/fs/coredump.c
 @@ -43,6 +43,8 @@
@@ -1796,10 +2939,10 @@ index 2b8c36c9660c..64894ba6efca 100644
  			retval = call_usermodehelper_exec(sub_info,
  							  UMH_WAIT_EXEC);
 diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 03ecc7765615..4503758e9594 100644
+index 3b0918ade53c..a10d39150abc 100644
 --- a/fs/nfs/client.c
 +++ b/fs/nfs/client.c
-@@ -1096,6 +1096,8 @@ struct nfs_server *nfs_create_server(struct fs_context *fc)
+@@ -1100,6 +1100,8 @@ struct nfs_server *nfs_create_server(struct fs_context *fc)
  		if (server->namelen == 0 || server->namelen > NFS2_MAXNAMLEN)
  			server->namelen = NFS2_MAXNAMLEN;
  	}
@@ -1809,10 +2952,10 @@ index 03ecc7765615..4503758e9594 100644
  	if (!(fattr->valid & NFS_ATTR_FATTR)) {
  		error = ctx->nfs_mod->rpc_ops->getattr(server, ctx->mntfh,
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 492cffd9d3d8..f9f4a92f63e9 100644
+index 2b04038b0e40..34f3471ce813 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -2690,6 +2690,18 @@ nfs_unblock_rename(struct rpc_task *task, struct nfs_renamedata *data)
+@@ -2678,6 +2678,18 @@ nfs_unblock_rename(struct rpc_task *task, struct nfs_renamedata *data)
  	unblock_revalidate(new_dentry);
  }
  
@@ -1831,7 +2974,7 @@ index 492cffd9d3d8..f9f4a92f63e9 100644
  /*
   * RENAME
   * FIXME: Some nfsds, like the Linux user space nfsd, may generate a
-@@ -2777,7 +2789,8 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+@@ -2765,7 +2777,8 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
  
  	}
  
@@ -2000,11 +3143,31 @@ index 77e6e195d1d6..76e41805b92d 100644
  };
  
  extern unsigned int core_file_note_size_limit;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 87cbe47b323e..0ba67935f530 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -735,6 +735,7 @@ struct iommu_domain_ops {
+  * @dev: struct device for sysfs handling
+  * @singleton_group: Used internally for drivers that have only one group
+  * @max_pasids: number of supported PASIDs
++ * @ready: set once iommu_device_register() has completed successfully
+  */
+ struct iommu_device {
+ 	struct list_head list;
+@@ -743,6 +744,7 @@ struct iommu_device {
+ 	struct device *dev;
+ 	struct iommu_group *singleton_group;
+ 	u32 max_pasids;
++	bool ready;
+ };
+ 
+ /**
 diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 81ab18658d72..2cff5cafbaa7 100644
+index 108862d81b57..8baaad2dfbe4 100644
 --- a/include/linux/nfs_fs_sb.h
 +++ b/include/linux/nfs_fs_sb.h
-@@ -211,6 +211,15 @@ struct nfs_server {
+@@ -210,6 +210,15 @@ struct nfs_server {
  	char			*fscache_uniq;	/* Uniquifier (or NULL) */
  #endif
  
@@ -2020,7 +3183,7 @@ index 81ab18658d72..2cff5cafbaa7 100644
  	u32			pnfs_blksize;	/* layout_blksize attr */
  #if IS_ENABLED(CONFIG_NFS_V4)
  	u32			attr_bitmask[3];/* V4 bitmask representing the set
-@@ -234,9 +243,6 @@ struct nfs_server {
+@@ -233,9 +242,6 @@ struct nfs_server {
  	u32			acl_bitmask;	/* V4 bitmask representing the ACEs
  						   that are supported on this
  						   filesystem */
@@ -2030,6 +3193,22 @@ index 81ab18658d72..2cff5cafbaa7 100644
  	struct pnfs_layoutdriver_type  *pnfs_curr_ld; /* Active layout driver */
  	struct rpc_wait_queue	roc_rpcwaitq;
  	void			*pnfs_ld_data;	/* per mount point data */
+diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
+index d7762ef5949a..39278737bb68 100644
+--- a/kernel/module/Kconfig
++++ b/kernel/module/Kconfig
+@@ -192,6 +192,11 @@ config GENDWARFKSYMS
+ 	depends on !DEBUG_INFO_REDUCED && !DEBUG_INFO_SPLIT
+ 	# Requires ELF object files.
+ 	depends on !LTO
++	# To avoid conflicts with the discarded __gendwarfksyms_ptr symbols on
++	# X86, requires pahole before commit 47dcb534e253 ("btf_encoder: Stop
++	# indexing symbols for VARs") or after commit 9810758003ce ("btf_encoder:
++	# Verify 0 address DWARF variables are in ELF section").
++	depends on !X86 || !DEBUG_INFO_BTF || PAHOLE_VERSION < 128 || PAHOLE_VERSION > 129
+ 	help
+ 	  Calculate symbol versions from DWARF debugging information using
+ 	  gendwarfksyms. Requires DEBUG_INFO to be enabled.
 diff --git a/net/sched/sch_hfsc.c b/net/sched/sch_hfsc.c
 index 7986145a527c..5a7745170e84 100644
 --- a/net/sched/sch_hfsc.c
@@ -2065,10 +3244,10 @@ index 7986145a527c..5a7745170e84 100644
  			init_ed(cl, len);
  		if (cl->cl_flags & HFSC_FSC)
 diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 13ffc9a6555f..dce568091200 100644
+index 9e5c36ad8f52..3f09ceac08ad 100644
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -6813,7 +6813,10 @@ static void alc256_fixup_chromebook(struct hda_codec *codec,
+@@ -6811,7 +6811,10 @@ static void alc256_fixup_chromebook(struct hda_codec *codec,
  
  	switch (action) {
  	case HDA_FIXUP_ACT_PRE_PROBE:
