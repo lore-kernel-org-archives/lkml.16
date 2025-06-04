@@ -1,131 +1,211 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2078.outbound.protection.outlook.com [40.107.236.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904401DE4E0;
-	Wed,  4 Jun 2025 02:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749003719; cv=none; b=PQelFu9+p9qggfwRp6j1fcegsRV5JukrAGZ/qGmooFs7DXWAX9SVbs1cP2f33KArSGyYbCttTTLLSxV7f8zvWqOpFjTs6GzPZ1rnAwsot4UVaRn0xM3iAlxiu2/puoIp4agEgH7yaXfqEd9ymT3szgtDglXY9fXIDPm02Gb2UaQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749003719; c=relaxed/simple;
-	bh=ctqXTNBZgtcIpZpzjMEuvc2QTfu0aH4V1HJ8hp1WPaM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nqw07vdJyc8QGzckto0Bn2P9TAyFuNh4mNFpSafOEzeQMm+IJQj56Zb3tN30dxNHMGPVp3x8j8JTCOBuZwqGWsZs8ZdeyQOK53vHcdpensC8is4yCREWptSZdRmqF0L4+jGtIJ3bTy0vTIxmiuKO/+Ux3//SFio3/ivj1kJzg/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bBrtl0Y7JzYQvQC;
-	Wed,  4 Jun 2025 10:21:51 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 1D7CA1A11BA;
-	Wed,  4 Jun 2025 10:21:50 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl+nrT9oedfBOQ--.14997S13;
-	Wed, 04 Jun 2025 10:21:49 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hch@lst.de,
-	tytso@mit.edu,
-	djwong@kernel.org,
-	john.g.garry@oracle.com,
-	bmarzins@redhat.com,
-	chaitanyak@nvidia.com,
-	shinichiro.kawasaki@wdc.com,
-	brauner@kernel.org,
-	martin.petersen@oracle.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH 09/10] block: add FALLOC_FL_WRITE_ZEROES support
-Date: Wed,  4 Jun 2025 10:08:49 +0800
-Message-ID: <20250604020850.1304633-10-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
-References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360F03BB48;
+	Wed,  4 Jun 2025 02:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749003908; cv=fail; b=GEvdARqkmDH0raKStDFeqNjIxWVLbfiAyUvg7CTtMdsT3SNfT4SUovRIvsE2839T/D7VAm+RmbABVRVnQxoHNSFx5AKXOh81qwKMeDAe3HquT8gdWvw4eaO8E/gfxtmUp/vxJ8RJWNY2cHuhsluDUZ1bp8tttMNBdZHoizUhoHY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749003908; c=relaxed/simple;
+	bh=y7bZGM3WYMrEm7EMXOf9BpYF1XNDypdNpuP5kc4H4HQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NQulV4IRkjAY9BPVqvhpvgwB/juo1vnpjPR0chEoQk9g5yigBbiLn2E4i6ey9QefKrKrm9Sc19sqMF2P+XlXnZFMFZcnS4kQz3EoGlbCTDufunIPXyi2oTlIE+4Oij4GsyKmNHQ54j9ax4cG09GNfgo/prZNaTeaeQbb5WBhvzQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R2YrXCJ0; arc=fail smtp.client-ip=40.107.236.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R2YrXCJ0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WlarPxiwcpZL02nKzyCUx4hb+qAQbcaCCNRyGQW7lsFb6/kRzWLIwOn56T5UJHb/qFbiEVQCNV1GFq8nfvlSUc5gI7JroSo47l6Gfc7mAUGGhv1Yy3OscBOMQKHT6Agi2PfKHYHoyjANxAf5bz2WNTNdku55TIzY9M892qPft1meENzp0Xux2Ej8uw+oNsPlvAsZoKRzG/z4uz8R4w9DbpOXlScsc6ta1DKzlYHoFMCb9x5c6qamcdoqsj7RWC6e3IVCf6/SUHnJVVv/lPcbUdeZDWStXts8yLeRmzRVvAINpaRoPGNkQSnUi68F+ZMLSuku0t3nAYQBTQtyJl3j2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e2qosL2msqR3/v+7vc+HOK9aauhYlcU5wVs8F8YlZUg=;
+ b=qQ1F6Kca9I+17IJCdQMJs/MZX3pbowHX3sDqRLZhO2PR5ToIPH/RKYHPS/pFwRXHbvtkFarJkUQaN1TM2shn/aJDx5tRT+bC0XJmfJwuVnmwCBATT1Uz6VJXP6+IK/sikBfjV1Z7AyQR2Ry7Gl+MiV6laR39QmtlQ4MCWHJCfwoUx/+m4zN40genvOGwkOQqxuCAHMDLtbfW3SP7jYiPpmc8HgB3emtNCooLpR/sdUmoTyxHWW9oK4v1Cd6xd6jZFr1T5ci90gOgH9QnSklkwYPib5vTaoX+OKrPa8YljXfgYzAk2hM6rmSCVEZeNpVT+ZGi1An5dvkLPJtcefnRog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e2qosL2msqR3/v+7vc+HOK9aauhYlcU5wVs8F8YlZUg=;
+ b=R2YrXCJ0ZGfJe8JGV2xRmXXx2fu8WWY7SgUQEbJ2MmvSpcl2ygosXSwtQGfK0j36dXVJx0mgP2kyjjBGKP9lyar/RuY8k5Pd02fakjT9Ogc4L1+fcRg5fvGk0iDrTGPQ6WBroUmpPuoq7szMrPiG6x16Q58zpzQVUFL0Ezg1ZPg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18) by
+ SA3PR12MB8023.namprd12.prod.outlook.com (2603:10b6:806:320::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.37; Wed, 4 Jun 2025 02:25:03 +0000
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620]) by DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620%5]) with mapi id 15.20.8792.033; Wed, 4 Jun 2025
+ 02:25:03 +0000
+Message-ID: <25b88913-8d52-4d0f-8906-699544d4abb7@amd.com>
+Date: Tue, 3 Jun 2025 22:25:00 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] i2c: designware: Initialize adapter name only when
+ not set
+To: Randy Dunlap <rdunlap@infradead.org>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>, andi.shyti@kernel.org,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+ mario.limonciello@amd.com, sfr@canb.auug.org.au, linux-next@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, benjamin.chan@amd.com, bin.du@amd.com,
+ gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
+References: <20250603214611.3039787-1-pratap.nirujogi@amd.com>
+ <20250603214611.3039787-2-pratap.nirujogi@amd.com>
+ <0993ec4e-c0cd-4e63-a0b3-3b9db0082279@infradead.org>
+Content-Language: en-GB
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <0993ec4e-c0cd-4e63-a0b3-3b9db0082279@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT4PR01CA0453.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10d::14) To DS0PR12MB6440.namprd12.prod.outlook.com
+ (2603:10b6:8:c8::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl+nrT9oedfBOQ--.14997S13
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zry7Xw4DWw48CryrJFy3twb_yoW8Wr43pF
-	45JFyFgFWFg3s3GF1rCa1kWrn5Za1kJrWrC3yIkr1F9w47Jrn7Kr98WF98tFyDJFyUAw4k
-	X3ya9ryDuF17ArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
-	daVFxhVjvjDU0xZFpf9x0pRiF4iUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|SA3PR12MB8023:EE_
+X-MS-Office365-Filtering-Correlation-Id: cac3b370-ad86-4769-d7bc-08dda30f034c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eUQxQ29ZS0xpUFdrdUVEdCtOS2JEQ3hTZi9EbDhiQ1UxdjdDZmpEajBzMEJV?=
+ =?utf-8?B?dndHb0FhUkhuNlZFYnJ6RFoxTkhJY0E2WVkzVWZUMCtFY3RYK1loUlpNeHpP?=
+ =?utf-8?B?SFN3dGZ6d2FxYmFyLytOS1UrZWNEZ0VaeEw5K0phdHpPRVdNd2JqYW55eEs0?=
+ =?utf-8?B?OUFMU2NYRC9zTWh3aW5qalRVYk54S2VtRFZMQTVRQW02dFVQU2tuclpqS2tj?=
+ =?utf-8?B?K2pRYW5Sdk5uL3dQZEtDc2l1MnRUY01IVVBzQ092bGRVZGcrNmJOREIxUlFl?=
+ =?utf-8?B?UWsxSGU4NjQ0MS84TFM4N1BLcTJnditwRUpWSGlKVHk2bnV0UVhzS1l0ZUU4?=
+ =?utf-8?B?VkQwUE5JNWtlTUUxSWxjbjJUSGVGaFhiaVF5M255VGs1MGdqdCtsbGZheFNt?=
+ =?utf-8?B?TEpuSC92dWxOSUlITTJoYjJNanJYUlRyYmc0UFhqTFkvRW90NHVGSU1nNm1w?=
+ =?utf-8?B?S251dVBJbmljbUxpL2FBRG5UVTU2Ync2STlhWnA1SUtscGlFZitFYlZZUjZ5?=
+ =?utf-8?B?NjN1empBajBPVXQ2WVA3d1dBMHNWS20xZDZGWEUzcVEwTWdUQko2c1RvZTEz?=
+ =?utf-8?B?aVVlU1ZrN0UzZEZlMzJ6OElzci9qdnZ1dVZiZGpHaytUeURPdHBreDhQS1ZY?=
+ =?utf-8?B?UENjS1BCZHFjb3VsOGZlQTVWcndWY1lQTWtBOW5nVktxWFIrZjRnVEU3a0Vw?=
+ =?utf-8?B?bW9VSFRuMlJWN1Y5T1lkUFhFMVE4V3BXdGMvVWhyVFdFcU9yV0kxOFhqdzQ0?=
+ =?utf-8?B?aGVFY1UwWHNVSm1yY091cVFwYVVKWUw5Z0FCU3JCcUtna01kcUhTRC9rbStn?=
+ =?utf-8?B?WWs0alF4UDlWUGxHWkpVYTEyUFdVU3VkYi9HOHZFRnB2ZktMOVJlM0JaeC9H?=
+ =?utf-8?B?eEdzWkJISWw2MUYwcFZUcmlub3dSempCb3F0aWFDMWtMaEZCajVpaEl0Rjdu?=
+ =?utf-8?B?dG1Jb1JHL1k2am1FNmYvV1ExelZOdU0vRFc1YnhkYkJ3Y3JqZWN5RlZCOWNn?=
+ =?utf-8?B?YlRtdWJ4a0tiVXpEMHZuZExUR3U4U0pUKzd5bGJlU092WFJxaHk5cTg0bjN1?=
+ =?utf-8?B?SE9lYWtrVDlJeitHckt0V0REalk1a0xlOFprK3ArcGZWNjVRbDBkR3BWZUJP?=
+ =?utf-8?B?RUcwSEJxR3FzL1UzUUNJMVE3T2dScXFzNWpQUm43b1JWOUd2eG9jWXduQWw5?=
+ =?utf-8?B?MmNiaFBrRWlJc28xVG5uNEhaMFNEd1g1dWY5cVBLZVoxZGdaSFgrN0VUTkcy?=
+ =?utf-8?B?TjMyRjR5cVJXWHgzZDl0SU0zMndUaXJnWTFXanhqNTdMaVFYZzJ4R21HajhV?=
+ =?utf-8?B?VmRaNUpodlBTeEo3bDUyaTRxRFVZYnJwTEcra0FkQ0hPY1BCUHk3bFNvWlI3?=
+ =?utf-8?B?L0h4cGRZTHNlazBFY21KdzBLZ2Qvc3Rwb1NEeG9WdDFhOTgrYVU5RkkxdzNz?=
+ =?utf-8?B?Z1F2S1J3V052N2xRZnZOaHR6bVdrWmRVandyZU1BSm1tQjViVzl2SFltQ0l2?=
+ =?utf-8?B?ak9LVnB2N3cwMWRTaGQreHRTcGdlVXJDTlJXYUdUU09WSnM0eGxZR0hpbHRw?=
+ =?utf-8?B?UWJTZGwwUmpvdC9NTm5BcHZka3YzUmdjSEQ0SCtYUVkwenZEdjVyKy9RZ0Jw?=
+ =?utf-8?B?S1pZOEFJbzQ4aGdIalplS1ZiM1ZCdU84SkNvUTZ2VXpIaDE5TFRvSlJHTlRs?=
+ =?utf-8?B?RHJCQVJQZVlCaUU5cDZRL3ZBWjhoOCthR3NRT01ldG5KT1krSkFzMkZPbktH?=
+ =?utf-8?B?UzBDdlk4aS94Q0pnRnVsMEFSNjFzNXFGR2hURVpSREdFY3lMNkpEK2VvTnZ6?=
+ =?utf-8?B?amVzR3VXNnNSa0lyZmtmYVArd2RsVXRHUU1ES284THNWUUF3TmNBL2NmdkFr?=
+ =?utf-8?B?dGNMa1E0OEc2a3l5VkxkZ3ZKWmhyUTArZlMzSU1md29BN3ZYODJZQmtxTTla?=
+ =?utf-8?Q?UDJW9Zn77LE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6440.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UzcxVzRwcnNzVkdwWkF4WnRpdGsxazY3OXBmNit4Wk9hRXJiK2Jzb2VlalAx?=
+ =?utf-8?B?YUZFSHBheVAvMGU5RndsTmxBQTFmSU5MTTVJLzlqL2VzUkNzNG9CZjkrYW9D?=
+ =?utf-8?B?NnNOZk0zODJIZFhRQjVVczBsWlpwZzJKczFwbXZyY3JEenhHUHk4TFhnYm1Z?=
+ =?utf-8?B?QldCWVBiR2UvYmlNVWUzVkZBMFdva2lmMVRMWEtnNEtjWkVUbU9jeXdmcXA2?=
+ =?utf-8?B?VHhEQ1ozY0J6ZlowSEk1RFI0azFsZU5XdFIxRnVCL1VROXpBSzlrMStUbmhu?=
+ =?utf-8?B?QzNHbnhUOURRTGcxUU1vUDNFYW5uTnFYbWJCQ1JiQzc1a0VMbDBxV0JxeWY5?=
+ =?utf-8?B?MmNKOGJmM1k3WTRDdmpBSi9paGZBS3paYmY4VUluYnFlT0Vtd2lkNWhSa0Jw?=
+ =?utf-8?B?ZGVlYXFuQzlYcUh3T2FiUW9IOUZiUWVZUUdwYlY0UVdsY2RSM09waVo5L3pI?=
+ =?utf-8?B?L2J4Tmd2RWxKRWNwdFlEeWNZQUt4c0Y1SzBMaXRsbEVQa0NRa1JVZm5BVVNs?=
+ =?utf-8?B?SXR6TmVLbWdnZmZKdFhTSEhqdHdXRUhLNUlsNVJ0L25lc1N6QVlMaFVhaWQw?=
+ =?utf-8?B?a3llV28rc0VzOVhxQ2loWHlFSk9VZjBRanljblhTQ2FySW04RnhuL3ZMeitt?=
+ =?utf-8?B?VFpWNGVyeXA1TVZvNGMzNXZOWE1sNGRLKzhLdW1acHJVY0p6RVNDRHVKMXpX?=
+ =?utf-8?B?Rjk3NVNrcFYzSFBqdnVMR1RpN2VnVExpa0VCRmptYmFleWJCR25FaVJIZGEz?=
+ =?utf-8?B?UXlBTEtONEI2MW9CdUcyMFNMM3BYanpmaURKQkJXZTc1ZVFtaU9BZnNoYUFp?=
+ =?utf-8?B?c283SlZWTUZUdGsyQ0ZvVmt4VU5MWUplM1llczg4K29sbkJDZXdaOVhMK1hU?=
+ =?utf-8?B?dHU2dDRvUzdMSXd0blZDQStzallRdXRPMGNqS08yU1VCRGtVRkh5Z05FNThz?=
+ =?utf-8?B?V2d3Mm9UanpJYURYaTlHcm1FZmNXaDdwUnNKeEY1eG9LRXpYSGVhUzFZZzdz?=
+ =?utf-8?B?dTdLaGk3MjQxNXBEZnQ2RnpUMXg0OHVwVW54dHFKZVlTN1U0WDRzZXZJNlhm?=
+ =?utf-8?B?RnA3VjJhYjhhSTdDVnU3NnZJUURqQjlYdk1oUmpzekd5QzlLeHlLa0lEWG5u?=
+ =?utf-8?B?L2xOdVlLNHZnazJraERxUzhPeFo4R0xvTkY1N0pUYjg1V2FoZk15VnJSOXcy?=
+ =?utf-8?B?dlpDcU81V2haWktQNHg3REsvdVdpZ25ZdlZ5bFJIeWRTK3htYng3ZU5qcXIw?=
+ =?utf-8?B?OXJXNzJnSHpYUHp5bnhWOFk3TzZrdHhjcVNpSDV6TEtqVEFiQ0U1U05XNXlS?=
+ =?utf-8?B?cDcyQzN3OUZtM2Erem5HeTJQdkQ0S3pZSWUyTVNFYmF0WlBVbERtYzFORCtl?=
+ =?utf-8?B?bW1IV29NQWxhMy91NzZWRzN5bGMvMDdwZ0hIZy9Wa2wycjZ1cElLTTA3L0Jj?=
+ =?utf-8?B?cTV2V3hOUzlTaUtXVnBoY3RTNitVb0xJVkY0bWxyUmxVazlSS3FlMG45eUtQ?=
+ =?utf-8?B?MGVmakVTSStSc0lySzExUWR5SzhNUlZxa1Y4eFpuY3NaRjMycWhxWWcxS0V6?=
+ =?utf-8?B?S0hTUjlpR0psUFlheE1RRWUrWksvenBJcjBmR0tBVFpVTVlUUUtDS055ZUJX?=
+ =?utf-8?B?U3JWbDhkaWtBSmRlZlJocDVlNFNOb3k1aCtBTnNQNXo4bi9saVlqWjJ5c1NJ?=
+ =?utf-8?B?Z1VpNTExRnovRDU1eEI2Zm4xaGZiSngwTlFFM0xoaU9YZkdvT0JHeW9jbXU5?=
+ =?utf-8?B?SWRqK1R4SmVlYVVwa3BSSml4MVRpSTl6M1ZxVVZMaTFOTE5xUDZOcENpUUVY?=
+ =?utf-8?B?eXErb0M4TCs0djZEcUYrQ3VRN1F0dm5TT3pMSGhwakU2aS90TEUzd2JPNHRx?=
+ =?utf-8?B?V0Ftem1iSFZyUUhCSnRjTmFZSnVsTVF5cE1uN3VtRWpQNk8zUlhkK0hhU3NQ?=
+ =?utf-8?B?RzdTQ1pzemRJR2pyNzJQcGpBU2hzakdtNWNhQkdXVVZ0R0NPSFE4ZzExaVZi?=
+ =?utf-8?B?R3ZhbWdTQnFYTjJrU05GMjFQS1JxazhVRUtEOUt1VWdLVTg0K1pjOEtpYWh6?=
+ =?utf-8?B?R0YrdmQzYjE4NmRiOXp4OGVUc3BycWlWVmdOdzQzeVZRdlZjd2NIOGF5VXJX?=
+ =?utf-8?Q?Vt9a/nuUkLO97ZHM076a/6u1/?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cac3b370-ad86-4769-d7bc-08dda30f034c
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6440.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 02:25:03.4768
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 26TFxoTtoVll4Wd/4LW9enkk5JjhdrnaziymVJqbENqS6ZOyBoPFDJ7kkBm3/ObSEPlmyAyxnT9rkMj3nccoZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8023
 
-From: Zhang Yi <yi.zhang@huawei.com>
 
-Add support for FALLOC_FL_WRITE_ZEROES, if the block device enables the
-unmap write zeroes operation, it will issue a write zeroes command.
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- block/fops.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+On 6/3/2025 6:50 PM, Randy Dunlap wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> 
+> 
+> On 6/3/25 2:40 PM, Pratap Nirujogi wrote:
+>> Check if the adapter name is already set in the driver prior
+>> to initializing with generic name in i2c_dw_probe_master().
+> 
+> That explains what but not why. Commits should also explain
+> why they are doing something.
+> 
+Thanks Randy. I will take care of updating the commit text explaining 
+why this change is needed in the next patch.
 
-diff --git a/block/fops.c b/block/fops.c
-index e1c921549d28..050c16f5974a 100644
---- a/block/fops.c
-+++ b/block/fops.c
-@@ -841,7 +841,7 @@ static ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 
- #define	BLKDEV_FALLOC_FL_SUPPORTED					\
- 		(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |		\
--		 FALLOC_FL_ZERO_RANGE)
-+		 FALLOC_FL_ZERO_RANGE | FALLOC_FL_WRITE_ZEROES)
- 
- static long blkdev_fallocate(struct file *file, int mode, loff_t start,
- 			     loff_t len)
-@@ -856,6 +856,13 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
- 	/* Fail if we don't recognize the flags. */
- 	if (mode & ~BLKDEV_FALLOC_FL_SUPPORTED)
- 		return -EOPNOTSUPP;
-+	/*
-+	 * Don't allow writing zeroes if the device does not enable the
-+	 * unmap write zeroes operation.
-+	 */
-+	if (!bdev_write_zeroes_unmap(bdev) &&
-+	    (mode & FALLOC_FL_WRITE_ZEROES))
-+		return -EOPNOTSUPP;
- 
- 	/* Don't go off the end of the device. */
- 	isize = bdev_nr_bytes(bdev);
-@@ -886,6 +893,9 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
- 	case FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE:
- 		flags = BLKDEV_ZERO_NOFALLBACK;
- 		break;
-+	case FALLOC_FL_WRITE_ZEROES:
-+		flags = 0;
-+		break;
- 	default:
- 		error = -EOPNOTSUPP;
- 		goto fail;
--- 
-2.46.1
+>>
+>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+> 
+> Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Thanks.
+> 
+> 
+>> ---
+>>   drivers/i2c/busses/i2c-designware-master.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
+>> index c5394229b77f..9d7d9e47564a 100644
+>> --- a/drivers/i2c/busses/i2c-designware-master.c
+>> +++ b/drivers/i2c/busses/i2c-designware-master.c
+>> @@ -1042,8 +1042,9 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
+>>        if (ret)
+>>                return ret;
+>>
+>> -     snprintf(adap->name, sizeof(adap->name),
+>> -              "Synopsys DesignWare I2C adapter");
+>> +     if (!adap->name[0])
+>> +             scnprintf(adap->name, sizeof(adap->name),
+>> +                       "Synopsys DesignWare I2C adapter");
+>>        adap->retries = 3;
+>>        adap->algo = &i2c_dw_algo;
+>>        adap->quirks = &i2c_dw_quirks;
+> 
+> --
+> ~Randy
 
