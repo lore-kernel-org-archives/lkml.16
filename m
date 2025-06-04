@@ -1,108 +1,104 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5349819F101;
-	Wed,  4 Jun 2025 09:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50B2169397;
+	Wed,  4 Jun 2025 09:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749028920; cv=none; b=Clyty9lN6dPbS5RV/MEQOhZhPjK4KKSZKUhZChDq2CKa7T031SpQoq2CMzZMClInBbmfDJ9dwKMGpEbT/xBH3ebUyJxuQ+/g0XtxH4hltxZSisa6E9YFJq6+c7Mp1joogUJNSHaAESIXZ0N7qOVEtWGTe8qUEnwH76+fk+RGvBM=
+	t=1749029006; cv=none; b=oZOlsA951cXzo4Ah1UQw3oLSPFsPnm0WXHDpPQixXtd/bphi7zRAVuXm4eEzuVM1mq/nM/9K2RbI87GsfLeNgtRtUEIODXaaUHKOQnel1tdQWU0PkamLzZltBeTeRCoCwuq0MpGzgOyF0asHa/m9oNcn+yezgBi7W4NoUH8Fqpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749028920; c=relaxed/simple;
-	bh=AIZnosm+FLDSBVgzOE5rLeYDMXQml3oDZavBSAeAVkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gZMbB8JGIFMwO2DDEt/lok8E/k9w9yuBCwVKLCgZXFb49jk4FDIK4VCKTNlLm5BqfXkgOsUj9t2Cw/QwraSdkvB37OXH+gZ6dW66vZZNV3WQI3T+DzT9PcIF+9TBJ060VzFsF0GEV1Liz7gXDJm1cdO/BLoBf4OA9uk9OtUptho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J3XQlZ5v; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749029006; c=relaxed/simple;
+	bh=RIYky3gjpTsCWWoJfEf+lc/dCW5mVapm/m/j24bH0IQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qB2GYhmjleqDoLmO8Gx+QJF1E5CG/1qeTlOOHAXUw3E2lEksY19xN5UwtHDreTPxZcRViE234i2CohWis+n28GL/aAhb0t/hIqKwLz0Ovff7BqYL3uq3EOxonbmwkV18j1PcBPyGC42LKZNexdPsS0kflppvSi4s5hPlzQeK2A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=ycher373; arc=none smtp.client-ip=162.62.57.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3XQlZ5v"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747fba9f962so663382b3a.0;
-        Wed, 04 Jun 2025 02:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749028918; x=1749633718; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7VDgfijz38wfqRmFtK4m0Gqr6eDYnbyCuwTRs5UPI5E=;
-        b=J3XQlZ5vHM3kv9oLw4EH+bV08j6jwKmYJ+MPQXUZ45BRYG7YppejOoXBjjm+NdIvFb
-         K4ij3/CM2n7dvdI8OSy9DwOMdCGHssjUlyaezPjjsxKAjl5oMQH/cZgLd/x7uvJCrf+C
-         Wu32EpBPylRNXHEbSyQLpFBK7gzFALeaRDJDVJkJS/CEG8XouzmDQi47ICc/Ljrn8vVD
-         QOA/XyCmm8Vvcb3VblnDJNmJVlI44NT5XSNSj5SGcHx4tCntiaxjfQP99NQ2yX225vQZ
-         h00HBlQE61duG+rXgyuKUIqXr3PPIysqxNUvtUXsdpsIN2vJWU/DLnjpiMy75fVQJ6qZ
-         IIUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749028918; x=1749633718;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7VDgfijz38wfqRmFtK4m0Gqr6eDYnbyCuwTRs5UPI5E=;
-        b=A+gaxpXmrrqTyI62C7LsA+AjlkI8MZDrVSNDA2nZmRJ4M4setieVOZfdstAzkyaWCW
-         lRuDSN9kieFjgM1M2vQYvYwagP+Q8eLreUb7uUleaRdmQCZ3f8oAL4hAbasXz/TbOLeq
-         op5uhZFbZ9jgMLJ7DbNOv5sQVAP7U+AU84DDven6ZGG9uQaOeTNu9wMn5j77WDK/cyZe
-         Fn3E1lYsiQihrduNDbisOKyhBSGfRU9vi8F6n5OuKsYeMeHSHy1cjD05sHbsQORzL3M6
-         MtPrmvSFvD6t/4ld4xcvnmJkcDspUYeM7TJS1aQs0UfHU7nm2+bOyAZfOBVlWajKG/NN
-         +ExQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9J8COsRs5flYY6BWrsfzda33uK4gbhyvr86OQx0NFnxOV0AbvqB3/xms6ab/dpKxdQcPLtN0bNNqafvg=@vger.kernel.org, AJvYcCVkZ7gFcqaw9jNMEgvhuSIwk4DtcFH082Ji1aBL6XbEIbXrQ9GG9DXUbCEZ7uNJhHLxaQTEz5xoxGrF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwL43sqCeVphyMoeZa2EElMlWh49WomfILf/KoDiyl4WsV1RsG
-	5ZzhArf8szUV8YoyXWvddqszJDmtPL92unPN/qhc2MNwYG3ULu8HwaCX
-X-Gm-Gg: ASbGncuWO/vgonfT5IBUY9QoGdzTySJTJsVWJqxGCXmwcUGw7SvRRiu2DvsOjGaKh3O
-	SzRLNXKJbZajjZf4v0Z2eM2Rx3yn7xkHe1ri/FYwPBjoban67Z7sQiebYL1o0K4ZAzImY91K/jz
-	sG/Y8acrH29/JLP76L0ct9MCaZG926aEcx6o9MOyF0EzDjDApWJNupwU+BOijSmhjlbfYC5xGgn
-	P9MwL7joxcA7dhf9ya7DvFrCQ81AOC1aEbNz7ElScVSmGhH0uCeUFcaR4xUwDoe8Y8Qjoq6YJZK
-	Q48UYhOzV5hj4LqtMJ6BuNxRxi4N4+IRvcmhqg==
-X-Google-Smtp-Source: AGHT+IE9lIxZe52g46OWQp8Lw4qB+x9M66i/HCShonwVogndogjTY9y2HrMxF8CUQxE3BdFwz/9X5w==
-X-Received: by 2002:a05:6a00:318e:b0:746:1c67:f6cb with SMTP id d2e1a72fcca58-747fdfc9152mr6296211b3a.5.1749028918431;
-        Wed, 04 Jun 2025 02:21:58 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:6be::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afed34fdsm10722510b3a.75.2025.06.04.02.21.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 02:21:57 -0700 (PDT)
-Date: Wed, 4 Jun 2025 06:21:52 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Hugh Cole-Baker <sigmaris@gmail.com>,
-	Christian Hewitt <christianshewitt@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 2/2] arm64: dts: rockchip: drop PCIe 3v3 always-on and
- boot-on
-Message-ID: <aEAQMHAQU3VgTghK@geday>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="ycher373"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1749028692;
+	bh=RIYky3gjpTsCWWoJfEf+lc/dCW5mVapm/m/j24bH0IQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ycher37324IbzHf505SgsNe0/N4ZdnkYj649dMDb/GhGeWesGIE3SrM/+cZ1q2okb
+	 yoMMu8EXjpW6yYmzZxhOwF48U3a5v616v1tM7AX9TvI4I6ArVWldq/pnj/WxCLLTtR
+	 FlhD+VLFxgrMTYZlAD4Xez5wbXyrcPWL13F9q/lA=
+Received: from [10.56.52.9] ([39.156.73.10])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 30098838; Wed, 04 Jun 2025 17:12:00 +0800
+X-QQ-mid: xmsmtpt1749028320tno68hupx
+Message-ID: <tencent_CC0310590D7085E8B3EC2E1955E45E4B4709@qq.com>
+X-QQ-XMAILINFO: NvKPbWBbh1DVYUNrtUaO4h9Jj+nOhO0LDaL7Td6QvGV4lWUff2j/vEKUwNnLFs
+	 OLHiU8HjtO7X0BTo/mZpmoEGAb9JuMxziyE13yu5EmANI/1w0vmju9epZ/bZzbSXA1flXKOlJCZZ
+	 0xdvAOAB8VyNKr2QluATxTOYVEe1IAEr29eygOc9y2gqvHEs7zbaNV8svwb2YcQomlJh10O1DWLo
+	 PXJrtg35/w2KjVub9G4hXlaaODVaIv5HxLJLIeGw8haZVbKol3pxT1UVrVP9PIE6iW6oGW1DASKk
+	 JglRxN8iFlXFrH408POil0NYTrv4Qls947B0al8UFnJ6xeYWFPfvmK+l6mw3Cl/4BLpWgDOMRt+k
+	 UrYDh0qAZTVf2FDZg6dIj2VABZbbalypmmpKQdY8zk4jeja07vCJfEocQCBNTybGixtgoKvRvcd0
+	 dSUcqfu9AgFxz8oM4ks2OZfJVc/+1YSKiZdZ5oWg4JzNvrD9IgDKripzGOCf2gfOXHhj67JKwtdc
+	 Xvt5qdrp6RIu3qv8q79nDMT9pBldnw+GpvGZd/GLfkykzwt4ZRmcEt2ADl0Bj/tfDN1XajAgi+NF
+	 AsgwcY3cJtX3K3Gh0WXK45o4Zof4kxKsygFeKzZU7NXl28+E4sH5vCLV4aIsOknG4m5D4CDUYdkm
+	 ac+ZcB+WCWf2D8wX5w4fMtWUtYNjW7X5EOQolpYsuNItcckXyWQP4hfCMgfdHYjzdbYS0UlIiByU
+	 buyWQSQCSzDpvNini1IwsOxoHQ0QcHWYCf9zveyqN85O1YLWoGw3uO39Vd/oSSS+IDCnTmE0vPoY
+	 owrNAXU/M0Msa9kRe2HGy9sJT5ME7CAy1QM/JX+1nQtOq0ShztSqPRXhjEkQ1Q9NeYf8YE416HyZ
+	 z06m9cTiKe6VUYzTY0knFb75smemeGwBRoXSxAC2fADTT93GciJy/QFtVo0WJYjvAQga58hOqboM
+	 8qdx5zDNtzNRgK0zCw8mhNrpqwX8kASut9RkRk/ypcFd0xG05u1ALrQq/VzpXCpTMwV84eDOcSsO
+	 PVaspGNOPthDgcgF8X
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-OQ-MSGID: <365843f4-d33d-490d-b567-fe9250577725@foxmail.com>
+Date: Wed, 4 Jun 2025 17:12:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next] selftests/bpf: Fix compile error of
+ bin_attribute::read/write()
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: andrii@kernel.org, eddyz87@gmail.com, rongtao@cestc.cn,
+ Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Shuah Khan <shuah@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Amery Hung <ameryhung@gmail.com>,
+ Juntong Deng <juntong.deng@outlook.com>, Oleg Nesterov <oleg@redhat.com>,
+ "open list:BPF [SELFTESTS] (Test Runners & Infrastructure)"
+ <bpf@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-stm32@st-md-mailman.stormreply.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <tencent_A6502A28AF21A3CA88B106F3421159869708@qq.com>
+ <aEAJbBH00yL2iTgn@krava>
+Content-Language: en-US
+From: Rong Tao <rtoax@foxmail.com>
+In-Reply-To: <aEAJbBH00yL2iTgn@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Example commit of needed dropping of regulator always-on/boot-on
-declarations to make sure quirky devices known to not be working
-on RK3399 are able to enumerate on second try without
-assertion/deassertion of PERST# in-band PCIe reset signal.
 
-One example only, to avoid patch-bomb.
+On 6/4/25 16:53, Jiri Olsa wrote:
+> On Wed, Jun 04, 2025 at 01:53:22PM +0800, Rong Tao wrote:
+>> From: Rong Tao <rongtao@cestc.cn>
+>>
+>> Since commit 97d06802d10a ("sysfs: constify bin_attribute argument of
+>> bin_attribute::read/write()"), make bin_attribute parameter of
+>> bin_attribute::read/write() const.
+> hi,
+> there's already fix for this in bpf/master
+>
+> thanks,
+> jirka
+I am confused, when should I use bpf/master[2] and when should I use
+bpf-next/master[1]? thank you :)
 
----
- arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-index 8ce7cee92af0..d31fd3d34cda 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-@@ -25,8 +25,6 @@ vcc3v3_pcie: regulator-vcc-pcie {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pcie_pwr>;
- 		regulator-name = "vcc3v3_pcie";
--		regulator-always-on;
--		regulator-boot-on;
- 		vin-supply = <&vcc5v0_sys>;
- 	};
- 
--- 
-2.49.0
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
 
