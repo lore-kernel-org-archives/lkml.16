@@ -1,110 +1,96 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59BB2749CF
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 23:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B7979D0;
+	Wed,  4 Jun 2025 23:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749080959; cv=none; b=VsG763PrrwlTH0nSi63Cq+MdRyFrAV5C/oRiNO0dIwhN2t3Vn6kignTe+rOqaw8BGNPsGlfmKFYLE55SDLN1KwxAVUvaQHAG4FsuX/bk90OryyoKqmuLSQiy0aA3ARCnWh97CX5eV+gaMOtn+qa0xhkIZQqDpZMmXtwhJFoGfOk=
+	t=1749081187; cv=none; b=Ya344sxV3YsVId419JbusWBn6fNA8jQKQoL5jcJBD6gOi+kO2BW43vNX95qMOJ9HcC8Qtj6BzkvOPcDBcH0y+t3hsrk5Y5/KUdHq4vb9i/73Vzt72HbFiHgG+FuvhOEazDQVk5+ONK5OZRyeqvBJrsOQoQae7Ve2oxa8lLZ4t1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749080959; c=relaxed/simple;
-	bh=ZESbz4ELnO8zQblI3om9NB+hAW28VwXYgt6cEiXrarg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PkT4+P2piNJtoKxKcl3GfDjpgSj7QB5yucwTNgz2osbiEbwtQS/K8f++N5CTCnKSm66g0TC9/xkP79/jGOKbjJfO4WPPyt6YzIkyue34xcymkN6aJzdX5fEeSYKzEgRIRHjqb+oh4gulxe9MEymTIOaboevmeI92NmqIEFjLFmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eKSlsQB+; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749081187; c=relaxed/simple;
+	bh=uHUGsqf5ZMZXheRER1HD5daqU3HlQsR4EkkzSEZSb8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nokOd89/8h809ONjM7N68gBxTpBdj/fJZ3Y40gZfcwKc64DM2wXwkbbW1fDTY/Gqm0Tvtf3JktwkGdAQrwtOZh7nSlGYmk4m3g8I6i+qeY5SueYvvaf5w+bbNc9V0btTE/RhbzwZps95yzhF0Ij46oTK+Z7Ak8UogA7qRoykVdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3S+JAQ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eKSlsQB+"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d3f72391so4027275e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 16:49:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749080954; x=1749685754; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LXMgX1rI0BiX2paFRHt2ngtjy2dYKyJCurcIJGGVP0I=;
-        b=eKSlsQB+axJ2wBrBCcutB3u/sEifgBhfgzUGAXXMdeQQEVtOpHlVvpd8O0jbeWn7nj
-         oiPgcvs7+si4r3rftBX02Ijlfw6LrW4jkD1rHsgm+BoG/2Jbmu2CJOAezK0/MkzlDLTF
-         ND2HOjbvFzq1krlSILyAn+ByDVinaD5ubP3s8qTludNEpGdVXQTMdpDsVYNZiJ4o+R/l
-         oFT5QmQaG2ggRpjrY1xuc017x6gJ3sr3mxY1qfcRDjMVMrDgltopcruGloUWrPuSNuxm
-         DcsFCV6IuMB+khXbT9ezTn3tk37dktAZMY5NCcqIcCSWsDz0TddBcQtkFeNYwxjPC3Fs
-         P/HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749080954; x=1749685754;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LXMgX1rI0BiX2paFRHt2ngtjy2dYKyJCurcIJGGVP0I=;
-        b=PXj09AFKoWB+a523vrPCLrVRidtrRg/PTpmQv9xQi0LEU9xov5ubprCmBRpFtfku8u
-         tSiL6JVE1/0lbmqgfEPatLep9xaBfMaF07V2id1Ob5hRRYXzFNYFtnXFrkK/BjxGb770
-         QeWhJLZ30S05Lvno0pZrND3fUEnh4YODWfF9OFMXBvpzALbOeYdoX3xReEHCcD/hcUzE
-         1KFCjjt5Klq0GFP0eFn3IoRfcO07XZ676xE5cfe6YAeyiq8yqLA9zNUu75n2z+wF6YLg
-         /oAGR7Xs1/m4u0SgslCc5lIxjeeTdmlwzpy2rK4wetuS28xyIjnSYtw0cp0w0iNbWlGU
-         8xMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxe05Y0hIGtcGUTGmXsNdEdzmVeuPm9EZgskom895lmssGu8b1FK+V14VrsFi2PznMQCM3yaeK35zqPYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx/ci4CsadWMKY5f83eMz0gtBLRtWw4zSz02IMh+IBL0shrSu9
-	wf8LAsYT96fbEmUK/KyoV7Guo4AQEvd/8q9SJxw8J/2cKnp3Uuai5gP6Hp2U/SEc1Y5jWyFKqn3
-	6bHiVBgI=
-X-Gm-Gg: ASbGncv/04Z2Gupm2Xshdx/RTuxTvIAyoWpZ+H3et93uJ85prGDP61acAzjArt/8lV1
-	ydzGjczLYJZYyQ29Vn4RuB1LvD4PlYHWsx8F4K2pMKLnZWgcpywlDnxvdUauzLLMtvF2gE6Con2
-	K4yZBmhi4I9CxpwIC/WvZ5dAYQhj/VJQxo5eRGKlp676KcA+XlRskgU5t6WmbK4Psh+DeOoeqQI
-	PFD8K7mzZb5dqRuU4akqT0rtioVjRRValMCsnHuETanxf0sd1kvCZaDTBmcnRmYF2P+FmpYwcO3
-	8411hAIEaX7na7m0uslRv7QByrjUi5U6LrJ/Qg9PZiaN3QeMYlY5fRJYwHxg5M+ye+Xp3VSKNLG
-	Na0IeW4fbZv0Y9sG3
-X-Google-Smtp-Source: AGHT+IF1mChU7rsrPqSp02CZnJuBIHPZRlYSiml5HbxrDzi778Xa2HmHel+wqN5T3oDjSRgQCq7PnA==
-X-Received: by 2002:a05:600c:3b01:b0:450:cf2e:7c92 with SMTP id 5b1f17b1804b1-451f0b0e796mr46847795e9.16.1749080954166;
-        Wed, 04 Jun 2025 16:49:14 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f9816cdasm5975275e9.13.2025.06.04.16.49.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 16:49:13 -0700 (PDT)
-Message-ID: <bdcc3e48-ceee-45bf-bc4f-f0e63d44b333@linaro.org>
-Date: Thu, 5 Jun 2025 00:49:11 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3S+JAQ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9835AC4CEE4;
+	Wed,  4 Jun 2025 23:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749081187;
+	bh=uHUGsqf5ZMZXheRER1HD5daqU3HlQsR4EkkzSEZSb8s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M3S+JAQ/d2afW4x7l30MX9OJsmIt8bLxLGfmz+Y1hrZgoLkWfSIIzNScSzIWKlNLJ
+	 iSI6NN7tYkKecFqHeup2ezu3g++xwtcrAgXRAiLrOFKLifYLuraeNoQR9EABXvmuZo
+	 wltya5BBow6tj2PelvgtGRtYmtONaOzD3/Ywc43gE4fgWge3cPSHMG8rIS5ld8Aa5l
+	 Qh6djueuJbn+wIWFSew4WBCtwYhpxzwwXaMZZzogmm6h0ev/jAx+X6Ohal48HMnLH7
+	 aUoP+u9J78HbTY6+OZwjBmvT1Y/jIrPwgHG9b1qLfPc2Q9l/79yU4iEBBqAYpBJx5v
+	 UZVzVopW6jO5A==
+Date: Wed, 4 Jun 2025 16:53:05 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 18/62] objtool: Fix x86 addend calculation
+Message-ID: <tvf7obye6afduyyefjrgicut2ehtyy4dkabxzxudtb55njsoba@4bhwzl3ftxeo>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <8064f40394e9f0438a36f53f54e3b56f8e5b5365.1746821544.git.jpoimboe@kernel.org>
+ <20250526102315.GK24938@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/8] serial: qcom-geni: move clock-rate logic to
- separate function
-To: Praveen Talari <quic_ptalari@quicinc.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: psodagud@quicinc.com, djaggi@quicinc.com, quic_msavaliy@quicinc.com,
- quic_vtanuku@quicinc.com, quic_arandive@quicinc.com,
- quic_mnaresh@quicinc.com, quic_shazhuss@quicinc.com
-References: <20250506180232.1299-1-quic_ptalari@quicinc.com>
- <VkNsXqYDdmwW9dutwc76Dv8ks2pvgcUwpf1UREJXhbXDQRaobVZL8m0hLz6rsOG-v6CjyAW3vHbuKMiPc9kN_Q==@protonmail.internalid>
- <20250506180232.1299-7-quic_ptalari@quicinc.com>
- <47d19ad8-37ad-462f-8cb3-d39c29008709@linaro.org>
- <8f18716f-cba2-4615-950a-63b6b73e23e9@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <8f18716f-cba2-4615-950a-63b6b73e23e9@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250526102315.GK24938@noisy.programming.kicks-ass.net>
 
-On 04/06/2025 18:11, Praveen Talari wrote:
->> Separate this stuff out.
->>
->> Your code should match the commit log. If you want to convert %u to 
->> %lu make a patch to do that, even if it seems trivial, it is better to 
->> make granular submissions.
+On Mon, May 26, 2025 at 12:23:15PM +0200, Peter Zijlstra wrote:
+> On Fri, May 09, 2025 at 01:16:42PM -0700, Josh Poimboeuf wrote:
+> > On x86, arch_dest_reloc_offset() hardcodes the addend adjustment to
+> > four, but the actual adjustment depends on the relocation type.  Fix
+> > that.
 > 
-> It comes under newly added API. Do we still need to make separate patch?
+> > +s64 arch_insn_adjusted_addend(struct instruction *insn, struct reloc *reloc)
+> >  {
+> > -	return addend + 4;
+> > +	s64 addend = reloc_addend(reloc);
+> > +
+> > +	switch (reloc_type(reloc)) {
+> > +	case R_X86_64_PC32:
+> > +	case R_X86_64_PLT32:
+> > +		addend += insn->offset + insn->len - reloc_offset(reloc);
+> > +		break;
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	return addend;
+> >  }
+> 
+> Should this not be something like:
+> 
+> s64 arch_insn_adjusted_addend(struct instruction *insn, struct reloc *reloc)
+> {
+> 	s64 addend = reloc_addend(reloc);
+> 
+> 	if (arch_pc_relative_reloc(reloc))
+> 		addend += insn->offset + insn->len - reloc_offset(reloc);
+> 
+> 	return addend;
+> }
+> 
+> instead?
+> 
+> AFAIU arch_pc_relative_reloc() is the exact same set of relocations.
 
-Best practice is to split this stuff up.
+Yeah that's better, thanks.
 
-If your commit log says "I'm moving code" then it should _only_ move 
-code, don't sneak any other changes in, no matter how seemingly innocuous.
-
----
-bod
+-- 
+Josh
