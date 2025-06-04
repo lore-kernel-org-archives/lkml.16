@@ -1,200 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDD925A62E
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 22:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE65D192598;
+	Wed,  4 Jun 2025 22:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749077897; cv=none; b=XCFqBZbjUH+zeLKsW4D/bCOyK6r07HDWdoqADhBKTIArO8cByVZLUaln486AE9c7pCfJPgA6qJoiSoWxWFIi9Xa+F9vj3VSw9C0K2P7N2SklluG7mBPFw3gk4GA7d4mrcphoEApLx6XtAM7FcsES6zRZEimQte345erBWeKAvFg=
+	t=1749077969; cv=none; b=hRwDZ+MevMd0I4dFneoECskLzzGKrR/dVMpDjqu7ZkIqHHw9JwmF00JFBQuSFh7vWHy/M6wNi0gJiV5fmlBbCgcUgWxdYext1glv73rOJ9ga24tmcTSOnSMxkwHlB3AJIl2lECRbEGZY6Qk3UiE3P648UxzZwTPisW9dpXDDlWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749077897; c=relaxed/simple;
-	bh=GzZ17EHodviThy4cQKgn2BX/gexgbOOUAnxS5f9iIGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TylagbjG3iHKbVElOEtN2cnFdKPeDcrkKD6KAAGTVnG1FJy8Dh5tbogTQAp1Vz2RFsobWIYshKhAAogvdpXOWjnkJYKaOQcS5LVVsYMubCUaFhTyMpi4LMgxBqiImqfs5hVC+uLZAnrWBi4hVVro6FxM1eFTeFsyE2JFjgqy+xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jEpoRbEb; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jEpoRbEb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749077896; x=1780613896;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GzZ17EHodviThy4cQKgn2BX/gexgbOOUAnxS5f9iIGM=;
-  b=jEpoRbEbTwDodqPiuRZSwE5OdM3OD4PDixrVpXt36Ha0NzrrnSNVJWig
-   aic/TPG6iniIk66I0b2H8gM2I7/9lQ1MLkhf+kgpBpOMgAKyjllB5loVJ
-   s399Fh3x8o+XOv/JwqV+2djDs+50LtmTohE/Pq/xgl4cLE36pQhXsArt8
-   yW5QJ76oFTTdfoeoL4Aq8nDDN3pQ/8KjVKDxq+fvT/cgcm8qvxkXKwIuJ
-   X6IeXGKHUjnNPO3jBBQJ49NXHC5Z8FKFKbNHiuJ7Q4da2TsNVouiALAOd
-   YYonA4WCbbx/KmQuFLZt4fJwngP4Qhe1lIsYKtlQlb+odXAfqHMlOVwzu
-   w==;
-X-CSE-ConnectionGUID: QV34OcqeSwKJtct8RKsrow==
-X-CSE-MsgGUID: /ui5jMGNQaqvoZW0R9IE3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="62236322"
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="62236322"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 15:58:15 -0700
-X-CSE-ConnectionGUID: HvRB10eBRu2SOyT/rezorg==
-X-CSE-MsgGUID: SZcZejnDTRymQr5MNeGdeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="149160214"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 15:58:14 -0700
-Date: Wed, 4 Jun 2025 15:58:13 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v5 06/29] x86,fs/resctrl: Improve domain type checking
-Message-ID: <aEDPhbwyjzeum_Km@agluck-desk3>
-References: <20250521225049.132551-1-tony.luck@intel.com>
- <20250521225049.132551-7-tony.luck@intel.com>
- <7de291ed-a29b-4768-9b27-7fd9f5602e37@intel.com>
+	s=arc-20240116; t=1749077969; c=relaxed/simple;
+	bh=JAXobm7Z2dkkQtZcGbD9QGTLI4MilESA4qlGk/KEPD0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lANwwRJQnpgjX7UINPFFhB8tWvKWY7ioWqh3wE2wNtGO8g0nUdfODS+GITvkyhGOIG9Udx2mTzHDLAP3boawmwXFt2Z1kdRbB1SmrM/TDkkX5JlTCS9R9KkG3ERXcKVvaDG/T30MXYrtS6zDkUuA1L8WMZGgxrfufqQIh9+CDBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bCNLY1zXYz9sd6;
+	Thu,  5 Jun 2025 00:59:17 +0200 (CEST)
+From: Lukas Timmermann <linux@timmermann.space>
+To: lee@kernel.org,
+	pavel@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@timmermann.space
+Subject: [PATCH v3 0/2] Support for Osram as3668 LED driver
+Date: Thu,  5 Jun 2025 00:58:36 +0200
+Message-ID: <20250604225838.102910-1-linux@timmermann.space>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7de291ed-a29b-4768-9b27-7fd9f5602e37@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 03, 2025 at 08:31:07PM -0700, Reinette Chatre wrote:
-> Hi Tony,
-> 
-> On 5/21/25 3:50 PM, Tony Luck wrote:
-> > The rdt_domain_hdr structure is used in both control and monitor
-> > domain structures to provide common methods for operations such as
-> > adding a CPU to a domain, removing a CPU from a domain, accessing
-> > the mask of all CPUs in a domain.
-> > 
-> > The "type" field provides a simple check whether a domain is a
-> > control or monitor domain so that programming errors operating
-> > on domains will be quickly caught.
-> > 
-> > To prepare for additional domain types that depend on the rdt_resource
-> > to which they are connected add the resource id into the header
-> > and check that in addition to the type.
-> > 
-> > Signed-off-by: Tony Luck <tony.luck@intel.com>
-> > ---
-> >  include/linux/resctrl.h            |  9 +++++++++
-> >  arch/x86/kernel/cpu/resctrl/core.c | 10 ++++++----
-> >  fs/resctrl/ctrlmondata.c           |  2 +-
-> >  3 files changed, 16 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-> > index 40f2d0d48d02..d6b09952ef92 100644
-> > --- a/include/linux/resctrl.h
-> > +++ b/include/linux/resctrl.h
-> > @@ -131,15 +131,24 @@ enum resctrl_domain_type {
-> >   * @list:		all instances of this resource
-> >   * @id:			unique id for this instance
-> >   * @type:		type of this instance
-> > + * @rid:		index of resource for this domain
-> >   * @cpu_mask:		which CPUs share this resource
-> >   */
-> >  struct rdt_domain_hdr {
-> >  	struct list_head		list;
-> >  	int				id;
-> >  	enum resctrl_domain_type	type;
-> > +	enum resctrl_res_level		rid;
-> >  	struct cpumask			cpu_mask;
-> >  };
-> >  
-> > +static inline bool domain_header_is_valid(struct rdt_domain_hdr *hdr,
-> > +					  enum resctrl_domain_type type,
-> > +					  enum resctrl_res_level rid)
-> > +{
-> > +	return !WARN_ON_ONCE(hdr->type != type || hdr->rid != rid);
-> > +}
-> > +
-> >  /**
-> >   * struct rdt_ctrl_domain - group of CPUs sharing a resctrl control resource
-> >   * @hdr:		common header for different domain types
-> > diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-> > index 4403a820db12..4983f6f81218 100644
-> > --- a/arch/x86/kernel/cpu/resctrl/core.c
-> > +++ b/arch/x86/kernel/cpu/resctrl/core.c
-> > @@ -456,7 +456,7 @@ static void domain_add_cpu_ctrl(int cpu, struct rdt_resource *r)
-> >  
-> >  	hdr = resctrl_find_domain(&r->ctrl_domains, id, &add_pos);
-> >  	if (hdr) {
-> > -		if (WARN_ON_ONCE(hdr->type != RESCTRL_CTRL_DOMAIN))
-> > +		if (!domain_header_is_valid(hdr, RESCTRL_CTRL_DOMAIN, r->rid))
-> >  			return;
+This patch adds basic support for the as3668 driver IC via I2C interface. 
+The IC is capable of driving four individual LEDs up to 25.5mA per 
+channel. Hardware blinking would be theoretically possible, but this chip
+only supports a few set on/off-delays which makes using that feature 
+unfeasable, therefore my driver doesn't offer that capability. 
+It's intended applications is in mobile devices such as phones, 
+tablets and cameras. This driver was tested and is working on 
+a samsung-manta which is running postmarketOS with a near mainline kernel.
 
-This type check was added as part of the split of the rdt_domain
-structure into sepaarte ctrl and mon structures. I think the concern
-was that some code might look at the wrong rdt_resource list and
-try to operate on a ctrl domain structure that is actually a mon
-structure (or vice versa). This felt like a real possibility.
+This is v3 of the patch series adding support for the as3668 LED driver. 
+I am sending v3 because I discovered major issues in v1 that required 
+correction before review and made some fixes in my workflow during v2.
 
-Extending this to save and check the resource id seemed like a
-natural extension at the time. But I'm starting to doubt the value
-of doing so.
+Please note: This is my first suggested patch to the kernel. 
+checkpatch.pl runs without warnings or errors. 
+I've read the docs in regards to the led subsystem, 
+coding style and submission of patches, 
+but I'm still a bit unsure about the general workflow. 
 
-For this new check to ever fail we would have to somehow add
-a domain for some resource type to a list on a different
-rdt_resource structure. I'm struggling to see how such an
-error could ever occur. Domains are only added to an rdt_resource
-list by one of domain_add_cpu_ctrl() or domain_add_cpu_mon().
-But these same functions are the ones to allocate the domain
-structure and initialize the "d->hdr.id" field a dozen or so
-lines earlier in the function.
+I will try my best.
 
-Note that I'm not disputing your comments where my patches
-are still passing a rdt_l3_mon_domain structure down through
-several levels of function calls only to do:
+Signed-off-by: Lukas Timmermann <linux@timmermann.space>
 
-	if (r->rid == RDT_RESOURCE_PERF_PKG)
-		return intel_aet_read_event(d->hdr.id, rmid, eventid, val);
+Lukas Timmermann (2):
+  leds: as3668: Driver for the ams Osram 4-channel i2c LED driver
+  dt-bindings: leds: Add new as3668 support
 
-revealing that it wasn't an rdt_l3_mon_domain at all!
+ .../devicetree/bindings/leds/leds-as3668.yaml |  76 +++++++
+ MAINTAINERS                                   |   6 +
+ drivers/leds/Kconfig                          |  14 ++
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-as3668.c                    | 196 ++++++++++++++++++
+ 5 files changed, 293 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-as3668.yaml
+ create mode 100644 drivers/leds/leds-as3668.c
 
-But these domain_header_is_valid() checks didn't help uncover
-that.
+-- 
+2.49.0
 
-Bottom line: I'd like to just keep the "type" check and not
-extend to check the resource id.
-
-> >  		d = container_of(hdr, struct rdt_ctrl_domain, hdr);
-> >  
-> 
-> This is quite subtle and not obvious until a few patches later that the
-> domain_header_is_valid() is done in preparation for using the
-> rdt_domain_hdr::rid to verify that the correct containing structure is
-> obtained in a subsequent container_of() call.
-> 
-> Patch #10 mentions it explicitly: "Add sanity checks where
-> container_of() is used to find the surrounding domain structure that
-> hdr has the expected type."
->            
-> The change above, when combined with later changes, results in
-> code like:
-> 
-> 	if (!domain_header_is_valid(hdr, RESCTRL_MON_DOMAIN, r->rid))
-> 		/* handle failure */
-> 
-> 	d = container_of(hdr, struct rdt_l3_mon_domain, hdr);
-> 	...
-> 
-> Considering this all I do not think using a variable r->rid is appropriate
-> here. Specifically, if the code has it hardcoded that, for example,
-> the containing structure is "struct rdt_l3_mon_domain" then should the
-> test not similarly be hardcoded to ensure that rid is RDT_RESOURCE_L3?
-> 
-> Reinette
-
--Tony
