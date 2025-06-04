@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C74B21507C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B606523536A;
 	Wed,  4 Jun 2025 02:53:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749005594; cv=none; b=joEJvAHKtSwTtZvN3wRlSHmTmTfHwhGG2y+XbJwD/PEXm2Qqjf772RoGKpr2LPQKE+wyVd4Tg4GNrQSurR7kENOOah69bo/TmuyRDC4Ih4NXFcFC/fh+Uy5okJDTGUF7vNayJIDn4JgwfZ2dMbN6GrjfxKtymh2Zj3ieT77Vr9Y=
+	t=1749005594; cv=none; b=Nz14i5vVEYa076WT5aR6C33Nnn+kNe0JIneQ2Csp1R38DCpYPX/Vi+1rodLX1+dw42UF73uW3ZIzRTnN1lO8oH2WyeK0Z+hlqB6ZwwgqWcchwXwCyWpHVupmos0UKpv9gF1lbNDAS3HX+d8aLgBxpkDpKV+FTbUQ/4KsgGoTlMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749005594; c=relaxed/simple;
-	bh=NybD056fPIwRjjACeccsAsw51OHyvTZyAaLmLap/H0U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Nw7crF/3O3hpXnatOgMPjAxtgT9sceOX1rAr8mKZoyjfdc5kyl7tFGRFSn0DC0rfEBS1NQltgIqPuRmw7N+0B51mHPSgEU1oE1YMMHB2u6oXYPYXMoPEUMkAIKX4wDgr8BEpoDJgrzK56dlOjgtz4Ha9eA/+khpl//axevNS1j0=
+	bh=3e2wWQjzL/nHoe82u8QRBrIltsUak/khJlSdHV3fHQ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=PW9iTb1o/AXGGDQYb59N9otjz8epwx+5T8rNabilVY82Mezqvuh5WWDEob46/TJ6MlI2PLOgtQTTCCTlpv1sfV4Fkq3i2n8y8BXXXbDfMPv2HNUI/OPQVvn+xPJKM6S357jUJ85D/QEFtc4SoXKK7+CBkbt+v0KMeXfsKkg6GQs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-46-683fb50abef6
+X-AuditID: a67dfc5b-681ff7000002311f-5b-683fb50a8f99
 From: Byungchul Park <byungchul@sk.com>
 To: willy@infradead.org,
 	netdev@vger.kernel.org
@@ -47,40 +47,40 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	bpf@vger.kernel.org,
 	vishal.moola@gmail.com
-Subject: [RFC v4 14/18] page_pool: make page_pool_get_dma_addr() just wrap page_pool_get_dma_addr_netmem()
-Date: Wed,  4 Jun 2025 11:52:42 +0900
-Message-Id: <20250604025246.61616-15-byungchul@sk.com>
+Subject: [RFC v4 16/18] netmem: introduce a netmem API, virt_to_head_netmem()
+Date: Wed,  4 Jun 2025 11:52:44 +0900
+Message-Id: <20250604025246.61616-17-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250604025246.61616-1-byungchul@sk.com>
 References: <20250604025246.61616-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTYRjHfXfOzi44OKzbm0biwiQl01J5sDLpQm8QdKMP2Qc9uUNbeWNT
-	UyHQspupXanQRbPwNpXZMjfFIs3UMvPWYuUVZVrgpZyJusq84Lcf////+X15xJT8He0mVscm
-	8JpYLlrBSGnpmGv+VunLPSr/5nJP0BnLGCidSYaiAYsQdIYqBFOz3SJwNDQx8Cx/mgJdWwYN
-	v41zFNgbB0XQXzhMQ+01MwWDt5oZyM5wUnDJUiyA9qocIdyfK6DAnDYggq4aHQN9ZfNCGK7P
-	puF9bgkN/Tlh0KhfC9MtowgajGYBTGc9ZuBep56BoYx+BJ1vB2nIS89BYHxtE4JzRseEeZLK
-	kq8CUp3bKyJ6UyJ5UexDMm2dFDEZbjDENHlXRHq+1DKk+ZGTJtUWh4BkXx5nyC/7N5pMvLYy
-	xFhppclHfYOIOEwbj7Lh0l1KPlqdxGu2hUZKVW32ERT/RJJ8x5lOpaEZUSaSiDEbiIfme+kV
-	NlxtQYvMsN7YZpulFnk1G4Adg00LG6mYYseF2K5zChaLVew53Gp+viSiWS/8r9i6JJKxwfjv
-	aI5gWeqBSyveLIkkC3nP+MOlXM4G4WzLZ2pRitkxETYW2anlg/W4rthG30YyPXIxILk6NimG
-	U0cH+qlSYtXJflFxMSa08NzCi39OW9Bk+4l6xIqRwlVm6QlVyYVckjYlph5hMaVYLfPYshDJ
-	lFxKKq+Ji9AkRvPaeuQuphXrZNunLyjl7FkugT/P8/G8ZqUViCVuaejICPfCcbhmwrlJmcZl
-	tLe9Kp0LUgXt21mRFeXrj0d9O+qsEVdyI/GaJ0+/ByeHN10/2+p1rKV76kdqTM/uM24pXae0
-	feabO8a9ew8NhNS1Kk5aD46Ewc+5D24FuG6/xHkA+RmESs2QH3nQUXncPcRF4GLRcXktmw17
-	XT5tKKcUtFbFBfhQGi33H2scw7nYAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWRW0hTcRzH/Z9zdradGhyX1MkelEGImpai8YOFCSKdIiQKuviihzy45ZVN
-	xSWCphVJmjcodNJqaXOTpmZuiknN4QVNy0vOMhVr1oOZd9Rl5ozePny+fL8vXxEuNRDeImVq
-	Bq9K5ZJlJEVQMfKCIOrVacWJ13opaM0NJJg2suH5jFUAWmMrgtXNz0JYsfeQoH+yjoN2qJCA
-	NfMWDs7uWSFM180R0HHXgsPsg14SigtdONyyGjDoqukTwPvWEgFUbtXiYMmbEcJIu5aEqYYd
-	AczZignoq6onYLokErp1B2G9fx6B3WzBYP1+DQkVwzoSvhZOIxjumiWgOr8EgbnTIQDXhpaM
-	lLEt9RMY21b1RcjqmjPZl4YAtsgxjLPNxnsk27xcLmQnP3aQbO8jF8G2WVcwtrhggWSXnJ8I
-	9lfnGMnqfyxirLlljGAHdHbhBc9Y6lQCn6zM4lXHI+IpxZDzO0p/LM4uc+XjeWhDWITEIoYO
-	Y4x3+pGbSdqPcTg2cTd70SHMymwPUYQoEU4vCBin1oW5gwP0DeadpWmvTNBHmT+GMcLNEvok
-	sz1fgv0b9WFMjW/2hsS7fnLh4Z6X0uFMsXUUL0WUDnkYkZcyNSuFUyaHB6uTFJpUZXbw9bSU
-	ZrT7X13u7zIrWh05Y0O0CMn2S6yTEQqpgMtSa1JsiBHhMi+Jj/+ukiRwmpu8Ki1OlZnMq23o
-	iIiQHZKcu8LHS+lELoNP4vl0XvU/xURi7zykdA1efPrt8Pz40tozv2ONH1541sdQvnC1ctUk
-	XIoONfNRg9fi9+1kUJP+lRA4WLSo96YtPw2cJnH8rTzIfrm7cqqhCeo4csy43lgebdpYTp8I
-	VVK+HWdzR7dNA6aoshw9Jq+1B1rk5+Mq9JkeQeh2ju+lsKVprr1aE1sqI9QKLiQAV6m5v1yZ
-	1AW7AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTYRjHe3fenR1Hg8OSPCkkDSKSMg2z50OZdIG3MMiyCwnW0EMbTWfz
+	XgZWVqRuiRqJzlhl6rw0mbbNEKk1b5V5y1g60yYagRo5HZVGqdG3H//n//99eRhK2o79GWVS
+	Kq9JkqtktBiLZ9Y+2i5+tk8RopsJAb2pnoa6H5lQPW4Tgr7WgmD+54gIPI5OGh4/9FKg783F
+	sGD6RcFkh1sEY1VTGFpvWylw3+2iQZu7SMF1W40A+iw6IZT8ekKBNWdcBIPP9TR8qv8jhCm7
+	FkN3mRHDmC4SOgzrwftmGoHDZBWAt6CChuIBAw0TuWMIBl65MZRf0yEwtTmFsPhDT0duIs3G
+	jwLSUjYqIgZzGmmqCSJ5zgGKmGvv0MQ8VyQirg+tNOkqXcSkxeYREO2NWZp8nxzG5FvbEE1M
+	zUOYvDU4RMRj3niMPSvek8CrlOm8ZkfEebHi9pQHJz9iMg3VX6kcNE3nIR+GY8O4p0sG/J/z
+	9BWCFabZLZzT+ZNaYV82lPO4O5c7YoZiZ4XcpH5xtbSOPco5G0ZXRZjdzPW4y0UrLGHDOe+X
+	CeqfNJCra3yxyj7LuWv2/upWyu7itLb31IqUY2dEXFFOK/o32MC9rHHiQiQxoDW1SKpMSk+U
+	K1VhwYqsJGVmcLw60YyWn1t1dSnWhub6TtgRyyDZWonNFaGQCuXpKVmJdsQxlMxXErh1OZIk
+	yLMu8xr1OU2aik+xowAGy/wkO70ZCVL2gjyVv8jzybzm/1XA+PjnoHzHtgMn1cct/T1xluIJ
+	dXy/ViBJC9cVNMlG9l+pO6huzDZmJMT1DeZ1n74XkxtjbFxKGx4uiQ6I9nH5GbOn5VWFl26q
+	TpEWZ/tnKD2kDOUG9w+HTjYsxJ7pPXxrqrLJt9LyO3H83fzrB+6F/OaoI1FOa2xYbcVe627C
+	YCNVL8MpCnloEKVJkf8FS5IIfNgCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRbUgTcRzH/d/dbudocM1RhwbiIKRJppDxA8PshXYJRlAQJJFDDzedD20q
+	GhSWgjXcephU6ISV5mOyWDanyao5dGaSzbRVPjGZPSCr3JwPE0qN3n34Pr35UrionYikFEWl
+	nKpIppSQAkJwKrn6oOD5MXmC60cUGExPSOhaq4C2eSsPDJ0WBIH1L3zwO4ZJaH4YxMHwroaA
+	FdMGDt4hDx/mWhcJGKjtxcFzy0mCtiaEw3VrOwaDTSM8GLfoeFC/8RiH3qp5Pkz0G0iYffKH
+	B4t2LQEjDR0EzOlSYci4B4KjSwgcpl4MgnVNJOhdRhIWauYQuAY9BDRe0yEw2dw8CK0ZyFQJ
+	29PxCWP7Gmb4rNFcxj5rl7IatwtnzZ03Sda8fJfPTk8NkKzzQYhg+6x+jNVW+0j2t/czwf60
+	TZJs87dfGGvqmSTYt0YH//Tu84KjuZxSUc6pDqVkC+S1i36i5BFVYWz7jlehJVKDwimGPsxo
+	DE3YNpN0LON2r+PbLKYTGb9nmNAgAYXTPh7jNYR2QhF0JuPuntkpE/R+ZszTyN9mIX2ECX5d
+	wP+NRjNdT1/tcPiWPu27v9MV0UmM1voBv40ERhTWicSKovJCmUKZFK8ukFcWKSric4oLzWjr
+	v9Yrm3esKDBxwo5oCkl2Ca3TKXIRT1auriy0I4bCJWJh9IEtSZgrq7zMqYovqsqUnNqOoihC
+	sleYcY7LFtF5slKugONKONV/F6PCI6tQlmtGn5MWKLmUH+No6c6IT0+Ji/a/PHt188XyHOY8
+	/r6iz5uwb3xM2GO9IJZYVupXRsKS12LWcg2rDWaftM6Ulp6fmKBvybJN6YMfT8a2e0dVm9Fk
+	a04zo8vpX3mzcG+8K68uELyRpoh57ZyNq121SdctZzLjpI56fpg7ApMQarksUYqr1LK/M/SC
+	xLsCAAA=
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -88,37 +88,36 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The page pool members in struct page cannot be removed unless it's not
-allowed to access any of them via struct page.
+To eliminate the use of struct page in page pool, the page pool code
+should use netmem descriptor and APIs instead.
 
-Do not access 'page->dma_addr' directly in page_pool_get_dma_addr() but
-just wrap page_pool_get_dma_addr_netmem() safely.
+As part of the work, introduce a netmem API to convert a virtual address
+to a head netmem allowing the code to use it rather than the existing
+API, virt_to_head_page() for struct page.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
-Reviewed-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 ---
- include/net/page_pool/helpers.h | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ include/net/netmem.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/net/page_pool/helpers.h b/include/net/page_pool/helpers.h
-index 93f2c31baf9b..387913b6c8bf 100644
---- a/include/net/page_pool/helpers.h
-+++ b/include/net/page_pool/helpers.h
-@@ -437,12 +437,7 @@ static inline dma_addr_t page_pool_get_dma_addr_netmem(netmem_ref netmem)
-  */
- static inline dma_addr_t page_pool_get_dma_addr(const struct page *page)
- {
--	dma_addr_t ret = page->dma_addr;
--
--	if (PAGE_POOL_32BIT_ARCH_WITH_64BIT_DMA)
--		ret <<= PAGE_SHIFT;
--
--	return ret;
-+	return page_pool_get_dma_addr_netmem(page_to_netmem(page));
+diff --git a/include/net/netmem.h b/include/net/netmem.h
+index d4066fcb1fee..d84ab624b489 100644
+--- a/include/net/netmem.h
++++ b/include/net/netmem.h
+@@ -265,6 +265,13 @@ static inline netmem_ref netmem_compound_head(netmem_ref netmem)
+ 	return page_to_netmem(compound_head(netmem_to_page(netmem)));
  }
  
- static inline void __page_pool_dma_sync_for_cpu(const struct page_pool *pool,
++static inline netmem_ref virt_to_head_netmem(const void *x)
++{
++	netmem_ref netmem = virt_to_netmem(x);
++
++	return netmem_compound_head(netmem);
++}
++
+ /**
+  * __netmem_address - unsafely get pointer to the memory backing @netmem
+  * @netmem: netmem reference to get the pointer for
 -- 
 2.17.1
 
