@@ -1,70 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A5E1F2C44
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5492A1E633C
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 16:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749056202; cv=none; b=HTWNAqCj0Wva+BlKuWZ3gCTAIxOW+3o52UJT3/dFVhTz/KP49OleVFSq/wGobSTc/WVrqdiKgjec6zmzHhVMq+FzPU2os59oECfBBDogLnwE6cULWqhBhGp2Wuf5ccZV6cosMSOsj+4fOrRsp7N40DBSOcFpOTZdjj6o55cUsG0=
+	t=1749056229; cv=none; b=lWWNJ2kfD/emz2GSb6DkLkbplhVNWa7jsjjgeOgKgrdqMeRqmE4RXyFVQTW5wdhugmVviA/LRYzBSREtCoGXclLjFLOt+2Q7mREyPCnlv23FOUAomBC0insazzEbkjM09N/fpROqlwXB8hoA8AEXgPgsqs62BXT7SBQdCDV/cP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749056202; c=relaxed/simple;
-	bh=hHWkN+1W3r8pcWm5IykqgahYA5ORV1Tz/OpKi1g0bhg=;
+	s=arc-20240116; t=1749056229; c=relaxed/simple;
+	bh=Gw+d+3S7IYA06FhUQyd+hYu00sNtRnUnl76qT+h9VuM=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ujboKMvBLkbp6d29QuyJhnW02D7XzsKttj8sfDPUDJAT9KhwaxgEAtL1lBKjk+/bwrV32Pt+76mHz2J/5qMSL5PLCWHqp3oSTRqgRPphNvESWSOLXum3HypIva0zbVm5wTfWsgIELur5Bdfw+/4EZ9Bh36kHGRi7Ubi54Mzfuq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FDNhrA2t; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=pBGY8Wt4ALYyE+PMlFRZniWkiM2SiTn4TuHhSbT1YXVaDWBgl/2Qe/ZXNsBIC373981WUxcXQV/nJCgBezZNVYO+ulfT7KbKKAGiEaD1x2rm9DvwcwQccqo+yGqYTd0pp3nbsSZo/GzzkCwI7vMNw0NsR+tIWix1CuNehbywIQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C21mvKqk; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDNhrA2t"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C21mvKqk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749056198;
+	s=mimecast20190719; t=1749056227;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2I81AuUlYQ9366SJCkTTKCrVJZ04owtIVy2X3Og2iB4=;
-	b=FDNhrA2tBSuNsYVdsr+ntslc40l//cJPdwjELnunNdTvwWlzRmLXNJr0/pNnoqowpA0f2/
-	ExQJ4rQ7dyXaEKSKYZTbTjQrLB5h+2Ou2f7AyhHdw9/LOBR5gITCF7Fu/Z2ndev4CS2eL5
-	fVtJEo6/sYaXDw4vSdJXJ/kkqp4rXlI=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Gw+d+3S7IYA06FhUQyd+hYu00sNtRnUnl76qT+h9VuM=;
+	b=C21mvKqkLS0A/YrHS/EtdqzOYjc98nNuFpGO1bflNmzD7R9KSJTSTkheFTCtQV9dZaMjrM
+	Ecd/InFBn1gFdVjXuNrYkzZAJvI3JnKs+tNejMEM3B2EKgMiKe36Qx53mxuQJ/tWlBmAAT
+	IhvAPgpcB1SQ7LAncp3Q6sET49Iuczo=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-tpyY9lqCOZ6WIiBppIvszQ-1; Wed, 04 Jun 2025 12:56:37 -0400
-X-MC-Unique: tpyY9lqCOZ6WIiBppIvszQ-1
-X-Mimecast-MFC-AGG-ID: tpyY9lqCOZ6WIiBppIvszQ_1749056196
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ad89a3bcc62so10975466b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:56:36 -0700 (PDT)
+ us-mta-665-nHu2NNCgMb-_wPZ8tsBZqg-1; Wed, 04 Jun 2025 12:57:06 -0400
+X-MC-Unique: nHu2NNCgMb-_wPZ8tsBZqg-1
+X-Mimecast-MFC-AGG-ID: nHu2NNCgMb-_wPZ8tsBZqg_1749056225
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ad5697c4537so12338066b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 09:57:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749056196; x=1749660996;
+        d=1e100.net; s=20230601; t=1749056225; x=1749661025;
         h=content-transfer-encoding:mime-version:message-id:date:references
          :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2I81AuUlYQ9366SJCkTTKCrVJZ04owtIVy2X3Og2iB4=;
-        b=k3th6Ff02FUbhIdC/Pxy0SzgobMN67TzE0v8SbFnhI7ERMzhixtbcCr9g1JPYPI3sy
-         WetYV0omzfUlWTppZ+VBeg2wXn4+gf4dHN9mFCrVz6Pm+M14OXrJqf5ZhW0EnJjnVWv6
-         gZwxaZbRFW0+kWxva/5pjx89vYnwfEZQQml4ppFelX6N/UGYk7klQWJ4uWwPGBLO4y7L
-         G/2j7Ph4MxwBrv+jjKo9lXWuUpSkyQRo6jHkO9M5iYjE/DF2cjwcZFPPXV+/r3JQIwaP
-         NvDrUDGoc68wzbF8oM3r68fogUbDbojwZmtCodTOI8vVTOw9gS136hD9CAVCEPK+6Cmq
-         z9MQ==
-X-Gm-Message-State: AOJu0YyQoTlyiby05EcwpmQG+8R1xz7+ttT+T4u0Le0BTkDB5fFRAy7E
-	P8x6rcAw5/4O90vUbUpNt+t1Qxaig4a6rUkzlG0pzfuV6SKvXwHow/CL8E+WALTEn5H5FjvRiUP
-	V78m43XWw7KWT+HI1RFqhmq+7IdUFphdFq45zToo8TrWCWOmH/wWAY1KEfNtJ3nSLzQ==
-X-Gm-Gg: ASbGncv+OtUEhKwkBrlvBuRRXNv2DKntp+g68A/d1Y09YRo49iyJo5hhKQxKtH2cqm1
-	i7fMo71pROb1L5EZyo9fSC18T8ZhL6FUQbchSxIIQ+KpmDaPHGCZqPjC+43vL4hYszlTxI5HvZN
-	b8UbYGlJvtf053R6A9A9ZTDdyZ6ivl2wGUu1Ir6es1dKl6SJ9DDEif1PmvC78sPISuomRnruXNM
-	QURIjG3ugV1hrI8AlDJBrh7xsRFpm9I2Eh8+oG5oQ5cB6xQdx5oZDWjNqEio4T8Pd0nKfUXeVq4
-	aCZSgAi6
-X-Received: by 2002:a17:907:9410:b0:ad5:eff:db32 with SMTP id a640c23a62f3a-addf8fbbcbamr374232566b.48.1749056195764;
-        Wed, 04 Jun 2025 09:56:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFyDZZleVWiVesfO9YTAhzLK2xLG6f1Ssys6/5lTY37/ymkAbmNiWcQtPEP0I7NoOuKWqtMkg==
-X-Received: by 2002:a17:907:9410:b0:ad5:eff:db32 with SMTP id a640c23a62f3a-addf8fbbcbamr374230266b.48.1749056195333;
-        Wed, 04 Jun 2025 09:56:35 -0700 (PDT)
+        bh=Gw+d+3S7IYA06FhUQyd+hYu00sNtRnUnl76qT+h9VuM=;
+        b=E+mhSLj/o+bcT3++H3m6c2lYXK+GjHqqmFHEiojXhiJ8wZubRcqPscqk9KPQW5M5dG
+         6u9vYTMueJ1O3RLIEARyB775umvK8UT6lFDgjsQLeejH78JVoY16h8V4Me7Bymt+oaU4
+         alSyUbrNE7DJhFbwgbePGzbkiBjuwp/4y62EIie8LAt+YXQi4jCEUYKcbVSddlp2Z4ZI
+         leI3obPtqEITLuvc4CP5gOSUIe9MUyn+j+RIcJir8724kj+0KG9niOtLHHfkrNhdSMK/
+         9Nj7VKSZTR3xxGHfX0PgI1EEkyNTh5bCNPfDs2IFvTLpk2j8SOwIPA9GE83YJziQgUOJ
+         N2rA==
+X-Gm-Message-State: AOJu0YypkU9hVOfrfQqoqZ71mZyTrTt+KeW/ArVE7vSwTUNOTHwQZaQ+
+	2s0IaTOOoPKiO9odEsPGfrukQCAZhPDFcAKRgvidmBP3B3NoIW1daV+Eugfc3D++Roh8pL4jC0S
+	vY2kz/vXw/3QtuYPHize4zhJvwiZwcoo7Gu/4V81nG6dnoJvzz7e7N5ENUqDsvud+JQ==
+X-Gm-Gg: ASbGncujP8yarN6WjJDg2z7NKm7NogC2bDZvhR1W0+X9XO91bjz/4U+lcF/dD4+MjGA
+	VeWnn7etV4TgC2k65urA1jRsJEIAyeG8P4FsjSvU+xUY2+v/H7UYWdGdS4gqxSQULIg4dsc1QpT
+	jpN/rpQPGB4ufOasTZ4krJe2/H/3QT2MS4O6B84v6ssMq5PgYZyoMchm7iXKbyqfa2kalSiKkT/
+	lkmqZv+MKRQUfPv/cagqcw0eHDaP6SP/PiiyH3S60C4TQMIsYet3MCr927EHmzdtX5H7wFivHQH
+	ZRah7M1KKFjVZbhMie8=
+X-Received: by 2002:a17:907:1c26:b0:ad8:942b:1d53 with SMTP id a640c23a62f3a-ade078951c7mr24902266b.27.1749056225228;
+        Wed, 04 Jun 2025 09:57:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHqG4TOAjPvMml/YdZyEoQ+QahksC02aQ5Whxm4dNHjvxJYD+wb6qalU2zcWL3KxMHhCO06XA==
+X-Received: by 2002:a17:907:1c26:b0:ad8:942b:1d53 with SMTP id a640c23a62f3a-ade078951c7mr24899166b.27.1749056224800;
+        Wed, 04 Jun 2025 09:57:04 -0700 (PDT)
 Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad39f08sm1135981966b.144.2025.06.04.09.56.34
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad6ab8esm1110204166b.185.2025.06.04.09.57.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 09:56:34 -0700 (PDT)
+        Wed, 04 Jun 2025 09:57:04 -0700 (PDT)
 Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 06E6B1AA9164; Wed, 04 Jun 2025 18:56:34 +0200 (CEST)
+	id 59CA91AA9166; Wed, 04 Jun 2025 18:57:03 +0200 (CEST)
 From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
 To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
  netdev@vger.kernel.org
@@ -78,13 +78,14 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
  rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
  linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Subject: Re: [RFC v4 13/18] netmem: remove __netmem_get_pp()
-In-Reply-To: <20250604025246.61616-14-byungchul@sk.com>
+Subject: Re: [RFC v4 14/18] page_pool: make page_pool_get_dma_addr() just
+ wrap page_pool_get_dma_addr_netmem()
+In-Reply-To: <20250604025246.61616-15-byungchul@sk.com>
 References: <20250604025246.61616-1-byungchul@sk.com>
- <20250604025246.61616-14-byungchul@sk.com>
+ <20250604025246.61616-15-byungchul@sk.com>
 X-Clacks-Overhead: GNU Terry Pratchett
-Date: Wed, 04 Jun 2025 18:56:33 +0200
-Message-ID: <87msanv41q.fsf@toke.dk>
+Date: Wed, 04 Jun 2025 18:57:03 +0200
+Message-ID: <87jz5rv40w.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,10 +97,15 @@ Content-Transfer-Encoding: quoted-printable
 
 Byungchul Park <byungchul@sk.com> writes:
 
-> There are no users of __netmem_get_pp().  Remove it.
+> The page pool members in struct page cannot be removed unless it's not
+> allowed to access any of them via struct page.
+>
+> Do not access 'page->dma_addr' directly in page_pool_get_dma_addr() but
+> just wrap page_pool_get_dma_addr_netmem() safely.
 >
 > Signed-off-by: Byungchul Park <byungchul@sk.com>
 > Reviewed-by: Mina Almasry <almasrymina@google.com>
+> Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
 Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
 
