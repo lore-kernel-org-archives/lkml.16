@@ -1,107 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A572153EA;
-	Wed,  4 Jun 2025 10:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946CB2153EA;
+	Wed,  4 Jun 2025 10:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749032932; cv=none; b=f5X8+ZFmp+X5DD5xkj+7vAkLkXw0PD/rrbvI3jCCvwiLgEBVPhovZlH0RZothG40S8ORgOmCVv5J9CKALPjKZ7UOI8uisP0YeM0MAdF6hjm/WS2PhozcweZMjRctJowGW9AAQtfGvYKbpc4kAw3eQNAtYum1GQrp7AFk4cOakrk=
+	t=1749032972; cv=none; b=fFtAimAwJZ+KPVdiYBcGYL2w0j75Vo6P64dqEamDizcyCU5KitaOBL8imyOrb8lvsNXp2TAs2fRWtylraDfjnOVYvFbKdJYLXkk1HIFbRWPKZ9DXhnrlDlhm5yZBH33QH7L9LvqraziqpNHuU/GhuNlwFJE3DyuWmWNLyHMAb2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749032932; c=relaxed/simple;
-	bh=JBl2S2HcUiHa7eTyy0mmRlKPLkijJl96CchvkFqMJNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XkzwAuBLtkl+RQ6qUWU6St+IGScdzz3Tm9wUVpvZEicdEnULd4cV92ZU4KTjmq00WFmz7QuAaX4z+8J21nAQRX4BI4SAadi7AQVysb/lQ0kuNONGyS1u9IG/MaCIe6MIWD12skWgg2iEBUOYZ4UGf0FtjhT0bKyHqZm3F40UuQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qP9yIi1G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749032972; c=relaxed/simple;
+	bh=K0KH87Eqmp0gY8TpGdW3mtysyP6xVb0gwpGfKjIWs7k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uTB15avj9JSlSlfq03npLfdxr6x4nl+yf7ex5Ye3cIvcaWEedkjrkMF5ulkRASgBmAReXqqtutoN8gvqLyx/UgORKpWjBJgZl7S7UvNIwDTnZmgvwz+DUiMxh72wYdnV85DovfuK4sHGOZ0udLc32vsEMMXDR/1Vd65m7ZqKWDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b=vz6lJEDI; arc=none smtp.client-ip=91.199.251.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qP9yIi1G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401EFC4CEE7;
-	Wed,  4 Jun 2025 10:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749032931;
-	bh=JBl2S2HcUiHa7eTyy0mmRlKPLkijJl96CchvkFqMJNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qP9yIi1GWziSK+VEJTpm1vEyrBxdG0uppVJAd6frmyrfEEZs2s5ba3u9NsSupTlTw
-	 DztOcoXc8EjQM0TDdtKR1jrVryh2iiC/To4hlWR9VuGAIFk2WrfJYI/YEApkELqkSN
-	 /oms3NVAgEpR2Hnr9jYOi5HUvxcJiaEPktU+qL/quWemrVQKOeMZExJhiCLHrmpqoK
-	 mtpwUXM2kpVPamsZ+tdNlIM7qIBYb/VI9J4j/uk7jZyr9C6ujVg6oM5MT3ThPMqn/7
-	 1yZ0kl9lccbciDhbRaTaw0sndq+0UyUJyHXf7mu7RTHxo32jxQv3ba2Poyru3o9bSt
-	 fMx2pRB0wAEbg==
-Date: Wed, 4 Jun 2025 12:28:44 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4 18/20] gpu: nova-core: add types for patching firmware
- binaries
-Message-ID: <aEAf3GUUz5oxnuk9@cassiopeiae>
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-18-05dfd4f39479@nvidia.com>
+	dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b="vz6lJEDI"
+DKIM-Signature: v=1; a=rsa-sha256; d=aladdin.ru; s=mail; c=simple/simple;
+	t=1749032043; h=from:subject:to:date:message-id;
+	bh=K0KH87Eqmp0gY8TpGdW3mtysyP6xVb0gwpGfKjIWs7k=;
+	b=vz6lJEDITQM61yQXqmdMenRaQvSX3SrS+iGH9t/NNNPxlBXwjYd92l0sEhHP/aMOFEFQtN2MPJE
+	VLiWbh124z2HFn3U7vyy/sGQjUwyQTtPTAw/Kt7Ijy+fJ5UY0SVwWb5Z7tOAY6TJh1QsuKKYv86P8
+	D6o7IppyT4xGGLakYNPHkBKguUJqA7euPRGwT13UnK3yAosdwYfPm4+vW+M630sGu9jkrO8Ipoxqq
+	GcvIuPzRh+IQfRcT0i065Q4C4P8iHDTY2c9dK0jVVh9tWn8T2Jpez8aC4LiCzYeCARGKjgZ+89GdQ
+	ENAN0VwovpvOQmPOVuO+IOW7DrYfxoPMDUNw==
+From: Daniil Dulov <d.dulov@aladdin.ru>
+To: Johannes Berg <johannes.berg@intel.com>
+CC: Daniil Dulov <d.dulov@aladdin.ru>, Kees Cook <kees@kernel.org>, "Emmanuel
+ Grumbach" <emmanuel.grumbach@intel.com>, Miri Korenblit
+	<miriam.rachel.korenblit@intel.com>, "John W. Linville"
+	<linville@tuxdriver.com>, Daniel Drake <dsd@gentoo.org>,
+	<linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH] wifi: zd1211rw: Fix potential data race in zd_mac_tx_to_dev()
+Date: Wed, 4 Jun 2025 13:13:56 +0300
+Message-ID: <20250604101356.6292-1-d.dulov@aladdin.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521-nova-frts-v4-18-05dfd4f39479@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EXCH-2016-03.aladdin.ru (192.168.1.103) To
+ EXCH-2016-01.aladdin.ru (192.168.1.101)
 
-On Wed, May 21, 2025 at 03:45:13PM +0900, Alexandre Courbot wrote:
-> +/// A [`DmaObject`] containing a specific microcode ready to be loaded into a falcon.
-> +///
-> +/// This is module-local and meant for sub-modules to use internally.
-> +struct FirmwareDmaObject<F: FalconFirmware>(DmaObject, PhantomData<F>);
-> +
-> +/// Trait for signatures to be patched directly into a given firmware.
-> +///
-> +/// This is module-local and meant for sub-modules to use internally.
-> +trait FirmwareSignature<F: FalconFirmware>: AsRef<[u8]> {}
-> +
-> +#[expect(unused)]
-> +impl<F: FalconFirmware> FirmwareDmaObject<F> {
-> +    /// Creates a new `UcodeDmaObject` containing `data`.
-> +    fn new(dev: &device::Device<device::Bound>, data: &[u8]) -> Result<Self> {
-> +        DmaObject::from_data(dev, data).map(|dmaobj| Self(dmaobj, PhantomData))
-> +    }
-> +
-> +    /// Patches the firmware at offset `sig_base_img` with `signature`.
-> +    fn patch_signature<S: FirmwareSignature<F>>(
-> +        &mut self,
-> +        signature: &S,
-> +        sig_base_img: usize,
-> +    ) -> Result<()> {
-> +        let signature_bytes = signature.as_ref();
-> +        if sig_base_img + signature_bytes.len() > self.0.size() {
-> +            return Err(EINVAL);
-> +        }
-> +
-> +        // SAFETY: we are the only user of this object, so there cannot be any race.
-> +        let dst = unsafe { self.0.start_ptr_mut().add(sig_base_img) };
-> +
-> +        // SAFETY: `signature` and `dst` are valid, properly aligned, and do not overlap.
-> +        unsafe {
-> +            core::ptr::copy_nonoverlapping(signature_bytes.as_ptr(), dst, signature_bytes.len())
-> +        };
-> +
-> +        Ok(())
-> +    }
-> +}
+There is a potential data race in zd_mac_tx_to_dev(). For example, it is
+possible for filter_ack() to clear the ack_wait_queue right after
+zd_mac_tx_to_dev() checks that queue has more than 50 elements, but before
+it dequeues any skb. This results in skb_dequeue() returns NULL and the
+pointer is dereferenced in zd_mac_tx_status().
 
-If we can't patch them when the object is created, i.e. in
-FirmwareDmaObject::new(), I think we should take self by value in
-FirmwareDmaObject::patch_signature() and return a SignedFirmwareDmaObject (which
-can just be a transparent wrapper) instead in order to let the type system prove
-that we did not forget to call patch_signature().
+In order to avoid potential data races and leading dereference of a NULL
+pointer, acquire the queue lock before any work with the queue is done and
+replace all skb_* calls with their lockless version.
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: 459c51ad6e1f ("zd1211rw: port to mac80211")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+---
+ drivers/net/wireless/zydas/zd1211rw/zd_mac.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
+index 9653dbaac3c0..e7e0d1b7b9ab 100644
+--- a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
++++ b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
+@@ -568,6 +568,7 @@ void zd_mac_tx_to_dev(struct sk_buff *skb, int error)
+ 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
+ 	struct ieee80211_hw *hw = info->rate_driver_data[0];
+ 	struct zd_mac *mac = zd_hw_mac(hw);
++	unsigned long flags;
+ 
+ 	ieee80211_tx_info_clear_status(info);
+ 
+@@ -581,13 +582,17 @@ void zd_mac_tx_to_dev(struct sk_buff *skb, int error)
+ 	} else {
+ 		struct sk_buff_head *q = &mac->ack_wait_queue;
+ 
+-		skb_queue_tail(q, skb);
++		spin_lock_irqsave(&q->lock, flags);
++
++		__skb_queue_tail(q, skb);
+ 		while (skb_queue_len(q) > ZD_MAC_MAX_ACK_WAITERS) {
+-			zd_mac_tx_status(hw, skb_dequeue(q),
++			zd_mac_tx_status(hw, __skb_dequeue(q),
+ 					 mac->ack_pending ? mac->ack_signal : 0,
+ 					 NULL);
+ 			mac->ack_pending = 0;
+ 		}
++
++		spin_unlock_irqrestore(&q->lock, flags);
+ 	}
+ }
+ 
+-- 
+2.34.1
+
