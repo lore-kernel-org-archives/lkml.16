@@ -1,194 +1,147 @@
-Received: from m.syntacore.com (m.syntacore.com [178.249.69.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A6E290D80;
-	Wed,  4 Jun 2025 15:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.249.69.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BD2291158
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 15:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749050030; cv=none; b=poy5lmqdvwJyCEqpwYP8L3wkm3pUyzleWmNqJohrmY+H3+M/RUVINIliBVLEpboyQ5G81H9aggfRjtYCASmyjQXC92WaLbVNiMC3e5IclB1pxcn79IS61ruTgOY+N5jHt2rl4FAE56l1TLu4G4eHw4szUXRwybMmBVK1elUgjlc=
+	t=1749050072; cv=none; b=m6TAxgoZqPPaLSqmM+/vq0gq7RIt+tWVyC5hOeOm6T6ZYqIPPsJWhgq5DT5Yo+IC+FUmnOdsAAOCOjeuC3cZ6eOhfhE5biSKdtBub+0zj9MyRk2PgbAjRa/zhM+QYUWgRvoVS/WNshcm5vRI9gNItFHunzORWBDGdkxJXf+O+ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749050030; c=relaxed/simple;
-	bh=Bz52cWmM5E063diqhU/tvNAwMpsAg2SFm+DiQ9Dj94Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PCnX9oz5riIH1R9aeAsmkbYoCehd7Uh2Ih/ECs19I68IeS42h/H30wy/MD7z0zDR7tZ5KkiRYUF1pGsGw9jTdKvTOpV5n6ugReWebZXjXb18pNKfWh6uAVb6GmS5wmhQCTtsJppppBySPnuDkAveswjQLM0CTK9A/5VH8bFrGP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=syntacore.com; spf=pass smtp.mailfrom=syntacore.com; dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b=qFFBj5JE; arc=none smtp.client-ip=178.249.69.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=syntacore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=syntacore.com
+	s=arc-20240116; t=1749050072; c=relaxed/simple;
+	bh=Vz9j+gRU9u8lCxApmtclw2M381IMN+MeB6Q2Te9JwCs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uG7Shx/0YRIP2OLRqj0wY4wZVc3ZlNzPEdZXlki/+xtqmWqIJxuJ9AlXJpUL8ntagwsMLXRQqhgwHgU4dhlV/pNFVXQ9Fjm4mIvXzjVqhM1ktOoYUpCFpYyhOulvPkoSSjH4Pwh10qPdwwcXcDzgUDcDASUX1SKqwerVd/5lts0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lYzCSoQM; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b="qFFBj5JE"
-Received: from MRN-SC-KSMG-01.corp.syntacore.com (localhost [127.0.0.1])
-	by m.syntacore.com (Postfix) with ESMTP id 386171A0004;
-	Wed,  4 Jun 2025 15:07:43 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 m.syntacore.com 386171A0004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=syntacore.com; s=m;
-	t=1749049663; bh=cFvYaW2WkbtOra3S0g7FSljIzV4LxrpuqkAbvhUZRVI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=qFFBj5JEyV6NX3EeyzhabNsOKCgp9jJ9AFkzUYTr7lX9o+e4rwwXk5S81XGzUfEi1
-	 LNQDEBsNDZs6a6o1xuli/VYrLGk4xDpdU11Z8sRU9LiqoRrk/sjtVcJDUm3rMlPP6F
-	 6xFw521QT9wRVQVhk1boOFiMCUOHRs1gXCSxK+bMJyLcQ7sGz9hkWl42jKqdkBrIAv
-	 IVZpAhBMUcCFAVLRde+a/IgzLNAKMTuWC3JYRG9wJ9wDKHrROMXu95QlNFG6ZyDZ7l
-	 GpqCr/eSzO4xhWXg3rxXh6nlXf8urJZZKLfcFQceCqN1gNzeTvzzfyjeLHaKHVYOU5
-	 gAdYVUb0Ohnmg==
-Received: from S-SC-EXCH-01.corp.syntacore.com (exchange.syntacore.com [10.76.202.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by m.syntacore.com (Postfix) with ESMTPS;
-	Wed,  4 Jun 2025 15:07:41 +0000 (UTC)
-Received: from localhost (10.199.25.251) by S-SC-EXCH-01.corp.syntacore.com
- (10.76.202.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 4 Jun
- 2025 18:06:55 +0300
-From: Svetlana Parfenova <svetlana.parfenova@syntacore.com>
-To: Kees Cook <kees@kernel.org>, <linux-mm@kvack.org>
-CC: Svetlana Parfenova <svetlana.parfenova@syntacore.com>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
-	<jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC] binfmt_elf: preserve original ELF e_flags in core dumps
-Date: Wed, 4 Jun 2025 22:05:02 +0700
-Message-ID: <20250604150502.622178-1-svetlana.parfenova@syntacore.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lYzCSoQM"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47e9fea29easo482111cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 08:14:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749050070; x=1749654870; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=utxbGnGIbzF8mH+ke5le74ATfkvfWNo9bI2IYs+ukk0=;
+        b=lYzCSoQMcqvJ6myfaxuhILu7NMmHb563kKHRdGsqsWaVwIJpGGPnR+17TNIBmWM5N0
+         2ZEy0+oyZYlYzi0S4KCF2BKnluIzUL/uYRhSIY+7Jw94zYiMWfKMcWDHNV/ili9VO+aT
+         cGS+AV9wPGW8Zylfh/Cl3ByB7fJr2DBWXF6Nk4qE9Fz2Cek56xA1boOXHlbAnpb3F0xH
+         Gbiy8nCQmuKSPv4bBc49fycOSeVQeuV6/YHdMkk6zEEPtztWBvtLocl0S0OmAGEgFGc/
+         JZUKFLQ4x+nWXe8OWYSsBorRgtn5MPl9jGTYeqTG0KkbRa3ZOiwQD3aJj48K8frzCmG3
+         UAMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749050070; x=1749654870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=utxbGnGIbzF8mH+ke5le74ATfkvfWNo9bI2IYs+ukk0=;
+        b=BwV51mmlhDBUWUI+EMzgEAjfRmivx033eUxnJLq8pjKGe9vSxo6jYFkBW1ZwE24fzU
+         H2IY86Z2Eabfy5oG2KfwppziLHtICDAtxtAOhennogEHPeM25OMwwYA/ktabhznLcDRZ
+         4rfyLDYqEuBQTSNWWDBZCF2TGEQb1Cm2mu0N9rjw/f425+pCwcaur4oCEkbaRC+brR0b
+         ir53cYf2v8+PAXcSyWgi0g/6Xsnx1DtsxMHa8cHIcA1qjd+fI1h1aMgpvVWfSwVXDV89
+         Jdnv6j/KyEKksbHgjy/Yn4rdO64hue6++YCNsmQjM31sgNsEPbhuQp60+8qGkRbtLIQm
+         8QLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVt+cN6oO3wulYBpCRX2tV+0qAYLXvLvFIcsmJUdcxchCXb63LkijzOED5l5630G7O16pkDM2O1srlfOjc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH+HnLXXp8lW7+zIHc1x+5+UUtSBgmJ6JGsdLMlbMTLQrOdLAj
+	f/aguE25h0SpWUjJnuBndLAKNhKRseJAAHtVjcjo5Ztv2PJXURF8Wr2PO1s6IOAUD7M/eXUvzLR
+	X2Mb0ySmWDJzTKR1HIFYe9zmeTm49rWFKC6k8zZha
+X-Gm-Gg: ASbGncs5pIocNv3BtsSvI8zP/Qf2gyXa+mmEjzM/uu0O4yhe4t5JOKsQg7CY0+ymDdI
+	P+C9Sjpxy98DnjpKySPPNF2vRtyigyDegI2RHz3lVzHmdBZNgLx6tqVwdaHHbQpzJJa5VCKH54I
+	w1tn6I4343Ygd2NiMl9KL0JOc1MhfL/4CO35okG4GfCB9IwBAd5OsjuTg2R8OZuUxID8CYr8sO
+X-Google-Smtp-Source: AGHT+IG7WUENSnzjQt1432tk0/IC2xUBgjIJ6p1wfQtTmthhSrBkIabqQdFzCkGqvNujLDVYjt6N/VZKebcP/XvFGPs=
+X-Received: by 2002:a05:622a:5513:b0:477:9a4:d7ea with SMTP id
+ d75a77b69052e-4a5a60d620fmr3781231cf.13.1749050069321; Wed, 04 Jun 2025
+ 08:14:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: S-SC-EXCH-01.corp.syntacore.com (10.76.202.20) To
- S-SC-EXCH-01.corp.syntacore.com (10.76.202.20)
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/06/04 12:53:00 #27536686
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 5
+References: <20250604025246.61616-1-byungchul@sk.com> <20250604025246.61616-3-byungchul@sk.com>
+In-Reply-To: <20250604025246.61616-3-byungchul@sk.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 4 Jun 2025 08:14:18 -0700
+X-Gm-Features: AX0GCFvbLYsMxCrveTLh5QRMe579FQstUyFi0HWrz3vr2pOTHdyUzOaCmMQ3Mp4
+Message-ID: <CAJuCfpFCtGFRip72x8HadTfuv_2d+e19qZ2xJowaLa6V9JOGHA@mail.gmail.com>
+Subject: Re: [RFC v4 02/18] netmem: introduce netmem alloc APIs to wrap page
+ alloc APIs
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	almasrymina@google.com, ilias.apalodimas@linaro.org, harry.yoo@oracle.com, 
+	hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net, 
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch, asml.silence@gmail.com, 
+	toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, 
+	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, 
+	david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
+	vbabka@suse.cz, rppt@kernel.org, mhocko@suse.com, horms@kernel.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Preserve the original ELF e_flags from the executable in the core dump
-header instead of relying on compile-time defaults (ELF_CORE_EFLAGS or
-value from the regset view). This ensures that ABI-specific flags in
-the dump file match the actual binary being executed.
+On Tue, Jun 3, 2025 at 7:53=E2=80=AFPM Byungchul Park <byungchul@sk.com> wr=
+ote:
+>
+> To eliminate the use of struct page in page pool, the page pool code
+> should use netmem descriptor and APIs instead.
+>
+> As part of the work, introduce netmem alloc APIs allowing the code to
+> use them rather than the existing APIs for struct page.
+>
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> ---
+>  net/core/netmem_priv.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/net/core/netmem_priv.h b/net/core/netmem_priv.h
+> index cd95394399b4..32e390908bb2 100644
+> --- a/net/core/netmem_priv.h
+> +++ b/net/core/netmem_priv.h
+> @@ -59,4 +59,18 @@ static inline void netmem_set_dma_index(netmem_ref net=
+mem,
+>         magic =3D netmem_get_pp_magic(netmem) | (id << PP_DMA_INDEX_SHIFT=
+);
+>         __netmem_clear_lsb(netmem)->pp_magic =3D magic;
+>  }
+> +
+> +static inline netmem_ref alloc_netmems_node(int nid, gfp_t gfp_mask,
+> +                                           unsigned int order)
+> +{
+> +       return page_to_netmem(alloc_pages_node(nid, gfp_mask, order));
+> +}
+> +
+> +static inline unsigned long alloc_netmems_bulk_node(gfp_t gfp, int nid,
+> +                                                   unsigned long nr_netm=
+ems,
+> +                                                   netmem_ref *netmem_ar=
+ray)
+> +{
+> +       return alloc_pages_bulk_node(gfp, nid, nr_netmems,
+> +                       (struct page **)netmem_array);
+> +}
 
-Save the e_flags field during ELF binary loading (in load_elf_binary())
-into the mm_struct, and later retrieve it during core dump generation
-(in fill_note_info()). Use this saved value to populate the e_flags in
-the core dump ELF header.
+Note: if you want these allocations to be reported in a separate line
+inside /proc/allocinfo you need to use alloc_hooks() like this:
 
-Add a new Kconfig option, CONFIG_CORE_DUMP_USE_PROCESS_EFLAGS, to guard
-this behavior. Although motivated by a RISC-V use case, the mechanism is
-generic and can be applied to all architectures.
+static inline unsigned long alloc_netmems_bulk_node_noprof(gfp_t gfp, int n=
+id,
+                                                   unsigned long nr_netmems=
+,
+                                                   netmem_ref *netmem_array=
+)
+{
+       return alloc_pages_bulk_node_noprof((gfp, nid, nr_netmems,
+                       (struct page **)netmem_array);
+}
 
-This change is needed to resolve a debugging issue encountered when
-analyzing core dumps with GDB for RISC-V systems. GDB inspects the
-e_flags field to determine whether optional register sets such as the
-floating-point unit are supported. Without correct flags, GDB may warn
-and ignore valid register data:
+#define alloc_netmems_bulk_node(...) \
+        alloc_hooks(alloc_netmems_bulk_node_noprof(__VA_ARGS__))
 
-    warning: Unexpected size of section '.reg2/213' in core file.
 
-As a result, floating-point registers are not accessible in the debugger,
-even though they were dumped. Preserving the original e_flags enables
-GDB and other tools to properly interpret the dump contents.
 
-Signed-off-by: Svetlana Parfenova <svetlana.parfenova@syntacore.com>
----
- fs/Kconfig.binfmt        |  9 +++++++++
- fs/binfmt_elf.c          | 26 ++++++++++++++++++++------
- include/linux/mm_types.h |  5 +++++
- 3 files changed, 34 insertions(+), 6 deletions(-)
-
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index bd2f530e5740..45bed2041542 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -184,4 +184,13 @@ config EXEC_KUNIT_TEST
- 	  This builds the exec KUnit tests, which tests boundary conditions
- 	  of various aspects of the exec internals.
- 
-+config CORE_DUMP_USE_PROCESS_EFLAGS
-+	bool "Preserve ELF e_flags from executable in core dumps"
-+	depends on BINFMT_ELF && ELF_CORE && RISCV
-+	default n
-+	help
-+	  Save the ELF e_flags from the process executable at load time
-+	  and use it in the core dump header. This ensures the dump reflects
-+	  the original binary ABI.
-+
- endmenu
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 4c1ea6b52a53..baf749e431a1 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1297,6 +1297,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	mm->end_data = end_data;
- 	mm->start_stack = bprm->p;
- 
-+#ifdef CONFIG_CORE_DUMP_USE_PROCESS_EFLAGS
-+	/* stash e_flags for use in core dumps */
-+	mm->saved_e_flags = elf_ex->e_flags;
-+#endif
-+
- 	/**
- 	 * DOC: "brk" handling
- 	 *
-@@ -1870,6 +1875,8 @@ static int fill_note_info(struct elfhdr *elf, int phdrs,
- 	struct elf_thread_core_info *t;
- 	struct elf_prpsinfo *psinfo;
- 	struct core_thread *ct;
-+	u16 machine;
-+	u32 flags;
- 
- 	psinfo = kmalloc(sizeof(*psinfo), GFP_KERNEL);
- 	if (!psinfo)
-@@ -1897,17 +1904,24 @@ static int fill_note_info(struct elfhdr *elf, int phdrs,
- 		return 0;
- 	}
- 
--	/*
--	 * Initialize the ELF file header.
--	 */
--	fill_elf_header(elf, phdrs,
--			view->e_machine, view->e_flags);
-+	machine = view->e_machine;
-+	flags = view->e_flags;
- #else
- 	view = NULL;
- 	info->thread_notes = 2;
--	fill_elf_header(elf, phdrs, ELF_ARCH, ELF_CORE_EFLAGS);
-+	machine = ELF_ARCH;
-+	flags = ELF_CORE_EFLAGS;
- #endif
- 
-+#ifdef CONFIG_CORE_DUMP_USE_PROCESS_EFLAGS
-+	flags = dump_task->mm->saved_e_flags;
-+#endif
-+
-+	/*
-+	 * Initialize the ELF file header.
-+	 */
-+	fill_elf_header(elf, phdrs, machine, flags);
-+
- 	/*
- 	 * Allocate a structure for each thread.
- 	 */
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 56d07edd01f9..5487d6ba6fcb 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -1059,6 +1059,11 @@ struct mm_struct {
- 
- 		unsigned long saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
- 
-+#ifdef CONFIG_CORE_DUMP_USE_PROCESS_EFLAGS
-+		/* the ABI-related flags from the ELF header. Used for core dump */
-+		unsigned long saved_e_flags;
-+#endif
-+
- 		struct percpu_counter rss_stat[NR_MM_COUNTERS];
- 
- 		struct linux_binfmt *binfmt;
--- 
-2.39.5
-
+>  #endif
+> --
+> 2.17.1
+>
