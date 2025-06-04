@@ -1,127 +1,143 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D471328ECDE
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E155B28EA55
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749043231; cv=none; b=fcG86a/myI1kPJ+8hoRKz3r+/FU9B2YIB+N3loIJJpLAUQT8qIgCS9/PTRRa+AGDIwyib3DOdTs33/di7V6spEBs640bmcruQIxEvRBCzZg244XvvB/EmUAhiny6nvOQbSE3KbpKOPpMNSz/kd3LK6b0GekVVRGhAMePpQT5+eE=
+	t=1749043290; cv=none; b=J1AuhD1qmPOjmx42/I5BzaKfgDoEfq66yr6Lh6Mb6bc386JUYOGG7djFe2ctIqACpr14c1SC80FyJhftm9SwUDaRkkW5Up6S+nAALtJpJ2XvvxtU+DmrD0LNjpspw4defg5i3XK+Euc5aq5QbMCsO8pcxp1DB1ca+KaagjVoKew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749043231; c=relaxed/simple;
-	bh=GtwuQJuy51N4t1zq/Q9Z6lCX128Pom+l/Co0cYVYgYo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=gb3LHz7Gh2sEwYPfaOB+tQZhZAxxJxoqltfnQSUIekxSbrjHwKSdgu3WAot6i6VW8e3Ljo2Nq7npN7bh35J1ZyWoQBDEiuavkZ8XyhGDdQBRv9dhGILNnoANdrIYZptR6UMV0u/ER4gYuZA7vFM06fJKGIEcbyXu4m+GvMR35FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3da6fe2a552so126256485ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:20:29 -0700 (PDT)
+	s=arc-20240116; t=1749043290; c=relaxed/simple;
+	bh=gOlSzSaCZlQLzn4CBTyY41/yRuizYmxBDqri/ySzeDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QKWqmuVj8Fkc/ae3Jv7XhF0Hl0tKYMWpaEhlX+WKACcxK3EV6elbtBeVK89QeFJktquVy5av+pJ8JvhJzCtyOcwwh6U3Urcom/fETCXzEy7tiIt5oORjGJ97f7c6pJPmeucP6dzKGBb0LL3OoHJZn69XWTn/5+h8tqqAFeQFkEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=gKJV9Nw8; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="gKJV9Nw8"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a375888297so653733f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1749043286; x=1749648086; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9FoPPyZXh48zUhjz0K7ZmNXk3NCW+1EH6zXuwMWdtUo=;
+        b=gKJV9Nw8LHWW0YbSHnEIBMwTjMU7U7P8T6IaRaVrtd6TgMQF3wWG1P1lCGa8H7+Sps
+         adKVGE3NP2pAZ4jPy/m+OlqH0gektmSaa4hZTxJk2b9UcBlTfawyK/xv03Tys+Cu76a/
+         K9QAiIXty+/Z+Ll2hM2ywB0W0U+3KSmwzTVa/35HNWAHk2732supD+ycFt2csM/G8+kb
+         c8ZYBF4ueLVtUBGsGBKfto4tPd1p7hemp7rS+l9w0bjGvSjNwmROMmkr9/c2StsgNMBV
+         bbh2rXCwP2qb2EsCgAjLgEFk5T8Clotq4EaW5rqGKqrbAIwQCcx+Mop7DQtvSw293KhC
+         BMoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749043229; x=1749648029;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=10aIB0t8KM36XkuxFgyqCSaNeuDx3XE/NxbhTOsT0v0=;
-        b=m0KYROkyQD2Y1LY8gOik0mHnD8DDIlhvgohih9xcFp5Im72xUeDPyEl5m1fb2u64J5
-         vvGjzSH89Reebe3yyZF3Ytfc8NTyb81CIwDPj21TsenZ1LhCw/4FItRbOWrxx1GHdhWp
-         1zpdTqMMhcuOmR49hBX3cJDbARnhCpr2Je0FZEQQKSwDhQAiG67F+quLEHl4YGnUwWsc
-         xcP/EK/PvlxJpMPhzkBnvVHeex5/+ZnnTvOwJNb8hZtTJ/mpZ5t5LthfsoIhQo62t07S
-         +EYMltQQdJxBRgqHtpgREpD6i6qfHMpmuGTTWQGZ+grXHhXsBKrG7SJwiNQS/0sKwg7r
-         DoaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVy4X+DZ6G9hZtYMUoIBg2/GQy68tKDRcmOO/FVFrq3W3B4DGkV81JeeuoKOTNpDvgc9GnjnRLQE+lamRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyagvTkIEKvzCzWtbHSz25Qb9C/vZHtZL0PpHpE5qxM8ethAI0X
-	vNTnsvSMqdJbGjsDRpUywPkfrw2VXcVAD8ItiEAJFDDOBhajP+uTFf3Li236WO5rrhkxpo2LI3/
-	99R6zQALK8j6V0+xxvnv8qdxOoph+5bIn4EdgHpI+ctg1cWtEl6ko0KCmAUo=
-X-Google-Smtp-Source: AGHT+IGwseWAf5OxBFbNEQ2+7rV/HvgblxWQTAb1qtVGBtvaspTA9QK9LkA8yHip5XZ3Qtm+IDi1O0NxObvlABQKQCrI0iybkd/M
+        d=1e100.net; s=20230601; t=1749043286; x=1749648086;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9FoPPyZXh48zUhjz0K7ZmNXk3NCW+1EH6zXuwMWdtUo=;
+        b=uExMkYM6eQOvJOYHwCCsthFkZsl/Sxzkhe6IbceMjj4fSbRPtGqpDDYEjEsknr+MET
+         me0Q2Yn6MA/oSMBzmUjn3rwyvChN9Bd6ypLAO364M9mqZjdVXrIGFj06s2J4gJsg56Wl
+         2wbTxRsQEoGG8AU89DRzEsKvmDNlJUMxValn1VGq6ZIl09kpMElDaajapG3P6v9mXh9d
+         lzve3IsIwqzNfZdXyZwPdxdLOYOpsKwshI0mrJml0f14pXIfbdbvuUFOWUxiNp8y9EHL
+         OLR6v4DECsf1p/6OfuCBSIjv1/cH074Bt++34hlEGrxYT8J4c9ZbMurOBcWWCFGvp5Gq
+         zjOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVK0e7skpzin8PeeWs6/Ydf1UAiQCN7Z4MbL8YBcv7pdjN05TSB2RSh1fEVXp0oCNM2XnXccTBcOEDs1bk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoC1SK9AcgRV51wLiNGe0tMKP2qSBwu5vTRSkrZ41IL0RdeKIZ
+	0zsbLonJwxtvCQmQ11kPmPXZyaOU4rajrp82rig9B8U9RNmdQQmYDvlE69O97t5Q0qw=
+X-Gm-Gg: ASbGncv9Sxg2V86L2eauP1O5vwlzbz6XYoc5EfVXSJ67iMoW+jfKheHbJ2Ug0pGNZCj
+	lC09veAtEpK/mhFZMhIkFTPJu03rMbZWE0g0tGNKk8lqNPsRcvVSg2ax+stIowVpHzjUs0a9Rnz
+	hCmOhBNXCknqeezf157x33O+/3qP5Kh1mDpQX6a3OjqcBs1ULc8OKQGnoRwTMkQ9yEvcRFWbNX9
+	zNib5OWxWIAvWAv3i6V4L57QhDE1y7ECWHtnogSgoAyoJ11xspP6a6TTicWY/2GnMosK3TP1LL7
+	44AgNtvx6VWouPvuxSBDvwXKEM8JfPAlyE/U8L8aYoKJ77Vo
+X-Google-Smtp-Source: AGHT+IGwF9eqMWG6go6awjyG5qynWmhDup7h3GdgJcJVmsx6gfF7MJu3xHvCKuQq4UMz9D9H9ckNww==
+X-Received: by 2002:a5d:45cc:0:b0:3a5:24cc:6d5e with SMTP id ffacd0b85a97d-3a524cc711amr548854f8f.3.1749043285998;
+        Wed, 04 Jun 2025 06:21:25 -0700 (PDT)
+Received: from localhost ([2a02:8071:6401:180:da11:6260:39d6:12c])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4f00972e8sm22115596f8f.67.2025.06.04.06.21.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 06:21:25 -0700 (PDT)
+Date: Wed, 4 Jun 2025 09:21:21 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	David Hildenbrand <david@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>,
+	Mike Rapoport <rppt@kernel.org>, Barry Song <21cnbao@gmail.com>,
+	linux-mm@kvack.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [DISCUSSION] proposed mctl() API
+Message-ID: <20250604132121.GC1431@cmpxchg.org>
+References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
+ <aDh9LtSLCiTLjg2X@casper.infradead.org>
+ <20250529211423.GA1271329@cmpxchg.org>
+ <aD3nFMS9kWHp7a4F@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3b07:b0:3dc:88ca:5ebd with SMTP id
- e9e14a558f8ab-3ddbedfca9emr32646245ab.20.1749043228917; Wed, 04 Jun 2025
- 06:20:28 -0700 (PDT)
-Date: Wed, 04 Jun 2025 06:20:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6840481c.a00a0220.d4325.000c.GAE@google.com>
-Subject: [syzbot] [btrfs?] WARNING in btrfs_add_delayed_iput
-From: syzbot <syzbot+0ed30ad435bf6f5b7a42@syzkaller.appspotmail.com>
-To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD3nFMS9kWHp7a4F@casper.infradead.org>
 
-Hello,
+On Mon, Jun 02, 2025 at 07:01:56PM +0100, Matthew Wilcox wrote:
+> On Thu, May 29, 2025 at 05:14:23PM -0400, Johannes Weiner wrote:
+> > On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
+> > > Barry's problem is that we're all nervous about possibly regressing
+> > > performance on some unknown workloads.  Just try Barry's proposal, see
+> > > if anyone actually compains or if we're just afraid of our own shadows.
+> > 
+> > I actually explained why I think this is a terrible idea. But okay, I
+> > tried the patch anyway.
+> 
+> Sorry, I must've missed that one ;-(
 
-syzbot found the following issue on:
+Apologies for my tone. The discussion is spread out over too many
+threads...
 
-HEAD commit:    3a83b350b5be Add linux-next specific files for 20250530
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=117a3ed4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28859360c84ac63d
-dashboard link: https://syzkaller.appspot.com/bug?extid=0ed30ad435bf6f5b7a42
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> > This is 'git log' on a hot kernel repo after a large IO stream:
+> > 
+> >                                      VANILLA                      BARRY
+> > Real time                 49.93 (    +0.00%)         60.36 (   +20.48%)
+> > User time                 32.10 (    +0.00%)         32.09 (    -0.04%)
+> > System time               14.41 (    +0.00%)         14.64 (    +1.50%)
+> > pgmajfault              9227.00 (    +0.00%)      18390.00 (   +99.30%)
+> > workingset_refault_file  184.00 (    +0.00%)    236899.00 (+127954.05%)
+> > 
+> > Clearly we can't generally ignore page cache hits just because the
+> > mmaps() are intermittent.
+> > 
+> > The whole point is to cache across processes and their various
+> > apertures into a common, long-lived filesystem space.
+> > 
+> > Barry knows something about the relationship between certain processes
+> > and certain files that he could exploit with MADV_COLD-on-exit
+> > semantics. But that's not something the kernel can safely assume. Not
+> > without defeating the page cache for an entire class of file accesses.
+> 
+> So what about distinguishing between exited-normally processes (ie git
+> log) vs killed-by-oom processes (ie Barry's usecase)?  Update the
+> referenced bit in the first case and not the second?
 
-Unfortunately, I don't have any reproducer for this issue yet.
+In cloud environments, it's common to restart a workload immediately
+after an OOM kill.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/e18e458d13c9/disk-3a83b350.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a1c40854811c/vmlinux-3a83b350.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/571f670b130a/bzImage-3a83b350.xz
+The hosts tend to handle a fairly dynamic mix of batch jobs and
+semi-predictable user request load, all while also trying to target
+decent average host utilization. Adapting to external load peaks is
+laggy (spawning new workers, rebalancing).
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0ed30ad435bf6f5b7a42@syzkaller.appspotmail.com
+In such setups, OOM conditions are generally assumed to be highly
+transient. And quick restarts are important to avoid cascading
+failures in the worker pool during load peaks.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 65 at fs/btrfs/inode.c:3420 btrfs_add_delayed_iput+0x2f8/0x370 fs/btrfs/inode.c:3420
-Modules linked in:
-CPU: 0 UID: 0 PID: 65 Comm: kworker/u8:4 Not tainted 6.15.0-next-20250530-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Workqueue: btrfs-endio-write btrfs_work_helper
-RIP: 0010:btrfs_add_delayed_iput+0x2f8/0x370 fs/btrfs/inode.c:3420
-Code: 4e ad 5d fe 48 8b 3b 48 83 c4 28 5b 41 5c 41 5d 41 5e 41 5f 5d e9 f8 bc ca fd e8 03 2a fa fd e9 e6 fd ff ff e8 f9 29 fa fd 90 <0f> 0b 90 e9 41 fe ff ff 44 89 f9 80 e1 07 80 c1 03 38 c1 0f 8c 72
-RSP: 0018:ffffc9000213f780 EFLAGS: 00010293
-RAX: ffffffff83c635b7 RBX: ffff888058920000 RCX: ffff88801c769e00
-RDX: 0000000000000000 RSI: 0000000000000100 RDI: 0000000000000000
-RBP: 0000000000000001 R08: ffff888058921b67 R09: 1ffff1100b12436c
-R10: dffffc0000000000 R11: ffffed100b12436d R12: 0000000000000001
-R13: dffffc0000000000 R14: ffff88807d748000 R15: 0000000000000100
-FS:  0000000000000000(0000) GS:ffff888125c53000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00002000000bd038 CR3: 000000006a142000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- btrfs_put_ordered_extent+0x19f/0x470 fs/btrfs/ordered-data.c:635
- btrfs_finish_one_ordered+0x11d8/0x1b10 fs/btrfs/inode.c:3312
- btrfs_work_helper+0x399/0xc20 fs/btrfs/async-thread.c:312
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+So I don't think OOM is a good universal signal that the workload is
+gone and the memory is cold.
