@@ -1,277 +1,129 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089E7149C55
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 18:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A49D139D;
+	Wed,  4 Jun 2025 18:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749061056; cv=none; b=tSJ2707YFXE31jsXD7yyD4l5md8ox8nuUYb1VPeji82YWW97LLPh+87hKPIxlvcCV/7yTArVOfd/SuRChkK74DDNeH8Ujlali727FHy4JJLqwKbt2pCJ5nrr76+6TS6XAuVsO1U+wtJWY/IXSuonUWe8UL90ulBeTvd9meHhuZo=
+	t=1749061187; cv=none; b=rtlNBtmbIdwQyOGr675SEEBOCQlxXYTT56x7AxVHJAM8pDAn4duICDvZzMgPlotuJl5gO2YiZf4i8CVEDBwi21nCY+3wD3T9P/PN/7yE3Pz2kP0BrbY8qzlHlRRXnq6OVsW9jGTTvVYgeqsZvrk/XZUTH6XHkJBZxlGDqzbZsRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749061056; c=relaxed/simple;
-	bh=psoh91nI2uI0Sy15561N6TGZ7CCZ0e/7pFH5VDdguCY=;
+	s=arc-20240116; t=1749061187; c=relaxed/simple;
+	bh=HEARLMHSlGAJvxpt66oclxxZn67jUYESwoOn9OnHHSs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jvNRDAY8lJAnK5HLoAf0lon0YgIauSIk+HhF9u/hopyj01FOEzdvqRwTAiiO62kYiGZwuJs4/1p4HyiCcLHtH1ZebP4LY/Zppq5TvJYZC9NWJ8/9F77yEcX7CVtKmPJZt/DmfVSaRJtMFdvpy55p49mMp9niNrXmw7qQZ4ZkNzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c40QDRH+; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=CtSwjND4/QOzzRC/PA2bXbaHXwwlWzvELx91F/L68u3wECVPQA8ShilPypZzZgEsoTTPKpMgLdSH+jyQU9xkfCDj/qhPzV+rj7yCNGfLHuZ0vjtqGqj6djc0kmmCVmfsUMrueY8b4sWl3J0xJGJ0jma/KuGxiHwZgu8IizUP1Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0g3rxno; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c40QDRH+"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-602c3f113bbso126515a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 11:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749061052; x=1749665852; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lj/ZRM00Y6bck08t7l8DzmjqoE1Rg6EPcxweeTc+cRY=;
-        b=c40QDRH+22d6Vb+dLa9JAyCadQjzz8TWWI/+xtM4PRnKRdyLCtul9H2PA2cw0wFjDy
-         8Mi5JLtbf/5bBlZv15800JQ4F2atvHRJ8OxnVZfV+PXfAHXVNzz7JCMqfRaKSYGfXswa
-         4kZpBlqKWrObb19JF/WauAKZMdlh0KeAJ34utdKOkwbUh/F/1UQVdGIX0q9sivL2C+ah
-         OhNlLL76TWN94+Rsu2Bg5kLJ6xNN5oBTNfV9Gjqd+HBpLk0OFt/zBaJGGCp09ciEEauM
-         g64fQidv59OvNFVPtaZ0irdHX4+zZkyS4AwfIjs1ANz87BKG5pPSGTA2MCt9oFfIe50+
-         9GLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749061052; x=1749665852;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lj/ZRM00Y6bck08t7l8DzmjqoE1Rg6EPcxweeTc+cRY=;
-        b=iiCdV8iEKc+D42+hDzumnc9OB9aKXMwNLhV+ZXhXqn2dCn/IsYDi5JnJu5/nfQGYPW
-         J0zpbwxuib+oqceSvTCk0bY6oeBJTNYDMKcOA1alnwXg8LAB5qvmDD3a7obn8ZFhEaVb
-         U6mI/IUBeVULeFjO7pPIks40HFUgRzoFt6thzCPxnhYcIxpD5FOt0xpXjm8CUMAQO2PB
-         TsD7zIpVu2e04WW71YuFsMOfWpejII/2uef6DyGf8btmwhevSvwJjjEYoAxZbkSTpNxy
-         JGlwdWC+lv7sXQzAcT16cPjGX4D1vVRBDvElf+77GAYsser+Jxoe2NDXsNJy2l4he7UK
-         iLYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCHb01DsCQNCJEWm7Kxg/r4S7p7PzkhnLTi0Pei0BaMdl81IpcSzplEO0tA46fNs2NjY6sxY7cOsRfUgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/C2h/+OmvCwQ3LF4DX5aG1Y8jWheViSU7mkKtIZ1JWPAuAgH+
-	v1ll6XhGCT/xAwNIGZD9wL3DQSkA2u/cd4sVkvapX+e9Z9/QBnPAWvlRGC5b1azzcgxdDd39Iua
-	LJ9cG9AzLvKXO0oKF/okY5Qn58ixzRrEeUKhK4n1Yi3uvsWygTnPu+o51W/g/8w==
-X-Gm-Gg: ASbGncuMqDigCkoblg6T74NycmE9XNWw7A66JWbFH7nxbSOLUXCKWw5fwA2K2LGXAy5
-	R6wfC8a7jEhTt4Lp8sFFGRZ/zcgom1zR1wvBrSAzjk/et62RJEHk98acOGUA1KorXj3rDlyZX1L
-	PuF/RCvHpY2olb8XF291DyPhadr4oMWcyTkHad5JKgyUYDpfJQT3fpFURCD53kG4e+GzmVTx8=
-X-Google-Smtp-Source: AGHT+IEEYnFIfamNc0xCTG14sb0jyvopHlMsu5d+GsAMF5NnKMqT1Fw2V2XC4qCaskaDO8Sd+9KklLkmaA/Y7an7mAA=
-X-Received: by 2002:a17:906:f295:b0:ade:5ba:40e6 with SMTP id
- a640c23a62f3a-ade05ba425bmr78144366b.18.1749061052080; Wed, 04 Jun 2025
- 11:17:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0g3rxno"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A080BC4CEF3;
+	Wed,  4 Jun 2025 18:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749061186;
+	bh=HEARLMHSlGAJvxpt66oclxxZn67jUYESwoOn9OnHHSs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=f0g3rxnon+OGy8uW/iBIcJwV9YE3hO0oHNm6DDZ55HCCz/LTH/+bD0xMJF6BurkaC
+	 /Rr9eRIrxbTkEJGbzLfmQBNf+cUNufZb7M47RX0Xik1voyeJTnBbwDHWSaTRxU5brb
+	 44/UFu9+0KAecoLEoobh5H18cmwR9thpc0TMefFNW66Y2Uz0uA4rjJB65IMMktbAYm
+	 RpEpzRYzxTSZMTJUiZjEsk2vuZ8DMG1h9i+FewdeKvrnr72COBjhF2fe74JMn6F3nE
+	 iiA7ouEZFfzRDUqFmY8vZ+PsMs4/NU7j8MljD036etrx2sshzectjBaMg58McQOCzR
+	 dpgcLnHOwVK2A==
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-4079f80ff0fso756345b6e.1;
+        Wed, 04 Jun 2025 11:19:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdulboepyeNAsfLnsrRsxPhPj4e2bXg1ZX7X1XM7cwUI8I/Grp61WhZj1kFMuVxIlwZ5hpYTUuhgo/@vger.kernel.org, AJvYcCV32YbPn0K+dU1u4JAudf9Yw9nnzdkqIvnWHhVc5bNOTIEWPXIm4C/NL2kNAWGcpSCmtowbMWn4Ir7QcvA=@vger.kernel.org, AJvYcCWTp99GqPAB4tEE0KojuxgX6Rxu614IOZuzN1kcLH8cTz2OqivXJR7Q1EsvdXSfm7bATupQ5wLi42E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFtlkVBWjuOZNTTGyL/dp4rZfRxjq463YVPLMqxsTqQJ5bp3uB
+	Ffdck9MbQaywCdsLOTc+vaZBKdE7TlEQ9633jX/yiFgNPQ4025VloKXYUHe9eKTHiLLLCJ5ghwc
+	q2grQK91Ia24Rgisuv59XLBgmbHUnd8I=
+X-Google-Smtp-Source: AGHT+IFzTiHFsMcNwEDy6J6DzLls3gsM6anKsUoGKN8wkS7W1gW9kVqAPb6jp1/ZPEVu8ZqkTyPj+gUXdCirNDH6nRE=
+X-Received: by 2002:a05:6808:22a2:b0:3f3:d699:e1a8 with SMTP id
+ 5614622812f47-408fac108c5mr484765b6e.13.1749061185873; Wed, 04 Jun 2025
+ 11:19:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521225307.743726-1-yuzhuo@google.com> <20250521225307.743726-3-yuzhuo@google.com>
- <aC9lXhPFcs5fkHWH@x1>
-In-Reply-To: <aC9lXhPFcs5fkHWH@x1>
-From: Yuzhuo Jing <yuzhuo@google.com>
-Date: Wed, 4 Jun 2025 11:17:20 -0700
-X-Gm-Features: AX0GCFupmXsRt1tE_ch4UHdMNbeRq4klRtHqLWhzFMfMGav7I8d9s-ouD80bzCs
-Message-ID: <CADQikVDs3msXqZ6tyoXR0WeN4D_9snxWyk2kXeDw5iAs+BHFuw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] perf tools: Add sha1 utils
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Liang Kan <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
-	James Clark <james.clark@linaro.org>, Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev
+References: <552d75b2-2736-419f-887e-ce2692616578@kernel.org>
+ <ee1117cf-6367-4e9a-aa85-ccfc6c63125d@gmail.com> <6f23d82c-10cc-4d70-9dce-41978b05ec9a@kernel.org>
+ <aCzNL9uXGbBSdF2S@black.fi.intel.com> <fea86161-2c47-4b0f-ac07-b3f9b0f10a03@kernel.org>
+ <aC2UzG-eycjqYQep@black.fi.intel.com> <CAJZ5v0gRFwKhq21ima3kT0zzFLk4=47ivvzJqARksV7nYHTJAQ@mail.gmail.com>
+ <CAJZ5v0h9--jFVBtQ5F7Gee3Cy8P3TeSLdiHEWykQ=EsZdoffmg@mail.gmail.com>
+ <aDnpfKvLwRZsKxhH@black.fi.intel.com> <CAJZ5v0gjA2B4AnaYpfYpaNDo49k4LM2FGSrPFFuOCJ62bCMmkA@mail.gmail.com>
+ <aEBpdwMfxp5M4Hxr@black.fi.intel.com>
+In-Reply-To: <aEBpdwMfxp5M4Hxr@black.fi.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 4 Jun 2025 20:19:34 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hhoh0Fqnph6ZcbyZBj1Wp0t8UqnLr27TAVW31ZyKPL3Q@mail.gmail.com>
+X-Gm-Features: AX0GCFsu9AnuhJSn72E2Tb6mBLfmajSBROpQVego6uWW9V1aoDEJzIL15ch0Xhg
+Message-ID: <CAJZ5v0hhoh0Fqnph6ZcbyZBj1Wp0t8UqnLr27TAVW31ZyKPL3Q@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous device
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Mario Limonciello <superm1@kernel.org>, 
+	Denis Benato <benato.denis96@gmail.com>, mahesh@linux.ibm.com, oohall@gmail.com, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com, lukas@wunner.de, 
+	aravind.iddamsetty@linux.intel.com, 
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, Alex Deucher <alexander.deucher@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Arnaldo,
-
-Thanks for testing the patches!
-
-> In file included from util/sha1_generic.c:18:
-> util/sha1_base.h: In function =E2=80=98sha1_base_do_finalize=E2=80=99:
-> util/sha1_base.h:77:21: error: comparison of integer expressions of diffe=
-rent signedness: =E2=80=98unsigned int=E2=80=99 and =E2=80=98int=E2=80=99 [=
--Werror=3Dsign-compare]
->    77 |         if (partial > bit_offset) {
->       |                     ^
-> cc1: all warnings being treated as errors
-
-Oh, I didn't see that on my GCC 14.2.  A quick fix would work:
-
---- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-+++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
-@@ -71,7 +69,7 @@
- static inline int sha1_base_do_finalize(struct sha1_state *sctx,
-                                        sha1_block_fn *block_fn)
- {
--       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-+       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-        __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
-        unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
-
-
-To test it, I added -Werror=3Dsign-compare to my local Makefile.config to
-force the error.
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index d19d1f132726..9909611be301 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -225,9 +225,9 @@ endif
-
- # Treat warnings as errors unless directed not to
- ifneq ($(WERROR),0)
--  CORE_CFLAGS +=3D -Werror
--  CXXFLAGS +=3D -Werror
--  HOSTCFLAGS +=3D -Werror
-+  CORE_CFLAGS +=3D -Werror=3Dsign-compare -Werror
-+  CXXFLAGS +=3D -Werror=3Dsign-compare -Werror
-+  HOSTCFLAGS +=3D -Werror=3Dsign-compare -Werror
- endif
-
- ifndef DEBUG
-
-
-While testing with "make -C tools/perf -f tests/make make_debug", I saw
-similar compile errors in libjvmti.c:
-
-jvmti/libjvmti.c: In function =E2=80=98copy_class_filename=E2=80=99:
-jvmti/libjvmti.c:148:39: error: comparison of integer expressions of
-different signedness: =E2=80=98int=E2=80=99 and =E2=80=98long unsigned int=
-=E2=80=99
-[-Werror=3Dsign-compare]
-  148 |                         for (i =3D 0; i < (size_t)(p - class_sign);=
- i++)
-      |                                       ^
-jvmti/libjvmti.c:155:31: error: comparison of integer expressions of
-different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {a=
-ka =E2=80=98long unsigned int=E2=80=99}
-[-Werror=3Dsign-compare]
-  155 |                 for (j =3D 0; i < (max_length - 1) && file_name
-&& j < strlen(file_name); j++, i++)
-      |                               ^
-jvmti/libjvmti.c:155:68: error: comparison of integer expressions of
-different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {a=
-ka =E2=80=98long unsigned int=E2=80=99}
-[-Werror=3Dsign-compare]
-  155 |                 for (j =3D 0; i < (max_length - 1) && file_name
-&& j < strlen(file_name); j++, i++)
-      |                                                                    =
-^
-
-I've just sent a separate patch to the mailing list:
-https://lore.kernel.org/lkml/20250604173632.2362759-1-yuzhuo@google.com/T/
-
-
-> Humm that part is the same as in the kernel...
+On Wed, Jun 4, 2025 at 5:43=E2=80=AFPM Raag Jadav <raag.jadav@intel.com> wr=
+ote:
 >
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3Df =
-include/crypto/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {print =
-$3}')
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypto/=
-sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /tm=
-p/original
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3Df =
-tools/perf/util/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {print=
- $3}')
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypto/=
-sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /tm=
-p/copy
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ diff -u /tmp/original /tmp/copy
-> --- /tmp/original       2025-05-22 14:48:31.338406860 -0300
-> +++ /tmp/copy   2025-05-22 14:48:58.401603439 -0300
-> @@ -1,3 +1,7 @@
-> +
-> +       return 0;
-> +}
-> +
->  static inline int sha1_base_do_finalize(struct shash_desc *desc,
->                                         sha1_block_fn *block_fn)
->  {
-> @@ -13,10 +17,3 @@
+> On Fri, May 30, 2025 at 07:49:26PM +0200, Rafael J. Wysocki wrote:
+> > On Fri, May 30, 2025 at 7:23=E2=80=AFPM Raag Jadav <raag.jadav@intel.co=
+m> wrote:
+> > > On Fri, May 23, 2025 at 05:23:10PM +0200, Rafael J. Wysocki wrote:
+> > > > On Wed, May 21, 2025 at 1:27=E2=80=AFPM Rafael J. Wysocki <rafael@k=
+ernel.org> wrote:
+> > > > > On Wed, May 21, 2025 at 10:54=E2=80=AFAM Raag Jadav <raag.jadav@i=
+ntel.com> wrote:
+> > > > > > On Tue, May 20, 2025 at 01:56:28PM -0500, Mario Limonciello wro=
+te:
+> > > > > > > On 5/20/2025 1:42 PM, Raag Jadav wrote:
+> > > > > > > > On Tue, May 20, 2025 at 12:39:12PM -0500, Mario Limonciello=
+ wrote:
 >
->                 block_fn(sctx, sctx->buffer, 1);
->         }
-> -
-> -       memset(sctx->buffer + partial, 0x0, bit_offset - partial);
-> -       *bits =3D cpu_to_be64(sctx->count << 3);
-> -       block_fn(sctx, sctx->buffer, 1);
-> -
-> -       return 0;
-> -}
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+> ...
+>
+> > > > > > > From the driver perspective it does have expectations that th=
+e parts outside
+> > > > > > > the driver did the right thing.  If the driver was expecting =
+the root port
+> > > > > > > to be powered down at suspend and it wasn't there are hardwar=
+e components
+> > > > > > > that didn't power cycle and that's what we're seeing here.
+> > > > > >
+> > > > > > Which means the expectation set by the driver is the opposite o=
+f the
+> > > > > > purpose of this patch, and it's going to fail if any kind of er=
+ror is
+> > > > > > detected under root port during suspend.
+> > > > >
+> > > > > And IMV this driver's expectation is questionable at least.
+> > > > >
+> > > > > There is no promise whatsoever that the device will always be put=
+ into
+> > > > > D3cold during system suspend.
+> > > >
+> > > > For instance, user space may disable D3cold for any PCI device via =
+the
+> > > > d3cold_allowed attribute in sysfs.
+> > > >
+> > > > If the driver cannot handle this, it needs to be fixed.
+> > >
+> > > Thanks for confirming. So should we consider this patch to be valid
+> > > and worth moving forward?
+> >
+> > It doesn't do anything that would be invalid in principle IMV.
+> >
+> > You need to consider one more thing, though: It may be necessary to
+> > power-cycle the device in order to kick it out of the erroneous state
+> > and the patch effectively blocks this if I'm not mistaken.
+> >
+> > But admittedly I'm not sure if this really matters.
+>
+> Wouldn't something like bus reset (SBR) be more predictable?
 
-There were some other fixes that I made only to the perf tree version,
-while maintaining verbatim for other parts.  Here's a script that
-retains and compares only the copied parts.
+Maybe.
 
-  # Ignore everything after sha1_transform
-  diff -u -B -I "^#include " <(sed -n
-'/EXPORT_SYMBOL(sha1_transform)/q;p' lib/crypto/sha1.c)
-tools/perf/util/sha1.c
-  diff -u -B -I "^#include " -I "sha1_zero_message_hash" -I "^struct
-sha1_state;$" -I "^void sha1_init(__u32 \*buf);$" \
-      <(sed 's/shash_desc/sha1_state/g;' include/crypto/sha1.h)
-tools/perf/util/sha1.h
-  diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
-      <(sed 's/shash_desc \*desc/sha1_state *sctx/g;
-/shash_desc_ctx(desc)/d' include/crypto/sha1_base.h)
-tools/perf/util/sha1_base.h
-  # Ignore everything after crypto_sha1_finup
-  diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
-      <(sed -n -e '/const u8
-sha1_zero_message_hash/,/EXPORT_SYMBOL_GPL(sha1_zero_message_hash)/d'
-\
-               -e 's/shash_desc/sha1_state/g;
-/EXPORT_SYMBOL(crypto_sha1_finup)/q;p' crypto/sha1_generic.c) \
-      tools/perf/util/sha1_generic.c
-
-And the changes are as below (including the quick fix above), with one
-changing the sign and integer type and another fixing type mismatch from
-const u8 * to const char *.
-
-Should we send another patch to the kernel tree version to fix the sign
-error, or we add rules to allow perf tree only changes?
-
---- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-+++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
-@@ -71,7 +69,7 @@
- static inline int sha1_base_do_finalize(struct sha1_state *sctx,
-                                        sha1_block_fn *block_fn)
- {
--       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-+       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-        __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
-        unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
-
-@@ -95,7 +93,7 @@
-        __be32 *digest =3D (__be32 *)out;
-        int i;
-
--       for (i =3D 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
-+       for (i =3D 0; i < SHA1_DIGEST_SIZE / (int)sizeof(__be32); i++)
-                put_unaligned_be32(sctx->state[i], digest++);
-
-        memzero_explicit(sctx, sizeof(*sctx));
---- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-+++ tools/perf/util/sha1_generic.c      2025-05-16 10:52:59.219531034 -0700
-@@ -27,7 +23,7 @@
-        u32 temp[SHA1_WORKSPACE_WORDS];
-
-        while (blocks--) {
--               sha1_transform(sst->state, src, temp);
-+               sha1_transform(sst->state, (const char *)src, temp);
-                src +=3D SHA1_BLOCK_SIZE;
-        }
-        memzero_explicit(temp, sizeof(temp));
-
-Thanks!
-
-Best regards,
-Yuzhuo
+The device state is most likely inconsistent in that case, so it depends.
