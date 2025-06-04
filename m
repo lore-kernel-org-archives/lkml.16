@@ -1,63 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD81111BF;
-	Wed,  4 Jun 2025 20:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2611A42C4
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 20:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749067679; cv=none; b=B6nUQD5ApEe39K3N8um3W7FuhgSaDTLaVcXjx3st+658NvEEdbFf1shLkeTbTyM7CdKEgrmmau7GlScv1T9U3TPs90dVw6zpNlwuxVpRdItxVlCZg9CzhLaw0nw4JVy5S7BXXRN3vkYlNxEmUJjeDS1tG5bW5FxSuoClYKgRzpI=
+	t=1749067693; cv=none; b=JsmuvlMp6EQveqdHzRHUqwPX2Ksr9dPq/Mcn8+nqXpJ5NxN+urwPNqOpO7sjMedbEhEGZvgBWjAnIc3MV6NlMw9egY2kPxNI/pCHI2HDT5RhBol3JbflYJwoFbC0ZJ5ElhDiQOWJ5oldmMfvbELJdonM/4vIMce42/WMlKkUDuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749067679; c=relaxed/simple;
-	bh=Qit1sA+kwTzNsiFqm8laY+LA4eKEs3f0ODnrucD8s3g=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qcj67LIuBzTFyoN2nJcjt1yWJSrWM+sPcesHj6QKw3sRFAUQgAdMZ+A79RhFRqbfkNpmi9caD6uUUJADFWpa8ZHtWeJ/gx2hf9cjrkuyQqEk1GpuJ20sNLRxRyj9HmmwIhIojpecJiC76rUQzoR4fHJ/FTGZqcoXulXphGRgXMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdC7nw6a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749067693; c=relaxed/simple;
+	bh=rPLkg40C2876sO8ZNF8kBgzPo/yntorrDO25Fyad8vA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eTYF+FW/PWXizrJVdasFexRiDAQEM50D9jdQ6oaq26/N+FYSgZRGZKhyHWVgWYLLW8b/m+PpSK4b8i5++F1ibv+nNwsGtlJVSTSjUeI3VAdSvpLck6Gqzq2G+YW+YW7gn7tXU3IIE11BpKfD1gbjC0CFB+G2y9z2ciPr65mkqIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eOX+Y9uY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QbNtSpua; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdC7nw6a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C20C3C4CEED;
-	Wed,  4 Jun 2025 20:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749067678;
-	bh=Qit1sA+kwTzNsiFqm8laY+LA4eKEs3f0ODnrucD8s3g=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=PdC7nw6afX25n4WEJVRvi2+YxIqiFD20oOX8Yq0a++IG/fUw6SciygncXQdwOrr/J
-	 3rrE5RTp87d4nuyZjcDlrN8ZfOGY/gu8CD2rnVPCR+9Ao8YfjvJBkn9e0FJF5ZCOgl
-	 L9vZn+zU76Gu31IcyOg0ixtN8Z8hrAyxE42P7r6zZeEKJ+mwq0s1PODJj9yAyxbhqE
-	 il8CJ54ZWm0il1QzRV2mvPldvDP7IlNsRO8o53xBBGOmeLPi9cv47MLK9pWzRkENQ9
-	 PlwMXqFjN0uYkxL122ntO2K6FZMt9g41K6isccNoX5sC8PuapE6/M65shpIRsB8MP2
-	 nedDjnj6DPDpA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB19B38111E5;
-	Wed,  4 Jun 2025 20:08:31 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI changes for v6.16
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250604171300.GA533412@bhelgaas>
-References: <20250604171300.GA533412@bhelgaas>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250604171300.GA533412@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.16-changes
-X-PR-Tracked-Commit-Id: 3de914864c0d53b7c49aaa94e4ccda9e1dd271d7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3719a04a80caf660f899a462cd8f3973bcfa676e
-Message-Id: <174906771057.2413472.14519966999221384526.pr-tracker-bot@kernel.org>
-Date: Wed, 04 Jun 2025 20:08:30 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Manivannan Sadhasivam <mani@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eOX+Y9uY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QbNtSpua"
+Date: Wed, 4 Jun 2025 22:08:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749067689;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UJS2JSKxRn2lcygSVB+S9SJi/+0Jb7bqFRFBhCAFLn8=;
+	b=eOX+Y9uY7eiqNDY+mXchKLjX6f/ajOGm6nIsc5dMEFn4DHCgm0NGdZ7peXF2tZBBCoYnuE
+	/P3FWgXL2Ac8Xaka+JTW9DNhBT+qNQDQBZmGL5P0TBY954GwZ7fA1neI6Skr1my4aA3YrM
+	BXQ825uU9j06utoKR3UajSP58AfOZYe6ORW9vQXqD8Q8u/qr3CYKmrc7S6Vw5d4xf0/zxo
+	M/goRUJ+mOKLMlZ9bK3EiCxdEJCdXIQiTZw19c1MFEByEGBCDeB3wLyyruFE2wkrhAVjSq
+	eebYcEFX2xWiaQKO8jMFnEbmopf81HITQknLt114cImolg9r7mGe6xUoxaaM0A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749067689;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UJS2JSKxRn2lcygSVB+S9SJi/+0Jb7bqFRFBhCAFLn8=;
+	b=QbNtSpuagaM07NcXmJ6CkOe8MB9Hkq+ElQWJjzQ+PS+OXBw2ulYrolSyAKQS487xqNoJSq
+	JifbKje3XqA5bKBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Chris Mason <clm@meta.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: futex performance regression from "futex: Allow automatic
+ allocation of process wide futex hash"
+Message-ID: <20250604200808.hqaWJdCo@linutronix.de>
+References: <3ad05298-351e-4d61-9972-ca45a0a50e33@meta.com>
+ <20250604092815.UtG-oi0v@linutronix.de>
+ <372d8277-7edb-4f78-99bd-6d23b8f94984@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <372d8277-7edb-4f78-99bd-6d23b8f94984@meta.com>
 
-The pull request you sent on Wed, 4 Jun 2025 12:13:00 -0500:
+On 2025-06-04 11:48:05 [-0400], Chris Mason wrote:
+> > --- a/kernel/futex/core.c
+> > +++ b/kernel/futex/core.c
+> > @@ -1687,7 +1687,7 @@ int futex_hash_allocate_default(void)
+> >  	scoped_guard(rcu) {
+> >  		threads =3D min_t(unsigned int,
+> >  				get_nr_threads(current),
+> > -				num_online_cpus());
+> > +				num_online_cpus() * 2);
+> > =20
+> >  		fph =3D rcu_dereference(current->mm->futex_phash);
+> >  		if (fph) {
+> >=20
+> > which would increase it to 2048 as Chris asks for.
+>=20
+> I haven't followed these changes, so asking some extra questions.  This
+> would bump to num_online_cpus() * 2, which probably isn't 2048 right?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.16-changes
+Assuming you have 256 CPUs and -m 4 -t 256 creates 4 * 256 =3D 1024 then
+threads =3D 512 gets computed (=3D min(1024, 256 * 2)). Later we do 512 * 4
+(roundup_pow_of_two(4 * threads)). This makes 2048 hash buckets.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3719a04a80caf660f899a462cd8f3973bcfa676e
+> We've got large systems that are basically dedicated to single
+> workloads, and those will probably miss the larger global hash table,
+> regressing like schbench did.  Then we have large systems spread over
+> multiple big workloads that will love the private tables.
+>=20
+> In either case, I think growing the hash table as a multiple of thread
+> count instead of cpu count will probably better reflect the crazy things
+> multi-threaded applications do?  At any rate, I don't think we want
+> applications to need prctl to get back to the performance they had on
+> older kernels.
 
-Thank you!
+This is only an issue if all you CPUs spend their time in the kernel
+using the hash buckets at the same time.
+This was the case in every benchmark I've seen so far. Your thing might
+be closer to an actual workload.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> For people that want to avoid that memory overhead, I'm assuming they
+> want the CONFIG_FUTEX_PRIVATE_HASH off, so the Kconfig help text should
+> make that more clear.
+>=20
+> > Then there the possibility of=20
+=E2=80=A6
+> > 256 cores, 2xNUMA:
+> > | average rps: 1 701 947.02 Futex HBs: 0 immutable: 1
+> > | average rps:   785 446.07 Futex HBs: 1024 immutable: 0
+> > | average rps: 1 586 755.62 Futex HBs: 1024 immutable: 1> | average
+> rps:   736 769.77 Futex HBs: 2048 immutable: 0
+> > | average rps: 1 555 182.52 Futex HBs: 2048 immutable: 1
+>=20
+>=20
+> How long are these runs?  That's a huge benefit from being immutable
+> (1.5M vs 736K?) but the hash table churn should be confined to early in
+> the schbench run right?
+
+I think 30 secs or so. I used your command line. The 256 core box showed
+a higher improvement than the 144 one. I attached a patch against
+schbench in the previous mail, I did then
+	./schbench -L -m 4 -M auto -t 256 -n 0 -r 60 -s 0 -H 1024 -I
+
+=E2=80=A6
+> This schbench hunk is just testing the performance impact of different
+> bucket sizes, but hopefully we don't need it long term unless we want to
+> play with even bigger hash tables?
+
+If you do "-H 0" then you should get the "old" behaviour. However the hash
+bucket are spread now over the NUMA nodes:
+
+| dmesg |grep -i futex
+| [    0.501736] futex hash table entries: 32768 (2097152 bytes on 2 NUMA n=
+odes, total 4096 KiB, linear).
+
+Now there are 32768 hash buckets on both NUMA nodes. Depending on the
+hash it computes, it uses the data structures on NUMA node 1 or 2. The
+old code allocated 65536 hash buckets via vmalloc().
+
+The bigger hash table isn't always the answer. Yes, you could play
+around figure out what works best for you. The problem is that the hash
+is based on the mm and the (user) memory address. So on each run you
+will get a different hash and therefore different collisions.
+If you end up having many hash collisions and then block on the same
+lock then yes, larger hash table will be the cure. If you have many
+threads doing the futex syscall simultaneously then making the hash
+immutable avoids two atomic ops on the same memory address.
+This would be my favorite.
+
+Now that I think about it, it might be possible to move the atomic ops
+the hash bucket itself. Then it wouldn't bounce the cache line so much.
+Making the hash immutable is simpler.
+=20
+> -chris
+
+Sebastian
