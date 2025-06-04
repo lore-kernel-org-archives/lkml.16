@@ -1,259 +1,283 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2042.outbound.protection.outlook.com [40.107.220.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1CD202C2B
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749071630; cv=none; b=tChTYm4EkpQH7w+lm5Qzr/bCnSQIPi5lrR0ZbjwfP2arZbk08z/dIM6c+lGHByCm/HxDfJbA8Py4kMrSY1NSX5gFETB2k1n2qnr6ee8e3ymRNBnlks3PGDu2Uyil2yfD0PlQOlFbTjIp0RhKKqKuAOwsFJma/rbuyaztI8UUXnI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749071630; c=relaxed/simple;
-	bh=sWOJA7v7Ov16Q2lLF9qoja13SWcCS3EU3H+3Y0lbZz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f5TFxJx84SbVaBz4+VHldWW/NisoCF5LWtiDf+NdT8e/5oxFJloUFLSIQvbisGToCofK0HgwfjlinZAgVP0RnIiA5+D7di1zU6evlaXzvTI9il8vkYslqeW/U5b+4yWAhX0RNFfh6fvlxiE1zgZ1AyC0XgdiKPbkbxLQBNjGYDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=J48ZOjUs; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A30D111BF
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 21:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749071679; cv=fail; b=Rex3AsPCCoHp32tx0FIRvngnTJxcAU4bBv1pgH6sIRciymE27uv93pWtvdtzg73O0kfsYJ0L0uWTMRA+zAaSfK/bgHJloItE6SpJR3UEzWuEKJHgr8rG16ppYrUyfKGwzZLb1VAfxK9Tc3q09vaq+XpeJ8xm5LJ5MnTSPHmXsOk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749071679; c=relaxed/simple;
+	bh=Z6vRVoTEFxw//we5ENqzsHdyrBlcfh+QXHjJm5I0iRI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ZkfoopspwMc3RQcEmCuXi6P+s37ZlkklSjsXnQH5W9yWwUfQ0fjX3NQY8k2R083tpIwWswH7YMMN0afUbWeRdRyQCIhTb6P2mJ+JLg2OT7zWRdrsjh5b/50FQx5va0rayfWOc3x2mmJ4SrcLPGinYqy0X9G8kCnfO3b3FbEl6Vs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Hahm4H2S; arc=fail smtp.client-ip=40.107.220.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="J48ZOjUs"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e818a57287eso67668276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 14:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1749071627; x=1749676427; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RFILvALIoE88+amXnoIecD1FsclDUOa9FdnGICXctS8=;
-        b=J48ZOjUs0gsj1gujKn+DBWQnSptDO5yRJ16jdvn4uPtU3S3UZPfZwMAVcfgXv+j/f/
-         ALk6LRWyNA+CakxXcVJx2dlmjB41IXZmSRtRRrIdt3oXwPdBWmiebEfcywF6GyZLUdyp
-         D2SmzhGHh/zSxeHGLDqdnLJCzGsLrPDfXfrF76pF5ZoyWFO2htuTzJqDCILONYKufjdS
-         eXY28de8CiPJiT8ola9UaGLNnJqtpY5M9y/qWPutXkIVXpBjW7s3jNnyc5tAsOw5zY0b
-         DN7NeSufe1nUM2cXLlW8koJwvxtNMGRKTJj8hash7GuvLSPcsAYEvd+3a0c8ApvrZegy
-         E7lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749071627; x=1749676427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RFILvALIoE88+amXnoIecD1FsclDUOa9FdnGICXctS8=;
-        b=JT6JAiTWjtQsKFJ8e4f/qMoj9stu93PDDIW+PUYTdqSEI/c5u+pokC4784UfmgJt/Z
-         jLjLWq4YzP0a87Cv/vPq7Eju7xr6othmw6c2eu3ZalYFFVYkhPW+mJaqy7c7kZuN9Vmk
-         58KIVDkAny9/S2YJQkILeRhwcrl3jELRnuO3/OyBxAsLgq+MMvNk/iRbNT7iXNepyz9z
-         uRbgkNr+CERL24QyrwaobBtPrLyBm+hnvXbLaylsbSfF+utPA7VNgtm6AVUZD+7+i4uH
-         VzhDYPf4SwUfZlY8OcpXcCf3LaiW+3XLs9+fjw44zl9oiMt7PiuDXKamV/JP926K6Lm8
-         +OoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVP/ExKjzifqVQjnHCQ5nLTNWxr1AlCEB56HTeYiFk76U2MyBvCtL1AK5PzcOWPVizkuQtCXQGxplX9kFA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynTwHAPJeMxdgFtt6mgs8MGeZKH6ApZrhhNvU8idTgwGe75MpJ
-	mTMVXvZxm76RF2Y+IXE+87rtgGJyaAMYH051ZJhWd88j2mdNBb6TPoQZfSRCgYqLVNohoLEtaW4
-	8C2qxYwxtAUsyIeuwgWvOsZSGRIdsDua5oMzCSyiu
-X-Gm-Gg: ASbGnctQu1eVtvE1KG55HD8K7/icwnH6+T6B/OgOHrEZ0Kf5UmeATlueB1ZFSe2tomp
-	e97wBWiA2fsr8PhezEkZL9Lmu356Osql6/LizS/yu/2Id9YFYIx/qF4rz/KNWCNOKo8r7JKh/a+
-	+OId2yt/pdM0Q69+bfBiIwx1wVLqE10qksd2n9LXhrfSY=
-X-Google-Smtp-Source: AGHT+IEzd3OT8v9HoRUzTyFAkQerHkAukxjDsy8RjmPaJTovfL79YwQkPcrXXduheAqGSFN+2XKJ11JKw/rxJLleniI=
-X-Received: by 2002:a05:6902:100c:b0:e7f:7352:bb31 with SMTP id
- 3f1490d57ef6-e8179d82fc0mr6218584276.39.1749071626412; Wed, 04 Jun 2025
- 14:13:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Hahm4H2S"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Nt08qRudeGd/KvhxjPGnUS8nfKQU8PMUdzglnjQgzRmisUfAN4Q/+N7Og/zciuGNxzhmc486UWJuT4KAy+cPJHYl2kj9Qg22pzCUTiUA68kjoHAQi13aXYEcSTrb/7pNnpPvM7j6aF4f2ZBlk9N1Q5IUfuiPCB7lya0xos+p31qeqUdSUW0hQvCigmTefD5AQkaa2XA4EggK4D9GsjIJLIQJe5Tw5tAtu++FjTPNK2n0O+DBdxS7Fv3oqruW/dU4lHCvhdxhzqyxM/GHXOZTHpIz8+s5krn3StrE3KIYTMZneXC9x8iV6SgW/uMzz4XT5G9xg+jv9M9lkk0TR7pcJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ftda8YoFNbQgU+/g34TsFysXCcABjB6iTs2PiWe/Wuk=;
+ b=yf8uJoSjhNzkTdB3s6WqgKoAwiNKz6uUi5bno/wqnuDxbBOXL5WP87jTUjTaPrhPphLEUvCL/B44cwYlDqFIJom/IzcUsfZf5jIEEtL8nYxRB0KLKsLEpafytsDucZ01jFHo8fPqGBszKxAmtXhXAL1dU5Co/X7tcOy1ZUmjM9/abIZSx78fZM5AvtIQG1K3M/ihm13Ix1HSj3v4MddaWoRS2kocBlRiG8puZfqOx3+vHD9Os2MHrkxLEdspC6nBwScBP8/U4j2GXezyUBQ1okDVjJg+kMNH/D4dHN6S41tsJpVt+BUZ9lec9nJd83Xd23tjLPj6GOS5mBrAEgLTkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ftda8YoFNbQgU+/g34TsFysXCcABjB6iTs2PiWe/Wuk=;
+ b=Hahm4H2SncwebcGGgBKfAQoKZzvd4gQ+vvhBPAo13BWDsLbRvif4+YcYfGUdhz+1ZHzV19kdqn2VNOeHPvGNDbt005x97DQ39Vq/sgHaem60xIPHmWhN9d8NRIqy+IRauJr7i0iZs8eUpFw2hJzxM/7CRKWyKamYLrWo0CWhkoXLWuxbugNbSvB/kktt3Ni6IL2/SqjaZe5rZdWCM74aNswrG9+rlDT0tLd5difAsPSaYmAmxfEy3WORC3jfRNcdNj1qjR4Yut+OtUtsngMxprdP0EcOJwb1tO09RAmjspjhUhNaILqDIpCFW6Nv0BFAci/aI57OqpV4k7zOO9mFvQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ CY5PR12MB6599.namprd12.prod.outlook.com (2603:10b6:930:41::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8792.34; Wed, 4 Jun 2025 21:14:33 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
+ 21:14:33 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: david@redhat.com
+Cc: Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	isaacmanjarres@google.com,
+	jyescas@google.com,
+	kaleshsingh@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lorenzo.stoakes@oracle.com,
+	masahiroy@kernel.org,
+	mhocko@suse.com,
+	minchan@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	tjmercier@google.com,
+	vbabka@suse.cz,
+	ziy@nvidia.com,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v2] mm: rename CONFIG_PAGE_BLOCK_ORDER to CONFIG_PAGE_BLOCK_MAX_ORDER.
+Date: Wed,  4 Jun 2025 17:14:27 -0400
+Message-ID: <20250604211427.1590859-1-ziy@nvidia.com>
+X-Mailer: git-send-email 2.47.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL1P222CA0011.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c7::16) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1748890962.git.ackerleytng@google.com> <c03fbe18c3ae90fb3fa7c71dc0ee164e6cc12103.1748890962.git.ackerleytng@google.com>
- <aD_8z4pd7JcFkAwX@kernel.org>
-In-Reply-To: <aD_8z4pd7JcFkAwX@kernel.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 4 Jun 2025 17:13:35 -0400
-X-Gm-Features: AX0GCFtyTLCLuG24EDdI8wKdQSrU3K8jUJ6RM6t9O342c2DffUvgfnmfuwj20Jg
-Message-ID: <CAHC9VhQczhrVx4YEGbXbAS8FLi0jaV1RB0kb8e4rPsUOXYLqtA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] fs: Provide function that allocates a secure
- anonymous inode
-To: Mike Rapoport <rppt@kernel.org>, Ackerley Tng <ackerleytng@google.com>
-Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz, 
-	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
-	will@kernel.org, willy@infradead.org, xiaoyao.li@intel.com, 
-	yan.y.zhao@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|CY5PR12MB6599:EE_
+X-MS-Office365-Filtering-Correlation-Id: e2933f5c-bc65-49ad-2445-08dda3accd5a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HJNMRZfhPdXdQiLOFK4oVJoq2ty1IepNWo6loCKGbUkIMYqyNmqsI9bsQQCd?=
+ =?us-ascii?Q?QDN9pVKgWJo8xWzKVoyJcEfzHRhQdQGK3HqvRLI/PwEu7HGUT0fKryb8WcKw?=
+ =?us-ascii?Q?qCqzx72EePZbBXanfAqPRYDGsgfym+YPb4gRBRqnRk4qtHzBfRilKJI1Kfm6?=
+ =?us-ascii?Q?DoRF7jrKxQqxPwab1/AWx6XfFhxFsgLR+e8NhMx8qNLTBCnhLjjY3wC146XT?=
+ =?us-ascii?Q?NChrC2+TRVc45bagOAET6jHxTvLy41pC6C5gq7S3AULDcHzhFFehvceLWSMg?=
+ =?us-ascii?Q?VwHfsiayGtaEYp9Rl4f7w5EpO3IWoPfXbGM/VqsS+eW7IOVYrrzTCPZFk2KR?=
+ =?us-ascii?Q?3QzDXlUDBCAHaWDfc8aBR4Yvk1qjjywGvaxGECCJTZ00DR7lOAIHEwaJvmNa?=
+ =?us-ascii?Q?qjnH+UBzEIub+CACqsd7nMrIzhvgSfXdaXxYjjgXKmj0OXQTFE/9my33yvuH?=
+ =?us-ascii?Q?0jemM0h1ztdNjIrr5iXRAHRZDdbweWMBRIVd8X77XHzUzch5UfUhTjwC+MLO?=
+ =?us-ascii?Q?9g+d10B0hZzAl9Je7m23Cfz0xOMTGKt0xY5FNKbvFEGpbOnyEUDXxvzq4+wV?=
+ =?us-ascii?Q?Y3cQZ5r3MgczmxTX0s87hJkz2MPSt0vr7Cm8lf37LbaUt2sMDDQTCfm5Gc/T?=
+ =?us-ascii?Q?IDEag6+uTSmNy9diyhTJVtMO/uNEpq9iVPDXzlNoIVngMgHcyVrnrOSM9/Oj?=
+ =?us-ascii?Q?s81Nz1xAWDBzwu32JbVUO/Fcs5SfpM2cby6+HSJVGQPIifvn7p7ZVkbQw/wo?=
+ =?us-ascii?Q?2Ze5Z/XrFyu+8nHZdZjUUapx4eZzWq1YJ5P6soj2B9Sj0AIWI1vK8UNFYx4R?=
+ =?us-ascii?Q?X+1rUkwP5QtWcra7x88JtqKiTEMB4f07EUWdbo/MV7YHY02oM/WLljihdY1f?=
+ =?us-ascii?Q?Ki3Idh0zUZyPpc3LMlufrSPdt/+m9kPXbaBlO/IVCWR75djjgNOzkdDVdffp?=
+ =?us-ascii?Q?2ZFgoTc0VAWrFtZHEeQXbCG63Yqo74YVNk+PJha4g3pVIQXjrQtbaqo81en8?=
+ =?us-ascii?Q?EqbJhWfd6a7ynYrQJt5sLDE+Esp6jyq+VwEvwM0AEOv85uZ6dcv5zyAtLtQK?=
+ =?us-ascii?Q?16Q2LDDCxQdWSEKVEkzRjfJIjFe/IE17dBVqsvYE5gOvNxTa/M2v7557paF5?=
+ =?us-ascii?Q?Gqoq4zNJdpFYnHk00/sWZNjZ+gOWBOd21L/hkJoTq2/WXVwxmV3bkXMAEfun?=
+ =?us-ascii?Q?kxC9v4J6cgopmF4KVKnRMoHWLe8cIiA8nffGoQYH6jxjbs+XKaRVFaIsb+Wq?=
+ =?us-ascii?Q?xUhyL2UdezZTNxPdt286lD8ocOUY5e4sQUlbXIYELkh+6IljpujiYH1aQ0HI?=
+ =?us-ascii?Q?bZ2mB+r3PGb6IxLluzMDl4tNQBkTAy+IWvZ3aaqO/rVEdw2IvdI3hS2cbubV?=
+ =?us-ascii?Q?dLmkLnmkBY5TQ78y56mdN0Et0PiXNPr9T9yyckmgjyf+yHGAn5Vsch58m713?=
+ =?us-ascii?Q?88swW4BlS6IWzaDNUTHH750T5vi84hKK?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?W7vLUwmgKvYCjznD4qgVyogIfhS5H8hjp0L7h+8+QtmwyEzvXCJPil034ug6?=
+ =?us-ascii?Q?QNTqiKHvHcYu1QEdy2Ap+6i04o8GwztgitABWsmdkefUPWoaoHNEXn+xMjOB?=
+ =?us-ascii?Q?/Djo5J99TQ4SAhxA+EmQqe4nBQwhWr1Xm4bCHXIK4MCWRTHcyyBuIEj00jam?=
+ =?us-ascii?Q?Dlb3CmRlCRG/cnHiEvR5ID7CQfiXKyAQ6ALCPxA9jsVEZuSssFPihQxuLlns?=
+ =?us-ascii?Q?m/AkHiKEkrX+QxEiYr+99isIFyrEx4MfbB/dyUfjlgTLURAerLIXXH9c1bb/?=
+ =?us-ascii?Q?Xjdt7Ap2WD8L38fxs2Rk8Q0oVUlg/GNzSc53m98ozOvhurTrsHNAmpGyr5fy?=
+ =?us-ascii?Q?ml67TQdQ1C6748Sz+/NVXc3H0yDANjY+/BCGhTYbPh1ONL6mKfUJhPU2dfNL?=
+ =?us-ascii?Q?6W68FDge7/QdrRytxvLKHTexTxkGgvZ40hDj2SeKEDm4B3kOTciRIntL2HdZ?=
+ =?us-ascii?Q?KxH8B8KJqFMzL1j3Ke7kJOPWbuD1eHoEbhzSuxFM39NKaJ5eL5aqp0QDuJQi?=
+ =?us-ascii?Q?OLzjdWkIRFG5cf5gaj1ci+Z2x6rvnTnsWjASoyoBR3ygXBe/9fB15xrGrtwf?=
+ =?us-ascii?Q?YNIBbMTZAdaew/WSZELVeTJUtQLZDEBhm76qUqmlAKsIW0w8NcVr/i5JO5ZV?=
+ =?us-ascii?Q?rwrMIsKeZi+ZsPdh9J9yNsEXOkmtWhQ1rAk/RdMYHDeHsf0aYTHCVytYLNbI?=
+ =?us-ascii?Q?KKmZobr+scdjaQFuRwDuTCcd/E17w2YFdHJVtF/cWfOWIFadml+CO0n81CBl?=
+ =?us-ascii?Q?45LCfIZ75tANsEUCCMqWO4aXuI3nqcrkdPA7E8YWb4cxhohKMDQSNfWrlRiu?=
+ =?us-ascii?Q?3bdxC73yHDKZ6CUMAGNxvYHf1QKJAvjdzW3V0KDloE2OmKd3L6fW9NdDRHeo?=
+ =?us-ascii?Q?IRCZTQiEXZvTap5q9Q3J32CrQfO5AfWyjs2kieqNFNAWtcYBzQfr1xTrfXXe?=
+ =?us-ascii?Q?22OI8dZA5BW6SjqsFPJfeJ9g8f1Ds4epd4pV2hkc9MyCCsvmfFSWcABj/o8N?=
+ =?us-ascii?Q?EbexCFWpnC76PvYLT45PxOsVC+5mzwkTlba0NfwO0HTeLkVHvSI0Ogr4KSZE?=
+ =?us-ascii?Q?FqAENN8iC4brC5BJCGVaE/fodXpE3LSCjr0mKYM5LuGGR+GzvrORsa+yMAri?=
+ =?us-ascii?Q?aCuvEcNCuuDokqcVmmCBnnxK6tO9QbP42TVpyvUZpTb8srR5+Y89ppzxXAn1?=
+ =?us-ascii?Q?YCdE/lRIA4yFBCj1wrgoyHPjQZLkML/CO8pywe7Bnv4RhCaFRMmoJuERzLID?=
+ =?us-ascii?Q?kd/7V0TJWqwqURG7EKqcNUWmvtVb/1QwyzAxWvynXWtdpy1/oaQ7BaU9UHap?=
+ =?us-ascii?Q?nX64lrG8senFas4fujowENLmIyarmKnvvkTCQaC4tGWMqsBeHI4kIO1JAJhY?=
+ =?us-ascii?Q?jLk323SLoi0gSAfEX7KN1nxO6Hoow5j65l+9hGYlfEjMTaCQ2OQWoiuVAdfD?=
+ =?us-ascii?Q?7qJZ6tskCSNTtVsynUNbM2yL+B805g6tb0fWzYriMmwZSCVTzjNQwhKsBPH2?=
+ =?us-ascii?Q?NvdIXSApxstCWC2ojHqMduI2r0KdbCSc8nqf1hHMan6Cs3PkGaKR3cXC4AKo?=
+ =?us-ascii?Q?LeiA5NuDfOro95RNpjLwy2dC/st99596yc85weOG?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2933f5c-bc65-49ad-2445-08dda3accd5a
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 21:14:33.2899
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DXBZ4u0QtX/FHzPBJrJdjM6d2IBkKugApvL0Bfmpo3wIDJcPftJMTRkHP1lbaWCD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6599
 
-On Wed, Jun 4, 2025 at 3:59=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wrot=
-e:
->
-> (added Paul Moore for selinux bits)
+The config is in fact an additional upper limit of pageblock_order, so
+rename it to avoid confusion.
 
-Thanks Mike.
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: Juan Yescas <jyescas@google.com>
+---
+From v1[1]:
+1. used a new name: PAGE_BLOCK_MAX_ORDER,
+2. added the missing PAGE_BLOCK_ORDER rename in mm/mm_init.c[2]
+3. dropped the Fixes tag.
 
-I'm adding the LSM and SELinux lists too since there are others that
-will be interested as well.
+[1] https://lore.kernel.org/linux-mm/20250603154843.1565239-1-ziy@nvidia.com/
+[2] https://lore.kernel.org/linux-mm/202506042058.XgvABCE0-lkp@intel.com/
 
-> On Mon, Jun 02, 2025 at 12:17:54PM -0700, Ackerley Tng wrote:
-> > The new function, alloc_anon_secure_inode(), returns an inode after
-> > running checks in security_inode_init_security_anon().
-> >
-> > Also refactor secretmem's file creation process to use the new
-> > function.
-> >
-> > Suggested-by: David Hildenbrand <david@redhat.com>
-> > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> > ---
-> >  fs/anon_inodes.c   | 22 ++++++++++++++++------
-> >  include/linux/fs.h |  1 +
-> >  mm/secretmem.c     |  9 +--------
-> >  3 files changed, 18 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-> > index 583ac81669c2..4c3110378647 100644
-> > --- a/fs/anon_inodes.c
-> > +++ b/fs/anon_inodes.c
-> > @@ -55,17 +55,20 @@ static struct file_system_type anon_inode_fs_type =
-=3D {
-> >       .kill_sb        =3D kill_anon_super,
-> >  };
-> >
-> > -static struct inode *anon_inode_make_secure_inode(
-> > -     const char *name,
-> > -     const struct inode *context_inode)
-> > +static struct inode *anon_inode_make_secure_inode(struct super_block *=
-s,
-> > +             const char *name, const struct inode *context_inode,
-> > +             bool fs_internal)
-> >  {
-> >       struct inode *inode;
-> >       int error;
-> >
-> > -     inode =3D alloc_anon_inode(anon_inode_mnt->mnt_sb);
-> > +     inode =3D alloc_anon_inode(s);
-> >       if (IS_ERR(inode))
-> >               return inode;
-> > -     inode->i_flags &=3D ~S_PRIVATE;
-> > +
-> > +     if (!fs_internal)
-> > +             inode->i_flags &=3D ~S_PRIVATE;
-> > +
-> >       error =3D security_inode_init_security_anon(inode, &QSTR(name),
-> >                                                 context_inode);
-> >       if (error) {
-> > @@ -75,6 +78,12 @@ static struct inode *anon_inode_make_secure_inode(
-> >       return inode;
-> >  }
-> >
-> > +struct inode *alloc_anon_secure_inode(struct super_block *s, const cha=
-r *name)
-> > +{
-> > +     return anon_inode_make_secure_inode(s, name, NULL, true);
-> > +}
-> > +EXPORT_SYMBOL_GPL(alloc_anon_secure_inode);
-> > +
-> >  static struct file *__anon_inode_getfile(const char *name,
-> >                                        const struct file_operations *fo=
-ps,
-> >                                        void *priv, int flags,
-> > @@ -88,7 +97,8 @@ static struct file *__anon_inode_getfile(const char *=
-name,
-> >               return ERR_PTR(-ENOENT);
-> >
-> >       if (make_inode) {
-> > -             inode =3D anon_inode_make_secure_inode(name, context_inod=
-e);
-> > +             inode =3D anon_inode_make_secure_inode(anon_inode_mnt->mn=
-t_sb,
-> > +                                                  name, context_inode,=
- false);
-> >               if (IS_ERR(inode)) {
-> >                       file =3D ERR_CAST(inode);
-> >                       goto err;
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index 016b0fe1536e..0fded2e3c661 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -3550,6 +3550,7 @@ extern int simple_write_begin(struct file *file, =
-struct address_space *mapping,
-> >  extern const struct address_space_operations ram_aops;
-> >  extern int always_delete_dentry(const struct dentry *);
-> >  extern struct inode *alloc_anon_inode(struct super_block *);
-> > +extern struct inode *alloc_anon_secure_inode(struct super_block *, con=
-st char *);
-> >  extern int simple_nosetlease(struct file *, int, struct file_lease **,=
- void **);
-> >  extern const struct dentry_operations simple_dentry_operations;
-> >
-> > diff --git a/mm/secretmem.c b/mm/secretmem.c
-> > index 1b0a214ee558..c0e459e58cb6 100644
-> > --- a/mm/secretmem.c
-> > +++ b/mm/secretmem.c
-> > @@ -195,18 +195,11 @@ static struct file *secretmem_file_create(unsigne=
-d long flags)
-> >       struct file *file;
-> >       struct inode *inode;
-> >       const char *anon_name =3D "[secretmem]";
-> > -     int err;
-> >
-> > -     inode =3D alloc_anon_inode(secretmem_mnt->mnt_sb);
-> > +     inode =3D alloc_anon_secure_inode(secretmem_mnt->mnt_sb, anon_nam=
-e);
-> >       if (IS_ERR(inode))
-> >               return ERR_CAST(inode);
->
-> I don't think we should not hide secretmem and guest_memfd inodes from
-> selinux, so clearing S_PRIVATE for them is not needed and you can just dr=
-op
-> fs_internal parameter in anon_inode_make_secure_inode()
+ include/linux/mmzone.h          | 14 +++++++-------
+ include/linux/pageblock-flags.h |  8 ++++----
+ mm/Kconfig                      | 15 ++++++++-------
+ mm/mm_init.c                    |  2 +-
+ 4 files changed, 20 insertions(+), 19 deletions(-)
 
-It's especially odd since I don't see any comments or descriptions
-about why this is being done.  The secretmem change is concerning as
-this is user accessible and marking the inode with S_PRIVATE will
-bypass a number of LSM/SELinux access controls, possibly resulting in
-a security regression (one would need to dig a bit deeper to see what
-is possible with secretmem and which LSM/SELinux code paths would be
-affected).
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 283913d42d7b..5bec8b1d0e66 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -38,19 +38,19 @@
+ #define NR_PAGE_ORDERS (MAX_PAGE_ORDER + 1)
+ 
+ /* Defines the order for the number of pages that have a migrate type. */
+-#ifndef CONFIG_PAGE_BLOCK_ORDER
+-#define PAGE_BLOCK_ORDER MAX_PAGE_ORDER
++#ifndef CONFIG_PAGE_BLOCK_MAX_ORDER
++#define PAGE_BLOCK_MAX_ORDER MAX_PAGE_ORDER
+ #else
+-#define PAGE_BLOCK_ORDER CONFIG_PAGE_BLOCK_ORDER
+-#endif /* CONFIG_PAGE_BLOCK_ORDER */
++#define PAGE_BLOCK_MAX_ORDER CONFIG_PAGE_BLOCK_MAX_ORDER
++#endif /* CONFIG_PAGE_BLOCK_MAX_ORDER */
+ 
+ /*
+  * The MAX_PAGE_ORDER, which defines the max order of pages to be allocated
+- * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_ORDER,
++ * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_MAX_ORDER,
+  * which defines the order for the number of pages that can have a migrate type
+  */
+-#if (PAGE_BLOCK_ORDER > MAX_PAGE_ORDER)
+-#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_ORDER
++#if (PAGE_BLOCK_MAX_ORDER > MAX_PAGE_ORDER)
++#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_MAX_ORDER
+ #endif
+ 
+ /*
+diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
+index e73a4292ef02..6297c6343c55 100644
+--- a/include/linux/pageblock-flags.h
++++ b/include/linux/pageblock-flags.h
+@@ -41,18 +41,18 @@ extern unsigned int pageblock_order;
+  * Huge pages are a constant size, but don't exceed the maximum allocation
+  * granularity.
+  */
+-#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER)
++#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_MAX_ORDER)
+ 
+ #endif /* CONFIG_HUGETLB_PAGE_SIZE_VARIABLE */
+ 
+ #elif defined(CONFIG_TRANSPARENT_HUGEPAGE)
+ 
+-#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)
++#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_MAX_ORDER)
+ 
+ #else /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+-/* If huge pages are not used, group by PAGE_BLOCK_ORDER */
+-#define pageblock_order		PAGE_BLOCK_ORDER
++/* If huge pages are not used, group by PAGE_BLOCK_MAX_ORDER */
++#define pageblock_order		PAGE_BLOCK_MAX_ORDER
+ 
+ #endif /* CONFIG_HUGETLB_PAGE */
+ 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 65089552e124..3afac26d3594 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1017,8 +1017,8 @@ config ARCH_FORCE_MAX_ORDER
+ # the default page block order is MAX_PAGE_ORDER (10) as per
+ # include/linux/mmzone.h.
+ #
+-config PAGE_BLOCK_ORDER
+-	int "Page Block Order"
++config PAGE_BLOCK_MAX_ORDER
++	int "Page Block Order Upper Limit"
+ 	range 1 10 if ARCH_FORCE_MAX_ORDER = 0
+ 	default 10 if ARCH_FORCE_MAX_ORDER = 0
+ 	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER != 0
+@@ -1026,12 +1026,13 @@ config PAGE_BLOCK_ORDER
+ 	help
+ 	  The page block order refers to the power of two number of pages that
+ 	  are physically contiguous and can have a migrate type associated to
+-	  them. The maximum size of the page block order is limited by
+-	  ARCH_FORCE_MAX_ORDER.
++	  them. The maximum size of the page block order is at least limited by
++	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER.
+ 
+-	  This config allows overriding the default page block order when the
+-	  page block order is required to be smaller than ARCH_FORCE_MAX_ORDER
+-	  or MAX_PAGE_ORDER.
++	  This config adds a new upper limit of default page block
++	  order when the page block order is required to be smaller than
++	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER or other limits
++	  (see include/linux/pageblock-flags.h for details).
+ 
+ 	  Reducing pageblock order can negatively impact THP generation
+ 	  success rate. If your workloads use THP heavily, please use this
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index f2944748f526..02f41e2bdf60 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1509,7 +1509,7 @@ static inline void setup_usemap(struct zone *zone) {}
+ /* Initialise the number of pages represented by NR_PAGEBLOCK_BITS */
+ void __init set_pageblock_order(void)
+ {
+-	unsigned int order = PAGE_BLOCK_ORDER;
++	unsigned int order = PAGE_BLOCK_MAX_ORDER;
+ 
+ 	/* Check that pageblock_nr_pages has not already been setup */
+ 	if (pageblock_order)
+-- 
+2.47.2
 
-I'm less familiar with guest_memfd, but generally speaking if
-userspace can act on the inode/fd then we likely don't want the
-S_PRIVATE flag stripped from the anon_inode.
-
-Ackerley can you provide an explanation about why the change in
-S_PRIVATE was necessary?
-
-> > -     err =3D security_inode_init_security_anon(inode, &QSTR(anon_name)=
-, NULL);
-> > -     if (err) {
-> > -             file =3D ERR_PTR(err);
-> > -             goto err_free_inode;
-> > -     }
-> > -
-> >       file =3D alloc_file_pseudo(inode, secretmem_mnt, "secretmem",
-> >                                O_RDWR, &secretmem_fops);
-> >       if (IS_ERR(file))
-> > --
-> > 2.49.0.1204.g71687c7c1d-goog
-
---=20
-paul-moore.com
