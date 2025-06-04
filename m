@@ -1,179 +1,389 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773FA79EA;
-	Wed,  4 Jun 2025 07:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575ADA937;
+	Wed,  4 Jun 2025 07:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749021518; cv=none; b=oYp+msYRKu4H6seNF2xFju3qIwiU7x2UOvoy7H0OIewbPie8aRkxyejo6Arj5kah3063ZLRqfcNfgTN428nC/zhahQKZzvmMlq40nOc7pQ6X3PFuMlb19XKogZ5SIXNluF168iTu32N1P1/oNBpxSaH6f72rJs3Du7RsUvBKNCU=
+	t=1749021561; cv=none; b=o6bDE5NLJyZ4bi0bgGkrJJVQqCU9wKH5qsbkpKj9Z3PLgK27UJal3fXfRWGjOaBpNfFtl76abuLhJz0WzF4IjZDqxbVGRUeKYmsPT0xD+60t71aSsYeTKwGL6ary+bwiURXtMWPSOc92dZrt1+Rf7JRHh0fe8h2zkWrZ0FWsLDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749021518; c=relaxed/simple;
-	bh=hLV6bUQrXlzvrssls30vFCh548KG3Got5mJHkOfBrZE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=TUKBVt+8SueWwhgGgZ9SglQJZsojelT0s04NPXseXMldmF3OJth2xo0RMjmpRdIv9DtjeMRJU/ZbJj1M1YaFwSqoa3njgTjQheClq3iWA9v4WAmelquNovYc8g/0WKdfkUSmUheqgvwxW7r5MujXEf6A/ttvF3HlBJ+4gWA19CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iih1QpkM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749021561; c=relaxed/simple;
+	bh=NqEjpzBwTm8b4UUIRUDEJpIggvzSdLRiaf3fq+uToi8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=b6ggJUCFnuZlOvVNafLTTEbqIPHOXPMpZxlJLO4ccSzjKzDMf/KQ6wXpUf6wENUijELRNGtoCsIrsUQp1D0oTLtM+Iiq8wbzgkLIxr0E5HwUh6A8m9s+IWtdpr6MIYWhXJdOFGMIwb6+JAEVxp1wuE+pK8UDHPBMEA3sthIIohE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PPbgIrN9; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iih1QpkM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CBEC4CEE7;
-	Wed,  4 Jun 2025 07:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749021517;
-	bh=hLV6bUQrXlzvrssls30vFCh548KG3Got5mJHkOfBrZE=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=iih1QpkMfxbsDlUAHq58TXJMsIkC8tbUwjHy5IpvIlgaDruw6V4+kZYqxpdwqRNmL
-	 wnioY11fpwZFS0uK2W3iDN5MPTCtXv5J3lhhQhiOHtBa/4sEIvhx/1Wq2839gC15mY
-	 lNkmheiTD+OKRABEajAtfk6eOI8Laah/kcz+TyfdRcEzJLAAxHUmst5/GByU+fyaCz
-	 OBUJ4SbJzt4jsODMvDWQ1suuwzf/wwe4Y9ETvYr9MKALlOzC8SVnAoU/JqHxCI+GnN
-	 i7A7+Df57sFynFYl8jaLjTCys7U8x0ePCnWqd9YpofNnY1giZSljV/FR1X99UggmSN
-	 GrxxPW8M5B6tQ==
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PPbgIrN9"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 553NFgu0013814;
+	Wed, 4 Jun 2025 07:19:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=ne/DRGIyKNE
+	VWK8VpatIEjAtrIvy+aNgd7lx7Ccrnyo=; b=PPbgIrN9BYJguQFX4CXBemKWYVW
+	7DqYlea0829Ih5knlshmgOz0CfLxjkaWRiabnC7lFUj21kjwD1gp65RQ3OMB56mb
+	7jB4ATetZbpxvqgZU42JY2txjHjWDs11ERqke6v/GvqewRyA7amkWLc2nYiy5cjM
+	3mqT0r177wWXnjTGBvwIlXdffcaN6CdmJGSBF9c9QL6aePlcSzgCff3R2aHZ6SxL
+	NisE/ltICnp0OgyQcrwPxk97sFKMn0S966r86khTSUsfvGyPGz5alN/QrR4+PUZf
+	ULyJZC6YjiSOY7Co6EVr0XZO4df7HS1F6yEO1FByB4am6T8VfwHdG8CKWIw==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8sw5gt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 07:19:02 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5547IwAM017260;
+	Wed, 4 Jun 2025 07:18:58 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46ytum3903-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 07:18:58 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5547Iwop017245;
+	Wed, 4 Jun 2025 07:18:58 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 5547Iwgo017238
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 07:18:58 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
+	id A5CB0592; Wed,  4 Jun 2025 12:48:57 +0530 (+0530)
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
+        dmitry.baryshkov@oss.qualcomm.com, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: [PATCH v8 RESEND 2/2] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI to DP bridge nodes
+Date: Wed,  4 Jun 2025 12:48:51 +0530
+Message-Id: <20250604071851.1438612-3-quic_amakhija@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250604071851.1438612-1-quic_amakhija@quicinc.com>
+References: <20250604071851.1438612-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 04 Jun 2025 09:18:31 +0200
-Message-Id: <DADKDQ1KGJJP.3T20P9V1D2PO1@kernel.org>
-Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
- "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
- operations
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>
-X-Mailer: aerc 0.20.1
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
- <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
- <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
- <DA8GTD7LT7KO.1A3LBQGEQTCEW@kernel.org>
- <DAC2L6ZKR6U2.WOMERUJIOENK@nvidia.com>
- <DAD9TNUBUGPN.1ED519FYR29U4@kernel.org>
- <DADB6892Z31G.12LB1BVSGTEAQ@nvidia.com>
-In-Reply-To: <DADB6892Z31G.12LB1BVSGTEAQ@nvidia.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=RMizH5i+ c=1 sm=1 tr=0 ts=683ff367 cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=LchG5PTgKyYevX63dD8A:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2MCBTYWx0ZWRfX7gdzZzK8w2W0
+ Rr4GuE9VtCGPJqkJKC3G8S8r908HO86xyB5VmzHK/QyyYzUtxm+Bx2Gpj2hzF41s1rHDZF/lctX
+ QS/yeD+XintjkrTJ1wR2Y9PbontoXlTL95wvAt7iYw+yk6WX5xArx2bW6JDdqt6RncG69tjAZGo
+ 37/PR/mw0Cw8X+1U8BK0uUIUKXaOgCG+exYTeZCjXa1HaZAPPBjzgFKWvgLfNxr5yzj1uzGoulg
+ yAAx4SbUUmrBUXQbQ5q8AH2X+O0UzgZjQG0DkYxZM6fVC7REcHnRJ8ITqb/EOhufyhBWXx6ovYO
+ dL9Fylmlo19x1ShJoo/kG06qF4vv5kJgMPiT2Cqd5UYzAUlHnQ5eTo4I036RelDRiGBU2SHG8Nd
+ EqCMc+d6pYgt6f3ehY9kfYp6IPDKUm0b7pyf7DINt1B97K2l2Akk9F4yniwbyitcUiDloA6S
+X-Proofpoint-GUID: aLgg1b2S9ZYdlLrqrAfnxomoH4n-huoV
+X-Proofpoint-ORIG-GUID: aLgg1b2S9ZYdlLrqrAfnxomoH4n-huoV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 suspectscore=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506040060
 
-On Wed Jun 4, 2025 at 2:05 AM CEST, Alexandre Courbot wrote:
-> On Wed Jun 4, 2025 at 8:02 AM JST, Benno Lossin wrote:
->> On Mon Jun 2, 2025 at 3:09 PM CEST, Alexandre Courbot wrote:
->>> On Thu May 29, 2025 at 4:27 PM JST, Benno Lossin wrote:
->>>> On Thu May 29, 2025 at 3:18 AM CEST, Alexandre Courbot wrote:
->>>>> On Thu May 29, 2025 at 5:17 AM JST, Benno Lossin wrote:
->>>>>> On Wed May 21, 2025 at 8:44 AM CEST, Alexandre Courbot wrote:
->>>>>>> +    /// Align `self` up to `alignment`.
->>>>>>> +    ///
->>>>>>> +    /// `alignment` must be a power of 2 for accurate results.
->>>>>>> +    ///
->>>>>>> +    /// Wraps around to `0` if the requested alignment pushes the =
-result above the type's limits.
->>>>>>> +    ///
->>>>>>> +    /// # Examples
->>>>>>> +    ///
->>>>>>> +    /// ```
->>>>>>> +    /// use kernel::num::NumExt;
->>>>>>> +    ///
->>>>>>> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
->>>>>>> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
->>>>>>> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
->>>>>>> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
->>>>>>> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
->>>>>>> +    /// ```
->>>>>>> +    fn align_up(self, alignment: Self) -> Self;
->>>>>>
->>>>>> Isn't this `next_multiple_of` [1] (it also allows non power of 2
->>>>>> inputs).
->>>>>>
->>>>>> [1]: https://doc.rust-lang.org/std/primitive.u32.html#method.next_mu=
-ltiple_of
->>>>>
->>>>> It is, however the fact that `next_multiple_of` works with non powers=
- of
->>>>> two also means it needs to perform a modulo operation. That operation
->>>>> might well be optimized away by the compiler, but ACAICT we have no w=
-ay
->>>>> of proving it will always be the case, hence the always-optimal
->>>>> implementation here.
->>>>
->>>> When you use a power of 2 constant, then I'm very sure that it will ge=
-t
->>>> optimized [1]. Even with non-powers of 2, you don't get a division [2]=
-.
->>>> If you find some code that is not optimized, then sure add a custom
->>>> function.
->>>>
->>>> [1]: https://godbolt.org/z/57M9e36T3
->>>> [2]: https://godbolt.org/z/9P4P8zExh
->>>
->>> That's impressive and would definitely work well with a constant. But
->>> when the value is not known at compile-time, the division does occur
->>> unfortunately: https://godbolt.org/z/WK1bPMeEx
->>>
->>> So I think we will still need a kernel-optimized version of these
->>> alignment functions.
->>
->> Hmm what exactly is the use-case for a variable align amount? Could you
->> store it in const generics?
->
-> Say you have an IOMMU with support for different pages sizes, the size
-> of a particular page can be decided at runtime.
->
->>
->> If not, there are also these two variants that are more efficient:
->>
->> * option: https://godbolt.org/z/ecnb19zaM
->> * unsafe: https://godbolt.org/z/EqTaGov71
->>
->> So if the compiler can infer it from context it still optimizes it :)
->
-> I think the `Option` (and subsequent `unwrap`) is something we want to
-> avoid on such a common operation.
+Add anx7625 DSI to DP bridge device nodes.
 
-Makes sense.
-
->> But yeah to be extra sure, you need your version. By the way, what
->> happens if `align` is not a power of 2 in your version?
->
-> It will just return `(self + (self - 1)) & (alignment - 1)`, which will
-> likely be a value you don't want.
-
-So wouldn't it be better to make users validate that they gave a
-power-of-2 alignment?
-
-> So yes, for this particular operation we would prefer to only use powers
-> of 2 as inputs - if we can ensure that then it solves most of our
-> problems (can use `next_multiple_of`, no `Option`, etc).
->
-> Maybe we can introduce a new integer type that, similarly to `NonZero`,
-> guarantees that the value it stores is a power of 2? Users with const
-> values (90+% of uses) won't see any difference, and if working with a
-> runtime-generated value we will want to validate it anyway...
-
-I like this idea. But it will mean that we have to have a custom
-function that is either standalone and const or in an extension trait :(
-But for this one we can use the name `align_up` :)
-
-Here is a cool idea for the implementation: https://godbolt.org/z/x6navM5WK
-
-> (I can already hear you saying "send that to upstream Rust!" ^_^;)
-
-This one isn't as clear I'd say. The stdlib of Rust is strict on what
-gets added. Since they already have `next_multiple_of`, adding a
-`prev_multiple_of` sounds very reasonable, but a new type for powers of
-2? That could be something they don't want to add. Ultimately I don't
-know, but if we need it, we should build it ourselves first :)
-
+Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
-Cheers,
-Benno
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 232 +++++++++++++++++++++
+ 1 file changed, 232 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+index 3ae416ab66e8..6af7d1db81a1 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+@@ -28,6 +28,64 @@ chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	vreg_12p0: vreg-12p0-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_12P0";
++
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++	};
++
++	vreg_5p0: vreg-5p0-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_5P0";
++
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		vin-supply = <&vreg_12p0>;
++	};
++
++	vreg_1p8: vreg-1p8-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_1P8";
++
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		vin-supply = <&vreg_5p0>;
++	};
++
++	vreg_1p0: vreg-1p0-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_1P0";
++
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <1000000>;
++		regulator-max-microvolt = <1000000>;
++
++		vin-supply = <&vreg_1p8>;
++	};
++
++	vreg_3p0: vreg-3p0-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_3P0";
++
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <3000000>;
++		regulator-max-microvolt = <3000000>;
++
++		vin-supply = <&vreg_12p0>;
++	};
++
+ 	vreg_conn_1p8: vreg_conn_1p8 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vreg_conn_1p8";
+@@ -128,6 +186,30 @@ dp1_connector_in: endpoint {
+ 			};
+ 		};
+ 	};
++
++	dp-dsi0-connector {
++		compatible = "dp-connector";
++		label = "DSI0";
++		type = "full-size";
++
++		port {
++			dp_dsi0_connector_in: endpoint {
++				remote-endpoint = <&dsi2dp_bridge0_out>;
++			};
++		};
++	};
++
++	dp-dsi1-connector {
++		compatible = "dp-connector";
++		label = "DSI1";
++		type = "full-size";
++
++		port {
++			dp_dsi1_connector_in: endpoint {
++				remote-endpoint = <&dsi2dp_bridge1_out>;
++			};
++		};
++	};
+ };
+ 
+ &apps_rsc {
+@@ -513,7 +595,108 @@ &i2c11 {
+ 
+ &i2c18 {
+ 	clock-frequency = <400000>;
++
+ 	status = "okay";
++
++	io_expander: gpio@74 {
++		compatible = "ti,tca9539";
++		reg = <0x74>;
++		interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		reset-gpios = <&tlmm 97 GPIO_ACTIVE_LOW>;
++
++		pinctrl-0 = <&io_expander_intr_active>,
++			    <&io_expander_reset_active>;
++		pinctrl-names = "default";
++	};
++
++	i2c-mux@70 {
++		compatible = "nxp,pca9543";
++		#address-cells = <1>;
++
++		#size-cells = <0>;
++		reg = <0x70>;
++
++		i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			bridge@58 {
++				compatible = "analogix,anx7625";
++				reg = <0x58>;
++				interrupts-extended = <&io_expander 2 IRQ_TYPE_EDGE_FALLING>;
++				enable-gpios = <&io_expander 1 GPIO_ACTIVE_HIGH>;
++				reset-gpios = <&io_expander 0 GPIO_ACTIVE_HIGH>;
++				vdd10-supply = <&vreg_1p0>;
++				vdd18-supply = <&vreg_1p8>;
++				vdd33-supply = <&vreg_3p0>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++
++						dsi2dp_bridge0_in: endpoint {
++							remote-endpoint = <&mdss0_dsi0_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++
++						dsi2dp_bridge0_out: endpoint {
++							remote-endpoint = <&dp_dsi0_connector_in>;
++						};
++					};
++				};
++			};
++		};
++
++		i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			bridge@58 {
++				compatible = "analogix,anx7625";
++				reg = <0x58>;
++				interrupts-extended = <&io_expander 10 IRQ_TYPE_EDGE_FALLING>;
++				enable-gpios = <&io_expander 9 GPIO_ACTIVE_HIGH>;
++				reset-gpios = <&io_expander 8 GPIO_ACTIVE_HIGH>;
++				vdd10-supply = <&vreg_1p0>;
++				vdd18-supply = <&vreg_1p8>;
++				vdd33-supply = <&vreg_3p0>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++
++						dsi2dp_bridge1_in: endpoint {
++							remote-endpoint = <&mdss0_dsi1_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++
++						dsi2dp_bridge1_out: endpoint {
++							remote-endpoint = <&dp_dsi1_connector_in>;
++						};
++					};
++				};
++			};
++		};
++	};
++
+ };
+ 
+ &mdss0 {
+@@ -560,6 +743,40 @@ &mdss0_dp1_phy {
+ 	status = "okay";
+ };
+ 
++&mdss0_dsi0 {
++	vdda-supply = <&vreg_l1c>;
++
++	status = "okay";
++};
++
++&mdss0_dsi0_out {
++	data-lanes = <0 1 2 3>;
++	remote-endpoint = <&dsi2dp_bridge0_in>;
++};
++
++&mdss0_dsi0_phy {
++	vdds-supply = <&vreg_l4a>;
++
++	status = "okay";
++};
++
++&mdss0_dsi1 {
++	vdda-supply = <&vreg_l1c>;
++
++	status = "okay";
++};
++
++&mdss0_dsi1_out {
++	data-lanes = <0 1 2 3>;
++	remote-endpoint = <&dsi2dp_bridge1_in>;
++};
++
++&mdss0_dsi1_phy {
++	vdds-supply = <&vreg_l4a>;
++
++	status = "okay";
++};
++
+ &pmm8654au_0_gpios {
+ 	gpio-line-names = "DS_EN",
+ 			  "POFF_COMPLETE",
+@@ -753,6 +970,21 @@ ethernet0_mdio: ethernet0-mdio-pins {
+ 		};
+ 	};
+ 
++	io_expander_intr_active: io-expander-intr-active-state {
++		pins = "gpio98";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	io_expander_reset_active: io-expander-reset-active-state {
++		pins = "gpio97";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-high;
++	};
++
+ 	pcie0_default_state: pcie0-default-state {
+ 		perst-pins {
+ 			pins = "gpio2";
+-- 
+2.34.1
+
