@@ -1,73 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443A328D8DD;
-	Wed,  4 Jun 2025 12:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CBD28EA41
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749040703; cv=none; b=Xfim9p1F5I/QKZTM/YONwAcphsjLrwdkbCNsSr61wMj63weFJR7kJgvu6WqbmHzO1PktjdEZPVlc/e00UYpqaU70yRRGUmsijyRAWBScnOzRMFse146O1IB2CthW09NVcjpnrXALJD98S/DU7pOlczZllGiSlhD6/y9u2f4tB34=
+	t=1749040848; cv=none; b=XuZtUEYDUclTS6IJFzyihRrFiJsG/14MUvEhPVbsFgmmwdeZ+dTYwVr3xAnJeQvxMVQjOlDRGYqLoItVGkrKObTxywbwAqP+OdLu8U1IuRIzHAGZqO9a4S56sHM+HWrERXRBqOlvzpxifGMSSuWclR2sW2MpthEMzwPqqWDI3u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749040703; c=relaxed/simple;
-	bh=7tHoRWpClE5dLKc7eKaOJE0EBswVDCbH75bRZ0dvDtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8t8YR6egeW11X3ucyif9MlFfhFZ4zEqC33j7zT5Mpo1rZG0Nh9CbM+ALqCP0/GM1KW8bn/CS634JhmYYNY6E6jmS5xlzS21ICRxGpwfDNMwY43JDSoW6/thuSTb7vdKDYPYvwrvbylxEyu3X8Khfz9NOLJ5a/M4pdpHsO93Gsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=z2xSW+QB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749040848; c=relaxed/simple;
+	bh=JZodZ9P1TWqjuyQ7ANQr6qONcAswGVx2ceY2TIRVpsc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=We1V+N6ncn+yBL+IxCiYCGqsrx8SFdX/7HlTjDtRKmr/2WmlvkNoWThWlyElRdBRtiu6wjLxOH9Sx2CH857+DiC1EEyooTSwCfpcZBTib2+a2G92Z6KblqmoVI3qk0cc5VE9pmR0NBwNgpaoyQCpXuu5yp9sRMbogvA1cghPStI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=a4gbI2uK; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="z2xSW+QB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1572BC4CEEF;
-	Wed,  4 Jun 2025 12:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749040702;
-	bh=7tHoRWpClE5dLKc7eKaOJE0EBswVDCbH75bRZ0dvDtw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=z2xSW+QBOUmyM2yWlcdXcasGDUIDdoKL+FVRkca1oDExVNmQFUMTFBhfYxzMf081m
-	 seIkXDCaBdvIqEkSL21CwhsLPL5o2rEjQhPoKgmelIB+BIwGgqCOsPipyrZ1oSCNCy
-	 2amykKUElpsO18F5eiHtk0mj5QVMWgFQ7KK1sCsE=
-Date: Wed, 4 Jun 2025 14:38:19 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Chen Ridong <chenridong@huaweicloud.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, lujialin4@huawei.com, chenridong@huawei.com
-Subject: Re: [PATCH stable 6.6.y] arm64: kaslr: fix nokaslr cmdline parsing
-Message-ID: <2025060409-fidgeting-basil-abf7@gregkh>
-References: <20250603125233.2707474-1-chenridong@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a4gbI2uK"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250604124043euoutp0135d754fbb7f8fbdb550b60b297388614~F12FYaDck1443714437euoutp01r
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 12:40:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250604124043euoutp0135d754fbb7f8fbdb550b60b297388614~F12FYaDck1443714437euoutp01r
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749040843;
+	bh=kAukIWR6u4Jom32Pa8uBS4iyUUF+BImaglA4PV9oEzQ=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=a4gbI2uKh9qSnXTOnisyHBycy4qQuffoUBlkfZVmQG43tehnzN4fdakk6Y0isqje/
+	 tqqU+P3e1u06PJ0Qzx2wVKoxUwR9kowkZGrAOL+XMoBDH2Qq7UffB8MS3ZIZBPjRpy
+	 olmcUWBNOqbeovuk1A1whOHyaiVBG+9DqWHXci+E=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250604124042eucas1p18959bb4cf78c93c05cdaad2ee125c276~F12Eqw0oR1319513195eucas1p1z;
+	Wed,  4 Jun 2025 12:40:42 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250604124041eusmtip29c8ca08943a9ca4c8ebeb77dd5466bfd~F12DrZDyv0267302673eusmtip2e;
+	Wed,  4 Jun 2025 12:40:41 +0000 (GMT)
+Message-ID: <a68e3bee-f4ad-4d73-a5a8-e39772c41711@samsung.com>
+Date: Wed, 4 Jun 2025 14:40:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603125233.2707474-1-chenridong@huaweicloud.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 7/8] riscv: dts: thead: th1520: Add IMG BXM-4-64 GPU
+ node
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
+	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
+	Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
+	<m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <CAPDyKFpYfZNthdRN=pCv4FEdFCzrKEH4aFBy4ew-xLKtpbJ5Tg@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250604124042eucas1p18959bb4cf78c93c05cdaad2ee125c276
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250529222410eucas1p2e1d41a2fc717caef1aed51367a7db944
+X-EPHeader: CA
+X-CMS-RootMailID: 20250529222410eucas1p2e1d41a2fc717caef1aed51367a7db944
+References: <CGME20250529222410eucas1p2e1d41a2fc717caef1aed51367a7db944@eucas1p2.samsung.com>
+	<20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
+	<20250530-apr_14_for_sending-v3-7-83d5744d997c@samsung.com>
+	<CAPDyKFpYfZNthdRN=pCv4FEdFCzrKEH4aFBy4ew-xLKtpbJ5Tg@mail.gmail.com>
 
-On Tue, Jun 03, 2025 at 12:52:33PM +0000, Chen Ridong wrote:
-> From: Chen Ridong <chenridong@huawei.com>
+
+
+On 6/3/25 14:27, Ulf Hansson wrote:
+> On Fri, 30 May 2025 at 00:24, Michal Wilczynski
+> <m.wilczynski@samsung.com> wrote:
+>>
+>> Add a device tree node for the IMG BXM-4-64 GPU present in the T-HEAD
+>> TH1520 SoC used by the Lichee Pi 4A board. This node enables support for
+>> the GPU using the drm/imagination driver.
+>>
+>> By adding this node, the kernel can recognize and initialize the GPU,
+>> providing graphics acceleration capabilities on the Lichee Pi 4A and
+>> other boards based on the TH1520 SoC.
+>>
+>> Add fixed clock gpu_mem_clk, as the MEM clock on the T-HEAD SoC can't be
+>> controlled programatically.
+>>
+>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>> ---
+>>  arch/riscv/boot/dts/thead/th1520.dtsi | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>
+>> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+>> index 6170eec79e919b606a2046ac8f52db07e47ef441..ee937bbdb7c08439a70306f035b1cc82ddb4bae2 100644
+>> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+>> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+>> @@ -225,6 +225,13 @@ aonsys_clk: clock-73728000 {
+>>                 #clock-cells = <0>;
+>>         };
+>>
+>> +       gpu_mem_clk: mem-clk {
+>> +               compatible = "fixed-clock";
+>> +               clock-frequency = <0>;
+>> +               clock-output-names = "gpu_mem_clk";
+>> +               #clock-cells = <0>;
+>> +       };
+>> +
+>>         stmmac_axi_config: stmmac-axi-config {
+>>                 snps,wr_osr_lmt = <15>;
+>>                 snps,rd_osr_lmt = <15>;
+>> @@ -504,6 +511,21 @@ clk: clock-controller@ffef010000 {
+>>                         #clock-cells = <1>;
+>>                 };
+>>
+>> +               gpu: gpu@ffef400000 {
+>> +                       compatible = "thead,th1520-gpu", "img,img-bxm-4-64",
+>> +                                    "img,img-rogue";
+>> +                       reg = <0xff 0xef400000 0x0 0x100000>;
+>> +                       interrupt-parent = <&plic>;
+>> +                       interrupts = <102 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       clocks = <&clk_vo CLK_GPU_CORE>,
+>> +                                <&gpu_mem_clk>,
+>> +                                <&clk_vo CLK_GPU_CFG_ACLK>;
+>> +                       clock-names = "core", "mem", "sys";
+>> +                       power-domains = <&aon TH1520_GPU_PD>;
+>> +                       power-domain-names = "a";
 > 
-> Currently, when the command line contains "nokaslrxxx", it was incorrectly
-> treated as a request to disable KASLR virtual memory. However, the behavior
-> is different from physical address handling.
+> If the power-domain-names are really needed, please pick a
+> useful/descriptive name.
+
+Yeah they are required. Even though this convention doesn't seem to be
+enforced by the dt-binding it seems like it's hard-coded into the driver
+330e76d31697 ("drm/imagination: Add power domain control"). So I don't
+think I have any choice here.
+
 > 
-> This issue exists before the commit af73b9a2dd39 ("arm64: kaslr: Use
-> feature override instead of parsing the cmdline again"). This patch fixes
-> the parsing logic for the 'nokaslr' command line argument. Only the exact
-> strings, 'nokaslr', will disable KASLR. Other inputs such as 'xxnokaslr',
-> 'xxnokaslrxx', or 'xxnokaslr=xx' will not disable KASLR.
+> [...]
 > 
-> Fixes: f80fb3a3d508 ("arm64: add support for kernel ASLR")
-> Cc: stable@vger.kernel.org # <= v6.6
-> Signed-off-by: Chen Ridong <chenridong@huawei.com>
-> ---
->  arch/arm64/kernel/pi/kaslr_early.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+> Kind regards
+> Uffe
 > 
 
-<formletter>
-
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
-
-</formletter>
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
