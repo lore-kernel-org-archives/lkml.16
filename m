@@ -1,113 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66FB33DF;
-	Wed,  4 Jun 2025 13:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2572557C;
+	Wed,  4 Jun 2025 13:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749044251; cv=none; b=oNTXDvVdU3mrib6CF/WyynhnNc9om2xQvs3+/URPLnTyd22ZC2BIYmRkhcU2oa4MWad0/Tq+aogI/1heOCRfkKjYmbfCZWVXmqzAyU2kXdo6RPwEodvktSPi0lNxOdSwPRsh2k1m3jx8/lI50Uai8bavBKQTJTkB4k3JlBF6pB4=
+	t=1749044274; cv=none; b=eYW7OTGevP/Zzjif6KCHuc8JRABjpLvPVlna9pR3rmgxzRYDe+xFw8Pesd6+LWgJkppWWUx7C08bZN07jwXAkUuLZznMXtVwVYj0Dzd7cxYzBC5kyYmCEy+Rf7Y1nVtUOkwx+P1L/f8HoCgG0tuul5ipv4RCk7myT6MmIyZtRRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749044251; c=relaxed/simple;
-	bh=LjylLgqkF7sXPvwM5QH3T3a2T3r7WcEDyImVKYKRfn0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=D/g6elXLS+XvDg2y4MXowBFBdFdFDIKmePkRi3+RlbMd/kCe51R230Odz8QrGzpPLG4lIlRg+YHRKV6Z7T3tIVKGvJP0o3iCc0Wgtu3RDoPz4jm/zyAk3+36jJBnh8qEa/yG9OOwDAiZUo9h8IwaSrT8L6FIKDde2h6clYUj7j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlAlwaCM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749044274; c=relaxed/simple;
+	bh=rW25kGFKF9OW0rXVmccGSvuXOG6b1nRyoTUDa2HMP1s=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=JN5oDD36XmzRiP9PDsX4b712C7UUeW/U38Zv22C0tdaOb/iROXKQlN0yz9ebIHLMOtusZM8z9630VmYRBIya9qiLQWGjZGC8HvAcb7M+iDOh8xaPI3UZ1L1yUwmIYezWn//l79Lk5+PwoEhpCi16uPqwP0eriEmDFDGl9Iv4CJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=OanJit2J; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlAlwaCM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D6C5C4CEE7;
-	Wed,  4 Jun 2025 13:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749044251;
-	bh=LjylLgqkF7sXPvwM5QH3T3a2T3r7WcEDyImVKYKRfn0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=mlAlwaCMs9tHjv6nEt7U+Ibg65b3CKJlPhs4lgVIQ1VKcvjCSAYuvfpS6hBIjw3OV
-	 XQ8nvezt/8lN48FPFZnaaeJIhrV3+e2znePItViM9AaToBMfrO64NF1hBlaB1QvO6z
-	 7z7MBsz2PgK1NDMFfsSxgSmZA49I1drxjPSJm2OqbmDUcdp5q8e2z3fTc3QtLqzj60
-	 FMvKPAK09UXyZ9zGUdOOQOWfA/LvFF06aPr//yfBeeocNL+rWHokKBimR3tSr5zb+U
-	 n5Po3J89DI/7AuC4qrESmIyKo8Bw3bZzX2U3Uds/QpUkap7crcVwBjgXNvjtoiQHDZ
-	 UCS7+3qRu7fTw==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
-	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	vivek.kasireddy@intel.com, yilun.xu@intel.com,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com,
-	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
- TEE-IO support
-In-Reply-To: <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-20-yilun.xu@linux.intel.com>
- <yq5aplfn210z.fsf@kernel.org> <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
-Date: Wed, 04 Jun 2025 19:07:18 +0530
-Message-ID: <yq5ajz5r8w6p.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="OanJit2J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=wyZv9KmZ8ZdATx+EOquAs3+NIy2myEHEKYHxNZgEXhI=; b=OanJit2JpnZYvfrkIw51bNItJV
+	7cw8Mb8Z94Qn8g9NtLL0E5nZlu8D9ZxOeDRnyumv+qINF7C/XA0lqjhAxGFgr4dv1elr2agTHGH8y
+	YJlxCVjW+Nj9VlFy4FUax5Wxkt+P2HK013M04fDSQB6LvJlIy/TgVb11sU0uZwMztGdQ=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:38330 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1uMoJM-0002D8-4F; Wed, 04 Jun 2025 09:37:44 -0400
+Date: Wed, 4 Jun 2025 09:37:43 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
+ <tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "dri-devel@lists.freedesktop.org"
+ <dri-devel@lists.freedesktop.org>, "linux-renesas-soc@vger.kernel.org"
+ <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Message-Id: <20250604093743.b416894b67fcc49b3c4ef9b3@hugovil.com>
+In-Reply-To: <OS3PR01MB83195CC101339CA1ECDCD6C78A6CA@OS3PR01MB8319.jpnprd01.prod.outlook.com>
+References: <20250522143911.138077-1-hugo@hugovil.com>
+	<20250522143911.138077-3-hugo@hugovil.com>
+	<OS3PR01MB831999C4A5A32FE11CC04A078A6CA@OS3PR01MB8319.jpnprd01.prod.outlook.com>
+	<OS3PR01MB83195CC101339CA1ECDCD6C78A6CA@OS3PR01MB8319.jpnprd01.prod.outlook.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	*  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+	*      blocklist
+	*      [URIs: hugovil.com]
+	*  0.1 URIBL_CSS Contains an URL's NS IP listed in the Spamhaus CSS
+	*      blocklist
+	*      [URIs: hugovil.com]
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -3.2 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH v3 2/2] drm: renesas: rz-du: Set DCS maximum return
+ packet size
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-Xu Yilun <yilun.xu@linux.intel.com> writes:
+On Wed, 4 Jun 2025 12:08:49 +0000
+Chris Brandt <Chris.Brandt@renesas.com> wrote:
 
-> On Sun, Jun 01, 2025 at 04:15:32PM +0530, Aneesh Kumar K.V wrote:
->> Xu Yilun <yilun.xu@linux.intel.com> writes:
->> 
->> > Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
->> > expected to be called by userspace when CoCo VM issues TDI bind/unbind
->> > command to VMM. Specifically for TDX Connect, these commands are some
->> > secure Hypervisor call named GHCI (Guest-Hypervisor Communication
->> > Interface).
->> >
->> > The TSM TDI bind/unbind operations are expected to be initiated by a
->> > running CoCo VM, which already have the legacy assigned device in place.
->> > The TSM bind operation is to request VMM make all secure configurations
->> > to support device work as a TDI, and then issue TDISP messages to move
->> > the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
->> >
->> > Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
->> > device to TDISP ERROR state.
->> >
->> 
->> Any reason these need to be a vfio ioctl instead of iommufd ioctl?
->> For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.kumar@kernel.org/
->
-> A general reason is, the device driver - VFIO should be aware of the
-> bound state, and some operations break the bound state. VFIO should also
-> know some operations on bound may crash kernel because of platform TSM
-> firmware's enforcement. E.g. zapping MMIO, because private MMIO mapping
-> in secure page tables cannot be unmapped before TDI STOP [1].
->
-> Specifically, for TDX Connect, the firmware enforces MMIO unmapping in
-> S-EPT would fail if TDI is bound. For AMD there seems also some
-> requirement about this but I need Alexey's confirmation.
->
-> [1] https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
->
+Hi Chris,
 
-According to the TDISP specification (Section 11.2.6), clearing either
-the Bus Master Enable (BME) or Memory Space Enable (MSE) bits will cause
-the TDI to transition to an error state. To handle this gracefully, it
-seems necessary to unbind the TDI before modifying the BME or MSE bits.
+> Hi Hugo,
+> 
+> Sorry, one more thing....
+> 
+> > +	/*
+> > +	 * The default value of 1 will result in long read commands payload
+> > +	 * not being saved to memory. Set to the DMA buffer size.
+> > +	 */
+> 
+> The comment is a bit wordy.
+> 
+> You just need to say:
+> 
+> /* Set read buffer size */
 
-If I understand correctly, we also need to unmap the Stage-2 mapping due
-to the issue described in commit
-abafbc551fddede3e0a08dee1dcde08fc0eb8476. Are there any additional
-reasons we would want to unmap the Stage-2 mapping for the BAR (as done
-in vfio_pci_zap_and_down_write_memory_lock)?
+Like I said, this is related to something that is not obvious, so that
+is why I put a lenghty description.
 
-Additionally, with TDX, it appears that before unmapping the Stage-2
-mapping for the BAR, we should first unbind the TDI (ie, move it to the
-"unlock" state?) Is this step related Section 11.2.6 of the TDISP spec,
-or is it driven by a different requirement?
+> Or...no comment at all. It's pretty obvious what the code is doing because you are writing
+> RZG2L_DCS_BUF_SIZE to a register.
 
--aneesh
+Agreed, I will remove the part that says "Set to the DMA buffer size".
+
+Hugo.
+
+
+> -----Original Message-----
+> From: Chris Brandt 
+> Sent: Wednesday, June 4, 2025 7:54 AM
+> To: Hugo Villeneuve <hugo@hugovil.com>; Biju Das <biju.das.jz@bp.renesas.com>; maarten.lankhorst@linux.intel.com; mripard@kernel.org; tzimmermann@suse.de; airlied@gmail.com; simona@ffwll.ch
+> Cc: dri-devel@lists.freedesktop.org; linux-renesas-soc@vger.kernel.org; linux-kernel@vger.kernel.org; Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> Subject: RE: [PATCH v3 2/2] drm: renesas: rz-du: Set DCS maximum return packet size
+> 
+> Hi Hugo,
+> 
+> I'm fine with the code, but maybe it should go in a different location.
+> 
+> Since it's a register setup, it should probably go in rzg2l_mipi_dsi_startup() with the others.
+> 
+> Additionally, since it is required to make rzg2l_mipi_dsi_host_transfer() operate properly, my suggestion is to add this to your previous patch instead of making it separate.
+> Otherwise, it's like you are submitting one patch with a known bug, then immediately fixing it with a second patch.
+> 
+> This also would prevent the merge conflict with my patch that also modifies rzg2l_mipi_dsi_atomic_enable().
+> 
+> Chris
+> 
+> 
+> -----Original Message-----
+> From: Hugo Villeneuve <hugo@hugovil.com>
+> Sent: Thursday, May 22, 2025 10:39 AM
+> To: Biju Das <biju.das.jz@bp.renesas.com>; maarten.lankhorst@linux.intel.com; mripard@kernel.org; tzimmermann@suse.de; airlied@gmail.com; simona@ffwll.ch
+> Cc: dri-devel@lists.freedesktop.org; linux-renesas-soc@vger.kernel.org; linux-kernel@vger.kernel.org; hugo@hugovil.com; Hugo Villeneuve <hvilleneuve@dimonoff.com>; Chris Brandt <Chris.Brandt@renesas.com>
+> Subject: [PATCH v3 2/2] drm: renesas: rz-du: Set DCS maximum return packet size
+> 
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> 
+> The default value of 1 will result in long read commands payload not being saved to memory.
+> 
+> Fix by setting this value to the DMA buffer size.
+> 
+> Cc: Biju Das <biju.das.jz@bp.renesas.com>
+> Cc: Chris Brandt <chris.brandt@renesas.com>
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> ---
+>  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c      | 10 ++++++++++
+>  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h |  4 ++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> index a048d473db00b..745aae63af9d8 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> @@ -549,6 +549,7 @@ static void rzg2l_mipi_dsi_atomic_enable(struct drm_bridge *bridge,
+>  	const struct drm_display_mode *mode;
+>  	struct drm_connector *connector;
+>  	struct drm_crtc *crtc;
+> +	u32 value;
+>  	int ret;
+>  
+>  	connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder); @@ -561,6 +562,15 @@ static void rzg2l_mipi_dsi_atomic_enable(struct drm_bridge *bridge,
+>  
+>  	rzg2l_mipi_dsi_set_display_timing(dsi, mode);
+>  
+> +	/*
+> +	 * The default value of 1 will result in long read commands payload
+> +	 * not being saved to memory. Set to the DMA buffer size.
+> +	 */
+> +	value = rzg2l_mipi_dsi_link_read(dsi, DSISETR);
+> +	value &= ~DSISETR_MRPSZ;
+> +	value |= FIELD_PREP(DSISETR_MRPSZ, RZG2L_DCS_BUF_SIZE);
+> +	rzg2l_mipi_dsi_link_write(dsi, DSISETR, value);
+> +
+>  	ret = rzg2l_mipi_dsi_start_hs_clock(dsi);
+>  	if (ret < 0)
+>  		goto err_stop;
+> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+> index 0e432b04188d0..26d8a37ee6351 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+> @@ -81,6 +81,10 @@
+>  #define RSTSR_SWRSTLP			(1 << 1)
+>  #define RSTSR_SWRSTHS			(1 << 0)
+>  
+> +/* DSI Set Register */
+> +#define DSISETR				0x120
+> +#define DSISETR_MRPSZ			GENMASK(15, 0)
+> +
+>  /* Rx Result Save Slot 0 Register */
+>  #define RXRSS0R				0x240
+>  #define RXRSS0R_RXPKTDFAIL		BIT(28)
+> --
+> 2.39.5
+> 
+> 
+
+
+-- 
+Hugo Villeneuve
