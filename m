@@ -1,121 +1,141 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F795143748;
-	Wed,  4 Jun 2025 15:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDE32F56;
+	Wed,  4 Jun 2025 15:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749050474; cv=none; b=c9CIeTWMWWHgags5OlereXzWr/job+CFHy7rGpIl32A9/pfRCefQSVOTQTl7sghrcNT56N6D8Og66zUeumgc4+ukwCJ1P/DnCFPoo94A18l81Vux0dzN9vo9xWST8SMYKUZB9FwzbIRSLrOIurpzhMHEc2HR9Fj6yCb3tHGSR0w=
+	t=1749050596; cv=none; b=m3xUZzLG/KKbuUk0A3a4NIIiQFEDDd4KKB4PXMd19xKb3s8V0rIIGy+ESEfU+PiIReSfrgGdZ6Su5rkC5gogY5Ou+UnE8NvWbJzMRl3guy49AAzZU6ccIXa+grsO8Qtq/1DKwbtIQFlAbUO4oNYnb2UQsCTH+eiDrHGsMJNaC8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749050474; c=relaxed/simple;
-	bh=owjnO9VvFJBs4z0MLcAItFN+hb71KXnPMbLj2c7IwHQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K9gDpiYAHnTa2IduRWgTbVfRvZ3QLirl5F6fg7v9KmV8zNaN1NtkooyB1ehddGDwcWH6zyKKPtDpIWRd7v729SthEESo/LefR6p4NGvLpOUK0QURmfZ0yDWuS5b6hSHN4Yh9ULvKERjMwDv/vbijQ61hC3FxSF3ViEJVg3CWTPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=drLspXgF; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749050596; c=relaxed/simple;
+	bh=+lJcxQsjxseXi30qNXRxLB/y4R9OszpeMs9veRimWYg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=S3EuJH0cFS3iFjGR8OuOEgU1Yva3OFQxtqD1qtiKSdwnDPWYCXuFKJ6JXuZKy82LRxvaAlYI6YckCIkndnOBRobAvYtkJgO1OpttS6MIjKD9yVFc3rQZ8RB6MsazK5GeWr4ie2kTklh1NV3HgHFNM7ikjax95iCc+lxWw51VPWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FrpnwNfA; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drLspXgF"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e8175f45e26so1492066276.1;
-        Wed, 04 Jun 2025 08:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749050472; x=1749655272; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wC7mKSrr4kiaf3UIcJvhXmaBddWPavsd+lLtVOh+oBA=;
-        b=drLspXgFdBpM2cbRuMGBPGKelh4KKepWJKqGw/HZDIqGhYx/miz5qXQI6hPaP1WcLs
-         GvDuGO677YmbZ0a8LfvmVNjjyvR76C0KcCSIwpJFum/47f+nen8XVUbB6eHIqyYyQIxm
-         hqbhHbvySQpC3YgkVMAHmQr3XgQvSRWuFhK4kHmeJ0EhHM5VyGZp7Dp0lS0mwWZ07+2y
-         Q9UzWYYdTR1r8Joxulym5teTmFcyZOhNEHR74dkhKp0zMfzjHS6ZItaM7tKRJhgBelF4
-         SWShyBbVbY+CCnuNYiuQbOurYk7EL9PFLQQfnRH/4LyFYXs6tdUt7IuJSGMGVwx7D1pv
-         oFxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749050472; x=1749655272;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wC7mKSrr4kiaf3UIcJvhXmaBddWPavsd+lLtVOh+oBA=;
-        b=kp2BtT1PWSwivtMRitdxN7Cq2GP67/bDf4MAs4LocHHs0/pr43bjwLE1sQ+q5qbOPW
-         Rtut+vl8IibGTKYjogY6auFyONScLCsIDueylDWr0P6vndVzVljL6YUNLt7LqHk/3CTR
-         MwM2rPGEkDwFZGJnW/BIOFcQBDq66i6reZdIVnfwSFk6tGKuOUdQkLvd+UcINCNdpBN3
-         4s6xc0OjHYgpcG2ssysUHbxPF3p4xQCNtDJbBnChtqsHNsMRBZHC/mk8XIQ+mGaINBzx
-         IluDGBCZGJrtzZtMNK3TahukDfTuo9qc9efXHqLC7KlXNaZBg8LvhojLiTJpnlWbUf0A
-         xucA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMBscKlhwnaQCMwR6QtICRtXwEXL5xqbLarhgtrMj5pGLrLxkHrOzAc+nVQ9QBP/7Etdyhkk4PDGoph3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1E+xVHN+fAE/MZ//teKPRhq2lUaMYSvSwdmV9zwPyB6IlM6Uf
-	X5faKxfIV8m5OFQvU6alGDSqMbTPPwqSGn7Teg73UltSmcoFYr8o0EXov3HD1TcEgoqlwESM9GY
-	TFkbOWrrV2hqbnQNMZswzFfZPfpueD/y0vytSvB4=
-X-Gm-Gg: ASbGncvazsVKFh6jWHytG/iMsKrG92bK70M5vJAbftgaY1qLOeg7Shci4yVOjU9wQo2
-	FB2WT1INUhpsTM0jhOfwx4IsDHGSuq0k53GuPbzN2jSnS4nZ8AM6YTGqaN/1vJVn1tF+hRsd2Tb
-	0LdY2mwWb2D0dmRD7X6yEfTmRiciz6Kgw=
-X-Google-Smtp-Source: AGHT+IGREyE12fbHjJBCwDCkpDdLrlnY34Qx31wboQATvSL9xppWlFT+MzuRD7abZcfpqgHcsVZXAPbDl5OG9kjk1cs=
-X-Received: by 2002:a05:6902:2102:b0:e7d:6d7c:c33e with SMTP id
- 3f1490d57ef6-e8179da11c7mr3933634276.44.1749050472139; Wed, 04 Jun 2025
- 08:21:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FrpnwNfA"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 554FMJIY076049
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 4 Jun 2025 08:22:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 554FMJIY076049
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749050541;
+	bh=NH2ltXtujZBqPJip4ancgNjYxroWFHWZyGX2p6NKPXc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=FrpnwNfA/rikkJwUqKavu+F3qP9DFDYIsBfs2A92z5aoMEvnWjkzfYojMhs98JXRn
+	 coeiXRhu75/wIJvdUSGvYY6BwK9I1KouJwNAN9odFoW5uUFHS1MptMWQREGT0rX2f8
+	 f6g6Q+cKIDEwQr8ORjzbF/t8oAIDaV9I+VMh75ax64t/EXUvl1y9/YnGNaWTT3lOUj
+	 2eXE0GUVgUxeIwkM/KBWkZkei92+bxbvFBLoD15xH8xydiCwjaggxg4UL8HaEoDOUz
+	 9ubB5Ku2C0uIWI1JSB4rzj+lfkQJeNqgS7twCkpv4PK+6euX/WeKwfNCvb4OXiSErp
+	 ZqMFdhLraiD6A==
+Date: Wed, 04 Jun 2025 08:22:19 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Dave Hansen <dave.hansen@intel.com>, Sohil Mehta <sohil.mehta@intel.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+CC: Xin Li <xin@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/9] x86/nmi: Assign and register NMI-source vectors
+User-Agent: K-9 Mail for Android
+In-Reply-To: <e978e1fb-d88e-4789-bd33-367281dfa0ad@intel.com>
+References: <20250513203803.2636561-1-sohil.mehta@intel.com> <20250513203803.2636561-5-sohil.mehta@intel.com> <e978e1fb-d88e-4789-bd33-367281dfa0ad@intel.com>
+Message-ID: <31DB6043-44B2-43C1-B312-9B0DEC23C500@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603221416.74523-1-stefano.radaelli21@gmail.com>
- <54c4a279-a528-4657-8319-c9374add54b7@lunn.ch> <CAK+owoihxp-2xAvFfVthvNELshti_3V-pFgD7D7jzd1XqiLgGQ@mail.gmail.com>
- <d5f891d7-d24a-4f85-b59d-313b925c4495@lunn.ch> <CAK+owog69JktbsBhHZj7ULYXmH_bZ-CO8=QEMqBVc0mjp8jz6g@mail.gmail.com>
- <1d755cbf-4dee-4784-98b7-e72061219e3f@lunn.ch>
-In-Reply-To: <1d755cbf-4dee-4784-98b7-e72061219e3f@lunn.ch>
-From: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Date: Wed, 4 Jun 2025 17:20:56 +0200
-X-Gm-Features: AX0GCFssVbXWXo-ClT4FiYIScIddnBW-kBko0Lugw34l6NVIDWlAS9mHkPVmzfg
-Message-ID: <CAK+owog-Mipq2Oc0=gd8+LziHmVUrC5R7HidYYZWu9_AWu02TA@mail.gmail.com>
-Subject: Re: [v1] arm64: dts: freescale: imx93-var-som: update eqos support
- for MaxLinear PHY
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
-
-Absolutely, thanks again for pointing this out! I'm actually glad you asked,
-because it pushed me to double-check internally with our hardware team
-and confirm the exact implementation details.
-
-I'll make sure to include a proper comment in the device tree right above the
-'phy-mode = "rgmii";' line in v2, clearly stating that the RGMII delays are
-handled via fixed passive components on the SOM's PCB itself, with no
-software or strap-based configuration involved.
-
-Thanks again,
-Stefano
-
-Il giorno mer 4 giu 2025 alle ore 17:13 Andrew Lunn <andrew@lunn.ch> ha scritto:
+On June 3, 2025 10:23:42 AM PDT, Dave Hansen <dave=2Ehansen@intel=2Ecom> wr=
+ote:
+>On 5/13/25 13:37, Sohil Mehta wrote:
+>=2E=2E=2E
+>> + * Vector 2 is reserved for external NMIs related to the Local APIC -
+>> + * LINT1=2E Some third-party chipsets may send NMI messages with a
+>> + * hardcoded vector of 2, which would result in bit 2 being set in the
+>> + * NMI-source bitmap=2E
 >
-> On Wed, Jun 04, 2025 at 03:08:09PM +0200, Stefano Radaelli wrote:
-> > Hi Andrew,
-> >
-> > To clarify more precisely: hw team told me that the required 2 ns
-> > RGMII delays are
-> > implemented directly in hardware inside the SOM itself, through passive delay
-> > elements (filters) placed on the RX and TX lines. There is no reliance on PHY
-> > strap settings or any kind of delay configuration via registers.
-> >
-> > This means:
-> > - The delays are fixed and cannot be changed via software.
-> > - From the point of view of any carrier board, the interface is
-> > already timing-compliant.
+>This doesn't actually say what problem this causes=2E Is this better?
 >
-> Great. Please add a comment in the DT explaining this. 99% of the time
-> 'rgmii' is wrong, but this is the 1%. We should make it clear this is
-> not just another cut/paste error, but very intentional and correct
-> because of the PCB design.
+>	Third-party chipsets send NMI messages with a fixed vector of 2=2E
+>	Using vector 2 for some other purpose would cause confusion
+>	between those Local APIC messages and the other purpose=2E Avoid
+>	using it=2E
 >
-> There is a patch to checkpatch.pl i want to introduce in the next
-> development cycle which will look for 'rgmii', and if found, look on
-> the line before for a comment including the word 'PCB'. If it finds
-> 'rgmii' without such a comment it will issue a warning. So it would be
-> nice to avoid that in your correct case.
+>> + * The vectors are in no particular priority order=2E Add new vector
+>> + * assignments sequentially in the list below=2E
+>> + */
+>> +#define NMIS_VECTOR_NONE	0	/* Reserved - Set for all unidentified sour=
+ces */
+>> +#define NMIS_VECTOR_TEST	1	/* NMI selftest */
+>> +#define NMIS_VECTOR_EXTERNAL	2	/* Reserved - Match External NMI vector=
+ 2 */
+>> +#define NMIS_VECTOR_SMP_STOP	3	/* Panic stop CPU */
+>> +#define NMIS_VECTOR_BT		4	/* CPU backtrace */
+>> +#define NMIS_VECTOR_KGDB	5	/* Kernel debugger */
+>> +#define NMIS_VECTOR_MCE		6	/* MCE injection */
+>> +#define NMIS_VECTOR_PMI		7	/* PerfMon counters */
+>> +
+>> +#define NMIS_VECTORS_MAX	16	/* Maximum number of NMI-source vectors */
 >
->      Andrew
+>Would an enum fit here?
+>
+>You could also add a:
+>
+>	NMIS_VECTOR_COUNT
+>
+>as the last entry and then just:
+>
+>	BUILD_BUG_ON(NMIS_VECTOR_COUNT >=3D 16);
+>
+>somewhere=2E
+>
+>I guess it's a little annoying that you need NMIS_VECTOR_EXTERNAL to
+>have a fixed value of 2, but I do like way the enum makes the type explic=
+it=2E
+>
+>
+>>  static int __init register_nmi_cpu_backtrace_handler(void)
+>>  {
+>> -	register_nmi_handler(NMI_LOCAL, nmi_cpu_backtrace_handler, 0, "arch_b=
+t", 0);
+>> +	register_nmi_handler(NMI_LOCAL, nmi_cpu_backtrace_handler, 0, "arch_b=
+t", NMIS_VECTOR_BT);
+>>  	return 0;
+>>  }
+>
+>=2E=2E=2E Oh you replaced _most_ of the random 0's in this patch=2E That =
+helps
+>for sure=2E
+
+The "may" here is important=2E *Most* sources are expected to send these a=
+s either a programmable MSI or as LINT1, which is programmable in the APIC,=
+ but since the vector hasn't mattered, we can't rule out that some hardware=
+ might have been built to send an MSI with a hard-coded vector, in which ca=
+se it is most likely they send either 0, 2 or 255=2E 0 and 255 will set the=
+ unknown source bit (0), but 2 is a legitimate source so it is defensive pr=
+ogramming to leave it fallow=2E
+
+Note also that although the current implementation is limited to 15 source=
+s (+ the unknown/lost source bit), the architecture allows for up to 63=2E
