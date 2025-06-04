@@ -1,176 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43636199FAB
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 06:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D58B262FDC
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 06:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749016903; cv=none; b=UFGRCxv75ZguhuRHqcjpnaD0NiJABaEm+mlo6lIVgbMU3K4ESL0q7uX1jWn85hyZxEZ5UGWx2TcuYP+G0GCTZ+xDkj5+FxSeraaue81wSh4rqEzm5eiWU06aHu25K3qDrTh6928moGUdody2+J3SrnVn0bVmm1k3zxWeIcja5CU=
+	t=1749016908; cv=none; b=J1h5yaEDtYbsG5kQniaIOnRlzi9vWUfMMfQHBv+b1fs2gvoOGmOnUTJKVe1mDLxA5Ybl3YmZXAeoqHTqxrcpkm1yjZM9uYP0n8P4qidvcJrKpjPNGXPQnEmaqcLoOV5xnh5pH/YkXRjIUN4OecI9Q0Lsplg07wuX+bnLstjslr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749016903; c=relaxed/simple;
-	bh=4TyRBG1G4EzdBNunppuanZ43NQgPH8fGRCpZBDbYUus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jh3oBIPxpDNLMkMrBZdC7vXB+Dzq04e1haxjkM9pqQ5cR1c4ueYhn0ErpyvY/p1mYKRGclKyP7qaxHaIxB86f4j6DFmHmkmPV9oLr9X7kvKeicQf28PMRoU35Cfwhx5NGgOZKePqm5r7Swg8CJXo9mokkMUPEz8QjZ/yDcoHBGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WXc3N7wW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749016908; c=relaxed/simple;
+	bh=OTfj5VgHFZ5gbh9tkYj67lK1g1D5j4ylUMJ/45wngNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s/iG5fitxNCU0xgbT0glp06IzaBWpQ2Q1Ofwhrd68HwuB/FFK74RxL7efhopM9P7bl2qLuc5Q73zgWAXE2z7FtykrGj8655nt7kibQoUpv/y3/Hx47FlWoxbH7x0y9+CrktFw7OM9wVmus2iSMqSd3xzFwF6CTM+maKcwra7qa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IelnpEic; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WXc3N7wW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749016900;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zuRWRJUNtoA1IwLH7xLOPSpkGMVdWFOSz6YPLpJ70Q8=;
-	b=WXc3N7wW1PLLSKXOExxYmGo2Fw7+4jUShSzvhw02P0Fp3vOwbgFs40qXLw4sZqlN22tFCd
-	UtO4sus+z2dFl9+q0iQo7NpX/5fNAFjeX+GAcDTQqCk+LuMunX8pG6iZLan79DvY5y6cZk
-	3MvTF0YZkcH5U+Iy9gIB0xkP0FaxeLY=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-448-2DyHaVVQPqyHICp2_brVMA-1; Wed, 04 Jun 2025 02:01:37 -0400
-X-MC-Unique: 2DyHaVVQPqyHICp2_brVMA-1
-X-Mimecast-MFC-AGG-ID: 2DyHaVVQPqyHICp2_brVMA_1749016896
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ad88ac202c0so55917966b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 23:01:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IelnpEic"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-442eb5d143eso64271485e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Jun 2025 23:01:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749016904; x=1749621704; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=js3ePkAFRXu2bd4kJEDMYhddIA3XtbtOgMVgKzlYv50=;
+        b=IelnpEicNQ8mjcrzJGFV7DLQVuoojkiEqIgUF+Nuxo4MTV1TYP7XtHh4LyrqVGiOvY
+         XF+C3v3QofQCSlDFeW/nz5nJCcvELjORNfYfqjtkKvYZv9IWKzezJpCltKn4GV1iWnog
+         rWkQkO3hAxNRzhiZV8sBr63LBFsFL87v/5TahTkzbPy63uHR788zaTJ5TOhffRV/t7Xz
+         gnha9wL/aqQe68Z5GCYXBJk4w8f0++5w/geuXqX9OQhn5v6yfk5xFEhCnf/biu1tmwZd
+         OU4NEaeu0cOhmwpyGpaJ6NFHX9cL98ls6tJmkSzOdepfTL4iMM5oRgXE5QXc9+yWuovq
+         2XLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749016896; x=1749621696;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zuRWRJUNtoA1IwLH7xLOPSpkGMVdWFOSz6YPLpJ70Q8=;
-        b=eAdzRM2EtqLtAQgB6OMPUUEFmxYGFJSH2dWAcri1kJ7EY9lfDxXoztkarnJFYFFPS3
-         K0N/uDmy4EQt3kHD4SxoD+LP9FvMMSLptRBJadUm4pHSVastymiAnNrPzGwpjYnabNuU
-         e6luBLc6jo4kfCfKgF+HFDQy9XzUv/rsAXMfGkLWao9XXCCANcL3GN2QaPqqASvvzMtq
-         HgfH9+rnvZUBbKmRb5qQePwCr7nnCbCbvEveI2wAnAFlWIUc2z8+WIzw/e9aB2Jdorwy
-         eIejBZ/Euo1X7KB4yUTwMNEoOjJ7fM5CDhGFPG0BgNdfrfaYS4lbCsaWswBFty4EyTsK
-         uOBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbVmiaaHBAeXdr3GWGKAD9N6WO94GpYUvmLl+pXqxzDfF3Zw8AyEpcGMuqXp08fhuxdNPADcc4V+89M44=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/Ya0eHiNbY74gcxCPNIdAaG4gv4/2PnJitq8P/x1aA4Ogrr1Z
-	IoeOqnj/99e3988EoTEx/zRCap4lHgyMGYM7fA/qMKm3R4yhmH/jJqbZL2G27bS9WAcp4sZPU9O
-	GKICBpGJDjoNhM272OxU0D9De0RY8Hp1GDxYVIbnGySevsLlsHJSNUeNPU/Pfk3JbfpUkWPHnAj
-	f8d/j5XAT4Ig9vX2u/6gghyJvFdKZE0OnFJfnhvHCh7FYXzNYcyJw=
-X-Gm-Gg: ASbGncubuBfDDmv5cdJvc1BQr1791/6y0ML9jFrOd4wkvJQmDytQIFC2IDBNNxTGXbe
-	b0h2MBAepgy6C3z3alRS/sUXwIMB7bJ8Y254Bq4DU/F0JHhuBl/i6QhARc/QGXn4lFSmD1Q==
-X-Received: by 2002:a17:907:3e27:b0:ad8:932e:77c9 with SMTP id a640c23a62f3a-addf6e5309dmr151677566b.3.1749016895878;
-        Tue, 03 Jun 2025 23:01:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEq7zshd+Mlb0ExzQc1p+OYd8O3naYB2lELgamGzeWirUG3oP6mxKyenZR4eIlwQzxmUZ2DblEvLugnFUc5+nI=
-X-Received: by 2002:a17:907:3e27:b0:ad8:932e:77c9 with SMTP id
- a640c23a62f3a-addf6e5309dmr151674666b.3.1749016895432; Tue, 03 Jun 2025
- 23:01:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749016904; x=1749621704;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=js3ePkAFRXu2bd4kJEDMYhddIA3XtbtOgMVgKzlYv50=;
+        b=a/rQ5UsfNTqKqbOmdFJuJ/ghS/kR2Pjt6HLWwfJh39cXRQxTynAXwJTLWxSiH26WWy
+         fAWZSLsO7n0tdoO0NS28gam6jRXlID0qfPKQ39UdL/MCpqDDSl5cQ0EbqMBFwdgyYmfN
+         uihYSqwKVN0XljQuXBn3fHSp4D3bssG6M4cVo+L6HohsQi8VTvUZA0Lg+OIBWsHvCZDZ
+         7znfpvvUzux6nl0uR0ezleF/L7rd8JCxjWD87x4wVgU3VzGMdDVpb2j8sgN4KTc9pRJt
+         CTQZkWqyDwEvZ82fOtjnCGfQIYGdky1UnbJTVPK2GZPOG81N0mda34VVeFOe0HV88RUD
+         t/0A==
+X-Forwarded-Encrypted: i=1; AJvYcCU3hdM4AdpH7M3SfPOLVOwwwVypXMpw5EfeikQ1y2UEAFx2NQ7BL5/xHExlIA5zepFPTqdNau0DkbNIAZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2YycVbX14l7gxluCbfd5ao69bXMJFz72wBT1qtKEnbxp0Po/d
+	kq5+MTz9Mm3DPt3cYLi0pN1GQ04STbTpGmp2qiTAjTHC+e7R+kpPaog1AcyLrniJCgY=
+X-Gm-Gg: ASbGncv8T9b4esulqzOtXLyDCLvn//pqlGnOrrCzgRxWUlHsLD4zx0XZGczIYL5CiMl
+	ySYw7q0nv3wb8JLQM2GV5fTuIKStIODVVKsVz8po1CBj6LFUyn2oprQo6YKQsxA6ucsIM++II0J
+	tJAD77ZDTu/hsKbT/ddBNeJxzJ9iEPM1cahuGEEBOr2YVhlcrwwg81c6Qs4HbVjAYqT5uZd6RG4
+	aKgnVuiCJpEPs/nqRWoWG6YeG29ooxV2usG6dfHsSTXxAbdv4SG+8uR9Hm/mBuexukuT7W4lhdW
+	5F4bH3zFpdWRrjU3ii1FnwHWWMtNUurpNQYhLWFPqAVrXjTT6d2V2HEbMikIIyCiS6U=
+X-Google-Smtp-Source: AGHT+IHggEMVfIpJ7Xv+hdE4EzIhRVMoFlT3x2R6JtIQQe6ubsLLxsK+lqCkT6TBd/hsKH6MzgQovA==
+X-Received: by 2002:a05:6000:2082:b0:3a4:dfa5:325e with SMTP id ffacd0b85a97d-3a51d8ef828mr998998f8f.10.1749016904364;
+        Tue, 03 Jun 2025 23:01:44 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4efe6c9d4sm20798221f8f.38.2025.06.03.23.01.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 23:01:43 -0700 (PDT)
+Date: Wed, 4 Jun 2025 09:01:39 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+	bp@alien8.de, ming.li@zohomail.com, shiju.jose@huawei.com,
+	Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+	yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org,
+	colyli@suse.de, uaisheng.ye@intel.com,
+	fabio.m.de.francesco@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	yazen.ghannam@amd.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v9 03/16] CXL/AER: Introduce kfifo for forwarding CXL
+ errors
+Message-ID: <aD_hQ7sKu-s7Yxiq@stanley.mountain>
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-4-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531095800.160043-1-lulu@redhat.com>
-In-Reply-To: <20250531095800.160043-1-lulu@redhat.com>
-From: Lei Yang <leiyang@redhat.com>
-Date: Wed, 4 Jun 2025 14:00:57 +0800
-X-Gm-Features: AX0GCFudKt31CUN4yXL1ybV6SffNxLvQTIurYx8hfUPGvIKESpW4_6rDnGimkiw
-Message-ID: <CAPpAL=w24Wwq8Qa9uQr8OQqdg8vMiK0FSOUGdCHAvB0O2B_T7Q@mail.gmail.com>
-Subject: Re: [PATCH RESEND v10 0/3] vhost: Add support of kthread API
-To: Cindy Lu <lulu@redhat.com>
-Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
-	sgarzare@redhat.com, linux-kernel@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603172239.159260-4-terry.bowman@amd.com>
 
-Tested this patch with virtio-net regression tests, everything works fine.
+On Tue, Jun 03, 2025 at 12:22:26PM -0500, Terry Bowman wrote:
+> +static struct work_struct cxl_prot_err_work;
+> +static DECLARE_WORK(cxl_prot_err_work, cxl_prot_err_work_fn);
+> +
+>  int cxl_ras_init(void)
+>  {
+> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> +	int rc;
+> +
+> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> +	if (rc)
+> +		pr_err("Failed to register CPER AER kfifo (%x)", rc);
 
-Tested-by: Lei Yang <leiyang@redhat.com>
+This shouldn't return rc;?
 
-On Sat, May 31, 2025 at 5:58=E2=80=AFPM Cindy Lu <lulu@redhat.com> wrote:
->
-> In commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads"),
-> the vhost now uses vhost_task and operates as a child of the
-> owner thread. This aligns with containerization principles.
-> However, this change has caused confusion for some legacy
-> userspace applications. Therefore, we are reintroducing
-> support for the kthread API.
->
-> In this series, a new UAPI is implemented to allow
-> userspace applications to configure their thread mode.
->
-> Changelog v2:
->  1. Change the module_param's name to enforce_inherit_owner, and the defa=
-ult value is true.
->  2. Change the UAPI's name to VHOST_SET_INHERIT_FROM_OWNER.
->
-> Changelog v3:
->  1. Change the module_param's name to inherit_owner_default, and the defa=
-ult value is true.
->  2. Add a structure for task function; the worker will select a different=
- mode based on the value inherit_owner.
->  3. device will have their own inherit_owner in struct vhost_dev
->  4. Address other comments
->
-> Changelog v4:
->  1. remove the module_param, only keep the UAPI
->  2. remove the structure for task function; change to use the function po=
-inter in vhost_worker
->  3. fix the issue in vhost_worker_create and vhost_dev_ioctl
->  4. Address other comments
->
-> Changelog v5:
->  1. Change wakeup and stop function pointers in struct vhost_worker to vo=
-id.
->  2. merging patches 4, 5, 6 in a single patch
->  3. Fix spelling issues and address other comments.
->
-> Changelog v6:
->  1. move the check of VHOST_NEW_WORKER from vhost_scsi to vhost
->  2. Change the ioctl name VHOST_SET_INHERIT_FROM_OWNER to VHOST_FORK_FROM=
-_OWNER
->  3. reuse the function __vhost_worker_flush
->  4. use a ops sturct to support worker relates function
->  5. reset the value of inherit_owner in vhost_dev_reset_owner.
->
-> Changelog v7:
->  1. add a KConfig knob to disable legacy app support
->  2. Split the changes into two patches to separately introduce the ops an=
-d add kthread support.
->  3. Utilized INX_MAX to avoid modifications in __vhost_worker_flush
->  4. Rebased on the latest kernel
->  5. Address other comments
->
-> Changelog v8:
->  1. Rebased on the latest kernel
->  2. Address some other comments
->
-> Changelog v9:
->  1. Rebased on the latest kernel.
->  2. Squashed patches 6=E2=80=917.
->  3. Squashed patches 2=E2=80=914.
->  4. Minor fixes in commit log
->
->
-> Changelog v10:
->  1.Add support for the module_param.
->  2.Squash patches 3 and 4.
->  3.Make minor fixes in the commit log.
->  4.Fix the mismatched tabs in Kconfig.
->  5.Rebase on the latest kernel.
->
-> Tested with QEMU with kthread mode/task mode/kthread+task mode
->
-> Cindy Lu (3):
->   vhost: Add a new modparam to allow userspace select kthread
->   vhost: Reintroduce kthread mode support in vhost
->   vhost: Add new UAPI to select kthread mode and KConfig to enable this
->     IOCTL
->
->  drivers/vhost/Kconfig      |  13 +++
->  drivers/vhost/vhost.c      | 223 +++++++++++++++++++++++++++++++++----
->  drivers/vhost/vhost.h      |  22 ++++
->  include/uapi/linux/vhost.h |  16 +++
->  4 files changed, 255 insertions(+), 19 deletions(-)
->
-> --
-> 2.45.0
->
->
+> +
+> +	rc = cxl_register_prot_err_work(&cxl_prot_err_work);
+> +	if (rc) {
+> +		pr_err("Failed to register native AER kfifo (%x)", rc);
+> +		return rc;
+> +	}
+> +
+> +	return 0;
+>  }
+
+regards,
+dan carpenter
 
