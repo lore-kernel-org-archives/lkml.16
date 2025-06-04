@@ -1,74 +1,74 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B66928F921
-	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:30:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1AE28F537
+	for <linux-kernel@vger.kernel.org>; Wed,  4 Jun 2025 13:30:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749043813; cv=none; b=YiCp2HKT0nClVRP3nWSAZyZo3WJGqLW/567l6TJhk6SovT8Uq9EqHwezDVwOa10MBbzNSGbLiHEEvTuBYjwF0Tz9QdMoVBzTI3MDl1U8zE3S+nLvb7Nu/HJc1rkmg6qJ9KKd5zjtMeBHtLQzm0i6pmn6gednyemMawEuithMeeo=
+	t=1749043837; cv=none; b=ZYXzIs1XorINKkAYCY9r6kukLv02ovsO/1mad/zzJ8NdvNxl44nSuJj4qy7D/Exm4kzFGC0dS9ixlM4NQiMs0mh46uZLRyHuQY6aw8r4JH6B3orAm/9z2bZxxtXRPqcWqwrqnflAEZ5CwEIhTN1YgRySnU1rNRGV7jRce/BohEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749043813; c=relaxed/simple;
-	bh=DJDT9AInBT4ZBXbnpZMDD3OPwVP1JNHKWyTYB41+vgw=;
+	s=arc-20240116; t=1749043837; c=relaxed/simple;
+	bh=vGc/ya8WD8Arl5kBDqEmegGuYoXLUKGi0BH+cyLb1Ac=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i1UO+V8miSeFnFCfyl8f42v3uPu6H1MR8EhLnKWlQynHomWu4D+X97ZCZC+hHRBk0u3Qk+on3mN8ZUj78BbKfrK/8NV+JfDYMCsqtq2uN1Z6F/twE2+pIBOhl5WTDcgIoUKOyeK/HBTljzqTzH3JWjRbtifNBVWpA4ArxAmmQUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P7OjiSZA; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=Yp/cnziJQ6DZrVL0HMYkvB/kdiRUO/LAT7MaipoOVP2WirTLSF5H48Ar4i/4vOmy5PdxNeXueIKbdbDlTRbOi7vtDi5u11Mgx408G1DNfOQ+Y60wKJK7x4JlIAlk1jkkyH0BuscE74H8JlTxcvyNNbl6P/Wy1D6/jIHfNV7cmAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Np+Yj+Cp; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P7OjiSZA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Np+Yj+Cp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749043811;
+	s=mimecast20190719; t=1749043834;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wM730wYdKzGLtqTwQp0WD4PZQ3ILvslvUEZgXXpTyII=;
-	b=P7OjiSZArcKxSBVMjw0eKvG5inYAcNzvIJQ0Ct+VSHTEud1loUEv3BYwBT+VU/0fpeJxsW
-	5gN2y/zfh48QVlmKLSyTXPwjZnan4wIBjHquER/BDg3YCq4htYzZDzGpcfNiJX59AWMHBU
-	Si381pV6UFqGsgbek+hASAhUIiWWfEI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=+X4krYrnH5NEJpMGCxhyBmpja6nPciHd8wSnog0o/ME=;
+	b=Np+Yj+Cpb5eZvlhGMNWyqDTgEiuLlAuo1RgyV18fZDFv2zr9nDzRpi0oXn/SBorIll5TGB
+	qK94DIzmJSz9nVk6wUUcnIePIrDYaAWqzMO0zWg+IL9GmEicb1RDshV10DLFC5X5T4pw/C
+	JLza0CseFyRzQP7GzZKHpvD1LnHbCbM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-445-WEylEPTzMIyld6opMeS5VQ-1; Wed, 04 Jun 2025 09:30:09 -0400
-X-MC-Unique: WEylEPTzMIyld6opMeS5VQ-1
-X-Mimecast-MFC-AGG-ID: WEylEPTzMIyld6opMeS5VQ_1749043807
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d57a0641so46685915e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:30:08 -0700 (PDT)
+ us-mta-81-uBoKpPGoPs-pAMWI0StnyA-1; Wed, 04 Jun 2025 09:30:32 -0400
+X-MC-Unique: uBoKpPGoPs-pAMWI0StnyA-1
+X-Mimecast-MFC-AGG-ID: uBoKpPGoPs-pAMWI0StnyA_1749043832
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4fac7fa27so2305196f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 06:30:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749043807; x=1749648607;
+        d=1e100.net; s=20230601; t=1749043831; x=1749648631;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=wM730wYdKzGLtqTwQp0WD4PZQ3ILvslvUEZgXXpTyII=;
-        b=OSmPKytkTkdQapCD4p9g1lQao1alQMqP8i5++f6WwwgKop965tm8BHllgxpjv3Il0E
-         1GpSCs3xzyajfC1LFwxH9aT8t6ayRKqnSyO4B/ET+dqjsNlyNzjaCDUX4xXFlSTgG0lA
-         nhYABI5SgM95fPnFz3c52mjgJGCy/HREpZIL6fBSh6Yd1CBT6DzSRd9ZsP3GHl2nNfZh
-         omBzGTbu4nLNUbYK2E+CKtFmHBLC7rMHvkvaF7yILtk07rcATsaWBCp+LKbJU7goQn69
-         Rk2w0f27V3wH6W77ziBFUB6N7wKFW4KKZCcezFk7q1vTXPxzOkHeAFFDcjU1cxdCYciY
-         i2Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCVppcWdFULkbion1Xr1TGuXLpra7d4/DSGJWNeLGrDyV9GNPfLXYyg1HLJEYdvNzaa2tShkEX6iBJEO6bw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGuMTDm+ld4Ln2LT4q/5QbOxTUiOAcC4r7SqCp+rj43MoH3JRt
-	Edf8UyrCa1GcYaSfbaw4mCf+aQSzWnVyCobzvllQ6pmkImkl+kF4Us4XeG3LzjzaAu0xLPwqtfB
-	wzcUdLtWN/uUCFTy6VuNeN2+Ufor0dxij/FgiolcHiELDNk4HjVsnfWExSzC8sFVbBMmOJgnsfq
-	EU
-X-Gm-Gg: ASbGncsG6aZUcXZaC5gvPwY2t9UfCwZ/bHveg8UAkt5VUoT8ftup9LxluSdRQ5OM6Hf
-	1QZq3s90fuMXtL7mreq7Hu9J8alSmFyrofSs/VZEG2GPzVqEZmUavPyWmKOt5byqIVWi9o5sHVQ
-	NVI4T2eQgbxtzdcFU//MITm3WMFeEG3NErN677w6VFdGkcQMze1CSMEMtRbkd16CnVG4YBoCal8
-	orXBz+14yljynOnk/j+AKg6hsQjUiwpQLDmA1iTVP5YuBnIQoW6Zd6yxanJ3q9G/xxouO7pKd/f
-	d8/0Ua4vx60/isPgJxk1Msq0nOOsfcdmOR1NMbixxcLHJDYwXA3P9lEWqb5T7O22YeSwYKRhrCx
-	cFm92a29Hu8D7H7ld0QzfwGl0qCBYhucgbg35PX0=
-X-Received: by 2002:a05:600c:3484:b0:450:c20d:64c3 with SMTP id 5b1f17b1804b1-451f50a2126mr15328895e9.18.1749043807372;
-        Wed, 04 Jun 2025 06:30:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGpnyxfH8Pv/rAsTwh7fWe/qdlsqtP0waH+CRL3dgCTNExEMwgjRrMrmo08vFsHutGjTeZV9A==
-X-Received: by 2002:a05:600c:3484:b0:450:c20d:64c3 with SMTP id 5b1f17b1804b1-451f50a2126mr15328525e9.18.1749043806909;
-        Wed, 04 Jun 2025 06:30:06 -0700 (PDT)
+        bh=+X4krYrnH5NEJpMGCxhyBmpja6nPciHd8wSnog0o/ME=;
+        b=m4agw8Fn1TulEMrFIY05HWiKjtBFh7e/iMXK8rK111znMAaZ1uY+mLc7GsJl8SzGk5
+         0PdWSmkGTWoCucBCjBT/Cn/TQMlQvk+PSURhpIuN3s9plS5QlEdp8PVlBc1JRGsPFGkL
+         UKKNvjV3QudUQv070QGoyCCcbu1IMDpN9E8emHU5sNvjyp7nbcqsSECf6WFHorIASEmI
+         /Kw8FNBgcV/iOwEqDOb3kqQYyn7+bpepuumG7PNpAfPDNfZM91zWO5cFgjK/OQoBXSG4
+         /4LCNBbZde3hKBjyi3Bne/U6D63mNK4X7el41Q/VUwUlEIh6Ai9W5k8OVESpB/vpiNjY
+         C9LA==
+X-Forwarded-Encrypted: i=1; AJvYcCX06Q4lpKl6BG0BKfgY8ObY3WmBrNQlZXOxUFJTug7JtM4CMiLQi/Th7qcpiD5qNjWblxMHnjaNJxFYH2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEeOWvBJ3MGngiunfoIhakoTW9LBTaFCmLBcOL68OYVKrdbWpu
+	n+hO4lD6xAveYvFD+GRSpTzxamk0/AjZDvL4cXMn8H0y6gW/o/mttQscvtZidlsEtE2mUgXdZAk
+	nzRkpbQupATxz1FD8bRQAc96zGMyflgbfidWKem2PEIsjjf7DqlBvTVEr9MyUQd9Gd+mur20GcA
+	q1
+X-Gm-Gg: ASbGnctc87cgmJkmaUHhH1KJzCnG7IYDtUOAKTiiuFbpszqEzQpHZhqtwl0uqs0m+0n
+	Krp18wVamfN25BlupmIOqavHqoQ05jxmnR0hRMsRFXZ6g/i/Dbb61yCAtA3dsMSF/lV1+OX8vIW
+	bOW21uA32sCDEvliH7g4guqPZOCvfBsIoHK9tiTmJWpfqnoeVJ0GfQRgcQ+0KZLzpE4JyQI/p85
+	68C3rqeBZHSJm6SNVqbqCmCZ1dhUslTpRUBD2jPEoJIrILEY1rf4bNNWaPacXHWW6N8lxRrpi2D
+	/CeuTziT/fe2thSFBJaI9lh/9wq/2euRJZ7LP3uOz7DFEfnmy856xnS6sc5whFp+k7iJ4TH8DVj
+	uCuXkhT3toYlrGM4L4hENpfdSKGT1fSN2vV4nNNnk58R7IZFuYw==
+X-Received: by 2002:a05:6000:178f:b0:3a2:ffbe:3676 with SMTP id ffacd0b85a97d-3a51d975b8bmr2460452f8f.49.1749043831559;
+        Wed, 04 Jun 2025 06:30:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEpcxAjAVL4GX5/4qPkj9qmsXJ/nEQtr6a+UPbPxY3tj6mbKjE9dQy9GiHzcIDrG79/3qURZg==
+X-Received: by 2002:a05:6000:178f:b0:3a2:ffbe:3676 with SMTP id ffacd0b85a97d-3a51d975b8bmr2460422f8f.49.1749043831138;
+        Wed, 04 Jun 2025 06:30:31 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf? (p200300d82f1bb8006fdb1af24fbd1fdf.dip0.t-ipconnect.de. [2003:d8:2f1b:b800:6fdb:1af2:4fbd:1fdf])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8eceasm200932785e9.7.2025.06.04.06.30.05
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5253a7aeesm354307f8f.1.2025.06.04.06.30.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 06:30:06 -0700 (PDT)
-Message-ID: <8abecd5b-2768-49d0-afc3-561b95d77a24@redhat.com>
-Date: Wed, 4 Jun 2025 15:30:05 +0200
+        Wed, 04 Jun 2025 06:30:30 -0700 (PDT)
+Message-ID: <106e83b1-7738-4c98-9095-84cfc1017b73@redhat.com>
+Date: Wed, 4 Jun 2025 15:30:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,10 +79,10 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v7 1/5] drivers/base/node: Optimize memory block
  registration to reduce boot time
 To: Donet Tom <donettom@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- Zi Yan <ziy@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
+ Oscar Salvador <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
  Danilo Krummrich <dakr@kernel.org>,
  Jonathan Cameron <Jonathan.Cameron@huawei.com>,
@@ -91,9 +91,8 @@ Cc: Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
  Madhavan Srinivasan <maddy@linux.ibm.com>, Nilay Shroff
  <nilay@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
 References: <2a0a05c2dffc62a742bf1dd030098be4ce99be28.1748452241.git.donettom@linux.ibm.com>
- <20250603200729.b7581e017e4ca63f502c795e@linux-foundation.org>
- <b355e72d-0284-4a31-84e3-ae4a79ad922f@redhat.com>
- <9f7ae0e6-4640-418d-a4db-dba594377ac2@linux.ibm.com>
+ <96f7d3a2-2d85-442c-a9f7-e558d4a2ba06@redhat.com>
+ <de209828-d237-4912-905b-8c7de7e5734d@linux.ibm.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -141,102 +140,17 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <9f7ae0e6-4640-418d-a4db-dba594377ac2@linux.ibm.com>
+In-Reply-To: <de209828-d237-4912-905b-8c7de7e5734d@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 04.06.25 15:17, Donet Tom wrote:
+
 > 
-> On 6/4/25 3:15 PM, David Hildenbrand wrote:
->> On 04.06.25 05:07, Andrew Morton wrote:
->>> On Wed, 28 May 2025 12:18:00 -0500 Donet Tom <donettom@linux.ibm.com>
->>> wrote:
->>>
->>>> During node device initialization, `memory blocks` are registered under
->>>> each NUMA node. The `memory blocks` to be registered are identified
->>>> using
->>>> the node’s start and end PFNs, which are obtained from the node's
->>>> pg_data
->>>
->>> It's quite unconventional to omit the [0/N] changelog.  This omission
->>> somewhat messed up my processes so I added a one-liner to this.
->>>
->>
->> Yeah, I was assuming that I simply did not get cc'ed on the cover
->> letter, but there is actually none.
->>
->> Donet please add that in the future. git can do this using
->> --cover-letter.
+> Thank you David
 > 
-> Sure,
-> 
-> I will add cover letter in next revision.
-> 
-> 
->>
->>>>
->>>> ...
->>>>
->>>> Test Results on My system with 32TB RAM
->>>> =======================================
->>>> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
->>>>
->>>> Without this patch
->>>> ------------------
->>>> Startup finished in 1min 16.528s (kernel)
->>>>
->>>> With this patch
->>>> ---------------
->>>> Startup finished in 17.236s (kernel) - 78% Improvement
->>>
->>> Well someone is in for a nice surprise.
->>>
->>>> 2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
->>>>
->>>> Without this patch
->>>> ------------------
->>>> Startup finished in 28.320s (kernel)
->>>
->>> what.  CONFIG_DEFERRED_STRUCT_PAGE_INIT is supposed to make bootup
->>> faster.
->>
->> Right, that's weird. Especially that it is still slower after these
->> changes.
->>
->> CONFIG_DEFERRED_STRUCT_PAGE_INIT should be initializing in parallel
->> which ... should be faster.
->>
->> @Donet, how many CPUs and nodes does your system have? Can you
->> identify what is taking longer than without
->> CONFIG_DEFERRED_STRUCT_PAGE_INIT?
-> 
-> 
-> 
-> My system has,
-> 
-> CPU      - 1528
+> I’ll make the change and send the next revision.
 
-Holy cow.
-
-Pure speculation: are we parallelizing *too much* ? :)
-
-That's ~95 CPUs per node on average.
-
-Staring at deferred_init_memmap(), we do have
-
-	max_threads = deferred_page_init_max_threads(cpumask);
-
-And that calls cpumask_weight(), essentially using all CPUs on the node.
-
-... not sure what exactly happens if there are no CPUs for a node.
-
-> Node     - 16
-
-Are any of these memory-less?
-
-> Memory - 31TB
-
-
+Feel free to only send a fixup on top of this patch.
 
 -- 
 Cheers,
