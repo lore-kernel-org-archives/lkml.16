@@ -1,58 +1,44 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA43778F2B;
-	Thu,  5 Jun 2025 14:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2818578F2B;
+	Thu,  5 Jun 2025 14:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749134349; cv=none; b=fDQXDOiW3WEscG1xRlphklmL4P2jBn/Cqz2l6O1G62nC//IQxZ8BLMLpe3u9J5K5ynJKWR+fj0tiJxtn4irNnKBx4jJ2E/rgVA7Dc1ijkcrqWic1tJF/p251kjWuTlworczgbTO0WZ3MIBx8LHpNeyimPLAJ8LKe0rWY5Kbi2bk=
+	t=1749134363; cv=none; b=UoM/l8brsSk7LlvRtbYYmqokh3qSCzrvFjyYlcd014Ju45dXFbx4ShMe3Q/dd4SZTeTOc4zM2/BpzRGF0ZLef5mgCDE68SJ9RfAZJNxJ3fOGV9zbanDMXQfkgCwR9ljGuVKKO5cXChiYGA3kfnO/iwI+diRNnESan5ZMLStKtx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749134349; c=relaxed/simple;
-	bh=xLpKEOc8fA92QFRjW1J6rRuu45Xm62oHNsj8UqAmlzA=;
+	s=arc-20240116; t=1749134363; c=relaxed/simple;
+	bh=Hf3Fh9gEp1P+PTJfdAgSS2nwgQSjZ7bjZZw4KUfHBuQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tOe/YVxvKxqnX+DEHHI1fz42DfIx6wYq0OB9MmlBWOLk/1DcqO/Gjeb0XfpfEpQjSHf9CIbPW3DQ37q/RpKcVOFsPy/k8CLQX/bK3BT8RKRchpaPh3V9Q0Wij0IOboqp5toNKw0L6YG65X1g0pACtY+i1SVYME5j9YvhTVn5rHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GuCjIDEA; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gi4dJOQIIJGMVZE5XNnbsIR+ZFiCSh5rAgAUU8jRhhYbTX22VTn7YNfS5/N4GNes578xlYLFQCvGuLUaAnWqrcT0W8FdQEqdY4YkYHSUcU4SO0kcYSzJmk2ZNcB+rm2A2kDMU9ujxmzDf9aIcksR2yFTzlffyixO2vTSrY82BzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ecu/x/rR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GuCjIDEA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7aizhFKosYRXj/8cXtw1gmVuAjL4hzqqXZZX38VaLYU=; b=GuCjIDEAIG1HbRH58bql6xqyV8
-	90UmDU4JJtQF/WNHqOP77Nqu5xkYG8Yn+z4dF6wXA7vWpblIGEhsHuCDTXLWAJpkspcHCNV5gs4zu
-	rOK19VcfR/zcGT7OrybHj6y969jfu4myNQlgr5+thc2hF7kbZKVPuL1H5o2LDNEctxTesAUgcdY3K
-	IoPlvEPKm9ke418mrZcKK6c0+P16h9T5tdV6SKgJIrCNzq9VjI4rAx5HHRAHSfM/z2F7uHkVg+WyZ
-	194Rjn0oa4J0gaq0iJhs/LKYBYTYhWA5GbsRFxkk3WOUrCvHpu80IRo8WCEnMD72MJV0PaOBw7+cr
-	VAoHdaMw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uNBkD-00000004Kor-33hj;
-	Thu, 05 Jun 2025 14:39:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E5E1330057C; Thu,  5 Jun 2025 16:39:00 +0200 (CEST)
-Date: Thu, 5 Jun 2025 16:39:00 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-modules@vger.kernel.org, oe-lkp@lists.linux.dev,
-	lkp@intel.com, linux-kernel@vger.kernel.org,
-	kernel test robot <oliver.sang@intel.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2] module: Make sure relocations are applied to the
- per-CPU section
-Message-ID: <20250605143900.GV39944@noisy.programming.kicks-ass.net>
-References: <202506041623.e45e4f7d-lkp@intel.com>
- <20250604152707.CieD9tN0@linutronix.de>
- <20250605060738.SzA3UESe@linutronix.de>
- <beb343ec-6349-4f9c-9fea-588b04eb49ee@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ecu/x/rR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3312CC4CEE7;
+	Thu,  5 Jun 2025 14:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749134362;
+	bh=Hf3Fh9gEp1P+PTJfdAgSS2nwgQSjZ7bjZZw4KUfHBuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ecu/x/rR3vq5mel//5ty7JjZSiBVTxDdK6q9qvPzn7MmFrIcFn6MKMvTNITkUS9KU
+	 hV3PUdvbWZ9a5kUT/O16aZ+rJ7QT51vtscVM+/2CfTea3aHA/TaEWQNB9Eun34kKl3
+	 NMKHX1hPYJdDSDKvtw0V0Zei7T/3ikg0VvPaaFVsG+UhEJuLP8mXWK2tRWs2vTsAtR
+	 bgjeUZDU53Ev7RZ5BAy0tpv+tMY4Y7q+hp4zFQkbAXbwEjVOS188sJFkIKh4tEapWH
+	 ec0wJq/g0zGgOnEA5mmGMft0FUyvFJp5GsTev/JAAdw1f6jJ9usDOo+3+yptG7GYH/
+	 3/iLm9tn6uYBg==
+Date: Thu, 5 Jun 2025 09:39:20 -0500
+From: Rob Herring <robh@kernel.org>
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
+	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v10 01/10] dt-bindings: serial: Added secondary clock for
+ RZ/T2H RSCI
+Message-ID: <20250605143920.GA2458810-robh@kernel.org>
+References: <20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com>
+ <20250523142417.2840797-2-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,24 +47,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <beb343ec-6349-4f9c-9fea-588b04eb49ee@suse.com>
+In-Reply-To: <20250523142417.2840797-2-thierry.bultel.yh@bp.renesas.com>
 
-On Thu, Jun 05, 2025 at 03:44:23PM +0200, Petr Pavlu wrote:
-
-> For instance:
+On Fri, May 23, 2025 at 04:24:05PM +0200, Thierry Bultel wrote:
+> At boot, the default clock is the PCLKM core clock (synchronous
+> clock, which is enabled by the bootloader).
+> For different baudrates, the asynchronous clock input must be used.
+> Clock selection is made by an internal register of RCSI.
 > 
-> 	/*
-> 	 * Don't bother with non-allocated sections.
-> 	 *
-> 	 * An exception is the percpu section, which has separate allocations
-> 	 * for individual CPUs. We relocate the percpu section in the initial
-> 	 * ELF template and subsequently copy it to the per-CPU destinations.
-> 	 */
-> 	if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC) &&
-> 	    infosec != info->index.pcpu)
-> 		continue;
+> Add the optional "sck", external clock input.
+> 
+> Also remove the unneeded serial0 alias from the dts example.
+> 
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> ---
+> Changes v9->v10:
+>  - mention sck in description
+>  - no maxItems on clock-names
+>  - fixed the #include dependency in dts example
+> Changes v8->v9:
+>  - typo in description
+>  - named clocks 'operational' and 'bus', and added optional 'sck' clock
+>  - uses value of 2nd core clock in example to break the dependency on cpg patch
+> ---
+>  .../bindings/serial/renesas,rsci.yaml           | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> index ea879db5f485..1bf255407df0 100644
+> --- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> @@ -35,10 +35,15 @@ properties:
+>        - const: tei
+>  
+>    clocks:
+> -    maxItems: 1
+> +    minItems: 2
+> +    maxItems: 3
+>  
+>    clock-names:
+> -    const: fck # UART functional clock
+> +    minItems: 2
+> +    items:
+> +      - const: operation
+> +      - const: bus
+> +      - const: sck # optional external clock input
 
-Right, and pcpu is a data section and should not have relative
-relocations, only absolute.
+You can't just change the clock names. What happens to users of 'fck'?
 
-So copying things should not be a problem.
+And you can't make additional entries required. What happens to users 
+with only 1 clock defined?
+
+Rob
