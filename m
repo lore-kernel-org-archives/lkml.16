@@ -1,72 +1,50 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D306227604B
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A355A277013;
+	Thu,  5 Jun 2025 17:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143637; cv=none; b=FW5SdQt7WO6E0OYGyRDfWw/1FyosySM+mJPwLGVzO4c64tjoGJyq55xH8krxK87/j3xkLFXp2HUzkodJd/W0lmsj58JRsWIZ3x2kQHom3h/m8U3b4tcchscqd2fMty6WZvBenst+Rai1GZvuYFrydKEnLdD8hZ6s8h5eNIYobPA=
+	t=1749143704; cv=none; b=sDF2r6aYKwbIDKKc7O6Oqk8yTeCDyyZC83eRHfj2uFWND7oA6CmZqnmF1QARlnHFpU4gGllN5ORVYPO+Hu0io9TvTnP8W/nWSMDeN2n9f/2QFeoJK6mKOfe+Ws8TAih8GvzT7zxEKB226H1kUxtWEykCTkug8SPujUm/7Q5i5Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143637; c=relaxed/simple;
-	bh=G1uMwlSRuCegDgrVIhbc8dLP3y0ky6QBmu4NxfkUt5Y=;
+	s=arc-20240116; t=1749143704; c=relaxed/simple;
+	bh=E0LLnEBBXupp6wiEw+vUdkJo0HIl9ljS9wURxTt0PII=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h6WDy/f1mq9NNa/puAC/qIjCQaY56a9R7xMQR8wZtHELiq47Nm0riBT9Ms8cKs8Wmam+2GaYCzdNfQIf5WYwGFZt61Bps56QBMMxrB8jLW/vvgIPE427B0MXQgwcadR8M9Ok8gGYyLbwF5/6NAyThBM29JTtbVKkzGAd/GRXdJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RdGdIcTf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=GUKFANYDc2VOqDasfsPhKJEDgzz2F+Y0jbCOA2inbEHA1kgtLgsyg1E3vdckc4rWH+52S62IViSe/DfNAsOtnbH0lZSZbatebC4ISyxkRdvkVSbgukRJnyfI/QGwA6uBWK3rPwJL4gaP7+aP4njU4HP631zU1rN4Mq7Ts1uviHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IrhEqj3z; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RdGdIcTf"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555H6VJG024416
-	for <linux-kernel@vger.kernel.org>; Thu, 5 Jun 2025 17:13:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BiSKdaHMeCVD8oaJKkvTJRlJ3qNDdfdL1Sy3uWHXIrQ=; b=RdGdIcTfvYm7C6K9
-	N9ep8x4kyX35n9cuG2Id7gMOYNhIi16ubJmJXMnFijmleiafbpHctsk8w9uRtrP7
-	rm9QYFbOfEhcsqCZNKNUutPpCGt5wtnGHJ3LIt5qlyGHmoZz4Ymx2atBZF5r//zS
-	nPW8T4iezTgUVonXGu41YJEIyZBqCZR2ds6fuqpsVdNVOFMCtw5fTsuk/kc/zkMh
-	MfyZPWGhX12odEM86qbtuypV5ZZLjCEQrBgvswBYL1YA8aJUhO2gPgo0if94gxXf
-	VPxEn8eUQxNS+0pbWNY5bHxQMrnWBu1jZg5hG8Vx2phq/W3sNCSm7qJsuszh4KI1
-	lAHAkw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8s25c6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 17:13:54 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c9305d29abso197587785a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:13:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749143633; x=1749748433;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BiSKdaHMeCVD8oaJKkvTJRlJ3qNDdfdL1Sy3uWHXIrQ=;
-        b=gCoYrHFA+1Wk6cUsl303z4LTHAyegUe/5hG6ryTROLqO4MIXtrwgoiztTaqbdKFm6G
-         xeyK+1Lo6WOGmgCzEVs7C7iUmMh0WxdFXGjLhCpMlPrEOPjew+NtzgZwQk6bRWRyw4Do
-         WN51b+Yau+nEhrKwSRAxg1/Q6gzVLs6niMsxjBcj6gSG6gPLZga4Rf+SA7Hl2N005lGm
-         w1paVQWgYZ85lvEjyOJsCa5SU6/u254aZNIHCjAIyuf4hV8ZJaaZ8/rPwLhUXcZklq1O
-         vjFziuEDmuy/cButmQ9duHFizRpjMtCcWPtX8e3a8OxuhTlg2Qk1sTkU+KPfBeQEbWaP
-         EynQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbAIuU7tgvxhf0QTDW60+gs4eYdkOH2FNqWNnWFUXvXv5c+YZol64kvmLN6R1AANBIZjkr3XZSrYh7K2E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOwT4fCZaW3ccq1nqSY9xmxBTiy+9GpQcmyNVWR1Pwp6evXK9u
-	L/t2MvhPtJWSxT/FY63oJX9844xAHTcbkEOgtCR17QdbTqaFLJPws4yDBkmdY100o/FG36JwMqN
-	SprozZn32TlIYF9qfNxmcwMXmeRUfalmo8npZuy8xQzkijugHUHfzdOKF163gQTx7B3s=
-X-Gm-Gg: ASbGncsQqAnbhDSyhomJ2Rpl1+dPXWD72RNvfeqoKH+mUhPFS7vcpndoU7edoqXllbl
-	+s4hAoQiz9Ybz6R/rMw9PgjLCgkZ5Mb5oZizZnu6uYvbnBqwJlF4rnOFluMYY3glakcJ8NdqvzP
-	GhAHB1qEniu0L5lkoDtB2IUsggvosGnmBILa2+xHb+H9HZpjEZgSEir33kWY2vPPWsDp7hoVBMQ
-	XJSHiccAeuOV/xI2Hqmmo9YxqCSrhXGltvSNZSgPW/fgsPT2PUwKpNHbICe2crsoFT9AV7ov7C0
-	4uufQ4xNVVN8YWohNj8+tS1aLJRfc+vSLQ==
-X-Received: by 2002:a05:620a:800c:b0:7c5:431f:f5e6 with SMTP id af79cd13be357-7d229887bf5mr53232485a.33.1749143633404;
-        Thu, 05 Jun 2025 10:13:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHA+PZVxU0KcpFWRWk2T4rCgPUtQLXzoDQwsIZvyrADwGhZQ0pSI//nevDF45+TMmeSQHR2lg==
-X-Received: by 2002:a05:620a:800c:b0:7c5:431f:f5e6 with SMTP id af79cd13be357-7d229887bf5mr53228885a.33.1749143633020;
-        Thu, 05 Jun 2025 10:13:53 -0700 (PDT)
-Received: from [192.168.23.80] ([87.224.39.253])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f982a5e5sm31482925e9.18.2025.06.05.10.13.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 10:13:52 -0700 (PDT)
-Message-ID: <73d9fa9e-823f-41ef-bdf3-76cef3591e1f@oss.qualcomm.com>
-Date: Thu, 5 Jun 2025 18:13:51 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IrhEqj3z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749143703; x=1780679703;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E0LLnEBBXupp6wiEw+vUdkJo0HIl9ljS9wURxTt0PII=;
+  b=IrhEqj3zW9ByB5nhWaGKJEDtRncmlRMs8DCXozie8GvJ/bG/+DbLN6Pm
+   9PlXVDHxT3PQI03ISssE387MdzmSMfIUGvw3wodqPqk5zUxsSv3opfLJx
+   jVp2ZSLXvTFwzEU8UhfW+gxSStomTfN8KjRAAKHw6yHG9wYz9MQqsaA/H
+   bZqIxJDnu7/vBb+942+/3BpDrcQDo9MtXYjb/hQgMH/bayOyMCdDgo568
+   4ngPs0pdSkMVH8Wu9af3lYTW+zTheK0y+o3m7j9/bs1bjulzjMrC9OFn0
+   E3QZ2WohqTa8JgOCf7MRw0o+zCvUqf6xBpOSl45xEfrpBlHpJZem7Ex9z
+   g==;
+X-CSE-ConnectionGUID: pH3saeqbQZaPqwOR4ZAkEw==
+X-CSE-MsgGUID: bJpqMW43SJ64r+TNkgM/bg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51372390"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="51372390"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 10:15:02 -0700
+X-CSE-ConnectionGUID: 1ozayxrpRb+wnJxdc0ERMg==
+X-CSE-MsgGUID: yJehJmXMRUScxGzuQA50Sg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="145611704"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.0]) ([10.125.111.0])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 10:15:01 -0700
+Message-ID: <b27d96fc-b234-4406-8d6e-885cd97a87f3@intel.com>
+Date: Thu, 5 Jun 2025 10:15:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,112 +52,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@foundries.io>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Renjiang Han <quic_renjiang@quicinc.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>
-References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
- <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
- <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
- <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
- <a3bf69f3-6500-4e45-ba34-8ba24312938a@kernel.org>
- <CAO9ioeWkLu+ne18kjEST7YU7b1aBzcMBBeyfpagzis99BAeOHg@mail.gmail.com>
- <b710e357-09e3-460e-b097-28cf0c856aeb@kernel.org>
- <44b3779b-702c-4e8b-8ccd-c9c3314a511f@linaro.org>
- <nr2je5ssn22npl2dqu5aj2xcwinnjmhvl3tvuz5smr4dd2rxaj@dfkk6aktkafy>
- <0a17dc61-a8eb-443c-9f4a-4f7851e07c5a@kernel.org>
+Subject: Re: Large modules with 6.15 [was: [PATCH v4 6/6] percpu/x86: Enable
+ strict percpu checks via named AS qualifiers]
+To: Jiri Slaby <jirislaby@kernel.org>, Uros Bizjak <ubizjak@gmail.com>,
+ x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-arch@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: Nadav Amit <nadav.amit@gmail.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, Shung-Hsi Yu <shung-hsi.yu@suse.com>
+References: <20250127160709.80604-1-ubizjak@gmail.com>
+ <20250127160709.80604-7-ubizjak@gmail.com>
+ <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <0a17dc61-a8eb-443c-9f4a-4f7851e07c5a@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 2OUoXw5PI5B3bL84fQFULlaxMsb60bUb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDE1MiBTYWx0ZWRfX0Nb+jVPnJAUu
- ml/XeYtYYBa8cuCUWJeU4B0jG974jh/dhhnEmiDvMiyMznUU7C8X/YOSZbExqP4iUzydd99/3xr
- Qm+i3ua2Fmge4MqVorMMSSGJs6KeZifkZQvq4mUQ7R+K1/kg0Oq9UrRM64IlJYkTgWoRNSKjFje
- QR5tx6ecC2VtRVw51+VR2ZG2kznnQftJGPeUyzkMnL8/X+AVh3gNkIpQ19MRJGr+q02piLCZIMB
- N8BlWAr+hLoeVMUiwL8g16+FvBB2aPrLdpO6TB20hKCSVuiVpcBZquVKfeYp5hI+7q3tgO2VyNM
- ZI+ZxwmMmyb4hNK6z7uLBFCRiKRnqgFnk6VDEsH8r+O81RG9cC9HjXHlhAu5G92yJJI8QlKvj8+
- +us/wm0QJIukXbtEfq/Yx2wf1+jvcJgU7MMPvaupp213eBodfsJek3wJPrI02PI9yXHy0Mh1
-X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=6841d052 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=UMobGI8h2IAScYPZOeRE3Q==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=v7yF-7gVPNHQD8MQQjQA:9
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: 2OUoXw5PI5B3bL84fQFULlaxMsb60bUb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_04,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
- impostorscore=0 spamscore=0 mlxlogscore=554 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506050152
 
-On 05/06/2025 18:12, Krzysztof Kozlowski wrote:
-> On 05/06/2025 18:02, Dmitry Baryshkov wrote:
->> On Thu, Jun 05, 2025 at 01:40:03PM +0100, Bryan O'Donoghue wrote:
->>> On 05/06/2025 13:33, Krzysztof Kozlowski wrote:
->>>> On 05/06/2025 14:30, Dmitry Baryshkov wrote:
->>>>> On Thu, 5 Jun 2025 at 13:13, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>>>
->>>>>> On 02/06/2025 08:16, Dmitry Baryshkov wrote:
->>>>>>> On Sat, May 31, 2025 at 08:05:24AM +0800, Renjiang Han wrote:
->>>>>>>>
->>>>>>>> On 5/31/2025 4:27 AM, Dmitry Baryshkov wrote:
->>>>>>>>> On Fri, May 30, 2025 at 09:32:12AM +0530, Renjiang Han wrote:
->>>>>>>>>> QCS615 uses the same video core as SC7180, so reuse the same resource
->>>>>>>>>> data of SC7180 for QCS615 to enable video functionality.
->>>>>>>>>>
->>>>>>>>>> There are no resources for the video-decoder and video-encoder nodes
->>>>>>>>>> in the device tree, so remove these two nodes from the device tree. In
->>>>>>>>>> addition, to ensure that the video codec functions properly, use [3]
->>>>>>>>>> to add encoder and decoder node entries in the venus driver.
->>>>>>>>>>
->>>>>>>>>> Validated this series on QCS615 and SC7180.
->>>>>>>>>>
->>>>>>>>>> Note:
->>>>>>>>>> This series consist of DT patches and a venus driver patch. The patch
->>>>>>>>>> 1/3, which is venus driver patch, can be picked independently without
->>>>>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
->>>>>>>>>> DT patches, still depend on [1].
->>>>>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
->>>>>>>>> on QCS615 over(?)clocked.
->>>>>>>> Agree, so we need to make sure that the driver patch is not picked after the
->>>>>>>> DT patch.
->>>>>>>
->>>>>>> Worse: we need to make sure that the driver patch is present in the
->>>>>>> branch which picks up DT patches. Otherwise building & testing that
->>>>>>
->>>>>>
->>>>>> Well, that's a NAK then (although depends what you mean by DT).
->>>>>
->>>>> I mean qcs615.dtsi. I'd suggest an immutable branch for the driver
->>>>
->>>> Sorry, but no, DTS cannot depend on drivers. You CANNOT merge them into
->>>> one branch.
->>
->> Surely it can... Like any other cross-subsystem dependency.
+On 6/5/25 07:27, Jiri Slaby wrote:
+> Reverting this gives me back to normal sizes.
 > 
-> Sure it cannot, because this breaks the basic rule of not mixing drivers
-> into DTS. Arm soc maintainers are not merging drivers back to DTS and
-> the DTS must not go via drivers tree. These are basic assumptions around
-> DTS, see subsystem profile for more explanations.
+> Any ideas?
 
-Ack, so v6.N+1, which is also fine.
+I don't see any reason not to revert it. The benefits weren't exactly
+clear from the changelogs or cover letter. Enabling "various compiler
+checks" doesn't exactly scream that this is critical to end users in
+some way.
 
--- 
-With best wishes
-Dmitry
+The only question is if we revert just this last patch or the whole series.
+
+Uros, is there an alternative to reverting?
