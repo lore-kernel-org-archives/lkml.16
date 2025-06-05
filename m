@@ -1,130 +1,123 @@
-Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED1E1E500C
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A29D2FB
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749138090; cv=none; b=THuQByqCVt7oiwQz5uK0eg8WwIICn+tOmUolN9l09jFkU0UzXPDHHaQBA3k39g5ErQcyfjfbnSNwKTqRq633Zc2tfCQNQV1UfPqUOEO0dLZ7f4Dym+u/1rVm9iCQROS2s+Hm5vlK/NCXSJkUscj8swMMPvl2gw53GTbra1Ysle0=
+	t=1749138137; cv=none; b=jfQ30gW6EMpkAepyjYPHyqYdGHdWsWBI9V0KS+XGWLHMKZdnTNGBbM0CpEy8IlavnKJUbvdaRuG/OTgtzrdkEoPQCcmxKshLNSHal8U0PRKIx1+AGo7+lqS3Y5XQ3MTKp1a/JNJDOrbUqM2f4Vo7h7twTelUrl1eogaPS17CW7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749138090; c=relaxed/simple;
-	bh=WbRRfpVolR85qtkR9dxkGi0m8xbVhJRA98FY3s6doQs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AKW1qismT+TnXlYVkZib9YrR34JEuHaRDiyBr+hL/XAXBmUDTJzCQXTFRFFa1fnMlxvpRkVW3BckWXCHPxdGozEtA2G6sdQgRFHVumAE9dZNQbubpY4KkwKkw82C8xEhr/dJGp9nCic3TTCSerHAbLWYDPB6rkzcsyPuTU4eZY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bCpZm56pzz5TC;
-	Thu,  5 Jun 2025 17:41:20 +0200 (CEST)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bCpZl6yQBzq71;
-	Thu,  5 Jun 2025 17:41:19 +0200 (CEST)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Thu, 05 Jun 2025 17:41:07 +0200
-Subject: [PATCH v2 2/4] mfd: rk8xx-core: allow to customize RK806 reset
- mode
+	s=arc-20240116; t=1749138137; c=relaxed/simple;
+	bh=CGZ2voXzpuqv5BDA6GbB9RzudNSofXOj956vYmHtZYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GOLFoKNPrYOfcUGdYfXDVLRrOV9tViFc8lbrQFff8WYmmRkLbtREBl6+o1DuDFKQ8kbvKgCFUX0WUPJ306tMyMLphaajsFuOkMFCKQ5c+yJwsdJAEgxf1QZY6cNtR8deKDrqpRY9geEFIsTWLO9K3cSNz6ZGxmZZBxPCXKL8knU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WBqKYBjo; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WBqKYBjo"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4e749d7b2so153299f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 08:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749138134; x=1749742934; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tVdDAyLthEulzKQwcDXevtinu2TUgGTGa8O6iSAk/yI=;
+        b=WBqKYBjoKZ6wbP17aFmWmgx8zMTXWnESTjM/89uDLglifOpN2xxSJvN3leSrhI8Fvi
+         Sg/lvSuvDdyaGMVGj81WS8BnUxxyUDiMFirq2reIeiPWnuRVS3FOKsyRIJH8DOdLAIE1
+         9CeqJANR3+VXEt4lLJT/CsczV+uMDWO3DNAD6/1gdB3f4xBaAc2t3cjeRADgxfmMFVdX
+         AwZu88jfDfE28IxTlzZOmelAlRwZs2i0HRud/D2ocK+ROzowk9S+2eYifkpy3QQ4UGo5
+         0iuEdtNlvIaY0KpudbTd+9sY+wGJgtSowvQPi4dgyIOn/sPD/TF0IVvwTR9LZW/HPoB2
+         sp6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749138134; x=1749742934;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tVdDAyLthEulzKQwcDXevtinu2TUgGTGa8O6iSAk/yI=;
+        b=JZTP+tPGnaZhjFMNYA9vTxxY9jJkcV7XIswQfxJCqOlg46Sm8S3OHS7frP6E9bvRu/
+         EHG6wuaC7CT9pkDafE91vkTFdZxcxXdE9BgNRRjiDx+bJJIAW3BjRBY52YaNRVVR9EOB
+         na5+YpsqVbxND41BylbPwvqzVqdZnWG9uCIb9m0jUWZ+d6Lc90RjDDFZKRyjAm19nb4H
+         IbBrAfcJ/IelqBLRpm9fI2IyRZ1P775rnwBZxLz22EOxvjlHA6lsC8L9lmkZR6HOQpao
+         +qKbwO9kK4czjToT329xCqN23KM6ENEDPKMPWqkcsU/ZfU3OEgsvklpQILgEzZHV/auo
+         8Ikw==
+X-Forwarded-Encrypted: i=1; AJvYcCUz3HB86VWz/ikCic2/yOXljpNM9aUYeJWG6VBZ6TfwBObhj/68fnCdZuKyA0U4QaYeVRoXOLSvraofR6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/6SkLTUxn8DNFwMTpPa9HIAMfnSgwcZcW3ld+38CmDgjbl+Om
+	Pl2wx+XBMhORgO341mKbVX1skSOOgHnDbYKmqGXobr37pV8vsogHb9QGdU5YdPH/GtQ=
+X-Gm-Gg: ASbGncurnRGFaJJqwXdeC6JvxYO2mKFcgfEeJUHyIQ2/Z9cQZFPCNi2ijj9uXwClx5o
+	bzmofvln/zP61mbm/wv5PzKh9gDepizPZ+4+CszIuTRxLGcs+2kETzvuP2TB2OBj48jFYIsph+r
+	vWGeucBbueFRbUUfpcARDeeUf8e/A1p5J//BebuUylkZvo4nm84gIaTkvKTscWrw3sDHtvSsUgE
+	XpLoxEKFm3ASdQUh0Hj9jiA2JKkTBH4mXo/TxouWmii42kMhrWYLiU9SgiaFvbS+aiernF9+PWk
+	gls971JusP3LsXBMFUK1V9kCHdy/CL/4AK05vFADDE4WvXTAz4hd4a2xx9Nqfw==
+X-Google-Smtp-Source: AGHT+IGB8zTp32oYZZKnFR48cFxcYSk+3m3Vnmwti62tsdDjgd7xtVgNTgLfDutXGVzb9zNCCp91Gg==
+X-Received: by 2002:a05:6000:2584:b0:3a3:71fb:7903 with SMTP id ffacd0b85a97d-3a51d96a1c9mr2349476f8f.10.1749138133759;
+        Thu, 05 Jun 2025 08:42:13 -0700 (PDT)
+Received: from kuoka.. ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00971fasm24478343f8f.77.2025.06.05.08.42.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 08:42:13 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] arm64: defconfig: Enable camcc and videocc on Qualcomm SM8450+
+Date: Thu,  5 Jun 2025 17:42:08 +0200
+Message-ID: <20250605154207.141224-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250605-rk8xx-rst-fun-v2-2-143d190596dd@cherry.de>
-References: <20250605-rk8xx-rst-fun-v2-0-143d190596dd@cherry.de>
-In-Reply-To: <20250605-rk8xx-rst-fun-v2-0-143d190596dd@cherry.de>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
- Daniel Semkowicz <dse@thaumatec.com>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Quentin Schulz <quentin.schulz@cherry.de>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1066; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=CGZ2voXzpuqv5BDA6GbB9RzudNSofXOj956vYmHtZYU=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoQbrP0MkLBrJusurDZXu7SzvMY+vWTEKuGU3wz
+ wI+XkSqD7GJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEG6zwAKCRDBN2bmhouD
+ 17pdD/9V7wk3b2lrT0Qe1evuJIXYVc/IdidpN1nCYzjuzjxPz23EK96jOuuxge/TmZEeXoU3gtJ
+ fyoXZ5D8WwmkRv7xNpVDAvBkXTrKjnRURz1NOdL70YO2X0hSrGKUR8YTJhwP5MVDx2byldP2o18
+ KnpRNx9koqU8ca0JLyilAtN7fdq0W7iGhSbqaIxXDWHud396bYdOjtOhYWAnQWphX4Mym0DGejM
+ X6BotoX/RCWDI5/NrkMyPPmhz+NDe4ubc13/k/IuPrUNO7opSE17lnKsPIO7wV1kbD1AWqkYz/7
+ hLWKdYy1lOXPheyXWW14BFB8JezBH/EWliImfiOgkIkpS0XIXMGIxGtp4OvAABRTtVB3PiaCnQF
+ 6+lVoxNm16MmJabVVVN+QERrQgicvag3fQvPGZKnUM5+e5U55ksfD3+yG+wW7O2lNXw7erHuvHp
+ GrMSTD0bi2hpMaXwhmeCIhNQuCoaWffKY1FKNTaAgt4wS29vgVCmZ38WH5JaQwOg50sszdP4reW
+ xcaLKGfReFY2SA90GP5BI45juioEb5p1H/QJ725wmLPOTjTuSe7ddfRLVGzVqeHA7/jdTq94q1S
+ +WZiqORwCBFWpwK+gTZq4r0/6W4Bc4fOagLuqXTX2PKqi6e5b8qjShL4I40FeEZZZM76FwiPEVX w/Xr1Z2j3a57WCQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
+Enable the drivers for camera clock controllers on Qualcomm SM8550 and
+SM8650 SoC (enabled in all DTS files like SM8550-HDK or SM8650-HDK) and
+video clock controllers on Qualcomm SM8450 SoC (enabled in SM8450-HDK
+DTS).
 
-The RK806 PMIC has a bitfield for configuring the restart/reset behavior
-(which I assume Rockchip calls "function") whenever the PMIC is reset
-either programmatically (c.f. DEV_RST in the datasheet) or via PWRCTRL
-or RESETB pins.
-
-For RK806, the following values are possible for RST_FUN:
-
-0b00 means "restart PMU"
-0b01 means "Reset all the power off reset registers, forcing
-	the state to switch to ACTIVE mode"
-0b10 means "Reset all the power off reset registers, forcing
-	the state to switch to ACTIVE mode, and simultaneously
-	pull down the RESETB PIN for 5mS before releasing"
-0b11 means the same as for 0b10 just above.
-
-This adds the appropriate logic in the driver to parse the new
-rockchip,reset-mode DT property to pass this information. It just
-happens that the values in the binding match the values to write in the
-bitfield so no mapping is necessary.
-
-If it is missing, the register is left untouched and relies either on
-the silicon default or on whatever was set earlier in the boot stages
-(e.g. the bootloader).
-
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/mfd/rk8xx-core.c  | 14 ++++++++++++++
- include/linux/mfd/rk808.h |  2 ++
- 2 files changed, 16 insertions(+)
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/rk8xx-core.c b/drivers/mfd/rk8xx-core.c
-index 71c2b80a4678d627e86cfbec8135f08e262559d3..32294af0b843fa20677513b1e1a5a6c8e76be4b6 100644
---- a/drivers/mfd/rk8xx-core.c
-+++ b/drivers/mfd/rk8xx-core.c
-@@ -699,6 +699,7 @@ int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap
- 	const struct mfd_cell *cells;
- 	int dual_support = 0;
- 	int nr_pre_init_regs;
-+	u32 rst_fun = 0;
- 	int nr_cells;
- 	int ret;
- 	int i;
-@@ -726,6 +727,19 @@ int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap
- 		cells = rk806s;
- 		nr_cells = ARRAY_SIZE(rk806s);
- 		dual_support = IRQF_SHARED;
-+
-+		ret = device_property_read_u32(dev, "rockchip,reset-mode", &rst_fun);
-+		if (ret) {
-+			dev_dbg(dev,
-+				"rockchip,reset-mode property missing, not setting RST_FUN\n");
-+			break;
-+		}
-+
-+		ret = regmap_update_bits(rk808->regmap, RK806_SYS_CFG3,
-+					 RK806_RST_FUN_MSK,
-+					 FIELD_PREP(RK806_RST_FUN_MSK, rst_fun));
-+		if (ret)
-+			return dev_err_probe(dev, ret, "RST_FUN write err\n");
- 		break;
- 	case RK808_ID:
- 		rk808->regmap_irq_chip = &rk808_irq_chip;
-diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-index 69cbea78b430b562a23d995263369d475daa6287..28170ee08898ca59c76a741a1d42763a42b72380 100644
---- a/include/linux/mfd/rk808.h
-+++ b/include/linux/mfd/rk808.h
-@@ -812,6 +812,8 @@ enum rk806_pin_dr_sel {
- #define RK806_INT_POL_H			BIT(1)
- #define RK806_INT_POL_L			0
- 
-+/* SYS_CFG3 */
-+#define RK806_RST_FUN_MSK		GENMASK(7, 6)
- #define RK806_SLAVE_RESTART_FUN_MSK	BIT(1)
- #define RK806_SLAVE_RESTART_FUN_EN	BIT(1)
- #define RK806_SLAVE_RESTART_FUN_OFF	0
-
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 62d3c87858e1..2ffa590b962f 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1404,6 +1404,8 @@ CONFIG_SDM_DISPCC_845=y
+ CONFIG_SDM_LPASSCC_845=m
+ CONFIG_SDX_GCC_75=y
+ CONFIG_SM_CAMCC_8250=m
++CONFIG_SM_CAMCC_8550=m
++CONFIG_SM_CAMCC_8650=m
+ CONFIG_SM_DISPCC_6115=m
+ CONFIG_SM_DISPCC_8250=y
+ CONFIG_SM_DISPCC_8450=m
+@@ -1431,6 +1433,7 @@ CONFIG_SM_VIDEOCC_8250=y
+ CONFIG_SM_VIDEOCC_8550=m
+ CONFIG_QCOM_HFPLL=y
+ CONFIG_CLK_GFM_LPASS_SM8250=m
++CONFIG_SM_VIDEOCC_8450=m
+ CONFIG_CLK_RCAR_USB2_CLOCK_SEL=y
+ CONFIG_CLK_RENESAS_VBATTB=m
+ CONFIG_HWSPINLOCK=y
 -- 
-2.49.0
+2.45.2
 
