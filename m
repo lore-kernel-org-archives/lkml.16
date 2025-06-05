@@ -1,60 +1,62 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A4717B50F
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35681F4C83
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749125080; cv=none; b=ptXea9jeGpC6y01UcR8bDmrarzFM2EKcNT4cBQp2Thb1joGUVfmnR9Zm4g3brw3ogo1cn0U8Qm0w+lIWPcS7fbHm2p3P3QL6eb4w47oaCa728fMG1kyEa3rjKQtpS8jiotZNUWNz/4t3WPQHhn031cxng+qmDf6sb0tVHmx2mfg=
+	t=1749125081; cv=none; b=cUL5NgZgu/hQWir7x6BFHCX+lmWKRX9wmgjkAJI1tYKbm5azl/ZtnG8LTkkXFRPnRp9kIwSQy7wLMvXqOwxcOTLykbttiyLng8C23YJYFtVdC99Io+wpzDOFwI8GcRmexAWex6oqQSmx1KNPVK4yIwCLPHX2gM9sawigKIkPFjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749125080; c=relaxed/simple;
-	bh=CcnmeEIPKBV+kF5AePGaDZ5DGEcvtTCP3HIM+5BzO9k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XkuNfUHuHoJalYPh20lV1F/1c9RELVhHNyS8MKkNTe2CTWV3PGlNlgJ4XVweidZJbeFTXqxJOSm9STYv7n0vL5/FufpOJrA9W7yjwz6zc2IikmdM6TT89SuPerJMDbWVpGbuALHX36O8mDr/p5yEtCSRNB5DFY1eBkHvdjUFjcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBfMkKnJ; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1749125081; c=relaxed/simple;
+	bh=4CJ9hOqoui4JlCN+zuVRP7AhnJyH4wdZ69h4hStuBWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZybspPcDK0WnA6UF4mkBVucAU7Pm07GNd/54P92QkvfzdVTHopd4wT4kYMsjWiZnykJvVFds+22gSZLcsJA77JPlJXsZobBoLCiuTWYmStmZiJ2D8eVLKmCX4CwlcmLf/XP8nuk8edoXYE4mSBRbCT18ZqnMy13HrEr/GhmMJCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HoHZT95p; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBfMkKnJ"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-234b9dfb842so8214635ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:04:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoHZT95p"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22e09f57ed4so18672205ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:04:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749125075; x=1749729875; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BJQmFW5Z8GCLV79wadAqcm+DhU85/dyUVQp0/Ag+fRw=;
-        b=HBfMkKnJCfUk8Ve6NW5zXIJTgfCoE+azEeikexv/LauvR6lI383IVZrNI+5q8mGTK7
-         WX9FMel9gQYtu5R8QYWqndAm04R/swOkeufwzXReehuv1JxXiO5PTUz2j+SIfqU/ovqr
-         4EqgQHwhz4XMxR/gB76lCEqcq6e1STCKeaZkNBh0YfGlpOgIJCudffbLy5vE4RshcbGa
-         OKcJx3TLRiyEvQj9+Wrlv94EYFTi6VaVnCJpAH9D83jnKQtjV+TMhNsamBfckach2e+R
-         pb3pBTWXLuE3oMa/9/igf14osSFKJiCuuE04PADlEAJGa1FeiOtMl/th7Fz9fXXxbQDx
-         KdMQ==
+        d=gmail.com; s=20230601; t=1749125079; x=1749729879; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uY+1+u4tI5f3R2HsjbASLO23onNPIfvm4SbCLPrNoYs=;
+        b=HoHZT95pYlx7tiPho2LqH1l239lKdBNigAe2juON/5rR8gB2iYadeSZn3Kggat5xIo
+         /nfq/CGrutXgUuwpXRB83l9ofOx2V1NkvUmzC0wdlMq/NNpk8lowAU+lGdkxNCQVWN+l
+         T5f0aJv7L4ellJ7xEYJk/W2slDjieUHFejG71BGyGIm4I27XOuvMOOzyM4NkMoV6r9j+
+         aEHBYbenciBAjED2qBjLZgVXxBZQUaJiPNwCZEGr2pEGgAx0/g2cxrULRrggAwC72iMK
+         o4Z5w/0y/K3BgRxC7xD7MKtMOTnfmHbjgQ+tURMJlAoh9jQk454GOBIWkmjoyiLem6ka
+         aZVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749125075; x=1749729875;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BJQmFW5Z8GCLV79wadAqcm+DhU85/dyUVQp0/Ag+fRw=;
-        b=cc3ofBYpD3CQunCVhV/GXUbtSjEHh0gp6HCrhw8edg/ERIKn4pxANl8vi8z+aT1wI8
-         3243cRjrzlTjnnApPklC1P2hRAIrNGYtppk8XRRPkDyKI39AHaFW0qCoObAbnfmPM3ft
-         V6kcwZxLZh5UH00nx32aorGLWiV+B7ZFj6FYmtO54hqIoe9m3gu7ccVXQbCpe3mLW5B4
-         r5W+exodjvNkf10f59nm25D0pK5P94cWUFzddkwgXTlXdZ8VCm5d+xWnBOH3DpWEBRNS
-         bG1nDMEnnGbRHukxraBdBi6koc9PifGJT2jkp4uv7GoRFZKZ3mgcC25uFAzX7gaGKqTE
-         aZAw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4s6CkKB5NcCOEcxwR7aRSQHdyBERYqHiGTTbB4l+BDuJ2DUg7WzdaP+KLMH2TZjyT7TwN33ThQolfPzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFTlN68j+VmwGQeYEskGCnwRpvIb7m9NgspWKmwSDIzaBEUW8G
-	R6riv5caRpriJE3GnTPSEphVDflUsZHI5bVoMXJNhkD3sbGPj5mgx2Sx
-X-Gm-Gg: ASbGncu/4ow40Je4uc2APfnVPtSBD/9+Oy24iANVPMYzw5SeKmUYLKluiiceeIZxP/Z
-	avnfSb84MKvuTVFXcHDH9h9e76WMuzDWsMglV8ceSup99HpGatcF0iIKaBF9HsV0MUNSAk3SIFF
-	KbpHHpHmJi2c9cehJncjBXb6bR/UJqdEKF+D44f4odQOyV3uJwLnDZ7b+9lGPEqaon+8HS8xKpi
-	rRuNjA0+Z1UBp9X75EqTYhJ/CQA8gnfX7UUphs9xgqwGqdXzIpdPOY8tEw80Wb7U0jYiairFSd8
-	k079/3n4Ouz0Uht8yyA0uymzHhrk0Xt7KVwiDmBIARwNH/tYy2RP4b2NfL7n2Q==
-X-Google-Smtp-Source: AGHT+IHCT8dYOrXVi/+Xg757CRqS20cLpeeDywxgxweKp4h5M0a4WGEZ6RbtkqXqv5QHA6OTDFB+Fg==
-X-Received: by 2002:a17:903:32cd:b0:235:1b3e:c01c with SMTP id d9443c01a7336-235e11e6804mr97018515ad.39.1749125075109;
-        Thu, 05 Jun 2025 05:04:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749125079; x=1749729879;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uY+1+u4tI5f3R2HsjbASLO23onNPIfvm4SbCLPrNoYs=;
+        b=iGyieXC7QjO47Goeice2oCLMCkB0QiHos9LYKqlUnPlt2m7qmc6JYSpNbGYYMKkLxS
+         yUR4FlWGSv076tvs9Dow9j2auKmzNNuov2p3HKDEzIxc3AHQw0ZDI5EWUehK19FhQL/B
+         2pvt7JYNdrl+tQSgwuZnuB7qDTTxOJNgTALkkxFqlBPeLssAPwdCcXL//dtZDKM46EIp
+         UKHePRekrh9pwDgos8uGJKKranDKwIUHVA5stp1tWjFlwNh0m+3hQTsuga1XGy8NNOL6
+         v3qixhnJG7Yh4lufAuKnEgIVShUSim2SAkecdL4XeyRHnTgm4Q52LmUkVyqBb1wwEmRq
+         70sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhZxo/FeIRjcPd9U5xEXANfdR54u5BNgQ9gmXCUGwMGcnAflXDvx1T/vnvHU0Ck+CAaAn5SY0e2WQjZQY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySPvTn3PSW9kbSD2O66xWDJhJSJFyv4CYu/pubxWvPacwFmlb7
+	7DvZS3xdRsD1LKQMtKqlfQMo1+4kf543v+orF6lAde1MaqWJFvP2PGDw
+X-Gm-Gg: ASbGnctFDzVlEKaKmkgYN386nTb/9oBy4jAOBnn5NjZ+fSrjl9bo24q+GpdkX4ZtJIk
+	v0cPtyQPy9WlAYCbnlyBtCy+MnUWyIbRe2FgknCAxC9TLZsL94fH/TaYLC/9CEiWqcp3+bAhySw
+	BLVZuLWGyQgJ678dInU8WIjmDrXaCAjgiBQ72+PVVcRvRbefynvF6OMupUJirjtKrHAOlsicONe
+	uAGqKbqvmcmah2ckBFCR3nKla/0RrmtMaIv1zmzGw8z/QYZcZ9wY4QyachKG2xUpkBNOr843IyQ
+	Q6xHZcZVZPsTjInQZiohAUhuNNBGYkOU5XknD7lTXxs3WaVCx60=
+X-Google-Smtp-Source: AGHT+IGkCSxgiSEGG4/X9kDUi9rfiJiddOaEIcYLN5aTyS3UAJMkveKy2sUWuVkQGnBZ047P6kOM1A==
+X-Received: by 2002:a17:903:19f0:b0:234:986c:66cf with SMTP id d9443c01a7336-235f166ccb4mr51021815ad.16.1749125079050;
+        Thu, 05 Jun 2025 05:04:39 -0700 (PDT)
 Received: from jemmy.. ([180.172.46.169])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bf330dsm118673755ad.105.2025.06.05.05.04.31
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bf330dsm118673755ad.105.2025.06.05.05.04.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 05:04:34 -0700 (PDT)
+        Thu, 05 Jun 2025 05:04:38 -0700 (PDT)
 From: Jemmy Wong <jemmywong512@gmail.com>
 To: K Prateek Nayak <kprateek.nayak@amd.com>
 Cc: Jemmy Wong <jemmywong512@gmail.com>,
@@ -68,10 +70,12 @@ Cc: Jemmy Wong <jemmywong512@gmail.com>,
 	Mel Gorman <mgorman@suse.de>,
 	Valentin Schneider <vschneid@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/1] sched/topology: Add lock guard support
-Date: Thu,  5 Jun 2025 20:04:23 +0800
-Message-ID: <20250605120424.14756-1-jemmywong512@gmail.com>
+Subject: [PATCH v1 1/1] sched/topology: Add lock guard support
+Date: Thu,  5 Jun 2025 20:04:24 +0800
+Message-ID: <20250605120424.14756-2-jemmywong512@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250605120424.14756-1-jemmywong512@gmail.com>
+References: <20250605120424.14756-1-jemmywong512@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,15 +84,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v1:
-- Convert scoped_guard to guard
+This change replaces manual lock acquisition and release with lock guards 
+to improve code robustness and reduce the risk of lock mismanagement. 
+No functional changes to the scheduler topology logic are introduced.
 
-v0 link:
-https://lore.kernel.org/all/20250604185049.374165-1-jemmywong512@gmail.com/
+Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
 
-Jemmy Wong (1):
-  sched/topology: Add lock guard support
-
+---
  include/linux/sched.h   |  11 ++--
  kernel/sched/core.c     |   6 +--
  kernel/sched/debug.c    |  13 ++---
@@ -96,6 +98,373 @@ Jemmy Wong (1):
  kernel/sched/topology.c | 115 +++++++++++++++++-----------------------
  5 files changed, 81 insertions(+), 99 deletions(-)
 
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 4f78a64beb52..10a9d6083b72 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -46,6 +46,7 @@
+ #include <linux/rv.h>
+ #include <linux/uidgid_types.h>
+ #include <linux/tracepoint-defs.h>
++#include <linux/mutex.h>
+ #include <asm/kmap_size.h>
+ 
+ /* task_struct member predeclarations (sorted alphabetically): */
+@@ -395,14 +396,14 @@ enum uclamp_id {
+ 	UCLAMP_CNT
+ };
+ 
++extern struct mutex sched_domains_mutex;
+ #ifdef CONFIG_SMP
+ extern struct root_domain def_root_domain;
+-extern struct mutex sched_domains_mutex;
+-extern void sched_domains_mutex_lock(void);
+-extern void sched_domains_mutex_unlock(void);
++DEFINE_LOCK_GUARD_0(sched_domains_mutex,
++	mutex_lock(&sched_domains_mutex),
++	mutex_unlock(&sched_domains_mutex))
+ #else
+-static inline void sched_domains_mutex_lock(void) { }
+-static inline void sched_domains_mutex_unlock(void) { }
++DEFINE_LOCK_GUARD_0(sched_domains_mutex, ,)
+ #endif
+ 
+ struct sched_param {
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index dce50fa57471..b2b7a0cae95a 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8457,9 +8457,9 @@ void __init sched_init_smp(void)
+ 	 * CPU masks are stable and all blatant races in the below code cannot
+ 	 * happen.
+ 	 */
+-	sched_domains_mutex_lock();
+-	sched_init_domains(cpu_active_mask);
+-	sched_domains_mutex_unlock();
++	scoped_guard(sched_domains_mutex) {
++		sched_init_domains(cpu_active_mask);
++	}
+ 
+ 	/* Move init over to a non-isolated CPU */
+ 	if (set_cpus_allowed_ptr(current, housekeeping_cpumask(HK_TYPE_DOMAIN)) < 0)
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 9d71baf08075..1c00016fd54c 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -293,8 +293,8 @@ static ssize_t sched_verbose_write(struct file *filp, const char __user *ubuf,
+ 	ssize_t result;
+ 	bool orig;
+ 
+-	cpus_read_lock();
+-	sched_domains_mutex_lock();
++	guard(cpus_read_lock)();
++	guard(sched_domains_mutex)();
+ 
+ 	orig = sched_debug_verbose;
+ 	result = debugfs_write_file_bool(filp, ubuf, cnt, ppos);
+@@ -306,9 +306,6 @@ static ssize_t sched_verbose_write(struct file *filp, const char __user *ubuf,
+ 		sd_dentry = NULL;
+ 	}
+ 
+-	sched_domains_mutex_unlock();
+-	cpus_read_unlock();
+-
+ 	return result;
+ }
+ #else
+@@ -517,9 +514,9 @@ static __init int sched_init_debug(void)
+ 	debugfs_create_u32("migration_cost_ns", 0644, debugfs_sched, &sysctl_sched_migration_cost);
+ 	debugfs_create_u32("nr_migrate", 0644, debugfs_sched, &sysctl_sched_nr_migrate);
+ 
+-	sched_domains_mutex_lock();
+-	update_sched_domain_debugfs();
+-	sched_domains_mutex_unlock();
++	scoped_guard(sched_domains_mutex) {
++		update_sched_domain_debugfs();
++	}
+ #endif
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index e40422c37033..3533b471b015 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -2920,36 +2920,37 @@ static int sched_rt_handler(const struct ctl_table *table, int write, void *buff
+ 	static DEFINE_MUTEX(mutex);
+ 	int ret;
+ 
+-	mutex_lock(&mutex);
+-	sched_domains_mutex_lock();
++	guard(mutex)(&mutex);
++	guard(sched_domains_mutex)();
++
+ 	old_period = sysctl_sched_rt_period;
+ 	old_runtime = sysctl_sched_rt_runtime;
+ 
+ 	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ 
+ 	if (!ret && write) {
+-		ret = sched_rt_global_validate();
+-		if (ret)
+-			goto undo;
++		do {
++			ret = sched_rt_global_validate();
++			if (ret)
++				break;
+ 
+-		ret = sched_dl_global_validate();
+-		if (ret)
+-			goto undo;
++			ret = sched_dl_global_validate();
++			if (ret)
++				break;
+ 
+-		ret = sched_rt_global_constraints();
+-		if (ret)
+-			goto undo;
++			ret = sched_rt_global_constraints();
++			if (ret)
++				break;
+ 
+-		sched_rt_do_global();
+-		sched_dl_do_global();
++			sched_rt_do_global();
++			sched_dl_do_global();
++		} while (0);
+ 	}
+-	if (0) {
+-undo:
++
++	if (ret) {
+ 		sysctl_sched_rt_period = old_period;
+ 		sysctl_sched_rt_runtime = old_runtime;
+ 	}
+-	sched_domains_mutex_unlock();
+-	mutex_unlock(&mutex);
+ 
+ 	return ret;
+ }
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index b958fe48e020..3f89f969666c 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -6,14 +6,6 @@
+ #include <linux/bsearch.h>
+ 
+ DEFINE_MUTEX(sched_domains_mutex);
+-void sched_domains_mutex_lock(void)
+-{
+-	mutex_lock(&sched_domains_mutex);
+-}
+-void sched_domains_mutex_unlock(void)
+-{
+-	mutex_unlock(&sched_domains_mutex);
+-}
+ 
+ /* Protected by sched_domains_mutex: */
+ static cpumask_var_t sched_domains_tmpmask;
+@@ -470,44 +462,41 @@ static void free_rootdomain(struct rcu_head *rcu)
+ void rq_attach_root(struct rq *rq, struct root_domain *rd)
+ {
+ 	struct root_domain *old_rd = NULL;
+-	struct rq_flags rf;
+ 
+-	rq_lock_irqsave(rq, &rf);
++	scoped_guard(rq_lock_irqsave, rq) {
++		if (rq->rd) {
++			old_rd = rq->rd;
+ 
+-	if (rq->rd) {
+-		old_rd = rq->rd;
++			if (cpumask_test_cpu(rq->cpu, old_rd->online))
++				set_rq_offline(rq);
++
++			cpumask_clear_cpu(rq->cpu, old_rd->span);
++
++			/*
++			 * If we don't want to free the old_rd yet then
++			 * set old_rd to NULL to skip the freeing later
++			 * in this function:
++			 */
++			if (!atomic_dec_and_test(&old_rd->refcount))
++				old_rd = NULL;
++		}
+ 
+-		if (cpumask_test_cpu(rq->cpu, old_rd->online))
+-			set_rq_offline(rq);
++		atomic_inc(&rd->refcount);
++		rq->rd = rd;
+ 
+-		cpumask_clear_cpu(rq->cpu, old_rd->span);
++		cpumask_set_cpu(rq->cpu, rd->span);
++		if (cpumask_test_cpu(rq->cpu, cpu_active_mask))
++			set_rq_online(rq);
+ 
+ 		/*
+-		 * If we don't want to free the old_rd yet then
+-		 * set old_rd to NULL to skip the freeing later
+-		 * in this function:
++		 * Because the rq is not a task, dl_add_task_root_domain() did not
++		 * move the fair server bw to the rd if it already started.
++		 * Add it now.
+ 		 */
+-		if (!atomic_dec_and_test(&old_rd->refcount))
+-			old_rd = NULL;
++		if (rq->fair_server.dl_server)
++			__dl_server_attach_root(&rq->fair_server, rq);
+ 	}
+ 
+-	atomic_inc(&rd->refcount);
+-	rq->rd = rd;
+-
+-	cpumask_set_cpu(rq->cpu, rd->span);
+-	if (cpumask_test_cpu(rq->cpu, cpu_active_mask))
+-		set_rq_online(rq);
+-
+-	/*
+-	 * Because the rq is not a task, dl_add_task_root_domain() did not
+-	 * move the fair server bw to the rd if it already started.
+-	 * Add it now.
+-	 */
+-	if (rq->fair_server.dl_server)
+-		__dl_server_attach_root(&rq->fair_server, rq);
+-
+-	rq_unlock_irqrestore(rq, &rf);
+-
+ 	if (old_rd)
+ 		call_rcu(&old_rd->rcu, free_rootdomain);
+ }
+@@ -1809,18 +1798,17 @@ bool find_numa_distance(int distance)
+ 	if (distance == node_distance(0, 0))
+ 		return true;
+ 
+-	rcu_read_lock();
++	guard(rcu)();
++
+ 	distances = rcu_dereference(sched_domains_numa_distance);
+ 	if (!distances)
+-		goto unlock;
++		return found;
+ 	for (i = 0; i < sched_domains_numa_levels; i++) {
+ 		if (distances[i] == distance) {
+ 			found = true;
+ 			break;
+ 		}
+ 	}
+-unlock:
+-	rcu_read_unlock();
+ 
+ 	return found;
+ }
+@@ -2131,26 +2119,24 @@ void sched_domains_numa_masks_clear(unsigned int cpu)
+  */
+ int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
+ {
+-	int i, j = cpu_to_node(cpu), found = nr_cpu_ids;
++	int i, j = cpu_to_node(cpu);
+ 	struct cpumask ***masks;
+ 
+-	rcu_read_lock();
++	guard(rcu)();
++
+ 	masks = rcu_dereference(sched_domains_numa_masks);
+ 	if (!masks)
+-		goto unlock;
++		return nr_cpu_ids;
+ 	for (i = 0; i < sched_domains_numa_levels; i++) {
+ 		if (!masks[i][j])
+-			break;
++			return nr_cpu_ids;
+ 		cpu = cpumask_any_and_distribute(cpus, masks[i][j]);
+ 		if (cpu < nr_cpu_ids) {
+-			found = cpu;
+-			break;
++			return cpu;
+ 		}
+ 	}
+-unlock:
+-	rcu_read_unlock();
+ 
+-	return found;
++	return nr_cpu_ids;
+ }
+ 
+ struct __cmp_key {
+@@ -2201,7 +2187,7 @@ int sched_numa_find_nth_cpu(const struct cpumask *cpus, int cpu, int node)
+ 	if (node == NUMA_NO_NODE)
+ 		return cpumask_nth_and(cpu, cpus, cpu_online_mask);
+ 
+-	rcu_read_lock();
++	guard(rcu)();
+ 
+ 	/* CPU-less node entries are uninitialized in sched_domains_numa_masks */
+ 	node = numa_nearest_node(node, N_CPU);
+@@ -2209,7 +2195,7 @@ int sched_numa_find_nth_cpu(const struct cpumask *cpus, int cpu, int node)
+ 
+ 	k.masks = rcu_dereference(sched_domains_numa_masks);
+ 	if (!k.masks)
+-		goto unlock;
++		return ret;
+ 
+ 	hop_masks = bsearch(&k, k.masks, sched_domains_numa_levels, sizeof(k.masks[0]), hop_cmp);
+ 	hop = hop_masks	- k.masks;
+@@ -2217,8 +2203,7 @@ int sched_numa_find_nth_cpu(const struct cpumask *cpus, int cpu, int node)
+ 	ret = hop ?
+ 		cpumask_nth_and_andnot(cpu - k.w, cpus, k.masks[hop][node], k.masks[hop-1][node]) :
+ 		cpumask_nth_and(cpu, cpus, k.masks[0][node]);
+-unlock:
+-	rcu_read_unlock();
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(sched_numa_find_nth_cpu);
+@@ -2570,17 +2555,17 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+ 	}
+ 
+ 	/* Attach the domains */
+-	rcu_read_lock();
+-	for_each_cpu(i, cpu_map) {
+-		rq = cpu_rq(i);
+-		sd = *per_cpu_ptr(d.sd, i);
++	scoped_guard(rcu) {
++		for_each_cpu(i, cpu_map) {
++			rq = cpu_rq(i);
++			sd = *per_cpu_ptr(d.sd, i);
+ 
+-		cpu_attach_domain(sd, d.rd, i);
++			cpu_attach_domain(sd, d.rd, i);
+ 
+-		if (lowest_flag_domain(i, SD_CLUSTER))
+-			has_cluster = true;
++			if (lowest_flag_domain(i, SD_CLUSTER))
++				has_cluster = true;
++		}
+ 	}
+-	rcu_read_unlock();
+ 
+ 	if (has_asym)
+ 		static_branch_inc_cpuslocked(&sched_asym_cpucapacity);
+@@ -2688,10 +2673,9 @@ static void detach_destroy_domains(const struct cpumask *cpu_map)
+ 	if (static_branch_unlikely(&sched_cluster_active))
+ 		static_branch_dec_cpuslocked(&sched_cluster_active);
+ 
+-	rcu_read_lock();
++	guard(rcu)();
+ 	for_each_cpu(i, cpu_map)
+ 		cpu_attach_domain(NULL, &def_root_domain, i);
+-	rcu_read_unlock();
+ }
+ 
+ /* handle null as "default" */
+@@ -2836,7 +2820,6 @@ static void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new
+ void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+ 			     struct sched_domain_attr *dattr_new)
+ {
+-	sched_domains_mutex_lock();
++	guard(sched_domains_mutex)();
+ 	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
+-	sched_domains_mutex_unlock();
+ }
 -- 
 2.43.0
 
