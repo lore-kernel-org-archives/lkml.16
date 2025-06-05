@@ -1,127 +1,143 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E168D19E971;
-	Thu,  5 Jun 2025 11:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F8819E971;
+	Thu,  5 Jun 2025 11:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749122606; cv=none; b=tP2R005OOlgzfhuMCXTKCudMpR6HwptfN9l0qvpUkAuPYOmNIJJCOwDuZxNFrPdSSmLn0sSyDjxEpSSDmvQdRPb/U0uVN5qO7qdU6kvz7NjrDuinJ8DDX8NGBgQtG4JJubzw4oeRVP0pPxnBRdZ8bm8kDsXDsjuI1189jLr0iO0=
+	t=1749122709; cv=none; b=fz0+WIivrTwQ7vaQK58WhEUbvJAAOKJ+GR0aJAuEY8aQlzPbKFanYbf/QdAMsVUulTBdSWJGGDFJN0nb9APmS1qrgh8TTp1dlUitYJyUtB+cs6miMT8W0Mdnkb33/NKooq3IDqV2Dmt8E2SYhLZesywZuLK2YI8zqcGD2r4Kqk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749122606; c=relaxed/simple;
-	bh=w7P8M/GOhiQDpkOpSltDYiC99AIvKxxRniJhDvABbU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dE+ZUekg7pWismFpk5zc+lqnFbg3bledCiVLxJscqGiUUWKoDvfhz+ZygYy0HdMtJOI/XyD8s7sEbtTXKdT/JYSbA9MWZUJOkKNJJcPrcnqG8Y/nrK/rV7niNvK9qkRPrZfOhdW5n9thODL7IGRvzIxaoiPX5hGrwCyWRcGdqQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YqOC1vKv; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749122709; c=relaxed/simple;
+	bh=DpwVve9/0dG2uJ931UA1JbFVqhsw/zGBo0gOoDwj/+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qRT68E1LDrQZjqBWt9Jyk4FUupuWgWRnHk6ejCRZhqmPbsB5AmHSg5/JAjZJDpZiA8AIdZNXLXqjkCokdgkn12UiSW/3Dzr45EmJOPpNMheEfhuA0jHYGiLXEJns3pywuYpmdt9KZlbH+zPN/h0P5Rr5kpv+k6X3a5mdGb8hcnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b3s77L/o; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqOC1vKv"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a42cb03673so9611051cf.3;
-        Thu, 05 Jun 2025 04:23:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749122604; x=1749727404; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GDizFze/hyxfmmFH+Z9n7Pgzu80dINVRGBjV8qhWnzA=;
-        b=YqOC1vKvkhv9qUVMB+/fpCArr692HTZ+qysM4YEjvNLh7t2zAww2HBfqZieVr+wTtN
-         KhTr2lprYzTokP4mQzWyWOfd0A1ldj/8jdb5wWUoIQC0yJd+0VKZc4NykZ8YF99OewHW
-         pZCRWTRkEFe/QXZPCk21PoVJL4eZ9koCLC05v9nCusLRpjUt7Mlp76n/cAVKsK0DYPIC
-         bCUDUVezAfJKY3E+Nogz8lZM9wYo+xLXC3uO5pRNM6h17hwyD0YV/qFQbWateArp50IO
-         c84wuFjY2HjYY8KCEdklVCJOOYm4KJ0jpIjZY80kZffTdbbB4a2AG5hW97K8N8No1lyU
-         w4hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749122604; x=1749727404;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GDizFze/hyxfmmFH+Z9n7Pgzu80dINVRGBjV8qhWnzA=;
-        b=SZ9g5JeOzd6cMmq2XIOFAToOY4TZWNipphvCc7OD17kqoumbjfPTckKNOtQBeFBEtU
-         IKiGjEio0NZhQ9ZtcNS+tQNGznljwDnlLPMK3GHOeuQQkEchbZI39kbVMhH9iLGWhBi9
-         XoxFEhqoOy+b1xfZ/5CwA3IY4nhiQGQ26eNr4jBXf2g+QyBQbf9PBQ8spxeBmC+qy0bc
-         +LrKZ0xjb3f/QYXpSnIc6NCK1q5VQ5dQ/n50hVVW4kjd7S4RUMkIEya82O7cXbXyqRJU
-         QbmWchX/7XTXidAEZJjQJlbJmmD+gUJvGFTYfpTe0NU0Zx13KJ2tMcjl2Z4orQH5cdwT
-         K0uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBctzSSsHUHLSvghJ64thk+uE2ocywt2O6oQNXrU0pT0jfvSUZNmKgt8GwuCh0LHDuSd80mEAW6MP7wL+2@vger.kernel.org, AJvYcCVkscoSnfLd1krzj4QP9YybCCLyrr+xqTY2ROpHyi6Ef2wYqo4m8lBfc1iWOehowMToVVaW071IG2bg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+NveMOz1xvJ996bzZF0OZ8Fb5GwsNCqUsAK/idMR0GZQxQjNJ
-	2O8xVZR0l09lLZ5dm1iH4eJSI5atHoLcCoAxSnNBX7SGEYRLrMASoVngLRNIctEUw5rmzDPQ1MC
-	hrM/EMjMDH8EYuljo+0ef61f1snfq3YE=
-X-Gm-Gg: ASbGncvyTpI2434uKSGPoMXfUo6dZrLFU5yAa0VnUbzcMiQSWUB+pyTdl4k4kYL7s+N
-	r+NOEfDeSDPx0oK7O822wfGC4vW2x+/gaeCqCUJ+65656OvS69BmiH/8HU1DA8dD60LOmAtnTmR
-	OnudXV8/joO7D7F23TVanRuNAj0qeqRb4xeOE018EtAA==
-X-Google-Smtp-Source: AGHT+IFxaSe8SmfOVrKj5PzC+PDhsrX1HEfaz65+xtZxnKyLtWkEJUtGUuyZJdJWYe7NQXeqgh0Qo15kLkJ4vnPGagY=
-X-Received: by 2002:ac8:5cd5:0:b0:48c:c121:7e27 with SMTP id
- d75a77b69052e-4a5a584733cmr119373931cf.50.1749122603602; Thu, 05 Jun 2025
- 04:23:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b3s77L/o"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5559f4kL012952;
+	Thu, 5 Jun 2025 11:25:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	DvbUUn1Orowm9QsrTQ7p9lFDHYwo9TUHwLS8Rj818Cc=; b=b3s77L/oa28wQVRy
+	r+rHEjZPIj+FdhGquhF4aiPoSEWnVfxQ8LFr2UAv0k5JUS0MfCC84V7lP0v6as0m
+	mkkSfS+LY6y7a0+kBlpVS8QR/goMde5xxguIcmajzdmgSE2hWDpxbSTBmw46VUOm
+	NB+MtazyY4ymBCost36nP5Qa/WtyXcmpnBiVW2pyQuz0BL6HJqrcpcU7vJItm+Fo
+	gXBKbiwqjSp2o9Bx9/UFBpAcFWzm0D+/E/mvSmXfVp6ijqyTgo9ZJ7914kdMggQ/
+	z5KcykvhPpynq7YhTns7LSl1wy5Vz/MsGluUDbQ6PxkqoGR49JTSnYc/vZNGF6/C
+	f5q2jQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47202wer5p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Jun 2025 11:25:02 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 555BP1cj030589
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 5 Jun 2025 11:25:01 GMT
+Received: from [10.231.216.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 5 Jun 2025
+ 04:24:58 -0700
+Message-ID: <903b0a04-f905-4a9f-b637-b146495988ea@quicinc.com>
+Date: Thu, 5 Jun 2025 19:24:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com> <DAEK3EQVNWQX.24DOM2VICSGCP@cknow.org>
-In-Reply-To: <DAEK3EQVNWQX.24DOM2VICSGCP@cknow.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 5 Jun 2025 15:23:16 +0400
-X-Gm-Features: AX0GCFsY4gmlZjHIBycyRoHQVN5KjE-g17VnqUGnair-V8LWvXbVvGhXOwb0_dY
-Message-ID: <CABjd4YzyGx60AeyxL049UrEFkhN_03+wHo64DLL778FimDvGeg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
-To: Diederik de Haas <didi.debian@cknow.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
+Content-Language: en-US
+From: Renjiang Han <quic_renjiang@quicinc.com>
+In-Reply-To: <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: EIgdq4tmk_lkUKsfJz3t-P5peaQRfi_b
+X-Proofpoint-GUID: EIgdq4tmk_lkUKsfJz3t-P5peaQRfi_b
+X-Authority-Analysis: v=2.4 cv=Y/D4sgeN c=1 sm=1 tr=0 ts=68417e8f cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=QPrIUxWvUZqGCaUyt4cA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDA5OSBTYWx0ZWRfX37eRkBBlMp10
+ IxA5+hndJc23VphHkrE1aDGGZ5EIKSukx1o+at30sDpzWF7hYd17sPQMe8wYnBu0Cw0Zrct8P2C
+ 70bMWbn2riUws8WshI6FaRNjZ3/d3pSkkvJinuiDj/Wj95R9Tb1Cr6taCo7tA86UjduRc/qBkVV
+ BOip3QdNJN5O0kQUYIS08IpvgkZzceQpCrZIbStOEut3fNjS//UlYgxVJjcTZQcO0LSPeJJQu8C
+ RD1Lx/YK6qFLTcKrp6tNRqiper20tj98jqzF0GqHdMq9U+5lgln0G8TZecfi1bWxLy8T3Ts6Uzu
+ 3D399+6SROIFIRdhtRNAoyee9ZCKRM30FyyJqepdeXGDHyUOLl2qxkxhnXnFodZPC09q57/0xd8
+ FFmqdngln7qBlENemeRBnGDfiVDALenaI+SUrMd23Zm6IIXt2MmL50RcprUY+Jugh/qyYco1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 priorityscore=1501 spamscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 mlxscore=0 mlxlogscore=394 malwarescore=0
+ bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506050099
 
-On Thu, Jun 5, 2025 at 3:18=E2=80=AFPM Diederik de Haas <didi.debian@cknow.=
-org> wrote:
+
+On 6/2/2025 2:16 PM, Dmitry Baryshkov wrote:
+> On Sat, May 31, 2025 at 08:05:24AM +0800, Renjiang Han wrote:
+>> On 5/31/2025 4:27 AM, Dmitry Baryshkov wrote:
+>>> On Fri, May 30, 2025 at 09:32:12AM +0530, Renjiang Han wrote:
+>>>> QCS615 uses the same video core as SC7180, so reuse the same resource
+>>>> data of SC7180 for QCS615 to enable video functionality.
+>>>>
+>>>> There are no resources for the video-decoder and video-encoder nodes
+>>>> in the device tree, so remove these two nodes from the device tree. In
+>>>> addition, to ensure that the video codec functions properly, use [3]
+>>>> to add encoder and decoder node entries in the venus driver.
+>>>>
+>>>> Validated this series on QCS615 and SC7180.
+>>>>
+>>>> Note:
+>>>> This series consist of DT patches and a venus driver patch. The patch
+>>>> 1/3, which is venus driver patch, can be picked independently without
+>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>>>> DT patches, still depend on [1].
+>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
+>>> on QCS615 over(?)clocked.
+>> Agree, so we need to make sure that the driver patch is not picked after the
+>> DT patch.
+> Worse: we need to make sure that the driver patch is present in the
+> branch which picks up DT patches. Otherwise building & testing that
+> branch (which is not unfrequent when doing git bisect) will fail.
 >
-> On Tue Jun 3, 2025 at 7:01 PM CEST, Alexey Charkov wrote:
-> > List both CPU supply regulators which drive the little and big CPU
-> > clusters, respectively, so that cpufreq can pick them up.
-> >
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> >  .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 28 ++++++++++++++=
-++++++++
-> >  1 file changed, 28 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arc=
-h/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-> > index b09e789c75c47fec7cf7e9810ab0dcca32d9404a..d9c129be55a0d997e04e6d6=
-77cdc98fb50353418 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-> > @@ -207,6 +207,22 @@ vcc_3v3_ufs_s0: regulator-vcc-ufs-s0 {
-> >       };
-> >  };
-> >
-> > +&cpu_b0 {
-> > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > +};
-> > +
-> > +&cpu_b1 {
-> > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > +};
-> > +
-> > +&cpu_b2 {
-> > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > +};
-> > +
-> > +&cpu_b3 {
-> > +     cpu-supply =3D <&vdd_cpu_big_s0>;
-> > +};
-> > +
-> >  &combphy0_ps {
-> >       status =3D "okay";
-> >  };
->
-> The &cpu_bN nodes should come after the &combphy0_ps node.
+> The easiest way to ensure that is to merge driver changes in v6.N and
+> then DT changes in v6.N+1.
+Yes, now DT patches are pending videocc DT patch. I think the
+venus driver patch will likely be picked no later than the DT patches.
 
-True, thanks for spotting it. Don't know why they ended up separated
-from &cpu_l*
+-- 
+Best Regards,
+Renjiang
 
-Best regards,
-Alexey
