@@ -1,149 +1,97 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE951C27
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01923C2F;
+	Thu,  5 Jun 2025 07:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749107991; cv=none; b=iJE7+w5jgkba0Ane5rna2zl8VrBIGfdPbSHhhLanv3lPVbR+MyYK/Mq8PZvb4ZNMCoAa6H4Kj6HPktIMqFby34t1y3sqWG7o3+yPjEi7sZPHVr+L/vjTAQ6Ib02gwT1bHl91sg1Y2R5hIC3nhfnzz7IeuWv2upL5Ynqfb3RWhig=
+	t=1749108043; cv=none; b=GVW/3Vf6jL0Jis/mAOjRopdyHLnLri5Lp6w7msZn9wQklUT7Yb683+79rUl9lq7k2ygvdfSjhZUMONdCMLhWRQ/Eiqzg7Z3GuNBGfB1S8nvkKI6OPtmAeDCpFGbYeJpeVAkY9bM5YwJ1MWPKgPrPx++xxiuH7la4B0qt2Mkn+Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749107991; c=relaxed/simple;
-	bh=wrOzrOpItq9PklhttnH4+ERkE/iekakTgs9ldslFJr4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Nb1KWZnRU21X6nNpFWTcjrw++apU0KWwjfBt0Pb1oHhEuVAMPXPV7alEMAmJv+Zzk2molr1lXXkt9P//sH73MDFGnudScJqo0FWE3idFo301/fGJapuThgslrCBfPc8eZeM7BVPwD3i37yUHZTk7zQPApu8Zf+6dlSujYfuJLPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 5557Iqwi020105;
-	Thu, 5 Jun 2025 15:18:52 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4bCbMc70cnz2NnHTV;
-	Thu,  5 Jun 2025 15:15:56 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Thu, 5 Jun 2025 15:18:49 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
-        <Hao_hao.Wang@unisoc.com>, <baocong.liu@unisoc.com>
-Subject: [PATCH v3] f2fs: compress: fix UAF of f2fs_inode_info in f2fs_free_dic
-Date: Thu, 5 Jun 2025 15:18:40 +0800
-Message-ID: <1749107920-17958-1-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+	s=arc-20240116; t=1749108043; c=relaxed/simple;
+	bh=FA625NrqD4qvBQNaAhyUhXitr38lRtVRqZSGqy0z2c4=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mecpGLihHG/B1XDmLPl/1xmNNag8zfotePOxSZ6aKIDlxbnukz4z1mTkgCbdEI6e+RT6gm64YtbxMC2mJyEfTpwiQMurScKHw11USdxJAeJuQ6AHZOz4014MV3NCJPf5XZFBeqI+dL435jELEbyDtgDe+ILTQNpjfywohWvUyYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e816uzv9; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e816uzv9"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742af84818cso509789b3a.1;
+        Thu, 05 Jun 2025 00:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749108041; x=1749712841; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FA625NrqD4qvBQNaAhyUhXitr38lRtVRqZSGqy0z2c4=;
+        b=e816uzv9gIG8vEsENbjOWwrs02bBdj/AGlBZVjlYpHQwsp7iAsaeM3DWZjRLLJUFgq
+         KNZXzuNq7A/u/OeO/Ho7Vux+Lk4k+5Osm/uv2ccufxQLLJaWTKoOi6ZyoxV+IHWiFI70
+         Mi0mVqhEe19PPF5fLZwOU51DiBpOzNMS7X3Ge1DhZOWGj0mgDRdrAqwUbj/xcPeHGrQk
+         mpULj2l4H93vxzt4t3JloCYegXzuJftzgSuRo1JDyDAqRXan3stAw312ZRs2O5EsuYxR
+         ilT28CnbKc4OwoBQFqBtoFHsnGIlMhqO/buVloItC8hUTwU215Zy5AseD90qqlo2LT+L
+         FBEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749108041; x=1749712841;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FA625NrqD4qvBQNaAhyUhXitr38lRtVRqZSGqy0z2c4=;
+        b=sUL1VeaiETxTb8NViePtZUnW8sArb7l3BerZwlQGwG6MWFwM9lx+TzVkegtmy9+BxW
+         4sgzQmMWH19vt6MXf7xD5tAbJIm3S4+TpTQar2/gAP+wV9/8Yr/rjD8/CBxLZXagh3Q2
+         Pk/wuZFdflsDMgkd097nNfEEAWHHp5p1BKd1GrfdGigVMVPEj7sZk0rW1q0UzZCixH4t
+         frdlK/LsbqAj4DOynCf9ephH8eczBACBNccL63MnrIANgvNwTNlf1V3eQ3nw06oNjk67
+         IVSDU7V+rb7z8IMnTInntbRY9VJDD6iYW3xYewWNzLhv28hW3d7srKABUygfA5kG2nvf
+         FD5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUdZuJfZ/YNMI3Ar/WfgSojynB3cOUUg/5aXPmXPBfAk0cC6yhg/TSLBdBTK2XIDrb9/W7nayUNMKXFLzs=@vger.kernel.org, AJvYcCXF93ZGz3GoPEC7zDwGHfjZyltSmiWakab5V/tmvrPKST6xnXKqkZ45EMoecG4vIf9uAf8G/HG1HEFd6lKLnUY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTuRvm0oFzqGZE/hcV+yugQy0b8qaoqzld/kAcr6q+glWeqgh7
+	PwxWc5DAh/QhorjCF+sC2pKhNY90kOW79aGFIAZiVvCHmxO+PVjkCajI
+X-Gm-Gg: ASbGncvrHRCeOp6xflhD9QwkHdBPE4+puUXiyNedCKOgncjFersbRhm+RhZKMxAcWci
+	PCM1ffQkTswVRzER2ToIqK68Xgf508Q1oKCh7us6AyBlg7I04gMzaSm5aoD/fGlw99ndGLLmgFV
+	XxXxejWv756+m3fUeN8pvAxAjKX+m1at15wBW93wJQfl9q0mCL9FaIFKfYTBgjohBZp+gnJQ1BR
+	qwV0GGTtdfbUGMA0JMXGh9fxyzQAl1vfIwN+JGc6UfvYawuPwHjtTY+O1eRt2TRxfxiQ0XyAn9H
+	rwmOS/HiV+E54KiHR9J/dWBSF5fk6qk/rz5kyiCky1Th4FKXh+v1en6RJYUL1qIEiZGQEOYeR9I
+	yNiuZT+hjG2S+vmxvDTPosIQbtKI9kXN+0A==
+X-Google-Smtp-Source: AGHT+IFD//RPz7ru1g21LutghSu3t+G8Yuhv3ZX4QuwTNEkZ18KvKr5lhdrA1j/AUPiBIQk/dzX11w==
+X-Received: by 2002:a05:6a00:853:b0:736:7270:4d18 with SMTP id d2e1a72fcca58-7480cf8b97amr7468180b3a.14.1749108041124;
+        Thu, 05 Jun 2025 00:20:41 -0700 (PDT)
+Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeab109sm12229223b3a.40.2025.06.05.00.20.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 00:20:40 -0700 (PDT)
+Date: Thu, 05 Jun 2025 16:20:22 +0900 (JST)
+Message-Id: <20250605.162022.1856520286549134654.fujita.tomonori@gmail.com>
+To: miguel.ojeda.sandonis@gmail.com
+Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, x86@kernel.org,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org,
+ hpa@zytor.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, tangyouling@loongson.cn,
+ hejinyang@loongson.cn, yangtiezhu@loongson.cn, ojeda@kernel.org,
+ alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+ aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org
+Subject: Re: [PATCH v6 0/4] rust: Add bug/warn abstractions
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <CANiq72=GXWj-aj1kPwnH=9mwR=GgrfJ4xsQUK36SFBRedk3oYg@mail.gmail.com>
+References: <20250502094537.231725-1-fujita.tomonori@gmail.com>
+	<CANiq72=GXWj-aj1kPwnH=9mwR=GgrfJ4xsQUK36SFBRedk3oYg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 5557Iqwi020105
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: base64
 
-The decompress_io_ctx may be released asynchronously after
-I/O completion. If this file is deleted immediately after read,
-and the kworker of processing post_read_wq has not been executed yet
-due to high workloads, It is possible that the inode(f2fs_inode_info)
-is evicted and freed before it is used f2fs_free_dic.
-
-    The UAF case as below:
-    Thread A                                      Thread B
-    - f2fs_decompress_end_io
-     - f2fs_put_dic
-      - queue_work
-        add free_dic work to post_read_wq
-                                                   - do_unlink
-                                                    - iput
-                                                     - evict
-                                                      - call_rcu
-    This file is deleted after read.
-
-    Thread C                                 kworker to process post_read_wq
-    - rcu_do_batch
-     - f2fs_free_inode
-      - kmem_cache_free
-     inode is freed by rcu
-                                             - process_scheduled_works
-                                              - f2fs_late_free_dic
-                                               - f2fs_free_dic
-                                                - f2fs_release_decomp_mem
-                                      read (dic->inode)->i_compress_algorithm
-
-This patch use igrab before f2fs_free_dic and iput after free the dic when dic free
-action is done by kworker.
-
-Cc: Daeho Jeong <daehojeong@google.com>
-Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in softirq")
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
----
-v3: use igrab to replace __iget
-v2: use __iget/iput function
----
- fs/f2fs/compress.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index b3c1df9..729ad16 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct decompress_io_ctx *dic,
- }
- 
- static void f2fs_free_dic(struct decompress_io_ctx *dic,
--		bool bypass_destroy_callback);
-+		bool bypass_destroy_callback, bool late_free);
- 
- struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
- {
-@@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
- 	return dic;
- 
- out_free:
--	f2fs_free_dic(dic, true);
-+	f2fs_free_dic(dic, true, false);
- 	return ERR_PTR(ret);
- }
- 
- static void f2fs_free_dic(struct decompress_io_ctx *dic,
--		bool bypass_destroy_callback)
-+		bool bypass_destroy_callback, bool late_free)
- {
- 	int i;
- 
-@@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
- 	}
- 
- 	page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
-+	if (late_free)
-+		iput(dic->inode);
- 	kmem_cache_free(dic_entry_slab, dic);
- }
- 
-@@ -1783,16 +1785,18 @@ static void f2fs_late_free_dic(struct work_struct *work)
- 	struct decompress_io_ctx *dic =
- 		container_of(work, struct decompress_io_ctx, free_work);
- 
--	f2fs_free_dic(dic, false);
-+	f2fs_free_dic(dic, false, true);
- }
- 
- static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task)
- {
- 	if (refcount_dec_and_test(&dic->refcnt)) {
- 		if (in_task) {
--			f2fs_free_dic(dic, false);
-+			f2fs_free_dic(dic, false, false);
- 		} else {
- 			INIT_WORK(&dic->free_work, f2fs_late_free_dic);
-+			/* use igrab to avoid inode is evicted simultaneously */
-+			f2fs_bug_on(F2FS_I_SB(dic->inode), !igrab(dic->inode));
- 			queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
- 					&dic->free_work);
- 		}
--- 
-1.9.1
-
+T24gVGh1LCA1IEp1biAyMDI1IDAzOjU2OjMxICswMjAwDQpNaWd1ZWwgT2plZGEgPG1pZ3VlbC5v
+amVkYS5zYW5kb25pc0BnbWFpbC5jb20+IHdyb3RlOg0KDQo+IE9uIEZyaSwgTWF5IDIsIDIwMjUg
+YXQgMTE6NDbigK9BTSBGVUpJVEEgVG9tb25vcmkNCj4gPGZ1aml0YS50b21vbm9yaUBnbWFpbC5j
+b20+IHdyb3RlOg0KPj4NCj4+IFRoaXMgcGF0Y2hzZXQgYWRkcyB3YXJuX29uIG1hY3JvIHdpdGgg
+dGhlIGJ1Zy93YXJuIGFic3RyYWN0aW9uIHRoYXQNCj4+IHV0aWxpemVzIHRoZSBrZXJuZWwncyBC
+VUcvV0FSTiBmZWF0dXJlIHZpYSBhc3NlbWJseS4NCj4gDQo+IFRoaXMgcGFzc2VkIG15IHVzdWFs
+IHRlc3RzIC0tIEkgd2lsbCB0YWtlIGEgYmV0dGVyIGxvb2sgYW5kIHBpY2sgaXQNCj4gZWFybHkg
+bmV4dCBjeWNsZS4NCg0KUGVyZmVjdCwgdGhhbmsgeW91IHNvIG11Y2ghDQoNCg==
