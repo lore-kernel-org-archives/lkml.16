@@ -1,84 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977D920330
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BA81DFF8
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749149417; cv=none; b=ozvZNySO+LIUlrIG1w61NGRkyA9GA7QzN95Sh6uDpbyPYO9nLbY/vltAglPoyFEmycAbVtEwYsY2bPFe3Jn7yplCADc5negb8Tyl2iEvvC+U+yLjJbiU4Hdm1jXhG21J7zZCrbn2MDvE7sDJltp66Ic1h6A87SfAI1S5eI6nm4Q=
+	t=1749149573; cv=none; b=tghy6G81+MpsFR7L1i4HzlifUj3glLA94BiZPClxbJTl2qTXD1gWn/OvOiHFwzQwZ4vv/r4O6AElbYNuuyErtxEHOrwzgV3Gk9oAMcA4E0Ph1T4CnxI7Az4m3qSdl+Gy19QAYDtBwVLbVXMYIFA5sdCOqczMphRFh5Xf8sIHbMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749149417; c=relaxed/simple;
-	bh=ul8uGIVqoA9GqmsCC7FvzunzA9M9vAIX7VNDjF8UFo4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QsM4D7GROBjd8LsmtTbRJEhL8O99wiFNydnQaGG8i5+I6TtcNrTq9SslyVMnmsloT5YxEhXEOpzHGuZ/75PuhH0zBPcm318/vSABsTBxoABHwy+3iXws0mXAt5hicRiOKJ33VA0zO+gCYUs48pm25HT+/ttNQw+P6bTEIOWzbZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6EWzSXX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749149573; c=relaxed/simple;
+	bh=nyOTJpThVJsfUYv/oE5C1pTn08Qj95h5whErxwTkch0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Tz1WH3mmHFfiRUufyJrUAu+LE8jstfkUSvtS8n5G0joTegPecj2cTq08J4pJw+/1sVpMQfCMrrCyHyuJw77O8/ozE7mh9jgu6JN2bauJgFNPpB++lO73uCTZ6P6Kaz9wt0KTGCdOgnlIFnLoUQRNF6nlItK0Fc6WjF3CzE8IL50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dbbXAkzL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6EWzSXX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18C9FC4CEE7;
-	Thu,  5 Jun 2025 18:50:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dbbXAkzL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5DBBC4CEE7;
+	Thu,  5 Jun 2025 18:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749149415;
-	bh=ul8uGIVqoA9GqmsCC7FvzunzA9M9vAIX7VNDjF8UFo4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=L6EWzSXXybjJIfZY9ElfC/9OBXU6KXi7/v6dw7BB6FESbBaWoiANooF8JeKgsCNmc
-	 IO1X0KqdXLnSabBa0KwFSh7O8utnqcm7zXW/ZznbzZAKPV2h92vF0vhf/34Kzk+NYB
-	 CNQ+TCwVchCAtKSSX8Gp59xE0awMzASHJEv5wfLd/kkZ4eAyjmd5ocSyiNKqGWVY8r
-	 4MvWf6iiGMkLSqtQXZdQcUcaUemE1dfXNKgFfKEluyLbjboSA311eRlj3+pVrSqTHo
-	 i/Fp3bhQ2Jm/uTi1Hyg/Blzx6J1gAe3b8YoTVWwNMrin0mNXVc0H5IkQPVEk+9Jy/Y
-	 qnihme2NuL8zw==
+	s=k20201202; t=1749149572;
+	bh=nyOTJpThVJsfUYv/oE5C1pTn08Qj95h5whErxwTkch0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=dbbXAkzLbv6mgraPk9/kDdOEZFy53+4Lgm7vvBw6ZXvVXde7DPIk0bLhdDsM6lqv5
+	 5LB8VI61vC1S3u2hchEU5cTEdNWFNtZ23tUTfTwRqOP3mSvxM2ar3FsXzya7lAQAy2
+	 sBAVjhEzO2RCW7ylnkE3N9GsZO4IUeUsk8T3+Hdit9o5s+oBKaciDwZuVfCm64QDAf
+	 GxSpDlXuGDowpll/Pbjv/f44efXjLaanIt/3mpZWwmIbfitCUhv+7Q3aU5RCLxkE0c
+	 06lSRH7euiv+vYnX1n/X3OsB/0552k0kVWMP+/rZEhz99JqIUFmN0O1wc+10Ml5OQc
+	 nlGZp5WW1SW7Q==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E7339D60B4;
-	Thu,  5 Jun 2025 18:50:48 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB33739D60B4;
+	Thu,  5 Jun 2025 18:53:25 +0000 (UTC)
+Subject: Re: [GIT PULL] uml 6.16-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250605092423.14973-3-johannes@sipsolutions.net>
+References: <20250605092423.14973-3-johannes@sipsolutions.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250605092423.14973-3-johannes@sipsolutions.net>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/uml/linux.git tags/uml-for-linux-6.16-rc1
+X-PR-Tracked-Commit-Id: e56a50ff7c12983aba710bd02a2c2ad401379e91
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: cfc4ca8986bb1f6182da6cd7bb57f228590b4643
+Message-Id: <174914960462.3197273.4053353076250915287.pr-tracker-bot@kernel.org>
+Date: Thu, 05 Jun 2025 18:53:24 +0000
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-um@lists.infradead.org, Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/3] riscv: misaligned: fix misaligned accesses
- handling in
- put/get_user()
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <174914944698.3195461.8348597570528832946.git-patchwork-notify@kernel.org>
-Date: Thu, 05 Jun 2025 18:50:46 +0000
-References: <20250602193918.868962-1-cleger@rivosinc.com>
-In-Reply-To: <20250602193918.868962-1-cleger@rivosinc.com>
-To: =?utf-8?b?Q2zDqW1lbnQgTMOpZ2VyIDxjbGVnZXJAcml2b3NpbmMuY29tPg==?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, macro@orcam.me.uk, david.laight.linux@gmail.com
 
-Hello:
+The pull request you sent on Thu,  5 Jun 2025 11:20:57 +0200:
 
-This series was applied to riscv/linux.git (for-next)
-by Palmer Dabbelt <palmer@dabbelt.com>:
+> https://git.kernel.org/pub/scm/linux/kernel/git/uml/linux.git tags/uml-for-linux-6.16-rc1
 
-On Mon,  2 Jun 2025 21:39:13 +0200 you wrote:
-> While debugging a few problems with the misaligned access kselftest,
-> Alexandre discovered some crash with the current code. Indeed, some
-> misaligned access was done by the kernel using put_user(). This
-> was resulting in trap and a kernel crash since. The path was the
-> following:
-> user -> kernel -> access to user memory -> misaligned trap -> trap ->
-> kernel -> misaligned handling -> memcpy -> crash due to failed page fault
-> while in interrupt disabled section.
-> 
-> [...]
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/cfc4ca8986bb1f6182da6cd7bb57f228590b4643
 
-Here is the summary with links:
-  - [v2,1/3] riscv: make unsafe user copy routines use existing assembly routines
-    https://git.kernel.org/riscv/c/a4348546332c
-  - [v2,2/3] riscv: process: use unsigned int instead of unsigned long for put_user()
-    https://git.kernel.org/riscv/c/020667d661f9
-  - [v2,3/3] riscv: uaccess: do not do misaligned accesses in get/put_user()
-    https://git.kernel.org/riscv/c/ca1a66cdd685
+Thank you!
 
-You are awesome, thank you!
 -- 
 Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+https://korg.docs.kernel.org/prtracker.html
