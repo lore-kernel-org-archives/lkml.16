@@ -1,28 +1,28 @@
-Received: from smtp-190c.mail.infomaniak.ch (smtp-190c.mail.infomaniak.ch [185.125.25.12])
+Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60481EEA3C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED1E1E500C
 	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749138090; cv=none; b=hms0Xf3dTieg3Bhc5hQ7vGDnca5Pi8dMnm8aNxriLwnr7o0LlJj6Dk85XjXazXlqg3p9okldvwWd27efmoF6ilgPeGG/PVF9gvwcUq5yE84Oi5IodoGDxphW2pFBHP3OAiBzJtMmL9CVbLqGSUPzYlUf2KYl2NwGzgh7Jv3civY=
+	t=1749138090; cv=none; b=THuQByqCVt7oiwQz5uK0eg8WwIICn+tOmUolN9l09jFkU0UzXPDHHaQBA3k39g5ErQcyfjfbnSNwKTqRq633Zc2tfCQNQV1UfPqUOEO0dLZ7f4Dym+u/1rVm9iCQROS2s+Hm5vlK/NCXSJkUscj8swMMPvl2gw53GTbra1Ysle0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749138090; c=relaxed/simple;
-	bh=nmfuwsHfObbwfOxWN3QCkxhDB/TrN7Ik4c69MJA6cTw=;
+	bh=WbRRfpVolR85qtkR9dxkGi0m8xbVhJRA98FY3s6doQs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mLg+SNgxHEaQy7BPA5PpAwce8Cpb3Eh67VE9t4T38ylSr5qasbvaztpGtucEeS8WZUj+ytq8WmwM++6eKrMhoRhmBJPpBDyjWG7hOS0/XBcdjEFWko9OYf3M0Y5hjfz65WUTs6D13f2fuEH4tzkoyAtcpitdJAVWq0QLgBo7xIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=185.125.25.12
+	 In-Reply-To:To:Cc; b=AKW1qismT+TnXlYVkZib9YrR34JEuHaRDiyBr+hL/XAXBmUDTJzCQXTFRFFa1fnMlxvpRkVW3BckWXCHPxdGozEtA2G6sdQgRFHVumAE9dZNQbubpY4KkwKkw82C8xEhr/dJGp9nCic3TTCSerHAbLWYDPB6rkzcsyPuTU4eZY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bCpZl743dztGn;
-	Thu,  5 Jun 2025 17:41:19 +0200 (CEST)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bCpZl1zQJzpLP;
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bCpZm56pzz5TC;
+	Thu,  5 Jun 2025 17:41:20 +0200 (CEST)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bCpZl6yQBzq71;
 	Thu,  5 Jun 2025 17:41:19 +0200 (CEST)
 From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Thu, 05 Jun 2025 17:41:06 +0200
-Subject: [PATCH v2 1/4] dt-bindings: mfd: rk806: allow to customize PMIC
- reset mode
+Date: Thu, 05 Jun 2025 17:41:07 +0200
+Subject: [PATCH v2 2/4] mfd: rk8xx-core: allow to customize RK806 reset
+ mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,7 +31,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250605-rk8xx-rst-fun-v2-1-143d190596dd@cherry.de>
+Message-Id: <20250605-rk8xx-rst-fun-v2-2-143d190596dd@cherry.de>
 References: <20250605-rk8xx-rst-fun-v2-0-143d190596dd@cherry.de>
 In-Reply-To: <20250605-rk8xx-rst-fun-v2-0-143d190596dd@cherry.de>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -49,102 +49,81 @@ X-Infomaniak-Routing: alpha
 
 From: Quentin Schulz <quentin.schulz@cherry.de>
 
-The RK806 PMIC allows to configure its reset/restart behavior whenever
-the PMIC is reset either programmatically or via some external pins
-(e.g. PWRCTRL or RESETB).
+The RK806 PMIC has a bitfield for configuring the restart/reset behavior
+(which I assume Rockchip calls "function") whenever the PMIC is reset
+either programmatically (c.f. DEV_RST in the datasheet) or via PWRCTRL
+or RESETB pins.
 
-The following modes exist:
- - 0 (RK806_RESTART) restart PMU,
- - 1 (RK806_RESET) reset all power off reset registers and force
-   state to switch to ACTIVE mode,
- - 2 (RK806_RESET_NOTIFY) same as RK806_RESET and also pull
-   RESETB pin down for 5ms,
+For RK806, the following values are possible for RST_FUN:
 
-For example, some hardware may require a full restart
-(RK806_RESTART mode) in order to function properly as regulators
-are shortly interrupted in this mode.
+0b00 means "restart PMU"
+0b01 means "Reset all the power off reset registers, forcing
+	the state to switch to ACTIVE mode"
+0b10 means "Reset all the power off reset registers, forcing
+	the state to switch to ACTIVE mode, and simultaneously
+	pull down the RESETB PIN for 5mS before releasing"
+0b11 means the same as for 0b10 just above.
 
-This is the case for RK3588 Jaguar and RK3588 Tiger which have a
-companion microcontroller running on an independent power supply and
-monitoring the PMIC power rail to know the state of the main system.
-When it detects a restart, it resets its own IPs exposed to the main
-system as if to simulate its own reset. Failing to perform this fake
-reset of the microcontroller may break things (e.g. watchdog not
-automatically disabled, buzzer still running until manually disabled,
-leftover configuration from previous main system state, etc...).
+This adds the appropriate logic in the driver to parse the new
+rockchip,reset-mode DT property to pass this information. It just
+happens that the values in the binding match the values to write in the
+bitfield so no mapping is necessary.
 
-Some other systems may be depending on the power rails to not be
-interrupted even for a small amount of time[1].
+If it is missing, the register is left untouched and relies either on
+the silicon default or on whatever was set earlier in the boot stages
+(e.g. the bootloader).
 
-This allows to specify how the PMIC should perform on the hardware level
-and may differ between harwdare designs, so a DT property seems
-warranted. I unfortunately do not see how this could be made generic
-enough to make it a non-vendor property.
-
-[1] https://lore.kernel.org/linux-rockchip/2577051.irdbgypaU6@workhorse/
 Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
- .../devicetree/bindings/mfd/rockchip,rk806.yaml    | 23 ++++++++++++++++++++++
- include/dt-bindings/mfd/rockchip,rk8xx.h           | 17 ++++++++++++++++
- 2 files changed, 40 insertions(+)
+ drivers/mfd/rk8xx-core.c  | 14 ++++++++++++++
+ include/linux/mfd/rk808.h |  2 ++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml b/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
-index 3c2b06629b75ea94f90712470bf14ed7fc16d68d..c555b5956cea9f594d80ebd3b27e8489e520d97d 100644
---- a/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
-+++ b/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
-@@ -31,6 +31,29 @@ properties:
+diff --git a/drivers/mfd/rk8xx-core.c b/drivers/mfd/rk8xx-core.c
+index 71c2b80a4678d627e86cfbec8135f08e262559d3..32294af0b843fa20677513b1e1a5a6c8e76be4b6 100644
+--- a/drivers/mfd/rk8xx-core.c
++++ b/drivers/mfd/rk8xx-core.c
+@@ -699,6 +699,7 @@ int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap
+ 	const struct mfd_cell *cells;
+ 	int dual_support = 0;
+ 	int nr_pre_init_regs;
++	u32 rst_fun = 0;
+ 	int nr_cells;
+ 	int ret;
+ 	int i;
+@@ -726,6 +727,19 @@ int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap
+ 		cells = rk806s;
+ 		nr_cells = ARRAY_SIZE(rk806s);
+ 		dual_support = IRQF_SHARED;
++
++		ret = device_property_read_u32(dev, "rockchip,reset-mode", &rst_fun);
++		if (ret) {
++			dev_dbg(dev,
++				"rockchip,reset-mode property missing, not setting RST_FUN\n");
++			break;
++		}
++
++		ret = regmap_update_bits(rk808->regmap, RK806_SYS_CFG3,
++					 RK806_RST_FUN_MSK,
++					 FIELD_PREP(RK806_RST_FUN_MSK, rst_fun));
++		if (ret)
++			return dev_err_probe(dev, ret, "RST_FUN write err\n");
+ 		break;
+ 	case RK808_ID:
+ 		rk808->regmap_irq_chip = &rk808_irq_chip;
+diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+index 69cbea78b430b562a23d995263369d475daa6287..28170ee08898ca59c76a741a1d42763a42b72380 100644
+--- a/include/linux/mfd/rk808.h
++++ b/include/linux/mfd/rk808.h
+@@ -812,6 +812,8 @@ enum rk806_pin_dr_sel {
+ #define RK806_INT_POL_H			BIT(1)
+ #define RK806_INT_POL_L			0
  
-   system-power-controller: true
- 
-+  rockchip,reset-mode:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [0, 1, 2]
-+    description:
-+      Mode to use when a reset of the PMIC is triggered.
-+
-+      The reset can be triggered either programmatically, via one of
-+      the PWRCTRL pins (provided additional configuration) or
-+      asserting RESETB pin low.
-+
-+      The following modes are supported (see also
-+      include/dt-bindings/mfd/rockchip,rk8xx.h)
-+
-+      - 0 (RK806_RESTART) restart PMU,
-+      - 1 (RK806_RESET) reset all power off reset registers and force
-+        state to switch to ACTIVE mode,
-+      - 2 (RK806_RESET_NOTIFY) same as RK806_RESET and also pull
-+        RESETB pin down for 5ms,
-+
-+      For example, some hardware may require a full restart
-+      (RK806_RESTART mode) in order to function properly as regulators
-+      are shortly interrupted in this mode.
-+
-   vcc1-supply:
-     description:
-       The input supply for dcdc-reg1.
-diff --git a/include/dt-bindings/mfd/rockchip,rk8xx.h b/include/dt-bindings/mfd/rockchip,rk8xx.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..f058ed1ca661185f79738a358aa2d4f04539c590
---- /dev/null
-+++ b/include/dt-bindings/mfd/rockchip,rk8xx.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+/*
-+ * Device Tree defines for Rockchip RK8xx PMICs
-+ *
-+ * Copyright 2025 Cherry Embedded Solutions GmbH
-+ *
-+ * Author: Quentin Schulz <quentin.schulz@cherry.de>
-+ */
-+
-+#ifndef _DT_BINDINGS_MFD_ROCKCHIP_RK8XX_H
-+#define _DT_BINDINGS_MFD_ROCKCHIP_RK8XX_H
-+
-+#define RK806_RESTART		0
-+#define RK806_RESET		1
-+#define RK806_RESET_NOTIFY	2
-+
-+#endif
++/* SYS_CFG3 */
++#define RK806_RST_FUN_MSK		GENMASK(7, 6)
+ #define RK806_SLAVE_RESTART_FUN_MSK	BIT(1)
+ #define RK806_SLAVE_RESTART_FUN_EN	BIT(1)
+ #define RK806_SLAVE_RESTART_FUN_OFF	0
 
 -- 
 2.49.0
