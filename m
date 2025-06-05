@@ -1,152 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EAC158535;
-	Thu,  5 Jun 2025 11:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E32F158535;
+	Thu,  5 Jun 2025 11:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749124577; cv=none; b=WDmFhP461r7fVLooIMPWEo0D2fAGQ9H/wgxrNqvMox+rDCIo/+FbtJ0zX31Bng+M/uHQX0Z4P5L88xFhloU1FklfBLKU3yyL94Z2fal6Ze1XNbL7gkp8JfIj7SVATaezSHSmGha+4p9oDdc3/FuqVwo/wbvqDkFRUtRnGFxMq+k=
+	t=1749124768; cv=none; b=FClQke6makFGE1XXyqGXl6Il8SPZfreq/VwADnE27A0Tk1PO/CPXvsRhkh6s3FcKtdfi/4jFR+2G23J1IFW9FQtjA3w0OGJZqBoYwn/pxpVC1tHz6kzYgq0c+wbr2hNVdXgrNefGG5ZpN6PfhCdXHkFg1mT4lCa8uPSlddPCi/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749124577; c=relaxed/simple;
-	bh=uWcXl9ynCkshNAH43IpoOSXtxdbCOYh/GOFOCUI9uBM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fFsKrTXR00JostM9oj76ehLq7+GcuX6ZP2DFndeRODyLX6ZiP8CdId+F5DffLIdHs8kLg3jHvZDbtDnfYLEeiMlPBYlIgMdfZk74MtBKccl8lHkNUdvUVN18I5tUu4ZO7WBlR2TlV2/i5Xi9WtKA6YOh/4hfjHYGxZvrrK0AQQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxlZk0qG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749124768; c=relaxed/simple;
+	bh=J1zRzyeiV7k5I79S9NHUGOfYbI2/aT905ucRxxR8/cs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=aAyXAZyxIvtRK2TDa3+iOywJZrxPfj9Enggc/MdnlQMY54eRPGPL6iKtCV09uqZTR4JnuC2GVB3R9B4ZIRSfmwgYMsu5SDD32c+MSalUjHkuxq9N7xmaqvcWJDPx434dw7iDR8CJixfoN17jYp/h6Xf1xiSBk1ycqXFLDvsmQsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ctE2cUN7; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxlZk0qG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CA70C4CEE7;
-	Thu,  5 Jun 2025 11:56:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749124575;
-	bh=uWcXl9ynCkshNAH43IpoOSXtxdbCOYh/GOFOCUI9uBM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=jxlZk0qGEQhuOAutqsXnOe9PmJHL+oEglN6Gi3ZE9MjWut4dthhXTsEGgA2HAbcHb
-	 sw5LD4lQxsUirwofRPfTE4Q+JUD47iS3Tcq1ue9KXa4oMdnceICx+TkFYV/F0jlpHI
-	 XU8EMX/6+aJwPOQEOg6Ez+4ZS/+5fdpTfFywGkIsTJ8Eo32WxK1IizN0AzD1H7If3n
-	 sY+26Nc5iR0/Afw1IrtCODqNeOE2hJLylCKpMdiPL3zFWHkdKBZasU5kH02sc49Q2N
-	 Zss2L83Q4KA/HZEtHWYMsP/Fy8ZOCgulYwJbu92vZuGus9qVdKbHl0+GDsYstcQW2A
-	 VDKOQHOOHaTxA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  pratyush@kernel.org,
-  jasonmiu@google.com,  graf@amazon.com,  changyuanl@google.com,
-  dmatlack@google.com,  rientjes@google.com,  corbet@lwn.net,
-  rdunlap@infradead.org,  ilpo.jarvinen@linux.intel.com,
-  kanie@linux.alibaba.com,  ojeda@kernel.org,  aliceryhl@google.com,
-  masahiroy@kernel.org,  akpm@linux-foundation.org,  tj@kernel.org,
-  yoann.congal@smile.fr,  mmaurer@google.com,  roman.gushchin@linux.dev,
-  chenridong@huawei.com,  axboe@kernel.dk,  mark.rutland@arm.com,
-  jannh@google.com,  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
-  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
-  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
-  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
-  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
-  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
-  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
-  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
-  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
-  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
-  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
-  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
-  stuart.w.hayes@gmail.com
-Subject: Re: [RFC v2 08/16] luo: luo_files: add infrastructure for FDs
-In-Reply-To: <aDQeWT9sLNQVZKf-@kernel.org>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
-	<20250515182322.117840-9-pasha.tatashin@soleen.com>
-	<aDQeWT9sLNQVZKf-@kernel.org>
-Date: Thu, 05 Jun 2025 13:56:06 +0200
-Message-ID: <mafs07c1qtnah.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctE2cUN7"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b1396171fb1so448051a12.2;
+        Thu, 05 Jun 2025 04:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749124766; x=1749729566; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rIkbuU9MIg1PrrJpfy9RHNU8RZMR4iYh8YoeMDroNnY=;
+        b=ctE2cUN7eYgggyuuY9dR0mYRkkyoQtDzc/ss1/+RbmnLEdb+8c3Sz9EZJzeLZZnIGd
+         Z/egrUs0d1d9tLoYi+EtnEE8rk9IobYWSvrVMG0sEuFmpVLNAggXbwmKF5yTn0FDdO7v
+         gdNf70YV9EKWHxDcRoWQGK9/9Ht2/NVv9gs0dee+UWH6Djl4PhscP43MUC5GgUk7lef1
+         DJgUeC4TknyEu4U278CuEPP555SnVp/GXg/hcynk6jYDl9DLAa9nlfMyG3qbC+cK2wMK
+         7wjjW2ODmVVGQGNDFY11EODwRAWwmQluGrwPW5usuquyQJwBFWaWoGxDIOmFKI9UD9UD
+         1cOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749124766; x=1749729566;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rIkbuU9MIg1PrrJpfy9RHNU8RZMR4iYh8YoeMDroNnY=;
+        b=qTgOyi0TaDeVLiXTU+ObcjhjiOnfil26yLadJnJKfFX4v4RSEUIsOah5wjKFz3OhWi
+         IW/f1K7TjRTR+oTiOzCgf6dCF6DiheJd6Sbp9F9PRlznvL4vW+y/+OTG2s0iv65EMSy4
+         9aJXf5dnrlcAJ0NZQtEZySZ//MR6lF5dRMuUyF/yFHTlgyIzzKMjetsYypGr3i27+0HF
+         xTzvDpcPKTiFv6gTqxmWSBjXQ1HR+ZuHDvK9OJLGgrcK/VZvgu7kVtwOLLosIyk+HU54
+         1jwTTpd3MG0ler/KwHRRT17jDbzCb9TbxbTnhUR6zU8ufn/IpH4bI51M7MLQbEVvuCoP
+         tFgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAZC552IFxvjtgBv+5QumcsAWOOpDOYaMQ5ydxxn/AdoLGYVkScgcrPs8vunhBFy0U+PybR4q1b1w=@vger.kernel.org, AJvYcCXcbvTB7uB1vf77hzH2Jizc2PEF55TMxepDh0hRpln6ggIXuPs8jQJXFXFrdl14KEBNJaZuytVaMROYTgLB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4nBFZrDGCo17UAFXisVhfFsgP7X46fDEsJpArX5L1FWAl8Sgs
+	5F+EhlczpnnmO+H0zqQ7i8auyhc9iICQujmLauEcdwNnVgAOlsOZrO+/bmZaz5vo3wz9IFOulqh
+	NM9L3DOnuaF1JFz8O0BwXFNWI85wk9Ow=
+X-Gm-Gg: ASbGncurvIw/w14wnYWDyyYyWvEStv1k8ZktsnWyT4G8rDa3rZOwA4we6bZJxkG6uEj
+	LV0t8eq8JtI293Qipot9ru4oWBJMI+Me2cr4g0kt+m3BqfSeBeetVrnsHsEpPhlcMVT1s7flRmP
+	85HO1/kKh2fv1YVS+8EoSaSuqGG8wFi17qn65Z8VxNWMf55+3hg9v+EK+3VK+gYmZUZA==
+X-Google-Smtp-Source: AGHT+IHA0zIkxjv8j/we/i66FUIVeZNHaeB/3YDFUdtxUtN42ZC2+2VF94CvNDyAGoOJSXj1cjYJvbT7bjv04MFoEYc=
+X-Received: by 2002:a17:90b:2ec3:b0:311:f99e:7f57 with SMTP id
+ 98e67ed59e1d1-3130cda9edfmr7636962a91.23.1749124766305; Thu, 05 Jun 2025
+ 04:59:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+From: Sai Vishnu <saivishnu725@gmail.com>
+Date: Thu, 5 Jun 2025 17:29:13 +0530
+X-Gm-Features: AX0GCFtlRq6SQVgcsw74rHa3T5jXcqzq1xlefm4CRrThQgWxFmUF3Yarc1DIcT0
+Message-ID: <CAFttn56VFPjikxjhgds6LjphinStm_cN+7ZhAzsieT0gnBqBDQ@mail.gmail.com>
+Subject: [RFC PATCH 00/04] scripts: sphinx-pre-install: add interactive option
+To: mchehab@kernel.org
+Cc: corbet@lwn.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	skhan@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 26 2025, Mike Rapoport wrote:
+This RFC proposes adding an interactive mode to the sphinx-pre-install script
+to guide users through installing missing dependencies for setting up sphinx.
+The goal is to enhance usability by prompting users to execute distro-specific
+commands, improving the experience for developers setting up the documentation
+builds.
 
-> On Thu, May 15, 2025 at 06:23:12PM +0000, Pasha Tatashin wrote:
->> Introduce the framework within LUO to support preserving specific types
->> of file descriptors across a live update transition. This allows
->> stateful FDs (like memfds or vfio FDs used by VMs) to be recreated in
->> the new kernel.
->> 
->> Note: The core logic for iterating through the luo_files_list and
->> invoking the handler callbacks (prepare, freeze, cancel, finish)
->> within luo_do_files_*_calls, as well as managing the u64 data
->> persistence via the FDT for individual files, is currently implemented
->> as stubs in this patch. This patch sets up the registration, FDT layout,
->> and retrieval framework.
->> 
->> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->> ---
-[...]
->> diff --git a/drivers/misc/liveupdate/luo_core.c b/drivers/misc/liveupdate/luo_core.c
->> index 417e7f6bf36c..ab1d76221fe2 100644
->> --- a/drivers/misc/liveupdate/luo_core.c
->> +++ b/drivers/misc/liveupdate/luo_core.c
->> @@ -110,6 +110,10 @@ static int luo_fdt_setup(struct kho_serialization *ser)
->>  	if (ret)
->>  		goto exit_free;
->>  
->> +	ret = luo_files_fdt_setup(fdt_out);
->> +	if (ret)
->> +		goto exit_free;
->> +
->>  	ret = luo_subsystems_fdt_setup(fdt_out);
->>  	if (ret)
->>  		goto exit_free;
->
-> The duplication of files and subsystems does not look nice here and below.
-> Can't we make files to be a subsystem?
+Based on feedback from the initial RFC, this series restarts fresh to outline
+the planned approach. The feature will take 4 patches to completely implement,
+each addressing a different section of the feature.
 
-+1
+Planned patch series:
+1. Add --interactive flag and update the script's "Usage" message
+2. Implement the run_if_interactive and other helper functions
+3. Add a fallback to distro detection and verify the user's choice
+    - Why? A user running Pop!_OS can utilize hints based on Ubuntu
+     but the script will not detect and return a "Unknown distro" message
+    - Add a package manager check for each distro-specific function to
+     verify the user's choice. Avoids running harmful/unsupported commands
+4. Apply interactive mode to distro-specific hints - Integration
 
-It would also give subsystems a user.
+Please provide feedback/advice if necessary. Patches are ready and will be sent
+in 2-3 days after gathering any possible feedback.
 
-[...]
->> diff --git a/drivers/misc/liveupdate/luo_files.c b/drivers/misc/liveupdate/luo_files.c
->> new file mode 100644
->> index 000000000000..953fc40db3d7
->> --- /dev/null
->> +++ b/drivers/misc/liveupdate/luo_files.c
->> @@ -0,0 +1,563 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +/*
->> + * Copyright (c) 2025, Google LLC.
->> + * Pasha Tatashin <pasha.tatashin@soleen.com>
->> + */
->> +
->> +/**
->> + * DOC: LUO file descriptors
->> + *
->> + * LUO provides the infrastructure necessary to preserve
->> + * specific types of stateful file descriptors across a kernel live
->> + * update transition. The primary goal is to allow workloads, such as virtual
->> + * machines using vfio, memfd, or iommufd to retain access to their essential
->> + * resources without interruption after the underlying kernel is  updated.
->> + *
->> + * The framework operates based on handler registration and instance tracking:
->> + *
->> + * 1. Handler Registration: Kernel modules responsible for specific file
->> + * types (e.g., memfd, vfio) register a &struct liveupdate_filesystem
->> + * handler. This handler contains callbacks (&liveupdate_filesystem.prepare,
->> + * &liveupdate_filesystem.freeze, &liveupdate_filesystem.finish, etc.)
->> + * and a unique 'compatible' string identifying the file type.
->> + * Registration occurs via liveupdate_register_filesystem().
->
-> I wouldn't use filesystem here, as the obvious users are not really
-> filesystems. Maybe liveupdate_register_file_ops?
+Please provide feedback, especially on:
+1. Whether to merge patches 1 and 2
+    - They are both setting the starting point for the entire feature
+2. How to deal with commands in recommend_sphinx_version()
+    - Two possible routes exist to install sphinx
+    - Available options: pip/pypi or distro-specific package manager
+    - The plan is to add a prompt that asks the user to specify a number
+     1 for pip, 2 for package manager, 0 to skip
 
-+1
+Initial RFC
+RFC: https://lore.kernel.org/all/20250410155414.47114-1-saivishnu725@gmail.com/
+Feedback: https://lore.kernel.org/all/87ikn6bw34.fsf@trenco.lwn.net
 
-[...]
-
--- 
-Regards,
-Pratyush Yadav
+Thank you for the time and response!
