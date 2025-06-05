@@ -1,118 +1,173 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFDC27780C;
-	Thu,  5 Jun 2025 14:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6C6279798;
+	Thu,  5 Jun 2025 14:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749133476; cv=none; b=PGudkAwS1E7OAmO6ojj+QMjT9zPq4RlOsMrIOFLsTGXOtb/9dYVl1BXOfr2wj/a5SXQOmcU7PSokW7rAeLMd51CCDVdvTM/QMAgUKLsBWXZTMQ3HcqDo5Tju1QzRUceHzBdL6GhnS04Byb7ay4to32mtMHwnpY2sRmvhVVFCeec=
+	t=1749133480; cv=none; b=l47dzMU+rc4c98axbiQl0AfZYSFYsiTg0Eam67gScuZgWqaLSEn8NBjsGoZ/wlCLnrKhBzqm86UL01sRnC/CVZpzr/TPkYok8VVYWg+KrKs73zBNoJxcbGFmyrJl8lFMBm2z1Ho0Npuf2wZbmFavrONEr5hgvSlyQLm5M97SiE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749133476; c=relaxed/simple;
-	bh=wqeLCR+kMOGYpL8wqQ6saI2UND5qcu1eTCor5Ts+qoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aa10x+RvXjqdkCqZTopf8znX3AKROhFPut74BtLUycUO1fKpcBbVkh9HTDpqnEBzGHZIfLdlxHoqt8ynXwrEjV6R2GwAjG+ulQCnE9YKvmyRkhvfU21S+APwZotVyEz/Gr6mqAEVf1qFaovd7C7m/OkXDQrxGRn+onxq5fmwZso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jOkSzQAH; arc=none smtp.client-ip=209.85.219.178
+	s=arc-20240116; t=1749133480; c=relaxed/simple;
+	bh=G6SikWPVN+nNCnuFqQSClA7U+4/eFe6bDbTcXuJR310=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CK1QXUG7+7ZjlJaOqBFzU1M+PAmnKb72m2RXhvNJiZSQIKkZPw/EOfvCPUQ4D9FX9MZFNBycHl2fpbOj5WbaQ5DVV/BnCzqjW53GvoO6RloZwHcAITDwM8IULVa+P2oOPDapCsFAdPmqrcoOCKL0sEgR0iR2bOnKLBRNjdrwZ+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cEd8Oia2; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOkSzQAH"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e7dc89108bfso929644276.3;
-        Thu, 05 Jun 2025 07:24:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEd8Oia2"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3292aad800aso10621751fa.0;
+        Thu, 05 Jun 2025 07:24:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749133474; x=1749738274; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7KW1JY7Y7VtpEznLuWv0WBuU55G2LknK2IpQRvG4+iU=;
-        b=jOkSzQAHLCKOYWFX1GgTrxwJ+4R3QilllFFU8zePYX6+n2MYM4lle5e01dxuVqdLUW
-         FjKK0AUuokwMqbp992z1pNxHDMUeNVgjVkrW3rYjOmeqZD8AgPqmpy6Hq87buzDa1HJj
-         VJH22FKkDiUvAfhdlfU3EAK6uTdcYIEtO9Xrd4SeiQY1qKTe+7oWkAvB2dEp/g0bFkE9
-         Rtm4IeWBzjN0S5nU+1hn9q2PY8R3D32sVkJkMMYOLYMPmh8AQT+Ls0E4Q73C/wVuMVdy
-         jCfgR3TKjEDxCHX8zzYY3NYX+kUJkbwlagw3fsaGlOoAjhhOuKA7c9O3xLpPhx63qyuC
-         FfeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749133474; x=1749738274;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749133476; x=1749738276; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7KW1JY7Y7VtpEznLuWv0WBuU55G2LknK2IpQRvG4+iU=;
-        b=p5oZGKlyXMuI20Ev5ajmmo6mR3Gq2HtQr7xr8t3mMmsHybEP2wlHsvy5W1ePwAgpXg
-         4j5NdiGsnKWu+bgFStp5DSc6S2IKEd+rOEDXy7Wv7WQwdM5UP3Jkcen7jnEKxn+F4vFR
-         LRfYoWFzZgXeav+j8ZTp9QVyINauDiUNzFfujHu+h9ECWYqaP0Vj1LyaOQzxabiieJPe
-         GJRyE7ie7yPoSyLKXJLQjlYSCYYBg2lZb2nMPk+0xxYfSWKZSlM7JNeF2g2zq6t/xfqO
-         M7cOWhaeXe5NPe6PasSsyPwOOMLNq0Fpo9n/xGjmrZyIQI4Oyuv8MP0Z5WX/jrdQT790
-         +Z1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVMqsQl6pVdY3VIb+bg6EZw2DxskEr3L4QAMucElUrlrcUTZi5A21iaEF/uDaZ6HX8xne0XFgo7tJGUG30=@vger.kernel.org, AJvYcCXeFQRHq2UqgXCNzHXgIfYd7a3mfP4Tt8K47flsXP0kWS8+8WfWB4tQc0GauYKJ6fM3Qof2YyR8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEgiaKAEpQyXjEPT+dTgLftrMlqGDuoEgR67HFsbLcdAgy6WZu
-	/bsk+R5ZYEdSp0QTQMcHkvksyEySZxj2aEfoght1dJLcE6+DGy7wFRByxg3w1Q==
-X-Gm-Gg: ASbGncvKa+yj+SJsKewy9mZRqJjdV30zxAGO4ipALZuJi2HLoLQyQirgwT+YYKCE6ky
-	Y7YuQ59h0AsHWHfpXbYQnAOcbPNBIemZ6ShSotqRUIAXC8ofmlXn8CAkoqKLHdPaloXa0aKkoZ/
-	GFHlCW9WAf+cKZft877ABWkLOOzrN5v4ilrtgSLMkL3ihMp2EvvttXfo4dDfaNGNHszOftAf1h0
-	ydQ3HcqNY88iVag6pR3J0B0UnSc5GWyUnU9dQn3JR2k+pfDGomk7id/znljKB+sVEQd1h6h/keF
-	lOafKWdbJ1i8X5BtSU3E5i3dGAxgTZ5AHxtk+jtLp1LilvAxBEhi92a2D0a6gevDiwcd+sgYKwx
-	LcEcWtfpuzy0=
-X-Google-Smtp-Source: AGHT+IGBlYgBpeRt9dQT+JeRalTDoWgn5PgI4JSFuOaHgqh8y6M/jDBUxrrdm73Fqvze9M5qDbxjCg==
-X-Received: by 2002:a05:6902:2511:b0:e81:868c:5b with SMTP id 3f1490d57ef6-e81868c04dcmr6518839276.31.1749133473613;
-        Thu, 05 Jun 2025 07:24:33 -0700 (PDT)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e819ef076a8sm94086276.54.2025.06.05.07.24.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 07:24:33 -0700 (PDT)
-Date: Thu, 5 Jun 2025 10:24:32 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	wireguard@lists.zx2c4.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wireguard/queueing: simplify wg_cpumask_next_online()
-Message-ID: <aEGooNws-KihCuWh@yury>
-References: <20250604233656.41896-1-yury.norov@gmail.com>
- <aEEbwQzSoVQAPqLq@yury>
- <aEGAfy80UcB_UMYs@zx2c4.com>
+        bh=FWrNnSRHAlUi7PefYVVS1cpe8fmIghTBMM3bYq3hKps=;
+        b=cEd8Oia2qD0Nspw5o+kzQZ/FoLC1XWatG02tkDpD6jmP5dSfLpRscBa5NgcRA7ZxZq
+         4pAPYwrUY0txOJN+xW5BO8Jq64Gx3Lll7WM1z2LY1srqSCDQWbEB+Af9UGn6RvuDVOkM
+         JVYKo5R3l36+dDmTMsYbvzl2JJpr2Hb4zXGHuxPRt/v2ZZMyUsdlOnEq1aIhMUQx3INt
+         0txW4kGwznEM2GDZQQmoNbP52F/0UTDz6LTPBhhFkIOZzxioL9v7X7rbCZGG0LS/PoT6
+         w2V/HvaYed3ftOziCwMiImVedyTpRoH7QLh3t6aZJ43fpiQNfoKwPU5/Cs76IzfGks/1
+         eUQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749133476; x=1749738276;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FWrNnSRHAlUi7PefYVVS1cpe8fmIghTBMM3bYq3hKps=;
+        b=Rpifenc3XrkF7OgKHJ3RVWTMxsncl0rHffKEy/Db6jc0TJz3iu3Uh0VHCZ1hbTidUz
+         L1EItQH/SQZAGuHMEVAQ7DuuyQ7aiRx3MuOKLDxKnueUWkmkpBeT7ADIBWc41KvODHcg
+         ijF/2VhycrAEt/7lf/UY1vjPLoIYJcoxM/zCvoNEc2UZZjEfapV559SoCPSKIST/nunL
+         uhfEdl82sBKftmQJ5Cb69pIxC9955Gf6v21K5U5tFjCupbqzcuk+EW2lWK/NxX2SEJME
+         r6+OwRQ3830FIHxhs8g3Blp262+d2gSv1o+k2ZXxKS4yWtSwkwwPXZol33asf958ZYg1
+         DbHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULN3lZj6lY4hJfndQ3mz9tjrG+DJydtpwFLYvKDFuOCyeo05XwarX+sNbPiiH05kEgg/JSlzDOZpdyEd8pXg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6LilON8AXW87d7SjCfqhjG4Q/2Q169Oy9HsgTJfWCfx28eZ5q
+	9yYbI2eRvvwazEcCYbFPIVCkU8nYKDxcBksG7ITNykkggabS2g5sZ2gY9rfu/GBrIejl7oKhET9
+	XubpEWnsbAFNMWqqWW5duDmlBOebPKIA=
+X-Gm-Gg: ASbGncvwDWSUXgbYt1POP0LRLH3SJnx8g3IdwnEbdXmeI0ojzaoJOrtxmrk3vepgYZy
+	lB6I8Qft75UVL3CDyy5faDFocMedI714RLrMELTz8pKpX2/fOrTyTtnld55zPi2hOCI1sjt/srK
+	tKWcybvnFloUy3WBv+iUkPVI+A8uzubSY=
+X-Google-Smtp-Source: AGHT+IF9munhCdQhh9vF4PCSa8O8tJPf3Bvk29RZUnUbBLX74gfe2ztpUonEWpTBRmmwr0Wbjg3phl3Pt2xqT08fOtc=
+X-Received: by 2002:a05:651c:2211:b0:329:136e:300f with SMTP id
+ 38308e7fff4ca-32ad131055emr11752111fa.13.1749133475737; Thu, 05 Jun 2025
+ 07:24:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEGAfy80UcB_UMYs@zx2c4.com>
+References: <CADiockAtCnLdN1rWTRuMeyuQisAWRyosG_K64AQSdVr-k7CLug@mail.gmail.com>
+ <aED3gmw0xqm_lMRQ@archie.me>
+In-Reply-To: <aED3gmw0xqm_lMRQ@archie.me>
+From: Alex Davis <alex47794@gmail.com>
+Date: Thu, 5 Jun 2025 10:24:24 -0400
+X-Gm-Features: AX0GCFswxPLHD_JTUy203jIJcOyB8Cf8muljbOHh7M-YrY30YvXzp56fZAEMJCM
+Message-ID: <CADiockCOpPuWxYB6-Rz30vcZhXDFK8ruD9ozDSg5BS4ncmtR8A@mail.gmail.com>
+Subject: Re: Latest kernel firmware update breaks intel wifi card.
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Wireless <linux-wireless@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 05, 2025 at 01:33:19PM +0200, Jason A. Donenfeld wrote:
-> On Thu, Jun 05, 2025 at 12:23:29AM -0400, Yury Norov wrote:
-> > On Wed, Jun 04, 2025 at 07:36:55PM -0400, Yury Norov wrote:
-> > > wg_cpumask_choose_online() opencodes cpumask_nth(). Use it and make the
-> > > function significantly simpler. While there, fix opencoded cpu_online()
-> > > too. 
-> > > 
-> > > Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> > > ---
-> > >  drivers/net/wireguard/queueing.h | 14 ++++----------
-> > >  1 file changed, 4 insertions(+), 10 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/wireguard/queueing.h b/drivers/net/wireguard/queueing.h
-> > > index 7eb76724b3ed..3bfe16f71af0 100644
-> > > --- a/drivers/net/wireguard/queueing.h
-> > > +++ b/drivers/net/wireguard/queueing.h
-> > > @@ -104,17 +104,11 @@ static inline void wg_reset_packet(struct sk_buff *skb, bool encapsulating)
-> > >  
-> > >  static inline int wg_cpumask_choose_online(int *stored_cpu, unsigned int id)
-> > >  {
-> > > -	unsigned int cpu = *stored_cpu, cpu_index, i;
-> > > +	if (likely(*stored_cpu < nr_cpu_ids && cpu_online(*stored_cpu)))
-> > > +		return cpu;
-> > 
-> > Oops... This should be 
-> >                 return *stored_cpu;
-> 
-> Maybe it's best to structure the function something like:
-> 
-> unsigned int cpu = *stored_cpu;
-> if (unlikely(cpu >= nr_cpu_ids || !cpu_online(cpu))) {
-> 	cpu = *stored_cpu = cpumask_nth(id % num_online_cpus(),	cpu_online_mask);
-> return cpu;
+The working version is commit id 3fbaee2; the non-working version is
+commit id 167118c
 
-If you prefer. I'll send v2 shortly
+On Wed, Jun 4, 2025 at 9:48=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.com>=
+ wrote:
+>
+> [also Cc: iwlwifi folks]
+>
+> On Wed, Jun 04, 2025 at 05:20:31PM -0400, Alex Davis wrote:
+> > I have the following card:
+> > 2f:00.0 Network controller: Intel Corporation Wi-Fi 7(802.11be)
+> > AX1775*/AX1790*/BE20*/BE401/BE1750* 2x2 (rev 1a)
+> >     Subsystem: Intel Corporation BE200 320MHz [Gale Peak]
+> >     Flags: bus master, fast devsel, latency 0, IRQ 19, IOMMU group 16
+> >     Memory at aa800000 (64-bit, non-prefetchable) [size=3D16K]
+> >     Capabilities: [40] Power Management version 3
+> >     Capabilities: [50] MSI: Enable- Count=3D1/1 Maskable- 64bit+
+> >     Capabilities: [70] Express Endpoint, IntMsgNum 0
+> >     Capabilities: [b0] MSI-X: Enable+ Count=3D32 Masked-
+> >     Capabilities: [100] Advanced Error Reporting
+> >     Capabilities: [148] Secondary PCI Express
+> >     Capabilities: [158] Physical Layer 16.0 GT/s <?>
+> >     Capabilities: [17c] Lane Margining at the Receiver
+> >     Capabilities: [188] Latency Tolerance Reporting
+> >     Capabilities: [190] L1 PM Substates
+> >     Capabilities: [1a0] Vendor Specific Information: ID=3D0002 Rev=3D4 =
+Len=3D100 <?>
+> >     Capabilities: [2a0] Data Link Feature <?>
+> >     Capabilities: [2ac] Precision Time Measurement
+> >     Capabilities: [2b8] Vendor Specific Information: ID=3D0003 Rev=3D1 =
+Len=3D054 <?>
+> >     Capabilities: [500] Vendor Specific Information: ID=3D0023 Rev=3D1 =
+Len=3D010 <?>
+> >     Kernel driver in use: iwlwifi
+> >
+> > With the current firmware, I get the following error in dmesg:
+> > iwlwifi 0000:2f:00.0: Detected crf-id 0x2001910, cnv-id 0x2001910 wfpm
+> > id 0x80000000
+> > iwlwifi 0000:2f:00.0: PCI dev 272b/00f4, rev=3D0x472, rfid=3D0x112200
+> > iwlwifi 0000:2f:00.0: Detected Intel(R) Wi-Fi 7 BE200 320MHz
+> > iwlwifi 0000:2f:00.0: Direct firmware load for
+> > iwlwifi-gl-c0-fm-c0-93.ucode failed with error -2
+> > iwlwifi 0000:2f:00.0: TLV_FW_FSEQ_VERSION: FSEQ Version: 0.182.4.1
+> > iwlwifi 0000:2f:00.0: loaded firmware version 92.67ce4588.0
+> > gl-c0-fm-c0-92.ucode op_mode iwlmvm
+> > iwlwifi 0000:2f:00.0: Detected RF FM, rfid=3D0x112200
+> > iwlwifi 0000:2f:00.0: loaded PNVM version 71864399
+> > iwlwifi 0000:2f:00.0: Microcode SW error detected. Restarting 0x0.
+> > iwlwifi 0000:2f:00.0: Start IWL Error Log Dump:
+> > iwlwifi 0000:2f:00.0: Transport status: 0x0000004A, valid: 6
+> > iwlwifi 0000:2f:00.0: Loaded firmware version: 92.67ce4588.0
+> > gl-c0-fm-c0-92.ucode
+> > iwlwifi 0000:2f:00.0: 0x00000071 | NMI_INTERRUPT_UMAC_FATAL
+> > iwlwifi 0000:2f:00.0: 0x000002F0 | trm_hw_status0
+> > iwlwifi 0000:2f:00.0: 0x00000000 | trm_hw_status1
+> > iwlwifi 0000:2f:00.0: 0x002C43D6 | branchlink2
+> > iwlwifi 0000:2f:00.0: 0x002B89BE | interruptlink1
+> > iwlwifi 0000:2f:00.0: 0x002B89BE | interruptlink2
+> > iwlwifi 0000:2f:00.0: 0x00015ADA | data1
+> > iwlwifi 0000:2f:00.0: 0x00000010 | data2
+> > iwlwifi 0000:2f:00.0: 0x00000000 | data3
+> > iwlwifi 0000:2f:00.0: 0x00000000 | beacon time
+> > iwlwifi 0000:2f:00.0: 0x0001A67A | tsf low
+> > iwlwifi 0000:2f:00.0: 0x00000000 | tsf hi
+> > iwlwifi 0000:2f:00.0: 0x00000000 | time gp1
+> > iwlwifi 0000:2f:00.0: 0x00046F7B | time gp2
+> > iwlwifi 0000:2f:00.0: 0x00000001 | uCode revision type
+> > iwlwifi 0000:2f:00.0: 0x0000005C | uCode version major
+> > iwlwifi 0000:2f:00.0: 0x67CE4588 | uCode version minor
+> > iwlwifi 0000:2f:00.0: 0x00000472 | hw version
+> > iwlwifi 0000:2f:00.0: 0x58C80002 | board version
+> > iwlwifi 0000:2f:00.0: 0x800CFD1B | hcmd
+> > iwlwifi 0000:2f:00.0: 0x00020000 | isr0
+> > iwlwifi 0000:2f:00.0: 0x20000000 | isr1
+> > iwlwifi 0000:2f:00.0: 0x48F00002 | isr2
+> > iwlwifi 0000:2f:00.0: 0x00C0001C | isr3
+> > iwlwifi 0000:2f:00.0: 0x02000000 | isr4
+> > iwlwifi 0000:2f:00.0: 0x00000000 | last cmd Id
+> > iwlwifi 0000:2f:00.0: 0x00015ADA | wait_event
+> > iwlwifi 0000:2f:00.0: 0x10000004 | l2p_control
+> > iwlwifi 0000:2f:00.0: 0x00000000 | l2p_duration
+> > iwlwifi 0000:2f:00.0: 0x00000000 | l2p_mhvalid
+> > iwlwifi 0000:2f:00.0: 0x00000000 | l2p_addr_match
+> > iwlwifi 0000:2f:00.0: 0x0000000B | lmpm_pmg_sel
+> > iwlwifi 0000:2f:00.0: 0x00000000 | timestamp
+> > iwlwifi 0000:2f:00.0: 0x00000024 | flow_handler
+> >
+> > When I use the file iwlwifi-gl-c0-fm-c0.pnvm from the previous
+> > version, it works. I'm running kernel 6.12.30 in Slackware current
+>
+> What firmware versions?
+>
+> Confused...
+>
+> --
+> An old man doll... just what I always wanted! - Clara
