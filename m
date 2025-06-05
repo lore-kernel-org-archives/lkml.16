@@ -1,122 +1,133 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1740415746F;
-	Thu,  5 Jun 2025 14:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7E62C324C;
+	Thu,  5 Jun 2025 14:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749135322; cv=none; b=ApyjGp2FW3epAy1IoFkWPKltqF0lvGRp1HjH0I47CU+hWYG2QZnQqVmcSMtoIdm5+SKIAbjpHB+X2ObqVa+DsqwPRQQ4BdWRKTTB9pCJuHjd1s5JEfPTutAYQouhG90gV1NfMra0wGDKsYW7F2XILhgya7z86OU2Vlw8OVuQxxY=
+	t=1749135338; cv=none; b=JVXyaTKZCitU84BuZm+OFgc51Wd4yz5ZqNt+qKxI53hq4zpn33JsPAbWz7wvooix8S3Xlf+xy7B34mgjuz+EYEIWMrFocrjTMgqm2iKXhHtqaZxetfYk3MO4i3Nnt8qToGxLbqU5gRVs0jb3z62YSo+rhIc9h3GgdvohmbTPJ8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749135322; c=relaxed/simple;
-	bh=p0T6YklgVc/kE7J3KrEpxvJGi7M9mrfxVk2al7JemAE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MybjXOIrh6PHYr16a3p9A86rY+WqDBOsWInswrVhqJg49mhLcWHmLb1TyXTzISNkAtD1RORPC7iN3XaLpz5uTnQ2Zo+qnF6XdlH8+axsjKqWqCE2SoxeB9oumNv014IUV6WdMAl1OA+WXeocwVTQcUHPDJtfz8NzW7DCikb1Kjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GVDE04oH; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749135338; c=relaxed/simple;
+	bh=9cZHR0UR0AtY4B2b908smxj28pEOo7Yf1Vgakmevv4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XViKhBl3tl/AlpBITXtcq/4dFYXrVVelhvgnkZSG7OkRPQxfCB17SCHOdCJGnXp3d5GbqX2vbUFy82pMnqDwv41dMXDtnb8hPTMCyAHmNZYrfAkgO6W56qWu3AJWLsVrxltwJh2ocNHoA8yJXff26RMl3ac3L3+U8ZorPbhtzcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jncFLnTr; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GVDE04oH"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5557HZMJ023831;
-	Thu, 5 Jun 2025 14:55:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=p0T6Yk
-	lgVc/kE7J3KrEpxvJGi7M9mrfxVk2al7JemAE=; b=GVDE04oHO+Aqj9r4AsvLj6
-	OeyOJhNsHFM+5YHGpmU1A3PM0g/Zd2pnqCO1Wd4zkU9kExs7GlJ6G1fCF7So7ida
-	YVa4JnQxXNdEdKwK1X9A63a9X7lbAnd81tv44pEVRlXCD5V/iQ8H/KkLYkfMRVwP
-	W7ZFzSCXf85untp3wkHSO/q3vocuHaG01ovvQZBcagTTNzwNeTFTPczBd5AdWavs
-	b30fz3Q8WK5dR1KXemAwHf2Va3lSl/B/nrNQtE9tl9KRTwqAfmarvKVyYlH9RJJM
-	PrDjZ4jRD/lcknWMKgOHGCbFuvn2m92jZXV75PRf+HChr0VlYpUP9YY+uUnznQDw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gf01d31-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 14:55:15 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 555EtEWQ032175;
-	Thu, 5 Jun 2025 14:55:14 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gf01d2w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 14:55:14 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 555DPqMa024899;
-	Thu, 5 Jun 2025 14:55:13 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 470dkmn3k7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 14:55:13 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 555EtBYE45220144
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 5 Jun 2025 14:55:11 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5116C20043;
-	Thu,  5 Jun 2025 14:55:11 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2C51520040;
-	Thu,  5 Jun 2025 14:55:09 +0000 (GMT)
-Received: from [9.124.213.71] (unknown [9.124.213.71])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  5 Jun 2025 14:55:08 +0000 (GMT)
-Message-ID: <9cf8f840-ff3f-4978-a454-9f2bba28c763@linux.ibm.com>
-Date: Thu, 5 Jun 2025 20:25:07 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jncFLnTr"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231e98e46c0so10550235ad.3;
+        Thu, 05 Jun 2025 07:55:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749135336; x=1749740136; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=COOVN/2kU9VyocOPfGmhspc1kH4NR3Ob5i1C6qOFT+g=;
+        b=jncFLnTrNhXDZlWY8cnpZaFZV1AebyDXEN3gpYA4dKhqq+69f9FPVhSXzhpx3uMfv/
+         bzwTL1pLxYsQgglS5eBxTseB3Uf5exulAp+tJiQMG3kLee91NLyfhZH/jeOMeW9slLqz
+         JJeeUBzR1K1NAnOREzhJD7IrZ4yhVop9A5KZnEzqigM/QA4Bka+Mac7b0pqldKUzj6T0
+         MUH/M1Kfe5SVP62QxpfBQaMCS7JPoDSmeTa4xkLsOVuFfEVymFgeevdMv6igisKJa2HS
+         luGxN6YxJMCZZlg3ibsnkq/t/Bd08FYyYGuDngrxU0HLXtXa5UXP9pyrKLP1OjLwGs4P
+         YjcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749135336; x=1749740136;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=COOVN/2kU9VyocOPfGmhspc1kH4NR3Ob5i1C6qOFT+g=;
+        b=JofXv7iaC72qdkZubCklAwf9ERQxkuGFqdz2ZzFDYXLF/3qXEyPJK8lUlhJjZ67N9L
+         j6AeqPCOpJcadw8UIG3ZqYA9ij5YeaoqQHeXo0aoaizBCDcFMrXEzI1eWiclOPWbN0TP
+         On2963yhy1TFcXWPxOTi8tTjPvKsqu9w96JBa/NumxvRlkIrDvIHiG2QaAx69QIf3gMR
+         QhNENXqFViH1abqfji/Te4EL2YrJY1K/ozpRbtO0a2FAuktpLNE0cHH8J7NGhHxY4HK8
+         nVeUT1AmyCnfq30bsQSylMzi2ncuxh/4faL9kqrP+w5CeO3BxSDxsR2I/bJ7pgRqh2yb
+         6o7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWe/E9O3ZdT7O5pfylsx3hAjMyi9MmZoTQV87BG77HF5BtGPQh4lb3yvQZTI19kKxM1IjGstvSG@vger.kernel.org, AJvYcCWzyx3e5BNcvLjC1U0ucVuOon9iQq2RouMlV3l83VCC3OUcDcjAQe1Oc5LiBarukG3Mngw=@vger.kernel.org, AJvYcCXVmswRzqSrA/x2XKDDXA/WO6djy0A//OTup7mPCdfl84N4HKs36J3fQwSJYfx3AA1rB5xK4JY1YX7IS7dw7CPS@vger.kernel.org, AJvYcCXcVtWqsyP5XjrO5l9idl1dN8B9gnF9nqIieOYFDeT96GZ9C9vnCcOgghN1J0S2/sX6fDlx0EeY5941/rCj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0muR7ZqeY3UFkrr9Q9ub4I5vdZlshjeZe/nBK4BECk3JadYlv
+	YxVz2UUQYO87z+Rk2EUG+ajAtdMq6f8RfwYiq5mEhqC9itfC4gm7dA1o
+X-Gm-Gg: ASbGnctjFdEaJUiNmestJ+ENTBMOFDMEHFlLu4FfFnkK6kaZMnxb5I8IbvfBeViqny8
+	WuMZXIh58Mq/7WWp7lt1mBe/MqCA97KEb2Gq4t92t7avt3Nvn2x1nAvLq5DhwD/NKiU4Kl+6J49
+	Pl+KATlptB1dh0JBjaK5SdFd4VXp6sgHcv04IecyIyAX+bYBH3nM4W1EQ7lx4F9FJ3L3pSd83ct
+	yXw8R18dqujzQDJOfTobIV4wAPvBHfQGAYuvSjZKI4o+JGlr2vthOdvBt0o/ALAfePGMyK3xt6Q
+	fdveVTauVAADjHCku2kUK1DO1bjhoLeunZZbV56GDytTebaHtzKhVowXo8g/cA==
+X-Google-Smtp-Source: AGHT+IEjdviQxVCCEwlyGzpI/wq2drQDCMCyyBvG5XqgSZkx4Z1pIi+SDjUcETxQ8pGPSokV/7UJBA==
+X-Received: by 2002:a17:903:3b47:b0:235:eb8d:800b with SMTP id d9443c01a7336-235eb8d82dbmr52447465ad.26.1749135335203;
+        Thu, 05 Jun 2025 07:55:35 -0700 (PDT)
+Received: from gmail.com ([98.97.41.44])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd9486sm120154115ad.67.2025.06.05.07.55.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 07:55:34 -0700 (PDT)
+Date: Thu, 5 Jun 2025 07:55:29 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>, bpf@vger.kernel.org,
+	Boris Pismenny <borisp@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, Ihor Solodrai <isolodrai@meta.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1 1/2] bpf,ktls: Fix data corruption when using
+ bpf_msg_pop_data() in ktls
+Message-ID: <20250605145529.3q3aqr6iygpa6xg6@gmail.com>
+References: <20250523131915.19349-1-jiayuan.chen@linux.dev>
+ <20250523131915.19349-2-jiayuan.chen@linux.dev>
+ <aDika2FRd4n+VRmZ@pop-os.localdomain>
+ <d99805aaeadd9cd041c9048801084648832a6da1@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: cgroup: add section explaining controller
- availability
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bagasdotme@gmail.com, llong@redhat.com
-References: <20250604054352.76641-2-vishalc@linux.ibm.com>
- <mzki6zhrnxdvuqgu56rztrkw473u2r4uqt5mu3t3nv2afyhaub@4qneqmlxgwog>
-Content-Language: en-US, en-IN
-From: Vishal Chourasia <vishalc@linux.ibm.com>
-In-Reply-To: <mzki6zhrnxdvuqgu56rztrkw473u2r4uqt5mu3t3nv2afyhaub@4qneqmlxgwog>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Pq2TbxM3 c=1 sm=1 tr=0 ts=6841afd3 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=GxmAIsd5OcVHd3j8ewQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDEyNSBTYWx0ZWRfX0ceUVp5Pc7CD Ufya8y2QyGeGhLdJ4N/fVahHIC/UMkGanajrXI8QpUVXtsguVGS7NarUk2IanQjYPWMAE+SkzGg HSWqMtpSacnl/Uw3ks33AwnSdF4DCxNCFJ86JMt2abu0hHSnStW/LWLf4QMvTh5H4PNPSaOTTmt
- MytnECdeAunIlEAvlpmaKyWLm90om6s2G6sigdbCfcpTcENB7An0GJVR3kKeySvwcoMz8ZliIBs E6PaXUyL1etee/JTeWj6rOeOzA+oNqJyHi+BOpdYJFNrBEpbp5FLWNlu7d3o5YLXJL/ceQk/uyd u0caMyTwduv4eny98mf8V/7ikNYilTpITBcsdXxpyQo1C01V1OpoT7kVdTW+u6JPigKB2vyXRUt
- IRZS9AKClInfiOberTx2m+bapYRnh2p/4FnJ5yQOSz7JqHhrSSPnqtBwZGCfu4zH2xNs+UoV
-X-Proofpoint-GUID: LMrcLdyAHaGgPgMDpd8JoeeMvrlp64Ll
-X-Proofpoint-ORIG-GUID: OnE3_pgoGwbZ84Kiv2IEI_khJbzI1N8P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_03,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=886
- phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 priorityscore=1501
- mlxscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506050125
+In-Reply-To: <d99805aaeadd9cd041c9048801084648832a6da1@linux.dev>
 
-On 05/06/25 15:15, Michal Koutný wrote:
-> On Wed, Jun 04, 2025 at 11:13:53AM +0530, Vishal Chourasia <vishalc@linux.ibm.com> wrote:
->> +Availablity
->> +~~~~~~~~~~~
->> +
->> +A controller is available in a cgroup when it is supported by the kernel and
-> +A controller is available in a cgroup when it is supported by the
-> +kernel (compiled, not disabled and not attached to a v1 hierarchy) and
->
-> Maybe this point about v1 exclusion. But altogether this section as
-> drafted looks sensible to me.
+On 2025-06-02 11:04:50, Jiayuan Chen wrote:
+> 2025/5/30 02:16, "Cong Wang" <xiyou.wangcong@gmail.com> 写到:
+> 
+> > 
+> > On Fri, May 23, 2025 at 09:18:58PM +0800, Jiayuan Chen wrote:
+> > 
 
-I will add this.
+[...]
 
-Thanks,
-Vishal
+> > 
+> > I am wondering if we need to WARN here? Because the code below this
+> > 
+> > handles it gracefully:
+> > 
+> 
+> Hi Cong
+> 
+> The ctx->open_rec is freed after a TLS record is processed (regardless
+> of whether the redirect check passes or triggers a redirect).
+> The 'if (rec)' check in the subsequent code you print is indeed designed
+> to handle the expected lifecycle state of open_rec.
+> 
+> But the code path I modified should never see a NULL open_rec under normal
+> operation As this is a bug fix, I need to ensure the fix itself doesn't
+> create new issues. 
+> 
+> Thanks.
 
->
-> Thanks,
-> Michal
+If we never see the NULL lets just drop the WARN. In general we prefer
+not to scatter warns everywhere.
+
+Can you resubmit without it?
+
+Thanks!
+John
