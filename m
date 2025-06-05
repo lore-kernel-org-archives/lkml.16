@@ -1,177 +1,156 @@
-Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00364e01.pphosted.com (mx0a-00364e01.pphosted.com [148.163.135.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC10E1FFC74
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6BA1FFC74
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749158151; cv=none; b=ZHjCdFFQeY06R805qEn03oYkPqiBLZ/VTZJINjg4OIVrhdzVAxVq333vA7ypNuD8BX99qBcuTwmK/Zk07xsgIoVMFEcoOs+KvpmNYGxMkFG1kGGKyXWi3WG2QibhH3wT/O1WrsG3McCMqvcDEZc7cxa3nC5hjba5Swe1BTbmiAA=
+	t=1749158163; cv=none; b=i4lmFWXo5wvF3szunWyidqP8VZO0O56oc6BLBIVhR7bxusV8ieoXFj0Y7YBDVPs701IrC7/Zc6TVcO6k25O4sIW5kJ/WwpAYnwQMzJXo4VcisivzwuMWl2uKeZLYHQ0zLkn+OnnvsnrrcYzQ78B2vyFOKFK30L+JLFi8ljB8NmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749158151; c=relaxed/simple;
-	bh=6HjkeaWthINU5HcCHrCcRlHjiO0Vi8/7MMZ5Nn6LK/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=btEQbQAhdbL7vIQECRI1JZncVpSuW6cqYMQKBOyP2kC/Ve1rBQwivfCDTQzMIkKm6UYf1CA3rL+4FwaMb5H2S1UtvO7HvmmhH4rSSmj0mDD0U8+LX/ajZk7MeLKFcWguYKpKp3PzgBqgaI3wZBC0Z/K8fAwj81IssKSHjI8Fl5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=iFJFLW03; arc=none smtp.client-ip=209.85.215.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1749158163; c=relaxed/simple;
+	bh=deJ8ujgYVXOLDRzPlJGjcrFyGqlX+2qP5XJVIPJC13c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aac8sUZKp0FXfnGbg4XFULY2n1J/24t6m3NOnDrfbfFkHRT6B/CGSZaXV7D57MBEz+BBqZ8sYPDYx7LeqiuA3T2EWowINoeIgh73dp2xrBT6g7d/hClmRdBRrbbdHleX6ZEpzCgGV8fuwo5HE38e+8t8q+vGVMkFp6yriBM7GbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=nlIddnrB; arc=none smtp.client-ip=148.163.135.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="iFJFLW03"
-Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-b1fd59851baso843030a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 14:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1749158149; x=1749762949; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=n4S19kvQPTgsV4nv+XvYaG+Ak9HdIxhdbirqQIiEN6Y=;
-        b=iFJFLW037sSL2ZEWEK3OBS60rdUudUGLII3hGOykNjNYCvvR+wtBVMuxsoVBLcl4aQ
-         bo0xlE1IICkKzH0tKWjYtBZevLXHaDPQMadMiEJYXuh+F0CfZJ82rq0XLFf8/du5DDW2
-         m8zq4ym8pSjAXIyfCWqs12Q9Lf5XKsbH9BKHI=
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="nlIddnrB"
+Received: from pps.filterd (m0167069.ppops.net [127.0.0.1])
+	by mx0a-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555L4tw1008045
+	for <linux-kernel@vger.kernel.org>; Thu, 5 Jun 2025 17:16:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pps01;
+ bh=kYNh9HFT2uHBGBuTCKgX10WS8SJF8NGZEUcVRDSxRuQ=;
+ b=nlIddnrBHoiqBQUxB3TXUWD9X49XJOdQ8+6EFQ5EkkzQBJ3Ia4xkx6p3xxL6htuwx2k2
+ MilhN28kQAe1lMta4lgEf62GFMpuusvSIwB8OX959Du/kJ+7/9/udrZ+bsChklShmuvE
+ R6UQOtySiL0jiZJxeEY+djwK81qUIFPntG2IP2HS3Y+jmPWute/Mc4Kr+ppfCYyQ0ctV
+ fweOOaMHrYGDfqtcfq0Eh/KCeG4NoXFx7TLozSakYOPqBMRwehriUz0O/bdX9vPVsFig
+ UnJ2V+4rnw+qKv6oYuaVKhdQY/eaEHZbO5kt0JyKfAxzbgH7oyDkFEFwxTRogKMnbpcm 8A== 
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com [209.85.128.199])
+	by mx0a-00364e01.pphosted.com (PPS) with ESMTPS id 471ethd1cr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 17:16:01 -0400
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70e649662deso20058987b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 14:16:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749158149; x=1749762949;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n4S19kvQPTgsV4nv+XvYaG+Ak9HdIxhdbirqQIiEN6Y=;
-        b=BReRLM8yqGaIOrxeFxIJhdsXNGQ48KcZi3y75HwzLYeq/cfkV4fHZ20upHQDBcpWZB
-         pHaGT/uBbDMx96b8/z6xkeJOq6AR3DJtKFvMwpZ8UH92I5Y39S60RWlXjJHzmraxgwl4
-         c3YT4aO4zp9JKlIvfdXfMFAk/E5eAVFUAZ7HHY250NjVUNrU7gb30cQd96EFjdf/uPlQ
-         VMhwVLR1fYKyFyFEmpR67MfOnFWUhceeG98H7YtzvlPqaUKbTUCSUiiMq1KekzjunR+G
-         WI4iN0QuKUWLrHCKC3bCGolXdoF0mBtPfr4+vo4PWr5f+ZI4/gsIZb2bf2vUk3kUyqSP
-         C10A==
-X-Gm-Message-State: AOJu0YyQRC17f/iTDcpVjWyQSdKjk6fiAQwYEaBg9UFe3tjMHBtkuuaS
-	wxKOxCrsKtUOu7xtvpAFm+FqwnWd/to/Id8T0H914Y5IWe7woY948c4nvFBzgpaD9yKxyGRNTGQ
-	fQPtdt7sMn3E=
-X-Gm-Gg: ASbGncuyQhoskQJPSJo5BmXpJLRjzEb0GdnM61jarAypf+i/Le83vRdGbQcVcXlz4IL
-	NfJWT4JjhEHkKwO2e53iBbhhKg8L1kdAkk5oU2/C+rjVHci/aehLI8epxOCq+kt2+JykCUo0oTD
-	JtPNmtobuDZssK6Kv/0vQPzgQnMbq8t56dcNJwfYZ8MDzG5BFyElGOXyKyivUrBObnmNDGWlQor
-	L9X/Vzv3H5gt87hmCa2fOZp/Kc0yjGi3SsfJsQLUQQT3B3BblduJaXntfi9qGBoTUDAKglc4e3W
-	OY3ZZQlD7ML2H3JaXGyoxfzcI8HTtxFNodAekQgS/rIjUb6tEZCLrahCLysBDQzqlmZFNwA+CAu
-	TolITXj1t35prwRoofl+dc7/MpQ==
-X-Google-Smtp-Source: AGHT+IFvheyXX9YWNnObK37zZQL3qKzOZ4htPgE+mvHDHQudg3DGxXMZG4UMivdjw61rVrUdSmiMZg==
-X-Received: by 2002:a17:90a:d64e:b0:313:2754:5910 with SMTP id 98e67ed59e1d1-31346b46defmr1808720a91.15.1749158149085;
-        Thu, 05 Jun 2025 14:15:49 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349fdf554sm188351a91.35.2025.06.05.14.15.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 14:15:48 -0700 (PDT)
-Message-ID: <52fb02f0-eef5-4bce-822e-140eb8769cd0@broadcom.com>
-Date: Thu, 5 Jun 2025 14:15:46 -0700
+        d=1e100.net; s=20230601; t=1749158160; x=1749762960;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kYNh9HFT2uHBGBuTCKgX10WS8SJF8NGZEUcVRDSxRuQ=;
+        b=BoXq7Mdbpm721HYmS3Rel2m5oXsjj8q2nqkPfzuI28keAJ4ry5yMw0HJm5yxadcDeU
+         TwEo2o8vUxVXK6v1jFTL/UxpXm6A78pYPsheXVsiRbO6lSGx9OB8oT/AhvYBqDCFPuhB
+         PoMXnAdJ8sFH4xJGR1zrftTUlI+0ewAemKdAs51mDU5R6jB+a7Pp10LmOrCafI7t1Zot
+         yHTQG0I0Y6UTZV3FgQcbOuU3kObk2oRH1EMbKRBQ4eRbA439IDfPExmYA8m+gTPFbjbN
+         RA0btHgdqj+8og8g9bvSxGi0P1AN4KmSlvIg/Gte5JPic5mPxXDEUHlDNLwh/qepxRuC
+         c9Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTikZR5Ma8WCukpkymfXXzb1mCKU4MKuB0HuF+rWyjXc0bYFIlMjJBT9GQzVfA1Yik8OX3ACMjL6dKzzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnlvP+pD5bUcB60IkttQrQn3dQ1/UCzt+athsiT7OhBkMLK+PQ
+	QsrsUwN1m+vpomNQtw5KD3CHs+63mGJuX8DcFSSQzTNOHsceGMGkFbKMlaecasJa3fsgT/fXqQO
+	A1yRrzy11G6NcsmFq/Xnx4Hei7VQj+o1zwhSnX1zaPvJGwlp8YdwcE2NQ3E5bSHZlyesW1WVDxT
+	663+WbV5GRlCK3JmykvfmU/fQBKjrqPEtzMFdX
+X-Gm-Gg: ASbGncsZjDAtLi81tzlheT2IRD0e+hVaYAqzG5BnlHPogNdefLfPMDMgH8DUUoqF2KF
+	xPLsSvPbvt1fzt7+TGKBQh6cDjfC+jb77XJUuozD67KuQDnKjml92udWMuACDlecJIg9v3fHZwA
+	/MI3FP
+X-Received: by 2002:a05:6902:228d:b0:e81:9ebf:f5ed with SMTP id 3f1490d57ef6-e81a226a62dmr1945945276.1.1749158160143;
+        Thu, 05 Jun 2025 14:16:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHb2rG2d+9fop1XPRUg94ju87oBPhimyPjoI4Ye2fKsZq+dhB515YFqLZyXsjORvVHzCfDPRC8LU2/J90no5JA=
+X-Received: by 2002:a05:6902:228d:b0:e81:9ebf:f5ed with SMTP id
+ 3f1490d57ef6-e81a226a62dmr1945917276.1.1749158159774; Thu, 05 Jun 2025
+ 14:15:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] memory: brcmstb_memc: Simplify compatible matching
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, justin.chen@broadcom.com,
- Conor Dooley <conor+dt@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>
-References: <20250523184354.1249577-1-florian.fainelli@broadcom.com>
- <20250523184354.1249577-3-florian.fainelli@broadcom.com>
- <20250605185557.GA3023589-robh@kernel.org>
- <ac57663b-3bcc-42ae-898e-06592d417715@broadcom.com>
- <86b6c9a8-5ecf-4aa5-a6cf-afee64d28efa@kernel.org>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <86b6c9a8-5ecf-4aa5-a6cf-afee64d28efa@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
+ <20250603-uffd-fixes-v1-2-9c638c73f047@columbia.edu> <84cf5418-42e9-4ec5-bd87-17ba91995c47@redhat.com>
+ <aEBhqz1UgpP8d9hG@x1.local> <0a1dab1c-80d2-436f-857f-734d95939aec@redhat.com>
+In-Reply-To: <0a1dab1c-80d2-436f-857f-734d95939aec@redhat.com>
+From: Tal Zussman <tz2294@columbia.edu>
+Date: Thu, 5 Jun 2025 17:15:49 -0400
+X-Gm-Features: AX0GCFsgrid_kqSVQH8gQAr68i4R2zJRlWIOJnyZmu8rrEwiMxn2I5F4znJwQ4U
+Message-ID: <CAKha_sovhM3ju9jV-d_2PgbWLhuCek5MgdVRVt24y7TQcmZvQg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] userfaultfd: prevent unregistering VMAs through a
+ different userfaultfd
+To: David Hildenbrand <david@redhat.com>
+Cc: Peter Xu <peterx@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-GUID: ArsyigDrO2xo_upDYsoyk2lNq4mtkvhP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDE5MSBTYWx0ZWRfX57zoscl6W5AF Ad9eU8snyyrzL08cA61og76ji85izZa81iTmv+wL/Bb95hsofPzFseipHXkC7dM33UgTXyr08dK QPozlM7GeFnXntPOc6mv9qo+5+Ue+dia9CCA3KcQnz7ryI8x/mvoIKPrf7xxZ32yZDhPxMOIkE4
+ 2YLWh3t6k03RAWQF120y3PHfKaBGVng5jiDx98eFpQmgHKT+7NNQ/HZxWVKZIWjrBCemi4ixghu dcY3CILDxR1yuGiLmvbXdBdKI9xHPzkS5HIj8xbKJtwam2MwLDlj/oFIzqryScfn9poVBA+7eYw YgwW7wp8CjTD7fNAT5z4qYkDF2J94Ax02k0pUoKHLi/J18H+zznAoVxgYn+mggN9XGMFeKYhNvF uP/j8gSM
+X-Proofpoint-ORIG-GUID: ArsyigDrO2xo_upDYsoyk2lNq4mtkvhP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_06,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 lowpriorityscore=10 phishscore=0
+ bulkscore=10 adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
+ mlxlogscore=844 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506050191
 
-On 6/5/25 13:30, Krzysztof Kozlowski wrote:
-> On 05/06/2025 21:10, Florian Fainelli wrote:
->> On 6/5/25 11:55, Rob Herring wrote:
->>> On Fri, May 23, 2025 at 11:43:54AM -0700, Florian Fainelli wrote:
->>>> Now that a "brcm,brcmstb-memc-ddr-rev-b.2.x" fallback compatible string
->>>> has been defined, we can greatly simplify the matching within the driver
->>>> to only look for that compatible string and nothing else.
->>>>
->>>> The fallback "brcm,brcmstb-memc-ddr" is also updated to assume the V21
->>>> register layout since that is the most common nowadays.
->>>>
->>>> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
->>>> ---
->>>>    drivers/memory/brcmstb_memc.c | 58 ++---------------------------------
->>>>    1 file changed, 3 insertions(+), 55 deletions(-)
->>>>
->>>> diff --git a/drivers/memory/brcmstb_memc.c b/drivers/memory/brcmstb_memc.c
->>>> index c87b37e2c1f0..ec4c198ddc49 100644
->>>> --- a/drivers/memory/brcmstb_memc.c
->>>> +++ b/drivers/memory/brcmstb_memc.c
->>>> @@ -181,65 +181,13 @@ static const struct of_device_id brcmstb_memc_of_match[] = {
->>>>    		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V20]
->>>>    	},
->>>>    	{
->>>> -		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.1",
->>>> +		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.x",
->>>>    		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
->>>
->>> This entry is pointless because the default will get V21.
->>>
->>> In fact, I don't think you need the new compatible string at all. It
->>> doesn't work to add fallbacks after the fact.
->>
->> I agree and would prefer to keep adding new compatible strings which is
-> 
-> So you agree that adding such entries is pointless?
+On Thu, Jun 5, 2025 at 5:06=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 04.06.25 17:09, Peter Xu wrote:
+> > On Wed, Jun 04, 2025 at 03:23:38PM +0200, David Hildenbrand wrote:
+> >> On 04.06.25 00:14, Tal Zussman wrote:
+> >>> Currently, a VMA registered with a uffd can be unregistered through a
+> >>> different uffd asssociated with the same mm_struct.
+> >>>
+> >>> Change this behavior to be stricter by requiring VMAs to be unregiste=
+red
+> >>> through the same uffd they were registered with.
+> >>>
+> >>> While at it, correct the comment for the no userfaultfd case. This se=
+ems
+> >>> to be a copy-paste artifact from the analagous userfaultfd_register()
+> >>> check.
+> >>
+> >> I consider it a BUG that should be fixed. Hoping Peter can share his
+> >> opinion.
+> >
+> > Agree it smells like unintentional, it's just that the man page indeed
+> > didn't mention what would happen if the userfaultfd isn't the one got
+> > registered but only requesting them to be "compatible".
+> >
+> > DESCRIPTION
+> >         Unregister a memory address range from userfaultfd.  The pages =
+in
+> >         the range must be =E2=80=9Ccompatible=E2=80=9D (see UFFDIO_REGI=
+STER(2const)).
+> >
+> > So it sounds still possible if we have existing userapp creating multip=
+le
+> > userfaultfds (for example, for scalability reasons on using multiple
+> > queues) to manage its own mm address space, one uffd in charge of a por=
+tion
+> > of VMAs, then it can randomly take one userfaultfd to do unregistration=
+s.
+> > Such might break.
+>
+> Not sure if relevant, but consider the following:
+>
+> an app being controlled by another process using userfaultfd.
+>
+> The app itself can "escape" uffd control of the other process by simply
+> creating a userfaultfd and unregistering VMAs.
 
-I don't think it is pointless, it's overly descriptive and we don't key 
-off of it for now.
+Yes, this is exactly what I was thinking. Or (less likely) a child process
+that inherits a uffd from its parent can then mess with memory the parent
+registers with a different uffd after the fork.
 
-> 
->> what I initially did here:
->>
->> https://lore.kernel.org/all/20241217194439.929040-2-florian.fainelli@broadcom.com/
->>
->> but the feedback was that this should not be done, and hence this
->> attempt at defining a compatible string that would avoid needless churn.
->>
->> So which way should I go now?
-> 
-> And the advice was to use v2.1 fallback, not replace v2.1 with something
-> else or keep adding pointless entries:
-> https://lore.kernel.org/all/2e33t7ft5ermsfr7c4ympxrn6l5sqdef3wml4hlbnhdupoouwj@gfjpbmowjadi/
-
-Fair enough then, I will re-spin accordingly. Thank you both.
--- 
-Florian
+> --
+> Cheers,
+>
+> David / dhildenb
+>
