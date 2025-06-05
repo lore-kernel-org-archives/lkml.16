@@ -1,125 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF88272E58;
-	Thu,  5 Jun 2025 13:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4154F272E54;
+	Thu,  5 Jun 2025 13:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749131467; cv=none; b=c3upx0cG50pvXqxh+eHVGdU2Yv2qlzuvX4Eg3zqcDu80GRTb0bXmsiha2pHDcwAVA+RMJTZqAqurNmnet0itSyKn73cwe7VZkyCfZHdu14SCQC0ZDFHD7HZE/iQZmjkJRb8QSVPWq0z4og9h+QkrvCUjZECbyzkKW4ntAMOAg64=
+	t=1749131489; cv=none; b=Mpl2uOiTuJbO2Zsjg7o26C/zoVyvpnF086teEg2NRciQbQzuV6jHu2k48JovAaD4KFGlnXHx64tenpWBowH0cnXgoCOeJ28Zq6MVMjZKwgoCnTZCwe/1bWTpmcq0LcSFm+0DQkUOb9DOVfW5mtzyGyi1oBpqIrFRKKevXJ62VOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749131467; c=relaxed/simple;
-	bh=CUuDv5BSBC048vwcKZzVjZ0CdBHLj4lB/45Mq40wZ9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N3aQI1WIs/9exK5gy+NHjxW+6xJO7Ib9I48YZccBw8tgYPLHWn6rGXLCOnO2sBmVRr+VwWROGcEVmnBA6679zHJMcIwXGUXCCrhhHDWh8WdNbqszpYoSXvC9mSEOUn+lyeBDpO9FOWhnOYMmO9yWKNYS/AtHjNnDzJD6yO6/qrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spmW2oJY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749131489; c=relaxed/simple;
+	bh=yAV1qmK+GD0TtFCwzR+lZZRLe8ffoaN7xhVT0oGq4Og=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dW4VUKYBiBgqMus/nQ9j2EDmCSJrSVTI1UzPV6mkMp7E3uqaL8kP8w4Gj7I4RXX6XlsXYv5EKbO9fw3VUPOcpX86W46FrNEO6LcNQQHrQ0uYMNxGMIWeCkthJh53uotLZgzKNbcLfbKdCc3dQNVsTN8LvAUtTPxPzYn/C10SD84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CxIuH5PN; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spmW2oJY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE6EC4CEE7;
-	Thu,  5 Jun 2025 13:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749131467;
-	bh=CUuDv5BSBC048vwcKZzVjZ0CdBHLj4lB/45Mq40wZ9E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=spmW2oJYhmHVT6vzAJCUPszJlMtNr3RDNNOowltKcsHqmeZKjNhKkYyzJ5s21VFFz
-	 uDsXKDJiw+gb8D3iHTdH312J70c4XKw329BUljiMDcEml+8P6xSp2/u0EDhBvCO0YD
-	 bBesROG/7UCwVinKib+h4/dbJ2LaMELnZBtpOVy6ksw+n9/nRM0WtNKj68+lX0cHdw
-	 g2dRbvyNtlKcH3IXDToknqmkMTGXc9t97E2T08b4kz1OYv+aHeYZ3yarjkhfzon4JD
-	 e58ldComiU278MN2luD2aiLyFaTdJf1yGVgI3u003wK7AuMU1goATRHqCXYj4vW47+
-	 DvsOPzCO+NxLQ==
-Date: Thu, 5 Jun 2025 08:51:04 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Simon Horman <horms@kernel.org>, davem@davemloft.net,
-	Paolo Abeni <pabeni@redhat.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, devicetree@vger.kernel.org,
-	Richard Cochran <richardcochran@gmail.com>,
-	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	netdev@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [net-next v12 1/7] dt-bindings: net: Add MTIP L2 switch
- description
-Message-ID: <174913146314.2458620.483188376722386147.robh@kernel.org>
-References: <20250522075455.1723560-1-lukma@denx.de>
- <20250522075455.1723560-2-lukma@denx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CxIuH5PN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749131488; x=1780667488;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yAV1qmK+GD0TtFCwzR+lZZRLe8ffoaN7xhVT0oGq4Og=;
+  b=CxIuH5PNgYHb9x48bRO35oenvhCIKm3iwgfLWTvlwqiFNmEPCMyTs0f0
+   tafhaYywKxDGS6/+rc8GviEFuE/xgKDje5Srg6wSsm20u4W9BMs9fCpBs
+   ga256pJkbn3PfPRjLnt2j+H+Ht8GbqEH9gpth5pphDcjbZ0cpTvtRgxVs
+   UW8xNTssm6xT4k+IkQ1bYbcF+EBIIyNunF45NU2sdn/TvQdM1G+R7+3uE
+   1IiHXcn4hg2HZWP/6Fr5pH7IFBGc86AwENmmOzRUOXktAUdf5lBmRqq0L
+   v8z92Dcx2litjoGWP7JNQVvBBX37VeECICRmp60Pf2eCDfgQvvwY4grja
+   Q==;
+X-CSE-ConnectionGUID: /XE7QyUqSsinz2eFqzaHdQ==
+X-CSE-MsgGUID: edBYGxpuSy21tWdcFWBJog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="62607354"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="62607354"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:51:28 -0700
+X-CSE-ConnectionGUID: RGgWUE6UTwuS67os1UEwPA==
+X-CSE-MsgGUID: KygK6xT1S9CXI8J+gpPULA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="146474689"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:51:27 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 4936120B5736;
+	Thu,  5 Jun 2025 06:51:25 -0700 (PDT)
+Message-ID: <1f97aa2e-c488-4800-ac7b-e7351f2a30ea@linux.intel.com>
+Date: Thu, 5 Jun 2025 09:51:24 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522075455.1723560-2-lukma@denx.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+To: Ingo Molnar <mingo@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
+ tmricht@linux.ibm.com, Leo Yan <leo.yan@arm.com>,
+ Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+ <aEE7ug56bPS_ZJUQ@gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <aEE7ug56bPS_ZJUQ@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On Thu, 22 May 2025 09:54:49 +0200, Lukasz Majewski wrote:
-> This patch provides description of the MTIP L2 switch available in some
-> NXP's SOCs - e.g. imx287.
-> 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
-> 
-> ---
-> Changes for v2:
-> - Rename the file to match exactly the compatible
->   (nxp,imx287-mtip-switch)
-> 
-> Changes for v3:
-> - Remove '-' from const:'nxp,imx287-mtip-switch'
-> - Use '^port@[12]+$' for port patternProperties
-> - Drop status = "okay";
-> - Provide proper indentation for 'example' binding (replace 8
->   spaces with 4 spaces)
-> - Remove smsc,disable-energy-detect; property
-> - Remove interrupt-parent and interrupts properties as not required
-> - Remove #address-cells and #size-cells from required properties check
-> - remove description from reg:
-> - Add $ref: ethernet-switch.yaml#
-> 
-> Changes for v4:
-> - Use $ref: ethernet-switch.yaml#/$defs/ethernet-ports and remove already
->   referenced properties
-> - Rename file to nxp,imx28-mtip-switch.yaml
-> 
-> Changes for v5:
-> - Provide proper description for 'ethernet-port' node
-> 
-> Changes for v6:
-> - Proper usage of
->   $ref: ethernet-switch.yaml#/$defs/ethernet-ports/patternProperties
->   when specifying the 'ethernet-ports' property
-> - Add description and check for interrupt-names property
-> 
-> Changes for v7:
-> - Change switch interrupt name from 'mtipl2sw' to 'enet_switch'
-> 
-> Changes for v8:
-> - None
-> 
-> Changes for v9:
-> - Add GPIO_ACTIVE_LOW to reset-gpios mdio phandle
-> 
-> Changes for v10:
-> - None
-> 
-> Changes for v11:
-> - None
-> 
-> Changes for v12:
-> - Remove 'label' from required properties
-> - Move the reference to $ref: ethernet-switch.yaml#/$defs/ethernet-ports
->   the proper place (under 'allOf:')
-> ---
->  .../bindings/net/nxp,imx28-mtip-switch.yaml   | 150 ++++++++++++++++++
->  1 file changed, 150 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
-> 
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+On 2025-06-05 2:39 a.m., Ingo Molnar wrote:
+> 
+> * kan.liang@linux.intel.com <kan.liang@linux.intel.com> wrote:
+> 
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+>> below perf command.
+>>   perf record -a -e cpu-clock -- sleep 2
+>>
+>> The issue is introduced by the generic throttle patch set, which
+>> unconditionally invoke the event_stop() when throttle is triggered.
+>>
+>> The cpu-clock and task-clock are two special SW events, which rely on
+>> the hrtimer. The throttle is invoked in the hrtimer handler. The
+>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+>> be used to stop the timer.
+>>
+>> There may be two ways to fix it.
+>> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>>   perf_event_throttle() if the flag is detected.
+>>   It has been implemented in the
+>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>   The new flag was thought to be an overkill for the issue.
+>> - Add a check in the event_stop. Return immediately if the throttle is
+>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>>   method to stop the timer.
+>>
+>> The latter is implemented here.
+>>
+>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+>> the order the same as perf_event_unthrottle(). Except the patch, no one
+>> checks the hw.interrupts in the stop(). There is no impact from the
+>> order change.
+>>
+>> Reported-by: Leo Yan <leo.yan@arm.com>
+>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Any idea which commit introduced this bug?
+> 
+> Was it:
+> 
+>   9734e25fbf5a perf: Fix the throttle logic for a group
+>  
+
+Yes.
+Since it is still in the tip.git, I'm not sure if the commit ID is valid
+for the Fixes tag. so I didn't mention the commit ID in the log.
+
+Thanks,
+Kan
+
+> plus the followup driver updates?
+> > Thanks,
+> 
+> 	Ingo
 
