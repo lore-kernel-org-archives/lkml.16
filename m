@@ -1,110 +1,89 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B112420C016
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6AF38FB9;
+	Thu,  5 Jun 2025 13:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129409; cv=none; b=Sma1a1uq3vRQZGeogCsuXi90bT2XmDlVH4qAkTBphrJrw3thsmrI88Rmn3TyBDfQnXS6SuZs3HWn9fndjUJ5pvNu3olq8IrekDKP5VUhNzAKAd3GyqIuQojtdqfVutfFDjMrySZSNiCK8fZDRGOg/uNxot3wfIjZQgO0jyVBgOg=
+	t=1749129423; cv=none; b=KNL+vqXk7PJKn6dtyT5vGKCDNVl1z92GM31+Nz/ZBQxy74/Kgd15zZJOJElRDRNmo3YZoNv32wWrdN/negAuvSxq2a1vq9UReY3J7Izta/ykteZq+EFqDeps1NQljeA+hqu2ZIgODCUDhadwPUycL0OTE94VypmSIi7y47e8H6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129409; c=relaxed/simple;
-	bh=k0Hbyy3QvPmBEmGfE+iw2klZZIGcUzF4JX5g7Ivo23Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZorkJCX/W/vjqhuLrcbOhSuVkJwd64Fie3sDgqvkw3JW++GifW3hUgmANkOIdevslQXS3MhYwN+qQTRLshXEaNCLpr6IznWcG8ZzFSUDZP9JFIp7dzIQD358Dk0qRtBJhTJ2VnQQKMhTHzGOLtyagvnxUEbWr1Wg6bSTZ//sTkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WqCsjrL/; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WqCsjrL/"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so1154407e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:16:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749129406; x=1749734206; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LxXez72tmox59Cq75Oo66zXwfJ67mOMcPg20hwp9f4M=;
-        b=WqCsjrL/PINi7XA3g9VTu//V5gowv4RCHLjliivBp/UCZElsxBvTrQDRoE4oFskZqG
-         Fsclrv6k6VUHvlmLszGfItAYZq9/r/cjuu0FGKnjvKmTc07epoAa8R0qzxPObcnZrRbd
-         d1tKwphqo32XgMBhlSnMBlRYQ0ouQeP3aL0OzNdeHGZKj7tK6/Zbnw/5YNaFxNl5Lz8M
-         j5kXfgruW2JIWl35alN4saTsSds8ipV/p31Iru8w0gQPm4eQifeYaz1pFjujn7LVvP34
-         aVn0ZXJFEiTtmILWKSH7sRKbyRuDvENHy6Rj453IKWtjnxZaWcJD8Jq4bOU9OuLpjib+
-         9lew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749129406; x=1749734206;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LxXez72tmox59Cq75Oo66zXwfJ67mOMcPg20hwp9f4M=;
-        b=ZwnHITsAt8TbOxdKM5cGnKOIIKiYvbpgjilaccUUQqMk1BB+KgUdE71RlGp0aP6vbK
-         KZgk23SVn4u3TvgbPixJ9rPJ6tAdv7sVYXAoKzJFZdSJi53iaLqt7kSszPLWF+I0q4CT
-         w/6gj7jKwRbW2B8/RPP1VIXk7Jxk3mHHaAhQroYTVcOpDPXkRj7lozqnkuW5kwa1J5Nc
-         2hMUhdhknlT+CQpC9fuTsXRXitzRgmEwDc3AQfVShvlsrMiWZI4HXDM5YH0Jnuvb8Mq7
-         OCpIWrduzFU4VKVnsjghELHJO7PTcHdTb/1AbXQX3XL8+W1Hzfhq7ICu3oMoPbhx7n9L
-         E/1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUrjFoFgLt0O1OvZU0OSc3nG0RHfFpzsEuJn92wsVtBayQ6YoESXKeuPgCQ3QSF6+bdb5lDCAuNXxiYU+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRyY+4DOor5J8CBeJSnTv239OqCLOheK7PiPR4AyYUBvG4uaSG
-	TdOiC6lz/udoVthI2OGrsUHDirMQ5Faunq1ES0hOmHeAFMts44Zr8U18rfSraxC7Xilpl5hZyhq
-	X0ZMZU0N6vPYn6ak6cvM3tK4XfMM0zSl4vaPDQsBLOA==
-X-Gm-Gg: ASbGncs/lezw5ICgWZ275I6YX4owwCKTRYYrFnMtwHVdqeC7hwr6tXFl4UmE5/KlO1e
-	xfkjzDU8PqIq+asbARLB6YIgsBaztqE9JBorBHfO0RgANn+zz4jhAx2bC/hUH4/78u+e2TYH3Ad
-	HDJ0SEWov1S/SpWRMZRL/heE6TMH5pYfz83yEIsmmYsSORaGB4HvF+Qkr10J3Q8dY=
-X-Google-Smtp-Source: AGHT+IG1FLIfsa6ezMp3MccDVHC5XAJOHj0QyInfJVqCTEun1SDxwdcWFvKFJCuA2PNkGlpvqJmb88wRcDaLGqLLsh0=
-X-Received: by 2002:a05:6512:10ce:b0:553:37e7:867c with SMTP id
- 2adb3069b0e04-55356df2a9emr2071437e87.50.1749129405586; Thu, 05 Jun 2025
- 06:16:45 -0700 (PDT)
+	s=arc-20240116; t=1749129423; c=relaxed/simple;
+	bh=4d5JJ/c1jR0wHKQHZnxPxIReNnqyfDLCCv1OX9n/Er0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gg2iYtl+90pXHXXkf1lFXJx0lwGqsXDa7EhKNwpB+budbNkgWROWc+vcVdRhVvsCA7FjWnRAZfzn3Nq+2u5Q0LLXWjCAYlNmrTPrJd5u0Ge4SjB4tprg4R3cYrLWSuFSoz7aCSuw3QObziOLXhHD4qDrh6lJo2HnD7PWTblH2HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bClNB2DVNzYQvdp;
+	Thu,  5 Jun 2025 21:16:58 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 5A3EE1A159C;
+	Thu,  5 Jun 2025 21:16:57 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP1 (Coremail) with SMTP id cCh0CgDnTH3HmEFobD9lOQ--.29489S2;
+	Thu, 05 Jun 2025 21:16:57 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: hughd@google.com,
+	baolin.wang@linux.alibaba.com,
+	willy@infradead.org,
+	akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH 0/7] Some random fixes and cleanups to shmem
+Date: Fri,  6 Jun 2025 06:10:30 +0800
+Message-Id: <20250605221037.7872-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com> <CACRpkdZ2NUfcn7O7tKSFDyAr8Hni3pvpTN6QpOz7N3J+EsFdLg@mail.gmail.com>
-In-Reply-To: <CACRpkdZ2NUfcn7O7tKSFDyAr8Hni3pvpTN6QpOz7N3J+EsFdLg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 5 Jun 2025 15:16:34 +0200
-X-Gm-Features: AX0GCFt62eNdDo8nSZ5fnuh_lgkPFAVa1oZqnviWb6rgA9ggBUhsLTEWXYkHUBU
-Message-ID: <CAMRc=Mddp=rmogziQ2XrzsO-TiRh9A5U3v8UxJqz_so1otPMLw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] Introduce HDP support for STM32MP platforms
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDnTH3HmEFobD9lOQ--.29489S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gry7uF1DGFW3Cr17Ar1kZrb_yoWDWrX_uF
+	WFqFy5Grn0vF4UWFyS9F4DJrZYgrW8Wr4qvFyrta1akFyUAFnxCw1DWrWrZr1xX3W5CrZ5
+	AF4vqr1xJw17WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
+	AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWD
+	JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gc
+	CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
+	r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87
+	Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAa
+	w2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
+	6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07
+	j3TmhUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On Thu, Jun 5, 2025 at 3:04=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> On Wed, May 28, 2025 at 3:33=E2=80=AFPM Cl=C3=A9ment Le Goffic
-> <clement.legoffic@foss.st.com> wrote:
->
-> > Cl=C3=A9ment Le Goffic (9):
-> >       gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
-> >       dt-bindings: pinctrl: stm32: Introduce HDP
-> >       pinctrl: stm32: Introduce HDP driver
-> >       MAINTAINERS: add Cl=C3=A9ment Le Goffic as STM32 HDP maintainer
->
-> Can I apply the driver and bindings patches 1-4 separately
-> from the rest of the series?
->
-> >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
-> >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
-> >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
-> >       ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP pin=
-ctrl node
-> >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-dk2=
- board
->
-> Or does it need to be merged along with these?
->
+This series contains more fixes and cleanups which are made during
+learning shmem. Patch 1-3 are some random fixes; Patch 4-7 are some
+random cleanups. More details can be found in respective patches. Thanks!
 
-Would you mind me taking patch 1/9 through the GPIO tree as I'll have
-some gpio-mmio rework going on next cycle? I will then send you an
-immutable tag to pull.
+Kemeng Shi (7):
+  mm: shmem: correctly pass alloced parameter to shmem_recalc_inode() to
+    avoid WARN_ON()
+  mm: shmem: avoid setting error on splited entries in
+    shmem_set_folio_swapin_error()
+  mm: shmem: avoid missing entries in shmem_undo_range() when entries
+    was splited concurrently
+  mm: shmem: handle special case of shmem_recalc_inode() in it's caller
+  mm: shmem: wrap additional shmem quota related code with
+    CONFIG_TMPFS_QUOTA
+  mm: shmem: simplify error flow in thpsize_shmem_enabled_store()
+  mm: shmem: eliminate unneeded page counting in
+    shmem_unuse_swap_entries()
 
-Bartosz
+ include/linux/shmem_fs.h |   4 +
+ mm/filemap.c             |   2 +-
+ mm/internal.h            |   2 +
+ mm/shmem.c               | 169 ++++++++++++++++++++++++++-------------
+ 4 files changed, 121 insertions(+), 56 deletions(-)
+
+-- 
+2.30.0
+
