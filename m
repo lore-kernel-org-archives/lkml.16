@@ -1,102 +1,130 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC4E2F5B
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309D62F5B;
+	Thu,  5 Jun 2025 08:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749110664; cv=none; b=hbpNDPzdTv9VIoio1vn21zLgn3AqupaFKxOaHdsB9x5e9UEZU+pyLKDplQAev0NIkmimqFdrCPswB5bvglXyxgOo0q6JeArQaC29BrtNvluG62SS/zRAslrLyYHGymKG2qD1NR8ToBLS7hDOBXn7KOvOiu3YRuppNCkPZR+jNC4=
+	t=1749110789; cv=none; b=uLMc3oMznu9wQAL2JIBwoFUvVf4oi/gi/1qb/2SsHyjjDUVZMdKMPibFnwX6NnmPPNgPt8EI1bkg+OAYgakXOFf3Wc3XzpgEoY+gv5D2kIOd5DkxNq0roGwQ2sIvuV24WV/2Qfrf68EjIguP5xsvY394NIBuqR3k76imG00EXfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749110664; c=relaxed/simple;
-	bh=LMzH/Bm2279A9lP/xsA0N2uSX2GikuVibB/mft22fs0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:In-Reply-To:
-	 Content-Type:References; b=sZTrOwwvyy//YXDbh6akdFitJ0cD1ErDApCfjrgjLtX+BVLKKI66ebYZdpGuu6WCEEmr7X3viEiE7hUiOOQ8n4SurL/fyBxFyxByh6lNUK8DuEoVwpFq6H1XmZbHvF+32fSJtTGqki+JIRpXHWd7gpOk9no303peJSftEItT/9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Rvmi3wBo; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749110789; c=relaxed/simple;
+	bh=2iz0xU6HSrN4K4tK4hEhiPBRQmZaCe79rTHf++duDHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AlyBT2pgl7oXODMu4rtDYS9xN9zXGGwOmjP19J9p7rGsYuLOXpJVuSSHR2UEqDVFR1k4b+yyp0QisOFDUZ0n+oDvDVh/n+VeG+GjXpAQWZGHMYrpy3ufXTanzi59mZF9SrKEEuzMECu5C5XEtaF79tUey+yVgMiH11MFDkYI53Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKmO/cgT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Rvmi3wBo"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250605080419euoutp02692f6c38b123bdd1186dc469ef15ca1a~GFuC7rHIs1212512125euoutp02n
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:04:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250605080419euoutp02692f6c38b123bdd1186dc469ef15ca1a~GFuC7rHIs1212512125euoutp02n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749110659;
-	bh=Zg2vFiDx8CLX/mdtIR7HKEpZZXyINdX/0zaUIkLHpyY=;
-	h=Date:Subject:To:From:In-Reply-To:References:From;
-	b=Rvmi3wBoxe3CjmYCAbux+kdSq+wRynDdHKPpwYThxDYXTyCzUEzPZQYAvvCtX/UBU
-	 oJwQDtYGpF+so6MhP3ncSa6ttez12mLTS3/KQw5TcByFphEYqr+vn5I1ythhFDBMOY
-	 RpDP+gcCW4zJRDbScdmV7zBbJB/wXvVwyMMcjXvY=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250605080419eucas1p2a3ceb2a6638ecf161295ac365bdeb33f~GFuCyHZaS1597115971eucas1p2N;
-	Thu,  5 Jun 2025 08:04:19 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250605080419eusmtip29b6aea360f101e67bba3f51bc79273e7~GFuCZpf261330113301eusmtip2Z;
-	Thu,  5 Jun 2025 08:04:19 +0000 (GMT)
-Message-ID: <2793e943-0297-47cd-bb65-b680a308a700@samsung.com>
-Date: Thu, 5 Jun 2025 10:04:19 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKmO/cgT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9997C4CEE7;
+	Thu,  5 Jun 2025 08:06:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749110789;
+	bh=2iz0xU6HSrN4K4tK4hEhiPBRQmZaCe79rTHf++duDHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tKmO/cgTih5V5cwtej6E/eOSdd8IfM2dq4hEQ64rqvF1XNV4O2Kdv3bsek8VhtSwX
+	 FUz9a77eJG2BnpptEdaokF+6TjeZ8YF8tTOlDu02OjC7IkGk1BbipUuName+rv1y4m
+	 oWp8Ot3S8uamg/bAa/JNKUn0aBJ/0hWLpIQGYaFXrJLZciTOPa9za/ZtbZOv60ig+R
+	 cGP75HXbzRmRAmGEUnpokkwk/9dhwUwiNejkjEszVEHtQZKYDBz383+XywHhDvnPtV
+	 LzXEqmHBlObHMVg5kmUE4yc6sNntDigJNpCSKEjHJJmRnUHxWU29PH5zWPgP0QURPB
+	 HJGR63N5mki4g==
+Date: Thu, 5 Jun 2025 10:06:19 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Peter Maydell <peter.maydell@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Marc Zyngier <maz@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, andre.przywara@arm.com,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, suzuki.poulose@arm.com
+Subject: Re: [PATCH v4 01/26] dt-bindings: interrupt-controller: Add Arm GICv5
+Message-ID: <aEFP+wsYCmMgIyhs@lpieralisi>
+References: <aDhWlytLCxONZdF9@lpieralisi>
+ <CAFEAcA_3YLMSy+OsSsRayaRciQ1+jjh-dGzEjrh2Wa8BqdmqrA@mail.gmail.com>
+ <aD6ouVAXy5qcZtM/@lpieralisi>
+ <CAL_JsqJ5N2ZUBeAes=wexq=EstRSZ5=heF1_6crAw76yZ9uXog@mail.gmail.com>
+ <CAFEAcA-JrS0BiT66iin-pRVFadrY-pnJZ8TkDNxcjErknSCnUA@mail.gmail.com>
+ <CAL_JsqL7x53an2-MaLHP5tfVXb4JxT8ORUMaA8pL-gMsWLJqkA@mail.gmail.com>
+ <aD/0tuak7Hja8k4g@lpieralisi>
+ <878qm7ec19.wl-maz@kernel.org>
+ <aEB10JC1bwwOJfWh@lpieralisi>
+ <CAFEAcA9xBJiRQ+UMvyOSOqOwMPYrjja0Vhk8j4_0V7f7_0ETtg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: defconfig: Enable TH1520 aon, mbox and reset
- support
-To: Drew Fustini <drew@pdp7.com>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Conor Dooley <conor.dooley@microchip.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <20250605071940.348873-3-drew@pdp7.com>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250605080419eucas1p2a3ceb2a6638ecf161295ac365bdeb33f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250605073400eucas1p181cb06c580c775a0205881cd1b54cc6e
-X-EPHeader: CA
-X-CMS-RootMailID: 20250605073400eucas1p181cb06c580c775a0205881cd1b54cc6e
-References: <CGME20250605073400eucas1p181cb06c580c775a0205881cd1b54cc6e@eucas1p1.samsung.com>
-	<20250605071940.348873-3-drew@pdp7.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFEAcA9xBJiRQ+UMvyOSOqOwMPYrjja0Vhk8j4_0V7f7_0ETtg@mail.gmail.com>
 
+On Wed, Jun 04, 2025 at 09:09:27PM +0100, Peter Maydell wrote:
 
+[...]
 
-On 6/5/25 09:17, Drew Fustini wrote:
-> Enable TH1520 Always-On (AON) firmware protocol, TH1520 Mailbox and
-> TH1520 reset controller.
+> > When I said "a separate problem", I meant that, extending secure- tag
+> > (that applies to the "status" property only) to cover other PASes is
+> > independent from the GICv5 binding *if* we define, for a single DT an eg
+> > IRS device per-PAS (with realm-status, root-status, describing what the
+> > reg property represents. Is that what secure-status does today ? Does
+> > it say "this device MMIO space is secure-only" ?).
+> >
+> > It does not look like there is much appetite for tagging the reg
+> > property either and making it GICv5 specific is a shortcut IMO.
 > 
-> Signed-off-by: Drew Fustini <drew@pdp7.com>
-> ---
->  arch/riscv/configs/defconfig | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index fe8bd8afb418..86b13177f27b 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -178,6 +178,7 @@ CONFIG_REGULATOR=y
->  CONFIG_REGULATOR_FIXED_VOLTAGE=y
->  CONFIG_REGULATOR_AXP20X=y
->  CONFIG_REGULATOR_GPIO=y
-> +CONFIG_RESET_TH1520=m
->  CONFIG_MEDIA_SUPPORT=m
->  CONFIG_MEDIA_PLATFORM_SUPPORT=y
->  CONFIG_VIDEO_CADENCE_CSI2RX=m
-> @@ -258,7 +259,9 @@ CONFIG_RPMSG_CTRL=y
->  CONFIG_RPMSG_VIRTIO=y
->  CONFIG_PM_DEVFREQ=y
->  CONFIG_IIO=y
-> +CONFIG_TH1520_AON_PROTOCOL=m
->  CONFIG_THEAD_C900_ACLINT_SSWI=y
-> +CONFIG_THEAD_TH1520_MBOX=m
->  CONFIG_PHY_SUN4I_USB=m
->  CONFIG_PHY_STARFIVE_JH7110_DPHY_RX=m
->  CONFIG_PHY_STARFIVE_JH7110_PCIE=m
+> I think something GICv5 specific is not unreasonable.
 
-Thanks !
-Reviewed-by: Michal Wilczynski <m.wilczynski@samsung.com>
+We need to define up to 4 interrupt domains (so max 4 frames per
+component per frame type: EL3, Secure, Realm, Non-Secure).
 
+Options:
+
+1) Using reg and reg-names, I don't know if reg-names allows us to
+   describe all possible resource names and the order does not matter,
+   please let me know. Keep in mind that some resources are optional.
+
+   Something like, for an IRS:
+
+   reg-names = "el3-config", "secure-config", "realm-config",
+   "non-secure-config", "el3-setlpi", "secure-setlpi", "realm-setlpi",
+   "non-secure-setlpi";
+
+   With that, I would remove the description in the reg property and
+   just say minItems: 1
+
+   This implicitly means that describing in DT a resource that the
+   CPU possibly is not able to reach depending on
+   security-state/exception level is OK. AFAICS reg-names achieves
+   the same purpose of tagging below, at the end of the day it is
+   a means to say eg "if you are non-secure stay away from something
+   that does not belong to you".
+
+2) We add a tagged "reg" property for GICv5 ("reg" refers to non-secure):
+
+   reg
+   el3-reg
+   secure-reg
+   realm-reg
+
+3) We add a GICv5 tagged "status" property and define an eg IRS device per
+   interrupt-domain ("status" refers to non-secure):
+
+   status
+   el3-status
+   secure-status
+   realm-status
+
+4) Anything else that I have not thought of
+
+What's the best option ? Please let me know, I'd like to repost the
+series at v6.16-rc1 with a solution.
+
+Thanks,
+Lorenzo
