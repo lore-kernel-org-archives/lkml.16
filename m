@@ -1,150 +1,161 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917DF1F4701
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:11:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C4F2750E3;
+	Thu,  5 Jun 2025 17:12:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143518; cv=none; b=beYfgKEA6p9s85wvGit/sDtBvU4Rl3ULwvBFZvrLLNWZbxDn0xNJvoRuNSZmp9L1wSzF/3QK4m0ZuqQ3D1WkYHFHMPYKC9JFXw4LyfPKMi5bO7WlskldvIG6CWgXkAw3q/O1Opx38lqhkj3lq1VJs7gegxBi0QglWg65fSgIEjM=
+	t=1749143557; cv=none; b=AJI1eyzW1dDi1Bx5lfgcy0LoqMSi7ZfqYzHgOZO1jT3c3H2wIe+wQn6MZ/KQ2pNI1qUBvfPn6K0n6gCU3WsFLIHgZPAenRa307ifrIvUFBSPXIa0LyVICdL9Zqb6wjoMxy9zLGTRBrqnqIOGivePcVchN7LbYdK+np+i3DX7zAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143518; c=relaxed/simple;
-	bh=VPsAJMShnkum23FOlcYAYrO6mPJpYIio8qbx3qLulTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A7D2ml1XPIWvhAz+oVeNgc4eU97tgDkE4zXLcuBMMvEO2WfEfJlmBY6Tlr/tLFAknmQl36EVHEob79rOTQoTBMimJm6R+hiPfgKp2Cy/3xzRiA4t2Ovpp4Ev4zCAU4kcqmdvvw1O50L1EWbIVaH7R59ueoq6tCdqy8Ykbgu3L9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZ8KEY1F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749143557; c=relaxed/simple;
+	bh=i/TRS9HoQ348xjedCJxL7IFxMWS+ebPKcpauxP9YIlQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I9dpQR5IwfrGAncQE0Fz9oep6gIa0t2uIyNFJVKyFwNTYz8+n+at1hX7l4ZZNpA4AznDuEypgobzSO+zVhmNf5rFg0Wiw6Qzt9yOMXyR6JFdk5ugYGXUtzKUgjMIgd1GUY4qNpCWWMDiEiqRsMKBhCiJFdHv2f1ggMxTdfSnuhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UkV2cuYJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZ8KEY1F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E6CC4CEE7;
-	Thu,  5 Jun 2025 17:11:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UkV2cuYJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7C0AC4CEE7;
+	Thu,  5 Jun 2025 17:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749143518;
-	bh=VPsAJMShnkum23FOlcYAYrO6mPJpYIio8qbx3qLulTc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MZ8KEY1FI3aFivdxmS7v0djgk2VpJnaC42fl+leC/Zl18zX+AGyshM3gDqhXeufJy
-	 omlf7gLJ2ExTjIpEx5foYIX+0tQw3jbHQHTWDgYqQPlcou2pXsHFH7SAmlXNM0WFLZ
-	 umbmzHnQykgrTLVgDoc2e4CUuHoWoO8gQQ9FrmfT5Dv4DW8V+Yh7rXLyqpZH+76Nm+
-	 SnODbW3kndfYmOXL33LHBAvPwuHp7Ld5nvpzAcTCXc2vbD9p5qlRQZRlFJwC/HLXIw
-	 X7QYxW2cgJ9bU/Yro+k4A63ZFedpSKo4+MeYy8ETFSIYNUBDaFOAKVEKtWoSCnOhQW
-	 G9ayP+IVU24fg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>
-Cc: Pratyush Yadav <ptyadav@amazon.de>,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH] kho: initialize tail pages for higher order folios properly
-Date: Thu,  5 Jun 2025 19:11:41 +0200
-Message-ID: <20250605171143.76963-1-pratyush@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=k20201202; t=1749143556;
+	bh=i/TRS9HoQ348xjedCJxL7IFxMWS+ebPKcpauxP9YIlQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UkV2cuYJZVJGQLBsRdQ/vwtqtzA1m3P13V/CdGYmDBDpOW1W/H/biFSFqJ4H9tGVF
+	 c+na8BR4mq6E46+UU1haum/hLYbiImzDLwe8YlNT07WaxfJUN/BIYYvF1S+hQR/Mli
+	 ghBiUcin9rNsoOiA4+g6wTQwvabqAXgds6T9oWq3dAGrBrk0osZGBUvcLp11tRVE46
+	 kJvJScSXAzX9GOZ+tzAm5YSoUueknzgtNn37HQD57tbbFl86dv6Fg8B9RP/XxDISml
+	 uCwKKNSsvD3ZxWA0QiyztyRbdC9j/i6KM+Z4IC0cXj0nYHRDsmNZauhNJ7aiWynh3B
+	 3ytl4Sj74HF4w==
+Message-ID: <0a17dc61-a8eb-443c-9f4a-4f7851e07c5a@kernel.org>
+Date: Thu, 5 Jun 2025 19:12:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Dmitry Baryshkov <dmitry.baryshkov@foundries.io>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Renjiang Han <quic_renjiang@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
+ <a3bf69f3-6500-4e45-ba34-8ba24312938a@kernel.org>
+ <CAO9ioeWkLu+ne18kjEST7YU7b1aBzcMBBeyfpagzis99BAeOHg@mail.gmail.com>
+ <b710e357-09e3-460e-b097-28cf0c856aeb@kernel.org>
+ <44b3779b-702c-4e8b-8ccd-c9c3314a511f@linaro.org>
+ <nr2je5ssn22npl2dqu5aj2xcwinnjmhvl3tvuz5smr4dd2rxaj@dfkk6aktkafy>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <nr2je5ssn22npl2dqu5aj2xcwinnjmhvl3tvuz5smr4dd2rxaj@dfkk6aktkafy>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Pratyush Yadav <ptyadav@amazon.de>
+On 05/06/2025 18:02, Dmitry Baryshkov wrote:
+> On Thu, Jun 05, 2025 at 01:40:03PM +0100, Bryan O'Donoghue wrote:
+>> On 05/06/2025 13:33, Krzysztof Kozlowski wrote:
+>>> On 05/06/2025 14:30, Dmitry Baryshkov wrote:
+>>>> On Thu, 5 Jun 2025 at 13:13, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>>
+>>>>> On 02/06/2025 08:16, Dmitry Baryshkov wrote:
+>>>>>> On Sat, May 31, 2025 at 08:05:24AM +0800, Renjiang Han wrote:
+>>>>>>>
+>>>>>>> On 5/31/2025 4:27 AM, Dmitry Baryshkov wrote:
+>>>>>>>> On Fri, May 30, 2025 at 09:32:12AM +0530, Renjiang Han wrote:
+>>>>>>>>> QCS615 uses the same video core as SC7180, so reuse the same resource
+>>>>>>>>> data of SC7180 for QCS615 to enable video functionality.
+>>>>>>>>>
+>>>>>>>>> There are no resources for the video-decoder and video-encoder nodes
+>>>>>>>>> in the device tree, so remove these two nodes from the device tree. In
+>>>>>>>>> addition, to ensure that the video codec functions properly, use [3]
+>>>>>>>>> to add encoder and decoder node entries in the venus driver.
+>>>>>>>>>
+>>>>>>>>> Validated this series on QCS615 and SC7180.
+>>>>>>>>>
+>>>>>>>>> Note:
+>>>>>>>>> This series consist of DT patches and a venus driver patch. The patch
+>>>>>>>>> 1/3, which is venus driver patch, can be picked independently without
+>>>>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>>>>>>>>> DT patches, still depend on [1].
+>>>>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
+>>>>>>>> on QCS615 over(?)clocked.
+>>>>>>> Agree, so we need to make sure that the driver patch is not picked after the
+>>>>>>> DT patch.
+>>>>>>
+>>>>>> Worse: we need to make sure that the driver patch is present in the
+>>>>>> branch which picks up DT patches. Otherwise building & testing that
+>>>>>
+>>>>>
+>>>>> Well, that's a NAK then (although depends what you mean by DT).
+>>>>
+>>>> I mean qcs615.dtsi. I'd suggest an immutable branch for the driver
+>>>
+>>> Sorry, but no, DTS cannot depend on drivers. You CANNOT merge them into
+>>> one branch.
+> 
+> Surely it can... Like any other cross-subsystem dependency.
 
-Currently, when restoring higher order folios, kho_restore_folio() only
-calls prep_compound_page() on all the pages. That is not enough to
-properly initialize the folios. The managed page count does not
-get updated, the reserved flag does not get dropped, and page count does
-not get initialized properly.
+Sure it cannot, because this breaks the basic rule of not mixing drivers
+into DTS. Arm soc maintainers are not merging drivers back to DTS and
+the DTS must not go via drivers tree. These are basic assumptions around
+DTS, see subsystem profile for more explanations.
 
-Restoring a higher order folio with it results in the following BUG with
-CONFIG_DEBUG_VM when attempting to free the folio:
 
-    BUG: Bad page state in process test  pfn:104e2b
-    page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x104e2b
-    flags: 0x2fffff80000000(node=0|zone=2|lastcpupid=0x1fffff)
-    raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000000
-    raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
-    page dumped because: nonzero _refcount
-    [...]
-    Call Trace:
-    <TASK>
-    dump_stack_lvl+0x4b/0x70
-    bad_page.cold+0x97/0xb2
-    __free_frozen_pages+0x616/0x850
-    [...]
-
-Combine the path for 0-order and higher order folios, initialize the
-tail pages with a count of zero, and call adjust_managed_page_count() to
-account for all the pages instead of just missing them.
-
-In addition, since all the KHO-preserved pages get marked with
-MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
-actually set (as can also be seen from the flags of the dumped page in
-the logs above). So drop the ClearPageReserved() calls.
-
-Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
-Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
----
-
-Side note: get_maintainers.pl for KHO only lists kexec@ as the mailing list.
-Since KHO has a bunch of MM bits as well, should we also add linux-mm@ to its
-MAINTAINERS entry?
-
-Adding linux-mm@ to this patch at least, in case MM people have an opinion on
-this.
-
- kernel/kexec_handover.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index eb305e7e61296..5214ab27d1f8d 100644
---- a/kernel/kexec_handover.c
-+++ b/kernel/kexec_handover.c
-@@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
- }
-
- /* almost as free_reserved_page(), just don't free the page */
--static void kho_restore_page(struct page *page)
-+static void kho_restore_page(struct page *page, unsigned int order)
- {
--	ClearPageReserved(page);
--	init_page_count(page);
--	adjust_managed_page_count(page, 1);
-+	unsigned int i, nr_pages = (1 << order);
-+
-+	/* Head page gets refcount of 1. */
-+	set_page_count(page, 1);
-+
-+	/* For higher order folios, tail pages get a page count of zero. */
-+	for (i = 1; i < nr_pages; i++)
-+		set_page_count(page + i, 0);
-+
-+	if (order > 0)
-+		prep_compound_page(page, order);
-+
-+	adjust_managed_page_count(page, nr_pages);
- }
-
- /**
-@@ -179,15 +189,10 @@ struct folio *kho_restore_folio(phys_addr_t phys)
- 		return NULL;
-
- 	order = page->private;
--	if (order) {
--		if (order > MAX_PAGE_ORDER)
--			return NULL;
--
--		prep_compound_page(page, order);
--	} else {
--		kho_restore_page(page);
--	}
-+	if (order > MAX_PAGE_ORDER)
-+		return NULL;
-
-+	kho_restore_page(page, order);
- 	return page_folio(page);
- }
- EXPORT_SYMBOL_GPL(kho_restore_folio);
---
-2.47.1
-
+Best regards,
+Krzysztof
