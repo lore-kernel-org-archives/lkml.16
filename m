@@ -1,184 +1,144 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5144672632;
-	Thu,  5 Jun 2025 09:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749114450; cv=pass; b=LycqJ55M2r/KOLz5vG5M8clWyEF6Pv5xZoVEwGTE/oOpnlDWnxR2XD8KXhCjTMKqhbcyTnr00cPZe6ZZXHkmwueHURmlg9X+UfOf6KnsY/U8+bU6jIuerkV3IAPE4Jv/6GVtbVfjZDidNMPeRdMgrz/XbcTSsyFDCa+H1TVbLSg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749114450; c=relaxed/simple;
-	bh=YuXZNoDSxY8ZWsSaAxsDie1qYj+/azass5LBkX7s62Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tyIriIwkWTQssELcMXgPkq96nEj3ioG/7tTNlXzsDBzaoBM6ZD+XUdNYm5G3kGad+N+mrnwsJF79QtLgVjT0s+oVCIFg5Q0K2A26bFQDfrGi85l0zZMqfe1584GD5Uccidvph6CqjH4QlyOl9B9mLzDK60NzlJHCH1R7OuJmXM0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=kCmiJ2Jg; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EF624B26;
+	Thu,  5 Jun 2025 09:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749114482; cv=none; b=LjMIccFq5rFDsoxSwGGOleOvmR5hGatXS5DZT3SHNffMHbDEDbc62Vvigj6cGWlJZtD/iwQHYEFiRZ50jBzzd9ff7uD/mGkn5Hst801hQoU5xlg2qTNYmluPSia9lyviU/cEasnjuu4snU6SmqnOmpskI2+ZPnX5BrISUXrBlAI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749114482; c=relaxed/simple;
+	bh=CyX7HgtIvMmKLzh8J3zSwCHKH/WTU9NyS5ypKYnMkxc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rXAd4jA7wrH7tuZvc7GkmKgYbFGS4zsqQmzVTXVnDA/WCwXYiKez+aYrxIW6yF+Jj2ZDEmiCU6thUcby0cjYczWfIMZZ1bxFmvMk2A+u/6vHd5BQ6tuEIFMLw3hzZytMrrfyGyMr3xUEE4QLM/UiqE4Ewx9vDeIAJDQrcuITPjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7U9Yb+S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="kCmiJ2Jg"
-ARC-Seal: i=1; a=rsa-sha256; t=1749114413; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Rjpt6qKRGn1eCDaHHFbnqdBmTl76gZ190K07Ep3xd/PpgpOZ9XV2M9SugdtLLsU+MR6MgwaPRt5B7OAhrJq0UkiQeIARFTgZ8oZ8U3dOvew23tIFyt7jj01aBhTRo6XkkWLPael/RfcwhDAsbGZdTokP5CJ8p3g1MFa0uEnVDPc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749114413; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=YuXZNoDSxY8ZWsSaAxsDie1qYj+/azass5LBkX7s62Q=; 
-	b=DQ8PQndLRHC4Z3ricZaTjtD8dhyd/fXFDdta90KS5gHqayp870u7ymwVdhXxmFvnHQtevBI/EpbHgyfwVMsSSKFopWK5/I4S1/Z+CYGGBsyQPL6+bhiKWbcpGdeIw34d3aMBc8/svfEWRvD/+m+aihybJYJ4GGYT/LYYx6YUafs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749114413;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=YuXZNoDSxY8ZWsSaAxsDie1qYj+/azass5LBkX7s62Q=;
-	b=kCmiJ2JgxugIAbfP2AU7osvpY1sZq4U3VgU77Gy2+wGCjjcQFtOom4lxV2vPN46B
-	jCEmUOZzXu2+hfiPeKP6B+y1NUo8at5iihGDSGEhUoqLu/HYVp66HYSuxSkG7VEdwiX
-	OwvqW36pL3paH38laOB0y7BDPVc6VBRA3PsHx1jJ4DM7z4h/a/rei6ecLYtIZASRzCT
-	stxkblh0fhfEt42lVpFoNACtdnwYD/tt5vuuE51LOCcbgsj93eW6JUJGOtfElF3BWg5
-	NUBxmAd6fWBhPTgYHOTc6c/Q4BS7ZXs0iTr82ubr1UP3wlfMz3+SsH7O82gyyFg/nMZ
-	Thm8NXWeOg==
-Received: by mx.zohomail.com with SMTPS id 174911440997793.93705801338638;
-	Thu, 5 Jun 2025 02:06:49 -0700 (PDT)
-Message-ID: <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chaoyi Chen <chaoyi.chen@rock-chips.com>, Matthias
- Schiffer <matthias.schiffer@ew.tq-group.com>, "Russell King (Oracle)"
- <linux@armlinux.org.uk>,  Heiner Kallweit <hkallweit1@gmail.com>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Thu, 05 Jun 2025 17:06:43 +0800
-In-Reply-To: <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
-	 <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
-	 <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7U9Yb+S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1743C4CEE7;
+	Thu,  5 Jun 2025 09:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749114482;
+	bh=CyX7HgtIvMmKLzh8J3zSwCHKH/WTU9NyS5ypKYnMkxc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=a7U9Yb+SqGsm+c80AqmOszRWqlGlkSCDyTv4P/UyrbaxB1hSRaWX+Qw1/s7uqBcUI
+	 zIXZuDVKPICC1BBKKI4pWjTi0LNYgD9C3LlyXMKv6IGgwMlSjaT6C07tfw4/Q8R4+v
+	 ZaOK2W8iTP92vrNH5sC5PcdFm/i8co6sQqtbt6joyXj98ccvEeBm9kQQEpuqSzeikS
+	 IOQLTGwZotPp2jcGeFooVFZ9zO3f+lq0zrP7h070oEw6cXVqxRLcboVS5/1CtnVByW
+	 VNi5btXUikB1fDG2/PHTmBiGcBTpDP13Tr2OFOm0/zhhfVQnF36GM3YDXBfU2p6ZBY
+	 7aO0bJbHhAzrg==
+Message-ID: <4302310a-b233-4cea-9a4b-d463fd1f455f@kernel.org>
+Date: Thu, 5 Jun 2025 11:07:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/8] drm/imagination: Use pwrseq for TH1520 GPU power
+ management
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+ Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
+ <CGME20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1@eucas1p1.samsung.com>
+ <20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
+ <20250603-whispering-jaybird-of-thunder-f87867@kuoka>
+ <d42a8c49-7ad2-49ef-bd9c-1e3d9981b58e@samsung.com>
+ <e5a0bee2-ff74-47cf-ad2c-0c78b57ae6cf@kernel.org>
+ <a6a29e58-8613-47f0-9e5c-d125da7ddb49@samsung.com>
+ <cc4dbf7c-e023-403c-88be-4691f97a0ff0@kernel.org>
+ <c7774790-07c3-469d-a994-9e84108ad21d@samsung.com>
+ <CAMRc=Mexq9ThfG6jZUbs3wYDA9UZN-+pHnX_Y-7WO4ubXvEuCw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAMRc=Mexq9ThfG6jZUbs3wYDA9UZN-+pHnX_Y-7WO4ubXvEuCw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-=E5=9C=A8 2025-06-04=E6=98=9F=E6=9C=9F=E4=B8=89=E7=9A=84 14:23 +0200=EF=BC=
-=8CAndrew Lunn=E5=86=99=E9=81=93=EF=BC=9A
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # RX and TX delays are added by the M=
-AC when required
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # RX and TX delays are provided by th=
-e PCB. See below
-> >=20
-> > This really sounds like a breaking change that changes the meaning
-> > of
-> > the definition of this item instead of simply rewording.
-> >=20
-> > Everything written according to the original description is broken
-> > by
-> > this change.
->=20
-> Please give some examples. What has broken, which was not already
-> broken. There has been a lot of discussion about this over the last
-> year, so please do some careful research about what has been said,
-> and
-> try not to repeat past discussion.
+On 05/06/2025 10:10, Bartosz Golaszewski wrote:
+>>
+>> Bart,
+>> Given Krzysztof's valid concerns about the current name based
+>> lookup in pwrseq_get() and the benefits of phandle based resource
+>> linking in OF platforms: Would you be open to a proposal for extending
+>> the pwrseq API to allow consumers to obtain a sequencer (or a specific
+>> target sequence) via a phandle defined in their Device Tree node? For
+>> instance, a consumer device could specify power-sequencer =
+>> <&aon> and a new API variant could resolve this.
+>>
+> 
+> I can be open to it all I want, but I bet Krzysztof won't be open to
+> introducing anything like a power-sequencer device property in DT
+> bindings. Simply because there's no such thing in the physical world.
 
-Yes, I saw many related discussions.
+Yep
 
-I have the same question with [1], what's the answer?
+> The concept behind the power sequencing framework was to bind
+> providers to consumers based on existing links modelling real device
+> properties (which a "power-sequencer" is not). I commented on it under
+> another email saying that you already have a link here - the
+> power-domains property taking the aon phandle. In your pwrseq
 
-[1]
-https://lore.kernel.org/netdev/271c15a45f41a110416f65d1f8a44b896aa01e33.cam=
-el@ew.tq-group.com/
+Exactly.
 
-In addition, analyzing existing Ethernet drivers, I found two drivers
-with contradition: stmicro/stmmac/dwmac-qcom-ethqos.c and
-ti/icssg/icssg_prueth.c .
 
-The QCOM ETHQOS driver enables the MAC's TX delay if the phy_mode is
-rgmii or rgmii-rxid, and the PRU ETH driver, which works on some MAC
-with hardcoded TX delay, rejects rgmii and rgmii-rxid, and patches
-rgmii-id or rgmii-txid to remove the txid part.
-
-The logic of QCOM ETHQOS clearly follows the original DT binding, which
-describes "rgmii-id" as `RGMII with internal RX and TX delays provided
-by the PHY, the MAC should not add the RX or TX delays in this case`
-(the driver skips the delay for rgmii-id). The logic of PRU ETH follows
-the logic of the new DT binding. This shows that the DT binding patch
-is not a simple clarification, but a change of meanings.
-
->=20
-> The whole point of this change is this is often wrongly interpreted,
-> and there are a lot of broken .dts files. By including a lot of text,
-> explaining both the pure OS agnostic DT meaning, and how Linux
-> systems
-> should implement it, i hope i have made it less ambiguous.
->=20
-> > Although these PHYs are able to implement (or not to implement) the
-> > delay, it's not promised that this could be overriden by the kernel
-> > instead of being set up as strap pins.
->=20
-> If you want the kernel to not touch the PHY, use
->=20
-> phy-mode =3D 'internal'
-
-This sounds weird, and may introduce side effect on the MAC side.
-
-Well we might need to allow PHY to have phy-mode property in addition
-to MAC, in this case MAC phy-mode=3D'rgmii*' and PHY phy-mode=3D'internal'
-might work?
-
->=20
-> > In addition, the Linux kernel contains a "Generic PHY" driver for
-> > any
-> > 802.1 c22 PHYs to work, without setting any delays.
->=20
-> genphy is best effort, cross your fingers, it might work if you are
-> luckily. Given the increasing complexity of PHYs, it is becoming less
-> and less likely to work. From a Maintainers perspective, i only care
-> if the system works with the proper PHY driver for the
-> hardware. Anything else is unmaintainable.
-
-Well this sounds unfortunate but reasonable.
-
->=20
-> > > +#
-> > > +# There are a small number of cases where the MAC has hard coded
-> > > +# delays which cannot be disabled. The 'phy-mode' only describes
-> > > the
-> > > +# PCB.=C2=A0 The inability to disable the delays in the MAC does not
-> > > change
-> > > +# the meaning of 'phy-mode'. It does however mean that a 'phy-
-> > > mode'
-> > > of
-> > > +# 'rgmii' is now invalid, it cannot be supported, since both the
-> > > PCB
-> > > +# and the MAC and PHY adding delays cannot result in a
-> > > functional
-> > > +# link. Thus the MAC should report a fatal error for any modes
-> > > which
-> >=20
-> > Considering compatibilty, should this be just a warning (which
-> > usually
-> > means a wrong phy-mode setup) instead of a fatal error?
->=20
-> As i said, there are a large number of broken DT blobs. In order to
-> fix them, but not break backwards compatibility, some MAC and PHY
-> drivers are going to have to check the strapping/bootloader
-> configuration and issue a warning if phy-mode seems wrong, telling
-> the
-> user to update there DT blob. So, yes it is just a warning for
-> systems
-> that are currently broken, but i would consider it an error for
-> correctly implemented systems.
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Andrew
-
+Best regards,
+Krzysztof
