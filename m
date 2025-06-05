@@ -1,154 +1,155 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B138190692
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 05:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5873190692
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 05:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749100593; cv=none; b=Z4TJtevcQWmuBP3q8ylmmpDfrws90Bmg57Ipj55VtId8I8gBywHEhg94TecQ6xCilcqcJ8NJdjT+bLEUah1gcQy2Bwy5JelqhY2zLGZKxTNb7UzVcWfNQc8eIzNN8ubaV3a6aoOdeffvoK/qaCeerwlFuTLLLcZaqpLPr2kxFyE=
+	t=1749100730; cv=none; b=SSO0D/Y2XIeHIAfiVAJKfFddG7KG7Vb2pI2cPSza7VLsDYjWa5H6hRE7seoXu/T/pQqtfjX2BwLlgp+OU0Z9zqspYylPKyv/rPgDmF4dF2TOUEWt/BomTiANNJIa7oIqU0oMXR226LvcTdEz28kYLn+La10L3wLptlwmU552RMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749100593; c=relaxed/simple;
-	bh=CYL58g7kYDc1rH0y5+w0eOYo16sWWvSaOQfSGz/KHzo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Zcn9G2CFLWTeemhvFOseEqKh6N8vAIfcDo51bJZEJElaNcS97OkFED7KSJpfH8UFrNHsHrsaGxhhkINDesW3mzWdbQwW6rmHGLnY8CeT579w5UsDf+AgWqpTqCnCgkkCc9ZqENmEpbi7Dkx46PxsZ1jKgb6vuxlrb8RByzv9Zbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86cff1087deso112671039f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 22:16:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749100591; x=1749705391;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fzfoMGaWZi7K+F5w93H5VmQc+4wXzeXQZAhXGH3uZrE=;
-        b=KaYjT2Y0x7KPHEcTuXx15Q2Gn7iDuiUEi7O/4noqR+7ajKh1JL5w9BOjkpwbeEO2IE
-         UXIkdPzdQdqjlBk5IzCAndtNmVA8rTkPm+4XbXGyDQ3bqk2PgX+MXtPcyT1dEpZB+GQj
-         28z//9gWcNZ9Hx6gJcWSKnqP+stdZO71CYyzMyPMupIEIwulmLIrXWEPH1DDXtC5MUH2
-         sbqBktftagh5WMeTBSsWCBkUbaVLzB1Q69nuNM48Uto66s+gB9RJNeRU79s6gY6yxEt/
-         mD+A2e7dXXFSAYy7z5MdIM5D8Wvbo0AodKLh6O466Om2tx1SX1d1PI3cXvysjOKvRgoS
-         /d+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUI5SslnArr3R+l5r7SxPEw7POdX6nUgcR2J83G/5bBwvWClx2UhbaeLBvRRQZfKDVTLX1eu2mJeu7C97s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD6Zmo9kPVpcJS0VaSVQS1WKX4q65xvIPc5UpgTEI4ngeKcOyy
-	uXXpM7jc9dzhky9BGRH2u9yH9b/LaYsHZpN0Q+N+Q+rk8I7GhqO+7wlaHswwK8qapbEwrqdInb0
-	M1tLav7FnxOatQq2Xn+0qk4GHhb3zAx8bRQ7FqQ5/Kb/EjfeIJzfUe3WapiU=
-X-Google-Smtp-Source: AGHT+IGL9CPGtTJctwG9cugoEq4QaqsKV0ucSk5e5D2W64n5w+zRUS3hZWmiQpgCRrXXzvnR5oDsXcTZ9M0cnlaYHuCmaWpvXLCk
+	s=arc-20240116; t=1749100730; c=relaxed/simple;
+	bh=o3zxqi9FWZgYJW+hUkbDNUhlZIYPVYW8O5vjroK0W/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qR1kcdvTNyVSvr8jQgPsSBP67GPj/zSoktMuYDOk1Brhtr55JlERnwriJrNZ9fc+UoVcIOgO9QBAgaa1BmX5KV1/zD37VOSbbmd9E8hyrRp/N7oETK2nIbsR8rAbAB5ZSDzYZ3KxLlMSmQtD9LclROlu9rFoRRBwFnqpT7dB5oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dFUSSWg0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OQLhnjrn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dFUSSWg0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OQLhnjrn; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dFUSSWg0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OQLhnjrn";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dFUSSWg0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OQLhnjrn"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7660720F07;
+	Thu,  5 Jun 2025 05:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749100725; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M6YRlTArp4mKb+ynUhlVeCQIiNcQ2GjLBI82fuvz7Dg=;
+	b=dFUSSWg0RDbwBWjqUo9TH6r8OztgXCb17cqSLW8r4VbUN+ZfjQIpebtVUVXYedkhgbmtX9
+	4jWTfAbCK+4CSu7aiZdfYgULU7Op/ZW/OV/5Uz9agVgsQyfBUC0RRh40Tcig8VqbdqDwm7
+	Yd3tS58Sq/cRU+EMFF/8vnQOOejORFM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749100725;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M6YRlTArp4mKb+ynUhlVeCQIiNcQ2GjLBI82fuvz7Dg=;
+	b=OQLhnjrnknf+r7qx5geJLQmlPSmBVTStq5ukqgvTYm6eQIcZlEVRA1mmDxAjWOyrbfXV32
+	FOBDdvVbKWEHyNBQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=dFUSSWg0;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=OQLhnjrn
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749100725; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M6YRlTArp4mKb+ynUhlVeCQIiNcQ2GjLBI82fuvz7Dg=;
+	b=dFUSSWg0RDbwBWjqUo9TH6r8OztgXCb17cqSLW8r4VbUN+ZfjQIpebtVUVXYedkhgbmtX9
+	4jWTfAbCK+4CSu7aiZdfYgULU7Op/ZW/OV/5Uz9agVgsQyfBUC0RRh40Tcig8VqbdqDwm7
+	Yd3tS58Sq/cRU+EMFF/8vnQOOejORFM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749100725;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M6YRlTArp4mKb+ynUhlVeCQIiNcQ2GjLBI82fuvz7Dg=;
+	b=OQLhnjrnknf+r7qx5geJLQmlPSmBVTStq5ukqgvTYm6eQIcZlEVRA1mmDxAjWOyrbfXV32
+	FOBDdvVbKWEHyNBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D3B6713A1D;
+	Thu,  5 Jun 2025 05:18:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EsXDMLQoQWjyBAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 05 Jun 2025 05:18:44 +0000
+Date: Thu, 5 Jun 2025 07:18:43 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] mm,memory_hotplug: Implement numa node notifier
+Message-ID: <aEEos-bG7cq0C8gI@localhost.localdomain>
+References: <20250603110850.192912-1-osalvador@suse.de>
+ <20250603110850.192912-3-osalvador@suse.de>
+ <ddcdd8b9-566c-4f6c-b1f7-861e93a80fbb@redhat.com>
+ <aEA-K3hTvhtdUxuA@localhost.localdomain>
+ <9a845c21-5cfb-4535-97bd-0b02f5852457@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3e8d:b0:3db:6fb2:4b95 with SMTP id
- e9e14a558f8ab-3ddbedd422fmr77706325ab.18.1749100591318; Wed, 04 Jun 2025
- 22:16:31 -0700 (PDT)
-Date: Wed, 04 Jun 2025 22:16:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6841282f.050a0220.2461cf.000d.GAE@google.com>
-Subject: [syzbot] [ocfs2?] kernel BUG in ocfs2_write_begin_nolock (2)
-From: syzbot <syzbot+f34f8bb121f222fb1f38@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a845c21-5cfb-4535-97bd-0b02f5852457@redhat.com>
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[linux-foundation.org,suse.cz,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org];
+	DKIM_TRACE(0.00)[suse.de:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 7660720F07
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.01
 
-Hello,
+On Wed, Jun 04, 2025 at 02:47:28PM +0200, David Hildenbrand wrote:
+> Just to clarify, these were the 3 notifiers each that belong together. I was
+> not sure about NODE_CANCEL_ADDING_FIRST_MEMORY vs.
+> NODE_NOT_ADDED_FIRST_MEMORY.
 
-syzbot found the following issue on:
+I started working on the new respin and the moment came to make a
+decision about this.
+I think I'd go with NODE_CANCEL_ADDING_FIRST_MEMORY, for two reasons.
+One is that memory notifier also uses that therminology, so I'd use that
+one for the node notifier to keep it consistent.
+Someone could argue whether we are perpetuating a bad decision naming
+though :-).
 
-HEAD commit:    3a83b350b5be Add linux-next specific files for 20250530
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=125f200c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28859360c84ac63d
-dashboard link: https://syzkaller.appspot.com/bug?extid=f34f8bb121f222fb1f38
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/e18e458d13c9/disk-3a83b350.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a1c40854811c/vmlinux-3a83b350.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/571f670b130a/bzImage-3a83b350.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f34f8bb121f222fb1f38@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-kernel BUG at fs/ocfs2/aops.c:1389!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 6894 Comm: syz.4.220 Not tainted 6.15.0-next-20250530-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:ocfs2_populate_write_desc fs/ocfs2/aops.c:1389 [inline]
-RIP: 0010:ocfs2_write_begin_nolock+0x42e0/0x4340 fs/ocfs2/aops.c:1687
-Code: 00 eb 05 e8 82 54 28 fe 49 bd 00 00 00 00 00 fc ff df e9 23 fe ff ff e8 fe dc cd 07 e8 69 54 28 fe 90 0f 0b e8 61 54 28 fe 90 <0f> 0b e8 59 54 28 fe 90 0f 0b e8 51 54 28 fe 90 0f 0b e8 49 54 28
-RSP: 0018:ffffc90019b97240 EFLAGS: 00010293
-RAX: ffffffff83980b4f RBX: 0000000000000002 RCX: ffff88802530da00
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
-RBP: ffffc90019b97800 R08: ffff88802530da00 R09: 0000000000000006
-R10: 00000000fffffffc R11: 0000000000000000 R12: 0000000000000000
-R13: dffffc0000000000 R14: 0000000000000001 R15: ffff88805b968010
-FS:  00005555780fd500(0000) GS:ffff888125c53000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000110c2f56bd CR3: 00000000675d4000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __ocfs2_page_mkwrite fs/ocfs2/mmap.c:93 [inline]
- ocfs2_page_mkwrite+0x600/0xc40 fs/ocfs2/mmap.c:144
- do_page_mkwrite+0x14a/0x310 mm/memory.c:3378
- wp_page_shared mm/memory.c:3779 [inline]
- do_wp_page+0x268d/0x5800 mm/memory.c:3998
- handle_pte_fault mm/memory.c:6105 [inline]
- __handle_mm_fault+0x1144/0x5620 mm/memory.c:6232
- handle_mm_fault+0x40a/0x8e0 mm/memory.c:6401
- do_user_addr_fault+0x764/0x1390 arch/x86/mm/fault.c:1387
- handle_page_fault arch/x86/mm/fault.c:1476 [inline]
- exc_page_fault+0x76/0xf0 arch/x86/mm/fault.c:1532
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0033:0x7f79671566ab
-Code: fa 10 73 2d 83 fa 08 73 46 83 fa 04 73 16 83 fa 01 7c 10 8a 0e 74 0a 0f b7 74 16 fe 66 89 74 17 fe 88 0f c3 8b 4c 16 fc 8b 36 <89> 4c 17 fc 89 37 c3 c5 fa 6f 06 c5 fa 6f 4c 16 f0 c5 fa 7f 07 c5
-RSP: 002b:00007fff1cbdc378 EFLAGS: 00010202
-RAX: 00002000000005c0 RBX: 0000000000000004 RCX: 0000000000737562
-RDX: 0000000000000006 RSI: 0000000075622f2e RDI: 00002000000005c0
-RBP: 00007f79673b7ba0 R08: 00007f7967000000 R09: 0000000000000001
-R10: 0000000000000001 R11: 0000000000000009 R12: 00007f79673b5fac
-R13: 00007fff1cbdc470 R14: fffffffffffffffe R15: 00007fff1cbdc490
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:ocfs2_populate_write_desc fs/ocfs2/aops.c:1389 [inline]
-RIP: 0010:ocfs2_write_begin_nolock+0x42e0/0x4340 fs/ocfs2/aops.c:1687
-Code: 00 eb 05 e8 82 54 28 fe 49 bd 00 00 00 00 00 fc ff df e9 23 fe ff ff e8 fe dc cd 07 e8 69 54 28 fe 90 0f 0b e8 61 54 28 fe 90 <0f> 0b e8 59 54 28 fe 90 0f 0b e8 51 54 28 fe 90 0f 0b e8 49 54 28
-RSP: 0018:ffffc90019b97240 EFLAGS: 00010293
-RAX: ffffffff83980b4f RBX: 0000000000000002 RCX: ffff88802530da00
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
-RBP: ffffc90019b97800 R08: ffff88802530da00 R09: 0000000000000006
-R10: 00000000fffffffc R11: 0000000000000000 R12: 0000000000000000
-R13: dffffc0000000000 R14: 0000000000000001 R15: ffff88805b968010
-FS:  00005555780fd500(0000) GS:ffff888125c53000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005561c2044660 CR3: 00000000675d4000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+The other reason is that to me, it sounds more natural as the way I see
+it, we are canceling an ongoing operation (memory-hotplug).
+Now, I can also see the point in the NODE_NOT_ADDED because the memory
+could "not be added in the end", but at the end of the way only one can be picked :-D.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Oscar Salvador
+SUSE Labs
