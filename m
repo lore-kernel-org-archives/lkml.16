@@ -1,36 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBCC1C862E
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 05:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E254C1DDC22;
+	Thu,  5 Jun 2025 05:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749102534; cv=none; b=CeyLgSM3bcjkVXqbGqZ8xKi7qTwYMKN33w8wzv6+hd6fpMB8xvBJ0gkXS2WgR78tCN+Gqa8rR01Dm3HVp0NUJhHt9s2uqH80EY43ifDkGXmu9obNE8FVPzS624iH9DHKG4KfFkh1p5JVLo/kJ4B+MSBoAKujXqRrIXM/QsE1r7Q=
+	t=1749102535; cv=none; b=T6Cy/NQ7+52top0Za5E8wTmFbmxe8YAu0IC/AbBInpCFqyziFTqiDpHrpQFDodJEh/ali9o3zrtRWXl/Xlu2jBsTSzBTTuDtCiqHawUeuVekmmW/jg798ka7kzNjf2QGT75M4m7cuPDzyNr/cnzPaJr4YJWRcqOTfaCtQaVp+hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749102534; c=relaxed/simple;
-	bh=ioeIikdVNsjZwbe54sIZrips7vq25Iqvahj3ht89His=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tKjzNMU6SDvggemk3NSuAM6R7UPoNE6mFwbBXNZIjFufSybkQ6HAJi5VLfqmQgDncGiPlxY08OMEeOJ8oIwt07CeeRCS7YmQIoOYGBwHvvjcx8/LQgy04EC9FphCifX9Reqy1cFpcJcpDEIDVV3EBuWlQHhJUfDxhaJr9AC0gxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=O9DIo/F4; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1749102535; c=relaxed/simple;
+	bh=i7Lj9tfu5NAQfMbyaPdpkBbDZUvI5+SMvlElgB75CI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Pmu19KBegPPT7FdAq7rqhlr9KKyJeQch0WKZorJNl/MMpJd0xqRKpqcOMHgYQXkPwBNaeY8FDEVBuURGc7zSPlExaiDKYcpOLONN3aH+Wr914XvOafVM++IJGbtmWdgq/YOExjG6ALqMirtSU3TzIgisKp5EJaHihMH1ThS8R8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=BDMRmr5e; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="O9DIo/F4"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="BDMRmr5e"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 6B96426012;
-	Thu,  5 Jun 2025 07:48:48 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 71CED260B0;
+	Thu,  5 Jun 2025 07:48:51 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id ghSKkJ2gbIWl; Thu,  5 Jun 2025 07:48:47 +0200 (CEST)
+ id 6IFpYv2bA_xj; Thu,  5 Jun 2025 07:48:50 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749102527; bh=ioeIikdVNsjZwbe54sIZrips7vq25Iqvahj3ht89His=;
-	h=From:To:Cc:Subject:Date;
-	b=O9DIo/F4cwKDNXUl/A7auardTOia3VtgJUzXGM9mQ6Wn0tIxCcdX2ukrwrSV7h6O/
-	 ZyX7nSfsK1/9eZX3QH4lO0hOhStJ+SAeWqyIWa6pFJnotYZBZgSRZtC1T933pb4+kk
-	 mb6wekyO7yMPpibJ0nHcZFlIVNbixIMssPg0Ar4CAR8VcGMH87u7Ihh4F096oNTuvv
-	 DZkrfcwLtIyfbnajZR2HZZdyYNVPzJN3QQiJ9rTiswQQg3Poj2wndDsOI8G4r3tv2n
-	 W4cAg39n6/qOgKdi2ljbA5jU46sw6oPZvswbspw8IIavT9id9c+TOIDe95FQjaNhPn
-	 amde2fiDzyoug==
+	t=1749102530; bh=i7Lj9tfu5NAQfMbyaPdpkBbDZUvI5+SMvlElgB75CI0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=BDMRmr5eXNBGMSorzdB5BFXakNR12aprNezRo8j7hFAeFrKI9c5LNNA0m8aUGiT9l
+	 dTMf3OKHkccJiuUPWnie7wNEZGvMJuqnN1uEEOUNReuNR60M2dDP7RdxDoSY1qUioF
+	 X4oL6lwllNVHjN9h7zDfqlc5o5pp4wOMTn2nM3ACMrC2Le2R6Cyf9lG3YwMykj9qHL
+	 /v4GIWEMuMei0Z1+BeJnp5EWCELLZtMmNbnONHpKEsxnoG8DYtn0/53oKHCat38vD8
+	 G1R2xC58bl29LcHugHeuWAtV6qHhichRvcHttrWYroWqm+ZzMk/FBNntem1sLYSB6s
+	 636z8lfl0HFGA==
 From: Yao Zi <ziyao@disroot.org>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Jianmin Lv <lvjianmin@loongson.cn>,
@@ -39,10 +40,13 @@ Cc: linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Mingcong Bai <jeffbai@aosc.io>,
 	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v2 0/2] Backlight control improvements for loongson_laptop
-Date: Thu,  5 Jun 2025 05:48:26 +0000
-Message-ID: <20250605054828.15093-1-ziyao@disroot.org>
+	Yao Zi <ziyao@disroot.org>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/2] platform/loongarch: laptop: Get brightness setting from EC on probe
+Date: Thu,  5 Jun 2025 05:48:27 +0000
+Message-ID: <20250605054828.15093-2-ziyao@disroot.org>
+In-Reply-To: <20250605054828.15093-1-ziyao@disroot.org>
+References: <20250605054828.15093-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,33 +55,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I've observed strange screen brightness changes on TongFang L860-T2
-3A5000 laptop after resumption. It's found that a brightness value that
-doesn't match the hardware state before suspension is "restored" for the
-EC, causing the strange behavior.
+Previously during probe, 1 is unconditionally taken as current
+brightness value and set to props.brightness, which will be considered
+as the brightness before suspend and restored to EC on resume. Since a
+brightness value of 1 almost never matches EC's state on coldboot (my
+laptop's EC defaults to 80), this causes surprising changes of screen
+brightness on the first time of resume after coldboot.
 
-This series fixes the behavior by obtaining EC's brightness setting
-instead of using a constant as current brightness on probe.
+Let's get brightness from EC and take it as the current brightness on
+probe of the laptop driver to avoid the surprising behavior. Tested on
+TongFang L860-T2 3A5000 laptop.
 
-While digging through the code, I've found some unused,
-power-control-related functions in the driver. They're cleaned up and
-used to support power control of backlight in the second patch as well.
+Cc: stable@vger.kernel.org
+Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+---
+ drivers/platform/loongarch/loongson-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changed from v1:
-- Reword commit message of PATCH 1
-- PATCH 2
-  - Always issue a power-on command on probe to ensure the backlight has
-    been powered, matching our expectation
-  - Cache backlight state in the driver to reduce interaction with EC
-- Link to v1: https://lore.kernel.org/loongarch/20250531113851.21426-1-ziyao@disroot.org/
-
-Yao Zi (2):
-  platform/loongarch: laptop: Get brightness setting from EC on probe
-  platform/loongarch: laptop: Support backlight power control
-
- drivers/platform/loongarch/loongson-laptop.c | 78 ++++++++++----------
- 1 file changed, 39 insertions(+), 39 deletions(-)
-
+diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+index 99203584949d..828bd62e3596 100644
+--- a/drivers/platform/loongarch/loongson-laptop.c
++++ b/drivers/platform/loongarch/loongson-laptop.c
+@@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
+ 	if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
+ 		return -EIO;
+ 
+-	props.brightness = 1;
++	props.brightness = ec_get_brightness();
+ 	props.max_brightness = status;
+ 	props.type = BACKLIGHT_PLATFORM;
+ 
 -- 
 2.49.0
 
