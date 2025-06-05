@@ -1,82 +1,63 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D075FEE6;
-	Thu,  5 Jun 2025 19:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385365FEE6;
+	Thu,  5 Jun 2025 19:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749153159; cv=none; b=fLdnxRIPT+3dTXRlxFNhBKOtD1P1YwhmPyNZUMKkIOPXVDGdzWZnWxxxoWgz+1ihrWl2NQn3ZgrEfw/6JBDf+G4Z7+gl8g9utLi3gA0YiGA7ysZOynkgGPWSvKGXawcODeyKR7jQJ4SRAOog55xbNAKmf7FH+btXDnsLCo5KEA0=
+	t=1749153169; cv=none; b=li5LPFz/kX/zKiuiy5tBJ5c8YYlm80muMAKBrfp7xd3ABze2Us32y7AeNhcog80bJez5IcyvMoQllPCmv47BvumMUAtlg7fGl2ZxBU45BMXJC3tMC+bsxQoHEaTTeZO26WPHBsSxz/EFjlhx94x3viJfnRuktAAWhIomssQJQao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749153159; c=relaxed/simple;
-	bh=NrA8+ELzWL+5QvlJ0VNSAx2hi+8qSkXlIoSXyHc5fBA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kflgLTY4sPSXYuKNul+pyJcfFvgblwcFGJq9pGE2DMaZGp7U1JW1WlOyL6JH5whap2/Idsie2T8dqUgZdIlBQzkc1m1zyYrXWFT1LumXQ/C6hF6fIf7+RGSBZMBM5vmhONzuufbPoDCCzmLfbZLQhDnMUAdvCyP7AgN7lcOcnms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=PWEUEkdX; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1749153169; c=relaxed/simple;
+	bh=2vCTRriFvgVJBP/Lq30iL/1OL8pYDeS9RFxclbxGhVg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=UPUlxKwsHtsTODRaJr+1K+TsLioXwwBE7Ws7HSHDKHHp3JgCQvbePsyBC0XsMrRyOo1gYs1YleA7DVThyGFZMsNQ92l+BFnR+x8ntXyRQV4IJTNzf/lEz4q39uCrdCDfpqilQZfn1mLxGV8qJuw0wZZJUTEbSdjQRDUNI5LRFvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlyQePWc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="PWEUEkdX"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 0D55041ED3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1749153157; bh=pkg6djgNhdNpf9TwFs43z0gZDGrP/br4agW+AXMjS7s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=PWEUEkdXLeUaTq6hJlXYvocAdjrlZn/7q75T0Uw9geVRFlNtqtLDL1eNX5gaLCdso
-	 LTa+bmFN1n+YrqtvPSoHW/s+9enS9O2wzRYyxkHO5+meM09jne9OKZFFPDqqsMS+4w
-	 bFSyg//3eW5kCobDLdRmbE8po6eeD8mHSgh5ltiv7Q7nB36SpBDDqAB1F5N63dQ3Jp
-	 PH7O0zg48Cjp9j/HxGU20egzR+US+9kTHKiLO6m4EA+NHbuwlcHgFvZEjzwiw8UfiC
-	 7Oh9WWorI8epQywWAtY/RqWEe1x0qylniDygzcSIULeGn7UwlcdH+VWVfMoHXbpR8f
-	 VuM7JzlQOE6pA==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 0D55041ED3;
-	Thu,  5 Jun 2025 19:52:36 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Suren Baghdasaryan <surenb@google.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>
-Subject: Re: [PATCH] scripts/kernel-doc: drop "_noprof" on function prototypes
-In-Reply-To: <aEHwdoNCrF4-KY_i@casper.infradead.org>
-References: <20240326054149.2121-1-rdunlap@infradead.org>
- <aEHq_Jy3hPQIzaO-@casper.infradead.org> <875xhaf145.fsf@trenco.lwn.net>
- <aEHwdoNCrF4-KY_i@casper.infradead.org>
-Date: Thu, 05 Jun 2025 13:52:36 -0600
-Message-ID: <871pryezjv.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlyQePWc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18490C4CEE7;
+	Thu,  5 Jun 2025 19:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749153169;
+	bh=2vCTRriFvgVJBP/Lq30iL/1OL8pYDeS9RFxclbxGhVg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ZlyQePWc+QKBFjhEUmuPW0CaqwneW3vAVgd7oKeN9MIMoFIz7RBqM4VP5jXd3/q7p
+	 2NoOAVsTSDeDOXF+ouWGF+Rmg0BjmD4euJbK4Eb/FM7bpsz9GZjgaknK4UEW/M/0IZ
+	 nLtq8oZU01SdapDIa0rq3HxZ0DQi7Nzec+O4EUN3X1IJtsfVNcZzCGR8Xb833nlKdQ
+	 MLbOdbZAqccJGIGwWe4uIAsloaxMSNfTPa3IHvvcvnMzpc7wgWG7p9Jg9cFyCAZZ5S
+	 mIAi+QzvKW4/w1Wk8BtdaRstN45pOhSAvaZZG3vcXw1gOaQP5DSuHWDzOTXGltsyYt
+	 SIQIa+PXBfL9A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33EAB39D60B4;
+	Thu,  5 Jun 2025 19:53:22 +0000 (UTC)
+Subject: Re: [GIT PULL] Power management fixes for v6.16-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAJZ5v0hBGhVuwsfQW=-MDp3nLL_5epaYYHqmPY-DY9_g6wciSQ@mail.gmail.com>
+References: <CAJZ5v0hBGhVuwsfQW=-MDp3nLL_5epaYYHqmPY-DY9_g6wciSQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0hBGhVuwsfQW=-MDp3nLL_5epaYYHqmPY-DY9_g6wciSQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.16-rc1-3
+X-PR-Tracked-Commit-Id: 8887abccf8aa16795f23ef3a3b25650cb8aa804c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e271ed52b344ac02d4581286961d0c40acc54c03
+Message-Id: <174915320068.3217379.7026462050758907526.pr-tracker-bot@kernel.org>
+Date: Thu, 05 Jun 2025 19:53:20 +0000
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-Matthew Wilcox <willy@infradead.org> writes:
+The pull request you sent on Thu, 5 Jun 2025 20:55:05 +0200:
 
-> kernel-doc is our own format, so sure, we can add whatever marker
-> we want to it.  I think it's not quite general enough because we have
-> situations like:
->
-> static inline void foo(int x)
-> {
-> 	numa_foo(x, NUMA_NO_NODE);
-> };
->
-> /**
->  * foo - Frobnicate
->  * @x: How many
->  * @nid: Which node
->  */
-> void numa_foo(int x, int node)
-> { .. }
->
-> and now we're documenting a parameter that doesn't exist.  The only
-> solution is to move the kdoc to the header file, which is annoying for
-> everyone.  Or replicate the declaration in the C file and kdoc it there.
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.16-rc1-3
 
-In this case, though, is there a reason to not document foo() as a
-separate function?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e271ed52b344ac02d4581286961d0c40acc54c03
 
-jon
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
