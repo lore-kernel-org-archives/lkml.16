@@ -1,149 +1,186 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FCE1E47AD;
-	Thu,  5 Jun 2025 15:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0761E1DE2
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749139035; cv=none; b=edOqtI4hX9SyRZ/lQc2O23A9ysvbgLtWo6A3tT+ASQ/UbBDUiTcbhBfFy8Z2mQEqdue56G/DzqUzARDP2MMH1eHLH5V1bpoKxcX9RgNMREXSgGnOGUoG9+E3sYAC4FYB7++1kVmDmanTB0q9+7b7827PBk4QDpXwOvJe9gcix3c=
+	t=1749139068; cv=none; b=dn/W22IywfgLSdkRTI9ZGzTnhLZHf6yMkfKXSkO0ISWfQw/YnkoR5KfUQapyIBfe1ZN19IeD2PNOwfW4zIHB7ed+XOhXh9yxTi9zDKnKa5ApP9+NVbqFbyI9ciVkGcO8sWVy685YUkuL3TqBrnRDV4ltscoCHRyjfjsj0r7K068=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749139035; c=relaxed/simple;
-	bh=3Jf/SJCCZMnPIW6ljfS/il7LMpnZ627rg6AgyFtW8dg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=TgzHnaVZRDrVddfA4ekreznOOHYikDtnlECfmFkOtK3OAVt3oR0lVMzqieQyKO9WBQMbE6AWYqSzp3r9n0VEWQuXtBcrcxIulzWmMdKBGK+RvlP2K+eCXLMM4gYwZcZqQB2flX/biA2DqaHpHNWZmOkesX20LdUM2f16r9HUb6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=QpTguXxY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S6T+XHo7; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749139068; c=relaxed/simple;
+	bh=WgMGgdMd38oyIPbik/hGQ40Tix6e4NF6Yzsh7po2Fqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E3PXHNHPhZdVMaY5r8F5oG8l7bBAnd6UEOgkpxdAbgAbxvTP9woGS1cm6yxDZetxjBmyL/sOuK6zdhFk3WTMLxNFwAqCnb2D5UhBBUyEXGOZ+Di0842fFhVXgqscVZGjpAhVcWzip8vZubvTHEkoA2h3EUel/6JiDKvki4aHEhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=foundries.io; spf=pass smtp.mailfrom=foundries.io; dkim=pass (2048-bit key) header.d=foundries.io header.i=@foundries.io header.b=apTrcIVq; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=foundries.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foundries.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="QpTguXxY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S6T+XHo7"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id 72978138031A;
-	Thu,  5 Jun 2025 11:57:12 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Thu, 05 Jun 2025 11:57:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749139032;
-	 x=1749225432; bh=i36Nkr/BYr7tE7XmsmYgh9umetnEHRPzzI0WI95Neu8=; b=
-	QpTguXxYJt+tlZ/cGftoTjnyeu8tvD8Dc/RJW/HFcC73A1okUfCdjdhfyuVB9W+/
-	NSnxfWnwTPaQ7G+ru0qyyQF63hzqH/tmMpwZvzzPGdxIe4SJJMN7+yAbYa0K7mtT
-	A2SWXWDqkQfT+cJzuM1wqdc02PWWKbRXwopnw678uVmALGhWDrtQ8dNOqe+jwAvE
-	KMwtuGTCD18rQEBwzgAJ47AGwH43N2A0Y4ksPSQWB+kHz8GZ4tsT53QHDNg0WRSK
-	fQF279Jn18ilNO055tdodh21OTQA1Jph3LjfwQovnxb0FBzCexbXWP5O4xs4gUG7
-	eq+OCq/boUtWWFOx6hDXQg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749139032; x=
-	1749225432; bh=i36Nkr/BYr7tE7XmsmYgh9umetnEHRPzzI0WI95Neu8=; b=S
-	6T+XHo7AwD6M4dmbUVcmICQCGk6iZZuDyUXaM48afdbLXgxx8XySadhmncA+oFop
-	B8eAjx7dAEOdF9rL8BvLWB8xKEUuDtpdJyJKUE57NaffCakEs6QxrPO2MFfwkGSW
-	34gDP9yeYLUYASomfCuIwucIBbfPk4oFExTUWFNWGHqFqrM7P46n5wcTXZY09muj
-	NSe6UPj/RJJiRynAIvBj5tqvy4E2lB6+5pS0WbzvXgyC4OSMKR70MRwLGKZ2lwp6
-	2fejhypXcJNGls8eLAU2Rkr/J1OphKRlcg/bJBZAwsmhr6i5yB1rk5xHCRG8RJt/
-	STR++sohnI5NTeLLhR1sw==
-X-ME-Sender: <xms:V75BaMAv4H3eukwV-sxwQaUFHdJdzQN6iXeiEtuL17FvMxWGjovVmg>
-    <xme:V75BaOjwUNBBmjee_uephyNOFxaby04reLg8SFCVpOkdhFCe5a0GRZh7QVvGZpokz
-    4-UPjsaZqTSFZsmA3o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdefkeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
-    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhveekjeeuueekfefh
-    leeljeehuedugfetffdvteekffejudelffdvjeekfeehvdenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
-    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
-    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
-    hrpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhn
-    thgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
-    hinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhs
-    thhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfi
-    hnrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgt
-    phhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:V75BaPlaJ6iOAtj5fbammoZONO5J36WkP9qPoprU6AjpxYg3LuYAkQ>
-    <xmx:V75BaCze7ATTTbjAyOdZWoqFKRDRu7YL_ULE-o6Y8vqQvQS2ILnuxA>
-    <xmx:V75BaBTlSR1fyR4_SnZMWoWp5treq-hukxLoNwsFZa6pTmr4Arom_w>
-    <xmx:V75BaNYdneM1M-ZUDFLrLtTM4NEaJvp2rhvL2zl7lrNnT-7qT051Dw>
-    <xmx:WL5BaFcU5x9TKTJtIbko64iu5BV2QuPXtQgp0ELSXOmMjuNycj1-oWrP>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B31352CE0062; Thu,  5 Jun 2025 11:57:11 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=foundries.io header.i=@foundries.io header.b="apTrcIVq"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5532e0ad84aso1266539e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 08:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=foundries.io; s=google; t=1749139064; x=1749743864; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IL2rqOYu8VKVkpdUoK8lFHqW1MNjlNlFCTBMUdbtw5I=;
+        b=apTrcIVq+XRT0VliWIz7SMUMW2qyhhk+nRIOtZCUdAyTbY3Hd0o14nIjAy529f1DwZ
+         JKqMfdXUcr5L7Odf0Qqs4dq44baXJd4OsS8V8eX2jVj2IZRmAkQxcRZviLsLa3FpbaRy
+         //YNr2+yW1U8RLlFeN5pS9R+Ctlqng3NSMpUMCI6IyuIdysXr1sJrkITFIw1f5auTOpD
+         5Xl+GgYKs9uy8J/i1JLX2dtDyObYNSb9nZP5pp9TjgMQdR11ABUZBW7Yd5rZg02sW1qO
+         we5hNTBCtaKBADrqF3BE9n24DZYB+03L6WDKf5IttMgjRLx0vuD3ElQkLEOWGdvyt/vr
+         ucXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749139064; x=1749743864;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IL2rqOYu8VKVkpdUoK8lFHqW1MNjlNlFCTBMUdbtw5I=;
+        b=KGuyoOCCvRTPgt5Bh5kpK9AD4cvnNhKMhav9XNhPFG3LiGDwnLGBrcg2jGwV8+2J4n
+         Fw8/ip3zTBI+7mhd0wqoVJjk1uAkYg3KSl4QrjEfFOVrmbvPqjCgCWhiADJdRLycThuX
+         H0oWWQhRDclsfgjHvcGBI20JhijehsjLlINlJ5K9681K1KsmbZL0FsWmkNsjArGJ5d9A
+         CXTVdIbnBc6a4zsz+yR91+auKbB8nvGKkWmUnzr//Rj1pVb0f530aGl+3yEic7uRtj/v
+         iKE5UXIY7+KC7D/FSm8c3TWPVp0dQ4Xp8TJS2PjgWcdkw2PVWqtyvrMrj2wmFx+Dmgp/
+         /5vA==
+X-Forwarded-Encrypted: i=1; AJvYcCUj1tPII7tb6+lxLHe52il7DAbk6m6d4kzhxVgneZLcHAN0YWkHGE+GjOqsp9m4eyQ+3U/gA7B0Pyx0NDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBQk5MAbAAk1Ee2Qyi+/nbX7VEt3HaEaDiQn6lsuMlAkfNYDDi
+	88j9RjtEviaXldYSP2cy67R05/YtF1fl9qFWIWt4y82TYCYUfRDXEEXO7UPTeWDlmoE=
+X-Gm-Gg: ASbGncshVTAsfHFruEiQKsNzce4PRafIn5kNdNDC/s/GtiPwEEjE6MUGfB/XHtafzts
+	vpiT3qgZ18BR/z+eFyGcJfVj3+C+6fnq95mIxCgS5ScyDrMZHoPFvpVt2ve0p0ZTaE3t7gKH0s4
+	6aXwdVOkJ8JAeyGAdMb5fVYAO1rHO6PEMzC3lx2VYw3eAjb1u2ZcXMSW0ZZM8CQSk9MrTNOHFvd
+	T+cK+13MEGdh+v2RB9BUEqnHqZGITPCvU+n7NQuy/DUr/7YHcc+hsntHL3C2LaGoxg80cXLF3B/
+	JJwfXYuE4V472GtqtTwqoUdzK4a65GYdeMa3puwYtqXiswipvMC9jptYP7lyRSEFTFoj6ZPa1IE
+	3/GrtMSEjOsb5S7/A24TmwLXf6wyjOQupQpyI4CfYzwQOx4ZFr7gSb2s=
+X-Google-Smtp-Source: AGHT+IEB3YEeO6zjpPzz4GmREpxraxHTzP68+ARHxZnojSSC5uKraBhg6PJus5tZV4YR+AghTaJ4SQ==
+X-Received: by 2002:ac2:4c45:0:b0:553:510d:f46b with SMTP id 2adb3069b0e04-55356df49e0mr2781393e87.32.1749139063513;
+        Thu, 05 Jun 2025 08:57:43 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553379374ffsm2647976e87.216.2025.06.05.08.57.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 08:57:43 -0700 (PDT)
+Date: Thu, 5 Jun 2025 18:57:41 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@foundries.io>
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>, 
+	Doug Anderson <dianders@chromium.org>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] soc: qcom: mdt_loader: Ensure we don't read past the
+ ELF header
+Message-ID: <bsnn6xpkubifuwxz4kccvves3ifq4ocp53qmbobv6ilmnfuh7x@eejawp7thorm>
+References: <20250605-mdt-loader-validation-and-fixes-v1-0-29e22e7a82f4@oss.qualcomm.com>
+ <20250605-mdt-loader-validation-and-fixes-v1-1-29e22e7a82f4@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T107eb5199b18744c
-Date: Thu, 05 Jun 2025 11:56:51 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
- ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Armin Wolf" <W_Armin@gmx.de>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- linux-doc@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>
-Message-Id: <63e00b35-361f-41ac-8341-f30c2e9dade9@app.fastmail.com>
-In-Reply-To: <d6df0dcf-5786-0ad6-dd30-3a8c9f16426e@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
- <d6df0dcf-5786-0ad6-dd30-3a8c9f16426e@linux.intel.com>
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605-mdt-loader-validation-and-fixes-v1-1-29e22e7a82f4@oss.qualcomm.com>
 
-Hi Ilpo
+On Thu, Jun 05, 2025 at 08:43:00AM -0500, Bjorn Andersson wrote:
+> When the MDT loader is used in remoteproc, the ELF header is sanitized
+> beforehand, but that's not necessary the case for other clients.
+> 
+> Validate the size of the firmware buffer to ensure that we don't read
+> past the end as we iterate over the header.
+> 
+> Fixes: 2aad40d911ee ("remoteproc: Move qcom_mdt_loader into drivers/soc/qcom")
+> Cc: <stable@vger.kernel.org>
+> Reported-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> ---
+>  drivers/soc/qcom/mdt_loader.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
+> index b2c0fb55d4ae678ee333f0d6b8b586de319f53b1..1da22b23d19d28678ec78cccdf8c328b50d3ffda 100644
+> --- a/drivers/soc/qcom/mdt_loader.c
+> +++ b/drivers/soc/qcom/mdt_loader.c
+> @@ -18,6 +18,31 @@
+>  #include <linux/slab.h>
+>  #include <linux/soc/qcom/mdt_loader.h>
+>  
+> +static bool mdt_header_valid(const struct firmware *fw)
+> +{
+> +	const struct elf32_hdr *ehdr;
+> +	size_t phend;
+> +	size_t shend;
+> +
+> +	if (fw->size < sizeof(*ehdr))
+> +		return false;
+> +
+> +	ehdr = (struct elf32_hdr *)fw->data;
+> +
+> +	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG))
+> +		return false;
+> +
+> +	phend = size_add(size_mul(sizeof(struct elf32_phdr), ehdr->e_phnum), ehdr->e_phoff);
 
-On Thu, Jun 5, 2025, at 4:03 AM, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 4 Jun 2025, Mark Pearson wrote:
->
->> Create lenovo subdirectory for holding Lenovo specific drivers.
->>=20
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->> Changes in v2:
->>  - Rebased to Linus's latest as requested
->>  - Updated documentation reference
->>  - Updated MAINTAINER file
->>  - Removed X86_PLATFORM_DRIVERS_LENOVO as I was worried about
->>    maintaining backwards compatibility for the distros.
->>  - Removed 2nd patch in series splitting out hkeys. That will be for
->>    the future
->
-> +# Lenovo x86 Platform-Specific Drivers
-> +# Lenovo X86 Platform Specific Drivers
->
-> Any possibility to be consistent in formatting that? :-)
->
-Ooops - yes. I'll fix.
+Nit, this should be a max(sizeof() and ehdr->e_phentsize.
 
-> Why does the admin guide contain a history book?? It should be guide f=
-or=20
-> this version of kernel, not what was there in 2.6.x era ;-D. Please do=
-n't=20
-> add to that any more, preferrably remove the history part afterwards i=
-n a=20
-> separate change.
->
+> +	if (phend > fw->size)
+> +		return false;
+> +
+> +	shend = size_add(size_mul(sizeof(struct elf32_shdr), ehdr->e_shnum), ehdr->e_shoff);
+> +	if (shend > fw->size)
 
-Sure. Will remove that change from the commit.
+Same for e_shentsize
 
-I was just trying to make sure I updated in all the right places and rea=
-lised I hadn't checked the documentation files and found that reference.
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>  static bool mdt_phdr_valid(const struct elf32_phdr *phdr)
+>  {
+>  	if (phdr->p_type != PT_LOAD)
+> @@ -82,6 +107,9 @@ ssize_t qcom_mdt_get_size(const struct firmware *fw)
+>  	phys_addr_t max_addr = 0;
+>  	int i;
+>  
+> +	if (!mdt_header_valid(fw))
+> +		return -EINVAL;
+> +
+>  	ehdr = (struct elf32_hdr *)fw->data;
+>  	phdrs = (struct elf32_phdr *)(ehdr + 1);
+>  
+> @@ -134,6 +162,9 @@ void *qcom_mdt_read_metadata(const struct firmware *fw, size_t *data_len,
+>  	ssize_t ret;
+>  	void *data;
+>  
+> +	if (!mdt_header_valid(fw))
+> +		return ERR_PTR(-EINVAL);
+> +
+>  	ehdr = (struct elf32_hdr *)fw->data;
+>  	phdrs = (struct elf32_phdr *)(ehdr + 1);
+>  
+> @@ -214,6 +245,9 @@ int qcom_mdt_pas_init(struct device *dev, const struct firmware *fw,
+>  	int ret;
+>  	int i;
+>  
+> +	if (!mdt_header_valid(fw))
+> +		return -EINVAL;
+> +
+>  	ehdr = (struct elf32_hdr *)fw->data;
+>  	phdrs = (struct elf32_phdr *)(ehdr + 1);
+>  
+> @@ -310,6 +344,9 @@ static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
+>  	if (!fw || !mem_region || !mem_phys || !mem_size)
+>  		return -EINVAL;
+>  
+> +	if (!mdt_header_valid(fw))
+> +		return -EINVAL;
+> +
+>  	is_split = qcom_mdt_bins_are_split(fw, fw_name);
+>  	ehdr = (struct elf32_hdr *)fw->data;
+>  	phdrs = (struct elf32_phdr *)(ehdr + 1);
+> 
+> -- 
+> 2.49.0
+> 
 
-> Other than those mentioned above, diffing per vs post seemed clean (I=20
-> didn't check where the empty lines got added, Andy seemingly did alrea=
-dy=20
-> :-)).
->
-Thanks for the review.
-Mark
+-- 
+With best wishes
+Dmitry
