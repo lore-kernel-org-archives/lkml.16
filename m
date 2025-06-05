@@ -1,59 +1,61 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FB414B08A
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70601BD035
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749107662; cv=none; b=HsnVHfvmKIefePVLHB6jGfD2JQ9kL9RM4LAQBI65mia8aoGpyiZCgy56tJrOw9ju0KB2y47YMUb28kW6jn5yStMX8ZG/mn7tM1hAB3WNNbi6icGoant0xVBymkGLqyVKpaGsg+keHPWzBK0R9Xmb1to6fp7IZmqNyp6nvbQXshA=
+	t=1749107663; cv=none; b=DiHyDwQcjNQLLWXjV3IqlroEWmXaiXzf5+wkvTZ3ARijWLavWQD/9jRSDipa019/Dks1/I9QKAEEeShw62CJ5crA1LCgnkgxNvxS9ildDKjIYqDTZNlcX0ZQzr4YIl9GvGhaAF1htV53SiSBYCPAXcT1a8LFAaLhaSJPTlOymT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749107662; c=relaxed/simple;
-	bh=3VEwGz2Z+/tP7cOrOPkL9pne6x8ixDnBK3Ac2KnuJM8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b5QQ5uWREjRgrIm92/gpSc+mOzdcke8ZGULUyXzVJbVOZTxIdrgf6gIt+PSlSpqaenOaLYtFxFTgxVeknmUDkDOhzoe35T4Zanu9B96Z7PQtQWvbNOxkNPtXmS8fbd3xRsH/LuiH0CoscLi4r6N+V232w4n8lG4feEYM2WmXZ6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=et70ar5B; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1749107663; c=relaxed/simple;
+	bh=l+ADq0dkQ0ISKn3AbvpIXY0kRmGqx3DmbHvcx4xzB6s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gKF08y3kaIjdfGFEV3Ftsm7ezUth9+2Vx2On7+wxKOvB2kIAlQ0Y7/lEhwu5FEYQMIc9rmHPrL918KXx/lfJID3SMmHUX0aMj91rn+zXvyVZAG7651ogCtxSMGuiT8NhmvwT8yfXKFKLhUWvOOXzr+acPvYV5Ikxiwq64aoPgpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GNI2AHV5; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="et70ar5B"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so6776805e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:14:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNI2AHV5"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a3673e12c4so348033f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:14:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749107658; x=1749712458; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dn4akhza0qZ3+Y35m3BBWIln1ChMI0xhmdYu7WD5G8Y=;
-        b=et70ar5BvU43DE6bndYW0Xz5DrAeuagAMku7ZFlnW6bR5T2adZjphVOdKYnaLtQC4/
-         6ercInjrQV3xNJprwiw9skijXGXNoB+sJU6BmGdFpipUXp/y//191BR1MdzrqHlINBoB
-         okxgxmHNOjqDhs3PXy1buFmyDr5fYbYfSNsqlSeKq13087G6ktDwlat/oHMPeiXaFoSF
-         136L4XwbJcUX+JDxR+YiFe0gfTPSx7CY6/boupYe1PYPmRdEYQ6MfABHjJG6jsnGuHrV
-         ahAe+ZmPlJRQygcKZCnyihKHMTwSKox929t7wzzcTTT67udjce4C1V5u5FIdDgHtmDlU
-         JJyw==
+        d=gmail.com; s=20230601; t=1749107660; x=1749712460; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4bgsNX+3yqAc+84E0G9kZgZo/o3wMNKh9J6Vou91qVE=;
+        b=GNI2AHV5ubOyVAnybhDvrlz82/ASQKC7DzW+x7N2N1TBGZxBPT44ljB6F8NXKfvfcJ
+         nUWaeTWbmO83pAoD6h5/L+LarYQ7Dd1CFp76t19fB48Hc2IW4taHfJZ0KP0niTm+tipu
+         AB7dA11YyXzxknJSH/4Rt/GsF+0KOTjGtna3VLJn2hnTnIhxp7e6dSAMe8MlCsuGSwem
+         cKkB75O4d6G4+GGdpPhyOZyyt4HG8leDpcW8JpCmmUcwglLcSjDIa0KR2cQnFBpfA9DT
+         5B5ApF6zlzJfdH6M1BbruS4VFlrUZxWOXz5wv1gpeN2wA3WOnZN23sZA/6fZlajpJcS3
+         0QpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749107658; x=1749712458;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dn4akhza0qZ3+Y35m3BBWIln1ChMI0xhmdYu7WD5G8Y=;
-        b=VQbL3tQf3mq+UZGPap6CfEvJDQWUSmMNLGoy9zq34E1uxdrCvbFKXxGyZd0U+PJNgN
-         aPVhBw7TpExpdnFogK6RXYmxiDw3ffpTb4JcqVYwa6oQMSygsrdpz4x9fOMMx0Vko/Bm
-         yfSYA9g2AJgfEX0d8v+aj1N/XP1NC1NFVCS90nLV8USFmerwrJG+YU3l5mIk36vsGyZI
-         0MUTbTR9oMRopM9Ejwq7XoW3ngYlFjN98hY2SWbFfVGG3TioeKigw0+Bg6JxndV0jSlm
-         jRmBCEWvMeb8Jsc+ciZAVJa2E95hHbdkKz+V+krBYgD1QthRzh/GzdI22ZRJ10TZawQf
-         xjhg==
-X-Gm-Message-State: AOJu0YyEWxR2k4qloRARfkGGezbsQnPA4+iMeLYtWFU0EYoNxv7lPhxU
-	RhAqlmZKQIR3R2LoeCv7bMSLZmp53STg/0Suxg4fKlu9/4BR2ulB+Zwr
-X-Gm-Gg: ASbGncvvVfXkOocuJ2lmBlclM0Gx2FEbywGIlMoQlb/vLxa/lUJDJ+bcYq5FYfVGrqx
-	9B9wfV2V1wBQ+e8m0GiCoo6rQZZXDw8weCH8Pjyg/Lv0hwQzhmhRXi9FxWRFW12lounnnRAS9zo
-	SaTZW9loOv8o7EoihJ3+U+thCEvyyqiNfJON/HBaqlrRq7pi/j/KGCUQYuyxhqeymoEjFwt/NO6
-	iGn3EJW5gaaPIJNY5euJnubXI1KNZsVl8qEwipbb0Af1ZqZqUEZVkpb6vxAvpv44ocpyiwp8WAx
-	MozuMSH5LJ0/k56ejrvMS0GzYWJsNMefJ4pX+cKwnyOpj+s0yo05eIkNzhqhbYqI
-X-Google-Smtp-Source: AGHT+IGLOkw7L4QYpuu7ptO9meV5YrqMTpeAhemxlEOyuGmrgW3DbC3zlo3SqAWnUDLJGR6sqY/nyw==
-X-Received: by 2002:a05:600c:4f47:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-451f0a7c52emr55093655e9.14.1749107658058;
-        Thu, 05 Jun 2025 00:14:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749107660; x=1749712460;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4bgsNX+3yqAc+84E0G9kZgZo/o3wMNKh9J6Vou91qVE=;
+        b=Dt4kfY8+VqxlZqRX+XW5wxb3lmwIVqRl7bEAp7fsdVKiJJZk4kHm950b5KjAngY4/d
+         3ayrQslVOTAcV1LaSLv6/PNRLmlFFn6HsPMYfHiNZGXuEaOvrYGCJeG9tcPVrn6oAlS+
+         vMUCfCawdtZiSBxH+FwNoxVqmU+ryv0V/NGxEo7wGgPdUK+EcmL3mO3jpPSn/aFykBdH
+         f5dw6/GVtkK2z/k5Nxr95ICZhAnqAq1gMFp+elaHkMqGwpZxF0SlYC4jxHrdeoV5mKog
+         lP+c8bj7gtqmNf7HuMF0jxBpxJ2H+ERm0FxFyhNfW+ronQK/q8U8DNHUsjjSVlycnqmI
+         87tQ==
+X-Gm-Message-State: AOJu0YxT0ie7dW1BXQhrsTwApXuPQRcl2frW5h1fZPFFB5sZoE1yJIb3
+	x4suuQxWoxr6EINgzby3gIDAAg0mBHH9zhJAWuV1Mb0vEPJS1orsxOLN
+X-Gm-Gg: ASbGncvVZ9A91+SsbP8fzch4nlzXfy6o4laFEBIWCet8FtmMrqKA/PIUDS2h+A8P3Qy
+	wGX5KIjFU+bQ+Ac5xykAPCTU2vPdvPv54lMaSQxpvj0XxVSzLllbSlDVpApPGoO0GhsSd5keXnr
+	P/ep+FgpOteAu1RNBj8uU4YOeA9/m5uEAfy29RslQFfN+4cdQlvclCOa+1lCPs6sfe8Bex2QkNH
+	rRH1hvL2NUpPMgRy3FaouxtMx2Trwab08udNBvIA8zBFBuZ+pxHOOJU3a9Ls4/eHfeBNy3veK9i
+	09ELCHkM/pWvtspQikwLfliS6ks+MtvzEkj5Tw327GIq42efGqoBY0OBZCI0JlA6
+X-Google-Smtp-Source: AGHT+IHKRat52YZ2v9YBVBgALfknsV6OcA4Bw2gnvLID8VBbh1J5mB1Y3NobJd5cyaYad2I0lchxFw==
+X-Received: by 2002:a05:6000:24c8:b0:3a4:f520:8bfc with SMTP id ffacd0b85a97d-3a51d95874fmr4682403f8f.36.1749107659790;
+        Thu, 05 Jun 2025 00:14:19 -0700 (PDT)
 Received: from localhost.localdomain ([78.210.56.234])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00972b5sm23885431f8f.76.2025.06.05.00.14.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00972b5sm23885431f8f.76.2025.06.05.00.14.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 00:14:17 -0700 (PDT)
+        Thu, 05 Jun 2025 00:14:19 -0700 (PDT)
 From: Yuri Andriaccio <yurand2000@gmail.com>
 To: Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -67,10 +69,12 @@ To: Ingo Molnar <mingo@redhat.com>,
 Cc: linux-kernel@vger.kernel.org,
 	Luca Abeni <luca.abeni@santannapisa.it>,
 	Yuri Andriaccio <yuri.andriaccio@santannapisa.it>
-Subject: [RFC PATCH 0/9] Hierarchical Constant Bandwidth Server
-Date: Thu,  5 Jun 2025 09:14:03 +0200
-Message-ID: <20250605071412.139240-1-yurand2000@gmail.com>
+Subject: [RFC PATCH 1/9] sched/deadline: Do not access dl_se->rq directly
+Date: Thu,  5 Jun 2025 09:14:04 +0200
+Message-ID: <20250605071412.139240-2-yurand2000@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250605071412.139240-1-yurand2000@gmail.com>
+References: <20250605071412.139240-1-yurand2000@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,123 +83,118 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: luca abeni <luca.abeni@santannapisa.it>
 
-This is the first set of patches that implements Hierarchical RT scheduling,
-aimed at replacing the current RT_GROUP_SCHED implementation with something more
-robust and theoretically sound. The patchset has been presented at OSPM25
-(https://retis.sssup.it/ospm-summit/), and a summary of its inner workings can
-be found at https://lwn.net/Articles/1021332/ .
+Make deadline.c code access the runqueue of a scheduling entity saved in the
+sched_dl_entity data structure. This allows future patches to save different
+runqueues in sched_dl_entity other than the global runqueues.
 
-Summary of the patches:
- 1-4) Preparation patches, so that the RT classes' code can be used both
-      for normal and cgroup scheduling.
- 5) Basic HCBS, no migration and only one level hierarchy.
- 6) Remove old RT_GROUP_SCHED code.
- 7) Add support for cgroup v2
- 8) Remove support for cgroup v1
- 9) HCBS with deeper hierarchies.
+Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
+---
+ kernel/sched/deadline.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-The patchset allows to create bandwidth reservations for cgroups which run
-SCHED_FIFO/SCHED_RR tasks. Whenever a cgroup is created, N cgroup's local
-runqueues and N dl_servers are allocated, one for each CPU.  The local runqueues
-emulate standard scheduling for the FIFO/RR classes, as rt.c code is reused on
-these local runqueues without excessive modifications. Through the cgroup's
-virtual files it is possible to setup the cgroup's reservation. The dl_servers
-are started only when there are active tasks, and invoke the RT clasess'
-scheduler when they are deemed runnable.
-
-Example usage (cgroups v2):
-  // create the cgroup
-  mkdir /sys/fs/cgroup/g0
-
-  // request a 10/100ms reservation
-  echo 100000 > /sys/fs/cgroup/g0/cpu.rt_period_us
-  echo 10000 > /sys/fs/cgroup/g0/cpu.rt_runtime_us
-
-  // move any process in the cgroup
-  echo $PID > /sys/fs/cgroup/g0/cgroup.procs
-
-  // if not already an RT process
-  // set scheduling class to FIFO or RR
-  chrt [-r] -p $PRIORITY $PID
-
-
-Testing:
-
-The HCBS mechanism has been evaluated on several synthetic tests with RT groups,
-containing RT tasks with different priorities and the groups bandwidths are
-limited as expected.
-
-The tests can be found at https://github.com/Yurand2000/HCBS-rust-initrd . They
-are written in C and Rust and should support any distro without issues, as they
-are statically compiled. These executables test both functional features and
-timing guarantees of the HCBS scheduler, but most are tailored to work with
-future patches which introduce task migration between CPUs.
-
-The Makefile will compile the test suite to a fully functional initramfs, ready
-to use in qemu, but of course the tests' executables can also be loaded in a
-fully fledged distro to run tests there. Further comments on the test suite will
-follow in a future RFC.
-
-
-Additional comments:
-
-1) As pointed out by Peter Zijlstra at OSPM25, we removed support for cgroups v1
-(patch 0008), but the mechanism should work also with cgroups v1 if the control
-files (i.e. cpu.rt_period_us and cpu.rt_runtime_us) are re-enabled in the legacy
-controller.
-
-2) In response to
-https://lwn.net/ml/all/20250310170442.504716-1-mkoutny@suse.com/, the new
-RT_GROUP_SCHED mechanism solves the issues which are discussed there:
-- RT group scheduling for cgroup v2
-- RT tasks can be created in the root control group without having to touch 
-  any of the hierarchy or reservations altogheter.
-
-
-Future work:
-
-As we already mentioned at OSPM25, we already have (partially) complete patches
-for task migration among CPUs and assignment of different runtimes for each
-individual CPU. The aim of this RFC is also to validate the current foundations
-before completing and submitting the patchset.
-
-Future patches:
- - HCBS with task migration.
- - HCBS with different runtimes per CPU.
- - capacity aware bandwidth reservation.
- - enable/disable dl_servers when a CPU goes online/offline.
-
-Have a nice day,
-Yuri
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Yuri Andriaccio (1):
-  sched/rt: Remove support for cgroups-v1
-
-luca abeni (8):
-  sched/deadline: Do not access dl_se->rq directly
-  sched/deadline: Make a distinction between dl_rq and my_q
-  sched/rt: Pass an rt_rq instead of an rq where needed
-  sched/rt: Move some inline functions from rt.c to sched.h
-  sched/deadline: Hierarchical scheduling with DL on top of RT
-  sched/rt: Remove unused code
-  sched/core: Cgroup v2 support
-  sched/deadline: Allow deeper hierarchies of RT cgroups
-
- include/linux/sched.h    |   10 +-
- kernel/sched/autogroup.c |    4 +-
- kernel/sched/core.c      |   44 +-
- kernel/sched/deadline.c  |  256 ++++++--
- kernel/sched/debug.c     |    6 -
- kernel/sched/fair.c      |    6 +-
- kernel/sched/rt.c        | 1266 +++++++++++---------------------------
- kernel/sched/sched.h     |  133 ++--
- kernel/sched/syscalls.c  |    8 +-
- 9 files changed, 672 insertions(+), 1061 deletions(-)
-
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ad45a8fea..26cd0c559 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -935,7 +935,7 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se)
+ 	 * and arm the defer timer.
+ 	 */
+ 	if (dl_se->dl_defer && !dl_se->dl_defer_running &&
+-	    dl_time_before(rq_clock(dl_se->rq), dl_se->deadline - dl_se->runtime)) {
++	    dl_time_before(rq_clock(rq), dl_se->deadline - dl_se->runtime)) {
+ 		if (!is_dl_boosted(dl_se) && dl_se->server_has_tasks(dl_se)) {
+ 
+ 			/*
+@@ -1244,11 +1244,11 @@ static enum hrtimer_restart dl_server_timer(struct hrtimer *timer, struct sched_
+ 			 * of time. The dl_server_min_res serves as a limit to avoid
+ 			 * forwarding the timer for a too small amount of time.
+ 			 */
+-			if (dl_time_before(rq_clock(dl_se->rq),
++			if (dl_time_before(rq_clock(rq),
+ 					   (dl_se->deadline - dl_se->runtime - dl_server_min_res))) {
+ 
+ 				/* reset the defer timer */
+-				fw = dl_se->deadline - rq_clock(dl_se->rq) - dl_se->runtime;
++				fw = dl_se->deadline - rq_clock(rq) - dl_se->runtime;
+ 
+ 				hrtimer_forward_now(timer, ns_to_ktime(fw));
+ 				return HRTIMER_RESTART;
+@@ -1259,7 +1259,7 @@ static enum hrtimer_restart dl_server_timer(struct hrtimer *timer, struct sched_
+ 
+ 		enqueue_dl_entity(dl_se, ENQUEUE_REPLENISH);
+ 
+-		if (!dl_task(dl_se->rq->curr) || dl_entity_preempt(dl_se, &dl_se->rq->curr->dl))
++		if (!dl_task(rq->curr) || dl_entity_preempt(dl_se, &rq->curr->dl))
+ 			resched_curr(rq);
+ 
+ 		__push_dl_task(rq, rf);
+@@ -1527,7 +1527,7 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
+ 
+ 		hrtimer_try_to_cancel(&dl_se->dl_timer);
+ 
+-		replenish_dl_new_period(dl_se, dl_se->rq);
++		replenish_dl_new_period(dl_se, rq);
+ 
+ 		/*
+ 		 * Not being able to start the timer seems problematic. If it could not
+@@ -1640,12 +1640,12 @@ void dl_server_update(struct sched_dl_entity *dl_se, s64 delta_exec)
+ {
+ 	/* 0 runtime = fair server disabled */
+ 	if (dl_se->dl_runtime)
+-		update_curr_dl_se(dl_se->rq, dl_se, delta_exec);
++		update_curr_dl_se(rq_of_dl_se(dl_se), dl_se, delta_exec);
+ }
+ 
+ void dl_server_start(struct sched_dl_entity *dl_se)
+ {
+-	struct rq *rq = dl_se->rq;
++	struct rq *rq;
+ 
+ 	/*
+ 	 * XXX: the apply do not work fine at the init phase for the
+@@ -1656,9 +1656,9 @@ void dl_server_start(struct sched_dl_entity *dl_se)
+ 		u64 runtime =  50 * NSEC_PER_MSEC;
+ 		u64 period = 1000 * NSEC_PER_MSEC;
+ 
++		dl_se->dl_server = 1;
+ 		dl_server_apply_params(dl_se, runtime, period, 1);
+ 
+-		dl_se->dl_server = 1;
+ 		dl_se->dl_defer = 1;
+ 		setup_new_dl_entity(dl_se);
+ 	}
+@@ -1668,8 +1668,9 @@ void dl_server_start(struct sched_dl_entity *dl_se)
+ 
+ 	dl_se->dl_server_active = 1;
+ 	enqueue_dl_entity(dl_se, ENQUEUE_WAKEUP);
+-	if (!dl_task(dl_se->rq->curr) || dl_entity_preempt(dl_se, &rq->curr->dl))
+-		resched_curr(dl_se->rq);
++			rq = rq_of_dl_se(dl_se);
++	if (!dl_task(rq->curr) || dl_entity_preempt(dl_se, &rq->curr->dl))
++		resched_curr(rq);
+ }
+ 
+ void dl_server_stop(struct sched_dl_entity *dl_se)
+@@ -1712,7 +1713,7 @@ int dl_server_apply_params(struct sched_dl_entity *dl_se, u64 runtime, u64 perio
+ {
+ 	u64 old_bw = init ? 0 : to_ratio(dl_se->dl_period, dl_se->dl_runtime);
+ 	u64 new_bw = to_ratio(period, runtime);
+-	struct rq *rq = dl_se->rq;
++	struct rq *rq = rq_of_dl_se(dl_se);
+ 	int cpu = cpu_of(rq);
+ 	struct dl_bw *dl_b;
+ 	unsigned long cap;
+@@ -1789,7 +1790,7 @@ static enum hrtimer_restart inactive_task_timer(struct hrtimer *timer)
+ 		p = dl_task_of(dl_se);
+ 		rq = task_rq_lock(p, &rf);
+ 	} else {
+-		rq = dl_se->rq;
++		rq = rq_of_dl_se(dl_se);
+ 		rq_lock(rq, &rf);
+ 	}
+ 
 -- 
 2.49.0
 
