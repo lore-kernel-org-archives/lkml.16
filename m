@@ -1,291 +1,199 @@
-Received: from PA5P264CU001.outbound.protection.outlook.com (mail-francecentralazon11020123.outbound.protection.outlook.com [52.101.167.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C90B2356BD;
-	Thu,  5 Jun 2025 13:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.167.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749130190; cv=fail; b=QjY971ZKjzVAy8ni33n5nxNtjLweA0O96Hj4Qk3lwEYOJa+/IaOIwqvy/Oy43cjn8qGf2KymykITq8rEhkHvsnozR8YqhrGYeL74Tle2BtWn8RUbOPkF2bGSMS0N6L1m4upFBmD0J1WIEmQuxQPUeLZ3FoNnJR+mJ0ThtX/GMig=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749130190; c=relaxed/simple;
-	bh=/4lTHxAwv4C3qxQZqQMqD+HYVhltfRTNIPtMH1Y1CLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bl68f7Re0zGHPwHr/3Qgl03nf9RxVwn3XBhNvHqoaTdB8N4DDRZct/bKoS+PjHa40GIS7p7gjpH1/IabLuUlZZPCLpSBIrrlU1XY6ZTBWEzx49axR4sWcTc/6KnUJ2d72wsiCYRhLzPu2z9aitjxu2pUydRwTs1gCo9uNLe+5ns=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com; spf=pass smtp.mailfrom=allegrodvt.com; dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b=g4PW1o58; arc=fail smtp.client-ip=52.101.167.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allegrodvt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEC01EEA40;
+	Thu,  5 Jun 2025 13:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749130248; cv=none; b=Y4/B9hwr/sOYrrlS7K5CuSGKNEOwPoJ74XMQAuo3S05pnAh2beBY90uQZ0io3AfMUtxXXw2lcn+f4rjEWu6r8o1L117a+rxbB9Rj07atXGcwomhbdo8Lf8DZLGCQfm2X7ZE8faFl14jUBeY6bYpwMYkHHAagtAUJwC7J2q7mRhE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749130248; c=relaxed/simple;
+	bh=NMWEAjEnzZjApTVwiRgXnucHoBIYdvfSZ3X1Z3+VKyg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DWxBdmk0VtogsSdyJrwME7OJgLqBddsxMhDsHpMh8IbzVKo0M2hntHKQNTgVvmpzkxIpRlBXEMb8brkz19Hc4ZzSYtvRHC55/PQkWYfEO5XH/MS5RDsf9OjOXLMe8G+9XZe7ELw2uDmb7TGxNt7HKluWPvly6NSFk+dd6DYlxq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LIpvC2Un; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b="g4PW1o58"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Im5P81QnkCW7j8dH7+sZD6TWsgfB5dO9AibDcfGu/mtAToYbw8y6wClDoHhg6pweVv7GMZX2WIpv9ojpSivaM2G3qhijSR36VUy64szb0XVU40n3wXUKJOOwTgyTpO2QcZXkYuHfmedV7qk8x/RUZmadYKjNEUycEpT+R/CJr1VrmzrIClqMXN8fa8O5q1iGGaFXbqFcSiewNTlSYj6saXqycubSuYAZuXgyosadXtyCxj2IP5HvSMOwn49DlQYCjoK4wjtzhwnD25VJ7vbjFFgnDnrw4xsyzSlXkNbsr5oo58ZiIe7BB/u7l3A4M5VvKlP0A8ETfjlIEJrUP6JeuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2t3ruNIDHdcHH1+tAe6pSYD7KqkuIDMt7U17BbC62Dc=;
- b=BOEDokro0nMAQznfuYiq2aLLCULHgrLUg02xTFQXEH+d/AONMnlBiClxEptelx9y15ufWr0PdOTZSNa/B8Mz3nHFH0fHJcKDRNiEU4tjM8ZKAlU1RwW+mjLWWZjLqLYw7f1o384nHCf67bgY/Hlu9yX5hnGGKQQCYcNdp+ee6N5oZshCCVOBmHrNbsr7V7lokt9Ur2hWZfdVFvxAELLm4iTayrJUAN112JgXd2fWMmAt+2XPwKqPn9ni8o0KgcyOo/0VjljC7kzhARx49kQJ72XqrCRDYojrps4jjvMHsGz/9dSu0cAfz8x1ULadoHldSBfeMRpFphJiQISK3xlyoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=allegrodvt.com; dmarc=pass action=none
- header.from=allegrodvt.com; dkim=pass header.d=allegrodvt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=allegrodvt.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2t3ruNIDHdcHH1+tAe6pSYD7KqkuIDMt7U17BbC62Dc=;
- b=g4PW1o58MjLEqMhXH4MsYeEODIRWbUl/XW3TwDK8ty/u2yToZYdCkV9mQl5oXnDsbFpSu2NKcJR7vK6rfCO2rvlho4WSGsFP05+5M9GvSSgeCeVQqejjHsExKjMgs5Qh2kOM1k/ie0NYsqejQegGWaNtpjaaED52ccC8mWEH2wfcNGG5WgksxJWKhkIQAGJ5KvWMcNZP/Jqw0l11qnnSrEelQx7RGzOX1q/1lSnCedLf9sJYdEq8oujSW1qu6c/me3EvgXrvk8lvlzu4/F95R5gWrUkzIBeFnCUN4svbMmGYKaY16lTYoB76aBNIcPZT2xlvAbHH4DFx3+JcLdMmpw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=allegrodvt.com;
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:3d::18)
- by PR0P264MB1785.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:16d::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.21; Thu, 5 Jun
- 2025 13:29:41 +0000
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5]) by MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5%2]) with mapi id 15.20.8792.034; Thu, 5 Jun 2025
- 13:29:41 +0000
-Date: Thu, 5 Jun 2025 13:29:31 +0000
-From: Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Michael Tretter <m.tretter@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Nicolas Dufresne <nicolas@ndufresne.ca>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: media: allegro-dvt: add decoder
- dt-bindings for Gen3 IP
-Message-ID: <pvocii4kji7xsci5fcztenhkkjbsyu4dgz5fu6nuwykezzoyuy@35i4phytxyzc>
-References: <20250605-allegro_dvt_al300_dec_driver-v2-0-1ef4839f5f06@allegrodvt.com>
- <20250605-allegro_dvt_al300_dec_driver-v2-2-1ef4839f5f06@allegrodvt.com>
- <759f9900-a74b-40a2-ae53-5e5a6261f963@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <759f9900-a74b-40a2-ae53-5e5a6261f963@kernel.org>
-X-ClientProxiedBy: MR1P264CA0007.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:2e::12) To MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:3d::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIpvC2Un"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-552206ac67aso1131995e87.2;
+        Thu, 05 Jun 2025 06:30:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749130244; x=1749735044; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ELiHfGb3gJOhYFEbnYSWkZyihCqMCFVCR+nZR19Yl7U=;
+        b=LIpvC2UncqevOqLQUuBC6hyAKIma4AlaQrkkQ0KSPUuoWvKSD467CV6hl2qwEaiwBV
+         uO3B9RsLC53nO2qkxnfCdVsgDZLYip16GFffMSQoMAQrVNOPi0cu1Q8+6A/ekM5BtHYh
+         G2297mFR4miNiTp26BsfnEHjusne4HdoKFl5p4mCRdJPPJmOuFoswIboH9fWuc1Wvr4v
+         3AbHvVNMpoqGbDJUoq/l+oMbzf4CNBwtIaD5vjh0qvUaYmUMAYlkmWCmLa+g4enbK8Xo
+         WzPOCctXzG9zpaEWiLCQNEc1tzprMQDpTR4pvjy6uWbgjgANvX8ju8mMfwhwpbag8lKS
+         Kx7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749130244; x=1749735044;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ELiHfGb3gJOhYFEbnYSWkZyihCqMCFVCR+nZR19Yl7U=;
+        b=bNAvMELn54CA/hrUssYbUL2xC1NgrjbaNDQvzqXc4Cp39xfZ6WCjgQtt76bxlpIWYb
+         09TYS1rIxHPPf+9G3mMtrjTO4IPpRfJ+TcMP2N4oc4Zuc0bsDuHps8LdbKK6ebsbqZep
+         I/j51/HS6lj8oR1/MXLlqB2In0G5feVn5Y2i6/HeJVg8Rd3rPlF9VIpckDKDqR7XFLaO
+         M3bnMyTrQpbDvgjzSOb8iuKnELHceoazF29PtxtQDtdF+4XE0v/cdslISs6HFZmzrTEs
+         Yyz6Wsx1E5bYvZuR6LZC4s3kXtMygQfylcMbBHRBZhMsK73sIl6BzGYESlNLVCCcUo1j
+         +mgg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0LAchqcUSyisjMeB6ZJKrjilyY+3Gy8ZSIg8Zymm7iuKUteNqGSaCvbUN6/r1Gu4aRMq5nF4Zx5KLKEk=@vger.kernel.org, AJvYcCW2AZogBlBA/7MQkcqN0iy1cHYtbiqOytPVwgNmSIltWALX2g0+RmB5n8FdfkCfcTABpEs0RHZMGsQsPJHDN/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNvcGytqNTGYiJ9CnKQR5fxzJNXpWt2qDR+dRAGkpfCFZv2OVk
+	M6e5ZBaJx8XHesCZC1tzsqJH6MoBxzEhCVKMNPoriiLVerRAB/SSyIE/
+X-Gm-Gg: ASbGnctHhONXJcjj7k1l9m38K4kAha1OCBDJp53+N18SfDA2vZ5WDU05yjePNz1TVba
+	ZlsXKhsiGC2NUyvapunNxqUt1JNRAOgTDOlDV10fig+LEhNOJfbZ5Z8Th8g9W9gSJ3EiEEm1aKO
+	r7t2qVa/mGpXtzos5qwt9cq0cJXWRB8xiIrnZmFW25XsOTxBq/eKZ6tF5xIOQ6kEJFDk5IbujQ6
+	44lYV2dGxYqlNmHWekw6f+4ZsQJzTcYY5Qhwd7OnRpAX+UQs7AI1idjvn+R6rc+RV+URux5yEPD
+	mXO98S9IcHeAXwRjnY9WGVCe89dIPPu3uEQU2rf6wfJKUfQBQTJcvFSB+pXFAA9oesFCJaK6Q43
+	Z+FMmyvkZyMf83OrJScP9+M7Rm/fG
+X-Google-Smtp-Source: AGHT+IEF+PITkMRWLVOjyJ0cqd4cnK3Xcxhp4Mve7qYR67GwKQOBFCd8LgQs47YQTlm7h85zXe3RRQ==
+X-Received: by 2002:a05:6512:ea0:b0:553:2f57:f8af with SMTP id 2adb3069b0e04-55356bf152amr2102514e87.20.1749130244273;
+        Thu, 05 Jun 2025 06:30:44 -0700 (PDT)
+Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5533787d325sm2605610e87.49.2025.06.05.06.30.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 06:30:43 -0700 (PDT)
+Message-ID: <27e17dbf-df6a-48fc-a652-ad48a776f668@gmail.com>
+Date: Thu, 5 Jun 2025 16:30:42 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MR1P264MB3140:EE_|PR0P264MB1785:EE_
-X-MS-Office365-Filtering-Correlation-Id: 232c90be-d803-41cf-72ed-08dda43506a7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZWZYVXlvVm5DUFhZdExwTXBFL3hxalVPemI4eWY1QUdISHpFM1RsR1ZBT09B?=
- =?utf-8?B?cDdxYklCRjNOeFl4cCtqT0p2V3JCMTJHY2FwRmt6Uk9NMDZ4N1g3b3R3Vlo4?=
- =?utf-8?B?K0JSOWcvSFB3L3VCR3VjSmhkaCtKNG5BM0VsUko5RW5wZitEQmpiUzg0dS94?=
- =?utf-8?B?OS9VWC96c3NuUzVPTmNJSEV1QUdNcCs1Ukd4Z0tnc3AwKzAzUWdLUFVFaE9K?=
- =?utf-8?B?UHFlTkNZVW94a0ZQL00wN3JPQTlGbE9QTVJteTFXV2ZZY0hUMFBwNURTVHZU?=
- =?utf-8?B?ZGJ1Z0NaQUgrKzlMVS9oOXZtZStsS3lPNDhlbVY5VTdlR1ZYeCs2OG5VWEhV?=
- =?utf-8?B?NW55N1VTMEFONXM2MEx6a1ZSWmYreEZCaHNvMmlBOHA2R3NwVUVScW03SC81?=
- =?utf-8?B?cWNNYTA1NGNNTmtUc2JjUHlOa3N6YVFEcnZEUGc3aEhNQTlFYVlqdUpkZlRq?=
- =?utf-8?B?ZS9zbzY5dnFwa1N3a0JUWFd5TTUyMEVxODhrTTduczNuRmljb3I1VjRmQ3Bx?=
- =?utf-8?B?TkVVWERKcHNNT1g2Ny9PZ1l3dUtaNlo0dWhpODlQSVQ5dDBaMEp5SjZFWlpQ?=
- =?utf-8?B?Uk53ZlZOdGdpQk5yaVR6ejg3b2Q4UndOQ2FtZm5xeFJWMHdybi9CdjBJSk9k?=
- =?utf-8?B?SGw3Z2pueHZZekJ5VEx1WXFLT2xuSDFBUFlrS3dXYkVQNWV3NmsvbU1qSVpo?=
- =?utf-8?B?YXJ1cmh3c3ZFMDFHbDhXY2JFeXI5Ym1pTVJYcTJwcDBqb1FnRmZ6QUphd3pP?=
- =?utf-8?B?WFR2S042SDlIaXErMHNXZmdaS1VzUmZaZFcwNVh3a3MvYlNEZmVLUXdjaXll?=
- =?utf-8?B?TldwS2pLSGpoVkw3SzkzVHRmV09KbTJ6VFZqL1NJN05hd1ltMkNZZWcyUjhJ?=
- =?utf-8?B?d0c4NnJ5SDRBU2Zmb21xVGwrWFFFZjVHSTgrUlAyN042K2FVSDV4eFVJUVAw?=
- =?utf-8?B?djJkb3ZrNWlMeGVUYksyZEMvLzZRSmF0RE9LeHNuTTlpZ2ptTmhuYzM5QlIw?=
- =?utf-8?B?aUtNMVQ4QjJJUGNmOUJCektMMWdvbFppZUJFMkpZb1hNOWV3Q0NyQitOb2pz?=
- =?utf-8?B?Y0tnZkZUOUlzTW9EN0JmK3pudzJFYktrMkxQVGtKd2hmR3ZnVzVPSndWdDMz?=
- =?utf-8?B?ZzVmWVQ1L2l1MGt5SzdRd1huM280ancrdkNBSkwwaDgyRnhmMGc0OVBrM0ha?=
- =?utf-8?B?SGFvek5IZmc0MUN4QVNUSWZ0dVVNVjZySzQ1VGlVaHBtblY3ZjJ5bGo3Vis1?=
- =?utf-8?B?VmJmS2hHcFpPSWV1cGloUmpySzNkMjFRL2k3RFVxOWRkcTQyM1VGcm9wWHJp?=
- =?utf-8?B?UnFtL2pNUGFoa1paazlONnJBdkNrNkFnZnp4V0dRa0pJN056STJ6R3FBRCs3?=
- =?utf-8?B?cHB0Q2NSK1dSc01ZNzJUQVVIWWNKVHo5bndyVGNHZ0dZQVBnZ2Z4cHBNa1Vk?=
- =?utf-8?B?OFV4bVZnSWk5YXVxQzJZdHF2eDNNZERtVm5DQjFsSW9TUU5uVUUzNEovbG1E?=
- =?utf-8?B?ZStjbnBUSmY2Qm1PVzZFWStHTVI0NkpKT2hISXMweEhuSktPUFZHeXViSjVm?=
- =?utf-8?B?UGJXSFBxUjh0V3BnMk5sd3VGR0J1Rm5OTVZzTStLcTkrQzl1Uis1NXFGTnk0?=
- =?utf-8?B?Mk5yZXNvYTVLUytZZmhGTWFjVDRJSDdBM3Bsb0E5ZDRGbUhjdi9IUEs1YzRP?=
- =?utf-8?B?a2t6bjBTWk9Td2NTS1czcndYZE1VZ2YxQWU2bG1sYStHSHVKV2VISlhLK1V4?=
- =?utf-8?B?UWVEUlJSSnlMRVRSRWh1TGY2SmRBWnBtMXlQNjBWN1Z0a0dIT0x2V1pJRlpB?=
- =?utf-8?Q?+oZcoiZIfzenLymKyupvY7pArzVQoxVD41g1Y=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UTM4ZUg3VEFjTVdLRE5GeVVXVEJLSkNPSmMyVXo0akk1N3p1NDlVTjhWRExT?=
- =?utf-8?B?em14a3YzblZ3VkJHTjJOVjVBMzl4b1BlVlA5R2JNTXNoVnBrYlpKSzUyZ3pa?=
- =?utf-8?B?Q3VuY1VvcGt1L0NCV2huZy9FZHdnU0lPQ0MvZDI0V0t2NHd0U1NIQU1NVTQ2?=
- =?utf-8?B?cXJHa0JGYkh2VExEWTJIc0piaTJuVTFtMyt3UjdkakxUbzNJaUZXUTk3OXp4?=
- =?utf-8?B?VG92VWZQdmRkNlpKUWFMS3MxeDRHN21xYkQ0aUxEWDI1YThNekVUWUNVbk1Q?=
- =?utf-8?B?dVJoLzVMTkJYeXQvc3hPRGY5TXZxUnFwcktmS0tlbmlGWFJxTkpiZWVORnls?=
- =?utf-8?B?aW8wQ3dSSVRWQnBaemVXblhmR2dUeDZya0FiRVAySWtINnRlZGdtb3hLQzJU?=
- =?utf-8?B?eVZ3bWxwSytVZzRSeTMvK2hwMWpkZk9uMzNsc2V1U0ZEWEJKM2I2UG1wUVVN?=
- =?utf-8?B?VENUODJVUlVvWDdRcGdUaVNKZk5OQk9wcnBMT2Y5eGdZUkkwSUhaZDR1eVg2?=
- =?utf-8?B?Z0dNWHhiQ0xkdXV5UndaWVNTS3cvNTQrbkJsL2pUcC9DR0dOdE1BOUxOZkxj?=
- =?utf-8?B?WE1NYXVlTkM1S2V3MStiTlE2c3dNQ2ZabVNkcGtqYmFlNWk3VXJqYWh1eEhX?=
- =?utf-8?B?YXdtZm5oQ3N5bU1UbkxqclduTkQwalY5MmZyZTVxbTJhdFp6V3BIekZScXFm?=
- =?utf-8?B?QUszeGhjdm9xMlJDelJXcHEyMmRtSWtqTURPaFVKVDBHMEx0bWtQeUsxSHVC?=
- =?utf-8?B?MlMxMFh1YVp3VVA3OFdJNkFuMnVYcDFUVUVLMVRvS2kzaTVOVmJQT0JNOGFK?=
- =?utf-8?B?STduNm5VbHlCZ3Rad2NRcE03Wk9KTS9ZNUpDY0JYYW5QQ2dCWkNQTFRWTG9r?=
- =?utf-8?B?NTBoeVB0VHMxNENlWjFNOGx5SXl4N0FZMmlpMjlFbTFINk9STGhsMWIzazJx?=
- =?utf-8?B?NDV4ZTRCRUVsMVRGTzVpd2puNjF4T1NFNHd3bkE0MkY4a1F1ZFd3cVMwbGh6?=
- =?utf-8?B?ejJVUXpSYTVteVVCZlZQdXZlWkh6UjRMeVlWeS94OWR2QWpTNVUvOURFMTdP?=
- =?utf-8?B?eHZWZksySG83MDJBU1dKMGlaU2FmVEdaUFQvSGVNR0twOHlGa1lOWGNRdGlR?=
- =?utf-8?B?NVMxV05BSHVvNlF1NlNVRWI3Y0wzTllHN1VmNmRMVVBhY0xBbGlqU0VQb3dm?=
- =?utf-8?B?NnVhQnV2RzJhbXZhVGVBUWUzeS94S0EzcFU1NGljc3VucXBKd2tSQmczY01h?=
- =?utf-8?B?ZmlUVUo3a0M5N0lyQm9YQ1Y2S3JON0ZGYngwREV0cUUxOTUwUW5FVVBxY2Zt?=
- =?utf-8?B?MW5vUms5OTVuWmlPVXJxeTZsc2JpYjNodVlzSktQS3JzRXBaV3I4V2h3a2E1?=
- =?utf-8?B?eVNiK0VaRFB5akhQRVVBRUN4WjVHdmJ6TTRrVzFZSEVFUUhyenpVMGFHeHBT?=
- =?utf-8?B?TFRpb250YTM2cHVJVlczUHNJb0sySHVVd0VENmVOQVdHS2d0TWFzUGVNWnRi?=
- =?utf-8?B?QUpzN1R4YjJONkt3eGhGWGVpQWxiUmQvTGpkWUxqRm83ZjkxYlV0MS9FTEZ2?=
- =?utf-8?B?MjZrK0M5akFXNGtpSklNNWNsK01GdGNpdzZSMnB3VytYdWV6WjE1WDRBbE01?=
- =?utf-8?B?L3RrOGd1ZDUyYTFUTDhtbkVvVzF3WWl3U1BYYm5lMFJ5emtXbDZ5RmtuSjEr?=
- =?utf-8?B?RUlxSGp1SWI5M2NWbytKL2p4UHMrelc5cHpQY2Z5cGx1VGhmNGgwUW4weGtV?=
- =?utf-8?B?eGlqY256K3AwNk8vcWQ1UHh5Rnp0cytPOFBySE5id0Y2eCszTHdETzJpWUZZ?=
- =?utf-8?B?SmlCa01hVndnOUt5VFg2b0pXZng0aHJCSEpGTnlMYk8rZUZ6RThrb3ZzZ3Rv?=
- =?utf-8?B?SFlBemNhR25NK1o3dVhaRjdGcEtBWi9nU1c5clo1eUJSZlBoNTZTbUU3ZEdU?=
- =?utf-8?B?OURZbHZiY3Fqa2RDU2hYWng5dG9OU3Y4OWtpWHlLbkhpUHJzY2hrOWFmV0VL?=
- =?utf-8?B?VVIvSW1Yd2lOVVJDYXBtellKYm1uRGNTVzRLRkp3UjJ1dnV4YXZyVVJZdFQz?=
- =?utf-8?B?amMrRkJsRVRYZzBEWEw0UEtUNmNRQ1dQOHFXTzdTRFA2c1ArUmYxZlU3VE5L?=
- =?utf-8?B?WHJvem1jQ2QwWHVnRDN6RCs5M1FSQ0FSQnRiREhrYkRDa09FM00yR20zR3Jl?=
- =?utf-8?B?dEE9PQ==?=
-X-OriginatorOrg: allegrodvt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 232c90be-d803-41cf-72ed-08dda43506a7
-X-MS-Exchange-CrossTenant-AuthSource: MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 13:29:41.0985
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6c7a5ec0-2d92-465a-a3e1-9e3f1e9fd917
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aeK0GxwxaLyl86e84itwrkWopEPAQ/1ZYV6AtGq0Nc4UrzsqNqSuGgLejoHPQyc/4jabOJBYh7k9eQt0TgNdQG6H8BEvqA22u3U02YaqcyE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR0P264MB1785
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
+To: Alexandre Courbot <acourbot@nvidia.com>, Lyude Paul <lyude@redhat.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: dakr@kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
+ rust-for-linux@vger.kernel.org,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+ Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
+ <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
+ <20250529004550.GB192517@ziepe.ca> <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
+ <95ff963ddabf7c3cd2cfd07d0231a0073ff6847e.camel@redhat.com>
+ <DAED5BUK7TUQ.4JRHFMWZ99W3@nvidia.com>
+Content-Language: en-US
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+In-Reply-To: <DAED5BUK7TUQ.4JRHFMWZ99W3@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,
 
-On 05.06.2025 15:01, Krzysztof Kozlowski wrote:
->On 05/06/2025 14:26, Yassine Ouaissa via B4 Relay wrote:
->> From: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+
+On 05/06/2025 08:51, Alexandre Courbot wrote:
+> On Thu Jun 5, 2025 at 3:21 AM JST, Lyude Paul wrote:
+>> On Fri, 2025-05-30 at 23:02 +0900, Alexandre Courbot wrote:
+>>> On Thu May 29, 2025 at 9:45 AM JST, Jason Gunthorpe wrote:
+>>>> On Thu, May 29, 2025 at 01:14:05AM +0300, Abdiel Janulgue wrote:
+>>>>> +impl SGEntry<Unmapped> {
+>>>>> +    /// Set this entry to point at a given page.
+>>>>> +    pub fn set_page(&mut self, page: &Page, length: u32, offset: u32) {
+>>>>> +        let c: *mut bindings::scatterlist = self.0.get();
+>>>>> +        // SAFETY: according to the `SGEntry` invariant, the scatterlist pointer is valid.
+>>>>> +        // `Page` invariant also ensures the pointer is valid.
+>>>>> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, offset) };
+>>>>> +    }
+>>>>> +}
+>>>>
+>>>> Wrong safety statement. sg_set_page captures the page.as_ptr() inside
+>>>> the C datastructure so the caller must ensure it holds a reference on
+>>>> the page while it is contained within the scatterlist.
+>>>>
+>>>> Which this API doesn't force to happen.
+>>>>
+>>>> Most likely for this to work for rust you have to take a page
+>>>> reference here and ensure the page reference is put back during sg
+>>>> destruction. A typical normal pattern would 'move' the reference from
+>>>> the caller into the scatterlist.
+>>>
+>>> As Jason mentioned, we need to make sure that the backing pages don't get
+>>> dropped while the `SGTable` is alive. The example provided unfortunately fails
+>>> to do that:
+>>>
+>>>      let sgt = SGTable::alloc_table(4, GFP_KERNEL)?;
+>>>      let sgt = sgt.init(|iter| {
+>>>          for sg in iter {
+>>>              sg.set_page(&Page::alloc_page(GFP_KERNEL)?, PAGE_SIZE as u32, 0);
+>>>          }
+>>>          Ok(())
+>>>      })?;
+>>>
+>>> Here the allocated `Page`s are dropped immediately after their address is
+>>> written by `set_page`, giving the device access to memory that may now be used
+>>> for completely different purposes. As long as the `SGTable` exists, the memory
+>>> it points to must not be released or reallocated in any way.
+>>>
+>>> To that effect, we could simply store the `Page`s into the `SGTable`, but that
+>>> would cover only one of the many ways they can be constructed. For instance we
+>>> may want to share a `VVec` with a device and this just won't allow doing it.
+>>>
+>>> So we need a way to keep the provider of the pages alive into the `SGTable`,
+>>> while also having a convenient way to get its list of pages. Here is rough idea
+>>> for doing this, it is very crude and probably not bulletproof but hopefully it
+>>> can constitute a start.
+>>>
+>>> You would have a trait for providing the pages and their range:
+>>>
+>>>      /// Provides a list of pages that can be used to build a `SGTable`.
+>>>      trait SGTablePages {
+>>>          /// Returns an iterator to the pages providing the backing memory of `self`.
+>>>          fn pages_iter<'a>(&'a self) -> impl Iterator<Item = &'a bindings::page>;
+>>>          /// Returns the effective range of the mapping.
+>>>          fn range(&self) -> Range<usize>;
+>>>      }
+>>>
+>>> The `SGTable` becomes something like:
+>>>
+>>>      struct SGTable<P: SGTablePages, T: MapState>
+>>>      {
+>>>          table: Opaque<bindings::sg_table>,
+>>>          pages: P,
+>>>          _s: PhantomData<T>,
+>>>      }
 >>
->> Add compatible for video decoder on allegrodvt Gen 3 IP.
->
->A nit, subject: drop second/last, redundant "dt-bindings". The
->"dt-bindings" prefix is already stating that these are bindings.
->See also:
->https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
->
->
->Subject prefix(es): still wrong. You can get them for example with `git
->log --oneline -- DIRECTORY_OR_FILE` on the directory your patch is
->touching. For bindings, the preferred subjects are explained here:
->https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
->
-
-Got it, thanks.
+>> Hopefully I'm not missing anything here but - I'm not sure how I feel about
+>> this making assumptions about the memory layout of an sg_table beyond just
+>> being a struct sg_table. For instance, in the gem shmem helpers I had this for
+>> exposing the SGTable that is setup for gem shmem objects:
 >>
->> v2:
->> - Change the YAML file name, use the existing vendor-prefix.
->> - Improuve the dt-bindings description.
->> - Change the device compatible identifier, from "allegrodvt, al300-vdec",
->>   to "allegro, al300-vdec"
->> - Simplify the register property specification,
->>   by using the simple min/max items constraint (Krzysztof Kozlowski)
->> - Remove the clock-names property. And remove it from the required
->>   properties list (Krzysztof Kozlowski) (Conor Dooley)
->> - Use the simple maxItems constraint for the memory-region property.
->>   Also for the firmware-name (Krzysztof Kozlowski)
->> - Example changes:
->>   - Use header provides definitions for the interrupts (Conor Dooley)
->>   - Improuve Interrupt specification using GIC constants (Conor Dooley)
->>   - Use generic node name "video-decoder" (Krzysztof Kozlowski) (Conor Dooley)
->>   - Remove unused label (Krzysztof Kozlowski)
->>   - Change clock reference from <&mcu_clock_dec> to <&mcu_core_clk>
->>   - Use hex format for reg property (Krzysztof Kozlowski) (Conor Dooley)
->>   - Reduce memory region size (Krzysztof Kozlowski) (Conor Dooley)
->
->All this goes to changelog
->
-
-I'll move it to the changelog.
+>> struct OwnedSGTable<T: drm::gem::shmem::DriverObject> {
+>>      sg_table: NonNull<SGTable>
+>>      _owner: ARef<Object<T>>
+>> }
 >>
->>   - Link v1: https://patchwork.linuxtv.org/project/linux-media/patch/20250511144752.504162-4-yassine.ouaissa@allegrodvt.com/
->
->Drop
->
->>
->> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
->> ---
->>  .../bindings/media/allegro,al300-vdec.yaml         | 75 ++++++++++++++++++++++
->>  MAINTAINERS                                        |  2 +
->>  2 files changed, 77 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/media/allegro,al300-vdec.yaml b/Documentation/devicetree/bindings/media/allegro,al300-vdec.yaml
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..26f9ac39682431b1d4828aed5d1ed43ef099e204
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/allegro,al300-vdec.yaml
->> @@ -0,0 +1,75 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/media/allegro,al300-vdec.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Allegro DVT Video IP Decoder Gen 3
->> +
->> +maintainers:
->> +  - Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>
->> +
->> +description: The al300-vdec represents the gen 3 of Allegro DVT IP video
->
->Blank line after description:
+>> So, I'm not really sure we have any reasonable representation for P here as we
+>> don't handle the memory allocation for the SGTable.
+> 
+> Maybe I need more context to understand your problem, but the point of
+> this design is precisely that it doesn't make any assumption about the
+> memory layout - all `P` needs to do is provide the pages describing the
+> memory backing.
+> 
+> Assuming that `_owner` here is the owner of the memory, couldn't you
+> flip your data layout and pass `_owner` (or rather a newtype wrapping
+> it) to `SGTable`, thus removing the need for a custom type?
 
-I'll change it in the next version.
->
->> +  decoding technology, offering significant advancements over its
->> +  predecessors. This new decoder features enhanced processing capabilities
->> +  with improved throughput and reduced latency.
->> +
->> +  Communication between the host driver software and the MCU is implemented
->> +  through a specialized mailbox interface mechanism. This mailbox system
->> +  provides a structured channel for exchanging commands, parameters, and
->> +  status information between the host CPU and the MCU controlling the codec
->> +  engines.
->> +
->> +properties:
->> +  compatible:
->> +    const: allegro,al300-vdec
->> +
->> +  reg:
->> +    maxItems: 2
->> +    minItems: 2
->
->Drop
+I think what Lyude has in mind here (Lyude, correct me if I'm wrong) is 
+for cases where we need to have a rust SGTable instances for those 
+struct sg_table that we didn't allocate ourselves for instance in the 
+gem shmem bindings. So memory layout needs to match for
+#[repr(transparent)] to work
 
-I'll change it in the next version.
->
->> +
->> +  reg-names:
->> +    items:
->> +      - const: regs
->
->base? apb is also "regs", because this is "reg" property, so "regs"
->feels redundant.
->
-
-the regs, is where the device is mapped, but the apb is used by the MCU.
-the reg 'apb' is used to map the MCU peripherals.
-
->Unless this is something entirely else (quite different address in
->example), so maybe this should not be reg at all.
->
->Also, make the example complete - missing memory region.
->
-
-I'll change it in the next version.
->> +      - const: apb
->> +
->Best regards,
->Krzysztof
-
-Best regards,
-Yassine OUAISSA
