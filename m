@@ -1,140 +1,63 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50858462;
-	Thu,  5 Jun 2025 03:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2278462;
+	Thu,  5 Jun 2025 03:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749092433; cv=none; b=FjiBdFEmP5PZXhDvoOI+4zHO4YO1S74YRZ0Yuy0uKtdGVPL6jyUFs8lnNnoHjTe3PgG7D9YL0uIgjNXqMnKi234go4ckDMBYn4uVgo0Wa6x2Q9Vbs91Gcxd6L5/Pu2/ver2Wf5ROAjS71n5+z/Net/wyAIG5DDpP9/3y3yZcG9w=
+	t=1749092602; cv=none; b=BifIZDOKmqJhIe3jrSiRxBHpS9d3UL2shyw8KXjPp+kTM0Rvr9CwE1AXiC/GvVZufhsxSPBDGBdc3VxOOj5UE5uKTvCb7DbO6Cz7eizzv4BoUXY4TcIhdKNpxB+n1BdCSs1v9PS0Q6gVMaGCueXzbFQQFoLDcu3C9BEWoXDMGOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749092433; c=relaxed/simple;
-	bh=od8Srxi0ZDThkk/K8ZieVDKuC/Csm+DVoiedt/ryxPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rOpYphNnThDjMV/i+TdZdOVX+d23N3PESnWqE2bynML87UEHA7Z17SRas1gC96wEn8hfGqrdjCRczS12N/Y5n0WfAvCG0N8mdc97f/wT1EHXQ7bSti+iX8d9wpF3VthAVP6x8e56qghcuK0tNeyWSKdg3iKGBifD+U6GPduwItc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OubdubNO; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749092602; c=relaxed/simple;
+	bh=puViIcy0fLmx48qFkHTXomeoMb2W/ioS2AUHaXZ54eA=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Ff2cpH/+M+ibU1ESKx/9hbXi8XKcGsySfJbBtXqR69XoQmYDQgveS2O08dg4OOE5sBpSKwEg5PXyAqzWH0CqKYeNGVzbHn5aj3qkyYAUTUCAM3+dq8R6IzWUzcKSMJQUYxwJinPHo4VT/5vkbZTME0AgFYz6xXonsVfb1/IRiNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHKN0hlE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OubdubNO"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-747c2cc3419so415461b3a.2;
-        Wed, 04 Jun 2025 20:00:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749092431; x=1749697231; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Slde/kYagTx037Us5u9pqXevqwcUDRHPhGcdcmkeis0=;
-        b=OubdubNO0VVnv9EnCGM0YudYrbbucgqc9wqR1E3k7plaORlyRKqfbsQRmPEN5M8pr7
-         OFRogMANX6xJ10fZGVHMpmXnuwMdH2C8d0tjk+JwtWnOK8pXEqsYuHxeGJmuO5nh6omH
-         XViZ0xqPhkPBHWPDaSKWF2TdnpA5ivoiOZKkGS0g6LBijDswZf+YGmAWn9xOGG5ynB4y
-         xiGv3nLUSK+WnHQnMGBAtokALhgLluBy9QQieV6cB2xir3j3xP4c8rOgx8vpf2wdRjNM
-         8v6S0pbt5Oh6ChZKACLTSpsiKzMhcntVpJabhvpgjNMxSirf1aqnCaaDxoXDmLfmFmg5
-         p9zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749092431; x=1749697231;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Slde/kYagTx037Us5u9pqXevqwcUDRHPhGcdcmkeis0=;
-        b=BEpfvTdXcXIMu9rbzWbMZdfgtrGqW1qx2trKop2QiUpodAmXVrgtAHLuYW4lxrIkrj
-         Td/sc8UK6PG1TT5PvGKUbcXAzzjyfmV3d92MKANA0dTUZvLG4sgE6EWUytz/Pe473oWQ
-         TbqiUpxv3GnSND5B8DFlbJb7w3AsmTmXqpm+jvL1QoTRhIGPfgjsSf0mAAkbNHdssdHO
-         zNWN3TNGXmRjYVS6oiVzu1NVYXA6XGcYsGNhjPDQV5MsrpeP/QAd9SaGcvsACZDDupTB
-         sEtLzdN+WgreUndD4hX4hmkkl4yzs3bZtvsf1IOTMt2/zowgH6f6rokwhVty47ap98os
-         2diw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVwZi4Hs9sZ4ySr9HuFrB0OU3079xB+w+f9k0mg9A2V69JMq1yEq7f5bzmyq4r5An4fSe1PofyEk90fvE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPcFo9bHUZZ8Hp6lUVD1YVPuH8gd7CRNhH8RU0+fz8q0xEYPWz
-	ZOn0kW3XatkzsEFEKVfa6+XoJDRycWCHRItnZNQBqMCGtaWPgIbmcxuL
-X-Gm-Gg: ASbGncsrHZvEMyvkb9lT4dI9Uyt6cfgZSdJ2VXKeqoG/c6OrhtGoVKCGqCMfv/wIPFN
-	zvFE2Lf9e8CqODETdDQca2nlP8CnE47bej1LK8UN5yQ44z2OJEpnLNBJXtWqQvn9bf75KzcEVE4
-	6IYS4WiPGXxsScRkvn8n/vZPDwGScRGBE4aabB33GwCEeHwb8FbYwbewqO/BmQyPl+fei5xaBmg
-	xM56DiXbrd8e96V2pxdUh8hG/sNBc7K9GZx4XFBunSXATph+lrTRklfsMhjqIFRjzogj8AnrjK1
-	xZBFrjkawgnrOjQHEYGPeD113yO0Z61VySElzpa2jSREz3GTcO9nWdgVi6YkOw==
-X-Google-Smtp-Source: AGHT+IGp8g8iik3RW6LdOVwHZPYHPYCXIc+7QLRz1H7jq6cTd3prufZaUyjdG7LXG7YLR9ql0G+naA==
-X-Received: by 2002:a05:6a00:1823:b0:746:2591:e531 with SMTP id d2e1a72fcca58-7480b4974dfmr7198327b3a.12.1749092430882;
-        Wed, 04 Jun 2025 20:00:30 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747bd44eb1asm10677468b3a.61.2025.06.04.20.00.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 20:00:29 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id CEC9B4209E8C; Thu, 05 Jun 2025 10:00:26 +0700 (WIB)
-Date: Thu, 5 Jun 2025 10:00:26 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: Re: [PATCH v2 0/3] docs: some automarkup improvements
-Message-ID: <aEEISsfy-O3DwXMJ@archie.me>
-References: <20250604143645.78367-1-corbet@lwn.net>
- <ebeb020a-8403-441b-ab02-f017ffcb7b83@notapiano>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHKN0hlE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3C9C4CEE4;
+	Thu,  5 Jun 2025 03:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749092602;
+	bh=puViIcy0fLmx48qFkHTXomeoMb2W/ioS2AUHaXZ54eA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ZHKN0hlEVfsOXvnmvvpqHgxmMWtvIFW1pTGWoHQb+Q9dxHU4zIBSQVw/OpKL7JaLK
+	 UdmPB85jWmIz0vsMqd39pzf9uyzoI/RJlWKLCB2sUKOsUyyDxFtWfSpydxGOOcFbCz
+	 tsVuCxjydyXUNBuSV3yHjC7BnJr9JhE3G+qbd6fzfrZlpQLVzexALfJTTa/A8hHy/W
+	 CKerneXb9/gXyGM6NZ3aTtiTEF7Y7gICyUesm6grBZKRjqiZkBhuGSJgPQtJCdkZAi
+	 dXTlz6Crm9bbegE3pCkteecWnEURvtd37OyxQ34sIlAYLG7ZvZZ3AfQ04Dj5/Zu8vV
+	 uyIfM3mhwINZw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE0C1380CED9;
+	Thu,  5 Jun 2025 03:03:55 +0000 (UTC)
+Subject: Re: [GIT PULL] ksmbd sever fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAH2r5muDAU9fFmkDERtE_Dvrt2HgC4s9t1wH-uHG6B4vQH39iw@mail.gmail.com>
+References: <CAH2r5muDAU9fFmkDERtE_Dvrt2HgC4s9t1wH-uHG6B4vQH39iw@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-cifs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5muDAU9fFmkDERtE_Dvrt2HgC4s9t1wH-uHG6B4vQH39iw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/ksmbd.git tags/6.16-rc-ksmbd-server-fixes
+X-PR-Tracked-Commit-Id: dc3e0f17f74558e8a2fce00608855f050de10230
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d2fec01e89447729c7b9d722a8e7ef9d1184c7be
+Message-Id: <174909263420.2554386.1610719925903832578.pr-tracker-bot@kernel.org>
+Date: Thu, 05 Jun 2025 03:03:54 +0000
+To: Steve French <smfrench@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, Namjae Jeon <linkinjeon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="EEjZrgwjpbfZiAAG"
-Content-Disposition: inline
-In-Reply-To: <ebeb020a-8403-441b-ab02-f017ffcb7b83@notapiano>
 
+The pull request you sent on Wed, 4 Jun 2025 18:20:46 -0500:
 
---EEjZrgwjpbfZiAAG
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> git://git.samba.org/ksmbd.git tags/6.16-rc-ksmbd-server-fixes
 
-On Wed, Jun 04, 2025 at 06:05:06PM -0400, N=C3=ADcolas F. R. A. Prado wrote:
-> The only other thing I noticed is that the links in the sidebar still use=
- the
-> old style, since they rely on a different CSS selector for some reason:
->=20
->   div.sphinxsidebar a {
->     text-decoration: none;
->     border-bottom: 1px dotted #999;
->   }
->=20
-> That makes it a bit inconsistent style-wise, so I think it'd be sensible =
-to
-> update that selector as well to follow suit.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d2fec01e89447729c7b9d722a8e7ef9d1184c7be
 
-It can be done simply by also applying the same style to aforementioned
-selector:
+Thank you!
 
----- >8 ----
-diff --git a/Documentation/sphinx-static/custom.css b/Documentation/sphinx-=
-static/custom.css
-index c9991566f91488..14e1bb9c4e63eb 100644
---- a/Documentation/sphinx-static/custom.css
-+++ b/Documentation/sphinx-static/custom.css
-@@ -137,8 +137,9 @@ div.language-selection ul li:hover {
-     background: #dddddd;
- }
-=20
--/* Make xrefs more universally visible */
--a.reference, a.reference:hover {
-+/* Make xrefs and sidebar links more universally visible */
-+a.reference, a.reference:hover,
-+div.sphinxsidebar a {
-     border-bottom: none;
-     text-decoration: underline;
-     text-underline-offset: 0.3em;
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---EEjZrgwjpbfZiAAG
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEEIRwAKCRD2uYlJVVFO
-o5r1AQCSfBjD1Q0WBtDnGDrAS2WvGCFR7odGDRswMdh0m8uE0AD8CKSSOn7a+uW0
-PIcRkEq4dX+1fFt+rcbSt91j3zhf6QQ=
-=yF4l
------END PGP SIGNATURE-----
-
---EEjZrgwjpbfZiAAG--
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
