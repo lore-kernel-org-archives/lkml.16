@@ -1,320 +1,353 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DAD225405;
-	Thu,  5 Jun 2025 18:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F2213D521
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749148932; cv=none; b=YZox5M+3YCPKlgrcfwVh7u7ujJ0dALXaY/0/jJK4lqN5B//qKa0TO1QQoSdk6Rwt0IFlFM8d+PiOM2c25dYDJnVtD5MAXUNnmn3BL9dVnamX5t1XmNDZAz561DxKKeOscKUkG8Tw9UoHz5GS5Z6ncahB/6CiADSTNGHt03JHc2I=
+	t=1749149000; cv=none; b=UUQzsI5Y4hZNvmNHifJgYG2lGJ3xpzhj6olPlLh4sknMToHXovpCTLprowAqyJfLX0d2ZGaeADjnqIFe6mEIj75QzxBxuTsR4JN97rJujb32VB/YWh5VgHiFVht6FmXb12rrjlT7D/NudI0T+eTszB0l9qXTYfbuZISV23zhulk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749148932; c=relaxed/simple;
-	bh=8A1uXNWW2809SvO52PJIvs8C0+8RcTEdczSyPA4VTJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=noil+QL8creiGDnn4O0LNWhH9ZSOne4QaQMachGVlzhk/Q/DvG7PnMOfzfkozKidBQoojZWlLvJMFaXDGl6F9K9B/b8c8f3S5RZiHfPkhMcJZ0Sdsh61PdVThFI67hK6zRw0VGk1m61aJnCVGSkQTIXJcBEHrxEwzND9LIW2DRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Co0hf//j; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749149000; c=relaxed/simple;
+	bh=pwq0PLV/b4ZEoWdQ/eB1ig3rglS/tfq54ydr0mKuGes=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jKrNP6g/xl5OB5HuoLkrWLoKrm0RwXS29vdCRTjYiWrfFoD/AbHRzqTYg+l58HcPILs8ieDUIswiivIwrYd8S2R/hENdmrs1CF4CD3A+Ni04i8/onzjwbqXJFdeAefDOlcjRO/ebrhM9keNRuZdYZkk7TnGdjv5zy8etKa6V9Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y2x07z53; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Co0hf//j"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-742c9907967so1310775b3a.1;
-        Thu, 05 Jun 2025 11:42:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749148930; x=1749753730; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J0mxh4Vh4mJ7p/VlQscr8sPVdvImTOagfcs541Xc3GY=;
-        b=Co0hf//jrGWWdF1VuHP/8BRZuD1OydJsmpyYR8qTYP2BvsmqQcipPQblQe7U/mDa8Z
-         EM1ACunEpku9waKSLVmxapdU6wgnxc3/cp9Gg7bHIUlYWAgbpxwwzuYCNvouuzvTYvKW
-         eFBOF+Cg2k/2luOM2mtpBM6KjQ72bqXevluVJZVb7eCYyih/VpBa92a1bqy/Gz+zStua
-         qdQ2PaktkP9VQk8f7rFCHT4Wu32AVqeYu9kl0Gq6JjnAriXRywY8Xqmz29jco9gW+QEw
-         0jxlDJB2erm3ngGblgVRUwCMJvEqjgLksmW5Pcfbz8tdW5DemL3AbS4O/q8wN3tIsqpe
-         73sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749148930; x=1749753730;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J0mxh4Vh4mJ7p/VlQscr8sPVdvImTOagfcs541Xc3GY=;
-        b=QNZ3i7bdiNmISiyzTK/nn90LD+E2l9OLAURH6uj3TQon5XBB2n9u/jqq+HrgKM7pdY
-         0EQnbaTJcIEndnTs+ywUSp0QZLvs3LQRy/riv2BgJUWnuTbGmDoLuqRPl+irTbsAvM0u
-         YMNDb4828/Oemfk4PBiIprHjBQlF7UgUHngsv9YxDHpIIPKwzhkAUoHq4MX9/YGYBo9O
-         sKhG5TmMFU0AXewnU/9Jeh5X2xri9vAu3ULe+c/PrIb1HOy+E0kACaj6BMYLQvhxreKD
-         9SFt0lr2kVMcv/HF0HUgQMkJptMlXGKQnER5pjLxDYBOHKIkIABj///qsa4/2kRi7xmR
-         WO9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWFpW9PoPxHrwanDJpwrcO5/w/9tYduqtgsyVTTojZXVGX6lpRD/u09VM7aoN6jtsjPBKKiYpFo5sF7JDmP@vger.kernel.org, AJvYcCXUwl8sPlfdWBih8FGU2U3lusTBlger1gH72J6NbmN6eojFqyLi2twEfBxfBcJyN+/F3h0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo9vrCdfe5wqr4e0Yp/L/SSm92OGpWuR82DuxBdin9gM48V2p2
-	riEWYrxsDS0g3SyMwr7WA6zuXUc6OS2nHFJbhDZxJxotddxjWXCEmM/AhQcWCUFeOsTOTBBGFFU
-	N6hSrkb9hZevxYxtJzz8a4c4VE6k4aqk=
-X-Gm-Gg: ASbGncvDTOGC1QhQYoLC1qT2RPBT4loDvO48fwjWLt2mxED7x4wM3Iev3vQBZG9VxJl
-	qoHTa2SRzYReJ7pzT1S1eYt9VMc+HuKR0xS71mWl8xzfVN2XGhXXmwqLUkhHO2ojx+rn+xVRaV8
-	7oPGrNDtlSQV9xmSzldKQIoZ7vGBfDetQO1ZaeFPo65vMyaR3G
-X-Google-Smtp-Source: AGHT+IFqfyYxtIAbk45UebUFLib9TE4AwrdAOQ8dQjfv0i8SmVPLhjpFLEuxtTuvVn3ycy+/MMBp1Wxq/Blh+0YNl+k=
-X-Received: by 2002:a05:6a00:1390:b0:737:678d:fb66 with SMTP id
- d2e1a72fcca58-74827e4ebddmr976443b3a.5.1749148929823; Thu, 05 Jun 2025
- 11:42:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y2x07z53"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749148998; x=1780684998;
+  h=date:from:to:cc:subject:message-id;
+  bh=pwq0PLV/b4ZEoWdQ/eB1ig3rglS/tfq54ydr0mKuGes=;
+  b=Y2x07z53JMIUYEaLuP+kULNRg2QgUhapQriC/2FIBtT/OBvu6b6z99n2
+   JNpG67wDh+zaeueObvoBn7Q7QmK40TKd9f42EuT9juk8qKmr0hwA62FGp
+   m8+OhH3VsH5nLAFIUetjj7Q3lPBKKHCvRYGkkknCV9ZflibH+0tlgqdZT
+   YzsBJWMjvhl6OhyNww5oUS3JBNxpOBEdclwPG0UGqlNjYNcGTIA9tpu0f
+   4jqGCgg/ACqOxCy/Cz1PaZy49H1mn7vl205JIx11/uZLck2PE9XKatqOe
+   BAHTagcJIWkrl6GZPX8kwyXpzeIcpfgbkgysfuVQ+a/Xz3kD3iNGQEmwj
+   w==;
+X-CSE-ConnectionGUID: v+lmv/h1T4G+YNyM9eQE/Q==
+X-CSE-MsgGUID: Rrhd1IjhQ6Oovs2zAqbG0w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="38916397"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="38916397"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 11:43:16 -0700
+X-CSE-ConnectionGUID: o6MxDX6ITWO95RYwR0bLnw==
+X-CSE-MsgGUID: TVJJsdigSwSV8o+b8ekJxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="176546753"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 05 Jun 2025 11:43:15 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uNFYX-0004O5-23;
+	Thu, 05 Jun 2025 18:43:13 +0000
+Date: Fri, 06 Jun 2025 02:43:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:tip/urgent] BUILD SUCCESS
+ 337964c8abfbef645cbbe25245e25c11d9d1fc4c
+Message-ID: <202506060200.y0Y06XYf-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250604163723.3175258-1-chen.dylane@linux.dev>
-In-Reply-To: <20250604163723.3175258-1-chen.dylane@linux.dev>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 5 Jun 2025 11:41:57 -0700
-X-Gm-Features: AX0GCFs7Ti8oMoMVNO8WJhBo2K6eC9zHWIcD5LPUdthDUVuA-lwdu2IWi7uzBZo
-Message-ID: <CAEf4BzasaZYD7y+4Po=K=jBq3Q7JSUMpJ_NSQv7B9=v6fieZ7g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: Add show_fdinfo for perf_event
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com, 
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me, 
-	haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 4, 2025 at 9:37=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wro=
-te:
->
-> After commit 1b715e1b0ec5 ("bpf: Support ->fill_link_info for perf_event"=
-) add
-> perf_event info, we can also show the info with the method of cat /proc/[=
-fd]/fdinfo.
->
-> kprobe fdinfo:
-> link_type:      perf
-> link_id:        2
-> prog_tag:       bcf7977d3b93787c
-> prog_id:        18
-> name:   bpf_fentry_test1
-> offset: 0
-> missed: 0
-> addr:   ffffffffaea8d134
-> event_type:     3
-> cookie: 3735928559
->
-> uprobe fdinfo:
-> link_type:      perf
-> link_id:        6
-> prog_tag:       bcf7977d3b93787c
-> prog_id:        7
-> name:   /proc/self/exe
-> offset: 6507541
-> event_type:     1
-> cookie: 3735928559
->
-> tracepoint fdinfo:
-> link_type:      perf
-> link_id:        4
-> prog_tag:       bcf7977d3b93787c
-> prog_id:        8
-> tp_name:        sched_switch
-> event_type:     5
-> cookie: 3735928559
->
-> perf_event fdinfo:
-> link_type:      perf
-> link_id:        5
-> prog_tag:       bcf7977d3b93787c
-> prog_id:        9
-> type:   1
-> config: 2
-> event_type:     6
-> cookie: 3735928559
->
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->  kernel/bpf/syscall.c | 126 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 126 insertions(+)
->
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 9794446bc8..9af54852eb 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -3793,6 +3793,35 @@ static int bpf_perf_link_fill_kprobe(const struct =
-perf_event *event,
->         info->perf_event.kprobe.cookie =3D event->bpf_cookie;
->         return 0;
->  }
-> +
-> +static void bpf_perf_link_fdinfo_kprobe(const struct perf_event *event,
-> +                                       struct seq_file *seq)
-> +{
-> +       const char *name;
-> +       int err;
-> +       u32 prog_id, type;
-> +       u64 offset, addr;
-> +       unsigned long missed;
-> +
-> +       err =3D bpf_get_perf_event_info(event, &prog_id, &type, &name,
-> +                                     &offset, &addr, &missed);
-> +       if (err)
-> +               return;
-> +
-> +       if (type =3D=3D BPF_FD_TYPE_KRETPROBE)
-> +               type =3D BPF_PERF_EVENT_KRETPROBE;
-> +       else
-> +               type =3D BPF_PERF_EVENT_KPROBE;
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
+branch HEAD: 337964c8abfbef645cbbe25245e25c11d9d1fc4c  Merge branch into tip/master: 'x86/urgent'
 
-maybe use "kretprobe" and "kprobe" strings?
+elapsed time: 726m
 
-> +
-> +       seq_printf(seq,
-> +                  "name:\t%s\n"
-> +                  "offset:\t%llu\n"
+configs tested: 276
+configs skipped: 5
 
-llx, hex makes most sense (we had similar discussion within the
-context of bpftool reporting)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-pw-bot: cr
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                         haps_hs_defconfig    gcc-12
+arc                     haps_hs_smp_defconfig    gcc-15.1.0
+arc                   randconfig-001-20250605    gcc-8.5.0
+arc                   randconfig-001-20250606    gcc-15.1.0
+arc                   randconfig-002-20250605    gcc-15.1.0
+arc                   randconfig-002-20250606    gcc-15.1.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-15.1.0
+arm                              allyesconfig    clang-19
+arm                              allyesconfig    gcc-15.1.0
+arm                       aspeed_g4_defconfig    gcc-15.1.0
+arm                         axm55xx_defconfig    clang-21
+arm                                 defconfig    gcc-15.1.0
+arm                          ixp4xx_defconfig    gcc-15.1.0
+arm                         lpc18xx_defconfig    clang-21
+arm                            mmp2_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250605    clang-21
+arm                   randconfig-001-20250606    gcc-15.1.0
+arm                   randconfig-002-20250605    clang-17
+arm                   randconfig-002-20250606    gcc-15.1.0
+arm                   randconfig-003-20250605    clang-21
+arm                   randconfig-003-20250606    gcc-15.1.0
+arm                   randconfig-004-20250605    clang-21
+arm                   randconfig-004-20250606    gcc-15.1.0
+arm                           sama5_defconfig    gcc-15.1.0
+arm                        spear6xx_defconfig    clang-21
+arm                           u8500_defconfig    gcc-15.1.0
+arm                         vf610m4_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                            allyesconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250605    clang-21
+arm64                 randconfig-001-20250606    gcc-15.1.0
+arm64                 randconfig-002-20250605    clang-21
+arm64                 randconfig-002-20250606    gcc-15.1.0
+arm64                 randconfig-003-20250605    clang-21
+arm64                 randconfig-003-20250606    gcc-15.1.0
+arm64                 randconfig-004-20250605    clang-21
+arm64                 randconfig-004-20250606    gcc-15.1.0
+csky                             allmodconfig    gcc-15.1.0
+csky                              allnoconfig    gcc-15.1.0
+csky                             allyesconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250605    gcc-10.5.0
+csky                  randconfig-001-20250606    gcc-13.3.0
+csky                  randconfig-002-20250605    gcc-15.1.0
+csky                  randconfig-002-20250606    gcc-13.3.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    gcc-15.1.0
+hexagon               randconfig-001-20250605    clang-21
+hexagon               randconfig-001-20250606    gcc-13.3.0
+hexagon               randconfig-002-20250605    clang-20
+hexagon               randconfig-002-20250606    gcc-13.3.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250605    gcc-12
+i386        buildonly-randconfig-001-20250606    gcc-12
+i386        buildonly-randconfig-002-20250605    clang-20
+i386        buildonly-randconfig-002-20250606    gcc-12
+i386        buildonly-randconfig-003-20250605    gcc-12
+i386        buildonly-randconfig-003-20250606    gcc-12
+i386        buildonly-randconfig-004-20250605    clang-20
+i386        buildonly-randconfig-004-20250606    gcc-12
+i386        buildonly-randconfig-005-20250605    clang-20
+i386        buildonly-randconfig-005-20250606    gcc-12
+i386        buildonly-randconfig-006-20250605    gcc-11
+i386        buildonly-randconfig-006-20250606    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250606    clang-20
+i386                  randconfig-002-20250606    clang-20
+i386                  randconfig-003-20250606    clang-20
+i386                  randconfig-004-20250606    clang-20
+i386                  randconfig-005-20250606    clang-20
+i386                  randconfig-006-20250606    clang-20
+i386                  randconfig-007-20250606    clang-20
+i386                  randconfig-011-20250606    clang-20
+i386                  randconfig-012-20250606    clang-20
+i386                  randconfig-013-20250606    clang-20
+i386                  randconfig-014-20250606    clang-20
+i386                  randconfig-015-20250606    clang-20
+i386                  randconfig-016-20250606    clang-20
+i386                  randconfig-017-20250606    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                        allyesconfig    gcc-15.1.0
+loongarch                           defconfig    gcc-15.1.0
+loongarch             randconfig-001-20250605    gcc-12.4.0
+loongarch             randconfig-001-20250606    gcc-13.3.0
+loongarch             randconfig-002-20250605    gcc-15.1.0
+loongarch             randconfig-002-20250606    gcc-13.3.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                             allmodconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                             allyesconfig    gcc-15.1.0
+mips                        bcm63xx_defconfig    gcc-15.1.0
+mips                         bigsur_defconfig    gcc-15.1.0
+mips                     decstation_defconfig    gcc-12
+mips                      fuloong2e_defconfig    gcc-15.1.0
+mips                           gcw0_defconfig    clang-21
+mips                     loongson1b_defconfig    clang-21
+mips                           mtx1_defconfig    gcc-12
+mips                         rt305x_defconfig    gcc-12
+nios2                             allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-15.1.0
+nios2                               defconfig    gcc-15.1.0
+nios2                 randconfig-001-20250605    gcc-14.2.0
+nios2                 randconfig-001-20250606    gcc-13.3.0
+nios2                 randconfig-002-20250605    gcc-11.5.0
+nios2                 randconfig-002-20250606    gcc-13.3.0
+openrisc                         alldefconfig    gcc-15.1.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250605    gcc-9.3.0
+parisc                randconfig-001-20250606    gcc-13.3.0
+parisc                randconfig-002-20250605    gcc-11.5.0
+parisc                randconfig-002-20250606    gcc-13.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc                    gamecube_defconfig    clang-21
+powerpc                        icon_defconfig    gcc-12
+powerpc                  iss476-smp_defconfig    gcc-15.1.0
+powerpc               mpc834x_itxgp_defconfig    clang-21
+powerpc                      ppc44x_defconfig    clang-21
+powerpc                      ppc6xx_defconfig    gcc-15.1.0
+powerpc                         ps3_defconfig    gcc-12
+powerpc                         ps3_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20250605    clang-21
+powerpc               randconfig-001-20250606    gcc-13.3.0
+powerpc               randconfig-002-20250605    clang-21
+powerpc               randconfig-002-20250606    gcc-13.3.0
+powerpc               randconfig-003-20250605    clang-21
+powerpc               randconfig-003-20250606    gcc-13.3.0
+powerpc64             randconfig-001-20250605    clang-18
+powerpc64             randconfig-001-20250606    gcc-13.3.0
+powerpc64             randconfig-002-20250605    clang-21
+powerpc64             randconfig-002-20250606    gcc-13.3.0
+powerpc64             randconfig-003-20250605    clang-21
+powerpc64             randconfig-003-20250606    gcc-13.3.0
+riscv                            allmodconfig    clang-21
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250605    clang-21
+riscv                 randconfig-001-20250606    gcc-12
+riscv                 randconfig-002-20250605    clang-21
+riscv                 randconfig-002-20250606    gcc-12
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-12
+s390                                defconfig    gcc-15.1.0
+s390                  randconfig-001-20250605    clang-21
+s390                  randconfig-001-20250606    gcc-12
+s390                  randconfig-002-20250605    clang-21
+s390                  randconfig-002-20250606    gcc-12
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-12
+sh                          landisk_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250605    gcc-12.4.0
+sh                    randconfig-001-20250606    gcc-12
+sh                    randconfig-002-20250605    gcc-12.4.0
+sh                    randconfig-002-20250606    gcc-12
+sh                          rsk7201_defconfig    gcc-15.1.0
+sh                          rsk7269_defconfig    gcc-15.1.0
+sh                           se7721_defconfig    gcc-15.1.0
+sh                          urquell_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250605    gcc-11.5.0
+sparc                 randconfig-001-20250606    gcc-12
+sparc                 randconfig-002-20250605    gcc-8.5.0
+sparc                 randconfig-002-20250606    gcc-12
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250605    gcc-12.4.0
+sparc64               randconfig-001-20250606    gcc-12
+sparc64               randconfig-002-20250605    gcc-15.1.0
+sparc64               randconfig-002-20250606    gcc-12
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250605    clang-21
+um                    randconfig-001-20250606    gcc-12
+um                    randconfig-002-20250605    clang-21
+um                    randconfig-002-20250606    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250605    clang-20
+x86_64      buildonly-randconfig-001-20250606    gcc-12
+x86_64      buildonly-randconfig-002-20250605    gcc-12
+x86_64      buildonly-randconfig-002-20250606    gcc-12
+x86_64      buildonly-randconfig-003-20250605    clang-20
+x86_64      buildonly-randconfig-003-20250606    gcc-12
+x86_64      buildonly-randconfig-004-20250605    clang-20
+x86_64      buildonly-randconfig-004-20250606    gcc-12
+x86_64      buildonly-randconfig-005-20250605    gcc-12
+x86_64      buildonly-randconfig-005-20250606    gcc-12
+x86_64      buildonly-randconfig-006-20250605    clang-20
+x86_64      buildonly-randconfig-006-20250606    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250606    gcc-11
+x86_64                randconfig-002-20250606    gcc-11
+x86_64                randconfig-003-20250606    gcc-11
+x86_64                randconfig-004-20250606    gcc-11
+x86_64                randconfig-005-20250606    gcc-11
+x86_64                randconfig-006-20250606    gcc-11
+x86_64                randconfig-007-20250606    gcc-11
+x86_64                randconfig-008-20250606    gcc-11
+x86_64                randconfig-071-20250606    gcc-12
+x86_64                randconfig-072-20250606    gcc-12
+x86_64                randconfig-073-20250606    gcc-12
+x86_64                randconfig-074-20250606    gcc-12
+x86_64                randconfig-075-20250606    gcc-12
+x86_64                randconfig-076-20250606    gcc-12
+x86_64                randconfig-077-20250606    gcc-12
+x86_64                randconfig-078-20250606    gcc-12
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-18
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250605    gcc-8.5.0
+xtensa                randconfig-001-20250606    gcc-12
+xtensa                randconfig-002-20250605    gcc-12.4.0
+xtensa                randconfig-002-20250606    gcc-12
+xtensa                         virt_defconfig    gcc-15.1.0
+xtensa                    xip_kc705_defconfig    gcc-15.1.0
 
-> +                  "missed:\t%lu\n"
-> +                  "addr:\t%llx\n"
-
-ditto, address -> hex
-
-> +                  "event_type:\t%u\n"
-> +                  "cookie:\t%llu\n",
-> +                  name, offset, missed, addr, type, event->bpf_cookie);
-> +}
->  #endif
->
->  #ifdef CONFIG_UPROBE_EVENTS
-> @@ -3820,6 +3849,34 @@ static int bpf_perf_link_fill_uprobe(const struct =
-perf_event *event,
->         info->perf_event.uprobe.cookie =3D event->bpf_cookie;
->         return 0;
->  }
-> +
-> +static void bpf_perf_link_fdinfo_uprobe(const struct perf_event *event,
-> +                                       struct seq_file *seq)
-> +{
-> +       const char *name;
-> +       int err;
-> +       u32 prog_id, type;
-> +       u64 offset, addr;
-> +       unsigned long missed;
-> +
-> +       err =3D bpf_get_perf_event_info(event, &prog_id, &type, &name,
-> +                                     &offset, &addr, &missed);
-> +       if (err)
-> +               return;
-> +
-> +       if (type =3D=3D BPF_FD_TYPE_URETPROBE)
-> +               type =3D BPF_PERF_EVENT_URETPROBE;
-> +       else
-> +               type =3D BPF_PERF_EVENT_UPROBE;
-
-strings, just as above
-
-> +
-> +       seq_printf(seq,
-> +                  "name:\t%s\n"
-> +                  "offset:\t%llu\n"
-
-hex
-
-> +                  "event_type:\t%u\n"
-> +                  "cookie:\t%llu\n",
-> +                  name, offset, type, event->bpf_cookie);
-> +
-> +}
->  #endif
->
->  static int bpf_perf_link_fill_probe(const struct perf_event *event,
-> @@ -3888,10 +3945,79 @@ static int bpf_perf_link_fill_link_info(const str=
-uct bpf_link *link,
->         }
->  }
->
-> +static void bpf_perf_event_link_show_fdinfo(const struct perf_event *eve=
-nt,
-> +                                           struct seq_file *seq)
-> +{
-> +       seq_printf(seq,
-> +                  "type:\t%u\n"
-> +                  "config:\t%llu\n"
-> +                  "event_type:\t%u\n"
-
-string?
-
-> +                  "cookie:\t%llu\n",
-> +                  event->attr.type, event->attr.config,
-> +                  BPF_PERF_EVENT_EVENT, event->bpf_cookie);
-> +}
-> +
-> +static void bpf_tracepoint_link_show_fdinfo(const struct perf_event *eve=
-nt,
-> +                                           struct seq_file *seq)
-> +{
-> +       int err;
-> +       const char *name;
-> +       u32 prog_id;
-> +
-> +       err =3D bpf_get_perf_event_info(event, &prog_id, NULL, &name, NUL=
-L,
-> +                                     NULL, NULL);
-> +       if (err)
-> +               return;
-> +
-> +       seq_printf(seq,
-> +                  "tp_name:\t%s\n"
-> +                  "event_type:\t%u\n"
-
-string
-
-> +                  "cookie:\t%llu\n",
-> +                  name, BPF_PERF_EVENT_TRACEPOINT, event->bpf_cookie);
-> +}
-> +
-> +static void bpf_probe_link_show_fdinfo(const struct perf_event *event,
-> +                                      struct seq_file *seq)
-> +{
-> +#ifdef CONFIG_KPROBE_EVENTS
-> +       if (event->tp_event->flags & TRACE_EVENT_FL_KPROBE)
-> +               return bpf_perf_link_fdinfo_kprobe(event, seq);
-> +#endif
-> +
-> +#ifdef CONFIG_UPROBE_EVENTS
-> +       if (event->tp_event->flags & TRACE_EVENT_FL_UPROBE)
-> +               return bpf_perf_link_fdinfo_uprobe(event, seq);
-> +#endif
-> +}
-> +
-> +static void bpf_perf_link_show_fdinfo(const struct bpf_link *link,
-> +                                     struct seq_file *seq)
-> +{
-> +       struct bpf_perf_link *perf_link;
-> +       const struct perf_event *event;
-> +
-> +       perf_link =3D container_of(link, struct bpf_perf_link, link);
-> +       event =3D perf_get_event(perf_link->perf_file);
-> +       if (IS_ERR(event))
-> +               return;
-> +
-> +       switch (event->prog->type) {
-> +       case BPF_PROG_TYPE_PERF_EVENT:
-> +               return bpf_perf_event_link_show_fdinfo(event, seq);
-> +       case BPF_PROG_TYPE_TRACEPOINT:
-> +               return bpf_tracepoint_link_show_fdinfo(event, seq);
-> +       case BPF_PROG_TYPE_KPROBE:
-> +               return bpf_probe_link_show_fdinfo(event, seq);
-> +       default:
-> +               return;
-> +       }
-> +}
-> +
->  static const struct bpf_link_ops bpf_perf_link_lops =3D {
->         .release =3D bpf_perf_link_release,
->         .dealloc =3D bpf_perf_link_dealloc,
->         .fill_link_info =3D bpf_perf_link_fill_link_info,
-> +       .show_fdinfo =3D bpf_perf_link_show_fdinfo,
->  };
->
->  static int bpf_perf_link_attach(const union bpf_attr *attr, struct bpf_p=
-rog *prog)
-> --
-> 2.43.0
->
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
