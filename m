@@ -1,129 +1,128 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606D428E17;
-	Thu,  5 Jun 2025 22:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67A628E17;
+	Thu,  5 Jun 2025 22:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749164219; cv=none; b=pwXoh+TOTVfxL/elpkmuetz1cQPbA6SexYY86OW8NYg6tG/QvqHwFFABzOBBw0ajTpB2r4axwmaBWsaVUnMqTwUongjZdPqIHTFe6NJqLCbQq6OmZifS0InJVjgR+y71ltxIJJnlZ2zwAI58OYKuy6+pq4NWZJ7e3/o5PcDcnsM=
+	t=1749164253; cv=none; b=N3z6Wp2+daDDtjxx+NtE3nsHUQLB8IhGFpYf47FWkOM1PB+ZnWj63F3+HsM9ZwHZMtI9jkhPVRslEALdPLVw4oQ8mZp1NawqhdwfzhZT5V2t5p44Zd+kCtDd+nmKLorXZG8e2plRCmg05uFpdvxmY10osYYY6boQ57eMU7NVQPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749164219; c=relaxed/simple;
-	bh=W9wvLgzBpwRlr4/h5Pqc8uGzskgjGvLoJgQexId1ewo=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YLCqnTxjU/WZ+7CN119mT+/jk4wuxH75wndfgG8I7Cte61B54PpUtA78PC4ydMYFPR4OheWeARtsKM/8oFeK7uueXUuoBTV1i0hJeJSqOtvlZ2Xlkx7uxXjlRytvRjRIte1wsBPHFXBvYVuTRxVFiGQU1bbUEo0sY0p0QGC7aB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RsTV1M3o; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749164253; c=relaxed/simple;
+	bh=ttq74J8zgl/CqPTmFPHRqNeX1HBQ5yWBTsGcAVjdt5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=nqDKZD1dx/NzCe1jsLqRmiVdhKTyPVSwa2LGHxN9I/TqlrLetliPViGU62J6ajYEQsddgEw50XTZJBFGrn3GSY31VmV2JgDKMRfE45UcQyuHT6M+6B5l8jbRj/rXCnUdbrSF45uKe7vffqHrFlTEabyaYMYUlI2HYHARKw8kOS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7J4N7AR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsTV1M3o"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235e1d4cba0so13091865ad.2;
-        Thu, 05 Jun 2025 15:56:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749164217; x=1749769017; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W9wvLgzBpwRlr4/h5Pqc8uGzskgjGvLoJgQexId1ewo=;
-        b=RsTV1M3ozDSUsv4nizOG6X5AfKI0rqfXTpRa1Muvh8nL6iPcH6arYPukrxwR6HegL0
-         CeuHaD5kH07OmPs1kznKDOUyaVYFVpxUzrHQPAuTbmWPTpkq2EWvrHozfOcf3yXwHMM1
-         OcNt7/xikbU0n7ly/c5EGRfBAEoC+ltAueBCNJ7Xh5kBWvT/UjKnaTAxDAbezSgikIJF
-         A3lHCcLWtlmOdwncPPuwBcVTd/DE9GUobbjNozrojZBVULDRX29OuO7MWzmR7xCjSVmk
-         +itXwOJsxVvVABRyL23UTgXXmxdD82mtTJDGKo3QaUBGAQ7VFXpZtMqyF/gzkpjGkILN
-         vpuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749164217; x=1749769017;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W9wvLgzBpwRlr4/h5Pqc8uGzskgjGvLoJgQexId1ewo=;
-        b=eRLEud8m6vtJ5L/j6YpBLHL06IvXBDObrpCAs35MFxM2r93eubERiir9cKpChCEI9b
-         fqByEBCamjqqZ1+K8PjAPaFitOMgz8eyaOSSLflF6eTA+cgaEudnhf4ySm3pMYh7MYha
-         jD5qZc/695O5jZQIFC8ZP23cjBIwnTRn/cOxxjXFRJ7Ft4B2W+C9SB8kGFOu7HDXSGRa
-         QcFzFoFFRXsP3iXd4sPocgai113UJnIiE9hy6P4h0lN78+C6qf3mE0qUhMJ/1TA+2+7p
-         4NhF0lFZjR61S76FLLVIPz2evOrwCM5x2SmkiGrDuzI15mJvUTGX2PrE0677EBodpEcH
-         fIVw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2RluOc2i23GbQ14LjTDtRL0hqQlSF+duioj0jIR8lNI/FI6/OhrCWp19jUJkDYg/6V9PRo466DgcNY8yw@vger.kernel.org, AJvYcCUOUZuS3n4K+exFtJFYDKn1oJuulZWzls3AHcMcJallj4nrPyR26YOcbqnZ6OZl54zUbxnZ+Qi/I3ir@vger.kernel.org, AJvYcCUtNubFflFDeVUf8d1b+9gz7LK0+OvO1cG07PrEmOOuPXXjehje0Jy7JMIOmrAOkykSG6mv4UDd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxACv24uxFxZ/jFuoHFSS525J4ZrEzMLCJtl+LZ+88gfZA8mlb
-	lQScJlescIe1lzJyezDDfE850+Ra8/SxTsvvXdBSmbuIO8ygJ71k9g9K
-X-Gm-Gg: ASbGncvWF+d0NYCEZvUzzUtsgzlx+aF4vG3r8fqU70Tj1Esj6f2XDfH0+UMTZtjkRFJ
-	dUpzNiMFQJesY9ctfGKlYxWCPTxU+uvvzqPADXLUGjEPxP+yPM62ZngNgnA8zhQY05e/Ttrwjuu
-	BNx8oF7DOG3hZMI/01DmvfvxHQXgHwzpoP/lthpWtwaNZ2YyTzpYzJ2Wv6cUPnDcbiu8+JgpvPk
-	lshSrH3jhF14j6tmEiUe1CgXZV2VAGjRJ1bxLSfRtyyz2pdVj2XNhqN8bR743vJrzQ4uaQvcTkc
-	dsikkmG/qHoBjH4q7TOdMGcP+p3MlaZFZ3aeekGfxSf1Y3I8Jq0=
-X-Google-Smtp-Source: AGHT+IF7aHWSDBE7OP8NbpbLMzieQT5Htocm4zHVaqcG6HRv4pd99kgqlQnHXj7COrmzwMCnUYQJdQ==
-X-Received: by 2002:a17:902:ccd2:b0:234:d399:f948 with SMTP id d9443c01a7336-23601d973bfmr14933535ad.33.1749164217443;
-        Thu, 05 Jun 2025 15:56:57 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603410b83sm1173335ad.215.2025.06.05.15.56.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 15:56:56 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 0CDCA4222987; Fri, 06 Jun 2025 05:56:53 +0700 (WIB)
-Date: Fri, 6 Jun 2025 05:56:53 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Vishal Chourasia <vishalc@linux.ibm.com>, Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llong@redhat.com
-Subject: Re: [PATCH v2] Documentation: cgroup: add section explaining
- controller availability
-Message-ID: <aEIgtdrFbyNf4v85@archie.me>
-References: <20250605145421.193189-2-vishalc@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7J4N7AR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30293C4CEE7;
+	Thu,  5 Jun 2025 22:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749164252;
+	bh=ttq74J8zgl/CqPTmFPHRqNeX1HBQ5yWBTsGcAVjdt5U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=F7J4N7AROXpSNCIcWVGENA6Qg3/33Ich5ukiqOms+VM42I5Zq1EHSHryln5/6ji+/
+	 bvlS2Ffc/4RS8aVyTKpO7Wc83areCxJzQ3L/Evs3CG9vuC+Tk6fYcvJT8O+90wjHnb
+	 F8cJlAE+J6PzkZjQzSCI+jPvUWCJGbPf1MiGlZNDgD3mxKIxzmFCLvpT3kFBcvpgyI
+	 RXvFQPh6UYp7n7DG0YI6U1PdH7I1oTrkbfVLZYKi9Ajk6rLWDdKavUoB2rf05X4Hwk
+	 hYmDWxDGxGWYve2Iy+Tm6lzEYHj8Y/ZNW7StUx+lCwF4wRcJV1tPYGObRoxY8PiQOD
+	 wW3m6rV4OlNMw==
+Date: Thu, 5 Jun 2025 17:57:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be,
+	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
+	p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org, john.madieu.xa@bp.renesas.com,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v2 4/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+Message-ID: <20250605225730.GA625963@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3nMlU14CJAHOY03i"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605145421.193189-2-vishalc@linux.ibm.com>
+In-Reply-To: <20250530111917.1495023-5-claudiu.beznea.uj@bp.renesas.com>
 
+On Fri, May 30, 2025 at 02:19:13PM +0300, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+> only as a root complex, with a single-lane (x1) configuration. The
+> controller includes Type 1 configuration registers, as well as IP
+> specific registers (called AXI registers) required for various adjustments.
 
---3nMlU14CJAHOY03i
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +/* Timeouts */
+> +#define RZG3S_REQ_ISSUE_TIMEOUT_US		2500
+> +#define RZG3S_LTSSM_STATE_TIMEOUT_US		1000
+> +#define RZG3S_LS_CHANGE_TIMEOUT_US		1000
+> +#define RZG3S_LINK_UP_TIMEOUT_US		500000
 
-On Thu, Jun 05, 2025 at 08:24:22PM +0530, Vishal Chourasia wrote:
-> A new documentation section titled "Availability" has been added to
-> describe the meaning of a controller being available in a cgroup,
-> complementing the existing "Enabling and Disabling" section.
+Are any of these timeouts related to values in the PCIe spec?  If so,
+use #defines from drivers/pci/pci.h, or add a new one if needed.
 
-'Add "Availability" section to Control Group v2 docs. It describes ...'
+If they come from the RZ/G3S spec, can you include citations?
 
-> +Availablity
-> +~~~~~~~~~~~
+> +static int rzg3s_pcie_host_init(struct rzg3s_pcie_host *host, bool probe)
+> +{
+> +	u32 val;
+> +	int ret;
 > +
-> +A controller is available in a cgroup when it is supported by the kernel=
- (i.e.,
-> +compiled in, not disabled and not attached to a v1 hierarchy) and listed=
- in the
-> +"cgroup.controllers" file. Availability means the controller's interface=
- files
-> +are exposed in the cgroup=E2=80=99s directory, allowing the distribution=
- of the target
-> +resource to be observed or controlled within that cgroup.
+> +	/* Initialize the PCIe related registers */
+> +	ret = rzg3s_pcie_config_init(host);
+> +	if (ret)
+> +		return ret;
 > +
+> +	/* Initialize the interrupts */
+> +	rzg3s_pcie_irq_init(host);
+> +
+> +	ret = reset_control_bulk_deassert(host->data->num_cfg_resets,
+> +					  host->cfg_resets);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Wait for link up */
+> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, val,
+> +				 !(val & RZG3S_PCI_PCSTAT1_DL_DOWN_STS), 5000,
+> +				 RZG3S_LINK_UP_TIMEOUT_US);
 
-The wording LGTM, thanks!
+Where do we wait for PCIE_T_RRS_READY_MS before pci_host_probe()
+starts issuing config requests to enumerate devices?
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> +	if (ret) {
+> +		reset_control_bulk_assert(host->data->num_cfg_resets,
+> +					  host->cfg_resets);
+> +		return ret;
+> +	}
+> +
+> +	val = readl(host->axi + RZG3S_PCI_PCSTAT2);
+> +	dev_info(host->dev, "PCIe link status [0x%x]\n", val);
+> +
+> +	val = FIELD_GET(RZG3S_PCI_PCSTAT2_STATE_RX_DETECT, val);
+> +	dev_info(host->dev, "PCIe x%d: link up\n", hweight32(val));
+> +
+> +	if (probe) {
+> +		ret = devm_add_action_or_reset(host->dev,
+> +					       rzg3s_pcie_cfg_resets_action,
+> +					       host);
+> +	}
+> +
+> +	return ret;
+> +}
 
---=20
-An old man doll... just what I always wanted! - Clara
+> +		 * According to the RZ/G3S HW manual (Rev.1.10, section
+> +		 * 34.3.1.71 AXI Window Mask (Lower) Registers) HW expects first
+> +		 * 12 LSB bits to be 0xfff. Extract 1 from size for this.
 
---3nMlU14CJAHOY03i
-Content-Type: application/pgp-signature; name=signature.asc
+s/Extract/Subtract/
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEIgsQAKCRD2uYlJVVFO
-o+xtAP9RbHJTrpVIIXhiUHpiNTItRIIwIZVCzIZXFaOjhTwPwQD/ZQL/DLUTfLqI
-ij2yh516RPu1k7N80NPmapHZ3f+YqgU=
-=WD/J
------END PGP SIGNATURE-----
-
---3nMlU14CJAHOY03i--
+> +		 */
+> +		size = roundup_pow_of_two(size) - 1;
