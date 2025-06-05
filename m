@@ -1,143 +1,151 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607A78836
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC78D8488;
+	Thu,  5 Jun 2025 12:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749126726; cv=none; b=uwfjh4D5BETeJxBRRlndQe9gdam8CG4gh9d+3TdvhuTCFZvMQHvvqSud0HkpYQs5eo9EhFL7H1Msj26vcq063kdQhSeQQp+f8ij+e0myN8AcYTNdf6YgbZFQZefYHiZrxoM1aW9fTi+KZmfdQztF0JeDuYnSJzcMANmpANXGOK4=
+	t=1749126790; cv=none; b=RGWHqmh6o8oOO+prFS20cLOYUohQ2Htv2+p4HsFmza57gf6GJzxeENb1v/OUhTgTbY0utG+I8FkPND0eZoTLt5t+xi0K6UJSwLOTtI5yIE4qqjiGMF0huLgGl/P5RslMju748jmDGj83zoY/HZGMlaZT6J9TwsLcf0HbgBU7l3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749126726; c=relaxed/simple;
-	bh=K+nUlpfXwR5cIEWXrqVroexFbFR95tK5TbTH6vTS2tQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kiDA5l6+4p+MPunJ/1AkmIdvKZ6Kbpv7fLW42jdw4ccxnjsEtOBLYXlbxfaUJRO8BPqwpgY/OEgOwyQK6fW9IlyGpxeu408DxXR9gZG/VRHwgcvWaIPknxxoIOI/QKTN9A7KZhmM3HTfofrEWze6BCxtBk9rEAXNv1cf7Xen4XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=FvRth3X9; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1749126790; c=relaxed/simple;
+	bh=eRhE69I5I/eBMtv3TzqwfxGNB/q51MpvXft+RuE1JW4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eqvJarjIrldZABScxNVSvcKvbjpSrqHJI0FPA6hzCbrMOebkm4zsXXhhk9Em91FvfnIA0iJCtGOJo8kDLfDRz2+qgvW0Gq3Y3VNEzHPFD2AV+Q77MhiaaZDPrQnORfhEDdISS4KZUV+GhqoXu7fkEOJavo5xRPTv/pUNKUTHx/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=croVFQbq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="FvRth3X9"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4f71831abso880856f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1749126722; x=1749731522; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dbLVCYoHw89K1sMrvh2/XLW0a7eFbrKEsFO9EoIT/p8=;
-        b=FvRth3X9fdO01R7E4w8wiU499nMkrvaHCYRNMA/GdukO9ffXAOdpUbCFEKmyWOUPlE
-         2egALm2jXrO6zK56yICXrSXCxmbUC4axjP+hKwtB3SW7TM/E5LSmP9oOFFgsJranX/Ib
-         giDTO/21drRfPM/IMcABkuzRpVNarYO4nKGmm6Lto4ERhGtEWgWigQWTz6rZg4YI+JfA
-         qrSMlcuAOp1m7vgP1zeWL5LNz0RRJRqOJ6Ct0uQCiHAA73WiqC5fXVPEbUELbbhIhCnt
-         TcPmtALy5ZYQvJUPUHfLg2JxO77Q6laoj7Znn6sOETGCavCAW5xdZaVLaHWSTHMozuFN
-         4tmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749126722; x=1749731522;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dbLVCYoHw89K1sMrvh2/XLW0a7eFbrKEsFO9EoIT/p8=;
-        b=cmIb8gh6cc51znjy9AFWRNfyo332hvFshwAkd+MdPAzIcHepInELrB5R2g3HorxlRh
-         A9gCJjseDBSbSNeYasHq8YLGwckylMgA6yiB1ozDOHTOqO2Y52eb54X6AH37njZl80KK
-         Vt7foy1KciFxpJgaefE4Ugo1E0GdJGwAEaIspdk1YVDscyMIQCW8lPUlqkC9TQNeS4Qb
-         u5gwXWt/IyKrH6XCwyCOdKIqY+BPFXdNkVe3t+/T5OThfnpHv4w4Q6aFRbuOzAC3vvnH
-         45DPxQupt13H3D0g47Ji2U/mPR9IylmeQIBV+2zSCzAkCf9oxicZn5/yrr28E+sixslY
-         xxxg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+f+luQVpE/PkiQzcBkFW8b6ikNocd8OgQRqZ8dwVH3t8w9fqSd5iPYcwqCSm6WV3z8rq5/Y3u+uWJBTQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAPB7H03pkGaDScc5tUGaH8WF4iiRyo/YiG1FihVpkHfzY/bAQ
-	OfElfrCRR+XJLwpH1D2SsBFZBTaW4i8skzhgTROs1E5Q4RbF+Ngh3+274Ris8sqASm0=
-X-Gm-Gg: ASbGncvsSu7F2jMS+rkPz7FTddkVjI2EP4FKKK6bPxku55gnQ3xNXd2SrLvK/Yro0Dx
-	gSu7Jn4P52UgVIf1B5EotYahXZleS+nA2wRTp75LoPMnb5S3vBTSIbzwkHYuwrIqcaK0y+XI+3a
-	z/hwXj8U8Qy1OS2ssj0WhAphdJVPR1FqOgIVkGQPZChTF6wunbm9CV3+EO/8HUjSmObHcJS7R4q
-	lW1dgzPCcQGGwRCMaImtO6ulCDDB8gTXpnGvD/WDNAzYXxrzfXyQlyPVithY2/rKgrUhbfMhmRm
-	2+AtYLjTkoT7tEKkdxRTf252ccd2TIMoHsfK6zN8qFXxPn5E
-X-Google-Smtp-Source: AGHT+IFXHPkHPf2uCdDe9+EQcmvwifuUNGAljP9j70NUml2wxh1XWMThBMmV1XTwFDvkJEfjag4DDQ==
-X-Received: by 2002:a05:6000:290d:b0:3a4:dfa9:ce28 with SMTP id ffacd0b85a97d-3a51d8f5959mr6009327f8f.5.1749126722211;
-        Thu, 05 Jun 2025 05:32:02 -0700 (PDT)
-Received: from localhost ([2a02:8071:6401:180:da11:6260:39d6:12c])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4f00a0a96sm24730734f8f.96.2025.06.05.05.32.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 05:32:01 -0700 (PDT)
-Date: Thu, 5 Jun 2025 08:31:56 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>,
-	Mike Rapoport <rppt@kernel.org>, Barry Song <21cnbao@gmail.com>,
-	linux-mm@kvack.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	Pedro Falcato <pfalcato@suse.de>, Tejun Heo <tj@kernel.org>
-Subject: Re: [DISCUSSION] proposed mctl() API
-Message-ID: <20250605123156.GA2812@cmpxchg.org>
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
- <aDh9LtSLCiTLjg2X@casper.infradead.org>
- <20250529211423.GA1271329@cmpxchg.org>
- <0aeb6d8b-2abb-43a7-b47d-448f37f8a3bf@suse.cz>
- <20250604121923.GB1431@cmpxchg.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="croVFQbq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 813F1C4CEE7;
+	Thu,  5 Jun 2025 12:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749126790;
+	bh=eRhE69I5I/eBMtv3TzqwfxGNB/q51MpvXft+RuE1JW4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=croVFQbqpp18W4TbbU1AbiFnZ1NoFbr65uMWfnrQyVWUwbDU5mE+G2oG8P4kkVyMg
+	 tC19JPmCIMCYVRJWBz+KbOywzovvrApNQgqaxZbEtZH+Sp9mUFje7c5a+s3YDmGX1Y
+	 LckkRwtGdUBaWSCvmPd+VKJutKgljVVsy6R9z1UX3LyZiDG5RC+mGi8UpdtgZTKS8J
+	 Qr7bJEgfwgYHETLSva/X4w5tYjPfGQOiwTTqquuuUabE7SwBj2AgOKhNFQXsWcJcbb
+	 r5UZjhxdNV1rGWSOjiqsyPt263IPhksMR26aC8qsJbQLe/36JyjhaJNmjHOFKU5djS
+	 bXNLdCcIb8dBQ==
+Message-ID: <b710e357-09e3-460e-b097-28cf0c856aeb@kernel.org>
+Date: Thu, 5 Jun 2025 14:33:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604121923.GB1431@cmpxchg.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Renjiang Han <quic_renjiang@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
+ <a3bf69f3-6500-4e45-ba34-8ba24312938a@kernel.org>
+ <CAO9ioeWkLu+ne18kjEST7YU7b1aBzcMBBeyfpagzis99BAeOHg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAO9ioeWkLu+ne18kjEST7YU7b1aBzcMBBeyfpagzis99BAeOHg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-CCing Tejun - with the right mutt alias this time.
+On 05/06/2025 14:30, Dmitry Baryshkov wrote:
+> On Thu, 5 Jun 2025 at 13:13, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 02/06/2025 08:16, Dmitry Baryshkov wrote:
+>>> On Sat, May 31, 2025 at 08:05:24AM +0800, Renjiang Han wrote:
+>>>>
+>>>> On 5/31/2025 4:27 AM, Dmitry Baryshkov wrote:
+>>>>> On Fri, May 30, 2025 at 09:32:12AM +0530, Renjiang Han wrote:
+>>>>>> QCS615 uses the same video core as SC7180, so reuse the same resource
+>>>>>> data of SC7180 for QCS615 to enable video functionality.
+>>>>>>
+>>>>>> There are no resources for the video-decoder and video-encoder nodes
+>>>>>> in the device tree, so remove these two nodes from the device tree. In
+>>>>>> addition, to ensure that the video codec functions properly, use [3]
+>>>>>> to add encoder and decoder node entries in the venus driver.
+>>>>>>
+>>>>>> Validated this series on QCS615 and SC7180.
+>>>>>>
+>>>>>> Note:
+>>>>>> This series consist of DT patches and a venus driver patch. The patch
+>>>>>> 1/3, which is venus driver patch, can be picked independently without
+>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>>>>>> DT patches, still depend on [1].
+>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
+>>>>> on QCS615 over(?)clocked.
+>>>> Agree, so we need to make sure that the driver patch is not picked after the
+>>>> DT patch.
+>>>
+>>> Worse: we need to make sure that the driver patch is present in the
+>>> branch which picks up DT patches. Otherwise building & testing that
+>>
+>>
+>> Well, that's a NAK then (although depends what you mean by DT).
+> 
+> I mean qcs615.dtsi. I'd suggest an immutable branch for the driver
 
-On Wed, Jun 04, 2025 at 08:19:28AM -0400, Johannes Weiner wrote:
-> On Fri, May 30, 2025 at 12:31:35PM +0200, Vlastimil Babka wrote:
-> > On 5/29/25 23:14, Johannes Weiner wrote:
-> > > On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
-> > >> Barry's problem is that we're all nervous about possibly regressing
-> > >> performance on some unknown workloads.  Just try Barry's proposal, see
-> > >> if anyone actually compains or if we're just afraid of our own shadows.
-> > > 
-> > > I actually explained why I think this is a terrible idea. But okay, I
-> > > tried the patch anyway.
-> > > 
-> > > This is 'git log' on a hot kernel repo after a large IO stream:
-> > > 
-> > >                                      VANILLA                      BARRY
-> > > Real time                 49.93 (    +0.00%)         60.36 (   +20.48%)
-> > > User time                 32.10 (    +0.00%)         32.09 (    -0.04%)
-> > > System time               14.41 (    +0.00%)         14.64 (    +1.50%)
-> > > pgmajfault              9227.00 (    +0.00%)      18390.00 (   +99.30%)
-> > > workingset_refault_file  184.00 (    +0.00%)    236899.00 (+127954.05%)
-> > > 
-> > > Clearly we can't generally ignore page cache hits just because the
-> > > mmaps() are intermittent.
-> > > 
-> > > The whole point is to cache across processes and their various
-> > > apertures into a common, long-lived filesystem space.
-> > > 
-> > > Barry knows something about the relationship between certain processes
-> > > and certain files that he could exploit with MADV_COLD-on-exit
-> > > semantics. But that's not something the kernel can safely assume. Not
-> > > without defeating the page cache for an entire class of file accesses.
-> > 
-> > I've just read the previous threads about Barry's proposal and if doing this
-> > always isn't feasible, I'm wondering if memcg would be a better interface to
-> > opt-in for this kind of behavior than both prctl or mctl. I think at least
-> > conceptually it fits what memcg is doing? The question is if the
-> > implementation would be feasible, and if android puts apps in separate memcgs...
-> 
-> CCing Tejun.
-> 
-> Cgroups has been trying to resist flag settings like these. The cgroup
-> tree is a nested hierarchical structure designed for dividing up
-> system resources. But flag properties don't have natural inheritance
-> rules. What does it mean if the parent group says one thing and the
-> child says another? Which one has precedence?
-> 
-> Hence the proposal to make it a per-process property that propagates
-> through fork() and exec(). This also enables the container usecase (by
-> setting the flag in the container launching process), without there
-> being any confusion what the *effective* setting for any given process
-> in the system is.
+Sorry, but no, DTS cannot depend on drivers. You CANNOT merge them into
+one branch.
+
+> patch. Or just merging the patches in two consequent releases.
+
+That's a new device nodes, new hardware so it should not be blocked by
+any driver patch. This is just totally broken process / patchset / work.
+
+Best regards,
+Krzysztof
