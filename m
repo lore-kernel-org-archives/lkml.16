@@ -1,145 +1,88 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB7B5FEE6
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E7D27B4FA
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749152998; cv=none; b=a3m59vl5RdNx15TbCPKDeKChabYpnloz040FBmHn6P8UkMsYYq6CmMGvkU5fiWMOU0+uFhB75K3OgNAsg1N7vzayvMCioEW206VfmjsSXf+MKRsWxReojt2jbM8l5UsiEC/BaBU08rwh5Rbgb4uLxkTDorncaX0Z2ullgdZ8b9Y=
+	t=1749153025; cv=none; b=QPMZIJlIn2Kgd+q5hasQxx7wYp9UB5rIilEyzLXHxkqmewrPGPGmjLgcL0zNw8D+Jwsmx/SfFwDTkIR2FwHp9CnmfPh2mvUOROzkjEDTTwjaW15QIEN79UNplJJ5jWXtprC7kP2aFRGf+j9mZlazNIFmrIwBh/zny5wYEIb0bTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749152998; c=relaxed/simple;
-	bh=ReVnwpCkjYaOtt27KO0F8tOngaoZCV7oCA1ODZd970I=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=sHUaL07EWc+rm9BtMDCEB9xbR2wYTu1C2hwmbin5V+TaYNWyoZJDjwOf/TZSH8BjOBMOvATQHf39xHrUEJER7DWbhTp10NR1Vnwc7Yuyd9tF1B34h7fFCGIQ1+kHCBx6PkjQx509N5UhQtu3Umd6tSo916R6vAbTAb/31Hr+9oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=FXcqnj/Z; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1749153025; c=relaxed/simple;
+	bh=TflTtOFYOoUc4cVuPAvdOITqmHHc6pcnCgi8Ql7m9Rk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=p52zw9FLvQnQRW84TKwxPc6AUuaDXb6S1CaN3qrTjaoSfeSxGAvdw/gFcvC4auuQYPl9z9viVKNoObPHtbrPGXeroUzNjxUfOW7TpACBuNBI8t1wW07ZCgG01GEaDysNRMHidyIu7BS8tbCUw6oYbMqhmXaDpsp8CmfuZkWH+LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xaqxAQ1A; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="FXcqnj/Z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xaqxAQ1A"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311d067b3faso2383276a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749153023; x=1749757823; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YnwxO9GogIau5EpmXLwXictumDZfroYmuoG/2pq9rqo=;
+        b=xaqxAQ1ATqZGky+mSoCaB5oMkhz/SggvCO8PD4H308idUgJnBEI6WPYImsTBLqLpQ+
+         PSymqiD/8hchFxGuMpZK8ZhitdgchmeNScyaNTpgOAISkvao6DGvUOFvK+kGbLINPSu6
+         1ZMgVAR5eYVdA3VEys+PkGZ5odDR+0S0He0xVs4C5l0obz16er2z2T41xc7LksZQKC7p
+         p9EshORctN81C2fdRKn4dW52fD2+IbeMLa6vkCPPfp5LmnKTaVfVyMivjZDTF3aLQA+w
+         OwVbL9MjYnpc7VC0ZWFuMFLJ59sJ4R/MDDwv/PE9OI7c3zwk8eZI2hftqobwagFSqUMd
+         yi7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749153023; x=1749757823;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YnwxO9GogIau5EpmXLwXictumDZfroYmuoG/2pq9rqo=;
+        b=ZpN5rYPCyvTwcNPQftCUQxsJyHLabMiHu2CX7uileJo9/4iKFEMmqwIhIP1HrR9QWP
+         gnPdVtEC+xOMhPNoYIJOUKhRyQTW/C4qvZk3qQu9ivJkK3lp2SUgU02xnN1Njqg2nbaz
+         5xN01wgLuuaMKHdBtD4a8sUk+iYJ4xDhAr7IQhzS3hqowzLon0eMy41cQqNgKg7yqUFR
+         6GV4eRNsQA7WlmZz2Sf9vzOss5Zc7SBpy7OXJaH5xZdH+MrtjUXOC5femghj5cmgLtgR
+         5r8f1Ie6BCeYVcCZaOvVMfds7rniykPc2o6sRkchJhd1Xv+ffTpLxFVsIzU7h5bSedZD
+         7sJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYEDFckwEPMu4pImOW+MNFRkVo7vcvVIuUMkI8f2uzmQy3sdwYVR4dOZux7Hk5wQ7JJIQPn0yUQUSRbt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0wGfxXqCy5Rbe7CVIazD2/8U1LwYWtynVpjKXdIelj//tWY/T
+	QLydRo7w7rNHHb6f+LAoqo1C7FXEpcHgpTcCPEmkZDB34cj88BamY+vuqQ8ZN4Vz9R5zQPY/FHH
+	CgMKQhg==
+X-Google-Smtp-Source: AGHT+IGp8RVwCKNPkVtRNFf2/Hcg+g70jZPhLr6lPIG7Wja7Cwqp16NUoA0vIqJSdxh6fZRE9ayphp+3AUI=
+X-Received: from pjbpa17.prod.google.com ([2002:a17:90b:2651:b0:311:462d:cb60])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3851:b0:313:1ea2:a577
+ with SMTP id 98e67ed59e1d1-313470736cbmr1304000a91.29.1749153023341; Thu, 05
+ Jun 2025 12:50:23 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Thu,  5 Jun 2025 12:50:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1749152990;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EJqiZsO00UW1qzZCC8pTl4Bce7VgLFymF1yeTS4Wo1I=;
-	b=FXcqnj/ZkLVgqnSXA/9FCtL8/d/zbvT/uL/nRPY4ksTM7NoH+k7HOrLyiUHdrSN448BJEs
-	tzm80CoUd+7YJYNYcP8LDfYzXJxnSMktTXGW8Kwp7IkGVirCjElBjFaIWD3fy73G8ASCEz
-	bi0vCwHbcMFzgtcrYfkulfJnzWs97Ya8EuOeG6Ynh3tmJNSyiwTaxVCoyWVnZc6Ltkq/Ln
-	feYAgiGpA0nhzBqo0uSjz9JfldpzkKqhRG/grezN5hoBijkcaPwIcYAMd6yHiDXQRnXaF0
-	n8r1ngQ5EzjutOWkyYl5Y7qlhheNe2HsVJPVZo1oMz/kOAwit7pbWLMIJbCNsw==
-Content-Type: multipart/signed;
- boundary=3cdd52bd73029a86b1db18a8ebe587a89be50fded87b2fd99a67d4267211;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Thu, 05 Jun 2025 21:49:40 +0200
-Message-Id: <DAEUZDXQ1QT8.1YMVDZVR29GJM@cknow.org>
-Cc: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-rockchip@lists.infradead.org>, <kernel@collabora.com>,
- <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/2] PM / devfreq: rockchip-dfi: add support for LPDDR5
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Nicolas Frattaroli" <nicolas.frattaroli@collabora.com>, "Chanwoo Choi"
- <cw00.choi@samsung.com>, "MyungJoo Ham" <myungjoo.ham@samsung.com>,
- "Kyungmin Park" <kyungmin.park@samsung.com>, "Heiko Stuebner"
- <heiko@sntech.de>, "Sascha Hauer" <s.hauer@pengutronix.de>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, "Sebastian Reichel"
- <sebastian.reichel@collabora.com>
-References: <20250530-rk3588-dfi-improvements-v1-0-6e077c243a95@collabora.com> <20250530-rk3588-dfi-improvements-v1-2-6e077c243a95@collabora.com> <DADLSAEF1YPO.V0CQK084KFFO@cknow.org> <4244538.aeNJFYEL58@workhorse>
-In-Reply-To: <4244538.aeNJFYEL58@workhorse>
-X-Migadu-Flow: FLOW_OUT
+X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
+Message-ID: <20250605195018.539901-1-seanjc@google.com>
+Subject: [PATCH 0/4] KVM: x86: Fix WFS vs. pending SMI WARN
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+c1cbaedc2613058d5194@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 
---3cdd52bd73029a86b1db18a8ebe587a89be50fded87b2fd99a67d4267211
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Fix a user-triggerable WARN that syzkaller found by stuffing INIT_RECEIVED,
+a.k.a. WFS, and then putting the vCPU into VMX Root Mode (post-VMXON).  Use
+the same approach KVM uses for dealing with "impossible" emulation when
+running a !URG guest, and simply wait until KVM_RUN to detect that the vCPU
+has architecturally impossible state.
 
-Hi,
+Sean Christopherson (4):
+  KVM: x86: Drop pending_smi vs. INIT_RECEIVED check when setting
+    MP_STATE
+  KVM: x86: WARN and reject KVM_RUN if vCPU's MP_STATE is SIPI_RECEIVED
+  KVM: x86: Move INIT_RECEIVED vs. INIT/SIPI blocked check to KVM_RUN
+  KVM: x86: Refactor handling of SIPI_RECEIVED when setting MP_STATE
 
-On Thu Jun 5, 2025 at 5:14 PM CEST, Nicolas Frattaroli wrote:
-> On Wednesday, 4 June 2025 10:24:33 Central European Summer Time Diederik =
-de Haas wrote:
->> On Fri May 30, 2025 at 3:38 PM CEST, Nicolas Frattaroli wrote:
->> > [...]
->> > +	case ROCKCHIP_DDRTYPE_LPDDR5:
->> > +		ddrmon_ver =3D readl_relaxed(dfi->regs);
->> > +		if (ddrmon_ver < 0x40) {
->> > +			*ctrl =3D DDRMON_CTRL_LPDDR5 | dfi->lp5_bank_mode;
->> > +			*mask |=3D DDRMON_CTRL_LP5_BANK_MODE_MASK;
->> > +			break;
->> > +		}
->> > +
->> > +		/*
->> > +		 * As it is unknown whether the unpleasant special case
->> > +		 * behaviour used by the vendor kernel is needed for any
->> > +		 * shipping hardware, ask users to report if they have
->> > +		 * some of that hardware.
->> > +		 */
->> > +		dev_err(&dfi->edev->dev,
->> > +			"unsupported DDRMON version 0x%04X, please let linux-rockchip know=
-!\n",
->> > +			ddrmon_ver);
->> > +		return -EOPNOTSUPP;
->>=20
->> I'm guessing you mean the linux-rockchip mailing list here? If so, I
->> think it's better to make that explicit as 'Joe User' who may run into
->> this issue may not be aware of that mailing list. The 'linux' and
->> 'rockchip' name combo is used in quite a few places.
->
-> I agree it's ambiguous, the message as it is right now is the way it is
-> because we're not allowed to linebreak user-facing messages for grep-
-> ability and I also don't want to exceed 100 lines of width (though this
-> is the one case where we're allowed to).
->
-> I suppose I should just replace it with the e-mail address of the list.
-> That should be clear enough and this error message also won't end up in
-> random boot logs strewn across the internet if it really is just some
-> engineering sample hardware or similar that's affected.
-
-I understand the issue. Maybe this discussion itself will help make it
-appear high enough in the search results to fix the ambiguity ;-)
-I'll leave it up to you if or how to change anything (or not).
-
-Cheers,
-  Diederik
-
->> > +	default:
->> > +		dev_err(&dfi->edev->dev, "unsupported memory type 0x%X\n",
->> > +			dfi->ddr_type);
->> > +		return -EOPNOTSUPP;
->> > +	}
->> > +
->> > +	return 0;
->> > +}
->> > +
->> >  static int rockchip_dfi_enable(struct rockchip_dfi *dfi)
->> >  {
->> >  	void __iomem *dfi_regs =3D dfi->regs;
->> >  	int i, ret =3D 0;
->> > +	u32 ctrl;
->> > +	u32 ctrl_mask;
->> > =20
->> >  	mutex_lock(&dfi->mutex);
->> > =20
->> > @@ -136,8 +186,11 @@ static int rockchip_dfi_enable(struct rockchip_df=
-i *dfi)
->> > <snip>
->>=20
+ arch/x86/kvm/x86.c | 49 ++++++++++++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 19 deletions(-)
 
 
---3cdd52bd73029a86b1db18a8ebe587a89be50fded87b2fd99a67d4267211
-Content-Type: application/pgp-signature; name="signature.asc"
+base-commit: 61374cc145f4a56377eaf87c7409a97ec7a34041
+-- 
+2.50.0.rc0.604.gd4ff7b7c86-goog
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaEH01wAKCRDXblvOeH7b
-bjekAQDt2eVvkNGS0Du340umiQKSvaFxizTMOEIkxgx5fjC8KwD+I8OVx9ygu1iV
-eOdkqV5mvuHIC90hcPFQOQTfuRHH9QU=
-=SP89
------END PGP SIGNATURE-----
-
---3cdd52bd73029a86b1db18a8ebe587a89be50fded87b2fd99a67d4267211--
