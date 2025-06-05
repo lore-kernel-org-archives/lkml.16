@@ -1,193 +1,257 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1779214A4C7;
-	Thu,  5 Jun 2025 14:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6D01527B4;
+	Thu,  5 Jun 2025 14:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749133972; cv=none; b=Z1IarepFfkOivVD9RjLD4qUZhZ7kDR0fTUULTfFDgfzqJkJGY8kJ2YdGryCLUBur7nNsk8OzeWKt9KAMldtNJet0HtPWmLn9PABbvHbvUkymPPXhnzQtTnMajHsDteabyUF8xTQUAdjG/x2tArxNeQYNEDg1NQfLJ9cFqIXUI9s=
+	t=1749134007; cv=none; b=sKtu2AEBeZFnDJ1+z7OIWneVItGgwdZQtZ3mVAucAeF+vXX7Plw6I5oSTDRrkzNlkl30DGvCV/CT4sYoBDF0Bt7lM5maAxBhUNXXBbFw9j/fDvhY+b7Y/UYOt8o2NR6T8jAgh+uhCp087wUYO5gvqOzeczIscBi+l99xhlY6fxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749133972; c=relaxed/simple;
-	bh=dJhCM9RPviR0g7JT1D5tY8Qs8gank6kHriTlr+jVdk8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=I3NH5XrAyiyk/zduSXUiubruK6bnsGA6qq+xAWiRCTD6MraiU545+2cFMIO2Nes8nSZc4z+1KP6joLn1ts1jCu5s4FsW9JA3u8Yv6uhtkaPlW3hT189jSSfIBspTA+CYAI6OUD79/dCDWqf9YkQQnPQal4wN9S9Gv51aOSvTTGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQJ6vm58; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749134007; c=relaxed/simple;
+	bh=6zxPKgvHSUxqNVe0Ix83thKj6ebHaEy44tlg/+lYCMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z7rzgU5JABmBl7Dbb/BjQrgPjUMzoqKGIB27bSEX6vTKvGFiKXEhFYFJiIJtjUvBofLl0I472CzJ2/nlj1ncFxacsUDXMtF34eBQZAHkasLroUC1Q2wdK0l50ynQkB7UoGXt5F+Ghf5Us8qzf4F4AHASyA7KayXE20PdT6RxtUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M5aNCzjf; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQJ6vm58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A35A7C4CEE7;
-	Thu,  5 Jun 2025 14:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749133971;
-	bh=dJhCM9RPviR0g7JT1D5tY8Qs8gank6kHriTlr+jVdk8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=hQJ6vm58a9sKrWs9pbShbS3RA6iSmi0wkOqOIohbxsH9H+Q56BxXzsFbZ+ejQ1ycp
-	 3HiA6msSez1IKjXj45/iK33pnzB2iuvu+keB9Cfeg+Xgut99Tu90vSSq1zRkSeOMGO
-	 fbKbvoGkG/hF/zHS7/Wz1RRGwQwUFZHoANS2Xw+kzuh7GQES6DzUaYmOkKr1PLmepz
-	 k9VBLzQG0R6cbmHU+tgErk05+UtA79vzuWFGsQgQBgb1M3fM1u6T1d38LkHS5bLh/m
-	 V6zUEf7o8M06Dv8P+qWU1JspV1TZXG/+kxnPZ+jlj7V6H0rSt13SJOXVlpFSV8StHm
-	 bkkhv+tpwoK2A==
-Message-ID: <8ea2aefc-2847-433e-b56e-5caad49e54f2@kernel.org>
-Date: Thu, 5 Jun 2025 16:32:44 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5aNCzjf"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235ae05d224so16525935ad.1;
+        Thu, 05 Jun 2025 07:33:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749134005; x=1749738805; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FRQIVm7bW3YjkdOh4dp4IupF84p+1l9VUm+jmJFp9Wo=;
+        b=M5aNCzjfV2q7YbtbfPzf/y8tOkzDvB5XZOwdSoue3wl4M9EVw5L0IrAWu3LKHb4+IH
+         REXONIfCPA1+p7BXMZSKNroLHwyW/4zNTYeYGi+ac+C12B+OQRNjHZyCnOjBE78hTIiF
+         APCkWM+Es9ZLfvN8yzVrSt12ql26rVVDNwjUelDpQ2Uzr0jMXjoXdEBzkyBoj2Iesm0U
+         b+qA07kZs7rHJ4VeAD/2CCUgYHQ/9xP3RoZa7vpyXlV2ItigUyBlciSywlgDkfU+967b
+         yqfPOAY3nhRFrSQ7dPMzRAusGMxDYSveEs1qHe8BVn5m9H3m9hhUgPp+6Kl8h6S2LR5g
+         NApg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749134005; x=1749738805;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FRQIVm7bW3YjkdOh4dp4IupF84p+1l9VUm+jmJFp9Wo=;
+        b=RNK/Uj1lmcMbo/Eniyxvf9T7/dCQNA9ZSobfiYMOF3MIDZK/0DE0X84yXAb6JxOipu
+         GBxHWE7eycIjv+9zRiIcW6FT3jmPoa1DWIm7OjqeJISOkaGUhqYA9P4yyA2TOz+EXAc4
+         73HiWfe0V+/srG9K2cvFIpBR059DtBhxIb1OV2EDDKsP6xMGWcmsBX7F0DbQ8Uc0rHKx
+         /4mbGs/YzCDACzBA/dtLi6VusI78HVugPAQ5PLEBFOle29xkj3Kz1ewXq0Hep2y4oCyw
+         h3coVmc/n/57g+kjLhDKRz4iqMQB1A70QQpEcqKgcPi4TAaU0MDPMWukRDNT7umgaC8Q
+         Mexg==
+X-Forwarded-Encrypted: i=1; AJvYcCV98hz4GnpoDT+0Ri7Qsyvaj6jTV3GTtO4PLOXMnLvP7w0KSuRp+bJ21cd5Ixs5lo9Yq6amjOY09uNYL/HQ@vger.kernel.org, AJvYcCXljPdoF1M35VeQCNflao1dBM+WfSh0uoM5znkAD7gMkn8j7JCYXE8cwRn/75fTkBJxykf+90aajtnKHw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt3qjDR2WpCADRiZFvIHI99pDgcJxx2+Q4XPk89eWuHBVepScl
+	cPuk3lX3698pPd0+4nlU5wfZ/DBg3j4WVyb2vK9sSxobaXh2/SC7DdTlA3Ys1EC7
+X-Gm-Gg: ASbGncviC3YC9Ceq+wNUb11FnPusJnUtQF5W4F2h1Dyr6e/YnQyEdfK+RLY5nJgukdr
+	tRceCV/BO+CNFUT2/uRfu5LxPXnENVZut5N6szr0hYldIByI/eDmEHJXByi8mz7A53stlrAjg9p
+	LXAnX/vvRmK2e7qF2Xbf1TdrNiW+tAMCEfn4t877mt3o66AkdxgkQpPodnz9nDQdHQ+cFd/+BH/
+	f0176adWKZ8+R8GWaemsjGLau7d7lwMBV/UaUlZjRtBA7VdAgFczzKazbGqIet6S6/BWSJZEV3U
+	9k6lgD3Mmhrowm6+aU5oiIFVrVsthi0PT2LeC1faJyZei10UIN5eT0WrjDDo2/BkZgd+KeIMSek
+	=
+X-Google-Smtp-Source: AGHT+IFIap5RhCzHwAydKaMXs+LDAf3IVPmGYTXkAPcRxYXwcPhDsnb2X0Q2ZaI7J0ak5CfFPD4q/w==
+X-Received: by 2002:a17:902:e741:b0:235:e94b:62dd with SMTP id d9443c01a7336-235f1436538mr57259925ad.12.1749134004434;
+        Thu, 05 Jun 2025 07:33:24 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb396f6sm8986661a12.42.2025.06.05.07.33.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 07:33:23 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 5 Jun 2025 07:33:22 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Gui-Dong Han <hanguidong02@gmail.com>
+Cc: vt8231@hiddenengine.co.uk, steve.glendinning@shawell.net,
+	jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [BUG] hwmon: Widespread TOCTOU vulnerabilities in the hwmon
+ subsystem
+Message-ID: <3f5feb87-330c-4342-88a1-d5076538a86d@roeck-us.net>
+References: <CALbr=LYJ_ehtp53HXEVkSpYoub+XYSTU8Rg=o1xxMJ8=5z8B-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Large modules with 6.15 [was: [PATCH v4 6/6] percpu/x86: Enable
- strict percpu checks via named AS qualifiers]
-From: Jiri Slaby <jirislaby@kernel.org>
-To: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org,
- linux-arch@vger.kernel.org, netdev@vger.kernel.org
-Cc: Nadav Amit <nadav.amit@gmail.com>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>, Shung-Hsi Yu <shung-hsi.yu@suse.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>, bpf <bpf@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>
-References: <20250127160709.80604-1-ubizjak@gmail.com>
- <20250127160709.80604-7-ubizjak@gmail.com>
- <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALbr=LYJ_ehtp53HXEVkSpYoub+XYSTU8Rg=o1xxMJ8=5z8B-g@mail.gmail.com>
 
-Cc BPF people, just so you know.
+On Thu, Jun 05, 2025 at 07:49:37PM +0800, Gui-Dong Han wrote:
+> Hello maintainers,
+> 
+> I would like to report a class of pervasive Time-of-Check to
+> Time-of-Use (TOCTOU) bugs within the drivers/hwmon/ subsystem. These
+> issues can lead to various problems, including kernel panics and
+> incorrect hardware behavior, due to race conditions when accessing
+> shared data without proper synchronization.
+> 
+> The TOCTOU vulnerabilities stem from several common patterns:
+> 
+> 1.  Use of macros that access contended variables multiple times
+> without locking.
+>     Many macros, such as FAN_FROM_REG, FAN_TO_REG, RPM_FROM_REG,
+> IN_FROM_REG, and TEMP_OFFSET_FROM_REG, access their arguments (which
+> are often contended variables) multiple times.
+>     For example, in drivers/hwmon/vt8231.c (v6.15-rc7), the fan_show
+> function uses FAN_FROM_REG:
+> 
+>     /* Fans */
+>     static ssize_t fan_show(struct device *dev, struct device_attribute *attr,
+>     char *buf)
+>     {
+>     struct sensor_device_attribute *sensor_attr = to_sensor_dev_attr(attr);
+>     int nr = sensor_attr->index;
+>     struct vt8231_data *data = vt8231_update_device(dev);
+>     return sprintf(buf, "%d\n", FAN_FROM_REG(data->fan[nr],
+>     DIV_FROM_REG(data->fan_div[nr])));
+>     }
+> 
+>     The FAN_FROM_REG macro, typically defined as #define
+> FAN_FROM_REG(val, div) ((val) == 0 ? 0 : 1310720 / ((val) * (div))),
+> checks val for zero and then uses val in a division. If data->fan[nr]
+> (which becomes val) is a contended variable, it could be non-zero at
+> the check but modified to zero by another thread before its use in the
+> division, leading to a division-by-zero error.
+> 
+> 2.  Checking and then using contended variables without locking.
+>     Some code paths check a contended variable and then use it,
+> assuming its state hasn't changed. This assumption is unsafe without
+> locks.
+>     For example, in drivers/hwmon/emc2103.c (v6.15-rc7),
+> fan1_input_show contains:
+> 
+>     static ssize_t
+>     fan1_input_show(struct device *dev, struct device_attribute *da, char *buf)
+>     {
+>     struct emc2103_data *data = emc2103_update_device(dev);
+>     int rpm = 0;
+>     if (data->fan_tach != 0) // Check
+>     rpm = (FAN_RPM_FACTOR * data->fan_multiplier) / data->fan_tach; // Use
+>     return sprintf(buf, "%d\n", rpm);
+>     }
+> 
+>     Here, data->fan_tach might be non-zero during the check but
+> changed to zero by a concurrent operation before the division, again
+> risking a division-by-zero.
+> 
+> 3.  Insufficient lock scope when updating contended variables.
+>     In some update functions, locks are taken too late, after shared
+> data has already been read.
+>     For example, in drivers/hwmon/vt8231.c (v6.15-rc7), the
+> fan_div_store function reads old and calculates min before acquiring
+> data->update_lock:
+> 
+>     static ssize_t fan_div_store(struct device *dev,
+>          struct device_attribute *attr, const char *buf,
+>          size_t count)
+>     {
+>     struct vt8231_data *data = dev_get_drvdata(dev);
+>     struct sensor_device_attribute *sensor_attr = to_sensor_dev_attr(attr);
+>     unsigned long val;
+>     int nr = sensor_attr->index;
+>     // 'old' and 'min' are read/calculated from shared data before lock
+>     int old = vt8231_read_value(data, VT8231_REG_FANDIV);
+>     long min = FAN_FROM_REG(data->fan_min[nr],
+>     DIV_FROM_REG(data->fan_div[nr]));
+>     int err;
+> 
+>     err = kstrtoul(buf, 10, &val);
+>     if (err)
+>     return err;
+> 
+>     mutex_lock(&data->update_lock);
+>     // ... (rest of the function)
+>     data->fan_min[nr] = FAN_TO_REG(min, DIV_FROM_REG(data->fan_div[nr]));
+>     vt8231_write_value(data, VT8231_REG_FAN_MIN(nr), data->fan_min[nr]);
+>     // ...
+>     mutex_unlock(&data->update_lock);
+>     return count;
+>     }
+> 
+>     If there's contention for data->update_lock, old and min can
+> become stale by the time the lock is acquired. Subsequent operations
+> based on these stale values (e.g., calculating data->fan_min[nr]) can
+> lead to incorrect hardware configuration. Furthermore, the calculation
+> of min itself is unsynchronized and might use inconsistent
+> data->fan_min[nr] and data->fan_div[nr] values if another thread is
+> concurrently updating these fields. While Linux kernel coding style
+> often encourages declaring variables at the beginning of a block,
+> their values, if derived from shared data, should be obtained under
+> lock protection.
+> 
+> Consequences of these bugs:
+> 
+> Kernel Panics: Division-by-zero errors, particularly in macros like
+> FAN_FROM_REG, FAN_TO_REG, and RPM_FROM_REG.
+> Incorrect Data: For macros not involving division (e.g.,
+> TEMP_OFFSET_FROM_REG), TOCTOU on variable values can lead to incorrect
+> calculations and reporting of sensor data.
+> Hardware Misconfiguration: Updating hardware registers based on stale
+> or inconsistently read data (due to insufficient lock scope) can lead
+> to illegal values being written to ports.
+> 
+> Scope and Prevalence:
+> 
+> These TOCTOU issues are unfortunately widespread across the hwmon subsystem.
+> For instance, the FAN_FROM_REG macro pattern is found in numerous
+> files, including but not limited to:
+> adm1026.c, adm1031.c, gl518sm.c, gl520sm.c, it87.c, lm63.c, lm80.c,
+> lm85.c, lm87.c, max6639.c, pc87360.c, smsc47m1.c, via686a.c, vt8231.c,
+> w83627hf.c, w83791d.c, w83792d.c, w83l786ng.c.
+> 
+> Other instances of manually coded TOCTOU include functions like
+> fan1_input_show and fan1_target_show in drivers/hwmon/emc2103.c
+> (v6.15-rc7), and max6620_read in drivers/hwmon/max6620.c. I have not
+> been able to catalogue all instances.
+> 
+> Many of these bugs appear to have been introduced very early. For
+> example, the issues in drivers/hwmon/vt8231.c seem to date back to the
+> driver's introduction around kernel version 2.6.
+> 
+> Suggested Fixes and Discussion:
+> 
+> I am not certain what the most appropriate strategy for fixing these
+> widespread issues would be (e.g., per-file fixes or a more generalized
+> approach) and would appreciate your guidance. However, some potential
+> remediation steps include:
+> 
+> 1.  Convert multi-access macros to inline functions: Macros like
+> FAN_FROM_REG that access their arguments multiple times should ideally
+> be converted to static inline functions. This would ensure that
+> arguments are evaluated only once, mitigating races related to
+> multiple accesses of the same underlying variable within the macro's
+> expansion.
+> 2.  Expand lock scopes: For functions that update shared data, such as
+> fan_div_store in vt8231.c, the critical sections protected by locks
+> need to be carefully reviewed and potentially expanded. All reads of
+> shared data that are used in subsequent calculations or writes under
+> the lock should occur after the lock is acquired.
+> 3.  Ensure consistent reads for multiple related variables: For read
+> operations involving multiple distinct but related pieces of shared
+> data (e.g., fan_show in vt8231.c which uses both data->fan[nr] and
+> data->fan_div[nr]), merely converting macros to functions might not be
+> sufficient if these variables can be updated non-atomically relative
+> to each other. Such scenarios might require acquiring a lock to ensure
+> a consistent snapshot of all related data is read and used.
+> 
+> I would like to discuss these issues further and collaborate on the
+> best way to address them comprehensively.
+> 
 
-On 05. 06. 25, 16:27, Jiri Slaby wrote:
-> On 27. 01. 25, 17:05, Uros Bizjak wrote:
->> This patch declares percpu variables in __seg_gs/__seg_fs named AS
->> and keeps them named AS qualified until they are dereferenced with
->> percpu accessor. This approach enables various compiler check
->> for cross-namespace variable assignments.
->>
->> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
->> Acked-by: Nadav Amit <nadav.amit@gmail.com>
->> Cc: Dennis Zhou <dennis@kernel.org>
->> Cc: Tejun Heo <tj@kernel.org>
->> Cc: Christoph Lameter <cl@linux.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: Linus Torvalds <torvalds@linux-foundation.org>
->> Cc: Andy Lutomirski <luto@kernel.org>
->> Cc: Brian Gerst <brgerst@gmail.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> ---
->>   arch/x86/include/asm/percpu.h | 15 ++++++++++++---
->>   1 file changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/ 
->> percpu.h
->> index 27f668660abe..474d648bca9a 100644
->> --- a/arch/x86/include/asm/percpu.h
->> +++ b/arch/x86/include/asm/percpu.h
->> @@ -95,9 +95,18 @@
->>   #endif /* CONFIG_SMP */
->> -#define __my_cpu_type(var)    typeof(var) __percpu_seg_override
->> -#define __my_cpu_ptr(ptr)    (__my_cpu_type(*(ptr))*)(__force 
->> uintptr_t)(ptr)
->> -#define __my_cpu_var(var)    (*__my_cpu_ptr(&(var)))
->> +#if defined(CONFIG_USE_X86_SEG_SUPPORT) && defined(USE_TYPEOF_UNQUAL)
->> +# define __my_cpu_type(var)    typeof(var)
->> +# define __my_cpu_ptr(ptr)    (ptr)
->> +# define __my_cpu_var(var)    (var)
->> +
->> +# define __percpu_qual        __percpu_seg_override
->> +#else
->> +# define __my_cpu_type(var)    typeof(var) __percpu_seg_override
->> +# define __my_cpu_ptr(ptr)    (__my_cpu_type(*(ptr))*)(__force 
->> uintptr_t)(ptr)
->> +# define __my_cpu_var(var)    (*__my_cpu_ptr(&(var)))
->> +#endif
->> +
-> 
-> Another issue with this is this causes all modules in 6.15 are 2-4 times 
-> (compressed size) bigger:
-> $ ll /usr/lib/modules/*-[0-9]-default/kernel/drivers/atm/atmtcp.ko.zst
->  > -rw-r--r--. 1 root root 10325 May 13 11:49 /usr/lib/modules/6.14.6-2- 
-> default/kernel/drivers/atm/atmtcp.ko.zst
->  > -rw-r--r--. 1 root root 39677 Jun  2 09:13 /usr/lib/modules/6.15.0-1- 
-> default/kernel/drivers/atm/atmtcp.ko.zst
-> 
-> It's due to larger .BTF section:
-> .BTF              PROGBITS         0000000000000000  [-00003080-]
-> [-       00000000000011a8-]  {+00003100+}
-> {+       0000000000012cf8+}  0000000000000000           0     0     1
-> 
-> There are a lot of new BTF types defined in each module like:
-> +attribute_group STRUCT
-> +backing_dev_info STRUCT
-> +bdi_writeback STRUCT
-> +bin_attribute STRUCT
-> +bio_end_io_t TYPEDEF
-> +bio_list STRUCT
-> +bio_set STRUCT
-> +bio STRUCT
-> +bio_vec STRUCT
-> 
-> Reverting this gives me back to normal sizes.
-> 
-> Any ideas?
-> 
-> FTR downstream report:
-> https://bugzilla.suse.com/show_bug.cgi?id=1244135
-> 
-> thanks,
+I'd suggest to start submitting patches, with the goal of minimizing
+the scope of changes. Sometimes that may mean expanding the scope of
+locks, sometimes it may mean converting macros to functions. When
+converting to functions, it doesn't have to be inline functions: I'd
+leave that up to the compiler to decide. None of that code is performance
+critical.
 
--- 
-js
-suse labs
+Also, it might make sense to add a note to
+Documentation/hwmon/submitting-patches.rst, to "avoid calculations in
+macros", explaining that this may result in the kind of problem explained
+here.
 
+Thanks,
+Guenter
