@@ -1,80 +1,161 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDF3F1D8A0A
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0602F210F5A
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749127177; cv=none; b=cwQgzNaLlhBcIwLB6GffwL7CiqGboLcJwmXRKpASrrwS0B8a6JSTk+ZU8DU6dvuR2gBatqnrjaaBLyGOEvXieNA9DQ3PScdfEU7fQPS1Gvam6gttoO11g2Y00zM9JnXr17OPOR0cKQX71H/9Kyhff3ZkPt+4x3jtG8+DsxqwUmw=
+	t=1749127209; cv=none; b=nLGo/Vrr1KRPlq6+1fEOidOIoAc78YIgX+SKiekFHe8K3xDwD+studthg+NThLLAjxWVLzmglNOEDii30/zMHKfpa45c3sfJv5hKxFyiPOIcxkgK85o3hIu/uMVHnFHpW5ReGllspEcqPm8kBm3JJ/hv9mkyCbaAjVp+HBmkXxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749127177; c=relaxed/simple;
-	bh=KkVqRl7kNIscnV92hznnT5Eju0cYVXu90jpfBstwsNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=obbdRZkM3s4Xqejskjw6O/Pcni3MoIGsSdf6ESPKD5OE8rUwTGebanWAOk4aNrDOJ/zR6ImkB/WoJtDUF2JdSZYnxR+naahe+l+4HEAyZeshGM8WpX66yiq3rfMLBFSRp0L+y3gD7GpRSWdZGkyqqaMbjT8b+5B/M4iQGoXOvAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7BF61691;
-	Thu,  5 Jun 2025 05:39:10 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CDFE3F673;
-	Thu,  5 Jun 2025 05:39:26 -0700 (PDT)
-Date: Thu, 5 Jun 2025 13:39:24 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	Sumit Garg <sumit.garg@linaro.org>,
-	Jerome Forissier <jerome.forissier@linaro.org>
-Subject: Re: [PATCH] optee: ffa: fix sleep in atomic context
-Message-ID: <20250605-spicy-mackerel-of-poetry-9948b8@sudeepholla>
-References: <20250602120452.2507084-1-jens.wiklander@linaro.org>
+	s=arc-20240116; t=1749127209; c=relaxed/simple;
+	bh=nCUKXO6dCKnHu7IzoBDjMlKdgxKzmF/UGOro8VhrZ4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b8cTkyj+97OHWgt/GleVZIlrhWbAuehauV02I1Nl/rfrXV+hNEmsBEkGBr82lrknpFUF6Iuvcr8rJdJ/hSLKfd4hYBlKTmDb3mzGS4uW7W9+SKsYaeMS0aJp2w9z8EJs+w8TmFCZgyRHZ81mIGzfAt5bNnSWzwm6UE1UqDiz5gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QIITwvXC; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QIITwvXC"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d7b50815so7631855e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749127206; x=1749732006; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jleYuFzLzfRA5MPpLBL/znJ4nBJa4J0zBphZ1LfbvF4=;
+        b=QIITwvXCjlewtNIKy8GsOeU2pqzswByg3eg25LHXsOHirndubtlBEfEYqRlMHn8Ji0
+         ECwuB0e+yZha+dO3oPZ25wsUvvWrWXlEMnJtM5gz+RbeglE5vBRK6ahd5xiZqf3PkWWc
+         qQW8/GQjsT3/vqTD1Y4dpg9nMNpLa14LA5ZfOHXTi1tvVzZG0nEb1pW+P2sIDB5joYcr
+         bbmp2hN1ngpzEzvCHjqkm/JU4RQKjIWv4YY1tMmA45hxnYuThF+yBSVSSI4tP/4yTicu
+         l6CPaydk0sgZTbR2jFaobbBmi+CkOKIKhP7L9o/MCZ+CQH00AyWMwHZckpBieERthEVL
+         GHrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749127206; x=1749732006;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jleYuFzLzfRA5MPpLBL/znJ4nBJa4J0zBphZ1LfbvF4=;
+        b=QwgMLiskiskLCsO7FFSEotIMSogBnewN+I9oa5VbgRwf4PODTX7lH6AgORpUwd/CDt
+         37LBTEwZ0gibbIxWk2WItfqJ9grUrfCoZfHDteU5TYq2rFUNBihKxxibdOzNfZAWMbBw
+         2lDPea4avXEi9/3vdQN55P6E/tUQGkH3bNWwt2kmwkIQ74p99kH2qtdt+u0rb9a9XsRj
+         N7tta69e0wJuG51zo/rwvrdM8SGdHXFDeR/sn0Qw3PTPA3P7esw/KDZlup8Q7Zei7AZF
+         M8xRcgEmzow4W0iaBGSMKa+Q1QUgSIyUglHqkqZdf6GUeqUNmZnoypjLYloVlyKrkY/T
+         enOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXoEZlXbyMShVQ+i3YAO4a9WqoAq8ENpFf+/c5PnLx4RqJLihAeEPlp+spRFXiS/Kv22LOF3Hoe6T84Nn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5t6nxWA/3V2HBRSXsbO8Kvs8JimGaMDIQCj1XxJ2K+xy6rO3t
+	oSjxUcAyxitAuA8tNrNH4W2JwY8Uy2k4sv5pd0fBvJfJ3oUrHlyDVmr/PJcftU4lqxw=
+X-Gm-Gg: ASbGncu85ktDjZO4aDLrJ7u4Y5qvdLJfZzqqNrnW214paQ6/Hh+4rCgkU8aWX+aN/gg
+	lHI3nShr0eqJtSw+HBKHPWFBWv7Pn9HF6wetjHkABtFzox3wUwqN1bL9VO/yKqLEbgT/R5br0PI
+	BeWBqhAdfPEG8XX3rWxV3H/jzVyUexhcB2RZ2J4HH+2HO7IveWXmbIznbU5ei4XqtnM9AS2u2am
+	nLqS20RRZZMA/7DtG80Rxc+19Y0zZTdWvcG97lCuo2ljr+/43hw3YSL8kvQCV3qXT9EpvuBZ6MN
+	UEcx9GGFqH1+9nQSo68kXdSBWFyem9jgYa2ly26OVWe7IEeKWmPCTi3c6EyQKXtPTxCD11k3F34
+	46EmC1NwwMSrpu7DB
+X-Google-Smtp-Source: AGHT+IEsxxsTElehsXiy/j9gvQgKD6AbOSqheG88RGHTrVgmb0CU8UNDkYtrV/BImx3zQJlDwaL0EA==
+X-Received: by 2002:a05:600c:a42:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-451f0a8d601mr68257205e9.14.1749127206162;
+        Thu, 05 Jun 2025 05:40:06 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451fb169309sm18073265e9.4.2025.06.05.05.40.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 05:40:05 -0700 (PDT)
+Message-ID: <44b3779b-702c-4e8b-8ccd-c9c3314a511f@linaro.org>
+Date: Thu, 5 Jun 2025 13:40:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602120452.2507084-1-jens.wiklander@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Renjiang Han <quic_renjiang@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
+ <a3bf69f3-6500-4e45-ba34-8ba24312938a@kernel.org>
+ <CAO9ioeWkLu+ne18kjEST7YU7b1aBzcMBBeyfpagzis99BAeOHg@mail.gmail.com>
+ <b710e357-09e3-460e-b097-28cf0c856aeb@kernel.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <b710e357-09e3-460e-b097-28cf0c856aeb@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 02, 2025 at 02:04:35PM +0200, Jens Wiklander wrote:
-> The OP-TEE driver registers the function notif_callback() for FF-A
-> notifications. However, this function is called in an atomic context
-> leading to errors like this when processing asynchronous notifications:
+On 05/06/2025 13:33, Krzysztof Kozlowski wrote:
+> On 05/06/2025 14:30, Dmitry Baryshkov wrote:
+>> On Thu, 5 Jun 2025 at 13:13, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>
+>>> On 02/06/2025 08:16, Dmitry Baryshkov wrote:
+>>>> On Sat, May 31, 2025 at 08:05:24AM +0800, Renjiang Han wrote:
+>>>>>
+>>>>> On 5/31/2025 4:27 AM, Dmitry Baryshkov wrote:
+>>>>>> On Fri, May 30, 2025 at 09:32:12AM +0530, Renjiang Han wrote:
+>>>>>>> QCS615 uses the same video core as SC7180, so reuse the same resource
+>>>>>>> data of SC7180 for QCS615 to enable video functionality.
+>>>>>>>
+>>>>>>> There are no resources for the video-decoder and video-encoder nodes
+>>>>>>> in the device tree, so remove these two nodes from the device tree. In
+>>>>>>> addition, to ensure that the video codec functions properly, use [3]
+>>>>>>> to add encoder and decoder node entries in the venus driver.
+>>>>>>>
+>>>>>>> Validated this series on QCS615 and SC7180.
+>>>>>>>
+>>>>>>> Note:
+>>>>>>> This series consist of DT patches and a venus driver patch. The patch
+>>>>>>> 1/3, which is venus driver patch, can be picked independently without
+>>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>>>>>>> DT patches, still depend on [1].
+>>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
+>>>>>> on QCS615 over(?)clocked.
+>>>>> Agree, so we need to make sure that the driver patch is not picked after the
+>>>>> DT patch.
+>>>>
+>>>> Worse: we need to make sure that the driver patch is present in the
+>>>> branch which picks up DT patches. Otherwise building & testing that
+>>>
+>>>
+>>> Well, that's a NAK then (although depends what you mean by DT).
+>>
+>> I mean qcs615.dtsi. I'd suggest an immutable branch for the driver
 > 
->  | BUG: sleeping function called from invalid context at kernel/locking/mutex.c:258
->  | in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 9, name: kworker/0:0
->  | preempt_count: 1, expected: 0
->  | RCU nest depth: 0, expected: 0
->  | CPU: 0 UID: 0 PID: 9 Comm: kworker/0:0 Not tainted 6.14.0-00019-g657536ebe0aa #13
->  | Hardware name: linux,dummy-virt (DT)
->  | Workqueue: ffa_pcpu_irq_notification notif_pcpu_irq_work_fn
->  | Call trace:
->  |  show_stack+0x18/0x24 (C)
->  |  dump_stack_lvl+0x78/0x90
->  |  dump_stack+0x18/0x24
->  |  __might_resched+0x114/0x170
->  |  __might_sleep+0x48/0x98
->  |  mutex_lock+0x24/0x80
->  |  optee_get_msg_arg+0x7c/0x21c
->  |  simple_call_with_arg+0x50/0xc0
->  |  optee_do_bottom_half+0x14/0x20
->  |  notif_callback+0x3c/0x48
->  |  handle_notif_callbacks+0x9c/0xe0
->  |  notif_get_and_handle+0x40/0x88
->  |  generic_exec_single+0x80/0xc0
->  |  smp_call_function_single+0xfc/0x1a0
->  |  notif_pcpu_irq_work_fn+0x2c/0x38
->  |  process_one_work+0x14c/0x2b4
->  |  worker_thread+0x2e4/0x3e0
->  |  kthread+0x13c/0x210
->  |  ret_from_fork+0x10/0x20
+> Sorry, but no, DTS cannot depend on drivers. You CANNOT merge them into
+> one branch.
 > 
-> Fix this by adding work queue to process the notification in a
-> non-atomic context.
+>> patch. Or just merging the patches in two consequent releases.
+> 
+> That's a new device nodes, new hardware so it should not be blocked by
+> any driver patch. This is just totally broken process / patchset / work.
+> 
+> Best regards,
+> Krzysztof
 
-Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+Reading this thread, I don't think that is the case.
 
--- 
-Regards,
-Sudeep
+I don't see how patches 2/3 or 3/3 depend on 1/3.
+
+The frequency table is a fallback in the driver and the DT changes are 
+completely straight forward.
+
+TBH, I think we are hitting an email comms/social barrier here, not a 
+technical one.
+
+@Renjiang can you please confirm that freq_table is a fallback, qcs615 
+will work without OPP table and the DTS stuff doesn't depend on the driver.
+
+TBH, I don't see how the DTS can or should but...
+
+---
+bod
+
