@@ -1,191 +1,120 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCA88488;
-	Thu,  5 Jun 2025 12:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D261DFF0
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749126835; cv=none; b=C5r4PWA/rzpqxhFsgdn9sCF92M+KWKCX8wAnx1HcE+D7uasIyrrVEaCM5aXets4dOOCp01U+DKNDCTk4OLXWCG5l9hkS62yJeL2ie14Dzo+Ip39oFSh/4deqiV4OWWJve6ZLtf//QNqppfqbgdLq/OEgxM+hzzdUuhcc7XUU5uk=
+	t=1749126876; cv=none; b=d3DyDEw7wsPODWONJHewdEOz8QUwMPs5FuIKk14GRdJIOv8pm3wI1l1mFmvv98fuoVMpNqG+YQO0QfKYEFkxyoAtNhZEZcAC3mmnd67izKo0jg3BuY2GpPmW94XGMlRpbX/4f21OxthLbcki+0CeJdghrspLbZk3i88wGbr9z1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749126835; c=relaxed/simple;
-	bh=oSg0BWQhTBYi4pRNfN5FZqVnrstvVSk2pbDgIsNr8O0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PWW0eZVFq+TVlXnaMJV2KHU6ViV8ZHEcLSFSIDRLh66NKq7NTJNZ8DXu5BNDFXswITEldJyxHNIbjY6Y0OMevLn88kT8G9QkxjUfcasd9DM5LP6+765WF4S7HzubSqPrVZ0xu3bNACSWUfTT5Cbjz7RpJ07MtxMH+i41yYiY8EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ddBo4wVd; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749126876; c=relaxed/simple;
+	bh=cjbh1iJPcHo1SoPgqjrQYH/wQ/TWFV5f6hNewSpBYZk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UuwT6P48eWp87q1N+DdhJ/EezcLW9jGDPwo93rfc+70lCQIkfK3mDrGTE73SpmXkivqEpQNPz3yCSfBivyyc7Si2A8k6nm2TzaoMknbpuW84aGryF/LMaFvO0Z/4yFaDEdLxHgaXXGeJ35WZs3+mXsirTpRpwpiea1ERzQidH8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=COomPcny; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ddBo4wVd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xJHjIyrqVhzyFs1QdOrPnjGgaN4xPKZQLhRy3L1nySg=; b=ddBo4wVdR1yo2OyDoim0aGXJon
-	ZtI6amPXG8QgireXbsqr5/Xk5Wv3iE2KdKJFVH4XchYMqXvqUyZKuZPl6MV0KbQ9zrrJgve1r6W36
-	pUz8/tqx7g7u18UaO4UU7fdE/5gZGyRXi6oOI9RXKmiw3nygNmm/heV/GJqPLuxii7TCe7mPilR1m
-	i1i+5WUFc/nO8XF+sp53jnQ3gOJX95/b5F5VzPD+AD0L8CWEp06zScJN1ZMZJ32Eg8b2aO3pbRWa7
-	eJuuDrUWY829OP5TtWdSR/r73O/IRDdO0Ocb9tsD7Dcm5f/K3026tozIlscFxVFQAQEdMBsd3SP7C
-	lDCfKLcQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uN9my-00000004EXg-1Wkf;
-	Thu, 05 Jun 2025 12:33:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B46693005AF; Thu,  5 Jun 2025 14:33:43 +0200 (CEST)
-Date: Thu, 5 Jun 2025 14:33:43 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250605123343.GD35970@noisy.programming.kicks-ass.net>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
- <20250603144414.GC38114@noisy.programming.kicks-ass.net>
- <20250604080339.GB35970@noisy.programming.kicks-ass.net>
- <20250604101821.GC8020@e132581.arm.com>
- <20250604141640.GL38114@noisy.programming.kicks-ass.net>
- <20250604154639.GE8020@e132581.arm.com>
- <20250605112921.GR39944@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="COomPcny"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a375e72473so443456f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749126873; x=1749731673; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=exkJCJom4RO5dcCa+OJwP+hizG0/yi1+ayoRAtNv+kQ=;
+        b=COomPcny5A6K7VTC/wQpkYlI1Vk9iawGMSCH6TtUwofIa5ELpV/+mMAuQcBtY4+zeE
+         5Pufd1iXSQ1G4YyhcYsvtbsw1eQ6twnprFisxnsN4zCtjLAfqV1Cz6qGpxlTsmRECNEJ
+         r5Zn26cHGXiJxsZYS96yU/NCsHy3Hbes1cgZQpSvVYsrQQDm7an3xWv1gsZhi6xZ5xCX
+         MO8dp5oJzbRfBsLCijhmSmDh8PV1H/55cI7lKW+Z1OcGilbcFB1sR0wWAanz0ULlwKs7
+         n12FTWqw7RWUJck9R70vK3ZDjqgX2t502xjwcANIWD2bldew9LwM3ih774jGI/MryaFB
+         ZIbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749126873; x=1749731673;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=exkJCJom4RO5dcCa+OJwP+hizG0/yi1+ayoRAtNv+kQ=;
+        b=ws5591/EakumygOI9f1d0iu/vVhWll0/Ve2dgz2+a2Jye4jMWPtTC+sqlnOmVpAX2z
+         q8GgqgWZrpFJ0wnvx1Mq3FlzMPyzcsS4lPehxsVhjzL6iGmGV36Ozr2IQ69WiiRbcaWH
+         b5szjImKDNVT8cCkec5y1v91aHkhQwWu3LvVii2ISHUPrBSJdG4jni26Z5LhP/NNdX9x
+         Hv731eF1yc/3wpn1RIDmeSUqdoN/rOuvbZWo2VBRZQMVUhQog3eaZR4IeydlGaKRbSCO
+         VBmkYc6/WR7YidXZK+Vh7kEKiQ5xQxE0+H3xqcS6cY+tMwWz6asOt9eaB+B8B/QLgYrS
+         lb8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVob+rY2P0km/s2xN1LFPaxKy1p4E7ZKUTUo6gfl9ST2qc2MWdFAgZ+MwaChBm8/pTKKr6BcdJp9gpeN5o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywn9Cf03Q67elgrbkOAyynlETMaL+uOgUpb8fwuFdYRf4I4tOZL
+	BD6+LUUHcEsty9+OVuZF88gDhOkLKPW53qN9hxEIYRjerTaFyieeef4BLCMsgwNcMOY=
+X-Gm-Gg: ASbGncuUf0ZRt/0DDabFjpHlt6hITiwN1DJp+TOV1WBpcr0KkaV1MYmsL/FVdi/Nqu2
+	hi5Qn3juK0N9wpfdxkqN0C8oAQvQC1hl8fxx7zxdEweClq2huTKxSLsYeTD4Sb5ioDn17xD+IRG
+	Erlz2uSWacXnSN52sdwVk6RYpst4svYP7X9Z8uGdIkfwCvfCGlu7874Ipn4l6fmnWbBUFMdCkcf
+	DtYvSZUEU647NfInafy77uzbjMmuk9F1IBC8l7D7oRu+yLiX/WB8cAD9JShkNlEHriYOdz8E/bs
+	mudIXDPa76Lae7tdjBPbxFSiCrESZXRqr6NWZSZddoM2dRCmJEzLvQAV5Dw887xOSJh7/SXuM2q
+	wxENfbap6EjZU0YMC
+X-Google-Smtp-Source: AGHT+IFay1Kv4O/AIX3uTmBLPt0/aev+6Rj7lbZSat73UDWQjBuMnLbHPYrx37RB3wdZf5F86HsTfA==
+X-Received: by 2002:a5d:5f90:0:b0:3a4:d41d:8f40 with SMTP id ffacd0b85a97d-3a51dc3182amr6168249f8f.46.1749126873038;
+        Thu, 05 Jun 2025 05:34:33 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5236d4466sm3690446f8f.100.2025.06.05.05.34.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 05:34:32 -0700 (PDT)
+Message-ID: <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
+Date: Thu, 5 Jun 2025 13:34:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605112921.GR39944@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Renjiang Han <quic_renjiang@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 05, 2025 at 01:29:21PM +0200, Peter Zijlstra wrote:
+On 31/05/2025 01:05, Renjiang Han wrote:
+>>>
+>>> Note:
+>>> This series consist of DT patches and a venus driver patch. The patch
+>>> 1/3, which is venus driver patch, can be picked independently without
+>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>>> DT patches, still depend on [1].
+>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
+>> on QCS615 over(?)clocked.
+> Agree, so we need to make sure that the driver patch is not picked after 
+> the DT patch.
 
-> But yes, slightly confusing. Let me see if I can make a less confusing
-> patch, and if not, sprinkle comments.
+This statement is confusing.
 
-I've settled on the below.
+1/3 states that there will be a fallback if there is no OPP table present.
+
+Giving the code a glance, I believe that is so, freq_table should be 
+used if there is no OPP specified in the DT.
+
+I think we are having a hard time here understanding what you are saying.
+
+My understanding:
+
+- venus modification is standalone 1/3
+   Qcs615 will fallback if no OPP is present
+
+- dt modification 2/3 3/3 is therefore also independent of driver
 
 ---
-Subject: perf: Fix cgroup state vs ERROR
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu Jun 5 12:37:11 CEST 2025
-
-While chasing down a missing perf_cgroup_event_disable() elsewhere,
-Leo Yan found that both perf_put_aux_event() and
-perf_remove_sibling_event() were also missing one.
-
-Specifically, the rule is that events that switch to OFF,ERROR need to
-call perf_cgroup_event_disable().
-
-Unify the disable paths to ensure this.
-
-Fixes: ab43762ef010 ("perf: Allow normal events to output AUX data")
-Fixes: 9f0c4fa111dc ("perf/core: Add a new PERF_EV_CAP_SIBLING event capability")
-Reported-by: Leo Yan <leo.yan@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |   51 ++++++++++++++++++++++++++++++---------------------
- 1 file changed, 30 insertions(+), 21 deletions(-)
-
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2149,8 +2149,9 @@ perf_aux_output_match(struct perf_event
- }
- 
- static void put_event(struct perf_event *event);
--static void event_sched_out(struct perf_event *event,
--			    struct perf_event_context *ctx);
-+static void __event_disable(struct perf_event *event,
-+			    struct perf_event_context *ctx,
-+			    enum perf_event_state state);
- 
- static void perf_put_aux_event(struct perf_event *event)
- {
-@@ -2183,8 +2184,7 @@ static void perf_put_aux_event(struct pe
- 		 * state so that we don't try to schedule it again. Note
- 		 * that perf_event_enable() will clear the ERROR status.
- 		 */
--		event_sched_out(iter, ctx);
--		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-+		__event_disable(iter, ctx, PERF_EVENT_STATE_ERROR);
- 	}
- }
- 
-@@ -2242,18 +2242,6 @@ static inline struct list_head *get_even
- 				    &event->pmu_ctx->flexible_active;
- }
- 
--/*
-- * Events that have PERF_EV_CAP_SIBLING require being part of a group and
-- * cannot exist on their own, schedule them out and move them into the ERROR
-- * state. Also see _perf_event_enable(), it will not be able to recover
-- * this ERROR state.
-- */
--static inline void perf_remove_sibling_event(struct perf_event *event)
--{
--	event_sched_out(event, event->ctx);
--	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
--}
--
- static void perf_group_detach(struct perf_event *event)
- {
- 	struct perf_event *leader = event->group_leader;
-@@ -2289,8 +2277,15 @@ static void perf_group_detach(struct per
- 	 */
- 	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
- 
-+		/*
-+		 * Events that have PERF_EV_CAP_SIBLING require being part of
-+		 * a group and cannot exist on their own, schedule them out
-+		 * and move them into the ERROR state. Also see
-+		 * _perf_event_enable(), it will not be able to recover this
-+		 * ERROR state.
-+		 */
- 		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
--			perf_remove_sibling_event(sibling);
-+			__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
- 
- 		sibling->group_leader = sibling;
- 		list_del_init(&sibling->sibling_list);
-@@ -2562,6 +2557,15 @@ static void perf_remove_from_context(str
- 	event_function_call(event, __perf_remove_from_context, (void *)flags);
- }
- 
-+static void __event_disable(struct perf_event *event,
-+			    struct perf_event_context *ctx,
-+			    enum perf_event_state state)
-+{
-+	event_sched_out(event, ctx);
-+	perf_cgroup_event_disable(event, ctx);
-+	perf_event_set_state(event, state);
-+}
-+
- /*
-  * Cross CPU call to disable a performance event
-  */
-@@ -2576,13 +2580,18 @@ static void __perf_event_disable(struct
- 	perf_pmu_disable(event->pmu_ctx->pmu);
- 	ctx_time_update_event(ctx, event);
- 
-+	/*
-+	 * When disabling a group leader, the whole group becomes ineligible
-+	 * to run, so schedule out the full group.
-+	 */
- 	if (event == event->group_leader)
- 		group_sched_out(event, ctx);
--	else
--		event_sched_out(event, ctx);
- 
--	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
--	perf_cgroup_event_disable(event, ctx);
-+	/*
-+	 * But only mark the leader OFF; the siblings will remain
-+	 * INACTIVE.
-+	 */
-+	__event_disable(event, ctx, PERF_EVENT_STATE_OFF);
- 
- 	perf_pmu_enable(event->pmu_ctx->pmu);
- }
+bod
