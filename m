@@ -1,172 +1,225 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF85B202969
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7553134CB
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749111751; cv=none; b=ZZ1Btkb4n/AQgsiELPqZI/6AuM8TdVEHRxPMG6XUdzdKHN+6fyCYtMqba78DPzH8RfxzZKBelFI6aUxEQhEUMe30oPs3FLGUGe1yhxVRzddomzmV2s1RuLSVf8hSsNLcrtiRL7K5JfkzC91aSQKp5+1MyiFkPqIkHnbEmXG3iGw=
+	t=1749111795; cv=none; b=llD3MxJF4KFmnQYYfCbKhGPB9wL5+0bQOBmsaLtt4zI/QiSvDhgaxCQ5Y+w+PQM4yplDFccpp4bVDsI6y1IzRVT5YqkYlBDxdL0zECl3JgqRjUPTlmasujWron4z+28Yaky3U6OSb+v6s6XKFqGQFXfrNJOAGiOB69lzF3aSSlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749111751; c=relaxed/simple;
-	bh=BS5ErSQFZKq+7kg9upVNEdfD3Awdd/h9z4xDcxD/XfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sLp5WluxODEp/A0WXeG6AfJUhZh4dxBJXUyCnt92Bz8FD2g1H8rvVlvuqlAXWZsv+06RX0/dlJ8aq4x3iSHjW2PF3cgNHob4udrivE1iQpFU640Hu3+p1X6KaPKWfdZp7SVtordIH0YwtLm2xq+ROxUq+vFJjzwcaAY/3bcOtOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BEWZJPWx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aEvM2aGh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yVNNQfCG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FhIH3GPO; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749111795; c=relaxed/simple;
+	bh=B4ysrMxEsk9Rh5gAtJvCAmde43xe4sHeZk8GusInAP0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AVCPRdDcdczQ5fuX3h0+RICDYp5VF4V96LT7W8fnnlXIvFZIhbGT0mGi0udmJrCL7Fy9MojiCjdD78xfZ42nFekA0STYBy825gFIJENTO96DCn1IVj9Txx2u61pqM6LYlGwTyCx+cAf0SFaCQ16y4Y+lBNbT535SHYyZfVPn/kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=PQcAVCr2; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BEWZJPWx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aEvM2aGh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yVNNQfCG";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FhIH3GPO"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id ED4FE5BF44;
-	Thu,  5 Jun 2025 08:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749111748; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mG4VCh9tlRxGqy5O4mxRiy9A5IFEM35DxvBHVeN1js4=;
-	b=BEWZJPWxFehhiwfcyh967XUrO5y9JmHZHR+l0vqVXUP/3PlPzEvXXlwD/Vwe5tLknpnNv0
-	fw1KAr/uiFR6HK+PWbjSpe7ng//GzkmJkwB4IqwKIXO/73iwVq/THBV4RLT0M7Z6uosTz3
-	i1LBW30eUfq5Be8lK3Ar4qFu+IZ1b4I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749111748;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mG4VCh9tlRxGqy5O4mxRiy9A5IFEM35DxvBHVeN1js4=;
-	b=aEvM2aGhxDaJO4xwhCHRD59KhUq8kx3S89zh7LY7WjJTPGjDNQQZhEEj2zbrzMLlbsQA0L
-	cjXn/ECyMGRcVWDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=yVNNQfCG;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=FhIH3GPO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749111747; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mG4VCh9tlRxGqy5O4mxRiy9A5IFEM35DxvBHVeN1js4=;
-	b=yVNNQfCGuVN7Yt1fN4BbWOG2aui2spn406vLnVPtFRABhdOQ4Z6ujq0I9Gcs4F1ibaSqbR
-	Gv4aieEAJIwJOIuQa8VsJ471ZhW7Lb44NNtUksMwlhK297aFoTlpCrPvu91wppWqy2zBYe
-	kNFEhs6G9MxGrIMweDA7r3TF+E15FUw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749111747;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mG4VCh9tlRxGqy5O4mxRiy9A5IFEM35DxvBHVeN1js4=;
-	b=FhIH3GPOi8w7eWR8e/597X4ZXPYFG9QlazlnrGlWbe7Jz9ZJMJyXf7z5f+fL6mdeiXW6B1
-	zl8EHailOBGsDOCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E1D8B137FE;
-	Thu,  5 Jun 2025 08:22:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id foodN8NTQWj6QQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 05 Jun 2025 08:22:27 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 8A09BA0951; Thu,  5 Jun 2025 10:22:23 +0200 (CEST)
-Date: Thu, 5 Jun 2025 10:22:23 +0200
-From: Jan Kara <jack@suse.cz>
-To: Chi Zhiling <chizhiling@163.com>
-Cc: willy@infradead.org, akpm@linux-foundation.org, josef@toxicpanda.com, 
-	jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Chi Zhiling <chizhiling@kylinos.cn>
-Subject: Re: [PATCH] readahead: fix return value of page_cache_next_miss()
- when no hole is found
-Message-ID: <qbuhdfdvbyida5y7g34o4rf5s5ntx462ffy3wso3pb5f3t4pev@3hqnswkp7of6>
-References: <20250605054935.2323451-1-chizhiling@163.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="PQcAVCr2"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23228b9d684so7505885ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 01:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1749111793; x=1749716593; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XnhYVXyPNED7aSa+QtVGAu9aQawWwPe0ExGu8cnyfFA=;
+        b=PQcAVCr22l9JX1ymj11wpK+4C2xAqF+A9Dr+zrijij43GFsuEpcAD8PQcaYOa64HgS
+         3/FWFgiIWEjgBdw6IwsaVzyaPDOBxBM3yS0CaUIpSz5qH9YyOHp6rimxdxiJH/0uB+CW
+         0XxBjUp++TTuBI9/6ZpxP8tC85JySCLWjqTNXl6akWbmvpxtzfHuvhjM82U1ZLQsi/ze
+         E9cuGB7mwz6VAsPaByJQtUlZHlh/eg6wxCpGPkXQE2nsK9diY9sCvy7N7gwf3S1cWLjU
+         SkEj2DMMr57XdHPGd8Uau0k++H3bpzom5yEEm2TTuE4HV2qyEbNiEWhtZYds+N9MxrL0
+         V7cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749111793; x=1749716593;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XnhYVXyPNED7aSa+QtVGAu9aQawWwPe0ExGu8cnyfFA=;
+        b=emYRCR85xl+che6kTNEUfP8UuMI493KNBKSTabKmZPspw9eN0kWXIma3oBC0MUWVTo
+         O/UfRxcXPpVps2uTHCKjBTRarznzg/R9WwDTpFr9OgdrVhQoNfUvkpTMbhPlxmlbr89b
+         OH/u0BR+PrI58chTL4T2gjcIOtL8qJXwqveE1Z/+yupceZiRKI45rwunKqGu5aCG0Ue4
+         3JkQRNLik34DhnTW4BQ3T505Wl/d0fdVWaopYmnyZ4y9FEDqq+Fz3GC2PlHvJGGHaFV3
+         SFM7zJ776+JwBJUcuVUU8sb/hE2gtvMdnNTmdBSw1H+cQLejOWTUWytXD+x/d0k19Q0Y
+         fKfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxCIJGD1jJKn9MECcu8zChaZ6JSMLFRpMX1kmsfs7C0SKVlpCFq/gqdslVDsJYGmCLdtbwoRYeL4UAiac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzOVWaY73W5W7Y7X5tYdEpEocsoiAL7oxweB11Yyz+uY/VQWqo
+	QfyaJtOytRT8ZT66FoD8XnA7fM8HtT7ZIqCAjxmKRqIimVsbqgNHlsjDFeHpZ9FFHA0=
+X-Gm-Gg: ASbGncsWUepI68MxbU8T+D/k8eIMf1iEv4Me2xSJ77nYzd4n6Rj5IbGEv5lOQdiWGG/
+	uSPcPCewVku+LG1O+yMVeoCteUZ6vqryWGMQzB1FRcO2FzAe0V/n4UsBPLhNWqSkYDM3K7+sLeo
+	9Wgo0CV3c5ehuN/exZIzHV3n8ZcJUjwX+RBvx5ae410LN8bYMjjm45sQT+A0G0/Vrjp6JOr6neb
+	wq93u+6DZ0AD/69bas8cD/fTLxqt2pbqOvKxIaWKhlXztIekgTccdI66IeRO5jOuE88WLOCZ53Y
+	2U4Oh9v0VQgIrbDi1I6W6g5hxdcUjIyG9wj8/xC2fnGLVRhtdR7jkqRxR/4MqpPRcBfwl180TU3
+	ii+E=
+X-Google-Smtp-Source: AGHT+IH/uXMpO9vPlvwO5HE6KiJ+VbwN8EwnVeB/4PqiwC40qukfCsjqe5p4aL0wGoWKyJb7NE1+9Q==
+X-Received: by 2002:a17:902:d510:b0:234:bef7:e227 with SMTP id d9443c01a7336-235e1150935mr73488875ad.18.1749111793100;
+        Thu, 05 Jun 2025 01:23:13 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.12])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc8695sm115300815ad.34.2025.06.05.01.23.09
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 05 Jun 2025 01:23:12 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: david@redhat.com
+Cc: akpm@linux-foundation.org,
+	dev.jain@arm.com,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	muchun.song@linux.dev,
+	peterx@redhat.com
+Subject: Re: [PATCH v3] gup: optimize longterm pin_user_pages() for large folio
+Date: Thu,  5 Jun 2025 16:23:05 +0800
+Message-ID: <20250605082305.5280-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <9b04871b-33fb-42cb-840b-88fdb6b93c48@redhat.com>
+References: <9b04871b-33fb-42cb-840b-88fdb6b93c48@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605054935.2323451-1-chizhiling@163.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[163.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[163.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: ED4FE5BF44
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
+Content-Transfer-Encoding: 8bit
 
-On Thu 05-06-25 13:49:35, Chi Zhiling wrote:
-> From: Chi Zhiling <chizhiling@kylinos.cn>
-> 
-> max_scan in page_cache_next_miss always decreases to zero when no hole
-> is found, causing the return value to be index + 0.
-> 
-> Fix this by preserving the max_scan value throughout the loop.
-> 
-> Fixes: 901a269ff3d5 ("filemap: fix page_cache_next_miss() when no hole found")
-> Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
+On Thu, 5 Jun 2025 09:51:06 +0200, david@redhat.com wrote:
 
-Indeed. Thanks for catching this. Don't know how I missed that. Feel free
-to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  mm/filemap.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> On 05.06.25 05:34, lizhe.67@bytedance.com wrote:
+> > From: Li Zhe <lizhe.67@bytedance.com>
+> > 
+> > In the current implementation of the longterm pin_user_pages() function,
+> > we invoke the collect_longterm_unpinnable_folios() function. This function
+> > iterates through the list to check whether each folio belongs to the
+> > "longterm_unpinnabled" category. The folios in this list essentially
+> > correspond to a contiguous region of user-space addresses, with each folio
+> > representing a physical address in increments of PAGESIZE. If this
+> > user-space address range is mapped with large folio, we can optimize the
+> > performance of function collect_longterm_unpinnable_folios() by reducing
+> > the using of READ_ONCE() invoked in
+> > pofs_get_folio()->page_folio()->_compound_head(). Also, we can simplify
+> > the logic of collect_longterm_unpinnable_folios(). Instead of comparing
+> > with prev_folio after calling pofs_get_folio(), we can check whether the
+> > next page is within the same folio.
+> > 
+> > The performance test results, based on v6.15, obtained through the
+> > gup_test tool from the kernel source tree are as follows. We achieve an
+> > improvement of over 66% for large folio with pagesize=2M. For small folio,
+> > we have only observed a very slight degradation in performance.
+> > 
+> > Without this patch:
+> > 
+> >      [root@localhost ~] ./gup_test -HL -m 8192 -n 512
+> >      TAP version 13
+> >      1..1
+> >      # PIN_LONGTERM_BENCHMARK: Time: get:14391 put:10858 us#
+> >      ok 1 ioctl status 0
+> >      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+> >      [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
+> >      TAP version 13
+> >      1..1
+> >      # PIN_LONGTERM_BENCHMARK: Time: get:130538 put:31676 us#
+> >      ok 1 ioctl status 0
+> >      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+> > 
+> > With this patch:
+> > 
+> >      [root@localhost ~] ./gup_test -HL -m 8192 -n 512
+> >      TAP version 13
+> >      1..1
+> >      # PIN_LONGTERM_BENCHMARK: Time: get:4867 put:10516 us#
+> >      ok 1 ioctl status 0
+> >      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+> >      [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
+> >      TAP version 13
+> >      1..1
+> >      # PIN_LONGTERM_BENCHMARK: Time: get:131798 put:31328 us#
+> >      ok 1 ioctl status 0
+> >      # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+> > 
+> > Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> > ---
+> > Changelogs:
+> > 
+> > v2->v3:
+> > - Update performance test data based on v6.15.
+> > - Refine the description of the optimization approach in commit message.
+> > - Fix some issues of code formatting.
+> > - Fine-tune the conditions for entering the optimization path.
+> > 
+> > v1->v2:
+> > - Modify some unreliable code.
+> > - Update performance test data.
+> > 
+> > v2 patch: https://lore.kernel.org/all/20250604031536.9053-1-lizhe.67@bytedance.com/
+> > v1 patch: https://lore.kernel.org/all/20250530092351.32709-1-lizhe.67@bytedance.com/
+> > 
+> >   mm/gup.c | 37 +++++++++++++++++++++++++++++--------
+> >   1 file changed, 29 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 84461d384ae2..9fbe3592b5fc 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -2317,6 +2317,31 @@ static void pofs_unpin(struct pages_or_folios *pofs)
+> >   		unpin_user_pages(pofs->pages, pofs->nr_entries);
+> >   }
+> >   
+> > +static struct folio *pofs_next_folio(struct folio *folio,
+> > +				struct pages_or_folios *pofs, long *index_ptr)
 > 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index b5e784f34d98..148be65be1cd 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -1767,8 +1767,9 @@ pgoff_t page_cache_next_miss(struct address_space *mapping,
->  			     pgoff_t index, unsigned long max_scan)
->  {
->  	XA_STATE(xas, &mapping->i_pages, index);
-> +	unsigned long nr = max_scan;
->  
-> -	while (max_scan--) {
-> +	while (nr--) {
->  		void *entry = xas_next(&xas);
->  		if (!entry || xa_is_value(entry))
->  			return xas.xa_index;
-> -- 
-> 2.43.0
+> ^ use two tabs here
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> > +{
+> > +	long i = *index_ptr + 1;
+> > +
+> > +	if (!pofs->has_folios && folio_test_large(folio)) {
+> > +		const unsigned long start_pfn = folio_pfn(folio);
+> > +		const unsigned long end_pfn = start_pfn + folio_nr_pages(folio);
+> > +
+> > +		for (; i < pofs->nr_entries; i++) {
+> > +			unsigned long pfn = page_to_pfn(pofs->pages[i]);
+> > +
+> > +			/* Is this page part of this folio? */
+> > +			if (pfn < start_pfn || pfn >= end_pfn)
+> > +				break;
+> > +		}
+> > +	}
+> > +
+> > +	if (unlikely(i == pofs->nr_entries))
+> > +		return NULL;
+> > +	*index_ptr = i;
+> > +
+> > +	return pofs_get_folio(pofs, i);
+> > +}
+> > +
+> >   /*
+> >    * Returns the number of collected folios. Return value is always >= 0.
+> >    */
+> > @@ -2324,16 +2349,12 @@ static void collect_longterm_unpinnable_folios(
+> >   		struct list_head *movable_folio_list,
+> >   		struct pages_or_folios *pofs)
+> >   {
+> > -	struct folio *prev_folio = NULL;
+> >   	bool drain_allow = true;
+> > -	unsigned long i;
+> > -
+> > -	for (i = 0; i < pofs->nr_entries; i++) {
+> > -		struct folio *folio = pofs_get_folio(pofs, i);
+> > +	struct folio *folio;
+> > +	long i = 0;
+> >   
+> > -		if (folio == prev_folio)
+> > -			continue;
+> > -		prev_folio = folio;
+> > +	for (folio = pofs_get_folio(pofs, i); folio;
+> > +			folio = pofs_next_folio(folio, pofs, &i)) {
+> 
+> As discussed, align both "folios" (using tabs and then spaces)
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+
+Thank you very much for your review. I will fix the issue in v4 patch.
+
+Thanks,
+Zhe
