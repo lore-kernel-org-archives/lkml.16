@@ -1,174 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0B920330;
-	Thu,  5 Jun 2025 21:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC10E1FFC74
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749158070; cv=none; b=AVFmAkfddadLp26bJdr0aBdth3LqX3hncPHTvBcLBIYK6IHJ1mhxUxikO5lXjgUGr9WHhp7dgSw9Z06GaCT8EOZ+5LmyxfEONGQ1+viMZYRXZ9fuY3lRr6od2ghdXvkdeWNUTHYhMkETc8GbjJy8kdvObu6isjowFiu4FN4WepY=
+	t=1749158151; cv=none; b=ZHjCdFFQeY06R805qEn03oYkPqiBLZ/VTZJINjg4OIVrhdzVAxVq333vA7ypNuD8BX99qBcuTwmK/Zk07xsgIoVMFEcoOs+KvpmNYGxMkFG1kGGKyXWi3WG2QibhH3wT/O1WrsG3McCMqvcDEZc7cxa3nC5hjba5Swe1BTbmiAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749158070; c=relaxed/simple;
-	bh=WOJbNMIIzp8UshuzXv5C+5t+iCkp7fkLH50ic3CZMa4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fcl5NMyEjPFfskFbT3LhqF0j5+ECswluWGKYXE7Wp5bHd/YHquEpxMYYfNckkgjJPTWfHZQrlAqVTz0vIWNROcQPDdwUOn2cmbDZkCxsmlE5gk4BjRp/baxUXgy1ZJpW1Uvvw9NjvPP35xpDuK7beHRiT32v6BRserwDfKuRJXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJarFV92; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749158151; c=relaxed/simple;
+	bh=6HjkeaWthINU5HcCHrCcRlHjiO0Vi8/7MMZ5Nn6LK/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=btEQbQAhdbL7vIQECRI1JZncVpSuW6cqYMQKBOyP2kC/Ve1rBQwivfCDTQzMIkKm6UYf1CA3rL+4FwaMb5H2S1UtvO7HvmmhH4rSSmj0mDD0U8+LX/ajZk7MeLKFcWguYKpKp3PzgBqgaI3wZBC0Z/K8fAwj81IssKSHjI8Fl5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=iFJFLW03; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJarFV92"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2A2C4CEF1;
-	Thu,  5 Jun 2025 21:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749158069;
-	bh=WOJbNMIIzp8UshuzXv5C+5t+iCkp7fkLH50ic3CZMa4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZJarFV92B75b2Xn1R4g5YTO8yPR1Q0duTLZzJdwYJcEDNjIJcbUpWOAbCTWT1c9ML
-	 vVj10rSxlxcIMzbeyrKjKojPiFtUYSw7Dlj/fvfb82w/Xtc0u9gTedrLJB86DLQrdC
-	 V0qixMtJpFxhCvT8ouBn1wU4P1A7FmLD88ZlQnNmV7oL2X/XfeHTjHHI5YXlfI7/Bz
-	 wJM1GIeWZNAychWSV4Qp0APRJGlMYVali7AXnL1lh9Wqh0Z+PtyZ5BNJRh6S7m0C1B
-	 hN0eqqRiby8cW9FfE9aqsIQ0TNfqzFqHpMs8YL/+zBI/N6sM/9hGslyl6Ge1MkoVty
-	 EqEHMP9dh+OMw==
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-48d71b77cc0so16938121cf.1;
-        Thu, 05 Jun 2025 14:14:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVeccKlg4CHustzXeJH8hkbfSXm7HVE9j9Ytf1soeL5olGsBHMyf5xe3oPse+S7u74H9xBAIJU2rXSSwSrbYQjRw+5bMNLd@vger.kernel.org, AJvYcCW+n4bB10MBPpdTLj33O9kh99oFLJCluN4IWigk3e9cL8JPLIP1fumMDUciL1DPaDlQB+WWw3Mb9q9L68X6@vger.kernel.org, AJvYcCWkQ+L2pIc9osMNPBH2eaUzcNBEbAxskjmXr8IjGgT3e3k4Lp87ftUd6DjfPlvM7Dws4umCBqf28eioIiLn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz10QRK+9yx3eSOYVKeb4Gb3n4RFVtG1L/s7d3iCg9Eg63sva1i
-	chg7bfHQY33SxfMsF9Yu906HRsDdzwweANnnDlc+sOUQ0XewGzBr0nIbDhT1WYKLk/NFYfITVFY
-	z+MsenSjj2WOUNecejqZNz/Td47oTJt8=
-X-Google-Smtp-Source: AGHT+IGTLw/U5w416/3Eu9jpNdm9/30Kn8C7cz3OadHd3JEnr2/2eVp0goFHQwxJZAyKrVuUxH+5KKnk38pxNlKc5Ow=
-X-Received: by 2002:a05:622a:5c17:b0:4a4:30e7:77a with SMTP id
- d75a77b69052e-4a5b9e20149mr17600321cf.15.1749158069080; Thu, 05 Jun 2025
- 14:14:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="iFJFLW03"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-b1fd59851baso843030a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 14:15:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1749158149; x=1749762949; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=n4S19kvQPTgsV4nv+XvYaG+Ak9HdIxhdbirqQIiEN6Y=;
+        b=iFJFLW037sSL2ZEWEK3OBS60rdUudUGLII3hGOykNjNYCvvR+wtBVMuxsoVBLcl4aQ
+         bo0xlE1IICkKzH0tKWjYtBZevLXHaDPQMadMiEJYXuh+F0CfZJ82rq0XLFf8/du5DDW2
+         m8zq4ym8pSjAXIyfCWqs12Q9Lf5XKsbH9BKHI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749158149; x=1749762949;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n4S19kvQPTgsV4nv+XvYaG+Ak9HdIxhdbirqQIiEN6Y=;
+        b=BReRLM8yqGaIOrxeFxIJhdsXNGQ48KcZi3y75HwzLYeq/cfkV4fHZ20upHQDBcpWZB
+         pHaGT/uBbDMx96b8/z6xkeJOq6AR3DJtKFvMwpZ8UH92I5Y39S60RWlXjJHzmraxgwl4
+         c3YT4aO4zp9JKlIvfdXfMFAk/E5eAVFUAZ7HHY250NjVUNrU7gb30cQd96EFjdf/uPlQ
+         VMhwVLR1fYKyFyFEmpR67MfOnFWUhceeG98H7YtzvlPqaUKbTUCSUiiMq1KekzjunR+G
+         WI4iN0QuKUWLrHCKC3bCGolXdoF0mBtPfr4+vo4PWr5f+ZI4/gsIZb2bf2vUk3kUyqSP
+         C10A==
+X-Gm-Message-State: AOJu0YyQRC17f/iTDcpVjWyQSdKjk6fiAQwYEaBg9UFe3tjMHBtkuuaS
+	wxKOxCrsKtUOu7xtvpAFm+FqwnWd/to/Id8T0H914Y5IWe7woY948c4nvFBzgpaD9yKxyGRNTGQ
+	fQPtdt7sMn3E=
+X-Gm-Gg: ASbGncuyQhoskQJPSJo5BmXpJLRjzEb0GdnM61jarAypf+i/Le83vRdGbQcVcXlz4IL
+	NfJWT4JjhEHkKwO2e53iBbhhKg8L1kdAkk5oU2/C+rjVHci/aehLI8epxOCq+kt2+JykCUo0oTD
+	JtPNmtobuDZssK6Kv/0vQPzgQnMbq8t56dcNJwfYZ8MDzG5BFyElGOXyKyivUrBObnmNDGWlQor
+	L9X/Vzv3H5gt87hmCa2fOZp/Kc0yjGi3SsfJsQLUQQT3B3BblduJaXntfi9qGBoTUDAKglc4e3W
+	OY3ZZQlD7ML2H3JaXGyoxfzcI8HTtxFNodAekQgS/rIjUb6tEZCLrahCLysBDQzqlmZFNwA+CAu
+	TolITXj1t35prwRoofl+dc7/MpQ==
+X-Google-Smtp-Source: AGHT+IFvheyXX9YWNnObK37zZQL3qKzOZ4htPgE+mvHDHQudg3DGxXMZG4UMivdjw61rVrUdSmiMZg==
+X-Received: by 2002:a17:90a:d64e:b0:313:2754:5910 with SMTP id 98e67ed59e1d1-31346b46defmr1808720a91.15.1749158149085;
+        Thu, 05 Jun 2025 14:15:49 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349fdf554sm188351a91.35.2025.06.05.14.15.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 14:15:48 -0700 (PDT)
+Message-ID: <52fb02f0-eef5-4bce-822e-140eb8769cd0@broadcom.com>
+Date: Thu, 5 Jun 2025 14:15:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603065920.3404510-1-song@kernel.org> <20250603065920.3404510-4-song@kernel.org>
- <aEHvkQ1C7Ne1dB4n@google.com>
-In-Reply-To: <aEHvkQ1C7Ne1dB4n@google.com>
-From: Song Liu <song@kernel.org>
-Date: Thu, 5 Jun 2025 14:14:17 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW46grJgJrXovKuksGXM0HfYg-hmmfroUUkBJTsPL4bSxQ@mail.gmail.com>
-X-Gm-Features: AX0GCFubNgDo50rcw47zJs5bVbZAszS-OTfDxJ-hTGtP_5ndfdQs8RXPRlrMeqY
-Message-ID: <CAPhsuW46grJgJrXovKuksGXM0HfYg-hmmfroUUkBJTsPL4bSxQ@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 3/4] bpf: Introduce path iterator
-To: Matt Bobrowski <mattbobrowski@google.com>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
-	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org, amir73il@gmail.com, 
-	repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, 
-	gnoack@google.com, m@maowtm.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] memory: brcmstb_memc: Simplify compatible matching
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, justin.chen@broadcom.com,
+ Conor Dooley <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>
+References: <20250523184354.1249577-1-florian.fainelli@broadcom.com>
+ <20250523184354.1249577-3-florian.fainelli@broadcom.com>
+ <20250605185557.GA3023589-robh@kernel.org>
+ <ac57663b-3bcc-42ae-898e-06592d417715@broadcom.com>
+ <86b6c9a8-5ecf-4aa5-a6cf-afee64d28efa@kernel.org>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <86b6c9a8-5ecf-4aa5-a6cf-afee64d28efa@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 5, 2025 at 12:27=E2=80=AFPM Matt Bobrowski <mattbobrowski@googl=
-e.com> wrote:
->
-> On Mon, Jun 02, 2025 at 11:59:19PM -0700, Song Liu wrote:
-> > Introduce a path iterator, which reliably walk a struct path toward
-> > the root. This path iterator is based on path_walk_parent. A fixed
-> > zero'ed root is passed to path_walk_parent(). Therefore, unless the
-> > user terminates it earlier, the iterator will terminate at the real
-> > root.
-> >
-> > Signed-off-by: Song Liu <song@kernel.org>
-> > ---
-> >  kernel/bpf/Makefile    |  1 +
-> >  kernel/bpf/helpers.c   |  3 +++
-> >  kernel/bpf/path_iter.c | 58 ++++++++++++++++++++++++++++++++++++++++++
-> >  kernel/bpf/verifier.c  |  5 ++++
-> >  4 files changed, 67 insertions(+)
-> >  create mode 100644 kernel/bpf/path_iter.c
-> >
-> > diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
-> > index 3a335c50e6e3..454a650d934e 100644
-> > --- a/kernel/bpf/Makefile
-> > +++ b/kernel/bpf/Makefile
-> > @@ -56,6 +56,7 @@ obj-$(CONFIG_BPF_SYSCALL) +=3D kmem_cache_iter.o
-> >  ifeq ($(CONFIG_DMA_SHARED_BUFFER),y)
-> >  obj-$(CONFIG_BPF_SYSCALL) +=3D dmabuf_iter.o
-> >  endif
-> > +obj-$(CONFIG_BPF_SYSCALL) +=3D path_iter.o
-> >
-> >  CFLAGS_REMOVE_percpu_freelist.o =3D $(CC_FLAGS_FTRACE)
-> >  CFLAGS_REMOVE_bpf_lru_list.o =3D $(CC_FLAGS_FTRACE)
-> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> > index b71e428ad936..b190c78e40f6 100644
-> > --- a/kernel/bpf/helpers.c
-> > +++ b/kernel/bpf/helpers.c
-> > @@ -3397,6 +3397,9 @@ BTF_ID_FLAGS(func, bpf_iter_dmabuf_next, KF_ITER_=
-NEXT | KF_RET_NULL | KF_SLEEPAB
-> >  BTF_ID_FLAGS(func, bpf_iter_dmabuf_destroy, KF_ITER_DESTROY | KF_SLEEP=
-ABLE)
-> >  #endif
-> >  BTF_ID_FLAGS(func, __bpf_trap)
-> > +BTF_ID_FLAGS(func, bpf_iter_path_new, KF_ITER_NEW | KF_SLEEPABLE)
->
-> Hm, I'd expect KF_TRUSTED_ARGS to be enforced onto
-> bpf_iter_path_new(), no? Shouldn't this only be operating on a stable
-> struct path reference?
+On 6/5/25 13:30, Krzysztof Kozlowski wrote:
+> On 05/06/2025 21:10, Florian Fainelli wrote:
+>> On 6/5/25 11:55, Rob Herring wrote:
+>>> On Fri, May 23, 2025 at 11:43:54AM -0700, Florian Fainelli wrote:
+>>>> Now that a "brcm,brcmstb-memc-ddr-rev-b.2.x" fallback compatible string
+>>>> has been defined, we can greatly simplify the matching within the driver
+>>>> to only look for that compatible string and nothing else.
+>>>>
+>>>> The fallback "brcm,brcmstb-memc-ddr" is also updated to assume the V21
+>>>> register layout since that is the most common nowadays.
+>>>>
+>>>> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+>>>> ---
+>>>>    drivers/memory/brcmstb_memc.c | 58 ++---------------------------------
+>>>>    1 file changed, 3 insertions(+), 55 deletions(-)
+>>>>
+>>>> diff --git a/drivers/memory/brcmstb_memc.c b/drivers/memory/brcmstb_memc.c
+>>>> index c87b37e2c1f0..ec4c198ddc49 100644
+>>>> --- a/drivers/memory/brcmstb_memc.c
+>>>> +++ b/drivers/memory/brcmstb_memc.c
+>>>> @@ -181,65 +181,13 @@ static const struct of_device_id brcmstb_memc_of_match[] = {
+>>>>    		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V20]
+>>>>    	},
+>>>>    	{
+>>>> -		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.1",
+>>>> +		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.x",
+>>>>    		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+>>>
+>>> This entry is pointless because the default will get V21.
+>>>
+>>> In fact, I don't think you need the new compatible string at all. It
+>>> doesn't work to add fallbacks after the fact.
+>>
+>> I agree and would prefer to keep adding new compatible strings which is
+> 
+> So you agree that adding such entries is pointless?
 
-Good catch! Added KF_TRUSTED_ARGS. also added a test with
-untrusted pointer.
+I don't think it is pointless, it's overly descriptive and we don't key 
+off of it for now.
 
->
-> > +BTF_ID_FLAGS(func, bpf_iter_path_next, KF_ITER_NEXT | KF_RET_NULL | KF=
-_SLEEPABLE)
-> > +BTF_ID_FLAGS(func, bpf_iter_path_destroy, KF_ITER_DESTROY | KF_SLEEPAB=
-LE)
->
-> At this point, the claim is that such are only to be used from the
-> context of the BPF LSM. If true, I'd expect these BPF kfuncs to be
-> part of bpf_fs_kfunc_set_ids once moved into fs/bpf_fs_kfuncs.c.
+> 
+>> what I initially did here:
+>>
+>> https://lore.kernel.org/all/20241217194439.929040-2-florian.fainelli@broadcom.com/
+>>
+>> but the feedback was that this should not be done, and hence this
+>> attempt at defining a compatible string that would avoid needless churn.
+>>
+>> So which way should I go now?
+> 
+> And the advice was to use v2.1 fallback, not replace v2.1 with something
+> else or keep adding pointless entries:
+> https://lore.kernel.org/all/2e33t7ft5ermsfr7c4ympxrn6l5sqdef3wml4hlbnhdupoouwj@gfjpbmowjadi/
 
-I moved this to fs/bpf_fs_kfuncs.c in the next version.
-
->
-> >  static const struct btf_kfunc_id_set common_kfunc_set =3D {
-> > diff --git a/kernel/bpf/path_iter.c b/kernel/bpf/path_iter.c
-> > new file mode 100644
-> > index 000000000000..0d972ec84beb
-> > --- /dev/null
-> > +++ b/kernel/bpf/path_iter.c
-> > @@ -0,0 +1,58 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
-> > +#include <linux/bpf.h>
-> > +#include <linux/bpf_mem_alloc.h>
-> > +#include <linux/namei.h>
-> > +#include <linux/path.h>
-> > +
-> > +/* open-coded iterator */
-> > +struct bpf_iter_path {
-> > +     __u64 __opaque[3];
-> > +} __aligned(8);
-> > +
-> > +struct bpf_iter_path_kern {
-> > +     struct path path;
-> > +     __u64 flags;
-> > +} __aligned(8);
-> > +
-> > +__bpf_kfunc_start_defs();
-> > +
-> > +__bpf_kfunc int bpf_iter_path_new(struct bpf_iter_path *it,
-> > +                               struct path *start,
-> > +                               __u64 flags)
-> > +{
-> > +     struct bpf_iter_path_kern *kit =3D (void *)it;
-> > +
-> > +     BUILD_BUG_ON(sizeof(*kit) > sizeof(*it));
-> > +     BUILD_BUG_ON(__alignof__(*kit) !=3D __alignof__(*it));
-> > +
-> > +     if (flags) {
-> > +             memset(&kit->path, 0, sizeof(struct path));
->
-> This warrants a comment for sure. Also why not just zero it out
-> entirely?
-
-Added some comments in v3. Also "flags" is removed in v3.
-
-Thanks,
-Song
-
-[...]
+Fair enough then, I will re-spin accordingly. Thank you both.
+-- 
+Florian
