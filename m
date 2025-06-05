@@ -1,96 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0791C32;
-	Thu,  5 Jun 2025 08:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC4E2F5B
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749110636; cv=none; b=jh1ROOtnMBa4xtwtg86xuEGxAJQ1drHWz9lTXSPxUkJ/HTQFzhLy/N3OApElWbc3Xt94qFW1/nZQF358BoK+3Tm4dR0OulRoKKQUColLXZZY1TCdWWZuR/UZg38g+zWw9U6JC5lM2je7aHS0Xr7dV3oqc96uCyIRReBunDMMpus=
+	t=1749110664; cv=none; b=hbpNDPzdTv9VIoio1vn21zLgn3AqupaFKxOaHdsB9x5e9UEZU+pyLKDplQAev0NIkmimqFdrCPswB5bvglXyxgOo0q6JeArQaC29BrtNvluG62SS/zRAslrLyYHGymKG2qD1NR8ToBLS7hDOBXn7KOvOiu3YRuppNCkPZR+jNC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749110636; c=relaxed/simple;
-	bh=GVU4Gvw7/QkvUOMwYa1MyK0yJkaG+dpjnoUe5fhC0Rk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KI47RKB6WfJmcQETtR7pxQ6y4bQdtOhZvXgD2jYb8Gc1mrbWUulkF4/lm+VUuyH7QXnMfNURijWa5uRyfu1n1eAeMc9dRRMiktK9Vgz5JELRnUGcHwUhVrGHfl0uySbyRh3d9IewNX8QJMlIocsKgZn/35IAqrCFUMsjV54xpEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BblZ+dja; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749110664; c=relaxed/simple;
+	bh=LMzH/Bm2279A9lP/xsA0N2uSX2GikuVibB/mft22fs0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:In-Reply-To:
+	 Content-Type:References; b=sZTrOwwvyy//YXDbh6akdFitJ0cD1ErDApCfjrgjLtX+BVLKKI66ebYZdpGuu6WCEEmr7X3viEiE7hUiOOQ8n4SurL/fyBxFyxByh6lNUK8DuEoVwpFq6H1XmZbHvF+32fSJtTGqki+JIRpXHWd7gpOk9no303peJSftEItT/9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Rvmi3wBo; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BblZ+dja"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749110635; x=1780646635;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=GVU4Gvw7/QkvUOMwYa1MyK0yJkaG+dpjnoUe5fhC0Rk=;
-  b=BblZ+dja/B8dEr3owGeVj9uM2Bzt9X2twX6zLm+MUoJUyg2JaRMBG61/
-   wjOUxiHsYa8d2WOARJKlXl7vhlMR5O3SjRJO8fHxWwA6CGVL/tLcdoISt
-   Xz/kM24/aCWg4XktlyrBxRq3WCD95peFWg87HJYsOYw4qDVe9nlCGjtXT
-   cuzSwsGrxkvPNt8quFQ+jIsmivbm0vjxM8yC9znfA0U0yp4whTIeab7ad
-   YWx71OtMLxePYktT7zaWEdPtvSRtC8VQEvxIir0f897Ly9SyUWmGNCkUh
-   sfIbt2w5b6XivB3c491Z57y+eJv8vDH9R3LbbRE9vS4h0CuF++lPqQDvK
-   g==;
-X-CSE-ConnectionGUID: 7M6EV79fTye151pnJrMKIg==
-X-CSE-MsgGUID: Kpsvjn6kTFub3BvNHykpQw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51310352"
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="51310352"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 01:03:54 -0700
-X-CSE-ConnectionGUID: 0ZvabdKoQbGkfvKSzEZZSg==
-X-CSE-MsgGUID: LpaLe2XjRFe4TDXFeEy9MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="145389173"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 01:03:50 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 5 Jun 2025 11:03:46 +0300 (EEST)
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-cc: Hans de Goede <hdegoede@redhat.com>, corbet@lwn.net, ikepanhc@gmail.com, 
-    hmh@hmh.eng.br, W_Armin@gmx.de, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-In-Reply-To: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
-Message-ID: <d6df0dcf-5786-0ad6-dd30-3a8c9f16426e@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Rvmi3wBo"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250605080419euoutp02692f6c38b123bdd1186dc469ef15ca1a~GFuC7rHIs1212512125euoutp02n
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:04:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250605080419euoutp02692f6c38b123bdd1186dc469ef15ca1a~GFuC7rHIs1212512125euoutp02n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749110659;
+	bh=Zg2vFiDx8CLX/mdtIR7HKEpZZXyINdX/0zaUIkLHpyY=;
+	h=Date:Subject:To:From:In-Reply-To:References:From;
+	b=Rvmi3wBoxe3CjmYCAbux+kdSq+wRynDdHKPpwYThxDYXTyCzUEzPZQYAvvCtX/UBU
+	 oJwQDtYGpF+so6MhP3ncSa6ttez12mLTS3/KQw5TcByFphEYqr+vn5I1ythhFDBMOY
+	 RpDP+gcCW4zJRDbScdmV7zBbJB/wXvVwyMMcjXvY=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250605080419eucas1p2a3ceb2a6638ecf161295ac365bdeb33f~GFuCyHZaS1597115971eucas1p2N;
+	Thu,  5 Jun 2025 08:04:19 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250605080419eusmtip29b6aea360f101e67bba3f51bc79273e7~GFuCZpf261330113301eusmtip2Z;
+	Thu,  5 Jun 2025 08:04:19 +0000 (GMT)
+Message-ID: <2793e943-0297-47cd-bb65-b680a308a700@samsung.com>
+Date: Thu, 5 Jun 2025 10:04:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: defconfig: Enable TH1520 aon, mbox and reset
+ support
+To: Drew Fustini <drew@pdp7.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Conor Dooley <conor.dooley@microchip.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <20250605071940.348873-3-drew@pdp7.com>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250605080419eucas1p2a3ceb2a6638ecf161295ac365bdeb33f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250605073400eucas1p181cb06c580c775a0205881cd1b54cc6e
+X-EPHeader: CA
+X-CMS-RootMailID: 20250605073400eucas1p181cb06c580c775a0205881cd1b54cc6e
+References: <CGME20250605073400eucas1p181cb06c580c775a0205881cd1b54cc6e@eucas1p1.samsung.com>
+	<20250605071940.348873-3-drew@pdp7.com>
 
-On Wed, 4 Jun 2025, Mark Pearson wrote:
 
-> Create lenovo subdirectory for holding Lenovo specific drivers.
+
+On 6/5/25 09:17, Drew Fustini wrote:
+> Enable TH1520 Always-On (AON) firmware protocol, TH1520 Mailbox and
+> TH1520 reset controller.
 > 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Signed-off-by: Drew Fustini <drew@pdp7.com>
 > ---
-> Changes in v2:
->  - Rebased to Linus's latest as requested
->  - Updated documentation reference
->  - Updated MAINTAINER file
->  - Removed X86_PLATFORM_DRIVERS_LENOVO as I was worried about
->    maintaining backwards compatibility for the distros.
->  - Removed 2nd patch in series splitting out hkeys. That will be for
->    the future
+>  arch/riscv/configs/defconfig | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index fe8bd8afb418..86b13177f27b 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -178,6 +178,7 @@ CONFIG_REGULATOR=y
+>  CONFIG_REGULATOR_FIXED_VOLTAGE=y
+>  CONFIG_REGULATOR_AXP20X=y
+>  CONFIG_REGULATOR_GPIO=y
+> +CONFIG_RESET_TH1520=m
+>  CONFIG_MEDIA_SUPPORT=m
+>  CONFIG_MEDIA_PLATFORM_SUPPORT=y
+>  CONFIG_VIDEO_CADENCE_CSI2RX=m
+> @@ -258,7 +259,9 @@ CONFIG_RPMSG_CTRL=y
+>  CONFIG_RPMSG_VIRTIO=y
+>  CONFIG_PM_DEVFREQ=y
+>  CONFIG_IIO=y
+> +CONFIG_TH1520_AON_PROTOCOL=m
+>  CONFIG_THEAD_C900_ACLINT_SSWI=y
+> +CONFIG_THEAD_TH1520_MBOX=m
+>  CONFIG_PHY_SUN4I_USB=m
+>  CONFIG_PHY_STARFIVE_JH7110_DPHY_RX=m
+>  CONFIG_PHY_STARFIVE_JH7110_PCIE=m
 
-+# Lenovo x86 Platform-Specific Drivers
-+# Lenovo X86 Platform Specific Drivers
+Thanks !
+Reviewed-by: Michal Wilczynski <m.wilczynski@samsung.com>
 
-Any possibility to be consistent in formatting that? :-)
-
-Why does the admin guide contain a history book?? It should be guide for 
-this version of kernel, not what was there in 2.6.x era ;-D. Please don't 
-add to that any more, preferrably remove the history part afterwards in a 
-separate change.
-
-Other than those mentioned above, diffing per vs post seemed clean (I 
-didn't check where the empty lines got added, Andy seemingly did already 
-:-)).
-
--- 
- i.
