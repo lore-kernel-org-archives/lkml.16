@@ -1,607 +1,159 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FAF276045
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA56278E7B
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749150613; cv=none; b=XwL++AROr/rSdXjlENSK0Qg2HgseZjfXklV3txgOdCbGOuPTyPpF91bfclyacQNaA+nVROpPMiilg2l40iun5MBZwizZmlIXweLxk/loehm3N0+j+apq/IUSPjubCPzXyP9YbGayBLxMO98qtNpxng3trD66E3JK0/s0RSeZPN0=
+	t=1749150629; cv=none; b=BbONU9R9vkrzZGldyRA/Pzq5DInKfXa2Vn05kiemSKQbM68CcZjl4IkwfMsUywBqAAgFTQstytsBzo/ecf5VbDMeK4FY9MwmoY0Yf2mgoDiL1p44u1NxlWmhu8DzFw722X+UVXZOZORSh/3vh3y+z9tXGH5Jw2tPGBgaRhT8/f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749150613; c=relaxed/simple;
-	bh=8gf0qUcbhq07ZHPc9LwsEHzm1CGw9PUN6pUqovvVc9k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YUbLQn68pMKfHK7YeHfisvefdjIIG/89dQOzdc20/ZqgWWS0MrxvChDZ9lkL25etGkd4i9NQbgczC7+1Aacygao5MjHMgRj6h3ETEKoonpvviHQXi7cOK6JL0crAswV/Ghq9coaAlVtHHGmXy+Kb8w8/6r1OYMyrK40mo2oqsXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BtcsWEeC; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1749150629; c=relaxed/simple;
+	bh=BzhDXvO+fo6vdDlGvPLhFLjNB66knyQPyVH22yq04h4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cMs7H3sQdidK8lt/nKv8+FE2IZnBDrLKsM4svxI+YWzrOdQflfVTP5ObtrBSMumRwVZjNgEFFoSiiOFtqavLvACk66OQXcosJl/PSe3Qp+1N14EwV2LUGu/qy2TLghWrG51nD4EXEfid3TXYbPhVZ1fhMnaCGZbh8kCgy11TAlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=CvjQVrj0; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BtcsWEeC"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b26db9af463so1158400a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:10:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CvjQVrj0"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-22d95f0dda4so18304755ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749150610; x=1749755410; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zjNHQkrozoEk7wT4tVqIYEicLqYUUYc18Y54oROkfGA=;
-        b=BtcsWEeCyvy51tmNNnob2OzO8vR1GLCU2jrtQFXM65WG2udpwFwE2KHVf4VFEG+aIa
-         B+mHBS02O93Cr1hJfDiCBWlywP1O7nfJYII+VqtGfYDNAFWWO9cGXNqj+NK6v1/55zHe
-         f9EzN2jW5UWcse5HF4+jB8Ya/PR+8b1tyVoZZ6oWoEibDb95VxyRjctFbxHSfkivKP2/
-         pCZ1sO+ozXf1JbN+Fhs2YXGL0mwkYmyznwKuUeKIV3fHqtx50vpOJLxhmhcjCKRXfnzW
-         sVstB6SzZjfJcpUKcdg9sfBOoi4cfn63UUhTmPu456NF++vF1M5lIQsBiiMfZBpSYKvE
-         n7sw==
+        d=broadcom.com; s=google; t=1749150626; x=1749755426; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=S8Q01zwWnDH2jcws9vUi105eGLMi3lYwKgILJyKyZOU=;
+        b=CvjQVrj0GQ+7D+6il8tY5VFKMtQd35LjQywutk4BFTQY91swbXtxl+EEPcLxSFmR05
+         CRZJGv2XwcuNcpHiaAKzEJ67Sy3WvN02DCNhw8KPF1OKvhAWIOpOP36vDwoMSh+0jw//
+         OFAvyodqdKGkkYheOYgGMFAN9RY1urgMB+NdI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749150610; x=1749755410;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zjNHQkrozoEk7wT4tVqIYEicLqYUUYc18Y54oROkfGA=;
-        b=UrA752yJ0V8p4lL9ZnjOUyVI3JCpW4Hjgx4OvHQT3qjl7Bunl2tr9lrX1m81HVCERR
-         fZ8/ksLBggM7MejQWB5u8gb54H+/01OY5QkMaLRXgk9MMS5sWnf6EYwDLtlOHCsVag4m
-         il65I43cQuXKUgL4581HeXOyd0LNrTDM79esEuTfWJd/zyZwM/ff/ARKzTSyEmBUJhsH
-         k3OCnapGvlKeV38f/r0yE9GDMbypMHGCYkEzUCapaasQbNJHI7HITlswCQ2/vrggCt5M
-         mLSlUiM9X91U66IWy3hh3LjzegGPCytU/nTAobj/Wx9oELjpoBKyTh+i7PhkMIssp8Eq
-         yQ1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVS191RK4pm53X6H4JR9f4gTj559j4cEA7z0hzyvLN9BUIwiB96LdBOLEmG9Sdl5VwqZLNLHVKCq8YXUiw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz75lH3r+cKTwsM7961qGMoXdI7WZHm/QtdX5mIWzDT+J20kgNS
-	RMTFh6KLD6C2JvjYYVFl8rjC9fg8SPII5zP7acMe5FH9kba+HmjFcQz1353yrp4NJP0SzwJlBiy
-	qUAzYGv+z4vA2AtQXls4GYilb1g==
-X-Google-Smtp-Source: AGHT+IFnhG2YRphukgOvoQL4/6YO64uBmqe4RoJYJKWTqXdR6Q02e+Ak2PxwVOn1uZe9hOdMItX6imdxj2tL8shi7Q==
-X-Received: from pfud19.prod.google.com ([2002:a05:6a00:10d3:b0:747:b682:5cc0])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:7484:b0:201:85f4:ade6 with SMTP id adf61e73a8af0-21ee68997bcmr454718637.27.1749150610013;
- Thu, 05 Jun 2025 12:10:10 -0700 (PDT)
-Date: Thu, 05 Jun 2025 12:10:08 -0700
-In-Reply-To: <aDV7vZ72S+uJDgmn@yzhao56-desk.sh.intel.com>
+        d=1e100.net; s=20230601; t=1749150626; x=1749755426;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S8Q01zwWnDH2jcws9vUi105eGLMi3lYwKgILJyKyZOU=;
+        b=g89bXIQSsgOKO33HV4JAcWJQtX6D/mgHx7EW1zYiP/4RCKonEQVXHm+hTP+udGrhIT
+         E07sKiPTbfa127NhsE4SDok4D3zrCsqw9S3MAou+9Yg2X+HG27jrc3ro8kXJuGMIeYsg
+         HHAx0Fwo+SyvgDPp1sgPvMn40lKc1BvwkOJ3eTvKREBWxrWK5ZMLZf4B9QHSgThLhYkK
+         0UoAuheGHDTNSoLr9GAOJkF3N/NDTESIPvVmVvtJRNOzC+Uok8UB7Le15jmkJcd40+R1
+         ZlNocef+P1PgbI0msmpLjKBh0g9BLNO6OqKprKP/c/C0gBPwuio7fkk/xc8XlM6vdX/F
+         mFZA==
+X-Gm-Message-State: AOJu0Yx/wxpQrPi7H227UqSoWjl78V+GE7Qan5kxku4LNgC8HLhP8oaD
+	hkMKfrNKLBXlYbQx0aqH8Hlm+F9ppCvvVIHoXpNTvUTObceof1wHsIstUk1FJGPj8w==
+X-Gm-Gg: ASbGnctHNlg9Gc4rJn5gl7fAES5g9vuu5ODLINwMgvdfqy/xRR258xTGVEgHK+wpHPV
+	pYVbwpYUNYydcJc/s2Cq5SQpTjiQsDntW1T05/DC3FR+IBd53oW4MEenZZ4hpm7yExpHG6JeBvr
+	XQYIR0gVcxYt0gNPw7Pl7O9pQfcwwUdT3AsbDoeSD8SU1U21yW3TAqqRgiupRh31vG7V7gtthED
+	Zafx/T4z2KVlnIxioLZ9TkeLLXrePOfigBlPjU9FRq9tkQDU6quE9H4UP+Ujb00gJmTY+qSaQ4+
+	webkksH1yEewVk9qOjCA4TVCtuSz2Rag3nZZ4NIBw8G5ud5Rtz28y78sKAuqn9caXGI7O9JCXN0
+	W7iQStZAUGjtAp+c=
+X-Google-Smtp-Source: AGHT+IH8uMPfDU2hWPBfSee1riTDDvC6J/TIxbPRoKG9On+pgfWIdYZeF7y84NvovZbhYEH2dSNdRA==
+X-Received: by 2002:a17:902:b205:b0:234:cb4a:bc48 with SMTP id d9443c01a7336-23601d1993cmr5856905ad.31.1749150626567;
+        Thu, 05 Jun 2025 12:10:26 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f66a87fsm37744a12.39.2025.06.05.12.10.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 12:10:25 -0700 (PDT)
+Message-ID: <ac57663b-3bcc-42ae-898e-06592d417715@broadcom.com>
+Date: Thu, 5 Jun 2025 12:10:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
- <aDV7vZ72S+uJDgmn@yzhao56-desk.sh.intel.com>
-Message-ID: <diqztt4uhunj.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 38/51] KVM: guest_memfd: Split allocator pages for
- guest_memfd use
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] memory: brcmstb_memc: Simplify compatible matching
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, justin.chen@broadcom.com,
+ Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>
+References: <20250523184354.1249577-1-florian.fainelli@broadcom.com>
+ <20250523184354.1249577-3-florian.fainelli@broadcom.com>
+ <20250605185557.GA3023589-robh@kernel.org>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250605185557.GA3023589-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+On 6/5/25 11:55, Rob Herring wrote:
+> On Fri, May 23, 2025 at 11:43:54AM -0700, Florian Fainelli wrote:
+>> Now that a "brcm,brcmstb-memc-ddr-rev-b.2.x" fallback compatible string
+>> has been defined, we can greatly simplify the matching within the driver
+>> to only look for that compatible string and nothing else.
+>>
+>> The fallback "brcm,brcmstb-memc-ddr" is also updated to assume the V21
+>> register layout since that is the most common nowadays.
+>>
+>> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+>> ---
+>>   drivers/memory/brcmstb_memc.c | 58 ++---------------------------------
+>>   1 file changed, 3 insertions(+), 55 deletions(-)
+>>
+>> diff --git a/drivers/memory/brcmstb_memc.c b/drivers/memory/brcmstb_memc.c
+>> index c87b37e2c1f0..ec4c198ddc49 100644
+>> --- a/drivers/memory/brcmstb_memc.c
+>> +++ b/drivers/memory/brcmstb_memc.c
+>> @@ -181,65 +181,13 @@ static const struct of_device_id brcmstb_memc_of_match[] = {
+>>   		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V20]
+>>   	},
+>>   	{
+>> -		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.1",
+>> +		.compatible = "brcm,brcmstb-memc-ddr-rev-b.2.x",
+>>   		.data = &brcmstb_memc_versions[BRCMSTB_MEMC_V21]
+> 
+> This entry is pointless because the default will get V21.
+> 
+> In fact, I don't think you need the new compatible string at all. It
+> doesn't work to add fallbacks after the fact.
 
-> On Wed, May 14, 2025 at 04:42:17PM -0700, Ackerley Tng wrote:
->> +static int kvm_gmem_convert_execute_work(struct inode *inode,
->> +					 struct conversion_work *work,
->> +					 bool to_shared)
->> +{
->> +	enum shareability m;
->> +	int ret;
->> +
->> +	m = to_shared ? SHAREABILITY_ALL : SHAREABILITY_GUEST;
->> +	ret = kvm_gmem_shareability_apply(inode, work, m);
->> +	if (ret)
->> +		return ret;
->> +	/*
->> +	 * Apply shareability first so split/merge can operate on new
->> +	 * shareability state.
->> +	 */
->> +	ret = kvm_gmem_restructure_folios_in_range(
->> +		inode, work->start, work->nr_pages, to_shared);
->> +
->> +	return ret;
->> +}
->> +
+I agree and would prefer to keep adding new compatible strings which is 
+what I initially did here:
 
-Hi Yan,
+https://lore.kernel.org/all/20241217194439.929040-2-florian.fainelli@broadcom.com/
 
-Thanks for your thorough reviews and your alternative suggestion in the
-other discussion at [1]! I'll try to bring the conversion-related parts
-of that discussion over here.
+but the feedback was that this should not be done, and hence this 
+attempt at defining a compatible string that would avoid needless churn.
 
->>  static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
->>  				  size_t nr_pages, bool shared,
->>  				  pgoff_t *error_index)
-
-The guiding principle I was using for the conversion ioctls is
-
-* Have the shareability updates and any necessary page restructuring
-  (aka splitting/merging) either fully complete for not at all by the
-  time the conversion ioctl returns.
-* Any unmapping (from host or guest page tables) will not be re-mapped
-  on errors.
-* Rollback undoes changes if conversion failed, and in those cases any
-  errors are turned into WARNings.
-
-The rationale is that we want page sizes to be in sync with shareability
-so that any faults after the (successful or failed) conversion will not
-wrongly map in a larger page than allowed and cause any host crashes.
-
-We considered 3 places where the memory can be mapped for conversions:
-
-1. Host page tables
-2. Guest page tables
-3. IOMMU page tables
-
-Unmapping from host page tables is the simplest case. We unmap any
-shared ranges from the host page tables. Any accesses after the failed
-conversion would just fault the memory back in and proceed as usual.
-
-guest_memfd memory is not unmapped from IOMMUs in conversions. This case
-is handled because IOMMU mappings hold refcounts. After unmapping from
-the host, we check for unexpected refcounts and fail if there are
-unexpected refcounts.
-
-We also unmap from guest page tables. Considering failed conversions, if
-the pages are shared, we're good since the next time the guest accesses
-the page, the page will be faulted in as before.
-
-If the pages are private, on the next guest access, the pages will be
-faulted in again as well. This is fine for software-protected VMs IIUC.
-
-For TDX (and SNP) IIUC the memory would have been cleared, and the
-memory would also need to be re-accepted. I was thinking that this is by
-design, since when a TDX guest requests a conversion it knows that the
-contents is not to be used again.
-
-The userspace VMM is obligated to keep trying convert and if it gives
-up, userspace VMM should inform the guest that the conversion
-failed. The guest should handle conversion failures too and not assume
-that conversion always succeeds.
-
-Putting TDX aside for a moment, so far, there are a few ways this
-conversion could fail:
-
-a. Unexpected refcounts. Userspace should clear up the unexpected
-   refcounts and report failure to the guest if it can't for whatever
-   reason.
-b. ENOMEM because (i) we ran out of memory updating the shareability
-   maple_tree or (ii) since splitting involves allocating more memory
-   for struct pages and we ran out of memory there. In this case the
-   userspace VMM gets -ENOMEM and can make more memory available and
-   then retry, or if it can't, also report failure to the guest.
-
-TDX introduces TDX-specific conversion failures (see discussion at
-[1]), which this series doesn't handle, but I think we still have a line
-of sight to handle new errors.
-
-In the other thread [1], I was proposing to have guest_memfd decide what
-to do on errors, but I think that might be baking more TDX-specific
-details into guest_memfd/KVM, and perhaps this is better:
-
-We could return the errors to userspace and let userspace determine what
-to do. For retryable errors (as determined by userspace), it should do
-what it needs to do, and retry. For errors like TDX being unable to
-reclaim the memory, it could tell guest_memfd to leak that memory.
-
-If userspace gives up, it should report conversion failure to the guest
-if userspace thinks the guest can continue (to a clean shutdown or
-otherwise). If something terrible happened during conversion, then
-userspace might have to exit itself or shutdown the host.
-
-In [2], for TDX-specific conversion failures, you proposed prepping to
-eliminate errors and exiting early on failure, then actually
-unmapping. I think that could work too.
-
-I'm a little concerned that prepping could be complicated, since the
-nature of conversion depends on the current state of shareability, and
-there's a lot to prepare, everything from counting memory required for
-maple_tree allocation (and merging ranges in the maple_tree), and
-counting the number of pages required for undoing vmemmap optimization
-in the case of splitting...
-
-And even after doing all the prep to eliminate errors, the unmapping
-could fail in TDX-specific cases anyway, which still needs to be
-handled.
-
-Hence I'm hoping you'll consider to let TDX-specific failures be
-built-in and handled alongside other failures by getting help from the
-userspace VMM, and in the worst case letting the guest know the
-conversion failed.
-
-I also appreciate comments or suggestions from anyone else!
-
-[1] https://lore.kernel.org/all/diqzfrgfp95d.fsf@ackerleytng-ctop.c.googlers.com/
-[2] https://lore.kernel.org/all/aEEEJbTzlncbRaRA@yzhao56-desk.sh.intel.com/
-
->> @@ -371,18 +539,21 @@ static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
->>  
->>  	list_for_each_entry(work, &work_list, list) {
->>  		rollback_stop_item = work;
->> -		ret = kvm_gmem_shareability_apply(inode, work, m);
->> +
->> +		ret = kvm_gmem_convert_execute_work(inode, work, shared);
->>  		if (ret)
->>  			break;
->>  	}
->>  
->>  	if (ret) {
->> -		m = shared ? SHAREABILITY_GUEST : SHAREABILITY_ALL;
->>  		list_for_each_entry(work, &work_list, list) {
->> +			int r;
->> +
->> +			r = kvm_gmem_convert_execute_work(inode, work, !shared);
->> +			WARN_ON(r);
->> +
->>  			if (work == rollback_stop_item)
->>  				break;
->> -
->> -			WARN_ON(kvm_gmem_shareability_apply(inode, work, m));
-> Could kvm_gmem_shareability_apply() fail here?
->
-
-Yes, it could. If shareability cannot be updated, then we probably ran
-out of memory. Userspace VMM will probably get -ENOMEM set on some
-earlier ret and should handle that accordingly.
-
-On -ENOMEM in a rollback, the host is in a very tough spot anyway, and a
-clean guest shutdown may be the only way out, hence this is a WARN and
-not returned to userspace.
-
->>  		}
->>  	}
->>  
->> @@ -434,6 +605,277 @@ static int kvm_gmem_ioctl_convert_range(struct file *file,
->>  	return ret;
->>  }
->>  
->> +#ifdef CONFIG_KVM_GMEM_HUGETLB
->> +
->> +static inline void __filemap_remove_folio_for_restructuring(struct folio *folio)
->> +{
->> +	struct address_space *mapping = folio->mapping;
->> +
->> +	spin_lock(&mapping->host->i_lock);
->> +	xa_lock_irq(&mapping->i_pages);
->> +
->> +	__filemap_remove_folio(folio, NULL);
->> +
->> +	xa_unlock_irq(&mapping->i_pages);
->> +	spin_unlock(&mapping->host->i_lock);
->> +}
->> +
->> +/**
->> + * filemap_remove_folio_for_restructuring() - Remove @folio from filemap for
->> + * split/merge.
->> + *
->> + * @folio: the folio to be removed.
->> + *
->> + * Similar to filemap_remove_folio(), but skips LRU-related calls (meaningless
->> + * for guest_memfd), and skips call to ->free_folio() to maintain folio flags.
->> + *
->> + * Context: Expects only the filemap's refcounts to be left on the folio. Will
->> + *          freeze these refcounts away so that no other users will interfere
->> + *          with restructuring.
->> + */
->> +static inline void filemap_remove_folio_for_restructuring(struct folio *folio)
->> +{
->> +	int filemap_refcount;
->> +
->> +	filemap_refcount = folio_nr_pages(folio);
->> +	while (!folio_ref_freeze(folio, filemap_refcount)) {
->> +		/*
->> +		 * At this point only filemap refcounts are expected, hence okay
->> +		 * to spin until speculative refcounts go away.
->> +		 */
->> +		WARN_ONCE(1, "Spinning on folio=%p refcount=%d", folio, folio_ref_count(folio));
->> +	}
->> +
->> +	folio_lock(folio);
->> +	__filemap_remove_folio_for_restructuring(folio);
->> +	folio_unlock(folio);
->> +}
->> +
->> +/**
->> + * kvm_gmem_split_folio_in_filemap() - Split @folio within filemap in @inode.
->> + *
->> + * @inode: inode containing the folio.
->> + * @folio: folio to be split.
->> + *
->> + * Split a folio into folios of size PAGE_SIZE. Will clean up folio from filemap
->> + * and add back the split folios.
->> + *
->> + * Context: Expects that before this call, folio's refcount is just the
->> + *          filemap's refcounts. After this function returns, the split folios'
->> + *          refcounts will also be filemap's refcounts.
->> + * Return: 0 on success or negative error otherwise.
->> + */
->> +static int kvm_gmem_split_folio_in_filemap(struct inode *inode, struct folio *folio)
->> +{
->> +	size_t orig_nr_pages;
->> +	pgoff_t orig_index;
->> +	size_t i, j;
->> +	int ret;
->> +
->> +	orig_nr_pages = folio_nr_pages(folio);
->> +	if (orig_nr_pages == 1)
->> +		return 0;
->> +
->> +	orig_index = folio->index;
->> +
->> +	filemap_remove_folio_for_restructuring(folio);
->> +
->> +	ret = kvm_gmem_allocator_ops(inode)->split_folio(folio);
->> +	if (ret)
->> +		goto err;
->> +
->> +	for (i = 0; i < orig_nr_pages; ++i) {
->> +		struct folio *f = page_folio(folio_page(folio, i));
->> +
->> +		ret = __kvm_gmem_filemap_add_folio(inode->i_mapping, f,
->> +						   orig_index + i);
-> Why does the failure of __kvm_gmem_filemap_add_folio() here lead to rollback,    
-> while the failure of the one under rollback only triggers WARN_ON()?
->
-
-Mostly because I don't really have a choice on rollback. On rollback we
-try to restore the merged folio back into the filemap, and if we
-couldn't, the host is probably in rather bad shape in terms of memory
-availability and there may not be many options for the userspace VMM.
-
-Perhaps the different possible errors from
-__kvm_gmem_filemap_add_folio() in both should be handled differently. Do
-you have any suggestions on that?
-
->> +		if (ret)
->> +			goto rollback;
->> +	}
->> +
->> +	return ret;
->> +
->> +rollback:
->> +	for (j = 0; j < i; ++j) {
->> +		struct folio *f = page_folio(folio_page(folio, j));
->> +
->> +		filemap_remove_folio_for_restructuring(f);
->> +	}
->> +
->> +	kvm_gmem_allocator_ops(inode)->merge_folio(folio);
->> +err:
->> +	WARN_ON(__kvm_gmem_filemap_add_folio(inode->i_mapping, folio, orig_index));
->> +
->> +	return ret;
->> +}
->> +
->> +static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
->> +						      struct folio *folio)
->> +{
->> +	size_t to_nr_pages;
->> +	void *priv;
->> +
->> +	if (!kvm_gmem_has_custom_allocator(inode))
->> +		return 0;
->> +
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_page(priv);
->> +
->> +	if (kvm_gmem_has_some_shared(inode, folio->index, to_nr_pages))
->> +		return kvm_gmem_split_folio_in_filemap(inode, folio);
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * kvm_gmem_merge_folio_in_filemap() - Merge @first_folio within filemap in
->> + * @inode.
->> + *
->> + * @inode: inode containing the folio.
->> + * @first_folio: first folio among folios to be merged.
->> + *
->> + * Will clean up subfolios from filemap and add back the merged folio.
->> + *
->> + * Context: Expects that before this call, all subfolios only have filemap
->> + *          refcounts. After this function returns, the merged folio will only
->> + *          have filemap refcounts.
->> + * Return: 0 on success or negative error otherwise.
->> + */
->> +static int kvm_gmem_merge_folio_in_filemap(struct inode *inode,
->> +					   struct folio *first_folio)
->> +{
->> +	size_t to_nr_pages;
->> +	pgoff_t index;
->> +	void *priv;
->> +	size_t i;
->> +	int ret;
->> +
->> +	index = first_folio->index;
->> +
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->> +	if (folio_nr_pages(first_folio) == to_nr_pages)
->> +		return 0;
->> +
->> +	for (i = 0; i < to_nr_pages; ++i) {
->> +		struct folio *f = page_folio(folio_page(first_folio, i));
->> +
->> +		filemap_remove_folio_for_restructuring(f);
->> +	}
->> +
->> +	kvm_gmem_allocator_ops(inode)->merge_folio(first_folio);
->> +
->> +	ret = __kvm_gmem_filemap_add_folio(inode->i_mapping, first_folio, index);
->> +	if (ret)
->> +		goto err_split;
->> +
->> +	return ret;
->> +
->> +err_split:
->> +	WARN_ON(kvm_gmem_allocator_ops(inode)->split_folio(first_folio));
-> guestmem_hugetlb_split_folio() is possible to fail. e.g.
-> After the stash is freed by guestmem_hugetlb_unstash_free_metadata() in
-> guestmem_hugetlb_merge_folio(), it's possible to get -ENOMEM for the stash
-> allocation in guestmem_hugetlb_stash_metadata() in
-> guestmem_hugetlb_split_folio().
->
->
-
-Yes. This is also on the error path. In line with all the other error
-and rollback paths, I don't really have other options at this point,
-since on error, I probably ran out of memory, so I try my best to
-restore the original state but give up with a WARN otherwise.
-
->> +	for (i = 0; i < to_nr_pages; ++i) {
->> +		struct folio *f = page_folio(folio_page(first_folio, i));
->> +
->> +		WARN_ON(__kvm_gmem_filemap_add_folio(inode->i_mapping, f, index + i));
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static inline int kvm_gmem_try_merge_folio_in_filemap(struct inode *inode,
->> +						      struct folio *first_folio)
->> +{
->> +	size_t to_nr_pages;
->> +	void *priv;
->> +
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->> +
->> +	if (kvm_gmem_has_some_shared(inode, first_folio->index, to_nr_pages))
->> +		return 0;
->> +
->> +	return kvm_gmem_merge_folio_in_filemap(inode, first_folio);
->> +}
->> +
->> +static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
->> +						pgoff_t start, size_t nr_pages,
->> +						bool is_split_operation)
->> +{
->> +	size_t to_nr_pages;
->> +	pgoff_t index;
->> +	pgoff_t end;
->> +	void *priv;
->> +	int ret;
->> +
->> +	if (!kvm_gmem_has_custom_allocator(inode))
->> +		return 0;
->> +
->> +	end = start + nr_pages;
->> +
->> +	/* Round to allocator page size, to check all (huge) pages in range. */
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->> +
->> +	start = round_down(start, to_nr_pages);
->> +	end = round_up(end, to_nr_pages);
->> +
->> +	for (index = start; index < end; index += to_nr_pages) {
->> +		struct folio *f;
->> +
->> +		f = filemap_get_folio(inode->i_mapping, index);
->> +		if (IS_ERR(f))
->> +			continue;
->> +
->> +		/* Leave just filemap's refcounts on the folio. */
->> +		folio_put(f);
->> +
->> +		if (is_split_operation)
->> +			ret = kvm_gmem_split_folio_in_filemap(inode, f);
-> kvm_gmem_try_split_folio_in_filemap()?
->
-
-Here we know for sure that this was a private-to-shared
-conversion. Hence, we know that there are at least some shared parts in
-this huge page and we can skip checking that. 
-
->> +		else
->> +			ret = kvm_gmem_try_merge_folio_in_filemap(inode, f);
->> +
-
-For merge, we don't know if the entire huge page might perhaps contain
-some other shared subpages, hence we "try" to merge by first checking
-against shareability to find shared subpages.
-
->> +		if (ret)
->> +			goto rollback;
->> +	}
->> +	return ret;
->> +
->> +rollback:
->> +	for (index -= to_nr_pages; index >= start; index -= to_nr_pages) {
-
-Note to self: the first index -= to_nr_pages was meant to skip the index
-that caused the failure, but this could cause an underflow if index = 0
-when entering rollback. Need to fix this in the next revision.
-
->> +		struct folio *f;
->> +
->> +		f = filemap_get_folio(inode->i_mapping, index);
->> +		if (IS_ERR(f))
->> +			continue;
->> +
->> +		/* Leave just filemap's refcounts on the folio. */
->> +		folio_put(f);
->> +
->> +		if (is_split_operation)
->> +			WARN_ON(kvm_gmem_merge_folio_in_filemap(inode, f));
->> +		else
->> +			WARN_ON(kvm_gmem_split_folio_in_filemap(inode, f));
-> Is it safe to just leave WARN_ON()s in the rollback case?
->
-
-Same as above. I don't think we have much of a choice.
-
-> Besides, are the kvm_gmem_merge_folio_in_filemap() and
-> kvm_gmem_split_folio_in_filemap() here duplicated with the
-> kvm_gmem_split_folio_in_filemap() and kvm_gmem_try_merge_folio_in_filemap() in
-> the following "r = kvm_gmem_convert_execute_work(inode, work, !shared)"?
->
-
-This handles the case where some pages in the range [start, start +
-nr_pages) were split and the failure was halfway through. I could call
-kvm_gmem_convert_execute_work() with !shared but that would go over all
-the folios again from the start.
-
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +#else
->> +
->> +static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
->> +						      struct folio *folio)
->> +{
->> +	return 0;
->> +}
->> +
->> +static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
->> +						pgoff_t start, size_t nr_pages,
->> +						bool is_split_operation)
->> +{
->> +	return 0;
->> +}
->> +
->> +#endif
->> +
->  
+So which way should I go now?
+-- 
+Florian
