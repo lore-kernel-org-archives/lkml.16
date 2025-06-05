@@ -1,97 +1,303 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB77122FDFF
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5EF235071;
+	Thu,  5 Jun 2025 13:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129940; cv=none; b=GR6+7ZXVMitZg+8Xu0hVr7/gSL9sCrIha3lrYhtgHWDEJocbzP1Kf7dIlj+1litrmcw1lbAWHr9JLhrpiWTSZjIetJf9E2Gb7h52ml4KsGOsAIAtLl4VomHyBVQuWu6lOGMu3s6mx3/DlSkMUClI6OOf5gJvlzl+Pl0XcUUi05I=
+	t=1749129943; cv=none; b=g7+RWL35M2wRnvzr4A7lfPXHWng0MFHZOj1ozsyNTBWzXUyKQtoj9T7tZa9QgznTkxk2kOazoQcDHaD86UPs1OBwXn/M/pDlafAESKB0bpSX6e25eE/+qRfBx9jOPtOoQlQNFDk6c1rD0LvYGprDInWjPkBGK+vzY5d+13+WF84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129940; c=relaxed/simple;
-	bh=ph8J09n5JKQD535azyDhvY/sp5bOQf//77AfpWmxs2Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DZ/dfzTogELmAg5kS29olE7gbrop9dqQ6/FvxmFo5StmloEKqls59nUYTmzKDtPMeDRb3Oh45Y83FwTwYZYgiKvWYfDSI3bYa24/SXRfs3mphVx9ZwR3hrCJkBXadvvgRwX0xMt0TMbweZOgdSoXZ4B/QBHsp6mv23j3BT/YwT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mXB16Xx4; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749129943; c=relaxed/simple;
+	bh=v0Chd71DVDcu42XYiuOcBiOSYISbKkHWfkhBBYvU+R0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ojSPo2NzwZbzJTf6hRrFP6DgfWHtbFG+iifck4PvPnYAF9Ab4itw6muigMZ5bVeUHAkR1FSS469FnRmSVShjJK5sRp7lPglJ24806kigMIt0MjwTNWOeQ2f2WXlkXpc0eDZrJF/IJ0KH6q3X5xeFX4T7iCCb0haAPu35TMIMP1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ukX9FIeD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXB16Xx4"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5535652f42cso1022072e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:25:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749129937; x=1749734737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ph8J09n5JKQD535azyDhvY/sp5bOQf//77AfpWmxs2Y=;
-        b=mXB16Xx4ng1JVwsH9BePsKNPf6mXIE9Ogtyrd6h7qMxYXSuFU4rGZyHe8CpjiZiqb5
-         JLSJqbLSH4kqzeUgXVFVBSIKOxccdopB2FA2t/I3MWmU/U9t6x3II+YaXh5QlwcqrVXy
-         IyukmVxpLzu5a3YfWWZCoKvX3Ot1TFV0OX9dZTn8zzBpdQAtmwdBL+mdSHlNYVZBOhwM
-         96vY/J7BclkCB4/5AZn+3LNwsh0Nyg6gWMfTktTCqo5b2GV5zi1xzN2L29ltkGfaiVAo
-         a7amm3oquRPa8wL13zraL4K7XiceKDVOWL3BtDy1INVBQKJayMN2s232j4E9uxfFK1U4
-         5YRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749129937; x=1749734737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ph8J09n5JKQD535azyDhvY/sp5bOQf//77AfpWmxs2Y=;
-        b=PdEHYC+9a0d6hjjbe57b/ZIlPQ1REBW88kakqBSgnHPwuhZJjF9dWUQBCQgBC4Kslb
-         p7x0kxpQ6OMjdEImFJCUPuIiargkNF7Nczrj4XB3kKFJJXAoBqyem2/dJWIWGZyvkf9f
-         I/pelMwVWSsYAx8a8CUxagm9nTgwAFu7Cf/dd6a8fFQ6MyVE4HK0pW1GBv2jigEyEAdE
-         vM3VT5z6WNcoLFQODR6CeBn5Ue9sEEpE5CR1CdP9P5Tn1+/yY0ofd9pbFtmZ5gBKp6Vu
-         dP9/EnOSrs3TNV3QNm04UYJZ4EeJMYvH7JN2K56c9Wxk2y+HUj6bgKLJhlh6gKdXhGcQ
-         xyHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpoizoqz66qZBHSnWX/7OJg+cw+DtWHyvId4M6ywSRCB66e/kpbEUa1G27QveKdC4WaeRpuU6b0DHxOtU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo5FnT9+BkpsF2Qk88Tsvf0b4qUzIMD6uQNDv7dyi1ne21BETs
-	PptWc7fffdY1G6uBSGnxO5SugVkeaKM5d9uhWkK5V9P3FaNCoJjxXWiZgkt9OIQ+dcpDtua2Quh
-	mF7SjikK0Epdz3aOzY49CMj9tFuG/o5gac1VSqdTnrg==
-X-Gm-Gg: ASbGncuzsqdtIqWVBZ0kRyNSiaaytBi/n4wyMUOuzdfTIeWdNofQafm1S0YM78YrQRQ
-	ga7jmwWhLPv6j7Qhs9FghGqvCvUkOi+CSqGbIxlaYfTeede39aMTAGSU4eyDmeJPF7EOLGaOLri
-	/P2nUFaEcvBrX182NYjJTEPBxTVhnKDifV
-X-Google-Smtp-Source: AGHT+IEXDLuUxYBO7fxS8P8ms4WiU/xJFKvEp/hKMmovCR15hms9m/g0A6FghTW4kUyhFWDODOXMqMLjOLenFT8s9LA=
-X-Received: by 2002:a05:651c:994:b0:30b:f283:5ef8 with SMTP id
- 38308e7fff4ca-32ac71bfedfmr18601411fa.18.1749129936758; Thu, 05 Jun 2025
- 06:25:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukX9FIeD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EFB2C4CEEE;
+	Thu,  5 Jun 2025 13:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749129942;
+	bh=v0Chd71DVDcu42XYiuOcBiOSYISbKkHWfkhBBYvU+R0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ukX9FIeDMy++S8UOrv2xV74DdmWCpE4rLWYXBYoGOTOzT7iVdJkVvgve6pN/Bxe7N
+	 RFrhFWVmTQHxfd4InhjJoBgKhZV++kRajtEDnqRCYqE+L0F61YdnUySYQ4xacgoA9Y
+	 uyNYMu0ZFT1wuP9t2n6VP21gVoaFRLqIZWtej0q9eyaihzVV1Iop/kmnfvvSgBwWFe
+	 XNMh8/xZt5m3lM910vIEcWLuLPNkqpqKRl3Ux7JkFhtSdF7NTXS9awFHggbxml2Pei
+	 XvqTD1M8vDg2yS0/biwKLngUdEZh0MGQbfwXgKTT7PukQkR4z6vCXnAdb64nCuZLcp
+	 MUsK+PPUR210g==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCHv3 perf/core 09/22] uprobes/x86: Add uprobe syscall to speed up uprobe
+Date: Thu,  5 Jun 2025 15:23:36 +0200
+Message-ID: <20250605132350.1488129-10-jolsa@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250605132350.1488129-1-jolsa@kernel.org>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529-b4-drm_panel_mass_driver_convert_part3-v2-0-5d75a3711e40@redhat.com>
- <20250529-b4-drm_panel_mass_driver_convert_part3-v2-36-5d75a3711e40@redhat.com>
-In-Reply-To: <20250529-b4-drm_panel_mass_driver_convert_part3-v2-36-5d75a3711e40@redhat.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 5 Jun 2025 15:25:24 +0200
-X-Gm-Features: AX0GCFsdE6ka4seBq476pc4kVds9Z70NwuFBL-Ad03eDGyeURiB9xBYNtFeP04Q
-Message-ID: <CACRpkdbbwGOF6URoYtjci-muvBHUhT8pRu6JXR71n3LpicgSzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 36/46] panel/tpo-tpg110: Use refcounted allocation in
- place of devm_kzalloc()
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Robert Chiras <robert.chiras@nxp.com>, Markuss Broks <markuss.broks@gmail.com>, 
-	Artur Weber <aweber.kernel@gmail.com>, Dzmitry Sankouski <dsankouski@gmail.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
-	Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
-	Janne Grunau <j@jannau.net>, Michael Trimarchi <michael@amarulasolutions.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 30, 2025 at 4:52=E2=80=AFAM Anusha Srivatsa <asrivats@redhat.co=
-m> wrote:
+Adding new uprobe syscall that calls uprobe handlers for given
+'breakpoint' address.
 
-> Move to using the new API devm_drm_panel_alloc() to allocate the
-> panel.
->
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+The idea is that the 'breakpoint' address calls the user space
+trampoline which executes the uprobe syscall.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+The syscall handler reads the return address of the initial call
+to retrieve the original 'breakpoint' address. With this address
+we find the related uprobe object and call its consumers.
 
-Yours,
-Linus Walleij
+Adding the arch_uprobe_trampoline_mapping function that provides
+uprobe trampoline mapping. This mapping is backed with one global
+page initialized at __init time and shared by the all the mapping
+instances.
+
+We do not allow to execute uprobe syscall if the caller is not
+from uprobe trampoline mapping.
+
+The uprobe syscall ensures the consumer (bpf program) sees registers
+values in the state before the trampoline was called.
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+ arch/x86/kernel/uprobes.c              | 122 +++++++++++++++++++++++++
+ include/linux/syscalls.h               |   2 +
+ include/linux/uprobes.h                |   1 +
+ kernel/events/uprobes.c                |  17 ++++
+ kernel/sys_ni.c                        |   1 +
+ 6 files changed, 144 insertions(+)
+
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index cfb5ca41e30d..9fd1291e7bdf 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -345,6 +345,7 @@
+ 333	common	io_pgetevents		sys_io_pgetevents
+ 334	common	rseq			sys_rseq
+ 335	common	uretprobe		sys_uretprobe
++336	common	uprobe			sys_uprobe
+ # don't use numbers 387 through 423, add new calls after the last
+ # 'common' entry
+ 424	common	pidfd_send_signal	sys_pidfd_send_signal
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 0295cfb625c0..b42232f449e8 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -723,6 +723,128 @@ void arch_uprobe_clear_state(struct mm_struct *mm)
+ 	hlist_for_each_entry_safe(tramp, n, &state->head_tramps, node)
+ 		destroy_uprobe_trampoline(tramp);
+ }
++
++static bool __in_uprobe_trampoline(unsigned long ip)
++{
++	struct vm_area_struct *vma = vma_lookup(current->mm, ip);
++
++	return vma && vma_is_special_mapping(vma, &tramp_mapping);
++}
++
++static bool in_uprobe_trampoline(unsigned long ip)
++{
++	struct mm_struct *mm = current->mm;
++	bool found, retry = true;
++	unsigned int seq;
++
++	rcu_read_lock();
++	if (mmap_lock_speculate_try_begin(mm, &seq)) {
++		found = __in_uprobe_trampoline(ip);
++		retry = mmap_lock_speculate_retry(mm, seq);
++	}
++	rcu_read_unlock();
++
++	if (retry) {
++		mmap_read_lock(mm);
++		found = __in_uprobe_trampoline(ip);
++		mmap_read_unlock(mm);
++	}
++	return found;
++}
++
++SYSCALL_DEFINE0(uprobe)
++{
++	struct pt_regs *regs = task_pt_regs(current);
++	unsigned long ip, sp, ax_r11_cx_ip[4];
++	int err;
++
++	/* Allow execution only from uprobe trampolines. */
++	if (!in_uprobe_trampoline(regs->ip))
++		goto sigill;
++
++	err = copy_from_user(ax_r11_cx_ip, (void __user *)regs->sp, sizeof(ax_r11_cx_ip));
++	if (err)
++		goto sigill;
++
++	ip = regs->ip;
++
++	/*
++	 * expose the "right" values of ax/r11/cx/ip/sp to uprobe_consumer/s, plus:
++	 * - adjust ip to the probe address, call saved next instruction address
++	 * - adjust sp to the probe's stack frame (check trampoline code)
++	 */
++	regs->ax  = ax_r11_cx_ip[0];
++	regs->r11 = ax_r11_cx_ip[1];
++	regs->cx  = ax_r11_cx_ip[2];
++	regs->ip  = ax_r11_cx_ip[3] - 5;
++	regs->sp += sizeof(ax_r11_cx_ip);
++	regs->orig_ax = -1;
++
++	sp = regs->sp;
++
++	handle_syscall_uprobe(regs, regs->ip);
++
++	/*
++	 * Some of the uprobe consumers has changed sp, we can do nothing,
++	 * just return via iret.
++	 */
++	if (regs->sp != sp)
++		return regs->ax;
++
++	regs->sp -= sizeof(ax_r11_cx_ip);
++
++	/* for the case uprobe_consumer has changed ax/r11/cx */
++	ax_r11_cx_ip[0] = regs->ax;
++	ax_r11_cx_ip[1] = regs->r11;
++	ax_r11_cx_ip[2] = regs->cx;
++
++	/* keep return address unless we are instructed otherwise */
++	if (ax_r11_cx_ip[3] - 5 != regs->ip)
++		ax_r11_cx_ip[3] = regs->ip;
++
++	regs->ip = ip;
++
++	err = copy_to_user((void __user *)regs->sp, ax_r11_cx_ip, sizeof(ax_r11_cx_ip));
++	if (err)
++		goto sigill;
++
++	/* ensure sysret, see do_syscall_64() */
++	regs->r11 = regs->flags;
++	regs->cx  = regs->ip;
++	return 0;
++
++sigill:
++	force_sig(SIGILL);
++	return -1;
++}
++
++asm (
++	".pushsection .rodata\n"
++	".balign " __stringify(PAGE_SIZE) "\n"
++	"uprobe_trampoline_entry:\n"
++	"push %rcx\n"
++	"push %r11\n"
++	"push %rax\n"
++	"movq $" __stringify(__NR_uprobe) ", %rax\n"
++	"syscall\n"
++	"pop %rax\n"
++	"pop %r11\n"
++	"pop %rcx\n"
++	"ret\n"
++	".balign " __stringify(PAGE_SIZE) "\n"
++	".popsection\n"
++);
++
++extern u8 uprobe_trampoline_entry[];
++
++static int __init arch_uprobes_init(void)
++{
++	tramp_mapping_pages[0] = virt_to_page(uprobe_trampoline_entry);
++	return 0;
++}
++
++late_initcall(arch_uprobes_init);
++
+ #else /* 32-bit: */
+ /*
+  * No RIP-relative addressing on 32-bit
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index e5603cc91963..b0cc60f1c458 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -998,6 +998,8 @@ asmlinkage long sys_ioperm(unsigned long from, unsigned long num, int on);
+ 
+ asmlinkage long sys_uretprobe(void);
+ 
++asmlinkage long sys_uprobe(void);
++
+ /* pciconfig: alpha, arm, arm64, ia64, sparc */
+ asmlinkage long sys_pciconfig_read(unsigned long bus, unsigned long dfn,
+ 				unsigned long off, unsigned long len,
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index b40d33aae016..b6b077cc7d0f 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -239,6 +239,7 @@ extern unsigned long uprobe_get_trampoline_vaddr(void);
+ extern void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len);
+ extern void arch_uprobe_clear_state(struct mm_struct *mm);
+ extern void arch_uprobe_init_state(struct mm_struct *mm);
++extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
+ #else /* !CONFIG_UPROBES */
+ struct uprobes_state {
+ };
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index acec91a676b7..cbba31c0495f 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2772,6 +2772,23 @@ static void handle_swbp(struct pt_regs *regs)
+ 	rcu_read_unlock_trace();
+ }
+ 
++void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr)
++{
++	struct uprobe *uprobe;
++	int is_swbp;
++
++	guard(rcu_tasks_trace)();
++
++	uprobe = find_active_uprobe_rcu(bp_vaddr, &is_swbp);
++	if (!uprobe)
++		return;
++	if (!get_utask())
++		return;
++	if (arch_uprobe_ignore(&uprobe->arch, regs))
++		return;
++	handler_chain(uprobe, regs);
++}
++
+ /*
+  * Perform required fix-ups and disable singlestep.
+  * Allow pending signals to take effect.
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index c00a86931f8c..bf5d05c635ff 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -392,3 +392,4 @@ COND_SYSCALL(setuid16);
+ COND_SYSCALL(rseq);
+ 
+ COND_SYSCALL(uretprobe);
++COND_SYSCALL(uprobe);
+-- 
+2.49.0
+
