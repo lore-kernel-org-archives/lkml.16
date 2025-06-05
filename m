@@ -1,73 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1857827D773;
-	Thu,  5 Jun 2025 19:56:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B101616FF37;
+	Thu,  5 Jun 2025 19:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749153360; cv=none; b=GVhg99QxlxCq8RqHmFpSzmvcent3Zpao9WppyZEx7CG6L7SL2cdMUW0geIiET9zBgB+YXOqPuoaew6Ug+5KYuvMwclAbNWpTNqmC8ef8uvaZVeDCIwF8Uzg2x+TXvug8KwepdYgClv4EP7Ydt9E8tOFgguMG3ymVKpeuuAkyw74=
+	t=1749153446; cv=none; b=QQG9ogjsEBaH2I+c7B3U42eHsLsII8YQn0XqRLb0SOtQK3HKDf2Hjkbk+xo6t5I9pGvF5q3c6PiFgIQ4+VNfNbMg1o8yba/PoD5OBZ7HCvusARCG1z+9vWognXqBXpgivPUfGQaX+Yrqe1KyRo3WhdhPg6ygCM+xmS3nUml8GBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749153360; c=relaxed/simple;
-	bh=wYtujNZwrORBCml224vf1c045Haw3Rm1isqHefy1T1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AlMhGzBCqE8zMTIDyrPiS95Tz848GUzVesO/DdGcuyv7u/iSQf6jr5MlQsvCLYQpKMwlrpF4ajEHsXwa8wpxv9Dm7XbreL8boipDrhq4t660GufXhcSUqag/pV+ze6s4FY/bIrdT4P2VYt3mqY0khwEUo0tiWXAJzW4wuo8JcSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVXFmX60; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749153446; c=relaxed/simple;
+	bh=1u8lfpAO42Ly1Adp2rWOcQfq7JPHMSczCMk7/C3j4QA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=E6mMDFvxzc98DnZ36Ss+oA015mRmVm0ntvzOtzi3ZdtXJnMbb0sEQm78VOp9X3hpOZ/zGJgPFnAgYLf9UBxGGYwOMM9iOZoYg6J8DHcRnvO9KbHTLkEfXwWnXTo7s/4QovcHQTaY9d28P/+AMl1eOZXOWDEqVq6DJt1TYKD7CzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=hLooBr5K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVXFmX60"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A47A9C4CEE7;
-	Thu,  5 Jun 2025 19:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749153359;
-	bh=wYtujNZwrORBCml224vf1c045Haw3Rm1isqHefy1T1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CVXFmX60Jk5VMgy/abCJ8UhgesIewd9czM3aEeMdI13hTpT/Z6fM8m5QMkugX/Z0Q
-	 0mMEntK83i2kUMlFY0l/ajqLq5mmhSIZ4BWnB1qKDkT3iTxMMygeRFYxgDyyzgFWe1
-	 Q3QQMB1j71mwunm6ktI3JZ7dxns3b+1AoyJ7Lpcm6C3a6R11HDxDWmXxXivNOvLV8I
-	 UhZZrc1gtulmwZn2UOZku17pxNh70+wi+9jWCakID0I5i/uyZczBtnaGj/GAJ4HxA0
-	 gh0eFyv1DJ7T7+QzfF7rDTsoQXuRJyvDbDX9Mu3YIDByv9xq1t/qAgM+7qPUXTyY3y
-	 OXRUN/H43733w==
-Date: Thu, 5 Jun 2025 14:55:57 -0500
-From: Rob Herring <robh@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/6] dt-bindings: pinctrl: airoha: Document AN7583 Pin
- Controller
-Message-ID: <20250605195557.GA3133706-robh@kernel.org>
-References: <20250527222040.32000-1-ansuelsmth@gmail.com>
- <20250527222040.32000-6-ansuelsmth@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="hLooBr5K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08152C4CEE7;
+	Thu,  5 Jun 2025 19:57:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749153445;
+	bh=1u8lfpAO42Ly1Adp2rWOcQfq7JPHMSczCMk7/C3j4QA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hLooBr5KY9DQTeDlulfLIviETs7q2vSYR7FamOkzeGc/MKCoH26Ynb9m9h8AqVn5B
+	 pdxTenQkJgFQ9M2aYtoP8thiTNlcEqaHKDqNMrHfqzZktN4uR1Kxz6U/QdLAfCeQF6
+	 VgBLSRPPTePFj0wbig2U/E5ZfLi+J5V93V2wXL8I=
+Date: Thu, 5 Jun 2025 12:57:24 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: hughd@google.com, baolin.wang@linux.alibaba.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/7] mm: shmem: correctly pass alloced parameter to
+ shmem_recalc_inode() to avoid WARN_ON()
+Message-Id: <20250605125724.d2e3db9c23af7627a53d8914@linux-foundation.org>
+In-Reply-To: <20250605221037.7872-2-shikemeng@huaweicloud.com>
+References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
+	<20250605221037.7872-2-shikemeng@huaweicloud.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527222040.32000-6-ansuelsmth@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 12:20:37AM +0200, Christian Marangi wrote:
-> Document Airoha AN7583 Pin Controller based on Airoha EN7581 with some
-> minor difference on some function group.
+On Fri,  6 Jun 2025 06:10:31 +0800 Kemeng Shi <shikemeng@huaweicloud.com> wrote:
+
+> As noted in the comments, we need to release block usage for swap entry
+> which was replaced with poisoned swap entry. However, no block usage is
+> actually freed by calling shmem_recalc_inode(inode, -nr_pages, -nr_pages).
+> Instead, call shmem_recalc_inode(inode, 0, -nr_pages) can correctly release
+> the block usage.
 > 
-> Make the PHY LEDs, pcie_reset and PCM SPI function dependent of the
-> compatible and define the different group for AN7583.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  .../pinctrl/airoha,en7581-pinctrl.yaml        | 297 ++++++++++++------
->  1 file changed, 207 insertions(+), 90 deletions(-)
+> ...
+>
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -2145,7 +2145,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+>  	 * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
+>  	 * in shmem_evict_inode().
+>  	 */
+> -	shmem_recalc_inode(inode, -nr_pages, -nr_pages);
+> +	shmem_recalc_inode(inode, 0, -nr_pages);
+>  	swap_free_nr(swap, nr_pages);
+>  }
 
-I think this should be a separate file because the condition parts are 
-so big.
+Huh, three years ago.  What do we think might be the userspace-visible
+runtime effects of this?
 
-Rob
