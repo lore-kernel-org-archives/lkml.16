@@ -1,184 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A1D2C324C;
-	Thu,  5 Jun 2025 02:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D1CC2C324C
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 02:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749091358; cv=none; b=KWPebckcrW0N3pdL7MN/gVFWoMmo3QsBQA2/Y0tlhCwVlyO0sg9hsm4RjzbjFG+ySESJwXKCOfGNzWenGbqcFJM+6L18Dk6H2CxCeIl+aYSA0Ct7rLEXmBnt+Ouyj700kY1TLJW1WDNV7sQ/RtuxwLMP8awV2Y2VNZTZrSlfSdE=
+	t=1749091408; cv=none; b=hsZ2EFBYsFHF6ZhNVW18BukF2kHxytTsYgyxDFUC0Wbtqq78vnrrGL/t3zy9i4yMH7daGzuDxFsnVZdy857wt4wkdv8QEG2H6n1Pi8QsdK1lrFWpikmC8YOjmRPWiOYGY18saxEaS/s/YI08+5izne7evvdCjHozgH9lWNt2ip4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749091358; c=relaxed/simple;
-	bh=gH40Ixbi074S5DghIAnw5tgeKF6M/YiIzrDl41K3k04=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ThqtQ5fy2oAqYMFO3Xu2DLDw1PAthXPOnwUSXB21Vkj9mqJqLoHmb3KOsj5Q/N6Z5gBW8+bNgDpbIQzwToTdzC3PitUHp6S0Ryycd9ts7QSgA2dm3ZQ0+Me1vmgiucwV5AWNWJootPPcd9pKkK4foGCepD3M8HZqfvzfr1TttGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxLEmR5x; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pxLEmR5x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B338BC4CEE4;
-	Thu,  5 Jun 2025 02:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749091357;
-	bh=gH40Ixbi074S5DghIAnw5tgeKF6M/YiIzrDl41K3k04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pxLEmR5xy4Pt9amdeKCX8nyT0j61W8rcx1mdwLGoyPOVDKpWHYA6nqV1vDqSHlgoE
-	 hV6Im0BHzFQtN62Rqqu169Y6INYdLars1dYI03nonxgO62t5j6v3NrDsCcvCRMdcij
-	 IzJdXwuYvcLThcUPQoHDfyI9ZoiKzZftMY3yz2bBJq+uWdpDipy4yXVDDonGmv6TTf
-	 4H/PNx6EzROfiMIcwGwTOJYIm5EDAszqxnFCroqWGC2ZCuuhzWZUqXRF/gtt3vRR9h
-	 8y9IkURIJWIE7mSyBiKybG4JV0SLVWjonBystA3wZeXEktCSPncdQ/V/7LACgquV/D
-	 Cp/Gnu4Pk+hRQ==
-Date: Wed, 4 Jun 2025 21:42:34 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	david.collins@oss.qualcomm.com, jishnu.prakash@oss.qualcomm.com
-Subject: Re: [PATCH] arm64: dts: qcom: sm8550: Correct the max voltage for
- vreg_l6n_3p3
-Message-ID: <4tqlrfqevkb4t5rygcikbnx4auxhn2ahzx3tsbobvraacmpil6@sq2diovqalta>
-References: <20250604-sm8550-correct-vreg_l6n_3p3-voltage-v1-1-18cd01a69ac6@oss.qualcomm.com>
+	s=arc-20240116; t=1749091408; c=relaxed/simple;
+	bh=e9M/V5FLRor05pEbmP2mKuGexiaBIlZ+dMakGu7Iilo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DauUP7e6cdRF6SaCw9zSQ2wjCG+0TnNt3/2dUs5z0TE6bdDnvF0GVJqe3G4wZWVQr/eimrU7A9bkModQ8DH50dmxfVpkrvNNzdEDOh7Ooej24KXPlvHr56hOUw7L+NdMsDougyw3GGhrvgLGTTk9vkzad+TWZC1loSaqpYob0wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DC66169C;
+	Wed,  4 Jun 2025 19:43:07 -0700 (PDT)
+Received: from [10.164.18.47] (a077893.blr.arm.com [10.164.18.47])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 561843F673;
+	Wed,  4 Jun 2025 19:43:19 -0700 (PDT)
+Message-ID: <cfcb7239-4404-4e71-8fda-7fd3656a8975@arm.com>
+Date: Thu, 5 Jun 2025 08:13:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604-sm8550-correct-vreg_l6n_3p3-voltage-v1-1-18cd01a69ac6@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: rename CONFIG_PAGE_BLOCK_ORDER to
+ CONFIG_PAGE_BLOCK_MAX_ORDER.
+To: Zi Yan <ziy@nvidia.com>, david@redhat.com
+Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org,
+ isaacmanjarres@google.com, jyescas@google.com, kaleshsingh@google.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ lorenzo.stoakes@oracle.com, masahiroy@kernel.org, mhocko@suse.com,
+ minchan@kernel.org, rppt@kernel.org, surenb@google.com,
+ tjmercier@google.com, vbabka@suse.cz, Oscar Salvador <osalvador@suse.de>
+References: <20250604211427.1590859-1-ziy@nvidia.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250604211427.1590859-1-ziy@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 04, 2025 at 11:57:22AM +0530, Kamal Wadhwa wrote:
-> Voltage regulator 'vreg_l6n_3p3' max-microvolt prop is currently
-> configured at 3304000uV in different sm8550 board files. However this
-> is not a valid voltage value for 'pmic5_pldo502ln' type voltage
-> regulators.
+On 6/5/25 02:44, Zi Yan wrote:
+> The config is in fact an additional upper limit of pageblock_order, so
+> rename it to avoid confusion.
 > 
-> Check below the max value(3200mV) in the regulator summary for min/max
-> used as 2800mV/3304mV in DT:-
-> 
-> logs:
-> 
-> [    0.294781] vreg_l6n_3p3: Setting 2800000-3304000uV
-> 
-> regulator summary:
-> 
-> regulator     use open bypass  opmode   voltage current  min     max
-> ---------------------------------------------------------------------
-> ..
-> vreg_l6n_3p3   0    0    0     normal   2800mV   0mA  2800mV  3200mV
-> ..
-> 
-> Correct the max value to 3200000uV, so that it is aligned to voltages
-> allowed by the regulator.
-> 
-> Also, correct the phandle name of 'vreg_l6n_3p3' to 'vreg_l6n_3p2',
-> so it reflect this change in settings.
-> 
-> Signed-off-by: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Acked-by: Juan Yescas <jyescas@google.com>
+
+LGTM.
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
 > ---
->  arch/arm64/boot/dts/qcom/sm8550-hdk.dts         | 6 +++---
->  arch/arm64/boot/dts/qcom/sm8550-mtp.dts         | 6 +++---
->  arch/arm64/boot/dts/qcom/sm8550-qrd.dts         | 6 +++---
->  arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts | 6 +++---
->  4 files changed, 12 insertions(+), 12 deletions(-)
+>>From v1[1]:
+> 1. used a new name: PAGE_BLOCK_MAX_ORDER,
+> 2. added the missing PAGE_BLOCK_ORDER rename in mm/mm_init.c[2]
+> 3. dropped the Fixes tag.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> index 29bc1ddfc7b25f203c9f3b530610e45c44ae4fb2..fe46699804b3a8fb792edc06b58b961778cd8d70 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> @@ -857,10 +857,10 @@ vreg_l5n_1p8: ldo5 {
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
-> -		vreg_l6n_3p3: ldo6 {
-> -			regulator-name = "vreg_l6n_3p3";
-> +		vreg_l6n_3p2: ldo6 {
-
-Please follow the naming from the board's schematics for the label and
-regulator-name.
-
-> +			regulator-name = "vreg_l6n_3p2";
->  			regulator-min-microvolt = <2800000>;
-
-The name of this regulator indicates that it's a 3.3V (or 3.2V, although
-unlikely) rail. But regulator framework will use the min/max from
-DeviceTree combined with any regulator_set_voltage() requests (if there
-are any) and pick the lowest possible value in the resulting range.
-
-As we regulator_set_voltage() votes tends to be the exception, this
-looks like a 2.8V rail. Can you please confirm what voltage is expected
-here?
-
-If 2.8V is correct, please make max (a valid variant of) 2.8V.
-
-Regards,
-Bjorn
-
-> -			regulator-max-microvolt = <3304000>;
-> +			regulator-max-microvolt = <3200000>;
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-> index 5648ab60ba4c4bfaf5baa289969898277ee57cef..1e95a2849146e3eeea9f68085ac504e32b63fdaf 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-> @@ -624,10 +624,10 @@ vreg_l5n_1p8: ldo5 {
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
-> -		vreg_l6n_3p3: ldo6 {
-> -			regulator-name = "vreg_l6n_3p3";
-> +		vreg_l6n_3p2: ldo6 {
-> +			regulator-name = "vreg_l6n_3p2";
->  			regulator-min-microvolt = <2800000>;
-> -			regulator-max-microvolt = <3304000>;
-> +			regulator-max-microvolt = <3200000>;
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-> index 3a6cb279130489168f8d20a6e27808647debdb41..5a33d7d7ac923c7c0bf6aeb51d0db728e65883ac 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-> @@ -700,10 +700,10 @@ vreg_l5n_1p8: ldo5 {
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
-> -		vreg_l6n_3p3: ldo6 {
-> -			regulator-name = "vreg_l6n_3p3";
-> +		vreg_l6n_3p2: ldo6 {
-> +			regulator-name = "vreg_l6n_3p2";
->  			regulator-min-microvolt = <2800000>;
-> -			regulator-max-microvolt = <3304000>;
-> +			regulator-max-microvolt = <3200000>;
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts b/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-> index 7d29a57a2b540708fa88fb59e821406f400a3174..073040fbd7ba215169adbe3862d3e1f6d2c786e0 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-> @@ -485,10 +485,10 @@ vreg_l5n_1p8: ldo5 {
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
-> -		vreg_l6n_3p3: ldo6 {
-> -			regulator-name = "vreg_l6n_3p3";
-> +		vreg_l6n_3p2: ldo6 {
-> +			regulator-name = "vreg_l6n_3p2";
->  			regulator-min-microvolt = <2800000>;
-> -			regulator-max-microvolt = <3304000>;
-> +			regulator-max-microvolt = <3200000>;
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
+> [1] https://lore.kernel.org/linux-mm/20250603154843.1565239-1-ziy@nvidia.com/
+> [2] https://lore.kernel.org/linux-mm/202506042058.XgvABCE0-lkp@intel.com/
 > 
-> ---
-> base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
-> change-id: 20250603-sm8550-correct-vreg_l6n_3p3-voltage-cba298bc0294
+>  include/linux/mmzone.h          | 14 +++++++-------
+>  include/linux/pageblock-flags.h |  8 ++++----
+>  mm/Kconfig                      | 15 ++++++++-------
+>  mm/mm_init.c                    |  2 +-
+>  4 files changed, 20 insertions(+), 19 deletions(-)
 > 
-> Best regards,
-> -- 
-> Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
-> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 283913d42d7b..5bec8b1d0e66 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -38,19 +38,19 @@
+>  #define NR_PAGE_ORDERS (MAX_PAGE_ORDER + 1)
+>  
+>  /* Defines the order for the number of pages that have a migrate type. */
+> -#ifndef CONFIG_PAGE_BLOCK_ORDER
+> -#define PAGE_BLOCK_ORDER MAX_PAGE_ORDER
+> +#ifndef CONFIG_PAGE_BLOCK_MAX_ORDER
+> +#define PAGE_BLOCK_MAX_ORDER MAX_PAGE_ORDER
+>  #else
+> -#define PAGE_BLOCK_ORDER CONFIG_PAGE_BLOCK_ORDER
+> -#endif /* CONFIG_PAGE_BLOCK_ORDER */
+> +#define PAGE_BLOCK_MAX_ORDER CONFIG_PAGE_BLOCK_MAX_ORDER
+> +#endif /* CONFIG_PAGE_BLOCK_MAX_ORDER */
+>  
+>  /*
+>   * The MAX_PAGE_ORDER, which defines the max order of pages to be allocated
+> - * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_ORDER,
+> + * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_MAX_ORDER,
+>   * which defines the order for the number of pages that can have a migrate type
+>   */
+> -#if (PAGE_BLOCK_ORDER > MAX_PAGE_ORDER)
+> -#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_ORDER
+> +#if (PAGE_BLOCK_MAX_ORDER > MAX_PAGE_ORDER)
+> +#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_MAX_ORDER
+>  #endif
+>  
+>  /*
+> diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
+> index e73a4292ef02..6297c6343c55 100644
+> --- a/include/linux/pageblock-flags.h
+> +++ b/include/linux/pageblock-flags.h
+> @@ -41,18 +41,18 @@ extern unsigned int pageblock_order;
+>   * Huge pages are a constant size, but don't exceed the maximum allocation
+>   * granularity.
+>   */
+> -#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER)
+> +#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_MAX_ORDER)
+>  
+>  #endif /* CONFIG_HUGETLB_PAGE_SIZE_VARIABLE */
+>  
+>  #elif defined(CONFIG_TRANSPARENT_HUGEPAGE)
+>  
+> -#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)
+> +#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_MAX_ORDER)
+>  
+>  #else /* CONFIG_TRANSPARENT_HUGEPAGE */
+>  
+> -/* If huge pages are not used, group by PAGE_BLOCK_ORDER */
+> -#define pageblock_order		PAGE_BLOCK_ORDER
+> +/* If huge pages are not used, group by PAGE_BLOCK_MAX_ORDER */
+> +#define pageblock_order		PAGE_BLOCK_MAX_ORDER
+>  
+>  #endif /* CONFIG_HUGETLB_PAGE */
+>  
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 65089552e124..3afac26d3594 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -1017,8 +1017,8 @@ config ARCH_FORCE_MAX_ORDER
+>  # the default page block order is MAX_PAGE_ORDER (10) as per
+>  # include/linux/mmzone.h.
+>  #
+> -config PAGE_BLOCK_ORDER
+> -	int "Page Block Order"
+> +config PAGE_BLOCK_MAX_ORDER
+> +	int "Page Block Order Upper Limit"
+>  	range 1 10 if ARCH_FORCE_MAX_ORDER = 0
+>  	default 10 if ARCH_FORCE_MAX_ORDER = 0
+>  	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER != 0
+> @@ -1026,12 +1026,13 @@ config PAGE_BLOCK_ORDER
+>  	help
+>  	  The page block order refers to the power of two number of pages that
+>  	  are physically contiguous and can have a migrate type associated to
+> -	  them. The maximum size of the page block order is limited by
+> -	  ARCH_FORCE_MAX_ORDER.
+> +	  them. The maximum size of the page block order is at least limited by
+> +	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER.
+>  
+> -	  This config allows overriding the default page block order when the
+> -	  page block order is required to be smaller than ARCH_FORCE_MAX_ORDER
+> -	  or MAX_PAGE_ORDER.
+> +	  This config adds a new upper limit of default page block
+> +	  order when the page block order is required to be smaller than
+> +	  ARCH_FORCE_MAX_ORDER/MAX_PAGE_ORDER or other limits
+> +	  (see include/linux/pageblock-flags.h for details).
+>  
+>  	  Reducing pageblock order can negatively impact THP generation
+>  	  success rate. If your workloads use THP heavily, please use this
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index f2944748f526..02f41e2bdf60 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -1509,7 +1509,7 @@ static inline void setup_usemap(struct zone *zone) {}
+>  /* Initialise the number of pages represented by NR_PAGEBLOCK_BITS */
+>  void __init set_pageblock_order(void)
+>  {
+> -	unsigned int order = PAGE_BLOCK_ORDER;
+> +	unsigned int order = PAGE_BLOCK_MAX_ORDER;
+>  
+>  	/* Check that pageblock_nr_pages has not already been setup */
+>  	if (pageblock_order)
