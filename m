@@ -1,61 +1,94 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF7715746F
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EC41EB5CE;
+	Thu,  5 Jun 2025 17:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143885; cv=none; b=WBKWX89/CUUBsCk+s1te67JuQDJl0rB570CkoTyMnLeRaluCb1Y5z8buDmNGR3jS+MjGfQilMGzIU5R/Fs3s1kAxYd3eKcF/OlKOu/rn6nHFtfykt1l4Ytnr5Vb4pPCcErC8X8ucXVnspFv9SOTmeiR7vyl4IGSpgIdptAPYmCA=
+	t=1749143946; cv=none; b=VQTQ3bNDYjZbANn3zXhPtaNFzdlVhvMxYI8yC3YvpUYSX6qcH5pcqd1XswbxgkEDtYmqQumsflfXUgK5dNeUR5jBAhJwmXB1AZtonaOe/FyQymzA20hkoNPqqwuM717zcEWR52idFT3um9I4fChYx1mMx7XGz1GGkIoud/EdliE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143885; c=relaxed/simple;
-	bh=zBYGvX52BxLQ4GUMUxG0DeMTjGwYb+sctll/J9DgxZ0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Q8ooslY/IevcCBn+Mu5O/ludHBbOYhuHV8Z/WLDGqLB4/pqB5SanpRP8w5cLtjDOrUhQnO9JwpVtAlISP8cAtMu3tWwRM5qoJtwuNVFEkq0WrXj+a4Yp8c+pTGX8tE/9ZgVYESwYeYP/Ofo86BnNNiFdFp7p84JgBXkYI9hZBKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddc4908c4dso19679235ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:18:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749143883; x=1749748683;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zBYGvX52BxLQ4GUMUxG0DeMTjGwYb+sctll/J9DgxZ0=;
-        b=MLfUOA6nJb76XoN8U+Kcg1sPXH8b3ChaW3SbBgopFg19Pz4vnTVAT/nJ++RZfLlST8
-         c2j8j3GwOcj1WWi5K2KVdbtfcI0mCO9xTeP0V8qxyVIFL1O60UQe5OC2+JBkR6pW+3+d
-         hRa+GXTojbEx63DwsLApi2elXjRaTPmueHQ/ngAq1ts/xJH8Y5CBVcOQb6krhQdB9an0
-         odZ+jvDQvDojOfB1/ZUHnWxySuFo+EZ1nAv95KCDAWztzLNow9geZpEyoFm5Vp/c1LG6
-         pd7uRl2CxRFOn+Qt2uK0JkKx3RwJdOHsl94oWFdR5+NJRCB3HBRIwoQJK6MI6XjQaFgx
-         BSsQ==
-X-Gm-Message-State: AOJu0Yy/rapHASPj+y7p0TuhD6eMxgGMiD03GqZatH4ZBgdv3u5qcUF7
-	ScZC/v17sEZ4mzq74jGra8ahyIsBJp4m+frfVllTX+HPumDQX9C7M9yIu2neu04zX+J2mclBYTn
-	oWrmutDLj8G133CoguSA2AGSSk7/pNOjPh+XMFmfbfUSELMC9nG3zZRWB1yQ=
-X-Google-Smtp-Source: AGHT+IEsQw+U8u6x4L38rxh3hZQAzp4Mi9OAE7Ht7RZUVz7RJ5RMSE1jw91Qgbb93zETELTZhhyeqUXeFTsz/bwMfi6iiA/O58Vg
+	s=arc-20240116; t=1749143946; c=relaxed/simple;
+	bh=xCg9FEDKTtf3vgEKMxIzLSqhN3C9kcE2FIyIYFBrXO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FePbF/oof7YMh6o2uTASh8kDsuWXZSXpA0zc6nCYFGrL/xK/cwpQqzkbuQb84q67NnXr9uc92dMRZH9aF7VOnr5Mm9GR2WBylOFt6sEuY6x5khKLmRsK/hcbkf1CTkzhn3z2yGeoJPe1J9vTQvio6o5Z8mVriP0swOJu+yHvVfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/Or4xx9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/Or4xx9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BB5FC4CEE7;
+	Thu,  5 Jun 2025 17:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749143944;
+	bh=xCg9FEDKTtf3vgEKMxIzLSqhN3C9kcE2FIyIYFBrXO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N/Or4xx9tvbtr9+eiQwdd6CVnIQNajAKUUJYDj6KC5xhn2BBiftLbYl16k1QvKqhP
+	 ZMmcd1+CW7EEBd1yXWLiDYjt1To5AbFcX07xfA84hgTaDIpEroHuqDSqsQNZawJfi4
+	 +1wEgHha4pMQLPXuVPFr5cYFuqpw2+Vsr3lmI5D9dPMhFWJvNjUawjZsrtgIzFxHUh
+	 CHxnV9Yyf/SC3dENM+XsHdSwUCgn8hz8RN386uf4gpqoyT4pGLHnv9CWDEMMZqjQwS
+	 A0IKfKRjEGzvbzEGz0HhmnNikyXgDrKbbAqJVpGZIkZqIW3XiRdWXV+fJXgjjYhmoE
+	 kRA6kVpBBevkg==
+Date: Thu, 5 Jun 2025 18:19:00 +0100
+From: Mark Brown <broonie@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] selftests/mm: Fix test result reporting in
+ gup_longterm
+Message-ID: <d039ca05-da2f-4317-be04-34edb7ad3496@sirena.org.uk>
+References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
+ <20250527-selftests-mm-cow-dedupe-v2-4-ff198df8e38e@kernel.org>
+ <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
+ <722628a8-f3fd-4fb9-ae04-2313a52ffb36@sirena.org.uk>
+ <66db3d9e-73a6-4fcd-8abd-db65cfff49ab@lucifer.local>
+ <661fc4ce-839f-4c47-bc3a-0c864e846324@sirena.org.uk>
+ <077b6af0-bef3-4f1f-b785-9e351d01a89f@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3093:b0:3dd:cb92:f12f with SMTP id
- e9e14a558f8ab-3ddce4100demr2424895ab.12.1749143883212; Thu, 05 Jun 2025
- 10:18:03 -0700 (PDT)
-Date: Thu, 05 Jun 2025 10:18:03 -0700
-In-Reply-To: <68344557.a70a0220.1765ec.0165.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6841d14b.a00a0220.68b4a.0017.GAE@google.com>
-Subject: Re: [syzbot] #syz test
-From: syzbot <syzbot+5138f00559ffb3cb3610@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
-
-***
-
-Subject: #syz test
-Author: abhinav.ogl@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xgLCgah/58nynGKp"
+Content-Disposition: inline
+In-Reply-To: <077b6af0-bef3-4f1f-b785-9e351d01a89f@redhat.com>
+X-Cookie: That's no moon...
 
 
+--xgLCgah/58nynGKp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jun 05, 2025 at 06:55:53PM +0200, David Hildenbrand wrote:
+> On 05.06.25 18:42, Mark Brown wrote:
+
+> > I can't remember off hand, sorry.
+
+> I assume in ... my review to patch #4?
+
+Oh, yeah - it's there.  I did look there but the "not a fan" bit made me
+think it was one of the stylistic things as I quickly scanned through.
+
+> What an unpleasant upstream experience.
+
+TBH this has been a lot better than the more common failure mode with
+working on selftests where people just completely ignore or are openly
+dismissive about them :/ .  Probably room for a middle ground though.
+
+--xgLCgah/58nynGKp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhB0YMACgkQJNaLcl1U
+h9BK5Qf/fpHXvEbHQRvJzqX8a/QCO94vPB2OwXy8cSOSokQohN3ZULM13g+tnQw2
+5BJmHheHkQlqu8VykO3C8BbWyAmR6anJAOeAYaQOPH7itzqrSNnhsoI8pylVPhgK
+hiYQ8jmIcRkdHPfachihGaHmmrAvF8xZDtRUITnL75f3YlwOmAy+uh1Zj11clYqL
+mXQZEopwVJWi0DGJyfCFBiMrda86ck9da0KhBDMh0b1vHw9xKOBZpt6Ukt/gsVAh
+zJXj4R1OnanUjhrxSKuDppSwbSSHGzic6f7LY6WSg4Kno06t0RHPED6vxBGvY++N
+D00VBYOYo/23HOGZJ3NHG8f8xAajSg==
+=YRar
+-----END PGP SIGNATURE-----
+
+--xgLCgah/58nynGKp--
