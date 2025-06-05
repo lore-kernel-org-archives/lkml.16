@@ -1,92 +1,97 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874FA229B28
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628F2218E91;
+	Thu,  5 Jun 2025 13:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749128581; cv=none; b=qPiQn96kvV6HJYyMVCjESGMh3+jGjq3pvV35YC5Nra9oGoVjcGW70pMZVB7Ew0tzC/uZ5QCAfz3cuXkz86OjRtWBP07qUyifRvDBNe6pdpsjk55Wa8n4kLUsOXBYvuYItTborVMzwP0CehsdeRU71cBypX5bD5m9d3Ue48PtvIg=
+	t=1749128596; cv=none; b=neoFo22ofVweNb5iRMzWBb7JAFOUC3JMChRSPIYAxd7HrP7aZSiA67WmZtTTcFE2e5z8IS3vbya0mkGY9H1LekeYQO3xCo/pCCd5HMKIfc3uP8rkSBe7X3c38VMFqMw5+gzRP+XEBE3IlB4ix1xkTr5VxJxn972BlXhT1oGwyG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749128581; c=relaxed/simple;
-	bh=PVT5EJpM+m1cOTQkhZPkhfUXOCLKAPtm4dYD8NRnSuE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a4k7OjiQNkTPe4uM4vGee1c2TOD85ROYGzqj5OYRE6NJ0MYiWOqvBgRFSsfevxtW4ZBXYwQGTN60ckrbwgs7ZpOwYnBFuXOzhAASU3FEN6mCC6b6aS5nOTGuU81klY3gY4E5UGY1KfNFlmsEM0kwEL+uBwDvF9suwt/4puq0aDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kt+WSbE9; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749128596; c=relaxed/simple;
+	bh=0qx6Hubyt4O4AdYD0nN1QeadlJ17tKUMfZHsy1X6CrE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=caFJreBMT9gRaJovj4CK1akbKe5zBdbBn8ocxUH2SMXEMivLvJvQLHg3hRU5mec7/l/M3UnMRvgQanpu1MRcKwBAZBpO75Kh61+Krrt5MrRy0v4YkjmFLyfCNLywT1B8b1C4zgHFbZh74rhUN3dGJbKu2ttAX2vBtH32cUnT+hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=rfZhXYjF; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kt+WSbE9"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-55342bca34eso1011340e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749128577; x=1749733377; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PVT5EJpM+m1cOTQkhZPkhfUXOCLKAPtm4dYD8NRnSuE=;
-        b=kt+WSbE9nVghB9lTKcZ2gMF5L4D6eZWSU983I2zvI7VoQ7V5Hhv63E2xEnI74JT+o7
-         sp0Ej8cbYaHBZzztRNl58gVwuOkRUz0bT6dw6qZ9kK7mNOsA301Dim+8bgVber4bsLlh
-         mEownm34HDEqEkntfRI2TD2j9EnpxhTp1lidRVs9FRbrIhHgAZtJ79nEUHTV4G40uLED
-         SrtmhtGs6JErShVfGD3yl7+c3vjN4elcQ9ab3wQGOz1C5N/8UreIcYzTdujSwIDGWyAR
-         lglBNHPmSXcgnBRo1j0BviJ7uHwbi0Fr+uOZNS+tP6pSQxrL7Y57nna0TVMEnEeJrxgG
-         VWyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749128577; x=1749733377;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PVT5EJpM+m1cOTQkhZPkhfUXOCLKAPtm4dYD8NRnSuE=;
-        b=vHVgLXSof8xLdHS0Tmk0NIwTfEXDU4zJXGK2UtpDWIHD0sooop5wYrUvBpIhxQ2BXP
-         q2T/273VmE5vy4qtK2TeCWJYdD+8wPzj5iyH2zoxzYGGM5bI/B5kaT8Ryi4DKQqn7pL7
-         DBKqtU2emkr8y6RT4cq6IekjrzcNEVIKp9RjolKygS4RsQt2dDCzWTPwMlA67wtzeakO
-         bwqUyPSgrTWixvcdI76TuaZ2rHMl0SKzHIA8dHCZDXfKF04Qr98j7/2dFMo40YHTinKC
-         o+czjB9ZzWo9ZMGfXVevT7gi+J9LkHGwXtz+MZ3O6Hug4F+ryXnStYDHo/DecmGA/SxP
-         L3JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8xRJNoafJ4mgNt5VztlEfKOthucgT+BuJgrSfrWT1f4mRtu8i+4CHY77m396Hlg1OVBfpKKeYBafKDfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCT9ijASIsvu0OWH+LNFhh6tCpwOkcB979s5lQOcAiqSiTIKre
-	isf73SkxeLQ5JDYzzYcx155o1sBuKmG1KVKnIZEiVe7l65l0HalJMCd0oDjCKT0ArxrJ7hDo3DM
-	rim/ye2e9Xb9/PsVxP9/4GhgljZAQnE2AxmJiTVqLew==
-X-Gm-Gg: ASbGnct2OKqwkDdKgk2iFvpBLz0gq0dRo5sbw+nZ7WB4njmrujSGnlnI+rs4iZGOmmg
-	FxjLv+7TeUtyVHHrSkptihvOS/ftejmSfZOaJ4MDEzfM2KCCu7csOVCBf7xkrE+xx9xQzhl3zgU
-	xo9UnMeBp17afo8trXK/VD2rZzbnKZbGkF
-X-Google-Smtp-Source: AGHT+IEtlN9LmFKCqkTfr1fMDsTcWr6BPb/SNfXLFckAF9Sr8ZXGsmd9lFBvMAQkVfe0s88El5iAUEXMpQYKE5AAkEc=
-X-Received: by 2002:a05:6512:3043:b0:553:5283:980f with SMTP id
- 2adb3069b0e04-55356df2aeemr2183360e87.51.1749128577147; Thu, 05 Jun 2025
- 06:02:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="rfZhXYjF"
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 0E2D81FC21;
+	Thu,  5 Jun 2025 15:03:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1749128591;
+	bh=1/K0m/4uJlUAUHLqOtNd4YAqnOEAV+gHKTqgtCKKZUc=; h=From:To:Subject;
+	b=rfZhXYjFZ0lSsAvHxA2NUfIDac5g86VXo5YqgRjL0BKCUksdF1ySd7Vw3rpxi2AWc
+	 CiwfvaM7s2yoHU5TiCKifO3CQ6gRhK4nWBNRI9BtNfEbNQjcsOi8krIKgH7qbFK1uX
+	 KYH0BV9zWoP8rKjQdIl0T1jfGYPyDbeETy3ct0WSJXZCag+57wsoCqT5VITdVyg6Sr
+	 VZKd8pgZkfiFjvjeG3olv+AdY3xMWmZDobUoHG0uM1VPtpnli+ZAKgpw+h5GbKLVEJ
+	 gxWmoS9JSNflWOxsIusbtn/ZRM6+qUGy+j4dVSPAlKjZBPXUKlF9gnNaWGwE5Pxa+G
+	 Oh5Dqld9jUFTQ==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jeff Chen <jeff.chen_1@nxp.com>,
+	stable@vger.kernel.org
+Subject: [PATCH wireless v2] Revert "wifi: mwifiex: Fix HT40 bandwidth issue."
+Date: Thu,  5 Jun 2025 15:03:02 +0200
+Message-Id: <20250605130302.55555-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com> <20250528-hdp-upstream-v4-3-7e9b3ad2036d@foss.st.com>
-In-Reply-To: <20250528-hdp-upstream-v4-3-7e9b3ad2036d@foss.st.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 5 Jun 2025 15:02:45 +0200
-X-Gm-Features: AX0GCFun0Zlf8oI1kptxrVzEZHeoQoovvg-1R2vISTKQmzQE4bFTIdqUSf5gGUc
-Message-ID: <CACRpkdZsyUR6_Rbxcbs-yUUm=U9UKGCuFp7kmmogqsUAxzTZuw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] pinctrl: stm32: Introduce HDP driver
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 28, 2025 at 3:33=E2=80=AFPM Cl=C3=A9ment Le Goffic
-<clement.legoffic@foss.st.com> wrote:
+From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-> This patch introduce the driver for the Hardware Debug Port available on
-> STM32MP platforms. The HDP allows the observation of internal SoC
-> signals by using multiplexers. Each HDP port can provide up to 16
-> internal signals (one of them can be software controlled as a GPO).
->
-> Signed-off-by: Cl=C3=A9ment Le Goffic <clement.legoffic@foss.st.com>
+This reverts commit 4fcfcbe457349267fe048524078e8970807c1a5b.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+That commit introduces a regression, when HT40 mode is enabled,
+received packets are lost, this was experience with W8997 with both
+SDIO-UART and SDIO-SDIO variants. From an initial investigation the
+issue solves on its own after some time, but it's not clear what is
+the reason. Given that this was just a performance optimization, let's
+revert it till we have a better understanding of the issue and a proper
+fix.
 
-Yours,
-Linus Walleij
+Cc: Jeff Chen <jeff.chen_1@nxp.com>
+Cc: stable@vger.kernel.org
+Fixes: 4fcfcbe45734 ("wifi: mwifiex: Fix HT40 bandwidth issue.")
+Closes: https://lore.kernel.org/all/20250603203337.GA109929@francesco-nb/
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+---
+v2: fix reverted commit sha
+v1: https://lore.kernel.org/all/20250605100313.34014-1-francesco@dolcini.it/
+---
+ drivers/net/wireless/marvell/mwifiex/11n.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
+index 738bafc3749b..66f0f5377ac1 100644
+--- a/drivers/net/wireless/marvell/mwifiex/11n.c
++++ b/drivers/net/wireless/marvell/mwifiex/11n.c
+@@ -403,14 +403,12 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
+ 
+ 		if (sband->ht_cap.cap & IEEE80211_HT_CAP_SUP_WIDTH_20_40 &&
+ 		    bss_desc->bcn_ht_oper->ht_param &
+-		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY) {
+-			chan_list->chan_scan_param[0].radio_type |=
+-				CHAN_BW_40MHZ << 2;
++		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY)
+ 			SET_SECONDARYCHAN(chan_list->chan_scan_param[0].
+ 					  radio_type,
+ 					  (bss_desc->bcn_ht_oper->ht_param &
+ 					  IEEE80211_HT_PARAM_CHA_SEC_OFFSET));
+-		}
++
+ 		*buffer += struct_size(chan_list, chan_scan_param, 1);
+ 		ret_len += struct_size(chan_list, chan_scan_param, 1);
+ 	}
+-- 
+2.39.5
+
