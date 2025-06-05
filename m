@@ -1,130 +1,88 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A13A19F42D
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B1F21A454;
+	Thu,  5 Jun 2025 19:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749152350; cv=none; b=r2uw41/Ok9krvd28ye1j+pn6VnYyVo/Iu5WgVYkHg85QE9n9hWacTDYEK7wxLElHZwLOa/9pNVQ0L8feTlBgvXXCMgKIz00n+IZKGFFpPQOIIhq+kWgvJq8Cl0Rs/4L3G5Sa4lZtMdg0Ozr5BlJfSR+vLXxz2b7Nw7Lq4trfbqE=
+	t=1749152373; cv=none; b=XVsJJ0cwI59scpYsf7Sgt3YKxLjssg5prZlW8WvVt8VBfJ+Rq0VVFbBC9V54t0EkywqWRQMainNG9fS12T9xWadxX4dDoN6uFkkkaICyr0z8nZ91cA9XohgV/zC0U9sXNEvGWc13avVca8cLbHlLf9dIIooDPD7P5QpKCE1vlOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749152350; c=relaxed/simple;
-	bh=wXznWQBOXTEi2tAcuMpCkxGd8HrJXPKiu6Cyasd3Fzw=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=WjCkQao+j/lCFQWYXJKpcp1QKXyEnt/NgMBTmUZLZ6EQMrb2F9LoUke9uJBBohj1VJkHjv+k5no+XHdxhA2E3sYbFJDXurt7buLCr/lNeXmOpHyrq4Nu/a05rROQWydxRJLlPeFLcXhcnQyFebijaJCcwDVePZSZ4ibXZN/cYXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=YoJ1ALcF; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1749152373; c=relaxed/simple;
+	bh=8kX+0SKha7Pws3nxTa2q2GKi8InvsonHOdQzOKyIg5c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=soxTOE9GaW4JShrn3EGQOq9SsBIfUpN4CQ8ex9QTcT9wgc5qr9R1l5JcYGO8+tezoqTcv7bLxtT3LUfHzqyUlNxTFumNQm1vylqKgY66RKi6QiN3AbtM/W1YcGI6OQRdM6IUjkGHVG0BStNmqjbYnDA3KtyYeRLgOdr+9NTT37U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sNoFza2W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="YoJ1ALcF"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-747fc7506d4so1539768b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749152348; x=1749757148; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=haAgiaDfI7iPjM0FExGSkhhwCTi21Y4yAp4lNyqCkJU=;
-        b=YoJ1ALcFBo9/P9bLgXyS8D89K7v8u7YSzvRO3ibSAKqaYKqg8dbXtve9GCfEI5qtHn
-         xg51jDuVWEgJOKbjQUdfzFcliPZegXB6DIWMGUjtFipRMcmtnR0T09fgV/JWpNctaldN
-         9bn7KTs7yCvMNWH7AEsY4H4X9MyUEWQpY/W7S81nUuUNxZZ6o+shmHDnXGdfhSFd6ZYo
-         SjhH1iwXX1zxqnSLAPFfEWUyBojemNcC9HwlVqu3mBsvxoM/tsfQJXgKkalo3GmD8Vk9
-         NnJCkIlsEqFONbrw7TFgegXfxx9FMA/DFk8yCmEFCt4GC9ZWmeWSzr22bI9sJ78wDTji
-         D/9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749152348; x=1749757148;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=haAgiaDfI7iPjM0FExGSkhhwCTi21Y4yAp4lNyqCkJU=;
-        b=RpIuqutcr9a4m9PL/pQtGxDZqacHJebHavUKtFh2UbHvvQcoVFVl4NA6ghPuhIRJ+K
-         vVsymBlNe9DQrSIJ2ipB6Bvp6tzS5uKyzZlf5dMR9tOuadgWObcJdgJP0RMf+Mo8W3vN
-         2ymIUM6F7YWlRtwxLbDZ5U65+6iXI/T5r+yWyjrucnGHLYvJQOSjNJptHzMmqyCK6l0V
-         hwdUwXzuanjbTffyOkVTuPJ9wp60RHdEuYOEOXkt6zgPwQa1uULgPmpT4qc+twsXAR6a
-         rlkPqdkoUfnj5ebCqbQij/ipbcW8dOmfNdJ7Es/bJVz223ctw3uyK4uktLpqUvaCZDza
-         TxmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTx2PaUzJQEPW7IJZbP3HuB6lYAr298fQJsSPEE713Ce74S6h9QGVIkhx2lPsHSPhGySr+d3dyAm+oz7o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxC5gEmDUYGVjtbNcGRDdDnrp+jUoTAn99OPiCfM3/UxQJMYExT
-	P6U/LMUrWIIUpFZFk3S6xGkePSJZxbCtNEWkYkw4OxuAapzXM9z0Ub6UNBAqBgrIoGc=
-X-Gm-Gg: ASbGncu1s2wLEGj3YWlQmJg5sFJeg/PUekFagcS0CQQLgM4IwWuSBHdzlReLxLbG6A8
-	P6Ixga1fbG/EoQG8AZv+5f1weVkaDbANBnuXyIHN6jNaH+QnV7mzTe3yVNcbJJ0Bu9vF9hGfTmn
-	MdsQUFY/3KOktnM6C5ho2MhPH2AoN0BDmW06S9Kyr8MA+QG1nf4OHkPJOzPdbd5porlDBujvPBh
-	FIpr81nJDhd82iKWGPv3cQpSWvEw4A5NV0sEQSK1tn94hW0BNCqgouNEes7fRp4wo6QEbpZx08s
-	/CoJ9HjIqcx3X5OXrjb6s6u6CKNV56rLaZEpzMNS/6vuaIOeDqq9ZIFvInxFavesMztMUes=
-X-Google-Smtp-Source: AGHT+IHNLhqWS4JZ8qnkbhSByUjBqdeldKvsjPEP40lKj7hLG7t5iUA23bGpFM6YZZkMzsTaHANp/A==
-X-Received: by 2002:a05:6a00:3d4b:b0:742:a77b:8c4 with SMTP id d2e1a72fcca58-74827e50d2cmr1436138b3a.3.1749152347778;
-        Thu, 05 Jun 2025 12:39:07 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::4:8480])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7482adace2csm49444b3a.0.2025.06.05.12.39.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 12:39:07 -0700 (PDT)
-Date: Thu, 05 Jun 2025 12:39:07 -0700 (PDT)
-X-Google-Original-Date: Thu, 05 Jun 2025 12:39:05 PDT (-0700)
-Subject:     Re: linux-next: Fixes tag needs some work in the risc-v tree
-In-Reply-To: <mhng-0BFF3412-041F-491C-BFDA-D83B5213E1D5@palmerdabbelt-mac>
-CC: alexghiti@rivosinc.com, Paul Walmsley <paul@pwsan.com>, cyrilbur@tenstorrent.com,
-  linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Message-ID: <mhng-4EB34AF4-99CD-44B7-92E2-19D63EC0E099@palmerdabbelt-mac>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sNoFza2W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27446C4CEF1;
+	Thu,  5 Jun 2025 19:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749152373;
+	bh=8kX+0SKha7Pws3nxTa2q2GKi8InvsonHOdQzOKyIg5c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sNoFza2WKsj59ZBl3LyAwyuvCSQonfD4ecSrSv0VaXOY3dzUibhwa9zE6zg+LxxD/
+	 YSVMpXnm1l5h5te334aTFJAQ7jaM7ToibyjLWWUnG5LgEx+m38qsLI4Yh8c3VpnnCv
+	 zmsAO09bjS4Cgblt10mOjAnsP7X+AHhCEoAVcpi666fiHyXtTE/A4GzDZvmeg0Tpwv
+	 rBQA2qs17HVBPcC1HcnhjfHmKCDNRV3d+Vxzbf+PREf80nh5WNTMs5rtAmJW+KmqNg
+	 T23MyVltYfjCZXQ5cBoFuBAv5BsUamckLeMahq3m+a5eHL6Zl7nxZMjhH3RbYoUnOD
+	 HEJ16LRabBrKw==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5534edc6493so1651154e87.1;
+        Thu, 05 Jun 2025 12:39:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWBbUEEWqRF1EILN2Rj/dIEqO7gvdSRtdydfU2/7z8VvFyA32XpKTV4c0TqP34zJjkmvgjns7Vf0sJtk+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1JnKVBO/GA1oeYxLImc7GO9vctV93+NQujCb7BPXuqNHG1paY
+	8gcMmp+EF1r/w4PqTym81AW3Ynmv0T1ARaQMeHDNn5YVcyiXl/zvK/YchhBeR/AAfrD/m3fnA/I
+	ZMIl3zj/0w/fIekuY+yFMCbt3TpAYRRs=
+X-Google-Smtp-Source: AGHT+IGsSiZ3bAmB/88G8wDxNMfEjert3Zql/M99zaJiTWefbqY+2uUyuySefy7f1WLQwJ6fWz5vkqNRoTpjEeyfoFY=
+X-Received: by 2002:ac2:53ac:0:b0:553:20f2:2e77 with SMTP id
+ 2adb3069b0e04-55366e33a1emr80046e87.55.1749152371856; Thu, 05 Jun 2025
+ 12:39:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20250526184401.33417-1-khaledelnaggarlinux@gmail.com> <20250526211039.163449-1-khaledelnaggarlinux@gmail.com>
+In-Reply-To: <20250526211039.163449-1-khaledelnaggarlinux@gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 6 Jun 2025 04:38:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR8ie2VmJ2RiMZaV4MaHi=hGebev7LV+jpD2cNt430aQQ@mail.gmail.com>
+X-Gm-Features: AX0GCFuFmrxL8miWi2wty8frgs2Oth1qCIdZqsrJMDUMEj9DGCIH_tEVwPEpd4k
+Message-ID: <CAK7LNAR8ie2VmJ2RiMZaV4MaHi=hGebev7LV+jpD2cNt430aQQ@mail.gmail.com>
+Subject: Re: [PATCH v2] docs: symbol-namespaces: fix reST warning with literal block
+To: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
+Cc: linux-doc@vger.kernel.org, willy@infradead.org, 
+	linux-kernel-mentees@lists.linux.dev, shuah@kernel.org, corbet@lwn.net, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 05 Jun 2025 12:30:41 PDT (-0700), Palmer Dabbelt wrote:
-> On Thu, 05 Jun 2025 10:08:15 PDT (-0700), alexghiti@rivosinc.com wrote:
->> On Thu, Jun 5, 2025 at 6:23 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->>>
->>> On Wed, 04 Jun 2025 23:35:13 PDT (-0700), Stephen Rothwell wrote:
->>> > Hi all,
->>> >
->>> > In commit
->>> >
->>> >   4e27ce58e7fa ("riscv: uaccess: Only restore the CSR_STATUS SUM bit")
->>> >
->>> > Fixes tag
->>> >
->>> >   Fixes: 788aa64c0c01 ("riscv: save the SR_SUM status over switches")
->>> >
->>> > has these problem(s):
->>> >
->>> >   - Target SHA1 does not exist
->>> >
->>> > Maybe you meant
->>> >
->>> > Fixes: b0feecf5b812 ("riscv: save the SR_SUM status over switches")
->>> > Fixes: 788aa64c01f1 ("riscv: save the SR_SUM status over switches")
+On Tue, May 27, 2025 at 6:10=E2=80=AFAM Khaled Elnaggar
+<khaledelnaggarlinux@gmail.com> wrote:
+>
+> Use a literal block for the EXPORT_SYMBOL_GPL_FOR_MODULES() example to
+> avoid a Docutils warning about unmatched '*'. This ensures correct render=
+ing
+> and keeps the source readable.
+>
+> Warning:
+> Documentation/core-api/symbol-namespaces.rst:90: WARNING: Inline emphasis=
+ start-string without end-string. [docutils]
+>
+> Signed-off-by: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
+> ---
+>
+> Changes in v2:
+> - Use 'For example::' to create a literal block, suggested by Matthew Wil=
+cox.
+>
+> --
 
-I think that's the correct one now.  It's disturbingly close to the 
-broken hash, though, and I've been staring at commit IDs for so long 
-trying to figure out this rebase that I'm kind of losing my mind...
 
->>> > or
->>> > Fixes: 8f9b274ad153 ("riscv: save the SR_SUM status over switches")
->>> >
->>> > (yes, they are all the same patch ... and all ancestors of 4e27ce58e7fa)
->>>
->>> Ya, thanks.  Something's gone way off the rails here, let me try to
->>> figure it out...
->>
->> I expected to send this fix (along with other fixes) next week, after
->> the -rc1 was released, with the proper fixes tag, so maybe Palmer you
->> can just drop it?
->
-> The actual problem is that you've got some sort of rebasing going on,
-> which is causing duplicate patches.  We just got lucky and this Fixes
-> checked happened to stumble on it, but there's a bunch of these.
->
-> I'm going through and rebasing your PRs to try and get it cleaned up,
-> but next week we should talk about some workflow stuff because something
-> is wrong.
->
->>
->>>
->>> > --
->>> > Cheers,
->>> > Stephen Rothwell
+
+Applied to linux-kbuild.
+Thanks.
+
+--=20
+Best Regards
+Masahiro Yamada
