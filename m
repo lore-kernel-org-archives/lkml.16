@@ -1,65 +1,56 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8830725DAE2
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9156426AA82;
+	Thu,  5 Jun 2025 13:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749131068; cv=none; b=fNCzZh8l743FclQL7fWj/xdEFSRI2cifk9odNG7+4H2XdYuLObFr90ykAf5GCKXlc6qmIyGPysY50eMU/PBTnwGYaB+NoeUnZF1BQRXvNzA7bkhAmYa5rg2/qhq5XYq6SeK0cBQw2MnQEXAC40ie8WPUqzeALF48KQoMDCxLK40=
+	t=1749131198; cv=none; b=QJPJcMdDXYFuNVPjqSfkl8kqxJJULPfTofBukjz2trfCt7WUm8hBFTo9NaL6WpK6LAA2MzVi/aYqL1c5xx1HwpOF/ptlnYJM121720Pgo7wD/LTWuxIAgR4mFoU8ro0H2ikAweUek4tT2Ztb9HyiTOc1U+SBBmmOPHxVUQwb4NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749131068; c=relaxed/simple;
-	bh=rCO97t5tY3E5x9tBF5MM51T7nX5k5kOJxQqu9YByUYc=;
+	s=arc-20240116; t=1749131198; c=relaxed/simple;
+	bh=Tpf9ItGaBou0FWnVAa3e7cYiVATjsvVi5B2ILbnbgAc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VsbqPYRXBAtvYUC8L0TK3cxaCvATus6peDae+itSdnTJgpCQZLliDDv9xPHSIAPpJVDjRhoKlvdk8NjXnVf3muZ47BdjdKXD0w9g0W6Kwah/e9qjd+pgOK5GBuwBhDc2EeULGUZVBUH1dkpUomc91Iy/S3KoH0kMi7JVohuCxK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Kr9Id81S; arc=none smtp.client-ip=209.85.221.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=eT9C+N4U1Ye5M8d9/dQThWSCUk+BiVNte4swuNT8yat/py8mvQPWuDgmEmiUyFW2MVu1vW65kh2kGcPQmDvl6VOiYnNtxBqClOzNbmYpH+dHl0WFMdYqjtdotrtzyqTGVZgRegy8YzP4Avxs63RHY3xaUPXG4FjoqHna8VAWTjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nMUUy8l7; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Kr9Id81S"
-Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-3a51d552de4so578661f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749131065; x=1749735865; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kQdIuSTATuzb/lH9GWsSgTLyKRDQtpfdIWX4HXG5tVQ=;
-        b=Kr9Id81Sb1GR3sMZ3YtsKIYQhLqsGiDv5tZqVbu/cb74ByVLmEwaOyjMeG2DM95QaA
-         XK1IjD4wa5jCqTLwqEFuEJfceyBX56DM34xzwhUAx9m9O+cqQb0R1aDeKQInzXWHbA3a
-         dGVpq7tmG/nXAshI9IBQrcp5+b8WlF43evlFmWdxV97Y/k9Io20JaF3VT6GCTJi/Mcv+
-         AbMsQLaa8tajF+n80XD7UV/bLO/oc6LQhwtGcT+PkPzcNcPxh7ijhco6mBSbO24MWsfF
-         djkPdjMkU5jtuJyttk7z7aufJ2XrtuGW61D9ToOIf2Le7bM5MlNGP+QVLPVyPx+m1Gmw
-         Pguw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749131065; x=1749735865;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kQdIuSTATuzb/lH9GWsSgTLyKRDQtpfdIWX4HXG5tVQ=;
-        b=hHPOvLIaR5UcN9Koeb7eGnW37CGCbHIdIdZlnWddUiDcZ9aWWS41a9q5HevOo/dk6u
-         L7G5XXFVncsHgO4WuE9LncUSrfn/axlgUhmgwWET+y0yJTtX5bMW+0HHbBYzdHELMlSV
-         lqMz69DF83nstYFVVq7y4rK2Yn+Pv8h1Yg52aZubijmwbbT56DOFQa4jkfw+KU4Blu24
-         DVoCi1H+V5D6029OKF8k3XBfKyFfVRVtgutxX99adtuk0vIg6amAKuzdUpVU6qVNvQBI
-         64TVAXuPskNBIAQkMsTleD7UWOiCyEUt5YUYDY55voYWrYAQCLmSLP6/WoiNafeoBh7q
-         PpLw==
-X-Forwarded-Encrypted: i=1; AJvYcCV36IrHPAEtqhEdFc0+ZPIhfCKN9p6SrM0YTkekUzPH/17rmLwnZ+eUsQ/CKFfdOXX6axKgzbZcCmoNZJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/1TNkJcDtxbEu+niJvEs/fPiBqnAQIDlurzmGFz8c3yKEiND1
-	T+IO2Z8IfLWQa+P3ixZoR23VZzknhkXOKjzl7IBUNAqWwC0Yo6oscylNvg6Lcevszgk=
-X-Gm-Gg: ASbGncvs7tc8hZPlcpcs0BiHn1vs5EUtPd4oZa6S4lm08dq1+q0FqnoIsvvaSUGGJgh
-	BkmVr47VS5MkacAXfh5ZACRIaHwUtCmkgKh861hO/vRsl/JF7x1ueEaQTWQeHEhIS+ogn8dQ/J8
-	1ZfwWU/cafJfSTGSRjPDQg+EiHFR3tjQZ1rUS5clCR6xJlAlI4kcrvkb2+MzEVbRnVWa62ivKwh
-	gK793aSgeE7zEVJG/YhxVbAfxxuvjjRvc2NLXIx4rVQzmoJMnrjQFYa/lJuVmM3uqLT212gPf6t
-	JVQoHQY+AEKlCFjy2qVQtWq8x7jRkv3S/pgumWItd0QKOT/Afjs0eZJGCVG3DqdPJ6bMnikJjgy
-	yOguA
-X-Google-Smtp-Source: AGHT+IEZBXkNJsZax09ksMSFFsYVIlL2lvRHaY0jmuIMadt7kKvrCMXnThYERvTqZ4mq0dgdqgi/bQ==
-X-Received: by 2002:a05:6000:25ca:b0:3a5:1c71:432a with SMTP id ffacd0b85a97d-3a51d91c1f0mr5935337f8f.14.1749131064750;
-        Thu, 05 Jun 2025 06:44:24 -0700 (PDT)
-Received: from [10.0.1.22] (109-81-1-248.rct.o2.cz. [109.81.1.248])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6ca46sm25077312f8f.31.2025.06.05.06.44.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 06:44:24 -0700 (PDT)
-Message-ID: <beb343ec-6349-4f9c-9fea-588b04eb49ee@suse.com>
-Date: Thu, 5 Jun 2025 15:44:23 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nMUUy8l7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749131197; x=1780667197;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Tpf9ItGaBou0FWnVAa3e7cYiVATjsvVi5B2ILbnbgAc=;
+  b=nMUUy8l7SCUuxShDmR9ax6+uSKS8uW5k7SClpA5juijbGL2oFVBH0PrL
+   kDQMQ0VBwukItViF8FYaKuyHiSitvxOEhRe76Q93PEYqSFbr/fziGR64f
+   AwHGFpcYAvhz+e5Hlyarj+ZJ+zOzRR1uoKeuXvmDYA/pkGLtmkhTqXSa7
+   L2+zRl63Eq+l2jDZSi9ducW8TU0tttMiDYj8hmoZMBtDEisAYSeeM5sra
+   ESJB3A09sIXYqoDj/dNLd4IfxLDmEhKF8WWAaiW5INR2Orv2U5CdmE7++
+   3A4ERZmPcWTZrYJxg85FiIC6GF7FzGMOb1y0Zx1VZqsBH6y5v994kg/Wf
+   w==;
+X-CSE-ConnectionGUID: RgKyhc41QJeGsd26H/HLLQ==
+X-CSE-MsgGUID: vbMp3goqRp2rErDWsQOYrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="73782036"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="73782036"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:46:37 -0700
+X-CSE-ConnectionGUID: Kj+CZmbWSh+lfX1+Useb+w==
+X-CSE-MsgGUID: Iw4kSaOnQ46FeR9Srzp1cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="145391614"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:46:36 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id B052E20B5736;
+	Thu,  5 Jun 2025 06:46:33 -0700 (PDT)
+Message-ID: <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
+Date: Thu, 5 Jun 2025 09:46:32 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,109 +58,104 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] module: Make sure relocations are applied to the
- per-CPU section
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-modules@vger.kernel.org, oe-lkp@lists.linux.dev, lkp@intel.com,
- linux-kernel@vger.kernel.org, kernel test robot <oliver.sang@intel.com>,
- Paolo Abeni <pabeni@redhat.com>,
- Allison Henderson <allison.henderson@oracle.com>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
- Luis Chamberlain <mcgrof@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-References: <202506041623.e45e4f7d-lkp@intel.com>
- <20250604152707.CieD9tN0@linutronix.de>
- <20250605060738.SzA3UESe@linutronix.de>
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
+ Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+ <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
 Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250605060738.SzA3UESe@linutronix.de>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 6/5/25 8:07 AM, Sebastian Andrzej Siewior wrote:
-> The per-CPU data section is handled differently than the other sections.
-> The memory allocations requires a special __percpu pointer and then the
-> section is copied into the view of each CPU. Therefore the SHF_ALLOC
-> flag is removed to ensure move_module() skips it.
+
+
+On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
+> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
+>>
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+>> below perf command.
+>>   perf record -a -e cpu-clock -- sleep 2
+>>
+>> The issue is introduced by the generic throttle patch set, which
+>> unconditionally invoke the event_stop() when throttle is triggered.
+>>
+>> The cpu-clock and task-clock are two special SW events, which rely on
+>> the hrtimer. The throttle is invoked in the hrtimer handler. The
+>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+>> be used to stop the timer.
+>>
+>> There may be two ways to fix it.
+>> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>>   perf_event_throttle() if the flag is detected.
+>>   It has been implemented in the
+>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>   The new flag was thought to be an overkill for the issue.
+>> - Add a check in the event_stop. Return immediately if the throttle is
+>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>>   method to stop the timer.
+>>
+>> The latter is implemented here.
+>>
+>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+>> the order the same as perf_event_unthrottle(). Except the patch, no one
+>> checks the hw.interrupts in the stop(). There is no impact from the
+>> order change.
+>>
+>> Reported-by: Leo Yan <leo.yan@arm.com>
+>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > 
-> Later, relocations are applied and apply_relocations() skips sections
-> without SHF_ALLOC because they have not been copied. This also skips the
-> per-CPU data section.
-> The missing relocations result in a NULL pointer on x86-64 and very
-> small values on x86-32. This results in a crash because it is not
-> skipped like NULL pointer would and can't be dereferenced.
+> It seems the patch fixes one issue and introduces another ?
 > 
-> Such an assignment happens during static per-CPU lock initialisation
-> with lockdep enabled.
+> Looks like the throttle event is sticky.
+> Once it's reached the perf_event no longer works ?
+
+No. It should still work even the throttle is triggered.
+
+sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
+/proc/sys/kernel/perf_event_max_sample_rate'
+sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
+sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.564 MB perf.data (613 samples) ]
+sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.545 MB perf.data (502 samples) ]
+
+
+> Repro:
+> test_progs -t perf_branches/perf_branches_no_hw
+> #250/2   perf_branches/perf_branches_no_hw:OK
 > 
-> Add the SHF_ALLOC flag back for the per-CPU section (if found) after
-> move_module().
+> test_progs -t stacktrace_build_id_nmi
+> #393     stacktrace_build_id_nmi:OK
 > 
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202506041623.e45e4f7d-lkp@intel.com
-> Fixes: 8d8022e8aba85 ("module: do percpu allocation after uniqueness check.  No, really!")
-
-Isn't this broken earlier by "Don't relocate non-allocated regions in modules."
-(pre-Git, [1])?
-
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> v1…v2: https://lore.kernel.org/all/20250604152707.CieD9tN0@linutronix.de/
->   - Add the flag back only on SMP if the per-CPU section was found.
+> test_progs -t perf_branches/perf_branches_no_hw
+> perf_branches/perf_branches_no_hw:FAIL
 > 
->  kernel/module/main.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/module/main.c b/kernel/module/main.c
-> index 5c6ab20240a6d..4f6554dedf8ea 100644
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
-> @@ -2816,6 +2816,10 @@ static struct module *layout_and_allocate(struct load_info *info, int flags)
->  	if (err)
->  		return ERR_PTR(err);
->  
-> +	/* Add SHF_ALLOC back so that relocations are applied. */
-> +	if (IS_ENABLED(CONFIG_SMP) && info->index.pcpu)
-> +		info->sechdrs[info->index.pcpu].sh_flags |= SHF_ALLOC;
-> +
->  	/* Module has been copied to its final place now: return it. */
->  	mod = (void *)info->sechdrs[info->index.mod].sh_addr;
->  	kmemleak_load_module(mod, info);
 
-This looks like a valid fix. The info->sechdrs[info->index.pcpu].sh_addr
-is set by rewrite_section_headers() to point to the percpu data in the
-userspace-passed ELF copy. The section has SHF_ALLOC reset, so it
-doesn't move and the sh_addr isn't adjusted by move_module(). The
-function apply_relocations() then applies the relocations in the initial
-ELF copy. Finally, post_relocation() copies the relocated percpu data to
-their final per-CPU destinations.
+Do you have more logs regarding where it's failed?
 
-However, I'm not sure if it is best to manipulate the SHF_ALLOC flag in
-this way. It is ok to reset it once, but if we need to set it back again
-then I would reconsider this.
-
-An alternative approach could be to teach apply_relocations() that the
-percpu section is special and should be relocated even though it doesn't
-have SHF_ALLOC set. This would also allow adding a comment explaining
-that we're relocating the data in the original ELF copy, which I find
-useful to mention as it is different to other relocation processing.
-
-For instance:
-
-	/*
-	 * Don't bother with non-allocated sections.
-	 *
-	 * An exception is the percpu section, which has separate allocations
-	 * for individual CPUs. We relocate the percpu section in the initial
-	 * ELF template and subsequently copy it to the per-CPU destinations.
-	 */
-	if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC) &&
-	    infosec != info->index.pcpu)
-		continue;
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/mpe/linux-fullhistory.git/commit/?id=b3b91325f3c77ace041f769ada7039ebc7aab8de
-
--- 
 Thanks,
-Petr
+Kan> Maybe it's an unrelated bug.
+> 
+
