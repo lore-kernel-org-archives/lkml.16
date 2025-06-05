@@ -1,104 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0BD27877D;
-	Thu,  5 Jun 2025 18:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A351DFF8;
+	Thu,  5 Jun 2025 18:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749146983; cv=none; b=K3DE3VC9t6yIajUQuOtQUaTRHRsXKhtEqg7UFfQeU8pSxuBNwcESULJ82v6fw6J+Kbbrwgjn5QeXZaraQ/MwGXMTRuc1+s0oGLzFKIHlWW25yE+B0SIJkcWuN7iNQl5/yRfrrwWzzgi1RTKXq719JvOA/fJhHldhDrBmlw77A7A=
+	t=1749147077; cv=none; b=TwEMGU8+U0y/vLUptcZwH00j1saKCVKg+kbwcEOQ1+SR//clIfK9e9g9XoWttn9KNk4xnVLpnzu0ABUIx1lUnjsQ2RZHQxmJAdIAwz+g0G7eEv1gE5gNrhtYv/3zKUJB88N+GRNmEc180xywEUzZBTE7wS0x0D7EMVGaChyPvqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749146983; c=relaxed/simple;
-	bh=ubqHoAU1Db00pEWl3huh6IlImU4mT5yagwpEuTLPCPw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SMnOaCKJLk9xkm0zAogZPJsExiH10rwpYCdqRGA5Iouzyl8po9DCMX0+zr9prsPSwsVqEb1+ON48mIgsN/iNd1zp8lcxs7m4B9Hfe3gKq+Hjuil3czRv/Wt0m6rv0CHeTieauvPEnlzpm/O7AhDF/HFDB0oMpLlbmCfQqTlsC+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/MTKqLO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749147077; c=relaxed/simple;
+	bh=qsPpSJ4ygt+4NVkpsrkmbd+H5NIZSkUSZ+G5QW9hzt4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EBVXb7A8rZvAKDRfDTEAiCkBPWe2eakIxb5nGLucJ8OzUWwPPoF+rvK4oK1Osxq5C2BjgbHl4bQAwKx3T9nEGx6AENQ8s52gA1HXohmJq0w6i4p6JlMayrWKUdAArD8rXrNHC3Y5zRCSbABA5sGby4SAY304p+oJ6YDP4hDkr6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=m/Ee+Wai; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/MTKqLO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DD8E5C4CEE7;
-	Thu,  5 Jun 2025 18:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749146983;
-	bh=ubqHoAU1Db00pEWl3huh6IlImU4mT5yagwpEuTLPCPw=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=A/MTKqLOgnr1yMKy4c5ewVNZ6epadxFwnRQildE3J+cE6vZESw04d1C0uvG+zwYao
-	 lWo1gUJllYVv/TIrcW5MsMlb9DjodXq9FfXZrJ2uWu6npHqnpJCXdNUmiJ2FAy2UR1
-	 HEokW0q2s2FkqBwKrshhajV5SBMPhQkN2iYDNa/sY8SIVb0GnOkUwiMkKb7b1CnftS
-	 NuNOJMK8GNNRghDSnR+CB1DmFSMA1QoLXOqsy9V9I+in0TgRFeaUGMkxzsmJbfsr2/
-	 OzHg7GOnDdQ4XbmDiIiZ0TFfwVYe3kAdVVIny0w26emB7He0W1xnrLr/Dk6oS2EXkz
-	 9a+UQMSlxiHFQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B1EC5AE59;
-	Thu,  5 Jun 2025 18:09:42 +0000 (UTC)
-From: Jake Hillion via B4 Relay <devnull+jake.hillion.co.uk@kernel.org>
-Subject: [PATCH v2 0/2] x86/platform/amd: better handle scheduling delays
- in hsmp_send_message
-Date: Thu, 05 Jun 2025 19:09:25 +0100
-Message-Id: <20250605-amd-hsmp-v2-0-a811bc3dd74a@hillion.co.uk>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="m/Ee+Wai"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 555IAKGb590473
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Thu, 5 Jun 2025 11:10:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 555IAKGb590473
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749147024;
+	bh=yZ78zeeeYn7NurhVTyIVvApgCn0j/7L5rqg/Aa9n7Lo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=m/Ee+WaiOn2ZlUAmkSkUN4HBj2S03xUz9v6FzET8lkAtWiQRwWasEKzlvwHGReCht
+	 n6c1aNua31lOzrenmqnJgPSqrlJkKu/FM8T60NEtLA4Z6wh/Kaz4MrgE6isNjcoG6A
+	 jY9of3eQoFfAid7KUGDtvjP3XIMdD/tpUgZdW3KkGH9VAcqNg+GwWOYi+v/3SxUc2N
+	 eCb16xD5CxBAIGdmX0zzoJusW5riNHLLhNhYlqqRqi4AOCqvBRinRu0HwWwalsQsRi
+	 kRZyj0I7cKg+UVLmOTFZMHMPrLv1ncdvj1wRjqsp0CvRlQ2YGi037soFJX9bLkzu0m
+	 M1+12ODj5pegw==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        shuah@kernel.org, andrew.cooper3@citrix.com, sohil.mehta@intel.com
+Subject: [PATCH v4 0/2] x86/fred: Prevent single-step upon ERETU completion
+Date: Thu,  5 Jun 2025 11:10:18 -0700
+Message-ID: <20250605181020.590459-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFXdQWgC/0XOTQ7CIBCG4as0s5aGTktEV97DdAEUZGL/Ako0D
- XcXGxOX75fJk9kg2kA2wrnaINhEkZa5BB4qMF7NN8toKA3IUXCBR6amgfk4rUyaVsiTFLpzGsr
- 5Gqyj105d+9Ke4mMJ711OzXf9IS3/I6lhnLWIqJ1THefy4mkcyw+1WernHfqc8weQ7zaNpAAAA
- A==
-X-Change-ID: 20250527-amd-hsmp-8c358985b4fb
-To: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
- Carlos Bilbao <carlos.bilbao@kernel.org>, 
- Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- sched-ext@meta.com, Jake Hillion <jake@hillion.co.uk>, 
- Blaise Sanouillet <linux@blaise.sanouillet.com>, 
- Suma Hegde <suma.hegde@amd.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749146981; l=1329;
- i=jake@hillion.co.uk; s=20250530; h=from:subject:message-id;
- bh=ubqHoAU1Db00pEWl3huh6IlImU4mT5yagwpEuTLPCPw=;
- b=htrNljWqypmTs++CldvPDLsMDVWtvPO9SWXx1w01s5UjqaPHNkrT35Va8KX93u2Zf+FbglKmo
- meAffuLUQy1CfksR0KQMxdzNKZDCsGvna9dQ6BzUldFUzGq7b/cmrV0
-X-Developer-Key: i=jake@hillion.co.uk; a=ed25519;
- pk=8cznmqtMcMEcU8QH55k8DrySboD889OBB/BEUMJh3dw=
-X-Endpoint-Received: by B4 Relay for jake@hillion.co.uk/20250530 with
- auth_id=419
-X-Original-From: Jake Hillion <jake@hillion.co.uk>
-Reply-To: jake@hillion.co.uk
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-hsmp_send_message currently relies in 2 places on the assumption that
-usleep_range will complete in well under 100ms. This is not guaranteed,
-and is prevalent when running sched_ext schedulers or possible under
-other high load conditions.
+IDT event delivery has a debug hole in which it does not generate #DB
+upon returning to userspace before the first userspace instruction is
+executed if the Trap Flag (TF) is set.
 
-These patches alter the behaviour in two ways:
-1. Checks the result of `mbox_status` a final time if the sleep took us
-   past the timeout. This gives a useful result under test when there
-   are significant scheduling delays, rather than -ETIMEDOUT.
-2. Removes the 100ms limit on awaiting the semaphore. This allows a
-   second thread to compete even when the other suffers large scheduling
-   delays.
+FRED closes this hole by introducing a software event flag, i.e., bit
+17 of the augmented SS: if the bit is set and ERETU would result in
+RFLAGS.TF = 1, a single-step trap will be pending upon completion of
+ERETU.
 
-Signed-off-by: Jake Hillion <jake@hillion.co.uk>
----
-Changes in v2:
-- Corrected -ETIMEDOUT to -ETIME in patch 2 as requested by reviewers.
-- Link to v1: https://lore.kernel.org/r/20250530-amd-hsmp-v1-0-3222bffa4008@hillion.co.uk
+However I overlooked properly setting and clearing the bit in different
+situations.  Thus when FRED is enabled, if the Trap Flag (TF) is set
+without an external debugger attached, it can lead to an infinite loop
+in the SIGTRAP handler.  To avoid this, the software event flag in the
+augmented SS must be cleared, ensuring that no single-step trap remains
+pending when ERETU completes.
 
----
-Jake Hillion (2):
-      x86/platform/amd: move final timeout check to after final sleep
-      x86/platform/amd: replace down_timeout with down_interruptible
+This patch set combines the fix [1] and its corresponding selftest [2]
+(requested by Dave Hansen) into one patch set.
 
- drivers/platform/x86/amd/hsmp/hsmp.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
----
-base-commit: 44ed0f35df343d00b8d38006854f96e333104a66
-change-id: 20250527-amd-hsmp-8c358985b4fb
+[1] https://lore.kernel.org/lkml/20250523050153.3308237-1-xin@zytor.com/
+[2] https://lore.kernel.org/lkml/20250530230707.2528916-1-xin@zytor.com/
 
-Best regards,
+
+This patch set is based on tip/x86/urgent branch as of today.
+
+
+Xin Li (Intel) (2):
+  x86/fred/signal: Prevent single-step upon ERETU completion
+  selftests/x86: Add a test to detect infinite sigtrap handler loop
+
+ arch/x86/include/asm/sighandling.h         | 22 +++++
+ arch/x86/kernel/signal_32.c                |  4 +
+ arch/x86/kernel/signal_64.c                |  4 +
+ tools/testing/selftests/x86/Makefile       |  2 +-
+ tools/testing/selftests/x86/sigtrap_loop.c | 97 ++++++++++++++++++++++
+ 5 files changed, 128 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/x86/sigtrap_loop.c
+
+
+base-commit: dd2922dcfaa3296846265e113309e5f7f138839f
 -- 
-Jake Hillion <jake@hillion.co.uk>
-
+2.49.0
 
