@@ -1,107 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC1013D521
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0CC1917FB
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749144890; cv=none; b=ZDSEBgnmZ6U27JS4QqnQELH6ND+T+8h6GSoYdpUFOJj8zW5L5pyqEAgPeYPC65oegKj7wxAL+DCImRAcms+Gt0UgCAGANUKzoJ1DjheXgsuajUtRwIKur0NLoP+jz0y9scSAEKxrafNsmavMiXHoNxbZt2rRTd7KLqxNP1ADyhI=
+	t=1749144976; cv=none; b=AmCupu0UJt6Bmy+QYxN5ivSdR6Hh8RujBn+IalulaH7lE0eazpRMI28+y+Kl1PobSagX9P9qJOCpiTY+YtM2fhJBynxsxd4ZLddTkyH8EXn+CxKwtCfUQ1ckTn37xI6Mto+tIdk8+a/lanAl/406CAV8+GTUvmN4NIGclcoiR8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749144890; c=relaxed/simple;
-	bh=6NCxqu7v4UWy0UxOIfb0/A4soX96yrnrGRMd21U+GXc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hYr75NnBy4kRv0zqjvWV8ZK9cwoNQRkUPhMaQetp7FCkZlVyJWlOXoFXY+4yNoKHuTXTsRYhB9m1POIQsV9sIeTtCFdItJfHm4L/8qO2rEVptyzXDGHQ5LL6+LLYdCJ7WdE0noKCnYJ0mr5uIbQcWkhuEo5AYe9WsUIdFQ0l0Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQBlux8Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749144976; c=relaxed/simple;
+	bh=dl8Jg60ElVh4ZYg5JYQyBSog9Gk/qp3bgu5GdVsMqhQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uh1uyucImRjajfj2kmNbGhUkt/Tt4FsOXGFuG/QxxZsHtFbN1ow6IT1klWVOs+y9rLO1GeQgdJCH70RtnGpmHwgdTTSk2+TG+x0pbIH/DEGX6Q+SBRREBiSZ3GG3pxReIVXRzpTNyyxFH/WqzZqjddJxh44ESfxLrNg681ntSU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cSZ4LwQs; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQBlux8Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 736B8C4CEE7;
-	Thu,  5 Jun 2025 17:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749144889;
-	bh=6NCxqu7v4UWy0UxOIfb0/A4soX96yrnrGRMd21U+GXc=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=qQBlux8ZVWeEr0UZ4ffKr6V5wuD5VVlBTg6ZnAUONmMVr9uZJ2V3Sdzo0UxUJY+DP
-	 PWz1ihkeshDb3tJPFHQneBshG0UbMVxmfirBD1MlLFh/V9FTPHc05d2AHrV3kvOp/d
-	 Pe4ZFy4IsvHpDN1h6MuSgbBkVuSDJrbSI8Fdaxx5nxxCYJCNV416G+ArLas0Aq8Yh9
-	 rPWCcUtwZndV695bQgnQ/q/IaEHJjY912Rp9hsvQtXNqeLMrhKCi+vXdK/Awg4GqFT
-	 UCGgGkAQCtvRtiyifGEWfnd/8qrPhKV/pikWxiRphk/jI+UA8H3vuhRmVBxYkWY1AG
-	 80rAgGix9cj2Q==
-Message-ID: <79df2566-dfbf-4fe9-a524-3344a81d71ce@kernel.org>
-Date: Thu, 5 Jun 2025 19:34:46 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cSZ4LwQs"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a52878d37aso181234f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:36:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749144973; x=1749749773; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YMvfcfOLF48v1uRyKZXu/RrHT1jhYeWqfpahQ2X1A5Y=;
+        b=cSZ4LwQswzcelV49WU5/Qwx25g1a7IC8Gw358XJS7u2Lm+pu9QERuzPhqjvkXDbBgr
+         6kY+PpifncATswB0oKVrtu+EeG1ZkjA71C5ZDkO1KOHZR1GNn9NGrtqSunQ4u9YPm+mh
+         GiOdBxefpbsAGXAvLeibRd6kixMuYQk77yXokemsh3l6G52BlCRhdO3WkwUaYDD5xFMD
+         XaWr50y480TMXDMD1cQU4Vnc1pYQOdSgEPGABfIxB1JnKPPZBf2Rbnmz9GYLUL4lqEd2
+         W+sah79nxQBEeZ9Vqa6O2KfzJlxNZOLTocQy5cnGf7BLPazg1v3QFdCM9YSSNKLlBQCe
+         ZH3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749144973; x=1749749773;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YMvfcfOLF48v1uRyKZXu/RrHT1jhYeWqfpahQ2X1A5Y=;
+        b=DxP4Q1PVVSO91oPVtxpkaXv9Ar15GNJh3b4b8xXn2T7mRT1ztCKz5j5AG56De0btVZ
+         bDOom6hnDabPzUW+j52dZwN0802DDLtmk76BNY6Xj8m/nb2qnmnjLi1XlYB66L6CF6PI
+         sSX6ZzviBm8UInZV1MfqSxkcbeeXiZpjlksF8TY4NB2O+IpKNz7AtQzFEdjLPXDmavv8
+         2EHl/dvxxhCgbBKGxyyQTE19JhLSONZ+I+pBYTHx98olCZdPUGtN6LqJ8d8bZUjLAP6e
+         FtmfzpU3Frju5vb0rCM5x41Y6ws9kbY2vUWfSxHepBN78Y2RUGi66DaI47kMdlAdDoLF
+         ek9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXmrZQMqmHH4m0chlldmddPtPRxIZGAhu9GaLwiW5HD5xdZ8+Whlw6yAGnp2YxWK+O7wBYXgYSu5x2Sccs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIV/ApgTY6g0zd8ut6tAS+Bsi8XEEs4td+XHdRfCftDdJXpBSn
+	vq+ZnBQ2ycpa55FzucliGz3gNaq8KeKT71fNvSyQcM8teOlf2V/NTMrq35TkwGThkKQ=
+X-Gm-Gg: ASbGncvGjNCXNT7aLnPtSDpZ0/tvTctkwKObyo1kgIRKISJvSBLt5UtwGhyQzavcuP4
+	H3wBHwSvyjrC38QUDLwa+rKJwrifYrd4xa01Key0hJp43aXM5VpBexsf68LZQ5/AsMaksTpcGKJ
+	3uLbrZdZsx37iPvA2t0DDsu9pWmEOFeYzmC+YN0nFNvB1VuxKCjEZGWdR28ixPwQMYZamA/t92R
+	Poo7guHCU8WlLP6TpuRmqUWzx0gb1aulub/EHtk3OiczsiYtB7KOL6+ik5eJDTFM3xbSbItJbid
+	bWL36GO5CdDrP1Yu/UbOzjoXa58VhPlNYllPB3zwV4Ag/0Lq3F3/deWWIQxdMxrY9EQd2NS1
+X-Google-Smtp-Source: AGHT+IETnhCupdaOviaQHK4ozrpKn6IIjf0eM/B64EnImOiA/1lyExI1946ZBaKtrzPDwgK4NXiOYw==
+X-Received: by 2002:a05:6000:18a4:b0:3a3:7049:f947 with SMTP id ffacd0b85a97d-3a51d952bf0mr2560096f8f.10.1749144973112;
+        Thu, 05 Jun 2025 10:36:13 -0700 (PDT)
+Received: from kuoka.. ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451febed5d7sm9711795e9.3.2025.06.05.10.36.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 10:36:12 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [RESEND PATCH] arm64: defconfig: Enable camcc and videocc on Qualcomm SM8450+
+Date: Thu,  5 Jun 2025 19:36:09 +0200
+Message-ID: <20250605173608.217495-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Enable camcc and videocc on Qualcomm
- SM8450+
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250605154207.141224-2-krzysztof.kozlowski@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250605154207.141224-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1120; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=dl8Jg60ElVh4ZYg5JYQyBSog9Gk/qp3bgu5GdVsMqhQ=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoQdWIg0KFlLqP1FkVueD0UsRvJ00CqeHqO4uav
+ Ac+lFcBHjWJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEHViAAKCRDBN2bmhouD
+ 10vOD/0ZMt4+8X+Vjca4R+MkxyjOIH9VunlrWkdoS41xwOdrV2c4SMfXEGbYdA5fTDUKKOEVQee
+ s4zBiNC9dWMQOqV4F8ybyJtA3ntvXGKZo3gjBVE1OVgG0yNT63xBE/R99O6eTF1DmB818Y5JEsZ
+ G3xR7txsU9JJrqXxboShpg/QK3/lWD9bLIZ1FPaDqJ25GhMSTMaF2DyJTXkaVb/zBuL0siWMD7j
+ ObtFLvnylLf22EseMJmBcRDBMHOnPjlVMrW84QcmoKZBfv1PZSXXQ5DgDhB5gnlEb5K+korOT08
+ iQi6MEqmRppY9u0Gk0uQEPWgDMTfgoiGZUUFH3sI2UNTWcmcCnOfX2jzIwwzJdxz1DyLzvnAiw2
+ NWkuYGP/xPDgN+IquvM/97zNSzcEqpPKwy3Lqitgc6uRDHZzOPbX2BxyONcs+d7PRwMDBhBFO00
+ eSX+htPnWVKK8gRgf9vQWetqn0ZLfj5jEnIzZSL35JPB2OYzEadbjv1eFnJm6Q/uVl6eZqPHrO7
+ fjsu0dDzeSGvuIKyLr7VNP62yJsy//S6eWxeeajQfU3Sd5Hsy/j5V3hQl04H4B1yuv+QJnDIafQ
+ UqyZLZEK8y5w6cerptvRGjHofkFdBLsjsYSfmSGbRMtYVT4S/CJc8ISPpAg4GBsXRZsnNR2zKjI eXOyqfAD7b1dIuQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On 05/06/2025 17:42, Krzysztof Kozlowski wrote:
-> Enable the drivers for camera clock controllers on Qualcomm SM8550 and
-> SM8650 SoC (enabled in all DTS files like SM8550-HDK or SM8650-HDK) and
-> video clock controllers on Qualcomm SM8450 SoC (enabled in SM8450-HDK
-> DTS).
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  arch/arm64/configs/defconfig | 3 +++
->  1 file changed, 3 insertions(+)
+Enable the drivers for camera clock controllers on Qualcomm SM8550 and
+SM8650 SoC (enabled in all DTS files like SM8550-HDK or SM8650-HDK) and
+video clock controllers on Qualcomm SM8450 SoC (enabled in SM8450-HDK
+DTS).
 
-And I forgot to CC qcom maintainers. :/ I will send v2.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Best regards,
-Krzysztof
+---
+
+Resend because I forgot to CC right people.
+---
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 62d3c87858e1..2ffa590b962f 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1404,6 +1404,8 @@ CONFIG_SDM_DISPCC_845=y
+ CONFIG_SDM_LPASSCC_845=m
+ CONFIG_SDX_GCC_75=y
+ CONFIG_SM_CAMCC_8250=m
++CONFIG_SM_CAMCC_8550=m
++CONFIG_SM_CAMCC_8650=m
+ CONFIG_SM_DISPCC_6115=m
+ CONFIG_SM_DISPCC_8250=y
+ CONFIG_SM_DISPCC_8450=m
+@@ -1431,6 +1433,7 @@ CONFIG_SM_VIDEOCC_8250=y
+ CONFIG_SM_VIDEOCC_8550=m
+ CONFIG_QCOM_HFPLL=y
+ CONFIG_CLK_GFM_LPASS_SM8250=m
++CONFIG_SM_VIDEOCC_8450=m
+ CONFIG_CLK_RCAR_USB2_CLOCK_SEL=y
+ CONFIG_CLK_RENESAS_VBATTB=m
+ CONFIG_HWSPINLOCK=y
+-- 
+2.45.2
+
