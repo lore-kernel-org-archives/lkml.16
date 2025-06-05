@@ -1,83 +1,69 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E0A28E17;
-	Thu,  5 Jun 2025 21:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D402798FF;
+	Thu,  5 Jun 2025 22:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749160712; cv=none; b=MyOApr3aU5pJ86WuxHN18QUvCBBry0PNxQ9Mf/6sCUUsRXEDnc7mBU4a5tNmA4mYUMNgUYyNLapWr/YMqzMgmXfCa2O/ghprFFvv5S10foCij6jAHO1k2YIuWw3pxkqPj3fRTV1T6a1yVaTnWcuYe+W1g29CWTZsAAqn2N13QJQ=
+	t=1749160821; cv=none; b=DvNOybEGb8pvPDYsidnvLZ/z3kktWrC5DkmRh0XOD9UgHf6rTUY5K/k2NT3vuG+2+dDy0uUZdm46VeuqUZGpW8a2kYocxAUdOJvCA8unZgu3qbM6qqlO2rltb+Qh2hAQ3qbQZuJ1IODG6OioGvb/wiRjHVArCNobEOjbs08MQ28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749160712; c=relaxed/simple;
-	bh=YDcKeBvvCH76i4Lg7IQXNCwVtg0zeGFowGCrTovcc2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=adOwufDHIDoTypJ1dlAh6PciNN+TiXsObkc6vbkw6Zn+mUHtG1B6tswBJVwfk4XWS2cxsZIliJowxHiGsscIQOucpicWU96zclBY6NsBN7KONRWw6LOjrLRw+SucQGN8wo9uO5Kr1a8LdJQcVNIDO6KPUvibxyTrCzpFnYQCk+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=LTr/WfB0; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1749160821; c=relaxed/simple;
+	bh=fSv5LxJHz+pAz1a6urKJjp0z40L5qoyfwoJaFcV/MPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fW1+9l6m95REksRXWAQlI05n9t4+dqP9jReYJdUTVd7lsC4KMUbLr3YkmhLn1YU94bY1xWS7wFhZIR1YPDCXVirnbQ+lAV8DXWGlQKXskDNUK5cpiTRcm7rn1PRdyCANe3kUIlxl+pgy4xC+Mx8IMq0WkCYsR4Fizsl/9B1/yOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQyL4/rZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LTr/WfB0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1749160352;
-	bh=5zwNf8JIwOXt0gCxd/4OJe0h4Pp5ciq/uJCTwjYdGUE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=LTr/WfB0nQ/cPvzc74JLXRJLpSkT4SJYTIz4fxZpc1ADQEmGThSjd0pHLbWe80/4+
-	 nJLYwOXZkUNK7prXZhPIo84+lk3cK715Wvmtuj1ygyVRhJ2Qqve90vizYSyY17ulSs
-	 CQGfum7QaEl4xLQBos3eascNJb+EN4haLkwgRtbhKG9/Y8wGADjS0NdxVwYHftM70Z
-	 aFDrISV/7UkpjMUVbfUS+pdMCUqPFY/wGBF1UwDsIpj/uMYb9BqLzBfigE5qEwEr+K
-	 ljvWQM9PDNoucDAZ7BdrX/5/XUV103pszlLedKuZa8t5LaUXWnnUF75i5i7Tz80VLw
-	 943ZyT3YZNKfg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bCyq42mkYz4w2J;
-	Fri,  6 Jun 2025 07:52:31 +1000 (AEST)
-Date: Fri, 6 Jun 2025 07:52:30 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQyL4/rZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E84C4CEE7;
+	Thu,  5 Jun 2025 22:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749160821;
+	bh=fSv5LxJHz+pAz1a6urKJjp0z40L5qoyfwoJaFcV/MPc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FQyL4/rZb4sT8FwKFBE9R1kW+Iz2+p7oi0DLQNGWfTGU91tA+eXCL7XxnOLUYZdgu
+	 tsq4JNlurDVtamAhAVZWznngcuCPI68alO23qAZsBHesWKJe0vDT4p+tcE3yiHM57z
+	 wuVxx6hMdd/yotddiOsiwR0NqwUfsBFbnjmc93qut3MohLMMJyxigi4kJ/kkqvysXs
+	 W69MqRCihSRyQqiFYtuQ3uGFVGpMAzgd34gQ2jVGnbXnTg8GhlHybqLV/ucx9VIdmr
+	 InK5KwkqITMKzh5tkJGxXuAtlf8OuPLsAYRTwFturWc9ljDFPXKuuq+mDuQp52ahRA
+	 viw5OrE+lAmMg==
+Date: Thu, 5 Jun 2025 16:00:18 -0600
+From: Keith Busch <kbusch@kernel.org>
 To: Jens Axboe <axboe@kernel.dk>
-Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the block tree
-Message-ID: <20250606075230.6a13c53d@canb.auug.org.au>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Christoph Hellwig <hch@lst.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the block tree
+Message-ID: <aEITcpq6tEAHegEN@kbusch-mbp>
+References: <20250606075230.6a13c53d@canb.auug.org.au>
+ <ddea36e4-4e89-459d-aa60-3d3c05a9b688@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Pyps0HuD9/J/87+6btea1.g";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ddea36e4-4e89-459d-aa60-3d3c05a9b688@kernel.dk>
 
---Sig_/Pyps0HuD9/J/87+6btea1.g
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 05, 2025 at 03:55:35PM -0600, Jens Axboe wrote:
+> On 6/5/25 3:52 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Commit
+> > 
+> >   10f4a7cd724e ("nvme: fix command limits status code")
+> > 
+> > is missing a Signed-off-by from its author.
+> 
+> Sigh... That came from Christoph's pull today. Keith, can you just
+> verbally sign off in here for that patch, at least then there's some
+> sort of trail publicly available.
 
-Hi all,
+Sure thing:
 
-Commit
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 
-  10f4a7cd724e ("nvme: fix command limits status code")
+Again for the record, it was in the original posting:
 
-is missing a Signed-off-by from its author.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Pyps0HuD9/J/87+6btea1.g
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhCEZ4ACgkQAVBC80lX
-0GwToQf9FLX3oEPYyPCQxve/oLm2ICV2QCQNtDinYFKcyAMPxO+Vb+1I6Yg0KvmK
-b1H/eiOgKLG9EnCnetPFkpQLwFrqtwcif5/r1V8JbRo6XJg1lPrOVhNr+FF2M9Te
-8lX9aVA0lEyjO5zUD6j4FYITOb0qC1qxAl03Cdp0g1NqZxKXUFWKlAqWu4Vskh1g
-sEINlhwW5SdSaQVdFAczyJDKEiG8VScHOkw5I8cCbpNS6ZerssLMCpFq9tS5VaCY
-CGBLjvIidsYPF1ZwC5SuTsZ7nUwYiiqLnCIedlDJBZ0lB64ze6AwXRl0+L7o6t/1
-Na6QJ81kHS1k+49gHBcCAZDTR/1M2A==
-=kL69
------END PGP SIGNATURE-----
-
---Sig_/Pyps0HuD9/J/87+6btea1.g--
+  https://lore.kernel.org/linux-nvme/20250520202037.2751433-1-kbusch@meta.com/
