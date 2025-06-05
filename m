@@ -1,33 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C4F2750E3;
-	Thu,  5 Jun 2025 17:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D306227604B
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143557; cv=none; b=AJI1eyzW1dDi1Bx5lfgcy0LoqMSi7ZfqYzHgOZO1jT3c3H2wIe+wQn6MZ/KQ2pNI1qUBvfPn6K0n6gCU3WsFLIHgZPAenRa307ifrIvUFBSPXIa0LyVICdL9Zqb6wjoMxy9zLGTRBrqnqIOGivePcVchN7LbYdK+np+i3DX7zAM=
+	t=1749143637; cv=none; b=FW5SdQt7WO6E0OYGyRDfWw/1FyosySM+mJPwLGVzO4c64tjoGJyq55xH8krxK87/j3xkLFXp2HUzkodJd/W0lmsj58JRsWIZ3x2kQHom3h/m8U3b4tcchscqd2fMty6WZvBenst+Rai1GZvuYFrydKEnLdD8hZ6s8h5eNIYobPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143557; c=relaxed/simple;
-	bh=i/TRS9HoQ348xjedCJxL7IFxMWS+ebPKcpauxP9YIlQ=;
+	s=arc-20240116; t=1749143637; c=relaxed/simple;
+	bh=G1uMwlSRuCegDgrVIhbc8dLP3y0ky6QBmu4NxfkUt5Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I9dpQR5IwfrGAncQE0Fz9oep6gIa0t2uIyNFJVKyFwNTYz8+n+at1hX7l4ZZNpA4AznDuEypgobzSO+zVhmNf5rFg0Wiw6Qzt9yOMXyR6JFdk5ugYGXUtzKUgjMIgd1GUY4qNpCWWMDiEiqRsMKBhCiJFdHv2f1ggMxTdfSnuhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UkV2cuYJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=h6WDy/f1mq9NNa/puAC/qIjCQaY56a9R7xMQR8wZtHELiq47Nm0riBT9Ms8cKs8Wmam+2GaYCzdNfQIf5WYwGFZt61Bps56QBMMxrB8jLW/vvgIPE427B0MXQgwcadR8M9Ok8gGYyLbwF5/6NAyThBM29JTtbVKkzGAd/GRXdJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RdGdIcTf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UkV2cuYJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7C0AC4CEE7;
-	Thu,  5 Jun 2025 17:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749143556;
-	bh=i/TRS9HoQ348xjedCJxL7IFxMWS+ebPKcpauxP9YIlQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UkV2cuYJZVJGQLBsRdQ/vwtqtzA1m3P13V/CdGYmDBDpOW1W/H/biFSFqJ4H9tGVF
-	 c+na8BR4mq6E46+UU1haum/hLYbiImzDLwe8YlNT07WaxfJUN/BIYYvF1S+hQR/Mli
-	 ghBiUcin9rNsoOiA4+g6wTQwvabqAXgds6T9oWq3dAGrBrk0osZGBUvcLp11tRVE46
-	 kJvJScSXAzX9GOZ+tzAm5YSoUueknzgtNn37HQD57tbbFl86dv6Fg8B9RP/XxDISml
-	 uCwKKNSsvD3ZxWA0QiyztyRbdC9j/i6KM+Z4IC0cXj0nYHRDsmNZauhNJ7aiWynh3B
-	 3ytl4Sj74HF4w==
-Message-ID: <0a17dc61-a8eb-443c-9f4a-4f7851e07c5a@kernel.org>
-Date: Thu, 5 Jun 2025 19:12:30 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RdGdIcTf"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555H6VJG024416
+	for <linux-kernel@vger.kernel.org>; Thu, 5 Jun 2025 17:13:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	BiSKdaHMeCVD8oaJKkvTJRlJ3qNDdfdL1Sy3uWHXIrQ=; b=RdGdIcTfvYm7C6K9
+	N9ep8x4kyX35n9cuG2Id7gMOYNhIi16ubJmJXMnFijmleiafbpHctsk8w9uRtrP7
+	rm9QYFbOfEhcsqCZNKNUutPpCGt5wtnGHJ3LIt5qlyGHmoZz4Ymx2atBZF5r//zS
+	nPW8T4iezTgUVonXGu41YJEIyZBqCZR2ds6fuqpsVdNVOFMCtw5fTsuk/kc/zkMh
+	MfyZPWGhX12odEM86qbtuypV5ZZLjCEQrBgvswBYL1YA8aJUhO2gPgo0if94gxXf
+	VPxEn8eUQxNS+0pbWNY5bHxQMrnWBu1jZg5hG8Vx2phq/W3sNCSm7qJsuszh4KI1
+	lAHAkw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8s25c6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 17:13:54 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c9305d29abso197587785a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:13:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749143633; x=1749748433;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BiSKdaHMeCVD8oaJKkvTJRlJ3qNDdfdL1Sy3uWHXIrQ=;
+        b=gCoYrHFA+1Wk6cUsl303z4LTHAyegUe/5hG6ryTROLqO4MIXtrwgoiztTaqbdKFm6G
+         xeyK+1Lo6WOGmgCzEVs7C7iUmMh0WxdFXGjLhCpMlPrEOPjew+NtzgZwQk6bRWRyw4Do
+         WN51b+Yau+nEhrKwSRAxg1/Q6gzVLs6niMsxjBcj6gSG6gPLZga4Rf+SA7Hl2N005lGm
+         w1paVQWgYZ85lvEjyOJsCa5SU6/u254aZNIHCjAIyuf4hV8ZJaaZ8/rPwLhUXcZklq1O
+         vjFziuEDmuy/cButmQ9duHFizRpjMtCcWPtX8e3a8OxuhTlg2Qk1sTkU+KPfBeQEbWaP
+         EynQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbAIuU7tgvxhf0QTDW60+gs4eYdkOH2FNqWNnWFUXvXv5c+YZol64kvmLN6R1AANBIZjkr3XZSrYh7K2E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOwT4fCZaW3ccq1nqSY9xmxBTiy+9GpQcmyNVWR1Pwp6evXK9u
+	L/t2MvhPtJWSxT/FY63oJX9844xAHTcbkEOgtCR17QdbTqaFLJPws4yDBkmdY100o/FG36JwMqN
+	SprozZn32TlIYF9qfNxmcwMXmeRUfalmo8npZuy8xQzkijugHUHfzdOKF163gQTx7B3s=
+X-Gm-Gg: ASbGncsQqAnbhDSyhomJ2Rpl1+dPXWD72RNvfeqoKH+mUhPFS7vcpndoU7edoqXllbl
+	+s4hAoQiz9Ybz6R/rMw9PgjLCgkZ5Mb5oZizZnu6uYvbnBqwJlF4rnOFluMYY3glakcJ8NdqvzP
+	GhAHB1qEniu0L5lkoDtB2IUsggvosGnmBILa2+xHb+H9HZpjEZgSEir33kWY2vPPWsDp7hoVBMQ
+	XJSHiccAeuOV/xI2Hqmmo9YxqCSrhXGltvSNZSgPW/fgsPT2PUwKpNHbICe2crsoFT9AV7ov7C0
+	4uufQ4xNVVN8YWohNj8+tS1aLJRfc+vSLQ==
+X-Received: by 2002:a05:620a:800c:b0:7c5:431f:f5e6 with SMTP id af79cd13be357-7d229887bf5mr53232485a.33.1749143633404;
+        Thu, 05 Jun 2025 10:13:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHA+PZVxU0KcpFWRWk2T4rCgPUtQLXzoDQwsIZvyrADwGhZQ0pSI//nevDF45+TMmeSQHR2lg==
+X-Received: by 2002:a05:620a:800c:b0:7c5:431f:f5e6 with SMTP id af79cd13be357-7d229887bf5mr53228885a.33.1749143633020;
+        Thu, 05 Jun 2025 10:13:53 -0700 (PDT)
+Received: from [192.168.23.80] ([87.224.39.253])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f982a5e5sm31482925e9.18.2025.06.05.10.13.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 10:13:52 -0700 (PDT)
+Message-ID: <73d9fa9e-823f-41ef-bdf3-76cef3591e1f@oss.qualcomm.com>
+Date: Thu, 5 Jun 2025 18:13:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,19 +75,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
-To: Dmitry Baryshkov <dmitry.baryshkov@foundries.io>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Renjiang Han <quic_renjiang@quicinc.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@foundries.io>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Renjiang Han <quic_renjiang@quicinc.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
  <conor+dt@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>
 References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
  <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
  <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
@@ -58,104 +99,87 @@ References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
  <b710e357-09e3-460e-b097-28cf0c856aeb@kernel.org>
  <44b3779b-702c-4e8b-8ccd-c9c3314a511f@linaro.org>
  <nr2je5ssn22npl2dqu5aj2xcwinnjmhvl3tvuz5smr4dd2rxaj@dfkk6aktkafy>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <0a17dc61-a8eb-443c-9f4a-4f7851e07c5a@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <nr2je5ssn22npl2dqu5aj2xcwinnjmhvl3tvuz5smr4dd2rxaj@dfkk6aktkafy>
-Content-Type: text/plain; charset=UTF-8
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <0a17dc61-a8eb-443c-9f4a-4f7851e07c5a@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 2OUoXw5PI5B3bL84fQFULlaxMsb60bUb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDE1MiBTYWx0ZWRfX0Nb+jVPnJAUu
+ ml/XeYtYYBa8cuCUWJeU4B0jG974jh/dhhnEmiDvMiyMznUU7C8X/YOSZbExqP4iUzydd99/3xr
+ Qm+i3ua2Fmge4MqVorMMSSGJs6KeZifkZQvq4mUQ7R+K1/kg0Oq9UrRM64IlJYkTgWoRNSKjFje
+ QR5tx6ecC2VtRVw51+VR2ZG2kznnQftJGPeUyzkMnL8/X+AVh3gNkIpQ19MRJGr+q02piLCZIMB
+ N8BlWAr+hLoeVMUiwL8g16+FvBB2aPrLdpO6TB20hKCSVuiVpcBZquVKfeYp5hI+7q3tgO2VyNM
+ ZI+ZxwmMmyb4hNK6z7uLBFCRiKRnqgFnk6VDEsH8r+O81RG9cC9HjXHlhAu5G92yJJI8QlKvj8+
+ +us/wm0QJIukXbtEfq/Yx2wf1+jvcJgU7MMPvaupp213eBodfsJek3wJPrI02PI9yXHy0Mh1
+X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=6841d052 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=UMobGI8h2IAScYPZOeRE3Q==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=v7yF-7gVPNHQD8MQQjQA:9
+ a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: 2OUoXw5PI5B3bL84fQFULlaxMsb60bUb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 spamscore=0 mlxlogscore=554 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506050152
 
-On 05/06/2025 18:02, Dmitry Baryshkov wrote:
-> On Thu, Jun 05, 2025 at 01:40:03PM +0100, Bryan O'Donoghue wrote:
->> On 05/06/2025 13:33, Krzysztof Kozlowski wrote:
->>> On 05/06/2025 14:30, Dmitry Baryshkov wrote:
->>>> On Thu, 5 Jun 2025 at 13:13, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>>
->>>>> On 02/06/2025 08:16, Dmitry Baryshkov wrote:
->>>>>> On Sat, May 31, 2025 at 08:05:24AM +0800, Renjiang Han wrote:
->>>>>>>
->>>>>>> On 5/31/2025 4:27 AM, Dmitry Baryshkov wrote:
->>>>>>>> On Fri, May 30, 2025 at 09:32:12AM +0530, Renjiang Han wrote:
->>>>>>>>> QCS615 uses the same video core as SC7180, so reuse the same resource
->>>>>>>>> data of SC7180 for QCS615 to enable video functionality.
->>>>>>>>>
->>>>>>>>> There are no resources for the video-decoder and video-encoder nodes
->>>>>>>>> in the device tree, so remove these two nodes from the device tree. In
->>>>>>>>> addition, to ensure that the video codec functions properly, use [3]
->>>>>>>>> to add encoder and decoder node entries in the venus driver.
->>>>>>>>>
->>>>>>>>> Validated this series on QCS615 and SC7180.
->>>>>>>>>
->>>>>>>>> Note:
->>>>>>>>> This series consist of DT patches and a venus driver patch. The patch
->>>>>>>>> 1/3, which is venus driver patch, can be picked independently without
->>>>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
->>>>>>>>> DT patches, still depend on [1].
->>>>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
->>>>>>>> on QCS615 over(?)clocked.
->>>>>>> Agree, so we need to make sure that the driver patch is not picked after the
->>>>>>> DT patch.
+On 05/06/2025 18:12, Krzysztof Kozlowski wrote:
+> On 05/06/2025 18:02, Dmitry Baryshkov wrote:
+>> On Thu, Jun 05, 2025 at 01:40:03PM +0100, Bryan O'Donoghue wrote:
+>>> On 05/06/2025 13:33, Krzysztof Kozlowski wrote:
+>>>> On 05/06/2025 14:30, Dmitry Baryshkov wrote:
+>>>>> On Thu, 5 Jun 2025 at 13:13, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >>>>>>
->>>>>> Worse: we need to make sure that the driver patch is present in the
->>>>>> branch which picks up DT patches. Otherwise building & testing that
+>>>>>> On 02/06/2025 08:16, Dmitry Baryshkov wrote:
+>>>>>>> On Sat, May 31, 2025 at 08:05:24AM +0800, Renjiang Han wrote:
+>>>>>>>>
+>>>>>>>> On 5/31/2025 4:27 AM, Dmitry Baryshkov wrote:
+>>>>>>>>> On Fri, May 30, 2025 at 09:32:12AM +0530, Renjiang Han wrote:
+>>>>>>>>>> QCS615 uses the same video core as SC7180, so reuse the same resource
+>>>>>>>>>> data of SC7180 for QCS615 to enable video functionality.
+>>>>>>>>>>
+>>>>>>>>>> There are no resources for the video-decoder and video-encoder nodes
+>>>>>>>>>> in the device tree, so remove these two nodes from the device tree. In
+>>>>>>>>>> addition, to ensure that the video codec functions properly, use [3]
+>>>>>>>>>> to add encoder and decoder node entries in the venus driver.
+>>>>>>>>>>
+>>>>>>>>>> Validated this series on QCS615 and SC7180.
+>>>>>>>>>>
+>>>>>>>>>> Note:
+>>>>>>>>>> This series consist of DT patches and a venus driver patch. The patch
+>>>>>>>>>> 1/3, which is venus driver patch, can be picked independently without
+>>>>>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>>>>>>>>>> DT patches, still depend on [1].
+>>>>>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
+>>>>>>>>> on QCS615 over(?)clocked.
+>>>>>>>> Agree, so we need to make sure that the driver patch is not picked after the
+>>>>>>>> DT patch.
+>>>>>>>
+>>>>>>> Worse: we need to make sure that the driver patch is present in the
+>>>>>>> branch which picks up DT patches. Otherwise building & testing that
+>>>>>>
+>>>>>>
+>>>>>> Well, that's a NAK then (although depends what you mean by DT).
 >>>>>
->>>>>
->>>>> Well, that's a NAK then (although depends what you mean by DT).
+>>>>> I mean qcs615.dtsi. I'd suggest an immutable branch for the driver
 >>>>
->>>> I mean qcs615.dtsi. I'd suggest an immutable branch for the driver
->>>
->>> Sorry, but no, DTS cannot depend on drivers. You CANNOT merge them into
->>> one branch.
+>>>> Sorry, but no, DTS cannot depend on drivers. You CANNOT merge them into
+>>>> one branch.
+>>
+>> Surely it can... Like any other cross-subsystem dependency.
 > 
-> Surely it can... Like any other cross-subsystem dependency.
+> Sure it cannot, because this breaks the basic rule of not mixing drivers
+> into DTS. Arm soc maintainers are not merging drivers back to DTS and
+> the DTS must not go via drivers tree. These are basic assumptions around
+> DTS, see subsystem profile for more explanations.
 
-Sure it cannot, because this breaks the basic rule of not mixing drivers
-into DTS. Arm soc maintainers are not merging drivers back to DTS and
-the DTS must not go via drivers tree. These are basic assumptions around
-DTS, see subsystem profile for more explanations.
+Ack, so v6.N+1, which is also fine.
 
-
-Best regards,
-Krzysztof
+-- 
+With best wishes
+Dmitry
