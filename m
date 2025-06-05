@@ -1,115 +1,320 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A723627A46A;
-	Thu,  5 Jun 2025 18:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DAD225405;
+	Thu,  5 Jun 2025 18:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749148662; cv=none; b=rbdQj6N2XmzdLTgj5M9LkAMYjfHLLfg/2mlmg3NPWNBzjhvtfv7xC/wUSOYqrugf7hgNo3nlC2ewxL/DsVzJyUU9EEFdFYeVeG1Pe580Wb5OmwjBSt4PuHiCLB+FOgwrcyJk+rGHD6lrNj+dCqKXsHi3EGSEvJieNudRJPCi1Q4=
+	t=1749148932; cv=none; b=YZox5M+3YCPKlgrcfwVh7u7ujJ0dALXaY/0/jJK4lqN5B//qKa0TO1QQoSdk6Rwt0IFlFM8d+PiOM2c25dYDJnVtD5MAXUNnmn3BL9dVnamX5t1XmNDZAz561DxKKeOscKUkG8Tw9UoHz5GS5Z6ncahB/6CiADSTNGHt03JHc2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749148662; c=relaxed/simple;
-	bh=S4sUC15Mace13WAZDAtAsOHoOZX4leNGTKotohTjG0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JwooZKwNPRADqC+GXDdvh/FOB6GMUFX4/Xd0Joi2r45xoKeu/sT0k/f1r0HLSmkO2nEEIgFo3fbEubnt5kY539PI44NDJd8xRW0Cz19GSxb7EJPweXpBIcT/kYiw0L6bnNP2gmAc5yXHnyyjQkfIpnizvYs4wVp+RgXTcR+U9j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cSKAISS2; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749148932; c=relaxed/simple;
+	bh=8A1uXNWW2809SvO52PJIvs8C0+8RcTEdczSyPA4VTJs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=noil+QL8creiGDnn4O0LNWhH9ZSOne4QaQMachGVlzhk/Q/DvG7PnMOfzfkozKidBQoojZWlLvJMFaXDGl6F9K9B/b8c8f3S5RZiHfPkhMcJZ0Sdsh61PdVThFI67hK6zRw0VGk1m61aJnCVGSkQTIXJcBEHrxEwzND9LIW2DRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Co0hf//j; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cSKAISS2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749148660; x=1780684660;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=S4sUC15Mace13WAZDAtAsOHoOZX4leNGTKotohTjG0w=;
-  b=cSKAISS2nSKDDsTpJgC7ycexwHgk1CfvazR3St01LtxMjjenqmiB9+3s
-   TyWcXTrzx/Xuy8lsmn3AkispVCGXq3m4Qi9Eyh1z7ZAeXY4arf11fyLnQ
-   I9mnsYEG3nhuGK6uAT1kaa3t8IPa7cclykhyVBX+BaNtS4/GnS6oOM+/E
-   eBOhUbeBNbbKv/fAcvAorZwG2B/C4GHzJSXVuzPZkYS397+HOnMmnV4T6
-   Hwp8qgMZ5PQbKW7tCVtYAWi+tFDS22rQUQV2lMQ+08whBChAWaV6EwMOg
-   LP22vjFKUuDYwz8Sp2tnsArpo2y2fGC8+MhXZLHqH11YZ5/soLtmwU6Ng
-   A==;
-X-CSE-ConnectionGUID: VJW9FVZrT9ivcM2mmJuh1w==
-X-CSE-MsgGUID: JnMrCn84Qlea0g59pANGjg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="54950209"
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="54950209"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 11:37:40 -0700
-X-CSE-ConnectionGUID: X0z2z7rJQPWu+5U/0sD/zQ==
-X-CSE-MsgGUID: hIJplFQSTEqnGEDZzI1kuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="150853473"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 11:37:40 -0700
-Received: from [10.124.222.23] (unknown [10.124.222.23])
-	by linux.intel.com (Postfix) with ESMTP id 9CF4220B5736;
-	Thu,  5 Jun 2025 11:37:38 -0700 (PDT)
-Message-ID: <9496f540-04eb-407f-a5ed-eac6a5e8f549@linux.intel.com>
-Date: Thu, 5 Jun 2025 11:37:38 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Co0hf//j"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-742c9907967so1310775b3a.1;
+        Thu, 05 Jun 2025 11:42:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749148930; x=1749753730; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J0mxh4Vh4mJ7p/VlQscr8sPVdvImTOagfcs541Xc3GY=;
+        b=Co0hf//jrGWWdF1VuHP/8BRZuD1OydJsmpyYR8qTYP2BvsmqQcipPQblQe7U/mDa8Z
+         EM1ACunEpku9waKSLVmxapdU6wgnxc3/cp9Gg7bHIUlYWAgbpxwwzuYCNvouuzvTYvKW
+         eFBOF+Cg2k/2luOM2mtpBM6KjQ72bqXevluVJZVb7eCYyih/VpBa92a1bqy/Gz+zStua
+         qdQ2PaktkP9VQk8f7rFCHT4Wu32AVqeYu9kl0Gq6JjnAriXRywY8Xqmz29jco9gW+QEw
+         0jxlDJB2erm3ngGblgVRUwCMJvEqjgLksmW5Pcfbz8tdW5DemL3AbS4O/q8wN3tIsqpe
+         73sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749148930; x=1749753730;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J0mxh4Vh4mJ7p/VlQscr8sPVdvImTOagfcs541Xc3GY=;
+        b=QNZ3i7bdiNmISiyzTK/nn90LD+E2l9OLAURH6uj3TQon5XBB2n9u/jqq+HrgKM7pdY
+         0EQnbaTJcIEndnTs+ywUSp0QZLvs3LQRy/riv2BgJUWnuTbGmDoLuqRPl+irTbsAvM0u
+         YMNDb4828/Oemfk4PBiIprHjBQlF7UgUHngsv9YxDHpIIPKwzhkAUoHq4MX9/YGYBo9O
+         sKhG5TmMFU0AXewnU/9Jeh5X2xri9vAu3ULe+c/PrIb1HOy+E0kACaj6BMYLQvhxreKD
+         9SFt0lr2kVMcv/HF0HUgQMkJptMlXGKQnER5pjLxDYBOHKIkIABj///qsa4/2kRi7xmR
+         WO9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWFpW9PoPxHrwanDJpwrcO5/w/9tYduqtgsyVTTojZXVGX6lpRD/u09VM7aoN6jtsjPBKKiYpFo5sF7JDmP@vger.kernel.org, AJvYcCXUwl8sPlfdWBih8FGU2U3lusTBlger1gH72J6NbmN6eojFqyLi2twEfBxfBcJyN+/F3h0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo9vrCdfe5wqr4e0Yp/L/SSm92OGpWuR82DuxBdin9gM48V2p2
+	riEWYrxsDS0g3SyMwr7WA6zuXUc6OS2nHFJbhDZxJxotddxjWXCEmM/AhQcWCUFeOsTOTBBGFFU
+	N6hSrkb9hZevxYxtJzz8a4c4VE6k4aqk=
+X-Gm-Gg: ASbGncvDTOGC1QhQYoLC1qT2RPBT4loDvO48fwjWLt2mxED7x4wM3Iev3vQBZG9VxJl
+	qoHTa2SRzYReJ7pzT1S1eYt9VMc+HuKR0xS71mWl8xzfVN2XGhXXmwqLUkhHO2ojx+rn+xVRaV8
+	7oPGrNDtlSQV9xmSzldKQIoZ7vGBfDetQO1ZaeFPo65vMyaR3G
+X-Google-Smtp-Source: AGHT+IFqfyYxtIAbk45UebUFLib9TE4AwrdAOQ8dQjfv0i8SmVPLhjpFLEuxtTuvVn3ycy+/MMBp1Wxq/Blh+0YNl+k=
+X-Received: by 2002:a05:6a00:1390:b0:737:678d:fb66 with SMTP id
+ d2e1a72fcca58-74827e4ebddmr976443b3a.5.1749148929823; Thu, 05 Jun 2025
+ 11:42:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 11/16] cxl/pci: Update __cxl_handle_cor_ras() to return
- early if no RAS errors
-To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
- ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
- Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
- yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
- uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-12-terry.bowman@amd.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250603172239.159260-12-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250604163723.3175258-1-chen.dylane@linux.dev>
+In-Reply-To: <20250604163723.3175258-1-chen.dylane@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 5 Jun 2025 11:41:57 -0700
+X-Gm-Features: AX0GCFs7Ti8oMoMVNO8WJhBo2K6eC9zHWIcD5LPUdthDUVuA-lwdu2IWi7uzBZo
+Message-ID: <CAEf4BzasaZYD7y+4Po=K=jBq3Q7JSUMpJ_NSQv7B9=v6fieZ7g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: Add show_fdinfo for perf_event
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com, 
+	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me, 
+	haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 6/3/25 10:22 AM, Terry Bowman wrote:
-> __cxl_handle_cor_ras() is missing logic to leave the function early in the
-> case there is no RAS error. Update __cxl_handle_cor_ras() to exit early in
-> the case there is no RAS errors detected after applying the mask.
+On Wed, Jun 4, 2025 at 9:37=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wro=
+te:
 >
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> After commit 1b715e1b0ec5 ("bpf: Support ->fill_link_info for perf_event"=
+) add
+> perf_event info, we can also show the info with the method of cat /proc/[=
+fd]/fdinfo.
+>
+> kprobe fdinfo:
+> link_type:      perf
+> link_id:        2
+> prog_tag:       bcf7977d3b93787c
+> prog_id:        18
+> name:   bpf_fentry_test1
+> offset: 0
+> missed: 0
+> addr:   ffffffffaea8d134
+> event_type:     3
+> cookie: 3735928559
+>
+> uprobe fdinfo:
+> link_type:      perf
+> link_id:        6
+> prog_tag:       bcf7977d3b93787c
+> prog_id:        7
+> name:   /proc/self/exe
+> offset: 6507541
+> event_type:     1
+> cookie: 3735928559
+>
+> tracepoint fdinfo:
+> link_type:      perf
+> link_id:        4
+> prog_tag:       bcf7977d3b93787c
+> prog_id:        8
+> tp_name:        sched_switch
+> event_type:     5
+> cookie: 3735928559
+>
+> perf_event fdinfo:
+> link_type:      perf
+> link_id:        5
+> prog_tag:       bcf7977d3b93787c
+> prog_id:        9
+> type:   1
+> config: 2
+> event_type:     6
+> cookie: 3735928559
+>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 > ---
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->   drivers/cxl/core/pci.c | 9 +++++----
->   1 file changed, 5 insertions(+), 4 deletions(-)
+>  kernel/bpf/syscall.c | 126 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 126 insertions(+)
 >
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 0f4c07fd64a5..f5f87c2c3fd5 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -677,10 +677,11 @@ static void __cxl_handle_cor_ras(struct device *dev, u64 serial,
->   
->   	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->   	status = readl(addr);
-> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> -		trace_cxl_aer_correctable_error(dev, serial, status);
-> -	}
-> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
-> +		return;
-> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 9794446bc8..9af54852eb 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -3793,6 +3793,35 @@ static int bpf_perf_link_fill_kprobe(const struct =
+perf_event *event,
+>         info->perf_event.kprobe.cookie =3D event->bpf_cookie;
+>         return 0;
+>  }
 > +
-> +	trace_cxl_aer_correctable_error(dev, serial, status);
->   }
->   
->   static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+> +static void bpf_perf_link_fdinfo_kprobe(const struct perf_event *event,
+> +                                       struct seq_file *seq)
+> +{
+> +       const char *name;
+> +       int err;
+> +       u32 prog_id, type;
+> +       u64 offset, addr;
+> +       unsigned long missed;
+> +
+> +       err =3D bpf_get_perf_event_info(event, &prog_id, &type, &name,
+> +                                     &offset, &addr, &missed);
+> +       if (err)
+> +               return;
+> +
+> +       if (type =3D=3D BPF_FD_TYPE_KRETPROBE)
+> +               type =3D BPF_PERF_EVENT_KRETPROBE;
+> +       else
+> +               type =3D BPF_PERF_EVENT_KPROBE;
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+maybe use "kretprobe" and "kprobe" strings?
 
+> +
+> +       seq_printf(seq,
+> +                  "name:\t%s\n"
+> +                  "offset:\t%llu\n"
+
+llx, hex makes most sense (we had similar discussion within the
+context of bpftool reporting)
+
+pw-bot: cr
+
+> +                  "missed:\t%lu\n"
+> +                  "addr:\t%llx\n"
+
+ditto, address -> hex
+
+> +                  "event_type:\t%u\n"
+> +                  "cookie:\t%llu\n",
+> +                  name, offset, missed, addr, type, event->bpf_cookie);
+> +}
+>  #endif
+>
+>  #ifdef CONFIG_UPROBE_EVENTS
+> @@ -3820,6 +3849,34 @@ static int bpf_perf_link_fill_uprobe(const struct =
+perf_event *event,
+>         info->perf_event.uprobe.cookie =3D event->bpf_cookie;
+>         return 0;
+>  }
+> +
+> +static void bpf_perf_link_fdinfo_uprobe(const struct perf_event *event,
+> +                                       struct seq_file *seq)
+> +{
+> +       const char *name;
+> +       int err;
+> +       u32 prog_id, type;
+> +       u64 offset, addr;
+> +       unsigned long missed;
+> +
+> +       err =3D bpf_get_perf_event_info(event, &prog_id, &type, &name,
+> +                                     &offset, &addr, &missed);
+> +       if (err)
+> +               return;
+> +
+> +       if (type =3D=3D BPF_FD_TYPE_URETPROBE)
+> +               type =3D BPF_PERF_EVENT_URETPROBE;
+> +       else
+> +               type =3D BPF_PERF_EVENT_UPROBE;
+
+strings, just as above
+
+> +
+> +       seq_printf(seq,
+> +                  "name:\t%s\n"
+> +                  "offset:\t%llu\n"
+
+hex
+
+> +                  "event_type:\t%u\n"
+> +                  "cookie:\t%llu\n",
+> +                  name, offset, type, event->bpf_cookie);
+> +
+> +}
+>  #endif
+>
+>  static int bpf_perf_link_fill_probe(const struct perf_event *event,
+> @@ -3888,10 +3945,79 @@ static int bpf_perf_link_fill_link_info(const str=
+uct bpf_link *link,
+>         }
+>  }
+>
+> +static void bpf_perf_event_link_show_fdinfo(const struct perf_event *eve=
+nt,
+> +                                           struct seq_file *seq)
+> +{
+> +       seq_printf(seq,
+> +                  "type:\t%u\n"
+> +                  "config:\t%llu\n"
+> +                  "event_type:\t%u\n"
+
+string?
+
+> +                  "cookie:\t%llu\n",
+> +                  event->attr.type, event->attr.config,
+> +                  BPF_PERF_EVENT_EVENT, event->bpf_cookie);
+> +}
+> +
+> +static void bpf_tracepoint_link_show_fdinfo(const struct perf_event *eve=
+nt,
+> +                                           struct seq_file *seq)
+> +{
+> +       int err;
+> +       const char *name;
+> +       u32 prog_id;
+> +
+> +       err =3D bpf_get_perf_event_info(event, &prog_id, NULL, &name, NUL=
+L,
+> +                                     NULL, NULL);
+> +       if (err)
+> +               return;
+> +
+> +       seq_printf(seq,
+> +                  "tp_name:\t%s\n"
+> +                  "event_type:\t%u\n"
+
+string
+
+> +                  "cookie:\t%llu\n",
+> +                  name, BPF_PERF_EVENT_TRACEPOINT, event->bpf_cookie);
+> +}
+> +
+> +static void bpf_probe_link_show_fdinfo(const struct perf_event *event,
+> +                                      struct seq_file *seq)
+> +{
+> +#ifdef CONFIG_KPROBE_EVENTS
+> +       if (event->tp_event->flags & TRACE_EVENT_FL_KPROBE)
+> +               return bpf_perf_link_fdinfo_kprobe(event, seq);
+> +#endif
+> +
+> +#ifdef CONFIG_UPROBE_EVENTS
+> +       if (event->tp_event->flags & TRACE_EVENT_FL_UPROBE)
+> +               return bpf_perf_link_fdinfo_uprobe(event, seq);
+> +#endif
+> +}
+> +
+> +static void bpf_perf_link_show_fdinfo(const struct bpf_link *link,
+> +                                     struct seq_file *seq)
+> +{
+> +       struct bpf_perf_link *perf_link;
+> +       const struct perf_event *event;
+> +
+> +       perf_link =3D container_of(link, struct bpf_perf_link, link);
+> +       event =3D perf_get_event(perf_link->perf_file);
+> +       if (IS_ERR(event))
+> +               return;
+> +
+> +       switch (event->prog->type) {
+> +       case BPF_PROG_TYPE_PERF_EVENT:
+> +               return bpf_perf_event_link_show_fdinfo(event, seq);
+> +       case BPF_PROG_TYPE_TRACEPOINT:
+> +               return bpf_tracepoint_link_show_fdinfo(event, seq);
+> +       case BPF_PROG_TYPE_KPROBE:
+> +               return bpf_probe_link_show_fdinfo(event, seq);
+> +       default:
+> +               return;
+> +       }
+> +}
+> +
+>  static const struct bpf_link_ops bpf_perf_link_lops =3D {
+>         .release =3D bpf_perf_link_release,
+>         .dealloc =3D bpf_perf_link_dealloc,
+>         .fill_link_info =3D bpf_perf_link_fill_link_info,
+> +       .show_fdinfo =3D bpf_perf_link_show_fdinfo,
+>  };
+>
+>  static int bpf_perf_link_attach(const union bpf_attr *attr, struct bpf_p=
+rog *prog)
+> --
+> 2.43.0
+>
