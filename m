@@ -1,135 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B1822F16F;
-	Thu,  5 Jun 2025 13:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639E5231858
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129873; cv=none; b=c/9odhehiU8ad9kcM80sTNwGWAyGlkukpMfF0YalwzOrS0zAQLoP73mSWz55x5TNVWuud/r6u5wwRCJVlVI8LOsFsqViCXqbEzpf1r7K1QpL9OYiN2WvHOXnym0R5BmFDI9P9Nqsogbl5gxC89kmVCkO9GOyIl2UqI2/4+fB2+Q=
+	t=1749129880; cv=none; b=UNsUBEpelJyQsSEi5HuMjg0jO/hRVYSAkbPjto6qRv9SlzWFOfeRkCBN25BHI/hM4oBFVXOrAcLtlYVfiWEEn9jdSXcJFRa0vGwMy40hvGTkZL6RxTM582wOPF381S8/VVLdiyfiUxAAkDF680C0WJnJyrZIuGk5Z9BosIjrilg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129873; c=relaxed/simple;
-	bh=eQBaGg3jNd4Z/py24V3qrQUvhcNfu6sc8E56vcH1DPg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SK3rn+vJ6Xj91DGlzMJ3VAZ9zjxjJLA0TBNLAimKzs58VbB71EvIOS8VbvDGx8DGLbqwpDarG3O4lNwWv7su7d00GJHmj+W8J7y8Lph540AzPSIxGQGgKjWo/0R9keP3b4+kExoDxGwNxYrUZgETV3b1sFylNXNSLjuqm+pIKFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpLeWar4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749129880; c=relaxed/simple;
+	bh=ph8J09n5JKQD535azyDhvY/sp5bOQf//77AfpWmxs2Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gvxYyPrdPrPV4H9FGdWoAwLsGeBY+Uzg7+1Jn/oAf6Pg5mfFqrZ/aq2q+x7BEP0oIfdD7bSMW983Zc7J49giON6gu/KdT7Mv7a78h6JCPc1bLhHXX/BRRt5R/LBay3M7lOPfrIG1mGg3qUUx4quhbaopEgYX8TqNa1yKNx4yfig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mMAlnBgd; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpLeWar4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1820C4CEE7;
-	Thu,  5 Jun 2025 13:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749129872;
-	bh=eQBaGg3jNd4Z/py24V3qrQUvhcNfu6sc8E56vcH1DPg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IpLeWar4ZnoX76Ex62yAbX309S+LCCg/3rPQPtNzcCN9gtDquqyCoe/kbMMY0fwJk
-	 3f9jq4+FkyCGtHXsETYG7UL+HZa3XC2mG2KKmnbX1IYIw9BIDAQKIkG4ap/mvHvz/U
-	 ggVDbBF3K1HlaltLHa4bYkNO/C3Tmqqptsf0doaV4Npzh663Lc8UpJCtvHMV6NjolN
-	 hzpeVef1AGJnH2YKh6+UggMfIAFjE9Cad8TToq5P/dGK8TVl0bDHPymkGXR9+gr/VK
-	 LvhecbIT6bRz9m+dJe9kgF0LttuIH3BoXQvtP23Zdvd5HT8FTr/iDsfycYY4PUhAUm
-	 mIu4lolwoEfig==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCHv3 perf/core 03/22] uprobes: Make copy_from_page global
-Date: Thu,  5 Jun 2025 15:23:30 +0200
-Message-ID: <20250605132350.1488129-4-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250605132350.1488129-1-jolsa@kernel.org>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mMAlnBgd"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5534edc6493so1209125e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:24:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749129876; x=1749734676; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ph8J09n5JKQD535azyDhvY/sp5bOQf//77AfpWmxs2Y=;
+        b=mMAlnBgdW4sGDqrEMLIy8yhAW6JMQ+PDIgc1Np0QNTGa5egENV9Lnqw7OQuxSpQJlm
+         n1SRIal3lV+FoMqfo2cTkPUTCCPkGNwXGqOJPGBP1IWzP5yUiibyl/OyVkO+74RiUGqR
+         JXGQ20tED3ViIDwDxeRfVD0LihY21+XHUZaOkmatj3ah+tJZMTDNVE2RH652QZ4DsE+A
+         kE5MCLDDKQJLXXj/NJGpz6JBofY8d9rY/4dUJRegDST+pbn0mB/PNV3IcR6iz3hZ4oZC
+         +hp4x+AHqW6DqbIdrsruUT3j8y+1kGypLTVg4ewGIjR9L60L3SOnowBSs4KTGZ0SS32H
+         7W0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749129876; x=1749734676;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ph8J09n5JKQD535azyDhvY/sp5bOQf//77AfpWmxs2Y=;
+        b=qMmc9RSn3McsS/fyaqRCQbWJXyX6SMOYWhco/hRDclWI0Ozex1DaOLSpFt7wAneAyH
+         +43d+JzxIkLFUJYRgffeVJxBYAHcC7qh9LKsXkPlINK5euhoBK9fejxLWuL/Yj2Go9Rp
+         p3eYalG1Yr0kbHf8Udme3tvITIBB54C2tDkWXdHDv//7cvnTeSqlQqsKvjxWaVfGlUny
+         tv215NLaRbvtGXxML6x1O4y4yuTgdfB6CHylu9XsvYVUV/YgWwxGZlevGMNL9yXFX52k
+         hQ5BbL7MrpT5YlOfsLOKEEOK4H0OD8UGcRnnSWkdgSQn1OQzHqsERbfpvrBp5Celevvq
+         JiTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnIXS622CjrXduv0qc4+BI/N66H6Kj5DZcToWPII36CzLeu85YR+NwwQ07eRMgPYZYJ0lqMxjWZwgNquw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjRhDB1te8DkZfjG8JDx0hzpzjr++Er/oZ+3hVHqiee9j1gSM7
+	qOZCLopVIk1uPMaoMBIv9VzzhvrvtwQ3lR9a5yE6DgagJNIBigArYLzaI8Ja9dd0A7UQr3ABwfz
+	wBXWL72Gte5T8yFZp7MUANOh9V6wCzQlZOOpamCa0pQ==
+X-Gm-Gg: ASbGncv/8qcK7Y4+E0NzSUVmaaiF08/nrjsb9GDE57hg9xE6+5jHslR7imXFzq96O8V
+	25L5yF3wWmOdhI03+pvKtVsyglRSFhJwnUbV6A8yKJImlUwSdPlGmVTlb6mElDIUv6/H3yOyTNl
+	LZg9mE6KQ/FQ1C/W85gbPCXlPwqgcyZKZh
+X-Google-Smtp-Source: AGHT+IHcFKkR1DgTHybFc9+cXkjDfNRWO9Y5rsQ/Vs78BAkzeGllU9ZiczF0eVkbFtRkeWxN8XAgTwUOdn8ciwJ5GKY=
+X-Received: by 2002:a05:6512:4011:b0:553:26f6:bc01 with SMTP id
+ 2adb3069b0e04-55356e0492dmr1902010e87.53.1749129876416; Thu, 05 Jun 2025
+ 06:24:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250529-b4-drm_panel_mass_driver_convert_part3-v2-0-5d75a3711e40@redhat.com>
+ <20250529-b4-drm_panel_mass_driver_convert_part3-v2-29-5d75a3711e40@redhat.com>
+In-Reply-To: <20250529-b4-drm_panel_mass_driver_convert_part3-v2-29-5d75a3711e40@redhat.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 5 Jun 2025 15:24:24 +0200
+X-Gm-Features: AX0GCFv_P_oe8_LfoK0HrETyIz_pn_ODXYaiFB7vtLAilhJTNSsv4UaB2RLH_HU
+Message-ID: <CACRpkdaFYcvq+XsQ6FocXqW-gnoP+66CL4hTiSQ=w0fc1jckig@mail.gmail.com>
+Subject: Re: [PATCH v2 29/46] panel/sony-acx565akm: Use refcounted allocation
+ in place of devm_kzalloc()
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Robert Chiras <robert.chiras@nxp.com>, Markuss Broks <markuss.broks@gmail.com>, 
+	Artur Weber <aweber.kernel@gmail.com>, Dzmitry Sankouski <dsankouski@gmail.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
+	Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+	Janne Grunau <j@jannau.net>, Michael Trimarchi <michael@amarulasolutions.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Making copy_from_page global and adding uprobe prefix.
-Adding the uprobe prefix to copy_to_page as well for symmetry.
+On Fri, May 30, 2025 at 4:52=E2=80=AFAM Anusha Srivatsa <asrivats@redhat.co=
+m> wrote:
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- include/linux/uprobes.h |  1 +
- kernel/events/uprobes.c | 10 +++++-----
- 2 files changed, 6 insertions(+), 5 deletions(-)
+> Move to using the new API devm_drm_panel_alloc() to allocate the
+> panel.
+>
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 01112f27cd21..7447e15559b8 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -226,6 +226,7 @@ extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
- extern void uprobe_handle_trampoline(struct pt_regs *regs);
- extern void *arch_uretprobe_trampoline(unsigned long *psize);
- extern unsigned long uprobe_get_trampoline_vaddr(void);
-+extern void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4e8e607abda8..37d3a3f6e48a 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -177,7 +177,7 @@ bool __weak is_trap_insn(uprobe_opcode_t *insn)
- 	return is_swbp_insn(insn);
- }
- 
--static void copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len)
-+void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len)
- {
- 	void *kaddr = kmap_atomic(page);
- 	memcpy(dst, kaddr + (vaddr & ~PAGE_MASK), len);
-@@ -205,7 +205,7 @@ static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t
- 	 * is a trap variant; uprobes always wins over any other (gdb)
- 	 * breakpoint.
- 	 */
--	copy_from_page(page, vaddr, &old_opcode, UPROBE_SWBP_INSN_SIZE);
-+	uprobe_copy_from_page(page, vaddr, &old_opcode, UPROBE_SWBP_INSN_SIZE);
- 	is_swbp = is_swbp_insn(&old_opcode);
- 
- 	if (is_swbp_insn(new_opcode)) {
-@@ -1052,7 +1052,7 @@ static int __copy_insn(struct address_space *mapping, struct file *filp,
- 	if (IS_ERR(page))
- 		return PTR_ERR(page);
- 
--	copy_from_page(page, offset, insn, nbytes);
-+	uprobe_copy_from_page(page, offset, insn, nbytes);
- 	put_page(page);
- 
- 	return 0;
-@@ -1398,7 +1398,7 @@ struct uprobe *uprobe_register(struct inode *inode,
- 		return ERR_PTR(-EINVAL);
- 
- 	/*
--	 * This ensures that copy_from_page(), copy_to_page() and
-+	 * This ensures that uprobe_copy_from_page(), copy_to_page() and
- 	 * __update_ref_ctr() can't cross page boundary.
- 	 */
- 	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
-@@ -2394,7 +2394,7 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
- 	if (result < 0)
- 		return result;
- 
--	copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
-+	uprobe_copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
- 	put_page(page);
-  out:
- 	/* This needs to return true for any variant of the trap insn */
--- 
-2.49.0
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
