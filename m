@@ -1,72 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD26418C06;
-	Thu,  5 Jun 2025 19:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F112718C06;
+	Thu,  5 Jun 2025 19:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749150123; cv=none; b=UyzVTWwNxoSVS7xNtGwzJlTiARX+WrFDR9jxBS1Sx6arNdfM4Zp8Mkn+qofGytojum8DA3H1WJKOsBXoctbwzUrQ5gKzoI1Bp70GajoQBh++JiFv1hP62r92zxzHc8tD0J0hrBL4dqyTzWAa38IWlruOjeqQcnTWnVD1G8I8nSc=
+	t=1749150474; cv=none; b=dcDMWN68dwVWNcrud7GY11uIYIDJhu+ovW1rrKSWjbBBEyVB2dPmCKfOD0SxSGvJ9T2U5my4/ajWSchpqjtpibLOtHbVGIDm40PJFAxqQGqvUaQqckkAO+aG98i6frTKKlQU6TUJfY5d8bkoYJtVyb9eQb6IH/JvVf/PuHx/8pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749150123; c=relaxed/simple;
-	bh=XxRokW+/dMt7qLnii6MRmLb2sBIeInQb0EjwzLaQ6XM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iVWXB9kDfeE8mCVi0Yg5HM42k564sQj/16bzfKocGFCY4OguzA7BMi97eYb68kO4UVKm5FnhxraQq/tqQDe/+M3Bf/1DurCGK4kjzKsSEyhmOgerJpRGMnVPopSkrRl1l76zdonb6SMBCTHG3BlFuFKHbTzloYikNU3cD4HdEEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQeAIbDk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749150474; c=relaxed/simple;
+	bh=JNoaVs4iRnRiP/T19vzcD+MZ6/eoe/6/sJbe9J72MFk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZOhutNmu/WBZIKPjTVK7KJd3l+EtSr3FOd604wKDZc7dJUtv5V8MA8WDnASwytwXkO1PqZxUJ59hPkLFM8QS+aJ/R5hScUNgyfFCSY/o+roMAfvJLcF7d1ADPnrpLsvYw+SNG6kUrU+D3MPl0EoHXPAoJa+/q8XcUsDaD9uBEEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GtCE+HGy; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQeAIbDk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3594AC4CEF0;
-	Thu,  5 Jun 2025 19:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749150123;
-	bh=XxRokW+/dMt7qLnii6MRmLb2sBIeInQb0EjwzLaQ6XM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nQeAIbDk+/4ttpiRtXz0crVvMV9eDiCs//fqxZWvnsYIi9xLHxxqX6P5tyjQwJ0df
-	 56/a5IddYokcCEeo2KW62Ti/2TVNCY9bmfMqGeNybTqSwcL9iM+luJE69TsDZVahK1
-	 JS0pNkZcCBCsR7PH7/jFNYtJ5JBL8b5Thahg7faM8dl+MkacBtejtCV/jCSg3QqVQD
-	 rLrFn6dY0sqLZ8HjJ478lX+72T7XdkoO66ZecY1pHvStsymrmI0wWp3sIGtYiGutDJ
-	 ksCfsaV8nmlGjTO6FToFddMPcblZrr2W6tUfGnoP3la2jzf3Jc8usakEeyzU8fe0je
-	 llrQMnDutD/gQ==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-551fe46934eso1530666e87.1;
-        Thu, 05 Jun 2025 12:02:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXLI7/RMnCz/p2bBxQbkdlviVmTYsNoJL6Vex37Vw3oI/VYDegj3iXKKsnpb06YHZr6N+Z1dGsfaSeO7UoF@vger.kernel.org, AJvYcCXfzxQKnATx+gzQl63YfQejQgUs8omHBx3SWLUYgnmvCbujwDg2sn8r7JHjqhPYcHh0hOKmau+HYfV2Pf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl+4nxe4QcnxMS9/2jcYRTaDaaBCKXRDXGgyU2Z4WdU1lB6dHG
-	DpQbe2CrvptxpeqIY+T8xzapAKO+GNq7stL5ZafI15/6HDNZk1O3RDuwPMTzLGqQp1CNvpMt2Fo
-	0F7C6MyfklTESTkgq88vhCZBE2qJaeZs=
-X-Google-Smtp-Source: AGHT+IETGFT/vOPMFADytAvc9wAfTaXnwRrLijKbq4AborxlFJh7XrLda3pqY6aqBVVHFFv1brU4NJ5haKIj1ie1apk=
-X-Received: by 2002:a05:6512:4025:b0:54e:780f:3074 with SMTP id
- 2adb3069b0e04-55366be73fdmr69396e87.8.1749150121548; Thu, 05 Jun 2025
- 12:02:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GtCE+HGy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vRx1XSWACZs83q/QDpFT/kcZBhTDDJdxU63mDG//IM0=; b=GtCE+HGyJteyZbFX2Px+ZBvDj+
+	/0SMWIYUlJoQIca6nXlRB2rPsuMZxqiJ77LVzSRdSHVrfQ5SoWnYwOoroH8b43NGZqqDZ2RNfpb0T
+	Yz5SW0uBqeD5sZnZhPEPXgSDwxY6w6ggjd6qO/ObnElQkd+SJuxvFnYjRmUY67YK0zvnHKWb/tw0F
+	kCkqH4XOi7Za997WqROQeDzXGM6k7TunDB4xS2Sw98u4q8yjvUF5vWURamcUxnFX0NfagcYEHE1kW
+	Ob9fYS78I2tHSiHryim51tkSoSl6oDSOMPiX7FUoh3G6o9WvFTPh4Uxhki2idySLiSm0NhvB+68Fk
+	WDcRfopQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uNFwC-00000004YCO-38JR;
+	Thu, 05 Jun 2025 19:07:40 +0000
+Date: Thu, 5 Jun 2025 20:07:40 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH] scripts/kernel-doc: drop "_noprof" on function prototypes
+Message-ID: <aEHq_Jy3hPQIzaO-@casper.infradead.org>
+References: <20240326054149.2121-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605171156.2383-1-ebiggers@kernel.org> <CAHmME9ot0LdZ+SBYh9xLqFQLT0QL91mupwzUZRFyc=BV2QiJqw@mail.gmail.com>
- <CAMj1kXGEX_i-Gi3NAO+co6+4fKh5rQLhzwn=88wZbs+mVzGXPQ@mail.gmail.com>
- <CAHk-=wgd_4xrpXLUH1CGgGL=SXj0vq=XdJGGg388Exkti2Dg5Q@mail.gmail.com> <CAHmME9qE-gihY9XK0nNnRY+mHeTNNgn1qi1E7xCKJACFz-uqDg@mail.gmail.com>
-In-Reply-To: <CAHmME9qE-gihY9XK0nNnRY+mHeTNNgn1qi1E7xCKJACFz-uqDg@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 5 Jun 2025 21:01:49 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHthZYSrZzUEkMzjO+Jwy2LA4WUCCBosScX3P8FAPn1yQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtQY_SejFzjSP_ShcwJjUdFWSmSivNCuBFfayQgHNKDIi8BiBMuP5wFWqk
-Message-ID: <CAMj1kXHthZYSrZzUEkMzjO+Jwy2LA4WUCCBosScX3P8FAPn1yQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add entry for crypto library
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Eric Biggers <ebiggers@kernel.org>, 
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, 
-	Christoph Hellwig <hch@lst.de>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326054149.2121-1-rdunlap@infradead.org>
 
-On Thu, 5 Jun 2025 at 20:46, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On Thu, Jun 5, 2025 at 8:45=E2=80=AFPM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Should I just add you and Jason directly as 'M:' entries for this?
->
-> Works for me.
+On Mon, Mar 25, 2024 at 10:41:49PM -0700, Randy Dunlap wrote:
+> Memory profiling introduces macros as hooks for function-level
+> allocation profiling[1]. Memory allocation functions that are profiled
+> are named like xyz_alloc() for API access to the function. xyz_alloc()
+> then calls xyz_alloc_noprof() to do the allocation work.
+> 
+> The kernel-doc comments for the memory allocation functions are
+> introduced with the xyz_alloc() function names but the function
+> implementations are the xyz_alloc_noprof() names.
+> This causes kernel-doc warnings for mismatched documentation and
+> function prototype names.
+> By dropping the "_noprof" part of the function name, the kernel-doc
+> function name matches the function prototype name, so the warnings
+> are resolved.
 
-Sure.
+This turns out not to be enough.  For example, krealloc() is
+currently undocumented.  This is because we match the function name
+in EXPORT_SYMBOL() against the function name in the comment, and they
+don't match.  This patch restores the documentation, although only
+for the python version of kernel-doc, and I'm pretty sure there's a
+better way to do it (eg building it into the export_symbol* regexes).
+I can turn this into a proper patch if this is the way to go, but for
+now it's just to illustrate the problem.
+
+diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
+index 062453eefc7a..bdfa698d5570 100644
+--- a/scripts/lib/kdoc/kdoc_parser.py
++++ b/scripts/lib/kdoc/kdoc_parser.py
+@@ -1176,11 +1176,15 @@ class KernelDoc:
+
+         if export_symbol.search(line):
+             symbol = export_symbol.group(2)
++            # See alloc_tags.h
++            symbol = symbol.removesuffix('_noprof')
+             function_set.add(symbol)
+             return
+
+         if export_symbol_ns.search(line):
+             symbol = export_symbol_ns.group(2)
++            # See alloc_tags.h
++            symbol = symbol.removesuffix('_noprof')
+             function_set.add(symbol)
+
+     def process_normal(self, ln, line):
+
