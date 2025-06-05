@@ -1,289 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216A22309B9;
-	Thu,  5 Jun 2025 13:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB77122FDFF
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129931; cv=none; b=teDZlo0Z4aa49TsavTnMsoJxjwKodbY88Brxq7TK45/OSU/DTKDYb3JF7eTjz27cqzh4qy2YxKbk6lfb8GaFC6TIqou3/h96DoHHz/5xKlIRzDXHBcLH+Qqcg+ED/KhYijkq/ci3qy6f71Yl9ItAieMZzZvPQ2Arip4aR06jwhw=
+	t=1749129940; cv=none; b=GR6+7ZXVMitZg+8Xu0hVr7/gSL9sCrIha3lrYhtgHWDEJocbzP1Kf7dIlj+1litrmcw1lbAWHr9JLhrpiWTSZjIetJf9E2Gb7h52ml4KsGOsAIAtLl4VomHyBVQuWu6lOGMu3s6mx3/DlSkMUClI6OOf5gJvlzl+Pl0XcUUi05I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129931; c=relaxed/simple;
-	bh=hzhgKWXE+T/3rO4m6l03ub+kzjQUoFi1sbn81ENwDjY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FLUy9UAUnPhpPYmvXDRRCJlnnZkKdFE0n3zmHA6ZYM9QHas9/CCcqW+SgGMS8kQPz+hybnEyHK2CwTrlwQU7rBfY33ekzzMYzQA39xmF4XD/sdBFUC6uUGqK+OPR3zxi+l0w9G9oHnAjbf2dh7uHplPeNVb8hRp3/vmhM6qA0w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhKui2zS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749129940; c=relaxed/simple;
+	bh=ph8J09n5JKQD535azyDhvY/sp5bOQf//77AfpWmxs2Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DZ/dfzTogELmAg5kS29olE7gbrop9dqQ6/FvxmFo5StmloEKqls59nUYTmzKDtPMeDRb3Oh45Y83FwTwYZYgiKvWYfDSI3bYa24/SXRfs3mphVx9ZwR3hrCJkBXadvvgRwX0xMt0TMbweZOgdSoXZ4B/QBHsp6mv23j3BT/YwT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mXB16Xx4; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhKui2zS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F03C4CEE7;
-	Thu,  5 Jun 2025 13:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749129930;
-	bh=hzhgKWXE+T/3rO4m6l03ub+kzjQUoFi1sbn81ENwDjY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jhKui2zS1U+9MJYbHyxBSuh5R4ASkGMVoczdaL00jgAMnaWmZ6jtZDHFVH8k91y4I
-	 OzCCbRebV7/kBJABZHAm3OfabUa1oz7TH9j4/OBd1ZdbL4BlONK1Ke9zfeBJmMobne
-	 UCmekzvn0T8AIYkqwlz+WN55fh8g3sAf65GbNUSGDb/dO/PFzyYyk+BN87EsnibIX9
-	 6clxAwFoGPvjVc/P+lpXxfsbkL1ApCylypjdrOI9fwGz1UapDDkyhU0M77vC9II2gK
-	 yxEK12rhsxjlG9+4sL975W9e6vEgOX5IRL3J8H3bwxBIkRcN2MeAEyEs03lqzJrysP
-	 DC0m1h3bbQWVA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCHv3 perf/core 08/22] uprobes/x86: Add mapping for optimized uprobe trampolines
-Date: Thu,  5 Jun 2025 15:23:35 +0200
-Message-ID: <20250605132350.1488129-9-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250605132350.1488129-1-jolsa@kernel.org>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXB16Xx4"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5535652f42cso1022072e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:25:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749129937; x=1749734737; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ph8J09n5JKQD535azyDhvY/sp5bOQf//77AfpWmxs2Y=;
+        b=mXB16Xx4ng1JVwsH9BePsKNPf6mXIE9Ogtyrd6h7qMxYXSuFU4rGZyHe8CpjiZiqb5
+         JLSJqbLSH4kqzeUgXVFVBSIKOxccdopB2FA2t/I3MWmU/U9t6x3II+YaXh5QlwcqrVXy
+         IyukmVxpLzu5a3YfWWZCoKvX3Ot1TFV0OX9dZTn8zzBpdQAtmwdBL+mdSHlNYVZBOhwM
+         96vY/J7BclkCB4/5AZn+3LNwsh0Nyg6gWMfTktTCqo5b2GV5zi1xzN2L29ltkGfaiVAo
+         a7amm3oquRPa8wL13zraL4K7XiceKDVOWL3BtDy1INVBQKJayMN2s232j4E9uxfFK1U4
+         5YRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749129937; x=1749734737;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ph8J09n5JKQD535azyDhvY/sp5bOQf//77AfpWmxs2Y=;
+        b=PdEHYC+9a0d6hjjbe57b/ZIlPQ1REBW88kakqBSgnHPwuhZJjF9dWUQBCQgBC4Kslb
+         p7x0kxpQ6OMjdEImFJCUPuIiargkNF7Nczrj4XB3kKFJJXAoBqyem2/dJWIWGZyvkf9f
+         I/pelMwVWSsYAx8a8CUxagm9nTgwAFu7Cf/dd6a8fFQ6MyVE4HK0pW1GBv2jigEyEAdE
+         vM3VT5z6WNcoLFQODR6CeBn5Ue9sEEpE5CR1CdP9P5Tn1+/yY0ofd9pbFtmZ5gBKp6Vu
+         dP9/EnOSrs3TNV3QNm04UYJZ4EeJMYvH7JN2K56c9Wxk2y+HUj6bgKLJhlh6gKdXhGcQ
+         xyHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpoizoqz66qZBHSnWX/7OJg+cw+DtWHyvId4M6ywSRCB66e/kpbEUa1G27QveKdC4WaeRpuU6b0DHxOtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo5FnT9+BkpsF2Qk88Tsvf0b4qUzIMD6uQNDv7dyi1ne21BETs
+	PptWc7fffdY1G6uBSGnxO5SugVkeaKM5d9uhWkK5V9P3FaNCoJjxXWiZgkt9OIQ+dcpDtua2Quh
+	mF7SjikK0Epdz3aOzY49CMj9tFuG/o5gac1VSqdTnrg==
+X-Gm-Gg: ASbGncuzsqdtIqWVBZ0kRyNSiaaytBi/n4wyMUOuzdfTIeWdNofQafm1S0YM78YrQRQ
+	ga7jmwWhLPv6j7Qhs9FghGqvCvUkOi+CSqGbIxlaYfTeede39aMTAGSU4eyDmeJPF7EOLGaOLri
+	/P2nUFaEcvBrX182NYjJTEPBxTVhnKDifV
+X-Google-Smtp-Source: AGHT+IEXDLuUxYBO7fxS8P8ms4WiU/xJFKvEp/hKMmovCR15hms9m/g0A6FghTW4kUyhFWDODOXMqMLjOLenFT8s9LA=
+X-Received: by 2002:a05:651c:994:b0:30b:f283:5ef8 with SMTP id
+ 38308e7fff4ca-32ac71bfedfmr18601411fa.18.1749129936758; Thu, 05 Jun 2025
+ 06:25:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250529-b4-drm_panel_mass_driver_convert_part3-v2-0-5d75a3711e40@redhat.com>
+ <20250529-b4-drm_panel_mass_driver_convert_part3-v2-36-5d75a3711e40@redhat.com>
+In-Reply-To: <20250529-b4-drm_panel_mass_driver_convert_part3-v2-36-5d75a3711e40@redhat.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 5 Jun 2025 15:25:24 +0200
+X-Gm-Features: AX0GCFsdE6ka4seBq476pc4kVds9Z70NwuFBL-Ad03eDGyeURiB9xBYNtFeP04Q
+Message-ID: <CACRpkdbbwGOF6URoYtjci-muvBHUhT8pRu6JXR71n3LpicgSzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 36/46] panel/tpo-tpg110: Use refcounted allocation in
+ place of devm_kzalloc()
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Robert Chiras <robert.chiras@nxp.com>, Markuss Broks <markuss.broks@gmail.com>, 
+	Artur Weber <aweber.kernel@gmail.com>, Dzmitry Sankouski <dsankouski@gmail.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
+	Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+	Janne Grunau <j@jannau.net>, Michael Trimarchi <michael@amarulasolutions.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Adding support to add special mapping for user space trampoline with
-following functions:
+On Fri, May 30, 2025 at 4:52=E2=80=AFAM Anusha Srivatsa <asrivats@redhat.co=
+m> wrote:
 
-  uprobe_trampoline_get - find or add uprobe_trampoline
-  uprobe_trampoline_put - remove or destroy uprobe_trampoline
+> Move to using the new API devm_drm_panel_alloc() to allocate the
+> panel.
+>
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 
-The user space trampoline is exported as arch specific user space special
-mapping through tramp_mapping, which is initialized in following changes
-with new uprobe syscall.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-The uprobe trampoline needs to be callable/reachable from the probed address,
-so while searching for available address we use is_reachable_by_call function
-to decide if the uprobe trampoline is callable from the probe address.
-
-All uprobe_trampoline objects are stored in uprobes_state object and are
-cleaned up when the process mm_struct goes down. Adding new arch hooks
-for that, because this change is x86_64 specific.
-
-Locking is provided by callers in following changes.
-
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- arch/x86/kernel/uprobes.c | 115 ++++++++++++++++++++++++++++++++++++++
- include/linux/uprobes.h   |   6 ++
- kernel/events/uprobes.c   |  10 ++++
- kernel/fork.c             |   1 +
- 4 files changed, 132 insertions(+)
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 77050e5a4680..0295cfb625c0 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -608,6 +608,121 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
- 		*sr = utask->autask.saved_scratch_register;
- 	}
- }
-+
-+static int tramp_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
-+{
-+	return -EPERM;
-+}
-+
-+static struct page *tramp_mapping_pages[2] __ro_after_init;
-+
-+static struct vm_special_mapping tramp_mapping = {
-+	.name   = "[uprobes-trampoline]",
-+	.mremap = tramp_mremap,
-+	.pages  = tramp_mapping_pages,
-+};
-+
-+struct uprobe_trampoline {
-+	struct hlist_node	node;
-+	unsigned long		vaddr;
-+};
-+
-+static bool is_reachable_by_call(unsigned long vtramp, unsigned long vaddr)
-+{
-+	long delta = (long)(vaddr + 5 - vtramp);
-+
-+	return delta >= INT_MIN && delta <= INT_MAX;
-+}
-+
-+static unsigned long find_nearest_page(unsigned long vaddr)
-+{
-+	struct vm_unmapped_area_info info = {
-+		.length     = PAGE_SIZE,
-+		.align_mask = ~PAGE_MASK,
-+		.flags      = VM_UNMAPPED_AREA_TOPDOWN,
-+		.low_limit  = PAGE_SIZE,
-+		.high_limit = ULONG_MAX,
-+	};
-+	unsigned long limit, call_end = vaddr + 5;
-+
-+	if (!check_add_overflow(call_end, INT_MIN, &limit))
-+		info.low_limit = limit;
-+	if (!check_add_overflow(call_end, INT_MAX, &limit))
-+		info.high_limit = limit;
-+	return vm_unmapped_area(&info);
-+}
-+
-+static struct uprobe_trampoline *create_uprobe_trampoline(unsigned long vaddr)
-+{
-+	struct pt_regs *regs = task_pt_regs(current);
-+	struct mm_struct *mm = current->mm;
-+	struct uprobe_trampoline *tramp;
-+	struct vm_area_struct *vma;
-+
-+	if (!user_64bit_mode(regs))
-+		return NULL;
-+
-+	vaddr = find_nearest_page(vaddr);
-+	if (IS_ERR_VALUE(vaddr))
-+		return NULL;
-+
-+	tramp = kzalloc(sizeof(*tramp), GFP_KERNEL);
-+	if (unlikely(!tramp))
-+		return NULL;
-+
-+	tramp->vaddr = vaddr;
-+	vma = _install_special_mapping(mm, tramp->vaddr, PAGE_SIZE,
-+				VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_DONTCOPY|VM_IO,
-+				&tramp_mapping);
-+	if (IS_ERR(vma))
-+		goto free_area;
-+	return tramp;
-+
-+free_area:
-+	kfree(tramp);
-+	return NULL;
-+}
-+
-+__maybe_unused
-+static struct uprobe_trampoline *get_uprobe_trampoline(unsigned long vaddr, bool *new)
-+{
-+	struct uprobes_state *state = &current->mm->uprobes_state;
-+	struct uprobe_trampoline *tramp = NULL;
-+
-+	hlist_for_each_entry(tramp, &state->head_tramps, node) {
-+		if (is_reachable_by_call(tramp->vaddr, vaddr))
-+			return tramp;
-+	}
-+
-+	tramp = create_uprobe_trampoline(vaddr);
-+	if (!tramp)
-+		return NULL;
-+
-+	*new = true;
-+	hlist_add_head(&tramp->node, &state->head_tramps);
-+	return tramp;
-+}
-+
-+static void destroy_uprobe_trampoline(struct uprobe_trampoline *tramp)
-+{
-+	hlist_del(&tramp->node);
-+	kfree(tramp);
-+}
-+
-+void arch_uprobe_init_state(struct mm_struct *mm)
-+{
-+	INIT_HLIST_HEAD(&mm->uprobes_state.head_tramps);
-+}
-+
-+void arch_uprobe_clear_state(struct mm_struct *mm)
-+{
-+	struct uprobes_state *state = &mm->uprobes_state;
-+	struct uprobe_trampoline *tramp;
-+	struct hlist_node *n;
-+
-+	hlist_for_each_entry_safe(tramp, n, &state->head_tramps, node)
-+		destroy_uprobe_trampoline(tramp);
-+}
- #else /* 32-bit: */
- /*
-  * No RIP-relative addressing on 32-bit
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 5080619560d4..b40d33aae016 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -17,6 +17,7 @@
- #include <linux/wait.h>
- #include <linux/timer.h>
- #include <linux/seqlock.h>
-+#include <linux/mutex.h>
- 
- struct uprobe;
- struct vm_area_struct;
-@@ -185,6 +186,9 @@ struct xol_area;
- 
- struct uprobes_state {
- 	struct xol_area		*xol_area;
-+#ifdef CONFIG_X86_64
-+	struct hlist_head	head_tramps;
-+#endif
- };
- 
- typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr,
-@@ -233,6 +237,8 @@ extern void uprobe_handle_trampoline(struct pt_regs *regs);
- extern void *arch_uretprobe_trampoline(unsigned long *psize);
- extern unsigned long uprobe_get_trampoline_vaddr(void);
- extern void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len);
-+extern void arch_uprobe_clear_state(struct mm_struct *mm);
-+extern void arch_uprobe_init_state(struct mm_struct *mm);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 6795b8d82b9c..acec91a676b7 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1802,6 +1802,14 @@ static struct xol_area *get_xol_area(void)
- 	return area;
- }
- 
-+void __weak arch_uprobe_clear_state(struct mm_struct *mm)
-+{
-+}
-+
-+void __weak arch_uprobe_init_state(struct mm_struct *mm)
-+{
-+}
-+
- /*
-  * uprobe_clear_state - Free the area allocated for slots.
-  */
-@@ -1813,6 +1821,8 @@ void uprobe_clear_state(struct mm_struct *mm)
- 	delayed_uprobe_remove(NULL, mm);
- 	mutex_unlock(&delayed_uprobe_lock);
- 
-+	arch_uprobe_clear_state(mm);
-+
- 	if (!area)
- 		return;
- 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 1ee8eb11f38b..7108ca558518 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1010,6 +1010,7 @@ static void mm_init_uprobes_state(struct mm_struct *mm)
- {
- #ifdef CONFIG_UPROBES
- 	mm->uprobes_state.xol_area = NULL;
-+	arch_uprobe_init_state(mm);
- #endif
- }
- 
--- 
-2.49.0
-
+Yours,
+Linus Walleij
