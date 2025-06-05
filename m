@@ -1,124 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D766A182D7;
-	Thu,  5 Jun 2025 14:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA43778F2B;
+	Thu,  5 Jun 2025 14:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749134295; cv=none; b=N2xZhRBFlwY+xWo5S9zzQLyKMCcUywQtlZtihb+8TbqcOIbTLP7GkNGgSiRaC1rVvWoks0zCq7h3T0CjEKkafMh7Be20x3qO9dkh/Tr6sgmCeuBExOLiTkOO84KRaZEydMAcgiT1rVWMvuEylEhIaI4SIBJN2G/Ax5+voO3aFNU=
+	t=1749134349; cv=none; b=fDQXDOiW3WEscG1xRlphklmL4P2jBn/Cqz2l6O1G62nC//IQxZ8BLMLpe3u9J5K5ynJKWR+fj0tiJxtn4irNnKBx4jJ2E/rgVA7Dc1ijkcrqWic1tJF/p251kjWuTlworczgbTO0WZ3MIBx8LHpNeyimPLAJ8LKe0rWY5Kbi2bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749134295; c=relaxed/simple;
-	bh=2wQoiEp/25lDUsgFjzKAQF/FgvhWHF6Ofd14vJ+/6h8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z0DkAFlb71jz2Q8Nyo1fJzRl3s+zz0kTRfat735dDnbQPOm3XiD3B3WToobDwko4vdkzmr54UJ4tVmy/6pbD2NlpowTeJUSIMJ42c5BSMOd4ClpURxj6Tl76i/DQfRZkm9t51+rBHf0mw1CDT2KI7cQk36j/Wv80iGbSuhYZ1r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yh5Ye/5K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749134349; c=relaxed/simple;
+	bh=xLpKEOc8fA92QFRjW1J6rRuu45Xm62oHNsj8UqAmlzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tOe/YVxvKxqnX+DEHHI1fz42DfIx6wYq0OB9MmlBWOLk/1DcqO/Gjeb0XfpfEpQjSHf9CIbPW3DQ37q/RpKcVOFsPy/k8CLQX/bK3BT8RKRchpaPh3V9Q0Wij0IOboqp5toNKw0L6YG65X1g0pACtY+i1SVYME5j9YvhTVn5rHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GuCjIDEA; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yh5Ye/5K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C1A1C4CEE7;
-	Thu,  5 Jun 2025 14:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749134295;
-	bh=2wQoiEp/25lDUsgFjzKAQF/FgvhWHF6Ofd14vJ+/6h8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yh5Ye/5KwiX0dBesrH4zRrzoVDYJwOgKG2ClLfgWI3k7kvHT9UOB35XDIF2niC6Cp
-	 ObmU4UBR+JhXH0RZ+9D0e2YAO9dd1P/LUW/HIRA0Kabk81LYD6OxunCRip7A4ZVuoA
-	 SmcQUKwXzZku10LW+BBQwjpOzdqj6wYuGrllMEHsHnMB1s4NFzrPHWsAm574kWozxm
-	 j6hR01wt2rPcF58zmdCFro/+6iLHcJybBv8USbBVQkKTo57rN9InGNYFby1UEQKBnQ
-	 o/07NhHYg8XTdRpzHiiXyqvNU+QOsxFf5e6Rtx7nCE/4c+miyY/KjJn1WQVnpbl2NJ
-	 ysPReQZ6H4yTw==
-Message-ID: <9c3fd179-f59e-452b-a7a9-5326d78f4741@kernel.org>
-Date: Thu, 5 Jun 2025 16:38:10 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GuCjIDEA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7aizhFKosYRXj/8cXtw1gmVuAjL4hzqqXZZX38VaLYU=; b=GuCjIDEAIG1HbRH58bql6xqyV8
+	90UmDU4JJtQF/WNHqOP77Nqu5xkYG8Yn+z4dF6wXA7vWpblIGEhsHuCDTXLWAJpkspcHCNV5gs4zu
+	rOK19VcfR/zcGT7OrybHj6y969jfu4myNQlgr5+thc2hF7kbZKVPuL1H5o2LDNEctxTesAUgcdY3K
+	IoPlvEPKm9ke418mrZcKK6c0+P16h9T5tdV6SKgJIrCNzq9VjI4rAx5HHRAHSfM/z2F7uHkVg+WyZ
+	194Rjn0oa4J0gaq0iJhs/LKYBYTYhWA5GbsRFxkk3WOUrCvHpu80IRo8WCEnMD72MJV0PaOBw7+cr
+	VAoHdaMw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uNBkD-00000004Kor-33hj;
+	Thu, 05 Jun 2025 14:39:01 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E5E1330057C; Thu,  5 Jun 2025 16:39:00 +0200 (CEST)
+Date: Thu, 5 Jun 2025 16:39:00 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-modules@vger.kernel.org, oe-lkp@lists.linux.dev,
+	lkp@intel.com, linux-kernel@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Allison Henderson <allison.henderson@oracle.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2] module: Make sure relocations are applied to the
+ per-CPU section
+Message-ID: <20250605143900.GV39944@noisy.programming.kicks-ass.net>
+References: <202506041623.e45e4f7d-lkp@intel.com>
+ <20250604152707.CieD9tN0@linutronix.de>
+ <20250605060738.SzA3UESe@linutronix.de>
+ <beb343ec-6349-4f9c-9fea-588b04eb49ee@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Bluetooth: BT Driver: mediatek: add gpio pin to reset
- bt
-To: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>,
- Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Von Dentz <luiz.dentz@gmail.com>
-Cc: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
- Aaron Hou <aaron.hou@mediatek.com>, Chris Lu <chris.lu@mediatek.com>,
- Hao Qin <Hao.qin@mediatek.com>,
- linux-bluetooth <linux-bluetooth@vger.kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- linux-mediatek <linux-mediatek@lists.infradead.org>
-References: <20250605095300.22989-1-ot_zhangchao.zhang@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250605095300.22989-1-ot_zhangchao.zhang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <beb343ec-6349-4f9c-9fea-588b04eb49ee@suse.com>
 
-On 05/06/2025 11:53, Zhangchao Zhang wrote:
-> This patch provides two methods btmtk_reset_by_gpio,
-> btmtk_reset_by_gpio_work for mediatek controller,
-> it has been tested locally many times and can reset normally.
+On Thu, Jun 05, 2025 at 03:44:23PM +0200, Petr Pavlu wrote:
+
+> For instance:
 > 
-> The pin is configured in dts files, bluetooth is reset by pulling
-> the pin, when exception or coredump occurs, the above methods will
-> be used to reset the bluetooth, if the pin is not found, it also can
-> reset bluetooth successfully by software reset.
-> 
-> Co-develop-by Hao Qin <hao.qin@mediatek.com>
-> Co-develop-by Chris LU <chris.lu@mediatek.com>
-> Co-develop-by Jiande Lu <jiande.lu@mediatek.com>
-> Signed-off-by: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
-> ---
->  drivers/bluetooth/btmtk.c | 60 +++++++++++++++++++++++++++++++++++++++
->  drivers/bluetooth/btmtk.h |  5 ++++
->  2 files changed, 65 insertions(+)
+> 	/*
+> 	 * Don't bother with non-allocated sections.
+> 	 *
+> 	 * An exception is the percpu section, which has separate allocations
+> 	 * for individual CPUs. We relocate the percpu section in the initial
+> 	 * ELF template and subsequently copy it to the per-CPU destinations.
+> 	 */
+> 	if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC) &&
+> 	    infosec != info->index.pcpu)
+> 		continue;
 
-You just sent the same without any changes, any changelog, any improvements.
+Right, and pcpu is a data section and should not have relative
+relocations, only absolute.
 
-Respond to previous feedback and them implement it.
-
-Best regards,
-Krzysztof
+So copying things should not be a problem.
