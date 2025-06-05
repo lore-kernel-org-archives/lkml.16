@@ -1,206 +1,120 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C623277819;
-	Thu,  5 Jun 2025 15:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3491022A4E8
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749136291; cv=none; b=dEmE5urjmjyy/p6b4s4xr7psAIVPhTWzdl1o2dWZNSGJWDIy1KVfXWwKERy/8lBFmSx4VWDYyuGdezhMxAorsDuPwuGI2e8mJ2ngb+JO3sENT1DgC9JwHa0ia8Te9POII3oRyuUtBo5+/9d9zbVsvKVRUisfAsve1R2rMiesH4k=
+	t=1749136303; cv=none; b=P22wiohp9TnGmk8kNyeMy2hWoePmEDN9zd2saZFGizHzEpfGbv7oCYiIw/obc9nOx8KI9oHiK2Ywt+tOeJOsBIZ98k+aYsn4Y9fZB39QsO3TM4HcTo+inTNCz4uHJISvkY4Wr0ZfMLOyKyTqg9YvsQizyVjDtq7rNoAENjkGVeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749136291; c=relaxed/simple;
-	bh=5ByCBNtaK+LgpgvpKKzcfc261k1mNXaDpdqFzomi9iY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JFqyG06TPZFQskLdU6zXhq8Z029zIi6ZZFUhFC8+z//+jQxpahWUAJe9C4iaOKNVLp7QgAmfUesdLxq6hEwG5ggpWzJcr2DtcKosg5xBmPyjC8COXQF1aMaWXg60d0vRSWeS5yZ7Xu15dbTcuIHBgUxLbFfaos0eh4ybSqxRTKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Rm0iZ/qK; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1749136303; c=relaxed/simple;
+	bh=3t5hMeP7ABBlyRxpmilprlc7d1eAM1m14oAOcrmuomg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LrJKXOoYwMDH7Omz5xCgYwKFqp6XbwsgLvJhMP4BFKi/QZGQ3M8I7U+jdAQeMHE084GVcuswKkJJTD985l0p0bHCee0pAujBUYwRGR8KDRiLisqitxfUSHFnbs0ui+HKUCmtiTqjguZpLMrzndv7KBVkIVi2hVfgsdzdzZ2YnvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cOhUf1Eo; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Rm0iZ/qK"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555DDGtV028924;
-	Thu, 5 Jun 2025 11:11:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=Sr4Gh
-	eLiPdRY5QMddXSBzGUdMsfxWcpqgC1VQoc31yE=; b=Rm0iZ/qKFqSfOzejSVCDR
-	VyLd5dP0c/uGHr8ktsK/yz61GHtOYCuiIKwbb5pVnV5t2SqZbSU60MbKOl4r6rE0
-	widnhnjy/5rtaTya/KncR39ztEMIG0ZZi7JTJE7Vme7e9XW5CRv2LzYDaW5+gayE
-	FYxoXfLsqHmSrhFx5eO18LuG/uNeKgVsGMQyiwylKUSeVKezTs43no1+x3zU3BOh
-	MoA4rS2gQ8rGB9m4TycF7TNflrGAlgWZfIXM78m8cjMxXuqidhBTEI/EzeXhrOuz
-	sDigyXq3Ajmlp1E2ECz1nfFe5NBqzKI8Ilvkx5k4dGaENrrO+54w4BZ88cAm1kKn
-	w==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 471g9j8jfy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 11:11:05 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 555FB4d8046975
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 5 Jun 2025 11:11:04 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Thu, 5 Jun 2025 11:11:04 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Thu, 5 Jun 2025 11:11:04 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Thu, 5 Jun 2025 11:11:02 -0400
-Received: from romlx5.adlk.analog.com ([10.48.65.73])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 555FA1ut027831;
-	Thu, 5 Jun 2025 11:10:52 -0400
-From: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-To: Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich
-	<Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "David
- Lechner" <dlechner@baylibre.com>,
-        =?UTF-8?q?Nuno=20S=C3=A1?=
-	<nuno.sa@analog.com>,
-        Andy Shevchenko <andy@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-        "Dragos Bogdan" <dragos.bogdan@analog.com>,
-        Antoniu Miclaus
-	<antoniu.miclaus@analog.com>,
-        Olivier Moysan <olivier.moysan@foss.st.com>,
-        Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-        Matti Vaittinen
-	<mazziesaccount@gmail.com>,
-        Tobias Sperling <tobias.sperling@softing.com>,
-        Marcelo Schmitt <marcelo.schmitt@analog.com>,
-        Trevor Gamblin
-	<tgamblin@baylibre.com>,
-        Ramona Alexandra Nechita
-	<ramona.nechita@analog.com>,
-        Herve Codina <herve.codina@bootlin.com>,
-        "Ioan
- Daniel" <pop.ioan-daniel@analog.com>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 4/5] dt-bindings: iio: adc: add ad7405
-Date: Thu, 5 Jun 2025 18:09:42 +0300
-Message-ID: <20250605150948.3091827-5-pop.ioan-daniel@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250605150948.3091827-1-pop.ioan-daniel@analog.com>
-References: <20250605150948.3091827-1-pop.ioan-daniel@analog.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cOhUf1Eo"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a528243636so653658f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 08:11:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749136299; x=1749741099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2bzgHxof4HGWQflHabmyRzOQmodkv7YALqL3K9iBeEo=;
+        b=cOhUf1EoJ67iuqXHXVrfZ+uUM7gAQwv2unxKA9d476+7nA6BTOxhcrASHPxQ1jWzrc
+         q2gIgw0nxSmnMsJP9KInpHvGM1SUQjXp3E4t0RhaeIP5uWRW3yV4wF2F6tNWIX3mdsb/
+         z2RZcG386iAXysRVYgmGdZBD/JyDf7QQx4vcWnsO41/nuigNVehppxY/zFIdMMlh8t27
+         wChSWfcit72C9dK7nwfrKNGU61AeGS7HcwgGqnf9IZLTaUTQcVdGU1Lb06+ecO8IPp0V
+         0q6xKHQyYM3gyFrTfYTFsryS/MDAdCV221QuzEpwkJVixdo7/trxX+Vei0XtscAHqO9s
+         +s3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749136299; x=1749741099;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2bzgHxof4HGWQflHabmyRzOQmodkv7YALqL3K9iBeEo=;
+        b=sGtgI0jU0nb7clDKwy1Tf5yvjZTjW40J9uU+5DLdE6avEzXgIQqBHD+s09sd+x8Ere
+         147VRYkAgOGDSJ14VAhTkrsyBYJxzcVOgU2SigiPr3sKUaGSbbwNXE6yAoAbZGHUtNr5
+         +E+LVJWh7FO2ZFdaJgz5+T18uc05YjpPNBA3yCXFbzG9MW5KkbXWydxok+jWZcUe5nM6
+         zHKUKdAjk5r4scI3QP0iOcS4dTZ2OwCavmdhSMqjgwT/5bfA+ngS+4DIgy2ak52s4alD
+         TYEfKoNmiL7v1Xs4hEloO1X3bcX8tnZyBXfozRIHKIkjLnurtqnR3zFw11Bxj7iFIb/k
+         Knjw==
+X-Gm-Message-State: AOJu0Yw9OLOwYlu40rxEixJws07apC/nsQi8Hfx/moJtM1lQnb3svwQ+
+	mwv8FFTRueVmmT17zxTEgurXDOVqizBQjIlXQDUHKjLcuItl5+DWKNAu/yAZ2sM3Gdk=
+X-Gm-Gg: ASbGnctn3BEBwsqCSjmWninHm7dyH6poOInKfUZGB7AmmhvXTm5Gdcg+NCmbX/X/3d1
+	2SlyW4cz/lgbGKatZPTfcBC5zN4aZzDUmnbczrQ2UU4GWHQHd5ZvAYs6jE/xKCqwaJf3KNKGEy/
+	/7bAR17DOGq6+uYKAIsad0O8FCU7RKDfKvLiLY+0ZswVMi4dEuu0jNwoVmBTyaveJ8agc8r2o6E
+	vS1Gl2rbs6RGFK6OKKqFPdUgJ1FVfNRzz1MJhqHIW76VZF5Dqk+qBpiyQAWk1zwTzLVCpRfagpA
+	ACSVCoM4uQ0AOCvzyF3N9dyPzYE6mlTH6rEYJX2g1Ue91vDcsKIkGjx2yZl/
+X-Google-Smtp-Source: AGHT+IHRtSTrr2O7oU4uHDUU1xf7WoHhUspxl0v+JpGHp0sOgs8hGDWDwWjJWhusRVSgq8S9nf6lzw==
+X-Received: by 2002:a05:6000:40d9:b0:3a4:dde7:ee12 with SMTP id ffacd0b85a97d-3a51d97ca2fmr7046857f8f.53.1749136299417;
+        Thu, 05 Jun 2025 08:11:39 -0700 (PDT)
+Received: from eugen-station.. ([37.245.43.41])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f009758esm24923968f8f.75.2025.06.05.08.11.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 08:11:39 -0700 (PDT)
+From: Eugen Hristev <eugen.hristev@linaro.org>
+To: andersson@kernel.org,
+	linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Eugen Hristev <eugen.hristev@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: sm8750: Trivial stray lines removal
+Date: Thu,  5 Jun 2025 18:10:39 +0300
+Message-ID: <20250605151040.56942-1-eugen.hristev@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: NYvmfvo_RkRiIzrvC2T9MUcHw_PV3OCG
-X-Authority-Analysis: v=2.4 cv=DfIXqutW c=1 sm=1 tr=0 ts=6841b389 cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gEfo2CItAAAA:8 a=gAnH3GRIAAAA:8
- a=KKAkSRfTAAAA:8 a=BlUfrHhC_0NcX1HyLxIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=sptkURWiP4Gy88Gu7hUp:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: NYvmfvo_RkRiIzrvC2T9MUcHw_PV3OCG
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDEzMiBTYWx0ZWRfXwkMvfK0vVTcz
- fcXSoy1lQYPvXzhLtFNbLxGZsens18WbjjQ4ttxECuqEyldfbuEjr4GKNhQnyJ/qFH7XatzdcGR
- Ewg6I53KJmxsvT2rEBLOVWZgvd5JxnMapOlTTP1T9sWZuJlR4TAZOiI+9O5JupsfKRt1NgIcW5/
- oqWRczPfxMU8KzCjnmntUqhIFWG3O7pwB4Lfwhg/hTC5ctH3L5bow34PI9gXSf8FhzOF3+8bqVl
- FovXmamLWUaafkVGTTq4fC56aSn9XLwS4ZEAvt861mGgqhJDFC/iHuoq7zU1dj4yt7wbebzoo4D
- iX7WDJ2x3G+Cyd6oAMSQtM6JYbB/nos3X00jWvUu9LYVHLEbTZ7zmRZzR/sLher9HWqKiE2ncJ2
- iomOWn1oODRjo/0Cn84yw14PsuJLSPxC8Y3BSKyKKRyfrS9wysCCCRRW70R/mBVDRlAOQzFY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_03,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 malwarescore=0 clxscore=1011 priorityscore=1501 suspectscore=0
- adultscore=0 mlxlogscore=999 spamscore=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506050132
 
-Add devicetree bindings for ad7405/adum770x family.
+Remove stray lines
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
-changes in v7:
- - add Reviewed-by: tag
- .../bindings/iio/adc/adi,ad7405.yaml          | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
+ arch/arm64/boot/dts/qcom/sm8750.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
-new file mode 100644
-index 000000000000..57f097025705
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2025 Analog Devices Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7405.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD7405 family
-+
-+maintainers:
-+  - Dragos Bogdan <dragos.bogdan@analog.com>
-+  - Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-+
-+description: |
-+  Analog Devices AD7405 is a high performance isolated ADC, 1-channel,
-+  16-bit with a second-order Σ-Δ modulator that converts an analog input signal
-+  into a high speed, single-bit data stream.
-+
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7405.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/adum7701.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/adum7702.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADuM7703.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7405
-+      - adi,adum7701
-+      - adi,adum7702
-+      - adi,adum7703
-+
-+  clocks:
-+    maxItems: 1
-+
-+  vdd1-supply: true
-+
-+  vdd2-supply: true
-+
-+  io-backends:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - clocks
-+  - vdd1-supply
-+  - vdd2-supply
-+  - io-backends
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    adc {
-+        compatible = "adi,ad7405";
-+        clocks = <&axi_clk_gen 0>;
-+        vdd1-supply = <&vdd1>;
-+        vdd2-supply = <&vdd2>;
-+        io-backends = <&axi_adc>;
-+    };
-+...
+diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+index 980ba1ca23c4..69cb60dfbd97 100644
+--- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+@@ -177,7 +177,6 @@ cluster1_c4: cpu-sleep-1 {
+ 				exit-latency-us = <130>;
+ 				min-residency-us = <686>;
+ 			};
+-
+ 		};
+ 
+ 		domain-idle-states {
+@@ -1986,7 +1985,6 @@ &clk_virt SLAVE_QUP_CORE_1 QCOM_ICC_TAG_ALWAYS>,
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 
+-
+ 				pinctrl-0 = <&qup_uart7_default>;
+ 				pinctrl-names = "default";
+ 
+@@ -2027,7 +2025,6 @@ pcie_noc: interconnect@16c0000 {
+ 			#interconnect-cells = <2>;
+ 			clocks = <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
+ 				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>;
+-
+ 		};
+ 
+ 		aggre1_noc: interconnect@16e0000 {
+@@ -2037,7 +2034,6 @@ aggre1_noc: interconnect@16e0000 {
+ 			#interconnect-cells = <2>;
+ 			clocks = <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
+ 				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>;
+-
+ 		};
+ 
+ 		aggre2_noc: interconnect@1700000 {
 -- 
-2.34.1
+2.43.0
 
