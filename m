@@ -1,63 +1,63 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A56214A6A
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D9321765B
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749104146; cv=none; b=p79z0wE5aQsL+iWbc1G2LHcZTHic7YawbOaNkFLvpYd8J8CL3brd2xTqvniPFK6qwl2VMHuZ0pNis98Y04AUhFh+PBPrL7jGmvVWnllRNhP/Dh7ZRf1yGHoDCkGcA+h1sAPd7Tf3auzDA67pR81HNwd900ofPCKTFFXQxlgOyCg=
+	t=1749104150; cv=none; b=YVGggJguBEH/yJCG7SkM16m7GWxPBbKUZVA7Im4jua3Xa0NlBMm/zEMVHGINyamOHvs7thB4N5oVuAbjc83gy5whyIl3ElgNPG5NVybgSLbXiM6iOiodGGzA6JYArnj2F5o2ZRbo8HsDBEjBU3KL2XQNyhIV43b5RaDuPU9CJ1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749104146; c=relaxed/simple;
-	bh=6sszuUfccYuEtJctsI5BNx1ZHbTwew1hmbwnSMnNPl4=;
+	s=arc-20240116; t=1749104150; c=relaxed/simple;
+	bh=/DDImLrZIWe6DHfRVDh2VF/oihV7w86USnafdPxDL18=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=szvt1Kwp6ZP/wkMMrZG4p7fhlJWg7NeUCrpHzA0vJbfP4p/iwqtgRMJJIqWWOlO6Dsmx5MORYwJxL/tFL+B3UVrlK/EQ3b7ZllTtMAFe9FUxnDz+g+jB7ZAosPh+m75QUwQhbMhj7T/9yP/dVjfHzzM8PHk8I57IEweAHvr9cLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=G2AairEB; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=pPRM6fOLEHYN+0ni/roVYxmZJPhO34+Gg/CSU6UL/w0gW4rAgHmfS+w9o/mjG1YwAR9gOjDh3Q4Ynvia3U6HP2ckh41o+WFBZsxNgUFTK+JOKfYLYgrISdZqIGIZEdrwwYgP+9N/M6aCrvavLDsx4UpLs3WV2KxST3h7S9LC7Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=V6Wdhcz5; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="G2AairEB"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-23526264386so5583825ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 23:15:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="V6Wdhcz5"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-311ef4fb43dso501607a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 23:15:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1749104144; x=1749708944; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1749104148; x=1749708948; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hZLXSy5dKdnrCLdxDNwluOSVBrj34xrZ5br2B7QUPFM=;
-        b=G2AairEBuM94wAjFcm6qq6RM6ARY5RGxyZGFQ16ABMetm8uotzHfENwYxMrkQMBflJ
-         V5qiFgt6WqjyA53fSA8bszeC1Mb9OU1mDJO8M/67Fe79PeIUbCZoywmn41mUVqlOxRdt
-         plX2gNDQ+FE9iHDf3i0wY+HZblxHk7rgyM8MUqiqZFWUnLlikhExsdkoqIKgwjBIkvv6
-         TS2C0WpUvQvETMXwqFLLeugTiWVB5awTbU6BLYinWvdv3DwsVZ11zBR2LxCcVgsiuzd4
-         ekfVZHOea+IPogteJJjKpjygyIIkLySE/joj0+3FHGE7pgSPH0wOg5kM+ZxptQHhxptV
-         1dIg==
+        bh=FTUNizeD4GAwjamuleDEZyMo3f2gr2d8rHj6sva7l/8=;
+        b=V6Wdhcz5aiHGC0C84nAsaI442TSnPk/yar5bAr6t84SXSVyu2VIB4JHKrrxSkheWBr
+         ATyXi0sljLqLnNjB6CWTVb8qN02VITDtwnsBMbpWTMEbt2fmLEs2YGxYprQzqsHg1sGf
+         4q7k/ut1ra5alow5+yYYIwjHmgYw3cEEU04NRl4vlxaXBib2x8ehKQZaXxTXFgEUp/BQ
+         cSNi2UTM+eniEMz0LgzsM2jWgdhgPma47QD06kKgdxjzy69oT39HSgU8TJxzT55DoRrW
+         rOp5iOsZOHtav4pNiFp3rzcvhNV8wdA/M8nIiTWjfxrk86eRIZBrsmBfqO04z55ykFgM
+         P+ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749104144; x=1749708944;
+        d=1e100.net; s=20230601; t=1749104148; x=1749708948;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hZLXSy5dKdnrCLdxDNwluOSVBrj34xrZ5br2B7QUPFM=;
-        b=nKn+7MmnC9rcoNtgsguXnQ4paYHjM3mE7H3Gf9eIZFkKMS4kX2Uf0R7UWg9ArHrev/
-         AlRy5+QtyXg/gYuhM/2aBDgGv5L/ZJnXgZlvRt8U55A2ubAR1SDlYcuprdxriUp6FQF0
-         53GOsnsRI5EvdVQnPEwZlokcCotk01H126+2+s20liWIiR/brSZfo3+W5evlaNW2evUE
-         0zoAT9AsuTOfLYV0eqz5nha8W+oN9MLvKEfN/8mSAauN0v0tW0GZ9PrTRlYo4Nk9HndN
-         5RhMC+tji4xdZadJvIzXjVC6zpIzsXtpSGdm3RdICsreBVVr1k5K8fsv5MoiQ5adMJx0
-         Hz/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUuSuZu9HzZwYqkcywK5lTbaN4MCxEWHUF8/m4J1WFqYEjYbHCDZJk3RJw/wcBYuaKXYzXIqgGIduqzs00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxocGe8krSaj3MYIbzWidb6txqIIbP7bB7yaJh4Dy8ZNAbg6TrG
-	HWxfUt9euJxUBKLE9s2mkPNtQR+r04MfpMGTshzwOxr+u9x7DX1WZgzMdEA0pELAQig=
-X-Gm-Gg: ASbGncuMQ6Rjnm2ueT9/FuPDAsIa+eT9c5l1X09j7e2V1F82AriTeLFriRFuRzyG4Uh
-	Al2ue0qES1wxSAIKlc/uhNmi8QJ4kVLYyiXQoU24pXRRMaLA7cDCqydnSN5TSfqhxShXG2miaBt
-	UwXXqXIUp3IE1QYbLB7lI+/FYzTQpOGUXpwRE6c6f76bni/pxYwxI4UH2+ynTFQoIdGIqHzTM6K
-	LKLyWXwPCFATvvPsY3BGneWhwH6DvgeQHHtJsN1+iQJcQxfkY2v7H/qpYgZiBBDQx1HMc34otF+
-	5r6eko6YKZiatVwLK/dOxf0Y6Ta+Zj+aYNv2NuVmGMbCz2jxiEsvVWVfpAdexaaEERxQNplkJxX
-	qRcfZRlMQS/wXfM/V
-X-Google-Smtp-Source: AGHT+IFO2epwN2LjtG31OoHm0egnGNF3it3sm9FcAWa7tNOhP+eBWwaD0IdyHqo/ELqbwOrF1xeE1A==
-X-Received: by 2002:a17:903:230d:b0:234:8f5d:e3bd with SMTP id d9443c01a7336-235e11ebbaemr80514335ad.39.1749104143890;
-        Wed, 04 Jun 2025 23:15:43 -0700 (PDT)
+        bh=FTUNizeD4GAwjamuleDEZyMo3f2gr2d8rHj6sva7l/8=;
+        b=FUnKKQwlLWL2o9CVkehsKf4Fv2w06Xq0OG03J5PGbX+Sr/6KD4erXtWL2Ugk1YyCug
+         7zBDkhgcLEpWjOG0NiI6QICl4wIC06nUNMqUBl1BmJI950I6UsA+fd0tsf3yPDMq8VRd
+         vSA4737kAHrQKfTIbBzQ5bPL2shWxJ/c7Vs2LtRwcnUoTazEsEw8cwxahv1hkzu93GEN
+         nkM6zsZL0L3mzF/AIot0ck0Eq1GArJogRf/rWbfeXPOrFOvKPA2SC5yxxeLWpeGSBCFC
+         R74rQw90Kv7a8YU2/zCUpBAy02zNb63PrsrlPOYvNxdQ1O5jqt0mDm8KQ3b8jFtYs/d6
+         +rfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEb/6IVW4zgK20Td1mzsttrwaUWmzU3cX21imnqqTkSevjdpIClFKz86/vs5YaCEuMr0j8Dzz/aP4UwsA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmCRjEcHFWF5DifuynmYzPFs2sWPdrIZgD2ujoS7E2p5gTSRkC
+	yOajGCPG1XTCkp4TWHtLQZuxMrpLgvC5dwiXxo9B5sY0G9ZwCcUBkRAMeUubiNTz4UQ=
+X-Gm-Gg: ASbGncuo9TViGJHkLZ2hzoqQ3EHH97t41nKNzSgUbW3SQa1vpBh+9WcY3Zof4Ktgzpq
+	K6II0nOn69/EWmMXSMfF8PmIMRiGzNEyc/RQLcHglDaEljHIMGHXjgzvWsBN+TXdi7gSjCR3aTQ
+	ZmQYIYMkSmsPhNjIfhEIcWKl+EcxMISujz2f2WrWRkfdo3sYVzrZlgHBa1qSQN/mO4VSOLtaWvi
+	c0aV40PCDq2z3SeaJ1QaJ4e5kbAo72FXzn0xHOAtBmDVbmfGC4S4L2jMMetUA1xzOTKV3L417Jp
+	v7TURolDBrSfF/5QoTD4Jy5lfk2jwwTKHmUnQlBbWbvxFLou0okxXfof7ljFCX2MI/Tkuf3YJL1
+	ermvXhg==
+X-Google-Smtp-Source: AGHT+IF1vChQlmPdBhFqDNCJg7mNgqFPE+jCNdqDdFH2eL595DiIm4Pp7WZXYGhvZd5N4Z0BmeSfBw==
+X-Received: by 2002:a17:90a:d444:b0:311:abba:53c0 with SMTP id 98e67ed59e1d1-3130cd12d75mr8464937a91.9.1749104147746;
+        Wed, 04 Jun 2025 23:15:47 -0700 (PDT)
 Received: from localhost.localdomain ([14.141.91.70])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3132c0bedc7sm716026a91.49.2025.06.04.23.15.40
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3132c0bedc7sm716026a91.49.2025.06.04.23.15.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 23:15:43 -0700 (PDT)
+        Wed, 04 Jun 2025 23:15:47 -0700 (PDT)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Atish Patra <atish.patra@linux.dev>
 Cc: Palmer Dabbelt <palmer@dabbelt.com>,
@@ -70,9 +70,9 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH 10/13] RISC-V: KVM: Introduce struct kvm_gstage_mapping
-Date: Thu,  5 Jun 2025 11:44:55 +0530
-Message-ID: <20250605061458.196003-11-apatel@ventanamicro.com>
+Subject: [PATCH 11/13] RISC-V: KVM: Add vmid field to struct kvm_riscv_hfence
+Date: Thu,  5 Jun 2025 11:44:56 +0530
+Message-ID: <20250605061458.196003-12-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250605061458.196003-1-apatel@ventanamicro.com>
 References: <20250605061458.196003-1-apatel@ventanamicro.com>
@@ -84,219 +84,144 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce struct kvm_gstage_mapping which represents a g-stage
-mapping at a particular page table level of the g-stage. Also,
-update the kvm_riscv_gstage_map() to return the g-stage mapping
-upon success.
+Currently, the struct kvm_riscv_hfence does not have vmid field
+and various hfence processing functions always pick vmid assigned
+to the guest/VM. This prevents us from doing hfence operation on
+arbitrary vmid hence add vmid field to struct kvm_riscv_hfence
+and use it wherever applicable.
 
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- arch/riscv/include/asm/kvm_mmu.h |  9 ++++-
- arch/riscv/kvm/mmu.c             | 58 ++++++++++++++++++--------------
- arch/riscv/kvm/vcpu_exit.c       |  3 +-
- 3 files changed, 43 insertions(+), 27 deletions(-)
+ arch/riscv/include/asm/kvm_tlb.h |  1 +
+ arch/riscv/kvm/tlb.c             | 30 ++++++++++++++++--------------
+ 2 files changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/arch/riscv/include/asm/kvm_mmu.h b/arch/riscv/include/asm/kvm_mmu.h
-index 4e1654282ee4..91c11e692dc7 100644
---- a/arch/riscv/include/asm/kvm_mmu.h
-+++ b/arch/riscv/include/asm/kvm_mmu.h
-@@ -8,6 +8,12 @@
+diff --git a/arch/riscv/include/asm/kvm_tlb.h b/arch/riscv/include/asm/kvm_tlb.h
+index cd00c9a46cb1..f67e03edeaec 100644
+--- a/arch/riscv/include/asm/kvm_tlb.h
++++ b/arch/riscv/include/asm/kvm_tlb.h
+@@ -19,6 +19,7 @@ enum kvm_riscv_hfence_type {
+ struct kvm_riscv_hfence {
+ 	enum kvm_riscv_hfence_type type;
+ 	unsigned long asid;
++	unsigned long vmid;
+ 	unsigned long order;
+ 	gpa_t addr;
+ 	gpa_t size;
+diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
+index 6fc4361c3d75..349fcfc93f54 100644
+--- a/arch/riscv/kvm/tlb.c
++++ b/arch/riscv/kvm/tlb.c
+@@ -237,49 +237,43 @@ static bool vcpu_hfence_enqueue(struct kvm_vcpu *vcpu,
  
- #include <linux/kvm_types.h>
- 
-+struct kvm_gstage_mapping {
-+	gpa_t addr;
-+	pte_t pte;
-+	u32 level;
-+};
-+
- int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
- 			     phys_addr_t hpa, unsigned long size,
- 			     bool writable, bool in_atomic);
-@@ -15,7 +21,8 @@ void kvm_riscv_gstage_iounmap(struct kvm *kvm, gpa_t gpa,
- 			      unsigned long size);
- int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
- 			 struct kvm_memory_slot *memslot,
--			 gpa_t gpa, unsigned long hva, bool is_write);
-+			 gpa_t gpa, unsigned long hva, bool is_write,
-+			 struct kvm_gstage_mapping *out_map);
- int kvm_riscv_gstage_alloc_pgd(struct kvm *kvm);
- void kvm_riscv_gstage_free_pgd(struct kvm *kvm);
- void kvm_riscv_gstage_update_hgatp(struct kvm_vcpu *vcpu);
-diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-index c9d87e7472fb..934c97c21130 100644
---- a/arch/riscv/kvm/mmu.c
-+++ b/arch/riscv/kvm/mmu.c
-@@ -135,18 +135,18 @@ static void gstage_remote_tlb_flush(struct kvm *kvm, u32 level, gpa_t addr)
- 	kvm_riscv_hfence_gvma_vmid_gpa(kvm, -1UL, 0, addr, BIT(order), order);
- }
- 
--static int gstage_set_pte(struct kvm *kvm, u32 level,
--			   struct kvm_mmu_memory_cache *pcache,
--			   gpa_t addr, const pte_t *new_pte)
-+static int gstage_set_pte(struct kvm *kvm,
-+			  struct kvm_mmu_memory_cache *pcache,
-+			  const struct kvm_gstage_mapping *map)
+ void kvm_riscv_hfence_process(struct kvm_vcpu *vcpu)
  {
- 	u32 current_level = gstage_pgd_levels - 1;
- 	pte_t *next_ptep = (pte_t *)kvm->arch.pgd;
--	pte_t *ptep = &next_ptep[gstage_pte_index(addr, current_level)];
-+	pte_t *ptep = &next_ptep[gstage_pte_index(map->addr, current_level)];
+-	unsigned long vmid;
+ 	struct kvm_riscv_hfence d = { 0 };
+-	struct kvm_vmid *v = &vcpu->kvm->arch.vmid;
  
--	if (current_level < level)
-+	if (current_level < map->level)
- 		return -EINVAL;
- 
--	while (current_level != level) {
-+	while (current_level != map->level) {
- 		if (gstage_pte_leaf(ptep))
- 			return -EEXIST;
- 
-@@ -165,13 +165,13 @@ static int gstage_set_pte(struct kvm *kvm, u32 level,
- 		}
- 
- 		current_level--;
--		ptep = &next_ptep[gstage_pte_index(addr, current_level)];
-+		ptep = &next_ptep[gstage_pte_index(map->addr, current_level)];
- 	}
- 
--	if (pte_val(*ptep) != pte_val(*new_pte)) {
--		set_pte(ptep, *new_pte);
-+	if (pte_val(*ptep) != pte_val(map->pte)) {
-+		set_pte(ptep, map->pte);
- 		if (gstage_pte_leaf(ptep))
--			gstage_remote_tlb_flush(kvm, current_level, addr);
-+			gstage_remote_tlb_flush(kvm, current_level, map->addr);
- 	}
- 
- 	return 0;
-@@ -181,14 +181,16 @@ static int gstage_map_page(struct kvm *kvm,
- 			   struct kvm_mmu_memory_cache *pcache,
- 			   gpa_t gpa, phys_addr_t hpa,
- 			   unsigned long page_size,
--			   bool page_rdonly, bool page_exec)
-+			   bool page_rdonly, bool page_exec,
-+			   struct kvm_gstage_mapping *out_map)
+ 	while (vcpu_hfence_dequeue(vcpu, &d)) {
+ 		switch (d.type) {
+ 		case KVM_RISCV_HFENCE_UNKNOWN:
+ 			break;
+ 		case KVM_RISCV_HFENCE_GVMA_VMID_GPA:
+-			vmid = READ_ONCE(v->vmid);
+ 			if (kvm_riscv_nacl_available())
+-				nacl_hfence_gvma_vmid(nacl_shmem(), vmid,
++				nacl_hfence_gvma_vmid(nacl_shmem(), d.vmid,
+ 						      d.addr, d.size, d.order);
+ 			else
+-				kvm_riscv_local_hfence_gvma_vmid_gpa(vmid, d.addr,
++				kvm_riscv_local_hfence_gvma_vmid_gpa(d.vmid, d.addr,
+ 								     d.size, d.order);
+ 			break;
+ 		case KVM_RISCV_HFENCE_VVMA_ASID_GVA:
+ 			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_ASID_RCVD);
+-			vmid = READ_ONCE(v->vmid);
+ 			if (kvm_riscv_nacl_available())
+-				nacl_hfence_vvma_asid(nacl_shmem(), vmid, d.asid,
++				nacl_hfence_vvma_asid(nacl_shmem(), d.vmid, d.asid,
+ 						      d.addr, d.size, d.order);
+ 			else
+-				kvm_riscv_local_hfence_vvma_asid_gva(vmid, d.asid, d.addr,
++				kvm_riscv_local_hfence_vvma_asid_gva(d.vmid, d.asid, d.addr,
+ 								     d.size, d.order);
+ 			break;
+ 		case KVM_RISCV_HFENCE_VVMA_ASID_ALL:
+ 			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_ASID_RCVD);
+-			vmid = READ_ONCE(v->vmid);
+ 			if (kvm_riscv_nacl_available())
+-				nacl_hfence_vvma_asid_all(nacl_shmem(), vmid, d.asid);
++				nacl_hfence_vvma_asid_all(nacl_shmem(), d.vmid, d.asid);
+ 			else
+-				kvm_riscv_local_hfence_vvma_asid_all(vmid, d.asid);
++				kvm_riscv_local_hfence_vvma_asid_all(d.vmid, d.asid);
+ 			break;
+ 		case KVM_RISCV_HFENCE_VVMA_GVA:
+ 			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_RCVD);
+-			vmid = READ_ONCE(v->vmid);
+ 			if (kvm_riscv_nacl_available())
+-				nacl_hfence_vvma(nacl_shmem(), vmid,
++				nacl_hfence_vvma(nacl_shmem(), d.vmid,
+ 						 d.addr, d.size, d.order);
+ 			else
+-				kvm_riscv_local_hfence_vvma_gva(vmid, d.addr,
++				kvm_riscv_local_hfence_vvma_gva(d.vmid, d.addr,
+ 								d.size, d.order);
+ 			break;
+ 		default:
+@@ -336,10 +330,12 @@ void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
+ 				    gpa_t gpa, gpa_t gpsz,
+ 				    unsigned long order)
  {
--	int ret;
--	u32 level = 0;
--	pte_t new_pte;
- 	pgprot_t prot;
-+	int ret;
++	struct kvm_vmid *v = &kvm->arch.vmid;
+ 	struct kvm_riscv_hfence data;
  
--	ret = gstage_page_size_to_level(page_size, &level);
-+	out_map->addr = gpa;
-+	out_map->level = 0;
-+
-+	ret = gstage_page_size_to_level(page_size, &out_map->level);
- 	if (ret)
- 		return ret;
- 
-@@ -216,10 +218,10 @@ static int gstage_map_page(struct kvm *kvm,
- 		else
- 			prot = PAGE_WRITE;
- 	}
--	new_pte = pfn_pte(PFN_DOWN(hpa), prot);
--	new_pte = pte_mkdirty(new_pte);
-+	out_map->pte = pfn_pte(PFN_DOWN(hpa), prot);
-+	out_map->pte = pte_mkdirty(out_map->pte);
- 
--	return gstage_set_pte(kvm, level, pcache, gpa, &new_pte);
-+	return gstage_set_pte(kvm, pcache, out_map);
- }
- 
- enum gstage_op {
-@@ -350,7 +352,6 @@ int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
- 			     phys_addr_t hpa, unsigned long size,
- 			     bool writable, bool in_atomic)
+ 	data.type = KVM_RISCV_HFENCE_GVMA_VMID_GPA;
+ 	data.asid = 0;
++	data.vmid = READ_ONCE(v->vmid);
+ 	data.addr = gpa;
+ 	data.size = gpsz;
+ 	data.order = order;
+@@ -359,10 +355,12 @@ void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
+ 				    unsigned long gva, unsigned long gvsz,
+ 				    unsigned long order, unsigned long asid)
  {
--	pte_t pte;
- 	int ret = 0;
- 	unsigned long pfn;
- 	phys_addr_t addr, end;
-@@ -358,22 +359,25 @@ int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
- 		.gfp_custom = (in_atomic) ? GFP_ATOMIC | __GFP_ACCOUNT : 0,
- 		.gfp_zero = __GFP_ZERO,
- 	};
-+	struct kvm_gstage_mapping map;
++	struct kvm_vmid *v = &kvm->arch.vmid;
+ 	struct kvm_riscv_hfence data;
  
- 	end = (gpa + size + PAGE_SIZE - 1) & PAGE_MASK;
- 	pfn = __phys_to_pfn(hpa);
- 
- 	for (addr = gpa; addr < end; addr += PAGE_SIZE) {
--		pte = pfn_pte(pfn, PAGE_KERNEL_IO);
-+		map.addr = addr;
-+		map.pte = pfn_pte(pfn, PAGE_KERNEL_IO);
-+		map.level = 0;
- 
- 		if (!writable)
--			pte = pte_wrprotect(pte);
-+			map.pte = pte_wrprotect(map.pte);
- 
- 		ret = kvm_mmu_topup_memory_cache(&pcache, gstage_pgd_levels);
- 		if (ret)
- 			goto out;
- 
- 		spin_lock(&kvm->mmu_lock);
--		ret = gstage_set_pte(kvm, 0, &pcache, addr, &pte);
-+		ret = gstage_set_pte(kvm, &pcache, &map);
- 		spin_unlock(&kvm->mmu_lock);
- 		if (ret)
- 			goto out;
-@@ -591,7 +595,8 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
- 
- int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
- 			 struct kvm_memory_slot *memslot,
--			 gpa_t gpa, unsigned long hva, bool is_write)
-+			 gpa_t gpa, unsigned long hva, bool is_write,
-+			 struct kvm_gstage_mapping *out_map)
+ 	data.type = KVM_RISCV_HFENCE_VVMA_ASID_GVA;
+ 	data.asid = asid;
++	data.vmid = READ_ONCE(v->vmid);
+ 	data.addr = gva;
+ 	data.size = gvsz;
+ 	data.order = order;
+@@ -374,10 +372,12 @@ void kvm_riscv_hfence_vvma_asid_all(struct kvm *kvm,
+ 				    unsigned long hbase, unsigned long hmask,
+ 				    unsigned long asid)
  {
- 	int ret;
- 	kvm_pfn_t hfn;
-@@ -606,6 +611,9 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
- 	unsigned long vma_pagesize, mmu_seq;
- 	struct page *page;
++	struct kvm_vmid *v = &kvm->arch.vmid;
+ 	struct kvm_riscv_hfence data;
  
-+	/* Setup initial state of output mapping */
-+	memset(out_map, 0, sizeof(*out_map));
-+
- 	/* We need minimum second+third level pages */
- 	ret = kvm_mmu_topup_memory_cache(pcache, gstage_pgd_levels);
- 	if (ret) {
-@@ -675,10 +683,10 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
- 	if (writable) {
- 		mark_page_dirty(kvm, gfn);
- 		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
--				      vma_pagesize, false, true);
-+				      vma_pagesize, false, true, out_map);
- 	} else {
- 		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
--				      vma_pagesize, true, true);
-+				      vma_pagesize, true, true, out_map);
- 	}
- 
- 	if (ret)
-diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-index cc82bbab0e24..4fadf2bcd070 100644
---- a/arch/riscv/kvm/vcpu_exit.c
-+++ b/arch/riscv/kvm/vcpu_exit.c
-@@ -14,6 +14,7 @@
- static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 			     struct kvm_cpu_trap *trap)
+ 	data.type = KVM_RISCV_HFENCE_VVMA_ASID_ALL;
+ 	data.asid = asid;
++	data.vmid = READ_ONCE(v->vmid);
+ 	data.addr = data.size = data.order = 0;
+ 	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE,
+ 			    KVM_REQ_HFENCE_VVMA_ALL, &data);
+@@ -388,10 +388,12 @@ void kvm_riscv_hfence_vvma_gva(struct kvm *kvm,
+ 			       unsigned long gva, unsigned long gvsz,
+ 			       unsigned long order)
  {
-+	struct kvm_gstage_mapping host_map;
- 	struct kvm_memory_slot *memslot;
- 	unsigned long hva, fault_addr;
- 	bool writable;
-@@ -42,7 +43,7 @@ static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 	}
++	struct kvm_vmid *v = &kvm->arch.vmid;
+ 	struct kvm_riscv_hfence data;
  
- 	ret = kvm_riscv_gstage_map(vcpu, memslot, fault_addr, hva,
--		(trap->scause == EXC_STORE_GUEST_PAGE_FAULT) ? true : false);
-+		(trap->scause == EXC_STORE_GUEST_PAGE_FAULT) ? true : false, &host_map);
- 	if (ret < 0)
- 		return ret;
- 
+ 	data.type = KVM_RISCV_HFENCE_VVMA_GVA;
+ 	data.asid = 0;
++	data.vmid = READ_ONCE(v->vmid);
+ 	data.addr = gva;
+ 	data.size = gvsz;
+ 	data.order = order;
 -- 
 2.43.0
 
