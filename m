@@ -1,157 +1,183 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072.outbound.protection.outlook.com [40.107.93.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E87119F42D
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749152410; cv=none; b=Esl1Bs9d/2QkyWmSkswrHK4oW09Jxk/Vs5qgnpSTbtompv3eezFnQgI82zQoEc9499wuOV51BdjKu/ddYvg66Mrl5NFpOdoCwR/xyKn5wAHmvR9LgNX129qRJZTnUFuuSxUqqjM9DbQA7AsE8eTRS6I4WocRKx/+P4YBnqEeXX0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749152410; c=relaxed/simple;
-	bh=0z6CW5q8CQV/wMH7D+qnHlnbKdM+YxP0rsRBNbXmvIw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qw8+XC+4yF75X3fAXYz6nmLqYzu4rssG5J6dcbiwWcafsojTjxcbf7ahZfuqpOsHH2SnFmad3dWDlJiUIgS046ej5KQ/6h22+4t8uZd2aPo+cyRXaNR3LGQ/N87XBmazVXo2vkXqbbVr8r00yjGGXhx89bvBPx2DHWwvauQiU2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iqG5kmtf; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CF220C497;
+	Thu,  5 Jun 2025 19:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749152440; cv=fail; b=IGtH/54dIknfzENZbCibM9/E4PXOJ7iZ5pKGzbRshqEsE3zV8nCB8nlJbCY8zaEM13GNqs5XA75WzpOCP+IkNGzXLEyADlCSbkPT9gBeVtVTelSNwui17fYRTQgz7CI8CnuKVeGnXeD+4XCdPbTs6ifSVwMFI4I0ZQGeru7VgoA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749152440; c=relaxed/simple;
+	bh=yi+f3d5P/yOhyxhl6uokHMWiIWEqjVGGVf8PhxLuY7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=eUAqb1yv2qSWYlumSM68EB1+PR/jInsNjXHm1eyoUQpPqD9GprECSr/8d+vHR8FhU5GoajRZ2Ej2kvzmJ/7VsT1U27nF4GwqPk8Lug3oraovIv11vuMRWmDOP4vKFsPsATm9l/otfE/T3Jm5dKlsfTYcoTK+9cSdcUWHoxRBRkA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=n3E9o5zr; arc=fail smtp.client-ip=40.107.93.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iqG5kmtf"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2348ac8e0b4so4795ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749152409; x=1749757209; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+gbRXiixoAXfGdGLxJ2oFtFITg4n/f+sldemH0In+WE=;
-        b=iqG5kmtfmYpoPJgTLi1pTx/Ysb5WDDVMNa2hNMcxB2upkSS8J2hKGdaBFpHR9P3mDB
-         ehLf/QRUGJFSQfjfcwsddwfZ6+evAzGiwYC34maAHJMwl/idMCREX+xf3QGaXOt5953H
-         pL3jGDG2KQPJAyCxUg+xh2eCL0D4f7404ci7ECmbm0s8+vYhHKXlpmX1gHIvb/H9tnmE
-         xF6FaEOmwAik2CxKaiK3jGCC0U9hUauU0GKUNrf5URyDS6rYCAclVQIxNd8L2ozg5hkK
-         yfX5HAT4LEPHrTnGsDv4eZ6tbSA2boaa3QBS0KVtpG9EPaQNeLV3pATMwDrnoF7xpItv
-         mHbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749152409; x=1749757209;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+gbRXiixoAXfGdGLxJ2oFtFITg4n/f+sldemH0In+WE=;
-        b=oKC2UOkETiuSw2f3CiQMt529UB+mPw6m4QZQFUSn1+vlxXNyTJX3WheQJvcg7pCfZN
-         HiorvFBLL6NFvCJU5noe0vnZ/A6FJpl0sIuZYrapliu8xr5/FYyYYh/W7hhyGJlacXXa
-         xaPB4szJSNVhPLuELMvAij5XZiyd+YeLWUipa5EF3dBZUlOY4OnDp4FpcKMqAma6mlud
-         Z+RhNBSoIRAurP2zDJZm/I7LHymkMoFJGeYvppITFCIZ4FYreL5xmyfTUjcdp9ZRNXMt
-         mFd4Z5yJxyY/+XpM4cf2EUdV3ZmonVgZVhdYhRBHnrEkyurAMLm964bbLYE2KuSq7IVQ
-         abaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtNKH7SGK+1D7fC8zbYAtPJY3bTAkg+00V+GOyY4RG5pugVz5IP9W/hnNi+EFybucL2iWks/kGzjT6SK0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf4TMvqje51D/YDGkF0vzM91tGfRXlV/2E0ePDej46AXpPFq3b
-	rfc1R4xOo4lO9g4ABa3ldq0WcXC4lPfnhWe0jD+TBk0VSe7qgfodWPu8N+Nf1egEDKtu8prKioW
-	6xtSiqTZm55aQfyhk6eAWZS/og7CV82M0Z4wywKI5
-X-Gm-Gg: ASbGncumYdWMuJ65IKrHrTJYbzrH3x4UhER6KVcQR7nxqwJsS9Bjb9zpkU9MOJ01nlb
-	vlNLRA97GasQwuy+CwkWmX4VGR5Pjvq53TFDC/Sw6Z0xNG+d8tsV2J8gLrEEArT+xqqHm2WGjiL
-	QRRon/2+VCrGWada3E2xSuIV4PQhvMmxTfsY8oPi39ANa1JQNKTUsolCY=
-X-Google-Smtp-Source: AGHT+IHcTT2o1MKZq8UOcR4hL4bLiIFrmHftqSOGm8UgMZTc0+7X62O4TzoVnuFdqoRLnvK6zwsJrTF6DgwOQtF9S6k=
-X-Received: by 2002:a17:902:bd01:b0:235:e1d6:5343 with SMTP id
- d9443c01a7336-23602368069mr378735ad.20.1749152408349; Thu, 05 Jun 2025
- 12:40:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="n3E9o5zr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=L2MkvZr1+yl39ZaPLcpZsPINkbEJ82pNOI3Zr1YkS244BzdyqSukpz3uzKdkiwaoeOmZXx7Zen1d/I5Cq1G1mSUPobq2FixLl7AAUzVB8cHabWDSDfmkeuw4Kn5bCtjIm+22ZM65aYAyZ1HTaR6EdZEwVV1TeMEIh2F5NKjdM/aWLF5j7qGiLHempSWHpj58oEe9oZhCzfzQEvHgoyRo9YgRtKgq4+U/gxHDmBBGcWrL6AET0q+CQxrEleLWDlw9HaaBc8cLNhSudsBjUe5gNZkg1NQ2oERev/wvvL+VUtA6wdhaDv3aaG7xU3htVXolA8OCabOE0hzFnQNn/ZwZ1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a4OOMDk1aRmcPuVJ6Z2ciUvkgjvJGT5f24nhCfaT2zM=;
+ b=di3Q46KcR3sqkkWEwUcZmqXCC8vsaV1ACWef+Uyv84SMSAgrS0p/K/sAJIGAUVHWg0lqG5qeRRB8j1VNK8dos4CZdmlO/9V8/xxtMo9ewQzucH4I/pbRZx/8+udeNHkc3yPgaA/cgHf5OljqArHl4KbKDHq9t0WQ6sHOBFkpeSeUrAsU9PcEAGEBd1/hQ0Ctv4jc5LaG2oekDgKWaL3DfHCjsem5RpzewZzBR6sF9EfYY76BtxmsEvFzrCVvV412cl9huJ4zNnhlUQ+dMWVApCs4P4XkohuM9wdBDLBFEymRel5CPNy5GLTpbUu7jF+UqfmbEIyLSagKtq9atBfB1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a4OOMDk1aRmcPuVJ6Z2ciUvkgjvJGT5f24nhCfaT2zM=;
+ b=n3E9o5zrfn9+mpE36epu8zjQZR8vaYz3RGu9FfwyGErlgjBljw6dQjBvYnwocHIaRry79lilWABKdLBuZvThNXacovYYHBKEvFzzEc212o9N6E4KEqxllwmh2RYJaiw1xBOgXvVcCAIprKBautr6uCGGRcgx+J4XEM4hnmybliy9AoAyx3SjEl0r2/XhMOFkIGYMCe8kehA8mapBg5WCBtVBAM/NhKPGNSVm1XsTeLlcfdrAgxUhxnNPW9l9vf2hDOAD8y6/rih/7Naf2vXGg/7YuL7cVhY55OmlqNJK+5Lqn+JXTDH/9UnJDSB3jbRa09Rc394c4vVnLqBksOwSDg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DM4PR12MB5865.namprd12.prod.outlook.com (2603:10b6:8:64::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Thu, 5 Jun
+ 2025 19:40:36 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8792.034; Thu, 5 Jun 2025
+ 19:40:35 +0000
+Date: Thu, 5 Jun 2025 16:40:34 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v5 10/29] iommufd: Abstract iopt_pin_pages and
+ iopt_unpin_pages helpers
+Message-ID: <20250605194034.GF19710@nvidia.com>
+References: <cover.1747537752.git.nicolinc@nvidia.com>
+ <49f7143c1b513049fd8158278a11d9f8b6c837d3.1747537752.git.nicolinc@nvidia.com>
+ <20250528171754.GY61950@nvidia.com>
+ <aEEY28ZXH+NqiE+T@Asurada-Nvidia>
+ <20250605151648.GD19710@nvidia.com>
+ <aEHOI522eucrOZyI@Asurada-Nvidia>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEHOI522eucrOZyI@Asurada-Nvidia>
+X-ClientProxiedBy: YT4PR01CA0053.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:111::20) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604025246.61616-1-byungchul@sk.com> <20250604025246.61616-4-byungchul@sk.com>
- <29f2c375-65e3-4d22-8274-552653222f8d@gmail.com>
-In-Reply-To: <29f2c375-65e3-4d22-8274-552653222f8d@gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 5 Jun 2025 12:39:55 -0700
-X-Gm-Features: AX0GCFtD68ApdCzrpjOMryrJ8sFch7OmJFbZRp-t7ALE-eD446rw2nCSo1WQWYU
-Message-ID: <CAHS8izMb23eaav-Fz50sefuS8BhF7as7=BX+Sv1wj01+0n6tMg@mail.gmail.com>
-Subject: Re: [RFC v4 03/18] page_pool: use netmem alloc/put APIs in __page_pool_alloc_page_order()
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com, 
-	kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com, 
-	hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net, 
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com, 
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM4PR12MB5865:EE_
+X-MS-Office365-Filtering-Correlation-Id: 835d488b-c92f-48dd-bffd-08dda468d794
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?TAjkhcOxNW7bI0l0cdK9k3B41LOuYDGPNrQ57YoiYie84GGikDOcjyk0au/8?=
+ =?us-ascii?Q?22xIqfT3nnaLFqaDuHzsX9yPDRf3SuBlujG5gPTLwSGTSc2FVFZ8UWmE51jZ?=
+ =?us-ascii?Q?m/NLCGzvreQ9FpJLyftA2j/PwFEcAb12GanTvRp+KsuH2GIWtpTV2dYAGk0b?=
+ =?us-ascii?Q?chFrYp3itebRQQJeRtRFJszU4XpSlYiH41lc5LKDxwmzT+zNb7pxwMYimi+a?=
+ =?us-ascii?Q?h+5K0FFGare+L6VxZm5HMYnkhCsYtv4EU8x73hNomfzDCj+0DIaqxrJ5/HJF?=
+ =?us-ascii?Q?Ekix84+gT+0zgMaoIOro39FEjPIhquqwB6b3diH6WfDGTy8aMeLHRi4E58fQ?=
+ =?us-ascii?Q?IrrXN1+mEWQlWNWZIwTQA9THh+6YUZUAXb2UW6UrKOqrSUjNCJuMZ5r3uyLN?=
+ =?us-ascii?Q?VlU+h5ItUXlkSmCFCo/GXQoCXpA1tcLDKtrt8TRuIbTe/BvllHJk8ExSVFHw?=
+ =?us-ascii?Q?1lB5kMGRE9hnvKXCDLPzuveQfXvXxwFNwo0dSwqCqFD6tkLctUYgVT5wPVtZ?=
+ =?us-ascii?Q?P6BXvJfqTuvnMqkvSVP8eJ8CyO1v/rZKz1CpNKVoHlz/DyEYrFVFxtgsWZq0?=
+ =?us-ascii?Q?xeyMAGTgUOVsQsaI/9jt7Om39+0C50kziv8Dain9GEL/pSXmTbP5mX8rZEfQ?=
+ =?us-ascii?Q?sWOmesl9l7p4jUS2sFO9AEuvDTNKSaMSSEqK3hLEWr/HnXURgFyOtARsSvV9?=
+ =?us-ascii?Q?YTm3k4enrAzVskG1BX+/02qurt/EmQLwR9WfoClP/9l3nz1pp/hNrlXqmtJr?=
+ =?us-ascii?Q?FyMp6uM23mv6BAvZqVdlfpWdPdsVJfBCk5LavVXD8snm2RRLPS22bKYgSgkZ?=
+ =?us-ascii?Q?u8v9Y7fo7HY3tjEi46vH8PVO6nd/0H1Sfpz1vkYiSW4c+56D3SalEoDg/bDt?=
+ =?us-ascii?Q?4UR07HBobpR3q4hL2KkRaFct7BnTWgUtFhuawDj5ANkZaYEwS9EI/WUObyUu?=
+ =?us-ascii?Q?WlCNRCJhyi9tBJy2Z2BJ+sIPsbYTWKe6h2m5oExM6SS53HoJ3NKQcZO2R1RR?=
+ =?us-ascii?Q?/1S5urk1dPPrg/JEwHLhOBLWx4Lip5cBN2K7GlumvATYdhhYVWcZIvJwMq2p?=
+ =?us-ascii?Q?A9r327rKsODB2nY/InqI+EhiMoy8uLMweSXIkwIyO/eGpxBcMSNxHc77ZvWI?=
+ =?us-ascii?Q?c9ANxWPqVHZo4uw3SW4h374LJNmOoJH5VM9yM1It+9ghiJXKugizdsoSpwh9?=
+ =?us-ascii?Q?+3pj/mRcEKYBmP/oy7moOlrh7n33uJsRndCUTTFoO68nWzmBrzajR4kzPIsc?=
+ =?us-ascii?Q?i8i7F4UeJLj/RGycA3N0jWnk1Xv3AUuGt9XtgkTCADNfPXEue6PXMxR4uxkj?=
+ =?us-ascii?Q?VaE63Bfqul9RAgTxuabe7ouIyRv4R9YKvaDfB0p8sFSesEgen4860bMoLxzx?=
+ =?us-ascii?Q?x63i0jnYjxoUwCCj2m9/qP5OhG31oITIAwiK4MJuCZ9UdsTqeA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?4wF8f2WmN/r4x1dMbvqTx30SVlFGJMaGWmlOvseAdjkIn/AqFmllswgsXlzJ?=
+ =?us-ascii?Q?T16BouJtLkbuJDffdCa+4jEqzb9t9GDh8OQIfBtuRRSsR4GJUND/UymCE1aE?=
+ =?us-ascii?Q?7y3faRtkmIPxkrNo4itQnYezqSYVclrByMzjEKOsmEVjthUieOzAtzk44U43?=
+ =?us-ascii?Q?h0+04DHrBTiwqngliYC0Jmum8BDmljyh+lf1TJg9KrQ0mgKKBPXViG9Zq9DW?=
+ =?us-ascii?Q?SfwnSUCowfwmw/9DQo9pBrfnCTCiYuYqPVOAStkjpOmWmi0vkaF4kM31oe7u?=
+ =?us-ascii?Q?RZEcFUDfUUnCrpocWTQFqZT0kQMiHAGzcOyEbzBbadG8hzfKgRFoI+u1N9Jd?=
+ =?us-ascii?Q?yelZL0RBFgRXddAQmNEIKlOTMQVLfbKANYWYQtDY+AKGyKr45wDA+h/b1t/g?=
+ =?us-ascii?Q?3+RBjtTiIJn4nxy+F4qiLO07NdFy22If3J+iBHAepd8uSc+wTSYJw/HxPv62?=
+ =?us-ascii?Q?7A3mVBuWxD3183x4891Vfao8pwHmDHMra6MtMJvi/NolaH2LV66LSfo3PkBD?=
+ =?us-ascii?Q?zlapFDGBRooq3hk2UR7yQ3WAq69Xowz8bqFzw0AUdoazpuCCupxTD4UqXhMz?=
+ =?us-ascii?Q?ykIzbvqPO2Z8AFdcpdkuNS7eSndWo4yplNoxULYObFIyyH7BE0SN0mV7MPDC?=
+ =?us-ascii?Q?2uO1L7pwr/bbCy0AgtF8EXmjSBRBuGDvI9dljSiFUUVNNo7J0kvRj44twvhz?=
+ =?us-ascii?Q?hbL3qSO/WMZLJWHJotBhbpKehiKfwWb78sKDuFzrSipdwhpkdeDsXKiuWIvt?=
+ =?us-ascii?Q?95vs6XLicpVxE7VDY006BRn0URMINJxGfwcqbGTI8k92/36+vUWP8uqLCjyX?=
+ =?us-ascii?Q?X5W1rTqUKiIAE+/FPH3JKdKmrXXJ39cUxUlBtriAOiy3+m3WEyfKsS8qkgRB?=
+ =?us-ascii?Q?jlHxKk2XXBnCgRedz8KV6Z022gN0geJ3Sdv+Omj7xiVyb/i4OAvjZ+o4PHHf?=
+ =?us-ascii?Q?DGxoL4bt4HS1HrDwhA5a9IIvN2+U45qa39PjeizYLzIJ2gxJiOA7TDTAhc7M?=
+ =?us-ascii?Q?y1TzkI9j9YCl4bOqnW7JYIwUqLVyWp9x1LZxyZ1TsYKnQuP9M0brO4AZCwd5?=
+ =?us-ascii?Q?GrX7/gLP6+Rwvur522P759dZ+1XVRaAWT+n6rBdvldEQDxwPMRIIktjAwWn5?=
+ =?us-ascii?Q?77TQg4lNvasV7KilNbnrl5JD1M6owego3DIaZgYVR1N4KiirgMGpn9Sp6PEw?=
+ =?us-ascii?Q?AQn057SLwEdlfVJdvuI6RKacGaHxivj+d+qspuraIsoZ5zQjPCky2WGf5MoV?=
+ =?us-ascii?Q?9OSYnlXCYtNQRCAmKIM740l9vAXVjtXM3qLnvQa6RtlJF/tVcpgg/imfq8eW?=
+ =?us-ascii?Q?gZbFMJZbLaYdcsog+fWqoVhqYcldxD0sxFjk0dp2A7W48Efl+EuGu7qHPVUJ?=
+ =?us-ascii?Q?3JNpi7zhcHIevjcHPpX/gXaey5dC/CvrJ9QlLi+ElI4saLWFFI/TFI5uRF2z?=
+ =?us-ascii?Q?x6Z67sisBfBfH/litmFcFKwrNzdfEiPIPgus2gWy7tJw/5qHCdYNSjmYXVKh?=
+ =?us-ascii?Q?7JpGqSH8lil3Vl3y0qwCYwxHyWLbmyCUMa6i5mOZiK5R+jf6OKoeJL3JOOnz?=
+ =?us-ascii?Q?rf7NSBPXYiZAUJ16Z5QB3hk7pj3/JUc6kP7QmgaI?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 835d488b-c92f-48dd-bffd-08dda468d794
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 19:40:35.8559
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YTF4fRKDRLjhMF74Xt6y0ddDiYrDvf9WOHCO8YaRIpZNYE0A3RnwLbnq2pCklVDi
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5865
 
-On Thu, Jun 5, 2025 at 3:25=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.c=
-om> wrote:
->
-> On 6/4/25 03:52, Byungchul Park wrote:
-> > Use netmem alloc/put APIs instead of page alloc/put APIs and make it
-> > return netmem_ref instead of struct page * in
-> > __page_pool_alloc_page_order().
-> >
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > Reviewed-by: Mina Almasry <almasrymina@google.com>
-> > ---
-> >   net/core/page_pool.c | 26 +++++++++++++-------------
-> >   1 file changed, 13 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> > index 4011eb305cee..523354f2db1c 100644
-> > --- a/net/core/page_pool.c
-> > +++ b/net/core/page_pool.c
-> > @@ -518,29 +518,29 @@ static bool page_pool_dma_map(struct page_pool *p=
-ool, netmem_ref netmem, gfp_t g
-> >       return false;
-> >   }
-> >
-> > -static struct page *__page_pool_alloc_page_order(struct page_pool *poo=
-l,
-> > -                                              gfp_t gfp)
-> > +static netmem_ref __page_pool_alloc_page_order(struct page_pool *pool,
-> > +                                            gfp_t gfp)
-> >   {
-> > -     struct page *page;
-> > +     netmem_ref netmem;
-> >
-> >       gfp |=3D __GFP_COMP;
-> > -     page =3D alloc_pages_node(pool->p.nid, gfp, pool->p.order);
-> > -     if (unlikely(!page))
-> > -             return NULL;
-> > +     netmem =3D alloc_netmems_node(pool->p.nid, gfp, pool->p.order);
-> > +     if (unlikely(!netmem))
-> > +             return 0;
-> >
-> > -     if (pool->dma_map && unlikely(!page_pool_dma_map(pool, page_to_ne=
-tmem(page), gfp))) {
-> > -             put_page(page);
-> > -             return NULL;
-> > +     if (pool->dma_map && unlikely(!page_pool_dma_map(pool, netmem, gf=
-p))) {
-> > +             put_netmem(netmem);
->
-> It's a bad idea to have {put,get}_netmem in page pool's code, it has a
-> different semantics from what page pool expects for net_iov. I.e.
-> instead of releasing the netmem and allowing it to be reallocated by
-> page pool, put_netmem(niov) will drop a memory provider reference and
-> leak the net_iov. Depending on implementation it might even underflow
-> mp refs if a net_iov is ever passed here.
->
+On Thu, Jun 05, 2025 at 10:04:35AM -0700, Nicolin Chen wrote:
+> On Thu, Jun 05, 2025 at 12:16:48PM -0300, Jason Gunthorpe wrote:
+> > On Wed, Jun 04, 2025 at 09:11:07PM -0700, Nicolin Chen wrote:
+> > 
+> > > I found the entire ictx would be locked by iommufd_access_create(),
+> > > then the release fop couldn't even get invoked to destroy objects.
+> > 
+> > Yes, that makes sense..
+> > 
+> > It looks to me like you can safely leave ictx as NULL instead of
+> > adding a flag? That would be nicer than leaving a unrefcounted
+> > pointer floating around..
+> 
+> Hmm, there are a few iommufd_get_object calls using access->ictx
+> in iommufd_access_attach() and iommufd_access_destroy().
 
-Hmm, put_netmem (I hope) is designed and implemented to do the right
-thing no matter what netmem you pass it (and it needs to, because we
-can't predict what netmem will be passed to it):
+I counted:
 
-- For non-pp pages, it drops a page ref.
-- For pp pages, it drops a pp ref.
-- For non-pp net_iovs (devmem TX), it drops a net_iov ref (which for
-devmem net_iovs is a binding ref)
-- For pp net_iovs, it drops a niov->pp ref (the same for both iouring
-and devmem).
+iommufd_access_change_ioas_id
+ * Don't call this
+iommufd_access_destroy_object
+ * Don't put if null
+iommufd_access_create
+ * Don't set it
+iommufd_access_destroy
+ * Call iommufd_object_destroy_user directly
+iommufd_access_notify_unmap
+ * Check for null access->ops->unmap and skip the lock_obj/put_obj
 
-In my estimation using it should be safe to use put_netmem here, but
-I'm not opposed to reverting to put_page here, since we're sure it's a
-page in this call path anyway.
-
---=20
-Thanks,
-Mina
+Jason
