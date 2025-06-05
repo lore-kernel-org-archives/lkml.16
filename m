@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D018320F;
-	Thu,  5 Jun 2025 14:32:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1779214A4C7;
+	Thu,  5 Jun 2025 14:32:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749133961; cv=none; b=kWQ7aw8TU7KY17z2HdQqGwGeyId2nVSEr1reK+KZYY5YkEWfPZdd4xvWe5nOajrj52SdXvF16MYO+vdech6clrOaDpheG7xtC3uzdGeR9Doc5aOanTltZRwcy2KKmtTTJocCiOl4xtoPXN8MZe/aRXsmH+i3Kijwhb3qrENWZ0U=
+	t=1749133972; cv=none; b=Z1IarepFfkOivVD9RjLD4qUZhZ7kDR0fTUULTfFDgfzqJkJGY8kJ2YdGryCLUBur7nNsk8OzeWKt9KAMldtNJet0HtPWmLn9PABbvHbvUkymPPXhnzQtTnMajHsDteabyUF8xTQUAdjG/x2tArxNeQYNEDg1NQfLJ9cFqIXUI9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749133961; c=relaxed/simple;
-	bh=jkVVdrFLFb+SUYFLwoJa8mmlECkhqAaMisTZP8HLPzc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Af0swspPXgYIIx9vYuVUt3f/O0mOlHkfmf1Ev6/yQq1Y6ao8/8vi/Xb1vvQwQ0JkbhzwnSmEyopfQLWyBquRZ/u5jEvBMiD6uvXi7rL0RcjlcTrWClEDvCzUbShvsyQd/V5vQkDgJetpbAyHraiSNsUe327LFjEAFVcJu301b80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6PeKgWC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749133972; c=relaxed/simple;
+	bh=dJhCM9RPviR0g7JT1D5tY8Qs8gank6kHriTlr+jVdk8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=I3NH5XrAyiyk/zduSXUiubruK6bnsGA6qq+xAWiRCTD6MraiU545+2cFMIO2Nes8nSZc4z+1KP6joLn1ts1jCu5s4FsW9JA3u8Yv6uhtkaPlW3hT189jSSfIBspTA+CYAI6OUD79/dCDWqf9YkQQnPQal4wN9S9Gv51aOSvTTGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQJ6vm58; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6PeKgWC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00734C4CEE7;
-	Thu,  5 Jun 2025 14:32:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQJ6vm58"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A35A7C4CEE7;
+	Thu,  5 Jun 2025 14:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749133960;
-	bh=jkVVdrFLFb+SUYFLwoJa8mmlECkhqAaMisTZP8HLPzc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l6PeKgWCWRBYnxmuNF8BTA+27unubQlH4GGv7xmktLPngbBhFs30oUz7Hn3brWFnT
-	 ymSxIK/gQhpeTdFHDGdc9krhdPIlFCtUP+kTuWHPcaNEFtB+oiUmiNjIb5hOMI7qld
-	 Hhmsp0QY9R9XztZQ5RZQEOMQuujWjVMb8wsCRnYLXn9FDBs4wXvaEbv+zmX+f3/ii8
-	 YHdFmpLPnrz6gOYd1s3L7eboc3jFQXjVmNrRA/tzU58btzgB8a2l+RUXFWFVnOwNo8
-	 uwQSuERwm7ILkfpywJep5jTFLPstyr4cy5cNF5tkz4wFVvX1Aq8lvqDLoS9gUTuuYu
-	 EgZEoQlibqZtw==
-Message-ID: <9bac057f-efcd-4ff2-9217-9f2c3720f857@kernel.org>
-Date: Thu, 5 Jun 2025 16:32:36 +0200
+	s=k20201202; t=1749133971;
+	bh=dJhCM9RPviR0g7JT1D5tY8Qs8gank6kHriTlr+jVdk8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=hQJ6vm58a9sKrWs9pbShbS3RA6iSmi0wkOqOIohbxsH9H+Q56BxXzsFbZ+ejQ1ycp
+	 3HiA6msSez1IKjXj45/iK33pnzB2iuvu+keB9Cfeg+Xgut99Tu90vSSq1zRkSeOMGO
+	 fbKbvoGkG/hF/zHS7/Wz1RRGwQwUFZHoANS2Xw+kzuh7GQES6DzUaYmOkKr1PLmepz
+	 k9VBLzQG0R6cbmHU+tgErk05+UtA79vzuWFGsQgQBgb1M3fM1u6T1d38LkHS5bLh/m
+	 V6zUEf7o8M06Dv8P+qWU1JspV1TZXG/+kxnPZ+jlj7V6H0rSt13SJOXVlpFSV8StHm
+	 bkkhv+tpwoK2A==
+Message-ID: <8ea2aefc-2847-433e-b56e-5caad49e54f2@kernel.org>
+Date: Thu, 5 Jun 2025 16:32:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,87 +35,159 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: arm: imx8mp: Add Ultratronik Ultra-MACH
- SBC
-To: =?UTF-8?B?R29yYW4gUmHEkWVub3ZpxIc=?= <goran.radni@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250605142728.2891465-1-goran.radni@gmail.com>
- <20250605142728.2891465-3-goran.radni@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: Large modules with 6.15 [was: [PATCH v4 6/6] percpu/x86: Enable
+ strict percpu checks via named AS qualifiers]
+From: Jiri Slaby <jirislaby@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+ linux-arch@vger.kernel.org, netdev@vger.kernel.org
+Cc: Nadav Amit <nadav.amit@gmail.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>, bpf <bpf@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>
+References: <20250127160709.80604-1-ubizjak@gmail.com>
+ <20250127160709.80604-7-ubizjak@gmail.com>
+ <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250605142728.2891465-3-goran.radni@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 05/06/2025 16:27, Goran Rađenović wrote:
-> Document the Ultratronik Ultra-MACH SBC, based on the NXP i.MX8MP SoC.
-> 
-> This board is manufactured by Ultratronik GmbH and uses the compatible
-> string "ux,imx8mp-ultra-mach-sbc".
-> 
-> Signed-off-by: Goran Rađenović <goran.radni@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index d3b5e6923e41..49fa640b6806 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -1232,6 +1232,11 @@ properties:
->            - const: tq,imx8mp-tqma8mpql            # TQ-Systems GmbH i.MX8MP TQMa8MPQL SOM
->            - const: fsl,imx8mp
->  
-> +      - description: Ultratronik SBC i.MX8MP based boards
-> +        items:
-> +          - const: ultratronik,imx8mp-ultra-mach-sbc
+Cc BPF people, just so you know.
 
-That's just part of the standard/first enum.
+On 05. 06. 25, 16:27, Jiri Slaby wrote:
+> On 27. 01. 25, 17:05, Uros Bizjak wrote:
+>> This patch declares percpu variables in __seg_gs/__seg_fs named AS
+>> and keeps them named AS qualified until they are dereferenced with
+>> percpu accessor. This approach enables various compiler check
+>> for cross-namespace variable assignments.
+>>
+>> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+>> Acked-by: Nadav Amit <nadav.amit@gmail.com>
+>> Cc: Dennis Zhou <dennis@kernel.org>
+>> Cc: Tejun Heo <tj@kernel.org>
+>> Cc: Christoph Lameter <cl@linux.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@kernel.org>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>> Cc: Andy Lutomirski <luto@kernel.org>
+>> Cc: Brian Gerst <brgerst@gmail.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> ---
+>>   arch/x86/include/asm/percpu.h | 15 ++++++++++++---
+>>   1 file changed, 12 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/ 
+>> percpu.h
+>> index 27f668660abe..474d648bca9a 100644
+>> --- a/arch/x86/include/asm/percpu.h
+>> +++ b/arch/x86/include/asm/percpu.h
+>> @@ -95,9 +95,18 @@
+>>   #endif /* CONFIG_SMP */
+>> -#define __my_cpu_type(var)    typeof(var) __percpu_seg_override
+>> -#define __my_cpu_ptr(ptr)    (__my_cpu_type(*(ptr))*)(__force 
+>> uintptr_t)(ptr)
+>> -#define __my_cpu_var(var)    (*__my_cpu_ptr(&(var)))
+>> +#if defined(CONFIG_USE_X86_SEG_SUPPORT) && defined(USE_TYPEOF_UNQUAL)
+>> +# define __my_cpu_type(var)    typeof(var)
+>> +# define __my_cpu_ptr(ptr)    (ptr)
+>> +# define __my_cpu_var(var)    (var)
+>> +
+>> +# define __percpu_qual        __percpu_seg_override
+>> +#else
+>> +# define __my_cpu_type(var)    typeof(var) __percpu_seg_override
+>> +# define __my_cpu_ptr(ptr)    (__my_cpu_type(*(ptr))*)(__force 
+>> uintptr_t)(ptr)
+>> +# define __my_cpu_var(var)    (*__my_cpu_ptr(&(var)))
+>> +#endif
+>> +
+> 
+> Another issue with this is this causes all modules in 6.15 are 2-4 times 
+> (compressed size) bigger:
+> $ ll /usr/lib/modules/*-[0-9]-default/kernel/drivers/atm/atmtcp.ko.zst
+>  > -rw-r--r--. 1 root root 10325 May 13 11:49 /usr/lib/modules/6.14.6-2- 
+> default/kernel/drivers/atm/atmtcp.ko.zst
+>  > -rw-r--r--. 1 root root 39677 Jun  2 09:13 /usr/lib/modules/6.15.0-1- 
+> default/kernel/drivers/atm/atmtcp.ko.zst
+> 
+> It's due to larger .BTF section:
+> .BTF              PROGBITS         0000000000000000  [-00003080-]
+> [-       00000000000011a8-]  {+00003100+}
+> {+       0000000000012cf8+}  0000000000000000           0     0     1
+> 
+> There are a lot of new BTF types defined in each module like:
+> +attribute_group STRUCT
+> +backing_dev_info STRUCT
+> +bdi_writeback STRUCT
+> +bin_attribute STRUCT
+> +bio_end_io_t TYPEDEF
+> +bio_list STRUCT
+> +bio_set STRUCT
+> +bio STRUCT
+> +bio_vec STRUCT
+> 
+> Reverting this gives me back to normal sizes.
+> 
+> Any ideas?
+> 
+> FTR downstream report:
+> https://bugzilla.suse.com/show_bug.cgi?id=1244135
+> 
+> thanks,
 
-Best regards,
-Krzysztof
+-- 
+js
+suse labs
+
