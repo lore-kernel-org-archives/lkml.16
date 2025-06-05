@@ -1,108 +1,111 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF222184524
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417971C5F14
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749135776; cv=none; b=Jh/cuPZiQMC2I6jMK3dHcZ6JGcbx3CUKFDENKMVFMxDDptOF8iBFh8/Gqtwx3Es6Nhv4KY5KxHkLNYbo8HL1eP8/P1o1ae5mnDjORjJCyc35L3i5T1FrOUHKzAYGRiDXbwuwuvbk1H2XyqS/fBpUbYIERKRE9O/BFjt5CqOw2n4=
+	t=1749135781; cv=none; b=HOsSLJOMEFiTWelUwING8nqmw8n8SGSxQYCq2FIpvHu5KXffhyOnCNwxGheV7OJgUYgG/YJdeL8FCQZnA8nxMsx5splxwTdlZJeAqxMfGDcRWZruTretmHuWfTvYqwB9yLe1K3QNtPsv3UzqGOa5Qau1uIDSWijqiNw2P7tyups=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749135776; c=relaxed/simple;
-	bh=/9oGjbRjnfueRQJIZGhA2Un3eglBFE6JP5x5vleF0JM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jKj7NARPc/E0L7JbrubWxGVQ3p/vmVmVmUZN7nT5Hqse2O0CpUTRN6FNko0CmjftNM4zjIAogQ3jluGT+SP9Mk97iJ0cvCMi+3DipoyXjvOWocGd2R/WhUTrAa7FdpWvWHAVt7JqWQUc8FQhSQP4FSTrYGNee2rPPckAAFVcfWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dionnaglaze.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gvXIbrgr; arc=none smtp.client-ip=209.85.215.202
+	s=arc-20240116; t=1749135781; c=relaxed/simple;
+	bh=3jeQmiKt06GXrIHfpjh0oQlnOaSY9Kr4rz+umFvQdDA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LRaQoZJ/CKkFq26VYx404jy/xn48Ww8BHio5ay3X7F3I+//jVQ2K8ditRtBWU/Hs808RBu5ftdEOKAW4ciT+gM8tJ4paRbQ6NHr6YT7YLKsjc9o7S2Rfo7VTM/2wp4YqL9SY+OaJwbLtSIzNJ5geLdm+Mzsgbd+gVI6HITiW37Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dionnaglaze.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xxcbR5lM; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dionnaglaze.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gvXIbrgr"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b270145b864so721970a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 08:02:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xxcbR5lM"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7377139d8b1so1071401b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 08:02:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749135774; x=1749740574; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7VKfd8Mda9jsQ2KQuKEzreTAair58/eAqehxmumcIZc=;
-        b=gvXIbrgroQwKDO+dorJqSO6uGKtmlciHPzATAbOrRU7SjgXs4hkwiRGSy4X1xpEv0U
-         f61Ub7rVj/qrdQgO0lrIInbSTTWxxCHFLhwZzOJdlC05hRn9aapNI4FT/4SSs0cCA2HP
-         v+q+Mh6dpIGCRqvq0LNONPhPX61LMSiaUIfTziLV/WPrSE3r+8WvGLU5mm9VBxvQinPn
-         DCiPn4/l3OcgwMXQAmIJI98+t2fKfIKCNwmjexlg8ENRrc6Zi0mnk8rcqMlEaQ5vz3vv
-         NmFrYOTSApm89zKyvKo67XlcEucUSS4CfaXeLFaeqBxW+NeC9O04cL6VFNthwKGmfiAo
-         EIBg==
+        d=google.com; s=20230601; t=1749135779; x=1749740579; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xzwm5+cjAdLoNMVYNUU/eCk5jF9CVdW14YhkjiBUlxs=;
+        b=xxcbR5lMaILUjVpQrFjgd3/BOPL+dbjdx7N0iqLoFCCiWU48g512azL/kg8x5DHHsz
+         UMEdP3DXImkfJea5LBpIp/R60bRrhqadUxRMBpJlMQiMQqQnExxL0dC/5kURg4OhZ+Rq
+         3I0v5cJxmk8BudW0COy79kuny57EQ+2LA2Nrwgrlwa23Pt7lPFpNtmfanm+AHmTJiXC2
+         sJzcTrz9/FusxTWSl3Ey8I2GC3Nr6I7D6UKoMkJEHJeoWX3jcG60CJCVNaJ7bZkANJZN
+         nVf084+oupRHmDBN6HjaPMlEnz2qxAjMj9iv5y6DqwmqSCxPgDsJ/LBWz6PH/bt9WXp1
+         mqAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749135774; x=1749740574;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7VKfd8Mda9jsQ2KQuKEzreTAair58/eAqehxmumcIZc=;
-        b=T5n8zf+sX94IYu5WQEL8jfL6pgNrhjRI0sCATlJWv8d1qITgiHYzP7oRIsdo4ZHnty
-         f66nPVp+6il2AgltgV8Mcpb9KS4+a7IlpW2jRzCBrb5aQxM36zob/dcmyJOjEqE0nZme
-         kHhIzhdFeInymH2hxRL7QBsVJ93GlCPettYRQUYLKaxxSMcTtad+fIoMroZ2Y4mH7ntU
-         bx6UqlapbM8+oegbPikDpioDFt+Gjnz3ytETngTqm43r/2bHtc8sc4kiLQPp3lwJAzoB
-         /CaZnsbkwm44+uW0BZEvNynorT82ipJWuqBfc/2N/4nD1Ac18T6GAlAIoaDWoLtkdVLm
-         zuKg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+HrA7duSyZNLiT+l8ESE8/bXhV5u/8ezndJ7k03qD1AleF1MY7JYN8+GMZDOkP3GpPieWY6bSFteETPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWEozfpDwvgkjk0L92Vv7DVAkwB9kf1mScbwitMEp+E7fWJZfN
-	H2REZwllUgR1ehrC/qZKy0BA4Hy7n74PL5b5p/uDMgw+hkuI41HeLaud9VmmHDF5z30virGkt0T
-	+7cfwh64W5o3gCLV2oxn0NBlohw==
-X-Google-Smtp-Source: AGHT+IFnu6A91F8hyb9IYuCWMuLpnU44IExyUHuWukUU1F2elsZVdXzAgW0uaSCuWvSNDeFg1ZN4aJuYGs9ROhHb/Q==
-X-Received: from pgbdh4.prod.google.com ([2002:a05:6a02:b84:b0:b2e:ce0c:b3fb])
+        d=1e100.net; s=20230601; t=1749135779; x=1749740579;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xzwm5+cjAdLoNMVYNUU/eCk5jF9CVdW14YhkjiBUlxs=;
+        b=hmZyc5hcQugvMbTbn41HA6NMl3cfD8o0tjvKPm8LjL8TuF58KIU1COzuXqrHqkxZA0
+         z7zbdnojwtJu+F/k3w6ThBWzv2+NTzoP+jO/TgKt84zIcFbT593yeqR3JvuiYJUZH/Sd
+         dw0Oz3+MwuOjN4q8QSi7eKrcVD97nnTyt1322LNQH1X2m6P91jw2X8xDWEF+mh5eyTH6
+         EVxVqj4HGEBWsx4Agui5s4Vr1ULNNY0nNQkpAurTA+VLhXMpeIlynWUGfJKFI6WJ5WIX
+         1/o9rP0S1WL0sE9q56a+rskNYwIC1MRFacgVQrTrwi1C9E+umvjB1OUB84+6Jmix0n6J
+         1quQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCv9E8JNOhNFJ/4zw7ICpvzm9EQQ9CXIqlc/5PmKQ7FsmxlNJC7TsrWd94vBsH81WLvlb9NMtoOshrO6k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymUv9nRY5VOrkwlZo14LXGK8Q8kemw3XpDLWvuHpEGWSi+0wC3
+	ZTzj45IKg7LXaK68rS1McUZA+RtBFcRnSAMPL51MjmLFoHOhJHNtuHJNV0JL83GB+9KLWN3pQ4Y
+	t427Zzu9iJKzH3HYRjnsEjbyamw==
+X-Google-Smtp-Source: AGHT+IHb5hKDUYrgVOzSrfCbbqZtDuSQIRve0rxtHVkUEsiBbiESd9WvsZr9lyVAILAcpiMtqMiFe+S0tlpgh2kuCw==
+X-Received: from pfvx14.prod.google.com ([2002:a05:6a00:270e:b0:747:9faf:ed39])
  (user=dionnaglaze job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:734e:b0:201:85f4:ad07 with SMTP id adf61e73a8af0-21d22b98d7bmr10729217637.33.1749135774020;
- Thu, 05 Jun 2025 08:02:54 -0700 (PDT)
-Date: Thu,  5 Jun 2025 15:02:34 +0000
+ 2002:a05:6a00:b53:b0:747:ee09:1fb4 with SMTP id d2e1a72fcca58-74827f09679mr61292b3a.15.1749135779455;
+ Thu, 05 Jun 2025 08:02:59 -0700 (PDT)
+Date: Thu,  5 Jun 2025 15:02:36 +0000
+In-Reply-To: <20250605150236.3775954-1-dionnaglaze@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250605150236.3775954-1-dionnaglaze@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250605150236.3775954-1-dionnaglaze@google.com>
-Subject: [PATCH v6 0/2] kvm: sev: Add SNP guest request throttling
+Message-ID: <20250605150236.3775954-3-dionnaglaze@google.com>
+Subject: [PATCH v6 2/2] kvm: sev: If ccp is busy, report busy to guest
 From: Dionna Glaze <dionnaglaze@google.com>
 To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-coco@lists.linux.dev, Dionna Glaze <dionnaglaze@google.com>
+Cc: linux-coco@lists.linux.dev, Dionna Glaze <dionnaglaze@google.com>, 
+	Thomas Lendacky <Thomas.Lendacky@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Joerg Roedel <jroedel@suse.de>, Peter Gonda <pgonda@google.com>, Borislav Petkov <bp@alien8.de>, 
+	Sean Christopherson <seanjc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The GHCB specification recommends that SNP guest requests should be
-rate limited. Add a kernel module parameter to ensure a system-wide
-lower bound rate limit on a per-VM scale for all new VMs. Note that
-this does not preclude the addition of a new KVM exit type for SEV-SNP
-guest requests for userspace to impose any additional throttling logic.
+The ccp driver can be overloaded even with guest request rate limits.
+The return value of -EBUSY means that there is no firmware error to
+report back to user space, so the guest VM would see this as
+exitinfo2 = 0. The false success can trick the guest to update its
+message sequence number when it shouldn't have.
 
-The AMD-SP is a global resource that must be shared across VMs, so
-its time should be multiplexed across VMs fairly. It is the
-responsibility of the VMM to ensure all SEV-SNP VMs have a rate limit
-set such that the collective set of VMs on the machine have a rate of
-access that does not exceed the device's capacity.
+Instead, when ccp returns -EBUSY, that is reported to userspace as the
+throttling return value.
 
-The sev-guest device already respects the SNP_GUEST_VMM_ERR_BUSY
-result code, so utilize that result to cause the guest to retry after
-waiting momentarily.
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Peter Gonda <pgonda@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Sean Christopherson <seanjc@google.com>
 
-Changes since v5:
-  * Reverted the KVM command for setting the rate limit in favor of
-    the module parameter solution. The default is no rate-limiting
-    to maintain existing behavior.
-Changes since v4:
-  * Fixed build failure caused by rebase.
-  * Added ratelimit.h include.
-  * Added rate bounds checking to stay within ratelimit types.
-Changes since v3:
-  * Rebased on master, changed module parameter to mem_enc_ioctl
-    command. Changed commit descriptions. Much time has passed.
-Changes since v2:
-  * Rebased on v7, changed "we" wording to passive voice.
-Changes since v1:
-  * Added missing Ccs to patches.
+Signed-off-by: Dionna Glaze <dionnaglaze@google.com>
+---
+ arch/x86/kvm/svm/sev.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Dionna Glaze (2):
-  kvm: sev: Add SEV-SNP guest request throttling
-  kvm: sev: If ccp is busy, report busy to guest
-
- arch/x86/kvm/svm/sev.c | 22 ++++++++++++++++++++++
- arch/x86/kvm/svm/svm.h |  3 +++
- 2 files changed, 25 insertions(+)
-
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index e45f0cfae2bd..0ceb7e83a98d 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -4060,6 +4060,11 @@ static int snp_handle_guest_req(struct vcpu_svm *svm, gpa_t req_gpa, gpa_t resp_
+ 	 * the PSP is dead and commands are timing out.
+ 	 */
+ 	ret = sev_issue_cmd(kvm, SEV_CMD_SNP_GUEST_REQUEST, &data, &fw_err);
++	if (ret == -EBUSY) {
++		svm_vmgexit_no_action(svm, SNP_GUEST_ERR(SNP_GUEST_VMM_ERR_BUSY, fw_err));
++		ret = 1;
++		goto out_unlock;
++	}
+ 	if (ret && !fw_err)
+ 		goto out_unlock;
+ 
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
