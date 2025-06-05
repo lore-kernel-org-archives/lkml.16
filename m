@@ -1,93 +1,117 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4FCBA927
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A04C17B50F;
+	Thu,  5 Jun 2025 12:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749124965; cv=none; b=nufBFKPvPCnLdTmjFtq2XG2GT+v6rkfiJw/lhcTQ3CrSSy3dMqggcOZ9j/8W1lvg1eejTu9RN464Oekw1Se7P5WgPOY1HAvGv5ip9/dPOqslWPpxcZrfxPJclw0ar1vrnvN2fceIBDUEG52ScCFQt9UjOOiCxrnd2HHf6EOewF8=
+	t=1749125050; cv=none; b=VUQXHVO0bkGMLd36YLgos9njC5tPpPXqV21JScWuKTskJaZoGC3Jn5MF8PeSXfpEd8erII+eKruH9RXPcRFQLpl2YeRmunfficz46mGJQfGk4VrOylVpNraZj+kyRk2oAOFxjBwTomnIyGxkxg+9HDNB3bE7ePg1g4FeUzxxKMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749124965; c=relaxed/simple;
-	bh=y5KzyvrhLc9OxqaiVD7bht/3s9UPHT0+6dPjvd7Kt8k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eypTHGbPv1ejf03SM5cwNX7Ecg4zxqpHoO3nDBhcrrA8RYfdkOhKSIIXLI/cOqdoPjE80iPWxvHiGx0atcBapcpUy+xxgeUMtx6MyzzGltAFoBhi0IyYtDoyKdA/9IaLGOhS9c2sx7bydz2gNtucjVRq02bVqR4Ifii1yJA2EcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jmH0cKtc; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749125050; c=relaxed/simple;
+	bh=lCVZA25/isGuQai3LP6gi6FwlJVk5NeO2+7NBohc5SU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=K7+ouXKY+djQUsCrvcABuyzdpLI8eqpos5icVmyjS5eJOM6//4KSikyJa/v+Yt3bTjofAtiYvORS5f21ETJtwNIVuMw4rSi5Bb5bOAXb9hU5UWlXtv7Df3pglNbu4fZXIgtGDanpb9disAgjD+NRRNOoLKtPxLzfvr1zhyAc24k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmAAhXWz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jmH0cKtc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=97
-	SPQovFI1r29DqJeMBUwPuY8N3trv6H1t1q8FpPIlQ=; b=jmH0cKtcK5mHrtFwwY
-	7xHEowa7A98W84PAQ0HY0aRRTZULhYwia+5cQGNp3s2hUsn8FUUEB5KSptVR5wya
-	F6HWuPePuQoo+N5MU4fLEOWkl9Jh484Ip46qNRwVePzl600Dwh2h2PISrD1cBwq9
-	4tDFP7xJm72NfFSeKFQGYxSfk=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3n7pOh0FoP_+gGA--.5060S2;
-	Thu, 05 Jun 2025 20:02:23 +0800 (CST)
-From: luoqing <l1138897701@163.com>
-To: harry.wentland@amd.com
-Cc: sunpeng.li@amd.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	amd-gfx@lists.freedesktop.org,
-	luoqing@kylinos.cn
-Subject: [PATCH 2/2] drm/amd/display: ZERO_OR_NULL_PTR Macro overdetection
-Date: Thu,  5 Jun 2025 20:02:22 +0800
-Message-Id: <20250605120222.803462-1-l1138897701@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmAAhXWz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4AF1C4CEE7;
+	Thu,  5 Jun 2025 12:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749125049;
+	bh=lCVZA25/isGuQai3LP6gi6FwlJVk5NeO2+7NBohc5SU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=VmAAhXWzVGBjeWNpVW2wh+mAxiJcDJYA6OUElXSkndlFiRbwoupeUKMTH94sxLGvI
+	 mm+H/Gf2F7yPxlLw3e05dd0veLXsk1JP4wjON1COr10tlCInZjoSa7vOOesZdr9d96
+	 gUOhYR2G5S6tS+73HgdIsXGy6YWJgRN8aWYW/EKfjs3ZHWxP+MMaJm2zNM99QG71LN
+	 6u/uC+PiBbdLJ33bKUgN8BjrnLIAr+4iPVhyTo6jd6bdl2vM+pfnbPwBAOm/6o6A6f
+	 lmP5838AChfUmUz4tXi4HnRBYEm8WQTUGcFn9QLj5penqKRJvzkYco8PtO6YVZQ4Mz
+	 ZmTOk2gmbJV4w==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev
+Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, yilun.xu@linux.intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+In-Reply-To: <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+Date: Thu, 05 Jun 2025 17:33:52 +0530
+Message-ID: <yq5ah60u8kev.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3n7pOh0FoP_+gGA--.5060S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AF1ktr4kCFWDCr45tr47Jwb_yoW8AFWDpr
-	4rJry5Xw1UZF12q347JF1kuF98K3ZaqFWSkr4jyw1Yq345AFn8J345JFnFqrZrWFWxCaya
-	vFZrW3y7Z3Wqvw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UHT5LUUUUU=
-X-CM-SenderInfo: jorrjmiyzxliqr6rljoofrz/1tbiEABjRGhBfqzVgQAAsY
+Content-Type: text/plain
 
-From: luoqing <luoqing@kylinos.cn>
+Xu Yilun <yilun.xu@linux.intel.com> writes:
 
-sizeof(xx) these variable values' return values cannot be 0.
-For memory allocation requests of non-zero length,
-there is no need to check other return values;
-it is sufficient to only verify that it is not null.
+> Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
+> expected to be called by userspace when CoCo VM issues TDI bind/unbind
+> command to VMM. Specifically for TDX Connect, these commands are some
+> secure Hypervisor call named GHCI (Guest-Hypervisor Communication
+> Interface).
+>
+> The TSM TDI bind/unbind operations are expected to be initiated by a
+> running CoCo VM, which already have the legacy assigned device in place.
+> The TSM bind operation is to request VMM make all secure configurations
+> to support device work as a TDI, and then issue TDISP messages to move
+> the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
+>
+> Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
+> device to TDISP ERROR state.
+>
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+>
 
-Signed-off-by: luoqing <luoqing@kylinos.cn>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c | 2 +-
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+....
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c
-index e8bdd7f0c460..518383425c80 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c
-@@ -230,7 +230,7 @@ struct idle_workqueue *idle_create_workqueue(struct amdgpu_device *adev)
- 	struct idle_workqueue *idle_work;
- 
- 	idle_work = kzalloc(sizeof(*idle_work), GFP_KERNEL);
--	if (ZERO_OR_NULL_PTR(idle_work))
-+	if (!idle_work)
- 		return NULL;
- 
- 	idle_work->dm = &adev->dm;
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
-index c16962256514..1cf2cf7a9a47 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
-@@ -735,7 +735,7 @@ struct hdcp_workqueue *hdcp_create_workqueue(struct amdgpu_device *adev,
- 	int i = 0;
- 
- 	hdcp_work = kcalloc(max_caps, sizeof(*hdcp_work), GFP_KERNEL);
--	if (ZERO_OR_NULL_PTR(hdcp_work))
-+	if (!hdcp_work)
- 		return NULL;
- 
- 	hdcp_work->srm = kcalloc(PSP_HDCP_SRM_FIRST_GEN_MAX_SIZE,
--- 
-2.25.1
+> +
+> +	/* To ensure no host side MMIO access is possible */
+> +	ret = pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
+> +	if (ret)
+> +		goto out_unlock;
+> +
+>
 
+I am hitting failures here with similar changes. Can you share the Qemu
+changes needed to make this pci_request_regions_exclusive successful.
+Also after the TDI is unbound, we want the region ownership backto
+"vfio-pci" so that things continue to work as non-secure device. I don't
+see we doing that. I could add a pci_bar_deactivate/pci_bar_activate in
+userspace which will result in vfio_unmap()/vfio_map(). But that doesn't
+release the region ownership.
+
+
+> +	ret = vfio_iommufd_tsm_bind(&vdev->vdev, tsm_bind.vdevice_id);
+> +	if (ret)
+> +		goto out_release_region;
+> +
+> +	vdev->is_tsm_bound = true;
+> +	mutex_unlock(&vdev->vdev.dev_set->lock);
+> +
+> +	return 0;
+> +
+> +out_release_region:
+> +	pci_release_regions(pdev);
+> +out_unlock:
+> +	mutex_unlock(&vdev->vdev.dev_set->lock);
+> +	return ret;
+> +}
+
+-aneesh
