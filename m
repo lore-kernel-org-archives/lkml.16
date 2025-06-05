@@ -1,97 +1,73 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2081.outbound.protection.outlook.com [40.107.101.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E3D1E500C
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 14:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4244B1E500C;
+	Thu,  5 Jun 2025 14:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749132277; cv=fail; b=ojgPZ/DyNa09p4GhrZeQJu3oCKWz+IEpeYlIGmthV5aDALrSy8H1mkba8SnxbposGwXl3iDv0PJmyTJCvvjqwl6IOl9StGq0Q+Tz3kKQc+KwbJ5a33sNujof9tDn+p0KQKur+/MTvZtRnyhcNkMnvslx0VH8m16b833qD4zcvfY=
+	t=1749132290; cv=fail; b=CFsemW9lPznCBX7JspZvsM3omQLsYIbT1H9Jo2BBkrT3V5F9oMI7CEeDQDg8jiOUy7TsnNr+RhSoCrEPh/7ssMctwaGs5wuIWeEm5k3A6arDJpjfKYJe9jJrIn/NgZtmVyUspUYdEM7m6MptdvHve09AXaQkLA8/Gsf7jl8mmlw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749132277; c=relaxed/simple;
-	bh=DLxfpJQYh1UV9aIVIIe5KMNCCjOaZl0r371ac7jc+t4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dKVSh97VVncKYqLcdgTj1uRWtlhGumv6QSbG/FRGDLPEkGgL+/2tz3z8GF4fEJpkhjBSv1YTeMppUr4+mVXQfy0D1toTYBFRS2a3G55YeRix5MYRrtB8fi4gB4OlVAODlCNLK1ZK5PMVZOYOXH0EF3V+3wTcGtOUqRViwW+HduQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=B1gph5cy; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ywrixxMk; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1749132290; c=relaxed/simple;
+	bh=XIppgE+Gv4uBaEWn+ZfGRBB8ziFHcFBMd86V/BeQi6E=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FDAtwds4mVmn56EVKgHq2oiC+ScmRyToKlBRfL8m19NkkSgueE4JRo0gC0jw+R4TO4U0fRWNnKyaEEjZzitFddo869nbjsISjLm7Opk5lbqhwWiDOPuAil5suKY4dPLwO6j/GztPr4Z4Gtqf51l0Vtd2G6FMCOL59arazN35BDU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D+ARWFGQ; arc=fail smtp.client-ip=40.107.101.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B1gph5cy";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ywrixxMk"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555AtVRI011517;
-	Thu, 5 Jun 2025 14:04:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=7aDTNz4gzyQ2t9F39dSNooct+tlmDoGZsMBRoGk8yDs=; b=
-	B1gph5cyPvVGGlE+30QsXkuTvd+94HidMchL0FgcftKlY+muPkHIQf03vo5BNcjz
-	2vA8Zy2PnUzex3Qd+S1+lHY1C6O6snV63ZbeLCzg6Gdq5XCZJ0aiYYSGJAhiBemp
-	R/DM7hINOxsOfawSDJFrSKFMsFzKeBm+h8St0grz9KAY31PeoCP/jBKSdhHxkZr/
-	rIhCeDlUCV2TU4TbbksoXL65+WY68Ln32RZ0a9XFN0HvjW8m3G265rm7ZQwJFWLU
-	QItlpQiphk+5qmvvsRFz7FFU3IO4jeMespU1MI5xCC+xM/+0FSTaRJPyAWuvunh9
-	n0fspJ/QXScW/G7aejW6Iw==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471g8j68q4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 05 Jun 2025 14:04:10 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 555DU7GT033811;
-	Thu, 5 Jun 2025 14:04:09 GMT
-Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02on2070.outbound.protection.outlook.com [40.107.95.70])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7c42fx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 05 Jun 2025 14:04:09 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D+ARWFGQ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=J8lJTwdLgYz7S6FwPvOtVgMVhKjucEDZd0zJDMjx9DfiydsOVIW/QcwMn3QT5ObnFg/NnPOVkFsked5jcBS0GMngY/gpf5I6d2mOj3p0N24J6gnYI7dOjlLMIB37oMVxSpadkvKgXzKQeD01i/4zCpSK37M0dPczVY/xcSDiszBSwUWHo03a/LRgCfknr+LTKNszHwd6WxPD9CIf9Rs9h7aHg7lGPny95htuq6PTwdkAwk4AFJUgLK039fBGtK2XhHt1HrfYKljFDZ+PKxYcItvUsOS53wpu3glOMrQjtSgJdbd2EHz2xwRUfgWeIQtagBeOkL5PhDv41x3rRpysfg==
+ b=wL0fVBeyJrkJfY371U+1/mEJM4OE51BTIix+YYlOS5Gqlm2Pq4ZscCn4UwoUwMMeE6ZqaNDDfSDUx223FfnoEMf50AsA4qra//t+lmembdkgAJTzM2R5WUCmkhAGu4cFC0E5RPNrdPqJJcuWx4leoCKejsEc+zLgYQLcHs0WAhT3vXfqVzoBzBWGsRh9aJ/SI34s5dYOz10LAGM029fmahwZRxM5shgq1/XbHCcNQpvyX4rD5FNEUtqc0SNLQKWC//5Q94NdE03ryTjj53AIdd28kmrvlNkeCEBtty+zrnm05sxvt5jmTt0qmEMF6P8lOB8huUvc+a/g2H7pWqHRhQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7aDTNz4gzyQ2t9F39dSNooct+tlmDoGZsMBRoGk8yDs=;
- b=O7e5ptVfKZ6q9FEEQkEr/a3ORWESq3nFfzjy5VR97L+lEUBzdeROXBebfRH0ut7EIiPgxMR20YQgzD/Bj854eT1wBr9dSjoBPNHhPrTLTCYdH6/zOynn6IcO9cwjfdfVljw3qYnz1tJvPreIzeSbGP+jUq1DoDh27DRcVANabxPbk7I/Hkfs99nvRwPzsZNkWtzJu2FPM14IVoq1d6rybET9GsQm78ga+o5uCyPvat5xfKxJ9Hq6d+yECp8ZSTi5oVYF4oqdm3vyRIEzJkRoTgLpmi95mnqbXpLhJzWu/CAXjqvhyX7B06xXnGR8UqinBwoX3nX9hrOhqd7uxlaMtQ==
+ bh=B4Fkq5LfLf8KR4bXwI0h9wQv17tywHiXLR2owiAWaxE=;
+ b=Bypsxz5Si0JZObcyYL5Dw4Cwt8leZpcrDuEFCj1ABJqZCjoBQ2h1hyRuFxZUFtQ6TCr4IRFVuKcYL5Jo1zgcHLe5lICMa2UJdiA3RkU8gKpxZK20La5DkldfELeN0Jd3LL1jtCIxnTMuEKjTS14TuObzyuilMikgNrdpU6FnXG1RoFFOedTPi+CzLYibYoKZMP7JdRk8V6BmXahVLVni6JdokqOcY7WobaMJ8KLz6bsIlBWaAMs5YegPlEFqfm6ya4g/Ov2pcHCMseCqR4gbaByVmxu8ZdbSuQDWkxhirbkfMHIit4WDJ9Cjgex94lSEabFeuWqeaUBuFdw6Ja/hYQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7aDTNz4gzyQ2t9F39dSNooct+tlmDoGZsMBRoGk8yDs=;
- b=ywrixxMkTiu0oedVWrXpKM0s4X0qWcBrR6C20ZKESXD0dOj5jylOc/+MqG/rya16zwgo1RAEVlp9nAkraUXKo4L18BSkYSkiKfDS4eHbyJKoPtFSJzC8NWpihNmajJyAEcs9+hulwmDleBj0IFhLAIKoTsWWLmHxqlGtO/vP+fU=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SJ0PR10MB4558.namprd10.prod.outlook.com (2603:10b6:a03:2d8::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Thu, 5 Jun
- 2025 14:04:05 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8746.041; Thu, 5 Jun 2025
- 14:04:05 +0000
-Date: Thu, 5 Jun 2025 15:04:02 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: Jann Horn <jannh@google.com>, Barry Song <21cnbao@gmail.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Tangquan Zheng <zhengtangquan@oppo.com>
-Subject: Re: [PATCH RFC v2] mm: use per_vma lock for MADV_DONTNEED
-Message-ID: <bfb56be6-d55e-4dcc-93a3-4c7e6faf790f@lucifer.local>
-References: <20250530104439.64841-1-21cnbao@gmail.com>
- <CAG48ez11zi-1jicHUZtLhyoNPGGVB+ROeAJCUw48bsjk4bbEkA@mail.gmail.com>
- <0fb74598-1fee-428e-987b-c52276bfb975@bytedance.com>
- <c6dbfb68-413a-4a98-8d21-8c3f4b324618@lucifer.local>
- <3cb53060-9769-43f4-996d-355189df107d@bytedance.com>
- <c813c03a-5d95-43a6-9415-0ceb845eb62c@lucifer.local>
- <7cb990bf-57d4-4fc9-b44c-f30175c0fb7a@bytedance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7cb990bf-57d4-4fc9-b44c-f30175c0fb7a@bytedance.com>
-X-ClientProxiedBy: LO6P123CA0049.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:310::9) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+ bh=B4Fkq5LfLf8KR4bXwI0h9wQv17tywHiXLR2owiAWaxE=;
+ b=D+ARWFGQvKcZV3lnNu7yeaRf3VYtG3wk/ebOuj45QuhDC+MMRi/nwxarTImsP6tSSTLKlpkx+7q9vnpNtf/30p2GPWUnGQSMkJ1+ij/a4tMazBS4TplZaap2VzIQZyKUyK/jNobC07uKIpBQw47WGVvrDy6b0FZw5eJ8RieAzuY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ SA1PR12MB5669.namprd12.prod.outlook.com (2603:10b6:806:237::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.32; Thu, 5 Jun 2025 14:04:45 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8792.034; Thu, 5 Jun 2025
+ 14:04:45 +0000
+Message-ID: <4a7dfa9a-965d-403e-9356-2013c30569d6@amd.com>
+Date: Thu, 5 Jun 2025 09:04:42 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 03/16] CXL/AER: Introduce kfifo for forwarding CXL
+ errors
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-4-terry.bowman@amd.com>
+ <52dfc3f1-b7e1-44f2-8f99-f3f37f44f00d@linux.intel.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <52dfc3f1-b7e1-44f2-8f99-f3f37f44f00d@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DS7PR05CA0029.namprd05.prod.outlook.com
+ (2603:10b6:5:3b9::34) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -99,270 +75,450 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB4558:EE_
-X-MS-Office365-Filtering-Correlation-Id: e3d678d9-0544-4221-170d-08dda439d4e5
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SA1PR12MB5669:EE_
+X-MS-Office365-Filtering-Correlation-Id: c53165c3-911f-427e-c0dc-08dda439ecce
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TVUrR3dQSnd5Z29jMm9CZnpRenVtTVVPNlAzaFZHUUxXNTVUNGpWMEYyTUo0?=
- =?utf-8?B?dXYxMHMyZkxGYWF4M2pIVlkxNHh3aC93c25nSWlDYVh5OEozYmZXT1YxMnlR?=
- =?utf-8?B?NmwzS1NZMGJIckNTRDl4U3E4aTNDbldFRWY5cVBJSTk5TU9YWWs2L2NIYlB5?=
- =?utf-8?B?UFIyOVRCQWljSnpQb0k1Q3ZKRW4wclJpdUhCcmhlUkhPTlJGS3M5VHNMYkts?=
- =?utf-8?B?TnhvMjllTWVIMU5jenU0ZHd2c3ROMVdYUWxTQmFNcE0xWTIwZDJkN053dk9J?=
- =?utf-8?B?VDBqMVBERUFjcGVnT3M2RUpwWG1hQTVsY1RFWFhpb1c0bStzMzROMDFYNTVr?=
- =?utf-8?B?TStNUTZ3dmZ1K2xIRUM3QzlVUkkwQngxakdUWGg3SVY4a3JSNjFIRkZDNUVm?=
- =?utf-8?B?SENZdys4Nks5V24wTklvSXlVLzJpbFA2WkMxMTFUM1BlYzF4c3prbi9mSC9k?=
- =?utf-8?B?REJKT0U0aTE1QUhEenVZR2JuWmc1MzZUdU5WaXdubXFhTTRCVVBLcUhleHBP?=
- =?utf-8?B?cURMOVl2TThJR0NqYkw3RDNab2Z4ZFgwdTVZdExLeXBPRmErMEdPTmpMQUYx?=
- =?utf-8?B?VC9ZM05tN2E3WmFMOFM2YlpPMFlSUG1ZVVpGMC9wdnlxNjVlTFppcnRoeHhz?=
- =?utf-8?B?VzlqN0NqOUE2ZGlwYnJTT3FpOGNjZklqNENsQ1JDZXhMTFE0ZUNKZkp1T08v?=
- =?utf-8?B?UHpCQkJJa2pZK2UyK045VEJ6QWR3NnhaVS9rTmdzY2tJTGQyaXpIZ1hFaGNh?=
- =?utf-8?B?Uk1XeEJXMkw3ODhHdFhUamhrWTBnZkJOb3k2RzM0cGp3UEs2a1l6SmJhVkJu?=
- =?utf-8?B?TktNaUIrL3VtUndvc1RKeXZScXdWTnNrUEhMWTM0K0NkQ2w3amFFS01FUmYx?=
- =?utf-8?B?QkRPaGJvSDBDNU5FSDJMTnhwUXVra1FuajdyRUg3OGRWOFFyZWhzYWg5SWZ5?=
- =?utf-8?B?L0NrS2tNelhtQ1ViK1dacmpwQUx5TVlhOU1sSmdPSThlWkd5OWVNZTFrREtO?=
- =?utf-8?B?aC96UkduVnZJQ3JlRGVrVWFKY2xaZk8xN284cFE5RHhDSElHSnBrZUsyTytS?=
- =?utf-8?B?NS81dGpKM2c5ZWsvYm9UekI4dldFS1UwakRYUGVSVTh6Zm02ZjkwdEcvbEgw?=
- =?utf-8?B?bU1OSWNEY2RFOTJFbHZZTTAxcXJGS2hNKzhMZzF6bmNZK2Q2cTZOWlVRYlpX?=
- =?utf-8?B?K0s1S2pOOHBoOFhzNUNQcmxrL0ZlTnoyNlJ2Z0l0U0UwTDFLVnpWbkR3SHpO?=
- =?utf-8?B?ZGMvSkJwcEVuMzdDSEVTanhHQUdKK3FLZWZMc05EL1Vob2FrSy9pUVZBa3B2?=
- =?utf-8?B?WG1nK0xueEV3TkppYUR2YS9PYlVrdHZwazZuWUFFYjA4MzNQMVVLczFQUno4?=
- =?utf-8?B?UjQyamplM3R3K1NtR1RqRUFVSVRGRzMxbzNEM0VySzVJNmladzRpbk9pdkRU?=
- =?utf-8?B?QlZ3YkQ0Rm10U1JYNVpzR0RMMlA1RHltRHhhNGhTRjJDa2o1VUJJWVdpVlRu?=
- =?utf-8?B?aTF1WU1DcUR4dXVUMHdqcytmTzhVbFUzM3hXTUdBY1o5Z3ZXanh6TTNlMWRW?=
- =?utf-8?B?b2xMRmdjOWpuNmpUK1VZd3NERlZaZkU4WCtnQnVJaXgvcG9MaFlqdkZUaGdo?=
- =?utf-8?B?QzExME53cUhudVhOTzRvcjRXUGR4RlRkLzhJQ0FSNmdlL3VrSXFJT0x3WDFC?=
- =?utf-8?B?Y3lZMnN5UUlQcTUrUVRzTnhZWlNtTzQ3U1R6NTFPTlNkZnVSVTNBOTZPalNy?=
- =?utf-8?B?eHFqOS9zQjk0WTYyckFzbkJDUHdDN2J5VVdwc0VqN20xZDdScGJZNFB1dmZI?=
- =?utf-8?B?dFRpQThsN0VMWFEyM0VDSzRIK3lYQWkvR2dabkpsdmw1RDRNSUpsY3FVanZo?=
- =?utf-8?B?TDg5WUw4VEEzZXFQeElTK0JTUnBWK0ZSL0JUVUZ2aGViRnc9PQ==?=
+	=?utf-8?B?WDlpbEd5dTRXMDBaK1hyR3lWaklmVGFWTkcvR0I4djNadEF5WEJ4aUxFNzAr?=
+ =?utf-8?B?bWVvWGdMMVdrSFlqdnJheEJDTE9xeUZ3eW5TYlJMOTZYRTFRcVBHTS9NRzhX?=
+ =?utf-8?B?QWtFdDE4blIvNC9GS25oeHhnd3g0a2thbDl1ZzlSK2dCSEJ3NXIxSzlDWkJR?=
+ =?utf-8?B?UUEzalNjYWR3dUE5UWRUa25hb2QySEUrNUhpelA3eHhabDdwQVlPRkVkQ1VR?=
+ =?utf-8?B?WExWcFV3d2lTb2tYZDJ4dTJPdU1HK3RpaW9SVFd0WFZoYjUwdHUxUXdzVzhW?=
+ =?utf-8?B?c3U5cWc5ZG5nOUhHanVCL0xXT2J2L2M4bUVYa1V2bDgwK2JLSjdqYkFKRTBa?=
+ =?utf-8?B?UEQyTkozY2JRTUI5dnZCeC9uWXRMU3BYbSsyRVhBOUo0bU0yc1dmZFdkMTBF?=
+ =?utf-8?B?UWtsY3I3SGlnVSthVnl4VXlUZGM1ODQ0MnU3cS9JZmRDUU1CSHB4a3p2N3NF?=
+ =?utf-8?B?MW93aW13QmtrVDI4Q2taNm1aOTdqc2YvbzJkRGJIVzBVb2J1dTQ5ZnZvM240?=
+ =?utf-8?B?RmxzaUR1UzJmOHhXVUdrS2pZL2MxRlpNY3hFS3Rrelphbm1SeWVOb2VVTjdP?=
+ =?utf-8?B?UWNiL2JNb3dVbzBXOEljLzNMQW9yOEhxS0RUQ01RemtwVHZrZWFORnZveVBT?=
+ =?utf-8?B?YjZ0enk0UFcvM0ZxTWtraTJ2aWFJVjcrV3NObG00d2hiNTVORzAyZmwrT1ZN?=
+ =?utf-8?B?OXNJd29BU1grUFhLZy9WYXlxL21YZ0tRR0xyNWlqUDhUdHFKTVMrSmlWSDNE?=
+ =?utf-8?B?TDZvS2dXcEVTYW1lOGxPamR2VTNYWGl4anVKN2R2cHpGNW9BekkrS2Y1Nkt1?=
+ =?utf-8?B?NHk4MkRTNjVKN0xzT2F2eUZscExoeVk1a1FaN1dTLzB1UHpqeE0vdTZuZG0z?=
+ =?utf-8?B?eFNLb25NVzdnS0p4ZGptTjRYY1RSeGorOXJSWkhCcnZMRXIwQWNpZmJKcm52?=
+ =?utf-8?B?bGJ4NWc5YmJ3N2tvZzkvS0JvRU5ORVBQa1JqRlJGYzIwbnJrN1hkSzA5K0du?=
+ =?utf-8?B?bnlRYTBzdXB0ZitvWVBaQjVGN25SekdmVzh4UTVJWjViZlYwd2tkNE9ydFZu?=
+ =?utf-8?B?Z3Z3WFdPZmdEYXV5ckF1UG5oYkdRNEhic3FDK1BiM1lwR1c4U1RIQjRMVXFw?=
+ =?utf-8?B?bHZiUWhSYkN5VW9OK0tiREdlLzZWMTlEbGM2Y05TZHQzak5FOTg2SEx1WDZq?=
+ =?utf-8?B?VXlaQ3c0dlh3NEttNElKNXJXSjlKQzQrTVdnOXEvTVdvOFZ1enE3V0dlSEx2?=
+ =?utf-8?B?c3RybW4xcmlzSGZJOURnM0x4aVBiczlBMVlIRkFBVG5oTm1UcU5ZbWVDdEJ1?=
+ =?utf-8?B?UE9jNWFyUFlGU0puK0tkNTIxWTczOWhrTU1ZNG54N3ZTQWhRNHp2N3c4Q05v?=
+ =?utf-8?B?ZHhVWWZIcFJ2S2dKRnFXMUVyaThPZjJLbmRCWE9lOGdXNXNNMUcyVzNUanVZ?=
+ =?utf-8?B?QTNmZURjbmhqeU95N2FBY1BQN29PbFdmeXlQblZKZUVQQXJJWE5tY1BMK2NH?=
+ =?utf-8?B?cUtmSWtoK3FWZjhtdmRzWkV1R0JITXk3SVY1L2d4VWpqV2lGbHZ5ajlBbHNT?=
+ =?utf-8?B?NS8wcS9iWWJGZWU4NTdOS09POVJlV0x4bi9jZUZxWVh6dlJrbURSZ2VEdVMy?=
+ =?utf-8?B?blVNam5tc1Bqb1RUczJXZGl2Y3RqQVcwUFFOa0JxNnBwcUkwM2dWZGlTWjFw?=
+ =?utf-8?B?VHpmNzZySThtMDZCNXZ1eVc4UllkZG9mcUZMVUdZMVZKSEU1dkxzQ2FnZGdI?=
+ =?utf-8?B?N3k0SzVFY2Y5L1poTkZqYlMvaFhQNm00YmxUU1JoU0d1TW8zcFlxWCtDcitl?=
+ =?utf-8?B?enBaV1dJK24xWnVPWGdlN2hiclRUN1ZPM1V5Vm5aQWNEbnhJa2RtNm02SHBI?=
+ =?utf-8?B?eXJHekxTTXNaZjZoNFF2eHZUajR3eTQ2RHFhODE2R1V5SVhzcVlvWVFQa0tM?=
+ =?utf-8?B?M1MzRGVuekZHdUQyUUFXaEUwVkxwNjVyRHY0eVBDN1FTQ3NXaU1ZTmFjaHVT?=
+ =?utf-8?B?c091dG9WUUZRPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NS9adVRVb3lrMFdKQ1hoRkJZNnJNLzBpaUN3ZjNmZkpZNHZsdlZ2YURiN3F1?=
- =?utf-8?B?R3JlcERVdUNpL1p5eHloOXg1SXU4dlhBYnFPMFM0THl0MHpadzdlRGlKRC9G?=
- =?utf-8?B?NG84VzZicGh6eEhxWFRmb3FrZmRsc2xwZkR6OVhsMENIRk9UYlErZytpMXZP?=
- =?utf-8?B?dzJiaElPbjNxdXFIMUUvK0FJaHZ5ZlN3MTRsOUkwVWJOU1B6TDJGVHhOdjFC?=
- =?utf-8?B?MHNJMko0ZjV1WmcvSUtTSWtucDBwckFDZ1N0Q1BNMTErSVN5bHE2NWlwV2tm?=
- =?utf-8?B?Mmh3RERKV3dvZi9mK3FZM2N2dVhGMGw5SmRUVVBPdlpRT2YxNGV4MGJpQ1JP?=
- =?utf-8?B?NkFXNzBhWkt5VWwxL2UwR0NjcGlRbGVqdUU3TmtxSGVvSXBmRzhQdDdxaUk4?=
- =?utf-8?B?SE0wdndqVytlb21MZk1ucTY0N25QT2lORkFmUlJSNEU5NTFXTThBUERLa1hT?=
- =?utf-8?B?eTVsMnZheWJhQTMybFVob211Tnkyd2NMSy9mZ0huUVBWZTdseGJRaDBCV0po?=
- =?utf-8?B?b1pzbE1DSm5MUXAwWXFHN094UmJTV0F3QWUrMlorS2lRNVAySTNMVFNsVGZ4?=
- =?utf-8?B?VjFBamVYd3dtcXdTMVFmdE1WeEFacVlXZ2tjRUtKSFUvcklkbndmWGNvbEhO?=
- =?utf-8?B?aEJodS9HalNVdVBpd0xEUjQ5dW01Mmpkcjd5UzlvUGtZQnVtcGcrNVFVOVhs?=
- =?utf-8?B?bXhtd25ORDFqZFRrUEZ0WlJzMW9WaXFNellReDZWNldxUHVDS280am9UTlpN?=
- =?utf-8?B?bUs5YWlRY1g3L05qUDVmUi9UNmpMU09wUjBtNjJ3alh5MUxTd2x3MG1NcHBK?=
- =?utf-8?B?NVJnSGFBWGkwSnh3NFVGbTRqTXlFeEdoK2M0Q3Q5cWdCWFZKd1pxNS80cHFO?=
- =?utf-8?B?YjJxMENQa1lqeGpRVWNudkJSK3I2TFZ5YnZlQUNLeW8xbU1QaXprVzdZdUgy?=
- =?utf-8?B?RFdKUWlqM2c1OG9aY05FZVppbW9lRWIvSno3Q2p6VFlPM1JxbktrQi9zUXF3?=
- =?utf-8?B?V2lkQ1o3djU5RTFkYXIvRWU1NzBUNnpmdXRWblVHU3hFR2VjTUtETmVrTFlu?=
- =?utf-8?B?TWJjWjhxS3ZJbGdXd3BrS0xmQVo3VjRDdzJXbDlHYVZmMUdTQ0w2UGlRY0lE?=
- =?utf-8?B?VUZCaWt3YzRVVXBuVTZVbHFtTjZ0OUdaODJzQ0FvK1FHcnVmbmFuNnIyTjF6?=
- =?utf-8?B?ZVIva1FuQW1hT3JXZ250VFN1R1YzVVEwN2x6UkhNNmo5VFo4TVdWSGtHNWs4?=
- =?utf-8?B?MmF0eXFzQkJybHIweEI5Y2k2UXgrNUVWM0FtbEJJOUxXeFBKQXN5eFlyMzNi?=
- =?utf-8?B?dUwrKzZuWmt4TXY4MmYxcXl4Rlg4TlkyVU1EeTBHWk5VNnlpZCs4TXIrSTNN?=
- =?utf-8?B?QmZXU3FCNEJQMHdTNlNVUXhUZzF3cnhZQ09TZzNqSGlEZlJMWTVhNjhuR1BO?=
- =?utf-8?B?NHo0dzdkdHQzeTFsVXBnMm5Ia0VpZ29OOWl1UXFGM3Erc1ppUTlJaUQwZUV6?=
- =?utf-8?B?QlhML29lTVNjbWFobGRzV0N6ckV0cFpjUFZncjBWc20rV3pOdjZ3Qmh5Zk93?=
- =?utf-8?B?bG1Gei9vL3kzL215VEJ6b1BPK1FTWEJRTVZ3RDRhbkExS3QzNW16c2duUUNN?=
- =?utf-8?B?RS9tZEtGMExGY0lXdG9EWFRESlBncmVxVlFlYnpQaTlCMkg2T1JVOWlaTWNN?=
- =?utf-8?B?OFQvaWZjTkkxWFdWYTR3OUJEMklpS3VVblNlZ1hKOEZhVnI3UnE2cWhnQmdn?=
- =?utf-8?B?OXV3eDVOSmxHU0Ura3Z1eVpNNk5mWGJKRjh3Q21OQmdrVXNXTXFMa2Z2ODQ3?=
- =?utf-8?B?U1prRUlka0ZrdGxVenJQMkJjb3lGNmIzSndKR2ltVVArU3FhV3h0bmY5WVFO?=
- =?utf-8?B?TE1kVGpFdVgrMjRBRzZWR3NLdXgwNzZONG9sNnN0RGFMMkRJTnBXbGM3ZFd4?=
- =?utf-8?B?cnFVWk14TTRPdE1WQjh2eDVadkcrSTVIUUV4cUxOS1BhQncrak5KalBZa1E4?=
- =?utf-8?B?ejBWRWd5eG9TazJ1VDFXdDl5QjFsT0F0UkxWb3lTNnJyNm0vcGdEMWZiSUlC?=
- =?utf-8?B?N1JDbkhoSjlQcHNxMnpPcndwSjJlV05HRklhVkNIYys4bUJ1TUwxaTRiM0xW?=
- =?utf-8?B?RFVxSktqS0p5UWFmV3FvVkJyRzEwbitNRVNWQzRVa0l6SXBSaUt2QXZkS2Vv?=
- =?utf-8?B?UFE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	LuEnR42W5NNK1yubRSLIZhHILILypQHeIfima1X/JbF3oeNEBSZcBnNk+4KUzy9i1VWk26btKiwaMMcpgLtuLvsSso/Ewy5gLwCUWFOL9bOsDNkalkfDmM4HwfA6jlLWbttqafz77qv7Iz6JH5BNNTNOAaFCxXQRQPmyDLnyEBrRsJICFRZyBo2fh6c0OJ12xDbdTmwWoq6BgeeP4cylva1B+tgP7HteUUM4mmrYaFH+Yvi7c2APP82RzPEzWYvG9PUXL4DL2J0Ik6ewtqHxAMwJI9uYDz7F3ZHMR50uMLezV59yQpFYAKrSMR2bvJwOCB4Kz6LY+iuNxmUZD938qbKymB7cB/hOd1eCRFqI5RcWhjJ9lH5B2EzgoePwPRM68deDVNEocpBh7oR4TU5VDsTv7z66tww6xyuy33jP+FJJOwSbEhyZbtQYexxlRHfjns2Gc5OaQyqoLDA1hAKBIIA9NL/7pbDaqAc0cm591eP2GqrNeNQxACzbO8QOUubOEQYx1QLrnsyKFWhMB8sZ8aEXwdMBE4wsro1tYfYRk+8R14qXKNsxMs05DMnE4CUl3cUZUUft7nIOWTf6kyxp785GFuBZK1YTxci7mhYn5iE=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3d678d9-0544-4221-170d-08dda439d4e5
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+	=?utf-8?B?N1p0a1BFWDFLNHkyOWJ3ZHpMSW1LUUc1bFNkZFNrQUpVUjJOdnZTNUVIMUZB?=
+ =?utf-8?B?SlpBRHU0L1hsSjgrdzNBQWNtZ2hSM3BBSUJjUXpCSGgxa1NwbGwxYXg1amRu?=
+ =?utf-8?B?cnpBY0xNRFJMY2dQdUtLb1JTdXNRMGIvY1k5WDBCMlF6WVM3a3hKSk5mcHNY?=
+ =?utf-8?B?NGZRUGk1c09oSXFiOWNNU1RaMjExTjdYYnpYVEtNelFRZER3VDNEVG1sdnNh?=
+ =?utf-8?B?ZWk1cDN4cXFBVXVDY3pockF5LzM1T2hVQ28wVHV5c2NjSW9mV2w2VzhIRGY2?=
+ =?utf-8?B?SXMwdEt0aXhQT0diMDRvaXZnZjRDZWFERkwyeGtyQmxoWHBJTVZwb1BOMlBM?=
+ =?utf-8?B?UWpiaHpuRW4vT1FEVktYS3pKbXdqakltY2ZCeEI4MG9ZSUVVK2c5amxpdG83?=
+ =?utf-8?B?Z0lMczZsbFNXd3VjaDQ1ZjBhV3RFYXhtUnJTd0lIT0hGWC92UFI2eVIyTlp3?=
+ =?utf-8?B?SDEzaElmZmVRRHU2VmMvMWdNTFNnSU03bDFWTFFHenQxajYwUW5NVXZnRm5F?=
+ =?utf-8?B?S1pWcnR3TFNtR1B3aDN1TWlBVWVIak4xSFVyK2hiU0l4WHB0OVJsemkyMUFj?=
+ =?utf-8?B?cjJFaWlTRHFOS1dMSkdQb0JTOUFVQndWWEx2QjVKKzBqNExJTUI0NDlaMU93?=
+ =?utf-8?B?bFVqcFBFcWJlM2MyWURZak1OcURvME1IRnVhVDVHdmY2U09sMXE3M2VsNDBm?=
+ =?utf-8?B?L0l3TDFFbE45YjkxT3J4dUNwV2JaeE1iY1R5VkMxaHN5eXNaU0M5WW44TEFK?=
+ =?utf-8?B?WFJGaTRpUmc5SmR6VUdyNkFmTi95allCR0JHNlR1UkhiQUJscTlyQUtBTnR0?=
+ =?utf-8?B?OVNaWUdaZUJoK3JNdGhrSi9qdlVBTEo3NWpLajhtTC9zOXNrcU5nTDdkUWdQ?=
+ =?utf-8?B?ZDBMa21JdVlqTnducW1FYkVVU3hTNXFlb0hZVGVwOFcrTjN0ODB5dzNMaXdq?=
+ =?utf-8?B?TSt6RzhBZkZ6RXZVSHFFTTBIdFM0bnh5OXNUNGZxaG1xSnNKcGpJcUk5eU5G?=
+ =?utf-8?B?eUlPWklXVUUxWGh3WExKc05Hajg5aDVYRTIraWNyeG5aRytXeDE2b25IUHhD?=
+ =?utf-8?B?ZktJNnhnOXhmeHhjWmUxamFBQktuYVgzRGZGRkMyWE5UZ1RVRUJLSjhoVTZ4?=
+ =?utf-8?B?WlZBQkZSTWNMQ0lyM2hFZmN6TC8wbTY0OWp4Z1Z2WFBQamFELzZudWVGU0p6?=
+ =?utf-8?B?akRiQmxaZkNac2ptOUhUQU10VmNrS0ZCdkJGTS9qbnVnMCsvY1NieFZocG9z?=
+ =?utf-8?B?TWJFWlMyYXhXa0Vha202WUJKeGdBeTZoQ2R5eE14NkVxZ1JTYkRGditHK3hK?=
+ =?utf-8?B?SW1ZZ3VENVBSVlNsQzJvTTVYNlA5UVRqS3BVYi9lU1ZmMlkyRkkrNkdEQVVu?=
+ =?utf-8?B?SnZ3aDNTL0xjYkdDa3kxR3pEQWlJV1FycjJRT1JtOWxlVDhOcnR6R0RhS1NK?=
+ =?utf-8?B?b2o4VFBsNU1ZMUdSdjkxQVZVU0lTc2xYRVNXSHZVaWY5REcxdHpsZ2tIV010?=
+ =?utf-8?B?Mk1mYVZRQyt5Q0dLVElEOG9GOTNHNE1UMjZiU1JzVlVHbEQ3ZUxJRlJEVUJu?=
+ =?utf-8?B?T1IzajhtbUFEMitDcVdCSGNPN083MCtlMlNLNE5lamg1ellSUFNNV3NkUzhz?=
+ =?utf-8?B?cFdNTDE1akd2L2h4KzIraUlkUU5Tc1AwdUxOVWdRVkhBbW9kUWJROEM3UitV?=
+ =?utf-8?B?UG0zeTN1NFJGdCttS3U2YkVWeHZ4WVhPNE9GWWxmMFlydjVKbS9lVElrVk14?=
+ =?utf-8?B?b1RiOUR5ekVDTlZabDljdlhHelBVbXh3QkkvcFZiSS92OTROWTlkNm8xM01J?=
+ =?utf-8?B?YjFmeU12ZjdJMlgwZ1VJcEZqczFNT0REbXdxNStpQXNCTDAwYTNhVkpCYVRk?=
+ =?utf-8?B?MUdVM3dVWUhQUFBtUnI2S3lnMXlYQk9VemtETDFIbklJMTJwWVplY21Kb3M5?=
+ =?utf-8?B?K2FtNHRTNE4zbnhXUE9Qbk5vWHN3MWhYU3hWY0dkWXF0ZTZVcXdjeHVGWHJP?=
+ =?utf-8?B?cC9DNzVMMExwZUttTVE1N1gyR09nTHEzVDNrWldrb3BlU1g0cGNCbVZzNUhY?=
+ =?utf-8?B?QkhXRWM4TnFpcFdBLzlpWW1yRzVOdm1JVHpEUllQS1ZzNGIxQTNRcjhuN09h?=
+ =?utf-8?Q?5FIXIOq/7Hk3GRrsPDVYRfZJB?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c53165c3-911f-427e-c0dc-08dda439ecce
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 14:04:04.9907
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 14:04:45.2306
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Kvm82rXpqk5mzqSjJ7XhFzdvNuDdS1kL+Ge8edfjtLg6StRZzV0MFavyFgv1eNhUWiGPhbM/ROPn7dR/IGhkQHeWGmn781WGbBka/wBdPlk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4558
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_03,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506050121
-X-Proofpoint-GUID: 9aAO1s_-vlDWei2JJVwpvXNzwEic5VEf
-X-Proofpoint-ORIG-GUID: 9aAO1s_-vlDWei2JJVwpvXNzwEic5VEf
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDEyMSBTYWx0ZWRfXxQlZVXZ+AaW5 ZohWQrl+3+3Ne+e0GkeFC6gOwb9QEJ0J20gkBgmgDK3iZQE5atSs2rAhVPN6lvKdsdKVATECg05 gnRb6Z9eKAGH2y/durswFDsVHlOlADj0B9A5JVVMEcu801pYZk/uIG5zNaLR8jvd7fFOAym/IKL
- 1Y9vxqKCHLUIMaGdGeSqZm8j+ssJ6QTFBHiVrH0bJ6sZTWhPwWwxjX66buVO1SBM1XJEPPsN/EO sNO6FQG2N6veIK1dNaAdYDvdhWXZqcuxZBl3dRkZJOfmbLjw3dCEW7QSeUCARiPFirUtkVVSx4X Qch7L20fH/iRWIfrhWbOfXz2RUmuAnsk5MKGaVXMMAIMrtCJPGJTQk73LxdgIpd7bYmao9nfGMW
- Rf8KsPRRYDnz2zRjs65/IPbUZNnvzkrOP8GuNkB55J0Bl24rPCFdZHhyfjuez+U2LHJGj3qO
-X-Authority-Analysis: v=2.4 cv=QI1oRhLL c=1 sm=1 tr=0 ts=6841a3da b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=pGLkceISAAAA:8 a=yMelWy21kOp2rXCf5nEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 cc=ntf awl=host:13207
+X-MS-Exchange-CrossTenant-UserPrincipalName: xcOqMqI7a1byyVfeXLRz04NGAbV/t2/vrvsRqfAG6M7y3+esVDASEUF4A8PRE8XT3SGqs8tG8FzqQPoF/Ls72Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5669
 
-On Thu, Jun 05, 2025 at 11:23:18AM +0800, Qi Zheng wrote:
->
->
-> On 6/5/25 1:50 AM, Lorenzo Stoakes wrote:
-> > On Wed, Jun 04, 2025 at 02:02:12PM +0800, Qi Zheng wrote:
-> > > Hi Lorenzo,
-> > >
-> > > On 6/3/25 5:54 PM, Lorenzo Stoakes wrote:
-> > > > On Tue, Jun 03, 2025 at 03:24:28PM +0800, Qi Zheng wrote:
-> > > > > Hi Jann,
-> > > > >
-> > > > > On 5/30/25 10:06 PM, Jann Horn wrote:
-> > > > > > On Fri, May 30, 2025 at 12:44 PM Barry Song <21cnbao@gmail.com> wrote:
-> > > > > > > Certain madvise operations, especially MADV_DONTNEED, occur far more
-> > > > > > > frequently than other madvise options, particularly in native and Java
-> > > > > > > heaps for dynamic memory management.
-> > > > > > >
-> > > > > > > Currently, the mmap_lock is always held during these operations, even when
-> > > > > > > unnecessary. This causes lock contention and can lead to severe priority
-> > > > > > > inversion, where low-priority threads—such as Android's HeapTaskDaemon—
-> > > > > > > hold the lock and block higher-priority threads.
-> > > > > > >
-> > > > > > > This patch enables the use of per-VMA locks when the advised range lies
-> > > > > > > entirely within a single VMA, avoiding the need for full VMA traversal. In
-> > > > > > > practice, userspace heaps rarely issue MADV_DONTNEED across multiple VMAs.
-> > > > > > >
-> > > > > > > Tangquan’s testing shows that over 99.5% of memory reclaimed by Android
-> > > > > > > benefits from this per-VMA lock optimization. After extended runtime,
-> > > > > > > 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
-> > > > > > > only 1,231 fell back to mmap_lock.
-> > > > > > >
-> > > > > > > To simplify handling, the implementation falls back to the standard
-> > > > > > > mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexity of
-> > > > > > > userfaultfd_remove().
-> > > > > >
-> > > > > > One important quirk of this is that it can, from what I can see, cause
-> > > > > > freeing of page tables (through pt_reclaim) without holding the mmap
-> > > > > > lock at all:
-> > > > > >
-> > > > > > do_madvise [behavior=MADV_DONTNEED]
-> > > > > >      madvise_lock
-> > > > > >        lock_vma_under_rcu
-> > > > > >      madvise_do_behavior
-> > > > > >        madvise_single_locked_vma
-> > > > > >          madvise_vma_behavior
-> > > > > >            madvise_dontneed_free
-> > > > > >              madvise_dontneed_single_vma
-> > > > > >                zap_page_range_single_batched [.reclaim_pt = true]
-> > > > > >                  unmap_single_vma
-> > > > > >                    unmap_page_range
-> > > > > >                      zap_p4d_range
-> > > > > >                        zap_pud_range
-> > > > > >                          zap_pmd_range
-> > > > > >                            zap_pte_range
-> > > > > >                              try_get_and_clear_pmd
-> > > > > >                              free_pte
-> > > > > >
-> > > > > > This clashes with the assumption in walk_page_range_novma() that
-> > > > > > holding the mmap lock in write mode is sufficient to prevent
-> > > > > > concurrent page table freeing, so it can probably lead to page table
-> > > > > > UAF through the ptdump interface (see ptdump_walk_pgd()).
-> > > > >
-> > > > > Maybe not? The PTE page is freed via RCU in zap_pte_range(), so in the
-> > > > > following case:
-> > > > >
-> > > > > cpu 0				cpu 1
-> > > > >
-> > > > > ptdump_walk_pgd
-> > > > > --> walk_pte_range
-> > > > >       --> pte_offset_map (hold RCU read lock)
-> > > > > 				zap_pte_range
-> > > > > 				--> free_pte (via RCU)
-> > > > >           walk_pte_range_inner
-> > > > >           --> ptdump_pte_entry (the PTE page is not freed at this time)
-> > > > >
-> > > > > IIUC, there is no UAF issue here?
-> > > > >
-> > > > > If I missed anything please let me know.
-> >
-> > Seems to me that we don't need the VMA locks then unless I'm missing
-> > something? :) Jann?
-> >
-> > Would this RCU-lock-acquired-by-pte_offset_map also save us from the
-> > munmap() downgraded read lock scenario also? Or is the problem there
-> > intermediate page table teardown I guess?
-> >
->
-> Right. Currently, page table pages other than PTE pages are not
-> protected by RCU, so mmap write lock still needed in the munmap path
-> to wait for all readers of the page table pages to exit the critical
-> section.
->
-> In other words, once we have achieved that all page table pages are
-> protected by RCU, we can completely remove the page table pages from
-> the protection of mmap locks.
 
-Interesting - so on reclaim/migrate we are just clearing PTE entries with
-the rmap lock right? Would this lead to a future where we could also tear
-down page tables there?
 
-Another point to remember is that when we are clearing down higher level
-page tables in the general case, the logic assumes nothing else can touch
-anything... we hold both rmap lock AND mmap/vma locks at this point.
+On 6/4/2025 5:50 PM, Sathyanarayanan Kuppuswamy wrote:
+> On 6/3/25 10:22 AM, Terry Bowman wrote:
+>> CXL error handling will soon be moved from the AER driver into the CXL
+>> driver. This requires a notification mechanism for the AER driver to share
+>> the AER interrupt with the CXL driver. The notification will be used
+>> as an indication for the CXL drivers to handle and log the CXL RAS errors.
+>>
+>> Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
+>> driver will be the sole kfifo producer adding work and the cxl_core will be
+>> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
+>>
+>> Add CXL work queue handler registration functions in the AER driver. Export
+>> the functions allowing CXL driver to access. Implement registration
+>> functions for the CXL driver to assign or clear the work handler function.
+>>
+>> Introduce function cxl_create_prot_err_info() and 'struct cxl_prot_err_info'.
+>> Implement cxl_create_prot_err_info() to populate a 'struct cxl_prot_err_info'
+>> instance with the AER severity and the erring device's PCI SBDF. The SBDF
+>> details will be used to rediscover the erring device after the CXL driver
+>> dequeues the kfifo work. The device rediscovery will be introduced along
+>> with the CXL handling in future patches.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> ---
+>>   drivers/cxl/core/ras.c |  31 +++++++++-
+>>   drivers/cxl/cxlpci.h   |   1 +
+>>   drivers/pci/pcie/aer.c | 132 ++++++++++++++++++++++++++++-------------
+>>   include/linux/aer.h    |  36 +++++++++++
+>>   4 files changed, 157 insertions(+), 43 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+>> index 485a831695c7..d35525e79e04 100644
+>> --- a/drivers/cxl/core/ras.c
+>> +++ b/drivers/cxl/core/ras.c
+>> @@ -5,6 +5,7 @@
+>>   #include <linux/aer.h>
+>>   #include <cxl/event.h>
+>>   #include <cxlmem.h>
+>> +#include <cxlpci.h>
+>>   #include "trace.h"
+>>   
+>>   static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+>> @@ -107,13 +108,41 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+>>   }
+>>   static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+>>   
+>> +#ifdef CONFIG_PCIEAER_CXL
+>> +
+>> +static void cxl_prot_err_work_fn(struct work_struct *work)
+>> +{
+>> +}
+>> +
+>> +#else
+>> +static void cxl_prot_err_work_fn(struct work_struct *work) { }
+>> +#endif /* CONFIG_PCIEAER_CXL */
+>> +
+>> +static struct work_struct cxl_prot_err_work;
+>> +static DECLARE_WORK(cxl_prot_err_work, cxl_prot_err_work_fn);
+>> +
+>>   int cxl_ras_init(void)
+>>   {
+>> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+>> +	int rc;
+>> +
+>> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+>> +	if (rc)
+>> +		pr_err("Failed to register CPER AER kfifo (%x)", rc);
+>> +
+>> +	rc = cxl_register_prot_err_work(&cxl_prot_err_work);
+>> +	if (rc) {
+>> +		pr_err("Failed to register native AER kfifo (%x)", rc);
+>> +		return rc;
+>> +	}
+>> +
+>> +	return 0;
+>>   }
+>>   
+>>   void cxl_ras_exit(void)
+>>   {
+>>   	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
+>>   	cancel_work_sync(&cxl_cper_prot_err_work);
+>> +
+>> +	cxl_unregister_prot_err_work();
+>> +	cancel_work_sync(&cxl_prot_err_work);
+>>   }
+>> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+>> index 54e219b0049e..6f1396ef7b77 100644
+>> --- a/drivers/cxl/cxlpci.h
+>> +++ b/drivers/cxl/cxlpci.h
+>> @@ -4,6 +4,7 @@
+>>   #define __CXL_PCI_H__
+>>   #include <linux/pci.h>
+>>   #include "cxl.h"
+>> +#include "linux/aer.h"
+>>   
+>>   #define CXL_MEMORY_PROGIF	0x10
+>>   
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index adb4b1123b9b..5350fa5be784 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -114,6 +114,14 @@ struct aer_stats {
+>>   static int pcie_aer_disable;
+>>   static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+>>   
+>> +#if defined(CONFIG_PCIEAER_CXL)
+>> +#define CXL_ERROR_SOURCES_MAX          128
+>> +static DEFINE_KFIFO(cxl_prot_err_fifo, struct cxl_prot_err_work_data,
+>> +		    CXL_ERROR_SOURCES_MAX);
+>> +static DEFINE_SPINLOCK(cxl_prot_err_fifo_lock);
+>> +struct work_struct *cxl_prot_err_work;
+>> +#endif
+>> +
+>>   void pci_no_aer(void)
+>>   {
+>>   	pcie_aer_disable = 1;
+>> @@ -1004,45 +1012,17 @@ static bool is_internal_error(struct aer_err_info *info)
+>>   	return info->status & PCI_ERR_UNC_INTN;
+>>   }
+>>   
+>> -static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>> +static bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info)
+>>   {
+>> -	struct aer_err_info *info = (struct aer_err_info *)data;
+>> -	const struct pci_error_handlers *err_handler;
+>> +	if (!info || !info->is_cxl)
+>> +		return false;
+>>   
+>> -	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
+>> -		return 0;
+>> +	/* Only CXL Endpoints are currently supported */
+>> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+>> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC))
+>> +		return false;
+>>   
+>> -	/* Protect dev->driver */
+>> -	device_lock(&dev->dev);
+>> -
+>> -	err_handler = dev->driver ? dev->driver->err_handler : NULL;
+>> -	if (!err_handler)
+>> -		goto out;
+>> -
+>> -	if (info->severity == AER_CORRECTABLE) {
+>> -		if (err_handler->cor_error_detected)
+>> -			err_handler->cor_error_detected(dev);
+>> -	} else if (err_handler->error_detected) {
+>> -		if (info->severity == AER_NONFATAL)
+>> -			err_handler->error_detected(dev, pci_channel_io_normal);
+>> -		else if (info->severity == AER_FATAL)
+>> -			err_handler->error_detected(dev, pci_channel_io_frozen);
+>> -	}
+>> -out:
+>> -	device_unlock(&dev->dev);
+>> -	return 0;
+>> -}
+>> -
+>> -static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>> -{
+>> -	/*
+>> -	 * Internal errors of an RCEC indicate an AER error in an
+>> -	 * RCH's downstream port. Check and handle them in the CXL.mem
+>> -	 * device driver.
+>> -	 */
+>> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+>> -	    is_internal_error(info))
+>> -		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
+>> +	return is_internal_error(info);
+>>   }
+>>   
+>>   static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+>> @@ -1056,13 +1036,17 @@ static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+>>   	return *handles_cxl;
+>>   }
+>>   
+>> -static bool handles_cxl_errors(struct pci_dev *rcec)
+>> +static bool handles_cxl_errors(struct pci_dev *dev)
+>>   {
+>>   	bool handles_cxl = false;
+>>   
+>> -	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
+>> -	    pcie_aer_is_native(rcec))
+>> -		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
+>> +	if (!pcie_aer_is_native(dev))
+>> +		return false;
+>> +
+>> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+>> +		pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl);
+>> +	else
+>> +		handles_cxl = pcie_is_cxl(dev);
+>>   
+>>   	return handles_cxl;
+>>   }
+>> @@ -1076,10 +1060,46 @@ static void cxl_rch_enable_rcec(struct pci_dev *rcec)
+>>   	pci_info(rcec, "CXL: Internal errors unmasked");
+>>   }
+>>   
+>> +static int cxl_create_prot_error_info(struct pci_dev *pdev,
+>> +				      struct aer_err_info *aer_err_info,
+>> +				      struct cxl_prot_error_info *cxl_err_info)
+>> +{
+>> +	cxl_err_info->severity = aer_err_info->severity;
+>> +
+>> +	cxl_err_info->function = PCI_FUNC(pdev->devfn);
+>> +	cxl_err_info->device = PCI_SLOT(pdev->devfn);
+>> +	cxl_err_info->bus = pdev->bus->number;
+>> +	cxl_err_info->segment = pci_domain_nr(pdev->bus);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void forward_cxl_error(struct pci_dev *pdev, struct aer_err_info *aer_err_info)
+>> +{
+>> +	struct cxl_prot_err_work_data wd;
+>> +	struct cxl_prot_error_info *cxl_err_info = &wd.err_info;
+>> +
+>> +	cxl_create_prot_error_info(pdev, aer_err_info, cxl_err_info);
+>> +
+>> +	if (!kfifo_put(&cxl_prot_err_fifo, wd)) {
+>> +		dev_err_ratelimited(&pdev->dev, "CXL kfifo overflow\n");
+>> +		return;
+>> +	}
+>> +
+>> +	schedule_work(cxl_prot_err_work);
+>> +}
+>> +
+>>   #else
+>>   static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
+>>   static inline void cxl_rch_handle_error(struct pci_dev *dev,
+>>   					struct aer_err_info *info) { }
+>> +static inline void forward_cxl_error(struct pci_dev *dev,
+>> +				    struct aer_err_info *info) { }
+>> +static inline bool handles_cxl_errors(struct pci_dev *dev)
+>> +{
+>> +	return false;
+>> +}
+>> +static bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info) { return 0; };
+>>   #endif
+>>   
+>>   /**
+>> @@ -1117,8 +1137,11 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>>   
+>>   static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>>   {
+>> -	cxl_rch_handle_error(dev, info);
+>> -	pci_aer_handle_error(dev, info);
+>> +	if (is_cxl_error(dev, info))
+>> +		forward_cxl_error(dev, info);
+>> +	else
+>> +		pci_aer_handle_error(dev, info);
+>> +
+>>   	pci_dev_put(dev);
+>>   }
+>>   
+>> @@ -1582,6 +1605,31 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+>>   	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+>>   }
+>>   
+>> +#if defined(CONFIG_PCIEAER_CXL)
+>> +
+>> +int cxl_register_prot_err_work(struct work_struct *work)
+>> +{
+>> +	guard(spinlock)(&cxl_prot_err_fifo_lock);
+>> +	cxl_prot_err_work = work;
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_register_prot_err_work, "CXL");
+>> +
+>> +int cxl_unregister_prot_err_work(void)
+>> +{
+>> +	guard(spinlock)(&cxl_prot_err_fifo_lock);
+>> +	cxl_prot_err_work = NULL;
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_unregister_prot_err_work, "CXL");
+>> +
+> Above two functions can never fail, right? What not make them return void?
 
-But I guess if we're RCU-safe, we're same even from rmap right?
+You are correct. Good point. Thanks, I'll make the change.
 
->
-> Here are some of my previous thoughts:
->
-> ```
-> Another plan
-> ============
->
-> Currently, page table modification are protected by page table locks
-> (page_table_lock or split pmd/pte lock), but the life cycle of page
-> table pages are protected by mmap_lock (and vma lock). For more details,
-> please refer to the latest added Documentation/mm/process_addrs.rst file.
->
-> Currently we try to free the PTE pages through RCU when
-> CONFIG_PT_RECLAIM is turned on. In this case, we will no longer
-> need to hold mmap_lock for the read/write op on the PTE pages.
->
-> So maybe we can remove the page table from the protection of the mmap
-> lock (which is too big), like this:
->
-> 1. free all levels of page table pages by RCU, not just PTE pages, but
->    also pmd, pud, etc.
-> 2. similar to pte_offset_map/pte_unmap, add
->    [pmd|pud]_offset_map/[pmd|pud]_unmap, and make them all contain
->    rcu_read_lock/rcu_read_unlcok, and make them accept failure.
->
-> In this way, we no longer need the mmap lock. For readers, such as page
-> table wallers, we are already in the critical section of RCU. For
-> writers, we only need to hold the page table lock.
->
-> But there is a difficulty here, that is, the RCU critical section is not
-> allowed to sleep, but it is possible to sleep in the callback function
-> of .pmd_entry, such as mmu_notifier_invalidate_range_start().
->
-> Use SRCU instead? Or use RCU + refcount method? Not sure. But I think
-> it's an interesting thing to try.
+Terry
+>> +int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd)
+>> +{
+>> +	return kfifo_get(&cxl_prot_err_fifo, wd);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_prot_err_kfifo_get, "CXL");
+>> +#endif
+>> +
+>>   static struct pcie_port_service_driver aerdriver = {
+>>   	.name		= "aer",
+>>   	.port_type	= PCIE_ANY_PORT,
+>> diff --git a/include/linux/aer.h b/include/linux/aer.h
+>> index 02940be66324..550407240ab5 100644
+>> --- a/include/linux/aer.h
+>> +++ b/include/linux/aer.h
+>> @@ -10,6 +10,7 @@
+>>   
+>>   #include <linux/errno.h>
+>>   #include <linux/types.h>
+>> +#include <linux/workqueue_types.h>
+>>   
+>>   #define AER_NONFATAL			0
+>>   #define AER_FATAL			1
+>> @@ -53,6 +54,27 @@ struct aer_capability_regs {
+>>   	u16 uncor_err_source;
+>>   };
+>>   
+>> +/**
+>> + * struct cxl_prot_err_info - Error information used in CXL error handling
+>> + * @severity: AER severity
+>> + * @function: Device's PCI function
+>> + * @device: Device's PCI device
+>> + * @bus: Device's PCI bus
+>> + * @segment: Device's PCI segment
+>> + */
+>> +struct cxl_prot_error_info {
+>> +	int severity;
+>> +
+>> +	u8 function;
+>> +	u8 device;
+>> +	u8 bus;
+>> +	u16 segment;
+>> +};
+>> +
+>> +struct cxl_prot_err_work_data {
+>> +	struct cxl_prot_error_info err_info;
+>> +};
+>> +
+>>   #if defined(CONFIG_PCIEAER)
+>>   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>>   int pcie_aer_is_native(struct pci_dev *dev);
+>> @@ -64,6 +86,20 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>>   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>>   #endif
+>>   
+>> +#if defined(CONFIG_PCIEAER_CXL)
+>> +int cxl_register_prot_err_work(struct work_struct *work);
+>> +int cxl_unregister_prot_err_work(void);
+>> +int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd);
+>> +#else
+>> +static inline int
+>> +cxl_register_prot_err_work(struct work_struct *work)
+>> +{
+>> +	return 0;
+>> +}
+>> +static inline int cxl_unregister_prot_err_work(void) { return 0; }
+>> +static inline int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd) { return 0; }
+>> +#endif
+>> +
+>>   void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>   		    struct aer_capability_regs *aer);
+>>   int cper_severity_to_aer(int cper_severity);
 
-Thanks for the information, RCU freeing of page tables is something of a
-long-term TODO discussed back and forth :) might take a look myself if
-somebody else hasn't grabbed when I have a second...
-
-Is it _only_ the mmu notifier sleeping in this scenario? Or are there other
-examples?
-
-We could in theory always add another callback .pmd_entry_sleep or
-something for this one case and document the requirement...
-
-> ```
->
-> Thanks!
->
->
-
-Cheers, Lorenzo
