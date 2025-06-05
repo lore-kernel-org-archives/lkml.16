@@ -1,151 +1,149 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B673C2F
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE951C27
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749107928; cv=none; b=GGhF6ig+K2uMw9kjOfSvlRbYjp7R+fJ2f2Urnw/33bYfwUzctNYM6U8aZEOaOUPFnXKD6/kxuDKNmYUfCUAD18efSc9U7pL9BSOVovkrJTfcRO/y/zv/+AZUwsPSGwuhU3UGCtmmKTx8hnc7QBl0hm6tbHDwQBpnb52fWRVOMYQ=
+	t=1749107991; cv=none; b=iJE7+w5jgkba0Ane5rna2zl8VrBIGfdPbSHhhLanv3lPVbR+MyYK/Mq8PZvb4ZNMCoAa6H4Kj6HPktIMqFby34t1y3sqWG7o3+yPjEi7sZPHVr+L/vjTAQ6Ib02gwT1bHl91sg1Y2R5hIC3nhfnzz7IeuWv2upL5Ynqfb3RWhig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749107928; c=relaxed/simple;
-	bh=IL/Hd3yIqTvIVLzMgkriI+WGtf8SJIpzTT8RklcLaB4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CqZXJ7nH+cMiMEcDpCFK3DN7YAKu/99Un6IIej5BrAC2oJ2m3mo1SFInj/RK/rpKyLHF78KHKGIVGcT8XYWd3aKTrQQCNCzEa0XvHhm8yPP8nmp5nckACSPbnoAPoeNK52LfVszqVzcbyGByEUNX8rOc9JWOOC6ZoqQQ1QzMaEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bCbLH4l0hzGpwn;
-	Thu,  5 Jun 2025 15:14:47 +0800 (CST)
-Received: from kwepemo200002.china.huawei.com (unknown [7.202.195.209])
-	by mail.maildlp.com (Postfix) with ESMTPS id 67BF1180080;
-	Thu,  5 Jun 2025 15:18:36 +0800 (CST)
-Received: from [10.174.179.13] (10.174.179.13) by
- kwepemo200002.china.huawei.com (7.202.195.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 5 Jun 2025 15:18:35 +0800
-Message-ID: <d1e1896b-8685-fd7c-d17d-f4328939b96f@huawei.com>
-Date: Thu, 5 Jun 2025 15:18:34 +0800
+	s=arc-20240116; t=1749107991; c=relaxed/simple;
+	bh=wrOzrOpItq9PklhttnH4+ERkE/iekakTgs9ldslFJr4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Nb1KWZnRU21X6nNpFWTcjrw++apU0KWwjfBt0Pb1oHhEuVAMPXPV7alEMAmJv+Zzk2molr1lXXkt9P//sH73MDFGnudScJqo0FWE3idFo301/fGJapuThgslrCBfPc8eZeM7BVPwD3i37yUHZTk7zQPApu8Zf+6dlSujYfuJLPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 5557Iqwi020105;
+	Thu, 5 Jun 2025 15:18:52 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4bCbMc70cnz2NnHTV;
+	Thu,  5 Jun 2025 15:15:56 +0800 (CST)
+Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.48; Thu, 5 Jun 2025 15:18:49 +0800
+From: Zhiguo Niu <zhiguo.niu@unisoc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
+        <Hao_hao.Wang@unisoc.com>, <baocong.liu@unisoc.com>
+Subject: [PATCH v3] f2fs: compress: fix UAF of f2fs_inode_info in f2fs_free_dic
+Date: Thu, 5 Jun 2025 15:18:40 +0800
+Message-ID: <1749107920-17958-1-git-send-email-zhiguo.niu@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [syzbot] [mm?] kernel BUG in try_to_unmap_one (2)
-To: David Hildenbrand <david@redhat.com>, syzbot
-	<syzbot+3b220254df55d8ca8a61@syzkaller.appspotmail.com>,
-	<Liam.Howlett@oracle.com>, <akpm@linux-foundation.org>,
-	<harry.yoo@oracle.com>, <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<lorenzo.stoakes@oracle.com>, <riel@surriel.com>,
-	<syzkaller-bugs@googlegroups.com>, <vbabka@suse.cz>, Jens Axboe
-	<axboe@kernel.dk>, Catalin Marinas <catalin.marinas@arm.com>
-References: <68412d57.050a0220.2461cf.000e.GAE@google.com>
- <4fc2c008-2384-4d94-b1bf-f0a076585a4a@redhat.com>
- <fda7a3e3-1711-4f1b-a0bb-6a4369aa80ab@redhat.com>
- <b9a43f6d-1865-4074-b91c-a5bd7e10f2a9@redhat.com>
-From: Jinjiang Tu <tujinjiang@huawei.com>
-In-Reply-To: <b9a43f6d-1865-4074-b91c-a5bd7e10f2a9@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemo200002.china.huawei.com (7.202.195.209)
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 5557Iqwi020105
 
+The decompress_io_ctx may be released asynchronously after
+I/O completion. If this file is deleted immediately after read,
+and the kworker of processing post_read_wq has not been executed yet
+due to high workloads, It is possible that the inode(f2fs_inode_info)
+is evicted and freed before it is used f2fs_free_dic.
 
-在 2025/6/5 14:37, David Hildenbrand 写道:
-> On 05.06.25 08:27, David Hildenbrand wrote:
->> On 05.06.25 08:11, David Hildenbrand wrote:
->>> On 05.06.25 07:38, syzbot wrote:
->>>> Hello,
->>>>
->>>> syzbot found the following issue on:
->>>>
->>>> HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into 
->>>> for-kernelci
->>>
->>> Hmmm, another very odd page-table mapping related problem on that tree
->>> found on arm64 only:
->>
->> In this particular reproducer we seem to be having MADV_HUGEPAGE and
->> io_uring_setup() be racing with MADV_HWPOISON, MADV_PAGEOUT and
->> io_uring_register(IORING_REGISTER_BUFFERS).
->>
->> I assume the issue is related to MADV_HWPOISON, MADV_PAGEOUT and
->> io_uring_register racing, only. I suspect MADV_HWPOISON is trying to
->> split a THP, while MADV_PAGEOUT tries paging it out.
->>
->> IORING_REGISTER_BUFFERS ends up in
->> io_sqe_buffers_register->io_sqe_buffer_register where we GUP-fast and
->> try coalescing buffers.
->>
->> And something about THPs is not particularly happy :)
->>
->
-> Not sure if realted to io_uring.
->
-> unmap_poisoned_folio() calls try_to_unmap() without TTU_SPLIT_HUGE_PMD.
->
-> When called from memory_failure(), we make sure to never call it on a 
-> large folio: WARN_ON(folio_test_large(folio));
->
-> However, from shrink_folio_list() we might call unmap_poisoned_folio() 
-> on a large folio, which doesn't work if it is still PMD-mapped. Maybe 
-> passing TTU_SPLIT_HUGE_PMD would fix it.
->
-TTU_SPLIT_HUGE_PMD only converts the PMD-mapped THP to PTE-mapped THP, and may trigger the below WARN_ON_ONCE in try_to_unmap_one.
+    The UAF case as below:
+    Thread A                                      Thread B
+    - f2fs_decompress_end_io
+     - f2fs_put_dic
+      - queue_work
+        add free_dic work to post_read_wq
+                                                   - do_unlink
+                                                    - iput
+                                                     - evict
+                                                      - call_rcu
+    This file is deleted after read.
 
-	if (PageHWPoison(subpage) && (flags & TTU_HWPOISON)) {
-		...
-	} else if (likely(pte_present(pteval)) && pte_unused(pteval) &&
-		!userfaultfd_armed(vma)) {
-		 ....
-	} else if (folio_test_anon(folio)) {
-		swp_entry_t entry = page_swap_entry(subpage);
-		pte_t swp_pte;
-		/*
-		 * Store the swap location in the pte.
-		 * See handle_pte_fault() ...
-		*/
-		if (unlikely(folio_test_swapbacked(folio) !=
-			folio_test_swapcache(folio))) {
-			WARN_ON_ONCE(1);          // here. if the subpage isn't hwposioned, and we hasn't call add_to_swap() for the THP
-			goto walk_abort;
-		 }
+    Thread C                                 kworker to process post_read_wq
+    - rcu_do_batch
+     - f2fs_free_inode
+      - kmem_cache_free
+     inode is freed by rcu
+                                             - process_scheduled_works
+                                              - f2fs_late_free_dic
+                                               - f2fs_free_dic
+                                                - f2fs_release_decomp_mem
+                                      read (dic->inode)->i_compress_algorithm
 
-If we want to unmap in shrink_folio_list, we have to try_to_split_thp_page() like memory_failure(). But it't too complicated, maybe just skip the
-hwpoisoned folio is enough? If the folio is accessed again, memory_failure will be trigerred again and kill the accessing process since the folio
-has be hwpoisoned.
+This patch use igrab before f2fs_free_dic and iput after free the dic when dic free
+action is done by kworker.
 
->
-> Likely the relevant commit is:
->
-> commit 1b0449544c6482179ac84530b61fc192a6527bfd
-> Author: Jinjiang Tu <tujinjiang@huawei.com>
-> Date:   Tue Mar 18 16:39:39 2025 +0800
+Cc: Daeho Jeong <daehojeong@google.com>
+Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in softirq")
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
+---
+v3: use igrab to replace __iget
+v2: use __iget/iput function
+---
+ fs/f2fs/compress.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-Yes, It is caused by this commit.
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index b3c1df9..729ad16 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct decompress_io_ctx *dic,
+ }
+ 
+ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+-		bool bypass_destroy_callback);
++		bool bypass_destroy_callback, bool late_free);
+ 
+ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+ {
+@@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+ 	return dic;
+ 
+ out_free:
+-	f2fs_free_dic(dic, true);
++	f2fs_free_dic(dic, true, false);
+ 	return ERR_PTR(ret);
+ }
+ 
+ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+-		bool bypass_destroy_callback)
++		bool bypass_destroy_callback, bool late_free)
+ {
+ 	int i;
+ 
+@@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+ 	}
+ 
+ 	page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
++	if (late_free)
++		iput(dic->inode);
+ 	kmem_cache_free(dic_entry_slab, dic);
+ }
+ 
+@@ -1783,16 +1785,18 @@ static void f2fs_late_free_dic(struct work_struct *work)
+ 	struct decompress_io_ctx *dic =
+ 		container_of(work, struct decompress_io_ctx, free_work);
+ 
+-	f2fs_free_dic(dic, false);
++	f2fs_free_dic(dic, false, true);
+ }
+ 
+ static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task)
+ {
+ 	if (refcount_dec_and_test(&dic->refcnt)) {
+ 		if (in_task) {
+-			f2fs_free_dic(dic, false);
++			f2fs_free_dic(dic, false, false);
+ 		} else {
+ 			INIT_WORK(&dic->free_work, f2fs_late_free_dic);
++			/* use igrab to avoid inode is evicted simultaneously */
++			f2fs_bug_on(F2FS_I_SB(dic->inode), !igrab(dic->inode));
+ 			queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
+ 					&dic->free_work);
+ 		}
+-- 
+1.9.1
 
->
->     mm/vmscan: don't try to reclaim hwpoison folio
->         Syzkaller reports a bug as follows:
->         Injecting memory failure for pfn 0x18b00e at process virtual 
-> address 0x20ffd000
->     Memory failure: 0x18b00e: dirty swapcache page still referenced by 
-> 2 users
->     Memory failure: 0x18b00e: recovery action for dirty swapcache 
-> page: Failed
->     page: refcount:2 mapcount:0 mapping:0000000000000000 index:0x20ffd 
-> pfn:0x18b00e
->     memcg:ffff0000dd6d9000
->     anon flags: 
-> 0x5ffffe00482011(locked|dirty|arch_1|swapbacked|hwpoison|node=0|zone=2|lastcpupid=0xfffff)
->     raw: 005ffffe00482011 dead000000000100 dead000000000122 
-> ffff0000e232a7c9
->     raw: 0000000000020ffd 0000000000000000 00000002ffffffff 
-> ffff0000dd6d9000
->     page dumped because: VM_BUG_ON_FOLIO(!folio_test_uptodate(folio))
->
-> CCing Jinjiang Tu
->
