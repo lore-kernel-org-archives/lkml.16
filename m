@@ -1,179 +1,106 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE982AF19
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075D786337;
+	Thu,  5 Jun 2025 06:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749103304; cv=none; b=pFzv4aZq4fVVAJxnKw6g51ha5NN1Y9yzZZUyqp8u2heRv+i/CibObqBSc1v7WenOgQd4Gcvq+Z1eibfSGSExjU7HTijYMjx8NLpw2WtgfaI8c8kE1h4yvt/pdcCKeVb4CjXeFZs2Gh7CkWIwWE7B1Fui3UJND+HGgEYZr1CEbhk=
+	t=1749103471; cv=none; b=eNbcH9L5b48+Hbi0cAydIJmfDXzJ+Di2Upk7344U7RSNsTMrX7QCGHJy2XwRNl/GGRmOzqPPFyY+RnN7adUVs6AuOhzaNyGBXDe6dzmm1m3ujRuqS0dVQ2mnMqSUwxJJVW+vS8i5l/SoY6Sk4GQ7jClLf+W7lJ7JtSHYTeGLC9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749103304; c=relaxed/simple;
-	bh=M8QZmBD0ZPJrqhiSCNNbeJu51o5CaN/7G3c+Xl8U2Z4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tArJGxl9ZkYTFUaAx6MhLgcP+P4WiCJWZ9JFAalGAhi87Al2R8XK7hObiK9SOx/KFGmZWynpboZKA58RvCW7Qql4AsFd8odCxIhg+f4A6Sf8WePiey5PvYmYa7IAH7KSpZ/NNIvF/uPdGZy+b1Cso2WNfdrz4rVXPWU+Ku3ZHaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MjByNuoe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WzwLABCF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MjByNuoe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WzwLABCF; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749103471; c=relaxed/simple;
+	bh=RZxpLfhIRq9MDyCn7PC1IqQd3NaFFgnnFlYQvCjgl1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AGiGeQAMhy7dZnEjwzXPrGkpOqSvqPxVMNP7fVU6vH7Q73Mi+FlMbsSkkXY8/Ym4iZHLwbxAAf4DnoOX8HOg7TodZluh1Ns37DElQYmSbkSNkJwzhKEMbeB8Zr08pcEFrHyGFnaIjqL5h+t1I/Eb3Z4+oWMe32lkazNcRfQnt5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XoasEWsE; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MjByNuoe";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WzwLABCF";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MjByNuoe";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WzwLABCF"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D25B23439D;
-	Thu,  5 Jun 2025 06:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749103300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OT4buQt3ej32l9/4XvTTl1cX0WhBmPm7BItKSnIsM2o=;
-	b=MjByNuoeusKBGJlxCeEtrBgj3YYWOIGDwhCT0U7EE5Zv0rgls1YlAcT4dfb23+Sl7JtJEo
-	M2R77XXC1MwXC4HoKpelmVnHVig2a6CFPmCdj0LYCB8LZUuUUsxoJp8VKutPNuAnLOgsAn
-	R+abXclUv6zEzLag9iNg7YYQxywomPM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749103300;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OT4buQt3ej32l9/4XvTTl1cX0WhBmPm7BItKSnIsM2o=;
-	b=WzwLABCFJ4h6cFprUossKHY+Gu8NppE9YkMzXfuHAFDnWMI/dX0B3OMSETUazIM88jPo/5
-	fdw56EACvlUzddBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749103300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OT4buQt3ej32l9/4XvTTl1cX0WhBmPm7BItKSnIsM2o=;
-	b=MjByNuoeusKBGJlxCeEtrBgj3YYWOIGDwhCT0U7EE5Zv0rgls1YlAcT4dfb23+Sl7JtJEo
-	M2R77XXC1MwXC4HoKpelmVnHVig2a6CFPmCdj0LYCB8LZUuUUsxoJp8VKutPNuAnLOgsAn
-	R+abXclUv6zEzLag9iNg7YYQxywomPM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749103300;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OT4buQt3ej32l9/4XvTTl1cX0WhBmPm7BItKSnIsM2o=;
-	b=WzwLABCFJ4h6cFprUossKHY+Gu8NppE9YkMzXfuHAFDnWMI/dX0B3OMSETUazIM88jPo/5
-	fdw56EACvlUzddBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 812001373E;
-	Thu,  5 Jun 2025 06:01:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id u+uNHcQyQWjsEQAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 05 Jun 2025 06:01:40 +0000
-Message-ID: <2455a292-5bba-4e6e-ab85-4fed0f917d7d@suse.de>
-Date: Thu, 5 Jun 2025 08:01:40 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XoasEWsE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749103470; x=1780639470;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RZxpLfhIRq9MDyCn7PC1IqQd3NaFFgnnFlYQvCjgl1g=;
+  b=XoasEWsEb0PwgqCZz+cHCMZkdZRemmNqIPlDJL1G8HUbd1u24JFht+WO
+   EzYTVRbNCmlO+o+RKrSiuvBnI7LQHMwzAGyqo/KF3yvbVPYUuC4Rnoj0d
+   lGx6OHFSQgP5fHUk19ayQMmsmtNJ+gxu+1IFzIlvAADj1DIx/hXtzMIcG
+   PpvdvFxoP3/nhdrV6clAz3mzie9QW/lX3zuqKpS2c3PTDRDIR9mjAqOxW
+   S4vwkuFF4Ik1d1pR41/M9aR6+tzbTtZJ3psrA2Rtxgsph+ESc390LmFeC
+   nuxG4JeACksJ3l81/7SNIzmbaer6t6BFIps8gCjttu0HHhn6jomuQTzVy
+   g==;
+X-CSE-ConnectionGUID: VR2OW/oCQ+uk1ZOrb0d1Ow==
+X-CSE-MsgGUID: UXWvV5SIQ4KkDq7TVDItKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="38837851"
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="38837851"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:04:29 -0700
+X-CSE-ConnectionGUID: utlLf4pZQPODm/+M2F+6mA==
+X-CSE-MsgGUID: aKLhIUSCTNmCCS/ak7G/Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="145905398"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:04:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uN3iA-00000003mBg-218f;
+	Thu, 05 Jun 2025 09:04:22 +0300
+Date: Thu, 5 Jun 2025 09:04:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, nuno.sa@analog.com,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v10 07/12] iio: adc: ad7768-1: Add GPIO controller support
+Message-ID: <aEEzZjfLVUW1kyC9@smile.fi.intel.com>
+References: <cover.1749063024.git.Jonathan.Santos@analog.com>
+ <eb48ea5f11503729b15a36ef00c89de3dd37bcc3.1749063024.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi/fcoe: simplify fcoe_select_cpu()
-To: Yury Norov <yury.norov@gmail.com>, Bart Van Assche <bvanassche@acm.org>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>
-References: <20250604234201.42509-1-yury.norov@gmail.com>
- <0959d3c2-b849-4826-8edf-d72a89fbadff@acm.org> <aEDmXvKAvJfjMrCk@yury>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <aEDmXvKAvJfjMrCk@yury>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,acm.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[hansenpartnership.com,oracle.com,vger.kernel.org,kernel.org,gmail.com];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb48ea5f11503729b15a36ef00c89de3dd37bcc3.1749063024.git.Jonathan.Santos@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 6/5/25 02:35, Yury Norov wrote:
-> + Tejun, Lai
+On Wed, Jun 04, 2025 at 04:36:43PM -0300, Jonathan Santos wrote:
+> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 > 
-> On Thu, Jun 05, 2025 at 08:13:53AM +0800, Bart Van Assche wrote:
->> On 6/5/25 7:42 AM, Yury Norov wrote:
->>> diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
->>> index b911fdb387f3..07eddafe52ff 100644
->>> --- a/drivers/scsi/fcoe/fcoe.c
->>> +++ b/drivers/scsi/fcoe/fcoe.c
->>> @@ -1312,10 +1312,7 @@ static inline unsigned int fcoe_select_cpu(void)
->>>    {
->>>    	static unsigned int selected_cpu;
->>> -	selected_cpu = cpumask_next(selected_cpu, cpu_online_mask);
->>> -	if (selected_cpu >= nr_cpu_ids)
->>> -		selected_cpu = cpumask_first(cpu_online_mask);
->>> -
->>> +	selected_cpu = cpumask_next_wrap(selected_cpu, cpu_online_mask);
->>>    	return selected_cpu;
->>>    }
->>
->> Why does this algorithm occur in the FCoE driver? Isn't
->> WORK_CPU_UNBOUND good enough for this driver? And if it isn't
->> good enough, shouldn't this kind of functionality be integrated in
->> kernel/workqueue.c rather than having the above algorithm in a
->> kernel driver?
+> The AD7768-1 has the ability to control other local hardware (such as gain
+> stages),to power down other blocks in the signal chain, or read local
+> status signals over the SPI interface.
 > 
-> (I'm obviously not an expert in this driver, and just wanted to cleanup
-> the cpumask API usage.)
-> 
-> It looks like the intention is to distribute the workload among CPUs
-> sequentially. If you move this function out of the driver, someone
-> else may call the function, and sequential distribution may get
-> broken.
-> 
-> If sequential distribution doesn't matter here, and the real
-> intention is just to distribute workload more or less evenly,
-> we already have cpumask_any_distribute() for this.
-> 
-This function is used to distribute incoming skbs onto a work
-cpu. And it's actually quite pointless, as the skb already
-has a field (skb->sk->sk_incoming_cpu) which tells you exactly
-on which CPU this skb was received, so we should use that
-here.
+> Add direct mode conditional locks in the gpio callbacks to prevent register
 
-I'll send a patch.
+GPIO
 
-Cheers,
+> access when the device is in buffered mode.
+> 
+> This change exports the AD7768-1's four gpios and makes them accessible
 
-Hannes
+GPIOs
+
+> at an upper layer.
+
+...
+
+I haven't seen in the commit message nor in the comments why GPIO regmap can't
+be used. (No need to resend, just reply here, but keep in mind in case of a new
+version of the series.)
+
 -- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+With Best Regards,
+Andy Shevchenko
+
+
