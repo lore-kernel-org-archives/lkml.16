@@ -1,171 +1,192 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19AC27F75C
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 22:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFFD211A11
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 22:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749163350; cv=none; b=kqSFQB414B20ki0ScyIjbZ9D51IsgR3m1lha+qEdl5suNJPApbK7ENqLEze+VSaohds2lXzRJKyMgQDLhg7ZK1DB7kkpi2T4T4Orxy7VVmdZN5iwmCy5wVITCeQZR5efzLLTCijFL5tw8GK4vl/Kv9HD24wHXpB9Eyxxl4ciltM=
+	t=1749163529; cv=none; b=elpES4Rrs7fqhBs4L6DS/mnd6NhlNy2In+2EyRHe9rNmR89TBR+GlY7LTOsTd9QE4+CwVBygr0nV3XsHSdknZ43YYyXi2I4JHTV8Jlv5QaJbVqx4zItlG96BzoFTkqgEwmmGPxi+5Q3H/27Er0QDbDpTi5CCwWEavy7yBfKddRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749163350; c=relaxed/simple;
-	bh=R7dbsBZjJE2Azjg5R1VQDyU3z2Exy8+C3l8TPo4Ywkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=izv9fVwhqxotyqP4Wh7EMBVR9qZOEl3UiEFxTnEOSjiHI8hFJo09GJ/lnDpONQrGwBTdN/o1hulnhspe2maqVVjRiSBhiZWOBOgT1pCJtDxFSGLapHKlVfTqeIsIdLemsr4rVeqZUmudg/OzT/gl8tpyZwvM/FMP4R4/HCJpU2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ZxYHmSnP; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1749163529; c=relaxed/simple;
+	bh=6YuAfwZQJjuClEHEe0uU4Jv+uNSJ56oYiKv6H3ihh0M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BXcjiosEYc7iyS7yfeP4JOui3Wi7TkUcMakbP5w6LEg73T/4wkr6UdjGcsx5dOE59DDlX4Vt4yLVCTjJFh+8VVPXzl1WwB9zBNHx27CM1YyNHaqJprQENHjndWNa6HaNBu5mHon42PlJ8wzhjeWKBLdfhqA/DWD+QMRgMkBZEmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HPfmmRSr; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZxYHmSnP"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22d95f0dda4so20212555ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 15:42:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HPfmmRSr"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23507382e64so13647415ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 15:45:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1749163347; x=1749768147; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q5468u4m8pLTcYAildW7Ghv+ZFxFp/ImHQGuCTAzbeI=;
-        b=ZxYHmSnPDRHWwvdnWBOjcgmuqLw70PiX2ExgOOF8lWNl7C8FBkvzbtjiX0l8MBc3Zr
-         ZiA4eakMctBTSUPxbr+9zGA+91n9L/fC6gzEizEowg2NW4j6V9NkSUgETW7w7YWtfJdJ
-         1U+QbIetBY4ttOTRboM6yDSff39gVApD6VShA=
+        d=google.com; s=20230601; t=1749163527; x=1749768327; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ugvQvrQ0LdnzKH+hQvM3dsEHBtBiigm9XRnIEkv/Xbo=;
+        b=HPfmmRSrBV9p4Y+tg9QVvq2mOBBeEpgkErqlYEGQh6hBQouAjtmTRXbhPgUZNLDoPz
+         dI9Oc7AzSxVBHljlSfQL+XobIt7bPhp1/KMJFuhESEKYu2brIKAX7Iv+u3ouLNoKkPSd
+         CI0L/I7Cl24y/Obhi6XcN4DFwQ7yGuSCgoq9B+MZgCwmXosWi/MQS+3dNxij1PHd51HU
+         49+Q94dv8Lx0ewVzXipQbiIq2H3j5zBomWju6z0k2xkaLqQ22670T1NNQwb56DbcqNeM
+         VsucFXDNztFJ0ECbYyUFa6WA5wHnXMFqmmruO4FvGH/2PiSi9v3LXr2K4afRDHNv2v57
+         yygA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749163347; x=1749768147;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q5468u4m8pLTcYAildW7Ghv+ZFxFp/ImHQGuCTAzbeI=;
-        b=X2aIqHlPM8ZItKsJbHM1Cd7HA75x0oFg09ba63Gz/lNbBMUGNN2CWVTkiX+79Hi+T2
-         Lb8XvdCzsIByMrYi1EcQ4b3HzQLProFuZ12UZTHVyuI09l+zbF3kpyfSdK5e+cO1XP5c
-         mY971P7ZCTXF4zpyjqBcaFYaVwR7geJKgaD23flyYNcnObnN+u4sw7OQ7pgy8iW+LWjn
-         335lxUCAIor+cuj77vCGhErky1T2rn7tGow52RdjRDZuQjdpDBjIO2Xr21gOzAYrKXgh
-         WuGizii+CPa0Mbbw1X+gKD7xJdXw97xN6IJyF0EisjWriza7yHUuf1MtaYCyvvFATAWi
-         /csQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOy7mb7dS/zXY+8o5OtxjGketXtgwztjb/EQHwDC20b4X6OcbDFF4KMW5C1RV/rQQHrdQqZInHdwD49bw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7+bqkGkxoIXK9p8MxYa/q7w546BCGJAm6FgfPD+iE+4eEzosg
-	73gmqfXy8d6z5OTMhXFHkua0aeZVmUs7K3UQeyIz2yuFAcOAniA/8kJ9aQYnGKC7/w==
-X-Gm-Gg: ASbGncucUQE7E0ZOtgTF4wuua+Qi0R1J042A0yvRSLlibiKpeHN+7y74M1lscmkU+w4
-	4+XJ/AYAzom9+w5yUncKvC5J8KOYk0opm+Zd5m4g/rGKSXhUUEmjvJ/+jxHNNE9Jzt0q9r7IDtu
-	EW1FcmGBuO8UOlvnN6gJEb7LpnwtJjbr+37G9UJ025zlrqQ+76ivwn+C/eK3WE57K/OHFvc4Jb6
-	Ywv5IMJk27jtJwsZkF5je7pvJQRyVRu/iTuZWW/qOPTlIYH/N4ZzlX9vm5YZVKp62Qrh3CvT7FA
-	vxjZBSEdVXUUbkIcbu0PAL+IZ6hT7zzmP6kkOvCAR8BzPlgLDhmXr6oHH1GyBgvfZxHCXJAlQ82
-	1dB1b2qAZoQs9RjU=
-X-Google-Smtp-Source: AGHT+IHHHFpE6BSf2Tcrq2DmOOYCDTLBu5+JqxnkzhVqzpPGSyscTwfKDff0mEiWe3sKIkDAXlZjpg==
-X-Received: by 2002:a17:903:1245:b0:234:8e54:2d53 with SMTP id d9443c01a7336-23601da9ad1mr13792835ad.45.1749163346985;
-        Thu, 05 Jun 2025 15:42:26 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030926dcsm1157345ad.65.2025.06.05.15.42.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 15:42:25 -0700 (PDT)
-Message-ID: <91ba9f70-3e8e-46f4-bd77-36abb8fae850@broadcom.com>
-Date: Thu, 5 Jun 2025 15:42:23 -0700
+        d=1e100.net; s=20230601; t=1749163527; x=1749768327;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ugvQvrQ0LdnzKH+hQvM3dsEHBtBiigm9XRnIEkv/Xbo=;
+        b=rxkC28jK9XT8ctAb6dMWoMYR1hiR8N5h8HFj6MC5zrODF8+Y8LklfrWXD5AbJ/pLpy
+         67ndicoBxM08zJUz+BoWIL0eYhwKPZq0RgpteRBsH3kl+88wjEC4s2FM2o/jE8doPsH6
+         IJdsqcNmG63juzSR/+Ca0jZZ3MEO3T174k/1KHT9tVviivFrq5whjjT6RR3SrTguEEJJ
+         zkkvrts57wxSSzagBIEK7aykFR1t5CoC9VNkKFlDxXTNACcr7KIp+UsvK4DhN/gbikLu
+         iEzD6kc1iUD1HMeITbZew3LiKiOQi5Ci9BBUJ7AvhVa+qiCNTZMEeOdsswSwTIcjm6d4
+         YN4w==
+X-Gm-Message-State: AOJu0YyLvpkiKbixNTSlqWPCf3mHs4OfeGXTDUcwRkMv3QzHA8W9dqJt
+	pQInYQpxf35dEfwmfzn6vldS/kSrJW5yyvMi6Qi4P9fAoUqBQa20ONxii5skfTtGRnvHuIlgsAg
+	uZ1wXmA==
+X-Google-Smtp-Source: AGHT+IF4XA/cekiM7zz30QoLBWk54GmCCOInuS1IOF6zdOMi/h4d856on0mJoA5XVDm65MtEqJtNKw45MiM=
+X-Received: from pjbqo14.prod.google.com ([2002:a17:90b:3dce:b0:2ff:84e6:b2bd])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce82:b0:234:bc4e:4eb4
+ with SMTP id d9443c01a7336-23601dec370mr11746275ad.51.1749163526816; Thu, 05
+ Jun 2025 15:45:26 -0700 (PDT)
+Date: Thu, 5 Jun 2025 15:45:25 -0700
+In-Reply-To: <20250401161106.790710-8-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes
- property
-To: Rob Herring <robh@kernel.org>
-Cc: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20250530224035.41886-1-james.quinlan@broadcom.com>
- <20250530224035.41886-2-james.quinlan@broadcom.com>
- <6c3ec1c3-8f62-4d76-86d3-c1bbe3e1418f@broadcom.com>
- <2f79ae4e-6349-472c-b0cc-ea774b8ac7cf@broadcom.com>
- <CA+-6iNz48EFUGUOiHCSaqgsU_tKGV1=Xvw4fjoUS_AMhUHAi6w@mail.gmail.com>
- <3037cd65-89e8-4029-9ee2-4695db5987ad@broadcom.com>
- <20250605223603.GA3375348-robh@kernel.org>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250605223603.GA3375348-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250401161106.790710-1-pbonzini@redhat.com> <20250401161106.790710-8-pbonzini@redhat.com>
+Message-ID: <aEIeBU72WBWnlZdZ@google.com>
+Subject: Re: [PATCH 07/29] KVM: do not use online_vcpus to test vCPU validity
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, roy.hopkins@suse.com, 
+	thomas.lendacky@amd.com, ashish.kalra@amd.com, michael.roth@amd.com, 
+	jroedel@suse.de, nsaenz@amazon.com, anelkz@amazon.de, 
+	James.Bottomley@hansenpartnership.com
+Content-Type: text/plain; charset="us-ascii"
 
-On 6/5/25 15:36, Rob Herring wrote:
-> On Tue, Jun 03, 2025 at 10:17:26AM -0700, Florian Fainelli wrote:
->> On 6/3/25 10:16, Jim Quinlan wrote:
->>> On Tue, Jun 3, 2025 at 12:24 PM Florian Fainelli
->>> <florian.fainelli@broadcom.com> wrote:
->>>>
->>>> On 5/30/25 16:32, Florian Fainelli wrote:
->>>>> On 5/30/25 15:40, Jim Quinlan wrote:
->>>>>> Add optional num-lanes property Broadcom STB PCIe host controllers.
->>>>>>
->>>>>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->>>>>
->>>>> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
->>>>
->>>> Sorry I take that back, I think this should be:
->>>>
->>>> num-lanes:
->>>>      enum: [ 1, 2, 4 ]
->>>>
->>>> We are basically documenting the allowed values, not specifying that we
->>>> can repeat the num-lames property between 1 and 4 times.
+On Tue, Apr 01, 2025, Paolo Bonzini wrote:
+> Different planes can initialize their vCPUs separately, therefore there is
+> no single online_vcpus value that can be used to test that a vCPU has
+> indeed been fully initialized.
 > 
-> Are you confused with maxItems?
+> Use the shiny new plane field instead, initializing it to an invalid value
+> (-1) while the vCPU is visible in the xarray but may still disappear if
+> the creation fails.
 
-Yes I am.
+Checking vcpu->plane _in addition_ to online_cpus seems way safer than checking
+vcpu->plane _instead_ of online_cpus.  Even if we end up checking only vcpu->plane,
+I think that should be a separate patch.
 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/i8254.c     |  3 ++-
+>  include/linux/kvm_host.h | 23 ++++++-----------------
+>  virt/kvm/kvm_main.c      | 20 +++++++++++++-------
+>  3 files changed, 21 insertions(+), 25 deletions(-)
 > 
->>>
->>> num-lanes is already defined as
->>>
->>>       enum: [ 1, 2, 4, 8, 16, 32 ]
->>
->> Right, but then we need to re-define it with our own specific constraints,
->> still, don't we?
-> 
-> It is correct as-is.
+> diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
+> index d7ab8780ab9e..e3a3e7b90c26 100644
+> --- a/arch/x86/kvm/i8254.c
+> +++ b/arch/x86/kvm/i8254.c
+> @@ -260,9 +260,10 @@ static void pit_do_work(struct kthread_work *work)
+>  	 * VCPUs and only when LVT0 is in NMI mode.  The interrupt can
+>  	 * also be simultaneously delivered through PIC and IOAPIC.
+>  	 */
+> -	if (atomic_read(&kvm->arch.vapics_in_nmi_mode) > 0)
+> +	if (atomic_read(&kvm->arch.vapics_in_nmi_mode) > 0) {
 
-Thanks!
--- 
-Florian
+Spurious change (a good change, but noisy for this patch).
+
+>  		kvm_for_each_vcpu(i, vcpu, kvm)
+>  			kvm_apic_nmi_wd_deliver(vcpu);
+> +	}
+>  }
+>  
+>  static enum hrtimer_restart pit_timer_fn(struct hrtimer *data)
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 4d408d1d5ccc..0db27814294f 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -992,27 +992,16 @@ static inline struct kvm_io_bus *kvm_get_bus(struct kvm *kvm, enum kvm_bus idx)
+>  
+>  static inline struct kvm_vcpu *kvm_get_vcpu(struct kvm *kvm, int i)
+>  {
+> -	int num_vcpus = atomic_read(&kvm->online_vcpus);
+> -
+> -	/*
+> -	 * Explicitly verify the target vCPU is online, as the anti-speculation
+> -	 * logic only limits the CPU's ability to speculate, e.g. given a "bad"
+> -	 * index, clamping the index to 0 would return vCPU0, not NULL.
+> -	 */
+> -	if (i >= num_vcpus)
+> +	struct kvm_vcpu *vcpu = xa_load(&kvm->vcpu_array, i);
+
+newline
+
+> +	if (vcpu && unlikely(vcpu->plane == -1))
+>  		return NULL;
+>  
+> -	i = array_index_nospec(i, num_vcpus);
+
+Don't we still need to prevent speculating into the xarray ?
+
+> -
+> -	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu.  */
+> -	smp_rmb();
+> -	return xa_load(&kvm->vcpu_array, i);
+> +	return vcpu;
+>  }
+>  
+> -#define kvm_for_each_vcpu(idx, vcpup, kvm)				\
+> -	if (atomic_read(&kvm->online_vcpus))				\
+> -		xa_for_each_range(&kvm->vcpu_array, idx, vcpup, 0,	\
+> -				  (atomic_read(&kvm->online_vcpus) - 1))
+> +#define kvm_for_each_vcpu(idx, vcpup, kvm)			\
+> +	xa_for_each(&kvm->vcpu_array, idx, vcpup)		\
+> +		if ((vcpup)->plane == -1) ; else		\
+>  
+>  static inline struct kvm_vcpu *kvm_get_vcpu_by_id(struct kvm *kvm, int id)
+>  {
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index e343905e46d8..eba02cb7cc57 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -4186,6 +4186,11 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+>  		goto unlock_vcpu_destroy;
+>  	}
+>  
+> +	/*
+> +	 * Store an invalid plane number until fully initialized.  xa_insert() has
+> +	 * release semantics, which ensures the write is visible to kvm_get_vcpu().
+> +	 */
+> +	vcpu->plane = -1;
+>  	vcpu->vcpu_idx = atomic_read(&kvm->online_vcpus);
+>  	r = xa_insert(&kvm->vcpu_array, vcpu->vcpu_idx, vcpu, GFP_KERNEL_ACCOUNT);
+>  	WARN_ON_ONCE(r == -EBUSY);
+> @@ -4195,7 +4200,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+>  	/*
+>  	 * Now it's all set up, let userspace reach it.  Grab the vCPU's mutex
+>  	 * so that userspace can't invoke vCPU ioctl()s until the vCPU is fully
+> -	 * visible (per online_vcpus), e.g. so that KVM doesn't get tricked
+> +	 * visible (valid vcpu->plane), e.g. so that KVM doesn't get tricked
+>  	 * into a NULL-pointer dereference because KVM thinks the _current_
+>  	 * vCPU doesn't exist.  As a bonus, taking vcpu->mutex ensures lockdep
+>  	 * knows it's taken *inside* kvm->lock.
+> @@ -4206,12 +4211,13 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+>  	if (r < 0)
+>  		goto kvm_put_xa_erase;
+>  
+> -	/*
+> -	 * Pairs with smp_rmb() in kvm_get_vcpu.  Store the vcpu
+> -	 * pointer before kvm->online_vcpu's incremented value.
+
+Bad me for not updating this comment, but kvm_vcpu_on_spin() also pairs with this
+barrier, and needs to be updated to be planes-aware, e.g. this looks like a NULL
+pointer deref waiting to happen:
+
+		vcpu = xa_load(&plane->vcpu_array, idx);
+		if (!READ_ONCE(vcpu->ready))
+			continue;
