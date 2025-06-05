@@ -1,57 +1,57 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1020127F18B
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DF027FB06
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749153030; cv=none; b=KXpD4rNev6qCXdrr+ay7Tm13cUOYLqYX05+1Hh8s8YSpFd+CMRLg60phs6KYYToaMnwJ2a0dtQyH9FDqBnOGeVJPJ13Fr+xzLa8NzMtaSKgiURNoJWwn2Y9+/FWFL5xlUs+9I8F7GqeyhC9EPO2QfS5IhB0poBR4nsq81SfLmnw=
+	t=1749153032; cv=none; b=MtA4b8La6khll/OFTtEyyHkDtbMPUfmTOymmnbdleYSlBOzA/p6BvqX39gSANwethX/KrPPsFAwGOj31QFrIjVVt5PwwfWaJKvNsaCGyVcr1SOJn8sPb+Tpc98OPsSSVSiRznW+ff8cjVqqbcHnq9i+um1pMhkyhP/++/yT83qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749153030; c=relaxed/simple;
-	bh=dMMmeVqG6y64MjPQv22VwPgGnCrbMuVJu5GSj+ydhl0=;
+	s=arc-20240116; t=1749153032; c=relaxed/simple;
+	bh=DLH64El6OXN5WMeklaHTszwSOe1DG7x14NJ32u/E2Aw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZNfNLLIiKjTeD0rpLk28JevDiKPlPv/casKbbp/mSysbriD/JXEv7r12kmMHSQ5OkgRPH22ldhcxI9nJb2RfLqickHxO3LWeDbmPwk+9rD/aE96c40iWXx64fKeUIOZF6U49H1axjMun5G3bfYki41ngfk2kkn46H8PTc+m8TQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z0vCB+pS; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=gQhxOT7HaUpRbSH4DxWMRYvb3JX51O3tTketwISgo+hsbAtfpECLQ5I2dM0i7fGVOCc+sdearI3lbmgPT4VLKDStGvT+2txaU4zNjI16OyMks3pN3NJXJSqWS3bgy7B1r9TfSNUP3iMuSlt5d5P9S+sOuLMrXioA1Ilwp4/0Vb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wO0pDk8T; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z0vCB+pS"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-312df02acf5so1964377a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:50:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wO0pDk8T"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311f4f2e6baso1535214a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:50:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749153028; x=1749757828; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749153030; x=1749757830; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=e5/ya4b8F4i6OaZk//U+SRw0E/FULSSadOHslX+QOmc=;
-        b=Z0vCB+pSagNZB5OyKJKNZov6STd8iuhhlIpFDoZMVkB55vprgsNTFwp1j53o762uX1
-         775gVQLvRnre/iTV6WR0IsW8UBsslakXcc9mrZd01B9TC9aRYMu770eeaapInwnAm29V
-         OyswQXrYmum2ILnKJOtoVhAhhOpghrF4kywmxEby0iLNiJGTUJA7mUsjUGxabKl6Gzup
-         JOHx1q4xaaC/n6pidysWmfBXQeT1fTcmh3KUoZ7hp6yiexKg1Esap3ASy8CjIYSRqIjP
-         sHn3wmk91neq6Z4wpMYk4Jzx9ocoUe0TvpkJntxBTl5KRKOa0ym+XHgwydovLHb6mre6
-         c7gA==
+        bh=TadzeiVx8KJvVm3F7EgQlyQo6nVjOUl2f4eK4MtVzDs=;
+        b=wO0pDk8TKceRBFpWSm4T8E5cZEShgaAHa0Qm0fNpHB/Vn9Etw2ApfX1fR2klEhoTi8
+         zDm5JA/6WRKAb6awbUhcGNujI9+WXiffPHs6bIb2jiw6Zi5/BEp7dXKCB/Xkr5gWv/xE
+         QZZ7x9QMD/ELb69QJs+Mzx/M8ZvUGk/ofu3cvx+GwTT56NHkCdQF4kKtFZg7LwLiposh
+         62mhAtBwIFE3rihT35kYuPA9Fk6Kl251CSbm1xkVfiZ/CPASMjxVOzy1FwtR/hqf2gTm
+         e2Aak4cTZXkBPzGzGDa8PIjfX2R85WACzQJ1cwvfeOSme5R+U4wyPljW9DAXmD+7A9UR
+         umSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749153028; x=1749757828;
+        d=1e100.net; s=20230601; t=1749153030; x=1749757830;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=e5/ya4b8F4i6OaZk//U+SRw0E/FULSSadOHslX+QOmc=;
-        b=lDg+HMjMzSf9pT2x+EWM5CX2ci3NHijxzx/0+60DdLfLh+H92IuGFzYW7n/XWuqSIb
-         ijJEAQkrf45G45shjnaJpJsTf3jVKLmflunUelfLffD1K0NetxwZq63xVgJyib9U2wnT
-         HV+YtwYNevaHeHqT4295SVeEnojaAd7RNqFpekdvN/shMoPA8IE49+Ts+rrWvZ0ro/1A
-         potg09+alRpZ9VejdqDBwAWc65YA6toZqTPJYc/6BJiXaMsQo8MEBe9nKzBYGkxKy3rE
-         JYrQHr1gfOrYdkO6hyqairJ2kMKcFQ80QkMMa3fqARStw+Sg10niWY40dpV5cYWEUt7q
-         Tnlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxhNUErVlIUxEdp3uqRDOemEKG6/Xt+08xGG8tENLPPGpYSxd8ThFWiX1AWnPPJQQVUGzTR9tVNL/8mPg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyh3jdaAuovD2fEzSb6XY6jtEl23tAISnqldQLjUrpRQ+emluKC
-	GCRz0b8is3l+3oVw6KbES1kgZvX34lAZKUntwS8x1463R8twhqNxX72H3HnG63kWamLO+6S/ymE
-	WL2fONQ==
-X-Google-Smtp-Source: AGHT+IES7OKRIKK/BU05Qe7TJH5y0xsr3cOFiTR2JP9IX0NjNsoT6bbpcvX5TnLErMO9fBPCLPkFIeaGAT4=
-X-Received: from pjbeu15.prod.google.com ([2002:a17:90a:f94f:b0:311:6040:2c7a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5866:b0:311:be43:f09a
- with SMTP id 98e67ed59e1d1-31349f53ea6mr632451a91.9.1749153028181; Thu, 05
- Jun 2025 12:50:28 -0700 (PDT)
+        bh=TadzeiVx8KJvVm3F7EgQlyQo6nVjOUl2f4eK4MtVzDs=;
+        b=D+OtTRs6YKENLYS8iUB2i5e284Qy8mJ6MwEP9L97ARR6hlm8Q+tiv4CdX/4Z4M74tc
+         /S79gF9iEBDhfExA3aLz63mWRKNqY2rQLjt6CWpAo7a7csKimCZTXtTSWEaXkdL5T7EW
+         jlO5bAeiktT5OwW6LGRtGIXc4mm+tQlk8u/ZmouMlazQA4XAxpesqgq4wzlqxSQZ5MQ4
+         tw5PBic+2fr9ECLWlt8nh/IHLGRqF7FbRUGz0dCRRUaTw7Xw9jXKvUnPdhJriGXJIGfv
+         jOjWiwuT3M4EoyYAR0fiFxQ/VIRvMm7+hV9zA0vyeJ7o6T9hrs7dsPE1QCZlqy7WdTjB
+         P4HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSsmqdRE+NDVKQNMf0h9wNSj8AiZIvcRJ+h8DomX/Ji5PWQsfTkpHwjll2fS12CGxxi/MoSO8iBOarqa4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuIKCQQK+VGsRUDFhwSsNuP35aD70sJV7ni0+JCrtWxVboBRlZ
+	KYskTaa8jCQ42kMpVSZmuiaaGT7cG2xrFxafrlwkP6Mosa63cBxREB7K6VuwGemEf4/ezuNFTBv
+	jz8Jj3g==
+X-Google-Smtp-Source: AGHT+IFqrgAXjDGGMOzkv9dbrRl1muhwdNPcu0ofy/G9fG1cymdj30b4P9mWjIJs9OS5z/LFkKNVH2aTo2o=
+X-Received: from pjbqo7.prod.google.com ([2002:a17:90b:3dc7:b0:312:e5dd:9248])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1e42:b0:312:e731:5a6b
+ with SMTP id 98e67ed59e1d1-31347799bd0mr1146466a91.32.1749153029991; Thu, 05
+ Jun 2025 12:50:29 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu,  5 Jun 2025 12:50:17 -0700
+Date: Thu,  5 Jun 2025 12:50:18 -0700
 In-Reply-To: <20250605195018.539901-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,87 +61,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250605195018.539901-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-Message-ID: <20250605195018.539901-4-seanjc@google.com>
-Subject: [PATCH 3/4] KVM: x86: Move INIT_RECEIVED vs. INIT/SIPI blocked check
- to KVM_RUN
+Message-ID: <20250605195018.539901-5-seanjc@google.com>
+Subject: [PATCH 4/4] KVM: x86: Refactor handling of SIPI_RECEIVED when setting MP_STATE
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	syzbot+c1cbaedc2613058d5194@syzkaller.appspotmail.com
 Content-Type: text/plain; charset="UTF-8"
 
-Check for the should-be-impossible scenario of a vCPU being in
-Wait-For-SIPI with INIT/SIPI blocked during KVM_RUN instead of trying to
-detect and prevent illegal combinations in every ioctl that sets relevant
-state.  Attempting to handle every possible "set" path is a losing game of
-whack-a-mole, and risks breaking userspace.  E.g. INIT/SIPI are blocked on
-Intel if the vCPU is in VMX Root mode (post-VMXON), and on AMD if GIF=0.
-Handling those scenarios would require potentially breaking changes to
-{vmx,svm}_set_nested_state().
+Convert the incoming mp_state to INIT_RECIEVED instead of manually calling
+kvm_set_mp_state() to make it more obvious that the SIPI_RECEIVED logic is
+translating the incoming state to KVM's internal tracking, as opposed to
+being some entirely unique flow.
 
-Moving the check to KVM_RUN fixes a syzkaller-induced splat due to the
-aforementioned VMXON case, and in theory should close the hole once and for
-all.
+Opportunistically add a comment to explain what the code is doing.
 
-Note, kvm_x86_vcpu_pre_run() already handles SIPI_RECEIVED, only the WFS
-case needs additional attention.
+No functional change intended.
 
-Reported-by: syzbot+c1cbaedc2613058d5194@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?id=490ae63d8d89cb82c5d462d16962cf371df0e476
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/x86.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ arch/x86/kvm/x86.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c3cbcd9e39f6..9935307ad41f 100644
+index 9935307ad41f..47fef0e7f08f 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -5487,12 +5487,6 @@ static int kvm_vcpu_ioctl_x86_set_vcpu_events(struct kvm_vcpu *vcpu,
- 	    (events->exception.nr > 31 || events->exception.nr == NMI_VECTOR))
- 		return -EINVAL;
- 
--	/* INITs are latched while in SMM */
--	if (events->flags & KVM_VCPUEVENT_VALID_SMM &&
--	    (events->smi.smm || events->smi.pending) &&
--	    vcpu->arch.mp_state == KVM_MP_STATE_INIT_RECEIVED)
--		return -EINVAL;
--
- 	process_nmi(vcpu);
- 
- 	/*
-@@ -11558,6 +11552,14 @@ static int kvm_x86_vcpu_pre_run(struct kvm_vcpu *vcpu)
- 	if (WARN_ON_ONCE(vcpu->arch.mp_state == KVM_MP_STATE_SIPI_RECEIVED))
- 		return -EINVAL;
- 
-+	/*
-+	 * Disallow running the vCPU if userspace forced it into an impossible
-+	 * MP_STATE, e.g. if the vCPU is in WFS but SIPI is blocked.
-+	 */
-+	if (vcpu->arch.mp_state == KVM_MP_STATE_INIT_RECEIVED &&
-+	    !kvm_apic_init_sipi_allowed(vcpu))
-+		return -EINVAL;
-+
- 	return kvm_x86_call(vcpu_pre_run)(vcpu);
- }
- 
-@@ -11906,16 +11908,6 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
+@@ -11908,11 +11908,17 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
  		goto out;
  	}
  
--	/*
--	 * Pending INITs are reported using KVM_SET_VCPU_EVENTS, disallow
--	 * forcing the guest into INIT/SIPI if those events are supposed to be
--	 * blocked.
--	 */
--	if (!kvm_apic_init_sipi_allowed(vcpu) &&
--	    (mp_state->mp_state == KVM_MP_STATE_SIPI_RECEIVED ||
--	     mp_state->mp_state == KVM_MP_STATE_INIT_RECEIVED))
--		goto out;
--
++	/*
++	 * SIPI_RECEIVED is obsolete and no longer used internally; KVM instead
++	 * leaves the vCPU in INIT_RECIEVED (Wait-For-SIPI) and pends the SIPI.
++	 * Translate SIPI_RECEIVED as appropriate for backwards compatibility.
++	 */
  	if (mp_state->mp_state == KVM_MP_STATE_SIPI_RECEIVED) {
- 		kvm_set_mp_state(vcpu, KVM_MP_STATE_INIT_RECEIVED);
+-		kvm_set_mp_state(vcpu, KVM_MP_STATE_INIT_RECEIVED);
++		mp_state->mp_state = KVM_MP_STATE_INIT_RECEIVED;
  		set_bit(KVM_APIC_SIPI, &vcpu->arch.apic->pending_events);
+-	} else
+-		kvm_set_mp_state(vcpu, mp_state->mp_state);
++	}
++
++	kvm_set_mp_state(vcpu, mp_state->mp_state);
+ 	kvm_make_request(KVM_REQ_EVENT, vcpu);
+ 
+ 	ret = 0;
 -- 
 2.50.0.rc0.604.gd4ff7b7c86-goog
 
