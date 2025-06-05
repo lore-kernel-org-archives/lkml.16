@@ -1,163 +1,211 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE421E7C03;
-	Thu,  5 Jun 2025 08:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2740F1DFE12;
+	Thu,  5 Jun 2025 08:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749113937; cv=none; b=tm8RHYS/UB7JAK+ddO2lOkQRtqC/j5knkV3G7SZ/Hf91HVsBeiNhj84bQDfG8uhuKv5z46X8jo35DMtJ/GrRqBcVJguO8J13LKgZBqgN2Fl3eNnQZJBhfi2Ubdo186gNRd7YZ8oDYgKZm2zaQ6ZkLzfGrsBq7VZuTvwUsLyXoZI=
+	t=1749113984; cv=none; b=cIGJBAc0x24tFvZt1htIiOUWwTbMaoVF8Ul2+II8Qfg6Pl+4uUDWggKf92QZnhYMwM5MtLixmMJZHIStgyMsP5mKQhtU3lEduGnqR2i4PzP7t7EOIkK909aJjMpYRyTTJcpgOUUrdJXbbUhFbghi2nLlDcEvQKqwkLRKmcwh+F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749113937; c=relaxed/simple;
-	bh=mKrBiwt6AOlJQSevlQqWsIpniSpxAzoe9MQtZ4al1SA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HU40u9DABDa6qXAXB3n2hyzl9bY2VACaXc+O8q7F9jjkjOzGuibqXbemwsIuy+SEPvqEWPjEEJcpLpVP+jg4HznkQrvSQO1KTyokbZQ1gyl+TDDEkBBZyrtVU6pMnyn0Jt2h71kmjtMRFRYAXKk1BLoezfgPiVgpCfYrC02oQ0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egqsSe+6; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1749113984; c=relaxed/simple;
+	bh=1IQrU1iDuiWW/Hfm8bkjda3OSF3yBkVGdgW8iJKSHIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dbq4oXK5DqZZO+auQPdHloyQNwLNNXq6iWNZ8cdBys/vn7w5kCeZVhl6QnjkBiOibom6y/S3gX69GrdaIzGBT0IWvH6oAjyL8zW6jhWsDZQFka+RUNiVarYDe6sl8fp2Uy7jdeybaRHmaqLsbQzndyCpYsd1Rf2RFoo4j4uqgdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UjGA85JP; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egqsSe+6"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2345c60507bso4873325ad.0;
-        Thu, 05 Jun 2025 01:58:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjGA85JP"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso697502f8f.1;
+        Thu, 05 Jun 2025 01:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749113935; x=1749718735; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kcE+ZTXZDvoOLkfVrKW5KI2HPJPv75omS4jE9Lo/weU=;
-        b=egqsSe+6JgeCE7kpcxvz3vKFfM3IV+qvM8u7xFVTSrBx4hA5CaYi8JREWUs4IYe76O
-         tzKd6sTJPMuQ6oIB+hVZCSRafQhrw3wdhd4luUEGQhcMxfTbgegIeoibAbi8Dz2PDoUW
-         HXN/t09b/mh6ugEAjLs1kMmV9/8ToHD/e3ZcRSu4bfvWr4zIdR89BHq/wIN2dVDPMPq+
-         QNNaIMIBdWtuHF7DuiKcPBYRE67GQrnkaLq+li3WPccPdKnSFqKG/dfvIJ/Xt7AaNhP7
-         ZvyRQ7hO1gXK6k/46UXUoDxfsifJZd+DYtGkiO380F7FtPulr1qrTiU7O6GlGRUuNa/M
-         S4uQ==
+        d=gmail.com; s=20230601; t=1749113981; x=1749718781; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ogjVDhDiMnU/s3WI4h7hVLm4gcfXJF8zSM1Pe2+EESo=;
+        b=UjGA85JPkVvWWdkjrDb/iMSaWXI2aAHfkzfZj0jdRnGoxUcG2ealUruOMoAsW9eRzN
+         D6QmeenWcOgy9t/kIZXA+u0N3n79B3V7hY60JNbGZA3zeei3D5j/kIqWgdIpA8MdlpfO
+         kF9J18I4aV0+EmFGi/+pHgdYmrxLvxAMxPJXRk0NKOkYGMcz0Rf8YPRkAPHiQ/4yhzRV
+         hh2fMvkKNBj11Y5hrvY+m5aV8gXE37EbIPFf4ejRY4nXCRsW+iX1xuKhNhlgIdN3nluU
+         cKvv5UQzVJfaDrNw+x2h5vpLunmQW3q8+YSzMB6F2JgEXvBz2pCQ9BmfpVdaQxn1Rd36
+         uxWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749113935; x=1749718735;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kcE+ZTXZDvoOLkfVrKW5KI2HPJPv75omS4jE9Lo/weU=;
-        b=RjK8449kokKSAyo/sqUhMEh4MlhQc8aNp/V9KYaSsBGf8PzBEhG5e3MR2kIwymL+/i
-         OHSX8temE7oUpIAvn/yAiJY4m1R3BOvC+Bn2eB1G9JNIlaqbbYik88H/llw0MeCBoL0B
-         KXDRM1KVN0T7jn3ADhvVB4AW46HRUSgXzK6JfwfU0h2wx1CWeXs1vUYE4RkUeGqUiO8H
-         41q+Y9gIfDKt06IFVa9129KLET34mWeEBlzxdpBio+/mGNKfgvIO9p2wdQvs61C+hTqv
-         O9JMnMOq5Cf36tlEMlnkbui8pIRBfO9l9TgsuIPdctreCpR7Q8jg/NAT0eQW0fZ5Pgcw
-         0/Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfQlA6I6ETxnryhuf8uO7NhMj0Z+mUrDv3FfaWDGB6jQ4mehCInQduG3Sco/yr33nY1c62QLU09eQDkI5v@vger.kernel.org, AJvYcCWWCTB5c9jBMtRqW1vzd6jqANWtBn9PtY8mUjNY/XVmZKOPGr1GpRr5nSQMPfbqrJ6+pXiA8jgjR+RZmUw=@vger.kernel.org, AJvYcCWac4xMxspL97vImf/LDWs+jyKUPRbORJScbvNV3SjVFmDPYcEuRV26Wz98K/WnvXHIPq9wtcWJWEc5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0LowVPlaWHBi67H2seMLrdNdfjydTq8vuQGG8c3NbLUU6D0GU
-	mmcbAZGt5xqtSbgyg4+fDiQ6IrgauCxe0X6yjquYfHzXq9dFpac/ws/M
-X-Gm-Gg: ASbGnctcwZqd1r8YxpjxAnbb2ojka6w1gIBxFhivLbVPXQF+S3W9fQCh67ZL3TLRYAS
-	Zaflhr0igYPxwwofVBYBFyAJ7tNV+pPPAKqMTEMwA6dDXpJY/mqe0eKKp+86Zmew744RSqmTTdt
-	IEvaEf/QNUtF6ishUtKfyEUpDVJohdnzEI1uHdwj0zh0DHumDrVd9oO5A96bUs27M822+hyE/s5
-	AyQc/PxeZmwrlqF4xMCn5i9BUmFpo61HwcO29lcnQEJNbM7uxa800mztGVq2l8PmxLR/dzAu7sO
-	ndrlz+fJZubjYGMqqAftk9mL6Rjpg8rtUg6OkQj2V9tzl7IAzw==
-X-Google-Smtp-Source: AGHT+IH6vkqchgwcIhSPAD5CrRInVnJne0qPyofCMs5iaGAkLr2B34y6cFmPWiKZWp6Lv3FHpngVQQ==
-X-Received: by 2002:a17:903:230d:b0:234:948b:91c7 with SMTP id d9443c01a7336-235e121e2d4mr83159855ad.51.1749113934752;
-        Thu, 05 Jun 2025 01:58:54 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d22f36sm115857205ad.258.2025.06.05.01.58.48
+        d=1e100.net; s=20230601; t=1749113981; x=1749718781;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ogjVDhDiMnU/s3WI4h7hVLm4gcfXJF8zSM1Pe2+EESo=;
+        b=r7pcSGcUgASbaZWKdlmGqZ5w73efmimzcVy6nm4K9VI23YCD5W0I0RzdPrJNAvS7V8
+         QiuTrrbJVeqdLxSmg0xoU9A/SF+j4ptnwtjpLknF1n49t/UIZZvIdQWZMF9j53Nsoho9
+         /N0UYjMM4aZbQ04XVUeTKTNxVxpfqq8Lg42EKUGyQnu+aRviyzoRMDA19KZ/CM3Bunci
+         pSL3fjKV5DfQc8aWzpqEEHnR7jUr19mjncrXv8S4xTpwssR179zr2dLmA+ujM/LrkDpF
+         kaKYOoyMlOLYdlF8Fo061xsNX5n85/ofxIlYaFrM/yZpBrDIYYZ2EQQMYxckcKx7RdpO
+         VXUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxn4YeQTDkpU0j0YVSezrA5lLfSlgX6jey73YBD3gkrntbJIc0+kbaHFalWLsfgALUDZEYG80r4/T50Ig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpYY/9o+2lZgqnncSMTCjHywU2kaP0rSvzS+SfDayvLpZDI6gj
+	NccvNoLB5C6ech47e/3loUsSAV7YeKeqwApwHYTodygsdXqCoJ5TrO+Js1bXlwuT
+X-Gm-Gg: ASbGncv+pW4a8No9Uz7qQxVsD+kNRs3V7GtT7NhDqX25ixLUemvZb2EP6kDe79leg9s
+	ZnWBFT4WIkBc65CUff+9nO+m4s7QRzBopAnKRrIh14HKGEkvIvxST3FgcGTkaFsrbVzkTa91/+t
+	kBQINMyDxS5F/i6tHOGMvjD/z4vnE5EiAsQH3PKFdIE+ivcbyG0nvL5UPeGy3t9ZzldtfdD7fTr
+	i7bOZOeu7lGi3ESEVTcH9KQsbEz3z2n//U/IhA3ICAodHXN0Iv2RWX4ZD5DhT3IWPF6x8j5lh4H
+	suQ+NjCxNnjKwExdWq6nTykWHm7z4/CVM4fQtuNqZnH7xWmIom5/jpD8yYi6G5B9Pq6T9U2u3H3
+	jW2AeFhFk8zAf2wLxaLU1lwuG56g8+mZhUMU=
+X-Google-Smtp-Source: AGHT+IEzo/+1PtqXUJzfqQ4rzJBMvCxovxZsMpL2szL116m7MitSuowtYBLWA/qIIb6W6jeKzOII8w==
+X-Received: by 2002:adf:edc3:0:b0:3a5:2465:c0a4 with SMTP id ffacd0b85a97d-3a52465c359mr3054884f8f.20.1749113981006;
+        Thu, 05 Jun 2025 01:59:41 -0700 (PDT)
+Received: from Lord-Beerus.station (net-93-70-53-177.cust.vodafonedsl.it. [93.70.53.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00a00d4sm24281167f8f.92.2025.06.05.01.59.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 01:58:54 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: krzk@kernel.org
-Cc: charles.goodix@gmail.com,
-	conor+dt@kernel.org,
-	dan.j.williams@intel.com,
-	devicetree@vger.kernel.org,
-	dionnaglaze@google.com,
-	dmitry.torokhov@gmail.com,
-	ebiggers@google.com,
-	fdmanana@suse.com,
-	hdegoede@redhat.com,
-	kees@kernel.org,
-	krzk+dt@kernel.org,
-	len.brown@intel.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mitltlatltl@gmail.com,
-	neil.armstrong@linaro.org,
-	pengdonglin@xiaomi.com,
-	quic_luoj@quicinc.com,
-	robh@kernel.org,
-	thomas.weissschuh@linutronix.de,
-	yury.norov@gmail.com
-Subject: Re: [PATCH 1/2] dt-bindings: input: goodix,gt9916: Document stylus support
-Date: Thu,  5 Jun 2025 16:58:35 +0800
-Message-ID: <20250605085836.424932-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <0365ffe2-82c6-41d1-ab39-17fe4642bebc@kernel.org>
-References: <0365ffe2-82c6-41d1-ab39-17fe4642bebc@kernel.org>
+        Thu, 05 Jun 2025 01:59:40 -0700 (PDT)
+From: Stefano Radaelli <stefano.radaelli21@gmail.com>
+To: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: othacehe@gnu.org,
+	andrew@lunn.ch,
+	Stefano Radaelli <stefano.radaelli21@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3] arm64: dts: freescale: imx93-var-som: update eqos support for MaxLinear PHY
+Date: Thu,  5 Jun 2025 10:59:04 +0200
+Message-ID: <20250605085904.12199-1-stefano.radaelli21@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 5, 2025 at 1:54 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On 05/06/2025 07:48, Pengyu Luo wrote:
-> > Document stylus support. Optional support for DT properties:
-> >   - `goodix,stylus-enable`
-> >   - `goodix,stylus-pressure-level`
-> >   - `goodix,physical-x`
-> >   - `goodix,physical-y`
-> >
-> > Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> > ---
-> >  .../input/touchscreen/goodix,gt9916.yaml      | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml
-> > index c40d92b7f..e5476ea36 100644
-> > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml
-> > @@ -44,6 +44,27 @@ properties:
-> >    touchscreen-size-y: true
-> >    touchscreen-swapped-x-y: true
-> >
-> > +  goodix,stylus-enable:
-> > +    type: boolean
-> > +    description:
-> > +      Indicates that stylus (pen) functionality is enabled. If present,
->
-> Looks like deducible from the compatible.
->
-> > +      the driver will initialize stylus-specific input reporting.
->
-> What if my driver does something else? Shall we change the binding? No.
->
+Variscite has updated the Ethernet PHY on the VAR-SOM-MX93 from the
+ADIN1300BCPZ to the MaxLinear MXL86110, as documented in the
+August 2023 revision changelog.
+Link: https://variwiki.com/index.php?title=VAR-SOM-MX93_rev_changelog
 
-Ack, I will drop it in v2.
+Update the device tree accordingly:
+- Drop the regulator node used to power the previously PHY.
+- Add support for the reset line using GPIO1_IO07 with proper timings.
+- Configure the PHY LEDs via the LED subsystem under /sys/class/leds/,
+  leveraging the support implemented in the mxl86110 PHY driver
+  (drivers/net/phy/mxl-86110.c).
+  Two LEDs are defined to match the LED configuration on the Variscite
+  VAR-SOM Carrier Boards:
+    * LED@0: Yellow, netdev trigger.
+    * LED@1: Green, netdev trigger.
+- Adjust the RGMII clock pad control settings to match the updated PHY
+  requirements.
 
-> > +
-> > +  goodix,physical-x:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: Physical width of the touchscreen in millimeters.
->
-> No, use existing input properties.
->
+These changes ensure proper PHY initialization and LED status indication
+for the new MaxLinear MXL86110, improving board compatibility with the
+latest hardware revision.
 
-Ack, I overlooked it.
+Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
+---
+v3:
+  - Add "PATCH" to subject line.
+  - Fix wrong reference to previous PHY in commit message.
 
-> > +
-> > +  goodix,physical-y:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: Physical height of the touchscreen in millimeters.
-> > +
-> > +  goodix,stylus-pressure-level:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      Number of discrete pressure levels supported by the stylus.
-> > +      The reported ABS_PRESSURE range will be 0 to
-> > +      (goodix,stylus-pressure-level - 1).
->
-> Use existing input properties.
->
+v2: https://lore.kernel.org/imx/20250604153510.55689-1-stefano.radaelli21@gmail.com/
+  - Clarified the use of 'rgmii' mode by adding a comment in the DT,
+    explaining that hardware delays are already implemented on the SOM PCB.
 
-With a quick check, I think there is no suitable property for stylus,
-"touchscreen-max-pressure" is for touchscreen, not for stylus. AFAIK,
-Pressure data is reported by stylus, received by touch IC.
+v1: https://lore.kernel.org/imx/20250603221416.74523-1-stefano.radaelli21@gmail.com/
 
-Best wishes,
-Pengyu
+ .../boot/dts/freescale/imx93-var-som.dtsi     | 45 ++++++++++++-------
+ 1 file changed, 30 insertions(+), 15 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx93-var-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-var-som.dtsi
+index 783938245e4f..cea8d792328c 100644
+--- a/arch/arm64/boot/dts/freescale/imx93-var-som.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx93-var-som.dtsi
+@@ -19,26 +19,19 @@ mmc_pwrseq: mmc-pwrseq {
+ 		reset-gpios = <&gpio4 14 GPIO_ACTIVE_LOW>,	/* WIFI_RESET */
+ 			      <&gpio3 7 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
+ 	};
+-
+-	reg_eqos_phy: regulator-eqos-phy {
+-		compatible = "regulator-fixed";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_reg_eqos_phy>;
+-		regulator-name = "eth_phy_pwr";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+-		enable-active-high;
+-		startup-delay-us = <100000>;
+-		regulator-always-on;
+-	};
+ };
+ 
+ &eqos {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_eqos>;
++	/*
++	 * The required RGMII TX and RX 2ns delays are implemented directly
++	 * in hardware via passive delay elements on the SOM PCB.
++	 * No delay configuration is needed in software via PHY driver.
++	 */
+ 	phy-mode = "rgmii";
+ 	phy-handle = <&ethphy0>;
++	snps,clk-csr = <5>;
+ 	status = "okay";
+ 
+ 	mdio {
+@@ -51,6 +44,27 @@ ethphy0: ethernet-phy@0 {
+ 			compatible = "ethernet-phy-ieee802.3-c22";
+ 			reg = <0>;
+ 			eee-broken-1000t;
++			reset-gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <10000>;
++			reset-deassert-us = <100000>;
++			leds {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				led@0 {
++					reg = <0>;
++					color = <LED_COLOR_ID_YELLOW>;
++					function = LED_FUNCTION_LAN;
++					linux,default-trigger = "netdev";
++				};
++
++				led@1 {
++					reg = <1>;
++					color = <LED_COLOR_ID_GREEN>;
++					function = LED_FUNCTION_LAN;
++					linux,default-trigger = "netdev";
++				};
++			};
+ 		};
+ 	};
+ };
+@@ -75,14 +89,15 @@ MX93_PAD_ENET1_RD0__ENET_QOS_RGMII_RD0			0x57e
+ 			MX93_PAD_ENET1_RD1__ENET_QOS_RGMII_RD1			0x57e
+ 			MX93_PAD_ENET1_RD2__ENET_QOS_RGMII_RD2			0x57e
+ 			MX93_PAD_ENET1_RD3__ENET_QOS_RGMII_RD3			0x57e
+-			MX93_PAD_ENET1_RXC__CCM_ENET_QOS_CLOCK_GENERATE_RX_CLK	0x5fe
++			MX93_PAD_ENET1_RXC__CCM_ENET_QOS_CLOCK_GENERATE_RX_CLK	0x58e
+ 			MX93_PAD_ENET1_RX_CTL__ENET_QOS_RGMII_RX_CTL		0x57e
+ 			MX93_PAD_ENET1_TD0__ENET_QOS_RGMII_TD0			0x57e
+ 			MX93_PAD_ENET1_TD1__ENET_QOS_RGMII_TD1			0x57e
+ 			MX93_PAD_ENET1_TD2__ENET_QOS_RGMII_TD2			0x57e
+ 			MX93_PAD_ENET1_TD3__ENET_QOS_RGMII_TD3			0x57e
+-			MX93_PAD_ENET1_TXC__CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK	0x5fe
++			MX93_PAD_ENET1_TXC__CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK	0x58e
+ 			MX93_PAD_ENET1_TX_CTL__ENET_QOS_RGMII_TX_CTL		0x57e
++			MX93_PAD_UART2_TXD__GPIO1_IO07				0x51e
+ 		>;
+ 	};
+ 
+
+base-commit: a9dfb7db96f7bc1f30feae673aab7fdbfbc94e9c
+prerequisite-patch-id: 2335ebcc90360b008c840e7edf7e34a595880edf
+-- 
+2.43.0
+
