@@ -1,193 +1,81 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E0417548;
-	Thu,  5 Jun 2025 20:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220441FE44B;
+	Thu,  5 Jun 2025 20:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749154341; cv=none; b=kdnJwBtE2uDPX2jh1hvqgGfsPd0OslvLoNK/uZEoPm+/gKd2mIIji07oc0TOnfnFo36B5yg1gsC8pNndf7u2cs3Lt1wR3eZAppHnqRvTLwwu6UAS5dGg1TlFhZmOt7VnLIv9h4hIY9bqb+bgGTHOLO/4aEEy5hv2nvTUddccYvY=
+	t=1749154367; cv=none; b=px3qp57NAHyy8s2ILsOtb4XiRRze0lsudIFegm4Erx0IGkEriQ/GW4PGqfjodEV0Y7vPD2CmUg/ALAECH0uZftH4wAJ1+SMaQHR8vq1J0KaOzO3meLzndHh7aVFmMJ92auYCJv3SsCpddd4Ri8DZ9slxTbKXlgha5Q2Y9w2ekxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749154341; c=relaxed/simple;
-	bh=QB6a6QnZCJvmdCt4kElU/V09bx7MQ+aZo5RGGO0uw5s=;
+	s=arc-20240116; t=1749154367; c=relaxed/simple;
+	bh=v+1wOsotRzGcLl4+pWDHHGDBSmgsLs2nD0tQqzlXX2Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HmeVmoDTCXb5pSR7JWaVYuEmzdGjsTia3aZ8HsQotkOGuIKxsudVyuGIuRtxHcL5iyAzezmfEX9h+Yd9ADwaN5NDat1+kpGIWhadFEgSmBpw3VtDmNEP1zxf76TJdxRHTIyvDu9sv7lOm988ktVBcXdZ9KMl8rB4ZOGDXxRbNzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L83jCFko; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HG16/aGtQEJLsZTocYLqvzAtI3IOI0QfCYROGOCoDOYiDr4Khcqimcjp0id9aXu+gJV98YkF8XYxgMZWf2On2C1sDgEfQRRcVXUfUomI1VpVvz5huf9JMHO/XkZCd/uIXjePePNsv6olDm11SoQerm4S1ibhuxkQ6k2ncoXI+bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cn0pnvb9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L83jCFko"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a43e277198so11097171cf.1;
-        Thu, 05 Jun 2025 13:12:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749154335; x=1749759135; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xJx0420e5t7bqEmHlvjgSHZCEQopSee7LNPR+zkXs+0=;
-        b=L83jCFkoYJ+IpEWt1YPfsW4d9nhUmb6HYiovy36Jb8G7/QneBgIoo96kvV6N3cZHBL
-         o0fSNcoi3NTssjDRALLVXa0YZh88FpXqbcxn0u+qyhzz0saAcec7Wq5ZvZ9oKstezvcG
-         /8wZ0WagHOqZxQTsLE9VILEe0fl7BsdeWbb/HiMARKFGYe69ttZnrI9yNO7ubi+KDZOh
-         YpElDzJZ7pcEzeDtOQh7n7Dxh85OL6SM7wWW95Gc1Ow2hrHRxM84dYUuNikQ0ktR6bM1
-         6RFVwMSqPUV1sN57RNQ6HsYjUExi0CReUcw6Pzs4hPHtVjgjtXX/Azol1cktfSHWZTAk
-         Q7Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749154335; x=1749759135;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xJx0420e5t7bqEmHlvjgSHZCEQopSee7LNPR+zkXs+0=;
-        b=eWFBphgwQKyKTRHH07UJuolAIBpCseY9o6Ts4qMu/GRcLAPWZETvq2fbshJGbEAxtg
-         KvjZg6Rq97ZhA6l0YL/dVwjdG8JOPze12OQjNSFmUA/gTJITvGQDoqYxQx4iYjE+isTR
-         jJDJhlNSRYJl4xfbEaR+j9jq+Ki9pFvHbFU6wAWuTKQ2M6ODJ8MARlXuHaU3+LazPuJ5
-         x8yqAFUrqLRJmfYzlpQOlcFWWxhMwUPtqYQ5kn5RVSk2PKDyAp7RvTVyeCIqev9C36fY
-         RLl/7zUGd46AO1dg9HeMeHcNKgkEyQpFAN0Ua7dffAVlp86bWpaXl6FlLpZWhAFwxndJ
-         M4Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCUA0j+SNjZsghoiXrNgTKN4dKrXXgTXElbr/HUiFHCKeiiykJBfRSULGhN2f7rXLAlqAoHK/Hi7gqlLDRr+@vger.kernel.org, AJvYcCUc/GGSSfUADNa6mhZnVuWW2CAGVCt/ZhEflaRul3+wZj+iEwF9nEUEGZFTrUuwviW9jMF24yMqvEnf0lXt4qE=@vger.kernel.org, AJvYcCVs4K7V+dQvvGnvKPWTOsRFFbadIFYk5txBrB96EAlk0qHal9abwy2ASCiFXW8mj6RX9S+sJnJRm0M=@vger.kernel.org, AJvYcCWxVLRXvKRy5/Y47HaYjP7qTq3zG1BJn7u6oeu9pDIR50fSe0uJUm+lbzXoeqFcorwTvPhCBMCUxJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzU22RSL8fMYXCb231OTnEMAe4XJ6+jpiXPifkMj9ujJpiGXfC
-	aUZtV4k//fwA6IQqYk/V8FHwB00Ah3hY38WPX6UJIu5IbUZZEKX4RHq7
-X-Gm-Gg: ASbGnct1D7XJdQA9yLDfaBDlI5Mdqz4gHR/+YT6/CHFel97ZtQQgKhENRe7rFDemXuM
-	ynsAQrmZ1NOp/pPq8W1aWkBZlL9pVF+ngPoBu4xx2KAz26UtIIINNlW0zxtrHujHCqrFCyr3umh
-	6W+x80+PW39N0TOq6Gr5pR9MRgUfo3iwt+dFhIeGZcW3C1UP8FfelDwrrRh4i2mJQ1A+EJ9Oi0P
-	0qLwGoyx6bCx3Bfs0pexFLCtWW3BkUfBWq8XKZiB0eXMjbAVbALbhWeynzLw6Ew8nPvGAwqBTTU
-	JEU88O1Bj054oGW6zzL3uKFTzV68U5QLgdeW9uR1YoqzhAzP7BJNwxlEf7qdeTQTYKWMae78HyT
-	VcA6yhPThvREpZ50pNkN9Q+YnST0SyDrNdhE8VHWaF5aF07Tz99wVXUsMC8+rNGY=
-X-Google-Smtp-Source: AGHT+IFULRUPzojdAaDpJFce5F/nNf251w/kMWFq6JSJs64ILjSjzEyM96+UXUR1hLnTgTg/n3Hrmw==
-X-Received: by 2002:a05:622a:1f92:b0:4a1:630b:e12b with SMTP id d75a77b69052e-4a5b997134dmr16457021cf.0.1749154335444;
-        Thu, 05 Jun 2025 13:12:15 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a611150018sm661281cf.8.2025.06.05.13.12.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 13:12:14 -0700 (PDT)
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id BCB961200068;
-	Thu,  5 Jun 2025 16:12:13 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Thu, 05 Jun 2025 16:12:13 -0400
-X-ME-Sender: <xms:HfpBaHek2lw76evY09i3114OHnWBm9i7e-N8O3cSxkMH80HHN8e1qw>
-    <xme:HfpBaNMMhRCPkkzA0u_lEJ2KwhR3VI5mdas70RqftcZNp_Ykuj9DvHN57hhpXECyb
-    Yr0z6tsQuDxt2zw8w>
-X-ME-Received: <xmr:HfpBaAhgEFY3SGfyVwtZj7339fAXTAtXyNI6TcRVtWoAL7fOXnC7VeZxYnrV>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegtdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
-    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
-    gtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedvteeh
-    uddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
-    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
-    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
-    mhgvpdhnsggprhgtphhtthhopeefiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
-    eprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghs
-    hhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehmihhguhgvlhdrohhjvggurgdrshgrnhguohhn
-    ihhssehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrkhhrsehrvgguhhgrthdrtghomh
-    dprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthht
-    oheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepsggvnhhnoh
-    drlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtohepsghjohhrnhefpghghhes
-    phhrohhtohhnmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:HfpBaI9_gxe5GPy-ctI7fs4NiLvFIggIaOO1prxOcVMUV_LznvvxgQ>
-    <xmx:HfpBaDuOr_05watrBth21FJwCWYgogve-nGg5qK5atkXWcKd33euQw>
-    <xmx:HfpBaHEt04awxE2CVByaIMY37pfxj8PRUlxrWRZ7yZ7jVRkprDMMOg>
-    <xmx:HfpBaKNwh3dPmy5vrsh6fn34OFHrpWIZvI2Ba26_Q_zI4iGVAMjcQw>
-    <xmx:HfpBaEM00swxWy-lnZ7sU36wnF4owWgCBK0R65ceuJe7-bss_u6JVe7M>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 5 Jun 2025 16:12:12 -0400 (EDT)
-Date: Thu, 5 Jun 2025 13:12:11 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>,	Alex Gaynor <alex.gaynor@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,	Benno Lossin <benno.lossin@proton.me>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Peter Zijlstra <peterz@infradead.org>,	Stephen Boyd <sboyd@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,	Trevor Gross <tmgross@umich.edu>,
- Viresh Kumar <vireshk@kernel.org>,	Yury Norov <yury.norov@gmail.com>,
- linux-pm@vger.kernel.org,	Vincent Guittot <vincent.guittot@linaro.org>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Burak Emir <bqe@google.com>,	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Andrew Ballance <andrewjballance@gmail.com>,
-	Anisse Astier <anisse@astier.eu>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V12 00/15] Rust abstractions for clk, cpumask, cpufreq,
- OPP
-Message-ID: <aEH6GzCTgXZSneHt@tardis.local>
-References: <HVTDJypFNQFfSQJmmYDSPU4o-irFnjmDN22RW3S0z5Kwe_hVk9kquZWElv-C2k6d5kOIiewhj_Xo2kAoTHbHgg==@protonmail.internalid>
- <cover.1747634382.git.viresh.kumar@linaro.org>
- <87qzzy3ric.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cn0pnvb9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F8AC4CEE7;
+	Thu,  5 Jun 2025 20:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749154366;
+	bh=v+1wOsotRzGcLl4+pWDHHGDBSmgsLs2nD0tQqzlXX2Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cn0pnvb9wKhKvJTNY3YDs+mbPW1r4l3LQwSzRkDDbNsDPMvIg9tRNVMCOI+hi2n/c
+	 O28Cp6MNrUyUZRMRiBzdkLcfCygfgTfXLqUusfU3g8YDGeSX0uUqa7/GZ9xoAk/pbr
+	 LX55U7XvoX3YLOQH5MV7pXrL9WOGG6sAD/qOcQeIwI1W9TZV5CCgm8e5W7By5wP0Se
+	 xtnQv2TO7Uvv1zwdyIPEMVAZfbsEr5ZfpnPteh2lLt/rTb1qk4w1ELh/Bx3lNbBjSa
+	 euClTFxdtrVDasNBcV4GGO0/0moiMbTO924XswcRs3XATesqq9bQVUCm9M6jBg92az
+	 +M5OfqAh4fG6A==
+Date: Thu, 5 Jun 2025 13:12:43 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 52/62] objtool/klp: Introduce klp diff subcommand for
+ diffing object files
+Message-ID: <jqwyjrmxnwn6lfthyulg3ps4akmw4l6aax66qk6unk7ia6fywm@h2atxp4bu5yq>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
+ <20250526184700.GS24938@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87qzzy3ric.fsf@kernel.org>
+In-Reply-To: <20250526184700.GS24938@noisy.programming.kicks-ass.net>
 
-On Thu, Jun 05, 2025 at 09:41:47PM +0200, Andreas Hindborg wrote:
-> Hi Viresh,
+On Mon, May 26, 2025 at 08:47:00PM +0200, Peter Zijlstra wrote:
+> On Fri, May 09, 2025 at 01:17:16PM -0700, Josh Poimboeuf wrote:
+> > +#define SEC_NAME_LEN		512
+> >  #define SYM_NAME_LEN		512
+> >  
 > 
-> "Viresh Kumar" <viresh.kumar@linaro.org> writes:
+> > +static int validate_ffunction_fdata_sections(struct elf *elf)
+> > +{
+> > +	struct symbol *sym;
+> > +	bool found_text = false, found_data = false;
+> > +
+> > +	for_each_sym(elf, sym) {
+> > +		char sec_name[SEC_NAME_LEN];
+> > +
+> > +		if (!found_text && is_func_sym(sym)) {
+> > +			snprintf(sec_name, SEC_NAME_LEN, ".text.%s", sym->name);
 > 
-> > Hello,
-> >
-> > I have queued this up for v6.16-rc1, will merge it via the PM tree soon.
-> > Thanks.
-> >
-> > This series introduces initial Rust abstractions for a few subsystems: clk,
-> > cpumask, cpufreq and Operating Performance Points (OPP).
-> >
-> > The abstractions cover most of the interfaces exposed by cpufreq and OPP
-> > subsystems. It also includes minimal abstractions for the clk and cpumask
-> > frameworks, which are required by the cpufreq / OPP abstractions.
-> >
-> > Additionally, a sample `rcpufreq-dt` driver is included. This is a
-> > duplicate of the existing `cpufreq-dt` driver, which is a
-> > platform-agnostic, device-tree based cpufreq driver commonly used on ARM
-> > platforms.
-> >
-> > The implementation has been tested using QEMU, ensuring that frequency
-> > transitions, various configurations, and driver binding/unbinding work as
-> > expected. However, performance measurements have not been conducted yet.
-> >
-> > For those interested in testing these patches, they can be found at:
-> >
-> > git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm.git rust/cpufreq-dt
-> >
-> > Based on 6.15-rc1 + rust/devres dependencies + PM/cpufreq dependencies.
-> 
-> I was testing an unrelated patch and found this kunit failure in
-> mainline today:
-> 
-> [19:45:34] # rust_doctest_kernel_cpumask_rs_0.location: rust/kernel/cpumask.rs:180
-> [19:45:34] # rust_doctest_kernel_cpumask_rs_0: ASSERTION FAILED at rust/kernel/cpumask.rs:190
-> 
+> So given SYM_NAME_LEN is 512, this SEC_NAME_LEN should be at least 6
+> more, no?
 
-I assume you run it in a VM? How many vcpus are you using? I've checked
-the code, cpumask_{set,test}() can set or set bits out of nr_cpu_ids
-without triggering warning if CONFIG_DEBUG_PER_CPU_MAPS=n, but
-cpumask_weight() only examine nr_cpu_ids bits. So if you run with
-nr_cpu_ids < 4, the test case may fail.
+I suppose so.  There's also the .rela.text.* and .klp.rela.sec_objname.*
+prefixes.  I'll just bump SEC_NAME_LEN to 1024.
 
-Regards,
-Boqun
+I should also double check the snprintf() return codes.
 
-> This is for arm64 defconfig. The test seems to passes on x86_64.
-> 
-> 
-> Best regards,
-> Andreas Hindborg
-> 
-> 
+-- 
+Josh
