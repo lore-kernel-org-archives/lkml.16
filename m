@@ -1,210 +1,117 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D267157A6B
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0552566;
+	Thu,  5 Jun 2025 06:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749104373; cv=none; b=T14XmThApifDvYmu5alY2ESoP+pIYjpIaNFgNyGYTbEx4NZ7XtiI/8h8bBtKpMKYwOo1q00tLocvfMsScb+9Z8nvuzuMRIeVOTkaRrFPMSCWJ2zPu5rLv2DUFaKt4tTBrRbGofYsHY44z9iaZTsHzI7tRj8vRpKFH/EjnfPT6H4=
+	t=1749104504; cv=none; b=G2qGlYkDHR/awpgSLgjKPS4x6i+Wn+e1amyPCDzvuATheWLzMUGv4qlhFEpaKAUxlNbdMADd+GVMfQGcgGkrp8Jlnz6JXbbxaryEoslG1hwzCQYAWiCb6Kpo4BKmK0EYSDE0KbRpBVw6eh3s0MoM7uRuQ5gYEm7nOA7aHeHCJek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749104373; c=relaxed/simple;
-	bh=L/b4ZNVxyrpo3MbQVnE86SO5i2UFhdGNXOAho69D7GA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BK/s6y/A71znElIJ3CX/QSLQvEYMPTKROZhd1saTxaGU6LZVTOSd50lxBPHat5UMO23w+65OHTuJ2B1Gty7ExEQSN6f9FwPQkYM8uiroqJ+d3RQ5gmv5AEGsIYqI88KMTz36FnHYUbk3PtCvZYzZaXmDU9gGFNKSpSTDoZZdhtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HJ/VLELa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=53sHyl1/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HJ/VLELa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=53sHyl1/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749104504; c=relaxed/simple;
+	bh=+Redz4ifkRkx64frRMoX7dOYX5AJN+Q/ArPYmvxEyPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qtigZH51Ssl9Yy1MFNLbFCmqkV6soDW9+atHMKJZTh6AGVPWkS5F+1PN2ArKyF3tuGxJC1aoP5FwUhEfOM9lWAgCrcQGUj0IbiV7MvLagR6TjaP3vRORdUzez0tjw3CQ29taqrpnpj6B3GlhqPgPqJadK/m47xLgvXyixho1a8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RpHB0y5R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HJ/VLELa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="53sHyl1/";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HJ/VLELa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="53sHyl1/"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 776DC20EB8;
-	Thu,  5 Jun 2025 06:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749104369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OMbhcZbCeEqhLQVEpQtGmU6m8hH/pjgYtw6RJLlYjuk=;
-	b=HJ/VLELatXJlV+UxFJEET8AnxMQAfqqNbKoO9sJYES8uV712/JE0PLGKObVBmQfZiTPtbY
-	BtSPQ22SojiznZstWEuD0dq3SaFhisBDSyi2DcEkKTJ+R0VFkyflXAqQkN4GJXor9ktQSF
-	h9DLqKeDhVhaX2Om1FZaTZx3ojd+p8k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749104369;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OMbhcZbCeEqhLQVEpQtGmU6m8hH/pjgYtw6RJLlYjuk=;
-	b=53sHyl1/OacrWNnQlL8wL+uhwhVY7E7OWpVh7tIAT5HrsqB34SCIgM7HfCpb4SC10jRXZZ
-	CZL4z8QELecg8YCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749104369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OMbhcZbCeEqhLQVEpQtGmU6m8hH/pjgYtw6RJLlYjuk=;
-	b=HJ/VLELatXJlV+UxFJEET8AnxMQAfqqNbKoO9sJYES8uV712/JE0PLGKObVBmQfZiTPtbY
-	BtSPQ22SojiznZstWEuD0dq3SaFhisBDSyi2DcEkKTJ+R0VFkyflXAqQkN4GJXor9ktQSF
-	h9DLqKeDhVhaX2Om1FZaTZx3ojd+p8k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749104369;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OMbhcZbCeEqhLQVEpQtGmU6m8hH/pjgYtw6RJLlYjuk=;
-	b=53sHyl1/OacrWNnQlL8wL+uhwhVY7E7OWpVh7tIAT5HrsqB34SCIgM7HfCpb4SC10jRXZZ
-	CZL4z8QELecg8YCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 44D27137FE;
-	Thu,  5 Jun 2025 06:19:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id v6j9D/E2QWhSFwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 05 Jun 2025 06:19:29 +0000
-Message-ID: <03c2b01b-18f5-4015-a19b-79b8af656697@suse.cz>
-Date: Thu, 5 Jun 2025 08:19:28 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RpHB0y5R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1271C4CEE7;
+	Thu,  5 Jun 2025 06:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749104504;
+	bh=+Redz4ifkRkx64frRMoX7dOYX5AJN+Q/ArPYmvxEyPc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RpHB0y5Ra2FIpz9VgGLS53mxOfVMAIYqacJek1YYOjiIK68AYA+laSiYRBvxmXbya
+	 hnJy//xgXODlHJYv3jCjpYD3peZV8eJMilgHHNzMoM6HWjz3ZV75w6Y6B2cwrbo8wB
+	 vBKfKwm47IhwMJ/my3pAsa55ftxFNeYGTAoShHQi8GNHfCkruvz/0Ek2z5DOgJSUz9
+	 MetvBMahFWXn23VTcIJQBrY5d7N3Csdg2JEeZJyMP/u/ZeOmeHUHU2w4cuRm2wiufE
+	 m+rEx0MdwqPAMDfmyWjwHuz/0Lt1kuETWGqydDGZJmm6KhptVX0EF4EBW7vCbGKT2h
+	 nbtBBkx7RZRxA==
+Date: Thu, 5 Jun 2025 08:21:41 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Lukas Timmermann <linux@timmermann.space>
+Cc: lee@kernel.org, pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] dt-bindings: leds: Add new as3668 support
+Message-ID: <20250605-poised-furry-elephant-cadd08@kuoka>
+References: <20250604225838.102910-1-linux@timmermann.space>
+ <20250604225838.102910-3-linux@timmermann.space>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/vmstat: Fix build with MEMCG=y and VM_EVENT_COUNTERS=n
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, hannes@cmpxchg.org, shakeel.butt@linux.dev,
- muchun.song@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>,
- Konstantin Khlebnikov <koct9i@gmail.com>
-References: <20250604095111.533783-1-kirill.shutemov@linux.intel.com>
- <6fffd2fe-0cee-405f-af78-b57b5e5d02e8@suse.cz>
- <20250604142043.bdfdf4f9a6a6cbb57946f1a5@linux-foundation.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20250604142043.bdfdf4f9a6a6cbb57946f1a5@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-0.999];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux.intel.com,redhat.com,oracle.com,kernel.org,google.com,suse.com,cmpxchg.org,linux.dev,kvack.org,vger.kernel.org,infradead.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid,infradead.org:email,intel.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250604225838.102910-3-linux@timmermann.space>
 
-On 6/4/25 23:20, Andrew Morton wrote:
-> On Wed, 4 Jun 2025 11:56:42 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+On Thu, Jun 05, 2025 at 12:58:38AM GMT, Lukas Timmermann wrote:
+> Document Osram as3668 LED driver devicetree bindings.
 > 
->> > There is no need to backport this fix to stable trees. Without the
->> > strict BUILD_BUG_ON(), the issue is not harmful. The elements in
->> > question would only be read by the memcg code, not by /proc/vmstat.
->> > 
->> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
->> > Fixes: ebc5d83d0443 ("mm/memcontrol: use vmstat names for printing statistics")
->> 
->> Well in that case I think we should put Fixes: to the BUILD_BUG_ON() change.
->> And if it's not yet a stable sha1, squash that together with this?
->> It doesn't seem ebc5d83d0443 alone needs this fix.
-> 
-> I shuffled things around.
-> 
-> I moved "mm: strictly check vmstat_text array size" from mm-hotfixes
-> and back into mm-new for the next cycle.
-> 
-> I reworked "mm/vmstat: fix build with MEMCG=y and VM_EVENT_COUNTERS=n"
-> so it precedes "mm: strictly check vmstat_text array size".
-> 
-> I reworked "mm/vmstat: utilize designated initializers for the
-> vmstat_text array" so it comes last.
-> 
-> 
-> So the applying order is now
+> Signed-off-by: Lukas Timmermann <linux@timmermann.space>
 
-I checked and in general it looks good, except a nit below.
+Please organize the patch documenting compatible (DT bindings) before their user.
+See also: https://elixir.bootlin.com/linux/v6.14-rc6/source/Documentation/devicetree/bindings/submitting-patches.rst#L46
 
-> mm-hotfixes:
-> mm-fix-vmstat-after-removing-nr_bounce.patch
+> ---
+>  .../devicetree/bindings/leds/leds-as3668.yaml | 76 +++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-as3668.yaml
 > 
-> mm-new:
-> mm-vmstat-fix-build-with-memcg=y-and-vm_event_counters=n.patch
-> mm-strictly-check-vmstat_text-array-size.patch
+> diff --git a/Documentation/devicetree/bindings/leds/leds-as3668.yaml b/Documentation/devicetree/bindings/leds/leds-as3668.yaml
+> new file mode 100644
+> index 000000000000..a9d698eb87d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-as3668.yaml
 
-The changelogs of these two don't reflect the new ordering though, maybe
-Kirill can provide updated ones?
+Filename matching compatible. ams,as3668.yaml
 
-> mm-vmstat-utilize-designated-initializers-for-the-vmstat_text-array.patch
-> 
-> and everything should land nicely.
+
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-as3668.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Osram 4-channel i2c LED driver.
+
+Drop full stop
+
+> +
+> +maintainers:
+> +  - Lukas Timmermann <linux@timmermann.space>
+> +
+> +description: |
+
+Drop |, Do not need '|' unless you need to preserve formatting.
+
+> +  This IC can drive up to four separate LEDs.
+> +  Having four channels suggests it could be used with a single RGBW LED.
+> +
+> +properties:
+> +  compatible:
+> +    const: ams,as3668
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +      I2C slave address
+
+Drop description, obvious.
+
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+
+Missing gpio / pwm / audio input. I guess you omitted it because you do
+not know how to implement the audio input part? Bindings should be
+complete, so at least mention this in commit msg.
+
+Best regards,
+Krzysztof
 
