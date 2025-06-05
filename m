@@ -1,110 +1,112 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0610E14A4C7;
-	Thu,  5 Jun 2025 14:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEA91DE3A7;
+	Thu,  5 Jun 2025 14:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749133657; cv=none; b=emUfOFOGF4mIPQHWbRSAeSFsXPXfLSl5Dx0RpRLYtskwYXGoniRscloixbq0sF3csfoznZ1TbQdFA2VeL4a64AF8njEwx0DETUoamc3OmJxkSmh632+enOGzkAyxyGqEi96uz62Z8G7h8yh291ReY282nNVP+vYXgG2ciVHAND4=
+	t=1749133660; cv=none; b=SwkDHZ+CH06o7DRi/kWksjrx59Yg51OMdr5OQZE7nPhlR8N41uywEmr6VOSyFOmegFKqqL/txuIcvYOFmB+C1ZoAAzZKsBcroFYTK/oSb5WOdu7LEvR6VGuB3r3Bfd2hV3wWevSFH1Jlv66CVO5SW9JSG81qERCDULOiSIe8UQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749133657; c=relaxed/simple;
-	bh=uV/SiPiH+VxV3hdqcIhcquwwMlIrac2VGP8JHLIbLtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rsASHTLOXOZ/3Fc/ag//CPW/jXo4CyptRuToedVz3Z2sO2dCWa3K6uhAIK4+P2DGpcVTY6nUT74MRApU55V0SDhqJ+NIuzMv2et8jMC70RvhFzya69CmfLC5iElXCyNFJCXq7Ch+Xxe3dT3A/C9IVnUyH56n/eOxSF5UUzp1mkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JozWpcYC; arc=none smtp.client-ip=209.85.216.43
+	s=arc-20240116; t=1749133660; c=relaxed/simple;
+	bh=nllIz1ELWLaTsW0jgbqZFDkXDGbpV+IrcJUPbcQPwOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nkTUaPbuyrGxjH+Pf7+Tv43dsiOa97AiNMzMKS/KLaV9a5zANY7VnMuTA3y1Sn9TQbMFcwQu7ytulVIVSchGm5Mxa+liIhvqHp9PkrZ3DcK1yyzyBRaC16DhmBS/lWpYBMcXze/h38rd3aa7yYxYNny1hyCeysPLnj1T2oKEGw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d+S9JZmq; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JozWpcYC"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-31223a4cddeso806858a91.1;
-        Thu, 05 Jun 2025 07:27:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+S9JZmq"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad8a6c202ffso188226766b.3;
+        Thu, 05 Jun 2025 07:27:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749133655; x=1749738455; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Q28lIFu96QWF7S1IK1ZB+vzOB0OSf7nSsE4vmyIWPY=;
-        b=JozWpcYCwGzfBAtLr+/FkFrwwiq/C2yLe6hm+4+3UhEbuEV5KCXhotXcY5z224Uc03
-         3u68u+23WrqtlKwAOiL2twvA4EWZ5ZuWzn7Wge89uHcjY8E/9BZWTxY3Bm5RwiMs6NCN
-         MA4oe1cyTn8bzZ29mgAtzn2ALMs+ZbIHGhZfPdV0zFscxR9dGOyP7ZSll6rJ65Gli0WD
-         duMZoeZJp7j+RiZtH9b/voqGnlpyOMcBcsEWtokHBDBj8eBdnxoMGCoZBFr4YUrH5hBm
-         8Vd+xhWFrx6xghIgsJuWU7k+ccAHK5D614857jFDw5eh0Ktvu4+89aJ6sexlVS9lrK/7
-         bR1g==
+        d=gmail.com; s=20230601; t=1749133657; x=1749738457; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6+NXri69Vzo7baXI/w3sw4guApRbpP2jRadBYUKmX0w=;
+        b=d+S9JZmqcziR6/o2q4Uht11vXlgrLtyzotsDTI0djSCvO3hSIkbw2OLiqYvAFFSvw7
+         toGzHRkufEwCNssO1YuA66ZsjdFXD8yq2Auu8x00oPgRQ+gc0ejofu3ATuidSsKA6cGl
+         3E89twxc+ZOlq6oX4F4RKM/60XZgSVqiWdZX026lEUEDeCTQDUNaWmmWLxx8Cikt0z3W
+         o7RR8CC3/5saKgbsuyNOPOPfZdbP1Rbitt8PI4TC+6f814krgHkDPu/kYBeCCVc08hjF
+         UdRuw5sVeJrsakjwfSsFriDCI49SVxGCwL6CYrsOm14ADWU7wTxtIOxcfbkLXU25vq8s
+         pWfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749133655; x=1749738455;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Q28lIFu96QWF7S1IK1ZB+vzOB0OSf7nSsE4vmyIWPY=;
-        b=PX+6+EVEKw46pP7Ta17z2Pwb3z7gWWQBBHp8S5J+uPmi3FGpiF/BHzS40gDYB/8GPF
-         XinyIY4dysYKTLG8Y1Gth/zU75lKeZnzib7lsPBCWuJRlH+PbaRJ8nfeRb5GdI1Mh1V7
-         ucf/xTf79tmQGlMP2Qsfaf8pA+shtBUHnnAehNEdN/VoeeiGE8344OaTylUo+sFmYzrq
-         D3vkmWbN8/fLn6ULuBXg6UansJhHB8Ae8E0aMl1+Szcc+2nmuyL22GnsF3Xh9fvHsaxX
-         0/LHqFG/inwrxE1ZVXpV+Gq1/XQn8mEwqu6QTY0y83I4JyFRTYWtVxb+aLn1MvN6V9oS
-         ofdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW56aGUMMXQKF9/g4ybMhWWLIOjc9mhOW5o9FdjfGlz/UhoeAfBQR6qMoT6lt4DA5iefrM9tXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh8nfX35OEft+HWQvJI6KWgo9sK7HvglLgh+b/hQnv/oqbSMVF
-	P8RpjQjaYfBxhVFwozkimYHm9mWq1qVtmA8Nl1vEbjDcNQPoWd4nKoIM
-X-Gm-Gg: ASbGncsLGlXHv83ABjtEfS5MC53lHF4MBTn2NtwMxXlCC0Aduheo9yN0aTj9PkZAQLE
-	eSIZ8l5OnxLQ5MQNUtKaoAWZOfuyKxVC+uUoNieR89J8Opmaxn0jBuKPNTTwpIcYAe6aVBIhXK5
-	i5XWMgXOn0GqPtCz2jMMee0YKmdh77JbCATawDdy+sEjyKD2y/Aflzuc1/npVmba5/oGsCihP2l
-	0ZqtzRzzKZUDfiMZrBCp2JwITWzcTdZcceGQ8hjoJaFR8pgQ96YELzW8Cz6HLWo4+5/+/A2K+ym
-	Mo1xARu39taol/gqa6hr+w37n8vD99DnTUzroGmcXQjK2iXRXGw=
-X-Google-Smtp-Source: AGHT+IEt8bxaWIw/PHmchHRiHaGxj9qQl60heZBunPGOxQIGpzlgK2FphKwmGP2vwSFRRoNu/4p9LA==
-X-Received: by 2002:a17:90a:d444:b0:311:abba:53c0 with SMTP id 98e67ed59e1d1-3130cd12d75mr10796094a91.9.1749133655156;
-        Thu, 05 Jun 2025 07:27:35 -0700 (PDT)
-Received: from gmail.com ([98.97.41.44])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313315eda23sm1364295a91.0.2025.06.05.07.27.33
+        d=1e100.net; s=20230601; t=1749133657; x=1749738457;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6+NXri69Vzo7baXI/w3sw4guApRbpP2jRadBYUKmX0w=;
+        b=NEDfq2Yak3zfoO+fumXnyDBjQ7wZYSQ/ba5tehyhma7MLv6Io60dZ5HZUflrj1Rd9G
+         TkQ84nOaIrk4rahN/FQ/8rbbGBwwZQ8MrACVPE+cj+0xB1sAn7hb1HvM6jquoJ3YUblw
+         wBxFrrJWeQgoE1Hb+vKfIsBqq7OpLh65ibl+zF4TR/RorXFqRWvHbpfjw/kWN4E0gNUW
+         gXgPiED9AiSzO9hCjvH9gHcagVkk4M7LOg7YG+21LCi6NeM/X6D0rKSUZrBXlWPOAGSe
+         aVN3OrSgII0hAZuh4mhyITvh2k23Rpzf1KJOplRgVTzT5uWxjmSj607OYb6FNFNnIjj6
+         iTTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVG7uh0Dz0Mxv2gbOEao4himmzWLQij5kPgfosGwg91gbVMdXAbsPcdmyVNgceAtCYqRv3ZnAuen39DJava@vger.kernel.org, AJvYcCX7D1kRSHkykSwRegHz9VEV6++1lZz2/VSSmNp3UpS+9Co+FMfT9RIi5YoMUG7r5sdwOOh9EfzNJHZB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJI6kVctKh89nc06f2ei0yBzwQ/vBAfzoBPMMoqhy28wv7of1T
+	MaA8x7FkmuhYgkZEGVEr3Jry6fAgS+f64kP9rIzUIhH6MXbkwV/+8cba
+X-Gm-Gg: ASbGncshy2Ar8XByYwZN6su2gcvR+4QIuM0SuaLTFNs3Hc/7BRDymfyZ0GN76bDIfSl
+	fz26TGaE8ILbZsxxrcAuq4LVjfbJd8XrdYkBPcxyR44S8KAXwDtoo8IfbhNiu7qW6dWDH9fGiw6
+	hjFV/1rP8UZKE4ssI+/1gSP719pnghdiYfgFiGWQQ23it/vXJDopOW9gxo21VEzr55llOehaH5w
+	GZ0aTt8yY/35vJN5sP01D837fAfcc7QyWLj+U79F4r9zPEK3ymTF0+9I4y9ItENCimtd1PDMez+
+	/rWSZRrlfzl0yxIHI6xwapqF9Xj/S4vXH08ygAS/6jIDDouN5VTu2h3Qd0PaYeyDIg==
+X-Google-Smtp-Source: AGHT+IHW2Pc/ewt7hddIYI4OomGwG9pMOjuT2WwbFuM4l7M77lzfl5/Sb5QJCFz7zadn8bOoPbfd2g==
+X-Received: by 2002:a17:907:7b8e:b0:ad8:a41a:3cba with SMTP id a640c23a62f3a-addf8f75b77mr657715266b.43.1749133656544;
+        Thu, 05 Jun 2025 07:27:36 -0700 (PDT)
+Received: from wslxew242.. ([188.193.103.108])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d84e75fsm1259338066b.81.2025.06.05.07.27.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 07:27:34 -0700 (PDT)
-Date: Thu, 5 Jun 2025 07:27:30 -0700
-From: John Fastabend <john.fastabend@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	netdev <netdev@vger.kernel.org>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [for-linus][PATCH 3/5] xdp: Remove unused mem_return_failed event
-Message-ID: <20250605142730.wv5rsc4eg6ynwpga@gmail.com>
-References: <20250603171149.582996770@goodmis.org>
- <20250603171228.762591654@goodmis.org>
+        Thu, 05 Jun 2025 07:27:35 -0700 (PDT)
+From: =?UTF-8?q?Goran=20Ra=C4=91enovi=C4=87?= <goran.radni@gmail.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	boerge.struempfel@gmail.com
+Cc: =?UTF-8?q?Goran=20Ra=C4=91enovi=C4=87?= <goran.radni@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] arm64: dts: Add support for Ultratronik i.MX8MP Ultra-MACH SBC
+Date: Thu,  5 Jun 2025 16:27:23 +0200
+Message-ID: <20250605142728.2891465-1-goran.radni@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603171228.762591654@goodmis.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2025-06-03 13:11:52, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The change to allow page_pool to handle its own page destruction instead
-> of relying on XDP removed the trace_mem_return_failed() tracepoint caller,
-> but did not remove the mem_return_failed trace event. As trace events take
-> up memory when they are created regardless of if they are used or not,
-> having this unused event around wastes around 5K of memory.
-> 
-> Remove the unused event.
-> 
-> Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
-> 
-> Cc: netdev <netdev@vger.kernel.org>
-> Cc: Jonathan Lemon <jonathan.lemon@gmail.com>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Link: https://lore.kernel.org/20250529160550.1f888b15@gandalf.local.home
-> Fixes: c3f812cea0d7 ("page_pool: do not release pool until inflight == 0.")
-> Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-> Acked-by: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/trace/events/xdp.h | 26 --------------------------
->  1 file changed, 26 deletions(-)
+This patch series adds support for the Ultratronik i.MX8MP-based Ultra-MACH SBC.
 
-Reviewed-by: John Fastabend <john.fastabend@gmail.com>
+The Ultra-MACH SBC is an industrial-grade single-board computer based on the NXP i.MX8M Plus SoC. This initial support includes:
+
+- Updating the MAINTAINERS file to include the new board in the Ultratronik support section.
+- Adding a compatible string entry for the board to `fsl.yaml` in device tree bindings.
+- Introducing a new device tree source file `imx8mp-ultra-mach-sbc.dts` with basic hardware support.
+
+This series is modeled after the support added for the STM32MP157C-based Ultra-FLY SBC and aims to follow the conventions used for other i.MX8MP boards in mainline.
+
+Tested on hardware with:
+- Serial console
+- HDMI output via LCDIF pipeline
+- eMMC/SD-card boot
+
+Feedback is welcome.
+
+Goran Rađenović (3):
+  MAINTAINERS: Add i.MX8MP Ultra-MACH SBC to ULTRATRONIK BOARD SUPPORT
+  dt-bindings: arm: imx8mp: Add Ultratronik Ultra-MACH SBC
+  arm64: dts: imx8mp: Add initial support for Ultratronik
+    imx8mp-ultra-mach-sbc board
+
+ .../devicetree/bindings/arm/fsl.yaml          |   5 +
+ MAINTAINERS                                   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx8mp-ultra-mach-sbc.dts   | 907 ++++++++++++++++++
+ 4 files changed, 914 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-ultra-mach-sbc.dts
+
+base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
+-- 
+2.43.0
