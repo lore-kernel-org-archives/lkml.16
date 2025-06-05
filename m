@@ -1,114 +1,61 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A0817A317;
-	Thu,  5 Jun 2025 15:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C812717A317
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749138925; cv=none; b=N2CWenBMZyTeMnPOjYeKVQV3O2YR2aHRYIfZ0lUo2StCA0YcfbcXCOSiBH8SxhlQ1Ny4+1vrZtPwf3v7YvBUGm9H7It3Bwf/wQP2BzIdS9zJD5OQ52IoSRM78YMYlaKMR4u6Erodr3HNpSPM/miu7uxoVoGFn+CuRKOnslLQCuw=
+	t=1749138996; cv=none; b=HmAvJuhEkRpWi98vSB6PvemMJz/TQnjhYR0ALLLwQg/CR3UfFjkRld3VHlHblzEI/J013KdII2JKn4KP7bH4OJNzfXH1ifqYfWNYIVTglaf5en8ryAxu7mrb1tIi4AkcafaRkQhz34o735Hq6AKxowGsZwDMpJdMJAoSEXHkvYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749138925; c=relaxed/simple;
-	bh=MnOAMjlucWWDs+fu5fv7AmZ4TACG2bxE2ReThc1je50=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=F6RtJ0B9wGa+iI5zplb09cszan9BtZlTrCQo4Wukj+Hv9ZUS/MvRdC7PS2wjOllNovThJr+IZjBRrE28/4Vr5i/TXPG7lN6PY4awcLggcZxJbBgKAWnEYPMr8/4/j02VjG0VADp9g04lJ82qtgadV4oX2uckzw5ZvXTtSMBDCoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=x5nIktGH; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="x5nIktGH"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555CUO6U017916;
-	Thu, 5 Jun 2025 17:54:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=7GIhYXvKL3wJRk1dIpzuKA
-	KsrZ2kloHNxniKoQVFP+w=; b=x5nIktGHB6dK7/e+5b1KmApj/ISN8oC8EBNx+s
-	z3mdkw0inMfwOVzA8Anab5m1fToIfyw6mDrms8Es8FMQXnJGeCMYa1rql7wYQFl/
-	hZHUBltTcubsMP5tGGi2amiyRhley1GvLu9RAlRih2X6KGFagtwJHWI1ATkIjTdY
-	B0DWi2jEMxIWuDujRhw7VHbYClJsCndIq/IvVLDj4v2TWYPouzqntnaeV+Ze5MQv
-	GqunbPTuErrMaCtO+jyDYZHbOKOBQiK5U3GuLycGnnlOz+IJ/XiaRAO66/KAV8Lb
-	SV8WxTfRltHIatB0cHnomljiUxhpi+nOHnC8B46IKGu9Sn8w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 471g90qrah-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 17:54:57 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 285E540051;
-	Thu,  5 Jun 2025 17:54:04 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3CB7ED22AEA;
-	Thu,  5 Jun 2025 17:53:41 +0200 (CEST)
-Received: from localhost (10.48.87.237) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Jun
- 2025 17:53:40 +0200
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Date: Thu, 5 Jun 2025 17:53:30 +0200
-Subject: [PATCH] dmaengine: stm32-dma: configure next sg only if there are
- more than 2 sgs
+	s=arc-20240116; t=1749138996; c=relaxed/simple;
+	bh=zBYGvX52BxLQ4GUMUxG0DeMTjGwYb+sctll/J9DgxZ0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=hIj2WuO/9DcCuty6w+ZBJ1SuJo9K8qPPZRK+aWS4d9a5c2OnnosUp2PfaWG0AtQyZsmeepklYctyEcjo2dJ3ttLtloQPyp4GcnHclerfhu6SxytYDaXiQzhI9I2RmNCYXTksh9YQjQwy79pvREjbXSQnV1Y9xKtPp7iqYkXyK0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddbec809acso15687415ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 08:56:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749138994; x=1749743794;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zBYGvX52BxLQ4GUMUxG0DeMTjGwYb+sctll/J9DgxZ0=;
+        b=GykG2O3ND0XXVL9/1sNjqcLGGZsXVQsjSxXmO5XfAiVnbdd1xpzlGRw/GcWpLmREUK
+         jZnjj2O4KkeaweXyXUHfvtMv4hdBGtWIxWBgCc9iloqFA8NGPnPVzbOWTC3Vc9FyUkMi
+         /lVJvQr5sl9sW96NenhLwBGt3oD7fCgGIRQeUYo7A0ZaDeu48+3szU/aUzjOGivI0CXy
+         WirvkVYkW7OLZc1VzMBZ5rgypEsjFNORNnIVG9i1BLb4wMKMJEfbYw5W9YCHMT72kBu+
+         dV5X8+7uBSF3W13KbpzHe4SytqG16O9vktgGHKc8VYq5S45s8S/uYbRW1YiPfjXx+3EU
+         7R4g==
+X-Gm-Message-State: AOJu0YzaekvrmParr30plJrfOBsaJXpmoP06OOVnRubHk9CINw+drYgt
+	QgtOY/DziQQjTT1GruclB81pzXoMbJgq1H6ZU2qPy4OZdkJcNue2YlIsyokDYjve6DafEht0eV0
+	eM7zopkfq0s7MGFlryp3kBG/0XQlJfHLMmX7ss+zWbuxvrxIxRLa6IIc2LJI=
+X-Google-Smtp-Source: AGHT+IHBFr/f91qjOOuHB8VF4bf73NvOL4fAIpQJEOiB64aBXkVb3yXjqGtTcqin6t33AhmkP9QOmqu1i7OefjxrMfBZ5bF4e+Zl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250605-stm32_dma_dbm_fix-v1-1-44657463d7d6@foss.st.com>
-X-B4-Tracking: v=1; b=H4sIAHm9QWgC/x2MQQqAIBAAvxJ7TjDNir4SIdVutQctNCII/550n
- IGZFyIFpgh98UKgmyMfPkNVFrDsk99IMGYGJZWRjTQiXk4ri26yODu78iP03DWqrdDUWEPuzkB
- Z/89hTOkDoElwwGMAAAA=
-X-Change-ID: 20250605-stm32_dma_dbm_fix-3b86271d54d4
-To: Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <dmaengine@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_04,2025-06-05_01,2025-03-28_01
+X-Received: by 2002:a92:ca05:0:b0:3dc:7c5d:6372 with SMTP id
+ e9e14a558f8ab-3ddbed0e8dcmr83738145ab.7.1749138993835; Thu, 05 Jun 2025
+ 08:56:33 -0700 (PDT)
+Date: Thu, 05 Jun 2025 08:56:33 -0700
+In-Reply-To: <68344557.a70a0220.1765ec.0165.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6841be31.a00a0220.68b4a.0014.GAE@google.com>
+Subject: Re: [syzbot] #syz test
+From: syzbot <syzbot+5138f00559ffb3cb3610@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-DMA operates in Double Buffer Mode (DBM) when the transfer is cyclic and
-there are at least two periods.
-When DBM is enabled, the DMA toggles between two memory targets (SxM0AR and
-SxM1AR), indicated by the SxSCR.CT bit (Current Target).
-There is no need to update the next memory address if two periods are
-configured, as SxM0AR and SxM1AR are already properly set up before the
-transfer begins in the stm32_dma_start_transfer() function.
-This avoids unnecessary updates to SxM0AR/SxM1AR, thereby preventing
-potential Transfer Errors. Specifically, when the channel is enabled,
-SxM0AR and SxM1AR can only be written if SxSCR.CT=1 and SxSCR.CT=0,
-respectively. Otherwise, a Transfer Error interrupt is triggered, and the
-stream is automatically disabled.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
- drivers/dma/stm32/stm32-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+***
 
-diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
-index 917f8e9223739af853e492d97cecac0e95e0aea3..0e39f99bce8be8c38fe33dd0246012910243d831 100644
---- a/drivers/dma/stm32/stm32-dma.c
-+++ b/drivers/dma/stm32/stm32-dma.c
-@@ -744,7 +744,7 @@ static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan, u32 scr)
- 		/* cyclic while CIRC/DBM disable => post resume reconfiguration needed */
- 		if (!(scr & (STM32_DMA_SCR_CIRC | STM32_DMA_SCR_DBM)))
- 			stm32_dma_post_resume_reconfigure(chan);
--		else if (scr & STM32_DMA_SCR_DBM)
-+		else if (scr & STM32_DMA_SCR_DBM && chan->desc->num_sgs > 2)
- 			stm32_dma_configure_next_sg(chan);
- 	} else {
- 		chan->busy = false;
+Subject: #syz test
+Author: abhinav.ogl@gmail.com
 
----
-base-commit: 3c018bf5a0ee3abe8d579d6a0dda616c3858d7b2
-change-id: 20250605-stm32_dma_dbm_fix-3b86271d54d4
-
-Best regards,
--- 
-Amelie Delaunay <amelie.delaunay@foss.st.com>
 
