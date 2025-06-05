@@ -1,95 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BFF1DED5D;
-	Thu,  5 Jun 2025 18:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792DC18CC15;
+	Thu,  5 Jun 2025 18:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749147493; cv=none; b=nBWL9nsk3REsYc0AtPVCo9edxQxY6mJyYXj2ncJfUePfhTVuIzcAqe+RLPstLUN/fPHKDapEW+P9cC1TET/loLg7RPoYryuohd/U+OtGU/8G1kX7qJEdKhyt4bsESvPgWv2iIcveg10RwQlvxN8VowKje6y6wvJFhv73nxPTOu0=
+	t=1749147649; cv=none; b=mTZ1NgtIAU//augwZU7zBFR4OY5gmM4OaSWGcumAn93qaoFDEAcjn8OipaGrhy5gTaASrmjMO+RrIlVUxo+WvS2y5FmAMjQYkmUBUx+Jj9m44eE/fW4+LkHw6YM+ESl35FXmTBhu/apWP+VjpyatSv9S1xfTCGur3YGCA/VL59c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749147493; c=relaxed/simple;
-	bh=DiaUWvin590sd4LNLULghDtdpNa3AH8Zw4fNwjtlgUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gk1Dq5zGDtcbA5xXgMfBGX+LMZ/PYry0YKxUGy9YyqFqZwwU0mp3bwJucyp4PYjxQ7SqYsOLEkw2TuT/lGBLRLsGGQRFICwFP7Hpx04oGyuOCIve8SJrMObzb4bynNXOy35bIfWevPH6bPGmFeK/HhR7J8+a7syEqltn7zWo9n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2JO3O5Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749147649; c=relaxed/simple;
+	bh=GuXy+S2OnKHqrs/0WLDLbvtSsvLUSoORLGJxOpGZcXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CdmkD0uKRmmhQBKAY6Kj+sieuTjxpviO8rmc6OuzcUgESrl4gtrz7qIzzdS0yC8umprVJpVaxig/N2tsEFfYcPiactYo4/9qxXu9/8pYuhOkTQyrSrK+HrP2zgaDJ6y8l1bCnJnog8zalF0fZ8X6pmFCFd/Mb0R6mvSx3lk1JNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=keiFWWIw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2JO3O5Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A61ABC4CEE7;
-	Thu,  5 Jun 2025 18:18:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="keiFWWIw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 564AEC4AF09;
+	Thu,  5 Jun 2025 18:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749147492;
-	bh=DiaUWvin590sd4LNLULghDtdpNa3AH8Zw4fNwjtlgUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S2JO3O5Q3qZdbKHnJ07kqkpN7InrviFSkMUjoqjG4KyNB8gfiMzJB+B5+FX6zyLxI
-	 qni74gqIv8mMeatD0ydhrgCIZVm/huASAxi9SoKyEioo7kAjc2pH7unq7qd31LvVhN
-	 bAXs/JsOAmBrShNmYmx7DgAwBvbJm5fRL2nBDdOyepzpiRWyZcAlVeD+egxUwIieDs
-	 YTIvFe162twob2HiMPwUInLphJg0MpxuHUtAHRX646w2Mr3G8gkwZzOunhcS/Ym9A6
-	 yiePUGCAsSW4qcFKrhrj9Ij6Jgvosu7gNHF9+9F1gwENNL9yEbRpttMOpjiYbz0f7R
-	 0xV6G2Nc5NY1A==
-Date: Thu, 5 Jun 2025 13:18:10 -0500
-From: Rob Herring <robh@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: george.moussalem@outlook.com, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] net: phy: qcom: at803x: Add Qualcomm IPQ5018
- Internal PHY support
-Message-ID: <20250605181810.GB2946252-robh@kernel.org>
-References: <20250602-ipq5018-ge-phy-v3-0-421337a031b2@outlook.com>
- <20250602-ipq5018-ge-phy-v3-3-421337a031b2@outlook.com>
- <3704c056-91b9-464a-8bc8-7a98a9d9b7a7@lunn.ch>
+	s=k20201202; t=1749147649;
+	bh=GuXy+S2OnKHqrs/0WLDLbvtSsvLUSoORLGJxOpGZcXc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=keiFWWIweJGAGGpJEc3eEuezuxh0czRjsJE0KBKUTBLewXpE67McAwV4kw3SWb94f
+	 WtJ6fohNII7lPoDKA7P+UxyD2iots2ZO2fCQs6J4H9yWKdQ/BYIHPlPlAZPocABts6
+	 jQXtn0wVYM0TR30KMZzoS3hXUnEnYiu8yGuyBp3HR67IrbcEQ6Wng/60vNmx7oM4ZZ
+	 Hlt/h849/EwSo1OaoqWhpiNhqtV9dXp0evEb96u5KlOg14CP0igpIhqiOUEdyPwRLP
+	 fYdqIO7fwRQAklxyXWJ6C3PY+I14Nirzbz4Ef6ImobeqYfZfF8Y7mHxZylHznXLlsk
+	 e9vQTyDY+AuHQ==
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-4080548891fso566892b6e.3;
+        Thu, 05 Jun 2025 11:20:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX5wPulpf7ULzqYsOnXve/017yl/I7KXAl3eF/XhXDBSMNXejGKFVRxiEwDs+7xX4Bz9ut1iSFbrmE=@vger.kernel.org, AJvYcCXH19ShC9vyiFay6fa+XI1A7T/8De83BOjDrRLqT8WJWee42u5MuiRO0K7CxTf9H7Sg4dBVd4Wg/s8x@vger.kernel.org, AJvYcCXJrnHa+9rDNFliDooWCMyhcDQoOQvjjPsr6lmQcglg19naieqoknhuapBVlz+HyRXDyp/TQ3cv6J0dUDmg@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYsWOnUol94tRNdvNWDOMYuPoxk9qnjbolzlwwSXDl5Wih4gBK
+	JS3/Fe/gT2XKuc8NmeXzckifYwW0r4aznlEDQFXCNSYpQv1dRHON3upeiiEeu2X5Z8I8ACN7hBj
+	YtHbldgC3IR7jXFitWaFZO0f/zRtt14A=
+X-Google-Smtp-Source: AGHT+IG7/jJC0HU0cZqVScsTdwM1qZWvoE/yBpdMOxLSTp/DaDcMwzM/LYCBuwtfgXrti+7vhjcfBPjwDne2N5E0Has=
+X-Received: by 2002:a4a:ec44:0:b0:60f:9d6:bd08 with SMTP id
+ 006d021491bc7-60f3ceeda67mr390588eaf.3.1749147648692; Thu, 05 Jun 2025
+ 11:20:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3704c056-91b9-464a-8bc8-7a98a9d9b7a7@lunn.ch>
+References: <2226957.irdbgypaU6@rjwysocki.net> <2005721.PYKUYFuaPT@rjwysocki.net>
+ <06122416-b24a-493b-9374-550e5c290436@intel.com>
+In-Reply-To: <06122416-b24a-493b-9374-550e5c290436@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 5 Jun 2025 20:20:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h=d-w3QVdTwC7dApDKE_eVtNxOa1deyG1ru-VTcY_C0g@mail.gmail.com>
+X-Gm-Features: AX0GCFtFXybSlkhGV2Kxomjop5gub7gHo84hnArGGoVN05qIYAyCIl6ek_pkwhA
+Message-ID: <CAJZ5v0h=d-w3QVdTwC7dApDKE_eVtNxOa1deyG1ru-VTcY_C0g@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] ACPI: processor: Rescan "dead" SMT siblings during initialization
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 Maintainers <x86@kernel.org>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Len Brown <lenb@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Linux ACPI <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 02:41:56PM +0200, Andrew Lunn wrote:
-> > +	/* PHY DAC values are optional and only set in a PHY to PHY link architecture */
-> > +	if (priv->set_short_cable_dac) {
-> > +		/* setting MDAC (Multi-level Digital-to-Analog Converter) in MMD1 */
-> > +		phy_modify_mmd(phydev, MDIO_MMD_PMAPMD, IPQ5018_PHY_MMD1_MDAC,
-> > +			       IPQ5018_PHY_DAC_MASK, IPQ5018_PHY_MMD1_MDAC_VAL);
-> > +
-> > +		/* setting EDAC (Error-detection and Correction) in debug register */
-> > +		at803x_debug_reg_mask(phydev, IPQ5018_PHY_DEBUG_EDAC,
-> > +				      IPQ5018_PHY_DAC_MASK, IPQ5018_PHY_DEBUG_EDAC_VAL);
-> > +	}
-> 
-> In the binding you say:
-> 
-> 
-> +            If not set, it is assumed the MDI output pins of this PHY are directly
-> +            connected to an RJ45 connector and default DAC values will be used.
-> 
-> So shouldn't there be an else clause here setting these two values to
-> their default, undoing what the bootloader might of done etc.
-> 
-> Or you can change the binding, and say something like:
-> 
-> +            If not set, DAC values are not modified.
-> 
-> We often need a tristate in DT, set something, unset something, leave
-> it as it is. But that does not exist in DT in an easy form :-(
+On Thu, Jun 5, 2025 at 6:14=E2=80=AFPM Dave Hansen <dave.hansen@intel.com> =
+wrote:
+>
+> On 6/5/25 08:07, Rafael J. Wysocki wrote:
+> >  #ifdef CONFIG_ACPI_PROCESSOR_CSTATE
+> > +void acpi_idle_rescan_dead_smt_siblings(void)
+> > +{
+> > +     if (cpuidle_get_driver() =3D=3D &acpi_idle_driver)
+> > +             arch_cpu_rescan_dead_smt_siblings();
+> > +}
+>
+> My only thought in reading this is that maybe cpuidle_register_driver()
+> would be a better spot to force the arch_cpu_rescan_dead_smt_siblings().
+> That way, each driver would not have to do the rescan.
 
-I'm happy to define that and have thought about it. That does up the 
-minimum version of dtschema required, but we pretty much expect people 
-to use the latest anyways.
+Unfortunately, this wouldn't work in the current arrangement of things
+because cpuidle_register_driver() can be called in a CPU online path.
 
-Rob
+It should be possible to make this work in the future, but first things fir=
+st.
+
+> But that's just a little nit at worst, otherwise the series looks good
+> to me. Thanks for chasing this down.
+>
+> For the x86 bits:
+>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+
+Thank you!
