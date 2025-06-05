@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E32E279918
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD85A27A46A
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143756; cv=none; b=P3s/HufyPiOXl3+QE0r7Z72gw37QsIoA0X9Q2/AwsurUvwqLvXbtgYH8kZsgZPkHh5/r/X1qYma3Iei+0knvaqOtxxar5/g/JPwEseZJbdXeczvDQCwedVa518H4egKHtIgsARXoTKoXZ4Lxz3/AZaXfz4PqzxtrrXF4DV6nk9I=
+	t=1749143760; cv=none; b=GntAMZHx5HTIzWxwhBb008ucrBx+TopAmgji64erPPapLIvQE8ohFYKvZbKVlLNzJHtidoP61kBhheC9g3fgxsjZcz/Lfo48UULcYBBfgzXLvDvRphelbb7t77lypiKsaVnOK2ZTfJxei+8Dr3qtT7PV/Mi0QWwyHxmpVMNYxW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143756; c=relaxed/simple;
+	s=arc-20240116; t=1749143760; c=relaxed/simple;
 	bh=owWI8WAYAlFsjJvXIyvYSUNXCshP/5FGhM730a1ama8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=k1ztKct3FegC5HQ+hdUFZ2wVShjxejK6yHtKIs6EY7CL8tMBfvjWpIXF9WgLPXV2n076u6pUoZu/fzzkEAE37qbQn5yTxbdnRysyD2TzOah9itIHEGK4iv8V+eRleLRdQ6xL4C1Pfc/XHEUMqdTiBq6fUcqwbw0qcPrUTm0a8J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3EKTus+i; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=Ndm8rSZnyhYcWJ5xC3KoVJ57xh+V8Cg5xCNmZvPRdfxxruPd149cMhSsHCmrWJwVQl1n4WiwRzzBhzOpu4SD2bGriq/MX3Ael5Z8ubCLa8G52n/Xb9eJW0hyraW7nYoMeLLByn368F65yIUPgR1WCF91LB6BQOwfu7kNZSlhQ7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tiXXATfE; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3EKTus+i"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-234a102faa3so8253525ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:15:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tiXXATfE"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742a969a4d0so1170616b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:15:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749143754; x=1749748554; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749143758; x=1749748558; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
         bh=1BvVogHbLCy3WniKJnzNXayCUjBrxVyVRH9sGv66360=;
-        b=3EKTus+i1JnDucVaMhuTSgXD7YTZOibnmejXlIOOreTNijnvHMFMpLZ+QXQaKgmOlb
-         Aa1iZLcPCb9NYfLfPBS5n1j1kWSoNJeZ+YNqT2aQPyLMQWTMtdKSdSAxFZ69ikGqGwfO
-         QWmYh2jfBFZ8XHJI3l/kGLIrkanWDsGj3lcQHgqbBX6pygK1DlD7M7k6cEZNI3EylxkJ
-         1y8N14mzr4i2tZZ3S5uIjesIE5o53ivwxnNX5dFuVo/L44iM5qiPEIvIYA2poMjsYr0r
-         D81tlq6B+xcUmFB497C5RFSw7cC8sBNlvDo2tCqCGAT+cLT/jSSF6yRAgA2QAltRvq8h
-         4E7Q==
+        b=tiXXATfEMA7Cv0bGj0LDF6x1n/TjkXBr4rFmaofyFnxiC8SMk92R22yxPaG7WZoPkW
+         ERxg/mD/oLRTVX1JDgUq3N0DobXZGuAKBrtrk/TylVBnUMn8azm93tC2Imwv2neIbxJT
+         ktU0n/UnhrM7zM69AllYiIE1r2vM3dCAQHr1Ro4YpHnxgCVw1qSPAKXHTrLjQPahDwDJ
+         KIOndle5g3Wali2zbkcnHOupiZO+yoedawczAyp1i1rB1qK5Km1bnAYrDA/jRw4nHd1+
+         Tv81yZ1HryL5+CJE9Lv+3n85hV3oNO7FuNg4avPeC1/ZOqPgivtLsauRBlhq0HcvSPvK
+         9eHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749143754; x=1749748554;
+        d=1e100.net; s=20230601; t=1749143758; x=1749748558;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=1BvVogHbLCy3WniKJnzNXayCUjBrxVyVRH9sGv66360=;
-        b=YYofk7o9OJYSTQiLbZDneQHbw409GBo1YaBx1oN8NEJeuUcVGHHN81Zk0BMDWc2sUA
-         TtWHdegh7+vrpp2qxYZKUOTcae6Wbj9fcFIVD/3Zdtqgiityg3QiGCJ4ti60guOtAr6y
-         6A36sVdvUYc0z3pP0vVXW0l1wz7UzbVbvagbGHmrHjLMjNGu6vcJ6dqbEZZUn2uQ655d
-         PG7HJNcy4JGaHjer3N07XwuED8h965OosZb08e4bn2PccnpxRjIO6FIdcFRLeF9AibfW
-         BeUqVff80A8Le5xZF73SxMOGPfe435P5xjBeaIVlt2dSOAZw7TvzsSYeJlri2caf1BIk
-         e2/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXT/mQRS6WFtnIanUwLZCm4AQuy/H4fkV5+/6ysuX6TOIiEPF9us9aoGxcC+/a7+hgvJlfr6DYw3vu+gKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRzgGKzTGjBtWIHDwoNfJ8ymW4OuEkUhjehGOftJn4sqgjveLr
-	QjO8yUW8Yj3W+k9OcYUB1X3GtnuI/hKWOHtEfACZ9WsEYAMTz3V8IqLjAQjis3XXD+TK+eDzafi
-	1vU3+McFM7oed66xfV6HqAOs6KQ==
-X-Google-Smtp-Source: AGHT+IEW234xG8sWokLR9Rty6k1AIBgtp49T5P85K9mc9H7ZjXy7xEQDhgc08MioADyUz2CbmUlZakt/hY882gqV/g==
-X-Received: from plsh2.prod.google.com ([2002:a17:902:b942:b0:234:f137:75cf])
+        b=kAqNBA7NeVMjTzjIbah4hpzngnZy+UEBHn6t4SXHUdM1g9ZIjT1eQ+dTZzyJRYh1Yw
+         o0nomofio180JgVy5vFQOZjHw4QL4qF7ilm2+FICwhF68zfxgQ3KbypPpDnPsh9gO6Kd
+         ReKGCJjTOQLYGaRyzNWGbbavp2Y5yIt+ckCUondQsUDS/NZtb/voEeIFPSw75sTkv05K
+         kX7oKtUP3nFKpCcstUP/P/WDdYFAJC5TggIlM5L7oTnalQw/Gbq0tNWsbAJD4Tb9vNL3
+         JmbBd9jWLeNIott7Cu6+7gRItzZO5x9eQGeeBaNAwJwYTkOnDlHgotgcJ7qB7lJv7OED
+         EfTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVl4Ccsx0k2f5HLp9QWc7SLSmUt+M5DouA3u/mpG9BY8U2wKFcRG5YHepUF9p4tPAkq6VKSEpduDFYQAgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3xOXPvTuBV1zZRWT/aslj2DnsepjBGWdLtAzcsh/SDOlJtynY
+	+OKkLwd65rseyLs4EswJB5Dme5P13G1Ec+xVNxIUyzxPQbtLD7UKeCJf+bieDJ180et8xUDRwoU
+	39IdWMM0Ki4iTPaQldW5lSmYdrw==
+X-Google-Smtp-Source: AGHT+IHR3VOIiMaXef3dSyiefFvR0BSAkbNXMc/PNNBHc5HJZyLp7dkRgDqMefJVOModcnjrV8QSGFx91L6zxAGgtw==
+X-Received: from pfef13.prod.google.com ([2002:a05:6a00:228d:b0:746:301b:10ca])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:dad0:b0:234:c5c1:9b73 with SMTP id d9443c01a7336-23601ec356fmr1418295ad.36.1749143754410;
- Thu, 05 Jun 2025 10:15:54 -0700 (PDT)
-Date: Thu, 05 Jun 2025 10:15:53 -0700
+ 2002:a05:6a00:6ca3:b0:736:34a2:8a23 with SMTP id d2e1a72fcca58-74827f10b6bmr586610b3a.15.1749143757947;
+ Thu, 05 Jun 2025 10:15:57 -0700 (PDT)
+Date: Thu, 05 Jun 2025 10:15:56 -0700
 In-Reply-To: <85ae7dc691c86a1ae78d56d413a1b13b444b57cd.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com> <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
  <85ae7dc691c86a1ae78d56d413a1b13b444b57cd.camel@intel.com>
-Message-ID: <diqz7c1qjeie.fsf@ackerleytng-ctop.c.googlers.com>
+Message-ID: <diqz5xhajeib.fsf@ackerleytng-ctop.c.googlers.com>
 Subject: Re: [RFC PATCH v2 38/51] KVM: guest_memfd: Split allocator pages for
  guest_memfd use
 From: Ackerley Tng <ackerleytng@google.com>
