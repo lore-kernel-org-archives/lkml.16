@@ -1,95 +1,108 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8921E89C;
-	Thu,  5 Jun 2025 07:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE8D195;
+	Thu,  5 Jun 2025 07:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749109366; cv=none; b=tAuUkiYu2Bp64jsIG5hZ0TIyNxhq7y0AOXdc/FW2PLyh7V3O0rixxgiICRq9Httlji8+Gz4lkt1wPZpbn0fdBK9L/ITljzsvPoMZBRlc1WlmSFsmM3IOFIzNsBxzGVqcQY+7hxww3nrcaJUn9OGP9CQd5bhx1SG+baVEfH2sj9w=
+	t=1749109545; cv=none; b=TWJxmlzPHvc6XrxcnafuQ+2aGtgk8YbNhhKVsvjFsMadrncxGjpd5WDHI5TGEJVeST0uuJy42Y0ViEjz2GrTENfnNdoJY4tya8ooYcw8OdooI++KhqQ7uIS/GKrTFYFrJ8+KHeeuVTVcw9uZQKGWXLMuoKPkbvh2gG3HUTMGxV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749109366; c=relaxed/simple;
-	bh=peuxk0dkEC2wxlfivCJMs9Q2+LO/nasgZkbrMNUpV4Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nptVDvA8WfS2XX8yFJBkgz+pUWk3YCIunXMqklD8S7JvecqvS9C2SuYvBiN1vK6sfIitG4SInjBKcex/FIbjh4bbAT1zCuvTeXh6vBchJrhQXpcMbd5eYdnavUSMUDBi+6tG/G1Kdt/c8/6Kx84VeGxCGserDmJeK5PUvMjl3dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dEzXuzzm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xaIgdKHQ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749109545; c=relaxed/simple;
+	bh=PjlNTKzwngQqNEBa3TbeQ0mzTtY1R9SNKZyGeEwznDU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g/kZ3P8GnhJMRcsPLSPIiVUpYicYVy/R7OJzlL2xR0Gcsa5pQ1dhQN6W+rY/PewjlHL0TB9/JeTGexajdsFu8fyRpa7MZd7I6iUqRK9sREndhAZiIYSlKVpEyBytDffyLbCTMUasq8L/iCZHnUpOqCEG/B0KLbGoz0uVVN/29M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kGPuRHe5; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dEzXuzzm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xaIgdKHQ"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749109363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Uk7jUtyFriANUDP97nlPEEGavPhnHMbnB5cr3BLrlT4=;
-	b=dEzXuzzm7qOiZMhDCY/Uud8J20wiBvShDbrLBHWRDku30PSJqFP9GmEhs/RJC9zsYW0i8i
-	9rYw4AXFkvvQLl7qgc6YXVpqqOzax1c9YNeZKxww5TQ9Ekz8BRNXvuIIm7r7+QijfB8ApF
-	wRzBCmdbCdc6EYW3F/zUMAy/mdDKNu8bI/KCDMWE2OZYOzNAOXXTJTmjhl975w0ML3QWs4
-	lMqG4i6cqEVCQ3q8No7Xwqt+/9EbvxPRts8XVGYSlSbHgijpztY/cnU9BKzKbqVZF4rRkv
-	mkwegLuyKU6mzdPM71WzW0VOUayNd6RWLkIarIs70Dd4klJ7YPc1V9wd9VH/CA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749109363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Uk7jUtyFriANUDP97nlPEEGavPhnHMbnB5cr3BLrlT4=;
-	b=xaIgdKHQsDFX9XqICsj59NIkOI0erRFCXhx9udCz/da7bXgApBUFttnk84VGCi7r9Uk1wC
-	cfdfJoV3IOB1QEAQ==
-To: "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>, 'Michael Kelley'
- <mhklinux@outlook.com>
-Cc: "pmladek@suse.com" <pmladek@suse.com>, 'Ryo Takakura'
- <ryotkkr98@gmail.com>, Russell King <linux@armlinux.org.uk>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org"
- <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "Toshiyuki Sato (Fujitsu)"
- <fj6611ie@fujitsu.com>
-Subject: RE: Problem with nbcon console and amba-pl011 serial port
-In-Reply-To: <TY4PR01MB1377757DD5E7F27A41F0B4723D76FA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
-References: <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
- <84y0u95e0j.fsf@jogness.linutronix.de>
- <84plfl5bf1.fsf@jogness.linutronix.de>
- <TY4PR01MB13777674C22721FCD8ACF4FCCD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
- <SN6PR02MB41575419E1223B8A8B0A1F1FD46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <TY4PR01MB1377757DD5E7F27A41F0B4723D76FA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
-Date: Thu, 05 Jun 2025 09:48:42 +0206
-Message-ID: <84frgevdl9.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGPuRHe5"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-70e2b601a6bso6919157b3.0;
+        Thu, 05 Jun 2025 00:45:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749109542; x=1749714342; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IzdffW7bbYyaLyNz/ImY9z2KWcCazIf2IOAm//YVIGk=;
+        b=kGPuRHe5olwqm4pca1ykV9yQIJyXsv2DfeMR0sV/SE5cV7nWuAZywo3L7eX4uvx++G
+         zCPdCDScCRA3EdbJxFv+2eRJ23zNECOJXxHp2QhDupd7/runYWbUHL8/IchrBX+oxO/R
+         pLjS0zY9RZtK7cvz6E1GMw8E3L7i0mWBx4mJvYp9kRxCc6YCQjDMiu3hYOttJj29iIT7
+         thjeCzDspzpyxqFGPjgOEjaWE3hfi9Abrfa6wh94c9mgqSILaQIKvsZ+UI2dpjv74Wdw
+         pe4tr8GSpsosErIEk8sE1EepzktlxqhzSSao/Rf51aHyAdZt3Bwq9jmRRgqpcL6GifwA
+         dFwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749109542; x=1749714342;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IzdffW7bbYyaLyNz/ImY9z2KWcCazIf2IOAm//YVIGk=;
+        b=fR1ui7ugJbl2wv8d0ZD/Zx68VKRTqwiOwtb9WhP2i0iCGUBl2hg2iecVOmS7fMSNA/
+         qi2TiO3wqnK9l3wAEdNBZ7q2XpOOexwEF/12694Gr6IPWI9EzmHNwiENpfUO76v8yNHJ
+         RAFMj7dKZWMVVRipDcfZ4qAZ4ca+mbL4EIT4AFv4YqgNDst8N8nKVc95E4vYgDOXtr3m
+         jGPnbPPGA1KJ1de2lpo96IFMPQmS8gbnSb58MCRGiWZjhWhcbnlhWOBDeuIq4VgAjzUd
+         BKY5cpUxqii1iKFHCDuLSiEV66w73sILwiaKdrsyYoeRDop2TnVKoxE1pDmbi7C8HRDG
+         hFZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6Mp6Y6mfrkQ9HRrnzBnFrhOvOlzoXOgME/aKKBdxxQ4T1Owfxteqn+7wZD3ruQ31ER6/BWckU0+nr@vger.kernel.org, AJvYcCW0t5eSm1f7Z8/q6F7AbHEZOF8TDievq0hjv9VbDVt86RV83v71AEIn/6u6moAN4DD0OAvyJs3lsP+W1/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxtGBuRRYUJU5Fnk6r1RHhOJ0Xo3NsrPjI7AnmkMwlDDtgs9Zy
+	Br/OYWt2H6W9+z2C61s0DkoXCmqa47lBVsDcD6eNkW7aqVDqriFvheKh9iK1p6Sf2WK3ulFGIWO
+	DPRknO8DToWkpBdCNH4f+Y1khLOGkcso=
+X-Gm-Gg: ASbGncvdO2ZChhOfp/M1ToW4z1QcJUfIX0g0gV8Fbe4FUbfZ1BDOcSTGBvaET4oKwJo
+	mUwnhtDhL4Kjz97jH39KmwrWQtxwYYNWOsqtAjxhuJJ2nib1BDGT2/crZqaCNc7ke5fTW8EKInP
+	X2kd2lWJ9WbeZXiy3QW8aswDJ/52E0bY4=
+X-Google-Smtp-Source: AGHT+IE0oww02nur6cCoeFmiqTdCDIBv8Z6wvA3Kmn01B2U7GulLjWjewIGmh/gv/aYnH1VfsT5WU3cX8kgF4m2M2bE=
+X-Received: by 2002:a05:690c:6c07:b0:70e:272c:95ae with SMTP id
+ 00721157ae682-710d9b47619mr86616607b3.32.1749109542647; Thu, 05 Jun 2025
+ 00:45:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250529130915.2519590-1-noltari@gmail.com> <83e59280261ad0769dd7e9f6135656c795836878.camel@pengutronix.de>
+In-Reply-To: <83e59280261ad0769dd7e9f6135656c795836878.camel@pengutronix.de>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Date: Thu, 5 Jun 2025 09:45:30 +0200
+X-Gm-Features: AX0GCFsJCMU5XEm5qbA7gX2LCkkPq9rMz7qNnuLHOCLZ_E__S4YZ82wsdUpMrds
+Message-ID: <CAOiHx=kFvXoPwes4AXsysxLz7ZgGzae2FayGw=BAgbaqfJ_Ukw@mail.gmail.com>
+Subject: Re: [PATCH] spi: bcm63xx: fix shared reset
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
+	dgcbueu@gmail.com, florian.fainelli@broadcom.com, william.zhang@broadcom.com, 
+	kursad.oney@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
+	broonie@kernel.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-06-05, "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com> wrote:
->> I've tested the fix in my primary environment (ARM64 VM in the Azure cloud), and I've seen no failures to stop a CPU. I kept my
->> custom logging in place, so I could confirm that the problem path is still happening, and the fix recovers from the problem path.
->> So the good results are not due to just a timing change. The "pr/ttyAMA0" task is still looping forever trying to get ownership
->> of the console, but it is doing so at a higher level in nbcon_kthread_func() and in calling nbcon_emit_one(), and interrupts are
->> enabled for part of the loop.
->> 
->> Full disclosure: I have a secondary environment, also an ARM64 VM in the Azure cloud, but running on an older version of
->> Hyper-V. In this environment I see the same custom logging results, and the "pr/ttyAMA0" task is indeed looping with
->> interrupts enabled. But for some reason, the CPU doesn't stop in response to IPI_CPU_STOP. I don't see any evidence that this
->> failure to stop is due to the Linux pl011 driver or nbcon. This older version of Hyper-V has a known problem in pl011 UART
->> emulation, and I have a theory on how that problem may be causing the failure to stop. It will take me some time to investigate
->> further, but based on what I know now, that investigation should not hold up this fix.
->> 
->> Michael
+On Mon, Jun 2, 2025 at 11:31=E2=80=AFAM Philipp Zabel <p.zabel@pengutronix.=
+de> wrote:
 >
-> Thank you for testing the patch.
-> I'm concerned about the thread looping...
+> On Do, 2025-05-29 at 15:09 +0200, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> > Some bmips SoCs (bcm6362, bcm63268) share the same SPI reset for both S=
+PI and
+> > HSSPI controllers, so reset shouldn't be exclusive.
+> >
+> > =C3=81lvaro Fern=C3=A1ndez Rojas (2):
+> >   spi: bcm63xx-spi: fix shared reset
+>
+> Both drivers currently enable the SPI clock before triggering a reset.
+> Can the hardware cope with being reset before the clock is enabled?
+> That could happen for the second device to be bound [1], unless the SPI
+> clock is shared as well or already running for another reason.
+>
+> [1] https://docs.kernel.org/driver-api/reset.html#triggering
 
-The thread would only loop if there is a backlog. But that backlog
-should have been flushed atomically by the panic CPU.
+In a completely unscientific test, I disabled both SPI clocks and
+triggered the reset, and the hardware didn't seem to mind. It also
+didn't seem to have any observable effect, as all registers I checked
+kept their previous values (both with and without clocks enabled).
+Neither disabling the clocks nor asserting the reset prevented my from
+reading the registers of either block, so their effects seem to be
+rather limited.
 
-Are you able to dump the kernel buffer and see if there are trailing
-messages in the kernel buffer that did not get printed? I wonder if the
-atomic printing is hanging or something.
+That being said, the bootloader (in the one device I tested) seems to
+keep both clocks enabled, so they would still both be enabled during
+the reset of whichever is probed first.
 
-John
+Regards,
+Jonas
