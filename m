@@ -1,124 +1,94 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BAC8462
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCC41876;
+	Thu,  5 Jun 2025 06:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749105261; cv=none; b=cNhnbnIfXXfLUI+0oOJxKn6a4SV6GdFZvSo0bbk+LHxI/AHfhfzrQ/aIwhs2iqCpsjpWVAYLOrVLZJX1dT16b3Jog5sf0X8iCMbX7ZFIrNCHmhk54i79zJjQ+QzlSj+vpe9KyYJgYXTWzPiEP58u4bQ3pvKOMXCKdQKIVt/0r/E=
+	t=1749105281; cv=none; b=WJ/54g8Dq9jWDb+DDrzR2vm0H3BZF+kqYkqKB5MPMwiwgU/Qk1AIxYxsWNP9tvPE6VUg8PvF7Rc9wV3l51Cwh1ymqBPgiv3GlkH76NNAe/Ch0ZNy/afqLVopDyoB/GttIJr/lsBYBVqKchtM+gPF0eeVKdQzhSpQs+cpOZDi49E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749105261; c=relaxed/simple;
-	bh=WBKeGzxGzzd9x0XUdV5HWMXtxw3JKDGOjRT4f4tNWF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lb8jrklgwPv7agF40/4GgKWKq+a0yZ/xjVclSCrG0Z5NOfoZ5vj8nu3WjCdoGH1VgDMrfCNKVXo+ApYvSYcX2bfYGSbRUpE6NCGTq9VvaQzlEDzwIMt3cFHud5j8bPV7E1WSabUsW3LWzr5+zDB2cVns8I/Tu17kqeCW3HtA8kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=foundries.io; spf=pass smtp.mailfrom=foundries.io; dkim=pass (2048-bit key) header.d=foundries.io header.i=@foundries.io header.b=lpham7mT; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=foundries.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foundries.io
+	s=arc-20240116; t=1749105281; c=relaxed/simple;
+	bh=HHWpE5lbbZL3wQiWIV78wYmIeZMoSTWyxTft+BH/zxM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X1Thy0NQ/oEApdoHqyLTHQHCU/c54gNMsEj4E3/rU4megRer1s3xtgjtFecp3jZlu/fal3y31dwrIoiJsQ8UwV2tHBlMRakMWIQKDYESFdqWkpLAKgYuPPAZkuFA9+CEOAyjLQweSeYzF0QSmIEpGPzFLBf/RIwLVgYm2Rzuxsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DIpn6Yhu; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foundries.io header.i=@foundries.io header.b="lpham7mT"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5532a30ac41so681348e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 23:34:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries.io; s=google; t=1749105258; x=1749710058; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FSYAF2WstzvPvCo4AlPKEcAwzeUBhl4r57KbdFFm/JE=;
-        b=lpham7mTESZl4ymp/NNBT2cDgtWiRaAzbJFkYJNvAOewq9680IxZM50qiej5AXg9SB
-         FuGm1mq2cBZd6Q+8FmsefN+ZpdmznhQfVXJGPPgCDL2QQ3J+JPD6QH68vrnPvqSDHYJz
-         qFGcqL7pnNkt+W+iOf8r3Vw2ARMUrj8d6NGO6YCxwCtOe0isA7x2ekwAKbKbdHPwFssl
-         UKIOrvLfVu4Y5uPCUy3VQhkGhCPcf/Xr8F4bQURwZw5IGLJjWh3Cs/R6bJhHygYogMV3
-         EaWdF4/jPOoAZlKxwvYIQ72FelITw+Z+f3yO0QQtC+J9W8+VE9KWYgfhAGmMOSMIHg7Q
-         4yEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749105258; x=1749710058;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FSYAF2WstzvPvCo4AlPKEcAwzeUBhl4r57KbdFFm/JE=;
-        b=WljD7JsO42kcZvtttWWDJDW7mfUQGE8QPFIFZ/qYMbk0tZI91K4cDg4wynh7JCiiqE
-         vPhLVNMJI1ZUvGlOtapa2psVeBeM3a5UK4xjn4emxqnD7kvSvqc1dqO9AhkOxe5QBgrK
-         diksq1MLRTRgGszOeetU2bV6JfD6uRvtguW0jligfRrCeUn3TEbkz+4DVJ8+btwW0idE
-         OcpMSwqATcqaikWIH0r1T75lbUPzQJS/uIEB3fEj+AQSX1/L0WNeiF5ZPFDA+JBX7hBK
-         ucubxpGe3CzZ0zuQ5iLr6Wr1t8kh6KLlSOVffMUZOR0AGFplC5Wr6+c+rYVtpSl7Jwvc
-         yoUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfwC1Y3Zb9niFMFw6QwiLC9wBvlG9EcCaPV0wzlrRde8frhry6umLqLUgXJ0l8w6Tm4BJt+80C6BIXsHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5BToIy1YYO2L/L9DRbkQBWfw7Tjm2u7PO8YYb1bk8UfhdWXbd
-	fXCBPj1GILgf+sVyPf7e/RxkL6ActrdpGqTGPOUe5Axad/hz9dQVTz9iQH3aAvBjqXI=
-X-Gm-Gg: ASbGncsGj/MZF1w+tHAa+8y3sFBnSlaSBMLtdI+3dfyqJY4ZM8qauhXnCJ+5Onhl/e0
-	sWrhuCJOhkJMPYgV9IU0fvdfDXT+eNIcGCj3BaOeisHeAgpelwHyLw5YKkoMrgbbN0y1cveJJB2
-	KqhLiXkWlB3A/WyKn9G0m43oRr5MUe43uajH48GsraL7CMY/blQ2qmsmjhT2ZR5ICXffo2qSheE
-	VVk00lYspEJ/CBBhhR00ziuTFBmMndvZCEbVucQBO1ekhRpzHO4kFwdpQ6lawvJYX15U9SEXzWw
-	hGJk8KsQ158eTn7IYq2cptdBUpcaI2nEU7Nny60/iYYcaMly51oGrNumeovgncejviwDhXvdKb2
-	Kq73P9DbTf2JIx5oClRl6wGM6j4lee1U1XEZK9qDshEaC
-X-Google-Smtp-Source: AGHT+IEeoLpgJuAlO/Hd+Yo0ndJOTyX+6xSjbYLZNp63nindH9o3ENze5fCiwM3W+rGkVaSW9Rgplw==
-X-Received: by 2002:ac2:4c4d:0:b0:54b:117b:b54b with SMTP id 2adb3069b0e04-55357bd6e59mr1492888e87.54.1749105257542;
-        Wed, 04 Jun 2025 23:34:17 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553510f7402sm1025889e87.185.2025.06.04.23.34.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 23:34:17 -0700 (PDT)
-Date: Thu, 5 Jun 2025 09:34:14 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@foundries.io>
-To: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>, David Collins <david.collins@oss.qualcomm.com>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	kernel@oss.qualcomm.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 2/8] power: supply: core: Add state_of_health power
- supply property
-Message-ID: <3ldf7w5cpv4wt63kvewl2a32abx4uohvir7zgefpqly5rytkcn@p5fslnvpnjn3>
-References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
- <20250530-qcom_battmgr_update-v2-2-9e377193a656@oss.qualcomm.com>
- <6oixvnhihgjucqaovkayzm6cpi35jfmtwmm67wa6h4nlmhr6w5@ggb7auvjzos2>
- <cd2964b0-e28e-4ddb-b319-9b65fb78b73c@oss.qualcomm.com>
- <p5nxjuexggzxttislcaum7vomawnq5fncos7itfib6ysvy6a4k@d5ywmfpqyk3s>
- <994cb636-50b3-40f8-baaf-0b1afa2e7f53@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DIpn6Yhu"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5556YPwI4016710;
+	Thu, 5 Jun 2025 01:34:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749105265;
+	bh=j8gvwH3NIbG+weltGI6t7kllgUJfe9fjGkzv21AdfIQ=;
+	h=From:To:CC:Subject:Date;
+	b=DIpn6YhuJ0VgtK51IzCVAhb8vyMWRtqp6V6+jdvFqK9CeAVTH3TprR/M2KYSgaUJq
+	 7FXJmEvlpiCD9GF+hhDSEQdzNNWGO94LUf9DVjl+s/cKgrfcCZQkCkLnN32ugCRCKO
+	 eLNvMhzzkHjkBFDp3760shM3fIiVMAd3moMQVmkY=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5556YPFX622652
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 5 Jun 2025 01:34:25 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 5
+ Jun 2025 01:34:24 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 5 Jun 2025 01:34:24 -0500
+Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5556YN7V3267399;
+	Thu, 5 Jun 2025 01:34:24 -0500
+From: Chintan Vankar <c-vankar@ti.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>, Andrew Davis <afd@ti.com>,
+        Chintan Vankar <c-vankar@ti.com>, Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Peter Rosin <peda@axentia.se>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <s-vadapalli@ti.com>, <vigneshr@ti.com>, <nm@ti.com>,
+        <danishanwar@ti.com>
+Subject: [PATCH 0/2] Add support for new property 'mux-reg-masks-state' for mmio mux
+Date: Thu, 5 Jun 2025 12:04:20 +0530
+Message-ID: <20250605063422.3813260-1-c-vankar@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <994cb636-50b3-40f8-baaf-0b1afa2e7f53@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, Jun 05, 2025 at 02:08:30PM +0800, Fenglin Wu wrote:
-> 
-> On 6/3/2025 6:35 PM, Dmitry Baryshkov wrote:
-> > > > > +What:		/sys/class/power_supply/<supply_name>/state_of_health
-> > > > > +Date:		May 2025
-> > > > > +Contact:	linux-arm-msm@vger.kernel.org
-> > > > > +Description:
-> > > > > +		Reports battery power supply state of health in percentage.
-> > > > > +
-> > > > > +		Access: Read
-> > > > > +
-> > > > > +		Valid values: 0 - 100 (percent)
-> > > > What does it mean that battery has 77% of health?
-> > > I will update this to explain it better:
-> > > 
-> > > Reports battery power supply state of health in percentage, indicating that the maximum charge capacity has degraded to that percentage of its original designed capacity.
-> > Which basically means that we don't need it in the first place, as we
-> > can read capacity_full and capacity_full_design (or energy_full /
-> > energy_full_design) and divide one onto another.
-> 
-> Hmm, it is true in general to quantify how the battery performance has
-> degraded over time. However, estimating and calculating for battery state of
-> health is much more complicated I think. I am not an expert, but as far as I
-> know, different battery management systems might have different algorithms
-> to calculate the battery health and report it in as percentage. For example,
-> in Qcom battery management firmware, a "soh" parameter is provided as the
-> battery health percentage based on the real-time calculations from learning
-> capacity, resistance estimation, etc.
+This series extends mmio-mux driver's capability to configure driver in
+with extended property.
 
-Ack, this is more than just full / full_design. Please consider
-expanding ABI description (though in the vendor-neutral way).
+In current driver implementation (mmio.c), driver is parsing register's
+offset, mask and value from two different device tree property. In order
+to configure mux register, these two properties should be synchronized
+with each other, and this constraint makes it complex to modify or add 
+further entries for that memory region. To simplify this, add support for 
+a new property, "mux-reg-masks-state", which allows offset, mask, and 
+value to be specified together as a tuple, and remove the above
+constraint.
+
+This series is based on linux next tagged next-20250604.
+
+Link to RFC series:
+https://lore.kernel.org/r/20250304102306.2977836-1-c-vankar@ti.com/
+
+Chintan Vankar (2):
+  devicetree: bindings: mux: reg-mux: Add support for new property
+    'mux-reg-masks-state'
+  mux: mmio: Extend mmio-mux driver to configure mux with
+    mux-reg-masks-state
+
+ .../devicetree/bindings/mux/reg-mux.yaml      |  32 +++-
+ drivers/mux/mmio.c                            | 144 ++++++++++++++----
+ 2 files changed, 148 insertions(+), 28 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.34.1
+
