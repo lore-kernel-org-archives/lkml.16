@@ -1,177 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A261DE8B3;
-	Thu,  5 Jun 2025 05:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54101DC98C;
+	Thu,  5 Jun 2025 05:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749101125; cv=none; b=H+RLWtXlW9+IBRBDFRIU8rDc7jtJHWF/TWvcnjwTivU+jn8Y6dC6bn/9tX6nn4FkSmyFsnwYV8eZ7vKqXtI1SCLHE9sBhFIkwc5xM4P3fv+iN+G8xTu0jF9+ail6PmygRD9ra/GdBu1sB/A4Evr03vtxzaze2DIE2+1vigkhcJA=
+	t=1749101336; cv=none; b=f8iZrDbEtW6gn85p3hpVHcR7QWE0d1HtSGHtounMad8hMJFjI8t3jyVu0hI3c5lYik984wh0n0v1oBsfk/qLokAqksL1oB1y6V9J0BM5Xl32D0uc+Khnq3x3CCH5StO/5xEhZt2Z78WdwuDJA1sch/pYj2eigVFSjt1KtjRdrFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749101125; c=relaxed/simple;
-	bh=+cdbKhZjBoZDRwbRa0KV1PYNo7teLIa2Q8X716SvQ9M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D306UN0RcRMCuRXVlTXFheHRwITJY7KP5kTrej0wAGi/cbnnX3ErPgzHvaFm9+0SPDi5F9sAsRHpd7/Y6VTphlpnunv9ZQVHvv8H7IwB19tPob4RneyNLdC1tdOoknfaWKSZrL8cbFOEguZuWxEljvZMIA//OwGmsLHR5ltUEBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zk9VwQ1/; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749101336; c=relaxed/simple;
+	bh=8T+KiH+TRmyHZbNkGgihRrs6KzyojxmRHnHiGTLDKWU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=F8+UnpfOmbSrzLhSi1gy6+EuUT24Q3FCozNnyEHviQ3ozn+ZsoRVkb7hBP4KvXB34e6g8Qf199lfwSkvj9gFDGRSV06wvTUMeSdS9Y/uEz5rqPsRNm2kjpjALs3CUebHMzQsNEmkqXBNgMtubsNFdF2QhtQOIMzabhimQmGuT0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=C6f4wtlm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zk9VwQ1/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749101124; x=1780637124;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+cdbKhZjBoZDRwbRa0KV1PYNo7teLIa2Q8X716SvQ9M=;
-  b=Zk9VwQ1/Jfs7pCflyWK8VdUgL5I4GK4y27mycU9DZ9j7sVBpc3zrUXsC
-   POSROZrgswPZ79AXeg4fQLj7aRA6XCSGoQjmIrDBsFpzvGLoc0ZzUc1K1
-   Og0XwdrmK/er74IrDJQjyIlFfVg5RCh6NJs1U4edosvRd3Mj49zNo/Ajo
-   pNQJyl5bOXm2mIyRkgM3D0GA2m4AfWhdoKqodtNT5F+bua+Wc19GQQ38G
-   Z7MdEyj+UJdqI0JvV0KqYUv+EJC/paY2PL9tG5JuOBCydY+yOQ14gFWof
-   +d5Iic789ZT+rAut9j7PVgew8OOQEjv+ug0sWlot1Wdpy7O/Rb+tq8dnn
-   A==;
-X-CSE-ConnectionGUID: y58tkR3HShKZn0EMSi193Q==
-X-CSE-MsgGUID: cqZv6qh/SsKKi/qcVqoYBA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="62560127"
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="62560127"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 22:25:23 -0700
-X-CSE-ConnectionGUID: xg/4fCFnQ4G6T1ilLlHNzw==
-X-CSE-MsgGUID: mfb3AFnxSWG0gS83KmOkWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="182602137"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 22:25:00 -0700
-Message-ID: <558a649d-d419-46e2-adb8-4027e105c1ce@linux.intel.com>
-Date: Thu, 5 Jun 2025 13:24:57 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="C6f4wtlm"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554HJJK1027554;
+	Thu, 5 Jun 2025 05:28:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	c2nhgPnAlNxy8+rgUUUdvD4NqC/lP6n/L4BAZPK/zdo=; b=C6f4wtlmDrYbgTEt
+	der0z0jFOw8tHXyZPIapDsbWmGPdhRUeRuMYJ1WPcHy7aKVeI2c2idNiEcUWleGn
+	deHBwSmNyFu/SdGG6oyDRTXjKS9EL5S39le5DJS0d02/RQEc7cwmWOWqxbJqzH6E
+	Zmv9AXOfV36TTYVh3Ki8nNkJW72WUyebr0lqOLioHBTSrNF3PvntlLXIRSc2aHyJ
+	Vo3M118phas4c4J8oo6Xc/08VbDSArzVfegHBsLh9R0zKDuGE48XO8HxQMgke0ab
+	NBtmXMVXbzLGN+pnkY0UEzGzGM8arTGOB3uSosIRk4MJwu28weNqDGcMDq+yblkO
+	D9RlCg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8t85su-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Jun 2025 05:28:46 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5555SaxU024457
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 5 Jun 2025 05:28:36 GMT
+Received: from [10.216.44.241] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Jun 2025
+ 22:28:32 -0700
+Message-ID: <fb4763e4-0106-94da-548c-6c585ab8ff2f@quicinc.com>
+Date: Thu, 5 Jun 2025 10:58:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 38/51] KVM: guest_memfd: Split allocator pages for
- guest_memfd use
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
- ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
- anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
- bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com,
- chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
- david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
- erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
- haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
- ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
- james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
- jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
- jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
- kent.overstreet@linux.dev, kirill.shutemov@intel.com,
- liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
- mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
- michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
- nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
- palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
- pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
- pgonda@google.com, pvorel@suse.cz, qperret@google.com,
- quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
- quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
- quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
- richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
- steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
- tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
- vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
- vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
- willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
- yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-References: <cover.1747264138.git.ackerleytng@google.com>
- <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH ath-next] wifi: ath12k: fix GCC_GCC_PCIE_HOT_RST
+ definition for WCN7850
 Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Baochen Qiang <quic_bqiang@quicinc.com>,
+        Jeff Johnson
+	<jjohnson@kernel.org>,
+        Pradeep Kumar Chitrapu <quic_pradeepc@quicinc.com>,
+        Wen Gong <quic_wgong@quicinc.com>,
+        Bhagavathi Perumal S
+	<quic_bperumal@quicinc.com>,
+        P Praneesh <quic_ppranees@quicinc.com>
+CC: Sriram R <quic_srirrama@quicinc.com>, <linux-wireless@vger.kernel.org>,
+        <ath12k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Parth Panchoil
+	<parth105105@gmail.com>
+References: <20250523-ath12k-wrong-global-reset-addr-v1-1-3b06eb556196@quicinc.com>
+From: Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>
+In-Reply-To: <20250523-ath12k-wrong-global-reset-addr-v1-1-3b06eb556196@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=eJQTjGp1 c=1 sm=1 tr=0 ts=68412b0e cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=17ir-Gtp1zVAAPY-F3MA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: jm_FZWIanXm3UkUXi9rD9HpK5lQoSJYT
+X-Proofpoint-GUID: jm_FZWIanXm3UkUXi9rD9HpK5lQoSJYT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDA0NiBTYWx0ZWRfX08ybtEULpqSU
+ TyKqO8j9oAB38jqmnSuBptOv9o+ILvYDefh1zgwESy+1dIUn5vQ8Lgylah24zorBgIwKs7E8fYr
+ FH7n86tJYuErw+xLn4wZFA2HGuJEzyvFVNPxk8d2l6T+DKRAwnFLZCV7EmKBVNQIqQ9GE2wrYsG
+ LAUJao5jmgIF0n0ULlk3PJtHQdx00mas96qS6WSwX15F3liGqgPVI45U+T1UKEHSZFy8NYyyAP/
+ nwnNOCUUowPioO7vPthn7cBMOJg3g8NzHK0opX/XPYD91COIuB6KrhUHJUFyIIsUpAFUWoq23/D
+ jazW+LgsHHJteIZwKtCsOBVUh1zoq+pkVdQCSpmaQn0L/WOQ9RPjZruDkMSKodz7Ug3s0ec86z9
+ Qo+PEKyVwwnUy4HYZEIoXgHFT5Gf34e9HhZZFu2zqzZJULu1y8nDliSmcjwrJDNtVbK6e6kZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_01,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1011
+ priorityscore=1501 bulkscore=0 mlxlogscore=503 impostorscore=0 spamscore=0
+ phishscore=0 mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506050046
 
 
 
-On 5/15/2025 7:42 AM, Ackerley Tng wrote:
-[...]
-> +
-> +static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
-> +						      struct folio *folio)
-> +{
-> +	size_t to_nr_pages;
-> +	void *priv;
-> +
-> +	if (!kvm_gmem_has_custom_allocator(inode))
-> +		return 0;
-> +
-> +	priv = kvm_gmem_allocator_private(inode);
-> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_page(priv);
-> +
-> +	if (kvm_gmem_has_some_shared(inode, folio->index, to_nr_pages))
+On 5/23/2025 7:53 AM, Baochen Qiang wrote:
+> GCC_GCC_PCIE_HOT_RST is wrongly defined for WCN7850, causing kernel crash
+> on some specific platforms.
+> 
+> Since this register is divergent for WCN7850 and QCN9274, move it to
+> register table to allow different definitions. Then correct the register
+> address for WCN7850 to fix this issue.
+> 
+> Note IPQ5332 is not affected as it is not PCIe based device.
+> 
+> Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+> 
+> Reported-by: Parth Panchoil <parth105105@gmail.com>
+> Closes: https://lore.kernel.org/all/86899b2235a59c9134603beebe08f2bb0b244ea0.camel@gmail.com
+> Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
+> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
 
-What if a huge page whose attribute is shared?
-
-> +		return kvm_gmem_split_folio_in_filemap(inode, folio);
-> +
-> +	return 0;
-> +}
-> +
-[...]
->   
->   static int kvm_gmem_shareability_setup(struct maple_tree *mt, loff_t size, u64 flags)
-> @@ -563,11 +1005,16 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
->   		return folio;
->   
->   	if (kvm_gmem_has_custom_allocator(inode)) {
-> -		void *p = kvm_gmem_allocator_private(inode);
-> +		size_t nr_pages;
-> +		void *p;
->   
-> +		p = kvm_gmem_allocator_private(inode);
->   		folio = kvm_gmem_allocator_ops(inode)->alloc_folio(p);
->   		if (IS_ERR(folio))
->   			return folio;
-> +
-> +		nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(p);
-> +		index_floor = round_down(index, nr_pages);
->   	} else {
->   		gfp_t gfp = mapping_gfp_mask(inode->i_mapping);
->   
-> @@ -580,10 +1027,11 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
->   			folio_put(folio);
->   			return ERR_PTR(ret);
->   		}
-> +
-> +		index_floor = index;
->   	}
->   	allocated_size = folio_size(folio);
->   
-> -	index_floor = round_down(index, folio_nr_pages(folio));
->   	ret = kvm_gmem_filemap_add_folio(inode->i_mapping, folio, index_floor);
->   	if (ret) {
->   		folio_put(folio);
-> @@ -600,6 +1048,13 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
->   		return ERR_PTR(ret);
->   	}
->   
-> +	/* Leave just filemap's refcounts on folio. */
-> +	folio_put(folio);
-> +
-> +	ret = kvm_gmem_try_split_folio_in_filemap(inode, folio);
-
-When !CONFIG_KVM_GMEM_SHARED_MEM, kvm_gmem_try_split_folio_in_filemap() is
-undefined.
-
-> +	if (ret)
-> +		goto err;
-> +
->   	spin_lock(&inode->i_lock);
->   	inode->i_blocks += allocated_size / 512;
->   	spin_unlock(&inode->i_lock);
->
-[...]
+Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
