@@ -1,70 +1,136 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CBE33062
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F7733062;
+	Thu,  5 Jun 2025 16:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749140045; cv=none; b=pcDJlm/TU+pjK7Pq+3T2XD9mnEP+56MO5D6/JKJXoBy6PwL75MyYJtNa1LEer/U1oYS/GxOxkKZwVMWrR5QiSNvgr1tODYdsalhpQVZv2bAWChmrl2wMMPLrYXodcfCzffflBuqeNGhApfHASwT8MksnQqQ6me6aVTUxdFnmRUs=
+	t=1749140097; cv=none; b=Y990pYaR5kPQwQPJBuT6NhD17T2Uxw7zHMA8RroBDZjc7XZxToJgoZ0UPwJuYVuyZfBPvmm7kGUhCC8gbEFebJ/G2hXXZLFrYKhW/r07adCgM7VMnzAQAA6Zbah6Eu7AepmXuIRHhYSztYV65BNQH4w9BKrzPbg5XnTJ1VhoJgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749140045; c=relaxed/simple;
-	bh=CoBZ1/d4VrSP6eFEOFXsI/O3ahaZ9G7q/alpCt/15l0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=FnDayIVZzSVv3WD7BM+NQZrohp/vVkrYlb+f+E28xQ2JCcU4iX/xpV/2gIO/e7O/PXSlC+fJzvK2TS9wgJu+bc8rpjbJSwJuVeX9gIim7SD2cR3nRbVFDuWLJKM7IZJFB4JOD2WFta+TvwrNTh9CwH6JxZsMbXoQgBvDC1rv5TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so13850375ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 09:14:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749140043; x=1749744843;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lLcixu2J4gsaoZFhxwygcfRmuOJLLhBMCrdvAdyKPZU=;
-        b=KX0sTga0FyotYDoUy3plePYEGpmrpGTrvurpR9WvlEmIL4aq7mrjmXSY/eaUjA3k0w
-         0bW6ldu/5JbPV8Aqnw3shiiB6CtDPZ2CSL88ug/HwSj0Gqh/FyySw5/dqah9RNteSLyf
-         CaewkDJXhYvizBwAlAGnaZ9uEnlHqdRDL60EGM+A+n7tNNyO009RkRmvRCiYDVZFBwRN
-         SfEAx3GTRRgfHKL07QMoIYl9HzEom4y1Q6xHNb7unrnB4sokFZj7DUXpgp9kRpZBHcWU
-         AePbDrhPJ5mgeNkqz7B8VzbEwGdYpJqiU9e6YJ71aIOGQCcMKOH9sWpq6fxxnYx+/EIn
-         d+3A==
-X-Forwarded-Encrypted: i=1; AJvYcCW7c5X03pxnGC/8aEbDdApMSOmhgWzpEf55Fq5eGwpM49YBpHbmK6IYULcfuPj12Kga06DtWpULNuTvud8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw504aOxRwSQtcjv4/bwfJZ3tffYlz+dda8HJEOU1r0rcSHBNZv
-	K8Of5+qcxuJ4hUvFMsKxRj+UBGqLvNWP65P2T2Ey9FeZbdCq6f4rQvOsLgSwzryAW7jBRgTtbom
-	O9cmtShscHCdNVUty/bS8XVw/C1aa+WYfigUBcC4oG1r+TymlE1I6DPb2/WE=
-X-Google-Smtp-Source: AGHT+IGMYqqsmgDQHi14dq1tm7Qz+j2NEWdtpQmK/ACPpjDOAQPTIaBiQ67gXI72bBTLP+Do0o6YW6PIWTqcPYtkUHPDIkYakO8H
+	s=arc-20240116; t=1749140097; c=relaxed/simple;
+	bh=Z+qxrYdrG4yhgOppFP8nF3DdRyP2MGfzPB3rOVknUFM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iHhppwSs//Pjc+hkH444Y67V3WNWP5kol31J30T2ojgDaFu6Y4fsgVb9dL/452haqPXNwlPzowjEnhXF3D0PQqkbWRf3m9kipGtzj/S3juqcPFKOhLAismwD7+GimMOsd88rtc1HjI4Bpx5i9/Ja4ZbYGmPzivOxh4gv7dZZK7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F2qDIOU2; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F2qDIOU2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749140096; x=1780676096;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Z+qxrYdrG4yhgOppFP8nF3DdRyP2MGfzPB3rOVknUFM=;
+  b=F2qDIOU2CHDvXS4cPZHgThXbkyC+ESI6NFjjvdl2ejD0KfQ1h6cU3UXa
+   8Ge3MPUAI9XesulAZ9A+nltGaZKZEJZF6DxmZC2PPuQQpfXTNpS/Vjfn6
+   TjIlmL7sy5p70Xm5mfTN+YhPpDeVWf42Nuyn+drhKWRD5YJCQE2Bfd6Jh
+   uqofTxAdRP9HsRZlN25JbmvO2XuUTvax+tfuyUC60lK0WUfUpAq2nMOwP
+   Q7BgvReTLHgFJhzOibVUJbdJYV+IHanoHFMeAm9sB6BO3BeRVYyi0tSTn
+   Z71+nwz2zcrl88TDPiOhUAR8GbZld2XNszyLc2KCEru7fge6CB7X5dxWS
+   Q==;
+X-CSE-ConnectionGUID: JPy0Ka44QMSBUHg1EzSSLQ==
+X-CSE-MsgGUID: hE8BlqTaTV6WsaDaePO9Jw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51415146"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="51415146"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:14:55 -0700
+X-CSE-ConnectionGUID: LDycTst+TAyD9PotJNzUAg==
+X-CSE-MsgGUID: A799Z+d4QZiF9izF4In5bQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="146512766"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.0]) ([10.125.111.0])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:14:56 -0700
+Message-ID: <06122416-b24a-493b-9374-550e5c290436@intel.com>
+Date: Thu, 5 Jun 2025 09:14:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2148:b0:3d8:20fb:f060 with SMTP id
- e9e14a558f8ab-3ddbecfd784mr83662345ab.4.1749140042778; Thu, 05 Jun 2025
- 09:14:02 -0700 (PDT)
-Date: Thu, 05 Jun 2025 09:14:02 -0700
-In-Reply-To: <CAGR7w82GyV+37kyf+y6NzSxrkeHqhjzaerC6mEqBJ1b4ACzz9g@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6841c24a.a00a0220.68b4a.0015.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] KASAN: slab-out-of-bounds Read in bch2_sb_members_v2_to_text
-From: syzbot <syzbot+5138f00559ffb3cb3610@syzkaller.appspotmail.com>
-To: abhinav.ogl@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/5] ACPI: processor: Rescan "dead" SMT siblings during
+ initialization
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 Maintainers
+ <x86@kernel.org>, Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Linux ACPI <linux-acpi@vger.kernel.org>
+References: <2226957.irdbgypaU6@rjwysocki.net>
+ <2005721.PYKUYFuaPT@rjwysocki.net>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <2005721.PYKUYFuaPT@rjwysocki.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 6/5/25 08:07, Rafael J. Wysocki wrote:
+>  #ifdef CONFIG_ACPI_PROCESSOR_CSTATE
+> +void acpi_idle_rescan_dead_smt_siblings(void)
+> +{
+> +	if (cpuidle_get_driver() == &acpi_idle_driver)
+> +		arch_cpu_rescan_dead_smt_siblings();
+> +}
 
-syzbot tried to test the proposed patch but the build/boot failed:
+My only thought in reading this is that maybe cpuidle_register_driver()
+would be a better spot to force the arch_cpu_rescan_dead_smt_siblings().
+That way, each driver would not have to do the rescan.
 
-fs/bcachefs/sb-members.c:68:39: error: no member named 'member_byets' in 'struct bch_sb_field_members_v2'; did you mean 'member_bytes'?
+But that's just a little nit at worst, otherwise the series looks good
+to me. Thanks for chasing this down.
 
+For the x86 bits:
 
-Tested on:
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 
-commit:         4f27f06e Add linux-next specific files for 20250605
-git tree:       linux-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e7902c752bef748
-dashboard link: https://syzkaller.appspot.com/bug?extid=5138f00559ffb3cb3610
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17342c0c580000
 
