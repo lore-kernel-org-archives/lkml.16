@@ -1,96 +1,97 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1AD2F852
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 20:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CEB19D880;
+	Thu,  5 Jun 2025 20:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749156358; cv=none; b=caAip997F9IHvwZyXGGf8Zx8evQT9B2nvObEOIfNkHm9YhjuR1u1wavjked6aJJjeCyU/+DC8MSHyoGDxV/Xve7tcb9pusjBoFTsqcC/7Nyx3+4VdedbC36nDJ2o0+xnxKEV9SGCijUvYXgAP6pOZTr9HeI+6ToDwBUr+trojzQ=
+	t=1749156358; cv=none; b=XaeYxAzXJgeU01/qxpKXkefmUDYeNO5qsU5hPJd8UxRJ0BZZoKJk0Spqi/sohm3ZYRmGWED9CdDuQgqyW/BWFyz8QOUkviYenhHNJtcMiJSkI+6w6rnIPVu1Vt6nAN9F5BTQ2bjHwuNsC/Gxlvk7a6u1xdmxYHkbdneMDWYbpKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749156358; c=relaxed/simple;
-	bh=41UcQNF0NYZ5vOdfYZCJxGjidjDGnId0EGj2effOi6I=;
+	bh=KaleJOZCFYwOjK3nI6qlWVXegytr99EwRh96RQIPuX8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UOBxpPGkL7nfYlXumiJ/wTQFLcNrliqTnIzMYgweD1KKKKb9f5BwNFHJA9xJQpEki6qqObfo4SEY4IpnFPGBuQRGLsLvyt5koka89OCik4DDXUbBgXw8/Jw4jMblWIPL/8W9sP4OAcv7nAadisQ0h5wqBqgO+k21h5aPjbY5UXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uto0J2cr; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=WRjhpihuh4mEjOSefBEbaX1C4PLjDVQj1Fp5ENxdX405Vdc0bx0oMHZ14s5dtdpNEu/QGgUEp4hYr8+7eZ4QLezIZ1VdSpGyASiyq665MwQeNeosgRf+/mlFkL7s3JniDRLmx60VQYbklZKVoPMRsyNjMjRv9LWuN+h0KvgNuFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGpzMmoA; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uto0J2cr"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-311ef4fb43dso1211173a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 13:45:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGpzMmoA"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3122a63201bso1285309a91.0;
+        Thu, 05 Jun 2025 13:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749156356; x=1749761156; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749156356; x=1749761156; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=41UcQNF0NYZ5vOdfYZCJxGjidjDGnId0EGj2effOi6I=;
-        b=Uto0J2crCljqqfmD0qaUjZU2LNhnL6XiHZpL+RugKPP0fjsCuF0KsergQyKvfVRaj+
-         FapgbQ5ZN2oAOI6XCmrsRvjFYl+zajtr+6wTp/hpxOBy/MDbDOMQm3I7sVCSG8cqJ/Ht
-         es9hMeqA1V0sjFeyowy/5/pKNs3TQHtSpfx6Ety6lD7xsvudMNRtYp/0yrpiRy4m7yCN
-         +ujpfkNUZouivGsfVxbVfp7XhnqY8Tm5P1u/FWuW/4r631UkIDDouNzRm5TarsHLq37o
-         +meyQggTLgqF4XMmA08u3PoOWe2xQD4aV9ym+a2247nV07/VAVtoHrtABTmMbsLRYdZh
-         JK3A==
+        bh=08nvIWQniSHmCFLizlsO6hV7YjeqPzOvfL/VB+gEMjQ=;
+        b=TGpzMmoArGh92boshPkIgyyRzUM76ISskMt0AysCDrtJMSsFOpxUwIJ3JkPcy/NDkL
+         0WK1odIwqI1cH8pMeiB25RFT+9kelTHkDJ7Z1jtQMv6P0ZLFPru7j+DHYynVV+7+7A8x
+         fV1/HLpDe9NemgeSEirjy7JXOSeRDOjUUfNpfWh9yPvyaEd88wdpCMK5FgyoFJ3Oyi1M
+         scm/Ji5d4mhHbDYTp9rJk2faS910QJiZignijW/Bq80iWod1Ya5BU81WY+K5mqh2HKI6
+         vvUIEDlikp69qzrhJ1MAhFKyefccbYZkKTR2IOAAH4jnigQwGsfBT1jMKo/TJkEAtQUO
+         omgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1749156356; x=1749761156;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=41UcQNF0NYZ5vOdfYZCJxGjidjDGnId0EGj2effOi6I=;
-        b=oKUzBCOO+pOO9CP2yfaxMBaxW/VoMhQLZJ2zKchnedE6l2SU0Gi5RoC7MqtApQOPsR
-         ZbHZ00J5Pc9S1YtrBjFF+WxdPHbOWfSKVPg+qLw2yVTLrTWUPQ6mifLSIOVbYKYWuSk5
-         29EaRXY9WTEYnV2ZRt1Wfk4DbhFVMQQJbVA2XTwCBwzZoUKI4KGdddVhMUzP7KvkCvn2
-         hbzUCn+ZnjjTRacmm6uo9EdSBDQrumD8h0BTAP0R/6OfU1K5lumt7H9SemLBejeVHVea
-         YnWq8nSabWqkuRGh8pMq9IvqLT4LsrSdYlOKTwZ7A+nu27LfyNDJ/d78YHQsFw0xsGG2
-         ekcw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzcMm2Cm5WrXOSzFEdNilmDPHFBC3wdchWHGCGMpLrmmuPKMPwP9aGM219QFlm9zoPWVIj6YOJYKtOKdM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKs+tCHRb/qXxFjYIGkdMMeyx+BCaUjt/174RYIEEmbWw0/3ox
-	dpHruewsJKs7E+GR63VT8mDkuC+99Jlh93pGhE0L0Xvil9xaZmIANWMN8MFKWpEBTavjCoUGvXK
-	oRXTpvNfTHsbfQNSm+Nts2/DTTaPyK+G+oQkBo8Rr
-X-Gm-Gg: ASbGncupofwqhjcWGKkx1dEpvQf5i+fAg5s2Fp477d+4dNrOtnJu1d+u7gHVdujrW7T
-	Vc0eegdsgZtfj+llDMUzgsWaln8WT4xVDaqQgUVEGa+RQ6AllXtM7j1KtJnsAUHiBrs2QXJnLnT
-	5JmoUhiKbDHE+c6maVtULVz6iThh8HELJ7NJvNij7yddbBr7R17rA7O930CUrQJSimaVNniDiOU
-	w==
-X-Google-Smtp-Source: AGHT+IGQEyQ7xC/2gN7AR6mQJWZcHfKlTjNOFZ0aNJuMVhtq7C8GdNK06ZCyXnyWEhtqlam63k1Qx8RM6OmlrSSS9Dg=
-X-Received: by 2002:a17:90b:4b4f:b0:311:c939:c848 with SMTP id
- 98e67ed59e1d1-31346b44fafmr1785689a91.0.1749156355425; Thu, 05 Jun 2025
- 13:45:55 -0700 (PDT)
+        bh=08nvIWQniSHmCFLizlsO6hV7YjeqPzOvfL/VB+gEMjQ=;
+        b=onsXXDYlnhU/qVvGFKDUCjXAs9P3VAkDkk1UNW6/rAgUkfheYoLFOazpgVL/eyWG3v
+         SevCI1kDBbkstsmzGCd7dHT+ZG0cm/A9y/RM2lkvI+QUfAaUGloY2cItKu8dvaYY48yA
+         MygN3lineQFsA8TDIyR6MOrSlw6jL7FxyFSOnqZOLynsR6VAd51R8nuhyhK9PRoEmf8i
+         rQUoSxpTjtAy+42dXAGHbXQ6gCJoSOluF6JoiJr5Yi3LtGrpNIa5cBg1bpujWM5/kHYE
+         Z3Q7EPsLnic0u6PJU6mlSnQyA+klnsEvcI/C0aT1xLi9VDNBAHuLdsA/SFldB2febp56
+         dqxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIRZPxpQCLGcIwnBbEy+cP7H0BqPlThj1xy3QDssXRWyYmzaMxyjts9zqh2I+va04+lQjbhJAejELXWUnt@vger.kernel.org, AJvYcCWftN1v4hoWtZaT0lyT3uTDeN7FX2tbpQdyZajetDyvZ1+P79/3Ie6ohaFR46uY+YjEBJo9P32wRdMhsUNsMDLU@vger.kernel.org, AJvYcCWp9my6zr39cSNW360avezYsHpclNdbbPc3NRXbKFKxMWCNwL+ty0O8URy7BWXpqFrk3nw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuVfcmKcnLGRnSmPXkme7UDBR9izkHmfzLfgP48EIfVcNCL8tV
+	pgpgX2c8nFKGZDdbbdZ+ooXTJ4+4soquq9hWerdpt8uxiKa8cjaRqD6xrk4qbtzEDc/x5NKHu5M
+	0U7TVjjaqRvSnDimJJlQXSNNzDCafDd4=
+X-Gm-Gg: ASbGncsm8J2vaCxaDK7bGfQUkqy56nW6yX23MfcxhFDcq3Gd5T/PDP9/rL5P6c+Bpse
+	IlRGI8OIDPHkeqzD6W0OIidOkp7YX991fIaTexUtm4ufWXbsNwiwkGEVAeloUlKf+ERhs+WGPWN
+	1Awfgpqyno3ERq0+ZK5QLeEWRsy6MfU5+x5aEEgFKHA15upMa6rs/3+J8YkIc=
+X-Google-Smtp-Source: AGHT+IHsr9ttE7WIn3845WOdkjd+yiJ7dZGR1JHZtZQdlQhQ6XinR/AD3N+nP6o+ND2yd8oiZBZvEkpoETpzIV7L2t4=
+X-Received: by 2002:a17:90b:58cf:b0:311:ea13:2e63 with SMTP id
+ 98e67ed59e1d1-31347300dafmr1668278a91.13.1749156356548; Thu, 05 Jun 2025
+ 13:45:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605150236.3775954-1-dionnaglaze@google.com>
- <20250605150236.3775954-3-dionnaglaze@google.com> <b6b9b935-c5fa-dec6-ec82-56015b5dc733@amd.com>
-In-Reply-To: <b6b9b935-c5fa-dec6-ec82-56015b5dc733@amd.com>
-From: Dionna Amalie Glaze <dionnaglaze@google.com>
+References: <20250603203701.520541-1-blakejones@google.com> <20250603203701.520541-2-blakejones@google.com>
+In-Reply-To: <20250603203701.520541-2-blakejones@google.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Date: Thu, 5 Jun 2025 13:45:42 -0700
-X-Gm-Features: AX0GCFvw6StWYSjYMIhscpi25Cgn32D8l5h6WrL5Hb03D2NIE4-XGuR2mkZV11Q
-Message-ID: <CAAH4kHaeMgzdNP6Y7zdkdODransNkP4UiQ8ROpCVgenpiveJ_Q@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] kvm: sev: If ccp is busy, report busy to guest
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, Paolo Bonzini <pbonzini@redhat.com>, 
-	Joerg Roedel <jroedel@suse.de>, Peter Gonda <pgonda@google.com>, Borislav Petkov <bp@alien8.de>, 
-	Sean Christopherson <seanjc@google.com>
+X-Gm-Features: AX0GCFsF8bZqbHLzfHuC1RDhJourh4uvIqmM0-HJinP_vZEVbnxfekkB0vbUQNM
+Message-ID: <CAEf4BzYyn0=d-M45czJe-Qfk0tTuqLcjzCOge_p9iu6vXWR7hA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] Tests for the ".emit_strings" functionality in the
+ BTF dumper.
+To: Blake Jones <blakejones@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 12:15=E2=80=AFPM Tom Lendacky <thomas.lendacky@amd.c=
-om> wrote:
+On Tue, Jun 3, 2025 at 1:37=E2=80=AFPM Blake Jones <blakejones@google.com> =
+wrote:
 >
-> On 6/5/25 10:02, Dionna Glaze wrote:
-> > The ccp driver can be overloaded even with guest request rate limits.
-> > The return value of -EBUSY means that there is no firmware error to
-> > report back to user space, so the guest VM would see this as
-> > exitinfo2 =3D 0. The false success can trick the guest to update its
-> > message sequence number when it shouldn't have.
+> When this mode is turned on, "emit_zeroes" and "compact" have no effect,
+> and embedded NUL characters always terminate printing of an array.
 >
-> -EBUSY from the CCP driver is an error, not a throttling condition. Eithe=
-r
+> Signed-off-by: Blake Jones <blakejones@google.com>
+> ---
+>  .../selftests/bpf/prog_tests/btf_dump.c       | 118 ++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+>
 
-Ah, okay thanks Tom. I'll drop it for v6. I'll see how the first patch
-is received before cutting a new email.
+Nice set of tests, thank you! Applied to bpf-next.
 
---=20
--Dionna Glaze, PhD, CISSP, CCSP (she/her)
+[...]
