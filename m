@@ -1,143 +1,87 @@
-Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C95A22F765;
-	Thu,  5 Jun 2025 13:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A19422686F
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749130332; cv=none; b=PinghVSv2722Lvoc3fjtyBVuGmYgycZ2yGit2NV3z1B5ubvuP1lH3aJgK641FT2t8uHlSKbghn3yE2ReMmPetxF3fEyh369mTLvHppkHaTx2QMxnxC5Ad3jvdJsJ0JXUDtONn6pMblAMzI8UxrPn9OvbvWG/LDpXWfnM0P3CISc=
+	t=1749130363; cv=none; b=N/ouavryPwTna3CaX4mEobYvOpF/B46/+ufFUaHV4Q2lZeLQM8j6tR1NOMFgteHM29NOd64Zlf9NVQa9RGuhuWpcGWNBhQWDGnAVuGYQ5IC9crwu14dyowDunmF4LphljXzhrgcjTFpSX+CTv436LsajS3YHRhEV+PfElRAuDB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749130332; c=relaxed/simple;
-	bh=mRRn5494WVPiZ1HbdbeXdMsTMq7k/8XqGHHbIo4GKCE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=k1KexSnk+/tGzu6jYZCm36DWSlixpsovFw+9/sYfQW1/99NVduDWjxNxJNh1RoPlvV8VFtuWnMxxwaUhgjrF/dL0MLbcLrh0UsOoWsNIm90YJTjfBwaIFnUbrO69rsEEAcXzF9VoenNCVMTWEzs6MUG4uwuD1RTT2doux8yl1gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
-Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
- (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Jun
- 2025 15:32:09 +0200
-Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
- S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
- 15.01.2507.039; Thu, 5 Jun 2025 15:32:09 +0200
-From: John Ernberg <john.ernberg@actia.se>
-To: =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>, Pankaj Gupta
-	<pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
-	<s.hauer@pengutronix.de>
-CC: Frank Li <Frank.li@nxp.com>, Pengutronix Kernel Team
-	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: crypto: fsl,sec-v4.0: Add power
- domains for iMX8QM and iMX8QXP
-Thread-Topic: [PATCH v4 3/4] dt-bindings: crypto: fsl,sec-v4.0: Add power
- domains for iMX8QM and iMX8QXP
-Thread-Index: AQHb1h2p186darlQmUK22qpyzH8BCrP0brUA
-Date: Thu, 5 Jun 2025 13:32:09 +0000
-Message-ID: <2bfe7b81-b70e-4882-b1ce-8cbaef24838f@actia.se>
-References: <20250605132754.1771368-1-john.ernberg@actia.se>
- <20250605132754.1771368-4-john.ernberg@actia.se>
-In-Reply-To: <20250605132754.1771368-4-john.ernberg@actia.se>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-esetresult: clean, is OK
-x-esetid: 37303A2955B1445363726A
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <24B75F4E67FE224A942D8D7BE8B8B5BC@actia.se>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1749130363; c=relaxed/simple;
+	bh=pW1iugis4xtG9s+eETnQ7bIIF6wv/OD2/0HPPVI9f/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pHtUF+96+rgjQqCFFzkHey2Ud1INaZVlDRxJ+jwffxQj3M5ZSUJ4ge+/fprxKYr9iQ6vN5UoIKYgCezkaqz28GhdGslfKV3+n8k+UWVvphyTGVqPsalrMhzXBfMtTHnENx+GETEq0/RNo90gtR5ZSIq1Z8Sz+dB9wSTJZ34Uoww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OIS1TQBZ; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OIS1TQBZ"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30f30200b51so8879631fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:32:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749130359; x=1749735159; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pW1iugis4xtG9s+eETnQ7bIIF6wv/OD2/0HPPVI9f/g=;
+        b=OIS1TQBZ0ipBOOKp/z9Jt1KYUhmFwZo7Ffj7hpRRd7nw7Hpb94SJmCWr8qwTi/LRZa
+         6lu2WYwxzZRCuriri//E5nyRF+Mkln3QzXuMHkcnKcoOy0X51Mo/pWn5txWD4wxr1Wco
+         ukeZTzf4DavZfHfDSFT+MVIvJHgXNudEf7ztKV3TuDwWxtnt1FfyqQV8GtebXLY46OfW
+         MDbaSPFgzj1TYboMccVFYYFcLomG+y68oUOPowKVJ3uWqoFR1gnTRiDsen20ZoKfgenU
+         PUyBLE4e2W1nlTN0SmbJt6UtjOElBmROO2+VGfESiR9kf5Wgjy47S0sZ5MJ4EzpDdolc
+         WbJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749130359; x=1749735159;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pW1iugis4xtG9s+eETnQ7bIIF6wv/OD2/0HPPVI9f/g=;
+        b=Vos8GMz78zVmDjHPSBzK1o72rSWwApAsAVYG9zPmhhEu6YuwaKVyDCMhx4eiTsSwPe
+         QNjS8AcnrDNssXZbZNGQBHZAupZkrR67TDPK9lzWCssutPqDhHF0aUMNPwnvcz5JECak
+         6BhH/Ul2OW68dHBYWMXN2P6EkIYvtW6KsIjQGF+pIegnFykV0Co1/gC+RC6qU9dusCgC
+         X7pOyAMx1Ns/SxZAJ/48pVkXaulzubY8isnT64vaMDWhpaplg9MdiMinZz+YluNX2juE
+         UJueoA6pNzi+PB9tAkZCxR16y5SEjoXmSEyg6U/ttqaTFNQsICLY018hT1cKn7gpu3fP
+         tIyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUasmumr0+QQftpr7hnRwNV82XEzrg6o8Q0uNXYN3Cr8SbgWRehub3lKccWhRXngPvRXvHuAn3hsYn7xk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yynlfw1VMPt2+JPbkOkeRCSbRco7mmZqkRQcbTqv8bzLsZzB1bw
+	JZJe7hr+AbTQY++PUnacVdCXaf7cU+o6GtsmZ8RzEEYK+PjoW+k5stHkbdFx4Xdqb+6bEKUkIXl
+	Rn/xiQoqmg7dlG2pKXduTjeKcvROMMtz66cY/hVPZug==
+X-Gm-Gg: ASbGncvdfdwwapLPMr/tCVQWazE0jQZr7iaKaq7n+EibnviJ1Ox/3DP4Frchj3efstc
+	zmAbRt4QQzKGoB9XSJU+9uF/ZpQjPbs0BPt+zUeOU0cdDDav2hGczWwETqbvFcfCwEY2iw8I9Tj
+	tZI1aWSfgY9lifVLuQl5bPubnW9Um3D+0p
+X-Google-Smtp-Source: AGHT+IE6+QQHxCcMPWQQTqK9V5d4sWGLTrbxqyQTR9ZbF5NR1Ou/BeZZfqyxjXMAwgIBmogu6upkqYbLcvT4mZAdS3Y=
+X-Received: by 2002:a05:651c:2106:b0:32a:7315:fff3 with SMTP id
+ 38308e7fff4ca-32ac7275b96mr20992861fa.35.1749130359252; Thu, 05 Jun 2025
+ 06:32:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250531195801.3632110-1-andriy.shevchenko@linux.intel.com> <20250531195801.3632110-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250531195801.3632110-3-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 5 Jun 2025 15:32:28 +0200
+X-Gm-Features: AX0GCFsxCPT2i86_1t4bwbeQABv1RKSRClew8rCWJzzT5hSg_V0_R-wqdU9burc
+Message-ID: <CACRpkdZo8K1Dffr+TNkM46B44oT=vtHc7Ty=H9teAqzLzwaVrg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] gpiolib: Move GPIO_DYNAMIC_* constants to its only user
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGksDQoNCk9uIDYvNS8yNSAzOjI4IFBNLCBKb2huIEVybmJlcmcgd3JvdGU6DQo+IE5YUCBTb0Nz
-IGxpa2UgdGhlIGlNWDhRTSwgaU1YOFFYUCBvciBpTVg4RFhQIHVzZSBwb3dlciBkb21haW5zIGZv
-cg0KPiByZXNvdXJjZSBtYW5hZ2VtZW50Lg0KPiANCj4gQWRkIGNvbXBhdGlibGUgc3RyaW5ncyBm
-b3IgdGhlc2UgU29DcyAoUVhQIGFuZCBEWFAgZ2V0cyB0byBzaGFyZSBhcyB0aGVpcg0KPiBvbmx5
-IGRpZmZlcmVuY2UgaXMgYSBjb3JlLWNvdW50LCBRPVF1YWQgY29yZSBhbmQgRD1EdWFsIGNvcmUp
-LCBhbmQgYWxsb3cNCj4gcG93ZXItZG9tYWlucyBmb3IgdGhlbSBvbmx5LiBLZWVwIHRoZSBvbGQg
-cmVzdHJpY3Rpb24gZm9yIG90aGVycy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEpvaG4gRXJuYmVy
-ZyA8am9obi5lcm5iZXJnQGFjdGlhLnNlPg0KPiANCj4gLS0tDQo+IA0KPiB2NDoNCj4gICAtIFJl
-d29yZCBjb21taXQgbWVzc2FnZSAoRnJhbmsgTGkpDQo+ICAgLSBBZGQgZXhwbGljaXQgaW14OHF4
-cCBjb21wYXRpYmxlIChGcmFuayBMaSkNCj4gICAtIE1vdmUgdGhlIGpvYi1yaW5nIGNvbnN0cmFp
-bnRzIGJhY2sgdG8gdGhlIGpvYi1yaW5nIHNlY3Rpb24gdW5kZXIgYW4NCj4gICAgICdhbGxPZjon
-IHRvIGF2b2lkIHRoZSB3YXJuaW5nIGZyb20gdjIgKFJvYiBIZXJyaW5nKQ0KPiANCj4gdjM6DQo+
-ICAgLSBGaXggd2FybmluZ3MgZGlzY292ZXJlZCBieSBSb2IgSGVycmluZydzIGJvdA0KPiAgIC0g
-RGVjbGFyZSB0aGUgY29tcGF0aWJsZXMgY29ycmVjdGx5IChLcnp5c3p0b2YgS296bG93c2tpKQ0K
-PiANCj4gdjI6DQo+ICAgLSBBZGp1c3QgY29tbWl0IG1lc3NhZ2UgKEZyYW5rIExpKQ0KPiAgIC0g
-T25seSBhbGxvdyBwb3dlci1kb21haW5zIHdoZW4gY29tcGF0aWJsZSB3aXRoIGlteDhxbSAoRnJh
-bmsgTGkpDQo+IC0tLQ0KPiAgIC4uLi9iaW5kaW5ncy9jcnlwdG8vZnNsLHNlYy12NC4wLnlhbWwg
-ICAgICAgICB8IDQxICsrKysrKysrKysrKysrKysrKy0NCj4gICAxIGZpbGUgY2hhbmdlZCwgNDAg
-aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcnlwdG8vZnNsLHNlYy12NC4wLnlhbWwgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3J5cHRvL2ZzbCxzZWMtdjQuMC55YW1sDQo+
-IGluZGV4IDc1YWZhNDQxZTAxOS4uZWFiNDNlN2EzNTRjIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3J5cHRvL2ZzbCxzZWMtdjQuMC55YW1sDQo+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcnlwdG8vZnNsLHNlYy12NC4w
-LnlhbWwNCj4gQEAgLTQ2LDYgKzQ2LDggQEAgcHJvcGVydGllczoNCj4gICAgICAgICAtIGl0ZW1z
-Og0KPiAgICAgICAgICAgICAtIGVudW06DQo+ICAgICAgICAgICAgICAgICAtIGZzbCxpbXg2dWwt
-Y2FhbQ0KPiArICAgICAgICAgICAgICAtIGZzbCxpbXg4cW0tY2FhbQ0KPiArICAgICAgICAgICAg
-ICAtIGZzbCxpbXg4cXhwLWNhYW0NCj4gICAgICAgICAgICAgICAgIC0gZnNsLHNlYy12NS4wDQo+
-ICAgICAgICAgICAgIC0gY29uc3Q6IGZzbCxzZWMtdjQuMA0KPiAgICAgICAgIC0gY29uc3Q6IGZz
-bCxzZWMtdjQuMA0KPiBAQCAtNzcsNiArNzksOSBAQCBwcm9wZXJ0aWVzOg0KPiAgICAgaW50ZXJy
-dXB0czoNCj4gICAgICAgbWF4SXRlbXM6IDENCj4gICANCj4gKyAgcG93ZXItZG9tYWluczoNCj4g
-KyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICAgICBmc2wsc2VjLWVyYToNCj4gICAgICAgZGVzY3Jp
-cHRpb246IERlZmluZXMgdGhlICdFUkEnIG9mIHRoZSBTRUMgZGV2aWNlLg0KPiAgICAgICAkcmVm
-OiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzINCj4gQEAgLTEwNiw3ICsx
-MTEsMTAgQEAgcGF0dGVyblByb3BlcnRpZXM6DQo+ICAgICAgICAgICAgICAgICAtIGNvbnN0OiBm
-c2wsc2VjLXY1LjAtam9iLXJpbmcNCj4gICAgICAgICAgICAgICAgIC0gY29uc3Q6IGZzbCxzZWMt
-djQuMC1qb2ItcmluZw0KPiAgICAgICAgICAgICAtIGl0ZW1zOg0KPiAtICAgICAgICAgICAgICAt
-IGNvbnN0OiBmc2wsc2VjLXY1LjAtam9iLXJpbmcNCj4gKyAgICAgICAgICAgICAgLSBlbnVtOg0K
-PiArICAgICAgICAgICAgICAgIC0gZnNsLGlteDhxbS1qb2ItcmluZw0KPiArICAgICAgICAgICAg
-ICAgIC0gZnNsLGlteDhxeHAtam9iLXJpbmcNCj4gKyAgICAgICAgICAgICAgICAtIGZzbCxzZWMt
-djUuMC1qb2ItcmluZw0KPiAgICAgICAgICAgICAgICAgLSBjb25zdDogZnNsLHNlYy12NC4wLWpv
-Yi1yaW5nDQo+ICAgICAgICAgICAgIC0gY29uc3Q6IGZzbCxzZWMtdjQuMC1qb2ItcmluZw0KPiAg
-IA0KPiBAQCAtMTE2LDYgKzEyNCw5IEBAIHBhdHRlcm5Qcm9wZXJ0aWVzOg0KPiAgICAgICAgIGlu
-dGVycnVwdHM6DQo+ICAgICAgICAgICBtYXhJdGVtczogMQ0KPiAgIA0KPiArICAgICAgcG93ZXIt
-ZG9tYWluczoNCj4gKyAgICAgICAgbWF4SXRlbXM6IDENCj4gKw0KPiAgICAgICAgIGZzbCxsaW9k
-bjoNCj4gICAgICAgICAgIGRlc2NyaXB0aW9uOg0KPiAgICAgICAgICAgICBTcGVjaWZpZXMgdGhl
-IExJT0ROIHRvIGJlIHVzZWQgaW4gY29uanVuY3Rpb24gd2l0aCB0aGUgcHBpZC10by1saW9kbg0K
-PiBAQCAtMTI1LDYgKzEzNiwyMCBAQCBwYXR0ZXJuUHJvcGVydGllczoNCj4gICAgICAgICAgICRy
-ZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMi1hcnJheQ0KPiAgICAg
-ICAgICAgaXRlbXM6DQo+ICAgICAgICAgICAgIC0gbWF4aW11bTogMHhmZmYNCj4gKyAgICBhbGxP
-ZjoNCj4gKyAgICAgIC0gaWY6DQo+ICsgICAgICAgICAgcHJvcGVydGllczoNCj4gKyAgICAgICAg
-ICAgIGNvbXBhdGlibGU6DQo+ICsgICAgICAgICAgICAgIGNvbnRhaW5zOg0KPiArICAgICAgICAg
-ICAgICAgIGVudW06DQo+ICsgICAgICAgICAgICAgICAgICAtIGZzbCxpbXg4cW0tam9iLXJpbmcN
-Cj4gKyAgICAgICAgICAgICAgICAgIC0gZnNsLGlteDhxeHAtam9iLXJpbmcNCj4gKyAgICAgICAg
-dGhlbjoNCj4gKyAgICAgICAgICByZXF1aXJlZDoNCj4gKyAgICAgICAgICAgIC0gcG93ZXItZG9t
-YWlucw0KPiArICAgICAgICBlbHNlOg0KPiArICAgICAgICAgIHByb3BlcnRpZXM6DQo+ICsgICAg
-ICAgICAgICBwb3dlci1kb21haW5zOiBmYWxzZQ0KDQpUbyBkb2RnZSB0aGUgYWxsT2YgaGVyZSBJ
-IGhhZCB0byBtYWtlIHNvbWUgY2hhbmdlcyB0byBkdC1zY2hlbWEgDQpub2Rlcy55YW1sLiBJcyB0
-aGUgYWxsT2YgT0sgb3IgZG9lcyB0aGUgY2hhbmdlcyBsb29rIGxpa2Ugc29tZXRoaW5nIHRoYXQg
-DQpzaG91bGQgYmUgc3VibWl0dGVkIGZvcm1hbGx5Pw0KDQpUaGFua3MhIC8vIEpvaG4gRXJuYmVy
-Zw0KDQotLS0tLS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0tLS0tLS0tLQ0KDQogRnJvbSAzOWUz
-Yzg1ZTUzYWI1NzBmZGQ1ZDVhOTMxNTZhOGE0ODZlZjIwZjBjIE1vbiBTZXAgMTcgMDA6MDA6MDAg
-MjAwMQ0KRnJvbTogSm9obiBFcm5iZXJnIDxqb2huLmVybmJlcmdAYWN0aWEuc2U+DQpEYXRlOiBX
-ZWQsIDQgSnVuIDIwMjUgMTU6MTI6NTUgKzAyMDANClN1YmplY3Q6IFtQQVRDSF0gc2NoZW1hczog
-bm9kZXM6IEFsbG93IGlmLXRoZW4tZWxzZSBpbiBwYXR0ZXJuUHJvcGVydGllcw0KICBvYmplY3Rz
-DQoNCkhhdmluZyBsb2NhbCBpZi10aGVuLWVsc2Ugc3RhdGVtZW50cyB1bmRlciBlLmcuIGEgcGF0
-dGVyblByb3BlcnRpZXMgb2JqZWN0DQpub2RlIGNhdXNlcyBhIHNjaGVtYSB3YXJuaW5nIGFib3V0
-IGFuIHVuZXhwZWN0ZWQgc3RhdGVtZW50Lg0KDQpBbGxvdyB0aGlzIGNvbnN0cnVjdCB0byByZWR1
-Y2Ugc2l6ZSBvZiBpZi10aGVuLWVsc2UgYmxvY2tzIHRoYXQgd291bGQNCm90aGVyd2lzZSBuZWVk
-IHRvIG9jY3VyIGF0IHRoZSB0b3AgbGV2ZWwsIG1ha2luZyB0aGVtIGVhc2llciB0byByZWFkLA0K
-YW5kIG1vcmUgbG9jYWxpemVkIHRvIHdoYXQgdGhleSBhcmUgY29udHJvbGxpbmcuDQoNClNpZ25l
-ZC1vZmYtYnk6IEpvaG4gRXJuYmVyZyA8am9obi5lcm5iZXJnQGFjdGlhLnNlPg0KLS0tDQogIGR0
-c2NoZW1hL21ldGEtc2NoZW1hcy9ub2Rlcy55YW1sIHwgMyArKysNCiAgMSBmaWxlIGNoYW5nZWQs
-IDMgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHRzY2hlbWEvbWV0YS1zY2hlbWFzL25v
-ZGVzLnlhbWwgDQpiL2R0c2NoZW1hL21ldGEtc2NoZW1hcy9ub2Rlcy55YW1sDQppbmRleCAwYjJj
-OGY3Li5lNDVjYjQ1IDEwMDY0NA0KLS0tIGEvZHRzY2hlbWEvbWV0YS1zY2hlbWFzL25vZGVzLnlh
-bWwNCisrKyBiL2R0c2NoZW1hL21ldGEtc2NoZW1hcy9ub2Rlcy55YW1sDQpAQCAtMjcsNiArMjcs
-OSBAQCBwcm9wZXJ0eU5hbWVzOg0KICAgICAgLSBkZXByZWNhdGVkDQogICAgICAtIHJlcXVpcmVk
-DQogICAgICAtIG5vdA0KKyAgICAtIGlmDQorICAgIC0gZWxzZQ0KKyAgICAtIHRoZW4NCiAgICAg
-IC0gYWxsT2YNCiAgICAgIC0gYW55T2YNCiAgICAgIC0gb25lT2YNCg0KDQo=
+On Sat, May 31, 2025 at 9:58=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+
+> There is no need to export GPIO_DYNAMIC_* constants, especially via
+> legacy header which is subject to remove. Move the mentioned constants
+> to its only user, i.e. gpiolib.c.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
