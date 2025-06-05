@@ -1,119 +1,166 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC821F4176;
-	Thu,  5 Jun 2025 07:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6239E1FECAD
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749109903; cv=none; b=HrvOzbPDqa+ScxXB4hi7ZvbVW/ENU0UiLU52ScFwUbEZWi/Y+KM+M7K+ykl14PBEgQiuM6jd7Mc6BdYod4xD9XE3HHgHRyLA+A01V6SfWtsQ49QWnp0Ho6mXxevmudnu+OpIs/nNbeOLjA2FtDMrfzl3Q0vtHJ5wIuy0RuB0zCI=
+	t=1749110086; cv=none; b=oLeofVzme3xQeFFiq/0pBNYSU7g3w26rzzniAxSJi48246CMl3HT8yqOf8bsu9zKxSDcGPsZLYNUiHJm4iUoRZMYSZdGgf6DSk+UcOgs5brHuo9VjNK4KxRoP1JdpE1y3wtaMXSUgq7Y6DT8d9psZ2Fmb7NUYxGzGy95EJQW/R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749109903; c=relaxed/simple;
-	bh=ADAo4tuAn9RJse2Dsl/pLYasjN1HWf+dOgXZED+HZ0c=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=R5eSTmWsraynviKI4JR79fj6KAKZOUC5md8sAumYSJzI2IKUZ1PuIH8ygaPeaaaRA0GYAr1Y1LHMC9x8O84G4TsVLKgRTpX7LwPpIhkQXvbJkn/pto6Aom1UVICG/LtSLyT2dMra+AMNCEAUY8FErhmtjfK/gqlDebGPvuQcr5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=AYd+VJE5; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1749110086; c=relaxed/simple;
+	bh=NNFSE2fFzpiSASQWnZwDpNqWAbQXEhYo1W4bEKJ2yGQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dYzslWMUmshJY278GQnDRTnZGIto+1y37q6KYqOU12zUKvx8emn0I+6qYF9fT6HeGFWy5BgcfcmkYBT2l8xNGUFLsyQKT46i9NDVqAlrl6Ip9+veNHF4AEQHuX8NjJ2rUfF6GjCMRCWIpuB/ws58Gej/S0AsEPW/3RAtIYSuujk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MTPPh3gQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="AYd+VJE5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1749109883;
-	bh=riOYvbqngrrZtJixWRHCaMdJe6DT8P5TkGFvEYl78Zg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AYd+VJE5lKlEjhHf5oHs05oZUpDJ2BsMS3x+/D01ci4p5dtZTDLw/RtuQCezvK4H4
-	 9JOfr/k+yyHOMjRFZ+a+HK+2J9PF9ugugnt+8r4dMoSJQj3zvINBu7MroedVSc0Bky
-	 Ts0VX32LXNwaiOpUJPsFN8Sog3eTxdg6IHqu+MuA=
-Received: from NUC10.. ([39.156.73.10])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id CD1A1A28; Thu, 05 Jun 2025 15:51:17 +0800
-X-QQ-mid: xmsmtpt1749109877th51j190x
-Message-ID: <tencent_F85EF146D110170D48845EB3F02ED5549409@qq.com>
-X-QQ-XMAILINFO: MRMtjO3A6C9XKLqM7JeVPGU0RrgQGAi/gOOybpETim/eOO5nyhGqNka7shneg+
-	 EufHpPXJz532I2fJbZBPyyrG3nQTLAkguSn7BQRmDhkzAWl4orFo2S8X4OFdhxguZdsUGxFa9Mpo
-	 qHPVqqQ0mrHBhc7D1Q8wSg5YZkRCmYPtwpavBWcH18V9vABB8UGGspg4hfTxmR3qmO3u6+Ktjq3l
-	 vSoZbLqoXUFQYpoZc1j8UPk5Pucde7gn5Qqv3XoNlOZxzCzKmXwhxoloFjKx984LuvDP58qvzmrV
-	 mBpBBU38mmOuvsEgc9PIcUszCcbjXYPjMNSHGarFQ6Ziu2GG+nkRm0z2rJk1PPRWI75iMnAqOLZW
-	 wLUfRSTdc+7lTQzflFTgQC+qGbQwW+yS1Gxe3II6ct8IoL1K/TBbAVYeTydoWxc2CJP/Kbw+YPtt
-	 clrenvo9DNdjIDhr4qsbkIA2ZK0by+x5oYRX9CwdPEZa5jt8vBDQSoEFveJhTXhQw98xFdoDMpRb
-	 86nIuZfXCUsnJAazvQZu5OUmn5qVY70GFgY3duM3sAnyNJZhnJINFI9GcR2GDqYXmMB/g7wHcBjf
-	 pCuCYUITgbELJKl7b4Ib9pNISvM1/Afst8/uMe9vF5utiVAHpYQAZsiH/gu3xF6Yq6EyRlIk1pxn
-	 0XfryPS4YcCy8Op+GlanCOTtnMR+EHoJM/Nyj3sazXKTu2giouYGJsL5Fr0uaiTnze4uTe62qDtR
-	 N7lC+jSMoE6cqWm8TmhyHebAEt8C4SGbOWs4bok2Gwv1fWCyBvMKMy7zbAHb45a/u22oVs/WNY6q
-	 KdII5KSnQ6U4Xfkz3WLdYJH6qo+OdbkbtWi4IiOZfD5N71mg6yfCGkqHQ/h1jHRrRWv3VHrDXF1h
-	 cJr+2ZRobCb7qhbKiY5AwJjE1P8PFEY3PrAbWhmpIhkytZvI7wipn/g08cQpNg0/P6fcoY4dmVo4
-	 EwdfnowzxsSO0h1wfBAol3gVIBd1wjrL0d7KATx1GZv8t8k7SzViUFb0XAVT/tYe7OQmvCrP8mW9
-	 NdohZDZPVkg1QnDtxcZAM+hicZx+I=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Rong Tao <rtoax@foxmail.com>
-To: Quentin Monnet <qmo@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Rong Tao <rongtao@cestc.cn>,
-	Lin Yikai <yikai.lin@vivo.com>,
-	bpf@vger.kernel.org (open list:BPF [TOOLING] (bpftool)),
-	linux-kernel@vger.kernel.org (open list)
-Cc: rtoax@foxmail.com
-Subject: [PATCH bpf-next 2/2] bpftool: skel: Introduce NAME__open_and_load_opts()
-Date: Thu,  5 Jun 2025 15:51:13 +0800
-X-OQ-MSGID: <8c0f486b44591013c4fe538fb5edb908992978b8.1749109589.git.rongtao@cestc.cn>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1749109589.git.rongtao@cestc.cn>
-References: <cover.1749109589.git.rongtao@cestc.cn>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTPPh3gQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749110083;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EsWFMFas7O2Lvk4gjiHkVtt4n83KeM8DN/r9KQDAJpg=;
+	b=MTPPh3gQR8aKTm01kPJ5h6JxFHhTXoYLqZlJ7I//3iDtOxd+D+p+Hb1DaFui51Qcp6zEmy
+	K1bw1+3mq+FvEY2y3JVpqUxJJcekND6iXZj3hv+zQ5KIl0K95jP7cs0YF3MOm7X/9ycgCp
+	C5Wi+h2qor16sJWGJvyhtnW64JHLiLc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-569-tIQA8IGSPJaQb1Vl43CdZg-1; Thu, 05 Jun 2025 03:54:41 -0400
+X-MC-Unique: tIQA8IGSPJaQb1Vl43CdZg-1
+X-Mimecast-MFC-AGG-ID: tIQA8IGSPJaQb1Vl43CdZg_1749110080
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-442f90418b0so2815815e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:54:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749110080; x=1749714880;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EsWFMFas7O2Lvk4gjiHkVtt4n83KeM8DN/r9KQDAJpg=;
+        b=Woy6ntMKr09RdAPG1uDTepvre03UgKfoGR0Eb/0xcKQRdmDZuFEtG67AVb7X+96vQP
+         aN1nnwicIryktA19Ra6ful2jKNY/OeIyb44KubNYYKa0eIAeXjdox6j6pzHBLuoJstTm
+         9CIQnAaRMHZDcp2wPOzhcihe3Y39rk1g8B1iE1se20+gv39Ftqh4vUw3ea8QHSduTzVg
+         OMH50QEDtTQsNSafUmNaUAid9019vcY9vG2KvSnLiNezMl7lcsBn8oO8LjsNSimVX2r3
+         H7PAYWWVwUalW/fVROm+/4ObgZ4Du6RdS7wsMlOord3JBGylmW3ClprKMpR6KGXyrmNk
+         nwjg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUZd6/lc6s4/MX9Da7wH2THyh9WRzII00EelaQh1n/MnZ6TlUh1mWrVvs3Eu5wB5/XNx2fB+PENwz7d9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqftgiPYWx7ct96iaNAnEito/EHR1feYp3DQXHqiYl8nsroKpE
+	IiCfhqnc9Eer4RvyIVVnxkGLLHYCKToR8k13HrxPBfDmDc4Jj1bRFYxUmPAet0esNvyifkPxBBB
+	BfNSWQ/BdNRG0H/AWZwgSHZh7bvENyjOQp/2UYm2L9AhWtHUZMy3lsg86dhxEYdAiaw==
+X-Gm-Gg: ASbGncuQ/O4+AXmqYqBI5H2JqkrzwxooXropPH79WnEZ/7ys6n/eTKUY0RZCKFaQoDJ
+	1y9ZIR/UlQuFZ8W07X2Ltfu4fyzIARRBYqkAPH5AY0I9WAHuXMm4+vL1eFRehPC/7Be9aDPVYPe
+	Vh2WY12kgMaVjU3JRAFS67A8CZX3pqeqSipLfVDy9AbsdY4bzNwFkP+0cTTAnSfwjC+WqK6o25M
+	t2ztV8HM0WHgIDAhuN8H/c8daV7VtVRLh12aBVdjZ4cIvf1QPmfPd4SrH6PiZ5MMc7LXjYebApN
+	zfN1ZQFnxWanlFaQbg==
+X-Received: by 2002:a05:600c:1382:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-451f0a5fe0amr51092005e9.5.1749110080156;
+        Thu, 05 Jun 2025 00:54:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG1SRbImSlbGm32npkuOoSxiRgAXup0UEUY8LHi/iQ53+IYu08XHv+Q7OLZVb45/K6v+57Beg==
+X-Received: by 2002:a05:600c:1382:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-451f0a5fe0amr51091785e9.5.1749110079698;
+        Thu, 05 Jun 2025 00:54:39 -0700 (PDT)
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f97f85casm16199575e9.4.2025.06.05.00.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 00:54:38 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>
+Cc: "linux-security-module@vger.kernel.org"
+ <linux-security-module@vger.kernel.org>, "linux-integrity@vger.kernel.org"
+ <linux-integrity@vger.kernel.org>, "linux-modules@vger.kernel.org"
+ <linux-modules@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>, "keyrings@vger.kernel.org"
+ <keyrings@vger.kernel.org>, David Howells <dhowells@redhat.com>, David
+ Woodhouse <dwmw2@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Luis
+ Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami
+ Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
+ <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge
+ E. Hallyn" <serge@hallyn.com>, Peter Jones <pjones@redhat.com>, Robert
+ Holmes <robeholmes@gmail.com>, Jeremy Cline <jcline@redhat.com>, Coiby Xu
+ <coxu@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>
+Subject: Re: [PATCH RFC 0/1] module: Optionally use .platform keyring for
+ signatures verification
+In-Reply-To: <f0b37bc55ed3c02569c74f0fbdb6afa8efd329e2.camel@HansenPartnership.com>
+References: <20250602132535.897944-1-vkuznets@redhat.com>
+ <0FD18D05-6114-4A25-BD77-C32C1D706CC3@oracle.com>
+ <f0b37bc55ed3c02569c74f0fbdb6afa8efd329e2.camel@HansenPartnership.com>
+Date: Thu, 05 Jun 2025 09:54:37 +0200
+Message-ID: <87zfemoc76.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Rong Tao <rongtao@cestc.cn>
+James Bottomley <James.Bottomley@HansenPartnership.com> writes:
 
-Update Documentation for skel NAME__open_and_load_opts()
+> On Wed, 2025-06-04 at 17:01 +0000, Eric Snowberg wrote:
+>> > On Jun 2, 2025, at 7:25=E2=80=AFAM, Vitaly Kuznetsov <vkuznets@redhat.=
+com>=20
+>> > The use-case: virtualized and cloud infrastructure generally
+>> > provide an ability to customize SecureBoot variables, in
+>> > particular, it is possible to bring your own SecureBoot 'db'. This
+>> > may come handy when a user wants to load a third party kernel
+>> > module (self built or provided by a third party vendor) while still
+>> > using a distro provided kernel. Generally, distro provided kernels
+>> > sign modules with an ephemeral key and discard the private part
+>> > during the build. While MOK can sometimes be used to sign something
+>> > out-of-tree, it is a tedious process requiring either a manual
+>> > intervention with shim or a 'certmule' (see
+>> > https://blogs.oracle.com/linux/post/the-machine-keyring). In
+>> > contrast, the beauty of using SecureBoot 'db' in this scenario is
+>> > that for public clouds and virtualized infrastructure it is
+>> > normally a property of the OS image (or the whole
+>> > infrastructure/host) and not an individual instance; this means
+>> > that all instances created from the same template will have 'db'
+>> > keys in '.platform' by default.
+>>=20
+>> Hasn=E2=80=99t this approach been rejected multiple times in the past?
+>
+> Well not rejected, just we always thought that people (like me) who
+> take control of their secure boot systems are a tiny minority who can
+> cope with being different.  I have to say the embedding of all the
+> variable manipulations in shim made it quite hard.  However you can use
+> the efitools KeyTool to get a graphical method for adding MoK keys even
+> in the absence of shim.
+>
+> The question is, is there a growing use case for db users beyond the
+> exceptions who own their own keys on their laptop, in which case we
+> should reconsider this.
 
-Signed-off-by: Rong Tao <rongtao@cestc.cn>
----
- tools/bpf/bpftool/Documentation/bpftool-gen.rst | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Yes, exactly; I may had missed some of the discussions but what I found
+gave me the impression that the idea was never implemented just because
+'db' was normally considered to be outside of user's control ("just a few
+evil certs from MS"). This may still be true for bare metal but over the
+last few years things have changed in a way that major cloud providers
+started moving towards offering UEFI booted instances by default (or, in
+some cases, UEFI-only instances). At least the three major hyperscalers
+(AWS, GCP, Azure) offer fairly straightforward ways to customize 'db'
+for SecureBoot; it is also possible to have a custom UEFI setup with
+KVM/QEMU+OVMF based infrastructures.=20
 
-diff --git a/tools/bpf/bpftool/Documentation/bpftool-gen.rst b/tools/bpf/bpftool/Documentation/bpftool-gen.rst
-index ca860fd97d8d..4dc2a624090e 100644
---- a/tools/bpf/bpftool/Documentation/bpftool-gen.rst
-+++ b/tools/bpf/bpftool/Documentation/bpftool-gen.rst
-@@ -107,8 +107,10 @@ bpftool gen skeleton *FILE*
-       global data maps. It corresponds to libbpf's **bpf_object__load**\ ()
-       API.
- 
--    - **example__open_and_load** combines **example__open** and
--      **example__load** invocations in one commonly used operation.
-+    - **example__open_and_load** and **example__open_and_load_opts**.
-+      Combines **example__open** and **example__load** invocations in one
-+      commonly used operation. **_opts** variants accepts extra
-+      **bpf_object_open_opts** options.
- 
-     - **example__attach** and **example__detach**.
-       This pair of functions allow to attach and detach, correspondingly,
-@@ -336,6 +338,9 @@ files into the final BPF ELF object file *example.bpf.o*.
-                 const struct bpf_object_open_opts *opts);
-   static inline struct example *example__open();
-   static inline int example__load(struct example *obj);
-+  static inline struct example *example__open();
-+  static inline struct example *example__open_and_load_opts(
-+                const struct bpf_object_open_opts *opts);
-   static inline struct example *example__open_and_load();
-   static inline int example__attach(struct example *obj);
-   static inline void example__detach(struct example *obj);
--- 
-2.49.0
+'certwrapper' offers _a_ solution which is great. It may, however, not
+be very convenient to use when a user wants to re-use the same OS image
+(e.g. provided by the distro vendor) for various different use-cases as
+proper 'certwrapper' binary needs to be placed on the ESP (and thus
+we'll end up with a bunch of images instead of one). 'db' is different
+because it normally lives outside of the OS disk so it is possible to
+register the exact same OS image with different properties (e.g. with
+and without a custom cert which allows to load third party modules).
+
+One additional consideration is the fact that we already trust 'db' for
+dm-verity (since 6fce1f40e951) and kexec (since 278311e417be) and
+especially the later gives someone who is able to control 'db' access to
+CPL0; a 'db'-signed module (IMO) wouldn't change much.
+
+--=20
+Vitaly
 
