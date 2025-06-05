@@ -1,142 +1,148 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-qv1-f77.google.com (mail-qv1-f77.google.com [209.85.219.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EE518C06
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8BC4400
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749146554; cv=none; b=LY20aJ6m7UEeZNrs50Hzeh9xtsu7il1sf/gdKSoeOKJMMoZDDYaADsG0EBe8/t03hRQymj+1kCzD/k77ZoSaNMtLdm9p8Wjgk7NHJd0pUDXC+8k452P4N4aGhA86IiU7t+GHbmidbKS19P+pinPJt3wMoQD+PaxWMBoY52HWgj4=
+	t=1749146805; cv=none; b=pg6NIuWNCTOg74vspysrh78vMiGpO+9AbaDfbit0aXKNBTPucQQTV3Vv76m7TL7wUDKQDBMvQGdqeVIAJmHEfeTmDXEqsIkQBPHrfqyV+rrsRBvlUqcCbrQqBXwCorNevfH7HQMsSnfvvhKa4TOE5Pf3j5+uvw4xeG20M0gsSKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749146554; c=relaxed/simple;
-	bh=Qixvd4OhypbD8d/UbtBEp9h3rsuuLj4KcvcrC0o/m/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KJKb9icY0ettfSW4aA5hCVYo9fL7JRaY7dYN3PRv9HykCp2VGmJAGrHUdqqrK9a9ozji/Ewjpu3gMzXVYqftU55K2isf+2NvjCrWdX8oK88U+b01mxd4OWmoZOv006rZNe0IQrZWPaPncqlZR8Oaq7wAroL0J2ImolK4+guWL3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=EGXkBsiL; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="EGXkBsiL"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso1272283b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 11:02:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1749146552; x=1749751352; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=BwlFuB/WA8JgwT54XR12ivvxbEoyZqbT8RK1LGV138g=;
-        b=EGXkBsiL42X3wbnYJLn/KntMJ9sWLH9AOkbhtw/W2PnyTw9vbRt8FQAqbN3TfQFrIx
-         kSri/r80tn4/mH/sZoZzE3/OsgUdXpoa7X8aaF/8FEWVFqPjTMVjJAPIbuZERADsz0tS
-         vGEZxk9rr/97aNyKsbwgs0V+Ez3vv44ZZyASI=
+	s=arc-20240116; t=1749146805; c=relaxed/simple;
+	bh=p2h8bVXfAqrdK2pNUNt8dqwNGWIHa63N9oNTqy83JI4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=sSPCF/0SfmyZ1sHTHdPX+mGfrqpwU9RTBUjf67nem+mhyTQ04cKGIg1Umi5DNQeX+ZVkxH50yrcOo/wmBXLoVE8/rZvwyffaMkKnGakYQYa+V1wjHY9jfuKqnjCo6lMhWhM1tQzqYHvWgQJxyP+/d7it2jnEja/M336OHhK4q+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.219.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-qv1-f77.google.com with SMTP id 6a1803df08f44-6fad34d3cd8so18380896d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 11:06:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749146552; x=1749751352;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BwlFuB/WA8JgwT54XR12ivvxbEoyZqbT8RK1LGV138g=;
-        b=AA0Cyk83Gp2CZwh8Y7XVApBxeUILbWMwnnlVhyqUQMTsJNUqrT6vQ/SmrzpaoEZnuM
-         hPSz8H/R+OIU/KnHzjiB5SVIeJQ60GfG8hOCXZ2f/e5e7n2CWvB6wgNvdl45DlGfy54L
-         pR75iNc62jw0759QDOInlGSA6FAX8GA9gih+YEYDP1xPUSU4ptqQ3e5YCmJCl4U9tgPM
-         yZdEiYtPowwNKUWqr7pwwPZdPI5r/wfbuexK/61F3rKBBSItGqJJ44X/Pr+jsyYKAEsG
-         PSdmYOwwQj7j4BePZjNwixtXoKO90lhcpxPLBZciXi6uAc9ADGb88lOppKvnX8wf4nkk
-         Kj9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUSbqCM9ignj/iAIsi+UbNHYDuoRytKKZJHlMKs6cOeq5Cwy0GDB0wqtINC8cV5qJIFVa8sclfeTCSJ/pw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyygwLpx0bggWX+ZDYPpsaTOk/afyfmYg8JIsLjCUB8xXPuakIz
-	UCgX2WW/WaU/Dk9WAZtV3RAK1jm0jp/REzRg5hfCWroLL4pSLdrP11uTDFlfK5VKjg==
-X-Gm-Gg: ASbGncuZdKp5kt/rbI09fySJUZp4aKDc9xzoYXWtaB9hwOR72knTJ3XQAtfC8x0N8+M
-	N2cdf3/jxCHkzavqanExSpgdxUXARSm7zWTUiJoqrspyas6k/yJ4a/kUJe05AYOQ8tQo68qJyBV
-	99lEdVQNBVEvn86zWulwzf8SQx2R3lLy044pn2Ujl4AfLP4KwZRzBlPhvK2ZSOdGh+HsfH98Zel
-	J9fcBofUCW5tOneMQ7bLKWc4I2GlK9jOF/jMtcCH7clZGv8P/KfzHWA3UX7gn/LGEoL1hB8N8LE
-	wHW0TN3c+8QBZVcOzVpYQNxskyjJmYgjsYJ2IUgOL7OojUbttvvXfziQDWYTCnXIIMkpgfzMX1h
-	CmwyXdAuckTt9z/VoOTBnIPrQ8A==
-X-Google-Smtp-Source: AGHT+IEIUa9PX/FUvJMVxiR3QvCiRLgr7dERa3ZumCVq2A2BQoxv4jgjwbyszorMPUkMHGKjETHTvA==
-X-Received: by 2002:a05:6a21:6b16:b0:1f5:51d5:9ef3 with SMTP id adf61e73a8af0-21ee253296emr216532637.20.1749146552073;
-        Thu, 05 Jun 2025 11:02:32 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff7407sm13462933b3a.178.2025.06.05.11.02.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 11:02:31 -0700 (PDT)
-Message-ID: <9092793c-cb9c-4440-b2b6-3e80216a737c@broadcom.com>
-Date: Thu, 5 Jun 2025 11:02:29 -0700
+        d=1e100.net; s=20230601; t=1749146803; x=1749751603;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dImjQym7d7b9YjCAVqcDiJr2iidHUk/UARmDlM+j+6E=;
+        b=HYpFOWGqNj4NcWJPjPmClk2NISFTKl+F0eLH1rX9xn7CVkv3I806opWNExRyu9NXJb
+         sgCzYp3eYiShelqUzGj8yKBna7iKC7OAH9Nrk2OTMMN3modqPnMDL+7ZQrZgUJV4UV3E
+         RLrh2LYhmJeEOKUN3EDeWqPp0piopmn34JVHK8oxwqJhUhRpwqiuWS3i1RkbvTh9l71f
+         TwE+ufkhrTfoHyWV4sYjFCe3CRVrQSINzF+YrOk7nRVH7GD/CKSFQEPjdN7oEotbFllJ
+         1MTDpfJmgcCiScoOG7Z1UFqXYgAwsMjcGTlYY0rKuKyWqHcA7VfPALv+vdO8PXUZ15yS
+         Dv8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVUQptF/0g2v4ulIHpAg/eDQUGDg1x8ISwmdqTVwxf14flVuw8x24jD7WQULti7H9VlFYwNRdoyltmLjjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBW/DHcepInAuWL8+AhSq23ZEiC4IETPKaq/Lkh82HotRLA99G
+	T8RDbfdZ/YwOeuXuuCLVXQplAZZ5DvbtDDL66b17GZW4e/hy1WA6Xf788scHyAhL18QcHlOySNY
+	qMjZ7ADO9Ys4kw+DuKcEJs/8O8ql3tKLPX8RYtsEDs0f50jH/m6s6Cle16YA=
+X-Google-Smtp-Source: AGHT+IF69b7I0bjd5WI/y0hsTfFsRbtkLRNY1fVQJOY3MtlEGrSTCs31itW1/CjOU9TD9Ta27HsfG+f4NcqrUQuSb1J3SCdJOd2q
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net: dsa: b53: fix untagged traffic sent via cpu
- tagged with VID 0
-To: Jonas Gorski <jonas.gorski@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250602194914.1011890-1-jonas.gorski@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250602194914.1011890-1-jonas.gorski@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1c0f:b0:3dd:c04e:49af with SMTP id
+ e9e14a558f8ab-3ddce461a0emr5658455ab.3.1749146792542; Thu, 05 Jun 2025
+ 11:06:32 -0700 (PDT)
+Date: Thu, 05 Jun 2025 11:06:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6841dca8.a00a0220.d4325.0020.GAE@google.com>
+Subject: [syzbot] [btrfs?] kernel BUG in populate_free_space_tree
+From: syzbot <syzbot+36fae25c35159a763a2a@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/2/25 12:49, Jonas Gorski wrote:
-> When Linux sends out untagged traffic from a port, it will enter the CPU
-> port without any VLAN tag, even if the port is a member of a vlan
-> filtering bridge with a PVID egress untagged VLAN.
-> 
-> This makes the CPU port's PVID take effect, and the PVID's VLAN
-> table entry controls if the packet will be tagged on egress.
-> 
-> Since commit 45e9d59d3950 ("net: dsa: b53: do not allow to configure
-> VLAN 0") we remove bridged ports from VLAN 0 when joining or leaving a
-> VLAN aware bridge. But we also clear the untagged bit, causing untagged
-> traffic from the controller to become tagged with VID 0 (and priority
-> 0).
-> 
-> Fix this by not touching the untagged map of VLAN 0. Additionally,
-> always keep the CPU port as a member, as the untag map is only effective
-> as long as there is at least one member, and we would remove it when
-> bridging all ports and leaving no standalone ports.
-> 
-> Since Linux (and the switch) treats VLAN 0 tagged traffic like untagged,
-> the actual impact of this is rather low, but this also prevented earlier
-> detection of the issue.
-> 
-> Fixes: 45e9d59d3950 ("net: dsa: b53: do not allow to configure VLAN 0")
-> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Hello,
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+syzbot found the following issue on:
+
+HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=17ab4c0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
+dashboard link: https://syzkaller.appspot.com/bug?extid=36fae25c35159a763a2a
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12b79282580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=106b4c0c580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/643a65f1a5eb/mount_0.gz
+  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=11f86570580000)
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+36fae25c35159a763a2a@syzkaller.appspotmail.com
+
+BTRFS warning: 'usebackuproot' is deprecated, use 'rescue=usebackuproot' instead
+BTRFS info (device loop0 state M): rebuilding free space tree
+assertion failed: ret == 0, in fs/btrfs/free-space-tree.c:1102
+------------[ cut here ]------------
+kernel BUG at fs/btrfs/free-space-tree.c:1102!
+Internal error: Oops - BUG: 00000000f2000800 [#1]  SMP
+Modules linked in:
+CPU: 1 UID: 0 PID: 6592 Comm: syz-executor322 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : populate_free_space_tree+0x514/0x518 fs/btrfs/free-space-tree.c:1102
+lr : populate_free_space_tree+0x514/0x518 fs/btrfs/free-space-tree.c:1102
+sp : ffff8000a4ce7600
+x29: ffff8000a4ce76e0 x28: ffff0000c9bc6000 x27: ffff0000ddfff3d8
+x26: ffff0000ddfff378 x25: dfff800000000000 x24: 0000000000000001
+x23: ffff8000a4ce7660 x22: ffff70001499cecc x21: ffff0000e1d8c160
+x20: ffff0000e1cb7800 x19: ffff0000e1d8c0b0 x18: 00000000ffffffff
+x17: ffff800092f39000 x16: ffff80008ad27e48 x15: ffff700011e740c0
+x14: 1ffff00011e740c0 x13: 0000000000000004 x12: ffffffffffffffff
+x11: ffff700011e740c0 x10: 0000000000ff0100 x9 : 94ef24f55d2dbc00
+x8 : 94ef24f55d2dbc00 x7 : 0000000000000001 x6 : 0000000000000001
+x5 : ffff8000a4ce6f98 x4 : ffff80008f415ba0 x3 : ffff800080548ef0
+x2 : 0000000000000000 x1 : 0000000100000000 x0 : 000000000000003e
+Call trace:
+ populate_free_space_tree+0x514/0x518 fs/btrfs/free-space-tree.c:1102 (P)
+ btrfs_rebuild_free_space_tree+0x14c/0x54c fs/btrfs/free-space-tree.c:1337
+ btrfs_start_pre_rw_mount+0xa78/0xe10 fs/btrfs/disk-io.c:3074
+ btrfs_remount_rw fs/btrfs/super.c:1319 [inline]
+ btrfs_reconfigure+0x828/0x2418 fs/btrfs/super.c:1543
+ reconfigure_super+0x1d4/0x6f0 fs/super.c:1083
+ do_remount fs/namespace.c:3365 [inline]
+ path_mount+0xb34/0xde0 fs/namespace.c:4200
+ do_mount fs/namespace.c:4221 [inline]
+ __do_sys_mount fs/namespace.c:4432 [inline]
+ __se_sys_mount fs/namespace.c:4409 [inline]
+ __arm64_sys_mount+0x3e8/0x468 fs/namespace.c:4409
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Code: f0047182 91178042 528089c3 9771d47b (d4210000) 
+---[ end trace 0000000000000000 ]---
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
