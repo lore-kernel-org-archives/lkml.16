@@ -1,93 +1,95 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0116B1DB34B;
-	Thu,  5 Jun 2025 05:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B70819CC11;
+	Thu,  5 Jun 2025 05:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749102965; cv=none; b=RyFw/4VkTFdX4gUA3SGT5AHfC9uvOdukMsbcJwqSlmL2ofKshD87sdF5qKjXCIz4GvRe9p2Jkwix/kpi0xf8ij8mmpw2qpdZnlUetfU/ZxITfkkUD5e4b5kfMfS7/4ogltjZ2Rb6ODPhpCsxZfjhuayXmmCo9CTRbf95VvQFg3Q=
+	t=1749103019; cv=none; b=BeqpkuCDliDIhedoXmJ+28wP6KoH7yDADLELb8m3iMUZt03WjvnEtNJCeWFiwm2iioDrDrplijRKOvch5MpLMPL+Yt0MxaA6PpQN+AFF1f2d+hnRByaBIzIT/GVxuwhrNQQSpmf3graf3UPg/4C08H56z/P9CuxgMc5FGxFpBE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749102965; c=relaxed/simple;
-	bh=TiFQYvsKtNb3eu7X/TfGW0Zpc0IrlwKjViFKEuHchrg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O0b641MkkTDgsxlZM3GP085ZPjp0QTXLc4zj7UXryuplPEqzDdbCbQrju8qbmMPmu3XTyst6IcLxLmeqf9HxF9dKPhGsVnK6/nfZaw0/DDnGxw2zHoflN6P3KVKIiLayZ8pqI5TXjAqiI65L0aW/56AK4k37IoOtkGz/3GeuIXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=UQY28apT; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1749103019; c=relaxed/simple;
+	bh=WkkGM08VMW5SFQ/+XIX9f/SVjIxnmSZqqyIBTfQ8hC4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a3l67iWc/u0iMGyVQ3OxZzKSedLr53TN/rEfqx3cxp2tl/2QPQpFd4t1VWh5RWrpH/rTFeQF0BHODJMM+Cs3IcCFpPJ0CerYgWQW9Hg+ouhENnFkNeSXcnwN0NAmr2anib7HaqwSUJZ1f6zb8HGm54IlUI3PKs1lp1rLpoxAwdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=D96Hid6K; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="UQY28apT"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 821B6260BB;
-	Thu,  5 Jun 2025 07:56:02 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id X7APAh8gTR1d; Thu,  5 Jun 2025 07:56:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749102961; bh=TiFQYvsKtNb3eu7X/TfGW0Zpc0IrlwKjViFKEuHchrg=;
-	h=From:To:Cc:Subject:Date;
-	b=UQY28apTlO7/DGuRKxZZyDp7Tdr46hqi3MsMLre1YSLCS2ijeXvmOyB4uVQCwFVLa
-	 UzLBISG3a6vuhZJzyFD0jbUr0g+CKv8pLgWIw3wyPOloU+gufv/TorFZCgaDaxeGKn
-	 SVXjH9FHCDIzNIS9FFNtJSBj5iCxQdHVdoqsr1l/711WttyCAZhLE2fFH27qL7o35z
-	 sZNUCIuoBey/TlFV4Pwsv7LZgYFA9DV/bouR0jTK9MfzxU8dH6S/e7qEmP1/0Le23E
-	 qNALJzoGv4gXGMpaeFKbeCmg1WSONCGmYQkTvM/NcIpPFR9Bazal/i96XTrcsOeQEC
-	 v91JREsnE+FAA==
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/loongarch: laptop: Unregister generic_sub_drivers on exit
-Date: Thu,  5 Jun 2025 05:55:46 +0000
-Message-ID: <20250605055546.15264-1-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D96Hid6K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749103015;
+	bh=WkkGM08VMW5SFQ/+XIX9f/SVjIxnmSZqqyIBTfQ8hC4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=D96Hid6Kq7JQS22naS6+/J1Gkoyyed/yJCJAXYhRomHGd88EpOq8yAz7u5mfEQb7N
+	 E6YbQBMT0iTOrL4EVumEKOOji6CTok4mZqPDP1Ng0VI5rUrFjAgJ1FdmRLew5Z5cYP
+	 drDyKTf5/1/E6r5vN5DdOTy/6j6u9gvjN/Wz0kqi4JcYht0PmSodjHV+VHtL4zzrCU
+	 y0m40domMY+T8E2H6i9A+vL/zZzBAHhbe7og8/uKCDp6xCEWqFChcU9AmZamASRHVJ
+	 BpvccimnTvVV3IyLv69tOEsAQQ8zjG13PPnHoW3Pb4opcT16e9DoQo5m/qUE0/Y24S
+	 NPbKP/DBp/fYQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0361C17E010B;
+	Thu,  5 Jun 2025 07:56:54 +0200 (CEST)
+Message-ID: <f40e7b31-5bb2-4d1d-8687-6f728ea255be@collabora.com>
+Date: Thu, 5 Jun 2025 07:56:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mtk-sd: Fix a pagefault in dma_unmap_sg() for not
+ prepared data
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Chaotian Jing <chaotian.jing@mediatek.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, linux-mmc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <174908565814.4056588.769599127120955383.stgit@mhiramat.tok.corp.google.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <174908565814.4056588.769599127120955383.stgit@mhiramat.tok.corp.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Without correct unregisteration, ACPI notify handlers and the platform
-driver installed by generic_subdriver_init will become dangling
-references after removing loongson_laptop module, triggering various
-kernel faults when a hotkey is sent or at kernel shutdown.
+Il 05/06/25 03:07, Masami Hiramatsu (Google) ha scritto:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> mtk-msdc driver causes a kernel crash after swiotlb buffer is full.
+> 
+> ---
+> mtk-msdc 11240000.mmc: swiotlb buffer is full (sz: 16384 bytes), total 32768 (slots), used 32732 (slots)
+> mtk-msdc 11240000.mmc: msdc_track_cmd_data: cmd=18 arg=0397A6F8; host->error=0x00000004
+> Unable to handle kernel paging request at virtual address ffffffffc0001fc0
+> ---
+> 
+> When swiotlb buffer is full, the dma_map_sg() returns 0 to
+> msdc_prepare_data(), but it does not check it and sets the
+> MSDC_PREPARE_FLAG.
+> 
+> swiotlb_tbl_map_single() /* prints "swiotlb buffer is full" */
+>    <-swiotlb_map()
+>      <-dma_direct_map_page()
+>        <-dma_direct_map_sg()
+>          <-__dma_map_sg_attrs()
+>            <-dma_map_sg_attrs()
+>              <-dma_map_sg()  /* returns 0 (pages mapped) */
+>                <-msdc_prepare_data()
+> 
+> Then, the msdc_unprepare_data() checks MSDC_PREPARE_FLAG and calls
+> dma_unmap_sg() with unmapped pages. It causes a page fault.
+> 
+> To fix this problem, Do not set MSDC_PREPARE_FLAG if dma_map_sg()
+> fails because this is not prepared.
+> 
+> Fixes: 208489032bdd ("mmc: mediatek: Add Mediatek MMC driver")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Cc: stable@vger.kernel.org
-Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- drivers/platform/loongarch/loongson-laptop.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-index 99203584949d..cfe2cf79dbbe 100644
---- a/drivers/platform/loongarch/loongson-laptop.c
-+++ b/drivers/platform/loongarch/loongson-laptop.c
-@@ -611,11 +611,17 @@ static int __init generic_acpi_laptop_init(void)
- 
- static void __exit generic_acpi_laptop_exit(void)
- {
-+	int i;
-+
- 	if (generic_inputdev) {
--		if (input_device_registered)
-+		if (input_device_registered) {
- 			input_unregister_device(generic_inputdev);
--		else
-+
-+			for (i = 0; i < ARRAY_SIZE(generic_sub_drivers); i++)
-+				generic_subdriver_exit(&generic_sub_drivers[i]);
-+		} else {
- 			input_free_device(generic_inputdev);
-+		}
- 	}
- }
- 
--- 
-2.49.0
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
