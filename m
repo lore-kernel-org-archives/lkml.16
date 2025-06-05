@@ -1,142 +1,181 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8118327465B;
-	Thu,  5 Jun 2025 16:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E6D1F4168
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749139808; cv=none; b=jFcO788qlgC1R0dpFSoO5U5tZlohHHbKe0kauzndpgubnzya2ohFlExdkjk369rmX6EOccfItGCwlmFKHBZsPN58LzpXNFv7/lXbrNctwDMjHRWipIAZhR8NKIwMTcbqY1WnB8DYe1QSa+3S6e8/UUk7N9JOiCIArHInupGXd+I=
+	t=1749139808; cv=none; b=VAtZr/c+mG5Gwuk3MJ4qOd/7TxEy7R5hkCGjW8L4yzSEP7XAtxDWxCNYGCtgf+E08yL3gjtZNW6FniFphJ+j+pKiDoSF7uUBi6VMhIb1DJhNn+WadL3Za7OO6PAonx1u+J5+gfO0eY9WkjCEPp5sVip63+lHf3SUJzBuwQ1MOuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749139808; c=relaxed/simple;
-	bh=YnIQvPD9lJYDOlBpOrCy1ioFdRL5RyD0q+hZaolXlzo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wn5pWzuZdMpAIaUseEMEeFekcvFyaCnOVbyneo3RAe0G0Zqzc9JxxkKeBVL0JoDHefh0p+87HoE43fLjzotMMsZQUgCPmF+qziqLSoGisVpMmPFLeVYBRHjZH6MpgIdOdkWTZb/ZOjEbSRhN80V28Y/8ozVrjMfjU3Sumowgoos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZfuKyTca; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=o/Tlk9x1eSaxP1Eo8YyEvaZZuLAOeOGyA2Hs3yxwQXI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J+ZV3ZSNovKBRFZ5EDUHUZmYTfnsdwCA9Al/EmPNzkg7fOap9isW7DMnUjYkyVWZ8lP1AOKfDoNDkAYf02zeyfDIgmx4CFsVYNX0ytNFUe3Apfm8qoauGgPJMKTQEXshc/ywSYafXf2Ranws1qhXnvNCBG+p0gh7RWhCeLUgm40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DA6xyS7R; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZfuKyTca"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a3673e12c4so741579f8f.2;
-        Thu, 05 Jun 2025 09:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749139805; x=1749744605; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YnIQvPD9lJYDOlBpOrCy1ioFdRL5RyD0q+hZaolXlzo=;
-        b=ZfuKyTcaeJFqu+dTkbPlSa7ggOFULpTlQC0g4os60Fxs9toYm9QedRnswqwwPB0qtM
-         d4kq0tj94rZw/EGp99Hl5jXMwlI74USyXppVjuQXZngYp69zfb57C+3kK5AD907S6MFy
-         YdlpGlHzNqRhGIdxzQu0lja7DzWsXVeEK58VGUyjivC5DcWiACHH/my26n38VXG+rMD4
-         bfnWuJuDwkFfx0n0vYxDCWZaJSA4ebQUqhERQboADu7qpL7RRLFYg2ACyzASQw2VYeDy
-         Z3lZrDtDWJxa+wESUIvNINVdrZsCRHvffVwa1SSaHdNmxMuP28si3REGpurut0VU0bV/
-         qqbw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DA6xyS7R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749139805;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wDs1HzFrKoifF1hub98p0mc0v8p741xLPpTuV3UpURY=;
+	b=DA6xyS7Roo3yzLc7aOvKqSQxpjBtJBR5DmiiX6ZWGHcEBaNYM+Zk2Gabsr8fAztMhyDDNq
+	Za7Zt7QbtszofEJjf5fiD0/TTTOB8Ag1nXJLA0AwSWByiuDx7uDOmO+FImVm+ziTyYOeDE
+	uBQE6rWOFwaFHX3KAoE/jh6DLWiwMmk=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-101-rSGf6ESROTKGDHIb_BhKbw-1; Thu, 05 Jun 2025 12:10:04 -0400
+X-MC-Unique: rSGf6ESROTKGDHIb_BhKbw-1
+X-Mimecast-MFC-AGG-ID: rSGf6ESROTKGDHIb_BhKbw_1749139804
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddb983411bso2706945ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 09:10:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749139805; x=1749744605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749139803; x=1749744603;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YnIQvPD9lJYDOlBpOrCy1ioFdRL5RyD0q+hZaolXlzo=;
-        b=vi+WHxLFmjDlPVV5+WXVUs73ef8DptcbpfV/F6+aBBd5IfpZ1cU/bgquwwcVO/92ni
-         0Pn9h3Gj0JEoW3lJL0Wx2AKHf3zi/ohDAuPKQHhumV1RucS09rajB2dtWQFaygIheMKE
-         8dRNZjL+aZSi3oxeuHgLwKaDHRXAvzdSMTHPJODSLOmAO9K/sSKrpRJw5UpEKR27zk1E
-         s2fFNLbbx2M9+WIeQoT5aGlG4SEUqeSBK4fq/41uc4sGZTXp4F8IR2Uo1+l4kibvjE3O
-         W97+CNckZlN3uo13Wi4bcm4DhC09uSTAGwwXx+w/BRsvR6G4iYbpUMwPvPvq4u3O7mnB
-         Yq7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ1xrYrB6eFDe4rNOkEXKd4uZ+UMNjzGsRFgg2Zu7GbcF45F4QgWJZCIlFf9dPkKZyxahhfxjPqQ==@vger.kernel.org, AJvYcCX0MCDNvEBFXRBrxn7DNiVVVcYUFLyXRRyR76bDro/WOhL4T5YnFaq0vMo4XPI+yhn7eFqjWxHw/z29VQcw@vger.kernel.org, AJvYcCX4Ho6zlCGbRYw9yU6RTyRgbfB5nXBniZ2y3MZE75hsJKl9tk4UeSSPmGnnHn0hPPGXMfevwB5+sda9ydOLPRJC@vger.kernel.org, AJvYcCXsoUU8pcESvspGYzsM0eNqvjHZtEmDXv4h9PQEcxk4sjJSBuxDiGnbdBcVAtDixVgT4g0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU85nEDqW6PtPQTbDGotUinYSZU3Qi+Tyuvxx7ml/17iftQ0q5
-	oXMMmcl1EANaETli/mds4zGXVsklpfokmRdLFbkpe9Txn54PczQctZIrkDYIQz7obBXUJ6fXmeV
-	ce/HCsmmhta5MVchiuZkVToQnA/en0Aw=
-X-Gm-Gg: ASbGncsE0/kKnqrrSF8kNEosTzO0r4e5b5UrDKPqg2vcHvdeZkv5jqMvcgU1J4ok+Jo
-	fFNFixpmEXkTnd6j+CIu5H1K478YN68R7DHb8n3QghYA+X6hOr0vNmrK3c56mESMhVro6hXdBm2
-	HuqKe1guNgrUvHY1ICZs7vJiPkdkFzt5pAUMHqoU1kb5GeobhqFKMt2VPhCDzGW9bUDikD+Q==
-X-Google-Smtp-Source: AGHT+IF4/r/MeCk1ofRbXjeQgnJMl2fjGGz6lBVtftByV5fvMH1+Rl6IDv+s6YX9w9uN5TsW5ALs3oMs2ojfpEr5ugw=
-X-Received: by 2002:a5d:4291:0:b0:3a5:2875:f986 with SMTP id
- ffacd0b85a97d-3a52875fc63mr2749955f8f.44.1749139804629; Thu, 05 Jun 2025
- 09:10:04 -0700 (PDT)
+        bh=wDs1HzFrKoifF1hub98p0mc0v8p741xLPpTuV3UpURY=;
+        b=H9ORFhTe1jSxKwhGSSirKybkTRQPLYp6LaNBeaHx06jHc6GpglqlslM7AuE2I2vmk/
+         zGyZkUYTxzXKOiKUkBFeCos6elkwiCNZ88EcrF5a5cF8Ov8Ru4YewM12Epb60J3RJOtB
+         r9x9leLeLyotn4BguU6luGHeR2OZYa+vt4L3+FIMxRR4YwZnnLrv/IRgycG4iTEOYtug
+         QujDAugWAY6erUenx7gYEW11vP74K1FzG6xIFdWkknuPPAJPy/mY4mbCb8aF2nyDqZ9j
+         Q8P6r3+bLxqS7yNwrMfETNopOoUOSjWwfrrY3ttAavywYJWtySR7jk0dfuatVl9BmeDd
+         phmw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQcOCCes6/Lb7/qxcNRv+BVCgmFf/JvqXFWwRx0f5jZdpRH2jduxfnt34EtnBu2XSLXmskB4DRekZQz30=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvF0pIFJoklttQ4CmZDYId9WI0AKi8K0Zw1hX/YIhhKyNkwWSo
+	2xRLjSZFMNlA9yYdmH0xspFX2UZ8s/eCgAWoVr0bD6aUMITEuqvXgvBjPW065BCdZzJGdjfb6j0
+	0F1AH3P/Yn5jJ7HjZBBGX5cpQ3Nh+9xlCYaIy4h8oQnNOUZkkpHaJfomtb4dJkrei7gKkEkshtw
+	==
+X-Gm-Gg: ASbGncuEaEoUucz9iRKuHqPl/FLiVo5Ms8IiIVUAkSHGWE5kxLByFF/9sArlogOcJVf
+	Bdewnn8KGhmdIuSznYhIWPugYL4nMSg+F7K2K05bTcJI/5ZzAlDVo0TZyBwPKwgJ5xubq6GDwo5
+	fVuKQ7JH28WXNT+bCA2DKCg2Rv6JE966rAGBn2+8lNiJHZMZoRHcI5qVBnq4gM/tKWuuTvdvKgA
+	nhRuj4a797Z3TuCuwTem6HhaSZJUIY+SqIOaPAnMZyuVwl9R4fyuJUSE2CfTGkaFqeoK5GD686W
+	6kkMFeCOWyZ8w1k=
+X-Received: by 2002:a05:6e02:2206:b0:3dd:b589:9da5 with SMTP id e9e14a558f8ab-3ddbece82afmr22588565ab.1.1749139803055;
+        Thu, 05 Jun 2025 09:10:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEBfaCbaCOLCMKp+VFVqNAc7n8GjDzBAgP6HF7JopaVxLiFSueJ4pIKVONeJY/lKn0BrZzv1A==
+X-Received: by 2002:a05:6e02:2206:b0:3dd:b589:9da5 with SMTP id e9e14a558f8ab-3ddbece82afmr22588485ab.1.1749139802661;
+        Thu, 05 Jun 2025 09:10:02 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fdd7ed82fbsm3360220173.90.2025.06.05.09.10.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 09:10:00 -0700 (PDT)
+Date: Thu, 5 Jun 2025 10:09:58 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: lizhe.67@bytedance.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] vfio/type1: optimize vfio_unpin_pages_remote() for large
+ folio
+Message-ID: <20250605100958.10c885d3.alex.williamson@redhat.com>
+In-Reply-To: <20250605124923.21896-1-lizhe.67@bytedance.com>
+References: <20250605124923.21896-1-lizhe.67@bytedance.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com> <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
- <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com> <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
- <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com> <DADMLIVHMSSO.3AXSI5216WCT6@bootlin.com>
- <9a2ba0ad-b34d-42f8-89a6-d9a44f007bdc@linux.dev> <DAEFD2WH7HRV.2SOG9Q00QSEXH@bootlin.com>
-In-Reply-To: <DAEFD2WH7HRV.2SOG9Q00QSEXH@bootlin.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 5 Jun 2025 09:09:53 -0700
-X-Gm-Features: AX0GCFt6yH5UVLu_OY8YyoKeWCoB2_l0Zw4RyPbCo3gsHpLrUJ01bzW8146d9WY
-Message-ID: <CAADnVQ+T_s6dAwJ5JKqNqA8tq1P+MdfPvPw0EoY5yOf8PnGT4g@mail.gmail.com>
-Subject: Re: [Question] attributes encoding in BTF
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Cc: Ihor Solodrai <ihor.solodrai@linux.dev>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Florent Revest <revest@chromium.org>, Bastien Curutchet <bastien.curutchet@bootlin.com>, 
-	ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, 
-	dwarves@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 5, 2025 at 12:35=E2=80=AFAM Alexis Lothor=C3=A9
-<alexis.lothore@bootlin.com> wrote:
->
-> Hi Ihor,
->
-> On Wed Jun 4, 2025 at 7:31 PM CEST, Ihor Solodrai wrote:
-> > On 6/4/25 2:02 AM, Alexis Lothor=C3=83=C2=A9 wrote:
->
-> [...]
->
-> >> Could I be missing something obvious ? Or did I misunderstand the actu=
-al
-> >> attribute encoding feature ?
-> >
-> > Hi Alexis.
-> >
-> > The changes recently landed in pahole and libbpf re attributes had a
-> > very narrow goal: passing through particular attributes for some BPF
-> > kfuncs from the kernel source to vmlinux.h
-> >
-> > BTF now has a way of encoding any attribute (as opposed to only bpf
-> > type/decl tags) by setting type/decl tag kind flag [1]. So it is
-> > possible to represent attributes like packed and aligned in BTF.
-> >
-> > However, the BTF tags need to be generated by something, in case of
-> > vmlinux by pahole. Pahole generates BTF by parsing DWARF. And, as far a=
-s
-> > I understand, attributes are not (can not be?) represented in DWARF in =
-a
-> > generic way, it really depends on specifics of the attribute.
-> >
-> > In order to support packed/aligned, pahole needs to know how to figure
-> > them out from DWARF input and add the tags to BTF. And this does not
-> > happen right now, which is why you don't see anything in bpftool output=
-.
-> >
-> > [1]
-> > https://lore.kernel.org/bpf/20250130201239.1429648-1-ihor.solodrai@linu=
-x.dev/
->
-> Thanks for the details ! I have missed this possibility, as I have been
-> assuming that DWARF info was exposing the needed info. I'll take a look a=
-t
-> it, but if those attributes can not be represented by DWARF, I'll have to
-> find another way of getting those packing/alignment modifications on data
-> type (eg: re-use/share btf__align_of from libbpf, as suggested by Andrii,
-> but it may not able to cover all cases).
+On Thu,  5 Jun 2025 20:49:23 +0800
+lizhe.67@bytedance.com wrote:
 
-Not sure all the trouble is worth it.
-I feel it's a corner case. Something we don't need to fix.
+> From: Li Zhe <lizhe.67@bytedance.com>
+> 
+> This patch is based on patch 'vfio/type1: optimize vfio_pin_pages_remote()
+> for large folios'[1].
+> 
+> When vfio_unpin_pages_remote() is called with a range of addresses that
+> includes large folios, the function currently performs individual
+> put_pfn() operations for each page. This can lead to significant
+> performance overheads, especially when dealing with large ranges of pages.
+> 
+> This patch optimize this process by batching the put_pfn() operations.
+> 
+> The performance test results, based on v6.15, for completing the 8G VFIO
+> IOMMU DMA unmapping, obtained through trace-cmd, are as follows. In this
+> case, the 8G virtual address space has been separately mapped to small
+> folio and physical memory using hugetlbfs with pagesize=2M. For large
+> folio, we achieve an approximate 66% performance improvement. However,
+> for small folios, there is an approximate 11% performance degradation.
+> 
+> Before this patch:
+> 
+>     hugetlbfs with pagesize=2M:
+>     funcgraph_entry:      # 94413.092 us |  vfio_unmap_unpin();
+> 
+>     small folio:
+>     funcgraph_entry:      # 118273.331 us |  vfio_unmap_unpin();
+> 
+> After this patch:
+> 
+>     hugetlbfs with pagesize=2M:
+>     funcgraph_entry:      # 31260.124 us |  vfio_unmap_unpin();
+> 
+>     small folio:
+>     funcgraph_entry:      # 131945.796 us |  vfio_unmap_unpin();
+
+I was just playing with a unit test[1] to validate your previous patch
+and added this as well:
+
+Test options:
+
+	vfio-pci-mem-dma-map <ssss:bb:dd.f> <size GB> [hugetlb path]
+
+I'm running it once with device and size for the madvise and populate
+tests, then again adding /dev/hugepages (1G) for the remaining test:
+
+Base:
+# vfio-pci-mem-dma-map 0000:0b:00.0 16
+------- AVERAGE (MADV_HUGEPAGE) --------
+VFIO MAP DMA in 0.294 s (54.4 GB/s)
+VFIO UNMAP DMA in 0.175 s (91.3 GB/s)
+------- AVERAGE (MAP_POPULATE) --------
+VFIO MAP DMA in 0.726 s (22.0 GB/s)
+VFIO UNMAP DMA in 0.169 s (94.5 GB/s)
+------- AVERAGE (HUGETLBFS) --------
+VFIO MAP DMA in 0.071 s (224.0 GB/s)
+VFIO UNMAP DMA in 0.103 s (156.0 GB/s)
+
+Map patch:
+------- AVERAGE (MADV_HUGEPAGE) --------
+VFIO MAP DMA in 0.296 s (54.0 GB/s)
+VFIO UNMAP DMA in 0.175 s (91.7 GB/s)
+------- AVERAGE (MAP_POPULATE) --------
+VFIO MAP DMA in 0.741 s (21.6 GB/s)
+VFIO UNMAP DMA in 0.184 s (86.7 GB/s)
+------- AVERAGE (HUGETLBFS) --------
+VFIO MAP DMA in 0.010 s (1542.9 GB/s)
+VFIO UNMAP DMA in 0.109 s (146.1 GB/s)
+
+Map + Unmap patches:
+------- AVERAGE (MADV_HUGEPAGE) --------
+VFIO MAP DMA in 0.301 s (53.2 GB/s)
+VFIO UNMAP DMA in 0.236 s (67.8 GB/s)
+------- AVERAGE (MAP_POPULATE) --------
+VFIO MAP DMA in 0.735 s (21.8 GB/s)
+VFIO UNMAP DMA in 0.234 s (68.4 GB/s)
+------- AVERAGE (HUGETLBFS) --------
+VFIO MAP DMA in 0.011 s (1434.7 GB/s)
+VFIO UNMAP DMA in 0.023 s (686.5 GB/s)
+
+So overall the map optimization shows a nice improvement in hugetlbfs
+mapping performance.  I was hoping we'd see some improvement in THP,
+but that doesn't appear to be the case.  Will folio_nr_pages() ever be
+more than 1 for THP?  The degradation in non-hugetlbfs case is small,
+but notable.
+
+The unmap optimization shows a pretty substantial decline in the
+non-hugetlbfs cases.  I don't think that can be overlooked.  Thanks,
+
+Alex
+
+[1]https://github.com/awilliam/tests/blob/vfio-pci-mem-dma-map/vfio-pci-mem-dma-map.c
+
