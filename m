@@ -1,124 +1,94 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D0E86347;
-	Thu,  5 Jun 2025 16:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F3813D521;
+	Thu,  5 Jun 2025 16:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749140213; cv=none; b=gtU32fC9lRfAbgmfz4S/5R73MF/5TgCz/Vh1zISNddIOZoHOU8rSGaOAG7BHx9hzLm9R0O8WoHgyM1haGakUJe1pxqOltJlAUnDp6Fb1oj8ELM+KRjif67wBgv1VuVLQNHJCiM6HKTvGcVX7cgiYU5fQQWK61ew1mamilXlMO2w=
+	t=1749140236; cv=none; b=qK5rzNF18w+p1z7HesnExjKyBuro/mLPXyDs8oQ1GNJPDxT5JbYdDMN1ydQQG/aFennPykyT3dZSGB+1D4j5Fz/4XjcRr43VNdpKzdF/r4xfdPd5AVzYcZgRV5IDTDDWkW/j7xMmkJproxNz12THO/bZE+FUq/hH4q6qQ9ADaRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749140213; c=relaxed/simple;
-	bh=823PvZlKbvnDkDz/Ru+tzdIq+Oan69I7NBcRhm1D6s8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=gKD8kfm+SVDjyqfhh/4q4Wk1tzZkTbBQkVcWfb9+4YWQdLsACn+GM9g3apNyQVu+BTbTXt9Q2d5fAesesGQ1sKgqMHgMT1FAswaww7sRsJqzfr5OpOIzDMQR+mVY4KXy3lpu3QQz7yNP3B4w1b1re6mBOUZndYzEk9faKMJzpsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bCqMg0Vw5z9t1g;
-	Thu,  5 Jun 2025 18:16:47 +0200 (CEST)
+	s=arc-20240116; t=1749140236; c=relaxed/simple;
+	bh=R2kAT8sgTVzEg0Z9dPF3UmifglniI93iuJxDsKCUq4E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FDFlcGiu2DbyDIH2TwWaJgHGXbS9fJ5sszrFo9zLCMovKYCzC+en5WNWiTD1iCmBIyAolcVz+y21tjOfJ1Q5+srV/ds8t0qUUpyLXtTF9lrMShKMVST8/4ZaaVcw9GrskvYXUGXkf6xgq1KlIFluCHkpNX0OGRo/AYZnJv+aM30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RETF9+Fi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RETF9+Fi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC90C4CEE7;
+	Thu,  5 Jun 2025 16:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749140234;
+	bh=R2kAT8sgTVzEg0Z9dPF3UmifglniI93iuJxDsKCUq4E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=RETF9+Fi566neb4lJUpVLBOnK1Q0DHWFqA422TSAoXhbf7GHEODVktjFPnGcb07Ta
+	 kOlF0aK90BS+b+AiPwJxUZiKLwsNJSzbqIMH42/smRXUEP0vOXRwuknlk5wdLLeW0X
+	 jIbGv8yAN7a3R2ZoA88CWDALpE4x2Hc1YB0rjkJFARh1FZeoVrNpwlGikvihjETTSP
+	 KXwkqG5+CDCEtGNNOBQc0ZvWP+VDLDFfEFVXV33nSylK2zNa8UhKAWecCyrrk7YCml
+	 vfFtmhR4/MsoPIJvEBUXUVHFKjeoo5YlWkVygaoZdiWeYvBMVE4qpU22KNIjjoPy8f
+	 eFQS4zumEsmpw==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	iommu@lists.linux.dev, kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+In-Reply-To: <20250605151029.GC19710@nvidia.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+ <yq5ah60u8kev.fsf@kernel.org> <20250605151029.GC19710@nvidia.com>
+Date: Thu, 05 Jun 2025 21:47:01 +0530
+Message-ID: <yq5a7c1q88oy.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 05 Jun 2025 18:16:41 +0200
-Message-Id: <DAEQGBNLMOP1.2RW2A0A4OBZQS@buenzli.dev>
-Cc: "Saravana Kannan" <saravanak@google.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
- Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Dirk Behme" <dirk.behme@de.bosch.com>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v7 5/9] rust: device: Introduce PropertyGuard
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-To: "Rob Herring" <robh@kernel.org>
-References: <20250530192856.1177011-1-remo@buenzli.dev>
- <20250530192856.1177011-6-remo@buenzli.dev>
- <20250605150840.GA2539727-robh@kernel.org>
-In-Reply-To: <20250605150840.GA2539727-robh@kernel.org>
 
-On Thu Jun 5, 2025 at 5:08 PM CEST, Rob Herring wrote:
-> On Fri, May 30, 2025 at 09:28:52PM +0200, Remo Senekowitsch wrote:
->> This abstraction is a way to force users to specify whether a property
->> is supposed to be required or not. This allows us to move error
->> logging of missing required properties into core, preventing a lot of
->> boilerplate in drivers.
->>=20
->> It will be used by upcoming methods for reading device properties.
->>=20
->> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
->> ---
->>  rust/kernel/device/property.rs | 59 ++++++++++++++++++++++++++++++++++
->>  1 file changed, 59 insertions(+)
->>=20
->> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/propert=
-y.rs
->> index 8e0414b0517e4..b789fbbd0e6cc 100644
->> --- a/rust/kernel/device/property.rs
->> +++ b/rust/kernel/device/property.rs
->> @@ -155,3 +155,62 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
->>          unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
->>      }
->>  }
->> +
->> +/// A helper for reading device properties.
->> +///
->> +/// Use [`Self::required_by`] if a missing property is considered a bug=
- and
->> +/// [`Self::optional`] otherwise.
->> +///
->> +/// For convenience, [`Self::or`] and [`Self::or_default`] are provided=
-.
->> +pub struct PropertyGuard<'fwnode, 'name, T> {
->> +    /// The result of reading the property.
->> +    inner: Result<T>,
->> +    /// The fwnode of the property, used for logging in the "required" =
-case.
->> +    fwnode: &'fwnode FwNode,
->> +    /// The name of the property, used for logging in the "required" ca=
-se.
->> +    name: &'name CStr,
->> +}
->> +
->> +impl<T> PropertyGuard<'_, '_, T> {
->> +    /// Access the property, indicating it is required.
->> +    ///
->> +    /// If the property is not present, the error is automatically logg=
-ed. If a
->> +    /// missing property is not an error, use [`Self::optional`] instea=
-d. The
->> +    /// device is required to associate the log with it.
->> +    pub fn required_by(self, dev: &super::Device) -> Result<T> {
->> +        if self.inner.is_err() {
->> +            dev_err!(
->> +                dev,
->> +                "{}: property '{}' is missing\n",
->> +                self.fwnode.display_path(),
+Jason Gunthorpe <jgg@nvidia.com> writes:
+
+> On Thu, Jun 05, 2025 at 05:33:52PM +0530, Aneesh Kumar K.V wrote:
 >
-> Is it possible to make "{self.fwnode}: property..." work? Just need to=20
-> implement Display trait on FwNode, right?
+>> > +
+>> > +	/* To ensure no host side MMIO access is possible */
+>> > +	ret =3D pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
+>> > +	if (ret)
+>> > +		goto out_unlock;
+>> > +
+>> >
+>>=20
+>> I am hitting failures here with similar changes. Can you share the Qemu
+>> changes needed to make this pci_request_regions_exclusive successful.
+>> Also after the TDI is unbound, we want the region ownership backto
+>> "vfio-pci" so that things continue to work as non-secure device. I don't
+>> see we doing that. I could add a pci_bar_deactivate/pci_bar_activate in
+>> userspace which will result in vfio_unmap()/vfio_map(). But that doesn't
+>> release the region ownership.
 >
-> Doesn't look to me like we can alter what we print like in C, but for=20
-> dmesg it's usually the full path we want anyways.
+> Again, IMHO, we should not be doing this dynamically. VFIO should do
+> pci_request_regions_exclusive() once at the very start and it should
+> stay that way.
+>
+> There is no reason to change it dynamically.
+>
+> The only decision to make is if all vfio should switch to exclusive
+> mode or if we need to make it optional for userspace.
 
-Well, field access is not allowed directly in the format string. But if
-there is a variable `fwnode`, then yes, one can do "{fwnode}" directly.
-Implementing Display directly on FwNode seems like a good idea if the
-full path is the intuitive default.
+We only need the exclusive mode when the device is operating in secure
+mode, correct? That suggests we=E2=80=99ll need to dynamically toggle this
+setting based on the device=E2=80=99s security state.
 
-I tried it with an `ARef<FwNode>`, but that didn't work. I had to force
-the dereference with `&*fwnode`. Maybe an `impl<T: Display> for ARef<T>`
-could be added, the standard library does that for its smart pointers.
-
-Remo
+-aneesh
