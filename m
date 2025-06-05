@@ -1,256 +1,174 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DAB27A46E
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395AB2797A3
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749146131; cv=none; b=eBfKVH8XOkvebb5ZpIPJyU1+J8S++5AtIkQlo6+BXLS8RMOlh7ifHESNhqGOpkxeFtwDjhtOs3Gfg2/5qvUAGoD+n5zvIUfHcgZ4cxrRVZ87Sq2cT2yIEJNrhei0hlKaObfB4LOMfTOMnRXjQKPZoM9JB1//zJ/TZldS65/qeo8=
+	t=1749146185; cv=none; b=SKvL4DyJsPhrRm2tfYIYXAKb/FNd9etij0k/ByawEOUzL4wba6klHcc5KcvuD2g+9USpt5hdH5bNmIfRK3Uu1j3UoAEMVWrY1fEwasCas/NXaYJHws/skQ7HJcWy19oG5xVDwEfvy+9pDYtCA2MOeqt/YxZ2ST++6bF8MU/7rGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749146131; c=relaxed/simple;
-	bh=wdDha2tCb/d4mPaMwyCoEIobXZ4/2AN4XR3pnZ+g6is=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=f2H4TeNJ4CKxd2ie9PqWSadU8WIInDr71QLDQdN1glitlCeQFfDr5TcQLml8quKb3Bvbd2fwAe0ozMYvworRvCWk1Vg1w4ECz8yq3qPIudB9UmoPXHplRY5B9kwCwKVizOD7IywJeR2KrG/3Nq2rLadnKosy8FjB4SIj/NrP+fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3ddcc14b794so2924195ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:55:29 -0700 (PDT)
+	s=arc-20240116; t=1749146185; c=relaxed/simple;
+	bh=RukCIS+sJx3VdGKZDRlpBXirAsgXcEVmiyigL9kxbkw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hMlIEN/lO87hWX5GIIgj5FyMa24xphxsGIOAkK7KuGmMPeMf80xsbPUYx4n48nTpqUHst1ABfsSn2CCNrQ00+Ey/aqnnYzqNbuMVnQxS6N2618PhQlEMOceiNWLZ6XcEJFbTihvsiJyF9UyuTKtXdNrEVuoSOelRwK3ynp9dWZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Y1bKW9tm; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Y1bKW9tm"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235ea292956so13518825ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1749146183; x=1749750983; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=b8jf1lmQO0Pg7Ys10iVizBIdX5M9wTrvSGVjsrJdlFk=;
+        b=Y1bKW9tmFK4LcokMNHZ+WsboRxZMWsnXkxcoD1eeLcyH4rGoSc0LD+kNkedhc7Jkko
+         jTAG+QipmeTeX7sMOtJVJNtOmM3rhigvn130fR123wKB9ugCz2mkBGrsSQRqjIXy2KKK
+         qOCCJWKePtqf30M3sTUVlcfpG5O+HDVay2eC8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749146128; x=1749750928;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LqH8M9rtmVG9L5l4qcJ/6jdyJmDhCB1Emg0U2+eybck=;
-        b=jnXGqtn34Hw8fz9DX9oGl/zp/5Tal2lHLJxHkgDiEX8D2ucWfy3LUfr6MPc/5xbE8W
-         k2kHckh2UASm8DQ9OOEvwBEm6QyivQAf8cPk3GUmT3U5APG6efajFzRAvqll25YudjKE
-         HmlpzMaLAjvv3Bh82oCHIgAg/l94VUchfuMHnVAj5/TFt+siW1k8MBBYUbtfav08Xb8Y
-         rupJvEvhUCCFC3G3kojohKmN1LO17mGb3rcsJxM6NXC1/6Xfso42Sny+kLE1qZ1bg9H+
-         5b0TnIbVXBVBbZMzVa1RPQ6eJyuQ9Qo3Mhm7TGf6iuGtoiNwZWz72RmdQ87Rqbu9oX3O
-         GKKg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7VvtB02RYNmzYdLoYtDebnIqMJdZOHTE0QVvTkFf3oBLmRK+mOQOHPQh3HRU8JiD5DLVc5NgoBQYG9Cg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEdsDIu//HZx9P4DYxpsNEN9jbx3gVYcRrJKc16OnYtQtVjUIH
-	dbGwoKWuAUysKvljeVegL5wi7itBPY18caG3KGv7IwjSVzck/EviNN8nI5MTZu8gTcPZU9aPlZh
-	yYMbsCPwuovewkk2zRra8Ot/e4WLm+Q5bRKg9NpSvCHxqefBudq/3a3UclDk=
-X-Google-Smtp-Source: AGHT+IGUIFaN0Ed7oEimCPfzUTydN/3lDXwGywsbsE3iYRCX0x2c3hLg6yedQiLsHAolVfsPoaHLZBxs9Ueh7Jhx8jHsSkEaVEx+
+        d=1e100.net; s=20230601; t=1749146183; x=1749750983;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b8jf1lmQO0Pg7Ys10iVizBIdX5M9wTrvSGVjsrJdlFk=;
+        b=K+C/Wq6FATqM2V16C1op5wZh9T78S1larWwk9Xk1K17ZAj2cArnv3nfzD6LvHbOMNf
+         jmgtirjzWGy6zi/w+L1lPTUJkoAYqE6j3Ou/1y9T1LPNx+Q32+eBijKYBJ07rQyI4VCf
+         GV6ge2eXeiYYKtefchW10dDv+RsS/HM31aR8VOv8pLsY6fQCTpxB7RnUj1yMAVtbwgxI
+         og1IU8gZvoJWoAtEX6JJSMKEC3larUKBN5tmGurz+zMjSdzE8uBuHIxejG1kWRgxVoXl
+         LuYtv4u7Vsge4pu8KYggKbdYwp7FnG2PaECza7mK/5rJ7ZL1F7XVTNhCBDg/3HrOTU7O
+         B6YA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZCLjQJ5j0VzgHMixIUUszNQphvR6h7UNtmAmVT03l6Czy1tkN1ZuUxN43V2X/G0As3E6gKHP7fodFPTk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzyqg2hjAZKPYs+ZgyOQvlIepqzSWUWLnrBGAO2GtuDpP0ausO/
+	3Cwm7fR5KSAST0dm5iC1i0EzQoRkSmEjT1+BtudjTQY2xSA2VMeGAxGclTEZjuZ/KkTSVcTTbaQ
+	Xm1q3QNyD
+X-Gm-Gg: ASbGnctKfs/SGsX17IjkbxjPrOpBEIriZvnQZPFAYxReOetq4SIQ2Brxhnd6TgY1WMp
+	nLdycuMg0fzsN4vkgbMZR+hx0QgO9WN+Yg1oFo18IAhTFwr+nIdGQ8Od84ZeD0+K4CnHExfrOSc
+	ooFNmFdk3y+h1ok74+WE+cJkgwJDlkU0iXyL9Ki0ZCFQZO5mLpzEZFjUW2/DBz/JVV7CfSOLhf1
+	lcTPZDXgLzIt4qpKNdl4ZgaTPW5ktrDY8dFTa6vPK6DQ+YU8wIsf7TOLdEJJcQXHkRT7KzpADt1
+	TzY4dmebplESm6QFKOC3IN/9bb3ZaSVbAeagdXukpyUnGoEe9LO6o2lLAkOWLnCKtEV0S0vmjAN
+	T1N5i4a20F/UTOyOzbIViosABwQ==
+X-Google-Smtp-Source: AGHT+IHg/Lebx9Vxjm/X2QVgDBjrGiUnrwsQoERVRbwKkJolroxifqh7yUeV+FNoLlX1GBOfS/JanA==
+X-Received: by 2002:a17:902:ccd2:b0:234:d399:f948 with SMTP id d9443c01a7336-23601d973bfmr3905535ad.33.1749146181074;
+        Thu, 05 Jun 2025 10:56:21 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd34edsm122425045ad.126.2025.06.05.10.56.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 10:56:20 -0700 (PDT)
+Message-ID: <d642eba3-d7f2-4bf5-93ce-6ea491d4709a@broadcom.com>
+Date: Thu, 5 Jun 2025 10:56:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fc4:b0:3dd:babf:9b00 with SMTP id
- e9e14a558f8ab-3ddce3ea2efmr5725905ab.1.1749146128339; Thu, 05 Jun 2025
- 10:55:28 -0700 (PDT)
-Date: Thu, 05 Jun 2025 10:55:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6841da10.a00a0220.68b4a.0018.GAE@google.com>
-Subject: [syzbot] [xfs?] INFO: task hung in vfs_setxattr (7)
-From: syzbot <syzbot+3d0a18cd22695979a7c6@syzkaller.appspotmail.com>
-To: cem@kernel.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Jun 3 (clk/clk-rp1.c)
+To: Randy Dunlap <rdunlap@infradead.org>,
+ Andrea della Porta <andrea.porta@suse.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-clk@vger.kernel.org
+References: <20250603170058.5e1e1058@canb.auug.org.au>
+ <cee929b0-8b09-4e6b-95c1-c4067a8c389d@infradead.org>
+ <6e88587d-f426-4841-b370-b46917822212@broadcom.com>
+ <aEGhHy7qPyIjG5Xp@apocalypse>
+ <44c89b6b-edaa-4b0f-9306-a447ef2d9250@infradead.org>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <44c89b6b-edaa-4b0f-9306-a447ef2d9250@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 6/5/25 10:07, Randy Dunlap wrote:
+> 
+> 
+> On 6/5/25 6:52 AM, Andrea della Porta wrote:
+>> On 20:06 Wed 04 Jun     , Florian Fainelli wrote:
+>>>
+>>>
+>>> On 6/3/2025 10:01 AM, Randy Dunlap wrote:
+>>>>
+>>>>
+>>>> On 6/3/25 12:00 AM, Stephen Rothwell wrote:
+>>>>> Hi all,
+>>>>>
+>>>>> Please do not add any material destined for v6.17 to you rlinux-next
+>>>>> included branches until after v6.16-rc1 has been released.
+>>>>>
+>>>>> Changes since 20250530:
+>>>>>
+>>>>
+>>>> on i386:
+>>>>
+>>>> ld: drivers/clk/clk-rp1.o: in function `rp1_pll_divider_set_rate':
+>>>> clk-rp1.c:(.text+0xba1): undefined reference to `__udivdi3'
+>>>>
+>>>> caused by
+>>>> 	/* must sleep 10 pll vco cycles */
+>>>> 	ndelay(10ULL * div * NSEC_PER_SEC / parent_rate);
+>>>>
+>>>>
+>>>
+>>> Andrea, do you mind fixing this build error for a 32-bit kernel? Thanks!
+>>
+>> Sorry for the delay, this should fix it:
+>>
+>> @@ -754,7 +769,7 @@ static int rp1_pll_divider_set_rate(struct clk_hw *hw,
+>>          clockman_write(clockman, data->ctrl_reg, sec);
+>>   
+>>          /* must sleep 10 pll vco cycles */
+>> -       ndelay(10ULL * div * NSEC_PER_SEC / parent_rate);
+>> +       ndelay(div64_ul(10ULL * div * NSEC_PER_SEC, parent_rate));
+>>   
+>>          sec &= ~PLL_SEC_RST;
+>>          clockman_write(clockman, data->ctrl_reg, sec);
+>>
+>> should I send a new patch with this fix only (against linux-next or stblinux/next?)
+>> or Florian is it better if you make the change in your next branch directly?
+> 
+> Yes, this fixes the 32-bit build error. Thanks.
+> 
+> Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> 
 
-syzbot found the following issue on:
-
-HEAD commit:    3a83b350b5be Add linux-next specific files for 20250530
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1798600c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28859360c84ac63d
-dashboard link: https://syzkaller.appspot.com/bug?extid=3d0a18cd22695979a7c6
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=138db00c580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/e18e458d13c9/disk-3a83b350.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a1c40854811c/vmlinux-3a83b350.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/571f670b130a/bzImage-3a83b350.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/b3f387ffeadc/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=131e4c82580000)
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3d0a18cd22695979a7c6@syzkaller.appspotmail.com
-
-INFO: task syz.4.173:7853 blocked for more than 143 seconds.
-      Not tainted 6.15.0-next-20250530-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.4.173       state:D stack:25352 pid:7853  tgid:7809  ppid:5949   task_flags:0x400140 flags:0x00004004
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5396 [inline]
- __schedule+0x16f5/0x4d00 kernel/sched/core.c:6785
- __schedule_loop kernel/sched/core.c:6863 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6878
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6935
- rwsem_down_write_slowpath+0xbec/0x1030 kernel/locking/rwsem.c:1176
- __down_write_common kernel/locking/rwsem.c:1304 [inline]
- __down_write kernel/locking/rwsem.c:1313 [inline]
- down_write+0x1ab/0x1f0 kernel/locking/rwsem.c:1578
- inode_lock include/linux/fs.h:867 [inline]
- vfs_setxattr+0x144/0x2f0 fs/xattr.c:320
- do_setxattr fs/xattr.c:636 [inline]
- filename_setxattr+0x274/0x600 fs/xattr.c:665
- path_setxattrat+0x364/0x3a0 fs/xattr.c:713
- __do_sys_lsetxattr fs/xattr.c:754 [inline]
- __se_sys_lsetxattr fs/xattr.c:750 [inline]
- __x64_sys_lsetxattr+0xbf/0xe0 fs/xattr.c:750
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6a4f78e969
-RSP: 002b:00007f6a50646038 EFLAGS: 00000246 ORIG_RAX: 00000000000000bd
-RAX: ffffffffffffffda RBX: 00007f6a4f9b6080 RCX: 00007f6a4f78e969
-RDX: 0000200000000340 RSI: 0000200000000180 RDI: 0000200000000040
-RBP: 00007f6a4f810ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000000000d4 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000001 R14: 00007f6a4f9b6080 R15: 00007ffe0d3fb538
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/31:
- #0: ffffffff8e13f140 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8e13f140 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #0: ffffffff8e13f140 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6770
-2 locks held by getty/5591:
- #0: ffff888030ba30a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc9000332b2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
-1 lock held by udevd/5913:
- #0: ffff888148cf9320 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:882 [inline]
- #0: ffff888148cf9320 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:832
-1 lock held by syz-executor/5936:
- #0: ffff8880285d40e0 (&type->s_umount_key#53){+.+.}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff8880285d40e0 (&type->s_umount_key#53){+.+.}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff8880285d40e0 (&type->s_umount_key#53){+.+.}-{4:4}, at: deactivate_super+0xa9/0xe0 fs/super.c:506
-2 locks held by syz-executor/5944:
- #0: ffff88807e1020e0 (&type->s_umount_key#53){+.+.}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88807e1020e0 (&type->s_umount_key#53){+.+.}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88807e1020e0 (&type->s_umount_key#53){+.+.}-{4:4}, at: deactivate_super+0xa9/0xe0 fs/super.c:506
- #1: ffff8880b863b918 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:606
-4 locks held by syz.4.173/7810:
- #0: ffff88807b30e428 (sb_writers#13){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:557
- #1: ffff888059424130 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff888059424130 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: vfs_setxattr+0x144/0x2f0 fs/xattr.c:320
- #2: ffff88807b30e618 (sb_internal#2){.+.+}-{0:0}, at: xfs_trans_alloc_inode+0x13c/0x4a0 fs/xfs/xfs_trans.c:1096
- #3: ffff888059423f18 (&xfs_nondir_ilock_class){++++}-{4:4}, at: xfs_trans_alloc_inode+0x161/0x4a0 fs/xfs/xfs_trans.c:1102
-2 locks held by syz.4.173/7853:
- #0: ffff88807b30e428 (sb_writers#13){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:557
- #1: ffff888059424130 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff888059424130 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: vfs_setxattr+0x144/0x2f0 fs/xattr.c:320
-2 locks held by syz.3.482/11259:
- #0: ffff888025568428 (sb_writers#13){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:557
- #1: ffff8880596db970 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff8880596db970 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: vfs_setxattr+0x144/0x2f0 fs/xattr.c:320
-2 locks held by syz.3.482/11289:
- #0: ffff888025568428 (sb_writers#13){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:557
- #1: ffff8880596db970 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff8880596db970 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: vfs_setxattr+0x144/0x2f0 fs/xattr.c:320
-2 locks held by syz.5.481/11278:
-4 locks held by syz.1.483/11280:
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-next-20250530-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:307 [inline]
- watchdog+0xfee/0x1030 kernel/hung_task.c:470
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 5837 Comm: syz-executor Not tainted 6.15.0-next-20250530-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:unwind_next_frame+0x374/0x2390 arch/x86/kernel/unwind_orc.c:505
-Code: ea 48 01 d2 48 01 f2 48 bd 00 00 00 00 00 fc ff df 0f 84 37 01 00 00 4c 8d 62 04 4c 8d 6a 05 4c 89 e0 48 c1 e8 03 0f b6 04 28 <84> c0 0f 85 6d 19 00 00 4c 89 e8 48 c1 e8 03 0f b6 04 28 84 c0 0f
-RSP: 0018:ffffc900043770f8 EFLAGS: 00000a03
-RAX: 0000000000000000 RBX: ffffffff8fb4db94 RCX: ffffffff8fb4db98
-RDX: ffffffff90303ae8 RSI: ffffffff90303ab8 RDI: ffffffff8be29c20
-RBP: dffffc0000000000 R08: 0000000000000009 R09: ffffffff81729de5
-R10: ffffc90004377228 R11: fffff5200086ee51 R12: ffffffff90303aec
-R13: ffffffff90303aed R14: ffffc90004377228 R15: ffffffff8fb4db94
-FS:  000055557497c500(0000) GS:ffff888125d53000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fff520a6f80 CR3: 0000000077dae000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __unwind_start+0x5b9/0x760 arch/x86/kernel/unwind_orc.c:758
- unwind_start arch/x86/include/asm/unwind.h:64 [inline]
- arch_stack_walk+0xe4/0x150 arch/x86/kernel/stacktrace.c:24
- stack_trace_save+0x9c/0xe0 kernel/stacktrace.c:122
- save_stack+0xf5/0x1f0 mm/page_owner.c:156
- __reset_page_owner+0x71/0x1f0 mm/page_owner.c:308
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1248 [inline]
- __free_frozen_pages+0xc71/0xe70 mm/page_alloc.c:2706
- discard_slab mm/slub.c:2717 [inline]
- __put_partials+0x161/0x1c0 mm/slub.c:3186
- put_cpu_partial+0x17c/0x250 mm/slub.c:3261
- __slab_free+0x2f7/0x400 mm/slub.c:4513
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x97/0x140 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x148/0x160 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:329
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4148 [inline]
- slab_alloc_node mm/slub.c:4197 [inline]
- kmem_cache_alloc_node_noprof+0x1bb/0x3c0 mm/slub.c:4249
- __alloc_skb+0x112/0x2d0 net/core/skbuff.c:660
- alloc_skb_fclone include/linux/skbuff.h:1386 [inline]
- tcp_stream_alloc_skb+0x3d/0x340 net/ipv4/tcp.c:894
- tcp_sendmsg_locked+0x1fa8/0x56f0 net/ipv4/tcp.c:1200
- tcp_sendmsg+0x2f/0x50 net/ipv4/tcp.c:1396
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x19c/0x270 net/socket.c:727
- sock_write_iter+0x258/0x330 net/socket.c:1131
- new_sync_write fs/read_write.c:593 [inline]
- vfs_write+0x54b/0xa90 fs/read_write.c:686
- ksys_write+0x145/0x250 fs/read_write.c:738
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f18c638d3e0
-Code: 40 00 48 c7 c2 a8 ff ff ff f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d 61 71 1f 00 00 74 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 48 83 ec 28 48 89
-RSP: 002b:00007ffdfa6c3d28 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000077fbf140 RCX: 00007f18c638d3e0
-RDX: 00000000000000b8 RSI: 00007f18c1a3ff48 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000007 R09: 000000000003fde8
-R10: 56c24c0166ec81ab R11: 0000000000000202 R12: 00000000000000b8
-R13: 0000555574993b40 R14: 00007ffdfa6c41f0 R15: 00007f18c1a3ff48
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thank you both, amended the original commit with the change and added 
+Randy's tag.
+-- 
+Florian
