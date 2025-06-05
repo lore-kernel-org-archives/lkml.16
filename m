@@ -1,96 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9628E1C8601;
-	Thu,  5 Jun 2025 06:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7151E1FC8;
+	Thu,  5 Jun 2025 06:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749103583; cv=none; b=j5d+UsQpJp3QdG6VrVhGeQQqozevDRRRVtWFWYrGjhfxuZ5KKO4M2I677n1yvb6GA6J6H/Cw6hXL7BhCrkBkPf6LvVLd7Aw3O512t/dlvCmIDjjYa4RcCwG+8M56awu9+Cu5U6QPJ8AmdMx4URYU3T/pRxU+TaqOn3ALwiUaHKM=
+	t=1749103664; cv=none; b=HXzqH/Rz9J+Is0X02mcQmeCXxb5j5tK0+wh/+gSAzdWBjkUtoUL250TjNdmdBNdGxG/m3rovaPOiwqFbZvFwAs6r+9wGcFYnV/2xp8Mq/b/mnZoMZA8WH7MCFk2P+ei+qtai7NEXK6/aJEJw2pbLvYGZaLBkrVFdAxssZe/xdls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749103583; c=relaxed/simple;
-	bh=Ktzhq4fVsKEWiMOkF+2uTaOey3+lr5ajT6Ebq/4uTXo=;
+	s=arc-20240116; t=1749103664; c=relaxed/simple;
+	bh=+uBO42iXZqtDYIQMA9gA6/zv4IsrwRUl3RAt4NSUZlo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YXlfCMKmWcUoVBMVeHsg5ORSU9Lkzgf4OCdw4Kc6dPMamIo2jzfc44VjvHw877bTYZrkM+4GvaKsxJwc3q6F4Ag2JEx6N8VLcPRR6RoilrmTEyTlL49dMQezU8fru72X01R1QJdnkYUGJkWoSKUlrl/b1actyKtlPO1glommmXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V68yeE4u; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pI/D2d8kU9yO5HTicS5xYTTMuMx6h2BlgDyAmrTZaWgd4QwbYqxFj3ac3lVOgxJMPeaxNUtzt8i9OzWbC0bL17w6lS6Y+VhetD2SjkO3va2q0uC8T+MHO2rU9TR+aUj3NLT8cg8JXY/EJHH/qM2opR78GDhOakT68+JNGHBNBhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yhNiMwGK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t+p8jzgb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V68yeE4u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749103581; x=1780639581;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ktzhq4fVsKEWiMOkF+2uTaOey3+lr5ajT6Ebq/4uTXo=;
-  b=V68yeE4ugat7mogncat/GEpX+xZyAFxifnAyBxikt1kPPNchKW8vcVS/
-   u9YkVwGKYgZLd2sW7yXGkyC5KcXh7Kcpv7Z1tWUFOkvU1Yss38wc2NJl0
-   hlkYBpzZAxNMpaV1fAUTRHC0j+F/0tlH92sKkbBfEyP/0rpgFYvlGMATG
-   y2xd0qrjjcI3qOJMLubgJxAONpy//JTlNDgABJnR8E9upI5BtZD0ctZJz
-   oDSqoSyDxfcqgHRGhlusgBNUo73MmkmZYagbiSgUqulZOlBQ8eHNXPx21
-   fNsbzK5u93xqHA8iZenc48667Tc4hjrRE2uGkVh88ZP3zzJzfoIYpVR2T
-   g==;
-X-CSE-ConnectionGUID: h9QS89yfS/m0Ggk8jIBNLQ==
-X-CSE-MsgGUID: VjaRtC8eQ/KMbs5PNqQOCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="68645220"
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="68645220"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:06:21 -0700
-X-CSE-ConnectionGUID: gTM/7DNhT4+4yuad8s9pUQ==
-X-CSE-MsgGUID: sS81EJFBR/SKefZQkVYCMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="145749493"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:06:16 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uN3jx-00000003mCp-0RIo;
-	Thu, 05 Jun 2025 09:06:13 +0300
-Date: Thu, 5 Jun 2025 09:06:12 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
-Subject: Re: [PATCH v10 08/12] iio: adc: ad7768-1: add multiple scan types to
- support 16-bits mode
-Message-ID: <aEEz1ORQAUBDGHoF@smile.fi.intel.com>
-References: <cover.1749063024.git.Jonathan.Santos@analog.com>
- <badd5aafc1be4a264dc5d7c46bfc9e502d6b37db.1749063024.git.Jonathan.Santos@analog.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yhNiMwGK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t+p8jzgb"
+Date: Thu, 5 Jun 2025 08:07:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749103660;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8HZ71isqmSlxdQ2pUqhCUqFJFnnu4E61MVtczgwOP6Q=;
+	b=yhNiMwGKmUXfkBKAQLXO/d3mTwEE3QnYl4xV5r+GwmyOgacZhEdCH7UCbTWj+WIOfYhk7o
+	gMraDmikgcjndOHfvnKxjxPOaTbfnnyN2P8T2/SaoLlq8pKh8Hp5+BDOBXkPnVhAPxsxH0
+	sxK6rmYkHRbOPKejL8DCcCzBE8tHNjquvrFCIxCrVTdpX7lp/zVRECytzKf7oGfji/aeYW
+	e5lNKkifBjnHRKlop2T3odJ7zO5va2eIdPb5hny7XhhWUatVJi2kKA/Ix4305mWU9nODAw
+	kVD6s8qRcaMxsSAs387s0Xr3jdXVnt/Vb18P9nt/OtaIzh0FFxajK8AFrdfWPA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749103660;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8HZ71isqmSlxdQ2pUqhCUqFJFnnu4E61MVtczgwOP6Q=;
+	b=t+p8jzgbDKKet5/oPbEz5/zhqjCZj2Q3KQu7QZtaWafXE22DK5hbl4cjUZPD8GgwU2y4rb
+	fgWZI2jQ5RTsTmBA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-modules@vger.kernel.org
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Allison Henderson <allison.henderson@oracle.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2] module: Make sure relocations are applied to the per-CPU
+ section
+Message-ID: <20250605060738.SzA3UESe@linutronix.de>
+References: <202506041623.e45e4f7d-lkp@intel.com>
+ <20250604152707.CieD9tN0@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <badd5aafc1be4a264dc5d7c46bfc9e502d6b37db.1749063024.git.Jonathan.Santos@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250604152707.CieD9tN0@linutronix.de>
 
-On Wed, Jun 04, 2025 at 04:36:56PM -0300, Jonathan Santos wrote:
-> When the device is configured to decimation x8, only possible in the
-> sinc5 filter, output data is reduced to 16-bits in order to support
+The per-CPU data section is handled differently than the other sections.
+The memory allocations requires a special __percpu pointer and then the
+section is copied into the view of each CPU. Therefore the SHF_ALLOC
+flag is removed to ensure move_module() skips it.
 
-16-bit
+Later, relocations are applied and apply_relocations() skips sections
+without SHF_ALLOC because they have not been copied. This also skips the
+per-CPU data section.
+The missing relocations result in a NULL pointer on x86-64 and very
+small values on x86-32. This results in a crash because it is not
+skipped like NULL pointer would and can't be dereferenced.
 
-...OR...
+Such an assignment happens during static per-CPU lock initialisation
+with lockdep enabled.
 
-16 bits
+Add the SHF_ALLOC flag back for the per-CPU section (if found) after
+move_module().
 
-> 1 MHz of sampling frequency due to clock limitation.
-> 
-> Use multiple scan types feature to enable the driver to switch
-> scan type at runtime, making it possible to support both 24-bit and
-> 16-bit resolution.
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202506041623.e45e4f7d-lkp@intel.com
+Fixes: 8d8022e8aba85 ("module: do percpu allocation after uniqueness check.=
+  No, really!")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+v1=E2=80=A6v2: https://lore.kernel.org/all/20250604152707.CieD9tN0@linutron=
+ix.de/
+  - Add the flag back only on SMP if the per-CPU section was found.
 
--- 
-With Best Regards,
-Andy Shevchenko
+ kernel/module/main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 5c6ab20240a6d..4f6554dedf8ea 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2816,6 +2816,10 @@ static struct module *layout_and_allocate(struct loa=
+d_info *info, int flags)
+ 	if (err)
+ 		return ERR_PTR(err);
+=20
++	/* Add SHF_ALLOC back so that relocations are applied. */
++	if (IS_ENABLED(CONFIG_SMP) && info->index.pcpu)
++		info->sechdrs[info->index.pcpu].sh_flags |=3D SHF_ALLOC;
++
+ 	/* Module has been copied to its final place now: return it. */
+ 	mod =3D (void *)info->sechdrs[info->index.mod].sh_addr;
+ 	kmemleak_load_module(mod, info);
+--=20
+2.49.0
 
