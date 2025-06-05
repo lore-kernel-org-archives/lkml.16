@@ -1,124 +1,167 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01496158520
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 14:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D62F15746F;
+	Thu,  5 Jun 2025 14:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749135100; cv=none; b=BggXBJ8LdrwaU3Ll03gP8fcJkLqQRh9S/7FjHdNG9Xo94AzBscULpvEZGx8dCoVlZvFVBdfSn8e55gKMV0DNuV92Qef4esqZJnnS+hKhhGXRw5v5u6nqnffItAel6xTlVYaiTluFBrBK9mEd1yLbq06cvldYijG9k1eIeaWBwRM=
+	t=1749135159; cv=none; b=bXfn7Otx0ULeDsJQkrPR0XPP/Lpko2B18vkopI4VZw4TtxTo0Eg6EfNYaHRZ+eW6azFRAts1TyAp3o6yBEaEW092UXXsg6HMnrlj/VKWXQOQfRjQrOW3cVSe7kB/vIR5VrN4yPXN+MyMgNE8pmoI/mYMUW7xJje7eYbpKMPWdnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749135100; c=relaxed/simple;
-	bh=8opYR/RLHE+c4NG9PfiIatcqdYIIGlAtUPp/Y7mK/SA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=WfCQwpyyCK8qt27sIFKjsDCycu0sv03iKbwPYZbyOPBWwU6XnI3GVTsqL/HoYLp/3jEqnlqgi6Er7ga/iKMKbsmPEk81f8MtVV9+nzHb/cAhOpnn4Mq8efiMQgShdXqi4Sn//G8yBJpEXOaN+Y4VjKq7KkkOGP8w5nJQ8R2lcBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=ePrt0JgV; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1749135159; c=relaxed/simple;
+	bh=wayIl4wmNDj1d9bhCMlvwZSoiA+VMr2flEQT0BpqHB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mW7C/lF+BoHewsC+FJSeWZFkLGJWviPw99aDOuQkPBmXeFXnbJYR0QsrdylQqP7uglQCnC8SlthEqRz03D3x6THNG6MbBxjlar/24lX1ZRiZWUIm5wH6DjqHAJ0MBgqAv59cK3VJwpMc5nB9o5API2ij9ybf7quRTUTx5J1hSMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jrdv1awi; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="ePrt0JgV"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so768518a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 07:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1749135097; x=1749739897; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0qZIyhLNfUK8aRt0IjyGDdUz2kW/fFohhjPr9dq+tBQ=;
-        b=ePrt0JgVhqfQYTTmoGYfMpd1fOibsM7Po0g2kPJYRRsNT7UxFnpvyd8X4lb1e3ID4o
-         plEOfYieBq9opx8nkCVgSTtZGqFZAdlDqQ+exp3nQH5O9RJNif77JxJrzFJh70+HB8++
-         m+V0GxDUWiyCWwqyzBou2ouYZ+tSpOEuV1/mM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749135097; x=1749739897;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0qZIyhLNfUK8aRt0IjyGDdUz2kW/fFohhjPr9dq+tBQ=;
-        b=QhsufNEVeipNffQkUxCowC+qkOVz1zV1X9QCaEM8eZTVsZ3HywjAP21O4711Ez/w4B
-         4Tv9xXGum7hIPGXuP8ZHr68ICqaESIyBrp3H4f9t953nkimnmSJuV2aw34XA372oJDHK
-         TRHoKT6tlSTHXshjTPiT2yUBINlbuac3Cz38GZjVBkkEiO6rnhi/Nw1qIHEvUlKMyVTA
-         fdlkEoCORgokENeNLALu3E0hkNCkhlvlqOQRfr7MB0pbT13WfvxYUI1/kzSARQhFVv1N
-         3wbrTEVKVlQv9hLvAAwGS2z6Ha6IzaSMmI/exypFxCNBlnfoyEBEdKrdqMx/0RAhCkMk
-         hVEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZpnmN0Lo5Ivvu/3UWfs2szMEkCgSzHyZI4TASN/mwnoRSgPFz2IY2kxVJWnLPIjtYPX4Qjb7btOBK30Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbXOjsSUGPKX1INGVB06rCkL5Qu1Hv0PqljMIwYlVJTK/8/hKR
-	C/K+uK8qiqTlZAuSvtfV80159pzSECaoYNTnvCV/Yrawu3qIsFSbl1s4IrSxSaOTkclR6ozlkmJ
-	1EALx8L5DVnTG1MUtGsdpWazxOGkOSv7nQpoW/gX/luJ6BmMIZgWt61TPtw==
-X-Gm-Gg: ASbGnctXrA7xnmEsvF+6E/+jEOxub0khDQIcu85LeYNIRq5kBSAVH6VG2S9vHubxgwY
-	CEnAdd80dOweUWS2PvRPH+VeGlIbXAuUJzgV6zeYojHmp7N8DGgKuK2eR+LXy7HeCkGPBDf36dh
-	yWmYef735AHZYx37rZ87FRpUFj1X4tmvM=
-X-Google-Smtp-Source: AGHT+IHAbJn7akHP0pYrJh9k1QTBH4AMnJ3AUW68Wk+P5THmWTp3kCTbbGZ2EV9/S5oBNPTKOCVGI0vam2239o4+gmA=
-X-Received: by 2002:a05:622a:5a0f:b0:476:7e6b:d297 with SMTP id
- d75a77b69052e-4a5a581c203mr125679031cf.41.1749135086307; Thu, 05 Jun 2025
- 07:51:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jrdv1awi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=iR8UuHFYy7CvKHN3eUB5kYDHYIukekw7Is23zJCqzRQ=; b=jrdv1awi310rJSQKvOHJBSXrYW
+	XFDPs16zYuknImMAqPEPO5fsCkq5NMijUXxGtnmsbJFXdhq8h/cgi11hlzuRNfRQyra36sy0KyVlU
+	lmObjGt3cD5FRAHPima6M4vLn2QDGf3EJzGdmv4RxQD9ctaRCm2tRqzoSs/c9tPJIxOg4j43EgLaC
+	L7YQgDF2yqs99w64A+G9CXpPgNlpMhX9hySMPUfKKfznyiS6fGrjf1LkuFg2Jzs93XerNE5MyBeur
+	FxYkW6IwXxFYQQSiSv4ZhzChakALQ9Vid9Jt7o7BwXbTRQvxAK//rrSA/FgGunCF1HuR5Eq5xE/FA
+	j3MC85Dg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uNBxB-00000001Aws-0oph;
+	Thu, 05 Jun 2025 14:52:26 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 66B483005AF; Thu,  5 Jun 2025 16:52:24 +0200 (CEST)
+Date: Thu, 5 Jun 2025 16:52:24 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 32/62] objtool: Suppress section skipping warnings
+ with --dryrun
+Message-ID: <20250605145224.GE35970@noisy.programming.kicks-ass.net>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <7eccdb0b09eff581377e5efab8377b6a37596992.1746821544.git.jpoimboe@kernel.org>
+ <20250526105240.GN24938@noisy.programming.kicks-ass.net>
+ <20250528103453.GF31726@noisy.programming.kicks-ass.net>
+ <ycpdd352wztjux4wgduvwb7jgvt6djcb57gdepzai2gv5zkl3e@3igne4ssrjdm>
+ <20250605073246.GM39944@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Thu, 5 Jun 2025 16:51:15 +0200
-X-Gm-Features: AX0GCFsTY9gN9NDJLz1wYsjKjFbqBwGH61myZEfMvmbdvIDQuo4OYyMlmpHjQd8
-Message-ID: <CAJfpegvB3At5Mm54eDuNVspuNtkhoJwPH+HcOCWm7j-CSQ1jbw@mail.gmail.com>
-Subject: [GIT PULL] overlayfs update for 6.16
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: overlayfs <linux-unionfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605073246.GM39944@noisy.programming.kicks-ass.net>
 
-Hi Linus,
+On Thu, Jun 05, 2025 at 09:32:46AM +0200, Peter Zijlstra wrote:
 
-Please pull from:
+> > But also, feel free to resurrect --backup, or you can yell at me to do
+> > it as the backup code changed a bit.
+> 
+> I have the patch somewhere, failed to send it out. I'll try and dig it
+> out later today.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/overlayfs/vfs.git
-tags/ovl-update-6.16
+This is what I had. Wasn't sure we wanted to make -v imply --backup ?
 
-- Fix a regression in getting the path of an open file (e.g.  in
-/proc/PID/maps) for a nested overlayfs setup  (Andr=C3=A9 Almeida)
+I'm used to stealing the objtool arguments from V=1 builds. I suppose
+the print_args thing is easier, might get used to it eventually.
 
-- The above fix contains a cast to non-const, which is not actually
-needed.  So add the necessary helpers postfixed with _c that allow the
-cast to be removed (touches vfs files but only in trivial ways)
 
-- Support data-only layers and verity in a user namespace
-(unprivileged composefs use case)
-
-- Fix a gcc warning (Kees)
-
-- Cleanups
-
-Thanks,
-Miklos
-
----
-Andr=C3=A9 Almeida (1):
-      ovl: Fix nested backing file paths
-
-Kees Cook (1):
-      ovl: Check for NULL d_inode() in ovl_dentry_upper()
-
-Miklos Szeredi (4):
-      ovl: make redirect/metacopy rejection consistent
-      ovl: relax redirect/metacopy requirements for lower -> data redirect
-      ovl: don't require "metacopy=3Don" for "verity"
-      vfs: change 'struct file *' argument to 'const struct file *'
-where possible
-
-Thorsten Blum (4):
-      ovl: Use str_on_off() helper in ovl_show_options()
-      ovl: Replace offsetof() with struct_size() in ovl_cache_entry_new()
-      ovl: Replace offsetof() with struct_size() in ovl_stack_free()
-      ovl: Annotate struct ovl_entry with __counted_by()
-
----
- Documentation/filesystems/overlayfs.rst |  7 +++
- fs/file_table.c                         | 10 ++--
- fs/internal.h                           |  1 +
- fs/overlayfs/file.c                     |  4 +-
- fs/overlayfs/namei.c                    | 98 ++++++++++++++++++++---------=
-----
- fs/overlayfs/ovl_entry.h                |  2 +-
- fs/overlayfs/params.c                   | 40 ++------------
- fs/overlayfs/readdir.c                  |  4 +-
- fs/overlayfs/util.c                     |  9 ++-
- include/linux/fs.h                      | 12 ++--
- 10 files changed, 97 insertions(+), 90 deletions(-)
+diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
+index 80239843e9f0..7d8f99cf9b0b 100644
+--- a/tools/objtool/builtin-check.c
++++ b/tools/objtool/builtin-check.c
+@@ -101,6 +101,7 @@ static const struct option check_options[] = {
+ 	OPT_BOOLEAN(0,   "stats", &opts.stats, "print statistics"),
+ 	OPT_BOOLEAN('v', "verbose", &opts.verbose, "verbose warnings"),
+ 	OPT_BOOLEAN(0,   "Werror", &opts.werror, "return error on warnings"),
++	OPT_BOOLEAN(0,   "backup", &opts.backup, "create a backup (.orig) file on error"),
+ 
+ 	OPT_END(),
+ };
+@@ -244,13 +245,10 @@ static void save_argv(int argc, const char **argv)
+ 	};
+ }
+ 
+-void print_args(void)
++static void make_backup(void)
+ {
+ 	char *backup = NULL;
+ 
+-	if (opts.output || opts.dryrun)
+-		goto print;
+-
+ 	/*
+ 	 * Make a backup before kbuild deletes the file so the error
+ 	 * can be recreated without recompiling or relinking.
+@@ -258,17 +256,19 @@ void print_args(void)
+ 	backup = malloc(strlen(objname) + strlen(ORIG_SUFFIX) + 1);
+ 	if (!backup) {
+ 		ERROR_GLIBC("malloc");
+-		goto print;
++		return;
+ 	}
+ 
+ 	strcpy(backup, objname);
+ 	strcat(backup, ORIG_SUFFIX);
+ 	if (copy_file(objname, backup)) {
+ 		backup = NULL;
+-		goto print;
++		return;
+ 	}
++}
+ 
+-print:
++void print_args(void)
++{
+ 	/*
+ 	 * Print the cmdline args to make it easier to recreate.  If '--output'
+ 	 * wasn't used, add it to the printed args with the backup as input.
+@@ -278,10 +278,7 @@ void print_args(void)
+ 	for (int i = 1; i < orig_argc; i++) {
+ 		char *arg = orig_argv[i];
+ 
+-		if (backup && !strcmp(arg, objname))
+-			fprintf(stderr, " %s -o %s", backup, objname);
+-		else
+-			fprintf(stderr, " %s", arg);
++		fprintf(stderr, " %s", arg);
+ 	}
+ 
+ 	fprintf(stderr, "\n");
+@@ -324,8 +321,11 @@ int objtool_run(int argc, const char **argv)
+ 	}
+ 
+ 	ret = check(file);
+-	if (ret)
++	if (ret) {
++		if (opts.backup)
++			make_backup();
+ 		return ret;
++	}
+ 
+ 	if (!opts.dryrun && file->elf->changed && elf_write(file->elf))
+ 		return 1;
+diff --git a/tools/objtool/include/objtool/builtin.h b/tools/objtool/include/objtool/builtin.h
+index 6b08666fa69d..97c36fb1fe9a 100644
+--- a/tools/objtool/include/objtool/builtin.h
++++ b/tools/objtool/include/objtool/builtin.h
+@@ -39,6 +39,7 @@ struct opts {
+ 	bool stats;
+ 	bool verbose;
+ 	bool werror;
++	bool backup;
+ };
+ 
+ extern struct opts opts;
