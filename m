@@ -1,149 +1,140 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA5725DB0B
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DB125E827
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749131008; cv=none; b=rS+qr4QO/lAdXCKjb7Cpd3iqwEs1dLXUwLlIgVVuUyh8nUfKegEW5KD5XyPb+unYBSo46ntnQJT+dE9tM/SGt2r0GTrsCj93NOvlTYZaWvN4qnbFmsXCAimKO93+e15nktX1tmH2yEezbj2JYgfzWuy2shGfDdZCoQozhF3tqZE=
+	t=1749131010; cv=none; b=W/ldv03O4XKqq8jVobgPoIKQCvQs/U54UmduViKIa3Coei47TSGD+9NRugiw8CNqbXgB0riuDLu4HBZAugKMGyLl0KdN2EFyi10ZIqGabIIKpbRoMgNPsL2Eh/GoJlOx0aBTcqJ0W0Py86Dc7duCXnGH5R0eibc6LJAIRfQEOGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749131008; c=relaxed/simple;
-	bh=3Q0QXaolxWY5w9SU15ztjaahCT1/EvDyEuICk9gmC10=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CxLlm9QSxWFlszPbaHSk9u1QMP0UsA0P1XhH0xDIWwwswvolyfA0GsVtvWMqipZD1kwy2YNqffJrijdFx65CG8p+pJtQiCS8sFv0IARaTlhMQRpyjYsEFTKly0Z3xwkblFdrbqPUa2XLCdUmi6jgHXacaeOeUCcjCjyc3ERTeP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ayWA3a9I; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749131010; c=relaxed/simple;
+	bh=Ibr9kab54z+bb8Bbxb6yjOzT0aoFx9OQrLydi6uSjbk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=g1oTPqr5CKjDOxqWC1ZpqrUP4TduxR3pDoF0Y2gii/wvOiJkDDGB/02rq6ZxGE82/3SI42r9vgKjLoJo7R3AEdkWSGLkXCArJ+1TLwa75xfcP+O3wvps/EG8RjcWeu6k/jCnZR3pWTNzyTGlDqCf9xhTZGBbuBmkrmQ3KLdmFlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=If0rd5Yz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ayWA3a9I"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55591feB013814
-	for <linux-kernel@vger.kernel.org>; Thu, 5 Jun 2025 13:43:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=aVk8k7cpJXs9jx1Q8NkhQx
-	ynOKi9vcuv9OFvsSclvyw=; b=ayWA3a9IjQVbHPcI8oG0g8V6j6+vwVu/qm0CJ6
-	EkJrWAtLx9+vfak6UFwmn5I6ZogT7r3OGTGAYMklmxc6Ev15JRpd/WX82gfZ9l/E
-	O+ecVtdCCqUWLbcFTzfACQ/N7VH+l1AqAafLnfZ8o/2zFCOQyc8W9UT1w+xT7iHp
-	iF+F1AGQEgHNr0b7bHsTQJ94QwEzhRjnnLvkJcxZkfbd+6VzC9j+WTKQ0n3gGNNm
-	asoe2rq23xsh6XFoMSvKxQpnbqAX3pXkdkTUyq4VfsBQgheSjGolUugZW7KiXRwX
-	ETvqeuZARy0U8LtOGyrGuP6dk9RNdtkVE25nkx4R9WO1ZvnA==
-Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com [209.85.222.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8t1eht-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 13:43:26 +0000 (GMT)
-Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-87e8668f1ffso767516241.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="If0rd5Yz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749131007;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WyJG+3VB/l9E5cKEG16NYCx4C/OXUyDFX/570MgrW70=;
+	b=If0rd5YzEzDyvhxF/zINDSBNo61SMiB/3PH1vYJ3J5BSYkpmvpb88v6w+IATjs4iSwGm+u
+	8sXWpHZHTB2aQasq/JtnhUcjknQPT2d3qnvsWZ1BM18/TrTSCSHlh78ZpVXDP/9ZNTpDB8
+	63DWtFjv2HDXfW8ydXwHVleOmIeTnYY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-100-XGDbriIyM5mV7fj2yW2Rug-1; Thu, 05 Jun 2025 09:43:26 -0400
+X-MC-Unique: XGDbriIyM5mV7fj2yW2Rug-1
+X-Mimecast-MFC-AGG-ID: XGDbriIyM5mV7fj2yW2Rug_1749131005
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4eec544c6so502569f8f.0
         for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:43:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1749131005; x=1749735805;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aVk8k7cpJXs9jx1Q8NkhQxynOKi9vcuv9OFvsSclvyw=;
-        b=Q0VVCE7y70ZNhho4Da5sEI0ULRW8Y4qUCbNsaqPr6Dbwer0XzFobaPU3s7oeIjQ6ji
-         cyfQiBFfnq76deHRAU3b2PoZQ1eXkAAxcxOuA7qf+ZSnyOvK+A02YsJZmZcDNNx1PCj8
-         Af7swGyVYxkQzOYlsgW8h6Q6HVYwOvA/gJclqypG0Nwf80tbH5mKBToP7glDnrfxHuY1
-         GTdxIxLKt8RKlTVhbtBKmqwwbnEaSJ95GRw8MwbacDAIh12VWQAN2H6o8Z8bGwIyiFmc
-         OKaxqH12LadPz6F7H1jBXoiyDVtPMOcB/B2/vN7klMawAhJva+KEQF/omgtcJ7aqakcI
-         xCEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwJNtV4FWvLdVDp5FOkyGV0E+0/dJ4iHGY+PeeWjNrnDsG4olCEonTUW32+7ydb4cX30CGmIlVSm5CLcs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxObUhxrPiImjqmhpsw93VTR5OJQ8CEDDexpGgERad6Yzy0iSqb
-	up4xPSz+PJehjX630u+1XKsW7lHGDJVf8cPEpfeMRQpM4aSwUrHqAO3etfIdF/avHwafV24HZmO
-	yDt9o2X+vWpi0P9pe/iqOWkLNVR3mCjpgjFN6miXlxj1iM4O0puFkK1w8E0SGu+XgyfE1i1+hKc
-	sI+Q==
-X-Gm-Gg: ASbGncvFntsCtCANE6MljemV1faUEvHAVwrtICVd6ifPPwirQhnGGTWGyM/skBLjKLy
-	P6tMLPC/dhPtUjoEZJw0KydfVNWTpsVe1gDMXchwZ3TARASydThv6GNPeats8mxNPCBath0H7vB
-	FSE/uO/vpPBPz67PO/zJ8VDCyMmU6lVnnYY7xjeXQCTHJqAUhSrvO6ie6i+TdGNzIGVoxuavANO
-	CQ8NmOKBe0yWVMn7oC10wYSMQuBSD3P8xwuZHSXYMnQN5jrkSs03LJP+r8w3Dq39z4as3SzcwTE
-	Q6TdSk4cL4Si1gu/wHRdoX8kHFaXoMnmBcJCiit/GQzvnixNncOz5MyLZw/CExceARphjG9y7ch
-	m3zSYMdwWtIY=
-X-Received: by 2002:a05:6102:510e:b0:4e5:9c06:39d8 with SMTP id ada2fe7eead31-4e746d1b51dmr5548048137.5.1749131004692;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WyJG+3VB/l9E5cKEG16NYCx4C/OXUyDFX/570MgrW70=;
+        b=k61vvgHxOnGkjzQT5kNJf1ifHDI1cCWUf/P0EqNJC2w1sv7aJZOzv59Pn+U3+NLy1s
+         7n+q3UjO3BZs4thjhCnrlPupALWcufcuXa83uAzQd4c5LAiSY92PxoM+SndCDJsjAGu5
+         U+ld9PiuV8f23bSvGh2ot2swQTnjc+04f+YnTWFM81wR7lte+RqWVcmAXkioPWgkrmq2
+         e0VZ9SAUPs9D09QhJK/pNWWhngLkRAPtYXQQQtaK1IeW+XH6/OL/EI23fse65QM16kJP
+         Ssf6tWiUCXKIRXweBVnIet6KTf7RQrXVJT9IRI8T+HYkA6Eo0J8bBaf2hUgCrG89CZso
+         BM6w==
+X-Forwarded-Encrypted: i=1; AJvYcCWcSChrigG5nItnndkida18knMjOddEbn4ezU/1Qx+pDmIYQsL2v66KxbO/Fwo0+8MJqf/PbRhjG6EPwiA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3Tw7LObBHH1CHGvQCZSjk71TLqOYewg9aPchL6xniakevVOhk
+	exFh7kCIR1novl1sATObdiUdXbl6K6wIE7qWyhSERLSJxVVVXWDiLjyKisgRjoHR7POgr/N9zY7
+	LsWzqcBPqtfu0JUVaVqvaHntUrIpBeZpCg6eRcgw+Vl0PW2zBr9ipKyIDgSErOqKFLw==
+X-Gm-Gg: ASbGncuBtg7sAlwO+wOA4hKLHg2tvXQpRJ6QnTVIXQKFWIWGc3pUMrIdpjjbFLsGz0o
+	VKIl06Kv40JKwF7oJUZlxNelTa1degTYNFXU2YpLf1kuB2jAqRwpQmLsb5e8vgJq5qis8lhWVQQ
+	ZucgWU/Ej6jBwN63z1KH+M1x4xQy/e5vt/ewIc6WtK73EzH0riP2xCxgMx+VFKCwW7FBlchnoFd
+	21qiKgPEW013EJGsf0CXTwh4HScWOyAeSIWoy5h2HgF/BdWcXUzRQo5Ix8hBgItHa2LRbYwHviA
+	Q4/vHWH8NpzmCW45WA==
+X-Received: by 2002:a05:6000:144c:b0:3a4:fc37:70e4 with SMTP id ffacd0b85a97d-3a51d97408amr5757690f8f.58.1749131005257;
+        Thu, 05 Jun 2025 06:43:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH06+3a1Kbk78BFgL3ZwbDTDTsWsomlMTVTUM+GFt6c6uDgEbkD9kGtXYidxIou37MFPIzdSQ==
+X-Received: by 2002:a05:6000:144c:b0:3a4:fc37:70e4 with SMTP id ffacd0b85a97d-3a51d97408amr5757647f8f.58.1749131004775;
         Thu, 05 Jun 2025 06:43:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVYdfhpp4FJ7SmLqPejCmqbxXj2opSUrnqug518ARGUG/eIE28eAmWYKD/8Tdocm8sfAG6kA==
-X-Received: by 2002:a05:6820:1987:b0:603:f903:c85a with SMTP id 006d021491bc7-60f0c73392emr3549900eaf.4.1749130993365;
-        Thu, 05 Jun 2025 06:43:13 -0700 (PDT)
-Received: from [192.168.86.65] (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60c1eb719f8sm2691359eaf.28.2025.06.05.06.43.12
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b8f0sm24267394f8f.6.2025.06.05.06.43.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 06:43:12 -0700 (PDT)
-From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Subject: [PATCH 0/3] (no cover subject)
-Date: Thu, 05 Jun 2025 08:42:59 -0500
-Message-Id: <20250605-mdt-loader-validation-and-fixes-v1-0-29e22e7a82f4@oss.qualcomm.com>
+        Thu, 05 Jun 2025 06:43:24 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>
+Cc: "linux-security-module@vger.kernel.org"
+ <linux-security-module@vger.kernel.org>, "linux-integrity@vger.kernel.org"
+ <linux-integrity@vger.kernel.org>, "linux-modules@vger.kernel.org"
+ <linux-modules@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>, "keyrings@vger.kernel.org"
+ <keyrings@vger.kernel.org>, David Howells <dhowells@redhat.com>, David
+ Woodhouse <dwmw2@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Luis
+ Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami
+ Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
+ <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge
+ E. Hallyn" <serge@hallyn.com>, Peter Jones <pjones@redhat.com>, Robert
+ Holmes <robeholmes@gmail.com>, Jeremy Cline <jcline@redhat.com>, Coiby Xu
+ <coxu@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>
+Subject: Re: [PATCH RFC 0/1] module: Optionally use .platform keyring for
+ signatures verification
+In-Reply-To: <e4e838d03b3619df5523d429e0cd8160a8aef9f8.camel@HansenPartnership.com>
+References: <20250602132535.897944-1-vkuznets@redhat.com>
+ <0FD18D05-6114-4A25-BD77-C32C1D706CC3@oracle.com>
+ <f0b37bc55ed3c02569c74f0fbdb6afa8efd329e2.camel@HansenPartnership.com>
+ <87zfemoc76.fsf@redhat.com>
+ <e4e838d03b3619df5523d429e0cd8160a8aef9f8.camel@HansenPartnership.com>
+Date: Thu, 05 Jun 2025 15:43:23 +0200
+Message-ID: <87tt4unw1w.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOSeQWgC/x2M0QqDMAwAf0XybKDW1bH9ivgQTeoCro5WRBD/f
- cHH47g7oUhWKfCuTsiya9E1GTR1BdOH0iyobAze+eA698Avb7isxJJxp0WZNiuQEmPUQwqGqfX
- dM4axeUWwyy/LLWzSD9f1B9BRFkdxAAAA
-X-Change-ID: 20250604-mdt-loader-validation-and-fixes-5c3267f5b19f
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-        stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=609;
- i=bjorn.andersson@oss.qualcomm.com; h=from:subject:message-id;
- bh=3Q0QXaolxWY5w9SU15ztjaahCT1/EvDyEuICk9gmC10=;
- b=owEBggJ9/ZANAwAIAQsfOT8Nma3FAcsmYgBoQZ7wzuSNIDoxicO+eNJkk389eTziZ8KRF85s7
- 6OX4lm7xhCJAkgEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCaEGe8BUcYW5kZXJzc29u
- QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcVb5g/3XMzQN93Xb26ritBVMFl/NWhaWaDwsj1E21MPfrC
- yPS7y7dR/q/qmdY5PQkuGtBLuPwsR5iBqDWY+OTupBuvfaBhUTwiP1cmae8wWpDyJK42VXH+tNU
- nYO467XQnRtrccGV3tZEWKGjkdbag2rIycxrgo/jmiAzFVKhYD7Laf3WCtzxXd4IFImImxpoxJH
- IPWnOCogvs9L2bm6wkBZ86r+12bnXMXEfsVoaQvCbg89ZwEhbbDcgDSxY3evv5YHw7Q4fP14zaX
- Tt8KVGPi4dsgJLgpBIKLZHbZdmSnUDo/HEZ1tZIJ4qdhbM1WIvhifS/TxWgyLeixTXt2YaZ9jxe
- 2n5DduGlUyQXfjAQynecszk8bM5R/ZLKuFwS6fHUTutyewTjmUzuW4RPZ+5vQzHOZPmGYiTjnQp
- 9U7wonMZA0MivwxESLvptyHZcAMerE4arcYDp27z3MHftPMTC7PBDU8O7zIJoFEIdoqJ63U2uWO
- k3x2WAqJ1fXdddf8w4L/Hodc5O6U7tvIDEseEjhOCrkVGYGMrTtSLjAtkbeX4iRxyOXHQ7deI7X
- IW2WG8EbkQauEn3SN5D9kzpt7FW+g8Vtx0oQL/02ZW5sFBLrf0wxNIBs8qP7ycuvKN7z5u6jenr
- nLUiT2LUk4rWW+tZk/CZKe76IhBS+KROFkiFiULge/w==
-X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=openpgp;
- fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
-X-Authority-Analysis: v=2.4 cv=RMizH5i+ c=1 sm=1 tr=0 ts=68419efe cx=c_pps
- a=ULNsgckmlI/WJG3HAyAuOQ==:117 a=DaeiM5VmU20ml6RIjrOvYw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=Eo5HmAVCleSnqplLZ4EA:9
- a=QEXdDO2ut3YA:10 a=1WsBpfsz9X-RYQiigVTh:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDExNyBTYWx0ZWRfX3MmpNadeMviO
- 0OTFsodVZLnFBzgASEn6Ysdq4lpWYovYxbwv72tAunCoO18tM+tDAmul9CjVzmUwapRJSYVyz7w
- ZEBUjZXAJw3VIocZZ5bkr52sfDhWhvUOdKMK+f7aMR8sPy64m7paTXn80Xkr6dcrNzycd0nFyXN
- 8OUYCXi7NxW1JG6frjJgcuqrO2axl8W7Msa2bJpFko2W2KZmPzP8maYfed5Y4bebaeDhjHyDFPk
- pyKzywR5SuE538miK3QHigAVZljcB1B8M6jkzmHqBBoCm6BW60XgTKwKUfXRiTvJrB/uOwwmDQ2
- /Wcxc/wNOxifblrpkGfUcUWrCjAnuWI8R4esEq3S1WBv4AmbqBjskiHen1CgBLvtc9ngvritXYu
- mUBI86BtTQUlz4D73xyYoqefeSrT8j5abAywF1/nwFdRPG8Cy/LC2RYC3pOP4HKHLURwO6mp
-X-Proofpoint-GUID: 15nGi3E5vJ5R7Lwi9zXwmGXiIE4zBs4A
-X-Proofpoint-ORIG-GUID: 15nGi3E5vJ5R7Lwi9zXwmGXiIE4zBs4A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_02,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 suspectscore=0 adultscore=0 mlxlogscore=856 mlxscore=0
- clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506050117
+Content-Type: text/plain
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
----
-Bjorn Andersson (3):
-      soc: qcom: mdt_loader: Ensure we don't read past the ELF header
-      soc: qcom: mdt_loader: Rename mdt_phdr_valid()
-      soc: qcom: mdt_loader: Actually use the e_phoff
+James Bottomley <James.Bottomley@HansenPartnership.com> writes:
 
- drivers/soc/qcom/mdt_loader.c | 57 +++++++++++++++++++++++++++++++++++--------
- 1 file changed, 47 insertions(+), 10 deletions(-)
----
-base-commit: a0bea9e39035edc56a994630e6048c8a191a99d8
-change-id: 20250604-mdt-loader-validation-and-fixes-5c3267f5b19f
+> On Thu, 2025-06-05 at 09:54 +0200, Vitaly Kuznetsov wrote:
+>> One additional consideration is the fact that we already trust 'db'
+>> for dm-verity (since 6fce1f40e951) and kexec (since 278311e417be) and
+>> especially the later gives someone who is able to control 'db' access
+>> to CPL0; a 'db'-signed module (IMO) wouldn't change much.
+>
+> Well, the kexec case is because kexec has to verify the new kernel as
+> shim would and shim would use the UEFI keys.  The dm-verity one was
+> added for a cloud use case by pressuring the maintainers in spite of
+> the objection to using the platform keyring (it went to dm-devel only
+> so not many integrity people saw it):
+>
+> https://lore.kernel.org/all/20240617220037.594792-1-luca.boccassi@gmail.com/
+>
+> The point here is I do think the cloud use case is legitimate, but it
+> can't be supported simply by ignoring the bare metal security domain
+> separation concerns of the integrity community.  The argument that
+> distros have done it so it must be safe isn't really a winning one
+> (especially as there's no clear explanation of why they did it).  So
+> either you need a better argument or we need a way to support both sets
+> of communities ... which is why I was wondering about a runtime
+> differentiator.
 
-Best regards,
+So far, I got two 'runtime' ideas:
+- Observe MokListTrustedRT and distrust .platform when it is
+non-empty. This can, of course, be combine with a Kconfig for those, who
+do not want it at all.
+
+and/or
+- Sysctl toggle. Keep things as they are by default but make .platform
+trusted (either for modules or for everything) when switched 'on'. This
+can (optionally) by combined with a previous idea and have e.g. an
+'auto' state for the toggle which follows MokListTrustedRT.
+
 -- 
-Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Vitaly
 
