@@ -1,171 +1,185 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A941EDA12;
-	Thu,  5 Jun 2025 13:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E57E22AE7A;
+	Thu,  5 Jun 2025 13:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129776; cv=none; b=U9pseO2uBHmuGKb6Y1V1vS2hBWohxYKosUwaZo5gmZvj3SwCFZKTQFpUPfW4tPyqe3gHkCh6oWcd8A4iuc2lWGCmk1o+yhYHX477WQfkTm09NSEeRLUe8i0chfy2NtM2M3vu3b0tvd9xnVcoQ71e3SBirvHOv4k6eKf/rw3ni6U=
+	t=1749129777; cv=none; b=LiUj43IkJzoxnatZ/6u4pOrBtwV1Mib8lDwcuEuc8J7DKkr7dYMLHa+9dJciByjlhW52kyFMK1v/of83+c/u+6nJZPjYEsOb032mjJWciekD0w/l/xe39DSd+zJI9c8Yonll2KsVM2Bd1NQVesKddtWDgsfV1a7kA8MZWu3Bf8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129776; c=relaxed/simple;
-	bh=CfFh3w0ThJN+yAH5vQnSPQ1cohCNV0n239N6A/m/PpU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LZE27c9AF8UhyjkfMmg3ieZy8DKeznKkL3JQ1lLScgG+YwJJ2dnSQjcP0LEymefi+kg1osgA0544aNXaitVDdaWmpVplLcaxSQFkEWfzkqtm1M1ldRc/KTGwHBFAE023scAU6/RI99uJwNpTugT7tTVxjyI3+ExR1I6Kh/kVTIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ef5dZqDj; arc=none smtp.client-ip=209.85.167.42
+	s=arc-20240116; t=1749129777; c=relaxed/simple;
+	bh=Of4vTHHo0c3fLH3Y13EMcDavOhIYjcqdwDcNmNcqIeM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=GmGza8XVTy9SvXzYDHLGsvxgO4B32+o8xZgZIGKDHoIgE4c4+OoLKk8KdJIRfpseaM1E5MnprQJH3ZZ04YrgjsnJxbE6uCwvNaYWogC+AbMQl/+02RcQ0SF+YHE3+/9ziQgMmGht9THwmrcNEdnJKvHct1Z7/6He699o0s8nCSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iy4dNI8o; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ef5dZqDj"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5534edc6493so1206868e87.1;
-        Thu, 05 Jun 2025 06:22:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iy4dNI8o"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso1773293a12.1;
+        Thu, 05 Jun 2025 06:22:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749129772; x=1749734572; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I/GGnrCZDhPfrx6amA2Y2XENRlSPIkx2oqNJAJB+2Yg=;
-        b=Ef5dZqDjjSyZlj0zoQHWjHQyGYDYDtjWKzLhjgwRn5+QEASJkZmpEQud/YUlCNdZGh
-         GwoX8kxe8LpPXdJnA4IL2yv38CmKMn4PP8FMyx+6b7FuIQ04MdCPKs91YvzW7C5EVuvV
-         RGouY/IpX+q3CITjagZCTPpaCH0RJF3ehlP2XlIUd3czB7gpvvEtXSRMGR+j93OGT53J
-         RQpJw3txa+RuR+sP7tZdbMR5SWVRzksETHBOFmb+kttIAEqonxCQ3Y0bdTqfY+/PNoqz
-         6ysVQgoK0llzFX7SjvV6jZUR9MOwHdwvvVd+PEG5/YPiOBDVVb6XaaKnft8Hfh4G5McO
-         KEqg==
+        d=gmail.com; s=20230601; t=1749129774; x=1749734574; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Of4vTHHo0c3fLH3Y13EMcDavOhIYjcqdwDcNmNcqIeM=;
+        b=iy4dNI8odxi+pGphSf9nQj7g17ZX948XgOTDcZ4dfnhLU44qQyvfrE2XE1zermb1wc
+         Oz7nZMClujTzcpih/vEWqmU9yG/CowBc7kpVsAdv5OmZBTv/Cz6vSyw1vAIeCcK53tHU
+         8b9lAMEcshQ6JylySqXuHl8RVsvozKChZ3B/cragVGmh9ogA/UAO4KtAEBrztCD5MAab
+         0lMfGzmZgqmH81LZ+qrIUkBRJlQ+2jVAmvpzBLAUW6o7DFnzyK0ThZoTOMds4pLNOL1G
+         WB3O6+sDu5Sz0yRKhLzMfjpwI/U9fIdkhYpy7RzVYnDTqEy1+hTI2omJUMKX1gg6/yfx
+         8ixg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749129772; x=1749734572;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I/GGnrCZDhPfrx6amA2Y2XENRlSPIkx2oqNJAJB+2Yg=;
-        b=kUsLq6UUDLB9PvyI9D+HiDRUex11/r2rLbQFzH/PoAYShqsuNUBZCuHba2ATSJTymt
-         WM/y1wVR8L8njsclgSn6VceGMZZkRqkOpfXJAxieSIMYwWn9XDJEbgF62xoUrlwq91ic
-         I+ZGOIxcaVr0X3hUJceld/MDWCiRL7ZR+/w8cJCpL3tXwonsakdtG/jTAsYrR3ZJFp75
-         RoWinAZdvzvf3W9hKb2uJuZ3GLsJco3vo61ch3EsCxzI9jYdqVgIu18kspUamhi5Rn1v
-         +HVuV+iuysbfWyzkrpXe16rlNbpVuzI9Qbz+v1IMGF+noZtRPfgUDawFGJt2jAPVbC1e
-         rbjw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/YGjJSkgtLeQ5elrJwPnBnrN5bVA0cb+8t4/fKsHI0lGJqpR6OrDaNf5FNhFohg9qDfL0r1HeD8wkmtnz3+g=@vger.kernel.org, AJvYcCWjy4JwjfS5V2Flpiq1nghNHpREaMX1vrl/rIkTehVMqvTv/KBFlagfP4218F2kgLoYWOXR8ulC8rC3NAs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYBh0QrkVAapoAK9B0yG9z5CGvvSWWRAXf6gByFT7K2G47YF6B
-	Pw7uETEEDomS2dYyHUjS3uxLbLqOIyV7c0VUuvJtiN81CkjzHo6/z4Xt
-X-Gm-Gg: ASbGncsZ4gyVe7Yb6LTGMFNkRtJlhyoAFOgPTRhZPAvmkHB1Y7tXZjyB4OHybNqeQIY
-	nbYQ44X8Gk52ThJezuNO3LwOlgCkQgtN2nFBMAPJmtowdTzhSJl15ZE28zt9vh/mYs6GUT/jz1r
-	bNiVv4LioTVLMV80Pp0UI6JXyjR0KKUO+eHkdzXTwDq1ceVR8sqIbSiQu/IcHPESFThbQ5rePs7
-	EXu6jxPSAyqV4TUFLdtcnnYxta8oOJkmHX5daDT0+s0JqajSwSAW7jiolEBCfm7bBxWT9FcF/6T
-	CPY+qu5WhalqH1nXVWhqCjsGKWfx5spToYVYyHPNDcKcb8VhcKJ1Doqbusx9uNPIMapPrFy/3on
-	vapT4sN1l0OHCU7NdJ25YEEjlC/RO
-X-Google-Smtp-Source: AGHT+IGUkWPUVcTxMOH4yIrjfz5Gt3Qal4jvY6QFmn4eIjhXcLJmVM6uyLDL0ne8sloZ4dGqhpJwAg==
-X-Received: by 2002:a05:6512:12c3:b0:553:35ca:5922 with SMTP id 2adb3069b0e04-55356e04c18mr2010599e87.56.1749129771676;
-        Thu, 05 Jun 2025 06:22:51 -0700 (PDT)
-Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5533791d026sm2640505e87.168.2025.06.05.06.22.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 06:22:50 -0700 (PDT)
-Message-ID: <5c72682a-ede9-4a48-a214-f1795115816b@gmail.com>
-Date: Thu, 5 Jun 2025 16:22:50 +0300
+        d=1e100.net; s=20230601; t=1749129774; x=1749734574;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Of4vTHHo0c3fLH3Y13EMcDavOhIYjcqdwDcNmNcqIeM=;
+        b=DINkh7Noq+j9FijiXidNmp+YEQfVfphX7hWXpBN0ruiMxoZIdd4LUCdG7/I4cEDE4u
+         C5ts8xbwcJsMsj/JMbs9tUvh4ibAdJX8WqeE5y3Mif/f2W9gWBb8qFsxd94ckTKXHMzK
+         pw9dlpQJM9SXwtbbZDAaHS5zwFXfa3ldfjIEQMHCiloxA4aP974FQh0AFMJcZVL8eJv4
+         wRPEqmC99/ZNUHUPqlNAoW45AUQj46pObL7747Z5iEGop2kIKzFA0KsbqEao96/AcXsU
+         FOaemIAn3D3qjMnn7X13FmwyOMoswxepjdf2DPEMibz05uKUs+Cly2OzT3MoMxXjathN
+         T6CA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8MxtGARsMZof2i8FmYkR2+/W0LH8vrwcEqCINE1gBCcD7iGnBgXKTzm3i9OyMEtMWQyhl/IrqJgAGHmNg@vger.kernel.org, AJvYcCUL6DVZOUk2exGLDbvpiVBVBp0UdDaHOQ334iwoG1lxy2/v8/DFAmORuoCofguvUWqHJC12CQnXbto3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzPacn0iXUZnuTWEwCYeCQWHAie3C83DUuu+RxE6Z9iI2gb7Pu
+	vdkdUfPtXDzL5lQNRDvWxStJ/CpBxvRTB7UQ02uR6v1pwGVmGYmbDY1V
+X-Gm-Gg: ASbGnctmKpuFWP+TyhceR/ug8C/8lP0gmXF9yRFvInS5YgpFkdtMY0CmBZ8d30ldUad
+	bnzgVVXUv8OgpkacYzD4pSZ9jGRJFhAnnDS6q0iJc9OCL2eS7mHwpu3BM/Tr/vmVC+az9CyW+Kt
+	4VFAMlccJRhvmr4Wbg5NczjChFBxIZMPqhwLrGU6pKTzJh44fqSSOmKmEYPl8tEcIUcrNLWogYG
+	MIZgNJ+QhLr36biaXqHrA0hxqnREHc+AEa1V4x62IHB5F9kdJVRyLV+gxmxW/VNwvUv1dWfPZCC
+	dlJIfOgYzCbZGb6Jkb2xsQ2z9wn3FlNQG1ssANr5rPKZveZyNv1zMpvOivMp07nOL3ZsPdaiFFY
+	=
+X-Google-Smtp-Source: AGHT+IFzTwW0TcXzPL/9HV49c8h7szVsDRMxjGRBWs1/HHxFZV/8F9GvGOd1FZ+sNDL/yaa7WrK/WA==
+X-Received: by 2002:a05:6402:358a:b0:5f8:36b2:dc1a with SMTP id 4fb4d7f45d1cf-606ea17a74amr6862983a12.16.1749129773399;
+        Thu, 05 Jun 2025 06:22:53 -0700 (PDT)
+Received: from smtpclient.apple ([89.66.237.154])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6073d367974sm313209a12.70.2025.06.05.06.22.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Jun 2025 06:22:53 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
-To: Alexandre Courbot <acourbot@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: dakr@kernel.org, lyude@redhat.com, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
- rust-for-linux@vger.kernel.org,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
- <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
- <20250529004550.GB192517@ziepe.ca> <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
-Content-Language: en-US
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-In-Reply-To: <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM
+ Sige5
+From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+In-Reply-To: <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com>
+Date: Thu, 5 Jun 2025 15:22:41 +0200
+Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>,
+ devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <512E950E-E8CB-443B-8E47-79F073D217E8@gmail.com>
+References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
+ <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com>
+ <6656934.DvuYhMxLoT@workhorse>
+ <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com>
+To: Alexey Charkov <alchark@gmail.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
 
 
-On 30/05/2025 17:02, Alexandre Courbot wrote:
-> On Thu May 29, 2025 at 9:45 AM JST, Jason Gunthorpe wrote:
->> On Thu, May 29, 2025 at 01:14:05AM +0300, Abdiel Janulgue wrote:
->>> +impl SGEntry<Unmapped> {
->>> +    /// Set this entry to point at a given page.
->>> +    pub fn set_page(&mut self, page: &Page, length: u32, offset: u32) {
->>> +        let c: *mut bindings::scatterlist = self.0.get();
->>> +        // SAFETY: according to the `SGEntry` invariant, the scatterlist pointer is valid.
->>> +        // `Page` invariant also ensures the pointer is valid.
->>> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, offset) };
->>> +    }
->>> +}
->>
->> Wrong safety statement. sg_set_page captures the page.as_ptr() inside
->> the C datastructure so the caller must ensure it holds a reference on
->> the page while it is contained within the scatterlist.
->>
->> Which this API doesn't force to happen.
->>
->> Most likely for this to work for rust you have to take a page
->> reference here and ensure the page reference is put back during sg
->> destruction. A typical normal pattern would 'move' the reference from
->> the caller into the scatterlist.
-> 
-> As Jason mentioned, we need to make sure that the backing pages don't get
-> dropped while the `SGTable` is alive. The example provided unfortunately fails
-> to do that:
-> 
->      let sgt = SGTable::alloc_table(4, GFP_KERNEL)?;
->      let sgt = sgt.init(|iter| {
->          for sg in iter {
->              sg.set_page(&Page::alloc_page(GFP_KERNEL)?, PAGE_SIZE as u32, 0);
->          }
->          Ok(())
->      })?;
-> 
-> Here the allocated `Page`s are dropped immediately after their address is
-> written by `set_page`, giving the device access to memory that may now be used
-> for completely different purposes. As long as the `SGTable` exists, the memory
-> it points to must not be released or reallocated in any way.
+> Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.com> =
+w dniu 4 cze 2025, o godz. 21:12:
+>=20
+> On Wed, Jun 4, 2025 at 10:38=E2=80=AFPM Nicolas Frattaroli
+> <nicolas.frattaroli@collabora.com> wrote:
+>>=20
+>>=20
+>=20
+> Frequencies are fine, but I don't think the more power hungry big CPU
+> cluster gets any voltage scaling without it. Once I try to load the
+> system enough that the governor decides to bump the big cluster
+> frequency up, the regulator stays at 850000 microvolts, causing random
+> reboots when the whole cluster starts starving. With the patch,
+> voltage oscillates between 700000-737000 microvolts in idle and jumps
+> up to 950000 under load, and the system seems stable.
+>=20
+> Here's what I used to monitor the voltage (there must be a better way
+> to do it, but it works):
+> sige5 ~ # watch cat `grep -r . /sys/class/regulator/*/name | grep
+> vdd_cpu_big_s0 | sed -e 's/name.*//'`/microvolts
+>=20
+> And in another terminal:
+> sige5 ~ # stress-ng -c8
 
+Alexey,
+I see you are using rk3576 board like me (nanopi-m5)
+Have you on your board correctly working cpu dvfs?
+I mean: [1][desired clocks reported by kernel sysfs are in pair with =
+[2[]cur clocks?
+In my case i see mine cpu lives totally on it=E2=80=99s own with dvfs:
 
-Hi just a silly observation while trying to think about other ways to 
-tie the page lifetime to the sgtable. Why can't we just use a lifetime 
-bound annotation?
+Requested is [1]
+Running is [2]
+Measured is [3]
 
-It's simpler and it seems to work:
+random read 1:
+Requested CPU4: 408 MHz=20
+Requested CPU0: 408 MHz=20
+Running CPU4: 1800 MHz=20
+Running CPU0: 1416 MHz=20
+Measured on HW: 1579.03 MHz
 
+random read 2:
+Requested CPU4: 1608 MHz=20
+Requested CPU0: 408 MHz=20
+Running CPU4: 2016 MHz=20
+Running CPU0: 1800 MHz=20
+Measured on HW: 410.33 MHz
 
-impl<'b> SGEntry<'b, Unmapped> {
-     pub fn set_page<'a: 'b> (&mut self, page: &'a Page, length: u32, 
-offset: u32)
+random read 3:
+Requested CPU4: 600 MHz=20
+Requested CPU0: 1800 MHz=20
+Running CPU4: 816 MHz=20
+Running CPU0: 1008 MHz=20
+Measured on HW: 2275.07 MHz
 
-So with this, my erroneous example fails to compile. Here the compiler 
-enforces the use  of the api so that the page of the lifetime is always 
-tied to the sgtable:
+random read 4:
+Requested CPU4: 1608 MHz=20
+Requested CPU0: 1200 MHz=20
+Running CPU4: 816 MHz=20
+Running CPU0: 816 MHz=20
+Measured on HW: 2114.58 MHz
 
+this is on rk3576
+on i.e allwinner h618 or rk3588 all looks quite normal - [1] and [2] are =
+equal... =20
 
-let sgt = sgt.init(|iter| {
-    |                             ---- has type 
-`kernel::scatterlist::SGTableIterMut<'1>`
-71 |             for sg in iter {
-    |                 -- assignment requires that borrow lasts for `'1`
-72 |                 sg.set_page(&Page::alloc_page(GFP_KERNEL)?, 
-PAGE_SIZE as u32, 0);
-    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
-              - temporary value is freed at the end of this statement
-    |                              |
-    |                              creates a temporary value which is 
-freed while still in use
+my scaling governor is on_demand - so for sure clocks are dynamic - but =
+i.e. on 3588 with the same binaries - i can't catch -at any random read =
+- that requested is not equal to running while on 3576 almost any random =
+read gives significant differences.
+=20
+[1] scaling_cur_freq in sysfs
+[2] cpuinfo_cur_freq in sysfs
+[3] code to estimate arm cpu clock from =
+http://uob-hpc.github.io/2017/11/22/arm-clock-freq.html
+ =20
+=20
 
+>=20
+> This might warrant a note in the commit message I guess :)
+>=20
+> Thanks for your review and testing!
+>=20
+> Best regards,
+> Alexey
+>=20
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-Regards,
-Abdiel
