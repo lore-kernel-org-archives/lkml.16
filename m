@@ -1,188 +1,102 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A527B2E40E;
-	Thu,  5 Jun 2025 13:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E492E40E;
+	Thu,  5 Jun 2025 13:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749130969; cv=none; b=JM5Ewp3pWfoua+JJwKTVjeeuDn28wVj+rCnzMLut7hWH3S2gT8/Jel2DX8lZqkuFrOUTByszyN/Vl8tNgIhqWkMQ2EzBkOUJ1d+jGFKov/rQ3e1Okv5qo7OZu0wLTxWr9K73+9NdtwBoAaBRJyNq0pYCo0XaWcSt6MJxIqWUD5w=
+	t=1749130981; cv=none; b=WvMMEtaEVjqZevbzMdcHXT9bHHabEReyGgOpmBDBBDUc7xfUDNyeKOaDqlkgnkN/60OkNO5Ugmsfkxos1KKvmsC9TlXpgTPoVgozUnWBrhutClCYIVs6+BnWuoxqs7FxhjihnRl1KqVvvtQeWEk0RkoC2pd3aUpO11cnamQkTB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749130969; c=relaxed/simple;
-	bh=b1Aw1oATIRI4U6r0tJJxa/pTsMT8z1zs/O7llSWlNeU=;
+	s=arc-20240116; t=1749130981; c=relaxed/simple;
+	bh=ZDaTLbspWsJYkFMbFVDMSx2aSEZZOtQzFXBqHuYVc+E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E8gKEZsbvTdoUQ6II9Y4rTgELFL8HZPsK1mBxs/9aojqGR0pxTJl0ycgIF8aupnCGw7K/H5y2ALfeekLl/ZG2e3TGF+9ht0CfpsMcZa/N9dL7e2jDRG+3H1E0zwWuzvvxhygVzGDZ/cueQ1rtz5Gi+fZx3GM40Zhfy4Y1BViTPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ix1rDgDC; arc=none smtp.client-ip=209.85.160.182
+	 To:Cc:Content-Type; b=eNI5e5QQR8Lhol3jcs2+HQVdVNIY7sVPUavY6DYlDTA3cI9ST5V2jYj5kk5eRr1GY1nYB5lKR/JTqz4baDIsf4df2BIX8OZ4oQhD3k1b3VvqE4gGBOAP4Ddy9QQmfR9iZjNWFjGTNaDWUwNMCuSdRr5MSmj45QbrDXes824MNgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjjXWxbt; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ix1rDgDC"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a43cbc1ab0so11002621cf.0;
-        Thu, 05 Jun 2025 06:42:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjjXWxbt"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60707b740a6so1322974a12.0;
+        Thu, 05 Jun 2025 06:42:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749130966; x=1749735766; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749130977; x=1749735777; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b1Aw1oATIRI4U6r0tJJxa/pTsMT8z1zs/O7llSWlNeU=;
-        b=ix1rDgDCjTd57vWtRaAmhV5aGPxw1jbWIwWFemKkUkDZGE8TNgFhhW8HniIIsQpd4G
-         TcTUlgVPovgT3KeAT4x66hZ95Ah2OYX0k2owVWJ1HfERI//sEPGMuZlUh4kdl3R1lWpt
-         qBIkkM3VkoYVQyga1jeJCJG2xWkhlwXCn6PGGNlmw0oT0o6rj8EF0+UWKdrJGDGYXGcu
-         YRLvaOACCkcJJ1PKcx7XrkyZ9N5apXJWQZqxcdI9qsygRnTHRTES5IBnO6MhebqdQ2sM
-         KgSmCuM51B7iC0hUuKvWTZpPlaQArooekxUbQEJY8VxT1udBKtrDUwNZwJhGGBidoXEf
-         9wqg==
+        bh=NNYkE3zwLLRZ/mwyxlP9oruoQDkKk7uF9dI/PyYXEU4=;
+        b=kjjXWxbtDc8WNOJ70DJAHIaq2nZ9CoUo8dfm+xOigS5QK1lMuTPQFDRc2lk6bdg8Mt
+         iJvRpDghDlJ8dWoeXYjNz+9qLRYIGGLsPxgJYsawBQL3Pbcr5l0OBZln9KDGkisjaw6k
+         W47ZEqQJH8N2BKBD/xNo6USRjFaRPlINAu7VMiB/JreMrWlZl3EoU4VwSxgZzp051Ece
+         vdduecSahLJD3/xILGXD/3HV+ghQPcv7bIe04nCnh2SaEI6zsESOIq+dRmMrGb8uj7OP
+         NSoFD6yDRZ1rxluh/sqAHcmmClNjBpTYfi2rvj3P9qa+gj1v4/BFc9vA8I9+bgUo3vrR
+         KjGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749130966; x=1749735766;
+        d=1e100.net; s=20230601; t=1749130977; x=1749735777;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b1Aw1oATIRI4U6r0tJJxa/pTsMT8z1zs/O7llSWlNeU=;
-        b=DQ7XqJgFgY0LiGhvP4xHD6tDe1lh4XAu9we7ceJuQWGCDeocHdB19bQhb8UXxNp/ia
-         +nrOBYiyh4ZphNLS+xFYwZRPKbnFG83Icgl1c1jSIrYySE6H6CRQCcWpmRi8QFgg6Y1e
-         J4chvw70w4wOHpkYCrLcz+1MJM3LkAXZEKdP8/SYXEIE/auoE5jpwguJ67JUbcSKb2pW
-         NOqdkkrnX68YQM/Yne3O7Nwi0SmpltjNUoIS3n2E5ah0b/m+nPAe6JkBpOKJyqE/lh02
-         xEGZWmD+Kjc1qLJy0XUMIfE4d2WU5HbW9NibOsGLiM+LyXBa3lwGizDt7BYjPRl5hoah
-         TzFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxwGmVw7PO5gNVp5zNlFo4cHLLQDgrYsXYW8mLBvLrH7DrKdLY+LJ3rDY7UXemZ/eMFxLxXMFq3C37@vger.kernel.org, AJvYcCWnP60Tk44akVbyJuxQtqSEuVzJvdjn+Y7Qeaqpc3AL4uE54frCiz21wzsq40ZJOB8yvkcBwg2IIu95LXm5@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcZmTNRWhDfLtGy9f76GnbgJc9aYjzJ95FrSOsmgtzWq8gDxhJ
-	kIz1L2H5jNJ1gqO3RYnMF18rfHsnuIJbulOGU1DJ7s9WXzFBnubjv5f3MHPMF05kRqq6rXubJB2
-	b5kQvpVzjxZebf5V8y53kZvvN1HfGJEyUi3uvGJ4MLRk9
-X-Gm-Gg: ASbGncvb78wTwfVNCeZfBaNLqYjUS3B+4OySBN/XHuElgc3ZFDmQpWraOfHCGYVrz+f
-	BMdB+Rq/9yKCjRkAUeG0K3Nge0Y+W9RhwwpeWbPz2+klxh2oDgIK28WMSowidfspBqcKm5lsM16
-	BdcNXlJqRGBDryk/F2P4jFIzunji64rDjxEOHHAjfSYkfX
-X-Google-Smtp-Source: AGHT+IG0MMWP+x7U8tsJQ6YRTMkTZzqpNjJO/whvvcK/0u3aHGtE8WDWz1uwITy8x/Dviq7md8X536qbBtEfOUabryE=
-X-Received: by 2002:a05:622a:8ca:b0:494:b2db:eeca with SMTP id
- d75a77b69052e-4a5a585f3ecmr94610721cf.26.1749130966422; Thu, 05 Jun 2025
- 06:42:46 -0700 (PDT)
+        bh=NNYkE3zwLLRZ/mwyxlP9oruoQDkKk7uF9dI/PyYXEU4=;
+        b=H6E0RVWfP54aWFvbkM+Qg8NaRtryBHs1K1pnjdi8b4bDHViADUllIzio0GTNhc8DjL
+         cUd/IAq7VlM0ord6QxwsbQvWmX+H9s+BL7OkL/ByqxA3Dbl2a0WGMroRHtDKk1OhJc0S
+         E9TCHZQ2Orb3NZKE60YyyEu4y+Mr59LZLQMy/BDpryUt6MgDeKSvc2aC5wdSZ8K6tM7Y
+         ikOkTpiHN8MLbxb0xdXKfYxy6GWUzT03ZdE54n7C2p8w6jENsPpgLXP6d7C6hGueuhD0
+         1VI5lbJHGLPHWgnW2H1/CnZQnoBg8vaOs754/kRHObh7YaLvD8+iIT9DwB/kzLNYdfrd
+         44uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVL0ix5GcvAv9fwaSnaVK+jCd7LvRxw3ksZGb48L33yHdCBMcdSuULEoifgYntwOyIXWGeBov4nPV0ywg==@vger.kernel.org, AJvYcCWgZ4zl8K0uPCWj72K8+ZwzM9KTuDIf1OstdNsC+8sV70YbgrEzs8KK1D6co69fvwKkWY4fUX9k4cPqROtG@vger.kernel.org, AJvYcCXKpv/hvAI1fGKp5fcrnKFiHv9P6cPxKOVrRcKNNW6bQWUjQpy0Yj/LEEanX4LHTwzFj7iSoFRJqPx6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK0JSkLSVWwAErSXtOADkop2aUVJf39qcNY6MDy+tWsOwGXW/D
+	AbXy3N/itcg2coe4bD9GM4GAuQP9oq5C+U+6Q1UMHhaIWSIJMbm33vHhRSlbUl5we8qbIFRHV9T
+	0MI+Oh9FYe3gvi6wD0f5sC4yj3ZZBcPg=
+X-Gm-Gg: ASbGnct/U0KVDrNDYUcH0BRCfedYAyuUITzDRY5d28a8mTeiOFcg0lPEm9rJx9PLPxq
+	NF1iwPn4PxTGdwt8aDcaSpZLgtwO34PVAYWOh88KDoEcuK8/7glI7v2JviXgUL1borzefe2PQOJ
+	ldHMkXMIxkFJqsVPFZBJbEkiVo+XrgBbS+L4g7cPjx6+GYT3YNiV705+CttTnZPz4=
+X-Google-Smtp-Source: AGHT+IEGRIDZrXauu6JWYOGuZQNfpCjgy9EHpgz/7KTxXLdbQljcB0PFB5wDQdDR+S6eZZxj94P0wdB3S/Cv8wNgC8w=
+X-Received: by 2002:a17:907:c15:b0:ad8:9257:5733 with SMTP id
+ a640c23a62f3a-addf8ce46c4mr631367266b.20.1749130977178; Thu, 05 Jun 2025
+ 06:42:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com> <6656934.DvuYhMxLoT@workhorse>
- <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com> <512E950E-E8CB-443B-8E47-79F073D217E8@gmail.com>
-In-Reply-To: <512E950E-E8CB-443B-8E47-79F073D217E8@gmail.com>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 5 Jun 2025 17:42:38 +0400
-X-Gm-Features: AX0GCFsTzLQL93s6ofhHt9HSu3m-CxEmKHnPQLzRarGwazT_7OOgybpDR17U5os
-Message-ID: <CABjd4YxGQP=rH15EX12w36b7+82Dedf+rVH3v5V6gBwNv3V3iw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+References: <20250605160540.76a4c651@canb.auug.org.au>
+In-Reply-To: <20250605160540.76a4c651@canb.auug.org.au>
+From: Meetakshi Setiya <meetakshisetiyaoss@gmail.com>
+Date: Thu, 5 Jun 2025 19:12:44 +0530
+X-Gm-Features: AX0GCFvTtwlzLe3ShBatCkGpgZEQMQYDIp7QZYz6BwjTcXKR31Yiwtz2L-cwk5I
+Message-ID: <CAFTVevUGg-HVfd1EBq3BXazLqTbHwALGknFLfyN-rGZv_0UfRQ@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the cifs tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Steve French <smfrench@gmail.com>, Meetakshi Setiya <msetiya@microsoft.com>, 
+	Steve French <stfrench@microsoft.com>, CIFS <linux-cifs@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 5:22=E2=80=AFPM Piotr Oniszczuk
-<piotr.oniszczuk@gmail.com> wrote:
+Hi Stephen
+
+Thanks for letting me know. I have sent a patch to fix it.
+
+Best
+
+Meetakshi
+
+On Thu, Jun 5, 2025 at 11:35=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
 >
+> Hi all,
 >
+> After merging the cifs tree, today's linux-next build (htmldocs) produced
+> this warning:
 >
-> > Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.com> w=
- dniu 4 cze 2025, o godz. 21:12:
-> >
-> > On Wed, Jun 4, 2025 at 10:38=E2=80=AFPM Nicolas Frattaroli
-> > <nicolas.frattaroli@collabora.com> wrote:
-> >>
-> >>
-> >
-> > Frequencies are fine, but I don't think the more power hungry big CPU
-> > cluster gets any voltage scaling without it. Once I try to load the
-> > system enough that the governor decides to bump the big cluster
-> > frequency up, the regulator stays at 850000 microvolts, causing random
-> > reboots when the whole cluster starts starving. With the patch,
-> > voltage oscillates between 700000-737000 microvolts in idle and jumps
-> > up to 950000 under load, and the system seems stable.
-> >
-> > Here's what I used to monitor the voltage (there must be a better way
-> > to do it, but it works):
-> > sige5 ~ # watch cat `grep -r . /sys/class/regulator/*/name | grep
-> > vdd_cpu_big_s0 | sed -e 's/name.*//'`/microvolts
-> >
-> > And in another terminal:
-> > sige5 ~ # stress-ng -c8
+> Documentation/filesystems/smb/smbdirect.rst: WARNING: document isn't incl=
+uded in any toctree
 >
-> Alexey,
-> I see you are using rk3576 board like me (nanopi-m5)
-> Have you on your board correctly working cpu dvfs?
-> I mean: [1][desired clocks reported by kernel sysfs are in pair with [2[]=
-cur clocks?
-> In my case i see mine cpu lives totally on it=E2=80=99s own with dvfs:
-
-Hi Piotr,
-
-I haven't tried to validate actual running frequencies vs. requested
-frequencies, but subjective performance and power consumption seem to
-be in line with what I expect.
-
-Big thing to note here is that on Rockchip the kernel does not really
-set the CPU frequency directly. It only issues an SCMI request to the
-ATF firmware with the desired target frequency and provides sufficient
-voltage via the supply regulator as defined by the respective OPP.
-
-What the ATF firmware (running on a dedicated MCU completely separate
-from the OS) then does is it takes the desired target frequency,
-matches it to a loop length for the PVTPLL block via an internal
-lookup table, and PVTPLL then determines the stable frequency that
-this particular chip specimen can run at with the provided loop length
-and voltage. This frequency then gets applied to the hardware via the
-CRU - and as you can imagine, it can well differ from what the kernel
-was requesting via SCMI.
-
-> Requested is [1]
-> Running is [2]
-> Measured is [3]
+> Introduced by commit
 >
-> random read 1:
-> Requested CPU4: 408 MHz
-> Requested CPU0: 408 MHz
-> Running CPU4: 1800 MHz
-> Running CPU0: 1416 MHz
-> Measured on HW: 1579.03 MHz
-
-Hmm, have you tried pinning a particular frequency on each of the
-clusters, so that the governor doesn't change it while you are going
-from the point where you read the "requested" frequency to "running"
-and "measured"? Also I think it would be a good idea to "taskset" the
-measuring thread to particular CPU cores - otherwise I'm not sure what
-it shows when the scheduler can bounce the process between cores as it
-pleases it.
-
-> random read 2:
-> Requested CPU4: 1608 MHz
-> Requested CPU0: 408 MHz
-> Running CPU4: 2016 MHz
-> Running CPU0: 1800 MHz
-> Measured on HW: 410.33 MHz
+>   b94d1b9e07ba ("cifs: add documentation for smbdirect setup")
 >
-> random read 3:
-> Requested CPU4: 600 MHz
-> Requested CPU0: 1800 MHz
-> Running CPU4: 816 MHz
-> Running CPU0: 1008 MHz
-> Measured on HW: 2275.07 MHz
->
-> random read 4:
-> Requested CPU4: 1608 MHz
-> Requested CPU0: 1200 MHz
-> Running CPU4: 816 MHz
-> Running CPU0: 816 MHz
-> Measured on HW: 2114.58 MHz
->
-> this is on rk3576
-> on i.e allwinner h618 or rk3588 all looks quite normal - [1] and [2] are =
-equal...
-
-Are these taken on the mainline kernel or Rockchip one? Binary BL31
-from Rockchip or opensource TF-A? With big-core CPUs linked up to
-their supply regulator (as per this patch) or without?
-
-Can't see why the behavior would differ vs. RK3588 though, unless
-there are some bugs somewhere.
-
-Best regards,
-Alexey
+> --
+> Cheers,
+> Stephen Rothwell
