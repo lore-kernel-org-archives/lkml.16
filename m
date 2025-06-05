@@ -1,151 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F66328E17
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 22:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606D428E17;
+	Thu,  5 Jun 2025 22:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749163961; cv=none; b=pW0TfbAfELuhTq40dUDlGUDgy7IP532t2Usfu/ur3WafGVmrixdNXHdEEZdyNfTndU9Hktan5432NfpD6AleeRJ3W16TkZr5YGhfYJT121c74g2fCaIxYAqtIbT0fwD1KBu1/mrPHX8MCaQS7sVqA9cIHhCFyn+BUhVuacWcEC4=
+	t=1749164219; cv=none; b=pwXoh+TOTVfxL/elpkmuetz1cQPbA6SexYY86OW8NYg6tG/QvqHwFFABzOBBw0ajTpB2r4axwmaBWsaVUnMqTwUongjZdPqIHTFe6NJqLCbQq6OmZifS0InJVjgR+y71ltxIJJnlZ2zwAI58OYKuy6+pq4NWZJ7e3/o5PcDcnsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749163961; c=relaxed/simple;
-	bh=hVCG/PNAyR47L2wew1gz+MjkOBF/by+He8JQcUJ+LD8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qqHiT0qeVCWTT/hCgRqF+EYDn74CfD/kwDPONN4XF9mwKYvzujQ9XqWTTuIWIKBNpG4lFadVH6yKoo9EapR6T8UTX6DR7AujPAiDS6oY1OHUywfMsT0ygtJKg8WfKwy4uObJGADmrKmOtVW3mUJ1TTBo1Q2GOaBb/AtuqPU7yck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LMXFIUDW; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749164219; c=relaxed/simple;
+	bh=W9wvLgzBpwRlr4/h5Pqc8uGzskgjGvLoJgQexId1ewo=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YLCqnTxjU/WZ+7CN119mT+/jk4wuxH75wndfgG8I7Cte61B54PpUtA78PC4ydMYFPR4OheWeARtsKM/8oFeK7uueXUuoBTV1i0hJeJSqOtvlZ2Xlkx7uxXjlRytvRjRIte1wsBPHFXBvYVuTRxVFiGQU1bbUEo0sY0p0QGC7aB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RsTV1M3o; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LMXFIUDW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749163960; x=1780699960;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hVCG/PNAyR47L2wew1gz+MjkOBF/by+He8JQcUJ+LD8=;
-  b=LMXFIUDWcdITc66rUwE3QAKt/1hxCMXCRAW4WcqpLtVdBGJ8DwDRYJSF
-   SeM54tRzKvJeDI1zE/Urvc84/H8fQXbJraE6QCeJWs5X1OTc3IJ3zK/mk
-   BMNOIVH9Lh4sPi0VxFJrH5KRg7Oanqxn3Q2MDfiNs9vWzdPURTO9nwCG1
-   A1pAkTBrhOxaz5Jjt2g3FeorCwfqtbMH1GeJdPdRFMnlEv1RTv/bqiFPw
-   kO1i26rhqT6F/ZXOPGvdo5e+hBcbycrcnaz5WnwBjApupfYe57wp3c73o
-   TwR9W0C8tnU9jc9IXhwoCIC/bmdKGXaFMi5LpIdcG0yyd2RZeIbZBOGK7
-   A==;
-X-CSE-ConnectionGUID: gfH2MUDQT9uKQ8IrMwGykw==
-X-CSE-MsgGUID: grwHHjruR3qYY/Nmxauyfg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51448018"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="51448018"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 15:52:39 -0700
-X-CSE-ConnectionGUID: R+UqtUdlQsGpSkoUzszFwQ==
-X-CSE-MsgGUID: cxHUHmgBSR6txsQLjuMVaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="150475768"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 05 Jun 2025 15:52:38 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNJRq-0004Wr-2h;
-	Thu, 05 Jun 2025 22:52:34 +0000
-Date: Fri, 6 Jun 2025 06:51:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Waiman Long <longman@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH 2/3] debugobjects: Show the state of debug_objects_enabled
-Message-ID: <202506060634.mQtyT7cN-lkp@intel.com>
-References: <20250604220926.870760-3-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsTV1M3o"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235e1d4cba0so13091865ad.2;
+        Thu, 05 Jun 2025 15:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749164217; x=1749769017; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W9wvLgzBpwRlr4/h5Pqc8uGzskgjGvLoJgQexId1ewo=;
+        b=RsTV1M3ozDSUsv4nizOG6X5AfKI0rqfXTpRa1Muvh8nL6iPcH6arYPukrxwR6HegL0
+         CeuHaD5kH07OmPs1kznKDOUyaVYFVpxUzrHQPAuTbmWPTpkq2EWvrHozfOcf3yXwHMM1
+         OcNt7/xikbU0n7ly/c5EGRfBAEoC+ltAueBCNJ7Xh5kBWvT/UjKnaTAxDAbezSgikIJF
+         A3lHCcLWtlmOdwncPPuwBcVTd/DE9GUobbjNozrojZBVULDRX29OuO7MWzmR7xCjSVmk
+         +itXwOJsxVvVABRyL23UTgXXmxdD82mtTJDGKo3QaUBGAQ7VFXpZtMqyF/gzkpjGkILN
+         vpuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749164217; x=1749769017;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W9wvLgzBpwRlr4/h5Pqc8uGzskgjGvLoJgQexId1ewo=;
+        b=eRLEud8m6vtJ5L/j6YpBLHL06IvXBDObrpCAs35MFxM2r93eubERiir9cKpChCEI9b
+         fqByEBCamjqqZ1+K8PjAPaFitOMgz8eyaOSSLflF6eTA+cgaEudnhf4ySm3pMYh7MYha
+         jD5qZc/695O5jZQIFC8ZP23cjBIwnTRn/cOxxjXFRJ7Ft4B2W+C9SB8kGFOu7HDXSGRa
+         QcFzFoFFRXsP3iXd4sPocgai113UJnIiE9hy6P4h0lN78+C6qf3mE0qUhMJ/1TA+2+7p
+         4NhF0lFZjR61S76FLLVIPz2evOrwCM5x2SmkiGrDuzI15mJvUTGX2PrE0677EBodpEcH
+         fIVw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2RluOc2i23GbQ14LjTDtRL0hqQlSF+duioj0jIR8lNI/FI6/OhrCWp19jUJkDYg/6V9PRo466DgcNY8yw@vger.kernel.org, AJvYcCUOUZuS3n4K+exFtJFYDKn1oJuulZWzls3AHcMcJallj4nrPyR26YOcbqnZ6OZl54zUbxnZ+Qi/I3ir@vger.kernel.org, AJvYcCUtNubFflFDeVUf8d1b+9gz7LK0+OvO1cG07PrEmOOuPXXjehje0Jy7JMIOmrAOkykSG6mv4UDd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxACv24uxFxZ/jFuoHFSS525J4ZrEzMLCJtl+LZ+88gfZA8mlb
+	lQScJlescIe1lzJyezDDfE850+Ra8/SxTsvvXdBSmbuIO8ygJ71k9g9K
+X-Gm-Gg: ASbGncvWF+d0NYCEZvUzzUtsgzlx+aF4vG3r8fqU70Tj1Esj6f2XDfH0+UMTZtjkRFJ
+	dUpzNiMFQJesY9ctfGKlYxWCPTxU+uvvzqPADXLUGjEPxP+yPM62ZngNgnA8zhQY05e/Ttrwjuu
+	BNx8oF7DOG3hZMI/01DmvfvxHQXgHwzpoP/lthpWtwaNZ2YyTzpYzJ2Wv6cUPnDcbiu8+JgpvPk
+	lshSrH3jhF14j6tmEiUe1CgXZV2VAGjRJ1bxLSfRtyyz2pdVj2XNhqN8bR743vJrzQ4uaQvcTkc
+	dsikkmG/qHoBjH4q7TOdMGcP+p3MlaZFZ3aeekGfxSf1Y3I8Jq0=
+X-Google-Smtp-Source: AGHT+IF7aHWSDBE7OP8NbpbLMzieQT5Htocm4zHVaqcG6HRv4pd99kgqlQnHXj7COrmzwMCnUYQJdQ==
+X-Received: by 2002:a17:902:ccd2:b0:234:d399:f948 with SMTP id d9443c01a7336-23601d973bfmr14933535ad.33.1749164217443;
+        Thu, 05 Jun 2025 15:56:57 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603410b83sm1173335ad.215.2025.06.05.15.56.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 15:56:56 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 0CDCA4222987; Fri, 06 Jun 2025 05:56:53 +0700 (WIB)
+Date: Fri, 6 Jun 2025 05:56:53 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Vishal Chourasia <vishalc@linux.ibm.com>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llong@redhat.com
+Subject: Re: [PATCH v2] Documentation: cgroup: add section explaining
+ controller availability
+Message-ID: <aEIgtdrFbyNf4v85@archie.me>
+References: <20250605145421.193189-2-vishalc@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3nMlU14CJAHOY03i"
 Content-Disposition: inline
-In-Reply-To: <20250604220926.870760-3-longman@redhat.com>
-
-Hi Waiman,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on tip/timers/core]
-[also build test ERROR on akpm-mm/mm-everything tip/core/debugobjects linus/master v6.15 next-20250605]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Waiman-Long/debugobjects-Add-ODEBUG_FLAG_NO_ALLOC-to-disable-memory-allocation/20250605-061211
-base:   tip/timers/core
-patch link:    https://lore.kernel.org/r/20250604220926.870760-3-longman%40redhat.com
-patch subject: [PATCH 2/3] debugobjects: Show the state of debug_objects_enabled
-config: arm-randconfig-002-20250606 (https://download.01.org/0day-ci/archive/20250606/202506060634.mQtyT7cN-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506060634.mQtyT7cN-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506060634.mQtyT7cN-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   lib/debugobjects.c: In function 'check_results':
->> lib/debugobjects.c:1325:17: error: implicit declaration of function 'debug_object_disable'; did you mean 'debug_objects_disable'? [-Werror=implicit-function-declaration]
-    1325 |                 debug_object_disable("selftest");
-         |                 ^~~~~~~~~~~~~~~~~~~~
-         |                 debug_objects_disable
-   cc1: some warnings being treated as errors
+In-Reply-To: <20250605145421.193189-2-vishalc@linux.ibm.com>
 
 
-vim +1325 lib/debugobjects.c
+--3nMlU14CJAHOY03i
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  1288	
-  1289	static int __init
-  1290	check_results(void *addr, enum debug_obj_state state, int fixups, int warnings)
-  1291	{
-  1292		struct debug_bucket *db;
-  1293		struct debug_obj *obj;
-  1294		unsigned long flags;
-  1295		int res = -EINVAL;
-  1296	
-  1297		db = get_bucket((unsigned long) addr);
-  1298	
-  1299		raw_spin_lock_irqsave(&db->lock, flags);
-  1300	
-  1301		obj = lookup_object(addr, db);
-  1302		if (!obj && state != ODEBUG_STATE_NONE) {
-  1303			WARN(1, KERN_ERR "ODEBUG: selftest object not found\n");
-  1304			goto out;
-  1305		}
-  1306		if (obj && obj->state != state) {
-  1307			WARN(1, KERN_ERR "ODEBUG: selftest wrong state: %d != %d\n",
-  1308			       obj->state, state);
-  1309			goto out;
-  1310		}
-  1311		if (fixups != debug_objects_fixups) {
-  1312			WARN(1, KERN_ERR "ODEBUG: selftest fixups failed %d != %d\n",
-  1313			       fixups, debug_objects_fixups);
-  1314			goto out;
-  1315		}
-  1316		if (warnings != debug_objects_warnings) {
-  1317			WARN(1, KERN_ERR "ODEBUG: selftest warnings failed %d != %d\n",
-  1318			       warnings, debug_objects_warnings);
-  1319			goto out;
-  1320		}
-  1321		res = 0;
-  1322	out:
-  1323		raw_spin_unlock_irqrestore(&db->lock, flags);
-  1324		if (res)
-> 1325			debug_object_disable("selftest");
-  1326		return res;
-  1327	}
-  1328	
+On Thu, Jun 05, 2025 at 08:24:22PM +0530, Vishal Chourasia wrote:
+> A new documentation section titled "Availability" has been added to
+> describe the meaning of a controller being available in a cgroup,
+> complementing the existing "Enabling and Disabling" section.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+'Add "Availability" section to Control Group v2 docs. It describes ...'
+
+> +Availablity
+> +~~~~~~~~~~~
+> +
+> +A controller is available in a cgroup when it is supported by the kernel=
+ (i.e.,
+> +compiled in, not disabled and not attached to a v1 hierarchy) and listed=
+ in the
+> +"cgroup.controllers" file. Availability means the controller's interface=
+ files
+> +are exposed in the cgroup=E2=80=99s directory, allowing the distribution=
+ of the target
+> +resource to be observed or controlled within that cgroup.
+> +
+
+The wording LGTM, thanks!
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--3nMlU14CJAHOY03i
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEIgsQAKCRD2uYlJVVFO
+o+xtAP9RbHJTrpVIIXhiUHpiNTItRIIwIZVCzIZXFaOjhTwPwQD/ZQL/DLUTfLqI
+ij2yh516RPu1k7N80NPmapHZ3f+YqgU=
+=WD/J
+-----END PGP SIGNATURE-----
+
+--3nMlU14CJAHOY03i--
