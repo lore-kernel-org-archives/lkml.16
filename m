@@ -1,49 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492FC1FAC4D;
-	Thu,  5 Jun 2025 10:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DCB1F8733
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 10:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749117622; cv=none; b=G95elTSBPRkwFw+H3gCZbxqcRJIk7TCR1oW4TtbvUhzsi7Jgi2SLKrHsWK/is0uhs0zPY112W5CH9Ef3Pugandqps2SGsJI9S5Adr7EnONKzEZF4XitR6EQrdUoSZna5cIyYxpjoMG17hMidFsBOfYnQdrj2+xuP+rgbHuMp2Bs=
+	t=1749117624; cv=none; b=MuZ9/rns7Qf/Teo/AECvJr0f4QkCOA3zOIXhE/Ni8HDb/HsineIFIn1a3o2AUPS7aLnzphdSRG2/bAe1z1LkmuPlhm2yYpztk6ABczFpktUAF7OtHhxaozHOR6NLTu0QhuGs5j/k5syc11ppbPoaUrm+0GtsFjoAAbdorP8zx0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749117622; c=relaxed/simple;
-	bh=5Eav7+G7caZZygl7Od69GSqH2G5p51M5I4/DH9iNkvA=;
+	s=arc-20240116; t=1749117624; c=relaxed/simple;
+	bh=YXujSu5prHyr29Ezh1slQ95QWQAo6Et6QIL3Rapq/TA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KLttqdmCDpweNrGJzaWA16yDDmVQ14bVvMJYAOBoh2ReAQgzxqij5trWz1FfnJrEKK08GnFi+byYTF2B1RtiEl3IFdgpMWPpd1NPv/Y+1p1gZW5osSblQJRb4csM9fNTxAEmSpzCBwrMwwxTaFtlMhwrNmU8f6wTjcM+qB5xwMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGEXQI/E; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EgaB9bkLMeqAZJ1TpZEfzqwuvuMSPWaj+QZtpBOdkUjFmPqQpjY6K5+Jd0aLg3HzEXXDFfwCJnD8OBb+EsOjo/97IP9hPRBLraE5uwCDINBGHRk8w0moWUrpsFUU700/nNHnaSI8uFB4nfx2Lgc1cvFwx6VGJU95q4M/CgguX1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TPSn4nCq; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGEXQI/E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BCC6C4CEE7;
-	Thu,  5 Jun 2025 10:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749117621;
-	bh=5Eav7+G7caZZygl7Od69GSqH2G5p51M5I4/DH9iNkvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CGEXQI/E3ikPG3TMnj3L1o7OQn1gBi8hj6JUx52U/3rlrwN+n7jsg9Iax58rAQVLP
-	 ocQsfyyl0m0VJO+rk+8C4lTmfaa0wMiAs7ZAqrxtbDfhudaGxOKVbAEIH9QqA/ha+5
-	 32ZOCTivQ9iI4ynr0DD6wdYByCfrovJyfu+6tgVWap84kn7sfGQvpIbRoF46CmI4QF
-	 TkDhNr/9Oh/+1LVvxWuIhucjz8Jsr5zZnd+ok+RfUgZox3qBanmRWV/MoTc3Pe/OOc
-	 O/EgOUs5EtI3HavqqB/5Io4BDPcNPZawPoXpJn6lP3IfJ2NHWbZ0OsoUD07k5Pmwy2
-	 vV0uNT6dzLp0w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uN7OU-000000000Zb-1mJ1;
-	Thu, 05 Jun 2025 12:00:19 +0200
-Date: Thu, 5 Jun 2025 12:00:18 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Miaoqing Pan <quic_miaoqing@quicinc.com>,
-	Remi Pommarel <repk@triplefau.lt>, linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] wifi: ath12k: fix dest ring-buffer corruption
-Message-ID: <aEFqsghEuJc3xxlU@hovoldconsulting.com>
-References: <20250604144509.28374-1-johan+linaro@kernel.org>
- <20250604144509.28374-2-johan+linaro@kernel.org>
- <6f3eb9fa-617e-4434-8fc4-33dd92c4bdd2@quicinc.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TPSn4nCq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=5gaT7m1y3gHJH3Wh7s86xKh8A4+RoMUe3RY8wTdWPP0=; b=TPSn4nCqcq6VTujRF5jDE6WIMG
+	gEvhkyJv2MJRyPHXaU7ct6kNpg+MlEGjjcvbQ45SXbo1yEPIrjLNMQXuLGquJpfJ1azNBjl8zQW1g
+	55rXHW024aTbJv9miWVl0ASkYXagnOMK98mvggMWgM2TkL/XwoZu5oy4+XHpH/HjnQ2xWkTAh8Qp4
+	ikpJqkHdREQSLWs7gGfxArKeb0ansCNPq0AtBDi5MGQ31psT3MW1fWX6/Buzi50v6OfDpANe+PxmE
+	Ik/V4v2JWfEXZiGXjBPB+3GBRU4sccJlTkEjHzPrtdH0lfwC2z9bCtSNMk6akPevlLjENL5sdwTHr
+	+xtBK5Qw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uN7OM-000000018qX-3FjU;
+	Thu, 05 Jun 2025 10:00:11 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B48FF3005AF; Thu,  5 Jun 2025 12:00:09 +0200 (CEST)
+Date: Thu, 5 Jun 2025 12:00:09 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kuyo Chang <kuyo.chang@mediatek.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 1/1] sched/core: Fix migrate_swap() vs. hotplug
+Message-ID: <20250605100009.GO39944@noisy.programming.kicks-ass.net>
+References: <20250602072242.1839605-1-kuyo.chang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,87 +56,155 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6f3eb9fa-617e-4434-8fc4-33dd92c4bdd2@quicinc.com>
+In-Reply-To: <20250602072242.1839605-1-kuyo.chang@mediatek.com>
 
-On Thu, Jun 05, 2025 at 04:41:32PM +0800, Baochen Qiang wrote:
-> On 6/4/2025 10:45 PM, Johan Hovold wrote:
-> > Add the missing memory barrier to make sure that destination ring
-> > descriptors are read after the head pointers to avoid using stale data
-> > on weakly ordered architectures like aarch64.
-> > 
-> > The barrier is added to the ath12k_hal_srng_access_begin() helper for
-> > symmetry with follow-on fixes for source ring buffer corruption which
-> > will add barriers to ath12k_hal_srng_access_end().
-> > 
-> > Note that this may fix the empty descriptor issue recently worked around
-> > by commit 51ad34a47e9f ("wifi: ath12k: Add drop descriptor handling for
-> > monitor ring").
+On Mon, Jun 02, 2025 at 03:22:13PM +0800, Kuyo Chang wrote:
+
+How easy can you reproduce this?
+
+> So, the potential race scenario is:
 > 
-> why? I would expect drunk cookies are valid in case of HAL_MON_DEST_INFO0_EMPTY_DESC,
-> rather than anything caused by reordering.
-
-Based on a quick look it seemed like this could possibly fall in the
-same category as some of the other workarounds I've spotted while
-looking into these ordering issues (e.g. f9fff67d2d7c ("wifi: ath11k:
-Fix SKB corruption in REO destination ring")).
-
-If you say this one is clearly unrelated, I'll drop the comment.
-
-> > @@ -343,9 +343,6 @@ static int ath12k_ce_completed_recv_next(struct ath12k_ce_pipe *pipe,
-> >  		goto err;
-> >  	}
-> >  
-> > -	/* Make sure descriptor is read after the head pointer. */
-> > -	dma_rmb();
-> > -
-> >  	*nbytes = ath12k_hal_ce_dst_status_get_length(desc);
-> >  
-> >  	*skb = pipe->dest_ring->skb[sw_index];
-> > diff --git a/drivers/net/wireless/ath/ath12k/hal.c b/drivers/net/wireless/ath/ath12k/hal.c
-> > index 91d5126ca149..9eea13ed5565 100644
-> > --- a/drivers/net/wireless/ath/ath12k/hal.c
-> > +++ b/drivers/net/wireless/ath/ath12k/hal.c
-> > @@ -2126,13 +2126,24 @@ void *ath12k_hal_srng_src_get_next_reaped(struct ath12k_base *ab,
-> >  
-> >  void ath12k_hal_srng_access_begin(struct ath12k_base *ab, struct hal_srng *srng)
-> >  {
-> > +	u32 hp;
-> > +
-> >  	lockdep_assert_held(&srng->lock);
-> >  
-> > -	if (srng->ring_dir == HAL_SRNG_DIR_SRC)
-> > +	if (srng->ring_dir == HAL_SRNG_DIR_SRC) {
-> >  		srng->u.src_ring.cached_tp =
-> >  			*(volatile u32 *)srng->u.src_ring.tp_addr;
-> > -	else
-> > -		srng->u.dst_ring.cached_hp = READ_ONCE(*srng->u.dst_ring.hp_addr);
-> > +	} else {
-> > +		hp = READ_ONCE(*srng->u.dst_ring.hp_addr);
-> > +
-> > +		if (hp != srng->u.dst_ring.cached_hp) {
+> 	CPU0							CPU1
+> 	// doing migrate_swap(cpu0/cpu1)
+> 	stop_two_cpus()
+> 							  ...
+> 							 // doing _cpu_down()
+> 							      sched_cpu_deactivate()
+> 								set_cpu_active(cpu, false);
+> 								balance_push_set(cpu, true);
+> 	cpu_stop_queue_two_works
+> 	    __cpu_stop_queue_work(stopper1,...);
+> 	    __cpu_stop_queue_work(stopper2,..);
+> 	stop_cpus_in_progress -> true
+> 		preempt_enable();
+> 								...
+> 							1st balance_push
+> 							stop_one_cpu_nowait
+> 							cpu_stop_queue_work
+> 							__cpu_stop_queue_work
+> 							list_add_tail  -> 1st add push_work
+> 							wake_up_q(&wakeq);  -> "wakeq is empty.
+> 										This implies that the stopper is at wakeq@migrate_swap."
+> 	preempt_disable
+> 	wake_up_q(&wakeq);
+> 	        wake_up_process // wakeup migrate/0
+> 		    try_to_wake_up
+> 		        ttwu_queue
+> 		            ttwu_queue_cond ->meet below case
+> 		                if (cpu == smp_processor_id())
+> 			         return false;
+> 			ttwu_do_activate
+> 			//migrate/0 wakeup done
+> 		wake_up_process // wakeup migrate/1
+> 	           try_to_wake_up
+> 		    ttwu_queue
+> 			ttwu_queue_cond
+> 		        ttwu_queue_wakelist
+> 			__ttwu_queue_wakelist
+> 			__smp_call_single_queue
+> 	preempt_enable();
 > 
-> This consumes additional CPU cycles in hot path, which is a concern to me.
+> 							2nd balance_push
+> 							stop_one_cpu_nowait
+> 							cpu_stop_queue_work
+> 							__cpu_stop_queue_work
+> 							list_add_tail  -> 2nd add push_work, so the double list add is detected
+> 							...
+> 							...
+> 							cpu1 get ipi, do sched_ttwu_pending, wakeup migrate/1
 > 
-> Based on that, I prefer the v1 implementation.
 
-The conditional avoids a memory barrier in case the ring is empty, so
-for all callers but ath12k_ce_completed_recv_next() it's an improvement
-over v1 in that sense.
+So this balance_push() is part of schedule(), and schedule() is supposed
+to switch to stopper task, but because of this race condition, stopper
+task is stuck in WAKING state and not actually visible to be picked.
 
-I could make the barrier unconditional, which will only add one barrier
-to ath12k_ce_completed_recv_next() in case the ring is empty compared to
-v1. Perhaps that's a good compromise if you worry about the extra
-comparison?
+Therefore CPU1 can do another schedule() and end up doing another
+balance_push() even though the last one hasn't been done yet.
 
-I very much want to avoid having both explicit barriers in the caller
-and barriers in the hal end() helper. I think it should be either or.
+So how about we do something like this? Does this help?
+
+---
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 62b3416f5e43..c37b80bd53e6 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3939,6 +3939,11 @@ static inline bool ttwu_queue_cond(struct task_struct *p, int cpu)
+ 	if (!scx_allow_ttwu_queue(p))
+ 		return false;
  
-> > +			srng->u.dst_ring.cached_hp = hp;
-> > +			/* Make sure descriptor is read after the head
-> > +			 * pointer.
-> > +			 */
-> > +			dma_rmb();
-> > +		}
-> > +	}
-
-Johan
++#ifdef CONFIG_SMP
++	if (p->sched_class == &stop_sched_class)
++		return false;
++#endif
++
+ 	/*
+ 	 * Do not complicate things with the async wake_list while the CPU is
+ 	 * in hotplug state.
+diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+index 5d2d0562115b..8855a50cc216 100644
+--- a/kernel/stop_machine.c
++++ b/kernel/stop_machine.c
+@@ -82,18 +82,15 @@ static void cpu_stop_signal_done(struct cpu_stop_done *done)
+ }
+ 
+ static void __cpu_stop_queue_work(struct cpu_stopper *stopper,
+-					struct cpu_stop_work *work,
+-					struct wake_q_head *wakeq)
++				  struct cpu_stop_work *work)
+ {
+ 	list_add_tail(&work->list, &stopper->works);
+-	wake_q_add(wakeq, stopper->thread);
+ }
+ 
+ /* queue @work to @stopper.  if offline, @work is completed immediately */
+ static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
+ {
+ 	struct cpu_stopper *stopper = &per_cpu(cpu_stopper, cpu);
+-	DEFINE_WAKE_Q(wakeq);
+ 	unsigned long flags;
+ 	bool enabled;
+ 
+@@ -101,12 +98,12 @@ static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
+ 	raw_spin_lock_irqsave(&stopper->lock, flags);
+ 	enabled = stopper->enabled;
+ 	if (enabled)
+-		__cpu_stop_queue_work(stopper, work, &wakeq);
++		__cpu_stop_queue_work(stopper, work);
+ 	else if (work->done)
+ 		cpu_stop_signal_done(work->done);
+ 	raw_spin_unlock_irqrestore(&stopper->lock, flags);
+ 
+-	wake_up_q(&wakeq);
++	wake_up_process(stopper->thread);
+ 	preempt_enable();
+ 
+ 	return enabled;
+@@ -264,7 +261,6 @@ static int cpu_stop_queue_two_works(int cpu1, struct cpu_stop_work *work1,
+ {
+ 	struct cpu_stopper *stopper1 = per_cpu_ptr(&cpu_stopper, cpu1);
+ 	struct cpu_stopper *stopper2 = per_cpu_ptr(&cpu_stopper, cpu2);
+-	DEFINE_WAKE_Q(wakeq);
+ 	int err;
+ 
+ retry:
+@@ -300,8 +296,8 @@ static int cpu_stop_queue_two_works(int cpu1, struct cpu_stop_work *work1,
+ 	}
+ 
+ 	err = 0;
+-	__cpu_stop_queue_work(stopper1, work1, &wakeq);
+-	__cpu_stop_queue_work(stopper2, work2, &wakeq);
++	__cpu_stop_queue_work(stopper1, work1);
++	__cpu_stop_queue_work(stopper2, work2);
+ 
+ unlock:
+ 	raw_spin_unlock(&stopper2->lock);
+@@ -316,7 +312,8 @@ static int cpu_stop_queue_two_works(int cpu1, struct cpu_stop_work *work1,
+ 		goto retry;
+ 	}
+ 
+-	wake_up_q(&wakeq);
++	wake_up_process(stopper1->thread);
++	wake_up_process(stopper2->thread);
+ 	preempt_enable();
+ 
+ 	return err;
