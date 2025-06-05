@@ -1,156 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9750323F40F;
-	Thu,  5 Jun 2025 13:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4A523F439;
+	Thu,  5 Jun 2025 13:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749130094; cv=none; b=q9395dCw+Hbe+wS4tx1d3+6/q4aJOVw/Buuvzpechmu5k3VKsGyVXu/gvBTynf6PJb4e4rD069Ym2qbKMF1Qa6u9AZNAF2Z2H+IwlI/f7olCXHyPGM3PU0e31oiOcVZUBrs0dOoOibq3dFppkRGSS8F/axu/M7iSmMJGL06g2+s=
+	t=1749130097; cv=none; b=SQhqEcUJWYSlacLhlYoUE663UGFMJ8bu34z1UuFnxD/6oAh4Yldh3xQPzdDLfy97Bqrnb6fd/vHv7D1Qt/QH1n8TB2JsgStmfjB9D+4NgfZNcbhDlCCjEfJdpg0e+dQkxpfbyMS4Q0ZleYtZQOjw9XXyfJmtCp/wCLLM7peHiUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749130094; c=relaxed/simple;
-	bh=EqbqFyzPoVlsUd8OJ/wRieFevPUGJYsc6E0swOY0ulg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iEQVEhEKGm85osUUgb3g3J7sDaBCpU2m4VY4jNAeqOwEmNaZ4dFbY8axQB4gaBko5Ft6c6RE2fn6KL+ZInFcqGhDeEs8Rly5txskhQgIbDrJbstaL0ukJl3I0P2+EWi0Sy4ZCYXgsjwFgmFvWAlMU/JG+CYzbua8ZsgOopzx2pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lS8gNIbp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lS8gNIbp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BA7FC4CEE7;
-	Thu,  5 Jun 2025 13:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749130094;
-	bh=EqbqFyzPoVlsUd8OJ/wRieFevPUGJYsc6E0swOY0ulg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lS8gNIbpGnEvVFK1uPIIujv4/As6yrLMS+yVvQ/nGlx1PZmdaxdbg+i3qv/X+3u1O
-	 +cFhTD5VJse0UX8LezZyVK1qglXkCxA37NSfPnreswKMf/VoFgh9b97wvO1c+qVg9n
-	 I8Y14EnBpBsZ4D5abOQLkgfURvhbF2DNN9aY9Kn/+X3t4LB1F0IfjnnN/DnnixhjoU
-	 zjVq5L5cyvHTXTMap/tUQ2Ls2s8anh/Jl+fqqaDe1S3AskaeSGEYi+L6GOHHCiFJHb
-	 MHVlLjJKhgZAsnJKBypPTqZgVHRdAMlCPIxbGI9/PQsbK90UPjqj/94BKYRVvtlVzJ
-	 AbKjenRI6rxQQ==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCHv3 22/22] man2: Add uprobe syscall page
-Date: Thu,  5 Jun 2025 15:23:49 +0200
-Message-ID: <20250605132350.1488129-23-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250605132350.1488129-1-jolsa@kernel.org>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
+	s=arc-20240116; t=1749130097; c=relaxed/simple;
+	bh=0VaaYgemooqHftsLY5hq5p91XL19Z/Eis8kNzUp04wg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=m2t0+w1hXTlEUpuoGI0FzN5xgkvPF0OrfJHL0vch9bMppDLCzNvlCa5Z4mIGxXQZxqeDA2TaGtK3Me7/daV0SGgxIPjiW+ETC9sTzQZ60KY9/EA9Ij8Q/DyTqKnWe+Z5jdyTsMVa+A7+x9fl3UiftHT8zQ0GzOXdrY1+hitmfwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
+ (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Jun
+ 2025 15:28:02 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
+ 15.01.2507.039; Thu, 5 Jun 2025 15:28:02 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>, Pankaj Gupta
+	<pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+	<s.hauer@pengutronix.de>
+CC: Frank Li <Frank.li@nxp.com>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, John Ernberg <john.ernberg@actia.se>,
+	Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v4 2/4] crypto: caam - Support iMX8QXP and variants thereof
+Thread-Topic: [PATCH v4 2/4] crypto: caam - Support iMX8QXP and variants
+ thereof
+Thread-Index: AQHb1h2pah806/NWaU+ZkYPXGVG3qQ==
+Date: Thu, 5 Jun 2025 13:28:02 +0000
+Message-ID: <20250605132754.1771368-3-john.ernberg@actia.se>
+References: <20250605132754.1771368-1-john.ernberg@actia.se>
+In-Reply-To: <20250605132754.1771368-1-john.ernberg@actia.se>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.49.0
+x-esetresult: clean, is OK
+x-esetid: 37303A2956B1445363726A
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Changing uretprobe syscall man page to be shared with new
-uprobe syscall man page.
+The iMX8QXP (and variants such as the QX, DX, DXP) all identify as iMX8QXP.
 
-Cc: Alejandro Colomar <alx@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+They have the exact same restrictions as the supported iMX8QM introduced
+at commit 61bb8db6f682 ("crypto: caam - Add support for i.MX8QM")
+
+Loosen the check a little bit with a wildcard to also match the iMX8QXP
+and its variants.
+
+Signed-off-by: John Ernberg <john.ernberg@actia.se>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+
 ---
- man/man2/uprobe.2    |  1 +
- man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
- 2 files changed, 25 insertions(+), 12 deletions(-)
- create mode 100644 man/man2/uprobe.2
 
-diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
-new file mode 100644
-index 000000000000..ea5ccf901591
---- /dev/null
-+++ b/man/man2/uprobe.2
-@@ -0,0 +1 @@
-+.so man2/uretprobe.2
-diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
-index bbbfb0c59335..df0e5d92e5ed 100644
---- a/man/man2/uretprobe.2
-+++ b/man/man2/uretprobe.2
-@@ -2,22 +2,28 @@
- .\"
- .\" SPDX-License-Identifier: Linux-man-pages-copyleft
- .\"
--.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.TH uprobe 2 (date) "Linux man-pages (unreleased)"
- .SH NAME
-+uprobe,
- uretprobe
- \-
--execute pending return uprobes
-+execute pending entry or return uprobes
- .SH SYNOPSIS
- .nf
-+.B int uprobe(void);
- .B int uretprobe(void);
- .fi
- .SH DESCRIPTION
-+.BR uprobe ()
-+is an alternative to breakpoint instructions
-+for triggering entry uprobe consumers.
-+.P
- .BR uretprobe ()
- is an alternative to breakpoint instructions
- for triggering return uprobe consumers.
- .P
- Calls to
--.BR uretprobe ()
-+these system calls
- are only made from the user-space trampoline provided by the kernel.
- Calls from any other place result in a
- .BR SIGILL .
-@@ -26,22 +32,28 @@ The return value is architecture-specific.
- .SH ERRORS
- .TP
- .B SIGILL
--.BR uretprobe ()
--was called by a user-space program.
-+These system calls
-+were called by a user-space program.
- .SH VERSIONS
- The behavior varies across systems.
- .SH STANDARDS
- None.
- .SH HISTORY
-+.TP
-+.BR uprobe ()
-+TBD
-+.TP
-+.BR uretprobe ()
- Linux 6.11.
- .P
--.BR uretprobe ()
--was initially introduced for the x86_64 architecture
--where it was shown to be faster than breakpoint traps.
--It might be extended to other architectures.
-+These system calls
-+were initially introduced for the x86_64 architecture
-+where they were shown to be faster than breakpoint traps.
-+They might be extended to other architectures.
- .SH CAVEATS
--.BR uretprobe ()
--exists only to allow the invocation of return uprobe consumers.
--It should
-+These system calls
-+exist only to allow the invocation of
-+entry or return uprobe consumers.
-+They should
- .B never
- be called directly.
--- 
+v4:
+ - no changes
+
+v3:
+ - no changes
+
+v2:
+ - Collect review tag
+---
+ drivers/crypto/caam/ctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 766c447c9cfb..ce7b99019537 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -573,7 +573,7 @@ static const struct soc_device_attribute caam_imx_soc_t=
+able[] =3D {
+ 	{ .soc_id =3D "i.MX7*",  .data =3D &caam_imx7_data },
+ 	{ .soc_id =3D "i.MX8M*", .data =3D &caam_imx7_data },
+ 	{ .soc_id =3D "i.MX8ULP", .data =3D &caam_imx8ulp_data },
+-	{ .soc_id =3D "i.MX8QM", .data =3D &caam_imx8ulp_data },
++	{ .soc_id =3D "i.MX8Q*", .data =3D &caam_imx8ulp_data },
+ 	{ .soc_id =3D "VF*",     .data =3D &caam_vf610_data },
+ 	{ .family =3D "Freescale i.MX" },
+ 	{ /* sentinel */ }
+--=20
 2.49.0
-
