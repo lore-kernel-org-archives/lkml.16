@@ -1,148 +1,133 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2034187332;
-	Thu,  5 Jun 2025 13:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E68A272E41
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749131333; cv=none; b=kucnxS5YifupmhnLVVCqrCaZlWwBXYM79gMrO1Crftfa520e7Qjtx//0MrluGijsSxlebeAm+HnNEv+wYKJFCxdsLNIn9tKiWu5o8E/AvV9KIXvMMoOry5gWBkdFpooSJWnrQFXTSBEtJtrBtd9QhsAitcde6E9/oMkuEfCV5F8=
+	t=1749131458; cv=none; b=vCoyOxrdD8JKDuS5sjcCVSnBvIEjabe7E2ja3usPqaKtecVyHwoVc2MqsGeBpDCkzpNrgvVocd9N3DX3G27u9aVO+y2tft1N0CcQHkovzS6/ykQ96PxJBKl53YoOSSzkuXzehP3jjBi2yUITfI4B6VumdiKl0HxGhz/+pnoyCGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749131333; c=relaxed/simple;
-	bh=PQwCtTHpfjblBY1wgPoU6gycETBaSsI0rdsuy5i175U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=huQ6MHT2suWNWwar1kOhVokAxDGqJbLyCiWCQqFUIMFxuW6Pb6uWCEL0QhjHsm8sTx043T/11+uuyFCp7OWMAALEYXogxZ4ca+waQ54IeaFsnMU/O+ymuzswqzLL3TFW567xyPubRFKKJH7dW7s4X37LRVBrz2CoW8B+xrZh+OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4QOqj9mB; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1749131458; c=relaxed/simple;
+	bh=pGhX/wVZN0RGvBVwSNXI+HlZVCiN3e9tQXYEg1OIFho=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j6JKbGG8hJGv5WnwcjGcm6R0W1ECA9eU8wvFzENlSrBFepOzEVtTo/CFlGD6Y/llohJfSOV7NFtsw1C6NHX3AfUIOXRvs3SD6OJ9SOVzEPhvzfOOxtV1c4gYYRZvV595f9XjYOacdPYeUcClSNb8vjHtRxk6TUyCcIIDGvtmJts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LxqEvHXJ; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4QOqj9mB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=Avs8RreK+zR7HP1QXRMqbMIL8H/eJs96poV9Y6KSBt8=; b=4Q
-	Oqj9mBciCJWKhvwI8WQ7R3rG9kkXjYiEwi3NywHjU5tUpdrTY+H1J79+vA3gnVJR5s+Z8W0YnnoE/
-	qcXxx+UCq5dLyNQzwGyfFot7sSGg4QCcx6Zdi40E6j7KH7FObEBudB6+6bJcI63NRMQqIeydWMU/n
-	sIwBz7Bis/Z1ZrQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uNAxR-00Em9A-8k; Thu, 05 Jun 2025 15:48:37 +0200
-Date: Thu, 5 Jun 2025 15:48:37 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-Message-ID: <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
- <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
- <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
- <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
- <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
- <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LxqEvHXJ"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso2016267a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749131455; x=1749736255; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ggZCkgQEfMCBTbPPekOLvTIApHTIQLiYr/IDAMWkO24=;
+        b=LxqEvHXJLYk18bGojUrSLXq17kg7fltNrkO3UaA1AFcH2GbiI1eui22s/l6ekjeMX8
+         U0qiCZZ6Ay6LrYnyuJ18iuQIjZiF1vEGuBGankf8vkdBZBk7qTNO247haDL0jwUL3eHP
+         XwHc5Vmw1tP5pTDCkmXFqM1n6FgPz7L3mZ0K9Ml001YWaGW2J7ZvrkwCPV0nkoWv93Vl
+         y5sDrPL27oxg/hg48BoYip8H+7oMpFWmjev4Sy/HjqKfVSH1VXZel+0/77VX3/KsMhzm
+         45eBu4xreuHYW5V4Ondzg2e32GjHi4AN+GfEpP2z02zBOwvGxWGrwegzkPz6tvlSNwek
+         KjgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749131455; x=1749736255;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ggZCkgQEfMCBTbPPekOLvTIApHTIQLiYr/IDAMWkO24=;
+        b=JSFuJaxsB3NoDoWHQTEB7ANgc2QL1EBuu50vnCBOm7hIJ1zUNpvYkXpRUnxS2vRIa7
+         +tPQg9bYRKUiAYZ6b260nIVkXmzL1znj6Ej+q7O89E3OJ2vqfGbsWEtIur8VyKeRBNqg
+         an4RIMwrkdwsmpwbBm0jEfs8vPCN2Y98sbbYqA235NV3sITyo9MwgeQC6flNpXdNXCZ4
+         P13VBn9i/LvIlbwF+3SDnB7JehhZeLvBCvii2/W7eWjmHLArJ6coMvfz+CVBR5rFUj9L
+         PY+dBCoD8lCdnK7GxJhD0OGwBwU88FVVwO2g+2blUtyt+18w2Etpw6kKF6IBxSdIsYdI
+         eJAA==
+X-Forwarded-Encrypted: i=1; AJvYcCXFpKtdI/p7bUl7+R6WFHc5sppH6e38DcA1PpGQ4Ln/+sP6lcnZCNZfAk++pnuMaC/UOOctddMhVx9zuVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGbVf7rESbJS+6vQfl10jQf6BQnxLWpW4ZJdNp/68gFtEww4gS
+	nHocc1yXflbQngcF7R2ZHnJVw+NbGmAx5pBq8nRxeNOFXA6n/+Mdl+JpSfIxyZ3ZryY=
+X-Gm-Gg: ASbGncv5ttGtZjgcEYx50xQarzTpVwVxn3PidwvgGnP92j82//C4pWSuRVf6mSFWlWC
+	e6XyJ58HX3QxF4MjUA4JbtBjb33vSeWw1cWY4Trp9Lkjz81bldfLblk1oOOBrKee0Nw+moB6Y9L
+	ZC1wlp3MiBgzTVukxIH7a+9ISqbO/itU7FBEfnckY5pPaXc5TDWVIVQpK6DYdUPJRj3ZMmITaDn
+	T8UoYp4vviyr4Su1mRdV21NUe4LqFZwpMpCRouO6ZQr8iE3KCRusZUgZUZdAXcUlmSbdqP0Eigi
+	9NK3DkpgaLTizz0hue3kCrEmxh5edx0igl1HGFzDYdc+pRxbIxgJ2DnR+bc1EF3z9qZvOHlIlDF
+	ZYnnopqwk4nEz7PBR7de5uFP2NC8M6pQ2JzDCXpm8VmQ=
+X-Google-Smtp-Source: AGHT+IGsZK01GTgeXRGvrF2f+PIjoQHuluhsLAHTkeb0wTJPNILx+jwsb/VHsmQ9utQ5doDtE/qnrQ==
+X-Received: by 2002:a17:906:7951:b0:adb:41b1:feca with SMTP id a640c23a62f3a-addf8ff443cmr600103066b.61.1749131454652;
+        Thu, 05 Jun 2025 06:50:54 -0700 (PDT)
+Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82e760sm1275872866b.52.2025.06.05.06.50.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 06:50:54 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 5 Jun 2025 15:52:31 +0200
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	linux-clk@vger.kernel.org
+Subject: Re: linux-next: Tree for Jun 3 (clk/clk-rp1.c)
+Message-ID: <aEGhHy7qPyIjG5Xp@apocalypse>
+References: <20250603170058.5e1e1058@canb.auug.org.au>
+ <cee929b0-8b09-4e6b-95c1-c4067a8c389d@infradead.org>
+ <6e88587d-f426-4841-b370-b46917822212@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
+In-Reply-To: <6e88587d-f426-4841-b370-b46917822212@broadcom.com>
 
-On Thu, Jun 05, 2025 at 06:51:43PM +0800, Icenowy Zheng wrote:
-> 在 2025-06-05星期四的 10:41 +0100，Russell King (Oracle)写道：
-> > On Thu, Jun 05, 2025 at 05:06:43PM +0800, Icenowy Zheng wrote:
-> > > In addition, analyzing existing Ethernet drivers, I found two
-> > > drivers
-> > > with contradition: stmicro/stmmac/dwmac-qcom-ethqos.c and
-> > > ti/icssg/icssg_prueth.c .
+On 20:06 Wed 04 Jun     , Florian Fainelli wrote:
+> 
+> 
+> On 6/3/2025 10:01 AM, Randy Dunlap wrote:
+> > 
+> > 
+> > On 6/3/25 12:00 AM, Stephen Rothwell wrote:
+> > > Hi all,
 > > > 
-> > > The QCOM ETHQOS driver enables the MAC's TX delay if the phy_mode
-> > > is
-> > > rgmii or rgmii-rxid, and the PRU ETH driver, which works on some
-> > > MAC
-> > > with hardcoded TX delay, rejects rgmii and rgmii-rxid, and patches
-> > > rgmii-id or rgmii-txid to remove the txid part.
+> > > Please do not add any material destined for v6.17 to you rlinux-next
+> > > included branches until after v6.16-rc1 has been released.
+> > > 
+> > > Changes since 20250530:
+> > > 
 > > 
-> > No, this is wrong.
+> > on i386:
 > > 
-> > First, it does not reject any RGMII mode. See qcom_ethqos_probe() and
-> > the switch() in there. All four RGMII modes are accepted.
+> > ld: drivers/clk/clk-rp1.o: in function `rp1_pll_divider_set_rate':
+> > clk-rp1.c:(.text+0xba1): undefined reference to `__udivdi3'
+> > 
+> > caused by
+> > 	/* must sleep 10 pll vco cycles */
+> > 	ndelay(10ULL * div * NSEC_PER_SEC / parent_rate);
+> > 
+> > 
 > 
-> Well my sentence have its subject switched here. I mean the TI PRU ETH
-> driver is rejecting modes.
+> Andrea, do you mind fixing this build error for a 32-bit kernel? Thanks!
 
-Which is theoretically fine. I've not looked at this driver in
-particular, but there are some MACs were you cannot disable the delay.
-The MAC always imposes 2ns delay. That would mean a PCB which also has
-extra long clock lines is simply FUBAR, cannot work, and 'rgmii' is
-invalid, so reject it.
+Sorry for the delay, this should fix it:
 
-> Well I am not sure, considering two examples I raised here (please note
-> I am comparing QCOM ETHQOS and TI PRUETH two drivers, they have
-> contrary handling of RGMII modes, and one matches the old binding
-> document, one matches the new one).
+@@ -754,7 +769,7 @@ static int rp1_pll_divider_set_rate(struct clk_hw *hw,
+        clockman_write(clockman, data->ctrl_reg, sec);
+ 
+        /* must sleep 10 pll vco cycles */
+-       ndelay(10ULL * div * NSEC_PER_SEC / parent_rate);
++       ndelay(div64_ul(10ULL * div * NSEC_PER_SEC, parent_rate));
+ 
+        sec &= ~PLL_SEC_RST;
+        clockman_write(clockman, data->ctrl_reg, sec);
 
-Nope, i fully agree with Russell, the binding has not changed, just the
-words to explain the binding.
+should I send a new patch with this fix only (against linux-next or stblinux/next?)
+or Florian is it better if you make the change in your next branch directly?
 
-Just for a minute, consider your interpretation of the old text is
-wrong. Read the old text again and again, and see if you can find an
-interpretation which is the same as the new text. If you do:
+Many thanks,
+Andrea
 
-* It proves our point that describing what this means is hard, and
-  developers will get it wrong.
-
-* There is an interpretation of both the old and new where nothing
-  changed.
-
-* You have to be careful looking at drivers, because some percent of
-  developers also interpreted it wrongly, and have broken
-  implementations as a result.  You cannot say the binding means X,
-  not Y, because there is a driver using meaning X.
-
-My hope with the new text is that it focuses on hardware, which is
-what DT is about. You can look at the schematic, see if there is extra
-long clock lines or not, and then decided on 'rgmii-id' if there are
-not, and 'rgmii' is there are. The rest then follows from that.
-
-And if you look at the questions i've been asking for the last year or
-more, i always start with, "Does the PCB have extra long clock
-lines?".
-
-> > The RGMII modes have been documented in
-> > Documentation/networking/phy.rst
-> > (Documentation/networking/phy.txt predating) since:
+> -- 
+> Florian
 > 
-> I checked the document here, and it seems that it's against the changed
-> binding document (it matches the original one):
-> 
-> The phy.rst document says:
-> ```
-> * PHY_INTERFACE_MODE_RGMII: the PHY is not responsible for inserting
-> any
->   internal delay by itself, it assumes that either the Ethernet MAC (if
-> capable)
->   or the PCB traces insert the correct 1.5-2ns delay
-> ```
-> 
-> The changed binding document says:
-
-You are not reading it carefully enough. The binding describes
-hardware, the board. phy.rst describes the phylib interface. They are
-different.
-
-	Andrew
