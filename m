@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F39280012
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 23:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA81280330
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 23:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749166792; cv=none; b=rKPkRyeQ/JQPdu6xYFGTO+/WOwAZP/011bJpQHtb4oRUPP5TBCLh3xUnHSYEP/p74DyUL8owg7WHUE5WBlJXfOi9/XfgKAJBYatawnsFMOFxc8Q7FAWt9Qo+RDeQ7Ewkc5dkURi7zNokMJrlNLO+vb9X3OYq5mC9sU3jkhulWP8=
+	t=1749166796; cv=none; b=Lu3oFJwIET4UmoaLxaXR0OiE1OY7FSTzrDEc5mfZ1YAkVOZKaUOhP8yLma30G2+KTXLlQObC14IHedjb5jG74pLkUU3CAGBgRanNn1ugAyqK5vn9/4a75NzaV0ZQKeC5gGWuWDrMCjQzwFAPLOsvtUFCCvl80S+UkFnsvntXxLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749166792; c=relaxed/simple;
-	bh=lv+bM4moTnKOGlGoG2cAgW1utmnJXzA7idT/X6DTndA=;
+	s=arc-20240116; t=1749166796; c=relaxed/simple;
+	bh=b5qIz6P3lrcv3sGS7KxAxKzdqooPdqfn8oztpbwmp10=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=le9if4P6GvmelbiXlPmLvrU/+bn8JPr0Ji4BdgGNxG+1kBHH0ohIbo7NFkyhvBRIB/gQJkaXpqNGQ7QXKRPJ5f1rBZ3IRec0XpJ5p4oHmP2iRCRVYFlZDDTOZ0CzJzMujhXdoaXtKxVgM09NLrZMr7NyY0Tlmz0d6VQbyLnP4zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YrClmg8J; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=u9ZqoBAIsD2ZhqHAkoUVwI4BvtQcBxOSMkyQtnnh9fPQULaMRN4NL8GofnyvngctAOxxVSWHmi90mkykcg+6yNaW3yw3Qy39ssAvbaKrvV+EKWlkEd86++9/iJReTcIwtozw1dNHuBxivFWz1u5V/nAy0BgyJq2pFwFYtrVoh1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KoYkv7G3; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YrClmg8J"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747dd44048cso1337060b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 16:39:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KoYkv7G3"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a39fa0765so2440123a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 16:39:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749166790; x=1749771590; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749166794; x=1749771594; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=slKzUD48tkq9i10Iz9b2HZco4LcIFVLTatkKbkE7Sdg=;
-        b=YrClmg8JqWjYCnALpEsLRi8oJIcbNNxgL8P5wC6xTUrpxJpGlpe25JDnRshnKUpoKJ
-         X+kwDuAEhsNcjOdnlhEshqFEH1SI1nI/CW84Odqu28tnFpG3UR5tSaRj82x8OZgOD6CC
-         uo4s9AOVHCiAFyKaq6m5vG32b+Hx7cEbgIrrI3BWSSrlU8QfuAfX3kCJjaTFoIqcYdCV
-         nhgXY5J79JcyZYdmsAjCA1pMewKu4obJVjhvCuel7rYoogmON/qGZ5AuB0gS0ZVs9tn5
-         PbVXoP+OnMCZvycY3igr8wDqY03BPevXNcK/eaX20f++7nlVAJB0N67heDO1oVjwQyrH
-         jxWQ==
+        bh=8iFfeaMcLuzx3qT6HoU1lCQOc9APQy0cingwV7epWcY=;
+        b=KoYkv7G3t2JacguDnQHkoLBhbfUedimSiSODTtF/fmj+UCDxcVKrXJwSz/RO+LAxDD
+         SXjhZRz80la3GK/70l1ddjc2UexGjM+kYdQzg1R9gTmX0ite7NDD08t8gygHpreMHnW2
+         ww92zqAxQK1Yj5DXxCo2mXzZ89SgOIFfgFrNVJvaeYb4DK3EA/bHxXaWTOb9+bhJFbhP
+         skIRNYzTvXpqOmlQHtLuTr6ur1e8BGvvQCVZhrmmJKuY70/6EhdeayuN8If3Ts/waaTa
+         BPF0NyCjURvxs7X7/EKAkUpGCXT+istdBqo7SijG+ThX/OC8HYN5LDyZWkWYvnNFqins
+         NNMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749166790; x=1749771590;
+        d=1e100.net; s=20230601; t=1749166794; x=1749771594;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=slKzUD48tkq9i10Iz9b2HZco4LcIFVLTatkKbkE7Sdg=;
-        b=A7OroBvGnlQ6D6KUfz5AJ2DT03/sQlwwGxWJKqNeuXA0dYAMDjDkQDZZQsv7hwJAfi
-         d4xRC7WrhHMEQdke37HW4IhDg0Xuaq/472bdNc0iYjzsPO5hr56k1EaeuOnsJU3vHafC
-         VkXh4CWJAsChgAz+/ZyqY5EUR49nVoaZNfzLmmYeF7csqxPnW5AxSBR6Wh3swOtzoxmb
-         gAnprGBbwGIZAa5kjSDhzCAFvjk84FSdbfq5Y7R15wRN16scWN78ArLBiU5h9FIX5ban
-         SVe7Smbuldl6NMOKT8EdkWAS3c1kkyya8iis8pJL36SrmUI2/dvg+OTF2ft4p1gscAmG
-         bX8A==
-X-Forwarded-Encrypted: i=1; AJvYcCV0Kk9j3BITgLAt5xhwKZ1zEDHIXvLkVeR4+N1cs2/VxEGiTjwXgRSRNGfw/aCxnOxi8FqkxZHLsQTmi8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRkxKmGe1qN3XBTF36jz/QaRXurwzbNOqmU7dQPoKFl5fZ8WYL
-	R4Jujb7SYZiSHxhLi2wdAmbo0AwTkgaielhXIEK4nGHHeNgX0xZleu+dtPpW8gO8GIn18gSF8If
-	pUPA3WMLRs8Q7nt08aSVRxg==
-X-Google-Smtp-Source: AGHT+IGRn75rA9+CWGF+pQ2bmargynx83ZVWyLHO26zHNwn+Nq9+SnbPPTD34vfcFptZCQEfH8DZhKZqHVvDlAyU
-X-Received: from pfbhm22.prod.google.com ([2002:a05:6a00:6716:b0:746:2bf3:e5e8])
+        bh=8iFfeaMcLuzx3qT6HoU1lCQOc9APQy0cingwV7epWcY=;
+        b=I78PoFBdaiwFOY6huKqSN9IDZx5tCk9DiXwZv9/ADoqY0J349UF3ZcIHs3fx8WPH7/
+         G/iFwyRqaZDAlwu0TTvbsmsH5gSGRP8Ps0UzbTXechkFhVFhg3xJET1OtCld1w5VDX3U
+         kYPD7okcSBEfyZNsHLgQ8cgtA7tYUm9SWSKOGMj67pq9ckbNl3ZAptGCDyNRGtrjBygZ
+         VT02+ereaisgMw1z16+S520ghzik4HKnt8GKCzGHhBosM/ANRBlLyJtVrELORQC0bpW7
+         8lWpu3lD5pecq9zy3gpirAVtuFPQFluIl/klXlrzxeChnLInbWp/lfxN03t2D6mENQE8
+         6NgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDldIUZu0P0RFvQE/r5SEmWU3I134moHWEGShZ41dB/aB8ZyyHlk3CaMscDjrlHYToqNlgU7kd9pvaXlw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2/psU5CtneTebBvycKZ3yxz3+YI8nOwmEeN398PJFnUtmvn8Y
+	EjACtcmXukou9tjHN3/t4JYxOmYC9KRxvp0va9EJUuubF5/CF7oDqSVen3yxdw4iWqtCzdZFDG0
+	Xb2U0T70C54lzdfv92MZDCw==
+X-Google-Smtp-Source: AGHT+IFUcFav0NjAszjunYAxed+zQO9SwfdaT5YNefYYg0tyYpUQXQps02dUQweyT2eKvQCmOpCRVw1JAQd50fP3
+X-Received: from pjh7.prod.google.com ([2002:a17:90b:3f87:b0:311:4aa8:2179])
  (user=blakejones job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:2586:b0:1f3:2e85:c052 with SMTP id adf61e73a8af0-21ee32b637bmr1528499637.35.1749166789748;
- Thu, 05 Jun 2025 16:39:49 -0700 (PDT)
-Date: Thu,  5 Jun 2025 16:39:32 -0700
+ 2002:a17:90b:38c3:b0:30e:ee4:3094 with SMTP id 98e67ed59e1d1-31346b04333mr1683541a91.1.1749166794276;
+ Thu, 05 Jun 2025 16:39:54 -0700 (PDT)
+Date: Thu,  5 Jun 2025 16:39:34 -0700
 In-Reply-To: <20250605233934.1881839-1-blakejones@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250605233934.1881839-1-blakejones@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-Message-ID: <20250605233934.1881839-3-blakejones@google.com>
-Subject: [PATCH v2 2/4] perf: collect BPF metadata from existing BPF programs
+Message-ID: <20250605233934.1881839-5-blakejones@google.com>
+Subject: [PATCH v2 4/4] perf: add test for PERF_RECORD_BPF_METADATA collection
 From: Blake Jones <blakejones@google.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
@@ -81,499 +81,142 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Blake Jones <blakejones@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Look for .rodata maps, find ones with 'bpf_metadata_' variables, extract
-their values as strings, and create a new PERF_RECORD_BPF_METADATA
-synthetic event using that data. The code gets invoked from the existing
-routine perf_event__synthesize_one_bpf_prog().
-
-For example, a BPF program with the following variables:
-
-    const char bpf_metadata_version[] SEC(".rodata") = "3.14159";
-    int bpf_metadata_value[] SEC(".rodata") = 42;
-
-would generate a PERF_RECORD_BPF_METADATA record with:
-
-    .prog_name        = <BPF program name, e.g. "bpf_prog_a1b2c3_foo">
-    .nr_entries       = 2
-    .entries[0].key   = "version"
-    .entries[0].value = "3.14159"
-    .entries[1].key   = "value"
-    .entries[1].value = "42"
-
-Each of the BPF programs and subprograms that share those variables would
-get a distinct PERF_RECORD_BPF_METADATA record, with the ".prog_name"
-showing the name of each program or subprogram. The prog_name is
-deliberately the same as the ".name" field in the corresponding
-PERF_RECORD_KSYMBOL record.
-
-This code only gets invoked if support for displaying BTF char arrays
-as strings is detected.
+This is an end-to-end test for the PERF_RECORD_BPF_METADATA support.
+It adds a new "bpf_metadata_perf_version" variable to perf's BPF programs,
+so that when they are loaded, there will be at least one BPF program with
+some metadata to parse. The test invokes "perf record" in a way that loads
+one of those BPF programs, and then sifts through the output to find its
+BPF metadata.
 
 Signed-off-by: Blake Jones <blakejones@google.com>
 ---
- tools/lib/perf/include/perf/event.h |  18 ++
- tools/perf/util/bpf-event.c         | 332 ++++++++++++++++++++++++++++
- tools/perf/util/bpf-event.h         |  12 +
- 3 files changed, 362 insertions(+)
+ tools/perf/Makefile.perf                    |  3 +-
+ tools/perf/tests/shell/test_bpf_metadata.sh | 76 +++++++++++++++++++++
+ tools/perf/util/bpf_skel/perf_version.h     | 17 +++++
+ 3 files changed, 95 insertions(+), 1 deletion(-)
+ create mode 100755 tools/perf/tests/shell/test_bpf_metadata.sh
+ create mode 100644 tools/perf/util/bpf_skel/perf_version.h
 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index 09b7c643ddac..6608f1e3701b 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -467,6 +467,22 @@ struct perf_record_compressed2 {
- 	char			 data[];
- };
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index d4c7031b01a7..4f292edeca5a 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1250,8 +1250,9 @@ else
+ 	$(Q)cp "$(VMLINUX_H)" $@
+ endif
  
-+#define BPF_METADATA_KEY_LEN   64
-+#define BPF_METADATA_VALUE_LEN 256
-+#define BPF_PROG_NAME_LEN      KSYM_NAME_LEN
-+
-+struct perf_record_bpf_metadata_entry {
-+	char key[BPF_METADATA_KEY_LEN];
-+	char value[BPF_METADATA_VALUE_LEN];
-+};
-+
-+struct perf_record_bpf_metadata {
-+	struct perf_event_header	      header;
-+	char				      prog_name[BPF_PROG_NAME_LEN];
-+	__u64				      nr_entries;
-+	struct perf_record_bpf_metadata_entry entries[];
-+};
-+
- enum perf_user_event_type { /* above any possible kernel type */
- 	PERF_RECORD_USER_TYPE_START		= 64,
- 	PERF_RECORD_HEADER_ATTR			= 64,
-@@ -489,6 +505,7 @@ enum perf_user_event_type { /* above any possible kernel type */
- 	PERF_RECORD_COMPRESSED			= 81,
- 	PERF_RECORD_FINISHED_INIT		= 82,
- 	PERF_RECORD_COMPRESSED2			= 83,
-+	PERF_RECORD_BPF_METADATA		= 84,
- 	PERF_RECORD_HEADER_MAX
- };
+-$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h | $(SKEL_TMP_OUT)
++$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(OUTPUT)PERF-VERSION-FILE util/bpf_skel/perf_version.h $(LIBBPF) $(SKEL_OUT)/vmlinux.h | $(SKEL_TMP_OUT)
+ 	$(QUIET_CLANG)$(CLANG) -g -O2 --target=bpf $(CLANG_OPTIONS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
++	  -include $(OUTPUT)PERF-VERSION-FILE -include util/bpf_skel/perf_version.h \
+ 	  -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
  
-@@ -530,6 +547,7 @@ union perf_event {
- 	struct perf_record_header_feature	feat;
- 	struct perf_record_compressed		pack;
- 	struct perf_record_compressed2		pack2;
-+	struct perf_record_bpf_metadata		bpf_metadata;
- };
- 
- #endif /* __LIBPERF_EVENT_H */
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index c81444059ad0..1f6e76ee6024 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -1,13 +1,21 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
-+#include <stddef.h>
-+#include <stdint.h>
-+#include <stdio.h>
- #include <stdlib.h>
-+#include <string.h>
- #include <bpf/bpf.h>
- #include <bpf/btf.h>
- #include <bpf/libbpf.h>
-+#include <linux/bpf.h>
- #include <linux/btf.h>
- #include <linux/err.h>
-+#include <linux/perf_event.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- #include <internal/lib.h>
-+#include <perf/event.h>
- #include <symbol/kallsyms.h>
- #include "bpf-event.h"
- #include "bpf-utils.h"
-@@ -151,6 +159,319 @@ static int synthesize_bpf_prog_name(char *buf, int size,
- 	return name_len;
- }
- 
-+#ifdef HAVE_LIBBPF_STRINGS_SUPPORT
+ $(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o | $(BPFTOOL)
+diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tests/shell/test_bpf_metadata.sh
+new file mode 100755
+index 000000000000..11df592fb661
+--- /dev/null
++++ b/tools/perf/tests/shell/test_bpf_metadata.sh
+@@ -0,0 +1,76 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# BPF metadata collection test.
 +
-+#define BPF_METADATA_PREFIX "bpf_metadata_"
-+#define BPF_METADATA_PREFIX_LEN (sizeof(BPF_METADATA_PREFIX) - 1)
++set -e
 +
-+static bool name_has_bpf_metadata_prefix(const char **s)
-+{
-+	if (strncmp(*s, BPF_METADATA_PREFIX, BPF_METADATA_PREFIX_LEN) != 0)
-+		return false;
-+	*s += BPF_METADATA_PREFIX_LEN;
-+	return true;
++err=0
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++
++cleanup() {
++	rm -f "${perfdata}"
++	rm -f "${perfdata}".old
++	trap - EXIT TERM INT
 +}
 +
-+struct bpf_metadata_map {
-+	struct btf *btf;
-+	const struct btf_type *datasec;
-+	void *rodata;
-+	size_t rodata_size;
-+	unsigned int num_vars;
-+};
-+
-+static int bpf_metadata_read_map_data(__u32 map_id, struct bpf_metadata_map *map)
-+{
-+	int map_fd;
-+	struct bpf_map_info map_info;
-+	__u32 map_info_len;
-+	int key;
-+	struct btf *btf;
-+	const struct btf_type *datasec;
-+	struct btf_var_secinfo *vsi;
-+	unsigned int vlen, vars;
-+	void *rodata;
-+
-+	map_fd = bpf_map_get_fd_by_id(map_id);
-+	if (map_fd < 0)
-+		return -1;
-+
-+	memset(&map_info, 0, sizeof(map_info));
-+	map_info_len = sizeof(map_info);
-+	if (bpf_obj_get_info_by_fd(map_fd, &map_info, &map_info_len) < 0)
-+		goto out_close;
-+
-+	/* If it's not an .rodata map, don't bother. */
-+	if (map_info.type != BPF_MAP_TYPE_ARRAY ||
-+	    map_info.key_size != sizeof(int) ||
-+	    map_info.max_entries != 1 ||
-+	    !map_info.btf_value_type_id ||
-+	    !strstr(map_info.name, ".rodata")) {
-+		goto out_close;
-+	}
-+
-+	btf = btf__load_from_kernel_by_id(map_info.btf_id);
-+	if (!btf)
-+		goto out_close;
-+	datasec = btf__type_by_id(btf, map_info.btf_value_type_id);
-+	if (!btf_is_datasec(datasec))
-+		goto out_free_btf;
-+
-+	/*
-+	 * If there aren't any variables with the "bpf_metadata_" prefix,
-+	 * don't bother.
-+	 */
-+	vlen = btf_vlen(datasec);
-+	vsi = btf_var_secinfos(datasec);
-+	vars = 0;
-+	for (unsigned int i = 0; i < vlen; i++, vsi++) {
-+		const struct btf_type *t_var = btf__type_by_id(btf, vsi->type);
-+		const char *name = btf__name_by_offset(btf, t_var->name_off);
-+
-+		if (name_has_bpf_metadata_prefix(&name))
-+			vars++;
-+	}
-+	if (vars == 0)
-+		goto out_free_btf;
-+
-+	rodata = zalloc(map_info.value_size);
-+	if (!rodata)
-+		goto out_free_btf;
-+	key = 0;
-+	if (bpf_map_lookup_elem(map_fd, &key, rodata)) {
-+		free(rodata);
-+		goto out_free_btf;
-+	}
-+	close(map_fd);
-+
-+	map->btf = btf;
-+	map->datasec = datasec;
-+	map->rodata = rodata;
-+	map->rodata_size = map_info.value_size;
-+	map->num_vars = vars;
-+	return 0;
-+
-+out_free_btf:
-+	btf__free(btf);
-+out_close:
-+	close(map_fd);
-+	return -1;
++trap_cleanup() {
++	cleanup
++	exit 1
 +}
++trap trap_cleanup EXIT TERM INT
 +
-+struct format_btf_ctx {
-+	char *buf;
-+	size_t buf_size;
-+	size_t buf_idx;
-+};
++test_bpf_metadata() {
++	echo "Checking BPF metadata collection"
 +
-+static void format_btf_cb(void *arg, const char *fmt, va_list ap)
-+{
-+	int n;
-+	struct format_btf_ctx *ctx = (struct format_btf_ctx *)arg;
++	if ! perf check -q feature libbpf-strings ; then
++		echo "Basic BPF metadata test [skipping - not supported]"
++		err=0
++		return
++	fi
 +
-+	n = vsnprintf(ctx->buf + ctx->buf_idx, ctx->buf_size - ctx->buf_idx,
-+		      fmt, ap);
-+	ctx->buf_idx += n;
-+	if (ctx->buf_idx >= ctx->buf_size)
-+		ctx->buf_idx = ctx->buf_size;
-+}
++	# This is a basic invocation of perf record
++	# that invokes the perf_sample_filter BPF program.
++	if ! perf record -e task-clock --filter 'ip > 0' \
++			 -o "${perfdata}" sleep 1 2> /dev/null
++	then
++		echo "Basic BPF metadata test [Failed record]"
++		err=1
++		return
++	fi
 +
-+static void format_btf_variable(struct btf *btf, char *buf, size_t buf_size,
-+				const struct btf_type *t, const void *btf_data)
-+{
-+	struct format_btf_ctx ctx = {
-+		.buf = buf,
-+		.buf_idx = 0,
-+		.buf_size = buf_size,
-+	};
-+	const struct btf_dump_type_data_opts opts = {
-+		.sz = sizeof(struct btf_dump_type_data_opts),
-+		.skip_names = 1,
-+		.compact = 1,
-+		.emit_strings = 1,
-+	};
-+	struct btf_dump *d;
-+	size_t btf_size;
-+
-+	d = btf_dump__new(btf, format_btf_cb, &ctx, NULL);
-+	btf_size = btf__resolve_size(btf, t->type);
-+	btf_dump__dump_type_data(d, t->type, btf_data, btf_size, &opts);
-+	btf_dump__free(d);
-+}
-+
-+static void bpf_metadata_fill_event(struct bpf_metadata_map *map,
-+				    struct perf_record_bpf_metadata *bpf_metadata_event)
-+{
-+	struct btf_var_secinfo *vsi;
-+	unsigned int i, vlen;
-+
-+	memset(bpf_metadata_event->prog_name, 0, BPF_PROG_NAME_LEN);
-+	vlen = btf_vlen(map->datasec);
-+	vsi = btf_var_secinfos(map->datasec);
-+
-+	for (i = 0; i < vlen; i++, vsi++) {
-+		const struct btf_type *t_var = btf__type_by_id(map->btf,
-+							       vsi->type);
-+		const char *name = btf__name_by_offset(map->btf,
-+						       t_var->name_off);
-+		const __u64 nr_entries = bpf_metadata_event->nr_entries;
-+		struct perf_record_bpf_metadata_entry *entry;
-+
-+		if (!name_has_bpf_metadata_prefix(&name))
-+			continue;
-+
-+		if (nr_entries >= (__u64)map->num_vars)
-+			break;
-+
-+		entry = &bpf_metadata_event->entries[nr_entries];
-+		memset(entry, 0, sizeof(*entry));
-+		snprintf(entry->key, BPF_METADATA_KEY_LEN, "%s", name);
-+		format_btf_variable(map->btf, entry->value,
-+				    BPF_METADATA_VALUE_LEN, t_var,
-+				    map->rodata + vsi->offset);
-+		bpf_metadata_event->nr_entries++;
-+	}
-+}
-+
-+static void bpf_metadata_free_map_data(struct bpf_metadata_map *map)
-+{
-+	btf__free(map->btf);
-+	free(map->rodata);
-+}
-+
-+static struct bpf_metadata *bpf_metadata_alloc(__u32 nr_prog_tags,
-+					       __u32 nr_variables)
-+{
-+	struct bpf_metadata *metadata;
-+	size_t event_size;
-+
-+	metadata = zalloc(sizeof(struct bpf_metadata));
-+	if (!metadata)
-+		return NULL;
-+
-+	metadata->prog_names = zalloc(nr_prog_tags * sizeof(char *));
-+	if (!metadata->prog_names) {
-+		bpf_metadata_free(metadata);
-+		return NULL;
-+	}
-+	for (__u32 prog_index = 0; prog_index < nr_prog_tags; prog_index++) {
-+		metadata->prog_names[prog_index] = zalloc(BPF_PROG_NAME_LEN);
-+		if (!metadata->prog_names[prog_index]) {
-+			bpf_metadata_free(metadata);
-+			return NULL;
++	# The BPF programs that ship with "perf" all have the following
++	# variable defined at compile time:
++	#
++	#   const char bpf_metadata_perf_version[] SEC(".rodata") = <...>;
++	#
++	# This invocation looks for a PERF_RECORD_BPF_METADATA event,
++	# and checks that its content contains the string given by
++	# "perf version".
++	VERS=$(perf version | awk '{print $NF}')
++	if ! perf script --show-bpf-events -i "${perfdata}" | awk '
++		/PERF_RECORD_BPF_METADATA.*perf_sample_filter/ {
++			header = 1;
 +		}
-+		metadata->nr_prog_names++;
-+	}
-+
-+	event_size = sizeof(metadata->event->bpf_metadata) +
-+	    nr_variables * sizeof(metadata->event->bpf_metadata.entries[0]);
-+	metadata->event = zalloc(event_size);
-+	if (!metadata->event) {
-+		bpf_metadata_free(metadata);
-+		return NULL;
-+	}
-+	metadata->event->bpf_metadata = (struct perf_record_bpf_metadata) {
-+		.header = {
-+			.type = PERF_RECORD_BPF_METADATA,
-+			.size = event_size,
-+		},
-+		.nr_entries = 0,
-+	};
-+
-+	return metadata;
-+}
-+
-+static struct bpf_metadata *bpf_metadata_create(struct bpf_prog_info *info)
-+{
-+	struct bpf_metadata *metadata;
-+	const __u32 *map_ids = (__u32 *)(uintptr_t)info->map_ids;
-+
-+	for (__u32 map_index = 0; map_index < info->nr_map_ids; map_index++) {
-+		struct bpf_metadata_map map;
-+
-+		if (bpf_metadata_read_map_data(map_ids[map_index], &map) != 0)
-+			continue;
-+
-+		metadata = bpf_metadata_alloc(info->nr_prog_tags, map.num_vars);
-+		if (!metadata)
-+			continue;
-+
-+		bpf_metadata_fill_event(&map, &metadata->event->bpf_metadata);
-+
-+		for (__u32 index = 0; index < info->nr_prog_tags; index++) {
-+			synthesize_bpf_prog_name(metadata->prog_names[index],
-+						 BPF_PROG_NAME_LEN, info,
-+						 map.btf, index);
++		/^ *entry/ {
++			if (header) { header = 0; entry = 1; }
 +		}
-+
-+		bpf_metadata_free_map_data(&map);
-+
-+		return metadata;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int synthesize_perf_record_bpf_metadata(const struct bpf_metadata *metadata,
-+					       const struct perf_tool *tool,
-+					       perf_event__handler_t process,
-+					       struct machine *machine)
-+{
-+	const size_t event_size = metadata->event->header.size;
-+	union perf_event *event;
-+	int err = 0;
-+
-+	event = zalloc(event_size + machine->id_hdr_size);
-+	if (!event)
-+		return -1;
-+	memcpy(event, metadata->event, event_size);
-+	memset((void *)event + event->header.size, 0, machine->id_hdr_size);
-+	event->header.size += machine->id_hdr_size;
-+	for (__u32 index = 0; index < metadata->nr_prog_names; index++) {
-+		memcpy(event->bpf_metadata.prog_name,
-+		       metadata->prog_names[index], BPF_PROG_NAME_LEN);
-+		err = perf_tool__process_synth_event(tool, event, machine,
-+						     process);
-+		if (err != 0)
-+			break;
-+	}
-+
-+	free(event);
-+	return err;
-+}
-+
-+void bpf_metadata_free(struct bpf_metadata *metadata)
-+{
-+	if (metadata == NULL)
-+		return;
-+	for (__u32 index = 0; index < metadata->nr_prog_names; index++)
-+		free(metadata->prog_names[index]);
-+	free(metadata->prog_names);
-+	free(metadata->event);
-+	free(metadata);
-+}
-+
-+#else /* HAVE_LIBBPF_STRINGS_SUPPORT */
-+
-+static struct bpf_metadata *bpf_metadata_create(struct bpf_prog_info *info __maybe_unused)
-+{
-+	return NULL;
-+}
-+
-+static int synthesize_perf_record_bpf_metadata(const struct bpf_metadata *metadata __maybe_unused,
-+					       const struct perf_tool *tool __maybe_unused,
-+					       perf_event__handler_t process __maybe_unused,
-+					       struct machine *machine __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+void bpf_metadata_free(struct bpf_metadata *metadata __maybe_unused)
-+{
-+}
-+
-+#endif /* HAVE_LIBBPF_STRINGS_SUPPORT */
-+
- /*
-  * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
-  * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
-@@ -173,6 +494,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 	const struct perf_tool *tool = session->tool;
- 	struct bpf_prog_info_node *info_node;
- 	struct perf_bpil *info_linear;
-+	struct bpf_metadata *metadata;
- 	struct bpf_prog_info *info;
- 	struct btf *btf = NULL;
- 	struct perf_env *env;
-@@ -193,6 +515,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 	arrays |= 1UL << PERF_BPIL_JITED_INSNS;
- 	arrays |= 1UL << PERF_BPIL_LINE_INFO;
- 	arrays |= 1UL << PERF_BPIL_JITED_LINE_INFO;
-+	arrays |= 1UL << PERF_BPIL_MAP_IDS;
- 
- 	info_linear = get_bpf_prog_info_linear(fd, arrays);
- 	if (IS_ERR_OR_NULL(info_linear)) {
-@@ -301,6 +624,15 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 		 */
- 		err = perf_tool__process_synth_event(tool, event,
- 						     machine, process);
-+
-+		/* Synthesize PERF_RECORD_BPF_METADATA */
-+		metadata = bpf_metadata_create(info);
-+		if (metadata != NULL) {
-+			err = synthesize_perf_record_bpf_metadata(metadata,
-+								  tool, process,
-+								  machine);
-+			bpf_metadata_free(metadata);
++		$0 !~ /^ *entry/ {
++			entry = 0;
 +		}
- 	}
- 
- out:
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index e2f0420905f5..16644b3aaba1 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -17,6 +17,12 @@ struct record_opts;
- struct evlist;
- struct target;
- 
-+struct bpf_metadata {
-+	union perf_event *event;
-+	char		 **prog_names;
-+	__u64		 nr_prog_names;
-+};
-+
- struct bpf_prog_info_node {
- 	struct perf_bpil		*info_linear;
- 	struct rb_node			rb_node;
-@@ -36,6 +42,7 @@ int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env);
- void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
- 				      struct perf_env *env,
- 				      FILE *fp);
-+void bpf_metadata_free(struct bpf_metadata *metadata);
- #else
- static inline int machine__process_bpf(struct machine *machine __maybe_unused,
- 				       union perf_event *event __maybe_unused,
-@@ -55,6 +62,11 @@ static inline void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info _
- 						    FILE *fp __maybe_unused)
- {
- 
++		/perf_version/ {
++			if (entry) print $NF;
++		}
++	' | egrep "$VERS" > /dev/null
++	then
++		echo "Basic BPF metadata test [Failed invalid output]"
++		err=1
++		return
++	fi
++	echo "Basic BPF metadata test [Success]"
 +}
 +
-+static inline void bpf_metadata_free(struct bpf_metadata *metadata)
-+{
++test_bpf_metadata
 +
- }
- #endif // HAVE_LIBBPF_SUPPORT
- #endif
++cleanup
++exit $err
+diff --git a/tools/perf/util/bpf_skel/perf_version.h b/tools/perf/util/bpf_skel/perf_version.h
+new file mode 100644
+index 000000000000..1ed5b2e59bf5
+--- /dev/null
++++ b/tools/perf/util/bpf_skel/perf_version.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++
++#ifndef __PERF_VERSION_H__
++#define __PERF_VERSION_H__
++
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++
++/*
++ * This is used by tests/shell/record_bpf_metadata.sh
++ * to verify that BPF metadata generation works.
++ *
++ * PERF_VERSION is defined by a build rule at compile time.
++ */
++const char bpf_metadata_perf_version[] SEC(".rodata") = PERF_VERSION;
++
++#endif /* __PERF_VERSION_H__ */
 -- 
 2.50.0.rc0.604.gd4ff7b7c86-goog
 
