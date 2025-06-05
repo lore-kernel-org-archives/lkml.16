@@ -1,64 +1,75 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB1D283680
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B86E283FDC
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749151525; cv=none; b=VcjWsPmN2bCBBnKagsC7Xt7H+i5vfZWCNUcamkhvlB84KPQ1zlEeLL7XZKifhGFxgtlmfWZ+xkG/Ye4EIObIRoT9U3aqhDDOJhRXRxnNO8qC0JWly3fROkS9i+uYb36SnXjoMWirfZAuTQhKcoJKiWJKVcNOeh87vTSgHAomCCw=
+	t=1749151527; cv=none; b=AChc6RQByrax/q6Fx+MqCy4z5bvX77qbRz+QNXquANPppvseLYrIubc8AyY4FtlV1Essb5vggHRNzDUx8ZZI9/UAtt2iALX1aArv+q4N9dcvTJAgPINYyPY+/FHE1TxlbhKuPW5urcw9LsUhMCT564shfKo3lKb25CeooFwjCJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749151525; c=relaxed/simple;
-	bh=o474ANeWJVZlzcrSMV5Ed/SZ1EjEIgzsMfOO8j2h6aQ=;
+	s=arc-20240116; t=1749151527; c=relaxed/simple;
+	bh=g1uSPY3ekxdDqUP1FiL97nkkGHxjamontIVvh7+SpJ4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c6sEx2Lo4mafP/byHwbHlwtGrXtSlir3v4Xnje2eGT01DzpklqSIdcUbfpMrmIasFGQQrbbmdLUmMUEuXwRqvXYY5IrZk91wOEipBxi800rpL9SWexDuD9xU0mn2PkYe+hKojjEco2zBmeIXZXoT16JEnxV5HoSXoAd7TVWSgsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cRWTMO1L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+aDKZt/t; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 MIME-Version; b=mrhurd9J6Tq9Maxy+W6t1cbXfY0uwGdNprpfskMB+BWkWIUjH7voxKRQZzacJwAqTrk5jDQ+LRvVjtMhGPmn6IZtWMG5HBnolJ8pZsHw4Be3fitSGNdNWgcUDEVlhYCPCc++HptLYecmTwKpNTq0+VgoiXjr4wDOxLv+y40Wzmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DvieLlNt; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cRWTMO1L";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+aDKZt/t"
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749151522;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2ec7o83d4fyhY5AOtDVdz8zKCDhFmAcZqf5S8EoVtgQ=;
-	b=cRWTMO1LxCjU9xjFW0fWWzlR8vs8W6D4WlhHsmyPpSW64ZbsmpTvuTlP8X5fa1JPgMnrlQ
-	g+vg7Pi6VkFGQ7PKiqh2GrM1RhetCL1hWRUDx3NB0ic6npKo+ADxpOJrXKYYju8Rv9MpPo
-	SUGk9rcltd9nzJnbNUe+ppwpkSHuSyWgCbu+PMcK3XEqSDhj/ayruTm0cGwgZHOLwMYfHt
-	j+9orX2+W4yKrHUdhoKZUnQCT8jBs1Yy9p5tuNiUi1Bit7fE+47PF2MbaRrJ8gKxDNSgN4
-	leZGofn3kKlhxY4QN/zZq0Oumul2TXLgRN7GhjQ0Ha5j6LiFyNY80qjn86pFXA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749151522;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2ec7o83d4fyhY5AOtDVdz8zKCDhFmAcZqf5S8EoVtgQ=;
-	b=+aDKZt/tJRRMTF/EyaKRJb3BpDswF7nBxAF+pzUYZ9U8SLePS/AB5/bZ82FSC7lwCR1RKF
-	qcNwyNk7N5+tXrBA==
-To: Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	x86@kernel.org,
-	x86-cpuid@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v2 23/27] x86/cacheinfo: Use auto-generated data types
-Date: Thu,  5 Jun 2025 21:23:52 +0200
-Message-ID: <20250605192356.82250-24-darwi@linutronix.de>
-In-Reply-To: <20250605192356.82250-1-darwi@linutronix.de>
-References: <20250605192356.82250-1-darwi@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvieLlNt"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70a57a8ffc3so15758217b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:25:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749151524; x=1749756324; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FprG7nruJwqKDxMeetenSg6au9m16AMAZ5r0mOGn5VE=;
+        b=DvieLlNt05vzfmbYugsfZCJQD2j8zZbwxw0yxg9x0J9eiDgw0tpOXCpZoAXBVKLRvB
+         qkVzX00OPe/Upae5lhi0h2WVdmLSzug/oRSyk5EgvTj8YL+WohF8OP7ASW2uB1l9jiF1
+         kFUIrrbmWKgpEZPBfJL1LN+kqX6osCQqA7My+EMxEl/HGIzQLDAFZH3xF4hEO6LHOYqM
+         44XGBtcli083Sk0oWZXjOzV+kVV7djE74ZYT8uiF5QpEi90MxeDhPu1rv0ASg/kZ5sAj
+         aqmXQ302elocAj2ewFiBsqv0i8oX/UWrr51jzkjr9T6AU4aJQirlUg8dG5cHQkCkYVOD
+         fM/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749151524; x=1749756324;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FprG7nruJwqKDxMeetenSg6au9m16AMAZ5r0mOGn5VE=;
+        b=aTW+MeYdUnoFlow+Q69av2rVhtfICx3djUN/6lw1R2MswHMtUjeHSOlimN/vj4H1hC
+         yds0Z0XEbw4Z43sVrfcJ+3W+wAxv7YMfLcDwZeY3mYIssp2RsLjTuzCgpafjcmfCsk/c
+         ZUIoXynn4eiSgozqrn+PhVGykdcmim8qr+7LJwnpfVVBFeZCUiZKagkSvksbNNouRsCv
+         JUDYDMv4B6Plr6TR/e2SSons0VO8a42kwgfLlMl40LrZ8o9hG14Ef4a6JRLm4moZp3Hv
+         m3I+yWJvI/QAoDSC1GSwZHDzdyL2JFnCa8vZMwXD/OiE/NIcJfAmrxPi1AgTn7UUHoHI
+         QdaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9WjyeFSQjzHy3nkk/VMEk5hTZIIp55HqSPeoUGMUggooxFbfJ30E3TI6E9wkqeRJvlzuB2AHiuUJLKzE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlwgsg11JXR+6CNx0uAELWq+UN+ab+MRe3akE6yODUG1n9c/Me
+	HmiER3vsmLwPoiHgN4Gchh6/1S6Izwhn2zaith2cKI9eJhFeblm0X4ZVqM219A==
+X-Gm-Gg: ASbGncuoKBeOuDHR4n13eZnarvtRwp7TxRs9Dwgh/tUt7Tubd6Iih8BUoRtt8U7h1lU
+	LcVnZSX+VC5LT0WZQPCg4F9TToS4lA0nBEHZcWfZRKN+VCgqmNBg4MSNj+Z9fBpPZraTjpp4SwG
+	EiPIFHy+4Ic3NSqQ+sVc9Oj2kFyRvoRQoKxgoFrBVIbd/iEv3EEUduXRgenaCnHkOcIW6Bm6gJZ
+	JXwTUuhk+Zr9k44rx7Rn3shIWvLg4a4y7gBDU947JDcFaT5js1UB0ttUqF55MuKLEmSbN9uavyv
+	FH2mDR6cLDu0lN1D712W+jnIkgUEX5lTZ279c3ErzyzHTKO0irY=
+X-Google-Smtp-Source: AGHT+IGk++Z15BxbtjJ9K7UZBhMrTiCpmJvFSUyXRDZkfKc9GS6MedIlLmJfAwhoGdBkkpcPFYk5Cw==
+X-Received: by 2002:a05:690c:688b:b0:70d:f673:1412 with SMTP id 00721157ae682-710f751e254mr12464717b3.0.1749151524484;
+        Thu, 05 Jun 2025 12:25:24 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:50::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8ad2439asm35895997b3.125.2025.06.05.12.25.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 12:25:23 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: SeongJae Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v2 1/4] mm/damon: introduce DAMON_STAT module
+Date: Thu,  5 Jun 2025 12:25:20 -0700
+Message-ID: <20250605192521.306529-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250605161129.82107-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,251 +78,139 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For the AMD CPUID(0x4) emulation logic, use the auto-generated
-<cpuid/leaf_types.h> data type:
+On Thu,  5 Jun 2025 09:11:29 -0700 SeongJae Park <sj@kernel.org> wrote:
 
-    struct leaf_0x4_0
+> On Thu,  5 Jun 2025 08:25:07 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
+> 
+> > On Wed,  4 Jun 2025 11:31:24 -0700 SeongJae Park <sj@kernel.org> wrote:
+> [...]
+> > Hi SJ, thank you for this patch! I have been looking forward to it : -)
+> > I had a few questions about the init function:
+> 
+> Hi Joshua, I'm more than happy to get your questions :)
+> 
+> > 
+> > [...snip...]
+> > 
+> > > +static int damon_stat_start(void)
+> > > +{
+> > > +	damon_stat_context = damon_stat_build_ctx();
+> > > +	if (!damon_stat_context)
+> > > +		return -ENOMEM;
+> > > +	return damon_start(&damon_stat_context, 1, true);
+> > > +}
+> > > +
+> > > +static void damon_stat_stop(void)
+> > > +{
+> > > +	damon_stop(&damon_stat_context, 1);
+> > > +	damon_destroy_ctx(damon_stat_context);
+> > > +}
+> > > +
+> > > +static bool damon_stat_init_called;
+> > > +
+> > > +static int damon_stat_enabled_store(
+> > > +		const char *val, const struct kernel_param *kp)
+> > > +{
+> > > +	bool is_enabled = enabled;
+> > > +	int err;
+> > > +
+> > > +	err = kstrtobool(val, &enabled);
+> > > +	if (err)
+> > > +		return err;
+> > > +
+> > > +	if (is_enabled == enabled)
+> > > +		return 0;
+> > > +
+> > > +	if (!damon_stat_init_called)
+> > > +		/*
+> > > +		 * probably called from command line parsing (parse_args()).
+> > > +		 * Cannot call damon_new_ctx().  Let damon_stat_init() handle.
+> > > +		 */
+> > > +		return 0;
+> > 
+> > I was hoping you could educate me about how damon_stat_init_called works here.
+> > I think my confusion comes from my lack of knowledge about kernel modules : -)
+> > In the cover letter, you wrote that DAMON_STAT is a static kernel module.
+> > My understanding was that this would mean damon_stat_init would always be
+> > called,
+> 
+> To my understanding, the function is called back only when the parameteer value
+> is being changed.  Such changes could be made in runtime via parameter files,
+> and in boot time via the kernel command line.  If there is not kernel command
+> line for setting the parameter, this callback function is not called.
+> 
+> > so I was wondering under what condition it would not be initialized.
+> 
+> The enabled parameter value is initialized at build time, based on
+> CONFIG_DAMON_STAT_ENABLED_DEFAULT.  So, the parameter value will always be
+> initialized.
+> 
+> > I see the comment you wrote above, but was still a little bit confused.
+> 
+> The kernel command line parameters parsing is called in pretty early stage of
+> the bootup, before slab is ready.  Hence, if enabled parmeter is set by the
+> kernel command line, damon_stat_enabled_store() is called in the early stage,
+> and fails from damon_stat_start(), since it needs slab, to initialize DAMON
+> contexts.  For more details of such failure, you could refer to a previous
+> issue report[1].
+> 
+> Meanwhile, damon_stat_init() and module init functions are called later, when
+> slab is ready.  We therefore check the case, and defer real handling of enabled
+> to damon_stat_init() in the case.
+> 
+> Thank you for this question, I find the comment has rooms to improve.  I'll try
+> to make this better documented or easier to read.
 
-instead of the manually-defined:
+I see, I think it makes more sense to me now. Thank you for explaining this, SJ!
+I think my confusion came from my lack of knowledge. Please do not feel the need
+to update the comment on this section, if you feel it is already enough : -)
 
-    union _cpuid4_leaf_{eax,ebx,ecx}
+> > Also, should we perhaps call damon_stat_init() if !damon_stat_init_called?
+> > That way, the first caller would just eat up the time it takes to run
+> > damon_stat_start().
+> 
+> damon_stat_init() is a module init function, and hence it will be called in
+> boot time, regardless of enabled parameter setup on kernel command line.  In
+> other words, it will be always invoked once, with !damon_stat_init_called.  And
+> it will call damon_stat_start(), unless enabled is unset via
+> CONFIG_DAMON_STAT_ENABLED_DEFAULT or kernel command line.
+> 
+> So, the current implementation is working as you suggested, to my
+> understanding.  Please let me know if I'm missing something.
+> > 
+> > One other thought I have is that if this config checks for whether
+> > damon_stat_init was called, this can be moved to the beginning of the function
+> > before the other checks are run, but that is just my thought : -) Feel free
+> > to keep the input check first, since having this at the beginning of the
+> > function would mean incorrect inputs would be silently ignored.
+> 
+> In the kernel command line based parameter setup scenario, later
+> damon_stat_init() call should see the updated 'enabled' variable value.  Hence,
+> the user input value check should be done here, regardless of if this is called
+> before or after damon_stat_init().
+> 
+> So I find no needs to change the code for now.  Nonetheless, I believe this
+> code has many rooms to improve, and I'm always getting more than glad to get
+> this kind of improvement ideas.  Thank you, Joshua.  Please feel free to let me
+> know if you get another idea later.
+> 
+> I hope I answered your questions, but please let me know if I'm missing
+> something!
 
-ones.  Remove such unions entirely as they are no longer used.
+Thanks SJ, it all makes a lot more sense now. Thank you for taking the time
+to explain things!
 
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
-Link: https://gitlab.com/x86-cpuid.org/x86-cpuid-db
----
- arch/x86/kernel/cpu/cacheinfo.c | 130 +++++++++++---------------------
- 1 file changed, 42 insertions(+), 88 deletions(-)
+> > 
+> > Thank you SJ! I hope you have a great day!
+> 
+> You too.  Friday is coming!
+> 
+> [1] https://lore.kernel.org/linux-mm/20220604192222.1488-1-sj@kernel.org/
+> 
+> 
+> Thanks,
+> SJ
+> 
+> [...]
 
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index 05a3fbd0d849..f0540cba4bd4 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -41,39 +41,8 @@ enum _cache_type {
- 	CTYPE_UNIFIED	= 3
- };
- 
--union _cpuid4_leaf_eax {
--	struct {
--		enum _cache_type	type			:5;
--		unsigned int		level			:3;
--		unsigned int		is_self_initializing	:1;
--		unsigned int		is_fully_associative	:1;
--		unsigned int		reserved		:4;
--		unsigned int		num_threads_sharing	:12;
--		unsigned int		num_cores_on_die	:6;
--	} split;
--	u32 full;
--};
--
--union _cpuid4_leaf_ebx {
--	struct {
--		unsigned int		coherency_line_size	:12;
--		unsigned int		physical_line_partition	:10;
--		unsigned int		ways_of_associativity	:10;
--	} split;
--	u32 full;
--};
--
--union _cpuid4_leaf_ecx {
--	struct {
--		unsigned int		number_of_sets		:32;
--	} split;
--	u32 full;
--};
--
- struct _cpuid4_info {
--	union _cpuid4_leaf_eax eax;
--	union _cpuid4_leaf_ebx ebx;
--	union _cpuid4_leaf_ecx ecx;
-+	struct leaf_0x4_0 regs;
- 	unsigned int id;
- 	unsigned long size;
- };
-@@ -148,17 +117,14 @@ static const unsigned short assocs[] = {
- static const unsigned char levels[] = { 1, 1, 2, 3 };
- static const unsigned char types[]  = { 1, 2, 3, 3 };
- 
--static void legacy_amd_cpuid4(int index, union _cpuid4_leaf_eax *eax,
--			      union _cpuid4_leaf_ebx *ebx, union _cpuid4_leaf_ecx *ecx)
-+static void legacy_amd_cpuid4(int index, struct leaf_0x4_0 *regs)
- {
- 	unsigned int dummy, line_size, lines_per_tag, assoc, size_in_kb;
- 	union l1_cache l1i, l1d, *l1;
- 	union l2_cache l2;
- 	union l3_cache l3;
- 
--	eax->full = 0;
--	ebx->full = 0;
--	ecx->full = 0;
-+	*regs = (struct leaf_0x4_0){ };
- 
- 	cpuid(0x80000005, &dummy, &dummy, &l1d.val, &l1i.val);
- 	cpuid(0x80000006, &dummy, &dummy, &l2.val, &l3.val);
-@@ -204,65 +170,53 @@ static void legacy_amd_cpuid4(int index, union _cpuid4_leaf_eax *eax,
- 		return;
- 	}
- 
--	eax->split.is_self_initializing		= 1;
--	eax->split.type				= types[index];
--	eax->split.level			= levels[index];
--	eax->split.num_threads_sharing		= 0;
--	eax->split.num_cores_on_die		= topology_num_cores_per_package();
-+	regs->cache_self_init		= 1;
-+	regs->cache_type		= types[index];
-+	regs->cache_level		= levels[index];
-+	regs->num_threads_sharing	= 0;
-+	regs->num_cores_on_die		= topology_num_cores_per_package();
- 
- 	if (assoc == AMD_CPUID4_FULLY_ASSOCIATIVE)
--		eax->split.is_fully_associative = 1;
-+		regs->fully_associative	= 1;
- 
--	ebx->split.coherency_line_size		= line_size - 1;
--	ebx->split.ways_of_associativity	= assoc - 1;
--	ebx->split.physical_line_partition	= lines_per_tag - 1;
--	ecx->split.number_of_sets		= (size_in_kb * 1024) / line_size /
--		(ebx->split.ways_of_associativity + 1) - 1;
-+	regs->cache_linesize		= line_size - 1;
-+	regs->cache_nways		= assoc - 1;
-+	regs->cache_npartitions		= lines_per_tag - 1;
-+	regs->cache_nsets		= (size_in_kb * 1024) / line_size /
-+		(regs->cache_nways + 1) - 1;
- }
- 
--static int cpuid4_info_fill_done(struct _cpuid4_info *id4, union _cpuid4_leaf_eax eax,
--				 union _cpuid4_leaf_ebx ebx, union _cpuid4_leaf_ecx ecx)
-+static int cpuid4_info_fill_done(struct _cpuid4_info *id4, const struct leaf_0x4_0 *regs)
- {
--	if (eax.split.type == CTYPE_NULL)
-+	if (regs->cache_type == CTYPE_NULL)
- 		return -EIO;
- 
--	id4->eax = eax;
--	id4->ebx = ebx;
--	id4->ecx = ecx;
--	id4->size = (ecx.split.number_of_sets          + 1) *
--		    (ebx.split.coherency_line_size     + 1) *
--		    (ebx.split.physical_line_partition + 1) *
--		    (ebx.split.ways_of_associativity   + 1);
-+	id4->regs = *regs;
-+	id4->size = (regs->cache_nsets	     + 1) *
-+		    (regs->cache_linesize    + 1) *
-+		    (regs->cache_npartitions + 1) *
-+		    (regs->cache_nways	     + 1);
- 
- 	return 0;
- }
- 
- static int amd_fill_cpuid4_info(struct cpuinfo_x86 *c, int index, struct _cpuid4_info *id4)
- {
--	union _cpuid4_leaf_eax eax;
--	union _cpuid4_leaf_ebx ebx;
--	union _cpuid4_leaf_ecx ecx;
-+	struct leaf_0x4_0 regs;
- 
--	if (boot_cpu_has(X86_FEATURE_TOPOEXT) || boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
--		const struct cpuid_regs *regs = cpuid_subleaf_index_regs(c, 0x8000001d, index);
--
--		eax.full = regs->eax;
--		ebx.full = regs->ebx;
--		ecx.full = regs->ecx;
--	} else
--		legacy_amd_cpuid4(index, &eax, &ebx, &ecx);
-+	if (boot_cpu_has(X86_FEATURE_TOPOEXT) || boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
-+		regs = *(struct leaf_0x4_0 *)cpuid_subleaf_index(c, 0x8000001d, index);
-+	else
-+		legacy_amd_cpuid4(index, &regs);
- 
--	return cpuid4_info_fill_done(id4, eax, ebx, ecx);
-+	return cpuid4_info_fill_done(id4, &regs);
- }
- 
- static int intel_fill_cpuid4_info(struct cpuinfo_x86 *c, int index, struct _cpuid4_info *id4)
- {
--	const struct cpuid_regs *regs = cpuid_subleaf_index_regs(c, 0x4, index);
-+	const struct leaf_0x4_0 *regs = cpuid_subleaf_index(c, 0x4, index);
- 
--	return cpuid4_info_fill_done(id4,
--				     (union _cpuid4_leaf_eax)(regs->eax),
--				     (union _cpuid4_leaf_ebx)(regs->ebx),
--				     (union _cpuid4_leaf_ecx)(regs->ecx));
-+	return cpuid4_info_fill_done(id4, regs);
- }
- 
- static int fill_cpuid4_info(struct cpuinfo_x86 *c, int index, struct _cpuid4_info *id4)
-@@ -388,7 +342,7 @@ static unsigned int calc_cache_topo_id(struct cpuinfo_x86 *c, const struct _cpui
- 	unsigned int num_threads_sharing;
- 	int index_msb;
- 
--	num_threads_sharing = 1 + id4->eax.split.num_threads_sharing;
-+	num_threads_sharing = 1 + id4->regs.num_threads_sharing;
- 	index_msb = get_count_order(num_threads_sharing);
- 	return c->topo.apicid & ~((1 << index_msb) - 1);
- }
-@@ -420,11 +374,11 @@ static bool intel_cacheinfo_0x4(struct cpuinfo_x86 *c)
- 		if (ret < 0)
- 			continue;
- 
--		switch (id4.eax.split.level) {
-+		switch (id4.regs.cache_level) {
- 		case 1:
--			if (id4.eax.split.type == CTYPE_DATA)
-+			if (id4.regs.cache_type == CTYPE_DATA)
- 				l1d = id4.size / 1024;
--			else if (id4.eax.split.type == CTYPE_INST)
-+			else if (id4.regs.cache_type == CTYPE_INST)
- 				l1i = id4.size / 1024;
- 			break;
- 		case 2:
-@@ -485,7 +439,7 @@ static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- 	} else if (boot_cpu_has(X86_FEATURE_TOPOEXT)) {
- 		unsigned int apicid, nshared, first, last;
- 
--		nshared = id4->eax.split.num_threads_sharing + 1;
-+		nshared = id4->regs.num_threads_sharing + 1;
- 		apicid = cpu_data(cpu).topo.apicid;
- 		first = apicid - (apicid % nshared);
- 		last = first + nshared - 1;
-@@ -532,7 +486,7 @@ static void __cache_cpumap_setup(unsigned int cpu, int index,
- 	}
- 
- 	ci = this_cpu_ci->info_list + index;
--	num_threads_sharing = 1 + id4->eax.split.num_threads_sharing;
-+	num_threads_sharing = 1 + id4->regs.num_threads_sharing;
- 
- 	cpumask_set_cpu(cpu, &ci->shared_cpu_map);
- 	if (num_threads_sharing == 1)
-@@ -559,13 +513,13 @@ static void ci_info_init(struct cacheinfo *ci, const struct _cpuid4_info *id4,
- {
- 	ci->id				= id4->id;
- 	ci->attributes			= CACHE_ID;
--	ci->level			= id4->eax.split.level;
--	ci->type			= cache_type_map[id4->eax.split.type];
--	ci->coherency_line_size		= id4->ebx.split.coherency_line_size + 1;
--	ci->ways_of_associativity	= id4->ebx.split.ways_of_associativity + 1;
-+	ci->level			= id4->regs.cache_level;
-+	ci->type			= cache_type_map[id4->regs.cache_type];
-+	ci->coherency_line_size		= id4->regs.cache_linesize + 1;
-+	ci->ways_of_associativity	= id4->regs.cache_nways + 1;
- 	ci->size			= id4->size;
--	ci->number_of_sets		= id4->ecx.split.number_of_sets + 1;
--	ci->physical_line_partition	= id4->ebx.split.physical_line_partition + 1;
-+	ci->number_of_sets		= id4->regs.cache_nsets + 1;
-+	ci->physical_line_partition	= id4->regs.cache_npartitions + 1;
- 	ci->priv			= nb;
- }
- 
-@@ -591,7 +545,7 @@ static void get_cache_id(int cpu, struct _cpuid4_info *id4)
- 	unsigned long num_threads_sharing;
- 	int index_msb;
- 
--	num_threads_sharing = 1 + id4->eax.split.num_threads_sharing;
-+	num_threads_sharing = 1 + id4->regs.num_threads_sharing;
- 	index_msb = get_count_order(num_threads_sharing);
- 	id4->id = c->topo.apicid >> index_msb;
- }
--- 
-2.49.0
-
+Sent using hkml (https://github.com/sjp38/hackermail)
