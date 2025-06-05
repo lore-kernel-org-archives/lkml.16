@@ -1,235 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F4C20F09A;
-	Thu,  5 Jun 2025 23:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1460123741;
+	Thu,  5 Jun 2025 23:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749164829; cv=none; b=KZGJQyaR/coFchCKoR3a37+ARuwuckaNRzxfMX+1nH8I0bvHJ+JnXh94nKuSPZk0g34ZzO98dIQImfD2cAgShU3F0340mR8dHMVhVlRGS1q4GYpw8ZoKSU/PnQow74GAYUiLQB1SvLTCRfNpGO7amKstrIf86h30h2N2sCx7JgA=
+	t=1749165149; cv=none; b=ZKqq7YT6dWhsR8CP9kuyZ3AX3BqxZC4/h/dabUYL3noBTRC3TfJ/EAYCFBkhBI41eyi9OsUmZ+b2u1MnJ3B13ZldZPrPrvvEXlk9bJ2/5OjaxGgwlC+6NgviVUVM3S5hlx1bqnjB0MX21qUfZsnh5Vu0atch60H9oGUBu8whd+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749164829; c=relaxed/simple;
-	bh=UjLXllv38/ayKRtbAWXghoX9UubiwAPwtQ/5ByY7WO4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qUpgiWCO6HmMbr6D0SJT7psXEDVfccIwV9szCBlHLoEWZljDE7ItqlnWDo5yx7Hus6XZMSzxQQlGg6mnPYGUssKpZ4ESrdUzMvVpvPHd/eGgLei2wtbWtloZzUFD5xUsp3kV65smUTtJCbEfl+nz8i+RYpbwB89nikfA7afy6Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTyDyg82; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749165149; c=relaxed/simple;
+	bh=DOUpTRPDpmQDH8ars2nmAVcSRBjhUX+m/IXQ62sGvgg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EgzsSB0akxk15VZAGgki9uKPZkyt+LHe06lyLzicFGdzX24FIxEcfZINYQ/kq3Y3+WJNhyLJlznEchW2kHa6KuZHjQVjvRThbT3Bj44lzLBA8umuvkPWbrjS5deZuM/FY8M4uByofWpwbexBAsvITL+NLTagvBGh3aPboOO7fT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0oB7aZf; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTyDyg82"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A7DC4AF09;
-	Thu,  5 Jun 2025 23:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749164829;
-	bh=UjLXllv38/ayKRtbAWXghoX9UubiwAPwtQ/5ByY7WO4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gTyDyg82GjLyXm/+Xxw/6fn8ww+WbctvOE+3TX+ie5+J62OvLYMs1tBwFQZykqjve
-	 rhNH2xxgyxgWSXTrphrAvhG2GaHD7i+/qARTw8MbWoUCOed6Z0+DcveLnEun0e93al
-	 9TJzalzM+0cjUMNFeVKLO2ddXsVabHyI3a/s2Dw6V4mnTVSkL90Z+1ctB6v5Pcv78w
-	 WQAK55Gf0j1ASW/k/RksJstuTiRfFjveOZf2LP7fc9fg3dqr0FEMyW09qjnjWPg7RN
-	 26j0ovNuOEOBkjbQfi1ycHcBBa9XEI8CPrIH/cn378tJFBgnSUN6IDwqJYqn2bWIrP
-	 meZpQgD67+19g==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad51ba0af48so507228466b.0;
-        Thu, 05 Jun 2025 16:07:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUpXedNnAoPp8CgdfVckm4hOQRIrbUgFjKYWJcHB6p9aE23088IObxsoOpCJVVWEyifYUgimJof9xdwirSC@vger.kernel.org, AJvYcCX5aBgNzRJZ+JUphiE6DOx2j3YgkVqldI8kGx7/taWyl4IkjtE9i0U3yhnIDpDh9a2CpWHRsg1zubA3no+6w1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxdh2N26LxPAS/HIVOoSfwc0h4QsS3CXKZZvhkEvXiqRECaQg7/
-	QqTFSOyL7OK3gnHmLPNak5OJ987s2wnOsXnIjNaC7PPqVW6G6/FyAttIo0bmdt/Z1sQu8xC7H1Q
-	qhqDDbEDNzAuHMB26GC/fJnnMOpMZUNE=
-X-Google-Smtp-Source: AGHT+IFIM5DEQ+EkB7ri9jbdCbyDdUJyhKpoLC7kSNlWUiKgDPJdKpTqwabqWJxyxg7eaYnsk2EL7BA/44mVHgFfQqY=
-X-Received: by 2002:a17:907:7204:b0:ad5:4cde:fb97 with SMTP id
- a640c23a62f3a-ade078b8726mr489091766b.29.1749164827849; Thu, 05 Jun 2025
- 16:07:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0oB7aZf"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23508d30142so20973525ad.0;
+        Thu, 05 Jun 2025 16:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749165147; x=1749769947; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gH9iE8xUuhmsM++nBGZb1sp3kMQiuQ+pxJGMgIYtR6c=;
+        b=T0oB7aZfcxbpw7k3yaOl3r5vQmyFxoylsR7+32f1qpBlON0fHelAODL0mrV4jTk2pu
+         LHZXiWDsRCeSmw1P5j1PefyTFE2F1yuY/T+YOVlXZQce5+uAD6OS6ITGhGB9LkrZlWKo
+         B4OnvaObS3JHBRKKUJ0lpVyULwoJyNMjABSb3uTFDcbhkgY6YGKn5rILx5PCxyA8Fy7p
+         ZqRqT2I7qF4OIv/wbOxeMo546gj7JJqtLcJmaqFZepxKUtlXOoEvQztgmdWOW6eE5T7t
+         j/CtWUz7MMW9M1fvIU86KtV8xPD/T6LGlopwVSCNKOq1GpDwTKnWT2rb3bYqtxhh2JrD
+         yu0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749165147; x=1749769947;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gH9iE8xUuhmsM++nBGZb1sp3kMQiuQ+pxJGMgIYtR6c=;
+        b=AbNa7BB9Idj2NQm/69jie2F0G2Gw4naINo2BbnT0HsRBUVKLTlnI0Mh9ItLh0dSGxY
+         LGoH7grhUxY3bBnXGCvK9Of4zTs4tsU76s7MCA215OwituxUSGwvOAG7RsporF1IwuE9
+         Z0YFtOkLmimdpUj60N3owNByL4mnDCobfX2xGsFkybkc2ges7Zm6+WYBtU4DnyZ0tQwL
+         3h0+C4hwRgpXBekRcDWMx+32BX0661F9+gSWQ411KzCuWukQuO9p54G18xTMMtIrp66d
+         6AMRpwCOJKx4loWgZH49EQiOxcQid3hi+YxM5YDCDZSgEfepg4B8vAxIVrvzQ9V5uqoU
+         g3dA==
+X-Forwarded-Encrypted: i=1; AJvYcCVSz+K5RW2pHgLoi+nncuXi9F5UnVPatH83e5uPjFI/OEmIaJc7ulir6XyM1sFAbZuVqAkuGRGLKODOTbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+C3gXoMPyOqelsJNCtYIHJ2AWhIr4yGcTGwN52DZKLoI8BzTD
+	92rpFC9xNORLKwrVT4igU0ACS/Q4id+5mgGmXibkibI0HhBznSG7sOD8D2v74SIu
+X-Gm-Gg: ASbGncubRSo9+hPKgmm7IjBI+kwHM/tTHTD9ToMAmqtwamqtOvXsRynBxYFInCNpEIq
+	jGmGvS9lCVLD334PmLWaWbykE+k3+6rF4mJsiRaV59GTvAulxnkRa4WN7fZ3PECSK8U7rS0YhO7
+	nnryjzXG5PmNMGZFeU3m2iB3qGVeqp+g4PJgz1yLJ96lNUEYZm1ssbNtz8u+5sIixXAKIitdibU
+	m1Nod0iN9/bE3SodqisxUHI81T7jpsfwwgaod5PIMZIiTzoogszU8B8FfE5VMMPFQBxscwdxPc5
+	HU9u0rws5dXbV7i8IIHcE16IUkgRWsF6L4Bhi+1p7Ryil2VaVYg8HVE4mzphfw==
+X-Google-Smtp-Source: AGHT+IEjxScSWalAxjVgNDznTRIAw0FLaD7GhhKVsHmV467GCZwy5/nzrKZqqBA5WDi5Nt+WQhlN5A==
+X-Received: by 2002:a17:902:ce05:b0:235:ef67:b595 with SMTP id d9443c01a7336-23601d710bamr18195975ad.35.1749165147195;
+        Thu, 05 Jun 2025 16:12:27 -0700 (PDT)
+Received: from wash.local ([50.46.184.91])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603097091sm1346175ad.69.2025.06.05.16.12.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 16:12:26 -0700 (PDT)
+From: Joseph Kogut <joseph.kogut@gmail.com>
+Subject: [PATCH v4 0/3] Add Radxa CM5 module and IO board dts
+Date: Thu, 05 Jun 2025 16:11:50 -0700
+Message-Id: <20250605-rk3588s-cm5-io-dts-upstream-v4-0-8445db5ca6b0@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605095300.22989-1-ot_zhangchao.zhang@mediatek.com>
-In-Reply-To: <20250605095300.22989-1-ot_zhangchao.zhang@mediatek.com>
-From: Sean Wang <sean.wang@kernel.org>
-Date: Thu, 5 Jun 2025 18:06:55 -0500
-X-Gmail-Original-Message-ID: <CAGp9LzqkcH6KQq+TcaTGgK-4oK6XU8pzPB4j35en+df3beAhzQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtUAdwu3cwpHEFg1KUpSQ7ERv8IK0VFNhN73qLZQD_L6lIAxORQHnGsedE
-Message-ID: <CAGp9LzqkcH6KQq+TcaTGgK-4oK6XU8pzPB4j35en+df3beAhzQ@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: BT Driver: mediatek: add gpio pin to reset bt
-To: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Luiz Von Dentz <luiz.dentz@gmail.com>, Sean Wang <sean.wang@mediatek.com>, 
-	Deren Wu <deren.Wu@mediatek.com>, Aaron Hou <aaron.hou@mediatek.com>, 
-	Chris Lu <chris.lu@mediatek.com>, Hao Qin <Hao.qin@mediatek.com>, 
-	linux-bluetooth <linux-bluetooth@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-mediatek <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADYkQmgC/x3MSwqDQAwA0KtI1gbGT+roVcSFOJk2FD8ktggyd
+ +/Q5du8G4xV2GAoblD+ism+ZbRlActr3p6MErKhdjW5hyPUd0PeGy4roewYTsPPYafyvGJsQ8W
+ emr7rGPJwKEe5/vs4pfQDOf6pZG0AAAA=
+X-Change-ID: 20250605-rk3588s-cm5-io-dts-upstream-f4d1e853977e
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Joseph Kogut <joseph.kogut@gmail.com>, 
+ Steve deRosier <derosier@cal-sierra.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
 
-Hi Zhangchao,
+This patch series adds initial device tree support for the Radxa CM5 SoM
+and accompanying IO board.
 
-Thanks for your recent patch submission. Could you help address the
-following points?
+For the latest revision, we noticed that the USB-C port wasn't working
+properly on boot until an external power source was connected. This was
+tracked down to try-power-role being incorrectly set to source instead
+of sink. Setting it to sink also matches with the vendor kernel
+configuration, and fixes USB-C.
 
-1) Add a revision history
-each patch version should include a clear changelog under the --- line
-to show what has changed since the previous version.
+V3 -> V4:
+  - Fixed XHCI initialization bug by changing try-power-role from source
+    to sink
 
-2) Remove the "BT driver" in the prefix
-To stay consistent with the other patches we've already submitted, the
-"BT driver" should be removed from this prefix.
+V2 -> V3:
+  - Addressed YAML syntax error in dt binding (per Rob)
+  - Fixed whitespace issue in dts reported by checkpatch.pl
+  - Split base SoM and carrier board into separate patches
+  - Added further details about the SoM and carrier to the commit
+    messages
 
-3) Update the bt-bindings document
-Please also add or update a corresponding entry to the bt-bindings
-documentation in a separate patch  to describe the "reset-gpios"
-property and "mediatek,usb-bluetooth" and how it is used.
+V1 -> V2:
+  - Added copyright header and data sheet links
+  - Removed non-existent property
+  - Sorted alphabetically
+  - Removed errant whitespace
+  - Moved status to the end of each node
+  - Removed pinctrl-names property from leds (indicated by CHECK_DTBS)
+  - Removed delays from gmac with internal delay
 
+Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+---
+Joseph Kogut (3):
+      dt-bindings: arm: rockchip: Add Radxa CM5 IO board
+      arm64: dts: rockchip: Add rk3588 based Radxa CM5
+      arm64: dts: rockchip: Add support for CM5 IO carrier
 
-On Thu, Jun 5, 2025 at 4:54=E2=80=AFAM Zhangchao Zhang
-<ot_zhangchao.zhang@mediatek.com> wrote:
->
-> This patch provides two methods btmtk_reset_by_gpio,
-> btmtk_reset_by_gpio_work for mediatek controller,
-> it has been tested locally many times and can reset normally.
->
-> The pin is configured in dts files, bluetooth is reset by pulling
-> the pin, when exception or coredump occurs, the above methods will
-> be used to reset the bluetooth, if the pin is not found, it also can
-> reset bluetooth successfully by software reset.
->
-> Co-develop-by Hao Qin <hao.qin@mediatek.com>
-> Co-develop-by Chris LU <chris.lu@mediatek.com>
-> Co-develop-by Jiande Lu <jiande.lu@mediatek.com>
-> Signed-off-by: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
-> ---
->  drivers/bluetooth/btmtk.c | 60 +++++++++++++++++++++++++++++++++++++++
->  drivers/bluetooth/btmtk.h |  5 ++++
->  2 files changed, 65 insertions(+)
->
-> diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
-> index 4390fd571dbd..88e588f1b95b 100644
-> --- a/drivers/bluetooth/btmtk.c
-> +++ b/drivers/bluetooth/btmtk.c
-> @@ -6,6 +6,8 @@
->  #include <linux/firmware.h>
->  #include <linux/usb.h>
->  #include <linux/iopoll.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/unaligned.h>
->
->  #include <net/bluetooth/bluetooth.h>
-> @@ -109,6 +111,60 @@ static void btmtk_coredump_notify(struct hci_dev *hd=
-ev, int state)
->         }
->  }
->
-> +static void btmtk_reset_by_gpio_work(struct work_struct *work)
-> +{
-> +       struct btmtk_reset_gpio *reset_gpio_data =3D
-> +                       container_of(work, struct btmtk_reset_gpio, reset=
-_work.work);
-> +
-> +       gpio_direction_output(reset_gpio_data->gpio_number, 1);
-> +       kfree(reset_gpio_data);
-> +}
-> +
-> +static int btmtk_reset_by_gpio(struct hci_dev *hdev)
-> +{
-> +       struct btmtk_data *data =3D hci_get_priv(hdev);
-> +       struct btmtk_reset_gpio *reset_gpio_data;
-> +       struct device_node *node;
-> +       int reset_gpio_number;
-> +
-> +       node =3D of_find_compatible_node(NULL, NULL, "mediatek,usb-blueto=
-oth");
-> +       if (node) {
-> +               reset_gpio_number =3D of_get_named_gpio(node, "reset-gpio=
-s", 0);
-> +               if (!gpio_is_valid(reset_gpio_number)) {
-> +                       bt_dev_warn(hdev, "invalid reset GPIO, use softwa=
-re reset");
-> +                       return -EINVAL;
-> +               }
-> +       } else {
-> +               bt_dev_warn(hdev, "no reset GPIO, use software reset");
-> +               return -ENODEV;
-> +       }
-> +
-> +       /* Toggle the hard reset line. The Mediatek device is going to
-> +        * yank itself off the USB and then replug. The cleanup is handle=
-d
-> +        * correctly on the way out (standard USB disconnect), and the ne=
-w
-> +        * device is detected cleanly and bound to the driver again like
-> +        * it should be.
-> +        */
-> +
-> +       if (test_and_set_bit(BTMTK_HW_RESET_ACTIVE, &data->flags)) {
-> +               bt_dev_err(hdev, "last reset failed? Not resetting again"=
-);
-> +               return 0;
-> +       }
-> +
-> +       reset_gpio_data =3D kzalloc(sizeof(*reset_gpio_data), GFP_KERNEL)=
-;
-> +       if (!reset_gpio_data)
-> +               return -ENOMEM;
-> +
-> +       INIT_DELAYED_WORK(&reset_gpio_data->reset_work, btmtk_reset_by_gp=
-io_work);
-> +       reset_gpio_data->gpio_number =3D reset_gpio_number;
-> +
-> +       gpio_direction_output(reset_gpio_number, 0);
-> +
-> +       /* it requires 200ms for mtk bt chip to do reset */
-> +       schedule_delayed_work(&reset_gpio_data->reset_work, msecs_to_jiff=
-ies(200));
+ .../devicetree/bindings/arm/rockchip.yaml          |   7 +
+ arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+ .../boot/dts/rockchip/rk3588s-radxa-cm5-io.dts     | 454 +++++++++++++++++++++
+ .../arm64/boot/dts/rockchip/rk3588s-radxa-cm5.dtsi | 156 +++++++
+ 4 files changed, 618 insertions(+)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250605-rk3588s-cm5-io-dts-upstream-f4d1e853977e
 
-4) Just to clarify  since schedule_delayed_work() is asynchronous, is
-there a risk that the reset may not complete before subsequent logic
-(like firmware loading or hci setup) begins? Would it be safer to wait
-for the GPIO reset to complete explicitly?
+Best regards,
+-- 
+Joseph Kogut <joseph.kogut@gmail.com>
 
-> +       return 0;
-> +}
-> +
->  void btmtk_fw_get_filename(char *buf, size_t size, u32 dev_id, u32 fw_ve=
-r,
->                            u32 fw_flavor)
->  {
-> @@ -364,6 +420,10 @@ void btmtk_reset_sync(struct hci_dev *hdev)
->         struct btmtk_data *reset_work =3D hci_get_priv(hdev);
->         int err;
->
-> +       /*Toggle reset gpio if the platform provieds one*/
-> +       err =3D btmtk_reset_by_gpio(hdev);
-> +       if (!err)
-> +               return;
-
-5) We need this fallback to ensure that even if reset-gpios or
-mediatek,usb-bluetooth aren't defined in the device tree, the platform
-can still boot and operate normally. This helps maintain compatibility
-with existing or older deployments.
-
-                 Sean
-
->         hci_dev_lock(hdev);
->
->         err =3D hci_cmd_sync_queue(hdev, reset_work->reset_sync, NULL, NU=
-LL);
-> diff --git a/drivers/bluetooth/btmtk.h b/drivers/bluetooth/btmtk.h
-> index 5df7c3296624..8a265ce367d1 100644
-> --- a/drivers/bluetooth/btmtk.h
-> +++ b/drivers/bluetooth/btmtk.h
-> @@ -179,6 +179,11 @@ struct btmtk_data {
->         spinlock_t isorxlock;
->  };
->
-> +struct btmtk_reset_gpio {
-> +       struct delayed_work reset_work;
-> +       int gpio_number;
-> +};
-> +
->  typedef int (*wmt_cmd_sync_func_t)(struct hci_dev *,
->                                    struct btmtk_hci_wmt_params *);
->
-> --
-> 2.46.0
->
->
