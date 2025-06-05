@@ -1,65 +1,80 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF2619C542;
-	Thu,  5 Jun 2025 14:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D61154457
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 14:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749134014; cv=none; b=TiYAhbbO62Onln4MncNmVhZ6yURvHVR1wviBI3hyB9c8Aa/QtMYPThlFFwOe/w7h5/h/Ynwq/k0wluypgTyKfgfVgpT3H9qpvCApTu7FgivEONzhYt+4XroPw5CfEUKEfpxXnt+LVM0BcFKXWSGMVaGLMM2cUYQzQmtY0rgCSKc=
+	t=1749134066; cv=none; b=QFHm6ZMT1xh9BF8MlOBn5P0B6SuXdph7lAI/DcImKUqSk7C4G6YbZClzCRN6Sk2Ggzk5LGZVuzjOlni6Z7mRjGMIeV7U/hOACPJZJ7m/ZfNKlTuFm0+GgYIOZ7WjSA0StoZ6FJN5XNk7Ax5lFe1Zn3OdKoKQrx8wRqRmmRQpk34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749134014; c=relaxed/simple;
-	bh=tr58EZgbVcJISngjP+ObYSCUQbAQYsfVcd2Vwdp3hD0=;
+	s=arc-20240116; t=1749134066; c=relaxed/simple;
+	bh=VQeNGGlngNomkP6UPbHCnSR9wQkNSRxN7n5aEq4uSEY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UhGOjePFXhDAEYoypZqklx24DRYVwjP+PGYDs2rvbrOX7uwmzc9u0LcnB9C+Xh0Gtimo45kKB5fG2ETlNTFQakZRcojOKogTXtOsjn0KPdOsn85eyZJ1C4IFFxWuQnaBV9vCt5aRMln6MHj5JKf9BfT6MF8JMz0IvDKzNhVMeT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GsVM8EhG; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=uLoWieZ/98HcYIDBE5BKeNykq6TfluP+UwdRj9wAqcVvA3ceTdiVOptePeFHOJBnStaE1jBZEZ6p+eDuvzfh+HBwD9Q4xxJf5mnCltmd+PcJtTpdg9m+hA68DXDnh5m51YxHINqKwY1h3WrAJupVtVzNd+QgW2QQOdsR99kv2OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nRWYQrcb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=SGItmQXa; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=U8zOLo3d; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vyg3B6JK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsVM8EhG"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2320d06b728so9716915ad.1;
-        Thu, 05 Jun 2025 07:33:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749134012; x=1749738812; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l9avWjVFt6aWkiQYT2o6nDnnWjkbc+AGyVyiibpfVvU=;
-        b=GsVM8EhGv7fTMgIBH0lnq3zDiuuT1H5O/fBIN9Lu1VLCOyPOjtH/DkknEHRu/WXJxa
-         lAjBoSLe7hy+XQ5/btvefKyqrgFwNSEXHFKHYtjmoYYZoV8c0Vdod6lSkm+aVYc/qdPd
-         PNZ0Oy0MWrP6VyWYsvcTP6quvYCRT7E5qvj70f3fZE5z5JfIGUsiKWnRuG0DNTSWC0J3
-         rW1P9eg1SIFFMWyEtP74GV/j4A2IEuZ53tnEXWbJj36Xtngesc5d+9FJyKwWYrL+tHK6
-         4mnNljzrBWX1ed+aEKdyxVMKsY5LYz7GV9HmXxBWXqKove/mkSZRfvRlQ0jAEWMLy/iB
-         aqmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749134012; x=1749738812;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9avWjVFt6aWkiQYT2o6nDnnWjkbc+AGyVyiibpfVvU=;
-        b=lZWk13Ab4iY2tGsAv/joZxaq+1L6o/BKdhCrBrfXU6fCkpB0KsJyg4yMB2kKfUv8J4
-         Wd7r3VF9QBWkEdJU1CIDyRAm22SyyBS8df7FPOH9MMTKUsrVXa0LcNi3SIgDv6CQt3io
-         3alXS2DloAbuIVZWcfAX32rPqDowXz/EJUhNbummzQxU3A+LGmv+D2juNMxRcHj9DhXl
-         jlk9ujilYT1MkPg5EBu8tDrVSnE7kxHtw4D23X6QA1N49ppTxqDJK8VI2L8Mf5ba+s1b
-         UZJ29O/gTuM7HKRucMykfwlIXSCOctonP7HJBzIR1uvYMPZaorVHEqZMYL1/LW2LEvln
-         IhNg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6CPqf5uO3cl1XtWNCyVpgHykMCHi8FnmcsAhYXW5o8xogm5cf9bBdzw6XduOKrT6TTov7xBC0@vger.kernel.org, AJvYcCVBCYKsMMlJUTwrKQ4W75r+g6NJ4nNB9cE/qLFBKZUqr/CqQdXoDXMBnAbBfeTqj7NBxwctqQT2@vger.kernel.org, AJvYcCXT+Blp8V8pm/UeXbyRbgwSmjFtXdRC/Lwv5LT7Ge2oybj3R/49PVSEDBaV+JiyCXx74aE=@vger.kernel.org, AJvYcCXg2lG6cHAMSIEFXMOuJkX/Z23CbwGz8gq8AfTtRCdTbHmWCahlwYaTRN1bJxc75yZtMvBNPijtdMyNjiGB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXVNdzFm69CgZd/5rnOWBR1sEFfSWI4LWR3nZIpPsa9vMYpHUV
-	r8Aw0jjXK+2BOjFvZASKOAaJ6UWTF85WkUPZDU2tGbKhppmf2WTmyGXD5gXCGw==
-X-Gm-Gg: ASbGncsfsBBXxA+K2Qt49viKfnlv77wZmNRMKAV9NINlDeLUDo6reE8jxKf9mnhF9HN
-	vMq6ZrtV3DXnrq75VeUog7X/ooq8FITWcOwQsF2MDE/3lAXiqZAQ2axdej43DHORhhAvy5fCeUI
-	TQdWK/dH3+rxxhnWhh16mLPE4E8h4Ip9kf5ExqaJw1JJ3iFIqAx/vb4CyrAhbkHTZ8hOFVu3MXt
-	yvDa/Q3bzIFsXPPFq0JGvEtYsNGBIvA+0lwXPofKFgScs4H+R1sZRjWXzY+jjNzW1Tkqsoy0dIB
-	gVa+cOgOWXRucw3+qfqv1Gv7ZqTlTkHmrkNqQyWEVAlX9Q9Gk9X+nnWtfGAlHYMthtza7L2R6Ph
-	5wGbA5on99Uq5eBW7OfbVG5g3Vck=
-X-Google-Smtp-Source: AGHT+IHoYsehzq4W4hQnnnjTlH/Y7tcjh0kuCIpQiDNFzibOyjGm7QM3TfN7RjAAdMWkvPfyNTl5uw==
-X-Received: by 2002:a17:902:d550:b0:224:1af1:87f4 with SMTP id d9443c01a7336-235e14bc5d2mr113225345ad.22.1749134012316;
-        Thu, 05 Jun 2025 07:33:32 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:fe1:cf75:ee2d:d934? ([2001:ee0:4f0e:fb30:fe1:cf75:ee2d:d934])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd8cf0sm120472525ad.155.2025.06.05.07.33.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 07:33:31 -0700 (PDT)
-Message-ID: <f6d7610b-abfe-415d-adf8-08ce791e4e72@gmail.com>
-Date: Thu, 5 Jun 2025 21:33:26 +0700
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nRWYQrcb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="SGItmQXa";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="U8zOLo3d";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vyg3B6JK"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D87541F393;
+	Thu,  5 Jun 2025 14:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749134063; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tBRKCo+M4DocNY1VmXWBuYEliuLCfga2TMsPTI/Vqq0=;
+	b=nRWYQrcbJd9eLGzapJMVHqMlQv0ff5LGDOIjPvhj3hrxv30UHGnW2n3gkCNbOzjm63dP19
+	wJLwNWnsYDwwFqXd3Z3sSWkSSPeI3ek39JQFbRv3u5pdv7B+JAilr365ltVa/DdxGIF54p
+	XtrqdzvTKnjya+mN+r82ev16jz3tDFU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749134063;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tBRKCo+M4DocNY1VmXWBuYEliuLCfga2TMsPTI/Vqq0=;
+	b=SGItmQXaeqv5a5VtDbLuVrLIthHFp2a1KDCa/UXFvRBmu3C35+hU/l2nB3pBqQ3HQIqxyH
+	zKsjXld9cnMEI3Dg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749134062; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tBRKCo+M4DocNY1VmXWBuYEliuLCfga2TMsPTI/Vqq0=;
+	b=U8zOLo3ddbvXrBNa9TMQT1K5wgLWhzSKynxPLCx1xPpkT8xrzVSRwyScL3jCR3H38jFKOe
+	zZAYLftr/MrTu6IG10B86pwqxZJE5hQbzdJvUgkI+pfFVv7evQlVKWhtDqjgDlzK6UfJJ1
+	N4eWRXhp/pHBOTve3A3I8TZ9nvyAn9Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749134062;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tBRKCo+M4DocNY1VmXWBuYEliuLCfga2TMsPTI/Vqq0=;
+	b=vyg3B6JKj+dhWLFKvc57oS+dsa4C7uqCaCM/7cq+i2B3oD5cUvayWaGWa1Pr9g5JsEEd0h
+	zlgJa+qtlaPhcqAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C472A137FE;
+	Thu,  5 Jun 2025 14:34:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id y0FLL+6qQWjNSwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 05 Jun 2025 14:34:22 +0000
+Message-ID: <7f87973e-05c0-4c93-9251-e839e00dc5ce@suse.cz>
+Date: Thu, 5 Jun 2025 16:34:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,50 +82,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] virtio-net: drop the multi-buffer XDP packet in
- zerocopy
-To: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org, stable@vger.kernel.org
-References: <20250603150613.83802-1-minhquangbui99@gmail.com>
- <dd087fdf-5d6c-4015-bed3-29760002f859@redhat.com>
+Subject: Re: [PATCH v5 02/10] mm,memory_hotplug: Remove
+ status_change_nid_normal and update documentation
 Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <dd087fdf-5d6c-4015-bed3-29760002f859@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250605142305.244465-1-osalvador@suse.de>
+ <20250605142305.244465-3-osalvador@suse.de>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <20250605142305.244465-3-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -6.80
+X-Spamd-Result: default: False [-6.80 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	URIBL_BLOCKED(0.00)[suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:helo,suse.de:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:email,suse.de:email]
+X-Spam-Level: 
 
-On 6/5/25 18:03, Paolo Abeni wrote:
-> On 6/3/25 5:06 PM, Bui Quang Minh wrote:
->> In virtio-net, we have not yet supported multi-buffer XDP packet in
->> zerocopy mode when there is a binding XDP program. However, in that
->> case, when receiving multi-buffer XDP packet, we skip the XDP program
->> and return XDP_PASS. As a result, the packet is passed to normal network
->> stack which is an incorrect behavior.
-> Why? AFAICS the multi-buffer mode depends on features negotiation, which
-> is not controlled by the VM user.
->
-> Let's suppose the user wants to attach an XDP program to do some per
-> packet stats accounting. That suddenly would cause drop packets
-> depending on conditions not controlled by the (guest) user. It looks
-> wrong to me.
+On 6/5/25 16:22, Oscar Salvador wrote:
+> Now that the last user of status_change_nid_normal is gone, we can remove it.
+> Update documentation accordingly.
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
 
-But currently, if a multi-buffer packet arrives, it will not go through 
-XDP program so it doesn't increase the stats but still goes to network 
-stack. So I think it's not a correct behavior.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
->
-> XDP_ABORTED looks like a better choice.
->
-> /P
->
-
-Thanks,
-Quang Minh.
