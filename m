@@ -1,284 +1,232 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2FE20330
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC9D20330;
+	Thu,  5 Jun 2025 21:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749159334; cv=none; b=MhILRXlXSO0NjZk9DsenoZFYmKFIMLWRxw6+6f3dkSShlkOxgF/5obkXaVKVOXRWJFfM3xFwG1BiCme7m0PZN9KCBn4AeTopPDUk5XvOnDnmsCrXZEt1kYW7eO/CGLUN7dKyVlK6AA5k65A5N1QwXUGVmZadsNzwx7BNUrHRmLQ=
+	t=1749159431; cv=none; b=XuLQNML0q+15mxiABwpRZf9ywIgQARJ/ElzlbcBF2+O/Ffz5UPBGkZzpztqTskCg71WfWaNdpuVM8n9VDnkSvaU8ii45jCTQSQ7903kdKAaapU88WyRjXndRcXkjhvT9BJVSw/GMHk60gonbpqF3YR8EJc1rOJj9oc1ZQvsrO44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749159334; c=relaxed/simple;
-	bh=InJjN6zcsOZOTWHasrvyLwiyY8QNBp0ip4xNdsI2DFY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=TB0X1j2cGL3Q2qUc5ZXklY78nzFqm9GavcKzKtPgynXbhBGFG+FLw4NfKuQowVK3e9p7AymfXqpCwm+EILQKsyN9JZYSNIUOUUbCVFrfsANVUURFMZa066Hni5vuPt0NwVTUW2IUOA12xyo5HsJNFXni07TW+ArkdM1ibsy/wDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dRR3y1JB; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749159431; c=relaxed/simple;
+	bh=KomAMxAvk/8Fc5tTwcHMRIr9zWc5gjWQmOub4ROYpow=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CjqPxkIekkPfYfsAjZibl3/x9OvIWVSx3QvA/mbrMbNoqtcx4z24uyEQBqKQVzIKomr1DAUkbVokrQxXik3lFYKUCj5VjwtRzKCAw9tiwEPp4qDUo2FIcoXDdxjqjzqLrrkflp+07Y0Mxv00cnYZaZ5+yj2gjlJl79Gt/L3qiaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=d9QT9hUK; arc=none smtp.client-ip=185.70.43.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dRR3y1JB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749159333; x=1780695333;
-  h=date:from:to:cc:subject:message-id;
-  bh=InJjN6zcsOZOTWHasrvyLwiyY8QNBp0ip4xNdsI2DFY=;
-  b=dRR3y1JBFdI6QEHF/2zFXuDfA49qnRCdwtATheheiKM0J2y01kKkr/ix
-   IqWtrK23LJlmEBnY0MKVKbPn6ua4WoyM4D0rjNK8NeuqibzamXWSe5jLj
-   8LF+OciPbP/nVTvN26YP8uVbz7ATvpdOic0C7MHKInqkGp+U9ZQErqkao
-   FE2v/Z/Pp+NcRu1bkKdVoY53TB5IbKHOQS9jd0SiMmPH4rXBzcpWBIPso
-   QKYeXaVe4dwqEEhrTnAFZ/j9r8HytAczeLhz0kMdEWYGew1D1GrXG5WUy
-   UWKLbmP28P8nHQtyXeHNEJD87COOG5CgcTUD7y8Ax0J+HxtN8yxEAFvV8
-   Q==;
-X-CSE-ConnectionGUID: obZcZLtSRZun+p6vQhl1tA==
-X-CSE-MsgGUID: SiKVeNFxTaGR3tFnfQI0dA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="73833222"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="73833222"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 14:35:33 -0700
-X-CSE-ConnectionGUID: HRaU8m3cR76pU4GGH9xVqA==
-X-CSE-MsgGUID: swU/iRYzRJ6NfJl9jeCa2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="150504252"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 05 Jun 2025 14:35:31 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNIFF-0004Uv-0T;
-	Thu, 05 Jun 2025 21:35:29 +0000
-Date: Fri, 06 Jun 2025 05:35:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev.2025.06.04a] BUILD SUCCESS
- 2e8c51d247e7324e3a2204da839069fbe222c9cd
-Message-ID: <202506060509.G3EeWgyw-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="d9QT9hUK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1749159426; x=1749418626;
+	bh=21FryjTDqEqpqP5odesMO7gwe0g3ollvbPo6Ejjt5TE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=d9QT9hUK1TUc6sevjceVQVHiZqxlt/OlbaghCqW6E3ztPOLroSqNmbXMvATygHrNs
+	 4iGibH2JJA3xdd+5lew1DpwVMuWYuf6iaQWRWN3t/q3MQpB8y4uzUdNGFnNQYNvgqi
+	 ghgXLjLEDP8/xibfWMvyY1xaK9ut0auTFkGzPoYlbsCzY9xxY1T5jRx2q7UBkjRLfb
+	 X8sb1GiHUJ9JL3Feiy4eu2KXmR7969lSLP899p/hp/fXCEZiKwmeHwDKSb/kIq0Omm
+	 ygED7M35lcZTfAs5SdDxNfXWbnll4sVtnbGLoxrUt0VBXijubscewOW47H8/H0Kavy
+	 UCLmo5zLR4/QA==
+Date: Thu, 05 Jun 2025 21:37:00 +0000
+To: Burak Emir <bqe@google.com>
+From: Pekka Ristola <pekkarr@protonmail.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Carlos LLama <cmllamas@google.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v11 4/5] rust: add find_bit_benchmark_rust module.
+Message-ID: <pXt1ZkjyScL3fnnuyw12MHGyxxDunKpUjhGl_tL4kg8FpobamrUohmzQyqMxtCPfgbUmmPl4ZE6wco8Yqs6aLD5jLTD5ZL-zeNo8wk0uKUM=@protonmail.com>
+In-Reply-To: <20250602135231.1615281-5-bqe@google.com>
+References: <20250602135231.1615281-1-bqe@google.com> <20250602135231.1615281-5-bqe@google.com>
+Feedback-ID: 29854222:user:proton
+X-Pm-Message-ID: f90f569db84e596600f06996b3f91aa40038543e
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2025.06.04a
-branch HEAD: 2e8c51d247e7324e3a2204da839069fbe222c9cd  torture: Add textid.txt file to --do-allmodconfig and --do-rcu-rust runs
+On Monday, June 2nd, 2025 at 16.53, Burak Emir <bqe@google.com> wrote:
+> Microbenchmark protected by a config FIND_BIT_BENCHMARK_RUST,
+> following `find_bit_benchmark.c` but testing the Rust Bitmap API.
+>=20
+> We add a fill_random() method protected by the config in order to
+> maintain the abstraction.
+>=20
+> The sample output from the benchmark, both C and Rust version:
+>=20
+> find_bit_benchmark.c output:
+> ```
+> Start testing find_bit() with random-filled bitmap
+> [  438.101937] find_next_bit:                  860188 ns, 163419 iteratio=
+ns
+> [  438.109471] find_next_zero_bit:             912342 ns, 164262 iteratio=
+ns
+> [  438.116820] find_last_bit:                  726003 ns, 163419 iteratio=
+ns
+> [  438.130509] find_nth_bit:                  7056993 ns,  16269 iteratio=
+ns
+> [  438.139099] find_first_bit:                1963272 ns,  16270 iteratio=
+ns
+> [  438.173043] find_first_and_bit:           27314224 ns,  32654 iteratio=
+ns
+> [  438.180065] find_next_and_bit:              398752 ns,  73705 iteratio=
+ns
+> [  438.186689]
+>                Start testing find_bit() with sparse bitmap
+> [  438.193375] find_next_bit:                    9675 ns,    656 iteratio=
+ns
+> [  438.201765] find_next_zero_bit:            1766136 ns, 327025 iteratio=
+ns
+> [  438.208429] find_last_bit:                    9017 ns,    656 iteratio=
+ns
+> [  438.217816] find_nth_bit:                  2749742 ns,    655 iteratio=
+ns
+> [  438.225168] find_first_bit:                 721799 ns,    656 iteratio=
+ns
+> [  438.231797] find_first_and_bit:               2819 ns,      1 iteratio=
+ns
+> [  438.238441] find_next_and_bit:                3159 ns,      1 iteratio=
+ns
+> ```
+>=20
+> find_bit_benchmark_rust.rs output:
+> ```
+> [  451.182459] find_bit_benchmark_rust_module:
+> [  451.186688] Start testing find_bit() Rust with random-filled bitmap
+> [  451.194450] next_bit:                       777950 ns, 163644 iteratio=
+ns
+> [  451.201997] next_zero_bit:                  918889 ns, 164036 iteratio=
+ns
+> [  451.208642] Start testing find_bit() Rust with sparse bitmap
+> [  451.214300] next_bit:                         9181 ns,    654 iteratio=
+ns
+> [  451.222806] next_zero_bit:                 1855504 ns, 327026 iteratio=
+ns
+> ```
+>=20
+> Here are the results from 32 samples, with 95% confidence interval.
+> The microbenchmark was built with RUST_BITMAP_HARDENED=3Dn and run on a
+> machine that did not execute other processes.
+>=20
+> Random-filled bitmap:
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | find_bit/ | C     |    825.07 |        53.89 |    806.40 |    843.74 |
+> | next_bit  | Rust  |    870.91 |        46.29 |    854.88 |    886.95 |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | find_zero/| C     |    933.56 |        56.34 |    914.04 |    953.08 |
+> | next_zero | Rust  |    945.85 |        60.44 |    924.91 |    966.79 |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+>=20
+> Rust appears 5.5% slower for next_bit, 1.3% slower for next_zero.
+>=20
+> Sparse bitmap:
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | find_bit/ | C     |     13.17 |         6.21 |     11.01 |     15.32 |
+> | next_bit  | Rust  |     14.30 |         8.27 |     11.43 |     17.17 |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | find_zero/| C     |   1859.31 |        82.30 |   1830.80 |   1887.83 |
+> | next_zero | Rust  |   1908.09 |       139.82 |   1859.65 |   1956.54 |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+>=20
+> Rust appears 8.5% slower for next_bit, 2.6% slower for next_zero.
+>=20
+> In summary, taking the arithmetic mean of all slow-downs, we can say
+> the Rust API has a 4.5% slowdown.
+>=20
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Suggested-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Burak Emir <bqe@google.com>
+> ---
+>  MAINTAINERS                     |  1 +
+>  lib/Kconfig.debug               | 13 +++++
+>  lib/Makefile                    |  1 +
+>  lib/find_bit_benchmark_rust.rs  | 95 +++++++++++++++++++++++++++++++++
+>  rust/bindings/bindings_helper.h |  1 +
+>  rust/kernel/bitmap.rs           | 14 +++++
+>  6 files changed, 125 insertions(+)
+>  create mode 100644 lib/find_bit_benchmark_rust.rs
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 565eaa015d9e..943d85ed1876 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4132,6 +4132,7 @@ M:=09Alice Ryhl <aliceryhl@google.com>
+>  M:=09Burak Emir <bqe@google.com>
+>  R:=09Yury Norov <yury.norov@gmail.com>
+>  S:=09Maintained
+> +F:=09lib/find_bit_benchmark_rust.rs
+>  F:=09rust/kernel/bitmap.rs
+>=20
+>  BITOPS API
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index f9051ab610d5..3f826a73bdbf 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2605,6 +2605,19 @@ config FIND_BIT_BENCHMARK
+>=20
+>  =09  If unsure, say N.
+>=20
+> +config FIND_BIT_BENCHMARK_RUST
+> +=09tristate "Test find_bit functions in Rust"
+> +=09depends on CONFIG_RUST
 
-elapsed time: 1442m
+The `CONFIG_` prefix should be removed.
 
-configs tested: 207
-configs skipped: 12
+> +=09help
+> +=09  This builds the "find_bit_benchmark_rust" module. It is a micro
+> +          benchmark that measures the performance of Rust functions that
+> +          correspond to the find_*_bit() operations in C. It follows the
+> +          FIND_BIT_BENCHMARK closely but will in general not yield same
+> +          numbers due to extra bounds checks and overhead of foreign
+> +          function calls.
+> +
+> +=09  If unsure, say N.
+> +
+>  config TEST_FIRMWARE
+>  =09tristate "Test firmware loading via userspace interface"
+>  =09depends on FW_LOADER
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[...]
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    clang-19
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                     haps_hs_smp_defconfig    gcc-15.1.0
-arc                   randconfig-001-20250605    gcc-15.1.0
-arc                   randconfig-002-20250605    gcc-15.1.0
-arm                              allmodconfig    clang-19
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                               allnoconfig    gcc-15.1.0
-arm                              allyesconfig    clang-19
-arm                              allyesconfig    gcc-15.1.0
-arm                         axm55xx_defconfig    gcc-15.1.0
-arm                                 defconfig    gcc-15.1.0
-arm                          ixp4xx_defconfig    gcc-15.1.0
-arm                            mmp2_defconfig    gcc-15.1.0
-arm                   randconfig-001-20250605    clang-21
-arm                   randconfig-002-20250605    clang-17
-arm                   randconfig-003-20250605    clang-21
-arm                   randconfig-004-20250605    clang-21
-arm                           u8500_defconfig    gcc-15.1.0
-arm                         vf610m4_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250605    clang-21
-arm64                 randconfig-002-20250605    clang-21
-arm64                 randconfig-003-20250605    clang-21
-arm64                 randconfig-004-20250605    clang-21
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250605    clang-21
-csky                  randconfig-001-20250605    gcc-10.5.0
-csky                  randconfig-002-20250605    clang-21
-csky                  randconfig-002-20250605    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-21
-hexagon                           allnoconfig    gcc-15.1.0
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    gcc-15.1.0
-hexagon               randconfig-001-20250605    clang-21
-hexagon               randconfig-002-20250605    clang-20
-hexagon               randconfig-002-20250605    clang-21
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-20
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250605    clang-20
-i386        buildonly-randconfig-001-20250605    gcc-12
-i386        buildonly-randconfig-002-20250605    clang-20
-i386        buildonly-randconfig-003-20250605    clang-20
-i386        buildonly-randconfig-003-20250605    gcc-12
-i386        buildonly-randconfig-004-20250605    clang-20
-i386        buildonly-randconfig-005-20250605    clang-20
-i386        buildonly-randconfig-006-20250605    clang-20
-i386        buildonly-randconfig-006-20250605    gcc-11
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250605    clang-20
-i386                  randconfig-002-20250605    clang-20
-i386                  randconfig-003-20250605    clang-20
-i386                  randconfig-004-20250605    clang-20
-i386                  randconfig-005-20250605    clang-20
-i386                  randconfig-006-20250605    clang-20
-i386                  randconfig-007-20250605    clang-20
-i386                  randconfig-011-20250605    clang-20
-i386                  randconfig-012-20250605    clang-20
-i386                  randconfig-013-20250605    clang-20
-i386                  randconfig-014-20250605    clang-20
-i386                  randconfig-015-20250605    clang-20
-i386                  randconfig-016-20250605    clang-20
-i386                  randconfig-017-20250605    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                           defconfig    gcc-15.1.0
-loongarch             randconfig-001-20250605    clang-21
-loongarch             randconfig-001-20250605    gcc-12.4.0
-loongarch             randconfig-002-20250605    clang-21
-loongarch             randconfig-002-20250605    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                         bigsur_defconfig    gcc-15.1.0
-mips                     loongson1b_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                               defconfig    gcc-15.1.0
-nios2                 randconfig-001-20250605    clang-21
-nios2                 randconfig-001-20250605    gcc-14.2.0
-nios2                 randconfig-002-20250605    clang-21
-nios2                 randconfig-002-20250605    gcc-11.5.0
-openrisc                          allnoconfig    clang-21
-openrisc                            defconfig    gcc-12
-parisc                            allnoconfig    clang-21
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20250605    clang-21
-parisc                randconfig-001-20250605    gcc-9.3.0
-parisc                randconfig-002-20250605    clang-21
-parisc                randconfig-002-20250605    gcc-11.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-21
-powerpc                    gamecube_defconfig    gcc-15.1.0
-powerpc                  iss476-smp_defconfig    gcc-15.1.0
-powerpc               mpc834x_itxgp_defconfig    gcc-15.1.0
-powerpc                      ppc44x_defconfig    gcc-15.1.0
-powerpc                      ppc6xx_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250605    clang-21
-powerpc               randconfig-002-20250605    clang-21
-powerpc               randconfig-003-20250605    clang-21
-powerpc64             randconfig-001-20250605    clang-18
-powerpc64             randconfig-001-20250605    clang-21
-powerpc64             randconfig-002-20250605    clang-21
-powerpc64             randconfig-003-20250605    clang-21
-riscv                             allnoconfig    clang-21
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250605    clang-21
-riscv                 randconfig-002-20250605    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250605    clang-21
-s390                  randconfig-002-20250605    clang-21
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-12
-sh                    randconfig-001-20250605    clang-21
-sh                    randconfig-001-20250605    gcc-12.4.0
-sh                    randconfig-002-20250605    clang-21
-sh                    randconfig-002-20250605    gcc-12.4.0
-sh                           se7721_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250605    clang-21
-sparc                 randconfig-001-20250605    gcc-11.5.0
-sparc                 randconfig-002-20250605    clang-21
-sparc                 randconfig-002-20250605    gcc-7.5.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250605    clang-21
-sparc64               randconfig-001-20250605    gcc-12.4.0
-sparc64               randconfig-002-20250605    clang-21
-sparc64               randconfig-002-20250605    gcc-15.1.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250605    clang-21
-um                    randconfig-002-20250605    clang-21
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250605    clang-20
-x86_64      buildonly-randconfig-002-20250605    gcc-12
-x86_64      buildonly-randconfig-003-20250605    clang-20
-x86_64      buildonly-randconfig-004-20250605    clang-20
-x86_64      buildonly-randconfig-005-20250605    gcc-12
-x86_64      buildonly-randconfig-006-20250605    clang-20
-x86_64                              defconfig    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250605    gcc-12
-x86_64                randconfig-002-20250605    gcc-12
-x86_64                randconfig-003-20250605    gcc-12
-x86_64                randconfig-004-20250605    gcc-12
-x86_64                randconfig-005-20250605    gcc-12
-x86_64                randconfig-006-20250605    gcc-12
-x86_64                randconfig-007-20250605    gcc-12
-x86_64                randconfig-008-20250605    gcc-12
-x86_64                randconfig-071-20250605    clang-20
-x86_64                randconfig-072-20250605    clang-20
-x86_64                randconfig-073-20250605    clang-20
-x86_64                randconfig-074-20250605    clang-20
-x86_64                randconfig-075-20250605    clang-20
-x86_64                randconfig-076-20250605    clang-20
-x86_64                randconfig-077-20250605    clang-20
-x86_64                randconfig-078-20250605    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-18
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250605    clang-21
-xtensa                randconfig-001-20250605    gcc-7.5.0
-xtensa                randconfig-002-20250605    clang-21
-xtensa                randconfig-002-20250605    gcc-12.4.0
-xtensa                         virt_defconfig    gcc-15.1.0
+> diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
+> index 28c11e400d1e..9fefb2473099 100644
+> --- a/rust/kernel/bitmap.rs
+> +++ b/rust/kernel/bitmap.rs
+> @@ -252,6 +252,20 @@ pub fn new(nbits: usize, flags: Flags) -> Result<Sel=
+f, AllocError> {
+>      pub fn len(&self) -> usize {
+>          self.nbits
+>      }
+> +
+> +    /// Fills this `Bitmap` with random bits.
+> +    #[cfg(CONFIG_FIND_BIT_BENCHMARK_RUST)]
+> +    pub fn fill_random(&mut self) {
+> +        // SAFETY: `self.as_mut_ptr` points to either an array of the
+> +        // appropriate length or one usize.
+> +        unsafe {
+> +            bindings::get_random_bytes(
+> +                self.as_mut_ptr() as *mut ffi::c_void,
+> +                usize::div_ceil(self.nbits, bindings::BITS_PER_LONG as u=
+size)
+> +                    * bindings::BITS_PER_LONG as usize,
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I think the second argument to `get_random_bytes` should be in bytes, not
+bits. So it should be multiplied by "bytes per long", not "bits per long".
+
+> +            );
+> +        }
+> +    }
+>  }
+>=20
+>  impl CBitmap {
+> --
+> 2.49.0.1204.g71687c7c1d-goog
+
+Cheers,
+Pekka
