@@ -1,54 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD7B17548;
-	Thu,  5 Jun 2025 20:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0FF13B590
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 20:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749153748; cv=none; b=dZWjsj9j1zm8EXINQkaQXqqQmmr0GxbvnhNg8sGzUwSkXEU5XawK2jJ9TtsoZwEmy3rYtDGM9/JrwqNZWZhc11g2IoJeonAjAgobca0yl9t0aD9jb15Hicg7TMwoX9UT0bZdAf22isO1pqHrsh23EwiwIhMVl221UUz9cF55/4Y=
+	t=1749153840; cv=none; b=SIxRbCwz/f5XnoLQPHxCjbGit8F4DT1tyW+YPibTyNRzkol86Zd4+/oW0pcgKljfWLkLpN1+Qii10VQNoF9WaCPiHyOnFY+EXtFAml2an33hqFlWBbdhWF+xkYTmStJTBc8Jyudr2Nc0Q+6OQuUm8nrQ6k+xdOvppfQccKoJ+Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749153748; c=relaxed/simple;
-	bh=7POy0PwH4blRJ5E1aF7ZF6VZE2R9uGB+oQ4ajtto1xU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=iVwBqh7jEwlMqXxlzjFL6LlavgOFevPIqCQ44SJXG7ZVDa2KjylyYs5Mm48H7sqkbknosaMU6PnHqX1Dfo1W8UeV+hiqohzyyuHLopz0vmhY87KnPSn8a9eXO882L5O6xKuz1GbmqrJTTZqXocCrRyrD7/A6dybBb//Sjro4ro4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gqiLvvt7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749153840; c=relaxed/simple;
+	bh=TeGhnktdSvFxXreUkwhblyYxGqCrkCLuVr00TRFUiKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F88EAO/GGv9SF0RPdxmQ6+teoiKjseJclOcN5Jl9vEG08jZXZiLkRDrJQ+4+1CiQbOQSzpJMOZZ+L2IjV1Grp12SV2Ae0MiAzlStpQkXrXX8ey5iPWIr3msEEJRm9VPbW3lq45ladUmYn9hWTljn2ognJcPl41o5dDPFU5ijcdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=muyYK09A; arc=none smtp.client-ip=195.133.245.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gqiLvvt7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16542C4CEE7;
-	Thu,  5 Jun 2025 20:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749153748;
-	bh=7POy0PwH4blRJ5E1aF7ZF6VZE2R9uGB+oQ4ajtto1xU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gqiLvvt7+M/LbKMv5+JDSwn9E9h/04p9RPnSOU1ir9l4zi2LQYDkDi4dboD1sQLPj
-	 ZmgOjSXyN3gWxVSJiIqZtiuannx9BCweEpn6XqOBntxX+fecPXTqFaoz+/jhhsC1Ga
-	 LP/zlWHqzZfSJRTT5syc7sPqJbJwR/uvYv6z06zs=
-Date: Thu, 5 Jun 2025 13:02:27 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: hughd@google.com, baolin.wang@linux.alibaba.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/7] Some random fixes and cleanups to shmem
-Message-Id: <20250605130227.f06c8ad8cc6517720d7e0db9@linux-foundation.org>
-In-Reply-To: <20250605221037.7872-1-shikemeng@huaweicloud.com>
-References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="muyYK09A"
+Received: from mail.nppct.ru (localhost [127.0.0.1])
+	by mail.nppct.ru (Postfix) with ESMTP id AD95F1C2ABB
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 23:03:51 +0300 (MSK)
+Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
+	reason="pass (just generated, assumed good)" header.d=nppct.ru
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
+	content-transfer-encoding:mime-version:references:in-reply-to
+	:x-mailer:message-id:date:date:subject:subject:to:from:from; s=
+	dkim; t=1749153831; x=1750017832; bh=TeGhnktdSvFxXreUkwhblyYxGqC
+	rkCLuVr00TRFUiKg=; b=muyYK09AKsd5svyarCM+wgyXi06Ne0zIQpr8osYyGlM
+	mvFv38mvh3e1slWQweEQvM33yQ2sJPuyYfezhOkuBx44rteHQiJ3P3ULqQ0CTKY+
+	Yf6RfncjFBjitQYbMnjScBBdtAJZeidKE5vZzL2zX0n+++cfU7vC7VRQHVDjnJt8
+	=
+X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
+Received: from mail.nppct.ru ([127.0.0.1])
+	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 9j4KrAqbXQx1 for <linux-kernel@vger.kernel.org>;
+	Thu,  5 Jun 2025 23:03:51 +0300 (MSK)
+Received: from localhost.localdomain (unknown [87.249.24.51])
+	by mail.nppct.ru (Postfix) with ESMTPSA id EA2801C2ABA;
+	Thu,  5 Jun 2025 23:03:49 +0300 (MSK)
+From: Alexey Nepomnyashih <sdl@nppct.ru>
+To: Lyude Paul <lyude@redhat.com>
+Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH 2/2] drm/nouveau/instmem/gk20a: fix incorrect argument in iommu_unmap
+Date: Thu,  5 Jun 2025 20:03:24 +0000
+Message-ID: <20250605200332.336245-2-sdl@nppct.ru>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250605200332.336245-1-sdl@nppct.ru>
+References: <20250605200332.336245-1-sdl@nppct.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri,  6 Jun 2025 06:10:30 +0800 Kemeng Shi <shikemeng@huaweicloud.com> wrote:
+The unmap logic assumes a fixed step size of PAGE_SIZE, but the
+actual IOVA step depends on iommu_pgshift, not PAGE_SHIFT. If
+iommu_pgshift > PAGE_SHIFT, this results in mismatched offsets and
+causes iommu_unmap() to target incorrect addresses, potentially
+leaving mappings intact or corrupting IOMMU state.
 
-> This series contains more fixes and cleanups which are made during
-> learning shmem. Patch 1-3 are some random fixes; Patch 4-7 are some
-> random cleanups. More details can be found in respective patches. Thanks!
+Fix this by recomputing the offset per index using the same logic as
+in the map loop, ensuring symmetry and correctness.
 
-Thanks.  I'll skip v1, wait to see what reviewers have to say.  Please
-poke me in a week or so if you think I should proceed with the v1 series.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Cc: stable@vger.kernel.org # v4.3+
+Fixes: a7f6da6e758c ("drm/nouveau/instmem/gk20a: add IOMMU support")
+Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
+---
+ drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c
+index 17a0e1a46211..f58e0d4fb2b1 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c
+@@ -481,8 +481,9 @@ gk20a_instobj_ctor_iommu(struct gk20a_instmem *imem, u32 npages, u32 align,
+ 			nvkm_error(subdev, "IOMMU mapping failure: %d\n", ret);
+ 
+ 			while (i-- > 0) {
+-				offset -= PAGE_SIZE;
+-				iommu_unmap(imem->domain, offset, PAGE_SIZE);
++				iommu_unmap(imem->domain,
++					    ((unsigned long)r->offset + i) << imem->iommu_pgshift,
++					    PAGE_SIZE);
+ 			}
+ 			goto release_area;
+ 		}
+-- 
+2.43.0
 
