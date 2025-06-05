@@ -1,1482 +1,315 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D777F2AF0A
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 22:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749161881; cv=none; b=AL5unG3ym7x7OaQ9+xiHK628cR8BV32XxPwswJwqYO8GlIWMyc8Qigr3HhAABG8bTq0LIjwoTcUOEgwWw6x1PwhYMzfBBjeyBa7oZwoB6s2u0dU6UervxJC6ouMwjSOXm51nmlmd4T+AZmmvxRYY5VGRbScITnLHb0ycHxnDWbI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749161881; c=relaxed/simple;
-	bh=KcCxnkaLAzedl46fr5qSq832f++6M/A6gPneXpFYYmM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=l3YtsZNAj6BQBcVFxMmysq2IMN3gtP6+dADXinCb75o95ThkPYveXAoWFTqNxARKM35OVCA2h3E8ulnh8zUEWHpObZQCMdNpJ1KJxnntvCeiubiegSkjwf5oa6w6gXgu0Co03E87D6aMvjco47dADftaLQwdNtF3e6yCAKvuxXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aXAW+dxq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54E72749F0;
+	Thu,  5 Jun 2025 22:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749162155; cv=fail; b=eCIYnmIp2pCGQIXJP9JKlVscqfBVy7zuSLKBCvHZazOJ9TMhNKJwX6UMAiyO1KadvdOZJ752ztNF76sG7Q9szJHg2TpAHfZpm7JPE1bJjIXU/BYl/mkdZc9cwdH3jxtR+bXhURLC+FjrXxqgyBOo9VXmyMlBjC9HeDwYNMEgooM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749162155; c=relaxed/simple;
+	bh=jwEDBe86Ra4fVPyGZjJ1LF2PMvG2Ixmw8MNFRwRdIn0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mjHkABYB/yI6mAp9r5QPX3+d5jeakZi3TO83DFYvvHSxhwgWWiIspMMoTWqgzAo33Tl6HMGB04D5d1v9Yc4v2vdNjBt9cM2cOFhVqPs+7wFYc8grAitRcxW/5P/LBwR4c0vC2NTu3y7IbpxNZteFMkEnQWkuDgCh2i3pqi/B9YE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V70A/qBu; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aXAW+dxq"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555AUsqi031915
-	for <linux-kernel@vger.kernel.org>; Thu, 5 Jun 2025 22:17:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=dWOOwem5X3eD76WnD19e0g
-	xGVuS0bXeNd7150aFp5A0=; b=aXAW+dxqfOzJYyIH+FQUopn8gJz5QOe2nYjiCH
-	hr7prMjlPJYvKVfzkuae40c0dhOIZM5PTntiJsWuHRHlC5md5a9+joC0NSlvsoDG
-	ZoSeObTM2pU3szGVwkriicOxmJSG4C83z7l6/YGQhcQf0Ul9XafYs6rdsmeslm1N
-	lJo/Mvi2ld3unO4tjWJc6IuA+j/elj2VW5J77mGxAIFnRfekoFBvGKE9bKukrEbc
-	DxjbuEMPiZNw5rh+ZdFrLBqp1hvg3oP0L5GV4MR+mRIQnZ/+/2miN0o7xQrPzAXH
-	rPkeYQ/Qv5MhG3apnMVOpWN6bkazerjhwqX16abLNiS0OpXA==
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 472be86fnw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 22:17:57 +0000 (GMT)
-Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-408d05d8c03so557892b6e.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 15:17:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749161876; x=1749766676;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dWOOwem5X3eD76WnD19e0gxGVuS0bXeNd7150aFp5A0=;
-        b=fUp4OzqvzPV3WccAU2alTH5vp/0q65g+UsrYW+gq5r0hqn5MUdTJyL0/qz27a/1Sju
-         v6voT0jnpUFqBeXoscyyzVpZqNVYdsW0e7X9P9TqUfw3eZHIOslvYkrkBna+WVFO1eHd
-         9pLvDByPdf/vdp5/dcdXNKOlVBK688zqvD0+9vWzwVOCPyhJfNp/4nLEnXcZJ6MA2DYt
-         nuPbO9xxzXhlpkU//FgqkEAOPF/x7MfQ8Z9Kwx8zcB3xy2fxdhRhmGJ8+nsGwDENBP9i
-         PvNPg76li2RlWRpzylIjxFLYvYCCLg6PcRFxtw+oQ4E5V58K7hwOWxy69G7XeI76fFO9
-         H//g==
-X-Forwarded-Encrypted: i=1; AJvYcCVpKFmrx0ezUrxGXyJtDrNBAHChhqnyFc+jyD7uLtfUXBh4olhTpjEMBPu+9Fqg+96vkIdSAHMuSs4XgnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYRl1dratWRKBXg4EFth9bTJ9Vit1ATNBdvRdFduGVV9roYaOP
-	wsVtwN4AzVAonCOsNz8f2iob7DfO4U8zGTHYnZPoh76WhEUj4KakvlNTDXvpF1QtFZ71+UJQBbt
-	m1avFThAWB7ffYl5pFQTgM2NABRfUOBbH+UP/kwD7v+/w0nUpmHQ3J5X2RwL7kQ9lqe4=
-X-Gm-Gg: ASbGncugs9DLWnCa6fxS9W277WgxUcaNu6IfL8dJc9sjnZPgRJBiWtiXhomgtFbQk+f
-	HbsDpRV+r7ilzIF4oiCJtqkT0fFY6r9SBeEE1W5gQvmzGPXEyY1gOIV3Uh/rU5SXRAAOyqnQhbK
-	/XgRYKG8h8xcOQYQSHTKfPczGlgoxHkUpFD3KaWvh5ansJ8t3cfKY4YOse7xAgtZevGMJnACF7C
-	LRf6zh0jsranmMxYSkl2OnmXwFGpFODPvplPraFx585xf1DFdd5cKdkos1JvQf5iKPG+exqS29u
-	AYLcZMRjLPTFXBf96/IqMU0yseZKGUaBPO/oEj1xR8yeSsBf/ZjMzpX8NPuZSg7TsFXEWrOSv7u
-	w7lChkkHl5J8=
-X-Received: by 2002:a05:6808:6f94:b0:400:b402:2403 with SMTP id 5614622812f47-4090525e179mr910910b6e.32.1749161875814;
-        Thu, 05 Jun 2025 15:17:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGQlwxFyoOLuwYkfStnpUAUJlLJu9tJ6U+nMGE/sz2sWwcYXG8gAXklQPQB06e+XrvEEwYG5A==
-X-Received: by 2002:a05:6808:6f94:b0:400:b402:2403 with SMTP id 5614622812f47-4090525e179mr910889b6e.32.1749161875130;
-        Thu, 05 Jun 2025 15:17:55 -0700 (PDT)
-Received: from [192.168.86.65] (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40906a0fef5sm34949b6e.42.2025.06.05.15.17.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 15:17:54 -0700 (PDT)
-From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Date: Thu, 05 Jun 2025 17:17:47 -0500
-Subject: [PATCH v2] remoteproc: qcom: pas: Conclude the rename from adsp
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V70A/qBu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749162154; x=1780698154;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=jwEDBe86Ra4fVPyGZjJ1LF2PMvG2Ixmw8MNFRwRdIn0=;
+  b=V70A/qBuxpNunoOVn3xt49gCM63nKkwyRHaeY+aXN+C6utOKYuYXcoTl
+   CfjwHAUieJrLTErWFZS8VInTLkJ/ugua38osHkvSaWMeVYHmZPwjLOzKa
+   6XElpZSPYK8NOnSZjlku1S99lwZHF/lrSFcfbe+0eKT7t7/RjgDCzvygy
+   GVS+AgQE6+jU0rW9dkEI1l7BWwvX044yyDMKF1f62mnCRtmQbOFQPtnh+
+   ZX7OUuDQxnSC4iddTJUusITYTalajb7Dpq3LJfUxKAdXyzlZ0YWIv2iMD
+   5pspzt8XZWlWlW6u2qz/YnmXyqaDNOBqWnP93hJbijg/YMIJeguRnGChq
+   A==;
+X-CSE-ConnectionGUID: O8FK+/2BQNOfY5iVysDQZA==
+X-CSE-MsgGUID: zltLh4wRQ0eF7QqokaKqLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="62663241"
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="62663241"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 15:22:33 -0700
+X-CSE-ConnectionGUID: 9gNeDbiATcaFh+LGxiZCdg==
+X-CSE-MsgGUID: YLegbgADRqSNdij4UyPfzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="145540118"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 15:22:33 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 5 Jun 2025 15:22:32 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 5 Jun 2025 15:22:32 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (40.107.102.47)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Thu, 5 Jun 2025 15:22:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=E94W4O0GrN4okBshF9YJ+GqMf1QfmNraN7yfhVHG2cx5akEUEu2DUxnoi71suAHjZvVQ+eKHeY+JuCx65pGW4LWAzV7NsyaXKF1nezbCeojVNMtfWtRJr3xZKFhK7t5Z0oynNJvwL7csAsFXw/XcP60TSilCOBJt3FmrkJ4YeXjnzN0+qHdSY0ZuV6fT/Gtd5CdtHmX3+zXaF9lEka0DUHMqZVdYhmo7zyNG3+fzIdp85UM7HK+0xxZeF7EGmzjiNwzWRvYh9XI8BwSjKUE9S0E8sZu1cflmaEOGEOxvWqXJ4n0dI2I3WaHfZUpLoONm11+ftqaEogiWJx5JCLH1CA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jwEDBe86Ra4fVPyGZjJ1LF2PMvG2Ixmw8MNFRwRdIn0=;
+ b=AqYIyfckTlHxikKAceU/WZALcBBDf1Xsbzx+3IKAseuiNFp9EpO7/JEceYUPfyu02wY6gEcckiB5iJXQtpj54KrRp3C9/poGJPm/A7VCBU4PbsTis1+prLaMkGhybEwMNBe0IEhLeHezexx3NtxADpnk47bmeFKX7Y7rtaRUuZbksjmnfyRnta0XeRQ4OXFDuZ2d6IRyyftvefw1Vy6xyVNO0MdLpPL3/SWho8df6CztbdWla7b9GeUok7ybYl0l6xPZ6JLWrNcP0MagelhxAmzZIZxgb0c//QQY9fgrrPYqT8l7XHJfGPjrPMh+4O6Wj0LXFtxPCWCBiy/ld0JEtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BL1PR11MB5525.namprd11.prod.outlook.com (2603:10b6:208:31f::10)
+ by PH3PPF957B3B2A8.namprd11.prod.outlook.com (2603:10b6:518:1::d39) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Thu, 5 Jun
+ 2025 22:21:46 +0000
+Received: from BL1PR11MB5525.namprd11.prod.outlook.com
+ ([fe80::1a2f:c489:24a5:da66]) by BL1PR11MB5525.namprd11.prod.outlook.com
+ ([fe80::1a2f:c489:24a5:da66%5]) with mapi id 15.20.8813.018; Thu, 5 Jun 2025
+ 22:21:46 +0000
+From: "Huang, Kai" <kai.huang@intel.com>
+To: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+CC: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "seanjc@google.com"
+	<seanjc@google.com>, "x86@kernel.org" <x86@kernel.org>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
+Subject: Re: [RFC, PATCH 08/12] KVM: x86/tdp_mmu: Add phys_prepare() and
+ phys_cleanup() to kvm_x86_ops
+Thread-Topic: [RFC, PATCH 08/12] KVM: x86/tdp_mmu: Add phys_prepare() and
+ phys_cleanup() to kvm_x86_ops
+Thread-Index: AQHbu2NdArquWBZL3k6ZxRzni0e1trPFhLGAgAM9bgCAAMm8AIAFRXMAgAJ+QICADu5ZAIAUf0OAgACcfYA=
+Date: Thu, 5 Jun 2025 22:21:46 +0000
+Message-ID: <46e0a089ea78613be5f0287eeca449231731f824.camel@intel.com>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+	 <20250502130828.4071412-9-kirill.shutemov@linux.intel.com>
+	 <aBn4pfn4aMXcFHd7@yzhao56-desk.sh.intel.com>
+	 <t2im27kgcfsl2qltxbf3cear35szyoafczgvmmwootxthnbcdp@dasmg4bdfd6i>
+	 <aB1ZplDCPkDCkhQr@yzhao56-desk.sh.intel.com>
+	 <2bi4cz2ulrki62odprol253mhxkvjdu3xtq4p6dbndowsufnmu@7kzlzywmi22s>
+	 <8668efe87d6e538b5a49a3c7508ade612a6d766b.camel@intel.com>
+	 <mgu7at7d3qy4h55bchxfmxj6yzqyi7gh4ieds4ecdvlv243frl@bzou376shiak>
+	 <wwftow6boiueqbzrbfpedxs3e3ioelx3aqmsblzal6kxqdt3d5@dljyaozrfiry>
+In-Reply-To: <wwftow6boiueqbzrbfpedxs3e3ioelx3aqmsblzal6kxqdt3d5@dljyaozrfiry>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR11MB5525:EE_|PH3PPF957B3B2A8:EE_
+x-ms-office365-filtering-correlation-id: 0b61c676-1edf-46ca-a18a-08dda47f5c05
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018|7053199007;
+x-microsoft-antispam-message-info: =?utf-8?B?UmlMSTUvbGcxU050NXp2ZTZHYXB6NWE1cW5rWU8wZWh6U0lSL0taSC8yZ3ly?=
+ =?utf-8?B?aXd2UlVSdjU2Z3lEQm9ZZDdseE1SNUtlNGVDeXRlNDhUbmtuZlhVZk1IbDBO?=
+ =?utf-8?B?YVhvVjBsV05aanlLN3g0amRSTFpzTCtUWnpESHJUZ1JZVUJ1aWZqZXZQNG0x?=
+ =?utf-8?B?a3Ryd3A5WU1CUmVFeWM5UDNhM0xWWWlRclZmZk5iTHRKZXROb0VRSUJ1aC9T?=
+ =?utf-8?B?ZTRqU1Y0UkEvcjUzNGRINEJQNWF4QVhRYS9XVmFId2p6WFpFNTBlb0J6Nnpa?=
+ =?utf-8?B?ejZ4aTVOZ21wUm8yZDhyK0NiNjJNTmhyN2hhaDlVYmV2clQ1NkZ1N283UmtG?=
+ =?utf-8?B?dk1QVE1jejVzV3F2MlR1Mk1DUkRtSFNJQkJ4ODMwRDk3bjVSaG16dEVqOUpI?=
+ =?utf-8?B?b0c1RHBpTFdrYzhmQ0lzYVV3d0FGYXVETnIwQ1Z1b3RXYXVaSW1qMitWb29I?=
+ =?utf-8?B?L1A0c0FZdFBDOEtBR1FWelhTd0lvU24wZjlDbytKZ1MvNWJFK3VtMmg4OXBv?=
+ =?utf-8?B?NjhTWVZzN2xQNWlzYnZjMlp3aERxZHYzUnBMZGQ2bGxrTUJXbWUyQ3QwZWk0?=
+ =?utf-8?B?bEUrYndiZWtOb1FaQ1JnbEJPK0NCaEdxcXdjWlF4dndnQ1pid0ZnakcvT3Vv?=
+ =?utf-8?B?eHlBWEErLzNSR2xXYm1zWHc5b0UzN0pYZ0NrMzUzVFY0R0RnOXVydlpoVlVx?=
+ =?utf-8?B?THVSSDY2cmFpOHhnTXNBa3R5bkU3WSsrRVJkK0RWZ2dXbkZ5Mkg0cHVnRDQw?=
+ =?utf-8?B?MnRrRWZjL1JOKzNibkRudC9jUmNQMmR3OUdPWVdlVHE3aGNySEY5Sm5KZEJ6?=
+ =?utf-8?B?c1F0cmthaU1LUy9RemU3UzBraDFDYklURDF5K0dPNmlZaTVJZzJTS2JRWDY0?=
+ =?utf-8?B?c0tpQ1FWYUhDbGFEVXhlMUQzTWY4TFBlbEt2bmdmZ2FIQzdFMXNWVmhrOVdj?=
+ =?utf-8?B?ZTZRdnBBbEFYV0U3d3NIWkhlcmpGY211ZVRqNkgvUmc0TldsZHZjUC9HZXpF?=
+ =?utf-8?B?N2s3c0ZzVDk2cGRWL2NIQUlnZGJkcXVPT3B3NmthcDdkRUV2bUlBL1QwYlpW?=
+ =?utf-8?B?NU5pazBhSWUyS1FRamlkYTl1TnJHRi8zN1IrN3dtVi9nY1VRcTRhWU5aWkVw?=
+ =?utf-8?B?WmJaWGh4WkRmN28xTWU1VTB4WUo1T3lWdTROWnRUNkFRM2w5TndWVU9ITnBZ?=
+ =?utf-8?B?VEc1NThDMVlyNUlMY2JkaytkRkNETFpqc2xaNTQ5aURvZHlVVjBYR3gvQ2Ux?=
+ =?utf-8?B?dXd4WVllUmphZ0lqTU4rZUs2RkJQQkRiTnhJMWZKcENsVTRRRnJNK084NkNp?=
+ =?utf-8?B?WThPUU9Ocms3WDJyUXJZVDdYSCtsSVJtSXhobE03M3ZSd1g2dE40bGk0Z1BB?=
+ =?utf-8?B?blplOVYxZnpjcHRlU2xpMnN4VE5aL0JoQTdYc1NUY3hLTThvRXJHN1EraFJS?=
+ =?utf-8?B?M2FPek9LQXB1bFFjSDhsMHJ2bm9wVGZGNExhMzdxRkRLbHE4bVFuNlF3Z1o0?=
+ =?utf-8?B?M2pzRHRSUWdXTHNuSGJTZ3YxVmIzdk90d3gybXZCc0ExdlZaZXRnNzFpQkE3?=
+ =?utf-8?B?OEdlSEF3N21aL1pYbEVFR2hTaDUzclluUG4vYk1ZUkMwRWtaaWxZL2JuUGNw?=
+ =?utf-8?B?M3hBN05nRVVIdjhLb3F3YmpGbS9UbTFNN1U0bmZTV0t2ZGh0blVXN1h3YlZJ?=
+ =?utf-8?B?NlpBd2EvV1hvdVArOUJUcEJmdEJvb1d4Zm0yQXBhQXRJMTlicldna0lKUVJM?=
+ =?utf-8?B?ckt3cm9kYUc5aTJTaGRMU3Q0eStGY1o0M29idWdLcEpNTVVZcW9iRzVFeFd6?=
+ =?utf-8?B?NnBab2luYnFVa1RRY0xUOEx2RU5iVWg2d0JUaUR1S3U1ZGVhdEdGQkc5ZFZ4?=
+ =?utf-8?B?NC9RTzZyNWt0NllrOFRxTGxLdTZhSzhQa0Zwcld6d0t0eVY2a1VXeTRKVlp4?=
+ =?utf-8?B?SEREaUp1V1hITFVQeXVYOXVvUnRObzVHNS8zRW1YaUUvWmx6bmtXTDVOb2FI?=
+ =?utf-8?Q?0wZqfIpMI+gsMaKODnLwgf2P1Wj2b8=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5525.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018)(7053199007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?am9GY01lMlVwNHpiOFF0b2pmVUlhZFZpZUI1azdEQkxyUFBxaWxXRFFXV0tl?=
+ =?utf-8?B?R2NKa1NGc2JuL2lFelpYMWRYVFNBMGR6Y3lJS05DNG9sTWFoTlkrMzRVQm9Q?=
+ =?utf-8?B?ZnJUVTA2S2R4NnJSNnYrcGlucldDQmpKdjFVeGUyalRMMkladVB4TmVHS2RX?=
+ =?utf-8?B?cnNnVXJnQ3dsYzlFU0JzSzNyMzJ0b05SZmxsNk1PVEhDNVIyZ3U5bUFiNWs4?=
+ =?utf-8?B?UjU1UElKd0gvZEVkVENabXBOS3VCMk5kcDZ4QzdxU0Q3QWszazhaeGdJdFFK?=
+ =?utf-8?B?c3RIZURZM0xxV0V2ZkR3dGMxWndLQ3czNzlwQTNHVFRvY3BCOEJSTzdpMkhm?=
+ =?utf-8?B?VVM4L1h1NGtnYjZBOHB0enhxcHd6RGk3ajYweWtWclVaRTY5ZDZ6SC9DL2Vi?=
+ =?utf-8?B?Wm51bEFTYmhCbmJMWDcwOWZ2SkptSm5VVmdETG8rcHhjQXV5VGJ6OXltTFhH?=
+ =?utf-8?B?YUFHT3oreUJRRzVoMm9hREVFUjJ0c250WXpPZnV1Sy9sRURXaVlGOGlXZkww?=
+ =?utf-8?B?TzRDQjJ0RnE3U3QxbXRXQ05ndDBEMGFMVVFSRzR5MEE5UDdyeU0xKzA1Wkhi?=
+ =?utf-8?B?QkQva1Y1VHV4UWpZdFJERSt2Q1REK3pBR0Y2WmhOSE5CSDNFUG9GYkZBRTla?=
+ =?utf-8?B?S0ZDN0Vid1JqMjZDK1ZwSlM4QklTZWhZVERudCszK2VWaU1oWmVFOUJsU01K?=
+ =?utf-8?B?ZlN1VGlNcDcwcHVHeStGK2JGcGtCUnZvc0x5L0tHZXR3WHFiR1ZrblBXT0pm?=
+ =?utf-8?B?S2JvSWNvZ1d2VjZ3UmNJWWhURWN5TTVSUktUdmozR2ZsMUpJdEtqdWJGM0I4?=
+ =?utf-8?B?cmcwM2dvVmVscU9SQWlGczdkOWI3anM0bjlZd1dWZnIyOHFQUjhaOEpOa0t4?=
+ =?utf-8?B?Y1NQWDlNZy8rb1QrRzdudkZHYjZDV2hyZDhGZzNrM3VpNS9kaEpaTVkwUjFK?=
+ =?utf-8?B?eWN3eGhWWWgvL2VaMDVEM1o0VFZSZWsxSU1KSjIxaTlMM3F5SmZjVmpwOTJW?=
+ =?utf-8?B?cXltWEJ1K1lTRlc2eWZpYytyUDJtMWE0VVp2Z2FRQjVwaCs2aEhoS2g4YjJO?=
+ =?utf-8?B?cmxWNWhscUd4MWhmdG4zb1VaeXhJZTkvL0duYlNIOGpmVzZCQXVmTFMzZ3lx?=
+ =?utf-8?B?WGwyZDZPYlpTSjloNVh3WTBwRlRRZVdFOU9YbnhOTTQwbUpFMGVlSU9jU0hZ?=
+ =?utf-8?B?ZEF5RUgrcXU3NzhXdmlBMWJ3azB0YnJVajJYOFVSMURVRmVnZkdqUEM1M1Jm?=
+ =?utf-8?B?REtqa2E5eHRJMVQ2KzdESEpJS3YzNG94WDBkVGx6OHhuRVJJdkRaeXNESkxa?=
+ =?utf-8?B?cUg3bDRoTjRiZHpVVlFHY2J3ZU9HampzMnZueklBMGF0SWNVS2JPanBUcEM2?=
+ =?utf-8?B?cG9EdGs0dlY1Rm5VdUdYa1FrUDZzem0wdk95QS9PelIwaHZXUVpSZmFoWklx?=
+ =?utf-8?B?Q213KytpYmpnbjRCRGwyeUl4SUlpaU5icFgxbG9hTkdFcSt0cWxwSVpLcjRP?=
+ =?utf-8?B?Qlc2Q1NKZmRUMmhhNmI2S2dHSTB2MTZvMXlacW5pNSswNTFFTHZnZHJnK2pL?=
+ =?utf-8?B?RjgyRlFZOVdheXplV0pmN28zVUs4ZVIrV0V0cUkxckJBRUF6UGhBWWdvd3BB?=
+ =?utf-8?B?M0ExS01iMElXNlJ0Y3VnYXpxU3JJUXJmRDNFaGVDc25wVW4rU3Jwb0ZRcW52?=
+ =?utf-8?B?MWFnOENqbHJkR0taR3dCTGhGMEdsU0lxSldiRDYxb2JRQ25FRWpxRmthYWxv?=
+ =?utf-8?B?ZEs1TlJ3ZkNZZlp4bDlUTG1nS1JsZWZFOFhMbGswalF3ck51YkNvcXFSdjRM?=
+ =?utf-8?B?VVJ1d0tURGlSYWhSUVY1eU5kdFgrcFhlQmxKc2ZDbCtMNytscU1xcHIzRS9G?=
+ =?utf-8?B?YTNOZjBYam5lcExoYWtOMVMweWtZaXpubElkQ3FkTVBlQlFjN0JhSjdBSHZs?=
+ =?utf-8?B?NXllT1RnSkJ6MkZ0SXZlUDEzaHJ0b2EwenVsWEpmTjB3ell2YVYzdFNVV2Rs?=
+ =?utf-8?B?RmNzYmZUTmhVcjNrdTZiV1liRENWTVI0cmlSajV2UzI4SElaZTdMSzVHRGJG?=
+ =?utf-8?B?ZGdJblpha0JXd2orN3Erak9QSnF4YVhoMTlLaDhQMVJ1UHBUaGt4WDBuT3o0?=
+ =?utf-8?Q?lpqvv0djZC67my/zfimYq75pV?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E5B99ED71FF02B44B0D3F2D19862AB54@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250605-pas-rename-v2-1-f1c89e49e691@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAIoXQmgC/22MQQrDIBRErxL+ugYVVNJV71GysObbCDWm/lZag
- nevybowDLyBeRsQ5oAE526DjCVQSEsDeerAzXa5IwtTY5BcKq65YqsllnGxEZnxevDC71HQDmt
- GHz6H7Do2ngO9Uv4e7iL29a+mCCbYwPnNGD5prd0lEfXPt324FGPfCsZa6w+xESwFqwAAAA==
-X-Change-ID: 20250605-pas-rename-7f69f1ff1ff5
-To: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=46885;
- i=bjorn.andersson@oss.qualcomm.com; h=from:subject:message-id;
- bh=KcCxnkaLAzedl46fr5qSq832f++6M/A6gPneXpFYYmM=;
- b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBoQheSuL0cKe2wtaUEvangPhMuJWd7JxFK4gOgh
- P1JogkuVTuJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCaEIXkhUcYW5kZXJzc29u
- QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcW8HQ/8D3/Y/3iiHKOgQRFZTBvt852HhdxTaoplU3Mf4QW
- iuExy4EG4IGlGrhaa98KQZ8IXZB72ptVhAjmdvP8M5u0QjRLAzGwvrskxiZ5QK6xUGuTDTLGHkH
- GkEQvmgi6XU2rrjPkhq61DNPxmmUAZ64jTvloO3ay7arLNaq5DG/hyOywsSUKkq+srBVtXATXMk
- EbgsHcR0j4n5aMKS/LimDUSbDhYtOUZLVSHr9E8FRulEaMROlIPC6/vVMMQt7uqawRQ0A8Vn7NC
- LIvsbzzOrv8E3HVonCfXA52qsgMb7WZPMp39E+FQeAlpKTERSnrepr20wwHZXX+4fOslOqEJIJ8
- kjgCfUJiVruVrw9Ca5kv9Xpe6OUnp3WaSxML2VJWejkH5cEyrbCbXSe8JduocVckCy8Px0jwdtd
- MjNmwnAdlzbyBLbCpu/izhZd8LWO/hTfT85DM0dvVfE130JhIoeKi9gH32LEhd6x2yR9yFVd6pU
- WXAuNDPRLwltI4kxyo8h/Li6KwdM9IlfL3v5kM9PWewEYIEEp/jtZ19ZBKHI25U27lbzoToBYgB
- Cr9SCx5sUWNx92iXuzjIrifTrPmbRGpd1bYeBh3QT+ZbvWaY+50yTpQsCfuvYxm/F2hgx10GeSw
- FDrId3rdg+YmjxsPcl54EDaz36dRtySd/PB4yMSFxb2g=
-X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=openpgp;
- fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
-X-Authority-Analysis: v=2.4 cv=bNYWIO+Z c=1 sm=1 tr=0 ts=68421795 cx=c_pps
- a=WJcna6AvsNCxL/DJwPP1KA==:117 a=DaeiM5VmU20ml6RIjrOvYw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=dzOwiNe6f2M5HJTgGzcA:9 a=QEXdDO2ut3YA:10 a=_Y9Zt4tPzoBS9L09Snn2:22
-X-Proofpoint-GUID: Og13NYtUWhdhOsQy8AUj3c_g_DA2lNZ4
-X-Proofpoint-ORIG-GUID: Og13NYtUWhdhOsQy8AUj3c_g_DA2lNZ4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDIwMCBTYWx0ZWRfXwFU6uXm0IPTa
- e/F1tn3T9R8a8n8BEhyuEBfFxiZf+6bWWdb53v//1zEBNawX3n+ITtQuZXI9kCPfl18w7zFpDDU
- +hbSl7D26qdXIJXRVSfLX6y4KMoDo97oTOiEERRuxt3450DbwEeAuzFJnPHmTqmAzMP6TUbGLxd
- jljxgXEtcW1tdYcqExbXkFrVH+pVyq3wJAZ3B+CnnJW34rmhNyf1GUkWC1f5EZsci2O3+JRBe6W
- hhBoHzTCUwGoLwClstmVjL06aAjP9IvJIpVtlHq37T2LPGoK+neoAAa3vF6Q1Q7AVioddIOnYAu
- fPJDv2VAXsaWTAUpeq6ROqlLFh1gxYFOqz99TUI7JZ3MizKMjlPIrf477Gbx37/CBYITAmkHRQX
- Mul8kyCutCt3vbN0LJzXnkDzHkRe15T7asx4fxF+YWgESZbj3/ETsFshvenUHrAyb6AiSSUU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_07,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- suspectscore=0 mlxscore=0 impostorscore=0 spamscore=0 clxscore=1015
- mlxlogscore=999 adultscore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506050200
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5525.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b61c676-1edf-46ca-a18a-08dda47f5c05
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2025 22:21:46.7748
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iumzwaiEkagtqU/FLo4owD/izzq235c3Uc0WiJyluOv6sHCsqrPlWEaHjQzBeY16xG/+jD9jzwycgHhrHrGwKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF957B3B2A8
+X-OriginatorOrg: intel.com
 
-The change that renamed the driver from "adsp" to "pas" didn't change
-any of the implementation. The result is an aesthetic eyesore, and
-confusing to many.
-
-Conclude the rename of the driver, by updating function, structures and
-variable names to match what the driver actually is. The "Hexagon v5" is
-also dropped from the name and Kconfig, as this isn't correct either.
-
-No functional change.
-
-Fixes: 9e004f97161d ("remoteproc: qcom: Rename Hexagon v5 PAS driver")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
----
-Changes in v2:
-- Dropped unwanted changes of qcom_q6v5_adsp.c
-- Fixed ADSP-prefixed define
-- Ensured qcom_ prefix in a few comments, and rewrote two to be more
-  succinct
-- Fixed spelling of peripheral and reworded Kconfig help text slightly.
-- Link to v1: https://lore.kernel.org/r/20250605-pas-rename-v1-1-900b770d666c@oss.qualcomm.com
----
- drivers/remoteproc/Kconfig         |  11 +-
- drivers/remoteproc/qcom_q6v5_pas.c | 621 ++++++++++++++++++-------------------
- 2 files changed, 313 insertions(+), 319 deletions(-)
-
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index 83962a114dc9fdb3260e6e922602f2da53106265..48a0d3a69ed08057716f1e7ea950899f60bbe0cf 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -214,7 +214,7 @@ config QCOM_Q6V5_MSS
- 	  handled by QCOM_Q6V5_PAS driver.
- 
- config QCOM_Q6V5_PAS
--	tristate "Qualcomm Hexagon v5 Peripheral Authentication Service support"
-+	tristate "Qualcomm Peripheral Authentication Service support"
- 	depends on OF && ARCH_QCOM
- 	depends on QCOM_SMEM
- 	depends on RPMSG_QCOM_SMD || RPMSG_QCOM_SMD=n
-@@ -229,11 +229,10 @@ config QCOM_Q6V5_PAS
- 	select QCOM_RPROC_COMMON
- 	select QCOM_SCM
- 	help
--	  Say y here to support the TrustZone based Peripheral Image Loader
--	  for the Qualcomm Hexagon v5 based remote processors. This is commonly
--	  used to control subsystems such as ADSP (Audio DSP),
--	  CDSP (Compute DSP), MPSS (Modem Peripheral SubSystem), and
--	  SLPI (Sensor Low Power Island).
-+	  Say y here to support the TrustZone based Peripheral Image Loader for
-+	  the Qualcomm remote processors. This is commonly used to control
-+	  subsystems such as ADSP (Audio DSP), CDSP (Compute DSP), MPSS (Modem
-+	  Peripheral SubSystem), and SLPI (Sensor Low Power Island).
- 
- config QCOM_Q6V5_WCSS
- 	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index b306f223127c452f8f2d85aa0fc98db2d684feae..02e29171cbbee2d305827365ef7d2241b6eb786b 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Qualcomm ADSP/SLPI Peripheral Image Loader for MSM8974 and MSM8996
-+ * Qualcomm Peripheral Authentication Service remoteproc driver
-  *
-  * Copyright (C) 2016 Linaro Ltd
-  * Copyright (C) 2014 Sony Mobile Communications AB
-@@ -31,11 +31,11 @@
- #include "qcom_q6v5.h"
- #include "remoteproc_internal.h"
- 
--#define ADSP_DECRYPT_SHUTDOWN_DELAY_MS	100
-+#define QCOM_PAS_DECRYPT_SHUTDOWN_DELAY_MS	100
- 
- #define MAX_ASSIGN_COUNT 3
- 
--struct adsp_data {
-+struct qcom_pas_data {
- 	int crash_reason_smem;
- 	const char *firmware_name;
- 	const char *dtb_firmware_name;
-@@ -60,7 +60,7 @@ struct adsp_data {
- 	int region_assign_vmid;
- };
- 
--struct qcom_adsp {
-+struct qcom_pas {
- 	struct device *dev;
- 	struct rproc *rproc;
- 
-@@ -119,36 +119,37 @@ struct qcom_adsp {
- 	struct qcom_scm_pas_metadata dtb_pas_metadata;
- };
- 
--static void adsp_segment_dump(struct rproc *rproc, struct rproc_dump_segment *segment,
--		       void *dest, size_t offset, size_t size)
-+static void qcom_pas_segment_dump(struct rproc *rproc,
-+				  struct rproc_dump_segment *segment,
-+				  void *dest, size_t offset, size_t size)
- {
--	struct qcom_adsp *adsp = rproc->priv;
-+	struct qcom_pas *pas = rproc->priv;
- 	int total_offset;
- 
--	total_offset = segment->da + segment->offset + offset - adsp->mem_phys;
--	if (total_offset < 0 || total_offset + size > adsp->mem_size) {
--		dev_err(adsp->dev,
-+	total_offset = segment->da + segment->offset + offset - pas->mem_phys;
-+	if (total_offset < 0 || total_offset + size > pas->mem_size) {
-+		dev_err(pas->dev,
- 			"invalid copy request for segment %pad with offset %zu and size %zu)\n",
- 			&segment->da, offset, size);
- 		memset(dest, 0xff, size);
- 		return;
- 	}
- 
--	memcpy_fromio(dest, adsp->mem_region + total_offset, size);
-+	memcpy_fromio(dest, pas->mem_region + total_offset, size);
- }
- 
--static void adsp_minidump(struct rproc *rproc)
-+static void qcom_pas_minidump(struct rproc *rproc)
- {
--	struct qcom_adsp *adsp = rproc->priv;
-+	struct qcom_pas *pas = rproc->priv;
- 
- 	if (rproc->dump_conf == RPROC_COREDUMP_DISABLED)
- 		return;
- 
--	qcom_minidump(rproc, adsp->minidump_id, adsp_segment_dump);
-+	qcom_minidump(rproc, pas->minidump_id, qcom_pas_segment_dump);
- }
- 
--static int adsp_pds_enable(struct qcom_adsp *adsp, struct device **pds,
--			   size_t pd_count)
-+static int qcom_pas_pds_enable(struct qcom_pas *pas, struct device **pds,
-+			       size_t pd_count)
- {
- 	int ret;
- 	int i;
-@@ -174,8 +175,8 @@ static int adsp_pds_enable(struct qcom_adsp *adsp, struct device **pds,
- 	return ret;
- };
- 
--static void adsp_pds_disable(struct qcom_adsp *adsp, struct device **pds,
--			     size_t pd_count)
-+static void qcom_pas_pds_disable(struct qcom_pas *pas, struct device **pds,
-+				 size_t pd_count)
- {
- 	int i;
- 
-@@ -185,65 +186,65 @@ static void adsp_pds_disable(struct qcom_adsp *adsp, struct device **pds,
- 	}
- }
- 
--static int adsp_shutdown_poll_decrypt(struct qcom_adsp *adsp)
-+static int qcom_pas_shutdown_poll_decrypt(struct qcom_pas *pas)
- {
- 	unsigned int retry_num = 50;
- 	int ret;
- 
- 	do {
--		msleep(ADSP_DECRYPT_SHUTDOWN_DELAY_MS);
--		ret = qcom_scm_pas_shutdown(adsp->pas_id);
-+		msleep(QCOM_PAS_DECRYPT_SHUTDOWN_DELAY_MS);
-+		ret = qcom_scm_pas_shutdown(pas->pas_id);
- 	} while (ret == -EINVAL && --retry_num);
- 
- 	return ret;
- }
- 
--static int adsp_unprepare(struct rproc *rproc)
-+static int qcom_pas_unprepare(struct rproc *rproc)
- {
--	struct qcom_adsp *adsp = rproc->priv;
-+	struct qcom_pas *pas = rproc->priv;
- 
- 	/*
--	 * adsp_load() did pass pas_metadata to the SCM driver for storing
-+	 * qcom_pas_load() did pass pas_metadata to the SCM driver for storing
- 	 * metadata context. It might have been released already if
- 	 * auth_and_reset() was successful, but in other cases clean it up
- 	 * here.
- 	 */
--	qcom_scm_pas_metadata_release(&adsp->pas_metadata);
--	if (adsp->dtb_pas_id)
--		qcom_scm_pas_metadata_release(&adsp->dtb_pas_metadata);
-+	qcom_scm_pas_metadata_release(&pas->pas_metadata);
-+	if (pas->dtb_pas_id)
-+		qcom_scm_pas_metadata_release(&pas->dtb_pas_metadata);
- 
- 	return 0;
- }
- 
--static int adsp_load(struct rproc *rproc, const struct firmware *fw)
-+static int qcom_pas_load(struct rproc *rproc, const struct firmware *fw)
- {
--	struct qcom_adsp *adsp = rproc->priv;
-+	struct qcom_pas *pas = rproc->priv;
- 	int ret;
- 
--	/* Store firmware handle to be used in adsp_start() */
--	adsp->firmware = fw;
-+	/* Store firmware handle to be used in qcom_pas_start() */
-+	pas->firmware = fw;
- 
--	if (adsp->lite_pas_id)
--		ret = qcom_scm_pas_shutdown(adsp->lite_pas_id);
-+	if (pas->lite_pas_id)
-+		ret = qcom_scm_pas_shutdown(pas->lite_pas_id);
- 
--	if (adsp->dtb_pas_id) {
--		ret = request_firmware(&adsp->dtb_firmware, adsp->dtb_firmware_name, adsp->dev);
-+	if (pas->dtb_pas_id) {
-+		ret = request_firmware(&pas->dtb_firmware, pas->dtb_firmware_name, pas->dev);
- 		if (ret) {
--			dev_err(adsp->dev, "request_firmware failed for %s: %d\n",
--				adsp->dtb_firmware_name, ret);
-+			dev_err(pas->dev, "request_firmware failed for %s: %d\n",
-+				pas->dtb_firmware_name, ret);
- 			return ret;
- 		}
- 
--		ret = qcom_mdt_pas_init(adsp->dev, adsp->dtb_firmware, adsp->dtb_firmware_name,
--					adsp->dtb_pas_id, adsp->dtb_mem_phys,
--					&adsp->dtb_pas_metadata);
-+		ret = qcom_mdt_pas_init(pas->dev, pas->dtb_firmware, pas->dtb_firmware_name,
-+					pas->dtb_pas_id, pas->dtb_mem_phys,
-+					&pas->dtb_pas_metadata);
- 		if (ret)
- 			goto release_dtb_firmware;
- 
--		ret = qcom_mdt_load_no_init(adsp->dev, adsp->dtb_firmware, adsp->dtb_firmware_name,
--					    adsp->dtb_pas_id, adsp->dtb_mem_region,
--					    adsp->dtb_mem_phys, adsp->dtb_mem_size,
--					    &adsp->dtb_mem_reloc);
-+		ret = qcom_mdt_load_no_init(pas->dev, pas->dtb_firmware, pas->dtb_firmware_name,
-+					    pas->dtb_pas_id, pas->dtb_mem_region,
-+					    pas->dtb_mem_phys, pas->dtb_mem_size,
-+					    &pas->dtb_mem_reloc);
- 		if (ret)
- 			goto release_dtb_metadata;
- 	}
-@@ -251,248 +252,246 @@ static int adsp_load(struct rproc *rproc, const struct firmware *fw)
- 	return 0;
- 
- release_dtb_metadata:
--	qcom_scm_pas_metadata_release(&adsp->dtb_pas_metadata);
-+	qcom_scm_pas_metadata_release(&pas->dtb_pas_metadata);
- 
- release_dtb_firmware:
--	release_firmware(adsp->dtb_firmware);
-+	release_firmware(pas->dtb_firmware);
- 
- 	return ret;
- }
- 
--static int adsp_start(struct rproc *rproc)
-+static int qcom_pas_start(struct rproc *rproc)
- {
--	struct qcom_adsp *adsp = rproc->priv;
-+	struct qcom_pas *pas = rproc->priv;
- 	int ret;
- 
--	ret = qcom_q6v5_prepare(&adsp->q6v5);
-+	ret = qcom_q6v5_prepare(&pas->q6v5);
- 	if (ret)
- 		return ret;
- 
--	ret = adsp_pds_enable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
-+	ret = qcom_pas_pds_enable(pas, pas->proxy_pds, pas->proxy_pd_count);
- 	if (ret < 0)
- 		goto disable_irqs;
- 
--	ret = clk_prepare_enable(adsp->xo);
-+	ret = clk_prepare_enable(pas->xo);
- 	if (ret)
- 		goto disable_proxy_pds;
- 
--	ret = clk_prepare_enable(adsp->aggre2_clk);
-+	ret = clk_prepare_enable(pas->aggre2_clk);
- 	if (ret)
- 		goto disable_xo_clk;
- 
--	if (adsp->cx_supply) {
--		ret = regulator_enable(adsp->cx_supply);
-+	if (pas->cx_supply) {
-+		ret = regulator_enable(pas->cx_supply);
- 		if (ret)
- 			goto disable_aggre2_clk;
- 	}
- 
--	if (adsp->px_supply) {
--		ret = regulator_enable(adsp->px_supply);
-+	if (pas->px_supply) {
-+		ret = regulator_enable(pas->px_supply);
- 		if (ret)
- 			goto disable_cx_supply;
- 	}
- 
--	if (adsp->dtb_pas_id) {
--		ret = qcom_scm_pas_auth_and_reset(adsp->dtb_pas_id);
-+	if (pas->dtb_pas_id) {
-+		ret = qcom_scm_pas_auth_and_reset(pas->dtb_pas_id);
- 		if (ret) {
--			dev_err(adsp->dev,
-+			dev_err(pas->dev,
- 				"failed to authenticate dtb image and release reset\n");
- 			goto disable_px_supply;
- 		}
- 	}
- 
--	ret = qcom_mdt_pas_init(adsp->dev, adsp->firmware, rproc->firmware, adsp->pas_id,
--				adsp->mem_phys, &adsp->pas_metadata);
-+	ret = qcom_mdt_pas_init(pas->dev, pas->firmware, rproc->firmware, pas->pas_id,
-+				pas->mem_phys, &pas->pas_metadata);
- 	if (ret)
- 		goto disable_px_supply;
- 
--	ret = qcom_mdt_load_no_init(adsp->dev, adsp->firmware, rproc->firmware, adsp->pas_id,
--				    adsp->mem_region, adsp->mem_phys, adsp->mem_size,
--				    &adsp->mem_reloc);
-+	ret = qcom_mdt_load_no_init(pas->dev, pas->firmware, rproc->firmware, pas->pas_id,
-+				    pas->mem_region, pas->mem_phys, pas->mem_size,
-+				    &pas->mem_reloc);
- 	if (ret)
- 		goto release_pas_metadata;
- 
--	qcom_pil_info_store(adsp->info_name, adsp->mem_phys, adsp->mem_size);
-+	qcom_pil_info_store(pas->info_name, pas->mem_phys, pas->mem_size);
- 
--	ret = qcom_scm_pas_auth_and_reset(adsp->pas_id);
-+	ret = qcom_scm_pas_auth_and_reset(pas->pas_id);
- 	if (ret) {
--		dev_err(adsp->dev,
-+		dev_err(pas->dev,
- 			"failed to authenticate image and release reset\n");
- 		goto release_pas_metadata;
- 	}
- 
--	ret = qcom_q6v5_wait_for_start(&adsp->q6v5, msecs_to_jiffies(5000));
-+	ret = qcom_q6v5_wait_for_start(&pas->q6v5, msecs_to_jiffies(5000));
- 	if (ret == -ETIMEDOUT) {
--		dev_err(adsp->dev, "start timed out\n");
--		qcom_scm_pas_shutdown(adsp->pas_id);
-+		dev_err(pas->dev, "start timed out\n");
-+		qcom_scm_pas_shutdown(pas->pas_id);
- 		goto release_pas_metadata;
- 	}
- 
--	qcom_scm_pas_metadata_release(&adsp->pas_metadata);
--	if (adsp->dtb_pas_id)
--		qcom_scm_pas_metadata_release(&adsp->dtb_pas_metadata);
-+	qcom_scm_pas_metadata_release(&pas->pas_metadata);
-+	if (pas->dtb_pas_id)
-+		qcom_scm_pas_metadata_release(&pas->dtb_pas_metadata);
- 
--	/* Remove pointer to the loaded firmware, only valid in adsp_load() & adsp_start() */
--	adsp->firmware = NULL;
-+	/* firmware is used to pass reference from qcom_pas_start(), drop it now */
-+	pas->firmware = NULL;
- 
- 	return 0;
- 
- release_pas_metadata:
--	qcom_scm_pas_metadata_release(&adsp->pas_metadata);
--	if (adsp->dtb_pas_id)
--		qcom_scm_pas_metadata_release(&adsp->dtb_pas_metadata);
-+	qcom_scm_pas_metadata_release(&pas->pas_metadata);
-+	if (pas->dtb_pas_id)
-+		qcom_scm_pas_metadata_release(&pas->dtb_pas_metadata);
- disable_px_supply:
--	if (adsp->px_supply)
--		regulator_disable(adsp->px_supply);
-+	if (pas->px_supply)
-+		regulator_disable(pas->px_supply);
- disable_cx_supply:
--	if (adsp->cx_supply)
--		regulator_disable(adsp->cx_supply);
-+	if (pas->cx_supply)
-+		regulator_disable(pas->cx_supply);
- disable_aggre2_clk:
--	clk_disable_unprepare(adsp->aggre2_clk);
-+	clk_disable_unprepare(pas->aggre2_clk);
- disable_xo_clk:
--	clk_disable_unprepare(adsp->xo);
-+	clk_disable_unprepare(pas->xo);
- disable_proxy_pds:
--	adsp_pds_disable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
-+	qcom_pas_pds_disable(pas, pas->proxy_pds, pas->proxy_pd_count);
- disable_irqs:
--	qcom_q6v5_unprepare(&adsp->q6v5);
-+	qcom_q6v5_unprepare(&pas->q6v5);
- 
--	/* Remove pointer to the loaded firmware, only valid in adsp_load() & adsp_start() */
--	adsp->firmware = NULL;
-+	/* firmware is used to pass reference from qcom_pas_start(), drop it now */
-+	pas->firmware = NULL;
- 
- 	return ret;
- }
- 
- static void qcom_pas_handover(struct qcom_q6v5 *q6v5)
- {
--	struct qcom_adsp *adsp = container_of(q6v5, struct qcom_adsp, q6v5);
--
--	if (adsp->px_supply)
--		regulator_disable(adsp->px_supply);
--	if (adsp->cx_supply)
--		regulator_disable(adsp->cx_supply);
--	clk_disable_unprepare(adsp->aggre2_clk);
--	clk_disable_unprepare(adsp->xo);
--	adsp_pds_disable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
-+	struct qcom_pas *pas = container_of(q6v5, struct qcom_pas, q6v5);
-+
-+	if (pas->px_supply)
-+		regulator_disable(pas->px_supply);
-+	if (pas->cx_supply)
-+		regulator_disable(pas->cx_supply);
-+	clk_disable_unprepare(pas->aggre2_clk);
-+	clk_disable_unprepare(pas->xo);
-+	qcom_pas_pds_disable(pas, pas->proxy_pds, pas->proxy_pd_count);
- }
- 
--static int adsp_stop(struct rproc *rproc)
-+static int qcom_pas_stop(struct rproc *rproc)
- {
--	struct qcom_adsp *adsp = rproc->priv;
-+	struct qcom_pas *pas = rproc->priv;
- 	int handover;
- 	int ret;
- 
--	ret = qcom_q6v5_request_stop(&adsp->q6v5, adsp->sysmon);
-+	ret = qcom_q6v5_request_stop(&pas->q6v5, pas->sysmon);
- 	if (ret == -ETIMEDOUT)
--		dev_err(adsp->dev, "timed out on wait\n");
-+		dev_err(pas->dev, "timed out on wait\n");
- 
--	ret = qcom_scm_pas_shutdown(adsp->pas_id);
--	if (ret && adsp->decrypt_shutdown)
--		ret = adsp_shutdown_poll_decrypt(adsp);
-+	ret = qcom_scm_pas_shutdown(pas->pas_id);
-+	if (ret && pas->decrypt_shutdown)
-+		ret = qcom_pas_shutdown_poll_decrypt(pas);
- 
- 	if (ret)
--		dev_err(adsp->dev, "failed to shutdown: %d\n", ret);
-+		dev_err(pas->dev, "failed to shutdown: %d\n", ret);
- 
--	if (adsp->dtb_pas_id) {
--		ret = qcom_scm_pas_shutdown(adsp->dtb_pas_id);
-+	if (pas->dtb_pas_id) {
-+		ret = qcom_scm_pas_shutdown(pas->dtb_pas_id);
- 		if (ret)
--			dev_err(adsp->dev, "failed to shutdown dtb: %d\n", ret);
-+			dev_err(pas->dev, "failed to shutdown dtb: %d\n", ret);
- 	}
- 
--	handover = qcom_q6v5_unprepare(&adsp->q6v5);
-+	handover = qcom_q6v5_unprepare(&pas->q6v5);
- 	if (handover)
--		qcom_pas_handover(&adsp->q6v5);
-+		qcom_pas_handover(&pas->q6v5);
- 
--	if (adsp->smem_host_id)
--		ret = qcom_smem_bust_hwspin_lock_by_host(adsp->smem_host_id);
-+	if (pas->smem_host_id)
-+		ret = qcom_smem_bust_hwspin_lock_by_host(pas->smem_host_id);
- 
- 	return ret;
- }
- 
--static void *adsp_da_to_va(struct rproc *rproc, u64 da, size_t len, bool *is_iomem)
-+static void *qcom_pas_da_to_va(struct rproc *rproc, u64 da, size_t len, bool *is_iomem)
- {
--	struct qcom_adsp *adsp = rproc->priv;
-+	struct qcom_pas *pas = rproc->priv;
- 	int offset;
- 
--	offset = da - adsp->mem_reloc;
--	if (offset < 0 || offset + len > adsp->mem_size)
-+	offset = da - pas->mem_reloc;
-+	if (offset < 0 || offset + len > pas->mem_size)
- 		return NULL;
- 
- 	if (is_iomem)
- 		*is_iomem = true;
- 
--	return adsp->mem_region + offset;
-+	return pas->mem_region + offset;
- }
- 
--static unsigned long adsp_panic(struct rproc *rproc)
-+static unsigned long qcom_pas_panic(struct rproc *rproc)
- {
--	struct qcom_adsp *adsp = rproc->priv;
-+	struct qcom_pas *pas = rproc->priv;
- 
--	return qcom_q6v5_panic(&adsp->q6v5);
-+	return qcom_q6v5_panic(&pas->q6v5);
- }
- 
--static const struct rproc_ops adsp_ops = {
--	.unprepare = adsp_unprepare,
--	.start = adsp_start,
--	.stop = adsp_stop,
--	.da_to_va = adsp_da_to_va,
-+static const struct rproc_ops qcom_pas_ops = {
-+	.unprepare = qcom_pas_unprepare,
-+	.start = qcom_pas_start,
-+	.stop = qcom_pas_stop,
-+	.da_to_va = qcom_pas_da_to_va,
- 	.parse_fw = qcom_register_dump_segments,
--	.load = adsp_load,
--	.panic = adsp_panic,
-+	.load = qcom_pas_load,
-+	.panic = qcom_pas_panic,
- };
- 
--static const struct rproc_ops adsp_minidump_ops = {
--	.unprepare = adsp_unprepare,
--	.start = adsp_start,
--	.stop = adsp_stop,
--	.da_to_va = adsp_da_to_va,
-+static const struct rproc_ops qcom_pas_minidump_ops = {
-+	.unprepare = qcom_pas_unprepare,
-+	.start = qcom_pas_start,
-+	.stop = qcom_pas_stop,
-+	.da_to_va = qcom_pas_da_to_va,
- 	.parse_fw = qcom_register_dump_segments,
--	.load = adsp_load,
--	.panic = adsp_panic,
--	.coredump = adsp_minidump,
-+	.load = qcom_pas_load,
-+	.panic = qcom_pas_panic,
-+	.coredump = qcom_pas_minidump,
- };
- 
--static int adsp_init_clock(struct qcom_adsp *adsp)
-+static int qcom_pas_init_clock(struct qcom_pas *pas)
- {
--	adsp->xo = devm_clk_get(adsp->dev, "xo");
--	if (IS_ERR(adsp->xo))
--		return dev_err_probe(adsp->dev, PTR_ERR(adsp->xo),
-+	pas->xo = devm_clk_get(pas->dev, "xo");
-+	if (IS_ERR(pas->xo))
-+		return dev_err_probe(pas->dev, PTR_ERR(pas->xo),
- 				     "failed to get xo clock");
- 
--
--	adsp->aggre2_clk = devm_clk_get_optional(adsp->dev, "aggre2");
--	if (IS_ERR(adsp->aggre2_clk))
--		return dev_err_probe(adsp->dev, PTR_ERR(adsp->aggre2_clk),
-+	pas->aggre2_clk = devm_clk_get_optional(pas->dev, "aggre2");
-+	if (IS_ERR(pas->aggre2_clk))
-+		return dev_err_probe(pas->dev, PTR_ERR(pas->aggre2_clk),
- 				     "failed to get aggre2 clock");
- 
- 	return 0;
- }
- 
--static int adsp_init_regulator(struct qcom_adsp *adsp)
-+static int qcom_pas_init_regulator(struct qcom_pas *pas)
- {
--	adsp->cx_supply = devm_regulator_get_optional(adsp->dev, "cx");
--	if (IS_ERR(adsp->cx_supply)) {
--		if (PTR_ERR(adsp->cx_supply) == -ENODEV)
--			adsp->cx_supply = NULL;
-+	pas->cx_supply = devm_regulator_get_optional(pas->dev, "cx");
-+	if (IS_ERR(pas->cx_supply)) {
-+		if (PTR_ERR(pas->cx_supply) == -ENODEV)
-+			pas->cx_supply = NULL;
- 		else
--			return PTR_ERR(adsp->cx_supply);
-+			return PTR_ERR(pas->cx_supply);
- 	}
- 
--	if (adsp->cx_supply)
--		regulator_set_load(adsp->cx_supply, 100000);
-+	if (pas->cx_supply)
-+		regulator_set_load(pas->cx_supply, 100000);
- 
--	adsp->px_supply = devm_regulator_get_optional(adsp->dev, "px");
--	if (IS_ERR(adsp->px_supply)) {
--		if (PTR_ERR(adsp->px_supply) == -ENODEV)
--			adsp->px_supply = NULL;
-+	pas->px_supply = devm_regulator_get_optional(pas->dev, "px");
-+	if (IS_ERR(pas->px_supply)) {
-+		if (PTR_ERR(pas->px_supply) == -ENODEV)
-+			pas->px_supply = NULL;
- 		else
--			return PTR_ERR(adsp->px_supply);
-+			return PTR_ERR(pas->px_supply);
- 	}
- 
- 	return 0;
- }
- 
--static int adsp_pds_attach(struct device *dev, struct device **devs,
--			   char **pd_names)
-+static int qcom_pas_pds_attach(struct device *dev, struct device **devs, char **pd_names)
- {
- 	size_t num_pds = 0;
- 	int ret;
-@@ -528,10 +527,9 @@ static int adsp_pds_attach(struct device *dev, struct device **devs,
- 	return ret;
- };
- 
--static void adsp_pds_detach(struct qcom_adsp *adsp, struct device **pds,
--			    size_t pd_count)
-+static void qcom_pas_pds_detach(struct qcom_pas *pas, struct device **pds, size_t pd_count)
- {
--	struct device *dev = adsp->dev;
-+	struct device *dev = pas->dev;
- 	int i;
- 
- 	/* Handle single power domain */
-@@ -544,62 +542,62 @@ static void adsp_pds_detach(struct qcom_adsp *adsp, struct device **pds,
- 		dev_pm_domain_detach(pds[i], false);
- }
- 
--static int adsp_alloc_memory_region(struct qcom_adsp *adsp)
-+static int qcom_pas_alloc_memory_region(struct qcom_pas *pas)
- {
- 	struct reserved_mem *rmem;
- 	struct device_node *node;
- 
--	node = of_parse_phandle(adsp->dev->of_node, "memory-region", 0);
-+	node = of_parse_phandle(pas->dev->of_node, "memory-region", 0);
- 	if (!node) {
--		dev_err(adsp->dev, "no memory-region specified\n");
-+		dev_err(pas->dev, "no memory-region specified\n");
- 		return -EINVAL;
- 	}
- 
- 	rmem = of_reserved_mem_lookup(node);
- 	of_node_put(node);
- 	if (!rmem) {
--		dev_err(adsp->dev, "unable to resolve memory-region\n");
-+		dev_err(pas->dev, "unable to resolve memory-region\n");
- 		return -EINVAL;
- 	}
- 
--	adsp->mem_phys = adsp->mem_reloc = rmem->base;
--	adsp->mem_size = rmem->size;
--	adsp->mem_region = devm_ioremap_wc(adsp->dev, adsp->mem_phys, adsp->mem_size);
--	if (!adsp->mem_region) {
--		dev_err(adsp->dev, "unable to map memory region: %pa+%zx\n",
--			&rmem->base, adsp->mem_size);
-+	pas->mem_phys = pas->mem_reloc = rmem->base;
-+	pas->mem_size = rmem->size;
-+	pas->mem_region = devm_ioremap_wc(pas->dev, pas->mem_phys, pas->mem_size);
-+	if (!pas->mem_region) {
-+		dev_err(pas->dev, "unable to map memory region: %pa+%zx\n",
-+			&rmem->base, pas->mem_size);
- 		return -EBUSY;
- 	}
- 
--	if (!adsp->dtb_pas_id)
-+	if (!pas->dtb_pas_id)
- 		return 0;
- 
--	node = of_parse_phandle(adsp->dev->of_node, "memory-region", 1);
-+	node = of_parse_phandle(pas->dev->of_node, "memory-region", 1);
- 	if (!node) {
--		dev_err(adsp->dev, "no dtb memory-region specified\n");
-+		dev_err(pas->dev, "no dtb memory-region specified\n");
- 		return -EINVAL;
- 	}
- 
- 	rmem = of_reserved_mem_lookup(node);
- 	of_node_put(node);
- 	if (!rmem) {
--		dev_err(adsp->dev, "unable to resolve dtb memory-region\n");
-+		dev_err(pas->dev, "unable to resolve dtb memory-region\n");
- 		return -EINVAL;
- 	}
- 
--	adsp->dtb_mem_phys = adsp->dtb_mem_reloc = rmem->base;
--	adsp->dtb_mem_size = rmem->size;
--	adsp->dtb_mem_region = devm_ioremap_wc(adsp->dev, adsp->dtb_mem_phys, adsp->dtb_mem_size);
--	if (!adsp->dtb_mem_region) {
--		dev_err(adsp->dev, "unable to map dtb memory region: %pa+%zx\n",
--			&rmem->base, adsp->dtb_mem_size);
-+	pas->dtb_mem_phys = pas->dtb_mem_reloc = rmem->base;
-+	pas->dtb_mem_size = rmem->size;
-+	pas->dtb_mem_region = devm_ioremap_wc(pas->dev, pas->dtb_mem_phys, pas->dtb_mem_size);
-+	if (!pas->dtb_mem_region) {
-+		dev_err(pas->dev, "unable to map dtb memory region: %pa+%zx\n",
-+			&rmem->base, pas->dtb_mem_size);
- 		return -EBUSY;
- 	}
- 
- 	return 0;
- }
- 
--static int adsp_assign_memory_region(struct qcom_adsp *adsp)
-+static int qcom_pas_assign_memory_region(struct qcom_pas *pas)
- {
- 	struct qcom_scm_vmperm perm[MAX_ASSIGN_COUNT];
- 	struct device_node *node;
-@@ -607,45 +605,45 @@ static int adsp_assign_memory_region(struct qcom_adsp *adsp)
- 	int offset;
- 	int ret;
- 
--	if (!adsp->region_assign_idx)
-+	if (!pas->region_assign_idx)
- 		return 0;
- 
--	for (offset = 0; offset < adsp->region_assign_count; ++offset) {
-+	for (offset = 0; offset < pas->region_assign_count; ++offset) {
- 		struct reserved_mem *rmem = NULL;
- 
--		node = of_parse_phandle(adsp->dev->of_node, "memory-region",
--					adsp->region_assign_idx + offset);
-+		node = of_parse_phandle(pas->dev->of_node, "memory-region",
-+					pas->region_assign_idx + offset);
- 		if (node)
- 			rmem = of_reserved_mem_lookup(node);
- 		of_node_put(node);
- 		if (!rmem) {
--			dev_err(adsp->dev, "unable to resolve shareable memory-region index %d\n",
-+			dev_err(pas->dev, "unable to resolve shareable memory-region index %d\n",
- 				offset);
- 			return -EINVAL;
- 		}
- 
--		if (adsp->region_assign_shared)  {
-+		if (pas->region_assign_shared)  {
- 			perm[0].vmid = QCOM_SCM_VMID_HLOS;
- 			perm[0].perm = QCOM_SCM_PERM_RW;
--			perm[1].vmid = adsp->region_assign_vmid;
-+			perm[1].vmid = pas->region_assign_vmid;
- 			perm[1].perm = QCOM_SCM_PERM_RW;
- 			perm_size = 2;
- 		} else {
--			perm[0].vmid = adsp->region_assign_vmid;
-+			perm[0].vmid = pas->region_assign_vmid;
- 			perm[0].perm = QCOM_SCM_PERM_RW;
- 			perm_size = 1;
- 		}
- 
--		adsp->region_assign_phys[offset] = rmem->base;
--		adsp->region_assign_size[offset] = rmem->size;
--		adsp->region_assign_owners[offset] = BIT(QCOM_SCM_VMID_HLOS);
-+		pas->region_assign_phys[offset] = rmem->base;
-+		pas->region_assign_size[offset] = rmem->size;
-+		pas->region_assign_owners[offset] = BIT(QCOM_SCM_VMID_HLOS);
- 
--		ret = qcom_scm_assign_mem(adsp->region_assign_phys[offset],
--					  adsp->region_assign_size[offset],
--					  &adsp->region_assign_owners[offset],
-+		ret = qcom_scm_assign_mem(pas->region_assign_phys[offset],
-+					  pas->region_assign_size[offset],
-+					  &pas->region_assign_owners[offset],
- 					  perm, perm_size);
- 		if (ret < 0) {
--			dev_err(adsp->dev, "assign memory %d failed\n", offset);
-+			dev_err(pas->dev, "assign memory %d failed\n", offset);
- 			return ret;
- 		}
- 	}
-@@ -653,35 +651,35 @@ static int adsp_assign_memory_region(struct qcom_adsp *adsp)
- 	return 0;
- }
- 
--static void adsp_unassign_memory_region(struct qcom_adsp *adsp)
-+static void qcom_pas_unassign_memory_region(struct qcom_pas *pas)
- {
- 	struct qcom_scm_vmperm perm;
- 	int offset;
- 	int ret;
- 
--	if (!adsp->region_assign_idx || adsp->region_assign_shared)
-+	if (!pas->region_assign_idx || pas->region_assign_shared)
- 		return;
- 
--	for (offset = 0; offset < adsp->region_assign_count; ++offset) {
-+	for (offset = 0; offset < pas->region_assign_count; ++offset) {
- 		perm.vmid = QCOM_SCM_VMID_HLOS;
- 		perm.perm = QCOM_SCM_PERM_RW;
- 
--		ret = qcom_scm_assign_mem(adsp->region_assign_phys[offset],
--					  adsp->region_assign_size[offset],
--					  &adsp->region_assign_owners[offset],
-+		ret = qcom_scm_assign_mem(pas->region_assign_phys[offset],
-+					  pas->region_assign_size[offset],
-+					  &pas->region_assign_owners[offset],
- 					  &perm, 1);
- 		if (ret < 0)
--			dev_err(adsp->dev, "unassign memory %d failed\n", offset);
-+			dev_err(pas->dev, "unassign memory %d failed\n", offset);
- 	}
- }
- 
--static int adsp_probe(struct platform_device *pdev)
-+static int qcom_pas_probe(struct platform_device *pdev)
- {
--	const struct adsp_data *desc;
--	struct qcom_adsp *adsp;
-+	const struct qcom_pas_data *desc;
-+	struct qcom_pas *pas;
- 	struct rproc *rproc;
- 	const char *fw_name, *dtb_fw_name = NULL;
--	const struct rproc_ops *ops = &adsp_ops;
-+	const struct rproc_ops *ops = &qcom_pas_ops;
- 	int ret;
- 
- 	desc = of_device_get_match_data(&pdev->dev);
-@@ -706,9 +704,9 @@ static int adsp_probe(struct platform_device *pdev)
- 	}
- 
- 	if (desc->minidump_id)
--		ops = &adsp_minidump_ops;
-+		ops = &qcom_pas_minidump_ops;
- 
--	rproc = devm_rproc_alloc(&pdev->dev, desc->sysmon_name, ops, fw_name, sizeof(*adsp));
-+	rproc = devm_rproc_alloc(&pdev->dev, desc->sysmon_name, ops, fw_name, sizeof(*pas));
- 
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
-@@ -718,68 +716,65 @@ static int adsp_probe(struct platform_device *pdev)
- 	rproc->auto_boot = desc->auto_boot;
- 	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
- 
--	adsp = rproc->priv;
--	adsp->dev = &pdev->dev;
--	adsp->rproc = rproc;
--	adsp->minidump_id = desc->minidump_id;
--	adsp->pas_id = desc->pas_id;
--	adsp->lite_pas_id = desc->lite_pas_id;
--	adsp->info_name = desc->sysmon_name;
--	adsp->smem_host_id = desc->smem_host_id;
--	adsp->decrypt_shutdown = desc->decrypt_shutdown;
--	adsp->region_assign_idx = desc->region_assign_idx;
--	adsp->region_assign_count = min_t(int, MAX_ASSIGN_COUNT, desc->region_assign_count);
--	adsp->region_assign_vmid = desc->region_assign_vmid;
--	adsp->region_assign_shared = desc->region_assign_shared;
-+	pas = rproc->priv;
-+	pas->dev = &pdev->dev;
-+	pas->rproc = rproc;
-+	pas->minidump_id = desc->minidump_id;
-+	pas->pas_id = desc->pas_id;
-+	pas->lite_pas_id = desc->lite_pas_id;
-+	pas->info_name = desc->sysmon_name;
-+	pas->smem_host_id = desc->smem_host_id;
-+	pas->decrypt_shutdown = desc->decrypt_shutdown;
-+	pas->region_assign_idx = desc->region_assign_idx;
-+	pas->region_assign_count = min_t(int, MAX_ASSIGN_COUNT, desc->region_assign_count);
-+	pas->region_assign_vmid = desc->region_assign_vmid;
-+	pas->region_assign_shared = desc->region_assign_shared;
- 	if (dtb_fw_name) {
--		adsp->dtb_firmware_name = dtb_fw_name;
--		adsp->dtb_pas_id = desc->dtb_pas_id;
-+		pas->dtb_firmware_name = dtb_fw_name;
-+		pas->dtb_pas_id = desc->dtb_pas_id;
- 	}
--	platform_set_drvdata(pdev, adsp);
-+	platform_set_drvdata(pdev, pas);
- 
--	ret = device_init_wakeup(adsp->dev, true);
-+	ret = device_init_wakeup(pas->dev, true);
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = adsp_alloc_memory_region(adsp);
-+	ret = qcom_pas_alloc_memory_region(pas);
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = adsp_assign_memory_region(adsp);
-+	ret = qcom_pas_assign_memory_region(pas);
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = adsp_init_clock(adsp);
-+	ret = qcom_pas_init_clock(pas);
- 	if (ret)
- 		goto unassign_mem;
- 
--	ret = adsp_init_regulator(adsp);
-+	ret = qcom_pas_init_regulator(pas);
- 	if (ret)
- 		goto unassign_mem;
- 
--	ret = adsp_pds_attach(&pdev->dev, adsp->proxy_pds,
--			      desc->proxy_pd_names);
-+	ret = qcom_pas_pds_attach(&pdev->dev, pas->proxy_pds, desc->proxy_pd_names);
- 	if (ret < 0)
- 		goto unassign_mem;
--	adsp->proxy_pd_count = ret;
-+	pas->proxy_pd_count = ret;
- 
--	ret = qcom_q6v5_init(&adsp->q6v5, pdev, rproc, desc->crash_reason_smem, desc->load_state,
--			     qcom_pas_handover);
-+	ret = qcom_q6v5_init(&pas->q6v5, pdev, rproc, desc->crash_reason_smem,
-+			     desc->load_state, qcom_pas_handover);
- 	if (ret)
- 		goto detach_proxy_pds;
- 
--	qcom_add_glink_subdev(rproc, &adsp->glink_subdev, desc->ssr_name);
--	qcom_add_smd_subdev(rproc, &adsp->smd_subdev);
--	qcom_add_pdm_subdev(rproc, &adsp->pdm_subdev);
--	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
--					      desc->sysmon_name,
--					      desc->ssctl_id);
--	if (IS_ERR(adsp->sysmon)) {
--		ret = PTR_ERR(adsp->sysmon);
-+	qcom_add_glink_subdev(rproc, &pas->glink_subdev, desc->ssr_name);
-+	qcom_add_smd_subdev(rproc, &pas->smd_subdev);
-+	qcom_add_pdm_subdev(rproc, &pas->pdm_subdev);
-+	pas->sysmon = qcom_add_sysmon_subdev(rproc, desc->sysmon_name, desc->ssctl_id);
-+	if (IS_ERR(pas->sysmon)) {
-+		ret = PTR_ERR(pas->sysmon);
- 		goto deinit_remove_pdm_smd_glink;
- 	}
- 
--	qcom_add_ssr_subdev(rproc, &adsp->ssr_subdev, desc->ssr_name);
-+	qcom_add_ssr_subdev(rproc, &pas->ssr_subdev, desc->ssr_name);
- 	ret = rproc_add(rproc);
- 	if (ret)
- 		goto remove_ssr_sysmon;
-@@ -787,41 +782,41 @@ static int adsp_probe(struct platform_device *pdev)
- 	return 0;
- 
- remove_ssr_sysmon:
--	qcom_remove_ssr_subdev(rproc, &adsp->ssr_subdev);
--	qcom_remove_sysmon_subdev(adsp->sysmon);
-+	qcom_remove_ssr_subdev(rproc, &pas->ssr_subdev);
-+	qcom_remove_sysmon_subdev(pas->sysmon);
- deinit_remove_pdm_smd_glink:
--	qcom_remove_pdm_subdev(rproc, &adsp->pdm_subdev);
--	qcom_remove_smd_subdev(rproc, &adsp->smd_subdev);
--	qcom_remove_glink_subdev(rproc, &adsp->glink_subdev);
--	qcom_q6v5_deinit(&adsp->q6v5);
-+	qcom_remove_pdm_subdev(rproc, &pas->pdm_subdev);
-+	qcom_remove_smd_subdev(rproc, &pas->smd_subdev);
-+	qcom_remove_glink_subdev(rproc, &pas->glink_subdev);
-+	qcom_q6v5_deinit(&pas->q6v5);
- detach_proxy_pds:
--	adsp_pds_detach(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
-+	qcom_pas_pds_detach(pas, pas->proxy_pds, pas->proxy_pd_count);
- unassign_mem:
--	adsp_unassign_memory_region(adsp);
-+	qcom_pas_unassign_memory_region(pas);
- free_rproc:
--	device_init_wakeup(adsp->dev, false);
-+	device_init_wakeup(pas->dev, false);
- 
- 	return ret;
- }
- 
--static void adsp_remove(struct platform_device *pdev)
-+static void qcom_pas_remove(struct platform_device *pdev)
- {
--	struct qcom_adsp *adsp = platform_get_drvdata(pdev);
--
--	rproc_del(adsp->rproc);
--
--	qcom_q6v5_deinit(&adsp->q6v5);
--	adsp_unassign_memory_region(adsp);
--	qcom_remove_glink_subdev(adsp->rproc, &adsp->glink_subdev);
--	qcom_remove_sysmon_subdev(adsp->sysmon);
--	qcom_remove_smd_subdev(adsp->rproc, &adsp->smd_subdev);
--	qcom_remove_pdm_subdev(adsp->rproc, &adsp->pdm_subdev);
--	qcom_remove_ssr_subdev(adsp->rproc, &adsp->ssr_subdev);
--	adsp_pds_detach(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
--	device_init_wakeup(adsp->dev, false);
-+	struct qcom_pas *pas = platform_get_drvdata(pdev);
-+
-+	rproc_del(pas->rproc);
-+
-+	qcom_q6v5_deinit(&pas->q6v5);
-+	qcom_pas_unassign_memory_region(pas);
-+	qcom_remove_glink_subdev(pas->rproc, &pas->glink_subdev);
-+	qcom_remove_sysmon_subdev(pas->sysmon);
-+	qcom_remove_smd_subdev(pas->rproc, &pas->smd_subdev);
-+	qcom_remove_pdm_subdev(pas->rproc, &pas->pdm_subdev);
-+	qcom_remove_ssr_subdev(pas->rproc, &pas->ssr_subdev);
-+	qcom_pas_pds_detach(pas, pas->proxy_pds, pas->proxy_pd_count);
-+	device_init_wakeup(pas->dev, false);
- }
- 
--static const struct adsp_data adsp_resource_init = {
-+static const struct qcom_pas_data adsp_resource_init = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mdt",
- 	.pas_id = 1,
-@@ -831,7 +826,7 @@ static const struct adsp_data adsp_resource_init = {
- 	.ssctl_id = 0x14,
- };
- 
--static const struct adsp_data sa8775p_adsp_resource = {
-+static const struct qcom_pas_data sa8775p_adsp_resource = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mbn",
- 	.pas_id = 1,
-@@ -848,7 +843,7 @@ static const struct adsp_data sa8775p_adsp_resource = {
- 	.ssctl_id = 0x14,
- };
- 
--static const struct adsp_data sdm845_adsp_resource_init = {
-+static const struct qcom_pas_data sdm845_adsp_resource_init = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mdt",
- 	.pas_id = 1,
-@@ -859,7 +854,7 @@ static const struct adsp_data sdm845_adsp_resource_init = {
- 	.ssctl_id = 0x14,
- };
- 
--static const struct adsp_data sm6350_adsp_resource = {
-+static const struct qcom_pas_data sm6350_adsp_resource = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mdt",
- 	.pas_id = 1,
-@@ -875,7 +870,7 @@ static const struct adsp_data sm6350_adsp_resource = {
- 	.ssctl_id = 0x14,
- };
- 
--static const struct adsp_data sm6375_mpss_resource = {
-+static const struct qcom_pas_data sm6375_mpss_resource = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
- 	.pas_id = 4,
-@@ -890,7 +885,7 @@ static const struct adsp_data sm6375_mpss_resource = {
- 	.ssctl_id = 0x12,
- };
- 
--static const struct adsp_data sm8150_adsp_resource = {
-+static const struct qcom_pas_data sm8150_adsp_resource = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mdt",
- 	.pas_id = 1,
-@@ -905,7 +900,7 @@ static const struct adsp_data sm8150_adsp_resource = {
- 	.ssctl_id = 0x14,
- };
- 
--static const struct adsp_data sm8250_adsp_resource = {
-+static const struct qcom_pas_data sm8250_adsp_resource = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mdt",
- 	.pas_id = 1,
-@@ -922,7 +917,7 @@ static const struct adsp_data sm8250_adsp_resource = {
- 	.ssctl_id = 0x14,
- };
- 
--static const struct adsp_data sm8350_adsp_resource = {
-+static const struct qcom_pas_data sm8350_adsp_resource = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mdt",
- 	.pas_id = 1,
-@@ -938,7 +933,7 @@ static const struct adsp_data sm8350_adsp_resource = {
- 	.ssctl_id = 0x14,
- };
- 
--static const struct adsp_data msm8996_adsp_resource = {
-+static const struct qcom_pas_data msm8996_adsp_resource = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mdt",
- 	.pas_id = 1,
-@@ -952,7 +947,7 @@ static const struct adsp_data msm8996_adsp_resource = {
- 	.ssctl_id = 0x14,
- };
- 
--static const struct adsp_data cdsp_resource_init = {
-+static const struct qcom_pas_data cdsp_resource_init = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.pas_id = 18,
-@@ -962,7 +957,7 @@ static const struct adsp_data cdsp_resource_init = {
- 	.ssctl_id = 0x17,
- };
- 
--static const struct adsp_data sa8775p_cdsp0_resource = {
-+static const struct qcom_pas_data sa8775p_cdsp0_resource = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp0.mbn",
- 	.pas_id = 18,
-@@ -980,7 +975,7 @@ static const struct adsp_data sa8775p_cdsp0_resource = {
- 	.ssctl_id = 0x17,
- };
- 
--static const struct adsp_data sa8775p_cdsp1_resource = {
-+static const struct qcom_pas_data sa8775p_cdsp1_resource = {
- 	.crash_reason_smem = 633,
- 	.firmware_name = "cdsp1.mbn",
- 	.pas_id = 30,
-@@ -998,7 +993,7 @@ static const struct adsp_data sa8775p_cdsp1_resource = {
- 	.ssctl_id = 0x20,
- };
- 
--static const struct adsp_data sdm845_cdsp_resource_init = {
-+static const struct qcom_pas_data sdm845_cdsp_resource_init = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.pas_id = 18,
-@@ -1009,7 +1004,7 @@ static const struct adsp_data sdm845_cdsp_resource_init = {
- 	.ssctl_id = 0x17,
- };
- 
--static const struct adsp_data sm6350_cdsp_resource = {
-+static const struct qcom_pas_data sm6350_cdsp_resource = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.pas_id = 18,
-@@ -1025,7 +1020,7 @@ static const struct adsp_data sm6350_cdsp_resource = {
- 	.ssctl_id = 0x17,
- };
- 
--static const struct adsp_data sm8150_cdsp_resource = {
-+static const struct qcom_pas_data sm8150_cdsp_resource = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.pas_id = 18,
-@@ -1040,7 +1035,7 @@ static const struct adsp_data sm8150_cdsp_resource = {
- 	.ssctl_id = 0x17,
- };
- 
--static const struct adsp_data sm8250_cdsp_resource = {
-+static const struct qcom_pas_data sm8250_cdsp_resource = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.pas_id = 18,
-@@ -1055,7 +1050,7 @@ static const struct adsp_data sm8250_cdsp_resource = {
- 	.ssctl_id = 0x17,
- };
- 
--static const struct adsp_data sc8280xp_nsp0_resource = {
-+static const struct qcom_pas_data sc8280xp_nsp0_resource = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.pas_id = 18,
-@@ -1069,7 +1064,7 @@ static const struct adsp_data sc8280xp_nsp0_resource = {
- 	.ssctl_id = 0x17,
- };
- 
--static const struct adsp_data sc8280xp_nsp1_resource = {
-+static const struct qcom_pas_data sc8280xp_nsp1_resource = {
- 	.crash_reason_smem = 633,
- 	.firmware_name = "cdsp.mdt",
- 	.pas_id = 30,
-@@ -1083,7 +1078,7 @@ static const struct adsp_data sc8280xp_nsp1_resource = {
- 	.ssctl_id = 0x20,
- };
- 
--static const struct adsp_data x1e80100_adsp_resource = {
-+static const struct qcom_pas_data x1e80100_adsp_resource = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mdt",
- 	.dtb_firmware_name = "adsp_dtb.mdt",
-@@ -1103,7 +1098,7 @@ static const struct adsp_data x1e80100_adsp_resource = {
- 	.ssctl_id = 0x14,
- };
- 
--static const struct adsp_data x1e80100_cdsp_resource = {
-+static const struct qcom_pas_data x1e80100_cdsp_resource = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.dtb_firmware_name = "cdsp_dtb.mdt",
-@@ -1123,7 +1118,7 @@ static const struct adsp_data x1e80100_cdsp_resource = {
- 	.ssctl_id = 0x17,
- };
- 
--static const struct adsp_data sm8350_cdsp_resource = {
-+static const struct qcom_pas_data sm8350_cdsp_resource = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.pas_id = 18,
-@@ -1140,7 +1135,7 @@ static const struct adsp_data sm8350_cdsp_resource = {
- 	.ssctl_id = 0x17,
- };
- 
--static const struct adsp_data sa8775p_gpdsp0_resource = {
-+static const struct qcom_pas_data sa8775p_gpdsp0_resource = {
- 	.crash_reason_smem = 640,
- 	.firmware_name = "gpdsp0.mbn",
- 	.pas_id = 39,
-@@ -1157,7 +1152,7 @@ static const struct adsp_data sa8775p_gpdsp0_resource = {
- 	.ssctl_id = 0x21,
- };
- 
--static const struct adsp_data sa8775p_gpdsp1_resource = {
-+static const struct qcom_pas_data sa8775p_gpdsp1_resource = {
- 	.crash_reason_smem = 641,
- 	.firmware_name = "gpdsp1.mbn",
- 	.pas_id = 40,
-@@ -1174,7 +1169,7 @@ static const struct adsp_data sa8775p_gpdsp1_resource = {
- 	.ssctl_id = 0x22,
- };
- 
--static const struct adsp_data mpss_resource_init = {
-+static const struct qcom_pas_data mpss_resource_init = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
- 	.pas_id = 4,
-@@ -1191,7 +1186,7 @@ static const struct adsp_data mpss_resource_init = {
- 	.ssctl_id = 0x12,
- };
- 
--static const struct adsp_data sc8180x_mpss_resource = {
-+static const struct qcom_pas_data sc8180x_mpss_resource = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
- 	.pas_id = 4,
-@@ -1206,7 +1201,7 @@ static const struct adsp_data sc8180x_mpss_resource = {
- 	.ssctl_id = 0x12,
- };
- 
--static const struct adsp_data msm8996_slpi_resource_init = {
-+static const struct qcom_pas_data msm8996_slpi_resource_init = {
- 	.crash_reason_smem = 424,
- 	.firmware_name = "slpi.mdt",
- 	.pas_id = 12,
-@@ -1220,7 +1215,7 @@ static const struct adsp_data msm8996_slpi_resource_init = {
- 	.ssctl_id = 0x16,
- };
- 
--static const struct adsp_data sdm845_slpi_resource_init = {
-+static const struct qcom_pas_data sdm845_slpi_resource_init = {
- 	.crash_reason_smem = 424,
- 	.firmware_name = "slpi.mdt",
- 	.pas_id = 12,
-@@ -1236,7 +1231,7 @@ static const struct adsp_data sdm845_slpi_resource_init = {
- 	.ssctl_id = 0x16,
- };
- 
--static const struct adsp_data wcss_resource_init = {
-+static const struct qcom_pas_data wcss_resource_init = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "wcnss.mdt",
- 	.pas_id = 6,
-@@ -1246,7 +1241,7 @@ static const struct adsp_data wcss_resource_init = {
- 	.ssctl_id = 0x12,
- };
- 
--static const struct adsp_data sdx55_mpss_resource = {
-+static const struct qcom_pas_data sdx55_mpss_resource = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
- 	.pas_id = 4,
-@@ -1261,7 +1256,7 @@ static const struct adsp_data sdx55_mpss_resource = {
- 	.ssctl_id = 0x22,
- };
- 
--static const struct adsp_data sm8450_mpss_resource = {
-+static const struct qcom_pas_data sm8450_mpss_resource = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
- 	.pas_id = 4,
-@@ -1279,7 +1274,7 @@ static const struct adsp_data sm8450_mpss_resource = {
- 	.ssctl_id = 0x12,
- };
- 
--static const struct adsp_data sm8550_adsp_resource = {
-+static const struct qcom_pas_data sm8550_adsp_resource = {
- 	.crash_reason_smem = 423,
- 	.firmware_name = "adsp.mdt",
- 	.dtb_firmware_name = "adsp_dtb.mdt",
-@@ -1299,7 +1294,7 @@ static const struct adsp_data sm8550_adsp_resource = {
- 	.smem_host_id = 2,
- };
- 
--static const struct adsp_data sm8550_cdsp_resource = {
-+static const struct qcom_pas_data sm8550_cdsp_resource = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.dtb_firmware_name = "cdsp_dtb.mdt",
-@@ -1320,7 +1315,7 @@ static const struct adsp_data sm8550_cdsp_resource = {
- 	.smem_host_id = 5,
- };
- 
--static const struct adsp_data sm8550_mpss_resource = {
-+static const struct qcom_pas_data sm8550_mpss_resource = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
- 	.dtb_firmware_name = "modem_dtb.mdt",
-@@ -1344,7 +1339,7 @@ static const struct adsp_data sm8550_mpss_resource = {
- 	.region_assign_vmid = QCOM_SCM_VMID_MSS_MSA,
- };
- 
--static const struct adsp_data sc7280_wpss_resource = {
-+static const struct qcom_pas_data sc7280_wpss_resource = {
- 	.crash_reason_smem = 626,
- 	.firmware_name = "wpss.mdt",
- 	.pas_id = 6,
-@@ -1361,7 +1356,7 @@ static const struct adsp_data sc7280_wpss_resource = {
- 	.ssctl_id = 0x19,
- };
- 
--static const struct adsp_data sm8650_cdsp_resource = {
-+static const struct qcom_pas_data sm8650_cdsp_resource = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
- 	.dtb_firmware_name = "cdsp_dtb.mdt",
-@@ -1386,7 +1381,7 @@ static const struct adsp_data sm8650_cdsp_resource = {
- 	.region_assign_vmid = QCOM_SCM_VMID_CDSP,
- };
- 
--static const struct adsp_data sm8650_mpss_resource = {
-+static const struct qcom_pas_data sm8650_mpss_resource = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
- 	.dtb_firmware_name = "modem_dtb.mdt",
-@@ -1410,7 +1405,7 @@ static const struct adsp_data sm8650_mpss_resource = {
- 	.region_assign_vmid = QCOM_SCM_VMID_MSS_MSA,
- };
- 
--static const struct adsp_data sm8750_mpss_resource = {
-+static const struct qcom_pas_data sm8750_mpss_resource = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "modem.mdt",
- 	.dtb_firmware_name = "modem_dtb.mdt",
-@@ -1434,7 +1429,7 @@ static const struct adsp_data sm8750_mpss_resource = {
- 	.region_assign_vmid = QCOM_SCM_VMID_MSS_MSA,
- };
- 
--static const struct of_device_id adsp_of_match[] = {
-+static const struct of_device_id qcom_pas_of_match[] = {
- 	{ .compatible = "qcom,msm8226-adsp-pil", .data = &msm8996_adsp_resource},
- 	{ .compatible = "qcom,msm8953-adsp-pil", .data = &msm8996_adsp_resource},
- 	{ .compatible = "qcom,msm8974-adsp-pil", .data = &adsp_resource_init},
-@@ -1504,17 +1499,17 @@ static const struct of_device_id adsp_of_match[] = {
- 	{ .compatible = "qcom,x1e80100-cdsp-pas", .data = &x1e80100_cdsp_resource},
- 	{ },
- };
--MODULE_DEVICE_TABLE(of, adsp_of_match);
-+MODULE_DEVICE_TABLE(of, qcom_pas_of_match);
- 
--static struct platform_driver adsp_driver = {
--	.probe = adsp_probe,
--	.remove = adsp_remove,
-+static struct platform_driver qcom_pas_driver = {
-+	.probe = qcom_pas_probe,
-+	.remove = qcom_pas_remove,
- 	.driver = {
- 		.name = "qcom_q6v5_pas",
--		.of_match_table = adsp_of_match,
-+		.of_match_table = qcom_pas_of_match,
- 	},
- };
- 
--module_platform_driver(adsp_driver);
--MODULE_DESCRIPTION("Qualcomm Hexagon v5 Peripheral Authentication Service driver");
-+module_platform_driver(qcom_pas_driver);
-+MODULE_DESCRIPTION("Qualcomm Peripheral Authentication Service remoteproc driver");
- MODULE_LICENSE("GPL v2");
-
----
-base-commit: a0bea9e39035edc56a994630e6048c8a191a99d8
-change-id: 20250605-pas-rename-7f69f1ff1ff5
-
-Best regards,
--- 
-Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-
+T24gVGh1LCAyMDI1LTA2LTA1IGF0IDE2OjAxICswMzAwLCBraXJpbGwuc2h1dGVtb3ZAbGludXgu
+aW50ZWwuY29tIHdyb3RlOg0KPiBPbiBGcmksIE1heSAyMywgMjAyNSBhdCAwMzowMDo1NlBNICsw
+MzAwLCBraXJpbGwuc2h1dGVtb3ZAbGludXguaW50ZWwuY29tIHdyb3RlOg0KPiA+IE9uIFdlZCwg
+TWF5IDE0LCAyMDI1IGF0IDEyOjAwOjE3QU0gKzAwMDAsIEh1YW5nLCBLYWkgd3JvdGU6DQo+ID4g
+PiBPbiBNb24sIDIwMjUtMDUtMTIgYXQgMTI6NTUgKzAzMDAsIEtpcmlsbCBBLiBTaHV0ZW1vdiB3
+cm90ZToNCj4gPiA+ID4gT24gRnJpLCBNYXkgMDksIDIwMjUgYXQgMDk6MjU6NThBTSArMDgwMCwg
+WWFuIFpoYW8gd3JvdGU6DQo+ID4gPiA+ID4gT24gVGh1LCBNYXkgMDgsIDIwMjUgYXQgMDQ6MjM6
+NTZQTSArMDMwMCwgS2lyaWxsIEEuIFNodXRlbW92IHdyb3RlOg0KPiA+ID4gPiA+ID4gT24gVHVl
+LCBNYXkgMDYsIDIwMjUgYXQgMDc6NTU6MTdQTSArMDgwMCwgWWFuIFpoYW8gd3JvdGU6DQo+ID4g
+PiA+ID4gPiA+IE9uIEZyaSwgTWF5IDAyLCAyMDI1IGF0IDA0OjA4OjI0UE0gKzAzMDAsIEtpcmls
+bCBBLiBTaHV0ZW1vdiB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPiBUaGUgZnVuY3Rpb25zIGt2bV94
+ODZfb3BzOjpsaW5rX2V4dGVybmFsX3NwdCgpIGFuZA0KPiA+ID4gPiA+ID4gPiA+IGt2bV94ODZf
+b3BzOjpzZXRfZXh0ZXJuYWxfc3B0ZSgpIGFyZSB1c2VkIHRvIGFzc2lnbiBuZXcgbWVtb3J5IHRv
+IGEgVk0uDQo+ID4gPiA+ID4gPiA+ID4gV2hlbiB1c2luZyBURFggd2l0aCBEeW5hbWljIFBBTVQg
+ZW5hYmxlZCwgdGhlIGFzc2lnbmVkIG1lbW9yeSBtdXN0IGJlDQo+ID4gPiA+ID4gPiA+ID4gY292
+ZXJlZCBieSBQQU1ULg0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IFRoZSBuZXcg
+ZnVuY3Rpb24ga3ZtX3g4Nl9vcHM6OnBoeXNfcHJlcGFyZSgpIGlzIGNhbGxlZCBiZWZvcmUNCj4g
+PiA+ID4gPiA+ID4gPiBsaW5rX2V4dGVybmFsX3NwdCgpIGFuZCBzZXRfZXh0ZXJuYWxfc3B0ZSgp
+IHRvIGVuc3VyZSB0aGF0IHRoZSBtZW1vcnkgaXMNCj4gPiA+ID4gPiA+ID4gPiByZWFkeSB0byBi
+ZSBhc3NpZ25lZCB0byB0aGUgdmlydHVhbCBtYWNoaW5lLiBJbiB0aGUgY2FzZSBvZiBURFgsIGl0
+DQo+ID4gPiA+ID4gPiA+ID4gbWFrZXMgc3VyZSB0aGF0IHRoZSBtZW1vcnkgaXMgY292ZXJlZCBi
+eSBQQU1ULg0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IGt2bV94ODZfb3BzOjpw
+aHlzX3ByZXBhcmUoKSBpcyBjYWxsZWQgaW4gYSBjb250ZXh0IHdoZXJlIHN0cnVjdCBrdm1fdmNw
+dQ0KPiA+ID4gPiA+ID4gPiA+IGlzIGF2YWlsYWJsZSwgYWxsb3dpbmcgdGhlIGltcGxlbWVudGF0
+aW9uIHRvIGFsbG9jYXRlIG1lbW9yeSBmcm9tIGENCj4gPiA+ID4gPiA+ID4gPiBwZXItVkNQVSBw
+b29sLg0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiBXaHkgbm90IGludm9rZSBwaHlz
+X3ByZXBhcmUoKSBhbmQgcGh5c19jbGVhbnVwKCkgaW4gc2V0X2V4dGVybmFsX3NwdGVfcHJlc2Vu
+dCgpPw0KPiA+ID4gPiA+ID4gPiBPciBpbiB0ZHhfc2VwdF9zZXRfcHJpdmF0ZV9zcHRlKCkvdGR4
+X3NlcHRfbGlua19wcml2YXRlX3NwdCgpPw0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBCZWNh
+dXNlIHRoZSBtZW1vcnkgcG9vbCB3ZSBhbGxvY2F0ZWQgZnJvbSBpcyBwZXItdmNwdSBhbmQgd2Ug
+bG9zdCBhY2Nlc3MNCj4gPiA+ID4gPiA+IHRvIHZjcHUgYnkgdGhlbi4gQW5kIG5vdCBhbGwgY2Fs
+bGVycyBwcm92aWRlIHZjcHUuDQo+ID4gPiA+ID4gTWF5YmUgd2UgY2FuIGdldCB2Y3B1IHZpYSBr
+dm1fZ2V0X3J1bm5pbmdfdmNwdSgpLCBhcyBpbiBbMV0uDQo+ID4gPiA+ID4gVGhlbiBmb3IgY2Fs
+bGVycyBub3QgcHJvdmlkaW5nIHZjcHUgKHdoZXJlIHZjcHUgaXMgTlVMTCksIHdlIGNhbiB1c2Ug
+cGVyLUtWTQ0KPiA+ID4gPiA+IGNhY2hlPyANCj4gPiA+ID4gDQo+ID4gPiA+IEhtLiBJIHdhcyBu
+b3QgYXdhcmUgb2Yga3ZtX2dldF9ydW5uaW5nX3ZjcHUoKS4gV2lsbCBwbGF5IHdpdGggaXQsIHRo
+YW5rcy4NCj4gPiA+IA0KPiA+ID4gSSBhbSBub3Qgc3VyZSB3aHkgcGVyLXZjcHUgY2FjaGUgbWF0
+dGVycy4NCj4gPiA+IA0KPiA+ID4gRm9yIG5vbi1sZWFmIFNFUFQgcGFnZXMsIEFGQUlDVCB0aGUg
+InZjcHUtPmFyY2gubW11X2V4dGVybmFsX3NwdF9jYWNoZSIgaXMganVzdA0KPiA+ID4gYW4gZW1w
+dHkgY2FjaGUsIGFuZCBldmVudHVhbGx5IF9fZ2V0X2ZyZWVfcGFnZSgpIGlzIHVzZWQgdG8gYWxs
+b2NhdGUgaW46DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+
+ID4gICBzcC0+ZXh0ZXJuYWxfc3B0ID3CoA0KPiA+ID4gCWt2bV9tbXVfbWVtb3J5X2NhY2hlX2Fs
+bG9jKCZ2Y3B1LT5hcmNoLm1tdV9leHRlcm5hbF9zcHRfY2FjaGUpOw0KPiA+ID4gDQo+ID4gPiBT
+byB3aHkgbm90IHdlIGFjdHVhbGx5IGNyZWF0ZSBhIGttZW1fY2FjaGUgZm9yIGl0IHdpdGggYW4g
+YWN0dWFsICdjdG9yJywgYW5kIHdlDQo+ID4gPiBjYW4gY2FsbCB0ZHhfYWxsb2NfcGFnZSgpIGlu
+IHRoYXQuICBUaGlzIG1ha2VzIHN1cmUgd2hlbiB0aGUgImV4dGVybmFsX3NwdCIgaXMNCj4gPiA+
+IGFsbG9jYXRlZCwgdGhlIHVuZGVybmVhdGggUEFNVCBlbnRyeSBpcyB0aGVyZS4NCj4gPiANCj4g
+PiBJIGxvb2tlZCBjbG9zZXIgdG8gdGhpcyBhbmQgd2hpbGUgaXQgaXMgZ29vZCBpZGVhLCBidXQg
+Y3RvciBpbiBrbWVtX2NhY2hlDQo+ID4gY2Fubm90IGZhaWwgd2hpY2ggbWFrZXMgdGhpcyBhcHBy
+b2FjaCBub3QgdmlhYmxlLg0KPiA+IA0KPiA+IEkgZ3Vlc3Mgd2UgY2FuIGEgY29uc3RydWN0b3Ig
+ZGlyZWN0bHkgaW50byBzdHJ1Y3Qga3ZtX21tdV9tZW1vcnlfY2FjaGUuDQo+ID4gTGV0IG1lIHBs
+YXkgd2l0aCB0aGlzLg0KPiANCj4gSSBmYWlsZWQgdG8gbWFrZSBpdCB3b3JrLg0KPiANCj4gV2Ug
+bmVlZCB0byBoYXZlIGRlc3RydWN0b3IgcGFpcmVkIHdpdGggdGhlIGNvbnN0cnVjdG9yIHRoYXQg
+d291bGQgZG8NCj4gUEFNVC1hd2FyZSBmcmVlaW5nLiBBbmQgcmVkaXJlY3QgYWxsIGZyZWUgcGF0
+aHMgdG8gaXQuIEl0IHJlcXVpcmVzDQo+IHN1YnN0YW50aWFsIHJld29yay4gSSBkb24ndCB0aGlu
+ayBpdCB3b3J0aCB0aGUgZWZmb3J0Lg0KPiANCj4gV2lsbCBkbyBtYW51YWwgUEFNVCBtYW5hZ2Vt
+ZW50IGZvciBTUFQgaW4gVERYIGNvZGUuDQoNClRoYW5rcyBmb3IgdGhlIGVmZm9ydC4NCg0KTWF5
+YmUgc29tZXRoaW5nIGJlbG93Pw0KDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL21tdS9tbXVf
+aW50ZXJuYWwuaA0KYi9hcmNoL3g4Ni9rdm0vbW11L21tdV9pbnRlcm5hbC5oDQppbmRleCBkYjhm
+MzNlNGRlNjIuLjQ4NzMyMjcwYmZmMCAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2t2bS9tbXUvbW11
+X2ludGVybmFsLmgNCisrKyBiL2FyY2gveDg2L2t2bS9tbXUvbW11X2ludGVybmFsLmgNCkBAIC0x
+NjQsOCArMTY0LDEwIEBAIHN0YXRpYyBpbmxpbmUgYm9vbCBpc19taXJyb3Jfc3AoY29uc3Qgc3Ry
+dWN0DQprdm1fbW11X3BhZ2UgKnNwKQ0KICAgICAgICByZXR1cm4gc3AtPnJvbGUuaXNfbWlycm9y
+Ow0KIH0NCiANCi1zdGF0aWMgaW5saW5lIHZvaWQga3ZtX21tdV9hbGxvY19leHRlcm5hbF9zcHQo
+c3RydWN0IGt2bV92Y3B1ICp2Y3B1LCBzdHJ1Y3QNCmt2bV9tbXVfcGFnZSAqc3ApDQorc3RhdGlj
+IGlubGluZSBpbnQga3ZtX21tdV9hbGxvY19leHRlcm5hbF9zcHQoc3RydWN0IGt2bV92Y3B1ICp2
+Y3B1LCBzdHJ1Y3QNCmt2bV9tbXVfcGFnZSAqc3ApDQogew0KKyAgICAgICBpbnQgcjsNCisNCiAg
+ICAgICAgLyoNCiAgICAgICAgICogZXh0ZXJuYWxfc3B0IGlzIGFsbG9jYXRlZCBmb3IgVERYIG1v
+ZHVsZSB0byBob2xkIHByaXZhdGUgRVBUDQptYXBwaW5ncywNCiAgICAgICAgICogVERYIG1vZHVs
+ZSB3aWxsIGluaXRpYWxpemUgdGhlIHBhZ2UgYnkgaXRzZWxmLg0KQEAgLTE3Myw2ICsxNzUsMTIg
+QEAgc3RhdGljIGlubGluZSB2b2lkIGt2bV9tbXVfYWxsb2NfZXh0ZXJuYWxfc3B0KHN0cnVjdA0K
+a3ZtX3ZjcHUgKnZjcHUsIHN0cnVjdCBrdm1fDQogICAgICAgICAqIEtWTSBvbmx5IGludGVyYWN0
+cyB3aXRoIHNwLT5zcHQgZm9yIHByaXZhdGUgRVBUIG9wZXJhdGlvbnMuDQogICAgICAgICAqLw0K
+ICAgICAgICBzcC0+ZXh0ZXJuYWxfc3B0ID0ga3ZtX21tdV9tZW1vcnlfY2FjaGVfYWxsb2MoJnZj
+cHUtDQo+YXJjaC5tbXVfZXh0ZXJuYWxfc3B0X2NhY2hlKTsNCisNCisgICAgICAgciA9IHRkeF9w
+YW10X2dldCh2aXJ0X3RvX3BhZ2Uoc3AtPmV4dGVybmFsX3NwdCkpOw0KKyAgICAgICBpZiAocikN
+CisgICAgICAgICAgICAgICBmcmVlX3BhZ2UoKHVuc2lnbmVkIGxvbmcpc3AtPmV4dGVybmFsX3Nw
+dCk7DQorDQorICAgICAgIHJldHVybiByOw0KIH0NCiANCiBzdGF0aWMgaW5saW5lIGdmbl90IGt2
+bV9nZm5fcm9vdF9iaXRzKGNvbnN0IHN0cnVjdCBrdm0gKmt2bSwgY29uc3Qgc3RydWN0DQprdm1f
+bW11X3BhZ2UgKnJvb3QpDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL21tdS90ZHBfbW11LmMg
+Yi9hcmNoL3g4Ni9rdm0vbW11L3RkcF9tbXUuYw0KaW5kZXggN2YzZDcyMjliMmMxLi4yZDNhNzE2
+ZDkxOTUgMTAwNjQ0DQotLS0gYS9hcmNoL3g4Ni9rdm0vbW11L3RkcF9tbXUuYw0KKysrIGIvYXJj
+aC94ODYva3ZtL21tdS90ZHBfbW11LmMNCkBAIC01NSw3ICs1NSwxMCBAQCB2b2lkIGt2bV9tbXVf
+dW5pbml0X3RkcF9tbXUoc3RydWN0IGt2bSAqa3ZtKQ0KIA0KIHN0YXRpYyB2b2lkIHRkcF9tbXVf
+ZnJlZV9zcChzdHJ1Y3Qga3ZtX21tdV9wYWdlICpzcCkNCiB7DQotICAgICAgIGZyZWVfcGFnZSgo
+dW5zaWduZWQgbG9uZylzcC0+ZXh0ZXJuYWxfc3B0KTsNCisgICAgICAgaWYgKHNwLT5leHRlcm5h
+bF9zcHQpIHsNCisgICAgICAgICAgICAgICBmcmVlX3BhZ2UoKHVuc2lnbmVkIGxvbmcpc3AtPmV4
+dGVybmFsX3NwdCk7DQorICAgICAgICAgICAgICAgdGR4X3BhbXRfcHV0KHZpcnRfdG9fcGFnZShz
+cC0+ZXh0ZXJuYWxfc3B0KSk7DQorICAgICAgIH0NCiAgICAgICAgZnJlZV9wYWdlKCh1bnNpZ25l
+ZCBsb25nKXNwLT5zcHQpOw0KICAgICAgICBrbWVtX2NhY2hlX2ZyZWUobW11X3BhZ2VfaGVhZGVy
+X2NhY2hlLCBzcCk7DQogfQ0KQEAgLTEyNzcsOCArMTI4MCwxMyBAQCBpbnQga3ZtX3RkcF9tbXVf
+bWFwKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwgc3RydWN0DQprdm1fcGFnZV9mYXVsdCAqZmF1bHQp
+DQogICAgICAgICAgICAgICAgICovDQogICAgICAgICAgICAgICAgc3AgPSB0ZHBfbW11X2FsbG9j
+X3NwKHZjcHUpOw0KICAgICAgICAgICAgICAgIHRkcF9tbXVfaW5pdF9jaGlsZF9zcChzcCwgJml0
+ZXIpOw0KLSAgICAgICAgICAgICAgIGlmIChpc19taXJyb3Jfc3Aoc3ApKQ0KLSAgICAgICAgICAg
+ICAgICAgICAgICAga3ZtX21tdV9hbGxvY19leHRlcm5hbF9zcHQodmNwdSwgc3ApOw0KKyAgICAg
+ICAgICAgICAgIGlmIChpc19taXJyb3Jfc3Aoc3ApKSB7DQorICAgICAgICAgICAgICAgICAgICAg
+ICByID0ga3ZtX21tdV9hbGxvY19leHRlcm5hbF9zcHQodmNwdSwgc3ApOw0KKyAgICAgICAgICAg
+ICAgICAgICAgICAgaWYgKHIpIHsNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGRw
+X21tdV9mcmVlX3NwKHNwKTsNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ290byBy
+ZXRyeTsNCisgICAgICAgICAgICAgICAgICAgICAgIH0NCisgICAgICAgICAgICAgICB9DQogDQog
+ICAgICAgICAgICAgICAgc3AtPm54X2h1Z2VfcGFnZV9kaXNhbGxvd2VkID0gZmF1bHQtPmh1Z2Vf
+cGFnZV9kaXNhbGxvd2VkOw0KDQo=
