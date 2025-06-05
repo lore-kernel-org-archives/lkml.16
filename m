@@ -1,112 +1,118 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0061DEFDA;
-	Thu,  5 Jun 2025 17:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1761E519;
+	Thu,  5 Jun 2025 17:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749144185; cv=none; b=OYwtnxzacroBXMZy/HLxKYcI7QzsBAo8xPdhJqVay7XHMoFwUHmG2Udgf1Bp1+eM6dibhCHhzvqD2R/6GRENyafZ12F3HgjDVgA1Rndz/6QU0nEWwzNchAsk22qVBcMhjSGyA06n62bDH4CobPHxPhBBwx6j/JxVBxPFvJYZpYU=
+	t=1749144328; cv=none; b=AmMFS83DeoSrZ1oQiObwJh16KfC3VxZ/f7RkhP2p4NVNoYnOnSpLT74ef7ytqW7tMJhsm7oldy1fqH2HZR7DLRXa32A7Fx/oqxCE+v9qHyfdjfVBUvxybq9b7IsmgI9P7KlLfSW8+uZQ7K86TbDftCFvdxp5hToYjpqO8idbywk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749144185; c=relaxed/simple;
-	bh=qfipMnTx7xeKxeo0c7dR7MpB300bOpoEqcpahufYAl0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rKStIExpfQLhGS9I+elDyWMQxwWCAKzHC6Fd4IP8Nr0l3MXaG8bPdUrpwpyPOLfQ6hyL/yUel27JgpFDQ0OzE7aUYOCxlRVNWWY9S3qD/WhEWf/UwGINHKZhTgiQxRrMf/zxTbae4m6RT6I8JPaFvtU8ml3jskTZpFjpJLw7lN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjt27mKA; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749144328; c=relaxed/simple;
+	bh=5Yl5mCYxrczLodJ0pTPkcFCpM2H4dD6dZ5cU19KMeyM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aBgUwjrVUIfkaumeDtNIFazxSHYHllTW4I10Ey4rAYL/p9qb2WHHkhxngqrBLE89xcA47QqXBQQXzFQ+pT7dlvtkBzkMihfDsTlSLb73kjDw1Oox8oUGngpIyJk+kZ8Hb/ELTEAZ+L+Hn8oigUE3XjGWpnXPz0nbQ+5fTk66llc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VW38q1U0; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjt27mKA"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-31308f52248so168427a91.2;
-        Thu, 05 Jun 2025 10:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749144184; x=1749748984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qfipMnTx7xeKxeo0c7dR7MpB300bOpoEqcpahufYAl0=;
-        b=kjt27mKAqemjrmRTLU6Yl+y3Wsca5uipYqg4LJ0mRkQyz8nOjeoiGSWoyzIqO68nRO
-         BlA7+LRNTi3DOQ8yeSkALHAPJBJMQ5FhrvdR0ep74fbaphl/z4oCqvAnYpURAjTm3NHS
-         3eyDqzZtx5nhhQwTnVxwAzIzGDXVd7oX+Nx4E6EWe8PVzLRtKE5fGR0U+b7EtxnaR7Ay
-         OlKV5fh52VIg1mDjalwq3ezDO/7gGsaetmFGYWrV8PzScekZERWoAefa5py3XZRJaIbu
-         rnWjYrrF/XZF6N2ZsOxifdB8ZnWpQtdFok4uV7ubp0AB9RVRNvm2tclZ3ltdrMho6lfr
-         hrzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749144184; x=1749748984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qfipMnTx7xeKxeo0c7dR7MpB300bOpoEqcpahufYAl0=;
-        b=CNsMM5TJPRuy71x3aG6PU5BQ8kaiJ7yOYytyZRyxQaghf5QHi/QyxRC+eqFRFL9L3r
-         zASv+Bx1MNYeUXC4cpF3Rw9hseSYlLQDl7F4/c3lz81czL0OWQk7Fd3lQIdM2/63cTsE
-         LSbBHuqMZrP+z7V47yDOmWlerW5Sho6C6ELkvYFr7sUKD0g7s7E361+/bR9z7tWK5gBa
-         ttgdBn5ju26gjO2PI0CPOCsezE1t+1Yk67Y5pYz+P+uAj7JWZV7oYG5r+I48bVRzbJa6
-         9RucL3+BPkcQo6ehBMW3+0lHcGy+Rx26j3yb9aXc9d3me7+GQ13krKsq3iUEebA3DSWw
-         eMSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxeQyCstxm3DD8nyh/KEkPE6tCSGk2BO0P85zPqxDYg3CFIC/dxuixllN1Ks0GOz94zw+1EPiUSVssE1ne0A0=@vger.kernel.org, AJvYcCWv+tAP8SDCNrn74Kk/MBB/Q2v0KBbY1OTC8HHQgjcrLMbG6RWmHlo+0tQw2m3Ok+ZU6RtwmFVLCtXiOGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKVyOcfoDR/qHilxlFhMnHiQrUXOzOk4FEODccMqmdM/oxzyjq
-	h7zhXsvNiVMTigenlb5GkoOowMT7TDahEBDt83Rva8UGjnJvR9XbzQ8plHvnU6ZILufV9XQ52EB
-	6oEOd/rlTb+RX5NrAUA6QDtfnZhdoX0E=
-X-Gm-Gg: ASbGncvAtifu5qIPQ7zpSerJjmofvrjmRHQ6lkNQclNPbfJxfuHZSP6tC8xNmyVCcnU
-	QmmEHye8OC9suInVKmrgLitwGAz1SPYtItXUBDzJQdqRxzv1epdBpPLCpTlH5nMzdnJ/FiYoYq5
-	a5IUSQowRSnQPbH3MlJGGT3EndZ93K3rBBUFdaIWIrzIQ=
-X-Google-Smtp-Source: AGHT+IFL93Dn+JPYLvdJ97OS1e9Y7WI8nNfScy/BvawuaHEKEfXx1cgMVsWswxX1DXxUVjKFqj43r25VkwIzBxqwwJw=
-X-Received: by 2002:a17:90b:57c6:b0:311:c939:c855 with SMTP id
- 98e67ed59e1d1-31347a28f5dmr221166a91.3.1749144183617; Thu, 05 Jun 2025
- 10:23:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VW38q1U0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749144328; x=1780680328;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=5Yl5mCYxrczLodJ0pTPkcFCpM2H4dD6dZ5cU19KMeyM=;
+  b=VW38q1U0lEOTejoNTG/5BeId1K26r2SNb5CaGmiTPixFYfa0URXQPoHo
+   eClF0fE/zMJd8ak8EzPK46j5qxEVJVT9kgMcwrvw98pdP031UK5J5punM
+   paM6kYHoHlI/JL0anD0GqXm3MRuzoHWslrOOHyk1G57v2xlaCesZ7mn5H
+   G6Q9yg4qb2cGojiTj3ntR1WYpiIoXjerckqC/CUamVFHAsYsL082Weyan
+   GOgcD8SXQ1VQM3dyKUTW9kSH6R3q3v55onSN/UDmJBpEO55FnNmI23HhL
+   3ojhXUGfP0K/OdMTdRvN81cLzwcnbuUbI7UBPoTZHaGSnW3/VW3YTZKMl
+   A==;
+X-CSE-ConnectionGUID: cOVoWkJSQUSKpKQH7SSmOQ==
+X-CSE-MsgGUID: z2AV60C1Tn2hE9zS8QB3Lg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51134671"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="51134671"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 10:25:27 -0700
+X-CSE-ConnectionGUID: +QonGZtsRx+Ju9/3s/IE8g==
+X-CSE-MsgGUID: iG+kP28qTMWQPy0uhoupGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="176531907"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.124.222.36])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 10:25:27 -0700
+Message-ID: <5a0dc3858c802a5d6247424529377c6dbfd450ca.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] thermal: intel: int340x: Add performance control
+ for platform temperature control
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Zhang, Rui" <rui.zhang@intel.com>, "lukasz.luba@arm.com"
+	 <lukasz.luba@arm.com>, "rafael@kernel.org" <rafael@kernel.org>, 
+ "daniel.lezcano@linaro.org"
+	 <daniel.lezcano@linaro.org>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Thu, 05 Jun 2025 10:25:25 -0700
+In-Reply-To: <f33e302aac482860eebf5e5f45a44df77455512c.camel@intel.com>
+References: <20250604203518.2330533-1-srinivas.pandruvada@linux.intel.com>
+	 <f33e302aac482860eebf5e5f45a44df77455512c.camel@intel.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511-rust_unsafe_pinned-v4-0-a86c32e47e3d@gmail.com>
- <20250511-rust_unsafe_pinned-v4-1-a86c32e47e3d@gmail.com> <1553eea9-9ced-410a-b6e7-886e11e2edba@gmail.com>
-In-Reply-To: <1553eea9-9ced-410a-b6e7-886e11e2edba@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 5 Jun 2025 19:22:51 +0200
-X-Gm-Features: AX0GCFsKx2Moxjr3HRPaNrk2wzvk9Nc89fe4Aa5PGppcA4ASb7L4anzao8sQk4A
-Message-ID: <CANiq72mVuPex3fLd5n8jMtU30QStLs=vhsChENdX1hGhA4KKpg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] rust: add UnsafePinned type
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 7:03=E2=80=AFPM Christian Schrefl
-<chrisi.schrefl@gmail.com> wrote:
->
-> The upstream rust PR [0] that changes this was just merged. So now `Unsaf=
-ePinned` includes
-> `UnsafeCell` semantics. It's probably best to also change this in the ker=
-nel docs.
-> Though it's still the case that removing the guarantee is simpler than ad=
-ding it back later,
-> so let me know what you all think.
+On Thu, 2025-06-05 at 03:06 +0000, Zhang, Rui wrote:
+> On Wed, 2025-06-04 at 13:35 -0700, Srinivas Pandruvada wrote:
+> > Add additional attribute to control performance of platform
+> > temperature
+> > control feature. Two attributes are added:
+> >=20
+> > gain: 0-7 levels, with 0 being most aggressive.
+> > 	7 =E2=80=93 graceful, favors performance at the expense of
+> > temperature
+> > 	overshoots
+> > 	0 =E2=80=93 aggressive, favors tight regulation over performance
+>=20
+> By reading this, I know that setting "pts_0_control/gain" to a larger
+> value means less aggressive ptc control.
+>=20
+> But what does "gain" mean here?
+This is the input to the algorithm on how much performance gain is
+allowed to be in acceptable range for trip violation. May be call
+performance levels instead. I am using the same term as in the spec.
 
-Since upstream's will imply `UnsafeCell`, then I assume they will not
-take it away, and thus we should just document it the same way, so
-that eventually we can just alias the upstream one.
+Thanks,
+Srinivas
 
-But that last part can only happen in a long time, when our minimum
-upgrades past 1.89, since otherwise we would lose the `UnsafeCell`
-with an alias.
-
-If we really wanted a type that does not do that, then we could have
-another one, with a different name.
-
-Thanks!
-
-(By the way, please try to trim unneeded quotes in replies; otherwise,
-threads become harder to read in clients such as lore.kernel.org, and
-it also becomes harder to reply)
-
-Cheers,
-Miguel
+>=20
+> May be my English problem, I'm trying hard to understand this, but it
+> is
+> still a bit confusing to me.
+>=20
+> thanks,
+> rui
