@@ -1,169 +1,275 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3618E8633A;
-	Thu,  5 Jun 2025 17:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4E91DFF8;
+	Thu,  5 Jun 2025 17:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143985; cv=none; b=D6yyxXfALH4Fxe6feJf+eVee94B1OgeHFjdJlJ+TBJC/L7vqBzi3Op5Cr0yAb/O3zPvcb+fTRiZgmnIH9yPRC3n2LIlVse6JzmWLzeCsdbrN1tSNp+AvH5EI8eyqkEZdVqqnic/TzI4VG+u/qYTPK+hkUh/T5EvV2rDYazVZ6Zg=
+	t=1749144047; cv=none; b=QdZoZIqfh6iLPj5h5+mJA+Ii2jARQotxq0k20Te/R40rQPfavwFUZ4oHk1sXVDo5YdGaFw/+ukgNE6hP/HYOlM/yX3//x9mFaL8ZqBiPbwRSPi6ThqFUh9E520uvjG67ktMbF5fHhQJEqY/uI+WhGARwNWlue34hyBfW03/UvVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143985; c=relaxed/simple;
-	bh=ftjIODcJElgKCE4DU8BhMhWX2Y6yrqizED7saqK8bXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uwCGWzTVjjZMU3sa6Rumgv0xBxmISKFkGEJszTQapIEsbgjrj6csRcHy684ZJePZSw+4APAsG8xQUG83vO6m/2JrgQxiH6mbE2Id7Dg0S1Se7EycAB6Zj9wRLq4ASF/uXGnQcggINYvBpPUsTHXsZ5E3NDLaw4f7mfIqjPJkAs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aud9rPAn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749144047; c=relaxed/simple;
+	bh=XwGdHtoqujZip3vIIlT8VmeTxwgZkDqjj9/lpv9bS6s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kTpUQkhOuqWEQfhjRKTf2JHDr06AL54dY5tBQVFAHJqLsgr5YTTgIg6h2WArBXKxg6sGrbH+SbdA8J+DOcLuU4VZAiK3TqJTwb0DWEsWCcn3JK+oAFnfVEso399EJ85LWlLA9FyZ2ZRWdvMX5rfGsvhadUmOqlZMy6hEFzm1YE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jF25dsnV; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aud9rPAn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39D0AC4CEE7;
-	Thu,  5 Jun 2025 17:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749143984;
-	bh=ftjIODcJElgKCE4DU8BhMhWX2Y6yrqizED7saqK8bXc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aud9rPAnhm+5tgBEVIxf/CkuHsaLbcHonC6VLFjKIMGWx0eVNruJ9yB5qBB3E+6cU
-	 dwIxG3BLYiCLdQKRU5CSjtLgz5SxzaIAUBLhCgYVxzHOorLuKTlVGY2QOuCIrIVNrS
-	 vHhSyThu6wSK7HuwcG1imc9Cw7VdnRBqvl646fCPCzY/Fk3PPq1p+PdQx4zwIO3ZbY
-	 wgeJCjyFJ3/Fa5DdI4NZZ0+AqqDqwCh0EzENmnApr694VvXGiWJG0xncKiSda33UuR
-	 ayBzsxgaXcdY/GSDlEL/P5DpbN0Pw16OJRtMY2e7t0KEBM41jl8gF/2UnFCfkxqCON
-	 A/6m/oA9iOGpQ==
-Date: Thu, 5 Jun 2025 10:19:41 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, pbonzini@redhat.com, 
-	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org, samitolvanen@google.com, 
-	ojeda@kernel.org, xin@zytor.com
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <4z4fhaqesjlevwiugiqpnxdths5qkkj7vd4q3wgdosu4p24ppl@nb6c2gybuwe5>
-References: <p6mkebfvhxvtqyz6mtohm2ko3nqe2zdawkgbfi6h2rfv2gxbuz@ktixvjaj44en>
- <20250506073100.GG4198@noisy.programming.kicks-ass.net>
- <20250506133234.GH4356@noisy.programming.kicks-ass.net>
- <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
- <20250528074452.GU39944@noisy.programming.kicks-ass.net>
- <20250528163035.GH31726@noisy.programming.kicks-ass.net>
- <20250528163557.GI31726@noisy.programming.kicks-ass.net>
- <20250529093017.GJ31726@noisy.programming.kicks-ass.net>
- <fp5amaygv37wxr6bglagljr325rsagllbabb62ow44kl3mznb6@gzk6nuukjgwv>
- <eegs5wq4eoqpu5yqlzug7icptiwzusracrp3nlmjkxwfywzvez@jngbkb3xqj6o>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jF25dsnV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749144045; x=1780680045;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=XwGdHtoqujZip3vIIlT8VmeTxwgZkDqjj9/lpv9bS6s=;
+  b=jF25dsnVNmEvUT9WaDArrH7D3xFzHzN91YINop1icZo78uNHyejh0Q41
+   fuiNJagje/YXbCC8/dVZHum3CV2lUVh7HJJqk34JGvAxlVpcGmNzA+Pus
+   EkOu5bf8MpEd9ila+UfpaAWeP45wa+BX/+RlM0Pz6A1kSBBPg8kvaAZhh
+   Cd12h9KlEZdBImCQ4zD0y6xp/cQLgLwp75V9bExmL9qmCevv4IGHFzeUX
+   24uVzhVOyDyP8DuZiW45XxdwLlZNT+5l6VXG+Tn+Oqwig4WM5Gjia+TCx
+   QFFkcJ9XV/osZ5bGKIIqaDee4S7V50cuI9Bh6Z13kXzikHZjeYH09pEKI
+   g==;
+X-CSE-ConnectionGUID: lhxwz3qqQB2RB6seJeixiQ==
+X-CSE-MsgGUID: KZXTNB+wTCCjB/n/UaYGMQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="68833796"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="68833796"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 10:20:45 -0700
+X-CSE-ConnectionGUID: 9iz7uCNLQiuXpVKhsFkmnQ==
+X-CSE-MsgGUID: D1ezj7lbSnikjO92mkTmZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="150458051"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.124.222.36])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 10:20:44 -0700
+Message-ID: <63d616ac8bb1dbac9eebf10953886a5ce3274940.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] thermal: intel: int340x: Allow temperature override
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Zhang, Rui" <rui.zhang@intel.com>, "lukasz.luba@arm.com"
+	 <lukasz.luba@arm.com>, "rafael@kernel.org" <rafael@kernel.org>, 
+ "daniel.lezcano@linaro.org"
+	 <daniel.lezcano@linaro.org>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Thu, 05 Jun 2025 10:20:43 -0700
+In-Reply-To: <545fae8be782943a92d9df1c4a3ff90b7a865c76.camel@intel.com>
+References: <20250604203518.2330533-1-srinivas.pandruvada@linux.intel.com>
+		 <20250604203518.2330533-2-srinivas.pandruvada@linux.intel.com>
+	 <545fae8be782943a92d9df1c4a3ff90b7a865c76.camel@intel.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <eegs5wq4eoqpu5yqlzug7icptiwzusracrp3nlmjkxwfywzvez@jngbkb3xqj6o>
 
-On Tue, Jun 03, 2025 at 09:29:45AM -0700, Josh Poimboeuf wrote:
-> On Mon, Jun 02, 2025 at 10:43:42PM -0700, Josh Poimboeuf wrote:
-> > On Thu, May 29, 2025 at 11:30:17AM +0200, Peter Zijlstra wrote:
-> > > > > So the sequence of fail is:
-> > > > > 
-> > > > > 	push %rbp
-> > > > > 	mov %rsp, %rbp	# cfa.base = BP
-> > > > > 
-> > > > > 	SAVE
-> > > 
-> > > 	sub    $0x40,%rsp
-> > > 	and    $0xffffffffffffffc0,%rsp
-> > > 
-> > > This hits the 'older GCC, drap with frame pointer' case in OP_SRC_AND.
-> > > Which means we then hard rely on the frame pointer to get things right.
-> > > 
-> > > However, per all the PUSH/POP_REGS nonsense, BP can get clobbered.
-> > > Specifically the code between the CALL and POP %rbp below are up in the
-> > > air. I don't think it can currently unwind properly there.
-> > 
-> > RBP is callee saved, so there's no need to pop it or any of the other
-> > callee-saved regs.  If they were to change, that would break C ABI
-> > pretty badly.  Maybe add a skip_callee=1 arg to POP_REGS?
-> 
-> This compiles for me:
+On Thu, 2025-06-05 at 02:18 +0000, Zhang, Rui wrote:
+> On Wed, 2025-06-04 at 13:35 -0700, Srinivas Pandruvada wrote:
+> > Add debugfs interface to override hardware provide temperature.
+> > This
+> > interface can be used primarily for debug. Alternatively this can
+> > be also used to use hardware control loops to manage temperature
+> > for
+> > virtual sensors. Virtual sensors are soft sensors created by
+> > kernel/
+> > user space aggregating other sensors.
+> >=20
+> > There are three attributes to override the maximum three instances
+> > of
+> > platform temperature control.
+> > /sys/kernel/debug/plaftform_temperature_control/
+> > =E2=94=9C=E2=94=80=E2=94=80 temperature_0
+> > =E2=94=9C=E2=94=80=E2=94=80 temperature_1
+> > =E2=94=94=E2=94=80=E2=94=80 temperature_2
+> >=20
+> > These are write only attributes requires admin privilege. Any value
+> > greater than 0, will override the temperature. A value of 0 will
+> > stop overriding the temperature.
+> >=20
+> > Signed-off-by: Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>
+> > ---
+> > =C2=A0.../platform_temperature_control.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 64
+> > +++++++++++++++++++
+> > =C2=A01 file changed, 64 insertions(+)
+> >=20
+> > diff --git
+> > a/drivers/thermal/intel/int340x_thermal/platform_temperature_contro
+> > l.c
+> > b/drivers/thermal/intel/int340x_thermal/platform_temperature_contro
+> > l.c
+> > index 6cd05783a52d..5dcfd2cc9082 100644
+> > ---
+> > a/drivers/thermal/intel/int340x_thermal/platform_temperature_contro
+> > l.c
+> > +++
+> > b/drivers/thermal/intel/int340x_thermal/platform_temperature_contro
+> > l.c
+> > @@ -38,6 +38,7 @@
+> > =C2=A0
+> > =C2=A0#include <linux/kernel.h>
+> > =C2=A0#include <linux/module.h>
+> > +#include <linux/debugfs.h>
+> > =C2=A0#include <linux/pci.h>
+> > =C2=A0#include "processor_thermal_device.h"
+> > =C2=A0
+> > @@ -53,6 +54,7 @@ struct mmio_reg {
+> > =C2=A0
+> > =C2=A0struct ptc_data {
+> > =C2=A0	u32 offset;
+> > +	struct pci_dev *pdev;
+> > =C2=A0	struct attribute_group ptc_attr_group;
+> > =C2=A0	struct attribute *ptc_attrs[PTC_MAX_ATTRS];
+> > =C2=A0	struct device_attribute temperature_target_attr;
+> > @@ -222,6 +224,63 @@ static int ptc_create_groups(struct pci_dev
+> > *pdev,
+> > int instance, struct ptc_data
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static struct ptc_data ptc_instance[PTC_MAX_INSTANCES];
+> > +static struct dentry *ptc_debugfs;
+> > +
+> > +#define PTC_TEMP_OVERRIDE_ENABLE_INDEX	4
+> > +#define PTC_TEMP_OVERRIDE_INDEX		5
+> > +
+> > +static ssize_t ptc_temperature_write(struct file *file, const char
+> > __user *data,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0 size_t count, loff_t *ppos)
+> > +{
+> > +	struct ptc_data *ptc_instance =3D file->private_data;
+> > +	struct pci_dev *pdev =3D ptc_instance->pdev;
+> > +	char buf[32];
+> > +	ssize_t len;
+> > +	u32 value;
+> > +
+> > +	len =3D min(count, sizeof(buf) - 1);
+> > +	if (copy_from_user(buf, data, len))
+> > +		return -EFAULT;
+> > +
+> > +	buf[len] =3D '\0';
+> > +	if (kstrtouint(buf, 0, &value))
+> > +		return -EINVAL;
+> > +
+> > +	if (ptc_mmio_regs[PTC_TEMP_OVERRIDE_INDEX].units)
+> > +		value /=3D
+> > ptc_mmio_regs[PTC_TEMP_OVERRIDE_INDEX].units;
+> > +
+> > +	if (value > ptc_mmio_regs[PTC_TEMP_OVERRIDE_INDEX].mask)
+> > +		return -EINVAL;
+> > +
+> > +	if (!value) {
+> > +		ptc_mmio_write(pdev, ptc_instance->offset,
+> > PTC_TEMP_OVERRIDE_ENABLE_INDEX, 0);
+> > +	} else {
+> > +		ptc_mmio_write(pdev, ptc_instance->offset,
+> > PTC_TEMP_OVERRIDE_INDEX, value);
+> > +		ptc_mmio_write(pdev, ptc_instance->offset,
+> > PTC_TEMP_OVERRIDE_ENABLE_INDEX, 1);
+> > +	}
+> > +
+> > +	return count;
+> > +}
+> > +
+> > +static const struct file_operations ptc_fops =3D {
+> > +	.open =3D simple_open,
+> > +	.write =3D ptc_temperature_write,
+> > +	.llseek =3D generic_file_llseek,
+> > +};
+> > +
+> > +static void ptc_create_debugfs(void)
+> > +{
+> > +	ptc_debugfs =3D
+> > debugfs_create_dir("plaftform_temperature_control", NULL);
+>=20
+> s/platform/plaftform
+>=20
+correct.
 
-That last patch had a pretty heinous bug: it didn't adjust the stack
-accordingly when it skipped the callee-saved pops.
+> And same in the changelog.
+>=20
+> > +
+> > +	debugfs_create_file("temperature_0",=C2=A0 0200, ptc_debugfs,=C2=A0
+> > &ptc_instance[0], &ptc_fops);
+> > +	debugfs_create_file("temperature_1",=C2=A0 0200, ptc_debugfs,=C2=A0
+> > &ptc_instance[1], &ptc_fops);
+> > +	debugfs_create_file("temperature_2",=C2=A0 0200, ptc_debugfs,=C2=A0
+> > &ptc_instance[2], &ptc_fops);
+> > +}
+> > +
+> > +static void ptc_delete_debugfs(void)
+> > +{
+> > +	debugfs_remove_recursive(ptc_debugfs);
+> > +}
+> > =C2=A0
+> > =C2=A0int proc_thermal_ptc_add(struct pci_dev *pdev, struct
+> > proc_thermal_device *proc_priv)
+> > =C2=A0{
+> > @@ -230,10 +289,13 @@ int proc_thermal_ptc_add(struct pci_dev
+> > *pdev,
+> > struct proc_thermal_device *proc_
+> > =C2=A0
+> > =C2=A0		for (i =3D 0; i < PTC_MAX_INSTANCES; i++) {
+> > =C2=A0			ptc_instance[i].offset =3D ptc_offsets[i];
+> > +			ptc_instance[i].pdev =3D pdev;
+> > =C2=A0			ptc_create_groups(pdev, i,
+> > &ptc_instance[i]);
+> > =C2=A0		}
+> > =C2=A0	}
+> > =C2=A0
+> > +	ptc_create_debugfs();
+> > +
+>=20
+> should we create the debugfs only when PROC_THERMAL_FEATURE_PTC is
+> set?
 
-But actually there's no need to pop *any* regs there.
+This function is only called when
+ if (feature_mask & PROC_THERMAL_FEATURE_PTC) {
+}
 
-asm_fred_entry_from_kvm() uses C function ABI, so changes to
-callee-saved regs aren't allowed, and changes to caller-saved regs would
-have no effect.
 
-How about something like this?
+>=20
+> > =C2=A0	return 0;
+> > =C2=A0}
+> > =C2=A0EXPORT_SYMBOL_GPL(proc_thermal_ptc_add);
+> > @@ -248,6 +310,8 @@ void proc_thermal_ptc_remove(struct pci_dev
+> > *pdev)
+> > =C2=A0		for (i =3D 0; i < PTC_MAX_INSTANCES; i++)
+> > =C2=A0			sysfs_remove_group(&pdev->dev.kobj,
+> > &ptc_instance[i].ptc_attr_group);
+> > =C2=A0	}
+> > +
+> > +	ptc_delete_debugfs();
+>=20
+> ditto.
+Same as above.
 
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index d83236b96f22..e680afbf65b6 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -99,7 +99,7 @@ For 32-bit we have the following conventions - kernel is built with
- 	.endif
- .endm
- 
--.macro CLEAR_REGS clear_bp=1
-+.macro CLEAR_REGS clear_callee=1
- 	/*
- 	 * Sanitize registers of values that a speculation attack might
- 	 * otherwise want to exploit. The lower registers are likely clobbered
-@@ -113,20 +113,19 @@ For 32-bit we have the following conventions - kernel is built with
- 	xorl	%r9d,  %r9d	/* nospec r9  */
- 	xorl	%r10d, %r10d	/* nospec r10 */
- 	xorl	%r11d, %r11d	/* nospec r11 */
-+	.if \clear_callee
- 	xorl	%ebx,  %ebx	/* nospec rbx */
--	.if \clear_bp
- 	xorl	%ebp,  %ebp	/* nospec rbp */
--	.endif
- 	xorl	%r12d, %r12d	/* nospec r12 */
- 	xorl	%r13d, %r13d	/* nospec r13 */
- 	xorl	%r14d, %r14d	/* nospec r14 */
- 	xorl	%r15d, %r15d	/* nospec r15 */
--
-+	.endif
- .endm
- 
--.macro PUSH_AND_CLEAR_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0 clear_bp=1 unwind_hint=1
-+.macro PUSH_AND_CLEAR_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0 clear_callee=1 unwind_hint=1
- 	PUSH_REGS rdx=\rdx, rcx=\rcx, rax=\rax, save_ret=\save_ret unwind_hint=\unwind_hint
--	CLEAR_REGS clear_bp=\clear_bp
-+	CLEAR_REGS clear_callee=\clear_callee
- .endm
- 
- .macro POP_REGS pop_rdi=1
-diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-index 29c5c32c16c3..5d1eef193b79 100644
---- a/arch/x86/entry/entry_64_fred.S
-+++ b/arch/x86/entry/entry_64_fred.S
-@@ -112,11 +112,12 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
- 	push %rax				/* Return RIP */
- 	push $0					/* Error code, 0 for IRQ/NMI */
- 
--	PUSH_AND_CLEAR_REGS clear_bp=0 unwind_hint=0
-+	PUSH_AND_CLEAR_REGS clear_callee=0 unwind_hint=0
- 	movq %rsp, %rdi				/* %rdi -> pt_regs */
- 	call __fred_entry_from_kvm		/* Call the C entry point */
--	POP_REGS
--	ERETS
-+	addq $C_PTREGS_SIZE, %rsp
-+
-+	ALTERNATIVE "mov %rbp, %rsp", __stringify(ERETS), X86_FEATURE_FRED
- 1:
- 	/*
- 	 * Objtool doesn't understand what ERETS does, this hint tells it that
-diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
-index ad4ea6fb3b6c..d4f9bfdc24a7 100644
---- a/arch/x86/kernel/asm-offsets.c
-+++ b/arch/x86/kernel/asm-offsets.c
-@@ -94,6 +94,7 @@ static void __used common(void)
- 
- 	BLANK();
- 	DEFINE(PTREGS_SIZE, sizeof(struct pt_regs));
-+	OFFSET(C_PTREGS_SIZE, pt_regs, orig_ax);
- 
- 	/* TLB state for the entry code */
- 	OFFSET(TLB_STATE_user_pcid_flush_mask, tlb_state, user_pcid_flush_mask);
+Thanks,
+Srinivas
+
+>=20
+> thanks,
+> rui
