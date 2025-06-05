@@ -1,108 +1,80 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181691C695
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 00:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DB82F43;
+	Thu,  5 Jun 2025 00:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749082903; cv=none; b=Qx4qNGuimtnDJ8NzTDc7OpohHdyVEgrLUWbz01Gs83eqIBhqkfanoSRYqv2qK4jY19EQt01HXN+M6OlFog47q8B9kDfJfw+h7ywehj3GU2GE5pLTX7L0senl1DpMdH27nchLyD1UDC2eTMCvLRZGKaPeLCbWBFT/T7CObyX/1+M=
+	t=1749082935; cv=none; b=INlYl1qNOTkB2lQ5Z+7kSVIZar/7k6UfX506WNNmIjmGOgB46UAgRxpkrY/wsIpjCxjzm20wE0MfIIxuWxbJZOHPDL8rJ2cW6Ll/WZ4T/1UkMAcQyZw1f41ydZb2W7Mc8NLwYYXkSCha0Uofi9sbtnvPZb/ddiAhkUwPJklc/+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749082903; c=relaxed/simple;
-	bh=Rzc26UGss66HbG99AfC6Xrb6mr5yeBzZKHvJSIqoDx4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EsFhim1JLaWxuVv/Ji+ep7pg98aNUE1YEfLP+5R4RZmqCb5xG1Ue6v/y0SFqyYfM09Jd/HxD3vjsQaaNkHraIwSR2F6SwEyUDoKwyPcQMhTITMOgb7dhMr1wWqWKUvZtdKqlovFq6q1mmapFRZ8SYsks/W9XL+0HCGcfjiNwvVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+0M8Fhq; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749082935; c=relaxed/simple;
+	bh=6/q73xe5zRQSNc9a93fuAwlkT85IVrJBXRq8AT/arok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MxaBvHGSIvoyRByBMafQ1jIi8U1TE2FzJC1nRbfBF7ILdvT9MJw+6fS2wqYkvdgI4wJpzY8+naECDKUaZ37rm4TfTEYwi0C6I/cEcOA1P9rPEUMo4dnWURihZ8pwZ8Lv5f6AdHhhrWZc+WqmKfgRJtD+YtNu75Y9kpVBfX+cpfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HTmnug0l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+0M8Fhq"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e5599b795so4937607b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 17:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749082901; x=1749687701; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vn+YpZ5oWgO6gZ9Q0emBGijkBmytA6hKk8jzRwcMZA8=;
-        b=i+0M8FhqOpQWbXlMRgHmkWiW0FKLuyX48DDUXMrqfN2Rm3wqFUv9Ie9dq4GS/A70qS
-         CZQOVy3vBlBQJ73YY8jOxO5tPCN1AfedivNN6NFxut5bF4FSqCUc0hT/MKGPMeSYME1/
-         MnDgkDB6B4g1nbCv+dq4fhurzdZcY53MUYOD2pVs4XFkD/dMTUakJIhVoT/VOxxXrEJF
-         42AknqnlBf74bIfw/7rdptgUsV3ISnuKK8XnyTsgGvV2IdW7GpMjI9T0z4glk0t0mZq5
-         PKrrDI166ncm7XmtB6MI0PeiDnnhvbQjTX0Pt9ZKJ9jq7W1B9fCnMWtdNlsaSMnAZ5/E
-         +4rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749082901; x=1749687701;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Vn+YpZ5oWgO6gZ9Q0emBGijkBmytA6hKk8jzRwcMZA8=;
-        b=YsC0NKtfOXRv0t6gCvqNnK14/d+/TUxD0oi0fvsue6FjnKKEsFjJM12D73sRvhwKMy
-         7/FfbGmwEOUc+Env2l9Dd6uIO3G8r13vR7xmBKrD6RNMymH9PyIZ3acV1Ug/3ds4smAH
-         UIWz/BKTczLVd+REQ4e+r5UR/yNgNE8WTa0qHbyhliCdD5Wc5OomWfCGec1CC3kFEeTI
-         +rJT6hM5T4rTWCVnmLVQwChk8ngwcCxjpN06EfoD8rsviR+Qg+1H31VhB0dfIrEqjHsS
-         O6pwg5veccmfyJ7O3W3/Pr5Rdo0iPgGmxa1X2P7FLwK9mX06g9eRqareqkZQU0JiQVTs
-         XtBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX64SWrxLkBMq1SApwEBAkSK/9sG0xilIDWeTS2NFZDd9S2eAaTF7Nms7Gr0U25dRS8Pzj4zzstuXavqko=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKH4CHyQlvAEYajEUtFylH3emL1v6md42vYa1fu/9bbhRnHx39
-	xvrlU4/nxHXnorw5OAbidOQ0z5+9TlMJbeIu86Zq9wPhYL2qN2rxFmKc
-X-Gm-Gg: ASbGncvjdng097t4eWzUr0efVUlYbGW8SjtnbId03D4k/iSiLo4vBOgciwuAqLyWOdD
-	8I660wD4Kh41MjRffLXNav58CZPoJtFXJNZEvBn8giZHLSBcVStDMl3clyIBAsP76cJx1vpOOvT
-	J2fFIw3Bzq78rudKgngDi8/7HM2jimly8Gid8I8hDtPnKR/CrSiqUcFMFHIe0N1tAefISkWXHyp
-	Ail1/gUNsBmCah+TdxacXaAAt6ZCr8gkFpfFRjwe3Qnb5QZVCSP7apZe/OhI6LPBwooPXaHQyi8
-	KEEF11mNeORhluquH0qbXkTzVAG/Kjh2qZOgiIBGkY4TGcBp+oaprBn0BT+SYJMc2M+v3p0tT8N
-	JT9mmup6rZaTaZjZN4xhHyA==
-X-Google-Smtp-Source: AGHT+IFQt7fO9AECKZrf8OQSMHbCPAbYYxpHP3uMmGoGNb/ueCaBAW87Ibq1AW/FU41/+MnBGTaNrA==
-X-Received: by 2002:a05:690c:d8f:b0:70e:7503:1181 with SMTP id 00721157ae682-710d9f2e395mr73630087b3.18.1749082900903;
-        Wed, 04 Jun 2025 17:21:40 -0700 (PDT)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8ad005a6sm32221627b3.101.2025.06.04.17.21.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 17:21:40 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	linux-kernel@vger.kernel.org
-Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Subject: [PATCH] workque: fix opencoded cpumask_next_and_wrap() in wq_select_unbound_cpu()
-Date: Wed,  4 Jun 2025 20:21:37 -0400
-Message-ID: <20250605002138.47124-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HTmnug0l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83EA0C4CEE4;
+	Thu,  5 Jun 2025 00:22:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749082935;
+	bh=6/q73xe5zRQSNc9a93fuAwlkT85IVrJBXRq8AT/arok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HTmnug0l3MftKjinfBDulJrcGKbRxNQ0297A8tjDgtGxXhjLrJyeU8orTu13wiiVB
+	 y7T/4rdZwfcBt/aYavkk3wejw0kVJLf6+KBKX1ZRF1efQJs92CqEFUxsXkHJpt2WSk
+	 s6pYJooP58W9e7TLGt3C6wgWkLtkRFf8ExEwd1u+/Xe0dQ+U/vX3p92h2I3uGNVEtV
+	 awZByAbb4r7sVpAXVytyWGZW2XCkYTNTDLPQJuiKrfBJfTGdPl2DfEOaquV2XCnJ6x
+	 2zzUxfpzPWJGC3/mWjkQznX8T4acp06IxzB/oI9LcYryU1NA1GgzLAd0Vbc+Lk2KJe
+	 /fxfLw1rDwcWg==
+Date: Wed, 4 Jun 2025 17:22:11 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v2 42/62] kbuild,x86: Fix module permissions for
+ __jump_table and __bug_table
+Message-ID: <cv2xosjolcau7n3poyymo3yodhl4cokwmju53d3rwfsqhkbqym@rsvd5oqqhczk>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <9da1e9f592aadc8fbf48b7429e3fbcea4606a76a.1746821544.git.jpoimboe@kernel.org>
+ <20250526110634.GO24938@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250526110634.GO24938@noisy.programming.kicks-ass.net>
 
-From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+On Mon, May 26, 2025 at 01:06:34PM +0200, Peter Zijlstra wrote:
+> On Fri, May 09, 2025 at 01:17:06PM -0700, Josh Poimboeuf wrote:
+> > An upcoming patch will add the SHF_MERGE flag to x86 __jump_table and
+> > __bug_table so their entry sizes can be defined in inline asm.
+> > 
+> > However, those sections have SHF_WRITE, which the Clang linker (lld)
+> > explicitly forbids combining with SHF_MERGE.
+> > 
+> > Those sections are modified at runtime and must remain writable.  While
+> > SHF_WRITE is ignored by vmlinux, it's still needed for modules.
+> > 
+> > To work around the linker interference, remove SHF_WRITE during
+> > compilation and restore it after linking the module.
+> 
+> *groan*
+> 
+> This and the following patches marking a whole bunch of sections M,
+> seems to suggest you're going to rely on sh_entsize actually working.
+> 
+> There was an ld.lld bug, and IIRC you need to enforce llvm-20 or later
+> if you want this to be so.
 
-The dedicated helper is more verbose and effective comparing to
-cpumask_first() followed by cpumask_next().
+Hm, ISTR this working with clang 18, I'll go test that again.
 
-Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
----
- kernel/workqueue.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 3bef0754cf73..3518ea5ec55f 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2221,12 +2221,9 @@ static int wq_select_unbound_cpu(int cpu)
- 	}
- 
- 	new_cpu = __this_cpu_read(wq_rr_cpu_last);
--	new_cpu = cpumask_next_and(new_cpu, wq_unbound_cpumask, cpu_online_mask);
--	if (unlikely(new_cpu >= nr_cpu_ids)) {
--		new_cpu = cpumask_first_and(wq_unbound_cpumask, cpu_online_mask);
--		if (unlikely(new_cpu >= nr_cpu_ids))
--			return cpu;
--	}
-+	new_cpu = cpumask_next_and_wrap(new_cpu, wq_unbound_cpumask, cpu_online_mask);
-+	if (unlikely(new_cpu >= nr_cpu_ids))
-+		return cpu;
- 	__this_cpu_write(wq_rr_cpu_last, new_cpu);
- 
- 	return new_cpu;
 -- 
-2.43.0
-
+Josh
