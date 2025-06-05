@@ -1,71 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69BC204090
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 10:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA63E20B7FC;
+	Thu,  5 Jun 2025 10:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749119103; cv=none; b=KtZTkJ83TCOwRC0wqIo4ZXLeWqKPOsRu2ky5vMymUfpLC85dR/MFr/e7hGd5wnW0AN2JpT4ZJB/omwa4p7myOAoodM0YslqP2CECmjslE0gZMzsGwO1fpGBh7bY/ATNIVnbUF8tnhUGn4yxHZKeuXf0jIOQlCMBlV+eMXdFhyiw=
+	t=1749119115; cv=none; b=N1fpYdbDRomai4tGzlCgStnmce1uxQPuIghxRYxnpkLe1GUZEE/adBGNQLMYdJy+Sm/7egzm4mwz3MDOKqmsP2Dv+CgX6hSeDTc/hohotSo2T3Fe43BQ32G8FgGIVoi1wTmSW6+1W475tfkdTNmiQXJcd417G3s1HQfONYWcclo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749119103; c=relaxed/simple;
-	bh=015oBGMB3YXrG897FkQBa+RLeqYZAPDXjdd6A32n7dk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jJsaHGEZzomAJ6TmuK9blk/Puw+8XigiYTpTsaqHwXzFiClVXiQQcHm3fnmbYoOm9B0CtiYSlKwEf0YJRJEm70ahhPtLOsB/WNMGalVJNOpv+8ryROCzII5Xx3erwC7iEUgkhVFbzCkMBjvb97Nv+0q0rh9NNneg0qsqTUX4Cqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bvg+6+IB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749119115; c=relaxed/simple;
+	bh=YdJvMMxNeJZ4ws+mkLoEmNugy4D3YfkKWs3ds4JIL/4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=CxN8gLmnvS0NaItUgHx7bKdKFB6i/EU82FFRpbkomdIN83kgGSPT1VcNt0ItxBkrkzE7IH48a+zHgDTkrFQoVd2Ty3uhmB2dvyGm0dumPZBJ51c1i0bHGzy7bECUdnZQhgy5UHdRMZIDNagW6GlvWkothBJmgSoVLZOw7Dn14Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4PPodmG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bvg+6+IB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749119100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+/I6BadOUjI/02G0YPnq9xgrPHjXcmZakozl0E4TDSo=;
-	b=Bvg+6+IB77bbCXKQ9QKMIe09Cxj2onu9iZOFiZZZ7ob5FmB8kBxSE0QiPwpxQ+dGyw92wR
-	J3YHX8gqvOOsE3mINVAzPONp0vMp/J7v+bppMi/r++QLDeZSvjNEY4mes2p74bdBa5i54+
-	V77VBvQoWuz1X07F9thNzDaxz1CXlu4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-444-0csW83k3O7uzCOhzz5hi3A-1; Thu, 05 Jun 2025 06:24:58 -0400
-X-MC-Unique: 0csW83k3O7uzCOhzz5hi3A-1
-X-Mimecast-MFC-AGG-ID: 0csW83k3O7uzCOhzz5hi3A_1749119097
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4e713e05bso375865f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 03:24:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749119097; x=1749723897;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+/I6BadOUjI/02G0YPnq9xgrPHjXcmZakozl0E4TDSo=;
-        b=YFjgBu9iGlbOZit98VX0HZ0u35ZSt8BxPHcZBz8YkuWGFeaZvkRVWgGjQLEqjVVByu
-         QaYZU39T+mTxBevd4FlEnkevtD8LRGgEOYhnTuWTc7Q1UZW15wsU+cm2a1T60gt1Y23M
-         QJOjwMCrzs32DHPys9rmghHD1YJKsh5BDWZnI8GrxsOE0/58hilopl5xdUiopHQ/+Ye9
-         LKmTNkLVFh1RQgltbL5ONoyiW6lvzlrBFkjVCUE1FbLYjAP2teR+JHV1ZpTq8tjuvgWL
-         oxmi6JGfUd3cFzjgf2lNEVCXZ2zodbc162Gs8LZJJDI1eHf/jh3AzCfXCjxSdyh9TNTd
-         FVnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqlT6t3UVMbkK0FvyrDUHCmT7v8wpZwTw9u6BsNNs2SyS6VkcuS7FPxJjxq7NMIrwQHbeYlsRBtx8XGpI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzp+YecgQbeOzuQkrMfgwytUYn2C2YjAbRIxZet8N3vcWWk+y40
-	BShEuNlvwgVoITBDYQqlXGDDXD6KzwoqzZZvQOtac1YyXBA8AVlmJagk19aN8lCLjec8meINocl
-	bNdlBaXNmjj/d58oK2dQxGFNx8L6HTL9os2vY0LnECM46iHuprLnq0ocNQb9/wm3oJA==
-X-Gm-Gg: ASbGnct0KLjrTsvrOoYi9hxmWCKevcwDJUHYEuV7TPK5lv0AdLbMsdQWD8BOiWv6xgf
-	7IHjrpkbVGRIdriVzS4SocOJXj7DuBNC5G31YrHvL9kpyhq07hc9oxIyZtCfePjukET3/IMu7cg
-	JhE7iG+g30ClFuQkt0F8h9mUpgEDERjm1feyYGmy0IHL4VvSRo6XQpJ/hbzQbjQKijVH7plwFsF
-	E42zeXfClMTVgCcENkgbUwgC/uOQWPaJXb9I/YxPot6Tp1gBB9V77VTbcY191WW3h+sNnaJPT9F
-	XMa7kZ4Z4eEPYKdTbnA9j2fggtlqrw==
-X-Received: by 2002:a05:6000:1a85:b0:3a4:d0ed:257b with SMTP id ffacd0b85a97d-3a51d923b56mr5438388f8f.22.1749119097314;
-        Thu, 05 Jun 2025 03:24:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE9rhdrXoBB2l0aQ9oW8se1WPPDQ7OCJdLmo7Mz8TqllVZz9mFe8kK46lg4hrRM9Z/HNjs9tg==
-X-Received: by 2002:a05:6000:1a85:b0:3a4:d0ed:257b with SMTP id ffacd0b85a97d-3a51d923b56mr5438361f8f.22.1749119096926;
-        Thu, 05 Jun 2025 03:24:56 -0700 (PDT)
-Received: from ?IPV6:2a0d:3341:cced:ed10::f39? ([2a0d:3341:cced:ed10::f39])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5253a7aeesm2687387f8f.1.2025.06.05.03.24.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 03:24:56 -0700 (PDT)
-Message-ID: <ef3efb3c-3b5a-4176-a512-011e80c52a06@redhat.com>
-Date: Thu, 5 Jun 2025 12:24:54 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4PPodmG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFA39C4CEE7;
+	Thu,  5 Jun 2025 10:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749119114;
+	bh=YdJvMMxNeJZ4ws+mkLoEmNugy4D3YfkKWs3ds4JIL/4=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=f4PPodmGDavBEPsrZH6CTP09Oz6VdO24835qnpwrQF7qR5Ng57NXXpxvd9Fe6yCJ9
+	 ZWQs9LT6MR03KUhBwDM+qyCAhlW/qA9J50X9SLcQs4lViFsNGn8mbG7/ExG/rpwBvF
+	 HetZqNnqNbBtJYhDcKMwRW5OX0z+RL+shCvGmS6oFnEJpeivlSVd5GGzTMRj/wbffB
+	 CNU3TYc10Nm6vaNPxFg7B03NQ9Jx816OJyV79UqJ14fSJ1ef36k/DxAvFNmruTRIuV
+	 f696TTLTlqadTX1aCP2YtcxX3zueLEj39X9pXWt/9ttLekYbtlJqC2HjFb8K4Y7JTj
+	 98dbQqEkzkQ4w==
+Message-ID: <dafd58ae-0a08-4fe6-b94d-c8c6c8c1fa97@kernel.org>
+Date: Thu, 5 Jun 2025 12:25:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,82 +35,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net: phy: phy_caps: Don't skip better duplex macth on
- non-exact match
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
- Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com, Simon Horman <horms@kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- Herve Codina <herve.codina@bootlin.com>,
- Romain Gantois <romain.gantois@bootlin.com>,
- Jijie Shao <shaojijie@huawei.com>
-References: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
+From: Sven Peter <sven@kernel.org>
+Subject: Re: [BUG] rmmod i2c-pasemi-platform causing kernel crash on Apple M1.
+To: =?UTF-8?B?56iL5YeM6aOe?= <chenglingfei22s@ict.ac.cn>, j@jannau.net,
+ alyssa@rosenzweig.io, neal@gompa.dev
+Cc: zhangzhenwei22b@ict.ac.cn, wangzhe12@ict.ac.cn, maddy@linux.ibm.com,
+ mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ naveen@kernel.org, andi.shyti@kernel.org, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <5c598fea.3165d.1973e0a9a3a.Coremail.chenglingfei22s@ict.ac.cn>
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <5c598fea.3165d.1973e0a9a3a.Coremail.chenglingfei22s@ict.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 6/3/25 10:35 AM, Maxime Chevallier wrote:
-> When performing a non-exact phy_caps lookup, we are looking for a
-> supported mode that matches as closely as possible the passed speed/duplex.
+Hi,
+
+On 05.06.25 05:02, 程凌飞 wrote:
+> Hi, all!
 > 
-> Blamed patch broke that logic by returning a match too early in case
-> the caller asks for half-duplex, as a full-duplex linkmode may match
-> first, and returned as a non-exact match without even trying to mach on
-> half-duplex modes.
+> We’ve encountered a kernel crash when running rmmod i2c-pasemi-platform on a Mac Mini M1 (T8103) running Asahi Arch Linux.
 > 
-> Reported-by: Jijie Shao <shaojijie@huawei.com>
-> Closes: https://lore.kernel.org/netdev/20250603102500.4ec743cf@fedora/T/#m22ed60ca635c67dc7d9cbb47e8995b2beb5c1576
-> Fixes: fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps based on speed and duplex")
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> ---
->  drivers/net/phy/phy_caps.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
+> The bug was first found on the Linux v6.6, which is built manually with the Asahi given config to run our services.
+> At that time, the i2c-pasemi-platform was i2c-apple.
 > 
-> diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
-> index 703321689726..d80f6a37edf1 100644
-> --- a/drivers/net/phy/phy_caps.c
-> +++ b/drivers/net/phy/phy_caps.c
-> @@ -195,7 +195,7 @@ const struct link_capabilities *
->  phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
->  		bool exact)
->  {
-	> -	const struct link_capabilities *lcap, *last = NULL;
-> +	const struct link_capabilities *lcap, *match = NULL, *last = NULL;
->  
->  	for_each_link_caps_desc_speed(lcap) {
->  		if (linkmode_intersects(lcap->linkmodes, supported)) {
-> @@ -204,16 +204,19 @@ phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
->  			if (lcap->speed == speed && lcap->duplex == duplex) {
->  				return lcap;
->  			} else if (!exact) {
-> -				if (lcap->speed <= speed)
-> -					return lcap;
-> +				if (!match && lcap->speed <= speed)
-> +					match = lcap;
-> +
-> +				if (lcap->speed < speed)
-> +					break;
->  			}
->  		}
->  	}
->  
-> -	if (!exact)
-> -		return last;
-> +	if (!match && !exact)
-> +		match = last;
+> We noticed in the Linux v6.7, the pasemi is splitted into two separate modules, one of which is i2c-pasemi-platform.
+> Therefore, we built Linux v6.14.6 and tried to rmmod i2c-pasemi-platform again, the crash still exists. Moreover, we fetched
+> the latest i2c-pasemi-platform on linux-next(911483b25612c8bc32a706ba940738cc43299496) and asahi, built them and
+> tested again with Linux v6.14.6, but the crash remains.
+> 
+> Because kexec is not supported and will never be fully supported on Apple Silicon platforms due to hardware and firmware
+> design constraints, we can not record the panic logs through kdump.
 
-If I read correctly, when user asks for half-duplex, this can still
-return a non exact matching full duplex cap, even when there is non
-exact matching half-duplex cap available.
+Do you have UART connected to a device under test which you could use to 
+grab the panic log from the kernel? Alternatively you can also run the 
+kernel under m1n1's hypervisor and grab the log that way. It'll emulate 
+the serial port and redirect its output via USB.
 
-I'm wondering if the latter would be preferable, or at least if the
-current behaviour should be explicitly called out in the function
-documentation.
+> 
+> Thus we tried to find the root cause of the issue manually. When we perform rmmod, the kernel performs device releasing on
+> the i2c bus, then calls the remove function in snd-soc-cs42l83-i2c, which calls the cs42l42_common_remove in cs42l42,
+> because cs42l42-&gt;init_done is true, it performs regmap_write, and finally calls into pasemi_smb_waitready in i2c-pasemi
+> -core.c. We noticed that smbus-&gt;use_irq is true, and after it calls into wait_for_completion_timeout, the system crashs!>
+> We found that wait_for_completion_timeout is one of the core scheduler APIs used by tens of thousands of other drivers,
+> it is unlikely causing the crash. So we tried to remove the call to wait_for_completion_timeout, then the system seems to
+> run well.
+> 
+> However, because we have little knowledge about i2c devices and specifications, we are not sure whether this change will
+> cause other potential harms for the system and device. Is this call to wait necesary here? Or can you give a more
+> sophisticated fix?
 
-/P
+Yes, that call is necessary. It waits for the "transfer completed" 
+interrupt from the hardware. Without it the driver will try to read data 
+before it's available and you'll see corruption. I'm surprised hardware 
+attached to i2c (usb pd controller and audio I think) works at all with 
+that change.
+
+
+Sven
 
