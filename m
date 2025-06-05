@@ -1,92 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62B536D;
-	Thu,  5 Jun 2025 04:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6329A36D;
+	Thu,  5 Jun 2025 04:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749096061; cv=none; b=TXBlXUZ1u21I6BwTBLdGVSvtzjdyYLF2CD5yFZT2k5JWErdcATnok789278L93uvEPNNjBvSHLl/IdxQEqg+UHLAgNWeRx40XisBukg7oQgGcsaawyCCkT2t6t28Y4NBL6ddevL+t8CovyU59dP65W9YHamFbZ2uozr77PTk7Gs=
+	t=1749096103; cv=none; b=MhBTHtfAy1TkwV3fUT/zKYPaLaTwyT+S0GTJaiWUil1ZNq9HDNd2U7hJHY/Le7X0t0+Fbc2PXdvW8sYEZDZlbuWWJeXMFCPanze1VJocbZ82iGrjY5gocMXtHd8pZoNV19boJDHE/tcapMphMxsw4/z+H0eiE6CxroCfKm91LpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749096061; c=relaxed/simple;
-	bh=FXBbPzAAhSovRjwex5dKZ+yjnaMLwgjnsSIoY9sDE1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qLn5EASLmFnAhyRTZaKoij4B3yRmumZhnD/5eiyf2QC+OiA1fquMWrKZ+h3KLEP/kngaqfaSojnyj8T03Y9idcoskz00Gctr7MWcYFhpZYJwXQnja0G11MUc3GHUp4mEQi+yw21sXYj0iUbrNcRHYTn/mDXQ/MhoMT2n+GYJ01s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TE3SRtVn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749096103; c=relaxed/simple;
+	bh=32c7+/f8dJEBLn5iseICjaVxF8Xs0WCRAXtVpNyVYvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EylaAzqPigCFScfatMd/3zAwKbewLEnls/+YOapRjfQXAneRYRMUFJxJ4p06k0xg4T+g/rc0DodV6m17thEWSWVmlrfg4EhPqfW5gW+5TghitfFwJzwb6oZnbV2hlXVHoZZLMBkNyCgSjhwWvxJfmlkdzVBAlSrCAnA5JNnQNts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PE/HJkK2; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TE3SRtVn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B8AC4CEE7;
-	Thu,  5 Jun 2025 04:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749096061;
-	bh=FXBbPzAAhSovRjwex5dKZ+yjnaMLwgjnsSIoY9sDE1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TE3SRtVn/ST+6NYt67ULRZx7tLW0hM+eND8+c6xr+qyGpmaewhWnLTwJ27qjghKQK
-	 57GwktKqixOBYHWf7bTWA7bqVaaEq2wDr9YNXva+rIr4eplsrmGsedyY00N567BvPa
-	 DekU3wZEL5OImZrkEeCui9XbMAH6fnWt1yx5frXEpM++4mUAl46PR/8EhLURhc4azL
-	 /ctQkn9JztINDO49ZNJwVkbpUNG+3NxurCG990GJkwo8YZvYtGwJqNB1KhjMRm1jxj
-	 OTIn6gmUznXonsOsg9veOK70Z8zhobwNiwExdqMwe+jQpSc6JfCLnQCL1/PoVOtYuS
-	 7dGXV4AeYtWIw==
-Date: Wed, 4 Jun 2025 21:00:58 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
-	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
-	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
-	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
-	Puranjay Mohan <puranjay@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH v2 42/62] kbuild,x86: Fix module permissions for
- __jump_table and __bug_table
-Message-ID: <bibraqfzt22adfii3emorei7lobdhjnmfrfv3n4cd7f22k73s4@jbxclgfc6fgi>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <9da1e9f592aadc8fbf48b7429e3fbcea4606a76a.1746821544.git.jpoimboe@kernel.org>
- <20250526110634.GO24938@noisy.programming.kicks-ass.net>
- <cv2xosjolcau7n3poyymo3yodhl4cokwmju53d3rwfsqhkbqym@rsvd5oqqhczk>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PE/HJkK2"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554HXXig032470;
+	Thu, 5 Jun 2025 04:01:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	YylkOQCh+vCY3pVbR+5T6o1JTLHD9ZCMZHUsqJ1mDIg=; b=PE/HJkK2ZTSZggqn
+	rU/xxdpJJRUrR77TLp1G94gogCvBRbhr5m/aHae0ffddwYyTauXAvmsyRdqFzyFK
+	8U5ByBrZ3S/bFzdgeuhy3cXM8xECkKOgV0tSlBz+gKEgymxDryEPZX5umLv3uSrk
+	iW/5AUXH9IOKowd4payvnn6T0yA7yHsl9vOr8LyOl/Y5uJIl1bgYoVczLoFsZfWT
+	BMYhhia1Q3kDMF8ClVshO//2RUmu5ZTIF41uuqggoujjS/EtiuWKZWBLU/13WAAt
+	Sj1oOUrNjyAUA7AbInHpV7+QBVMc+g6bU5o8MWx42FzaJliJCgkDp3W+tVcZ/Wje
+	i8Xqfw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471sfuxv8n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Jun 2025 04:01:35 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55541YU8020129
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 5 Jun 2025 04:01:34 GMT
+Received: from [10.133.33.145] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Jun 2025
+ 21:01:31 -0700
+Message-ID: <03354d56-ed21-47e0-a52e-14f559ff3bfb@quicinc.com>
+Date: Thu, 5 Jun 2025 12:01:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cv2xosjolcau7n3poyymo3yodhl4cokwmju53d3rwfsqhkbqym@rsvd5oqqhczk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Johan Hovold
+	<johan@kernel.org>,
+        Baochen Qiang <quic_bqiang@quicinc.com>
+CC: Johan Hovold <johan+linaro@kernel.org>,
+        Jeff Johnson
+	<jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250526114803.2122-1-johan+linaro@kernel.org>
+ <20250526114803.2122-2-johan+linaro@kernel.org>
+ <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
+ <aD1axxSAJsbUfnHH@hovoldconsulting.com>
+ <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
+ <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
+ <01634993-80b1-496e-8453-e94b2efe658c@quicinc.com>
+ <50555c1a-c200-4ac0-8dfb-424ff121b41d@oss.qualcomm.com>
+Content-Language: en-US
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
+In-Reply-To: <50555c1a-c200-4ac0-8dfb-424ff121b41d@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=CY8I5Krl c=1 sm=1 tr=0 ts=6841169f cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=HNy3F74MYHTJsWsaVJsA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: eez8o6FWFR7_XDEWNogdVUfn6H8qt2j6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDAzMSBTYWx0ZWRfX1sFSTU4HTb4g
+ +fVLEIJj6xUsLDiOzqWPABGcih4+gZuRi+GWUexjAfMKAKkYao0Ht5Y1nQa4FzB1n9a6Uzb389q
+ cJZ/IcnuIr7VDP2ikUfQ0FcQI0FxrLK3JBkKcgFNUaPSiiiqqEgt+NWeDvmM304XB7To9/IW6+L
+ aMRp74N2rgQsQ1iknlhbv4HF9mVHxSdm7DkcT6n33O6GunJTRh3Subhc+bm3xd1WN7fuIM4RnHi
+ R4jfU9k3mZyJqd17Nh+j14BgiwAhuXIhx4IaQtbDlO5GADYl4ND4cZ6kazWBfiBAnFoFyQ40N9C
+ ej+1L26jVzpTTVxdKg4Va8g73WaEKWnRr/E3uv+s+VuM8c76f6GXAiYpg6tXrWPsA+dj1d0S+hS
+ akR1h0OrMC9VvuZOPhfL8MWDTDFGazFVlIts3bYNnS/rhWPhMctME3hidCHNxgZhCM68pJRD
+X-Proofpoint-GUID: eez8o6FWFR7_XDEWNogdVUfn6H8qt2j6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_01,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 spamscore=0 impostorscore=0
+ phishscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506050031
 
-On Wed, Jun 04, 2025 at 05:22:15PM -0700, Josh Poimboeuf wrote:
-> On Mon, May 26, 2025 at 01:06:34PM +0200, Peter Zijlstra wrote:
-> > On Fri, May 09, 2025 at 01:17:06PM -0700, Josh Poimboeuf wrote:
-> > > An upcoming patch will add the SHF_MERGE flag to x86 __jump_table and
-> > > __bug_table so their entry sizes can be defined in inline asm.
-> > > 
-> > > However, those sections have SHF_WRITE, which the Clang linker (lld)
-> > > explicitly forbids combining with SHF_MERGE.
-> > > 
-> > > Those sections are modified at runtime and must remain writable.  While
-> > > SHF_WRITE is ignored by vmlinux, it's still needed for modules.
-> > > 
-> > > To work around the linker interference, remove SHF_WRITE during
-> > > compilation and restore it after linking the module.
-> > 
-> > *groan*
-> > 
-> > This and the following patches marking a whole bunch of sections M,
-> > seems to suggest you're going to rely on sh_entsize actually working.
-> > 
-> > There was an ld.lld bug, and IIRC you need to enforce llvm-20 or later
-> > if you want this to be so.
+
+
+On 6/5/2025 12:24 AM, Jeff Johnson wrote:
+> On 6/3/2025 7:34 PM, Miaoqing Pan wrote:
+>> We previously had extensive discussions on this topic in the
+>> https://lore.kernel.org/linux-wireless/ecfe850c-b263-4bee-b888-c34178e690fc@quicinc.com/
+>> thread. On my platform, dma_rmb() did not work as expected. The issue
+>> only disappeared after disabling PCIe endpoint relaxed ordering in
+>> firmware side. So it seems that HP was updated (Memory write) before
+>> descriptor (Memory write), which led to the problem.
 > 
-> Hm, ISTR this working with clang 18, I'll go test that again.
+> Have all ath11k and ath12k firmware been updated to prevent this problem from
+> the firmware side?
+> 
+No, as this is not a widespread issue, and addressing it would require 
+modifying the core underlying modules of the firmware. Therefore, we 
+chose not to proceed with that approach but instead used the workaround 
+patch I previously submitted.
 
-You're right, looks like sh_entsize is getting cleared by the linker
-with my Clang 18.  I guess I tested with newer Clang.
+> Or do we need both the barriers and the logic to retry reading the descriptor?
+> 
 
-"objtool klp diff" fails with:
-
-  vmlinux.o: error: objtool: .discard.annotate_insn: unknown entry size
-
-So yeah, non-buggy linker is already being enforced, though I should
-probably make the error more human friendly.
-
--- 
-Josh
+I think so, that would be best.
