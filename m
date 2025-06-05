@@ -1,97 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED87B1A38E4;
-	Thu,  5 Jun 2025 15:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699141DED69;
+	Thu,  5 Jun 2025 15:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749138790; cv=none; b=d4HDPKlxyPGVHV/DltBN+acsEGrsdb+jr15SMsX7POMvm90qB3jB7GJUaEynLHzSI1bYcAVKH3PspmZr6thAX8qn21UXFj1gBLm58oqaxRcE9JtU7vU7So466otjwH5uR1isVllASLoGsnQmO3dPrpfF1niPhkLOLHIs4CUUIPw=
+	t=1749138851; cv=none; b=nHdbbEYAEJ0LzqEoN15zFi9ltm1Bjj78m6DfJCutP2Qdi9vswLOFlw8c00rvQ3WxtHmZzK5GgDzJe+W0h8ju6TwpXfEVbiDmEi7TWTOVsX0l2f42NnHrIsqXDjyknhsQvTBHOSZRCKW0eSlpnjxiDOBSbh8d6euQ0btEaSkv1/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749138790; c=relaxed/simple;
-	bh=fiN+FZko9+Fu7eOm/rhVSkG/bkyXnVLs4lXx+1GXUNw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YWMDpyt3E2a0z26pRkBhc4vbyJ1vHvU0NJEvfWBbRlpF3YaYjZEchIhwmCC9T9tcvWUpjVrqovVfcfOVXYnxlHjAAO60F+GqDgDApfOwXPa0PfLXqpgbheyBq3V3w4H1161Ym/HX6Rrp2HhB9B0Z6SVZ+NDFUHWJn2fzNV7Eijg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g19L8dpQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749138851; c=relaxed/simple;
+	bh=GG5pH0WumM+1EtuumeUEtMhwO7i52Jn7UO0eiIvnzoc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LPDh1NMLqYFHVDgQ2V99O9RJuSC+Ke/g9qx1hbmL1t2bWJWuzjZjm9H1ZLOQZ98BcqY5pkSKdKGs82Ud4TIUK267fR2zGRSdY7uwAZDlAa+/nyKA5Nf3ahkNp5D1FOlhZA3o6bEXxbjMatgBUO+9sRIMZIpJ6qfgOrowmrRpaWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HyIhVUcB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TFQv1fIq; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g19L8dpQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD20EC4CEE7;
-	Thu,  5 Jun 2025 15:53:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749138789;
-	bh=fiN+FZko9+Fu7eOm/rhVSkG/bkyXnVLs4lXx+1GXUNw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=g19L8dpQIzYuX6uW15QpXvyBA/ziqBMsZ/rC69KWzot7+LPgJ0xSGmyqhV+gwNA/L
-	 KvYNwOR2G+9VqYypavamq6Eh/b/CZbks/AP6rbFbwu2AzXULtnvRxEEDXgdTtokIHh
-	 1q9uh/atvyCbrcz6JteH0enpOsP/v6STSCV+xPZ1UPKHRhYNiHKtz9KW6Qhah6iJBs
-	 GbkhzxUwiLoe85JqCqfqIqW6QS7n/oN6YXMH3ijWRwqXVF9DQvXjNXpPy+hMrHL2G1
-	 3Ip3tZKz1iTSiJ+/8jPslFEL0bJPfJc+VHznByCHuFl36SLJPmFYbXvO2g5UdkWKsy
-	 wPqZKhmyslvyQ==
-From: Benno Lossin <lossin@kernel.org>
-To: Benno Lossin <lossin@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Fiona Behrens <me@kloenk.dev>
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rust: pin-init: examples, tests: use `ignore` instead of conditionally compiling tests
-Date: Thu,  5 Jun 2025 17:52:54 +0200
-Message-ID: <20250605155258.573391-1-lossin@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HyIhVUcB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TFQv1fIq"
+Date: Thu, 5 Jun 2025 17:54:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749138847;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eUZKiCDB3kruCoH3meBGYpAjvuH1dsB48dpAegEVExA=;
+	b=HyIhVUcBRunFL+9nv9XcR33JwHfWW6DX1qu4vYh6buxnGMLY4ZHnx7xjt6Zu2VA0F7E4/M
+	Gec6JWwVk/Wki4z+D2+4LOBW/glSFhxSwHZaaisrYoCXffM3VmtZymfMcIZ1S2EbU3+V/i
+	55G9TcJ1zb89JLdfL7FisVctMHjg4YYHw/6fvAFLFU3Xs+KZjP8tn/RA95IqlWhDimF+FM
+	HuDs9KIGjEgQt7jgJ0WUU9kwasw/kw7uA5V2GTseK3wW6zGqYnyc3HWd1U9to3p5ZrY5IO
+	yrIdzT/x6UbwfmOnfpTaU6P1Rg0sDGQeKwh3Ait4vCsUwhO2le7AJrAdl93LIg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749138847;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eUZKiCDB3kruCoH3meBGYpAjvuH1dsB48dpAegEVExA=;
+	b=TFQv1fIqG2rR9BuyhfqHSruT9hCxu8iBZVCvPsWvP7P8zrc4RO+xIwZUK3pDpha3FNap7l
+	3HXm19ax10u6I5CQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: linux-modules@vger.kernel.org, oe-lkp@lists.linux.dev, lkp@intel.com,
+	linux-kernel@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Allison Henderson <allison.henderson@oracle.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2] module: Make sure relocations are applied to the
+ per-CPU section
+Message-ID: <20250605155405.3BiTtQej@linutronix.de>
+References: <202506041623.e45e4f7d-lkp@intel.com>
+ <20250604152707.CieD9tN0@linutronix.de>
+ <20250605060738.SzA3UESe@linutronix.de>
+ <beb343ec-6349-4f9c-9fea-588b04eb49ee@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <beb343ec-6349-4f9c-9fea-588b04eb49ee@suse.com>
 
-Change `#[cfg(cond)]` to `#[cfg_attr(not(cond), ignore)]` on tests.
+On 2025-06-05 15:44:23 [+0200], Petr Pavlu wrote:
+> Isn't this broken earlier by "Don't relocate non-allocated regions in mod=
+ules."
+> (pre-Git, [1])?
 
-Ignoring tests instead of disabling them still makes them appear in the
-test list, but with `ignored`. It also still compiles the code in those
-cases.
+Looking further back into the history, we have
+	21af2f0289dea ("[PATCH] per-cpu support inside modules (minimal)")
 
-Some tests still need to be ignore, because they use types that are not
-present when the condition is false. For example the condition is
-`feature = std` and then it uses `std::thread::Thread`.
+which does
 
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Link: https://lore.kernel.org/all/aDC9y829vZZBzZ2p@google.com
-Link: https://github.com/Rust-for-Linux/pin-init/pull/58/commits/b004dd8e64d4cbe219a4eff0d25f0a5f5bc750ca
-Signed-off-by: Benno Lossin <lossin@kernel.org>
----
++       if (pcpuindex) {
++               /* We have a special allocation for this section. */
++               mod->percpu =3D percpu_modalloc(sechdrs[pcpuindex].sh_size,
++                                             sechdrs[pcpuindex].sh_addrali=
+gn);
++               if (!mod->percpu) {
++                       err =3D -ENOMEM;
++                       goto free_mod;
++               }
++               sechdrs[pcpuindex].sh_flags &=3D ~(unsigned long)SHF_ALLOC;
++       }
 
-Depends on https://lore.kernel.org/all/20250523125424.192843-3-lossin@kernel.org
+so this looks like the origin.
 
----
- rust/pin-init/examples/pthread_mutex.rs | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+=E2=80=A6
+> > --- a/kernel/module/main.c
+> > +++ b/kernel/module/main.c
+> > @@ -2816,6 +2816,10 @@ static struct module *layout_and_allocate(struct=
+ load_info *info, int flags)
+> >  	if (err)
+> >  		return ERR_PTR(err);
+> > =20
+> > +	/* Add SHF_ALLOC back so that relocations are applied. */
+> > +	if (IS_ENABLED(CONFIG_SMP) && info->index.pcpu)
+> > +		info->sechdrs[info->index.pcpu].sh_flags |=3D SHF_ALLOC;
+> > +
+> >  	/* Module has been copied to its final place now: return it. */
+> >  	mod =3D (void *)info->sechdrs[info->index.mod].sh_addr;
+> >  	kmemleak_load_module(mod, info);
+>=20
+> This looks like a valid fix. The info->sechdrs[info->index.pcpu].sh_addr
+> is set by rewrite_section_headers() to point to the percpu data in the
+> userspace-passed ELF copy. The section has SHF_ALLOC reset, so it
+> doesn't move and the sh_addr isn't adjusted by move_module(). The
+> function apply_relocations() then applies the relocations in the initial
+> ELF copy. Finally, post_relocation() copies the relocated percpu data to
+> their final per-CPU destinations.
+>=20
+> However, I'm not sure if it is best to manipulate the SHF_ALLOC flag in
+> this way. It is ok to reset it once, but if we need to set it back again
+> then I would reconsider this.
 
-diff --git a/rust/pin-init/examples/pthread_mutex.rs b/rust/pin-init/examples/pthread_mutex.rs
-index 6c4d18238956..49b004c8c137 100644
---- a/rust/pin-init/examples/pthread_mutex.rs
-+++ b/rust/pin-init/examples/pthread_mutex.rs
-@@ -139,7 +139,8 @@ fn deref_mut(&mut self) -> &mut Self::Target {
-     }
- }
- 
--#[cfg_attr(all(test, not(miri)), test)]
-+#[cfg_attr(test, test)]
-+#[cfg_attr(all(test, miri), ignore)]
- fn main() {
-     #[cfg(all(any(feature = "std", feature = "alloc"), not(windows)))]
-     {
+I had the other way around but this flag is not considered anywhere
+else other than the functions called here. So I decided to add back what
+was taken once.
 
-base-commit: ae8b3a83fb9de394f609035041cd7a668fda2ab3
-prerequisite-patch-id: 8d7ade67c2e5189bf8a2c91253d925e25744cba5
-prerequisite-patch-id: 0ebbd4a86bebeff23257870db92a1b0fe017c481
-prerequisite-patch-id: 1437fc7adeff6e13abd433594da923272b9388bf
--- 
-2.49.0
+> An alternative approach could be to teach apply_relocations() that the
+> percpu section is special and should be relocated even though it doesn't
+> have SHF_ALLOC set. This would also allow adding a comment explaining
+> that we're relocating the data in the original ELF copy, which I find
+> useful to mention as it is different to other relocation processing.
 
+Not sure if this makes it better. It looks like it continues a
+workaround=E2=80=A6
+The only reason why it has been removed in the first place is to skip
+the copy process.
+We could also keep the flag and skip the section during the copy
+process based on its id. This was the original intention.
+
+> For instance:
+>=20
+> 	/*
+> 	 * Don't bother with non-allocated sections.
+> 	 *
+> 	 * An exception is the percpu section, which has separate allocations
+> 	 * for individual CPUs. We relocate the percpu section in the initial
+> 	 * ELF template and subsequently copy it to the per-CPU destinations.
+> 	 */
+> 	if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC) &&
+> 	    infosec !=3D info->index.pcpu)
+> 		continue;
+>=20
+
+If you insist but=E2=80=A6
+
+Sebastian
