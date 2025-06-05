@@ -1,30 +1,65 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6223928E3F;
-	Thu,  5 Jun 2025 03:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530DD1F30B2
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 03:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749095716; cv=none; b=RX+/8kmO0oYUSgxi4v/FVQkZqGiy3foccuI/iuI56LBhsing8q41abjprg4FIxEGpRplrStcBSAs6cHXGiAIXcZwXZ9BXYmXVeUgBzkTAVM4YohJhQEclbrXZFjQsL6JUVQ8PtwXq4Fy6gNwN6A5GCZygBZv7xPmoJVLdQPYEM8=
+	t=1749095730; cv=none; b=lJaoLxpBWJN1vcWmhOJXPrL8PHoQTXr7YTG7G9h9rmTADOPtItRzAVx9EJ3ZPRPlz312Kdd5y9JdVZoy5UZvgO307PrB1x0c2F3qZpYM6LODWJchHBiOQFTRC4OsLcydj9o9mdQ1O17yiH+tHjQ7rT6iyzls9Yv6UGVffVaC+gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749095716; c=relaxed/simple;
-	bh=2ob9mLxLPx3nnUzKezqzg9HY+9Zpiv+L6w0YwZrNN/4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X93Ad+n/IUOK5MmTQiCrhJvrHKzSVh49qUcII53e6uZ7gqMAvLFTidUmFA1JpJmcD5KCls0KqH0bjQBSef3FxfP1OVadOgWSMWr8s4S3IF5cs5prZA91NVDdAoqb8lRc/MhlW+VPZ1Nw3k5V3zBswbMnCTTYF9O9iSCxgNOOcgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bCVvs71GLzYQv7Y;
-	Thu,  5 Jun 2025 11:55:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 06C351A1530;
-	Thu,  5 Jun 2025 11:55:05 +0800 (CST)
-Received: from [10.67.108.244] (unknown [10.67.108.244])
-	by APP4 (Coremail) with SMTP id gCh0CgAni18XFUFo7SMxOg--.62183S3;
-	Thu, 05 Jun 2025 11:55:04 +0800 (CST)
-Message-ID: <83d9c5e8-9c72-4ab8-a3ac-638e49691694@huaweicloud.com>
-Date: Thu, 5 Jun 2025 11:55:03 +0800
+	s=arc-20240116; t=1749095730; c=relaxed/simple;
+	bh=6vV8BBBuLBseH4drZNDS1JiYTzhPY15/Bct2tXlZ1l8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Y6p6Aih7iKiO2bIM0YxtOqTkAV3odi9UxVv8KmnWg1GouyCAXQHE2V+K3tIycNd8C0Ct/rneob4SQoAu88LNNmeORyA5e4LVGd1QNpEIUZtjCUSQtb03c7hWSmisHpAbA08kW9Jefk7OLyK7ltTAy6vFywDshNGGIAEMSr1lYGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rg38A2ZR; arc=none smtp.client-ip=209.85.221.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rg38A2ZR"
+Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so385337f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 20:55:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749095726; x=1749700526; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UFw1hVm4aqEwlAr8rCOCLfQ9NHkEpt5q96evQjKko24=;
+        b=Rg38A2ZR+pFs0Fu/u3YaCQXsyaOmWMPJz/3FfRx7uj7r0ZjD13wtpEytl0hZG0VmjH
+         sJmw5FI1Gye+Bi2StfUljj+vQhfIzCpered0LEgpQ83POfIbjOpKHCRdBor15NZCQ88I
+         CtDRTtQzUyekpoxMmA3AUAKYjKdr8SosBVMNJDop+SEQ0f7OL+WyvMn+PpHLJp/1VqbW
+         rNlYKJrz/4D5Cpyo4d9fTVI+CNxcfCOd9ELN0H4Nk4e5B0kYxcxyKYs4xOop45eT4Dwy
+         F6IQjmMX8QMWG1GPkWZTBqe1qaW51KsuRF2BgXs3Eaq2FJMM+aIjzPBVHJD0MpqWCQFZ
+         Rvuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749095726; x=1749700526;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UFw1hVm4aqEwlAr8rCOCLfQ9NHkEpt5q96evQjKko24=;
+        b=hbvrD796yKGqRbok7MEKkXaUGf/+O4rQ/uC+O10TUimdy6aiHBdBgw5fwTk1eQdU2b
+         T9CzW0o3X8shunUK8w9o+Lpwh4b0yZYhF1HK3LdyHmpXp25A8ZslFcE5J/PfsfOZNY0O
+         CF40sYCjOz4IZ2nviwp8hpqD0U6L4/TUQ6ZsETk5S5dfwa8fY9nPOtjMB/TcfCWlJ/UY
+         eunW+6erF0GrLLJ5NbhKd0MQ/NdIGv9gqQTfqWgxoJLHvrfo6t+DceWm+SKdmtSRfj8j
+         7ANieGYDuw9DzmKElo0sUtwQiz5iU2EnB6sWYX58c9JD4qpX0NCT+QSSXcxZKifOv79G
+         6z8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUPpHIY5oTRqVbBopmrosmPtVpJ+vlHDUb9TpCKP+t4Mj0PwzTRayv2BzQhHObOByGJEbRiD6rZ8OObBpw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfHZodOJdHt5d2DWfv0FVqGJsgbrxsNoGzPmd1N8fWrWLw4cd4
+	dvsP+xAmOQs4a20Y8JKOXWH/qWfqe1bknwqXKWobAhqaV4iVwTyCx6gS
+X-Gm-Gg: ASbGnctR9m0v+KjtHuL84JNcPqzE+bad9TGY8+WI95qwYOqWOdE0IGZLwLPLJMXMMID
+	PZvF+PDm6eYabyD5yvN3YCqXdohFCNxz2bNqeL3fkF6Va0BXTCNk2SU3odXmFWJEfz/7MFo70Ml
+	owI1SA7R4QoJfwZ2BbxLaWa84YEuAJlhGhgVQeKqxPO/goOXAyXGyqvMV4y4+1ckYhTFFH5DKa1
+	sNAUw2zIKGyGqbts0yJOJmHOWBumcd7/JSLBNOS6BaCabnmLe2AwYRCrcwHmnoQhpy5K4CsAwC4
+	S9PMiAc2YoZ9GYK3VAZ2x7HgkETK4NtXpRffzUuy0pTQnXWOpmm5R8h7GsM0MenagVW3HjS+UPh
+	zYFuakH0BksOvU0vH8vhSAfoYPUNkFhrT6TSyPD92SkPnajzI3W4Ih210j9OzSpcdut4=
+X-Google-Smtp-Source: AGHT+IHs9o7cJ+ssmBhszqk9ddF0qXxrKNkv9fb9GFLwxoeRPawQyEP6ki2Pz/VW8vyNBzgyPg9SqQ==
+X-Received: by 2002:a5d:5f51:0:b0:3a4:f430:2547 with SMTP id ffacd0b85a97d-3a51d8f6105mr4140212f8f.6.1749095726307;
+        Wed, 04 Jun 2025 20:55:26 -0700 (PDT)
+Received: from [26.26.26.1] (ec2-18-153-191-229.eu-central-1.compute.amazonaws.com. [18.153.191.229])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a52bd85d51sm192467f8f.94.2025.06.04.20.55.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 20:55:25 -0700 (PDT)
+Message-ID: <d32ac499-fadb-401c-bb8c-9c3616da302a@gmail.com>
+Date: Thu, 5 Jun 2025 11:55:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,136 +67,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] perf/core: Fix WARN_ON_ONCE(cpuctx->ctx.nr_cgroups
- == 0) in perf_cgroup_switch
+Subject: Re: [PATCH v1] iommu/vt-d: Remove dead code in
+ intel_iommu_domain_alloc_paging_flags()
+To: Baolu Lu <baolu.lu@linux.intel.com>, Wei Wang <wei.w.wang@intel.com>,
+ kevin.tian@intel.com, yi.l.liu@intel.com, dwmw2@infradead.org,
+ jroedel@suse.de, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+References: <20250530091325.694456-1-wei.w.wang@intel.com>
+ <f1f55968-28e0-4c5d-876b-1c5499b3c01a@linux.intel.com>
 Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- davidcc@google.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250604033924.3914647-1-luogengkun@huaweicloud.com>
- <20250604033924.3914647-3-luogengkun@huaweicloud.com>
- <20250604100052.GH38114@noisy.programming.kicks-ass.net>
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-In-Reply-To: <20250604100052.GH38114@noisy.programming.kicks-ass.net>
+From: Ethan Zhao <etzhao1900@gmail.com>
+In-Reply-To: <f1f55968-28e0-4c5d-876b-1c5499b3c01a@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgAni18XFUFo7SMxOg--.62183S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWryfGrW5Cr45ZryfCF4xtFb_yoW5urW7pF
-	srCF4a9398XFyUXa17tw1vva4Svw4SgaykWw15Kw43CrWUXrn8GF47Ga15AFn8Z3Z7AFWf
-	t390kr13A348ta7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+Content-Transfer-Encoding: 8bit
 
 
-On 2025/6/4 18:00, Peter Zijlstra wrote:
-> On Wed, Jun 04, 2025 at 03:39:24AM +0000, Luo Gengkun wrote:
->> There may be concurrency between perf_cgroup_switch and
->> perf_cgroup_event_disable. Consider the following scenario: after a new
->> perf cgroup event is created on CPU0, the new event may not trigger
->> a reprogramming, causing ctx->is_active to be 0. In this case, when CPU1
->> disables this perf event, it executes __perf_remove_from_context->
->> list _del_event->perf_cgroup_event_disable on CPU1, which causes a race
->> with perf_cgroup_switch running on CPU0.
+
+On 6/3/2025 10:39 AM, Baolu Lu wrote:
+> On 5/30/25 17:13, Wei Wang wrote:
+>> When dirty_tracking is enabled, first_stage is set to false to use the
+>> second stage translation table. dmar_domain->use_first_level, which is
+>> assigned from first_page, is guaranteed to be false when the execution
+>> reaches the location of the code to be removed by this patch. So the
+>> handling for dmar_domain->use_first_level being true there will never
+>> be executed.
 >>
->> The following describes the details of this concurrency scenario:
->>
->> CPU0						CPU1
->>
->> perf_cgroup_switch:
->>     ...
->>     # cpuctx->cgrp is not NULL here
->>     if (READ_ONCE(cpuctx->cgrp) == NULL)
->>     	return;
->>
->> 						perf_remove_from_context:
->> 						   ...
->> 						   raw_spin_lock_irq(&ctx->lock);
->> 						   ...
->> 						   # ctx->is_active == 0 because reprogramm is not
->> 						   # tigger, so CPU1 can do __perf_remove_from_context
->> 						   # for CPU0
->> 						   __perf_remove_from_context:
->> 						         perf_cgroup_event_disable:
->> 							    ...
->> 							    if (--ctx->nr_cgroups)
->> 							    ...
->>
->>     # this warning will happened because CPU1 changed
->>     # ctx.nr_cgroups to 0.
->>     WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
->>
->> To fix this problem, expand the lock-holding critical section in
->> perf_cgroup_switch.
->>
->> Fixes: db4a835601b7 ("perf/core: Set cgroup in CPU contexts for new cgroup events")
->> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+>> Signed-off-by: Wei Wang<wei.w.wang@intel.com>
 >> ---
-> Right, so how about we simply re-check the condition once we take the
-> lock?
->
-> Also, take the opportunity to convert to guard instead of adding goto
-> unlock.
->
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -207,6 +207,19 @@ static void perf_ctx_unlock(struct perf_
->   	__perf_ctx_unlock(&cpuctx->ctx);
->   }
->   
-> +typedef struct {
-> +	struct perf_cpu_context *cpuctx;
-> +	struct perf_event_context *ctx;
-> +} class_perf_ctx_lock_t;
-> +
-> +static inline void class_perf_ctx_lock_destructor(class_perf_ctx_lock_t *_T)
-> +{ perf_ctx_unlock(_T->cpuctx, _T->ctx); }
-> +
-> +static inline class_perf_ctx_lock_t
-> +class_perf_ctx_lock_constructor(struct perf_cpu_context *cpuctx,
-> +				struct perf_event_context *ctx)
-> +{ perf_ctx_lock(cpuctx, ctx); return (class_perf_ctx_lock_t){ cpuctx, ctx }; }
-> +
->   #define TASK_TOMBSTONE ((void *)-1L)
->   
->   static bool is_kernel_event(struct perf_event *event)
-> @@ -944,7 +957,13 @@ static void perf_cgroup_switch(struct ta
->   	if (READ_ONCE(cpuctx->cgrp) == cgrp)
->   		return;
->   
-> -	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> +	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
-> +	/*
-> +	 * Re-check, could've raced vs perf_remove_from_context().
-> +	 */
-> +	if (READ_ONCE(cpuctx->cgrp) == NULL)
-> +		return;
-> +
->   	perf_ctx_disable(&cpuctx->ctx, true);
->   
->   	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
-> @@ -962,7 +981,6 @@ static void perf_cgroup_switch(struct ta
->   	ctx_sched_in(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
->   
->   	perf_ctx_enable(&cpuctx->ctx, true);
-> -	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->   }
->   
->   static int perf_cgroup_ensure_storage(struct perf_event *event,
+>>   drivers/iommu/intel/iommu.c | 7 +------
+>>   1 file changed, 1 insertion(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>> index cb0b993bebb4..1145567c60f9 100644
+>> --- a/drivers/iommu/intel/iommu.c
+>> +++ b/drivers/iommu/intel/iommu.c
+>> @@ -3418,13 +3418,8 @@ intel_iommu_domain_alloc_paging_flags(struct 
+>> device *dev, u32 flags,
+>>           spin_lock_init(&dmar_domain->s1_lock);
+>>       }
+>> -    if (dirty_tracking) {
+>> -        if (dmar_domain->use_first_level) {
+> 
+> This *explicit* check enforces that dirty tracking cannot be supported
+> for a domain that relies on first-stage translation due to the lack of
+> enabling/disabling dirty tracking support.
+> 
+> While this might appear redundant, this prevents potential issues
+> if related code is modified without awareness of this dependency. 
+There would always something sooner or later like this to stop the 
+improper configuration/coding , under an assumption that caller path 
+always coded perfect, indeed, we could remove a lot of error stopper code.
 
-Thank for your review, I will make changes based on your suggestions.
+But that world seems never works like that.
+
+Thanks,
+Ethan
+> 
+>> -            iommu_domain_free(domain);
+>> -            return ERR_PTR(-EOPNOTSUPP);
+>> -        }
+> 
+> Thanks,
+> baolu
+> 
 
