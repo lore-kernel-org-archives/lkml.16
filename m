@@ -1,28 +1,28 @@
-Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
+Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D8419F11B
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECCB1E47AD
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749138086; cv=none; b=bduT5u7OKL5aEnvJSoVAEaHT67nqZqpe73l9To4n3e1k6Xki+X7FjgNabtcKoFWUiqqR0gd5+6b0XFrMzRfqBAqTMUR+2uNwo8nLx9Df01TannRZLRX+1HoEHvKGx6choVB8PtkVOVIjH7doSs9gA+tOS4rSPZFcxz3RpMjAa1M=
+	t=1749138090; cv=none; b=OO/nZnzIXkpgZyG7NIYnZ04mC6B7OzmGg0VZkAAcMBHzRsKIlm1ESBSZa5GKpuMi+hQTEb49aTZCg2SUQfU3Omr7nDiu/flU2sYihqkoLUjIrSO+aNb4779Y6JHiZXe5Ir4RrmKSlWNWqYsW3NPPunU56POh716i3W0ZIcu1rZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749138086; c=relaxed/simple;
-	bh=P719VLxHFxERjXUpHSjJfqPi7IZOb95FqVlS6IdDChg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lhOi4tvlByHDf/ZjOqk5TEbRf45Vi03egklMp9jYqdYRtN3MtvM8K7zby0tshMWFqbSQUxXcCLcsdek/Hoh3VhFf8KjJRqVUJWVW2AD/cRY1GcTaOjYVL6N69asxn1wNZ83gRxIlXcVc6Sx3e+FCACYpehcDAO7DbI2Vms6IL5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.168
+	s=arc-20240116; t=1749138090; c=relaxed/simple;
+	bh=8+Sypfrx2ChSZvVb5GtzdDo7H4mVx2VmT0mTEBKQXww=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=T76QXwhJgVKmPPt7cBBv/e45/Jsa59HNegapfaaaeOB3Z+j/2fLrbsd63vXhrfT45l1p+QJrU78ApdKT9pe/1YvYBz1m5+I5G3PMupgmnOcTkBu+TekapLpTOrcex//nwce56Jyl6nyBlEGOfHXgOk3BsX7lU/KxVa3wofD731M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
 Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bCpZp2PGNzrRp;
-	Thu,  5 Jun 2025 17:41:22 +0200 (CEST)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bCpZn4Vc1zdCl;
-	Thu,  5 Jun 2025 17:41:21 +0200 (CEST)
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bCpZl23Znz2f6;
+	Thu,  5 Jun 2025 17:41:19 +0200 (CEST)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bCpZk11YKzppn;
+	Thu,  5 Jun 2025 17:41:18 +0200 (CEST)
 From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Thu, 05 Jun 2025 17:41:09 +0200
-Subject: [PATCH v2 4/4] arm64: dts: rockchip: force PMIC reset behavior to
- restart PMU on RK3588 Tiger
+Subject: [PATCH v2 0/4] rockchip: rk8xx: allow to customize PMIC reset mode
+ on RK806
+Date: Thu, 05 Jun 2025 17:41:05 +0200
+Message-Id: <20250605-rk8xx-rst-fun-v2-0-143d190596dd@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,9 +31,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250605-rk8xx-rst-fun-v2-4-143d190596dd@cherry.de>
-References: <20250605-rk8xx-rst-fun-v2-0-143d190596dd@cherry.de>
-In-Reply-To: <20250605-rk8xx-rst-fun-v2-0-143d190596dd@cherry.de>
+X-B4-Tracking: v=1; b=H4sIAJG6QWgC/3XMQQ6CMBCF4auQWTumNKWCK+9hWGA7lYkJmCk2E
+ NK7W9m7/F/yvh0iCVOEa7WDUOLI81RCnypw4zA9CdmXBq10oxptUV7tuqLEBcNnwqBt7Yx6WK8
+ clM9bKPB6ePe+9MhxmWU7+FT/1n9SqlEhDW1nfGcuhtTNjSSynT1Bn3P+Ap2qUSyqAAAA
+X-Change-ID: 20250526-rk8xx-rst-fun-f261c40b6d0c
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
@@ -47,46 +48,58 @@ Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>,
 X-Mailer: b4 0.14.2
 X-Infomaniak-Routing: alpha
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
+This allows to customize the PMIC reset method (also called RST_FUN) on
+RK806 PMIC from Rockchip, mainly found on RK3588 devices but also on
+RK3576.
 
-The bootloader for RK3588 Tiger currently forces the PMIC reset behavior
-(stored in RST_FUN bitfield in register SYS_CFG3 of the PMIC) to 0b1X
-which is incorrect for our devices.
+Finally, this is required on the two RK3588 devices from Theobroma as
+U-Boot changes the silicon-default (which is suitable for us) to
+something that breaks our companion microcontroller's reboot detection
+which breaks a bunch of assumptions in the MCU FW code.
 
-It is required to restart the PMU as otherwise the companion
-microcontroller cannot detect the PMIC (and by extension the full
-product and main SoC) being rebooted which is an issue as that is used
-to reset a few things like the PWM beeper and watchdogs.
+To validate this works on those devices do the following:
 
-Let's add the new rockchip,reset-mode property to make sure the PMIC
-reset behavior is the expected one.
+On Tiger:
+i2cset -y -f 6 0x6f 0x9 0x62
+On Jaguar:
+i2cset -y -f 0 0x6f 0x9 0x62
+
+You hear a nice (loud :) ) beep, then reboot and it should stop right
+before entering U-Boot TPL again.
 
 Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
- arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v2:
+- moved rst_fun variable declaration out of the switch-case,
+- initialized rst_fun variable to make kernel test robot happy even
+  though the variable wouldn't be used uninitialized due to breaking
+  before using it,
+- renamed rockchip,rst-fun to rockchip,reset-mode
+- rewrote rockchip,reset-mode binding description to not mention the
+  relation to registers or register values,
+- added binding header file to make it easier to understand what the
+  mode is when reading a Device Tree without having to read the binding,
+- Link to v1: https://lore.kernel.org/r/20250526-rk8xx-rst-fun-v1-0-ea894d9474e0@cherry.de
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
-index c4933a08dd1e3c92f3e0747135faf97c5eeca906..4c05603abed2e458e406ed45f1bc7cdb57b42478 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
-@@ -5,6 +5,7 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/leds/common.h>
-+#include <dt-bindings/mfd/rockchip,rk8xx.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include "rk3588.dtsi"
- 
-@@ -440,6 +441,7 @@ pmic@0 {
- 		vcc13-supply = <&vcc_1v1_nldo_s3>;
- 		vcc14-supply = <&vcc_1v1_nldo_s3>;
- 		vcca-supply = <&vcc5v0_sys>;
-+		rockchip,reset-mode = <RK806_RESTART>;
- 
- 		rk806_dvs1_null: dvs1-null-pins {
- 			pins = "gpio_pwrctrl1";
+---
+Quentin Schulz (4):
+      dt-bindings: mfd: rk806: allow to customize PMIC reset mode
+      mfd: rk8xx-core: allow to customize RK806 reset mode
+      arm64: dts: rockchip: force PMIC reset behavior to restart PMU on RK3588 Jaguar
+      arm64: dts: rockchip: force PMIC reset behavior to restart PMU on RK3588 Tiger
 
+ .../devicetree/bindings/mfd/rockchip,rk806.yaml    | 23 ++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts     |  2 ++
+ arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi     |  2 ++
+ drivers/mfd/rk8xx-core.c                           | 14 +++++++++++++
+ include/dt-bindings/mfd/rockchip,rk8xx.h           | 17 ++++++++++++++++
+ include/linux/mfd/rk808.h                          |  2 ++
+ 6 files changed, 60 insertions(+)
+---
+base-commit: ec7714e4947909190ffb3041a03311a975350fe0
+change-id: 20250526-rk8xx-rst-fun-f261c40b6d0c
+
+Best regards,
 -- 
-2.49.0
+Quentin Schulz <quentin.schulz@cherry.de>
 
