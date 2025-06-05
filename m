@@ -1,215 +1,264 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1214E136E
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 04:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B721136E
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 04:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749096332; cv=none; b=aQWG7ij4LN/fD99zWTgo39z/MXVwHGMvbZ681knD9yp1NtBuhjsVGDXzvsQTqeBkBMTrqx8gAg1uo1MeazRXupAhtFLGP9k0B7dHWVIQRlG93hVbmDsYb4nH6g3s82W0VEaPP7ckkAqdFTYN+v4/SC/rPpiweb/EPzwIyZKIGuM=
+	t=1749096481; cv=none; b=apCXsN/Uu4OrFA8cznRdjtP28tnDQ54kV0G6jUlVRXjmhvJH1GSifetcg0yD0qI4eFemzFWpGkyczv9jHWCprxl1qU1rfo+B9rRyEn/EPnQmuaoZEecP/hPsgps1RwjIIxirzs/o5nk69YFmBQObmhnlDEXBP1/OzhPktCKcrB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749096332; c=relaxed/simple;
-	bh=0aMuVvcO/HryfZVnLIrporC1sMe8K19mf8AMb9yj2UY=;
+	s=arc-20240116; t=1749096481; c=relaxed/simple;
+	bh=JlZa1MR3jqRKxiFr4tenQ3861maa561Y0IEGxPqSOQI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TMaIFPy7x55pxKd/mNSIw+PjVFinqdLYbzqYl2Ucf9/envHMrQ5NlIF1AOgYH3s0JvK9xdfuqgp1w9AIaAriXeUP90zopcjLEYCIbxNsmOFn7uIJbgtGeiReb1o9qg6Qi3dUOmv5yls0Lg7QJeiJm3zz5M0FuHKJd47NTpfloIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P9ODmomC; arc=none smtp.client-ip=209.85.221.53
+	 To:Cc:Content-Type; b=qsz5yMGGizSOyUVZdXs0VgGZdB6kq+Z9+n2yh7EWGKkd9aUHt70lo0WIPn7SR5T57303BDdtZX4GxOPZjED1x8xtzgche3LXu9+iXAmKquEOdPv82ToMk7JnP7LsshhxH9F27IB2S8/RfGiJKdvF8E6TmQslnZgd0n/BBobb36U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UI2nK91j; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9ODmomC"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4e62619afso79670f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 21:05:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UI2nK91j"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4e6a0c274so70101f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 21:07:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749096329; x=1749701129; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749096478; x=1749701278; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dEwtieco4GKYEC1Fw9rbOSmkU4O570HqhhN1nDaf00c=;
-        b=P9ODmomC72UN8EmB2tJD2B0yQFuq/smuKTwGArOC+3gDPtIx7YdY2cA5orVcsoAbe3
-         IKAbDYKBqDA0FXupKA7HaV9szr6a/BSjgsxpv55E2F8vwzqnBdQQSaMInyZQcAfweLq9
-         Y9GF5h4IQpxpDuUEfALsyWgu88F/PMWmEt1Z3B59AsEewcOb+Rc0DcmAmvQ+nD19Gnut
-         4kNqM0rPcwiO0aEdVx8gge6FfUWgGdoTmJ3yfTdvVdTk064JGByctLy+7bbeWAiXFIKV
-         VxMt1ZlWBsBxdkBYtaRSUGSSHq5bKdkU66lj1IFGUN/WdHGYBWmwe+IvQEwV67h3vaMg
-         XliQ==
+        bh=AJhyl/czqq/y4sUsvxlz8289DMHwxFEsMSCXaocVBpY=;
+        b=UI2nK91jNhT3GAH6zFkxdkHfzxRw49msTpfjsPQEmzFq69OdFDzvI18snk/Eg3SDYb
+         M2/IoJEMmTRg2CLRwM1rWmmxtOHMzyWjzePqNsD7ktVRvMP6c6V/DqAy59uAopb8oHFa
+         qw7EGx/k2FbDA5GXn+1DYqKhyZdLdCE3sVwVd+gMQkSVhvLwpwB6OS2zB7UbagB4qwvf
+         uTaMmndVccDmTKD+Mi0im+w0EHCF1aUTzuNHdfkkk/TFnySxyGkYn+mSLDXohRbJfYQ4
+         eHUlRmL/12BrDSBNZFmnjgrkwHLDQJ+XqRRCOQx/J3OO1THe1ighQ+wP89so+1JgzP4j
+         ZUVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749096329; x=1749701129;
+        d=1e100.net; s=20230601; t=1749096478; x=1749701278;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dEwtieco4GKYEC1Fw9rbOSmkU4O570HqhhN1nDaf00c=;
-        b=gLALTK+lH8v52yKiqcF61/BZ5cjq0xLszg09I1ZqmEPmkoa39Q31z6hq6o1miF1j52
-         6h3Sat01wfwMmbhr81HeDkGNvdI57HWGfJfUPrQUS9n0Z/KjSOkA+DGi0Z+cPRzBVam4
-         QZPGSafJbK7HgCzvDw4iIBrxktAauuxMfFhbxEFZrKVw/VOcHZFhU8jlPWv7scleUn+V
-         P+AMF6n6hPc4Zj19cCPVP9b9PLipLY8J9ygM44a2fRflVfd5LxHYh2EST1IDJWozxbTh
-         EndBNUy+IPAtzLPsuM7ZPXRcP8UyKKeHeBRt+yujMuOUW5AsDeIOi+7wn7LypMgBomBL
-         NUmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMLmAbLdiphSiWpFK2iWn3VyysE31ZYwzkYifIDHr8ahP/ITXOJIM/toh8+EQGEC+Jy4JhNm6aNiG7/Yw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5ocDEsz/huF41sJ0Eo3DWUNm5+toQqhqVemysHIKojyBHrdTK
-	cD0RI+tbugr50E3PRKug7TPk/dQeKtjhu5H0aXQCW8UjilSfi6iIQmQCncyLQ+BeBPv0fUQZp9k
-	wqRGr5Li5/QpSz5NeIp/olU1FjTJ4AZwkvQ==
-X-Gm-Gg: ASbGncv+fSMNY5Q+HRSAmdr3gB5UdacfRmsWwNuMvx2QUAr0p9vnyRyS0SJjiDI0aRH
-	XVhgy5ORT7pKig5g4WaSvF9jFw4QBIQDvo+3yFkETITnrzgpCr7io3M7xEDgXvfDGLd6j+X5ZtL
-	PkyyyIR0e3nuguXHNGDH3QdC8CmhKr3OrLbQ==
-X-Google-Smtp-Source: AGHT+IEGy5Ojz4lIsgpjdJct16wfU6hSORmQedpsbzwZYJaouI3aHwEH0WbI773cz57GlUP8HPa6/7RP5vf0nNBq8mc=
-X-Received: by 2002:a05:6000:430d:b0:3a3:6ab0:8863 with SMTP id
- ffacd0b85a97d-3a51d997120mr1434178f8f.16.1749096329088; Wed, 04 Jun 2025
- 21:05:29 -0700 (PDT)
+        bh=AJhyl/czqq/y4sUsvxlz8289DMHwxFEsMSCXaocVBpY=;
+        b=Xg3eEQSEwwx0hTnjZ5ZMnXBFNKSo9/uWf+xNCdPh6dqHauJGpT4VOqecpKQv0lUh2E
+         lgTdLHJVfBO7F7P/HnAfzjx7eBOsXLXx481dyv7Mzv7NUsH2VVOcs99MO4sXpWfNNYv4
+         IuSd53LkCR+9TfdB2vxz+7+LZigFK1m4xaWsT2s4NbaKScLlJ1AEDbMkypidpDLih52Z
+         z+Z5XTmnvxmxyP585JxjZXGGHKb/C0OQo8tSOL1+MTKjWrS3axHFtVFZ3Y9m7W7uO1Ab
+         bCWGeoEmuwAMaj1poqoe8MDNJdFsN96gGJTpzedPlzSgPtp4ssWwDuVahqq+b6i63ZXf
+         RzXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhERcFd3p7iEu1IYMGhshSeG2+tLlnixNUJuxzNAKLeZoPAW5ajyjfRrSDXU1jkvVi6a5zngY3qfz9x/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsT3/BPNUKfC+p+Y3MN5Qw9KUXIvg4K2yDeaGRa2BeFhkl+deO
+	t79nRpevgUPfpJMP8TFw2Y10pcGkBG5p9Z8PNJ/bpIL1T6Z/8+MnbVK+XVQ+npQXCfGR28UnQe0
+	HHBWp5LsNw4fYbxx0BkajBa8VKleqcnk=
+X-Gm-Gg: ASbGncuOqCvZQPwvN4iz/llmp60n3WR2SJ+sAX/CldA2/6NQOD0gsWj/MrkcsbR+8PA
+	RM9XuYnyIXOaZbdd5crhZqMcTPjPSRQ/vlp++OmGac/OelcFGNTs3YoJCEcExXjfL5F2x7DPZna
+	CKtsjSA2uZ9EcMp05/GXGK7buRZEIoIahAlg==
+X-Google-Smtp-Source: AGHT+IEmSPI8KqN59ZHEnT3BHsvJbXgMvTKfY3B5/UO28d/mt5dsmTQN6OMmkCQtPB+7dk8uSTqbIiCnW/RzrE4TtXw=
+X-Received: by 2002:a05:600c:1382:b0:439:9a40:aa1a with SMTP id
+ 5b1f17b1804b1-451f0b27b92mr16707885e9.6.1749096477341; Wed, 04 Jun 2025
+ 21:07:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1749037059-4243-1-git-send-email-zhiguo.niu@unisoc.com>
- <76adf905-191d-4415-a584-a79bc502bb87@kernel.org> <CAHJ8P3+ygYG=9ZnPY15=L9AwGr9b5_2PkMwT8AXOyE68v6Hg3A@mail.gmail.com>
- <2a387dd6-9c10-478d-aae2-8284ad395944@kernel.org>
-In-Reply-To: <2a387dd6-9c10-478d-aae2-8284ad395944@kernel.org>
+References: <20250605032633.2744434-1-chao@kernel.org>
+In-Reply-To: <20250605032633.2744434-1-chao@kernel.org>
 From: Zhiguo Niu <niuzhiguo84@gmail.com>
-Date: Thu, 5 Jun 2025 12:05:17 +0800
-X-Gm-Features: AX0GCFvJBT95joyY_JO0nCWFEiJ0UyXel-A54_RG69i2bqx3GaVOigAsJsFlYfo
-Message-ID: <CAHJ8P3JcGAtwQVTqCfno+_agZjkEMn3XHtgBeOicUAPkONvnTQ@mail.gmail.com>
-Subject: Re: [PATCH v2] f2fs: compress: fix UAF of f2fs_inode_info in f2fs_free_dic
+Date: Thu, 5 Jun 2025 12:07:46 +0800
+X-Gm-Features: AX0GCFvpfdoBjZVRPiDxdtYK7pUi7tY4Ahdm2d2v_lWBBaFvMYKpaLHo_lYMFKs
+Message-ID: <CAHJ8P3KmB+TocruTThpTe-YE3LH-uZ7_w_GrHqSV0B-PWwwMjg@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH v3] f2fs: fix to zero post-eof page
 To: Chao Yu <chao@kernel.org>
-Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	ke.wang@unisoc.com, Hao_hao.Wang@unisoc.com, baocong.liu@unisoc.com
+Cc: jaegeuk@kernel.org, stable@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Chao Yu <chao@kernel.org> =E4=BA=8E2025=E5=B9=B46=E6=9C=885=E6=97=A5=E5=91=
-=A8=E5=9B=9B 11:31=E5=86=99=E9=81=93=EF=BC=9A
+Chao Yu via Linux-f2fs-devel <linux-f2fs-devel@lists.sourceforge.net>
+=E4=BA=8E2025=E5=B9=B46=E6=9C=885=E6=97=A5=E5=91=A8=E5=9B=9B 11:29=E5=86=99=
+=E9=81=93=EF=BC=9A
 >
-> On 6/5/25 10:44, Zhiguo Niu wrote:
-> > Chao Yu <chao@kernel.org> =E4=BA=8E2025=E5=B9=B46=E6=9C=885=E6=97=A5=E5=
-=91=A8=E5=9B=9B 10:23=E5=86=99=E9=81=93=EF=BC=9A
-> >>
-> >> On 6/4/25 19:37, Zhiguo Niu wrote:
-> >>> The decompress_io_ctx may be released asynchronously after
-> >>> I/O completion. If this file is deleted immediately after read,
-> >>> and the kworker of processing post_read_wq has not been executed yet
-> >>> due to high workloads, It is possible that the inode(f2fs_inode_info)
-> >>> is evicted and freed before it is used f2fs_free_dic.
-> >>>
-> >>>     The UAF case as below:
-> >>>     Thread A                                      Thread B
-> >>>     - f2fs_decompress_end_io
-> >>>      - f2fs_put_dic
-> >>>       - queue_work
-> >>>         add free_dic work to post_read_wq
-> >>>                                                    - do_unlink
-> >>>                                                     - iput
-> >>>                                                      - evict
-> >>>                                                       - call_rcu
-> >>>     This file is deleted after read.
-> >>>
-> >>>     Thread C                                 kworker to process post_=
-read_wq
-> >>>     - rcu_do_batch
-> >>>      - f2fs_free_inode
-> >>>       - kmem_cache_free
-> >>>      inode is freed by rcu
-> >>>                                              - process_scheduled_work=
-s
-> >>>                                               - f2fs_late_free_dic
-> >>>                                                - f2fs_free_dic
-> >>>                                                 - f2fs_release_decomp=
-_mem
-> >>>                                       read (dic->inode)->i_compress_a=
-lgorithm
-> >>>
-> >>> This patch use __iget before f2fs_free_dic and iput after free the di=
-c.
-> >>>
-> >>> Cc: Daeho Jeong <daehojeong@google.com>
-> >>> Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in=
- softirq")
-> >>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> >>> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
-> >>> ---
-> >>> v2: use __iget/iput function
-> >>> ---
-> >>>  fs/f2fs/compress.c | 16 +++++++++++-----
-> >>>  1 file changed, 11 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> >>> index b3c1df9..3f0c18d 100644
-> >>> --- a/fs/f2fs/compress.c
-> >>> +++ b/fs/f2fs/compress.c
-> >>> @@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct deco=
-mpress_io_ctx *dic,
-> >>>  }
-> >>>
-> >>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
-> >>> -             bool bypass_destroy_callback);
-> >>> +             bool bypass_destroy_callback, bool late_free);
-> >>>
-> >>>  struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
-> >>>  {
-> >>> @@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(stru=
-ct compress_ctx *cc)
-> >>>       return dic;
-> >>>
-> >>>  out_free:
-> >>> -     f2fs_free_dic(dic, true);
-> >>> +     f2fs_free_dic(dic, true, false);
-> >>>       return ERR_PTR(ret);
-> >>>  }
-> >>>
-> >>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
-> >>> -             bool bypass_destroy_callback)
-> >>> +             bool bypass_destroy_callback, bool late_free)
-> >>>  {
-> >>>       int i;
-> >>>
-> >>> @@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io_=
-ctx *dic,
-> >>>       }
-> >>>
-> >>>       page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
-> >>> +     if (late_free)
-> >>> +             iput(dic->inode);
-> >>>       kmem_cache_free(dic_entry_slab, dic);
-> >>>  }
-> >>>
-> >>> @@ -1783,16 +1785,20 @@ static void f2fs_late_free_dic(struct work_st=
-ruct *work)
-> >>>       struct decompress_io_ctx *dic =3D
-> >>>               container_of(work, struct decompress_io_ctx, free_work)=
-;
-> >>>
-> >>> -     f2fs_free_dic(dic, false);
-> >>> +     f2fs_free_dic(dic, false, true);
-> >>>  }
-> >>>
-> >>>  static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task=
+> fstest reports a f2fs bug:
+>
+> generic/363 42s ... [failed, exit status 1]- output mismatch (see /share/=
+git/fstests/results//generic/363.out.bad)
+>     --- tests/generic/363.out   2025-01-12 21:57:40.271440542 +0800
+>     +++ /share/git/fstests/results//generic/363.out.bad 2025-05-19 19:55:=
+58.000000000 +0800
+>     @@ -1,2 +1,78 @@
+>      QA output created by 363
+>      fsx -q -S 0 -e 1 -N 100000
+>     +READ BAD DATA: offset =3D 0xd6fb, size =3D 0xf044, fname =3D /mnt/f2=
+fs/junk
+>     +OFFSET      GOOD    BAD     RANGE
+>     +0x1540d     0x0000  0x2a25  0x0
+>     +operation# (mod 256) for the bad data may be 37
+>     +0x1540e     0x0000  0x2527  0x1
+>     ...
+>     (Run 'diff -u /share/git/fstests/tests/generic/363.out /share/git/fst=
+ests/results//generic/363.out.bad'  to see the entire diff)
+> Ran: generic/363
+> Failures: generic/363
+> Failed 1 of 1 tests
+>
+> The root cause is user can update post-eof page via mmap [1], however, f2=
+fs
+> missed to zero post-eof page in below operations, so, once it expands i_s=
+ize,
+> then it will include dummy data locates previous post-eof page, so during
+> below operations, we need to zero post-eof page.
+>
+> Operations which can include dummy data after previous i_size after expan=
+ding
+> i_size:
+> - write
+> - mapwrite [1]
+> - truncate
+> - fallocate
+>  * preallocate
+>  * zero_range
+>  * insert_range
+>  * collapse_range
+> - clone_range (doesn=E2=80=99t support in f2fs)
+> - copy_range (doesn=E2=80=99t support in f2fs)
+>
+> [1] https://man7.org/linux/man-pages/man2/mmap.2.html 'BUG section'
+>
+> Cc: stable@kernel.org
+> Signed-off-by: Chao Yu <chao@kernel.org>
+
+Reviewed-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Thanks!
+> ---
+> v3:
+> - fix check condition in f2fs_zero_post_eof_page()
+> - fix wrong parameter passed from f2fs_setattr() to
+> - add a reference
+> f2fs_zero_post_eof_page()
+>  fs/f2fs/file.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 6bd3de64f2a8..696131e655ed 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -35,6 +35,17 @@
+>  #include <trace/events/f2fs.h>
+>  #include <uapi/linux/f2fs.h>
+>
+> +static void f2fs_zero_post_eof_page(struct inode *inode, loff_t new_size=
 )
-> >>>  {
-> >>>       if (refcount_dec_and_test(&dic->refcnt)) {
-> >>>               if (in_task) {
-> >>> -                     f2fs_free_dic(dic, false);
-> >>> +                     f2fs_free_dic(dic, false, false);
-> >>>               } else {
-> >>>                       INIT_WORK(&dic->free_work, f2fs_late_free_dic);
-> >>> +                     /* to avoid inode is evicted simultaneously */
-> >>> +                     spin_lock(&dic->inode->i_lock);
-> >>> +                     __iget(dic->inode);
-> >>> +                     spin_unlock(&dic->inode->i_lock);
-> >>
-> >> Oh, how about using igrab() instead?
-> > Hi Chao,
-> > after I check igrab, I think it is ok,
-> > but here We don't need care about igarb's return value, right?
+> +{
+> +       loff_t old_size =3D i_size_read(inode);
+> +
+> +       if (old_size >=3D new_size)
+> +               return;
+> +
+> +       /* zero or drop pages only in range of [old_size, new_size] */
+> +       truncate_pagecache(inode, old_size);
+> +}
+> +
+>  static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
+>  {
+>         struct inode *inode =3D file_inode(vmf->vma->vm_file);
+> @@ -103,8 +114,13 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fau=
+lt *vmf)
 >
-> I guess "return NULL" should be impossible case, but still we can add
-> f2fs_bug_on() to detect any potential bug, right?
-OK, thanks for your suggestions.
+>         f2fs_bug_on(sbi, f2fs_has_inline_data(inode));
 >
-> Thanks,
+> +       filemap_invalidate_lock(inode->i_mapping);
+> +       f2fs_zero_post_eof_page(inode, (folio->index + 1) << PAGE_SHIFT);
+> +       filemap_invalidate_unlock(inode->i_mapping);
+> +
+>         file_update_time(vmf->vma->vm_file);
+>         filemap_invalidate_lock_shared(inode->i_mapping);
+> +
+>         folio_lock(folio);
+>         if (unlikely(folio->mapping !=3D inode->i_mapping ||
+>                         folio_pos(folio) > i_size_read(inode) ||
+> @@ -1109,6 +1125,8 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct de=
+ntry *dentry,
+>                 f2fs_down_write(&fi->i_gc_rwsem[WRITE]);
+>                 filemap_invalidate_lock(inode->i_mapping);
 >
-> > Thanks!
-> >
-> >>
-> >>>                       queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
-> >>>                                       &dic->free_work);
-> >>>               }
-> >>
+> +               if (attr->ia_size > old_size)
+> +                       f2fs_zero_post_eof_page(inode, attr->ia_size);
+>                 truncate_setsize(inode, attr->ia_size);
 >
+>                 if (attr->ia_size <=3D old_size)
+> @@ -1227,6 +1245,10 @@ static int f2fs_punch_hole(struct inode *inode, lo=
+ff_t offset, loff_t len)
+>         if (ret)
+>                 return ret;
+>
+> +       filemap_invalidate_lock(inode->i_mapping);
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+> +       filemap_invalidate_unlock(inode->i_mapping);
+> +
+>         pg_start =3D ((unsigned long long) offset) >> PAGE_SHIFT;
+>         pg_end =3D ((unsigned long long) offset + len) >> PAGE_SHIFT;
+>
+> @@ -1510,6 +1532,8 @@ static int f2fs_do_collapse(struct inode *inode, lo=
+ff_t offset, loff_t len)
+>         f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>         filemap_invalidate_lock(inode->i_mapping);
+>
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+> +
+>         f2fs_lock_op(sbi);
+>         f2fs_drop_extent_tree(inode);
+>         truncate_pagecache(inode, offset);
+> @@ -1631,6 +1655,10 @@ static int f2fs_zero_range(struct inode *inode, lo=
+ff_t offset, loff_t len,
+>         if (ret)
+>                 return ret;
+>
+> +       filemap_invalidate_lock(mapping);
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+> +       filemap_invalidate_unlock(mapping);
+> +
+>         pg_start =3D ((unsigned long long) offset) >> PAGE_SHIFT;
+>         pg_end =3D ((unsigned long long) offset + len) >> PAGE_SHIFT;
+>
+> @@ -1762,6 +1790,8 @@ static int f2fs_insert_range(struct inode *inode, l=
+off_t offset, loff_t len)
+>         /* avoid gc operation during block exchange */
+>         f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>         filemap_invalidate_lock(mapping);
+> +
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+>         truncate_pagecache(inode, offset);
+>
+>         while (!ret && idx > pg_start) {
+> @@ -1819,6 +1849,10 @@ static int f2fs_expand_inode_data(struct inode *in=
+ode, loff_t offset,
+>         if (err)
+>                 return err;
+>
+> +       filemap_invalidate_lock(inode->i_mapping);
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+> +       filemap_invalidate_unlock(inode->i_mapping);
+> +
+>         f2fs_balance_fs(sbi, true);
+>
+>         pg_start =3D ((unsigned long long)offset) >> PAGE_SHIFT;
+> @@ -4860,6 +4894,10 @@ static ssize_t f2fs_write_checks(struct kiocb *ioc=
+b, struct iov_iter *from)
+>         err =3D file_modified(file);
+>         if (err)
+>                 return err;
+> +
+> +       filemap_invalidate_lock(inode->i_mapping);
+> +       f2fs_zero_post_eof_page(inode, iocb->ki_pos + iov_iter_count(from=
+));
+> +       filemap_invalidate_unlock(inode->i_mapping);
+>         return count;
+>  }
+>
+> --
+> 2.49.0
+>
+>
+>
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
