@@ -1,145 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916311E7C03
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7753C42A87;
+	Thu,  5 Jun 2025 08:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749112543; cv=none; b=b6DNnZsBEXcrIjUHnC0DxCTq4l+tx3kiKoSdoR3I4lqrqMDbcN/kRecWNSXv3Qvb+s/mc+qXLJ0EcBfoNODqJg93l724V8sHXvWq85UWe6R8YGI3Fa3HVDyxB8RqXFsUfbkc1l83g0weUpMeirl5CiI088YJySpWeJbyrHAr2BM=
+	t=1749112649; cv=none; b=PFOIoHNBrbCO8AJRTaHkyrq/LhgagjHm7YIPXoN/CyO/vxLv2RfAf2MDwS9Rn6kl8iHKkZbHPnGAuej9gyN407mnV1UM8QI/kcFKK/5C97Mg+fqXiBeZl4BQnc2ymJpk4XUFk/HhXJ8aD5NXkYyIyfqk2tOXwNman/Hi/m5qKTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749112543; c=relaxed/simple;
-	bh=NRoDy9oPqPmwUYRp1IJc6lJX14zHgjomcJR0myjnx68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PXwwsYvJOpFZx4mAUQkBjgcvhD2HiMHwr8BkwDtJdFKNg1FUnKA8iBykd4cM+3Fkbmx8LNFh09xTVOwyBvLacY+1QPWpLDNF+p4D757TWt/JGLsAtPzBO1RhpT7gQen2o6+FBqEHjAycaEz4+cEnPSegRfRTtfBq4jtszfmCfr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T6r3fFS6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749112649; c=relaxed/simple;
+	bh=lN8QOUnt3tDoKFR2GRrl18RHwKQjxTLDwQFldfPNPGM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=drX5+XZAn75UpE8JNreDresBb7Qe8Dx+a6SIlmOU+RGW2SQUPbx1ViUlcz5t58kLBA4QeuEkcZMZytfc8lbsdK9oHZcOtGIfb8oI2iI9dxKIiodyB25202Xa16f0KInz+jLf7AyUXm/IiTTFWD3C27Nc+UnlwvhN0g2vuquoVJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S98rW2NY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T6r3fFS6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749112540;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J7OP291cCHEccCOVb5GqF2fJ19heqtSc19LUMzhHmhc=;
-	b=T6r3fFS6X0wfn07ShrpPgNhij8M11l1pnKrfkTy3Anp97hEWFAD0oQAUBUZXQ4guHz+0r8
-	XmGeL2kBj0f6TIk5kQdiT/Kpi3yoSdzoQGuNbaPx7C9bqpnDoHt5tczapgl/xCqME53I3P
-	0KuGB+mhN3X1gdn35RodWCrTBXohNrc=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-495-gLZEwW_RMiiTY24mWWeMCg-1; Thu, 05 Jun 2025 04:35:37 -0400
-X-MC-Unique: gLZEwW_RMiiTY24mWWeMCg-1
-X-Mimecast-MFC-AGG-ID: gLZEwW_RMiiTY24mWWeMCg_1749112536
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7398d70abbfso1364540b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 01:35:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749112536; x=1749717336;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J7OP291cCHEccCOVb5GqF2fJ19heqtSc19LUMzhHmhc=;
-        b=PLXVKO5k2xMn9wvrM/bQWZmKssQ9QmvFsDQL68h5gxevPJOP+qdtCYs+gNh7mTJPtX
-         b0g2v7OfFG1NAZSKkrQs/QfilHJ+4uwCnvL6RjrTujHcgMeTyQz1eWwB6vbimnpBsqsD
-         QZ1q9OmbuJ+k0rVxN2FDawSgnxGILBR3J29qrzqsArerSS+R2gcP3RjQR96seLRqx+Us
-         OtvAFm+TFQrePEpzKHcQgJ+drEMJxg6zEfP/qBmpTFoFe8pO0A78dSa3ESDhAIaAM21P
-         EyIuxvPlAAFH8DHbiypuiwhbFVr/mVMx8yYqUKnncgOVVvuvNXR0tGtvptv9hOaLw4J/
-         ap0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVBYTbZY2bzIYGXRFSoZGY7bf5uD+mnbY+adUL2HZGt/XzUdc1hyr9mBcQ8N3RKDIdOosMdewhwIaFvztA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyElG6JtC0zc5w6Hgeg7tHlLwZ1lokyQtNqLLE+G749trOAqeWP
-	ZqFfT4vOWSeHZ/EWQqRLu+WppvSv1V+rQBrgZowMq7rfXK+OuqED5WAvTePPOnA6893R/8a7YTB
-	3bSWKJMQoBHzn7ipqVGuOB/x0f1txGfmhhd1KxUiHTZ34BbQu9HDtBWWkmJiPm5y2vQ==
-X-Gm-Gg: ASbGncvPzaKV1R7xWL//hx/orp4ldjpuYCYenom/HWl0MxHukgoZIYjttQ8+C8gowMN
-	Tr0Vla3F4J2iV/q8vaaKdIv4iNYdNHraXFf7KYP3n/TCgmK3f08z/Nft9d0bxmNCxguOuElwtKr
-	JSuJSfZI5OGdoblC9KF2QX5SGq9rEvanb/iqltjXu4MHSXQNsbogkwKAlsdCRBlJP64MetY8SJn
-	h9GZQHeKJNCo2NPzorX0A48SPbfH5oafCOWKW22RXkW/kZ5cod+5J2BG39GnHIeXD+XINkKEgsp
-	8Js=
-X-Received: by 2002:a05:6a00:23c6:b0:736:43d6:f008 with SMTP id d2e1a72fcca58-7480b2e0361mr8190445b3a.12.1749112536497;
-        Thu, 05 Jun 2025 01:35:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFrN0PqOUdKalMaeAG7aIgHJtiglVXWjEwD24TEHI4LYox9Gd70kryUZzyeMjHmJRalEgOnRg==
-X-Received: by 2002:a05:6a00:23c6:b0:736:43d6:f008 with SMTP id d2e1a72fcca58-7480b2e0361mr8190429b3a.12.1749112536110;
-        Thu, 05 Jun 2025 01:35:36 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeab75csm12734762b3a.52.2025.06.05.01.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 01:35:35 -0700 (PDT)
-Date: Thu, 5 Jun 2025 16:34:20 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, keyrings@vger.kernel.org, 
-	David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Peter Jones <pjones@redhat.com>, Robert Holmes <robeholmes@gmail.com>, 
-	Jeremy Cline <jcline@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>
-Subject: Re: [PATCH RFC 1/1] module: Make use of platform keyring for module
- signature verify
-Message-ID: <ibosm332sa2kz6vqrru5qsfk4tybsxepo4vascc3zsetmyckvv@pml7puc5jyl6>
-References: <20250602132535.897944-1-vkuznets@redhat.com>
- <20250602132535.897944-2-vkuznets@redhat.com>
- <948f5567fe4d9ae39aa2528965f123e42bf82b46.camel@HansenPartnership.com>
- <87r001yzob.fsf@redhat.com>
- <d34555e2b0c4746fc01d5295959a434befcf8b18.camel@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S98rW2NY"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5557fZOt024416;
+	Thu, 5 Jun 2025 08:37:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GvXMhXjr02ODB+m/D0r6qd74wzQBhpGFQBfiLckl99c=; b=S98rW2NYa9nwHdqm
+	pCxWJEBzJphLXvcpgo1+wiHqDQyjX7W23N4YhIBGfFiDQNky3L9ATePqN41AZAH2
+	ysVVWDyox3kB9gcfW+y7UMJJnMqtPrrOIVjdfTZR0puxk02C7Hh7j+1/KtqG/2O4
+	QeJY8a034cptu6l3U96CrHHim4AYOIJk7exfdp5qLfLTLg/+lsbAg1rWemAknEE1
+	EHzyZtfbyYHJGjVq2h8Vav4LWR493QtxczP/Y657euOJzKqqFtN+duL8JZ1IfYIN
+	OtQkRMZOqI3+rgYUB1N6vJCnNARolxiHAevITudq85ZZGciL/esqOz74LjKXRJqX
+	7NiwdA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8s0pu0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Jun 2025 08:37:19 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5558bJ6l005158
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 5 Jun 2025 08:37:19 GMT
+Received: from [10.253.10.58] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 5 Jun 2025
+ 01:37:17 -0700
+Message-ID: <257bf9e9-f4b2-4ab9-804f-b895243c924d@quicinc.com>
+Date: Thu, 5 Jun 2025 16:37:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d34555e2b0c4746fc01d5295959a434befcf8b18.camel@HansenPartnership.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] wifi: ath12k: fix dest ring-buffer corruption
+To: Johan Hovold <johan+linaro@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+CC: Miaoqing Pan <quic_miaoqing@quicinc.com>,
+        Remi Pommarel
+	<repk@triplefau.lt>, <linux-wireless@vger.kernel.org>,
+        <ath12k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250604144509.28374-1-johan+linaro@kernel.org>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <20250604144509.28374-1-johan+linaro@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 6irz6-X3e9sQVWi0LxvafzqQ-_TPpCC-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDA3NSBTYWx0ZWRfX12rAmdHVM0Wa
+ LtAmT8PLMp+iMqtdW+AA+5BQrqRCORHhcOl9jyYzluXw7Dq6QTHy0vjWgjththn6tHjTapCKA0N
+ glkT8Zq0pwzisd65hnOmZMonsLkcl/u4bFUM6U7BhmnFRE54QIioPYs7mvCaAOB6LHIeL9DI6FW
+ efvuIA8APe1xqvSc59/Fs/RtA+TMnlc0xDAmy9UmJ4o2QEsdmFC70TqO44X0dnlx9YC9z8pCq/P
+ 3NANj0A7346uxPA3NuS9SYflHz0whBm6R4M6m2acTWqyJuOdHgbn0Dt1Og2xc7ffO1EIn6vmmBr
+ 8O87429CWSzv+5ryK1KdixVQxSNpWqDvrU4oMKgqi2irH+nbX52orQgnWE2rEX76VjHhPwGftOv
+ L6uMEkfpdaHm6xciEQLH9X5vJdltJbKAKGXmAdu3H4OBr5V2Bh/q8wx/D9EkqRMzZqd8LSq3
+X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=6841573f cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=kPFMAqld5iEWQpescWAA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 6irz6-X3e9sQVWi0LxvafzqQ-_TPpCC-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ clxscore=1011 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 spamscore=0 mlxlogscore=844 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506050075
 
-On Tue, Jun 03, 2025 at 09:03:22AM -0400, James Bottomley wrote:
->On Tue, 2025-06-03 at 10:52 +0200, Vitaly Kuznetsov wrote:
->> James Bottomley <James.Bottomley@HansenPartnership.com> writes:
->[...]
->> > Also, are you sure a config option is the right thing?  Presumably
->> > Red Hat wants to limit its number of kernels and the design of just
->> > linking the machine keyring (i.e. MoK) was for the use case where
->> > trust is being pivoted away from db by shim, so users don't want to
->> > trust the db keys they don't control.  If the same kernel gets used
->> > for both situations (trusted and untrusted db) you might want a
->> > runtime means to distinguish them.
->>
->> I was not personally involved when RH put the patch downstream (and
->> wasn't very successful in getting the background story) but it
->> doesn't even have an additional Kconfig, e.g.:
->> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-10/-/commit/03d4694fa6511132989bac0da11fa677ea5d29f6
->> so apparently there's no desire to limit anything, basically,
->> .platform is always trusted on Fedora/RHEL systems (for a long time
->> already).
->
->It sounds like that's just distro politics:  RH wants to enable binary
->modules (by allowing them to be signed) but doesn't want to be seen to
->be signing them (so they can't be signed with the embedded RH key) so
->that gamers can have performant graphics drivers and the like.  Thus it
->mixes in the db keyring, which usually contains several Microsoft
->certificates and also one from the ODM manufacturer, so now it can send
->would be shippers of binary modules to those groups to get them signed.
->If you only have the built in and MoK keyrings, the only possible
->signers are either RH or the machine owner ... who isn't a single
->entity to deal with.  Personally I think this is a bit daft: Debian
->manages an out of tree module infrastructure using DKMS and MoK
->signing, so I can't see why RH can't get it to work in the same way.
 
-It's interesting to find that although Debian's wiki page [1] only
-mentions DKMS and MOK, it actually has the same downstream kernel patch
-[2][3] as Fedora/RHEL to allow using db keys to verify kernel modules.
 
-[1] https://wiki.debian.org/SecureBoot
-[2] https://salsa.debian.org/kernel-team/linux/-/blob/debian/latest/debian/patches/features/all/db-mok-keyring/KEYS-Make-use-of-platform-keyring-for-module-signature.patch?ref_type=heads
-[3] https://sources.debian.org/patches/linux/6.12.30-1/features/all/db-mok-keyring/KEYS-Make-use-of-platform-keyring-for-module-signature.patch/
+On 6/4/2025 10:45 PM, Johan Hovold wrote:
+> As a follow up to commit:
+> 
+> 	b67d2cf14ea ("wifi: ath12k: fix ring-buffer corruption")
+> 
+> add the remaining missing memory barriers to make sure that destination
+> ring descriptors are read after the head pointers to avoid using stale
+> data on weakly ordered architectures like aarch64.
+> 
+> Also switch back to plain accesses for the descriptor fields which is
+> sufficient after the memory barrier.
+> 
+> New in v2 are two patches that add the missing barriers also for source
+> rings and when updating the tail pointer for destination rings.
+> 
+> To avoid leaking ring details from the "hal" (lmac or non-lmac), the
+> barriers are added to the ath12k_hal_srng_access_end() helper. For
 
--- 
-Best regards,
-Coiby
+Could you elaborate? what do you mean by "leaking ring details from the 'hal'"?
+
+> symmetry I therefore moved also the dest ring barriers into
+> ath12k_hal_srng_access_begin() and made the barrier conditional.
+> 
+> [ Due to this change I did not add Miaoqing's reviewed-by tag. ]
+> 
+> Johan
+> 
+> 
+> Changes in v2:
+>  - add tested-on tags to plain access patch
+>  - move destination barriers into begin helper
+>  - fix source ring corruption (new patch)
+>  - fix dest ring corruption when ring is full (new patch)
+> 
+> 
+> Johan Hovold (4):
+>   wifi: ath12k: fix dest ring-buffer corruption
+>   wifi: ath12k: use plain access for descriptor length
+>   wifi: ath12k: fix source ring-buffer corruption
+>   wifi: ath12k: fix dest ring-buffer corruption when ring is full
+> 
+>  drivers/net/wireless/ath/ath12k/ce.c  |  3 --
+>  drivers/net/wireless/ath/ath12k/hal.c | 40 ++++++++++++++++++++++-----
+>  2 files changed, 33 insertions(+), 10 deletions(-)
+> 
 
