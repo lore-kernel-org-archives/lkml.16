@@ -1,139 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A71521B908;
-	Thu,  5 Jun 2025 13:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6098A13D24D
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749128504; cv=none; b=fjyvxzP18GHhGlHtcX1JQ1U5Gh1hXVJi/DwmMJ2VPCY+7f6LvW5bdyYsSkmEtcKwg+5dGa3s22AfO7CXoxF69V23rZhxb/ijumuvbdONZJiCeMEGyIKoGAiW++SFAJTMpctZEJ/yInAM5AH+EqdX37OnU3WlHzs5EW7TUcnfx90=
+	t=1749128578; cv=none; b=Ph26q0rXWD/Kxbdo+CG6mjxrFrFXMmk4wQf6nOGhumG+1aaZScsZRNAqK7CEtrSk2HPABmaNEvv3zTXai9i/DDlS9EL2yR6cV6BjI+p47QB+El1khGAbzfl4eECPCQMbRazEWDYaMlecpjNfHD0pG75ZG2C1gXvK7sq3rdrqpEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749128504; c=relaxed/simple;
-	bh=xnRs7Vv5sYSYQIaen35RN6BXN4ovD8MaQTkoIpnbOhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d6JBAYCqmXciWoepHBtHzvUC7L5lZrj+c6ZmNmkcplpqo1NPlFVJdzySFjCFhQ3cIxfMfG8wFlvslws+cFo/ZGSqotVppK3pmmD5zlQclK+y+RkxQWRQhexu9wVtgNWvqUqlJ2UWVJjKv3mglHHJuk1z70eEKiwg5Rjly9FUNUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bLF8Vj9d; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749128578; c=relaxed/simple;
+	bh=5de8RG8f3o6sWoFM1mI4X9Fp3LN5IoyHomEe0eRNiZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GR+cspHAqr/DdBKMOIqnEzreoy26T2zmVBFXOX63v6/ngSAnPu433jl2t3ZMNqV/Zqa29hr3aLXs/qrNqTUHzv3fPzPIodh4oPmbmWbtMTFGtekQ+lqiZtNMb4hLMf1GNDeyGiltP646nhSpjsmhVemBTZ2VAppZChhYNNWde2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bp6Up4BR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bLF8Vj9d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749128503; x=1780664503;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=xnRs7Vv5sYSYQIaen35RN6BXN4ovD8MaQTkoIpnbOhY=;
-  b=bLF8Vj9dvWJY8C6WYChgM/BXqDUjDOeYGGUjeVJN1IVfmoovXohOCJeD
-   3q1hQWe6Q51wNP++BcaDAxC1y+KNEbGucwp2DYMTw8cIDo8/tI/xkhpA5
-   bvCOlh7TvzqyWV8vMOlod8miKwERmTxYblGJaQQmAyZVdvKm90FA3iTZ6
-   Ntr8JR19Al3v5GqeL7AosPW8/0x/AwImaf4Lhb2N3q/c6i3hV92nITxhU
-   cH7obU1bu2llszjSio0YDmrpTOCFa7xPIC+sn2VNKDleCcvixoeBaYSn3
-   7OpH1FBV6BWQovUeEBACzk83f3H3J3uy4Clokby1bhim1XiVdnHkky9E5
-   w==;
-X-CSE-ConnectionGUID: xMQp0UOGSP+Ojw7DnPAdow==
-X-CSE-MsgGUID: XdCU1Ox4RZmFHwSQ5pnPnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="54908124"
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="54908124"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:01:42 -0700
-X-CSE-ConnectionGUID: epT2e4FhR5a38kKrIQTB8A==
-X-CSE-MsgGUID: N5AXAFrmTge9OtS8hYr9eA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="146011525"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 05 Jun 2025 06:01:39 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 591F22A1; Thu, 05 Jun 2025 16:01:37 +0300 (EEST)
-Date: Thu, 5 Jun 2025 16:01:37 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: Re: [RFC, PATCH 08/12] KVM: x86/tdp_mmu: Add phys_prepare() and
- phys_cleanup() to kvm_x86_ops
-Message-ID: <wwftow6boiueqbzrbfpedxs3e3ioelx3aqmsblzal6kxqdt3d5@dljyaozrfiry>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <20250502130828.4071412-9-kirill.shutemov@linux.intel.com>
- <aBn4pfn4aMXcFHd7@yzhao56-desk.sh.intel.com>
- <t2im27kgcfsl2qltxbf3cear35szyoafczgvmmwootxthnbcdp@dasmg4bdfd6i>
- <aB1ZplDCPkDCkhQr@yzhao56-desk.sh.intel.com>
- <2bi4cz2ulrki62odprol253mhxkvjdu3xtq4p6dbndowsufnmu@7kzlzywmi22s>
- <8668efe87d6e538b5a49a3c7508ade612a6d766b.camel@intel.com>
- <mgu7at7d3qy4h55bchxfmxj6yzqyi7gh4ieds4ecdvlv243frl@bzou376shiak>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bp6Up4BR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749128574;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xg498BWU6yCD+3EXYlmoQ452Swm7wT/w2qqavlOm8pU=;
+	b=bp6Up4BRUvC5+8BMszyYS4YNhn30Pd5pGW+qgnlQUE8V/gFzWuUfU1O5uqVgGvb8ZPROgd
+	TgXubv1i9iSrbaaJi0472jNCABPo2GfjaNaRwq75y6OJbzjM8AKSI2QMuSbKy9OpHKCZmJ
+	w8GU1/Gn47yWejNFuUytb2BthZd29+c=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-619-_2DsAPpYN1mqERet4tER8g-1; Thu, 05 Jun 2025 09:02:51 -0400
+X-MC-Unique: _2DsAPpYN1mqERet4tER8g-1
+X-Mimecast-MFC-AGG-ID: _2DsAPpYN1mqERet4tER8g_1749128569
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so4369365e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:02:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749128569; x=1749733369;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xg498BWU6yCD+3EXYlmoQ452Swm7wT/w2qqavlOm8pU=;
+        b=FgzRdsJAnMCbYqWmZHdzOtCKGzEBf+QvNmorvFI1wKtd9+fn8wTeZXdjAzMp8NFTHA
+         cUHs9zVfToFARp89sWmpjspDEj6rBdes1qrFFVx1Fo+TadBbO3HAHbnBH5PKRsdSQxQ/
+         /Rxs0iQMY2EW2jfN2EY+UlehBbxPvvNAulBgxakWjmnTZAYgNQksezpe0EjLtoAMvyVP
+         l1kpaK53LrLYfzVERdGpEjbkN74hfw0+p9i7z65Tko/qmFQkgyR5SHF/cDBEy6Mu9lqi
+         OHX6kf+L+CXAf/6wKjw746EyKXZrbAdLmMbK3sEERBxII+DWriuKdLfgqZxUyQwhlRa2
+         kDgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpCtCgpeAdi6vxQATuGQoYpIy8fw9PVzjGXvhuzm2LL76FueKUWs8it8yzB/A4lN6LZpM6MnnJ1GvLuXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqxnLWclZbAsaFvsCY6jAhknNKtiGuzhAS2ZLdMD/SUELbHJcF
+	RkgQX4g5QWwOrC0xVB2y1MMJ2wvceHNPoRx13N8pUANYsO/90/DkWGwle8yV1GYp34KeMVbyeIh
+	kd396UxdJER3nDDBWLXjbuIeiRAiK8DbMHyZpfiHP2fEYiEUEWsBfTTT00XfuvaJzIA==
+X-Gm-Gg: ASbGncsql+Ft/dOr8hG6rEFdwqAwzFC6O8MHrjQ/Hr/TmbzUrbIUfyjAtwN2Za0+1Qm
+	tuE/doqTUoxvGeDAdFZZ8HEemIoyUdd4ppmHK6fM9T6tYsS5qp8CV542MdZf4MAA9MtBmcMpHEp
+	XeBhlYOw+N8Nmb88sVBYGuiYXXCmWvAc9LABm+CvOAk+J+uYOLCmX3KW7Q7IMGUwlD2IEscVZal
+	QqHaxMwIdI8KnZhTZ/YKw8W95CN50qYpSV2sQ4Ykyh0bUT0xP3dWmTYfc6lLXTJVoE6ry75ayQW
+	aQy6Z87FHJweNR/f2/Kanx4tI0/cj7osnqJ1BJGbGV23HmhtNKs=
+X-Received: by 2002:a05:6000:2204:b0:3a1:f564:cd9d with SMTP id ffacd0b85a97d-3a51d961c1fmr5842946f8f.36.1749128569243;
+        Thu, 05 Jun 2025 06:02:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFLOWcpTWTCDyXBY4w2ZvbieYKYJr5NwdKMUi24PSZUQgwCDHfdsFZ1q9E35GmfdHu/7yFH7g==
+X-Received: by 2002:a05:6000:2204:b0:3a1:f564:cd9d with SMTP id ffacd0b85a97d-3a51d961c1fmr5842816f8f.36.1749128568020;
+        Thu, 05 Jun 2025 06:02:48 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00a13fasm24830979f8f.98.2025.06.05.06.02.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 06:02:47 -0700 (PDT)
+Message-ID: <f1927c1b-95b7-4d98-9d95-fcd52bd06766@redhat.com>
+Date: Thu, 5 Jun 2025 15:02:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <mgu7at7d3qy4h55bchxfmxj6yzqyi7gh4ieds4ecdvlv243frl@bzou376shiak>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC drm-misc-next v2 1/1] drm/hyperv: Add support for
+ drm_panic
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>, drawat.floss@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250526090117.80593-1-ryasuoka@redhat.com>
+ <20250526090117.80593-2-ryasuoka@redhat.com>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <20250526090117.80593-2-ryasuoka@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 23, 2025 at 03:00:56PM +0300, kirill.shutemov@linux.intel.com wrote:
-> On Wed, May 14, 2025 at 12:00:17AM +0000, Huang, Kai wrote:
-> > On Mon, 2025-05-12 at 12:55 +0300, Kirill A. Shutemov wrote:
-> > > On Fri, May 09, 2025 at 09:25:58AM +0800, Yan Zhao wrote:
-> > > > On Thu, May 08, 2025 at 04:23:56PM +0300, Kirill A. Shutemov wrote:
-> > > > > On Tue, May 06, 2025 at 07:55:17PM +0800, Yan Zhao wrote:
-> > > > > > On Fri, May 02, 2025 at 04:08:24PM +0300, Kirill A. Shutemov wrote:
-> > > > > > > The functions kvm_x86_ops::link_external_spt() and
-> > > > > > > kvm_x86_ops::set_external_spte() are used to assign new memory to a VM.
-> > > > > > > When using TDX with Dynamic PAMT enabled, the assigned memory must be
-> > > > > > > covered by PAMT.
-> > > > > > > 
-> > > > > > > The new function kvm_x86_ops::phys_prepare() is called before
-> > > > > > > link_external_spt() and set_external_spte() to ensure that the memory is
-> > > > > > > ready to be assigned to the virtual machine. In the case of TDX, it
-> > > > > > > makes sure that the memory is covered by PAMT.
-> > > > > > > 
-> > > > > > > kvm_x86_ops::phys_prepare() is called in a context where struct kvm_vcpu
-> > > > > > > is available, allowing the implementation to allocate memory from a
-> > > > > > > per-VCPU pool.
-> > > > > > > 
-> > > > > > Why not invoke phys_prepare() and phys_cleanup() in set_external_spte_present()?
-> > > > > > Or in tdx_sept_set_private_spte()/tdx_sept_link_private_spt()?
-> > > > > 
-> > > > > Because the memory pool we allocated from is per-vcpu and we lost access
-> > > > > to vcpu by then. And not all callers provide vcpu.
-> > > > Maybe we can get vcpu via kvm_get_running_vcpu(), as in [1].
-> > > > Then for callers not providing vcpu (where vcpu is NULL), we can use per-KVM
-> > > > cache? 
-> > > 
-> > > Hm. I was not aware of kvm_get_running_vcpu(). Will play with it, thanks.
-> > 
-> > I am not sure why per-vcpu cache matters.
-> > 
-> > For non-leaf SEPT pages, AFAICT the "vcpu->arch.mmu_external_spt_cache" is just
-> > an empty cache, and eventually __get_free_page() is used to allocate in:
-> >                                                                                             
-> >   sp->external_spt = 
-> > 	kvm_mmu_memory_cache_alloc(&vcpu->arch.mmu_external_spt_cache);
-> > 
-> > So why not we actually create a kmem_cache for it with an actual 'ctor', and we
-> > can call tdx_alloc_page() in that.  This makes sure when the "external_spt" is
-> > allocated, the underneath PAMT entry is there.
-> 
-> I looked closer to this and while it is good idea, but ctor in kmem_cache
-> cannot fail which makes this approach not viable.
-> 
-> I guess we can a constructor directly into struct kvm_mmu_memory_cache.
-> Let me play with this.
+On 26/05/2025 11:01, Ryosuke Yasuoka wrote:
+> Add drm_panic module for hyperv drm so that panic screen can be
+> displayed on panic.
 
-I failed to make it work.
+I've just pushed it to drm-misc-next.
 
-We need to have destructor paired with the constructor that would do
-PAMT-aware freeing. And redirect all free paths to it. It requires
-substantial rework. I don't think it worth the effort.
-
-Will do manual PAMT management for SPT in TDX code.
+Thanks for your contribution.
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+
+Jocelyn
+
+> 
+> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+> ---
+>   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 36 +++++++++++++++++++++
+>   1 file changed, 36 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> index f7d2e973f79e..945b9482bcb3 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> @@ -17,6 +17,7 @@
+>   #include <drm/drm_gem_framebuffer_helper.h>
+>   #include <drm/drm_gem_shmem_helper.h>
+>   #include <drm/drm_probe_helper.h>
+> +#include <drm/drm_panic.h>
+>   #include <drm/drm_plane.h>
+>   
+>   #include "hyperv_drm.h"
+> @@ -181,10 +182,45 @@ static void hyperv_plane_atomic_update(struct drm_plane *plane,
+>   	}
+>   }
+>   
+> +static int hyperv_plane_get_scanout_buffer(struct drm_plane *plane,
+> +					   struct drm_scanout_buffer *sb)
+> +{
+> +	struct hyperv_drm_device *hv = to_hv(plane->dev);
+> +	struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(hv->vram);
+> +
+> +	if (plane->state && plane->state->fb) {
+> +		sb->format = plane->state->fb->format;
+> +		sb->width = plane->state->fb->width;
+> +		sb->height = plane->state->fb->height;
+> +		sb->pitch[0] = plane->state->fb->pitches[0];
+> +		sb->map[0] = map;
+> +		return 0;
+> +	}
+> +	return -ENODEV;
+> +}
+> +
+> +static void hyperv_plane_panic_flush(struct drm_plane *plane)
+> +{
+> +	struct hyperv_drm_device *hv = to_hv(plane->dev);
+> +	struct drm_rect rect;
+> +
+> +	if (!plane->state || !plane->state->fb)
+> +		return;
+> +
+> +	rect.x1 = 0;
+> +	rect.y1 = 0;
+> +	rect.x2 = plane->state->fb->width;
+> +	rect.y2 = plane->state->fb->height;
+> +
+> +	hyperv_update_dirt(hv->hdev, &rect);
+> +}
+> +
+>   static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
+>   	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
+>   	.atomic_check = hyperv_plane_atomic_check,
+>   	.atomic_update = hyperv_plane_atomic_update,
+> +	.get_scanout_buffer = hyperv_plane_get_scanout_buffer,
+> +	.panic_flush = hyperv_plane_panic_flush,
+>   };
+>   
+>   static const struct drm_plane_funcs hyperv_plane_funcs = {
+
