@@ -1,291 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80AE2114;
-	Thu,  5 Jun 2025 06:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2F51F03D9;
+	Thu,  5 Jun 2025 06:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749106272; cv=none; b=LlPecBHGe9c73gZgM2k9BNy7mfoMZUmMm92ooVgAG9AMXkQr4SQBoShwLjZ3i9peYzefx/WurIx6UVOQRpWn3I530ru5gqBzg4RN3FTNI6qcunU37SKS0rNdltZJYkNJf607WImEsag8Gn3jJpE7QH/tJAOcBvn7yFjILcVDjOI=
+	t=1749106298; cv=none; b=OI00yswVq+JAc7I1CrBZQdOChFO7m7gF+sb/AVQalqkx0x7vVMx4+a4N/RFiIHNafwJXi0WPs8YWEcrSfTNEDXtGeepk+4Vo5TDpkXE5jXR7D4dROFHtz7DTDnSe4KJdjHtulKeC/vBavEbF5udfHUqt5LoW4uXqCaYRaz7vkk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749106272; c=relaxed/simple;
-	bh=4u0cpenPUYwUhEIn7H4Eq3mCfXok80FoEd4oOTI+Xe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HONxHcKVlpqussfFVQf5H5gzcOCxZopnZJAbCg1/K1lbXtIMzkypDnJDiOeoRi8rUJGhRK+C8I/x3s7Z5mkwS33Z5xeD3Y2g0USM7hgcj9+H8FTrXwRcti1HtwwE2eyC2LquMirpm0r9IKb7MqdWUFDifBb8N+IauUOEL0Bbeq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AOdNvhqU; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AOdNvhqU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749106268; x=1780642268;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4u0cpenPUYwUhEIn7H4Eq3mCfXok80FoEd4oOTI+Xe4=;
-  b=AOdNvhqUwpVOkn0xNFteCZ/9uty3Gv3mwdxS8zVr0ZM+EpKqfHSOmkba
-   Zs0dWoVsiTj8vpWXDNyB0VXyK7VPLAgTNwRl2TGr9bF1IP2TjM+O9DCPT
-   3ejD3KT814PwMG6N4V8LX7FHv1oi+qu62ys76JXwd5JnausLUPnZzEHwM
-   0pyo1g5CvtvmHXqTjEVMTfwuh+T0lmGd7RCD2zYT8XeszTzuR2bCJ1P+T
-   PNQAetcsq+5TwydY5tIM77nAfrHifQ9FT8cF0S7aELIKH6OZMcyO45TMW
-   to5IgVKK/4F303miIRNv/jW4yIVIAVSi7aDRbOAJMAzhJ37UioYhQUJCB
-   A==;
-X-CSE-ConnectionGUID: kVvLDWavQbSbaHL4xCrBEA==
-X-CSE-MsgGUID: YzlEtEPBRL2CRiQZTfjSZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="62262541"
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="62262541"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:51:07 -0700
-X-CSE-ConnectionGUID: xu2tSk4iTv2MRpKjasZFEA==
-X-CSE-MsgGUID: oJ/ST0IjQoWa8lS+Ksbi+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="150569068"
-Received: from cpetruta-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.16])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:51:03 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 8AECE12023B;
-	Thu,  5 Jun 2025 09:51:00 +0300 (EEST)
-Date: Thu, 5 Jun 2025 06:51:00 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Tiffany Lin <tiffany.lin@mediatek.com>,
-	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-	Yunfei Dong <yunfei.dong@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com,
-	linux-media@vger.kernel.org,
-	Sebastian Fricke <sebastian.fricke@collabora.com>
-Subject: Re: [PATCH v3 1/5] media: mc: add manual request completion
-Message-ID: <aEE-VFfJDhUbM2nA@kekkonen.localdomain>
-References: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com>
- <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-1-603db4749d90@collabora.com>
- <aEC05991kEIIifDB@kekkonen.localdomain>
- <1ccaaec7f782afc71bae5c3b0f60a786a907555c.camel@collabora.com>
+	s=arc-20240116; t=1749106298; c=relaxed/simple;
+	bh=hS1CBvwCFC9uRduSLLx0Ti6WROWYkF8xkTzwy5DuWaI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NFSMmm/cpIhZ3EYN9AkheJzbJH4ovtY+Fw9lKjJ77AKY7HzD5R77lo9Pe0jfuGv87y9J9hsb0nYLDFzuE3LFhGJ9gE7MZRU9y67Dmimrq6gC/VDRPKp4w/U6rKiH5HPr0wo40SbCjg7Z7PRw4oUYUh/H3eiAu/JYlt/CTzu2COI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bCZp434jZztS1K;
+	Thu,  5 Jun 2025 14:50:20 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3C3051402FC;
+	Thu,  5 Jun 2025 14:51:33 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 5 Jun 2025 14:51:32 +0800
+Message-ID: <b023bb1f-4c1c-49dc-8842-0b2f1cfbbee0@huawei.com>
+Date: Thu, 5 Jun 2025 14:51:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] nfs: fix the race of lock/unlock and open
+To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
+	<bcodding@redhat.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
+References: <20250419085709.1452492-1-lilingfeng3@huawei.com>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <20250419085709.1452492-1-lilingfeng3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1ccaaec7f782afc71bae5c3b0f60a786a907555c.camel@collabora.com>
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-Hi Nicolas,
+Friendly ping..
 
-On Wed, Jun 04, 2025 at 07:19:27PM -0400, Nicolas Dufresne wrote:
-> Le mercredi 04 juin 2025 à 21:04 +0000, Sakari Ailus a écrit :
-> > Hi Nicolas,
-> > 
-> > Thanks for the update.
-> > 
-> > On Wed, Jun 04, 2025 at 04:09:35PM -0400, Nicolas Dufresne wrote:
-> > > From: Hans Verkuil <hverkuil@xs4all.nl>
-> > > 
-> > > By default when the last request object is completed, the whole
-> > > request completes as well.
-> > > 
-> > > But sometimes you want to delay this completion to an arbitrary point in
-> > > time so add a manual complete mode for this.
-> > > 
-> > > In req_queue the driver marks the request for manual completion by
-> > > calling media_request_mark_manual_completion, and when the driver
-> > > wants to manually complete the request it calls
-> > > media_request_manual_complete().
-> > > 
-> > > Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> > > Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > > ---
-> > >  drivers/media/mc/mc-request.c | 38 ++++++++++++++++++++++++++++++++++++--
-> > >  include/media/media-request.h | 38 +++++++++++++++++++++++++++++++++++++-
-> > >  2 files changed, 73 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-request.c
-> > > index 5edfc2791ce7c7485def5db675bbf53ee223d837..398d0806d1d274eb8c454fc5c37b77476abe1e74 100644
-> > > --- a/drivers/media/mc/mc-request.c
-> > > +++ b/drivers/media/mc/mc-request.c
-> > > @@ -54,6 +54,7 @@ static void media_request_clean(struct media_request *req)
-> > >  	req->access_count = 0;
-> > >  	WARN_ON(req->num_incomplete_objects);
-> > >  	req->num_incomplete_objects = 0;
-> > > +	req->manual_completion = false;
-> > >  	wake_up_interruptible_all(&req->poll_wait);
-> > >  }
-> > >  
-> > > @@ -313,6 +314,7 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
-> > >  	req->mdev = mdev;
-> > >  	req->state = MEDIA_REQUEST_STATE_IDLE;
-> > >  	req->num_incomplete_objects = 0;
-> > > +	req->manual_completion = false;
-> > >  	kref_init(&req->kref);
-> > >  	INIT_LIST_HEAD(&req->objects);
-> > >  	spin_lock_init(&req->lock);
-> > > @@ -459,7 +461,7 @@ void media_request_object_unbind(struct media_request_object *obj)
-> > >  
-> > >  	req->num_incomplete_objects--;
-> > >  	if (req->state == MEDIA_REQUEST_STATE_QUEUED &&
-> > > -	    !req->num_incomplete_objects) {
-> > > +	    !req->num_incomplete_objects && !req->manual_completion) {
-> > >  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
-> > >  		completed = true;
-> > >  		wake_up_interruptible_all(&req->poll_wait);
-> > > @@ -488,7 +490,7 @@ void media_request_object_complete(struct media_request_object *obj)
-> > >  	    WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
-> > >  		goto unlock;
-> > >  
-> > > -	if (!--req->num_incomplete_objects) {
-> > > +	if (!--req->num_incomplete_objects && !req->manual_completion) {
-> > >  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
-> > >  		wake_up_interruptible_all(&req->poll_wait);
-> > >  		completed = true;
-> > > @@ -499,3 +501,35 @@ void media_request_object_complete(struct media_request_object *obj)
-> > >  		media_request_put(req);
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(media_request_object_complete);
-> > > +
-> > > +void media_request_manual_complete(struct media_request *req)
-> > > +{
-> > > +	unsigned long flags;
-> > 
-> > I'd declare flags as last.
-> > 
-> > > +	bool completed = false;
-> > > +
-> > > +	if (WARN_ON(!req))
-> > > +		return;
-> > > +	if (WARN_ON(!req->manual_completion))
-> > > +		return;
-> > 
-> > I think I'd use WARN_ON_ONCE() consistently: this is a driver (or
-> > framework) bug and telling once about it is very probably enough.
-> 
-> Just to be sure, you only mean for the two checks above ? Or did
-> you mean for the entire function ?
+Thanks
 
-For the entire function. I thought that if this is user-triggerable, the
-amount of data ending up in logs could be very large.
-
-> 
-> > 
-> > > +
-> > > +	spin_lock_irqsave(&req->lock, flags);
-> 
-> In practice, if you call this specific function from two places at the same
-> time you have a bug, but I realize that moving the the warning on the check
-> manual_completion inside that lock would massively help detect that case.
-> 
-> What do you think ?
-
-Seems reasonable to me.
-
-> 
-> > > +	if (WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
-> > > +		goto unlock;
-> > > +
-> > > +	req->manual_completion = false;
-> > > +	/*
-> > > +	 * It is expected that all other objects in this request are
-> > > +	 * completed when this function is called. WARN if that is
-> > > +	 * not the case.
-> > > +	 */
-> > > +	if (!WARN_ON(req->num_incomplete_objects)) {
-> > > +		req->state = MEDIA_REQUEST_STATE_COMPLETE;
-> > > +		wake_up_interruptible_all(&req->poll_wait);
-> > > +		completed = true;
-> > > +	}
-> > 
-> > A newline would be nice here.
-> > 
-> > > +unlock:
-> > > +	spin_unlock_irqrestore(&req->lock, flags);
-> > > +	if (completed)
-> > > +		media_request_put(req);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(media_request_manual_complete);
-> > > diff --git a/include/media/media-request.h b/include/media/media-request.h
-> > > index d4ac557678a78372222704400c8c96cf3150b9d9..7f9af68ef19ac6de0184bbb0c0827dc59777c6dc 100644
-> > > --- a/include/media/media-request.h
-> > > +++ b/include/media/media-request.h
-> > > @@ -56,6 +56,9 @@ struct media_request_object;
-> > >   * @access_count: count the number of request accesses that are in progress
-> > >   * @objects: List of @struct media_request_object request objects
-> > >   * @num_incomplete_objects: The number of incomplete objects in the request
-> > > + * @manual_completion: if true, then the request won't be marked as completed
-> > > + * when @num_incomplete_objects reaches 0. Call media_request_manual_complete()
-> > > + * to complete the request after @num_incomplete_objects == 0.
-> > >   * @poll_wait: Wait queue for poll
-> > >   * @lock: Serializes access to this struct
-> > >   */
-> > > @@ -68,6 +71,7 @@ struct media_request {
-> > >  	unsigned int access_count;
-> > >  	struct list_head objects;
-> > >  	unsigned int num_incomplete_objects;
-> > > +	bool manual_completion;
-> > >  	wait_queue_head_t poll_wait;
-> > >  	spinlock_t lock;
-> > >  };
-> > > @@ -218,6 +222,38 @@ media_request_get_by_fd(struct media_device *mdev, int request_fd);
-> > >  int media_request_alloc(struct media_device *mdev,
-> > >  			int *alloc_fd);
-> > >  
-> > > +/**
-> > > + * media_request_mark_manual_completion - Enable manual completion
-> > > + *
-> > > + * @req: The request
-> > > + *
-> > > + * Mark that the request has to be manually completed by calling
-> > > + * media_request_manual_complete().
-> > > + *
-> > > + * This function shall be called in the req_queue callback.
-> > > + */
-> > > +static inline void
-> > > +media_request_mark_manual_completion(struct media_request *req)
-> > > +{
-> > > +	req->manual_completion = true;
-> > > +}
-> > > +
-> > > +/**
-> > > + * media_request_manual_complete - Mark the request as completed
-> > > + *
-> > > + * @req: The request
-> > > + *
-> > > + * This function completes a request that was marked for manual completion by an
-> > > + * earlier call to media_request_mark_manual_completion(). The request's
-> > > + * @manual_completion flag is reset to false.
-> > 
-> > s/flag/field/
-> > 
-> > > + *
-> > > + * All objects contained in the request must have been completed previously. It
-> > > + * is an error to call this function otherwise. If such an error occurred, the
-> > > + * function will WARN and the object completion will be delayed until
-> > > + * @num_incomplete_objects is 0.
-> > > + */
-> > > +void media_request_manual_complete(struct media_request *req);
-> > > +
-> > >  #else
-> > >  
-> > >  static inline void media_request_get(struct media_request *req)
-> > > @@ -336,7 +372,7 @@ void media_request_object_init(struct media_request_object *obj);
-> > >   * @req: The media request
-> > >   * @ops: The object ops for this object
-> > >   * @priv: A driver-specific priv pointer associated with this object
-> > > - * @is_buffer: Set to true if the object a buffer object.
-> > > + * @is_buffer: Set to true if the object is a buffer object.
-> > >   * @obj: The object
-> > >   *
-> > >   * Bind this object to the request and set the ops and priv values of
-> > > 
-
--- 
-Kind regards,
-
-Sakari Ailus
+åœ¨ 2025/4/19 16:57, Li Lingfeng å†™é“:
+> LOCK may extend an existing lock and release another one and UNLOCK may
+> also release an existing lock.
+> When opening a file, there may be access to file locks that have been
+> concurrently released by lock/unlock operations, potentially triggering
+> UAF.
+> While certain concurrent scenarios involving lock/unlock and open
+> operations have been safeguarded with locks â€“ for example,
+> nfs4_proc_unlckz() acquires the so_delegreturn_mutex prior to invoking
+> locks_lock_inode_wait() â€“ there remain cases where such protection is not
+> yet implemented.
+>
+> The issue can be reproduced through the following steps:
+> T1: open in read-only mode with three consecutive lock operations applied
+>      lock1(0~100) --> add lock1 to file
+>      lock2(120~200) --> add lock2 to file
+>      lock3(50~150) --> extend lock1 to cover range 0~200 and release lock2
+> T2: restart nfs-server and run state manager
+> T3: open in write-only mode
+>      T1                            T2                                T3
+>                              start recover
+> lock1
+> lock2
+>                              nfs4_open_reclaim
+>                              clear_bit // NFS_DELEGATED_STATE
+> lock3
+>   _nfs4_proc_setlk
+>    lock so_delegreturn_mutex
+>    unlock so_delegreturn_mutex
+>    _nfs4_do_setlk
+>                              recover done
+>                                                  lock so_delegreturn_mutex
+>                                                  nfs_delegation_claim_locks
+>                                                  get lock2
+>     rpc_run_task
+>     ...
+>     nfs4_lock_done
+>      locks_lock_inode_wait
+>      ...
+>       locks_dispose_list
+>       free lock2
+>                                                  use lock2
+>                                                  // UAF
+>                                                  unlock so_delegreturn_mutex
+>
+> Get so_delegreturn_mutex before calling locks_lock_inode_wait to fix this
+> issue.
+>
+> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
+> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> ---
+>   fs/nfs/nfs4proc.c | 19 +++++++++++++++----
+>   1 file changed, 15 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 970f28dbf253..297ee2442c02 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -7112,13 +7112,16 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
+>   		.inode = calldata->lsp->ls_state->inode,
+>   		.stateid = &calldata->arg.stateid,
+>   	};
+> +	struct nfs4_state_owner *sp = calldata->ctx->state->owner;
+>   
+>   	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
+>   		return;
+>   	switch (task->tk_status) {
+>   		case 0:
+>   			renew_lease(calldata->server, calldata->timestamp);
+> +			mutex_lock(&sp->so_delegreturn_mutex);
+>   			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
+> +			mutex_unlock(&sp->so_delegreturn_mutex);
+>   			if (nfs4_update_lock_stateid(calldata->lsp,
+>   					&calldata->res.stateid))
+>   				break;
+> @@ -7375,6 +7378,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+>   {
+>   	struct nfs4_lockdata *data = calldata;
+>   	struct nfs4_lock_state *lsp = data->lsp;
+> +	struct nfs4_state_owner *sp = data->ctx->state->owner;
+>   
+>   	if (!nfs4_sequence_done(task, &data->res.seq_res))
+>   		return;
+> @@ -7386,8 +7390,12 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+>   				data->timestamp);
+>   		if (data->arg.new_lock && !data->cancelled) {
+>   			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
+> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
+> +			mutex_lock(&sp->so_delegreturn_mutex);
+> +			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0) {
+> +				mutex_unlock(&sp->so_delegreturn_mutex);
+>   				goto out_restart;
+> +			}
+> +			mutex_unlock(&sp->so_delegreturn_mutex);
+>   		}
+>   		if (data->arg.new_lock_owner != 0) {
+>   			nfs_confirm_seqid(&lsp->ls_seqid, 0);
+> @@ -7597,11 +7605,14 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
+>   	int status;
+>   
+>   	request->c.flc_flags |= FL_ACCESS;
+> -	status = locks_lock_inode_wait(state->inode, request);
+> -	if (status < 0)
+> -		goto out;
+>   	mutex_lock(&sp->so_delegreturn_mutex);
+>   	down_read(&nfsi->rwsem);
+> +	status = locks_lock_inode_wait(state->inode, request);
+> +	if (status < 0) {
+> +		up_read(&nfsi->rwsem);
+> +		mutex_unlock(&sp->so_delegreturn_mutex);
+> +		goto out;
+> +	}
+>   	if (test_bit(NFS_DELEGATED_STATE, &state->flags)) {
+>   		/* Yes: cache locks! */
+>   		/* ...but avoid races with delegation recall... */
