@@ -1,297 +1,226 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2076.outbound.protection.outlook.com [40.107.95.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698E31C84CB;
-	Thu,  5 Jun 2025 19:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749151195; cv=none; b=U7UCAWdYE3WkDO03OvfFYLEEQawhy1MemOAZaAckBNGh0PGEbcMbmiTN9ldQrwgE7q8ttyWJct6YEusFUzN2gcu2hWgXFAnFNilhKxFehAco9alqKBdCCF2l/wVEKuNkD68Y4yhOAFaTrjepf1rcVIASrOqkkTrUMiygCYIdro8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749151195; c=relaxed/simple;
-	bh=lSr9p9W9TI5vl3SG4wGYglsTzCcYAqEITF2YFkTCPs0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VNNlbrVyw+ENMpzphUqguTdMbcujSYzJOqw9kfVgUhbSGrRbjSLRgF95LOj9zHcr+6j5Uitc5eAS6t79nx4Wbb9PR3HA+0cz2E4mmM+ae2LTh5ACigj0Q8dxV2tIHFOfZiBWmfvt87nCvyyTGSxvufQjLiNXp3h9a47nh8816Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bjlumpkc; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667704315A;
+	Thu,  5 Jun 2025 19:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749151314; cv=fail; b=Ozx9Q5qPEUG0oN14lFpmu+KfSW2D0ZtPbcbGbHGVx/52Z6LolnOzFvVj5YH034MYKSpMaBjAUE3c7Dq/Ea9qKdRsjYz6sPYyUSNuDRiNIiYWehfDNErBEAvmb+o+KugRnVQo16bMG7IsqaoWRwRxOQrXHFhefSBzlnTgJ65dgWs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749151314; c=relaxed/simple;
+	bh=OiG2BguezSp9mpyRYIoNCLydgliEjj8Btn7ES6LAnrY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=D3WjTVf8WS3PjhAObXyytBdeE8orL70i5fh327C2mHbTyyTUTnSf8zsr76IoBVTVkhSRb3DMK433fEetI7XzrTKV24YLeE3btPKU6568YBO3ZeLM9GFuTjZGJVsvvqxGKbt5BWvBCTsfegGdmFHfBa5c9zMQzrXJysj6LWrUwRE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XVOVbwIl; arc=fail smtp.client-ip=40.107.95.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bjlumpkc"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a4bb155eb1so14706831cf.1;
-        Thu, 05 Jun 2025 12:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749151192; x=1749755992; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=07Pr/3RW2zLHEhFDRanXb6IABI33Ahx5XZcAGV/Afqg=;
-        b=Bjlumpkc9GnO5SS9YBjBsW0YZzUeki9nbSjg7ih8qJKJKqja4uBcl25EYrT74vXOO8
-         ANRm7xOheplSDKBIQhNE4gWSmVDj1AWOpm1tkKN6Q+t6364fO2ySXuJT6hSCVHAoJYHN
-         fpq9giqvFyw+UYgqMqgbvu4Qx3ECqHpQmAHChD9/X5FTOMBchlggUkvc1RsqcsYiJ3Hq
-         cdMWiUPCdB5m0B7WYVo/YE4Ty+dCcsXowfzcugSN6crfSm9WUfDOIWaTTiTgpeuQ1bFh
-         3Icw7s4QVPxqFZJoN82O4DAFxq4k1qFpnjc+Zh9Z1YrGHTeIXMtVsRSjjyIDYq5daTUS
-         AZEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749151192; x=1749755992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=07Pr/3RW2zLHEhFDRanXb6IABI33Ahx5XZcAGV/Afqg=;
-        b=djXga1IIrUFiSNHL8mnz9UKCEhkQe9caTVeXVs7MRO2voyc/pchBmNWcYIVNwrY0OH
-         aWq6Rwho3+vUu/lVAdnfNAU5uZHRlVsYHiAnm2dC/sGxxIjNIrrMW8VsOIn1bETMNfMN
-         RnVAAkfwhkxg6YzNwcPQpnMZUn1asDLfF8oIMXnw3dIbDpFUeutQiciK5rmsIqfXs464
-         J70q1AP8kr2dP+FYRrbAECf894t+SDcb4zRKe46ZdPT9uf+1ohhj7PZBEsH6kwPILC+r
-         UwJBlNSd9NZ6mnToBAzz8Q3KKDjOMz27Xv925ONEmbV5BcBYZcliKFwlHYXqYEIFxEvk
-         ZZkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMlHbIZzB9AM7XCskzOVO458ufKuqMrFwL2qYMwJ7tuFh6CA2Wj/LaT5kpN2FO0ZDdn99ZO1KQ8ssyqAFn@vger.kernel.org, AJvYcCVGQpexBog2oJAhFggRJjCtN7Z830GCzyYU78F9K2z16pZgJLWUYktMAA92JxofMcf2uUJFFaXsKxSR@vger.kernel.org, AJvYcCXk5HcfwA6rHhM/LcEZU/uzHtCtP/pUJ871GinjvwZ6mG0YpG32IJ9zJqaL/PWhxTQ303HxV+/Rv9A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ80KC6o3QeD+OdUEWvsptHOW6NywUEWw2xiCBfKdl+DS8aw3v
-	LhJl7G4bylFGbLE6/NPqO6o3At3HB3V2YtT1f84WFRAjjRa0ZiYinJ3fouG9xuABiLeyE1k9NZV
-	nelO/rRQIGCLqVjft1f7NjcA2OygChMg=
-X-Gm-Gg: ASbGncuYPkzMWjf0EacxMifJRe7MyRTsq+bRVA4drRRd33oXD9dI4YGekH0iQskAsHZ
-	/eg4jE3UnUmuhANogEAbcFhY0YTDYZlWtXPIWzu/6pBClesOI9OPYYl470RJWm2ROb26yI05Z/k
-	MfnBita4Wh+tCmtjAAwY6Uqa2N350HVAK2IkZH6S/ya4jv
-X-Google-Smtp-Source: AGHT+IFCqGBmttXS2MNsvkjz2Oag4+7fLFaxxoaskycYOFPeR6iWx5WNapqSo9nz4/NLFcssJHKpXKF6je1fcsq0xWA=
-X-Received: by 2002:a05:622a:581b:b0:4a4:4206:b6f3 with SMTP id
- d75a77b69052e-4a5b9e00ed4mr11050881cf.10.1749151192105; Thu, 05 Jun 2025
- 12:19:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XVOVbwIl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dUdm5cxTlrXE7z8dZ8I+XGheicSdiVPxpiFLPntA2lfN8A8COSpq7G5XpvzGZE/BFK3UeLyE8Re17iGiSRVeki+ELfHYUSdisi650ZUi52fzpqjbPlYzRDJMaavF2JtIUcmFD44biMFeboOU0NGW+vtXHvxcQ9wfjYhlky5aXH56b7bGzKuoyjga82X2zMAaRUqLDrWaQbYHz5ksBp3hGv4tjEcmI4wxWp9zAwdl/rZPrGJVubNMEfhPY7gbQeR29BkBn6JeelnXR2XhMgVrhFN+v6uMfQ0oFEVyrdEDFBAXLuHgruSX01CcaA8c4/PcLeEhjp1O+9DvybywzQC/cQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qKUdydZL+eYMYYUvhtwrL5fiqosGpceefeLb4xQlLWc=;
+ b=ZFI3sJX5wGHji0ZohRjgAYSEYJFOHPtDbBT5wdgw2Z6gft0RD/cyXW6SE1/fJHvZBGNzl4HHQHSGKXh5yGgr3TM4GkWs76irF0KZ5tOxHZHo8AiNWTKQ7G/2P821llb91WcMtS1zaZhQ1hZHbBy5YXk+iYp8I2jObXgXbuuHzdoZwR6Jvj9jKI5PJ6B7FgC/eL4EyIrQ2N8abIYaXmpfAS2i5zRxq0y/HvnYtONlejeQIiIPhXAbEexPLpuEh+T2EC721q7br6GxsWLcoplRUYZn+MeKbahnEFJUqA3C137Ddm0eHRWav147JoQSO00DE1EGqSHCjKMrENzGZkU4Mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qKUdydZL+eYMYYUvhtwrL5fiqosGpceefeLb4xQlLWc=;
+ b=XVOVbwIlQCNWZYgLCyTeuzaVw3MTmqbsJ5HgIx/B7Pq7OyR7oBUA8WgULO30GPBdRdUw1s0B0ojo/ZewHl32RbgELrI89wIPRVkPEAorgLkeRroTxCGTSCaCutNrirXpwhInWGTOSeTk4hfkspYzW+7jjvjSRPh4M5tlg88nBLE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21)
+ by CH2PR12MB4038.namprd12.prod.outlook.com (2603:10b6:610:7b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.36; Thu, 5 Jun
+ 2025 19:21:51 +0000
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::c170:6906:9ef3:ecef]) by BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::c170:6906:9ef3:ecef%5]) with mapi id 15.20.8792.034; Thu, 5 Jun 2025
+ 19:21:51 +0000
+Message-ID: <28de19a2-57fc-46d9-9ef3-3790e2a51188@amd.com>
+Date: Thu, 5 Jun 2025 14:21:46 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] KVM: SEV: Add SEV-SNP CipherTextHiding support
+To: Tom Lendacky <thomas.lendacky@amd.com>, corbet@lwn.net,
+ seanjc@google.com, pbonzini@redhat.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ herbert@gondor.apana.org.au, akpm@linux-foundation.org, paulmck@kernel.org,
+ rostedt@goodmis.org
+Cc: x86@kernel.org, thuth@redhat.com, ardb@kernel.org,
+ gregkh@linuxfoundation.org, john.allen@amd.com, davem@davemloft.net,
+ michael.roth@amd.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org
+References: <cover.1747696092.git.ashish.kalra@amd.com>
+ <e663930ca516aadbd71422af66e6939dd77e7b06.1747696092.git.ashish.kalra@amd.com>
+ <a6b39023-447d-67bf-9502-4340f9d41c81@amd.com>
+ <11700688-98a4-439e-bcd3-44ca51fcaa14@amd.com>
+ <087c429a-7d1a-a65a-f254-155cd6b2aa49@amd.com>
+Content-Language: en-US
+From: "Kalra, Ashish" <ashish.kalra@amd.com>
+In-Reply-To: <087c429a-7d1a-a65a-f254-155cd6b2aa49@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR04CA0015.namprd04.prod.outlook.com
+ (2603:10b6:5:334::20) To BL3PR12MB9049.namprd12.prod.outlook.com
+ (2603:10b6:208:3b8::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425-rk3576-tsadc-upstream-v5-0-0c840b99c30e@collabora.com> <20250425-rk3576-tsadc-upstream-v5-6-0c840b99c30e@collabora.com>
-In-Reply-To: <20250425-rk3576-tsadc-upstream-v5-6-0c840b99c30e@collabora.com>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 5 Jun 2025 23:19:39 +0400
-X-Gm-Features: AX0GCFsHLRy0Dx5vZtQW6clXPjR-z7m8YaqdEawS_nTns43C_dVBSJ1PP5R5jWo
-Message-ID: <CABjd4YwrraMC587sn1afA+pHGA-P25xhEMh7AJJQbQ5RwYJPsg@mail.gmail.com>
-Subject: Re: [PATCH v5 6/7] arm64: dts: rockchip: Add thermal nodes to RK3576
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Jonas Karlman <jonas@kwiboo.se>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, kernel@collabora.com, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB9049:EE_|CH2PR12MB4038:EE_
+X-MS-Office365-Filtering-Correlation-Id: 009f61f2-4113-413f-3dca-08dda4663917
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SkZCNnJkODI2ZHhTZEE0dFNlZEN1NVpqRUw3d2tnTWJsdmFGU29nU2tFeEhE?=
+ =?utf-8?B?TFphc1ZvYU9wbTRFOWNWbTBUbkhSZk5iWVJqNWd6enh3Zzh1MEJ1U043OXFw?=
+ =?utf-8?B?dUNPVXZrTERiYllaT0hOTE5CTDBXNnVNelNCdWNQcEs2Nk96ajJIS2o3ZHZZ?=
+ =?utf-8?B?bUI0dHl2TWpXMFY1am1hSXRmUlMzdkZYdWdkTDBzL3RWRmJOa2RVRmJBOFRl?=
+ =?utf-8?B?YVJlcTAvcS9TWDFQRDIyUHUxTVJIZlRrSTZ1cCtKU2gzelhjRDE4RmE0bzVa?=
+ =?utf-8?B?Qld6ejJ1aVlXOFVRRXB4cWNqOW9MREF6bnRDbjVMTFg2T1lrQno0bjhUdmJJ?=
+ =?utf-8?B?LzUzdUw2Y01McTlmUjFEazZBUW9zYjh4N0xDS1dhWGlNMnl2aUFrMmIrWnl5?=
+ =?utf-8?B?SXE5dVl2bURjWGdBOGlpRExtaE14N3VlbEZWekN6VDNWT0QzVnBlNXV4SUdP?=
+ =?utf-8?B?b0YwSVJyTi9GeU9YV3JpcUdocHR1TEFwa0ZJRlM3VzVHZmhMRkxEVkkvOUJU?=
+ =?utf-8?B?Myt6cXVtQ252em1jN1I4TnFNeWtGUTVodkZ4amZySmxkUXQ2WThKYzM3OHNI?=
+ =?utf-8?B?cW1KdDVvTFdoZHBUWnJzU2VxVzRCamw4eTF3VWUvSnZDM0JKUi96UXVTdVRo?=
+ =?utf-8?B?dm9rbVJOclprNGE2TUQvdmtCT0RjM1Buek1oUHpvTzZIWW1CMmJvY0pTSzZM?=
+ =?utf-8?B?elZFK1AydThrN0Z1dTV6OGJZczE4cm1sRFFsM2V0WWpwR1VUbmxsLytzcjdW?=
+ =?utf-8?B?VkUrUk9FSFg3NHFXNTJESjdiRThSMithREJoRFhpOEV3VmRyalVHWGo3MTJJ?=
+ =?utf-8?B?TStPcE5WR2FNeFFWalRoaHdIWVg4Y2ZzbXZSV016SldZSGhxL1ZLaWxXWlFC?=
+ =?utf-8?B?aUlTUkRqVWJPZU9pcTc0Q1dNdGlPNkNQSWM4S1IxTHFEbml6a0cvVVpST2Zp?=
+ =?utf-8?B?bW9XcEk2TURCVHBXZ3M5NVNXa3RhaFQzVEJ6TzJCcm9nVSt6RlhHajRnRFlr?=
+ =?utf-8?B?WGFpcEtaOVpMMFVZb1J4eFVwdFl1NGF2aEVvcm5HYkx5ZWpzTjdYV2lNUFBa?=
+ =?utf-8?B?cGoycWlzNFU3WWd5MTQ4bkdNYUxWcUJNUmtZaERSZEQ1OC9sK1pJZ04vRzlv?=
+ =?utf-8?B?TjFYMUEvc0lES285L2xpaU9PMnpaTzlXN3RRaHEwYWR5bWd1WUdhU1FQSnZu?=
+ =?utf-8?B?T3ZVMnRvT1g5MTk0Y0pXaDlKbnFoNTJJdHR3WXhHam9haEJwbGYrVGhJZzNj?=
+ =?utf-8?B?dnpaeE9FRGFMd1cvZGhlcm1GVU1SOFlMT1R6RkxXWjhsY251b1B2VzVNMXZU?=
+ =?utf-8?B?N1N3dVFkRjFPNWx6VUQxY1dNMkJiSnlHSStabDFsWE1CZlRjZWREdDNrMHVR?=
+ =?utf-8?B?djRyRnNKMEIwTE82QWxoQ1lQK2NxNm52OTQ0dHp1VWtXNmhzcis5RDJ6SkdB?=
+ =?utf-8?B?TXdDYmNCdU9ERS9iaW10aG8wcVJuT21yZDJZSFdnYVljbWlIWnVNdE9kMUYx?=
+ =?utf-8?B?Nzd2VG9PRUZRTC9BdW96bUt3VW15RFZYSVR3TVBQUDNYUkRhb1NQWkpZQ0Rr?=
+ =?utf-8?B?T3IrWUZ2ZXR2SUJseXFQVUhqUnR3dURuaEVvSzVlbGg4eDcydEtUQnRZUVpa?=
+ =?utf-8?B?SnF5ZDRKdmVwaVRmUU5LVjlvc2xQQU83YWJmNkw2ZThtWTY5UWFRMnA4Lzd5?=
+ =?utf-8?B?R0tKRmZvYVB1TTdpNStIbkU5UmJwRS8wR2N1SGdaZy9rWUdNWUtzOUlrK0lt?=
+ =?utf-8?B?STJVaFp6ZGJXMjFzdHNJMmFSV0p4VkRLWDZCQTVWZXE2REFhbEJQUFZUVFZj?=
+ =?utf-8?B?OWRHYWxBaVAwSkJhSEZmL1RyMEJDSndtR1pEL3J5ODRFc28rZEFQZEVtVnpy?=
+ =?utf-8?B?MWF1WjZpeUhmbVNpMXFpYUFjNU1kU0FkeG5lVTNZOTlyUkNWRUlBRVhCcFlJ?=
+ =?utf-8?B?anFMMTA1V2xLL0ErMEpDRHVGcXRGQThFcVZiY2VDaS9wRXVSVEtqaFNhTmJV?=
+ =?utf-8?B?TXVBM2gwcXlRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB9049.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RXlXQ2hMdDFLUHg0S0JoSklieVJ0azhKTU5PYWlOMEpqK2paMGh3aG9GQnZY?=
+ =?utf-8?B?cCtIOWIvTXJHN3d1ZmlHK1FVaUtTa0R4aVlTUDdXTU5Idzd4WkxXdWdKNVJE?=
+ =?utf-8?B?K1pqdWE1bEVZQjBZaTl5TC82VTlldlFkOWxVUlhETGN5RnhWL0tldUJ5cXhh?=
+ =?utf-8?B?aEs0cDRyTEsvaHNEUzVJTEJ0eDdtOFJRYUpYazVlTkwydElMYVF1dGF0aTJu?=
+ =?utf-8?B?YzhoY2tUT3hwZjZBQkd5cmpubXpQU2VzWG9CWC9hei9SWkxwREpubnR3Sk5D?=
+ =?utf-8?B?QUdMVzBvWEp1bHhZUnRoZWhPNnJieFRVa09DeC9KRDIrRUhaeEg3WVpmUG1w?=
+ =?utf-8?B?bnBGcDVtaEhwd1cwbEFXckZlQ3RObDBNU2VTeFIwTGxNNnM0a2hUZ2RxUmc0?=
+ =?utf-8?B?MkhmRE5hMHdMSWxjZkVzNTdrSXlLMkE4OGFKV1pSY3dQRXJMZmVXdnJXbEtW?=
+ =?utf-8?B?czU2VElOZ2tsZEtVK0lCUnZoeWxyaEduNTdUd2xueGdreS9EbTFFbmhLVEJj?=
+ =?utf-8?B?R2NGR1NnQWdBZ0x1Y0xuNTFVT2w5UFV1L0FiQ1drMndKMWd1cXJ2UHFmVFhI?=
+ =?utf-8?B?amtjOFpkUGM0cWFMNjd0VHFoQVJ0MnlreVVvZnJaR2U4M1lNUm9OdGR4YTlL?=
+ =?utf-8?B?RmVtSXdCcWRFRmpDbkVUUHU4d2Robm52a0d4ak12c1FSSmh3Z1dObFVsaHdK?=
+ =?utf-8?B?QnR4dnNhT3NVTVpjT1dtNlVrc0F5UWVRaWxlV2pxLzZhbUV1K0VEMXA0TkFS?=
+ =?utf-8?B?SmJXYkhjWStRTjJOS3BqcVBjM28vUlBNMU5FVGVuOEZrMVlPdVNROUxzY0ZD?=
+ =?utf-8?B?NUlHbkNma1U5MVVTU3BIZFJ2ZlFrWWJWRXhYL0NKQWN2NlFLaHkrWGdPQTFr?=
+ =?utf-8?B?SlRZUWJKcFNzQTYveWxhaEpWVlRETFU1bzk2ZUc1ZkhtTUJ1aWIyV1RQQzNh?=
+ =?utf-8?B?bDVFamthT1A0L3Zpbzd3c1hKVk5Fay9yVGE1cXl3ODBNYWh0MHVobnBJWFhG?=
+ =?utf-8?B?bFdpWFptNkJ3REFGYXZrQ1NhYmdXWkxOMDcvMEQyMkF3TGxHdXN0Zm9malVp?=
+ =?utf-8?B?UWtoMVVkbDRlaVRwSVZUS0pEbHoxN0lmZFJyZG5tSmc2WWhKdlQrVFlRbGZT?=
+ =?utf-8?B?a2I5cDllbDRoUTdFUGxybzZXL0drK0hKSVcrTFUxc2lQQnZrLytZYXVlNVo1?=
+ =?utf-8?B?czlwbzJDV3BHak12NG5SNElKRVJCLytGb1cxRW84UkpMektRcmlkbnE3UFZL?=
+ =?utf-8?B?alVFclJrN1lkNklnZmpRNTMxK0dsOEZDcWJtTElSL2xZeEIveXkzUWNycXJT?=
+ =?utf-8?B?UmR6dlR3bldpTFR5aTBPVHR3WGtNNStGZ1lod0JDajBpSUs1bUJNRDFiR3Iv?=
+ =?utf-8?B?enprVXI0ZTRXRDJpQU1HUmZOcFJqNklDd0VVZ0gzQ0RmVW54RjdxYjlPRXJH?=
+ =?utf-8?B?Q3lPK2tiTFFPcTFGMlVqUGlWYXl0S1h6S0ZuemgrKy9EY1pDaHB0RGFDY002?=
+ =?utf-8?B?K0NQYW5BaDZOYTRjbUlqUmxsNFcvcUNaSUpYcTdGU0JhdmV1WWcxa2JsdlZQ?=
+ =?utf-8?B?c01iYkxCTm1qeDZ5MUh0MnpocCtzZW9aOUs4WngwWmpaTE5KUXpUY21lN1Zy?=
+ =?utf-8?B?UW5tVmR6VXYyUTZSS0M5b0JLNjFVNktHRVVFNStFaVNPK3RCdnhzNHR0WXdB?=
+ =?utf-8?B?WVZNaGJwRnliQ2R4TTh3SUE5TFl6elFxR2hhMDZyckI2TTZ6NmV2T205TDFQ?=
+ =?utf-8?B?bHluRk9VVnBYUHpvakZSaFFxZnZSUEFFYUdmK216OVJLWHpjTStmNHkxREtB?=
+ =?utf-8?B?NjJhNG0zTXRZQWdCOU5LL2V0anZUbWRFYng1RHNVNlNjbXI4SE52dCtVSHlo?=
+ =?utf-8?B?MW1EZlJCdjRndDNnZGtVcTJYR3k3UHVhdGJQZStwazR3QzNDSE9PSUlkNkh0?=
+ =?utf-8?B?ajdibWRxdEpadjIyRDdYc1JGT282TzRkL2NzNXVDOStMTjFRT0F1bE8vMDZl?=
+ =?utf-8?B?Y2VXaDVBQ2NoWTNad1VCczVvOFZtMHNyNDZoeW95WnFsMElLem1nT016ZHd3?=
+ =?utf-8?B?NUh2a3VPYWl6M2hPVHA4c3liRkNSY3BWOXBxbElnSnNGcDFlNTIxN2h0Vy9w?=
+ =?utf-8?Q?j8+uhSfQ5d2g/engTDEiLLDZI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 009f61f2-4113-413f-3dca-08dda4663917
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB9049.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 19:21:50.9464
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /RciIKT/PmFKbup2SI4B/zO/pRUPQ3ixNRZ7sBv4g9wLSNbxCsE5vagwCeFNlYxF/lJsw5w5is/Xjf1EnLv41A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4038
 
-Hi Nicolas,
 
-On Thu, Jun 5, 2025 at 11:07=E2=80=AFPM Nicolas Frattaroli
-<nicolas.frattaroli@collabora.com> wrote:
+On 6/5/2025 11:23 AM, Tom Lendacky wrote:
+> On 6/4/25 19:17, Kalra, Ashish wrote:
+>> Hello Tom,
+>>
+>> On 6/3/2025 11:26 AM, Tom Lendacky wrote:
+>>> On 5/19/25 19:02, Ashish Kalra wrote:
+>>>> From: Ashish Kalra <ashish.kalra@amd.com>
+>>>>
+> 
+>>>
+>>> The ciphertext hiding feature partions the joint SEV-ES/SEV-SNP ASID range
+>>> into separate SEV-ES and SEV-SNP ASID ranges with teh SEV-SNP ASID range
+>>> starting at 1.
+>>>
+>>
+>> Yes that sounds better.
+> 
+> Just fix my spelling errors :)
 >
-> Add the TSADC node to the RK3576. Additionally, add everything the TSADC
-> needs to function, i.e. thermal zones, their trip points and maps, as
-> well as adjust the CPU cooling-cells property.
->
-> The polling-delay properties are set to 0 as we do have interrupts for
-> this TSADC on this particular SoC.
->
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3576.dtsi | 164 +++++++++++++++++++++++++=
-+++++-
->  1 file changed, 162 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot/d=
-ts/rockchip/rk3576.dtsi
-> index a6bfef82d50bc9b0203a04324d61e0f232b61a65..1c07ad78c9230f1e46b0ef881=
-7834f58b19eb86b 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-> @@ -11,6 +11,7 @@
->  #include <dt-bindings/power/rockchip,rk3576-power.h>
->  #include <dt-bindings/reset/rockchip,rk3576-cru.h>
->  #include <dt-bindings/soc/rockchip,boot-mode.h>
-> +#include <dt-bindings/thermal/thermal.h>
->
->  / {
->         compatible =3D "rockchip,rk3576";
-> @@ -113,9 +114,9 @@ cpu_l0: cpu@0 {
->                         capacity-dmips-mhz =3D <485>;
->                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
->                         operating-points-v2 =3D <&cluster0_opp_table>;
-> -                       #cooling-cells =3D <2>;
->                         dynamic-power-coefficient =3D <120>;
->                         cpu-idle-states =3D <&CPU_SLEEP>;
-> +                       #cooling-cells =3D <2>;
->                 };
->
->                 cpu_l1: cpu@1 {
-> @@ -127,6 +128,7 @@ cpu_l1: cpu@1 {
->                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
->                         operating-points-v2 =3D <&cluster0_opp_table>;
->                         cpu-idle-states =3D <&CPU_SLEEP>;
-> +                       #cooling-cells =3D <2>;
->                 };
->
->                 cpu_l2: cpu@2 {
-> @@ -138,6 +140,7 @@ cpu_l2: cpu@2 {
->                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
->                         operating-points-v2 =3D <&cluster0_opp_table>;
->                         cpu-idle-states =3D <&CPU_SLEEP>;
-> +                       #cooling-cells =3D <2>;
->                 };
->
->                 cpu_l3: cpu@3 {
-> @@ -149,6 +152,7 @@ cpu_l3: cpu@3 {
->                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
->                         operating-points-v2 =3D <&cluster0_opp_table>;
->                         cpu-idle-states =3D <&CPU_SLEEP>;
-> +                       #cooling-cells =3D <2>;
->                 };
->
->                 cpu_b0: cpu@100 {
-> @@ -159,9 +163,9 @@ cpu_b0: cpu@100 {
->                         capacity-dmips-mhz =3D <1024>;
->                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
->                         operating-points-v2 =3D <&cluster1_opp_table>;
-> -                       #cooling-cells =3D <2>;
->                         dynamic-power-coefficient =3D <320>;
->                         cpu-idle-states =3D <&CPU_SLEEP>;
-> +                       #cooling-cells =3D <2>;
->                 };
->
->                 cpu_b1: cpu@101 {
-> @@ -173,6 +177,7 @@ cpu_b1: cpu@101 {
->                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
->                         operating-points-v2 =3D <&cluster1_opp_table>;
->                         cpu-idle-states =3D <&CPU_SLEEP>;
-> +                       #cooling-cells =3D <2>;
->                 };
->
->                 cpu_b2: cpu@102 {
-> @@ -184,6 +189,7 @@ cpu_b2: cpu@102 {
->                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
->                         operating-points-v2 =3D <&cluster1_opp_table>;
->                         cpu-idle-states =3D <&CPU_SLEEP>;
-> +                       #cooling-cells =3D <2>;
->                 };
->
->                 cpu_b3: cpu@103 {
-> @@ -195,6 +201,7 @@ cpu_b3: cpu@103 {
->                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
->                         operating-points-v2 =3D <&cluster1_opp_table>;
->                         cpu-idle-states =3D <&CPU_SLEEP>;
-> +                       #cooling-cells =3D <2>;
->                 };
->
->                 idle-states {
-> @@ -436,6 +443,143 @@ psci {
->                 method =3D "smc";
->         };
->
-> +       thermal_zones: thermal-zones {
-> +               /* sensor near the center of the SoC */
-> +               package_thermal: package-thermal {
-> +                       polling-delay-passive =3D <0>;
-> +                       polling-delay =3D <0>;
-> +                       thermal-sensors =3D <&tsadc 0>;
-> +
-> +                       trips {
-> +                               package_crit: package-crit {
-> +                                       temperature =3D <115000>;
-> +                                       hysteresis =3D <0>;
-> +                                       type =3D "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               /* sensor for cluster1 (big Cortex-A72 cores) */
-> +               bigcore_thermal: bigcore-thermal {
-> +                       polling-delay-passive =3D <0>;
 
-I've tried these on my board, and it seems that with a zero here it
-never stops throttling the CPU even after it cools down. I believe you
-need something like <100> here, which is what I used on RK3588 for
-similar reasons.
+Sure.
+ 
+>>
+>>>> +	 */
+>>>> +	if (ciphertext_hiding_nr_asids && sev_is_snp_ciphertext_hiding_supported()) {
+>>>> +		/* Do sanity checks on user-defined ciphertext_hiding_nr_asids */
+>>>> +		if (ciphertext_hiding_nr_asids != -1 &&
+>>>> +		    ciphertext_hiding_nr_asids >= min_sev_asid) {
+>>>> +			pr_info("ciphertext_hiding_nr_asids module parameter invalid, limiting SEV-SNP ASIDs to %d\n",
+>>>> +				 min_sev_asid);
+>>>> +			ciphertext_hiding_nr_asids = min_sev_asid - 1;
+>>>
+>>> So specifying a number greater than min_sev_asid will result in enabling
+>>> ciphertext hiding and no SEV-ES guests allowed even though you report that
+>>> the number is invalid?
+>>>
+>>
+>> Well, the user specified a non-zero ciphertext_hiding_nr_asids, so the intent is to enable ciphertext hiding and therefore 
+>> sanitize the user specified parameter and enable ciphertext hiding.
+> 
+> Should you support something like ciphertext_hiding_asids=max (similar to
+> the 'auto' comment that Dave had) and report an error if a value is
+> specified that exceeds min_sev_asid and not enable ciphertext hiding?
+>
 
-I think it's because the TSADC only fires an interrupt when the
-temperature crosses the trip point, but the thermal governor also
-needs to observe temperature trends and step up / step down the
-cooling states depending on whether the system is cooling sufficiently
-or not. So it needs to poll the temperature once the cooling device is
-activated (passive in this case).
+Ok, that makes sense.
 
-> +                       polling-delay =3D <0>;
-> +                       thermal-sensors =3D <&tsadc 1>;
-> +
-> +                       trips {
-> +                               bigcore_alert: bigcore-alert {
-> +                                       temperature =3D <85000>;
-> +                                       hysteresis =3D <2000>;
-> +                                       type =3D "passive";
-> +                               };
-> +
-> +                               bigcore_crit: bigcore-crit {
-> +                                       temperature =3D <115000>;
-> +                                       hysteresis =3D <0>;
-> +                                       type =3D "critical";
-> +                               };
-> +                       };
-> +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip =3D <&bigcore_alert>;
-> +                                       cooling-device =3D
-> +                                               <&cpu_b0 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> +                                               <&cpu_b1 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> +                                               <&cpu_b2 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> +                                               <&cpu_b3 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               /* sensor for cluster0 (little Cortex-A53 cores) */
-> +               littlecore_thermal: littlecore-thermal {
-> +                       polling-delay-passive =3D <0>;
+Thanks,
+Ashish
+ 
+> Thanks,
+> Tom
+> 
+>>  
+> 
 
-polling-delay-passive =3D <100>;
-
-> +                       polling-delay =3D <0>;
-> +                       thermal-sensors =3D <&tsadc 2>;
-> +
-> +                       trips {
-> +                               littlecore_alert: littlecore-alert {
-> +                                       temperature =3D <85000>;
-> +                                       hysteresis =3D <2000>;
-> +                                       type =3D "passive";
-> +                               };
-> +
-> +                               littlecore_crit: littlecore-crit {
-> +                                       temperature =3D <115000>;
-> +                                       hysteresis =3D <0>;
-> +                                       type =3D "critical";
-> +                               };
-> +                       };
-> +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip =3D <&littlecore_alert>;
-> +                                       cooling-device =3D
-> +                                               <&cpu_l0 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> +                                               <&cpu_l1 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> +                                               <&cpu_l2 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> +                                               <&cpu_l3 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               gpu_thermal: gpu-thermal {
-> +                       polling-delay-passive =3D <0>;
-
-polling-delay-passive =3D <100>;
-
-Best regards,
-Alexey
