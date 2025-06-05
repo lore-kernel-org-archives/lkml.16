@@ -1,69 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zm-mta-out-3.u-ga.fr (zm-mta-out-3.u-ga.fr [152.77.200.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172CA1DFF8;
-	Thu,  5 Jun 2025 17:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27BC2777E4
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.77.200.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749145723; cv=none; b=EDOLR2fmlRdJ6iLPUgDfSZ1otJtydFG8sX9rsJ1+rNlD6ZxLMNEcRhMESA8WG2fdvQEV5y0Saw7UB0C038CE4yIZYFJ7pwmrhCw80tCe7k6Du2OWZl79VhIJYYB5pvPrlOpka0Fs4WV7Aw1t/fSWrmZ+7IRVjQN2HmJhQ7AQhf0=
+	t=1749145809; cv=none; b=fhEd3CZp4dmpE0cRdnYDZt9Mw9aQsvTJV3+fJBwHu2tXX654I7s2SlZTiCVzIhlgSGVwUa9s+Fa4ovvCJWoy6CEmxdw4oYOM8OpBvrefyCSiuerQkwgm39kJ1YUKGyPkx99HUm8ZrJYeyycy8AhGSVqpl+T9bNjJ42P+TF3AmYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749145723; c=relaxed/simple;
-	bh=z1alDu+OK3mBs+MEaKTan/LvOGCnBM4jHemIdBWdMAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jv//PQDvHKZ/2yoHrFJLBMvKoSuo1L4qAxsBmq+DdeIIBJnoMk3cLrzzmOXNw+n50KFHncnZF4nDYFrqmflnMnnHgePOEjXKUFnV/TYedD2gEbNouUAf6U31BNn4zlz6nbDe7HOMhvvRt1Uu8+Jk7bF8O+4dfwjY6LEAYWTLzRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEP6ipiA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749145809; c=relaxed/simple;
+	bh=477VCimCiTfccZ61itzmeWM2c2Jc7goY4wvB2OQY1l0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DLTH+mO7uojc6c2KShMT3t3DG9M4GqKal79jcLprdP3sPyipltjYRCPgD6sg/7Fk5HmtBxNlTNDvN+nLVF4Gxe60/z4W+F3XGjpJxL1byWTwvg4tS9PBQ6gv/aPjQ5H20nB6FBe/ySk+EcBV1LXEY9vwV1XwcI1c3W8bfWqU4Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=imag.fr; spf=pass smtp.mailfrom=imag.fr; dkim=pass (2048-bit key) header.d=imag.fr header.i=@imag.fr header.b=K8gyncPr; arc=none smtp.client-ip=152.77.200.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=imag.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imag.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEP6ipiA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56D5EC4CEE7;
-	Thu,  5 Jun 2025 17:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749145721;
-	bh=z1alDu+OK3mBs+MEaKTan/LvOGCnBM4jHemIdBWdMAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TEP6ipiAz3j1xYP3Shehu4INZBk+myzfSOoUlgWD/HkZ7bkyqPlHr60ZJb8pmQHxM
-	 j6W2OADxRZN6HjdhthesXZA9OdZwMh//sSoG/1oR978hCvmxrnerimNwoEmjdOZ5ul
-	 qIjRpe4hp4ds6Hle+xyGwbLkGOGN1YDKnXg4YQrD94GAtVy3lltaaQQNS9R9wEFLvs
-	 1SmFsS9e/w33yl72x5GNG5gPuY7GQ+ZKmX/Bl28a1FlUODrYHEs5YsC3Qfda3u8yiu
-	 8NCJi0Es2RRZX2rB9jcl/p+8AMOos8Zg3s5I/D19dqOhjLSLhTf3nMC9G5Jd9O1I/F
-	 KIbOb/GZI/V9w==
-Date: Thu, 5 Jun 2025 12:48:39 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Raghav Sharma <raghav.s@samsung.com>
-Cc: richardcochran@gmail.com, s.nawrocki@samsung.com,
-	alim.akhtar@samsung.com, netdev@vger.kernel.org,
-	karthik.sun@samsung.com, dev.tailor@samsung.com,
-	linux-clk@vger.kernel.org, shin.son@samsung.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, sboyd@kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	krzk@kernel.org, chandan.vn@samsung.com, sunyeal.hong@samsung.com,
-	mturquette@baylibre.com, conor+dt@kernel.org, cw00.choi@samsung.com
-Subject: Re: [PATCH v3 2/4] dt-bindings: clock: exynosautov920: add hsi2
- clock definitions
-Message-ID: <174914571742.2925706.2735159055400329437.robh@kernel.org>
-References: <20250529112640.1646740-1-raghav.s@samsung.com>
- <CGME20250529111711epcas5p48afd16e6f771a18e3b287b07edd83c22@epcas5p4.samsung.com>
- <20250529112640.1646740-3-raghav.s@samsung.com>
+	dkim=pass (2048-bit key) header.d=imag.fr header.i=@imag.fr header.b="K8gyncPr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=imag.fr; s=2022;
+	t=1749145400; bh=477VCimCiTfccZ61itzmeWM2c2Jc7goY4wvB2OQY1l0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=K8gyncPrqZOaj4hsIUmtg0P6S97JUBctmO+QyxeJaiAltO589Sdg4mBrERLp+Cgfc
+	 y829XuKBvHeEJ8RZLEshyWVLqP/hqtoVOYY1ozdPpyUxL5eldWjzopDoDvElsSx7CA
+	 14E/M64xDcI+Xzeha3q5zHDrIolw352D7xIcVH/Ly90sauoOJ0lzemuOgSmBD4zjsH
+	 9CaSHFqZlNhGKy+Qlh1IeeFnkc5fZLUyTUi/X5FKI4YPYu8MoAzVvTgTseb4quh6tV
+	 lBYMjSadeRxHmVupIK6rOPKGhHUPwdWpWOMIkWa0UoXcr1vuCw3J40X/Ce3Gdd6NQp
+	 MT7iIFv+6E59g==
+Received: from mailhub-1.u-ga.fr (mailhub-1.u-ga.fr [129.88.178.98])
+	by zm-mta-out-3.u-ga.fr (Postfix) with ESMTP id A59C94029E;
+	Thu,  5 Jun 2025 19:43:20 +0200 (CEST)
+Received: from smtps.univ-grenoble-alpes.fr (smtps2.u-ga.fr [152.77.18.2])
+	by mailhub-1.u-ga.fr (Postfix) with ESMTP id A2290FF853;
+	Thu,  5 Jun 2025 19:43:20 +0200 (CEST)
+Received: from [192.168.1.87] (unknown [87.89.124.250])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: palixn@univ-grenoble-alpes.fr)
+	by smtps.univ-grenoble-alpes.fr (Postfix) with ESMTPSA id 335B71400A2;
+	Thu,  5 Jun 2025 19:43:20 +0200 (CEST)
+Message-ID: <e8221cc5-cf5b-49f8-871d-e49d6621fc6e@imag.fr>
+Date: Thu, 5 Jun 2025 19:43:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529112640.1646740-3-raghav.s@samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] scripts: coccicheck: filter *.cocci files by MODE
+To: Songwei Chai <quic_songchai@quicinc.com>,
+ Julia Lawall <Julia.Lawall@inria.fr>, cocci@inria.fr
+Cc: linux-kernel@vger.kernel.org, quic_tingweiz@quicinc.com,
+ quic_jinlmao@quicinc.com
+References: <20250605044405.2057511-1-quic_songchai@quicinc.com>
+Content-Language: en-US, fr
+From: Nicolas Palix <nicolas.palix@imag.fr>
+Organization: LIG
+In-Reply-To: <20250605044405.2057511-1-quic_songchai@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Greylist: Whitelist-UGA SMTP Authentifie (palixn@univ-grenoble-alpes.fr) via submission-587 ACL (41)
 
+Hi Songwei,
 
-On Thu, 29 May 2025 16:56:38 +0530, Raghav Sharma wrote:
-> Add device tree clock binding definitions for CMU_HSI2
+Le 05/06/2025 à 06:44, Songwei Chai a écrit :
+> Enhance the coccicheck script to filter *.cocci files based on the
+> specified MODE (e.g., report, patch). This ensures that only compatible
+> semantic patch files are executed, preventing errors such as:
 > 
-> Signed-off-by: Raghav Sharma <raghav.s@samsung.com>
+>      "virtual rule report not supported"
+> 
+> This error occurs when a .cocci file does not define a 'virtual <MODE>'
+> rule, yet is executed in that mode.
+
+I am fine with the idea even if the orignal idea was to be exhaustive in 
+the implementation of the mode in each SP.
+
+However, silently discarding the patch is maybe not what one would 
+expect as the considered SP will vary according to the mode.
+
+Hence, could I suggest to add an else branch reporting a warning at least ?
+
+Regards,
+
+> 
+> For example:
+> 
+>      make coccicheck M=drivers/hwtracing/coresight/ MODE=report
+> 
+> In this case, running "secs_to_jiffies.cocci" would trigger the error
+> because it lacks support for 'report' mode. With this change, such files
+> are skipped automatically, improving robustness and developer experience.
+> 
+> Signed-off-by: Songwei Chai <quic_songchai@quicinc.com>
 > ---
->  .../clock/samsung,exynosautov920-clock.yaml   | 29 +++++++++++++++++--
->  .../clock/samsung,exynosautov920.h            |  9 ++++++
->  2 files changed, 36 insertions(+), 2 deletions(-)
+>   scripts/coccicheck | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> diff --git a/scripts/coccicheck b/scripts/coccicheck
+> index 0e6bc5a10320..18a69edcea66 100755
+> --- a/scripts/coccicheck
+> +++ b/scripts/coccicheck
+> @@ -270,7 +270,9 @@ fi
+>   
+>   if [ "$COCCI" = "" ] ; then
+>       for f in `find $srctree/scripts/coccinelle/ -name '*.cocci' -type f | sort`; do
+> -	coccinelle $f
+> +        if grep -q "virtual[[:space:]]\+$MODE" "$f"; then
+> +	        coccinelle $f
+> +        fi
+>       done
+>   else
+>       coccinelle $COCCI
+> 
 
