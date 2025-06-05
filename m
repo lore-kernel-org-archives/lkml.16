@@ -1,184 +1,199 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9889D1FC0E2;
-	Thu,  5 Jun 2025 07:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0479B1E89C
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749109231; cv=none; b=iSaSbWD7QCbAhNb57fKCNBBZLSE1dmHYIOLjq2sKx/hAXVaSRgMWrNhz1nn4oGxC9X3u0xyTNJyTeo50HngUlWOqlpK4wwfsmgNOlYh2d/JU8uuNvj5FC1cMmoH4X4OJRdKV54RjKYUE9BwpcSOMHtommTnzidYTC6IC2WZ9XtE=
+	t=1749109296; cv=none; b=RvdDCt+2+GIrWm57vXkxrRedPHDiFp1KRGGrLP48NHsE8C1MT/wgLAvtcWiB/6z8XKIZSB1l/DwPxeslzTfROcmy0kkcg6CbcumGo73K5AqysFFXbHMADd+ugedwCaYPEX+K4+ZaNNkpb/9fW/UWe74P3mb2Rbzt/qEmQAcmU8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749109231; c=relaxed/simple;
-	bh=05Jc9u4Bexu8GoY7o9uhByRATP/Px7knFLc8/E2cspU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JLfaVR0zsSC7+GOaIX0d0Yf180F2Rq9MNhRby0J3qgpoYmlUR3katsOd5QafjAw770Y1F+yQHaBvjId5IxMPovGlM7rWSs7P2a+HWg+zsFJxOsDmE7OmbUDLo7y8Laq9rXPk7yIUlZX0QoSSOcxwchbO4GzpRBdpHTzypNQlF4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=c818Xxqk; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749109296; c=relaxed/simple;
+	bh=y1PCGFlWWPF3JvL3K1/6MNl0+ee8mQIKVLCRzu/rCdk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ToOFXFn8O+HJ5dZiJ9DqCjFnZD7RiOYTHtjzCuR2E/cXjsaMfufYAcJH3UetoNIs9hRsRgRq370bWxWZ+cbFj0KFXIatsLLWjTU7kI7k5At4QJUyPZ2NbxhXBcnSTD1hjvTt+viURvwV8U5pJbU++O9p8ksBCv3IH8jHb1iPQD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=AvtEnnUF; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="c818Xxqk"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749109218; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=kWz5KHsxBrz6YOL3qgX9LCCiLt6LGCV7LicdRW9KMKk=;
-	b=c818XxqkiQ61QjSsry2Zaw6gUjeGXfPaGbpRildinUIT5tJWAJhIdt3+cwkD4FkSxzCnbeIndzJLLd/oGHBCAxPDYYykbKg/23geyeVg2R0Tqj/VgMPxzOKyYrSf0IxOxJY9wFDZEp7iSftflOV9EDcPCGTciwn1lDVkwc2Xkyk=
-Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wd7FGGt_1749109216 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 05 Jun 2025 15:40:17 +0800
-Message-ID: <97e52eb0-d531-4464-bbb7-1dffa5d8d74e@linux.alibaba.com>
-Date: Thu, 5 Jun 2025 15:40:15 +0800
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="AvtEnnUF"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-70e3e0415a7so7045447b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1749109293; x=1749714093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DGC12m9VHJaicWgWsYknA1yUSyETrOF70heDVG+923I=;
+        b=AvtEnnUFiCbqdKUJR/5y8se9zttMaZFrP48dR46QN4PvDk2YEm1I4y1LfiFISV6D6Y
+         pnlIj6d3bYFhWLImoUo7Rhit5Ob6E7iTbCowLrqn30IcIVufa6Fgh4/p/+vUqv8cQaBM
+         AyurBErJyDnZy6MXcdYSDP9sSRGxEajFNHlvI8MiQ26zF4X3OQof8jRRMtuWNOgmm4zT
+         oSwSJ9uDJHjhmMEqgS0crNvXrClSJcTgSs3+FxJ65DtspcGv8/rDrIHGR02hdgSq5O61
+         tTxSpuYJHamlbucy2xgqpfnPZ6ItOMsQatjetBlbIN9BvTHx8Qbyn9zYXrQOXVUrLO69
+         pH8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749109293; x=1749714093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DGC12m9VHJaicWgWsYknA1yUSyETrOF70heDVG+923I=;
+        b=ecreYzzcSsDj+frRftXn0nTVXm2SjZS5t/q41+61xvEkCuRMqPBw+9hrmL2mPUYgrm
+         9UJWtSWiatjDZKmWcGyiT81u2VeDnsUhadHbAUy+jUOvW6PUTXBwZIXXMQOPm1eQiQgb
+         lwLqFhmo2Qte88CWlDjFDXM4H0YgIMX3dV4UCggfLZSfd1WtRABumpmPp456M7fUu6m3
+         PZjDjG5igl4/2BSbUHLY8bzMBVSdg5U998ZRPSTJnaoctD/ZsRpzVFr/iawvf9vrjSE4
+         PqtXWEEgTAR2NAr3vidInyR7NYDLcOhQX1rRd4vaC4vS/BYOb9pjnpPgQiQgozoH1SZl
+         gUSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHpGzJYJTkL3ZIK8wOnTxQpcyXaitUXilNdLkPKuQ79qpxVQjiLDEIAFRYjPppfUu0m4NSiEontOcwHkE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw99wHZYFerEUThlHL2UkTU1l3m49Cxj2K9HwrAO9A238KvdAtK
+	m8Btec8FHnWYeBrIL9SBbGvLY+1MYm4qm6vdkpoyTXHa+ERsC9sILfU6bp2xivURCjIRhJN8oQi
+	Xhbxbk3YMzg==
+X-Gm-Gg: ASbGncvdTQapW8jaEyKdG8Qya9cxXsjLmr2Ke/15BYNDUls0V0DvSmiek8jyCfTSF/w
+	Kf7QLJ829cDCvxA/wGwS/0tot7+U85giOgFQt4DhxzMlz7O6VE+U0BqZW5rZMZtFDNjzpPMDOhP
+	Cw0m8dAF28GcL2S3skLA3JKxCXOhIeKy4gXFa0StliNVtPZbFo8yyu5TPXBfi/cfgtGBkkX6TwI
+	cCKwFVkOzLTKh1/6yrVOOTX4lOJQ/H1Aos9rv+OWV7JebZpI4V4TxB4d4dhUk+XWAHEx+F9YpO0
+	6Y8ytBctAaYG3LKGSSkpR57zkaOSIP5l0OLkg/n5QAGY69bwlY8d6yQeJWdV/LVc707pfYxZAjt
+	JLXTmfgGou8QuAluVS5U=
+X-Google-Smtp-Source: AGHT+IHSJQoOVDMsY5oOs2JgiDzu6MEMr27+gFA96Ya7nkRDGs1fqMFbGKKIQ41a/6AmuF3Kn2zMMA==
+X-Received: by 2002:a05:690c:6ac7:b0:70e:2063:a5dd with SMTP id 00721157ae682-710e7dcfd84mr36042057b3.8.1749109292708;
+        Thu, 05 Jun 2025 00:41:32 -0700 (PDT)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f9fcdae38sm29580447b3.50.2025.06.05.00.41.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 00:41:32 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e7db5c13088so635980276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:41:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVhsFcr3cDmJa3Q33V8iKediXAKfaCQdI2GJJ5AGIJVD8TH97+/PlN3MxXIM4UUCNhUN6nCAedYp3Wx9eM=@vger.kernel.org
+X-Received: by 2002:a05:6902:1387:b0:e7d:c621:33d1 with SMTP id
+ 3f1490d57ef6-e81882c7d19mr3544074276.14.1749109291936; Thu, 05 Jun 2025
+ 00:41:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
- enable and reset paths
-To: Dave Jiang <dave.jiang@intel.com>,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>, fenghuay@nvidia.com,
- vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
- <20250522063329.51156-2-xueshuai@linux.alibaba.com>
- <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
- <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
- <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
- <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
- <874ix5bhkz.fsf@intel.com> <226ecbd8-af44-49e8-9d4c-1f2294832897@intel.com>
- <22b3a299-b148-46ec-804e-2f6cbb3d5de1@linux.alibaba.com>
- <343f6719-598a-453b-9903-21632bc6b623@intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <343f6719-598a-453b-9903-21632bc6b623@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250604-6-10-rocket-v6-0-237ac75ddb5e@tomeuvizoso.net>
+ <20250604-6-10-rocket-v6-6-237ac75ddb5e@tomeuvizoso.net> <CAPj87rPv7Pd5tbXhpRLaUJCGB8JmD4kfF50WRsEiST2gvtg3Bg@mail.gmail.com>
+ <cc21a090-801d-4b32-bac2-01cebf896c85@arm.com>
+In-Reply-To: <cc21a090-801d-4b32-bac2-01cebf896c85@arm.com>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Thu, 5 Jun 2025 09:41:21 +0200
+X-Gmail-Original-Message-ID: <CAAObsKDMhuqYtn=+xR6-n=Uk+5_rU91OqVKyQ5cxhqfTo5svjg@mail.gmail.com>
+X-Gm-Features: AX0GCFucQ_FiqAlA0rjsUQpt2JT7jK-lOTeRvMqo5HOGrCT-6j2Gn-ED1Jn3Rvg
+Message-ID: <CAAObsKDMhuqYtn=+xR6-n=Uk+5_rU91OqVKyQ5cxhqfTo5svjg@mail.gmail.com>
+Subject: Re: [PATCH v6 06/10] accel/rocket: Add IOCTL for BO creation
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Daniel Stone <daniel@fooishbar.org>, Rob Herring <robh@kernel.org>, 
+	Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Kever Yang <kever.yang@rock-chips.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jun 4, 2025 at 7:03=E2=80=AFPM Robin Murphy <robin.murphy@arm.com> =
+wrote:
+>
+> On 2025-06-04 5:18 pm, Daniel Stone wrote:
+> > Hi Tomeu,
+> > I have some bad news ...
+> >
+> > On Wed, 4 Jun 2025 at 08:57, Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote=
+:
+> >> +int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct=
+ drm_file *file)
+> >> +{
+> >> +       [...]
+> >> +
+> >> +       /* This will map the pages to the IOMMU linked to core 0 */
+> >> +       sgt =3D drm_gem_shmem_get_pages_sgt(shmem_obj);
+> >> +       if (IS_ERR(sgt)) {
+> >> +               ret =3D PTR_ERR(sgt);
+> >> +               goto err;
+> >> +       }
+> >> +
+> >> +       /* Map the pages to the IOMMUs linked to the other cores, so a=
+ll cores can access this BO */
+> >
+> > So, uh, this is not great.
+> >
+> > We only have a single IOMMU context (well, one per core, but one
+> > effective VMA) for the whole device. Every BO that gets created, gets
+> > mapped into the IOMMU until it's been destroyed. Given that there is
+> > no client isolation and no CS validation, that means that every client
+> > has RW access to every BO created by any other client, for the
+> > lifetime of that BO.
+> >
+> > I really don't think that this is tractable, given that anyone with
+> > access to the device can exfiltrate anything that anyone else has
+> > provided to the device.
+> >
+> > I also don't think that CS validation is tractable tbh.
+> >
+> > So I guess that leaves us with the third option: enforcing context
+> > separation within the kernel driver.
+> >
+> > The least preferable option I can think of is that rkt sets up and
+> > tears down MMU mappings for each job, according to the BO list
+> > provided for it. This seems like way too much overhead - especially
+> > with RK IOMMU ops having been slow enough within DRM that we expended
+> > a lot of effort in Weston doing caching of DRM BOs to avoid doing this
+> > unless completely necessary. It also seems risky wrt allocating memory
+> > in drm_sched paths to ensure forward progress.
+> >
+> > Slightly more preferable than this would be that rkt kept a
+> > per-context list of BOs and their VA mappings, and when switching
+> > between different contexts, would tear down all MMU mappings from the
+> > old context and set up mappings from the new. But this has the same
+> > issues with drm_sched.
+> >
+> > The most preferable option from where I sit is that we could have an
+> > explicit notion of driver-managed IOMMU contexts, such that rkt could
+> > prepare the IOMMU for each context, and then switching contexts at
+> > job-run time would be a matter of changing the root DTE pointer and
+> > issuing a flush. But I don't see that anywhere in the user-facing
+> > IOMMU API, and I'm sure Robin (CCed) will be along shortly to explain
+> > why it's not possible ...
+>
+> On the contrary, it's called iommu_attach_group() :)
+>
+> In fact this is precisely the usage model I would suggest for this sort
+> of thing, and IIRC I had a similar conversation with the Ethos driver
+> folks a few years back. Running your own IOMMU domain is no biggie, see
+> several other DRM drivers (including rockchip). As long as you have a
+> separate struct device per NPU core then indeed it should be perfectly
+> straightforward to maintain distinct IOMMU domains per job, and
+> attach/detach them as part of scheduling the jobs on and off the cores.
+> Looks like rockchip-iommu supports cross-instance attach, so if
+> necessary you should already be OK to have multiple cores working on the
+> same job at once, without needing extra work at the IOMMU end.
 
+Ok, so if I understood it correctly, the plan would be for each DRM
+client to have one IOMMU domain per each core (each core has its own
+IOMMU), and map all its buffers in all these domains.
 
-在 2025/6/4 22:19, Dave Jiang 写道:
-> 
-> 
-> On 6/4/25 1:55 AM, Shuai Xue wrote:
->>
->>
->> 在 2025/6/3 22:32, Dave Jiang 写道:
->>>
->>>
->>> On 5/27/25 7:21 PM, Vinicius Costa Gomes wrote:
->>>> Shuai Xue <xueshuai@linux.alibaba.com> writes:
->>>>
->>>>> 在 2025/5/23 22:54, Dave Jiang 写道:
->>>>>>
->>>>>>
->>>>>> On 5/22/25 10:20 PM, Shuai Xue wrote:
->>>>>>>
->>>>>>>
->>>>>>> 在 2025/5/22 22:55, Dave Jiang 写道:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
->>>>>>>>> A device reset command disables all WQs in hardware. If issued while a WQ
->>>>>>>>> is being enabled, it can cause a mismatch between the software and hardware
->>>>>>>>> states.
->>>>>>>>>
->>>>>>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
->>>>>>>>> send a reset command and clear the state (wq->state) of all WQs. It then
->>>>>>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
->>>>>>>>> ensure consistency between the software and hardware states.
->>>>>>>>>
->>>>>>>>> However, a race condition exists between the WQ enable path and the
->>>>>>>>> reset/recovery path. For example:
->>>>>>>>>
->>>>>>>>> A: WQ enable path                   B: Reset and recovery path
->>>>>>>>> ------------------                 ------------------------
->>>>>>>>> a1. issue IDXD_CMD_ENABLE_WQ
->>>>>>>>>                                        b1. issue IDXD_CMD_RESET_DEVICE
->>>>>>>>>                                        b2. clear wq->state
->>>>>>>>>                                        b3. check wq_enable_map bit, not set
->>>>>>>>> a2. set wq->state = IDXD_WQ_ENABLED
->>>>>>>>> a3. set wq_enable_map
->>>>>>>>>
->>>>>>>>> In this case, b1 issues a reset command that disables all WQs in hardware.
->>>>>>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
->>>>>>>>> leading to an inconsistency between wq->state (software) and the actual
->>>>>>>>> hardware state (IDXD_WQ_DISABLED).
->>>>>>>>
->>>>>>>>
->>>>>>>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
->>>>>>>>
->>>>>>>> DJ
->>>>>>>
->>>>>>> Yep, how about add a spin lock to enable wq and reset device path.
->>>>>>>
->>>>>>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
->>>>>>> index 38633ec5b60e..c0dc904b2a94 100644
->>>>>>> --- a/drivers/dma/idxd/device.c
->>>>>>> +++ b/drivers/dma/idxd/device.c
->>>>>>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
->>>>>>>     }
->>>>>>>     EXPORT_SYMBOL_GPL(idxd_wq_enable);
->>>>>>>     +/*
->>>>>>> + * This function enables a WQ in hareware and updates the driver maintained
->>>>>>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
->>>>>>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
->>>>>>> + * otherwise disable the WQ without the driver's state being properly
->>>>>>> + * updated.
->>>>>>> + *
->>>>>>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
->>>>>>> + * called after the WQ has been explicitly disabled, so no concurrency
->>>>>>> + * issues arise.
->>>>>>> + */
->>>>>>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
->>>>>>> +{
->>>>>>> +       struct idxd_device *idxd = wq->idxd;
->>>>>>> +       int ret;
->>>>>>> +
->>>>>>> +       spin_lock(&idxd->dev_lock);
->>>>>>
->>>>>> Let's start using the new cleanup macro going forward:
->>>>>> guard(spinlock)(&idxd->dev_lock);
->>>>>>
->>>>>> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
->>>>>> guard(device)(idxd_confdev(idxd));
->>>>>
->>>>> Then we need to replace the lock from spinlock to mutex lock?
->>>>
->>>> We still need a (spin) lock that we could hold in interrupt contexts.
->>>>
->>>>>
->>>>>>
->>>>>> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
->>>>>> guard(device)(wq_confdev(wq));
->>>>>>
->>>>>> If you are up for it that is.
->>>>>
->>>>> We creates a hierarchy: pdev -> idxd device -> wq device.
->>>>> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
->>>>>
->>>>>        (wq_confdev(wq))->parent = idxd_confdev(idxd);
->>>>>
->>>>> Is it safe to grap lock of idxd_confdev(idxd) under hold
->>>>> lock of wq_confdev(wq)?
->>>>>
->>>>> We have mounts of code use spinlock of idxd->dev_lock under
->>>>> hold of wq->wq_lock.
->>>>>
->>>>
->>>> I agree with Dave that the locking could be simplified, but I don't
->>>> think that we should hold this series because of that. That
->>>> simplification can be done later.
->>>
->>> I agree. Just passing musing on the current code.
->>
->> Got it, do I need to send a separate patch for Patch 2?
-> 
-> Not sure what you mean. Do you mean if you need to send patch 2 again?
+Then when a job is about to be scheduled on a given core, make sure
+that the IOMMU for that core uses the domain for the client that
+submitted the job.
 
-Yep, the locking issue is more complicate and can be done later.
-(I could split patch 2 from this patch set if you prefer a new patch.)
+Did I get that right?
 
->>
->> Thanks.
->> Shuai
+> > Either way, I wonder if we have fully per-context mappings, userspace
+> > should not manage IOVAs in the VM_BIND style common to newer drivers,
+> > rather than relying on the kernel to do VA allocation and inform
+> > userspace of them?
+>
+> Indeed if you're using the IOMMU API directly then you need to do your
+> own address space management either way, so matching bits of process VA
+> space is pretty simple to put on the table.
 
+My impression was that the VM_BIND facility is intended for SVM as in
+OpenCL and maybe Vulkan?
+
+Guess my question is, what would such an accelerator driver win by
+letting userspace manage the address space?
+
+Thanks,
+
+Tomeu
