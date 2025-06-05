@@ -1,237 +1,179 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFDF149C7B
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E32E279918
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143752; cv=none; b=gz/iXj8tEOnPZHSyAtLx1EIeFgOFkUTuBB9MiCVlmSoXRbxFycNkYbeW2qxs88N6fG6aamZ/jJD5sM8akq4oscFWQVCiCab9Kb2Nip2PqUaiiixwhuA7s4xDMTCaDTziPA6FAEj7CMzfKI/nunuu1ZPTbLZ3GYFhItglRko5S98=
+	t=1749143756; cv=none; b=P3s/HufyPiOXl3+QE0r7Z72gw37QsIoA0X9Q2/AwsurUvwqLvXbtgYH8kZsgZPkHh5/r/X1qYma3Iei+0knvaqOtxxar5/g/JPwEseZJbdXeczvDQCwedVa518H4egKHtIgsARXoTKoXZ4Lxz3/AZaXfz4PqzxtrrXF4DV6nk9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143752; c=relaxed/simple;
-	bh=q0+2m760AEDdzhpiq5ZzK16VK3dhnc51lKmJc09PnTA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f+7v3kZUELxlqeJi7+8iUEF18OWohCHnNJQP32v9pqzO4Y80QAsR/MFGeMpnIqCS3CYED+2X5OqBY1IF/oPonaK/3+OYNUjKRH35reO7LoZlc++V4LkRNnnct1liTp4stLV43ycDtExoIYdO0on+HVmFYG8VtGHb+HFDTRvWTw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X45UZ0Bm; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749143756; c=relaxed/simple;
+	bh=owWI8WAYAlFsjJvXIyvYSUNXCshP/5FGhM730a1ama8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=k1ztKct3FegC5HQ+hdUFZ2wVShjxejK6yHtKIs6EY7CL8tMBfvjWpIXF9WgLPXV2n076u6pUoZu/fzzkEAE37qbQn5yTxbdnRysyD2TzOah9itIHEGK4iv8V+eRleLRdQ6xL4C1Pfc/XHEUMqdTiBq6fUcqwbw0qcPrUTm0a8J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3EKTus+i; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X45UZ0Bm"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749143748;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j7rgZ0BS12OWD8vbtUruCamyU9orBoA03q/2SPzJLhM=;
-	b=X45UZ0BmRe7VZbDlv3WIVRoxC7jQFc/PN5tV2juaAGWkElrCOnEOsejSB+xSxKa8jM8sZ6
-	3X71iIXRJ0ftUTrGskcDLYjNPzx5td2yHmTLv+F6X2J6hzLKi+8Z6FSI1hu+lYh53CVlZG
-	UkxrV+tAufPHG/kyM2TuxHiv0xGZPAo=
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>,
-	Alexander Sverdlin <alexander.sverdlin@siemens.com>
-Subject: [PATCH v13 2/4] drm/atomic-helper: Separate out bridge pre_enable/post_disable from enable/disable
-Date: Thu,  5 Jun 2025 22:45:22 +0530
-Message-Id: <20250605171524.27222-3-aradhya.bhatia@linux.dev>
-In-Reply-To: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
-References: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3EKTus+i"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-234a102faa3so8253525ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:15:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749143754; x=1749748554; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1BvVogHbLCy3WniKJnzNXayCUjBrxVyVRH9sGv66360=;
+        b=3EKTus+i1JnDucVaMhuTSgXD7YTZOibnmejXlIOOreTNijnvHMFMpLZ+QXQaKgmOlb
+         Aa1iZLcPCb9NYfLfPBS5n1j1kWSoNJeZ+YNqT2aQPyLMQWTMtdKSdSAxFZ69ikGqGwfO
+         QWmYh2jfBFZ8XHJI3l/kGLIrkanWDsGj3lcQHgqbBX6pygK1DlD7M7k6cEZNI3EylxkJ
+         1y8N14mzr4i2tZZ3S5uIjesIE5o53ivwxnNX5dFuVo/L44iM5qiPEIvIYA2poMjsYr0r
+         D81tlq6B+xcUmFB497C5RFSw7cC8sBNlvDo2tCqCGAT+cLT/jSSF6yRAgA2QAltRvq8h
+         4E7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749143754; x=1749748554;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1BvVogHbLCy3WniKJnzNXayCUjBrxVyVRH9sGv66360=;
+        b=YYofk7o9OJYSTQiLbZDneQHbw409GBo1YaBx1oN8NEJeuUcVGHHN81Zk0BMDWc2sUA
+         TtWHdegh7+vrpp2qxYZKUOTcae6Wbj9fcFIVD/3Zdtqgiityg3QiGCJ4ti60guOtAr6y
+         6A36sVdvUYc0z3pP0vVXW0l1wz7UzbVbvagbGHmrHjLMjNGu6vcJ6dqbEZZUn2uQ655d
+         PG7HJNcy4JGaHjer3N07XwuED8h965OosZb08e4bn2PccnpxRjIO6FIdcFRLeF9AibfW
+         BeUqVff80A8Le5xZF73SxMOGPfe435P5xjBeaIVlt2dSOAZw7TvzsSYeJlri2caf1BIk
+         e2/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXT/mQRS6WFtnIanUwLZCm4AQuy/H4fkV5+/6ysuX6TOIiEPF9us9aoGxcC+/a7+hgvJlfr6DYw3vu+gKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRzgGKzTGjBtWIHDwoNfJ8ymW4OuEkUhjehGOftJn4sqgjveLr
+	QjO8yUW8Yj3W+k9OcYUB1X3GtnuI/hKWOHtEfACZ9WsEYAMTz3V8IqLjAQjis3XXD+TK+eDzafi
+	1vU3+McFM7oed66xfV6HqAOs6KQ==
+X-Google-Smtp-Source: AGHT+IEW234xG8sWokLR9Rty6k1AIBgtp49T5P85K9mc9H7ZjXy7xEQDhgc08MioADyUz2CbmUlZakt/hY882gqV/g==
+X-Received: from plsh2.prod.google.com ([2002:a17:902:b942:b0:234:f137:75cf])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:dad0:b0:234:c5c1:9b73 with SMTP id d9443c01a7336-23601ec356fmr1418295ad.36.1749143754410;
+ Thu, 05 Jun 2025 10:15:54 -0700 (PDT)
+Date: Thu, 05 Jun 2025 10:15:53 -0700
+In-Reply-To: <85ae7dc691c86a1ae78d56d413a1b13b444b57cd.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+References: <cover.1747264138.git.ackerleytng@google.com> <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
+ <85ae7dc691c86a1ae78d56d413a1b13b444b57cd.camel@intel.com>
+Message-ID: <diqz7c1qjeie.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH v2 38/51] KVM: guest_memfd: Split allocator pages for
+ guest_memfd use
+From: Ackerley Tng <ackerleytng@google.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+Cc: "palmer@dabbelt.com" <palmer@dabbelt.com>, "pvorel@suse.cz" <pvorel@suse.cz>, 
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "Miao, Jun" <jun.miao@intel.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "pdurrant@amazon.co.uk" <pdurrant@amazon.co.uk>, 
+	"steven.price@arm.com" <steven.price@arm.com>, "peterx@redhat.com" <peterx@redhat.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "jack@suse.cz" <jack@suse.cz>, 
+	"amoorthy@google.com" <amoorthy@google.com>, "maz@kernel.org" <maz@kernel.org>, 
+	"keirf@google.com" <keirf@google.com>, "vkuznets@redhat.com" <vkuznets@redhat.com>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, 
+	"mail@maciej.szmigiero.name" <mail@maciej.szmigiero.name>, "hughd@google.com" <hughd@google.com>, 
+	"anthony.yznaga@oracle.com" <anthony.yznaga@oracle.com>, "Wang, Wei W" <wei.w.wang@intel.com>, 
+	"Du, Fan" <fan.du@intel.com>, 
+	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>, 
+	"quic_svaddagi@quicinc.com" <quic_svaddagi@quicinc.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"ajones@ventanamicro.com" <ajones@ventanamicro.com>, 
+	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "nsaenz@amazon.es" <nsaenz@amazon.es>, "aik@amd.com" <aik@amd.com>, 
+	"usama.arif@bytedance.com" <usama.arif@bytedance.com>, 
+	"quic_mnalajal@quicinc.com" <quic_mnalajal@quicinc.com>, "fvdl@google.com" <fvdl@google.com>, 
+	"rppt@kernel.org" <rppt@kernel.org>, "quic_cvanscha@quicinc.com" <quic_cvanscha@quicinc.com>, 
+	"bfoster@redhat.com" <bfoster@redhat.com>, "willy@infradead.org" <willy@infradead.org>, 
+	"anup@brainfault.org" <anup@brainfault.org>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"tabba@google.com" <tabba@google.com>, "mic@digikod.net" <mic@digikod.net>, 
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "muchun.song@linux.dev" <muchun.song@linux.dev>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "rientjes@google.com" <rientjes@google.com>, 
+	"mpe@ellerman.id.au" <mpe@ellerman.id.au>, "Aktas, Erdem" <erdemaktas@google.com>, 
+	"david@redhat.com" <david@redhat.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+	"Annapurve, Vishal" <vannapurve@google.com>, "Xu, Haibo1" <haibo1.xu@intel.com>, 
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"jthoughton@google.com" <jthoughton@google.com>, "will@kernel.org" <will@kernel.org>, 
+	"steven.sistare@oracle.com" <steven.sistare@oracle.com>, "jarkko@kernel.org" <jarkko@kernel.org>, 
+	"quic_pheragu@quicinc.com" <quic_pheragu@quicinc.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
+	"Huang, Kai" <kai.huang@intel.com>, "shuah@kernel.org" <shuah@kernel.org>, 
+	"dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "pankaj.gupta@amd.com" <pankaj.gupta@amd.com>, 
+	"Peng, Chao P" <chao.p.peng@intel.com>, "nikunj@amd.com" <nikunj@amd.com>, 
+	"Graf, Alexander" <graf@amazon.com>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
+	"jgowans@amazon.com" <jgowans@amazon.com>, "Xu, Yilun" <yilun.xu@intel.com>, 
+	"liam.merwick@oracle.com" <liam.merwick@oracle.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
+	"quic_tsoni@quicinc.com" <quic_tsoni@quicinc.com>, 
+	"richard.weiyang@gmail.com" <richard.weiyang@gmail.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"qperret@google.com" <qperret@google.com>, 
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>, "dmatlack@google.com" <dmatlack@google.com>, 
+	"james.morse@arm.com" <james.morse@arm.com>, "brauner@kernel.org" <brauner@kernel.org>, 
+	"pgonda@google.com" <pgonda@google.com>, "quic_pderrin@quicinc.com" <quic_pderrin@quicinc.com>, 
+	"hch@infradead.org" <hch@infradead.org>, "roypat@amazon.co.uk" <roypat@amazon.co.uk>, 
+	"seanjc@google.com" <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The encoder-bridge ops occur by looping over the new connector states of
-the display pipelines. The enable sequence runs as follows -
+"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
 
-	- pre_enable(bridge),
-	- enable(encoder),
-	- enable(bridge),
+> On Wed, 2025-05-14 at 16:42 -0700, Ackerley Tng wrote:
+>> +
+>> +static pgoff_t kvm_gmem_compute_invalidate_bound(struct inode *inode,
+>> +						 pgoff_t bound, bool start)
+>> +{
+>> +	size_t nr_pages;
+>> +	void *priv;
+>> +
+>> +	if (!kvm_gmem_has_custom_allocator(inode))
+>
+> General comment - It's a bit unfortunate how kvm_gmem_has_custom_allocator() is
+> checked all over the place across this series. There are only two allocators
+> after this, right? So one is implemented with callbacks presumably designed to
+> fit other allocators, and one has special case logic in guest_memfd.c.
+>
+> Did you consider designing struct guestmem_allocator_operations so that it could
+> encapsulate the special logic for both the existing and new
+> allocators?
 
-while the disable sequnce runs as follows -
+I did, yes. I believe it is definitely possible to make standard 4K
+pages become another allocator too.
 
-	- disable(bridge),
-	- disable(encoder),
-	- post_disable(bridge).
+I would love to clean this up. Not sure if that will be a new series
+after this one, or part of this one though.
 
-Separate out the pre_enable(bridge), and the post_disable(bridge)
-operations into separate functions each.
+> If it
+> didn't work well, could we expect that a next allocator would actually fit
+> struct guestmem_allocator_operations?
+>
 
-This patch keeps the sequence same for any singular disaplay pipe, but
-changes the sequence across multiple display pipelines.
+This was definitely designed to support allocators beyond
+guestmem_hugetlb, though I won't promise that it will be a perfect fit
+for future allocators. This is internal to the kernel and this interface
+can be updated for future allocators though.
 
-This patch is meant to be an interim patch, to cleanly pave the way for
-the sequence re-ordering patch, and maintain bisectability in the
-process.
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
----
- drivers/gpu/drm/drm_atomic_helper.c | 91 ++++++++++++++++++++++++++++-
- 1 file changed, 88 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index d185486071c5..539b7f072c72 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1223,8 +1223,6 @@ encoder_bridge_disable(struct drm_device *dev, struct drm_atomic_state *state)
- 			else if (funcs->dpms)
- 				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
- 		}
--
--		drm_atomic_bridge_chain_post_disable(bridge, state);
- 	}
- }
- 
-@@ -1281,11 +1279,65 @@ crtc_disable(struct drm_device *dev, struct drm_atomic_state *state)
- 	}
- }
- 
-+static void
-+encoder_bridge_post_disable(struct drm_device *dev, struct drm_atomic_state *state)
-+{
-+	struct drm_connector *connector;
-+	struct drm_connector_state *old_conn_state, *new_conn_state;
-+	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-+	int i;
-+
-+	for_each_oldnew_connector_in_state(state, connector, old_conn_state, new_conn_state, i) {
-+		struct drm_encoder *encoder;
-+		struct drm_bridge *bridge;
-+
-+		/*
-+		 * Shut down everything that's in the changeset and currently
-+		 * still on. So need to check the old, saved state.
-+		 */
-+		if (!old_conn_state->crtc)
-+			continue;
-+
-+		old_crtc_state = drm_atomic_get_old_crtc_state(state, old_conn_state->crtc);
-+
-+		if (new_conn_state->crtc)
-+			new_crtc_state = drm_atomic_get_new_crtc_state(state,
-+								       new_conn_state->crtc);
-+		else
-+			new_crtc_state = NULL;
-+
-+		if (!crtc_needs_disable(old_crtc_state, new_crtc_state) ||
-+		    !drm_atomic_crtc_needs_modeset(old_conn_state->crtc->state))
-+			continue;
-+
-+		encoder = old_conn_state->best_encoder;
-+
-+		/*
-+		 * We shouldn't get this far if we didn't previously have
-+		 * an encoder.. but WARN_ON() rather than explode.
-+		 */
-+		if (WARN_ON(!encoder))
-+			continue;
-+
-+		drm_dbg_atomic(dev, "post-disabling bridges [ENCODER:%d:%s]\n",
-+			       encoder->base.id, encoder->name);
-+
-+		/*
-+		 * Each encoder has at most one connector (since we always steal
-+		 * it away), so we won't call disable hooks twice.
-+		 */
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		drm_atomic_bridge_chain_post_disable(bridge, state);
-+	}
-+}
-+
- static void
- disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
- {
- 	encoder_bridge_disable(dev, state);
- 
-+	encoder_bridge_post_disable(dev, state);
-+
- 	crtc_disable(dev, state);
- }
- 
-@@ -1498,6 +1550,38 @@ static void drm_atomic_helper_commit_writebacks(struct drm_device *dev,
- 	}
- }
- 
-+static void
-+encoder_bridge_pre_enable(struct drm_device *dev, struct drm_atomic_state *state)
-+{
-+	struct drm_connector *connector;
-+	struct drm_connector_state *new_conn_state;
-+	int i;
-+
-+	for_each_new_connector_in_state(state, connector, new_conn_state, i) {
-+		struct drm_encoder *encoder;
-+		struct drm_bridge *bridge;
-+
-+		if (!new_conn_state->best_encoder)
-+			continue;
-+
-+		if (!new_conn_state->crtc->state->active ||
-+		    !drm_atomic_crtc_needs_modeset(new_conn_state->crtc->state))
-+			continue;
-+
-+		encoder = new_conn_state->best_encoder;
-+
-+		drm_dbg_atomic(dev, "pre-enabling bridges [ENCODER:%d:%s]\n",
-+			       encoder->base.id, encoder->name);
-+
-+		/*
-+		 * Each encoder has at most one connector (since we always steal
-+		 * it away), so we won't call enable hooks twice.
-+		 */
-+		bridge = drm_bridge_chain_get_first_bridge(encoder);
-+		drm_atomic_bridge_chain_pre_enable(bridge, state);
-+	}
-+}
-+
- static void
- crtc_enable(struct drm_device *dev, struct drm_atomic_state *state)
- {
-@@ -1559,7 +1643,6 @@ encoder_bridge_enable(struct drm_device *dev, struct drm_atomic_state *state)
- 		 * it away), so we won't call enable hooks twice.
- 		 */
- 		bridge = drm_bridge_chain_get_first_bridge(encoder);
--		drm_atomic_bridge_chain_pre_enable(bridge, state);
- 
- 		if (funcs) {
- 			if (funcs->atomic_enable)
-@@ -1593,6 +1676,8 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- {
- 	crtc_enable(dev, state);
- 
-+	encoder_bridge_pre_enable(dev, state);
-+
- 	encoder_bridge_enable(dev, state);
- 
- 	drm_atomic_helper_commit_writebacks(dev, state);
--- 
-2.34.1
-
+>> +		return bound;
+>> +
+>> +	priv = kvm_gmem_allocator_private(inode);
+>> +	nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
+>> +
+>> +	if (start)
+>> +		return round_down(bound, nr_pages);
+>> +	else
+>> +		return round_up(bound, nr_pages);
+>> +}
+>> +
+>> +static pgoff_t kvm_gmem_compute_invalidate_start(struct inode *inode,
+>> +						 pgoff_t bound)
+>> +{
+>> +	return kvm_gmem_compute_invalidate_bound(inode, bound, true);
+>> +}
+>> +
+>> +static pgoff_t kvm_gmem_compute_invalidate_end(struct inode *inode,
+>> +					       pgoff_t bound)
+>> +{
+>> +	return kvm_gmem_compute_invalidate_bound(inode, bound, false);
+>> +}
+>> +
