@@ -1,198 +1,210 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2058.outbound.protection.outlook.com [40.107.92.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4161DED66
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749104260; cv=fail; b=Ea0CdUULVCZ4HfmkYtAzcVXdcdSqcMECnbglSg1jJ/ts0zW0Evaz05jdBHuzW4hsM+pzYjIfGgWHX9iG+LMM+qM8Uyr0W50E/Blwse4ymFm/OADdUzEDz+2k+FxgwBOMoPdMQUIk+UvssHnwPdAVWyNsOVVmxlGLbjx+iLB4dcE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749104260; c=relaxed/simple;
-	bh=Ls1WolPYBuXqr818MgadhP8g1rcGwAD60yRyT47xDp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TQhYyurWLMjYGaqbW7eoibx/tKjguJo4NXtW+LP7XFNMzRtfbI/a/J9LRTE/rWMnZ1NYxQgdyWrXIRkPnNOpa21La1WshhvHvluLfP1Y9NG2+TxAPnLkU2VEPG7rdWLC9f3La1cUNPFKEtRm5uWmvwsHx+uAv+ZzeskyHIKTP60=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gjRi6QWT; arc=fail smtp.client-ip=40.107.92.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D267157A6B
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749104373; cv=none; b=T14XmThApifDvYmu5alY2ESoP+pIYjpIaNFgNyGYTbEx4NZ7XtiI/8h8bBtKpMKYwOo1q00tLocvfMsScb+9Z8nvuzuMRIeVOTkaRrFPMSCWJ2zPu5rLv2DUFaKt4tTBrRbGofYsHY44z9iaZTsHzI7tRj8vRpKFH/EjnfPT6H4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749104373; c=relaxed/simple;
+	bh=L/b4ZNVxyrpo3MbQVnE86SO5i2UFhdGNXOAho69D7GA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BK/s6y/A71znElIJ3CX/QSLQvEYMPTKROZhd1saTxaGU6LZVTOSd50lxBPHat5UMO23w+65OHTuJ2B1Gty7ExEQSN6f9FwPQkYM8uiroqJ+d3RQ5gmv5AEGsIYqI88KMTz36FnHYUbk3PtCvZYzZaXmDU9gGFNKSpSTDoZZdhtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HJ/VLELa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=53sHyl1/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HJ/VLELa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=53sHyl1/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gjRi6QWT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pbGeqm+QnfBkYqb0sXlqeVJpbLkl3jT3GGO3bp9N+FcSvobmmM7HR4Ibizoy3h7FzwVXIjdfYIPuiouuYj4lhqyiFOlKPZ15JzvirUO3u4harLQ8RAXbRrSH5aHADWBetI/o7N6/R58gyVaXJJ0NdREMg8BAT7eXUsR6vDKQagErpmzbTJJYyl3SJPCnEwOGNGNkwkDzkFiwiQJxHKwQNJI3yTZx3a5zAebCgb6yCKdBsexFwbQCOrq9qGSvjzVf+ISXiS83nk41Er4zVIAfkx1A+aQ86KpWYWrmKtfkXnTi6+SxYTX/8MhxwjUuoKFKxCzzmOnJnuG7MobASOf27w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hvtGZMMuFEZZEDrIKT0iLvjDpDQNQ30A5VXJyWW5cbo=;
- b=yqTjfbeT68z/g2+lhZdaObnd1zbK+qEBi/wQDR4mPsievNSURzVkBA6zR6hPq8THLiZ0cGjGjUzGRTgEIH9+5QMDUJfslJx57UhoBSwZ7o/FgzKdlKWwZ6MKjeuNu4Sl5LE8t9vcwWK2Rx3hSj3srPkFsVCUaEDP0uJd8s/+n9P9nhVSYIH/gfkk8HedOaO2Xg7JVa/yGxl2CBHhJqGcJYGgdriEkyFYpQlPqvq39VvLDWA5dqlIfiN8kg0o5PRxp7UXy8PtiF84zR+QL6IDPxp7zP72/uPb8gBhC94dkW4NiZnK+Y5Senz21NCBxPUaYVFzp/G0FcLXr5jApJIgcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hvtGZMMuFEZZEDrIKT0iLvjDpDQNQ30A5VXJyWW5cbo=;
- b=gjRi6QWT3UcJ5ge31zvqVAJlRZuKqrGwpHof0yb1l7KiPSxhGQeevfxWp3ZCCyVFhBrR/YXvTLZUniFK+xBrDs33m77WKJo7NQ8H0yEiZh6wOBcEbYY4DPD6F2Vq1Lb0p95ahjgQdAy8kdXKmOws3kdJ2zeSuC93R9M+6jSYlimqUdTAS2hj3Yb9jESEpa8y8QO9CtC6CYLKd5ljRDc6ejRWJT7ymHJDbo4vGrmXTz7xEmA7IEN5jvr/6zhuVCQaDa1/bRKD3d2dH6ve4wlTDVwDmHSKd1xTIIYJR7RzGDU4j1Y0xkvIrU+XWgBHJetPJzgNKUIJ5IhvMJCE1pY0rg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.35; Thu, 5 Jun
- 2025 06:17:36 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c%5]) with mapi id 15.20.8792.034; Thu, 5 Jun 2025
- 06:17:36 +0000
-Date: Thu, 5 Jun 2025 08:17:26 +0200
-From: Andrea Righi <arighi@nvidia.com>
-To: Changwoo Min <changwoo@igalia.com>
-Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] sched_ext: Make scx_locked_rq() shared
-Message-ID: <aEE2dnJ8jdZ6wyid@gpd4>
-References: <20250604143547.708202-1-arighi@nvidia.com>
- <20250604143547.708202-5-arighi@nvidia.com>
- <5b18b631-c570-43fa-ac76-a09f0fb4363e@igalia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b18b631-c570-43fa-ac76-a09f0fb4363e@igalia.com>
-X-ClientProxiedBy: ZR0P278CA0163.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:45::10) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HJ/VLELa";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="53sHyl1/";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HJ/VLELa";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="53sHyl1/"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 776DC20EB8;
+	Thu,  5 Jun 2025 06:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749104369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=OMbhcZbCeEqhLQVEpQtGmU6m8hH/pjgYtw6RJLlYjuk=;
+	b=HJ/VLELatXJlV+UxFJEET8AnxMQAfqqNbKoO9sJYES8uV712/JE0PLGKObVBmQfZiTPtbY
+	BtSPQ22SojiznZstWEuD0dq3SaFhisBDSyi2DcEkKTJ+R0VFkyflXAqQkN4GJXor9ktQSF
+	h9DLqKeDhVhaX2Om1FZaTZx3ojd+p8k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749104369;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=OMbhcZbCeEqhLQVEpQtGmU6m8hH/pjgYtw6RJLlYjuk=;
+	b=53sHyl1/OacrWNnQlL8wL+uhwhVY7E7OWpVh7tIAT5HrsqB34SCIgM7HfCpb4SC10jRXZZ
+	CZL4z8QELecg8YCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749104369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=OMbhcZbCeEqhLQVEpQtGmU6m8hH/pjgYtw6RJLlYjuk=;
+	b=HJ/VLELatXJlV+UxFJEET8AnxMQAfqqNbKoO9sJYES8uV712/JE0PLGKObVBmQfZiTPtbY
+	BtSPQ22SojiznZstWEuD0dq3SaFhisBDSyi2DcEkKTJ+R0VFkyflXAqQkN4GJXor9ktQSF
+	h9DLqKeDhVhaX2Om1FZaTZx3ojd+p8k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749104369;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=OMbhcZbCeEqhLQVEpQtGmU6m8hH/pjgYtw6RJLlYjuk=;
+	b=53sHyl1/OacrWNnQlL8wL+uhwhVY7E7OWpVh7tIAT5HrsqB34SCIgM7HfCpb4SC10jRXZZ
+	CZL4z8QELecg8YCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 44D27137FE;
+	Thu,  5 Jun 2025 06:19:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id v6j9D/E2QWhSFwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 05 Jun 2025 06:19:29 +0000
+Message-ID: <03c2b01b-18f5-4015-a19b-79b8af656697@suse.cz>
+Date: Thu, 5 Jun 2025 08:19:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|DS7PR12MB9473:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab03efb4-7cb5-41c5-3e3e-08dda3f8aa37
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?F1z5nsbcfv+zo8s+BMdrO2NV3XodReS4zzH36hx2qFCiLs1reXGXwHTMPiiS?=
- =?us-ascii?Q?uJhS0H5XMpZs2FrKfAaTYyPkoj5K3Z50ZlB3TNwlF5mxLEroY2O4eFM7BRST?=
- =?us-ascii?Q?gKjAuN4Ey0QUhDwT1KVyOk5hzAALwMUb1qr8AsfVQ6C38/zJk1lhZi12dmY4?=
- =?us-ascii?Q?Us5zWYzIlRlsOyM6N2gkaBn+CzfkrVlShczhlMKKdItLY4irn9+B5IIZALg0?=
- =?us-ascii?Q?AKPx9DoxL17d8x7huFj/2rxSmtJngUUHWfjDhwMTdDSDJ4sNdVcy/fyisT6J?=
- =?us-ascii?Q?F52A+ZzemlBarpRCp+jrZnmdvD3LfcbJCCBwuliKgMhNLVBniEUL8T5QoMOt?=
- =?us-ascii?Q?9UdF8ysdw5a0LrrD99qB1GA4CWNXt/73IgW8X3IDfOSGa4zB7qBn8SKhJNO9?=
- =?us-ascii?Q?koInT8EOhMW+tjUM5AILvxVvcAarKI1OspeA3ww9nu8xcmy05nv+JuT5Xvqp?=
- =?us-ascii?Q?mSww9JVRX9psI2k/duCi+KzJCOdm6DdRFhDenwXv0yMTZYXwPYa91hw61sEV?=
- =?us-ascii?Q?ptNXkPtdu7bO3UZNanRI6J1h60acreXmWa9/lRGxlVJ0+YBPj+TICbVq1jy1?=
- =?us-ascii?Q?X1VrKtQBFKiZndpaFkPOBHU+bvo2KYIVhlHc9FEdgvifUcB4+g8fC7ktP6cH?=
- =?us-ascii?Q?Hqyh/GLuOIRsCmQmTyQyJs3wR8JgBEHEICsCyuqDmpntZYCnW1a65YV5ZxFu?=
- =?us-ascii?Q?xRkdPImiJ2CbYhXYoITxdEmdk6mmLR2bRSFhn3d4bRCRBCkKI90hNBvxKbR7?=
- =?us-ascii?Q?eeSKglneyVHrlZYs0jQ1xrRVOBWggvW3ppyeKaR1s2dlnPeaEpaSoeHeBsNl?=
- =?us-ascii?Q?HAyeW9Lgle70YxW6watVtG6fapfVwNrlV6XPHJlCTFqqfHV1ySQc09mx/8qZ?=
- =?us-ascii?Q?w2PyHeNR+ZT/IEoZSuRok2tAKqs0zBHfi1qTP02bgg6rYg+pmBAvTLDUfACk?=
- =?us-ascii?Q?jSpsvK6deMbprVq6Lkk9GgqCdXKxyxZwMcIilkZD3vGPblGXkCICbgXVSg4V?=
- =?us-ascii?Q?0UDhTuH4IZBZzCQ59C9MZI+rI7vpXNM/HtOynSEdb1+wsjY3UFk1rq4J+S3L?=
- =?us-ascii?Q?TSY/EewUIyPb/pFo1uaFHZ7+VUsOSu+NIgazrEGSvLgjtMurZKN9YwF95/Jq?=
- =?us-ascii?Q?pvMeYUdkhOKFuJ8XePtjviG0Gi1+59hnn0NNmMrLBMoVIv+wfoS0XuY8EBeX?=
- =?us-ascii?Q?k1eKy3EYUysiZLwNaduzbtasjZI3bsWYR0jrZ6I7JdGb9kklDlNn7cAvORmH?=
- =?us-ascii?Q?dYYl1JXPmY6vtrauxhjVubGyx5GQED31QR4S+SZSdYkgA+2E+FVlPRhJHaoW?=
- =?us-ascii?Q?e0MUAdfTma/dAmqBZUAqkjXHTxeJpIESPgmgfSGBn6qwoUecvm65FNk+k/6W?=
- =?us-ascii?Q?V7km1CirxW8psI+cNx9Y5/u3Cj7n1jaBoAO2TQN4MsfmnW1g0A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KiPjs3IeOQyBSeeczc1qdKW4bgSpsBdH4KMLxEtq9YjCTRJ0WYHF2B7vJV/j?=
- =?us-ascii?Q?/KJMuKD8GGax/zQGYjk7zFRUl8JNEQ9FJadjFa9zSSJ7azTXauvxk4gB4xPH?=
- =?us-ascii?Q?o7W8YnO4kTVhsUyeqmRuOQTq+LHCvThu1tgvV3Of0PTmRmpLGCuNyeUNi9Is?=
- =?us-ascii?Q?KxzExVpeOpBicFfou4QF0HfMAqpxcDmftxnZWmSNuCHaYk/JuozBDUwLyCBr?=
- =?us-ascii?Q?iiDmPWk/DHBIAAGSumgnpECY0WnoEB9XR0CIbcPYINlN1DtSxHoioN6V94DD?=
- =?us-ascii?Q?N1DQFRY2kv/aLgHHdTuOHaVBmdZAoXLE533cDd+rQ5CGdV+54fchxBKZ6XRF?=
- =?us-ascii?Q?ba4JMfEXW1VgBoX0bqi9PN5/Xo80AjvfeOPvlZALuZmYOI2kh4BJXnBW1PIo?=
- =?us-ascii?Q?uyv5/gCxqjDXZo5BBbIFfzW/0bY6fdHaKnEixcB6mRkSbmLGfdyLVoEmDtXv?=
- =?us-ascii?Q?RFLlKCtuzVLB502PSVJFCrDp6PV8W2pv4p9sf2gM6NePS8NJ+7j51s567zGs?=
- =?us-ascii?Q?RRPXaaxuohf5YOxmLSY8cwLJbwDkQxLDYuoLqwCpH6EPEhV2IoZ3ebMOTvDQ?=
- =?us-ascii?Q?1vAwH4MM5XP7WXZl8R7TQe7UTq+mNrevlHBgFofoQtgjdSvnYFjHAoA9328l?=
- =?us-ascii?Q?ixGJW36RMo0qCluT4obNvtMEYZ7D7papFtN22jlqTjVneiOJlRb1eD734ft6?=
- =?us-ascii?Q?DhH29PYtdUTCR1lJ+YFpRynK4+LWv6XUEhuzHrcQrf+nooKg+r25KwBauvGT?=
- =?us-ascii?Q?2F9QyUGOla74LkdG/E5lwj9LTbA2Y2WGkIXqz7XSaF7s+NPGSfnntx3t0wCu?=
- =?us-ascii?Q?EikmjQL803KpH/sLVet41la3i2loDxmBG9+6+9c+U+QAdGhtxevpqwi+fjnm?=
- =?us-ascii?Q?8RikPRWVR9pp5+Yd1yHRzEGDBKCHLjJPt5NQRFyhKZtjGHMvCMW9UQCIbab0?=
- =?us-ascii?Q?lcfde+hHfXKLkby6Vn129R+YScSDkEYJIzktjC6SmV656U0hDM6bvPshE7YG?=
- =?us-ascii?Q?nvexfU3LE+8OmrlORcbWyW3S2ReBvoyReczOoFIGCrEcfC/HGlN+pgSFoXL4?=
- =?us-ascii?Q?KGjfwxXKP+tkcDDQMfQ82fD82BxfW/kiTycCjxgDYkYwsgcpHF8zQ0zrK+fu?=
- =?us-ascii?Q?IcxrHX0Y6TmEXcKfscZzS8NFf17ES/KgsfruMyWm707gueBLgsMnZ7f3nMMb?=
- =?us-ascii?Q?Cufq6u+WaEvyKH6bGbBNygsduh5yWGgYCUCvbbu7t5pdQ+N466mHarpy3Rfp?=
- =?us-ascii?Q?7xMYnLDTcklG/R3F2GHX1B8mYJYlpnrEgP2PRueVML787rVdpL9pJx9X6k8O?=
- =?us-ascii?Q?KrZCxjeSN46Xw6VNp3N+ALoEaLcWQQ2GoQsV0aRuTknAJ6U/Ct5vrgqzNRwJ?=
- =?us-ascii?Q?A+BnoR2hiSskksll4H4ghv2bGV9sg4sQivipzhX4o/MgMd33tMrIhng7pi4v?=
- =?us-ascii?Q?URE6huR6eakTOFRBbmkN5Y2Md25JoUWezxOOMLQlKao16iy0vzZkGlniniTS?=
- =?us-ascii?Q?42EC6pVgaNpD13xwIpn0jvkMLYvDNj8ESyJZCiC89K2r1BfG//UgXJGG9GyK?=
- =?us-ascii?Q?E3gr2KB4kYqa0J7BR/qJk/LQfUbdJOkgeXiFekQX?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab03efb4-7cb5-41c5-3e3e-08dda3f8aa37
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 06:17:36.0819
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jUgmfmcZYW9zTLaLYETxHvEydoO1sl7s9+YrI5sFBwJHQoKpOXAOpYyhy62UlGUnnq0FKMRR3+RqZMuKnI8npg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9473
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/vmstat: Fix build with MEMCG=y and VM_EVENT_COUNTERS=n
+Content-Language: en-US
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, hannes@cmpxchg.org, shakeel.butt@linux.dev,
+ muchun.song@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Konstantin Khlebnikov <koct9i@gmail.com>
+References: <20250604095111.533783-1-kirill.shutemov@linux.intel.com>
+ <6fffd2fe-0cee-405f-af78-b57b5e5d02e8@suse.cz>
+ <20250604142043.bdfdf4f9a6a6cbb57946f1a5@linux-foundation.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <20250604142043.bdfdf4f9a6a6cbb57946f1a5@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-0.999];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.intel.com,redhat.com,oracle.com,kernel.org,google.com,suse.com,cmpxchg.org,linux.dev,kvack.org,vger.kernel.org,infradead.org,gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid,infradead.org:email,intel.com:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-Hi Changwoo,
+On 6/4/25 23:20, Andrew Morton wrote:
+> On Wed, 4 Jun 2025 11:56:42 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+> 
+>> > There is no need to backport this fix to stable trees. Without the
+>> > strict BUILD_BUG_ON(), the issue is not harmful. The elements in
+>> > question would only be read by the memcg code, not by /proc/vmstat.
+>> > 
+>> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> > Fixes: ebc5d83d0443 ("mm/memcontrol: use vmstat names for printing statistics")
+>> 
+>> Well in that case I think we should put Fixes: to the BUILD_BUG_ON() change.
+>> And if it's not yet a stable sha1, squash that together with this?
+>> It doesn't seem ebc5d83d0443 alone needs this fix.
+> 
+> I shuffled things around.
+> 
+> I moved "mm: strictly check vmstat_text array size" from mm-hotfixes
+> and back into mm-new for the next cycle.
+> 
+> I reworked "mm/vmstat: fix build with MEMCG=y and VM_EVENT_COUNTERS=n"
+> so it precedes "mm: strictly check vmstat_text array size".
+> 
+> I reworked "mm/vmstat: utilize designated initializers for the
+> vmstat_text array" so it comes last.
+> 
+> 
+> So the applying order is now
 
-On Thu, Jun 05, 2025 at 07:28:36AM +0200, Changwoo Min wrote:
-> Hi Andrea,
-> 
-> On 6/4/25 23:33, Andrea Righi wrote:
-> > scx_locked_rq() is used both from ext.c and ext_idle.c, so make it
-> > public and declare its prototype in ext.h.
-> 
-> scx_rq_bypassing() is the same, but it is defined with "static inline".
-> Would it be better to define with "static inline" for consistency? And,
-> anyway scx_rq_bypassing() is used only within ext*.
+I checked and in general it looks good, except a nit below.
 
-Yep, I'll make scx_locked_rq() static inline as well as suggested by Tejun.
-About scx_rq_bypassing(), it is currently used both in ext.c and
-ext_idle.c, so we need to move that to ext.h.
+> mm-hotfixes:
+> mm-fix-vmstat-after-removing-nr_bounce.patch
+> 
+> mm-new:
+> mm-vmstat-fix-build-with-memcg=y-and-vm_event_counters=n.patch
+> mm-strictly-check-vmstat_text-array-size.patch
 
-Thanks,
--Andrea
+The changelogs of these two don't reflect the new ordering though, maybe
+Kirill can provide updated ones?
 
+> mm-vmstat-utilize-designated-initializers-for-the-vmstat_text-array.patch
 > 
-> Regards,
-> Changwoo Min
-> 
-> > 
-> > No functional changes.
-> > 
-> > Signed-off-by: Andrea Righi <arighi@nvidia.com>
-> > ---
-> >   kernel/sched/ext.c | 2 +-
-> >   kernel/sched/ext.h | 2 ++
-> >   2 files changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-> > index 3e483138dff60..941603ec67e27 100644
-> > --- a/kernel/sched/ext.c
-> > +++ b/kernel/sched/ext.c
-> > @@ -1265,7 +1265,7 @@ static inline void update_locked_rq(struct rq *rq)
-> >    * Return the rq currently locked from an scx callback, or NULL if no rq is
-> >    * locked.
-> >    */
-> > -static inline struct rq *scx_locked_rq(void)
-> > +struct rq *scx_locked_rq(void)
-> >   {
-> >   	return __this_cpu_read(locked_rq);
-> >   }
-> > diff --git a/kernel/sched/ext.h b/kernel/sched/ext.h
-> > index d30f2d1bc00d5..cda5dfa4dad09 100644
-> > --- a/kernel/sched/ext.h
-> > +++ b/kernel/sched/ext.h
-> > @@ -18,6 +18,8 @@ static inline bool scx_rq_bypassing(struct rq *rq)
-> >   	return unlikely(rq->scx.flags & SCX_RQ_BYPASSING);
-> >   }
-> > +struct rq *scx_locked_rq(void);
-> > +
-> >   DECLARE_STATIC_KEY_FALSE(scx_ops_allow_queued_wakeup);
-> >   void scx_tick(struct rq *rq);
-> 
+> and everything should land nicely.
+
