@@ -1,138 +1,768 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EAC223DF1;
-	Thu,  5 Jun 2025 21:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDB2223DF1
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749157962; cv=none; b=jWItoZRKVaD6UMkJCwioA3KLutiU46c7rKKWRGcIR8xZZKhRNQoCSbdZUh7dWjOAlVStZy1uQo/48s6sotkClLTotL4oghlaF0srgpIOnd+S4Ca9+cVxM/zFi8mteJh8G+MFtvTJ+jgrggXZGbeh1mbbIMVyR0moBbaltSAuC7E=
+	t=1749157983; cv=none; b=DQM3F0Fy8bl4WP6c99J2e1uZzm/Qe6BlVQUFiKz+mVuV1/PxoctrZ3mY3iPp+nbINdpZw1xW7mymvNoJG/T57UbE/NwRD/AwvWQPYppnU/M2hbOGDp17nSOJgl0+mLo3lTM8r0Lj8cPIw6+En91eGJjPCTR6OfQmU2rM88tyS58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749157962; c=relaxed/simple;
-	bh=E68LmhCReqJaa8c0bb4Z5dTVK2OKwRICpy+jtrk0fyE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oeVtl7pjeyz8rPdee23f9yNNu1zqEPROWVES+zWXV8/ndcOJ1NcsG/Jfm7RO5Ofsb3e9nq2yyew4Z6roxAHRqkDcHS3CXFM0mF0F2hvKWY+MNXffTx43gCQqsW93B4bihXuq6io+lA/mjNXdlKsg7p1aaFC44rHm9n9TQ1J65XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVS91JNi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749157983; c=relaxed/simple;
+	bh=tFDePnJjAJFc1+SWn+DrxUx7b6BBTnnbLN1XOS+DgBM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NcHx6RFGxqjydAPznzW6dDZ6rGq+3eque8cjxvIS6Kyp2po8fdi5T/fYE/clrxoQciuo/8nr8OD+oiSV4Lj0JhT5QA93lB6gIBtNlpxvZOMaEnkTozmgVghYnDqtU/5CBTc02GQb/iL/RoheOWQDT0Sge7SCIYpbuq/6C3MlFA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DrK08CQO; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVS91JNi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D8ADC4CEE7;
-	Thu,  5 Jun 2025 21:12:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749157961;
-	bh=E68LmhCReqJaa8c0bb4Z5dTVK2OKwRICpy+jtrk0fyE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mVS91JNiqbGBzl3h+h3hlDuuvJzDxjUKCrBYM0bEx4e0yNzT1pyQQtIS4tZXkVS7i
-	 JD6RQA8Cd+9U/8pcMDwcx20A0y3esrTslmNkqlpwsfGF57T3nzTicRGi131qF3C2f6
-	 uwMHfqXl6hvaXUp2ovoKk/2mn2hXDzaMsBhiJcrsjjSzmn4tqkVNt9VrjJEr89dkhE
-	 xk4YGLsw7t6ues0R0VGmdvU5cPau7D8qZykCZBdh/EUjqoHinP+SQT9r5LCez7axp0
-	 V36RJ/gpiTBKeUE6rgTxQz6suIeyy+22PpObB4PH4eI/VlW8ofsJq15Hf9UkDzpuBk
-	 MTNXpHDzC2ZBw==
-Date: Thu, 5 Jun 2025 18:12:38 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH 6/6] perf annotate: Add 'y' hot key to toggle data type
- display
-Message-ID: <aEIIRmb6SNOroSJJ@x1>
-References: <20250601065302.12531-1-namhyung@kernel.org>
- <20250601065302.12531-7-namhyung@kernel.org>
- <aEICHsZPYbN5KWTa@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DrK08CQO"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7480d44e6f9so1356322b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 14:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749157980; x=1749762780; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nV/EksNhnvwxUc+6HNl4qI0B45dI75nVSAURiB2WujU=;
+        b=DrK08CQOQng8lLhooDvx3JiHDWvJAhCtk78bLMa+AYyD2OfLYTVJilnMSwgYzp3pal
+         GK8tRnBu2j7TqH8Nc4zcdmSVaCnhu9sZWm3wdkml8ONLft+NDTMze6HlbfFalImG0FeI
+         KPm8y/lvaKFJTNCU0Oy2iXxb+8uwbHC3PoF4jf8pmnOmNWth0F6uSjO9sQNykIDnGiQO
+         CpOP2lrj5s1c7M0eUVdVB5MsnIB0ZWQqVcHfSBYRpG5Ceit6WSzTu3X555PHd69ndHqp
+         RFMGVvf2p1YeWdApDfj6AAKYg1ww1L2UYQSYrJUS2lP0WQoJcSNbANbXnD8RzHUsa04S
+         Ginw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749157980; x=1749762780;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nV/EksNhnvwxUc+6HNl4qI0B45dI75nVSAURiB2WujU=;
+        b=YxJHGsu7wfBRUnzLrfRhEyM8ELg2sYTEJG83B1TOTBWZgb+Tz5Uvr/wXbwSR62Y+IA
+         5kTLDLQALBsB4iQyuq3OYa0pcF3H6y4jm60TxLayQhMoTGkV9y0LFy1uIMPVK0F9zShC
+         1oTHul8TEWob9W0R7b1AxgKnqiV2owtjSe5UWcVSddxXW3hxVnqai1w2hM96lrRcG0G4
+         hGhuau9SNCRgtsbM8NojJc2gEWj+sCUVf0kk2PvAgulcU0tqBmQpmj9Rqddy13lAVXdy
+         b9vH9xxr0+Ob6Qo28LaTh3vi+CE/rUgtOPCbfAuRS3KWHwXJ8yVzmzejCJiUkM3sK8Ze
+         /D9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXOUp9pN7x9ztF+HsZfh55yLQBUtW6xCG6GTr8KwSOzRI5fOgFbfpKXxgMRsMfPw/n83glGlxIVDRg01UY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWze1G7WocngHFR2wDQkI9B8ZUn7JnXPVVmAzWhg7BMaTjeZPM
+	9n9iSdv6CB04fhFTlvGlDNwi4KrXlT3qLXPiulR6Y991N2gHvTPGOnaUKcDhEoUoPHJEqftdu7I
+	yaZlva6Wzpkg6KCYZxvmVrf5l7g==
+X-Google-Smtp-Source: AGHT+IElxGRsdyFsm6NZYzCEr3x3yVLk5tEWK+wQtGSqbNW4QHU/jkC0JW589WIZj9j5Ykby706Ic2ekK+n0kAkgEA==
+X-Received: from pfiu22.prod.google.com ([2002:a05:6a00:1256:b0:747:b608:3d8e])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:4b51:b0:740:41e4:e761 with SMTP id d2e1a72fcca58-74827f3ba85mr1481404b3a.22.1749157980073;
+ Thu, 05 Jun 2025 14:13:00 -0700 (PDT)
+Date: Thu, 05 Jun 2025 14:12:58 -0700
+In-Reply-To: <aEEEJbTzlncbRaRA@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEICHsZPYbN5KWTa@x1>
+Mime-Version: 1.0
+References: <aCVZIuBHx51o7Pbl@yzhao56-desk.sh.intel.com> <diqzfrgfp95d.fsf@ackerleytng-ctop.c.googlers.com>
+ <aEEEJbTzlncbRaRA@yzhao56-desk.sh.intel.com>
+Message-ID: <diqzldq5j3j9.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: vannapurve@google.com, pbonzini@redhat.com, seanjc@google.com, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org, 
+	rick.p.edgecombe@intel.com, dave.hansen@intel.com, kirill.shutemov@intel.com, 
+	tabba@google.com, quic_eberman@quicinc.com, michael.roth@amd.com, 
+	david@redhat.com, vbabka@suse.cz, jroedel@suse.de, thomas.lendacky@amd.com, 
+	pgonda@google.com, zhiquan1.li@intel.com, fan.du@intel.com, 
+	jun.miao@intel.com, ira.weiny@intel.com, isaku.yamahata@intel.com, 
+	xiaoyao.li@intel.com, binbin.wu@linux.intel.com, chao.p.peng@intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 05, 2025 at 05:46:22PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Sat, May 31, 2025 at 11:53:02PM -0700, Namhyung Kim wrote:
-> > Support data type display with a key press so that users can toggle the
-> > output dynamically on TUI.
-> 
-> 'd', 'T', control+d, control+t are all available, why 'y'? :-)
-> 
-> Apart from these minor nits,
+Yan Zhao <yan.y.zhao@intel.com> writes:
 
-There is one issue I noticed now that Ingo mentioned earlier, if you
-press 'y' to get Data type display we better add some visual cue that
-this is toggled, like was done for source code view in:
+> On Wed, Jun 04, 2025 at 01:02:54PM -0700, Ackerley Tng wrote:
+>> Yan Zhao <yan.y.zhao@intel.com> writes:
+>>=20
+>> > On Mon, May 12, 2025 at 09:53:43AM -0700, Vishal Annapurve wrote:
+>> >> On Sun, May 11, 2025 at 7:18=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.co=
+m> wrote:
+>> >> > ...
+>> >> > >
+>> >> > > I might be wrongly throwing out some terminologies here then.
+>> >> > > VM_PFNMAP flag can be set for memory backed by folios/page struct=
+s.
+>> >> > > udmabuf seems to be working with pinned "folios" in the backend.
+>> >> > >
+>> >> > > The goal is to get to a stage where guest_memfd is backed by pfn
+>> >> > > ranges unmanaged by kernel that guest_memfd owns and distributes =
+to
+>> >> > > userspace, KVM, IOMMU subject to shareability attributes. if the
+>> >> > OK. So from point of the reset part of kernel, those pfns are not r=
+egarded as
+>> >> > memory.
+>> >> >
+>> >> > > shareability changes, the users will get notified and will have t=
+o
+>> >> > > invalidate their mappings. guest_memfd will allow mmaping such ra=
+nges
+>> >> > > with VM_PFNMAP flag set by default in the VMAs to indicate the ne=
+ed of
+>> >> > > special handling/lack of page structs.
+>> >> > My concern is a failable invalidation notifer may not be ideal.
+>> >> > Instead of relying on ref counts (or other mechanisms) to determine=
+ whether to
+>> >> > start shareabilitiy changes, with a failable invalidation notifier,=
+ some users
+>> >> > may fail the invalidation and the shareability change, even after o=
+ther users
+>> >> > have successfully unmapped a range.
+>> >>
+>> >> Even if one user fails to invalidate its mappings, I don't see a
+>> >> reason to go ahead with shareability change. Shareability should not
+>> >> change unless all existing users let go of their soon-to-be-invalid
+>> >> view of memory.
+>>=20
+>> Hi Yan,
+>>=20
+>> While working on the 1G (aka HugeTLB) page support for guest_memfd
+>> series [1], we took into account conversion failures too. The steps are
+>> in kvm_gmem_convert_range(). (It might be easier to pull the entire
+>> series from GitHub [2] because the steps for conversion changed in two
+>> separate patches.)
+>>=20
+>> We do need to handle errors across ranges to be converted, possibly from
+>> different memslots. The goal is to either have the entire conversion
+>> happen (including page split/merge) or nothing at all when the ioctl
+>> returns.
+>>=20
+>> We try to undo the restructuring (whether split or merge) and undo any
+>> shareability changes on error (barring ENOMEM, in which case we leave a
+>> WARNing).
+> As the undo can fail (as the case you leave a WARNing, in patch 38 in [1]=
+), it
+> can lead to WARNings in kernel with folios not being properly added to th=
+e
+> filemap.
+>
 
-commit c6043d35c0f3eb5bcbeb6309e10c4ae33d203841
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Tue Apr 8 19:03:43 2025 -0300
+I'm not sure how else to handle errors on rollback path. I've hopefully
+addressed this on the other thread at [1].
 
-    perf ui browser annotate: Show in the title the source code view toggle
-    
-    Ingo reported that having a visual cue if the source code view is
-    enabled will help in noticing a bug when no source is presented.
-    
-    Change the title scnprintf routine for the annotation browser to do
-    that.
-    
-    Suggested-by: Ingo Molnar <mingo@kernel.org>
+>> The part we don't restore is the presence of the pages in the host or
+>> guest page tables. For that, our idea is that if unmapped, the next
+>> access will just map it in, so there's no issue there.
+>
+> I don't think so.
+>
+> As in patch 38 in [1], on failure, it may fail to
+> - restore the shareability
+> - restore the folio's filemap status
+> - restore the folio's hugetlb stash metadata
+> - restore the folio's merged/split status
+>
 
-Also I did it with a simple perf.data file, no data stuff in it,
-probably it is best to show that if what is required for it to work is
-present in the perf.data file.
+The plan is that we try our best to restore shareability, filemap,
+restructuring (aka split/merge, including stash metadata) other than
+failures on rollback.
 
-Or to tell what is needed for that hotkey/feature to work, which I think
-is even better and more informative.
+> Also, the host page table is not restored.
+>
+>
 
-- Arnaldo
- 
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> - Arnaldo
->  
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/ui/browsers/annotate.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> > index 686fa54e545e275c..cd1d452035a265d3 100644
-> > --- a/tools/perf/ui/browsers/annotate.c
-> > +++ b/tools/perf/ui/browsers/annotate.c
-> > @@ -827,7 +827,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> >  		"b             Toggle percent base [period/hits]\n"
-> >  		"B             Branch counter abbr list (Optional)\n"
-> >  		"?             Search string backwards\n"
-> > -		"f             Toggle showing offsets to full address\n");
-> > +		"f             Toggle showing offsets to full address\n"
-> > +		"y             Toggle data type display\n");
-> >  			continue;
-> >  		case 'r':
-> >  			script_browse(NULL, NULL);
-> > @@ -947,6 +948,11 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> >  		case 'f':
-> >  			annotation__toggle_full_addr(notes, ms);
-> >  			continue;
-> > +		case 'y':
-> > +			annotate_opts.code_with_type ^= 1;
-> > +			if (browser->dbg == NULL)
-> > +				browser->dbg = debuginfo__new(dso__long_name(map__dso(ms->map)));
-> > +			continue;
-> >  		case K_LEFT:
-> >  		case '<':
-> >  		case '>':
-> > @@ -1035,8 +1041,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> >  
-> >  	ret = annotate_browser__run(&browser, evsel, hbt);
-> >  
-> > -	if (annotate_opts.code_with_type)
-> > -		debuginfo__delete(browser.dbg);
-> > +	debuginfo__delete(browser.dbg);
-> >  	if(not_annotated)
-> >  		annotated_source__purge(notes->src);
-> >  
-> > -- 
-> > 2.49.0
-> > 
+This is by design, the host page tables can be re-populated on the next
+fault. I've hopefully addressed this on the other thread at [1].
+
+>> > My thinking is that:
+>> >
+>> > 1. guest_memfd starts shared-to-private conversion
+>> > 2. guest_memfd sends invalidation notifications
+>> >    2.1 invalidate notification --> A --> Unmap and return success
+>> >    2.2 invalidate notification --> B --> Unmap and return success
+>> >    2.3 invalidate notification --> C --> return failure
+>> > 3. guest_memfd finds 2.3 fails, fails shared-to-private conversion and=
+ keeps
+>> >    shareability as shared
+>> >
+>> > Though the GFN remains shared after 3, it's unmapped in user A and B i=
+n 2.1 and
+>> > 2.2. Even if additional notifications could be sent to A and B to ask =
+for
+>> > mapping the GFN back, the map operation might fail. Consequently, A an=
+d B might
+>> > not be able to restore the mapped status of the GFN.
+>>=20
+>> For conversion we don't attempt to restore mappings anywhere (whether in
+>> guest or host page tables). What do you think of not restoring the
+>> mappings?
+> It could cause problem if the mappings in S-EPT can't be restored.
+>
+> For TDX private-to-shared conversion, if kvm_gmem_convert_should_proceed(=
+) -->
+> kvm_gmem_unmap_private() --> kvm_mmu_unmap_gfn_range() fails in the end, =
+then
+> the GFN shareability is restored to private. The next guest access to
+> the partially unmapped private memory can meet a fatal error: "access bef=
+ore
+> acceptance".
+>
+> It could occur in such a scenario:
+> 1. TD issues a TDVMCALL_MAP_GPA to convert a private GFN to shared
+> 2. Conversion fails in KVM.
+> 3. set_memory_decrypted() fails in TD.
+> 4. TD thinks the GFN is still accepted as private and accesses it.
+>
+>
+
+This is true, I was thinking that this isn't handled solely in
+conversion but by being part of the contract between userspace VMM and
+the guest, that guest must handle conversion failures. I've hopefully
+addressed this on the other thread at [1].
+
+>> > For IOMMU mappings, this
+>> > could result in DMAR failure following a failed attempt to do shared-t=
+o-private
+>> > conversion.
+>>=20
+>> I believe the current conversion setup guards against this because after
+>> unmapping from the host, we check for any unexpected refcounts.
+> Right, it's fine if we check for any unexpected refcounts.
+>
+>
+>> (This unmapping is not the unmapping we're concerned about, since this i=
+s
+>> shared memory, and unmapping doesn't go through TDX.)
+>>=20
+>> Coming back to the refcounts, if the IOMMU had mappings, these refcounts
+>> are "unexpected". The conversion ioctl will return to userspace with an
+>> error.
+>>=20
+>> IO can continue to happen, since the memory is still mapped in the
+>> IOMMU. The memory state is still shared. No issue there.
+>>=20
+>> In RFCv2 [1], we expect userspace to see the error, then try and remove
+>> the memory from the IOMMU, and then try conversion again.
+> I don't think it's right to depend on that userspace could always perform=
+ in=20
+> kernel's expected way, i.e. trying conversion until it succeeds.
+>
+
+Let me think more deeply about this. Please let me know if there's
+anything I missed.
+
+It is true that a buggy or malicious userspace VMM can ignore conversion
+failures and report success to the guest, but if both the userspace VMM
+and guest are malicious, it's quite hard for the kernel to defend
+against that.
+
+I think as long as there's no point where the guest can crash the host
+in a fixed way, I think it is okay to rely on a userspace VMM and guest
+protocol.
+
+IIUC the guest can crash the host (original point of having guest_memfd)
+if the guest can convince the host to write to private memory. For that
+to happen, the memory must be faulted into the Secure EPTs, and the
+shareability state must be ALL for the host to fault it in.
+
+So to have this issue, the conversion failure must be such that the
+memory remains faulted into the Secure EPTs while shareability is
+shared. Since unmapping from secure EPTs happens pretty early before any
+shareability is changed or any rollback (and rollback failures) can
+happen, I think we should be quite safe?
+
+If unmapping of private memory fails, this is where I think guest_memfd
+should get an error from the unmap and it should not proceed to change
+shareability.
+
+
+> We need to restore to the previous status (which includes the host page t=
+able)
+> if conversion can't be done.
+
+Most of the previous status (shareability, filemap,
+restructuring (aka split/merge, including stash metadata)) are restored
+other than during rollback failures.
+
+As for presence in host page tables, is it okay to defer that till the
+next fault, and if not okay, why not?
+
+For presence in guest page tables, is it okay to fall back on the
+protocol where the guest must handle conversion failures, and if not
+okay, why not?
+
+> That said, in my view, a better flow would be:
+>
+> 1. guest_memfd sends a pre-invalidation request to users (users here mean=
+s the
+>    consumers in kernel of memory allocated from guest_memfd).
+>
+> 2. Users (A, B, ..., X) perform pre-checks to determine if invalidation c=
+an
+>    proceed. For example, in the case of TDX, this might involve memory
+>    allocation and page splitting.
+>
+> 3. Based on the pre-check results, guest_memfd either aborts the invalida=
+tion or
+>    proceeds by sending the actual invalidation request.
+>
+> 4. Users (A-X) perform the actual unmap operation, ensuring it cannot fai=
+l. For
+>    TDX, the unmap must succeed unless there are bugs in the KVM or TDX mo=
+dule.
+>    In such cases, TDX can callback guest_memfd to inform the poison-statu=
+s of
+>    the page or elevate the page reference count.
+>
+> 5. guest_memfd completes the invalidation process. If the memory is marke=
+d as
+>    "poison," guest_memfd can handle it accordingly. If the page has an el=
+evated
+>    reference count, guest_memfd may not need to take special action, as t=
+he
+>    elevated count prevents the OS from reallocating the page.
+>    (but from your reply below, seems a callback to guest_memfd is a bette=
+r
+>    approach).
+>
+>
+
+Thanks for this, I've tried to combine this into my response at
+[1]. I think this works, but it's hard because
+
+a. Pre-checks are hard to check (explained at [1])
+b. Even after all the checks, unmapping can still fail, and those still
+   have to be handled, and to handle those, we have to buy into the
+   userspace VMM/guest protocol, so why not just buy into the protocol
+   to start with?
+
+[1] https://lore.kernel.org/all/diqztt4uhunj.fsf@ackerleytng-ctop.c.googler=
+s.com/
+
+>> The part in concern here is unmapping failures of private pages, for
+>> private-to-shared conversions, since that part goes through TDX and
+>> might fail.
+> IMO, even for TDX, the real unmap must not fail unless there are bugs in =
+the KVM
+> or TDX module.
+> So, for page splitting in S-EPT, I prefer to try splitting in the
+> pre-invalidation phase before conducting any real unmap.
+>
+>
+
+Thanks for your detailed suggestion.
+
+>> One other thing about taking refcounts is that in RFCv2,
+>> private-to-shared conversions assume that there are no refcounts on the
+>> private pages at all. (See filemap_remove_folio_for_restructuring() in
+>> [3])
+>>
+>> Haven't had a chance to think about all the edge cases, but for now I
+>> think on unmapping failure, in addition to taking a refcount, we should
+>> return an error at least up to guest_memfd, so that guest_memfd could
+>> perhaps keep the refcount on that page, but drop the page from the
+>> filemap. Another option could be to track messed up addresses and always
+>> check that on conversion or something - not sure yet.
+>
+> It looks good to me. See the bullet 4 in my proposed flow above.
+>
+
+Thanks again for your detailed suggestion.
+
+>> Either way, guest_memfd must know. If guest_memfd is not informed, on a
+>> next conversion request, the conversion will just spin in
+>> filemap_remove_folio_for_restructuring().
+> It makes sense.
+>
+>
+>> What do you think of this part about informing guest_memfd of the
+>> failure to unmap?
+> So, do you want to add a guest_memfd callback to achieve this purpose?
+>
+
+I will need to think the entire thing through, but I meant informing as
+in returning an error to guest_memfd so that guest_memfd knows. I think
+returning an error should be the first cause of action.
+
+As for whether guest_memfd should know how to handle the error or
+whether the userspace VMM should participate in deciding what to do with
+the error, I'm not sure. If you have suggestions on this, I hope we can
+combine the suggestions about the conversion protocol on the other thread.
+
+Regarding a callback, are you thinking something like not having the
+unmap return an error, but instead TDX will call a function like
+kvm_gmem_error_at_offset(loff_t offset), and guest_memfd will then
+record that somewhere, and then immediately after calling unmap
+guest_memfd will check kvm_gmem_was_there_an_error_in_range() and then
+determining whether there's an error? Something like that?
+
+I guess it could work but feels a little odd.
+
+>
+> BTW, here's an analysis of why we can't let kvm_mmu_unmap_gfn_range()
+> and mmu_notifier_invalidate_range_start() fail, based on the repo
+> https://github.com/torvalds/linux.git, commit cd2e103d57e5 ("Merge tag
+> 'hardening-v6.16-rc1-fix1-take2' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux")
+
+Thank you, I appreciate the effort you took to enumerate these. The
+following suggestions are based on my current understanding. I don't
+have time in the near future to do the plumbing to test out the
+suggestion, but for now I want to see if this suggestion makes sense,
+maybe you can correct any misunderstandings first.=20
+
+>
+> 1. Status of mmu notifier
+> -------------------------------
+> (1) There're 34 direct callers of mmu_notifier_invalidate_range_start().
+>     1. clear_refs_write
+>     2. do_pagemap_scan
+>     3. uprobe_write_opcode
+>     4. do_huge_zero_wp_pmd
+>     5. __split_huge_pmd (N)
+>     6. __split_huge_pud (N)
+>     7. move_pages_huge_pmd
+>     8. copy_hugetlb_page_range
+>     9. hugetlb_unshare_pmds  (N)
+>     10. hugetlb_change_protection
+>     11. hugetlb_wp
+>     12. unmap_hugepage_range (N)
+>     13. move_hugetlb_page_tables
+>     14. collapse_huge_page
+>     15. retract_page_tables
+>     16. collapse_pte_mapped_thp
+>     17. write_protect_page
+>     18. replace_page
+>     19. madvise_free_single_vma
+>     20. wp_clean_pre_vma
+>     21. wp_page_copy=20
+>     22. zap_page_range_single_batched (N)
+>     23. unmap_vmas (N)
+>     24. copy_page_range=20
+>     25. remove_device_exclusive_entry
+>     26. migrate_vma_collect
+>     27. __migrate_device_pages
+>     28. change_pud_range=20
+>     29. move_page_tables
+>     30. page_vma_mkclean_one
+>     31. try_to_unmap_one
+>     32. try_to_migrate_one
+>     33. make_device_exclusive
+>     34. move_pages_pte
+>
+> Of these 34 direct callers, those marked with (N) cannot tolerate
+> mmu_notifier_invalidate_range_start() failing. I have not yet investigate=
+d all
+> 34 direct callers one by one, so the list of (N) is incomplete.
+>
+> For 5. __split_huge_pmd(), Documentation/mm/transhuge.rst says:
+> "Note that split_huge_pmd() doesn't have any limitations on refcounting:
+> pmd can be split at any point and never fails." This is because split_hug=
+e_pmd()
+> serves as a graceful fallback design for code walking pagetables but unaw=
+are
+> about huge pmds.
+>
+>
+
+Do these callers, especially those with (N), ever try to unmap any TDX
+private pages? guest_memfd only gives shared pages to core-mm, so for
+shared pages, there will continue to be no chance of errors.
+
+If we change mmu_notifier_invalidate_range_start() to return an int, all
+of the callers that never invalidate shared pages can continue to safely
+rely on the fact that mmu_notifier_invalidate_range_start() will return
+0.
+
+For the callers of mmu_notifier_invalidate_range_start() that may touch
+private pages, I believe that's only guest_memfd and KVM. That's where
+we want the error, and will handle the error.
+
+Another point here is that I was thinking to put EPT splitting together
+with actual unmapping instead of with invalidation because we will
+probably invalidate more than we unmap (see explanation at [1] about the
+race). Maybe moving EPT splitting to unmap could help?
+
+> (2) There's 1 direct caller of mmu_notifier_invalidate_range_start_nonblo=
+ck(),
+> __oom_reap_task_mm(), which only expects the error -EAGAIN.
+>
+> In mn_hlist_invalidate_range_start():
+> "WARN_ON(mmu_notifier_range_blockable(range) || _ret !=3D -EAGAIN);"
+>
+>
+> (3) For DMAs, drivers need to invoke pin_user_pages() to pin memory. In t=
+hat
+> case, they don't need to register mmu notifier.
+>
+> Or, device drivers can pin pages via get_user_pages*(), and register for =
+mmu        =20
+> notifier callbacks for the memory range. Then, upon receiving a notifier =
+       =20
+> "invalidate range" callback , stop the device from using the range, and u=
+npin   =20
+> the pages.
+>
+> See Documentation/core-api/pin_user_pages.rst.
+>
+>
+
+Do you mean that we should teach device drivers to get callbacks for
+private pages? Are you looking ahead to handle TDX IO on private pages?
+So far we haven't handled that yet.
+
+> 2. Cases that cannot tolerate failure of mmu_notifier_invalidate_range_st=
+art()
+> -------------------------------
+> (1) Error fallback cases.
+>
+>     1. split_huge_pmd() as mentioned in Documentation/mm/transhuge.rst.
+>        split_huge_pmd() is designed as a graceful fallback without failur=
+e.
+>
+>        split_huge_pmd
+>         |->__split_huge_pmd
+>            |->mmu_notifier_range_init
+>            |  mmu_notifier_invalidate_range_start
+>            |  split_huge_pmd_locked
+>            |  mmu_notifier_invalidate_range_end
+>
+>
+>     2. in fs/iomap/buffered-io.c, iomap_write_failed() itself is error ha=
+ndling.
+>        iomap_write_failed
+>          |->truncate_pagecache_range
+>             |->unmap_mapping_range
+>             |  |->unmap_mapping_pages
+>             |     |->unmap_mapping_range_tree
+>             |        |->unmap_mapping_range_vma
+>             |           |->zap_page_range_single
+>             |              |->zap_page_range_single_batched
+>             |                       |->mmu_notifier_range_init
+>             |                       |  mmu_notifier_invalidate_range_star=
+t
+>             |                       |  unmap_single_vma
+>             |                       |  mmu_notifier_invalidate_range_end
+>             |->truncate_inode_pages_range
+>                |->truncate_cleanup_folio
+>                   |->if (folio_mapped(folio))
+>                   |     unmap_mapping_folio(folio);
+>                          |->unmap_mapping_range_tree
+>                             |->unmap_mapping_range_vma
+>                                |->zap_page_range_single
+>                                   |->zap_page_range_single_batched
+>                                      |->mmu_notifier_range_init
+>                                      |  mmu_notifier_invalidate_range_sta=
+rt
+>                                      |  unmap_single_vma
+>                                      |  mmu_notifier_invalidate_range_end
+>
+>    3. in mm/memory.c, zap_page_range_single() is invoked to handle error.
+>       remap_pfn_range_notrack
+>         |->int error =3D remap_pfn_range_internal(vma, addr, pfn, size, p=
+rot);
+>         |  if (!error)
+>         |      return 0;
+> 	|  zap_page_range_single
+>            |->zap_page_range_single_batched
+>               |->mmu_notifier_range_init
+>               |  mmu_notifier_invalidate_range_start
+>               |  unmap_single_vma
+>               |  mmu_notifier_invalidate_range_end
+>
+>    4. in kernel/events/core.c, zap_page_range_single() is invoked to clea=
+r any
+>       partial mappings on error.
+>
+>       perf_mmap
+>         |->ret =3D map_range(rb, vma);
+>                  |  err =3D remap_pfn_range
+>                  |->if (err)=20
+>                  |     zap_page_range_single
+>                         |->zap_page_range_single_batched
+>                            |->mmu_notifier_range_init
+>                            |  mmu_notifier_invalidate_range_start
+>                            |  unmap_single_vma
+>                            |  mmu_notifier_invalidate_range_end
+>
+>
+>    5. in mm/memory.c, unmap_mapping_folio() is invoked to unmap posion pa=
+ge.
+>
+>       __do_fault
+> 	|->if (unlikely(PageHWPoison(vmf->page))) {=20
+> 	|	vm_fault_t poisonret =3D VM_FAULT_HWPOISON;
+> 	|	if (ret & VM_FAULT_LOCKED) {
+> 	|		if (page_mapped(vmf->page))
+> 	|			unmap_mapping_folio(folio);
+>         |                       |->unmap_mapping_range_tree
+>         |                          |->unmap_mapping_range_vma
+>         |                             |->zap_page_range_single
+>         |                                |->zap_page_range_single_batched
+>         |                                   |->mmu_notifier_range_init
+>         |                                   |  mmu_notifier_invalidate_ra=
+nge_start
+>         |                                   |  unmap_single_vma
+>         |                                   |  mmu_notifier_invalidate_ra=
+nge_end
+> 	|		if (mapping_evict_folio(folio->mapping, folio))
+> 	|			poisonret =3D VM_FAULT_NOPAGE;=20
+> 	|		folio_unlock(folio);
+> 	|	}
+> 	|	folio_put(folio);
+> 	|	vmf->page =3D NULL;
+> 	|	return poisonret;
+> 	|  }
+>
+>
+>   6. in mm/vma.c, in __mmap_region(), unmap_region() is invoked to undo a=
+ny
+>      partial mapping done by a device driver.
+>
+>      __mmap_new_vma
+>        |->__mmap_new_file_vma(map, vma);
+>           |->error =3D mmap_file(vma->vm_file, vma);
+>           |  if (error)
+>           |     unmap_region
+>                  |->unmap_vmas
+>                     |->mmu_notifier_range_init
+>                     |  mmu_notifier_invalidate_range_start
+>                     |  unmap_single_vma
+>                     |  mmu_notifier_invalidate_range_end
+>
+>
+
+These should probably not ever be invalidating or unmapping private pages.
+
+> (2) No-fail cases
+> -------------------------------
+> 1. iput() cannot fail.=20
+>
+> iput
+>  |->iput_final
+>     |->WRITE_ONCE(inode->i_state, state | I_FREEING);
+>     |  inode_lru_list_del(inode);
+>     |  evict(inode);
+>        |->op->evict_inode(inode);
+>           |->shmem_evict_inode
+>              |->shmem_truncate_range
+>                 |->truncate_inode_pages_range
+>                    |->truncate_cleanup_folio
+>                       |->if (folio_mapped(folio))
+>                       |     unmap_mapping_folio(folio);
+>                             |->unmap_mapping_range_tree
+>                                |->unmap_mapping_range_vma
+>                                   |->zap_page_range_single
+>                                      |->zap_page_range_single_batched
+>                                         |->mmu_notifier_range_init
+>                                         |  mmu_notifier_invalidate_range_=
+start
+>                                         |  unmap_single_vma
+>                                         |  mmu_notifier_invalidate_range_=
+end
+>
+>
+> 2. exit_mmap() cannot fail
+>
+> exit_mmap
+>   |->mmu_notifier_release(mm);
+>      |->unmap_vmas(&tlb, &vmi.mas, vma, 0, ULONG_MAX, ULONG_MAX, false);
+>         |->mmu_notifier_range_init
+>         |  mmu_notifier_invalidate_range_start
+>         |  unmap_single_vma
+>         |  mmu_notifier_invalidate_range_end
+>
+>
+
+These should probably not ever be invalidating or unmapping private pages.
+
+> 3. KVM Cases That Cannot Tolerate Unmap Failure
+> -------------------------------
+> Allowing unmap operations to fail in the following scenarios would make i=
+t very
+> difficult or even impossible to handle the failure:
+>
+> (1) __kvm_mmu_get_shadow_page() is designed to reliably obtain a shadow p=
+age
+> without expecting any failure.
+>
+> mmu_alloc_direct_roots
+>   |->mmu_alloc_root
+>      |->kvm_mmu_get_shadow_page
+>         |->__kvm_mmu_get_shadow_page
+>            |->kvm_mmu_alloc_shadow_page
+>               |->account_shadowed
+>                  |->kvm_mmu_slot_gfn_write_protect
+>                     |->kvm_tdp_mmu_write_protect_gfn
+>                        |->write_protect_gfn
+>                           |->tdp_mmu_iter_set_spte
+>
+>
+
+I need to learn more about shadow pages but IIUC TDX doesn't use shadow
+pages so this path won't interact with unmapping private pages.
+
+> (2) kvm_vfio_release() and kvm_vfio_file_del() cannot fail
+>
+> kvm_vfio_release/kvm_vfio_file_del
+>  |->kvm_vfio_update_coherency
+>     |->kvm_arch_unregister_noncoherent_dma
+>        |->kvm_noncoherent_dma_assignment_start_or_stop
+>           |->kvm_zap_gfn_range
+>              |->kvm_tdp_mmu_zap_leafs
+>                 |->tdp_mmu_zap_leafs
+>                    |->tdp_mmu_iter_set_spte
+>
+>
+
+I need to learn more about VFIO but for now IIUC IO uses shared pages,
+so this path won't interact with unmapping private pages.
+
+> (3) There're lots of callers of __kvm_set_or_clear_apicv_inhibit() curren=
+tly
+> never expect failure of unmap.
+>
+> __kvm_set_or_clear_apicv_inhibit
+>   |->kvm_zap_gfn_range
+>      |->kvm_tdp_mmu_zap_leafs
+>         |->tdp_mmu_zap_leafs
+>            |->tdp_mmu_iter_set_spte
+>
+>
+>
+
+There could be some TDX specific things such that TDX doesn't use this
+path.
+
+> 4. Cases in KVM where it's hard to make tdp_mmu_set_spte() (update SPTE w=
+ith
+> write mmu_lock) failable.
+>
+> (1) kvm_vcpu_flush_tlb_guest()
+>
+> kvm_vcpu_flush_tlb_guest
+>   |->kvm_mmu_sync_roots
+>      |->mmu_sync_children
+>         |->kvm_vcpu_write_protect_gfn
+>            |->kvm_mmu_slot_gfn_write_protect
+>               |->kvm_tdp_mmu_write_protect_gfn
+>                  |->write_protect_gfn
+>                     |->tdp_mmu_iter_set_spte
+>                        |->tdp_mmu_set_spte
+>
+>
+> (2) handle_removed_pt() and handle_changed_spte().
+>
+
+Thank you so much for looking into these, I'm hoping that the number of
+cases where TDX and private pages are unmapped are really limited to a
+few paths that we have to rework.
+
+If we agree that the error has to be handled, then regardless of how we
+let the caller know that an error happened, all paths touching TDX
+private pages have to be reworked.
+
+Between (1) returning an error vs (2) marking error and having the
+caller check for errors, then it's probably better to use the standard
+approach of returning an error since it is better understood, and
+there's no need to have extra data structures?
+
+>
+> Thanks
+> Yan
