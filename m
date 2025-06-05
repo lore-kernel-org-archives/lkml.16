@@ -1,55 +1,89 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDCD1D63C7;
-	Thu,  5 Jun 2025 11:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01093158535
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 11:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749122972; cv=none; b=mhqLpn02SWqrIGITa0ArHWEAslR0sewOrV7Er0cKYgdB0vKrRQceGA7cslH+1imSVOrvoPJ9lyFE8pHSLTJw3rQojFYV6d9y1kpoqhc8U1Vu/Ar1P/l/Ov/BYnuNIt7lUvwv0EXsd7mv/Kq9DYwfcfTWJafMM6zdparMsxZQfKI=
+	t=1749123136; cv=none; b=kfjZCzlCBKf/SMcy7DJZsxpsbQXs7e8JsrDbJnhFvdGzlNR7pvgrtvRS1FB7CGl2GtPf+TwhXd4WbfFX47C48agv41pJrC8EGywN6YQF+N9qE+UMlNJOLPdx+s6gSC6cKRrBiyW7/FkUngKzb4fE/ObeTrDoUZ5S2gJNDq4soFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749122972; c=relaxed/simple;
-	bh=keFCUiiYXh91U4xTipO8BIMtTgha35W/CKZZ5Gh6W+o=;
+	s=arc-20240116; t=1749123136; c=relaxed/simple;
+	bh=pnGl/l8pcKgaFKuCfCrF0AvIewkIuELE+b6p5jB7ECk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SJHkM0/naK5YxWuOAGhP0GhBYCukbnqKlLHlgOJL6DwKa6rG/oFxHurm9ise9D+NoFSZbSJV5zzTE8BaltmjMUjEvrXvJ4EKkEXNtMU73QCCMtiTu+20x2Kh9jlEKwBpCRDlwAhNdzXLCVDXFpgKDAdfQ+vPehInIZfR3a/5nYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qw9gDO8R; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=QARO/F9Mno1JAherd+P0QKS5DYD36nkIw2LU/V64vkTKqjuaVuNCHDVcK614fk9yJCWJ+5oJwO6BfI3spLTJRhEBXueSeKfmqbV7zr7nhMW4UX6Jlik3Qz9VvLPPVcm6fpdG00PJKVBG+DhDgZvfuGw29u/6kI8DKSCkPPZc1fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VIq3L636; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fNs6hq+x; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VIq3L636; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fNs6hq+x; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qw9gDO8R"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=WqixUjhn8x3j9PoWAdaiUBk4NGYFB5LGObX47NMD4ow=; b=qw9gDO8RsldwTGSQ54FzLCi/9p
-	kDZXyAVf7vb+FEg2VCLq4l/N5bRv8VZDDgzuwZUu8uRuEYIdphhp8beqw9iIjoUq4WTvzfRMzYn/E
-	WRoUksBDw2ZKzW76bMw/cyGz9mG5uOcdBnayzGpKDuJIu6RArR3YjIwHHnYi3AeHzn91ZG5MeTbmg
-	Er3sllKN9Eka6xwwVBSWlPuxaQDmSiAGzbM2kbHMWygoPn3CqS8rnr+XYy4aEuOs8bAVz3ma7XOgz
-	0BFXngN9e683TX14T/pNCJEWY+78++K5CeoZTbfMRzRHt0r0cvDDPeGaR7kug7pG2B2OAc5FFaH1q
-	cxknz9EA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uN8mg-000000019Y4-0PSS;
-	Thu, 05 Jun 2025 11:29:22 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5BEC13005AF; Thu,  5 Jun 2025 13:29:21 +0200 (CEST)
-Date: Thu, 5 Jun 2025 13:29:21 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250605112921.GR39944@noisy.programming.kicks-ass.net>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
- <20250603144414.GC38114@noisy.programming.kicks-ass.net>
- <20250604080339.GB35970@noisy.programming.kicks-ass.net>
- <20250604101821.GC8020@e132581.arm.com>
- <20250604141640.GL38114@noisy.programming.kicks-ass.net>
- <20250604154639.GE8020@e132581.arm.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VIq3L636";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fNs6hq+x";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VIq3L636";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fNs6hq+x"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0880B20B8B;
+	Thu,  5 Jun 2025 11:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749123133; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0KF/A/J9bSP7U/XEa9MZJ9ajKV9tr5ExQhcU9vC/jFc=;
+	b=VIq3L636CWt5294O5kpRs00BaCr+ehsydiBiSPU15UAfZJGSNXNlj5htvWRkptYQzx92vc
+	jDQzVyuuwpxo4GYV812hNcQftEXUfI7CeW0HFWcdAFPrQT9cgOjCA1P464FKrPgHIjZNms
+	IBy8+1NQp2uQo16VMYe54g4DtF4ztmA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749123133;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0KF/A/J9bSP7U/XEa9MZJ9ajKV9tr5ExQhcU9vC/jFc=;
+	b=fNs6hq+xqBl1p9dXVZPsrtyPHSWmsV9BqrapoTN0RUND5nnGmr7NHtuNddR4yTdfBByt7J
+	Kf+EuIGTTO194HAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=VIq3L636;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=fNs6hq+x
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749123133; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0KF/A/J9bSP7U/XEa9MZJ9ajKV9tr5ExQhcU9vC/jFc=;
+	b=VIq3L636CWt5294O5kpRs00BaCr+ehsydiBiSPU15UAfZJGSNXNlj5htvWRkptYQzx92vc
+	jDQzVyuuwpxo4GYV812hNcQftEXUfI7CeW0HFWcdAFPrQT9cgOjCA1P464FKrPgHIjZNms
+	IBy8+1NQp2uQo16VMYe54g4DtF4ztmA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749123133;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0KF/A/J9bSP7U/XEa9MZJ9ajKV9tr5ExQhcU9vC/jFc=;
+	b=fNs6hq+xqBl1p9dXVZPsrtyPHSWmsV9BqrapoTN0RUND5nnGmr7NHtuNddR4yTdfBByt7J
+	Kf+EuIGTTO194HAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EA9C11373E;
+	Thu,  5 Jun 2025 11:32:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id q6L+ODyAQWhlCQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 05 Jun 2025 11:32:12 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 9C2E2A0951; Thu,  5 Jun 2025 13:32:12 +0200 (CEST)
+Date: Thu, 5 Jun 2025 13:32:12 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
+	ojaswin@linux.ibm.com, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
+	yangerkun@huawei.com
+Subject: Re: [PATCH 2/5] ext4: correct the reserved credits for extent
+ conversion
+Message-ID: <2xgxxvibw35ijwl5gtuure7hegce6h3ysx2m453hx6hcs5vnqs@2tvvv57fbvee>
+References: <20250530062858.458039-1-yi.zhang@huaweicloud.com>
+ <20250530062858.458039-3-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,48 +92,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250604154639.GE8020@e132581.arm.com>
+In-Reply-To: <20250530062858.458039-3-yi.zhang@huaweicloud.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 0880B20B8B
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
 
-On Wed, Jun 04, 2025 at 04:46:39PM +0100, Leo Yan wrote:
-> On Wed, Jun 04, 2025 at 04:16:40PM +0200, Peter Zijlstra wrote:
+On Fri 30-05-25 14:28:55, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
 > 
-> [...]
+> Now, we reserve journal credits for converting extents in only one page
+> to written state when the I/O operation is complete. This is
+> insufficient when large folio is enabled.
 > 
-> > It might be prudent to do something like so:
+> Fix this by reserving credits for converting up to one extent per block in
+> the largest 2MB folio, this calculation should only involve extents index
+> and leaf blocks, so it should not estimate too many credits.
 > 
-> Thanks for the patch.
+> Fixes: 7ac67301e82f ("ext4: enable large folio for regular file")
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/ext4/inode.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> > +static void __event_disable(struct perf_event *event,
-> > +			    struct perf_event_context *ctx,
-> > +			    enum perf_event_state state)
-> > +{
-> > +	if (event == event->group_leader)
-> > +		group_sched_out(event, ctx);
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 5ef34c0c5633..d35c07c1dcac 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -2808,12 +2808,12 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
+>  	mpd->journalled_more_data = 0;
+>  
+>  	if (ext4_should_dioread_nolock(inode)) {
+> +		int bpf = ext4_journal_blocks_per_folio(inode);
+>  		/*
+>  		 * We may need to convert up to one extent per block in
+> -		 * the page and we may dirty the inode.
+> +		 * the folio and we may dirty the inode.
+>  		 */
+> -		rsv_blocks = 1 + ext4_chunk_trans_blocks(inode,
+> -						PAGE_SIZE >> inode->i_blkbits);
+> +		rsv_blocks = 1 + ext4_ext_index_trans_blocks(inode, bpf);
+>  	}
+>  
+>  	if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
+> -- 
+> 2.46.1
 > 
-> I am a bit struggle for this code line. It disables all events in a
-> group, but only clear cgroup pointer for group leader but miss to clear
-> for sibling events.
-
-What happens is that perf_event_disable() will only mark the group
-leader as OFF. By having the group leader marked OFF, the whole group
-becomes ineligible to run. But the siblings are still INACTIVE and thus
-don't need to get perf_cgroup_event_disable() called.
-
-perf_event_enable() does the symmetric thing, it only marks the group
-leader INACTIVE (and then tries to schedule it, possibly resulting in
-ACTIVE).
-
-Now, it is entirely possible to call {dis,en}able() on siblings, in
-which case only the sibling gets marked OFF and gets scheduled out, but
-the rest of the group can continue functioning.
-
-So I think this was indeed correct.
-
-> If the cgroup pointer is only used for group leader, maybe we only
-> maintain (set and clear) the cgroup pointer for the leader?
-
-And the patch re-used this function on siblings, do it would never hit
-this group_sched_out() case.
-
-But yes, slightly confusing. Let me see if I can make a less confusing
-patch, and if not, sprinkle comments.
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
