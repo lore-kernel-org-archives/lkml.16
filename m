@@ -1,83 +1,63 @@
-Received: from cstnet.cn (smtp20.cstnet.cn [159.226.251.20])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CBA1F5617;
-	Thu,  5 Jun 2025 03:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915151EEE6;
+	Thu,  5 Jun 2025 03:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749092611; cv=none; b=dd3vh96gCuGRUNL07dRHCwjLmLreKheZewSwJtR1aB9xG3GK9NAYZ8EnxXl4r+pslDjbOe+HMz7eusfr+DdUicOxlXzM6lsgTkyHz3zQB4XiabB237XofXaksd7hI5JESquL0pmL2eadJcLjW7qLs5vr1oUddhMMOBJ9pozSA4E=
+	t=1749092656; cv=none; b=QK8dM57zlskMXpTXNYukeSCamx88bcwfivliVuILoqW+AGPXLulw+O+KaM778262ttuUbOJ/XJUvmfQcUEbF9uhbVTP0dcOHxMwaOiKQk0uwHBO9V4lH3LvXJXAcs4b8z8rMwqVfSuTBvLSWLW/rO3fze0JFo5cu0MaP0smjqZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749092611; c=relaxed/simple;
-	bh=jg24Yo+Bw83kcQE5Zz+uHIe9HXkorbFQAvED/E/Ahmc=;
-	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=kF3X4mCiCyO36zzxW0HBtVJKQTI1wP7a2iJJQ0tTrdWEr/DU8tqDKdTopT1y1f+GUU0knkvdGcVHjv1l9rBSO0qAoXQx62tJ15BW1rmeccICuSl6d3sf7HpStRdMv+rRTfIrU9yBE9Dgr3byiWW9stTGvOceshpHUBlcPbQVJp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ict.ac.cn; spf=pass smtp.mailfrom=ict.ac.cn; arc=none smtp.client-ip=159.226.251.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ict.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ict.ac.cn
-Received: from chenglingfei22s$ict.ac.cn ( [115.42.62.11] ) by
- ajax-webmail-APP-10 (Coremail) ; Thu, 5 Jun 2025 11:02:51 +0800 (GMT+08:00)
-Date: Thu, 5 Jun 2025 11:02:51 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?56iL5YeM6aOe?= <chenglingfei22s@ict.ac.cn>
-To: sven@svenpeter.dev, j@jannau.net, alyssa@rosenzweig.io, neal@gompa.dev
-Cc: zhangzhenwei22b@ict.ac.cn, wangzhe12@ict.ac.cn, 
-	chenglingfei22s@ict.ac.cn, maddy@linux.ibm.com, mpe@ellerman.id.au, 
-	npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org, 
-	andi.shyti@kernel.org, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [BUG] rmmod i2c-pasemi-platform causing kernel crash on Apple M1.
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.1-cmXT5 build
- 20240627(e6c6db66) Copyright (c) 2002-2025 www.mailtech.cn cnic.cn
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1749092656; c=relaxed/simple;
+	bh=WtkDm5d2NT8dGTsNCqzoNNUL2xuXXF8++dgwNhnyBRs=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GSy6PX4cWZHFDXe5XLzzT4ZCIzjeIG/TZ0Q8NlGlluKoZdqXNQuVHwH2KUuiIvPOuAPaivsZadtCbmkR8LitnL7HY/CleIZWPc6CjqsUBUT4CYQaJTTteEEmvepswYbXJAkaY4Nt8rfXRlMtgcBMAKqiM6QrZJrMhjkgIxBDBks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TrOfvcg/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TrOfvcg/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE99C4CEE4;
+	Thu,  5 Jun 2025 03:04:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749092656;
+	bh=WtkDm5d2NT8dGTsNCqzoNNUL2xuXXF8++dgwNhnyBRs=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=TrOfvcg/dRipROWdzIc1+Vgwo+eMOmZf4h/KcfVKInHN/teL8UI4E08k96KnU1ytb
+	 Z6C9H9pwL8bfIqkAACHQas6fYsj7/xx+srYDGHcOFDRbA+7dQJB3mk0++VPzWWyj5H
+	 rN0S0RcDq09cOF2Bhz/MGmfSWpwuGE1AVXjPr7aZPwEr6T2x0wLLtK72SOr8qjFhVs
+	 2VG3sU01RmJ0boTfq1vxN24Xw41RqG3LR9Z5mtBjjl/p55mnwN1QdflN7y1Byt9+wK
+	 gEh2NZvk1mr/P57/6jfgwzF5qwZdOqgrC5nXziegdOnShmaRukORkV6OTvrrvYu7Fu
+	 Qa24ed9bxp6mw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADDA4380CED9;
+	Thu,  5 Jun 2025 03:04:49 +0000 (UTC)
+Subject: Re: [GIT PULL] bcachefs changes for 6.16, part 2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <xtigikvqorbxtpy2rh52fobvunp7yrwkfpj4muwaogr4ijxl4j@s327kfvhpi3v>
+References: <xtigikvqorbxtpy2rh52fobvunp7yrwkfpj4muwaogr4ijxl4j@s327kfvhpi3v>
+X-PR-Tracked-List-Id: <linux-bcachefs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <xtigikvqorbxtpy2rh52fobvunp7yrwkfpj4muwaogr4ijxl4j@s327kfvhpi3v>
+X-PR-Tracked-Remote: git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-06-04
+X-PR-Tracked-Commit-Id: 3d11125ff624b540334f7134d98b94f3b980e85d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ff0905bbf991f4337b5ebc19c0d43525ebb0d96b
+Message-Id: <174909268839.2554386.13230803597159202651.pr-tracker-bot@kernel.org>
+Date: Thu, 05 Jun 2025 03:04:48 +0000
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <5c598fea.3165d.1973e0a9a3a.Coremail.chenglingfei22s@ict.ac.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:tACowABnWYXcCEForT8GAA--.62932W
-X-CM-SenderInfo: xfkh0wpolqwwthlsj2g6lf3hldfou0/1tbiBgoEDmhA0QvjOgAAst
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
 
-SGksIGFsbCEKCldl4oCZdmUgZW5jb3VudGVyZWQgYSBrZXJuZWwgY3Jhc2ggd2hlbiBydW5uaW5n
-IHJtbW9kIGkyYy1wYXNlbWktcGxhdGZvcm0gb24gYSBNYWMgTWluaSBNMSAoVDgxMDMpIHJ1bm5p
-bmcgQXNhaGkgQXJjaCBMaW51eC4gCgpUaGUgYnVnIHdhcyBmaXJzdCBmb3VuZCBvbiB0aGUgTGlu
-dXggdjYuNiwgd2hpY2ggaXMgYnVpbHQgbWFudWFsbHkgd2l0aCB0aGUgQXNhaGkgZ2l2ZW4gY29u
-ZmlnIHRvIHJ1biBvdXIgc2VydmljZXMuIApBdCB0aGF0IHRpbWUsIHRoZSBpMmMtcGFzZW1pLXBs
-YXRmb3JtIHdhcyBpMmMtYXBwbGUuCgpXZSBub3RpY2VkIGluIHRoZSBMaW51eCB2Ni43LCB0aGUg
-cGFzZW1pIGlzIHNwbGl0dGVkIGludG8gdHdvIHNlcGFyYXRlIG1vZHVsZXMsIG9uZSBvZiB3aGlj
-aCBpcyBpMmMtcGFzZW1pLXBsYXRmb3JtLgpUaGVyZWZvcmUsIHdlIGJ1aWx0IExpbnV4IHY2LjE0
-LjYgYW5kIHRyaWVkIHRvIHJtbW9kIGkyYy1wYXNlbWktcGxhdGZvcm0gYWdhaW4sIHRoZSBjcmFz
-aCBzdGlsbCBleGlzdHMuIE1vcmVvdmVyLCB3ZSBmZXRjaGVkIAp0aGUgbGF0ZXN0IGkyYy1wYXNl
-bWktcGxhdGZvcm0gb24gbGludXgtbmV4dCg5MTE0ODNiMjU2MTJjOGJjMzJhNzA2YmE5NDA3Mzhj
-YzQzMjk5NDk2KSBhbmQgYXNhaGksIGJ1aWx0IHRoZW0gYW5kIAp0ZXN0ZWQgYWdhaW4gd2l0aCBM
-aW51eCB2Ni4xNC42LCBidXQgdGhlIGNyYXNoIHJlbWFpbnMuCgpCZWNhdXNlIGtleGVjIGlzIG5v
-dCBzdXBwb3J0ZWQgYW5kIHdpbGwgbmV2ZXIgYmUgZnVsbHkgc3VwcG9ydGVkIG9uIEFwcGxlIFNp
-bGljb24gcGxhdGZvcm1zIGR1ZSB0byBoYXJkd2FyZSBhbmQgZmlybXdhcmUgCmRlc2lnbiBjb25z
-dHJhaW50cywgd2UgY2FuIG5vdCByZWNvcmQgdGhlIHBhbmljIGxvZ3MgdGhyb3VnaCBrZHVtcC4K
-ClRodXMgd2UgdHJpZWQgdG8gZmluZCB0aGUgcm9vdCBjYXVzZSBvZiB0aGUgaXNzdWUgbWFudWFs
-bHkuIFdoZW4gd2UgcGVyZm9ybSBybW1vZCwgdGhlIGtlcm5lbCBwZXJmb3JtcyBkZXZpY2UgcmVs
-ZWFzaW5nIG9uIAp0aGUgaTJjIGJ1cywgdGhlbiBjYWxscyB0aGUgcmVtb3ZlIGZ1bmN0aW9uIGlu
-IHNuZC1zb2MtY3M0Mmw4My1pMmMsIHdoaWNoIGNhbGxzIHRoZSBjczQybDQyX2NvbW1vbl9yZW1v
-dmUgaW4gY3M0Mmw0MiwgCmJlY2F1c2UgY3M0Mmw0Mi0mZ3Q7aW5pdF9kb25lIGlzIHRydWUsIGl0
-IHBlcmZvcm1zIHJlZ21hcF93cml0ZSwgYW5kIGZpbmFsbHkgY2FsbHMgaW50byBwYXNlbWlfc21i
-X3dhaXRyZWFkeSBpbiBpMmMtcGFzZW1pCi1jb3JlLmMuIFdlIG5vdGljZWQgdGhhdCBzbWJ1cy0m
-Z3Q7dXNlX2lycSBpcyB0cnVlLCBhbmQgYWZ0ZXIgaXQgY2FsbHMgaW50byB3YWl0X2Zvcl9jb21w
-bGV0aW9uX3RpbWVvdXQsIHRoZSBzeXN0ZW0gY3Jhc2hzIQoKV2UgZm91bmQgdGhhdCB3YWl0X2Zv
-cl9jb21wbGV0aW9uX3RpbWVvdXQgaXMgb25lIG9mIHRoZSBjb3JlIHNjaGVkdWxlciBBUElzIHVz
-ZWQgYnkgdGVucyBvZiB0aG91c2FuZHMgb2Ygb3RoZXIgZHJpdmVycywKaXQgaXMgdW5saWtlbHkg
-Y2F1c2luZyB0aGUgY3Jhc2guIFNvIHdlIHRyaWVkIHRvIHJlbW92ZSB0aGUgY2FsbCB0byB3YWl0
-X2Zvcl9jb21wbGV0aW9uX3RpbWVvdXQsIHRoZW4gdGhlIHN5c3RlbSBzZWVtcyB0bwpydW4gd2Vs
-bC4KCkhvd2V2ZXIsIGJlY2F1c2Ugd2UgaGF2ZSBsaXR0bGUga25vd2xlZGdlIGFib3V0IGkyYyBk
-ZXZpY2VzIGFuZCBzcGVjaWZpY2F0aW9ucywgd2UgYXJlIG5vdCBzdXJlIHdoZXRoZXIgdGhpcyBj
-aGFuZ2Ugd2lsbCAKY2F1c2Ugb3RoZXIgcG90ZW50aWFsIGhhcm1zIGZvciB0aGUgc3lzdGVtIGFu
-ZCBkZXZpY2UuIElzIHRoaXMgY2FsbCB0byB3YWl0IG5lY2VzYXJ5IGhlcmU/IE9yIGNhbiB5b3Ug
-Z2l2ZSBhIG1vcmUgCnNvcGhpc3RpY2F0ZWQgZml4PwoKV2XigJlyZSBoYXBweSB0byBwcm92aWRl
-IGFkZGl0aW9uYWwgbG9ncywgY29uZmlncywgb3IgdGVzdGluZyBhc3Npc3RhbmNlLiBBbnkgZ3Vp
-ZGFuY2Ugd291bGQgYmUgZ3JlYXRseSBhcHByZWNpYXRlZCEKCgo=
+The pull request you sent on Wed, 4 Jun 2025 17:23:13 -0400:
+
+> git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-06-04
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ff0905bbf991f4337b5ebc19c0d43525ebb0d96b
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
