@@ -1,106 +1,110 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B302750F0
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0684F226541
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749141581; cv=none; b=Iy0uAM6hpwzSIYQIjEyvIlPZ7jyTOAPcOqBNkmBL0N8UBTbMaInCJSGJZPs2nJ/Ho9GPzQCtspDT8pcUUpWhJq76QtDWBknWf3ZMSXcSHKQ3tN4WKZu1kDtkoFwwDFtik68NxOuKwZomQtg4UZUeZUuhRRODBre6/61EFy9A3FM=
+	t=1749141587; cv=none; b=TYJ/DYEK2Mp9oHGPnMFt+6Xk41Td7mTvvC13DeRV86af/4tKtCzWfyRugRFe+NYjPuKvcp7/M2cNz6RedHnANDlhjpeXda5W7zvyMW7bm9aLpwQ9to6RX3L/bqiTsxfc0dPy7s1zWFrSw5CNQrjzKTmIRVUZOgBewwqWFeN2FAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749141581; c=relaxed/simple;
-	bh=RFriP/I3+eC+Mtn8Y9bz27OWriV5nSIZX8Nfpzjwgjg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JddYTrYRump1ZqCQKfWdaz+d2bg09VbAPW4C5b6+0HlH6m7CWv6Qa5z9d2ynAWNuBIObr03qB/CHtkWCaH4rs5q7119BMzgGfVziOUHiCIFsHPpIB7R6qUn2ExIiekuH5TITeW1ULq0n4nG5EFR7sM6w0XlXjs26wmzEGpUUSeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6ixj713; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749141587; c=relaxed/simple;
+	bh=5bo7YkY1tlWpi8PAoKcUNHCafSvwyvXhWorc1ggJctk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kxfRa9p4x7CHbxq9BB43ONSnMwScOVnnimsL6BCE5NMuP9L3uvkxASjfwT0lDneMcHM4QdTl5QfoSRhhjAHwAf1tPkhe5z2gnNrC07xCqowUuVetGWViq7KzdDAMYOm2AB8Q/pJe3E4ELCvUH7PCmjpmi6xPdrt455Fvtx3n4Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LY8yjCry; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6ixj713"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-450d61cc409so1214335e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 09:39:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LY8yjCry"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-451d54214adso10516625e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 09:39:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749141578; x=1749746378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JQDRq2J6JVZdzzl58I/TpodvSza3ScCl+sz60fx5X0c=;
-        b=O6ixj713xKF3tE1F2Sd1tVRQpNfQU67Ew7pAbzlpMTSQB4/g4WMy2oSDYjPY2ovu5S
-         VYG6ZD2wt+O7z4FkdE7eM6/gM9fMxXlkJjnTM+8q1U5XOm8pIAbpBjdERLOFsPlyuzn7
-         0zSe3s8vDC199ZFy+wSmfNIsXVOFmStKh/lhlUSQYLgX4ToA6/Q0A4zWyH396QI2P4X9
-         wTbhQlfeDKxL6OUihqbqKWEx30j1MYTrs3phEBnxMt8qf9EI55aOazXoyVmgNHCLGcmV
-         aD5d4gs/uatKtopUgBoyW5bT1pQEgPqG72iuTgwZaJxfdO7YmrDN8GzSvuhhG8FZwzP+
-         Zu3g==
+        d=linaro.org; s=google; t=1749141583; x=1749746383; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5bo7YkY1tlWpi8PAoKcUNHCafSvwyvXhWorc1ggJctk=;
+        b=LY8yjCrynjbywcCoPqlu3N4j+zRgSo/WhCN1SowHicMHuFLjftOwzl9fmVjAKcIFdP
+         QZku+Do166hfeM3sHfYJzvaEc1zQe2nZcFuipg1l+xkSSNtRvbI9oQhYolGxUz9GhIOB
+         9Rk0vF/xE28Q7hFDrxdk9fwQ8zPgkzARtAVz0kXe6Uw3bEMo5F+yiCy1RsNbxL5kGWT4
+         W0/mRjWfujqrciSFgcVQKfVjEBFs1lzQmW6uIwsat6me7F7aMJWEsQpK+g2VkyHCrUil
+         trAqMQNALdpZEsbv62OtfjvpK10A9pukQLqpfFGHSgjcurflbM+MwJh6LYDQXKpcI3OA
+         pfow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749141578; x=1749746378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JQDRq2J6JVZdzzl58I/TpodvSza3ScCl+sz60fx5X0c=;
-        b=oCz1t0hwzF5puQqst9f4zvnrO5bOmODPRbrtost9v7IN4ZbgFOdMW5Js7BOoEH8Wok
-         MT9eTqVzrB+q1NM9x2k1vCTCSo/lnI0t9o4rolk0XIX7ytlVH5lRQ6jXu3al1xPHcuJc
-         sZejArkf/1LNEdv1HGl3CujcmcHFlZAcvEu15b9JdIv8s06HfrPXioV9wGoN1Xlx/Y7U
-         0LWEE1c/Yn9SoxqSDBQ0VAkHEIkK2W24R/eCM/trCsXctO+D6tyqAVqgwDYqfXfz39DJ
-         Jidnv46c0KNqXNOMiTpN+KOkK59Um/J1DUFbhOlHFM5v4RNx1EK4lqyYewTQZZyPr5As
-         Z2bA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+GW3uesUKTNmxb5VXAb5EGC48zXprJnPUCv7W3v1vQZXTe0RRGyIPMlZ74VfPkkS4Rsg9iGHS/5/OcQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhtI8D4seSJFOEwdqVbtoRu3EatDyjTinyPXSnIp75gBpFCGOl
-	5CZK30Qf3LWxmR1jMFcwTruZY8KI1bdsGKK3gXsJ3U454ptln+IXSTyp
-X-Gm-Gg: ASbGncuh5/yRNwhbWiShLgX/zaCxAqQ8WKtXKyvL9/SVENu+iPN8RCfB5WNg5StQkkJ
-	Y6t9paFpGN8wPR57xjKYmlztAdlMU5rU3YrFSKYWx656kXCE64QlvvasJLgD7Hyo8GID+rJYCTb
-	185YAbknoRqkmpdHVr8BcJ9hTKtED9/X0nLzDRotp906HhoESLkYNveOzE3teyj7S/aw4XuOl7h
-	h9UaX510YZWxhimkwQN53aqRJzDdaME3DrroS09Lyr66YBc1uu+k1X/YzDZRkdWlhto9xCxeIEo
-	6Vlgh88J8w8ZKj+ENQlJagefPP2u8wbDXDOTpdz0K/A1Vk5Gx9Y4mzIzqbSr2xybRywU12k=
-X-Google-Smtp-Source: AGHT+IFapntRUB2pslt9OoGnLM+SrlC1B8O0oNVU16LpEOaPAczQ9ZO8r4IU5V0ImeNESiOYiHqvKg==
-X-Received: by 2002:a05:6000:2891:b0:3a4:f6e0:c1c6 with SMTP id ffacd0b85a97d-3a51d9236d7mr2791274f8f.6.1749141578411;
-        Thu, 05 Jun 2025 09:39:38 -0700 (PDT)
-Received: from thomas-precision3591.. ([78.246.169.42])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4f009745esm25224425f8f.71.2025.06.05.09.39.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 09:39:37 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Anatolij Gustschin <agust@denx.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC EMBEDDED MPC5XXX),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] (powerpc/512) Fix possible `dma_unmap_single()` on uninitialized pointer
-Date: Thu,  5 Jun 2025 18:37:10 +0200
-Message-ID: <20250605163717.18020-1-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1749141583; x=1749746383;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5bo7YkY1tlWpi8PAoKcUNHCafSvwyvXhWorc1ggJctk=;
+        b=q7szkPqiomL/fn3iJiIc4Z1e2uWRRqgEGoL/UNNN6Rvs75h5vZqzFT+Fqm07ODM5jw
+         S6Xu1xcGgTVY/45+wzrjMe6xYK5ePVcklIlEiAso1fi/ajwXU0psOVpkkS0O21iRIF1N
+         a1D0LxwNI0FTdyYLYCcED739588/CXLDhfxT4xi2JmEwzT+RQ1ydKRdXFF/pfbgseEig
+         2UlK99NNWVAtW8LzYFgo9VorT1TH/r/f99/+5qazVeDfXnADXMDq9Xxp7J+/vDxFyHfA
+         tCE7WtTZhjE69N/v0+bJ0PXqxFqnW8KM2oiewbJAyU3EYHMSYUSI39ANIcpGWGUKm8MX
+         XESQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIM7Mn8oDCEn0uGWu8KpxrqMQnp6TbPi+ouBC+e1jVK0baNrkz6KhxWyboIuIoPFX4QlAUHlcnXinCGJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXpS/wrPFaRhWMpew1fsMkhB1qy9upvFgLBZtQpFFXlupBaB9z
+	s27TfUVR5MXeoy9QjBQOj6wX7XefQyrmuo4QwCyQ+T7bLRN7peGgx7X3ACOXDU6dDs0=
+X-Gm-Gg: ASbGncstIULFrwH9HopIPt3mSZMGFrjEn0vLkBQCgfiRX2f9t7qG4PCRCk9mCP84wtA
+	PMMzSpx0yLSpFu3huDLsLir7XSTGPRCOFPg1VIWYQ2rYzwarfW5HcIauRtXdeaTQJHAD5nkAabE
+	TEmXaC/Hce+RpFXr7i2gVo0XrmV66YqqkKRjoCW0+Gu3D9oSjlfxo1JMWtEpKW9OgtMJrpDJhes
+	1ZMK8v7zhm2FsiPQqxPLAFRfCus9tYsFw2Lt0XDENreZ2ExCwzheqf2kb7gDqRiqrjeBighJ8GD
+	f2QnwHum1LjxGN09PkGKcDYgYKdHbTsTUs3iSuki1vRhlMjfr5E00qkhDK/8HoEmaTqvOCWdbt7
+	YdrThPEtP/V0FgrhAPYQVx5m7m7oWC0JfHN3g8g==
+X-Google-Smtp-Source: AGHT+IF7pEWfu5EDT6M+8KlbHqhY7oSySizrEvnVy21r0eB6qhX6Du8968GoXexTi9wIPaNnXrCi5w==
+X-Received: by 2002:a05:600c:c0d2:20b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-451f78169eemr34545795e9.13.1749141583322;
+        Thu, 05 Jun 2025 09:39:43 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f82878acsm19149985e9.0.2025.06.05.09.39.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 09:39:42 -0700 (PDT)
+Message-ID: <6b09348e-d920-4025-9932-6c861fd5f1e9@linaro.org>
+Date: Thu, 5 Jun 2025 17:39:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Dmitry Baryshkov <dmitry.baryshkov@foundries.io>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Renjiang Han <quic_renjiang@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
+ <a3bf69f3-6500-4e45-ba34-8ba24312938a@kernel.org>
+ <CAO9ioeWkLu+ne18kjEST7YU7b1aBzcMBBeyfpagzis99BAeOHg@mail.gmail.com>
+ <b710e357-09e3-460e-b097-28cf0c856aeb@kernel.org>
+ <44b3779b-702c-4e8b-8ccd-c9c3314a511f@linaro.org>
+ <nr2je5ssn22npl2dqu5aj2xcwinnjmhvl3tvuz5smr4dd2rxaj@dfkk6aktkafy>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <nr2je5ssn22npl2dqu5aj2xcwinnjmhvl3tvuz5smr4dd2rxaj@dfkk6aktkafy>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If the device configuration fails (if `dma_dev->device_config()`),
-`sg_dma_address(&sg)` is not initialized and the jump to `err_dma_prep`
-leads to calling `dma_unmap_single()` on `sg_dma_address(&sg)`.
+On 05/06/2025 17:02, Dmitry Baryshkov wrote:
+> Please correct me if I'm wrong. Without driver changes from patch 1, the
+> driver will always use frequency table from the driver itself. In this
+> case it will be the frequency table (and corners) for SC7180, which
+> would make venus driver overclock the hardware on QCS615.
 
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+True.
+
+Yes, let's apply 1/3 and then re-submit 2 and 3 once it hits -next.
+
 ---
- arch/powerpc/platforms/512x/mpc512x_lpbfifo.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c b/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
-index 9668b052cd4b..ef3be438f914 100644
---- a/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
-+++ b/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
-@@ -241,8 +241,7 @@ static int mpc512x_lpbfifo_kick(void)
- 
- 	/* Make DMA channel work with LPB FIFO data register */
- 	if (dma_dev->device_config(lpbfifo.chan, &dma_conf)) {
--		ret = -EINVAL;
--		goto err_dma_prep;
-+		return -EINVAL;
- 	}
- 
- 	sg_init_table(&sg, 1);
--- 
-2.43.0
-
+bod
