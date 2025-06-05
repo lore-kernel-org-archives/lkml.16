@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF0C28E3F
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF181FE44A
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:12:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749111040; cv=none; b=cZTqoW+2gH0eBEzvSlBR/gYVtfrVUDQwsitTs3qPr3iWtw0w3qtDIYzEGnq2H0wjNNFgkeD6D8DVFpDC2EYOLn4cJxyfZc+02KKMr+v6geLvhGa/4YatL0u2ryDcGSLzBD2i0gRE4qycYJ9AaM1AwPOKvSaorLCr64qOuQgPGb8=
+	t=1749111127; cv=none; b=nOCV6u8s64gi1wl+AC0Rz71IsO6Loz7DHziPtVWn3QHpFXSqpVIi+nLrJNJ+9d2HCG1Ok6ppp9K2kblhqo3iZHgo2P1MtYIgtfweQM2OwhPRUI8LiPQxGLB3HUePQB+yxwMp4lS0zUtLMy8aFfBycUUFYPqs/BX81MOnnTRJIMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749111040; c=relaxed/simple;
-	bh=hErvfpDrhU6YA4P9HbA+wSbn8MKaX0IJ3xoMGHNZIxk=;
+	s=arc-20240116; t=1749111127; c=relaxed/simple;
+	bh=7APDMZaxuVVUzPH0hzXVXeKKwrGCSAQgU0rVY3XSHRo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aemPkOH2PllkgSsqwfwZQD35buyMW3icq9kEiEktbsh4sh0UEgZwEMcRwECubDqNnCQ6o90i5NTlrkb3ddEIBocFGZXojpRniZjslUmm0tX0evm4kX89do0i0SK1JSw5rVl7RGDxT82utRLSWs73vtq58o33N8ZvVPvtFzACusQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KG8DVzVs; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=l1J7PPNUkgDT4iwDyCYMH14PWnaMwwXRu9wYuFhEzliCLBCTqS8jar+yGiYEQqjSpbUTZRPpx0EajiSUbI2F2FvH3R+7ubU0iR5vRzYxAHexEBvK1tRaqSDXBMCRUy+kz8PZtX7GYd7rcInY77i36WeNfZIXb8u9mF1qoj87YNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bTaXK+XL; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KG8DVzVs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bTaXK+XL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749111036;
+	s=mimecast20190719; t=1749111125;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/aafh01NTxR+A0AeWsHCsf2rjG1YaF5gheNCJp/ghJg=;
-	b=KG8DVzVskntnGLCD+VJBp+Vdv+Nztmwd7O88DFJbuNtlzCTpeWcstKkq4NlsoSLMeW/5jX
-	00ipGbcZC1SEfFv8KQQNDqeADzF6sjLo18gXtRTu4VSXBsESAGgWrHAqlF4ULGlsjZqE/+
-	Ux/PpFnN41zs/99eekjo+Z5AA4/Pu8Q=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=aGysovsvSFhFmocooEY0x0kn//BwNRfG7TQs4Li9A7s=;
+	b=bTaXK+XLUcGyQngJIFi1G6oYqPLEVyOviN80YKfxzP2Xo1oJkZhRVt3JKy5kfc76pCAXEZ
+	2PYHes/213fKysp8nK84G5hb6udwVzNBBWDJbGCpZvC2uhC+HbNLgjanEYvOt5+gDtX6pm
+	RTlZuHfSITUnWO6AITTFmlhqlu+11rE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-526-ZELZdsPKMEeMbexmC4x8dw-1; Thu, 05 Jun 2025 04:10:35 -0400
-X-MC-Unique: ZELZdsPKMEeMbexmC4x8dw-1
-X-Mimecast-MFC-AGG-ID: ZELZdsPKMEeMbexmC4x8dw_1749111034
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450787c8626so3494015e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 01:10:35 -0700 (PDT)
+ us-mta-544-zTkkcovgNFKLzUr-c3lMjQ-1; Thu, 05 Jun 2025 04:12:03 -0400
+X-MC-Unique: zTkkcovgNFKLzUr-c3lMjQ-1
+X-Mimecast-MFC-AGG-ID: zTkkcovgNFKLzUr-c3lMjQ_1749111123
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4e6d426b1so900392f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 01:12:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749111034; x=1749715834;
+        d=1e100.net; s=20230601; t=1749111122; x=1749715922;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=/aafh01NTxR+A0AeWsHCsf2rjG1YaF5gheNCJp/ghJg=;
-        b=FshFQqZxV+jYK5SA70rE6RHHL5H9Wp95vwzd6sFlJoXfyy+ZtxUQgase+YLmhxcBSi
-         4EruE6unIQ9kAvsrE5fDJAVP2OxfWuaoeTLAzaUKITi7V/jZwZ+f/TXp8X53I0FXLh5B
-         zGrr9JOF1qmacKRNnml5PVMck+t8yTlqXyQcdKWQMtupP28k+ccmzaAnqn1w29L0s9rj
-         RZteftyFPpBCwr/AgR24kMPQWX11A60mGrjz+prPyQBseKWlarzE+GE4xhnpPxUD8y4J
-         ctT7GikIikd2/BYcjyzSerKszIewxwHfS5PGuwrFISt3E60jmoUjhl/ITpVnIRwH46Ik
-         WazA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+QN8o7/3CtGH4xiyUEelfEonJ+ai8SlOL1oDFtToWj6I9BLdZQMk2CQ4wyWVAX32cuROLl/bdKkuePx4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+7N+5pBKziJHUENTcvIV3o4nE2Am9AD1/II3bjQgNv4WxiaEq
-	55Ss2xPwBWJO19hU+Tr4PpHB8Qc7bI9Owb2dMlwOv7/mAb8kZrKVJMkujPNc+RujN5qFeylygQ/
-	CNkFsMaFOzZUC+BtLhMllyck5pVBpqacsHGAP8nMIrk0iGXKIla5XMHRPasJfstdBWA==
-X-Gm-Gg: ASbGncv3WeqZ5YSk1/6Pej1x051OHHrXp7hZF+qgXG1gwA1ASGXC6WLHCdLc0dKqArC
-	cpCw/c8Lo6tHmDoY1zd9O2aooABZC8yr0g+UkPgDZK1uLPsIP8NF3oXYoTfxeJkF2O57Y4PJw1X
-	Mocxprxp7x2MEaH+YffdW+woCRDZ+k1TeQwJhKRAcprSiqlCy5B7Huyc9JJmXf2sDVGTVQoI51r
-	H9s3Ue6hUij8Myt3Reve6Z/qJkelSIf2+hY0P7LP+kRO4uk/pe7eKznpt+xY5vrpfqxm1TyLcUQ
-	tCBN6d9jhP67YbbJ2EWRfT0bOtC5taYA9Cq0S5yGiMjqwmc8pES5/5mZ1WtM8lhs+CrQC1h0jgF
-	saVPEGw3WKmg+5bAnyNBjnU+dFzPqARicIAUg
-X-Received: by 2002:a05:600c:3b2a:b0:43d:97ea:2f4 with SMTP id 5b1f17b1804b1-451f0a730b0mr58780715e9.12.1749111033957;
-        Thu, 05 Jun 2025 01:10:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHQaYAgZhu0/nJvvDbz/QegVm0m1Rp5DMdQtvjdR9TXdNKm057xHvIDTOC0STgOwPWMrDD66g==
-X-Received: by 2002:a05:600c:3b2a:b0:43d:97ea:2f4 with SMTP id 5b1f17b1804b1-451f0a730b0mr58780185e9.12.1749111033420;
-        Thu, 05 Jun 2025 01:10:33 -0700 (PDT)
+        bh=aGysovsvSFhFmocooEY0x0kn//BwNRfG7TQs4Li9A7s=;
+        b=RQ1BROxgoJAwJHEIQ/aoPNulW+dhLntHK8/CvCnr48u72xNFn3hwsG8SPH5vEugtcm
+         z2MRngL2iMGsn/weAhaaiqcsT9jPHU8BZIxpZO9o7ZM3r/J8DRKFCnJr+UleukDBGnul
+         RdPTDN5z3Mskzhhp4pCBWKK8uq1cLAEWJXetGjl67uCL9avIbdNTZNc1prDj4oZmuvhJ
+         /cSY5YnpuLEv8EqYIfa5teussJ2qBAe+M37CeIidnY9SjR+6/k7lBPHBKfPUoeMPZGbu
+         vn2JLEBlR8I0fHLhL5vq0oogpW9OYnzN0C73qaNtIbEu2AhIS3Lg6AhIhV9uS4UXDVlR
+         f0SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhif29Y8TbomrAC/kIbh0HD8TWAgZbW7v9NKZ4nevs22y+45tJeErAvH044C7oHaeQEdbaRVYMmOz2pFE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNAL8FdRymLntq4pbv8EXhvRfdJw/i0OjnXndNhWKWskFGeeTT
+	RwYuCIwCbKO9bBKlBfcbHsMJG+Uq7V5kEw1qHICDL+THX77/eTBOACr/ysMaWgH8t2AW32okG9Q
+	z1ViaTodNUuSogD6he4PAe1uMVt8oq4JjLdKUaSBlpxoVRQP0RJvxWb3roLv/wRq6OA==
+X-Gm-Gg: ASbGncuHvsfWxHnEszJBMhmZHfubwRy0DbazI+98kjl34+U67rfQmI0Xwwqfp8SYYzs
+	3R4pfQwMyHrzwLSGZOiDPKvwLCpe3IKb5/LmjacxtWcPEnVz613Pwehc28j1FdOGTtME6PQB+Bt
+	fe15H6YyXJFVMq/YAW7Zzpu+Q4I+VnWJdW6nA9+7yPYE/CiQVczv998HoCk+hwzHMXt6nEQFZty
+	xAfZEwGdddGx8ouTEGtNxRUcNhUtl0t9YmlW9ExDDFTlF6+imUIiEohyC/yudH9YXYVNFkAUPai
+	x7zq9NH/uwqQs+ygT1fnpt/vBN5sXm+KPSoka6FAtVD+NWoIahvywbNFe6MY04BdY/Auje/iX01
+	q9JhRkGppOYMMHvHFTVtX9nOTCVl9zcmQAEuYc6QL/v8xVPw=
+X-Received: by 2002:a5d:5f51:0:b0:3a4:e61e:dc93 with SMTP id ffacd0b85a97d-3a526dc53e9mr2106824f8f.1.1749111122618;
+        Thu, 05 Jun 2025 01:12:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHcU5CzNqzvXoSvX3HTznxyYrcaaBp12FMjtapttNNs0veytGDkx7moKmOt950sPzUrUeBIfA==
+X-Received: by 2002:a5d:5f51:0:b0:3a4:e61e:dc93 with SMTP id ffacd0b85a97d-3a526dc53e9mr2106796f8f.1.1749111122277;
+        Thu, 05 Jun 2025 01:12:02 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2? (p200300d82f27ec004f4d0d38ba979aa2.dip0.t-ipconnect.de. [2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451fb178895sm10101345e9.14.2025.06.05.01.10.32
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f990cf14sm16149545e9.25.2025.06.05.01.12.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 01:10:32 -0700 (PDT)
-Message-ID: <ba6fe395-d18d-46fe-8ba5-7b84bbf23c13@redhat.com>
-Date: Thu, 5 Jun 2025 10:10:31 +0200
+        Thu, 05 Jun 2025 01:12:01 -0700 (PDT)
+Message-ID: <057fc1c1-7285-4656-aaa3-9a18d2e8f34b@redhat.com>
+Date: Thu, 5 Jun 2025 10:12:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,29 +75,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
- memory framebuffers
-To: Michael Kelley <mhklinux@outlook.com>, "simona@ffwll.ch"
- <simona@ffwll.ch>, "deller@gmx.de" <deller@gmx.de>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc: "weh@microsoft.com" <weh@microsoft.com>,
- "tzimmermann@suse.de" <tzimmermann@suse.de>, "hch@lst.de" <hch@lst.de>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20250523161522.409504-1-mhklinux@outlook.com>
- <20250523161522.409504-4-mhklinux@outlook.com>
- <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
- <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <e069436f-764d-464d-98ac-36a086297632@redhat.com>
- <SN6PR02MB4157A3F9E646C060553E5D90D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SN6PR02MB41574078A6785C3E2E1A6391D46CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: Re: [PATCH v4 2/3] mm,memory_hotplug: Implement numa node notifier
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250603110850.192912-1-osalvador@suse.de>
+ <20250603110850.192912-3-osalvador@suse.de>
+ <ddcdd8b9-566c-4f6c-b1f7-861e93a80fbb@redhat.com>
+ <aEA-K3hTvhtdUxuA@localhost.localdomain>
+ <9a845c21-5cfb-4535-97bd-0b02f5852457@redhat.com>
+ <aEEos-bG7cq0C8gI@localhost.localdomain>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -145,121 +136,28 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <SN6PR02MB41574078A6785C3E2E1A6391D46CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <aEEos-bG7cq0C8gI@localhost.localdomain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 04.06.25 23:58, Michael Kelley wrote:
-> From: Michael Kelley <mhklinux@outlook.com> Sent: Tuesday, June 3, 2025 10:25 AM
->>
->> From: David Hildenbrand <david@redhat.com> Sent: Tuesday, June 3, 2025 12:55 AM
->>>
->>> On 03.06.25 03:49, Michael Kelley wrote:
->>>> From: David Hildenbrand <david@redhat.com> Sent: Monday, June 2, 2025 2:48 AM
->>>>>
+On 05.06.25 07:18, Oscar Salvador wrote:
+> On Wed, Jun 04, 2025 at 02:47:28PM +0200, David Hildenbrand wrote:
+>> Just to clarify, these were the 3 notifiers each that belong together. I was
+>> not sure about NODE_CANCEL_ADDING_FIRST_MEMORY vs.
+>> NODE_NOT_ADDED_FIRST_MEMORY.
 > 
-> [snip]
-> 
->>>>>> @@ -182,20 +221,34 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
->>>>>>     	}
->>>>>>
->>>>>>     	/*
->>>>>> -	 * We want the page to remain locked from ->page_mkwrite until
->>>>>> -	 * the PTE is marked dirty to avoid mapping_wrprotect_range()
->>>>>> -	 * being called before the PTE is updated, which would leave
->>>>>> -	 * the page ignored by defio.
->>>>>> -	 * Do this by locking the page here and informing the caller
->>>>>> -	 * about it with VM_FAULT_LOCKED.
->>>>>> +	 * The PTE must be marked writable before the defio deferred work runs
->>>>>> +	 * again and potentially marks the PTE write-protected. If the order
->>>>>> +	 * should be switched, the PTE would become writable without defio
->>>>>> +	 * tracking the page, leaving the page forever ignored by defio.
->>>>>> +	 *
->>>>>> +	 * For vmalloc() framebuffers, the associated struct page is locked
->>>>>> +	 * before releasing the defio lock. mm will later mark the PTE writaable
->>>>>> +	 * and release the struct page lock. The struct page lock prevents
->>>>>> +	 * the page from being prematurely being marked write-protected.
->>>>>> +	 *
->>>>>> +	 * For FBINFO_KMEMFB framebuffers, mm assumes there is no struct page,
->>>>>> +	 * so the PTE must be marked writable while the defio lock is held.
->>>>>>     	 */
->>>>>> -	lock_page(pageref->page);
->>>>>> +	if (info->flags & FBINFO_KMEMFB) {
->>>>>> +		unsigned long pfn = page_to_pfn(pageref->page);
->>>>>> +
->>>>>> +		ret = vmf_insert_mixed_mkwrite(vmf->vma, vmf->address,
->>>>>> +					       __pfn_to_pfn_t(pfn, PFN_SPECIAL));
->>>>>
->>>>> Will the VMA have VM_PFNMAP or VM_MIXEDMAP set? PFN_SPECIAL is a
->>>>> horrible hack.
->>>>>
->>>>> In another thread, you mention that you use PFN_SPECIAL to bypass the
->>>>> check in vm_mixed_ok(), so VM_MIXEDMAP is likely not set?
->>>>
->>>> The VMA has VM_PFNMAP set, not VM_MIXEDMAP.  It seemed like
->>>> VM_MIXEDMAP is somewhat of a superset of VM_PFNMAP, but maybe that's
->>>> a wrong impression.
->>>
->>> VM_PFNMAP: nothing is refcounted except anon pages
->>>
->>> VM_MIXEDMAP: anything with a "struct page" (pfn_valid()) is refcounted
->>>
->>> pte_special() is a way for GUP-fast to distinguish these refcounted (can
->>> GUP) from non-refcounted (camnnot GUP) pages mapped by PTEs without any
->>> locks or the VMA being available.
->>>
->>> Setting pte_special() in VM_MIXEDMAP on ptes that have a "struct page"
->>> (pfn_valid()) is likely very bogus.
->>
->> OK, good to know.
->>
->>>
->>>> vm_mixed_ok() does a thorough job of validating the
->>>> use of __vm_insert_mixed(), and since what I did was allowed, I thought
->>>> perhaps it was OK. Your feedback has set me straight, and that's what I
->>>> needed. :-)
->>>
->>> What exactly are you trying to achieve? :)
->>>
->>> If it's mapping a page with a "struct page" and *not* refcounting it,
->>> then vmf_insert_pfn() is the current way to achieve that in a VM_PFNMAP
->>> mapping. It will set pte_special() automatically for you.
->>>
->>
->> Yes, that's what I'm using to initially create the special PTE in the
->> .fault callback.
->>
->>>>
->>>> But the whole approach is moot with Alistair Popple's patch set that
->>>> eliminates pfn_t. Is there an existing mm API that will do mkwrite on a
->>>> special PTE in a VM_PFNMAP VMA? I didn't see one, but maybe I missed
->>>> it. If there's not one, I'll take a crack at adding it in the next version of my
->>>> patch set.
->>>
->>> I assume you'd want vmf_insert_pfn_mkwrite(), correct? Probably
->>> vmf_insert_pfn_prot() can be used by adding PAGE_WRITE to pgprot. (maybe
->>> :) )
->>
->> Ok, I'll look at that more closely. The sequence is that the special
->> PTE gets created with vmf_insert_pfn(). Then when the page is first
->> written to, the .pfn_mkwrite callback is invoked by mm. The question
->> is the best way for that callback to mark the existing PTE as writable.
->>
-> 
-> FWIW, vmf_insert_pfn_prot() won't work. It calls insert_pfn() with
-> the "mkwrite" parameter set to 'false', in which case insert_pfn()
-> does nothing if the PTE already exists.
+> I started working on the new respin and the moment came to make a
+> decision about this.
+> I think I'd go with NODE_CANCEL_ADDING_FIRST_MEMORY, for two reasons.
+> One is that memory notifier also uses that therminology, so I'd use that
+> one for the node notifier to keep it consistent.
+> Someone could argue whether we are perpetuating a bad decision naming
+> though :-).
 
-Ah, you are worried about the "already exists but is R/O case".
+Works for me :)
 
-> 
-> So I would need to create a new API that does appropriate validation
-> for a VM_PFNMAP VMA, and then calls insert_pfn() with the "mkwrite"
-> parameter set to 'true'.
+And yes, out of both options I provided, that is the better one.
 
-IMHO, nothing would speak against vmf_insert_pfn_mkwrite().
-
-Much better than using that "mixed" ... beauty of a function.
 
 -- 
 Cheers,
