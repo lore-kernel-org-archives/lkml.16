@@ -1,101 +1,229 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2345C1624F7;
-	Thu,  5 Jun 2025 16:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC711AAA1C;
+	Thu,  5 Jun 2025 16:16:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749140157; cv=none; b=b1rdiEp0jZtC25TOIybaY5AVdOQ/SP0sEDygMYWOsf6p9cauXyIJwGZuHuHqew9zYzSFYNPdsakBK7PimWu0PG2oCl2oonlkrCGgM5fSKL8gqKIzoLk0fSpPKtCdiV2NaePMSPffoyC3B589rjoqaVHZIzJcNLUh1bNVTciup44=
+	t=1749140164; cv=none; b=bLpuvjsKcQYhHaGSznSZq9h2L+KpTmphMTiun8LyB0HxHlfyh9PGX3Dwp7lcaIvMubcSLEvwco8F/GgJngJx07wE1XOZM3TX9I1xcv4UMgBopsLfY7XFq3ZzeD3N1SbWxlTrred8UqlV04RlFUsI/13dc8s2migrK3Q7Lk+RlKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749140157; c=relaxed/simple;
-	bh=5chTMrgQJS2vmZa5XplnJeYkwgfYEOhwNWxnlCNJXYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JjkMS7AIpZEXCO/Oc23Wnc01H6eI8BdDGu2xJ8BfI8kESdZglP/8ZSoclJ938PYS+2wsxKi7Gbp/Act0XumuJF4apK4mOwzi8zh2kFnLEvtFjGO27DXWEBehCrt8bSjgrIlaQPQVoJQprf5QseI6MA8/Dp7YksRQHaxwUzGcBVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1C3ytCw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749140164; c=relaxed/simple;
+	bh=hxdKP8d4Td5fDMuUGjhIbKeXVValvsUe9aIvDa7yldo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UzcXhQ1WwHj6EoyirpcvC7ZWw6yuWm+aLBv3igzDmmlh+3RZL2IxEM4DU/Qnt9I+zA2RYYr1MnEpdSZn+B3OGNijeH86xb7Zs7UAINcVmdvPpAlTsArpycmgyk8TElbNZZ+1ZR2Cqu/U/ZnnXdbL3YPFAsuabLQTVTHNgwziMaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGsUGSTp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1C3ytCw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E121C4CEE7;
-	Thu,  5 Jun 2025 16:15:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGsUGSTp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5009AC4CEEB;
+	Thu,  5 Jun 2025 16:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749140155;
-	bh=5chTMrgQJS2vmZa5XplnJeYkwgfYEOhwNWxnlCNJXYg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F1C3ytCwGT18Y0qV/xxv2qNGYZHjS2yR3yFvxeeLYQlVyOq/+vXAAYBPJs1YqQCnP
-	 889PwElOGACTCQKo+AvCCl7OBZ9u/NQ7v335m5+aytdAek5Imq9G/rkaQJO5Iod1e/
-	 rt9KIx7u8zSAQPV6ydutJ5WhT3ipEzF2d2EyI7/i0Eq1YQV3k0ToMb5Kefb6kE/i3G
-	 wtM94kOgQLc5wlDfNI/1SeVzcewZw7RMTHREhuJMmMOOzKxeW+sUprTTmLv7lVAe3X
-	 XlzEuIO78m4dMsPOLp8OH2ljQZ0h1JuRMnQU1yRhSa3+t2HeX8U3W/MEyKYJe+SwLZ
-	 26su1QQ4Y0d/g==
-Date: Thu, 5 Jun 2025 17:15:51 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] selftests/mm: Fix test result reporting in
- gup_longterm
-Message-ID: <722628a8-f3fd-4fb9-ae04-2313a52ffb36@sirena.org.uk>
-References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
- <20250527-selftests-mm-cow-dedupe-v2-4-ff198df8e38e@kernel.org>
- <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
+	s=k20201202; t=1749140164;
+	bh=hxdKP8d4Td5fDMuUGjhIbKeXVValvsUe9aIvDa7yldo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=eGsUGSTpiafmq9qnZYc96i2HdB9tbJh72SG2LEaAEeiTSCxTh5JP7m1nmTfJhIzoN
+	 k2F4H8JjyFAU1a1yWcutcru1dWpCbuVBbvKFaZXBo43f/yTiwjQXN1XRt7Y5y7lDFZ
+	 yUDGShat0NmHZcVp4CRIZwzfqaOdOf1aAD+knhCJC4vqNfe5uEEMnE/lSxwjL2BNEU
+	 oq2nCa4fRP++Y4ZXmIrpzvgk2IMUH5HHW4PWT6X8xTPMJvkF+azOwPb/zZmT9Balvv
+	 K2AJfP7LvUtasObPCCPkUs3EvWssoVrw8MAQkuE6InWpZkJE9LVopRnE9pOYBIyvZr
+	 OGeMNa/sinTAQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: pratyush@kernel.org,  jasonmiu@google.com,  graf@amazon.com,
+  changyuanl@google.com,  rppt@kernel.org,  dmatlack@google.com,
+  rientjes@google.com,  corbet@lwn.net,  rdunlap@infradead.org,
+  ilpo.jarvinen@linux.intel.com,  kanie@linux.alibaba.com,
+  ojeda@kernel.org,  aliceryhl@google.com,  masahiroy@kernel.org,
+  akpm@linux-foundation.org,  tj@kernel.org,  yoann.congal@smile.fr,
+  mmaurer@google.com,  roman.gushchin@linux.dev,  chenridong@huawei.com,
+  axboe@kernel.dk,  mark.rutland@arm.com,  jannh@google.com,
+  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
+  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
+  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
+  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
+  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
+  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
+  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
+  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
+  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
+  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
+  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
+  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
+  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
+  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
+  stuart.w.hayes@gmail.com
+Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
+In-Reply-To: <20250515182322.117840-11-pasha.tatashin@soleen.com>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+	<20250515182322.117840-11-pasha.tatashin@soleen.com>
+Date: Thu, 05 Jun 2025 18:15:55 +0200
+Message-ID: <mafs0tt4urwp0.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="y5zP/ODICYjBWB2e"
-Content-Disposition: inline
-In-Reply-To: <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
-X-Cookie: That's no moon...
+Content-Type: text/plain
 
+On Thu, May 15 2025, Pasha Tatashin wrote:
 
---y5zP/ODICYjBWB2e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Introduce the user-space interface for the Live Update Orchestrator
+> via ioctl commands, enabling external control over the live update
+> process and management of preserved resources.
+>
+> Create a misc character device at /dev/liveupdate. Access
+> to this device requires the CAP_SYS_ADMIN capability.
+>
+> A new UAPI header, <uapi/linux/liveupdate.h>, defines the necessary
+> structures. The magic number is registered in
+> Documentation/userspace-api/ioctl/ioctl-number.rst.
+>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> ---
+[...]
+> +static int luo_ioctl_fd_preserve(struct liveupdate_fd *luo_fd)
+> +{
+> +	struct file *file;
+> +	int ret;
+> +
+> +	file = fget(luo_fd->fd);
+> +	if (!file) {
+> +		pr_err("Bad file descriptor\n");
+> +		return -EBADF;
+> +	}
+> +
+> +	ret = luo_register_file(&luo_fd->token, file);
+> +	if (ret)
+> +		fput(file);
+> +
+> +	return ret;
+> +}
+> +
+> +static int luo_ioctl_fd_unpreserve(u64 token)
+> +{
 
-On Thu, Jun 05, 2025 at 05:00:49PM +0100, Lorenzo Stoakes wrote:
+This leaks the refcount on the file that preserve took. Perhaps
+luo_unregister_file() should return the file it unregistered, so this
+can do fput(file)?
 
-> This seems to be causing tests to fail rather than be skipped if hugetlb
-> isn't configured. I bisected the problem to this patch so it's definitely
-> changed how things are handled (though of course it might just be
-> _revealing_ some previously existing bug in this test...).
+> +	return luo_unregister_file(token);
+> +}
+> +
+> +static int luo_ioctl_fd_restore(struct liveupdate_fd *luo_fd)
+> +{
+> +	struct file *file;
+> +	int ret;
+> +	int fd;
+> +
+> +	fd = get_unused_fd_flags(O_CLOEXEC);
+> +	if (fd < 0) {
+> +		pr_err("Failed to allocate new fd: %d\n", fd);
+> +		return fd;
+> +	}
+> +
+> +	ret = luo_retrieve_file(luo_fd->token, &file);
+> +	if (ret < 0) {
+> +		put_unused_fd(fd);
+> +
+> +		return ret;
+> +	}
+> +
+> +	fd_install(fd, file);
+> +	luo_fd->fd = fd;
+> +
+> +	return 0;
+> +}
+> +
+> +static int luo_open(struct inode *inodep, struct file *filep)
+> +{
+> +	if (!capable(CAP_SYS_ADMIN))
+> +		return -EACCES;
+> +
+> +	if (filep->f_flags & O_EXCL)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static long luo_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
+> +{
+> +	void __user *argp = (void __user *)arg;
+> +	struct liveupdate_fd luo_fd;
+> +	enum liveupdate_state state;
+> +	int ret = 0;
+> +	u64 token;
+> +
+> +	if (_IOC_TYPE(cmd) != LIVEUPDATE_IOCTL_TYPE)
+> +		return -ENOTTY;
+> +
+> +	switch (cmd) {
+> +	case LIVEUPDATE_IOCTL_GET_STATE:
+> +		state = READ_ONCE(luo_state);
+> +		if (copy_to_user(argp, &state, sizeof(luo_state)))
+> +			ret = -EFAULT;
+> +		break;
+> +
+> +	case LIVEUPDATE_IOCTL_EVENT_PREPARE:
+> +		ret = luo_prepare();
+> +		break;
+> +
+> +	case LIVEUPDATE_IOCTL_EVENT_FREEZE:
+> +		ret = luo_freeze();
+> +		break;
+> +
+> +	case LIVEUPDATE_IOCTL_EVENT_FINISH:
+> +		ret = luo_finish();
+> +		break;
+> +
+> +	case LIVEUPDATE_IOCTL_EVENT_CANCEL:
+> +		ret = luo_cancel();
+> +		break;
+> +
+> +	case LIVEUPDATE_IOCTL_FD_PRESERVE:
+> +		if (copy_from_user(&luo_fd, argp, sizeof(luo_fd))) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		ret = luo_ioctl_fd_preserve(&luo_fd);
+> +		if (!ret && copy_to_user(argp, &luo_fd, sizeof(luo_fd)))
+> +			ret = -EFAULT;
 
-> Using a couple of tests as an example:
+luo_unregister_file() is needed here on error.
 
-> Before this patch:
+> +		break;
+> +
+> +	case LIVEUPDATE_IOCTL_FD_UNPRESERVE:
+> +		if (copy_from_user(&token, argp, sizeof(u64))) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		ret = luo_ioctl_fd_unpreserve(token);
+> +		break;
+> +
+> +	case LIVEUPDATE_IOCTL_FD_RESTORE:
+> +		if (copy_from_user(&luo_fd, argp, sizeof(luo_fd))) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		ret = luo_ioctl_fd_restore(&luo_fd);
+> +		if (!ret && copy_to_user(argp, &luo_fd, sizeof(luo_fd)))
+> +			ret = -EFAULT;
+> +		break;
+> +
+> +	default:
+> +		pr_warn("ioctl: unknown command nr: 0x%x\n", _IOC_NR(cmd));
+> +		ret = -ENOTTY;
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+[...]
 
-> # [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with me=
-mfd hugetlb (2048 kB)
-> # memfd_create() failed (Cannot allocate memory)
-> not ok 39 R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with =
-memfd hugetlb (2048 kB)
-> # [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with me=
-mfd hugetlb (1048576 kB)
-> # memfd_create() failed (Cannot allocate memory)
-> not ok 40 R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with =
-memfd hugetlb (1048576 kB)
-
-That's the thing with memfd being special and skipping on setup failure
-that David mentioned, I've got a patch as part of the formatting series
-I was going to send after the merge window. =20
-
---y5zP/ODICYjBWB2e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhBwrYACgkQJNaLcl1U
-h9BZfgf/ZkJKx9DMIc/WRlEi/afFnFOqjI8V2apX7B3CuS7klARJ57l1fyMdKlRd
-3MRc5VRV31VuwmfYdIFPwqHzOnn6PEy7PHvtCwSKO9uCs/po21b3wMlknaaloFwn
-2sDENLSd39sWNBlnqqcOVK7A8p2rjTkidUo8Qhhy3NfaoOCwL2b9iiL5gr59cily
-YkwCy4Un4qDCryspKDr90H1wZGOnt0GbILGTWd/hNIsnwqvXVCG7WAZf0CvIoXSE
-e3LHCIoLXa7w/qhdakdrV+MHWf7MYmFbbG86hks1Kl0Q1yy+/9pNAgLtYm4vQmZz
-il0Wv7YKAdwiLTWWn/o2cL6qDoufDw==
-=Cxj0
------END PGP SIGNATURE-----
-
---y5zP/ODICYjBWB2e--
+-- 
+Regards,
+Pratyush Yadav
