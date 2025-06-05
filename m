@@ -1,214 +1,215 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368B5136E;
-	Thu,  5 Jun 2025 04:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1214E136E
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 04:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749096221; cv=none; b=SVmZnFR21H9HXqd2MD0xAR89fpU8aonNs/sY+snHJVT3ZFsehAKbpnzy+TaowQeWBPHE238axLE4j5vyPAXx4dPhqmXs8EFkkZ1/J6QfTcX9OQVshOsm1wGGA0v1xAAa6yysFwplo8hED0pUMXxL1xNmjJRxTJ0d8MXE0mp8AFo=
+	t=1749096332; cv=none; b=aQWG7ij4LN/fD99zWTgo39z/MXVwHGMvbZ681knD9yp1NtBuhjsVGDXzvsQTqeBkBMTrqx8gAg1uo1MeazRXupAhtFLGP9k0B7dHWVIQRlG93hVbmDsYb4nH6g3s82W0VEaPP7ckkAqdFTYN+v4/SC/rPpiweb/EPzwIyZKIGuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749096221; c=relaxed/simple;
-	bh=fI8J9rG7JbSFo7ZW/8CY8BUJMXza+StESHTX68eOZkI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WGoW1KwpPQxLHbf/CoZrB4VtPA04gIUWqUllY1omMUFVQTOdiWstYW+ZKjOrpoycSZEkrp9PZWSG3XrRX2IZ5w/5udKuP+5xmj72jHZD4hVr2t1qjRa+7uzThp0jzgrFeeu6SlAbgaoxHvqIiIjZW+MoIbF6iy2wZZ72Eyf+bxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YP1uoV6T; arc=none smtp.client-ip=209.85.215.175
+	s=arc-20240116; t=1749096332; c=relaxed/simple;
+	bh=0aMuVvcO/HryfZVnLIrporC1sMe8K19mf8AMb9yj2UY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TMaIFPy7x55pxKd/mNSIw+PjVFinqdLYbzqYl2Ucf9/envHMrQ5NlIF1AOgYH3s0JvK9xdfuqgp1w9AIaAriXeUP90zopcjLEYCIbxNsmOFn7uIJbgtGeiReb1o9qg6Qi3dUOmv5yls0Lg7QJeiJm3zz5M0FuHKJd47NTpfloIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P9ODmomC; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YP1uoV6T"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso440136a12.3;
-        Wed, 04 Jun 2025 21:03:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9ODmomC"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4e62619afso79670f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 21:05:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749096219; x=1749701019; darn=vger.kernel.org;
-        h=mime-version:user-agent:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=n8Cus5seLSLQKzB+xZDhAecKeXWVYO5YCmHd7YT8TtE=;
-        b=YP1uoV6TYAfRTdYqISgjTYVzHjfE34tzFCrmL6DPrxrrSW7kNIWVrM+u1EPsh5BOa3
-         XuiTmzlIY08zFxHQ39lQzJy6mTLt5OxiKT7ujgw6mTH/ltxCojOdG5YxjS0IUhq6A6YK
-         RodOt/I218HVXBd8IdQf7tKscUpLWAcmp93pN5FHy3kH+Tq2/Juk3LeFE3WAERviVjnV
-         mLWVboP3iQ4AIEZ8B9UhQrfQ1jW4Nq3s8qIwQP1OYK8Co6F0c9WkdabfVt4sMN+gKh6a
-         +6OYUcWbRGXom+A/1gzqsSJzediTfbLiepudF5GtrzN5Tf91J7zcVsjwMRqRgDpQa43k
-         wHhQ==
+        d=gmail.com; s=20230601; t=1749096329; x=1749701129; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dEwtieco4GKYEC1Fw9rbOSmkU4O570HqhhN1nDaf00c=;
+        b=P9ODmomC72UN8EmB2tJD2B0yQFuq/smuKTwGArOC+3gDPtIx7YdY2cA5orVcsoAbe3
+         IKAbDYKBqDA0FXupKA7HaV9szr6a/BSjgsxpv55E2F8vwzqnBdQQSaMInyZQcAfweLq9
+         Y9GF5h4IQpxpDuUEfALsyWgu88F/PMWmEt1Z3B59AsEewcOb+Rc0DcmAmvQ+nD19Gnut
+         4kNqM0rPcwiO0aEdVx8gge6FfUWgGdoTmJ3yfTdvVdTk064JGByctLy+7bbeWAiXFIKV
+         VxMt1ZlWBsBxdkBYtaRSUGSSHq5bKdkU66lj1IFGUN/WdHGYBWmwe+IvQEwV67h3vaMg
+         XliQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749096219; x=1749701019;
-        h=mime-version:user-agent:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n8Cus5seLSLQKzB+xZDhAecKeXWVYO5YCmHd7YT8TtE=;
-        b=Q57hqznM7castmZAVusQHte2ets0/Krmlh8+hHx9uKx/QVwRQlbNyvKlLpDTs/u5ry
-         HBbyj2pnGzxO7dUkQhHINkw0JFxHrB4GOhOuFwEdvFc1qKqlXtbYUNLYmYwSZOimgzuR
-         khV8ArdtCQoz0eAZ+htvK1EAqXXvYVBgMf+t3lK4NaQfYHaPqMOcG5wOdvJLxmyrFacL
-         JqhrwGFRSbydH6W//b+zas9ToRWzClJHnAatoFz4ds4ev+CVuD+1I7THzOeaCU4IplTT
-         J9G6p1XekppJe13FOBSHve7G/lgOOpV8wGBRs/YYkYmLdPuXcegmY5iU1IJeY9rg71T4
-         iqGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQQA/+/xx2Nyr8TU8JgSc5fwuPlUl5d6/PzNhOxhDn9md9No4fDLCjsfqfW5vhvB71tc1PfR5HPvI6xB4=@vger.kernel.org, AJvYcCWztBBkKG1g3qao3DyZ7zt5X2E2Die2FKAc0TpgEW4nCf6ImcQFv1G1q/DEss54HgsWCR9y4kgBHA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUD7xVubMRLO02PZP1hWb4OalsXQxGUrmy6X1wz/AA3g5pQtJV
-	Z4MmfkaevVVwd+3yfxuQ3nqFb3uvmT6CzYDYO1uGjXb1SELLwtmRUvJr
-X-Gm-Gg: ASbGncv1Jmcvrnvas6TOM2tbcPy2WK5arb4blfEsyXQ9cEAM6j0jn0DUePH9rfhdbZb
-	hQnShQyqMlhgN2yC+8COU3HYUWR0nLOuKsUCAXqGtNHuR2uFsO/AxwB16av9B5j6USHrKzVbOrG
-	x39YHmqv9/S893i5D/q5v7Qdjsj5vC0kBTJk08LdDdPBxnWAtc2KsHeb4q3U3aAeV2DLfBNRolj
-	l1sYLKagR0FhsH7hBy05oQVpVMshnthoAQTixKMHq2SgWWLKVK+mB9FmeOMMt/OV9vq+3WIBSul
-	MqfSsJiduMHmFBVSjp6Okezt3K0wGJGB5YLnX1A8Yw==
-X-Google-Smtp-Source: AGHT+IFleYWpeplnyvLnUHsWZ/C1wgFh8kYYty+VwdGXtjDE7p3YQ3/FXG72/ONc4f5yHBGAVqT9CQ==
-X-Received: by 2002:a17:90b:1b42:b0:312:ec3b:82c0 with SMTP id 98e67ed59e1d1-3130ce8a426mr7886836a91.29.1749096219250;
-        Wed, 04 Jun 2025 21:03:39 -0700 (PDT)
-Received: from fedora ([2601:646:8081:3770::9eb])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3132bff65c0sm493926a91.6.2025.06.04.21.03.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 21:03:38 -0700 (PDT)
-From: Collin Funk <collin.funk1@gmail.com>
-To: bug-gnulib@gnu.org
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- selinux@vger.kernel.org, Christian Brauner <brauner@kernel.org>, Stephen
- Smalley <stephen.smalley.work@gmail.com>
-Subject: Recent Linux kernel commit breaks Gnulib test suite.
-Date: Wed, 04 Jun 2025 21:03:37 -0700
-Message-ID: <8734ceal7q.fsf@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        d=1e100.net; s=20230601; t=1749096329; x=1749701129;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dEwtieco4GKYEC1Fw9rbOSmkU4O570HqhhN1nDaf00c=;
+        b=gLALTK+lH8v52yKiqcF61/BZ5cjq0xLszg09I1ZqmEPmkoa39Q31z6hq6o1miF1j52
+         6h3Sat01wfwMmbhr81HeDkGNvdI57HWGfJfUPrQUS9n0Z/KjSOkA+DGi0Z+cPRzBVam4
+         QZPGSafJbK7HgCzvDw4iIBrxktAauuxMfFhbxEFZrKVw/VOcHZFhU8jlPWv7scleUn+V
+         P+AMF6n6hPc4Zj19cCPVP9b9PLipLY8J9ygM44a2fRflVfd5LxHYh2EST1IDJWozxbTh
+         EndBNUy+IPAtzLPsuM7ZPXRcP8UyKKeHeBRt+yujMuOUW5AsDeIOi+7wn7LypMgBomBL
+         NUmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMLmAbLdiphSiWpFK2iWn3VyysE31ZYwzkYifIDHr8ahP/ITXOJIM/toh8+EQGEC+Jy4JhNm6aNiG7/Yw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5ocDEsz/huF41sJ0Eo3DWUNm5+toQqhqVemysHIKojyBHrdTK
+	cD0RI+tbugr50E3PRKug7TPk/dQeKtjhu5H0aXQCW8UjilSfi6iIQmQCncyLQ+BeBPv0fUQZp9k
+	wqRGr5Li5/QpSz5NeIp/olU1FjTJ4AZwkvQ==
+X-Gm-Gg: ASbGncv+fSMNY5Q+HRSAmdr3gB5UdacfRmsWwNuMvx2QUAr0p9vnyRyS0SJjiDI0aRH
+	XVhgy5ORT7pKig5g4WaSvF9jFw4QBIQDvo+3yFkETITnrzgpCr7io3M7xEDgXvfDGLd6j+X5ZtL
+	PkyyyIR0e3nuguXHNGDH3QdC8CmhKr3OrLbQ==
+X-Google-Smtp-Source: AGHT+IEGy5Ojz4lIsgpjdJct16wfU6hSORmQedpsbzwZYJaouI3aHwEH0WbI773cz57GlUP8HPa6/7RP5vf0nNBq8mc=
+X-Received: by 2002:a05:6000:430d:b0:3a3:6ab0:8863 with SMTP id
+ ffacd0b85a97d-3a51d997120mr1434178f8f.16.1749096329088; Wed, 04 Jun 2025
+ 21:05:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1749037059-4243-1-git-send-email-zhiguo.niu@unisoc.com>
+ <76adf905-191d-4415-a584-a79bc502bb87@kernel.org> <CAHJ8P3+ygYG=9ZnPY15=L9AwGr9b5_2PkMwT8AXOyE68v6Hg3A@mail.gmail.com>
+ <2a387dd6-9c10-478d-aae2-8284ad395944@kernel.org>
+In-Reply-To: <2a387dd6-9c10-478d-aae2-8284ad395944@kernel.org>
+From: Zhiguo Niu <niuzhiguo84@gmail.com>
+Date: Thu, 5 Jun 2025 12:05:17 +0800
+X-Gm-Features: AX0GCFvJBT95joyY_JO0nCWFEiJ0UyXel-A54_RG69i2bqx3GaVOigAsJsFlYfo
+Message-ID: <CAHJ8P3JcGAtwQVTqCfno+_agZjkEMn3XHtgBeOicUAPkONvnTQ@mail.gmail.com>
+Subject: Re: [PATCH v2] f2fs: compress: fix UAF of f2fs_inode_info in f2fs_free_dic
+To: Chao Yu <chao@kernel.org>
+Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	ke.wang@unisoc.com, Hao_hao.Wang@unisoc.com, baocong.liu@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-Using the following testdir:
-
-    $ git clone https://git.savannah.gnu.org/git/gnulib.git && cd gnulib
-    $ ./gnulib-tool --create-testdir --dir testdir1 --single-configure `./gnulib-tool --list | grep acl`
-
-I see the following result:
-
-    $ cd testdir1 && ./configure && make check
-    [...]
-    FAIL: test-copy-acl.sh
-    [...]
-    FAIL: test-file-has-acl.sh
-
-This occurs with these two kernels:
-
-    $ uname -r
-    6.14.9-300.fc42.x86_64
-    $ uname -r
-    6.14.8-300.fc42.x86_64
-
-But with this kernel:
-
-    $ uname -r
-    6.14.6-300.fc42.x86_64
-
-The result is:
-
-    $ cd testdir1 && ./configure && make check
-    [...]
-    PASS: test-copy-acl.sh
-    [...]
-    PASS: test-file-has-acl.sh
-
-Here is the test-suite.log from 6.14.9-300.fc42.x86_64:
-
-    FAIL: test-copy-acl.sh
-    ======================
-    
-    /home/collin/.local/src/gnulib/testdir1/gltests/test-copy-acl: preserving permissions for 'tmpfile2': Numerical result out of range
-    FAIL test-copy-acl.sh (exit status: 1)
-    
-    FAIL: test-file-has-acl.sh
-    ==========================
-    
-    file_has_acl("tmpfile0") returned no, expected yes
-    FAIL test-file-has-acl.sh (exit status: 1)
-
-To investigate further, I created the testdir again after applying the
-following diff:
-
-    diff --git a/tests/test-copy-acl.sh b/tests/test-copy-acl.sh
-    index 061755f124..f9457e884f 100755
-    --- a/tests/test-copy-acl.sh
-    +++ b/tests/test-copy-acl.sh
-    @@ -209,7 +209,7 @@ cd "$builddir" ||
-       {
-         echo "Simple contents" > "$2"
-         chmod 600 "$2"
-    -    ${CHECKER} "$builddir"/test-copy-acl${EXEEXT} "$1" "$2" || exit 1
-    +    ${CHECKER} strace "$builddir"/test-copy-acl${EXEEXT} "$1" "$2" || exit 1
-         ${CHECKER} "$builddir"/test-sameacls${EXEEXT} "$1" "$2" || exit 1
-         func_test_same_acls                           "$1" "$2" || exit 1
-       }
-
-Then running the test from inside testdir1/gltests:
-
-    $ ./test-copy-acl.sh
-    [...]
-    access("/etc/selinux/config", F_OK)     = 0
-    openat(AT_FDCWD, "tmpfile0", O_RDONLY)  = 3
-    fstat(3, {st_mode=S_IFREG|0610, st_size=16, ...}) = 0
-    openat(AT_FDCWD, "tmpfile2", O_WRONLY)  = 4
-    fchmod(4, 0610)                         = 0
-    flistxattr(3, NULL, 0)                  = 17
-    flistxattr(3, 0x7ffda3f6c900, 17)       = -1 ERANGE (Numerical result out of range)
-    write(2, "/home/collin/.local/src/gnulib/t"..., 63/home/collin/.local/src/gnulib/testdir1/gltests/test-copy-acl: ) = 63
-    write(2, "preserving permissions for 'tmpf"..., 37preserving permissions for 'tmpfile2') = 37
-    write(2, ": Numerical result out of range", 31: Numerical result out of range) = 31
-    write(2, "\n", 1
-    )                       = 1
-    exit_group(1)                           = ?
-    +++ exited with 1 +++
-
-So, we get the buffer size from 'flistxattr(3, NULL, 0)' and then call
-it again after allocating it 'flistxattr(3, 0x7ffda3f6c900, 17)'. This
-shouldn't fail with ERANGE then.
-
-To confirm, I replaced 'strace' with 'gdb --args'. Here is the result:
-
-    (gdb) b qcopy_acl 
-    Breakpoint 1 at 0x400a10: file qcopy-acl.c, line 84.
-    (gdb) run
-    Starting program: /home/collin/.local/src/gnulib/testdir1/gltests/test-copy-acl tmpfile0 tmpfile2
-    [Thread debugging using libthread_db enabled]
-    Using host libthread_db library "/lib64/libthread_db.so.1".
-    
-    Breakpoint 1, qcopy_acl (src_name=src_name@entry=0x7fffffffd7c3 "tmpfile0", source_desc=source_desc@entry=3, 
-        dst_name=dst_name@entry=0x7fffffffd7cc "tmpfile2", dest_desc=dest_desc@entry=4, mode=mode@entry=392) at qcopy-acl.c:84
-    84	  ret = chmod_or_fchmod (dst_name, dest_desc, mode);
-    (gdb) n
-    90	  if (ret == 0)
-    (gdb) n
-    92	      ret = source_desc <= 0 || dest_desc <= 0
-    (gdb) s
-    attr_copy_fd (src_path=src_path@entry=0x7fffffffd7c3 "tmpfile0", src_fd=src_fd@entry=3, dst_path=dst_path@entry=0x7fffffffd7cc "tmpfile2", 
-        dst_fd=dst_fd@entry=4, check=check@entry=0x4009b0 <is_attr_permissions>, ctx=ctx@entry=0x0) at libattr/attr_copy_fd.c:73
-    73		if (check == NULL)
-    (gdb) n
-    76		size = flistxattr (src_fd, NULL, 0);
-    (gdb) n
-    77		if (size < 0) {
-    (gdb) print size
-    $1 = 17
-    (gdb) n
-    86		names = (char *) my_alloc (size+1);
-    (gdb) n
-    92		size = flistxattr (src_fd, names, size);
-    (gdb) print errno
-    $2 = 0
-    (gdb) n
-    93		if (size < 0) {
-    (gdb) print size
-    $3 = -1
-    (gdb) print errno
-    $4 = 34
-
-After confirming with the Fedora Kernel tags [1], I am fairly confident
-that it was caused by this commit [2].
-
-But I am not familiar enough with ACLs, SELinux, or the Kernel to know
-the fix.
-
-Adding the lists where this was discussed and some of the signers to CC,
-since they will know better than me.
-
-Collin
-
-[1] https://gitlab.com/cki-project/kernel-ark
-[2] https://github.com/torvalds/linux/commit/8b0ba61df5a1c44e2b3cf683831a4fc5e24ea99d
+Chao Yu <chao@kernel.org> =E4=BA=8E2025=E5=B9=B46=E6=9C=885=E6=97=A5=E5=91=
+=A8=E5=9B=9B 11:31=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 6/5/25 10:44, Zhiguo Niu wrote:
+> > Chao Yu <chao@kernel.org> =E4=BA=8E2025=E5=B9=B46=E6=9C=885=E6=97=A5=E5=
+=91=A8=E5=9B=9B 10:23=E5=86=99=E9=81=93=EF=BC=9A
+> >>
+> >> On 6/4/25 19:37, Zhiguo Niu wrote:
+> >>> The decompress_io_ctx may be released asynchronously after
+> >>> I/O completion. If this file is deleted immediately after read,
+> >>> and the kworker of processing post_read_wq has not been executed yet
+> >>> due to high workloads, It is possible that the inode(f2fs_inode_info)
+> >>> is evicted and freed before it is used f2fs_free_dic.
+> >>>
+> >>>     The UAF case as below:
+> >>>     Thread A                                      Thread B
+> >>>     - f2fs_decompress_end_io
+> >>>      - f2fs_put_dic
+> >>>       - queue_work
+> >>>         add free_dic work to post_read_wq
+> >>>                                                    - do_unlink
+> >>>                                                     - iput
+> >>>                                                      - evict
+> >>>                                                       - call_rcu
+> >>>     This file is deleted after read.
+> >>>
+> >>>     Thread C                                 kworker to process post_=
+read_wq
+> >>>     - rcu_do_batch
+> >>>      - f2fs_free_inode
+> >>>       - kmem_cache_free
+> >>>      inode is freed by rcu
+> >>>                                              - process_scheduled_work=
+s
+> >>>                                               - f2fs_late_free_dic
+> >>>                                                - f2fs_free_dic
+> >>>                                                 - f2fs_release_decomp=
+_mem
+> >>>                                       read (dic->inode)->i_compress_a=
+lgorithm
+> >>>
+> >>> This patch use __iget before f2fs_free_dic and iput after free the di=
+c.
+> >>>
+> >>> Cc: Daeho Jeong <daehojeong@google.com>
+> >>> Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in=
+ softirq")
+> >>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> >>> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
+> >>> ---
+> >>> v2: use __iget/iput function
+> >>> ---
+> >>>  fs/f2fs/compress.c | 16 +++++++++++-----
+> >>>  1 file changed, 11 insertions(+), 5 deletions(-)
+> >>>
+> >>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> >>> index b3c1df9..3f0c18d 100644
+> >>> --- a/fs/f2fs/compress.c
+> >>> +++ b/fs/f2fs/compress.c
+> >>> @@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct deco=
+mpress_io_ctx *dic,
+> >>>  }
+> >>>
+> >>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+> >>> -             bool bypass_destroy_callback);
+> >>> +             bool bypass_destroy_callback, bool late_free);
+> >>>
+> >>>  struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+> >>>  {
+> >>> @@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(stru=
+ct compress_ctx *cc)
+> >>>       return dic;
+> >>>
+> >>>  out_free:
+> >>> -     f2fs_free_dic(dic, true);
+> >>> +     f2fs_free_dic(dic, true, false);
+> >>>       return ERR_PTR(ret);
+> >>>  }
+> >>>
+> >>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+> >>> -             bool bypass_destroy_callback)
+> >>> +             bool bypass_destroy_callback, bool late_free)
+> >>>  {
+> >>>       int i;
+> >>>
+> >>> @@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io_=
+ctx *dic,
+> >>>       }
+> >>>
+> >>>       page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
+> >>> +     if (late_free)
+> >>> +             iput(dic->inode);
+> >>>       kmem_cache_free(dic_entry_slab, dic);
+> >>>  }
+> >>>
+> >>> @@ -1783,16 +1785,20 @@ static void f2fs_late_free_dic(struct work_st=
+ruct *work)
+> >>>       struct decompress_io_ctx *dic =3D
+> >>>               container_of(work, struct decompress_io_ctx, free_work)=
+;
+> >>>
+> >>> -     f2fs_free_dic(dic, false);
+> >>> +     f2fs_free_dic(dic, false, true);
+> >>>  }
+> >>>
+> >>>  static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task=
+)
+> >>>  {
+> >>>       if (refcount_dec_and_test(&dic->refcnt)) {
+> >>>               if (in_task) {
+> >>> -                     f2fs_free_dic(dic, false);
+> >>> +                     f2fs_free_dic(dic, false, false);
+> >>>               } else {
+> >>>                       INIT_WORK(&dic->free_work, f2fs_late_free_dic);
+> >>> +                     /* to avoid inode is evicted simultaneously */
+> >>> +                     spin_lock(&dic->inode->i_lock);
+> >>> +                     __iget(dic->inode);
+> >>> +                     spin_unlock(&dic->inode->i_lock);
+> >>
+> >> Oh, how about using igrab() instead?
+> > Hi Chao,
+> > after I check igrab, I think it is ok,
+> > but here We don't need care about igarb's return value, right?
+>
+> I guess "return NULL" should be impossible case, but still we can add
+> f2fs_bug_on() to detect any potential bug, right?
+OK, thanks for your suggestions.
+>
+> Thanks,
+>
+> > Thanks!
+> >
+> >>
+> >>>                       queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
+> >>>                                       &dic->free_work);
+> >>>               }
+> >>
+>
