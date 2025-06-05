@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA63E20B7FC;
-	Thu,  5 Jun 2025 10:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EAC1A2C25;
+	Thu,  5 Jun 2025 10:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749119115; cv=none; b=N1fpYdbDRomai4tGzlCgStnmce1uxQPuIghxRYxnpkLe1GUZEE/adBGNQLMYdJy+Sm/7egzm4mwz3MDOKqmsP2Dv+CgX6hSeDTc/hohotSo2T3Fe43BQ32G8FgGIVoi1wTmSW6+1W475tfkdTNmiQXJcd417G3s1HQfONYWcclo=
+	t=1749119145; cv=none; b=AAKknLPTe2DunE9vwTeigrxssffsLkqiK/FRWZtMVxWMjvyCDLUHEoN6keb+DORyTe6r/NtqdOvr32tfh9SnADpkF2Zhkpo2U7mobLJ6TV7lH595Fv26EszY5gsh8/lUnI9FAaay19BD3MR+/2IalRvZFZyVrWE+/nyzj2vkX6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749119115; c=relaxed/simple;
-	bh=YdJvMMxNeJZ4ws+mkLoEmNugy4D3YfkKWs3ds4JIL/4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=CxN8gLmnvS0NaItUgHx7bKdKFB6i/EU82FFRpbkomdIN83kgGSPT1VcNt0ItxBkrkzE7IH48a+zHgDTkrFQoVd2Ty3uhmB2dvyGm0dumPZBJ51c1i0bHGzy7bECUdnZQhgy5UHdRMZIDNagW6GlvWkothBJmgSoVLZOw7Dn14Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4PPodmG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749119145; c=relaxed/simple;
+	bh=Y6odTPkaS4fOfYNHRYgsmVh7nl91jNEtq7WCKbmDCAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MXarD/ypyDiV0rB/Sca4vaQEO6a7P6ViZhyyJh+m9Awh2KHdx1Ca3UeiAbEuLeiAoCiVHQQ5fH7kzT9g1GmZ8YVdmvEaYYQh8bVR65d+6Kbz55xeKENeVlXFoaWHjNd1YppmkZDtNSL3xJOHP/sN203/64VwkX2u378Kujfnkkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ieu1dsbO; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4PPodmG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFA39C4CEE7;
-	Thu,  5 Jun 2025 10:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749119114;
-	bh=YdJvMMxNeJZ4ws+mkLoEmNugy4D3YfkKWs3ds4JIL/4=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=f4PPodmGDavBEPsrZH6CTP09Oz6VdO24835qnpwrQF7qR5Ng57NXXpxvd9Fe6yCJ9
-	 ZWQs9LT6MR03KUhBwDM+qyCAhlW/qA9J50X9SLcQs4lViFsNGn8mbG7/ExG/rpwBvF
-	 HetZqNnqNbBtJYhDcKMwRW5OX0z+RL+shCvGmS6oFnEJpeivlSVd5GGzTMRj/wbffB
-	 CNU3TYc10Nm6vaNPxFg7B03NQ9Jx816OJyV79UqJ14fSJ1ef36k/DxAvFNmruTRIuV
-	 f696TTLTlqadTX1aCP2YtcxX3zueLEj39X9pXWt/9ttLekYbtlJqC2HjFb8K4Y7JTj
-	 98dbQqEkzkQ4w==
-Message-ID: <dafd58ae-0a08-4fe6-b94d-c8c6c8c1fa97@kernel.org>
-Date: Thu, 5 Jun 2025 12:25:09 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ieu1dsbO"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-adb2bd27c7bso134255066b.2;
+        Thu, 05 Jun 2025 03:25:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749119141; x=1749723941; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=itRQPWabF7d6IdaAkp4MBncmkvXPAe8HLLkNyEpU2ug=;
+        b=Ieu1dsbO4YNZ0Sij4j9owQnq0t605ibIwCLymHlB2UCaxSQs+HAF2s5OSUmvAESZxx
+         yuxm0t3u5g0RbboZq/Xoj61dvDhoCSCQ9qoqoDt/YXQguu0y+d71WhqUUElr8l45XD98
+         Pd70PiNiPCxIv7B/4oOMgD5DB3dbu+f5dQVLS5b/PCmXKkQMQP8E7b/HpbWZGXadEvyH
+         50FTS4xCsMYIgXIvnwBDDfGyzoeyah0fzdxWqA60xF0+b+Ny5SkFqPybJ7XuzwQkyKZz
+         FrVHHiZt2oWGPzNNE4ExqWddIhIWv4UV3NE6/N/Ve2Xnd3q6eTNZhyKZCDBe3lb+eAiK
+         tQEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749119141; x=1749723941;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=itRQPWabF7d6IdaAkp4MBncmkvXPAe8HLLkNyEpU2ug=;
+        b=Ilaflht0no8Cnq0g8KhwNPykndNE2acpXUPkGAkv/FpU9zsleBrpdeGM88ih0/zn6o
+         W9skaNzrMXyBxQolk/i6GAEZ4LNgVaYMEA3taeq4Ri6bkEQIg7TKdl3Z7bDlsTKmePZt
+         K8qwdVGeYVGKfCMV0SFIpSnPmc3Hd1V6WHEAl5fccMwIRaqFzbDLcEpN9nIAc2+TyG+p
+         mEd4cfk+xvBxBpy/5c35p+L+Ljkc8X4FdNybJ4hh2GnUBhZNvux78an8t100wvRswR9s
+         wflXnPG4qHYZ3B1g9UBdWCTlxA84F71YOwC5Sq45Y6r3VCJCQyFZke8m9x0pM5n62LvI
+         w09g==
+X-Forwarded-Encrypted: i=1; AJvYcCUOLG67atCA5QHhNxMrHSco/C8WrZuVKlx0t/8kJHQMKIW5QlUPHnBNZqBqZdA5OpqLtfo=@vger.kernel.org, AJvYcCWaJyU4dHYo+/U8zahCK9eIZq6EATpXtPTwlGDtvQ1T4UzKjFB6JV64+ubbd7VptCKcrVvSdWFZ@vger.kernel.org, AJvYcCWo65KWJ7E4bJajFJsPF5N2mPk8TtlZTHFRVQzP9nZDNLE8erS5F2+P0LiVF6pXrjrgw+pMJwwo0gIhQg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp5ZGTm6vxhPrZSs375QzTLK+kHWt0lOyDPQdgyQ4JHHC1+7Cc
+	1e6VvMkARAAFKXKqouWMJFO1cjY6EpyMAnfMRXj2d4+es5hPmrO5rcuD
+X-Gm-Gg: ASbGncsr1bm2FTlSCPkTLriULdGgiOUbFNMw0Ez8u7+DRVKSwoL3lN7uaSLvWWzARX+
+	TYM1v0SrDL7ZdJCcNL4n7WAY1V0gDRYy+he22f9/TJbgz9WKG9CuXcr12PYTtAXEQKFUD0C+R5E
+	Xp9fovXiME7KVRCG6o9oMbotm1Cn/7ZNeOIZGfVzEbAA3yvs8LQoLZ9/QU+5UQN9c03kRIcp7ho
+	BCPb3oIKpznVCvDGhhomgMSA9CxdckiCnj2S+ZMbGUdncsjMLIbcOBQI9x1XiwQr/KRyzLiV7fz
+	EMZBSeeIcAmy5wVRibTJ4ZQ67wR5adf8ODTT0zFJ0WJ8gydDolPtB/amTSpKM68IGJxaB8k0KHE
+	=
+X-Google-Smtp-Source: AGHT+IEJVIeyPovY+XNoaWDAFKnxn+Gk0ei3Mrur69LBv34N0LN+wxmIwZL7D5wIY9s978A9r9fmyA==
+X-Received: by 2002:a17:906:f58c:b0:ad8:93a3:299c with SMTP id a640c23a62f3a-addf8c96579mr614742266b.10.1749119140426;
+        Thu, 05 Jun 2025 03:25:40 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325::22f? ([2620:10d:c092:600::1:d66f])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adb31ea3504sm1104621366b.172.2025.06.05.03.25.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 03:25:39 -0700 (PDT)
+Message-ID: <29f2c375-65e3-4d22-8274-552653222f8d@gmail.com>
+Date: Thu, 5 Jun 2025 11:26:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,63 +67,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Sven Peter <sven@kernel.org>
-Subject: Re: [BUG] rmmod i2c-pasemi-platform causing kernel crash on Apple M1.
-To: =?UTF-8?B?56iL5YeM6aOe?= <chenglingfei22s@ict.ac.cn>, j@jannau.net,
- alyssa@rosenzweig.io, neal@gompa.dev
-Cc: zhangzhenwei22b@ict.ac.cn, wangzhe12@ict.ac.cn, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
- naveen@kernel.org, andi.shyti@kernel.org, asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <5c598fea.3165d.1973e0a9a3a.Coremail.chenglingfei22s@ict.ac.cn>
+Subject: Re: [RFC v4 03/18] page_pool: use netmem alloc/put APIs in
+ __page_pool_alloc_page_order()
+To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
+ netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+ ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+ akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
+ andrew+netdev@lunn.ch, toke@redhat.com, tariqt@nvidia.com,
+ edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+References: <20250604025246.61616-1-byungchul@sk.com>
+ <20250604025246.61616-4-byungchul@sk.com>
 Content-Language: en-US
-In-Reply-To: <5c598fea.3165d.1973e0a9a3a.Coremail.chenglingfei22s@ict.ac.cn>
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250604025246.61616-4-byungchul@sk.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 05.06.25 05:02, 程凌飞 wrote:
-> Hi, all!
+On 6/4/25 03:52, Byungchul Park wrote:
+> Use netmem alloc/put APIs instead of page alloc/put APIs and make it
+> return netmem_ref instead of struct page * in
+> __page_pool_alloc_page_order().
 > 
-> We’ve encountered a kernel crash when running rmmod i2c-pasemi-platform on a Mac Mini M1 (T8103) running Asahi Arch Linux.
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> Reviewed-by: Mina Almasry <almasrymina@google.com>
+> ---
+>   net/core/page_pool.c | 26 +++++++++++++-------------
+>   1 file changed, 13 insertions(+), 13 deletions(-)
 > 
-> The bug was first found on the Linux v6.6, which is built manually with the Asahi given config to run our services.
-> At that time, the i2c-pasemi-platform was i2c-apple.
-> 
-> We noticed in the Linux v6.7, the pasemi is splitted into two separate modules, one of which is i2c-pasemi-platform.
-> Therefore, we built Linux v6.14.6 and tried to rmmod i2c-pasemi-platform again, the crash still exists. Moreover, we fetched
-> the latest i2c-pasemi-platform on linux-next(911483b25612c8bc32a706ba940738cc43299496) and asahi, built them and
-> tested again with Linux v6.14.6, but the crash remains.
-> 
-> Because kexec is not supported and will never be fully supported on Apple Silicon platforms due to hardware and firmware
-> design constraints, we can not record the panic logs through kdump.
+> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> index 4011eb305cee..523354f2db1c 100644
+> --- a/net/core/page_pool.c
+> +++ b/net/core/page_pool.c
+> @@ -518,29 +518,29 @@ static bool page_pool_dma_map(struct page_pool *pool, netmem_ref netmem, gfp_t g
+>   	return false;
+>   }
+>   
+> -static struct page *__page_pool_alloc_page_order(struct page_pool *pool,
+> -						 gfp_t gfp)
+> +static netmem_ref __page_pool_alloc_page_order(struct page_pool *pool,
+> +					       gfp_t gfp)
+>   {
+> -	struct page *page;
+> +	netmem_ref netmem;
+>   
+>   	gfp |= __GFP_COMP;
+> -	page = alloc_pages_node(pool->p.nid, gfp, pool->p.order);
+> -	if (unlikely(!page))
+> -		return NULL;
+> +	netmem = alloc_netmems_node(pool->p.nid, gfp, pool->p.order);
+> +	if (unlikely(!netmem))
+> +		return 0;
+>   
+> -	if (pool->dma_map && unlikely(!page_pool_dma_map(pool, page_to_netmem(page), gfp))) {
+> -		put_page(page);
+> -		return NULL;
+> +	if (pool->dma_map && unlikely(!page_pool_dma_map(pool, netmem, gfp))) {
+> +		put_netmem(netmem);
 
-Do you have UART connected to a device under test which you could use to 
-grab the panic log from the kernel? Alternatively you can also run the 
-kernel under m1n1's hypervisor and grab the log that way. It'll emulate 
-the serial port and redirect its output via USB.
+It's a bad idea to have {put,get}_netmem in page pool's code, it has a
+different semantics from what page pool expects for net_iov. I.e.
+instead of releasing the netmem and allowing it to be reallocated by
+page pool, put_netmem(niov) will drop a memory provider reference and
+leak the net_iov. Depending on implementation it might even underflow
+mp refs if a net_iov is ever passed here.
 
-> 
-> Thus we tried to find the root cause of the issue manually. When we perform rmmod, the kernel performs device releasing on
-> the i2c bus, then calls the remove function in snd-soc-cs42l83-i2c, which calls the cs42l42_common_remove in cs42l42,
-> because cs42l42-&gt;init_done is true, it performs regmap_write, and finally calls into pasemi_smb_waitready in i2c-pasemi
-> -core.c. We noticed that smbus-&gt;use_irq is true, and after it calls into wait_for_completion_timeout, the system crashs!>
-> We found that wait_for_completion_timeout is one of the core scheduler APIs used by tens of thousands of other drivers,
-> it is unlikely causing the crash. So we tried to remove the call to wait_for_completion_timeout, then the system seems to
-> run well.
-> 
-> However, because we have little knowledge about i2c devices and specifications, we are not sure whether this change will
-> cause other potential harms for the system and device. Is this call to wait necesary here? Or can you give a more
-> sophisticated fix?
+The second problem is that you pass it page_pool_dma_map(), which
+works only with struct page and not net_iov, and so it just
+unconditionally casts it back to struct page. Which, to be fair,
+a pre-existent issue.
 
-Yes, that call is necessary. It waits for the "transfer completed" 
-interrupt from the hardware. Without it the driver will try to read data 
-before it's available and you'll see corruption. I'm surprised hardware 
-attached to i2c (usb pd controller and audio I think) works at all with 
-that change.
+This function deals with pages, can we just use pages instead and
+cast to netmem when needed? Sth like in this pseudo code:
 
+netmem_ref __page_pool_alloc_page_order() {
+	struct page *p = alloc_pages_order();
 
-Sven
+	netmem = page_to_netmem(p);
+	if (!page_pool_dma_map(netmem)) {
+		put_page(p);
+		return 0;
+	}
+	return netmem;
+}
+
+-- 
+Pavel Begunkov
 
