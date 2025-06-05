@@ -1,140 +1,240 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605811BEF74;
-	Thu,  5 Jun 2025 07:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D721F2C44
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749108806; cv=none; b=jiYNgXkx2+/WxHuxitwOisC3GseDmDpAFY6DGViO6WbN882V/XgCNjVQ3WFM63RxCebsUJFCsAmj7CLABE5jcGxC/dnny3qezfJlRrj1biY+ZKHiGhv8GLi8twH1COiuTj65pRkAlQiz+Dpz3oUpzwcwVkC3QsrRNEDHxg7EQzQ=
+	t=1749108814; cv=none; b=rywjtFNRknnqz/FhoFCsS6h7YMaH+XhJpbK64LAwLrrn2LfGh3xjs0PjmbI+P1soPLwl3hg68jt8UbXgdqkVAGUrFX35WgmJE/8uYomF2xgILJ5BEUKB+ynRN+Fub75m1DGiqxdT/d29WI+LyZh2nrWZsiw+hbjXouASmng1m1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749108806; c=relaxed/simple;
-	bh=3HU5Hw5tR0oA02ajckSNgdgzpmuDD96VbblNWpCR6yE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JF+H7Uf66zcTyXZkyja2nRL2pBIf0rFesYeekBMYhNHhhqx4cEM6w8l6KkHAvZHf4g104SQtFsLuajPb87yBcmBRVU6CGE0Ke98jEhmYeRfEVLuwtaiK97mDBAfRkDKquGZbL9Q6lJRtUlLDX/Dx1xcV1/dW0qaK4A9EudWqfmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-52f05bb975bso253513e0c.1;
-        Thu, 05 Jun 2025 00:33:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749108802; x=1749713602;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UPXygViugK2qDdRyZqMS+7O5LAWGbwutgev5XJq8gb8=;
-        b=asIflDm20qWZfcpmm5Fot/pQZY7LKJaTDRBjz36WhCC+A6VzKqtenP3lE181XXN1b+
-         1/prCCFptm3yUkj6dW56q5nbFpF9ZuGrL+FejZYG7Ge3ed4ul2FN5XBUhONrjpbHLvPw
-         XjcxoQog1GbWmqT5Xu37vx5UKNiL+qsaaw5W1XwmuzIFCh28bLjepwYIkA9AGsX4tyIJ
-         slethI7gJDK2/Dfcej8LqyNTN07TQeLZCJL/XvPCsORBwm1cVTZ5OZAfcjJZWqeXOtFD
-         QuNEI5p5rCK2YwgvM/4DGu2tyuJdjevLLGO8tgK7gIGI6xB/GvB+owFke9WuqU4v1wUO
-         dXJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEeGprwU46w9e+SAr0//xEBA1WUpUyoX93x8l8V9Q4KC53I+Ilg0DFX1EWAlX73/TZNwQ3RqaDWMup@vger.kernel.org, AJvYcCWKqGBceZhbcq+VCIM7morK6qrGNsucAJxLFbvIySAPNVg+DmLL5M29Qk4v4WVc7AixNnefxaThr3YR1RQy@vger.kernel.org, AJvYcCWcYJ6OhR2P+grSVZxpjd4mJAsRDQd3AOVoK0GA4paraFnneZ7ltWFYYQnkjVgFofrdriIUqpKRhpcB@vger.kernel.org, AJvYcCXhpozIN5Sg1ZZK6EqGZdSbm0heHOZB979Q0aGk5gGpsrAV/NanTWedtRvne064cf+jNuNKYs2NN1Wu0Ma7V80ZN1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/qFkgJDiHLROufE5vbtAjg+y7cyJdsYbeIhMi6qZxfmfVtfFB
-	YK8FjEObNhA6hp9T+fclP+K8LasWQyUln1TWhfcs5xxlXv4ErvR+y2ovj+szovPd
-X-Gm-Gg: ASbGncu2ijzFz8kxEQhk60fKrd8wmiFB5UM2+tqhGc4OREAjBrvui1s0FVogT2PSKq5
-	6E/Jrha/1CHxvAPukfYYhlBWxZqq8jyGb6XHfsTASM3YdCqOCbcUD7o86al+iOWAQV+6iTsjZ4/
-	c4HPtQLi/Ff/c8ifpagLJxHNWkT3psErRpPqtgbklVrkTQSShtFQleUx4pqpFgzs2661xhIlk2R
-	ehBiF3FDunKw//EEntp0JvNU2a+4pITnJgezvN+ldOCcb1ZgB0xgzjwUnmyzVPa87AMhEk8+FnY
-	7R6QnGj4POv7GUh4TeChyKPn4+i56/9H3CO0cx9hfY6uUOChfZoBtwL+EisHTByJvdqdBLOaIGX
-	R5qJurOywvkvl8XhZLGgmBemO
-X-Google-Smtp-Source: AGHT+IGoPdAK7xoPICutFq0mu9VODkcVC0PSvVKCb9eCGVKQbdy9OnN4H9kVkO+cnJOGFBfaIXx8Ew==
-X-Received: by 2002:a05:6122:658e:b0:530:626b:7d43 with SMTP id 71dfb90a1353d-530c73159a7mr5732695e0c.2.1749108801834;
-        Thu, 05 Jun 2025 00:33:21 -0700 (PDT)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53074c32036sm12119147e0c.43.2025.06.05.00.33.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 00:33:21 -0700 (PDT)
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4e5adc977ecso205167137.3;
-        Thu, 05 Jun 2025 00:33:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVp7BhIzJ4kpmBWwkYBD7Sm54Qa6BJfZmvXXileYEAEa/HbEeJvHgZUPsYqlVmcXdiT2yBqvLYjquC3bPpy@vger.kernel.org, AJvYcCWDOA8n8AGNC+XfFitmLEQTQQblMzRRYGE1g8q77/5Liua94NkYU4lMgqFW9f0gbbz9K2q9YnozjviOW5T0a7S8L24=@vger.kernel.org, AJvYcCWX5gykN777tHN0bIN9ptbKL/gALrfS7jhMD/bnRkhx2V2FZCmBgBIN0zc/82MgcJtDgGxYqTHeAU3A@vger.kernel.org, AJvYcCXbnLLNyenimupoyPba/0HE222yJU4nt5pcIZJK37DtQdu0OLZfoAmu5Hlrspi9kC0bpvjQYnkh6GwC@vger.kernel.org
-X-Received: by 2002:a05:6102:1496:b0:4bc:82f:b4e0 with SMTP id
- ada2fe7eead31-4e746e4976fmr4848002137.22.1749108801250; Thu, 05 Jun 2025
- 00:33:21 -0700 (PDT)
+	s=arc-20240116; t=1749108814; c=relaxed/simple;
+	bh=gmGszBrVzfKmvu4SEigChqt4NOq+6RosBHpHMVPbLxc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D9+3dMTl+JG6D5L4Rtrcdf1/5Spgn7i8xzxPgq08uONcrvvRe/p/UlYOEpi+3dbAXMqDyLIwoEpnr1/Ghe8gIkD1lEhobNj375DssC5bVSt/W0TGYuDWARCGtwah5qO00X3ueIbseSw8Dv+REWE0hn3jBQybHe37BOQOXKqelys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WyEfqwsK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4qMiTnRv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WyEfqwsK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4qMiTnRv; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WyEfqwsK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4qMiTnRv";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WyEfqwsK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4qMiTnRv"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B960020FD7;
+	Thu,  5 Jun 2025 07:33:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749108804; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Eti/kusLt4Hx+hsFwLu/xPDbXs6k5uThauq5TP9Zszc=;
+	b=WyEfqwsKqgPfO1QdDu6pv4Uz2cq6epVuvFGr/6QjRCuIykB4AI8SHcXQvNYRX35t43RIH+
+	lc7CfQdPyZJqwmXOxuLLmnfa8h6oqFmh+65Fow+NQs/lIr1NT7iDU+WkqXg1YzTW6BMmQL
+	CoXlh1Ox6NPcpuwOKL36P0plWQru/Ug=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749108804;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Eti/kusLt4Hx+hsFwLu/xPDbXs6k5uThauq5TP9Zszc=;
+	b=4qMiTnRvB1UEr2w62DR60LOzGg7ovQAE/sx9LACL/a0A7wxPZRr/66BsiNqSemeVzJG9RN
+	eKyFRu+8APadQhAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749108804; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Eti/kusLt4Hx+hsFwLu/xPDbXs6k5uThauq5TP9Zszc=;
+	b=WyEfqwsKqgPfO1QdDu6pv4Uz2cq6epVuvFGr/6QjRCuIykB4AI8SHcXQvNYRX35t43RIH+
+	lc7CfQdPyZJqwmXOxuLLmnfa8h6oqFmh+65Fow+NQs/lIr1NT7iDU+WkqXg1YzTW6BMmQL
+	CoXlh1Ox6NPcpuwOKL36P0plWQru/Ug=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749108804;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Eti/kusLt4Hx+hsFwLu/xPDbXs6k5uThauq5TP9Zszc=;
+	b=4qMiTnRvB1UEr2w62DR60LOzGg7ovQAE/sx9LACL/a0A7wxPZRr/66BsiNqSemeVzJG9RN
+	eKyFRu+8APadQhAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A16031373E;
+	Thu,  5 Jun 2025 07:33:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dTAEJ0RIQWiNLgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 05 Jun 2025 07:33:24 +0000
+Message-ID: <ba208d76-7992-4c70-be8f-49082001f194@suse.cz>
+Date: Thu, 5 Jun 2025 09:33:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
- <20250530225504.55042-3-marek.vasut+renesas@mailbox.org> <CAMuHMdUVYzaUyP=OUOST8SK66_BpubOh0WCXcaVWBy=RxBrquA@mail.gmail.com>
- <egtsvxsfc5c2s4hrwucsqk3s5dv7xsi6ghrnf6jd3mvf3zvskb@z7hvehbd33t5>
-In-Reply-To: <egtsvxsfc5c2s4hrwucsqk3s5dv7xsi6ghrnf6jd3mvf3zvskb@z7hvehbd33t5>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 5 Jun 2025 09:33:08 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWEmGk0iE0vroGRWOwsK3+EFpbqzO-OH3aVDQTud3wVtQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtG6IELptLOfKa-AavRTgQeGCljZvKI3BSZXgMtp-NgzVLc1G-6_2R8iug
-Message-ID: <CAMuHMdWEmGk0iE0vroGRWOwsK3+EFpbqzO-OH3aVDQTud3wVtQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: r8a779g3: Describe split PCIe
- clock on V4H Sparrow Hawk
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-arm-kernel@lists.infradead.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory
+ snapshot
+Content-Language: en-US
+To: Jann Horn <jannh@google.com>, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+ Pedro Falcato <pfalcato@suse.de>
+Cc: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
+ <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.990];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Level: 
 
-Hi Mani,
+On 6/3/25 20:21, Jann Horn wrote:
+> When fork() encounters possibly-pinned pages, those pages are immediately
+> copied instead of just marking PTEs to make CoW happen later. If the parent
+> is multithreaded, this can cause the child to see memory contents that are
+> inconsistent in multiple ways:
+> 
+> 1. We are copying the contents of a page with a memcpy() while userspace
+>    may be writing to it. This can cause the resulting data in the child to
+>    be inconsistent.
+> 2. After we've copied this page, future writes to other pages may
+>    continue to be visible to the child while future writes to this page are
+>    no longer visible to the child.
+> 
+> This means the child could theoretically see incoherent states where
+> allocator freelists point to objects that are actually in use or stuff like
+> that. A mitigating factor is that, unless userspace already has a deadlock
+> bug, userspace can pretty much only observe such issues when fancy lockless
+> data structures are used (because if another thread was in the middle of
+> mutating data during fork() and the post-fork child tried to take the mutex
+> protecting that data, it might wait forever).
+> 
+> On top of that, this issue is only observable when pages are either
+> DMA-pinned or appear false-positive-DMA-pinned due to a page having >=1024
+> references and the parent process having used DMA-pinning at least once
+> before.
 
-On Wed, 4 Jun 2025 at 19:31, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> On Wed, Jun 04, 2025 at 11:24:17AM +0200, Geert Uytterhoeven wrote:
-> > On Sat, 31 May 2025 at 00:55, Marek Vasut
-> > <marek.vasut+renesas@mailbox.org> wrote:
-> > > The V4H Sparrow Hawk board supplies PCIe controller input clock and PCIe
-> > > bus clock from separate outputs of Renesas 9FGV0441 clock generator chip.
-> > > Describe this split bus configuration in the board DT. The topology looks
-> > > as follows:
-> > >
-> > >  ____________                    _____________
-> > > | R-Car PCIe |                  | PCIe device |
-> > > |            |                  |             |
-> > > |    PCIe RX<|==================|>PCIe TX     |
-> > > |    PCIe TX<|==================|>PCIe RX     |
-> > > |            |                  |             |
-> > > |   PCIe CLK<|======..  ..======|>PCIe CLK    |
-> > > '------------'      ||  ||      '-------------'
-> > >                     ||  ||
-> > >  ____________       ||  ||
-> > > |  9FGV0441  |      ||  ||
-> > > |            |      ||  ||
-> > > |   CLK DIF0<|======''  ||
-> > > |   CLK DIF1<|==========''
-> > > |   CLK DIF2<|
-> > > |   CLK DIF3<|
-> > > '------------'
-> > >
-> > > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> >
-> > Thanks for your patch!
-> >
-> > > V2: Use pciec0_rp/pciec1_rp phandles to refer to root port moved to core r8a779g0.dtsi
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > I understand this has a hard dependency on [PATCH v2 1/3] (and on
-> > enabling CONFIG_PCI_PWRCTRL_SLOT), so I cannot apply this before that
-> > patch is upstream?
->
-> TBH, this patch is describing the binding properly. So even though the driver
-> change is necessary to make the device functional, I don't see it as a hard
-> dependency. But since people care about functionality, if both driver and DTS
-> changes go into the same release, it should be fine IMO.
+Seems the changelog seems to be missing the part describing what it's doing
+to fix the issue? Some details are not immediately obvious (the writing
+threads become blocked in page fault) as the conversation has shown.
 
-Applying the DTS change without the driver change would introduce a
-regression in my tree.  While the regression would be fixed in linux-next,
-it would still hurt bisectability.
+> Fixes: 70e806e4e645 ("mm: Do early cow for pinned pages during fork() for ptes")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-Gr{oetje,eeting}s,
+Given how the fix seems to be localized to the already rare slowpath and
+doesn't require us to pessimize every trivial fork(), it seems reasonable to
+me even if don't have a concrete example of a sane code in the wild that's
+broken by the current behavior, so:
 
-                        Geert
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> ---
+>  mm/memory.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 49199410805c..b406dfda976b 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -917,7 +917,25 @@ copy_present_page(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
+>  	/*
+>  	 * We have a prealloc page, all good!  Take it
+>  	 * over and copy the page & arm it.
+> +	 *
+> +	 * One nasty aspect is that we could be in a multithreaded process or
+> +	 * such, where another thread is in the middle of writing to memory
+> +	 * while this thread is forking. As long as we're just marking PTEs as
+> +	 * read-only to make copy-on-write happen *later*, that's easy; we just
+> +	 * need to do a single TLB flush before dropping the mmap/VMA locks, and
+> +	 * that's enough to guarantee that the child gets a coherent snapshot of
+> +	 * memory.
+> +	 * But here, where we're doing an immediate copy, we must ensure that
+> +	 * threads in the parent process can no longer write into the page being
+> +	 * copied until we're done forking.
+> +	 * This means that we still need to mark the source PTE as read-only,
+> +	 * with an immediate TLB flush.
+> +	 * (To make the source PTE writable again after fork() is done, we can
+> +	 * rely on the page fault handler to do that lazily, thanks to
+> +	 * PageAnonExclusive().)
+>  	 */
+> +	ptep_set_wrprotect(src_vma->vm_mm, addr, src_pte);
+> +	flush_tlb_page(src_vma, addr);
+>  
+>  	if (copy_mc_user_highpage(&new_folio->page, page, addr, src_vma))
+>  		return -EHWPOISON;
+> 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
