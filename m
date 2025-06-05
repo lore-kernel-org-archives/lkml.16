@@ -1,90 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914CF204F93;
-	Thu,  5 Jun 2025 20:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D69E1E5B9F;
+	Thu,  5 Jun 2025 20:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749156045; cv=none; b=IwD9AaIONPv/Jt32Lwo3EKwTi14tzMUC5U8KBh4XEJfMa5RAa4mbDUqEtlawXLQS0Sdr38kGRz8zkdsvnPkJ1oaGSDNcKV5gFlmWw/Z4Sy/GXTD7WphwJYNwgKg/3/KRL0KP80cOY2q9LR6NU/5L3ipXxFGj5QeLXZ0KNSd2RVA=
+	t=1749156190; cv=none; b=ePwt/EUypGnaReTMsrhLslBZFhn7bAlUBeUxTavtwV7ALK56Z+wZqErphze+Gx9/QDMCy6mxEuRPyoSqsocU+wr1NnZCAgPMMQDER56YlOaJp0yvmKWtLVsKcKanpAqy1Tw20ByDmORPToscoY+jDZHWCTEq5axviWhxnVDi2Sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749156045; c=relaxed/simple;
-	bh=Lg5UIiyH4Q57G7NQW5CuP/nO05aREMz8djr/XFdo9/g=;
+	s=arc-20240116; t=1749156190; c=relaxed/simple;
+	bh=5eFNb1/nop/S08gZqHhfQekf0Ums8/hC+AE2r+AET5U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NTLxztgaHQd/3osKRArDIMeikL4zECzGqcRVNDlo7vVX7lvRWk8GOVLLQhXFO0uiTLhVKZoG4ujO+e7UyFqd0JesVGoKGMbB9acs8WtDzBL/LB97fcI1UwxSl4/UAht09rt3aS8IRgqbYxsl5zdXa/Cj7os1HbJshfmqY/S6568=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KkF/+GGw; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=PeYsiGhWad/hh9MJ0bBJM6qjE2C0+Ec3T8XjBkweJvjrnwa1MEZHNLU/BxwSuI1vg8M0s6aOFi2HLvjD0jEYsbXbELtIrGG2pMxuB9QEYwrj6Aavcri0FcudGdFH7ecn9A0agpOPHBdu3yJdX7EnNMQ48pIlXpPA5EQ4XWZb1TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9gooNpb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkF/+GGw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58050C4CEF1;
-	Thu,  5 Jun 2025 20:40:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9gooNpb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB0CC4CEE7;
+	Thu,  5 Jun 2025 20:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749156045;
-	bh=Lg5UIiyH4Q57G7NQW5CuP/nO05aREMz8djr/XFdo9/g=;
+	s=k20201202; t=1749156190;
+	bh=5eFNb1/nop/S08gZqHhfQekf0Ums8/hC+AE2r+AET5U=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KkF/+GGwLW0TepEFsLiW7W1Buc2uiNdU3NRiLKIVfE1s4rjel+GvEP5PCHvlyu8Jb
-	 MJ1IA892P7VEWQRVmanOhpZcKTvsvWJ/tS+iV/o/kbFKIVos6dbJusHX/1fNDpbSjF
-	 8yDE76w8GZEn4decr8p/LH4wLmY3lk5wDrIUInwKHs96db0KVwVU20hdxcJR0TVb8T
-	 JBketqPIuqRjfdvYa4Tg99NOlIK5P85hJyyehhoojh5kFECme8nlQrdKTIngerZiRA
-	 uIfzc5VBW3BrNd4g0XfXzd3GnqysR3z6bOH4o3vlygQ9hEE/kfnprckYGfQyGmhCUs
-	 6BfHzrOJjy0Pw==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553644b8f56so789107e87.1;
-        Thu, 05 Jun 2025 13:40:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXbRRAM1U1sArBIakldZqG2dTGy4xxc9/aEwSHGMMj0APfvHarVCR/pegFq7REg8UT6u5SThXimEeWB3I8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdaPCsRf0J6zNw8kZ605v3pXQApFA7H9FbdSQLBg4ZsDyblnK0
-	cCOwusd19CgSYshn1xhro0EgYvHtcS2PplDAU4qAUpEXc/6NYEoGwM09UMwT54c0sM75jD6B49O
-	Z4ernSKzu2vHigassaPgfxDxY6s5/oYE=
-X-Google-Smtp-Source: AGHT+IEatRbFM/FmKCWy9sKO5xpdDCj/tNnQHiDrUQYz8fuR33yez6OUj1Z5K59hVMJyG3Fb7IDbo4lIbOuCbrIEPwM=
-X-Received: by 2002:a05:6512:15a9:b0:550:dee7:54b5 with SMTP id
- 2adb3069b0e04-55366c356e4mr166663e87.41.1749156043998; Thu, 05 Jun 2025
- 13:40:43 -0700 (PDT)
+	b=J9gooNpbJHQt8C+A0FcQNtvWS9jxWvqBwymsLI2NkWqUPm80/2G1qsrAdOlhyXTyC
+	 ApR8C1HQ3JXksLCMtB3jCkXas388cpTEBmqb/Kz7taxovcZrk1txK41rXzqz4Ea+cI
+	 fqysv1Qq9IE5ynuv55vl0cy+OrNuaXpbV+i80tJ/XpnJUvUqIAqvqPRfIJGyVYZDy/
+	 MoXXKkOoo0+Y/UbX0385+qd/RZS0UautceixqE/YXIoz9umnueHD5grmkYDAzphvqb
+	 21mQSmlU2UDjqt58DUjtsVx5jxVsTbCweKkoe9KBjHbMns/GkV5LFBEFeNxZ3fNffe
+	 xeXQhIl3/Lf7Q==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553241d30b3so1318798e87.3;
+        Thu, 05 Jun 2025 13:43:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVp5BAAFuHi3cSh5MFH4ZSTqnXwlmEgD7zzbLIqeqwH0F9V3QdMHLQxVHI2LqxapAfu2vMzFf66ak8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYnpYalh0KpCBgFNHCJr4ExD+6tYTR4nI43WZ4bV/APDc/I/97
+	dlr9aqo3LBc9GJPkw2NidRRtk1ZjEuWglOoDjVSSpm0raPD11j4bVbSdkbtCk9vTZjRdN24ikmi
+	YO30ube13oDnK3ltSnnaYlfk5qIl4Brc=
+X-Google-Smtp-Source: AGHT+IEvEvBVRfbjs/tzzHFWRRUcCCYsu5rap09rMlM/pTCpFFZ936JCFm0qzEHVbVd3ZNY2779F5fEgRmc6frJ4gXs=
+X-Received: by 2002:a05:6512:104b:b0:553:24bb:daa1 with SMTP id
+ 2adb3069b0e04-55366bd3b13mr153292e87.11.1749156188809; Thu, 05 Jun 2025
+ 13:43:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250525112833.3808220-1-masahiroy@kernel.org> <20250527221637.GA2566504@ax162>
-In-Reply-To: <20250527221637.GA2566504@ax162>
+References: <20250602181143.528789-1-masahiroy@kernel.org> <CAMj1kXHEkHMPMJwsMc8WAmsMhJn3ynHqJku=jeKQOT0T_aNqNA@mail.gmail.com>
+In-Reply-To: <CAMj1kXHEkHMPMJwsMc8WAmsMhJn3ynHqJku=jeKQOT0T_aNqNA@mail.gmail.com>
 From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 6 Jun 2025 05:40:06 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARTm2jftn6dDu1rCAYK7TdLKUHEhXc-LzYgGmu9GfU-AA@mail.gmail.com>
-X-Gm-Features: AX0GCFst7UEbP3DBeMZgZHIuRIETd3mCYHRutM9dfMKKcIhExiu0grYGX_VCSrI
-Message-ID: <CAK7LNARTm2jftn6dDu1rCAYK7TdLKUHEhXc-LzYgGmu9GfU-AA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: replace deprecated T option with --thin for $(AR)
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	llvm@lists.linux.dev
+Date: Fri, 6 Jun 2025 05:42:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATff5-eY-y9XKNqcHtTT32GPu5P=X4geZxb2Ur83ekbqQ@mail.gmail.com>
+X-Gm-Features: AX0GCFtZ06wQ5FyNvazMlSTJ3GaxZfal8mErvewBgz54UC5zlBCfgBC4Tqy0yJw
+Message-ID: <CAK7LNATff5-eY-y9XKNqcHtTT32GPu5P=X4geZxb2Ur83ekbqQ@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: use 'targets' instead of extra-y in Makefile
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 7:16=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
+On Tue, Jun 3, 2025 at 3:13=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wro=
+te:
 >
-> On Sun, May 25, 2025 at 08:28:31PM +0900, Masahiro Yamada wrote:
-> > According to 'man ar':
+> On Mon, 2 Jun 2025 at 20:11, Masahiro Yamada <masahiroy@kernel.org> wrote=
+:
 > >
-> >     T   Deprecated alias for --thin.  T is not recommended because in
-> >         many ar implementations T has a different meaning, as specified
-> >         by X/Open System Interface.
-> >
-> > 'man llvm-ar' also states:
-> >
-> >     T   Alias for --thin. In many ar implementations T has a different
-> >         meaning, as specified by X/Open System interface.
+> > These objects are built as prerequisites of %.stub.o files.
+> > There is no need to use extra-y, which is planned for deprecation.
 > >
 > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
 >
-> Yeah, seems reasonable to get ahead of the curve in case either
-> implementation decides to drop it.
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
 >
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> I misunderstood what extra-y was for - note that
+> arch/arm64/kernel/pi/Makefile has the same issue.
+
+Applied to linux-kbuild.
 
 
-I gave up due to this report:
+A patch exists for arm64 too
 
-https://lore.kernel.org/all/20250603163933.4df366ff@canb.auug.org.au/
+https://lore.kernel.org/lkml/20250602180937.528459-1-masahiroy@kernel.org/
+
 
 
 --=20
