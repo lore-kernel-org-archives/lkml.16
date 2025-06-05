@@ -1,168 +1,205 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2F51F03D9;
-	Thu,  5 Jun 2025 06:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316861A00F0
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749106298; cv=none; b=OI00yswVq+JAc7I1CrBZQdOChFO7m7gF+sb/AVQalqkx0x7vVMx4+a4N/RFiIHNafwJXi0WPs8YWEcrSfTNEDXtGeepk+4Vo5TDpkXE5jXR7D4dROFHtz7DTDnSe4KJdjHtulKeC/vBavEbF5udfHUqt5LoW4uXqCaYRaz7vkk4=
+	t=1749106385; cv=none; b=KAlw1FWzrMgy3yOY7nDSVYv2cz4Himo96cNP6EC4uCxDmxi/L553yluK9tZifVuD1zVLX988itQ58b9zdCujPTbKqOpGUMPoB4/iZkuzuZ1aG8Haj6Q9ZjQqhyFz8J7sEVyQtPydVrmt4MflT0PyVkozyp/owWr9EGnqdpP6b10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749106298; c=relaxed/simple;
-	bh=hS1CBvwCFC9uRduSLLx0Ti6WROWYkF8xkTzwy5DuWaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NFSMmm/cpIhZ3EYN9AkheJzbJH4ovtY+Fw9lKjJ77AKY7HzD5R77lo9Pe0jfuGv87y9J9hsb0nYLDFzuE3LFhGJ9gE7MZRU9y67Dmimrq6gC/VDRPKp4w/U6rKiH5HPr0wo40SbCjg7Z7PRw4oUYUh/H3eiAu/JYlt/CTzu2COI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bCZp434jZztS1K;
-	Thu,  5 Jun 2025 14:50:20 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3C3051402FC;
-	Thu,  5 Jun 2025 14:51:33 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 5 Jun 2025 14:51:32 +0800
-Message-ID: <b023bb1f-4c1c-49dc-8842-0b2f1cfbbee0@huawei.com>
-Date: Thu, 5 Jun 2025 14:51:31 +0800
+	s=arc-20240116; t=1749106385; c=relaxed/simple;
+	bh=vA8D3g3vJIvtt27o9aE9Vd7o6hUsfSfRZcwpsMs6PUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=L0rC0htTW4b6Cip5va973j+1ztV+Z11lrPWCavmDCnP4ZrLiQf6YaoO0HPwZq7bmtldDbnt4uGT0EoX0AftNRMTAbbWDlT9MnoCc2EZ9f4mKKtKgoWsJQkTlQVX0tMff+VNZBzzl9f/TbKYb1aMnXi3XrYafSUWKcXILHUUHAOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JyoiJ74m; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JyoiJ74m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 287F8C4CEE7;
+	Thu,  5 Jun 2025 06:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749106384;
+	bh=vA8D3g3vJIvtt27o9aE9Vd7o6hUsfSfRZcwpsMs6PUM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=JyoiJ74mDsUqco4MoQePxzTe0fLPkY+rRhbzDvWoXMd8i6CdW5QiUCkbdsO/d1lE2
+	 tAGiHcbNonarbnOwFIOoRIksyOXnlm1MENJBnQ8QqfQG9dZ/82BSFFiPFfnTxP+Xkc
+	 ByUCubkb7JgyfhmluSyeC4AyUNaYI1897rmcr/c59VIjIFBHG3Zr52vAMd+ssvwLyk
+	 VNgGFXW+qInrgn6F3RD9rBxxqO7ZLatPXoMO1R54T+cG1eRSQVmBm15gv+UzXPjTg3
+	 RafINg8K5At0534Cda+z8GpzEbBHv7Cm7UiS/pRv7xgg6cTye7FTZ8ORrO37mXHxrp
+	 rNYQXGuC+nTEQ==
+Date: Thu, 5 Jun 2025 12:23:01 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine updates for v6.16
+Message-ID: <aEE+za1ox/mlTs1D@vaman>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] nfs: fix the race of lock/unlock and open
-To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
-	<bcodding@redhat.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
-References: <20250419085709.1452492-1-lilingfeng3@huawei.com>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <20250419085709.1452492-1-lilingfeng3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="CVfQPmQrWZRrfKJW"
+Content-Disposition: inline
 
-Friendly ping..
 
-Thanks
+--CVfQPmQrWZRrfKJW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/4/19 16:57, Li Lingfeng 写道:
-> LOCK may extend an existing lock and release another one and UNLOCK may
-> also release an existing lock.
-> When opening a file, there may be access to file locks that have been
-> concurrently released by lock/unlock operations, potentially triggering
-> UAF.
-> While certain concurrent scenarios involving lock/unlock and open
-> operations have been safeguarded with locks – for example,
-> nfs4_proc_unlckz() acquires the so_delegreturn_mutex prior to invoking
-> locks_lock_inode_wait() – there remain cases where such protection is not
-> yet implemented.
->
-> The issue can be reproduced through the following steps:
-> T1: open in read-only mode with three consecutive lock operations applied
->      lock1(0~100) --> add lock1 to file
->      lock2(120~200) --> add lock2 to file
->      lock3(50~150) --> extend lock1 to cover range 0~200 and release lock2
-> T2: restart nfs-server and run state manager
-> T3: open in write-only mode
->      T1                            T2                                T3
->                              start recover
-> lock1
-> lock2
->                              nfs4_open_reclaim
->                              clear_bit // NFS_DELEGATED_STATE
-> lock3
->   _nfs4_proc_setlk
->    lock so_delegreturn_mutex
->    unlock so_delegreturn_mutex
->    _nfs4_do_setlk
->                              recover done
->                                                  lock so_delegreturn_mutex
->                                                  nfs_delegation_claim_locks
->                                                  get lock2
->     rpc_run_task
->     ...
->     nfs4_lock_done
->      locks_lock_inode_wait
->      ...
->       locks_dispose_list
->       free lock2
->                                                  use lock2
->                                                  // UAF
->                                                  unlock so_delegreturn_mutex
->
-> Get so_delegreturn_mutex before calling locks_lock_inode_wait to fix this
-> issue.
->
-> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->   fs/nfs/nfs4proc.c | 19 +++++++++++++++----
->   1 file changed, 15 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 970f28dbf253..297ee2442c02 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -7112,13 +7112,16 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
->   		.inode = calldata->lsp->ls_state->inode,
->   		.stateid = &calldata->arg.stateid,
->   	};
-> +	struct nfs4_state_owner *sp = calldata->ctx->state->owner;
->   
->   	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
->   		return;
->   	switch (task->tk_status) {
->   		case 0:
->   			renew_lease(calldata->server, calldata->timestamp);
-> +			mutex_lock(&sp->so_delegreturn_mutex);
->   			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
-> +			mutex_unlock(&sp->so_delegreturn_mutex);
->   			if (nfs4_update_lock_stateid(calldata->lsp,
->   					&calldata->res.stateid))
->   				break;
-> @@ -7375,6 +7378,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
->   {
->   	struct nfs4_lockdata *data = calldata;
->   	struct nfs4_lock_state *lsp = data->lsp;
-> +	struct nfs4_state_owner *sp = data->ctx->state->owner;
->   
->   	if (!nfs4_sequence_done(task, &data->res.seq_res))
->   		return;
-> @@ -7386,8 +7390,12 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
->   				data->timestamp);
->   		if (data->arg.new_lock && !data->cancelled) {
->   			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
-> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
-> +			mutex_lock(&sp->so_delegreturn_mutex);
-> +			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0) {
-> +				mutex_unlock(&sp->so_delegreturn_mutex);
->   				goto out_restart;
-> +			}
-> +			mutex_unlock(&sp->so_delegreturn_mutex);
->   		}
->   		if (data->arg.new_lock_owner != 0) {
->   			nfs_confirm_seqid(&lsp->ls_seqid, 0);
-> @@ -7597,11 +7605,14 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
->   	int status;
->   
->   	request->c.flc_flags |= FL_ACCESS;
-> -	status = locks_lock_inode_wait(state->inode, request);
-> -	if (status < 0)
-> -		goto out;
->   	mutex_lock(&sp->so_delegreturn_mutex);
->   	down_read(&nfsi->rwsem);
-> +	status = locks_lock_inode_wait(state->inode, request);
-> +	if (status < 0) {
-> +		up_read(&nfsi->rwsem);
-> +		mutex_unlock(&sp->so_delegreturn_mutex);
-> +		goto out;
-> +	}
->   	if (test_bit(NFS_DELEGATED_STATE, &state->flags)) {
->   		/* Yes: cache locks! */
->   		/* ...but avoid races with delegation recall... */
+Hello Linus,
+
+Please pull to receive a fairly small (compared to older requests) pull
+request for dmaengine subsystem. This has a new ARM dmaengine driver and
+couple of new device support and few driver changes.
+
+
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
+aengine-6.16-rc1
+
+for you to fetch changes up to 3c018bf5a0ee3abe8d579d6a0dda616c3858d7b2:
+
+  dmaengine: idxd: Remove unused pointer and macro (2025-05-14 16:00:30 +01=
+00)
+
+----------------------------------------------------------------
+dmaengine updates for v6.16
+
+ New support:
+  - Renesas RZ/V2H(P) dma support for r9a09g057
+  - Arm DMA-350 driver
+  - Tegra Tegra264 ADMA support
+
+ Updates:
+  - AMD ptdma driver code removal and optimizations
+  - Freescale edma error interrupt handler support
+
+----------------------------------------------------------------
+Ben Collins (1):
+      fsldma: Set correct dma_mask based on hw capability
+
+Devendra K Verma (1):
+      dmaengine: dw-edma: Add HDMA NATIVE map check
+
+Eder Zulian (3):
+      dmaengine: ptdma: Remove unused pointer dma_cmd_cache
+      dmaengine: ptdma: Remove dead code from pt_dmaengine_register()
+      dmaengine: idxd: Remove unused pointer and macro
+
+Fabrizio Castro (6):
+      dt-bindings: dma: rz-dmac: Restrict properties for RZ/A1H
+      dt-bindings: dma: rz-dmac: Document RZ/V2H(P) family of SoCs
+      irqchip/renesas-rzv2h: Add rzv2h_icu_register_dma_req()
+      dmaengine: sh: rz-dmac: Allow for multiple DMACs
+      dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
+      arm64: dts: renesas: r9a09g057: Add DMAC nodes
+
+Geert Uytterhoeven (1):
+      dmaengine: ARM_DMA350 should depend on ARM/ARM64
+
+Henry Martin (1):
+      dmaengine: ti: Add NULL check in udma_probe()
+
+Jie Hai (1):
+      MAINTAINERS: Maintainer change for hisi_dma
+
+Joy Zou (2):
+      dt-bindings: dma: fsl-edma: increase maxItems of interrupts and inter=
+rupt-names
+      dmaegnine: fsl-edma: add edma error interrupt handler
+
+Kaushal Kumar (1):
+      dt-bindings: dma: qcom,bam: Document dma-coherent property
+
+Nathan Lynch (1):
+      Documentation: dmaengine: Correct reference to glReadPixels()
+
+Robin Murphy (2):
+      dt-bindings: dma: Add Arm DMA-350
+      dmaengine: Add Arm DMA-350 driver
+
+Sakari Ailus (1):
+      dmaengine: at_xdmac: Use pm_runtime_put_noidle() with many usage_coun=
+ts
+
+Sheetal (2):
+      dt-bindings: Document Tegra264 ADMA support
+      dmaengine: tegra210-adma: Add Tegra264 support
+
+Thomas Gessler (2):
+      dmaengine: xilinx_dma: Set max segment size
+      dmaengine: xilinx_dma: Set dma_device directions
+
+Vinicius Costa Gomes (1):
+      dmaengine: idxd: Narrow the restriction on BATCH to ver. 1 only
+
+Yi Sun (1):
+      dmaengine: idxd: Check availability of workqueue allocated by idxd wq=
+ driver before using
+
+ .../devicetree/bindings/dma/arm,dma-350.yaml       |  44 ++
+ .../devicetree/bindings/dma/fsl,edma.yaml          |   4 +-
+ .../bindings/dma/nvidia,tegra210-adma.yaml         |   2 +
+ .../devicetree/bindings/dma/qcom,bam-dma.yaml      |   2 +
+ .../devicetree/bindings/dma/renesas,rz-dmac.yaml   | 107 +++-
+ Documentation/driver-api/dmaengine/provider.rst    |   4 +-
+ MAINTAINERS                                        |   2 +-
+ arch/arm64/boot/dts/renesas/r9a09g057.dtsi         | 165 ++++++
+ drivers/dma/Kconfig                                |   8 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/amd/ptdma/ptdma-dmaengine.c            |  23 +-
+ drivers/dma/amd/ptdma/ptdma.h                      |   1 -
+ drivers/dma/arm-dma350.c                           | 660 +++++++++++++++++=
+++++
+ drivers/dma/at_xdmac.c                             |   6 +-
+ drivers/dma/dw-edma/dw-edma-pcie.c                 |   5 +-
+ drivers/dma/fsl-edma-common.c                      |  30 +-
+ drivers/dma/fsl-edma-common.h                      |  18 +
+ drivers/dma/fsl-edma-main.c                        | 114 +++-
+ drivers/dma/fsldma.c                               |  20 +-
+ drivers/dma/fsldma.h                               |   1 +
+ drivers/dma/idxd/cdev.c                            |  10 +-
+ drivers/dma/idxd/idxd.h                            |   2 -
+ drivers/dma/idxd/sysfs.c                           |   6 +-
+ drivers/dma/sh/rz-dmac.c                           |  84 ++-
+ drivers/dma/tegra210-adma.c                        | 185 +++++-
+ drivers/dma/ti/k3-udma.c                           |   3 +-
+ drivers/dma/xilinx/xilinx_dma.c                    |   4 +
+ drivers/irqchip/irq-renesas-rzv2h.c                |  35 ++
+ include/linux/irqchip/irq-renesas-rzv2h.h          |  23 +
+ 29 files changed, 1463 insertions(+), 106 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/arm,dma-350.yaml
+ create mode 100644 drivers/dma/arm-dma350.c
+ create mode 100644 include/linux/irqchip/irq-renesas-rzv2h.h
+
+--=20
+~Vinod
+
+--CVfQPmQrWZRrfKJW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmhBPswACgkQfBQHDyUj
+g0fy5A/+NHsVQrNtFbaicz9wsR8A7dbyFapw1f9LTp0bFmBArNxhsemu0Pymcf30
+BCaXJO89hUd1uAborZjdIzH3gnSiWnQqS/dj2evXmOuR5iyia7faUi1ti3TgoH1C
+h+cFbnVJwjVUzXR8fhlCANVmxnNw0PTQGXkc+9lWPLxTEzx+JOiEBdCI6DFxN7aX
+W2p3HjvfkuairoCqvW4C3EF9MIwE5ImSOrmY5UUvTmkke9LaZJnz8Ib9KnwwJmgo
+SHtVm3a9JRrFJDtPmGEEEy+jUGz3xKeO2I37G8l8PG9azV9JESQA1fiAv2nf6D55
+pr++VCQ/wY3W5/yzpynHn/9YX8n+DIDIZ54Bidx8VV8KpnOZ3bbOEMA7WqAfIlvb
+dK+QEHDHn3KP0hu/801Aw6h3JKoc9NgGEB9dEb+TauRfBJZRbyo/MNKNAPhipTML
+bWw+cPL2gNcclOppRmo41XArwCr81xgWmwHW3u1bkUKChs4pcK/3BzE8IwHjVk1O
+Y3fpEFWIBOdSAGP0R089sXhk7AyNcgLq+LmH5bVcrm5hFKirclmieTXjtj5nTQIY
+tTGeddKVVgCntfow6pJag4lzKLLA5g2vAXOuHQMBnMEYM5bVtEfOzV4U9u9iN00M
+TWFC9qKj3fhg7IoNhoP7UavIq8zbO3Ep/JULo8EJVciu8gCzlCA=
+=ALqe
+-----END PGP SIGNATURE-----
+
+--CVfQPmQrWZRrfKJW--
