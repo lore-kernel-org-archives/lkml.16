@@ -1,311 +1,282 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69431F4631;
-	Thu,  5 Jun 2025 11:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C431F4631
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 11:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749122742; cv=none; b=HkPcKIdC3HYysnVRT/jkqzBOsFuaMutRzN8lz9/a8DRXXYww+9GR0LLjepyuizE5UmwgB76yYlFAOMox6ORcwd49V3GoERqWisHKj1X5p5rt4oOjbkbLnofbXQvT8zGVtGkuXoMGP8KDfy3BQB/DOyPKBd/UFdJLSUH8ECgw1/k=
+	t=1749122756; cv=none; b=W2kAnOiC4SvBCqpO69T7Mzijo70piXwmCPZdDxp0q27cdTvwIBQDIybCkld60Quzvs2TjTY2vmqXgv7WLj6sKKTlplo7vVF0G7utAXdrCQdM51czpJqwxNxTs6zeF1Vx5ZV7g2iZchB5JLl/7Axq+YIMQ2dN1WTvDIZdGV+3guM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749122742; c=relaxed/simple;
-	bh=K7m9f6Rk6duKbjEN+EwDIR4mKg+jSwYRbzFNL2XGm5s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U7OFcpyz97SE5L37mK9/+cldaMYcbmQhr6D5ruu0Lus05Emu5LpA+DyGbS/WhTUjaOUhPcZ+Uu/q5xCLdAlvJlW+l+RS+UCINaZerrVncgmoZWeVudlmE/MDtU4L3aDsex04i0sRpOE+auC4QCsiQKdbucUMGAc6npBd1FyYR1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACZ2sZE8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749122756; c=relaxed/simple;
+	bh=5OSX8YQj8LBRkjoMLbB72aagfUyGWFLMgKaB9V8mKvs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=if0mQ4NCjzApciLuzk9Oy1ruTMV4WCdBi0k8fJaNE3Br24zrDWMEH92puTRiRBE2pO7yQaZBZoFTtU0QUlkJbkHoxxE+JKCARjN5ky5Oo3runuuMt1u4VVgHkwLzBVGBPdvZPnIz52zhTFD839UW24dlABQpxJ9ux4NN1Iw5+n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AvyYOCzY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACZ2sZE8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BC3FC4CEE7;
-	Thu,  5 Jun 2025 11:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749122741;
-	bh=K7m9f6Rk6duKbjEN+EwDIR4mKg+jSwYRbzFNL2XGm5s=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ACZ2sZE8VQzcCub0RG1tMSKtg5yCHE2W/G1tE9YgrcMYYvA3qaODQp0T1QGdgOfzI
-	 dq0NJ/FYnPtG5Y2J8WMcQryFA18KfxbOVnvlt2HpPzoa64/LxfWyPyqKis6NqFtjnV
-	 PHWuFZqXV/XeQ4AIIbntYCGK3wXR3n4cnhukoMqjHH9ap5yCuYQvZkCDkUq1YQBGz7
-	 QfnjRZwK3XwpNyZVxa6GhP9/iZ95Z4T0+dAqqf6btIJSJz00HCWP0or14I8uRgb+Li
-	 mq4U0x7r9NI8aYl4L/3sIPVIwc9Zo1cxFLfgzBjq0TXqDqurx3Gn3B7oIv2seZAl1e
-	 c2S+BTMGzvg4w==
-Message-ID: <eeefb45bc67182971ae7d3c455a4ecfdec53d640.camel@kernel.org>
-Subject: Re: [PATCH RFC v2 04/28] vfs: allow mkdir to wait for delegation
- break on parent
-From: Jeff Layton <jlayton@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
- <brauner@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, Alexander Aring
-	 <alex.aring@gmail.com>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker	 <anna@kernel.org>, Steve French <sfrench@samba.org>, Paulo
- Alcantara	 <pc@manguebit.com>, Ronnie Sahlberg <ronniesahlberg@gmail.com>,
- Shyam Prasad N	 <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Bharath SM	 <bharathsm@microsoft.com>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia	 <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Jonathan
- Corbet	 <corbet@lwn.net>, Amir Goldstein <amir73il@gmail.com>, Miklos
- Szeredi	 <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
-	linux-doc@vger.kernel.org
-Date: Thu, 05 Jun 2025 07:25:38 -0400
-In-Reply-To: <wqp4ruxfzv47xwz2fca5trvpwg7rxufvd3nlfiu5kfsasqzsih@lutnvxe4ri62>
-References: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
-	 <20250602-dir-deleg-v2-4-a7919700de86@kernel.org>
-	 <wqp4ruxfzv47xwz2fca5trvpwg7rxufvd3nlfiu5kfsasqzsih@lutnvxe4ri62>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AvyYOCzY"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555AE7ip011697
+	for <linux-kernel@vger.kernel.org>; Thu, 5 Jun 2025 11:25:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Muh5Ll8OtdunKPtoiiN3qT
+	cAf63dr6jLMjW475Agn8I=; b=AvyYOCzYEbCH/u5w7lfSMwWvxgYkzzWT/8upec
+	kkCKF2YYoeGXBgJT9Tt4N848G0JI40j0OBLOpwZAmz8y4lFGoQqqfHJ+mD2TgWXV
+	AdwV/GOa5ZgaE6LGGBCyuszlXfp4ra8lClR60G1fwgSHxrbVuWqOc9ah+DEJoBVw
+	WHtCdmhUxTgsG4ypd4kssu2jR2jnEClqwhtD+bCkOoZn9akfuXogitV+JUEgcLcc
+	b8AOYrKTbriZBfbYgkiao/vXW3UL4PN4LF+Jk0wysEqWE922ZK46DNPmFsayYfGp
+	n7Zgi/S5ZSQmIkWAeAy1BTCGeer+SYuhfc4kV3H552uUxCOA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47202wer7k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 11:25:53 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7caef20a527so234232285a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 04:25:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749122752; x=1749727552;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Muh5Ll8OtdunKPtoiiN3qTcAf63dr6jLMjW475Agn8I=;
+        b=twFgD37hcNThWo1+sItCuwISv5CNBENCbaUFyNLnsKafbjOd8Qfj8PPDbsLXgStHY0
+         C8ViZA2y9kMcwfntDwH143leJYkikZiBHIAQQx2WFty8TexBNxNVN49ndKxdJyL1RpOb
+         RVoralChsyl7CWsw+IortuLk8gOXvMTe61QB1erHXuRuHOJ2jGV6Vqe0+rZ2NknBUF5r
+         gEVEaUtHEbFiM3FHP3R7UN8IGq4CRn47AU707NAZ18Kh0hIIk1dDg5DJ5pjdKViZt/cw
+         F2CgQdJb7MuOBAQFHrFZ23ABfHAGDXy/hrB9kMz7GiGfpXcnnATuAOhe2uE9uLAWp5sJ
+         gz6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVCZzqNhregsw6XUz5mnwM7PRWne3nGAJnjmQy7Sz94IOgMiFkeYSooq9rLq9BdObJawgwnLSsKXzu1RUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5DVbGSvWNeWzAUwWTFOuJN6Tp+wx7HSW3Iz7GVCt6QAHMLtku
+	vXkXxKbayniiY6jf+ER7KfsxTs/05eDf7ioGX6tkj6qtuppCFDVp7BTZHMCz24puRRUiYosM7mu
+	1hflIkYNRWLNbvbnG8/9QafTCuL+bVtiKB39oozONGo+zBbKLMvbEI5WeeMeP+gTj9sE=
+X-Gm-Gg: ASbGncvplJmSvrV6eeVDtmx50ZVwWfpvYtklRp4NNI7l85ANOw15566OG8cjANiBMRG
+	SyqiNjwS7KVCLEPE2qerQhiq4uyaHLfWkN7jI7a0akWQAo2Xl0eDxXqmrNLXXPOTvxnbl2G0dcc
+	pDSCUNMBptiIrRGWix4NgGGCqV8oOTlYLjW2cXRdvqMZ6XU/4BArJ6K0TCeUHOz6ogBYL9FHqH5
+	N7ZH+qDv6yxxWSb9GYWvn0ramjH2bS0ptxL6vt5hT+p67ix76PUdLMZC3i4H5XM1grD7QSnSnjy
+	8zQccRae46cQpVa1BjSGvUyUQjeLHaaeQA6h70Km6wGqN9VBmBcfG981dNagxyYQAwQYPQPuAqU
+	clx+4spTk/mmD5J2MRDZzU3Wf
+X-Received: by 2002:a05:620a:6890:b0:7c7:827b:46bf with SMTP id af79cd13be357-7d219907d6amr910502285a.39.1749122752186;
+        Thu, 05 Jun 2025 04:25:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFYAFJYgNLRu75zOZn+s+HbisknmnkiVqX0CP0iUslKEgB2UseKmGSPrXkSwGkK2+faE9DzMQ==
+X-Received: by 2002:a05:620a:6890:b0:7c7:827b:46bf with SMTP id af79cd13be357-7d219907d6amr910496885a.39.1749122751669;
+        Thu, 05 Jun 2025 04:25:51 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5533793774asm2592690e87.232.2025.06.05.04.25.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 04:25:50 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Thu, 05 Jun 2025 14:25:49 +0300
+Subject: [PATCH v3] phy: use per-PHY lockdep keys
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250605-phy-subinit-v3-1-1e1e849e10cd@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIALx+QWgC/23MTQqDMBCG4atI1o0k409jV71H6SKJsQ5UYxMNF
+ fHujUKhQjcD78D3LMQbh8aTS7IQZwJ6tH2M7JQQ3cr+YSjWsQkwKFgBgg7tTP2ksMeR5qArISQ
+ HVWoSF4MzDb537XaP3aIfrZt3PPDt+3WqgxM45VSdcy3rJitLJa7W+/Q1yae2XZfGQzYuwA+Rs
+ SMBkWBV3RjBjAD5j1jX9QNFlF2v8AAAAA==
+X-Change-ID: 20250528-phy-subinit-42c988a12b6c
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6122;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=5OSX8YQj8LBRkjoMLbB72aagfUyGWFLMgKaB9V8mKvs=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoQX6+NW1LsRa443FYZdaZnWjlG8DM5pTIQb7rb
+ t0n/bC5RLyJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaEF+vgAKCRCLPIo+Aiko
+ 1S0ECACMbElPp1hYwsCgLEc+IUqP/E1VMDDT3ow6WxFNKRd0fR+taEspgGreV1nwXXmhLk8N1nT
+ EcSdgc23TnESHt9ZAE1z2iMWqEeC0XNZbpS9o5gBigjU6oHhwoBsRj8wnHR93LGu/wsJGZvoKy+
+ dOuMHBbkZbxuDNnCcyY/HMM2qmauNUoo/1AafxfB9ILcCF1O7aQzXUdzDOcUQWYS2naeKJ06Tmb
+ uXwB9K+miDQ+PzwR5OOhQaFjO7F7N9MSaSpZGWQN4/71/de5oxvF+q6M8IME2oitf+OHjk7mNSN
+ Vljb8s8RHxtGX3Peq+72C/Cq6vPcXnyfxIfDjZV0/eW+MJvU
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-ORIG-GUID: PNCZni_q6Y1NopGo_p0icqTJYr-rdcP-
+X-Proofpoint-GUID: PNCZni_q6Y1NopGo_p0icqTJYr-rdcP-
+X-Authority-Analysis: v=2.4 cv=Y/D4sgeN c=1 sm=1 tr=0 ts=68417ec1 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=zitRP-D0AAAA:8 a=EUspDBNiAAAA:8
+ a=KKAkSRfTAAAA:8 a=83vSGatpBiZI-y3EDzYA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=xwnAI6pc5liRhupp6brZ:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDA5OSBTYWx0ZWRfX4nfrMDDPzN6c
+ GRuiGn74Fn/Uux4qCQYNblU9D1maer0YZUaXzBs2nOYmjxrvOWpU0s1+B+zX3Yso35EiDOteaGV
+ a9Jw0Fydev/qXtXPb3k4blhZ2YcC1l889N7AcBHIFKm91FsSmdr4AfeRbCbP7wf/lsb/ZBw7PTz
+ X0EK7fxod8vuOiVaGF5Gdev/oTlgbt12OjUnbWNxfaiOKcaPUjd2sBqp6lUQlOaYjxtBXmr+/j3
+ GaN045idSBOEuOYrNz+pbsW5ee9zqnG2UWdhdVHLia7OSEuJcCnhjMTESwaD8+56cC+iiotmAdc
+ DLdQx9NEkCRbWzM6OkfOFP1o1U3VsDsomOinzwuVtQL3+nhtcU7RJaRLgrYGfDoIby9UiOcGAkp
+ 55Vjn8qrY9Yk6joDKijtEV0TTvdw2Z7cw0bxeyqkYtRFdCKuIXt0LUYmul2ur1LxExlMU6KS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 priorityscore=1501 spamscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
+ bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506050099
 
-On Thu, 2025-06-05 at 13:19 +0200, Jan Kara wrote:
-> On Mon 02-06-25 10:01:47, Jeff Layton wrote:
-> > In order to add directory delegation support, we need to break
-> > delegations on the parent whenever there is going to be a change in the
-> > directory.
-> >=20
-> > Rename the existing vfs_mkdir to __vfs_mkdir, make it static and add a
-> > new delegated_inode parameter. Add a new exported vfs_mkdir wrapper
-> > around it that passes a NULL pointer for delegated_inode.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
->=20
-> FWIW I went through the changes adding breaking of delegations to VFS
-> directory functions and they look ok to me. Just I dislike the addition o=
-f
-> __vfs_mkdir() (and similar) helpers because over longer term the helpers
-> tend to pile up and the maze of functions (already hard to follow in VFS)
-> gets unwieldy. Either I'd try to give it a proper name or (if exposing th=
-e
-> functionality to the external world is fine - which seems it is) you coul=
-d
-> just add the argument to vfs_mkdir() and change all the callers? I've
-> checked and for each of the modified functions there's less than 10 calle=
-rs
-> so the churn shouldn't be that big. What do others think?
->=20
+If the PHY driver uses another PHY internally (e.g. in case of eUSB2,
+repeaters are represented as PHYs), then it would trigger the following
+lockdep splat because all PHYs use a single static lockdep key and thus
+lockdep can not identify whether there is a dependency or not and
+reports a false positive.
 
-Good point -- I'm always terrible with naming functions. I'm fine with
-either approach, but just adding the argument does sound simple enough.
-I'll plan to do that unless anyone objects.
+Make PHY subsystem use dynamic lockdep keys, assigning each driver a
+separate key. This way lockdep can correctly identify dependency graph
+between mutexes.
 
-Thanks for taking a look!
+ ============================================
+ WARNING: possible recursive locking detected
+ 6.15.0-rc7-next-20250522-12896-g3932f283970c #3455 Not tainted
+ --------------------------------------------
+ kworker/u51:0/78 is trying to acquire lock:
+ ffff0008116554f0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
 
-> 								Honza
->=20
-> > ---
-> >  fs/namei.c | 67 +++++++++++++++++++++++++++++++++++++++---------------=
---------
-> >  1 file changed, 42 insertions(+), 25 deletions(-)
-> >=20
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index 0fea12860036162c01a291558e068fde9c986142..7c9e237ed1b1a535934ffe5=
-e523424bb035e7ae0 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -4318,29 +4318,9 @@ SYSCALL_DEFINE3(mknod, const char __user *, file=
-name, umode_t, mode, unsigned, d
-> >  	return do_mknodat(AT_FDCWD, getname(filename), mode, dev);
-> >  }
-> > =20
-> > -/**
-> > - * vfs_mkdir - create directory returning correct dentry if possible
-> > - * @idmap:	idmap of the mount the inode was found from
-> > - * @dir:	inode of the parent directory
-> > - * @dentry:	dentry of the child directory
-> > - * @mode:	mode of the child directory
-> > - *
-> > - * Create a directory.
-> > - *
-> > - * If the inode has been found through an idmapped mount the idmap of
-> > - * the vfsmount must be passed through @idmap. This function will then=
- take
-> > - * care to map the inode according to @idmap before checking permissio=
-ns.
-> > - * On non-idmapped mounts or if permission checking is to be performed=
- on the
-> > - * raw inode simply pass @nop_mnt_idmap.
-> > - *
-> > - * In the event that the filesystem does not use the *@dentry but leav=
-es it
-> > - * negative or unhashes it and possibly splices a different one return=
-ing it,
-> > - * the original dentry is dput() and the alternate is returned.
-> > - *
-> > - * In case of an error the dentry is dput() and an ERR_PTR() is return=
-ed.
-> > - */
-> > -struct dentry *vfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
-> > -			 struct dentry *dentry, umode_t mode)
-> > +static struct dentry *__vfs_mkdir(struct mnt_idmap *idmap, struct inod=
-e *dir,
-> > +				  struct dentry *dentry, umode_t mode,
-> > +				  struct inode **delegated_inode)
-> >  {
-> >  	int error;
-> >  	unsigned max_links =3D dir->i_sb->s_max_links;
-> > @@ -4363,6 +4343,10 @@ struct dentry *vfs_mkdir(struct mnt_idmap *idmap=
-, struct inode *dir,
-> >  	if (max_links && dir->i_nlink >=3D max_links)
-> >  		goto err;
-> > =20
-> > +	error =3D try_break_deleg(dir, delegated_inode);
-> > +	if (error)
-> > +		goto err;
-> > +
-> >  	de =3D dir->i_op->mkdir(idmap, dir, dentry, mode);
-> >  	error =3D PTR_ERR(de);
-> >  	if (IS_ERR(de))
-> > @@ -4378,6 +4362,33 @@ struct dentry *vfs_mkdir(struct mnt_idmap *idmap=
-, struct inode *dir,
-> >  	dput(dentry);
-> >  	return ERR_PTR(error);
-> >  }
-> > +
-> > +/**
-> > + * vfs_mkdir - create directory returning correct dentry if possible
-> > + * @idmap:	idmap of the mount the inode was found from
-> > + * @dir:	inode of the parent directory
-> > + * @dentry:	dentry of the child directory
-> > + * @mode:	mode of the child directory
-> > + *
-> > + * Create a directory.
-> > + *
-> > + * If the inode has been found through an idmapped mount the idmap of
-> > + * the vfsmount must be passed through @idmap. This function will then=
- take
-> > + * care to map the inode according to @idmap before checking permissio=
-ns.
-> > + * On non-idmapped mounts or if permission checking is to be performed=
- on the
-> > + * raw inode simply pass @nop_mnt_idmap.
-> > + *
-> > + * In the event that the filesystem does not use the *@dentry but leav=
-es it
-> > + * negative or unhashes it and possibly splices a different one return=
-ing it,
-> > + * the original dentry is dput() and the alternate is returned.
-> > + *
-> > + * In case of an error the dentry is dput() and an ERR_PTR() is return=
-ed.
-> > + */
-> > +struct dentry *vfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
-> > +			 struct dentry *dentry, umode_t mode)
-> > +{
-> > +	return __vfs_mkdir(idmap, dir, dentry, mode, NULL);
-> > +}
-> >  EXPORT_SYMBOL(vfs_mkdir);
-> > =20
-> >  int do_mkdirat(int dfd, struct filename *name, umode_t mode)
-> > @@ -4386,6 +4397,7 @@ int do_mkdirat(int dfd, struct filename *name, um=
-ode_t mode)
-> >  	struct path path;
-> >  	int error;
-> >  	unsigned int lookup_flags =3D LOOKUP_DIRECTORY;
-> > +	struct inode *delegated_inode =3D NULL;
-> > =20
-> >  retry:
-> >  	dentry =3D filename_create(dfd, name, &path, lookup_flags);
-> > @@ -4396,12 +4408,17 @@ int do_mkdirat(int dfd, struct filename *name, =
-umode_t mode)
-> >  	error =3D security_path_mkdir(&path, dentry,
-> >  			mode_strip_umask(path.dentry->d_inode, mode));
-> >  	if (!error) {
-> > -		dentry =3D vfs_mkdir(mnt_idmap(path.mnt), path.dentry->d_inode,
-> > -				  dentry, mode);
-> > +		dentry =3D __vfs_mkdir(mnt_idmap(path.mnt), path.dentry->d_inode,
-> > +				     dentry, mode, &delegated_inode);
-> >  		if (IS_ERR(dentry))
-> >  			error =3D PTR_ERR(dentry);
-> >  	}
-> >  	done_path_create(&path, dentry);
-> > +	if (delegated_inode) {
-> > +		error =3D break_deleg_wait(&delegated_inode);
-> > +		if (!error)
-> > +			goto retry;
-> > +	}
-> >  	if (retry_estale(error, lookup_flags)) {
-> >  		lookup_flags |=3D LOOKUP_REVAL;
-> >  		goto retry;
-> >=20
-> > --=20
-> > 2.49.0
-> >=20
+ but task is already holding lock:
+ ffff000813c10cf0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
 
---=20
-Jeff Layton <jlayton@kernel.org>
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(&phy->mutex);
+   lock(&phy->mutex);
+
+  *** DEADLOCK ***
+
+  May be due to missing lock nesting notation
+
+ 4 locks held by kworker/u51:0/78:
+  #0: ffff000800010948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x18c/0x5ec
+  #1: ffff80008036bdb0 (deferred_probe_work){+.+.}-{0:0}, at: process_one_work+0x1b4/0x5ec
+  #2: ffff0008094ac8f8 (&dev->mutex){....}-{4:4}, at: __device_attach+0x38/0x188
+  #3: ffff000813c10cf0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
+
+ stack backtrace:
+ CPU: 0 UID: 0 PID: 78 Comm: kworker/u51:0 Not tainted 6.15.0-rc7-next-20250522-12896-g3932f283970c #3455 PREEMPT
+ Hardware name: Qualcomm CRD, BIOS 6.0.240904.BOOT.MXF.2.4-00528.1-HAMOA-1 09/ 4/2024
+ Workqueue: events_unbound deferred_probe_work_func
+ Call trace:
+  show_stack+0x18/0x24 (C)
+  dump_stack_lvl+0x90/0xd0
+  dump_stack+0x18/0x24
+  print_deadlock_bug+0x258/0x348
+  __lock_acquire+0x10fc/0x1f84
+  lock_acquire+0x1c8/0x338
+  __mutex_lock+0xb8/0x59c
+  mutex_lock_nested+0x24/0x30
+  phy_init+0x4c/0x12c
+  snps_eusb2_hsphy_init+0x54/0x1a0
+  phy_init+0xe0/0x12c
+  dwc3_core_init+0x450/0x10b4
+  dwc3_core_probe+0xce4/0x15fc
+  dwc3_probe+0x64/0xb0
+  platform_probe+0x68/0xc4
+  really_probe+0xbc/0x298
+  __driver_probe_device+0x78/0x12c
+  driver_probe_device+0x3c/0x160
+  __device_attach_driver+0xb8/0x138
+  bus_for_each_drv+0x84/0xe0
+  __device_attach+0x9c/0x188
+  device_initial_probe+0x14/0x20
+  bus_probe_device+0xac/0xb0
+  deferred_probe_work_func+0x8c/0xc8
+  process_one_work+0x208/0x5ec
+  worker_thread+0x1c0/0x368
+  kthread+0x14c/0x20c
+  ret_from_fork+0x10/0x20
+
+Fixes: 3584f6392f09 ("phy: qcom: phy-qcom-snps-eusb2: Add support for eUSB2 repeater")
+Fixes: e2463559ff1d ("phy: amlogic: Add Amlogic AXG PCIE PHY Driver")
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+Reported-by: Johan Hovold <johan+linaro@kernel.org>
+Link: https://lore.kernel.org/lkml/ZnpoAVGJMG4Zu-Jw@hovoldconsulting.com/
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+Note: I've used a Fixes tag pointing to the commit which actually
+started using nested PHYs. If you think that it's incorrect, I'm fine
+with dropping it.
+
+Note2: I've tried using mutex_lock_nested, however that didn't play
+well. We can not store nest level in the struct phy (as it can be used
+by different drivers), so using mutex_lock_nested() would require us to
+change and wrap all PHY APIs which take a lock internally. Using dynamic
+lockdep keys looks like a more ellegant solution, especially granted
+that there is no extra impact if lockdep is disabled.
+---
+Changes in v3:
+- Collected all the tags in a single run
+- Link to v2: https://lore.kernel.org/r/20250530-phy-subinit-v2-1-09dfe80e82a8@oss.qualcomm.com
+
+Changes in v2:
+- Fix lamsm ML address
+- Link to v1: https://lore.kernel.org/r/20250529-phy-subinit-v1-1-b74cadf366b8@oss.qualcomm.com
+---
+ drivers/phy/phy-core.c  | 5 ++++-
+ include/linux/phy/phy.h | 2 ++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index 8e2daea81666bf8a76d9c936c1a16d6318105c91..04a5a34e7a950ae94fae915673c25d476fc071c1 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -994,7 +994,8 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
+ 	}
+ 
+ 	device_initialize(&phy->dev);
+-	mutex_init(&phy->mutex);
++	lockdep_register_key(&phy->lockdep_key);
++	mutex_init_with_key(&phy->mutex, &phy->lockdep_key);
+ 
+ 	phy->dev.class = &phy_class;
+ 	phy->dev.parent = dev;
+@@ -1259,6 +1260,8 @@ static void phy_release(struct device *dev)
+ 	dev_vdbg(dev, "releasing '%s'\n", dev_name(dev));
+ 	debugfs_remove_recursive(phy->debugfs);
+ 	regulator_put(phy->pwr);
++	mutex_destroy(&phy->mutex);
++	lockdep_unregister_key(&phy->lockdep_key);
+ 	ida_free(&phy_ida, phy->id);
+ 	kfree(phy);
+ }
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 437769e061b7030105c9ea4e9b0da9d32b6fa158..13add0c2c40721fe9ca3f0350d13c035cd25af45 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -154,6 +154,7 @@ struct phy_attrs {
+  * @id: id of the phy device
+  * @ops: function pointers for performing phy operations
+  * @mutex: mutex to protect phy_ops
++ * @lockdep_key: lockdep information for this mutex
+  * @init_count: used to protect when the PHY is used by multiple consumers
+  * @power_count: used to protect when the PHY is used by multiple consumers
+  * @attrs: used to specify PHY specific attributes
+@@ -165,6 +166,7 @@ struct phy {
+ 	int			id;
+ 	const struct phy_ops	*ops;
+ 	struct mutex		mutex;
++	struct lock_class_key	lockdep_key;
+ 	int			init_count;
+ 	int			power_count;
+ 	struct phy_attrs	attrs;
+
+---
+base-commit: 4f27f06ec12190c7c62c722e99ab6243dea81a94
+change-id: 20250528-phy-subinit-42c988a12b6c
+
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
