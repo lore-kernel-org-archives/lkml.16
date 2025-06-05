@@ -1,92 +1,87 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD9C1A76D4;
-	Thu,  5 Jun 2025 05:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40A81A76D4
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 05:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749100850; cv=none; b=QfTyhk8lhAvggTiPyvR1ajFYU27pVCgfUGXT+7scZhPNBPYt2QOlSBG/Dm+hg3UFqi+tt2c4xrATeP43l/crx9eB3JuaMwhi7DqkgGV/CB0vaZCw6hKZLnSZm3dUPMlJSG0s4Bbf3YDb2fcFO3Y4QlAG0D2mVFciOPY1mRDsaMI=
+	t=1749101042; cv=none; b=Px4nnB5Pl3M5vHtjaRAdBK4YHCChr0PkbsXfZsVDec9yjOuXg7MXZfxHU56l3d2yOr9BMMu+983apNu6DvgSeL0ehy0QbWL+BIm4jOaazt7qzaHmvZvHCqR6YZW0xnO1p8AYqDF9qqAIiSqwZqPDmP+4NEe0LRRKzDexi4v/oM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749100850; c=relaxed/simple;
-	bh=ULsChxBcc2XUy1SxCccxS6KMnlpMConuFdkgaahqBj4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bNWpKGI0cPpNJdrwraWrNVqCZdpbuYGH9Av04m2tvYLlgbU6MdFCN2f+iJVax8xGRLUfwSB1FEkHf3UWq8XFnGIvA+uet6VoGTF7k7xgoDDNXct3KMj9UVQhnLXkbI1UuvY5YK3eQaVJPNyxBkLfhVdDWWWXiWTNMoDueaZMJTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fFZw4RtT; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749101042; c=relaxed/simple;
+	bh=CZDeq+zUBIlx9SSAEqsUxOQKyUy2jcu6QFtDsZAPNDg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=VTLrp806klq3mJS8tw+OWRBxuC+P6D6J3qvHa0RFa3QcC5z4/Yxl7Ht84JVdkSlHaOJuppWyzXebpEjX4bcr10pjrHj5RjHCRafy85cGGn6Y7n3J3zuYIgoP0cjB0KXhxlmyQfuf2f6mu4l+tWDjrrf7ait3SWcbzVxJQQSQ2Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=lNJRtVHh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFZw4RtT"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-313067339e9so48250a91.2;
-        Wed, 04 Jun 2025 22:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749100848; x=1749705648; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pisDPyCNhVloACjdr/CP/aoyNXW5eGbehzF4WzQdg6I=;
-        b=fFZw4RtTQv9FF1Y4Vm6ZQcH+WNbJTmoQyq5j4fdLQSOSJdmOSNo8rBPcfYOHALeOXd
-         NT2e+g2iWmH3Z0TQdptKUmKsQt/ioT16Lj/1pru0j8jbF13u4/KRxF5/2QusQ9zFRtQb
-         wFVgxdc4Uqke3gTu5EfUqnLDG2eMpD/y+enulIkeI6Of5ODitfwBDVqtVS//ekoEjSHk
-         cDPmuZRC6aAdsZyjrlkguyw9Mf4qYt6XFgT0auL4g8ZyM4hJT0KML3YNnl6MWDlRVnQE
-         d0qw9Rk8rG8fpd9nQRJ3i29O4pZhrAk7vC54EWU2ZT/yjoWynU2MjxCMvM56zXa1aDsZ
-         feig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749100848; x=1749705648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pisDPyCNhVloACjdr/CP/aoyNXW5eGbehzF4WzQdg6I=;
-        b=kf3hueOElG2IwGTzlu0MMNVoKHoILXy8aSwHgz+RZRY6FyPnEt3KY/4w/DfvqgKpet
-         V8q7jCkRfk9nEATxOK1kjEzR03PPky6MoDVcZPmsh2chZo5+L0TCCZkhiBpXp90U/f3y
-         cNRgEVuewmHQVAtaY5OyIbfxtfuJVB/ZF0YuVj/C6iGEHVjQ9SAtzByLYQ3tHjJhVayG
-         SqQiy+TUKGhaDQD7wBwiOEpJfLdkOifu+KAHCRQfrjKg5V4kPP42pSfnaMt8pxm42+/X
-         FHxJJxEHhaqUu5eGE+JhmltSzcOUFuygipLJihx7dwlwHYJMQCLGB42MU2C8SGEuT1az
-         nnbg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcBI9EzttynOY/BN4+wMvM0J1uuQxFv0YGPBfyqjhtCESr7as1jIO4rHjIb0ses6avsqQ9mSpKRVmZ5b2SNik=@vger.kernel.org, AJvYcCXdCU9qOtQJIMZU5oWYcbq1XO5gxrK2eInx9pCdy2K75vrUQmfoyjWLIaKd8+NJpNYC88jpwuad0uA9s5w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVXBUr0H/pJrkR4icIHUqilztlXDu5wJDjHvUOp+46Y/GdTkhP
-	A5HZ8KhaYJf/4LEVRG0Y48A7vH9BDRAGmk8/ax6qSsqs+zSMBVlunb9V+/TBM96PwSWksY7CQ10
-	hp8960b4DhWKXQCZxJx8+ltz8Ebvei0g=
-X-Gm-Gg: ASbGncuFIX2CP1QD2Lm35GLxV6AjujBaa2Y+juHXaJCnTZ0tTvvbVZOuLyNOKDviBRS
-	yNOYHy0NJH2EBbZlmAUnEJdJ/eCMYmRlz1dSKCQPa0LXdk7U04NOM11iOrXWxq/ElX2F3ZMM9Ug
-	/2ZUerVRix+COZEXaeV4OddabweauC1m2A
-X-Google-Smtp-Source: AGHT+IEhxlOAlFFMrVuiT7puZFaVOBDL40scV6ced0++5NAhQaJ0OdfMZ/bWyG9q/HXKGiRTDeuOVWJWAvIbl5d0Xpo=
-X-Received: by 2002:a17:90b:5587:b0:311:b0d3:851 with SMTP id
- 98e67ed59e1d1-3130cd2f168mr3035784a91.4.1749100848420; Wed, 04 Jun 2025
- 22:20:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="lNJRtVHh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3374C4CEE7;
+	Thu,  5 Jun 2025 05:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749101042;
+	bh=CZDeq+zUBIlx9SSAEqsUxOQKyUy2jcu6QFtDsZAPNDg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lNJRtVHh2E+FGF5dlIa1C06EUkGQzCI7y5pQGEx4k+SHydyKQdn5R3hDv2g6ombH7
+	 THOggm4mXRx6WsvFWE4RwYkYgW6z699GKFyNo0Dx5fb2EQDxdDz/2PyM1sx/zcrrtw
+	 tGwC3N0mLF8Di+4UvOJpY/2KgaAkGsCIE7cQhkv0=
+Date: Wed, 4 Jun 2025 22:24:00 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Hyesoo Yu <hyesoo.yu@samsung.com>
+Cc: janghyuck.kim@samsung.com, zhaoyang.huang@unisoc.com,
+ jaewon31.kim@gmail.com, david@redhat.com, Jason Gunthorpe <jgg@ziepe.ca>,
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm: gup: avoid CMA page pinning by retrying
+ migration if no migratable page
+Message-Id: <20250604222400.63203f9b10ae5b4c25f6de0b@linux-foundation.org>
+In-Reply-To: <20250605051131.GA3407065@tiffany>
+References: <20250605033210.3184521-1-hyesoo.yu@samsung.com>
+	<CGME20250605033432epcas2p4c024a9d05246b18c217f3562b3f53551@epcas2p4.samsung.com>
+	<20250605033210.3184521-3-hyesoo.yu@samsung.com>
+	<20250604204323.95a646ae67f6800069a11e36@linux-foundation.org>
+	<20250605051131.GA3407065@tiffany>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250605025400.244965-1-ojeda@kernel.org> <CAHk-=wik7gvxt-CEak_4HsGziRwo6-7q9LGeW37Pj9182dJ=ow@mail.gmail.com>
- <aEEjzTMJm7YzS1Ks@Mac.home>
-In-Reply-To: <aEEjzTMJm7YzS1Ks@Mac.home>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 5 Jun 2025 07:20:36 +0200
-X-Gm-Features: AX0GCFsV6wLuSWV8CngJk8vkZzJHN_e3b_sEoLPriNaHvICgprIi_KmAJTlN7DM
-Message-ID: <CANiq72kWgLKoswZL5h1U9oY8qo0-U03awS-3Sm1gvuX_9PcvBw@mail.gmail.com>
-Subject: Re: [GIT PULL] Rust for 6.16
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 5, 2025 at 6:57=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> wr=
-ote:
->
-> FWIW, I think this thread has the explanation:
->
->         https://lore.kernel.org/regressions/CANiq72mFL4dn+0JppLLfxyKnM+xY=
-wKeduFw2j07hUfxWVVHdUw@mail.gmail.com/
+On Thu, 5 Jun 2025 14:11:31 +0900 Hyesoo Yu <hyesoo.yu@samsung.com> wrote:
 
-Indeed, thanks Boqun.
+> We have confirmed that this regression causes CMA pages to be pinned
+> in our kernel 6.12-based environment.
+> 
+> In addition to CMA allocation failures, we also observed GUP longterm
+> failures in cases where the same VMA was accessed repeatedly.
+> 
+> Specifically, the first GUP longterm call would pin a CMA page, and a second
+> call on the same region would fail the migration due to the cma page already
+> being pinned.
+> 
+> After reverting commit 1aaf8c122918, the issue no longer reproduced.
+> 
+> Therefore, this fix is important to ensure reliable behavior of GUP longterm
+> and CMA-backed memory, and should be backported to stable.
 
-Cheers,
-Miguel
+Great, thanks.  Please add this to the patch's changelog.
+
+
+The problem is, this series combines a non-urgent cleanup with an
+important, backportable regression fix.  We shouldn't backport the
+cleanup into earlier kernels - that just adds undesirable noise.
+
+So can I ask you to prepare a single standalone fix for the regression
+against current -linus and to later propose the cleanup patch for
+6.17-rc1?
+
+In other words, pleas reverse the patching order, send the patches
+separately and test the regression fix without the presence of the
+cleanup?
+
+(I could do these manipulations locally but then what I have for the
+regression fix wasn't standalone tested by yourself).
+
+Thanks.
