@@ -1,219 +1,162 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D5A2E659;
-	Thu,  5 Jun 2025 14:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1518B2E659;
+	Thu,  5 Jun 2025 14:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749134491; cv=none; b=k1mQArOKDlmYlyXhhdb+Pf0SuiFwBUDYeTN4BSFKDfoZBUdCQP8UFVEqdRV4fe9jkvIiJVitFs43aiuK7keEWnehD4rOsQqt6ud6M77I7UdSUphul4DJoBL209e739vul8Xtlo4ittKjYCcX63qtfCv64qDmTBa9YNeiDimYSRs=
+	t=1749134507; cv=none; b=CNsz10f0OqisqDKzii286y93lWK9YKVbzB/lJcq8C3TrLfCtXLx6iHYaZFNOvAcH122v733vfT5k5lRII699qv94d2BEP/TQp+Wv+y+9ThHos3fU4N5olQipm6bp+hnesihwL12VaJUyImya+4fAdj2JjH+hLFq+NZUFU/SX6jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749134491; c=relaxed/simple;
-	bh=G4+47qc1n3bzX5gU3JB3YwOCDw7FrUpLqtOCy4J2WNk=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=blOrspqQ/StGYrJD/7hR4SXX52XZLyqbHGdiBuUsMLHTE+xwFsZUITg+jyCCR5waoeunev3gaxJy3m2dcvNen7TJ2+FzWkSBwSi58dS8IdQWfKZMHt7T00aS87P69QyOn1VU549VSomJ8B/bNE2y4EiPL+AyfGD3/DAztCMyOpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jNG0vLci; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749134507; c=relaxed/simple;
+	bh=yO5fqt9HuK0kjVxjDKW2m26zjnbn/JAZBHwnXsXNWqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQd02+Y5s/Ewc12ru8zg1Q2LfiauCFt8wIAbYsHwP0MftS5Jlv1fkWAyeCpGpZ9gabBc4bRPf4olnXIqvlpSM74ULoMmv52b0MXGFEwtUnE3ts18sFGXiY+NGuJU7Lrs4x2c9vz5WRFxGYwiLhL0scwjTd38RUCBuSC8clGkgFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WzNbi196; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jNG0vLci"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555BYYaP029077;
-	Thu, 5 Jun 2025 14:35:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=WMO587
-	RkCAs2RHbCh4bywkWzWURKdVqSdrgZo4cRfeQ=; b=jNG0vLciJY2CsB5MAZbwgY
-	O4QO0DDRBrQms+0ruJXhfcNzzkC1yniWGKFECzJ+MhszMCHb89xAYZ2PWGPtIwcZ
-	K/b0xogWr1Bb/0xKitRMtLw0LADyQWfeZK8qtcYns6H8ECHJbCezIc0QenuCODqO
-	M4YXSkNeNmbmGGL+UNBkE8N3xwy/2SffAO6vuXCo/fRcuGSjNWkkDgPtKIBppTmJ
-	sBdOroRnRffKAMFPxsvHMTEbq0qdinfV5SesdZa/f20mfQNQi/5yC9LIiQhMfI+T
-	Sq7kCxGX1ET8vu1OkggVfqI5EB4RmJtUz1mBOQwMy9INyljPJ8XSA8/J+b+pQ5aw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471geyhbm9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 14:35:45 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 555EVwFO007403;
-	Thu, 5 Jun 2025 14:35:45 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471geyhbm6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 14:35:45 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 555D1UQm012562;
-	Thu, 5 Jun 2025 14:35:44 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 470et2ms1f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 14:35:43 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 555EZhV515401646
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 5 Jun 2025 14:35:43 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E18558059;
-	Thu,  5 Jun 2025 14:35:43 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C630D5804B;
-	Thu,  5 Jun 2025 14:35:40 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.24.49])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  5 Jun 2025 14:35:40 +0000 (GMT)
-Message-ID: <a7b89a65ab24454676b8eb858d2b24445abe0a30.camel@linux.ibm.com>
-Subject: Re: [PATCH RFC 0/1] module: Optionally use .platform keyring for
- signatures verification
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-modules@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        keyrings@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        David
- Woodhouse	 <dwmw2@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis
- Chamberlain	 <mcgrof@kernel.org>,
-        Petr Pavlu <petr.pavlu@suse.com>,
-        Sami
- Tolvanen	 <samitolvanen@google.com>,
-        Daniel Gomez <da.gomez@samsung.com>,
-        Roberto Sassu	 <roberto.sassu@huawei.com>,
-        Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>,
-        Eric Snowberg <eric.snowberg@oracle.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge
- E. Hallyn"	 <serge@hallyn.com>,
-        Peter Jones <pjones@redhat.com>,
-        Robert
- Holmes	 <robeholmes@gmail.com>,
-        Jeremy Cline <jcline@redhat.com>, Coiby Xu	
- <coxu@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-In-Reply-To: <20250602132535.897944-1-vkuznets@redhat.com>
-References: <20250602132535.897944-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Jun 2025 10:35:40 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WzNbi196"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4351AC4CEEB;
+	Thu,  5 Jun 2025 14:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749134506;
+	bh=yO5fqt9HuK0kjVxjDKW2m26zjnbn/JAZBHwnXsXNWqQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WzNbi196JZko7WsBkAtNHT7clAsU2rlKFe1W4Ry43owbvfA8kIZMgoGmnSVuNUUiR
+	 nQSF0LTyLqzNrTrYsEqDG9WyrzGG61wZbmz9OA7zpuKH+w5roTplYwUmuAJ3TXMn3e
+	 TjrRtqrKO03hyYGUMpmOeRbhP+RfHMaHWyW9NnZBJdkNVOe3rr/NP2zbYtZJ824rzG
+	 k2YcvaO3jN12B6d51/qRc1iqAOyCz9w/5igBEMxnvPP7CrQkOaBKpDUaCBnbxxQ4s/
+	 F5WixNznQg7yOHqPGtqPl4wUUU6tkw2Sl6Y0mWVChw92iJAZ4Gnn6IhXQ6QI92r/ZI
+	 n1XAME+AgMzUQ==
+Date: Thu, 5 Jun 2025 09:41:44 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Cc: Devarsh Thakkar <devarsht@ti.com>,
+	Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Devicetree List <devicetree@vger.kernel.org>,
+	Simona Vetter <simona@ffwll.ch>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Maxime Ripard <mripard@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jyri Sarha <jyri.sarha@iki.fi>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	David Airlie <airlied@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+	Linux Kernel List <linux-kernel@vger.kernel.org>,
+	Jayesh Choudhary <j-choudhary@ti.com>, Nishanth Menon <nm@ti.com>,
+	DRI Development List <dri-devel@lists.freedesktop.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v9 2/4] dt-bindings: display: ti: Add schema for AM625
+ OLDI Transmitter
+Message-ID: <174913450088.2539370.15860584421984514366.robh@kernel.org>
+References: <20250528122544.817829-1-aradhya.bhatia@linux.dev>
+ <20250528122544.817829-3-aradhya.bhatia@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=ea09f6EH c=1 sm=1 tr=0 ts=6841ab41 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=yPCof4ZbAAAA:8 a=D1HWW76GpMGOKR5Gno0A:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: vHFrR4Ila0Sw6f-MNBSE6vwCv-niH7M_
-X-Proofpoint-ORIG-GUID: RcUfx5CmD7cpmR59MoAjvRUeAcHLXhaN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDEyNSBTYWx0ZWRfX67RurhBXVm98 BdyZYmy5wGJ7aaw5jqMtNbWCizupbUA2uS8Tqr03rxbi0joFb6JPq9QV4+GU6QTK7bvHLf0j1Sz gQt1qwHoYqn+YS66brb4rTFalIq/Hi//iCojEyP1+U49l9vUKLLZXfMOQVMuKm9gsaOTGBj1RKx
- 7HRkrt0bkCD9wzUHnuKt+flSboAUvguAmP3W1p4I7IVCCo7Hs8kANoBJBCISh/+H/4oKUy6nczM 5httlEmusJr4x4g42Nl7IeyoJR84CPI+cNPg1/fpqIv+aJuj8jUs32K2olnhWBweGTHSn1r81qh 0mJ6BfmBg+/HzFC8XsCLaCJ+/ufzsZnsgkKxzF17QcGRgrQuWncXGStU1pfVMy6dABaPNqDipkz
- Xmr6LaFkpx2OyJaoddr8/1FmuT0l1UwhaKkYN30tU2gaA/237EllMr8uMmI/wqge+vF4tbiP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_03,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- spamscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
- impostorscore=0 phishscore=0 mlxscore=0 adultscore=0 clxscore=1011
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506050125
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528122544.817829-3-aradhya.bhatia@linux.dev>
 
-On Mon, 2025-06-02 at 15:25 +0200, Vitaly Kuznetsov wrote:
-> UEFI SecureBoot 'db' keys are currently not trusted for modules signature=
-s
-> verification. RedHat based downstream distros (RHEL, Fedora, ...) carry a
-> patch changing that for many years (since 2019 at least). This RFC is an
-> attempt to upstream it as the functionality seems to be generally useful.
->=20
-> Previously, pre-boot keys (SecureBoot 'db', MOK) were not trusted within
-> kernel at all. Things have changed since '.machine' keyring got introduce=
-d
-> making MOK keys optionally trusted.
 
-The changes were made incrementally:
+On Wed, 28 May 2025 17:55:42 +0530, Aradhya Bhatia wrote:
+> From: Aradhya Bhatia <a-bhatia1@ti.com>
+> 
+> The OLDI transmitters (TXes) do not have registers of their own, and are
+> dependent on the source video-ports (VPs) from the DSS to provide
+> configuration data. This hardware doesn't directly sit on the internal
+> bus of the SoC, but does so via the DSS. Hence, the OLDI TXes are
+> supposed to be child nodes under the DSS, and not independent devices.
+> 
+> Two of the OLDI TXes can function in tandem to output dual-link OLDI
+> output, or cloned single-link outputs. In these cases, one OLDI will be
+> the primary OLDI, and the other one, a companion. The following diagram
+> represents such a configuration.
+> 
+> +-----+-----+         +-------+
+> |     |     |         |       |
+> |     | VP1 +----+--->+ OLDI0 |  (Primary - may need companion)
+> |     |     |    |    |       |
+> | DSS +-----+    |    +-------+
+> |     |     |    |
+> |     | VP2 |    |    +-------+
+> |     |     |    |    |       |
+> +-----+-----+    +--->+ OLDI1 |  (Companion OLDI)
+>                       |       |
+>                       +-------+
+> 
+> The DSS in AM625 SoC has a configuration like the one above. The AM625
+> DSS VP1 (port@0) can connect and control 2 OLDI TXes, to use them in
+> dual-link or cloned single-link OLDI modes. It is only the VP1 that can
+> connect to either OLDI TXes for the AM625 DSS, and not the VP2.
+> 
+> Alternatively, on some future TI SoCs, along with the above
+> configuration, the OLDI TX can _also_ connect to separate video sources,
+> making them work entirely independent of each other. In this case,
+> neither of the OLDIs are "companion" or "secondary" OLDIs, and nor do
+> they require one. They both are independent and primary OLDIs. The
+> following diagram represents such a configuration.
+> 
+> +-----+-----+               +-------+
+> |     |     |               |       |
+> |     | VP1 +--+----------->+ OLDI0 |  (Primary - may need companion)
+> |     |     |  |            |       |
+> |     +-----+  |            +-------+
+> |     |     |  |
+> |     | VP2 |  |
+> |     |     |  |
+> | DSS +-----+  |   +---+    +-------+
+> |     |     |  +-->+ M |    |       |
+> |     | VP3 +----->+ U +--->+ OLDI1 |  (Companion or Primary)
+> |     |     |      | X |    |       |
+> |     +-----+      +---+    +-------+
+> |     |     |
+> |     | VP4 |
+> |     |     |
+> +-----+-----+
+> 
+> Note that depending on the mux configuration, the OLDIs can either be
+> working together in tandem - sourced by VP1, OR, they could be working
+> independently sourced by VP1 and VP3 respectively.
+> The idea is to support all the configurations with this OLDI TX schema.
+> 
+> The OLDI functionality is further supported by a system-control module,
+> which contains a few registers to control OLDI IO power and other
+> electrical characteristics of the IO lanes.
+> 
+> Add devicetree binding schema for the OLDI TXes to support various
+> configurations, and extend their support to the AM625 DSS.
+> 
+> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+> ---
+> Changes Log:
+> V9:
+>   - Reword the "ti,companion-oldi" property description.
+>   - Fix the missing "ti,companion-oldi" property in the schema example.
+>   - v8 of this patch: https://lore.kernel.org/all/20250525151721.567042-3-aradhya.bhatia@linux.dev/
+> 
+> V8:
+>   - Drop the condition that made the "secondary-oldi" and "companion-oldi"
+>     properties mutually exclusive.
+>   - Add "ti,am62l-dss" compatible to the list of compatibles that cannot
+>     use the multiple endpoints or have "oldi-transmitters", on port@0.
+>   - Because of above, drop R-b tags from Tomi Valkeinen, and Rob Herring.
+>   - v7 of this patch: https://lore.kernel.org/all/20250329133943.110698-3-aradhya.bhatia@linux.dev/
+> 
+> ---
+>  .../bindings/display/ti/ti,am625-oldi.yaml    |  79 +++++++++
+>  .../bindings/display/ti/ti,am65x-dss.yaml     | 157 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  3 files changed, 237 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+> 
 
-The original trust model relied on the secure boot signature chain of trust=
-.
-After pivoting root, only keys that were built into the kernel were trusted=
-.=20
-Anyone building a kernel could embed their keys in the kernel image, but th=
-ere
-was no way of loading other keys.
-
-- The original exception was for verifying the kexec kernel image.  For tha=
-t
-reason and that reason alone, the pre-boot keys were loaded onto the platfo=
-rm
-keyring.
-
-- From an IMA perspective, the second exception allowed loading public keys
-needed for verifying locally signed code.  The first attempt stored and loa=
-ded
-keys from the TPM.  (Unfortunately) instead, what was upstreamed was loadin=
-g
-public keys stored in MOK.  There's an option to only load CA certificates
-stored in MOK, which would be "safer".
-
-Changing the existing behavior will impact everyone's security/integrity
-assumptions of the existing system trusted keyrings.=20
-
-What's clear today is that we need finer key granularity than at the level =
-of
-keyrings.
-
-Mimi
-
-> Before that, there was a discussion to
-> make .platform trusted by default:
-> https://lore.kernel.org/lkml/1556116431-7129-1-git-send-email-robeholmes@=
-gmail.com/
-> which didn't go very far because the assumption was that this is only use=
-ful
-> when the user has control over 'db'. I believe there's a fairly common
-> use-case where this is true.
->=20
-> The use-case: virtualized and cloud infrastructure generally provide an
-> ability to customize SecureBoot variables, in particular, it is possible
-> to bring your own SecureBoot 'db'. This may come handy when a user wants =
-to
-> load a third party kernel module (self built or provided by a third party
-> vendor) while still using a distro provided kernel. Generally, distro
-> provided kernels sign modules with an ephemeral key and discard the priva=
-te
-> part during the build. While MOK can sometimes be used to sign something
-> out-of-tree, it is a tedious process requiring either a manual interventi=
-on
-> with shim or a 'certmule'=20
-> (see https://blogs.oracle.com/linux/post/the-machine-keyring). In contras=
-t,
-> the beauty of using SecureBoot 'db' in this scenario is that for public
-> clouds and virtualized infrastructure it is normally a property of the OS
-> image (or the whole infrastructure/host) and not an individual instance;
-> this means that all instances created from the same template will have 'd=
-b'
-> keys in '.platform' by default.
->=20
-> The suggested approach is not to change the default, but to introduce a
-> Kconfig variable (CONFIG_MODULE_SIG_PLATFORM) doing the job. Note, the=
-=20
-> kernel already trusts '.platform' for kexec (see commit 278311e417be=20
-> ("kexec, KEYS: Make use of platform keyring for signature verify"))
-> and dm-verity (see commit 6fce1f40e951 ("dm verity: add support for
-> signature verification with platform keyring")) so maybe changing the
-> default or introducing a generic '.plarform is fully trusted' option
-> would actually be better.
->=20
-> Vitaly Kuznetsov (1):
->   module: Make use of platform keyring for module signature verify
->=20
->  Documentation/admin-guide/module-signing.rst |  6 ++++++
->  kernel/module/Kconfig                        | 11 +++++++++++
->  kernel/module/signing.c                      |  9 ++++++++-
->  security/integrity/Kconfig                   |  2 +-
->  4 files changed, 26 insertions(+), 2 deletions(-)
->=20
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
