@@ -1,108 +1,154 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE59022578C
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DC8205ABB;
+	Thu,  5 Jun 2025 16:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749140630; cv=none; b=JRZJUoDTWrTRpohwzIbUDE79CB9YJptardsUjAOko87JaonK72wzjEODftj55sC+Lks2jOlt5AWsAQTKvpDEc6J3LgrJuTX8yMlEELsk9oaDTeS3cTMxhac9ejGzM0XdPwPmXnscwX5nxjuqHXCAMraZQQGfhg2k/Ni6Cm8eqdg=
+	t=1749140701; cv=none; b=U3Vq/yCDHPLBzM7jMwceGavDsPYkgBoX0/cHFc12RiQZT4bL0G91tPsoSRx7Rr7ZRJD39tFwvYsSZeCrLniXUECQ/Pt+Us3CYoZPJE/Pls/6n5L2mxPfAaTfVmWwRebGDz6JfdwInpO7ZbW/ubLTOCkDpxv/UYpMiVYnpCNOb7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749140630; c=relaxed/simple;
-	bh=PjYlWDp3BNrBuSPWQfwonAQiBjIaNMna15G9r40nETU=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=c4UwSNNNYUIZwHHAEFQsLMDENZMMncj+mSZlVoSAnIUHI+CokP0na/sJib0+/jfgE6FnXk0QrK1laqfh6bYSfphORTIcUyz036QsN93bNoxBLZf9W2am7xh0EQz44w+ch65nyiAIs42fAADeREHUqjl+xlh4VT58SJa5dDWyNm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=ibQ+QLJq; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1749140701; c=relaxed/simple;
+	bh=pwyfEO34JmMzSrSCOCcsHlL2iqGjz85h0/93mVFh7sA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RhAmPUrAV70srPlMUIuYvj+pZyZo6RH36394Wtk+AiCrqcp27HxyWciWVcHjS9NRleOyff3aCMWNUag3+drEUvd4gUX2wI4KoO8hwWCJNYoeqb4D/C5vvuR2JfJxPLSZPCrH8/g8rtwcp08XkvNZ53PemyfGA+XB2rxaLrGHy0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EvCyPG+a; arc=none smtp.client-ip=209.85.128.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="ibQ+QLJq"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-4064ec636a4so679070b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 09:23:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvCyPG+a"
+Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-450caff6336so7287585e9.3;
+        Thu, 05 Jun 2025 09:24:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749140627; x=1749745427; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MhmkzSl4miVAEgBkjZzGaQa8Svu0eHPKNh52KfZfwCE=;
-        b=ibQ+QLJqxg2RLxe/SejXvpLPRJSaI3e4k49kz7RkAFvbiwiU5HPAVL85ETFCzGBi9m
-         70CIfgwthhkgwkZ62uH2yPnDN3cWkQLUVJZOlxYXHmjn4uyO0Gj4Ku/c/yf9saH4oicR
-         4D0+QMG4Y8JRcYVqSuDbuqBU7Pq+sIwkgpyloBL7JdYtwwNVE4lu1Nessa+vS2ht77i9
-         /tfaRo5C1+xVu50kj9/IsQ6MDVbdqii9w0Y/w6sFQcf/YQ4JSMCDZ55xIu8oQqLKR4Dk
-         cEug6xpPbsv5fTcUQEl7tPLs2gXA2Hl1TP+OxUxuAusRHfKLMHdhiQDNXYoCLV/gp15v
-         RwhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749140627; x=1749745427;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749140697; x=1749745497; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MhmkzSl4miVAEgBkjZzGaQa8Svu0eHPKNh52KfZfwCE=;
-        b=WzlOAVSEITuRQLLHTXGRmbcrrgq3cwWKdsAulVM847XWZD/VUqpDp/ARyGfTj4hEFx
-         k8ONfKKM5lf88NDd2PCwMDl285LRrkvh9zjYviQHtydU0Een8Uod3JGbsm9qMf8gmJ+k
-         spKKG01rXXtAAbf5j3VF3B89VYpUDj/fiLRiRZo32u+vY12XUN5n5sDMG96ZiMa+r7O5
-         gomKXWL5oXO3Eo5jAjKGYYSft/62OE1iuVQBQbkuLzNjk6+bn5cS5jOTH/+4nC/QrOQt
-         Pb4b9uboEElk7uABY/Ub0edF95JC83fkLrocFka79PTLao3u4mnSuV2WmYYX8pTOnFYZ
-         Qt8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWjr/kylXWGplimn05ny3KcI3IXchNMMOzXOXzrVCsG7KSOeHzrlqfZsh3293R53enBltHYbBVlzdyEzAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw87Cl0ozGmFi7OKzBGqQEgorPekOX6XPy9m92fN/5BNdR4fndq
-	bu9UVgIJ7gN0zGGfzVZ492llfNnkq/SLgSh/Dx6D0tUcUjWQNUywHrz72uohHwJv1k+MbaDwq1c
-	9gyvm
-X-Gm-Gg: ASbGncspR3mYkwyH/WQhVAkdpMAapGML/81hbUQLxtX2fncKg3H/1u/Lvp3AKgMllVP
-	Ww8aFTRC+nEh5B1EEEyU5teTQrlRiEF1C4CxlZxDMRcxTV185PEEwda9VRhjoTwte1SYLgAUuhM
-	5ws3uS0XVYrXNDn2410BAZlp6LaQQM0MktN5PU5NLGtBt6A4P4KQ8v79P1juMxdgkODSw6+lnzH
-	W6LveTrCzlshI/hnYuTWWQHbQXD5eGT0advEYIWjbEoWpQV+aV0hVuCM6a8zpN8kvSu0Qv06ux0
-	Fd05+nA0TQ3TyaC6ql7GI0cfDMgZtHWZA/Qh7vnTQG3boBBI7w==
-X-Google-Smtp-Source: AGHT+IEaIBy6yNKTCUA69UCGRX2VPwFS66IMWYvdLzscieBWr+NLD4pWHlMFRxq0s85XKrHw06zihw==
-X-Received: by 2002:a17:902:ce82:b0:224:24d3:6103 with SMTP id d9443c01a7336-235e12535e8mr123606485ad.35.1749140617531;
-        Thu, 05 Jun 2025 09:23:37 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::6:2592])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-235e425ad08sm27445665ad.129.2025.06.05.09.23.36
+        bh=b1m1B6nQXZ8mPeTAYsXRWJ8xyXAKXvkl9Kc6auAK6DM=;
+        b=EvCyPG+aUmDIqYVfudE5M7d6435+ur2jdppRIwgDLkmGm6M1+3EKiPQJcN9GwazhvD
+         nbAEbuTu1BH6OyJY680dtzKwVOe/CsR0FC63vyXeNWzv1YzIZFsuThb7tLle59bNQ/Yq
+         PAhZw1qQmG8A9n/4iPvGTl42M8R/0mcbEu5uG4bG97fzUxleNUGSoxmgYBvHdV1RzzLU
+         cwYp1U5OxSIsTYGAcECdRjHMmH6qJhg1QzpkM9iRxlAy1s0d8LxweF0dGJdqUJzXM1qz
+         FylMXAqu/HdK7HHnEbgyWsMVIOJKrYfoga7IZLWyDbAu/G8WY1PYY2szAezMHqtZA0mW
+         5F6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749140697; x=1749745497;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b1m1B6nQXZ8mPeTAYsXRWJ8xyXAKXvkl9Kc6auAK6DM=;
+        b=vE3N1Bmq/8xMcIGSMaT0AajwIQiq4+n6BQxv0DnU/zBBXmDZ9wElpXAarFAoaJWgPt
+         WXmRF6wHkfofYPk6vRYoTUAwvkPYUMGki7He7cWS4MYHxsjtVt9vTCW2ZCvOn+bMs5IG
+         0grl5ITh9tV3F5GJyJ4ShHKd157ncFq5Ve/zTZSZ4GqxudzJvoCZ8QVa9DFaVbCMBgLt
+         ehs3Dm+9co2e7bHE5uXg35NnjHIVTCOYtZBSoXSlxev8jrNLMn2r9W6adi+Osq9T2h8p
+         dS2YiU1GYxI5fpJ5EOye0odNyhuyP0+8uhCPAHIHHX+QYhPe7l/cZEqxNmj23jB8O1IM
+         mNvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgascl+yGN8WeOekGb/g8AIKD1mAxVmQLj8lJjGFXKqhWLexIAWwuoQ6Zn8sRFE2iQkCSuioG7nxOo@vger.kernel.org, AJvYcCVZbg97FKNMD5idStx7bJvWowPSbAxbdsnit6Efb2OjR9PVLhCsoG/TUFQOpjYRwjTO0l85gbJDIegPr+wuJoA=@vger.kernel.org, AJvYcCWdwvnrjFMuUJ64Or3KMZTmloUOTR19mC4M26F8ZsQpeai++Vlxe1i0H0WMeCJIanFFq7/u9X9J9kztAKWF@vger.kernel.org, AJvYcCXqcVE2fn//2foFy6ZuJ5LfYtvmfYSxHTdZnGRg/z28qsLR+nqwLnkjHvcuS1BXchzi8xfNbAEtcsWHbA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YysTDrHp2dNu/+CrTnJwmBCO6dzNXZv2CCrcneBhMSMtTYizppG
+	cDYcP8qt6Y0OtWx4WMIEAaI7/TCVk9PXKJCp3b62hyd+DqV0q2RptSrP
+X-Gm-Gg: ASbGnctw2vqdgHdFNePAe5ZCSxEC8xxpfj4tYHWSSlXgmRZqcbORYZmXmW5d1Dtq3l7
+	xcS/zyfQeDa7y3bli32nILV8FgamNVY5yCF6lbbGm5DL69iPa7yn/RQQqxCZETWaa597OIXlIYQ
+	yWHF/0jFQ8menMajWqOQZLSyQ+Orr/1kT36OlNI6PYv6FLexynu4jIQvTkdoilvlZLmhZ8r3j4Y
+	Tf1mA+V10K6MON75YtczJK+775fKnxzWqPd29SZRqXdEA+kUtjMYSDt5ij2USUyC+nZqZ6JwKFU
+	7yYqK3n/QswJY0AJoCgkljOtIxSzHduLdmz5NXWcYwsAQ2X1SbQTOOXOswSBRXmCtF3jcfcG1wA
+	pY/lETYMUespqbTo=
+X-Google-Smtp-Source: AGHT+IGWavlZhoQ+/UyAySuEJA2L+CnHKDxy4aTjsHiVQaqroh/Imb+eG9Mk0IdvcIUwFOomrCjnRg==
+X-Received: by 2002:a05:600c:3106:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-451f0a6a94bmr75309925e9.2.1749140697424;
+        Thu, 05 Jun 2025 09:24:57 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.. ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a526ddb8afsm2822451f8f.0.2025.06.05.09.24.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 09:23:37 -0700 (PDT)
-Date: Thu, 05 Jun 2025 09:23:37 -0700 (PDT)
-X-Google-Original-Date: Thu, 05 Jun 2025 09:23:35 PDT (-0700)
-Subject:     Re: linux-next: Fixes tag needs some work in the risc-v tree
-In-Reply-To: <20250605163513.7cfb7f2b@canb.auug.org.au>
-CC: Paul Walmsley <paul@pwsan.com>, cyrilbur@tenstorrent.com, alexghiti@rivosinc.com,
-  linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Message-ID: <mhng-3E0595D4-92E8-4E7C-B02A-C33F7289E4A6@palmerdabbelt-mac>
+        Thu, 05 Jun 2025 09:24:57 -0700 (PDT)
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	Igor Korotin <igor.korotin.linux@gmail.com>
+Subject: [PATCH v2 2/5] rust: helpers: Add `is_of_node` helper function
+Date: Thu,  5 Jun 2025 17:24:53 +0100
+Message-ID: <20250605162454.3659309-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250605161956.3658374-1-igor.korotin.linux@gmail.com>
+References: <20250605161956.3658374-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, 04 Jun 2025 23:35:13 PDT (-0700), Stephen Rothwell wrote:
-> Hi all,
->
-> In commit
->
->   4e27ce58e7fa ("riscv: uaccess: Only restore the CSR_STATUS SUM bit")
->
-> Fixes tag
->
->   Fixes: 788aa64c0c01 ("riscv: save the SR_SUM status over switches")
->
-> has these problem(s):
->
->   - Target SHA1 does not exist
->
-> Maybe you meant
->
-> Fixes: b0feecf5b812 ("riscv: save the SR_SUM status over switches")
-> Fixes: 788aa64c01f1 ("riscv: save the SR_SUM status over switches")
-> or
-> Fixes: 8f9b274ad153 ("riscv: save the SR_SUM status over switches")
->
-> (yes, they are all the same patch ... and all ancestors of 4e27ce58e7fa)
+Add a helper function to determine whether a given device appears to be
+an Open Firmware (OF) node.
 
-Ya, thanks.  Something's gone way off the rails here, let me try to 
-figure it out...
+This function will be used in Rust driver abstractions to support both
+ACPI and OF matching simultaneously in subsequent patches.
 
-> -- 
-> Cheers,
-> Stephen Rothwell
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+---
+ MAINTAINERS            | 1 +
+ rust/helpers/helpers.c | 1 +
+ rust/helpers/of.c      | 6 ++++++
+ 3 files changed, 8 insertions(+)
+ create mode 100644 rust/helpers/of.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5f8dfae08454..d6cadaa592aa 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18215,6 +18215,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ F:	Documentation/ABI/testing/sysfs-firmware-ofw
+ F:	drivers/of/
+ F:	include/linux/of*.h
++F:	rust/helpers/of.c
+ F:	rust/kernel/of.rs
+ F:	scripts/dtc/
+ F:	tools/testing/selftests/dt/
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 80785b1e7a63..2fc5242aa47a 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -21,6 +21,7 @@
+ #include "jump_label.c"
+ #include "kunit.c"
+ #include "mutex.c"
++#include "of.c"
+ #include "page.c"
+ #include "platform.c"
+ #include "pci.c"
+diff --git a/rust/helpers/of.c b/rust/helpers/of.c
+new file mode 100644
+index 000000000000..8913eaced716
+--- /dev/null
++++ b/rust/helpers/of.c
+@@ -0,0 +1,6 @@
++#include <linux/of.h>
++
++bool rust_helper_is_of_node(const struct fwnode_handle *fwnode)
++{
++    return is_of_node(fwnode);
++}
+-- 
+2.43.0
+
