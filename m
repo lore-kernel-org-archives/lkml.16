@@ -1,122 +1,196 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0BB5FEE6
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1220327E7C0;
+	Thu,  5 Jun 2025 19:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749152850; cv=none; b=KZNPMWZJCHpniXd7fJRSgzO2yfy3f7pXzV5OshAHTTUjfTgSD0rR1oJ9VCgxS3iQ98CM/JY487T2P/VUPTlSKOYGWw91/NAXezaOH5cDXGn+5qTukPf8NHh33Z7/wNOK4GZKkZJE1emq1Q9W0f0mlwRRBItrCHHRd2q4UcC6IQU=
+	t=1749152852; cv=none; b=ImjCDyE6cTvdElIUvJQu6YVlzl5DGkzwCyRd3z6cmta88C7Uxc6phJwVujuMHUR+v8vj63Ggrwj2TtNDNUAh6fAc/cJLGzZx+Uu8teZB9bf4Rl+NG/bhXCVO2DGgMrVDvHCMFuxHKnBOs4gQnemgVg7Nov7N25v9P24J5eVYnyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749152850; c=relaxed/simple;
-	bh=UCKucqpwIyXj8QqMkDicaIUSsgwwLiTElK59LUrl4fE=;
+	s=arc-20240116; t=1749152852; c=relaxed/simple;
+	bh=eo11vjDRDq3mejcd/trm8I0EIFj0unuN7KWTXiP41yI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YCWvSBB3Y/YwiuunlUq4ZC5EijbMZSu07Lxg0118dbwhbQGpjyO4PXa3Y48k5pW4XsAtsTkMAZCG2WwGoxjIzrO58JfI5EpSXAORBsYuD+74MBLhR68WA8hzuuYzDVYpU/fb2AI4i9otTKiwfp1YWSAIi9J2IVxUAF8y57etQfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HkZRSyKy; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=W6379a9Aq5hEDp+nBpPoy1gdJHFVkt+s+TrXpsMXq6uifzgTNl4+7S4vrrCSccLU88Pw9MqxdzGD0e5V4q1QEeRux4RZS7BnOXtWgNcdWY1v+8bdhFMAd8H9WNv6unSSn4EF2Udk+RSg+EFn9bp7CkEPalo9R6vjbSMhh7et5nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y5LgfZyS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HkZRSyKy"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2357c61cda7so4975ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749152848; x=1749757648; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UCKucqpwIyXj8QqMkDicaIUSsgwwLiTElK59LUrl4fE=;
-        b=HkZRSyKy1rL1pwe3LUs3LLl61kUzlQxWkvjm8DGMH0Jh1+YuGJ+VVhi7cx77uKFbBg
-         Gnz0BDN8p9d9rzjxv1aUXQlPYomT18gULbI1Sg0884mf/SxaE0ViWcIdM4Le2N/d/WUk
-         z3hWfH5ybmnBIdBHaP1f9yuyEWc3uVTCUzWpCBa5kNN9dor8zHrVEjokX3TXZGx2iZZr
-         wZk6AmSJLK16W37apSBo1VmYyLncIpg3dCaCRVhVO3x3tc1fFrOYA9icQBw9tFcmqfPy
-         nyZw1ZIYiEjHKQMJQ0Tof8z6lROTtXn26JffSpcK2hfYZcwbdR70IBWM7ZrxXEbl5cwk
-         rF8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749152848; x=1749757648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UCKucqpwIyXj8QqMkDicaIUSsgwwLiTElK59LUrl4fE=;
-        b=BFSYwjIY2nwVMdLeQ9lU2vCvzehVAzSwJfrdJpsARkzbH1HwUzIr/JlDf6qEyOXVmb
-         gI5/3cKF/BqEBAb4zCydur0L1TSi2lNzFVU9bUMenwBJ+M5ZaUXyKuwDiEO7uoJp0Jo7
-         2Us07S9yquAPmetxGdkFPbHDu6k9Qmu1iVix8f0tGPwNIVpN1mgXIdEmKWqwh/K2UcF7
-         iJ3IYXNmlIazhR9Lr4sgIRVIaeR6e/LfEERuaHQRZxu45Dub89C5GQqAR4Ut13mENG1n
-         fuhjjigBGS8VBU3dhPuWfEpzveC9ji438/hveflSbai/XuLWXKPPZUhKaYmIjmrG/3gg
-         Em7w==
-X-Forwarded-Encrypted: i=1; AJvYcCV7oxMD6Ty2pJItFXFglXnbq1RYGFbTRMWXDmWtw/X871BPhNJc0FKND1P/OOIF/hsniwqoSZvJEoFhUVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRTaVhfK3zCst25A7lIlI+Ua5SmBylgzbBCInr9ZQ1QeHOuaB9
-	OWCPVL6jCaqac3NtnJ5llZ4bTN5zhcYPXr5pStePp3EPqxjdR+/9txwSZ25ov9ISMtay5s9CST6
-	gKRdjwyQyljCANCOUXdK+K7Anpnf/Upkm7duSHESs
-X-Gm-Gg: ASbGncucPBfJECHqxi8IFRxtIN3I9HADgGzgdMTKZxvEs+cKWQwcitbtS0RWgyk8U8m
-	+1YzVXVy0djgrJUm/kGaIhOGt0pT+XwCsYyiIwN072FZe0EV9CtpBisACHsiSZamqvF3jo4MGZr
-	IJVrawTQUivp+jhTYVO8tt0+p4YBypCf0+E3z/x++ovpbY
-X-Google-Smtp-Source: AGHT+IGEZRKG6xvZHogMtre77VgiSxDaYZdqjTk10sRxgiSBiBGpyaYgS/fptxzapbkZ7Jl7Refn+g7Umm+MVSkwFF8=
-X-Received: by 2002:a17:903:22cf:b0:235:e1e4:efc4 with SMTP id
- d9443c01a7336-236021cbd7cmr556885ad.14.1749152847887; Thu, 05 Jun 2025
- 12:47:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y5LgfZyS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89C13C4AF09;
+	Thu,  5 Jun 2025 19:47:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749152851;
+	bh=eo11vjDRDq3mejcd/trm8I0EIFj0unuN7KWTXiP41yI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Y5LgfZyS/f6dTfukaOa5EZknrw1NvbGK38N0kKjZ+u+29y5cEjd9t+HxeIgZ8//E3
+	 2VbmSAQ0YMMmqEwF5yilmvivfkgCljMMJl4GBA05zqfCSYtzC6bCbT6btOwlUBfuhT
+	 hfe9VCSiwTtwVsibHtvl+K1tB6HJ/z9Yk3PVUiIcvnrANVa/GnF4HOm3nKWAh6lpu3
+	 XTsbclrmOOTfOMKvonIYjaPQe4ltL+RGHLhokde2k92FXyMe4oDCwV76BvVRV2u1tt
+	 rAiCYcz3kYlqslH8Ju90xaFcej7EaLqIFoniILjgt2Bk9pSAbqAw+WyW3qL4EnezQp
+	 4KGa6RqfJlLUw==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54acc0cd458so1560236e87.0;
+        Thu, 05 Jun 2025 12:47:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVtMESgddFeW1b2GZ4a637U06WeafNDDSUKCC4FL2QqD8FCCkBpzHSBJJasI+UGS7jQYhiZyisvbwktZYLt@vger.kernel.org, AJvYcCVzzqBUWylDox5EDQfQm5xqrtObMhOaRZ3XWPNoV5npjokw7WbymyleQpuJutawGxR9oczAkKNiMFzKlKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDXxMIYRX8FDhZ87LWu9XewI6ILnmy7ayxwHNQd+gmU6P+XSBV
+	MGHHtM7OP2MPxc0iUFBbnigKtZaOcBc9u2cF7hDknfM1zziayEECgU3sYEXTaujid7k5gj/hQmd
+	avUnf1FgYsj9Rm94a/jPgkv7QTmtUz8E=
+X-Google-Smtp-Source: AGHT+IG/t1ZgYzQF9Iw/v7rqbGhn0QbUWNjdjy5Q0ho67l7BfjUpQgBElJkOQZ9REIPKzBLsATG/rIE5qUVdx6OU2iI=
+X-Received: by 2002:a05:6512:4017:b0:54a:fa5a:e9b1 with SMTP id
+ 2adb3069b0e04-55366bd49fdmr101656e87.10.1749152850238; Thu, 05 Jun 2025
+ 12:47:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604025246.61616-1-byungchul@sk.com> <20250604025246.61616-19-byungchul@sk.com>
- <390073b2-cc7f-4d31-a1c8-4149e884ce95@gmail.com> <aEGEM3Snkl8z8v4N@hyeyoo>
-In-Reply-To: <aEGEM3Snkl8z8v4N@hyeyoo>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 5 Jun 2025 12:47:14 -0700
-X-Gm-Features: AX0GCFuQUodCCzxMMKtUv6I9nARNgb_4QREwvin7nUUsfjMZH4C0VBF2D5sefUE
-Message-ID: <CAHS8izPvdKZncxARWUqUqjXgoMb2MmMy+PaYa8XCcWHCQT-CSg@mail.gmail.com>
-Subject: Re: [RFC v4 18/18] page_pool: access ->pp_magic through struct
- netmem_desc in page_pool_page_is_pp()
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Pavel Begunkov <asml.silence@gmail.com>, Byungchul Park <byungchul@sk.com>, willy@infradead.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org, 
-	hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net, 
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com, 
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+References: <20250603130213.338518-1-petr.pavlu@suse.com>
+In-Reply-To: <20250603130213.338518-1-petr.pavlu@suse.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 6 Jun 2025 04:46:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQxXR64=GjMOnr_hpEqLWEZwH_XUkvkmp0xabryE8WG0Q@mail.gmail.com>
+X-Gm-Features: AX0GCFuhiyDSrCsvy5dO9Ne53j6nqEURNxG8AhcaMWTlYdu4Hd3e-Lt_NpGC5C0
+Message-ID: <CAK7LNAQxXR64=GjMOnr_hpEqLWEZwH_XUkvkmp0xabryE8WG0Q@mail.gmail.com>
+Subject: Re: [PATCH v2] genksyms: Fix enum consts from a reference affecting
+ new values
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 4:49=E2=80=AFAM Harry Yoo <harry.yoo@oracle.com> wro=
-te:
+On Tue, Jun 3, 2025 at 10:02=E2=80=AFPM Petr Pavlu <petr.pavlu@suse.com> wr=
+ote:
 >
-> On Thu, Jun 05, 2025 at 11:56:14AM +0100, Pavel Begunkov wrote:
-> > On 6/4/25 03:52, Byungchul Park wrote:
-> > > To simplify struct page, the effort to separate its own descriptor fr=
+> Enumeration constants read from a symbol reference file can incorrectly
+> affect new enumeration constants parsed from an actual input file.
+>
+> Example:
+>
+>  $ cat test.c
+>  enum { E_A, E_B, E_MAX };
+>  struct bar { int mem[E_MAX]; };
+>  int foo(struct bar *a) {}
+>  __GENKSYMS_EXPORT_SYMBOL(foo);
+>
+>  $ cat test.c | ./scripts/genksyms/genksyms -T test.0.symtypes
+>  #SYMVER foo 0x070d854d
+>
+>  $ cat test.0.symtypes
+>  E#E_MAX 2
+>  s#bar struct bar { int mem [ E#E_MAX ] ; }
+>  foo int foo ( s#bar * )
+>
+>  $ cat test.c | ./scripts/genksyms/genksyms -T test.1.symtypes -r test.0.=
+symtypes
+>  <stdin>:4: warning: foo: modversion changed because of changes in enum c=
+onstant E_MAX
+>  #SYMVER foo 0x9c9dfd81
+>
+>  $ cat test.1.symtypes
+>  E#E_MAX ( 2 ) + 3
+>  s#bar struct bar { int mem [ E#E_MAX ] ; }
+>  foo int foo ( s#bar * )
+>
+> The __add_symbol() function includes logic to handle the incrementation o=
+f
+> enumeration values, but this code is also invoked when reading a referenc=
+e
+> file. As a result, the variables last_enum_expr and enum_counter might be
+> incorrectly set after reading the reference file, which later affects
+> parsing of the actual input.
+>
+> Fix the problem by splitting the logic for the incrementation of
+> enumeration values into a separate function process_enum() and call it fr=
 om
-> > > struct page is required and the work for page pool is on going.
-> > >
-> > > To achieve that, all the code should avoid directly accessing page po=
-ol
-> > > members of struct page.
-> >
-> > Just to clarify, are we leaving the corresponding struct page fields
-> > for now until the final memdesc conversion is done?
+> __add_symbol() only when processing non-reference data.
 >
-> Yes, that's correct.
+> Fixes: e37ddb825003 ("genksyms: Track changes to enum constants")
+> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+> ---
 >
-> > If so, it might be better to leave the access in page_pool_page_is_pp()
-> > to be "page->pp_magic", so that once removed the build fails until
-> > the helper is fixed up to use the page->type or so.
+> Changes since v1 [1]:
+> - Remove the unnecessary condition 'type =3D=3D SYM_ENUM' in process_enum=
+().
+
+
+Applied to linux-kbuild. Thanks.
+
+
+
+> [1] https://lore.kernel.org/linux-kbuild/20250527142318.14175-1-petr.pavl=
+u@suse.com/
 >
-> When we truly separate netmem from struct page, we won't have 'lru' field
-> in memdesc (because not all types of memory are on LRU list),
-> so NETMEM_DESC_ASSERT_OFFSET(lru, pp_magic) should fail.
+>  scripts/genksyms/genksyms.c | 27 ++++++++++++++++++++-------
+>  1 file changed, 20 insertions(+), 7 deletions(-)
 >
-> And then page_pool_page_is_pp() should be changed to check lower bits
-> of memdesc pointer to identify its type.
+> diff --git a/scripts/genksyms/genksyms.c b/scripts/genksyms/genksyms.c
+> index 8b0d7ac73dbb..83e48670c2fc 100644
+> --- a/scripts/genksyms/genksyms.c
+> +++ b/scripts/genksyms/genksyms.c
+> @@ -181,13 +181,9 @@ static int is_unknown_symbol(struct symbol *sym)
+>                         strcmp(defn->string, "{") =3D=3D 0);
+>  }
+>
+> -static struct symbol *__add_symbol(const char *name, enum symbol_type ty=
+pe,
+> -                           struct string_list *defn, int is_extern,
+> -                           int is_reference)
+> +static struct string_list *process_enum(const char *name, enum symbol_ty=
+pe type,
+> +                                       struct string_list *defn)
+>  {
+> -       unsigned long h;
+> -       struct symbol *sym;
+> -       enum symbol_status status =3D STATUS_UNCHANGED;
+>         /* The parser adds symbols in the order their declaration complet=
+es,
+>          * so it is safe to store the value of the previous enum constant=
+ in
+>          * a static variable.
+> @@ -216,7 +212,7 @@ static struct symbol *__add_symbol(const char *name, =
+enum symbol_type type,
+>                                 defn =3D mk_node(buf);
+>                         }
+>                 }
+> -       } else if (type =3D=3D SYM_ENUM) {
+> +       } else {
+>                 free_list(last_enum_expr, NULL);
+>                 last_enum_expr =3D NULL;
+>                 enum_counter =3D 0;
+> @@ -225,6 +221,23 @@ static struct symbol *__add_symbol(const char *name,=
+ enum symbol_type type,
+>                         return NULL;
+>         }
+>
+> +       return defn;
+> +}
+> +
+> +static struct symbol *__add_symbol(const char *name, enum symbol_type ty=
+pe,
+> +                           struct string_list *defn, int is_extern,
+> +                           int is_reference)
+> +{
+> +       unsigned long h;
+> +       struct symbol *sym;
+> +       enum symbol_status status =3D STATUS_UNCHANGED;
+> +
+> +       if ((type =3D=3D SYM_ENUM_CONST || type =3D=3D SYM_ENUM) && !is_r=
+eference) {
+> +               defn =3D process_enum(name, type, defn);
+> +               if (defn =3D=3D NULL)
+> +                       return NULL;
+> +       }
+> +
+>         h =3D crc32(name);
+>         hash_for_each_possible(symbol_hashtable, sym, hnode, h) {
+>                 if (map_to_ns(sym->type) !=3D map_to_ns(type) ||
+>
+> base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
+> --
+> 2.49.0
+>
 >
 
-Oh boy, I'm not sure that works. We already do LSB tricks with
-netmem_ref to tell what kind of ref it is. I think the LSB pointer
-tricks with netmem_ref and netmem_desc may trample each other's toes.
-I guess we'll cross that bridge when we get to it...
 
 --=20
-Thanks,
-Mina
+Best Regards
+Masahiro Yamada
