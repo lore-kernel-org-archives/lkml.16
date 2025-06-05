@@ -1,226 +1,230 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69CA1F956
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 14:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1D626156B
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 14:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749132773; cv=none; b=hG+KiF6uKgEkVFUpJY+GmFRkRv+0kyMhRjlpfsYiKfH6pgUPVg5kcgxdA9CjbK88sJanl8ZBmq7zESm4WfTUblLkGUEC3/80GhljEjyDfKp1UfcmqF870aFvF75P+QhyWSVVW5F1K4rq5H5znu/ZAtxs99V3LgOZHSGm8MmszHQ=
+	t=1749132788; cv=none; b=lfpVh76nsV4woG6EVmgkKLa/hUONmtsCqiD1hXgyM8bAtPGwLc0fnp1bFu8FMTKpH3epu/g4NDHf2ofMjYM2WV7e5hVOMxQoMMsDlawkPWIu8QLeEArlzAWkbT5+Su7ExEeoq4vVzRBBcvROGSwr9Y1NeFTRTAV+9OCthI8gJd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749132773; c=relaxed/simple;
-	bh=iCgPu5pfYQJITjj/WtNvsoyc3dg8LybhViYUd6TFr5k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W95zfVKN4zczjsNqA4NEnSDd6Fic8uvxLfxXBtXjwvXwKPos+xrpbxxSdvSRK2p7tTa8MpWdmFKewXnPaHgQxq65zYZ9sRLUbfbAHRXdHXEiy1McTXTTyONBo5jUSCxCUbRXYRgyhO5T4H3qJ/718FNNMihhhXrNfkQvyAu/nvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=tG71v4ea; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pl346M3l; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yVRUymOZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9P9+I8da; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="tG71v4ea";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pl346M3l";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yVRUymOZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9P9+I8da"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B9BF11FDFF;
-	Thu,  5 Jun 2025 14:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749132769; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s1my+5sB9qYJQFz3d91MsXhWfhoHzIJlD1nQ1XwMkOs=;
-	b=tG71v4eaFsDniFBbqTpPADMXC6WUsCNeC77f+uttb5Wp5dxq8MUBiea5IevvvKBateeryr
-	GNMtUQqG59ytB8aN4bTsaIhh+fG296em3Oq1ByuV/XzTqtPMjI4ap9EoH/h22+kWfRKLMG
-	LMkWPfarQgbEHYi+QhxCiY7PAB9HTHs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749132769;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s1my+5sB9qYJQFz3d91MsXhWfhoHzIJlD1nQ1XwMkOs=;
-	b=Pl346M3lLepoZwomUooSysc8nrx+IcxJS/2fe1Xk2NBIHRfjqRVj87m+DTq9Dxjgz6Hv+m
-	+DUT+svdZVO9B0CQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=yVRUymOZ;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=9P9+I8da
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749132768; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s1my+5sB9qYJQFz3d91MsXhWfhoHzIJlD1nQ1XwMkOs=;
-	b=yVRUymOZXbdjq53zhhR2SHnQ4pIq54X/mlKTfxTIgNJ3vOLFzvkUKx1d8z1T0hzJYq4NBO
-	t3+a9rDTmsXVcyQuqqLuW3cjAYNfm6NgIy4i5ru1ej1mIImSrzGj6HrWfzfogopxljC8DC
-	rTIal5AVNtf9DzcyHeKi9UvBlqXZG+Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749132768;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s1my+5sB9qYJQFz3d91MsXhWfhoHzIJlD1nQ1XwMkOs=;
-	b=9P9+I8damNwrZy42cUnt+iwHQdiY7xerUBtq+LSZLqYWuYUfQDdnx6wCvPWyxERe/lloRy
-	q6ZSTWFfYa0QfYDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9CAE3137FE;
-	Thu,  5 Jun 2025 14:12:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QjroJeClQWi8QwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 05 Jun 2025 14:12:48 +0000
-Message-ID: <452a0296-7cdc-474b-b751-0c6c498e4190@suse.cz>
-Date: Thu, 5 Jun 2025 16:12:48 +0200
+	s=arc-20240116; t=1749132788; c=relaxed/simple;
+	bh=umSL5beEUobeZGxzkBdiVbovvnKj7LQIpwGmCZgcxEE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=P4gVjfRc7tvJnREVNGqoKNxNZoFFnnnW7pvXpGNxUjWEAPtymUVK/A+gGtSQB2L1N95GHmOS2E4+4zO9IkintV6F1st9U2SpjRMAcDgQrUN6MUgqsXCIh7UHpW23nNM8hiYxkyL5bvgNb3efG9ulnkbsFhjNAcsSaWBek8ifP78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddc4908c4dso16776855ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 07:13:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749132785; x=1749737585;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0YW0P8XbUGYocEpxJlVM+/uRIsSaN1nclHTkqn2m8Gg=;
+        b=VP9JeJarnnPqUqnD76Rqhg+EeC9dV03qKk4Nz419s5Nz/vV6wJIok0DMt2exg5FucD
+         yY+IvGUClomxQxk1mV/cXI94Psx0bNvLZxuwz/P2PTwoKFbTI6d6H0TGD1p2PBsscNXC
+         Rw0lRCNOYk+AscoswNXDlX8x8+y/3yH9AfLryoMzNob/kHtMDSFqtgsXkusf5v9ggEJx
+         CRi7Q7QQhgwn7U/GFFRnzPozRRPUfJnrOWdY5rqrJKcRL5Um38lRemz/gj69jFUDPrDs
+         fcvwcyV/4Y3yvpj1Xd4Sa+eEmOeUc03a2UUj02HnHfX/x4X7Kg2R6lh17TP++L6gHc3b
+         e5NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCkwJA6KLUThnPfCp0fAA1aTdaMYk53PxLs+qO/FTXbC8P4InV186tdj0rvvsEwnZ/gNM+ImqgBXhvL5o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ9cOLu+ebMZw/Wr987+91AZPK85Nfr6fjL2pz7YGaQvtWgUeD
+	Sk4LhCJtCBkmcEjynf9uQIObTkhPwnmCUpS9VecrgMpNkCCwbR64gQvxhCAWPsxP8/kEzMgieM8
+	opa+HDmQ2ls83PnZdItrBEZjx9NPTMdVpuU/1NTwDTWZPcRCH5NWVDi2ssjc=
+X-Google-Smtp-Source: AGHT+IGKZYs/Gw8/RLLsEhgGcVbl8fczGXpCxOuE47LrLxHgzkgsAIwbmSeTXEEmSmy7aC3oJIxn4Ably3ELB11fwFqe4tprfb/x
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: madvise: use walk_page_range_vma() instead of
- walk_page_range()
-Content-Language: en-US
-To: Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
- Barry Song <v-songbaohua@oppo.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
- Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra
- <lokeshgidra@google.com>, Dev Jain <dev.jain@arm.com>,
- Tangquan Zheng <zhengtangquan@oppo.com>
-References: <20250605083144.43046-1-21cnbao@gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20250605083144.43046-1-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com,kvack.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,oracle.com:email,suse.de:email,arm.com:email];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: B9BF11FDFF
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+X-Received: by 2002:a05:6e02:2188:b0:3dd:a4f0:8339 with SMTP id
+ e9e14a558f8ab-3ddbed0ef1cmr79162445ab.8.1749132783370; Thu, 05 Jun 2025
+ 07:13:03 -0700 (PDT)
+Date: Thu, 05 Jun 2025 07:13:03 -0700
+In-Reply-To: <tencent_5E9E6E1BDB4B9B1B062565BA47BB9A336A08@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6841a5ef.a00a0220.d4325.001c.GAE@google.com>
+Subject: Re: [syzbot] [ntfs3?] KASAN: slab-out-of-bounds Read in ntfs_utf16_to_nls
+From: syzbot <syzbot+598057afa0f49e62bd23@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/5/25 10:31, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
-> 
-> We've already found the VMA within madvise_walk_vmas() before calling
-> specific madvise behavior functions like madvise_free_single_vma().
-> So calling walk_page_range() and doing find_vma() again seems
-> unnecessary. It also prevents potential optimizations in those madvise
-> callbacks, particularly the use of dedicated per-VMA locking.
-> 
-> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
-> Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Lokesh Gidra <lokeshgidra@google.com>
-> Cc: Dev Jain <dev.jain@arm.com>
-> Cc: Tangquan Zheng <zhengtangquan@oppo.com>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+Hello,
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+syzbot has tested the proposed patch but the reproducer is still triggering=
+ an issue:
+KASAN: slab-out-of-bounds Read in ntfs_utf16_to_nls
 
-Thanks!
+nl: 254, name: file0aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, ntfs_dir_emit
+keysize: 76, name len: 255, nls: ffffffff8e445280, fn: f, ntfs_dir_emit
+ntfs3(loop0): failed to convert "0000" to maccroatian
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+BUG: KASAN: slab-out-of-bounds in ntfs_utf16_to_nls+0x3c9/0x5a0 fs/ntfs3/di=
+r.c:49
+Read of size 2 at addr ffff888033905000 by task syz.0.16/6595
 
-> @@ -1160,7 +1160,7 @@ static long madvise_guard_install(struct vm_area_struct *vma,
->  		unsigned long nr_pages = 0;
->  
->  		/* Returns < 0 on error, == 0 if success, > 0 if zap needed. */
-> -		err = walk_page_range_mm(vma->vm_mm, start, end,
-> +		err = walk_page_range_vma(vma, start, end,
->  					 &guard_install_walk_ops, &nr_pages);
+CPU: 1 UID: 0 PID: 6595 Comm: syz.0.16 Not tainted 6.15.0-syzkaller-12141-g=
+ec7714e49479-dirty #0 PREEMPT(full)=20
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xd2/0x2b0 mm/kasan/report.c:521
+ kasan_report+0x118/0x150 mm/kasan/report.c:634
+ ntfs_utf16_to_nls+0x3c9/0x5a0 fs/ntfs3/dir.c:49
+ ntfs_dir_emit fs/ntfs3/dir.c:310 [inline]
+ ntfs_read_hdr+0x6b5/0xca0 fs/ntfs3/dir.c:387
+ ntfs_readdir+0xa5c/0xdd0 fs/ntfs3/dir.c:498
+ iterate_dir+0x5ac/0x770 fs/readdir.c:108
+ __do_sys_getdents64 fs/readdir.c:410 [inline]
+ __se_sys_getdents64+0xe4/0x260 fs/readdir.c:396
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f414938e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 =
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f414a2cd038 EFLAGS: 00000246 ORIG_RAX: 00000000000000d9
+RAX: ffffffffffffffda RBX: 00007f41495b5fa0 RCX: 00007f414938e969
+RDX: 0000000000001000 RSI: 0000200000000f80 RDI: 0000000000000004
+RBP: 00007f4149410ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f41495b5fa0 R15: 00007fffafbf4148
+ </TASK>
 
-Nit: breaks the parameter alignment. Do we care? It's Lorenzo's code so
-maybe not ;P
+Allocated by task 6595:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
+ kasan_kmalloc include/linux/kasan.h:260 [inline]
+ __do_kmalloc_node mm/slub.c:4328 [inline]
+ __kmalloc_noprof+0x27a/0x4f0 mm/slub.c:4340
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ indx_read+0x27c/0xc20 fs/ntfs3/index.c:1059
+ ntfs_readdir+0x9d8/0xdd0 fs/ntfs3/dir.c:493
+ iterate_dir+0x5ac/0x770 fs/readdir.c:108
+ __do_sys_getdents64 fs/readdir.c:410 [inline]
+ __se_sys_getdents64+0xe4/0x260 fs/readdir.c:396
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
->  		if (err < 0)
->  			return err;
-> @@ -1244,7 +1244,7 @@ static long madvise_guard_remove(struct vm_area_struct *vma,
->  	if (!is_valid_guard_vma(vma, /* allow_locked = */true))
->  		return -EINVAL;
->  
-> -	return walk_page_range(vma->vm_mm, start, end,
-> +	return walk_page_range_vma(vma, start, end,
->  			       &guard_remove_walk_ops, NULL);
+The buggy address belongs to the object at ffff888033904000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 0 bytes to the right of
+ allocated 4096-byte region [ffff888033904000, ffff888033905000)
 
-Same.
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x33900
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=3D0|zone=3D1|lastcpupid=3D0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff88801a442140 dead000000000122 0000000000000000
+raw: 0000000000000000 0000000080040004 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff88801a442140 dead000000000122 0000000000000000
+head: 0000000000000000 0000000080040004 00000000f5000000 0000000000000000
+head: 00fff00000000003 ffffea0000ce4001 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2040(__=
+GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 6595, t=
+gid 6594 (syz.0.16), ts 131229531839, free_ts 131158758528
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
+ prep_new_page mm/page_alloc.c:1712 [inline]
+ get_page_from_freelist+0x21d5/0x22b0 mm/page_alloc.c:3669
+ __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4959
+ alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
+ alloc_slab_page mm/slub.c:2451 [inline]
+ allocate_slab+0x8a/0x3b0 mm/slub.c:2619
+ new_slab mm/slub.c:2673 [inline]
+ ___slab_alloc+0xbfc/0x1480 mm/slub.c:3859
+ __slab_alloc mm/slub.c:3949 [inline]
+ __slab_alloc_node mm/slub.c:4024 [inline]
+ slab_alloc_node mm/slub.c:4185 [inline]
+ __do_kmalloc_node mm/slub.c:4327 [inline]
+ __kmalloc_noprof+0x305/0x4f0 mm/slub.c:4340
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ indx_read+0x27c/0xc20 fs/ntfs3/index.c:1059
+ indx_find+0x4bb/0xba0 fs/ntfs3/index.c:1179
+ indx_insert_entry+0x4f1/0x720 fs/ntfs3/index.c:1963
+ ntfs_create_inode+0x2317/0x3340 fs/ntfs3/inode.c:1620
+ ntfs_mknod+0x3b/0x50 fs/ntfs3/namei.c:120
+ vfs_mknod+0x37f/0x3c0 fs/namei.c:4235
+ do_mknodat+0x385/0x4d0 fs/namei.c:-1
+ __do_sys_mknod fs/namei.c:4318 [inline]
+ __se_sys_mknod fs/namei.c:4316 [inline]
+ __x64_sys_mknod+0x8c/0xa0 fs/namei.c:4316
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+page last free pid 6275 tgid 6275 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1248 [inline]
+ __free_frozen_pages+0xc65/0xe60 mm/page_alloc.c:2706
+ discard_slab mm/slub.c:2717 [inline]
+ __put_partials+0x161/0x1c0 mm/slub.c:3186
+ put_cpu_partial+0x17c/0x250 mm/slub.c:3261
+ __slab_free+0x2f7/0x400 mm/slub.c:4513
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x97/0x140 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x148/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:329
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4148 [inline]
+ slab_alloc_node mm/slub.c:4197 [inline]
+ kmem_cache_alloc_noprof+0x1c1/0x3c0 mm/slub.c:4204
+ anon_vma_chain_alloc mm/rmap.c:142 [inline]
+ __anon_vma_prepare+0xcb/0x4a0 mm/rmap.c:195
+ __vmf_anon_prepare mm/memory.c:3523 [inline]
+ vmf_anon_prepare mm/internal.h:410 [inline]
+ do_anonymous_page mm/memory.c:5087 [inline]
+ do_pte_missing mm/memory.c:4249 [inline]
+ handle_pte_fault mm/memory.c:6089 [inline]
+ __handle_mm_fault+0x4d02/0x5620 mm/memory.c:6232
+ handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6401
+ do_user_addr_fault+0x764/0x1390 arch/x86/mm/fault.c:1387
+ handle_page_fault arch/x86/mm/fault.c:1476 [inline]
+ exc_page_fault+0x76/0xf0 arch/x86/mm/fault.c:1532
+ asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
 
->  }
->  
+Memory state around the buggy address:
+ ffff888033904f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff888033904f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888033905000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                   ^
+ ffff888033905080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888033905100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+
+Tested on:
+
+commit:         ec7714e4 Merge tag 'rust-6.16' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D136f31d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D26abb92f9ef9d1d=
+0
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D598057afa0f49e62b=
+d23
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-=
+1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D1411e5705800=
+00
 
