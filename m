@@ -1,109 +1,94 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08393C17;
-	Thu,  5 Jun 2025 10:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30463C17;
+	Thu,  5 Jun 2025 10:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749117806; cv=none; b=nD8gZ5Y85QB/n2oSRWcuznn1o8XA6GqDAmHPBUivsN27CXafmra0fy36w/Ky0tXoqFn4+BG+bCrRsEQDtVPZ3Qu7fO49y6HtF9hKR7YGxp22FTbQfikSkeuZ2Aepxl74ydrJtjUFPup1gaaY9pS0eOwbVisu6WwbYsWzKcJ03Zo=
+	t=1749117815; cv=none; b=Odq/1D9AW5YUhsMSAOkyiSLP27cUHVgD/0mSwt4F3MFq0mO6Kb8Uh9sII/um34l3CtujJrlgCzbL1UuNb/NCirVGlsLWVcyjbK+6GocTlojw1Nm6XEF6OV+hLvpFWrPTJlm18PMzjBsLHOEHazm4/aS810b2PT4+YmxAABIVZ6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749117806; c=relaxed/simple;
-	bh=6VdhVIgY4gObSvVw7aopJxkQYQlxGwQ/xj0LUFPBHwY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=W/aaUESkjA2n0Ki526WfjlaCZSQpygilMaHgXbU2lCpRw9q67BQZCAENSK221t0OjC1ewA5wFioY8TvuLRU7rC7xJmHK4a5iwe5AuQY/zcup6FvlHfRDaxvrhFqpMBmKwbwDQWQsS1Z68q7YTMjUEsNu5W71dLKKRYOyXr0rCsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eoJXXq2f; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749117815; c=relaxed/simple;
+	bh=FA/+BHeifIxqogwcWZmS8wqgT9vJObq/p6nrNOEyb80=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r8E0XRs18YQAqjIGWxu6CXD9iLtivbGqyCqxmlCX42fkCQA6jlE7OA9BLpggAp/NWqeEwr773VnYwo6KXfp2QtRUhSnp68nQZpkVwoJUSE1H7Vq/9xe0L8n4rRKhp8VA+vcYphWMXvn/93heEtKGc5hRl+ryEcSD7H3PCzAejSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Xw/U0uZ+; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoJXXq2f"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad89c32a7b5so128648966b.2;
-        Thu, 05 Jun 2025 03:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749117803; x=1749722603; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kRhn1TiqH0KT2FFIUh+7ZR8UU9/ld3YwiYBPUh5bTGU=;
-        b=eoJXXq2fuXTlv9ktEBMkhGRlCtFrqslM3cEGQb+wgEk4pWCCAWGe0k8/aVnggRp8ha
-         zSC1jvzupUdwIG6i+e6npGD96JhGwOhs2/Y+ZypiZsiQe/mfR925SjuTpAFyiceXJ0Am
-         QLPKtudUOdwLADyMGFzmiQVe4gBhdK/yGeNeYA7ZnqVmVWgWNj9JampIPfCYBNAFrvyP
-         f1hpNTw7dk9DhpdQwRNOmKlnCp6R/6t1qmp9O/cCm5N7GapSwpTgQlKHZHQKrD46xW+v
-         ecO2+68tY/MkZqHFyOhRP1ZOwMsgrP43YEM2WT5Lgl4cSrkyT8oPWFW4sxBDfl4MZWV9
-         tADg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749117803; x=1749722603;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kRhn1TiqH0KT2FFIUh+7ZR8UU9/ld3YwiYBPUh5bTGU=;
-        b=kwrztgpEDA32SnfzE58fQlLnghrdqnRLj/6PEe3m5Vj/UwbEnXWmjn7kEJ6sZOVves
-         8qYEV9V1vTCTb7J8mKCdtVCvwtEEJ/X9I3AtkEB/jE4z/ogOBlC+0XqH7dk0AiYrVmY/
-         iKULGE/WrVqMlXMwRWiab6dZ993tgvT6Dg5uTbIGhIIue6PttWRjARdd2JQA6n5d+6/h
-         damRHkoMuhDh7qv1WtYbhWvsXc/P/wDRWulQvTxnVoX+hYtqGKMkRmROzZ3iLo6ELZFQ
-         U+mAxYx1AKZklV+4OjF6XJ2exZyMaIGKMnxUvvQDFKYqHDYtYp2F1bSUW6ILW9VAJ3np
-         8vug==
-X-Forwarded-Encrypted: i=1; AJvYcCUnIvfuqxcivTkW20XzQ9MCkvSSp4QjbbcLARGDHtbXmFsgnkmWjiAW8WAibkJ6tkcmxAM=@vger.kernel.org, AJvYcCVCYLO1pjaLUUuGm/ao6H2Afu7TpKTbLUewkzPNMSVxywq704Tzb0tP8ohx9LA+U/vWJ81by/y4mysNmA==@vger.kernel.org, AJvYcCWJZSwRqM/6ar7ZAq6sLpt9ljukZ3qhwJxaLzMO7c1rSmt+1nUmQwmg08f13j78a0IPj6nsQzov@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxlvilmOr7nUm8wat+Qd5wTLO7++DITZORfe1poYJI40stlZwE
-	68oYUVyC+cuuaCW0TlQ8SmsLHX4ckBvX/i1/6LCj1Iqi1r8PSbRTr1pJ
-X-Gm-Gg: ASbGncvThSt0Oo1bl8RKqq2Ke2xYttGC2Z7CY9kJvCBXaRU47hChcSABQsnFNfpTi9O
-	406Acso31wd1DG+Ca7LG3xvByEqtrsouOXUvV7ejHyjtOg4sP60dTIyN24AVL9hCzj1BXj4mI3w
-	zJ6ttDDXtGJHZivTdlkb5CBG+M21zg3mQYa4u+RBjrnfj/Og29aCYI5wJF7s1v7j1VOSrx87NWs
-	6zZUYOEDRARipmh9tgj8QDSVQ2zdFU3Uwkvy7ORv0PBXMfKl8RTe6eHnRh9Njs7nUtMhAF/Um+l
-	fpuHFAsy1sayTrvA+mZiNCHNkPLWspdW/MqehOcwVee4SbdT27YfS8g5SjDrX6Dr
-X-Google-Smtp-Source: AGHT+IHiTJhxDSUUJslQqv/uJeFqGqftoei/4qY4933rA/xUChPfZH54s1BwMUBJdoWeD+pCDiWt8Q==
-X-Received: by 2002:a17:906:c112:b0:ad2:15c4:e23f with SMTP id a640c23a62f3a-addf8ceab60mr524055766b.13.1749117802492;
-        Thu, 05 Jun 2025 03:03:22 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325::22f? ([2620:10d:c092:600::1:d66f])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad39f08sm1252267366b.144.2025.06.05.03.03.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 03:03:21 -0700 (PDT)
-Message-ID: <d702507f-0c8c-494e-bbed-563c6f731e27@gmail.com>
-Date: Thu, 5 Jun 2025 11:04:41 +0100
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Xw/U0uZ+"
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 28EAD1FD24;
+	Thu,  5 Jun 2025 12:03:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1749117808;
+	bh=iegZH7tcjxXe+6mQln8FYa5oEl858U3Y7zsMG9yiJS0=; h=From:To:Subject;
+	b=Xw/U0uZ+3T939JRocOy6a+7VSv+x8VZEXaLHOkU1e/YA9ciISbUxG5NGRLHkm+pI+
+	 7iKjMqByc2w8S0XIV7RNhM+nw+Xaty8cN5v4ocuqJ85rmunreiSRWEoRDNon1pLImj
+	 ymKg1QBTcSdiHpes92K1L/NnIYPWQu3jTXDfPXxOm+5jSw5pP1nKg2rVUuN+rjPYbQ
+	 NIWTwsnf23fFy5gIl4gc04gqQaJUamNKgvUjGZKUl2t2l2WF6JG8Fh97vZlpIM19fV
+	 h7II2LB0aylJUdxqYp0Ix47vkhOBh1AyAkbEdEvvylPiw5kuWsR7KArUOcICT4A55f
+	 YWJ9LCikEhkSA==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jeff Chen <jeff.chen_1@nxp.com>,
+	stable@vger.kernel.org
+Subject: [PATCH wireless v1] Revert "wifi: mwifiex: Fix HT40 bandwidth issue."
+Date: Thu,  5 Jun 2025 12:03:13 +0200
+Message-Id: <20250605100313.34014-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v4 01/18] netmem: introduce struct netmem_desc mirroring
- struct page
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
- netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
- ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
- akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
- andrew+netdev@lunn.ch, toke@redhat.com, tariqt@nvidia.com,
- edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-References: <20250604025246.61616-1-byungchul@sk.com>
- <20250604025246.61616-2-byungchul@sk.com>
- <37376916-6fd0-4a29-ba40-dec512f9796a@gmail.com>
-Content-Language: en-US
-In-Reply-To: <37376916-6fd0-4a29-ba40-dec512f9796a@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/5/25 11:03, Pavel Begunkov wrote:
-> On 6/4/25 03:52, Byungchul Park wrote:
->> To simplify struct page, the page pool members of struct page should be
->> moved to other, allowing these members to be removed from struct page.
->>
->> Introduce a network memory descriptor to store the members, struct
->> netmem_desc, and make it union'ed with the existing fields in struct
->> net_iov, allowing to organize the fields of struct net_iov.
-> 
-> Pavel Begunkov <asml.silence@gmail.com>
+From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-Oops, it should be
+This reverts commit 34253084291cb210b251d64657958b8041ce4ab1.
 
-Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+That commit introduces a regression, when HT40 mode is enabled,
+received packets are lost, this was experience with W8997 with both
+SDIO-UART and SDIO-SDIO variants. From an initial investigation the
+issue solves on its own after some time, but it's not clear what is
+the reason. Given that this was just a performance optimization, let's
+revert it till we have a better understanding of the issue and a proper
+fix.
 
+Cc: Jeff Chen <jeff.chen_1@nxp.com>
+Cc: stable@vger.kernel.org
+Fixes: 34253084291c ("wifi: mwifiex: Fix HT40 bandwidth issue.")
+Closes: https://lore.kernel.org/all/20250603203337.GA109929@francesco-nb/
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+---
+ drivers/net/wireless/marvell/mwifiex/11n.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
+index 738bafc3749b..66f0f5377ac1 100644
+--- a/drivers/net/wireless/marvell/mwifiex/11n.c
++++ b/drivers/net/wireless/marvell/mwifiex/11n.c
+@@ -403,14 +403,12 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
+ 
+ 		if (sband->ht_cap.cap & IEEE80211_HT_CAP_SUP_WIDTH_20_40 &&
+ 		    bss_desc->bcn_ht_oper->ht_param &
+-		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY) {
+-			chan_list->chan_scan_param[0].radio_type |=
+-				CHAN_BW_40MHZ << 2;
++		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY)
+ 			SET_SECONDARYCHAN(chan_list->chan_scan_param[0].
+ 					  radio_type,
+ 					  (bss_desc->bcn_ht_oper->ht_param &
+ 					  IEEE80211_HT_PARAM_CHA_SEC_OFFSET));
+-		}
++
+ 		*buffer += struct_size(chan_list, chan_scan_param, 1);
+ 		ret_len += struct_size(chan_list, chan_scan_param, 1);
+ 	}
 -- 
-Pavel Begunkov
+2.39.5
 
