@@ -1,206 +1,102 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F881F2C44;
-	Thu,  5 Jun 2025 06:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869911876
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749105355; cv=none; b=Xn0Aotqeuk0ki72UwgFByTutyQeYaXTVj6RL/0EPvVgxMktzLK7WKOFLy/2zRYRXVx1PQk+m/rEC74z2EF7QjMTuiu7V8AmgLHhjMOK1pyV+uF7xLj81WOnChvJuETU7b+3IpmIcOM1sTgaqZxztTltts6dlOszkFDuBPZWynfM=
+	t=1749105412; cv=none; b=eAJSdtmx5gVoQ071daKT2uov0Na3TO662hklAss42wV6w/Uhq23VdFDyQIgfj2XsR2dPOEQnpfasjS8yXoZCAwnB82nytsD8JTjh7sNrFffQSb0hMERKwNSFr3iYxJ9ueUP7odqvx19ohs8WEo0TpH44HxSQiwDf/mL0hlM6Amo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749105355; c=relaxed/simple;
-	bh=3fVTZQULmeSj1kaoUxmb+CsZJulw3kIUf6Ah34p9Y3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cv5DnIbolo5Dmm6W/LMlIHKdbxim4NMKyPqYO5M32PV/p7A4dOdNrqFm5IdYDixuF2BsVQdtDkFNb3KiKlXrhjL7LafAlDCjY7hJx70fBLaUq1zppcRJYnz055FnpFcKGH7japDS3s4X6LiMJeenJrzDorZKYeap9Uv+FyW25wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bCZR12SLJz13M0N;
-	Thu,  5 Jun 2025 14:33:49 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id D9458140203;
-	Thu,  5 Jun 2025 14:35:43 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 5 Jun 2025 14:35:42 +0800
-Message-ID: <872dcf33-cc7e-48c0-810a-f27b59a603e1@huawei.com>
-Date: Thu, 5 Jun 2025 14:35:42 +0800
+	s=arc-20240116; t=1749105412; c=relaxed/simple;
+	bh=lexn+3RvTYohQzS2vm1pNRLFzrcMJVmP0yTe8m0a7eQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VT28Wb3nf/cw5v96vn6GQd80OxwFVYSE2JOXxipH+jF9wa7myPswJEuRVdhOub/BFOO8I1Jny0WfdeOwKjmY6ZzlCUmBqnQCsYVHuDNKm4+ftf6GyoDOSouY3A85KMqs+q1E97QKS3r2NdlsEh3XPq6iOIfRjvfq98d7Ct+wfHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1zmh8cK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1zmh8cK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 609C5C4CEE7;
+	Thu,  5 Jun 2025 06:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749105412;
+	bh=lexn+3RvTYohQzS2vm1pNRLFzrcMJVmP0yTe8m0a7eQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c1zmh8cK3yfu4BaW+JXF+XxG4WJymnndlXcaPg//PPRYuItmYoX3DSLV6tAslJN1V
+	 lS59assDhKUuUq6M2hE/0u5f6Q/LmtsniUdNfDFv2GXYrtA+OLMD0I9laIYE4SR9Uj
+	 QAvq4FuwmeVWoZdQ3aSvVfmC9Hx3xTFvpIbNTr7HBxC98VlQJBzOb+KQBw4oyjeeJJ
+	 niQXV4JfQo3x/s7OaJkigJ3jsPIbM8kDg0E3KYDFhXrHRrdhlNix6wNBvI5/tQm5gy
+	 bruvUwxYI2jzIHzzjX4xAWZf1i0+hllcRJUjEZTr8xt9uDIfJQGqUEGfOMi05YMphz
+	 wc2H2eMN2ER4w==
+Date: Thu, 5 Jun 2025 08:36:45 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Em Sharnoff <sharnoff@neon.tech>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Oleg Vasilev <oleg@neon.tech>,
+	Arthur Petukhovsky <arthur@neon.tech>,
+	Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
+Subject: Re: [PATCH] x86/mm: Handle alloc failure in phys_*_init()
+Message-ID: <aEE6_S2a-1tk1dtI@gmail.com>
+References: <9f4c0972-a123-4cc3-89f2-ed3490371e65@neon.tech>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] nfsd: Invoke tracking callbacks only after initialization
- is complete
-To: Jeff Layton <jlayton@kernel.org>, <chuck.lever@oracle.com>,
-	<neilb@suse.de>, <neil@brown.name>, <okorniev@redhat.com>,
-	<Dai.Ngo@oracle.com>, <tom@talpey.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
-References: <20250513074305.3362209-1-lilingfeng3@huawei.com>
- <ae16dcf3d5c569bbff817ca442a7615e816a66e7.camel@kernel.org>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <ae16dcf3d5c569bbff817ca442a7615e816a66e7.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9f4c0972-a123-4cc3-89f2-ed3490371e65@neon.tech>
 
-Hi Jeff,
 
-Following our discussion, my colleague Yang Erkun proposed an alternative
-solution: using the nfsd_mutex to prevent concurrency between
-initialization/destruction and usage of client_tracking_ops.
-Both our previous approaches (delayed pointer assignment and the
-initialization flag) still leave a window where the issue could occur.
-For example, after validating client_tracking_ops as non-NULL but before
-invoking its callbacks, the pointer could be set to NULL during teardown.
+* Em Sharnoff <sharnoff@neon.tech> wrote:
 
-I've prototyped the nfsd_mutex approach and confirmed it resolves the
-problem. What are your thoughts on this solution?
+> tl;dr:
+> 
+> * When setting up page table mappings for physical addresses after boot,
+>   alloc_low_page() uses GFP_ATOMIC, which is allowed to fail.
+> * This isn't currently handled, and results in a null pointer
+>   dereference when it occurs.
+> * This allocation failure can happen during memory hotplug.
+> 
+> To handle failure, change phys_pud_init() and similar functions to
+> return zero if allocation failed (either directly or transitively), and
+> convert that to -ENOMEM in arch_add_memory().
 
-Best regards,
-Li Lingfeng
+> +		/*
+> +		 * Bail only after updating pgd/p4d to keep progress from p4d across retries.
+> +		 */
+> +		if (!paddr_last)
+> +			return 0;
+> +
+>  		pgd_changed = true;
 
-在 2025/5/13 20:34, Jeff Layton 写道:
-> On Tue, 2025-05-13 at 15:43 +0800, Li Lingfeng wrote:
->> Checking whether tracking callbacks can be called based on whether
->> nn->client_tracking_ops is NULL may lead to callbacks being invoked
->> before tracking initialization completes, causing resource access
->> violations (UAF, NULL pointer dereference). Examples:
->>
->> 1) nfsd4_client_tracking_init
->>     // set nn->client_tracking_ops
->>     nfsd4_cld_tracking_init
->>      nfs4_cld_state_init
->>       nn->reclaim_str_hashtbl = kmalloc_array
->>      ... // error path, goto err
->>      nfs4_cld_state_shutdown
->>       kfree(nn->reclaim_str_hashtbl)
->>                                        write_v4_end_grace
->>                                         nfsd4_end_grace
->>                                          nfsd4_record_grace_done
->>                                           nfsd4_cld_grace_done
->>                                            nfs4_release_reclaim
->>                                             nn->reclaim_str_hashtbl[i]
->>                                             // UAF
->>     // clear nn->client_tracking_ops
->>
->> 2) nfsd4_client_tracking_init
->>     // set nn->client_tracking_ops
->>     nfsd4_cld_tracking_init
->>                                        write_v4_end_grace
->>                                         nfsd4_end_grace
->>                                          nfsd4_record_grace_done
->>                                           nfsd4_cld_grace_done
->>                                            alloc_cld_upcall
->>                                             cn = nn->cld_net
->>                                             spin_lock // cn->cn_lock
->>                                             // NULL deref
->>     // error path, skip init pipe
->>     __nfsd4_init_cld_pipe
->>      cn = kzalloc
->>      nn->cld_net = cn
->>     // clear nn->client_tracking_ops
->>
->> After nfsd mounts, users can trigger grace_done callbacks via
->> /proc/fs/nfsd/v4_end_grace. If resources are uninitialized or freed
->> in error paths, this causes access violations.
->>
->> Instead of adding locks for specific resources(e.g., reclaim_str_hashtbl),
->> introducing a flag to indicate whether tracking initialization has
->> completed and checking this flag before invoking callbacks may be better.
->>
->> Fixes: 52e19c09a183 ("nfsd: make reclaim_str_hashtbl allocated per net")
->> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
->> ---
->>   fs/nfsd/netns.h       |  1 +
->>   fs/nfsd/nfs4recover.c | 13 +++++++++----
->>   2 files changed, 10 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
->> index 3e2d0fde80a7..dbd782d6b063 100644
->> --- a/fs/nfsd/netns.h
->> +++ b/fs/nfsd/netns.h
->> @@ -113,6 +113,7 @@ struct nfsd_net {
->>   
->>   	struct file *rec_file;
->>   	bool in_grace;
->> +	bool client_tracking_init_done;
->>   	const struct nfsd4_client_tracking_ops *client_tracking_ops;
->>   
->>   	time64_t nfsd4_lease;
->> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
->> index c1d9bd07285f..6c27c1252c0e 100644
->> --- a/fs/nfsd/nfs4recover.c
->> +++ b/fs/nfsd/nfs4recover.c
->> @@ -2096,7 +2096,11 @@ nfsd4_client_tracking_init(struct net *net)
->>   		pr_warn("NFSD: Unable to initialize client recovery tracking! (%d)\n", status);
->>   		pr_warn("NFSD: Is nfsdcld running? If not, enable CONFIG_NFSD_LEGACY_CLIENT_TRACKING.\n");
->>   		nn->client_tracking_ops = NULL;
->> +		nn->client_tracking_init_done = false;
->> +	} else {
->> +		nn->client_tracking_init_done = true;
->>   	}
->> +
-> The problem seems real (theoretically at least), but I'm not a fan of
-> this fix.
->
-> If the problem is as you say, then why not just delay the setting of
-> the client_tracking_ops until there is a method that works. IOW, set a
-> temporary variable with an ops pointer and only assign
-> client_tracking_ops at the end of the function/
->
-> Would that also fix this issue?
->   
->>   	return status;
->>   }
->>   
->> @@ -2105,6 +2109,7 @@ nfsd4_client_tracking_exit(struct net *net)
->>   {
->>   	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
->>   
->> +	nn->client_tracking_init_done = false;
->>   	if (nn->client_tracking_ops) {
->>   		if (nn->client_tracking_ops->exit)
->>   			nn->client_tracking_ops->exit(net);
->> @@ -2117,7 +2122,7 @@ nfsd4_client_record_create(struct nfs4_client *clp)
->>   {
->>   	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
->>   
->> -	if (nn->client_tracking_ops)
->> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
->>   		nn->client_tracking_ops->create(clp);
->>   }
->>   
->> @@ -2126,7 +2131,7 @@ nfsd4_client_record_remove(struct nfs4_client *clp)
->>   {
->>   	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
->>   
->> -	if (nn->client_tracking_ops)
->> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
->>   		nn->client_tracking_ops->remove(clp);
->>   }
->>   
->> @@ -2135,7 +2140,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
->>   {
->>   	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
->>   
->> -	if (nn->client_tracking_ops)
->> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
->>   		return nn->client_tracking_ops->check(clp);
->>   
->>   	return -EOPNOTSUPP;
->> @@ -2144,7 +2149,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
->>   void
->>   nfsd4_record_grace_done(struct nfsd_net *nn)
->>   {
->> -	if (nn->client_tracking_ops)
->> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
->>   		nn->client_tracking_ops->grace_done(nn);
->>   }
->>   
+> -	init_memory_mapping(start, start + size, params->pgprot);
+> +	if (!init_memory_mapping(start, start + size, params->pgprot))
+> +		return -ENOMEM;
+
+I agree that it makes total sense to fix all this (especially since you 
+are actively triggering it), but have you tried also changing it away 
+from GFP_ATOMIC? There's no real reason why it should be GFP_ATOMIC 
+AFAICS, other than some historic inertia that nobody bothered to fix.
+
+Plus, could you please change the return flow from this zero 
+special-case over to something like ERR_PTR(-ENOMEM) and IS_ERR()?
+
+*Technically* zero is a valid physical address, although we 
+intentionally never use it in the kernel AFAIK and wouldn't ever put a 
+page table there either. ERR_PTR()/IS_ERR() is much easier on the eyes 
+than the zero special-case.
+
+Finally, could you make this a 2-patch fix series: first one to fix the 
+error return path to not crash, and the second one to change it away 
+from GFP_ATOMIC?
+
+Thanks,
+
+	Ingo
