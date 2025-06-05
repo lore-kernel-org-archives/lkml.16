@@ -1,90 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF6A27A445;
-	Thu,  5 Jun 2025 18:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C883E19F115
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749148203; cv=none; b=AZpekf/Bp2IjqdG18jKoEasvsVCBemP8IJTkhSyBfsLNkVUHbhqc5BKVCcknw+u5Bd6enFJNmuSDFtOw3xpnbf15gd9lcQxWHr04/wmZHBTDdgtDIiA64slUtGR4Co5vnR/DN8sZn6hkFCunQprd4idc1WqFAHBmBFGVE92uMAs=
+	t=1749148333; cv=none; b=OwcECoja5rAQjK9q3P3PSXIyejZEONwpBSmCWSYiU+n7lnVk17Q8ADKMVPbQHtPORXQT+PU5Nq211cYWZPs4TJjj8snsPMUpebM+6XTp8jfi4ls48OUxsVUPTY5fSfgItJowfqbx1jMQfdjrePX4yh/PGq3WLTe1Xr/bLoN+0W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749148203; c=relaxed/simple;
-	bh=hy75hSPJwRq14gtdJlzgwmegdwxEg8Yl7eucloOyWOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lrLoRZ+DZ/NGhgvAfBOapDkjINNVJaB9I0NAixZAinQcCEeaEs1/GG0rpjtxQj2Pxv8/9lw7KuJbNoixSxEHnWm/1I30zPuoARpX9pTwgca9iv80GFZlWrLovFzdqtFlBqcnTU4A2KEGiAkQaoLeIB+RtF84U6/kiF6WJIfCj84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SIekId6S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749148333; c=relaxed/simple;
+	bh=zHUtngLVqSEzJxnrFQn9wCmr98Xaj04/ojU983UZOcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nYpznO8N94ZA4sLGJBGoN2MsWpljkJudPKp55J403OHmu2q4tSLyeVhuI7OL8ut+dxO/uHlh7L9hUeARRUGpJdiDRR5xJFvVqkZxCBLBdfFcfseJLvPCRGWYZrd4ZXgg+WYYJh0/a8Os5xfoM32XyuoBDQEdpsJ3uy9Vi/6P/20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HknfJRJG; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SIekId6S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 746EDC4CEE7;
-	Thu,  5 Jun 2025 18:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749148203;
-	bh=hy75hSPJwRq14gtdJlzgwmegdwxEg8Yl7eucloOyWOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SIekId6S4JB/WwvVZJsHDO8pKi9c+jslyub6rvOokbUy6wrBTcscKMEfYeIOb3zlM
-	 oFRQfstINt12oIZMi6rfg7cRzJeReWtcUV8DPNqGFxZs2B0ZfNyMHL6k+im1zpg1lB
-	 Z3a+IHkomB2UZbYo3Rn2/92831outWsyoe1pYqvr+xkSUJemBVGwtsvalKasKJ/AdQ
-	 TvLcI1rdyTYdGiDUXWCf0qufUtqviF5BNe/x3uG0PerJvNFGVW1KJqn89jmssiqpMm
-	 Wg+pdg5p/Khq4Ret+8MnCiuLARhPGmhw+ws7q65IzDtQ3kuVGBznESjxZ0616adbnY
-	 YX0dGonQ5Qujw==
-Date: Thu, 5 Jun 2025 19:29:58 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] selftests/mm: Fix test result reporting in
- gup_longterm
-Message-ID: <fde974b7-de82-4a2a-bb8f-efa9955d50da@sirena.org.uk>
-References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
- <20250527-selftests-mm-cow-dedupe-v2-4-ff198df8e38e@kernel.org>
- <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
- <722628a8-f3fd-4fb9-ae04-2313a52ffb36@sirena.org.uk>
- <66db3d9e-73a6-4fcd-8abd-db65cfff49ab@lucifer.local>
- <661fc4ce-839f-4c47-bc3a-0c864e846324@sirena.org.uk>
- <976bbe1a-ef16-4006-acac-8b6be46ee5ea@lucifer.local>
- <961a62b0-d0d3-40db-8008-61c634172ca6@sirena.org.uk>
- <ab2e1fc5-a0bc-4694-9449-adf85b96b38f@lucifer.local>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HknfJRJG"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F068943A44;
+	Thu,  5 Jun 2025 18:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749148322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zPZNF5bEHba9k6vIOW/VukHg1eq0fNfZYGtVAdLeg+g=;
+	b=HknfJRJGzx8XPl8qn4PYSCthquzFJMwaozl0rT0LwbSM7P0U2fYePSF0VhijC3QRVPEUHD
+	eKd2cwPK9GEVAaQ0WR9JzJbGpIKVx1OibtDrNpdyHoih7jf0S/2Zz33kSUya31mUjOsVW2
+	JQ6yR6gxWkRRlPrRWkYp385G9LEuzF6V2kKCjJfsjtHTnOe2fRj6nGUowDkXY0qcOSUnaI
+	NKq6I6ARt3lfStzlpnvWmyuFQI798gUi2dzAF36P/833U5VEyne8ALgqymJg6woZlEQzFl
+	zpCwX69S1glyfLqkF89B0ZWhzmyqp27JBPJlDpUpvTXbFj07asF6Gbnk8ozWjA==
+Date: Thu, 5 Jun 2025 20:31:58 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Anusha
+ Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>,
+ Dmitry Baryshkov <lumag@kernel.org>, =?UTF-8?B?SGVydsOp?= Codina
+ <herve.codina@bootlin.com>, Hui Pu <Hui.Pu@gehealthcare.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/3] drm/tests: bridge: add KUnit tests for
+ devm_drm_bridge_alloc()
+Message-ID: <20250605203158.0846e8de@booty>
+In-Reply-To: <20250527-smiling-peacock-from-uranus-dc032f@houat>
+References: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
+	<20250516-drm-bridge-alloc-doc-test-v8-3-7e356fd58ba5@bootlin.com>
+	<20250527-smiling-peacock-from-uranus-dc032f@houat>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+CaRyybbQXauNurH"
-Content-Disposition: inline
-In-Reply-To: <ab2e1fc5-a0bc-4694-9449-adf85b96b38f@lucifer.local>
-X-Cookie: That's no moon...
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegtddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmo
+ hhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
+
+Hello Maxime,
+
+thanks for reviewing this series.
+
+On Tue, 27 May 2025 18:10:31 +0200
+Maxime Ripard <mripard@kernel.org> wrote:
+
+[...]
+
+> > @@ -422,11 +424,93 @@ static struct kunit_suite drm_bridge_helper_reset_crtc_test_suite = {
+> >  	.test_cases = drm_bridge_helper_reset_crtc_tests,
+> >  };
+> >  
+> > +struct drm_bridge_alloc_test_ctx {  
+> 
+> drm_bridge_alloc_priv
+> 
+> > +	struct device *dev;
+> > +	struct dummy_drm_bridge *dummy_br;
+> > +	bool destroyed;  
+> 
+> This can be in drm_bridge_priv
+
+Not really, because drm_bridge_priv will be freed just after calling
+.destroy, and we need .destroyed after the free happened.
+
+[...]
+
+> > +static const struct drm_bridge_funcs drm_bridge_dummy_funcs = {
+> > +	.destroy = dummy_drm_bridge_destroy,
+> > +};  
+> 
+> And same here, you don't need to create yet another function set, just
+> add it to the existing ones.
+
+OK, but it implies further changes.
+
+In this version of this patch, the alloc tests being introduced use
+drm_bridge_alloc_priv, while the other tests using the existing
+function sets rely on drm_bridge_init_priv which has different fields.
+So if all tests will call .destroy, we always need a valid struct
+pointer for drm_bridge_priv.data.
+
+Based on this, I think the only solution is to not introduce
+drm_bridge_alloc_priv, and instead put its members (struct device *dev and bool
+destroyed) to drm_bridge_init_priv, and then use drm_bridge_init_priv
+for all tests.
+
+The change is not very invasive, and perhaps even a cleanup, thus I'm
+going to send as above in v9.
 
 
---+CaRyybbQXauNurH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm OK with all the other changes you proposed. All queued for v9.
 
-On Thu, Jun 05, 2025 at 06:47:28PM +0100, Lorenzo Stoakes wrote:
+Luca
 
-> Mark, I'm not finding this productive.
-
-> Bottom line is you've broken the tests, please fix them or if you're not
-> willing to I'll send a fix.
-
-Sure, like I said further up I'm just running my patch through testing
-at the minute.
-
---+CaRyybbQXauNurH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhB4iUACgkQJNaLcl1U
-h9Bm4gf/cad7/YCdDz829GeDIoTAYLP1HXTO02TTMMjpoG+Dl4Z6TAgfKS03DO+Q
-VJim6CI8aE0BR8IdWc34MAEosN9EVLaIph38dukhe2DKCDoSEmexbR0q6byrdP4t
-EaJEk7KvosAheFDNO3FsyYjzD1waupbrN52bWAY98f34EDxStZxSDR/uCwAnowtV
-a8hC5olhLBC+foXqhTF6ODZXxlioUtwdoUYYHU0R0IzVAoIPsx9GqLUreccX6Rxv
-c3fX0q9tLgv+faEIjBIHrhwDV/hbNlDMY/ShXR9EBLrz2zOS/Kr7lOP0SewGecMU
-yTFOZ3EzDuzAkgyrKilO/CFJqMeNvg==
-=QSyT
------END PGP SIGNATURE-----
-
---+CaRyybbQXauNurH--
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
