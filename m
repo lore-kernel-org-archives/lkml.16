@@ -1,156 +1,193 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC27D2114;
-	Thu,  5 Jun 2025 06:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083162114;
+	Thu,  5 Jun 2025 06:47:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749106010; cv=none; b=SEo8l0u8ms9Rs5pcCd6uOZ5jDluC/2KKHzax7FLvxINLu8XLUh+KQpYjprVztsyIswe1TsMpspMjWA/QAOso/+kkmfFKd+zv7Z8SIbXUTplXmfvT9OSEx3DiW8Bk6n+oEYTFiTSSniwiREfQkjNsmrU7c1fRymEDFJow2US62pY=
+	t=1749106023; cv=none; b=nwXG7h7ywbDdMH3UxxGrybX0Lpmn/9iswvEibTSfHmtIhJu9f3h3UkWBPOWjIcPpXW4vEWPnHQZbY+jAQdJkN59psyOJ+sgI+5u8VmSawgxK3dWn7OdDXfQs2+gBvPJL9YzkvVfpCllXt6A65B6INn6rOODxK1Ba8OFH9hZahdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749106010; c=relaxed/simple;
-	bh=TkwPaC5LkiD2AzRfVu53V8vYeTTkIIo3sfS9ma0nNMo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MT/bkBVu9RHiABTI9rqEV3d26L+GJ+cMfeK8Q/W2e61E1fPIw/Am9qfeGcwB2HO8Cs95jwsPFFx8g7Vz4XUznurHQiKNHO1G4BuhKrAXOdoFJiJFb96pHB3W+eIumWtZuUeYhlzbXE5450zimPhL2qT6TqhPrH2Z3akGujvw6QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLwSt/rX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749106023; c=relaxed/simple;
+	bh=eCUjOx4w5jRxLq4+wJFYHnxODTQe3MFcxVYHstsW84o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nYhi3K9YqZoNM+cbnMg2LndA7yE7iquuYNWcDgCzOWkYzc0MZ2oDZLo+xOSyWh1jm3NL+XOJg+x6QbZQ0TzCCVppeUvTge2XG+g0jW5UkJPuyQq93hQgUlZvs5AjBA+hHK2JOSOqkXrwtkVwVz+0YWWTKcR6Ug3XtM4d6/YpcRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plwJplOI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLwSt/rX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26139C4CEE7;
-	Thu,  5 Jun 2025 06:46:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plwJplOI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70EABC4CEE7;
+	Thu,  5 Jun 2025 06:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749106010;
-	bh=TkwPaC5LkiD2AzRfVu53V8vYeTTkIIo3sfS9ma0nNMo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NLwSt/rXojX3cThmkkKEtcWLjAXAPd5COS5p+Snz0xS/Qt8dFWs9aFgZTSynHEUYt
-	 0WOgzX/u8wBdR1j6HqyW778WPuvy9f3QYkxnimgdhuDMOygd9mYMAWGifExKCLCd2C
-	 6Dpws77QthBmsN2YZHenwEBVBlrMaVwWZcxCwoBQVttY5qYr16STOTp/MFQjmBft6o
-	 tGT/3MadWrMWAQ7QZcFsjcmMNtj6NDoE6bqtXzRZGcm5zqbZBnI7ZgSiqHahi3K7az
-	 odhwsr187j3x+jQY/oGDRNaQDwepertrh9W+B4O7Xuvtv5v+l4mT0CU/n9uuSEVSAP
-	 pGnZ4w/x9+jyw==
-Received: from [149.88.19.236] (helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uN4ND-0049uH-Cb;
-	Thu, 05 Jun 2025 07:46:47 +0100
-Date: Thu, 05 Jun 2025 07:46:45 +0100
-Message-ID: <875xhaeld6.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Sebastian Ott <sebott@redhat.com>
-Cc: Zenghui Yu <yuzenghui@huawei.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Colton Lewis <coltonlewis@google.com>,
-	Ricardo Koller <ricarkol@google.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] KVM: arm64: selftests: arch_timer_edge_cases fixes
-In-Reply-To: <9b9f7099-4e81-9b74-a1ac-37cd4965675b@redhat.com>
-References: <20250527142434.25209-1-sebott@redhat.com>
-	<adf8b877-7ca2-f60b-fb59-578c70d0e3c0@huawei.com>
-	<9b9f7099-4e81-9b74-a1ac-37cd4965675b@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1749106022;
+	bh=eCUjOx4w5jRxLq4+wJFYHnxODTQe3MFcxVYHstsW84o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=plwJplOIO5WfFxoe86W030lbE74oVfEAQ9ASKf19kAmqN11LAJahjrS5uNW2Xa4hH
+	 +ldLzT5SYcb6kWzcve5T8qZWxvHp921mW/Y1eP2f+PWfDL4IibPzDrGgjSrIIU4QxL
+	 bqPHQbB1xokvg7FT7ewyO7IMmRzjdNheqdCKj+7Dr96CVzETjWFyA2/7tIFJBOwl6q
+	 w9qODWhjISnmffhYGR3+8q0iSIgf4l6Ag2G1SPerH99Em7AdnYZLJMCvmprEX4wsxO
+	 Y75/iDN7HQ6f7LMBfdy/sg3R8u4PA/Qe9+Ooc/yk+XDlOE+HK7PH0ywSqNShh6K5Kn
+	 C7ohC5+038Nmw==
+Message-ID: <01538054-c50f-4dc3-ac2a-37b594940e6e@kernel.org>
+Date: Thu, 5 Jun 2025 08:46:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 149.88.19.236
-X-SA-Exim-Rcpt-To: sebott@redhat.com, yuzenghui@huawei.com, oliver.upton@linux.dev, coltonlewis@google.com, ricarkol@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, shuah@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] devicetree: bindings: mux: reg-mux: Add support for
+ new property 'mux-reg-masks-state'
+To: Chintan Vankar <c-vankar@ti.com>, Thorsten Blum
+ <thorsten.blum@linux.dev>, Andrew Davis <afd@ti.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ s-vadapalli@ti.com, vigneshr@ti.com, nm@ti.com, danishanwar@ti.com
+References: <20250605063422.3813260-1-c-vankar@ti.com>
+ <20250605063422.3813260-2-c-vankar@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250605063422.3813260-2-c-vankar@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 04 Jun 2025 21:58:48 +0100,
-Sebastian Ott <sebott@redhat.com> wrote:
+On 05/06/2025 08:34, Chintan Vankar wrote:
+> The DT binding for reg-mux currenly requires specifying register offset
+> and masks in the "mux-reg-masks" property, while corresponding register
+> values are defined in the "idle-states" property. This approach imposes a
+> constraint where "mux-reg-masks" and "idle-states" must remain
+> synchroniszed, adding complexity when configuring specific registers or a
+
+Typo
+
+> set of registers with large memory spaces.
 > 
-> Hi Zenghui,
+> Add support of a new property "mux-reg-masks-state" to remove this
+> constraint, allowing offset, mask and value to be specified together as a
+> tuple.
 > 
-> On Tue, 3 Jun 2025, Zenghui Yu wrote:
-> > On 2025/5/27 22:24, Sebastian Ott wrote:
-> >> Some small fixes for arch_timer_edge_cases that I stumbled upon
-> >> while debugging failures for this selftest on ampere-one.
-> >> 
-> >> Changes since v1: modified patch 3 based on suggestions from Marc.
-> >> 
-> >> I've done some tests with this on various machines - seems to be all
-> >> good, however on ampere-one I now hit this in 10% of the runs:
-> >> ==== Test Assertion Failure ====
-> >>   arm64/arch_timer_edge_cases.c:481: timer_get_cntct(timer) >= DEF_CNT + (timer_get_cntfrq() * (uint64_t)(delta_2_ms) / 1000)
-> >>   pid=166657 tid=166657 errno=4 - Interrupted system call
-> >>      1  0x0000000000404db3: test_run at arch_timer_edge_cases.c:933
-> >>      2  0x0000000000401f9f: main at arch_timer_edge_cases.c:1062
-> >>      3  0x0000ffffaedd625b: ?? ??:0
-> >>      4  0x0000ffffaedd633b: ?? ??:0
-> >>      5  0x00000000004020af: _start at ??:?
-> >>   timer_get_cntct(timer) >= DEF_CNT + msec_to_cycles(delta_2_ms)
-> >> 
-> >> This is not new, it was just hidden behind the other failure. I'll
-> >> try to figure out what this is about (seems to be independent of
-> >> the wait time)..
-> > 
-> > Not sure if you have figured it out. I can easily reproduce it on my box
-> > and I *guess* it is that we have some random XVAL values when we enable
-> > the timer..
+
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+
+
+> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+> ---
+>  .../devicetree/bindings/mux/reg-mux.yaml      | 32 +++++++++++++++++--
+>  1 file changed, 30 insertions(+), 2 deletions(-)
 > 
-> Yes, I think so, too.
-> 
-> > test_reprogramming_timer()
-> > {
-> > 	local_irq_disable();
-> > 	reset_timer_state(timer, DEF_CNT);
-> 
-> My first attempt was to also initialize cval here
+> diff --git a/Documentation/devicetree/bindings/mux/reg-mux.yaml b/Documentation/devicetree/bindings/mux/reg-mux.yaml
+> index dc4be092fc2f..b029e2f28df0 100644
+> --- a/Documentation/devicetree/bindings/mux/reg-mux.yaml
+> +++ b/Documentation/devicetree/bindings/mux/reg-mux.yaml
+> @@ -32,11 +32,39 @@ properties:
+>          - description: pre-shifted bitfield mask
+>      description: Each entry pair describes a single mux control.
+>  
+> -  idle-states: true
+> +  idle-states:
+> +    description: Each entry describes mux register state.
+> +
+> +  mux-reg-masks-state:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    items:
+> +      items:
+> +        - description: register offset
+> +        - description: pre-shifted bitfield mask
+> +        - description: register value to be set
+> +    description: This property is an extension of mux-reg-masks which
 
-Note that CVAL and TVAL are two views of the same thing. It should be
-enough to initialise one of them (though TVAL is stupidly narrow).
+How one is supposed to use both (since this is extension)?
 
-> 
-> > 
-> > 	/* Program the timer to DEF_CNT + delta_1_ms. */
-> > 	set_tval_irq(timer, msec_to_cycles(delta_1_ms), CTL_ENABLE);
-> > 
-> > 	[...]
-> > }
-> > 
-> > set_tval_irq()
-> > {
-> > 	timer_set_ctl(timer, ctl);
-> > 
-> > 	// There is a window that we enable the timer with *random* XVAL
-> > 	// values and we may get the unexpected interrupt.. And it's
-> > 	// unlikely that KVM can be aware of TVAL's change (and
-> > 	// re-evaluate the interrupt's pending state) before hitting the
-> > 	// GUEST_ASSERT().
-> > 
-> > 	timer_set_tval(timer, tval_cycles);
-> 
-> Yes, I stumbled over this as well. I've always assumed that this order is
-> becauase of this from the architecture "If CNTV_CTL_EL0.ENABLE is 0,
-> the value returned is UNKNOWN." However re-reading that part today I
-> realized
-> that this only concerns register reads.
-> 
-> Maybe somone on cc knows why it's in that order?
+> +                 allows specifying register offset, mask and register
+> +                 value to be set.
 
-I can't think of a valid reason. Enabling the timer without having set
-the deadline first is just silly.
+Anyway, this is getting too complex (next will be
+mux-reg-masks-enable-state and mux-reg-masks-foo-state), just define
+your own device schema.
 
-> I'm currently testing this with the above swapped and it's looking good,
-> so far.
+> +
+> +allOf:
+> +  - oneOf:
+> +      - required: [mux-reg-masks]
+> +      - required: [mux-reg-masks-state]
 
-The swapped version (set xVAL, then enable the timer) is the only one
-that makes any sense.
+So not an extension but replacement?
 
-Thanks,
+> +
+> +  - if:
+> +      required: [mux-reg-masks-state]
+> +    then:
+> +      not:
+> +        required: [idle-states]
 
-	M.
+You cannot un-require a field. Where was it made required?
 
--- 
-Jazz isn't dead. It just smells funny.
+> +
+> +  - if:
+> +      required: [mux-reg-masks]
+> +    then:
+> +      properties:
+> +        idle-states: true
+
+This is no-op. I have no clue what you wanted to express here.
+
+
+>  
+>  required:
+>    - compatible
+> -  - mux-reg-masks
+>    - '#mux-control-cells'
+>  
+>  additionalProperties: false
+
+
+Best regards,
+Krzysztof
