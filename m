@@ -1,186 +1,218 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B20A2F5B
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749110794; cv=none; b=uqU4BCBBGsfRollrThlBMzpufd3xEPz/cL9HMMbOK6FDfDyJmeV6MXGhqcyLV+KRPJJMe3ogjTXajBXkMxxHDXv+rFU4M6KMkE8z3GxbBHRn8Q3odScl/x9IT6JqUu6kuFbgraFydyumj5ObnaROJ7UjzrAVjgwjAw/Lbtq/D0E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749110794; c=relaxed/simple;
-	bh=8GzO08tndfv721t4McGGmGHqUx0Jo7bW0KEhTttNya0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=fp5cMEkDmfT777rus9m62O1P9wBHy4XehBk1arPnaDfeal3EupkXZg1upfn7ws4GZ9RTo91rj0iIg34torkgUosdxdZZyrcPCTv56xebIYarsKYlWVkxLDo/6bI9BUCOj/Yvefq4GNnFf86iz4aVAG5EiYuCBTjmnDw0iiAkH7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Amssj6qE; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530781C27;
+	Thu,  5 Jun 2025 08:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749110932; cv=fail; b=DNm+cLgkkjEBjjjSP4kipQmsYEhK0LdYYXIR95NB3MTEohJ1b2pH0TuJkz24/yhvCVaDk+oO4nQZcQRLyT1+VnHX+wF8CvHvf/P7XmM6a2hDLufcdnJdfboSBtq7tmQFoCZuVUektz03F7zJW3OW5F/y9KMkfgZw009x8IckFU4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749110932; c=relaxed/simple;
+	bh=se6fLA24L7yCG3H6kQhQQmDz2kulYtCPh/nuNGvmVHI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fjD61wfV9iK7l8ViOrGCcc6mK9J1QxNJbHErNaq0YmdLqTG7CVVV4RyBRIdjhHm1LknYl0Gb45Z/iYlDzyofmiCKaoIqBLEE/AYWe/dYapmW1yUnjn442FapYkVem10KnC2QnThaQkfaKUMxBYPppzO1Ucm/RwIdQvhrfC/O9HI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=deYHZbMt; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Amssj6qE"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250605080630epoutp029a6ef996bc582742fa7dc821c4f25b3f~GFv8eyRte1890318903epoutp02a
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:06:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250605080630epoutp029a6ef996bc582742fa7dc821c4f25b3f~GFv8eyRte1890318903epoutp02a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749110790;
-	bh=5Fq5ho7EvwKI7nuqfXI3pZhlK+7Slkc0YlG396IIzDM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Amssj6qEVeJAgxY57Lqyg7KrglOI3H9QEFSkcloS+KWsN1TSdIy+kEgpd22bMaPA6
-	 uhJkIKGxXKsuBfyTdEhptXfXyqh/ZsBksDXYDo8FB6nA3ub2KfGC9o6wCxGDXO12FK
-	 Ln8g567pgWnDRnYreNh8yoxc/MnB8ZXBOIFKsJu8=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250605080629epcas2p2969bcac1c5d4bc57de58347b35d0e89d~GFv795vGH1407914079epcas2p2F;
-	Thu,  5 Jun 2025 08:06:29 +0000 (GMT)
-Received: from epcas2p4.samsung.com (unknown [182.195.36.89]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bCcTx1FvWz2SSKp; Thu,  5 Jun
-	2025 08:06:29 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250605080628epcas2p24220eeceef2ae38feeee9d2c18515800~GFv65NGmN1351013510epcas2p2L;
-	Thu,  5 Jun 2025 08:06:28 +0000 (GMT)
-Received: from localhost.localdomain (unknown [10.229.95.142]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250605080628epsmtip120becc5e0bf4cd5fdf0f5fd129ce21f0~GFv615FQg0467304673epsmtip1-;
-	Thu,  5 Jun 2025 08:06:28 +0000 (GMT)
-From: Hyesoo Yu <hyesoo.yu@samsung.com>
-To: 
-Cc: janghyuck.kim@samsung.com, zhaoyang.huang@unisoc.com,
-	jaewon31.kim@gmail.com, david@redhat.com, Hyesoo Yu <hyesoo.yu@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/1] mm: gup: avoid CMA page pinning by retrying
- migration if no migratable page
-Date: Thu,  5 Jun 2025 17:04:31 +0900
-Message-ID: <20250605080436.3764686-2-hyesoo.yu@samsung.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250605080436.3764686-1-hyesoo.yu@samsung.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="deYHZbMt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749110930; x=1780646930;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=se6fLA24L7yCG3H6kQhQQmDz2kulYtCPh/nuNGvmVHI=;
+  b=deYHZbMtudf6hcvMOk+1LWCwky/VKi4IysNVqrB6SWAPmAPTchv0iTKi
+   zPwni+r4F1k0ogMZnrDrG9L6SleN3nS30Ox+hexdJovftpbmkJJNQeryf
+   tBFSwPnS9+bMaEG4ML3B/aQcUYltjvDVXniYx+YkKVvpQwJx1GgNmdSfq
+   dzMPDuPyF2h7rF6C+N5vKds0wefPtk1Dr6g48LP1J+6HNBS7NY9uhvhlH
+   bGhJ2R3eZeP9ncWKjc7yVfeSCs7FuE0SwaMYTr2zpbCQmcObxhalpAWa1
+   N+HgK4BmtKev/5Asynva2CD9jgvSVguebqN4QYrZ2SN/EfW3bWr65OXy0
+   A==;
+X-CSE-ConnectionGUID: E5x6l6uvSeKKhOjN7c49xw==
+X-CSE-MsgGUID: ofevMRaEQKiGilk6hgKbYg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51364633"
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="51364633"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 01:08:50 -0700
+X-CSE-ConnectionGUID: rqfGRQfIQqG8fuMlhme4ug==
+X-CSE-MsgGUID: Yf2i7pThTRq6pG+ROCAGrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="176388915"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 01:08:50 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 5 Jun 2025 01:08:49 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 5 Jun 2025 01:08:49 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.47)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 5 Jun 2025 01:08:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qdJDopNvsVAZcPeoOnpQYmqDKFqkclwQKwE6YY/vCjMnGLi5fBnUpwEqNH97iSvt4NpbgvhQZdR29mLP+dB7VHuJ/bxyL7ttDM5KL3b4tsYHnKZ+paJ4uIczE43qv9EXW8o+4e7Ju3i93++qOfT3Je6U2nxWADV8SL56Iv6e95UO7c4QLecn7UDQ4LQeiBEKGOUhwXWGNSuM/s/23Um4Zr/cU6es/hDw/gh1spAYkvHFoKSirbobuOiw6WxK7hjNnqxQbd83bLdmxzKCtijxrTpqsgXrOxctnNCQjIo6mVWX/nyyFL5aAw7FP3Dw0igLeLlEL2xodVlKKk7MUyhQ4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gtQPRvfUD75nuWktZqxb1K/75w6DxOZ11wlLzqEbtgQ=;
+ b=jlrATe5G2XPBwJnGB6C59m9wa9JzTs6Aq7jbrhiBqtJsLXk1qMDJX5sVEh3KesJrx1RVdd8qdShzuH3YEmKGgZ+OZsEmFqgLk46a5+4DMc5HT5jY5oclOr9NlyJJSEuEatKYXqwGbcDtt5Tg4/+Q1rxtkgK17PvjAkqU6p2KXrzBt1YiAp3kBG4/p9BOYL+80opCxNdCw4ZiMHzusZjnd+wbXKJ/mvkYYXDmGv+o4ykdxZZT8lIxFys4roN7y7kpCEwxdcFOm0QS/5LiFA1zZDbobmZvO7IFTlmVKG9D+2Uv5ZrIj6IYDOx9u0QEMIUIiWOo+fBzwIdzsPJCxTyC+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+ by DM4PR11MB8227.namprd11.prod.outlook.com (2603:10b6:8:184::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Thu, 5 Jun
+ 2025 08:08:33 +0000
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b%4]) with mapi id 15.20.8769.031; Thu, 5 Jun 2025
+ 08:08:33 +0000
+Date: Thu, 5 Jun 2025 16:08:23 +0800
+From: Chao Gao <chao.gao@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: Paolo Bonzini <pbonzini@redhat.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Xin Li
+	<xin@zytor.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH 08/28] KVM: nSVM: Use dedicated array of MSRPM offsets to
+ merge L0 and L1 bitmaps
+Message-ID: <aEFQd8E4RDvLR5tj@intel.com>
+References: <20250529234013.3826933-1-seanjc@google.com>
+ <20250529234013.3826933-9-seanjc@google.com>
+ <aD/c6RZvE7a1KSqk@intel.com>
+ <aEBQchT0cpCKkmQ6@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aEBQchT0cpCKkmQ6@google.com>
+X-ClientProxiedBy: SI2PR02CA0047.apcprd02.prod.outlook.com
+ (2603:1096:4:196::14) To CH3PR11MB8660.namprd11.prod.outlook.com
+ (2603:10b6:610:1ce::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250605080628epcas2p24220eeceef2ae38feeee9d2c18515800
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250605080628epcas2p24220eeceef2ae38feeee9d2c18515800
-References: <20250605080436.3764686-1-hyesoo.yu@samsung.com>
-	<CGME20250605080628epcas2p24220eeceef2ae38feeee9d2c18515800@epcas2p2.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|DM4PR11MB8227:EE_
+X-MS-Office365-Filtering-Correlation-Id: ca531a0a-4b1f-4f97-4dbb-08dda4082a3d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Zce/mLDxk14w3l8e5P4KAfLuekRys8sdFLELq0KwDg27nwbTQfpWToAQt1IH?=
+ =?us-ascii?Q?rQn9oDzZ38lYPMZQbVZoSktNErevzl/+lDmuBg6eFn4NNRyl3wlHX3boUjuH?=
+ =?us-ascii?Q?kutui2810GShbQx1mEqs0fqlRj3FdFp9FL5670GQbOnff7yRDZ7155I5+JBd?=
+ =?us-ascii?Q?ae6ZMNLuMxyK/YJanp1T+iyMDOXmoTkEKu4H3jJjcLHjoxT2iKchHkcaqDm2?=
+ =?us-ascii?Q?6aGuZzosM0Ka4rZo0Tt0w7NTDM9su/9YC/CAaZfz/5PxFEX/GlsVn6Rgd9OB?=
+ =?us-ascii?Q?NjaPMNj3W2455HRpkSOzt/MjErP8jvn4u5x7VnlFi0W5m2+CaikDhQHNW4j6?=
+ =?us-ascii?Q?8TKGQnZzu2rpy0TUwtyU+MDJF0WCzDhN70wp8ghawIAcx7oxNVdDQ8j5kn7B?=
+ =?us-ascii?Q?/QU7pHbqYvp1jMa2T4yhmc9OOQEprVGsIqWhd/cQWfCSBaXGmBjxMcKSOd40?=
+ =?us-ascii?Q?h4U40HzARvaNP24m3NhAlHNJ3bg9rYEIO507VBr5K3YOwSNmmZ73Y0FzE4ek?=
+ =?us-ascii?Q?C0he9gTXj19qjXtzBZaSCWbVSSKeB/Wzu8RNK6FBjyODM4P8pxnDRN7Xznt1?=
+ =?us-ascii?Q?mI05cwVeN2qYJJS3UcvsnwfsNrqKMQOQiipxr6W2xo0lSndBBYWkTmBWQADJ?=
+ =?us-ascii?Q?6EVX6niPG84zX1sx7Z8BNHoZRbaTCbKsSONRBhUpeOvBwylfp8zRIS0DKU9a?=
+ =?us-ascii?Q?XXJidAqup+PisZuQ3xQ5z0XOqE1yLZrggsyutcD6VnAWCEpbyemIV7RQDzZd?=
+ =?us-ascii?Q?eU1ntC9RuIokL+aBzoeIgw8tAZ6Q4Scvwgy/SJoUjuCYMALYoGD3ihX6he5n?=
+ =?us-ascii?Q?CzMc+Bb/ks1mWdmljG9cR4NStVhJyZwrKhPXvr+gTGImoRYdjLJijLRD9Fdp?=
+ =?us-ascii?Q?YjDyFcGg/WsO0NeIHY/7zeB9AXSSNjd7ZVkY0YsoQm9n5Lj4jgbsBsCiYfiz?=
+ =?us-ascii?Q?ORppQKiMtvPQvTbPIXSFNogs6sMhNDX75BM1/J+LVkNTDY5wdookcBgKdvmI?=
+ =?us-ascii?Q?ynQaqehOlsTCM5RnYWoXQTq8cBV57g2Ihi31uAclU8veRndWMSUFPCYTo59c?=
+ =?us-ascii?Q?Rl+Lp+0n0sShfPEu29fIlpyov+uauP9lubZcQpc4Wc2GyR8kp+3Qr35lTcwj?=
+ =?us-ascii?Q?wsGr4WSTgkxkj/XC77ZKU35Y0jJqJdXDu+66vsUH7T2e5kvYAtCeVsPYjxbS?=
+ =?us-ascii?Q?tfOWUV7g2Ga0ul57bxFERc1nBTMlD9KL88cVyS5oWYN31WdDg8wsX/m9oWnz?=
+ =?us-ascii?Q?1lR/XXC9PNY2d1I5JXn0XnIFc8UvIR993tHsfMmDdSkCGNysrCvhFHHo4qr2?=
+ =?us-ascii?Q?ILkXL7AhcoAIIpbT5c9FIlVpbAujIz2SG/9yrhZF7MtE/lwnF/jJc38/4nvb?=
+ =?us-ascii?Q?ELgWUBGu5Nxlan6FcwU4xLSVDkQB4YjUXqjFQrPXfeUxkJLxIkrEv5roCx0W?=
+ =?us-ascii?Q?Cup+Xecbluw=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BIQCnKUVyfNJPqvtfMFy6esnSjYzhIoRj6/PPtJHlmO4+tV1odYMH6hA0WC2?=
+ =?us-ascii?Q?IP8vu0CGP4NfeAWBaVwC09uAE5RUkmIana3nqidmzr080WGK6NMXLCCGPsgN?=
+ =?us-ascii?Q?aQCNiO8vYBMRBL+4fzLJV3lCt6bg9VA8gj7fnnW5NftfcaJCayK78v1F3uf7?=
+ =?us-ascii?Q?yBMXwmLNHL1/UhMIfdVLWHcy3pymN6i//CtKCH8fI6A4abFLRhnMQ6oT+XvH?=
+ =?us-ascii?Q?Dui7kl9Gy8tbQz6iCGN3oBpV8bWWgNO44VhNsCtvECvhZUTVQtk+zWr6tZSQ?=
+ =?us-ascii?Q?XRdbY1WhE4eDJiTpRs8P+n3KdorGy+tN6okN2mtYsefbs4EiRoaBJ9lPCTbg?=
+ =?us-ascii?Q?TpHm07tey5EJ2Gl/O/5mlseLMsZ0423FZ6dHi5fuevtSDMjG7V3mmoOmlFJB?=
+ =?us-ascii?Q?HMITgTOHYM67AYdRFxEj+NjXYmQ8WvoTHMwe8jnX0DjwZWVVk7eFu4emxvIg?=
+ =?us-ascii?Q?U6qDHhFCkC7hrl7xV2jCpvxYhAxRpIdTrKlM0micCJxuE7VUqdbcuW9qVgS/?=
+ =?us-ascii?Q?6oIub2gx+CZBRaAYGbFrF/fq7dk02gjgTClGW1hiz673jlSHMVwSE9hc1TYA?=
+ =?us-ascii?Q?YMkXWaeIGwju7FMP8So3itrpSx25S2hklv8EJjekHMezyiZciE9LyOiNfgnC?=
+ =?us-ascii?Q?izRR7ftnnluLQ05BfEJ/ODmXMJZr8eKD4kzDTmq2Wm3LSuJBRm8wIeWOxKjg?=
+ =?us-ascii?Q?Z1UMfc8/KqlTRzba205HleKNN0GUowABBuUv9hK8k1shJagcnAdVicp3hJJb?=
+ =?us-ascii?Q?GuupfwGM97IhXgtfxWG7amP6HKmXCb8c29ZKJ3WuYL9g4liIyku1tsVe7f2g?=
+ =?us-ascii?Q?CqOzqwE+h9DPnh0d806dPrqtcafzf2lAjorQIWhAn52QFqZiw0e9lPJRPPmx?=
+ =?us-ascii?Q?rp6ntPirDG5fv1o6er54XjHgGdjMf6jLfuW0bN+v81vYtsTSMtd1fdAlJHab?=
+ =?us-ascii?Q?0HgwhLHzaR3ydZ8HwlKDi76VuVsTQrRI16uAan1Mcw5SJO7qx0OFvkfavfY1?=
+ =?us-ascii?Q?NzHjM/OZ+IpCtKMa55fPTMZmIoSn/euBCHhPyl0IbKzmEM5uuhAseiznd/QR?=
+ =?us-ascii?Q?WACWs8s/zyqmw37A1haWjFOryUvBdbMU3qZvYL/PXOXHa3k7T4oCjp4WCqmT?=
+ =?us-ascii?Q?Gif+L2MH+mZO3z1rJdvhb0fAMxAPNXemOThzuVSBKI1pUmIDzVikEKhrB7RN?=
+ =?us-ascii?Q?oCMI/YPm/m0qyFOGd53DUsxm7fQIPG7I0t4SkzX/DejTRp9OFvvRcC0DdhSp?=
+ =?us-ascii?Q?xXm5Wp47T/b309SVqRXUqKtMUCXbxmwp++VepEfQrciBpSq358rirE5CYX/V?=
+ =?us-ascii?Q?dNWM2RYbj4lCJpaql0LUz8LmebqxzxwLicdJGu+zeOzwUhOvYr3kd7rFooWe?=
+ =?us-ascii?Q?khyGhmTZDPEdf+jqOcfnxBZanwqzWRh2iQor90o/UbcDzApSIfEeuWC1P42J?=
+ =?us-ascii?Q?2DNEzU+JzrVM59Tr7GinJ9WRIAdfbP6GzToH6uyczH6AI/BS56Qkvt0O6g1J?=
+ =?us-ascii?Q?6gah780a+PQgIRd3mdeuOvOXbaiWoAFSoR5fU9NEoBiH5DRYZJxwrTrdBx38?=
+ =?us-ascii?Q?+WB7jiopRiGpnArxPXgDgyeoHlI72OmftBZ4Dcs6?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca531a0a-4b1f-4f97-4dbb-08dda4082a3d
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 08:08:33.5283
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4GlCOa2kdtDs5JboLitin4macXtGmXX8xAhjyDkMuZlE8EsylF78154K4JhkSwZGlcOl+1ZIz+SI90jMuWkOhg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB8227
+X-OriginatorOrg: intel.com
 
-Commit 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
-introduced an issue where CMA pages could be pinned by longterm GUP requests.
-This occurs when unpinnable pages are detected but the movable_page_list is empty;
-the commit would return success without retrying, allowing unpinnable
-pages (such as CMA) to become pinned.
+>Me either.  One option would be to use wrapper macros for the interception helpers
+>to fill an array at compile time (similar to how kernel exception fixup works),
+>but (a) it requires modifications to the linker scripts to generate the arrays,
+>(b) is quite confusing/complex, and (c) it doesn't actually solve the problem,
+>it just inverts the problem.  Because as above, there are MSRs we *don't* want
+>to expose to L2, and so we'd need to add yet more code to filter those out.
+>
+>And the failure mode for the inverted case would be worse, because if we missed
+>an MSR, KVM would incorrectly give L2 access to an MSR.  Whereas with the current
+>approach, a missed MSR simply means L2 gets a slower path; but functionally, it's
+>fine (and it has to be fine, because KVM can't force L1 to disable interception).
 
-CMA pages may be temporarily off the LRU due to concurrent isolation,
-for example when multiple longterm GUP requests are racing and therefore
-not appear in movable_page_list. Before commit 1aaf8c, the kernel would
-retry migration in such cases, which helped avoid accidental CMA pinning.
+I agree. The risk of breaking functionality should be very low.
 
-The original intent of the commit was to support longterm GUP on non-LRU
-CMA pages in out-of-tree use cases such as pKVM. However, allowing this
-can lead to broader CMA pinning issues.
+>
+>> Removing this array and iterating over direct_access_msrs[] directly is an
+>> option but it contradicts this series as one of its purposes is to remove
+>> direct_access_msrs[].
+>
+>Using direct_access_msrs[] wouldn't solve the problem either, because nothing
+>ensures _that_ array is up-to-date either.
+>
+>The best idea I have is to add a test that verifies the MSRs that are supposed
+>to be passed through actually are passed through.  It's still effectively manual
+>checking, but it would require us to screw up twice, i.e. forget to update both
+>the array and the test.  The problem is that there's no easy and foolproof way to
+>verify that an MSR is passed through in a selftest.
+>
+>E.g. it would be possible to precisely detect L2 => L0 MSR exits via a BPF program,
+>but incorporating a BPF program into a KVM selftest just to detect exits isn't
+>something I'm keen on doing (or maintaining).
+>
+>Using the "exits" stat isn't foolproof due to NMIs (IRQs can be accounted for via
+>"irq_exits", and to a lesser extent page faults (especially if shadow paging is
+>in use).
+>
+>If KVM provided an "msr_exits" stats, it would be trivial to verify interception
+>via a selftest, but I can't quite convince myself that MSR exits are interesting
+>enough to warrant their own stat.
 
-To avoid this, the logic is restored to return -EAGAIN instead of success
-when no folios could be collected but unpinnable pages were found.
-This ensures that migration is retried until success, and avoids
-inadvertently pinning unpinnable pages.
-
-Fixes: 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
-
----
-We have confirmed that this regression causes CMA pages to be pinned
-in our kernel 6.12-based environment.
-
-In addition to CMA allocation failures, we also observed longterm GUP failures
-when repeatedly accessing the same VMA. Specifically, the first longterm GUP
-call would pin a CMA page, and a second call on the same region
-would fail the migration because the cma page was already pinned.
-
-After reverting commit 1aaf8c122918, the issue no longer reproduced.
-
-Therefore, this fix is important to ensure reliable behavior of longterm GUP
-and CMA-backed memory, and should be backported to stable.
----
- mm/gup.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index e065a49842a8..66193421c1d4 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2300,14 +2300,12 @@ static void pofs_unpin(struct pages_or_folios *pofs)
- 		unpin_user_pages(pofs->pages, pofs->nr_entries);
- }
- 
--/*
-- * Returns the number of collected folios. Return value is always >= 0.
-- */
--static void collect_longterm_unpinnable_folios(
-+static bool collect_longterm_unpinnable_folios(
- 		struct list_head *movable_folio_list,
- 		struct pages_or_folios *pofs)
- {
- 	struct folio *prev_folio = NULL;
-+	bool any_unpinnable = false;
- 	bool drain_allow = true;
- 	unsigned long i;
- 
-@@ -2321,6 +2319,8 @@ static void collect_longterm_unpinnable_folios(
- 		if (folio_is_longterm_pinnable(folio))
- 			continue;
- 
-+		any_unpinnable = true;
-+
- 		if (folio_is_device_coherent(folio))
- 			continue;
- 
-@@ -2342,6 +2342,8 @@ static void collect_longterm_unpinnable_folios(
- 				    NR_ISOLATED_ANON + folio_is_file_lru(folio),
- 				    folio_nr_pages(folio));
- 	}
-+
-+	return any_unpinnable;
- }
- 
- /*
-@@ -2417,11 +2419,25 @@ migrate_longterm_unpinnable_folios(struct list_head *movable_folio_list,
- static long
- check_and_migrate_movable_pages_or_folios(struct pages_or_folios *pofs)
- {
-+	bool any_unpinnable;
-+
- 	LIST_HEAD(movable_folio_list);
- 
--	collect_longterm_unpinnable_folios(&movable_folio_list, pofs);
--	if (list_empty(&movable_folio_list))
-+	any_unpinnable = collect_longterm_unpinnable_folios(&movable_folio_list, pofs);
-+
-+	if (list_empty(&movable_folio_list)) {
-+		/*
-+		 * If we find any longterm unpinnable page that we failed to
-+		 * isolated for migration, it might be because someone else
-+		 * concurrently isolated it. Make the caller retry until it
-+		 * succeeds.
-+		 */
-+		if (any_unpinnable) {
-+			pofs_unpin(pofs);
-+			return -EAGAIN;
-+		}
- 		return 0;
-+	}
- 
- 	return migrate_longterm_unpinnable_folios(&movable_folio_list, pofs);
- }
--- 
-2.49.0
-
+Yes, there doesn't seem to be an easy solution to this problem. Given its low
+risk, I think we can live with it for now and revisit the issue if it truely
+becomes a recurring problem (i.e., people keep forgetting to update the array).
