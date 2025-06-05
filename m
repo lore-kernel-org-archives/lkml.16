@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD621EF0B0;
-	Thu,  5 Jun 2025 05:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BCF1DB34B;
+	Thu,  5 Jun 2025 05:54:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749102693; cv=none; b=LA3u17b4/MBPWi5rD3DmC3r4UGmQRlITXFGzxBSATQ/VKYGEwFf5v35GVKGktcb9Ew+lTBbG3AQClCMd4v0K34oOLLVoMubA+EIcDaswurLEbt0rhKj96kieag6hVX8SkMxjzX3zEMTmtnekN1RbKNXvtKU1GvbcD9mTlqspVA8=
+	t=1749102854; cv=none; b=NmJT+xQV2BPPIgXcuuDJojlzHnwgGX3AQj3v2UhqV8qud9une/qw5DWQkFwt+5yV4hPDYVb+fi7PhKxwzzjpIyQTJUkeoM6Kgaa8vNld+ZV4BTY/aXlwwuiHtzxrY62njZGFDWJmfNlda5VjjBMxFuj1jLqRTz7r+O0v7MoTS6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749102693; c=relaxed/simple;
-	bh=R9ZU7C4rQ0t5XOOUUDx00muG4HBw07Usm+yiH+RoIL4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uM6RJ8MGow3xag1OzwIkuCEB509B/tXJOxlNLgqbz+XWLOODNspbxxxNnEca+Ai2nhtR4cWXNtCI/GemgQZYoJdk4pGD1226n03l4MWinSJB2ILgKagqwKmvf5PVaICIhR3Do2GwLtcxeMNm3EnbtZ4OaM0y30MUqqaP2eChwbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+3IIXWK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749102854; c=relaxed/simple;
+	bh=T2Vo4BftPct0a6tijnrOurIzk7beQuRJvZ4WHfuhvsQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YF2XDx6ck8kKpFfzlLKyKyAqD9gkDYKGD/MMk7AQj2TiwYJMXOiY1365AGg8ueAAwF3OrebQvFZtpiqtgvzJZ0VB11nvlsG9yHfKjP/AL/nW70TVrZLa/x8RLwf1VTBnW7TcA9Y4w1EdHqeaSnHP+WsdnQSuLKWs4nsebRQdc/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KaAca/Cy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+3IIXWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E36C4CEE7;
-	Thu,  5 Jun 2025 05:51:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KaAca/Cy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ACDFC4CEE7;
+	Thu,  5 Jun 2025 05:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749102692;
-	bh=R9ZU7C4rQ0t5XOOUUDx00muG4HBw07Usm+yiH+RoIL4=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=U+3IIXWK1xtFRSMz3ntK5nUyElIy8FlDEa5GlUkne7JgAdhEsIN1vqa6yi13m7bW4
-	 Azu4mcoDkxkZPQ1moxmPwTW78OtPDLj+Gahg3rXYRpPcNDg/zkD5Jf6PgEchap77Rk
-	 ywUFef3tQul8VK8qWwgfkJVCvn/UPjUvLxtGdqMkio/JdlWSchAEMmrqIGbvyfSH9o
-	 o7VPDrvNMaQxZJ1MntH1zsRzBWlKcI/c1Vzq5yzCBgP8of4yT6+LhFdPP1psFKz8ZC
-	 q2Rp2WW9wOjXQCV6Ca8ArIUbgXC/4Wjl/H0Vc9R8eBoZnamdeCUFFgw5dZmT1Sv74f
-	 wgPg3NGK+RCOw==
-Message-ID: <7d4ec7c9-c95a-4e7e-9750-f6310ecb59fc@kernel.org>
-Date: Thu, 5 Jun 2025 07:51:28 +0200
+	s=k20201202; t=1749102853;
+	bh=T2Vo4BftPct0a6tijnrOurIzk7beQuRJvZ4WHfuhvsQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KaAca/CyXjndXSYXA8seSpmLKZAxGnniRmGiKLeLI4t0Q7wmKDwfex1+v+/r5Fkie
+	 PGixN6s0hbvVkpqu7dgtRKjV03vDZKz95GYDsPEwP3Un3y405cr9fwRzowLHxGo0uY
+	 unjPSobgfjwymSbm6/L8OvgTwOX8DmuEwMkrubics4ZleQIVAoJkGNnjiuh4pc45d/
+	 o0NDr8pqc07LJi51wKZgX7vheBHMvq4/EukLnCXlriVinSTfLtWOLqyv1qxR0GR9ro
+	 MsdvO4SbDMBCFfkMZlbRD952JBClIl8fcYy7iasv6RQ8As/krCIcW1L1Qr80nArGnX
+	 AqITY1vtY3P3g==
+Message-ID: <0365ffe2-82c6-41d1-ab39-17fe4642bebc@kernel.org>
+Date: Thu, 5 Jun 2025 07:54:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,21 +35,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] arm64: dts: imx95-19x19-evk: add adc0 flexcan[1,2]
- i2c[2,3] uart5 spi3 and tpm3
-To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH 1/2] dt-bindings: input: goodix,gt9916: Document stylus
+ support
+To: Pengyu Luo <mitltlatltl@gmail.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
- "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250604200301.1192096-1-Frank.Li@nxp.com>
+ <conor+dt@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ Kees Cook <kees@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ Yury Norov <yury.norov@gmail.com>, Filipe Manana <fdmanana@suse.com>,
+ Len Brown <len.brown@intel.com>, Eric Biggers <ebiggers@google.com>,
+ pengdonglin <pengdonglin@xiaomi.com>, Luo Jie <quic_luoj@quicinc.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Charles Wang <charles.goodix@gmail.com>, linux-input@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250605054855.403487-1-mitltlatltl@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -95,25 +96,62 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250604200301.1192096-1-Frank.Li@nxp.com>
+In-Reply-To: <20250605054855.403487-1-mitltlatltl@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/06/2025 22:02, Frank Li wrote:
-> +	num-cs = <1>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_lpspi7>;
-> +	cs-gpios = <&gpio2 4 GPIO_ACTIVE_LOW>;
-> +	status = "okay";
+On 05/06/2025 07:48, Pengyu Luo wrote:
+> Document stylus support. Optional support for DT properties:
+>   - `goodix,stylus-enable`
+>   - `goodix,stylus-pressure-level`
+>   - `goodix,physical-x`
+>   - `goodix,physical-y`
+> 
+> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> ---
+>  .../input/touchscreen/goodix,gt9916.yaml      | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml
+> index c40d92b7f..e5476ea36 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml
+> @@ -44,6 +44,27 @@ properties:
+>    touchscreen-size-y: true
+>    touchscreen-swapped-x-y: true
+>  
+> +  goodix,stylus-enable:
+> +    type: boolean
+> +    description:
+> +      Indicates that stylus (pen) functionality is enabled. If present,
+
+Looks like deducible from the compatible.
+
+> +      the driver will initialize stylus-specific input reporting.
+
+What if my driver does something else? Shall we change the binding? No.
+
 > +
-> +	spidev0: spi@0 {
-> +		reg = <0>;
-> +		compatible = "lwn,bk4-spi";
+> +  goodix,physical-x:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Physical width of the touchscreen in millimeters.
 
-NAK
+No, use existing input properties.
 
-You do not have big excavator attached to your eval kit. Don't add fake,
-non-existing or incorrect nodes.
+> +
+> +  goodix,physical-y:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Physical height of the touchscreen in millimeters.
+> +
+> +  goodix,stylus-pressure-level:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Number of discrete pressure levels supported by the stylus.
+> +      The reported ABS_PRESSURE range will be 0 to
+> +      (goodix,stylus-pressure-level - 1).
+
+Use existing input properties.
+
 
 
 Best regards,
