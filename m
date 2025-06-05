@@ -1,119 +1,388 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3F4213236
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2021720C026
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749125475; cv=none; b=DfurJMriNOjjlp5B5LC0c+VqQHRk3B/rx16noIGMWQNsFfHDoT/vYzj1yn9chisqQHWGQHs7OEAm3b4jk9DaDvtxhvcH+d5rz/8GZNILYcLgwRAyRdWIKwgztScVkZnJaJ/ny7OrxfSbqieTUx1G7SUasr/W2oSa+4yrYcxUWCk=
+	t=1749125586; cv=none; b=dqMrfvjCSIeZcpVs7tZs4gJHCZPZo0VeIEH9hNb9DVo390PzG3Fy717FEZluytsQEXw52OKdzKv/MKWUHRAtZY9wnLb9nacFNfKFGpLwm2papQI8yQJ+EfxlCge2yBNoisYRStwaAXLTu0W71pgcSkGRhMh4wvjkJRps3S8gHsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749125475; c=relaxed/simple;
-	bh=MW3N16/x4ORzkYHJazCJmRwnbO4hITQcNKVwQrY/7gQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=XlI+/HJfUaVCoObLA4HQCAhvescBecIfAkTAlNNOkbPGGxqG9wEJIeVkcZ/S/p5/w9LpBWF8tof+LJIEnFgnwXY2/dnY52CUFJj3uBGRcLailha9H2Ybz1lmtbjMvnadFDIOA3skxRTlki2zMJwijFqX8mZtFFz5Fh/Dy1SRRJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QqEe4+Nr; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749125586; c=relaxed/simple;
+	bh=21mcGr5CuLI+lsB2S43fewfJ2aOttCW6G+uPHFej7Do=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Ha6WhCf2usliLngo8EC9b4zWB6x6GvJaPYOPei0OaRaKlEGxozpfm1ndiGGoFZsoMfX5aV3jg2hl0SS7c5see+URzoo0/M94WKrgpZSbithX8WN7KoUnRrZOFuJZkqJx5HSSP5Sx8rZxU0ZDS+pv2uIMkcOP+H36SDII+hWpyvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WprBXos/; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QqEe4+Nr"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86dc3482b3dso1527451241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:11:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749125473; x=1749730273; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OgmiEXi0A20P8LTwFGfS1KsXpM+N3sq3vnKks2IxAc0=;
-        b=QqEe4+NrfNz7RYn+CehgTyuFIWaYHciqdEVZteBNEaupIwuMT0WLA02W/QZdtmJkf7
-         GdjMRHTGS9Hxlz+iNH7ocfM+a6IPMFNaxB3BTdnSb2pcjlhR85NbFSD1O/CI/2Zbach5
-         tMyHH6ANmeE/p2861xPiM+CkBh/vG917sus/ZhWCZN4guRi0MmTk/yZa9O0gBEc6huN0
-         Vt3EnENPhct4feyt+10VmJS2fekT/XREVpYlBKps3tbkXLa07//Jrd9uaiz3xFMK7vD4
-         1WKz9XaySiq/Y5mIU4nAPMhsjG9bb2KKIh0qg8d6uy6KAjXDtchoYGTlnJx2Vhb5HRYW
-         vN1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749125473; x=1749730273;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OgmiEXi0A20P8LTwFGfS1KsXpM+N3sq3vnKks2IxAc0=;
-        b=RQGfoI4xRwf+aZUr5B/cto29VaizvWV8qA2H4oHxSBtywmlpLYwzB76BOuk5Xq2gR7
-         WUVlCEpHbVyc8C5vu6jwuLE77GpwNiwU8mncePCGD2cUOgh/m1ZHPqZNyoyzW3PIfmV+
-         euFOz/4k7PP3r6pEc97YpnnWjsNzsBM0lB0RV+YZXoXsaRrhpOx7ftRbQs+aDiClKUFA
-         0a4yDpB8HudqqXnfEdtGCDlt5QHGQIT91HOylGlykzq6WvFGTyKS+sdngPqJHKmJcPoH
-         xe4+c4dVrLKdmuzijybOaclVhed9kCusdjQoUh5FCSoIPT1k91NACH9igw3/Y46Vk9Ap
-         Tvpg==
-X-Forwarded-Encrypted: i=1; AJvYcCW64wAstURaTZ1310vyqYAFexeWL3kwH834L5wkY3LDEJ8tc8WnLHe7xgk+qfTYuuFr4iaEymh7sIFuv8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIoBSDjfz5YmJNNQAqBOlMFfZ3maw7Q3TXjNko4tqjUhmt53fU
-	YTYgGCpANBkvrCKIAlidVEn32xN/7iMNh5htY6JPKIO1eGCkymUlUty7SV9z+T8joZPa7GEeSCM
-	2u3Ba7gYnHpPz50YzxXd8vqwCslIephi9ELHnhfqrfJYsgNSrb++D/9VXcA==
-X-Gm-Gg: ASbGnct58FE08Bl7m7MW9C8xfyYs4Yl3tY/GkVQC1NJhxxmI1gQDn+stpTSIlbXd5xQ
-	E2+oeywhcy4nXNZnTsgkb0eupXwxeuh5DASQT4un6hz7kxdUxAnQ9PF4qdTHcqjxcpujGGNMJ8i
-	XRzUqCnT4kTt07w6dn3++JyxGMg3/gx5Y5+b1VVBKirg2p3FtJ56XaPURpCbL4vsKAXN4rvhkui
-	Mwx
-X-Google-Smtp-Source: AGHT+IF2aumGdZUdL8u076i5ZOYIyzoO7Q7yA+GrS7FD0Blk3+o8CgZgvUcGhew/xxle19ewVkjFe1PCU2oG2AHumNI=
-X-Received: by 2002:a67:f995:0:b0:4e2:b21b:2cbc with SMTP id
- ada2fe7eead31-4e758a62aa2mr2243810137.3.1749125472722; Thu, 05 Jun 2025
- 05:11:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WprBXos/"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749125570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eCJkn2PLkOBoQ+g/YVc/8OYIcSE2y6YPjXDaWlpQP0U=;
+	b=WprBXos/8/QifUnZtQTRFFHHwiY+E+Li0C2h1xiLA+mYyTkVwnsDp4xT62PmY2WKaoPS3F
+	p+uYnrL8/SoTnHxynrtO+5HNPI6/GCdXuSTw2IrcV4skVqLGJw8mYqXJVYR9maitoI0jQ4
+	N1j1UfCbJJJI3dVf20HM6l9Y7SvTzjc=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 5 Jun 2025 17:41:01 +0530
-X-Gm-Features: AX0GCFt1mMqSdas5kTm6Jze2KjPhrZRGcVrdJh8UaX_gHiGLSsKT2XiJF6iZ_Zc
-Message-ID: <CA+G9fYt-CMBGCFxV5ziP98upkeK2LBxkZRo7-0XN1G+zLtWK4A@mail.gmail.com>
-Subject: selftests/filesystem: clang warning null passed to a callee that
- requires a non-null argument [-Wnonnull]
-To: clang-built-linux <llvm@lists.linux.dev>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org
-Cc: Nathan Chancellor <nathan@kernel.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v2] mm/pagewalk: split walk_page_range_novma() into
+ kernel/user parts
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <13b573c3-c432-43f5-b687-deb3f72cdce0@lucifer.local>
+Date: Thu, 5 Jun 2025 20:11:56 +0800
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Barry Song <baohua@kernel.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>,
+ Oscar Salvador <osalvador@suse.de>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>,
+ Jann Horn <jannh@google.com>,
+ loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ linux-openrisc@vger.kernel.org,
+ linux-riscv@lists.infradead.org,
+ linux-mm@kvack.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E816127E-5BF6-4B00-AB7D-C151939A1236@linux.dev>
+References: <20250604141958.111300-1-lorenzo.stoakes@oracle.com>
+ <536f5ffd-b4cf-4f35-970c-ad3a7593af2f@suse.cz>
+ <5a06f383-7d01-4ea7-a010-013063770240@lucifer.local>
+ <1AA4A4B3-AEBE-484A-8EE2-35A15035E748@linux.dev>
+ <13b573c3-c432-43f5-b687-deb3f72cdce0@lucifer.local>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+X-Migadu-Flow: FLOW_OUT
 
-Regressions found on arm, arm64 and x86_64 building warnings with clang-20
-and clang-nightly started from Linux next-20250603
 
-Regressions found on arm, arm64 and x86_64
- - selftests/filesystem
 
-Regression Analysis:
- - New regression? Yes
- - Reproducible? Yes
+> On Jun 5, 2025, at 17:56, Lorenzo Stoakes <lorenzo.stoakes@oracle.com> =
+wrote:
+>=20
+> On Thu, Jun 05, 2025 at 05:42:16PM +0800, Muchun Song wrote:
+>>=20
+>>=20
+>>> On Jun 5, 2025, at 17:24, Lorenzo Stoakes =
+<lorenzo.stoakes@oracle.com> wrote:
+>>>=20
+>>> On Thu, Jun 05, 2025 at 08:56:59AM +0200, Vlastimil Babka wrote:
+>>>> On 6/4/25 16:19, Lorenzo Stoakes wrote:
+>>>>> The walk_page_range_novma() function is rather confusing - it =
+supports two
+>>>>> modes, one used often, the other used only for debugging.
+>>>>>=20
+>>>>> The first mode is the common case of traversal of kernel page =
+tables, which
+>>>>> is what nearly all callers use this for.
+>>>>>=20
+>>>>> Secondly it provides an unusual debugging interface that allows =
+for the
+>>>>> traversal of page tables in a userland range of memory even for =
+that memory
+>>>>> which is not described by a VMA.
+>>>>>=20
+>>>>> It is far from certain that such page tables should even exist, =
+but perhaps
+>>>>> this is precisely why it is useful as a debugging mechanism.
+>>>>>=20
+>>>>> As a result, this is utilised by ptdump only. Historically, things =
+were
+>>>>> reversed - ptdump was the only user, and other parts of the kernel =
+evolved
+>>>>> to use the kernel page table walking here.
+>>>>>=20
+>>>>> Since we have some complicated and confusing locking rules for the =
+novma
+>>>>> case, it makes sense to separate the two usages into their own =
+functions.
+>>>>>=20
+>>>>> Doing this also provide self-documentation as to the intent of the =
+caller -
+>>>>> are they doing something rather unusual or are they simply doing a =
+standard
+>>>>> kernel page table walk?
+>>>>>=20
+>>>>> We therefore establish two separate functions - =
+walk_page_range_debug() for
+>>>>> this single usage, and walk_kernel_page_table_range() for general =
+kernel
+>>>>> page table walking.
+>>>>>=20
+>>>>> We additionally make walk_page_range_debug() internal to mm.
+>>>>>=20
+>>>>> Note that ptdump uses the precise same function for kernel walking =
+as a
+>>>>=20
+>>>> IMHO it's not clear at this point what "the precise same function" =
+means.
+>>>>=20
+>>>>> convenience, so we permit this but make it very explicit by having
+>>>>> walk_page_range_novma() invoke walk_kernel_page_table_range() in =
+this case.
+>>>>=20
+>>>> ^ walk_page_range_debug()
+>>>=20
+>>> Oops will fix.
+>>>=20
+>>>>=20
+>>>> Maybe this could be reworded in the sense (AFAIU) that
+>>>> walk_page_range_debug() can be used for both user space page table =
+walking
+>>>> or kernel depending on what mm is passed, so in the case of init_mm =
+it
+>>>> invokes walk_kernel_page_table_range() internally.
+>>>=20
+>>> Sure.
+>>>=20
+>>>>=20
+>>>>>=20
+>>>>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>>>>> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>>>>> ---
+>>>>> v2:
+>>>>> * Renamed walk_page_range_novma() to walk_page_range_debug() as =
+per David.
+>>>>> * Moved walk_page_range_debug() definition to mm/internal.h as per =
+Mike.
+>>>>> * Renamed walk_page_range_kernel() to =
+walk_kernel_page_table_range() as
+>>>>> per David.
+>>>>>=20
+>>>>> v1 resend:
+>>>>> * Actually cc'd lists...
+>>>>> * Fixed mistake in walk_page_range_novma() not handling kernel =
+mappings and
+>>>>> update commit message to referene.
+>>>>> * Added Mike's off-list Acked-by.
+>>>>> * Fixed up comments as per Mike.
+>>>>> * Add some historic flavour to the commit message as per Mike.
+>>>>> =
+https://lore.kernel.org/all/20250603192213.182931-1-lorenzo.stoakes@oracle=
+.com/
+>>>>>=20
+>>>>> v1:
+>>>>> (accidentally sent off-list due to error in scripting)
+>>>>>=20
+>>>>> arch/loongarch/mm/pageattr.c |  2 +-
+>>>>> arch/openrisc/kernel/dma.c   |  4 +-
+>>>>> arch/riscv/mm/pageattr.c     |  8 +--
+>>>>> include/linux/pagewalk.h     |  7 ++-
+>>>>> mm/hugetlb_vmemmap.c         |  2 +-
+>>>>> mm/internal.h                |  4 ++
+>>>>> mm/pagewalk.c                | 98 =
+++++++++++++++++++++++++------------
+>>>>> mm/ptdump.c                  |  3 +-
+>>>>> 8 files changed, 82 insertions(+), 46 deletions(-)
+>>>>>=20
+>>>>> diff --git a/arch/loongarch/mm/pageattr.c =
+b/arch/loongarch/mm/pageattr.c
+>>>>> index 99165903908a..f5e910b68229 100644
+>>>>> --- a/arch/loongarch/mm/pageattr.c
+>>>>> +++ b/arch/loongarch/mm/pageattr.c
+>>>>> @@ -118,7 +118,7 @@ static int __set_memory(unsigned long addr, =
+int numpages, pgprot_t set_mask, pgp
+>>>>> return 0;
+>>>>>=20
+>>>>> mmap_write_lock(&init_mm);
+>>>>> - ret =3D walk_page_range_novma(&init_mm, start, end, =
+&pageattr_ops, NULL, &masks);
+>>>>> + ret =3D walk_kernel_page_table_range(start, end, &pageattr_ops, =
+NULL, &masks);
+>>>>> mmap_write_unlock(&init_mm);
+>>>>=20
+>>>> You've removed init_mm from walk_page_range_novma() but I see most =
+callers
+>>>> do the locking of init_mm immediately around it. This suggests a =
+version
+>>>> handling that automatically? A bit complicated by the read/write
+>>>> possibilities, so maybe not worth wrapping? Just a thought, as =
+David says ;)
+>>>=20
+>>> Most callers write lock interestingly, but then one read lock's, so =
+we can't
+>>> just assume and would need to pass a boolean which would kind of =
+suck.
+>>=20
+>> Hi Lorenzo,
+>>=20
+>> Actually, the write lock introduced in commit 8782fb61cc848 to fix =
+the
+>> race condition when walking user page tables can be replaced with a =
+read
+>> lock. As explained in commit b123d09304d86, it is safe to walk kernel
+>> page tables while holding the mmap read lock. The function name
+>> `walk_kernel_page_table_range` clearly indicates its purpose: walking
+>> kernel page tables. Thus, using a read lock internally is appropriate
+>> and safe. Please correct me, if I am wrong.
+>>=20
+>> To further enhance robustness, it is better to add a WARN_ON check to
+>> ensure that the address range passed to walk_kernel_page_table_range
+>> is indeed within the kernel address space. This will help prevent any
+>> accidental misuse and catch issues early.
+>>=20
+>=20
+> Hi Muchun,
+>=20
+> Thanks for the information. I'll chase up this locking stuff in a
+> follow-up, if that's ok? As I want to get this refactoring landed =
+first
+> with the existing behaviour.
 
-First seen on the next-20250603
-Good: next-20250530
-Bad:  next-20250603
+OK. Make sense.
 
-Test regression: arm arm64 x86_64 clang warning null passed to a
-callee that requires a non-null argument [-Wnonnull]
+>=20
+> I did wonder about doing a WARN_ON(), but I am concerned that perhaps =
+there
+> are some very odd architectures that place things in unusual =
+locations... I
+> guess this would be a addr >=3D TASK_SIZE check?
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I think so.
 
-## Build warnings
-make[4]: Entering directory '/builds/linux/tools/testing/selftests/filesystems'
-  CC       devpts_pts
-  CC       file_stressor
-  CC       anon_inode_test
-anon_inode_test.c:45:37: warning: null passed to a callee that
-requires a non-null argument [-Wnonnull]
-   45 |         ASSERT_LT(execveat(fd_context, "", NULL, NULL,
-AT_EMPTY_PATH), 0);
-      |                                            ^~~~
+>=20
+> On the 'weirdness' front, Jann's opinion is that the debug code =
+shouldn't
+> even be walking page tables without VMAs in userspace anyway (and to =
+me -
+> unless there's some weird arch-specific stuff out there - I am also
+> perplexed by this).
+>=20
+> So we should in theory just drop the ability to do this kind of =
+traversal
+> in general.
+>=20
+> This is something I'll investigate...
+>=20
+> There's also oddities like:
+>=20
+> if (walk->mm =3D=3D &init_mm || addr >=3D TASK_SIZE)
+> 	pte =3D pte_offset_kernel(pmd, addr);
+> else
+> 	pte =3D pte_offset_map(pmd, addr);
+>=20
+> In the walk_pte_range() function, which I feel is wrong - you should =
+pass
+> init_mm if you want to explore kernel page tables, so why are we doing =
+this
+> here?
 
-## Source
-* Kernel version: 6.15.0-next-20250605
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: a0bea9e39035edc56a994630e6048c8a191a99d8
-* Toolchain: Debian clang version 21.0.0
-(++20250529012636+c474f8f2404d-1~exp1~20250529132821.1479)
+I guess it is because some users want to walk kernel address space but
+not mapped in init_mm (like efi_mm, see ptdump_efi_show()).
 
-## Build
-* Test log: https://qa-reports.linaro.org/api/testruns/28651387/log_file/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xzM4wMl8SvuLKE3mw3csiuv3Jz/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2xzM4wMl8SvuLKE3mw3csiuv3Jz/config
+>=20
+> I wonder if it's for stuff like vsyscall which are ostensibly kernel
+> addresses but accessible in userspace... but then would we really want =
+to
+> walk the page tables for this?
+>=20
+> This is stuff I want dig into a little bit.
+>=20
+> But overall, would you mind if I defer the WARN_ON() and other such =
+stuff
+> to a follow up?
 
---
-Linaro LKFT
-https://lkft.linaro.org
+No problem. It is up to you.
+
+>=20
+> Just keen for us to firstly separate out the actual usages of these
+> functions very clearly, and thanks to Mike's great suggestion also =
+making
+> the debug usage entirely mm-internal.
+>=20
+> This should lay a foundation for introducing further sanity to the =
+equation
+> here :)
+>=20
+> I will properly look into the commits you mention in preparation for a
+> follow up though to be clear (your input is much appreciated! :)
+
+Thank you! I look forward to your follow-up and any further insights you
+might have.
+
+Thanks.
+
+>=20
+>> Muchun,
+>> Thanks.
+>=20
+> Cheers, Lorenzo
+>=20
+>>=20
+>>>=20
+>>> Also other walkers assume the caller has the lock so it's consistent =
+to
+>>> keep it this way.
+>>>=20
+>>>>=20
+>>>>>=20
+>>>>> flush_tlb_kernel_range(start, end);
+>>>>> diff --git a/arch/openrisc/kernel/dma.c =
+b/arch/openrisc/kernel/dma.c
+>>>>> index 3a7b5baaa450..af932a4ad306 100644
+>>>>> --- a/arch/openrisc/kernel/dma.c
+>>>>> +++ b/arch/openrisc/kernel/dma.c
+>>>>> @@ -72,7 +72,7 @@ void *arch_dma_set_uncached(void *cpu_addr, =
+size_t size)
+>>>>> * them and setting the cache-inhibit bit.
+>>>>> */
+>>>>> mmap_write_lock(&init_mm);
+>>>>> - error =3D walk_page_range_novma(&init_mm, va, va + size,
+>>>>> + error =3D walk_kernel_page_table_range(va, va + size,
+>>>>> &set_nocache_walk_ops, NULL, NULL);
+>>>>> mmap_write_unlock(&init_mm);
+>>>>>=20
+>>>>> @@ -87,7 +87,7 @@ void arch_dma_clear_uncached(void *cpu_addr, =
+size_t size)
+>>>>>=20
+>>>>> mmap_write_lock(&init_mm);
+>>>>> /* walk_page_range shouldn't be able to fail here */
+>>>>> - WARN_ON(walk_page_range_novma(&init_mm, va, va + size,
+>>>>> + WARN_ON(walk_kernel_page_table_range(va, va + size,
+>>>>> &clear_nocache_walk_ops, NULL, NULL));
+>>>>> mmap_write_unlock(&init_mm);
+>>>>> }
+>>>>> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
+>>>>> index d815448758a1..3f76db3d2769 100644
+>>>>> --- a/arch/riscv/mm/pageattr.c
+>>>>> +++ b/arch/riscv/mm/pageattr.c
+>>>>> @@ -299,7 +299,7 @@ static int __set_memory(unsigned long addr, =
+int numpages, pgprot_t set_mask,
+>>>>> if (ret)
+>>>>> goto unlock;
+>>>>>=20
+>>>>> - ret =3D walk_page_range_novma(&init_mm, lm_start, lm_end,
+>>>>> + ret =3D walk_kernel_page_table_range(lm_start, lm_end,
+>>>>>    &pageattr_ops, NULL, &masks);
+>>>>=20
+>>>> Note this and other places break the second line's arguments =
+alignment on
+>>>> the opening bracket. Maybe it just shows it's a bit fragile =
+style...
+>>>>=20
+>>>>=20
+>>>=20
+>>> Yeah I know :) I know you won't believe this coming from me, but I =
+was
+>>> trying to minimise the churn :P
+
+
