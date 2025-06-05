@@ -1,71 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CAD27A46E;
-	Thu,  5 Jun 2025 18:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF94220330;
+	Thu,  5 Jun 2025 18:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749149172; cv=none; b=kSU1SCufDV93qQ12la8DBRZ3G5UEwH5If9A/U6m/lBKoa1iz7dQ1QyhogPnH/xKlK0iuxfExTV5s0flh/CVLMvVdFq4P5X02CcW44SlApKT6zleT9JHgwwmkucXaf7pUBLnHvF4E1C9M/DqjB16ZZvejFOaGoInSHQyc0dPacUs=
+	t=1749149229; cv=none; b=AyMTeB+0N+l0Wf3NrdpV6y073WS3VjpJaJ6MQzSGwyezr54m3WM+kwRBlB2fCR91Uu9EIEwIrTJEXC9WdjdBh1RYHT44eOeBezPFgirfA7FjaoZtIPgY77DnMXhWAoRqkyZFsQWFe+goTAnEuOKHs/claqZqPs76KDJawHmWtkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749149172; c=relaxed/simple;
-	bh=5whSNxZjJBq8hlzf6X5onhHVEXe5wrAaLddVIqqoP28=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nl8q/q1Zvtete3vM1q5GfTNVFI/zH8q0OkdYDcNmDap3qVhH+51Isv1c5FCCvKTnOJPCe5ah+lTr5mP3CU118rmFhxd7j31mFittSS2gqCaqoOJ9/dsI+JXqdLGUBpyreWF71aLus0uRKlKs+q6tmDjUgzhNIUPyM1ZnEQumV+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=oiGe/5Q0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749149229; c=relaxed/simple;
+	bh=fnxx2k4mdjwEbNfY0DSZkV4kipioOk34TMHhRZYO4NY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=TzOTMxplMdTKJYXwMl0QbOQAzQJXwcRmvll5C6oWMWFYetT9yA/NBNlZKm56RBObU9U7fciKZLuwNofz7PgXxNEy8u5TPKeN7lj4+bAe4d+PSNLJtW3bt24P2Gjmk8z4GTLW1S2MxQCXfDpXM/nL+9BP6IDGZZSHvMaWeABJGTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Cni07byl; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="oiGe/5Q0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54273C4CEE7;
-	Thu,  5 Jun 2025 18:46:11 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="oiGe/5Q0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1749149169;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5whSNxZjJBq8hlzf6X5onhHVEXe5wrAaLddVIqqoP28=;
-	b=oiGe/5Q00IXBICxEs88AKVrO8sluUNu1TfN25toYolE8mVGTi4kXuKLzpxc45WBN5sYygh
-	jL+NQak+Rg4dS2sR4raJSRmLZTekDwyFKc6LN19oHRpQvgH2R0o85YPyQ+mQzpC2sndS+b
-	/rBpI7S38PezBr7ITP8AH3rviyJZyqw=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 83c903e7 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 5 Jun 2025 18:46:09 +0000 (UTC)
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-606668f8d51so829696eaf.0;
-        Thu, 05 Jun 2025 11:46:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUyb8JzdcO/IDWgl4uiOQ5zgmTHs7qSzcmohxtVtTCQ7M27c1elnXPlhzGl37LQ1QPmNDVN0I+fhHCdPAI=@vger.kernel.org, AJvYcCXyg9phrNLMzKigIe7K9k6mceIfHF66GNjkk8x/5SoN1H29eQqO1QLEwTjYfXj4HjqC7t2c1yiVF7a4mzZC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqCHJ+BOz8bk3lH6krmSFEcwkaFHceY940VvbV092ruLsmQg72
-	Rgm6vaUhm5+0uDl1mviHDa46AzaMA7ARd0UKr4e57Ko0GPRajX2m6Ayjp239s9eAe0RwDDq32Km
-	q0i/g/pA74OeUAULzhyiTKYYtQ4kK0+8=
-X-Google-Smtp-Source: AGHT+IHfGH+NWz2p1/fN0HHjBnBQpbtCX590e/Q9M8WXiJ1PVzoRDQ6L8jQJ/ncZqlBqsjPelf05qj+u7Rlo48VBxjQ=
-X-Received: by 2002:a05:6820:2112:b0:60f:1fac:b899 with SMTP id
- 006d021491bc7-60f3d723f96mr170630eaf.2.1749149167922; Thu, 05 Jun 2025
- 11:46:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Cni07byl"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 555Ikeve604253
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 5 Jun 2025 11:46:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 555Ikeve604253
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749149201;
+	bh=ummgK17N+T78IC1ngyES2l/GZWAHPP3RbwaZSXrfpPg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Cni07bylTd0mZM1nSuZsc0W1lRqVQRIayXiR9EdNLPN2cqTajrfiqa+vi8Q9cDR0E
+	 eAoJep/LDkFmfWlSSdNZTyBG6+sAUIAG5XpDTjobqL9MKkJvNvc9iNqa7csOs9ZUSL
+	 fw3epwvrek/127JOLhxRpL7E+O001K5A0FYlPcIvGn9a3ziZsJN3TsJ1yZnawkHu3K
+	 //wkQqIfuvMIaT8PguTL4Z/oeEQPFV597aTvhbx9uQhADpNW4EQpSYlG0n+It819Lc
+	 HQk1QB4cnif/MzqzgIE2Db5Dw2bpJZh/O+9fTgkNSa21PhYAWDt/0oeKK7Osrbo3Pq
+	 yYopw7eN6kXKQ==
+Date: Thu, 05 Jun 2025 11:46:38 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+CC: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, shuah@kernel.org,
+        andrew.cooper3@citrix.com, sohil.mehta@intel.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v4_1/2=5D_x86/fred/signal=3A_Pr?=
+ =?US-ASCII?Q?event_single-step_upon_ERETU_completion?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250605181020.590459-2-xin@zytor.com>
+References: <20250605181020.590459-1-xin@zytor.com> <20250605181020.590459-2-xin@zytor.com>
+Message-ID: <B6762FE6-87DD-4B2D-B177-A574044C1513@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605171156.2383-1-ebiggers@kernel.org> <CAHmME9ot0LdZ+SBYh9xLqFQLT0QL91mupwzUZRFyc=BV2QiJqw@mail.gmail.com>
- <CAMj1kXGEX_i-Gi3NAO+co6+4fKh5rQLhzwn=88wZbs+mVzGXPQ@mail.gmail.com> <CAHk-=wgd_4xrpXLUH1CGgGL=SXj0vq=XdJGGg388Exkti2Dg5Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wgd_4xrpXLUH1CGgGL=SXj0vq=XdJGGg388Exkti2Dg5Q@mail.gmail.com>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Thu, 5 Jun 2025 20:45:56 +0200
-X-Gmail-Original-Message-ID: <CAHmME9qE-gihY9XK0nNnRY+mHeTNNgn1qi1E7xCKJACFz-uqDg@mail.gmail.com>
-X-Gm-Features: AX0GCFs-d7gBFupCQpdXIWYR568jYeUBNMCl-9sHIpUeMd-ViOev8bC94KfV6Qg
-Message-ID: <CAHmME9qE-gihY9XK0nNnRY+mHeTNNgn1qi1E7xCKJACFz-uqDg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add entry for crypto library
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S . Miller" <davem@davemloft.net>, Christoph Hellwig <hch@lst.de>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 8:45=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On June 5, 2025 11:10:19 AM PDT, "Xin Li (Intel)" <xin@zytor=2Ecom> wrote:
+>Clear the software event flag in the augmented SS to prevent infinite
+>SIGTRAP handler loop if the trap flag (TF) is set without an external
+>debugger attached=2E
 >
-> Should I just add you and Jason directly as 'M:' entries for this?
+>Following is a typical single-stepping flow for a user process:
+>
+>1) The user process is prepared for single-stepping by setting
+>   RFLAGS=2ETF =3D 1=2E
+>2) When any instruction in user space completes, a #DB is triggered=2E
+>3) The kernel handles the #DB and returns to user space, invoking the
+>   SIGTRAP handler with RFLAGS=2ETF =3D 0=2E
+>4) After the SIGTRAP handler finishes, the user process performs a
+>   sigreturn syscall, restoring the original state, including
+>   RFLAGS=2ETF =3D 1=2E
+>5) Goto step 2=2E
+>
+>According to the FRED specification:
+>
+>A) Bit 17 in the augmented SS is designated as the software event
+>   flag, which is set to 1 for FRED event delivery of SYSCALL,
+>   SYSENTER, or INT n=2E
+>B) If bit 17 of the augmented SS is 1 and ERETU would result in
+>   RFLAGS=2ETF =3D 1, a single-step trap will be pending upon completion
+>   of ERETU=2E
+>
+>In step 4) above, the software event flag is set upon the sigreturn
+>syscall, and its corresponding ERETU would restore RFLAGS=2ETF =3D 1=2E
+>This combination causes a pending single-step trap upon completion of
+>ERETU=2E  Therefore, another #DB is triggered before any user space
+>instruction is executed, which leads to an infinite loop in which the
+>SIGTRAP handler keeps being invoked on the same user space IP=2E
+>
+>Suggested-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
+>Signed-off-by: Xin Li (Intel) <xin@zytor=2Ecom>
+>Cc: stable@vger=2Ekernel=2Eorg
+>---
+>
+>Change in v3:
+>*) Use "#ifdef CONFIG_X86_FRED" instead of IS_ENABLED(CONFIG_X86_FRED)
+>   (Intel LKP)=2E
+>
+>Change in v2:
+>*) Remove the check cpu_feature_enabled(X86_FEATURE_FRED), because
+>   regs->fred_ss=2Eswevent will always be 0 otherwise (H=2E Peter Anvin)=
+=2E
+>---
+> arch/x86/include/asm/sighandling=2Eh | 22 ++++++++++++++++++++++
+> arch/x86/kernel/signal_32=2Ec        |  4 ++++
+> arch/x86/kernel/signal_64=2Ec        |  4 ++++
+> 3 files changed, 30 insertions(+)
+>
+>diff --git a/arch/x86/include/asm/sighandling=2Eh b/arch/x86/include/asm/=
+sighandling=2Eh
+>index e770c4fc47f4=2E=2Eb8481d33ba8e 100644
+>--- a/arch/x86/include/asm/sighandling=2Eh
+>+++ b/arch/x86/include/asm/sighandling=2Eh
+>@@ -24,4 +24,26 @@ int ia32_setup_rt_frame(struct ksignal *ksig, struct p=
+t_regs *regs);
+> int x64_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
+> int x32_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
+>=20
+>+/*
+>+ * To prevent infinite SIGTRAP handler loop if the trap flag (TF) is set
+>+ * without an external debugger attached, clear the software event flag =
+in
+>+ * the augmented SS, ensuring no single-step trap is pending upon ERETU
+>+ * completion=2E
+>+ *
+>+ * Note, this function should be called in sigreturn() before the origin=
+al
+>+ * state is restored to make sure the TF is read from the entry frame=2E
+>+ */
+>+static __always_inline void prevent_single_step_upon_eretu(struct pt_reg=
+s *regs)
+>+{
+>+	/*
+>+	 * If the trap flag (TF) is set, i=2Ee=2E, the sigreturn() SYSCALL inst=
+ruction
+>+	 * is being single-stepped, do not clear the software event flag in the
+>+	 * augmented SS, thus a debugger won't skip over the following instruct=
+ion=2E
+>+	 */
+>+#ifdef CONFIG_X86_FRED
+>+	if (!(regs->flags & X86_EFLAGS_TF))
+>+		regs->fred_ss=2Eswevent =3D 0;
+>+#endif
+>+}
+>+
+> #endif /* _ASM_X86_SIGHANDLING_H */
+>diff --git a/arch/x86/kernel/signal_32=2Ec b/arch/x86/kernel/signal_32=2E=
+c
+>index 98123ff10506=2E=2E42bbc42bd350 100644
+>--- a/arch/x86/kernel/signal_32=2Ec
+>+++ b/arch/x86/kernel/signal_32=2Ec
+>@@ -152,6 +152,8 @@ SYSCALL32_DEFINE0(sigreturn)
+> 	struct sigframe_ia32 __user *frame =3D (struct sigframe_ia32 __user *)(=
+regs->sp-8);
+> 	sigset_t set;
+>=20
+>+	prevent_single_step_upon_eretu(regs);
+>+
+> 	if (!access_ok(frame, sizeof(*frame)))
+> 		goto badframe;
+> 	if (__get_user(set=2Esig[0], &frame->sc=2Eoldmask)
+>@@ -175,6 +177,8 @@ SYSCALL32_DEFINE0(rt_sigreturn)
+> 	struct rt_sigframe_ia32 __user *frame;
+> 	sigset_t set;
+>=20
+>+	prevent_single_step_upon_eretu(regs);
+>+
+> 	frame =3D (struct rt_sigframe_ia32 __user *)(regs->sp - 4);
+>=20
+> 	if (!access_ok(frame, sizeof(*frame)))
+>diff --git a/arch/x86/kernel/signal_64=2Ec b/arch/x86/kernel/signal_64=2E=
+c
+>index ee9453891901=2E=2Ed483b585c6c6 100644
+>--- a/arch/x86/kernel/signal_64=2Ec
+>+++ b/arch/x86/kernel/signal_64=2Ec
+>@@ -250,6 +250,8 @@ SYSCALL_DEFINE0(rt_sigreturn)
+> 	sigset_t set;
+> 	unsigned long uc_flags;
+>=20
+>+	prevent_single_step_upon_eretu(regs);
+>+
+> 	frame =3D (struct rt_sigframe __user *)(regs->sp - sizeof(long));
+> 	if (!access_ok(frame, sizeof(*frame)))
+> 		goto badframe;
+>@@ -366,6 +368,8 @@ COMPAT_SYSCALL_DEFINE0(x32_rt_sigreturn)
+> 	sigset_t set;
+> 	unsigned long uc_flags;
+>=20
+>+	prevent_single_step_upon_eretu(regs);
+>+
+> 	frame =3D (struct rt_sigframe_x32 __user *)(regs->sp - 8);
+>=20
+> 	if (!access_ok(frame, sizeof(*frame)))
 
-Works for me.
+Nitpick: "Prevent immediate repeat of single step trap on return from SIGT=
+RAP handler"
