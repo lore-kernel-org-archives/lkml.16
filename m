@@ -1,109 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B6D278E7A;
-	Thu,  5 Jun 2025 17:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F5E1DFF8;
+	Thu,  5 Jun 2025 17:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749144646; cv=none; b=b8waJ1VChoKgEMb8ApseMQsHwv8jZWrtdwCu9HNGWhoC2rf647ljrOP5xfw8YHRZO17r6JNlg5SJB1koZR1ltiGX3zuWqWsZV+AMoblxXoaY+LftsywwqsneG5N1NGNJEsAJn8r/yQHKch9xqLqLfDAp8VU8E+HNmzIliOv15ic=
+	t=1749144719; cv=none; b=OVY6a3fduwQYe73Ppv+wk+4uePHb2wIOF7IB9TegGeI7gcaeDsRRlWsqvjbQu8DZTkKmlpgJUKmmuk+Ykmeixq07apa3c5ngYndBZ2A6UZ914ECsxqLhhVUp8EB3k0HqYRiZZ7imt/svOdwmm1AQd2p0+JjgSAhuF/NlPAbcnSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749144646; c=relaxed/simple;
-	bh=iVeuKT9g4qIU2SS3gVoZJT6OGFbjdSuSpj8u0pAAnfU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=IimKfODYVSHQA78aQ9k5zXIwRP/Ph6jMJftUn+1Bvre9GKIhAU7E5p3NU6y0RTs2F41OSW3cnWYtxZzlCXjDnzemJyHjg2xMREeRFPv700QvAFRgHYgLjrSxOEIsurgYpPhokhuB9tZf7M9jm7aP8TAkHz2wlpEHbROxpUB71k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ukykh5rt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749144719; c=relaxed/simple;
+	bh=Y8nWB/WLZe/CCeemauG5YdXkbxl5jf3QmnhrkUgxLHk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZJA1oouIteb/UFNqly89vb17GQ6/yHVcaMVBMNxnCgZ8AOguyI6c9WpARsKWo1e8weDejtqKOmk8wcx2m4osIrkYyhXTU+jpeNiRloh/omSZbx367Eb64wGuz05G9eRAAESqDREw0SKZy2mcDgLyRdqFk7d10JwckcJ8PChqWcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N5zdLkvy; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ukykh5rt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06A42C4CEE7;
-	Thu,  5 Jun 2025 17:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749144645;
-	bh=iVeuKT9g4qIU2SS3gVoZJT6OGFbjdSuSpj8u0pAAnfU=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=Ukykh5rtahNiWIg95gPqqUduHq8LFf7IFgi3KuQ8KIlb4NHUxQBL1xcCaBGkanUP6
-	 iY03dUH5S2vxPOd557v2M+tAKlCe5NvnytRzuMlsHXhR2nQqoZVUn7h+UgHCWnQRmV
-	 XZx7ZsAbcAFXPm5B+hMYeYrc1xKwTRbT9JQ2kH9/bUXzSrVr7WZOQhoA8ee6cVNzdS
-	 AXgCVCoKuBVjquYFqtjxwwUBxIg6qa/krQiJ9HrG1rRtS+7LSprrNasQBc5CpwSQTG
-	 YjaNe9AXVFkro/Z0+XDcaFDAEpUNduBafRHkYVrfReVAtgc5hzRsa99lw+mnIu//kR
-	 aESvmpOBFEGJg==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5zdLkvy"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5534edc6493so1518334e87.1;
+        Thu, 05 Jun 2025 10:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749144716; x=1749749516; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y8nWB/WLZe/CCeemauG5YdXkbxl5jf3QmnhrkUgxLHk=;
+        b=N5zdLkvysRKKoShU5FakBBvgRrt++NA9yEn/T/UYXEcUxgZpK58+nj1N/5kXX8UFPA
+         +Fh94FcvBkGiMrh54z19QV3zZbZlUBRkV88bx3IikbheV7YJCkcK18/U/qwslLVYrC7F
+         lC4VQHmAQCTxKl1ce7Bzdu3jR4760JLPDQ5x6qLJv1nfsO5ZSCOs3sJLHSrVlYbIln9O
+         yV3UajJQf/GZvqIahuaopsE/WZJjjBXuyfxxqNzD3ie/rtZdmaBpJSK2DGv/z9essQdX
+         ikh6LMy+lDr83yddYeAXVmZCYgT//1MaXIgRxpGnRX1xXmMIrxsDoVP2neAk8RstK8Cp
+         eVAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749144716; x=1749749516;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y8nWB/WLZe/CCeemauG5YdXkbxl5jf3QmnhrkUgxLHk=;
+        b=eoOyNP0V0vBbA5ynFo4azoKB1Cs5MtfmbzD1BqnV9YD91wACtkz7WCDXoJ/GqnLdmN
+         ivOxFnyOQPrnhe/2qlErj7IK6f4/4N5I0az5Rp6gdJtP26gsrpwRabI0pvZN3ylpVtYG
+         ljm6JT8HGcImjb6YkVEjCt3yhEBVLyFSI7sPtQD7sHMUL6FQHvQUdsa/mKN4h5N1Od2n
+         qbdJXPWYLNsXop3x7VsjXQ3FjVMsZj+oJ3PXePoyB6uPNXM2XKL8noc05dFEUlp2tcQK
+         BoU6quEHRC9HdciTy/uZlhQQJYFP3QcZLFkfTDLteN1EHkkanb9vTGE1kBKbF3NApgSH
+         z5zg==
+X-Forwarded-Encrypted: i=1; AJvYcCVV8RP4YjfUqDTaTbuc/spq1eL5sx/hZ2z+QfVJpkr59Nl1N4s0m2ZI0GzAJf8y6z8CpScaxJFZtlCnq+Ml@vger.kernel.org, AJvYcCWpedeLDigJILyKwbBCM3XWzhDZcLNx3lXARx2YHwMAJtfnWLvx8c822Cqt2Gbx5nZNCHw0v2SM@vger.kernel.org, AJvYcCXIJ/ot/Rv+dVmOP49jH2rOrHq8QjQXst14gIdDMk1OAVoOi/qnT0HU1wcOye9UAnE/QrglqjZ54YR56oxT9K8=@vger.kernel.org, AJvYcCXQzhE3VNlwLSkz/dX2vuGt3cq6USYPT0QPUNs5qjO2Zhp22y4S52AFcXCQtIngD48yzixosDceFgYw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxab7/6exg3hp0PTabilZgZeHgovUeyuBE78D9TJfy7HbponFiQ
+	Yb3DN1KqUbMEXBWhlB88HdFYhczoNMybZisctrS+KfMGK/k+WpZk4IO6di74C2pYMF8Af0Yop24
+	orYrS01xyh5PdSu70B4yqOX8ITHVGQwc=
+X-Gm-Gg: ASbGncthX6oE6txVkEXCoAkDtA71aaKcb5y/bj3eG0Gs7pHi8FlpQEMFIr9eB7MZ+fL
+	erw6PmiUmDJx1ADWOfwu/iPzmzytJfmMC75GbgZGc4l5p8J3KNaZrDpWZ0jJjJAWrCBMWKQD/4K
+	lV51Lr+DXOurn75e4lQnpn2Bb3L1GbZnIM
+X-Google-Smtp-Source: AGHT+IH6Ge5MBQj226ro/trJtTDJEKqfoxutgYQ+NLGhGSTlIr/XkGznsHM3XrTD7wIOs/Zk3MohR7asrPwdDTPC0QU=
+X-Received: by 2002:a05:651c:b0f:b0:32a:61cd:81f7 with SMTP id
+ 38308e7fff4ca-32adfcc5e7amr721251fa.18.1749144715513; Thu, 05 Jun 2025
+ 10:31:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250127160709.80604-1-ubizjak@gmail.com> <20250127160709.80604-7-ubizjak@gmail.com>
+ <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org> <b27d96fc-b234-4406-8d6e-885cd97a87f3@intel.com>
+In-Reply-To: <b27d96fc-b234-4406-8d6e-885cd97a87f3@intel.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Thu, 5 Jun 2025 19:31:44 +0200
+X-Gm-Features: AX0GCFueg9D52Q5ZKOUZZ4EHnuPhldYsmhABpjmPMClR-F5-yN8HoMwduFUUy98
+Message-ID: <CAFULd4Ygz8p8rD1=c-S2MjJniP6vjVNMsWG_B=OjCVpthk0fBg@mail.gmail.com>
+Subject: Re: Large modules with 6.15 [was: [PATCH v4 6/6] percpu/x86: Enable
+ strict percpu checks via named AS qualifiers]
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-arch@vger.kernel.org, netdev@vger.kernel.org, 
+	Nadav Amit <nadav.amit@gmail.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Christoph Lameter <cl@linux.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 05 Jun 2025 19:30:39 +0200
-Message-Id: <DAES0YHHTRQS.3EGLTCPLP3SK3@kernel.org>
-To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Sky" <sky@sky9.dev>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, =?utf-8?q?Gerald_Wisb=C3=B6ck?=
- <gerald.wisboeck@feather.ink>, "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>, "Bill Wendling"
- <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <llvm@lists.linux.dev>
-Subject: Re: [PATCH v4 1/3] rust: add UnsafePinned type
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250511-rust_unsafe_pinned-v4-0-a86c32e47e3d@gmail.com>
- <20250511-rust_unsafe_pinned-v4-1-a86c32e47e3d@gmail.com>
- <1553eea9-9ced-410a-b6e7-886e11e2edba@gmail.com>
-In-Reply-To: <1553eea9-9ced-410a-b6e7-886e11e2edba@gmail.com>
 
-On Thu Jun 5, 2025 at 7:03 PM CEST, Christian Schrefl wrote:
-> On 11.05.25 8:21 PM, Christian Schrefl wrote:
->> +/// This type provides a way to opt-out of typical aliasing rules;
->> +/// specifically, `&mut UnsafePinned<T>` is not guaranteed to be a uniq=
-ue pointer.
->> +///
->> +/// However, even if you define your type like `pub struct Wrapper(Unsa=
-fePinned<...>)`, it is still
->> +/// very risky to have an `&mut Wrapper` that aliases anything else. Ma=
-ny functions that work
->> +/// generically on `&mut T` assume that the memory that stores `T` is u=
-niquely owned (such as
->> +/// `mem::swap`). In other words, while having aliasing with `&mut Wrap=
-per` is not immediate
->> +/// Undefined Behavior, it is still unsound to expose such a mutable re=
-ference to code you do not
->> +/// control! Techniques such as pinning via [`Pin`](core::pin::Pin) are=
- needed to ensure soundness.
->> +///
->> +/// Similar to [`UnsafeCell`], [`UnsafePinned`] will not usually show u=
-p in
->> +/// the public API of a library. It is an internal implementation detai=
-l of libraries that need to
->> +/// support aliasing mutable references.
->> +///
->> +/// Further note that this does *not* lift the requirement that shared =
-references must be read-only!
->> +/// Use [`UnsafeCell`] for that.
+On Thu, Jun 5, 2025 at 7:15=E2=80=AFPM Dave Hansen <dave.hansen@intel.com> =
+wrote:
 >
-> The upstream rust PR [0] that changes this was just merged. So now `Unsaf=
-ePinned` includes
-> `UnsafeCell` semantics. It's probably best to also change this in the ker=
-nel docs.
-> Though it's still the case that removing the guarantee is simpler than ad=
-ding it back later,
-> so let me know what you all think.
+> On 6/5/25 07:27, Jiri Slaby wrote:
+> > Reverting this gives me back to normal sizes.
+> >
+> > Any ideas?
+>
+> I don't see any reason not to revert it. The benefits weren't exactly
+> clear from the changelogs or cover letter. Enabling "various compiler
+> checks" doesn't exactly scream that this is critical to end users in
+> some way.
+>
+> The only question is if we revert just this last patch or the whole serie=
+s.
+>
+> Uros, is there an alternative to reverting?
 
-Depends on how "stable" this decision is. I haven't followed the
-discussion, but given that this once changed to the "non-backwards"
-compatible case it feels permanent.
+This functionality can easily be disabled in include/linux/compiler.h
+by not defining USE_TYPEOF_UNQUAL:
 
-How close is it to stabilization?
+#if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
+# define USE_TYPEOF_UNQUAL 1
+#endif
 
-If it's close-ish, then I'd suggest we change this to reflect the new
-semantics. If not, then we should leave it as-is.
+(support for typeof_unqual keyword is required to handle __seg_gs
+qualifiers), but ...
 
----
-Cheers,
-Benno
+... the issue is reportedly fixed, please see [1], and ...
 
-> [0]: https://github.com/rust-lang/rust/pull/140638
+... you will disable much sought of feature, just ask tglx (and please
+read his rant at [2]):
+
+--q--
+If the compiler people would have provided a way to utilize the anyway
+non-standard name space support in a useful way, I could have spared the
+time to bang my head agaist the wall simply because this would have failed
+to build in the first place long ago. That just makes me sad.
+--/q--
+
+[1] https://lore.kernel.org/bpf/20250429161042.2069678-1-alan.maguire@oracl=
+e.com/
+[2] https://lore.kernel.org/lkml/20240303235029.555787150@linutronix.de/
+
+Uros.
