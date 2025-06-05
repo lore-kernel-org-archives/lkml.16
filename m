@@ -1,82 +1,142 @@
-Received: from out162-62-57-87.mail.qq.com (out162-62-57-87.mail.qq.com [162.62.57.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A931DB34B
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 14:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8581DB34B;
+	Thu,  5 Jun 2025 14:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749132156; cv=none; b=bTDEjlI93wNGuXtOIE1/KFRcdyGiUtzHzVa0/POmxNubl4QKeKFLvb6R15uz95GpMPBMxAPM/Bx7fXDytENydW7txC9dvbl+G2KJoQz7k1DLFrfbte7QDNnAmUZIRaQtrsJFj4X06a4LjDLU3b9J8zyXdMxPQ6ursb7d3ZdxMcA=
+	t=1749132161; cv=none; b=AaAx4fv22YZ+6ssubVT/3fLCUO9ioTHOaWX/S5EjK7ctATwkl9NqRArK3YLTRz3ipkn+MpRFIzpe/plbYGGqp+uxfPXrLO2L2ssFVs8JOvmApGJSHrSLHPpel0guVPo/DA7KHC/8DEKn7v6gf+W6PjwudnBaoootUoyizIhNIu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749132156; c=relaxed/simple;
-	bh=L5g0PkGPSJOiCfw2MjofVlVLMfOKrDIGLngWSTSOBJM=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=koEj6dBTQ3dLoPlO+usIG3yQeZYCZ2R481fsAWal62d95KcNSlZzvUN2cB7IZHaaULR9cXFo1uLSNyffprYUsPYlHNqDA96GJzq6vxnhMS3IozPgS3hFFk6+/gqGeljMvWJV6XYPgrNPMPK4oSaIqjvwa6rdLdOABPf/4KmyQF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kicMZ6G6; arc=none smtp.client-ip=162.62.57.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1749132161; c=relaxed/simple;
+	bh=iat9T/bPiMblSlK8d+zjpseMEDTU2L2gOx5NeoRkbMg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=CsLJrdn0FrVCA8lPIUTCfSrqEExspHNUJ3YREt4lfRRvQ/6abpU7FFwmf0K4cREYpV8zfOaA2EDcxEE0C1gEWIBGjySZmbjWr4sdSZT3Vx/a9RPGv/69Ly1Dhcqv1KTP9eAhEfaKLpge2CrGzAwJn1VceJ/PMmeiQdBPv8tEU4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gu1SckNE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kicMZ6G6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1749132147; bh=AyQ/K4lqOYsGnXqOB2tPbBC5xyXIKt+7XorqKIlZ2Us=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kicMZ6G6+Jec/lujTyjergkTP2g54Ykpc9YJyA3FjnzjnrpXupk4J/2U22y/d27WV
-	 bPV+H8yA7Oit30xtC78rtol5xzix7bYOM5cp3empEZ+daPjb/os6fG/WKKeVmz5dLT
-	 xB+4cYpO1NM7UY7v/vez52Iy++6AFiRm2CHDMM7w=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id E0F86C60; Thu, 05 Jun 2025 21:56:15 +0800
-X-QQ-mid: xmsmtpt1749131775t6r0h47d6
-Message-ID: <tencent_5E9E6E1BDB4B9B1B062565BA47BB9A336A08@qq.com>
-X-QQ-XMAILINFO: Mg/0DM1Zd+nH1sGD8QNgTVbF5aJBb4AotGy7AN1N9Gjh2HjXpMvldwxU6TBoqb
-	 XLhFv9mOuBhJWTe3VHx3N3TCKWoO0G52wi42Q8D+F5k4NyHXfVmg+R1d2M3hMtQy1ODcgWrBRjG8
-	 I3K1v13wj1kXjCli/U7Ab0Dx2YxYnq6lKMbuFc6DysnEGkYl8BOluvi4tnYItyaE/c/J+PjHOnSz
-	 9zhLxGEMK4ySz0roBZg4SaYJk+/MUNkCA+5qU5FNHXhiYsSCoi5O8635EHqYKY91xblDMWIXcUrW
-	 J8FFT+AXQjkL4rTyxQmn+jvv5jHSVke0rhxtfb9HR3u8TGfjCFsk4TbySbDyh6OLHRklIvfV+9S5
-	 QcPwQ0/Ylh9nR3X3RhTAjUABDCpAzNt/WNoMYNj/xfzwKn4Sxg4OsqNcLKvRqwGr/lDJk9YfVNQc
-	 ET/1VgQEKdW2FszBzUjM1t1dGjl38dNs8/xRBHbXYG00AqGAbAYVN9ZW1zzwCYZCoDlBMaoWbl6r
-	 y7t4DE0TLZ6D5WX5RWwcBi5WcLAtULzCO7QoWWFSzGEliZmsca+U11TMdkVtAGzD9idVTZNU6KEI
-	 S/MVKupr00vm0oUdXFVb+y2yjVU8kZEfROFAChjUpqGo2rSWVJVSa/nA/cjIAcWR7rmSOqDm1FrH
-	 kTOjG7M5OmXcL1xCmHsHDXkv2mcfr3euctQ2QdPLaprRNp1bLSlkfUaQXdSG+QssMyRVMslvz2g/
-	 N71GQsvvr3sHGB8Cf/zQtbIb47jTpQ76RPxa2QWXvOVfSUyR4I1VvfhF+XZNiW4k8Mb1hmIcLWFG
-	 L5HEfiaLDJBGuhPz7C4LLzWsBksU1XOo7fPKm8OqmAIKkKtbg8g2PGcjfNkTgakF0nts0+5buxyJ
-	 DMXdKzyA+DCOQbQOtCXWvxJntxsOExkKy8mXZmxwB4pwkkIQwQys2Hx5f80N2CSmNAFSabdopO
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+598057afa0f49e62bd23@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] KASAN: slab-out-of-bounds Read in ntfs_utf16_to_nls
-Date: Thu,  5 Jun 2025 21:55:53 +0800
-X-OQ-MSGID: <20250605135552.3698955-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <68407923.a00a0220.d8eae.008f.GAE@google.com>
-References: <68407923.a00a0220.d8eae.008f.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gu1SckNE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C7D4C4CEE7;
+	Thu,  5 Jun 2025 14:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749132160;
+	bh=iat9T/bPiMblSlK8d+zjpseMEDTU2L2gOx5NeoRkbMg=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=gu1SckNE3ydDy4+TPJ5hb90KWEtEJL7UQ4YxDNMsCyoErspywvpPZflGF86/Lds8N
+	 2CepgkWnmX/C16+jg8uf0zefUHcv5auHG6x2dW5P6PhyMoiB+q5pH51bhoHvYgkb9v
+	 tGsLt46b1Jqd/jhpUJI3Jl7q9DCtRCN9yDpqIAviHRmN0ab4xzWs1PixjB96Z5INAT
+	 ZsejwGMdmWfHwMfA8LlF1ebjHAbcdqooW1LTqAD6Jxf9E0b70Sk2n5IGeagqT2HfNB
+	 WSWBlRXkdzNSbUWRdhhQ8zCHndoIk8LmySF1ueBCBm2mr8YscM9fWJqP8/Rc8vAOAA
+	 KK15FRZIK7PYQ==
+Message-ID: <b3cbeae1-b0c5-43c3-80ec-3b6654582565@kernel.org>
+Date: Thu, 5 Jun 2025 16:02:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Sven Peter <sven@kernel.org>
+Subject: Re: [BUG] rmmod i2c-pasemi-platform causing kernel crash on Apple M1.
+To: chenglingfei <chenglingfei22s@ict.ac.cn>
+Cc: j@jannau.net, alyssa@rosenzweig.io, neal@gompa.dev,
+ zhangzhenwei22b@ict.ac.cn, wangzhe12@ict.ac.cn, maddy@linux.ibm.com,
+ mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ naveen@kernel.org, andi.shyti@kernel.org, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <5c598fea.3165d.1973e0a9a3a.Coremail.chenglingfei22s@ict.ac.cn>
+ <dafd58ae-0a08-4fe6-b94d-c8c6c8c1fa97@kernel.org>
+ <4cfe2276.2c0da.1973ff1cc40.Coremail.chenglingfei22s@ict.ac.cn>
+Content-Language: en-US
+In-Reply-To: <4cfe2276.2c0da.1973ff1cc40.Coremail.chenglingfei22s@ict.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-#syz test
+Hi,
 
-diff --git a/fs/ntfs3/dir.c b/fs/ntfs3/dir.c
-index b6da80c69ca6..4f511cbd392d 100644
---- a/fs/ntfs3/dir.c
-+++ b/fs/ntfs3/dir.c
-@@ -303,9 +303,13 @@ static inline bool ntfs_dir_emit(struct ntfs_sb_info *sbi,
- 
- 	if (sbi->options->nohidden && (fname->dup.fa & FILE_ATTRIBUTE_HIDDEN))
- 		return true;
-+	printk("keysize: %d, name len: %u, nls: %p, fn: %s, %s\n",
-+		le16_to_cpu(e->key_size), fname->name_len,
-+		sbi->options->nls, (s8*)fname->name, __func__);
- 
- 	name_len = ntfs_utf16_to_nls(sbi, fname->name, fname->name_len, name,
- 				     PATH_MAX);
-+	printk("nl: %d, name: %s, %s\n", name_len, name, __func__);
- 	if (name_len <= 0) {
- 		ntfs_warn(sbi->sb, "failed to convert name for inode %lx.",
- 			  ino);
+On 05.06.25 13:55, chenglingfei wrote:
+> 
+> 
+> 
+> &gt; -----原始邮件-----
+> &gt; 发件人: "Sven Peter" <sven@kernel.org>
+> &gt; 发送时间: 2025-06-05 18:25:09 (星期四)
+> &gt; 收件人: 程凌飞 <chenglingfei22s@ict.ac.cn>, j@jannau.net, alyssa@rosenzweig.io, neal@gompa.dev
+> &gt; 抄送: zhangzhenwei22b@ict.ac.cn, wangzhe12@ict.ac.cn, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org, andi.shyti@kernel.org, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+> &gt; 主题: Re: [BUG] rmmod i2c-pasemi-platform causing kernel crash on Apple M1.
+> &gt;
+> &gt; Hi,
+> &gt;
+> &gt; On 05.06.25 05:02, 程凌飞 wrote:
+> &gt; &gt; Hi, all!
+> &gt; &gt;
+> &gt; &gt; We’ve encountered a kernel crash when running rmmod i2c-pasemi-platform on a Mac Mini M1 (T8103) running Asahi Arch Linux.
+> &gt; &gt;
+> &gt; &gt; The bug was first found on the Linux v6.6, which is built manually with the Asahi given config to run our services.
+> &gt; &gt; At that time, the i2c-pasemi-platform was i2c-apple.
+> &gt; &gt;
+> &gt; &gt; We noticed in the Linux v6.7, the pasemi is splitted into two separate modules, one of which is i2c-pasemi-platform.
+> &gt; &gt; Therefore, we built Linux v6.14.6 and tried to rmmod i2c-pasemi-platform again, the crash still exists. Moreover, we fetched
+> &gt; &gt; the latest i2c-pasemi-platform on linux-next(911483b25612c8bc32a706ba940738cc43299496) and asahi, built them and
+> &gt; &gt; tested again with Linux v6.14.6, but the crash remains.
+> &gt; &gt;
+> &gt; &gt; Because kexec is not supported and will never be fully supported on Apple Silicon platforms due to hardware and firmware
+> &gt; &gt; design constraints, we can not record the panic logs through kdump.
+> &gt;
+> &gt; Do you have UART connected to a device under test which you could use to
+> &gt; grab the panic log from the kernel? Alternatively you can also run the
+> &gt; kernel under m1n1's hypervisor and grab the log that way. It'll emulate
+> &gt; the serial port and redirect its output via USB.
+> &gt;
+> 
+> I don't have UART, but I have tried to run the kernel under m1n1's hypervisor. However, it does not trigger the release of cs42l83.
+> Given that m1n1 provides full peripheral device emulation capability, the most plausible explanation would be an incorrect
+> firmware loading sequence. But the documentation of Asahi provides little details about how to generate an initramfs with
+> firmware (I think), can you give more guidance about it?
+
+I'm not sure why you are even trying to create a special initramfs. Just
+load your usual kernel using the usual boot flow as a guest. There's 
+also no firmware involved in i2c and I'm not sure what you mean with 
+"full peripheral device emulation" either or how that's related to firmware.
+You also mention that the crash happens when you run rmmod so I again 
+don't understand what "it does not trigger the release of cs42l83" means 
+here.
+
+> 
+> &gt; &gt;
+> &gt; &gt; Thus we tried to find the root cause of the issue manually. When we perform rmmod, the kernel performs device releasing on
+> &gt; &gt; the i2c bus, then calls the remove function in snd-soc-cs42l83-i2c, which calls the cs42l42_common_remove in cs42l42,
+> &gt; &gt; because cs42l42-&gt;init_done is true, it performs regmap_write, and finally calls into pasemi_smb_waitready in i2c-pasemi
+> &gt; &gt; -core.c. We noticed that smbus-&gt;use_irq is true, and after it calls into wait_for_completion_timeout, the system crashs!&gt;
+> &gt; &gt; We found that wait_for_completion_timeout is one of the core scheduler APIs used by tens of thousands of other drivers,
+> &gt; &gt; it is unlikely causing the crash. So we tried to remove the call to wait_for_completion_timeout, then the system seems to
+> &gt; &gt; run well.
+> &gt; &gt;
+> &gt; &gt; However, because we have little knowledge about i2c devices and specifications, we are not sure whether this change will
+> &gt; &gt; cause other potential harms for the system and device. Is this call to wait necesary here? Or can you give a more
+> &gt; &gt; sophisticated fix?
+> &gt;
+> &gt; Yes, that call is necessary. It waits for the "transfer completed"
+> &gt; interrupt from the hardware. Without it the driver will try to read data
+> &gt; before it's available and you'll see corruption. I'm surprised hardware
+> &gt; attached to i2c (usb pd controller and audio I think) works at all with
+> &gt; that change.
+> &gt;
+> &gt;
+> &gt; Sven
+> 
+> Are there any methods or tools to systematically verify its functionality? I am not sure whether the devices attached to i2c
+> should work well even after the i2c-pasemi-platform has been removed.
+
+I don't understand. You say you saw a crash inside pasemi_smb_waitready 
+when calling wait_for_completion_timeout and decided to remove that 
+method. When you remove the call you break the entire driver because it 
+will now try to read data long before the i2c transaction has been 
+completed.
+Obviously, no i2c device will work when the driver isn't loaded but 
+without waiting for the completion they also won't work when the driver 
+is loaded.
+
+
+Sven
 
