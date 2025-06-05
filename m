@@ -1,180 +1,95 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6A121D590;
-	Thu,  5 Jun 2025 12:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782162248A6
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749128327; cv=none; b=mD+OtJhAMyNX3cyIVaeosMIcuQvl9m8KhfrAMZPGhodO0pw4mdBDJjUFMrz/1WbeP3id36GmUMFZFvkhxZVgKwMb40NbmKDyEnlZGtw6yUgm+h1jJoo3mx5V0h+rFS23O0NhsBINZcwFSfj0XiRlcu9jl5sl9ZoDmDFOFIIzR0A=
+	t=1749128328; cv=none; b=rpsIa3aYsaho6lHEJnVG4gdrW9VN0dwUGbaMx9Sh1Jk0XVZYTGmSgzjQH2+FmI3+bPF3lsMwlsUIVcwA9wN4sB725u3CJjGpFg2vnTbcGBU1NTAYiKakaBl0rtckbewwQSlzuVmwPDDfCwWdkByM7yyakT8ZCIqPyPfuCZ83mtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749128327; c=relaxed/simple;
-	bh=b1fne/a2Hlwob8vSxGXFclDlnjhc3RArSy3fosP+Duc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mrSihvPzYdcpsZJ2wpmuJdeHl8RLrQTQW6d3nXUVAgAuCDe/qSsn6E3T1GIIYyoboOOMMgGC8KfwRCtcB56bNZgmld+qDLp9QsgJOLvTIp0Q1vJe5U4slKL6qs90MLxgpSIFIlBdo0AyXs5A8UKP/DFCwP7s3m5IRlkX3eF0WEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZpWXzjcL; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749128328; c=relaxed/simple;
+	bh=5F4J5fsk2zo51ye5xZxurgvmXqAk6TLsSVJ4G+IBpes=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pPKH7U9CcO7eKdUnqNZT7a+qHWI/VU7R33QNCnIDCHTr8VOS7xDSQKpdSF3EHhI/w2SLyy9ttDYATyzThOwVLNLZSPEUEvVtqgu2HcrGsge1T7EQRO10JJcsofNiYYY/DN9MCLsEfI22A16eagjdjiI/2qI+QGy3Rg0YJ7cNeuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BT3eqY1Y; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZpWXzjcL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749128320; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=1Dk53K+1nREQrA9jzQRa+fEPI5lfv5hZFEHqPDWUDYg=;
-	b=ZpWXzjcLS3p4Q++iyAikBIRQh7rROgh4JMrS6G93CgPAOz2x+YKYWSSsX733n6BV0KP8EHkkBHbNkOGbx1OaxuHvk4F23qd4fBeracxrr6DdK0W3QKsDLB+7sijJajjajXol6v+Bf9jcadSgc4iysSWgUPDKari13rLtFMkTQqM=
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wd8HvvE_1749128318 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 05 Jun 2025 20:58:38 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	david@redhat.com,
-	shakeel.butt@linux.dev
-Cc: lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	donettom@linux.ibm.com,
-	aboorvad@linux.ibm.com,
-	sj@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] mm: fix the inaccurate memory statistics issue for users
-Date: Thu,  5 Jun 2025 20:58:29 +0800
-Message-ID: <f4586b17f66f97c174f7fd1f8647374fdb53de1c.1749119050.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BT3eqY1Y"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55324587a53so2050713e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749128324; x=1749733124; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5F4J5fsk2zo51ye5xZxurgvmXqAk6TLsSVJ4G+IBpes=;
+        b=BT3eqY1YjGowVD7zIW92iWMhbBDHsqhlDu05hSD+L2lblBHPr/MK6FBU/qC0U/osBc
+         J/EH9/ck057rjD7cetbpOxspOKf6Dlv2N/mrDFkP7vErBLZLnojTkB1uB/QEt+8kuR2f
+         qVTEORHO8/UUcEWgAHOenhhed2zzRHRjbUBg0cOt+wNFaYjceflBN+QR/U7XARQ0mGC3
+         PdSl2OKKd6ipdRP8d72b9mUpznYiLeMq1OONEfSyHnBrBMm7GiXgcZE7Qho5lkOffdke
+         RgvG9Kzq0Rz0+cYNiE0rAGRADWgbswlD6Jfc05RvAJsiQQmfpS8cqsFiFN1N+VMxl+w9
+         3MCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749128324; x=1749733124;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5F4J5fsk2zo51ye5xZxurgvmXqAk6TLsSVJ4G+IBpes=;
+        b=T6QLriKeYN+Lox8FC16LgaY04bXyuWS9VpzZ4Wv8nfx4Q18JGRrpkKPmPxPJi+eE8/
+         Xw+dNiij4GyJoN5XgOj1vekCqr+L4UUS6aOL5UQTtv+8DrlynF0joVblTIs6HVh50P3R
+         pAyjznMKK8115JSBSCxlIcTT262YLkOeE8hOhni16S7WsMKalInoINSsgJcHt0uEpGzQ
+         VhDLTb1iUk0C7eiEi3xQB/vPvaE5+O1T3AUXi5ffwa4IZY+YgIZDJ1URK0UQo0DVk5El
+         A1ADOLMtxPioCfZ2RZw+qOttGbYc3xcgY+5VgZ1KBFdUZgLVEHZO+drUtDbp2JqeISya
+         CG3w==
+X-Forwarded-Encrypted: i=1; AJvYcCV1vSd/cNkE2OQuGTP20y/MRRI2GHgQstptfRm6HFNLMZ/JyBPTnF9hlr4BKXXTENX3RgAJca/8vnit8TU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzhh8ClU1HY0JWINz92JzYTm55upca4Mm3WNL+67RDKyHyI1Kw3
+	YrnuAFfhDJ7LyMART8l3gTJCm73CevV6rx+WM99xq/sSjqmKRR9ohX6Upg7gfH8L8tWTeBD7MzF
+	G+oFNqzXm6LJyff1lhHIqspoj+JR04Dw+8dz9DkxMmg==
+X-Gm-Gg: ASbGncvfuDjBjw/c7HHxv2OZl9qC29DFfErF6Vf1ycf/JJYqX6umGjmHMDPCZNbSI7v
+	aaBAqRgZdv7K+X8VY3RphWkKEamWZTpVr4YpnuL8WoONAy6SEgsZK01eXVTXsZctl8at+Je18Eb
+	24CF80Zw7oFGqQQXfXHDkMPKEcBpVvIpwE
+X-Google-Smtp-Source: AGHT+IGlsLgaz+OzrX7gChqfwNLu6aN4e02li+U7R1p+y1C1vMiENS7zjDEUb53JJ0ECcJmO7Mh9wmCUqhcTsFjS6Gc=
+X-Received: by 2002:a05:6512:234e:b0:553:2308:1ac5 with SMTP id
+ 2adb3069b0e04-5535d8f54e2mr916430e87.4.1749128324545; Thu, 05 Jun 2025
+ 05:58:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com> <20250523-hdp-upstream-v3-1-bd6ca199466a@foss.st.com>
+In-Reply-To: <20250523-hdp-upstream-v3-1-bd6ca199466a@foss.st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 5 Jun 2025 14:58:33 +0200
+X-Gm-Features: AX0GCFvp2kYXQryODv4yaq3ufj5OHSvi6P7gagdyzXCjgZwqYR5kV58IYRzsLbE
+Message-ID: <CACRpkdYz5BaoTfG+y84Y=HQUxdSberU3qnaWDmv2=Fk8zcbm1Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
+To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On some large machines with a high number of CPUs running a 64K pagesize
-kernel, we found that the 'RES' field is always 0 displayed by the top
-command for some processes, which will cause a lot of confusion for users.
+On Fri, May 23, 2025 at 2:40=E2=80=AFPM Cl=C3=A9ment Le Goffic
+<clement.legoffic@foss.st.com> wrote:
 
-    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
- 875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
-      1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
+> When using bgpio_init with a gpiochip acting as a GPO (output only), the
+> gpiochip ops `direction_input` was set to `bgpio_simple_dir_in` by
+> default but we have no input ability.
+>
+> Adding this flag allows to set a valid ops for the `direction_output`
+> ops without setting a valid ops for `direction_input` by default.
+>
+> Signed-off-by: Cl=C3=A9ment Le Goffic <clement.legoffic@foss.st.com>
 
-The main reason is that the batch size of the percpu counter is quite large
-on these machines, caching a significant percpu value, since converting mm's
-rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
-stats into percpu_counter"). Intuitively, the batch number should be optimized,
-but on some paths, performance may take precedence over statistical accuracy.
-Therefore, introducing a new interface to add the percpu statistical count
-and display it to users, which can remove the confusion. In addition, this
-change is not expected to be on a performance-critical path, so the modification
-should be acceptable.
+That's a good solution.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-In addition, the 'mm->rss_stat' is updated by using add_mm_counter() and
-dec/inc_mm_counter(), which are all wrappers around percpu_counter_add_batch().
-In percpu_counter_add_batch(), there is percpu batch caching to avoid 'fbc->lock'
-contention. This patch changes task_mem() and task_statm() to get the accurate
-mm counters under the 'fbc->lock', but this should not exacerbate kernel
-'mm->rss_stat' lock contention due to the percpu batch caching of the mm
-counters. The following test also confirm the theoretical analysis.
-
-I run the stress-ng that stresses anon page faults in 32 threads on my 32 cores
-machine, while simultaneously running a script that starts 32 threads to
-busy-loop pread each stress-ng thread's /proc/pid/status interface. From the
-following data, I did not observe any obvious impact of this patch on the
-stress-ng tests.
-
-w/o patch:
-stress-ng: info:  [6848]          4,399,219,085,152 CPU Cycles          67.327 B/sec
-stress-ng: info:  [6848]          1,616,524,844,832 Instructions          24.740 B/sec (0.367 instr. per cycle)
-stress-ng: info:  [6848]          39,529,792 Page Faults Total           0.605 M/sec
-stress-ng: info:  [6848]          39,529,792 Page Faults Minor           0.605 M/sec
-
-w/patch:
-stress-ng: info:  [2485]          4,462,440,381,856 CPU Cycles          68.382 B/sec
-stress-ng: info:  [2485]          1,615,101,503,296 Instructions          24.750 B/sec (0.362 instr. per cycle)
-stress-ng: info:  [2485]          39,439,232 Page Faults Total           0.604 M/sec
-stress-ng: info:  [2485]          39,439,232 Page Faults Minor           0.604 M/sec
-
-Tested-by Donet Tom <donettom@linux.ibm.com>
-Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-Acked-by: SeongJae Park <sj@kernel.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
-Changes from v1:
- - Update the commit message to add some measurements.
- - Add acked tag from Michal. Thanks.
- - Drop the Fixes tag.
-
-Changes from RFC:
- - Collect reviewed and tested tags. Thanks.
- - Add Fixes tag.
----
- fs/proc/task_mmu.c | 14 +++++++-------
- include/linux/mm.h |  5 +++++
- 2 files changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index b9e4fbbdf6e6..f629e6526935 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -36,9 +36,9 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
- 	unsigned long text, lib, swap, anon, file, shmem;
- 	unsigned long hiwater_vm, total_vm, hiwater_rss, total_rss;
- 
--	anon = get_mm_counter(mm, MM_ANONPAGES);
--	file = get_mm_counter(mm, MM_FILEPAGES);
--	shmem = get_mm_counter(mm, MM_SHMEMPAGES);
-+	anon = get_mm_counter_sum(mm, MM_ANONPAGES);
-+	file = get_mm_counter_sum(mm, MM_FILEPAGES);
-+	shmem = get_mm_counter_sum(mm, MM_SHMEMPAGES);
- 
- 	/*
- 	 * Note: to minimize their overhead, mm maintains hiwater_vm and
-@@ -59,7 +59,7 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
- 	text = min(text, mm->exec_vm << PAGE_SHIFT);
- 	lib = (mm->exec_vm << PAGE_SHIFT) - text;
- 
--	swap = get_mm_counter(mm, MM_SWAPENTS);
-+	swap = get_mm_counter_sum(mm, MM_SWAPENTS);
- 	SEQ_PUT_DEC("VmPeak:\t", hiwater_vm);
- 	SEQ_PUT_DEC(" kB\nVmSize:\t", total_vm);
- 	SEQ_PUT_DEC(" kB\nVmLck:\t", mm->locked_vm);
-@@ -92,12 +92,12 @@ unsigned long task_statm(struct mm_struct *mm,
- 			 unsigned long *shared, unsigned long *text,
- 			 unsigned long *data, unsigned long *resident)
- {
--	*shared = get_mm_counter(mm, MM_FILEPAGES) +
--			get_mm_counter(mm, MM_SHMEMPAGES);
-+	*shared = get_mm_counter_sum(mm, MM_FILEPAGES) +
-+			get_mm_counter_sum(mm, MM_SHMEMPAGES);
- 	*text = (PAGE_ALIGN(mm->end_code) - (mm->start_code & PAGE_MASK))
- 								>> PAGE_SHIFT;
- 	*data = mm->data_vm + mm->stack_vm;
--	*resident = *shared + get_mm_counter(mm, MM_ANONPAGES);
-+	*resident = *shared + get_mm_counter_sum(mm, MM_ANONPAGES);
- 	return mm->total_vm;
- }
- 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 185424858f23..15ec5cfe9515 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2568,6 +2568,11 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
- 	return percpu_counter_read_positive(&mm->rss_stat[member]);
- }
- 
-+static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
-+{
-+	return percpu_counter_sum_positive(&mm->rss_stat[member]);
-+}
-+
- void mm_trace_rss_stat(struct mm_struct *mm, int member);
- 
- static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
--- 
-2.43.5
-
+Yours,
+Linus Walleij
