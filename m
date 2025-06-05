@@ -1,506 +1,265 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09B5320F;
-	Thu,  5 Jun 2025 01:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436777DA9C
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 01:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749086139; cv=none; b=U1zNQUrEc0an3REi+5UShPFKca/dAtmwptCsQXO/qNnW9MKOiLSj3WDqo2r2DpagYxPImPiDK2LhV0rL0vtJwEmpibcK/mfJMHhpOScByqJcG1UCBzntxPpgZACjQd+fY8FQLRYziyo0ei9622FHu4OkEASZkK9+yuucPlMHdwc=
+	t=1749086144; cv=none; b=gSXBlTv2nRDMWvD4MZHJ73u/pdq+9bWsxFiLR1XN13sCd1idhQPAR5DqcHxqKfrIVc5Z+k62Uxsf04kIHXPCh5QZcvt1m2DB77AglAPiu1ZRuLpt3uxfWh0gKTZxjljz8GB/kRY3VbnA5BHML+V2yoqsheG5wmFtSQJsQLBfOrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749086139; c=relaxed/simple;
-	bh=7HW7x9nbWp4Qj2yNnx1v2h+XGemgVAdodEL5eVmunzI=;
+	s=arc-20240116; t=1749086144; c=relaxed/simple;
+	bh=GYMg85uC4AdKSm2Eiqazm43c0gUd12jPdjvb3RaZyjM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=doBTZTh2GJWkb4KUmHIFnYU7HSENV7S+wJ9n/wDzk+2fqvT1XygpNgPetbsBrcdeBJMpvGW/Q4sEWn3hIvA2+eL6zvheVhCaZ2pNunMnOWaXGbBScj2dydXtAHo/1oLsWDhlfbzk6G3woqdyMR6ya5sfEIewbXJaUu6rPIo0rGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nxonrskf; arc=none smtp.client-ip=209.85.208.53
+	 To:Cc:Content-Type; b=XmvAewKClioHhavsvY11t/wgxyZeIlolw2vii26Low164IRc31AJy6WbrkM/uWfvuKc6cRXE5baxUPmWb9D/Ha7f+RYTx+e5b6H4berwx3QDvsS/yqEXgqvSWrdCTlkDlBjHW+ebhzG3zvLenfw2nNPXhW1SgtyBDgz/tm+Cw8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FQo1xYk5; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nxonrskf"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60727e46168so427763a12.0;
-        Wed, 04 Jun 2025 18:15:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQo1xYk5"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450ddb35583so591605e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 18:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749086136; x=1749690936; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749086140; x=1749690940; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AxzhpDYdLonLZrJHBHeQGT9e3gBAhmynhF48vRJrIp0=;
-        b=NxonrskfueqPzF/yV2auhMapn1F0DWneNwen0fMP+5RjFYunIgG6nYDzBzxO9k6XZe
-         +uvr+ZlSQFZkQRjaAfmzKBaKwAtPb32Hl/lTv2E/EavwqD1y8UGaNJziz5O/ss0F5lUF
-         Mhjm1vafQbHjy/lMK1gE1RNCQOBmmr0h8EgNZg3WLz6lfI4PaIbeDZufNiO3LDsYmvMB
-         eOtuNIu1eb8F0BWAGjf4rdVhVAGoVxmw1FFJ0ZiRGluItX2L/+SCdjzR4rOqrk4uzCqG
-         fq/Dnng07TQYhIcOu+bCUNGSibMvn6cH86vr6LT4wMO4XM+Xf26sV1PkYzA8RbJ9KoFb
-         gx9Q==
+        bh=Ydty2cgBT4AE+PnyHm2b8qgI6YmYVnlOGYpbNpC1b90=;
+        b=FQo1xYk5cJB2CBkpmKq2svtuRG2FL69VeELuTW6YZCMORJAyP4cRyvNm5iYMNwiUs7
+         2k9BlrrnDds1O49nzgs7SdXRS0K51y3xVoEhOIFZmfdDARYAeOpaFLav0wlRhW/60jcS
+         t3D/TuTekfujkB4XxcTf+tVuZbjHx3OjH7Xpr/6ug4wwmSWcQMhuKWkmY3b9Av1si6pD
+         vQ1tr2GRZIw/s+VtRXfcc5NHS5rFfPVKSjXKwMRgVkL9FnmSExo4v0ykrjWKoQyUzvFe
+         zd7fN06v2uIsMkmS2HScEgBMq+3eGUDAREbne7/Mx+Cyehybs9rdpOHua0mZ9rC1zorI
+         uSMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749086136; x=1749690936;
+        d=1e100.net; s=20230601; t=1749086140; x=1749690940;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AxzhpDYdLonLZrJHBHeQGT9e3gBAhmynhF48vRJrIp0=;
-        b=cupu8e35yZIQvaoY0qEE7pC5IBy/s6527T+KB6fy6k6LOpviGBYtijSzqsxCvG45AV
-         On3Gq3F3vrRZF79TaiFQesLPPQmeq06CRI235ZN1rpqUjQ4QoNF0A6VgQoYNDa196Wco
-         x0cSxRbMB66UpuRk8DYcKZbAIWL+MnApAmsPd4/IhylQYCChipwJ7YsEcHxrRw8pnaIt
-         JVy3osXwEBaBe+pfCD3WsOQJUMdODLqAU7NPwlpCC84/RYNBA1vsrNV4dk2Vjc/Flw0Q
-         3nSc0r0+PqnVgeD0nV5d6aGsfqYd6RDDNhaUbykDAle8TYffn/fXcHhENRZUDEF4bkVf
-         97FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVLXGrkm+b3+/GS7SOJZj9lAGjCj/jX+eJ1O41Zs9mWHFvVfs+Z+TxUjHc7rvtR4SMC6jwo6LNHYfz@vger.kernel.org, AJvYcCX9xkouPBkZ9wTOppWwBkCVJfBO8U2l6RWeFF8H+jcy4D0vhFWcEgywa03CzutWYvV2pRF+rl4YsEfhKLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwipQkdoiQXBlDHHkBlDFhxnQimVrf2kZ1G5gLQDGq3aMLOz2T
-	xS+QGqllmMfuI8pKp+bEB/pF8kxdv1DFXlt/avtrJ3+IWZnsEhUA/DIyD2iFwROUy8ZSZme70/A
-	9uPQpbM3aW+LkQml6oZBn5yTT+/bt5oM=
-X-Gm-Gg: ASbGnct1iYtNKme5lYky460QTAl5RWCDdfQeOK3myJgyDtUfbZGn5WFUnke6VheMQVW
-	xk1+vcWld5OcU/b9LJxyPqf/NuEEbNFgt2tI6Ma/o/xgLii7gSJZ3wzS2HHJYGcIN0Q2iyuMCpQ
-	WgD7Ck3aAu0/zlPpfbVe7/8+IfSEwBm6t4xgMu3ujMgVR+Gt8ioQPeDnsHf8Gj4pps3HSlkH0Rz
-	Syh
-X-Google-Smtp-Source: AGHT+IGK4dCQjzgObFv1N9hvDW+ltpyh1QBv5ebBJlLbvX9/MegcFFdkItiwSB83rawVGaHKkb7BjUEwlcAlWvw9pIQ=
-X-Received: by 2002:a17:907:7f94:b0:adb:2a7d:1e78 with SMTP id
- a640c23a62f3a-addf8cca163mr474106066b.1.1749086135846; Wed, 04 Jun 2025
- 18:15:35 -0700 (PDT)
+        bh=Ydty2cgBT4AE+PnyHm2b8qgI6YmYVnlOGYpbNpC1b90=;
+        b=maPJBSTs3sH5LlPCCmIZ+XUHFfwkcOqbSRKPMYRj79oYm7q1GpcfUZV2/U0c8llj8Q
+         YrXYPDVLHER74PlPG+Sgfk6frZwn98Xfd67fOMhAjyQNwRT80R9o/iFaH8aHoNJ6p3aZ
+         A2RJOObfuIJHipXnVShtv8oSuzIIWllQn2mAQlfGvqhMRloL9Ue2/jYXU4cl8Iq0G7Vm
+         14XFFZv8ZAfiEuNBgm4E7aTNpTG92kGbCuMUcWp838PIzjotJfLi33p7HQMHECFI9m9m
+         +jObSYjLgy6yLz9XO3UbKXi8bQdjEKXozfpbu9IhIiIrDaXcl4yjTiZ45z5u9vq3iK4o
+         3ORg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDrKeF+mO8XY9W0dkXIwbZjXQ/paTdI9MtTEHYf+BDzN+rEeIKSrQBpPA/e1UBloJs8HvePvi9PNYaqUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw75f570TOFFz1fvsSXlog4/O3SSDr05ZZmxLBLQsxfCwhuQuo
+	zkSnNexGakwOZt8i0cHb4xjG/OGE/gIhMd22SFXDmMfPSRbRt+oKQNSS/fBXznNHCwCi274eJzH
+	k5BIgUnxptq8j29NdknuLarsmEqPh9t3+P5K0
+X-Gm-Gg: ASbGnctIQoW/R6hWGxgmlyL0cB4ceP7MRJ0hJ2OC7cYWfT8ZPIorj0t4UbIL9WkyB0B
+	8JK5WXI8GkEy3/qKVSbUqL13tflG8RV4BYXh3VvtTTZtZQ3HhlRPos7MiBR18ma8SXxk9WZANHo
+	fjY0O6LWvAc/rE4dgTe+ITXPl1OnN8Gsk0ZA==
+X-Google-Smtp-Source: AGHT+IFOv3cxIGhg6XydehDxtKJHQb0TYHVmegO4c/fhHhapPb0fBZJ0JyDbC9mtlVtiDtD9Aa2MNoxVJIGq7SFc/r8=
+X-Received: by 2002:a05:600c:8b23:b0:450:d5ed:3c20 with SMTP id
+ 5b1f17b1804b1-451f0b33452mr16474005e9.6.1749086140318; Wed, 04 Jun 2025
+ 18:15:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603032057.5174-1-syhuang3@nuvoton.com> <20250603032057.5174-2-syhuang3@nuvoton.com>
- <2ff4dd60-7579-40ce-a4e5-3ad846659f9c@suse.com>
-In-Reply-To: <2ff4dd60-7579-40ce-a4e5-3ad846659f9c@suse.com>
-From: =?UTF-8?B?6YC45puJ5aG1?= <hsyemail2@gmail.com>
-Date: Thu, 5 Jun 2025 09:15:24 +0800
-X-Gm-Features: AX0GCFtpm1wTVvJO7sVs8FLKaCKz79NJb441LgwKHHm0aiaO-tbf7_xpB8LWoMk
-Message-ID: <CACW=pY7P_i7gUjg5vOS9_kh2Z4jivP_nO5o8jH1+7UzU6MvuzQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] USB: serial: nct_usb_serial: add support for
- Nuvoton USB adapter
-To: Oliver Neukum <oneukum@suse.com>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Sheng-Yuan Huang <syhuang3@nuvoton.com>
+References: <20250604085700.2454694-1-chao@kernel.org>
+In-Reply-To: <20250604085700.2454694-1-chao@kernel.org>
+From: Zhiguo Niu <niuzhiguo84@gmail.com>
+Date: Thu, 5 Jun 2025 09:15:29 +0800
+X-Gm-Features: AX0GCFunATjmE-Apl3YtLj-4r7yYwysLxV6JvJRBuEX71CccePVVeXbo7AjYETA
+Message-ID: <CAHJ8P3JXJfX=YVKGuQzM6n+yRbAh6Kxem+dLqdP_3F_BN=b_+Q@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix to zero post-eof page
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, stable@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Oliver Neukum,
-Appreciate the excellent suggestions! I'm in the process of revising
-the code based on your input. It'll take me a little while to
-thoroughly address everything, but I'll post an update here when I
-have something new to share. Thank you very much.
+Chao Yu via Linux-f2fs-devel <linux-f2fs-devel@lists.sourceforge.net>
+=E4=BA=8E2025=E5=B9=B46=E6=9C=884=E6=97=A5=E5=91=A8=E4=B8=89 17:01=E5=86=99=
+=E9=81=93=EF=BC=9A
+>
+> fstest reports a f2fs bug:
+>
+> generic/363 42s ... [failed, exit status 1]- output mismatch (see /share/=
+git/fstests/results//generic/363.out.bad)
+>     --- tests/generic/363.out   2025-01-12 21:57:40.271440542 +0800
+>     +++ /share/git/fstests/results//generic/363.out.bad 2025-05-19 19:55:=
+58.000000000 +0800
+>     @@ -1,2 +1,78 @@
+>      QA output created by 363
+>      fsx -q -S 0 -e 1 -N 100000
+>     +READ BAD DATA: offset =3D 0xd6fb, size =3D 0xf044, fname =3D /mnt/f2=
+fs/junk
+>     +OFFSET      GOOD    BAD     RANGE
+>     +0x1540d     0x0000  0x2a25  0x0
+>     +operation# (mod 256) for the bad data may be 37
+>     +0x1540e     0x0000  0x2527  0x1
+>     ...
+>     (Run 'diff -u /share/git/fstests/tests/generic/363.out /share/git/fst=
+ests/results//generic/363.out.bad'  to see the entire diff)
+> Ran: generic/363
+> Failures: generic/363
+> Failed 1 of 1 tests
+>
+> The root cause is user can update post-eof page via mmap, however, f2fs m=
+issed
+> to zero post-eof page in below operations, so, once it expands i_size, th=
+en it
+> will include dummy data locates previous post-eof page, so during below
+> operations, we need to zero post-eof page.
+>
+> Operations which can include dummy data after previous i_size after expan=
+ding
+> i_size:
+> - write
+> - mapwrite
+> - truncate
+> - fallocate
+>  * preallocate
+>  * zero_range
+>  * insert_range
+>  * collapse_range
+> - clone_range (doesn=E2=80=99t support in f2fs)
+> - copy_range (doesn=E2=80=99t support in f2fs)
+>
+> Cc: stable@kernel.org
+> Signed-off-by: Chao Yu <chao@kernel.org>
+> ---
+> v2:
+> - cover f2fs_zero_post_eof_page w/ invalidate_lock
+>  fs/f2fs/file.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 6bd3de64f2a8..ee5e662d2a4c 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -35,6 +35,17 @@
+>  #include <trace/events/f2fs.h>
+>  #include <uapi/linux/f2fs.h>
+>
+> +static void f2fs_zero_post_eof_page(struct inode *inode, loff_t new_size=
+)
+> +{
+> +       loff_t old_size =3D i_size_read(inode);
+> +
+> +       if (old_size > new_size)
+Hi Chao,
+should it be old_size >=3D new_size?
 
-
-Oliver Neukum <oneukum@suse.com> =E6=96=BC 2025=E5=B9=B46=E6=9C=883=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:57=E5=AF=AB=E9=81=93=EF=BC=9A
+> +               return;
+> +
+> +       /* zero or drop pages only in range of [old_size, new_size] */
+> +       truncate_pagecache(inode, old_size);
+> +}
+> +
+>  static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
+>  {
+>         struct inode *inode =3D file_inode(vmf->vma->vm_file);
+> @@ -103,8 +114,13 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fau=
+lt *vmf)
 >
-> Hi,
+>         f2fs_bug_on(sbi, f2fs_has_inline_data(inode));
 >
-> On 03.06.25 05:20, hsyemail2@gmail.com wrote:
-> > From: Sheng-Yuan Huang <syhuang3@nuvoton.com>
-> >
-> > Add support for the Nuvoton USB-to-serial adapter, which provides
-> > multiple serial ports over a single USB interface.
-> >
-> > The device exposes one control endpoint, one bulk-in endpoint, and
-> > one bulk-out endpoint for data transfer. Port status is reported via
-> > an interrupt-in or bulk-in endpoint, depending on device configuration.
+> +       filemap_invalidate_lock(inode->i_mapping);
+> +       f2fs_zero_post_eof_page(inode, (folio->index + 1) << PAGE_SHIFT);
+> +       filemap_invalidate_unlock(inode->i_mapping);
+> +
+>         file_update_time(vmf->vma->vm_file);
+>         filemap_invalidate_lock_shared(inode->i_mapping);
+> +
+>         folio_lock(folio);
+>         if (unlikely(folio->mapping !=3D inode->i_mapping ||
+>                         folio_pos(folio) > i_size_read(inode) ||
+> @@ -1109,6 +1125,8 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct de=
+ntry *dentry,
+>                 f2fs_down_write(&fi->i_gc_rwsem[WRITE]);
+>                 filemap_invalidate_lock(inode->i_mapping);
 >
-> I am afraid there are a few issue that will not to be addressed
-> before this can be merged.
+> +               if (attr->ia_size > old_size)
+> +                       f2fs_zero_post_eof_page(inode, old_size);
+I'm a little suspicious about the logic here=EF=BC=8C here old_size is from
+i_size_read(inode),
+and it will compare with the "old_size" in f2fs_zero_post_eof_page, it
+is also from i_size_read(inode),
+so is this actually meaningless?
+Thanks!
+>                 truncate_setsize(inode, attr->ia_size);
 >
-> > This driver implements basic TTY operations.
-> >
-> > Signed-off-by: Sheng-Yuan Huang <syhuang3@nuvoton.com>
-> > ---
-> >   drivers/usb/serial/nct_usb_serial.c | 1523 ++++++++++++++++++++++++++=
-+
-> >   1 file changed, 1523 insertions(+)
-> >   create mode 100644 drivers/usb/serial/nct_usb_serial.c
-> >
-> > diff --git a/drivers/usb/serial/nct_usb_serial.c b/drivers/usb/serial/n=
-ct_usb_serial.c
-> > new file mode 100644
-> > index 000000000000..424c604229b3
-> > --- /dev/null
-> > +++ b/drivers/usb/serial/nct_usb_serial.c
+>                 if (attr->ia_size <=3D old_size)
+> @@ -1227,6 +1245,10 @@ static int f2fs_punch_hole(struct inode *inode, lo=
+ff_t offset, loff_t len)
+>         if (ret)
+>                 return ret;
 >
-> > +/* Index definition */
-> > +enum {
-> > +     NCT_VCOM_INDEX_0 =3D 0,
-> > +     NCT_VCOM_INDEX_1,
-> > +     NCT_VCOM_INDEX_2,
-> > +     NCT_VCOM_INDEX_3,
-> > +     NCT_VCOM_INDEX_4,
-> > +     NCT_VCOM_INDEX_5,
-> > +     NCT_VCOM_INDEX_GLOBAL =3D 0xF,
-> > +};
+> +       filemap_invalidate_lock(inode->i_mapping);
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+> +       filemap_invalidate_unlock(inode->i_mapping);
+> +
+>         pg_start =3D ((unsigned long long) offset) >> PAGE_SHIFT;
+>         pg_end =3D ((unsigned long long) offset + len) >> PAGE_SHIFT;
 >
-> What use is this? A number is a number.
+> @@ -1510,6 +1532,8 @@ static int f2fs_do_collapse(struct inode *inode, lo=
+ff_t offset, loff_t len)
+>         f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>         filemap_invalidate_lock(inode->i_mapping);
 >
-> > +/* Command */
-> > +enum {
-> > +     NCT_VCOM_GET_NUM_PORTS =3D 0,
-> > +     NCT_VCOM_GET_PORTS_SUPPORT,
-> > +     NCT_VCOM_GET_BAUD,
-> > +     NCT_VCOM_SET_INIT,
-> > +     NCT_VCOM_SET_CONFIG,
-> > +     NCT_VCOM_SET_BAUD,
-> > +     NCT_VCOM_SET_HCR,
-> > +     NCT_VCOM_SET_OPEN_PORT,
-> > +     NCT_VCOM_SET_CLOSE_PORT,
-> > +     NCT_VCOM_SILENT,
-> > +     /* Use bulk-in status instead of interrupt-in status */
-> > +     NCT_VCON_SET_BULK_IN_STATUS,
-> > +};
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+> +
+>         f2fs_lock_op(sbi);
+>         f2fs_drop_extent_tree(inode);
+>         truncate_pagecache(inode, offset);
+> @@ -1631,6 +1655,10 @@ static int f2fs_zero_range(struct inode *inode, lo=
+ff_t offset, loff_t len,
+>         if (ret)
+>                 return ret;
 >
-> No. This is an abuse of enumeration. These are just commands that
-> happen to use the number space consecutively. These need to be
-> defines.
+> +       filemap_invalidate_lock(mapping);
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+> +       filemap_invalidate_unlock(mapping);
+> +
+>         pg_start =3D ((unsigned long long) offset) >> PAGE_SHIFT;
+>         pg_end =3D ((unsigned long long) offset + len) >> PAGE_SHIFT;
 >
-> > +union nct_vendor_cmd {
-> > +     struct pkg0 {
-> > +             u16 index:4;
-> > +             u16 cmd:8;
-> > +     } p;
-> > +     u16 val;
-> > +} __packed;
+> @@ -1762,6 +1790,8 @@ static int f2fs_insert_range(struct inode *inode, l=
+off_t offset, loff_t len)
+>         /* avoid gc operation during block exchange */
+>         f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>         filemap_invalidate_lock(mapping);
+> +
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+>         truncate_pagecache(inode, offset);
 >
-> This definition is an endianness bug waiting to happen.
-> If this goes over the wire, it has a defined endianness,
-> which needs to be declared.
+>         while (!ret && idx > pg_start) {
+> @@ -1819,6 +1849,10 @@ static int f2fs_expand_inode_data(struct inode *in=
+ode, loff_t offset,
+>         if (err)
+>                 return err;
 >
-> > +#define NCT_HDR_MAGIC                0xA5
-> > +#define NCT_HDR_MAGIC2               0x5A
-> > +#define NCT_HDR_MAGIC_STATUS 0x5B
-> > +
-> > +struct nct_packet_header {
-> > +     unsigned int magic:8;
-> > +     unsigned int magic2:8;
-> > +     unsigned int idx:4;
-> > +     unsigned int len:12;
-> > +} __packed;
+> +       filemap_invalidate_lock(inode->i_mapping);
+> +       f2fs_zero_post_eof_page(inode, offset + len);
+> +       filemap_invalidate_unlock(inode->i_mapping);
+> +
+>         f2fs_balance_fs(sbi, true);
 >
-> Again endianness.
+>         pg_start =3D ((unsigned long long)offset) >> PAGE_SHIFT;
+> @@ -4860,6 +4894,10 @@ static ssize_t f2fs_write_checks(struct kiocb *ioc=
+b, struct iov_iter *from)
+>         err =3D file_modified(file);
+>         if (err)
+>                 return err;
+> +
+> +       filemap_invalidate_lock(inode->i_mapping);
+> +       f2fs_zero_post_eof_page(inode, iocb->ki_pos + iov_iter_count(from=
+));
+> +       filemap_invalidate_unlock(inode->i_mapping);
+>         return count;
+>  }
 >
-> > +/* The definitions are for the feilds of nct_ctrl_msg */
-> > +#define NCT_VCOM_1_STOP_BIT          0
-> > +#define NCT_VCOM_2_STOP_BITS         1
-> > +#define NCT_VCOM_PARITY_NONE         0
-> > +#define NCT_VCOM_PARITY_ODD          1
-> > +#define NCT_VCOM_PARITY_EVEN         2
-> > +#define NCT_VCOM_DL5                 0
-> > +#define NCT_VCOM_DL6                 1
-> > +#define NCT_VCOM_DL7                 2
-> > +#define NCT_VCOM_DL8                 3
-> > +#define NCT_VCOM_DISABLE_FLOW_CTRL   0
-> > +#define NCT_VCOM_XOFF                        1
-> > +#define NCT_VCOM_RTS_CTS             2
-> > +union nct_ctrl_msg {
-> > +     struct pkg1 {
-> > +             u16 stop_bit:1;
-> > +             u16 parity:2;
-> > +             u16 data_len:2;
-> > +             u16 flow:2;
-> > +             u16 spd:5;
-> > +             u16 reserved:4;
-> > +     } p;
-> > +     u16 val;
-> > +} __packed;
->
-> At the risk of repeating myself: endianness
->
-> > +
-> > +/* Read from USB control pipe */
-> > +static int nct_vendor_read(struct usb_interface *intf, union nct_vendo=
-r_cmd cmd,
-> > +                        unsigned char *buf, int size)
-> > +{
-> > +     struct device *dev =3D &intf->dev;
-> > +     struct usb_device *udev =3D interface_to_usbdev(intf);
-> > +     u8 *tmp_buf;
-> > +     int res;
-> > +
-> > +     tmp_buf =3D kmalloc(NCT_MAX_VENDOR_READ_SIZE, GFP_KERNEL);
-> > +     if (!tmp_buf)
-> > +             return -ENOMEM;
-> > +
-> > +     if (size > NCT_MAX_VENDOR_READ_SIZE)
-> > +             dev_err(dev, NCT_DRVNAME ": %s - failed to read [%04x]: o=
-ver size %d\n",
-> > +                     __func__, cmd.p.cmd, size);
->
-> And you just go on and overwrite kernel memory?
-> If you test for plausibility, do something with the result.
+> --
+> 2.49.0
 >
 >
-> > +static int nct_vendor_write(struct usb_interface *intf, union nct_vend=
-or_cmd cmd, u16 val)
-> > +{
-> > +     struct device *dev =3D &intf->dev;
-> > +     struct usb_device *udev =3D interface_to_usbdev(intf);
-> > +     int res;
-> > +     u8 *buf_val;
 >
-> Why is this u8* ?
-> It should be le16*
->
-> > +     buf_val =3D kmalloc(2, GFP_KERNEL);
-> > +     if (!buf_val)
-> > +             return -ENOMEM;
-> > +
-> > +     /* Copy data to the buffer for sending */
-> > +     buf_val[0] =3D val & 0xff;
-> > +     buf_val[1] =3D (val >> 8) & 0xff;
->
-> We have macros for that.
->
-> > +static u16 nct_set_baud(struct usb_interface *intf, u16 index, unsigne=
-d int cflag)
-> > +{
-> > +     union nct_ctrl_msg msg;
-> > +     union nct_vendor_cmd cmd;
-> > +     u16 i;
-> > +
-> > +     msg.val =3D 0;
-> > +     cmd.p.cmd =3D NCT_VCOM_SET_BAUD;
-> > +     msg.p.spd =3D NCT_DEFAULT_BAUD;
-> > +     cmd.p.index =3D index;
-> > +     dev_dbg(&intf->dev, NCT_DRVNAME ": %s tty baud: 0x%X\n", __func__=
-,
-> > +             (cflag & CBAUD));
-> > +     for (i =3D 0; i < ARRAY_SIZE(NCT_BAUD_SUP); i++) {
-> > +             if ((cflag & CBAUD) =3D=3D NCT_BAUD_SUP[i]) {
-> > +                     msg.p.spd =3D i;
-> > +                     dev_dbg(&intf->dev,
-> > +                             NCT_DRVNAME ": %s index %d set baud: NCT_=
-BAUD_SUP[%d]=3D%d\n",
-> > +                             __func__, cmd.p.index, msg.p.spd, NCT_BAU=
-D_SUP[i]);
-> > +                     if (nct_vendor_write(intf, cmd, msg.val))
-> > +                             dev_err(&intf->dev,
-> > +                                     NCT_DRVNAME ": %s - Set index: %d=
- speed error\n",
-> > +                                     __func__, cmd.p.index);
-> > +
-> > +                     break;
-> > +             }
->
-> If nothing matches, you do nothing?
-> > +     }
-> > +
-> > +     return msg.p.spd;
->
-> So errors are ignored?
->
->
-> > +static int nct_serial_tiocmset(struct tty_struct *tty, unsigned int se=
-t,
-> > +                            unsigned int clear)
-> > +{
-> > +     return nct_tiocmset_helper(tty, set, clear);
-> > +}
->
-> Why? Does this function do anything useful?
->
-> > +static void nct_rx_throttle(struct tty_struct *tty)
-> > +{
-> > +     unsigned int set;
-> > +     unsigned int clear =3D 0;
->
-> Why?
->
-> > +
-> > +     /* If we are implementing RTS/CTS, control that line */
-> > +     if (C_CRTSCTS(tty)) {
-> > +             set =3D 0;
-> > +             clear =3D TIOCM_RTS;
-> > +             nct_tiocmset_helper(tty, set, clear);
-> > +     }
-> > +}
-> > +
-> > +static void nct_rx_unthrottle(struct tty_struct *tty)
-> > +{
-> > +     unsigned int set;
-> > +     unsigned int clear =3D 0;
->
-> Why?
->
-> > +     /* If we are implementing RTS/CTS, control that line */
-> > +     if (C_CRTSCTS(tty)) {
-> > +             set =3D 0;
-> > +             set |=3D TIOCM_RTS;
-> > +             nct_tiocmset_helper(tty, set, clear);
-> > +     }
-> > +}
-> > +
-> > +static int nct_serial_write_data(struct tty_struct *tty, struct usb_se=
-rial_port *port,
-> > +                              const unsigned char *buf, int count)
-> > +{
-> > +     int ret;
-> > +     unsigned long flags;
-> > +     struct nct_packet_header hdr;
-> > +     int wr_len;
-> > +     struct nct_tty_port *tport =3D usb_get_serial_port_data(port);
-> > +
-> > +     wr_len =3D min((unsigned int)count, NCT_MAX_SEND_BULK_SIZE - size=
-of(hdr));
-> > +
-> > +     if (!wr_len)
-> > +             return 0;
-> > +
-> > +     spin_lock_irqsave(&tport->port_lock, flags);
-> > +
-> > +     if (tport->write_urb_in_use) {
-> > +             spin_unlock_irqrestore(&tport->port_lock, flags);
-> > +             return 0;
-> > +     }
-> > +
-> > +     /* Fill header */
-> > +     hdr.magic =3D NCT_HDR_MAGIC;
-> > +     hdr.magic2 =3D NCT_HDR_MAGIC2;
-> > +     hdr.idx =3D tport->hw_idx; /* The 'hw_idx' is based on 1 */
->
-> Endianness.
->
-> > +
-> > +     /* Copy data */
-> > +     memcpy(port->write_urb->transfer_buffer + sizeof(hdr),
-> > +            (const void *)buf, wr_len);
-> > +
-> > +     hdr.len =3D wr_len; /* File filed 'len' of header */
->
-> Endiannes
->
-> > +static int nct_startup_device(struct usb_serial *serial)
-> > +{
-> > +     int ret =3D 0;
-> > +     struct nct_serial *serial_priv =3D usb_get_serial_data(serial);
-> > +     struct usb_serial_port *port;
-> > +     unsigned long flags;
-> > +
-> > +     /* Be sure this happens exactly once */
-> > +     spin_lock_irqsave(&serial_priv->serial_lock, flags);
-> > +
-> > +     if (serial_priv->device_init) {
-> > +             spin_unlock_irqrestore(&serial_priv->serial_lock, flags);
-> > +             return 0;
-> > +     }
-> > +     serial_priv->device_init =3D true;
-> > +     spin_unlock_irqrestore(&serial_priv->serial_lock, flags);
-> > +
-> > +     /* Start reading from bulk in endpoint */
-> > +     port =3D serial->port[0];
-> > +     if (!port->read_urb)
-> > +             dev_dbg(&port->dev, NCT_DRVNAME ": %s: port->read_urb is =
-null, index=3D%d\n",
-> > +                     __func__, 0);
-> > +
-> > +     ret =3D usb_submit_urb(port->read_urb, GFP_KERNEL);
-> > +     if (ret)
-> > +             dev_err(&port->dev,
-> > +                     NCT_DRVNAME ": %s: usb_submit_urb failed, ret=3D%=
-d, port=3D%d\n",
-> > +                     __func__, ret, 0);
->
-> Error handling?
-> > +
-> > +     /* For getting status from interrupt-in */
-> > +     if (!serial_priv->status_trans_mode) {
-> > +             /* Start reading from interrupt pipe */
-> > +             port =3D serial->port[0];
-> > +             ret =3D usb_submit_urb(port->interrupt_in_urb, GFP_KERNEL=
-);
-> > +             if (ret)
-> > +                     dev_err(&port->dev,
-> > +                             NCT_DRVNAME ": %s: usb_submit_urb(intr) f=
-ailed, ret=3D%d, port=3D%d\n",
-> > +                             __func__, ret, 0);
-> > +     }
-> > +     return ret;
-> > +}
-> > +
-> > +static void nct_serial_port_end(struct usb_serial_port *port)
-> > +{
-> > +     struct nct_tty_port *tport =3D usb_get_serial_port_data(port);
-> > +     struct usb_serial *serial =3D port->serial;
-> > +     struct usb_interface *intf =3D serial->interface;
-> > +     union nct_ctrl_msg msg;
-> > +     union nct_vendor_cmd cmd;
-> > +
-> > +     /* Send 'Close Port' to the device */
-> > +     cmd.p.index =3D (u16)tport->hw_idx;
-> > +     cmd.p.cmd =3D NCT_VCOM_SET_CLOSE_PORT;
->
-> Endianness
->
->
-> > +again:
-> > +     spin_lock_irqsave(&serial_priv->serial_lock, flags);
-> > +     tport =3D serial_priv->cur_port;
-> > +     if (!tport) {
-> > +             /*
-> > +              * Handle a new data package (i.e., it is not
-> > +              * the remaining data without a header).
-> > +              * The package does not need to be combined this time.
-> > +              */
-> > +
-> > +             for (i =3D 0; i < urb->actual_length; i++) {
-> > +                     hdr =3D (struct nct_packet_header *)data;
-> > +                     /* Decode the header */
-> > +
-> > +                     if (serial_priv->status_trans_mode) {
-> > +                             /*
-> > +                              * Status data is also transmitted via bu=
-lk-in
-> > +                              * pipe.
-> > +                              */
-> > +                             if (hdr->magic =3D=3D NCT_HDR_MAGIC &&
-> > +                                 hdr->magic2 =3D=3D NCT_HDR_MAGIC_STAT=
-US &&
-> > +                                 hdr->len =3D=3D 24 && actual_len >=3D=
- 28) {
->
-> Endianness
->
-> > +                                     /*
-> > +                                      * Notice: actual_len will be dec=
-reased,
-> > +                                      * it is equal to urb->actual_len=
-gth
-> > +                                      * only at the beginning.
-> > +                                      */
-> > +
-> > +                                     /*
-> > +                                      * Status report.
-> > +                                      * It should be a standalone pack=
-age in
-> > +                                      * one URB
-> > +                                      */
-> > +                                     data +=3D sizeof(struct nct_packe=
-t_header);
-> > +                                     actual_len -=3D
-> > +                                             sizeof(struct nct_packet_=
-header);
-> > +
-> > +                                     nps =3D (struct nct_port_status *=
-)data;
-> > +
-> > +                                     for (j =3D 0; j < actual_len - 4;=
- j++) {
-> > +                                             nct_update_status(serial,
-> > +                                                               (unsign=
-ed char *)nps);
-> > +                                             nps++;
-> > +                                     }
-> > +
-> > +                                     spin_unlock_irqrestore(&serial_pr=
-iv->serial_lock, flags);
-> > +                                     return;
-> > +                             }
-> > +                     }
-> > +
-> > +                     if (hdr->magic =3D=3D NCT_HDR_MAGIC &&
-> > +                         hdr->magic2 =3D=3D NCT_HDR_MAGIC2 &&
-> > +                         hdr->idx <=3D NCT_MAX_NUM_COM_DEVICES &&
-> > +                         hdr->len <=3D 512)
-> > +                             break;
->
-> Endianness
->
->         Regards
->                 Oliver
->
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
