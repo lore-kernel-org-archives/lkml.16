@@ -1,103 +1,124 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3819C78F2B;
-	Thu,  5 Jun 2025 14:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D766A182D7;
+	Thu,  5 Jun 2025 14:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749134233; cv=none; b=at8UI+r8aQZzvlL+/atTTK6yR+o4xXUG+/6d3NYVi79Ir5fLWm/gPUyd36m3U2WmFxcykhgecDOwN7ELoq6KhvsMlEUejegC8jzh5HFIuxHgrv8Wsp3fnzyN3vsd+Rmb4he6tO+R5db4TYv4Qn32b1xx7YJqThCoOhpgK9srOwc=
+	t=1749134295; cv=none; b=N2xZhRBFlwY+xWo5S9zzQLyKMCcUywQtlZtihb+8TbqcOIbTLP7GkNGgSiRaC1rVvWoks0zCq7h3T0CjEKkafMh7Be20x3qO9dkh/Tr6sgmCeuBExOLiTkOO84KRaZEydMAcgiT1rVWMvuEylEhIaI4SIBJN2G/Ax5+voO3aFNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749134233; c=relaxed/simple;
-	bh=Rgv3aEFT01W6pBFbvtgJnQIouV+GXwKPnoeK6d1BPpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UZ7m0jHGf2C+OtZEdY9NsmzaK1ilAveoiFzyMvqYkNVtvdFvU9Gu6I8NaA8QTC72guFCaLEv5ZOnMCAfruvd8SsqLQTg5lPXNFCbSSyoBWZ3KSIUs7wDLTIxxuOG1zZUSBShT7Wkcc85KfwuTeRAX5tQNsPn8PGRhtQrrN/4KBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iiIZhS83; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749134295; c=relaxed/simple;
+	bh=2wQoiEp/25lDUsgFjzKAQF/FgvhWHF6Ofd14vJ+/6h8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z0DkAFlb71jz2Q8Nyo1fJzRl3s+zz0kTRfat735dDnbQPOm3XiD3B3WToobDwko4vdkzmr54UJ4tVmy/6pbD2NlpowTeJUSIMJ42c5BSMOd4ClpURxj6Tl76i/DQfRZkm9t51+rBHf0mw1CDT2KI7cQk36j/Wv80iGbSuhYZ1r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yh5Ye/5K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiIZhS83"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso925590a12.2;
-        Thu, 05 Jun 2025 07:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749134231; x=1749739031; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uNn7a9qROZttKIZEwUmD1+YxXegVVdWl/LW5vkAVcH4=;
-        b=iiIZhS83FRxd1kcfyGuFqu6OHnTR6F0qmS0+twNMeqao/WofmhsYhn/sbXvUmOSnoc
-         Y/nikgNIbXtFqPakSZPSEzobkf/i7NH2wedmcGly/5oPL4cYmZw0HyKr0EqFzwg7EkRH
-         rMsos5X+mZTje2+IIzxlW2zXFvN26MTgKLU3RhStTH/L0tiEVT7SVCoe4cjCfAFRRaEH
-         9DRrvB0ftinnFkYcvs+DBnGTZ3prfhjVnBWvHrWW53jolS3qUPwwSIiFMpxAmRaRrldD
-         Cp4zkWhHFBxpaHvXYiWyokDF3Y4p/sy/WtNbyg8ecc+jJctK7R9Tgc+CZatXRh8LvFJX
-         DYvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749134231; x=1749739031;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uNn7a9qROZttKIZEwUmD1+YxXegVVdWl/LW5vkAVcH4=;
-        b=ZPj4ZFS+ZfGOH5kO/9FPgXIR0RvnP1l0bSS/NbiT9oflFfTZxke2cQgA0xjtRJc6c3
-         ZGsB98oOetpL2WTMTulOL8CQePBP7iC1drScl9V49D1fzTxP7KZGrhaKhQER4+oaWcYd
-         twigb8E4leJcxsDJUpct9qEKxa+ul5HkR0RIh9rflLRrrvD96/rr4CjENGz6zCadDvVj
-         LgEfE8aNm3shcAlHdzIt79v4HoCmjbZabwWjOlN9QZprIYcnFfFznbK/EkMMCrFxleCG
-         s5rsPiz3zKr1mEaU5EUnKup7tOzvlszrwFdSi7otwWj2VirhFyT8zEPa8/KBbliPUApl
-         6vOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVg9Fln3uz5FOKHUc4dj+AnTc4ZbTTDu3xlavOKQqskbrrEo7LIPzJOCmviXriqEs2l6MyRR7Xsk82dow==@vger.kernel.org, AJvYcCWHk5oc9qRl7J+7qjx4s12XaVQ4ztUwSCeeX7A35Ox1JBFrt/TSsiTl1HdVzEzUUc870pfyh5D2hbwB8XC0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZEIsTeTNijxkB+fxMmtjzE4BQVub7D2wKaLHdcH7xGZqXibbB
-	tblrT+lpaTe9Fas+zNmX9cgXGew5xNh4c1/iY/xYZkK+MmhJQvJiGEVo
-X-Gm-Gg: ASbGncslEApcJ697aYIYs6u8Gzpjf2N0L+TH9tlCtSuaybSdjeRH9aAPutkhmVstOIE
-	U9Ig5MwLYVERnBWWiPwhGcltooCuvcSLY3GirSXV7HgUnjo9eVdx40KvD6UE5BHROlpxvkGPSZR
-	7W3X11Q/xXcvNIUKIATiypreYFNoUZ1oKnYWNmXf4+pHZSblWIMMiNI3+GdTNTUaE46a4a5YitJ
-	5muZ3ifDIx22+o3pf7iOsVCZ5AVmk++ySQYGrjnl7tDEyeYDuK6cm55dt91iHHRFaDfVBiVeqnl
-	pgQY8/N+2klS/+mP+wJS5PPEMd1UfpZ/OUoWP/cLQG1NBeQcK/1JjEGJeYsbjKrZ
-X-Google-Smtp-Source: AGHT+IE8N25cN9MB83DxlCzn/Mw1Qu09btXYxMfWgyAPV41dG8BeUQkQo4iTDpTTRdjVq0EgIbYTCg==
-X-Received: by 2002:a17:90b:4e8f:b0:311:da03:3437 with SMTP id 98e67ed59e1d1-3130cd6a9ecmr10669485a91.27.1749134231359;
-        Thu, 05 Jun 2025 07:37:11 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3132c003065sm1613381a91.13.2025.06.05.07.37.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 07:37:10 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 5 Jun 2025 07:37:10 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Gui-Dong Han <hanguidong02@gmail.com>
-Cc: vt8231@hiddenengine.co.uk, steve.glendinning@shawell.net,
-	jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [BUG] hwmon: Widespread TOCTOU vulnerabilities in the hwmon
- subsystem
-Message-ID: <3401727c-ad93-42df-8130-413eda41ab3a@roeck-us.net>
-References: <CALbr=LYJ_ehtp53HXEVkSpYoub+XYSTU8Rg=o1xxMJ8=5z8B-g@mail.gmail.com>
- <3f5feb87-330c-4342-88a1-d5076538a86d@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yh5Ye/5K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C1A1C4CEE7;
+	Thu,  5 Jun 2025 14:38:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749134295;
+	bh=2wQoiEp/25lDUsgFjzKAQF/FgvhWHF6Ofd14vJ+/6h8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Yh5Ye/5KwiX0dBesrH4zRrzoVDYJwOgKG2ClLfgWI3k7kvHT9UOB35XDIF2niC6Cp
+	 ObmU4UBR+JhXH0RZ+9D0e2YAO9dd1P/LUW/HIRA0Kabk81LYD6OxunCRip7A4ZVuoA
+	 SmcQUKwXzZku10LW+BBQwjpOzdqj6wYuGrllMEHsHnMB1s4NFzrPHWsAm574kWozxm
+	 j6hR01wt2rPcF58zmdCFro/+6iLHcJybBv8USbBVQkKTo57rN9InGNYFby1UEQKBnQ
+	 o/07NhHYg8XTdRpzHiiXyqvNU+QOsxFf5e6Rtx7nCE/4c+miyY/KjJn1WQVnpbl2NJ
+	 ysPReQZ6H4yTw==
+Message-ID: <9c3fd179-f59e-452b-a7a9-5326d78f4741@kernel.org>
+Date: Thu, 5 Jun 2025 16:38:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f5feb87-330c-4342-88a1-d5076538a86d@roeck-us.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Bluetooth: BT Driver: mediatek: add gpio pin to reset
+ bt
+To: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Von Dentz <luiz.dentz@gmail.com>
+Cc: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
+ Aaron Hou <aaron.hou@mediatek.com>, Chris Lu <chris.lu@mediatek.com>,
+ Hao Qin <Hao.qin@mediatek.com>,
+ linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ linux-mediatek <linux-mediatek@lists.infradead.org>
+References: <20250605095300.22989-1-ot_zhangchao.zhang@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250605095300.22989-1-ot_zhangchao.zhang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 05, 2025 at 07:33:24AM -0700, Guenter Roeck wrote:
-> > 
-> > I would like to discuss these issues further and collaborate on the
-> > best way to address them comprehensively.
-> > 
+On 05/06/2025 11:53, Zhangchao Zhang wrote:
+> This patch provides two methods btmtk_reset_by_gpio,
+> btmtk_reset_by_gpio_work for mediatek controller,
+> it has been tested locally many times and can reset normally.
 > 
-> I'd suggest to start submitting patches, with the goal of minimizing
-> the scope of changes. Sometimes that may mean expanding the scope of
-> locks, sometimes it may mean converting macros to functions. When
-> converting to functions, it doesn't have to be inline functions: I'd
-> leave that up to the compiler to decide. None of that code is performance
-> critical.
+> The pin is configured in dts files, bluetooth is reset by pulling
+> the pin, when exception or coredump occurs, the above methods will
+> be used to reset the bluetooth, if the pin is not found, it also can
+> reset bluetooth successfully by software reset.
 > 
-Actualy, that makes me wonder if it would make sense to introduce
-subsystem-level locking. We could introduce a lock in struct
-hwmon_device_attribute and lock it whenever a show or store function
-executes in drivers/hwmon/hwmon.c. That would only help for drivers
-using the _with_info API, but it would simplify driver code a lot.
-Any thoughts on that ?
+> Co-develop-by Hao Qin <hao.qin@mediatek.com>
+> Co-develop-by Chris LU <chris.lu@mediatek.com>
+> Co-develop-by Jiande Lu <jiande.lu@mediatek.com>
+> Signed-off-by: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
+> ---
+>  drivers/bluetooth/btmtk.c | 60 +++++++++++++++++++++++++++++++++++++++
+>  drivers/bluetooth/btmtk.h |  5 ++++
+>  2 files changed, 65 insertions(+)
 
-Thanks,
-Guenter
+You just sent the same without any changes, any changelog, any improvements.
+
+Respond to previous feedback and them implement it.
+
+Best regards,
+Krzysztof
