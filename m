@@ -1,51 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429B03B19A;
-	Thu,  5 Jun 2025 18:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB2718A6AE;
+	Thu,  5 Jun 2025 18:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749148061; cv=none; b=eD9I7hdgfSaYzNHz/w8XFBgGnvkA+Lr/JVKbdb/65JO/sm3HhjzTwKHERJWql7eyUtbs81EBMdABoc68v1rvyMm/I5NsmZE3urT+9OoFwVHlpY0KN4jp5LN4oZmvwz5+7FESLNqy16ETkLRwstVd6kZp/6Rnl+LpEVM77oSt/Uw=
+	t=1749148135; cv=none; b=W0OOAs9yW75QmduWKrKJ23hbegFWRnVKMRsEQrc9j2VVdCFUc63PbwLBVVIFjeEgvOpRgtVAdWSSvQ+9zXe56lUzC6GW/cHz+go7IxEMlp/xzSmo9cXKPoRmJkeHAmCWyvsfeoBfndKSNfIkAUYLdzUcPCGL1+mm9uTNsSmunhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749148061; c=relaxed/simple;
-	bh=LrHf+kL0S4F64MAYya3xzRVnHNkRHGI5W4EOABOWHXc=;
+	s=arc-20240116; t=1749148135; c=relaxed/simple;
+	bh=SxpCD6ISZ6SNV7q5q5PMNqCiQzrvFjlEMuMk0hZKHNM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oL+SYSB+pxBxVaov8svT/7zAFYyF3W8ziWknf+bP4x/mpA100IypFMD4BBA3gQYmIG5Of9bWzI0EyhpODbMTbd5MSnOHQED9W74N/+mw6JZ9R1HtXKjSu4wQRrEMANvzQ21MiBtN0mWfaiY7EqJmPb2S92dQwkV39NtUxiHX+iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bS5w7tKC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pxx9J3jyFovN4i5jTbZOMfo0541wf9S82Ywzpgc2It9XP7Ez88u5ifGlOqgFciFCvWfghKUtXv2MzJsFc3FQqyz9NAxOPjvSJJ8Ofzl8yd62S+vs9PMRZNqLre+ekJVK3dcRlLMFRVjFwljwsgnxC3ZKyF9eZrVZrlICJMHEjnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbr+e/HG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bS5w7tKC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83269C4CEE7;
-	Thu,  5 Jun 2025 18:27:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbr+e/HG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF5E8C4CEEB;
+	Thu,  5 Jun 2025 18:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749148060;
-	bh=LrHf+kL0S4F64MAYya3xzRVnHNkRHGI5W4EOABOWHXc=;
+	s=k20201202; t=1749148135;
+	bh=SxpCD6ISZ6SNV7q5q5PMNqCiQzrvFjlEMuMk0hZKHNM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bS5w7tKC4ZHtosuXqgcOD8vuu3xDAr8tH1Kct+EUSeEtFzs1ul27YTsTfwMi2BBky
-	 oPfwt0xjFnvbuIEz+8wd9+nZpMTFAremPqjsm/6kB+/lWDD3CNJ76sa4yw+Uo/bIpF
-	 89UL9o7EJRFfGXkCo8PQYFhnM92tqNXyjXydDQNN+eGcvdYDGTHA4kpmPjPLYwcjDs
-	 560DTWQnPPNkWndioNb9k4+mkzX8FLcZOpenht3/J44lUV9JyiFSnpYczSrXqLo39X
-	 9vDUMwYMcTbtVpRVxOD5qzDiAH3Wc2zZoIzp6a76dFcAL3dxGa0vUnF93iiKhk33t/
-	 jRCvGbnMQmsnw==
-Date: Thu, 5 Jun 2025 13:27:37 -0500
-From: Rob Herring <robh@kernel.org>
-To: Irui Wang <irui.wang@mediatek.com>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
+	b=hbr+e/HGgvpeQJh6yW6or2nZr4ZfFYL8fAZJYSY95Ear0/KmNWxkYyLIvzUGMiAKo
+	 Rqrplat/dc/fSpzFNnL+eGpPtowTXRuDVaCaS+923qM+9yvSlgUFJvRwnFSdMSRPsF
+	 NptqeeiElj4/OQ3F8jbVqleqAmV/ylOzkBSTVulWzH3f38dy1UO8foevSrzTkobRUY
+	 1xT0+n4M6rNB//nE0Jq/U5aFfcqqd99QYY7heY34oTr2zdOkjvB5UwdV68kN8ZmCmv
+	 pxtSBhmqWaCG4ItmEA9vwXR+1fKjuMd/H801aFoUcBd87s7KDveNiqTrDAIcU94Ymr
+	 pi6jvxByoOOWQ==
+Date: Thu, 5 Jun 2025 13:28:51 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Conor Dooley <conor+dt@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	angelogioacchino.delregno@collabora.com,
-	nicolas.dufresne@collabora.com, wenst@chromium.org,
-	Project_Global_Chrome_Upstream_Group@mediatek.com,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Yunfei Dong <yunfei.dong@mediatek.com>,
-	Longfei Wang <longfei.wang@mediatek.com>
-Subject: Re: [PATCH v2 5/6] dt-bindings: media: mediatek: encoder: Add
- encoder dt-bindings for MT8196
-Message-ID: <20250605182737.GB2983549-robh@kernel.org>
-References: <20250528063633.14054-1-irui.wang@mediatek.com>
- <20250528063633.14054-6-irui.wang@mediatek.com>
+	Fabio Estevam <festevam@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	imx@lists.linux.dev, Sascha Hauer <s.hauer@pengutronix.de>,
+	linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH v2 1/1] ASoC: dt-bindings: covert mxs-audio-sgtl5000.txt
+ to yaml format
+Message-ID: <174914812962.2988981.13376867927592691613.robh@kernel.org>
+References: <20250528165755.692264-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,51 +50,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250528063633.14054-6-irui.wang@mediatek.com>
+In-Reply-To: <20250528165755.692264-1-Frank.Li@nxp.com>
 
-On Wed, May 28, 2025 at 02:36:31PM +0800, Irui Wang wrote:
-> Add MT8196 encoder compatible string, which will reference VCP device.
 
-Also work on your subject. No need to say dt-bindings and encoder twice:
-
-media: dt-bindings: mediatek,vcodec-encoder: Add MT8196
-
+On Wed, 28 May 2025 12:57:54 -0400, Frank Li wrote:
+> Convert mxs-audio-sgtl5000.txt to yaml format.
 > 
-> Signed-off-by: Irui Wang <irui.wang@mediatek.com>
+> Additional changes:
+> - Add compatible string:
+>     bluegiga,apx4devkit-sgtl5000
+>     denx,m28evk-sgtl5000
+>     fsl,imx28-mbmx28lc-sgtl500
+> - Remove audio-routing from required list.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  .../bindings/media/mediatek,vcodec-encoder.yaml      | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> change in v2
+> - add missed commit change (all decleared in Additional changes of commit
+> message).
+> ---
+>  .../sound/fsl,mxs-audio-sgtl5000.yaml         | 81 +++++++++++++++++++
+>  .../bindings/sound/mxs-audio-sgtl5000.txt     | 42 ----------
+>  2 files changed, 81 insertions(+), 42 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,mxs-audio-sgtl5000.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/mxs-audio-sgtl5000.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml b/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml
-> index ebc615584f92..7675391d7eb0 100644
-> --- a/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml
-> +++ b/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml
-> @@ -24,6 +24,7 @@ properties:
->                - mediatek,mt8188-vcodec-enc
->                - mediatek,mt8192-vcodec-enc
->                - mediatek,mt8195-vcodec-enc
-> +              - mediatek,mt8196-vcodec-enc
->        - items:
->            - const: mediatek,mt8186-vcodec-enc
->            - const: mediatek,mt8183-vcodec-enc
-> @@ -76,6 +77,17 @@ required:
->    - iommus
->  
->  allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - mediatek,mt8196-vcodec-enc
-> +
-> +    then:
-> +      required:
-> +        - mediatek,vcp
-> +
->    - if:
->        properties:
->          compatible:
-> -- 
-> 2.45.2
-> 
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
