@@ -1,168 +1,212 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011066.outbound.protection.outlook.com [40.107.130.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF281F4187
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749104870; cv=none; b=aoUpiRslixgeN4djiFKTXJTNkCVt9oe2KSt3aus0FD9z4cI2xSI4pRyxpqU+HNfI8Qn9tSzWjseeKqmiwF6k2sTk8hTY47k/rYFK6SOoXdb1R3vLDJsor9XCTn0Z1puWNB6h/NiBzZBWnYaUD/ZFR4XogBWV+heVUfrAJhb/fhA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749104870; c=relaxed/simple;
-	bh=cCE3ErDale2WCt3eW7s5MfG2qNRk9Cnn248VZzGg30I=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=D3QDycGXsE4D6waThB+z0B1p0IfTfIXIyUYSUpyNxkcdxqU8FOaU5pyZDmU3TNqgi8c1mWduMi/apTzZ5eE1/OQWnnC3BT22N+DXZait724LCvqNcRHzHT/Wt0dNVP50V47ZRF8paPYIc5Tgj4GWcXNt7unGgM6CIeFODihMkN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WZHYuO9q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590581EF0B0;
+	Thu,  5 Jun 2025 06:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749104930; cv=fail; b=aN2JbuJ09Ya6m/q75UHDEDukrSqn5gdoxZ0UOJXR9Empb8VSlD1+/W0epy2lz9KgAKJ2PiPk5iqi15/qik8jSlfT89B2OP1a3F4/TosPR9je6ceAHASWmJKzrS1CmtoMB+k4xtvzxaYqiDGIZg86UPZHOO9NL/wkmfn4QUK4/ME=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749104930; c=relaxed/simple;
+	bh=JD0zAGL+Z1cBfSIqB7f0bhPiJD/EDf1C7QgzbyEGbxY=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=TXk/em2SOO21MC2AxD7Dr54WgcKvwrtrgNAN7EpaX8nIYlEO9ohfTWm8RWRAt9ty2h/9nDGZ17nOuIqwdroN8gAeMSdrmqSsLkLHkdyPthj4SP0K8v/baafBfRTiVxUO1bHLRDJA9fybxBxT4ZjnCAo0JF62FVHpjdv+0Y0FYnw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ID9Cm/NL; arc=fail smtp.client-ip=40.107.130.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZHYuO9q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749104867;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JQqBl5Hav61/7+PIBHrIWkPi3ZbnG5D1ATYx/fnwPpk=;
-	b=WZHYuO9qTtoKULsTWW8B5MpHpBo6i+mb30/YB7D0xrSIBZl5XUDiaFhaKN+fA2S+JV3h8U
-	2xFk6OYatMtg3EyOaleF965ggGZ/CLf35hoYlAG2VWJKJkX9cGXAHhXOu9qvRr0NtvmTWj
-	aa/DngUctBM7kQVOXZd7bAX02qvdi3A=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-92-m4j8hCOEPKO4hHLlfnHNTg-1; Thu, 05 Jun 2025 02:27:46 -0400
-X-MC-Unique: m4j8hCOEPKO4hHLlfnHNTg-1
-X-Mimecast-MFC-AGG-ID: m4j8hCOEPKO4hHLlfnHNTg_1749104865
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f8fd1847so223798f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 23:27:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749104865; x=1749709665;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:from:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JQqBl5Hav61/7+PIBHrIWkPi3ZbnG5D1ATYx/fnwPpk=;
-        b=CIh12yFo+Cn1I2xk2qyoRUx3AziIgGKU+GQ1xlZr+ILBCERDB+vPMUEpNV6naTxHsa
-         xW+HJF2cxcueEmII5wt6ZVnlCUg/Nl5pZARGezRRZlLJh2/mklg0bTjT9K/Cuekm0PDA
-         aqUTtk8s+Spj90B52VF6ns21eHOIe5sBhhlSSY4lbWW6kb8Nkh/OGXp2hsrnMzUK52TD
-         oGSV5o6W5ivfrjoRfvJryZGl9qucH/26mNM1Fp3p9AUfSZ0fiIQ1K2F1GUDlKHy65TT4
-         cdTZOqx8WM1pR7Q52plHkob69gf5o1ob1R5sI91qonWvYHW46LTovG5etCTMVk/0uE1u
-         9hmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXC/A0KdA8+dvVpBTFU9SUxi98MLjSkFyE6tgNQ+zCeOoj64vSUXOdY5ijLhKGRAQVYbzyVlP1lST6fxZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiAi7DKjUAT/y/ULn9IRESD4qiYIyVqiDVGPaH1Y0VtZ+bc8j1
-	68T6enxedmAFencsSDYkgxyg8K5S0d2yFg6gJVAul+hkUynsOWjPuog2yG4PbtMYk0hD0jetIDV
-	nqp/imay/v2uE5KhEGtqh89I9hVr0Rl9dfLPdr8HQj6gTtiqIkeULUPlPXvM1gsJXon+HZkKmiw
-	==
-X-Gm-Gg: ASbGnctswE5fL1oDHrCeCC8kUIvCGxoadl1fsyBXiwj3npprO0kN14uqTKuSYlGjksS
-	RzsFsqesHTkLwTxjbSXrUpwlT1KA44w5cLphbWTVT2v6t+bbucDynqiFUIa9Zue84zGJ6+OYi3o
-	mlR/1FKJ2czsDyAjgq5KujCy6c+5hF8nI5yCFXK4/wvV8JzxZjqQ5mxPJnmpAb3Lvy6HncwnbxR
-	hktggJkRY5X5B5L6D16qn43i07u+ycr8nq7Y39iOx8YFQ8x+udNXydJkhsEMrSil2NitgL7EIwq
-	Cih/8fY+9fDj/Jjad0t+LavttZSFXGgC3+aIns1D0xrCWPi1Gbd1zsXBtnmt4/IFeh25rd2PMJa
-	TmgapgHOjZ8DQR25pBxQ2Ts+9KBCLDrVKfGZy
-X-Received: by 2002:a5d:4291:0:b0:3a5:2875:f986 with SMTP id ffacd0b85a97d-3a52875fc63mr914842f8f.44.1749104864923;
-        Wed, 04 Jun 2025 23:27:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEP82DWNcm4kr+3DIl7a/WPr3+qXyLZ69SiIugt0U85UNyOjfOXBI6jcGts81CLJP1ReI/69g==
-X-Received: by 2002:a5d:4291:0:b0:3a5:2875:f986 with SMTP id ffacd0b85a97d-3a52875fc63mr914822f8f.44.1749104864597;
-        Wed, 04 Jun 2025 23:27:44 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2? (p200300d82f27ec004f4d0d38ba979aa2.dip0.t-ipconnect.de. [2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b962sm23296810f8f.7.2025.06.04.23.27.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 23:27:44 -0700 (PDT)
-Message-ID: <fda7a3e3-1711-4f1b-a0bb-6a4369aa80ab@redhat.com>
-Date: Thu, 5 Jun 2025 08:27:42 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ID9Cm/NL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Cs7h1iM0SDBNZyK+z7NlKVD7xg1JOH4XinPBACrLIrSQCSx/AzhqMDyyCtL6AWoGFI7RcemtqJhRYYtoLbRMmJwYdm2GkYMXIBUezmiCj7VWuyCRxqi/HB+jIXlaiXMIqIe1LM6b+Ja5KunBAMGZBr1tg9O9k8URSYZq0aEb1TsWfZgdUBlSI+16N0F7a5TYS5TI2KxIblJtHjrDPWJD1dMFP7a2AL3qzL+EI583dAZRQtPdXlwfMSFISzBpVolyzwKM8oUsI8gCDWEvTkMYEPUJT/JgP3+26mmipypeNjAyEJksN4EYjXIeIhebXEwPBQYx07nSq2eX96axd9tukA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JX9xU39AsB4lAe0XedJ/qZ/XCEBpWViT2cTzEuYmLLg=;
+ b=eBKLFqXI+dnuRSQgBxW+GYICA7DC1uGL9RU2w/zmYIJAbkkRz26wkGX9093UiYb7giqrl/3izhq5wInDjs2JeuA2R5qxe+tsRMV4Ixbcr6x+XlReme/rukufef97MBkbS2iT9nwBmnuz4VOw9gKUUMsh+bPodidpYgAuW/p4OqwiQrP40MAbVbyiUPlZDjT0DesqNWonUsq/4UBoXUUSEZCyro6vb6LV9j5PktwCVjk6uCcRUq1BKvRptk762f+9PcB9cgJ4BeU2KHXxd3UudhUPh9ti5AGBoPoNTzEN6w0tp/SU0VmhzG3kdPK8H739Pofjy1CjkaFFeX/Nx4VLHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JX9xU39AsB4lAe0XedJ/qZ/XCEBpWViT2cTzEuYmLLg=;
+ b=ID9Cm/NLx0IBEjlI243ypdmUYtJjFpV6thGAe1+7AntJC1QJr3TPArUUkc55yYwlHxY9bR3AAW/x/zUp3NvU0NompRWmpLR4h5XDsHS4mqtljyopBc4Ja3mB1tRFnjYoV0cpVv08mL40ize0MQ3Hm/pM7el619wYarYchxQd3K1hmLN+rz4W+vcneykBh+J/TuXtlBQhJ2fk758WVVJBfTurYHFKhHzl2k5Papftb2GycbWXrfovf05QRPdqg2WLQliWskMJ7ZXsq12xw0lcFQ8jEGRXoaaLX5tanIkAber81Y4cInS4V2qzQ8u6+DCnsoNxyZ3BorQaxA3azYMZXg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by DBBPR04MB7529.eurprd04.prod.outlook.com (2603:10a6:10:208::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.19; Thu, 5 Jun
+ 2025 06:28:45 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8813.018; Thu, 5 Jun 2025
+ 06:28:45 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: claudiu.manoil@nxp.com,
+	vladimir.oltean@nxp.com,
+	xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	arnd@kernel.org
+Subject: [PATCH v2] net: enetc: fix the netc-lib driver build dependency
+Date: Thu,  5 Jun 2025 14:08:36 +0800
+Message-Id: <20250605060836.4087745-1-wei.fang@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MA0PR01CA0055.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:ac::11) To PAXPR04MB8510.eurprd04.prod.outlook.com
+ (2603:10a6:102:211::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] kernel BUG in try_to_unmap_one (2)
-From: David Hildenbrand <david@redhat.com>
-To: syzbot <syzbot+3b220254df55d8ca8a61@syzkaller.appspotmail.com>,
- Liam.Howlett@oracle.com, akpm@linux-foundation.org, harry.yoo@oracle.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- lorenzo.stoakes@oracle.com, riel@surriel.com,
- syzkaller-bugs@googlegroups.com, vbabka@suse.cz, Jens Axboe
- <axboe@kernel.dk>, Catalin Marinas <catalin.marinas@arm.com>
-References: <68412d57.050a0220.2461cf.000e.GAE@google.com>
- <4fc2c008-2384-4d94-b1bf-f0a076585a4a@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <4fc2c008-2384-4d94-b1bf-f0a076585a4a@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|DBBPR04MB7529:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36ac3af1-d3b3-4a18-c427-08dda3fa3906
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|1800799024|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DiVfYKXYTMA+RuuyoBn17fFqAzqoNbRqhYjk7ij9ebISTTYowTkKXQAWoq0/?=
+ =?us-ascii?Q?e6B7p7XtyFMDm5BSdyQtlBBXXDfaPzsWtKwFo1MAJGG+163JxrTv+7cw2J5t?=
+ =?us-ascii?Q?8aL6i5Mz55rJul3BPYmg6lMAfcoVa3xogeeqx1Y//Y0rwXxt0T2XkUqhDDV3?=
+ =?us-ascii?Q?Qor7TjXGH2/YA+5YJTGmiixixUQ5mHnACpDgDb4i1iQPT66P1oynrayQ6Ynh?=
+ =?us-ascii?Q?1/j0JWi9RpWbV1vJ8e/PmBzkloJjd0SvlmJxvZC5eAzmaNk2dhEgPG72Nfnx?=
+ =?us-ascii?Q?xGmxpM10aRY7vWEiTvdtBNFUDw4KbLSWlfR0ATv6mAHH47wSKj6V+2UmMI8b?=
+ =?us-ascii?Q?HWs1687mPrrluKsPYXD0Wbs29Pw9qbFyjX+i1Nbi50v5buvfg+wX7874h7+W?=
+ =?us-ascii?Q?iRe14CHF0hNpNAb8Q2+c0R6PZCsxaSouwnsQwBhvoRfopoEKz4Cw4v29s+9/?=
+ =?us-ascii?Q?LfjZgblyyL4F59/AiutR4uwF+ulPxtZ1yb6pdkEanGpICz+Zexe+EhxSwY8b?=
+ =?us-ascii?Q?cxH9G28BFZ5xhaFouySfUSEf9cS6svJtkFQhL8tpMlY4kjLGyHarQK9LfeDh?=
+ =?us-ascii?Q?W59wwgZbfJ8rN8VM7ADg45ukIsGA0xwhjvLXpc01/pexfNCk31/lFkXa++l3?=
+ =?us-ascii?Q?08TgSrJieu3fW26k5yG5mtGsVVwTQN2+WiIZsgUYs5Yi75tUUkIW331REpOe?=
+ =?us-ascii?Q?87HG295/RdxtKxzOfSgbFNCSHIRGMvbuSUG8rHc+nEitNeXyqH88RZuawvTb?=
+ =?us-ascii?Q?0DgDbxXAv/2HQZr8nMAaiA3SZLKA+xbi3O4a24uLJXGZ03tMkNQFXwnY6a05?=
+ =?us-ascii?Q?hHWY9hNGqt0wQ/K//gHpYb8erDDzYlaOmpeU/nxZ0xBwYrhq+isyc7VTaeVo?=
+ =?us-ascii?Q?zVeBYVLP5z2YNmkN+izQ6XZLHk4l5dxMuCukDChhx3u/eGWzm0h058Ppy5za?=
+ =?us-ascii?Q?0DuVLIxKknO7rGWnYO/ISkVIxkQ2vCvfhH9CJNz1ebqgnktqoBAot5Kk9rfk?=
+ =?us-ascii?Q?6V/qVgVtWM/hfOwHdjKn6i1QnE2HumM9sf1+BtaoImTd+0DUUlxUYgGydnn4?=
+ =?us-ascii?Q?9XsZiZPjhI7rEM6G/yuzIWAd0RjMOqLGTLE79tGOCrt+MQDpoSpgoDigqPya?=
+ =?us-ascii?Q?OFNxMEPim2sBG1YEfoRkPDrr3WV9OUcBA9hwdFm2WNdn11kG/tyj5aimmONJ?=
+ =?us-ascii?Q?/ru3n2nxwHuWczdNRA4WMS/XkjP2oGv4WD+TxXomqr2dmWOKqHjoR7UmFT3p?=
+ =?us-ascii?Q?04XE/nvxvpUJeHGYKOwtn34fY5ylKfIVElNNGfn/RIoMa7uzn/a51hylZVLM?=
+ =?us-ascii?Q?zahRLEeW674NCYsBIg5+2utRBk9EIukatgZ0hGGOaxoRuBdVHpVfbInQV+0M?=
+ =?us-ascii?Q?gSPByyinOo4OcNjJBoAv8oHi83zYjDhRJ83RsBOZJMELAmycUSXeYLYqy5fW?=
+ =?us-ascii?Q?p7ccVwRhXDqHzgmGI3kOy7T9uJyanlU2kbuRedIdPSV/S3YjdEYcKY+9UQ1P?=
+ =?us-ascii?Q?B3PkryDJzwFE6x0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0OrGomTZi+Zaj1vc1FiFEd4wPX58XzIPWhiRLl2uOtlNudMufM2NjyDbMqfl?=
+ =?us-ascii?Q?IJdNmI9P3pCA3h5vieHx3nVpgSflw+tLPyyOrJOxpoa5DhRBhC+ulIYu4jZS?=
+ =?us-ascii?Q?FM4u3sIN6yRrOTJtlWhyQYxNf7DGiPt2LqNhGH9pM9pTUSzISczc2CGZKPGV?=
+ =?us-ascii?Q?+5SmwLeMZjBO7mPHqGbdBvAJnsLe6quJ0ef099mzMAfjqWKZAFdtTNzl9OOS?=
+ =?us-ascii?Q?LTY6jaELAoLz8EVcmd9Z4PgRCcUo3/3r5ikQy8ntJQ2DiW2IW/PcR2ptiGEw?=
+ =?us-ascii?Q?Ve0gWTvWhg8S2CLjJECICSj/4DD/sm0KLJiV0SgpWdIFkRgy4RQrIQbAo07k?=
+ =?us-ascii?Q?diPdNtHnpnV5k9V6PV2HJDaIhdBEMPVyfjg+t1ZTfHil5SmQ+GKfOIjmlXy7?=
+ =?us-ascii?Q?4zzJ37hOGbJL5dOV6AW1OFiDj0D1kc6g0N5kxjXLR3xoFYeC8bjABopgyFGK?=
+ =?us-ascii?Q?re0yD7p2IPHhCAv+RB70Ep4CkMqqti3YL1AUOeL+5ahvsZOQiWXykilxjE03?=
+ =?us-ascii?Q?07xMyArs0WLiYwi6XtJYXwCS5NObyyTbZqMkDkeDbBjumehuhz3baWnTF7UD?=
+ =?us-ascii?Q?S0AYQEt60rsHSXbbHjHkmaGJ76ciia+cfIxBQXD0WCMmXqkAxyZD1fyEKxd1?=
+ =?us-ascii?Q?XMXaT9QPnfKtzM91Dxehv6iO431W+jAHRRu8xOUMsTOGqvwXtiLSD1yvJDoU?=
+ =?us-ascii?Q?WbiIFAiKwlKpMDoyhVGVRcM11s7w99JcTh2ruwo1KbxbeInJeVEcaaGqoFqF?=
+ =?us-ascii?Q?aEoXCbegdSBccbYZ5AEYXOOOFX+jI7u8qzTtBu2Z2qBLkYiaw2MAReh5jJHR?=
+ =?us-ascii?Q?otDbhRzKyQhZGeCZSE1EzRIyiBO+u0kL9mzMQJOX3MQu/nVmvwUhcJj1Oy6J?=
+ =?us-ascii?Q?dmSsJgVp0gaJwqju1QHcAFtMa5xUVBBi05IXUGLIjkNFQtplOscCvEXQW/jG?=
+ =?us-ascii?Q?alusuSr8VfpL+WlxXGgH2Gr3RVn1p3B28dz7bUB3+RkQynagC0oZW+P/EJv7?=
+ =?us-ascii?Q?Vz6oooZcj82JebLiJaAjCShGErOT2EMLHWBYxdSl7RHRjrcuEYTtGG2dKy4a?=
+ =?us-ascii?Q?HJ8XdhZpGdQGlJ82KzwqQlxzVqkJ+v/jJz5xsnRaHwgr6Q63iztzMturkJ8y?=
+ =?us-ascii?Q?ePamPguUdMwmeSPVfuCfJDGk3xpJEAjN3eFJCWdu00T3re9xakigb/3y/wNz?=
+ =?us-ascii?Q?aSEFuQAk5aNF1JdkbXdC03q1maog9uwTMblHxrvwnXWD7eK7AsrmZYMSA7dL?=
+ =?us-ascii?Q?dX7Pn8RZ2eeRZ3Nygr6aaETlKjsBizXDAfRIhsR2XNruXxlLxXH42fSDth4B?=
+ =?us-ascii?Q?KQJaQ6JbGjjCjdkcFkMq8dtG5YFTojvP1frNfFLl0X9Qcf8Lo+FlPhVdXm57?=
+ =?us-ascii?Q?kTo1cvIpFzBsfLiHVov0EYh8GO+9Lhvs2J+xDxRPvXTkLM40KL/5h8rxCYjr?=
+ =?us-ascii?Q?FhQcFMBB97u7/wDisR4KCRPGioNCYRH1krfWY9tiwV+Wg0hBofn+XOvpIddf?=
+ =?us-ascii?Q?/3EkzjS+n5X7IrHzwo1RlZm1WURSX8qzrYYe0tn9xTtsKI8cdkEhy5DbE17O?=
+ =?us-ascii?Q?u0xgC/O27RgUT6t3DDoAkVzfPgpbOEcMqKTL4OWQ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36ac3af1-d3b3-4a18-c427-08dda3fa3906
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 06:28:45.2866
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LkA06fgOZktTOeCERlnOiSbx2dE7NAwYws2F2W/7BJpOcqD2Bsl/FV5188N5os210OOoV2YDrp9a1bcBGwf6Jw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7529
 
-On 05.06.25 08:11, David Hildenbrand wrote:
-> On 05.06.25 07:38, syzbot wrote:
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
-> 
-> Hmmm, another very odd page-table mapping related problem on that tree
-> found on arm64 only:
+The kernel robot reported the following errors when the netc-lib driver
+was compiled as a loadable module and the enetc-core driver was built-in.
 
-In this particular reproducer we seem to be having MADV_HUGEPAGE and 
-io_uring_setup() be racing with MADV_HWPOISON, MADV_PAGEOUT and 
-io_uring_register(IORING_REGISTER_BUFFERS).
+ld.lld: error: undefined symbol: ntmp_init_cbdr
+referenced by enetc_cbdr.c:88 (drivers/net/ethernet/freescale/enetc/enetc_cbdr.c:88)
+ld.lld: error: undefined symbol: ntmp_free_cbdr
+referenced by enetc_cbdr.c:96 (drivers/net/ethernet/freescale/enetc/enetc_cbdr.c:96)
 
-I assume the issue is related to MADV_HWPOISON, MADV_PAGEOUT and 
-io_uring_register racing, only. I suspect MADV_HWPOISON is trying to 
-split a THP, while MADV_PAGEOUT tries paging it out.
+Simply changing "tristate" to "bool" can fix this issue, but considering
+that the netc-lib driver needs to support being compiled as a loadable
+module and LS1028 does not need the netc-lib driver. Therefore, we add a
+boolean symbol 'NXP_NTMP' to enable 'NXP_NETC_LIB' as needed. And when
+adding NETC switch driver support in the future, there is no need to
+modify the dependency, just select "NXP_NTMP" and "NXP_NETC_LIB" at the
+same time.
 
-IORING_REGISTER_BUFFERS ends up in 
-io_sqe_buffers_register->io_sqe_buffer_register where we GUP-fast and 
-try coalescing buffers.
+Reported-by: Arnd Bergmann <arnd@kernel.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505220734.x6TF6oHR-lkp@intel.com/
+Fixes: 4701073c3deb ("net: enetc: add initial netc-lib driver to support NTMP")
+Suggested-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Wei Fang <wei.fang@nxp.com>
+---
+v1 Link: https://lore.kernel.org/imx/20250603105056.4052084-1-wei.fang@nxp.com/
+v2:
+1. Add the boolean symbol 'NXP_NTMP' as Arnd suggested and modify
+the commit message.
+---
+ drivers/net/ethernet/freescale/enetc/Kconfig | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-And something about THPs is not particularly happy :)
-
+diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig b/drivers/net/ethernet/freescale/enetc/Kconfig
+index e917132d3714..54b0f0a5a6bb 100644
+--- a/drivers/net/ethernet/freescale/enetc/Kconfig
++++ b/drivers/net/ethernet/freescale/enetc/Kconfig
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config FSL_ENETC_CORE
+ 	tristate
++	select NXP_NETC_LIB if NXP_NTMP
+ 	help
+ 	  This module supports common functionality between the PF and VF
+ 	  drivers for the NXP ENETC controller.
+@@ -22,6 +23,9 @@ config NXP_NETC_LIB
+ 	  Switch, such as NETC Table Management Protocol (NTMP) 2.0, common tc
+ 	  flower and debugfs interfaces and so on.
+ 
++config NXP_NTMP
++	bool
++
+ config FSL_ENETC
+ 	tristate "ENETC PF driver"
+ 	depends on PCI_MSI
+@@ -45,7 +49,7 @@ config NXP_ENETC4
+ 	select FSL_ENETC_CORE
+ 	select FSL_ENETC_MDIO
+ 	select NXP_ENETC_PF_COMMON
+-	select NXP_NETC_LIB
++	select NXP_NTMP
+ 	select PHYLINK
+ 	select DIMLIB
+ 	help
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
