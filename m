@@ -1,115 +1,176 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C07D2C324C
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 14:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFFD192598;
+	Thu,  5 Jun 2025 14:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749135277; cv=none; b=QNrY6+l5VSjTHXDYK6twPZKAB+396MGlHCRuV0M/5yjVv/31qsaRnsjUMlrtL4t6eF1Ye/PDEHcA3nQhJVcFrGRAi5FNfyd8UIJdLsLqbQ0zEL8rVLl00jIwOdNOyZF8YhZC0xM5UKX/aNL7NYj9algys+e7xuXbYinWo4Ym+G0=
+	t=1749135290; cv=none; b=ptXasCCZ9AOZ1g5gkAZiQh/JXxB9htmkuH3PG8O9IQJqTeUXUxy5QHvHtf4rL63os78j2Ws/iyCI4x8loTrwCfjkBc8sRBJiSSOAeRZK+Bc+atE3wykAwLGAJlX67aXGn8MNuI/S3R2yiL0mE1WHoIxkJ0vBaCBiCpmN4aMLx0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749135277; c=relaxed/simple;
-	bh=aHYbssR+9VM72fIqPBNGZpJvIkoY07+gJQAYdofPP/M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JtzSY6EBbQS3/Yvpz/Qq0/sQwIoFgg7RJ4QttpkPrzUKlRPLzbFC3mJAGFS4f5m2L/BGTtM5bI/atiwqo9JGYkRBNTwpMp28GM5o4eC4i+VtPRDqazKikEi4IB2M6ArePONgGcYX9+KfKgviAeL0Uj2/Uwwqw0ff2zE7C38Xqy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T18mhraG; arc=none smtp.client-ip=209.85.167.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749135290; c=relaxed/simple;
+	bh=27vwC2fhr8WK1QaEPy8n9LBaT5Rr62UqFih79a0rzVY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OE3coAyAwptyQV4MIzVz2n/BvJOPahQ4A8PA7xjHmtRpFFFjby5687SpS1ktc3llBpBZpRZM/9hqI3jjbHHCUFZKSuCoUV14OQYvycXAYrncQk6dYTnLnyLtNXjYFh4y+tl1+JLh55aruf1Q4AvCk3qWb8qDVlQ3OeKLylw3bX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fYHELiew; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T18mhraG"
-Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-551ed563740so1332127e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 07:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749135274; x=1749740074; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aHYbssR+9VM72fIqPBNGZpJvIkoY07+gJQAYdofPP/M=;
-        b=T18mhraGEdeOfK59tVdWyvyJx0HwUrpomxN4dz4l0RxLMnsYdbQmMKymhd9S0CNeqj
-         Q9svB41VZfzuBudHrL2pKImUxjTjTK/67Vnr0+1Ob/PI/ymLRCvH3GCXezm36ecRgXcm
-         uDoHz6ma+kQnF94JRweKCK0SOGBzaKpPtiEPo9LFBjzzAlJhibMan8fECRd0480+jSaE
-         s9yVSjFY57MDiR9NsHabmiYzJwpP1eV10WoWfkcHeJJKtAnI1dXJza4bbjCO4/FPCSOw
-         kXfaXp6tY39Ymkgc01dgbZq1geTh40qMe/KJ8HQYkYhTuefUwLgN6kR2JEzAK41brcfA
-         r+eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749135274; x=1749740074;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aHYbssR+9VM72fIqPBNGZpJvIkoY07+gJQAYdofPP/M=;
-        b=AqLSVwWLg7R8Ec1ZFR6Eoresf4otk8/XqRqM34Jt1nXmY2QNaoLbhPW28DOTH9mLA3
-         p0v0XT/PFB9ZJ5Y3sEGYAWSZiR7Iq4I3Ze093XOYBXAdJ8onaTgxVoXzFsYcXGUByUWv
-         a3dZKRVclPHZvhLtWsimeNIdavwpfbFzlLzqYkqln/7gj12WiMIrxEbVYTtf++OWTGsK
-         dORnO800BiQECnrlDKMGfF7lhSzJtj/ZY4oknwTSOorXuDsTAJcLzGzOBvNyJ3t0Xn5d
-         yf7G6NHwNqXETPiGzRfDwtaGK7G9EOY+thce2hadI8uXqK/pjsy0o8aTLEizT3n/RxVw
-         V10w==
-X-Gm-Message-State: AOJu0YzfwwwmdmjGQE6TVsDOUO/Wxq8DQkVJ9Ucq/l6OwrHP/6ewpsGz
-	aeg1fQ1vI3K5Zq+wE4a4JCvvMFonxhpjl98E8jZZM7DbYamZlEEyXVTpyp047gMPMOQnUXHT2b9
-	Gvg+xcF57yOyjSlHwm+TvSunqpjvDNNg=
-X-Gm-Gg: ASbGnctuJSVVBtHnAj4nEzhh1ZfDcKUCJl3pSArp/CHQJfDfcklO0rFQfB5dym6u83B
-	ZsdnZ6udRU21yhG5Ox4gWfwIPALosP6zVKojTuAmHKP4E1rzMwDXgj3z64I1ugCWYKkv5iciTM6
-	eqhgQpM5oF7e92VtxPbO598Sl9OfUQql4b4ePCBbUJKTEc
-X-Google-Smtp-Source: AGHT+IFyYo8Ml8OY//OgeUYcEk986C+CfcRJWXBY1hkFMM5bk05QVXBlbnqojST/HNffv1Jd0o68RKUoCaR8Pcncco8=
-X-Received: by 2002:a05:6512:1101:b0:553:24b7:2f61 with SMTP id
- 2adb3069b0e04-55356df2b3cmr2311547e87.57.1749135274071; Thu, 05 Jun 2025
- 07:54:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fYHELiew"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5559uYEp030432;
+	Thu, 5 Jun 2025 14:54:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=ShU0X8d9LxyRlNTkxBmjSYrE4mHV
+	A5cfcz17bfC2HRs=; b=fYHELiewROi2xnT4qP6aR76DhwsuhULpOVZYVQ8agYPz
+	W7DIAfF0pULhq4/U51V3I6drquNyB49QMl1VglGHGUZSAcDIX2ql3/5rQ3hi433T
+	rg+uCrDTmYvqYdHYQ5dNzULR2GtfYajMmvAXibRa9PzqBuevU9JOtHPYcvzhs4To
+	reSGv1AnJmosTrNnO/Ad+UV+vVRtiTMOBmi7QmaOVZ/SM3+CbHRUWOx1DsJtLCjT
+	LdBd1c07lJ+IPTVM3f7+SQMJD2LGjGluHSgRWtffiYR7L/GopJLuVzWdkVSdNzOz
+	B0L9c6br543hD04ZWqN+kCxZ49YvJU+hqo+G4GbP3Q==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gf01cqt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Jun 2025 14:54:42 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 555Eb36B007263;
+	Thu, 5 Jun 2025 14:54:41 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gf01cqq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Jun 2025 14:54:41 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 555DcmIX022518;
+	Thu, 5 Jun 2025 14:54:40 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 470c3tnc0q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Jun 2025 14:54:40 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 555EsdAT33554756
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 5 Jun 2025 14:54:39 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EE4212004E;
+	Thu,  5 Jun 2025 14:54:38 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 651F82004B;
+	Thu,  5 Jun 2025 14:54:36 +0000 (GMT)
+Received: from vishalc-ibm.ibm.com (unknown [9.124.213.71])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  5 Jun 2025 14:54:36 +0000 (GMT)
+From: Vishal Chourasia <vishalc@linux.ibm.com>
+To: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llong@redhat.com, bagasdotme@gmail.com
+Cc: Vishal Chourasia <vishalc@linux.ibm.com>
+Subject: [PATCH v2] Documentation: cgroup: add section explaining controller availability
+Date: Thu,  5 Jun 2025 20:24:22 +0530
+Message-ID: <20250605145421.193189-2-vishalc@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407134654.92841-1-hupu.gm@gmail.com> <CANDhNCptjorLthhgMBLLCCYsk5MJT73Daj+usFPWNenpgYTF4A@mail.gmail.com>
- <CADHxFxTWZJMBU9+VJH9=U9GHeoFf3N5fju3hApSRDONpQ9KAXg@mail.gmail.com> <CADHxFxSGwSBL0SvHGe6peVZ2=T=cz-PERrAiux8=0v_8heAp2w@mail.gmail.com>
-In-Reply-To: <CADHxFxSGwSBL0SvHGe6peVZ2=T=cz-PERrAiux8=0v_8heAp2w@mail.gmail.com>
-From: hupu <hupu.gm@gmail.com>
-Date: Thu, 5 Jun 2025 22:54:22 +0800
-X-Gm-Features: AX0GCFuI9UROKVNDj5d_aeBvWkLIS9yGsNDsziXCeh8NKppuq2EIpOxwmbrDKis
-Message-ID: <CADHxFxRQL_VyAMtJVrHXso9aGOTLf8Z==2eKaDnPHe5aXy+Gtg@mail.gmail.com>
-Subject: Re: [RFC 1/1] sched: Remove unreliable wake_cpu check in proxy_needs_return
-To: John Stultz <jstultz@google.com>
-Cc: linux-kernel@vger.kernel.org, juri.lelli@redhat.com, peterz@infradead.org, 
-	vschneid@redhat.com, mingo@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, hupu@transsion.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Yi6NcXQyYjMNak1u6hdZOLsjVmA6Z901
+X-Authority-Analysis: v=2.4 cv=DYMXqutW c=1 sm=1 tr=0 ts=6841afb2 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=HQQEU_knwVeOKeFEU2cA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: X_SXSZkJ1HdvVjGvtjJZJgcbfDP_9iwK
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDEyNSBTYWx0ZWRfXzoZD5xCoQOA4 Ncz/Ccx3HqT+32RuiCteWdYQT5bKmaAJSa0BentYsOgjBiHCLVKyYdzcDT8LBK0so84IDa6/SUW P8/QAa1kPXiwrkDLmXeFya9IUolcTzeevDiQfdVCnaBALl3DUjo8mK7kW0ltt2fBOf2zb2vB0fH
+ R2MIAyh6xozYWLIUKazyh02XsbjjGi0zUgemiWdp4Xra+iG8dnkO+gIiYlrzBaHsuF/xMSvXZAT 4NBks1lstFWgwPGLbfC7r0I+GkQ3BqOP0paXf5vKf8miiCv6jM9nz2ZwTvzHMcN+ysAXsdwG+Jz anta5sEYlRQxoW3wFoeGF8x3CQOXdcYBR0pLokFt769EANAhmIFGoltUijP8fDKrVnvvhQkwXHq
+ y6Q9eEnoqXD6iG+9feRFrc674ELVog7ofjDwY7a8gIT9s6Cz81eu/0kMC6Wk74u5iGK0BtNV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_03,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 mlxscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 mlxlogscore=866 adultscore=1
+ malwarescore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506050125
 
-Resending to bring it to your attention.
+A new documentation section titled "Availability" has been added to
+describe the meaning of a controller being available in a cgroup,
+complementing the existing "Enabling and Disabling" section.
 
-Thanks.
-hupu
+This update improves the clarity of cgroup controller management by
+explicitly distinguishing between:
 
-On Mon, May 19, 2025 at 1:13=E2=80=AFPM hupu <hupu.gm@gmail.com> wrote:
->
-> Hi John,
-> I=E2=80=99d like to revisit the discussion about this patch.
->
-> As mentioned in the previous email, while using wake_cpu directly can
-> effectively shortcut the deactivate & wakeup logic, it may introduce
-> performance issues, especially on big.LITTLE architectures. Let me
-> illustrate this with a common scenario on Android: foreground critical
-> threads often need to wait for background threads to release a mutex
-> lock. Under the "Proxy Execution" mechanism, the foreground thread is
-> migrated to the CPU where the background thread is running. However,
-> background threads are typically bound to weaker CPUs due to being
-> part of the background group. If proxy_needs_return allows the
-> foreground thread to be placed on wake_cpu, it may result in the
-> foreground thread being migrated to a little core, causing performance
-> bottlenecks.
->
-> Therefore, I suggest that proxy_needs_return() should always return
-> false for donor tasks unless the task is already running on a CPU.
-> This ensures that donor tasks trigger a CPU re-selection process,
-> which is consistent with the behavior prior to the introduction of
-> "Proxy Execution" and should not introduce additional overhead.
-> Furthermore, on Android platforms, this behavior allows vendors to
-> leverage the hook in select_task_rq() to fine-tune CPU selection logic
-> for critical threads, enabling better optimization for specific
-> scenarios.
->
-> Additionally, this patch has been successfully validated on an ARM64
-> platform emulated via QEMU. It has been running for several days
-> without issues, demonstrating its stability and reliability.
->
-> Looking forward to your response and further discussion!
-> hupu
+1. Availability – when a controller is supported by the kernel and
+   listed in "cgroup.controllers", making its interface files accessible
+   in the cgroup's directory.
+2. Enabling – when a controller is enabled via explicitly writing the
+   name of the controller to "cgroup.subtree_control" to control
+   distribution of resource across the cgroup's immediate children.
+
+As an example, consider
+
+/sys/fs/cgroup # cat cgroup.controllers
+cpuset cpu io memory hugetlb pids misc
+/sys/fs/cgroup # cat cgroup.subtree_control # No controllers enabled by default
+/sys/fs/cgroup # echo +cpu +memory > cgroup.subtree_control # enabling "cpu" and "memory"
+/sys/fs/cgroup # cat cgroup.subtree_control
+cpu memory                   # cpu and memory enabled in /sys/fs/cgroup
+/sys/fs/cgroup # mkdir foo_cgrp
+/sys/fs/cgroup # cd foo_cgrp/
+/sys/fs/cgroup/foo_cgrp # cat cgroup.controllers
+cpu memory                   # cpu and memory available in 'foo_cgrp'
+/sys/fs/cgroup/foo_cgrp # cat cgroup.subtree_control  # empty by default
+/sys/fs/cgroup/foo_cgrp # ls
+cgroup.controllers      cpu.max.burst           memory.numa_stat
+cgroup.events           cpu.pressure            memory.oom.group
+cgroup.freeze           cpu.stat                memory.peak
+cgroup.kill             cpu.stat.local          memory.pressure
+cgroup.max.depth        cpu.weight              memory.reclaim
+cgroup.max.descendants  cpu.weight.nice         memory.stat
+cgroup.pressure         io.pressure             memory.swap.current
+cgroup.procs            memory.current          memory.swap.events
+cgroup.stat             memory.events           memory.swap.high
+cgroup.subtree_control  memory.events.local     memory.swap.max
+cgroup.threads          memory.high             memory.swap.peak
+cgroup.type             memory.low              memory.zswap.current
+cpu.idle                memory.max              memory.zswap.max
+cpu.max                 memory.min              memory.zswap.writeback
+
+In this example, "cpu" and "memory" are enabled in the root cgroup,
+making them available in "foo_cgrp". This exposes the corresponding
+interface files in "foo_cgrp/", allowing resource control of processes
+in that cgroup. However, these controllers are not yet enabled in
+"foo_cgrp" itself.
+
+Once a controller is available in a cgroup it can be used to resource
+control processes of the cgroup.
+
+Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
+---
+ Documentation/admin-guide/cgroup-v2.rst | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 0cc35a14afbe..31acc64e656f 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -435,6 +435,15 @@ both cgroups.
+ Controlling Controllers
+ -----------------------
+ 
++Availablity
++~~~~~~~~~~~
++
++A controller is available in a cgroup when it is supported by the kernel (i.e.,
++compiled in, not disabled and not attached to a v1 hierarchy) and listed in the
++"cgroup.controllers" file. Availability means the controller's interface files
++are exposed in the cgroup’s directory, allowing the distribution of the target
++resource to be observed or controlled within that cgroup.
++
+ Enabling and Disabling
+ ~~~~~~~~~~~~~~~~~~~~~~
+ 
+-- 
+2.49.0
+
