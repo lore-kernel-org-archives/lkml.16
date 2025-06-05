@@ -1,112 +1,119 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB0520C026
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3F4213236
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749125361; cv=none; b=WS0EaA4PdqU2DaiZk8zbIrOEhYHFbhxYD2eGpzf7EUugFQaXRprG0P/f+SxP/6cwkx34vIUEhDI8wqK7Wb1EG+6FeR8HX7QJsoGGdbkEwxD+NDgDSUhPuBglY/MZqXpR8Znz5YsURI6NDsPbSB/2dGzzXHmXQis6NLncwrx13LA=
+	t=1749125475; cv=none; b=DfurJMriNOjjlp5B5LC0c+VqQHRk3B/rx16noIGMWQNsFfHDoT/vYzj1yn9chisqQHWGQHs7OEAm3b4jk9DaDvtxhvcH+d5rz/8GZNILYcLgwRAyRdWIKwgztScVkZnJaJ/ny7OrxfSbqieTUx1G7SUasr/W2oSa+4yrYcxUWCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749125361; c=relaxed/simple;
-	bh=68ST4wWru6aYFudYB/AR3+klXokvG7WPyNYVacGmxco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hbhSqqohQsUIQu7/iBdxUmwia8ps++LWIgDx+6AwoiCftjQ/c6vLs59znzMMmlcLPKCCt9c+T1sKzB1iBKyYD8gnsSTP6K6t6vTN2Ni7W0mmWHKgd2utftjYWb1Zrw7SoZ66abRC9+OTwAmFjcQjMhShlOW0pAt2WbvrwCxSh7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=I0osl0hl; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1749125475; c=relaxed/simple;
+	bh=MW3N16/x4ORzkYHJazCJmRwnbO4hITQcNKVwQrY/7gQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=XlI+/HJfUaVCoObLA4HQCAhvescBecIfAkTAlNNOkbPGGxqG9wEJIeVkcZ/S/p5/w9LpBWF8tof+LJIEnFgnwXY2/dnY52CUFJj3uBGRcLailha9H2Ybz1lmtbjMvnadFDIOA3skxRTlki2zMJwijFqX8mZtFFz5Fh/Dy1SRRJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QqEe4+Nr; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="I0osl0hl"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6fad8b4c927so8103966d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:09:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QqEe4+Nr"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86dc3482b3dso1527451241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1749125359; x=1749730159; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UNA1AqJPiuiUBzCeRC8bK1nu38f0qCHlYuwt9uDWl+g=;
-        b=I0osl0hlt4Wb/cImSyn7xpSmr1foyB4eyd+a5FZJdcMpmq0atJGB7StBZyENYtbAjo
-         bW9cIyQRYLE53n7QdQ0yCDv19KXYNITb/IYQrJjtsgDwbvT6v3/Lw3PgwRTn5tPV3kYt
-         A7XvI7/W8ynRihhAmKIuK0j+T4HbrSOTDRAopm1PiPY75dAyj0Jn90+7bfFi3b7yO4Qn
-         bgCJIxdvpy3cwdSFVbvKNbb3SLTQRJ2NzhraEow1wJZzkTTPkccKIRfm6Qkfx47gBD69
-         xzE4vscJt+NJLa9s5APp6AdsiUhZpUTeUHLdl91VJIXOafhwkbWfRRJTmPFHWGE9BXem
-         aijw==
+        d=linaro.org; s=google; t=1749125473; x=1749730273; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OgmiEXi0A20P8LTwFGfS1KsXpM+N3sq3vnKks2IxAc0=;
+        b=QqEe4+NrfNz7RYn+CehgTyuFIWaYHciqdEVZteBNEaupIwuMT0WLA02W/QZdtmJkf7
+         GdjMRHTGS9Hxlz+iNH7ocfM+a6IPMFNaxB3BTdnSb2pcjlhR85NbFSD1O/CI/2Zbach5
+         tMyHH6ANmeE/p2861xPiM+CkBh/vG917sus/ZhWCZN4guRi0MmTk/yZa9O0gBEc6huN0
+         Vt3EnENPhct4feyt+10VmJS2fekT/XREVpYlBKps3tbkXLa07//Jrd9uaiz3xFMK7vD4
+         1WKz9XaySiq/Y5mIU4nAPMhsjG9bb2KKIh0qg8d6uy6KAjXDtchoYGTlnJx2Vhb5HRYW
+         vN1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749125359; x=1749730159;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UNA1AqJPiuiUBzCeRC8bK1nu38f0qCHlYuwt9uDWl+g=;
-        b=MNnVULUzMVgG6UtD3oVyApFabvQ0ocoD5eVL/LBYNLLFgttztFx0tHGc6Ax6sBPT6x
-         p1XEsNKC7UDxeOhYVdQ9R7DJFrXeCNWv8MsU0NSnrCXp+B714vEoAxYOIJoXdc6mQntG
-         a0d2eUJGU1LSmjHeP/vnOy5tTnCuh7CXT21fbQfiEl0TfqR52zZ7A2/tW523bRwzAiEC
-         2swNpKVAar7hwRICZhUtmUxH1f1fnOvpkItBvjig+sCcyVS8cm30GpRDLKy0IkTgszDR
-         pt/b4YQhNGQuEciAIGvMTjP1O6ALdd73eXpmsIvn4EVMZkEou3jXnsbcHL/Hddr4FRtY
-         rrKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXe5pkPrHjgkuVi+nAbqt12A39md7s5bMGiQh1DIcREdDzwpXWvSdhXgtc7Mb6iJQ3gw1skFpp0Oh62JNg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFEI3KrfJXksaVBNnKQfmOKuJbVrk1ayfO00+GQBkd0x7bxob7
-	IR3LjrwakeSK7QBz4fPQGKH7aWWLtU02YsWUCq2IRRBDaNIOL73SI4tLBYx2JU1oK6k=
-X-Gm-Gg: ASbGncsjVHkyedScWS5haF6vWIqmE2Svaqg9k/6lxcGF3ftpdIt5RPO7DBjIOV+aAyA
-	bQrgNL5JoFQM2oGInkheodmvZJzD0eoa6sI+D4gfe4hmxHBGU4sO7olbOnL7D63jkYMiAxZ7yjz
-	t+H0/A+0TQOj+BJyJ90DFNk/R7kbtLbZ50pKoDjr+15WIGlVUYix97pLqn/d11XhKOuWQlsvm+X
-	85pH+ts3tQQN2VXj+nNaOFfRWrVAYV1TmUwZ34ZoQyekQb2jFZhQyx/5Bs15Bw/vQ+qFVmzX4Ec
-	ObjFqz3w4M6w/zEjSD146dTkuT68AE3R2NGYysqeRaj15Y+oH8yxryaQsu5OsU+mQhYW5aUmIp4
-	CCQJs3oAygIFphgpJEPCDC4t1ym0=
-X-Google-Smtp-Source: AGHT+IGoKm/5U4/UM2uM64qO2HBitYJapsKbuDFJlmk9byEyE/W8ROsmev/IR9V9jeal6LfHAI1O8g==
-X-Received: by 2002:a05:6214:224d:b0:6fa:c512:c401 with SMTP id 6a1803df08f44-6faf70163f2mr115317766d6.37.1749125350351;
-        Thu, 05 Jun 2025 05:09:10 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d4c7d8sm120604836d6.36.2025.06.05.05.09.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 05:09:09 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uN9PB-00000000EdT-18gz;
-	Thu, 05 Jun 2025 09:09:09 -0300
-Date: Thu, 5 Jun 2025 09:09:09 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
-	gerald.schaefer@linux.ibm.com, willy@infradead.org,
-	david@redhat.com, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-	jhubbard@nvidia.com, hch@lst.de, zhang.lyra@gmail.com,
-	debug@rivosinc.com, bjorn@kernel.org, balbirs@nvidia.com,
-	lorenzo.stoakes@oracle.com, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-cxl@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, John@groves.net
-Subject: Re: [PATCH 07/12] mm: Remove redundant pXd_devmap calls
-Message-ID: <20250605120909.GA44681@ziepe.ca>
-References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
- <2ee5a64581d2c78445e5c4180d7eceed085825ca.1748500293.git-series.apopple@nvidia.com>
- <6841026c50e57_249110022@dwillia2-xfh.jf.intel.com.notmuch>
+        d=1e100.net; s=20230601; t=1749125473; x=1749730273;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OgmiEXi0A20P8LTwFGfS1KsXpM+N3sq3vnKks2IxAc0=;
+        b=RQGfoI4xRwf+aZUr5B/cto29VaizvWV8qA2H4oHxSBtywmlpLYwzB76BOuk5Xq2gR7
+         WUVlCEpHbVyc8C5vu6jwuLE77GpwNiwU8mncePCGD2cUOgh/m1ZHPqZNyoyzW3PIfmV+
+         euFOz/4k7PP3r6pEc97YpnnWjsNzsBM0lB0RV+YZXoXsaRrhpOx7ftRbQs+aDiClKUFA
+         0a4yDpB8HudqqXnfEdtGCDlt5QHGQIT91HOylGlykzq6WvFGTyKS+sdngPqJHKmJcPoH
+         xe4+c4dVrLKdmuzijybOaclVhed9kCusdjQoUh5FCSoIPT1k91NACH9igw3/Y46Vk9Ap
+         Tvpg==
+X-Forwarded-Encrypted: i=1; AJvYcCW64wAstURaTZ1310vyqYAFexeWL3kwH834L5wkY3LDEJ8tc8WnLHe7xgk+qfTYuuFr4iaEymh7sIFuv8U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIoBSDjfz5YmJNNQAqBOlMFfZ3maw7Q3TXjNko4tqjUhmt53fU
+	YTYgGCpANBkvrCKIAlidVEn32xN/7iMNh5htY6JPKIO1eGCkymUlUty7SV9z+T8joZPa7GEeSCM
+	2u3Ba7gYnHpPz50YzxXd8vqwCslIephi9ELHnhfqrfJYsgNSrb++D/9VXcA==
+X-Gm-Gg: ASbGnct58FE08Bl7m7MW9C8xfyYs4Yl3tY/GkVQC1NJhxxmI1gQDn+stpTSIlbXd5xQ
+	E2+oeywhcy4nXNZnTsgkb0eupXwxeuh5DASQT4un6hz7kxdUxAnQ9PF4qdTHcqjxcpujGGNMJ8i
+	XRzUqCnT4kTt07w6dn3++JyxGMg3/gx5Y5+b1VVBKirg2p3FtJ56XaPURpCbL4vsKAXN4rvhkui
+	Mwx
+X-Google-Smtp-Source: AGHT+IF2aumGdZUdL8u076i5ZOYIyzoO7Q7yA+GrS7FD0Blk3+o8CgZgvUcGhew/xxle19ewVkjFe1PCU2oG2AHumNI=
+X-Received: by 2002:a67:f995:0:b0:4e2:b21b:2cbc with SMTP id
+ ada2fe7eead31-4e758a62aa2mr2243810137.3.1749125472722; Thu, 05 Jun 2025
+ 05:11:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6841026c50e57_249110022@dwillia2-xfh.jf.intel.com.notmuch>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 5 Jun 2025 17:41:01 +0530
+X-Gm-Features: AX0GCFt1mMqSdas5kTm6Jze2KjPhrZRGcVrdJh8UaX_gHiGLSsKT2XiJF6iZ_Zc
+Message-ID: <CA+G9fYt-CMBGCFxV5ziP98upkeK2LBxkZRo7-0XN1G+zLtWK4A@mail.gmail.com>
+Subject: selftests/filesystem: clang warning null passed to a callee that
+ requires a non-null argument [-Wnonnull]
+To: clang-built-linux <llvm@lists.linux.dev>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org
+Cc: Nathan Chancellor <nathan@kernel.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 04, 2025 at 07:35:24PM -0700, Dan Williams wrote:
+Regressions found on arm, arm64 and x86_64 building warnings with clang-20
+and clang-nightly started from Linux next-20250603
 
-> If all dax pages are special, then vm_normal_page() should never find
-> them and gup should fail.
-> 
-> ...oh, but vm_normal_page_p[mu]d() is not used in the gup path, and
-> 'special' is not set in the pte path.
+Regressions found on arm, arm64 and x86_64
+ - selftests/filesystem
 
-That seems really suboptimal?? Why would pmd and pte be different?
+Regression Analysis:
+ - New regression? Yes
+ - Reproducible? Yes
 
-> I think for any p[mu]d where p[mu]d_page() is ok to use should never set
-> 'special', right?
+First seen on the next-20250603
+Good: next-20250530
+Bad:  next-20250603
 
-There should be dedicated functions for installing pages and PFNs,
-only the PFN one would set the special bit.
+Test regression: arm arm64 x86_64 clang warning null passed to a
+callee that requires a non-null argument [-Wnonnull]
 
-And certainly your tests *should* be failing as special entries should
-never ever be converted to struct page.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Jason
+## Build warnings
+make[4]: Entering directory '/builds/linux/tools/testing/selftests/filesystems'
+  CC       devpts_pts
+  CC       file_stressor
+  CC       anon_inode_test
+anon_inode_test.c:45:37: warning: null passed to a callee that
+requires a non-null argument [-Wnonnull]
+   45 |         ASSERT_LT(execveat(fd_context, "", NULL, NULL,
+AT_EMPTY_PATH), 0);
+      |                                            ^~~~
+
+## Source
+* Kernel version: 6.15.0-next-20250605
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: a0bea9e39035edc56a994630e6048c8a191a99d8
+* Toolchain: Debian clang version 21.0.0
+(++20250529012636+c474f8f2404d-1~exp1~20250529132821.1479)
+
+## Build
+* Test log: https://qa-reports.linaro.org/api/testruns/28651387/log_file/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xzM4wMl8SvuLKE3mw3csiuv3Jz/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2xzM4wMl8SvuLKE3mw3csiuv3Jz/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
