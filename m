@@ -1,126 +1,103 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D221DFF8;
-	Thu,  5 Jun 2025 20:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9862D27C150
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 20:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749154792; cv=none; b=c7B/XgkT7ROoGZIX4yk+WGjfrg31jH5lTIVn73qYS7fac9NxhtQD6a+ZKB2XAQZ1MmmsYh0pY0nF26qKad5Vv883rawR5uHjlQzXLGGDT+pVvW3RSptCAQLOXjF+CA9GMExu8auYZSkqf5Y/K8/2UaI33FLmpNMJCZGOIKXPl8A=
+	t=1749154801; cv=none; b=S5oMYCkHKQLnPwBLGuOJZ3kVyCOWRpppUSmZO3f7+KEmYtWNvLI/JG6Cvb3vC18cXkOhEKcrd49JnLP/F2/+/N08ViRqkX3RGfHY/aaVLODkbdz30XJ4fjaovD8Pv4jhJJwKLZaMqNKG3BXnMbqaDL7abD08KLwR4albLe1SAuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749154792; c=relaxed/simple;
-	bh=bCoVjlodrgkYzGyi6l6AfakjRkc/l/4mvqDviZz/Z/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SjoYynQFKNUG8NLDBQkv4Iv7U5Eri6v/lOce1bnBQp6UP2qhnFipCcnjW20gh1dvLIQSrkUeEuVQRzsn99DK4bZ0HUWSFVf7/8o8uD6JKnK9GJ+oqnr4wkdL3LgFp3t2MwggA8smnOekRB8emUMv7nVOEbsgxXPyvfkSmR35GIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id AC5C4815F5;
-	Thu,  5 Jun 2025 20:19:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id C1ECA80009;
-	Thu,  5 Jun 2025 20:19:46 +0000 (UTC)
-Date: Thu, 5 Jun 2025 16:21:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Kajetan Puchalski
- <kajetan.puchalski@arm.com>, "Rafael J. Wysocki"
- <rafael.j.wysocki@intel.com>
-Subject: [PATCH] tracing: PM: Remove unused clock events
-Message-ID: <20250605162106.1a459dad@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749154801; c=relaxed/simple;
+	bh=o1vWj2peYFzT+9B8W1tqxLwFgYA9lzDCmka4MeMf2gg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=phA6d3Le85XXbAOcq4iXMX8vkHU9PveVdmqiIZIvBbxcAzmTs611hubau5LrbQZ30JxCeed8xRoYSsig/5+L9KixAbD+Cs3bAXHF88mOYgRUC9vMgH3xoOO1IIDAxXxbL2NsPhiR1q1ZZ3vCI7vehezN4VpXSzX5BePR5BzP684=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=khF9e8vS; arc=none smtp.client-ip=195.133.245.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="khF9e8vS"
+Received: from mail.nppct.ru (localhost [127.0.0.1])
+	by mail.nppct.ru (Postfix) with ESMTP id D54941C1200
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 23:19:53 +0300 (MSK)
+Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
+	reason="pass (just generated, assumed good)" header.d=nppct.ru
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:to:from:from; s=dkim; t=1749154788; x=
+	1750018789; bh=o1vWj2peYFzT+9B8W1tqxLwFgYA9lzDCmka4MeMf2gg=; b=k
+	hF9e8vSQzQ1D0bX9rXoVD8dUdk/GBze+XY5UHF8WTd1goY2kojEhFJ2fAuIajGK1
+	/odE+YTug3EEwn8372WTIl72uY9wtEZ5rXEwWCPRwbNh+hFZvuwpMgeifficseWF
+	PywKKVF10Qu96TCHr9TdUHPxyEy5t8Ob+CM0yti9Sw=
+X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
+Received: from mail.nppct.ru ([127.0.0.1])
+	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id QHRJMV0Q9GeV for <linux-kernel@vger.kernel.org>;
+	Thu,  5 Jun 2025 23:19:48 +0300 (MSK)
+Received: from localhost.localdomain (unknown [87.249.24.51])
+	by mail.nppct.ru (Postfix) with ESMTPSA id 5176C1C0D75;
+	Thu,  5 Jun 2025 23:19:43 +0300 (MSK)
+From: Alexey Nepomnyashih <sdl@nppct.ru>
+To: Lyude Paul <lyude@redhat.com>
+Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/2] drm/nouveau/instmem/gk20a: fix overflow in IOVA calculation for iommu_map/unmap
+Date: Thu,  5 Jun 2025 20:19:20 +0000
+Message-ID: <20250605201927.339352-1-sdl@nppct.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: uizkqrykdouwbnzti41gsigjsm9qq4b5
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: C1ECA80009
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+dspzweXgzXk3Nxn8TcOfSZ5im+XcUehg=
-X-HE-Tag: 1749154786-832789
-X-HE-Meta: U2FsdGVkX18nRbL1UU7fx6tinbnfYDnaPK4rk8GK75NQj/edkXAHq0Pz9T+AVZdy+pBKVrPKhilDDu7J5DL4dF1/Yplwi2uGdrBmJc/62lYd6vbEDiHR18x+5oI+B2LjA7JWX/ZoHOhkGI7sL0VTsOVnrFKGKFUSE+gWfg2Q66RLvNxEOZKrAJxExo+byRApfWsRds2N0pZa7obeJA8v+ezLh+/c+Rs9jury1fq8dyH0cd/3LFzQqeDMN781UOIeqsEI2wwIwoysDmcV40msrSrtlLar+/I8g2Ul4xdOC8EzWGOu7YjDq3t1sn72Q3GZlFIcytI/Sh0/f29S5eQ6ZOBM26m1PYajjyXNynd0nQO/AaFIEDJ6U2Rrmtuqu/c9b/rKuEvIjdihX4Hau7DcCQ==
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Fix possible overflow in the address expression used as the second
+argument to iommu_map() and iommu_unmap(). Without an explicit cast,
+this expression may overflow when 'r->offset' or 'i' are large. Cast
+the result to unsigned long before shifting to ensure correct IOVA
+computation and prevent unintended wraparound.
 
-The events clock_enable, clock_disable, and clock_set_rate were added back
-in 2010. In 2011 they were used by the arm architecture but removed in
-2013. These events add around 7K of memory which was wasted for the last 12
-years.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Remove them.
-
-Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
-
-Fixes: 74704ac6ea402 ("tracing, perf: Add more power related events")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
 ---
- include/trace/events/power.h | 47 ------------------------------------
- 1 file changed, 47 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-index 9253e83b9bb4..6c631eec23e3 100644
---- a/include/trace/events/power.h
-+++ b/include/trace/events/power.h
-@@ -337,53 +337,6 @@ DEFINE_EVENT(wakeup_source, wakeup_source_deactivate,
- 	TP_ARGS(name, state)
- );
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c
+index 201022ae9214..17a0e1a46211 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c
+@@ -334,7 +334,7 @@ gk20a_instobj_dtor_iommu(struct nvkm_memory *memory)
+ 	/* Unmap pages from GPU address space and free them */
+ 	for (i = 0; i < node->base.mn->length; i++) {
+ 		iommu_unmap(imem->domain,
+-			    (r->offset + i) << imem->iommu_pgshift, PAGE_SIZE);
++			    ((unsigned long)r->offset + i) << imem->iommu_pgshift, PAGE_SIZE);
+ 		dma_unmap_page(dev, node->dma_addrs[i], PAGE_SIZE,
+ 			       DMA_BIDIRECTIONAL);
+ 		__free_page(node->pages[i]);
+@@ -472,7 +472,7 @@ gk20a_instobj_ctor_iommu(struct gk20a_instmem *imem, u32 npages, u32 align,
  
--/*
-- * The clock events are used for clock enable/disable and for
-- *  clock rate change
-- */
--DECLARE_EVENT_CLASS(clock,
--
--	TP_PROTO(const char *name, unsigned int state, unsigned int cpu_id),
--
--	TP_ARGS(name, state, cpu_id),
--
--	TP_STRUCT__entry(
--		__string(       name,           name            )
--		__field(        u64,            state           )
--		__field(        u64,            cpu_id          )
--	),
--
--	TP_fast_assign(
--		__assign_str(name);
--		__entry->state = state;
--		__entry->cpu_id = cpu_id;
--	),
--
--	TP_printk("%s state=%lu cpu_id=%lu", __get_str(name),
--		(unsigned long)__entry->state, (unsigned long)__entry->cpu_id)
--);
--
--DEFINE_EVENT(clock, clock_enable,
--
--	TP_PROTO(const char *name, unsigned int state, unsigned int cpu_id),
--
--	TP_ARGS(name, state, cpu_id)
--);
--
--DEFINE_EVENT(clock, clock_disable,
--
--	TP_PROTO(const char *name, unsigned int state, unsigned int cpu_id),
--
--	TP_ARGS(name, state, cpu_id)
--);
--
--DEFINE_EVENT(clock, clock_set_rate,
--
--	TP_PROTO(const char *name, unsigned int state, unsigned int cpu_id),
--
--	TP_ARGS(name, state, cpu_id)
--);
--
- /*
-  * The power domain events are used for power domains transitions
-  */
+ 	/* Map into GPU address space */
+ 	for (i = 0; i < npages; i++) {
+-		u32 offset = (r->offset + i) << imem->iommu_pgshift;
++		unsigned long offset = ((unsigned long)r->offset + i) << imem->iommu_pgshift;
+ 
+ 		ret = iommu_map(imem->domain, offset, node->dma_addrs[i],
+ 				PAGE_SIZE, IOMMU_READ | IOMMU_WRITE,
 -- 
-2.47.2
+2.43.0
 
