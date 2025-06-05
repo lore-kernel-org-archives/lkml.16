@@ -1,126 +1,93 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C127202F83
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A4E224AF2
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749128237; cv=none; b=lMI++nxmMkrjLBeLexAumeOVLejqtMgmeNRN4at9ICB2+i6YYFap+PD2BkeF6C3offF4gQ6yQP/B12rEGL+KNxjZtc0r7mzvLiBUQWtxO7IaWBATBpByZU/CQYldCZovbdAaDGeZDB5iEfRTsoawt5+u+gEOs2UDQyw/HYZDoP8=
+	t=1749128247; cv=none; b=c6psuu89Yn3PW1mss4M/+ad+N+yEtSvY4ZBEbgSp7/WH1HYP+2kfPwkfze3F9JlR0iQ1YhwwG4Tj3wWgjq6YJJELH7vxguPKd64x9ZboR2roWIfJrTCRqMgCYxyILsYb+N28bsu6fJv7ht5IyBm1/4RBOWQFFm94cORGHDgxO5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749128237; c=relaxed/simple;
-	bh=8P9yRldB8efdjVI/GGOevnbpBNvIMbrliEBkXndufro=;
+	s=arc-20240116; t=1749128247; c=relaxed/simple;
+	bh=dp0oUZbHoiqC69CUU3moHGnpZ4l39TaovVOwY49CM+Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JHAqKui1cp0nuL7nRZvcuUZjlMh/GCnR57WB5GPW8NoyXMw0JbBGnHhUIDDz5qtUSTeoHxq30fsHRV2bUOfW1OgkoB0yv4HOXzAJH6snM565fQ8YoWYEdhEjaaqKDUe2YiqidLVOR3C3dGv9GEJ9SNqcgJPAWP65q5oEpdvRT/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=zLS+slgB; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
+	 To:Cc:Content-Type; b=ABcuJRH6Q4LMjPpC3X6+eZhGjLiOaaxA5JwgHSNQcXgjlA/0Du7v0KMogDdSTQ9sPFXZQtRo551YxMVqvK8isxifh278Huo4ir/OS72zBHeCchz3jEcO1SheNclG6AWwwFxtlySbZXqZ5vEfpNMH27cfV3VtRBoms9CRqmesLbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vn7mUxlR; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="zLS+slgB"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7dc3df7ac3so912536276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:57:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vn7mUxlR"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5534f3722caso1161934e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1749128234; x=1749733034; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749128244; x=1749733044; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8P9yRldB8efdjVI/GGOevnbpBNvIMbrliEBkXndufro=;
-        b=zLS+slgBxclExO+7PrxzQT3gPMRpG4j773E7dpPXjiE87mweShiPW//07hZag4JH/7
-         o7Oj9Y4BaHsPCP/IiUh6EOXIYUjNpYMhCU7sDr9AOsx5dnenQubUnI1PGFk44vGc9DqK
-         FuH3MuVY0hcvmXWqacmWsXD39/WUchIhFBC+2ivxZRNcw/SV/cfdcbaUsjD45Q959esS
-         Ensk1/Tvo1nuxoAzdBRwCAsysDZQstRUXV1Ebg1jxa7//igJN8ulsP8+gJectPp/7RTR
-         XOlB0fSxiOwiXT5bG91vtt5V2QyNMc5XPAQ1u6em3weptntZwBX6YEDyPjbukUC5PB0z
-         tNLQ==
+        bh=dp0oUZbHoiqC69CUU3moHGnpZ4l39TaovVOwY49CM+Y=;
+        b=vn7mUxlRdflpTOj+Pf9h6Fm0Dl5dGEFlK9pjKAPnan8AFHnwLq+6TKGggDeqbtGyrO
+         5cbtnk4Kpdd9dvchLv5QGnmwL7LSGaR3OmvsrWT13zWRSaLcgWPQ8ZPXZGSy+CRsk0hZ
+         NaCFxmu71OseErHcESTxxNzfnv1iGf3xfCUU2U+IrE5qcy9W++J4OHwn245j38RElxla
+         mH6ba4yabjVinzeAUjP1PvzZTgmKold+bzopLe25z3XFM9SaXwf1tqP53wih1RfixaNi
+         WGkT3Y4fgIKpIZ31dRXY2crpLx5a99+1S4ERkiG4dq2ickkWxoMnnZ0ma8h7iFOycTEr
+         RHgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749128234; x=1749733034;
+        d=1e100.net; s=20230601; t=1749128244; x=1749733044;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8P9yRldB8efdjVI/GGOevnbpBNvIMbrliEBkXndufro=;
-        b=cm8Wfp7ivcvQA+2iRfcJ/6Oz9hcAh3+bh6zQiqyttnQyjpWnY/X3znEC0vUr0xKclG
-         YCucyTmNXNm9MvrPrHQxkZxLP84fSUToQzpRcIPzzOEbwmPxynC8B0Sq/MCnZLbH82y7
-         wEuhQYxzoDYqVRZ1wc5UsS6gh+LDx81SYmKpMcitBD15PJHsNQPKaZS6gQvy6Xfqjjwn
-         UvReK2bhxsTAU3P7q5LjPUoUx5sPlnlMhjN0JfH4bcRniTpZ1OJaPDiCSIx78R1+4wuG
-         0fNfl3T0emo+l3yj+e7zGtOjNYHTQOxVEd6A8GIM00NS/MMj0Pc5aUKBnsTsiBWN039o
-         DlHw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+ve2m1Gc9t05AQzv1TAg4TFUNMWK4j7kSa0Ql36Zu/B7+bOymQvKuEba0H9OhrlOyCeFUS7gHHBOhpoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy57tU+zHYHOygpaqBSEpHUg+EI4r/hmHwSEhjLUFOx05zDC6bv
-	LugfjCci4cM8OzIAD4Eg0DSoaGdHxtsCD6d29T0vRexcz/j7CqYKeIdYLLQv6JOccfE5aOBSsED
-	DpoIQpJbUTg==
-X-Gm-Gg: ASbGncsWgF1Tpt7pxuad90eiM0IQb7ms/wjhT6K6vZ0bolDFoHFtHceOWcO3VdkGGrO
-	iNUjZ2idtmr0Werq+IHmgIJVTGoV2PwsFFC3CDgRtCcN9diokm9Yx4vmEObg/OJRRVNOK3zq+SF
-	QPhI5kxbAE6VgZuQm44/RmwpWk615J9UoMjC2C8qYE1xy/dVW2zYwF8f6PrRHsXTNJxwubPV+EC
-	eSG97MorvcrfIlCn7Ut+1X2DtgNfyfEiyaYmhe5MIsg3Mt2e3pS1h9/2xGL9yp5f5saOfQZTOXJ
-	rDSig68Z6OgoRCMTJ/Qn52RT2v1NP1GzZnw8ed3lPLKUPyyF/avU284VSqji+zDSyf29Pfc1/Cq
-	lxW49tumoWkgX/YHdFhkPtW7s50BF5Q==
-X-Google-Smtp-Source: AGHT+IGa945+NMDkzcpiZIGfHLwuePY7D76N58BFYoTrjWZTxEX7gzbPvThg+6TlgnPHGn3AP6vhMg==
-X-Received: by 2002:a05:6902:1543:b0:e7d:7504:b39e with SMTP id 3f1490d57ef6-e8179c3a8f1mr8183889276.7.1749128234051;
-        Thu, 05 Jun 2025 05:57:14 -0700 (PDT)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e819ef076a8sm61467276.54.2025.06.05.05.57.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 05:57:13 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e817b40d6e7so917680276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:57:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWhJshMKHcw+56Zrr+wfIqeRxj/SZNvJ1Cj3dvnwnQtna7EEbIqC35TKXnwlm4y4TeX3UOb1gRd9lqnPaU=@vger.kernel.org
-X-Received: by 2002:a05:6902:1245:b0:e81:49ba:47ef with SMTP id
- 3f1490d57ef6-e8179de2e64mr8284874276.27.1749128233149; Thu, 05 Jun 2025
- 05:57:13 -0700 (PDT)
+        bh=dp0oUZbHoiqC69CUU3moHGnpZ4l39TaovVOwY49CM+Y=;
+        b=NjfPbv+fZxeYwrNPY6OKe8sdEMBpqStkRZj4hle9o812X6ODxt8AHW2llEPnomyg0C
+         K/0koowxz8H7UP+Oi04NSjimlRmWX/8D1aKRNuaDaYA+DZ5SlgHIWf7dbBlLfy2/xk8J
+         WQwR8nrs19VysC5DOy6UDag5+mG+ZiDXigpeDNo2v68uN5yiWjLEHUx4KZ8YaJW5WUr1
+         y9txJWcvUpXiw+OoZBYfk0yU2UMdgmn4Js4k3Cl4c+Wilzx6MwL1uNmXQJE5k5Nngub7
+         o2k1mnPNSlS54QGFAYmsEak4+L0iliv2RHXi3BF9r5cLmXtVBSuvKFWwdY2pNt0Myxs8
+         rurg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlhURYfys2exTkobPwEyxLQAMU7AfEtvq324FY4yhsvF5kq9cSLRKloyxaVWjEYDjqDCwfidizDPjtAvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkYoEj8/utMvMPg69AOfislKtAnip4sJYbZelg9HxWXoJ1JcM8
+	ESa/0CyOonpGHQpGi/8PPuot0n/87fQY6/tyndFVuj+daJsjTOfJjTDGXTBrwymY4m+5HQYd0y6
+	iLjwEslkY34ioOl/iAxySJiXipsuQuPruGXkLdPffVQ==
+X-Gm-Gg: ASbGncsGwnQMZrISWyNYARxlZ4fnujPSjwUJodTSdA4qr3oXXgYv/9z8eMsFlQQh5Fj
+	jfCM7d0sEzWfrX7MgoReNl1t6M5ZNLSpvSjhEYhMHv5aiNZqeFa+BW8SlqL5H5YHWvUTGEtOp5T
+	qmyHsa07/h+mTznvpw+fQN/2ESSn160TUY
+X-Google-Smtp-Source: AGHT+IH9Fc11r+z9z+t3mefrHIVAfP3iFGxFMGaJxOiqNg6l3VU72qxYnBUmiH/fduZ1DDpbUCP8vP1nlENlTDvVodQ=
+X-Received: by 2002:a05:6512:131b:b0:553:2cef:2d2e with SMTP id
+ 2adb3069b0e04-55356bf062emr1989659e87.22.1749128243632; Thu, 05 Jun 2025
+ 05:57:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604-6-10-rocket-v6-0-237ac75ddb5e@tomeuvizoso.net>
- <20250604-6-10-rocket-v6-6-237ac75ddb5e@tomeuvizoso.net> <CAPj87rPv7Pd5tbXhpRLaUJCGB8JmD4kfF50WRsEiST2gvtg3Bg@mail.gmail.com>
- <cc21a090-801d-4b32-bac2-01cebf896c85@arm.com> <CAAObsKDMhuqYtn=+xR6-n=Uk+5_rU91OqVKyQ5cxhqfTo5svjg@mail.gmail.com>
- <CAPj87rOKGcufM0xB+uMCxhs0SdXCHpViyTd+jQ0+=B1kSihvVw@mail.gmail.com>
-In-Reply-To: <CAPj87rOKGcufM0xB+uMCxhs0SdXCHpViyTd+jQ0+=B1kSihvVw@mail.gmail.com>
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Thu, 5 Jun 2025 14:57:02 +0200
-X-Gmail-Original-Message-ID: <CAAObsKC2UCA2gfcS5M6FHodOGWh-D8_+ia_VJhp5K64wx8F5cA@mail.gmail.com>
-X-Gm-Features: AX0GCFvkLrhe0xTjkvrmlzVcmcIDMHbj0V1goAH3SY_Lo_zCTT8XJB_kX_AKtNs
-Message-ID: <CAAObsKC2UCA2gfcS5M6FHodOGWh-D8_+ia_VJhp5K64wx8F5cA@mail.gmail.com>
-Subject: Re: [PATCH v6 06/10] accel/rocket: Add IOCTL for BO creation
-To: Daniel Stone <daniel@fooishbar.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>, 
-	Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Kever Yang <kever.yang@rock-chips.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com> <20250523-hdp-upstream-v3-8-bd6ca199466a@foss.st.com>
+In-Reply-To: <20250523-hdp-upstream-v3-8-bd6ca199466a@foss.st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 5 Jun 2025 14:57:11 +0200
+X-Gm-Features: AX0GCFtoxtlGiRHxvWStpchY7_DopJKwnpQcArCi5YFUYLwYh-hGYulMuAzYZ6s
+Message-ID: <CACRpkdaXY1=v_HY9-PDZ=HYwJrP7P8ncZoCDm1da=vxoEazD4Q@mail.gmail.com>
+Subject: Re: [PATCH v3 8/9] ARM: dts: stm32: add alternate pinmux for HDP pin
+ and add HDP pinctrl node
+To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 2:29=E2=80=AFPM Daniel Stone <daniel@fooishbar.org> =
-wrote:
+On Fri, May 23, 2025 at 2:40=E2=80=AFPM Cl=C3=A9ment Le Goffic
+<clement.legoffic@foss.st.com> wrote:
+
+> Introduce hdp node to output a user defined value on port hdp2.
+> Add pinctrl nodes to be able to output this signal on one SoC pin.
 >
-> Hey,
->
-> On Thu, 5 Jun 2025 at 08:41, Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote:
-> > > Indeed if you're using the IOMMU API directly then you need to do you=
-r
-> > > own address space management either way, so matching bits of process =
-VA
-> > > space is pretty simple to put on the table.
-> >
-> > My impression was that the VM_BIND facility is intended for SVM as in
-> > OpenCL and maybe Vulkan?
-> >
-> > Guess my question is, what would such an accelerator driver win by
-> > letting userspace manage the address space?
->
-> I mean, not a lot gained, but otoh there's also not much to be gained
-> by using the kernel's range allocator either, and it saves userspace a
-> roundtrip to discover the VA for a BO it just created/mapped?
+> Signed-off-by: Cl=C3=A9ment Le Goffic <clement.legoffic@foss.st.com>
 
-Oh, I just map on creation and return the VA as an out arg in the
-creation ioctl.
+That's nice, this is exactly how pin control is supposed to be
+used!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-So it just seemed the simplest approach, with the least custom code in
-the driver.
-
-Cheers,
-
-Tomeu
+Yours,
+Linus Walleij
