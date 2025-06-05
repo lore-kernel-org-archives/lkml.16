@@ -1,192 +1,254 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC2F27C163;
-	Thu,  5 Jun 2025 20:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2A127CCF5;
+	Thu,  5 Jun 2025 20:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749155183; cv=none; b=p3FQkINz63XuijgJorR8QmSHqRMIkP+QhwFUUXsWCvjr1JoI3RZ44Y4Mktj1e5p/gCGcvW3zujZew6OixSzMsFbLuop+3PMZj41BE/rLDxPjn3V26SbRseXjRfG9GjDq4ZcnTIFShoCqgtYDgErb5+P0yBql53q5DHnuzeTeWEA=
+	t=1749155193; cv=none; b=pgeEd3RDQ4Rfh00pgvzP3ATPnsIAYEfni70ntqPoPEJha4pAKSBmvB/WM1kVekcwSFj1QAdn/GY+kbNyxY6pQsh9wBloymQJwRLEL4MN3tF7yWpluZXdohoM9KJee6Hly7k2G9mYYTfN2d5IJO6L+H0ZLs0hlqRSp3JjsJoxWw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749155183; c=relaxed/simple;
-	bh=fYciFyOdVG/nTMsy/FRr5xrC0jXrQA6oYaa97AL118w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CqwEOanpo4j2GbpW2IRkUrjja1YqQFqGgAGfAIN/swdHcohm+/1kjFwW9fiTisn/0d0UWZVfFIK10jjZeR+jF2/CXJDrHgT7kGQLC/Ev1iFqPt8HLpE99uPOIOeiyL2GQ5poV4nsPNGrjzmHd0eIEwFWwwphHnp+YwnnwZZTxgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eeyA6d63; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749155193; c=relaxed/simple;
+	bh=HqLK9FLNyni2o9eamovpLoHUs7SKHQEul0Dkt7S3oTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=pEgvW28dYXfCrTFMagd8f7tq0xRQZn7F3z26n/BmsIIkLVcXIhRQ/lKjUjlgxoYeXnhQ24QjACvTuws37n0I8s/l7wb6ewaF+A1OTGGa9d7PlJdXow3w8UQibA0JqSA4bwpm5HRVmzlZCekLaB3lOAPUy88lQB3zdUrBNGV3VOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FAJ5mJGb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eeyA6d63"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so11592535e9.3;
-        Thu, 05 Jun 2025 13:26:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749155179; x=1749759979; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ziYA5HNk/3b+C572WPNtkL1FIpx+25jD8CPAOz0v7y8=;
-        b=eeyA6d63Y1HctD2tTRx+5uRycmq3G+rjUXZx4zcU5SxcnC782tOMN2+rjhqCgCbZdm
-         gAs9oV8SfQSEVd3Up/jFsITiMFntDvu5A5sY1zcpu4uPDZo8Nmmb1QSpEhqlIgj6076/
-         PW0Ns6wDb6aF70Qgl+R477wYVoTIGNbXkeRXlZZfpC0GCxriLQc9WCzyieoHMZw0JQ5m
-         YgqcHzNf16cNjcnAULy7T6USrnrNIm4C6W/xWAhDh1RD39/uJzL0P6AJaZKK8qcCR/62
-         4DSKzUwHrgSyGMSUUoclvLN2gbZwWQdlmX21mP/pz6k3/l6RjtFX5WlIInbFHbPclwPY
-         QblA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749155179; x=1749759979;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ziYA5HNk/3b+C572WPNtkL1FIpx+25jD8CPAOz0v7y8=;
-        b=MYpSliLcdd7tMEmOfVkIJa88SMjpih5alC6qKkQ9c1VYq9B4kxGxmBKZwAFy1nAWeK
-         sgrGOX5lfb8BxYUCJ8m5qX44+6W3QPpqvR2wXV0GAv4dNmQfgqLd4OuEXlPi10MuG4e1
-         d5XAI1e4wG9HsTa03mRUkvvVutHsNOx4QHWIJsqZ7843+bt1E8FCxwUo7q25KEAGymF8
-         QtynAjQTDJcTAyHf6yECmXvo5rFNGxV0dkPU4IBP6GLS4vx+QZ/wW8aAcxX6TLgmvtzQ
-         2kvdzVxq4bnZakWsJASgo1tpwa0H/JseX7cbfIF42Hhj24yJWsLA+cuiKmmlISVLm/70
-         Q6gw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPtMQbuIFq6p+UASc1rvBQuzUiUROcUZY6tLsAQQi4UAWnLdfMG4OoQKIMVOqcEYr9lgVjlvYoWtAE5g==@vger.kernel.org, AJvYcCVLUKT8sNPc1m/GXysqtTMTY8u6EIwQEQWnw4/p0pMV/ukY9YT45EsAix5MrVRXPW/ys78HxwzwLvRMXme+@vger.kernel.org, AJvYcCWC/Ij45qw8iGPJFGwryqnkA3NIpLQk11UmNS8tdP0u2S2941DvSbejyMqKbcT0Tj3PdIekAM5W@vger.kernel.org, AJvYcCXWPbk5hIuspLIQY3cSIRJM8/cXQB+CJagmMdlfNm8unFmFw20P6TJTrWjmZm2PukHa4WY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZazRkbuG6CTVP2cixmgWdNHFfONlk5lPpGwxjpKyepLVPulKC
-	oXBwOzuEium7rssqvTewaVHqHmZCvWIvQJspLeUvn7805r4mn6glCFDZ
-X-Gm-Gg: ASbGncsa6mmoN1Dow3Jbuyu8ZuFijCNGwQVwfF5y8Hm4v/9h+O4AqOKq8X8/mXptuvv
-	mtJt4Qe2l17MaqmZjmD4wMA0kA1mbanOgXM5ndzocxNeHb5UpaEcQxp5ZEN3jgVsKOMnhJ/FEWN
-	1+qocyyCJYiCi6Sqeba6D0ip2j0d5tzgvZoNwVStkEfnQd1GYDuno2L6QVI5eJWx0ajGekqvVmG
-	5dQYGZEX0LSzihMKUA3MYOb17ccWJnZMfZNIA2jy5BZbgHI0zqcZFwIZm5QCf4v9HcTq6NeO5nu
-	LR+joHyMIAUQHrFeomMfc/lUZOM3cKN+Y/cKDSkquV+zKGRpGyyMOB1Ne8A2kA==
-X-Google-Smtp-Source: AGHT+IEQKdgJ+yBlCmq313HWyJi8MKwe0ZhZefu46HwpijquuDpy56UFySftqQ0mr5S2uC/fiW9I5g==
-X-Received: by 2002:a05:600c:6749:b0:450:cc3d:6a03 with SMTP id 5b1f17b1804b1-452013fd6c0mr8637935e9.7.1749155178354;
-        Thu, 05 Jun 2025 13:26:18 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.145.124])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532464e7fsm133755f8f.96.2025.06.05.13.26.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 13:26:17 -0700 (PDT)
-Message-ID: <ec924af7-1330-4220-97be-1171ef6ffc75@gmail.com>
-Date: Thu, 5 Jun 2025 21:27:41 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FAJ5mJGb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F3E1C4CEE7;
+	Thu,  5 Jun 2025 20:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749155192;
+	bh=HqLK9FLNyni2o9eamovpLoHUs7SKHQEul0Dkt7S3oTE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FAJ5mJGbeAX225unTQ2D3kweV83yCz6BS8Ky+yQMeDbS4g57wlRzmLk7lmVl0KFzs
+	 +i1sxqM6OAbCXeLNwHJwmdohHrwzvpbmWuL7F6syc93WywF0yfUl7kSPtJZgW+kflm
+	 LuZNSol+jSXKHYHuqCsHspVSV+5Cqk7CPIQUuSehYlkBOJxUgapoG8D1IsAxkBTfh6
+	 sH+42vq2RW/o2jxOJE0nCHE7JuhlTFLKhPXA3/egYcjxmWqm2B7XXKSuBB2ONzdLRU
+	 4woGB9FSicQsE6pzFQ8ZnQKfrQE19jxtnqwLsFusYoC0oH/13dpAZhwTkaVKduNRuv
+	 p2uG9eCSBxrvQ==
+Date: Thu, 5 Jun 2025 15:26:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, Sherry Sun <sherry.sun@nxp.com>
+Subject: Re: [PATCH v3 2/2] PCI/portdrv: Add support for PCIe wake interrupt
+Message-ID: <20250605202630.GA622231@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v4 03/18] page_pool: use netmem alloc/put APIs in
- __page_pool_alloc_page_order()
-To: Mina Almasry <almasrymina@google.com>
-Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org,
- harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
- davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
- toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
- saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
- vishal.moola@gmail.com
-References: <20250604025246.61616-1-byungchul@sk.com>
- <20250604025246.61616-4-byungchul@sk.com>
- <29f2c375-65e3-4d22-8274-552653222f8d@gmail.com>
- <CAHS8izMb23eaav-Fz50sefuS8BhF7as7=BX+Sv1wj01+0n6tMg@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAHS8izMb23eaav-Fz50sefuS8BhF7as7=BX+Sv1wj01+0n6tMg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605-wake_irq_support-v3-2-7ba56dc909a5@oss.qualcomm.com>
 
-On 6/5/25 20:39, Mina Almasry wrote:
-> On Thu, Jun 5, 2025 at 3:25 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>
->> On 6/4/25 03:52, Byungchul Park wrote:
->>> Use netmem alloc/put APIs instead of page alloc/put APIs and make it
->>> return netmem_ref instead of struct page * in
->>> __page_pool_alloc_page_order().
->>>
->>> Signed-off-by: Byungchul Park <byungchul@sk.com>
->>> Reviewed-by: Mina Almasry <almasrymina@google.com>
->>> ---
->>>    net/core/page_pool.c | 26 +++++++++++++-------------
->>>    1 file changed, 13 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
->>> index 4011eb305cee..523354f2db1c 100644
->>> --- a/net/core/page_pool.c
->>> +++ b/net/core/page_pool.c
->>> @@ -518,29 +518,29 @@ static bool page_pool_dma_map(struct page_pool *pool, netmem_ref netmem, gfp_t g
->>>        return false;
->>>    }
->>>
->>> -static struct page *__page_pool_alloc_page_order(struct page_pool *pool,
->>> -                                              gfp_t gfp)
->>> +static netmem_ref __page_pool_alloc_page_order(struct page_pool *pool,
->>> +                                            gfp_t gfp)
->>>    {
->>> -     struct page *page;
->>> +     netmem_ref netmem;
->>>
->>>        gfp |= __GFP_COMP;
->>> -     page = alloc_pages_node(pool->p.nid, gfp, pool->p.order);
->>> -     if (unlikely(!page))
->>> -             return NULL;
->>> +     netmem = alloc_netmems_node(pool->p.nid, gfp, pool->p.order);
->>> +     if (unlikely(!netmem))
->>> +             return 0;
->>>
->>> -     if (pool->dma_map && unlikely(!page_pool_dma_map(pool, page_to_netmem(page), gfp))) {
->>> -             put_page(page);
->>> -             return NULL;
->>> +     if (pool->dma_map && unlikely(!page_pool_dma_map(pool, netmem, gfp))) {
->>> +             put_netmem(netmem);
->>
->> It's a bad idea to have {put,get}_netmem in page pool's code, it has a
->> different semantics from what page pool expects for net_iov. I.e.
->> instead of releasing the netmem and allowing it to be reallocated by
->> page pool, put_netmem(niov) will drop a memory provider reference and
->> leak the net_iov. Depending on implementation it might even underflow
->> mp refs if a net_iov is ever passed here.
->>
+On Thu, Jun 05, 2025 at 10:54:45AM +0530, Krishna Chaitanya Chundru wrote:
+> PCIe wake interrupt is needed for bringing back PCIe device state
+> from D3cold to D0.
+
+Does this refer to the WAKE# signal or Beacon or both?  I guess the
+comments in the patch suggest WAKE#.  Is there any spec section we can
+cite here?
+
+> Implement new functions, of_pci_setup_wake_irq() and
+> of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
+> using the Device Tree.
 > 
-> Hmm, put_netmem (I hope) is designed and implemented to do the right
-> thing no matter what netmem you pass it (and it needs to, because we
-> can't predict what netmem will be passed to it):
+> From the port bus driver call these functions to enable wake support
+> for bridges.
+
+What is the connection to bridges and portdrv?  WAKE# is described in
+PCIe r6.0, sec 5.3.3.2, and PCIe CEM r6.0, sec 2.3, but AFAICS neither
+restricts it to bridges.
+
+Unless there's some related functionality in a Root Port, RCEC, or
+Switch Port, maybe this code should be elsewhere, like
+set_pcie_port_type(), so we could set this up for any PCIe device that
+has a WAKE# description?
+
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> Tested-by: Sherry Sun <sherry.sun@nxp.com>
+> ---
+>  drivers/pci/of.c           | 67 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h          |  6 +++++
+>  drivers/pci/pcie/portdrv.c | 12 ++++++++-
+>  3 files changed, 84 insertions(+), 1 deletion(-)
 > 
-> - For non-pp pages, it drops a page ref.
-> - For pp pages, it drops a pp ref.
-> - For non-pp net_iovs (devmem TX), it drops a net_iov ref (which for
-> devmem net_iovs is a binding ref)
-> - For pp net_iovs, it drops a niov->pp ref (the same for both iouring
-> and devmem).
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index ab7a8252bf4137a17971c3eb8ab70ce78ca70969..3487cd62d81f0a66e7408e286475e8d91c2e410a 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -7,6 +7,7 @@
+>  #define pr_fmt(fmt)	"PCI: OF: " fmt
+>  
+>  #include <linux/cleanup.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pci.h>
+> @@ -15,6 +16,7 @@
+>  #include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_wakeirq.h>
+>  #include "pci.h"
+>  
+>  #ifdef CONFIG_PCI
+> @@ -966,3 +968,68 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
+>  	return slot_power_limit_mw;
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> +
+> +/**
+> + * of_pci_slot_setup_wake_irq - Set up wake interrupt for PCI device
+> + * @pdev: The PCI device structure
+> + *
+> + * This function sets up the wake interrupt for a PCI device by getting the
+> + * corresponding WAKE# gpio from the device tree, and configuring it as a
+> + * dedicated wake interrupt.
+> + *
+> + * Return: 0 if the WAKE# gpio is not available or successfully parsed else
+> + * errno otherwise.
+> + */
+> +int of_pci_slot_setup_wake_irq(struct pci_dev *pdev)
+> +{
+> +	struct gpio_desc *wake;
+> +	struct device_node *dn;
+> +	int ret, wake_irq;
+> +
+> +	dn = pci_device_to_OF_node(pdev);
+> +	if (!dn)
+> +		return 0;
+> +
+> +	wake = devm_fwnode_gpiod_get(&pdev->dev, of_fwnode_handle(dn),
+> +				     "wake", GPIOD_IN, NULL);
 
-void put_netmem(netmem_ref netmem)
-{
-	struct net_iov *niov;
+I guess this finds "wake-gpio" or "wake-gpios", as used in
+Documentation/devicetree/bindings/pci/qcom,pcie.yaml,
+qcom,pcie-sa8775p.yaml, etc?  Are these names specified in any generic
+place, e.g.,
+https://github.com/devicetree-org/dt-schema/tree/main/dtschema/schemas/pci?
 
-	if (netmem_is_net_iov(netmem)) {
-		niov = netmem_to_net_iov(netmem);
-		if (net_is_devmem_iov(niov))
-			net_devmem_put_net_iov(netmem_to_net_iov(netmem));
-		return;
-	}
+> +	if (IS_ERR(wake) && PTR_ERR(wake) != -ENOENT) {
+> +		dev_err(&pdev->dev, "Failed to get wake GPIO: %ld\n", PTR_ERR(wake));
+> +		return PTR_ERR(wake);
+> +	}
+> +	if (IS_ERR(wake))
+> +		return 0;
+> +
+> +	wake_irq = gpiod_to_irq(wake);
+> +	if (wake_irq < 0) {
+> +		dev_err(&pdev->dev, "Dailed to get wake irq: %d\n", wake_irq);
 
-	put_page(netmem_to_page(netmem));
-}
-EXPORT_SYMBOL(put_netmem);
+s/Dailed/Failed/
 
-void net_devmem_put_net_iov(struct net_iov *niov)
-{
-	net_devmem_dmabuf_binding_put(net_devmem_iov_binding(niov));
-}
-
-Am I looking at an outdated version? for devmem net_iov it always puts
-the binding and not niov refs, and it's always does put_page for pages.
-And it'd also silently ignore io_uring. And we're also patching early
-alloc/init failures in this series, so gauging if it's pp or non-pp
-originated struct page might be dangerous and depend on init order. We
-don't even need to think about all that if we continue to use put_page,
-which is why I think it's a much better option.
-
-
-> In my estimation using it should be safe to use put_netmem here, but
-> I'm not opposed to reverting to put_page here, since we're sure it's a
-> page in this call path anyway.
+> +		return wake_irq;
+> +	}
+> +
+> +	device_init_wakeup(&pdev->dev, true);
+> +
+> +	ret = dev_pm_set_dedicated_wake_irq(&pdev->dev, wake_irq);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to set wake IRQ: %d\n", ret);
+> +		device_init_wakeup(&pdev->dev, false);
+> +		return ret;
+> +	}
+> +	irq_set_irq_type(wake_irq, IRQ_TYPE_EDGE_FALLING);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_slot_setup_wake_irq);
+> +
+> +/**
+> + * of_pci_slot_teardown_wake_irq - Teardown wake interrupt setup for PCI device
+> + *
+> + * @pdev: The PCI device structure
+> + *
+> + * This function tears down the wake interrupt setup for a PCI device,
+> + * clearing the dedicated wake interrupt and disabling device wake-up.
+> + */
+> +void of_pci_slot_teardown_wake_irq(struct pci_dev *pdev)
+> +{
+> +	dev_pm_clear_wake_irq(&pdev->dev);
+> +	device_init_wakeup(&pdev->dev, false);
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_slot_teardown_wake_irq);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 39f368d2f26de872f6484c6cb4e12752abfff7bc..dd7a4da1225bbdb1dff82707b580e7e0a95a5abf 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -888,6 +888,9 @@ void pci_release_of_node(struct pci_dev *dev);
+>  void pci_set_bus_of_node(struct pci_bus *bus);
+>  void pci_release_bus_of_node(struct pci_bus *bus);
+>  
+> +int of_pci_slot_setup_wake_irq(struct pci_dev *pdev);
+> +void of_pci_slot_teardown_wake_irq(struct pci_dev *pdev);
+> +
+>  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
+>  bool of_pci_supply_present(struct device_node *np);
+>  
+> @@ -931,6 +934,9 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
+>  	return 0;
+>  }
+>  
+> +static int of_pci_slot_setup_wake_irq(struct pci_dev *pdev) { return 0; }
+> +static void of_pci_slot_teardown_wake_irq(struct pci_dev *pdev) { }
+> +
+>  static inline bool of_pci_supply_present(struct device_node *np)
+>  {
+>  	return false;
+> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> index e8318fd5f6ed537a1b236a3a0f054161d5710abd..9a6beec87e4523a33ecace684109cd44e025c97b 100644
+> --- a/drivers/pci/pcie/portdrv.c
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -694,12 +694,18 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>  	     (type != PCI_EXP_TYPE_RC_EC)))
+>  		return -ENODEV;
+>  
+> +	status = of_pci_slot_setup_wake_irq(dev);
+> +	if (status)
+> +		return status;
+> +
+>  	if (type == PCI_EXP_TYPE_RC_EC)
+>  		pcie_link_rcec(dev);
+>  
+>  	status = pcie_port_device_register(dev);
+> -	if (status)
+> +	if (status) {
+> +		of_pci_slot_teardown_wake_irq(dev);
+>  		return status;
+> +	}
+>  
+>  	pci_save_state(dev);
+>  
+> @@ -732,6 +738,8 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+>  
+>  	pcie_port_device_remove(dev);
+>  
+> +	of_pci_slot_teardown_wake_irq(dev);
+> +
+>  	pci_disable_device(dev);
+>  }
+>  
+> @@ -744,6 +752,8 @@ static void pcie_portdrv_shutdown(struct pci_dev *dev)
+>  	}
+>  
+>  	pcie_port_device_remove(dev);
+> +
+> +	of_pci_slot_teardown_wake_irq(dev);
+>  }
+>  
+>  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
 > 
-
--- 
-Pavel Begunkov
-
+> -- 
+> 2.34.1
+> 
