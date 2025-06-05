@@ -1,196 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8E841DFF8;
-	Thu,  5 Jun 2025 17:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0061DEFDA;
+	Thu,  5 Jun 2025 17:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749144094; cv=none; b=Kyf+JIBjse1wuPelIgBK7hFiou29JyB/ObB8bDHrNpYvGo5uU1qee+qMil5U9DON01WVXtJQkKZc5o6f8pbkIgABCZZOPDhLxbO22iOPL40lED6UFXT+iGnA6/kTmp+zIdiqw8/+HvupmyguwhqeAHStvWE1caHrQemXutcD1+0=
+	t=1749144185; cv=none; b=OYwtnxzacroBXMZy/HLxKYcI7QzsBAo8xPdhJqVay7XHMoFwUHmG2Udgf1Bp1+eM6dibhCHhzvqD2R/6GRENyafZ12F3HgjDVgA1Rndz/6QU0nEWwzNchAsk22qVBcMhjSGyA06n62bDH4CobPHxPhBBwx6j/JxVBxPFvJYZpYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749144094; c=relaxed/simple;
-	bh=GTyfTFDpQ/QXc5ClJokHVK49buVYWxHthMCjuGsSSuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X/Qg5XdrqlXEUyptRlz3nQVoyfXoHZFCGi+0YpAG/pVO8ZjlRD/fYnD34Zxw0vKziYfl7OVKjRZVlEcUkOzXgiDAyqukFGT+m/wcGm4FNl6cqRpqu1y4bfQhlyu/tql4tyCl+Tq0FVHWFBmdROtq4HfqtMjxJf80r68vBBuFSw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5671F12FC;
-	Thu,  5 Jun 2025 10:21:13 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76A7F3F5A1;
-	Thu,  5 Jun 2025 10:21:30 -0700 (PDT)
-Date: Thu, 5 Jun 2025 18:21:26 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250605172126.GG8020@e132581.arm.com>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
- <20250603144414.GC38114@noisy.programming.kicks-ass.net>
- <20250604080339.GB35970@noisy.programming.kicks-ass.net>
- <20250604101821.GC8020@e132581.arm.com>
- <20250604141640.GL38114@noisy.programming.kicks-ass.net>
- <20250604154639.GE8020@e132581.arm.com>
- <20250605112921.GR39944@noisy.programming.kicks-ass.net>
- <20250605123343.GD35970@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1749144185; c=relaxed/simple;
+	bh=qfipMnTx7xeKxeo0c7dR7MpB300bOpoEqcpahufYAl0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rKStIExpfQLhGS9I+elDyWMQxwWCAKzHC6Fd4IP8Nr0l3MXaG8bPdUrpwpyPOLfQ6hyL/yUel27JgpFDQ0OzE7aUYOCxlRVNWWY9S3qD/WhEWf/UwGINHKZhTgiQxRrMf/zxTbae4m6RT6I8JPaFvtU8ml3jskTZpFjpJLw7lN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjt27mKA; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjt27mKA"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-31308f52248so168427a91.2;
+        Thu, 05 Jun 2025 10:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749144184; x=1749748984; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qfipMnTx7xeKxeo0c7dR7MpB300bOpoEqcpahufYAl0=;
+        b=kjt27mKAqemjrmRTLU6Yl+y3Wsca5uipYqg4LJ0mRkQyz8nOjeoiGSWoyzIqO68nRO
+         BlA7+LRNTi3DOQ8yeSkALHAPJBJMQ5FhrvdR0ep74fbaphl/z4oCqvAnYpURAjTm3NHS
+         3eyDqzZtx5nhhQwTnVxwAzIzGDXVd7oX+Nx4E6EWe8PVzLRtKE5fGR0U+b7EtxnaR7Ay
+         OlKV5fh52VIg1mDjalwq3ezDO/7gGsaetmFGYWrV8PzScekZERWoAefa5py3XZRJaIbu
+         rnWjYrrF/XZF6N2ZsOxifdB8ZnWpQtdFok4uV7ubp0AB9RVRNvm2tclZ3ltdrMho6lfr
+         hrzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749144184; x=1749748984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qfipMnTx7xeKxeo0c7dR7MpB300bOpoEqcpahufYAl0=;
+        b=CNsMM5TJPRuy71x3aG6PU5BQ8kaiJ7yOYytyZRyxQaghf5QHi/QyxRC+eqFRFL9L3r
+         zASv+Bx1MNYeUXC4cpF3Rw9hseSYlLQDl7F4/c3lz81czL0OWQk7Fd3lQIdM2/63cTsE
+         LSbBHuqMZrP+z7V47yDOmWlerW5Sho6C6ELkvYFr7sUKD0g7s7E361+/bR9z7tWK5gBa
+         ttgdBn5ju26gjO2PI0CPOCsezE1t+1Yk67Y5pYz+P+uAj7JWZV7oYG5r+I48bVRzbJa6
+         9RucL3+BPkcQo6ehBMW3+0lHcGy+Rx26j3yb9aXc9d3me7+GQ13krKsq3iUEebA3DSWw
+         eMSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxeQyCstxm3DD8nyh/KEkPE6tCSGk2BO0P85zPqxDYg3CFIC/dxuixllN1Ks0GOz94zw+1EPiUSVssE1ne0A0=@vger.kernel.org, AJvYcCWv+tAP8SDCNrn74Kk/MBB/Q2v0KBbY1OTC8HHQgjcrLMbG6RWmHlo+0tQw2m3Ok+ZU6RtwmFVLCtXiOGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKVyOcfoDR/qHilxlFhMnHiQrUXOzOk4FEODccMqmdM/oxzyjq
+	h7zhXsvNiVMTigenlb5GkoOowMT7TDahEBDt83Rva8UGjnJvR9XbzQ8plHvnU6ZILufV9XQ52EB
+	6oEOd/rlTb+RX5NrAUA6QDtfnZhdoX0E=
+X-Gm-Gg: ASbGncvAtifu5qIPQ7zpSerJjmofvrjmRHQ6lkNQclNPbfJxfuHZSP6tC8xNmyVCcnU
+	QmmEHye8OC9suInVKmrgLitwGAz1SPYtItXUBDzJQdqRxzv1epdBpPLCpTlH5nMzdnJ/FiYoYq5
+	a5IUSQowRSnQPbH3MlJGGT3EndZ93K3rBBUFdaIWIrzIQ=
+X-Google-Smtp-Source: AGHT+IFL93Dn+JPYLvdJ97OS1e9Y7WI8nNfScy/BvawuaHEKEfXx1cgMVsWswxX1DXxUVjKFqj43r25VkwIzBxqwwJw=
+X-Received: by 2002:a17:90b:57c6:b0:311:c939:c855 with SMTP id
+ 98e67ed59e1d1-31347a28f5dmr221166a91.3.1749144183617; Thu, 05 Jun 2025
+ 10:23:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605123343.GD35970@noisy.programming.kicks-ass.net>
+References: <20250511-rust_unsafe_pinned-v4-0-a86c32e47e3d@gmail.com>
+ <20250511-rust_unsafe_pinned-v4-1-a86c32e47e3d@gmail.com> <1553eea9-9ced-410a-b6e7-886e11e2edba@gmail.com>
+In-Reply-To: <1553eea9-9ced-410a-b6e7-886e11e2edba@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 5 Jun 2025 19:22:51 +0200
+X-Gm-Features: AX0GCFsKx2Moxjr3HRPaNrk2wzvk9Nc89fe4Aa5PGppcA4ASb7L4anzao8sQk4A
+Message-ID: <CANiq72mVuPex3fLd5n8jMtU30QStLs=vhsChENdX1hGhA4KKpg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] rust: add UnsafePinned type
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 05, 2025 at 02:33:43PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 05, 2025 at 01:29:21PM +0200, Peter Zijlstra wrote:
-> 
-> > But yes, slightly confusing. Let me see if I can make a less confusing
-> > patch, and if not, sprinkle comments.
-> 
-> I've settled on the below.
-> 
-> ---
-> Subject: perf: Fix cgroup state vs ERROR
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Thu Jun 5 12:37:11 CEST 2025
-> 
-> While chasing down a missing perf_cgroup_event_disable() elsewhere,
-> Leo Yan found that both perf_put_aux_event() and
-> perf_remove_sibling_event() were also missing one.
-> 
-> Specifically, the rule is that events that switch to OFF,ERROR need to
-> call perf_cgroup_event_disable().
-> 
-> Unify the disable paths to ensure this.
-> 
-> Fixes: ab43762ef010 ("perf: Allow normal events to output AUX data")
-> Fixes: 9f0c4fa111dc ("perf/core: Add a new PERF_EV_CAP_SIBLING event capability")
-> Reported-by: Leo Yan <leo.yan@arm.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/events/core.c |   51 ++++++++++++++++++++++++++++++---------------------
->  1 file changed, 30 insertions(+), 21 deletions(-)
-> 
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2149,8 +2149,9 @@ perf_aux_output_match(struct perf_event
->  }
->  
->  static void put_event(struct perf_event *event);
-> -static void event_sched_out(struct perf_event *event,
-> -			    struct perf_event_context *ctx);
-> +static void __event_disable(struct perf_event *event,
-> +			    struct perf_event_context *ctx,
-> +			    enum perf_event_state state);
->  
->  static void perf_put_aux_event(struct perf_event *event)
->  {
-> @@ -2183,8 +2184,7 @@ static void perf_put_aux_event(struct pe
->  		 * state so that we don't try to schedule it again. Note
->  		 * that perf_event_enable() will clear the ERROR status.
->  		 */
-> -		event_sched_out(iter, ctx);
-> -		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-> +		__event_disable(iter, ctx, PERF_EVENT_STATE_ERROR);
->  	}
->  }
->  
-> @@ -2242,18 +2242,6 @@ static inline struct list_head *get_even
->  				    &event->pmu_ctx->flexible_active;
->  }
->  
-> -/*
-> - * Events that have PERF_EV_CAP_SIBLING require being part of a group and
-> - * cannot exist on their own, schedule them out and move them into the ERROR
-> - * state. Also see _perf_event_enable(), it will not be able to recover
-> - * this ERROR state.
-> - */
-> -static inline void perf_remove_sibling_event(struct perf_event *event)
-> -{
-> -	event_sched_out(event, event->ctx);
-> -	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-> -}
-> -
->  static void perf_group_detach(struct perf_event *event)
->  {
->  	struct perf_event *leader = event->group_leader;
-> @@ -2289,8 +2277,15 @@ static void perf_group_detach(struct per
->  	 */
->  	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
->  
-> +		/*
-> +		 * Events that have PERF_EV_CAP_SIBLING require being part of
-> +		 * a group and cannot exist on their own, schedule them out
-> +		 * and move them into the ERROR state. Also see
-> +		 * _perf_event_enable(), it will not be able to recover this
-> +		 * ERROR state.
-> +		 */
->  		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
-> -			perf_remove_sibling_event(sibling);
-> +			__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
->  
->  		sibling->group_leader = sibling;
->  		list_del_init(&sibling->sibling_list);
-> @@ -2562,6 +2557,15 @@ static void perf_remove_from_context(str
->  	event_function_call(event, __perf_remove_from_context, (void *)flags);
->  }
->  
-> +static void __event_disable(struct perf_event *event,
-> +			    struct perf_event_context *ctx,
-> +			    enum perf_event_state state)
-> +{
-> +	event_sched_out(event, ctx);
-> +	perf_cgroup_event_disable(event, ctx);
-> +	perf_event_set_state(event, state);
-> +}
-> +
->  /*
->   * Cross CPU call to disable a performance event
->   */
-> @@ -2576,13 +2580,18 @@ static void __perf_event_disable(struct
->  	perf_pmu_disable(event->pmu_ctx->pmu);
->  	ctx_time_update_event(ctx, event);
->  
-> +	/*
-> +	 * When disabling a group leader, the whole group becomes ineligible
-> +	 * to run, so schedule out the full group.
-> +	 */
->  	if (event == event->group_leader)
->  		group_sched_out(event, ctx);
-> -	else
-> -		event_sched_out(event, ctx);
->  
-> -	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
-> -	perf_cgroup_event_disable(event, ctx);
-> +	/*
-> +	 * But only mark the leader OFF; the siblings will remain
-> +	 * INACTIVE.
-> +	 */
-> +	__event_disable(event, ctx, PERF_EVENT_STATE_OFF);
+On Thu, Jun 5, 2025 at 7:03=E2=80=AFPM Christian Schrefl
+<chrisi.schrefl@gmail.com> wrote:
+>
+> The upstream rust PR [0] that changes this was just merged. So now `Unsaf=
+ePinned` includes
+> `UnsafeCell` semantics. It's probably best to also change this in the ker=
+nel docs.
+> Though it's still the case that removing the guarantee is simpler than ad=
+ding it back later,
+> so let me know what you all think.
 
-Here, a group lead will invoke event_sched_out() twice: one is in
-group_sched_out() (above) andin __event_disable(). This would be fine,
-as the second call to event_sched_out() will directly bail out due to
-the following condition:
+Since upstream's will imply `UnsafeCell`, then I assume they will not
+take it away, and thus we should just document it the same way, so
+that eventually we can just alias the upstream one.
 
-  if (event->state != PERF_EVENT_STATE_ACTIVE)
-      return;
+But that last part can only happen in a long time, when our minimum
+upgrades past 1.89, since otherwise we would lose the `UnsafeCell`
+with an alias.
 
-I think you have already noticed this minor redundancy.
+If we really wanted a type that does not do that, then we could have
+another one, with a different name.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+Thanks!
 
-And thanks for the explaination in your another reply, it makes sense to
-me.
+(By the way, please try to trim unneeded quotes in replies; otherwise,
+threads become harder to read in clients such as lore.kernel.org, and
+it also becomes harder to reply)
 
-Leo
-
->  	perf_pmu_enable(event->pmu_ctx->pmu);
->  }
+Cheers,
+Miguel
