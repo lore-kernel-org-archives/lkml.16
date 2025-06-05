@@ -1,186 +1,73 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2078.outbound.protection.outlook.com [40.107.220.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA70220ED
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 00:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749082378; cv=fail; b=fvqHWBFkTJCqoXYxy7IPmlvmLPlCwfbyiKcEjBr5Zo5SBtgJemu60ZvMq7oLDO+uOs5cS9jh0uE9ZOfFhDQJWHy4TvC7BmpL/zfrryFNaqg2JF90JsNv0M/IFvQdFzUXTUCJU9S7uxX+SYxs1fB2dNkeRdcdDftkbFjpnKRlgT0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749082378; c=relaxed/simple;
-	bh=rcEWmX63ieWh5xEd/UK1dSWOYcu1Oic4NJPN2naPhj8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=H8JYsGBv0o112CaRFfbD5omm13/bWVzfV/JT61yefE0zMcQF1FreT0Qj6vRJQQjDTX68jYrp4pVVhIhcOfCClb07aiMTzpraCbRyRMTRrBMnKKcR2qFi4lXgz6uYvnmxl8xNfDuRHVZzpTgJgs9zp31gVSiRR8PaOKEd9KMmsuA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ipBpNkrV; arc=fail smtp.client-ip=40.107.220.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3D310F2;
+	Thu,  5 Jun 2025 00:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749082447; cv=none; b=uzNY1/cJgrX5qYbca7Mj6yHmROd73U8jR3yiwktQ6/I+OEcf6fn72v/eXaPf9Mc8a4or7CNMzOKt5RDI6HQ+mFQh7yc49nhMk+BIql49cS/qUidb/JsrVCUDC4/vasI2KOnhWAdqN1tfUedjG7vQxEOpvBd7Ns8wG038NoMgphg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749082447; c=relaxed/simple;
+	bh=mlTrSydj2jGyyZ86G2tYuTK3bYvP3uK6PULl2Dx4/qU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oZidXv5KoYkgRldYjDM51qs0+u8utirP2a36BQgTtt9Iwxx9kc5iFFNj1+OLz61KCjIGPY9UBXmdG0zVemorcRNItg9qAUxoam9ypG5YnCFDNoC3/3FRzD95MFwy1txC5Fgk9rfZF9D7asZRDiC1/GYPBG/MmLrNsHuOnKD8HmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bm7FPQmU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ipBpNkrV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uNS6yEkAK8zBZ/rO/sMypomhBl9HNV93YTHajKKkdKX6heWC/qIfS3KwnsIorNv2Unh4/YYAt0RgqbryKA8Z8DLgVc8VNKEtwqmhVOMaplmZhTT58w3qUAyarMfRbSHj+f7h7FkN3rF4NeaCYm+NP8+eZaU2XNTqIwXhW3pz8uyDPgczSa05IrTK+RAzrqWB2JzjsRbZ8eUq+TMsCkTIWNWtTHaxZXl6jM+PcSrq3rxSfNONtugAm5R58vK2aoHbFCdfzYW60F3zU//U7jYtTvjOE1KKvMSnkEomeuLmk73GgnovXbUd3PMqV7EkyfZt9oA5K/Dv/3bKgtQrtoloLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dg1PWmIZC6x12sWBCPnqJjEYm62vk8l89AuY+V4pOA4=;
- b=XlBBKkQaOnaOZVZ9qOSN95fCFdfha9+ou7Di/XggrTSowHYR3zld4jlNsfYWZ1FT+rW15RJ0mls1qM1kI2fJCJ+bJ5huwAXLGTIpYgS+jjBkfnKggq1S36sXL2HbeHn9JGwbaqV6gY8en7AFd53ozN8OtXrLqpUiiyr6RI6oCAjac/k/XvJpl3iIkvCGo4T9ozvSl14s3Y7tt+3E3ancz/KNnfRdfqyOhAj7ODHjE/HaMcpJ7OHGwxioip3L60GNK/D0AjVDsnJifcYNLvJPCkE+ZXHBkw6sPpuB32RItdFf/S0RRuub+d1WAIO3/FX44YuEEwe0jtsH895yZnwGvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dg1PWmIZC6x12sWBCPnqJjEYm62vk8l89AuY+V4pOA4=;
- b=ipBpNkrVrmi2tHf1vA5tkPeX3LpmUyS2s4ENhU8pApcOTZztWxdPTUtjgVqiQcGSvgjaL0K+Ev+TaaeamAqnwZJksPiwTmag+JdMVFJ1fKdLuwdHD3Q81FMrlmwNZFWbOB3ftZeUSyhz3j+dcffhpboFzBR0ppN7ccAGUmmc/qo=
-Received: from BN9PR03CA0375.namprd03.prod.outlook.com (2603:10b6:408:f7::20)
- by DS0PR12MB9400.namprd12.prod.outlook.com (2603:10b6:8:1b6::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Thu, 5 Jun
- 2025 00:12:54 +0000
-Received: from BL02EPF0001A106.namprd05.prod.outlook.com
- (2603:10b6:408:f7:cafe::d) by BN9PR03CA0375.outlook.office365.com
- (2603:10b6:408:f7::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29 via Frontend Transport; Thu,
- 5 Jun 2025 00:12:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A106.mail.protection.outlook.com (10.167.241.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8792.29 via Frontend Transport; Thu, 5 Jun 2025 00:12:54 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 4 Jun
- 2025 19:12:53 -0500
-Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 4 Jun 2025 19:12:53 -0500
-Message-ID: <e70bdb30-66cc-7e9e-b666-efff3203bf27@amd.com>
-Date: Wed, 4 Jun 2025 17:12:47 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bm7FPQmU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74B99C4CEE4;
+	Thu,  5 Jun 2025 00:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749082446;
+	bh=mlTrSydj2jGyyZ86G2tYuTK3bYvP3uK6PULl2Dx4/qU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bm7FPQmUuI3GFvJtimaBWKKYnP+5kcu2vGotHUVPS6okAV9GCMHt2V8Id0dQ1H59h
+	 exH/+xmglG1ZZEFOyNGk+oaAM4+6gINmUqrh+vJ3yPV0eA0r+1KL+yIL8ANCHzzhve
+	 PLEQYe0P3Ziyt39Ifu6mBnwpmrwKSdXJhgom4vZOS/wEa7Q5l6344157Hvi4q8X2++
+	 m4ZVvYuwBPJC4a7zIHIJQwmXjbtyYZtS2B2rPkUyYsQYgGsBK3N9KSc0w6NdUilGFH
+	 Cfo7P2+Ac/AhF7KqpBIVGd5gBeVsJqjDnnMlL2PORKyhWA2n7lDuS8xlpwwAzJX1lQ
+	 7/+XmSIpNc7sg==
+Date: Wed, 4 Jun 2025 17:14:03 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 32/62] objtool: Suppress section skipping warnings
+ with --dryrun
+Message-ID: <u7g72fiqwvkxl3hpl3l2jmbfhez5o7sjtlpxf73or6wh545you@z3xpzkeg45yf>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <7eccdb0b09eff581377e5efab8377b6a37596992.1746821544.git.jpoimboe@kernel.org>
+ <20250526105240.GN24938@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V1] accel/amdxdna: Fix incorrect PSP firmware size
-Content-Language: en-US
-To: Alex Deucher <alexdeucher@gmail.com>
-CC: <ogabbay@kernel.org>, <quic_jhugo@quicinc.com>,
-	<jacek.lawrynowicz@linux.intel.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <max.zhen@amd.com>, <min.ma@amd.com>,
-	<sonal.santan@amd.com>, <mario.limonciello@amd.com>
-References: <20250604143217.1386272-1-lizhi.hou@amd.com>
- <CADnq5_NMamTAd0whqwr+xcokFThCNX7T7qFBfX+u3vnS6oc=tA@mail.gmail.com>
-From: Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <CADnq5_NMamTAd0whqwr+xcokFThCNX7T7qFBfX+u3vnS6oc=tA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Received-SPF: None (SATLEXMB04.amd.com: lizhi.hou@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A106:EE_|DS0PR12MB9400:EE_
-X-MS-Office365-Filtering-Correlation-Id: db79d339-835e-4d0c-4299-08dda3c5b7b4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?R0FtUlhtV3FGcDlvWnFoUDR5SW9kMDJMQUcwS0p3QTB1U011ZkJRdzNZSFBZ?=
- =?utf-8?B?d1dQSjNDbjB3eWNXRGU5amNOYnM2ZVpjL3U3TXplSFE3YzdvTEtOSnRnVlI1?=
- =?utf-8?B?MkNFUzlUSzJXUzE3WU8xK0tQcHRnTzNyMElrcmtJbEJSMVlGcldZU3dUYmxF?=
- =?utf-8?B?ekJpOE9HZkx3SzNtSklLaHRZS01Lb01rNXJqRzEySmJSWlplNnFDREl2OVZD?=
- =?utf-8?B?S1hicW8rQlZiZmZPT1lzSUs1UjVKT0pLYVFmb0R3T3daU3lkNTRkdXU4SXZx?=
- =?utf-8?B?ZFdIamcyd2tnSVI1TXBaWnkrd1NKeGFPNHMwM3JsWG9JM01wZTJ4UmlKVGZa?=
- =?utf-8?B?d3d4cnQwbHRGczBwSnVjOUJFT252eXBRN1RrNyt3N0dvYjRMaERkYnhaMVdB?=
- =?utf-8?B?bFFoM1RWRDREeGk5U1RCMzZHbksxOW9aQnF5OTBMcmh1dlk0ZXFBS3puazJS?=
- =?utf-8?B?ditkUDBVYmdDd25rUzlid2xnUjNPNnpYU1VNY3Y1b0x4VnM3L1p4V1RTTW5i?=
- =?utf-8?B?Tnh4c3drdkRRTmU3TXBzcmQzQjNVblhkcWxoYUEwUnc2NExOSmQ1cFdSamx0?=
- =?utf-8?B?bVdJR0RuZ3Y0QWNIUEtIc2ljaDBIRFZBLyswejF6QzR1cVJsZ1NWdnUxcG84?=
- =?utf-8?B?TGdMNHVrQmhPUjh0cUkwOTF1RUlLa04wb3RvMWdkS0gvR3Y5UVNSbk9YcC9D?=
- =?utf-8?B?UWZJdWpVOCt0S2tNK0RLTDkyTG5qLzRwcEZzNjA1UHd5ekIwK2dya2Y5U2xt?=
- =?utf-8?B?WjNwcHI1cjYvL1JpSTRnRERVUllKazlEVHVLWXZHQlgwQXVaQ1JLWUVOYWdU?=
- =?utf-8?B?NmNydnJVZnBTbkNwb2U1aVJ1dnAzay9SdlZDTm92czJzUFZIdnNvS1BQMXRz?=
- =?utf-8?B?TStobUxEREVMN3pNVzMwNWUzeUlvUFhGQ0VqYnh2ek50NldLQkNSdUJtVFh2?=
- =?utf-8?B?MXdSdFpYU2hsMjJTV09vbkxSeFBmQmRkNEJHVXhVN0tMa0trTUNkaVdSTzNx?=
- =?utf-8?B?dnUrcCtKcHE4a2U3c2hUQVV2L1pYUElQdkwzKzZxVVMvdTFOMG41YU5DNmV4?=
- =?utf-8?B?ZXJwTFl2TmplYllqZUFOSnBEY1VndXd1aHR3MUl5NHJoUnJrb2x1R3dBcksy?=
- =?utf-8?B?cjBhQUdJZ3FtUkc1UGJsaXZ2M2w2ay9CelgyTkFFUDJQYk1jeUp5SEZVVFZq?=
- =?utf-8?B?dHpFUVBkbUlLQXVxRnlQVnQ4UlpDcTRXQkdGLzJ2cnNyQ0w3SU5ieDZuMHVN?=
- =?utf-8?B?VDg4c1V0SXc0bFNtcEtkZXlPTjdNR3dXbStRL2NVMFV0T0JkKzZ3V05ET0NL?=
- =?utf-8?B?ZkZBaXFhWFFvQzZvSlhnVElDcXFESnZNUnc1Q1VMeTltWE5NUVJwMGM2ZUtJ?=
- =?utf-8?B?dDBIanovbjNocExSY3JJTTVkUkQ1eTFvQVVSVDZiUGlwWDJUQVJUaVV2OFBr?=
- =?utf-8?B?M20wNTBFd28rRStvRGVRSnVLOGZxaTVCQWVkd094cEFERzAvWmF2cFBLc0NP?=
- =?utf-8?B?SXV6eUVIREJaM0hyYnpMdUkwc0JlNFA4bHBQZmpiOVZ2eWpJRXk1Uzg5Qkhu?=
- =?utf-8?B?eUtYNWhVSE4wOE12QnV2VmZJVFE4YjZ4WWNoMGpuS0NwbXhpd2RYOEVPcktw?=
- =?utf-8?B?eEVKU2MwSFQ3Q05QRE9qSDFRNTZCMkk5QXRTbmVaWVpJZ0srNEpzdDhSUVZI?=
- =?utf-8?B?ZTNHYmVsS3VDclBDbG5MY1lzT0lBaFBta2pRVU5qR0RNMEtoODlYV1p5MFRT?=
- =?utf-8?B?NDZUeTJYaXJzWXVibzI5S2gvNXNzU1hKc0thVFNRWmUrNU8vRVY5YlBUQTFC?=
- =?utf-8?B?ODVFZnd6K2dweEVsT3h0clZoSllORmFPUm5aUTF6Ui93d2pFNk56OFB0bmJL?=
- =?utf-8?B?V3hHWVZPbFFNaFdENURGakkxbkJnNWdqUkF3dHBlRWZFRE1NZFVLdG1BSGhO?=
- =?utf-8?B?djY0bS9xcUpFZm1KWXM3aWdpMk4vd0todXhOckpsdTBEdDRIWDBMeWRlVVR2?=
- =?utf-8?B?VDl6SlNaZHhpcTBnVHFRSlZvMThnMGlRUU1CM3o4dWxMdTZ6MFdEU1pCUGsr?=
- =?utf-8?Q?+XFyyz?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 00:12:54.1989
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: db79d339-835e-4d0c-4299-08dda3c5b7b4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A106.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9400
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250526105240.GN24938@noisy.programming.kicks-ass.net>
 
+On Mon, May 26, 2025 at 12:52:40PM +0200, Peter Zijlstra wrote:
+> On Fri, May 09, 2025 at 01:16:56PM -0700, Josh Poimboeuf wrote:
+> > It's common to use --dryrun on binaries that have already been
+> > processed.  Don't print the section skipping warnings in that case.
+> 
+> Ah, I rather like this warning, it gives me an easy check to see if the
+> file has already been processed.
+> 
+> I typically do a OBJTOOL_ARGS="--backup" build and run dryrun debug
+> sessions against those .orig files.
 
-On 6/4/25 07:51, Alex Deucher wrote:
-> On Wed, Jun 4, 2025 at 10:42 AM Lizhi Hou <lizhi.hou@amd.com> wrote:
->> The incorrect PSP firmware size is used for initializing. It may
->> cause error for newer version firmware.
->>
->> Fixes: 8c9ff1b181ba ("accel/amdxdna: Add a new driver for AMD AI Engine")
->> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
->> ---
->>   drivers/accel/amdxdna/aie2_psp.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/accel/amdxdna/aie2_psp.c b/drivers/accel/amdxdna/aie2_psp.c
->> index dc3a072ce3b6..f28a060a8810 100644
->> --- a/drivers/accel/amdxdna/aie2_psp.c
->> +++ b/drivers/accel/amdxdna/aie2_psp.c
->> @@ -126,8 +126,8 @@ struct psp_device *aie2m_psp_create(struct drm_device *ddev, struct psp_config *
->>          psp->ddev = ddev;
->>          memcpy(psp->psp_regs, conf->psp_regs, sizeof(psp->psp_regs));
->>
->> -       psp->fw_buf_sz = ALIGN(conf->fw_size, PSP_FW_ALIGN) + PSP_FW_ALIGN;
->> -       psp->fw_buffer = drmm_kmalloc(ddev, psp->fw_buf_sz, GFP_KERNEL);
->> +       psp->fw_buf_sz = ALIGN(conf->fw_size, PSP_FW_ALIGN);
->> +       psp->fw_buffer = drmm_kmalloc(ddev, psp->fw_buf_sz + PSP_FW_ALIGN, GFP_KERNEL);
-> Why do you need the extra PSP_FW_ALIGN in the allocation?
+Ok.
 
-The start address of the firmware is also required to be PSP_FW_ALIGN 
-aligned.
+Though, note that as of a few months ago, --backup no longer exists.  A
+backup is now automatically created with --verbose.  But we can revive
+it if you want.
 
-
-Thanks,
-
-Lizhi
-
->
-> Alex
->
->>          if (!psp->fw_buffer) {
->>                  drm_err(ddev, "no memory for fw buffer");
->>                  return NULL;
->> --
->> 2.34.1
->>
+-- 
+Josh
