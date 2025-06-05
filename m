@@ -1,113 +1,138 @@
-Received: from sonic315-20.consmr.mail.ne1.yahoo.com (sonic315-20.consmr.mail.ne1.yahoo.com [66.163.190.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D6A272E5F
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.190.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8283266B46;
+	Thu,  5 Jun 2025 13:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749131854; cv=none; b=OqUan2nJrmD1FzGrACIo5TleRdRcoiSRRyZ8KGzKnkWc+BG9GANLJ5cWU9oZtIFy0HNvXTWvRZLz4CAguYT9t4yl3l5/Dx88p+Lnwb6/dNydJ+aio+ACJNXNL6zWdViIy6ejtfbGYrgUSVDxlKe6jNYAtO2tg+ASCr2Pt6oPbyo=
+	t=1749131891; cv=none; b=UJ5Dq8EjR+fdv+/wyS1VbtzNYUCJYn8YDUpHmu7mpl9QKsfj+XI/TJikPgP74vjUDOrlPJT1bqEeJj5uE/CvwTDPmyKeLNQ6KR3B48mtN0bG8MoofRieiuIJcmGfAAs0uA0gIGmpsdkuh9wby8zVR0vfj+03Z5+HyX1vmoqvuCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749131854; c=relaxed/simple;
-	bh=vLM/1Fwlx8b+UK1HL4acBgZkNMtY/ECcZtBJAw5i8kQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eQK5KE9Q2uTOlmXqdpO1UPQmfxsn2T78vViflixVMGO6TTtjWBACcD1Gs1sdrzrmRWNRwRpFRwLFBoxy0WeeV1zvbZrtgZwnFQieYuoxjdVmzz08aBZ6l49meIHSD4hcD2p7XAlVuCkYDP1tqW8+9DqQ1C/+YjSfHZ4+wtcYysk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=gpWy8An+; arc=none smtp.client-ip=66.163.190.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1749131891; c=relaxed/simple;
+	bh=RxeZKKtfRds3PxN3PLe0wf4c3gwQug6TquFWBiVuZic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gg/YMprXlf0cDWSGmzmv6h8rTI7Lnk8OYnsWJBPcau7BwX97UCjJ1SOtwoYoUurz1CnrAr49lgF5PMYctCvNNwicjCnuVcoy511TZNn5lSlDD6tkgI4mcWo3i/GSo+alxXNcaZFoeCfhpTg7JmXDEJpogTZajBaub5P8sY6B6cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oGVwMvp4; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="gpWy8An+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749131846; bh=7Pij581zFWjUHqr6AUe1QrFQplXSla6n2vA3DY/kqa4=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=gpWy8An+JRoWSzveSq2D6pEJhW6mrJNsby2j017NTTU8rHOnd9EDl5C2i2tMxgVaACbD7Iu+s1P9rXeJ89qAzU80jXj6EqPhHwWR0BShz1Mb/1ALz8ffI1vpDMFshBCN1CI0mjMcsnbYsCCZv808RMc/iLyjd1OmroCQdQa34qhlrgozyKIaddlSbpuyoQZ2jk0hmsiT5K7FUTW0VQlSBeCR4gKfG3e+C4fBjfPHxrsHE6R58xFcyprZK1Mj8qvv5BHLcQkkpmD1ZZjXHBnMS2KLreiBCo7CUd4w6J4+NrhktcKNeG5sv8n3ujE7j8bHknKeU/Hcb+RU3oFu1KpAPA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749131846; bh=+0Wh3eI2F1SO811zLel0DC36S2dzMgVS6IxKU8+vCBv=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=rRuij+LZiIuUwzyrfkYvId7f7tw4VHYJOLKLxT7wvr/NEy9JvvvqgUNRdvV7a3ZZUTNeX9aSEe7BzfRTnjANyOZND6F3JvFSiJuFZipLfcldTfdA0LABSIf8cl1RdfDMu8t5BwOGubR2E7q/DCqGcoatf/4ZaJi6oAU1XGDwUkWABsECa8RdZ7wdOpSAXvAdyRJirMovhAlrhmyEyv9bGinyk0LU7tY77uVNgk4yAP2yF5c8jGTDw5btNIGC+9G/rDokGTtpoeqI6007OP6IKHzYBs1+HR8NuniQCAG812NdB9AtPxs8eP8iVH7HzkpGHEaGrOYx7ojTy76ardOyqw==
-X-YMail-OSG: fwBjBwAVM1kZM4WGig35UZ.bs419msPgG20iG_FR3ESJtpOV9SQ1dZ7HOSrgjwZ
- w0Gh1yFKMs3huH9kd8ZyxbLiCU9DfDLwHHoTUV7s32cytmTdOEm8DqGuYlQ77JlZULJyoMqYr.wC
- 0c4vx8VfE63PmXs6nPPyOfPllt.MKeUduRC27IwhLnK53Q1gCO3WxLPgHXvtRsBr8ZQf72t7UTA2
- PIJimt3uMNz2iDHx0CvpRmh07wQTrY1cXgMyFyzcIop5Y.Un865rsxv_703TvbkAEpoYsCe7UK67
- QuUZd8zJQ5m03q5hX2ehMmNZm4voHNbTnu5EH_nl8cLONlMCfgKj30fVc4S8LilwbHQeb__dgNgO
- vUCZwcOA5gdhiGFSo2c4qpvUJiOqtQGyfTKjAyq3IlY_GnjAEcoGdegZcFcwSP69Q4TSQs.hTvNn
- rAAPaYGPEWHwqA4LQjcr4EHpV7uWzUKPk8FjL.nUaBSysjuvhaMTmQKvf.FGXOJbBKPiWpYmjopD
- Rp1axoD76BCKCBBy5cMPIfVBecDxdYbrod18XvHG5N6xehfZJIZUf0RsUtGkWKD33id2Ij3raaSN
- q8R7_POeOBsnVfYbqUJTVPgEVcwecillchl86tn26spnRQTPyJT9IF7bLYiUrMne4EhQ3c86x6vv
- muTW7F9w0zqVI3LSSDdfzxjs5jSHo26kpkQ4DlI5uQCYD_x1WwWLd6KdLPMGeQwylQVKVWpsDWc9
- LoqxAS2fEOfQnHuejEtza05dwRH3vCLWaVH0h9ZiHUtx_M_3OxoaCVHH1Si9AFP95QmMOS.9uL2L
- OS_mF1nbN0_h9h21u8wxi7Ubugqqq6H.DPMoZ2rR719Iebg3TKGHHXKyIDg96MSvNCVmOujmk_xt
- gS4mHnV.xj8JxGHlqDL3rZ4hbifKmVFk6eE2NGBPUDzT1XsvjxVOGw.Js2WSpnmadUSrVnBR11zP
- DGslLZT1jqxP6_5XshUwZUqqkzZJjPrqhb0Us4K82ab1s.gu4Ilgo.eCmgyGcA9wbnUMYc.eJOiP
- 6fx.NhrbCO7sK35EZopZc0DIBMrXVpPCKV2TrpHyB0NWy4o6ta3OsYdWSsXW_LmsKn5iqFOc5P0u
- CQPKOBvc7H9.Ya1YAj5DnbjYdwUSrv9ug79d7rDDVAmh9kFMG3ukX8FKZEUNKajrSc8y0KaQZIBz
- eAMKQVMd64hnIKrlV5e3Ld9lHffAJ3CNXSIEH54xi4DaBzc2qgHtqFRi6quqPkZaHm.U8boKWFUt
- j5iRyzkqhZz83PugOjBcqBkESWCZqpRvlxogkNbmsHiXXR.0htA5f5r2fYSoaDL2fBICNDR3n44s
- 7oTktF9oV3xnJs4FjgMDKPi.vo1zQQRkFeBcBAvRwyZ46AJ7XlFH07jcFUsfjJn7Fs2oAWVRftfa
- 7J0bQcyLwJgajlGoZikGOPehIORutMlvB.zLRTT_TptOOnVKtf.pilZsKUXRd.CZ2HbC3kywJEaI
- eLcwMxeDBjr.oj6BEfEOH81GVMkIRvliaHl_j_vlCyTSywu58dsIZbiJQcAJspojyS_WDrFiWjac
- TGM1oXHpdTXMFYBsH6b_8s23CrD3LQx3G387npJ8arpPC3dimMu.VMeGeVwZbYfqMrcIiZWqPm1d
- rqBaOZveyMb0GD5yyHeOosFja5ud1HK41gT3Hr_a5titim7ElZP3V0Trakvj5umU1KC3wHqP8Y1W
- GLjHC_9Mak1sOHCNCHqp58pOwoN.q0oaBfKzH_6baqdbVZZjaTJtMkdAYlZbco6nts_quu2r6QmN
- NMEJML0YOQX9AAWyyfKyizmMDD0tbpOk_H2gg1S6zFcZsMR8yM10A8EBcgpJY8Owcbww2GefyMtC
- wV2PXVc8j3rdCVZOgjDTjmWKkk.ERcKhKbIeyMH1959rOYi9_9k4eglNCaH36o_.G6vdcdjvwWMZ
- g1Mm3PAlobi8M_PRnKUvz.9b7soam_lBazNSytPNwAHGrHfLLQBam1jF2V7PwI9rt5hQL2MprlTC
- ly_mILJ1rkyPZ4jtIZ8afyC3julxSOhJm7tPvFDGYI6.0zIDpDBeciL0oM5vWwnE6JtxAsQEAfwr
- sQTffb6G9dkOKOtH92D3f9YlrQ2eYwZSIkwtZ_dFZQXH0TXSRQTzWIKdOiMpv8tIrJ4y5yfzt0PD
- G2e98_M0Xv6IxMPbF9qgWM4UsBvLL5hN6JWc5ZLr4m283SozQaBmm3lLb35.VY22FAlfHttZYQbB
- sy7XTNSkK_7ywkLXfuP.NGfFFogGi7ImIdda1HQmxtoklLQ--
-X-Sonic-MF: <igor.korotin@yahoo.com>
-X-Sonic-ID: 3befdfe6-6df7-4284-8731-6c12b188ce9e
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Thu, 5 Jun 2025 13:57:26 +0000
-Received: by hermes--production-ir2-858bd4ff7b-w59v5 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID aa6bd7898dce500d2c3ef2418e041585;
-          Thu, 05 Jun 2025 13:57:23 +0000 (UTC)
-Message-ID: <2d02be52-b22b-4a2b-bfbe-aff7b62200e8@yahoo.com>
-Date: Thu, 5 Jun 2025 14:57:21 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oGVwMvp4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=tiQUdlh/Ce3B8Ur44I1W3ANWS6iBCuhuH2zMPodOOo8=; b=oGVwMvp475cMptqAnh+LDsAfic
+	6ETohqcOf2AIKYMPfZqGeo3k9QK+/bAYSvVz8Do6+DEjBsZChbz2VLkFpYNlEedEPfopmGUjicYA7
+	eiqeA1XR6Bh3e9gf3M5bZcu+eyGfbTpnBN2VYnx+ujGC0z/MUE+63ux8Z98pi/uIfkudGfjazRMV2
+	lMce6nTj1euWRLb/XfY/UGpQtoLi7HQ873GaeJeDL93gGiR8DIOazRhbIddSk2TSQDYmST5W9qUre
+	pRHq2XVNue/5MivDrqoTZBqaoAI3BiOilTVGNjo/YPjO0nujpI19oQBo60Jf546AAT4IuKiEnfT+j
+	QW3GnLPg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uNB6b-00000004IoF-01Q4;
+	Thu, 05 Jun 2025 13:58:05 +0000
+Date: Thu, 5 Jun 2025 14:58:04 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: syzbot <syzbot+f34f8bb121f222fb1f38@syzkaller.appspotmail.com>
+Cc: jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+	linux-kernel@vger.kernel.org, mark@fasheh.com,
+	ocfs2-devel@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [ocfs2?] kernel BUG in ocfs2_write_begin_nolock (2)
+Message-ID: <aEGibEiKI5Tl6gmV@casper.infradead.org>
+References: <6841282f.050a0220.2461cf.000d.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/5] rust: Add ACPI match table support for Rust
- drivers
-To: Danilo Krummrich <dakr@kernel.org>,
- Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Len Brown <lenb@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Hung <alex.hung@amd.com>,
- Tamir Duberstein <tamird@gmail.com>,
- FUJITA Tomonori <fujita.tomonori@gmail.com>,
- Xiangfei Ding <dingxiangfei2009@gmail.com>
-References: <20250604122945.3445776-1-igor.korotin.linux@gmail.com>
- <aEC73CHD0fvByrJs@cassiopeiae>
-Content-Language: en-US
-From: Igor Korotin <igor.korotin@yahoo.com>
-In-Reply-To: <aEC73CHD0fvByrJs@cassiopeiae>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.23956 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6841282f.050a0220.2461cf.000d.GAE@google.com>
 
+On Wed, Jun 04, 2025 at 10:16:31PM -0700, syzbot wrote:
+> ------------[ cut here ]------------
+> kernel BUG at fs/ocfs2/aops.c:1389!
 
-> Thanks this is great!
+That's this one:
+
+                        /* We should already CoW the refcountd extent. */
+                        BUG_ON(ext_flags & OCFS2_EXT_REFCOUNTED);
+
+> Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
+> CPU: 0 UID: 0 PID: 6894 Comm: syz.4.220 Not tainted 6.15.0-next-20250530-syzkaller #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+> RIP: 0010:ocfs2_populate_write_desc fs/ocfs2/aops.c:1389 [inline]
+> RIP: 0010:ocfs2_write_begin_nolock+0x42e0/0x4340 fs/ocfs2/aops.c:1687
+> Code: 00 eb 05 e8 82 54 28 fe 49 bd 00 00 00 00 00 fc ff df e9 23 fe ff ff e8 fe dc cd 07 e8 69 54 28 fe 90 0f 0b e8 61 54 28 fe 90 <0f> 0b e8 59 54 28 fe 90 0f 0b e8 51 54 28 fe 90 0f 0b e8 49 54 28
+> RSP: 0018:ffffc90019b97240 EFLAGS: 00010293
+> RAX: ffffffff83980b4f RBX: 0000000000000002 RCX: ffff88802530da00
+> RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
+> RBP: ffffc90019b97800 R08: ffff88802530da00 R09: 0000000000000006
+> R10: 00000000fffffffc R11: 0000000000000000 R12: 0000000000000000
+> R13: dffffc0000000000 R14: 0000000000000001 R15: ffff88805b968010
+> FS:  00005555780fd500(0000) GS:ffff888125c53000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000000110c2f56bd CR3: 00000000675d4000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  __ocfs2_page_mkwrite fs/ocfs2/mmap.c:93 [inline]
+>  ocfs2_page_mkwrite+0x600/0xc40 fs/ocfs2/mmap.c:144
+>  do_page_mkwrite+0x14a/0x310 mm/memory.c:3378
+>  wp_page_shared mm/memory.c:3779 [inline]
+>  do_wp_page+0x268d/0x5800 mm/memory.c:3998
+>  handle_pte_fault mm/memory.c:6105 [inline]
+>  __handle_mm_fault+0x1144/0x5620 mm/memory.c:6232
+>  handle_mm_fault+0x40a/0x8e0 mm/memory.c:6401
+>  do_user_addr_fault+0x764/0x1390 arch/x86/mm/fault.c:1387
+>  handle_page_fault arch/x86/mm/fault.c:1476 [inline]
+>  exc_page_fault+0x76/0xf0 arch/x86/mm/fault.c:1532
+>  asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+> RIP: 0033:0x7f79671566ab
+> Code: fa 10 73 2d 83 fa 08 73 46 83 fa 04 73 16 83 fa 01 7c 10 8a 0e 74 0a 0f b7 74 16 fe 66 89 74 17 fe 88 0f c3 8b 4c 16 fc 8b 36 <89> 4c 17 fc 89 37 c3 c5 fa 6f 06 c5 fa 6f 4c 16 f0 c5 fa 7f 07 c5
+> RSP: 002b:00007fff1cbdc378 EFLAGS: 00010202
+> RAX: 00002000000005c0 RBX: 0000000000000004 RCX: 0000000000737562
+> RDX: 0000000000000006 RSI: 0000000075622f2e RDI: 00002000000005c0
+> RBP: 00007f79673b7ba0 R08: 00007f7967000000 R09: 0000000000000001
+> R10: 0000000000000001 R11: 0000000000000009 R12: 00007f79673b5fac
+> R13: 00007fff1cbdc470 R14: fffffffffffffffe R15: 00007fff1cbdc490
+>  </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:ocfs2_populate_write_desc fs/ocfs2/aops.c:1389 [inline]
+> RIP: 0010:ocfs2_write_begin_nolock+0x42e0/0x4340 fs/ocfs2/aops.c:1687
+> Code: 00 eb 05 e8 82 54 28 fe 49 bd 00 00 00 00 00 fc ff df e9 23 fe ff ff e8 fe dc cd 07 e8 69 54 28 fe 90 0f 0b e8 61 54 28 fe 90 <0f> 0b e8 59 54 28 fe 90 0f 0b e8 51 54 28 fe 90 0f 0b e8 49 54 28
+> RSP: 0018:ffffc90019b97240 EFLAGS: 00010293
+> RAX: ffffffff83980b4f RBX: 0000000000000002 RCX: ffff88802530da00
+> RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
+> RBP: ffffc90019b97800 R08: ffff88802530da00 R09: 0000000000000006
+> R10: 00000000fffffffc R11: 0000000000000000 R12: 0000000000000000
+> R13: dffffc0000000000 R14: 0000000000000001 R15: ffff88805b968010
+> FS:  00005555780fd500(0000) GS:ffff888125c53000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00005561c2044660 CR3: 00000000675d4000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 > 
-> Unfortunately, it seems that something went wrong sending this patch series.
-> Patches 3 and 5 are missing on my end (and on the corresponding lists as well).
-
-Yes, I know. Gmail has blocked me from sending any letters. I probably hit
-some limit. It will likely unblock me sometime today or tomorrow.
-
-> Also, technically this series is a v2; patch 1 differs from the one you sent
-> originally -- please include a changelog.
-
-Because of this Gmail issue, I need to clarify the right course of 
-action to avoid being blocked again:
-Should I resend the whole series as PATCH v2 with a changelog?
-
-Thanks
-Igor
-
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
+> 
