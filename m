@@ -1,314 +1,119 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE1E1FC7CB
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5189D1F0E26
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749107680; cv=none; b=hK6W9N0CG8FnODAFLr1+jb0G0ruUk+3tMaD0g5M0JUjv4x2G9ZcWwG7McmRt0AqFFlWorWwZacdkThHdVYJLRqhlol85J1vpRYL29CJglhhicXPR1awQ/tsJpXIYmxHFsKvZATuMQBkKgxttBEisJrmEWgcH7e8AXfyS7H5mzTM=
+	t=1749107741; cv=none; b=D45meyXA0ExruzsGpHoo8paL+7LHbRmX/kJekPODeATqianvTprzNYB9lIBjFYOR+uHfGDbdORtrztE7L8PTTkZpBImDrFu+vv4QzBIIS5K270We7Ux2BYw1DzvhVvRz2hhqkGmC5DZnteMHOiRvsrzg+jFfizIWXUhU3HGK/Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749107680; c=relaxed/simple;
-	bh=akpe+JnFNh0nrYF5bAG6YaO3R78jRwSWyOGs9dvuljg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R1XUHB6cBGZ4YrX2g8XKqH9x0hdriPP30rCni3FI0gxz5bdVeXHLFxWMKy9drVy0fINeE+7O7y3lAyiN4X2By/b2B79oLOAhebwjeVYlB+1dL3Uk3RRWFU9bRcT8rKqAcgGnu58S5/cmyyDW/JtWOagIAn7/WsXBfJXhhpoR6LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CSLyQLYh; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749107741; c=relaxed/simple;
+	bh=eQ+6FyRVM8PPKszPrCrL3SlSesv5MrWqZAnxeCxvKAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i+8u1XBQhBWJ9gzWGp8iafhnDg91t+c3qyhVDO4BvT3u5D4jjbidmNlBaGvBgTv2vlh42ddVfej9F+Fk6wIiGaRTucODJ2TaZtrXgwMISsfwIS+jO5EVrYUGDczD0KIoXH0qoVFvar+SF7YnmkxvSTg/1Jz0z41aPJ5YXdEa4E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cdQvLKjk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ll0Txor3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSLyQLYh"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a361b8a664so592357f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:14:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749107677; x=1749712477; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wunkGBMjdfVg2AP1giwWoYeKTmh1qFR/UdkCw8YVy9E=;
-        b=CSLyQLYh39/2MZUFMVgNuS4IscRFPTk/OPpGYuXAf6RgTlSx0yI1pPt3K0xrtyLm+n
-         k7w7Z0oDO5nWZ6Qghngyto3+pHbIhnYTeJ7WJ9/7ijiTzG/zcZltM0DUVps7lPB6a1/J
-         IAjlG5sIYfiwd0xulsKoqQO1HyUTX6cYZ7XIQPuaH7yZPAcMPuLUN7QlHtwFOESDZt43
-         ylsWX7g+1u4iyOpR4n/GglqShqUJuEhlnyy43A5Z6Jexe9cBHWZARaGGhdCz9Q+fwSYj
-         glTdpcdwA5Oanm8OSvPNFAWAyen2RYRUV2DLkAy+lQ7Y14LCq+jA0++z/V0wGfX6RJGj
-         fj3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749107677; x=1749712477;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wunkGBMjdfVg2AP1giwWoYeKTmh1qFR/UdkCw8YVy9E=;
-        b=h6LSoCDijKMd9SbgRqm5qgJb0IznRIBvP/DMj3AV+LnxxaiE5mD7RWliPeTxFq1PTc
-         3AYldQQPC5i/TeXphbrEAkQVvgD+ngxDbwg9ftUB9l/jkZDCWtd2pVOSv5RQO0TeKFwQ
-         zCbGKZkp6Xkp396wvldRjLW9+78LTKkG7jOIvaZkklI3K6qT9VOjTiOVBYyTd4Nk07tK
-         hLvyt+iZATrnQhqNF43MXvqP4VB/AyCjjppmt28TgOCxV37y340tF/VHieE84EWyVVoL
-         +Amc4DIYnSrBS4LM+PH22i/zuWUdgrPPDEb/iXgg303MTvZcBm3DkSId2HTNpRvSPVyM
-         9Llw==
-X-Gm-Message-State: AOJu0YxC7mRqeovqdCq+BfBTXppRxMBcZYrTwZaPIL9UHMNva9Gpm/5j
-	0ABeCjjieFwb/7apgBwqPY9V/LX208DPt+SGc/t0SgDgn4V4MJMjz1pC
-X-Gm-Gg: ASbGncvp6xpeECTjzmevOaB2Fdda6c1oYcqATN6ZXWWENmLMyeG1TQjqBhpYjMAq8i8
-	eWz6gihZk/hN5CReO9x0Ff6Z4H26Qx1PsqJayZNJ+qbjh/JLoLS6S++3eG1YzIJPBvPBiMqpAuV
-	7WrW6Z/cbR8emvl+EF0c3dqNcCGwbihs3B59DAosrXEcB8u2bqLEGbdT0hPyDkec8t+M1gEukEx
-	Wz+vJ7kgzt0FvqWx7QBUrsEXLnf4SZvki7knT33WVdk7MfLpl4G7WR0edwJvIQ1jvBglEmV66u6
-	T9TIED9fLc2aIIgH2sfMWXqRt4yMDL6oRSQEFVhJRzW3unnfe8c5OADZzm3sMjW6
-X-Google-Smtp-Source: AGHT+IFPiL6k/rAlAhbgeXT5cOuoAthP4yNSe1X48pEbt2w+TJrnfinK05CsPBV//zd7kId9wRjoEw==
-X-Received: by 2002:a05:6000:26d0:b0:3a4:f787:9b58 with SMTP id ffacd0b85a97d-3a51d986a6emr4521122f8f.58.1749107676489;
-        Thu, 05 Jun 2025 00:14:36 -0700 (PDT)
-Received: from localhost.localdomain ([78.210.56.234])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00972b5sm23885431f8f.76.2025.06.05.00.14.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 00:14:36 -0700 (PDT)
-From: Yuri Andriaccio <yurand2000@gmail.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Luca Abeni <luca.abeni@santannapisa.it>,
-	Yuri Andriaccio <yuri.andriaccio@santannapisa.it>
-Subject: [RFC PATCH 9/9] sched/deadline: Allow deeper hierarchies of RT cgroups
-Date: Thu,  5 Jun 2025 09:14:12 +0200
-Message-ID: <20250605071412.139240-10-yurand2000@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250605071412.139240-1-yurand2000@gmail.com>
-References: <20250605071412.139240-1-yurand2000@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cdQvLKjk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ll0Txor3"
+Date: Thu, 5 Jun 2025 09:15:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749107738;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=umTS7/wxwJGZ/2nVekjYJpD6hur1aVjvLdCfSnqSTYU=;
+	b=cdQvLKjkv3D1G2gKqvV4B3QBUO+wOWe7TkECPamTTWyc2+Hj0YZo5lKUSPqpMezodLf9LC
+	P8VModRaY59790cYs9rxFdwq7Nb/jkTnwZk7syHafuFMQyIZNNaFKbHW6aBFdWsnmsjZkF
+	hfMeLglQPzd4qwY/DOmCoQrvy5CKX+mNB90lOFfE1jFVMdiP+LpEuJxN48otO5rjdjQFLl
+	oR7cznjKUQ35/HWUMRA+iIKtuYYNNJhoKRMMdqfT/aAptu8eM52h8ZYa1qPpm5uYdJIzWn
+	L+o0ZY6D7mogXi4K0sDvVrqhK4GstaExO2lBO9h6t1Y580HoiZ4uqcyNBasC1Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749107738;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=umTS7/wxwJGZ/2nVekjYJpD6hur1aVjvLdCfSnqSTYU=;
+	b=Ll0Txor30Y+PWfzfK/UtImbmkgW7nNqiQS6WFGjTZWIhCwuSH5LkB5CTqgZdzpSXylUUv0
+	s9PcEnt2MwwW18CQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Guo Ren <guoren@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RISC-V: vDSO: Correct inline assembly constraints in the
+ getrandom syscall wrapper
+Message-ID: <20250605091112-7cd6b3bd-a466-486a-aebc-7bf0b2a8ac31@linutronix.de>
+References: <20250411024600.16045-1-xry111@xry111.site>
+ <20250411095103-2aad099a-e4a1-4efb-8374-dd27bf05b668@linutronix.de>
+ <a2477829-f3a5-4763-89f3-8c2c1f4716b8@ghiti.fr>
+ <7f840a23ab8865d7f205caec56817c660e237d64.camel@xry111.site>
+ <71f093d5-4823-4bc6-b9ee-23433bd8c60c@ghiti.fr>
+ <0f0eb024d7ed062141a8aa048017e6f7ef7c1fd4.camel@xry111.site>
+ <57a1ced6-406b-4197-96ca-6b83d99ca1a0@ghiti.fr>
+ <5065dcf8fe1995859874196aa9ea5c0bff056ae3.camel@xry111.site>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <5065dcf8fe1995859874196aa9ea5c0bff056ae3.camel@xry111.site>
 
-From: luca abeni <luca.abeni@santannapisa.it>
+Hi Xi,
 
-Allow creation of cgroup hierachies with depth greater than two.
-Add check to prevent attaching tasks to a child cgroup of an active cgroup (i.e.
-with a running FIFO/RR task).
-Add check to prevent attaching tasks to cgroups which have children with
-non-zero runtime.
-Update rt-cgroups allocated bandwidth accounting for nested cgroup hierachies.
+On Wed, Jun 04, 2025 at 11:09:52PM +0800, Xi Ruoyao wrote:
+> As recently pointed out by Thomas, if a register is forced for two
+> different register variables, among them one is used as "+" (both input
+> and output) and another is only used as input, Clang would treat the
+> conflicting input parameters as undefined behaviour and optimize away
+> the argument assignment.
 
-Co-developed-by: Yuri Andriaccio <yurand2000@gmail.com>
-Signed-off-by: Yuri Andriaccio <yurand2000@gmail.com>
-Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
----
- kernel/sched/core.c     |  6 ----
- kernel/sched/deadline.c | 69 ++++++++++++++++++++++++++++++++++-------
- kernel/sched/rt.c       | 25 +++++++++++++--
- kernel/sched/sched.h    |  2 +-
- kernel/sched/syscalls.c |  4 +++
- 5 files changed, 84 insertions(+), 22 deletions(-)
+Good catch, I forgot to check the getrandom() implementations.
+ 
+> Per an example in the GCC documentation, for this purpose we can use "="
+> (only output) for the output, and "0" for the input for that we must
+> reuse the same register as the output.  I'm not sure if using a simple
+> "r" for the input is safe or not here, so just follow the documentation.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 9c8bc9728..c02cdeccf 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -9127,12 +9127,6 @@ cpu_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
- 		return &root_task_group.css;
- 	}
- 
--	/* Do not allow cpu_cgroup hierachies with depth greater than 2. */
--#ifdef CONFIG_RT_GROUP_SCHED
--	if (parent != &root_task_group)
--		return ERR_PTR(-EINVAL);
--#endif
--
- 	tg = sched_create_group(parent);
- 	if (IS_ERR(tg))
- 		return ERR_PTR(-ENOMEM);
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index b07abbb60..b405b0724 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -414,10 +414,39 @@ int dl_check_tg(unsigned long total)
- 	return 1;
- }
- 
--int dl_init_tg(struct sched_dl_entity *dl_se, u64 rt_runtime, u64 rt_period)
-+static inline bool is_active_sched_group(struct task_group *tg)
- {
-+	struct task_group *child;
-+	bool is_active = 1;
-+
-+	// if there are no children, this is a leaf group, thus it is active
-+	list_for_each_entry_rcu(child, &tg->children, siblings) {
-+		if (child->dl_bandwidth.dl_runtime > 0) {
-+			is_active = 0;
-+		}
-+	}
-+	return is_active;
-+}
-+
-+static inline bool sched_group_has_active_siblings(struct task_group *tg)
-+{
-+	struct task_group *child;
-+	bool has_active_siblings = 0;
-+
-+	// if there are no children, this is a leaf group, thus it is active
-+	list_for_each_entry_rcu(child, &tg->parent->children, siblings) {
-+		if (child != tg && child->dl_bandwidth.dl_runtime > 0) {
-+			has_active_siblings = 1;
-+		}
-+	}
-+	return has_active_siblings;
-+}
-+
-+int dl_init_tg(struct task_group *tg, int cpu, u64 rt_runtime, u64 rt_period)
-+{
-+	struct sched_dl_entity *dl_se = tg->dl_se[cpu];
- 	struct rq *rq = container_of(dl_se->dl_rq, struct rq, dl);
--	int is_active;
-+	int is_active, is_active_group;
- 	u64 old_runtime;
- 
- 	/*
-@@ -434,24 +463,40 @@ int dl_init_tg(struct sched_dl_entity *dl_se, u64 rt_runtime, u64 rt_period)
- 	if (rt_period & (1ULL << 63))
- 		return 0;
- 
-+	is_active_group = is_active_sched_group(tg);
-+
- 	raw_spin_rq_lock_irq(rq);
- 	is_active = dl_se->my_q->rt.rt_nr_running > 0;
- 	old_runtime = dl_se->dl_runtime;
- 	dl_se->dl_runtime  = rt_runtime;
- 	dl_se->dl_period   = rt_period;
- 	dl_se->dl_deadline = dl_se->dl_period;
--	if (is_active) {
--		sub_running_bw(dl_se, dl_se->dl_rq);
--	} else if (dl_se->dl_non_contending) {
--		sub_running_bw(dl_se, dl_se->dl_rq);
--		dl_se->dl_non_contending = 0;
--		hrtimer_try_to_cancel(&dl_se->inactive_timer);
-+	if (is_active_group) {
-+		if (is_active) {
-+			sub_running_bw(dl_se, dl_se->dl_rq);
-+		} else if (dl_se->dl_non_contending) {
-+			sub_running_bw(dl_se, dl_se->dl_rq);
-+			dl_se->dl_non_contending = 0;
-+			hrtimer_try_to_cancel(&dl_se->inactive_timer);
-+		}
-+		__sub_rq_bw(dl_se->dl_bw, dl_se->dl_rq);
-+		dl_se->dl_bw = to_ratio(dl_se->dl_period, dl_se->dl_runtime);
-+		__add_rq_bw(dl_se->dl_bw, dl_se->dl_rq);
-+	} else {
-+		dl_se->dl_bw = to_ratio(dl_se->dl_period, dl_se->dl_runtime);
-+	}
-+
-+	// add/remove the parent's bw
-+	if (tg->parent && tg->parent != &root_task_group)
-+	{
-+		if (rt_runtime == 0 && old_runtime != 0 && !sched_group_has_active_siblings(tg)) {
-+			__add_rq_bw(tg->parent->dl_se[cpu]->dl_bw, dl_se->dl_rq);
-+		} else if (rt_runtime != 0 && old_runtime == 0 && !sched_group_has_active_siblings(tg)) {
-+			__sub_rq_bw(tg->parent->dl_se[cpu]->dl_bw, dl_se->dl_rq);
-+		}
- 	}
--	__sub_rq_bw(dl_se->dl_bw, dl_se->dl_rq);
--	dl_se->dl_bw = to_ratio(dl_se->dl_period, dl_se->dl_runtime);
--	__add_rq_bw(dl_se->dl_bw, dl_se->dl_rq);
- 
--	if (is_active)
-+	if (is_active_group && is_active)
- 		add_running_bw(dl_se, dl_se->dl_rq);
- 
- 	raw_spin_rq_unlock_irq(rq);
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index ce3320f12..225684450 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -106,7 +106,8 @@ void free_rt_sched_group(struct task_group *tg)
- 			 * Fix this issue by changing the group runtime
- 			 * to 0 immediately before freeing it.
- 			 */
--			BUG_ON(!dl_init_tg(tg->dl_se[i], 0, tg->dl_se[i]->dl_period));
-+			if (tg->dl_se[i]->dl_runtime)
-+				BUG_ON(!dl_init_tg(tg, i, 0, tg->dl_se[i]->dl_period));
- 			raw_spin_rq_lock_irqsave(cpu_rq(i), flags);
- 			BUG_ON(tg->rt_rq[i]->rt_nr_running);
- 			raw_spin_rq_unlock_irqrestore(cpu_rq(i), flags);
-@@ -2197,6 +2198,14 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
- {
- 	int i, err = 0;
- 
-+	/*
-+	 * Do not allow to set a RT runtime > 0 if the parent has RT tasks
-+	 * (and is not the root group)
-+	 */
-+	if (rt_runtime && (tg != &root_task_group) && (tg->parent != &root_task_group) && tg_has_rt_tasks(tg->parent)) {
-+		return -EINVAL;
-+	}
-+
- 	/* No period doesn't make any sense. */
- 	if (rt_period == 0)
- 		return -EINVAL;
-@@ -2220,7 +2229,7 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
- 		goto unlock_bandwidth;
- 
- 	for_each_possible_cpu(i) {
--		if (!dl_init_tg(tg->dl_se[i], rt_runtime, rt_period)) {
-+		if (!dl_init_tg(tg, i, rt_runtime, rt_period)) {
- 			err = -EINVAL;
- 			break;
- 		}
-@@ -2290,6 +2299,9 @@ static int sched_rt_global_constraints(void)
- 
- int sched_rt_can_attach(struct task_group *tg, struct task_struct *tsk)
- {
-+	struct task_group *child;
-+	int can_attach = 1;
-+
- 	/* Allow executing in the root cgroup regardless of allowed bandwidth */
- 	if (tg == &root_task_group)
- 		return 1;
-@@ -2298,7 +2310,14 @@ int sched_rt_can_attach(struct task_group *tg, struct task_struct *tsk)
- 	if (rt_group_sched_enabled() && tg->dl_bandwidth.dl_runtime == 0)
- 		return 0;
- 
--	return 1;
-+	/* If one of the children has runtime > 0, cannot attach RT tasks! */
-+	list_for_each_entry_rcu(child, &tg->children, siblings) {
-+		if (child->dl_bandwidth.dl_runtime) {
-+			can_attach = 0;
-+		}
-+	}
-+
-+	return can_attach;
- }
- 
- #else /* !CONFIG_RT_GROUP_SCHED */
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 686578666..fde133f9c 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -384,7 +384,7 @@ extern void dl_server_init(struct sched_dl_entity *dl_se, struct dl_rq *dl_rq,
- 		    dl_server_has_tasks_f has_tasks,
- 		    dl_server_pick_f pick_task);
- int dl_check_tg(unsigned long total);
--int dl_init_tg(struct sched_dl_entity *dl_se, u64 rt_runtime, u64 rt_period);
-+int dl_init_tg(struct task_group *tg, int cpu, u64 rt_runtime, u64 rt_period);
- 
- extern void dl_server_update_idle_time(struct rq *rq,
- 		    struct task_struct *p);
-diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-index 45a38fe5e..7e5e6de92 100644
---- a/kernel/sched/syscalls.c
-+++ b/kernel/sched/syscalls.c
-@@ -630,6 +630,10 @@ int __sched_setscheduler(struct task_struct *p,
- 
- 	if (user) {
- #ifdef CONFIG_RT_GROUP_SCHED
-+		if (dl_bandwidth_enabled() && rt_policy(policy) && !sched_rt_can_attach(task_group(p), p)) {
-+			retval = -EPERM;
-+			goto unlock;
-+		}
- 		/*
- 		 * Do not allow real-time tasks into groups that have no runtime
- 		 * assigned.
--- 
-2.49.0
+This looks good in general. However the usage of the "0" constraint now differs
+from the "r" constraint used by all other vDSO implementations, even the RISC-V
+gettimeofday() itself.
+I'd like to hold off applying this commit and wait for the conclusion of the
+discussion linked below and then implement the result of that everywhere.
 
+> Link: https://lore.kernel.org/all/20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de/
+> Link: https://gcc.gnu.org/onlinedocs/gcc-15.1.0/gcc/Local-Register-Variables.html
+> Cc: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>  arch/riscv/include/asm/vdso/getrandom.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/vdso/getrandom.h b/arch/riscv/include/asm/vdso/getrandom.h
+> index 8dc92441702a..0d84a38e79da 100644
+> --- a/arch/riscv/include/asm/vdso/getrandom.h
+> +++ b/arch/riscv/include/asm/vdso/getrandom.h
+> @@ -18,8 +18,8 @@ static __always_inline ssize_t getrandom_syscall(void *_buffer, size_t _len, uns
+>  	register unsigned int flags asm("a2") = _flags;
+>  
+>  	asm volatile ("ecall\n"
+> -		      : "+r" (ret)
+> -		      : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
+> +		      : "=r" (ret)
+> +		      : "r" (nr), "0" (buffer), "r" (len), "r" (flags)
+>  		      : "memory");
+>  
+>  	return ret;
+> 
+> base-commit: dc5240f09bca7b5fc72ad8894d6b9321bce51139
+> -- 
+> 2.49.0
