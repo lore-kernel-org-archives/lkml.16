@@ -1,295 +1,186 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2068.outbound.protection.outlook.com [40.107.101.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6C48462;
-	Thu,  5 Jun 2025 06:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749105148; cv=fail; b=iTGbMxxP3/Va4XCr87TghrJMdff1fA3lquGCSy60SXUQAN+tQqptZWc4nUbeh+01q9tczJyx6q342P53o8Yxq3ELp6RTqMoOsiSgynvi0MYCtIsX+B4poZywRbEIpembSIqx/R6Th1Q4AluKMnbnZRtmulzYB9KZdv400s192sY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749105148; c=relaxed/simple;
-	bh=U/5eWCUUWlyk/MoSVjDBvUXRSyhjDWlJ6sy3sleiHNc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uaS+ve2pyyOyKZzc9fsB62nc1KlR7yzgfBRzK4BwsrVCy4Dughh8B3REP15lx+JTbQJDktAejgvs/Z5cozdHAbLYIMXJwMyiSFq1d19tzSub2vusQGK7ZACephf9r7pwFA1UsAtPXlhzz+/cHrbptJlUpzXZy9m1HcdbXO8O4Vk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TrB9AIE2; arc=fail smtp.client-ip=40.107.101.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD561F4C92
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749105170; cv=none; b=CbnsK07NgoDnsrNt47u1L7Dmkt/eVmJQjaeGYmt2DO+Vpz57F9EJiDKCRA1ecyXfVaE9kStLAUvJ+M6ClYk7JhkYzjTbEmQjvAYc5q3QjBgyxbn4Fb+OxplORDhApb3znY71s4jRSSKlTFC1lUegV9+OspGGite4DPxXwCf8YfA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749105170; c=relaxed/simple;
+	bh=1eNm4nmWAuJG/6zyOp6XMQPMZuWG7lF8of09bIGrDCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VMotM3hlVVaZ/095mqoQpACQWPBfZk+KlEFg7zlwKbcXyqAm+HnSMzgfT+7DGRvBvyoYA7+D902XPsv/GJ+iljY/vUklnw2HgUrmWxDGU3lJpLoT3tpWrllvTObEzRiQQPvu1TttNOUI44MfG762RBlKj2+r1HeGqsOnzLWBwik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LCjCuYte; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TrB9AIE2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JT2uwW7HH70yzO0IS+AjbBhooTTOZaAPA487wTJ/NeMk/EVU5pu2xRX3RPo2qlo2hvuLYECzwim9Lnykal9nU3nQlt9YObRbNVqT1AR5M44eopxi47h++4K3x8ZGmC6gsdKVh5QR3GQg5wa5Jgj7mlDs0WmeH8gRjSZFRBI3tv8LyGOmAFuPR7Y07CjHTwxWZm+0XnDpy5sO+AdtVEvKL9xJc0XJO81xBMWf++elSkxKYcwihyuluh7nejSaEHSYLUG8jqRLpvTf3dbnY7IkXsMybOt6bmokn1uUUy+rIvzb4LH3Iaw3tpK2w5O1p0NUB3JEj4KndxVV9jyY0g5ofg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XpcfuwA7nyM++vG7YTDoDd8oD11wklUM0C1EPtH3G+0=;
- b=NvoHOkyvwsBDdx6uLN3LrMJBlwcg7+PH//a1pwZdT+fuUf9xSxh/zbQdJdBPEYbiJwPGeMo6ZTPFbJ2KoHG05+/NfCG4P4Ay2bdl/ZyH3rfAbirJ9qKxSbMEH6cQIzrAqZGtbWck2L4Gf06sQeKNxVdUr+np9SVh46YQk5seyOvXH9L1IrwofeHyBZjHPsVM1HlU+075co4dH55D387Jc1kn/ZUJ+0V8hu18jvBtHqEuo5j8KyN67mBSxo6ZIyww/27o0pEPrEqMS+NcIkvrHCpFvRIEA0DZmLg2YD2brfiI2klHHB5m4RBxycOao8CL8RucoG+F5VzjBNOXIMWWoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XpcfuwA7nyM++vG7YTDoDd8oD11wklUM0C1EPtH3G+0=;
- b=TrB9AIE2TJQYaocjyNVWIAiYUP2bBTBmdtdKXU8jkcbDSYhCAPAtIWXGBaUvmxzSM69uhkO9wM8PYph0xNHsT+xPj0VbRGN3RlK0MHm3V6voz7UWtteXqYzNWUFAFkKOFDLP5LaHuK+yUOsi0Z6YDHpnyGeaAcYPszLJ+t6prFg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by IA0PR12MB7508.namprd12.prod.outlook.com (2603:10b6:208:440::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Thu, 5 Jun
- 2025 06:32:23 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8769.037; Thu, 5 Jun 2025
- 06:32:22 +0000
-Message-ID: <cc8c6e32-f383-4ae9-8c49-5e61bfb0d86c@amd.com>
-Date: Thu, 5 Jun 2025 16:32:13 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v4 5/5] KVM: SEV: Add SEV-SNP CipherTextHiding support
-To: Ashish Kalra <Ashish.Kalra@amd.com>, corbet@lwn.net, seanjc@google.com,
- pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, herbert@gondor.apana.org.au,
- akpm@linux-foundation.org, paulmck@kernel.org, rostedt@goodmis.org
-Cc: x86@kernel.org, thuth@redhat.com, ardb@kernel.org,
- gregkh@linuxfoundation.org, john.allen@amd.com, davem@davemloft.net,
- thomas.lendacky@amd.com, michael.roth@amd.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <cover.1747696092.git.ashish.kalra@amd.com>
- <e663930ca516aadbd71422af66e6939dd77e7b06.1747696092.git.ashish.kalra@amd.com>
-Content-Language: en-US
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <e663930ca516aadbd71422af66e6939dd77e7b06.1747696092.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SYCPR01CA0034.ausprd01.prod.outlook.com
- (2603:10c6:10:e::22) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LCjCuYte"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acae7e7587dso97329666b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 23:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749105166; x=1749709966; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3lSOF0EtBbyqxKKcvWaFAuAauvCX/Qj9zdt2j6KevZM=;
+        b=LCjCuYte/NhD7G7BD/8tagE3e5tu9t9+sZlFCp6w9rHZUnAjVi4kK2opGjMIj/UmUP
+         GplLjUJ9DvGp88Kb0HtEZjRG1Oq9hoNSwo15fxB6GesGJKJieEHKjr1hX9dY69bOEiVp
+         nFPqPvwOAJRprepqSiYWgY+XvoF8lKvvxP6jne21CKQP8NEOVf0Y8cWiVF+feD3li24/
+         J31qlSHRIy0JtOEmWKSpSLeVJJXFwxyzJzoeaVVlkxAmNhz1M81xi2z7q8rt+TgyeZqF
+         ouNFu8zRuYr9/pLrLlKgZjzkvHMfcg07wa2l/+1DMlooYQCcxXtDX5/UF3DiREyBb62O
+         54gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749105166; x=1749709966;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3lSOF0EtBbyqxKKcvWaFAuAauvCX/Qj9zdt2j6KevZM=;
+        b=CvTP4sLAOJ/4n0ocsAe2ev2iKzTPubSN+4I5M6fYFW+E35ScIEb9AgIpA8gr58ScGp
+         nOhIwn9M4FJXOZSb6cP/Zpp7sSzBn9UYHjL7gfINkvQ77Ct61v1sSlehkv4rqlYL+9kC
+         bc3FsoS8skD4g3y1pNSESPsL35wndcCqijiGH175vFag/QfLH6/yorL1+p8nz7mPxjeu
+         EQ3CVMjVZvu6F+REDi/ytwPJzR6Zty7lCDOKOEeuebU0Us9FLSQMVWDvQMdC1yVH+zWg
+         MW13xNYeYBHUg57GWNpyx5t47I5NqrVgT8w9NRkIb90FeQ05cqdoH13BDmDEJVA+A2F1
+         1p+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXlXWfsn5bPf1Xv+iYMWSprWCst89T5jbbteFjlYN7XbzCi0rLMYMNyi9lsgpD8BpBHHA2pOElHioBbpIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjaxNlJTNgymrX3jPi190m4Iu53ZMxhWJY4mYyaFj3cNmLbAck
+	4DuLLTh3Xv8V3bN0KO4rB9qD32eRkzg4nkNJubkDBmYciMzmG17ykUiHLRm6pClmEUw=
+X-Gm-Gg: ASbGncvsjmhNls/INvB4rY17BXm2FcwQmMXoZZWPKhVno/J61O0YDgHPb3Tk6VZUZ4t
+	aI7eTDVWwmsY4c8cVLHu7K65jBrAFg/1lEDLlPgO1nPBqk1AG47/kbF3TjUl1jSRJtSSkK8GJtu
+	LnTjyc7hToqP19UtWSfb0NEkrgE8upRtf/GubxwmHRLfSbh9Mi7bbR8ZnOUO1b+NssuUJbHtI1b
+	6QuNgYp7RoU3G7L7TBUzVwVnjGlBccM4/lrEm8VSWoZJVr0quD2Z54YMSaUUMp5BqKC5h7JP+3a
+	FK8ZqGYc+MnX83NV4omY5yJyNw0nr+ew6IQwfMupwvRsgX/InMygLH6E8hdSH4CS
+X-Google-Smtp-Source: AGHT+IG6tFvgSjWU4ETeIFzDsF5SwAK4ctDL8+HRHWpaT2Wob1h8vxQM68Y5aUX0aVGhDQl+FZHLFA==
+X-Received: by 2002:a17:907:3dab:b0:ad8:ae51:d16 with SMTP id a640c23a62f3a-addf8fc9887mr488019166b.55.1749105166500;
+        Wed, 04 Jun 2025 23:32:46 -0700 (PDT)
+Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ada5e2bf029sm1198020466b.115.2025.06.04.23.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 23:32:46 -0700 (PDT)
+Date: Thu, 5 Jun 2025 08:32:45 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	rppt@kernel.org, surenb@google.com, donettom@linux.ibm.com,
+	aboorvad@linux.ibm.com, sj@kernel.org, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
+Message-ID: <aEE6DW-Gjv95eBTj@tiehlicka>
+References: <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
+ <aD7OM5Mrg5jnEnBc@tiehlicka>
+ <7307bb7a-7c45-43f7-b073-acd9e1389000@linux.alibaba.com>
+ <aD8LKHfCca1wQ5pS@tiehlicka>
+ <obfnlpvc4tmb6gbd4mw7h7jamp3kouyhnpl4cusetyctswznod@yr6dyrsbay6w>
+ <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
+ <1aa7c368-c37f-4b00-876c-dcf51a523c42@suse.cz>
+ <d2b76402-7e1a-4b2d-892a-2e8ffe1a37a9@linux.alibaba.com>
+ <nohu552nfqkfumrj3zc7akbdrq3bzwexle3i6weyta76dltppv@txizmvtg3swd>
+ <985a92d4-e0d4-4164-88eb-dc7931e2c40c@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|IA0PR12MB7508:EE_
-X-MS-Office365-Filtering-Correlation-Id: fe6c51ad-cc2d-477a-8230-08dda3faba9a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RVR4ZlR5YXFsSDNGcXlaLzl3UkNuMTRoellnYkxtSDNqNkhLbk4rTngra1kv?=
- =?utf-8?B?UUhtOXZtVVFicG1LWnV4bUdXUmlaSnBIQzdodTMvek5hckM3eDVtRC8zNjlG?=
- =?utf-8?B?Nk1nOS9vWU9nY0VPWXZVQzVHeDI5cFhNdDA4T05ZRk1tVVdWQXhJRWd6UzRt?=
- =?utf-8?B?M2o5TWU4eVM4eTJlR1I5WnFDUTNxaldmR0V6ZTJ1ck8xTlBuNkQvdUhIN0FJ?=
- =?utf-8?B?Wk5YQjRZb2VUK1VNeThXUUNqYzJKT1lPbTAvUFptbDRxTVNKTHpwV0d0c2I5?=
- =?utf-8?B?MGNmQ1F5RzgxV2RaU25jandJRkowdEFPVG5tM21wV0prcHVaRFJLYStIaFRu?=
- =?utf-8?B?SEt2bVhCNStyd2IyaFMzbmYvc2VVZS94YXZ1OWo0Z2FrVUNCamZsdFpFWmg0?=
- =?utf-8?B?UDlqSHlXWkdobUZWNThsZzdxcDhsc0d3SnUwYjJLQzlYcW5naFNaRlliYmIv?=
- =?utf-8?B?a29NZlNXRUpYSnEyK21MeXFBNG9mVExXVDNEd3VqK3V0Z21qOEoybGtydVNu?=
- =?utf-8?B?ZEFEd2p3RDVCb2xpUC9WUTNTd3VCalpyd29pRzdDUThjaE1OMWs5Vi9zNDJn?=
- =?utf-8?B?WEp2Zy9VaURKZTY4SmxYSEJaOS9WQ3NBZVlXa0lWOEpjTmczQS9jYXdSQ1BR?=
- =?utf-8?B?VUhxSENaTmJhNDNkcDRqZC9maFh6Y2Z1RXdudXY2OGZxWUUyUHZsdG96VUFL?=
- =?utf-8?B?NHVmNW51ZmU4cmF0TXJYSk1XaWxYa2piTnlmbnBHMHc5eGVuaGpmRk1KOURl?=
- =?utf-8?B?YW02YUgyR09NK2Z5NXlPdlUydXhhbDIrYThRUGVxbUM2d0pSdTZkWlZqWlhE?=
- =?utf-8?B?bnB2eGdld0FwV0w1d2RsY3RXMW5XR1ltY1MwTVJiaGg4Vm1IcmJVcFB1cVE4?=
- =?utf-8?B?dUhQOXg1aWFYTmRlQzhMOTNIa3MydUtheVhBS1V3K3ZUOEl4UVFBZlU4aURL?=
- =?utf-8?B?UGJFWlZEeGhRQUVtd3lNaUkzbkNTNzArODRpdVlSN2JMdHdzWEF2aHNQclVY?=
- =?utf-8?B?dkRJbkwyZDZOcERNaTNjdXdyaklsZU1SbFE1Yng4cng2OUdzbHVXWFJzbVhM?=
- =?utf-8?B?UzQya1FmR1RXS3Z2MUFRUlg3U3FpQ0pBUWF6RW5jWnliMnp0RVJsU2xLdWdi?=
- =?utf-8?B?S1RMem9zdXBtZ0xFeTRvZWZqR2NWa0s1MWd1S29xUlRxZXMreUJhamdhdjZ5?=
- =?utf-8?B?aWdVcnpzSERMbFVlVThNbkwwQXA3VFc3STZXY0ZUcHpVa2JuZ0IrSjNGSDJm?=
- =?utf-8?B?eTQwaTFiRUI0Y3Z0aEcrdk9CV245WWMrZWM0MXhlbzIwQ3IyQ09NaHA3TnAv?=
- =?utf-8?B?blZrVnZ5dUU0NkhsZ1ZINVBxMTU4V2gyZUJLbDdkQVIwWVRTQ3NUOFF5SnE2?=
- =?utf-8?B?SGVEV1llUXdBZmRQQmJsaUFPWWRRYjdURWtwV2NKRFZzS3FSaFlUVzZHM29j?=
- =?utf-8?B?VUNhRjgxdDl2ZVFlRWtlTEdZUnJpSWJLUkpvdUp4TUpZa0EySCtwSGRQdkVE?=
- =?utf-8?B?ZjQ2aDg4RHdYZTkwUHlBRllLZjJEMXNmeTVsM2VIVkNBN2l5dHhQc0l0TlBp?=
- =?utf-8?B?QS8yUTAraGtya0xrQ0ErUVF1VmNVMm9idFNjVGNkcVdzVHkrSW1zYnVzbzZV?=
- =?utf-8?B?dHRDMEo2OWM4c2ZMQWhrdlNnK3RNOW52bTBhOHdVeHJNei80SERtWnF1UGZ6?=
- =?utf-8?B?NUgyYU8yQm9VWWZLSHNjeGNpQWZoaWMxaHJPRXVra3FMem82d204eDNJRTNX?=
- =?utf-8?B?dWtTa3VqeEVUT3dpbE1MSmNnTzdiOVdneHBEK3BWTzNDYjllTVJGUldDZm9a?=
- =?utf-8?B?aWh4d3c2SnpSNGZGdDB4S1FPMy9KV2YvaUxhazlubkg3U1VoT3dOdDlWMml5?=
- =?utf-8?B?NkNZdlBibXcrMmVORVVxUUYzdG9UZ244aWNjV0k4UFpBZEFvcStGNEZBOWxi?=
- =?utf-8?B?TGVTa2FOZVF4VlgzTkxjUzhVU0RwUnVzQWhyMEZjMmhDL0tPYzlueC94SEsz?=
- =?utf-8?B?c1cxSDNjMzZRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aFZmQTBzZjJQYXdnaW9vdEJxL1hNV3BibW9SK1h3ZGVIbThHQmNPVVBjQldy?=
- =?utf-8?B?RGVuYXFJSENiTEw1c0ttNTU5YnJpbTh0djR4anIyNy9hVFVNdnZ4YkhUZFl0?=
- =?utf-8?B?RGhza0JTZ01CbzZIamhzSnBYUjBmTlFqTklUSWNhd05Ebm5ZYXZRZnRORlBy?=
- =?utf-8?B?WjdEaGRhNlc4bEs0VEhyYlFqbDdXV0sxLyt6TmF1MkxMcVFhRjkxN2hqbXR3?=
- =?utf-8?B?QWx0MHpJL01OK0xzdk1RcG1sb0tQOHZWVWNUYjZqWUx3cnMwdlFmY3pPb1Z6?=
- =?utf-8?B?eUJtRXFwL2syQkg2bXdCaXBZaTIvWkFSRlk5b0FZQW13WG5CV0t1NndVbmVB?=
- =?utf-8?B?VUV2RFloOEpRTDNRWlRoRzZBYzlKTEt2em13bEo3SStERlpsbnhnTlRudUV0?=
- =?utf-8?B?aXNnSnlVYVhMQ0oyeC8xMnZNTzcyNlF5Q2RldlhMS1BEZ0NURzN5Wmx3d1lS?=
- =?utf-8?B?QVNza3A0ejRFV2VmVTVVcnlGdmNhODcvc3Y3WmMwM0ZKVEJsLzRNTXZoUG5o?=
- =?utf-8?B?TFlBaVJrOG8ydm8rYkliYzlCOWd2NDd5WVJEV1N3NThPb2xnWnRleHNaL2xG?=
- =?utf-8?B?YmhLMlllVC9zNit0clhYRmFqMnp6clN6UWFJanNOdDJsek5GejRwUGkrL0Fl?=
- =?utf-8?B?VUE4cm0zWEpWUEQzSk85MVordk1GNnczODRzVFN0ekNZRzhaZlFFbmFsRXJq?=
- =?utf-8?B?RGs2YVFta3JYRTV3YTNlUzdYVGt6cUs1b3p1d2tPWlkxQXNzMlRmUmF5RjQx?=
- =?utf-8?B?OG82dFJZREdINldPQ0xYRmdRMVh0dVN5ZTQ0MEVTRVZ3L2RzQjFPMVA4eTBD?=
- =?utf-8?B?dFFuenh3RC95Y3NDQ0o1NU5SaHgyUmhhc2NCcmpUTHg0YmlZTFJYaGhSVkZE?=
- =?utf-8?B?ZEZoaHZRcS9UVVhLdEZFdmYzbEczM1M0NHBIcTNZL3FZcnNjY1RUMTl5bk5U?=
- =?utf-8?B?OFpvMWdrQklGbTFXLzdFb0N3UUk2eWZJVGVjOEx1UmRUZVZkUWlNMGIva29m?=
- =?utf-8?B?d2FKby8wVm11aDVhRTBFelRyeUx0b1JpYXFaM20vM3drQXhIK2N5SS9taDVw?=
- =?utf-8?B?d21JUjlua2VTNzVwRmQwOUtLMmdVNnFoNEFMMHBKTWNuZ2doZ3Jubnk1WHlC?=
- =?utf-8?B?aXBLa2ZYRDR1YTdoRi9GWFN0Q0xsQ2xzU0I3NW9wNHFPZHJXN2dVMEMzMzhu?=
- =?utf-8?B?MTVFUVRxOUdBK1ZXOGJwc0RSYVJpUE9ZeEN5RW1NVklKcUR5NFNib3FLTmxt?=
- =?utf-8?B?cGtzYm8rV1hWajZ6ZGFBNHVwK0JsaWNtM0VJeDV5TkdweC9RVUpBMmNIQTF4?=
- =?utf-8?B?NjFoS3BCZG9qSVY1blJkVmNoSnhQVTkvMTY3MlZxMWdhSnZ6cVpwVXBRRDVG?=
- =?utf-8?B?VVd4QS9QaVd1NlV3NGRucEhucEMxVVJmNEZuZ0lBT3dVQnltT0h4N1B4RXBo?=
- =?utf-8?B?VGdPVHl3UitGNnBwemNGVUxFVlNDTlFwYzVLNmoxaDIyRHkvNGEvWlRLdnFQ?=
- =?utf-8?B?aFErckt4NFJLdGNOYnloL281S3d2dVhSYnlweW9wa3hHdm9rekJtcWMwSTZP?=
- =?utf-8?B?SUcwQ0NQc2VzQW5GSTYyL1Yvc3RkdlRBOEduWSttb3BOM1dONEdUTnVkMzRv?=
- =?utf-8?B?bDdUUVd6OFZEbnA0aHg1Z0xKL0t0Q3BLdzhBeWlKSHF3TjJxOW94cm1heEJO?=
- =?utf-8?B?a1Z1MDF2VUxwL3c2NEtGMjRzQ2NvYUpOVkhod2lyNFN1THVLb3hoUzJDcVdU?=
- =?utf-8?B?d05Ddm8xK21SMlZ0Q2NXWStTeitGSEtBNjZRRU9PQzJmMDM3MDNONElsc0NQ?=
- =?utf-8?B?VFVsdzZTTUZhazcyNzVVSmxJQStBQkZPaFBFR1R4QjRoRTRaUDM5dDJMMnUr?=
- =?utf-8?B?VGVXTUtta2xrT0VyWDBNRE9FQzJTcU9NWHYzSmZKWHBJZFRDdVJIcEd5NG9r?=
- =?utf-8?B?QUM2NHJGL0ZjQVZRMytVMUQ0YWEvVjRsVG5LejdSQTFNa3VsSG1BZVB4cUJE?=
- =?utf-8?B?ck5ZN2pQWlBVSEFqSkwwY3ZOOWtRVUwwa05BQmxUcTV3SVZ1c3NmSXA0U3Ra?=
- =?utf-8?B?bUJERWFMTlhQTm00S3hLb3ovVUxlR3NnbkxPWVBQZUNKUEdRT0VMTnRoRUZU?=
- =?utf-8?Q?OgsU8WSR/8GVsdTEpv5FWFlUy?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe6c51ad-cc2d-477a-8230-08dda3faba9a
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 06:32:22.7741
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +JfvslevQP+S9gpnkA69isYtY7ZMhdPqKaJcs496HfgYbu311ml3D+NnCTcqWDiuVuR8jfc9qTeYwDZs3cf88A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7508
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <985a92d4-e0d4-4164-88eb-dc7931e2c40c@linux.alibaba.com>
 
-On 20/5/25 10:02, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
+On Thu 05-06-25 08:48:07, Baolin Wang wrote:
 > 
-> Ciphertext hiding prevents host accesses from reading the ciphertext of
-> SNP guest private memory. Instead of reading ciphertext, the host reads
-> will see constant default values (0xff).
 > 
-> The SEV ASID space is basically split into legacy SEV and SEV-ES+.
-> CipherTextHiding further partitions the SEV-ES+ ASID space into SEV-ES
-> and SEV-SNP.
+> On 2025/6/5 00:54, Shakeel Butt wrote:
+> > On Wed, Jun 04, 2025 at 10:16:18PM +0800, Baolin Wang wrote:
+> > > 
+> > > 
+> > > On 2025/6/4 21:46, Vlastimil Babka wrote:
+> > > > On 6/4/25 14:46, Baolin Wang wrote:
+> > > > > > Baolin, please run stress-ng command that stresses minor anon page
+> > > > > > faults in multiple threads and then run multiple bash scripts which cat
+> > > > > > /proc/pidof(stress-ng)/status. That should be how much the stress-ng
+> > > > > > process is impacted by the parallel status readers versus without them.
+> > > > > 
+> > > > > Sure. Thanks Shakeel. I run the stress-ng with the 'stress-ng --fault 32
+> > > > > --perf -t 1m' command, while simultaneously running the following
+> > > > > scripts to read the /proc/pidof(stress-ng)/status for each thread.
+> > > > 
+> > > > How many of those scripts?
+> > > 
+> > > 1 script, but will start 32 threads to read each stress-ng thread's status
+> > > interface.
+> > > 
+> > > > >    From the following data, I did not observe any obvious impact of this
+> > > > > patch on the stress-ng tests when repeatedly reading the
+> > > > > /proc/pidof(stress-ng)/status.
+> > > > > 
+> > > > > w/o patch
+> > > > > stress-ng: info:  [6891]          3,993,235,331,584 CPU Cycles
+> > > > >             59.767 B/sec
+> > > > > stress-ng: info:  [6891]          1,472,101,565,760 Instructions
+> > > > >             22.033 B/sec (0.369 instr. per cycle)
+> > > > > stress-ng: info:  [6891]                 36,287,456 Page Faults Total
+> > > > >              0.543 M/sec
+> > > > > stress-ng: info:  [6891]                 36,287,456 Page Faults Minor
+> > > > >              0.543 M/sec
+> > > > > 
+> > > > > w/ patch
+> > > > > stress-ng: info:  [6872]          4,018,592,975,968 CPU Cycles
+> > > > >             60.177 B/sec
+> > > > > stress-ng: info:  [6872]          1,484,856,150,976 Instructions
+> > > > >             22.235 B/sec (0.369 instr. per cycle)
+> > > > > stress-ng: info:  [6872]                 36,547,456 Page Faults Total
+> > > > >              0.547 M/sec
+> > > > > stress-ng: info:  [6872]                 36,547,456 Page Faults Minor
+> > > > >              0.547 M/sec
+> > > > > 
+> > > > > =========================
+> > > > > #!/bin/bash
+> > > > > 
+> > > > > # Get the PIDs of stress-ng processes
+> > > > > PIDS=$(pgrep stress-ng)
+> > > > > 
+> > > > > # Loop through each PID and monitor /proc/[pid]/status
+> > > > > for PID in $PIDS; do
+> > > > >        while true; do
+> > > > >            cat /proc/$PID/status
+> > > > > 	usleep 100000
+> > > > 
+> > > > Hm but this limits the reading to 10 per second? If we want to simulate an
+> > > > adversary process, it should be without the sleeps I think?
+> > > 
+> > > OK. I drop the usleep, and I still can not see obvious impact.
+> > > 
+> > > w/o patch:
+> > > stress-ng: info:  [6848]          4,399,219,085,152 CPU Cycles
+> > > 67.327 B/sec
+> > > stress-ng: info:  [6848]          1,616,524,844,832 Instructions
+> > > 24.740 B/sec (0.367 instr. per cycle)
+> > > stress-ng: info:  [6848]                 39,529,792 Page Faults Total
+> > > 0.605 M/sec
+> > > stress-ng: info:  [6848]                 39,529,792 Page Faults Minor
+> > > 0.605 M/sec
+> > > 
+> > > w/patch:
+> > > stress-ng: info:  [2485]          4,462,440,381,856 CPU Cycles
+> > > 68.382 B/sec
+> > > stress-ng: info:  [2485]          1,615,101,503,296 Instructions
+> > > 24.750 B/sec (0.362 instr. per cycle)
+> > > stress-ng: info:  [2485]                 39,439,232 Page Faults Total
+> > > 0.604 M/sec
+> > > stress-ng: info:  [2485]                 39,439,232 Page Faults Minor
+> > > 0.604 M/sec
+> > 
+> > Is the above with 32 non-sleeping parallel reader scripts?
 > 
-> Add new module parameter to the KVM module to enable CipherTextHiding
-> support and a user configurable system-wide maximum SNP ASID value. If
-> the module parameter value is -1 then the ASID space is equally
-> divided between SEV-SNP and SEV-ES guests.
-> 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->   .../admin-guide/kernel-parameters.txt         | 10 ++++++
->   arch/x86/kvm/svm/sev.c                        | 31 +++++++++++++++++++
->   2 files changed, 41 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 1e5e76bba9da..2cddb2b5c59d 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2891,6 +2891,16 @@
->   			(enabled). Disable by KVM if hardware lacks support
->   			for NPT.
->   
-> +	kvm-amd.ciphertext_hiding_nr_asids=
-> +			[KVM,AMD] Enables SEV-SNP CipherTextHiding feature and
-> +			controls show many ASIDs are available for SEV-SNP guests.
-> +			The ASID space is basically split into legacy SEV and
-> +			SEV-ES+. CipherTextHiding feature further splits the
-> +			SEV-ES+ ASID space into SEV-ES and SEV-SNP.
-> +			If the value is -1, then it is used as an auto flag
-> +			and splits the ASID space equally between SEV-ES and
-> +			SEV-SNP ASIDs.
+> Yes.
 
+Thanks, this seems much more representative. Please update the changelog
+with this. With that feel free to add
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Why in halves? 0 or max would make sense and I'd think the user wants all SEV-ES+ VMs be hidden by default so I'd name the parameter as no_hiding_nr_asids and make the default value of zero mean "every SEV-ES+ is hidden".
-
-Or there is a downside of hiding all VMs?
-
-
-> +
->   	kvm-arm.mode=
->   			[KVM,ARM,EARLY] Select one of KVM/arm64's modes of
->   			operation.
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 383db1da8699..68dcb13d98f2 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -59,6 +59,10 @@ static bool sev_es_debug_swap_enabled = true;
->   module_param_named(debug_swap, sev_es_debug_swap_enabled, bool, 0444);
->   static u64 sev_supported_vmsa_features;
->   
-> +static int ciphertext_hiding_nr_asids;
-> +module_param(ciphertext_hiding_nr_asids, int, 0444);
-> +MODULE_PARM_DESC(max_snp_asid, "  Number of ASIDs available for SEV-SNP guests when CipherTextHiding is enabled");
-> +
->   #define AP_RESET_HOLD_NONE		0
->   #define AP_RESET_HOLD_NAE_EVENT		1
->   #define AP_RESET_HOLD_MSR_PROTO		2
-> @@ -200,6 +204,9 @@ static int sev_asid_new(struct kvm_sev_info *sev, unsigned long vm_type)
->   	/*
->   	 * The min ASID can end up larger than the max if basic SEV support is
->   	 * effectively disabled by disallowing use of ASIDs for SEV guests.
-> +	 * Similarly for SEV-ES guests the min ASID can end up larger than the
-> +	 * max when CipherTextHiding is enabled, effectively disabling SEV-ES
-> +	 * support.
->   	 */
->   
->   	if (min_asid > max_asid)
-> @@ -2955,6 +2962,7 @@ void __init sev_hardware_setup(void)
->   {
->   	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
->   	struct sev_platform_init_args init_args = {0};
-> +	bool snp_cipher_text_hiding = false;
->   	bool sev_snp_supported = false;
->   	bool sev_es_supported = false;
->   	bool sev_supported = false;
-> @@ -3052,6 +3060,27 @@ void __init sev_hardware_setup(void)
->   	if (min_sev_asid == 1)
->   		goto out;
->   
-> +	/*
-> +	 * The ASID space is basically split into legacy SEV and SEV-ES+.
-> +	 * CipherTextHiding feature further partitions the SEV-ES+ ASID space
-> +	 * into ASIDs for SEV-ES and SEV-SNP guests.
-> +	 */
-> +	if (ciphertext_hiding_nr_asids && sev_is_snp_ciphertext_hiding_supported()) {
-> +		/* Do sanity checks on user-defined ciphertext_hiding_nr_asids */
-> +		if (ciphertext_hiding_nr_asids != -1 &&
-> +		    ciphertext_hiding_nr_asids >= min_sev_asid) {
-> +			pr_info("ciphertext_hiding_nr_asids module parameter invalid, limiting SEV-SNP ASIDs to %d\n",
-> +				 min_sev_asid);
-> +			ciphertext_hiding_nr_asids = min_sev_asid - 1;
-> +		}
-> +
-> +		min_sev_es_asid = ciphertext_hiding_nr_asids == -1 ? (min_sev_asid - 1) / 2 :
-> +				  ciphertext_hiding_nr_asids + 1;
-> +		max_snp_asid = min_sev_es_asid - 1;
-> +		snp_cipher_text_hiding = true;
-> +		pr_info("SEV-SNP CipherTextHiding feature support enabled\n");
-
-
-Can do "init_args.snp_max_snp_asid = max_snp_asid;" here (as max_snp_asid seems to not change between here and next hunk) and drop snp_cipher_text_hiding. Thanks,
-
-> +	}
-> +
->   	sev_es_asid_count = min_sev_asid - 1;
->   	WARN_ON_ONCE(misc_cg_set_capacity(MISC_CG_RES_SEV_ES, sev_es_asid_count));
->   	sev_es_supported = true;
-> @@ -3092,6 +3121,8 @@ void __init sev_hardware_setup(void)
->   	 * Do both SNP and SEV initialization at KVM module load.
->   	 */
->   	init_args.probe = true;
-> +	if (snp_cipher_text_hiding)
-> +		init_args.snp_max_snp_asid = max_snp_asid;
->   	sev_platform_init(&init_args);
->   }
->   
+Thanks!
 
 -- 
-Alexey
-
+Michal Hocko
+SUSE Labs
