@@ -1,166 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6239E1FECAD
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B461FCFFB;
+	Thu,  5 Jun 2025 07:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749110086; cv=none; b=oLeofVzme3xQeFFiq/0pBNYSU7g3w26rzzniAxSJi48246CMl3HT8yqOf8bsu9zKxSDcGPsZLYNUiHJm4iUoRZMYSZdGgf6DSk+UcOgs5brHuo9VjNK4KxRoP1JdpE1y3wtaMXSUgq7Y6DT8d9psZ2Fmb7NUYxGzGy95EJQW/R0=
+	t=1749110129; cv=none; b=PYVdVCuaeCTWZdWEDODPfhtgYnvrLEQ8Hck1d6Wnk110To1H/jradU3hN8cLiXStbMd0jrKh+VZOAlh8Y6l3sr5sZXC7M6b+YXAFfaXGNjHr+wjwBx0Bt9bF2pzfgPuNYvkzf37nw1BD/exgnXOaNYDuxFRIFfdlSBdsznIy+Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749110086; c=relaxed/simple;
-	bh=NNFSE2fFzpiSASQWnZwDpNqWAbQXEhYo1W4bEKJ2yGQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dYzslWMUmshJY278GQnDRTnZGIto+1y37q6KYqOU12zUKvx8emn0I+6qYF9fT6HeGFWy5BgcfcmkYBT2l8xNGUFLsyQKT46i9NDVqAlrl6Ip9+veNHF4AEQHuX8NjJ2rUfF6GjCMRCWIpuB/ws58Gej/S0AsEPW/3RAtIYSuujk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MTPPh3gQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749110129; c=relaxed/simple;
+	bh=GpoQ+3Ee8T8lm6I9aP2enWwTg2qztQbdsDSevWYvSxA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kNVsUtPgtbiOBTbET5Wb+H261e02crYSnJ/O0NMU160pboo7Xz6IRVMzvBA3Q3LUsxK6sC2DTeXGwsrCP42ZoMeauKOtfacQfTispf1QMqg5Xf8j3MaPE66SqD6IxoC98ZhIF6qyymi+1B1fOUWDd7JX+/syQqvbYh1oaIqgmro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gvQqNmGz; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTPPh3gQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749110083;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EsWFMFas7O2Lvk4gjiHkVtt4n83KeM8DN/r9KQDAJpg=;
-	b=MTPPh3gQR8aKTm01kPJ5h6JxFHhTXoYLqZlJ7I//3iDtOxd+D+p+Hb1DaFui51Qcp6zEmy
-	K1bw1+3mq+FvEY2y3JVpqUxJJcekND6iXZj3hv+zQ5KIl0K95jP7cs0YF3MOm7X/9ycgCp
-	C5Wi+h2qor16sJWGJvyhtnW64JHLiLc=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-569-tIQA8IGSPJaQb1Vl43CdZg-1; Thu, 05 Jun 2025 03:54:41 -0400
-X-MC-Unique: tIQA8IGSPJaQb1Vl43CdZg-1
-X-Mimecast-MFC-AGG-ID: tIQA8IGSPJaQb1Vl43CdZg_1749110080
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-442f90418b0so2815815e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:54:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvQqNmGz"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b2c384b2945so512890a12.0;
+        Thu, 05 Jun 2025 00:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749110127; x=1749714927; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MN1EThQK7jwsdU6684ZQQdUH0BeblPeQioulBRCACxM=;
+        b=gvQqNmGziK4xqVoM2fV+Gg0QUbXnHfLc/HTYKRtIg3nRUfxd7hyOYo244n5z7xLUHR
+         xhaHAtZMczyI4UCGJuk2BLKGGHTknOyB8/DovFKGFcOGPQtrd9wRCCDjb+OJbfSKdnUd
+         g3yNnI7srNHRp047aYtX05jOtfdGzCQEwNNDe3o1coqBK9k167fypI9km6lzXccw7rEu
+         MI4SFlvvIZ2BRuf0Vb4spFf6eSDExcQc2EOW3HshSVPNkczp7ey4m4O7eQhhQ/G587uw
+         ZJEJzI5KI7opLFZTtDvPUx/R3jtTRB3o1TRV4NPwT5BMw/gnwiBHhB8ECoOUfeuGkmeo
+         84zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749110080; x=1749714880;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EsWFMFas7O2Lvk4gjiHkVtt4n83KeM8DN/r9KQDAJpg=;
-        b=Woy6ntMKr09RdAPG1uDTepvre03UgKfoGR0Eb/0xcKQRdmDZuFEtG67AVb7X+96vQP
-         aN1nnwicIryktA19Ra6ful2jKNY/OeIyb44KubNYYKa0eIAeXjdox6j6pzHBLuoJstTm
-         9CIQnAaRMHZDcp2wPOzhcihe3Y39rk1g8B1iE1se20+gv39Ftqh4vUw3ea8QHSduTzVg
-         OMH50QEDtTQsNSafUmNaUAid9019vcY9vG2KvSnLiNezMl7lcsBn8oO8LjsNSimVX2r3
-         H7PAYWWVwUalW/fVROm+/4ObgZ4Du6RdS7wsMlOord3JBGylmW3ClprKMpR6KGXyrmNk
-         nwjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUZd6/lc6s4/MX9Da7wH2THyh9WRzII00EelaQh1n/MnZ6TlUh1mWrVvs3Eu5wB5/XNx2fB+PENwz7d9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqftgiPYWx7ct96iaNAnEito/EHR1feYp3DQXHqiYl8nsroKpE
-	IiCfhqnc9Eer4RvyIVVnxkGLLHYCKToR8k13HrxPBfDmDc4Jj1bRFYxUmPAet0esNvyifkPxBBB
-	BfNSWQ/BdNRG0H/AWZwgSHZh7bvENyjOQp/2UYm2L9AhWtHUZMy3lsg86dhxEYdAiaw==
-X-Gm-Gg: ASbGncuQ/O4+AXmqYqBI5H2JqkrzwxooXropPH79WnEZ/7ys6n/eTKUY0RZCKFaQoDJ
-	1y9ZIR/UlQuFZ8W07X2Ltfu4fyzIARRBYqkAPH5AY0I9WAHuXMm4+vL1eFRehPC/7Be9aDPVYPe
-	Vh2WY12kgMaVjU3JRAFS67A8CZX3pqeqSipLfVDy9AbsdY4bzNwFkP+0cTTAnSfwjC+WqK6o25M
-	t2ztV8HM0WHgIDAhuN8H/c8daV7VtVRLh12aBVdjZ4cIvf1QPmfPd4SrH6PiZ5MMc7LXjYebApN
-	zfN1ZQFnxWanlFaQbg==
-X-Received: by 2002:a05:600c:1382:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-451f0a5fe0amr51092005e9.5.1749110080156;
-        Thu, 05 Jun 2025 00:54:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG1SRbImSlbGm32npkuOoSxiRgAXup0UEUY8LHi/iQ53+IYu08XHv+Q7OLZVb45/K6v+57Beg==
-X-Received: by 2002:a05:600c:1382:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-451f0a5fe0amr51091785e9.5.1749110079698;
-        Thu, 05 Jun 2025 00:54:39 -0700 (PDT)
-Received: from fedora (g3.ign.cz. [91.219.240.17])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f97f85casm16199575e9.4.2025.06.05.00.54.38
+        d=1e100.net; s=20230601; t=1749110127; x=1749714927;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MN1EThQK7jwsdU6684ZQQdUH0BeblPeQioulBRCACxM=;
+        b=kwNTw2k8QmMrppSAMDojeIkEiM8feyyIvuRS6DypozZab74xuEcjBFh3jhZ5byyTEI
+         AH/igCOqvhhHdiv0JmB/Q7ugNs6h1D+9iK6sYU2AcYhik8C6rP25Y/XE0+lYU1Li+Cja
+         2SM70I3rfB/Hjs5w2ic3P2LU7plyoSrXW40CCK17Lv+iD9zV6fsg+CwhNlkzfXCMbshC
+         Xe7MISV4qkXc4AQQoGiwFgWXsQW8xUCemvQoIDuDmu+TZOJQnecGGi88+G4Cx9dYzI7N
+         rj41dVfaSgh86eQ1bqxtbvlySL75NV4iuhCPsYIRIyNpa1fqc+mHvZJe6i2lVcd+bijr
+         AVug==
+X-Forwarded-Encrypted: i=1; AJvYcCUKYqhEy4YeYbH6NOgjVg6f1W2m5Qp9BHpvF2DLIQYdfjfoyI7UNM5pGb3DdPHKqcqjhA2KEwQDKuTTeN8c@vger.kernel.org, AJvYcCUm2xEUUSHH2fbfsfz6HE0kWSYCwyn7Q8+Uaw5UgVinTmPjkg4SIBOGU3OPa1N1OvPueqTqRI7UfsX0@vger.kernel.org, AJvYcCXiFEFzaGpwIl0AW2khz6MFPejexoGDutTkwGfg7fEV7BBWoPwULuOJxXl/ogDYpdFxFIRPhxtSn664@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsXAJhwGPIfiBCsWumb6tPzYN/X6QmfnjOaS2rhCVPbPsB6u5Y
+	6h9WdOmXthYciViGzzVOG689yj36b4edsHRtyYMy+KW17lZvSIKJZss6/fNwtJYt
+X-Gm-Gg: ASbGnctF2/Qq0cHl7QTAqH+EubugO66NLKCqzxjVKLEz6F2Ou2sI//rWK1eZDbn/Fdi
+	JUnlo00rjX9P7Sd2pNmxH7u9LkjNXxfG8ws2Q6b42Zlj4W4zXOdZAyNSBbGtjMhUb2ZGmmyX9LW
+	mrxLQiqg5DI3WAh96pzkJFN0bzMM1Dccl+doTSjeQv+evrD3Idl6ud1JBCEQJknJczYadJvGUCI
+	4KX2UbmYhZ/QQO/yVwyKVSSaPjFWlyzYeIieAGvM8tEkO4qH+2dXnWnwSE3szfXEPot5CKfcIrm
+	TCTzkYp2LoTJcI3kJSJLJsvIL4GySObUM9hHPZi70Eml60WwSHocgvaHtPPG
+X-Google-Smtp-Source: AGHT+IHh4IlR4kSwzddiIXdouQOY+AA/MICiWnCJd0UnK8DHLokqCrXMf2Tek4xlqGOD+8rK78ijtw==
+X-Received: by 2002:a17:90b:268f:b0:311:9c9a:58ca with SMTP id 98e67ed59e1d1-3130cd12d80mr8263145a91.8.1749110126595;
+        Thu, 05 Jun 2025 00:55:26 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc86cdsm115201015ad.8.2025.06.05.00.55.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 00:54:38 -0700 (PDT)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>, Eric Snowberg
- <eric.snowberg@oracle.com>
-Cc: "linux-security-module@vger.kernel.org"
- <linux-security-module@vger.kernel.org>, "linux-integrity@vger.kernel.org"
- <linux-integrity@vger.kernel.org>, "linux-modules@vger.kernel.org"
- <linux-modules@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
- <linux-doc@vger.kernel.org>, "keyrings@vger.kernel.org"
- <keyrings@vger.kernel.org>, David Howells <dhowells@redhat.com>, David
- Woodhouse <dwmw2@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Luis
- Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami
- Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
- Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
- <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge
- E. Hallyn" <serge@hallyn.com>, Peter Jones <pjones@redhat.com>, Robert
- Holmes <robeholmes@gmail.com>, Jeremy Cline <jcline@redhat.com>, Coiby Xu
- <coxu@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>
-Subject: Re: [PATCH RFC 0/1] module: Optionally use .platform keyring for
- signatures verification
-In-Reply-To: <f0b37bc55ed3c02569c74f0fbdb6afa8efd329e2.camel@HansenPartnership.com>
-References: <20250602132535.897944-1-vkuznets@redhat.com>
- <0FD18D05-6114-4A25-BD77-C32C1D706CC3@oracle.com>
- <f0b37bc55ed3c02569c74f0fbdb6afa8efd329e2.camel@HansenPartnership.com>
-Date: Thu, 05 Jun 2025 09:54:37 +0200
-Message-ID: <87zfemoc76.fsf@redhat.com>
+        Thu, 05 Jun 2025 00:55:26 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@foundries.io>
+Cc: linux-arm-msm@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: [PATCH RESEND 0/3] arm64: dts: qcom: Enable GPI DMA for sc8280xp
+Date: Thu,  5 Jun 2025 15:54:31 +0800
+Message-ID: <20250605075434.412580-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-James Bottomley <James.Bottomley@HansenPartnership.com> writes:
+This series adds GPI DMA support for sc8280xp platform and related devices.
 
-> On Wed, 2025-06-04 at 17:01 +0000, Eric Snowberg wrote:
->> > On Jun 2, 2025, at 7:25=E2=80=AFAM, Vitaly Kuznetsov <vkuznets@redhat.=
-com>=20
->> > The use-case: virtualized and cloud infrastructure generally
->> > provide an ability to customize SecureBoot variables, in
->> > particular, it is possible to bring your own SecureBoot 'db'. This
->> > may come handy when a user wants to load a third party kernel
->> > module (self built or provided by a third party vendor) while still
->> > using a distro provided kernel. Generally, distro provided kernels
->> > sign modules with an ephemeral key and discard the private part
->> > during the build. While MOK can sometimes be used to sign something
->> > out-of-tree, it is a tedious process requiring either a manual
->> > intervention with shim or a 'certmule' (see
->> > https://blogs.oracle.com/linux/post/the-machine-keyring). In
->> > contrast, the beauty of using SecureBoot 'db' in this scenario is
->> > that for public clouds and virtualized infrastructure it is
->> > normally a property of the OS image (or the whole
->> > infrastructure/host) and not an individual instance; this means
->> > that all instances created from the same template will have 'db'
->> > keys in '.platform' by default.
->>=20
->> Hasn=E2=80=99t this approach been rejected multiple times in the past?
->
-> Well not rejected, just we always thought that people (like me) who
-> take control of their secure boot systems are a tiny minority who can
-> cope with being different.  I have to say the embedding of all the
-> variable manipulations in shim made it quite hard.  However you can use
-> the efitools KeyTool to get a graphical method for adding MoK keys even
-> in the absence of shim.
->
-> The question is, is there a growing use case for db users beyond the
-> exceptions who own their own keys on their laptop, in which case we
-> should reconsider this.
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+Changes in resend:
+- document dt-bindings (Dmitry)
+- enable it for sc8280xp based devices
+- Link to v1: https://lore.kernel.org/linux-arm-msm/20250605054208.402581-1-mitltlatltl@gmail.com
 
-Yes, exactly; I may had missed some of the discussions but what I found
-gave me the impression that the idea was never implemented just because
-'db' was normally considered to be outside of user's control ("just a few
-evil certs from MS"). This may still be true for bare metal but over the
-last few years things have changed in a way that major cloud providers
-started moving towards offering UEFI booted instances by default (or, in
-some cases, UEFI-only instances). At least the three major hyperscalers
-(AWS, GCP, Azure) offer fairly straightforward ways to customize 'db'
-for SecureBoot; it is also possible to have a custom UEFI setup with
-KVM/QEMU+OVMF based infrastructures.=20
+---
+Pengyu Luo (3):
+  dt-bindings: dma: qcom,gpi: Document the sc8280xp GPI DMA engine
+  arm64: dts: qcom: sc8280xp: Add GPI DMA configuration
+  arm64: dts: qcom: sc8280xp: Enable GPI DMA
 
-'certwrapper' offers _a_ solution which is great. It may, however, not
-be very convenient to use when a user wants to re-use the same OS image
-(e.g. provided by the distro vendor) for various different use-cases as
-proper 'certwrapper' binary needs to be placed on the ESP (and thus
-we'll end up with a bunch of images instead of one). 'db' is different
-because it normally lives outside of the OS disk so it is possible to
-register the exact same OS image with different properties (e.g. with
-and without a custom cert which allows to load third party modules).
+ .../devicetree/bindings/dma/qcom,gpi.yaml     |   1 +
+ arch/arm64/boot/dts/qcom/sc8280xp-crd.dts     |  12 +
+ .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts |  12 +
+ .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    |  12 +
+ .../dts/qcom/sc8280xp-microsoft-arcata.dts    |  12 +
+ .../dts/qcom/sc8280xp-microsoft-blackrock.dts |  12 +
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi        | 368 ++++++++++++++++++
+ 7 files changed, 429 insertions(+)
 
-One additional consideration is the fact that we already trust 'db' for
-dm-verity (since 6fce1f40e951) and kexec (since 278311e417be) and
-especially the later gives someone who is able to control 'db' access to
-CPL0; a 'db'-signed module (IMO) wouldn't change much.
-
---=20
-Vitaly
+-- 
+2.49.0
 
