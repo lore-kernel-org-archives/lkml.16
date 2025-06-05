@@ -1,243 +1,241 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AED218AD1;
-	Thu,  5 Jun 2025 23:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585BE27D763;
+	Thu,  5 Jun 2025 23:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749166129; cv=none; b=fw7Wx8CmWPifcxQqH04n/R5RA8SpTCZKUXmxYcOU7UmijdKknMRButNG4/Lpzk05EbcWbBSH0+R79NJZdqLNbT9rEEZ0tvGuFY6WbvXsyrY75pBQ6t/92X+VNcYzZFhG76kADGaL2HXXi5tPRD7pMCwkpU3CRckrtyqR5Ou4YEo=
+	t=1749166213; cv=none; b=Xw08Q/4+G4d6eg1q621Gq4UgkaGjfbHZf2qMPamvDm6HhiJ/VpNzMRP9Iey2G9lsH0a4iQcw6nPOLwyJCmWNedZuTp4LsUwr2wpyyHz7Ro2+tNsKB+uLmUJjty3gRgQXNIcDHv/8OGs3Kh6mWxXX7tTErk7TGYU24ak5cqHdCWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749166129; c=relaxed/simple;
-	bh=PgvI5pderInIY5c86tPDww7UEclj+CoScCJ7c6jY70E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UbTe28aeOt8gk/dW89u1b/zqxGBgjTCNV4E9pdLG43ULeKjS2T/VvZMiuQw07K0QeqW7/lUxNW6AEHarM0N0XvbXwy8SuQ2oyE2BPeFcM6mNPDl4AUoopBrJNGxZAEHreml6DlTbldofR9TpaswVf49u61fYl7iAPeFjKMSywVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PbKPewkK; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749166213; c=relaxed/simple;
+	bh=5kEQsGN7NAp4+VEFAnTFOKHKVspES6OGH401R2B2VjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kdBxiI2+5IdShroNdFBcRtmJI1lSz4wQAT7EaOzK5yqobYiJ4SmaionqcvSHUdnRznHdpophaIPwr1p7Mw8MN+kweRp9tMqv2cdb/XzYidCAaByFNqADhEbSOzXjDtuslMF8pomaSWwyNvMJfsSJ4xlm693+HEPyPoMmOmp+wlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KQAqN4N6; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PbKPewkK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749166128; x=1780702128;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=PgvI5pderInIY5c86tPDww7UEclj+CoScCJ7c6jY70E=;
-  b=PbKPewkKobmvZGEW7e806GLu6NRLQJw2WFGCcCuEiPXpaz7ZSAN0gz/h
-   ljDBpZNFO6hl/1qMVeCtbP+RGYcwrgykkL4SwZpMModjDCqGC+W/1Y+Da
-   ZNrYWFrBIwqCm3pij8LmUSD7PN0BLka6LoYHkB6Fi8FlhynLDfi3R5QJJ
-   x1Y1IYIKNFs8hsFz1evoampadSQSivnOde2S34PCfUSsbgATOw3Z+rS+a
-   2hH9uwp9jenW+GLQicD2kJytZB9UEZmpng3zfxkpkPQsz6K+o/Sx2AuiO
-   fArGH+/yF6nHufLm7UngR5ftA4Aul7FqVg4T4Dr6m+nhbFMR99DBbfqrh
-   g==;
-X-CSE-ConnectionGUID: hkh6tuyfQWmfHchwvYZmUw==
-X-CSE-MsgGUID: 3YUW2LTLRfWiLWenOND02A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51169015"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="51169015"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 16:28:47 -0700
-X-CSE-ConnectionGUID: MUGYREc+SpiAkMC+YLPwbw==
-X-CSE-MsgGUID: zivcIAXKRtaZfkH9QZRZTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="150486352"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.7]) ([10.125.111.7])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 16:28:46 -0700
-Message-ID: <3d3e88aa-dbf3-428b-b763-fd760701e55d@intel.com>
-Date: Thu, 5 Jun 2025 16:28:42 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQAqN4N6"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23526264386so13718375ad.2;
+        Thu, 05 Jun 2025 16:30:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749166210; x=1749771010; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nIg/QKJK+t2tcG+N4zRKy0QR/HL0BRMZBIkzqbGzHhM=;
+        b=KQAqN4N62r0YuiiOMrThudGzS58wUTQJHy9XQgOwUrHkrJTMJKRKXA0kCn2qjzqhKM
+         PkklBMdvMbYjvqWIxBRsQcOujATniGOL6vlLCcKAI+hX6kiLM+Q30GtmSYuVXlrQbQ+2
+         IZFcK5GQ2t9CjjBX0WxekaGDa8YNTgPxdl0JS8d8YlR/W3CXusiURUdhqS/6eWbeggeB
+         /aPnJ8noVjNcsxma9IXexYJ0GT4MhHNnoUgjZKoFSRozrO+uHQSwRsZFlgv9eXIYP+AW
+         k+CJFYtLJLnENtEITtBXXD7MBlgNYlVNDL0RyMAmAgKyNoyUs84ZUyCObOj3uyWhd/kR
+         NknA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749166210; x=1749771010;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nIg/QKJK+t2tcG+N4zRKy0QR/HL0BRMZBIkzqbGzHhM=;
+        b=w7lCDHdmjTJN26RlhR2hmutABhCgJyMS77AqUi+jb4GxFBTBxkLz3e1IsGIcuwM28/
+         pMR8wV/B9zh5pQzD1ibkhu6Prqo05wtKTfdJ6yUV7GFoUKDXkv4LorRH8FAq0T6ePTcy
+         Tph540ND7uwvdAD9Voop5d6exlnoGZEybsEXPXFP4Eze7/m/Bm9OTeqppf6aPKoKijZk
+         n7Qq7/KDtA3VbHcSBZvfCpXK+RkJkaMGXMO2h+SbYynCOfOO4Xe02/xSDJ4BB6P/CMJm
+         7dEcvDHYA9KF3Kh/kcRwq5vDeeXDvqWaldxM0b9Vp44Z5zt8u3dSQml5R3icF0O91XHU
+         aZ4w==
+X-Forwarded-Encrypted: i=1; AJvYcCU6g9F86Rp8Mk2nLGbrBe6RAjVxfrWIs4wVvOuIkz8XnG6XQXRI7Zt0eqhyalxdkabyDvSxkg9OQOcVJwpf@vger.kernel.org, AJvYcCVgVUblq8+egHv/jvsBhlltaMMFVFHxEcfuIwaLygywFBH0hnzGr+nEbCNwRdBuO6YsTAAepgMblzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV7NNv4Q8vIeMnRVldIHjWW7NNhVbxmIjHs3ML8Fr5SsqrN1rC
+	Vk3S6RiwkIGivPhN9huQpQme2O6/8+zsSWFPwrGOYEJfrNAd70VQShfz
+X-Gm-Gg: ASbGnctzJl+5vXUU/JAQG2n8st1iz39eEEQqsWrivz+WWnvQHHMNAV/R/1VaF2N+QdA
+	veMD+8PcRAPNM2JVUuAJsY6durlbq2EtgRIZeQyZLNyhcvy7ebfl8yUdjr8tY3CFUEVJ65a60LC
+	QHppxjyxDshQz4k/OMSuh2+prGCWEcVp+/dIu64Z9gJHDhb5C1FmW0kfHz3s8mzA2oL0oy1oane
+	kuropIQxkTm2XumMbTDvxU2wt/rK/Eh3DKQXDUYF81EPfiPr7QNtEK1xiWHe0mav6Nng0tAgkgj
+	ka0rpmWU82K53xUMtjIwi+0XY4GGLGqYs3e1bH93x64lTumO3Uo=
+X-Google-Smtp-Source: AGHT+IHXKd4dGIULKIaYlncrp+DqaXIwq0DERiJ/XQO9ES/5H6bjbbs9gaHl/qGj5RljyK1lfMJmeg==
+X-Received: by 2002:a17:902:d483:b0:235:e1d6:4e29 with SMTP id d9443c01a7336-23601dc0136mr18210325ad.36.1749166210136;
+        Thu, 05 Jun 2025 16:30:10 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034056f8sm1405105ad.161.2025.06.05.16.30.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 16:30:09 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id B8D784222987; Fri, 06 Jun 2025 06:30:06 +0700 (WIB)
+Date: Fri, 6 Jun 2025 06:30:06 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>, Jann Horn <jannh@google.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] docs/mm: expand vma doc to highlight pte freeing,
+ non-vma traversal
+Message-ID: <aEIofgUdu5z5USfD@archie.me>
+References: <20250604180308.137116-1-lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 02/16] PCI/AER: Report CXL or PCIe bus error type in
- trace logging
-To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
- shiju.jose@huawei.com, dan.carpenter@linaro.org,
- Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
- yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
- uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-3-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250603172239.159260-3-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TKrJpDjXj3ldSAvw"
+Content-Disposition: inline
+In-Reply-To: <20250604180308.137116-1-lorenzo.stoakes@oracle.com>
 
 
+--TKrJpDjXj3ldSAvw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 6/3/25 10:22 AM, Terry Bowman wrote:
-> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
-> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
-> Type' for CXL device errors.
-> 
-> This requires the AER can identify and distinguish between PCIe errors and
-> CXL errors.
-> 
-> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
-> aer_get_device_error_info() and pci_print_aer().
-> 
-> Update the aer_event trace routine to accept a bus type string parameter.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/pci/pci.h       |  6 ++++++
->  drivers/pci/pcie/aer.c  | 18 ++++++++++++------
->  include/ras/ras_event.h |  9 ++++++---
->  3 files changed, 24 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index b81e99cd4b62..d6296500b004 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -588,6 +588,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
->  struct aer_err_info {
->  	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
->  	int error_dev_num;
-> +	bool is_cxl;
->  
->  	unsigned int id:16;
->  
-> @@ -604,6 +605,11 @@ struct aer_err_info {
->  	struct pcie_tlp_log tlp;	/* TLP Header */
->  };
->  
-> +static inline const char *aer_err_bus(struct aer_err_info *info)
-> +{
-> +	return info->is_cxl ? "CXL" : "PCIe";
-> +}
+On Wed, Jun 04, 2025 at 07:03:08PM +0100, Lorenzo Stoakes wrote:
+> diff --git a/Documentation/mm/process_addrs.rst b/Documentation/mm/proces=
+s_addrs.rst
+> index e6756e78b476..be49e2a269e4 100644
+> --- a/Documentation/mm/process_addrs.rst
+> +++ b/Documentation/mm/process_addrs.rst
+> @@ -303,7 +303,9 @@ There are four key operations typically performed on =
+page tables:
+>  1. **Traversing** page tables - Simply reading page tables in order to t=
+raverse
+>     them. This only requires that the VMA is kept stable, so a lock which
+>     establishes this suffices for traversal (there are also lockless vari=
+ants
+> -   which eliminate even this requirement, such as :c:func:`!gup_fast`).
+> +   which eliminate even this requirement, such as :c:func:`!gup_fast`). =
+There is
+> +   also a special case of page table traversal for non-VMA regions which=
+ we
+> +   consider separately below.
+>  2. **Installing** page table mappings - Whether creating a new mapping or
+>     modifying an existing one in such a way as to change its identity. Th=
+is
+>     requires that the VMA is kept stable via an mmap or VMA lock (explici=
+tly not
+> @@ -335,15 +337,13 @@ ahead and perform these operations on page tables (=
+though internally, kernel
+>  operations that perform writes also acquire internal page table locks to
+>  serialise - see the page table implementation detail section for more de=
+tails).
+>=20
+> +.. note:: We free empty PTE tables on zap under the RCU lock - this does=
+ not
+> +          change the aforementioned locking requirements around zapping.
 > +
->  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
->  
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index a1cf8c7ef628..adb4b1123b9b 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -698,13 +698,14 @@ static void __aer_print_error(struct pci_dev *dev,
->  
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
-> +	const char *bus_type = aer_err_bus(info);
->  	int layer, agent;
->  	int id = pci_dev_id(dev);
->  	const char *level;
->  
->  	if (!info->status) {
-> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> -			aer_error_severity_string[info->severity]);
-> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> +			bus_type, aer_error_severity_string[info->severity]);
->  		goto out;
->  	}
->  
-> @@ -713,8 +714,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  
->  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
->  
-> -	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-> -		   aer_error_severity_string[info->severity],
-> +	aer_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
-> +		   bus_type, aer_error_severity_string[info->severity],
->  		   aer_error_layer[layer], aer_agent_string[agent]);
->  
->  	aer_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> @@ -729,7 +730,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  	if (info->id && info->error_dev_num > 1 && info->id == id)
->  		pci_err(dev, "  Error of this Agent is reported first\n");
->  
-> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
->  			info->severity, info->tlp_header_valid, &info->tlp);
->  }
->  
-> @@ -763,6 +764,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  		   struct aer_capability_regs *aer)
->  {
-> +	const char *bus_type;
->  	int layer, agent, tlp_header_valid = 0;
->  	u32 status, mask;
->  	struct aer_err_info info;
-> @@ -784,6 +786,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  	info.status = status;
->  	info.mask = mask;
->  	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
-> +	info.is_cxl = pcie_is_cxl(dev);
+>  When **installing** page table entries, the mmap or VMA lock must be hel=
+d to
+>  keep the VMA stable. We explore why this is in the page table locking de=
+tails
+>  section below.
+>=20
+> -.. warning:: Page tables are normally only traversed in regions covered =
+by VMAs.
+> -             If you want to traverse page tables in areas that might not=
+ be
+> -             covered by VMAs, heavier locking is required.
+> -             See :c:func:`!walk_page_range_novma` for details.
+> -
+>  **Freeing** page tables is an entirely internal memory management operat=
+ion and
+>  has special requirements (see the page freeing section below for more de=
+tails).
+>=20
+> @@ -355,6 +355,44 @@ has special requirements (see the page freeing secti=
+on below for more details).
+>               from the reverse mappings, but no other VMAs can be permitt=
+ed to be
+>               accessible and span the specified range.
+>=20
+> +Traversing non-VMA page tables
+> +------------------------------
 > +
-> +	bus_type = aer_err_bus(&info);
->  
->  	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
->  	__aer_print_error(dev, &info);
-> @@ -797,7 +802,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  	if (tlp_header_valid)
->  		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
->  
-> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
-> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
->  			aer_severity, tlp_header_valid, &aer->header_log);
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-> @@ -1215,6 +1220,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->  	/* Must reset in this function */
->  	info->status = 0;
->  	info->tlp_header_valid = 0;
-> +	info->is_cxl = pcie_is_cxl(dev);
->  
->  	/* The device might not support AER */
->  	if (!aer)
-> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-> index 14c9f943d53f..080829d59c36 100644
-> --- a/include/ras/ras_event.h
-> +++ b/include/ras/ras_event.h
-> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
->  
->  TRACE_EVENT(aer_event,
->  	TP_PROTO(const char *dev_name,
-> +		 const char *bus_type,
->  		 const u32 status,
->  		 const u8 severity,
->  		 const u8 tlp_header_valid,
->  		 struct pcie_tlp_log *tlp),
->  
-> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
-> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
->  
->  	TP_STRUCT__entry(
->  		__string(	dev_name,	dev_name	)
-> +		__string(	bus_type,	bus_type	)
->  		__field(	u32,		status		)
->  		__field(	u8,		severity	)
->  		__field(	u8, 		tlp_header_valid)
-> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
->  
->  	TP_fast_assign(
->  		__assign_str(dev_name);
-> +		__assign_str(bus_type);
->  		__entry->status		= status;
->  		__entry->severity	= severity;
->  		__entry->tlp_header_valid = tlp_header_valid;
-> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
->  		}
->  	),
->  
-> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
-> -		__get_str(dev_name),
-> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
-> +		__get_str(dev_name), __get_str(bus_type),
->  		__entry->severity == AER_CORRECTABLE ? "Corrected" :
->  			__entry->severity == AER_FATAL ?
->  			"Fatal" : "Uncorrected, non-fatal",
+> +We've focused above on traversal of page tables belonging to VMAs. It is=
+ also
+> +possible to traverse page tables which are not represented by VMAs.
+> +
+> +Kernel page table mappings themselves are generally managed but whatever=
+ part of
+> +the kernel established them and the aforementioned locking rules do not =
+apply -
+> +for instance vmalloc has its own set of locks which are utilised for
+> +establishing and tearing down page its page tables.
+> +
+> +However, for convenience we provide the :c:func:`!walk_kernel_page_table=
+_range`
+> +function which is synchronised via the mmap lock on the :c:macro:`!init_=
+mm`
+> +kernel instantiation of the :c:struct:`!struct mm_struct` metadata objec=
+t.
+> +
+> +If an operation requires exclusive access, a write lock is used, but if =
+not, a
+> +read lock suffices - we assert only that at least a read lock has been a=
+cquired.
+> +
+> +Since, aside from vmalloc and memory hot plug, kernel page tables are no=
+t torn
+> +down all that often - this usually suffices, however any caller of this
+> +functionality must ensure that any additionally required locks are acqui=
+red in
+> +advance.
+> +
+> +We also permit a truly unusual case is the traversal of non-VMA ranges in
+> +**userland** ranges, as provided for by :c:func:`!walk_page_range_debug`.
+> +
+> +This has only one user - the general page table dumping logic (implement=
+ed in
+> +:c:macro:`!mm/ptdump.c`) - which seeks to expose all mappings for debug =
+purposes
+> +even if they are highly unusual (possibly architecture-specific) and are=
+ not
+> +backed by a VMA.
+> +
+> +We must take great care in this case, as the :c:func:`!munmap` implement=
+ation
+> +detaches VMAs under an mmap write lock before tearing down page tables u=
+nder a
+> +downgraded mmap read lock.
+> +
+> +This means such an operation could race with this, and thus an mmap **wr=
+ite**
+> +lock is required.
+> +
+>  Lock ordering
+>  -------------
+>=20
+> @@ -461,6 +499,10 @@ Locking Implementation Details
+>  Page table locking details
+>  --------------------------
+>=20
+> +.. note:: This section explores page table locking requirements for page=
+ tables
+> +          encompassed by a VMA. See the above section on non-VMA page ta=
+ble
+> +          traversal for details on how we handle that case.
+> +
+>  In addition to the locks described in the terminology section above, we =
+have
+>  additional locks dedicated to page tables:
+>=20
 
+The wording looks good, thanks!
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--TKrJpDjXj3ldSAvw
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEIoegAKCRD2uYlJVVFO
+o9YLAP0XEbGybhTT0kMYnpcDPlleOpjIwK2lOzh5ejXz8EynYwEApRxlM9Qqf+x1
+Hjc7iMbG0xjNPtyNl1s36fJcTI751gg=
+=sqiG
+-----END PGP SIGNATURE-----
+
+--TKrJpDjXj3ldSAvw--
