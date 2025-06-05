@@ -1,127 +1,95 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB8A28E17;
-	Thu,  5 Jun 2025 21:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625C828E17
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749160440; cv=none; b=fyLlm99aUsgNQDM5CBpsro7B7pRRPMswNZi5o1PO1P6nRZjL7UMJ9Y+pAOMxSgqSbfqctfQew9wHJeFQcGFNFp9gDm2b2JjmqqGW4UfIlX0U0uy+aUguw23lVRqSxC2SCvNdn9HA5vHsxXEzQaUt7jMtI2KE0UIVaEZF5Lj5MXA=
+	t=1749160539; cv=none; b=c97I3F6qNYG6gof0H2KooqXptFnemIC/A+BlpKdhi7uYKrf8WP40KqxIcYzVCwTrmPS0IXzeLCgytrSOfAhPBYoP2vrYk/aZDlBcvy8rzP/dwkNpYrskQkPwkN1QGr8qrikqiApGfPxMcqZO+xtNTc7kcu/0ejCEEcTTtZRN8kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749160440; c=relaxed/simple;
-	bh=TtAnK+ifHJsVnnqMC5yqz588+gnYzlaQls4UgU5+eF8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RKAaOfbTmiFI55rldgbR2bB1xCs6Wrb7tMjwDO7Dn8dm3VKOO4OrnRCG+rn9Siw4iDXIxaWivfaTPFosd3aZgMwFkOJN3Yb/f9mNtQu0SSQCTC/nAQYrCHSwFR9iQ1ks+ZY6eKrt4VYLHizaZHJ2IIV8bD7e1Q/VAipT0Vwyzk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BtlSw+hd; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749160539; c=relaxed/simple;
+	bh=lv2t+uE84kmEx74907j4rFCvGFtRtPS+kipfsQsVKas=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eFX+pw3CjiPh/3zhX1e5Ojv/TOxlHlf6F9Hbu/++m+DRukPviH2FZ9iWrTCMbX5iAScfctGJq8UWkxegGdZH7X1qtIROwJa180++X10mv2NuzfyFDF6/nWuW/533XujEPC0iCUIwuqXt0SgYDBaQwlPQW1xn6TbfAKG5a6FoGCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ntVGxYll; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtlSw+hd"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45024721cbdso12488215e9.2;
-        Thu, 05 Jun 2025 14:53:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ntVGxYll"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3dc83a8a4afso9531945ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 14:55:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749160437; x=1749765237; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wQaPLGjmqdute3+CVxHV4+IFNfw1ZJTcI8Xx1uO8iBg=;
-        b=BtlSw+hdfZSLQQnZyA2QtzjNlWjr4ruP2RDjnKIJvGzWjGPsxfGpyw17D0CbXUDO85
-         +h2g7LEOxWB01E+6q5pSjG2Idp1QhGIJgbVhBlVHYoBu3N56I94kNgBKnzSAmxfXsDBz
-         mVd07Eyl0mSp2/u6SZXgROdd2YA154qg/f1McJiSSg4esT8xmMq0NzAEL6pX61ZH2LA5
-         MHoAkvPyYt6HT00IDcyl4IRxEP8JR1+WZpvCT65QgxWRv0uZ1sHr3yXSX1RmPh4cyIFZ
-         uT/zbnju9s65FOb7JFnRyE47Yv00xZR622lwfH9hW6tWQ9LXaod0179DCzm1Jcsh71In
-         LUrQ==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749160536; x=1749765336; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1tPrRQ909k3LoqX5HXL+H8AJdVmtNVHZDBG5f3YzT+0=;
+        b=ntVGxYllAWcWNoOhObCYcdiF6p8BE6bVq8cSMB9+5ZKymmBBTtMKHViIUcZDEr7Yj9
+         tv2bjALdwYiOe529kCGbHGP6pqG57O1yLYRw2vm7O92vGdiodwRof5PlLLhH42HGcDYP
+         rUbKOW/NWAx2UvK/pC3eKVYe7/cnmsPaugjAJFkVjbMPzAd4ih9zywSt/P72ibjExdA7
+         7SjoBmkXQyz13FlvycTcyTuw3Np3GLwOxRTNkEJYwgg+fFip5j0FWyoCODA8/s3HPI1c
+         ev2gcD4Y7LpS0quf+y4f/gtAFBWpYw3omnWh6357MFx+RA+INcwuX6XVXr3edBAJ88MH
+         bwvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749160437; x=1749765237;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wQaPLGjmqdute3+CVxHV4+IFNfw1ZJTcI8Xx1uO8iBg=;
-        b=tYZjRKONUy+GjY5rbjV8mKV2cj7mQy/AKFvNrxvV6aT3nGQh+v0gY/2NYTxC1OtDcx
-         X+eD9qX67X7whr9DnUCk5bXcSqsSkVjenqLsh8ywyi6tvzkvvZ7Qh7qNP9l9ZnU8QPba
-         Ed04G9iqJao+k/PkRRpz1CdekFBZDcTNJ/I0PDH0QAv+/pqVbWFAI6lnXt6JKgNZIKb1
-         rv9zufcZZxJwHdci3xv/c5cvAtMgxg+RiupO3xrRihx8ytViwEp0ZYHA4vjzk2qKd7nq
-         5O9HFiWVptWdkHvbuSYw746jJY61Ny2XCjaDSHIinPwILisvZ4XwxFyox1+DeH+L9EYY
-         2Q6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWJTiWU0/ahXx46OYfb5jqLsqTqPAk2d77vp7os9h5CWk9r1Np1768vWnIIPTIj8/ispTw=@vger.kernel.org, AJvYcCXb3CtVFTIe0geANHij4xyDcq8BSbRrarV59+lM8ddtylUoZAS2wlBSvuFXBlpccFNQfok76gfgtIEEf1+B@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtoOd7MvuWWyZx031R6S9GoDGYxp6ZAYkNdIJB8Vgvh1G4EGHu
-	06/wOZ8iAa+iLocqbnt4DFZINOhQLw6gYNvOgw6HJqeyPbLgbjKkxEEe
-X-Gm-Gg: ASbGncuZASHgFkW4/Mg8eyqrRsQfgiMcXWTsznPsQZV7HzjnXBoY3RwBMUfKpQtIujK
-	4OYruPFrWwiEGBga4YEUAKxJi1SudczOh06zGmkrk9DpyCuM9l11ldu8AbzVzWRyHvtjBZPbcyI
-	z1JXKDzw05u8KN5SCZ/lZzr/N9aeZ1erHafZXO+hosb7h3a8ThLzOXdK6h8u/VhkKElhfEuaWqN
-	5pJCC8KofB4EI9c+/HEfbHMjcbuterywSKhAcAyLpGxIJPwzdZDJ5P5hWKDCOwUXVWvdIHeMq0H
-	N4huKgeIGFw+HYAnX3gRj8Dtlc3NYIZPtGMc3ow4wWHA9eBp2Q==
-X-Google-Smtp-Source: AGHT+IFGi6qPNQfhxX2FCHXVObAnqtUImxntP4+xBd3XDrJiL3C4i9nCu/klostaQ3/BqxMpiFx7oQ==
-X-Received: by 2002:a05:6000:288c:b0:3a4:f7e6:2b29 with SMTP id ffacd0b85a97d-3a53188d91emr797074f8f.5.1749160436720;
-        Thu, 05 Jun 2025 14:53:56 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b3992sm278798f8f.35.2025.06.05.14.53.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 14:53:56 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 5 Jun 2025 23:53:53 +0200
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
-	song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
-	sdf@fomichev.me, haoluo@google.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next] bpf: Add show_fdinfo for perf_event
-Message-ID: <aEIR8SBXrV9PgQ0L@krava>
-References: <20250604163723.3175258-1-chen.dylane@linux.dev>
+        d=1e100.net; s=20230601; t=1749160536; x=1749765336;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1tPrRQ909k3LoqX5HXL+H8AJdVmtNVHZDBG5f3YzT+0=;
+        b=NJ0+FdpNjwjervowZ4l8NUVnNtHcXheVNwQ3FdqRfk/n3Ru9yWAIIPPzBqGkxqL9wV
+         XPA56z8lXYIOWwHDe5a1ykGRLxJiUiB3Q+Ohc/bNQFpH1Y0Rr1FN26xk5Xwfi+c+FChq
+         bEG/2ldSqRqz1EdBf8ZFVENRXIO6DtAW/cFDpy9rbvErUuTN55ucsIFh5DrAvi9JO6MQ
+         14RIySimTp0l9LUGecXDu5BGKUxEQlT+k1EOnwH/kcBUAVyWAwPNkAEaj9XWKStuVOsn
+         uJIZKQFqC2gVRXwd8bpOvEbfSL9SUyt/f8UYTVftEamTmLXKc4KwBzGNplUl1jJUajbH
+         BjRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVjOkaM6arOBdF+ICEC2ac6YGeDj1cmUAwnFJRTv8qqLbKHQ0wp9s5Q4Fyk1cZom+MPub291Lb/1qWeX4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0ytzyYpJ+298M3Xjmk7VPN651iPuZD5iFX5mb7W/G082QQ2hB
+	/ur+hGRsgM+1wFnwSnYYU4qK9gEVaCPiSNjlzsVGbTuYuhQJ5Zo2SXnEikgemJtqeCU=
+X-Gm-Gg: ASbGncv8e+nmhMuB1uazZ0eDZt9q2ssj6c4Co3nIvyhgB4B6oqy5rTmifkdY2/wQUvb
+	IJLN7sj1QKq+Y3FtSOG9J5DyC0lIKz/YUP0r/Izup1VQ5ogEauoRXtxrd/UNP0RLcufVnIJI3kd
+	LYf9+v4ijeYXybuIN8qXcGDlSuXlecFoC+dQMy80JrfxrOEMrcurYcGQ2DuGvWkq1Q1h/4la5z/
+	+NYlNbWpvSfn8/F54/Qrq2gyyTwJBHS11N3WKEkxrhE8/8b9U1Tina+fJMC3muAwSCctdyz1aUV
+	ylSoJzQa8vkOs4J6VsakoRNxu4CY2kzz2hgxppM0Lp2ia7njnjQxs9AGX/3JSwO/Mr4yCQ==
+X-Google-Smtp-Source: AGHT+IED071g9IJXlFKyxypxNqRdATo8W0vGPD4rOVyraGxCMIc9j0kcJ2eTDLX+1hrfrxWCw8j9bQ==
+X-Received: by 2002:a05:6e02:2593:b0:3dc:7b3d:6a45 with SMTP id e9e14a558f8ab-3ddce521bdfmr11754995ab.0.1749160536364;
+        Thu, 05 Jun 2025 14:55:36 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3ddcf244ba5sm539375ab.38.2025.06.05.14.55.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 14:55:35 -0700 (PDT)
+Message-ID: <ddea36e4-4e89-459d-aa60-3d3c05a9b688@kernel.dk>
+Date: Thu, 5 Jun 2025 15:55:35 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604163723.3175258-1-chen.dylane@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Signed-off-by missing for commit in the block tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250606075230.6a13c53d@canb.auug.org.au>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250606075230.6a13c53d@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 05, 2025 at 12:37:22AM +0800, Tao Chen wrote:
+On 6/5/25 3:52 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>   10f4a7cd724e ("nvme: fix command limits status code")
+> 
+> is missing a Signed-off-by from its author.
 
-SNIP
+Sigh... That came from Christoph's pull today. Keith, can you just
+verbally sign off in here for that patch, at least then there's some
+sort of trail publicly available.
 
-> +static void bpf_perf_link_fdinfo_uprobe(const struct perf_event *event,
-> +					struct seq_file *seq)
-> +{
-> +	const char *name;
-> +	int err;
-> +	u32 prog_id, type;
-> +	u64 offset, addr;
-> +	unsigned long missed;
-> +
-> +	err = bpf_get_perf_event_info(event, &prog_id, &type, &name,
-> +				      &offset, &addr, &missed);
-
-hi,
-addr now gets ref_ctr_offset:
-  823153334042 bpf: Add support to retrieve ref_ctr_offset for uprobe perf link
-
-so let's display that
-
-thanks,
-jirka
-
-
-
-> +	if (err)
-> +		return;
-> +
-> +	if (type == BPF_FD_TYPE_URETPROBE)
-> +		type = BPF_PERF_EVENT_URETPROBE;
-> +	else
-> +		type = BPF_PERF_EVENT_UPROBE;
-> +
-> +	seq_printf(seq,
-> +		   "name:\t%s\n"
-> +		   "offset:\t%llu\n"
-> +		   "event_type:\t%u\n"
-> +		   "cookie:\t%llu\n",
-> +		   name, offset, type, event->bpf_cookie);
-> +
-> +}
->  #endif
->  
-
-SNIP
+-- 
+Jens Axboe
