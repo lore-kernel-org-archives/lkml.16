@@ -1,197 +1,140 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF94220330;
-	Thu,  5 Jun 2025 18:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D15A20330;
+	Thu,  5 Jun 2025 18:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749149229; cv=none; b=AyMTeB+0N+l0Wf3NrdpV6y073WS3VjpJaJ6MQzSGwyezr54m3WM+kwRBlB2fCR91Uu9EIEwIrTJEXC9WdjdBh1RYHT44eOeBezPFgirfA7FjaoZtIPgY77DnMXhWAoRqkyZFsQWFe+goTAnEuOKHs/claqZqPs76KDJawHmWtkY=
+	t=1749149247; cv=none; b=srTPfhQq+EZkituZRuTRuZyitxrQusmCPWbvcqGq09V3H7xz0Ezui9LZLGPZb2i28lxhpBwa8n0sAMdISlhtf3TpgROPdM5FzHis2qQaF9kBBkEHHA0rxByszBmeWYhtdUpLfIWh9A86mLQFj3KTGT1BV6pXjqfTa5XihUQgulk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749149229; c=relaxed/simple;
-	bh=fnxx2k4mdjwEbNfY0DSZkV4kipioOk34TMHhRZYO4NY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=TzOTMxplMdTKJYXwMl0QbOQAzQJXwcRmvll5C6oWMWFYetT9yA/NBNlZKm56RBObU9U7fciKZLuwNofz7PgXxNEy8u5TPKeN7lj4+bAe4d+PSNLJtW3bt24P2Gjmk8z4GTLW1S2MxQCXfDpXM/nL+9BP6IDGZZSHvMaWeABJGTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Cni07byl; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Cni07byl"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 555Ikeve604253
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 5 Jun 2025 11:46:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 555Ikeve604253
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749149201;
-	bh=ummgK17N+T78IC1ngyES2l/GZWAHPP3RbwaZSXrfpPg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Cni07bylTd0mZM1nSuZsc0W1lRqVQRIayXiR9EdNLPN2cqTajrfiqa+vi8Q9cDR0E
-	 eAoJep/LDkFmfWlSSdNZTyBG6+sAUIAG5XpDTjobqL9MKkJvNvc9iNqa7csOs9ZUSL
-	 fw3epwvrek/127JOLhxRpL7E+O001K5A0FYlPcIvGn9a3ziZsJN3TsJ1yZnawkHu3K
-	 //wkQqIfuvMIaT8PguTL4Z/oeEQPFV597aTvhbx9uQhADpNW4EQpSYlG0n+It819Lc
-	 HQk1QB4cnif/MzqzgIE2Db5Dw2bpJZh/O+9fTgkNSa21PhYAWDt/0oeKK7Osrbo3Pq
-	 yYopw7eN6kXKQ==
-Date: Thu, 05 Jun 2025 11:46:38 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-CC: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, shuah@kernel.org,
-        andrew.cooper3@citrix.com, sohil.mehta@intel.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v4_1/2=5D_x86/fred/signal=3A_Pr?=
- =?US-ASCII?Q?event_single-step_upon_ERETU_completion?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250605181020.590459-2-xin@zytor.com>
-References: <20250605181020.590459-1-xin@zytor.com> <20250605181020.590459-2-xin@zytor.com>
-Message-ID: <B6762FE6-87DD-4B2D-B177-A574044C1513@zytor.com>
+	s=arc-20240116; t=1749149247; c=relaxed/simple;
+	bh=6S02rl7+Xez6RygWdtvVQzZxfs94YcIWrjcdcz9JEjw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tKjbWj4xH3BX1G33Whrtb0yqGvnT0FHBWsWdhP7yKTSglAqMwRnbgmAtgD0V364+BHDnZKOK+1dCC15cf+WhoYhhbs+gyJF9fNFq5iNhx3BZ0w9SsJLC6/UXr9y0Dv78LZH8nEZy9LQlFDftjB6smtLpWxuRcljFcgzfjz5d37g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87df048fda8so696028241.3;
+        Thu, 05 Jun 2025 11:47:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749149243; x=1749754043;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XDESzcp9uhK4/bj12QFmlcdzua2IjhF1wc3RgZH2RJY=;
+        b=GSOKqZIdryhJ0E9i9PcvyKgMoWoQYGw0cmUQmOF9tf2xq1hMmhNTBiRfAG5ldM3rCd
+         qX8YWWZR188UJggdnVjOWMokusQv74vliorSCou6UDJno25cHcXSLVNswjhnDDo0E57A
+         LA1Rw+M42lb1aXENzHBIOPR9uQwJbZo/udWBPtU/onh9hrjwdiRDuE4MUhTLFi2og/W7
+         14FdOQnfbFWi6Y+NNV8rDp/D4akTVGUFx28DYVyO8Eno2x7Wes+04OWueEuFZOpeXfr0
+         SdQJf3vA0CiOGXflKQTu3yuhBzt5BG7bOh+XoDqSx79QJ/PJkjWEEFHoOf/IDPH8K1Sc
+         Iv6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVqEgEdYcm7Hq4D9FsuFAx0uhro8db1cYmZfxrSVZdvvtheGr0BWtfhF9tyo+aLG5MJ0L0JAYFqdeMb@vger.kernel.org, AJvYcCVqc3mClpqYY8q1gvmzv24Z1mIHVxGdqLIh95742iKLmjuVdnwqCJM+G3U0I5Nt8aQPcACADVHoTOcTCJ9elGXo0D4=@vger.kernel.org, AJvYcCWbQx0jmR2R/+rZ8VzKyNQEFq//FmjqCUn56IB8CWImDNKQTUrivT3sA9+LWOccgS1Bqi2NIXjXqpLFufDY@vger.kernel.org, AJvYcCXOPXyS0wQGey35Gm08B7nKyDBUMOPddOs3BXs2M1Q03oQ5Ph8Eo9lDEGo+PUv842lNV2fp7VXuEqHQFzti@vger.kernel.org
+X-Gm-Message-State: AOJu0YytJfJI2vftY3ZMM869PfFJwWUP9vhCIZZAvrQbmErPX+gTndma
+	9JGyFIFccDV2Mn+Y69oomqmJ+42msiUEU7YDObemUyrDk3Opo9KNWcF03MOwcqANCP4=
+X-Gm-Gg: ASbGncvHl3ahrlw7ePIrfL0cAnu/t2boWpwXc1O323/R9iLmMdk/2DYO9dxsfkfpgJ3
+	m669D+vo0tpW84r95uAqYKM4gXRWzFtrGGTaeJpqK60l4h6nU7WFdAVsekt3hW02OTRzodAPILt
+	i3BtqhAmfag+iX69WZijwLR7fo7TZ8OG/8pIfS60dFXph+e461a1DYAy6bFtkkWwyCU8umHfHPK
+	vY0yx0pp+KCBZVEnwLH9Sci9OsjD7OoX7c8h24+PtQUxmBXWgWzNF7NugT1H14Jro22Y6zUZRYE
+	2JtB6qYBtqt9Gdahl8BiwqGXHYOegj32ZsJnjieNEvjkfrvbEZUqwzbEQWBk8VWvKlxgpWb4NEl
+	qgYgTZg5loUXIwA==
+X-Google-Smtp-Source: AGHT+IGlEORG0TmV/lzSF3G5hgo6iRN/dlWuzjU4EgfGnWx4+CVAThfVmGC2MSV7CbWJ6CodF409sQ==
+X-Received: by 2002:a05:6102:dcb:b0:4e5:c51b:ace4 with SMTP id ada2fe7eead31-4e772a2bebdmr479493137.20.1749149243087;
+        Thu, 05 Jun 2025 11:47:23 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87ebd2310aesm31793241.30.2025.06.05.11.47.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 11:47:22 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4e47c2a9cdcso854795137.1;
+        Thu, 05 Jun 2025 11:47:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUXURhmhKTLzNzVeUVVnQ9s4QDii2sJ2nJtSTsi1lt55EDkZZEX41sjpSqOYWRuYS2FBkuIslT0PFQ+@vger.kernel.org, AJvYcCW/Wu+g5w23mU/guRrGnJG36JzbUU8aoDn2b/koadqrBCS5QI7pyma6TBCvHBfisW5cBmiq+z/okNrsdZMI@vger.kernel.org, AJvYcCWmu3+XQtDk+OXHLw+gjoRlngC+SiV18+avyNe1zwb5kj8+NV6CiPdtfCxO7Ubjzb+cvvLbojtR6BUpGNMw/goGkt0=@vger.kernel.org, AJvYcCXX56vhYJeoiz7aYRGQ69RT1936+KB+HV9stii9TDbx4xBnfZJoZh9bQrq0yuGizyOFi4niKe0Nl6i/n40z@vger.kernel.org
+X-Received: by 2002:a05:6102:3e10:b0:4e5:a6ad:8fd9 with SMTP id
+ ada2fe7eead31-4e77296a301mr528618137.13.1749149242184; Thu, 05 Jun 2025
+ 11:47:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com>
+ <20250523142417.2840797-2-thierry.bultel.yh@bp.renesas.com> <20250605143920.GA2458810-robh@kernel.org>
+In-Reply-To: <20250605143920.GA2458810-robh@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 5 Jun 2025 20:47:10 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUThuWxxznhjvcn5cOFCWOkb5u-fRYwTOoenDRY=4H6FA@mail.gmail.com>
+X-Gm-Features: AX0GCFur-Aski7uFxsghVWocWVwp8rvJ5FStM1HHe1m8EIQWcpodqYlBb_dIZ3c
+Message-ID: <CAMuHMdUThuWxxznhjvcn5cOFCWOkb5u-fRYwTOoenDRY=4H6FA@mail.gmail.com>
+Subject: Re: [PATCH v10 01/10] dt-bindings: serial: Added secondary clock for
+ RZ/T2H RSCI
+To: Rob Herring <robh@kernel.org>
+Cc: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>, thierry.bultel@linatsea.fr, 
+	linux-renesas-soc@vger.kernel.org, paul.barker.ct@bp.renesas.com, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On June 5, 2025 11:10:19 AM PDT, "Xin Li (Intel)" <xin@zytor=2Ecom> wrote:
->Clear the software event flag in the augmented SS to prevent infinite
->SIGTRAP handler loop if the trap flag (TF) is set without an external
->debugger attached=2E
->
->Following is a typical single-stepping flow for a user process:
->
->1) The user process is prepared for single-stepping by setting
->   RFLAGS=2ETF =3D 1=2E
->2) When any instruction in user space completes, a #DB is triggered=2E
->3) The kernel handles the #DB and returns to user space, invoking the
->   SIGTRAP handler with RFLAGS=2ETF =3D 0=2E
->4) After the SIGTRAP handler finishes, the user process performs a
->   sigreturn syscall, restoring the original state, including
->   RFLAGS=2ETF =3D 1=2E
->5) Goto step 2=2E
->
->According to the FRED specification:
->
->A) Bit 17 in the augmented SS is designated as the software event
->   flag, which is set to 1 for FRED event delivery of SYSCALL,
->   SYSENTER, or INT n=2E
->B) If bit 17 of the augmented SS is 1 and ERETU would result in
->   RFLAGS=2ETF =3D 1, a single-step trap will be pending upon completion
->   of ERETU=2E
->
->In step 4) above, the software event flag is set upon the sigreturn
->syscall, and its corresponding ERETU would restore RFLAGS=2ETF =3D 1=2E
->This combination causes a pending single-step trap upon completion of
->ERETU=2E  Therefore, another #DB is triggered before any user space
->instruction is executed, which leads to an infinite loop in which the
->SIGTRAP handler keeps being invoked on the same user space IP=2E
->
->Suggested-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
->Signed-off-by: Xin Li (Intel) <xin@zytor=2Ecom>
->Cc: stable@vger=2Ekernel=2Eorg
->---
->
->Change in v3:
->*) Use "#ifdef CONFIG_X86_FRED" instead of IS_ENABLED(CONFIG_X86_FRED)
->   (Intel LKP)=2E
->
->Change in v2:
->*) Remove the check cpu_feature_enabled(X86_FEATURE_FRED), because
->   regs->fred_ss=2Eswevent will always be 0 otherwise (H=2E Peter Anvin)=
-=2E
->---
-> arch/x86/include/asm/sighandling=2Eh | 22 ++++++++++++++++++++++
-> arch/x86/kernel/signal_32=2Ec        |  4 ++++
-> arch/x86/kernel/signal_64=2Ec        |  4 ++++
-> 3 files changed, 30 insertions(+)
->
->diff --git a/arch/x86/include/asm/sighandling=2Eh b/arch/x86/include/asm/=
-sighandling=2Eh
->index e770c4fc47f4=2E=2Eb8481d33ba8e 100644
->--- a/arch/x86/include/asm/sighandling=2Eh
->+++ b/arch/x86/include/asm/sighandling=2Eh
->@@ -24,4 +24,26 @@ int ia32_setup_rt_frame(struct ksignal *ksig, struct p=
-t_regs *regs);
-> int x64_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
-> int x32_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
->=20
->+/*
->+ * To prevent infinite SIGTRAP handler loop if the trap flag (TF) is set
->+ * without an external debugger attached, clear the software event flag =
-in
->+ * the augmented SS, ensuring no single-step trap is pending upon ERETU
->+ * completion=2E
->+ *
->+ * Note, this function should be called in sigreturn() before the origin=
-al
->+ * state is restored to make sure the TF is read from the entry frame=2E
->+ */
->+static __always_inline void prevent_single_step_upon_eretu(struct pt_reg=
-s *regs)
->+{
->+	/*
->+	 * If the trap flag (TF) is set, i=2Ee=2E, the sigreturn() SYSCALL inst=
-ruction
->+	 * is being single-stepped, do not clear the software event flag in the
->+	 * augmented SS, thus a debugger won't skip over the following instruct=
-ion=2E
->+	 */
->+#ifdef CONFIG_X86_FRED
->+	if (!(regs->flags & X86_EFLAGS_TF))
->+		regs->fred_ss=2Eswevent =3D 0;
->+#endif
->+}
->+
-> #endif /* _ASM_X86_SIGHANDLING_H */
->diff --git a/arch/x86/kernel/signal_32=2Ec b/arch/x86/kernel/signal_32=2E=
-c
->index 98123ff10506=2E=2E42bbc42bd350 100644
->--- a/arch/x86/kernel/signal_32=2Ec
->+++ b/arch/x86/kernel/signal_32=2Ec
->@@ -152,6 +152,8 @@ SYSCALL32_DEFINE0(sigreturn)
-> 	struct sigframe_ia32 __user *frame =3D (struct sigframe_ia32 __user *)(=
-regs->sp-8);
-> 	sigset_t set;
->=20
->+	prevent_single_step_upon_eretu(regs);
->+
-> 	if (!access_ok(frame, sizeof(*frame)))
-> 		goto badframe;
-> 	if (__get_user(set=2Esig[0], &frame->sc=2Eoldmask)
->@@ -175,6 +177,8 @@ SYSCALL32_DEFINE0(rt_sigreturn)
-> 	struct rt_sigframe_ia32 __user *frame;
-> 	sigset_t set;
->=20
->+	prevent_single_step_upon_eretu(regs);
->+
-> 	frame =3D (struct rt_sigframe_ia32 __user *)(regs->sp - 4);
->=20
-> 	if (!access_ok(frame, sizeof(*frame)))
->diff --git a/arch/x86/kernel/signal_64=2Ec b/arch/x86/kernel/signal_64=2E=
-c
->index ee9453891901=2E=2Ed483b585c6c6 100644
->--- a/arch/x86/kernel/signal_64=2Ec
->+++ b/arch/x86/kernel/signal_64=2Ec
->@@ -250,6 +250,8 @@ SYSCALL_DEFINE0(rt_sigreturn)
-> 	sigset_t set;
-> 	unsigned long uc_flags;
->=20
->+	prevent_single_step_upon_eretu(regs);
->+
-> 	frame =3D (struct rt_sigframe __user *)(regs->sp - sizeof(long));
-> 	if (!access_ok(frame, sizeof(*frame)))
-> 		goto badframe;
->@@ -366,6 +368,8 @@ COMPAT_SYSCALL_DEFINE0(x32_rt_sigreturn)
-> 	sigset_t set;
-> 	unsigned long uc_flags;
->=20
->+	prevent_single_step_upon_eretu(regs);
->+
-> 	frame =3D (struct rt_sigframe_x32 __user *)(regs->sp - 8);
->=20
-> 	if (!access_ok(frame, sizeof(*frame)))
+Hi Rob,
 
-Nitpick: "Prevent immediate repeat of single step trap on return from SIGT=
-RAP handler"
+On Thu, 5 Jun 2025 at 16:39, Rob Herring <robh@kernel.org> wrote:
+> On Fri, May 23, 2025 at 04:24:05PM +0200, Thierry Bultel wrote:
+> > At boot, the default clock is the PCLKM core clock (synchronous
+> > clock, which is enabled by the bootloader).
+> > For different baudrates, the asynchronous clock input must be used.
+> > Clock selection is made by an internal register of RCSI.
+> >
+> > Add the optional "sck", external clock input.
+> >
+> > Also remove the unneeded serial0 alias from the dts example.
+> >
+> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > ---
+> > Changes v9->v10:
+> >  - mention sck in description
+> >  - no maxItems on clock-names
+> >  - fixed the #include dependency in dts example
+> > Changes v8->v9:
+> >  - typo in description
+> >  - named clocks 'operational' and 'bus', and added optional 'sck' clock
+> >  - uses value of 2nd core clock in example to break the dependency on cpg patch
+> > ---
+> >  .../bindings/serial/renesas,rsci.yaml           | 17 +++++++++--------
+> >  1 file changed, 9 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> > index ea879db5f485..1bf255407df0 100644
+> > --- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> > +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> > @@ -35,10 +35,15 @@ properties:
+> >        - const: tei
+> >
+> >    clocks:
+> > -    maxItems: 1
+> > +    minItems: 2
+> > +    maxItems: 3
+> >
+> >    clock-names:
+> > -    const: fck # UART functional clock
+> > +    minItems: 2
+> > +    items:
+> > +      - const: operation
+> > +      - const: bus
+> > +      - const: sck # optional external clock input
+>
+> You can't just change the clock names. What happens to users of 'fck'?
+>
+> And you can't make additional entries required. What happens to users
+> with only 1 clock defined?
+
+There are no users of the bindings yet, and the RSCI driver updates haven't
+reached linux-next yet.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
