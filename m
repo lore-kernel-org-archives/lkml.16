@@ -1,98 +1,100 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F071876;
-	Thu,  5 Jun 2025 06:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFBB1F4C92;
+	Thu,  5 Jun 2025 06:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749105322; cv=none; b=tNZAJu7Z2jan+bIIheI1E0WgG/jQ2Gb4FiMEpwf06RceVD3ZkaUm5XEuhfZXmcjsWvsdkYF/Mt9gndelZhr02dZq+tDFupHrh/ixAsy3MHTWABLJDcGzkPAEz2zy7+Youd4YClg0nKYmkUHQyyslWn8u5W1/nAIQt2VM+yJK4eU=
+	t=1749105323; cv=none; b=B34WrqsZH48NRa9G/8FLKlB/cJ5wkSprKlWwYI+WaPSrvoTBIktQ6sp+9HXlj6FhWiaHHz+YlRiDy5nbowqulDbl/myIOpAwSLRbEjxwnwruMSAkBYcEworHFhADZYFOvOqhQaZw7snE4vSiiOVuD6Xm3C0oKBPS4f+MKlEfzR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749105322; c=relaxed/simple;
-	bh=xtl04Ru3+hySUvvsxwfudo+3sMxK5la2F+9A+Q0D4Vk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EKbXXnXeECe+OlD9DKZdlSyY39M7tfd31QBxByvk3qRIurfRHCQjJSGuyn0wRBbTKB1SZQaZY0jb5QkMURM7IBTaYQBXRUXZ2mH6WbOrV1nuzoLP1MNWaUnopeKrME6adzA+9FHE57VXzh/iXODt8FXpkF8DYAgO4AlWt5uHxTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=dvbccyEw; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1749105323; c=relaxed/simple;
+	bh=cXr60sN9FBBYwGnGouNmKQYCshKBhQvfEy+CevEsWjU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BGeSL3gldWQbn6jYFoRijvxQaNFqV4Zjgj17VPDB34g3uzE56jGv6rUkT+L0qWnCWBAKTOaWVF2D8BkFZODQHoBO814+Dm3UKneETt3AAOnQuIE7Z+NFMjwBLQs270NALTUle+6F5JeyvoBKccF7T1ANOuCWocVGBDm/FdZ0Xbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Y0GRIczJ; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dvbccyEw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1749105315;
-	bh=Z0a5pRAqENCInUSAGi71Pcld7tarEoX9Yzz8XCJFZ8I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=dvbccyEwRo3ZQLA8uRHDcmYpN1YYH+TFUl223JQOxjFhrwENVPHxnR7WAN4FG9Js5
-	 GYXotnh6sS6gulktEqvPIFwAis/3eBCfoRbyXT7NbtIAOrhsQrtaT91hSxnMDy2EAm
-	 7NFyJltpzN+igd090hiL4u4oO/82CzeVp9X5VPI6eeeZKJyEFLELyErAKvIFNH2lqP
-	 fsEohmPxuPhC/NRdIbEmM/k1U3GzGfDN85ruy7Zw3HjQNup8Ix8IA7nnxVq7uGNmfD
-	 MUjcYcy1Lfb+G2i8Y6e+VuzsjWhrZF8goYT09UzITzdOlobKdnHB+JTaviNLlIdz6y
-	 2Nm5U5DdlAU2A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bCZSf0qbkz4wvb;
-	Thu,  5 Jun 2025 16:35:13 +1000 (AEST)
-Date: Thu, 5 Jun 2025 16:35:13 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul@pwsan.com>
-Cc: Cyril Bur <cyrilbur@tenstorrent.com>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the risc-v tree
-Message-ID: <20250605163513.7cfb7f2b@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y0GRIczJ"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5556ZBIG1031472;
+	Thu, 5 Jun 2025 01:35:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749105311;
+	bh=kbCOyIxCpnaE8Cfg+DoqPNyQm2IjwjvAEIhJ23+mq04=;
+	h=From:To:CC:Subject:Date;
+	b=Y0GRIczJqm0Ss3af5D4K+1T2sfQyU99zS98KTwu3Bq1XFLrVhudTTAs20QstMOtQH
+	 wjRKNu/MNN0BiP7letipH1mb5lkwXqbo0wKLFRCaKnLQ8/PNY4L+iYy4K0IWvYuuG4
+	 mjmbVUQrdtzDIWwswqXHd0r4Q30i4/J1apRpzppk=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5556ZBFR948533
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 5 Jun 2025 01:35:11 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 5
+ Jun 2025 01:35:11 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 5 Jun 2025 01:35:11 -0500
+Received: from a0497641-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [10.24.69.37] (may be forged))
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5556Z7VY3168702;
+	Thu, 5 Jun 2025 01:35:08 -0500
+From: Neha Malcom Francis <n-francis@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>, <n-francis@ti.com>
+Subject: [PATCH v4 0/2] Add support for K3 BIST
+Date: Thu, 5 Jun 2025 12:05:04 +0530
+Message-ID: <20250605063506.2005637-1-n-francis@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1cRZFh3OSivbt/CiHWDPuSv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
---Sig_/1cRZFh3OSivbt/CiHWDPuSv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+BIST (Built-In Self Test) is an IP responsible for triggering hardware
+circuitry tests on both logic as well as memory blocks. This driver is
+currently being upstreamed in U-Boot [1] (on hold till the dt-binding
+is approved here) and triggers these tests on cores. This patch series
+adds the dt-binding as well as a node for BIST on J784S4 and J742S2.
 
-Hi all,
+Changes since v3:
+https://lore.kernel.org/all/20250514072056.639346-1-n-francis@ti.com/
+- Udit
+	- add support for J742S2
 
-In commit
+Changes since v2:
+https://lore.kernel.org/all/20250328111439.374748-1-n-francis@ti.com/
+- Krzysztof
+	- use existing common definition (ti,sci-dev-id) for grabbing
+	  the device ID instead of redefining properties
 
-  4e27ce58e7fa ("riscv: uaccess: Only restore the CSR_STATUS SUM bit")
+Changes since v1:
+https://lore.kernel.org/all/20241128140825.263216-1-n-francis@ti.com/
+- Krzysztof
+	- move from misc/ to soc/ti/
+	- minor property changes
+	- drop ti,bist-instance and instead opt for ti,bist-under-test
+	- correct example dt
 
-Fixes tag
+[1] https://lore.kernel.org/all/20250204123147.939917-1-n-francis@ti.com/
 
-  Fixes: 788aa64c0c01 ("riscv: save the SR_SUM status over switches")
+Neha Malcom Francis (2):
+  dt-bindings: soc: ti: bist: Add BIST for K3 devices
+  arm64: dts: ti: k3-j784s4-j742s2-main-common: Add PBIST_14 node
 
-has these problem(s):
+ .../bindings/soc/ti/ti,j784s4-bist.yaml       | 63 +++++++++++++++++++
+ .../dts/ti/k3-j784s4-j742s2-main-common.dtsi  | 11 ++++
+ 2 files changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,j784s4-bist.yaml
 
-  - Target SHA1 does not exist
+-- 
+2.34.1
 
-Maybe you meant
-
-Fixes: b0feecf5b812 ("riscv: save the SR_SUM status over switches")
-Fixes: 788aa64c01f1 ("riscv: save the SR_SUM status over switches")
-or
-Fixes: 8f9b274ad153 ("riscv: save the SR_SUM status over switches")
-
-(yes, they are all the same patch ... and all ancestors of 4e27ce58e7fa)
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/1cRZFh3OSivbt/CiHWDPuSv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhBOqEACgkQAVBC80lX
-0GxsMQf+MXtDlHfmRRDgOpGhXmwyGPpy4naV2ndns0BZklyUjuDpBlq5/TZLd4DC
-WgYNGBw05mrgQJrDnJM61zraLNC4oljrMQWIR7NgTrSOqXQ44QLKunQL04M0JEAV
-gVL/5cPbZsh1xlgr4WQGP5/SWr+VAt8N/KJ72hsSv0SZTUGmgjhs4mUkyZUFVeNc
-52PmEua1mdjPB7jlI5CwrSzP1yxIYR+doZo4O4wiPaKTS/ROe8tUYvBp3OXIXS2y
-6XVsDPKH+8QpmYF1XFiKLWdpgwgo9C9t2dEITT7+9pts0iBXGiXQDjGQY2Ups+e7
-tWCqS+E4rO6MKGR3YhuP69YhK2G0AQ==
-=Q/Uq
------END PGP SIGNATURE-----
-
---Sig_/1cRZFh3OSivbt/CiHWDPuSv--
