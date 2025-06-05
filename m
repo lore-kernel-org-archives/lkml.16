@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E4A27AC36;
-	Thu,  5 Jun 2025 18:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977D920330
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749149399; cv=none; b=fUmsmH/rvZhggBpJ/lW+7T2GcIQUzKPH6cJiYlysBgHrMiDZAVYthnNBoWUTqgpKYMr5CPviQO4RvBuphEYtB00up5LwsnpF0c6/ZA43M3HLFhpGxpae8FfquSjX8PAstmcRsKM42GMADGXq06xYP05PcGpJWtPO2HVRSAwPfAE=
+	t=1749149417; cv=none; b=ozvZNySO+LIUlrIG1w61NGRkyA9GA7QzN95Sh6uDpbyPYO9nLbY/vltAglPoyFEmycAbVtEwYsY2bPFe3Jn7yplCADc5negb8Tyl2iEvvC+U+yLjJbiU4Hdm1jXhG21J7zZCrbn2MDvE7sDJltp66Ic1h6A87SfAI1S5eI6nm4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749149399; c=relaxed/simple;
-	bh=pbq1aBxbhOTEQlMuwvx2n4uhA8uX7MJO3VGI3/YzuHM=;
+	s=arc-20240116; t=1749149417; c=relaxed/simple;
+	bh=ul8uGIVqoA9GqmsCC7FvzunzA9M9vAIX7VNDjF8UFo4=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Hv9qjyEq/1uknKrIL58uip5SLVq1e9RnpgWMwjL4Avw6+A12cpWt7hWmNaOZFwgbXQalD1uJ258eht+ChYOf8PCVvDXqLJpH58tluGPBm6rNJDX5G9/ETBA4USwyR4XIkEzR30BPx3np52WYyrZos5oajs8kvsnNXTiK2RMr8pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o6tNeLXb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=QsM4D7GROBjd8LsmtTbRJEhL8O99wiFNydnQaGG8i5+I6TtcNrTq9SslyVMnmsloT5YxEhXEOpzHGuZ/75PuhH0zBPcm318/vSABsTBxoABHwy+3iXws0mXAt5hicRiOKJ33VA0zO+gCYUs48pm25HT+/ttNQw+P6bTEIOWzbZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6EWzSXX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o6tNeLXb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 266BAC4CEE7;
-	Thu,  5 Jun 2025 18:49:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6EWzSXX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18C9FC4CEE7;
+	Thu,  5 Jun 2025 18:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749149399;
-	bh=pbq1aBxbhOTEQlMuwvx2n4uhA8uX7MJO3VGI3/YzuHM=;
+	s=k20201202; t=1749149415;
+	bh=ul8uGIVqoA9GqmsCC7FvzunzA9M9vAIX7VNDjF8UFo4=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=o6tNeLXbqOYgfUsNc8JhCVQEP3DREsdT0rEkaBDbY8rOqBJHKJw+p1BhBpCVz1/HY
-	 2nSZP0dkjBxVX7cTs/ehiLtxgZFH7nfRltzIoVyNdpJ6+hmkDi3z2NrcU5qS0ug8wh
-	 uY5M26lF5a+HlbmTxqgyjYuKr68PsZAchDUFgSZmZDXUYKtME9w7prnuk3GUIZAkLQ
-	 ptvxtiATyEBAlx9bYUJb11nLiNzf0loXmtZ7n9lJ3SrJPuPHDcJ61OfhhWZf+Dd92I
-	 AgVGh/V8I24QG9yXXIzNQuDd5zXYJ8WlZimEhrpYh+MJyr998ZGRFnlZ5wmHpaC9Y1
-	 zTaRkq7JSpjdA==
+	b=L6EWzSXXybjJIfZY9ElfC/9OBXU6KXi7/v6dw7BB6FESbBaWoiANooF8JeKgsCNmc
+	 IO1X0KqdXLnSabBa0KwFSh7O8utnqcm7zXW/ZznbzZAKPV2h92vF0vhf/34Kzk+NYB
+	 CNQ+TCwVchCAtKSSX8Gp59xE0awMzASHJEv5wfLd/kkZ4eAyjmd5ocSyiNKqGWVY8r
+	 4MvWf6iiGMkLSqtQXZdQcUcaUemE1dfXNKgFfKEluyLbjboSA311eRlj3+pVrSqTHo
+	 i/Fp3bhQ2Jm/uTi1Hyg/Blzx6J1gAe3b8YoTVWwNMrin0mNXVc0H5IkQPVEk+9Jy/Y
+	 qnihme2NuL8zw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3405339D60B4;
-	Thu,  5 Jun 2025 18:50:32 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E7339D60B4;
+	Thu,  5 Jun 2025 18:50:48 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,42 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v3 1/3] bpf: Add cookie to raw_tp bpf_link_info
-From: patchwork-bot+netdevbpf@kernel.org
+Subject: Re: [PATCH v2 0/3] riscv: misaligned: fix misaligned accesses
+ handling in
+ put/get_user()
+From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174914943101.3195461.18326988295120859046.git-patchwork-notify@kernel.org>
-Date: Thu, 05 Jun 2025 18:50:31 +0000
-References: <20250603154309.3063644-1-chen.dylane@linux.dev>
-In-Reply-To: <20250603154309.3063644-1-chen.dylane@linux.dev>
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, qmo@kernel.org, jolsa@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
+ <174914944698.3195461.8348597570528832946.git-patchwork-notify@kernel.org>
+Date: Thu, 05 Jun 2025 18:50:46 +0000
+References: <20250602193918.868962-1-cleger@rivosinc.com>
+In-Reply-To: <20250602193918.868962-1-cleger@rivosinc.com>
+To: =?utf-8?b?Q2zDqW1lbnQgTMOpZ2VyIDxjbGVnZXJAcml2b3NpbmMuY29tPg==?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, macro@orcam.me.uk, david.laight.linux@gmail.com
 
 Hello:
 
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+This series was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@dabbelt.com>:
 
-On Tue,  3 Jun 2025 23:43:07 +0800 you wrote:
-> After commit 68ca5d4eebb8 ("bpf: support BPF cookie in raw tracepoint
-> (raw_tp, tp_btf) programs"), we can show the cookie in bpf_link_info
-> like kprobe etc.
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+On Mon,  2 Jun 2025 21:39:13 +0200 you wrote:
+> While debugging a few problems with the misaligned access kselftest,
+> Alexandre discovered some crash with the current code. Indeed, some
+> misaligned access was done by the kernel using put_user(). This
+> was resulting in trap and a kernel crash since. The path was the
+> following:
+> user -> kernel -> access to user memory -> misaligned trap -> trap ->
+> kernel -> misaligned handling -> memcpy -> crash due to failed page fault
+> while in interrupt disabled section.
 > 
 > [...]
 
 Here is the summary with links:
-  - [bpf-next,v3,1/3] bpf: Add cookie to raw_tp bpf_link_info
-    https://git.kernel.org/bpf/bpf-next/c/2fe1c5934736
-  - [bpf-next,v3,2/3] selftests/bpf: Add cookies check for raw_tp fill_link_info test
-    https://git.kernel.org/bpf/bpf-next/c/25a0d04d3883
-  - [bpf-next,v3,3/3] bpftool: Display cookie for raw_tp link probe
-    https://git.kernel.org/bpf/bpf-next/c/9c8827d773bf
+  - [v2,1/3] riscv: make unsafe user copy routines use existing assembly routines
+    https://git.kernel.org/riscv/c/a4348546332c
+  - [v2,2/3] riscv: process: use unsigned int instead of unsigned long for put_user()
+    https://git.kernel.org/riscv/c/020667d661f9
+  - [v2,3/3] riscv: uaccess: do not do misaligned accesses in get/put_user()
+    https://git.kernel.org/riscv/c/ca1a66cdd685
 
 You are awesome, thank you!
 -- 
