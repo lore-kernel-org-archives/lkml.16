@@ -1,127 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4213A1F03D6;
-	Thu,  5 Jun 2025 16:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592371F03D6;
+	Thu,  5 Jun 2025 16:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749141777; cv=none; b=gGeeIjf/3Sw1oVXMJpITL5/cZmM+fsFHAVCjiZUeYPtTxTr/Vsbi0j2/LmcFTaokd6kdEfFbopQ7RSXPgGQGoVvh4cYdc65zIO5Ewv2YYccnI1QnLmWEp67is1fVwXqCNMk5C9FQ+Q6W6n59YXnuXyVeh8yQMMe7JPn9oMXUCA0=
+	t=1749141781; cv=none; b=fd4WbBWvQ2WL13dgPO6UGgOdxw+Sv8yfzArLxkXx0oZbv4Gj4E28/EqPR2+2o5385LnYKjToVPtPFu1dPkVCqt0vp41Q5CHRzn75axB5My0EBCMlu51E7/wGzAhID+wvKkvGk2/a+MQcoGaGBvg6WQ4zDfOTLcOMyergYpr4N44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749141777; c=relaxed/simple;
-	bh=WjTp4XoB7XO70hqBUHfR0FwEfy2zmiNSDaaI0gw9QrU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KHJYKcEdsM7XokQoAZT9uXuUQAsYMnyalRBaY4O0CiO6L5kWUM6FSg4aGiywYzNMpFHdMOYLszTyYOSJkdRdinqhFKutWeX5ifWW8M0C8AdZalLJoYnDHK5Gb+f2XBCO4y2D6Vl2gMnaA2yWy4fNLpw28RWM3T3bwzATv5pDAs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XqBDlFh1; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749141781; c=relaxed/simple;
+	bh=0r+aNnLmFMS7mdz7HvIsS99vO/nRpRQLOXs1kYWCUKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UdguQd3qhRICrY8ExrJnCyzeF8SbioDMgt4u1zmTD390N+2qm7oLbG7ioMmTb9YLICghMfipd0BNQzfvE9SKB46ZE7aRCPBQuJYPMg44A9vCHFFQzviKqKdJILMSJ2RydDGOTuN8mitygor7xI9rdPtbsqWEOgpeBfMWclkKrV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDizo1rU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XqBDlFh1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749141776; x=1780677776;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=WjTp4XoB7XO70hqBUHfR0FwEfy2zmiNSDaaI0gw9QrU=;
-  b=XqBDlFh1iAeRl4ZEQU9KeSUzEX+csZje9uoAG6MKd20iSJQtTP1Woxul
-   xg2/9aj6IxH4XZf4sm7wYD6VKE14V8QV8bYuIfvWAq867i3GEOnGuzOjG
-   tN2Lx/JkCP05DXZuz+YW8R0UBvI52anlXyIwNU+XWPFLUMvT+bc8QfNFX
-   OFup2sk9jpz0GjrbnsxbY25gQnlhwHJ8Ij4C+8mNOiAPrswj7Kp550o0m
-   DTlYJ+5oe+VEJzyN/OmVnUDsPS07la3gr41WITiqFcLhoZW0D3A7L+p9U
-   CClLHX38xs0EbN2JdNa8eJ3dKQyIfLx996wAJQIGcp4xC9xbsL+jpi17u
-   w==;
-X-CSE-ConnectionGUID: 1ei5ChT6RbmaYAjnw82XMA==
-X-CSE-MsgGUID: 3tR2qHw6ReKYvkuJGh9TZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="68710704"
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="68710704"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:42:38 -0700
-X-CSE-ConnectionGUID: tI7+wvQHQhyMdnbCyPZpoA==
-X-CSE-MsgGUID: IG9nIYKlQI2KqYVz3SH3KQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="146151085"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:42:37 -0700
-Received: from [10.124.222.23] (unknown [10.124.222.23])
-	by linux.intel.com (Postfix) with ESMTP id 37F6020B5736;
-	Thu,  5 Jun 2025 09:42:34 -0700 (PDT)
-Message-ID: <4419e62d-5e36-4776-ab3e-2b1b3702919b@linux.intel.com>
-Date: Thu, 5 Jun 2025 09:42:33 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDizo1rU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CD65C4CEEB;
+	Thu,  5 Jun 2025 16:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749141779;
+	bh=0r+aNnLmFMS7mdz7HvIsS99vO/nRpRQLOXs1kYWCUKU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hDizo1rUZ9KLPEX+dPsq23BvqaU8uk/lkHpdNMqJByU5gntxauyNzO/QKk4H2RCbc
+	 JqfucZjpD5dMBCz6ucakaWsjwIk6moVA1w+s7wlFuTXAxqpSSwcWm1U9i3J37wNqXL
+	 tFAe5yBup5MT5KIb6OEMmy/+zW2vrxjo4dkl0Kn4D242A77sf3Z4QYMj4iooh4D2mv
+	 6ZSrij3YjQdz4J63xsBF4i8B/8HlFl1MShRn3pXRVqnh/LiMPOD7uV+Fox4I6zjfdQ
+	 WrXJWwT+6sk8AvJ+M+EesADr/ogdBM9vxLTMb3wxeiRmqtbsfH9yi+jcALajjEBfzm
+	 Ri1/SVs5xPOGw==
+Date: Thu, 5 Jun 2025 17:42:55 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] selftests/mm: Fix test result reporting in
+ gup_longterm
+Message-ID: <661fc4ce-839f-4c47-bc3a-0c864e846324@sirena.org.uk>
+References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
+ <20250527-selftests-mm-cow-dedupe-v2-4-ff198df8e38e@kernel.org>
+ <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
+ <722628a8-f3fd-4fb9-ae04-2313a52ffb36@sirena.org.uk>
+ <66db3d9e-73a6-4fcd-8abd-db65cfff49ab@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 09/16] cxl/pci: Log message if RAS registers are
- unmapped
-To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
- ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
- Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
- yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
- uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-10-terry.bowman@amd.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250603172239.159260-10-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1KSTMtpuZmSO6oKM"
+Content-Disposition: inline
+In-Reply-To: <66db3d9e-73a6-4fcd-8abd-db65cfff49ab@lucifer.local>
+X-Cookie: That's no moon...
 
 
-On 6/3/25 10:22 AM, Terry Bowman wrote:
-> The CXL RAS handlers do not currently log if the RAS registers are
-> unmapped. This is needed in order to help debug CXL error handling. Update
-> the CXL driver to log a warning message if the RAS register block is
-> unmapped during RAS error handling.
->
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
+--1KSTMtpuZmSO6oKM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Thu, Jun 05, 2025 at 05:26:05PM +0100, Lorenzo Stoakes wrote:
+> On Thu, Jun 05, 2025 at 05:15:51PM +0100, Mark Brown wrote:
 
->   drivers/cxl/core/pci.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 78735da7e63d..186a5a20b951 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -670,8 +670,10 @@ static void __cxl_handle_cor_ras(struct device *dev,
->   	void __iomem *addr;
->   	u32 status;
->   
-> -	if (!ras_base)
-> +	if (!ras_base) {
-> +		dev_warn_once(dev, "CXL RAS register block is not mapped");
->   		return;
-> +	}
->   
->   	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->   	status = readl(addr);
-> @@ -714,8 +716,10 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->   	u32 status;
->   	u32 fe;
->   
-> -	if (!ras_base)
-> +	if (!ras_base) {
-> +		dev_warn_once(dev, "CXL RAS register block is not mapped");
->   		return false;
-> +	}
->   
->   	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
->   	status = readl(addr);
+> > That's the thing with memfd being special and skipping on setup failure
+> > that David mentioned, I've got a patch as part of the formatting series
+> > I was going to send after the merge window.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> where did he mention this?
 
+I can't remember off hand, sorry.
+
+> I mean I'd argue that making a test that previously worked now fail due to how
+> somebody's set up their system is a reason not to merge that patch.
+
+Well, it's a bit late now given that this is in Linus' tree and actually
+it turns out this was the only update for gup_longterm so I just rebased
+it onto Linus' tree and kicked off my tests.
+
+> Better to do all of these formating fixes and maintain the _same behaviour_ then
+> separately tackle whether or not we should skip.
+
+I'm confused, that's generally the opposite of the standard advice for
+the kernel - usually it's fixes first, then deal with anything cosmetic
+or new?
+
+> Obviously the better option would be to somehow determine if hugetlb is
+> available in advance (of course, theoretically somebody could come in and
+> reserve pages but that's not veyr likely).
+
+The tests do enumerate the set of available hugepage sizes at runtime
+(see the loop in run_test_case()) but detect_hugetlb_page_sizes() just
+looks in /sys/kernel/mm/hugepages/ for subdirectories and doesn't look
+inside those directories to see if there are actually any huge pages
+available for the huge page sizes advertised.  There's probably utility
+in at least a version of that function that checks.
+
+--1KSTMtpuZmSO6oKM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhByQ8ACgkQJNaLcl1U
+h9BaaQf9Hw7ugDXjeBvmEjND8ygIlFU2ID3I+VGXxWjM46ulNGznstKqLR52VpTF
+GyHa6iyZko7UJM+m7zi8vKjKJFHcqXMwfCOmR/Tmh/sHl0f1Q6jYGALQcW8YnbHL
+LE8EluuAiV4x0UkVomonbTFIkQhDkGYQ79Qbv3RA+24r3CVaSy1qJ7CW2HxnEUlK
+FP6PeVrQN+8/qNM+716nC3wIHLrBPKfaw7yyLADeTsww3I/eCYOa2YZ94/0FSqQl
+L0k/L8EG1WE1Hid187NCuYfGTVw/EmYA6cRAu4MYrbGjxV17Hj3n41owD8YEgCa0
+ZhzMYim72uAG2J7a2SAfx0Pa+z446w==
+=amh2
+-----END PGP SIGNATURE-----
+
+--1KSTMtpuZmSO6oKM--
