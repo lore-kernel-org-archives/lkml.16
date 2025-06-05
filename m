@@ -1,97 +1,84 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80231E5B95;
-	Thu,  5 Jun 2025 13:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA2A22A4EB;
+	Thu,  5 Jun 2025 13:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129661; cv=none; b=lsFTcGBbeXZcfF8tcyQZp3qS2f1H2nFY0GTBc7qkjCZxI7CEmHNYmy62VesA46WPtKorGTD6YOhMcki3AIjQmR0mFdCl90Jv4pSa97mIafmBsvBNlOtuaQZTHwHq3VPdejjc3xe4nNbyVmifQMj8MYgjeZCoZvVoMscV4oA2/aU=
+	t=1749129680; cv=none; b=fTIsNI7LcQAphL4V1sXY1lUrf22p1frS72qCqfaxKmkExidhHClo2Hy25MKDjJPSy9UZGUekBRMvny3YZKLmvzd2eD1w+2x6VpB8K9FjToZWJK91Zbv838UM0O2far+O7FTGaL2ubEGfVkMLwJ9Nb/L3H2gRUuqOXG0vn1izmPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129661; c=relaxed/simple;
-	bh=IbVjDlJ1LhjKgB3WqYIBNmH2O1Kjjxb8PtBFxfYMhYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mRizQXJhh9+luT5fsiOxSpGNZIoJP9iBDPByn8iKqhfGXw1wPBSmcxGXanoIa5IuU/XmD33ZVg/ly+HVp64WHbep6kGC+RXZVe8xCQq8PVFlsGAZx3TsJ7AGtTX1PBlCoC0Qgzwar7EfSa2bEmkqFcUlCVZqDENrYBhN0POE1xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=DWO8+mjR; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DWO8+mjR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=4Gx+44VNAwh2nJ7uA+08Jgl1iBxYZsQ6aOzwSW1WEA0=; b=DWO8+mjRZ/4bKNTzzBrVD7UrHe
-	xCFH6vd6BJF/G33XVCTybt05IuKx97iMEzGm1kZ14NLJJ22ap9H8IIzdC+QqblOp1AntUpFarqMii
-	cDtE78R1CeYPneuS3hRjSaUXMcOd3C5qtvM8quWAfO/1j5QvzX5tPG34djXX9aKMF+hE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uNAWN-00ElxD-7O; Thu, 05 Jun 2025 15:20:39 +0200
-Date: Thu, 5 Jun 2025 15:20:39 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Icenowy Zheng <uwu@icenowy.me>, Rob Herring <robh@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-Message-ID: <e0e468af-dc5d-4a27-b0b4-dddfef1e7405@lunn.ch>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
- <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
- <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
- <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
- <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
+	s=arc-20240116; t=1749129680; c=relaxed/simple;
+	bh=vx3AyTyMbsSiqF5B30zA1JnwgZnh2tHc2KRb85USan0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U5VCkocj7Yg7WZgiCvFHX/GELaC/TNgNn44c7UFo0a4sidysimYPe4alNDEcQldrKYa6nNXiIPgD+Eylx7h1eKS5yTg4ptwiCHEKzbsNNF83j8VvyPAhgK80/rLobeNJSP2oUOr+Ho/CntGsk0QBwYWYwyLlCaI6O2xZRLV/aiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E323C4CEE7;
+	Thu,  5 Jun 2025 13:21:18 +0000 (UTC)
+Date: Thu, 5 Jun 2025 09:21:17 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Linux
+ Regressions <regressions@lists.linux.dev>, Stephen Rothwell
+ <sfr@canb.auug.org.au>, Masami Hiramatsu <mhiramat@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
+ Roxell <anders.roxell@linaro.org>
+Subject: Re: next-20250604: qemu-riscv64 ltp tracing warning kernel trace
+ trace.c ignore_event
+Message-ID: <20250605092117.37a245dd@batman.local.home>
+In-Reply-To: <CA+G9fYuXxxPG7YY4ffbJ=hrBvBU4171J_FykYC2xoPV6uUB2sg@mail.gmail.com>
+References: <CA+G9fYuXxxPG7YY4ffbJ=hrBvBU4171J_FykYC2xoPV6uUB2sg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> > > If you want the kernel to not touch the PHY, use
-> > > 
-> > > phy-mode = 'internal'
-> > 
-> > This sounds weird, and may introduce side effect on the MAC side.
-> > 
-> > Well we might need to allow PHY to have phy-mode property in addition
-> > to MAC, in this case MAC phy-mode='rgmii*' and PHY phy-mode='internal'
-> > might work?
+On Thu, 5 Jun 2025 18:24:08 +0530
+Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+
+> Regression while running LTP tracing on the Linux next-20250604 and
+> next-20250605
+> the following kernel warnings found on the qemu-riscv64.
 > 
-> I'm not convinced that adding more possibilities to the problem (i.o.w.
-> the idea that phy=mode = "internal" can be used to avoid the delays
-> being messed with) is a good idea - not at this point, because as you
-> point out MACs (and PHYs) won't know that they need to be configured
-> for RGMII mode. "internal" doesn't state this, and if we do start doing
-> this, we'll end up with "internal" selecting RGMII mode which may work
-> for some platforms but not all.
+> Regressions found on qemu-riscv64
+>  - LTP tracing
 > 
-> So, IMHO this is a bad idea.
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+> 
+> First seen on the next-20250604
+> Good: next-20250603
+> Bad:  next-20250604
+> 
+> Test regression: qemu-riscv64 ltp tracing warning kernel trace trace.c
 
-I agree, and if actually see a MAC/PHY pair doing this, i will ask
-why. Using "internal" like is currently mostly hypothetical, i don't
-actually know of any real users. Those DT blobs which do use
-"internal" actually are internal interfaces within a SoC and it is
-some vendor proprietary interface which does not need any
-configuration. That is the original meaning for "internal", but it has
-been noticed it can be used to side step RGMII delay configuration.
+Does riscv64 place __func__ in rodata? If not, this may consider the
+string unsafe to use in an event. 
 
-It _might_ play a role when developers decide to clean up a mess with
-RGMII delays, and decide to just go with the strapping resistors
-rather than try to figure out what is actually happening vs what DT
-says should be happening, and issue warning the DT blob is out of
-date. But still, i would consider "internal" a lazy hack, not a proper
-fix.
+> ignore_event
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Test error
+> 
+> ------------[ cut here ]------------
+> [   28.134981] event 'ma_read' has unsafe pointer field 'fn'
 
-	Andrew
+In lib/maple_tree.c we have:
+
+        trace_ma_read(__func__, &mas);
+
+Where it records the address of "__func__" into the ring buffer 'fn' field.
+
+At a much later time (when the ring buffer is read), that pointer is
+dereferenced. As rodata doesn't change for the life of the kernel, it
+is safe to dereference. But if riscv doesn't place __func__ into
+rodata, this will be considered unsafe to use.
+
+-- Steve
