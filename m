@@ -1,194 +1,289 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99662C3272;
-	Thu,  5 Jun 2025 09:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF934212B28
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 09:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749116508; cv=none; b=gl6oqyAzZZfblelZyn5RgE2IGzuhBNeU9/yCK7hdJp6jyxxBmTa5gpW2lEo6DmBZpQZQfWSvAT039wkNxi45w7qZU/IpINFWbXUUvbpy2R1eKQJi6xKba3k5ALnsf8oNcuGKdoNNCBodOb8rJDBvvTEWPT1ShkdRaBI2OVew5cY=
+	t=1749116604; cv=none; b=YQJptM/nogCXeXSJ07gDTPR3IzEGJ7HboH+P9E8NuKjKp53V0Hm1V4iUHqOT+kFINji/IyasTCsW395pY9PnGWwK9Fy5kTXmQe713vEKQ4XYsDLRWYThfadft6YzE9w3lWQ4YlchqFaxso6PsgUVJasNte+fkthGVEjRplyUajk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749116508; c=relaxed/simple;
-	bh=ZLBC+KA6NGYS62D45P2YGEB4+x9lL6nfJSA2rz2NBK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lF1MnK7loYoabseu7VSRFi9hw5qhO1EbPsAwg3l3bQx+7qNmgw8gR6dGsm3I+VoGJ6984l1NZjiMdeboxIQSodkVsQ3GD5hgWiSEjBZWFNpJQ7K+wgYKbq3fmrhRL7XCPXzEc4Udl5tsOTqqSOxXSOtnVMkcBG1q5E8LK6gKjOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=CVQi9mh4; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1749116604; c=relaxed/simple;
+	bh=3CzAUpmVmfrQ1t4F5v8cEc+jwk13Dy2UTL8cmMebjbQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=aqkyj/GBrqgCiB8otvze8CVpWDyKM6SaeRi1B5GzibtTaH3rn6w3Hm4IF5WMMpXMuGJBPBP1kiNJaMyxW6LLYtoTYUlNvW+AfLW41lyqpXXh1Da1j0v6a+lCDttnc5FZlUUGhxs2TJjFfFDFkeP5P/t+lWWtniB9WVxbTWx6KUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZvAUiyFA; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CVQi9mh4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=pYfa480QeywizKCHmMV9b915U3JdV7fcJg6oO97CKu8=; b=CVQi9mh4ODfteTqvJxx8P3pgzH
-	J7gv3ERrIwSmKbjAfu/ozSb+f/7Ai2Z8/085hSu5wn0ZMV4ZLHJPccZYuhdZ4hFHifYPX8+lUEeP4
-	YkCuW44+6OgALcJ0ZIU5BybG8D2wtGreR/zTmlaJUEQVdhFWhZGdG8loYAwYmHFdmegxyJ/bNOiFS
-	srJJGO/M09BLQeI55Jy0yAKALvV702c23xNLjumdC7CzJPLBXUBgXi9W2kUDKZUIqiwZtP9qoqxy1
-	zC0V0Q5i0Re3KNHAe2VW0IhA0K/cpyNLlXpRX/G7AJJOcNwINXs5YvpS8KHRZtyqSMjjCEEEe89GN
-	xRYAgE0w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36144)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uN763-00081c-1p;
-	Thu, 05 Jun 2025 10:41:15 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uN75w-00025P-0W;
-	Thu, 05 Jun 2025 10:41:08 +0100
-Date: Thu, 5 Jun 2025 10:41:08 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-Message-ID: <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
- <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
- <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
- <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZvAUiyFA"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749116589;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9lThtLOtQl+h3cysY0wqvjMRcuzy/6SuzhFkQRTpDlE=;
+	b=ZvAUiyFAu9nMRJs58c2zOJSV4g2RXqfQC2U3dVx0ORx5bnsaYBTji+MCOs0iMxnNQw6y24
+	mZXnixMu3Sbn/L3MmiSDVPvtVDTALEwKNR6w7KlumpV0qTDytZiZZd8lMKSpUesuNbO4G0
+	CJQskSEZ0XkPU78YwhMqb3U4lHrL1sI=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v2] mm/pagewalk: split walk_page_range_novma() into
+ kernel/user parts
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <5a06f383-7d01-4ea7-a010-013063770240@lucifer.local>
+Date: Thu, 5 Jun 2025 17:42:16 +0800
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Barry Song <baohua@kernel.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>,
+ Oscar Salvador <osalvador@suse.de>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>,
+ Jann Horn <jannh@google.com>,
+ loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ linux-openrisc@vger.kernel.org,
+ linux-riscv@lists.infradead.org,
+ linux-mm@kvack.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1AA4A4B3-AEBE-484A-8EE2-35A15035E748@linux.dev>
+References: <20250604141958.111300-1-lorenzo.stoakes@oracle.com>
+ <536f5ffd-b4cf-4f35-970c-ad3a7593af2f@suse.cz>
+ <5a06f383-7d01-4ea7-a010-013063770240@lucifer.local>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jun 05, 2025 at 05:06:43PM +0800, Icenowy Zheng wrote:
-> In addition, analyzing existing Ethernet drivers, I found two drivers
-> with contradition: stmicro/stmmac/dwmac-qcom-ethqos.c and
-> ti/icssg/icssg_prueth.c .
-> 
-> The QCOM ETHQOS driver enables the MAC's TX delay if the phy_mode is
-> rgmii or rgmii-rxid, and the PRU ETH driver, which works on some MAC
-> with hardcoded TX delay, rejects rgmii and rgmii-rxid, and patches
-> rgmii-id or rgmii-txid to remove the txid part.
 
-No, this is wrong.
 
-First, it does not reject any RGMII mode. See qcom_ethqos_probe() and
-the switch() in there. All four RGMII modes are accepted.
+> On Jun 5, 2025, at 17:24, Lorenzo Stoakes <lorenzo.stoakes@oracle.com> =
+wrote:
+>=20
+> On Thu, Jun 05, 2025 at 08:56:59AM +0200, Vlastimil Babka wrote:
+>> On 6/4/25 16:19, Lorenzo Stoakes wrote:
+>>> The walk_page_range_novma() function is rather confusing - it =
+supports two
+>>> modes, one used often, the other used only for debugging.
+>>>=20
+>>> The first mode is the common case of traversal of kernel page =
+tables, which
+>>> is what nearly all callers use this for.
+>>>=20
+>>> Secondly it provides an unusual debugging interface that allows for =
+the
+>>> traversal of page tables in a userland range of memory even for that =
+memory
+>>> which is not described by a VMA.
+>>>=20
+>>> It is far from certain that such page tables should even exist, but =
+perhaps
+>>> this is precisely why it is useful as a debugging mechanism.
+>>>=20
+>>> As a result, this is utilised by ptdump only. Historically, things =
+were
+>>> reversed - ptdump was the only user, and other parts of the kernel =
+evolved
+>>> to use the kernel page table walking here.
+>>>=20
+>>> Since we have some complicated and confusing locking rules for the =
+novma
+>>> case, it makes sense to separate the two usages into their own =
+functions.
+>>>=20
+>>> Doing this also provide self-documentation as to the intent of the =
+caller -
+>>> are they doing something rather unusual or are they simply doing a =
+standard
+>>> kernel page table walk?
+>>>=20
+>>> We therefore establish two separate functions - =
+walk_page_range_debug() for
+>>> this single usage, and walk_kernel_page_table_range() for general =
+kernel
+>>> page table walking.
+>>>=20
+>>> We additionally make walk_page_range_debug() internal to mm.
+>>>=20
+>>> Note that ptdump uses the precise same function for kernel walking =
+as a
+>>=20
+>> IMHO it's not clear at this point what "the precise same function" =
+means.
+>>=20
+>>> convenience, so we permit this but make it very explicit by having
+>>> walk_page_range_novma() invoke walk_kernel_page_table_range() in =
+this case.
+>>=20
+>>  ^ walk_page_range_debug()
+>=20
+> Oops will fix.
+>=20
+>>=20
+>> Maybe this could be reworded in the sense (AFAIU) that
+>> walk_page_range_debug() can be used for both user space page table =
+walking
+>> or kernel depending on what mm is passed, so in the case of init_mm =
+it
+>> invokes walk_kernel_page_table_range() internally.
+>=20
+> Sure.
+>=20
+>>=20
+>>>=20
+>>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>>> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>>> ---
+>>> v2:
+>>> * Renamed walk_page_range_novma() to walk_page_range_debug() as per =
+David.
+>>> * Moved walk_page_range_debug() definition to mm/internal.h as per =
+Mike.
+>>> * Renamed walk_page_range_kernel() to walk_kernel_page_table_range() =
+as
+>>>  per David.
+>>>=20
+>>> v1 resend:
+>>> * Actually cc'd lists...
+>>> * Fixed mistake in walk_page_range_novma() not handling kernel =
+mappings and
+>>>  update commit message to referene.
+>>> * Added Mike's off-list Acked-by.
+>>> * Fixed up comments as per Mike.
+>>> * Add some historic flavour to the commit message as per Mike.
+>>> =
+https://lore.kernel.org/all/20250603192213.182931-1-lorenzo.stoakes@oracle=
+.com/
+>>>=20
+>>> v1:
+>>> (accidentally sent off-list due to error in scripting)
+>>>=20
+>>> arch/loongarch/mm/pageattr.c |  2 +-
+>>> arch/openrisc/kernel/dma.c   |  4 +-
+>>> arch/riscv/mm/pageattr.c     |  8 +--
+>>> include/linux/pagewalk.h     |  7 ++-
+>>> mm/hugetlb_vmemmap.c         |  2 +-
+>>> mm/internal.h                |  4 ++
+>>> mm/pagewalk.c                | 98 =
+++++++++++++++++++++++++------------
+>>> mm/ptdump.c                  |  3 +-
+>>> 8 files changed, 82 insertions(+), 46 deletions(-)
+>>>=20
+>>> diff --git a/arch/loongarch/mm/pageattr.c =
+b/arch/loongarch/mm/pageattr.c
+>>> index 99165903908a..f5e910b68229 100644
+>>> --- a/arch/loongarch/mm/pageattr.c
+>>> +++ b/arch/loongarch/mm/pageattr.c
+>>> @@ -118,7 +118,7 @@ static int __set_memory(unsigned long addr, int =
+numpages, pgprot_t set_mask, pgp
+>>> return 0;
+>>>=20
+>>> mmap_write_lock(&init_mm);
+>>> - ret =3D walk_page_range_novma(&init_mm, start, end, &pageattr_ops, =
+NULL, &masks);
+>>> + ret =3D walk_kernel_page_table_range(start, end, &pageattr_ops, =
+NULL, &masks);
+>>> mmap_write_unlock(&init_mm);
+>>=20
+>> You've removed init_mm from walk_page_range_novma() but I see most =
+callers
+>> do the locking of init_mm immediately around it. This suggests a =
+version
+>> handling that automatically? A bit complicated by the read/write
+>> possibilities, so maybe not worth wrapping? Just a thought, as David =
+says ;)
+>=20
+> Most callers write lock interestingly, but then one read lock's, so we =
+can't
+> just assume and would need to pass a boolean which would kind of suck.
 
-The code in ethqos_rgmii_macro_init() is the questionable bit, but
-again, does _not_ do any rejection of any RGMII mode. It simply sets
-the transmit clock phase shift according to the mode, and the only
-way this can work is if the board does not provide the required delay.
+Hi Lorenzo,
 
-This code was not reviewed by phylib maintainers, so has slipped
-through the review process. It ought to be using the delay properties
-to configure the MAC.
+Actually, the write lock introduced in commit 8782fb61cc848 to fix the
+race condition when walking user page tables can be replaced with a read
+lock. As explained in commit b123d09304d86, it is safe to walk kernel
+page tables while holding the mmap read lock. The function name
+`walk_kernel_page_table_range` clearly indicates its purpose: walking
+kernel page tables. Thus, using a read lock internally is appropriate
+and safe. Please correct me, if I am wrong.
 
-> The logic of QCOM ETHQOS clearly follows the original DT binding, which
+To further enhance robustness, it is better to add a WARN_ON check to
+ensure that the address range passed to walk_kernel_page_table_range
+is indeed within the kernel address space. This will help prevent any
+accidental misuse and catch issues early.
 
-Let's make this clear. "original DT binding" - no, nothing has
-*actually* changed with the DT binding - the meaning of the RGMII
-modes have not changed. The problem is one of interpretation, and
-I can tell you from personal experience that getting stuff documented
-so that everyone gets the same understanding is nigh on impossible.
-People will pick holes, and deliberately interpret whatever is written
-in ways that it isn't meant to - and the more words that are used the
-more this happens.
+Muchun,
+Thanks.
 
-The RGMII modes have been documented in Documentation/networking/phy.rst
-(Documentation/networking/phy.txt predating) since:
+>=20
+> Also other walkers assume the caller has the lock so it's consistent =
+to
+> keep it this way.
+>=20
+>>=20
+>>>=20
+>>> flush_tlb_kernel_range(start, end);
+>>> diff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
+>>> index 3a7b5baaa450..af932a4ad306 100644
+>>> --- a/arch/openrisc/kernel/dma.c
+>>> +++ b/arch/openrisc/kernel/dma.c
+>>> @@ -72,7 +72,7 @@ void *arch_dma_set_uncached(void *cpu_addr, size_t =
+size)
+>>>  * them and setting the cache-inhibit bit.
+>>>  */
+>>> mmap_write_lock(&init_mm);
+>>> - error =3D walk_page_range_novma(&init_mm, va, va + size,
+>>> + error =3D walk_kernel_page_table_range(va, va + size,
+>>> &set_nocache_walk_ops, NULL, NULL);
+>>> mmap_write_unlock(&init_mm);
+>>>=20
+>>> @@ -87,7 +87,7 @@ void arch_dma_clear_uncached(void *cpu_addr, =
+size_t size)
+>>>=20
+>>> mmap_write_lock(&init_mm);
+>>> /* walk_page_range shouldn't be able to fail here */
+>>> - WARN_ON(walk_page_range_novma(&init_mm, va, va + size,
+>>> + WARN_ON(walk_kernel_page_table_range(va, va + size,
+>>> &clear_nocache_walk_ops, NULL, NULL));
+>>> mmap_write_unlock(&init_mm);
+>>> }
+>>> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
+>>> index d815448758a1..3f76db3d2769 100644
+>>> --- a/arch/riscv/mm/pageattr.c
+>>> +++ b/arch/riscv/mm/pageattr.c
+>>> @@ -299,7 +299,7 @@ static int __set_memory(unsigned long addr, int =
+numpages, pgprot_t set_mask,
+>>> if (ret)
+>>> goto unlock;
+>>>=20
+>>> - ret =3D walk_page_range_novma(&init_mm, lm_start, lm_end,
+>>> + ret =3D walk_kernel_page_table_range(lm_start, lm_end,
+>>>     &pageattr_ops, NULL, &masks);
+>>=20
+>> Note this and other places break the second line's arguments =
+alignment on
+>> the opening bracket. Maybe it just shows it's a bit fragile style...
+>>=20
+>>=20
+>=20
+> Yeah I know :) I know you won't believe this coming from me, but I was
+> trying to minimise the churn :P
 
-commit bf8f6952a233f5084431b06f49dc0e1d8907969e
-Author: Florian Fainelli <f.fainelli@gmail.com>
-Date:   Sun Nov 27 18:45:14 2016 -0800
 
-    Documentation: net: phy: Add blurb about RGMII
-
-    RGMII is a recurring source of pain for people with Gigabit Ethernet
-    hardware since it may require PHY driver and MAC driver level
-    configuration hints. Document what are the expectations from PHYLIB and
-    what options exist.
-
-    Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-    Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-    Signed-off-by: David S. Miller <davem@davemloft.net>
-
-> describes "rgmii-id" as `RGMII with internal RX and TX delays provided
-> by the PHY, the MAC should not add the RX or TX delays in this case`
-> (the driver skips the delay for rgmii-id). The logic of PRU ETH follows
-> the logic of the new DT binding. This shows that the DT binding patch
-> is not a simple clarification, but a change of meanings.
-
-Let me say again. Nothing has changed. There is no "old binding" or
-"new binding". If you think there is, then it's down to
-misinterpretation.
-
-This is precisely why I've been opposed to documenting these properties
-in the binding document _and_ Documentation/networking/phy.* because
-keeping them both in sync is going to be a pain, leading to ambiguity
-and misinterpretation.
-
-> > If you want the kernel to not touch the PHY, use
-> > 
-> > phy-mode = 'internal'
-> 
-> This sounds weird, and may introduce side effect on the MAC side.
-> 
-> Well we might need to allow PHY to have phy-mode property in addition
-> to MAC, in this case MAC phy-mode='rgmii*' and PHY phy-mode='internal'
-> might work?
-
-I'm not convinced that adding more possibilities to the problem (i.o.w.
-the idea that phy=mode = "internal" can be used to avoid the delays
-being messed with) is a good idea - not at this point, because as you
-point out MACs (and PHYs) won't know that they need to be configured
-for RGMII mode. "internal" doesn't state this, and if we do start doing
-this, we'll end up with "internal" selecting RGMII mode which may work
-for some platforms but not all.
-
-So, IMHO this is a bad idea.
-
-> > > In addition, the Linux kernel contains a "Generic PHY" driver for
-> > > any
-> > > 802.1 c22 PHYs to work, without setting any delays.
-> > 
-> > genphy is best effort, cross your fingers, it might work if you are
-> > luckily. Given the increasing complexity of PHYs, it is becoming less
-> > and less likely to work. From a Maintainers perspective, i only care
-> > if the system works with the proper PHY driver for the
-> > hardware. Anything else is unmaintainable.
-> 
-> Well this sounds unfortunate but reasonable.
-
-We're already in this state with PHYs faster than gigabit, because
-IEEE 802.3 in their wisdom did not define where the 1000BASE-T
-autoneg parameters appear in the register space. As a result, vendors
-have done their own thing, and every vendor / PHY is different.
-Without access to this key data, phylib has no way to know the
-negotiation results. Thus, a generic PHY driver that works correctly
-for PHYs > 1G just isn't possible.
-
-I expect that in years to come, we'll see IEEE 802.3 updated with
-the 1G registers for Clause 45 PHYs, but the boat has already sailed
-so this would be totally pointless as there will be too many PHYs
-out there doing their own thing for whatever IEEE 802.3 says about
-this to have any relevence what so ever. Just like they did with
-2500BASE-X, which is a similar mess due to IEEE 802.3 being way too
-late.
-
-I hope that there isn't going to be more of this, because each time
-it happens, the IEEE 802.3 "standard" less relevant.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
