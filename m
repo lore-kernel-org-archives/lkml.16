@@ -1,136 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A17C2144B4;
-	Thu,  5 Jun 2025 12:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA3420C026;
+	Thu,  5 Jun 2025 12:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749125616; cv=none; b=RyZlLiCECvKSZmGssjB7+/s2KzuCLR/2DhnGAr4R4ZratDxzpQvTNMzgoRmOgy4oScPHTHteGnojzLM5S3OEOMSvQY4H7hUe1XcKh3CVB0vh35Mc9U2gHuXRJVpfntBVoPDImFReHG57hVjtA6hlLOOYhsd5rAWMyBk0xy/m5zc=
+	t=1749125701; cv=none; b=jZi5HSpZhY/qzA0KL3cxAZuPI0X7iV3cNzjQ2T13M2YvMtNHQpE+VPNZsmfmyXWvUjPDP7pXmrM0okgsPA2yoX40hRr/EAycC7OWDIiQ49UVhd5LFMXx07odOD/A3GZQFvx66jUre7hEI31LPuxhDrnVoCORMQdkMM3oYuohfaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749125616; c=relaxed/simple;
-	bh=MwGi7x8Dwtu6UB+m/ptX7z2JBqdRGmkzGDXewJd4oD8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ol4j65kIHpoDwZ8dcKRjSgPYeEm2XaZknfKsDMgdUBPG7fmZGPk4R2d9Nih5gHrE43GN4v9MRUeSiKe6HqkL8Ci/mxeJYbsNwS/dBUc7GV07xuJWRYdgnB7K45DEu9MjHx16SRt30Me/mZ0HzLVPcuIQhUmgDYOd2Rfhh13T+RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFbL7FFU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749125701; c=relaxed/simple;
+	bh=uXPuySW/2mRvaR0v35BShBQ43Iwx1yz1Vo1lzg4NP84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=myyvqUZ9BlrlKzcWugeYyUE919EfCFCGbByfOe7GxPPzsKm5bJFN6LOyUHCj24l+CPWdRnTuNEXGi8IaLx8oRH3BZeXxxnp+1M1ICqFyXsHf1hw1HMh0LBcVS4TRX84iq5NZfbnTUi9w/AMn38D8Zs4Iyn+pbSf1Rmbkg4qu74g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=w+GQi1BB; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFbL7FFU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E34A6C4CEE7;
-	Thu,  5 Jun 2025 12:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749125615;
-	bh=MwGi7x8Dwtu6UB+m/ptX7z2JBqdRGmkzGDXewJd4oD8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MFbL7FFU6oKJ2rqo0EwPLbMcQD+K4ET4LEF3BbzUnRFFpMg93tMYmjrfO7PJfQhI9
-	 lDUBPjChezdZPAJMFqJqHgFm2zYjGMA1akN3vjPKnt+dSZ/Ok/9djeVZR7F8V8GuQX
-	 uyLtPuAjUIS2ZdMMWEf9sRg8qNqFgkKYasJWj9A3XdJcTeKCmRWcmPHdxbdjx0uXnE
-	 ieJL1j/NrFqxRnSOKseYo0pj9EsPdk7UYfMC2UYrJTkZGQbgeYL44y7yDowPzvdbJU
-	 N+DU80JeT6iF6r1ZTaf65rL8IcpMwIb1XoZN/6hCvcy7l6gtK/r1kDTh7YQttfmvgQ
-	 OuLl/Z54CX0Kg==
-Message-ID: <a3bf69f3-6500-4e45-ba34-8ba24312938a@kernel.org>
-Date: Thu, 5 Jun 2025 14:13:29 +0200
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="w+GQi1BB"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 5187A22475;
+	Thu,  5 Jun 2025 14:14:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1749125696;
+	bh=sAXF4RHm4VzO/0RxTV4aH2pTUaWhFW39ZUyi8/v0sHI=; h=From:To:Subject;
+	b=w+GQi1BBPUWOmXFPV0prb48zim6Mp7BVudEAFZN+QK6QIpXIlGkggqaXNvGPydqIh
+	 SsEZdoxL8b6IpYXTnReYxIjHeKsqPh374zKnfxg2yborgSG5UIsBHAuYmajM0BLl0W
+	 th+D5bumLID1jN5sp2bjBsRKs9Xqy2U/BWjd9yOY8mmxDD9To6/bKHeopaIVEBZCkY
+	 C7mPPDRY9eii+D20pn6aeW0dx4/NQfYPKIeSrQFu1/FAoNBzC2JNyZNOL5fPm1wW6/
+	 Ca6FcmwK49pOT5facDLiBnSZeWXo01Z/lU8lUMzLEY51sHO3TnMXzZw4eYi1zrwdGN
+	 UF4PZnkNcc17g==
+Date: Thu, 5 Jun 2025 14:14:52 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jeff Chen <jeff.chen_1@nxp.com>, stable@vger.kernel.org
+Subject: Re: [PATCH wireless v1] Revert "wifi: mwifiex: Fix HT40 bandwidth
+ issue."
+Message-ID: <20250605121452.GA48603@francesco-nb>
+References: <20250605100313.34014-1-francesco@dolcini.it>
+ <0706792a7d08d7bcfdf7fa929cd5f1afc80e3f19.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Renjiang Han <quic_renjiang@quicinc.com>
-Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
-References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
- <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
- <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
- <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0706792a7d08d7bcfdf7fa929cd5f1afc80e3f19.camel@sipsolutions.net>
 
-On 02/06/2025 08:16, Dmitry Baryshkov wrote:
-> On Sat, May 31, 2025 at 08:05:24AM +0800, Renjiang Han wrote:
->>
->> On 5/31/2025 4:27 AM, Dmitry Baryshkov wrote:
->>> On Fri, May 30, 2025 at 09:32:12AM +0530, Renjiang Han wrote:
->>>> QCS615 uses the same video core as SC7180, so reuse the same resource
->>>> data of SC7180 for QCS615 to enable video functionality.
->>>>
->>>> There are no resources for the video-decoder and video-encoder nodes
->>>> in the device tree, so remove these two nodes from the device tree. In
->>>> addition, to ensure that the video codec functions properly, use [3]
->>>> to add encoder and decoder node entries in the venus driver.
->>>>
->>>> Validated this series on QCS615 and SC7180.
->>>>
->>>> Note:
->>>> This series consist of DT patches and a venus driver patch. The patch
->>>> 1/3, which is venus driver patch, can be picked independently without
->>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
->>>> DT patches, still depend on [1].
->>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video core
->>> on QCS615 over(?)clocked.
->> Agree, so we need to make sure that the driver patch is not picked after the
->> DT patch.
+On Thu, Jun 05, 2025 at 01:40:41PM +0200, Johannes Berg wrote:
+> On Thu, 2025-06-05 at 12:03 +0200, Francesco Dolcini wrote:
+> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > 
+> > This reverts commit 34253084291cb210b251d64657958b8041ce4ab1.
 > 
-> Worse: we need to make sure that the driver patch is present in the
-> branch which picks up DT patches. Otherwise building & testing that
+> I'm confused. If you want it reverted in wireless, this is the wrong
+> sha1? If you want bit only reverted in stable, why are you tagging it
+> for wireless?
 
+Because I did a mistake :-( This is supposed to be reverted on Linus
+tree, not just in stable, I'll send a v2 with this fixed, sorry.
 
-Well, that's a NAK then (although depends what you mean by DT).
+Francesco
 
-Best regards,
-Krzysztof
