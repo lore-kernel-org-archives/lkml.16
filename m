@@ -1,105 +1,130 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB9527C163
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 20:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8006C27C150;
+	Thu,  5 Jun 2025 20:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749154802; cv=none; b=UAljyksfr/QLf7ZidiDvRj7fDymBKtsf2TtXutc0r2qDVLJOfR2yYCERS7qbwfTH4ijCqgVWxfGdhKkFuwdyt3PsZSJRDodGgTHN6nLTwmGBMJFvGbO//mxChiMyVNUW+y6uqfWXnSiUfP4xw94nVPUWw+Y0Z9vEjB0IzrEbGlc=
+	t=1749154850; cv=none; b=YkNfeRa5s3TYUCzDfraL0Wug+AKWJ1MMPnmVIOlHFLaTOhlpmw2WSI+9rIEHm1AmdGD9wJYWn/4tR+zNS9ENG/ws33ZEIJU2GXFtiJojtX11StckLXgqwJ9M71oz/SqdJVMHFqA55qUqZWVA8/gnAO6H+h9XA2bLDp8/KzBpLrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749154802; c=relaxed/simple;
-	bh=TeGhnktdSvFxXreUkwhblyYxGqCrkCLuVr00TRFUiKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fn3QHEy+YMMtmAbBfcyUIZj9yWcSrth6IRGYV7oXIoRJeeziddIwpDkWttkKUW/qYTejvZjvpCWR5b7EhIis/YTcP/dj9zvzUudFAVoXa6z/nWIbvvvOKdSlCM+Ko1JtIzkBiYOWZy6e62F/ENWPhQ/c/Nv1b5uRnp9ps36XIWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=rm6yCB+o; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+	s=arc-20240116; t=1749154850; c=relaxed/simple;
+	bh=r1utos8IHVUWPpcTEYj5oGYSf7pgmh3WfT8WkMKuzO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E83ISm4h/NCrWn3xZh4AYW43YXxn+QxQyS3KoJCZmcJF/BnnLlUm3PNCiFy82VRJbrn2F+kL8BWMSUm4pNPaGsbtTcrBRKTU7AR+4o8AOpRBDHtHDL6OdMsxnILzeOtA9YQ6Fe9oQ/1EOWEPjvaXWLUVhMkBtBXeUQvPkT5mbms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JDa11dC5; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="rm6yCB+o"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id 414F91C2ABD
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 23:19:57 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:mime-version:references:in-reply-to
-	:x-mailer:message-id:date:date:subject:subject:to:from:from; s=
-	dkim; t=1749154796; x=1750018797; bh=TeGhnktdSvFxXreUkwhblyYxGqC
-	rkCLuVr00TRFUiKg=; b=rm6yCB+o3Z3hQU5WzYf37ke60L1n2HbJe+h6EnbXih6
-	PUVbK5yUD2rjoHyBT10ycx8Dsm2hpwKQVrnM2cN1EOeeZIU+Pg8oPcT+lM3EK50R
-	CQwPMc90Ia6mXLIqGX/ivzrwDEqwHV0Ee4xBHyAC6NyOtck6F0kieuB5yDM8I+cA
-	=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id lbEisGPpNHCD for <linux-kernel@vger.kernel.org>;
-	Thu,  5 Jun 2025 23:19:56 +0300 (MSK)
-Received: from localhost.localdomain (unknown [87.249.24.51])
-	by mail.nppct.ru (Postfix) with ESMTPSA id 11A101C1151;
-	Thu,  5 Jun 2025 23:19:48 +0300 (MSK)
-From: Alexey Nepomnyashih <sdl@nppct.ru>
-To: Lyude Paul <lyude@redhat.com>
-Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] drm/nouveau/instmem/gk20a: fix incorrect argument in iommu_unmap
-Date: Thu,  5 Jun 2025 20:19:21 +0000
-Message-ID: <20250605201927.339352-2-sdl@nppct.ru>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250605201927.339352-1-sdl@nppct.ru>
-References: <20250605201927.339352-1-sdl@nppct.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JDa11dC5"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad87fec4400so21627066b.1;
+        Thu, 05 Jun 2025 13:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749154847; x=1749759647; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pOf6kMkJBMv/kxUwMYAvC6No+wYBD2t+/55N4SZuCQA=;
+        b=JDa11dC5kjCHUZSikzG31PL1YRcZ5PgPfcB8rcSMu8+Vg0P57Wj60RuFkNZ0yXS09w
+         JVYyH5bjZlD93vSfc4HjEVOTqXVQIHFFbUlEHf2TrgL3TPCwS0AaXGFwt4iOHDkFTCPr
+         /SZ29ugZUOfW+d2Ns895sQCw/JihUbQzgm5ZVQ1ak7eKU0Flo5UJHe7WJ1jClJf3ez2i
+         qKIoPhMWcvPkvUnZ3Ry320llSpmx92C76cPuBEjiANh8yQD8hmiTodL7ukRaE6uCxPS4
+         7RLx4PAeqWrxDQYt0N/tYziHL4xByK1OyzCHuys4GigIu8iMlGmlbeMsKh0JzZzE8Q1T
+         0bQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749154847; x=1749759647;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pOf6kMkJBMv/kxUwMYAvC6No+wYBD2t+/55N4SZuCQA=;
+        b=SyNl1DxE+WmCHBvCzm/Hn4zoM6mhfjFfnkCTnupr81TroqTSAWBv/v97ceixKKbmjp
+         iDuspn0MYiFWvvfCrlx+wAJnh18358Q8ZpGgudJjT4AYsPGdkHqO6Z8jimjMOnKZ/Ngv
+         KLMAdbZ3+gAdQ6UFtTPAOfIUVmy9jCo2BHcshkfv4w/u2zGDNqXcobcn+NLio7afCzHI
+         qbVw3cMiscRVOphQjPdWBNuPuXD6w/eNE1EVk6rO8aQ9sMT7nxWIen3P6cklBgPOcBD3
+         sFasdmz9loQIcEyNy2J090nPYjHdY07k77kOm3Xsm6gJefHBqXPexaXiQSdcdO10DSun
+         uNWg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3cHpg/vhYLSBw2Fxc8S49b4QOBIOSc8wyD7WfDjrGjy0UJWCnDhrpZYfjZQCMvSMQiG/RygUohU85P/0=@vger.kernel.org, AJvYcCWd5UDnj3kOa2OF6M0c/TTfCNO1sLWtrQ8OpKehrzY9RIyQeMeyVYPP0G1hfgS6NHr50JUl94LW@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAOWtI2/dvhNETthN5ZkDO4s/NJ41aEGfg2EZmFrajYVEe1DmH
+	NDfQzIODw36WnWbE3ywCu+pryEc+Qmu46wr1KEPS6zc8DiGGUH0JC+Gw
+X-Gm-Gg: ASbGnctqU3odNXAemdZMRmzady6XHWO6QmAesIByh8GN9qG659j4b/8b+qudm08Of9n
+	4TIgHrYEQzhEUPuoOWRy+ZP/gbaJweCkm4xpy75UvIE5tXthsyOEfR3DSa45MBdaZfJyZ7T835m
+	dODND3o2ijgomGjRsPp9bOZa7qdr7a/bNz/edlGu3K+c2asKYncMC6H18jmmuOlL4W9ebwE+K/E
+	cImcO3M2e8C84zAujyHS3U4+/GBtiQYsQfSORNXoYgFK5WZKUzbno1M7cAdgyt0vfshrOubyY25
+	SGsHYUPdCXvI3LoGKGcIDscUqsaQfXdxX3WlExr/qWAGE8RDlQ==
+X-Google-Smtp-Source: AGHT+IG1rF0vK+81PB6gHlhmZyzr6XShnt5ZbsRu+W2TX9OAKnZ16UeydPdB8eGaw5MVCH1Bd7hU6A==
+X-Received: by 2002:a17:906:590b:b0:add:fa4e:8a57 with SMTP id a640c23a62f3a-ade1a9abadbmr14972566b.9.1749154846506;
+        Thu, 05 Jun 2025 13:20:46 -0700 (PDT)
+Received: from skbuf ([86.127.125.65])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c7a0sm5095566b.82.2025.06.05.13.20.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 13:20:45 -0700 (PDT)
+Date: Thu, 5 Jun 2025 23:20:43 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: b53: fix untagged traffic sent via cpu
+ tagged with VID 0
+Message-ID: <20250605202043.ivkjlwtvzi6jqhqx@skbuf>
+References: <20250602194914.1011890-1-jonas.gorski@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602194914.1011890-1-jonas.gorski@gmail.com>
 
-The unmap logic assumes a fixed step size of PAGE_SIZE, but the
-actual IOVA step depends on iommu_pgshift, not PAGE_SHIFT. If
-iommu_pgshift > PAGE_SHIFT, this results in mismatched offsets and
-causes iommu_unmap() to target incorrect addresses, potentially
-leaving mappings intact or corrupting IOMMU state.
+Hi Jonas,
 
-Fix this by recomputing the offset per index using the same logic as
-in the map loop, ensuring symmetry and correctness.
+On Mon, Jun 02, 2025 at 09:49:14PM +0200, Jonas Gorski wrote:
+> When Linux sends out untagged traffic from a port, it will enter the CPU
+> port without any VLAN tag, even if the port is a member of a vlan
+> filtering bridge with a PVID egress untagged VLAN.
+> 
+> This makes the CPU port's PVID take effect, and the PVID's VLAN
+> table entry controls if the packet will be tagged on egress.
+> 
+> Since commit 45e9d59d3950 ("net: dsa: b53: do not allow to configure
+> VLAN 0") we remove bridged ports from VLAN 0 when joining or leaving a
+> VLAN aware bridge. But we also clear the untagged bit, causing untagged
+> traffic from the controller to become tagged with VID 0 (and priority
+> 0).
+> 
+> Fix this by not touching the untagged map of VLAN 0. Additionally,
+> always keep the CPU port as a member, as the untag map is only effective
+> as long as there is at least one member, and we would remove it when
+> bridging all ports and leaving no standalone ports.
+> 
+> Since Linux (and the switch) treats VLAN 0 tagged traffic like untagged,
+> the actual impact of this is rather low, but this also prevented earlier
+> detection of the issue.
+> 
+> Fixes: 45e9d59d3950 ("net: dsa: b53: do not allow to configure VLAN 0")
+> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+> ---
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 
-Cc: stable@vger.kernel.org # v4.3+
-Fixes: a7f6da6e758c ("drm/nouveau/instmem/gk20a: add IOMMU support")
-Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
----
- drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+However, this situation triggered a bell in my mind. But it looks like
+I am about to open a can of worms, so I don't expect that to gate this
+patch.
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c
-index 17a0e1a46211..f58e0d4fb2b1 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/gk20a.c
-@@ -481,8 +481,9 @@ gk20a_instobj_ctor_iommu(struct gk20a_instmem *imem, u32 npages, u32 align,
- 			nvkm_error(subdev, "IOMMU mapping failure: %d\n", ret);
- 
- 			while (i-- > 0) {
--				offset -= PAGE_SIZE;
--				iommu_unmap(imem->domain, offset, PAGE_SIZE);
-+				iommu_unmap(imem->domain,
-+					    ((unsigned long)r->offset + i) << imem->iommu_pgshift,
-+					    PAGE_SIZE);
- 			}
- 			goto release_area;
- 		}
--- 
-2.43.0
+In the configuration below, what will the packet look like on the wire?
 
+$ ip link add br0 type bridge vlan_filtering 1 && ip link set br0 up
+$ ip link set lan1 master br0 && ip link set lan1 up
+$ bridge vlan add dev br0 vid 2 pvid untagged self
+$ bridge vlan add dev lan1 vid 2
+$ mausezahn br0 -t ip -b 00:01:02:03:04:05 -c 1 -p 1480
+
+Testing both on sja1105, as well as on veth using software bridging, the
+answer should be "tagged with VID 2". However, you make it sounds like
+the answer on b53 is "untagged".
+
+Depending on the answer, I can try to make some suggestions what to do
+about this.
