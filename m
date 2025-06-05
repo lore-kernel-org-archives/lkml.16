@@ -1,95 +1,124 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B70819CC11;
-	Thu,  5 Jun 2025 05:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AE71F0E37;
+	Thu,  5 Jun 2025 05:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749103019; cv=none; b=BeqpkuCDliDIhedoXmJ+28wP6KoH7yDADLELb8m3iMUZt03WjvnEtNJCeWFiwm2iioDrDrplijRKOvch5MpLMPL+Yt0MxaA6PpQN+AFF1f2d+hnRByaBIzIT/GVxuwhrNQQSpmf3graf3UPg/4C08H56z/P9CuxgMc5FGxFpBE0=
+	t=1749103133; cv=none; b=S3BNYItl20vAtv6xE9bY6qpwfflFNoqVoZQuJqF0bMdp8NuhbdN5yQ13QrzFlYzVm9xIHlhCsFjZZf1ENDCHmv4RiAJuedZnCI5/UWBwBVip74sL8s8wx8qeZ2iYmm2/I/T30rIXNFm1qc1WocN3w+ukYmc7OQdJWfLOzrSOaPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749103019; c=relaxed/simple;
-	bh=WkkGM08VMW5SFQ/+XIX9f/SVjIxnmSZqqyIBTfQ8hC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a3l67iWc/u0iMGyVQ3OxZzKSedLr53TN/rEfqx3cxp2tl/2QPQpFd4t1VWh5RWrpH/rTFeQF0BHODJMM+Cs3IcCFpPJ0CerYgWQW9Hg+ouhENnFkNeSXcnwN0NAmr2anib7HaqwSUJZ1f6zb8HGm54IlUI3PKs1lp1rLpoxAwdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=D96Hid6K; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749103133; c=relaxed/simple;
+	bh=/ByTCSRKhoKS/nj0DFNvNzqPbdF7gDWTNXPA+3K7AJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sW3yvWq0/oiux4ZItWdFdvBK0AFcFbycggj5XQ9NheVlT7FHLY9P4ovfG2is1AZKwRPbw7p/NFk6o10HcfSSkNEyhiRhk9cirNXErqFWsFe68XSu1iEJz+8vTXGZ9ldBHcdaNcPd2qOPA5U09sEXaqOrW9s1RVPoP8Dy/wcmWJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WRVrpB+m; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D96Hid6K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749103015;
-	bh=WkkGM08VMW5SFQ/+XIX9f/SVjIxnmSZqqyIBTfQ8hC4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=D96Hid6Kq7JQS22naS6+/J1Gkoyyed/yJCJAXYhRomHGd88EpOq8yAz7u5mfEQb7N
-	 E6YbQBMT0iTOrL4EVumEKOOji6CTok4mZqPDP1Ng0VI5rUrFjAgJ1FdmRLew5Z5cYP
-	 drDyKTf5/1/E6r5vN5DdOTy/6j6u9gvjN/Wz0kqi4JcYht0PmSodjHV+VHtL4zzrCU
-	 y0m40domMY+T8E2H6i9A+vL/zZzBAHhbe7og8/uKCDp6xCEWqFChcU9AmZamASRHVJ
-	 BpvccimnTvVV3IyLv69tOEsAQQ8zjG13PPnHoW3Pb4opcT16e9DoQo5m/qUE0/Y24S
-	 NPbKP/DBp/fYQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0361C17E010B;
-	Thu,  5 Jun 2025 07:56:54 +0200 (CEST)
-Message-ID: <f40e7b31-5bb2-4d1d-8687-6f728ea255be@collabora.com>
-Date: Thu, 5 Jun 2025 07:56:54 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WRVrpB+m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749103132; x=1780639132;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/ByTCSRKhoKS/nj0DFNvNzqPbdF7gDWTNXPA+3K7AJM=;
+  b=WRVrpB+mrpp0W7rb3QnmQx+s+9wMnrtfti4s4gHl6nwRNuxXYx1rpKMH
+   T6yyYETaSsgAPu5fIp/plcBXc6pDeXQzIkQ15d11Q2iQaC+b4N8wEbK4d
+   yyIZUYvSxn0ASe7HY1Zp1i260FHxCemgVE3wjB4o5x02zuFgwMlV9PM7L
+   FNdNKwxeQ0MygkxySeVukLT3BuGFfijfqWdIUBmsPu83u5vp3RT5rW2eK
+   PcN+afob2THizbSppO6Q8xCBliZliHrYAxFLVqvxamysen0U+yFbKuZD2
+   CYZf2zcPPvAG5uKJOEnPveuRkeNVOahNViGheoFHEjbGSFEMcQPIpC2KL
+   w==;
+X-CSE-ConnectionGUID: 4s9UYh9CSxufvkLOvc3duw==
+X-CSE-MsgGUID: +8cYOmsxT0m+Gl6pfeFz2w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51350675"
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="51350675"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 22:58:49 -0700
+X-CSE-ConnectionGUID: Qr7ZhDsVSQa50KZK2V97/A==
+X-CSE-MsgGUID: RWXMFbBFSLOCtiLFxCnQFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="146391908"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 22:58:46 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uN3cf-00000003m7A-1apF;
+	Thu, 05 Jun 2025 08:58:41 +0300
+Date: Thu, 5 Jun 2025 08:58:41 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, corbet@lwn.net,
+	ikepanhc@gmail.com, hmh@hmh.eng.br, W_Armin@gmx.de,
+	linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
+Message-ID: <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mtk-sd: Fix a pagefault in dma_unmap_sg() for not
- prepared data
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Chaotian Jing <chaotian.jing@mediatek.com>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, linux-mmc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <174908565814.4056588.769599127120955383.stgit@mhiramat.tok.corp.google.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <174908565814.4056588.769599127120955383.stgit@mhiramat.tok.corp.google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Il 05/06/25 03:07, Masami Hiramatsu (Google) ha scritto:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> mtk-msdc driver causes a kernel crash after swiotlb buffer is full.
-> 
-> ---
-> mtk-msdc 11240000.mmc: swiotlb buffer is full (sz: 16384 bytes), total 32768 (slots), used 32732 (slots)
-> mtk-msdc 11240000.mmc: msdc_track_cmd_data: cmd=18 arg=0397A6F8; host->error=0x00000004
-> Unable to handle kernel paging request at virtual address ffffffffc0001fc0
-> ---
-> 
-> When swiotlb buffer is full, the dma_map_sg() returns 0 to
-> msdc_prepare_data(), but it does not check it and sets the
-> MSDC_PREPARE_FLAG.
-> 
-> swiotlb_tbl_map_single() /* prints "swiotlb buffer is full" */
->    <-swiotlb_map()
->      <-dma_direct_map_page()
->        <-dma_direct_map_sg()
->          <-__dma_map_sg_attrs()
->            <-dma_map_sg_attrs()
->              <-dma_map_sg()  /* returns 0 (pages mapped) */
->                <-msdc_prepare_data()
-> 
-> Then, the msdc_unprepare_data() checks MSDC_PREPARE_FLAG and calls
-> dma_unmap_sg() with unmapped pages. It causes a page fault.
-> 
-> To fix this problem, Do not set MSDC_PREPARE_FLAG if dma_map_sg()
-> fails because this is not prepared.
-> 
-> Fixes: 208489032bdd ("mmc: mediatek: Add Mediatek MMC driver")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
+> Create lenovo subdirectory for holding Lenovo specific drivers.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+...
+
+> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
+
+You may follow the trick in the Makefile (see intel folder) to avoid repetition
+of the folder name in the file names. Note, the modules will be called the
+same (assuming no ABI breakages due to renames).
+
+...
+
+> -# IBM Thinkpad and Lenovo
+> +# IBM Thinkpad
+
+This is a bit ambiguous now. It's IBM and Lenove for ThinkPad... Perhaps you
+should put some kind of date or so? Like
+
+# IBM Thinkpad (before 2007)
+
+(note, I speculated on the year, you may know better what to put there).
+
+...
+
+> +++ b/drivers/platform/x86/lenovo/Makefile
+> @@ -0,0 +1,15 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for linux/drivers/platform/x86/lenovo
+> +# Lenovo x86 Platform-Specific Drivers
+> +#
+> +obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
+> +obj-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+= lenovo-wmi-hotkey-utilities.o
+> +obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
+> +obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+> +obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+> +obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
+> +obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
+> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+
+> +
+> +
+
+No need to have even a single blank line at the end of file. Usually editors
+even complain about this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
