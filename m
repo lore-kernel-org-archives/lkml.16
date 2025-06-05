@@ -1,101 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F3778F20
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 01:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E997428EB;
+	Thu,  5 Jun 2025 01:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749087874; cv=none; b=qSjvk7TPhaWlrYlYQCav8XbOCiTh9t79yXtxvSv//acwA3f+QUrn3emY10YgIDPobWuijdwi59R82OzEhsI6zFwfFvVPYWkGtsfhpHoVnrgkoaeBePgqDFLSIeP1CDF93HfKWxYMEav3G/C7CCMzqzjilhlHoANjg3g9QK+1ZQ8=
+	t=1749088137; cv=none; b=SEfMfRom0ku+4mDO1omFFncDAE6gQa6Z5MdfnPA6/lAcF00DYswMjDmr8IXv+bF6nz/IfABC3nWsItOmlUWSX87mHF8ztyJDilFRm8vyG7soATOGxqw4Vwk22tJaCKw0mT4ZwoHfmD9faJP5l3G8LPR+mOyyiRiYFcJkw1c3hWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749087874; c=relaxed/simple;
-	bh=98JOeQbdHFLnotA+noW+iaW7ngQU/8uiWvpLuOb+XPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=AlalbHrNNWcOdPV+C0CHf9cJ2qpN36IjHUh81PPrbI8kMLQO9A7+Eo5LEznC+NqHTe8dnINl/0hJuyQNWMaQic0Dk339RUsPSujJ0Nei1A5a/qcczs9evkCPzC0OYCztWGFxovAFAhUr0/dOv0TLu7NAhwn6tCCFo2bKqtNs0FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MOj6AOTL; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749088137; c=relaxed/simple;
+	bh=P1aMTBsnJVSY/v90gEBryK00v+FDJaZ8jiV/JtTDAGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nLuau5YobCtN4Q/UzTq/ibF5tdNTCVno7Ky4CNs0+XCbGHAFPd7bl6PGk+ZQPuX3DW8i3mTv+qiLNoG2PXWUvVl/u1s0GhmF2h/BaPUMOmODt6zDXK0Fj2zLDMZPeKiQhg7Gr6R8ZzpqdZYTzIieaX5WzlyXscfQ03YImkH8gmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iK1y/bQ2; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MOj6AOTL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749087873; x=1780623873;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=98JOeQbdHFLnotA+noW+iaW7ngQU/8uiWvpLuOb+XPU=;
-  b=MOj6AOTLbEtlzzohiKDYX6HNVyLwUqDNFOmcdhd+CR5Zjb/ghEeQZMg6
-   evNxz6rFTs8OjED94OXXKhRyiA6u93hTbVb67w9batZvDSJPfM28rNBVO
-   A1PJNSBkefSEaA0/RYI49pIYHLtNGeib9HSzUF3s07AFZp3dOE/Q6tF+I
-   D7KbfQ92tot0rbxm4S35u/1/D7F2MtqgO1EcDGP9tYg5WCRpQL747VJdX
-   BD/uR72KduNZ/HF+AdF4gOLmtj4aCx/z9FepZrxJBCY4Ts5UJLwU18g4G
-   qGt1F6VkzJbx5BnJYYjNs8TZnzMm4UOiyYyiBhn04p6AjfdOEtpDs9EBI
-   g==;
-X-CSE-ConnectionGUID: /skg3JqsTXqurzqLR3PcYg==
-X-CSE-MsgGUID: TEzpWWRUSGa+m6MVOVWbtA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="50428993"
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="50428993"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 18:44:32 -0700
-X-CSE-ConnectionGUID: dEUDQmIrQ66OfnWE4rAZqQ==
-X-CSE-MsgGUID: weT2W26dST+ROmHqbZ/jjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="145317455"
-Received: from igk-lkp-server01.igk.intel.com (HELO b69e6467d450) ([10.211.3.150])
-  by fmviesa007.fm.intel.com with ESMTP; 04 Jun 2025 18:44:30 -0700
-Received: from kbuild by b69e6467d450 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uMzee-0001qI-02;
-	Thu, 05 Jun 2025 01:44:28 +0000
-Date: Thu, 5 Jun 2025 09:43:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: mipi@21dc000
- (fsl,imx6-mipi-csi2): 'port' does not match any of the regexes:
- '^pinctrl-[0-9]+$', '^port@[1-4]$'
-Message-ID: <202506050912.DQmua49D-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iK1y/bQ2"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742c2ed0fe1so521736b3a.1;
+        Wed, 04 Jun 2025 18:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749088135; x=1749692935; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=by+7BIPkkw8WZPU+Sg0JjlCtfySnrdWiSJR+X3EkEx0=;
+        b=iK1y/bQ2YpDP4bsrzkfM6XVpSUh6ZpCjbVNcaw08RpMbMscUYBSdBfvpc3WQ+XcGr+
+         dUcbgbVg70ZenQBCuL2j5tatoymPhrtDEUVmhOxV+SnI8qh4JPUunOG4xPgUkwGBVBAK
+         VmIMiAyo1Qdw1WGMNQIUy4kJJpLZF5Y+DDShHv44oYaq0UeyKqzettweNI271wLNRRU5
+         5N2RNq8IaYQJz+E3Cv34oQK4j3k6tSV8a+XzLkoax5z7t3Xzjs6OIRFEV/+9FZnQUr0f
+         1oqpnzKUGf69g/DEPnu6Y9snPucrp/gnIxKpW928Z4w6SwWLPxkX8PpXxjBoO8SVc2vy
+         qCYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749088135; x=1749692935;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=by+7BIPkkw8WZPU+Sg0JjlCtfySnrdWiSJR+X3EkEx0=;
+        b=odGsR1tFaX7jUvkfdTj4Z/zHiYMxU1uVf69Jai3PKHXgWWJcKW6nIGsscIzquDV0I+
+         0lLa6URwrHnPIdmH8wd4u12rPRuUOpRGFeH50VOwVjFxwtICakJj3QHYeTy9tz2D5ZDN
+         50yqT/YyYd4CvEOfAQKbGikyKMku6usIGnywcdbfdqTu/dc72AFpvcRVpjE+/NOfnHQF
+         weJ2sUXyVk4LMKl/tbP2qGfR572LFlkJhac0WnUCl1juttGEgPCswfn7Aq5fAcAbq0QC
+         o+C/IMrJtG/LDTtfZXbo9MGxb3WJxUs81Rjnhg2kVCKiHCcadm/aXr+pdVPBXoz/KN67
+         muew==
+X-Forwarded-Encrypted: i=1; AJvYcCV+NuUOoa1vAwKUnvp1emndHLOMGbqtw7HojHvVRnDj7bOyIQZ/Wmyk2GhFBQ0JiABVjz6Kp+GT/KC3Mu8vx7k=@vger.kernel.org, AJvYcCVs7//1ydCDiMPCb2AoFIkbpJw15Iao5Bc4/r7DmqLlJNYojzwrgWfEXmf6fwrHWN5J7Zd8IwVxUplOneQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaY0TO4QsYZI23mrZb8to+fhDkNqr03OhP2QL/aYAOradR0Vcj
+	etxejSfLtZB+C6gUNMNWlQhpF+Y4V1J6L1AwljUyi9sJFLDdlGfpE7tlHsf1Yg==
+X-Gm-Gg: ASbGncv0hUOO5Yb0gEaOBip2wFuk9BPv3JTwbPybqzTUK8ndbepU2lDjBpkMiWWijoh
+	EPntd9mqg+mxeAftbrIPE56WDJjPQXcJpi9E7TYpnIbyTJDoZeNMpUjLirU4I+DJwChyg0Kg0Ve
+	UTJ6IPvGUo06wk/Z3ey4Mzyw3Yi8/AAFE8DowGoXfnlP57w6qhOCIqF5RyH6RKJIVuZU1vxBbLt
+	mPkp8FKXp9vZT2N7EKlDrqL5v8bcCgjs2bNYmV4O3WQdpMHD7VuYX6OQHjK4b/MrFfHhXOf+XpS
+	M4nmO5raZsa+3TAJfJPhB1Yj066MqW0Gv6CmFiknPfGe2g/v8qUxEjfLbwELKahyB8rgumFWeqW
+	+JBr9E04=
+X-Google-Smtp-Source: AGHT+IHV8YHr0uXpF/OHEsa+kL8AF1LWep7wKAP7SEElccAGzTR4C5CaMZdh2g0nGrxO21JkO9tM4w==
+X-Received: by 2002:a05:6a00:813:b0:73c:c11:b42e with SMTP id d2e1a72fcca58-7480b4216b7mr6876405b3a.20.1749088134902;
+        Wed, 04 Jun 2025 18:48:54 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafd60sm12220612b3a.97.2025.06.04.18.48.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 18:48:53 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id B13AD4209E8C; Thu, 05 Jun 2025 08:48:50 +0700 (WIB)
+Date: Thu, 5 Jun 2025 08:48:50 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Alex Davis <alex47794@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Wireless <linux-wireless@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Subject: Re: Latest kernel firmware update breaks intel wifi card.
+Message-ID: <aED3gmw0xqm_lMRQ@archie.me>
+References: <CADiockAtCnLdN1rWTRuMeyuQisAWRyosG_K64AQSdVr-k7CLug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KVPUsnhqMaipHaNp"
 Content-Disposition: inline
+In-Reply-To: <CADiockAtCnLdN1rWTRuMeyuQisAWRyosG_K64AQSdVr-k7CLug@mail.gmail.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   1af80d00e1e026c317c6ec19b1072f81ba7af64c
-commit: 48dbb76cef65fabaa3ac97461eda90495e954ecd dt-bindings: media: convert imx.txt to yaml format
-date:   4 weeks ago
-config: arm-randconfig-2052-20250514 (https://download.01.org/0day-ci/archive/20250605/202506050912.DQmua49D-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 10.5.0
-dtschema version: 2025.3.dev27+g32749b3
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250605/202506050912.DQmua49D-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506050912.DQmua49D-lkp@intel.com/
+--KVPUsnhqMaipHaNp
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm/boot/dts/nxp/imx/imx6qdl.dtsi:907.28-915.6: Warning (unique_unit_address_if_enabled): /soc/bus@2000000/iomuxc-gpr@20e0000: duplicate unit-address (also used in node /soc/bus@2000000/pinctrl@20e0000)
-   arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: /ldb: failed to match any schema with compatible: ['fsl,imx6q-ldb', 'fsl,imx53-ldb']
-   arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: /ldb: failed to match any schema with compatible: ['fsl,imx6q-ldb', 'fsl,imx53-ldb']
-   arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: iomuxc-gpr@20e0000 (fsl,imx6q-iomuxc-gpr): 'ipu1_csi0_mux', 'ipu2_csi1_mux' do not match any of the regexes: '^pinctrl-[0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/soc/imx/fsl,imx-iomuxc-gpr.yaml#
-   arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: pcf8523@68 (nxp,pcf8523): $nodename:0: 'pcf8523@68' does not match '^rtc(@.*|-([0-9]|[1-9][0-9]+))?$'
-   	from schema $id: http://devicetree.org/schemas/rtc/nxp,pcf8523.yaml#
-   arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: /soc/bus@2100000/i2c@21a0000/tc358743@f: failed to match any schema with compatible: ['toshiba,tc358743']
->> arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: mipi@21dc000 (fsl,imx6-mipi-csi2): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$', '^port@[1-4]$'
-   	from schema $id: http://devicetree.org/schemas/media/fsl,imx6-mipi-csi2.yaml#
-   arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: /soc/bus@2100000/vdoa@21e4000: failed to match any schema with compatible: ['fsl,imx6q-vdoa']
-   arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: /soc/ipu@2400000: failed to match any schema with compatible: ['fsl,imx6q-ipu']
-   arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: /soc/ipu@2800000: failed to match any schema with compatible: ['fsl,imx6q-ipu']
-   arch/arm/boot/dts/nxp/imx/imx6q-h100.dtb: /display-subsystem: failed to match any schema with compatible: ['fsl,imx-display-subsystem']
+[also Cc: iwlwifi folks]
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Wed, Jun 04, 2025 at 05:20:31PM -0400, Alex Davis wrote:
+> I have the following card:
+> 2f:00.0 Network controller: Intel Corporation Wi-Fi 7(802.11be)
+> AX1775*/AX1790*/BE20*/BE401/BE1750* 2x2 (rev 1a)
+>     Subsystem: Intel Corporation BE200 320MHz [Gale Peak]
+>     Flags: bus master, fast devsel, latency 0, IRQ 19, IOMMU group 16
+>     Memory at aa800000 (64-bit, non-prefetchable) [size=3D16K]
+>     Capabilities: [40] Power Management version 3
+>     Capabilities: [50] MSI: Enable- Count=3D1/1 Maskable- 64bit+
+>     Capabilities: [70] Express Endpoint, IntMsgNum 0
+>     Capabilities: [b0] MSI-X: Enable+ Count=3D32 Masked-
+>     Capabilities: [100] Advanced Error Reporting
+>     Capabilities: [148] Secondary PCI Express
+>     Capabilities: [158] Physical Layer 16.0 GT/s <?>
+>     Capabilities: [17c] Lane Margining at the Receiver
+>     Capabilities: [188] Latency Tolerance Reporting
+>     Capabilities: [190] L1 PM Substates
+>     Capabilities: [1a0] Vendor Specific Information: ID=3D0002 Rev=3D4 Le=
+n=3D100 <?>
+>     Capabilities: [2a0] Data Link Feature <?>
+>     Capabilities: [2ac] Precision Time Measurement
+>     Capabilities: [2b8] Vendor Specific Information: ID=3D0003 Rev=3D1 Le=
+n=3D054 <?>
+>     Capabilities: [500] Vendor Specific Information: ID=3D0023 Rev=3D1 Le=
+n=3D010 <?>
+>     Kernel driver in use: iwlwifi
+>=20
+> With the current firmware, I get the following error in dmesg:
+> iwlwifi 0000:2f:00.0: Detected crf-id 0x2001910, cnv-id 0x2001910 wfpm
+> id 0x80000000
+> iwlwifi 0000:2f:00.0: PCI dev 272b/00f4, rev=3D0x472, rfid=3D0x112200
+> iwlwifi 0000:2f:00.0: Detected Intel(R) Wi-Fi 7 BE200 320MHz
+> iwlwifi 0000:2f:00.0: Direct firmware load for
+> iwlwifi-gl-c0-fm-c0-93.ucode failed with error -2
+> iwlwifi 0000:2f:00.0: TLV_FW_FSEQ_VERSION: FSEQ Version: 0.182.4.1
+> iwlwifi 0000:2f:00.0: loaded firmware version 92.67ce4588.0
+> gl-c0-fm-c0-92.ucode op_mode iwlmvm
+> iwlwifi 0000:2f:00.0: Detected RF FM, rfid=3D0x112200
+> iwlwifi 0000:2f:00.0: loaded PNVM version 71864399
+> iwlwifi 0000:2f:00.0: Microcode SW error detected. Restarting 0x0.
+> iwlwifi 0000:2f:00.0: Start IWL Error Log Dump:
+> iwlwifi 0000:2f:00.0: Transport status: 0x0000004A, valid: 6
+> iwlwifi 0000:2f:00.0: Loaded firmware version: 92.67ce4588.0
+> gl-c0-fm-c0-92.ucode
+> iwlwifi 0000:2f:00.0: 0x00000071 | NMI_INTERRUPT_UMAC_FATAL
+> iwlwifi 0000:2f:00.0: 0x000002F0 | trm_hw_status0
+> iwlwifi 0000:2f:00.0: 0x00000000 | trm_hw_status1
+> iwlwifi 0000:2f:00.0: 0x002C43D6 | branchlink2
+> iwlwifi 0000:2f:00.0: 0x002B89BE | interruptlink1
+> iwlwifi 0000:2f:00.0: 0x002B89BE | interruptlink2
+> iwlwifi 0000:2f:00.0: 0x00015ADA | data1
+> iwlwifi 0000:2f:00.0: 0x00000010 | data2
+> iwlwifi 0000:2f:00.0: 0x00000000 | data3
+> iwlwifi 0000:2f:00.0: 0x00000000 | beacon time
+> iwlwifi 0000:2f:00.0: 0x0001A67A | tsf low
+> iwlwifi 0000:2f:00.0: 0x00000000 | tsf hi
+> iwlwifi 0000:2f:00.0: 0x00000000 | time gp1
+> iwlwifi 0000:2f:00.0: 0x00046F7B | time gp2
+> iwlwifi 0000:2f:00.0: 0x00000001 | uCode revision type
+> iwlwifi 0000:2f:00.0: 0x0000005C | uCode version major
+> iwlwifi 0000:2f:00.0: 0x67CE4588 | uCode version minor
+> iwlwifi 0000:2f:00.0: 0x00000472 | hw version
+> iwlwifi 0000:2f:00.0: 0x58C80002 | board version
+> iwlwifi 0000:2f:00.0: 0x800CFD1B | hcmd
+> iwlwifi 0000:2f:00.0: 0x00020000 | isr0
+> iwlwifi 0000:2f:00.0: 0x20000000 | isr1
+> iwlwifi 0000:2f:00.0: 0x48F00002 | isr2
+> iwlwifi 0000:2f:00.0: 0x00C0001C | isr3
+> iwlwifi 0000:2f:00.0: 0x02000000 | isr4
+> iwlwifi 0000:2f:00.0: 0x00000000 | last cmd Id
+> iwlwifi 0000:2f:00.0: 0x00015ADA | wait_event
+> iwlwifi 0000:2f:00.0: 0x10000004 | l2p_control
+> iwlwifi 0000:2f:00.0: 0x00000000 | l2p_duration
+> iwlwifi 0000:2f:00.0: 0x00000000 | l2p_mhvalid
+> iwlwifi 0000:2f:00.0: 0x00000000 | l2p_addr_match
+> iwlwifi 0000:2f:00.0: 0x0000000B | lmpm_pmg_sel
+> iwlwifi 0000:2f:00.0: 0x00000000 | timestamp
+> iwlwifi 0000:2f:00.0: 0x00000024 | flow_handler
+>=20
+> When I use the file iwlwifi-gl-c0-fm-c0.pnvm from the previous
+> version, it works. I'm running kernel 6.12.30 in Slackware current
+
+What firmware versions?
+
+Confused...
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--KVPUsnhqMaipHaNp
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaED3fgAKCRD2uYlJVVFO
+o7fOAP4gYZ8wbhKTkxmGANJUXc5ckfnpKCTwF31wEnUcPN/ewgEA0o0GPsWmnMdJ
+0sI7xax5GaA3vFJrSPh99/4N++27iQI=
+=QU/g
+-----END PGP SIGNATURE-----
+
+--KVPUsnhqMaipHaNp--
