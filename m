@@ -1,179 +1,483 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD85A27A46A
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005C1278153
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143760; cv=none; b=GntAMZHx5HTIzWxwhBb008ucrBx+TopAmgji64erPPapLIvQE8ohFYKvZbKVlLNzJHtidoP61kBhheC9g3fgxsjZcz/Lfo48UULcYBBfgzXLvDvRphelbb7t77lypiKsaVnOK2ZTfJxei+8Dr3qtT7PV/Mi0QWwyHxmpVMNYxW4=
+	t=1749143759; cv=none; b=sNC9AiLhpLTiuRZf9L4XUKEHE5ozZcIqlingPHp2FscxQ1oNwlD9fkhicpxF0Nsi4yzLaVPyFyUaTfe104mt6+xA7oW+Vyn+rBkJPyal4C1oDuHLaY1TvxAboWt+h1NUPwnRV03xFyqqa3Y148SSkcmmgA0rbLe7wsxMKZJLoUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143760; c=relaxed/simple;
-	bh=owWI8WAYAlFsjJvXIyvYSUNXCshP/5FGhM730a1ama8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ndm8rSZnyhYcWJ5xC3KoVJ57xh+V8Cg5xCNmZvPRdfxxruPd149cMhSsHCmrWJwVQl1n4WiwRzzBhzOpu4SD2bGriq/MX3Ael5Z8ubCLa8G52n/Xb9eJW0hyraW7nYoMeLLByn368F65yIUPgR1WCF91LB6BQOwfu7kNZSlhQ7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tiXXATfE; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1749143759; c=relaxed/simple;
+	bh=7AU2DpTMKPRxa5aj1whluARpJstGea8LAmvDZ4DS9Es=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=chlSQXFiLytuG7UP9opbYIvOUoJOSh87NtHtoTkk2SfwbYEGbtRVfWj8i+QiwgdxVD4cs2ybDULeYujpbP7qIWNKiBj19TFCMtSjwDVavbxlUTbh4tnZrKAgzj7CG+Z2HIFQYLxoGeOiIS7Khg1a/tK3VOJSJpbLC1uB/jX4yHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ksgcCf3l; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tiXXATfE"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742a969a4d0so1170616b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749143758; x=1749748558; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1BvVogHbLCy3WniKJnzNXayCUjBrxVyVRH9sGv66360=;
-        b=tiXXATfEMA7Cv0bGj0LDF6x1n/TjkXBr4rFmaofyFnxiC8SMk92R22yxPaG7WZoPkW
-         ERxg/mD/oLRTVX1JDgUq3N0DobXZGuAKBrtrk/TylVBnUMn8azm93tC2Imwv2neIbxJT
-         ktU0n/UnhrM7zM69AllYiIE1r2vM3dCAQHr1Ro4YpHnxgCVw1qSPAKXHTrLjQPahDwDJ
-         KIOndle5g3Wali2zbkcnHOupiZO+yoedawczAyp1i1rB1qK5Km1bnAYrDA/jRw4nHd1+
-         Tv81yZ1HryL5+CJE9Lv+3n85hV3oNO7FuNg4avPeC1/ZOqPgivtLsauRBlhq0HcvSPvK
-         9eHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749143758; x=1749748558;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1BvVogHbLCy3WniKJnzNXayCUjBrxVyVRH9sGv66360=;
-        b=kAqNBA7NeVMjTzjIbah4hpzngnZy+UEBHn6t4SXHUdM1g9ZIjT1eQ+dTZzyJRYh1Yw
-         o0nomofio180JgVy5vFQOZjHw4QL4qF7ilm2+FICwhF68zfxgQ3KbypPpDnPsh9gO6Kd
-         ReKGCJjTOQLYGaRyzNWGbbavp2Y5yIt+ckCUondQsUDS/NZtb/voEeIFPSw75sTkv05K
-         kX7oKtUP3nFKpCcstUP/P/WDdYFAJC5TggIlM5L7oTnalQw/Gbq0tNWsbAJD4Tb9vNL3
-         JmbBd9jWLeNIott7Cu6+7gRItzZO5x9eQGeeBaNAwJwYTkOnDlHgotgcJ7qB7lJv7OED
-         EfTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVl4Ccsx0k2f5HLp9QWc7SLSmUt+M5DouA3u/mpG9BY8U2wKFcRG5YHepUF9p4tPAkq6VKSEpduDFYQAgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3xOXPvTuBV1zZRWT/aslj2DnsepjBGWdLtAzcsh/SDOlJtynY
-	+OKkLwd65rseyLs4EswJB5Dme5P13G1Ec+xVNxIUyzxPQbtLD7UKeCJf+bieDJ180et8xUDRwoU
-	39IdWMM0Ki4iTPaQldW5lSmYdrw==
-X-Google-Smtp-Source: AGHT+IHR3VOIiMaXef3dSyiefFvR0BSAkbNXMc/PNNBHc5HJZyLp7dkRgDqMefJVOModcnjrV8QSGFx91L6zxAGgtw==
-X-Received: from pfef13.prod.google.com ([2002:a05:6a00:228d:b0:746:301b:10ca])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:6ca3:b0:736:34a2:8a23 with SMTP id d2e1a72fcca58-74827f10b6bmr586610b3a.15.1749143757947;
- Thu, 05 Jun 2025 10:15:57 -0700 (PDT)
-Date: Thu, 05 Jun 2025 10:15:56 -0700
-In-Reply-To: <85ae7dc691c86a1ae78d56d413a1b13b444b57cd.camel@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ksgcCf3l"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749143753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OSsoSA/a0rn2E8TexkvkkgZ5Jp5q4Qs8pTgbtALLktQ=;
+	b=ksgcCf3lfy7wnb3bPpDEfXJwoU1VXRbZyJXiIOLvVwaPgS56ixWRzlLC8t1JnheozRmAw1
+	+3GMG5JrrHHzENUsRB1SzQFReokOPhlHbCSWmFu3mQ79a1ZrwgUFXGGBCFczroc8hmKFUf
+	7F1HWuUkiCmUvAoAxccwvFmLj1GJyjg=
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
+	Linux Kernel List <linux-kernel@vger.kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Devarsh Thakkar <devarsht@ti.com>,
+	Jayesh Choudhary <j-choudhary@ti.com>,
+	Aradhya Bhatia <aradhya.bhatia@linux.dev>,
+	Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Subject: [PATCH v13 3/4] drm/atomic-helper: Re-order bridge chain pre-enable and post-disable
+Date: Thu,  5 Jun 2025 22:45:23 +0530
+Message-Id: <20250605171524.27222-4-aradhya.bhatia@linux.dev>
+In-Reply-To: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
+References: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
- <85ae7dc691c86a1ae78d56d413a1b13b444b57cd.camel@intel.com>
-Message-ID: <diqz5xhajeib.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 38/51] KVM: guest_memfd: Split allocator pages for
- guest_memfd use
-From: Ackerley Tng <ackerleytng@google.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-Cc: "palmer@dabbelt.com" <palmer@dabbelt.com>, "pvorel@suse.cz" <pvorel@suse.cz>, 
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "Miao, Jun" <jun.miao@intel.com>, 
-	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "pdurrant@amazon.co.uk" <pdurrant@amazon.co.uk>, 
-	"steven.price@arm.com" <steven.price@arm.com>, "peterx@redhat.com" <peterx@redhat.com>, 
-	"vbabka@suse.cz" <vbabka@suse.cz>, "jack@suse.cz" <jack@suse.cz>, 
-	"amoorthy@google.com" <amoorthy@google.com>, "maz@kernel.org" <maz@kernel.org>, 
-	"keirf@google.com" <keirf@google.com>, "vkuznets@redhat.com" <vkuznets@redhat.com>, 
-	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, 
-	"mail@maciej.szmigiero.name" <mail@maciej.szmigiero.name>, "hughd@google.com" <hughd@google.com>, 
-	"anthony.yznaga@oracle.com" <anthony.yznaga@oracle.com>, "Wang, Wei W" <wei.w.wang@intel.com>, 
-	"Du, Fan" <fan.du@intel.com>, 
-	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>, 
-	"quic_svaddagi@quicinc.com" <quic_svaddagi@quicinc.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"ajones@ventanamicro.com" <ajones@ventanamicro.com>, 
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "nsaenz@amazon.es" <nsaenz@amazon.es>, "aik@amd.com" <aik@amd.com>, 
-	"usama.arif@bytedance.com" <usama.arif@bytedance.com>, 
-	"quic_mnalajal@quicinc.com" <quic_mnalajal@quicinc.com>, "fvdl@google.com" <fvdl@google.com>, 
-	"rppt@kernel.org" <rppt@kernel.org>, "quic_cvanscha@quicinc.com" <quic_cvanscha@quicinc.com>, 
-	"bfoster@redhat.com" <bfoster@redhat.com>, "willy@infradead.org" <willy@infradead.org>, 
-	"anup@brainfault.org" <anup@brainfault.org>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"tabba@google.com" <tabba@google.com>, "mic@digikod.net" <mic@digikod.net>, 
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "muchun.song@linux.dev" <muchun.song@linux.dev>, 
-	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "rientjes@google.com" <rientjes@google.com>, 
-	"mpe@ellerman.id.au" <mpe@ellerman.id.au>, "Aktas, Erdem" <erdemaktas@google.com>, 
-	"david@redhat.com" <david@redhat.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"Annapurve, Vishal" <vannapurve@google.com>, "Xu, Haibo1" <haibo1.xu@intel.com>, 
-	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	"jthoughton@google.com" <jthoughton@google.com>, "will@kernel.org" <will@kernel.org>, 
-	"steven.sistare@oracle.com" <steven.sistare@oracle.com>, "jarkko@kernel.org" <jarkko@kernel.org>, 
-	"quic_pheragu@quicinc.com" <quic_pheragu@quicinc.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
-	"Huang, Kai" <kai.huang@intel.com>, "shuah@kernel.org" <shuah@kernel.org>, 
-	"dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "pankaj.gupta@amd.com" <pankaj.gupta@amd.com>, 
-	"Peng, Chao P" <chao.p.peng@intel.com>, "nikunj@amd.com" <nikunj@amd.com>, 
-	"Graf, Alexander" <graf@amazon.com>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
-	"jgowans@amazon.com" <jgowans@amazon.com>, "Xu, Yilun" <yilun.xu@intel.com>, 
-	"liam.merwick@oracle.com" <liam.merwick@oracle.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"quic_tsoni@quicinc.com" <quic_tsoni@quicinc.com>, 
-	"richard.weiyang@gmail.com" <richard.weiyang@gmail.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"qperret@google.com" <qperret@google.com>, 
-	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>, "dmatlack@google.com" <dmatlack@google.com>, 
-	"james.morse@arm.com" <james.morse@arm.com>, "brauner@kernel.org" <brauner@kernel.org>, 
-	"pgonda@google.com" <pgonda@google.com>, "quic_pderrin@quicinc.com" <quic_pderrin@quicinc.com>, 
-	"hch@infradead.org" <hch@infradead.org>, "roypat@amazon.co.uk" <roypat@amazon.co.uk>, 
-	"seanjc@google.com" <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
+From: Aradhya Bhatia <a-bhatia1@ti.com>
 
-> On Wed, 2025-05-14 at 16:42 -0700, Ackerley Tng wrote:
->> +
->> +static pgoff_t kvm_gmem_compute_invalidate_bound(struct inode *inode,
->> +						 pgoff_t bound, bool start)
->> +{
->> +	size_t nr_pages;
->> +	void *priv;
->> +
->> +	if (!kvm_gmem_has_custom_allocator(inode))
->
-> General comment - It's a bit unfortunate how kvm_gmem_has_custom_allocator() is
-> checked all over the place across this series. There are only two allocators
-> after this, right? So one is implemented with callbacks presumably designed to
-> fit other allocators, and one has special case logic in guest_memfd.c.
->
-> Did you consider designing struct guestmem_allocator_operations so that it could
-> encapsulate the special logic for both the existing and new
-> allocators?
+Move the bridge pre_enable call before crtc enable, and the bridge
+post_disable call after the crtc disable.
 
-I did, yes. I believe it is definitely possible to make standard 4K
-pages become another allocator too.
+The sequence of enable after this patch will look like:
 
-I would love to clean this up. Not sure if that will be a new series
-after this one, or part of this one though.
+	bridge[n]_pre_enable
+	...
+	bridge[1]_pre_enable
 
-> If it
-> didn't work well, could we expect that a next allocator would actually fit
-> struct guestmem_allocator_operations?
->
+	crtc_enable
+	encoder_enable
 
-This was definitely designed to support allocators beyond
-guestmem_hugetlb, though I won't promise that it will be a perfect fit
-for future allocators. This is internal to the kernel and this interface
-can be updated for future allocators though.
+	bridge[1]_enable
+	...
+	bridge[n]_enable
 
->> +		return bound;
->> +
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->> +
->> +	if (start)
->> +		return round_down(bound, nr_pages);
->> +	else
->> +		return round_up(bound, nr_pages);
->> +}
->> +
->> +static pgoff_t kvm_gmem_compute_invalidate_start(struct inode *inode,
->> +						 pgoff_t bound)
->> +{
->> +	return kvm_gmem_compute_invalidate_bound(inode, bound, true);
->> +}
->> +
->> +static pgoff_t kvm_gmem_compute_invalidate_end(struct inode *inode,
->> +					       pgoff_t bound)
->> +{
->> +	return kvm_gmem_compute_invalidate_bound(inode, bound, false);
->> +}
->> +
+And, the disable sequence for the display pipeline will look like:
+
+	bridge[n]_disable
+	...
+	bridge[1]_disable
+
+	encoder_disable
+	crtc_disable
+
+	bridge[1]_post_disable
+	...
+	bridge[n]_post_disable
+
+The definition of bridge pre_enable hook says that,
+"The display pipe (i.e. clocks and timing signals) feeding this bridge
+will not yet be running when this callback is called".
+
+Since CRTC is also a source feeding the bridge, it should not be enabled
+before the bridges in the pipeline are pre_enabled. Fix that by
+re-ordering the sequence of bridge pre_enable and bridge post_disable.
+
+While at it, update the drm bridge API documentation as well.
+
+Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+---
+ drivers/gpu/drm/drm_atomic_helper.c |   8 +-
+ include/drm/drm_bridge.h            | 249 ++++++++++++++++++++--------
+ 2 files changed, 187 insertions(+), 70 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 539b7f072c72..2fe6c91910a1 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1336,9 +1336,9 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
+ {
+ 	encoder_bridge_disable(dev, state);
+ 
+-	encoder_bridge_post_disable(dev, state);
+-
+ 	crtc_disable(dev, state);
++
++	encoder_bridge_post_disable(dev, state);
+ }
+ 
+ /**
+@@ -1674,10 +1674,10 @@ encoder_bridge_enable(struct drm_device *dev, struct drm_atomic_state *state)
+ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+ 					      struct drm_atomic_state *state)
+ {
+-	crtc_enable(dev, state);
+-
+ 	encoder_bridge_pre_enable(dev, state);
+ 
++	crtc_enable(dev, state);
++
+ 	encoder_bridge_enable(dev, state);
+ 
+ 	drm_atomic_helper_commit_writebacks(dev, state);
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index 0af5db244db8..ecdeb90e5586 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -165,17 +165,33 @@ struct drm_bridge_funcs {
+ 	/**
+ 	 * @disable:
+ 	 *
+-	 * This callback should disable the bridge. It is called right before
+-	 * the preceding element in the display pipe is disabled. If the
+-	 * preceding element is a bridge this means it's called before that
+-	 * bridge's @disable vfunc. If the preceding element is a &drm_encoder
+-	 * it's called right before the &drm_encoder_helper_funcs.disable,
+-	 * &drm_encoder_helper_funcs.prepare or &drm_encoder_helper_funcs.dpms
+-	 * hook.
++	 * The @disable callback should disable the bridge.
+ 	 *
+ 	 * The bridge can assume that the display pipe (i.e. clocks and timing
+ 	 * signals) feeding it is still running when this callback is called.
+ 	 *
++	 *
++	 * If the preceding element is a &drm_bridge, then this is called before
++	 * that bridge is disabled via one of:
++	 *
++	 * - &drm_bridge_funcs.disable
++	 * - &drm_bridge_funcs.atomic_disable
++	 *
++	 * If the preceding element of the bridge is a display controller, then
++	 * this callback is called before the encoder is disabled via one of:
++	 *
++	 * - &drm_encoder_helper_funcs.atomic_disable
++	 * - &drm_encoder_helper_funcs.prepare
++	 * - &drm_encoder_helper_funcs.disable
++	 * - &drm_encoder_helper_funcs.dpms
++	 *
++	 * and the CRTC is disabled via one of:
++	 *
++	 * - &drm_crtc_helper_funcs.prepare
++	 * - &drm_crtc_helper_funcs.atomic_disable
++	 * - &drm_crtc_helper_funcs.disable
++	 * - &drm_crtc_helper_funcs.dpms.
++	 *
+ 	 * The @disable callback is optional.
+ 	 *
+ 	 * NOTE:
+@@ -188,17 +204,34 @@ struct drm_bridge_funcs {
+ 	/**
+ 	 * @post_disable:
+ 	 *
+-	 * This callback should disable the bridge. It is called right after the
+-	 * preceding element in the display pipe is disabled. If the preceding
+-	 * element is a bridge this means it's called after that bridge's
+-	 * @post_disable function. If the preceding element is a &drm_encoder
+-	 * it's called right after the encoder's
+-	 * &drm_encoder_helper_funcs.disable, &drm_encoder_helper_funcs.prepare
+-	 * or &drm_encoder_helper_funcs.dpms hook.
+-	 *
+ 	 * The bridge must assume that the display pipe (i.e. clocks and timing
+-	 * signals) feeding it is no longer running when this callback is
+-	 * called.
++	 * signals) feeding this bridge is no longer running when the
++	 * @post_disable is called.
++	 *
++	 * This callback should perform all the actions required by the hardware
++	 * after it has stopped receiving signals from the preceding element.
++	 *
++	 * If the preceding element is a &drm_bridge, then this is called after
++	 * that bridge is post-disabled (unless marked otherwise by the
++	 * @pre_enable_prev_first flag) via one of:
++	 *
++	 * - &drm_bridge_funcs.post_disable
++	 * - &drm_bridge_funcs.atomic_post_disable
++	 *
++	 * If the preceding element of the bridge is a display controller, then
++	 * this callback is called after the encoder is disabled via one of:
++	 *
++	 * - &drm_encoder_helper_funcs.atomic_disable
++	 * - &drm_encoder_helper_funcs.prepare
++	 * - &drm_encoder_helper_funcs.disable
++	 * - &drm_encoder_helper_funcs.dpms
++	 *
++	 * and the CRTC is disabled via one of:
++	 *
++	 * - &drm_crtc_helper_funcs.prepare
++	 * - &drm_crtc_helper_funcs.atomic_disable
++	 * - &drm_crtc_helper_funcs.disable
++	 * - &drm_crtc_helper_funcs.dpms
+ 	 *
+ 	 * The @post_disable callback is optional.
+ 	 *
+@@ -241,18 +274,30 @@ struct drm_bridge_funcs {
+ 	/**
+ 	 * @pre_enable:
+ 	 *
+-	 * This callback should enable the bridge. It is called right before
+-	 * the preceding element in the display pipe is enabled. If the
+-	 * preceding element is a bridge this means it's called before that
+-	 * bridge's @pre_enable function. If the preceding element is a
+-	 * &drm_encoder it's called right before the encoder's
+-	 * &drm_encoder_helper_funcs.enable, &drm_encoder_helper_funcs.commit or
+-	 * &drm_encoder_helper_funcs.dpms hook.
+-	 *
+ 	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
+-	 * will not yet be running when this callback is called. The bridge must
+-	 * not enable the display link feeding the next bridge in the chain (if
+-	 * there is one) when this callback is called.
++	 * will not yet be running when the @pre_enable is called.
++	 *
++	 * This callback should perform all the necessary actions to prepare the
++	 * bridge to accept signals from the preceding element.
++	 *
++	 * If the preceding element is a &drm_bridge, then this is called before
++	 * that bridge is pre-enabled (unless marked otherwise by
++	 * @pre_enable_prev_first flag) via one of:
++	 *
++	 * - &drm_bridge_funcs.pre_enable
++	 * - &drm_bridge_funcs.atomic_pre_enable
++	 *
++	 * If the preceding element of the bridge is a display controller, then
++	 * this callback is called before the CRTC is enabled via one of:
++	 *
++	 * - &drm_crtc_helper_funcs.atomic_enable
++	 * - &drm_crtc_helper_funcs.commit
++	 *
++	 * and the encoder is enabled via one of:
++	 *
++	 * - &drm_encoder_helper_funcs.atomic_enable
++	 * - &drm_encoder_helper_funcs.enable
++	 * - &drm_encoder_helper_funcs.commit
+ 	 *
+ 	 * The @pre_enable callback is optional.
+ 	 *
+@@ -266,19 +311,31 @@ struct drm_bridge_funcs {
+ 	/**
+ 	 * @enable:
+ 	 *
+-	 * This callback should enable the bridge. It is called right after
+-	 * the preceding element in the display pipe is enabled. If the
+-	 * preceding element is a bridge this means it's called after that
+-	 * bridge's @enable function. If the preceding element is a
+-	 * &drm_encoder it's called right after the encoder's
+-	 * &drm_encoder_helper_funcs.enable, &drm_encoder_helper_funcs.commit or
+-	 * &drm_encoder_helper_funcs.dpms hook.
++	 * The @enable callback should enable the bridge.
+ 	 *
+ 	 * The bridge can assume that the display pipe (i.e. clocks and timing
+ 	 * signals) feeding it is running when this callback is called. This
+ 	 * callback must enable the display link feeding the next bridge in the
+ 	 * chain if there is one.
+ 	 *
++	 * If the preceding element is a &drm_bridge, then this is called after
++	 * that bridge is enabled via one of:
++	 *
++	 * - &drm_bridge_funcs.enable
++	 * - &drm_bridge_funcs.atomic_enable
++	 *
++	 * If the preceding element of the bridge is a display controller, then
++	 * this callback is called after the CRTC is enabled via one of:
++	 *
++	 * - &drm_crtc_helper_funcs.atomic_enable
++	 * - &drm_crtc_helper_funcs.commit
++	 *
++	 * and the encoder is enabled via one of:
++	 *
++	 * - &drm_encoder_helper_funcs.atomic_enable
++	 * - &drm_encoder_helper_funcs.enable
++	 * - drm_encoder_helper_funcs.commit
++	 *
+ 	 * The @enable callback is optional.
+ 	 *
+ 	 * NOTE:
+@@ -291,17 +348,30 @@ struct drm_bridge_funcs {
+ 	/**
+ 	 * @atomic_pre_enable:
+ 	 *
+-	 * This callback should enable the bridge. It is called right before
+-	 * the preceding element in the display pipe is enabled. If the
+-	 * preceding element is a bridge this means it's called before that
+-	 * bridge's @atomic_pre_enable or @pre_enable function. If the preceding
+-	 * element is a &drm_encoder it's called right before the encoder's
+-	 * &drm_encoder_helper_funcs.atomic_enable hook.
+-	 *
+ 	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
+-	 * will not yet be running when this callback is called. The bridge must
+-	 * not enable the display link feeding the next bridge in the chain (if
+-	 * there is one) when this callback is called.
++	 * will not yet be running when the @atomic_pre_enable is called.
++	 *
++	 * This callback should perform all the necessary actions to prepare the
++	 * bridge to accept signals from the preceding element.
++	 *
++	 * If the preceding element is a &drm_bridge, then this is called before
++	 * that bridge is pre-enabled (unless marked otherwise by
++	 * @pre_enable_prev_first flag) via one of:
++	 *
++	 * - &drm_bridge_funcs.pre_enable
++	 * - &drm_bridge_funcs.atomic_pre_enable
++	 *
++	 * If the preceding element of the bridge is a display controller, then
++	 * this callback is called before the CRTC is enabled via one of:
++	 *
++	 * - &drm_crtc_helper_funcs.atomic_enable
++	 * - &drm_crtc_helper_funcs.commit
++	 *
++	 * and the encoder is enabled via one of:
++	 *
++	 * - &drm_encoder_helper_funcs.atomic_enable
++	 * - &drm_encoder_helper_funcs.enable
++	 * - &drm_encoder_helper_funcs.commit
+ 	 *
+ 	 * The @atomic_pre_enable callback is optional.
+ 	 */
+@@ -311,18 +381,31 @@ struct drm_bridge_funcs {
+ 	/**
+ 	 * @atomic_enable:
+ 	 *
+-	 * This callback should enable the bridge. It is called right after
+-	 * the preceding element in the display pipe is enabled. If the
+-	 * preceding element is a bridge this means it's called after that
+-	 * bridge's @atomic_enable or @enable function. If the preceding element
+-	 * is a &drm_encoder it's called right after the encoder's
+-	 * &drm_encoder_helper_funcs.atomic_enable hook.
++	 * The @atomic_enable callback should enable the bridge.
+ 	 *
+ 	 * The bridge can assume that the display pipe (i.e. clocks and timing
+ 	 * signals) feeding it is running when this callback is called. This
+ 	 * callback must enable the display link feeding the next bridge in the
+ 	 * chain if there is one.
+ 	 *
++	 * If the preceding element is a &drm_bridge, then this is called after
++	 * that bridge is enabled via one of:
++	 *
++	 * - &drm_bridge_funcs.enable
++	 * - &drm_bridge_funcs.atomic_enable
++	 *
++	 * If the preceding element of the bridge is a display controller, then
++	 * this callback is called after the CRTC is enabled via one of:
++	 *
++	 * - &drm_crtc_helper_funcs.atomic_enable
++	 * - &drm_crtc_helper_funcs.commit
++	 *
++	 * and the encoder is enabled via one of:
++	 *
++	 * - &drm_encoder_helper_funcs.atomic_enable
++	 * - &drm_encoder_helper_funcs.enable
++	 * - drm_encoder_helper_funcs.commit
++	 *
+ 	 * The @atomic_enable callback is optional.
+ 	 */
+ 	void (*atomic_enable)(struct drm_bridge *bridge,
+@@ -330,16 +413,32 @@ struct drm_bridge_funcs {
+ 	/**
+ 	 * @atomic_disable:
+ 	 *
+-	 * This callback should disable the bridge. It is called right before
+-	 * the preceding element in the display pipe is disabled. If the
+-	 * preceding element is a bridge this means it's called before that
+-	 * bridge's @atomic_disable or @disable vfunc. If the preceding element
+-	 * is a &drm_encoder it's called right before the
+-	 * &drm_encoder_helper_funcs.atomic_disable hook.
++	 * The @atomic_disable callback should disable the bridge.
+ 	 *
+ 	 * The bridge can assume that the display pipe (i.e. clocks and timing
+ 	 * signals) feeding it is still running when this callback is called.
+ 	 *
++	 * If the preceding element is a &drm_bridge, then this is called before
++	 * that bridge is disabled via one of:
++	 *
++	 * - &drm_bridge_funcs.disable
++	 * - &drm_bridge_funcs.atomic_disable
++	 *
++	 * If the preceding element of the bridge is a display controller, then
++	 * this callback is called before the encoder is disabled via one of:
++	 *
++	 * - &drm_encoder_helper_funcs.atomic_disable
++	 * - &drm_encoder_helper_funcs.prepare
++	 * - &drm_encoder_helper_funcs.disable
++	 * - &drm_encoder_helper_funcs.dpms
++	 *
++	 * and the CRTC is disabled via one of:
++	 *
++	 * - &drm_crtc_helper_funcs.prepare
++	 * - &drm_crtc_helper_funcs.atomic_disable
++	 * - &drm_crtc_helper_funcs.disable
++	 * - &drm_crtc_helper_funcs.dpms.
++	 *
+ 	 * The @atomic_disable callback is optional.
+ 	 */
+ 	void (*atomic_disable)(struct drm_bridge *bridge,
+@@ -348,16 +447,34 @@ struct drm_bridge_funcs {
+ 	/**
+ 	 * @atomic_post_disable:
+ 	 *
+-	 * This callback should disable the bridge. It is called right after the
+-	 * preceding element in the display pipe is disabled. If the preceding
+-	 * element is a bridge this means it's called after that bridge's
+-	 * @atomic_post_disable or @post_disable function. If the preceding
+-	 * element is a &drm_encoder it's called right after the encoder's
+-	 * &drm_encoder_helper_funcs.atomic_disable hook.
+-	 *
+ 	 * The bridge must assume that the display pipe (i.e. clocks and timing
+-	 * signals) feeding it is no longer running when this callback is
+-	 * called.
++	 * signals) feeding this bridge is no longer running when the
++	 * @atomic_post_disable is called.
++	 *
++	 * This callback should perform all the actions required by the hardware
++	 * after it has stopped receiving signals from the preceding element.
++	 *
++	 * If the preceding element is a &drm_bridge, then this is called after
++	 * that bridge is post-disabled (unless marked otherwise by the
++	 * @pre_enable_prev_first flag) via one of:
++	 *
++	 * - &drm_bridge_funcs.post_disable
++	 * - &drm_bridge_funcs.atomic_post_disable
++	 *
++	 * If the preceding element of the bridge is a display controller, then
++	 * this callback is called after the encoder is disabled via one of:
++	 *
++	 * - &drm_encoder_helper_funcs.atomic_disable
++	 * - &drm_encoder_helper_funcs.prepare
++	 * - &drm_encoder_helper_funcs.disable
++	 * - &drm_encoder_helper_funcs.dpms
++	 *
++	 * and the CRTC is disabled via one of:
++	 *
++	 * - &drm_crtc_helper_funcs.prepare
++	 * - &drm_crtc_helper_funcs.atomic_disable
++	 * - &drm_crtc_helper_funcs.disable
++	 * - &drm_crtc_helper_funcs.dpms
+ 	 *
+ 	 * The @atomic_post_disable callback is optional.
+ 	 */
+-- 
+2.34.1
+
