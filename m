@@ -1,67 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CE71E9B3D;
-	Thu,  5 Jun 2025 16:19:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C7C2E659;
+	Thu,  5 Jun 2025 16:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749140377; cv=none; b=MgnFv4R8ufLZlCMuKjbjLUE7JZQFN2ZFMZDRvmqvBzgLypKXTDXEh5xnVgJ2R57aLdBsNfbWTzBfDjbbPhrqkkmHiKiecUKMhlUDlXc5r0YPZ071blVcODaZEQHt5k6QwiiB9HOq7H6tY5Do4hjiW86vLjPX31JXQ/3orvYUACw=
+	t=1749140450; cv=none; b=ujTve/eWKYS3i1HmdHEhGT9eKCqbLRtSkR7llXgN7J/XgIZDOwuCQ3WPHLOzPGl21VKDPIfa8C8LiIytAAXjOm2wAzHkeks9wh9K/D6ZxSuukxf0oWgLwnz/cnIyU570wWMkDDLmbJKBC0MJFycC14NvzmtHk0k+Y1EruwbSFzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749140377; c=relaxed/simple;
-	bh=MI0R8HITcFNmNRtLwaJ0PFb0ELfhM/iVB8q75aYrQgI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D8QGnqwQX5OGVtltOWcBpltUA/76QhPjTj9S+1cgzBEIMNrvzpc0F3vkiLK+yFonxXZ22GGXqGrXWdQ56hSNf6FqO7+K7GUHmfYmSqKbrIbe/V9CRtkmwQ2mjYlChHQLWlZD4Pq4SBIQxSksUH2lyaJPjJHeEqjfnmesYFED+EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8svjUn+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749140450; c=relaxed/simple;
+	bh=dLjBR5olXRnbPGN7bgU92sDc99qN++d0vbehJ13dqYI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=sf59i281/huVH133VhBg7n8FJ+c8YXc12QG0YFi/8dxqADNF/MD1O+nRrlacqofTf4doMXZpVFlHCHIr+JommpubXp6UeH6lZgx64zlBKBZ57oE/CqdpzKdNvDNFcdUPeJNBCSozyZId2BZBaewjSnOmAhHWeiN0lC+k5JDWsnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pslbklmL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8svjUn+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39781C4CEE7;
-	Thu,  5 Jun 2025 16:19:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pslbklmL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A14C4CEE7;
+	Thu,  5 Jun 2025 16:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749140376;
-	bh=MI0R8HITcFNmNRtLwaJ0PFb0ELfhM/iVB8q75aYrQgI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k8svjUn+D82cm2fDjyL39hf6xuk8KOEe9fjwlDFtLNpudguls4VUaVNY2N8ifEp3n
-	 ciuGTkJBbxbqs9zpPW8EnJ5q+KAh1N9V2xpfi9ikAuAsrJJJt0WI2YUzPZY4Acn5q7
-	 6Q70sD9QO8FvJEW9sFoEQR8jng1ZtP+lk4qgN0HSxDNZdbFHk6FlUSf7NRf/GkNmyf
-	 mxPg3+eDRX/qpwcvmuJEMZk1GplieqaB6bzDaPuYcFqlXtX/4bD6sLiIUfNkHmRrAk
-	 8sGZxGGC1Wt/7mKxwLUMHleHn+znIhtg7lsJhwrIrCTQU+ij0t0BiKj+oTt0F54bd4
-	 wcO7QlXQ26IXQ==
-Date: Thu, 5 Jun 2025 11:19:34 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: manivannan.sadhasivam@linaro.org, quic_vbadigan@quicinc.com,
-	kwilczynski@kernel.org, kw@linux.com, vkoul@kernel.org,
-	linux-phy@lists.infradead.org, krzk+dt@kernel.org,
-	andersson@kernel.org, linux-pci@vger.kernel.org,
-	konradybcio@kernel.org, lpieralisi@kernel.org, abel.vesa@linaro.org,
-	neil.armstrong@linaro.org, quic_qianyu@quicinc.com,
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	conor+dt@kernel.org, bhelgaas@google.com, quic_krichai@quicinc.com,
-	kishon@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/4] dt-bindings: PCI: qcom,pcie-sm8150: document
- qcs615
-Message-ID: <174914037222.2791589.7402731623467975644.robh@kernel.org>
-References: <20250527072036.3599076-1-quic_ziyuzhan@quicinc.com>
- <20250527072036.3599076-3-quic_ziyuzhan@quicinc.com>
+	s=k20201202; t=1749140449;
+	bh=dLjBR5olXRnbPGN7bgU92sDc99qN++d0vbehJ13dqYI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=pslbklmLeEEzrp5m/EBAqtK5VnHNi2OqUp0iZgUOC8UOsZiR8EuzgKDnYAMpaFJTR
+	 wDcoeMnH8umvUj5KEJFvuDoIs9h3b063j6z8ZMXEDHE279Vw7oeGYboLjSrDLFrVsG
+	 MKVWBVpsey+D+gjfjfMn9K1CiwvYEGQeIXNwpbH3v8LPcSxVrynIaQv/6k3r6PgVLK
+	 Sonj64B6xSYngP2BMG09DUj37gNkVZGk+ZnB7OWhmjxO6Bh+lzJW/pcaa381uECZgp
+	 m8VFxFceN9FKR1CBQw0eNcxe1+8Uj89GAZfCemOpTwaIhY4YxNrUoG7ZXcxE7dsDJB
+	 KXhDAVqIUOpaQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: pratyush@kernel.org,  jasonmiu@google.com,  graf@amazon.com,
+  changyuanl@google.com,  rppt@kernel.org,  dmatlack@google.com,
+  rientjes@google.com,  corbet@lwn.net,  rdunlap@infradead.org,
+  ilpo.jarvinen@linux.intel.com,  kanie@linux.alibaba.com,
+  ojeda@kernel.org,  aliceryhl@google.com,  masahiroy@kernel.org,
+  akpm@linux-foundation.org,  tj@kernel.org,  yoann.congal@smile.fr,
+  mmaurer@google.com,  roman.gushchin@linux.dev,  chenridong@huawei.com,
+  axboe@kernel.dk,  mark.rutland@arm.com,  jannh@google.com,
+  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
+  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
+  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
+  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
+  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
+  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
+  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
+  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
+  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
+  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
+  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
+  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
+  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
+  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
+  stuart.w.hayes@gmail.com
+Subject: Re: [RFC v2 11/16] luo: luo_sysfs: add sysfs state monitoring
+In-Reply-To: <20250515182322.117840-12-pasha.tatashin@soleen.com>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+	<20250515182322.117840-12-pasha.tatashin@soleen.com>
+Date: Thu, 05 Jun 2025 18:20:40 +0200
+Message-ID: <mafs0plfirwh3.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527072036.3599076-3-quic_ziyuzhan@quicinc.com>
+Content-Type: text/plain
 
+On Thu, May 15 2025, Pasha Tatashin wrote:
 
-On Tue, 27 May 2025 15:20:34 +0800, Ziyue Zhang wrote:
-> Add compatible for qcs615 platform, with sm8150 as the fallback.
-> 
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml          | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
+> Introduce a sysfs interface for the Live Update Orchestrator
+> under /sys/kernel/liveupdate/. This interface provides a way for
+> userspace tools and scripts to monitor the current state of the LUO
+> state machine.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+I am not sure if adding and maintaining a new UAPI that does the same
+thing is worth it. Can't we just have commandline utilities that can do
+the ioctls and fetch the LUO state, and those can be called from tools
+and scripts?
 
+>
+> The main feature is a read-only file, state, which displays the
+> current LUO state as a string ("normal", "prepared", "frozen",
+> "updated"). The interface uses sysfs_notify to allow userspace
+> listeners (e.g., via poll) to be efficiently notified of state changes.
+>
+> ABI documentation for this new sysfs interface is added in
+> Documentation/ABI/testing/sysfs-kernel-liveupdate.
+>
+> This read-only sysfs interface complements the main ioctl interface
+> provided by /dev/liveupdate, which handles LUO control operations and
+> resource management.
+>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
