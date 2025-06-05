@@ -1,185 +1,235 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E57E22AE7A;
-	Thu,  5 Jun 2025 13:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3575A1EB5DB;
+	Thu,  5 Jun 2025 13:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129777; cv=none; b=LiUj43IkJzoxnatZ/6u4pOrBtwV1Mib8lDwcuEuc8J7DKkr7dYMLHa+9dJciByjlhW52kyFMK1v/of83+c/u+6nJZPjYEsOb032mjJWciekD0w/l/xe39DSd+zJI9c8Yonll2KsVM2Bd1NQVesKddtWDgsfV1a7kA8MZWu3Bf8w=
+	t=1749129838; cv=none; b=T7XZdo36IXhK0oTRAqFlYsUHb06xk5SSeo76CLKwDcyBw9JUVWupT1iWOnSkRw4x8Lf3aD/0KLeaOAHGZl6oqWDbmzFVXxE08M1NJysaevcKK2/xpmxbxy73PyN+g2UwjFsPnJ5x/nsWqT1fkErsJHvYrTATyUCHfI+PjnGhgjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129777; c=relaxed/simple;
-	bh=Of4vTHHo0c3fLH3Y13EMcDavOhIYjcqdwDcNmNcqIeM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=GmGza8XVTy9SvXzYDHLGsvxgO4B32+o8xZgZIGKDHoIgE4c4+OoLKk8KdJIRfpseaM1E5MnprQJH3ZZ04YrgjsnJxbE6uCwvNaYWogC+AbMQl/+02RcQ0SF+YHE3+/9ziQgMmGht9THwmrcNEdnJKvHct1Z7/6He699o0s8nCSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iy4dNI8o; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749129838; c=relaxed/simple;
+	bh=5Ed+3SO1+uc7aMnJ5slsCdxvYGy8YBd6ffZjqZg2DeQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tn+MG+jVV9br6tylzDTwbszc4P6/mB6G0ci0LKP75/lVSJfENLzFGGRDmMsvVzEX3PipLcI9KCr4cwngyhrpdw3/+APBsj99UTrlEU1zO/Zq2YyDR9uxDMfus571JPuTS5VRoXtJ7xiPiSXqSby77kKoMaj/5lkWwA8J2d9768c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rUZO36Ai; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iy4dNI8o"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso1773293a12.1;
-        Thu, 05 Jun 2025 06:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749129774; x=1749734574; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Of4vTHHo0c3fLH3Y13EMcDavOhIYjcqdwDcNmNcqIeM=;
-        b=iy4dNI8odxi+pGphSf9nQj7g17ZX948XgOTDcZ4dfnhLU44qQyvfrE2XE1zermb1wc
-         Oz7nZMClujTzcpih/vEWqmU9yG/CowBc7kpVsAdv5OmZBTv/Cz6vSyw1vAIeCcK53tHU
-         8b9lAMEcshQ6JylySqXuHl8RVsvozKChZ3B/cragVGmh9ogA/UAO4KtAEBrztCD5MAab
-         0lMfGzmZgqmH81LZ+qrIUkBRJlQ+2jVAmvpzBLAUW6o7DFnzyK0ThZoTOMds4pLNOL1G
-         WB3O6+sDu5Sz0yRKhLzMfjpwI/U9fIdkhYpy7RzVYnDTqEy1+hTI2omJUMKX1gg6/yfx
-         8ixg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749129774; x=1749734574;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Of4vTHHo0c3fLH3Y13EMcDavOhIYjcqdwDcNmNcqIeM=;
-        b=DINkh7Noq+j9FijiXidNmp+YEQfVfphX7hWXpBN0ruiMxoZIdd4LUCdG7/I4cEDE4u
-         C5ts8xbwcJsMsj/JMbs9tUvh4ibAdJX8WqeE5y3Mif/f2W9gWBb8qFsxd94ckTKXHMzK
-         pw9dlpQJM9SXwtbbZDAaHS5zwFXfa3ldfjIEQMHCiloxA4aP974FQh0AFMJcZVL8eJv4
-         wRPEqmC99/ZNUHUPqlNAoW45AUQj46pObL7747Z5iEGop2kIKzFA0KsbqEao96/AcXsU
-         FOaemIAn3D3qjMnn7X13FmwyOMoswxepjdf2DPEMibz05uKUs+Cly2OzT3MoMxXjathN
-         T6CA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8MxtGARsMZof2i8FmYkR2+/W0LH8vrwcEqCINE1gBCcD7iGnBgXKTzm3i9OyMEtMWQyhl/IrqJgAGHmNg@vger.kernel.org, AJvYcCUL6DVZOUk2exGLDbvpiVBVBp0UdDaHOQ334iwoG1lxy2/v8/DFAmORuoCofguvUWqHJC12CQnXbto3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzPacn0iXUZnuTWEwCYeCQWHAie3C83DUuu+RxE6Z9iI2gb7Pu
-	vdkdUfPtXDzL5lQNRDvWxStJ/CpBxvRTB7UQ02uR6v1pwGVmGYmbDY1V
-X-Gm-Gg: ASbGnctmKpuFWP+TyhceR/ug8C/8lP0gmXF9yRFvInS5YgpFkdtMY0CmBZ8d30ldUad
-	bnzgVVXUv8OgpkacYzD4pSZ9jGRJFhAnnDS6q0iJc9OCL2eS7mHwpu3BM/Tr/vmVC+az9CyW+Kt
-	4VFAMlccJRhvmr4Wbg5NczjChFBxIZMPqhwLrGU6pKTzJh44fqSSOmKmEYPl8tEcIUcrNLWogYG
-	MIZgNJ+QhLr36biaXqHrA0hxqnREHc+AEa1V4x62IHB5F9kdJVRyLV+gxmxW/VNwvUv1dWfPZCC
-	dlJIfOgYzCbZGb6Jkb2xsQ2z9wn3FlNQG1ssANr5rPKZveZyNv1zMpvOivMp07nOL3ZsPdaiFFY
-	=
-X-Google-Smtp-Source: AGHT+IFzTwW0TcXzPL/9HV49c8h7szVsDRMxjGRBWs1/HHxFZV/8F9GvGOd1FZ+sNDL/yaa7WrK/WA==
-X-Received: by 2002:a05:6402:358a:b0:5f8:36b2:dc1a with SMTP id 4fb4d7f45d1cf-606ea17a74amr6862983a12.16.1749129773399;
-        Thu, 05 Jun 2025 06:22:53 -0700 (PDT)
-Received: from smtpclient.apple ([89.66.237.154])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6073d367974sm313209a12.70.2025.06.05.06.22.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Jun 2025 06:22:53 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rUZO36Ai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8DAAC4CEE7;
+	Thu,  5 Jun 2025 13:23:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749129837;
+	bh=5Ed+3SO1+uc7aMnJ5slsCdxvYGy8YBd6ffZjqZg2DeQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rUZO36AiAXggQ3XWCRMit86mVgif9bQwAc7lu9n/642A/XjsPVcrGS8nkEq6ggtmr
+	 NKVHZGmEumYKwvx0wnLQrbARff+pLOIy0PE5pjf7Gdfw9NhyLoILejjTHhvYeGTEmP
+	 jpJvCUc2shr0kE9XkaqN31BMPPEURFuw9kvoOppXG1HHJFBTvnLRnxJ/bUGOvvqj5K
+	 LEfZjiPzOUyGI3J/cA4K/1tbeq1c1hnmJcvGdZxE0yQ9PFkuknmRJ62uTW8SJt2h6V
+	 blDk0Fl7vSBG3+9g69UI5GZIVSjfIOutOOX2VWynhmO1aX8MXYVtdV/AN13OaWr22L
+	 0wpEG8T4Kbxzw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Alejandro Colomar <alx@kernel.org>,
+	Eyal Birger <eyal.birger@gmail.com>,
+	kees@kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCHv3 perf/core 00/22] uprobes: Add support to optimize usdt probes on x86_64
+Date: Thu,  5 Jun 2025 15:23:27 +0200
+Message-ID: <20250605132350.1488129-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM
- Sige5
-From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-In-Reply-To: <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com>
-Date: Thu, 5 Jun 2025 15:22:41 +0200
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>,
- devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <512E950E-E8CB-443B-8E47-79F073D217E8@gmail.com>
-References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com>
- <6656934.DvuYhMxLoT@workhorse>
- <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com>
-To: Alexey Charkov <alchark@gmail.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+hi,
+this patchset adds support to optimize usdt probes on top of 5-byte
+nop instruction.
+
+The generic approach (optimize all uprobes) is hard due to emulating
+possible multiple original instructions and its related issues. The
+usdt case, which stores 5-byte nop seems much easier, so starting
+with that.
+
+The basic idea is to replace breakpoint exception with syscall which
+is faster on x86_64. For more details please see changelog of patch 8.
+
+The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
+original instructions) in a loop and counts how many of those happened
+per second (the unit below is million loops).
+
+There's big speed up if you consider current usdt implementation
+(uprobe-nop) compared to proposed usdt (uprobe-nop5):
+
+current:
+        usermode-count :  152.501 ± 0.012M/s
+        syscall-count  :   14.463 ± 0.062M/s
+-->     uprobe-nop     :    3.160 ± 0.005M/s
+        uprobe-push    :    3.003 ± 0.003M/s
+        uprobe-ret     :    1.100 ± 0.003M/s
+        uprobe-nop5    :    3.132 ± 0.012M/s
+        uretprobe-nop  :    2.103 ± 0.002M/s
+        uretprobe-push :    2.027 ± 0.004M/s
+        uretprobe-ret  :    0.914 ± 0.002M/s
+        uretprobe-nop5 :    2.115 ± 0.002M/s
+
+after the change:
+        usermode-count :  152.343 ± 0.400M/s
+        syscall-count  :   14.851 ± 0.033M/s
+        uprobe-nop     :    3.204 ± 0.005M/s
+        uprobe-push    :    3.040 ± 0.005M/s
+        uprobe-ret     :    1.098 ± 0.003M/s
+-->     uprobe-nop5    :    7.286 ± 0.017M/s
+        uretprobe-nop  :    2.144 ± 0.001M/s
+        uretprobe-push :    2.069 ± 0.002M/s
+        uretprobe-ret  :    0.922 ± 0.000M/s
+        uretprobe-nop5 :    3.487 ± 0.001M/s
+
+I see bit more speed up on Intel (above) compared to AMD. The big nop5
+speed up is partly due to emulating nop5 and partly due to optimization.
+
+The key speed up we do this for is the USDT switch from nop to nop5:
+	uprobe-nop     :    3.160 ± 0.005M/s
+	uprobe-nop5    :    7.286 ± 0.017M/s
 
 
+Changes from v2:
+- rebased on top of tip/master + mm/mm-stable + 1 extra change [1]
+- added acks [Oleg,Andrii]
+- more details changelog for patch 1 [Masami]
+- several tests changes [Andrii]
+- add explicit PAGE_SIZE low limit to vm_unmapped_area call [Andrii]
 
-> Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.com> =
-w dniu 4 cze 2025, o godz. 21:12:
->=20
-> On Wed, Jun 4, 2025 at 10:38=E2=80=AFPM Nicolas Frattaroli
-> <nicolas.frattaroli@collabora.com> wrote:
->>=20
->>=20
->=20
-> Frequencies are fine, but I don't think the more power hungry big CPU
-> cluster gets any voltage scaling without it. Once I try to load the
-> system enough that the governor decides to bump the big cluster
-> frequency up, the regulator stays at 850000 microvolts, causing random
-> reboots when the whole cluster starts starving. With the patch,
-> voltage oscillates between 700000-737000 microvolts in idle and jumps
-> up to 950000 under load, and the system seems stable.
->=20
-> Here's what I used to monitor the voltage (there must be a better way
-> to do it, but it works):
-> sige5 ~ # watch cat `grep -r . /sys/class/regulator/*/name | grep
-> vdd_cpu_big_s0 | sed -e 's/name.*//'`/microvolts
->=20
-> And in another terminal:
-> sige5 ~ # stress-ng -c8
 
-Alexey,
-I see you are using rk3576 board like me (nanopi-m5)
-Have you on your board correctly working cpu dvfs?
-I mean: [1][desired clocks reported by kernel sysfs are in pair with =
-[2[]cur clocks?
-In my case i see mine cpu lives totally on it=E2=80=99s own with dvfs:
+This patchset is adding new syscall, here are notes to check list items
+in Documentation/process/adding-syscalls.rst:
 
-Requested is [1]
-Running is [2]
-Measured is [3]
+- System Call Alternatives
+  New syscall seems like the best way in here, because we need
+  just to quickly enter kernel with no extra arguments processing,
+  which we'd need to do if we decided to use another syscall.
 
-random read 1:
-Requested CPU4: 408 MHz=20
-Requested CPU0: 408 MHz=20
-Running CPU4: 1800 MHz=20
-Running CPU0: 1416 MHz=20
-Measured on HW: 1579.03 MHz
+- Designing the API: Planning for Extension
+  The uprobe syscall is very specific and most likely won't be
+  extended in the future.
 
-random read 2:
-Requested CPU4: 1608 MHz=20
-Requested CPU0: 408 MHz=20
-Running CPU4: 2016 MHz=20
-Running CPU0: 1800 MHz=20
-Measured on HW: 410.33 MHz
+- Designing the API: Other Considerations
+  N/A because uprobe syscall does not return reference to kernel
+  object.
 
-random read 3:
-Requested CPU4: 600 MHz=20
-Requested CPU0: 1800 MHz=20
-Running CPU4: 816 MHz=20
-Running CPU0: 1008 MHz=20
-Measured on HW: 2275.07 MHz
+- Proposing the API
+  Wiring up of the uprobe system call is in separate change,
+  selftests and man page changes are part of the patchset.
 
-random read 4:
-Requested CPU4: 1608 MHz=20
-Requested CPU0: 1200 MHz=20
-Running CPU4: 816 MHz=20
-Running CPU0: 816 MHz=20
-Measured on HW: 2114.58 MHz
+- Generic System Call Implementation
+  There's no CONFIG option for the new functionality because it
+  keeps the same behaviour from the user POV.
 
-this is on rk3576
-on i.e allwinner h618 or rk3588 all looks quite normal - [1] and [2] are =
-equal... =20
+- x86 System Call Implementation
+  It's 64-bit syscall only.
 
-my scaling governor is on_demand - so for sure clocks are dynamic - but =
-i.e. on 3588 with the same binaries - i can't catch -at any random read =
-- that requested is not equal to running while on 3576 almost any random =
-read gives significant differences.
-=20
-[1] scaling_cur_freq in sysfs
-[2] cpuinfo_cur_freq in sysfs
-[3] code to estimate arm cpu clock from =
-http://uob-hpc.github.io/2017/11/22/arm-clock-freq.html
- =20
-=20
+- Compatibility System Calls (Generic)
+  N/A uprobe syscall has no arguments and is not supported
+  for compat processes.
 
->=20
-> This might warrant a note in the commit message I guess :)
->=20
-> Thanks for your review and testing!
->=20
-> Best regards,
-> Alexey
->=20
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+- Compatibility System Calls (x86)
+  N/A uprobe syscall is not supported for compat processes.
 
+- System Calls Returning Elsewhere
+  N/A.
+
+- Other Details
+  N/A.
+
+- Testing
+  Adding new bpf selftests.
+
+- Man Page
+  Attached.
+
+- Do not call System Calls in the Kernel
+  N/A
+
+pending todo (or follow ups):
+- use PROCMAP_QUERY in tests
+- alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
+- use mm_cpumask(vma->vm_mm) in text_poke_sync
+
+thanks,
+jirka
+
+
+Cc: Alejandro Colomar <alx@kernel.org>
+Cc: Eyal Birger <eyal.birger@gmail.com>
+Cc: kees@kernel.org
+
+[1] https://lore.kernel.org/linux-trace-kernel/20250514101809.2010193-1-jolsa@kernel.org/T/#u
+---
+Jiri Olsa (21):
+      uprobes: Remove breakpoint in unapply_uprobe under mmap_write_lock
+      uprobes: Rename arch_uretprobe_trampoline function
+      uprobes: Make copy_from_page global
+      uprobes: Add uprobe_write function
+      uprobes: Add nbytes argument to uprobe_write
+      uprobes: Add is_register argument to uprobe_write and uprobe_write_opcode
+      uprobes: Add do_ref_ctr argument to uprobe_write function
+      uprobes/x86: Add mapping for optimized uprobe trampolines
+      uprobes/x86: Add uprobe syscall to speed up uprobe
+      uprobes/x86: Add support to optimize uprobes
+      selftests/bpf: Import usdt.h from libbpf/usdt project
+      selftests/bpf: Reorg the uprobe_syscall test function
+      selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprobe_multi
+      selftests/bpf: Add uprobe/usdt syscall tests
+      selftests/bpf: Add hit/attach/detach race optimized uprobe test
+      selftests/bpf: Add uprobe syscall sigill signal test
+      selftests/bpf: Add optimized usdt variant for basic usdt test
+      selftests/bpf: Add uprobe_regs_equal test
+      selftests/bpf: Change test_uretprobe_regs_change for uprobe and uretprobe
+      seccomp: passthrough uprobe systemcall without filtering
+      selftests/seccomp: validate uprobe syscall passes through seccomp
+
+ arch/arm/probes/uprobes/core.c                              |   2 +-
+ arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+ arch/x86/include/asm/uprobes.h                              |   7 ++
+ arch/x86/kernel/uprobes.c                                   | 525 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/syscalls.h                                    |   2 +
+ include/linux/uprobes.h                                     |  20 +++-
+ kernel/events/uprobes.c                                     | 100 ++++++++++++-----
+ kernel/fork.c                                               |   1 +
+ kernel/seccomp.c                                            |  32 ++++--
+ kernel/sys_ni.c                                             |   1 +
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 523 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ tools/testing/selftests/bpf/prog_tests/usdt.c               |  38 ++++---
+ tools/testing/selftests/bpf/progs/uprobe_syscall.c          |   4 +-
+ tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  60 +++++++++-
+ tools/testing/selftests/bpf/test_kmods/bpf_testmod.c        |  11 +-
+ tools/testing/selftests/bpf/usdt.h                          | 545 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/seccomp/seccomp_bpf.c               | 107 ++++++++++++++----
+ 17 files changed, 1867 insertions(+), 112 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/usdt.h
+
+
+Jiri Olsa (1):
+      man2: Add uprobe syscall page
+
+ man/man2/uprobe.2    |  1 +
+ man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
+ 2 files changed, 25 insertions(+), 12 deletions(-)
+ create mode 100644 man/man2/uprobe.2
