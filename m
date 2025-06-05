@@ -1,117 +1,70 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BA527F165
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39EB4AEE0
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749159621; cv=none; b=utEerzdw4Jq5v9yuM8V8le4u9RJBLgiettMqb1TbFYtK2XNna8eqAIz/h1b5M8hfhVk5JWQE/2NT2OqaQ7UkNeJbvM0ikBDoUdrVTkeETq4dWUFT1N7iWn0ED4I1a12999l42STYcOqxG44+zqvuX6AxVDVwL+DYrFMawdCGMsE=
+	t=1749160248; cv=none; b=IOsS+H+fv2+xYwhd2DyNyp5hlyQvWO9YXfFcCoT9iOy4k8faLFIIqtoi3i7+p58q7Faj8dz19TBqVydtDjxSfbLP92s24lSHDVPvYyV0S4CCj+B3kYY5sPHpbdIuHigR0+5+XPIHyF6RqCAFvEocs0z/PFIpJxZmvp7Gr1MPgmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749159621; c=relaxed/simple;
-	bh=owrTpob8Z3VilSx0/gmgUp1e46LRN3HBsxPE3/o5G6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qe8NIFHZQ76OBty+rzndqlWLY24ueoc+7S0zMVlH+Gv2Rlh1hQSjzBgpX3BQLn67OHDRcERcQb8bd13vBaCE0A7LXSc1JhodI5lHX9+CbHq5pq/9Xre/CfZB9K/BYLAYUSZj9b2deZy44+0fk3HaFRzmS16q6KzGiLxGD+tFPJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=IuXURwNx; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1749160248; c=relaxed/simple;
+	bh=O2TlHDafY3Hdx94VEJOxDAY1FvVnsudEvyXIgZm3Ewo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=qKR445uqFNFDn8rnF+ItkNFlbK1CqZtcpeFifQeGw/ifF/qIjZBOQ1h5aFn7t9cYeFlBrKQM0V1q9q8pXHbuqJ87KqxhIgIHYWik1xFyriW7mtRed65mle3hKJ87Nujhvdzp87Q+qqLzKYZajUeY4qep4C3an3ZIo8KcocQRtKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=kVJP2OkV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="IuXURwNx"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e819aa98db9so729159276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 14:40:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1749159617; x=1749764417; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yiGFe0gms5Y7vXFNBwmlK7Nf7zyHEzhHaHnVsxs9CbY=;
-        b=IuXURwNxIrnWOqUZ9sEpemZZlfxmRJhl0gOPEcfhNi/MwOqL/nUbuit38StphM+GIX
-         hugZIKs7KZ0RtLYfCmShISEwue9SDjGsqrL+xnqcuWEV6e/8XoIqLlaq9lzYJOpN490P
-         H5gxSAnTVHvi6XUhUCO50od0foj1uKTmX14SQtbCA5MKA6pN0BsBwhgbosnxsrIVXpK5
-         p08NRHRHMZynjIGJVQN8WV79FWD2lkIcvJa4EV27B+ktqAJZfQP0JWGeTz0kC5RKKL5s
-         tgGek5VF8hInimgY6QFZRAJzQSI1/JxNdYBRxCb/f4nftEt5cQn09gYlvWK39BDL4R6t
-         o+IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749159617; x=1749764417;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yiGFe0gms5Y7vXFNBwmlK7Nf7zyHEzhHaHnVsxs9CbY=;
-        b=UoR/wrFkNYc6GkWh3jDUSVvOVKI6TrxVGq2SOkEJCIU8MO2lV+4eDhCYr04gbgVP/k
-         ma8+jcK0TM9dAgBnW+3tOtYDZUYjuJMYR4TuToU9YLOywNM59Dw+g+Keqb/btymPkXYF
-         NfL+rHxB4w29/arKnXYGSEHWRXL7PbWc6CJlrV8CpgmRzXZvtKXcA5AgylyeHvZYHPEG
-         SMa6keszEoh4sub8mHUVQ+N7FwhLeu86vBRQN4ZHwvm8jFAzSAPj5ToLHREXW0gvqpGU
-         OdaQbzfIigMry2BC9569IJPWitmSci/K+DMYry/9LT1B7qwLt7Zq5YOU8Gcjprgfp/S5
-         4ABg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMdwcNrmScOk/fX8aYRTRMdxYMNToZJqqK5fm7KulnPU41c055W7hRgj6KNoDwWhk2u1PPbw57Qwqp5p0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc50I0MTGNwWjADkxPzdNEG++WVJOtvIdc1m5aP77x0Fzp50LV
-	P5NmOnA/2Ap48JmvoP+t1jDSxPQl/s8/2c7JrvhL1Ta4/bhC10nFxUAH7SAz0P20KVKEaAxFLOs
-	J3USS3jVa8YYmuzvf1LJKhYGtdgYvamPoPjG1C6QA
-X-Gm-Gg: ASbGncvxkQgSSbO8SBnbArvL+Nennb1MGlG4Y945xZZ+AB4Z+l0nB5u1Q60kqwx/ke6
-	Qh7wkm0D3tG+UeO8wAHwcsCsANYpbgjWCxSAiCoVdOY2RhNRJdviv1rSb04yw5jJedPbLTBZQan
-	enkXh+BDOfbZDKUTiYitXn8bbX/6wuts+fX5KnESbv42k=
-X-Google-Smtp-Source: AGHT+IGTeby9Zg/JuU6w1mykeF0rzMEB/yxOlEg0U/HDEnInZhQM1QBBvHoRi8EzOT3QP4pmXeIss0vQyHFHUSPEmnM=
-X-Received: by 2002:a05:6902:70b:b0:e7d:a3bc:22fd with SMTP id
- 3f1490d57ef6-e81a232544bmr1970836276.39.1749159617415; Thu, 05 Jun 2025
- 14:40:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="kVJP2OkV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C3CC4CEE7;
+	Thu,  5 Jun 2025 21:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749160248;
+	bh=O2TlHDafY3Hdx94VEJOxDAY1FvVnsudEvyXIgZm3Ewo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kVJP2OkVKpSuIcWAuzYHIHFXBLnQzE19qpIC74Yg094JZyVNQ/h2RI5gxQpnFU9q6
+	 A/E/gGF++Bg81IUFReS8vRwxKy37x9PMi/rDBXGE8NmirmQIncIzJjToDGxHaWXnfO
+	 j0BN4jmgmvsDH5uDqnw8jL5qLzeizIIpv9xFm4d8=
+Date: Thu, 5 Jun 2025 14:50:47 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, David Hildenbrand <david@redhat.com>,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
+ surenb@google.com, mhocko@suse.com, hannes@cmpxchg.org,
+ shakeel.butt@linux.dev, muchun.song@linux.dev, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+ Konstantin Khlebnikov <koct9i@gmail.com>
+Subject: Re: [PATCH] mm/vmstat: Fix build with MEMCG=y and
+ VM_EVENT_COUNTERS=n
+Message-Id: <20250605145047.80cdd84bc3dd321d535d4895@linux-foundation.org>
+In-Reply-To: <7lakc6hxbimvkgakpocj3aa65sdhmskm5p6hlurbwzyps33gfb@2z2eoz253hs4>
+References: <20250604095111.533783-1-kirill.shutemov@linux.intel.com>
+	<6fffd2fe-0cee-405f-af78-b57b5e5d02e8@suse.cz>
+	<20250604142043.bdfdf4f9a6a6cbb57946f1a5@linux-foundation.org>
+	<03c2b01b-18f5-4015-a19b-79b8af656697@suse.cz>
+	<7lakc6hxbimvkgakpocj3aa65sdhmskm5p6hlurbwzyps33gfb@2z2eoz253hs4>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250605164852.2016-1-stephen.smalley.work@gmail.com>
-In-Reply-To: <20250605164852.2016-1-stephen.smalley.work@gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 5 Jun 2025 17:40:06 -0400
-X-Gm-Features: AX0GCFvLs9Ehag9allmkViAyOyTZUnzE1Hp0rLlPcQr3EgCFF2MrKf7Z5oBdrT4
-Message-ID: <CAHC9VhQ-f-n+0g29MpBB3_om-e=vDqSC3h+Vn_XzpK2zpqamdQ@mail.gmail.com>
-Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list()
-To: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: brauner@kernel.org, linux-fsdevel@vger.kerne.org, 
-	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, collin.funk1@gmail.com, 
-	eggert@cs.ucla.edu, bug-gnulib@gnu.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 5, 2025 at 12:49=E2=80=AFPM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> commit 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always
-> include security.* xattrs") failed to reset err after the call to
-> security_inode_listsecurity(), which returns the length of the
-> returned xattr name. This results in simple_xattr_list() incorrectly
-> returning this length even if a POSIX acl is also set on the inode.
->
-> Reported-by: Collin Funk <collin.funk1@gmail.com>
-> Closes: https://lore.kernel.org/selinux/8734ceal7q.fsf@gmail.com/
-> Reported-by: Paul Eggert <eggert@cs.ucla.edu>
-> Closes: https://bugzilla.redhat.com/show_bug.cgi?id=3D2369561
-> Fixes: 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always include=
- security.* xattrs")
->
-> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> ---
->  fs/xattr.c | 1 +
->  1 file changed, 1 insertion(+)
+On Thu, 5 Jun 2025 14:53:59 +0300 "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
 
-Reviewed-by: Paul Moore <paul@paul-moore.com>
-
-> diff --git a/fs/xattr.c b/fs/xattr.c
-> index 8ec5b0204bfd..600ae97969cf 100644
-> --- a/fs/xattr.c
-> +++ b/fs/xattr.c
-> @@ -1479,6 +1479,7 @@ ssize_t simple_xattr_list(struct inode *inode, stru=
-ct simple_xattrs *xattrs,
->                 buffer +=3D err;
->         }
->         remaining_size -=3D err;
-> +       err =3D 0;
+> > The changelogs of these two don't reflect the new ordering though, maybe
+> > Kirill can provide updated ones?
+> 
+> Maybe something like this, for the first patch?
+> 
+> 
+> mm/vmstat: Make MEMCG select VM_EVENT_COUNTERS
+> 
+> The vmstat_text array contains labels for counters displayed in /proc/vmstat.
+> It is important to keep the labels in sync with the counters.
 >
->         read_lock(&xattrs->lock);
->         for (rbp =3D rb_first(&xattrs->rb_root); rbp; rbp =3D rb_next(rbp=
-)) {
-> --
-> 2.49.0
+> ...
+>
 
---=20
-paul-moore.com
+Updated, thanks.
