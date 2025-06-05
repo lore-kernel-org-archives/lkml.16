@@ -1,45 +1,48 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A351DFF8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669F34400;
 	Thu,  5 Jun 2025 18:11:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749147077; cv=none; b=TwEMGU8+U0y/vLUptcZwH00j1saKCVKg+kbwcEOQ1+SR//clIfK9e9g9XoWttn9KNk4xnVLpnzu0ABUIx1lUnjsQ2RZHQxmJAdIAwz+g0G7eEv1gE5gNrhtYv/3zKUJB88N+GRNmEc180xywEUzZBTE7wS0x0D7EMVGaChyPvqw=
+	t=1749147078; cv=none; b=CkD2UMQoSIb8xJVQVsU+U2xNbYVRE6FJwjjzvZ+yDC83n8Quj1CSiKCNc0WT/AGg6rEM6YFsWr0pP9nG16YQ/ymdFLnthdUMI3AnsVOApgCoxclM9wmIHfYN0k9+IxYMk5jyxoSCW97QlTPWwy7an23IYw5ZS+z3o7fMFtmQ93k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749147077; c=relaxed/simple;
-	bh=qsPpSJ4ygt+4NVkpsrkmbd+H5NIZSkUSZ+G5QW9hzt4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EBVXb7A8rZvAKDRfDTEAiCkBPWe2eakIxb5nGLucJ8OzUWwPPoF+rvK4oK1Osxq5C2BjgbHl4bQAwKx3T9nEGx6AENQ8s52gA1HXohmJq0w6i4p6JlMayrWKUdAArD8rXrNHC3Y5zRCSbABA5sGby4SAY304p+oJ6YDP4hDkr6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=m/Ee+Wai; arc=none smtp.client-ip=198.137.202.136
+	s=arc-20240116; t=1749147078; c=relaxed/simple;
+	bh=mJY0uIX1J84krwKRlYOLFhfzYeO/MWXUS/H9y19INa8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PEkSIHa9SuaMmPw+Qo7KucmGtTZzsccXytqtG1PuNiy0zk+/90daOt4cGXp8tVFv7zuGm8U5UfoPIkeg3zc6Nnp8tsb1jGn0Q91yyAjPWuIG141hLaNurTYxSwwH68GqExoTsPA6QtrXWJgBq10B/HMw5WUCy2Wi2ndIbvBPFck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=V7JarOo7; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="m/Ee+Wai"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="V7JarOo7"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 555IAKGb590473
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 555IAKGd590473
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Thu, 5 Jun 2025 11:10:24 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 555IAKGb590473
+	Thu, 5 Jun 2025 11:10:25 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 555IAKGd590473
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749147024;
-	bh=yZ78zeeeYn7NurhVTyIVvApgCn0j/7L5rqg/Aa9n7Lo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=m/Ee+WaiOn2ZlUAmkSkUN4HBj2S03xUz9v6FzET8lkAtWiQRwWasEKzlvwHGReCht
-	 n6c1aNua31lOzrenmqnJgPSqrlJkKu/FM8T60NEtLA4Z6wh/Kaz4MrgE6isNjcoG6A
-	 jY9of3eQoFfAid7KUGDtvjP3XIMdD/tpUgZdW3KkGH9VAcqNg+GwWOYi+v/3SxUc2N
-	 eCb16xD5CxBAIGdmX0zzoJusW5riNHLLhNhYlqqRqi4AOCqvBRinRu0HwWwalsQsRi
-	 kRZyj0I7cKg+UVLmOTFZMHMPrLv1ncdvj1wRjqsp0CvRlQ2YGi037soFJX9bLkzu0m
-	 M1+12ODj5pegw==
+	s=2025052101; t=1749147026;
+	bh=8ZQwv5P/GSxsAlH1pNNKRH747oDOTo7muJYoDg6M0fk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=V7JarOo7foqaOES7Kr7LtPswNkHXt5y+4q17sgNCIJBe5VGqMHi7Qq9+6zrzYDIHS
+	 26wMDqCKo28LlvKe4F0ZnodoSesU9gZPu3FEV8WqBK3sDqKkztvXVmD9D2TYw3FbiV
+	 9fkM2dYreE0N+dQII4Y0jGNrxtWSuBSZpKVl/ow51hWn184QnFEOItRCzEobe0Ucch
+	 0U6J7drhVcS/NjIq8V3OBBLYQ+Q6k98kl1+sQl++gpVZs3iiGkUCnLkYJRQVw6gybr
+	 nQCMc9tEIysJ3t3zg/lt+XvMkm11hy/Mntmo3rDBiDPwg6/aO7uI8KdNDPDyt7nrvH
+	 Y1yNyrDgsPd3w==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
         shuah@kernel.org, andrew.cooper3@citrix.com, sohil.mehta@intel.com
-Subject: [PATCH v4 0/2] x86/fred: Prevent single-step upon ERETU completion
-Date: Thu,  5 Jun 2025 11:10:18 -0700
-Message-ID: <20250605181020.590459-1-xin@zytor.com>
+Subject: [PATCH v4 2/2] selftests/x86: Add a test to detect infinite sigtrap handler loop
+Date: Thu,  5 Jun 2025 11:10:20 -0700
+Message-ID: <20250605181020.590459-3-xin@zytor.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250605181020.590459-1-xin@zytor.com>
+References: <20250605181020.590459-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,46 +52,146 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-IDT event delivery has a debug hole in which it does not generate #DB
-upon returning to userspace before the first userspace instruction is
-executed if the Trap Flag (TF) is set.
+When FRED is enabled, if the Trap Flag (TF) is set without an external
+debugger attached, it can lead to an infinite loop in the SIGTRAP
+handler.  To avoid this, the software event flag in the augmented SS
+must be cleared, ensuring that no single-step trap remains pending when
+ERETU completes.
 
-FRED closes this hole by introducing a software event flag, i.e., bit
-17 of the augmented SS: if the bit is set and ERETU would result in
-RFLAGS.TF = 1, a single-step trap will be pending upon completion of
-ERETU.
+This test checks for that specific scenario—verifying whether the kernel
+correctly prevents an infinite SIGTRAP loop in this edge case when FRED
+is enabled.
 
-However I overlooked properly setting and clearing the bit in different
-situations.  Thus when FRED is enabled, if the Trap Flag (TF) is set
-without an external debugger attached, it can lead to an infinite loop
-in the SIGTRAP handler.  To avoid this, the software event flag in the
-augmented SS must be cleared, ensuring that no single-step trap remains
-pending when ERETU completes.
+The test should _always_ pass with IDT event delivery, thus no need to
+disable the test even when FRED is not enabled.
 
-This patch set combines the fix [1] and its corresponding selftest [2]
-(requested by Dave Hansen) into one patch set.
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+---
 
-[1] https://lore.kernel.org/lkml/20250523050153.3308237-1-xin@zytor.com/
-[2] https://lore.kernel.org/lkml/20250530230707.2528916-1-xin@zytor.com/
-
-
-This patch set is based on tip/x86/urgent branch as of today.
-
-
-Xin Li (Intel) (2):
-  x86/fred/signal: Prevent single-step upon ERETU completion
-  selftests/x86: Add a test to detect infinite sigtrap handler loop
-
- arch/x86/include/asm/sighandling.h         | 22 +++++
- arch/x86/kernel/signal_32.c                |  4 +
- arch/x86/kernel/signal_64.c                |  4 +
+Changes in this version:
+*) Address review comments from Sohil.
+---
  tools/testing/selftests/x86/Makefile       |  2 +-
  tools/testing/selftests/x86/sigtrap_loop.c | 97 ++++++++++++++++++++++
- 5 files changed, 128 insertions(+), 1 deletion(-)
+ 2 files changed, 98 insertions(+), 1 deletion(-)
  create mode 100644 tools/testing/selftests/x86/sigtrap_loop.c
 
-
-base-commit: dd2922dcfaa3296846265e113309e5f7f138839f
+diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
+index f703fcfe9f7c..83148875a12c 100644
+--- a/tools/testing/selftests/x86/Makefile
++++ b/tools/testing/selftests/x86/Makefile
+@@ -12,7 +12,7 @@ CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh "$(CC)" trivial_program.c -no-pie)
+ 
+ TARGETS_C_BOTHBITS := single_step_syscall sysret_ss_attrs syscall_nt test_mremap_vdso \
+ 			check_initial_reg_state sigreturn iopl ioperm \
+-			test_vsyscall mov_ss_trap \
++			test_vsyscall mov_ss_trap sigtrap_loop \
+ 			syscall_arg_fault fsgsbase_restore sigaltstack
+ TARGETS_C_BOTHBITS += nx_stack
+ TARGETS_C_32BIT_ONLY := entry_from_vm86 test_syscall_vdso unwind_vdso \
+diff --git a/tools/testing/selftests/x86/sigtrap_loop.c b/tools/testing/selftests/x86/sigtrap_loop.c
+new file mode 100644
+index 000000000000..dfb05769551d
+--- /dev/null
++++ b/tools/testing/selftests/x86/sigtrap_loop.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Intel Corporation
++ */
++#define _GNU_SOURCE
++
++#include <err.h>
++#include <signal.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ucontext.h>
++
++#ifdef __x86_64__
++# define REG_IP REG_RIP
++#else
++# define REG_IP REG_EIP
++#endif
++
++static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *), int flags)
++{
++	struct sigaction sa;
++
++	memset(&sa, 0, sizeof(sa));
++	sa.sa_sigaction = handler;
++	sa.sa_flags = SA_SIGINFO | flags;
++	sigemptyset(&sa.sa_mask);
++
++	if (sigaction(sig, &sa, 0))
++		err(1, "sigaction");
++
++	return;
++}
++
++static unsigned int loop_count_on_same_ip;
++
++static void sigtrap(int sig, siginfo_t *info, void *ctx_void)
++{
++	ucontext_t *ctx = (ucontext_t *)ctx_void;
++	static unsigned long last_trap_ip;
++
++	if (last_trap_ip == ctx->uc_mcontext.gregs[REG_IP]) {
++		printf("\tTrapped at %016lx\n", last_trap_ip);
++
++		/*
++		 * If the same IP is hit more than 10 times in a row, it is
++		 * _considered_ an infinite loop.
++		 */
++		if (++loop_count_on_same_ip > 10) {
++			printf("[FAIL]\tDetected sigtrap infinite loop\n");
++			exit(1);
++		}
++
++		return;
++	}
++
++	loop_count_on_same_ip = 0;
++	last_trap_ip = ctx->uc_mcontext.gregs[REG_IP];
++	printf("\tTrapped at %016lx\n", last_trap_ip);
++}
++
++int main(int argc, char *argv[])
++{
++	sethandler(SIGTRAP, sigtrap, 0);
++
++	/*
++	 * Set the Trap Flag (TF) to single-step the test code, therefore to
++	 * trigger a SIGTRAP signal after each instruction until the TF is
++	 * cleared.
++	 *
++	 * Because the arithmetic flags are not significant here, the TF is
++	 * set by pushing 0x302 onto the stack and then popping it into the
++	 * flags register.
++	 *
++	 * Four instructions in the following asm code are executed with the
++	 * TF set, thus the SIGTRAP handler is expected to run four times.
++	 */
++	printf("[RUN]\tsigtrap infinite loop detection\n");
++	asm volatile(
++#ifdef __x86_64__
++		/* Avoid clobbering the redzone */
++		"sub $128, %rsp\n\t"
++#endif
++		"push $0x302\n\t"
++		"popf\n\t"
++		"nop\n\t"
++		"nop\n\t"
++		"push $0x202\n\t"
++		"popf\n\t"
++#ifdef __x86_64__
++		"add $128, %rsp\n\t"
++#endif
++	);
++
++	printf("[OK]\tNo sigtrap infinite loop detected\n");
++	return 0;
++}
 -- 
 2.49.0
 
