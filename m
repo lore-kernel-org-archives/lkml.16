@@ -1,106 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075D786337;
-	Thu,  5 Jun 2025 06:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D7586337;
+	Thu,  5 Jun 2025 06:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749103471; cv=none; b=eNbcH9L5b48+Hbi0cAydIJmfDXzJ+Di2Upk7344U7RSNsTMrX7QCGHJy2XwRNl/GGRmOzqPPFyY+RnN7adUVs6AuOhzaNyGBXDe6dzmm1m3ujRuqS0dVQ2mnMqSUwxJJVW+vS8i5l/SoY6Sk4GQ7jClLf+W7lJ7JtSHYTeGLC9k=
+	t=1749103551; cv=none; b=RoR9eNRmTNlaS/+y2WqJS3I52N8IRy/CJOIRLk8Bgiovr3+tqcVxL8h2z8hWMtseysx4npm8h9ah49rQ7F+mOAFlulOJ6XvDeND7eRbVhcIee4bwjJz2WiOgIG/WWGtzCiNRG63I5qq/Jv+bARvhUbktl7wQdFu/iDMQ2stuLO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749103471; c=relaxed/simple;
-	bh=RZxpLfhIRq9MDyCn7PC1IqQd3NaFFgnnFlYQvCjgl1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AGiGeQAMhy7dZnEjwzXPrGkpOqSvqPxVMNP7fVU6vH7Q73Mi+FlMbsSkkXY8/Ym4iZHLwbxAAf4DnoOX8HOg7TodZluh1Ns37DElQYmSbkSNkJwzhKEMbeB8Zr08pcEFrHyGFnaIjqL5h+t1I/Eb3Z4+oWMe32lkazNcRfQnt5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XoasEWsE; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749103551; c=relaxed/simple;
+	bh=sqgDfnN4N0J3wueLo9uBRnQ3TdtwpgSzJhcKSr1k4kk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=i/Upk0ay4/OJlFhkvxuIxtY5Q8XZXIPdyJyjHxbZhytM8/hKmM6t3yXKTTZXLw/erseiQEVt4t6pVXIydOA7Bi3VnxXFQQaVpUlYNwVdxF+qw3oK3/xTGi7qEH34Bgsx4Bg+vSWhrd3mOmSOCAfcKZYyVZTWYRfG0SUL2FjTAbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QGSUpdN0; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XoasEWsE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749103470; x=1780639470;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RZxpLfhIRq9MDyCn7PC1IqQd3NaFFgnnFlYQvCjgl1g=;
-  b=XoasEWsEb0PwgqCZz+cHCMZkdZRemmNqIPlDJL1G8HUbd1u24JFht+WO
-   EzYTVRbNCmlO+o+RKrSiuvBnI7LQHMwzAGyqo/KF3yvbVPYUuC4Rnoj0d
-   lGx6OHFSQgP5fHUk19ayQMmsmtNJ+gxu+1IFzIlvAADj1DIx/hXtzMIcG
-   PpvdvFxoP3/nhdrV6clAz3mzie9QW/lX3zuqKpS2c3PTDRDIR9mjAqOxW
-   S4vwkuFF4Ik1d1pR41/M9aR6+tzbTtZJ3psrA2Rtxgsph+ESc390LmFeC
-   nuxG4JeACksJ3l81/7SNIzmbaer6t6BFIps8gCjttu0HHhn6jomuQTzVy
-   g==;
-X-CSE-ConnectionGUID: VR2OW/oCQ+uk1ZOrb0d1Ow==
-X-CSE-MsgGUID: UXWvV5SIQ4KkDq7TVDItKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="38837851"
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="38837851"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:04:29 -0700
-X-CSE-ConnectionGUID: utlLf4pZQPODm/+M2F+6mA==
-X-CSE-MsgGUID: aKLhIUSCTNmCCS/ak7G/Tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="145905398"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:04:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uN3iA-00000003mBg-218f;
-	Thu, 05 Jun 2025 09:04:22 +0300
-Date: Thu, 5 Jun 2025 09:04:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, nuno.sa@analog.com,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v10 07/12] iio: adc: ad7768-1: Add GPIO controller support
-Message-ID: <aEEzZjfLVUW1kyC9@smile.fi.intel.com>
-References: <cover.1749063024.git.Jonathan.Santos@analog.com>
- <eb48ea5f11503729b15a36ef00c89de3dd37bcc3.1749063024.git.Jonathan.Santos@analog.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QGSUpdN0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1749103541;
+	bh=FBf32aloc4DGnuQVM6vOKg22DnQbQHJTGpi+iyZQLjQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QGSUpdN0x93Vhp/ouJLRw8PHZ91FHqR719A/sILSPKBnpGpGTeMKnANd9Vp17umBB
+	 hcBBl0/aQ79HG8Z3O/Q73znw3WLkI/GvXwMU/guqgOkEKDC9aFO+ldGDwI4mvKQ42F
+	 RQqdGkM9d7AN1PQpCZfiwdj1x5AK0JXHgi0+XxYvc67yQbjfAYvkLgF2BjtnwpbKBR
+	 jIqCNAb+3hF7J7m+vwjAZ2r1v/8VChAbE9wdiczvtj/OkdjBYvxO39VSAI79BSlcXl
+	 FfQ3qmLjc4ht2/YNcwxORZqtkQdtfLl3g+lR7XSDojQrc7ZEekid66sPaIR+NDGnOF
+	 w6vxmlxwadb9Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bCYpY492Sz4x7j;
+	Thu,  5 Jun 2025 16:05:41 +1000 (AEST)
+Date: Thu, 5 Jun 2025 16:05:40 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Steve French <smfrench@gmail.com>
+Cc: Meetakshi Setiya <msetiya@microsoft.com>, Steve French
+ <stfrench@microsoft.com>, CIFS <linux-cifs@vger.kernel.org>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the cifs tree
+Message-ID: <20250605160540.76a4c651@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb48ea5f11503729b15a36ef00c89de3dd37bcc3.1749063024.git.Jonathan.Santos@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: multipart/signed; boundary="Sig_/EX/gxNEihzoWEfJCUPI6oAa";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Wed, Jun 04, 2025 at 04:36:43PM -0300, Jonathan Santos wrote:
-> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> 
-> The AD7768-1 has the ability to control other local hardware (such as gain
-> stages),to power down other blocks in the signal chain, or read local
-> status signals over the SPI interface.
-> 
-> Add direct mode conditional locks in the gpio callbacks to prevent register
+--Sig_/EX/gxNEihzoWEfJCUPI6oAa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-GPIO
+Hi all,
 
-> access when the device is in buffered mode.
-> 
-> This change exports the AD7768-1's four gpios and makes them accessible
+After merging the cifs tree, today's linux-next build (htmldocs) produced
+this warning:
 
-GPIOs
+Documentation/filesystems/smb/smbdirect.rst: WARNING: document isn't includ=
+ed in any toctree
 
-> at an upper layer.
+Introduced by commit
 
-...
+  b94d1b9e07ba ("cifs: add documentation for smbdirect setup")
 
-I haven't seen in the commit message nor in the comments why GPIO regmap can't
-be used. (No need to resend, just reply here, but keep in mind in case of a new
-version of the series.)
+--=20
+Cheers,
+Stephen Rothwell
 
--- 
-With Best Regards,
-Andy Shevchenko
+--Sig_/EX/gxNEihzoWEfJCUPI6oAa
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhBM7QACgkQAVBC80lX
+0GzgPQf/fzMUypV5BngavlSqlHxMFB6N7CcQVD7KhiPDMvA76ZH3tXxK81CWqkO/
+T5QP4jrZspJO7HQx7DOFmMX/df/vG7T6Y+9NEDGq/7O9vj6Hzn1w2wkAnnAU6cdG
+rJ/V5WKaJQeVh2KroYOz13WttRUz19NP0sHuGVXbmcwUZPNTfE+d8bN2ygssYtx3
+9pH8LK/J9IgWlVdmIQl6Zcuzyc0luYd1GcTP2ZlNJur8/eT4VLYylocR0oL6AOsr
+Y9f3eZyEVb1r+GC59FVlNvZmJkJMpVJ5XfiS2DDpOvCiRaClJ6ED3dpSJZqNu42I
+zw70TaiPDlIfn5h7OP44XStwqZefDQ==
+=N/+H
+-----END PGP SIGNATURE-----
+
+--Sig_/EX/gxNEihzoWEfJCUPI6oAa--
