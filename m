@@ -1,431 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52944BA38
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 00:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB043C2F;
+	Thu,  5 Jun 2025 00:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749084718; cv=none; b=dfwONDRx7EyX02kPPJWAEUbUYRfjJgm9TCuSFoUk2EuBj4Rk1IOGAVRrzxwHiYA4Rn+eHir2GtOl4GWUqu0q9jO1rVz0fyZXKYoqqcPMZ+5ioAioBtkZpae9jSEZXKyYtGnzdfws+EK8rf06Hnv4mvTT+qiUqY+KYfcGEzBbpRY=
+	t=1749084843; cv=none; b=T1PN5NTNGn22yLwOptGOeSWhTco8PZ7F/+psuYOEBSe2DH6BNEXpkOuqhxp3DAdNi5z8b77iG/E2I65ERH1cSXgNTDEVXw6HK0P9jYSoRxMlT+qgMb3TrHdAASxLjLQCG8eJ7jCQZX7u4FOSDhVb+yYeAT8lvysCF0QlhROTsUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749084718; c=relaxed/simple;
-	bh=36ZtIPKNX8SAihjkv5qZH8LM9lQp6Jdc6XTWTLKtWe0=;
+	s=arc-20240116; t=1749084843; c=relaxed/simple;
+	bh=AWmbqXr8HmHhWDjBHzH3d9h3bQexph0OE6Cl//0txsc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UXGQyO8OkTCYBMdjySBZUYpekCLDr3JPL4MVoxmGwjYP11IAbkhUNw1Urf+jY2STkekgxFfK3eP/g3uZwArRtlDyFywWBzjw+MWDU9QoRRKwOPHpyafawBv4jdkC1YBUJujQQqiAGy/o4SoX0RiKf5gIn1sYom+KX6pv9+qBOXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CP8dz4it; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CP8dz4it"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749084716; x=1780620716;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=36ZtIPKNX8SAihjkv5qZH8LM9lQp6Jdc6XTWTLKtWe0=;
-  b=CP8dz4itjvlRnt90u8o3zwnL6xiZ7stgCpT6G23XTyCkvT8PHCHnBI2h
-   pW9UmlpMbD+g6p1cJDeWqEjANUC0Jr4i7bzet1VPxOHAt32KRpunw03oL
-   F82ESFWVmQ474jy6LbvwZLEIHEVFMdmJH2s239AH9bItEV4p5ZIsKrQNS
-   /hofU/Ryo8pEe/LgkpjWeHvb5GPmX9DRLWZFwCwYShtZ7HsmyfD2jWMG1
-   S+pwRl0bfbhsRBEbHN2ge6Qultvrh3ln6x0OOD1uHZE1iXT5bwOttnzXE
-   uM1MHKigKM1dgjPS6Zt3Km/Iescuezt5kbcQ4hQFmUcOfoa9P9wYg33eU
-   Q==;
-X-CSE-ConnectionGUID: AihOVGxZRgWXFSVjJlJ+FQ==
-X-CSE-MsgGUID: CwBX5AfcTAWUYrWo4CnGGw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="50883157"
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="50883157"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 17:51:55 -0700
-X-CSE-ConnectionGUID: 7+U0Zyk4RY++9YMSU/sE0g==
-X-CSE-MsgGUID: qSxTrllcTqay1o2hr+22iw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="150626227"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 04 Jun 2025 17:51:53 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uMypi-0003aH-1c;
-	Thu, 05 Jun 2025 00:51:50 +0000
-Date: Thu, 5 Jun 2025 08:51:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Qingfang Deng <dqfext@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH] riscv: use generic MMIO accessors
-Message-ID: <202506050828.Dktas7qm-lkp@intel.com>
-References: <20250530032252.3092502-1-dqfext@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jz+uAWejEB+FKJLs+loo+9GtxwsxnY/Dh6YmCMEW58M8shBtxmPTBc3MIbqbFXFC1+4mCgqZFyCJZJiUvH1X5i6rHR/hy/f0TFwwqAzUYfodv1CW5MG6ulGkdXgYrkTes5ph1r7I1RUmvypEOP8OasQQX04W0zMm9M+c2nvzPqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-13-6840eaa26553
+Date: Thu, 5 Jun 2025 09:53:49 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	mhocko@suse.com, horms@kernel.org, linux-rdma@vger.kernel.org,
+	bpf@vger.kernel.org, vishal.moola@gmail.com
+Subject: Re: [RFC v4 02/18] netmem: introduce netmem alloc APIs to wrap page
+ alloc APIs
+Message-ID: <20250605005349.GA37659@system.software.com>
+References: <20250604025246.61616-1-byungchul@sk.com>
+ <20250604025246.61616-3-byungchul@sk.com>
+ <CAJuCfpFCtGFRip72x8HadTfuv_2d+e19qZ2xJowaLa6V9JOGHA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250530032252.3092502-1-dqfext@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJuCfpFCtGFRip72x8HadTfuv_2d+e19qZ2xJowaLa6V9JOGHA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+++cnR2Xq9O6/U0qWmViZBeC3ihUiOAEFVlkdIEcemrLabLp
+	mkGgaUgjV2l0WUtWI1tTmS4vS2LmGt66KIvkdNUsg8IKnYk6L3mUyG8P7/O8z+/98NKE/K54
+	Ca1Oy+C0aUqNgpKS0p+h99bZfsSpNnz3kGBxllFQOmSAB11uMVgcNQgGht9LIOBrosB2d5AA
+	S1seCX+cIwT0NHZLoLPkGwlP8msJ6L7cTEFBXpCA8267CNprTGK4NnKfgNrsLgm8rrNQ8Kls
+	QgzfvAUktJgfktBpioNG6yIYfN6LwOesFcHgpTsUFPmtFHzJ60Tgf9ZNwu0cEwKnhxdDcMhC
+	xa1gqx6+FbGPzR8lrNWVyT6yR7FG3k+wLsdFinX1F0rYDx1PKLb5ZpBkH7sDIrYg9xfF9vW8
+	I9nfnjcU66x6Q7IvrD4JG3At28cckW5P5jRqPaddH5MoVQUaikTpL+UGT2OvJBuNhRpRCI2Z
+	zbipzkYYET2lv5RHCJJkVmFTQ7yQoJg1mOeHCUEvYKJwUeADZURSmmC6xfhesAIJxnzmMK7k
+	eZGwK2MA/2pRCRk5Y0e4vbWHEjIyZh5uufWVFDQxWTpa7J/CEkw4fjBOT4+X49zq21OsECYe
+	D09UT8UXMivx05omkdCJmac0Lq58QUyfH4Yb7Dx5Bc0zz0CYZyDM/xHmGQgrIh1Irk7TpyrV
+	ms3Rqqw0tSE66XSqC00+Tsm50aNu1N9+wIsYGilCZYnxcSq5WKnXZaV6EaYJxQJZ4o9YlVyW
+	rMw6y2lPH9dmajidF4XTpGKxbNPgmWQ5c1KZwaVwXDqn/eeK6JAl2eiUes+hYGvd6l1Gf1A1
+	UW8rT8q/f9UxKzM5Z7Qf+7gbhTvm9s2WBUoiYq57FdTH/dHIvXNsq/uEodQW9p5fKx+rj9wW
+	+fmKZ0ssLx4f33BnZKk65QJR8SohPcFzbE6Za+3eek8kOtlqqN7dljiamzGAupqfJ0Weqb7s
+	ijjYoV+hIHUq5cYoQqtT/gXxo/aRNAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe885OzsuJ8dldVLEWlEySSsKHkhy9MW3oMs+dSFsKw9tOGds
+	aSpUmtJl5LooXeaqpZiXtOUyLxGiU9RpVkyKldZipYiJVjNzruuKyG9/nv/v+T1fHoaUFAoi
+	GY3uCK/XqbRSWkSJtm8sWF02JlevqfTLwGKrpeHOTDZUvm0WgKWmEcGUf1AIvs5uGspvTZNg
+	eVpIwRfbLAnDXV4heG6PUPDodBMJ3vM9NBQVBkg42VxFQMd1pwCeNZoEUDJbQUJT3lshDDy0
+	0PCm9qcARhxFFDjN1RR4THLosi6C6b5xBJ22JgKmz12nodhlpeFdoQeBq8NLQWm+CYGt1S2A
+	wIyFlktxQ/VLAreYXwux1Z6J71fJsNHtIrG95iyN7Z8vCfHQi0c07rkaoHBLs4/ARQUTNP40
+	/IrCk63PaVw++pHAtobnFH5s7RTuDN8rSkzltZosXp+wSSlS+9qLicP9kuzWrnFhHvoeakQM
+	w7HruXd1K4ORYldwpnaFEYUwNLuKc7v9ZDBHsDKu2DdEG5GIIVmvgCsL3EPBYgG7h6t3u4ng
+	rpgFbsKpDjIStgpxz3qH6SAjZsM557X3VDCTv6XfbrjIIE+yUVzlD+bvOIYreFD651YIq+D8
+	Px/8wReyy7m2xm7iAgozzzGZ55jM/03mOSYrompQhEaXla7SaDfEG9LUOTpNdvzBjHQ7+v0b
+	t499u9iMpgaSHYhlkDRUrFTI1RKBKsuQk+5AHENKI8TKsSS1RJyqysnl9Rn79Zla3uBAUQwl
+	XSzeuotXSthDqiN8Gs8f5vX/WoIJicxDy9t3nLIndVwObVn3ZV/cHWe0Qj6au6MvZmAs8mZd
+	lPNMyivTtq0pCWGl5OJ5KR/COBSrGPmaX/1j/kT08YB1mqpb+iHWt7k/VXL6flrFsqNm113p
+	vZyh2SuewdndpxoSp3pj8/N8qYnaA0RJXMxaZf2kd0tjm2PJPmrek/pk3YkZKWVQq9bKSL1B
+	9QvNR7qxFwMAAA==
+X-CFilter-Loop: Reflected
 
-Hi Qingfang,
+On Wed, Jun 04, 2025 at 08:14:18AM -0700, Suren Baghdasaryan wrote:
+> On Tue, Jun 3, 2025 at 7:53 PM Byungchul Park <byungchul@sk.com> wrote:
+> >
+> > To eliminate the use of struct page in page pool, the page pool code
+> > should use netmem descriptor and APIs instead.
+> >
+> > As part of the work, introduce netmem alloc APIs allowing the code to
+> > use them rather than the existing APIs for struct page.
+> >
+> > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > ---
+> >  net/core/netmem_priv.h | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/net/core/netmem_priv.h b/net/core/netmem_priv.h
+> > index cd95394399b4..32e390908bb2 100644
+> > --- a/net/core/netmem_priv.h
+> > +++ b/net/core/netmem_priv.h
+> > @@ -59,4 +59,18 @@ static inline void netmem_set_dma_index(netmem_ref netmem,
+> >         magic = netmem_get_pp_magic(netmem) | (id << PP_DMA_INDEX_SHIFT);
+> >         __netmem_clear_lsb(netmem)->pp_magic = magic;
+> >  }
+> > +
+> > +static inline netmem_ref alloc_netmems_node(int nid, gfp_t gfp_mask,
+> > +                                           unsigned int order)
+> > +{
+> > +       return page_to_netmem(alloc_pages_node(nid, gfp_mask, order));
+> > +}
+> > +
+> > +static inline unsigned long alloc_netmems_bulk_node(gfp_t gfp, int nid,
+> > +                                                   unsigned long nr_netmems,
+> > +                                                   netmem_ref *netmem_array)
+> > +{
+> > +       return alloc_pages_bulk_node(gfp, nid, nr_netmems,
+> > +                       (struct page **)netmem_array);
+> > +}
+> 
+> Note: if you want these allocations to be reported in a separate line
+> inside /proc/allocinfo you need to use alloc_hooks() like this:
 
-kernel test robot noticed the following build errors:
+Ah, it looks better to use alloc_hooks().  Thanks.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.15 next-20250604]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+	Byungchul
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Qingfang-Deng/riscv-use-generic-MMIO-accessors/20250530-112455
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250530032252.3092502-1-dqfext%40gmail.com
-patch subject: [PATCH] riscv: use generic MMIO accessors
-config: riscv-randconfig-001-20250605 (https://download.01.org/0day-ci/archive/20250605/202506050828.Dktas7qm-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250605/202506050828.Dktas7qm-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506050828.Dktas7qm-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:7:
-   In file included from include/linux/gfp.h:7:
-   In file included from include/linux/mmzone.h:22:
-   In file included from include/linux/mm_types.h:16:
-   In file included from include/linux/uprobes.h:18:
-   In file included from include/linux/timer.h:6:
-   In file included from include/linux/ktime.h:25:
-   In file included from include/linux/jiffies.h:10:
-   In file included from include/linux/time.h:60:
-   In file included from include/linux/time32.h:13:
-   In file included from include/linux/timex.h:67:
->> arch/riscv/include/asm/timex.h:20:9: error: call to undeclared function '__raw_readq'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-      20 |         return readq_relaxed(clint_time_val);
-         |                ^
-   arch/riscv/include/asm/mmio.h:59:56: note: expanded from macro 'readq_relaxed'
-      59 | #define readq_relaxed(c)        ({ u64 __v; __io_rbr(); __v = readq_cpu(c); __io_rar(); __v; })
-         |                                                               ^
-   arch/riscv/include/asm/mmio.h:32:64: note: expanded from macro 'readq_cpu'
-      32 | #define readq_cpu(c)            ({ u64 __r = le64_to_cpu((__force __le64)__raw_readq(c)); __r; })
-         |                                                                          ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:98:11: warning: array index 3 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-      98 |                 return (set->sig[3] | set->sig[2] |
-         |                         ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:98:25: warning: array index 2 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-      98 |                 return (set->sig[3] | set->sig[2] |
-         |                                       ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:99:4: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-      99 |                         set->sig[1] | set->sig[0]) == 0;
-         |                         ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:101:11: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     101 |                 return (set->sig[1] | set->sig[0]) == 0;
-         |                         ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:114:11: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     114 |                 return  (set1->sig[3] == set2->sig[3]) &&
-         |                          ^         ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:114:27: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     114 |                 return  (set1->sig[3] == set2->sig[3]) &&
-         |                                          ^         ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:115:5: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     115 |                         (set1->sig[2] == set2->sig[2]) &&
-         |                          ^         ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:115:21: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     115 |                         (set1->sig[2] == set2->sig[2]) &&
-         |                                          ^         ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:116:5: warning: array index 1 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     116 |                         (set1->sig[1] == set2->sig[1]) &&
-         |                          ^         ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
---
-     175 |                 set->sig[2] = op(set->sig[2]);                          \
-         |                                  ^        ~
-   include/linux/signal.h:186:24: note: expanded from macro '_sig_not'
-     186 | #define _sig_not(x)     (~(x))
-         |                            ^
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:187:1: warning: array index 2 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     187 | _SIG_SET_OP(signotset, _sig_not)
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/signal.h:175:3: note: expanded from macro '_SIG_SET_OP'
-     175 |                 set->sig[2] = op(set->sig[2]);                          \
-         |                 ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:187:1: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     187 | _SIG_SET_OP(signotset, _sig_not)
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/signal.h:177:27: note: expanded from macro '_SIG_SET_OP'
-     177 |         case 2: set->sig[1] = op(set->sig[1]);                          \
-         |                                  ^        ~
-   include/linux/signal.h:186:24: note: expanded from macro '_sig_not'
-     186 | #define _sig_not(x)     (~(x))
-         |                            ^
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:187:1: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     187 | _SIG_SET_OP(signotset, _sig_not)
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/signal.h:177:10: note: expanded from macro '_SIG_SET_OP'
-     177 |         case 2: set->sig[1] = op(set->sig[1]);                          \
-         |                 ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:198:10: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     198 |         case 2: set->sig[1] = 0;
-         |                 ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:211:10: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     211 |         case 2: set->sig[1] = -1;
-         |                 ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:242:10: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     242 |         case 2: set->sig[1] = 0;
-         |                 ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:8:
-   In file included from include/linux/mm.h:35:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:255:10: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     255 |         case 2: set->sig[1] = -1;
-         |                 ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/riscv/kernel/asm-offsets.c:10:
-   In file included from include/linux/ftrace.h:10:
-   In file included from include/linux/trace_recursion.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
->> include/asm-generic/io.h:140:19: error: static declaration of '__raw_readq' follows non-static declaration
-     140 | static inline u64 __raw_readq(const volatile void __iomem *addr)
-         |                   ^
-   include/asm-generic/io.h:139:21: note: expanded from macro '__raw_readq'
-     139 | #define __raw_readq __raw_readq
-         |                     ^
-   arch/riscv/include/asm/timex.h:20:9: note: previous implicit declaration is here
-      20 |         return readq_relaxed(clint_time_val);
-         |                ^
-   arch/riscv/include/asm/mmio.h:59:56: note: expanded from macro 'readq_relaxed'
-      59 | #define readq_relaxed(c)        ({ u64 __v; __io_rbr(); __v = readq_cpu(c); __io_rar(); __v; })
-         |                                                               ^
-   arch/riscv/include/asm/mmio.h:32:64: note: expanded from macro 'readq_cpu'
-      32 | #define readq_cpu(c)            ({ u64 __r = le64_to_cpu((__force __le64)__raw_readq(c)); __r; })
-         |                                                                          ^
-   In file included from arch/riscv/kernel/asm-offsets.c:10:
-   In file included from include/linux/ftrace.h:10:
-   In file included from include/linux/trace_recursion.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:804:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     804 |         insb(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:104:53: note: expanded from macro 'insb'
-     104 | #define insb(addr, buffer, count) __insb(PCI_IOBASE + (addr), buffer, count)
-         |                                          ~~~~~~~~~~ ^
-   In file included from arch/riscv/kernel/asm-offsets.c:10:
-   In file included from include/linux/ftrace.h:10:
-   In file included from include/linux/trace_recursion.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:812:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     812 |         insw(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:105:53: note: expanded from macro 'insw'
-     105 | #define insw(addr, buffer, count) __insw(PCI_IOBASE + (addr), buffer, count)
-         |                                          ~~~~~~~~~~ ^
-   In file included from arch/riscv/kernel/asm-offsets.c:10:
-   In file included from include/linux/ftrace.h:10:
-   In file included from include/linux/trace_recursion.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:820:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     820 |         insl(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:106:53: note: expanded from macro 'insl'
-     106 | #define insl(addr, buffer, count) __insl(PCI_IOBASE + (addr), buffer, count)
-         |                                          ~~~~~~~~~~ ^
-   In file included from arch/riscv/kernel/asm-offsets.c:10:
-   In file included from include/linux/ftrace.h:10:
-   In file included from include/linux/trace_recursion.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:829:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     829 |         outsb(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:118:55: note: expanded from macro 'outsb'
-     118 | #define outsb(addr, buffer, count) __outsb(PCI_IOBASE + (addr), buffer, count)
-         |                                            ~~~~~~~~~~ ^
-   In file included from arch/riscv/kernel/asm-offsets.c:10:
-   In file included from include/linux/ftrace.h:10:
-   In file included from include/linux/trace_recursion.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:838:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     838 |         outsw(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:119:55: note: expanded from macro 'outsw'
-     119 | #define outsw(addr, buffer, count) __outsw(PCI_IOBASE + (addr), buffer, count)
-         |                                            ~~~~~~~~~~ ^
-   In file included from arch/riscv/kernel/asm-offsets.c:10:
-   In file included from include/linux/ftrace.h:10:
-   In file included from include/linux/trace_recursion.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-
-
-vim +/__raw_readq +20 arch/riscv/include/asm/timex.h
-
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  16  
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  17  #ifdef CONFIG_64BIT
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  18  static inline cycles_t get_cycles(void)
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  19  {
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14 @20  	return readq_relaxed(clint_time_val);
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  21  }
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  22  #else /* !CONFIG_64BIT */
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  23  static inline u32 get_cycles(void)
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  24  {
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  25  	return readl_relaxed(((u32 *)clint_time_val));
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  26  }
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  27  #define get_cycles get_cycles
-d5be89a8d118a8 Palmer Dabbelt 2020-09-14  28  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> static inline unsigned long alloc_netmems_bulk_node_noprof(gfp_t gfp, int nid,
+>                                                    unsigned long nr_netmems,
+>                                                    netmem_ref *netmem_array)
+> {
+>        return alloc_pages_bulk_node_noprof((gfp, nid, nr_netmems,
+>                        (struct page **)netmem_array);
+> }
+> 
+> #define alloc_netmems_bulk_node(...) \
+>         alloc_hooks(alloc_netmems_bulk_node_noprof(__VA_ARGS__))
+> 
+> 
+> 
+> >  #endif
+> > --
+> > 2.17.1
+> >
