@@ -1,167 +1,114 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D78B1EF080;
-	Thu,  5 Jun 2025 15:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A0817A317;
+	Thu,  5 Jun 2025 15:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749138854; cv=none; b=l3TkyzSXhFGRodEPehmAEMx6wzHKGoRpNEOxTEfjYoMUi18iqvDcrh4s91e5HOQaEw74bpkAGMPWHefOHKtrv9wHxMlC7CtzuEhU463+0B3HEKASmkvp4b76ETN56oHW14xUX65hC4VlaUY6GdwdXrzqndLtnxZ8NhmBoracIxE=
+	t=1749138925; cv=none; b=N2CWenBMZyTeMnPOjYeKVQV3O2YR2aHRYIfZ0lUo2StCA0YcfbcXCOSiBH8SxhlQ1Ny4+1vrZtPwf3v7YvBUGm9H7It3Bwf/wQP2BzIdS9zJD5OQ52IoSRM78YMYlaKMR4u6Erodr3HNpSPM/miu7uxoVoGFn+CuRKOnslLQCuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749138854; c=relaxed/simple;
-	bh=XJ4OnNteacnUcBJgU18uNHRd0LUAn8+t4EqsM7xK1mk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NpR4iFQkF7RKxpxDO9kJG1/hmAJV2H9/OpXtcmozcJw+sDy0KRS+Hj0SQn/QVZ+GQqusllGh2lkmqAgVhXNsqItF0vUveYTyifbpbhkCJ509Kqn3A/dp2MARWaY38fFGPKhJMhXZBF33tDNyBiWzXMrzzjv7WkOFiCRoddqGrEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=CJN8AhF/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q4UPYCXi; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749138925; c=relaxed/simple;
+	bh=MnOAMjlucWWDs+fu5fv7AmZ4TACG2bxE2ReThc1je50=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=F6RtJ0B9wGa+iI5zplb09cszan9BtZlTrCQo4Wukj+Hv9ZUS/MvRdC7PS2wjOllNovThJr+IZjBRrE28/4Vr5i/TXPG7lN6PY4awcLggcZxJbBgKAWnEYPMr8/4/j02VjG0VADp9g04lJ82qtgadV4oX2uckzw5ZvXTtSMBDCoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=x5nIktGH; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="CJN8AhF/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q4UPYCXi"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id DF84D114011C;
-	Thu,  5 Jun 2025 11:54:08 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-04.internal (MEProxy); Thu, 05 Jun 2025 11:54:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749138848;
-	 x=1749225248; bh=Qn245qQSyJEYdSkDPOgQGR69RTFiYTcg/zViHoyBBD0=; b=
-	CJN8AhF/P3whIfl3cMyusFbeq+OyGon/w+UuMXjXYLuqEntG2kSJKw+wI+h+Mw7u
-	RGpFhyEGvhjOQZqM7eSmRjU63eBxFNAc2MZjmB4Uux3rgKETrdsp4vNBuHuUAdCd
-	jN5jSqyPZ0OmPfq6BtIGMIvSYfQMBF4pj14SSxP9Zhrg/rnsfeVGbUNNNPbV0LIY
-	EEy2RzoKUPFczRJUjwOGLg9FnuYkzua/gqyK9mW55ngEZgWIo+k07jW3FWcCCOX/
-	sKJ+XcB3JagAiNaNsFr0O8k25rQYRtHECIJhKvV3YEKqZLG5F8HQf2BOXAiZgmOk
-	8fan6C6YpQxTryE6SPmtpg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749138848; x=
-	1749225248; bh=Qn245qQSyJEYdSkDPOgQGR69RTFiYTcg/zViHoyBBD0=; b=Q
-	4UPYCXiwOigcqrN1IPf0slad6+4inUQQ7hvSMvUvtvfmeK+Xz1zv8aX/6VEvucgY
-	/nfphvyfeklslWllMNhy1nmHZ/LZKTi+hGZ2Oxhhbr7VE5Spz+bsYcm7qjU/C7IR
-	/Q9ht/aql9AX2yEyZWzi0ZBkTKoz+UhWja+zyknVenmO7tTWgmQrkVKm2u6tYM0T
-	BbB8fX56QqGVtTPjOHk11bnDpLDy4CcHgoqIbu1Dt9PlJFLgLS1P3vcrct2w+fgd
-	1ZExkM4GFbchmcBhSZuCVf6iaoxjEmgtXNT02JzcBgcm8inIWwlg5nnhrE+XdSDK
-	snIHOVyyGRoRXCDOOrOVA==
-X-ME-Sender: <xms:n71BaNdKsqSkFYejiCh9O9VkXJHCclNIrkhmKoMMnLunqguDzhJ0fg>
-    <xme:n71BaOcP2fNek97Kt4J29mon2CLdICSL2gV-gv1UCqg63oSF07501kjWvzoZClRYz
-    Man1KChh1q_R3XxBCM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdefkeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
-    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
-    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
-    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
-    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
-    hrpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhn
-    thgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
-    hinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhs
-    thhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfi
-    hnrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgt
-    phhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:n71BaP_Sc7vGI49Jm4mDEDgCgnKZfkVX3D3G8rZ5knqlhvj7F6lZ3w>
-    <xmx:n71BaClsV-_9JTLYIQ3KPOZ8qbJx4Ae6Xp6tKkBdgkD2qzFyssjA1A>
-    <xmx:n71BaJ9kw8Hpi5UKvkYuaeTz7-gapc4ZU1hs8FQbuehokZC_dB-2bA>
-    <xmx:n71BaIm7_x46AORl57uWXZz_OxDgddbvqq4GZ542URutTcglQ9L-dA>
-    <xmx:oL1BaDNAU7hCoNSMfXjxgqO-lI7ASvmY4lBaEIeuE2GKton50KTiwpsA>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6D6222CE0061; Thu,  5 Jun 2025 11:54:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="x5nIktGH"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555CUO6U017916;
+	Thu, 5 Jun 2025 17:54:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=7GIhYXvKL3wJRk1dIpzuKA
+	KsrZ2kloHNxniKoQVFP+w=; b=x5nIktGHB6dK7/e+5b1KmApj/ISN8oC8EBNx+s
+	z3mdkw0inMfwOVzA8Anab5m1fToIfyw6mDrms8Es8FMQXnJGeCMYa1rql7wYQFl/
+	hZHUBltTcubsMP5tGGi2amiyRhley1GvLu9RAlRih2X6KGFagtwJHWI1ATkIjTdY
+	B0DWi2jEMxIWuDujRhw7VHbYClJsCndIq/IvVLDj4v2TWYPouzqntnaeV+Ze5MQv
+	GqunbPTuErrMaCtO+jyDYZHbOKOBQiK5U3GuLycGnnlOz+IJ/XiaRAO66/KAV8Lb
+	SV8WxTfRltHIatB0cHnomljiUxhpi+nOHnC8B46IKGu9Sn8w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 471g90qrah-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Jun 2025 17:54:57 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 285E540051;
+	Thu,  5 Jun 2025 17:54:04 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3CB7ED22AEA;
+	Thu,  5 Jun 2025 17:53:41 +0200 (CEST)
+Received: from localhost (10.48.87.237) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Jun
+ 2025 17:53:40 +0200
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+Date: Thu, 5 Jun 2025 17:53:30 +0200
+Subject: [PATCH] dmaengine: stm32-dma: configure next sg only if there are
+ more than 2 sgs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T107eb5199b18744c
-Date: Thu, 05 Jun 2025 11:53:47 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
- ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Armin Wolf" <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Message-Id: <71f410f4-6ac6-41d2-8c99-2a02e0f05fed@app.fastmail.com>
-In-Reply-To: <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
- <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250605-stm32_dma_dbm_fix-v1-1-44657463d7d6@foss.st.com>
+X-B4-Tracking: v=1; b=H4sIAHm9QWgC/x2MQQqAIBAAvxJ7TjDNir4SIdVutQctNCII/550n
+ IGZFyIFpgh98UKgmyMfPkNVFrDsk99IMGYGJZWRjTQiXk4ri26yODu78iP03DWqrdDUWEPuzkB
+ Z/89hTOkDoElwwGMAAAA=
+X-Change-ID: 20250605-stm32_dma_dbm_fix-3b86271d54d4
+To: Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+CC: <dmaengine@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_04,2025-06-05_01,2025-03-28_01
 
-Hi Andy
+DMA operates in Double Buffer Mode (DBM) when the transfer is cyclic and
+there are at least two periods.
+When DBM is enabled, the DMA toggles between two memory targets (SxM0AR and
+SxM1AR), indicated by the SxSCR.CT bit (Current Target).
+There is no need to update the next memory address if two periods are
+configured, as SxM0AR and SxM1AR are already properly set up before the
+transfer begins in the stm32_dma_start_transfer() function.
+This avoids unnecessary updates to SxM0AR/SxM1AR, thereby preventing
+potential Transfer Errors. Specifically, when the channel is enabled,
+SxM0AR and SxM1AR can only be written if SxSCR.CT=1 and SxSCR.CT=0,
+respectively. Otherwise, a Transfer Error interrupt is triggered, and the
+stream is automatically disabled.
 
-On Thu, Jun 5, 2025, at 1:58 AM, Andy Shevchenko wrote:
-> On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
->> Create lenovo subdirectory for holding Lenovo specific drivers.
->
-> ...
->
->> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
->> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
->
-> You may follow the trick in the Makefile (see intel folder) to avoid repetition
-> of the folder name in the file names. Note, the modules will be called the
-> same (assuming no ABI breakages due to renames).
->
-Interesting - I'll have to look at that a bit more.
-Any objections if I leave that for a future change?
+Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+---
+ drivers/dma/stm32/stm32-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ...
->
->> -# IBM Thinkpad and Lenovo
->> +# IBM Thinkpad
->
-> This is a bit ambiguous now. It's IBM and Lenove for ThinkPad... Perhaps you
-> should put some kind of date or so? Like
->
-> # IBM Thinkpad (before 2007)
->
-> (note, I speculated on the year, you may know better what to put there).
->
+diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
+index 917f8e9223739af853e492d97cecac0e95e0aea3..0e39f99bce8be8c38fe33dd0246012910243d831 100644
+--- a/drivers/dma/stm32/stm32-dma.c
++++ b/drivers/dma/stm32/stm32-dma.c
+@@ -744,7 +744,7 @@ static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan, u32 scr)
+ 		/* cyclic while CIRC/DBM disable => post resume reconfiguration needed */
+ 		if (!(scr & (STM32_DMA_SCR_CIRC | STM32_DMA_SCR_DBM)))
+ 			stm32_dma_post_resume_reconfigure(chan);
+-		else if (scr & STM32_DMA_SCR_DBM)
++		else if (scr & STM32_DMA_SCR_DBM && chan->desc->num_sgs > 2)
+ 			stm32_dma_configure_next_sg(chan);
+ 	} else {
+ 		chan->busy = false;
 
-Sure. Realistically the thinkpad_acpi driver still works for the (pretty old now!) IBM Thinkpads so it's a bit messy.
+---
+base-commit: 3c018bf5a0ee3abe8d579d6a0dda616c3858d7b2
+change-id: 20250605-stm32_dma_dbm_fix-3b86271d54d4
 
-Main reason I did this is those two IBM specific drivers aren't, to my understanding, active for Lenovo devices now, and it seemed wrong to move them. Not sure if anybody really cares though :) I just didn't want to step on any toes.
+Best regards,
+-- 
+Amelie Delaunay <amelie.delaunay@foss.st.com>
 
-IBM sold the PC business to Lenovo in 2005, so I can put that date there unless anybody else has concerns.
-
-> ...
->
->> +++ b/drivers/platform/x86/lenovo/Makefile
->> @@ -0,0 +1,15 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +#
->> +# Makefile for linux/drivers/platform/x86/lenovo
->> +# Lenovo x86 Platform-Specific Drivers
->> +#
->> +obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
->> +obj-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+= lenovo-wmi-hotkey-utilities.o
->> +obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
->> +obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->> +obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->> +obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
->> +obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
->> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
->
->> +
->> +
->
-> No need to have even a single blank line at the end of file. Usually editors
-> even complain about this.
->
-My bad - I missed this one. Will fix in v2.
-
-Thanks for the review
-Mark
