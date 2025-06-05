@@ -1,97 +1,99 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CEB19D880;
-	Thu,  5 Jun 2025 20:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0D119D880;
+	Thu,  5 Jun 2025 20:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749156358; cv=none; b=XaeYxAzXJgeU01/qxpKXkefmUDYeNO5qsU5hPJd8UxRJ0BZZoKJk0Spqi/sohm3ZYRmGWED9CdDuQgqyW/BWFyz8QOUkviYenhHNJtcMiJSkI+6w6rnIPVu1Vt6nAN9F5BTQ2bjHwuNsC/Gxlvk7a6u1xdmxYHkbdneMDWYbpKU=
+	t=1749156383; cv=none; b=WFw8p05mtakB4lb3xaYmyNemXmXYoQhoDzEmQ1X/Ixe5TvEfSw2XsmbMoAsfUzvGc2sLrtC3JBqpAwE8VvpM0VMmn8n2HMtHRFc5B7hvDhTfRTNTAKqPKeTW/2eW4MX0+woXgB3u+UU1CAJ8gp2HSqubUxd3fqty5k8688Lc0tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749156358; c=relaxed/simple;
-	bh=KaleJOZCFYwOjK3nI6qlWVXegytr99EwRh96RQIPuX8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WRjhpihuh4mEjOSefBEbaX1C4PLjDVQj1Fp5ENxdX405Vdc0bx0oMHZ14s5dtdpNEu/QGgUEp4hYr8+7eZ4QLezIZ1VdSpGyASiyq665MwQeNeosgRf+/mlFkL7s3JniDRLmx60VQYbklZKVoPMRsyNjMjRv9LWuN+h0KvgNuFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGpzMmoA; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749156383; c=relaxed/simple;
+	bh=UvdLdb+pxew9L0NYuA+94OAzZpwn/QZgmKSmKDC0QnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1xYK16iTC3+xAd3BZzOMJRZ877AySQVeT5jAxbBqjememogFiBoU8WlXofPJPeewHNev1og+cnHE1Vlv5QMsVcS68Zns1+pe/bL48271LV7KflqGeQNRMJalviXwxwO2ObmPEOQJoejyPCQmVC5wu89lR3hAUm3AvzehnKOnSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEAFWGsO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGpzMmoA"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3122a63201bso1285309a91.0;
-        Thu, 05 Jun 2025 13:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749156356; x=1749761156; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=08nvIWQniSHmCFLizlsO6hV7YjeqPzOvfL/VB+gEMjQ=;
-        b=TGpzMmoArGh92boshPkIgyyRzUM76ISskMt0AysCDrtJMSsFOpxUwIJ3JkPcy/NDkL
-         0WK1odIwqI1cH8pMeiB25RFT+9kelTHkDJ7Z1jtQMv6P0ZLFPru7j+DHYynVV+7+7A8x
-         fV1/HLpDe9NemgeSEirjy7JXOSeRDOjUUfNpfWh9yPvyaEd88wdpCMK5FgyoFJ3Oyi1M
-         scm/Ji5d4mhHbDYTp9rJk2faS910QJiZignijW/Bq80iWod1Ya5BU81WY+K5mqh2HKI6
-         vvUIEDlikp69qzrhJ1MAhFKyefccbYZkKTR2IOAAH4jnigQwGsfBT1jMKo/TJkEAtQUO
-         omgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749156356; x=1749761156;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=08nvIWQniSHmCFLizlsO6hV7YjeqPzOvfL/VB+gEMjQ=;
-        b=onsXXDYlnhU/qVvGFKDUCjXAs9P3VAkDkk1UNW6/rAgUkfheYoLFOazpgVL/eyWG3v
-         SevCI1kDBbkstsmzGCd7dHT+ZG0cm/A9y/RM2lkvI+QUfAaUGloY2cItKu8dvaYY48yA
-         MygN3lineQFsA8TDIyR6MOrSlw6jL7FxyFSOnqZOLynsR6VAd51R8nuhyhK9PRoEmf8i
-         rQUoSxpTjtAy+42dXAGHbXQ6gCJoSOluF6JoiJr5Yi3LtGrpNIa5cBg1bpujWM5/kHYE
-         Z3Q7EPsLnic0u6PJU6mlSnQyA+klnsEvcI/C0aT1xLi9VDNBAHuLdsA/SFldB2febp56
-         dqxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIRZPxpQCLGcIwnBbEy+cP7H0BqPlThj1xy3QDssXRWyYmzaMxyjts9zqh2I+va04+lQjbhJAejELXWUnt@vger.kernel.org, AJvYcCWftN1v4hoWtZaT0lyT3uTDeN7FX2tbpQdyZajetDyvZ1+P79/3Ie6ohaFR46uY+YjEBJo9P32wRdMhsUNsMDLU@vger.kernel.org, AJvYcCWp9my6zr39cSNW360avezYsHpclNdbbPc3NRXbKFKxMWCNwL+ty0O8URy7BWXpqFrk3nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuVfcmKcnLGRnSmPXkme7UDBR9izkHmfzLfgP48EIfVcNCL8tV
-	pgpgX2c8nFKGZDdbbdZ+ooXTJ4+4soquq9hWerdpt8uxiKa8cjaRqD6xrk4qbtzEDc/x5NKHu5M
-	0U7TVjjaqRvSnDimJJlQXSNNzDCafDd4=
-X-Gm-Gg: ASbGncsm8J2vaCxaDK7bGfQUkqy56nW6yX23MfcxhFDcq3Gd5T/PDP9/rL5P6c+Bpse
-	IlRGI8OIDPHkeqzD6W0OIidOkp7YX991fIaTexUtm4ufWXbsNwiwkGEVAeloUlKf+ERhs+WGPWN
-	1Awfgpqyno3ERq0+ZK5QLeEWRsy6MfU5+x5aEEgFKHA15upMa6rs/3+J8YkIc=
-X-Google-Smtp-Source: AGHT+IHsr9ttE7WIn3845WOdkjd+yiJ7dZGR1JHZtZQdlQhQ6XinR/AD3N+nP6o+ND2yd8oiZBZvEkpoETpzIV7L2t4=
-X-Received: by 2002:a17:90b:58cf:b0:311:ea13:2e63 with SMTP id
- 98e67ed59e1d1-31347300dafmr1668278a91.13.1749156356548; Thu, 05 Jun 2025
- 13:45:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEAFWGsO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E865EC4CEE7;
+	Thu,  5 Jun 2025 20:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749156382;
+	bh=UvdLdb+pxew9L0NYuA+94OAzZpwn/QZgmKSmKDC0QnM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mEAFWGsOtZ5iw44rMJfkzOufIoobgYIjrridKhQwVu2Ob9Hc8XeQi10XMHP2N99MB
+	 uXYXc0bxWXPlHmFhd9CBpK3JESex5fmj3tPDRXYQL7rEvElcbGsn7S8VSlEb9uiGyn
+	 1JqUHf8Id2Ojjr5y6NCQChbQ/F174bAzYQ8PtI/5SSmrPpi72jalilZ7Z4GEf6j+q6
+	 GndvqZOC9DeO/8u88WfvS8++v4/qrDtrHeYriiHT7yEJtCZXD5CH2LizGamFl080mi
+	 RoUgjcQ4RH4wYo3W3xPIj8ahQe8GuqWVUuG0HaDcRfR8/Wgs6Xz1BUqfnjZxmzNz0w
+	 LoQixXDn6PqHw==
+Date: Thu, 5 Jun 2025 15:46:20 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Luca Weiss <luca@lucaweiss.eu>
+Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: qcom: pas: Conclude the rename from adsp
+Message-ID: <ukst3ppor4ww53k4udt7tlpysleuanyfgylaonp3optvsl7k6s@uk2dd7hdrzij>
+References: <20250605-pas-rename-v1-1-900b770d666c@oss.qualcomm.com>
+ <9f6652c9-d0c2-405c-bdf0-fc4daa017a4d@lucaweiss.eu>
+ <v765tixx2jqqx5rxylqmtulhotxbld5xvjrvo376hyzelmgrop@mqr4fcqdcrfj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603203701.520541-1-blakejones@google.com> <20250603203701.520541-2-blakejones@google.com>
-In-Reply-To: <20250603203701.520541-2-blakejones@google.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 5 Jun 2025 13:45:42 -0700
-X-Gm-Features: AX0GCFsF8bZqbHLzfHuC1RDhJourh4uvIqmM0-HJinP_vZEVbnxfekkB0vbUQNM
-Message-ID: <CAEf4BzYyn0=d-M45czJe-Qfk0tTuqLcjzCOge_p9iu6vXWR7hA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] Tests for the ".emit_strings" functionality in the
- BTF dumper.
-To: Blake Jones <blakejones@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <v765tixx2jqqx5rxylqmtulhotxbld5xvjrvo376hyzelmgrop@mqr4fcqdcrfj>
 
-On Tue, Jun 3, 2025 at 1:37=E2=80=AFPM Blake Jones <blakejones@google.com> =
-wrote:
->
-> When this mode is turned on, "emit_zeroes" and "compact" have no effect,
-> and embedded NUL characters always terminate printing of an array.
->
-> Signed-off-by: Blake Jones <blakejones@google.com>
-> ---
->  .../selftests/bpf/prog_tests/btf_dump.c       | 118 ++++++++++++++++++
->  1 file changed, 118 insertions(+)
->
+On Thu, Jun 05, 2025 at 03:27:19PM -0500, Bjorn Andersson wrote:
+> On Thu, Jun 05, 2025 at 06:01:07PM +0200, Luca Weiss wrote:
+> > Hi Bjorn,
+> > 
+> > Awesome to see this being cleaned up!
+> > 
+> > On 05-06-2025 5:23 p.m., Bjorn Andersson wrote:
+> > > The change that renamed the driver from "adsp" to "pas" didn't change
+> > > any of the implementation. The result is an aesthetic eyesore, and
+> > > confusing to many.
+> > > 
+> > > Conclude the rename of the driver, by updating function, structures and
+> > > variable names to match what the driver actually is. The "Hexagon v5" is
+> > > also dropped from the name and Kconfig, as this isn't correct either.
+> > > 
+> > > No functional change.
+> > > 
+> > > Fixes: 9e004f97161d ("remoteproc: qcom: Rename Hexagon v5 PAS driver")
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> > > ---
+> > >   drivers/remoteproc/Kconfig          |  11 +-
+> > >   drivers/remoteproc/qcom_q6v5_adsp.c |  46 +--
+> > 
+> > Actually looking through that driver, it's not just adsp-pil but also
+> > supports cdsp-pil and wpss-pil, so long-term that should probably be renamed
+> > to qcom_q6v5_pil.c? Not for this patch though obviously.
+> > 
+> 
+> There's another "convention" at play here, the "pas" refers to the
+> secure service doing authentication. The alternative to this is to do
+> everything in Linux, which we conveniently refer to (here) as "pil".
+> 
+> Also, per the commit text the "q6v5" isn't accurate anymore, so perhaps
+> this should just be the qcom_pas driver - or the qcom_pil driver.
+> 
+> I think the change as proposed is a good middle ground, we get things
+> cleaned up and aligned without affecting anything outside the
+> implementation.
+> 
 
-Nice set of tests, thank you! Applied to bpf-next.
+Sorry, didn't spot my mistake until Wasim pointed it out, I didn't
+intend to touch this file.
 
-[...]
+Yes, the qcom_q6v5_adsp driver suffers the same problem as the "adsp
+pas" driver did.
+
+I like your suggestion.
+
+Regards,
+Bjorn
