@@ -1,125 +1,63 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2F11C27;
-	Thu,  5 Jun 2025 04:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958E442065;
+	Thu,  5 Jun 2025 04:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749097413; cv=none; b=osAQnax4c2CnaipHB6PQp1i5urKIKugX3j1qwSELnyd+8q/59H0ts9RDTOmAFmwiMceR589F/FlLt9tNKXp01CfR/Gcj4dP9+NpKirrDPU3eQ2KLSnx4ru1eLmjcuj9nPgX37VeM1SMhQf2g9UZ8/kJPBlGO/yA1nQ55H8RZkr4=
+	t=1749097440; cv=none; b=HR9pBc1AR67xoQMIzQCRkkguzSO70fA45ueW+2vzmFZ83//zMhBvHNoc0gagYgM5Kg8yDQB0JRRlpE8dm40TTe6VdEcVJsAut7sjnF9nDX8oGE4vic+dBeSVpvN78ybDGmKJhZEiP7TMtN4eAW9fraaYCgElbNOBmA6a0sQ27EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749097413; c=relaxed/simple;
-	bh=xcqSsH8JG67hjrSowQ1GFIuINC5lXrn+xg+F6QxuczM=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nnirxnRfjHL0cCnoXBaaMu2TTEjI+ve0EqBW4XoJKzJKMRcE8nLi5wU3VBLNHn4fHJtQU4kQWMOhnFV8dEdBys4Yh20n0j8oZIKSnV+4qzq3zoiAtXxv8ej816rIvZg0iOxyOvePcLp3APY2gYa8A/inL3ofk501DaK+byN/pyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQkcuyv2; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749097440; c=relaxed/simple;
+	bh=cl/9dwi0NgI67Cm44M2Id5f8c++OtBegUIKnmKrji74=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Ffl0q6A5+nxIYDMl1KgzqGaZX4btrF67R3UzQ52guvAwi8z9kbdgPny7pmcoRpXqxmTXbLLjQcAncXcJQjEuV8muraeaKeXBkQz/+o0ctFZPG0ciWYTB5/3kvQpBIOUdCd4oAG//VWUXuQoWFf7SICvRtiOU35g3sTs9Mgty9oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSk7bTlf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQkcuyv2"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7080dd5fe92so5353957b3.3;
-        Wed, 04 Jun 2025 21:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749097411; x=1749702211; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PcOrzpWjq/BkBEzwdw8mv0dCDmFt7adswzP9QPspSUg=;
-        b=BQkcuyv25nsHTMEq7yDAiS5iR1bfv4DfMb+aeDZjvNDcxUfZNPHtSP60hpavbgSQdv
-         d4kZCmL7M19lzUcvtWOgovv2oIIAq2j5Yb4zhxdhFbYrrq5D7QVwBJPNMTSuPvI4GphM
-         RCee9rsxVWZtjyc1ls6TXKSlecSrtiTf5i0FxP4A8xiZpIi9AI4wP5+TKqk/C6K2UvS8
-         v8caZ07qfHG4TlO3XWNl+MeZgT4n1O41rVAFuHXFDcjRwFAN715/w84j+jqZ5l/7zHGR
-         1Ns0sSf6rntyPGiSfumXvdieq08jtNf36bA0pDyZgovleIx+nRpU6G5+6SIEYI8n2u6N
-         n8Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749097411; x=1749702211;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PcOrzpWjq/BkBEzwdw8mv0dCDmFt7adswzP9QPspSUg=;
-        b=tkjAo1+iHiodW0M+RZ4ocweYeCHuVTahSdWG4chK1oVzHWnwn+dDOWBjNB7EEQc9OD
-         zBZq+1JuAcMLh9VNUpEMCuWUR5GBTCLL+qss5uolv6Uj+Lazoiv4yt0kJsmTEGh9LRQA
-         /cfxRbsRNa/UEnTbWkXEET54yb79QzzG7sTH1QcKWjR0vxGJ0jKH84bHckzKkO36DJQ4
-         YsghAIHjy+SEEO95KQWIl9k65Pad4URMQzW8yKwo59YRQBa+dBZCsk/8X5MBkJB7mxeU
-         6PSoFczFQqqQDxX5rmj8fIhHodxvRsFhMTBtV1qHumaaZub/w1FJ82mGRL97uC6Tui1n
-         Q8wA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOPNuM9vXHKVwFaQKI9bqK+P8M8INYS+kThtjw2OKiR8oXzuNq3XfmooMllO25JvCCx6sw/1Tz@vger.kernel.org, AJvYcCXGRb4LW72odsxUDpyE9bWoWwdnpaTQnxJFwTBSx7Pu7yRuJHscPCsOkAsQryzEdFl3Y8cYLH+BZvesKPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq+BUrSWhKvB2IYMLJxAKyf3L1zoTCMEEtvilgf1GAzl7AEHa0
-	lFZIm3Arqe3u9dBHLLfgOt2W4nQ4mhoYNKk+1gRMp15hnDWLWCXS3LSL
-X-Gm-Gg: ASbGncvFktWsQg9lRBuuteIuBgf7Q6SEYxoM4Dlcg9JI2NO1Abycp4PPQCInU4tw6xr
-	uyvRRGISbQsZSHsCJ8aKblcSajp7husqiczZ+q5dp3aQ2A9y4uiyynkMKU6iwPWcA7SpcA+G3Mz
-	vLkL3dndWvU/wvNIQMfKBWYq5eu/EPJVg+MOGKGhQbH8CV0w3bbQmMvS1I5KYWbwscTWW4T8Xf3
-	a43imCKZ4tlkSAb81hB78dU2rZUJIxC6taz2jPQ6SmqABoeKQGEdWCmflN/P1aW8abIpYo7v1KK
-	EktLobw8teCLP627/4yOFzYuk7btwWKG5IAvbDoEjeBj91N5vURJuhwfFxeFyP52rOHcj/Xnu9P
-	CinstMq3U+mc=
-X-Google-Smtp-Source: AGHT+IGwjW7MDmAwX88wzy2K6C4SsiEVtRq6YqAm1ZsuSD7WYUpOBa/WcBffoD7Zr8Xr/9saSv6bAA==
-X-Received: by 2002:a05:6902:2e05:b0:e81:8760:15c8 with SMTP id 3f1490d57ef6-e8187601fc2mr3665429276.28.1749097410596;
-        Wed, 04 Jun 2025 21:23:30 -0700 (PDT)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7f733ee856sm3483847276.30.2025.06.04.21.23.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 21:23:29 -0700 (PDT)
-Date: Thu, 5 Jun 2025 00:23:29 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	wireguard@lists.zx2c4.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wireguard/queueing: simplify wg_cpumask_next_online()
-Message-ID: <aEEbwQzSoVQAPqLq@yury>
-References: <20250604233656.41896-1-yury.norov@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSk7bTlf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 704BDC4CEE7;
+	Thu,  5 Jun 2025 04:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749097440;
+	bh=cl/9dwi0NgI67Cm44M2Id5f8c++OtBegUIKnmKrji74=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=qSk7bTlfW/T/rKpWbhFHi655q/IS5OcwbFcA8qAbAe7WffeDUYoTlM565ctLty85e
+	 PJrJqlgNSNGzRhm/IeR3KJTrZm1FG2Hvw7YGDP8WzwRZl8tXo0JJ8MI5JlgeOghPTr
+	 nJAn1spaH1cS7xrb01v0nDccs+UPFVJpg1UdZiAgKvmJSU1zZAuWYojjRbbI2bquNf
+	 CgdCQkPqLJ9LnOo9n9b/OmDEYsV2Iu2jBn6TrmgVFvnnKUtEIlJBKpSSJh7gYR++CS
+	 FC23DWTTakSgWQMbrQ6bGp7SJrx9BJQcnsGDdbPS+yZJxFwYGNJpJak8Jg7SnZQhRW
+	 Sah1B5DJl/ncw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE160380CED9;
+	Thu,  5 Jun 2025 04:24:33 +0000 (UTC)
+Subject: Re: [GIT PULL] Rust for 6.16
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250605025400.244965-1-ojeda@kernel.org>
+References: <20250605025400.244965-1-ojeda@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250605025400.244965-1-ojeda@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git rust-6.16-test-merge
+X-PR-Tracked-Commit-Id: 7a17bbc1d952057898cb0739e60665908fbb8c72
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ec7714e4947909190ffb3041a03311a975350fe0
+Message-Id: <174909747230.2573604.4030348226584390118.pr-tracker-bot@kernel.org>
+Date: Thu, 05 Jun 2025 04:24:32 +0000
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604233656.41896-1-yury.norov@gmail.com>
 
-On Wed, Jun 04, 2025 at 07:36:55PM -0400, Yury Norov wrote:
-> wg_cpumask_choose_online() opencodes cpumask_nth(). Use it and make the
-> function significantly simpler. While there, fix opencoded cpu_online()
-> too. 
-> 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> ---
->  drivers/net/wireguard/queueing.h | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/net/wireguard/queueing.h b/drivers/net/wireguard/queueing.h
-> index 7eb76724b3ed..3bfe16f71af0 100644
-> --- a/drivers/net/wireguard/queueing.h
-> +++ b/drivers/net/wireguard/queueing.h
-> @@ -104,17 +104,11 @@ static inline void wg_reset_packet(struct sk_buff *skb, bool encapsulating)
->  
->  static inline int wg_cpumask_choose_online(int *stored_cpu, unsigned int id)
->  {
-> -	unsigned int cpu = *stored_cpu, cpu_index, i;
-> +	if (likely(*stored_cpu < nr_cpu_ids && cpu_online(*stored_cpu)))
-> +		return cpu;
+The pull request you sent on Thu,  5 Jun 2025 04:54:00 +0200:
 
-Oops... This should be 
-                return *stored_cpu;
+> https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git rust-6.16-test-merge
 
-I'll resend, sorry for noise.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ec7714e4947909190ffb3041a03311a975350fe0
 
->  
-> -	if (unlikely(cpu >= nr_cpu_ids ||
-> -		     !cpumask_test_cpu(cpu, cpu_online_mask))) {
-> -		cpu_index = id % cpumask_weight(cpu_online_mask);
-> -		cpu = cpumask_first(cpu_online_mask);
-> -		for (i = 0; i < cpu_index; ++i)
-> -			cpu = cpumask_next(cpu, cpu_online_mask);
-> -		*stored_cpu = cpu;
-> -	}
-> -	return cpu;
-> +	*stored_cpu = cpumask_nth(id % num_online_cpus(), cpu_online_mask);
-> +	return *stored_cpu;
->  }
->  
->  /* This function is racy, in the sense that it's called while last_cpu is
-> -- 
-> 2.43.0
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
