@@ -1,163 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2EA2F5B;
-	Thu,  5 Jun 2025 08:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0791C32;
+	Thu,  5 Jun 2025 08:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749110601; cv=none; b=nG8jKt5CJ4QeQbuPfiIfP7WhSK/kTHe1KwgS2UX6wghrqETbbATYl7I77mm6UFyxvnJmDONqsNrT6/q44eAJ5OzoAerxeO461E8SnyVMS8C0qxTM9r2wXhfQqtYzhLsQwiKwXLr1irHTyETcbEYB+gO9hjxcy/te6anNaRege+A=
+	t=1749110636; cv=none; b=jh1ROOtnMBa4xtwtg86xuEGxAJQ1drHWz9lTXSPxUkJ/HTQFzhLy/N3OApElWbc3Xt94qFW1/nZQF358BoK+3Tm4dR0OulRoKKQUColLXZZY1TCdWWZuR/UZg38g+zWw9U6JC5lM2je7aHS0Xr7dV3oqc96uCyIRReBunDMMpus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749110601; c=relaxed/simple;
-	bh=vIck/aI7o/j2TdP1WtctZ4n5LTFEe86IRscOn0Amryk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TZ4KSYyw1qstS9gkd2fOy9mfYBX7kuW63WGxzWL8+w6QW236+vNcdvNOW2dETddRqB26mcK+sV+pZPLa5K2mDoZ4+q6wnTvv4XdbxY2V7Y6cj+YXkzOswhSkDCpa8i+f7Fl5VH0QLse3GUlctWThYEBWeQEIcbZCiuiYZig+T+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BoJZTW4T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749110636; c=relaxed/simple;
+	bh=GVU4Gvw7/QkvUOMwYa1MyK0yJkaG+dpjnoUe5fhC0Rk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KI47RKB6WfJmcQETtR7pxQ6y4bQdtOhZvXgD2jYb8Gc1mrbWUulkF4/lm+VUuyH7QXnMfNURijWa5uRyfu1n1eAeMc9dRRMiktK9Vgz5JELRnUGcHwUhVrGHfl0uySbyRh3d9IewNX8QJMlIocsKgZn/35IAqrCFUMsjV54xpEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BblZ+dja; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BoJZTW4T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5BEAC4CEE7;
-	Thu,  5 Jun 2025 08:03:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749110600;
-	bh=vIck/aI7o/j2TdP1WtctZ4n5LTFEe86IRscOn0Amryk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BoJZTW4T2E5gIxRD0FE9cTQGT9qwAExYR+Nruj6oEtUQeDxwaleDwG8jSoE3sjtPe
-	 pS2JNOUGEs2uZ498STCliar9BO/5ElrVUmjzzDxN6/oWIS/AiWCpc+LTFpYJQXk/Hk
-	 tDEM1Vz2F83zX7jdkN9doP4zrOQ+N4WaVCA8x4sv5/zIm97gqISfxBKqFh7oFfZ5Bj
-	 cqIAnxPS4W/cIZfUwApopUVdkaPKu+fBl+06POSwlDzyAETbV9MtWZyGxM2aHoDkrf
-	 eTW9rm3tNnqJwsl27UOMUvb5l4Bf6zmii/rIYZb3PqnHwQfwhR0Ft1Xt6OWUk9qVmc
-	 RPuinMl0UbKfg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uN5ZF-000000005bD-3s24;
-	Thu, 05 Jun 2025 10:03:17 +0200
-Date: Thu, 5 Jun 2025 10:03:17 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] phy: use per-PHY lockdep keys
-Message-ID: <aEFPRWErB4QkbMkt@hovoldconsulting.com>
-References: <20250530-phy-subinit-v2-1-09dfe80e82a8@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BblZ+dja"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749110635; x=1780646635;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GVU4Gvw7/QkvUOMwYa1MyK0yJkaG+dpjnoUe5fhC0Rk=;
+  b=BblZ+dja/B8dEr3owGeVj9uM2Bzt9X2twX6zLm+MUoJUyg2JaRMBG61/
+   wjOUxiHsYa8d2WOARJKlXl7vhlMR5O3SjRJO8fHxWwA6CGVL/tLcdoISt
+   Xz/kM24/aCWg4XktlyrBxRq3WCD95peFWg87HJYsOYw4qDVe9nlCGjtXT
+   cuzSwsGrxkvPNt8quFQ+jIsmivbm0vjxM8yC9znfA0U0yp4whTIeab7ad
+   YWx71OtMLxePYktT7zaWEdPtvSRtC8VQEvxIir0f897Ly9SyUWmGNCkUh
+   sfIbt2w5b6XivB3c491Z57y+eJv8vDH9R3LbbRE9vS4h0CuF++lPqQDvK
+   g==;
+X-CSE-ConnectionGUID: 7M6EV79fTye151pnJrMKIg==
+X-CSE-MsgGUID: Kpsvjn6kTFub3BvNHykpQw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51310352"
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="51310352"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 01:03:54 -0700
+X-CSE-ConnectionGUID: 0ZvabdKoQbGkfvKSzEZZSg==
+X-CSE-MsgGUID: LpaLe2XjRFe4TDXFeEy9MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="145389173"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 01:03:50 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 5 Jun 2025 11:03:46 +0300 (EEST)
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+cc: Hans de Goede <hdegoede@redhat.com>, corbet@lwn.net, ikepanhc@gmail.com, 
+    hmh@hmh.eng.br, W_Armin@gmx.de, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
+In-Reply-To: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+Message-ID: <d6df0dcf-5786-0ad6-dd30-3a8c9f16426e@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530-phy-subinit-v2-1-09dfe80e82a8@oss.qualcomm.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, May 30, 2025 at 07:08:28PM +0300, Dmitry Baryshkov wrote:
-> If the PHY driver uses another PHY internally (e.g. in case of eUSB2,
-> repeaters are represented as PHYs), then it would trigger the following
-> lockdep splat because all PHYs use a single static lockdep key and thus
-> lockdep can not identify whether there is a dependency or not and
-> reports a false positive.
-> 
-> Make PHY subsystem use dynamic lockdep keys, assigning each driver a
-> separate key. This way lockdep can correctly identify dependency graph
-> between mutexes.
-> 
->  ============================================
->  WARNING: possible recursive locking detected
->  6.15.0-rc7-next-20250522-12896-g3932f283970c #3455 Not tainted
->  --------------------------------------------
->  kworker/u51:0/78 is trying to acquire lock:
->  ffff0008116554f0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
-> 
->  but task is already holding lock:
->  ffff000813c10cf0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
-> 
->  other info that might help us debug this:
->   Possible unsafe locking scenario:
-> 
->         CPU0
->         ----
->    lock(&phy->mutex);
->    lock(&phy->mutex);
-> 
->   *** DEADLOCK ***
-> 
->   May be due to missing lock nesting notation
-> 
->  4 locks held by kworker/u51:0/78:
->   #0: ffff000800010948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x18c/0x5ec
->   #1: ffff80008036bdb0 (deferred_probe_work){+.+.}-{0:0}, at: process_one_work+0x1b4/0x5ec
->   #2: ffff0008094ac8f8 (&dev->mutex){....}-{4:4}, at: __device_attach+0x38/0x188
->   #3: ffff000813c10cf0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
-> 
->  stack backtrace:
->  CPU: 0 UID: 0 PID: 78 Comm: kworker/u51:0 Not tainted 6.15.0-rc7-next-20250522-12896-g3932f283970c #3455 PREEMPT
->  Hardware name: Qualcomm CRD, BIOS 6.0.240904.BOOT.MXF.2.4-00528.1-HAMOA-1 09/ 4/2024
->  Workqueue: events_unbound deferred_probe_work_func
->  Call trace:
->   show_stack+0x18/0x24 (C)
->   dump_stack_lvl+0x90/0xd0
->   dump_stack+0x18/0x24
->   print_deadlock_bug+0x258/0x348
->   __lock_acquire+0x10fc/0x1f84
->   lock_acquire+0x1c8/0x338
->   __mutex_lock+0xb8/0x59c
->   mutex_lock_nested+0x24/0x30
->   phy_init+0x4c/0x12c
->   snps_eusb2_hsphy_init+0x54/0x1a0
->   phy_init+0xe0/0x12c
->   dwc3_core_init+0x450/0x10b4
->   dwc3_core_probe+0xce4/0x15fc
->   dwc3_probe+0x64/0xb0
+On Wed, 4 Jun 2025, Mark Pearson wrote:
 
->   platform_probe+0x68/0xc4
->   really_probe+0xbc/0x298
->   __driver_probe_device+0x78/0x12c
->   driver_probe_device+0x3c/0x160
->   __device_attach_driver+0xb8/0x138
->   bus_for_each_drv+0x84/0xe0
->   __device_attach+0x9c/0x188
->   device_initial_probe+0x14/0x20
->   bus_probe_device+0xac/0xb0
->   deferred_probe_work_func+0x8c/0xc8
->   process_one_work+0x208/0x5ec
->   worker_thread+0x1c0/0x368
->   kthread+0x14c/0x20c
->   ret_from_fork+0x10/0x20
-
-Nit: This last bit of the stack trace adds little value and can be
-dropped.
- 
-> Fixes: 3584f6392f09 ("phy: qcom: phy-qcom-snps-eusb2: Add support for eUSB2 repeater")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Create lenovo subdirectory for holding Lenovo specific drivers.
+> 
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 > ---
-> Note: I've used a Fixes tag pointing to the commit which actually
-> started using nested PHYs. If you think that it's incorrect, I'm fine
-> with dropping it.
+> Changes in v2:
+>  - Rebased to Linus's latest as requested
+>  - Updated documentation reference
+>  - Updated MAINTAINER file
+>  - Removed X86_PLATFORM_DRIVERS_LENOVO as I was worried about
+>    maintaining backwards compatibility for the distros.
+>  - Removed 2nd patch in series splitting out hkeys. That will be for
+>    the future
 
-I think it's warranted. And if there were further users before this one
-as Neil suggested you could just list them all as each has been
-introducing a new splat.
++# Lenovo x86 Platform-Specific Drivers
++# Lenovo X86 Platform Specific Drivers
 
-> Note2: I've tried using mutex_lock_nested, however that didn't play
-> well. We can not store nest level in the struct phy (as it can be used
-> by different drivers), so using mutex_lock_nested() would require us to
-> change and wrap all PHY APIs which take a lock internally. Using dynamic
-> lockdep keys looks like a more ellegant solution, especially granted
-> that there is no extra impact if lockdep is disabled.
+Any possibility to be consistent in formatting that? :-)
 
-Thanks for fixing this. I've been using a local hack based on
-mutex_lock_nested() too but dynamic keys looks like the right way to go.
+Why does the admin guide contain a history book?? It should be guide for 
+this version of kernel, not what was there in 2.6.x era ;-D. Please don't 
+add to that any more, preferrably remove the history part afterwards in a 
+separate change.
 
-Perhaps you can add:
+Other than those mentioned above, diffing per vs post seemed clean (I 
+didn't check where the empty lines got added, Andy seemingly did already 
+:-)).
 
-Reported-by: Johan Hovold <johan+linaro@kernel.org>
-Link: https://lore.kernel.org/lkml/ZnpoAVGJMG4Zu-Jw@hovoldconsulting.com/
-
-Works fine on the T14s:
-
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-
-Johan
+-- 
+ i.
