@@ -1,237 +1,306 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2058.outbound.protection.outlook.com [40.107.237.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E33272E5F
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749131777; cv=none; b=MUwSFYKG1+e/k/DabPU1fBRYhrDcvzfv91NGjdC2cgzOu/tJkajK+K35QNUI1OQCbrvPuA6nVf4Zt4ATOK+5qKjNlohG0XHK9sKiB2Gl/gXQFiW6p30zoKukqPpbCtPIL0P6ZgJ5MiN+PX6uFbmLU3jSC5QyobReF2m/fNj1NgE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749131777; c=relaxed/simple;
-	bh=JY8eguoeVMug3lejr2EeN0T76qesNyoGTWbhLfJBeaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XyV5FrREM103+NKBNDNbsHpX/yslNHiwnmBBUlRicIRQCcs8r39NVxv22UV+XtkGQxvXwEtNGlITJcvZnnH7iOtJNkiGsMUPvqMpgv00O8Nw5ApfQpQq0jNYN5YMgSX/uwUcxTz4esJXYhpSDtk+PezMLJdjcMY5F5Q9Z+sXxi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dmUI5xfj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=K2JRKfPm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UuDEupoa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mRuZUTQD; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257B4221278;
+	Thu,  5 Jun 2025 13:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749131775; cv=fail; b=RFq6G27PqJb/rKFK3MbTZz5FaZz4ghI8OtounytmaCMLZ89O8qbwKVXq37D0KPJKCbf/YIyqDC1hEZhOWvcKRihKZU0TNZJuyMMp6sCwYz43Xnyzyl9mXfscyNmoFsvzh21TwX7mJo+GsP5EkQ1C74pO25TDsl6FBhuSMnjdjn0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749131775; c=relaxed/simple;
+	bh=NNFvRe0SOvsgW6QHR+0tQfa0D3UKcpgQOPmiDTKfo4A=;
+	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:References:
+	 In-Reply-To:MIME-Version; b=a0w1lNLOc6MwDl3DMZLHnyamyIKXFGRcb0Bn4d23l9LlkgOqhrCJUQIz9vqHSuTNeRHpSc1j47W/IhkxNBZucte+5QbqWRe3PWK1zQxO6Mtpe006H+Ze2mJgupPxJ/gzr+6Yi53YfNlJK6fNslYUh8xJSMFwDiSmI9XrWcFB0Kc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gEicDXpw; arc=fail smtp.client-ip=40.107.237.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dmUI5xfj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="K2JRKfPm";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UuDEupoa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mRuZUTQD"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E3D151F78F;
-	Thu,  5 Jun 2025 13:56:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749131774; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Jq2iaoJFXus2AuXH2g2QKS5xKjjXyQACZE8THrqxkJc=;
-	b=dmUI5xfj3LZATWHxgVomJxLpJ1kl0v9dCzZ1gHThVGka3hXgtLbPyxjQyEnG8KSE8GUOPb
-	76GIpAIuO8HeDxsuqblULfZhTJCtuhpJGWPRyrPh3Dp+hphjZ1bRsM8psCkYLU5eXLHv3w
-	2v6tFQKW2FKpKTk4wWPsj82Ams4JnkY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749131774;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Jq2iaoJFXus2AuXH2g2QKS5xKjjXyQACZE8THrqxkJc=;
-	b=K2JRKfPmlUUF+Bue/R6qxmWiZDsd+tbTUzBZCDjp+08HVj5b7syFIbVrTnDs3DNfrhmSfx
-	+363d0eXiNcCRSBQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749131773; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Jq2iaoJFXus2AuXH2g2QKS5xKjjXyQACZE8THrqxkJc=;
-	b=UuDEupoaZyyNVc0rJK3bmzudEYCGBK61joM4Im+fyLSvRLEI0F0GvUL1fJgNYCOmxNXdOD
-	UWWY+Cas42L5pMNN3jxzGyE27JS0MkMteTgzovOeXnCCwbIxyZVRK2zW+iHaDipuHbSxjA
-	usU3tknXvlhIBOjw5PCF76uxDauqJUc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749131773;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Jq2iaoJFXus2AuXH2g2QKS5xKjjXyQACZE8THrqxkJc=;
-	b=mRuZUTQDdgXF7d60CyE8ZNpxrj9ObeQdnPxxUjBFk/TeEIkRKnahVSzsDdw/Jg7CV9oHi0
-	ruzhO2zd9B3m8OAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C53BF1373E;
-	Thu,  5 Jun 2025 13:56:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wcDLL/2hQWhJPAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 05 Jun 2025 13:56:13 +0000
-Message-ID: <69a4b093-1fbd-4178-906b-960a3d8bc529@suse.cz>
-Date: Thu, 5 Jun 2025 15:56:13 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gEicDXpw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q+/vLWXJOlOxhEI04Zt5hEt5KoJ//W+MWNeAxZh89mxANR/Edn7a1aVVVNP667yyBqpxSyXmgJ5vTRkcFP7mNy7YMMwKXJL2CQO4w5pYgudg0DbRdyVaFlpn29Z2lOlxhLx3J8yE18TfocyiBlO4MohrosorUzZMkEGssNBu+exeUXqKMl1sdfdPg0lfVDizgxcnq3gXqBN6AZb51X9jX5uxmhzqaCIJ5BgyJ2dRkDzRjxj8nK92y0CTQjY7Vuihwv0gbLqSy4zU8xsTodf2yYEu9A3EMifQOlDAXjimgj2bDer1jdwixRIZorES7fBTaE9+bezOFsGj+TKTvfA7Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8aTVw9/cBcOYPFMmpZNSfT3kBCIuuzErH4mit1Ezn5g=;
+ b=rLd34ZVOXPr1cxMAd2lSViQFI+NrkEcwBlsYN3dU+hkhCkUf7GplMCsq7VkVqnE6GnvgsJ7RBlAgk5aaYm/orc5GMJ94jW/QzHlu4oRtx1QJIeukRC5LKfpJzM+iL+DRy6zsQLguyDJldeTf18gVMJdjWIC/4rQDKSytyXV94/Yu4S2YYyscWE01DTOWnIMN/z8Pf05EAKXmyS3QaTjZtbQ7mDz2dz9vcAOe7pcaQG7bezA9S2b43c4pD22JNAB8TtUpL9/oDSrBXmG4PLNRc2Vqt8L93BTOEF7rjlU3AeQY6xEiKEWOpmQnRDClvuaba0CoP2+2AvYfbVf0WfnnzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8aTVw9/cBcOYPFMmpZNSfT3kBCIuuzErH4mit1Ezn5g=;
+ b=gEicDXpw25uVvRo4MA+OQG0o9DYHqRQX++jN5auLzFFgCsJN63P1cWBz9KsEE1SbSXU/SJYjXY/Czsw2VHKNhjx0lJdWi9h04RUsZHuX1EEJw4wxovUHy6DNb0LWNyfLS0qfYLYlYNMfWnrhmAKvOuw9UIZMwQk3998x29sPtc6HKj38HqjNMmWlgVKXAfO+gG0xJLAAEE1dKZU5f3jcKxsVG62zE0HN68EFoaAn6BIouBRXVKNgNBmUjh3gxohaxLqJtU13kaKNVoiapP/LkOKSGLa/ROdfMYTuWjAYBwTVXQ9OsXl+1NlHHApmitIb5jaQHQCtJDrp6HISozEDOw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by BL3PR12MB6570.namprd12.prod.outlook.com (2603:10b6:208:38d::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.35; Thu, 5 Jun
+ 2025 13:56:10 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8792.034; Thu, 5 Jun 2025
+ 13:56:10 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 05 Jun 2025 22:56:07 +0900
+Message-Id: <DAENGORNRVZH.2KIGKFV5C5G3L@nvidia.com>
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Abdiel Janulgue" <abdiel.janulgue@gmail.com>, "Lyude Paul"
+ <lyude@redhat.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc: <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Valentin Obst"
+ <kernel@valentinobst.de>, "open list" <linux-kernel@vger.kernel.org>,
+ "Marek Szyprowski" <m.szyprowski@samsung.com>, "Robin Murphy"
+ <robin.murphy@arm.com>, <airlied@redhat.com>,
+ <rust-for-linux@vger.kernel.org>, "open list:DMA MAPPING HELPERS"
+ <iommu@lists.linux.dev>, "Petr Tesarik" <petr@tesarici.cz>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "Sui Jingfeng" <sui.jingfeng@linux.dev>, "Randy Dunlap"
+ <rdunlap@infradead.org>, "Michael Kelley" <mhklinux@outlook.com>
+Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
+ <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
+ <20250529004550.GB192517@ziepe.ca> <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
+ <95ff963ddabf7c3cd2cfd07d0231a0073ff6847e.camel@redhat.com>
+ <DAED5BUK7TUQ.4JRHFMWZ99W3@nvidia.com>
+ <27e17dbf-df6a-48fc-a652-ad48a776f668@gmail.com>
+In-Reply-To: <27e17dbf-df6a-48fc-a652-ad48a776f668@gmail.com>
+X-ClientProxiedBy: TYAPR01CA0112.jpnprd01.prod.outlook.com
+ (2603:1096:404:2a::28) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/vmstat: Fix build with MEMCG=y and VM_EVENT_COUNTERS=n
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, hannes@cmpxchg.org, shakeel.butt@linux.dev,
- muchun.song@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>,
- Konstantin Khlebnikov <koct9i@gmail.com>
-References: <20250604095111.533783-1-kirill.shutemov@linux.intel.com>
- <6fffd2fe-0cee-405f-af78-b57b5e5d02e8@suse.cz>
- <20250604142043.bdfdf4f9a6a6cbb57946f1a5@linux-foundation.org>
- <03c2b01b-18f5-4015-a19b-79b8af656697@suse.cz>
- <7lakc6hxbimvkgakpocj3aa65sdhmskm5p6hlurbwzyps33gfb@2z2eoz253hs4>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <7lakc6hxbimvkgakpocj3aa65sdhmskm5p6hlurbwzyps33gfb@2z2eoz253hs4>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,redhat.com,oracle.com,kernel.org,google.com,suse.com,cmpxchg.org,linux.dev,kvack.org,vger.kernel.org,infradead.org,gmail.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,suse.cz:email,suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|BL3PR12MB6570:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29544206-dc20-48c0-a599-08dda438b9df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|10070799003|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MFlsMmwwN2lzMmVmeTlZdzBoN3lHTjlOMUx5UzBxOUxONlJsWUNKVmdDbjhz?=
+ =?utf-8?B?aU9UaDhhdkp3VTh6eWRjV0JlS3NQSzNWb3RlOCtkTnNhUkZBUEpTaDQza2Q1?=
+ =?utf-8?B?NjFYZW16bkVWZ1ZYY1Bvcmg1QnNmd1pFQzFmUHVkZ2NNUFRpc1EyTVFFNnZt?=
+ =?utf-8?B?VFBQWW9Da09yS3NmRWhDc2tuV1pTUTB6d1IxNVBucDFrK1RXUVZiZENRY1Z1?=
+ =?utf-8?B?OWpnckV0TGs1bDVzL0lhUm45V3JqejhkZWFhRE44UFJDaFZ5WjFLMGRMdUFS?=
+ =?utf-8?B?MHlKREgreEhxaXl1MWVTUGJxNXhiT2MyaitEMnkwVTFINVZtMCsvQSt5a1Vm?=
+ =?utf-8?B?R0VpVEw3dzRQVmNOSThuNHBGWmxlNTJRYnNpU2VNcUxSQVN5VTdBdVJjcC9t?=
+ =?utf-8?B?aVFSTzR3WHNQVlFOa2ttZGR6M0dlQmNHanNLbkNHZ3hIZ2QyTzQxK2gvYU0x?=
+ =?utf-8?B?eWNjazVPU1VGWkdBWHFNV0dxMFYyaVZmakpWNDZXRE42a04yRk5CWXlZNExD?=
+ =?utf-8?B?bk9KRnRmd3A4aXFRUkx3Q2ZzNXRFUTNlYmgvMjZwTUo1M05XM1VFQlBmQlFm?=
+ =?utf-8?B?YktrRDR1TDgwQnV6VG81Q3ZTdERGR0FEOGR5TmZYNTFhNzNhenFaaUhRZkZO?=
+ =?utf-8?B?N0kzMExrL0JOREFCSGgzWnA4cVNNS0JiMGZESFM4c1VYbEE0MHgzd2hBUE9D?=
+ =?utf-8?B?czNtZUtFdkNkNVpEZjBRUXR1aGFnUWhTaU9KcCtzOGF3NDVpQnEvRVhHem5X?=
+ =?utf-8?B?MnUrR2FLdEZaYXNQcGdNVHN2Y1VHNmVGTVcyaWFMMnpLaHVoRThJTHBWTjRI?=
+ =?utf-8?B?OVc4bWRFK0xRZTV3RlZUR3dsdzVXdTZUVGNWU2NDUkJMQU5XVXlrb0d0UDVD?=
+ =?utf-8?B?TUV5T0FyZmRtOEpEM1FabC9GbGVKK200U1lsR2lCWTI5SE1uak5VeS9Ha1Aw?=
+ =?utf-8?B?RFlmZ2daaWg4eTJOSHFEUE00ZHJUZGFDTXMvRW94eEhwaUxuL0I0QkREb1N4?=
+ =?utf-8?B?b0dUb3BGOE0wVERsVTViM0NOcUZVdFhBd3BpUHJJZGZBQTNyMldSd2ViR2g3?=
+ =?utf-8?B?NzhRdm4ybmhENWMvN0lrRjdkTGpPQ2pYTHFtVHZtU0Z3VVRNM0c5ei94T0Zw?=
+ =?utf-8?B?Sk44Z1FpNUJpT1JPTThwdElvaTBnMERxdXVqdVNNaU9KMHg5ZnNHclNkbmlr?=
+ =?utf-8?B?VzhlckhkWnR6elh5WjAyZTlWbnMwSG51QWtIcEZZYld6cFZZUWZrQmUvaGdx?=
+ =?utf-8?B?QVpaTklrNU9EODh4cG5TdlRjdE1ET3dkbkdJM1FFVFVNdWRqTUVxMmZpNEJJ?=
+ =?utf-8?B?bDRJemU4RHlKRlhzRGl0Sm0waXAyVDNtb3J4MGJWTWRGN1N6WWtZSUNJbjI1?=
+ =?utf-8?B?UXpVN2hmUytQT3dodE9EREtKc0JkVDVEdlgvZXZseVRFdUdzK0VmdVFPS25D?=
+ =?utf-8?B?OGQ2VDk3TVR5WU9FQkNFMHZXbmpjaWx6R1B5RTliTHFiQVBQMjhKSHNsT21h?=
+ =?utf-8?B?THZCOTlZQkxsc045N0Z5Qk9lbWpTZ3plS2hFTVU1bFRFdTNxREh0dUxoNERs?=
+ =?utf-8?B?ZFlQbFM0MkE3SWYzTW5ZVFFqbzJIdFB3RUg2NUluVno0d05vYmRxYU1EUmJw?=
+ =?utf-8?B?SlUwUU5EQllrb2xiQkNLeXRISXE4Z1d6Yk5JY2VYUzNnR2dhdG1HTWx0NXBU?=
+ =?utf-8?B?MDNFbzBIaWRnY2l6QzI3UmF3MTIxZC8ySFZkRE1JY0FHTUgzUEwyTTMwNzJu?=
+ =?utf-8?B?Mlp0TWd2bVNCVzQvUmFjSG5INjFTbFVvd3IwVHVpT2Z4UTMzcTNNVWJweWZT?=
+ =?utf-8?B?TnFFbndmc0NhUzNrSFQwUUt3T2sreW1Bbm5MdEVYTU5sL2NkRU5Bc3p1TTBU?=
+ =?utf-8?B?cmF0TnJLSzRKWWVEa1BKK2RUYVlnaVZKQVhjczMwTnNlaTkxdStmOE84SUVr?=
+ =?utf-8?Q?nPIgja9Vwyo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Qk1OcytQcnhuY2tqUlhibFR2SUxzMHNiTzhIZUFGTlFWQUhua2VHZWFFZ21n?=
+ =?utf-8?B?NjVNeVgyRHFoc3dKOVRMaEdCZE91WWZIdWpWSEdYeCtzMkNRUGMwR1dOY1dn?=
+ =?utf-8?B?RHMwNzZRaW1IRW1HQUVIaW1HdENtbVlDc2thV0o0ckt3R2xvYUZKcCtMWGNG?=
+ =?utf-8?B?cU0veXpuU29vZmNMdkI1MXNKMm05RFo4OE4zZXdMTjVVRzltSjlpWHg3Zk5O?=
+ =?utf-8?B?azRPOUg2TWtEMjI0N2hMRUxQVm5pNk1DdU4wTWpjWWRKSkxyUzRzZTVhczVz?=
+ =?utf-8?B?blF2RlNaMmY1cDdNTmpZQzNtQ05PNlI3UFNSd0g5N0JEeTA3TjBIb3ZVem9N?=
+ =?utf-8?B?VFdzV0FUUFZIdDZDa2lDeEZHRWlzd2VEbENhS1VsZE1WZ295YnBVOElKVGZD?=
+ =?utf-8?B?V1lYR2hNazc1cjFWR0hNL1ZxMWpWTkUwd1lzdzhEeDUyZUk3WlYwNUFuSm5r?=
+ =?utf-8?B?bUJVUCs1YXV6UmN6NnJCWU5yTVBUa0tONHE0NkI5akhoN3lXRTVKbFN0KzY0?=
+ =?utf-8?B?aEJJRk5QLzNtTjl1ZWFaNk9iM1B2RXhHNnZZaVlMK1c0UHpuY0tZMEc4c0FC?=
+ =?utf-8?B?S3VjKzJRSFJDS1Btb2JuYzhjZ2x3NTU2WU9tMGREeGMvWFNvRzdTYm5XSExo?=
+ =?utf-8?B?RjBQL3I4TUdkMFV3VThWZ2VyMUJqNktjMzRZQ3A2djRUUmtWV001TDQ5MitZ?=
+ =?utf-8?B?eTRkdWZKanpCSldWVUFFdU1ndG1jM0pGTzRYSnB3Y0dyaHVrWDh0SGNocFdw?=
+ =?utf-8?B?b1llMHN1L2gyTTR4OU1vVDM5bnpNSnRKdnYraTlRczlJSXZreFArN2Z5eWgy?=
+ =?utf-8?B?eUhBbmxaQjBxT0RlcGhIeExJQXM4cVllQVpwSmcySzhQRWk4dEVaeGlmUFhW?=
+ =?utf-8?B?UzQ5SHo2S09SNXNYdFF0M3RJTkUxcTFJUklRZS9VZnJiZ2d5RStqVldDc1B5?=
+ =?utf-8?B?MDV1dTFVOVF1aDNKL0R5SnBrcUZTR2J2UTFSSkJsd2Rta2FjMVYzWk9kUjda?=
+ =?utf-8?B?dDh6QnhTVHVrVDFLYzh1SnRhU08yWUZKckgxeFRjR2dJYTkyZmsrVUdwYlYz?=
+ =?utf-8?B?YVc0aEV1Ky9hdWJHa2NxQnR3aEFoMS9jU1FiYVdVcFJmdFBBclRLUmI4cGpp?=
+ =?utf-8?B?djY1c0lHYlFWTFFMRldVWWVHQnh5Qlp3NjA4MXJITEZHZGN0YnFYYUV0Q053?=
+ =?utf-8?B?ZzMwQStnQjFHYzNYWWY2SjErYURaZ2ppR1FhWlQ2NkdsT2xKaUc5NmRXZTJt?=
+ =?utf-8?B?WnFnZ2xEeHZ6UW5qKzJqVTIrVWYxaWVoUTMzcDBPQUwyeEUyUzZLYUErQ1FG?=
+ =?utf-8?B?RU8xZE1OUFppaFh1eDNCNERnZUJpVDlQK2VGdkk3RHYvKzBhTFo1QWhKWnBU?=
+ =?utf-8?B?WVlhS2pkRVUzNDg5Tkhtd1BXbW81Nm13U2FyTjhVRjYvZk5icUJ5eTZYb2I0?=
+ =?utf-8?B?ODZEM01BR3I5MDYwK3pnVGRHNjViUFFpZGpRMkNvSmR2NmJvWVJVSGJXbTlJ?=
+ =?utf-8?B?T1ozUlp4WnRjcnFDT05rOVd0aGU3RjNUOVJTbkl1RHVBK2JDbTR4TjgzYjlM?=
+ =?utf-8?B?eE1YT2ZGazZQMDBicmFJV0x0V2tEUnBualZOUVQ5REZGaFBlSUlHNFVuV0hK?=
+ =?utf-8?B?dWtTZ0tRSC9aSTYvVjlBbDN6ZjRDaW50eUhYY1cxSjI1YlVrV3B4d1VYck5v?=
+ =?utf-8?B?OUt3SkllOENqTEU5b0FwSU9nRWdQWENkUWx0NUtuTFhHOEVZZ0MwUE1ndzRI?=
+ =?utf-8?B?YzlRaXlmQXhaSU9tVzZsVmFmWU85TkNWMlVvWG9wdGhpNGQ3ekJsdFB5b2NC?=
+ =?utf-8?B?ekg5WTZ1aERjUmRQZlVpRVBJZ3JxNy83TEF2ZUs4aTJtMURGY01tejRZMkxm?=
+ =?utf-8?B?ZGwvRHcwWFlFeUFubkxRZWN3cklzMmJyUzArY25EM1BYZXAwMEFzaWRSaFd1?=
+ =?utf-8?B?eFZyR2Qxa0F5cURvc3Qwanp0M1ZhUUhUV1A3T3RNRnR4SGoxMmxrSGYxVGxH?=
+ =?utf-8?B?UjNOUXhxSDkrU21ocEdscVBjQVhpc3BjQTZ2S2JwV2xHT3U0cHJEZ2c1VmZU?=
+ =?utf-8?B?ODV1YU5NR3Y4cWE0R2NINWZMVmZidU5PcUkwL3FrcU0xRXd2MzhEMG5uNzE0?=
+ =?utf-8?B?Q2ZnQ0pIbWErNi9zUVNZUjVCWDVRVzQ4TDRGcnVMVndGaDEvbjFLYUhJd01k?=
+ =?utf-8?Q?puR/QtJLy48ERfIqW5E+ocz/gOsSn4hbXJoLBtOOfQWf?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29544206-dc20-48c0-a599-08dda438b9df
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 13:56:10.2184
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YGzegzv4IwM5ACwDkLoetOYYkIP4godvQD17FkJ0N3bYaAiv/ebhkZj//F5LaBbSiVuN3wdEZvdh13/LvZyDhg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6570
 
-On 6/5/25 13:53, Kirill A. Shutemov wrote:
-> On Thu, Jun 05, 2025 at 08:19:28AM +0200, Vlastimil Babka wrote:
->> On 6/4/25 23:20, Andrew Morton wrote:
->> > On Wed, 4 Jun 2025 11:56:42 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
->> > 
->> >> > There is no need to backport this fix to stable trees. Without the
->> >> > strict BUILD_BUG_ON(), the issue is not harmful. The elements in
->> >> > question would only be read by the memcg code, not by /proc/vmstat.
->> >> > 
->> >> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> >> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
->> >> > Fixes: ebc5d83d0443 ("mm/memcontrol: use vmstat names for printing statistics")
->> >> 
->> >> Well in that case I think we should put Fixes: to the BUILD_BUG_ON() change.
->> >> And if it's not yet a stable sha1, squash that together with this?
->> >> It doesn't seem ebc5d83d0443 alone needs this fix.
->> > 
->> > I shuffled things around.
->> > 
->> > I moved "mm: strictly check vmstat_text array size" from mm-hotfixes
->> > and back into mm-new for the next cycle.
->> > 
->> > I reworked "mm/vmstat: fix build with MEMCG=y and VM_EVENT_COUNTERS=n"
->> > so it precedes "mm: strictly check vmstat_text array size".
->> > 
->> > I reworked "mm/vmstat: utilize designated initializers for the
->> > vmstat_text array" so it comes last.
->> > 
->> > 
->> > So the applying order is now
->> 
->> I checked and in general it looks good, except a nit below.
->> 
->> > mm-hotfixes:
->> > mm-fix-vmstat-after-removing-nr_bounce.patch
->> > 
->> > mm-new:
->> > mm-vmstat-fix-build-with-memcg=y-and-vm_event_counters=n.patch
->> > mm-strictly-check-vmstat_text-array-size.patch
->> 
->> The changelogs of these two don't reflect the new ordering though, maybe
->> Kirill can provide updated ones?
-> 
-> Maybe something like this, for the first patch?
+On Thu Jun 5, 2025 at 10:30 PM JST, Abdiel Janulgue wrote:
+>
+>
+> On 05/06/2025 08:51, Alexandre Courbot wrote:
+>> On Thu Jun 5, 2025 at 3:21 AM JST, Lyude Paul wrote:
+>>> On Fri, 2025-05-30 at 23:02 +0900, Alexandre Courbot wrote:
+>>>> On Thu May 29, 2025 at 9:45 AM JST, Jason Gunthorpe wrote:
+>>>>> On Thu, May 29, 2025 at 01:14:05AM +0300, Abdiel Janulgue wrote:
+>>>>>> +impl SGEntry<Unmapped> {
+>>>>>> +    /// Set this entry to point at a given page.
+>>>>>> +    pub fn set_page(&mut self, page: &Page, length: u32, offset: u3=
+2) {
+>>>>>> +        let c: *mut bindings::scatterlist =3D self.0.get();
+>>>>>> +        // SAFETY: according to the `SGEntry` invariant, the scatte=
+rlist pointer is valid.
+>>>>>> +        // `Page` invariant also ensures the pointer is valid.
+>>>>>> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, of=
+fset) };
+>>>>>> +    }
+>>>>>> +}
+>>>>>
+>>>>> Wrong safety statement. sg_set_page captures the page.as_ptr() inside
+>>>>> the C datastructure so the caller must ensure it holds a reference on
+>>>>> the page while it is contained within the scatterlist.
+>>>>>
+>>>>> Which this API doesn't force to happen.
+>>>>>
+>>>>> Most likely for this to work for rust you have to take a page
+>>>>> reference here and ensure the page reference is put back during sg
+>>>>> destruction. A typical normal pattern would 'move' the reference from
+>>>>> the caller into the scatterlist.
+>>>>
+>>>> As Jason mentioned, we need to make sure that the backing pages don't =
+get
+>>>> dropped while the `SGTable` is alive. The example provided unfortunate=
+ly fails
+>>>> to do that:
+>>>>
+>>>>      let sgt =3D SGTable::alloc_table(4, GFP_KERNEL)?;
+>>>>      let sgt =3D sgt.init(|iter| {
+>>>>          for sg in iter {
+>>>>              sg.set_page(&Page::alloc_page(GFP_KERNEL)?, PAGE_SIZE as =
+u32, 0);
+>>>>          }
+>>>>          Ok(())
+>>>>      })?;
+>>>>
+>>>> Here the allocated `Page`s are dropped immediately after their address=
+ is
+>>>> written by `set_page`, giving the device access to memory that may now=
+ be used
+>>>> for completely different purposes. As long as the `SGTable` exists, th=
+e memory
+>>>> it points to must not be released or reallocated in any way.
+>>>>
+>>>> To that effect, we could simply store the `Page`s into the `SGTable`, =
+but that
+>>>> would cover only one of the many ways they can be constructed. For ins=
+tance we
+>>>> may want to share a `VVec` with a device and this just won't allow doi=
+ng it.
+>>>>
+>>>> So we need a way to keep the provider of the pages alive into the `SGT=
+able`,
+>>>> while also having a convenient way to get its list of pages. Here is r=
+ough idea
+>>>> for doing this, it is very crude and probably not bulletproof but hope=
+fully it
+>>>> can constitute a start.
+>>>>
+>>>> You would have a trait for providing the pages and their range:
+>>>>
+>>>>      /// Provides a list of pages that can be used to build a `SGTable=
+`.
+>>>>      trait SGTablePages {
+>>>>          /// Returns an iterator to the pages providing the backing me=
+mory of `self`.
+>>>>          fn pages_iter<'a>(&'a self) -> impl Iterator<Item =3D &'a bin=
+dings::page>;
+>>>>          /// Returns the effective range of the mapping.
+>>>>          fn range(&self) -> Range<usize>;
+>>>>      }
+>>>>
+>>>> The `SGTable` becomes something like:
+>>>>
+>>>>      struct SGTable<P: SGTablePages, T: MapState>
+>>>>      {
+>>>>          table: Opaque<bindings::sg_table>,
+>>>>          pages: P,
+>>>>          _s: PhantomData<T>,
+>>>>      }
+>>>
+>>> Hopefully I'm not missing anything here but - I'm not sure how I feel a=
+bout
+>>> this making assumptions about the memory layout of an sg_table beyond j=
+ust
+>>> being a struct sg_table. For instance, in the gem shmem helpers I had t=
+his for
+>>> exposing the SGTable that is setup for gem shmem objects:
+>>>
+>>> struct OwnedSGTable<T: drm::gem::shmem::DriverObject> {
+>>>      sg_table: NonNull<SGTable>
+>>>      _owner: ARef<Object<T>>
+>>> }
+>>>
+>>> So, I'm not really sure we have any reasonable representation for P her=
+e as we
+>>> don't handle the memory allocation for the SGTable.
+>>=20
+>> Maybe I need more context to understand your problem, but the point of
+>> this design is precisely that it doesn't make any assumption about the
+>> memory layout - all `P` needs to do is provide the pages describing the
+>> memory backing.
+>>=20
+>> Assuming that `_owner` here is the owner of the memory, couldn't you
+>> flip your data layout and pass `_owner` (or rather a newtype wrapping
+>> it) to `SGTable`, thus removing the need for a custom type?
+>
+> I think what Lyude has in mind here (Lyude, correct me if I'm wrong) is=20
+> for cases where we need to have a rust SGTable instances for those=20
+> struct sg_table that we didn't allocate ourselves for instance in the=20
+> gem shmem bindings. So memory layout needs to match for
+> #[repr(transparent)] to work
 
-LGTM, thanks!
-
-> > mm/vmstat: Make MEMCG select VM_EVENT_COUNTERS
-> 
-> The vmstat_text array contains labels for counters displayed in /proc/vmstat.
-> It is important to keep the labels in sync with the counters.
-> 
-> There is a BUILD_BUG_ON() check in vmstat_start() that ensures the size of the
-> vmstat_text is not smaller than VM_EVENT_COUNTERS. This helps to catch cases
-> where a new counter is added but the label is not. However, it does not help if
-> a counter is removed but the label remains.
-> 
-> It would be nice to make the BUILD_BUG_ON() check more strict to catch such
-> cases. However, when compiling with MEMCG enabled but VM_EVENT_COUNTERS
-> disabled, the vmstat_text array is larger than NR_VMSTAT_ITEMS.
-> 
-> This issue arises because some elements of the vmstat_text array are present
-> when either MEMCG or VM_EVENT_COUNTERS is enabled, but NR_VMSTAT_ITEMS only
-> accounts for these elements if VM_EVENT_COUNTERS is enabled.
-> 
-> Instead of adjusting the NR_VMSTAT_ITEMS definition to account for MEMCG, make
-> MEMCG select VM_EVENT_COUNTERS. VM_EVENT_COUNTERS is enabled in most
-> configurations anyway.
-> 
+Thanks, I think I am starting to understand and this is a problem
+indeed. I should probably take a look at the DRM code to get my answers,
+but IIUC in `OwnedSGTable`, `sg_table` is already provided by the C side
+and is backed by `_owner`?
 
