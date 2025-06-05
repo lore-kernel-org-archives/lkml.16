@@ -1,129 +1,91 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435AA278753
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432CA276051;
+	Thu,  5 Jun 2025 18:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749147872; cv=none; b=XT3jIUe64sm5Wjg3P1OVH2KxO1p8CPSmAilPsYcgewC6s6qW+IVWmJfzZtH3U4IcULw+4vTdRoJpmWx0x9JHWcMMZqWrpnfxLTDlFuwC73lpdNjYTTbjBWqDkCsQhNygl0kDGzV4nXR31lsKjj4sSCQ0ehx9OCnhhEQz9C65j0M=
+	t=1749147882; cv=none; b=Y4gAvZ83WMBnBXLjtHtOHIxCxsg0Z1yuGf9zTveJDU45kljj6dEVjdDLKZwcahpIHrR+lCPt884StrRxotzpO0W6qOqpRJeVrB+aau/1L+W7LC8SVOVoP4v55EpGqw4S1u4BqpG3z7/t8wQX6RtjNCg2IkCl/PbnZooSWKTjkqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749147872; c=relaxed/simple;
-	bh=tGKIDGZtqQueasd3JtRGIJZMx5ylZw1zITKz99GjUn0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kFfxk+iblcitSs/lNWw6aMx8Zh10TSWscEDipy9hNrTRwQY5FUXGJ9qGkRH7Aoq8xSdmeGRDVXZxc0oKOjO2VmbG5+hKRF74Ky6B+HOYCPmZALM1lyr1kQeyjC4nJHUK8lTMbwf4dj3K+c4IoP0Xz2O8xxdePuozmRsCNtlFTyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=U2KQRF9g; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1749147882; c=relaxed/simple;
+	bh=h59WDfgXYE9Pb86KnZDa6AJUEpLoHUxQH/9dgjM8T7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iqU76mCg7xlweHETTZhSIEd1feeOUni9TYFNfiXEIIFSqPKqRbo0F09qGtgNfDYh9T14wkqE/a6t1rz2f5jOh4RXp0Q/8QI9R4UCs7/Eo5aM/pPPU52UymaCYr6wi/oT6ZdQkFLfCJ48zxj/vFy6N7p6snq5X4gxfqJJiVa9t4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/B05Pdc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="U2KQRF9g"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-710bbd7a9e2so12595987b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 11:24:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1749147869; x=1749752669; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=loafhdCi9dc6Ve3gPnUX+aj3YHhuwxH1+gMF2DvUoxU=;
-        b=U2KQRF9gMVWpoiDT+DpknCR4fAngrfwzYAU10s8OXIJ10Nvu2yyS/0lOfm63hfEre0
-         GWe25EIo+Qn/LRHB5MpXAXmy7BImT394yzujhQk+2EpNC3tnOaY9h3XlkFd/zwJa3WJ/
-         snSTTq6kS9RAGYK0+ZByv4GDlwdvqaJjreRowTJaZarRKllMYY9Xh0PdOv3OiaSUR03A
-         F9JUrXfu1YLjn6e5sjBFJWQl3FGh15KIgQVCRaN1nAuIiak103wqNrqz+qNk6/QBK+uK
-         Y8T/DLEHqxuDHd48q8UVPF1p6kgB1BUe5hgJXAhDvfDTKp0nCsuZ6A3X3eRheCz9X7LN
-         XIKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749147869; x=1749752669;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=loafhdCi9dc6Ve3gPnUX+aj3YHhuwxH1+gMF2DvUoxU=;
-        b=G0TklQiIJtfCFYlUDob9JscTJYNkqT8EIGj9ypLaavkF2ivHKZ5wBt+HVO+piKHnT1
-         isLrLUyEmquoHy4imo6qFurtaI5XztVW4bF3LVXhGsLy9yeIQTDwrmW98DQ3ju3eNPkA
-         WnUfFG8jrP/k2flAklJl30Wn1nWD+d/Tg2LfBHmDQVQ/bLpTmxRXsdGpo2QioMMstMCl
-         l/HMEQ0jCC/CSvRG+4hM5AkXaBq5uOjKCB9/Z+IDFAF5LCNfAqn0UuBCHcvxE3JP1TfN
-         djthvsqlWxwe/o82mSBfeZeRlg4k6WmOyHdKYr7zHyc/4ENV8BQyvBqPzEn65SPp8XHp
-         eAnA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3gMSbjSXni3IRxUHw7SWqO9xJfrWZD97BmomMU5vE23ufQowyzG7XgPu3R0evMUzH4MSHiPTj4RfF7Qc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlJ6IdGWbbLa0augkkrDL0eXcyA4FXMGtWZ+CaD1KaAtSjSlit
-	jLISarDpKxL976nSqhV0rG4XV43T2XYzUINJZz06aJajEmzRulWZR0gcWPcVgcNHt62C0Kihjom
-	K2mFpE44fjIhfzSKwy673NP/cJZAvv/cY+KuwDBr0
-X-Gm-Gg: ASbGncub8XteEri8rErq5wmr6KLDmXn82jmNU3TBNs77TG2YnDcEOxXbdBnY50SdbyH
-	h/DelQmQve48xE+KA3nhHYxdsTZLDbjSLpMbbsCK8eI3wM8CPvimoLdaOGzptUA0VBC1gkaOiIJ
-	XN3rXYTP5Os4TCdW+QwscGVWUv2szaDCXMyZ2YH46Mazk=
-X-Google-Smtp-Source: AGHT+IGxHcLyr5CUfj8Adk1qnJ7rv9uM6qFjbiSCZGbhPb0Z0+PCihp8dprkPhkh0xIW808Di0xugMW90I47iMKtMCg=
-X-Received: by 2002:a05:690c:6405:b0:70e:18c0:daba with SMTP id
- 00721157ae682-710f7702170mr6558677b3.25.1749147869072; Thu, 05 Jun 2025
- 11:24:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/B05Pdc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50580C4CEE7;
+	Thu,  5 Jun 2025 18:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749147880;
+	bh=h59WDfgXYE9Pb86KnZDa6AJUEpLoHUxQH/9dgjM8T7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M/B05PdcgIwIxY4Y40GFQWYpLlOJUSyIHxJ+BKK5DvdeVhb7+gJFx9o9TGk8T8iiW
+	 8XPN7Dc9sw/P2/QpN1l2YOQylJ5gn87gBubAPCsoczi0GFAnTJCWxAj4gEXRfch/M5
+	 KnhbGuih02Gs29Kfwd954vDs3EGkG7dbf3w/iMOLm1+tgoQszwjGcnIlHgbb9g/XBV
+	 tbqP1Edik1NcCKLL9P4voVzUq7NIJCO7qwH+aBiKub6j3cQ5oTMFmx8Ts86JqSkIaX
+	 4PLKPAP9an6Yhb+Dzl1O61Elo/qreKGt7iJIb9GAHgYg41850yQwCH3LiODiy6N42K
+	 XlFpni7xY0Pgw==
+Date: Thu, 5 Jun 2025 19:24:36 +0100
+From: Mark Brown <broonie@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] selftests/mm: Fix test result reporting in
+ gup_longterm
+Message-ID: <1fec0548-6507-466d-ace8-702fadbc68f1@sirena.org.uk>
+References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
+ <20250527-selftests-mm-cow-dedupe-v2-4-ff198df8e38e@kernel.org>
+ <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
+ <722628a8-f3fd-4fb9-ae04-2313a52ffb36@sirena.org.uk>
+ <66db3d9e-73a6-4fcd-8abd-db65cfff49ab@lucifer.local>
+ <661fc4ce-839f-4c47-bc3a-0c864e846324@sirena.org.uk>
+ <077b6af0-bef3-4f1f-b785-9e351d01a89f@redhat.com>
+ <d039ca05-da2f-4317-be04-34edb7ad3496@sirena.org.uk>
+ <beee85ae-8b36-4705-af96-1d65c40df215@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
- <CAHC9VhQfrMe7EY3_bvW6PcLdaW7tPMgv6WZuePxd1RrbhyZv-g@mail.gmail.com> <CAEjxPJ5CSUEsXGT5e9KKXvdWpetm=v8iWc9jKvUMFub30w9KqA@mail.gmail.com>
-In-Reply-To: <CAEjxPJ5CSUEsXGT5e9KKXvdWpetm=v8iWc9jKvUMFub30w9KqA@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 5 Jun 2025 14:24:18 -0400
-X-Gm-Features: AX0GCFsZ19Ez_LuqMFg5B8ZMjt620X-7zdb1BXMpiC6FnE_cwm04AN2nSkRV4iM
-Message-ID: <CAHC9VhQ=oDeMnzrp5oERzKi8Q_o70bfTqO=LA4nuv_UV+5ApoQ@mail.gmail.com>
-Subject: Re: [PATCH v2] security,fs,nfs,net: update security_inode_listsecurity()
- interface
-To: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Eric Dumazet <edumazet@google.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HpBeBDudQufsoeBi"
+Content-Disposition: inline
+In-Reply-To: <beee85ae-8b36-4705-af96-1d65c40df215@redhat.com>
+X-Cookie: That's no moon...
 
-On Thu, Jun 5, 2025 at 2:09=E2=80=AFPM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
-> On Tue, Apr 29, 2025 at 7:35=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
-wrote:
-> >
-> > On Mon, Apr 28, 2025 at 4:15=E2=80=AFPM Stephen Smalley
-> > <stephen.smalley.work@gmail.com> wrote:
-> > >
-> > > Update the security_inode_listsecurity() interface to allow
-> > > use of the xattr_list_one() helper and update the hook
-> > > implementations.
-> > >
-> > > Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.s=
-malley.work@gmail.com/
-> > >
-> > > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> > > ---
-> > > This patch is relative to the one linked above, which in theory is on
-> > > vfs.fixes but doesn't appear to have been pushed when I looked.
-> > >
-> > >  fs/nfs/nfs4proc.c             | 10 ++++++----
-> > >  fs/xattr.c                    | 19 +++++++------------
-> > >  include/linux/lsm_hook_defs.h |  4 ++--
-> > >  include/linux/security.h      |  5 +++--
-> > >  net/socket.c                  | 17 +++++++----------
-> > >  security/security.c           | 16 ++++++++--------
-> > >  security/selinux/hooks.c      | 10 +++-------
-> > >  security/smack/smack_lsm.c    | 13 ++++---------
-> > >  8 files changed, 40 insertions(+), 54 deletions(-)
-> >
-> > Thanks Stephen.  Once we get ACKs from the NFS, netdev, and Smack
-> > folks I can pull this into the LSM tree.
->
-> Note that this will need to have a conflict resolved with:
-> https://lore.kernel.org/selinux/20250605164852.2016-1-stephen.smalley.wor=
-k@gmail.com/
->
-> Fortunately it should be straightforward - just delete the line added
-> by that patch since this patch fixes the security_inode_listsecurity()
-> hook interface to return 0 or -errno itself.
 
-Yep, I'm pretty much just waiting on -rc1 right now.
+--HpBeBDudQufsoeBi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---=20
-paul-moore.com
+On Thu, Jun 05, 2025 at 07:34:28PM +0200, David Hildenbrand wrote:
+> On 05.06.25 19:19, Mark Brown wrote:
+
+> > TBH this has been a lot better than the more common failure mode with
+> > working on selftests where people just completely ignore or are openly
+> > dismissive about them :/ .  Probably room for a middle ground though.
+
+> Can we *please* limit such reworks to mechanical changes in the future?
+
+Yes, that's better in general.
+
+--HpBeBDudQufsoeBi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhB4OMACgkQJNaLcl1U
+h9Al1Af/a6G87pi3kA/SrMQRDKlWTzVxwv3blS6pt6Ks3luo0YCwAnyuv31qYJO/
+F2Y29QAhRS/q3/szS1Oc6dgLEDjBqOQY5lohv0FgMM4cKvFnrEusqh06KVlnrGCa
+wVir6kF7qRc+/WAyrbh1ilobORYMpLHLi8F+cidREacOP+KYOU4MqrMjp5GBVK0M
+Dr8HvKTSQst5p3R+u6Hv123JKDRQl65Pc+xGGjB0xV+V3TBVutENafKAWvRwwbtI
+PqXYhWkre2dndR+qw8tMxGs2B5woNRh8ZdQDkjlN2iYUy/rjI+v2RYB3uLnEIUvK
+Y3GT8Jbmuwyy90alEh6E+lMxX73YQg==
+=cOEy
+-----END PGP SIGNATURE-----
+
+--HpBeBDudQufsoeBi--
