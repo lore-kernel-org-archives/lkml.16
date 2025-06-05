@@ -1,121 +1,161 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5138D2C3242
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 09:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9E62C3242;
+	Thu,  5 Jun 2025 09:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749116804; cv=none; b=T0yIYAXZrQ3TaHrTajb+OJ9x71w8USy1Ed8WhU9/bEnhMI+rb0N/ruEslELVVc1wJrvNyCjJX7Xy0vD5CwI3951P7RuGn5qFW3ISSaANujHPGQ4+UdQo0t3v79njrc7QhYPgUMJEdDcO/htluEQS3Gp1aYiVgqqogot/7H6sFNU=
+	t=1749116884; cv=none; b=OnxkdfRSwmgJi4ZFATXECljRKwiDf2FV5Y8Q0vrsGr2/DYEXjXMg5cRKARnULpCQv210yubip2JLUDqyLeL7OHq2bCHacoRWHJXYbxl+mWnRt0BMxELtgNtHQC2XYN7frmjIK68d/OIE9G/PQ6Ekd+y19GlmH9fjelCW7Ayz2bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749116804; c=relaxed/simple;
-	bh=wnNS4HhULRyBFREAvZHyfSws5K9uvj//gUc7yGT6CpI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LeT2Q1YJgVjb9o0F0v23XLC1uyq4LQTD0qSIgKbCpx17OnpqC9obR0S8OILYqA8Fu/hGX2n30NhhebcxA+LdSTWCm6Bxnl83UkHqNYUT/5wpsBDFEYPBf3mgSzR9Bn4rvQjl967KtwVHhDwwot4c2KrZ6w5N9EVfBWujkvWJ+5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk; spf=pass smtp.mailfrom=thegoodpenguin.co.uk; dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20230601.gappssmtp.com header.i=@thegoodpenguin-co-uk.20230601.gappssmtp.com header.b=t24rVWWp; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thegoodpenguin.co.uk
+	s=arc-20240116; t=1749116884; c=relaxed/simple;
+	bh=/VL9o7ChNpJtoUsc5ibEOwDBnVANVkT3Ha++wcl3fYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sxqv/yqPZ91Z6yu+St9Kr9ScP9xdF1Mf+glVdpT/eogz9ZxZy9K1TAv3HEVl4dd0VMmyQGngyVEMGGtQAN0fNA0OQa6qxI9eOCmPRqW5OwEFj3zVLWCzOjVArKc29LAqFCLy/aFgSMhoFB44C5BFizyMWdtP+q+c2AZwVGbRDdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jzl9LojX; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20230601.gappssmtp.com header.i=@thegoodpenguin-co-uk.20230601.gappssmtp.com header.b="t24rVWWp"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-313132d1f7aso641279a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 02:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20230601.gappssmtp.com; s=20230601; t=1749116802; x=1749721602; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wnNS4HhULRyBFREAvZHyfSws5K9uvj//gUc7yGT6CpI=;
-        b=t24rVWWp60WwkOJ6moR2eXoU0A553vsmxVKAh8BDBQtUN8Wdr8hb+RuAQoKnj/jxG3
-         zGP3zZcVuCXHNPdn3OJR94GNsPSc9b1FM8cWiu9wHkd6XdDImASxc0lUgWl1DT5SEKAn
-         /dWLWtmOw33EfVDP9+dNBdFoZzmwZcqHvuXsb8clN6Xl5xAnvaQRibGyvrIllvYW5LbG
-         JBcNUXyLz+UpPy2cRb0mnxcdoJVK68JCeoKR24+ZY/NqPuSEvGAH3FTYoMdlQU2/dhhj
-         r7pKR6hMvznLjBH23y6oGjYaMgr6LqVt7nC8OD3c6YZCImsk7HEs6mJg1rB+6afCSGNe
-         Tadg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749116802; x=1749721602;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wnNS4HhULRyBFREAvZHyfSws5K9uvj//gUc7yGT6CpI=;
-        b=PoboEhYkse1oSiq3boi7gtDGn11ojN3JW4g5umXkrQs0KEM5dy2rhSa3aR2FVaz9zP
-         3gn5zWlNWAb42xS1uriUiQLgG21QFTkiq/3r7a5cyqSQmaLtSvW3TrGrtem7Sv2fS8ZO
-         g/QeLxm7/B326bfyHFeNK+nYLqTfW9p751aMvj/jNuwwEwunnc0X6AmOJvQc+k7NwLI8
-         mHzbg2tfYbGcmUCsCB4jqvNcLBekYfx8nT/3xuK/kAZk65ftOTxBn2DVTakfzCfj8USD
-         dzlxkwToo/A9BX7BaF53+7wE8COF66YlmoDZXGy8XPDxRumFO8ww2Ql9mtvfjINjz/kJ
-         nUcw==
-X-Forwarded-Encrypted: i=1; AJvYcCULl9Nl60SP4k9888Wvz48ptWrG7iGBUJdf8o72R4EOlbDJ0hE3GfPbopZ3x4/YVeL8KIJ79K0JU4bhkH4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqZ4QEnUXzScFLKvUkjCTCQRCliOjEt/mRAmNY9dMbq857MahH
-	uaTQNNzKuhegWUvHorzukuX8dwREqkjqMwwnGFeHAGE2blbdZOnLx1k0JVb/fUZ4R2wyTeZTOXv
-	C/OB1ws0Ino9JjKQrPmYIXs7yWSd7uQaE4PLho26mrQ==
-X-Gm-Gg: ASbGncv5nLzVd8Jot2mpfIdkN4NUo6JzNqev1bIKj49sB/1c7hiZdkfPl8OIH9T0ABZ
-	PopRp4zqdAwzJvS7A/KJlLR9XhhU5/MkCkMbrz6fBJ3BssTcD5KlUSwNyqSKIi4OQyy/hR8vFzu
-	ikHbRQNYYUFI1ajBJy5HC7aUU6kHjB2d8K
-X-Google-Smtp-Source: AGHT+IFGGi6RW+Ple5Wj2uUthdfC6mUCtgiFUSAwFtEXZ2lvtu6VqU7yOVFh2lRK8DXTZ1sibCEWgX3LcQt6ubIiNGI=
-X-Received: by 2002:a17:90b:4fc9:b0:311:b413:f5e1 with SMTP id
- 98e67ed59e1d1-3130cd7b12emr7162901a91.32.1749116802568; Thu, 05 Jun 2025
- 02:46:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jzl9LojX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749116883; x=1780652883;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/VL9o7ChNpJtoUsc5ibEOwDBnVANVkT3Ha++wcl3fYE=;
+  b=Jzl9LojXTcxA9v2vPNSYC+YgABD1rahkREzXZ/iQkE2Uw6jeezJHimKm
+   I+A/CrUWSydOvc9AhaRAU85GnZ1lTymdzmVpaQYBqyE+FMO4HFU5RJgQ0
+   MAvZV3qarpEo8Wy5mYIQw3tMUXRfBcO5L1sclTC56eF4YLLRY6F8OAZtq
+   bAE877swmE+/w/yYLPsoih2mQxtBkHrZPTxtzOOieLUyRn2n++0BFctsW
+   4MYYKMLtrlDQW+oRFqCCGAymQBlNOumWkTAZi8fKCeTU1muZZtWrFWTny
+   KALOsUAj2SeJcrbND+z6PqnjyhJj9hIa3hPx2uI8SKj8co0fVOFz718+v
+   Q==;
+X-CSE-ConnectionGUID: b8Tnf0HQTN6ckJytSyY1MA==
+X-CSE-MsgGUID: /qLFletzQaSMOJjHMzPmCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="61894012"
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="61894012"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 02:48:02 -0700
+X-CSE-ConnectionGUID: bZl8PvLtTTmumH8CpnrPsQ==
+X-CSE-MsgGUID: NroY4ThARXa4bErMmRN2Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="145358422"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa006.jf.intel.com with ESMTP; 05 Jun 2025 02:47:55 -0700
+Date: Thu, 5 Jun 2025 17:41:17 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com, yilun.xu@intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+Message-ID: <aEFmPaYorqaYCKBY@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+ <yq5aplfn210z.fsf@kernel.org>
+ <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
+ <yq5ajz5r8w6p.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604142045.253301-1-pmladek@suse.com>
-In-Reply-To: <20250604142045.253301-1-pmladek@suse.com>
-From: Michael Cobb <mcobb@thegoodpenguin.co.uk>
-Date: Thu, 5 Jun 2025 10:46:31 +0100
-X-Gm-Features: AX0GCFsGRKoKjDpzuaKJUW8xRoFbxRydeDfH7Jd7KKAH6uvxjps5xknvmV5dIko
-Message-ID: <CAC251sX=FezWGmZ==hAJg+8sbe-MS_CVSx8HwJfFthiAh2-L5g@mail.gmail.com>
-Subject: Re: [PATCH] printk: Allow to use the printk kthread immediately even
- for 1st nbcon
-To: Petr Mladek <pmladek@suse.com>
-Cc: John Ogness <john.ogness@linutronix.de>, rostedt@goodmis.org, 
-	senozhatsky@chromium.org, linux-serial@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5ajz5r8w6p.fsf@kernel.org>
 
-On Wed, 4 Jun 2025 at 15:21, Petr Mladek <pmladek@suse.com> wrote:
->
-> The kthreads for nbcon consoles are created by nbcon_alloc() at
-> the beginning of the console registration. But it currently works
-> only for the 2nd or later nbcon console because the code checks
-> @printk_kthreads_running.
->
-> The kthread for the 1st registered nbcon console is created at the very
-> end of register_console() by printk_kthreads_check_locked(). As a result,
-> the entire log is replayed synchronously when the "enabled" message
-> gets printed. It might block the boot for a long time with a slow serial
-> console.
->
-> Prevent the synchronous flush by creating the kthread even for the 1st
-> nbcon console when it is safe (kthreads ready and no boot consoles).
->
-> Also inform printk() to use the kthread by setting
-> @printk_kthreads_running. Note that the kthreads already must be
-> running when it is safe and this is not the 1st nbcon console.
->
-> Symmetrically, clear @printk_kthreads_running when the last nbcon
-> console was unregistered by nbcon_free(). This requires updating
-> @have_nbcon_console before nbcon_free() gets called.
->
-> Note that there is _no_ problem when the 1st nbcon console replaces boot
-> consoles. In this case, the kthread will be started at the end
-> of registration after the boot consoles are removed. But the console
-> does not reply the entire log buffer in this case. Note that
-> the flag CON_PRINTBUFFER is always cleared when the boot consoles are
-> removed and vice versa.
->
-> Closes: https://lore.kernel.org/r/20250514173514.2117832-1-mcobb@thegoodpenguin.co.uk
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+On Wed, Jun 04, 2025 at 07:07:18PM +0530, Aneesh Kumar K.V wrote:
+> Xu Yilun <yilun.xu@linux.intel.com> writes:
+> 
+> > On Sun, Jun 01, 2025 at 04:15:32PM +0530, Aneesh Kumar K.V wrote:
+> >> Xu Yilun <yilun.xu@linux.intel.com> writes:
+> >> 
+> >> > Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
+> >> > expected to be called by userspace when CoCo VM issues TDI bind/unbind
+> >> > command to VMM. Specifically for TDX Connect, these commands are some
+> >> > secure Hypervisor call named GHCI (Guest-Hypervisor Communication
+> >> > Interface).
+> >> >
+> >> > The TSM TDI bind/unbind operations are expected to be initiated by a
+> >> > running CoCo VM, which already have the legacy assigned device in place.
+> >> > The TSM bind operation is to request VMM make all secure configurations
+> >> > to support device work as a TDI, and then issue TDISP messages to move
+> >> > the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
+> >> >
+> >> > Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
+> >> > device to TDISP ERROR state.
+> >> >
+> >> 
+> >> Any reason these need to be a vfio ioctl instead of iommufd ioctl?
+> >> For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.kumar@kernel.org/
+> >
+> > A general reason is, the device driver - VFIO should be aware of the
+> > bound state, and some operations break the bound state. VFIO should also
+> > know some operations on bound may crash kernel because of platform TSM
+> > firmware's enforcement. E.g. zapping MMIO, because private MMIO mapping
+> > in secure page tables cannot be unmapped before TDI STOP [1].
+> >
+> > Specifically, for TDX Connect, the firmware enforces MMIO unmapping in
+> > S-EPT would fail if TDI is bound. For AMD there seems also some
+> > requirement about this but I need Alexey's confirmation.
+> >
+> > [1] https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+> >
+> 
+> According to the TDISP specification (Section 11.2.6), clearing either
+> the Bus Master Enable (BME) or Memory Space Enable (MSE) bits will cause
+> the TDI to transition to an error state. To handle this gracefully, it
+> seems necessary to unbind the TDI before modifying the BME or MSE bits.
 
-Tested-by: Michael Cobb <mcobb@thegoodpenguin.co.uk>
+Yes. But now the suggestion is never let VFIO do unbind, instead VFIO
+should block these operations when device is bound.
 
-With this patch, on Raspberry Pi 3B+, I'm seeing the kernel will reach
-userspace in ~1.5s, which is consistent with a boot with no console
-output (loglevel=1) and at slower baudrates too. For reference, I was
-seeing ~5s to reach userspace at 115200 baud and ~15s with
-initcall_debug turned on.
+> 
+> If I understand correctly, we also need to unmap the Stage-2 mapping due
+> to the issue described in commit
+> abafbc551fddede3e0a08dee1dcde08fc0eb8476. Are there any additional
+> reasons we would want to unmap the Stage-2 mapping for the BAR (as done
+> in vfio_pci_zap_and_down_write_memory_lock)?
 
-Thanks for your work on this Petr and John for your support!
+I think no more reason. 
 
-Kind regards,
+> 
+> Additionally, with TDX, it appears that before unmapping the Stage-2
+> mapping for the BAR, we should first unbind the TDI (ie, move it to the
+> "unlock" state?) Is this step related Section 11.2.6 of the TDISP spec,
+> or is it driven by a different requirement?
 
-Michael Cobb
+No, this is not device side TDISP requirement. It is host side
+requirement to fix DMA silent drop issue. TDX enforces CPU S2 PT share
+with IOMMU S2 PT (does ARM do the same?), so unmap CPU S2 PT in KVM equals
+unmap IOMMU S2 PT.
+
+If we allow IOMMU S2 PT unmapped when TDI is running, host could fool
+guest by just unmap some PT entry and suppress the fault event. Guest
+thought a DMA writting is successful but it is not and may cause
+data integrity issue.
+
+This is not a TDX specific problem, but different vendors has different
+mechanisms for this. For TDX, firmware fails the MMIO unmap for S2. For
+AMD, will trigger some HW protection called "ASID fence" [1]. Not sure
+how ARM handles this?
+
+https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+
+Thanks,
+Yilun
+
+> 
+> -aneesh
