@@ -1,127 +1,129 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5E81F7575
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435AA278753
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749147814; cv=none; b=rBVRrS0gorIWCQZmz9HjiXj3yZVt+O9D5kB5IhwqCHukjQXJwdtYoDiEd0qDl02V0jFB4PGSlaq3/Ib6lEGqbf1aE/j2PZEIgI79lvGxzhXQQAgEYojoAjpfBjYs9dNbISE4WazVQmLU51PU5YLMrRoTnwVxZM+Jq8FpOrM52jE=
+	t=1749147872; cv=none; b=XT3jIUe64sm5Wjg3P1OVH2KxO1p8CPSmAilPsYcgewC6s6qW+IVWmJfzZtH3U4IcULw+4vTdRoJpmWx0x9JHWcMMZqWrpnfxLTDlFuwC73lpdNjYTTbjBWqDkCsQhNygl0kDGzV4nXR31lsKjj4sSCQ0ehx9OCnhhEQz9C65j0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749147814; c=relaxed/simple;
-	bh=R9u39JEZmT18gJLnh4kUm01asal2sR177VJ3UQxdmQM=;
+	s=arc-20240116; t=1749147872; c=relaxed/simple;
+	bh=tGKIDGZtqQueasd3JtRGIJZMx5ylZw1zITKz99GjUn0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l4kAu2YeF6ccBOwrvnPitHUUNF5f6bDw6qING4RkVH6s3NPlPKNCQj1E2XLK343ikMzEMO4tjEOcSZldAW5XLxacmL+mU3TDXLQNb/sMIikNX3kuuUrM3OQ3H4qb6gDjOfVJrh07QptdSGQBIlaNNGHG6a791HAC0B8FZGS2EXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=GmiPTg+S; arc=none smtp.client-ip=209.85.219.172
+	 To:Cc:Content-Type; b=kFfxk+iblcitSs/lNWw6aMx8Zh10TSWscEDipy9hNrTRwQY5FUXGJ9qGkRH7Aoq8xSdmeGRDVXZxc0oKOjO2VmbG5+hKRF74Ky6B+HOYCPmZALM1lyr1kQeyjC4nJHUK8lTMbwf4dj3K+c4IoP0Xz2O8xxdePuozmRsCNtlFTyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=U2KQRF9g; arc=none smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="GmiPTg+S"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e819aa98e7aso809955276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 11:23:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="U2KQRF9g"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-710bbd7a9e2so12595987b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 11:24:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1749147812; x=1749752612; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1749147869; x=1749752669; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vo6V4Ppsn9eFIGNfpfF7fHNiUwnu2FfDlKV+ixE/pPE=;
-        b=GmiPTg+S9V/TuwngsVU3TwLZXGUCX9IP8XbwdfE98zQJZlku1hk2dWz8yApaeKxX9x
-         q9acXP6Ev/qFEz71ndH082ZSWUFx42SGeML/4CluZJg4GCMpZGOQPehWOnXSa3jo/Vvp
-         eS/kiX905O1jnqNajyM8CzRBX1812uLmuamDSGmgJ7rVv0OVONg0bM6fHG0/2G6mhmj5
-         B08W5FTZ8VoBZg6ntlSUb7BFclAwSxydKt7BeCVEXV8ONkuxHiLGK73F9Q+iQuil0ekm
-         IFDulSz6ZAcSARj87isu9b4cKvOfpZwQi8DPvBpAfz55vlatOdHdtlTsw6Biz3otyeRQ
-         3Upw==
+        bh=loafhdCi9dc6Ve3gPnUX+aj3YHhuwxH1+gMF2DvUoxU=;
+        b=U2KQRF9gMVWpoiDT+DpknCR4fAngrfwzYAU10s8OXIJ10Nvu2yyS/0lOfm63hfEre0
+         GWe25EIo+Qn/LRHB5MpXAXmy7BImT394yzujhQk+2EpNC3tnOaY9h3XlkFd/zwJa3WJ/
+         snSTTq6kS9RAGYK0+ZByv4GDlwdvqaJjreRowTJaZarRKllMYY9Xh0PdOv3OiaSUR03A
+         F9JUrXfu1YLjn6e5sjBFJWQl3FGh15KIgQVCRaN1nAuIiak103wqNrqz+qNk6/QBK+uK
+         Y8T/DLEHqxuDHd48q8UVPF1p6kgB1BUe5hgJXAhDvfDTKp0nCsuZ6A3X3eRheCz9X7LN
+         XIKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749147812; x=1749752612;
+        d=1e100.net; s=20230601; t=1749147869; x=1749752669;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vo6V4Ppsn9eFIGNfpfF7fHNiUwnu2FfDlKV+ixE/pPE=;
-        b=Qp9J97tFaPYiDE8zDHiHEHeewga1S2uOmFMN8X6cy+CbVokPd72nYtf+Gma+qk5eYB
-         1gZq/MEducBTdLe0veewgFagifnVOQK301+RAFErUGmGrA2PTV0fve4Hp/Mr+hh0srUk
-         zrqpbhilPpO8XofCLUssrHh6rekoXcvPrIkUmXUqdgv1TPsRvZibDah0GB9MsRyebYz9
-         7vYMU2p4N5ZQelL1yK8KMBYmoHXjd1VT59mezM0mGXOsMp+6pB8QxrTU2/etarvKhioC
-         BrupLrJKXLkU1AvWlu+kGC3pLM8xx8o/KHCVxHEYsuAklyHoHqH3uptKKPE43aEGLs0m
-         X56A==
-X-Forwarded-Encrypted: i=1; AJvYcCX4PVve/i8XJzfF/n4iGMkvf+MTkRQ//TqAFEzBuYfKgqLt3x60j2jinoKCr0ZGVbDGxFYxgLG8wZGACig=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyquJoanSv8N1+ZrgfzgJx3UcNno0y15OZL0J78Fx52nbwDHsk8
-	rfJ1ThU88CVhHTddnO634DgPXpI60QaS3AyJL7O+90AfV5ZQpivt3xW4cAWie6oyI+2e1/i5WBw
-	LVEIT/mZxmLmfrpfs7jbfGz4LsFW1bcozLJc7xJbA
-X-Gm-Gg: ASbGncterDXUOosuKgz5eAQGbfULm5wCzSjXQWFgYRGT0DpbR0zErMdc3NXdmkRumfX
-	dIo2G2TrFDvQwYbNQKH2AWa74yr9Ck6lWKH8fGbssAoizuyxV1/fGxIEcIBWfMQ1EFfJU4GVGsY
-	k5c1cBkZj6fxN73QBcG6uM0TACOBXpcRf5
-X-Google-Smtp-Source: AGHT+IFlZbkCKjkkUykBJ3kANNnDocnKVC3Jz2qHpf1mQeqFtAa91potV6f9YRNypDxAi3xWFBKbXGqceEKkdz1Ki5Y=
-X-Received: by 2002:a05:6902:2e0d:b0:e81:9a1c:1c0d with SMTP id
- 3f1490d57ef6-e81a22847e6mr978672276.7.1749147811619; Thu, 05 Jun 2025
- 11:23:31 -0700 (PDT)
+        bh=loafhdCi9dc6Ve3gPnUX+aj3YHhuwxH1+gMF2DvUoxU=;
+        b=G0TklQiIJtfCFYlUDob9JscTJYNkqT8EIGj9ypLaavkF2ivHKZ5wBt+HVO+piKHnT1
+         isLrLUyEmquoHy4imo6qFurtaI5XztVW4bF3LVXhGsLy9yeIQTDwrmW98DQ3ju3eNPkA
+         WnUfFG8jrP/k2flAklJl30Wn1nWD+d/Tg2LfBHmDQVQ/bLpTmxRXsdGpo2QioMMstMCl
+         l/HMEQ0jCC/CSvRG+4hM5AkXaBq5uOjKCB9/Z+IDFAF5LCNfAqn0UuBCHcvxE3JP1TfN
+         djthvsqlWxwe/o82mSBfeZeRlg4k6WmOyHdKYr7zHyc/4ENV8BQyvBqPzEn65SPp8XHp
+         eAnA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3gMSbjSXni3IRxUHw7SWqO9xJfrWZD97BmomMU5vE23ufQowyzG7XgPu3R0evMUzH4MSHiPTj4RfF7Qc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlJ6IdGWbbLa0augkkrDL0eXcyA4FXMGtWZ+CaD1KaAtSjSlit
+	jLISarDpKxL976nSqhV0rG4XV43T2XYzUINJZz06aJajEmzRulWZR0gcWPcVgcNHt62C0Kihjom
+	K2mFpE44fjIhfzSKwy673NP/cJZAvv/cY+KuwDBr0
+X-Gm-Gg: ASbGncub8XteEri8rErq5wmr6KLDmXn82jmNU3TBNs77TG2YnDcEOxXbdBnY50SdbyH
+	h/DelQmQve48xE+KA3nhHYxdsTZLDbjSLpMbbsCK8eI3wM8CPvimoLdaOGzptUA0VBC1gkaOiIJ
+	XN3rXYTP5Os4TCdW+QwscGVWUv2szaDCXMyZ2YH46Mazk=
+X-Google-Smtp-Source: AGHT+IGxHcLyr5CUfj8Adk1qnJ7rv9uM6qFjbiSCZGbhPb0Z0+PCihp8dprkPhkh0xIW808Di0xugMW90I47iMKtMCg=
+X-Received: by 2002:a05:690c:6405:b0:70e:18c0:daba with SMTP id
+ 00721157ae682-710f7702170mr6558677b3.25.1749147869072; Thu, 05 Jun 2025
+ 11:24:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1748890962.git.ackerleytng@google.com> <c03fbe18c3ae90fb3fa7c71dc0ee164e6cc12103.1748890962.git.ackerleytng@google.com>
- <aD_8z4pd7JcFkAwX@kernel.org> <CAHC9VhQczhrVx4YEGbXbAS8FLi0jaV1RB0kb8e4rPsUOXYLqtA@mail.gmail.com>
- <aEEv-A1ot_t8ePgv@kernel.org>
-In-Reply-To: <aEEv-A1ot_t8ePgv@kernel.org>
+References: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
+ <CAHC9VhQfrMe7EY3_bvW6PcLdaW7tPMgv6WZuePxd1RrbhyZv-g@mail.gmail.com> <CAEjxPJ5CSUEsXGT5e9KKXvdWpetm=v8iWc9jKvUMFub30w9KqA@mail.gmail.com>
+In-Reply-To: <CAEjxPJ5CSUEsXGT5e9KKXvdWpetm=v8iWc9jKvUMFub30w9KqA@mail.gmail.com>
 From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 5 Jun 2025 14:23:20 -0400
-X-Gm-Features: AX0GCFuxDKrPh9BVvZ5a1pei5w2LKJ7senFjfBy4ObZ7zkQcfpax-Jaemg5t1J8
-Message-ID: <CAHC9VhR3dKsXYAxY+1Ujr4weO=iBHMPHsJ3-8f=wM5q_oo81wA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] fs: Provide function that allocates a secure
- anonymous inode
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Ackerley Tng <ackerleytng@google.com>, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
-	aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
-	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz, 
-	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
-	will@kernel.org, willy@infradead.org, xiaoyao.li@intel.com, 
-	yan.y.zhao@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
+Date: Thu, 5 Jun 2025 14:24:18 -0400
+X-Gm-Features: AX0GCFsZ19Ez_LuqMFg5B8ZMjt620X-7zdb1BXMpiC6FnE_cwm04AN2nSkRV4iM
+Message-ID: <CAHC9VhQ=oDeMnzrp5oERzKi8Q_o70bfTqO=LA4nuv_UV+5ApoQ@mail.gmail.com>
+Subject: Re: [PATCH v2] security,fs,nfs,net: update security_inode_listsecurity()
+ interface
+To: Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
+	selinux@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 1:50=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wrot=
-e:
+On Thu, Jun 5, 2025 at 2:09=E2=80=AFPM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+> On Tue, Apr 29, 2025 at 7:35=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
+wrote:
+> >
+> > On Mon, Apr 28, 2025 at 4:15=E2=80=AFPM Stephen Smalley
+> > <stephen.smalley.work@gmail.com> wrote:
+> > >
+> > > Update the security_inode_listsecurity() interface to allow
+> > > use of the xattr_list_one() helper and update the hook
+> > > implementations.
+> > >
+> > > Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.s=
+malley.work@gmail.com/
+> > >
+> > > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> > > ---
+> > > This patch is relative to the one linked above, which in theory is on
+> > > vfs.fixes but doesn't appear to have been pushed when I looked.
+> > >
+> > >  fs/nfs/nfs4proc.c             | 10 ++++++----
+> > >  fs/xattr.c                    | 19 +++++++------------
+> > >  include/linux/lsm_hook_defs.h |  4 ++--
+> > >  include/linux/security.h      |  5 +++--
+> > >  net/socket.c                  | 17 +++++++----------
+> > >  security/security.c           | 16 ++++++++--------
+> > >  security/selinux/hooks.c      | 10 +++-------
+> > >  security/smack/smack_lsm.c    | 13 ++++---------
+> > >  8 files changed, 40 insertions(+), 54 deletions(-)
+> >
+> > Thanks Stephen.  Once we get ACKs from the NFS, netdev, and Smack
+> > folks I can pull this into the LSM tree.
 >
-> secretmem always had S_PRIVATE set because alloc_anon_inode() clears it
-> anyway and this patch does not change it.
+> Note that this will need to have a conflict resolved with:
+> https://lore.kernel.org/selinux/20250605164852.2016-1-stephen.smalley.wor=
+k@gmail.com/
+>
+> Fortunately it should be straightforward - just delete the line added
+> by that patch since this patch fixes the security_inode_listsecurity()
+> hook interface to return 0 or -errno itself.
 
-Yes, my apologies, I didn't look closely enough at the code.
-
-> I'm just thinking that it makes sense to actually allow LSM/SELinux
-> controls that S_PRIVATE bypasses for both secretmem and guest_memfd.
-
-It's been a while since we added the anon_inode hooks so I'd have to
-go dig through the old thread to understand the logic behind marking
-secretmem S_PRIVATE, especially when the
-anon_inode_make_secure_inode() function cleared it.  It's entirely
-possible it may have just been an oversight.
+Yep, I'm pretty much just waiting on -rc1 right now.
 
 --=20
 paul-moore.com
