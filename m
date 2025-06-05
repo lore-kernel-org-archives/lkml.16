@@ -1,235 +1,166 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE2927FB05
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698D127E7F0
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749151643; cv=none; b=au/RybM2PV2BRo51Vhazof/4FFHRAwi6YrSaKPUw2Kt/DYxMBjAg7v+5V7BE4z/hXAZItlvT9bqlFrK01+3LSJbSQaAwytAp92n7XpseYAK074+sSdPF17qlOb2+laCp5LfYy7m7OKuPuz2wUSNxxTD4NAKbXWm0TR9BZgRWUwo=
+	t=1749151684; cv=none; b=uqJFWToCEjbrwFoYMkWnKNHYU8iRKzQGWZlKkE8xGxZ3ce7YnlMdO3VloWghJc2Oq52rzRud6Pmpa3CmlSCVSSKhxZKKm4+z+xt0WVnwzwO8GjMPdwH3CRzvwAl1L9zldiKH4UjimfICyzwpAa21AcgyzjJ0NyrSNLk3HyBxslE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749151643; c=relaxed/simple;
-	bh=IMpfA1wqZarLzuB4nrBCzI9upCvhdpPW0XmBDJS/1F4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1UKOmSmc1NcnK5G9NGy4gaDQQDu+5FbI4rhVlS1eMplt7Zfnhypyz4LemInkJ3cu7e2S34mPPlkxmu12Oas/XOZghCFyfQxjXOuZlGytHUHfNwLXcTCGUTxdRgio9XxPrV04lUD7ug6VPKEwGvnI3WwPgN9BsEZRNth+03kyBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QWQcaNf+; arc=none smtp.client-ip=209.85.208.47
+	s=arc-20240116; t=1749151684; c=relaxed/simple;
+	bh=dx802gucmxUSwuA6G9zpAVT4nNSZ6L0ITiOgaKUJeoI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pmrb7VbttzFXmLVutiEUzjSKJKzZbsosVB6MpfqEPX9ml+XMlt7WCTV0bI5exeGjiiT6Rgdbe11k6pcmwMsxdZxEjL8/sVgyTVZWRqFeMO7LZ+R71GKYqe59tAW/LIqjr5vQIEnFWC0KizvzUY86lYoNhNqD9z/eDjtH/a8VyJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g8gtDFf9; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QWQcaNf+"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-602e203db66so2340131a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:27:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g8gtDFf9"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235ca5eba8cso34795ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749151640; x=1749756440; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ktTlyyYyWStVAYtvm1hFc3t1pciBGiotvMTYgEWetf4=;
-        b=QWQcaNf++5qYLOUIj+IO/rjRTBXp83BqsE54IYD7IfqWirN6HhUp0pqo70TI0f2JIh
-         cWlOp5OuEEf0Zfn6MYxS7N+d+zDj0A5jG/7+n6XFRtZvxoaOVkKSoNeGzh/zJ7EYDLfK
-         vPNVAmKqsvkJCjfzwOEpHKt/zlt8N2ujT80hdY/cZ99FuBytnfXUgPJuSs/ZI5VP7Ha9
-         /JfCnVyRQWYojbRkfgyhB9qHDSVK97zZF3y8mHBIeJx3yQVPjL79sAxXRW+GMYe5ja+k
-         JQlRORPkrJLMbp4nBRAIGJrUN0CThaK2WS3KR3qxsbV0Vv/oBfMd5wvYIhycxBGjSkSt
-         leUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749151640; x=1749756440;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1749151683; x=1749756483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ktTlyyYyWStVAYtvm1hFc3t1pciBGiotvMTYgEWetf4=;
-        b=N4dHdl2WLdQMgg6WEJK+IhSrWIzU6i03yK5T9RlXQXzyEr/FKiZKrArc3RPX4OMVIb
-         sAtSQh0OuIzvrcPa54UN/GFvn5EdBX+IZFNsY4Jj8KwMSRI9eiQ0MRmS47lrn+ayIm/f
-         j34YsUz5C1FIN5iwC+OLfMfrDYaAfUo1gIxso60Fj3CsSLTPsSJ56obATxk2PsZp7uKQ
-         nbv4wPBaFKtL4Vhai0I0jwy598y0U6K6oHdHs2QJXvOqHXKDnoqOgKjhWzcolNyvW1wY
-         oW7pFdNpBx25t6tQPwKDCcGtGqiaNbmO00LEZd1hfWOHfJsOph6t3H6QVVTzmCJAPRCe
-         o2uw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgApQsjEBDbmImyy5Lc3+NrksKAVPOpp7dZEoKni9L6uYfIoONhTMT0H6we4ilFR0qVeg/REv8ZyFK2v0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyczraGgxss4MByKd+mBDzIhM31APaT/vrYUWr2+rFsOA0aRLYN
-	prFFDg6aOngVaWkQPnD4IxgG6C7O9lQ06jHUUOhHRrAYAwI9GfhNnVgxSRWUtgGzdw==
-X-Gm-Gg: ASbGncsQ6LHZuKP5rsxoSmyfWO//C/77jVSuEFL5H2OdhUuWxKsyDtzv5ZS17kB5sNL
-	vYLnpm3iSRtDt1t6ragI7DBqFwyNmRfwz9vwR1JmIotHjk33extq+b8C5x6r3hmI/55De+rZ1BB
-	/bRok6xMbzPjM6NB9KKP58zQiyEUwsPHCTYgzO/f6m7LfcDdenz+5r6LD+PzzUyD3YgGuGWAAEL
-	24RF/lZHgkMPB4G6fw/zFMGHIp5cqMrb23mSilKC2ncfnEDu9SlCQ3+Zmy2aFLgAVPUDnizjzJa
-	ghJ2AD85SFYjIfQFiRg2zvNQPDBKB6jmfbJ3d6GXfZT+D4PejM+YDCg+I5j21KFJjngKLfpEbw8
-	pKnwsi6tvq0ZRIVLXvYy/uX8iFA==
-X-Google-Smtp-Source: AGHT+IGR0eQhUdX+BE/0D+8bzRt7h0N4AhkbBRetRMSEQ3qUIwv2gsp2KOR1vdCbT3C2qlHJYvRLaQ==
-X-Received: by 2002:a05:6402:50d2:b0:604:e33f:e5c0 with SMTP id 4fb4d7f45d1cf-60774b8001amr329835a12.30.1749151639586;
-        Thu, 05 Jun 2025 12:27:19 -0700 (PDT)
-Received: from google.com (57.35.34.34.bc.googleusercontent.com. [34.34.35.57])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6077837756esm34452a12.17.2025.06.05.12.27.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 12:27:18 -0700 (PDT)
-Date: Thu, 5 Jun 2025 19:27:13 +0000
-From: Matt Bobrowski <mattbobrowski@google.com>
-To: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com,
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	kpsingh@kernel.org, amir73il@gmail.com, repnop@google.com,
-	jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net,
-	gnoack@google.com, m@maowtm.org
-Subject: Re: [PATCH v2 bpf-next 3/4] bpf: Introduce path iterator
-Message-ID: <aEHvkQ1C7Ne1dB4n@google.com>
-References: <20250603065920.3404510-1-song@kernel.org>
- <20250603065920.3404510-4-song@kernel.org>
+        bh=gmU5jgwgBwNq/krxcY8pPMdH4Rz6BwK40x1VIx+RxWE=;
+        b=g8gtDFf93KfcFZNv0BfZw2U7ZpYif8I4Iwk7GoVPvIVE/543FkkMObmTdfKUcosx8Z
+         acse5slnM+r6/HEpsnVcjzyP4qRrb/pqcNxu7KLNow3EXOac7dOLwBrPHOoJEZHL+26y
+         xpLwjdHTVd3QFedyXuTU0GG8WAdQhq+FZHuLSb6/jDEWiAidSji/kvvhhBpsl6QISnTV
+         xrjfMZ5HQpORAgda1+oEEmG5KBvxa06CnVjXR8Y8qqvlLmVIZo0O+z/dAeQX3fkJcO9A
+         0iGDTeze/Mto9+QAiibPjqXVCJ6DZJDqARFD6kCaeAlmrfamdyDU0c7We1PKxsLk/1je
+         pmOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749151683; x=1749756483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gmU5jgwgBwNq/krxcY8pPMdH4Rz6BwK40x1VIx+RxWE=;
+        b=gNlhiI3F8iU+3hSjkWfwyNrr7pazNHZwvA5KuuYXPcslo1sb2lutK60LSP3wPG0kYw
+         1j/KnsZZdD5XbnFDOa7LQMCIZchoKS24vlBZykq26dXW5Sv0L2vkLW/KQRtIesHIYYpc
+         z8m8t5wwFwCIhse5rytnWwSCg967cjpPlgUirmq79WD3dJJj3YIJwyF9ox5uMOiZZ8UI
+         f/Jxj4LSSH4vcV8vqcDnsb6UU0D7cwphHHg9/fOAnttad0pN8iVT9MxjDj+ThxnKZrAN
+         ip9NYwzdPsdyRlQIeFGnNcYHzqQWSyV62EZDTSz+wSDNnPPMwKRWIXauew6mygUKYCaS
+         HxsA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpAPTCD4uZAOTEDQ62NQZiXzh8ysAWcLwOhtjI1X9W051edM0heNzE4+ukZCwAJ/tRCaljXyXBc84ZJCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz0ruYzHzyGs+MGhf8uPRWRj3eUf6FqTdZVkFEQK1m1Uvy4Woz
+	+GwF3FMfEqZQMNBTgUHGyFe8q0irPCcOe+3wXfEu7GxQhLWOkhxsr2ZHvZsW41jWI0BHH+8qsVg
+	GmjzSVQ7V8+sQiP1GNishk3zLSLbLBSdUE/LMY9cJ
+X-Gm-Gg: ASbGnctyr1WqZ8oQEj2F+ypIyBROvGsAUdZn4VU1yk2O+HRDUXEIw1IneRRsao6/63z
+	j8vpWI9MSAAnCsAPpSjQM/FkdJ4cN2Rks2fk78i8yYRb+rUe7Xiyr88cEnV+7+TllgU8TLeIZsD
+	l+eu6esBY+HsZTH45Se1YkAbmhdgXZxTqZpf5jpJvT9BQ7qa2HnOl5Vno=
+X-Google-Smtp-Source: AGHT+IFSB1k1iGfOurbGRkfNDqIiusOwckbHKMfilmFI2IBhAFHdiWOcxmpqiuagVNmXUXI0Db/8WyC397cn56HcfjE=
+X-Received: by 2002:a17:902:cec2:b0:235:e1fa:1fbc with SMTP id
+ d9443c01a7336-23602119b58mr618285ad.0.1749151682508; Thu, 05 Jun 2025
+ 12:28:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603065920.3404510-4-song@kernel.org>
+References: <770012.1748618092@warthog.procyon.org.uk> <CAHS8izMMU8QZrvXRiDjqwsBg_34s+dhvSyrU7XGMBuPF6eWyTA@mail.gmail.com>
+ <1098853.1749051265@warthog.procyon.org.uk>
+In-Reply-To: <1098853.1749051265@warthog.procyon.org.uk>
+From: Mina Almasry <almasrymina@google.com>
+Date: Thu, 5 Jun 2025 12:27:49 -0700
+X-Gm-Features: AX0GCFuJhZKWoveVe84eQDh04RXfblHAGI46IIBQheHQs446JQ4neVlmb69Eroo
+Message-ID: <CAHS8izNgJaj=S7HJ0Pjt2TaCA8_=vgmptzE2obmdLOuo8gby-w@mail.gmail.com>
+Subject: Re: Device mem changes vs pinning/zerocopy changes
+To: David Howells <dhowells@redhat.com>
+Cc: willy@infradead.org, hch@infradead.org, Jakub Kicinski <kuba@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 11:59:19PM -0700, Song Liu wrote:
-> Introduce a path iterator, which reliably walk a struct path toward
-> the root. This path iterator is based on path_walk_parent. A fixed
-> zero'ed root is passed to path_walk_parent(). Therefore, unless the
-> user terminates it earlier, the iterator will terminate at the real
-> root.
-> 
-> Signed-off-by: Song Liu <song@kernel.org>
-> ---
->  kernel/bpf/Makefile    |  1 +
->  kernel/bpf/helpers.c   |  3 +++
->  kernel/bpf/path_iter.c | 58 ++++++++++++++++++++++++++++++++++++++++++
->  kernel/bpf/verifier.c  |  5 ++++
->  4 files changed, 67 insertions(+)
->  create mode 100644 kernel/bpf/path_iter.c
-> 
-> diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
-> index 3a335c50e6e3..454a650d934e 100644
-> --- a/kernel/bpf/Makefile
-> +++ b/kernel/bpf/Makefile
-> @@ -56,6 +56,7 @@ obj-$(CONFIG_BPF_SYSCALL) += kmem_cache_iter.o
->  ifeq ($(CONFIG_DMA_SHARED_BUFFER),y)
->  obj-$(CONFIG_BPF_SYSCALL) += dmabuf_iter.o
->  endif
-> +obj-$(CONFIG_BPF_SYSCALL) += path_iter.o
->  
->  CFLAGS_REMOVE_percpu_freelist.o = $(CC_FLAGS_FTRACE)
->  CFLAGS_REMOVE_bpf_lru_list.o = $(CC_FLAGS_FTRACE)
-> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> index b71e428ad936..b190c78e40f6 100644
-> --- a/kernel/bpf/helpers.c
-> +++ b/kernel/bpf/helpers.c
-> @@ -3397,6 +3397,9 @@ BTF_ID_FLAGS(func, bpf_iter_dmabuf_next, KF_ITER_NEXT | KF_RET_NULL | KF_SLEEPAB
->  BTF_ID_FLAGS(func, bpf_iter_dmabuf_destroy, KF_ITER_DESTROY | KF_SLEEPABLE)
->  #endif
->  BTF_ID_FLAGS(func, __bpf_trap)
-> +BTF_ID_FLAGS(func, bpf_iter_path_new, KF_ITER_NEW | KF_SLEEPABLE)
+On Wed, Jun 4, 2025 at 8:34=E2=80=AFAM David Howells <dhowells@redhat.com> =
+wrote:
+> > FWIW, my initial gut feeling is that the work doesn't conflict that muc=
+h.
+> > The tcp devmem netmem/net_iov stuff is designed to follow the page stuf=
+f,
+> > and as the usage of struct page changes we're happy moving net_iovs and
+> > netmems to do the same thing. My read is that it will take a small amou=
+nt of
+> > extra work, but there are no in-principle design conflicts, at least AF=
+AICT
+> > so far.
+>
+> The problem is more the code you changed in the current merge window I'm =
+also
+> wanting to change, so merge conflicts will arise.
+>
+> However, I'm also looking to move the points at which refs are taken/drop=
+ped
+> which will directly inpinge on the design of the code that's currently
+> upstream.
+>
+> Would it help if I created some diagrams to show what I'm thinking of?
+>
 
-Hm, I'd expect KF_TRUSTED_ARGS to be enforced onto
-bpf_iter_path_new(), no? Shouldn't this only be operating on a stable
-struct path reference?
+I think I understand what you want to do, but I'm happy looking at
+diagrams or jumping on a call if needed.
 
-> +BTF_ID_FLAGS(func, bpf_iter_path_next, KF_ITER_NEXT | KF_RET_NULL | KF_SLEEPABLE)
-> +BTF_ID_FLAGS(func, bpf_iter_path_destroy, KF_ITER_DESTROY | KF_SLEEPABLE)
+[snip]
 
-At this point, the claim is that such are only to be used from the
-context of the BPF LSM. If true, I'd expect these BPF kfuncs to be
-part of bpf_fs_kfunc_set_ids once moved into fs/bpf_fs_kfuncs.c.
+> > I think to accomplish what you're describing we need to modify
+> > skb_frag_ref to do something else other than taking a reference on the
+> > page or net_iov. I think maybe taking a reference on the skb itself
+> > may be acceptable, and the skb can 'guarantee' that the individual
+> > frags underneath it don't disappear while these functions are
+> > executing.
+>
+> Maybe.  There is an issue with that, though it may not be insurmountable:=
+ If a
+> userspace process does, say, a MSG_ZEROCOPY send of a page worth of data =
+over
+> TCP, under a typicalish MTU, say, 1500, this will be split across at leas=
+t
+> three skbuffs.
+>
+> This would involve making a call into GUP to get a pin - but we'd need a
+> separate pin for each skbuff and we might (in fact we currently do) end u=
+p
+> calling into GUP thrice to do the address translation and page pinning.
+>
+> What I want to do is to put this outside of the skbuff so that GUP pin ca=
+n be
+> shared - but if, instead, we attach a pin to each skbuff, we need to get =
+that
+> extra pin in some way.  Now, it may be reasonable to add a "get me an ext=
+ra
+> pin for such-and-such a range" thing and store the {physaddr,len} in the
+> skbuff fragment, but we also have to be careful not to overrun the pin co=
+unt -
+> if there's even a pin count per se.
+>
 
->  static const struct btf_kfunc_id_set common_kfunc_set = {
-> diff --git a/kernel/bpf/path_iter.c b/kernel/bpf/path_iter.c
-> new file mode 100644
-> index 000000000000..0d972ec84beb
-> --- /dev/null
-> +++ b/kernel/bpf/path_iter.c
-> @@ -0,0 +1,58 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
-> +#include <linux/bpf.h>
-> +#include <linux/bpf_mem_alloc.h>
-> +#include <linux/namei.h>
-> +#include <linux/path.h>
-> +
-> +/* open-coded iterator */
-> +struct bpf_iter_path {
-> +	__u64 __opaque[3];
-> +} __aligned(8);
-> +
-> +struct bpf_iter_path_kern {
-> +	struct path path;
-> +	__u64 flags;
-> +} __aligned(8);
-> +
-> +__bpf_kfunc_start_defs();
-> +
-> +__bpf_kfunc int bpf_iter_path_new(struct bpf_iter_path *it,
-> +				  struct path *start,
-> +				  __u64 flags)
-> +{
-> +	struct bpf_iter_path_kern *kit = (void *)it;
-> +
-> +	BUILD_BUG_ON(sizeof(*kit) > sizeof(*it));
-> +	BUILD_BUG_ON(__alignof__(*kit) != __alignof__(*it));
-> +
-> +	if (flags) {
-> +		memset(&kit->path, 0, sizeof(struct path));
+I think I understand. Currently the GUP is done in this call stack
+(some helpers omitted), right?
 
-This warrants a comment for sure. Also why not just zero it out
-entirely?
+tcp_send_message_locked
+  skb_zerocopy_iter_stream
+    zerocopy_fill_skb_from_iter
+      iov_iter_get_pages2
+        get_user_pages_fast
 
-> +		return -EINVAL;
-> +	}
-> +
-> +	kit->path = *start;
-> +	path_get(&kit->path);
-> +	kit->flags = flags;
-> +
-> +	return 0;
-> +}
-> +
-> +__bpf_kfunc struct path *bpf_iter_path_next(struct bpf_iter_path *it)
-> +{
-> +	struct bpf_iter_path_kern *kit = (void *)it;
-> +	struct path root = {};
+I think maybe the extra ref management you're referring to can be
+tacked on to ubuf_info_msgzc? I still don't understand the need for a
+completely new net_txbuf when the existing one seems to be almost what
+you need, but I may be missing something.
 
-I think this also warrants a comment. Specifically, that unless the
-loop is explicitly terminated, bpf_iter_path_next() will continue
-looping until we've reached the global root of the VFS.
+I'm thinking, very roughly, I'm probably missing a lot of details:
 
-> +	if (!path_walk_parent(&kit->path, &root))
-> +		return NULL;
-> +	return &kit->path;
-> +}
-> +
-> +__bpf_kfunc void bpf_iter_path_destroy(struct bpf_iter_path *it)
-> +{
-> +	struct bpf_iter_path_kern *kit = (void *)it;
-> +
-> +	path_put(&kit->path);
-> +}
-> +
-> +__bpf_kfunc_end_defs();
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index a7d6e0c5928b..45b45cdfb223 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -7036,6 +7036,10 @@ BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct socket) {
->  	struct sock *sk;
->  };
->  
-> +BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct path) {
-> +	struct dentry *dentry;
-> +};
+1. Move the GUP call to msg_zerocopy_realloc, and save the pages array ther=
+e.
+2. Pass the ubuf_info_msgzc down to zerocopy_fill_skb_from_iter, and
+have it fill the skb with pages from the GUP.
+3. Modify skb_frag_ref such that if we want a reference on a frag that
+belongs to a ubuf_info_msgzc, we grab a reference on the ubuf rather
+than the frag.
+4. Onces the ubuf_info_msgzc refcount hits 0, you can un-GUP the memory?
 
-Only trusted if struct path is trusted, and hence why KF_TRUSTED_ARGS
-should be enforced. 
-
->  static bool type_is_rcu(struct bpf_verifier_env *env,
->  			struct bpf_reg_state *reg,
->  			const char *field_name, u32 btf_id)
-> @@ -7076,6 +7080,7 @@ static bool type_is_trusted_or_null(struct bpf_verifier_env *env,
->  				    const char *field_name, u32 btf_id)
->  {
->  	BTF_TYPE_EMIT(BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct socket));
-> +	BTF_TYPE_EMIT(BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct path));
->  
->  	return btf_nested_type_is_trusted(&env->log, reg, field_name, btf_id,
->  					  "__safe_trusted_or_null");
-> -- 
-> 2.47.1
-> 
+--=20
+Thanks,
+Mina
