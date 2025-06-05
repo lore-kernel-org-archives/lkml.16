@@ -1,240 +1,112 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D721F2C44
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2083A1F1301
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749108814; cv=none; b=rywjtFNRknnqz/FhoFCsS6h7YMaH+XhJpbK64LAwLrrn2LfGh3xjs0PjmbI+P1soPLwl3hg68jt8UbXgdqkVAGUrFX35WgmJE/8uYomF2xgILJ5BEUKB+ynRN+Fub75m1DGiqxdT/d29WI+LyZh2nrWZsiw+hbjXouASmng1m1Y=
+	t=1749108839; cv=none; b=gJI0Xb25JF4qZwSss03ljbmgT1oAM999x/7JhfdQ2XToFiOXAudzpfv8dT2rivFihLaCisb9EMglEKV0Fxp38dUC4d/MU04lh6Aad/wbBe+68TtnjZE//PcDIOS/YvFG4SFI5zZ2zV0YDxh00IZ8iMcBONVI34PK9Be9saTX2rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749108814; c=relaxed/simple;
-	bh=gmGszBrVzfKmvu4SEigChqt4NOq+6RosBHpHMVPbLxc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D9+3dMTl+JG6D5L4Rtrcdf1/5Spgn7i8xzxPgq08uONcrvvRe/p/UlYOEpi+3dbAXMqDyLIwoEpnr1/Ghe8gIkD1lEhobNj375DssC5bVSt/W0TGYuDWARCGtwah5qO00X3ueIbseSw8Dv+REWE0hn3jBQybHe37BOQOXKqelys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WyEfqwsK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4qMiTnRv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WyEfqwsK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4qMiTnRv; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749108839; c=relaxed/simple;
+	bh=Oq23UztHZrFpE5MHj9Wy2J9DoFWem7fBQMScvu1GuwU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nuteleXXjbBjcdtlsStrdAWYN+K0qzAGHC8go07aHhxJbXDp77ZWgLtU++WS5SEqdLaKYJ4NJ1YFU+422bI1K4ZTf2EsH8aw6ir72r1wIPg7GlxOLNy57yHOSfRlgodygu332AylCvHffr6/E4ZhLVfpAFCMOEZAS0YNvfAT+HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=fy3gZALw; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WyEfqwsK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4qMiTnRv";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WyEfqwsK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4qMiTnRv"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B960020FD7;
-	Thu,  5 Jun 2025 07:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749108804; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Eti/kusLt4Hx+hsFwLu/xPDbXs6k5uThauq5TP9Zszc=;
-	b=WyEfqwsKqgPfO1QdDu6pv4Uz2cq6epVuvFGr/6QjRCuIykB4AI8SHcXQvNYRX35t43RIH+
-	lc7CfQdPyZJqwmXOxuLLmnfa8h6oqFmh+65Fow+NQs/lIr1NT7iDU+WkqXg1YzTW6BMmQL
-	CoXlh1Ox6NPcpuwOKL36P0plWQru/Ug=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749108804;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Eti/kusLt4Hx+hsFwLu/xPDbXs6k5uThauq5TP9Zszc=;
-	b=4qMiTnRvB1UEr2w62DR60LOzGg7ovQAE/sx9LACL/a0A7wxPZRr/66BsiNqSemeVzJG9RN
-	eKyFRu+8APadQhAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749108804; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Eti/kusLt4Hx+hsFwLu/xPDbXs6k5uThauq5TP9Zszc=;
-	b=WyEfqwsKqgPfO1QdDu6pv4Uz2cq6epVuvFGr/6QjRCuIykB4AI8SHcXQvNYRX35t43RIH+
-	lc7CfQdPyZJqwmXOxuLLmnfa8h6oqFmh+65Fow+NQs/lIr1NT7iDU+WkqXg1YzTW6BMmQL
-	CoXlh1Ox6NPcpuwOKL36P0plWQru/Ug=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749108804;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Eti/kusLt4Hx+hsFwLu/xPDbXs6k5uThauq5TP9Zszc=;
-	b=4qMiTnRvB1UEr2w62DR60LOzGg7ovQAE/sx9LACL/a0A7wxPZRr/66BsiNqSemeVzJG9RN
-	eKyFRu+8APadQhAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A16031373E;
-	Thu,  5 Jun 2025 07:33:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id dTAEJ0RIQWiNLgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 05 Jun 2025 07:33:24 +0000
-Message-ID: <ba208d76-7992-4c70-be8f-49082001f194@suse.cz>
-Date: Thu, 5 Jun 2025 09:33:24 +0200
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="fy3gZALw"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-742af848148so473747b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749108835; x=1749713635; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DVZjus1ELPzuP51DN+x+ciUrQVA+2y5n7YpTYBbGMMA=;
+        b=fy3gZALwmKsVSTkbcZuX0w58aEF42HDnaSu7sz1dDqQZSE5sGolpgkPpHOcOfdONR+
+         BvvgrFP/4JuCWI73Y4gB+u+Cj2QMg/gd2vzS0o5n4MLQTCctyImKflX8IXPvqQAnRNQ9
+         Qvx9K6WXY7bDEUAL6wkY8C+PSJ5ioQk+tqfYvWev45xny/AhsGvBG8D26CYW8ooIdvhs
+         4FLNdFNL9sdypimW73EyxrXWp0LdZmGr8vI9tbbqE7mll4yvT2A6CRf51xbgbo3hrBmm
+         Z4zyf8cNxtRwsY4kuhNBUdusm98YRu+P/EdDxlvp+2L7lqdJSk78ewZ81SdzJdIYJSyx
+         0byA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749108835; x=1749713635;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DVZjus1ELPzuP51DN+x+ciUrQVA+2y5n7YpTYBbGMMA=;
+        b=eLZb8UI6/R0R25K76DWlLhtNRgm4MOobr7hP+5/s6vzYZOZSTdweSId/dQpFaRvHiD
+         2WWVAqMaNalQf1fHeDs7x1K5TR02OgifExDyOlLkv3h00SYQsMiLB8GZQW+PVpCgrD7h
+         Fs2xwpupP3wmn7gCT8r++OVzbZSQRBIeG6ipLov/eXk5PUuTr7EJ86qeurdcmrbo6iMZ
+         4tYoW8nqW4aCo9lOvVXrW/+5d01tjeLd6PGRdkEsGd/igzaJlu54rbcK3srbXq23w62V
+         6XtF00at3FB85KqTCgX6jcJ7pITSclTE4DkxAugKgzOLdBe/i3IcoN24SlzigbhtTG6m
+         cvhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPuROgoAbT5lp7uzGoOjLKx0CR5b+WUerwLdGCSpYOGqbp6cLxu0XhIhJkFD3z4ggAqVFKohci3wMVN2A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA4n+c7brsfqEKMfzbtRfZbxtEuOQjgDm5aed5Xx8mv4X4UlSI
+	TJ+SvZbhTnR52GPHwJQBRTbfzBHao6ZsV1QwhzDoSuG5j61bXCNBFMygRxFUuO6h6o8=
+X-Gm-Gg: ASbGncuSyTF0HWNmukzNs2wAtnvrAv/5Uq2u60kLwM/DDXCkklOenpsPc/jJjAePK1t
+	4H1taAXNOgGWmgdRQC3JBeHCCXGG3BncE6EUgxxmTUlPERY0KKdC8dzMOfXQgJBbHaT9t6QPbBr
+	uTpZI4ZKk20IYXz64Z48qvmyxlSJ2i7V1rnUPR9BZjbA3gf8HAjXnJSrOEQGiFMga9klxL6926g
+	mVYtiu3j8PnJCJ2bcKrKhmWLqfEmN1jHIw0SKJgFhIsgsoTdg2wrY46p9O0A5KONi1MLkzmTptS
+	oX5LOKRcMLh18V55Iv0ePK6NnDzJHjFXAtj7xKgvGTEtEtBrzahhGjH32vA=
+X-Google-Smtp-Source: AGHT+IH0324sFIz083/koIgx+gH9KYl0BcA5zNyP6D3F8oqFko/vUktQ55Hf8LJzzH/VR98FTVsa5g==
+X-Received: by 2002:a17:903:2304:b0:234:eadc:c0b4 with SMTP id d9443c01a7336-235e11fdc01mr89861685ad.44.1749108835283;
+        Thu, 05 Jun 2025 00:33:55 -0700 (PDT)
+Received: from thelio.tailc1103.ts.net ([97.120.245.255])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d14abdsm114511405ad.239.2025.06.05.00.33.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 00:33:54 -0700 (PDT)
+From: Drew Fustini <drew@pdp7.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Drew Fustini <drew@pdp7.com>
+Subject: [PATCH] riscv: defconfig: Enable TH1520 aon, mbox and reset support
+Date: Thu,  5 Jun 2025 00:17:48 -0700
+Message-ID: <20250605071940.348873-3-drew@pdp7.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory
- snapshot
-Content-Language: en-US
-To: Jann Horn <jannh@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
- Pedro Falcato <pfalcato@suse.de>
-Cc: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
- <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.990];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On 6/3/25 20:21, Jann Horn wrote:
-> When fork() encounters possibly-pinned pages, those pages are immediately
-> copied instead of just marking PTEs to make CoW happen later. If the parent
-> is multithreaded, this can cause the child to see memory contents that are
-> inconsistent in multiple ways:
-> 
-> 1. We are copying the contents of a page with a memcpy() while userspace
->    may be writing to it. This can cause the resulting data in the child to
->    be inconsistent.
-> 2. After we've copied this page, future writes to other pages may
->    continue to be visible to the child while future writes to this page are
->    no longer visible to the child.
-> 
-> This means the child could theoretically see incoherent states where
-> allocator freelists point to objects that are actually in use or stuff like
-> that. A mitigating factor is that, unless userspace already has a deadlock
-> bug, userspace can pretty much only observe such issues when fancy lockless
-> data structures are used (because if another thread was in the middle of
-> mutating data during fork() and the post-fork child tried to take the mutex
-> protecting that data, it might wait forever).
-> 
-> On top of that, this issue is only observable when pages are either
-> DMA-pinned or appear false-positive-DMA-pinned due to a page having >=1024
-> references and the parent process having used DMA-pinning at least once
-> before.
+Enable TH1520 Always-On (AON) firmware protocol, TH1520 Mailbox and
+TH1520 reset controller.
 
-Seems the changelog seems to be missing the part describing what it's doing
-to fix the issue? Some details are not immediately obvious (the writing
-threads become blocked in page fault) as the conversation has shown.
+Signed-off-by: Drew Fustini <drew@pdp7.com>
+---
+ arch/riscv/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Fixes: 70e806e4e645 ("mm: Do early cow for pinned pages during fork() for ptes")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jann Horn <jannh@google.com>
-
-Given how the fix seems to be localized to the already rare slowpath and
-doesn't require us to pessimize every trivial fork(), it seems reasonable to
-me even if don't have a concrete example of a sane code in the wild that's
-broken by the current behavior, so:
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-> ---
->  mm/memory.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 49199410805c..b406dfda976b 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -917,7 +917,25 @@ copy_present_page(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
->  	/*
->  	 * We have a prealloc page, all good!  Take it
->  	 * over and copy the page & arm it.
-> +	 *
-> +	 * One nasty aspect is that we could be in a multithreaded process or
-> +	 * such, where another thread is in the middle of writing to memory
-> +	 * while this thread is forking. As long as we're just marking PTEs as
-> +	 * read-only to make copy-on-write happen *later*, that's easy; we just
-> +	 * need to do a single TLB flush before dropping the mmap/VMA locks, and
-> +	 * that's enough to guarantee that the child gets a coherent snapshot of
-> +	 * memory.
-> +	 * But here, where we're doing an immediate copy, we must ensure that
-> +	 * threads in the parent process can no longer write into the page being
-> +	 * copied until we're done forking.
-> +	 * This means that we still need to mark the source PTE as read-only,
-> +	 * with an immediate TLB flush.
-> +	 * (To make the source PTE writable again after fork() is done, we can
-> +	 * rely on the page fault handler to do that lazily, thanks to
-> +	 * PageAnonExclusive().)
->  	 */
-> +	ptep_set_wrprotect(src_vma->vm_mm, addr, src_pte);
-> +	flush_tlb_page(src_vma, addr);
->  
->  	if (copy_mc_user_highpage(&new_folio->page, page, addr, src_vma))
->  		return -EHWPOISON;
-> 
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index fe8bd8afb418..86b13177f27b 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -178,6 +178,7 @@ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_AXP20X=y
+ CONFIG_REGULATOR_GPIO=y
++CONFIG_RESET_TH1520=m
+ CONFIG_MEDIA_SUPPORT=m
+ CONFIG_MEDIA_PLATFORM_SUPPORT=y
+ CONFIG_VIDEO_CADENCE_CSI2RX=m
+@@ -258,7 +259,9 @@ CONFIG_RPMSG_CTRL=y
+ CONFIG_RPMSG_VIRTIO=y
+ CONFIG_PM_DEVFREQ=y
+ CONFIG_IIO=y
++CONFIG_TH1520_AON_PROTOCOL=m
+ CONFIG_THEAD_C900_ACLINT_SSWI=y
++CONFIG_THEAD_TH1520_MBOX=m
+ CONFIG_PHY_SUN4I_USB=m
+ CONFIG_PHY_STARFIVE_JH7110_DPHY_RX=m
+ CONFIG_PHY_STARFIVE_JH7110_PCIE=m
+-- 
+2.43.0
 
