@@ -1,86 +1,143 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F1322F765
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C95A22F765;
+	Thu,  5 Jun 2025 13:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749130313; cv=none; b=TGH0f32r1Y/hE828VUBWY1z0Q/+yWEEzcVWp696PRYqFQ+Dmoy528EmHlcaDy4NzV6mWIhrZWhcyGHpN9/w9CSfBk9Uy88hc1JeQWKPyU59kFNcvyCKqa47XOl9xI9JJUcLn0daNJxPHnDs6BpDh7ygsopRYsG0s+sttU+if56I=
+	t=1749130332; cv=none; b=PinghVSv2722Lvoc3fjtyBVuGmYgycZ2yGit2NV3z1B5ubvuP1lH3aJgK641FT2t8uHlSKbghn3yE2ReMmPetxF3fEyh369mTLvHppkHaTx2QMxnxC5Ad3jvdJsJ0JXUDtONn6pMblAMzI8UxrPn9OvbvWG/LDpXWfnM0P3CISc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749130313; c=relaxed/simple;
-	bh=3Xp16Ul5W2xdqpl8OIkvkRsLmilUb5eDdkpE06xCKR4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HBhpIY7qfLV9xhiSoLnAqow3bFzoV0ETgi6uaWBFGiZN2vnvIIegPW5EcA59opDIlPuod/8cQv4tHa6T5OYLVHoebdrluXI4epE9tgX1rqmkczFAxnmHsU9IrqX1t6mCVaFxb3e7p8WrWGQxKIgJro5xL7VrFbwhJ7P9UlBtaDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZTgtrG+p; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZTgtrG+p"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32918fe5334so10050221fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749130309; x=1749735109; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Xp16Ul5W2xdqpl8OIkvkRsLmilUb5eDdkpE06xCKR4=;
-        b=ZTgtrG+pCz+16QVRtN3gJYSXhZaVSvIuOEx9hh4+3y7ImKdbCNdu3jdznAuDhBm90y
-         TSBGxiQP0Jd1xwSeZwlwrr5r+NZXG5EworM7T+9NAhkaIHI67GtG+q6lwN7wKdVf4v1g
-         ljSNnA4AU6pYtWavPYG7H4RhDQwEQrYz3z2ye57FgDwEhMBBqo/oF6KTO5mKEvl0Dpja
-         fM+gJu/x53Wj0f+GC1zLxBP+KhkBpQrNw7bC9Herh4sHf5rHNQ+ETT51gTHzDz48h1qK
-         qgbvmOpP8kK7G3csEC8bqA0+KeNXHOnoxw28UKW+RQCsd9VZYk2fVhC97CjBHlHGvTQn
-         vxLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749130309; x=1749735109;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3Xp16Ul5W2xdqpl8OIkvkRsLmilUb5eDdkpE06xCKR4=;
-        b=NfgZQJQfEzkxb5ShV3dYE9cM+ksV3vUuUKzOizWTOKIma0Cwyxbz2MZN8JgArFBsqZ
-         rAwISFFxBEpX5tNAzks7T8EP5zkgiVnLhh28mYxJ7VxvDS5SR6dQstNcKSp1sy9Z3kPV
-         rWQaMVNkJDPzOOmQZ5aV96jbGIhJmppysz2siF7SA4hpwI9sDLM3bu7B0KiF6cFPpp4F
-         NWQBs12SWrwx33NB8Mvq6f3AHzBrZiNamF412/SMFiYiIWYOFXH3Pk+gayHNS74gYqPf
-         KpoUQnRj8acNB2+g3OYV3o9yTwCZ4lKQFIQCBvRvep0lvHo4Cx3GmL2QKb7KkxSUXp++
-         86jA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDAeLmRSJHIPTgzsh2IPuHiASfe+lotsaDoBGBrrWPBk4mfSwzkn988zlmDN0v5AUGGe2UK5cyF2Ka+C4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVThcwEdKz3BbbEerehMG7zUwRy9U/5FibH81TpUocBlti1wR4
-	Xgnzk5iJzHkyD8ZTgryn0Vd5W1Bm/s9k05JqdJdEavMBrPM7KtKi3WVj3rfQoQB4ulVSaEs8hO4
-	0yCKkgbECBCuXlvNwdxOMl0bIgW4aEDy7/Ty6zhIUyg==
-X-Gm-Gg: ASbGncsSTjPqMLa5guuA7X8ZvqJ6/s9Ll8s/Eb46f/xpF9picFCZc35qtyvd+vOgmfB
-	7muoMKhntjdr78dQqZPWy8rLwnZE5v4nPKCHe8Lc7fvzwEcXZSVJQ4JzOBAp9xQzudy05KIWD05
-	xwEQJA6n31aAOcxwSvExcDXO0p4jiuD6ar
-X-Google-Smtp-Source: AGHT+IHSnKSDNQUJOOGzj78O2oKNC6lGuJm7j4wb7PTPZDyANZnfX0CVuXsuVoOMf6kUNk+ATNKuvBm/XvtBIQhaxeY=
-X-Received: by 2002:a2e:ae13:0:b0:31c:31a7:4679 with SMTP id
- 38308e7fff4ca-32ac7258010mr17887721fa.37.1749130309416; Thu, 05 Jun 2025
- 06:31:49 -0700 (PDT)
+	s=arc-20240116; t=1749130332; c=relaxed/simple;
+	bh=mRRn5494WVPiZ1HbdbeXdMsTMq7k/8XqGHHbIo4GKCE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=k1KexSnk+/tGzu6jYZCm36DWSlixpsovFw+9/sYfQW1/99NVduDWjxNxJNh1RoPlvV8VFtuWnMxxwaUhgjrF/dL0MLbcLrh0UsOoWsNIm90YJTjfBwaIFnUbrO69rsEEAcXzF9VoenNCVMTWEzs6MUG4uwuD1RTT2doux8yl1gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
+ (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Jun
+ 2025 15:32:09 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
+ 15.01.2507.039; Thu, 5 Jun 2025 15:32:09 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>, Pankaj Gupta
+	<pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+	<s.hauer@pengutronix.de>
+CC: Frank Li <Frank.li@nxp.com>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: crypto: fsl,sec-v4.0: Add power
+ domains for iMX8QM and iMX8QXP
+Thread-Topic: [PATCH v4 3/4] dt-bindings: crypto: fsl,sec-v4.0: Add power
+ domains for iMX8QM and iMX8QXP
+Thread-Index: AQHb1h2p186darlQmUK22qpyzH8BCrP0brUA
+Date: Thu, 5 Jun 2025 13:32:09 +0000
+Message-ID: <2bfe7b81-b70e-4882-b1ce-8cbaef24838f@actia.se>
+References: <20250605132754.1771368-1-john.ernberg@actia.se>
+ <20250605132754.1771368-4-john.ernberg@actia.se>
+In-Reply-To: <20250605132754.1771368-4-john.ernberg@actia.se>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-esetresult: clean, is OK
+x-esetid: 37303A2955B1445363726A
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <24B75F4E67FE224A942D8D7BE8B8B5BC@actia.se>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531195801.3632110-1-andriy.shevchenko@linux.intel.com> <20250531195801.3632110-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250531195801.3632110-2-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 5 Jun 2025 15:31:37 +0200
-X-Gm-Features: AX0GCFsbnofQ22BvZl1sODGZD9DlgA1gYR1ngBlv5uhGKV5q5X97cgJTuxkbKFE
-Message-ID: <CACRpkdZhBDCZi=-wdK=tNhgt+K=jjgScF+7FMN_Q=ge6eRrJxw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] gpio: Remove unused 'struct gpio' definition
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 31, 2025 at 9:58=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-
-> There is no user for the legacy 'struct gpio', remove it for good.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Good riddance.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+SGksDQoNCk9uIDYvNS8yNSAzOjI4IFBNLCBKb2huIEVybmJlcmcgd3JvdGU6DQo+IE5YUCBTb0Nz
+IGxpa2UgdGhlIGlNWDhRTSwgaU1YOFFYUCBvciBpTVg4RFhQIHVzZSBwb3dlciBkb21haW5zIGZv
+cg0KPiByZXNvdXJjZSBtYW5hZ2VtZW50Lg0KPiANCj4gQWRkIGNvbXBhdGlibGUgc3RyaW5ncyBm
+b3IgdGhlc2UgU29DcyAoUVhQIGFuZCBEWFAgZ2V0cyB0byBzaGFyZSBhcyB0aGVpcg0KPiBvbmx5
+IGRpZmZlcmVuY2UgaXMgYSBjb3JlLWNvdW50LCBRPVF1YWQgY29yZSBhbmQgRD1EdWFsIGNvcmUp
+LCBhbmQgYWxsb3cNCj4gcG93ZXItZG9tYWlucyBmb3IgdGhlbSBvbmx5LiBLZWVwIHRoZSBvbGQg
+cmVzdHJpY3Rpb24gZm9yIG90aGVycy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEpvaG4gRXJuYmVy
+ZyA8am9obi5lcm5iZXJnQGFjdGlhLnNlPg0KPiANCj4gLS0tDQo+IA0KPiB2NDoNCj4gICAtIFJl
+d29yZCBjb21taXQgbWVzc2FnZSAoRnJhbmsgTGkpDQo+ICAgLSBBZGQgZXhwbGljaXQgaW14OHF4
+cCBjb21wYXRpYmxlIChGcmFuayBMaSkNCj4gICAtIE1vdmUgdGhlIGpvYi1yaW5nIGNvbnN0cmFp
+bnRzIGJhY2sgdG8gdGhlIGpvYi1yaW5nIHNlY3Rpb24gdW5kZXIgYW4NCj4gICAgICdhbGxPZjon
+IHRvIGF2b2lkIHRoZSB3YXJuaW5nIGZyb20gdjIgKFJvYiBIZXJyaW5nKQ0KPiANCj4gdjM6DQo+
+ICAgLSBGaXggd2FybmluZ3MgZGlzY292ZXJlZCBieSBSb2IgSGVycmluZydzIGJvdA0KPiAgIC0g
+RGVjbGFyZSB0aGUgY29tcGF0aWJsZXMgY29ycmVjdGx5IChLcnp5c3p0b2YgS296bG93c2tpKQ0K
+PiANCj4gdjI6DQo+ICAgLSBBZGp1c3QgY29tbWl0IG1lc3NhZ2UgKEZyYW5rIExpKQ0KPiAgIC0g
+T25seSBhbGxvdyBwb3dlci1kb21haW5zIHdoZW4gY29tcGF0aWJsZSB3aXRoIGlteDhxbSAoRnJh
+bmsgTGkpDQo+IC0tLQ0KPiAgIC4uLi9iaW5kaW5ncy9jcnlwdG8vZnNsLHNlYy12NC4wLnlhbWwg
+ICAgICAgICB8IDQxICsrKysrKysrKysrKysrKysrKy0NCj4gICAxIGZpbGUgY2hhbmdlZCwgNDAg
+aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcnlwdG8vZnNsLHNlYy12NC4wLnlhbWwgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3J5cHRvL2ZzbCxzZWMtdjQuMC55YW1sDQo+
+IGluZGV4IDc1YWZhNDQxZTAxOS4uZWFiNDNlN2EzNTRjIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3J5cHRvL2ZzbCxzZWMtdjQuMC55YW1sDQo+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcnlwdG8vZnNsLHNlYy12NC4w
+LnlhbWwNCj4gQEAgLTQ2LDYgKzQ2LDggQEAgcHJvcGVydGllczoNCj4gICAgICAgICAtIGl0ZW1z
+Og0KPiAgICAgICAgICAgICAtIGVudW06DQo+ICAgICAgICAgICAgICAgICAtIGZzbCxpbXg2dWwt
+Y2FhbQ0KPiArICAgICAgICAgICAgICAtIGZzbCxpbXg4cW0tY2FhbQ0KPiArICAgICAgICAgICAg
+ICAtIGZzbCxpbXg4cXhwLWNhYW0NCj4gICAgICAgICAgICAgICAgIC0gZnNsLHNlYy12NS4wDQo+
+ICAgICAgICAgICAgIC0gY29uc3Q6IGZzbCxzZWMtdjQuMA0KPiAgICAgICAgIC0gY29uc3Q6IGZz
+bCxzZWMtdjQuMA0KPiBAQCAtNzcsNiArNzksOSBAQCBwcm9wZXJ0aWVzOg0KPiAgICAgaW50ZXJy
+dXB0czoNCj4gICAgICAgbWF4SXRlbXM6IDENCj4gICANCj4gKyAgcG93ZXItZG9tYWluczoNCj4g
+KyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICAgICBmc2wsc2VjLWVyYToNCj4gICAgICAgZGVzY3Jp
+cHRpb246IERlZmluZXMgdGhlICdFUkEnIG9mIHRoZSBTRUMgZGV2aWNlLg0KPiAgICAgICAkcmVm
+OiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzINCj4gQEAgLTEwNiw3ICsx
+MTEsMTAgQEAgcGF0dGVyblByb3BlcnRpZXM6DQo+ICAgICAgICAgICAgICAgICAtIGNvbnN0OiBm
+c2wsc2VjLXY1LjAtam9iLXJpbmcNCj4gICAgICAgICAgICAgICAgIC0gY29uc3Q6IGZzbCxzZWMt
+djQuMC1qb2ItcmluZw0KPiAgICAgICAgICAgICAtIGl0ZW1zOg0KPiAtICAgICAgICAgICAgICAt
+IGNvbnN0OiBmc2wsc2VjLXY1LjAtam9iLXJpbmcNCj4gKyAgICAgICAgICAgICAgLSBlbnVtOg0K
+PiArICAgICAgICAgICAgICAgIC0gZnNsLGlteDhxbS1qb2ItcmluZw0KPiArICAgICAgICAgICAg
+ICAgIC0gZnNsLGlteDhxeHAtam9iLXJpbmcNCj4gKyAgICAgICAgICAgICAgICAtIGZzbCxzZWMt
+djUuMC1qb2ItcmluZw0KPiAgICAgICAgICAgICAgICAgLSBjb25zdDogZnNsLHNlYy12NC4wLWpv
+Yi1yaW5nDQo+ICAgICAgICAgICAgIC0gY29uc3Q6IGZzbCxzZWMtdjQuMC1qb2ItcmluZw0KPiAg
+IA0KPiBAQCAtMTE2LDYgKzEyNCw5IEBAIHBhdHRlcm5Qcm9wZXJ0aWVzOg0KPiAgICAgICAgIGlu
+dGVycnVwdHM6DQo+ICAgICAgICAgICBtYXhJdGVtczogMQ0KPiAgIA0KPiArICAgICAgcG93ZXIt
+ZG9tYWluczoNCj4gKyAgICAgICAgbWF4SXRlbXM6IDENCj4gKw0KPiAgICAgICAgIGZzbCxsaW9k
+bjoNCj4gICAgICAgICAgIGRlc2NyaXB0aW9uOg0KPiAgICAgICAgICAgICBTcGVjaWZpZXMgdGhl
+IExJT0ROIHRvIGJlIHVzZWQgaW4gY29uanVuY3Rpb24gd2l0aCB0aGUgcHBpZC10by1saW9kbg0K
+PiBAQCAtMTI1LDYgKzEzNiwyMCBAQCBwYXR0ZXJuUHJvcGVydGllczoNCj4gICAgICAgICAgICRy
+ZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMi1hcnJheQ0KPiAgICAg
+ICAgICAgaXRlbXM6DQo+ICAgICAgICAgICAgIC0gbWF4aW11bTogMHhmZmYNCj4gKyAgICBhbGxP
+ZjoNCj4gKyAgICAgIC0gaWY6DQo+ICsgICAgICAgICAgcHJvcGVydGllczoNCj4gKyAgICAgICAg
+ICAgIGNvbXBhdGlibGU6DQo+ICsgICAgICAgICAgICAgIGNvbnRhaW5zOg0KPiArICAgICAgICAg
+ICAgICAgIGVudW06DQo+ICsgICAgICAgICAgICAgICAgICAtIGZzbCxpbXg4cW0tam9iLXJpbmcN
+Cj4gKyAgICAgICAgICAgICAgICAgIC0gZnNsLGlteDhxeHAtam9iLXJpbmcNCj4gKyAgICAgICAg
+dGhlbjoNCj4gKyAgICAgICAgICByZXF1aXJlZDoNCj4gKyAgICAgICAgICAgIC0gcG93ZXItZG9t
+YWlucw0KPiArICAgICAgICBlbHNlOg0KPiArICAgICAgICAgIHByb3BlcnRpZXM6DQo+ICsgICAg
+ICAgICAgICBwb3dlci1kb21haW5zOiBmYWxzZQ0KDQpUbyBkb2RnZSB0aGUgYWxsT2YgaGVyZSBJ
+IGhhZCB0byBtYWtlIHNvbWUgY2hhbmdlcyB0byBkdC1zY2hlbWEgDQpub2Rlcy55YW1sLiBJcyB0
+aGUgYWxsT2YgT0sgb3IgZG9lcyB0aGUgY2hhbmdlcyBsb29rIGxpa2Ugc29tZXRoaW5nIHRoYXQg
+DQpzaG91bGQgYmUgc3VibWl0dGVkIGZvcm1hbGx5Pw0KDQpUaGFua3MhIC8vIEpvaG4gRXJuYmVy
+Zw0KDQotLS0tLS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0tLS0tLS0tLQ0KDQogRnJvbSAzOWUz
+Yzg1ZTUzYWI1NzBmZGQ1ZDVhOTMxNTZhOGE0ODZlZjIwZjBjIE1vbiBTZXAgMTcgMDA6MDA6MDAg
+MjAwMQ0KRnJvbTogSm9obiBFcm5iZXJnIDxqb2huLmVybmJlcmdAYWN0aWEuc2U+DQpEYXRlOiBX
+ZWQsIDQgSnVuIDIwMjUgMTU6MTI6NTUgKzAyMDANClN1YmplY3Q6IFtQQVRDSF0gc2NoZW1hczog
+bm9kZXM6IEFsbG93IGlmLXRoZW4tZWxzZSBpbiBwYXR0ZXJuUHJvcGVydGllcw0KICBvYmplY3Rz
+DQoNCkhhdmluZyBsb2NhbCBpZi10aGVuLWVsc2Ugc3RhdGVtZW50cyB1bmRlciBlLmcuIGEgcGF0
+dGVyblByb3BlcnRpZXMgb2JqZWN0DQpub2RlIGNhdXNlcyBhIHNjaGVtYSB3YXJuaW5nIGFib3V0
+IGFuIHVuZXhwZWN0ZWQgc3RhdGVtZW50Lg0KDQpBbGxvdyB0aGlzIGNvbnN0cnVjdCB0byByZWR1
+Y2Ugc2l6ZSBvZiBpZi10aGVuLWVsc2UgYmxvY2tzIHRoYXQgd291bGQNCm90aGVyd2lzZSBuZWVk
+IHRvIG9jY3VyIGF0IHRoZSB0b3AgbGV2ZWwsIG1ha2luZyB0aGVtIGVhc2llciB0byByZWFkLA0K
+YW5kIG1vcmUgbG9jYWxpemVkIHRvIHdoYXQgdGhleSBhcmUgY29udHJvbGxpbmcuDQoNClNpZ25l
+ZC1vZmYtYnk6IEpvaG4gRXJuYmVyZyA8am9obi5lcm5iZXJnQGFjdGlhLnNlPg0KLS0tDQogIGR0
+c2NoZW1hL21ldGEtc2NoZW1hcy9ub2Rlcy55YW1sIHwgMyArKysNCiAgMSBmaWxlIGNoYW5nZWQs
+IDMgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHRzY2hlbWEvbWV0YS1zY2hlbWFzL25v
+ZGVzLnlhbWwgDQpiL2R0c2NoZW1hL21ldGEtc2NoZW1hcy9ub2Rlcy55YW1sDQppbmRleCAwYjJj
+OGY3Li5lNDVjYjQ1IDEwMDY0NA0KLS0tIGEvZHRzY2hlbWEvbWV0YS1zY2hlbWFzL25vZGVzLnlh
+bWwNCisrKyBiL2R0c2NoZW1hL21ldGEtc2NoZW1hcy9ub2Rlcy55YW1sDQpAQCAtMjcsNiArMjcs
+OSBAQCBwcm9wZXJ0eU5hbWVzOg0KICAgICAgLSBkZXByZWNhdGVkDQogICAgICAtIHJlcXVpcmVk
+DQogICAgICAtIG5vdA0KKyAgICAtIGlmDQorICAgIC0gZWxzZQ0KKyAgICAtIHRoZW4NCiAgICAg
+IC0gYWxsT2YNCiAgICAgIC0gYW55T2YNCiAgICAgIC0gb25lT2YNCg0KDQo=
