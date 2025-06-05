@@ -1,160 +1,136 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13071C4A20;
-	Thu,  5 Jun 2025 11:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619A23C465
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 11:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749121713; cv=none; b=hilgr9vfM5kbE0VI7hfN1zOUGC6hpoJHArn0zbKOFK28Z9MjRemrux8JL3r3vjuBtqTdcvvVx2w64rkT5XDl1+S6kAP43oN9cbdMLKhfwkZ0aimu974qrY955F5GoqJFsvbQMRjSq6jo/5MF1mdCCbGIvAl65l7IXBjG0DzICOE=
+	t=1749122305; cv=none; b=dvR+rF7tTDZ9G3lo2gj/eniM6vbFamSecnmXUMh6xkB7QjHwfbyTKB340RfOyFWgwustuNSBiXokbr1ceIWzv5Mf6tG/MtHTEXzDW4oDkLgKpS+rMuAOieWFq6uQn7rnI5+e2KsWgDx1aevPBbrPwhcu0J9nUh0l6w2NA3SxiPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749121713; c=relaxed/simple;
-	bh=HMRu+i1hsgiHiaaZYlY71LYjWVULN4Wiwey34tQDl6c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l+BMlR5HyuyihQGZAkhczar1+uMTIhqRsqQdsBIy4EChiPoHbrH06hcHe+TBhaabjNOOpiQI3/lcI1I6r6FxLzXXX0HqBg4d6/fUllytx8MNnfrSvJ1Lh+AOYjjMmu3ED4+m1H4I1XTeJIzA+9S1490bpG9IPkdMrey1tz3APKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=i6jfUp6K; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749122305; c=relaxed/simple;
+	bh=fJQoK0l81dkQqNhgdGQiDnK1SLdRuzzDfV/DKyrBG28=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=Hl2uhnQME8KgGNWH8trP5+jKpRiAO3jq/XaBOSMPMUWTRgOEj1yuN+/3CjLIw9v7+7Oe/eEsb381rNCWLx+4C0f3MUJd3C3NpIYAM+oNYHvxv0qD0K3iBziInlP58AyIvAUY9tnpbItAaZSbBkPMoe5tXkmMjzqLx+1xjj3WJPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=TuKKKtNd; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i6jfUp6K"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nzcwZQikZQA4ZQSmzmP28ryvumzddlmv0QFfHqKkX0Y=; b=i6jfUp6KuU2q9F5MtYoLfKE9VV
-	fLpAG94zGRz6tk0lkdvyxisLFjwL2lTI9vM9btp51VYjNIio2611hFZB9FJwX0GN89jPuZ75xCnJt
-	hwURE0ciIeD0cwyfF4R3rOBEg76Vkw7R+PZvuv7o0D8gPsVSgYhTUaMLxfTitDlot9k3+a1cqJuHN
-	R0jMzFzXlFFWtymdrBJuJJIaNPsP+E2jW7ycBcksrWZQz9M5i1nqRc2Zv3Hx6YlfJ/8iCvR1INWxP
-	/aIrEdLQ+W/LGnJuIkHAz/HvnqWFvIwERRaKRa8DlJcYWLZdyPQBIIjoSRL5eOKYNyVn1oIANB2tx
-	Yuu8Fn6g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uN8SG-000000019SB-0Nah;
-	Thu, 05 Jun 2025 11:08:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1DDDE3005AF; Thu,  5 Jun 2025 13:08:15 +0200 (CEST)
-Date: Thu, 5 Jun 2025 13:08:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Baisheng Gao <baisheng.gao@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
-	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
-Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
- sample
-Message-ID: <20250605110815.GQ39944@noisy.programming.kicks-ass.net>
-References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
- <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
- <20250604142437.GM38114@noisy.programming.kicks-ass.net>
- <aEBeRfScZKD-7h5u@J2N7QTR9R3>
- <20250604153219.GJ39944@noisy.programming.kicks-ass.net>
- <aEBvd8fIdjlTV53j@J2N7QTR9R3>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="TuKKKtNd"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEBvd8fIdjlTV53j@J2N7QTR9R3>
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1749122291;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=13cxEH6HxdmpWJc8QzYDB4UlEOp0j6xlHHpJ/zaokQk=;
+	b=TuKKKtNd+g/Kb3VvnuS++kfG2LyDperU5Qbq8xI3fnT6fUOx7xkBS5xYcoCwqDhJ5YHXiE
+	fXRzVEGwfenIvRfOiUpCx1CSinLT3vQzp4iRybeLpaAZZb0adb7ICTm4+TNMHUZ0IgVoZY
+	jUYxO6eTQESrTpvzdETOa/HOpInYxpJfI1THm4my2ruW8Ts8DScWwxHg/v3gpBNNdwcDNW
+	Nk90mY832LDw5jfsa7slPZRxByPsqPqykxh+zRbCwsFvSiQ267wNLI5UNTGe3xpRApFtwe
+	nVKFltZPau6NkQOotaEEsbOD92tyU2K/SYxTZXZx+KJXIeYqpZJEx7fZ4N9IxA==
+Content-Type: multipart/signed;
+ boundary=9a3e5395647fd1bec2889ce64d9b6b8ce6ab0473fcc5380cf846fa546bd7;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Thu, 05 Jun 2025 13:17:43 +0200
+Message-Id: <DAEK3EQVNWQX.24DOM2VICSGCP@cknow.org>
+To: "Alexey Charkov" <alchark@gmail.com>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>
+Cc: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on
+ ArmSoM Sige5
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
+ <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com>
+In-Reply-To: <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 04, 2025 at 05:08:23PM +0100, Mark Rutland wrote:
-> That looks good to me!
+--9a3e5395647fd1bec2889ce64d9b6b8ce6ab0473fcc5380cf846fa546bd7
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-I now haz the below patch.
+On Tue Jun 3, 2025 at 7:01 PM CEST, Alexey Charkov wrote:
+> List both CPU supply regulators which drive the little and big CPU
+> clusters, respectively, so that cpufreq can pick them up.
+>
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+>  .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 28 ++++++++++++++++=
+++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arch/=
+arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+> index b09e789c75c47fec7cf7e9810ab0dcca32d9404a..d9c129be55a0d997e04e6d677=
+cdc98fb50353418 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+> @@ -207,6 +207,22 @@ vcc_3v3_ufs_s0: regulator-vcc-ufs-s0 {
+>  	};
+>  };
+> =20
+> +&cpu_b0 {
+> +	cpu-supply =3D <&vdd_cpu_big_s0>;
+> +};
+> +
+> +&cpu_b1 {
+> +	cpu-supply =3D <&vdd_cpu_big_s0>;
+> +};
+> +
+> +&cpu_b2 {
+> +	cpu-supply =3D <&vdd_cpu_big_s0>;
+> +};
+> +
+> +&cpu_b3 {
+> +	cpu-supply =3D <&vdd_cpu_big_s0>;
+> +};
+> +
+>  &combphy0_ps {
+>  	status =3D "okay";
+>  };
 
----
-Subject: perf: Fix sample vs do_exit()
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu Jun 5 12:31:45 CEST 2025
+The &cpu_bN nodes should come after the &combphy0_ps node.
 
-Baisheng Gao reported an ARM64 crash, which Mark decoded as being a
-synchronous external abort -- most likely due to trying to access
-MMIO in bad ways.
+Cheers,
+  Diederik
 
-The crash further shows perf trying to do a user stack sample while in
-exit_mmap()'s tlb_finish_mmu() -- i.e. while tearing down the address
-space it is trying to access.
+> @@ -215,6 +231,18 @@ &cpu_l0 {
+>  	cpu-supply =3D <&vdd_cpu_lit_s0>;
+>  };
+> =20
+> +&cpu_l1 {
+> +	cpu-supply =3D <&vdd_cpu_lit_s0>;
+> +};
+> +
+> +&cpu_l2 {
+> +	cpu-supply =3D <&vdd_cpu_lit_s0>;
+> +};
+> +
+> +&cpu_l3 {
+> +	cpu-supply =3D <&vdd_cpu_lit_s0>;
+> +};
+> +
+>  &gmac0 {
+>  	phy-mode =3D "rgmii-id";
+>  	clock_in_out =3D "output";
 
-It turns out that we stop perf after we tear down the userspace mm; a
-receipie for disaster, since perf likes to access userspace for
-various reasons.
 
-Flip this order by moving up where we stop perf in do_exit().
+--9a3e5395647fd1bec2889ce64d9b6b8ce6ab0473fcc5380cf846fa546bd7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Additionally, harden PERF_SAMPLE_CALLCHAIN and PERF_SAMPLE_STACK_USER
-to abort when the current task does not have an mm (exit_mm() makes
-sure to set current->mm = NULL; before commencing with the actual
-teardown). Such that CPU wide events don't trip on this same problem.
+-----BEGIN PGP SIGNATURE-----
 
-Fixes: c5ebcedb566e ("perf: Add ability to attach user stack dump to sample")
-Reported-by: Baisheng Gao <baisheng.gao@unisoc.com>
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |    7 +++++++
- kernel/exit.c        |   17 +++++++++--------
- 2 files changed, 16 insertions(+), 8 deletions(-)
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaEF86gAKCRDXblvOeH7b
+btTlAQDI6lgSC9KhTjsX1bMR1+ahztGxcgRpovUts1PqDZ5LkAEAomVjXYHvh+hm
+ilgYDdQ31HkVBaW8QO6e4mmm5NYzGAE=
+=aDIe
+-----END PGP SIGNATURE-----
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7439,6 +7439,10 @@ perf_sample_ustack_size(u16 stack_size,
- 	if (!regs)
- 		return 0;
- 
-+	/* No mm, no stack, no dump. */
-+	if (!current->mm)
-+		return 0;
-+
- 	/*
- 	 * Check if we fit in with the requested stack size into the:
- 	 * - TASK_SIZE
-@@ -8150,6 +8154,9 @@ perf_callchain(struct perf_event *event,
- 	const u32 max_stack = event->attr.sample_max_stack;
- 	struct perf_callchain_entry *callchain;
- 
-+	if (!current->mm)
-+		user = false;
-+
- 	if (!kernel && !user)
- 		return &__empty_callchain;
- 
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -944,6 +944,15 @@ void __noreturn do_exit(long code)
- 	taskstats_exit(tsk, group_dead);
- 	trace_sched_process_exit(tsk, group_dead);
- 
-+	/*
-+	 * Since sampling can touch ->mm, make sure to stop everything before we
-+	 * tear it down.
-+	 *
-+	 * Also flushes inherited counters to the parent - before the parent
-+	 * gets woken up by child-exit notifications.
-+	 */
-+	perf_event_exit_task(tsk);
-+
- 	exit_mm();
- 
- 	if (group_dead)
-@@ -959,14 +968,6 @@ void __noreturn do_exit(long code)
- 	exit_task_work(tsk);
- 	exit_thread(tsk);
- 
--	/*
--	 * Flush inherited counters to the parent - before the parent
--	 * gets woken up by child-exit notifications.
--	 *
--	 * because of cgroup mode, must be called before cgroup_exit()
--	 */
--	perf_event_exit_task(tsk);
--
- 	sched_autogroup_exit_task(tsk);
- 	cgroup_exit(tsk);
- 
+--9a3e5395647fd1bec2889ce64d9b6b8ce6ab0473fcc5380cf846fa546bd7--
