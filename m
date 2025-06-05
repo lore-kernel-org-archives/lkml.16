@@ -1,81 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13511DFF8;
-	Thu,  5 Jun 2025 18:14:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE7D275869;
+	Thu,  5 Jun 2025 18:14:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749147277; cv=none; b=lA/JjXumY+1jMMJ2TCNyulfFU77sJqHwtnV7L6AXNVfo29UFwJVz4spZeLhtPH3hdnVk8b6DXw7GNANDXsbpZa57nIF//o4+1Hh1uI98xYpcb8vXJ07CI14n3fluZB6QX8WF7Je+/J9VqAPwIXhXvF5eXDC9B5T4NYzIuzez1xE=
+	t=1749147296; cv=none; b=ulBQQ14iFdrhXbO00MA3Upol6evW7bEN0B0HtbNn7C2B2BlJvA1tL1qwsi5+aYMgj5A4cX52RxO0a9R7gk0P2PN+Nj/OIsRm7QwMDhdlTtY5+2PaUhE24Cm2Aowp9zQ5z5oOb+R3QVlfI2P3hFL5NlpHBUYOsdutg1DUZ/iVrhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749147277; c=relaxed/simple;
-	bh=yqXCXnrnx1xTZOHiwdz8UbMjby7wpkwa+UN+TvEGT90=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uFXL4uO/JiasZuXOqd0WnMY0mAMku60f6oLzWfNBgFSQaSairkMFAkFN6WverB8REXcesc5I+fZgws0ObBaxarZY5xhaPwTjDuFoLCe+45ODQbgQXii/CjVd1dCf/P8sHkGrQ5mb5MRXmJzvsz+BT6McBVKtPetoGNDYZl4J6fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/Lv2qFg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749147296; c=relaxed/simple;
+	bh=kM+tZQLZzYNHuIw8DxjQDCB49bssz5ArH/w0ixdklPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYUZ2tvzNbunXXwMPDGqw3yrO+brcobqYiryd4PYpgTsGLJ0pINHr8HEdzfyDDBvBIpz9HX6QT49HN0pnMjvnv1K7kIyeAIMa5Df7wTkIOErRNagBbVEwBwUzhlxNp2oNVJ+SfMzGcNjflQr7pwEjvz39EEBcMVqG4N/gsn4K0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irglAXUu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/Lv2qFg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E79EC4CEE7;
-	Thu,  5 Jun 2025 18:14:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irglAXUu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 949B2C4CEE7;
+	Thu,  5 Jun 2025 18:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749147277;
-	bh=yqXCXnrnx1xTZOHiwdz8UbMjby7wpkwa+UN+TvEGT90=;
-	h=From:To:Cc:Subject:Date:From;
-	b=T/Lv2qFgHvP0fpl6IS/sYUS0cLUiTw49R6wgAvLKbdKb5RA5kftAfRkT9P2JaqPxB
-	 471i1CcZMKvpkYin9rZcRlysCG7pBUgiFmdoFck6/Y5iK32UUM1ZOqJKNb0NQp8Asq
-	 1o+NMlLoqgMOpFSPDIGRnzeSVsEKOLJLkDiL6UTSXy5Kim4/eQ0nWZyvmbwePYssFE
-	 p287Z7sO/TMkoFwc7j6xwyZWdjJqy7Cae/NSZLRBXzjwkDRt9GjTKWujkTkHp4f2yg
-	 aSUeTEwl7BE75YQztsQdaqnlmYVYvrIJq2e0STmz6e4K4h1U2i6fn5owtYp20N8llL
-	 V7Y4oo4YU8liA==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	masahiroy@kernel.org,
-	ojeda@kernel.org,
-	nathan@kernel.org
-Cc: bpf@vger.kernel.org,
-	kernel-team@meta.com,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>
-Subject: [PATCH] .gitignore: ignore compile_commands.json globally
-Date: Thu,  5 Jun 2025 11:14:26 -0700
-Message-ID: <20250605181426.2845741-1-andrii@kernel.org>
-X-Mailer: git-send-email 2.47.1
+	s=k20201202; t=1749147295;
+	bh=kM+tZQLZzYNHuIw8DxjQDCB49bssz5ArH/w0ixdklPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=irglAXUu2OpsKW9nnQWyxV8tVob52YV/dgR9F0uBahjTSfnZlgO5EVlJhjYbltYXu
+	 9lTnWSlOsDUgBwDvE9NnQENGN4k8AxmNWWB21jbtpF/pFzg60sSqmyI9dd3g5UaIz5
+	 F/yka1xtCh7bwVqLQQeTpiQPGJ1kwkYVV0zSpPRYNwVdUkDHn8GPH0MElwJ/1I8bIT
+	 Xd8kh5eKQp/yUzk+TnmPYge/1i12/RZSZK/yV4iJ1ZCrUSYecHTTRFAczRReeZXc0/
+	 MNpV1jjiF6eTu/jqu6EA4GcnV0PXjdq2agD/BztXZ55wQNNMXKc8epepoAHiLxuDss
+	 FLRKwbWv7PVFg==
+Date: Thu, 5 Jun 2025 13:14:53 -0500
+From: Rob Herring <robh@kernel.org>
+To: George Moussalem <george.moussalem@outlook.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] dt-bindings: net: qca,ar803x: Add IPQ5018
+ Internal GE PHY support
+Message-ID: <20250605181453.GA2946252-robh@kernel.org>
+References: <20250602-ipq5018-ge-phy-v3-0-421337a031b2@outlook.com>
+ <20250602-ipq5018-ge-phy-v3-2-421337a031b2@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602-ipq5018-ge-phy-v3-2-421337a031b2@outlook.com>
 
-compile_commands.json can be used with clangd to enable language server
-protocol-based assistance. For kernel itself this can be built with
-scripts/gen_compile_commands.py, but other projects (e.g., libbpf, or
-BPF selftests) can benefit from their own compilation database file,
-which can be generated successfully using external tools, like bear [0].
+On Mon, Jun 02, 2025 at 01:53:14PM +0400, George Moussalem wrote:
+> Document the IPQ5018 Internal Gigabit Ethernet PHY found in the IPQ5018
+> SoC. Its output pins provide an MDI interface to either an external
+> switch in a PHY to PHY link scenario or is directly attached to an RJ45
+> connector.
+> 
+> The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
+> 802.3az EEE.
+> 
+> For operation, the LDO controller found in the IPQ5018 SoC for which
+> there is provision in the mdio-4019 driver.
+> 
+> Two common archictures across IPQ5018 boards are:
+> 1. IPQ5018 PHY --> MDI --> RJ45 connector
+> 2. IPQ5018 PHY --> MDI --> External PHY
+> In a phy to phy architecture, the DAC needs to be configured to
+> accommodate for the short cable length. As such, add an optional boolean
+> property so the driver sets preset DAC register values accordingly.
+> 
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> ---
+>  .../devicetree/bindings/net/qca,ar803x.yaml        | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qca,ar803x.yaml b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+> index 3acd09f0da863137f8a05e435a1fd28a536c2acd..fce167412896edbf49371129e3e7e87312eee051 100644
+> --- a/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+> +++ b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+> @@ -16,8 +16,32 @@ description: |
+>  
+>  allOf:
+>    - $ref: ethernet-phy.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - ethernet-phy-id004d.d0c0
+> +
+> +    then:
+> +      properties:
+> +        reg:
+> +          const: 7  # This PHY is always at MDIO address 7 in the IPQ5018 SoC
 
-So, instead of adding compile_commands.json to .gitignore in respective
-individual projects, let's just ignore it globally anywhere in Linux repo.
+blank line
 
-  [0] https://github.com/rizsotto/Bear
+> +        resets:
+> +          items:
+> +            - description:
+> +                GE PHY MISC reset which triggers a reset across MDC, DSP, RX, and TX lines.
 
-Suggested-by: Eduard Zingerman <eddyz87@gmail.com>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- .gitignore | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+blank line
 
-diff --git a/.gitignore b/.gitignore
-index bf5ee6e01cd4..451dff66275d 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -175,7 +175,7 @@ x509.genkey
- *.kdev4
- 
- # Clang's compilation database file
--/compile_commands.json
-+compile_commands.json
- 
- # Documentation toolchain
- sphinx_*/
--- 
-2.47.1
+> +        qcom,dac-preset-short-cable:
+> +          description:
+> +            Set if this phy is connected to another phy to adjust the values for
+> +            MDAC and EDAC to adjust amplitude, bias current settings, and error
+> +            detection and correction algorithm to accommodate for short cable length.
+> +            If not set, it is assumed the MDI output pins of this PHY are directly
+> +            connected to an RJ45 connector and default DAC values will be used.
+> +          type: boolean
+>  
+>  properties:
+> +
 
+Drop
+
+But this schema is broken. There's no way for it to be applied to a node 
+because there is no compatible defined in this schema nor a 'select'. 
+You can introduce an error and see (e.g. 'qcom,dac-preset-short-cable = 
+"foo";'). Really, any phy using these properties should have a specific 
+compatible defined here.
+
+>    qca,clk-out-frequency:
+>      description: Clock output frequency in Hertz.
+>      $ref: /schemas/types.yaml#/definitions/uint32
+> @@ -132,3 +156,18 @@ examples:
+>              };
+>          };
+>      };
+> +  - |
+> +    #include <dt-bindings/reset/qcom,gcc-ipq5018.h>
+> +
+> +    mdio {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        /* add alias to set qcom,dac-preset-short-cable on boards that need it */
+> +        ge_phy: ethernet-phy@7 {
+> +            compatible = "ethernet-phy-id004d.d0c0";
+> +            reg = <7>;
+> +
+> +            resets = <&gcc GCC_GEPHY_MISC_ARES>;
+> +        };
+> +    };
+> 
+> -- 
+> 2.49.0
+> 
