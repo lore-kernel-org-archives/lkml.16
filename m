@@ -1,73 +1,64 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EAF1E261F
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 15:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A74619D080;
+	Thu,  5 Jun 2025 16:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749139112; cv=none; b=sOfXnrNgl5TxEWtbzK5JizmPA1TjlSNOb5Cv8NCraTmMdVB5p0T1VELGAbMRIJFlMp6y1hmj3lrAeT+9fD3iNJHMlF8hReIBHoOaCb0zZzPE7sthZiiLhtfiWyDvipzz+KOKQK2nbwuQgq2tu9Vo5CL4bULvNzaou1Gw7B8uxfY=
+	t=1749139203; cv=none; b=Y0G35vrkofLdtjp/ifsevWk+juTYJmLF4vzkLl1q3o0+l7ffxD2FTC+TZuYRNrWUKjvlzSFLUexZFCuHcnRKoO4CxBzHZWarXSfb41VOPc5LbIFSek0i3rr8P6alwCS/ecPwtX8ON+OVDIK2WzMXIWhYF7yTKUcGReyWRfHqF7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749139112; c=relaxed/simple;
-	bh=5oy6KHOvTzdcuYytmPkKZgPrpl7idOQtfQSObqeQCVc=;
+	s=arc-20240116; t=1749139203; c=relaxed/simple;
+	bh=RRz7YiPhyPTQ22ArkvymjhdfeIHClOipkpfMkO35EZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HdHiYwn3LWiToa9kYOovAM70NpP1+qL3NUdHhHSflbVdgfqV/lo8i6JxxY7V81bZN58o7E16i+8KYS0/KOEIZjERTRJGG/e/UaW5tmBBVXQUv9W3RR4O5A89yMeoo2x0SHHoiy/DI++Eqvw+gQqJYvXNQ+gOMNvAcgY1QzgKLXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=foundries.io; spf=pass smtp.mailfrom=foundries.io; dkim=pass (2048-bit key) header.d=foundries.io header.i=@foundries.io header.b=gW0btmgC; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=foundries.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foundries.io
+	 Content-Type:Content-Disposition:In-Reply-To; b=jVcDoz7714eVO9sLaW3mB0n7wiKP/XDB4qtBKCzHicaZ3E1a/65sEOsyb+ACzdaHVGTK5lbgB2356V7bIGsLLP4L7SqZfxBDgNRVABQz7gtMKl4M9+RO4IYaL9ElVBY/YGzOTnDQN0O4jtI7ObyB0OznLfOf3v4Oe4BWo8OBGnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l6fO/TMU; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foundries.io header.i=@foundries.io header.b="gW0btmgC"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5533c562608so1129273e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 08:58:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries.io; s=google; t=1749139109; x=1749743909; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jY+fBvo1omxGhJb81xJVOAzLMDMZ0VpHsAY7o7wB4qM=;
-        b=gW0btmgCzehWxNok2ZvOcAU/uE8xx9vZXUoy5HO61a6CGpYTesRV3mVq0K3ft1B8tM
-         rUfO7oSyn2QAdn+0prfGkxgjfeEe3rV2DcU94NZ5hkktHJtR8uQOq0igXIM4zdanNGW0
-         SkZiD3t+Q7ak90C7SZYqumWqSu5SipEt00OBWDGLmFzc2b8lunolrsGLGh6zfEM3qSTH
-         AcLJdOOYwT3kYTAa6oOZpbvzHUmD7dU4yqImBpZ7WdTcH4pWANga0XVeYm39bPaflEh9
-         jcP9zS08Fr24XRrrs0yfmPJ0UHj2DxyBKi2dOSpD+SlaBqnBKJBUETa+LAbIjNBITq6u
-         kXLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749139109; x=1749743909;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jY+fBvo1omxGhJb81xJVOAzLMDMZ0VpHsAY7o7wB4qM=;
-        b=kks/GogfkmkTl5joMaJO5/yvro2xKoKwlGS81aY6s1rZR51EGSogPz3ptDRQGAEWWy
-         ukyXtIgGzhXihFPbhcvTN5bGrjrHEvqfzJ26dYygVyaYNFkb32JbJFhrMCPE9o70SGwv
-         9v/5VPQwsijsu5n2U2lOxfitamFmz9pkfC5FHYbjbceab5ydLA8glwlkMECKPqg1UDOe
-         1OH24UiXJXyoGg4oEe/lpQHzBcLK5QfWB6eWC6vClKfcd69WOS4rTZAIA+6h6L9UqH3B
-         6369htKWWMZhkEnNt6qcxSQwhTZ9sCIiFZyklwwXn1vy9He463XOIY8mGgNAUtrN75g5
-         paxA==
-X-Forwarded-Encrypted: i=1; AJvYcCW007GfHIcp3KP1wVttqvaiu+GAy+YYGp1qXnjgvzgoO6vQ0X6G0H4PoFRyKQKhtNilQl3rlHxmWqfnD9s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztwksNcYdeFPG0cpXDJN2f7lNVPM4YVa6kLvBljkHUIK0K928t
-	TTTeZ/uaxmJowddl/FpUPaurTgDYqfne1aeb9t20gAs8V+i+/ND1X0fVh//lAfJFQBo=
-X-Gm-Gg: ASbGnct0FV8c5rRQ2p/4ol4Z0VSJscZnOqJasv6WgrhDFgloscbFxnugHKITCschb71
-	uX3pV1Anc7SCeoNnRFjjAAFKsw6sIiqPqQLH3jnWq/mM2eSfSoCMXUyQMoamALEfPBqeZatdsux
-	tgWW61t/pn4nJbGGZnvQdVuQaap3ACYC6dBLvFIuRfl9X5Gtp/dMmXORQA7J+wXJ6UH/3QrboJw
-	f6OEccx5atn66stj1xnfC+pV34Ur8ryCoKhEpmVExbcYjEyyuFOqCVAHAdNg6SXdbxHdEh1IN2C
-	R1rG6xObGBCgZwpLOKyFc2xe3Z18Dlc3O2d71DSGsB7t7Hc0HxbJ/G8ZIwjYm7YTyYY6cH3mOuM
-	YQ7rYqeW7gXHyUV+SkhWdiAx59qb7gygWnGP+xXPVkNK4
-X-Google-Smtp-Source: AGHT+IE5g0NpZiGKWdQAhxqzPgU+EDalkwHq2x5qhV+iGVnnLfBvqqZ/6tin9VLqkHuvfZ3nNw2+aQ==
-X-Received: by 2002:a05:6512:3a8e:b0:553:2a2f:22eb with SMTP id 2adb3069b0e04-55356df996cmr2190335e87.36.1749139108888;
-        Thu, 05 Jun 2025 08:58:28 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85b5664asm25008971fa.60.2025.06.05.08.58.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 08:58:28 -0700 (PDT)
-Date: Thu, 5 Jun 2025 18:58:27 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@foundries.io>
-To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>, 
-	Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 3/3] soc: qcom: mdt_loader: Actually use the e_phoff
-Message-ID: <p2nl6wmzo5tn7ve3ufhuwiw7sixg2bmmml3txwahq72h76asok@y24ixmekdxfr>
-References: <20250605-mdt-loader-validation-and-fixes-v1-0-29e22e7a82f4@oss.qualcomm.com>
- <20250605-mdt-loader-validation-and-fixes-v1-3-29e22e7a82f4@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l6fO/TMU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749139201; x=1780675201;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RRz7YiPhyPTQ22ArkvymjhdfeIHClOipkpfMkO35EZM=;
+  b=l6fO/TMU6lF7r4mNoC561ba2FYM0sb7OFmue5z0shRPpAlyIo1CGPhXp
+   SdEkI8VbsFkkU6omV6x9DZJSl2Cpt0E+DVRZBzEJmKmKC97hUFgd+2oe4
+   zavjg3Nn+5cvlSeoawlageYdZVh4ne4Sq+xbjszggyHAGNrFWQDDUJ66h
+   kjv1RsIdcTDcMoQ1/v4O9djEfabCepfzhpZkofNuc38jUuTF9bHGIeaVX
+   f0K+NmHXfxzsQz+WQWzVb+qChxfc/swuJIpDbbZcVvfyeSvX2XvLJCydy
+   w7mrHw1rJYg75jWnlDwYNixbavQxAc7WXMb1yEhkJfRlyGS02ff9lDpUt
+   Q==;
+X-CSE-ConnectionGUID: bTOKd+ywQyy6YQo57m9kmg==
+X-CSE-MsgGUID: U7UP7RbzRyueyT63myarjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="61886190"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="61886190"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:00:01 -0700
+X-CSE-ConnectionGUID: v0/PGK0lRouERhntos4ZtA==
+X-CSE-MsgGUID: Lvt/OwDyTLSQbKeDu4fzcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="145510428"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 05 Jun 2025 08:59:58 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uND0V-0004F7-0s;
+	Thu, 05 Jun 2025 15:59:55 +0000
+Date: Thu, 5 Jun 2025 23:59:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lukas Timmermann <linux@timmermann.space>, lee@kernel.org,
+	pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@timmermann.space
+Subject: Re: [PATCH v3 1/2] leds: as3668: Driver for the ams Osram 4-channel
+ i2c LED driver
+Message-ID: <202506052351.GK29s0TN-lkp@intel.com>
+References: <20250604225838.102910-2-linux@timmermann.space>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,21 +67,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605-mdt-loader-validation-and-fixes-v1-3-29e22e7a82f4@oss.qualcomm.com>
+In-Reply-To: <20250604225838.102910-2-linux@timmermann.space>
 
-On Thu, Jun 05, 2025 at 08:43:02AM -0500, Bjorn Andersson wrote:
-> Rather than relying/assuming that the tools generating the firmware
-> places the program headers immediately following the ELF header, use
-> e_phoff as intended to find the program headers.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> ---
->  drivers/soc/qcom/mdt_loader.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
+Hi Lukas,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on lee-leds/for-leds-next]
+[also build test ERROR on linus/master v6.15 next-20250605]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Lukas-Timmermann/leds-as3668-Driver-for-the-ams-Osram-4-channel-i2c-LED-driver/20250605-112204
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git for-leds-next
+patch link:    https://lore.kernel.org/r/20250604225838.102910-2-linux%40timmermann.space
+patch subject: [PATCH v3 1/2] leds: as3668: Driver for the ams Osram 4-channel i2c LED driver
+config: x86_64-kexec (attached as .config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250605/202506052351.GK29s0TN-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506052351.GK29s0TN-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/leds/Kconfig:116: syntax error
+   drivers/leds/Kconfig:116: unknown statement "The"
+   drivers/leds/Kconfig:117:warning: ignoring unsupported character '.'
+   drivers/leds/Kconfig:117: unknown statement "the"
+   drivers/leds/Kconfig:118:warning: ignoring unsupported character ','
+   drivers/leds/Kconfig:118:warning: ignoring unsupported character '.'
+   drivers/leds/Kconfig:118: unknown statement "channel"
+   drivers/leds/Kconfig:121:warning: ignoring unsupported character ','
+   drivers/leds/Kconfig:121:warning: ignoring unsupported character ':'
+   drivers/leds/Kconfig:121: unknown statement "To"
+   drivers/leds/Kconfig:122:warning: ignoring unsupported character '.'
+   drivers/leds/Kconfig:122: unknown statement "will"
+   make[3]: *** [scripts/kconfig/Makefile:85: oldconfig] Error 1
+   make[2]: *** [Makefile:731: oldconfig] Error 2
+   make[1]: *** [Makefile:248: __sub-make] Error 2
+   make[1]: Target 'oldconfig' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'oldconfig' not remade because of errors.
+--
+>> drivers/leds/Kconfig:116: syntax error
+   drivers/leds/Kconfig:116: unknown statement "The"
+   drivers/leds/Kconfig:117:warning: ignoring unsupported character '.'
+   drivers/leds/Kconfig:117: unknown statement "the"
+   drivers/leds/Kconfig:118:warning: ignoring unsupported character ','
+   drivers/leds/Kconfig:118:warning: ignoring unsupported character '.'
+   drivers/leds/Kconfig:118: unknown statement "channel"
+   drivers/leds/Kconfig:121:warning: ignoring unsupported character ','
+   drivers/leds/Kconfig:121:warning: ignoring unsupported character ':'
+   drivers/leds/Kconfig:121: unknown statement "To"
+   drivers/leds/Kconfig:122:warning: ignoring unsupported character '.'
+   drivers/leds/Kconfig:122: unknown statement "will"
+   make[3]: *** [scripts/kconfig/Makefile:85: olddefconfig] Error 1
+   make[2]: *** [Makefile:731: olddefconfig] Error 2
+   make[1]: *** [Makefile:248: __sub-make] Error 2
+   make[1]: Target 'olddefconfig' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'olddefconfig' not remade because of errors.
+
+
+vim +116 drivers/leds/Kconfig
+
+    66	
+    67	config LEDS_88PM860X
+    68		tristate "LED Support for Marvell 88PM860x PMIC"
+    69		depends on LEDS_CLASS
+    70		depends on MFD_88PM860X
+    71		help
+    72		  This option enables support for on-chip LED drivers found on Marvell
+    73		  Semiconductor 88PM8606 PMIC.
+    74	
+    75	config LEDS_AN30259A
+    76		tristate "LED support for Panasonic AN30259A"
+    77		depends on LEDS_CLASS && I2C && OF
+    78		help
+    79		  This option enables support for the AN30259A 3-channel
+    80		  LED driver.
+    81	
+    82		  To compile this driver as a module, choose M here: the module
+    83		  will be called leds-an30259a.
+    84	
+    85	config LEDS_APU
+    86		tristate "Front panel LED support for PC Engines APU/APU2/APU3 boards"
+    87		depends on LEDS_CLASS
+    88		depends on X86 && DMI
+    89		help
+    90		  This driver makes the PC Engines APU1 front panel LEDs
+    91		  accessible from userspace programs through the LED subsystem.
+    92	
+    93		  If you're looking for APU2/3, use the pcengines-apu2 driver.
+    94		  (symbol CONFIG_PCENGINES_APU2)
+    95	
+    96		  To compile this driver as a module, choose M here: the
+    97		  module will be called leds-apu.
+    98	
+    99	config LEDS_ARIEL
+   100		tristate "Dell Wyse 3020 status LED support"
+   101		depends on LEDS_CLASS
+   102		depends on (MACH_MMP3_DT && MFD_ENE_KB3930) || COMPILE_TEST
+   103		help
+   104		  This driver adds support for controlling the front panel status
+   105		  LEDs on Dell Wyse 3020 (Ariel) board via the KB3930 Embedded
+   106		  Controller.
+   107	
+   108		  Say Y to if your machine is a Dell Wyse 3020 thin client.
+   109	
+   110	config LEDS_AS3668
+   111		tristate "LED support for AMS AS3668"
+   112		depends on LEDS_CLASS
+   113		depends on I2C
+   114		help
+   115			 This option enables support for the AMS AS3668 LED controller.
+ > 116			The AS3668 provides up to four LED channels and is controlled via
+   117			the I2C bus. This driver offers basic brightness control for each
+   118			channel, without support for blinking or other advanced features.
+   119	
+   120	
+   121			To compile this driver as a module, choose M here: the module
+   122			will be called leds-as3668.
+   123	
 
 -- 
-With best wishes
-Dmitry
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
