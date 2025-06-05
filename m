@@ -1,161 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2410B3C2F
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 00:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088E918C06;
+	Thu,  5 Jun 2025 00:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749084394; cv=none; b=nuFSb5EqBUjFlxFL3jNXH1FlZ6sOMmRgw1O0WbU3BgFyx2HvIe1ombqKAKyvEet9nAEXrEn6o56m7IfmHtI9E+IBUqRb7DYCNvALvO0tRvm/McrJ4F6z48jobY4MdB11wp1P5siLWZkSfoyPc+QKfXsgjCU1cn5s0JPoOlqyQ5k=
+	t=1749084513; cv=none; b=CI1raqkY4Pzhsj5rQJ37553UyGKseyusJge9FqEBOZ55dKbdorauSeDW2OiOwTJS7gGdrgDAW8thAKbzS3XQ01fluy0iODgABwgMDHcgu0b5SkdPjkJxqiG4nJiTzL9bmYi03Yc8H5yrZN1i9rxBi0bokIFRo7GLloJ/yO5YW4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749084394; c=relaxed/simple;
-	bh=gQ2K28JFSJwrXcviJxZJUo1aNRaVu0m2YAcpDoDihjo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DPB7J9166B9oqWti5uxBYD0yOb5i/WK/ZHCwNCyb/Hahy2eplMII1COzR7Ks6Dyqdhk92Trri5PqpB63Y2uxc+RI19ZGBbzs37K3fu45k4C3ls3xD60M1C8dEhdSBJ7DLu4NPp56dCJPD0WtgUPmMu8UDQF9Vk8eeXG2+7/EVxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VOC/av84; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749084513; c=relaxed/simple;
+	bh=spiNuMouzkosxKKAlHJ/LKnfR6O/EaZkfHwVp4bYclQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iloMX3MpV+uv8wg4DtIE4OCP5mjc7YJkapCWz8HjjwNP+ryhDLWkS3IsZI0ISIpO9pOItyhUu/i1Dbzb+ygsgfRW07alNwLT+C5/qGUfaGmqk2+5NKIzFDyUmEslJ3M2uTmtuXrIqJ80nyVNWcAPq6ZbTqktHSSA+gad3LeJIhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=UodMRz/H; arc=none smtp.client-ip=47.90.199.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VOC/av84"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749084390;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4rvoJRZ+941RRB3yT2eqwz3H2iab1etLIqCrT/3n0JQ=;
-	b=VOC/av844JdAZzNwNKyB08D/6JGHXAo2r3ehJARx9H1ZFKOHd/jv1bbnUF1PtdelgkRo34
-	m6YnoKod7uWIUGgTSKobLDaU6GGtzO7AIaBjdpC8/oensZRy4IvUMrk8YQAG577FcJFymC
-	Nc2dDCOt1zb5/ok1CQQvgbOx6yw5yyQ=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-529-CZviJuMPPXWH-ISPR6aNIQ-1; Wed, 04 Jun 2025 20:46:28 -0400
-X-MC-Unique: CZviJuMPPXWH-ISPR6aNIQ-1
-X-Mimecast-MFC-AGG-ID: CZviJuMPPXWH-ISPR6aNIQ_1749084388
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-747a9ef52a4so585941b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 17:46:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749084387; x=1749689187;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4rvoJRZ+941RRB3yT2eqwz3H2iab1etLIqCrT/3n0JQ=;
-        b=VITtXtS6yslhZ4l/bYetFgZCnoaKYTaTkAWxQUpOeCWm0W6jwrNJHhChJUgHcKW2uy
-         393zpU9YBjS0Ch2ndIIb5xzzsVx1Bij/l65U0keKMyhljhJzJa9xUFU6eDfhA5rZRSDR
-         fl74NcSny3diAixM71oE5SAQ0/x9H+OTq3dwKtQieVTXMiqOWG6O/t94i1YPVjILOWRL
-         H0MKbuhAtw95ThypBuQqP5z+f57E7VmS1Jh36B/ncMDbMzKQRMJbIyKQ0b5X0FXqswnD
-         X0/8ESdN73D1JNGDez0FkK1BE7Z2BIaYpgw2ORKgmdPKOrYVqDEQROBYBYYEI0AkYg85
-         x3IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZn5pGw5ec51Mnlw9HiqnS9kPEdPsDRoDbxe/nUKW1yRwonpQADGfiBWiEEFV2n0IuT6qR9odpZemeItI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIKePR6e8HxZ8s+yoSI0hFxCsszDUsHDvCSiZg+JwDbhLXBrDd
-	SQDe0mSruL+v5XaMcedOrkd387X9TXGc0m4RMUzZvwLvqJKHlmyGctC4HuSNgREE6OeAfV7IL3v
-	VeziwlFs91RWjoIGlnMahN8B6Dm61O9mTnR+x2lOwea3LyauJjXAMfkokw5ZBf09kjUQTE+Vgw0
-	6IKycwTOm+Si+7mqEc3fUDuYU/U961g44CPy2CBw/y
-X-Gm-Gg: ASbGncs19bV0skfi8xShsveUujCKxt793wOsWiHWaFvNZ+Uu61Of7IyIc6xnQbb8xy1
-	A3e6wJLCQPbacyBMbYDqLFmQMRInB/6EcL9VIV5rHVs2fE4dJdPevzUwh2thZC/3yqeAq
-X-Received: by 2002:a05:6a00:1a8b:b0:736:53f2:87bc with SMTP id d2e1a72fcca58-7480b41c057mr6620864b3a.13.1749084387530;
-        Wed, 04 Jun 2025 17:46:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWm/kjbk8cd6j93CgnJ1yt93I+3ZM/WhLMOUv1rkUy4RSWdCL17+h6rPArAx08BKWo82wHYZSyXb0/Dn2zN4A=
-X-Received: by 2002:a05:6a00:1a8b:b0:736:53f2:87bc with SMTP id
- d2e1a72fcca58-7480b41c057mr6620834b3a.13.1749084387116; Wed, 04 Jun 2025
- 17:46:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="UodMRz/H"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749084492; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=hoFzIfUZJ4wj8058GkOSPWGehDB1B6IcsKmHwslnUG0=;
+	b=UodMRz/HOMIBX30RINyRFY2tD1EH1zPFYc2AwHaP0+L3+7NkM1Rj/uMBghFVnuLOHzd6KQGriFSxHvmuw/n366oV51rq4jUHR16hM0W7eaN42++G6GyE9Xf0LmVFtCTEfc8Xqkp2KEquxx/WQP+fdXikxQNUFeWsrldwj8xHa7g=
+Received: from 192.168.43.81(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wd5p7oJ_1749084488 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 05 Jun 2025 08:48:10 +0800
+Message-ID: <985a92d4-e0d4-4164-88eb-dc7931e2c40c@linux.alibaba.com>
+Date: Thu, 5 Jun 2025 08:48:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603150613.83802-1-minhquangbui99@gmail.com>
- <CACGkMEuHDLJiw=VdX38xqkaS-FJPTAU6+XUNwfGkNZGfp+6tKg@mail.gmail.com> <0bc8547d-aa8f-4d96-9191-fd52d1bec74e@gmail.com>
-In-Reply-To: <0bc8547d-aa8f-4d96-9191-fd52d1bec74e@gmail.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Thu, 5 Jun 2025 08:46:16 +0800
-X-Gm-Features: AX0GCFvjyMd1H9dniamKbUvfa3PlpuL7i79qr8xhrVJzz6-ckoHw99myc9wjf_U
-Message-ID: <CACGkMEvnn52XaidBdD9yGy8Yfpw3vu+QLcd8JoBSNS5ZEtmMqw@mail.gmail.com>
-Subject: Re: [PATCH net] virtio-net: drop the multi-buffer XDP packet in zerocopy
-To: Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@suse.com>,
+ Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
+ surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
+ sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
+ <aD6vHzRhwyTxBqcl@tiehlicka>
+ <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
+ <aD7OM5Mrg5jnEnBc@tiehlicka>
+ <7307bb7a-7c45-43f7-b073-acd9e1389000@linux.alibaba.com>
+ <aD8LKHfCca1wQ5pS@tiehlicka>
+ <obfnlpvc4tmb6gbd4mw7h7jamp3kouyhnpl4cusetyctswznod@yr6dyrsbay6w>
+ <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
+ <1aa7c368-c37f-4b00-876c-dcf51a523c42@suse.cz>
+ <d2b76402-7e1a-4b2d-892a-2e8ffe1a37a9@linux.alibaba.com>
+ <nohu552nfqkfumrj3zc7akbdrq3bzwexle3i6weyta76dltppv@txizmvtg3swd>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <nohu552nfqkfumrj3zc7akbdrq3bzwexle3i6weyta76dltppv@txizmvtg3swd>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 4, 2025 at 10:17=E2=80=AFPM Bui Quang Minh <minhquangbui99@gmai=
-l.com> wrote:
->
-> On 6/4/25 07:37, Jason Wang wrote:
-> > On Tue, Jun 3, 2025 at 11:07=E2=80=AFPM Bui Quang Minh <minhquangbui99@=
-gmail.com> wrote:
-> >> In virtio-net, we have not yet supported multi-buffer XDP packet in
-> >> zerocopy mode when there is a binding XDP program. However, in that
-> >> case, when receiving multi-buffer XDP packet, we skip the XDP program
-> >> and return XDP_PASS. As a result, the packet is passed to normal netwo=
-rk
-> >> stack which is an incorrect behavior. This commit instead returns
-> >> XDP_DROP in that case.
-> >>
-> >> Fixes: 99c861b44eb1 ("virtio_net: xsk: rx: support recv merge mode")
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
-> >> ---
-> >>   drivers/net/virtio_net.c | 11 ++++++++---
-> >>   1 file changed, 8 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> >> index e53ba600605a..4c35324d6e5b 100644
-> >> --- a/drivers/net/virtio_net.c
-> >> +++ b/drivers/net/virtio_net.c
-> >> @@ -1309,9 +1309,14 @@ static struct sk_buff *virtnet_receive_xsk_merg=
-e(struct net_device *dev, struct
-> >>          ret =3D XDP_PASS;
-> > It would be simpler to just assign XDP_DROP here?
-> >
-> > Or if you wish to stick to the way, we can simply remove this assignmen=
-t.
->
-> This XDP_PASS is returned for the case when there is no XDP program
-> binding (!prog).
 
-You're right.
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+On 2025/6/5 00:54, Shakeel Butt wrote:
+> On Wed, Jun 04, 2025 at 10:16:18PM +0800, Baolin Wang wrote:
+>>
+>>
+>> On 2025/6/4 21:46, Vlastimil Babka wrote:
+>>> On 6/4/25 14:46, Baolin Wang wrote:
+>>>>> Baolin, please run stress-ng command that stresses minor anon page
+>>>>> faults in multiple threads and then run multiple bash scripts which cat
+>>>>> /proc/pidof(stress-ng)/status. That should be how much the stress-ng
+>>>>> process is impacted by the parallel status readers versus without them.
+>>>>
+>>>> Sure. Thanks Shakeel. I run the stress-ng with the 'stress-ng --fault 32
+>>>> --perf -t 1m' command, while simultaneously running the following
+>>>> scripts to read the /proc/pidof(stress-ng)/status for each thread.
+>>>
+>>> How many of those scripts?
+>>
+>> 1 script, but will start 32 threads to read each stress-ng thread's status
+>> interface.
+>>
+>>>>    From the following data, I did not observe any obvious impact of this
+>>>> patch on the stress-ng tests when repeatedly reading the
+>>>> /proc/pidof(stress-ng)/status.
+>>>>
+>>>> w/o patch
+>>>> stress-ng: info:  [6891]          3,993,235,331,584 CPU Cycles
+>>>>             59.767 B/sec
+>>>> stress-ng: info:  [6891]          1,472,101,565,760 Instructions
+>>>>             22.033 B/sec (0.369 instr. per cycle)
+>>>> stress-ng: info:  [6891]                 36,287,456 Page Faults Total
+>>>>              0.543 M/sec
+>>>> stress-ng: info:  [6891]                 36,287,456 Page Faults Minor
+>>>>              0.543 M/sec
+>>>>
+>>>> w/ patch
+>>>> stress-ng: info:  [6872]          4,018,592,975,968 CPU Cycles
+>>>>             60.177 B/sec
+>>>> stress-ng: info:  [6872]          1,484,856,150,976 Instructions
+>>>>             22.235 B/sec (0.369 instr. per cycle)
+>>>> stress-ng: info:  [6872]                 36,547,456 Page Faults Total
+>>>>              0.547 M/sec
+>>>> stress-ng: info:  [6872]                 36,547,456 Page Faults Minor
+>>>>              0.547 M/sec
+>>>>
+>>>> =========================
+>>>> #!/bin/bash
+>>>>
+>>>> # Get the PIDs of stress-ng processes
+>>>> PIDS=$(pgrep stress-ng)
+>>>>
+>>>> # Loop through each PID and monitor /proc/[pid]/status
+>>>> for PID in $PIDS; do
+>>>>        while true; do
+>>>>            cat /proc/$PID/status
+>>>> 	usleep 100000
+>>>
+>>> Hm but this limits the reading to 10 per second? If we want to simulate an
+>>> adversary process, it should be without the sleeps I think?
+>>
+>> OK. I drop the usleep, and I still can not see obvious impact.
+>>
+>> w/o patch:
+>> stress-ng: info:  [6848]          4,399,219,085,152 CPU Cycles
+>> 67.327 B/sec
+>> stress-ng: info:  [6848]          1,616,524,844,832 Instructions
+>> 24.740 B/sec (0.367 instr. per cycle)
+>> stress-ng: info:  [6848]                 39,529,792 Page Faults Total
+>> 0.605 M/sec
+>> stress-ng: info:  [6848]                 39,529,792 Page Faults Minor
+>> 0.605 M/sec
+>>
+>> w/patch:
+>> stress-ng: info:  [2485]          4,462,440,381,856 CPU Cycles
+>> 68.382 B/sec
+>> stress-ng: info:  [2485]          1,615,101,503,296 Instructions
+>> 24.750 B/sec (0.362 instr. per cycle)
+>> stress-ng: info:  [2485]                 39,439,232 Page Faults Total
+>> 0.604 M/sec
+>> stress-ng: info:  [2485]                 39,439,232 Page Faults Minor
+>> 0.604 M/sec
+> 
+> Is the above with 32 non-sleeping parallel reader scripts?
 
-Thanks
-
->
-> >
-> >>          rcu_read_lock();
-> >>          prog =3D rcu_dereference(rq->xdp_prog);
-> >> -       /* TODO: support multi buffer. */
-> >> -       if (prog && num_buf =3D=3D 1)
-> >> -               ret =3D virtnet_xdp_handler(prog, xdp, dev, xdp_xmit, =
-stats);
-> >> +       if (prog) {
-> >> +               /* TODO: support multi buffer. */
-> >> +               if (num_buf =3D=3D 1)
-> >> +                       ret =3D virtnet_xdp_handler(prog, xdp, dev, xd=
-p_xmit,
-> >> +                                                 stats);
-> >> +               else
-> >> +                       ret =3D XDP_DROP;
-> >> +       }
-> >>          rcu_read_unlock();
-> >>
-> >>          switch (ret) {
-> >> --
-> >> 2.43.0
-> >>
-> > Thanks
-> >
->
->
-> Thanks,
-> Quang Minh.
->
->
-
+Yes.
