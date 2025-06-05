@@ -1,167 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0491AAA1C
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2345C1624F7;
+	Thu,  5 Jun 2025 16:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749140128; cv=none; b=qcr/xTkeFgPls0pXREnEBjiqhxmJxznpo5E2yO9qZvugWk+Hx+0eibMmHrHP1ISiOZs050rjy9exmI8hHUOgDsb4LK2M1XCTg48wDPmZUdwLmkgzWcvlK020kN92GEBuNXd4X9b3gqriI9rtus7CtteSszepev9KwH6njMl//20=
+	t=1749140157; cv=none; b=b1rdiEp0jZtC25TOIybaY5AVdOQ/SP0sEDygMYWOsf6p9cauXyIJwGZuHuHqew9zYzSFYNPdsakBK7PimWu0PG2oCl2oonlkrCGgM5fSKL8gqKIzoLk0fSpPKtCdiV2NaePMSPffoyC3B589rjoqaVHZIzJcNLUh1bNVTciup44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749140128; c=relaxed/simple;
-	bh=5YRfXPx9urXs5R9JeRsxMZW2JAsNkY5U5iQs48ngJ1w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HjGXjYRJzb+rIdJwkqrMS7Q9I07krcy4z01hO7gBbSAcGiYuPlzI2AzUaldChOPLk3rlE1IfBEsxoULSZoKflhY8HlkF5Pg5VO9+jesJsTuJV8fjOGfmHIU9UGNAHSVPhwrHxOKymHve7og8Nrb0mdPpE1P81sNtx1BGTulCswo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e2m58g95; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749140157; c=relaxed/simple;
+	bh=5chTMrgQJS2vmZa5XplnJeYkwgfYEOhwNWxnlCNJXYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JjkMS7AIpZEXCO/Oc23Wnc01H6eI8BdDGu2xJ8BfI8kESdZglP/8ZSoclJ938PYS+2wsxKi7Gbp/Act0XumuJF4apK4mOwzi8zh2kFnLEvtFjGO27DXWEBehCrt8bSjgrIlaQPQVoJQprf5QseI6MA8/Dp7YksRQHaxwUzGcBVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1C3ytCw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e2m58g95"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749140125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8oBJwL5i85fvyuh1/EIGr7LIagSUnBICErVA++ejqYk=;
-	b=e2m58g95HkT0N0JYxdRVU2aiBFdSv/mWJubu7OJx8Oc54sgQ5EUF9TChS6zsd6WqgSWHgc
-	U2Ur0MSUvIF1tTtTFGgQytaAh3oaPufiZ9OJm4EkiSfIHXyqcjwdJZlgPYzGQIFgceH8/Z
-	BmZuQkz9xIjURJdbLue0bR8htWXMtp4=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-597-qFiOFyMGN5-FlQLzPxOUSg-1; Thu, 05 Jun 2025 12:15:24 -0400
-X-MC-Unique: qFiOFyMGN5-FlQLzPxOUSg-1
-X-Mimecast-MFC-AGG-ID: qFiOFyMGN5-FlQLzPxOUSg_1749140122
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-553270eb471so682075e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 09:15:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749140122; x=1749744922;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8oBJwL5i85fvyuh1/EIGr7LIagSUnBICErVA++ejqYk=;
-        b=VpdFbjo7e+0BC4LoaUsQzI5zDNfkhBKwh4skBY8+hxDogzIgU5WrtrZ7Og7CyDuzNV
-         r+VM/j1PsDriI4D7by2JmxL3VvLdwP7txPTcgepL6KtBkQtzirWW3elmi98Gu8tdUVFr
-         JgeieinitpdaOS1U76ifqhZJ9lh6VlVdGf9IVsOD4ylxWj7bcmSimIfJr4jntutTto8r
-         NSoZtt1GtazwahFspCocUgTEAsHdaypXHLkQyzaxVhWV5JIA45sf8o7vAIZLKaWG0DFe
-         FK5IbJXoIGGExt9mejXlEfWLS/r7fIcKDVF74DDgtBffQMChFTJ4P3fs0V+kEPgCf1Bh
-         WDqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnYZ7smFmGFGsFoW62KL7bqVz3IxSM+I8CPxK96ntxUiBBOheRxPclHD3m/h8pld3/v86CW6//xeA7Gfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMCMV5ngHXUWhhfsG3RLiVFtaW+K9zQGIDnOBZUYAKea+dkQEZ
-	Q264m33GwNbr5x/e4dwJ4KQ6fg5Y3dEcZvHGzkPF/9GA+QMCFucl16MwP5wZloRLrMONUavjwiL
-	VlsWO6Ugi+U1iOlhoaKvujAup783Va4jT/+0sLDsA00CN10mKnIhsaBY9LzjIB62beeeep/1OyA
-	==
-X-Gm-Gg: ASbGncskauaq5KR3Yf+3Yhv0MojXgao7Ej2GWTFox1nBNs9CyqzJ05OHOgv8DwR2+4v
-	LspO6r/lScUBg1yVg80dg7r03i6jxQ4atsZ4QvWu2Bwn4bNJIBbiOhnHLUwHkEafVE0bSzmlsoO
-	EkLSRW3z8tdfXRdT2qwNmIxtmGe4MXAAOp/q8+0JIrIYyxwaJu9E5eabSVghynnMBvwzeWNm1Jk
-	+/6mN1Jqx+y09NUeW5nv2COHbE+gU5cIryniLMo7InOZ8Ew7tDqAnjTXMPuumu0F2R7aMLbEuZQ
-	ilAQSBXj
-X-Received: by 2002:a05:6512:1195:b0:553:2633:8a63 with SMTP id 2adb3069b0e04-55356bf0810mr2550091e87.17.1749140121792;
-        Thu, 05 Jun 2025 09:15:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFyEGbTPkSKROw9FM9QAr8F2/I2JIMKK1z9Bn5SHjSwSvXY3jUXjSWANlqa0vsJXPbGPEkgrA==
-X-Received: by 2002:a05:6512:1195:b0:553:2633:8a63 with SMTP id 2adb3069b0e04-55356bf0810mr2550079e87.17.1749140121308;
-        Thu, 05 Jun 2025 09:15:21 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553378a13d2sm2650604e87.74.2025.06.05.09.15.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 09:15:20 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 60FF81AA92F7; Thu, 05 Jun 2025 18:15:18 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>, Jesper Dangaard
- Brouer <hawk@kernel.org>, bpf@vger.kernel.org, netdev@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Jamal Hadi Salim <jhs@mojatatu.com>, Cong
- Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- linux-kernel@vger.kernel.org
-Subject: Re: [BUG] veth: TX drops with NAPI enabled and crash in combination
- with qdisc
-In-Reply-To: <9da42688-bfaa-4364-8797-e9271f3bdaef@hetzner-cloud.de>
-References: <9da42688-bfaa-4364-8797-e9271f3bdaef@hetzner-cloud.de>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Thu, 05 Jun 2025 18:15:18 +0200
-Message-ID: <87zfemtbah.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1C3ytCw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E121C4CEE7;
+	Thu,  5 Jun 2025 16:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749140155;
+	bh=5chTMrgQJS2vmZa5XplnJeYkwgfYEOhwNWxnlCNJXYg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F1C3ytCwGT18Y0qV/xxv2qNGYZHjS2yR3yFvxeeLYQlVyOq/+vXAAYBPJs1YqQCnP
+	 889PwElOGACTCQKo+AvCCl7OBZ9u/NQ7v335m5+aytdAek5Imq9G/rkaQJO5Iod1e/
+	 rt9KIx7u8zSAQPV6ydutJ5WhT3ipEzF2d2EyI7/i0Eq1YQV3k0ToMb5Kefb6kE/i3G
+	 wtM94kOgQLc5wlDfNI/1SeVzcewZw7RMTHREhuJMmMOOzKxeW+sUprTTmLv7lVAe3X
+	 XlzEuIO78m4dMsPOLp8OH2ljQZ0h1JuRMnQU1yRhSa3+t2HeX8U3W/MEyKYJe+SwLZ
+	 26su1QQ4Y0d/g==
+Date: Thu, 5 Jun 2025 17:15:51 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] selftests/mm: Fix test result reporting in
+ gup_longterm
+Message-ID: <722628a8-f3fd-4fb9-ae04-2313a52ffb36@sirena.org.uk>
+References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
+ <20250527-selftests-mm-cow-dedupe-v2-4-ff198df8e38e@kernel.org>
+ <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="y5zP/ODICYjBWB2e"
+Content-Disposition: inline
+In-Reply-To: <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
+X-Cookie: That's no moon...
 
-Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de> writes:
 
-> Hi,
->
-> while experimenting with XDP_REDIRECT from a veth-pair to another interface, I
-> noticed that the veth-pair looses lots of packets when multiple TCP streams go
-> through it, resulting in stalling TCP connections and noticeable instabilities.
->
-> This doesn't seem to be an issue with just XDP but rather occurs whenever the
-> NAPI mode of the veth driver is active.
-> I managed to reproduce the same behavior just by bringing the veth-pair into
-> NAPI mode (see commit d3256efd8e8b ("veth: allow enabling NAPI even without
-> XDP")) and running multiple TCP streams through it using a network namespace.
->
-> Here is how I reproduced it:
->
->   ip netns add lb
->   ip link add dev to-lb type veth peer name in-lb netns lb
->
->   # Enable NAPI
->   ethtool -K to-lb gro on
->   ethtool -K to-lb tso off
->   ip netns exec lb ethtool -K in-lb gro on
->   ip netns exec lb ethtool -K in-lb tso off
->
->   ip link set dev to-lb up
->   ip -netns lb link set dev in-lb up
->
-> Then run a HTTP server inside the "lb" namespace that serves a large file:
->
->   fallocate -l 10G testfiles/10GB.bin
->   caddy file-server --root testfiles/
->
-> Download this file from within the root namespace multiple times in parallel:
->
->   curl http://[fe80::...%to-lb]/10GB.bin -o /dev/null
->
-> In my tests, I ran four parallel curls at the same time and after just a few
-> seconds, three of them stalled while the other one "won" over the full bandwidth
-> and completed the download.
->
-> This is probably a result of the veth's ptr_ring running full, causing many
-> packet drops on TX, and the TCP congestion control reacting to that.
->
-> In this context, I also took notice of Jesper's patch which describes a very
-> similar issue and should help to resolve this:
->   commit dc82a33297fc ("veth: apply qdisc backpressure on full ptr_ring to
->   reduce TX drops")
->
-> But when repeating the above test with latest mainline, which includes this
-> patch, and enabling qdisc via
->   tc qdisc add dev in-lb root sfq perturb 10
-> the Kernel crashed just after starting the second TCP stream (see output below).
->
-> So I have two questions:
-> - Is my understanding of the described issue correct and is Jesper's patch
->   sufficient to solve this?
+--y5zP/ODICYjBWB2e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hmm, yeah, this does sound likely.
+On Thu, Jun 05, 2025 at 05:00:49PM +0100, Lorenzo Stoakes wrote:
 
-> - Is my qdisc configuration to make use of this patch correct and the kernel
->   crash is likely a bug?
->
-> ------------[ cut here ]------------
-> UBSAN: array-index-out-of-bounds in net/sched/sch_sfq.c:203:12
-> index 65535 is out of range for type 'sfq_head [128]'
+> This seems to be causing tests to fail rather than be skipped if hugetlb
+> isn't configured. I bisected the problem to this patch so it's definitely
+> changed how things are handled (though of course it might just be
+> _revealing_ some previously existing bug in this test...).
 
-This (the 'index 65535') kinda screams "integer underflow". So certainly
-looks like a kernel bug, yeah. Don't see any obvious reason why Jesper's
-patch would trigger this; maybe Eric has an idea?
+> Using a couple of tests as an example:
 
-Does this happen with other qdiscs as well, or is it specific to sfq?
+> Before this patch:
 
--Toke
+> # [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with me=
+mfd hugetlb (2048 kB)
+> # memfd_create() failed (Cannot allocate memory)
+> not ok 39 R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with =
+memfd hugetlb (2048 kB)
+> # [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with me=
+mfd hugetlb (1048576 kB)
+> # memfd_create() failed (Cannot allocate memory)
+> not ok 40 R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with =
+memfd hugetlb (1048576 kB)
 
+That's the thing with memfd being special and skipping on setup failure
+that David mentioned, I've got a patch as part of the formatting series
+I was going to send after the merge window. =20
+
+--y5zP/ODICYjBWB2e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhBwrYACgkQJNaLcl1U
+h9BZfgf/ZkJKx9DMIc/WRlEi/afFnFOqjI8V2apX7B3CuS7klARJ57l1fyMdKlRd
+3MRc5VRV31VuwmfYdIFPwqHzOnn6PEy7PHvtCwSKO9uCs/po21b3wMlknaaloFwn
+2sDENLSd39sWNBlnqqcOVK7A8p2rjTkidUo8Qhhy3NfaoOCwL2b9iiL5gr59cily
+YkwCy4Un4qDCryspKDr90H1wZGOnt0GbILGTWd/hNIsnwqvXVCG7WAZf0CvIoXSE
+e3LHCIoLXa7w/qhdakdrV+MHWf7MYmFbbG86hks1Kl0Q1yy+/9pNAgLtYm4vQmZz
+il0Wv7YKAdwiLTWWn/o2cL6qDoufDw==
+=Cxj0
+-----END PGP SIGNATURE-----
+
+--y5zP/ODICYjBWB2e--
