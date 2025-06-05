@@ -1,90 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374C3278E7E;
-	Thu,  5 Jun 2025 20:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74851A5B8A;
+	Thu,  5 Jun 2025 20:27:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749155221; cv=none; b=MEmjR/mt8G8LpVlIlxDvflSwMR+QD2XzOV8o+GVbXc28NYf6N+/o7Mkq4XNV41Gn5eoo/eqviZe7tpSAnLrVsjO8rmi/PufZblNaCUwmKkMaiGHqBVroG3xoIiaVy7zxglQBmDCQewSCyilBPRo5v7waKe7aJt7X87gQDFFtRjE=
+	t=1749155242; cv=none; b=QtnWjvKESi6rDc6XUAkJ1WO4M61zOOaveYleGR0/qEaxPxsEjJ6qIO6gIdhb6fkPZ2MXOCK1mb4dK9GozbW5lFKPdm0ZPpYHE0EhJD0Ap0Ik3Cpet7XfWiKGSa+P/BDjyIJzOJtsBRJbK7iBc1x9uFaNeZY6kBskNoAwzbyi6OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749155221; c=relaxed/simple;
-	bh=+JF8071c4lg517Db2sZWM2wPzcqmgMnNhvsONpKsV6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kFkk3EX3h12MCXpgBhnkF55kZYQupbcCUnjFLASHR1/w16l7DM+siOym9nrPf2YmkEbU1qceBB/4XNq1GjVgYVnsLwXysi49GunNAnFKKu61oVdiniR7+ofGmiKH8OIx4M+dlM0g42sml5akkaNy+PJ3DyMW91DjD5qa3xswurM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=al042plZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749155242; c=relaxed/simple;
+	bh=UD0f2aiYkLmpekoEpWZj548Tflm0OEq08J6LaazoEuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KRSO+Ef4HqaedpDevOL7uAKB9TkG73pvJokT8pCI7Nv6h8PpCiG9UzmXfCj0mTmii+9nN9iv8FxYAFJKf3Wy5/vttPJIclGW5ZYnRD3eWH1H9xmok+YonRvjvA6Q7/rijsStH9c8wA1sekFdE6PoaPnzH647sWJBInYZZu1sItU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFOyFEi8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="al042plZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D663C4CEF1;
-	Thu,  5 Jun 2025 20:27:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFOyFEi8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C84EAC4CEE7;
+	Thu,  5 Jun 2025 20:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749155221;
-	bh=+JF8071c4lg517Db2sZWM2wPzcqmgMnNhvsONpKsV6s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=al042plZEwSKO33dQYs8uhiNo3am4rm03ZapJ0mOZsMI/wBKbQUR2h+TVFk6qrFJ5
-	 /htTVXsHuuHeA34w8bfLhGYM0aG39hDuWOW3aaaEAuTZAcFPPt7sBFcbW/vT/62KxD
-	 KRHjtOnYfazHU/HUszg2kNqOnQsRi3urtYqfwJQFU0MAwFKvMjaOFyB1nbQ2z75sDY
-	 VwKikGiDM9+kiimbx510M7R1qr7hYJd1UcdjxjsxDwkFgISx13iV5w/d4aLdiqjhGx
-	 5RbPOIOjhWlBA/XwN3E5WNVMBU5tcblO4h5k0srBwKLyBVAUicwKV9lWF5vbS/Aa/j
-	 muSAwe3R5HPXw==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5534edc646dso1533149e87.1;
-        Thu, 05 Jun 2025 13:27:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVu6lPg89Lg2/oLnnBNEGgZniQ3De+ijS72vM777uTmAqJ8T96yDWu/wt0jo9UlHWf6AwruDND8XmV0lsqtGA==@vger.kernel.org, AJvYcCXwARLIU9gDobJlBLURwsyy78mI3r2LjNAmjZ5IPeMPw89jQUdyNw82eUWb3EA2Ybgw3B0eu5MDXL+V1hY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc/pqy65tJ91/LYhr81dr4NT8NEMqu/RpCmr0wT/Pm47kBfITS
-	W587KFQBvU6YnfKUAxtaYWN+FAnRg6X3aCIpS+lHLovBjbL3AL6Qxs7/Ao4i/dZcvpDzTB7nWEM
-	E/c0RJSSXywxtzgaPSX9uT5Q3pa63XdE=
-X-Google-Smtp-Source: AGHT+IHXcZhSOdZlV1roysND+AZ5TLN6Wb4vTVAhUmHeA1S9SKwpmBH969zJOMQtUYUrSCphCcp+JdrLH68C/ulK43w=
-X-Received: by 2002:a05:6512:4002:b0:553:2bf7:77be with SMTP id
- 2adb3069b0e04-55366be2d0fmr120285e87.22.1749155219745; Thu, 05 Jun 2025
- 13:26:59 -0700 (PDT)
+	s=k20201202; t=1749155241;
+	bh=UD0f2aiYkLmpekoEpWZj548Tflm0OEq08J6LaazoEuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UFOyFEi8RUmDkPJ26jNDEhgwb1NHCWc7X7Vk0NG19/CZA9aMfp0RRGY6rhrQ7PCWO
+	 9Cb8+sPNf1kqrod3Yhvidyx/mslDAeEbGt7U5ffWQ9zMut1oqdB2FFUJM0K7Q+wfSa
+	 BXlRvmYcTzcLx26o1Am275U24L4PW1gSR1dojNSHa5HsY25oyWxSo2w/6efJXfIOOf
+	 K440hYuT1iGLOPBYwR1+fc7TvtW1Ebm3gkWh9JVb+dbZKU91DQflbfRq3xUITP3gpP
+	 NZ/JMWv6X73GSKwCW1E5Elqxg0iAZoDnkjIe3RTyg4QMa1r38P2uCvbaFWYKkpS/5i
+	 G0lLUQVrvRHEw==
+Date: Thu, 5 Jun 2025 15:27:19 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Luca Weiss <luca@lucaweiss.eu>
+Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: qcom: pas: Conclude the rename from adsp
+Message-ID: <v765tixx2jqqx5rxylqmtulhotxbld5xvjrvo376hyzelmgrop@mqr4fcqdcrfj>
+References: <20250605-pas-rename-v1-1-900b770d666c@oss.qualcomm.com>
+ <9f6652c9-d0c2-405c-bdf0-fc4daa017a4d@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602105539.392362-1-masahiroy@kernel.org> <4fefa5cb-462f-4e13-9d45-f58775d78bab@suse.com>
-In-Reply-To: <4fefa5cb-462f-4e13-9d45-f58775d78bab@suse.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 6 Jun 2025 05:26:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATQhR9PLSfEZ92FRuD4OGBEk1pk5DUtV4doif9JgUNhnQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvlwxGcsH6fc-dcXHNogSFPZbHaHSA1vg5WXcmspcGkRb9SRl7WuL6pz-s
-Message-ID: <CAK7LNATQhR9PLSfEZ92FRuD4OGBEk1pk5DUtV4doif9JgUNhnQ@mail.gmail.com>
-Subject: Re: [PATCH] module: make __mod_device_table__* symbols static
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, linux-modules@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9f6652c9-d0c2-405c-bdf0-fc4daa017a4d@lucaweiss.eu>
 
-On Wed, Jun 4, 2025 at 5:50=E2=80=AFPM Petr Pavlu <petr.pavlu@suse.com> wro=
-te:
->
-> On 6/2/25 12:55 PM, Masahiro Yamada wrote:
-> > The __mod_device_table__* symbols are only parsed by modpost to generat=
-e
-> > MODULE_ALIAS() entries from MODULE_DEVICE_TABLE().
-> >
-> > Therefore, these symbols do not need to be globally visible, or globall=
-y
-> > unique.
-> >
-> > If they are in the global scope, we would worry about the symbol
-> > uniqueness, but modpost is fine with parsing multiple symbols with the
-> > same name.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
->
-> --
-> Thanks,
-> Petr
->
+On Thu, Jun 05, 2025 at 06:01:07PM +0200, Luca Weiss wrote:
+> Hi Bjorn,
+> 
+> Awesome to see this being cleaned up!
+> 
+> On 05-06-2025 5:23 p.m., Bjorn Andersson wrote:
+> > The change that renamed the driver from "adsp" to "pas" didn't change
+> > any of the implementation. The result is an aesthetic eyesore, and
+> > confusing to many.
+> > 
+> > Conclude the rename of the driver, by updating function, structures and
+> > variable names to match what the driver actually is. The "Hexagon v5" is
+> > also dropped from the name and Kconfig, as this isn't correct either.
+> > 
+> > No functional change.
+> > 
+> > Fixes: 9e004f97161d ("remoteproc: qcom: Rename Hexagon v5 PAS driver")
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> > ---
+> >   drivers/remoteproc/Kconfig          |  11 +-
+> >   drivers/remoteproc/qcom_q6v5_adsp.c |  46 +--
+> 
+> Actually looking through that driver, it's not just adsp-pil but also
+> supports cdsp-pil and wpss-pil, so long-term that should probably be renamed
+> to qcom_q6v5_pil.c? Not for this patch though obviously.
+> 
 
+There's another "convention" at play here, the "pas" refers to the
+secure service doing authentication. The alternative to this is to do
+everything in Linux, which we conveniently refer to (here) as "pil".
 
-Applied to linux-kbuild
+Also, per the commit text the "q6v5" isn't accurate anymore, so perhaps
+this should just be the qcom_pas driver - or the qcom_pil driver.
 
---=20
-Best Regards
-Masahiro Yamada
+I think the change as proposed is a good middle ground, we get things
+cleaned up and aligned without affecting anything outside the
+implementation.
+
+> >   drivers/remoteproc/qcom_q6v5_pas.c  | 617 ++++++++++++++++++------------------
+> >   3 files changed, 334 insertions(+), 340 deletions(-)
+> 
+> <snip>
+> 
+> > diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> > index b306f223127c452f8f2d85aa0fc98db2d684feae..b0fc372ff0a9e032d784b1a4403ffeea5d0f9a00 100644
+> > --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> > +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> > @@ -1,6 +1,6 @@
+> >   // SPDX-License-Identifier: GPL-2.0-only
+> >   /*
+> > - * Qualcomm ADSP/SLPI Peripheral Image Loader for MSM8974 and MSM8996
+> > + * Qualcomm Peripahal Authentication Service remoteproc driver
+> 
+> typo Peripahal
+> 
+
+Thank you
+
+> >    *
+> >    * Copyright (C) 2016 Linaro Ltd
+> >    * Copyright (C) 2014 Sony Mobile Communications AB
+[..]
+> > -static int adsp_unprepare(struct rproc *rproc)
+> > +static int qcom_pas_unprepare(struct rproc *rproc)
+> >   {
+> > -	struct qcom_adsp *adsp = rproc->priv;
+> > +	struct qcom_pas *pas = rproc->priv;
+> >   	/*
+> > -	 * adsp_load() did pass pas_metadata to the SCM driver for storing
+> > +	 * pas_load() did pass pas_metadata to the SCM driver for storing
+> 
+> qcom_pas_load?
+> 
+
+Of course, thanks for spotting those.
+
+[..]
+> > -static const struct of_device_id adsp_of_match[] = {
+> > +static const struct of_device_id qcom_pas_of_match[] = {
+> >   	{ .compatible = "qcom,msm8226-adsp-pil", .data = &msm8996_adsp_resource},
+> >   	{ .compatible = "qcom,msm8953-adsp-pil", .data = &msm8996_adsp_resource},
+> >   	{ .compatible = "qcom,msm8974-adsp-pil", .data = &adsp_resource_init},
+> 
+> Not really for this patch but shouldn't those compatibles also be -pas?
+> 
+
+Per the naming convention later adopted, they should have been "-pas".
+But changing that would break backwards compatibility with exiting DT,
+so we'll leave that as is.
+
+Thanks,
+Bjorn
