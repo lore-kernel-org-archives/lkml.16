@@ -1,133 +1,202 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F9C1BE238
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7251F91F6
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749105443; cv=none; b=n/jGEL7v8pJTKf852axZQNIznfX6Sqz1/MYa5XUx2/ByOW+t77+Pz0BFUiupQYac27vlRVQKKlrPRBP/gizYl1uqnRyNX1A6Ogf0HF6nTbO0ZDIRNH9MiD83VTnPNdoN2AAL6SDQlq5GONfNlmX+0kT/ltsaBFpLCVb+avTL9Sc=
+	t=1749105447; cv=none; b=a148rdOrkjBTOkOKPBTyiizZ6G/USl+wFI7cXMHuItvtYJijO3mPptAj8KQf7H3SRokn4WW5657NeCq4d3BM1Q21OyjfQGG2J84AZL0UaNaqT6XnOMdQR1oaG6Okn6h1wMH4pye16beG+HQFUp70CClxJIQyDZuWuM4RZFUBGTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749105443; c=relaxed/simple;
-	bh=SC5uOR2LzUcO4kdEG48K4T3TVmr8gOGZc2vFzWgfAzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0yX83S7b+kye4j83Fo+AmWkNGfhBynMMTqdiuG/VFj/oF5H/7d6tYgqYlBxQwzl6XjCaTZk+krblBYB//DTZXBAcI6d1iVRP2On+nZKI9+b5kEHFEUPDO3wd3xEI+1umL+KBCWZhYhV9FGzJTVwtIOy6dL4qICAhM/1mq99eo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=foundries.io; spf=pass smtp.mailfrom=foundries.io; dkim=pass (2048-bit key) header.d=foundries.io header.i=@foundries.io header.b=EJRGD/bV; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=foundries.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foundries.io
+	s=arc-20240116; t=1749105447; c=relaxed/simple;
+	bh=rDyOKtCQS8e7aGXgxvChEYdJZqGjA66bV7YpMtMh6dc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=Huj6Kgsnaq2s8uHrqtQ8UiDAr1gFSMvZKqJDcclhPsLrWUFy5+wwMxEX5YzHPBycqKovAddNAT9Gc0bDsgzANtRIt3nTTegmECaevQsAT+H/OSCGag0pL3sCN+yQKZMjAkmqyrJc21BRK5cVUsyhdtTJP/U2oFNGrABqnBm49DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=StpzOx/L; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foundries.io header.i=@foundries.io header.b="EJRGD/bV"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-55324e35f49so639849e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 23:37:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries.io; s=google; t=1749105439; x=1749710239; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kzft8fvBUk0mEm9pC+ysiqHnRwtZTTlz9Fajud+lXJk=;
-        b=EJRGD/bVelkkdClmSgRGyOSyzvbuGUzfJvPzRHOuLDKd7PreoUYTRIDklWjAe/8FNz
-         TixsoZi1cRzRm40tNBefCdJw7ksHfh2vU/qvdIiO+bC1EQvyYuAivwZZCBRJ2zQVf1ip
-         db1TAZLXCylY8eAOBLD/TyCiCdW/AVjo9og4Zn8yQlmWjIiUGwTYLW/B7JfVmv8rmOF0
-         eawTm+MYyM+wAU3p7BAc7mKq+wmyWww/n+xplMPJpguJ8AwdKW67Fsdn/LC8AOAnlt8d
-         /4iYJ8ZIPvRI89l6yqZccwDDeNzDmD9JS1KqJQ+pefDjeC1VSzY1+1GdSJNTNQCl1qfA
-         g2sg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="StpzOx/L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749105444;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qUNsKL2WG//LWRyl0dxuNhJtaytSDeJbo81cMVktrmg=;
+	b=StpzOx/L6dOIWaGYUhrDWtrU/OESGNrt8p8lGXUVMl6PIhdIcLVlyiGWT847MUq4GkmVqU
+	zXWbE1BssilOXbqU7YYf8OCnpg0+7yVD7pLMzvbZCUMdirK/LUFeSmcvg8Rm241UMdQVs7
+	378hBPgQHECP9/c4GZYVACCHjQpczEw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-17-zsS_2yq-NcKggsOKgLqsbg-1; Thu, 05 Jun 2025 02:37:23 -0400
+X-MC-Unique: zsS_2yq-NcKggsOKgLqsbg-1
+X-Mimecast-MFC-AGG-ID: zsS_2yq-NcKggsOKgLqsbg_1749105442
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d64026baso2747655e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 23:37:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749105439; x=1749710239;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1749105442; x=1749710242;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:to:from:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Kzft8fvBUk0mEm9pC+ysiqHnRwtZTTlz9Fajud+lXJk=;
-        b=nlal1YpZ0jPGpF+PmTTj3q5wYAZJjTu5DFTxGeDQPxAsl9+Ra/oY61EkdmbjUtlUB7
-         SdwcNZSkohmGyJQofmwRCImDvrk7K447VRQu2ZKYqkyGTD6VR0NstAvrcSqjnS870T9W
-         24CJ6VCOLzWrFezOz832JtJUk2b34lvTXcjWjih7eR0v5XcBry2dPzfpUzwKhXaBFkwq
-         bCqNmouRaEMek5pAkAQCwCOV3I7M3/YwBrwL2VNOzYxJAkfrVXOImcEciOBSAhlP3P6T
-         GEz3UoolaPPystn+HhKaFAhOfLgdKBuw7NaCPoOUz50eb//B8eiB4gBcLozkb7Ix/wzo
-         df3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWFry0b3r8qaxms+ndv26ReRflwzRTsgEL33ryagT+k9HWEnrW3n8FauGAM9nRBK00JU07Tmza7STFMYAo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+omD3CQKfxneIzwn0KEZNiAVJf8T+Y/waVm4rHAfbJugo9qxl
-	FxzQHlgH4CxaBq/t964g5oVOuhAdV7UUShWi1JoDFdI3buGLQbDROhlfJNoJrtTeTx0=
-X-Gm-Gg: ASbGncuPjZxI1yB47L6e89Xu42ISPUtrcQzOmg1UJBpJ4wxT8K7ts/kHCTkISHokK6j
-	7LZ2mj5SmpFk/OqeIeyXLsG7K6EpHUcW/4qTkDDFfXIQ2FHb+KPhJ+XKuIExqyWjvISX+Uwz0XZ
-	x2XZ3x28Xueyf64k5zqGx/ClUgcs5oyx+Ysj3Mzo1fbaPL56cyRyv+UJ/OwyS6qYNIymokDc+ZH
-	OVjJE4W6dbF6FFXdrjYdeEYT3wjMJgE3SOY1Z7EPO1C+kuQGVd5mdBlzhRJnOGptFqbQV6JgrKf
-	2ABR2iKdDMpWYsz6zMW4xHHUyE/26rcer9Sh3G2sOgC6mY6Y16DxUEYyKy42VgYqiNINKX1fI2q
-	Y3ynxLKFuEc/903RXaHMFiHQ0tCuLQiNvqg==
-X-Google-Smtp-Source: AGHT+IEh5kFBu9DwokZIMmdtqcjl/Iw20bSuedPbGD+ucOARVvJC2ImNqGXKQRyRhDnKRnsBLSyo6Q==
-X-Received: by 2002:a05:6512:b86:b0:553:25b2:357d with SMTP id 2adb3069b0e04-55357bd6f7fmr1435916e87.52.1749105439330;
-        Wed, 04 Jun 2025 23:37:19 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55350cab5b7sm1043831e87.52.2025.06.04.23.37.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 23:37:17 -0700 (PDT)
-Date: Thu, 5 Jun 2025 09:37:16 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@foundries.io>
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc8280xp: Add GPI DMA configuration
-Message-ID: <3vwz6bzllvhtwcfs34ofygayiquxptu467i7hej2potqsss5k2@phxby4uvhiho>
-References: <20250605054208.402581-1-mitltlatltl@gmail.com>
+        bh=qUNsKL2WG//LWRyl0dxuNhJtaytSDeJbo81cMVktrmg=;
+        b=HtdpgTYpARORO5YyqtUUUUX69hlIKml30TJoy5gwGG4mAPnKGvp//vQWxEv9vCjmeV
+         BzrvW90RsNCBWBFwan55B6NXsntgwJIEKx8bKp5bLG0rk+9KRMFKk4yulkK2QkjDVQX5
+         f+Vq3EbhMKWZm4+WHlmGqwYtgO7OBtJzSKE3I7ML/MLyoDaU+ONjBOnjnKtLbD7vvQdK
+         3mnUg5QiK85w7R8kOsutnLE4EoRhVKhHXbco0nOAbDKWvcppDHRaEdetuutLNEvP51ln
+         cEltxyW3KSiePWb5nwC1kX7pypvO72ag/SoJiVUnoq2Mup2ZNY4IqAEn5q8I3NuEpx+T
+         3LxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmC6SPg1O+nxJ/Z5yCt7ikrfHKuyh2u0uqMBQX5eCGCvXCD8S3lgduJSoCpHYpZ9LQuuAZ21KaOoU5aJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWrDXg6b52oof5XSfLl/WPpZjamRFpL2CkgzOa35mu1V4xdnEL
+	9Uj4DBciW6SzhoTf2n3PC48DKIV3vcEc4ibzXtFd0UlMvOc6QfLnL+AHP6avT9a2XHL6DkiHdiS
+	//u7sWrXdXPaGm756Jx1IkBLVHkY9m8LR1BetKddhaQTZKKOKcgDRJKNUp6Vv4ve6jg==
+X-Gm-Gg: ASbGncsZyzKKuh5W15u2aDhI/2shMovJPSQWN6VBhzANyeIg5FUR9MdPAppeLpc8dAV
+	ZArtBCoRaLYtGxO88kR9omYCVpFuAHNc+95kQPRV8+KYUL55IKKaGLwY8TP9PHol/mMTLmc/JR9
+	JXwawIaLgob6LkjLL73YiOH8U/mCZc6FNokKnAa7RKn3gVUBrNH/rxql4Szl7s14b9+6JuUFKbC
+	pwxnHwj5hgVshhBXCTaDA71yFoE9nmmjZqAFFvTCUBvw9kffK/xiFHiFGfpV2SRV4B8c7kG+hws
+	7pOzd2fzyH/HAgZpO7O8c04SS3X1dVn16yOybCu99/tBPayP1sbqK3vHQt134fEJA0ApWCYGWKf
+	REv7jjE1EyTyELPckAMsAiICHBE6AxUj1hIg2
+X-Received: by 2002:a05:600c:8b53:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-451f0a77343mr52623635e9.9.1749105441990;
+        Wed, 04 Jun 2025 23:37:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG+f1lvX+Z3d8WumrJl3Iyi8gGNCfiBGN2gsZh5A6452LXk2A+DQXyVzXvsRVFg/Tior3zQjA==
+X-Received: by 2002:a05:600c:8b53:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-451f0a77343mr52623295e9.9.1749105441591;
+        Wed, 04 Jun 2025 23:37:21 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2? (p200300d82f27ec004f4d0d38ba979aa2.dip0.t-ipconnect.de. [2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451fb1861d5sm7633885e9.17.2025.06.04.23.37.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 23:37:21 -0700 (PDT)
+Message-ID: <b9a43f6d-1865-4074-b91c-a5bd7e10f2a9@redhat.com>
+Date: Thu, 5 Jun 2025 08:37:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605054208.402581-1-mitltlatltl@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [mm?] kernel BUG in try_to_unmap_one (2)
+From: David Hildenbrand <david@redhat.com>
+To: syzbot <syzbot+3b220254df55d8ca8a61@syzkaller.appspotmail.com>,
+ Liam.Howlett@oracle.com, akpm@linux-foundation.org, harry.yoo@oracle.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ lorenzo.stoakes@oracle.com, riel@surriel.com,
+ syzkaller-bugs@googlegroups.com, vbabka@suse.cz, Jens Axboe
+ <axboe@kernel.dk>, Catalin Marinas <catalin.marinas@arm.com>,
+ Jinjiang Tu <tujinjiang@huawei.com>
+References: <68412d57.050a0220.2461cf.000e.GAE@google.com>
+ <4fc2c008-2384-4d94-b1bf-f0a076585a4a@redhat.com>
+ <fda7a3e3-1711-4f1b-a0bb-6a4369aa80ab@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <fda7a3e3-1711-4f1b-a0bb-6a4369aa80ab@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 05, 2025 at 01:42:07PM +0800, Pengyu Luo wrote:
-> SPI on SC8280XP requires DMA (GSI) mode to function properly. Without it,
-> SPI controllers fall back to FIFO mode, which causes:
+On 05.06.25 08:27, David Hildenbrand wrote:
+> On 05.06.25 08:11, David Hildenbrand wrote:
+>> On 05.06.25 07:38, syzbot wrote:
+>>> Hello,
+>>>
+>>> syzbot found the following issue on:
+>>>
+>>> HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
+>>
+>> Hmmm, another very odd page-table mapping related problem on that tree
+>> found on arm64 only:
 > 
-> [    0.901296] geni_spi 898000.spi: error -ENODEV: Failed to get tx DMA ch
-> [    0.901305] geni_spi 898000.spi: FIFO mode disabled, but couldn't get DMA, fall back to FIFO mode
-> ...
-> [   45.605974] goodix-spi-hid spi0.0: SPI transfer timed out
-> [   45.605988] geni_spi 898000.spi: Can't set CS when prev xfer running
-> [   46.621555] spi_master spi0: failed to transfer one message from queue
-> [   46.621568] spi_master spi0: noqueue transfer failed
-> [   46.621577] goodix-spi-hid spi0.0: spi transfer error: -110
-> [   46.621585] goodix-spi-hid spi0.0: probe with driver goodix-spi-hid failed with error -110
+> In this particular reproducer we seem to be having MADV_HUGEPAGE and
+> io_uring_setup() be racing with MADV_HWPOISON, MADV_PAGEOUT and
+> io_uring_register(IORING_REGISTER_BUFFERS).
 > 
-> Therefore, add GPI DMA controller nodes for qup{0,1,2}, and add DMA
-> channels for SPI and I2C, UART is excluded for now, as it does not
-> yet support this mode.
+> I assume the issue is related to MADV_HWPOISON, MADV_PAGEOUT and
+> io_uring_register racing, only. I suspect MADV_HWPOISON is trying to
+> split a THP, while MADV_PAGEOUT tries paging it out.
 > 
-> Note that, since there is no public schematic, this configuration
-> is derived from Windows drivers. The drivers do not expose any DMA
-> channel mask information, so all available channels are enabled.
+> IORING_REGISTER_BUFFERS ends up in
+> io_sqe_buffers_register->io_sqe_buffer_register where we GUP-fast and
+> try coalescing buffers.
 > 
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 368 +++++++++++++++++++++++++
->  1 file changed, 368 insertions(+)
+> And something about THPs is not particularly happy :)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-> index 87555a119..ff93ef837 100644
-> --- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-> @@ -10,6 +10,7 @@
->  #include <dt-bindings/clock/qcom,rpmh.h>
->  #include <dt-bindings/clock/qcom,sc8280xp-camcc.h>
->  #include <dt-bindings/clock/qcom,sc8280xp-lpasscc.h>
-> +#include <dt-bindings/dma/qcom-gpi.h>
->  #include <dt-bindings/interconnect/qcom,osm-l3.h>
->  #include <dt-bindings/interconnect/qcom,sc8280xp.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> @@ -912,6 +913,32 @@ gpu_speed_bin: gpu-speed-bin@18b {
->  			};
->  		};
->  
-> +		gpi_dma2: dma-controller@800000 {
-> +			compatible = "qcom,sc8280xp-gpi-dma", "qcom,sm6350-gpi-dma";
 
-This will cause warnings when validating against DT schema. Please
-extend Documentation/devicetree/bindings/dma/qcom,gpi.yaml and repost
-(as separate patches in a series).
+Not sure if realted to io_uring.
 
+unmap_poisoned_folio() calls try_to_unmap() without TTU_SPLIT_HUGE_PMD.
+
+When called from memory_failure(), we make sure to never call it on a large folio: WARN_ON(folio_test_large(folio));
+
+However, from shrink_folio_list() we might call unmap_poisoned_folio() on a large folio, which doesn't work if it is still PMD-mapped. Maybe passing TTU_SPLIT_HUGE_PMD would fix it.
+
+
+Likely the relevant commit is:
+
+commit 1b0449544c6482179ac84530b61fc192a6527bfd
+Author: Jinjiang Tu <tujinjiang@huawei.com>
+Date:   Tue Mar 18 16:39:39 2025 +0800
+
+     mm/vmscan: don't try to reclaim hwpoison folio
+     
+     Syzkaller reports a bug as follows:
+     
+     Injecting memory failure for pfn 0x18b00e at process virtual address 0x20ffd000
+     Memory failure: 0x18b00e: dirty swapcache page still referenced by 2 users
+     Memory failure: 0x18b00e: recovery action for dirty swapcache page: Failed
+     page: refcount:2 mapcount:0 mapping:0000000000000000 index:0x20ffd pfn:0x18b00e
+     memcg:ffff0000dd6d9000
+     anon flags: 0x5ffffe00482011(locked|dirty|arch_1|swapbacked|hwpoison|node=0|zone=2|lastcpupid=0xfffff)
+     raw: 005ffffe00482011 dead000000000100 dead000000000122 ffff0000e232a7c9
+     raw: 0000000000020ffd 0000000000000000 00000002ffffffff ffff0000dd6d9000
+     page dumped because: VM_BUG_ON_FOLIO(!folio_test_uptodate(folio))
+
+CCing Jinjiang Tu
 
 -- 
-With best wishes
-Dmitry
+Cheers,
+
+David / dhildenb
+
