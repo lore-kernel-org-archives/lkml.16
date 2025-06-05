@@ -1,113 +1,353 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EB027A102
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB48D275869
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749147114; cv=none; b=bsUbk2jq3ikBU40YpmgS2RRhdvpfzPQkVk0x/0ES0+VwIH0eA+wWT7gfpRpTUk1BqhNr6zNdJeUqz2nJCkJVCMbWZ7CLTaDhmWCDKNiREPgfglhr4+eoN2eLC0BHpKuu3WzNyAinJBqoQoS5vK/ZLMUBJmgHypsJT+fW3pSzI7k=
+	t=1749147134; cv=none; b=ucZM/3mLaZCVnlV9x9xWIUkmBUxVbi8cMtV9UhzoHKbGp356WwLeQzvh4bxgEIsSYFzNLwCjvrzRgVtepiZcjsVyJX3eD7uaGq2+Kjc0MCDHwfMMqjQhlq63eu3u7/iWDRQIX3D3c+wvACNg1fIebn11Rca1L9mng8vmepJ6kog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749147114; c=relaxed/simple;
-	bh=rUmXwGQdDxjV+rRFIkStphHB+nxUW5E5U9j4a+aHMAE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mTpmYxVIDAIo7EwfTpHq1rEIytyC/tb2kMSjVHMPGwQPgZ10WMJYl5dPnzCR/+LFIL/pQeS79Jmuc9l/tSOikjNhlux6UDHPvcJ0Y71/NaKUnrnefK9LIN6Wbj6s8qUAtEQPpejBUQc1iEhX/HLlX7yRXQoAOEK51jej8kGwS2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tVz3GuDa; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749147134; c=relaxed/simple;
+	bh=o/4+/BrBzYt4MfBOK4SJQaUMdCnWzmWSBBcwAlfGqzc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iSvYZcYZZjmkvU9LB2SNBeGVpwcmAsm3nXGjU6V11Vf5AzShrc9ek0XJAyD7Y6quCg9Q4daFFvYokSghGFdDNOWplY0QTCYX+/x3652WmysMIvRIqgRipDKqCGYNmvXL48kUH6g6aJaoYO0Z3BYU6Zscq7u2XfknWJec4DJPM/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oGrQd+3p; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tVz3GuDa"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso1462706e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 11:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749147111; x=1749751911; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JqsX8qqbM+TCchaFzPooUts8SMOS7Px5HGH4hYP3O60=;
-        b=tVz3GuDatodyJhRXjdxGMvbHS/lpzZgPvSyyHIfq33wdetoqlDpmNxe/Echk9jXkwk
-         q++nEAUfSUphsVHbL9IxcYLW62ZPzWRT4wzucbi6SH3zcFgMGwWLLvIMy4nUXvcAeUzY
-         iHX9SHm+g68yZML/eA3slOhTmJKpQuueUXVLf8AoQkafO9bmMukbLbHeUpb7ydC6LtTx
-         AaipKOuNgzDUnAG0c8G10dKg54iJq6XZe7yegWNOVKd08eRo8xS11POaaOpTAkeZbXiU
-         wfoGYHy8AuQMNNUABfH7Jb0Qx5JHXlT5mkaES748N338qla63Iw5kBq288AQwBfM1Bto
-         l3uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749147111; x=1749751911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JqsX8qqbM+TCchaFzPooUts8SMOS7Px5HGH4hYP3O60=;
-        b=vxNc86L1v16eP9QibabQg/TAMoq9X/F/rVxbOdsJzPmCX18ptXPXR5hYtPS2BIF4cD
-         vkYGx4RoIHLZ88RaB9R0YP5FpiEC1sT36ZGh0zXb748ZakCaLIWkIADszpLZfgB1G671
-         Lj5/cDaEmsxcNDI8tol0UHd3tgiGwyoud2JWq45k+DdppthV4133WmExyjLheRkZJyKL
-         HKnMl5r4h8ZdtSsPMlXYmq3y5BlqU3Ri6CZ8pnOfOCzuek40+hG+HRDGiCpqPwsk7H+b
-         N2CtZVtFthq0J2d7Drku0Epa6zzZWOyaN7ZqS0IYg1ZHcAoXuHCs9REJTSCjO+Sdb5Ql
-         WCQg==
-X-Gm-Message-State: AOJu0YwJ5oFz3gOcA88cnZyguKziHhaFazmUeKnUTrffiVPwmeGqFN43
-	ZeCbTK+VtPpj+gKlxfbGiUVmdNzGF8F/4HHMcvpGreJH0JrogXCKxO43mLZ5A5LVz9NpcRrzO7F
-	jKXHI4YU/1PdKyM1UqBC5Xmd2HX5wrx3hqGcTOYNv2yEP4q9fr7YVNz+Nsg==
-X-Gm-Gg: ASbGncsv/Jo7Qq/2TMtec2+5ClYxTCHuW/OIZoYWbv3xrNJfvHvGpggUBFk+hc69+Qp
-	682D/uFipyLMPf4iARM8AfOjSXxoaUsLmaHmG4y3zBzyyKjC7QD+IQT2WBTScyZ5OEjHA0F/sJp
-	q9htrU08AO1vUUy6pkBig9S4GLWr/Ctuap46IlsGWRg4FUvsv/nrThLXTs5TCydnxoMCOEWJXA
-X-Google-Smtp-Source: AGHT+IFzi4xrYNAH071GgMe065FQ2P3SE4t76MHGyx7VbRSDC8qVEB+1BKPEvbx0ydELHa31Zii4Zs/czWY+H7Bi1KY=
-X-Received: by 2002:a05:6512:304b:b0:553:23f9:bb3b with SMTP id
- 2adb3069b0e04-55366c40efamr31505e87.49.1749147110524; Thu, 05 Jun 2025
- 11:11:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oGrQd+3p"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 555IBWHL4149014;
+	Thu, 5 Jun 2025 13:11:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749147092;
+	bh=ZzS1C5EvMT0MXg6EMhBdqMlyprF5jw+kGcG1nrN8/TI=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=oGrQd+3pNARA6+k/hmqCeS8+r8m2yRrpoqV4Q4ITGuSDAMxfckwYpHSxgleCR7fDk
+	 iyhAzea31K2E1n00JOdmffcKv+63NQKkt5R2+DXW7PI2f6S9MZbkwxKrRZs8bzvit6
+	 onHdWDtH5TgAjln1KxJktBhyPtVVaMTzEGnuU/7Y=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 555IBWWr2938539
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 5 Jun 2025 13:11:32 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 5
+ Jun 2025 13:11:31 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 5 Jun 2025 13:11:31 -0500
+Received: from [10.249.137.120] ([10.249.137.120])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 555IBJYT4061280;
+	Thu, 5 Jun 2025 13:11:21 -0500
+Message-ID: <75d3df52-c6b0-4235-b81f-288009a3c3a7@ti.com>
+Date: Thu, 5 Jun 2025 23:41:18 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604232550.40491-1-yury.norov@gmail.com> <20250604232550.40491-3-yury.norov@gmail.com>
-In-Reply-To: <20250604232550.40491-3-yury.norov@gmail.com>
-From: John Stultz <jstultz@google.com>
-Date: Thu, 5 Jun 2025 11:11:38 -0700
-X-Gm-Features: AX0GCFsdjHpjYmvYs_jT3o7oe3wxiPx0OI8DSbCrTtkDaLaC4BErI1mG-0dqcFc
-Message-ID: <CANDhNCqbJZejdVqDJ8BnBstq1FAk5AiAvAo7sRnrKC41mCZ5nQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] clocksource: fix opencoded cpumask_next_wrap()
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Stephen Boyd <sboyd@kernel.org>
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH v13 0/4] drm/atomic-helper: Re-order CRTC and Bridge ops
+To: Aradhya Bhatia <aradhya.bhatia@linux.dev>,
+        Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej
+ Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+CC: DRI Development List <dri-devel@lists.freedesktop.org>,
+        Linux Kernel List
+	<linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>, Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Jayesh Choudhary <j-choudhary@ti.com>,
+        Alexander Sverdlin <alexander.sverdlin@siemens.com>
+References: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
+Content-Language: en-US
+From: "Thakkar, Devarsh" <devarsht@ti.com>
+In-Reply-To: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Jun 4, 2025 at 4:25=E2=80=AFPM Yury Norov <yury.norov@gmail.com> wr=
-ote:
->
-> From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
->
-> cpumask_next_wrap() is more verbose and efficient comparing to
-> cpumask_next() followed by cpumask_first().
->
-> Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+Hello Aradhya,
+
+Thanks for the patch series.
+
+On 6/5/2025 10:45 PM, Aradhya Bhatia wrote:
+> Hello all,
+> 
+> This series re-orders the sequences in which the drm CRTC and the drm
+> Bridge get enabled and disabled with respect to each other.
+> 
+> The bridge pre_enable calls have been shifted before the crtc_enable and
+> the bridge post_disable calls have been shifted after the crtc_disable.
+> 
+> This has been done as per the definition of bridge pre_enable.
+> "The display pipe (i.e. clocks and timing signals) feeding this bridge will
+> not yet be running when this callback is called".
+> 
+> Since CRTC is also a source feeding the bridge, it should not be enabled
+> before the bridges in the pipeline are pre_enabled.
+> 
+> The original sequence. for display pipe enable looks like:
+> 
+>       crtc_enable
+> 
+>       bridge[n]_pre_enable
+>       ...
+>       bridge[1]_pre_enable
+> 
+>       encoder_enable
+> 
+>       bridge[1]_enable
+>       ...
+>       bridge[n]_enable
+> 
+> The sequence of enable after this patch-set will look like:
+> 
+>       bridge[n]_pre_enable
+>       ...
+>       bridge[1]_pre_enable
+> 
+>       crtc_enable
+>       encoder_enable
+> 
+>       bridge[1]_enable
+>       ...
+>       bridge[n]_enable
+> 
+> 
+> For the disable sequence, this is what the original looks like:
+> 
+>       bridge[n]_disable
+>       ...
+>       bridge[1]_disable
+> 
+>       encoder_disable
+> 
+>       bridge[1]_post_disable
+>       ...
+>       bridge[n]_post_disable
+> 
+>       crtc_disable
+> 	        
+> This is what the disable sequence will be, after this series of patches:
+> 
+>       bridge[n]_disable
+>       ...
+>       bridge[1]_disable
+> 
+>       encoder_disable
+>       crtc_disable
+> 
+>       bridge[1]_post_disable
+>       ...
+>       bridge[n]_post_disable
+> 
+> This series further updates the bridge API definitions to accurately
+> reflect the updated scenario.
+> 
+> This series is a subset of its v11[0] which had 14 patches in the revision.
+> 9 of those 14 patches (which were specific to the cdns-dsi bridge driver)
+> were merged[1].
+> 
+> Regards
+> Aradhya
+> 
 > ---
->  kernel/time/clocksource.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-> index 2e24ce884272..0aef0e349e49 100644
-> --- a/kernel/time/clocksource.c
-> +++ b/kernel/time/clocksource.c
-> @@ -584,9 +584,7 @@ static void clocksource_watchdog(struct timer_list *u=
-nused)
->          * Cycle through CPUs to check if the CPUs stay synchronized
->          * to each other.
->          */
-> -       next_cpu =3D cpumask_next(raw_smp_processor_id(), cpu_online_mask=
-);
-> -       if (next_cpu >=3D nr_cpu_ids)
-> -               next_cpu =3D cpumask_first(cpu_online_mask);
-> +       next_cpu =3D cpumask_next_wrap(raw_smp_processor_id(), cpu_online=
-_mask);
->
+> 
+> References:
+> [0]: Revision v11 of this series.
+> https://lore.kernel.org/all/20250329113925.68204-1-aradhya.bhatia@linux.dev/
+> 
+> [1]: Patches 1 through 9 getting merged.
+> https://lore.kernel.org/all/174335361171.2556605.12634785416741695829.b4-ty@oss.qualcomm.com/
+> 
+> 
+> ---
+> Change Log:
+> 
+>   - Changes in v13:
+>     - Style  changes in patch 2/4. (Thomas)
+>     - Squash patch v12:4/5 into v12:3/5, which is now v13:3/4. (Thomas)
+>     - Add R-b tags from Thomas Zimmermann in patches 1-3.
+>     - Rebase onto latest drm-misc-next.
+> 
+>   - Changes in v12:
+>     - Drop patches 1 through 9 since they have been merged.
+>     - Rebase onto newer drm-misc-next.
+>     - Re-word the patch 3/4, ("drm/bridge: Update the bridge enable/disable doc")
+>       to make it more readable.
+> 
+>   - Changes in v11:
+>     - Add patch v11:13/14 ("drm/bridge: Update the bridge enable/disable doc"),
+>       that updates the documentation about the order of the various bridge
+>       enable/disable hooks being called wrt the CRTC and encoder hooks.
+>     - Rebase on drm-misc-next instead of linux-next.
+>       As part of rebase, accommodate the following change:
+>       - Change patch v10:08/13 ("drm/bridge: cdns-dsi: Support atomic bridge
+>         APIs") to v11:08/13 ("drm/bridge: cdns-dsi: Add input format
+>         negotiation"), since Maxime has already updated the bridge hooks to
+>         their atomic versions in commit 68c98e227a96 ("drm/bridge: cdns-csi:
+>         Switch to atomic helpers").
+>         My new patch now only adds the format negotiation hook for the cdns-dsi.
+>         (Note: Since the new patch is now only a subset of the old one, without
+>         any change in logic, I decided to carry forward the R-b and T-b tags.)
+>     - Add Alexander Sverdlin's T-b in patches 10, 11, 12.
+> 
+>   - Changes in v10:
+>     - Rebase on latest linux-next (next-20250226).
+>     - As part of rebase, update the patches to accommodate a couple of
+>       widespread changes in DRM Framework -
+>         - All the ("drm/atomic-helper: Change parameter name of ***") commits.
+>         - All the ("drm/bridge: Pass full state to ***") commits.
+>       (These updates are only trivial substitutions.)
+>     - Add Tomi Valkeinen's T-b tags in all the patches.
+> 
+>   - Changes in v9:
+>     - Fix the oops in 11/13 - where the encoder_bridge_enable _was_ pre_enabling
+>       the bridges instead of enabling.
+>     - Add the following tags:
+>       - Dmitry Baryshkov's R-b in patches 2, 10, 11, and A-b in patch 12.
+>       - Jayesh Choudhary's R-b in patch 12.
+>       - Tomi Valkeinen's R-b in patches 2, 10, 11, 12.
+> 
+>   - Changes in v8:
+>     - Move the phy de-initialization to bridge post_disable() instead of bridge
+>       disable() in patch-3.
+>     - Copy the private bridge state (dsi_cfg), in addition to the bridge_state,
+>       in patch-9.
+>     - Split patch v7:11/12 into three patches, v8:{10,11,12}/13, to separate out
+>       different refactorings into different patches, and improve bisectability.
+>     - Move patch v7:02/12 down to v8:06/12, to keep the initial patches for
+>       fixes only.
+>     - Drop patch v7:04/12 as it doesn't become relevant until patch v7:12/12.
+>     - Add R-b tags of Dmitry Baryshkov in patch-9 and patch-3, and of
+>       Tomi Valkeinen in patch-9.
+>    
+>   - Changes in v7:
+>     - phy_init()/exit() were called from the PM path in v6. Change it back to
+>       the bridge enable/disable path in patch-3, so that the phy_init() can go
+>       back to being called after D-Phy reset assert.
+>     - Reword commit text in patch-5 to explain the need of the fix.
+>     - Drop the stray code in patch-10.
+>     - Add R-b tag of Dmitry Baryshkov in patch-6.
+> 
+>   - Changes in v6:
+>     - Reword patch 3 to better explain the fixes around phy de-init.
+>     - Fix the Lane ready timeout condition in patch 7.
+>     - Fix the dsi _bridge_atomic_check() implementation by adding a new
+>       bridge state structure in patch 10.
+>     - Rework and combine patches v5:11/13 and v5:12/13 to v6:11/12.
+>     - Generate the patches of these series using the "patience" algorithm.
+>       Note: All patches, except v6:11/12, *do not* differ from their default
+>       (greedy) algorithm variants.
+>       For patch 11, the patience algorithm significantly improves the readability.
+>     - Rename and move the Bridge enable/disable enums from public to private
+>       in patch 11.
+>     - Add R-b tags of Tomi Valkeinen in patch 6, and Dmitry Baryshkov in patch 2.
+> 
+>   - Changes in v5:
+>     - Fix subject and description in patch 1/13.
+>     - Add patch to check the return value of
+>       phy_mipi_dphy_get_default_config() (patch: 6/13).
+>     - Change the Clk and Data Lane ready timeout from forever to 5s.
+>     - Print an error instead of calling WARN_ON_ONCE in patch 7/13.
+>     - Drop patch v4-07/11: "drm/bridge: cdns-dsi: Reset the DCS write FIFO".
+>       There has been some inconsistencies found with this patch upon further
+>       testing. This patch was being used to enable a DSI panel based on ILITEK
+>       ILI9881C bridge. This will be debugged separately.
+>     - Add patch to move the DSI mode check from _atomic_enable() to
+>       _atomic_check() (patch: 10/13).
+>     - Split patch v4-10/11 into 2 patches - 11/13 and 12/13.
+>       Patch 11/13 separates out the Encoder-Bridge operations into a helper
+>       function *without* changing the logic. Patch 12/13 then changes the order
+>       of the encoder-bridge operations as was intended in the original patch.
+>     - Add detailed comment for patch 13/13.
+>     - Add Tomi Valkeinen's R-b in patches 1, 2, 4, 5, 7, 8, 9, 13.
+> 
+>   - Changes in v4:
+>     - Add new patch, "drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()",
+>       to update to an auto-managed way of finding next bridge in the chain.
+>     - Drop patch "drm/bridge: cdns-dsi: Fix the phy_initialized variable" and
+>       add "drm/bridge: cdns-dsi: Fix Phy _init() and _exit()" that properly
+>       de-initializes the Phy and maintains the initialization state.
+>     - Reword patch "drm/bridge: cdns-dsi: Reset the DCS write FIFO" to explain
+>       the HW concerns better.
+>     - Add R-b tag from Dmitry Baryshkov for patches 1/11 and 8/11.
+> 
+>   - Changes in v3:
+>     - Reword the commit message for patch "drm/bridge: cdns-dsi: Fix OF node
+>       pointer".
+>     - Add a new helper API to figure out DSI host input pixel format
+>       in patch "drm/mipi-dsi: Add helper to find input format".
+>     - Use a common function for bridge pre-enable and enable, and bridge disable
+>       and post-disable, to avoid code duplication.
+>     - Add T-b tag from Dominik Haller in patch 5/10. (Missed to add it in v2).
+>     - Add R-b tag from Dmitry Baryshkov for patch 8/10.
+> 
+>   - Changes in v2:
+>     - Drop patch "drm/tidss: Add CRTC mode_fixup"
+>     - Split patch "drm/bridge: cdns-dsi: Fix minor bugs" into 4 separate ones
+>     - Drop support for early_enable/late_disable APIs and instead re-order the
+>       pre_enable / post_disable APIs to be called before / after crtc_enable /
+>       crtc_disable.
+>     - Drop support for early_enable/late_disable in cdns-dsi and use
+>       pre_enable/post_disable APIs instead to do bridge enable/disable.
+> 
+> 
+> Previous versions:
+> 
+> v1:  https://lore.kernel.org/all/20240511153051.1355825-1-a-bhatia1@ti.com/
+> v2:  https://lore.kernel.org/all/20240530093621.1925863-1-a-bhatia1@ti.com/
+> v3:  https://lore.kernel.org/all/20240617105311.1587489-1-a-bhatia1@ti.com/
+> v4:  https://lore.kernel.org/all/20240622110929.3115714-1-a-bhatia1@ti.com/
+> v5:  https://lore.kernel.org/all/20241019195411.266860-1-aradhya.bhatia@linux.dev/
+> v6:  https://lore.kernel.org/all/20250111192738.308889-1-aradhya.bhatia@linux.dev/
+> v7:  https://lore.kernel.org/all/20250114055626.18816-1-aradhya.bhatia@linux.dev/
+> v8:  https://lore.kernel.org/all/20250126191551.741957-1-aradhya.bhatia@linux.dev/
+> v9:  https://lore.kernel.org/all/20250209121032.32655-1-aradhya.bhatia@linux.dev/
+> v10: https://lore.kernel.org/all/20250226155228.564289-1-aradhya.bhatia@linux.dev/
+> v11: https://lore.kernel.org/all/20250329113925.68204-1-aradhya.bhatia@linux.dev/
+> v12: https://lore.kernel.org/all/20250406131642.171240-1-aradhya.bhatia@linux.dev/
+> 
+> ---
+> 
+> Aradhya Bhatia (4):
+>   drm/atomic-helper: Refactor crtc & encoder-bridge op loops into
+>     separate functions
+>   drm/atomic-helper: Separate out bridge pre_enable/post_disable from
+>     enable/disable
+>   drm/atomic-helper: Re-order bridge chain pre-enable and post-disable
+>   drm/bridge: cdns-dsi: Use pre_enable/post_disable to enable/disable
+> 
 
-This looks ok to me. The only nit is that often folks like to see the
-$Subject line look like:
-  $topic: Capitalized description.
+For the series,
+Tested-by: Devarsh Thakkar <devarsht@ti.com>
 
-So for this one:
-  clocksource: Fix opencoded cpumask_next_wrap()
+Regards
+Devarsh
 
-Acked-by: John Stultz <jstultz@google.com>
-thanks
--john
+>  .../gpu/drm/bridge/cadence/cdns-dsi-core.c    |  64 +++--
+>  drivers/gpu/drm/drm_atomic_helper.c           | 160 +++++++++--
+>  include/drm/drm_bridge.h                      | 249 +++++++++++++-----
+>  3 files changed, 355 insertions(+), 118 deletions(-)
+> 
+> 
+> base-commit: 0b3d99425891e3c4a87259afb88fbd1168dc7707
+
