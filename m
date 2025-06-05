@@ -1,577 +1,204 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2124.outbound.protection.outlook.com [40.107.223.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2ECC2777F1
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749145817; cv=none; b=I2vHM3Ja9qN4M4c4Os+iybuCxqBL4nFC8iNc7s0dEcWVAYtTFsuAV9IeGZ5zUh7HGHWHMM8xeS5o8u41UP1dYyAPSERkrHl1DmHMzui8B6DQ1ZowRu+X4z4Q2l+RRx2xzHyQYrz+yQ4cMC1MyYv40z/z+MonWaOteKJxiQrvksE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749145817; c=relaxed/simple;
-	bh=iHQF4Dourp1B1nMiwyaRmIVLvNsBf3nWKP7wfNzjNHo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZPngZDXIY9dJryJBzSQghU3vKzgvZ2E92TuLIKgJFkoU7OesR4U8gZCojM0x05OFkz2F6d8T4AQbGvk0C7X6/x5nF94ilJ1KCd3mvbUn7ZfVtOA6ZVf7VDThpcflvsJ1/9NgbWtwtv8MfbEF2c8UdzYoiB8RchP/3QTC49aZJ90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=01L2N+HS; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CBB1DFF8
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749145866; cv=fail; b=XUeQkeGBLZ19FBIuKsB10kYG9kHr9eGM4XfFOUqcXDmkPGS4/3O+jwxm0szxe4b9o5jPTjK0pk7Lw4U2GDvKwe5V9Fg0a18gIGKezI2oHUuv9l3LHAOs0+SDd6UM0AKIywj9Zd8onKJ0etRYecYSVTdJB1CD34rapW7xIEKXSZQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749145866; c=relaxed/simple;
+	bh=2p8db8iDxIIDMWLSvAlshHizTE3cYvOvxRseGUiTujo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Y+huhL1CN2Q6sMXn4WbT54CEvE3/HmNdF5q+Da2J362JC3NKkAjTtB3pCihAtpZM43prq3cy8wTQyvbeAe34CL1A+J1JXYeYx9ZwnAuDnphjqMpwe38qvLNcie9QdZ0SRyI+o8/GHygrjheoxm6xaobfoo9PCF+GBhP6zN6FH2E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=in-advantage.com; spf=pass smtp.mailfrom=in-advantage.com; dkim=pass (1024-bit key) header.d=inadvantage.onmicrosoft.com header.i=@inadvantage.onmicrosoft.com header.b=nyJYQxeu; arc=fail smtp.client-ip=40.107.223.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=in-advantage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=in-advantage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="01L2N+HS"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-312eaf676b3so1708917a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:50:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=inadvantage.onmicrosoft.com header.i=@inadvantage.onmicrosoft.com header.b="nyJYQxeu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IZIKbz8BI3JpAZ8tXcr9rluQZ5tLwdVMEEzSmsekMtI58dmZlsv1m8rEDBHu7raTaa4009B1rzt5Xp6VlpnQoOUFs2QreAMDkv3ymeQER32Oiwhw5ju2X+nxWQ5zwZd8gwo/SGzrXMLWdJxwmb/BFBxcA9jHmNiRc5d6dfVCoehZMw524Yh2hw3DayEWUz8hA039SDJ6Iq1uC0iOHukifU2mA7Ae1pWn0XWvAIevbHVI4WgAJw1EpBoZ30IwVwiq1ofzskxYPforpqR7b6awMeD4U+OtOO14k19TlYAHUWn1WNxBbrFVb6d7hOsq8EKI13v+Vgj+A5PrPMSr6/OgOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tAqmykJ4B/SzyPfzAgRfHVxQpzh9cJqNjTQg84HTscQ=;
+ b=eTQsAAijvaMi2MlpVXlrDCYxQYEG5wlA0CCOHlGxnHdlncoTqUbPgKP99kWYT4GF7svzi9WChEiE3ZiFlJ64TCIARUjRR0Q42Z61wplsgiRIo4RBaAR1fgefvvko8OFfI6z1FACoPeyz3qII1+4eYv3R6dPqbkSAnfeBfcT6LLwwHNm8qluAlNkgCPAlYSEPQuMRbyOCfT+pCh/uCzEkNlGF1ssL8STtt35M4JCeACergVu7SMg1z2Ksz/4A4Q74MmSmxamOOOqJcmWfsx/anckynr+3mC99opLBPT4qPcsV4ksdgskIgqquXAraKDhBKXrKHj3f+/d16w1ITlig+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=in-advantage.com; dmarc=pass action=none
+ header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749145814; x=1749750614; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hu5vz5+P98piBMEjaLWv8oEfWhjCynYV2VVURu/d67g=;
-        b=01L2N+HS03dAIGmCDJxyRPP2Vi2xouDjtebTQkGLY2tfCdDu9W0aLeEfvHe/0lShWP
-         jZ0pbl6mzJA4RGl+atsayeFmttW7lGiY3oKWwYH9FHUWKH4/QWPdETbsgrAT2GejWknN
-         5pbBNnEBuJvnz+hOYIRBc/xuvw/Mpl9qy0rSOEbISRFa195x+h3kdsEV7Je9GIRJCw0q
-         r1R8IMWP2Onyf1ZFrTYTaty1SM9xgRuaZRbX/MVp/5IYCPRGVpLg8TtBC9fJAeKbRT/C
-         /RRZnowU0P8++IgpWqvVTSKhnGP4Xz1mhdN6R1SsIThjS4W2GmO1iRMYh0CXpZn/nlOG
-         JlsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749145814; x=1749750614;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hu5vz5+P98piBMEjaLWv8oEfWhjCynYV2VVURu/d67g=;
-        b=pnvzaPIBHxSUicc4dGwS//1jEy6W6SSqCpNCRRZYewjRx9AMDh9OM/1xIreOJfaVTb
-         9Vegx13vb+gnVDwkPr8xoTj8CU/F4NtRm/hYSzl77VsKMUWlrGTmF3B1Y+UanYAtR1DA
-         VA0n2FfiF/mc+sxy55NLGqkGXL8SqOV9OhfYUAov/grPq9v+I9fn1JjTO8jQFIdwoLzO
-         kXoHUVj4Cq7EP/6iey+Byj+4oSDyyhGZ0yQ161wlxcwpFLCJBwjaCHbArnJ1STMLWo/I
-         vjhwJCyDUqYo9ZYch02JRgaGw/HaLvVqFx12iVcijxrzNivVTLnkORffAZ885D+93pOj
-         z7Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCVu8hWQhzcbsk2r4It1VrPZwXc4lTkCYAG2AhKhpkHXib+056eJ+Efi+W/ENPh1Ie7DM1jXaxSMwKEiVHo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVTi++eABjb+UtR3/46ORkeryVCbXRkmgwz9dATUnWaQ8iFyzj
-	3ZMO4zeh27ZK8kFetgVcd/nrHQLV6DfMpsIQ7ZiPsfcDI1hl/C4ECOVsneeOpWcqDsHhcXmqL6a
-	RGzvKCnH+alEm+z8uNChayxlM6w==
-X-Google-Smtp-Source: AGHT+IHK6zVUSY7vSWVpyGjXKfRpbP1oaw/sp3io8k5QV/4JgWT1gfwkZ+HsH1HbzqeLOACNzC0fcp9+sUgYbJaoAA==
-X-Received: from pjbmd8.prod.google.com ([2002:a17:90b:23c8:b0:313:274d:3007])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3950:b0:311:c970:c9c0 with SMTP id 98e67ed59e1d1-31347682102mr644405a91.22.1749145813894;
- Thu, 05 Jun 2025 10:50:13 -0700 (PDT)
-Date: Thu, 05 Jun 2025 10:50:12 -0700
-In-Reply-To: <aDU/0+XLZKv5kae7@yzhao56-desk.sh.intel.com>
+ d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tAqmykJ4B/SzyPfzAgRfHVxQpzh9cJqNjTQg84HTscQ=;
+ b=nyJYQxeuSscE3mRY4YDNuo897kzT0/iI2AASUDTY53gpzXU957+WMmnnqXpzIN/TcWKoyZ1W2+adbfvLOQ4rfUFBJ+uVBorTasa6GH53vX1Rfk3gMmAR9TPgD2ysrwuEIlxyiUoXb64NSsk8Dr1MiiAA9lPapbKsUUHe1ntNj8Q=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=in-advantage.com;
+Received: from DS0PR10MB6974.namprd10.prod.outlook.com (2603:10b6:8:148::12)
+ by SJ0PR10MB4414.namprd10.prod.outlook.com (2603:10b6:a03:2d0::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.21; Thu, 5 Jun
+ 2025 17:50:59 +0000
+Received: from DS0PR10MB6974.namprd10.prod.outlook.com
+ ([fe80::7603:d234:e4ab:3fea]) by DS0PR10MB6974.namprd10.prod.outlook.com
+ ([fe80::7603:d234:e4ab:3fea%5]) with mapi id 15.20.8813.020; Thu, 5 Jun 2025
+ 17:50:59 +0000
+Date: Thu, 5 Jun 2025 12:50:56 -0500
+From: Colin Foster <colin.foster@in-advantage.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Subject: Re: Crash when user space allocates non-highmem memory
+Message-ID: <aEHZAGThzCdvvF3O@colin-ia-desktop>
+References: <aDYXQDdT3dTodTlq@colin-ia-desktop>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDYXQDdT3dTodTlq@colin-ia-desktop>
+X-ClientProxiedBy: BL1P222CA0017.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c7::22) To DS0PR10MB6974.namprd10.prod.outlook.com
+ (2603:10b6:8:148::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
- <aDU/0+XLZKv5kae7@yzhao56-desk.sh.intel.com>
-Message-ID: <diqzy0u6hycr.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 38/51] KVM: guest_memfd: Split allocator pages for
- guest_memfd use
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB6974:EE_|SJ0PR10MB4414:EE_
+X-MS-Office365-Filtering-Correlation-Id: f90ffb0b-d543-4a34-a8ca-08dda45987cb
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7s2YWU4BXQUYqsFX8aN7cR2TL6qi7QTYOTiaWjze4cWXXAxoYcsjU3DZgMX0?=
+ =?us-ascii?Q?hL7TKZtasT6mt3w3nirGJC7OpUwu3h4i8+m/6BHKDo3dFHwrdGjMeuaiWFC9?=
+ =?us-ascii?Q?TiiIIIh4pv4pxn3o0gPJMKaUPKWOcn3EF7CTD5d7B3QEhk8h8w47nB+/FmpJ?=
+ =?us-ascii?Q?RWIu+ugihWtK7KobkqI9ZnBNyAgcAS2j41zAW8SaX+np7P/7g7a3fiilVGsH?=
+ =?us-ascii?Q?Em4I/ZwxlEpFk3y2RTRQSZpXjUE7vEbDoQnjLPbT8eDYntGdlO25yKDknRVh?=
+ =?us-ascii?Q?JezOGBGtd5dNy7QKLx6dHPBgXoKG3IOAkaBHdaRRFpmugFlDiM0v5fdT5V4D?=
+ =?us-ascii?Q?bupna24uqVr3phUP7Eq9TBfUD3OqFQ3x8MFSUNLCOogZWl5UCcvG6Crfu7YY?=
+ =?us-ascii?Q?oA+ChLslD8bcNuVTb6cizixXxzo2s2mp+JRHOcAR3S53qVa6HQUVJ2BU8dvU?=
+ =?us-ascii?Q?96RZEN6tfzmtgkJ681hISxaBz+hFDb1KXcqKS/NiSh6wp6rPDEsT+aiV+pDB?=
+ =?us-ascii?Q?HtfZWDBZZMe5CKaEkemxjAFR0Q5EC1cyoe7w2rs3sZPX3GkZl60ufGZnwRw8?=
+ =?us-ascii?Q?YJgc5nGSH53D7yXbEzoFrhtSzAkm0ACVRNPfwrw1r7Hbm5y4FjJyvHM8eAB4?=
+ =?us-ascii?Q?ZDmhSDQ0NPqxM/6kEqCL5wWA9hY8ZTKPoCExMOH9asOwQg4orIfhQX53s7gr?=
+ =?us-ascii?Q?+7BtY93KKm3sX+x5P4WwsSU3DGLEkqCdENQAUwR6eHvfubjB3Bj9FDQxoAWE?=
+ =?us-ascii?Q?T/b+zMPogNd4K4+ZnF3MSZBj7K96Q+rHR6XY/bUqCqInwiaBBgvjVcVt6XVX?=
+ =?us-ascii?Q?b2eUhVnggGNV0f9iCt/jsd6Jil+rIxVwek4/oOp5XoM4OffIdCWUn/MmCpwl?=
+ =?us-ascii?Q?J8MacTXWMkOsbUtGp2Gb16ctq1gJWWm3BgNTguQhQChsZTZDYW14cBsOeHlL?=
+ =?us-ascii?Q?jX/oGlOOybN446tH201sRbBxT3SzF+gV2EWrm3KTBB94rZ02vKat74Q3XcpK?=
+ =?us-ascii?Q?1XBiJU49YKBnV02a+oq/eJV5NPu6qEsVwBxqL5X8cUuEWizU9H23u4zd+RDM?=
+ =?us-ascii?Q?3VKOdxEmCD88I8VZgvIxanor9jxkvmWL8uAVeY0ofN8UtPnZwFZ9kjY2ep3M?=
+ =?us-ascii?Q?1TD3Xh92valowx66EaTHpmJV1rgi7HTwtThoGM+AZJolgz+ZeKR6s6tNAEtr?=
+ =?us-ascii?Q?13QHt7mPCFQC3/RbONClSAp8DL53J9laolfEKBlbMz+mSYWaIAHBMq0fEk8z?=
+ =?us-ascii?Q?+rWAt94xTWRHoNgo4lET+D0eh0EKCU332n0QjqLMssz+jP6fxXmTdSWXTjY4?=
+ =?us-ascii?Q?Ep0uGmdjagxN7bYreDUXnJxxivm06G2fAYe6XMUYEvk9Jrqs+DdjDWI60vAL?=
+ =?us-ascii?Q?8he2Z9pPQNQ/wACiWNy91NHIj654cTryPTsppsU1n7olqAygkW1by+hYor1r?=
+ =?us-ascii?Q?dOQJztQjXcY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB6974.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Dek5Kw2f8spY/NJNSZZF4U0ZJzkK/Px+58/3p70pTc/5+InfcKM4GxFMYm/J?=
+ =?us-ascii?Q?mEmyRC0lm9DUJiY4z93EEXZdRfn6LETRYdR9MQ6TztHFZ7IPeUHIxn9mVbgR?=
+ =?us-ascii?Q?a80kCz9cBq04G3eHnYmP490JZHqV0Zbwih6JtdVhFtp9lhJvf1E0DASevxO2?=
+ =?us-ascii?Q?Nh+TM9s2LhZzmGhm36Je/+6cvEkQSWj+BF4IQaqOejsuHYLdYbvX7o3+D5NZ?=
+ =?us-ascii?Q?lGFqgLpARrv4C7HIfH9Ngf6r86bc4zqxag1/z7rXe8QcRA0i9rRReCrDJvTi?=
+ =?us-ascii?Q?C2pClrlFQULmp+qd8bxc7vXA1QuEAeMAc27KdGcSyQMI1lZmb75aviMsAdR/?=
+ =?us-ascii?Q?nltZIYvloOJkyBU96U/10fUMSSds4Bg1YBApx9PilxEegL1VpfmoNPZcDGMu?=
+ =?us-ascii?Q?JRM3Dtg6elSZHOmytkZIfsoVyhETbOAiJH7mLE1opKHfipm+LcCpWgRaTFm8?=
+ =?us-ascii?Q?aVjJlNzyxVtHhAyO/RNf5H0dcQ3lQwIEmZ55mSGRWuxxWLrUwC3j74q9/XHX?=
+ =?us-ascii?Q?HSvrsJCNJY4rlDICpR3VqN1v6IMiFPRwFNWsgLQl13A5tCjCQ1Cqchk2zjwY?=
+ =?us-ascii?Q?agi1HCpHi5gi1GX/G1KpthMb6UrCkftDbs12CT2uGgnFsWvvLYAwsoUwRXGx?=
+ =?us-ascii?Q?q8MGu8z/3zP3BemqpfYS6GQ1BJVWDj6XSbLO0NCxhZMIMgMdXSUe+ey8pVO0?=
+ =?us-ascii?Q?Wh099KGkajbmf7e+XMT5hMG1egbb56jac/wAuoh2zrxnWIchkWCj18vhvS1f?=
+ =?us-ascii?Q?1Wt6lmtbozTgZWKz+Ic3O7tAygJp2MUPZAdwKGeMENAEF9cXeeTd/CN5VxeT?=
+ =?us-ascii?Q?OlnYdli/B1herXlj6u3Gve5qE/Clm/zijuenZ5iLxk2+ujOGtq9MX8fMTj6t?=
+ =?us-ascii?Q?Z4BN7kxz73GEe7W23T7rrxVkkvtZPdMEb1il3HGoduD4iQpLkG5AxLUna8S0?=
+ =?us-ascii?Q?pr3ZCHAAQkW1rTf1q6UGihUwMRb5BNB+3DTkLqsLpTkdN23R+YY5vpWKYKGS?=
+ =?us-ascii?Q?Tr7FVdC5zhc/gdlK34TSpHEtbOl5iUQX/ceet3du92CxsbWd0XxZ6Yh85TAq?=
+ =?us-ascii?Q?kOhXhDwWnjiGc2PtWZHUvh6KeNeOIil4dt8tdT+ZXXf5A1Yx+3Jh2UHlJ9bL?=
+ =?us-ascii?Q?IlCugjLb9LEfajEj4PJgVkFsXkkdzc6/EpQertKFwjGiFVx4yD2QBr4zYWuk?=
+ =?us-ascii?Q?DlgOiKyCALp+VhnoQ6NeSs75/Iey7lIa/Y+iFD2zpnVn2XO2VhP46N5eOqtN?=
+ =?us-ascii?Q?mErfIVHou7HIOAnMF1CC/TqIJDp1D/yeK5hnssm3/hehxXAsqFtWYEqlaUrV?=
+ =?us-ascii?Q?DgKeMtS09VCrKW1LVt1dNhj9Bu8p2kQUFgQZsz+RcbVuJ20JQpvcVd+6SGx8?=
+ =?us-ascii?Q?sRVetPv46gMfAuHHx/v2gAk9DT5pFgWN5MfRoepV5hzDbzgD5vl8e5w4aS49?=
+ =?us-ascii?Q?1BcgnuCbhnzd700r0Up98KcSVIEFD1yW5fQ3cUK9UVPhP2hQwyhoYYqmjuix?=
+ =?us-ascii?Q?c2Ji3raDal5F9yCnaYXulCYxAZnURdw7QtxKCwgvRRlgGLfHpiAWeln3Q0fO?=
+ =?us-ascii?Q?0dvByTDnNzStRAJFkoY7JGdcQJhQjrsGGS5e+cQfl8zBPOHGFe284QiAlNOE?=
+ =?us-ascii?Q?ZP22d2SJa8toa6E+mmhDTis=3D?=
+X-OriginatorOrg: in-advantage.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f90ffb0b-d543-4a34-a8ca-08dda45987cb
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB6974.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 17:50:59.5079
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Pd68JYC9czXWXrYe+c8V81qdBgDOV2PAQR1a3eFLrXLew6PqqCXpbNu9Z5vxP6M6U2A+S0Cli/qT742YBDdr/NKG7mr4/raEUss0H388GEk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4414
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+On Tue, May 27, 2025 at 02:49:20PM -0500, Colin Foster wrote:
+> Hello,
+> 
+> I'm running up against a reliable failure mode on my hardware and want
+> to see if there are any suggestions for tracking down what might be
+> going on.
+> 
+> The kernel is currently 6.12.28, with essentially no out-of-tree patches
+> besides our DTS. The hardware is an OMAP 4460 processor.
+> 
+> The behavior I see is quite repeatable. I can allocate about 220MB of
+> RAM by running:
+> 
+> dd if=/dev/zero of=/tmp/myfile1 bs=1M count=220
 
-> On Wed, May 14, 2025 at 04:42:17PM -0700, Ackerley Tng wrote:
+I figure I'd add more info about my issue.
 
-[...]
+A slight modification to "memhog" means I can essentially track one page
+at a time. It leads to the following behavior:
 
->> +static pgoff_t kvm_gmem_compute_invalidate_bound(struct inode *inode,
->> +						 pgoff_t bound, bool start)
->> +{
->> +	size_t nr_pages;
->> +	void *priv;
->> +
->> +	if (!kvm_gmem_has_custom_allocator(inode))
->> +		return bound;
->> +
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->> +
->> +	if (start)
->> +		return round_down(bound, nr_pages);
->> +	else
->> +		return round_up(bound, nr_pages);
->> +}
->> +
->> +static pgoff_t kvm_gmem_compute_invalidate_start(struct inode *inode,
->> +						 pgoff_t bound)
->> +{
->> +	return kvm_gmem_compute_invalidate_bound(inode, bound, true);
->> +}
->> +
->> +static pgoff_t kvm_gmem_compute_invalidate_end(struct inode *inode,
->> +					       pgoff_t bound)
->> +{
->> +	return kvm_gmem_compute_invalidate_bound(inode, bound, false);
->> +}
->> +
->>  static int kvm_gmem_shareability_apply(struct inode *inode,
->>  				       struct conversion_work *work,
->>  				       enum shareability m)
->> @@ -299,35 +428,53 @@ static void kvm_gmem_convert_invalidate_begin(struct inode *inode,
->>  					      struct conversion_work *work)
->>  {
->>  	struct list_head *gmem_list;
->> +	pgoff_t invalidate_start;
->> +	pgoff_t invalidate_end;
->>  	struct kvm_gmem *gmem;
->> -	pgoff_t end;
->> +	pgoff_t work_end;
->>  
->> -	end = work->start + work->nr_pages;
->> +	work_end = work->start + work->nr_pages;
->> +	invalidate_start = kvm_gmem_compute_invalidate_start(inode, work->start);
->> +	invalidate_end = kvm_gmem_compute_invalidate_end(inode, work_end);
+mmap(250MB);
+memset(addr, 0xff, 4096);
 
-The invalidation range is broadened to include the full range to take
-care of this race [1] reported for the conversion flow that uses
-KVM_SET_MEMORY_ATTRIBUTES ioctl, so I also repeated the broadening for
-this guest_memfd conversion ioctl.
+I can step in GDB over my application and trace page allocation one at
+a time.
 
-> Could we just notify the exact gfn range and let KVM adjust the invalidate
-> range?
->
+The PFN around 0x8fd3f should be available... 'page-types -l' reports a
+huge block available, as far as I understand:
 
-How do we get KVM to adjust the invalidate range?
+82c88   38      ____________________________________________
+82cc0   d190    __________B_________________________________
+8fe50   1       __________B_________________________________
 
-> Then kvm_gmem_invalidate_begin() can asks KVM to do EPT splitting before any
-> kvm_mmu_unmap_gfn_range() is performed.
->
->
+However, it seems clear that some memory in that range is, in
+fact, in use. 'memset' will eventually cause a crash around that area,
+as will running 'devmem', 'dd /dev/mem'.
 
-In this snapshot of my WIP of putting this HugeTLB support with TDX huge
-page EPT support [2], I was thinking to combine EPT splitting together
-with unmap, and leaving the invalidate to be a separate part. (See
-kvm_gmem_unmap_private().) I did it this way so that the EPT splitting
-is range is the unmapping range, and only the invalidation range is
-broadened.
+The output of /proc/vmallocinfo has me scratching my head. I'm not sure
+if this type of output (the second address) is expected, or an
+indication of something going terribly wrong:
 
-What do you think of that?
+0x887646e9-0xb6c38d9d   12288 kernel_clone+0xb0/0x414 pages=2 vmalloc
+0x8d918e2e-0x0f0cf24b    8192 load_module+0x6ec/0x1e2c pages=1 vmalloc
+0x8eadfe6c-0x2c2bdafa   12288 load_module+0x6ec/0x1e2c pages=2 vmalloc
+0x90bdaef9-0x73aeced1   36864 pcpu_create_chunk+0x208/0x2a0 pages=8 vmalloc
+0x93acc2a4-0x5c7fff68   12288 __devm_ioremap_resource+0x150/0x1dc phys=0x44800000 ioremap
+0x950bf861-0xd3df2ba7   12288 kernel_clone+0xb0/0x414 pages=2 vmalloc
 
->>  	gmem_list = &inode->i_mapping->i_private_list;
->>  	list_for_each_entry(gmem, gmem_list, entry)
->> -		kvm_gmem_invalidate_begin(gmem, work->start, end);
->> +		kvm_gmem_invalidate_begin(gmem, invalidate_start, invalidate_end);
->>  }
->>  
->>  static void kvm_gmem_convert_invalidate_end(struct inode *inode,
->>  					    struct conversion_work *work)
->>  {
->>  	struct list_head *gmem_list;
->> +	pgoff_t invalidate_start;
->> +	pgoff_t invalidate_end;
->>  	struct kvm_gmem *gmem;
->> -	pgoff_t end;
->> +	pgoff_t work_end;
->>  
->> -	end = work->start + work->nr_pages;
->> +	work_end = work->start + work->nr_pages;
->> +	invalidate_start = kvm_gmem_compute_invalidate_start(inode, work->start);
->> +	invalidate_end = kvm_gmem_compute_invalidate_end(inode, work_end);
->>  
->>  	gmem_list = &inode->i_mapping->i_private_list;
->>  	list_for_each_entry(gmem, gmem_list, entry)
->> -		kvm_gmem_invalidate_end(gmem, work->start, end);
->> +		kvm_gmem_invalidate_end(gmem, invalidate_start, invalidate_end);
->>  }
->>  
->>  static int kvm_gmem_convert_should_proceed(struct inode *inode,
->>  					   struct conversion_work *work,
->>  					   bool to_shared, pgoff_t *error_index)
->>  {
->> -	if (!to_shared) {
->> +	if (to_shared) {
->> +		struct list_head *gmem_list;
->> +		struct kvm_gmem *gmem;
->> +		pgoff_t work_end;
->> +
->> +		work_end = work->start + work->nr_pages;
->> +
->> +		gmem_list = &inode->i_mapping->i_private_list;
->> +		list_for_each_entry(gmem, gmem_list, entry)
->> +			kvm_gmem_unmap_private(gmem, work->start, work_end);
->> +	} else {
->>  		unmap_mapping_pages(inode->i_mapping, work->start,
->>  				    work->nr_pages, false);
->>  
->> @@ -340,6 +487,27 @@ static int kvm_gmem_convert_should_proceed(struct inode *inode,
->>  	return 0;
->>  }
->>  
->> +static int kvm_gmem_convert_execute_work(struct inode *inode,
->> +					 struct conversion_work *work,
->> +					 bool to_shared)
->> +{
->> +	enum shareability m;
->> +	int ret;
->> +
->> +	m = to_shared ? SHAREABILITY_ALL : SHAREABILITY_GUEST;
->> +	ret = kvm_gmem_shareability_apply(inode, work, m);
->> +	if (ret)
->> +		return ret;
->> +	/*
->> +	 * Apply shareability first so split/merge can operate on new
->> +	 * shareability state.
->> +	 */
->> +	ret = kvm_gmem_restructure_folios_in_range(
->> +		inode, work->start, work->nr_pages, to_shared);
->> +
->> +	return ret;
->> +}
->> +
->>  static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
->>  				  size_t nr_pages, bool shared,
->>  				  pgoff_t *error_index)
->> @@ -371,18 +539,21 @@ static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
->>  
->>  	list_for_each_entry(work, &work_list, list) {
->>  		rollback_stop_item = work;
->> -		ret = kvm_gmem_shareability_apply(inode, work, m);
->> +
->> +		ret = kvm_gmem_convert_execute_work(inode, work, shared);
->>  		if (ret)
->>  			break;
->>  	}
->>  
->>  	if (ret) {
->> -		m = shared ? SHAREABILITY_GUEST : SHAREABILITY_ALL;
->>  		list_for_each_entry(work, &work_list, list) {
->> +			int r;
->> +
->> +			r = kvm_gmem_convert_execute_work(inode, work, !shared);
->> +			WARN_ON(r);
->> +
->>  			if (work == rollback_stop_item)
->>  				break;
->> -
->> -			WARN_ON(kvm_gmem_shareability_apply(inode, work, m));
->>  		}
->>  	}
->>  
->> @@ -434,6 +605,277 @@ static int kvm_gmem_ioctl_convert_range(struct file *file,
->>  	return ret;
->>  }
->>  
->> +#ifdef CONFIG_KVM_GMEM_HUGETLB
->> +
->> +static inline void __filemap_remove_folio_for_restructuring(struct folio *folio)
->> +{
->> +	struct address_space *mapping = folio->mapping;
->> +
->> +	spin_lock(&mapping->host->i_lock);
->> +	xa_lock_irq(&mapping->i_pages);
->> +
->> +	__filemap_remove_folio(folio, NULL);
->> +
->> +	xa_unlock_irq(&mapping->i_pages);
->> +	spin_unlock(&mapping->host->i_lock);
->> +}
->> +
->> +/**
->> + * filemap_remove_folio_for_restructuring() - Remove @folio from filemap for
->> + * split/merge.
->> + *
->> + * @folio: the folio to be removed.
->> + *
->> + * Similar to filemap_remove_folio(), but skips LRU-related calls (meaningless
->> + * for guest_memfd), and skips call to ->free_folio() to maintain folio flags.
->> + *
->> + * Context: Expects only the filemap's refcounts to be left on the folio. Will
->> + *          freeze these refcounts away so that no other users will interfere
->> + *          with restructuring.
->> + */
->> +static inline void filemap_remove_folio_for_restructuring(struct folio *folio)
->> +{
->> +	int filemap_refcount;
->> +
->> +	filemap_refcount = folio_nr_pages(folio);
->> +	while (!folio_ref_freeze(folio, filemap_refcount)) {
->> +		/*
->> +		 * At this point only filemap refcounts are expected, hence okay
->> +		 * to spin until speculative refcounts go away.
->> +		 */
->> +		WARN_ONCE(1, "Spinning on folio=%p refcount=%d", folio, folio_ref_count(folio));
->> +	}
->> +
->> +	folio_lock(folio);
->> +	__filemap_remove_folio_for_restructuring(folio);
->> +	folio_unlock(folio);
->> +}
->> +
->> +/**
->> + * kvm_gmem_split_folio_in_filemap() - Split @folio within filemap in @inode.
->> + *
->> + * @inode: inode containing the folio.
->> + * @folio: folio to be split.
->> + *
->> + * Split a folio into folios of size PAGE_SIZE. Will clean up folio from filemap
->> + * and add back the split folios.
->> + *
->> + * Context: Expects that before this call, folio's refcount is just the
->> + *          filemap's refcounts. After this function returns, the split folios'
->> + *          refcounts will also be filemap's refcounts.
->> + * Return: 0 on success or negative error otherwise.
->> + */
->> +static int kvm_gmem_split_folio_in_filemap(struct inode *inode, struct folio *folio)
->> +{
->> +	size_t orig_nr_pages;
->> +	pgoff_t orig_index;
->> +	size_t i, j;
->> +	int ret;
->> +
->> +	orig_nr_pages = folio_nr_pages(folio);
->> +	if (orig_nr_pages == 1)
->> +		return 0;
->> +
->> +	orig_index = folio->index;
->> +
->> +	filemap_remove_folio_for_restructuring(folio);
->> +
->> +	ret = kvm_gmem_allocator_ops(inode)->split_folio(folio);
->> +	if (ret)
->> +		goto err;
->> +
->> +	for (i = 0; i < orig_nr_pages; ++i) {
->> +		struct folio *f = page_folio(folio_page(folio, i));
->> +
->> +		ret = __kvm_gmem_filemap_add_folio(inode->i_mapping, f,
->> +						   orig_index + i);
->> +		if (ret)
->> +			goto rollback;
->> +	}
->> +
->> +	return ret;
->> +
->> +rollback:
->> +	for (j = 0; j < i; ++j) {
->> +		struct folio *f = page_folio(folio_page(folio, j));
->> +
->> +		filemap_remove_folio_for_restructuring(f);
->> +	}
->> +
->> +	kvm_gmem_allocator_ops(inode)->merge_folio(folio);
->> +err:
->> +	WARN_ON(__kvm_gmem_filemap_add_folio(inode->i_mapping, folio, orig_index));
->> +
->> +	return ret;
->> +}
->> +
->> +static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
->> +						      struct folio *folio)
->> +{
->> +	size_t to_nr_pages;
->> +	void *priv;
->> +
->> +	if (!kvm_gmem_has_custom_allocator(inode))
->> +		return 0;
->> +
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_page(priv);
->> +
->> +	if (kvm_gmem_has_some_shared(inode, folio->index, to_nr_pages))
-> If the guest_memfd is configured with GUESTMEM_HUGETLB_FLAG_1GB, it seems that
-> whenever there's a shared page within a 1GB range, the folio will always be
-> split into 4KB folios. Is it good?
->
 
-It is not the best, but okay as an initial step.
+So I suppose I have an open question:
 
-We want to work on splitting 1G to 2M (as many 2M pages as possible)
-then to 4K. I believe the agreement with the community is that the
-1G->2M->4K splitting is an optimization for the patch series after this
-one.
+Is there a way to tell what might be mapped in that specific region?
+It seems clear that it is _something_, but there is some MMU / virtual
+memory misconfiguration that makes DDR that is supposed to be in one
+area actually use the memory in a different area.
 
->> +		return kvm_gmem_split_folio_in_filemap(inode, folio);
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * kvm_gmem_merge_folio_in_filemap() - Merge @first_folio within filemap in
->> + * @inode.
->> + *
->> + * @inode: inode containing the folio.
->> + * @first_folio: first folio among folios to be merged.
->> + *
->> + * Will clean up subfolios from filemap and add back the merged folio.
->> + *
->> + * Context: Expects that before this call, all subfolios only have filemap
->> + *          refcounts. After this function returns, the merged folio will only
->> + *          have filemap refcounts.
->> + * Return: 0 on success or negative error otherwise.
->> + */
->> +static int kvm_gmem_merge_folio_in_filemap(struct inode *inode,
->> +					   struct folio *first_folio)
->> +{
->> +	size_t to_nr_pages;
->> +	pgoff_t index;
->> +	void *priv;
->> +	size_t i;
->> +	int ret;
->> +
->> +	index = first_folio->index;
->> +
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->> +	if (folio_nr_pages(first_folio) == to_nr_pages)
->> +		return 0;
->> +
->> +	for (i = 0; i < to_nr_pages; ++i) {
->> +		struct folio *f = page_folio(folio_page(first_folio, i));
->> +
->> +		filemap_remove_folio_for_restructuring(f);
->> +	}
->> +
->> +	kvm_gmem_allocator_ops(inode)->merge_folio(first_folio);
->> +
->> +	ret = __kvm_gmem_filemap_add_folio(inode->i_mapping, first_folio, index);
->> +	if (ret)
->> +		goto err_split;
->> +
->> +	return ret;
->> +
->> +err_split:
->> +	WARN_ON(kvm_gmem_allocator_ops(inode)->split_folio(first_folio));
->> +	for (i = 0; i < to_nr_pages; ++i) {
->> +		struct folio *f = page_folio(folio_page(first_folio, i));
->> +
->> +		WARN_ON(__kvm_gmem_filemap_add_folio(inode->i_mapping, f, index + i));
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static inline int kvm_gmem_try_merge_folio_in_filemap(struct inode *inode,
->> +						      struct folio *first_folio)
->> +{
->> +	size_t to_nr_pages;
->> +	void *priv;
->> +
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->> +
->> +	if (kvm_gmem_has_some_shared(inode, first_folio->index, to_nr_pages))
->> +		return 0;
->> +
->> +	return kvm_gmem_merge_folio_in_filemap(inode, first_folio);
->> +}
->> +
->> +static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
->> +						pgoff_t start, size_t nr_pages,
->> +						bool is_split_operation)
->> +{
->> +	size_t to_nr_pages;
->> +	pgoff_t index;
->> +	pgoff_t end;
->> +	void *priv;
->> +	int ret;
->> +
->> +	if (!kvm_gmem_has_custom_allocator(inode))
->> +		return 0;
->> +
->> +	end = start + nr_pages;
->> +
->> +	/* Round to allocator page size, to check all (huge) pages in range. */
->> +	priv = kvm_gmem_allocator_private(inode);
->> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->> +
->> +	start = round_down(start, to_nr_pages);
->> +	end = round_up(end, to_nr_pages);
->> +
->> +	for (index = start; index < end; index += to_nr_pages) {
->> +		struct folio *f;
->> +
->> +		f = filemap_get_folio(inode->i_mapping, index);
->> +		if (IS_ERR(f))
->> +			continue;
->> +
->> +		/* Leave just filemap's refcounts on the folio. */
->> +		folio_put(f);
->> +
->> +		if (is_split_operation)
->> +			ret = kvm_gmem_split_folio_in_filemap(inode, f);
-> The split operation is performed after kvm_gmem_unmap_private() within
-> kvm_gmem_convert_should_proceed(), right?
->
-> So, it seems that that it's not necessary for TDX to avoid holding private page
-> references, as TDX must have released the page refs after
-> kvm_gmem_unmap_private() (except when there's TDX module or KVM bug).
->
+Once I figure out exactly "what" is in that region, it should hopefully
+be easy for me to track down "why" it is there. Any nudge for someone
+with little knowledge at VM layer could go a long way.
 
-I agree with your assessment in the follow up email.
+Thanks,
 
-We don't want to unmap more than the requested conversion range to avoid
-extra churn. If TDX holds refcounts on mapped pages, the subpages that
-are still mapped will contribute to the refcount of the huge page, and
-we can't split a page that has refcounts because we don't know how the
-refcounts are distributed over the subpages.
-
-I guess technically if the refcounts are divisible across nr_pages, we
-could still split, but if we have a 1G page, but only some of the 1G
-subpages are mapped into TDX EPTs, then we would have a refcount that we
-don't know how to divide out.
-
->> +		else
->> +			ret = kvm_gmem_try_merge_folio_in_filemap(inode, f);
->> +
->> +		if (ret)
->> +			goto rollback;
->> +	}
->> +	return ret;
->> +
->> +rollback:
->> +	for (index -= to_nr_pages; index >= start; index -= to_nr_pages) {
->> +		struct folio *f;
->> +
->> +		f = filemap_get_folio(inode->i_mapping, index);
->> +		if (IS_ERR(f))
->> +			continue;
->> +
->> +		/* Leave just filemap's refcounts on the folio. */
->> +		folio_put(f);
->> +
->> +		if (is_split_operation)
->> +			WARN_ON(kvm_gmem_merge_folio_in_filemap(inode, f));
->> +		else
->> +			WARN_ON(kvm_gmem_split_folio_in_filemap(inode, f));
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +#else
->> +
-
-[...]
-
-[1] https://lore.kernel.org/all/Z__AAB_EFxGFEjDR@google.com/
-[2] https://github.com/googleprodkernel/linux-cc/commits/wip-tdx-gmem-conversions-hugetlb-2mept/
+Colin
 
