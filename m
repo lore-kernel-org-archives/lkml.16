@@ -1,520 +1,235 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4141F9F51
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 23:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F4C20F09A;
+	Thu,  5 Jun 2025 23:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749164623; cv=none; b=QH0ESYFtrmBDOmPQVaQYqNABKDdBM8d5WIerK/ICxcPpBY85yfmCDl0N6inZge6AFGS08cuG4wtmlyoNdVQnp2VdzO76R5kcP2KKU8YiP5NeXpgvzplE+CWHPiRqykVQiwInb+VRVQXIyVhX/6HWpzxZDlCsGwCULjKoAEpUOYE=
+	t=1749164829; cv=none; b=KZGJQyaR/coFchCKoR3a37+ARuwuckaNRzxfMX+1nH8I0bvHJ+JnXh94nKuSPZk0g34ZzO98dIQImfD2cAgShU3F0340mR8dHMVhVlRGS1q4GYpw8ZoKSU/PnQow74GAYUiLQB1SvLTCRfNpGO7amKstrIf86h30h2N2sCx7JgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749164623; c=relaxed/simple;
-	bh=kzkTROdiTQEKkoNuXR9/RDOUfcSsHCsEuM1Uk9kkmLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GitMkMfbxDus3uHrbqFoSZrp0sMxzDHBYiYM0PtlF0NIZ0/f1br9DvFj4Equd8+FbDJOazolsSnMgNQ5cmo88PrmqiBS6GDrsDNnkNDtpmzqSxlYxRvdP0Wz0jBALFgxNxcGC3PCNYxypPcSqoYwjXv3WAkq0cVQMfpSp7rhZ9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oC/PHs5t; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749164829; c=relaxed/simple;
+	bh=UjLXllv38/ayKRtbAWXghoX9UubiwAPwtQ/5ByY7WO4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qUpgiWCO6HmMbr6D0SJT7psXEDVfccIwV9szCBlHLoEWZljDE7ItqlnWDo5yx7Hus6XZMSzxQQlGg6mnPYGUssKpZ4ESrdUzMvVpvPHd/eGgLei2wtbWtloZzUFD5xUsp3kV65smUTtJCbEfl+nz8i+RYpbwB89nikfA7afy6Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTyDyg82; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oC/PHs5t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749164620; x=1780700620;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=kzkTROdiTQEKkoNuXR9/RDOUfcSsHCsEuM1Uk9kkmLk=;
-  b=oC/PHs5tSMIpae5rXFjvlbuPwEx1E1PgBJbjyU+C8AG/IrYQkkiV9bnC
-   GKgGDWj9csHdFYIYhDNeSjwfVPdGnZnXgcPprKpRPZyLqCSLls1wzeUEe
-   EWn6DQXFvhKvOX3IoYY/BxXBr79nM7Pnt+C7IrZYa5Akff7hYZGOdhc+S
-   rBpXI/dWTUVOr4HWsKKVLzlGORoDVx4OqHJaho8D9GXdWZGHmU5GMyhwW
-   4d16l57eeHeomMyCMaAizdcvSVFJ5DP1CCoxtIaNQYLRQsY8OB+D973SA
-   xmLOxjtDQ4qVN+gr7jfnQDN/mLJPv+Lv7YM7/zgUkWjz7lvhBwzroONoT
-   w==;
-X-CSE-ConnectionGUID: Puu8LyKsSZKhT/YHC2DbSg==
-X-CSE-MsgGUID: 48oTxN4eQu+2e+EJ61m9WA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="53933740"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="53933740"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 16:03:39 -0700
-X-CSE-ConnectionGUID: Kd+DFLxESySJDuHjdZ00Xg==
-X-CSE-MsgGUID: NodV+vblSQ6uh/7e7O1QYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="149493369"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 05 Jun 2025 16:03:37 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNJcV-0004X3-1f;
-	Thu, 05 Jun 2025 23:03:35 +0000
-Date: Fri, 6 Jun 2025 07:02:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: include/asm-generic/io.h:542:14: error: call to '_inb' declared with
- attribute error: inb()) requires CONFIG_HAS_IOPORT
-Message-ID: <202506060742.XR3HcxWA-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTyDyg82"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A7DC4AF09;
+	Thu,  5 Jun 2025 23:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749164829;
+	bh=UjLXllv38/ayKRtbAWXghoX9UubiwAPwtQ/5ByY7WO4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gTyDyg82GjLyXm/+Xxw/6fn8ww+WbctvOE+3TX+ie5+J62OvLYMs1tBwFQZykqjve
+	 rhNH2xxgyxgWSXTrphrAvhG2GaHD7i+/qARTw8MbWoUCOed6Z0+DcveLnEun0e93al
+	 9TJzalzM+0cjUMNFeVKLO2ddXsVabHyI3a/s2Dw6V4mnTVSkL90Z+1ctB6v5Pcv78w
+	 WQAK55Gf0j1ASW/k/RksJstuTiRfFjveOZf2LP7fc9fg3dqr0FEMyW09qjnjWPg7RN
+	 26j0ovNuOEOBkjbQfi1ycHcBBa9XEI8CPrIH/cn378tJFBgnSUN6IDwqJYqn2bWIrP
+	 meZpQgD67+19g==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad51ba0af48so507228466b.0;
+        Thu, 05 Jun 2025 16:07:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUpXedNnAoPp8CgdfVckm4hOQRIrbUgFjKYWJcHB6p9aE23088IObxsoOpCJVVWEyifYUgimJof9xdwirSC@vger.kernel.org, AJvYcCX5aBgNzRJZ+JUphiE6DOx2j3YgkVqldI8kGx7/taWyl4IkjtE9i0U3yhnIDpDh9a2CpWHRsg1zubA3no+6w1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdh2N26LxPAS/HIVOoSfwc0h4QsS3CXKZZvhkEvXiqRECaQg7/
+	QqTFSOyL7OK3gnHmLPNak5OJ987s2wnOsXnIjNaC7PPqVW6G6/FyAttIo0bmdt/Z1sQu8xC7H1Q
+	qhqDDbEDNzAuHMB26GC/fJnnMOpMZUNE=
+X-Google-Smtp-Source: AGHT+IFIM5DEQ+EkB7ri9jbdCbyDdUJyhKpoLC7kSNlWUiKgDPJdKpTqwabqWJxyxg7eaYnsk2EL7BA/44mVHgFfQqY=
+X-Received: by 2002:a17:907:7204:b0:ad5:4cde:fb97 with SMTP id
+ a640c23a62f3a-ade078b8726mr489091766b.29.1749164827849; Thu, 05 Jun 2025
+ 16:07:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250605095300.22989-1-ot_zhangchao.zhang@mediatek.com>
+In-Reply-To: <20250605095300.22989-1-ot_zhangchao.zhang@mediatek.com>
+From: Sean Wang <sean.wang@kernel.org>
+Date: Thu, 5 Jun 2025 18:06:55 -0500
+X-Gmail-Original-Message-ID: <CAGp9LzqkcH6KQq+TcaTGgK-4oK6XU8pzPB4j35en+df3beAhzQ@mail.gmail.com>
+X-Gm-Features: AX0GCFtUAdwu3cwpHEFg1KUpSQ7ERv8IK0VFNhN73qLZQD_L6lIAxORQHnGsedE
+Message-ID: <CAGp9LzqkcH6KQq+TcaTGgK-4oK6XU8pzPB4j35en+df3beAhzQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Bluetooth: BT Driver: mediatek: add gpio pin to reset bt
+To: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	Luiz Von Dentz <luiz.dentz@gmail.com>, Sean Wang <sean.wang@mediatek.com>, 
+	Deren Wu <deren.Wu@mediatek.com>, Aaron Hou <aaron.hou@mediatek.com>, 
+	Chris Lu <chris.lu@mediatek.com>, Hao Qin <Hao.qin@mediatek.com>, 
+	linux-bluetooth <linux-bluetooth@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-mediatek <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   e271ed52b344ac02d4581286961d0c40acc54c03
-commit: b8c9c3b822fe8e033b9802516f6466099d915488 um: stop using PCI port I/O
-date:   4 days ago
-config: um-randconfig-001-20250606 (https://download.01.org/0day-ci/archive/20250606/202506060742.XR3HcxWA-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506060742.XR3HcxWA-lkp@intel.com/reproduce)
+Hi Zhangchao,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506060742.XR3HcxWA-lkp@intel.com/
+Thanks for your recent patch submission. Could you help address the
+following points?
 
-All errors (new ones prefixed by >>):
+1) Add a revision history
+each patch version should include a clear changelog under the --- line
+to show what has changed since the previous version.
 
-   drivers/char/sonypi.c: In function 'sonypi_call1':
-   drivers/char/sonypi.c:638:12: warning: variable 'v1' set but not used [-Wunused-but-set-variable]
-     638 |         u8 v1, v2;
-         |            ^~
-   In file included from arch/um/include/asm/io.h:24,
-                    from include/linux/io.h:12,
-                    from include/linux/irq.h:20,
-                    from include/asm-generic/hardirq.h:17,
-                    from arch/um/include/asm/hardirq.h:5,
-                    from include/linux/hardirq.h:11,
-                    from include/linux/interrupt.h:11,
-                    from include/linux/pci.h:38,
-                    from drivers/char/sonypi.c:27:
-   In function 'inb_p',
-       inlined from 'sonypi_irq' at drivers/char/sonypi.c:830:7:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'inb_p',
-       inlined from 'sonypi_irq' at drivers/char/sonypi.c:831:7:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'inb_p',
-       inlined from 'sonypi_call1.isra' at drivers/char/sonypi.c:640:2:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   drivers/char/sonypi.c: In function 'sonypi_call1.isra':
->> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   drivers/char/sonypi.c:641:9: note: in expansion of macro 'outb'
-     641 |         outb(dev, sonypi_device.ioport2);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_call1.isra' at drivers/char/sonypi.c:642:7:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'inb_p',
-       inlined from 'sonypi_call1.isra' at drivers/char/sonypi.c:643:7:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'inb_p',
-       inlined from 'sonypi_call2' at drivers/char/sonypi.c:651:2:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   drivers/char/sonypi.c: In function 'sonypi_call2':
->> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   drivers/char/sonypi.c:652:9: note: in expansion of macro 'outb'
-     652 |         outb(dev, sonypi_device.ioport2);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_call2' at drivers/char/sonypi.c:653:2:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   drivers/char/sonypi.c: In function 'sonypi_call2':
->> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   drivers/char/sonypi.c:654:9: note: in expansion of macro 'outb'
-     654 |         outb(fn, sonypi_device.ioport1);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_call2' at drivers/char/sonypi.c:655:7:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'inb_p',
-       inlined from 'sonypi_ec_read' at drivers/char/sonypi.c:533:2:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'outb_p',
-       inlined from 'sonypi_ec_read' at drivers/char/sonypi.c:534:2:
->> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-         |               ^
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   include/asm-generic/io.h:694:9: note: in expansion of macro 'outb'
-     694 |         outb(value, addr);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_ec_read' at drivers/char/sonypi.c:535:2:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'outb_p',
-       inlined from 'sonypi_ec_read' at drivers/char/sonypi.c:536:2:
->> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-         |               ^
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   include/asm-generic/io.h:694:9: note: in expansion of macro 'outb'
-     694 |         outb(value, addr);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_ec_read' at drivers/char/sonypi.c:537:2:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'inb_p',
-       inlined from 'sonypi_ec_read' at drivers/char/sonypi.c:538:11:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'inb_p',
-       inlined from 'sonypi_ec_write' at drivers/char/sonypi.c:517:2:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'outb_p',
-       inlined from 'sonypi_ec_write' at drivers/char/sonypi.c:518:2:
->> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-         |               ^
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   include/asm-generic/io.h:694:9: note: in expansion of macro 'outb'
-     694 |         outb(value, addr);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_ec_write' at drivers/char/sonypi.c:519:2:
->> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'outb_p',
-       inlined from 'sonypi_ec_write' at drivers/char/sonypi.c:520:2:
-   include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-         |               ^
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   include/asm-generic/io.h:694:9: note: in expansion of macro 'outb'
-     694 |         outb(value, addr);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_ec_write' at drivers/char/sonypi.c:521:2:
-   include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'outb_p',
-       inlined from 'sonypi_ec_write' at drivers/char/sonypi.c:522:2:
-   include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-         |               ^
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   include/asm-generic/io.h:694:9: note: in expansion of macro 'outb'
-     694 |         outb(value, addr);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_ec_write' at drivers/char/sonypi.c:523:2:
-   include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'inb_p',
-       inlined from 'sonypi_call3' at drivers/char/sonypi.c:663:2,
-       inlined from 'sonypi_set' at drivers/char/sonypi.c:693:2:
-   include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'sonypi_call3',
-       inlined from 'sonypi_set' at drivers/char/sonypi.c:693:2:
-   include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   drivers/char/sonypi.c:664:9: note: in expansion of macro 'outb'
-     664 |         outb(dev, sonypi_device.ioport2);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_call3' at drivers/char/sonypi.c:665:2,
-       inlined from 'sonypi_set' at drivers/char/sonypi.c:693:2:
-   include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-     542 | #define _inb _inb
-         |              ^
-   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
-     643 | #define inb _inb
-         |             ^~~~
-   include/asm-generic/io.h:670:16: note: in expansion of macro 'inb'
-     670 |         return inb(addr);
-         |                ^~~
-   In function 'sonypi_call3',
-       inlined from 'sonypi_set' at drivers/char/sonypi.c:693:2:
-   include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
-     596 | #define _outb _outb
-   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
-     655 | #define outb _outb
-         |              ^~~~~
-   drivers/char/sonypi.c:666:9: note: in expansion of macro 'outb'
-     666 |         outb(fn, sonypi_device.ioport1);
-         |         ^~~~
-   In function 'inb_p',
-       inlined from 'sonypi_call3' at drivers/char/sonypi.c:667:2,
-       inlined from 'sonypi_set' at drivers/char/sonypi.c:693:2:
-   include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
-..
+2) Remove the "BT driver" in the prefix
+To stay consistent with the other patches we've already submitted, the
+"BT driver" should be removed from this prefix.
+
+3) Update the bt-bindings document
+Please also add or update a corresponding entry to the bt-bindings
+documentation in a separate patch  to describe the "reset-gpios"
+property and "mediatek,usb-bluetooth" and how it is used.
 
 
-vim +/_inb +542 include/asm-generic/io.h
+On Thu, Jun 5, 2025 at 4:54=E2=80=AFAM Zhangchao Zhang
+<ot_zhangchao.zhang@mediatek.com> wrote:
+>
+> This patch provides two methods btmtk_reset_by_gpio,
+> btmtk_reset_by_gpio_work for mediatek controller,
+> it has been tested locally many times and can reset normally.
+>
+> The pin is configured in dts files, bluetooth is reset by pulling
+> the pin, when exception or coredump occurs, the above methods will
+> be used to reset the bluetooth, if the pin is not found, it also can
+> reset bluetooth successfully by software reset.
+>
+> Co-develop-by Hao Qin <hao.qin@mediatek.com>
+> Co-develop-by Chris LU <chris.lu@mediatek.com>
+> Co-develop-by Jiande Lu <jiande.lu@mediatek.com>
+> Signed-off-by: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
+> ---
+>  drivers/bluetooth/btmtk.c | 60 +++++++++++++++++++++++++++++++++++++++
+>  drivers/bluetooth/btmtk.h |  5 ++++
+>  2 files changed, 65 insertions(+)
+>
+> diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
+> index 4390fd571dbd..88e588f1b95b 100644
+> --- a/drivers/bluetooth/btmtk.c
+> +++ b/drivers/bluetooth/btmtk.c
+> @@ -6,6 +6,8 @@
+>  #include <linux/firmware.h>
+>  #include <linux/usb.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/unaligned.h>
+>
+>  #include <net/bluetooth/bluetooth.h>
+> @@ -109,6 +111,60 @@ static void btmtk_coredump_notify(struct hci_dev *hd=
+ev, int state)
+>         }
+>  }
+>
+> +static void btmtk_reset_by_gpio_work(struct work_struct *work)
+> +{
+> +       struct btmtk_reset_gpio *reset_gpio_data =3D
+> +                       container_of(work, struct btmtk_reset_gpio, reset=
+_work.work);
+> +
+> +       gpio_direction_output(reset_gpio_data->gpio_number, 1);
+> +       kfree(reset_gpio_data);
+> +}
+> +
+> +static int btmtk_reset_by_gpio(struct hci_dev *hdev)
+> +{
+> +       struct btmtk_data *data =3D hci_get_priv(hdev);
+> +       struct btmtk_reset_gpio *reset_gpio_data;
+> +       struct device_node *node;
+> +       int reset_gpio_number;
+> +
+> +       node =3D of_find_compatible_node(NULL, NULL, "mediatek,usb-blueto=
+oth");
+> +       if (node) {
+> +               reset_gpio_number =3D of_get_named_gpio(node, "reset-gpio=
+s", 0);
+> +               if (!gpio_is_valid(reset_gpio_number)) {
+> +                       bt_dev_warn(hdev, "invalid reset GPIO, use softwa=
+re reset");
+> +                       return -EINVAL;
+> +               }
+> +       } else {
+> +               bt_dev_warn(hdev, "no reset GPIO, use software reset");
+> +               return -ENODEV;
+> +       }
+> +
+> +       /* Toggle the hard reset line. The Mediatek device is going to
+> +        * yank itself off the USB and then replug. The cleanup is handle=
+d
+> +        * correctly on the way out (standard USB disconnect), and the ne=
+w
+> +        * device is detected cleanly and bound to the driver again like
+> +        * it should be.
+> +        */
+> +
+> +       if (test_and_set_bit(BTMTK_HW_RESET_ACTIVE, &data->flags)) {
+> +               bt_dev_err(hdev, "last reset failed? Not resetting again"=
+);
+> +               return 0;
+> +       }
+> +
+> +       reset_gpio_data =3D kzalloc(sizeof(*reset_gpio_data), GFP_KERNEL)=
+;
+> +       if (!reset_gpio_data)
+> +               return -ENOMEM;
+> +
+> +       INIT_DELAYED_WORK(&reset_gpio_data->reset_work, btmtk_reset_by_gp=
+io_work);
+> +       reset_gpio_data->gpio_number =3D reset_gpio_number;
+> +
+> +       gpio_direction_output(reset_gpio_number, 0);
+> +
+> +       /* it requires 200ms for mtk bt chip to do reset */
+> +       schedule_delayed_work(&reset_gpio_data->reset_work, msecs_to_jiff=
+ies(200));
 
-3f7e212df82ca0 Arnd Bergmann   2009-05-13  534  
-9216efafc52ff9 Thierry Reding  2014-10-01  535  /*
-9216efafc52ff9 Thierry Reding  2014-10-01  536   * {in,out}{b,w,l}() access little endian I/O. {in,out}{b,w,l}_p() can be
-9216efafc52ff9 Thierry Reding  2014-10-01  537   * implemented on hardware that needs an additional delay for I/O accesses to
-9216efafc52ff9 Thierry Reding  2014-10-01  538   * take effect.
-9216efafc52ff9 Thierry Reding  2014-10-01  539   */
-9216efafc52ff9 Thierry Reding  2014-10-01  540  
-f009c89df79abe John Garry      2020-03-28  541  #if !defined(inb) && !defined(_inb)
-f009c89df79abe John Garry      2020-03-28 @542  #define _inb _inb
-6f043e75744596 Niklas Schnelle 2024-10-24  543  #ifdef CONFIG_HAS_IOPORT
-214ba3584b2e2c Stafford Horne  2020-07-26  544  static inline u8 _inb(unsigned long addr)
-9216efafc52ff9 Thierry Reding  2014-10-01  545  {
-87fe2d543f8173 Sinan Kaya      2018-04-05  546  	u8 val;
-87fe2d543f8173 Sinan Kaya      2018-04-05  547  
-87fe2d543f8173 Sinan Kaya      2018-04-05  548  	__io_pbr();
-87fe2d543f8173 Sinan Kaya      2018-04-05  549  	val = __raw_readb(PCI_IOBASE + addr);
-abbbbc83a210e9 Will Deacon     2019-02-22  550  	__io_par(val);
-87fe2d543f8173 Sinan Kaya      2018-04-05  551  	return val;
-9216efafc52ff9 Thierry Reding  2014-10-01  552  }
-6f043e75744596 Niklas Schnelle 2024-10-24  553  #else
-6f043e75744596 Niklas Schnelle 2024-10-24  554  u8 _inb(unsigned long addr)
-6f043e75744596 Niklas Schnelle 2024-10-24  555  	__compiletime_error("inb()) requires CONFIG_HAS_IOPORT");
-6f043e75744596 Niklas Schnelle 2024-10-24  556  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  557  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  558  
-f009c89df79abe John Garry      2020-03-28  559  #if !defined(inw) && !defined(_inw)
-f009c89df79abe John Garry      2020-03-28  560  #define _inw _inw
-6f043e75744596 Niklas Schnelle 2024-10-24  561  #ifdef CONFIG_HAS_IOPORT
-f009c89df79abe John Garry      2020-03-28  562  static inline u16 _inw(unsigned long addr)
-9216efafc52ff9 Thierry Reding  2014-10-01  563  {
-87fe2d543f8173 Sinan Kaya      2018-04-05  564  	u16 val;
-87fe2d543f8173 Sinan Kaya      2018-04-05  565  
-87fe2d543f8173 Sinan Kaya      2018-04-05  566  	__io_pbr();
-c1d55d50139bea Stafford Horne  2020-07-29  567  	val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-abbbbc83a210e9 Will Deacon     2019-02-22  568  	__io_par(val);
-87fe2d543f8173 Sinan Kaya      2018-04-05  569  	return val;
-9216efafc52ff9 Thierry Reding  2014-10-01  570  }
-6f043e75744596 Niklas Schnelle 2024-10-24  571  #else
-6f043e75744596 Niklas Schnelle 2024-10-24  572  u16 _inw(unsigned long addr)
-6f043e75744596 Niklas Schnelle 2024-10-24  573  	__compiletime_error("inw() requires CONFIG_HAS_IOPORT");
-6f043e75744596 Niklas Schnelle 2024-10-24  574  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  575  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  576  
-f009c89df79abe John Garry      2020-03-28  577  #if !defined(inl) && !defined(_inl)
-f009c89df79abe John Garry      2020-03-28 @578  #define _inl _inl
-6f043e75744596 Niklas Schnelle 2024-10-24  579  #ifdef CONFIG_HAS_IOPORT
-214ba3584b2e2c Stafford Horne  2020-07-26  580  static inline u32 _inl(unsigned long addr)
-9216efafc52ff9 Thierry Reding  2014-10-01  581  {
-87fe2d543f8173 Sinan Kaya      2018-04-05  582  	u32 val;
-87fe2d543f8173 Sinan Kaya      2018-04-05  583  
-87fe2d543f8173 Sinan Kaya      2018-04-05  584  	__io_pbr();
-c1d55d50139bea Stafford Horne  2020-07-29  585  	val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-abbbbc83a210e9 Will Deacon     2019-02-22  586  	__io_par(val);
-87fe2d543f8173 Sinan Kaya      2018-04-05  587  	return val;
-9216efafc52ff9 Thierry Reding  2014-10-01  588  }
-6f043e75744596 Niklas Schnelle 2024-10-24  589  #else
-6f043e75744596 Niklas Schnelle 2024-10-24  590  u32 _inl(unsigned long addr)
-6f043e75744596 Niklas Schnelle 2024-10-24  591  	__compiletime_error("inl() requires CONFIG_HAS_IOPORT");
-6f043e75744596 Niklas Schnelle 2024-10-24  592  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  593  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  594  
-f009c89df79abe John Garry      2020-03-28  595  #if !defined(outb) && !defined(_outb)
-f009c89df79abe John Garry      2020-03-28 @596  #define _outb _outb
-6f043e75744596 Niklas Schnelle 2024-10-24  597  #ifdef CONFIG_HAS_IOPORT
-f009c89df79abe John Garry      2020-03-28  598  static inline void _outb(u8 value, unsigned long addr)
-9216efafc52ff9 Thierry Reding  2014-10-01  599  {
-a7851aa54c0cdd Sinan Kaya      2018-04-05  600  	__io_pbw();
-a7851aa54c0cdd Sinan Kaya      2018-04-05  601  	__raw_writeb(value, PCI_IOBASE + addr);
-a7851aa54c0cdd Sinan Kaya      2018-04-05  602  	__io_paw();
-9216efafc52ff9 Thierry Reding  2014-10-01  603  }
-6f043e75744596 Niklas Schnelle 2024-10-24  604  #else
-6f043e75744596 Niklas Schnelle 2024-10-24  605  void _outb(u8 value, unsigned long addr)
-6f043e75744596 Niklas Schnelle 2024-10-24  606  	__compiletime_error("outb() requires CONFIG_HAS_IOPORT");
-6f043e75744596 Niklas Schnelle 2024-10-24  607  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  608  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  609  
-f009c89df79abe John Garry      2020-03-28  610  #if !defined(outw) && !defined(_outw)
-f009c89df79abe John Garry      2020-03-28  611  #define _outw _outw
-6f043e75744596 Niklas Schnelle 2024-10-24  612  #ifdef CONFIG_HAS_IOPORT
-f009c89df79abe John Garry      2020-03-28  613  static inline void _outw(u16 value, unsigned long addr)
-9216efafc52ff9 Thierry Reding  2014-10-01  614  {
-a7851aa54c0cdd Sinan Kaya      2018-04-05  615  	__io_pbw();
-c1d55d50139bea Stafford Horne  2020-07-29  616  	__raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-a7851aa54c0cdd Sinan Kaya      2018-04-05  617  	__io_paw();
-9216efafc52ff9 Thierry Reding  2014-10-01  618  }
-6f043e75744596 Niklas Schnelle 2024-10-24  619  #else
-6f043e75744596 Niklas Schnelle 2024-10-24  620  void _outw(u16 value, unsigned long addr)
-6f043e75744596 Niklas Schnelle 2024-10-24  621  	__compiletime_error("outw() requires CONFIG_HAS_IOPORT");
-6f043e75744596 Niklas Schnelle 2024-10-24  622  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  623  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  624  
-f009c89df79abe John Garry      2020-03-28  625  #if !defined(outl) && !defined(_outl)
-f009c89df79abe John Garry      2020-03-28 @626  #define _outl _outl
-6f043e75744596 Niklas Schnelle 2024-10-24  627  #ifdef CONFIG_HAS_IOPORT
-f009c89df79abe John Garry      2020-03-28  628  static inline void _outl(u32 value, unsigned long addr)
-9216efafc52ff9 Thierry Reding  2014-10-01  629  {
-a7851aa54c0cdd Sinan Kaya      2018-04-05  630  	__io_pbw();
-c1d55d50139bea Stafford Horne  2020-07-29  631  	__raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-a7851aa54c0cdd Sinan Kaya      2018-04-05  632  	__io_paw();
-9216efafc52ff9 Thierry Reding  2014-10-01  633  }
-6f043e75744596 Niklas Schnelle 2024-10-24  634  #else
-6f043e75744596 Niklas Schnelle 2024-10-24  635  void _outl(u32 value, unsigned long addr)
-6f043e75744596 Niklas Schnelle 2024-10-24  636  	__compiletime_error("outl() requires CONFIG_HAS_IOPORT");
-6f043e75744596 Niklas Schnelle 2024-10-24  637  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  638  #endif
-9216efafc52ff9 Thierry Reding  2014-10-01  639  
+4) Just to clarify  since schedule_delayed_work() is asynchronous, is
+there a risk that the reset may not complete before subsequent logic
+(like firmware loading or hci setup) begins? Would it be safer to wait
+for the GPIO reset to complete explicitly?
 
-:::::: The code at line 542 was first introduced by commit
-:::::: f009c89df79abea5f5244b8135a205f7d4352f86 io: Provide _inX() and _outX()
+> +       return 0;
+> +}
+> +
+>  void btmtk_fw_get_filename(char *buf, size_t size, u32 dev_id, u32 fw_ve=
+r,
+>                            u32 fw_flavor)
+>  {
+> @@ -364,6 +420,10 @@ void btmtk_reset_sync(struct hci_dev *hdev)
+>         struct btmtk_data *reset_work =3D hci_get_priv(hdev);
+>         int err;
+>
+> +       /*Toggle reset gpio if the platform provieds one*/
+> +       err =3D btmtk_reset_by_gpio(hdev);
+> +       if (!err)
+> +               return;
 
-:::::: TO: John Garry <john.garry@huawei.com>
-:::::: CC: Wei Xu <xuwei5@hisilicon.com>
+5) We need this fallback to ensure that even if reset-gpios or
+mediatek,usb-bluetooth aren't defined in the device tree, the platform
+can still boot and operate normally. This helps maintain compatibility
+with existing or older deployments.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+                 Sean
+
+>         hci_dev_lock(hdev);
+>
+>         err =3D hci_cmd_sync_queue(hdev, reset_work->reset_sync, NULL, NU=
+LL);
+> diff --git a/drivers/bluetooth/btmtk.h b/drivers/bluetooth/btmtk.h
+> index 5df7c3296624..8a265ce367d1 100644
+> --- a/drivers/bluetooth/btmtk.h
+> +++ b/drivers/bluetooth/btmtk.h
+> @@ -179,6 +179,11 @@ struct btmtk_data {
+>         spinlock_t isorxlock;
+>  };
+>
+> +struct btmtk_reset_gpio {
+> +       struct delayed_work reset_work;
+> +       int gpio_number;
+> +};
+> +
+>  typedef int (*wmt_cmd_sync_func_t)(struct hci_dev *,
+>                                    struct btmtk_hci_wmt_params *);
+>
+> --
+> 2.46.0
+>
+>
