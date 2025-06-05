@@ -1,38 +1,38 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826D128EB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827637DA9C
 	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:35:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749141363; cv=none; b=hfx6L32GpRVNIUld6IFeVs33rZF9wP6aTfPtQq2WfkI+/4tZric9hpAqq9v9/RrvcJLdA91azQUfJzDFw9YFpKq3woJJtim1rMh1RJ61IqCj+DWJc/Y2iCtgR2CV50LlcSPyXVWRVz1cy5UgMqdbU6mbDuHfO1YtyHYRd2sC3+c=
+	t=1749141364; cv=none; b=WALn9Gx/FDp/KJlHFMdyp5C2s/vjDLruTz72ye9S/sh+iGrudugWsQwStgPU+UyM07oUPPlw6MUYeTNfSvA7SA89EE2VmnInw1snIHT1M8XWlK9Waij8GuD0eRpTXUVTjfzcfr9/EWUix0mXMGaSKO121JuXoU2eNE6UuFtSHgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749141363; c=relaxed/simple;
-	bh=pwKXZ7JdEhYK/8XERx6KXCjYqveKgYWh5sI7lsuJRCU=;
+	s=arc-20240116; t=1749141364; c=relaxed/simple;
+	bh=tUXIhZbF7H9VbMC/6Rr6SYm8b2PsrGPNeClDtMBzUMg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qHNcHC/ryjWxq/fjPZOyOhD/90rNxjiAmjSiQWXzmGZC5JzkZQEt04UKENyLeCVctE+ye2W2qZQBJmy7Ugl25Z5TXRGL6MUkmWEj7f2c4E/0rCfqZ0lXLP/n0iQd6DXzhjj9H4+zfXiEfw6gmVcUR7qYMv92vAxhO85e0JJcsI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=YHHnm21D; arc=none smtp.client-ip=96.67.55.147
+	 MIME-Version; b=avX4QWnPriGRQ/+5DsQW64gN3qO8NSHj00EsgwloBxdKPyQOPx17NTpsKw3yh93bxSEsCn3txCRz6VWWLkK1cubIaMEK8ZBQ/fcY7dKs9nsKaWofeLo+79HzOELb1E0dRXhWCclhKPJJ+ikN7gC7/2EZYqghqLYSWKOO17guQf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=QO2d/FP7; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="YHHnm21D"
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="QO2d/FP7"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
 	; s=mail; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=khz39EtDqLWffJdydfpu+X36rlWqSeiyiuDlzc/r+Ug=; b=YHHnm21DlLph7IRT69AUT4M3xX
-	mMMvaTZtrmUnp1LSQxORQf7RXoYZs2myZOJAl10WvyjglpTwzD7IHm4i+KZkrt1Wwz6pOXJqVek5X
-	dplIjIH1SbjPOpF4ypKYAjT6IlN3b5tgVTQ7RrcLnlN3ChfE5yVHxxm5wbBSdJqAdxZ1X8jibAWK5
-	x4D8w5V4Sg2bNCi13ZqjDrH+XL9twawyWWGRmgLj6YnD/V7qZdCA9VDJ2p2humpoHsi4/lNlcgCWk
-	GMX7zOqgliPLZN2fNEhy8EqSk5nd6BmAkZvOfYNFKBMVdjbAkma78E4SR/8iDLzbYJuOwutaqexdR
-	hYbTcgIw==;
+	bh=d0GaS7yOnMLWrg4UsPm7aK0LJLyPCA8rrRBXUPtjrSg=; b=QO2d/FP7YU/UtaWbMr4zEEzKZX
+	k+sy01hroVzxv6hrVfMRxcPuuWwGx7gYF0yTNdpZ6YcW5HQnZlNO2fR9Q0Cr0og0TgRtPsXEP6nPV
+	rrQRna6TVzkBMYmafmzU6/AiqbB+6KKwZ8+9adI9fARwaRa8lTuNXe7P+nqHtlJiauRcaM/Bv/hxh
+	8PQ3x+nQsvPmJ1ojhD1sM1+3sQG+Ji5nUUlsh7wDDEDEuv35POExsqyqq8SbrdSxFXfqEQPKkI+FF
+	iDXbFxr7AQ0KSMOwKT2hHFpiTZs0p+RNnuJ6MA7o1XnNLe3P71X5lqFeyvXZUDYp2oo0T+qhShWHL
+	wFXq2KsA==;
 Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@surriel.com>)
-	id 1uNDZC-000000002qg-3lKG;
+	id 1uNDZC-000000002qg-3ZIq;
 	Thu, 05 Jun 2025 12:35:46 -0400
 From: Rik van Riel <riel@surriel.com>
 To: linux-kernel@vger.kernel.org
@@ -45,11 +45,11 @@ Cc: kernel-team@meta.com,
 	nadav.amit@gmail.com,
 	seanjc@google.com,
 	tglx@linutronix.de,
-	Rik van Riel <riel@fb.com>,
+	Yu-cheng Yu <yu-cheng.yu@intel.com>,
 	Rik van Riel <riel@surriel.com>
-Subject: [RFC PATCH v3 7/7] x86/mm: userspace & pageout flushing using Intel RAR
-Date: Thu,  5 Jun 2025 12:35:16 -0400
-Message-ID: <20250605163544.3852565-8-riel@surriel.com>
+Subject: [RFC PATCH v3 5/7] x86/mm: Introduce Remote Action Request
+Date: Thu,  5 Jun 2025 12:35:14 -0400
+Message-ID: <20250605163544.3852565-6-riel@surriel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250605163544.3852565-1-riel@surriel.com>
 References: <20250605163544.3852565-1-riel@surriel.com>
@@ -61,441 +61,358 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Rik van Riel <riel@fb.com>
+From: Yu-cheng Yu <yu-cheng.yu@intel.com>
 
-Use Intel RAR to flush userspace mappings.
+Remote Action Request (RAR) is a TLB flushing broadcast facility.
+To start a TLB flush, the initiator CPU creates a RAR payload and
+sends a command to the APIC.  The receiving CPUs automatically flush
+TLBs as specified in the payload without the kernel's involement.
 
-Because RAR flushes are targeted using a cpu bitmap, the rules are
-a little bit different than for true broadcast TLB invalidation.
+[ riel: add pcid parameter to smp_call_rar_many so other mms can be flushed ]
 
-For true broadcast TLB invalidation, like done with AMD INVLPGB,
-a global ASID always has up to date TLB entries on every CPU.
-The context switch code never has to flush the TLB when switching
-to a global ASID on any CPU with INVLPGB.
-
-For RAR, the TLB mappings for a global ASID are kept up to date
-only on CPUs within the mm_cpumask, which lazily follows the
-threads around the system. The context switch code does not
-need to flush the TLB if the CPU is in the mm_cpumask, and
-the PCID used stays the same.
-
-However, a CPU that falls outside of the mm_cpumask can have
-out of date TLB mappings for this task. When switching to
-that task on a CPU not in the mm_cpumask, the TLB does need
-to be flushed.
-
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- arch/x86/include/asm/tlbflush.h |   9 +-
- arch/x86/mm/tlb.c               | 177 ++++++++++++++++++++++++--------
- 2 files changed, 141 insertions(+), 45 deletions(-)
+ arch/x86/include/asm/rar.h   |  69 +++++++++++
+ arch/x86/kernel/cpu/common.c |   4 +
+ arch/x86/mm/Makefile         |   1 +
+ arch/x86/mm/rar.c            | 217 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 291 insertions(+)
+ create mode 100644 arch/x86/include/asm/rar.h
+ create mode 100644 arch/x86/mm/rar.c
 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index e9b81876ebe4..21bd9162df38 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -250,7 +250,8 @@ static inline u16 mm_global_asid(struct mm_struct *mm)
- {
- 	u16 asid;
- 
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return 0;
- 
- 	asid = smp_load_acquire(&mm->context.global_asid);
-@@ -263,7 +264,8 @@ static inline u16 mm_global_asid(struct mm_struct *mm)
- 
- static inline void mm_init_global_asid(struct mm_struct *mm)
- {
--	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB) ||
-+	    cpu_feature_enabled(X86_FEATURE_RAR)) {
- 		mm->context.global_asid = 0;
- 		mm->context.asid_transition = false;
- 	}
-@@ -287,7 +289,8 @@ static inline void mm_clear_asid_transition(struct mm_struct *mm)
- 
- static inline bool mm_in_asid_transition(struct mm_struct *mm)
- {
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return false;
- 
- 	return mm && READ_ONCE(mm->context.asid_transition);
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 8931f7029d6c..75f32f49bef6 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -222,7 +222,8 @@ struct new_asid {
- 	unsigned int need_flush : 1;
- };
- 
--static struct new_asid choose_new_asid(struct mm_struct *next, u64 next_tlb_gen)
-+static struct new_asid choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
-+				       bool new_cpu)
- {
- 	struct new_asid ns;
- 	u16 asid;
-@@ -235,14 +236,22 @@ static struct new_asid choose_new_asid(struct mm_struct *next, u64 next_tlb_gen)
- 
- 	/*
- 	 * TLB consistency for global ASIDs is maintained with hardware assisted
--	 * remote TLB flushing. Global ASIDs are always up to date.
-+	 * remote TLB flushing. Global ASIDs are always up to date with INVLPGB,
-+	 * and up to date for CPUs in the mm_cpumask with RAR..
- 	 */
--	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB) ||
-+	    cpu_feature_enabled(X86_FEATURE_RAR)) {
- 		u16 global_asid = mm_global_asid(next);
- 
- 		if (global_asid) {
- 			ns.asid = global_asid;
- 			ns.need_flush = 0;
-+			/*
-+			 * If the CPU fell out of the cpumask, it can be
-+			 * out of date with RAR, and should be flushed.
-+			 */
-+			if (cpu_feature_enabled(X86_FEATURE_RAR))
-+				ns.need_flush = new_cpu;
- 			return ns;
- 		}
- 	}
-@@ -300,7 +309,14 @@ static void reset_global_asid_space(void)
- {
- 	lockdep_assert_held(&global_asid_lock);
- 
--	invlpgb_flush_all_nonglobals();
-+	/*
-+	 * The global flush ensures that a freshly allocated global ASID
-+	 * has no entries in any TLB, and can be used immediately.
-+	 * With Intel RAR, the TLB may still need to be flushed at context
-+	 * switch time when dealing with a CPU that was not in the mm_cpumask
-+	 * for the process, and may have missed flushes along the way.
-+	 */
-+	flush_tlb_all();
- 
- 	/*
- 	 * The TLB flush above makes it safe to re-use the previously
-@@ -377,7 +393,7 @@ static void use_global_asid(struct mm_struct *mm)
- {
- 	u16 asid;
- 
--	guard(raw_spinlock_irqsave)(&global_asid_lock);
-+	guard(raw_spinlock)(&global_asid_lock);
- 
- 	/* This process is already using broadcast TLB invalidation. */
- 	if (mm_global_asid(mm))
-@@ -403,13 +419,14 @@ static void use_global_asid(struct mm_struct *mm)
- 
- void mm_free_global_asid(struct mm_struct *mm)
- {
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return;
- 
- 	if (!mm_global_asid(mm))
- 		return;
- 
--	guard(raw_spinlock_irqsave)(&global_asid_lock);
-+	guard(raw_spinlock)(&global_asid_lock);
- 
- 	/* The global ASID can be re-used only after flush at wrap-around. */
- #ifdef CONFIG_BROADCAST_TLB_FLUSH
-@@ -427,7 +444,8 @@ static bool mm_needs_global_asid(struct mm_struct *mm, u16 asid)
- {
- 	u16 global_asid = mm_global_asid(mm);
- 
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return false;
- 
- 	/* Process is transitioning to a global ASID */
-@@ -445,7 +463,8 @@ static bool mm_needs_global_asid(struct mm_struct *mm, u16 asid)
-  */
- static void consider_global_asid(struct mm_struct *mm)
- {
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return;
- 
- 	/* Check every once in a while. */
-@@ -490,6 +509,7 @@ static void finish_asid_transition(struct flush_tlb_info *info)
- 		 * that results in a (harmless) extra IPI.
- 		 */
- 		if (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm_asid, cpu)) != bc_asid) {
-+			info->trim_cpumask = true;
- 			flush_tlb_multi(mm_cpumask(info->mm), info);
- 			return;
- 		}
-@@ -499,7 +519,7 @@ static void finish_asid_transition(struct flush_tlb_info *info)
- 	mm_clear_asid_transition(mm);
- }
- 
--static void broadcast_tlb_flush(struct flush_tlb_info *info)
-+static void invlpgb_tlb_flush(struct flush_tlb_info *info)
- {
- 	bool pmd = info->stride_shift == PMD_SHIFT;
- 	unsigned long asid = mm_global_asid(info->mm);
-@@ -530,8 +550,6 @@ static void broadcast_tlb_flush(struct flush_tlb_info *info)
- 		addr += nr << info->stride_shift;
- 	} while (addr < info->end);
- 
--	finish_asid_transition(info);
--
- 	/* Wait for the INVLPGBs kicked off above to finish. */
- 	__tlbsync();
- }
-@@ -862,7 +880,7 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		/* Check if the current mm is transitioning to a global ASID */
- 		if (mm_needs_global_asid(next, prev_asid)) {
- 			next_tlb_gen = atomic64_read(&next->context.tlb_gen);
--			ns = choose_new_asid(next, next_tlb_gen);
-+			ns = choose_new_asid(next, next_tlb_gen, true);
- 			goto reload_tlb;
- 		}
- 
-@@ -900,6 +918,7 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		ns.asid = prev_asid;
- 		ns.need_flush = true;
- 	} else {
-+		bool new_cpu = false;
- 		/*
- 		 * Apply process to process speculation vulnerability
- 		 * mitigations if applicable.
-@@ -914,20 +933,25 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		this_cpu_write(cpu_tlbstate.loaded_mm, LOADED_MM_SWITCHING);
- 		barrier();
- 
--		/* Start receiving IPIs and then read tlb_gen (and LAM below) */
--		if (next != &init_mm && !cpumask_test_cpu(cpu, mm_cpumask(next)))
-+		/* Start receiving IPIs and RAR invalidations */
-+		if (next != &init_mm && !cpumask_test_cpu(cpu, mm_cpumask(next))) {
- 			cpumask_set_cpu(cpu, mm_cpumask(next));
-+			if (cpu_feature_enabled(X86_FEATURE_RAR))
-+				new_cpu = true;
-+		}
+diff --git a/arch/x86/include/asm/rar.h b/arch/x86/include/asm/rar.h
+new file mode 100644
+index 000000000000..78c039e40e81
+--- /dev/null
++++ b/arch/x86/include/asm/rar.h
+@@ -0,0 +1,69 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_RAR_H
++#define _ASM_X86_RAR_H
 +
- 		next_tlb_gen = atomic64_read(&next->context.tlb_gen);
++/*
++ * RAR payload types
++ */
++#define RAR_TYPE_INVPG		0
++#define RAR_TYPE_INVPG_NO_CR3	1
++#define RAR_TYPE_INVPCID	2
++#define RAR_TYPE_INVEPT		3
++#define RAR_TYPE_INVVPID	4
++#define RAR_TYPE_WRMSR		5
++
++/*
++ * Subtypes for RAR_TYPE_INVLPG
++ */
++#define RAR_INVPG_ADDR			0 /* address specific */
++#define RAR_INVPG_ALL			2 /* all, include global */
++#define RAR_INVPG_ALL_NO_GLOBAL		3 /* all, exclude global */
++
++/*
++ * Subtypes for RAR_TYPE_INVPCID
++ */
++#define RAR_INVPCID_ADDR		0 /* address specific */
++#define RAR_INVPCID_PCID		1 /* all of PCID */
++#define RAR_INVPCID_ALL			2 /* all, include global */
++#define RAR_INVPCID_ALL_NO_GLOBAL	3 /* all, exclude global */
++
++/*
++ * Page size for RAR_TYPE_INVLPG
++ */
++#define RAR_INVLPG_PAGE_SIZE_4K		0
++#define RAR_INVLPG_PAGE_SIZE_2M		1
++#define RAR_INVLPG_PAGE_SIZE_1G		2
++
++/*
++ * Max number of pages per payload
++ */
++#define RAR_INVLPG_MAX_PAGES 63
++
++struct rar_payload {
++	u64 for_sw		: 8;
++	u64 type		: 8;
++	u64 must_be_zero_1	: 16;
++	u64 subtype		: 3;
++	u64 page_size		: 2;
++	u64 num_pages		: 6;
++	u64 must_be_zero_2	: 21;
++
++	u64 must_be_zero_3;
++
++	/*
++	 * Starting address
++	 */
++	u64 initiator_cr3;
++	u64 linear_address;
++
++	/*
++	 * Padding
++	 */
++	u64 padding[4];
++};
++
++void rar_cpu_init(void);
++void smp_call_rar_many(const struct cpumask *mask, u16 pcid,
++		       unsigned long start, unsigned long end);
++
++#endif /* _ASM_X86_RAR_H */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 8feb8fd2957a..d68a0a9b2aa2 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -71,6 +71,7 @@
+ #include <asm/tdx.h>
+ #include <asm/posted_intr.h>
+ #include <asm/runtime-const.h>
++#include <asm/rar.h>
  
--		ns = choose_new_asid(next, next_tlb_gen);
-+		ns = choose_new_asid(next, next_tlb_gen, new_cpu);
- 	}
+ #include "cpu.h"
  
- reload_tlb:
- 	new_lam = mm_lam_cr3_mask(next);
- 	if (ns.need_flush) {
--		VM_WARN_ON_ONCE(is_global_asid(ns.asid));
--		this_cpu_write(cpu_tlbstate.ctxs[ns.asid].ctx_id, next->context.ctx_id);
--		this_cpu_write(cpu_tlbstate.ctxs[ns.asid].tlb_gen, next_tlb_gen);
-+		if (is_dyn_asid(ns.asid)) {
-+			this_cpu_write(cpu_tlbstate.ctxs[ns.asid].ctx_id, next->context.ctx_id);
-+			this_cpu_write(cpu_tlbstate.ctxs[ns.asid].tlb_gen, next_tlb_gen);
-+		}
- 		load_new_mm_cr3(next->pgd, ns.asid, new_lam, true);
+@@ -2425,6 +2426,9 @@ void cpu_init(void)
+ 	if (is_uv_system())
+ 		uv_cpu_init();
  
- 		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
-@@ -1115,7 +1139,7 @@ static void flush_tlb_func(void *info)
- 	const struct flush_tlb_info *f = info;
- 	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
- 	u32 loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
--	u64 local_tlb_gen;
-+	u64 local_tlb_gen = 0;
- 	bool local = smp_processor_id() == f->initiating_cpu;
- 	unsigned long nr_invalidate = 0;
- 	u64 mm_tlb_gen;
-@@ -1138,19 +1162,6 @@ static void flush_tlb_func(void *info)
- 	if (unlikely(loaded_mm == &init_mm))
- 		return;
++	if (cpu_feature_enabled(X86_FEATURE_RAR))
++		rar_cpu_init();
++
+ 	load_fixmap_gdt(cpu);
+ }
  
--	/* Reload the ASID if transitioning into or out of a global ASID */
--	if (mm_needs_global_asid(loaded_mm, loaded_mm_asid)) {
--		switch_mm_irqs_off(NULL, loaded_mm, NULL);
--		loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
--	}
--
--	/* Broadcast ASIDs are always kept up to date with INVLPGB. */
--	if (is_global_asid(loaded_mm_asid))
--		return;
--
--	VM_WARN_ON(this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].ctx_id) !=
--		   loaded_mm->context.ctx_id);
--
- 	if (this_cpu_read(cpu_tlbstate_shared.is_lazy)) {
- 		/*
- 		 * We're in lazy mode.  We need to at least flush our
-@@ -1161,11 +1172,31 @@ static void flush_tlb_func(void *info)
- 		 * This should be rare, with native_flush_tlb_multi() skipping
- 		 * IPIs to lazy TLB mode CPUs.
- 		 */
-+		cpumask_clear_cpu(raw_smp_processor_id(), mm_cpumask(loaded_mm));
- 		switch_mm_irqs_off(NULL, &init_mm, NULL);
- 		return;
- 	}
+diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
+index 5b9908f13dcf..f36fc99e8b10 100644
+--- a/arch/x86/mm/Makefile
++++ b/arch/x86/mm/Makefile
+@@ -52,6 +52,7 @@ obj-$(CONFIG_ACPI_NUMA)		+= srat.o
+ obj-$(CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS)	+= pkeys.o
+ obj-$(CONFIG_RANDOMIZE_MEMORY)			+= kaslr.o
+ obj-$(CONFIG_MITIGATION_PAGE_TABLE_ISOLATION)	+= pti.o
++obj-$(CONFIG_BROADCAST_TLB_FLUSH)		+= rar.o
  
--	local_tlb_gen = this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen);
-+	/* Reload the ASID if transitioning into or out of a global ASID */
-+	if (mm_needs_global_asid(loaded_mm, loaded_mm_asid)) {
-+		switch_mm_irqs_off(NULL, loaded_mm, NULL);
-+		loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
+ obj-$(CONFIG_X86_MEM_ENCRYPT)	+= mem_encrypt.o
+ obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_amd.o
+diff --git a/arch/x86/mm/rar.c b/arch/x86/mm/rar.c
+new file mode 100644
+index 000000000000..f63e68b412de
+--- /dev/null
++++ b/arch/x86/mm/rar.c
+@@ -0,0 +1,217 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * RAR TLB shootdown
++ */
++#include <linux/sched.h>
++#include <linux/bug.h>
++#include <asm/current.h>
++#include <asm/io.h>
++#include <asm/sync_bitops.h>
++#include <asm/rar.h>
++#include <asm/tlbflush.h>
++
++static DEFINE_PER_CPU(struct cpumask, rar_cpu_mask);
++
++#define RAR_ACTION_SUCCESS	0x00
++#define RAR_ACTION_PENDING	0x01
++#define RAR_ACTION_FAILURE	0x80
++
++#define RAR_MAX_PAYLOADS 64UL
++
++/* How many RAR payloads are supported by this CPU */
++static int rar_max_payloads = RAR_MAX_PAYLOADS;
++
++/* Bitmap describing which RAR payload slots are in use. */
++static unsigned long rar_in_use = ~(RAR_MAX_PAYLOADS - 1);
++
++/*
++ * RAR payloads telling CPUs what to do. This table is shared between
++ * all CPUs; it is possible to have multiple payload tables shared between
++ * different subsets of CPUs, but that adds a lot of complexity.
++ */
++static struct rar_payload rar_payload[RAR_MAX_PAYLOADS] __page_aligned_bss;
++
++/*
++ * The action vector tells each CPU which payload table entries
++ * have work for that CPU.
++ */
++static DEFINE_PER_CPU_ALIGNED(u8[RAR_MAX_PAYLOADS], rar_action);
++
++static unsigned long get_payload_slot(void)
++{
++	while (1) {
++		unsigned long bit;
++
++		/*
++		 * Find a free bit and confirm it with test_and_set_bit()
++		 * below. If no slot is free, spin until one becomes free.
++		 */
++		bit = ffz(READ_ONCE(rar_in_use));
++
++		if (bit >= rar_max_payloads)
++			continue;
++
++		if (!test_and_set_bit((long)bit, &rar_in_use))
++			return bit;
++	}
++}
++
++static void free_payload_slot(unsigned long payload_nr)
++{
++	clear_bit(payload_nr, &rar_in_use);
++}
++
++static void set_payload(struct rar_payload *p, u16 pcid, unsigned long start,
++			uint32_t pages)
++{
++	p->must_be_zero_1	= 0;
++	p->must_be_zero_2	= 0;
++	p->must_be_zero_3	= 0;
++	p->page_size		= RAR_INVLPG_PAGE_SIZE_4K;
++	p->type			= RAR_TYPE_INVPCID;
++	p->num_pages		= pages;
++	p->initiator_cr3	= pcid;
++	p->linear_address	= start;
++
++	if (pcid) {
++		/* RAR invalidation of the mapping of a specific process. */
++		if (pages >= RAR_INVLPG_MAX_PAGES)
++			p->subtype = RAR_INVPCID_PCID;
++		else
++			p->subtype = RAR_INVPCID_ADDR;
++	} else {
++		/*
++		 * Unfortunately RAR_INVPCID_ADDR excludes global translations.
++		 * Always do a full flush for kernel invalidations.
++		 */
++		p->subtype = RAR_INVPCID_ALL;
++	}
++
++	/* Ensure all writes are visible before the action entry is set. */
++	smp_wmb();
++}
++
++static void set_action_entry(unsigned long payload_nr, int target_cpu)
++{
++	u8 *bitmap = per_cpu(rar_action, target_cpu);
++
++	/*
++	 * Given a remote CPU, "arm" its action vector to ensure it handles
++	 * the request at payload_nr when it receives a RAR signal.
++	 * The remote CPU will overwrite RAR_ACTION_PENDING when it handles
++	 * the request.
++	 */
++	WRITE_ONCE(bitmap[payload_nr], RAR_ACTION_PENDING);
++}
++
++static void wait_for_action_done(unsigned long payload_nr, int target_cpu)
++{
++	u8 status;
++	u8 *rar_actions = per_cpu(rar_action, target_cpu);
++
++	status = READ_ONCE(rar_actions[payload_nr]);
++
++	while (status == RAR_ACTION_PENDING) {
++		cpu_relax();
++		status = READ_ONCE(rar_actions[payload_nr]);
++	}
++
++	WARN_ON_ONCE(rar_actions[payload_nr] != RAR_ACTION_SUCCESS);
++}
++
++void rar_cpu_init(void)
++{
++	u64 r;
++	u8 *bitmap;
++	int max_payloads;
++	int this_cpu = smp_processor_id();
++
++	cpumask_clear(&per_cpu(rar_cpu_mask, this_cpu));
++
++	/* The MSR contains N defining the max [0-N] rar payload slots. */
++	rdmsrl(MSR_IA32_RAR_INFO, r);
++	max_payloads = (r >> 32) + 1;
++
++	/* If this CPU supports less than RAR_MAX_PAYLOADS, lower our limit. */
++	if (max_payloads < rar_max_payloads)
++		rar_max_payloads = max_payloads;
++	pr_info_once("RAR: support %d payloads\n", max_payloads);
++
++	bitmap = (u8 *)per_cpu(rar_action, this_cpu);
++	memset(bitmap, 0, RAR_MAX_PAYLOADS);
++	wrmsrl(MSR_IA32_RAR_ACT_VEC, (u64)virt_to_phys(bitmap));
++	wrmsrl(MSR_IA32_RAR_PAYLOAD_BASE, (u64)virt_to_phys(rar_payload));
++
++	/*
++	 * Allow RAR events to be processed while interrupts are disabled on
++	 * a target CPU. This prevents "pileups" where many CPUs are waiting
++	 * on one CPU that has IRQs blocked for too long, and should reduce
++	 * contention on the rar_payload table.
++	 */
++	r = RAR_CTRL_ENABLE | RAR_CTRL_IGNORE_IF;
++	wrmsrl(MSR_IA32_RAR_CTRL, r);
++}
++
++/*
++ * Inspired by smp_call_function_many(), but RAR requires a global payload
++ * table rather than per-CPU payloads in the CSD table, because the action
++ * handler is microcode rather than software.
++ */
++void smp_call_rar_many(const struct cpumask *mask, u16 pcid,
++		       unsigned long start, unsigned long end)
++{
++	unsigned long pages = (end - start + PAGE_SIZE) / PAGE_SIZE;
++	int cpu, this_cpu = smp_processor_id();
++	cpumask_t *dest_mask;
++	unsigned long payload_nr;
++
++	if (pages > RAR_INVLPG_MAX_PAGES || end == TLB_FLUSH_ALL)
++		pages = RAR_INVLPG_MAX_PAGES;
++
++	/*
++	 * Can deadlock when called with interrupts disabled.
++	 * Allow CPUs that are not yet online though, as no one else can
++	 * send smp call function interrupt to this CPU and as such deadlocks
++	 * can't happen.
++	 */
++	if (cpu_online(this_cpu) && !oops_in_progress && !early_boot_irqs_disabled) {
++		lockdep_assert_irqs_enabled();
++		lockdep_assert_preemption_disabled();
 +	}
 +
 +	/*
-+	 * Broadcast ASIDs are always kept up to date with INVLPGB; with
-+	 * Intel RAR IPI based flushes are used periodically to trim the
-+	 * mm_cpumask, and flushes that get here should be processed.
++	 * A CPU needs to be initialized in order to process RARs.
++	 * Skip offline CPUs.
++	 *
++	 * TODO:
++	 * - Use RAR to flush our own TLB so it can all happen in parallel
++	 *   (need to resolve a chicken-egg issue with the boot CPU)
++	 * - Skip RAR to CPUs that are in a deeper C-state, with an empty TLB
++	 *
++	 * This code cannot use the should_flush_tlb() logic here because
++	 * RAR flushes do not update the tlb_gen, resulting in unnecessary
++	 * flushes at context switch time.
 +	 */
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    is_global_asid(loaded_mm_asid))
++	dest_mask = this_cpu_ptr(&rar_cpu_mask);
++	cpumask_and(dest_mask, mask, cpu_online_mask);
++	__cpumask_clear_cpu(this_cpu, dest_mask);
++
++	/* Some callers race with other CPUs changing the passed mask */
++	if (unlikely(!cpumask_weight(dest_mask)))
 +		return;
 +
-+	VM_WARN_ON(is_dyn_asid(loaded_mm_asid) && loaded_mm->context.ctx_id !=
-+		   this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].ctx_id));
++	payload_nr = get_payload_slot();
++	set_payload(&rar_payload[payload_nr], pcid, start, pages);
 +
-+	if (is_dyn_asid(loaded_mm_asid))
-+		local_tlb_gen = this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen);
- 
- 	if (unlikely(f->new_tlb_gen != TLB_GENERATION_INVALID &&
- 		     f->new_tlb_gen <= local_tlb_gen)) {
-@@ -1264,7 +1295,8 @@ static void flush_tlb_func(void *info)
- 	}
- 
- 	/* Both paths above update our state to mm_tlb_gen. */
--	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
-+	if (is_dyn_asid(loaded_mm_asid))
-+		this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
- 
- 	/* Tracing is done in a unified manner to reduce the code size */
- done:
-@@ -1305,10 +1337,6 @@ static bool should_flush_tlb(int cpu, void *data)
- 	if (loaded_mm == info->mm)
- 		return true;
- 
--	/* In cpumask, but not the loaded mm? Periodically remove by flushing. */
--	if (info->trim_cpumask)
--		return true;
--
- 	return false;
- }
- 
-@@ -1324,6 +1352,27 @@ static bool should_trim_cpumask(struct mm_struct *mm)
- DEFINE_PER_CPU_SHARED_ALIGNED(struct tlb_state_shared, cpu_tlbstate_shared);
- EXPORT_PER_CPU_SYMBOL(cpu_tlbstate_shared);
- 
-+static bool should_flush_all(const struct flush_tlb_info *info)
-+{
-+	if (info->freed_tables)
-+		return true;
++	for_each_cpu(cpu, dest_mask)
++		set_action_entry(payload_nr, cpu);
 +
-+	if (info->trim_cpumask)
-+		return true;
++	/* Send a message to all CPUs in the map */
++	native_send_rar_ipi(dest_mask);
 +
-+	/*
-+	 * INVLPGB and RAR do not use this code path normally.
-+	 * This call cleans up the cpumask or ASID transition.
-+	 */
-+	if (mm_global_asid(info->mm))
-+		return true;
++	for_each_cpu(cpu, dest_mask)
++		wait_for_action_done(payload_nr, cpu);
 +
-+	if (mm_in_asid_transition(info->mm))
-+		return true;
-+
-+	return false;
++	free_payload_slot(payload_nr);
 +}
-+
- STATIC_NOPV void native_flush_tlb_multi(const struct cpumask *cpumask,
- 					 const struct flush_tlb_info *info)
- {
-@@ -1349,7 +1398,7 @@ STATIC_NOPV void native_flush_tlb_multi(const struct cpumask *cpumask,
- 	 * up on the new contents of what used to be page tables, while
- 	 * doing a speculative memory access.
- 	 */
--	if (info->freed_tables || mm_in_asid_transition(info->mm))
-+	if (should_flush_all(info))
- 		on_each_cpu_mask(cpumask, flush_tlb_func, (void *)info, true);
- 	else
- 		on_each_cpu_cond_mask(should_flush_tlb, flush_tlb_func,
-@@ -1380,6 +1429,35 @@ static DEFINE_PER_CPU_SHARED_ALIGNED(struct flush_tlb_info, flush_tlb_info);
- static DEFINE_PER_CPU(unsigned int, flush_tlb_info_idx);
- #endif
- 
-+static void rar_tlb_flush(struct flush_tlb_info *info)
-+{
-+	unsigned long asid = mm_global_asid(info->mm);
-+	u16 pcid = kern_pcid(asid);
-+
-+	/* Flush the remote CPUs. */
-+	smp_call_rar_many(mm_cpumask(info->mm), pcid, info->start, info->end);
-+	if (cpu_feature_enabled(X86_FEATURE_PTI))
-+		smp_call_rar_many(mm_cpumask(info->mm), user_pcid(asid), info->start, info->end);
-+
-+	/* Flush the local TLB, if needed. */
-+	if (cpumask_test_cpu(smp_processor_id(), mm_cpumask(info->mm))) {
-+		lockdep_assert_irqs_enabled();
-+		local_irq_disable();
-+		flush_tlb_func(info);
-+		local_irq_enable();
-+	}
-+}
-+
-+static void broadcast_tlb_flush(struct flush_tlb_info *info)
-+{
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		invlpgb_tlb_flush(info);
-+	else /* Intel RAR */
-+		rar_tlb_flush(info);
-+
-+	finish_asid_transition(info);
-+}
-+
- static struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
- 			unsigned long start, unsigned long end,
- 			unsigned int stride_shift, bool freed_tables,
-@@ -1440,15 +1518,22 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 	info = get_flush_tlb_info(mm, start, end, stride_shift, freed_tables,
- 				  new_tlb_gen);
- 
-+	/*
-+	 * IPIs and RAR can be targeted to a cpumask. Periodically trim that
-+	 * mm_cpumask by sending TLB flush IPIs, even when most TLB flushes
-+	 * are done with RAR.
-+	 */
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) || !mm_global_asid(mm))
-+		info->trim_cpumask = should_trim_cpumask(mm);
-+
- 	/*
- 	 * flush_tlb_multi() is not optimized for the common case in which only
- 	 * a local TLB flush is needed. Optimize this use-case by calling
- 	 * flush_tlb_func_local() directly in this case.
- 	 */
--	if (mm_global_asid(mm)) {
-+	if (mm_global_asid(mm) && !info->trim_cpumask) {
- 		broadcast_tlb_flush(info);
- 	} else if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
--		info->trim_cpumask = should_trim_cpumask(mm);
- 		flush_tlb_multi(mm_cpumask(mm), info);
- 		consider_global_asid(mm);
- 	} else if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
-@@ -1759,6 +1844,14 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- 	if (cpu_feature_enabled(X86_FEATURE_INVLPGB) && batch->unmapped_pages) {
- 		invlpgb_flush_all_nonglobals();
- 		batch->unmapped_pages = false;
-+	} else if (cpu_feature_enabled(X86_FEATURE_RAR) && cpumask_any(&batch->cpumask) < nr_cpu_ids) {
-+		rar_full_flush(&batch->cpumask);
-+		if (cpumask_test_cpu(cpu, &batch->cpumask)) {
-+			lockdep_assert_irqs_enabled();
-+			local_irq_disable();
-+			invpcid_flush_all_nonglobals();
-+			local_irq_enable();
-+		}
- 	} else if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
- 		flush_tlb_multi(&batch->cpumask, info);
- 	} else if (cpumask_test_cpu(cpu, &batch->cpumask)) {
++EXPORT_SYMBOL(smp_call_rar_many);
 -- 
 2.49.0
 
