@@ -1,51 +1,86 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37331F1927
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 05:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3DC1EF0B9;
+	Thu,  5 Jun 2025 05:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749102537; cv=none; b=Fm3n/5VcnYIPvH61ll+AJJTC2NIeDy3yjKIITJJ6pGQ8eiJVhDfC0/G+501ib9OOE0nECzcHuPEqGYOdYB+YQy6A9ygKxHjmV5sIEqt2XboWe/KJK5CJGt1Um9pane+8uVa09qK+EDjP/RtbxghloJTGhsATXqTvilRl6WLtY2g=
+	t=1749102557; cv=none; b=ceNbWxSwwwlhY9gdr1Ki2XtQ/7xrh/pB66/fp7Q70T0jNFBloL55jG5vgAE0SP/QTHtXOlv/d6bZr+O173BANbRJHhzklWrsM3xurv0VC+sJ8WTWiKSIFATpEu6tfY5BM7U41vBsDnqZFqzLChRNFr8RDV8iqeNCH+y4jKEJyL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749102537; c=relaxed/simple;
-	bh=ocKWQyWFvfo4i8RsaVUWnShGFXwK4VG6l8AjbjrEiVI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BC0ItMQKTzxGOT/Pt/M4bGTpIl5b99LgPBj+P0W2/33yzxm5Jl2SguD+YZmBMqfGwRNozyj7mNzwcPCRygDMRN+C1wOSTZR3TXMNpO3MhiF0NYH+h5N/y3sV8DkuURy4xnCAqtiZyNX0olucUwTApCl/S0cKSMMfL7waMwADo60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=YFtsD8HI; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1749102557; c=relaxed/simple;
+	bh=OIKPu2mbiRea8toxJB8h77wHD+vkqmaMLDdTwqVMVxU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xfe46hRoEXPEgxlu4zd8S1yxbNZAzfkfwpqhKVNmVsxQBY2r/osz13X0WD0aEjWHiKTNxEDW0KT4Jjt//9gbSHjWq/Tie+0GOQl59N1j2QGeuQFNrBdBPtBfWUVcFULxX20hE8v3zgwDzuzSIvlFmhNVGibjYDkQ6u96W02s4xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DwfXkHLq; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="YFtsD8HI"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 84E6F25DBC;
-	Thu,  5 Jun 2025 07:48:54 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id R5fxoGRey88U; Thu,  5 Jun 2025 07:48:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749102533; bh=ocKWQyWFvfo4i8RsaVUWnShGFXwK4VG6l8AjbjrEiVI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YFtsD8HIFsuqZnxPkJox2WRWLBedTnUKsSD6oUrm5qEZE6UjdkRcRkc5qKfOnUYYW
-	 luMv6Nbh27pLc+joYChsrRybQhR0W24y604Qk8o+vFLq0JmB4g0jT86lDwEJIKGnB1
-	 RQvvd8bKXtQYSYMA8/C+ps2CfQooN/8bY4K8t9vF/o0l/M3O/9ig1DXjJWX0X+6kUX
-	 e759oJBynZNngaZYL+kbLOETbmAr1xSHe6AblAHUS1lP43DGrB5Na0bjaOeMmOW/Ko
-	 /5LBDvFYZ9wQ3Zn8ZmPzgvyoKnnladuqmo2+IuYoys6fwdpSm6h01nwCExEbyoV8pD
-	 mVfEHQjxXSyXg==
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v2 2/2] platform/loongarch: laptop: Support backlight power control
-Date: Thu,  5 Jun 2025 05:48:28 +0000
-Message-ID: <20250605054828.15093-3-ziyao@disroot.org>
-In-Reply-To: <20250605054828.15093-1-ziyao@disroot.org>
-References: <20250605054828.15093-1-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwfXkHLq"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-312e747d2d8so1251280a91.0;
+        Wed, 04 Jun 2025 22:49:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749102555; x=1749707355; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FudjR0hExklji3S366f8VbcX6MleULSZEQFCVDOIEiE=;
+        b=DwfXkHLqJU1irRY6VsgG5Ii9e+W89P14uQSJ6QChUOXh6HFh9EbUnsXRGDD9sTjiv2
+         wDwI33XDAYN6L1aDGiwi597tSwLuMik3eoL8go7QdS/FY1RPhLE01P2rrkm1plLmDdMU
+         TmxUmt0fC9uejMZvfele8Y5COAgeDFViNte0MnJhc4d47A1iUfa2l9144UtyKRGIuFnh
+         C9ufUCj2ACsLHhSzXkUVEZWN6xt/3krRN15mM4HhLsPLHpETVcppp+t50644pt+rnqDn
+         935DPC2vHIdB7fGICTs4UxB+eLe8QkYeeEtF1a1my243Kq0BvjLF/WHxLWvEf76rXFKn
+         7joA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749102555; x=1749707355;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FudjR0hExklji3S366f8VbcX6MleULSZEQFCVDOIEiE=;
+        b=TnfcZbdAT1ii4eAU0jRZGxN3KalEIb5bnpuEHiBMuIwva+cU5oh1tzKTLLKcsa00z8
+         l06HU0EXDUp3W9WP0ncQJv3tpnVybtHx4xpSTU3cPgV/LMMqsdBOjFwwQwEEqmyyVuo1
+         leSKCdSrc0Yr9X+aa4tVqgK6y0LOcxdHqcuSTHvcw3FB1Z2hpdVQQYdsedKghH0c74km
+         QjxKnfXHEFXl3Cyzg9ioVV2yURVffFMPzKOowuxJkEVZgAvk1+gr6ulInpttwSrKu1PV
+         RdlR/tvnWcu5ULIMT6T9uQxQOhUxlxD3ZT1tlrAl8e2lpdE7JARvYgutHU/QhxPM665v
+         dObA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBUpt4HaJbHdrJj4oJA0VyMHOScd7XYBJsA5iBhLjM5hbMsQ/PzdzG2A/x/zxRsRRZ6o7ZPEpvMLFJ38s=@vger.kernel.org, AJvYcCUn0imIF1L3AQ/bRh176Tesn6TJOWwl4HzZScPq5WHT+Pq5Up8DLdMsLA+tvka4svBgU9pG5X9cDC+c@vger.kernel.org, AJvYcCVFbOVkdjiiGJgQIPXpovHjmtEbhvV2E6tXigvUPPHXfCY+ZEPd+LgA23qjDnQ/PGpgFoMURkfXrIaYkra0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrBQQwqp4yiNhcCyaGOEw+qL/ZqNAQny2DuyFJkMGUBKFw6ply
+	iEs2hrhVQ+nN0fz8UybHAU14/LjUmk050WuqrzKdcewDuPtH2M+CjAZF
+X-Gm-Gg: ASbGnctox7IlIAadLuc600O1z4sjDAoTznteK43rbMME+kfIUY8cKotMNLjal51gxSu
+	zQRV874uGdbLAIbcirlgR7yQBnFiaHdJuPg2bv/KqxdJcIFUOC0o7ZS3yGmAMN0Xi1FWCrFMPmG
+	NsBAWHmH8i4phhs3osVZ0PGDnJUQ8mghfCGnj2ZhLBNHhcqADUBa37Rn69S5GV6LzotKWMK6pmP
+	XGvabWD77kmIY+DCVEgDgQYdmO7gczSCOzoW9KIqX3/Nlbzk7y9ryYuTCzUMKKq4cipDqsaiS8W
+	H5zH4KED7Ajow6MYgzv419RJdSC1i6Ry/cfH+0l0ls/SsEEDag==
+X-Google-Smtp-Source: AGHT+IG+cLvM6EBM5hqY+xjSwFwgaKlstjrH+n4gxq3uygoWvW5JHICd5wEp+jsd3ecLswc0sEv3EA==
+X-Received: by 2002:a17:90b:28c8:b0:310:c8ec:4192 with SMTP id 98e67ed59e1d1-31328fa1c76mr3016940a91.10.1749102555130;
+        Wed, 04 Jun 2025 22:49:15 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313318e6a53sm425550a91.3.2025.06.04.22.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 22:49:14 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Filipe Manana <fdmanana@suse.com>,
+	Len Brown <len.brown@intel.com>,
+	Eric Biggers <ebiggers@google.com>,
+	pengdonglin <pengdonglin@xiaomi.com>,
+	Luo Jie <quic_luoj@quicinc.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Charles Wang <charles.goodix@gmail.com>,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: input: goodix,gt9916: Document stylus support
+Date: Thu,  5 Jun 2025 13:48:54 +0800
+Message-ID: <20250605054855.403487-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,142 +89,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-loongson_laptop_turn_{on,off}_backlight() are designed for controlling
-power of the backlight, but they aren't really used in the driver
-previously.
+Document stylus support. Optional support for DT properties:
+  - `goodix,stylus-enable`
+  - `goodix,stylus-pressure-level`
+  - `goodix,physical-x`
+  - `goodix,physical-y`
 
-Unify these two functions since they only differ in arguments passed to
-ACPI method, and wire up loongson_laptop_backlight_update() to update
-power state of the backlight as well. Tested on TongFang L860-T2 3A5000
-laptop.
-
-Signed-off-by: Yao Zi <ziyao@disroot.org>
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
 ---
- drivers/platform/loongarch/loongson-laptop.c | 76 ++++++++++----------
- 1 file changed, 38 insertions(+), 38 deletions(-)
+ .../input/touchscreen/goodix,gt9916.yaml      | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-index 828bd62e3596..fe3f5b24c0a1 100644
---- a/drivers/platform/loongarch/loongson-laptop.c
-+++ b/drivers/platform/loongarch/loongson-laptop.c
-@@ -56,9 +56,8 @@ static struct input_dev *generic_inputdev;
- static acpi_handle hotkey_handle;
- static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml
+index c40d92b7f..e5476ea36 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix,gt9916.yaml
+@@ -44,6 +44,27 @@ properties:
+   touchscreen-size-y: true
+   touchscreen-swapped-x-y: true
  
--int loongson_laptop_turn_on_backlight(void);
--int loongson_laptop_turn_off_backlight(void);
- static int loongson_laptop_backlight_update(struct backlight_device *bd);
-+static bool bl_powered;
- 
- /* 2. ACPI Helpers and device model */
- 
-@@ -354,16 +353,41 @@ static int ec_backlight_level(u8 level)
- 	return level;
- }
- 
-+static int ec_backlight_set_power(bool state)
-+{
-+	int status;
-+	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-+	struct acpi_object_list args = { 1, &arg0 };
++  goodix,stylus-enable:
++    type: boolean
++    description:
++      Indicates that stylus (pen) functionality is enabled. If present,
++      the driver will initialize stylus-specific input reporting.
 +
-+	arg0.integer.value = state;
-+	status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-+	if (ACPI_FAILURE(status)) {
-+		pr_info("Loongson lvds error: 0x%x\n", status);
-+		return -EIO;
-+	}
++  goodix,physical-x:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Physical width of the touchscreen in millimeters.
 +
-+	return 0;
-+}
++  goodix,physical-y:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Physical height of the touchscreen in millimeters.
 +
- static int loongson_laptop_backlight_update(struct backlight_device *bd)
- {
--	int lvl = ec_backlight_level(bd->props.brightness);
-+	int ret = 0, lvl = ec_backlight_level(bd->props.brightness);
-+	bool target_powered = !backlight_is_blank(bd);
- 
- 	if (lvl < 0)
- 		return -EIO;
--	if (ec_set_brightness(lvl))
--		return -EIO;
- 
--	return 0;
-+	if (target_powered != bl_powered) {
-+		ret = ec_backlight_set_power(target_powered);
-+		if (ret)
-+			return ret;
++  goodix,stylus-pressure-level:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Number of discrete pressure levels supported by the stylus.
++      The reported ABS_PRESSURE range will be 0 to
++      (goodix,stylus-pressure-level - 1).
 +
-+		bl_powered = target_powered;
-+	} else {
-+		ret = ec_set_brightness(lvl);
-+	}
-+
-+	return ret;
- }
+ additionalProperties: false
  
- static int loongson_laptop_get_brightness(struct backlight_device *bd)
-@@ -384,7 +408,7 @@ static const struct backlight_ops backlight_laptop_ops = {
- 
- static int laptop_backlight_register(void)
- {
--	int status = 0;
-+	int status = 0, ret;
- 	struct backlight_properties props;
- 
- 	memset(&props, 0, sizeof(props));
-@@ -392,44 +416,20 @@ static int laptop_backlight_register(void)
- 	if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
- 		return -EIO;
- 
-+	ret = ec_backlight_set_power(true);
-+	if (ret)
-+		return ret;
-+
-+	bl_powered = true;
-+
- 	props.brightness = ec_get_brightness();
- 	props.max_brightness = status;
-+	props.power = BACKLIGHT_POWER_ON;
- 	props.type = BACKLIGHT_PLATFORM;
- 
- 	backlight_device_register("loongson_laptop",
- 				NULL, NULL, &backlight_laptop_ops, &props);
- 
--	return 0;
--}
--
--int loongson_laptop_turn_on_backlight(void)
--{
--	int status;
--	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
--	struct acpi_object_list args = { 1, &arg0 };
--
--	arg0.integer.value = 1;
--	status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
--	if (ACPI_FAILURE(status)) {
--		pr_info("Loongson lvds error: 0x%x\n", status);
--		return -ENODEV;
--	}
--
--	return 0;
--}
--
--int loongson_laptop_turn_off_backlight(void)
--{
--	int status;
--	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
--	struct acpi_object_list args = { 1, &arg0 };
--
--	arg0.integer.value = 0;
--	status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
--	if (ACPI_FAILURE(status)) {
--		pr_info("Loongson lvds error: 0x%x\n", status);
--		return -ENODEV;
--	}
- 
- 	return 0;
- }
+ required:
 -- 
 2.49.0
 
