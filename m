@@ -1,129 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73E02114
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC27D2114;
+	Thu,  5 Jun 2025 06:46:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749105959; cv=none; b=gqNsS3U4VD5vrHVEpJf3iy53A7sZCF0qwp2EQLwEdnxCh4xlw0LOgca1kbMRpaLD0eHYUe26Yifr0+5tWzYWTK/+Rmf6I+GurNCOdDFFxABmwMrUlbmTJfDnbm4qHLyNeNfI2ycHnwfdSLbSm5SXZo398R2Rmulnz+j58xuvWZY=
+	t=1749106010; cv=none; b=SEo8l0u8ms9Rs5pcCd6uOZ5jDluC/2KKHzax7FLvxINLu8XLUh+KQpYjprVztsyIswe1TsMpspMjWA/QAOso/+kkmfFKd+zv7Z8SIbXUTplXmfvT9OSEx3DiW8Bk6n+oEYTFiTSSniwiREfQkjNsmrU7c1fRymEDFJow2US62pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749105959; c=relaxed/simple;
-	bh=cyduzTdGidhSuuj7X92xRstIuhvQeMVv9pQcr2FaBIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=aHlNvvk4VlriR2rPsYFDdkztFuRtccczPDHf9ugNsqv1ITN7G1v9p7rJgWORmQIxaBxHNTFbwFnzyiVJoHGYDZ7kk1pYEhi4NiqztTy3rxXnN/Cwd6lDAUgl2tz6xM3S8As0azhUuFJPl7TMVhtpzykKnMo2LxMcpljH6ySreYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCTFx4wH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749106010; c=relaxed/simple;
+	bh=TkwPaC5LkiD2AzRfVu53V8vYeTTkIIo3sfS9ma0nNMo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MT/bkBVu9RHiABTI9rqEV3d26L+GJ+cMfeK8Q/W2e61E1fPIw/Am9qfeGcwB2HO8Cs95jwsPFFx8g7Vz4XUznurHQiKNHO1G4BuhKrAXOdoFJiJFb96pHB3W+eIumWtZuUeYhlzbXE5450zimPhL2qT6TqhPrH2Z3akGujvw6QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLwSt/rX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCTFx4wH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8AFAC4CEE7;
-	Thu,  5 Jun 2025 06:45:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLwSt/rX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26139C4CEE7;
+	Thu,  5 Jun 2025 06:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749105959;
-	bh=cyduzTdGidhSuuj7X92xRstIuhvQeMVv9pQcr2FaBIU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=PCTFx4wHgqGTWPOLIP3vBHiWOoqIWpr5+wJ7lKMPVxP03gDDn7nbgZWHdGU/WqMPF
-	 5srLqbTz4+dq8Mrq6dhEv1deQfE0tkZcLZZeS29H87+zczcYa0fTrAOrvmm2EZCSzD
-	 HcoWX3IWU885bdG8auINWOrxh7CHKDwd+fX3nfLlq8SsAqtAFCygw/XR9SNrBxjz6p
-	 LeHL9mYJXqHKyJg2a0+EHUrrWnnZeAx2B6G0zEASnoL0U8jZLy50QaGX8DIXnWtVlg
-	 ORkzwEZ1TEiezjdAzAh24HFDSeIO0ALKGHVjX3JBdk5LvJESdoWgF3xxDFHOWxSXRB
-	 5hOTxJDgwQj2w==
-Date: Thu, 5 Jun 2025 12:15:55 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: Soundwire updates for v6.16
-Message-ID: <aEE9IwuPcjYyMSLu@vaman>
+	s=k20201202; t=1749106010;
+	bh=TkwPaC5LkiD2AzRfVu53V8vYeTTkIIo3sfS9ma0nNMo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NLwSt/rXojX3cThmkkKEtcWLjAXAPd5COS5p+Snz0xS/Qt8dFWs9aFgZTSynHEUYt
+	 0WOgzX/u8wBdR1j6HqyW778WPuvy9f3QYkxnimgdhuDMOygd9mYMAWGifExKCLCd2C
+	 6Dpws77QthBmsN2YZHenwEBVBlrMaVwWZcxCwoBQVttY5qYr16STOTp/MFQjmBft6o
+	 tGT/3MadWrMWAQ7QZcFsjcmMNtj6NDoE6bqtXzRZGcm5zqbZBnI7ZgSiqHahi3K7az
+	 odhwsr187j3x+jQY/oGDRNaQDwepertrh9W+B4O7Xuvtv5v+l4mT0CU/n9uuSEVSAP
+	 pGnZ4w/x9+jyw==
+Received: from [149.88.19.236] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uN4ND-0049uH-Cb;
+	Thu, 05 Jun 2025 07:46:47 +0100
+Date: Thu, 05 Jun 2025 07:46:45 +0100
+Message-ID: <875xhaeld6.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Sebastian Ott <sebott@redhat.com>
+Cc: Zenghui Yu <yuzenghui@huawei.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Colton Lewis <coltonlewis@google.com>,
+	Ricardo Koller <ricarkol@google.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] KVM: arm64: selftests: arch_timer_edge_cases fixes
+In-Reply-To: <9b9f7099-4e81-9b74-a1ac-37cd4965675b@redhat.com>
+References: <20250527142434.25209-1-sebott@redhat.com>
+	<adf8b877-7ca2-f60b-fb59-578c70d0e3c0@huawei.com>
+	<9b9f7099-4e81-9b74-a1ac-37cd4965675b@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="AvpxzHzZNNLAKbFV"
-Content-Disposition: inline
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 149.88.19.236
+X-SA-Exim-Rcpt-To: sebott@redhat.com, yuzenghui@huawei.com, oliver.upton@linux.dev, coltonlewis@google.com, ricarkol@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, shuah@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+On Wed, 04 Jun 2025 21:58:48 +0100,
+Sebastian Ott <sebott@redhat.com> wrote:
+> 
+> Hi Zenghui,
+> 
+> On Tue, 3 Jun 2025, Zenghui Yu wrote:
+> > On 2025/5/27 22:24, Sebastian Ott wrote:
+> >> Some small fixes for arch_timer_edge_cases that I stumbled upon
+> >> while debugging failures for this selftest on ampere-one.
+> >> 
+> >> Changes since v1: modified patch 3 based on suggestions from Marc.
+> >> 
+> >> I've done some tests with this on various machines - seems to be all
+> >> good, however on ampere-one I now hit this in 10% of the runs:
+> >> ==== Test Assertion Failure ====
+> >>   arm64/arch_timer_edge_cases.c:481: timer_get_cntct(timer) >= DEF_CNT + (timer_get_cntfrq() * (uint64_t)(delta_2_ms) / 1000)
+> >>   pid=166657 tid=166657 errno=4 - Interrupted system call
+> >>      1  0x0000000000404db3: test_run at arch_timer_edge_cases.c:933
+> >>      2  0x0000000000401f9f: main at arch_timer_edge_cases.c:1062
+> >>      3  0x0000ffffaedd625b: ?? ??:0
+> >>      4  0x0000ffffaedd633b: ?? ??:0
+> >>      5  0x00000000004020af: _start at ??:?
+> >>   timer_get_cntct(timer) >= DEF_CNT + msec_to_cycles(delta_2_ms)
+> >> 
+> >> This is not new, it was just hidden behind the other failure. I'll
+> >> try to figure out what this is about (seems to be independent of
+> >> the wait time)..
+> > 
+> > Not sure if you have figured it out. I can easily reproduce it on my box
+> > and I *guess* it is that we have some random XVAL values when we enable
+> > the timer..
+> 
+> Yes, I think so, too.
+> 
+> > test_reprogramming_timer()
+> > {
+> > 	local_irq_disable();
+> > 	reset_timer_state(timer, DEF_CNT);
+> 
+> My first attempt was to also initialize cval here
 
---AvpxzHzZNNLAKbFV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Note that CVAL and TVAL are two views of the same thing. It should be
+enough to initialise one of them (though TVAL is stupidly narrow).
 
-Hello Linus,
+> 
+> > 
+> > 	/* Program the timer to DEF_CNT + delta_1_ms. */
+> > 	set_tval_irq(timer, msec_to_cycles(delta_1_ms), CTL_ENABLE);
+> > 
+> > 	[...]
+> > }
+> > 
+> > set_tval_irq()
+> > {
+> > 	timer_set_ctl(timer, ctl);
+> > 
+> > 	// There is a window that we enable the timer with *random* XVAL
+> > 	// values and we may get the unexpected interrupt.. And it's
+> > 	// unlikely that KVM can be aware of TVAL's change (and
+> > 	// re-evaluate the interrupt's pending state) before hitting the
+> > 	// GUEST_ASSERT().
+> > 
+> > 	timer_set_tval(timer, tval_cycles);
+> 
+> Yes, I stumbled over this as well. I've always assumed that this order is
+> becauase of this from the architecture "If CNTV_CTL_EL0.ENABLE is 0,
+> the value returned is UNKNOWN." However re-reading that part today I
+> realized
+> that this only concerns register reads.
+> 
+> Maybe somone on cc knows why it's in that order?
 
-Please pull to receive a small pull request for soundwire subsystem for
-v6.16. This includes couple of core changes and an Intel driver change.
+I can't think of a valid reason. Enabling the timer without having set
+the deadline first is just silly.
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+> I'm currently testing this with the above swapped and it's looking good,
+> so far.
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+The swapped version (set xVAL, then enable the timer) is the only one
+that makes any sense.
 
-are available in the Git repository at:
+Thanks,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/so=
-undwire-6.16-rc1
+	M.
 
-for you to fetch changes up to 62ada17a6217a50fbd1b23f10899890f56effc97:
-
-  soundwire: only compute port params in specific stream states (2025-05-14=
- 12:44:01 +0100)
-
-----------------------------------------------------------------
-soundwire updates for 6.16
-
-Couple of small core changes for
- - sdw_assign_device_num() logic simplification, using internal slave id
-   for irqs and optimizing computing of port params in specific stream
-   states
- - Intel driver updates for ACE3+ microphone privacy status reporting
-   and enabling the status in HDA Intel driver
-
-----------------------------------------------------------------
-Bard Liao (1):
-      soundwire: only compute port params in specific stream states
-
-Charles Keepax (2):
-      soundwire: bus: Simplify sdw_assign_device_num()
-      soundwire: bus: Add internal slave ID and use for IRQs
-
-Peter Ujfalusi (2):
-      soundwire: intel: Add awareness of ACE3+ microphone privacy
-      ASoC: SOF: Intel: hda: Set the mic_privacy flag for soundwire with AC=
-E3+
-
- drivers/soundwire/bus.c                          | 31 +++++++++++---------=
-----
- drivers/soundwire/bus_type.c                     | 10 ++++++++
- drivers/soundwire/generic_bandwidth_allocation.c |  7 ++++++
- drivers/soundwire/intel.h                        |  2 ++
- drivers/soundwire/intel_ace2x_debugfs.c          |  6 +++++
- drivers/soundwire/intel_init.c                   |  1 +
- drivers/soundwire/irq.c                          |  6 ++---
- include/linux/soundwire/sdw.h                    |  6 +++++
- include/linux/soundwire/sdw_intel.h              |  5 ++++
- sound/soc/sof/intel/hda.c                        |  3 +++
- 10 files changed, 57 insertions(+), 20 deletions(-)
-
---=20
-~Vinod
-
---AvpxzHzZNNLAKbFV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmhBPSMACgkQfBQHDyUj
-g0dLsBAAozrJNeiebA+OTagpdFOL3af4AB0C4z/rGf9xSZiEBdkAuw0ByaS/NoqK
-660icxrshrnPLcqdifhWQSiys/q864zfdsoQOKz2MXZPSKMZjDzxKYQ9lEJ3N34Q
-OPbuu3xhgymZeirgkNn//C/vd3/Z4PYoQosBDxKmGJa8uxqc0DdJR17eiexNYmDB
-jOZqDe3BtI9URD8WbgYzp8wp8ZyIRtkPThdh6aIeTr8NZRG2am2G1aJHQToWnmE8
-b4uP3rBhtc1O4sQe22VrRClPFynwxevDp/VqlfyQ6B81YrFjEc93L6WHh/wtJL0+
-tCgTIDZ5XyCPpeYRcmqIP2od2ffhvBuCDUX9MCAWftmsyacCbqd3ResQjjfdkNsx
-r/MpHCS2EeJnHQwQMxdzCNGBIjtzu2IZhZR/3IUctsqyQ/CRgt7899lGZZ3mk0DQ
-kJ0+ucep5VPH80VBT8hS18zv0MzkULziVloCC0KLOOK3BNnfFSd2b/nu363iPZ8T
-CroFQKkUwElXOgKeAjo8SBYJ0XqlY14+Okq4dPBaw/N7EcHOMhWlJvd2Q+RtwWj3
-3wehYbQ8QCLpG0QIrxzm5YY7Oo0q0Jj/BOOU5JY9kGvSVFQXaUqOyovdKI4jGwyr
-1c6fTcZd8eT0DCTbisWlZLy6TNACz8vxcuZXyuAJLGGCav+anIY=
-=y68A
------END PGP SIGNATURE-----
-
---AvpxzHzZNNLAKbFV--
+-- 
+Jazz isn't dead. It just smells funny.
