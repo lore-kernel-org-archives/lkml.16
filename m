@@ -1,75 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B22127B50F;
-	Thu,  5 Jun 2025 19:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE2927FB05
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749151640; cv=none; b=grSLT74XqtQU3EjVotSRDR6PhVvD3W+DdXqVNmssRHy3LodhtpWVcKTMMjhazLIq+cZ9OHclbhKM9SUKGDYDwKXOZnwVHfROyp+rqylMdB1tVEJ0gGpsxHRyPw4cVvzJ+oz0F+UXv2Ube51BELUryIN7spgH6MU4BnthVDbsMz4=
+	t=1749151643; cv=none; b=au/RybM2PV2BRo51Vhazof/4FFHRAwi6YrSaKPUw2Kt/DYxMBjAg7v+5V7BE4z/hXAZItlvT9bqlFrK01+3LSJbSQaAwytAp92n7XpseYAK074+sSdPF17qlOb2+laCp5LfYy7m7OKuPuz2wUSNxxTD4NAKbXWm0TR9BZgRWUwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749151640; c=relaxed/simple;
-	bh=3WLeMMjA+fh4IHJ7WaUMpxMaHvV88oJ6noWJB0AtLuA=;
+	s=arc-20240116; t=1749151643; c=relaxed/simple;
+	bh=IMpfA1wqZarLzuB4nrBCzI9upCvhdpPW0XmBDJS/1F4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tzl4PWbzVcz2NACdvJ0F+xfWRkqSNGQChxaxbPabyTW7BBDwOzPmEh/S9kU4amNXVTK9CzX4Ur5tcSwSzVaw6EDlTS4ne8b9aIOpai7ODq0Rk4D/wThVNIH1/ftna8GHp2s9eHMeyBYobaISEpYU1CAO15xRC1UQ0/qY42u+R34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gW4S57n3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=u1UKOmSmc1NcnK5G9NGy4gaDQQDu+5FbI4rhVlS1eMplt7Zfnhypyz4LemInkJ3cu7e2S34mPPlkxmu12Oas/XOZghCFyfQxjXOuZlGytHUHfNwLXcTCGUTxdRgio9XxPrV04lUD7ug6VPKEwGvnI3WwPgN9BsEZRNth+03kyBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QWQcaNf+; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gW4S57n3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BBDC4CEE7;
-	Thu,  5 Jun 2025 19:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749151637;
-	bh=3WLeMMjA+fh4IHJ7WaUMpxMaHvV88oJ6noWJB0AtLuA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gW4S57n3mhtK9MHfayjsnpSTZGK3FTatXC/GnUwAt9aBndZgnRpD2jx7i62EPiyiC
-	 gX50B/IQOtdne8CqD2WJL0A0/em25RApjJONhUYAx052HbSb/3P5jJ1zreRPCsXTLj
-	 tSkPGpEqmsUgxn+rQ/YnJaUPVDrL3iPgNpdEloSoXj24+KDVLffvTPdqeMVG6RD31N
-	 /e7ZivjFEHtNmXhowOhdJxGcjkdRAl9tySz7eSaAB0UR6f4noawwKdu2RNaAxgCYgV
-	 VC2iRn3YRv97LsJRPOghn5fSOOtw76Kyptz5MxVrh7+AwbXNL1nhfiG1DnW7kK+My3
-	 3cYIFRdRWGX1Q==
-Date: Thu, 5 Jun 2025 19:27:15 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
-	Christoph Hellwig <hch@lst.de>, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: add entry for crypto library
-Message-ID: <20250605192715.GB945328@google.com>
-References: <20250605171156.2383-1-ebiggers@kernel.org>
- <CAHmME9ot0LdZ+SBYh9xLqFQLT0QL91mupwzUZRFyc=BV2QiJqw@mail.gmail.com>
- <CAMj1kXGEX_i-Gi3NAO+co6+4fKh5rQLhzwn=88wZbs+mVzGXPQ@mail.gmail.com>
- <CAHk-=wgd_4xrpXLUH1CGgGL=SXj0vq=XdJGGg388Exkti2Dg5Q@mail.gmail.com>
- <CAHmME9qE-gihY9XK0nNnRY+mHeTNNgn1qi1E7xCKJACFz-uqDg@mail.gmail.com>
- <CAMj1kXHthZYSrZzUEkMzjO+Jwy2LA4WUCCBosScX3P8FAPn1yQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QWQcaNf+"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-602e203db66so2340131a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749151640; x=1749756440; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ktTlyyYyWStVAYtvm1hFc3t1pciBGiotvMTYgEWetf4=;
+        b=QWQcaNf++5qYLOUIj+IO/rjRTBXp83BqsE54IYD7IfqWirN6HhUp0pqo70TI0f2JIh
+         cWlOp5OuEEf0Zfn6MYxS7N+d+zDj0A5jG/7+n6XFRtZvxoaOVkKSoNeGzh/zJ7EYDLfK
+         vPNVAmKqsvkJCjfzwOEpHKt/zlt8N2ujT80hdY/cZ99FuBytnfXUgPJuSs/ZI5VP7Ha9
+         /JfCnVyRQWYojbRkfgyhB9qHDSVK97zZF3y8mHBIeJx3yQVPjL79sAxXRW+GMYe5ja+k
+         JQlRORPkrJLMbp4nBRAIGJrUN0CThaK2WS3KR3qxsbV0Vv/oBfMd5wvYIhycxBGjSkSt
+         leUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749151640; x=1749756440;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ktTlyyYyWStVAYtvm1hFc3t1pciBGiotvMTYgEWetf4=;
+        b=N4dHdl2WLdQMgg6WEJK+IhSrWIzU6i03yK5T9RlXQXzyEr/FKiZKrArc3RPX4OMVIb
+         sAtSQh0OuIzvrcPa54UN/GFvn5EdBX+IZFNsY4Jj8KwMSRI9eiQ0MRmS47lrn+ayIm/f
+         j34YsUz5C1FIN5iwC+OLfMfrDYaAfUo1gIxso60Fj3CsSLTPsSJ56obATxk2PsZp7uKQ
+         nbv4wPBaFKtL4Vhai0I0jwy598y0U6K6oHdHs2QJXvOqHXKDnoqOgKjhWzcolNyvW1wY
+         oW7pFdNpBx25t6tQPwKDCcGtGqiaNbmO00LEZd1hfWOHfJsOph6t3H6QVVTzmCJAPRCe
+         o2uw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgApQsjEBDbmImyy5Lc3+NrksKAVPOpp7dZEoKni9L6uYfIoONhTMT0H6we4ilFR0qVeg/REv8ZyFK2v0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyczraGgxss4MByKd+mBDzIhM31APaT/vrYUWr2+rFsOA0aRLYN
+	prFFDg6aOngVaWkQPnD4IxgG6C7O9lQ06jHUUOhHRrAYAwI9GfhNnVgxSRWUtgGzdw==
+X-Gm-Gg: ASbGncsQ6LHZuKP5rsxoSmyfWO//C/77jVSuEFL5H2OdhUuWxKsyDtzv5ZS17kB5sNL
+	vYLnpm3iSRtDt1t6ragI7DBqFwyNmRfwz9vwR1JmIotHjk33extq+b8C5x6r3hmI/55De+rZ1BB
+	/bRok6xMbzPjM6NB9KKP58zQiyEUwsPHCTYgzO/f6m7LfcDdenz+5r6LD+PzzUyD3YgGuGWAAEL
+	24RF/lZHgkMPB4G6fw/zFMGHIp5cqMrb23mSilKC2ncfnEDu9SlCQ3+Zmy2aFLgAVPUDnizjzJa
+	ghJ2AD85SFYjIfQFiRg2zvNQPDBKB6jmfbJ3d6GXfZT+D4PejM+YDCg+I5j21KFJjngKLfpEbw8
+	pKnwsi6tvq0ZRIVLXvYy/uX8iFA==
+X-Google-Smtp-Source: AGHT+IGR0eQhUdX+BE/0D+8bzRt7h0N4AhkbBRetRMSEQ3qUIwv2gsp2KOR1vdCbT3C2qlHJYvRLaQ==
+X-Received: by 2002:a05:6402:50d2:b0:604:e33f:e5c0 with SMTP id 4fb4d7f45d1cf-60774b8001amr329835a12.30.1749151639586;
+        Thu, 05 Jun 2025 12:27:19 -0700 (PDT)
+Received: from google.com (57.35.34.34.bc.googleusercontent.com. [34.34.35.57])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6077837756esm34452a12.17.2025.06.05.12.27.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 12:27:18 -0700 (PDT)
+Date: Thu, 5 Jun 2025 19:27:13 +0000
+From: Matt Bobrowski <mattbobrowski@google.com>
+To: Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com,
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	kpsingh@kernel.org, amir73il@gmail.com, repnop@google.com,
+	jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net,
+	gnoack@google.com, m@maowtm.org
+Subject: Re: [PATCH v2 bpf-next 3/4] bpf: Introduce path iterator
+Message-ID: <aEHvkQ1C7Ne1dB4n@google.com>
+References: <20250603065920.3404510-1-song@kernel.org>
+ <20250603065920.3404510-4-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMj1kXHthZYSrZzUEkMzjO+Jwy2LA4WUCCBosScX3P8FAPn1yQ@mail.gmail.com>
+In-Reply-To: <20250603065920.3404510-4-song@kernel.org>
 
-On Thu, Jun 05, 2025 at 09:01:49PM +0200, Ard Biesheuvel wrote:
-> On Thu, 5 Jun 2025 at 20:46, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> >
-> > On Thu, Jun 5, 2025 at 8:45 PM Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > >
-> > > Should I just add you and Jason directly as 'M:' entries for this?
-> >
-> > Works for me.
+On Mon, Jun 02, 2025 at 11:59:19PM -0700, Song Liu wrote:
+> Introduce a path iterator, which reliably walk a struct path toward
+> the root. This path iterator is based on path_walk_parent. A fixed
+> zero'ed root is passed to path_walk_parent(). Therefore, unless the
+> user terminates it earlier, the iterator will terminate at the real
+> root.
 > 
-> Sure.
+> Signed-off-by: Song Liu <song@kernel.org>
+> ---
+>  kernel/bpf/Makefile    |  1 +
+>  kernel/bpf/helpers.c   |  3 +++
+>  kernel/bpf/path_iter.c | 58 ++++++++++++++++++++++++++++++++++++++++++
+>  kernel/bpf/verifier.c  |  5 ++++
+>  4 files changed, 67 insertions(+)
+>  create mode 100644 kernel/bpf/path_iter.c
+> 
+> diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
+> index 3a335c50e6e3..454a650d934e 100644
+> --- a/kernel/bpf/Makefile
+> +++ b/kernel/bpf/Makefile
+> @@ -56,6 +56,7 @@ obj-$(CONFIG_BPF_SYSCALL) += kmem_cache_iter.o
+>  ifeq ($(CONFIG_DMA_SHARED_BUFFER),y)
+>  obj-$(CONFIG_BPF_SYSCALL) += dmabuf_iter.o
+>  endif
+> +obj-$(CONFIG_BPF_SYSCALL) += path_iter.o
+>  
+>  CFLAGS_REMOVE_percpu_freelist.o = $(CC_FLAGS_FTRACE)
+>  CFLAGS_REMOVE_bpf_lru_list.o = $(CC_FLAGS_FTRACE)
+> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> index b71e428ad936..b190c78e40f6 100644
+> --- a/kernel/bpf/helpers.c
+> +++ b/kernel/bpf/helpers.c
+> @@ -3397,6 +3397,9 @@ BTF_ID_FLAGS(func, bpf_iter_dmabuf_next, KF_ITER_NEXT | KF_RET_NULL | KF_SLEEPAB
+>  BTF_ID_FLAGS(func, bpf_iter_dmabuf_destroy, KF_ITER_DESTROY | KF_SLEEPABLE)
+>  #endif
+>  BTF_ID_FLAGS(func, __bpf_trap)
+> +BTF_ID_FLAGS(func, bpf_iter_path_new, KF_ITER_NEW | KF_SLEEPABLE)
 
-Listing Ard and Jason as M: is fine with me.  I expect that in practice I'll be
-applying the patches and doing the pull requests for now, so (as is often the
-case with subsystems with multiple M:) in practice it will really be a primary
-maintainer and backup maintainer(s).  But I'm happy to have Ard and Jason listed
-in case one of them needs to step in.
+Hm, I'd expect KF_TRUSTED_ARGS to be enforced onto
+bpf_iter_path_new(), no? Shouldn't this only be operating on a stable
+struct path reference?
 
-- Eric
+> +BTF_ID_FLAGS(func, bpf_iter_path_next, KF_ITER_NEXT | KF_RET_NULL | KF_SLEEPABLE)
+> +BTF_ID_FLAGS(func, bpf_iter_path_destroy, KF_ITER_DESTROY | KF_SLEEPABLE)
+
+At this point, the claim is that such are only to be used from the
+context of the BPF LSM. If true, I'd expect these BPF kfuncs to be
+part of bpf_fs_kfunc_set_ids once moved into fs/bpf_fs_kfuncs.c.
+
+>  static const struct btf_kfunc_id_set common_kfunc_set = {
+> diff --git a/kernel/bpf/path_iter.c b/kernel/bpf/path_iter.c
+> new file mode 100644
+> index 000000000000..0d972ec84beb
+> --- /dev/null
+> +++ b/kernel/bpf/path_iter.c
+> @@ -0,0 +1,58 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
+> +#include <linux/bpf.h>
+> +#include <linux/bpf_mem_alloc.h>
+> +#include <linux/namei.h>
+> +#include <linux/path.h>
+> +
+> +/* open-coded iterator */
+> +struct bpf_iter_path {
+> +	__u64 __opaque[3];
+> +} __aligned(8);
+> +
+> +struct bpf_iter_path_kern {
+> +	struct path path;
+> +	__u64 flags;
+> +} __aligned(8);
+> +
+> +__bpf_kfunc_start_defs();
+> +
+> +__bpf_kfunc int bpf_iter_path_new(struct bpf_iter_path *it,
+> +				  struct path *start,
+> +				  __u64 flags)
+> +{
+> +	struct bpf_iter_path_kern *kit = (void *)it;
+> +
+> +	BUILD_BUG_ON(sizeof(*kit) > sizeof(*it));
+> +	BUILD_BUG_ON(__alignof__(*kit) != __alignof__(*it));
+> +
+> +	if (flags) {
+> +		memset(&kit->path, 0, sizeof(struct path));
+
+This warrants a comment for sure. Also why not just zero it out
+entirely?
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	kit->path = *start;
+> +	path_get(&kit->path);
+> +	kit->flags = flags;
+> +
+> +	return 0;
+> +}
+> +
+> +__bpf_kfunc struct path *bpf_iter_path_next(struct bpf_iter_path *it)
+> +{
+> +	struct bpf_iter_path_kern *kit = (void *)it;
+> +	struct path root = {};
+
+I think this also warrants a comment. Specifically, that unless the
+loop is explicitly terminated, bpf_iter_path_next() will continue
+looping until we've reached the global root of the VFS.
+
+> +	if (!path_walk_parent(&kit->path, &root))
+> +		return NULL;
+> +	return &kit->path;
+> +}
+> +
+> +__bpf_kfunc void bpf_iter_path_destroy(struct bpf_iter_path *it)
+> +{
+> +	struct bpf_iter_path_kern *kit = (void *)it;
+> +
+> +	path_put(&kit->path);
+> +}
+> +
+> +__bpf_kfunc_end_defs();
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index a7d6e0c5928b..45b45cdfb223 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -7036,6 +7036,10 @@ BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct socket) {
+>  	struct sock *sk;
+>  };
+>  
+> +BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct path) {
+> +	struct dentry *dentry;
+> +};
+
+Only trusted if struct path is trusted, and hence why KF_TRUSTED_ARGS
+should be enforced. 
+
+>  static bool type_is_rcu(struct bpf_verifier_env *env,
+>  			struct bpf_reg_state *reg,
+>  			const char *field_name, u32 btf_id)
+> @@ -7076,6 +7080,7 @@ static bool type_is_trusted_or_null(struct bpf_verifier_env *env,
+>  				    const char *field_name, u32 btf_id)
+>  {
+>  	BTF_TYPE_EMIT(BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct socket));
+> +	BTF_TYPE_EMIT(BTF_TYPE_SAFE_TRUSTED_OR_NULL(struct path));
+>  
+>  	return btf_nested_type_is_trusted(&env->log, reg, field_name, btf_id,
+>  					  "__safe_trusted_or_null");
+> -- 
+> 2.47.1
+> 
