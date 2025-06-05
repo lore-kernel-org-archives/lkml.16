@@ -1,115 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E623324B26;
-	Thu,  5 Jun 2025 05:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C221E24B26
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 05:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749100340; cv=none; b=NuGqRMSWcVRhpOGV1dsQM8qvGzcqGYjUliJEE8l/8n3+O7HOZJF5aoA4FWokf3rV4T51T9Dr1fzc58+InNcU2NDr34rO9v2/zSdPxJ34BTojJniscNkcaYhjqw1oe/os9T5LyjfWWZBx94RsxjJtBqJudRP8JhBNeAgALRrya4s=
+	t=1749100407; cv=none; b=BcRn4fhHiWo8t5boGBVje0FQeue0y4aMToG+j+7yCDnk1Cni76MFdwDPkS1z3VXWP0jtciG6q6qzFRRLeiY+9GJ5uBJhKvG9Y7C01pomROrKJv38/VurzC1JiUgSeVXdhTAt7FmWgJVXzlRRthC7GR+3kAJe4CJy7596KflPmgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749100340; c=relaxed/simple;
-	bh=Cojmq5Bw19bcv4D8O2BvzUtCCdxSCkh1++xIikVWjiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VF6ifSX2pI8axH0LGiPMTINsJ8qfm+7YOjpjNIoqE3rPVJXvixEFtbXyxFCPBacIFCG2hXd1axjFWiD6+1YkeSvx+YOSzP+3/xvKqh+NcjxaxMP95khwb3AOMOmW/1ZZubVD6SSTySucmBV/5z8O06aB9/z+BfmfUm+OhFgfAts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iigaeUz2; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749100407; c=relaxed/simple;
+	bh=yjKcUVsaOzsXlLaQQ6sVYum/jf/YVTmjmTtuD4pHD+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=lJhJokML7ALZ+co0VtPMOHuMXAiPxh3DC9pcBtLmHdEZ4DJpSXDlLr+5NyqNpVqksiM25IwHKO+nggmjYVhEvRclVwQZuHVqhZr7wUWI5z0HIiSu9USJXHVZlSWQELMXPff4vFxjlDqw0d/dmuU3AELM95onsgvVUIeNY75uljU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=O50PM8nT; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iigaeUz2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749100339; x=1780636339;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Cojmq5Bw19bcv4D8O2BvzUtCCdxSCkh1++xIikVWjiQ=;
-  b=iigaeUz23tmDfaYno5Tm3jhdxZDwcuR1GekOlucQ39h/kL+mR4BCg9EY
-   TCezB0PebmCXyRrqr3sjalcrJpfB3GyD8J5pFf+2iFrLnqJoW3SeVpVlZ
-   nqyZPiuuYl6ti4D6TU8mcjpsRrdFMAAaQLqezry95vYUiF7tRjV26QO5H
-   IiqzVYvfHJS/hD92DfLZOAQvy5L0o1mw124qHXeaYC4hkqXKw3OUEvSdO
-   caONnN4SQm6KitDqUompuPxzMX0i8sDbIcR2ye6v9JNy/VZAK8ZAC9y3+
-   OWQCfBSpt/UYM4Z+A24qi9ujm5ZfdaZl4NFuyP08Ao5IxZVAfR6q4QcQ0
-   A==;
-X-CSE-ConnectionGUID: z0002rrrS+y906dRWBwZuA==
-X-CSE-MsgGUID: xBe60VFHR9m8aLFxdPFX8A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="68754326"
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="68754326"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 22:12:18 -0700
-X-CSE-ConnectionGUID: pP3Otw1VR0Op+zdYIbAlJQ==
-X-CSE-MsgGUID: K9klzGtHRqiTQbrzEuROdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="149232736"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 04 Jun 2025 22:12:15 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uN2th-0003kP-1q;
-	Thu, 05 Jun 2025 05:12:13 +0000
-Date: Thu, 5 Jun 2025 13:12:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jorge Marques <jorge.marques@analog.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-i3c@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jorge Marques <jorge.marques@analog.com>
-Subject: Re: [PATCH 2/2] i3c: master: Add driver for Analog Devices I3C
- Controller IP
-Message-ID: <202506051224.6jLJ0AOh-lkp@intel.com>
-References: <20250604-adi-i3c-master-v1-2-0488e80dafcb@analog.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="O50PM8nT"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250605051322epoutp02a17a35543e53e6cbbc43ed7d53c3433c~GDYyERrSY3266132661epoutp02H
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 05:13:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250605051322epoutp02a17a35543e53e6cbbc43ed7d53c3433c~GDYyERrSY3266132661epoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749100402;
+	bh=TWZJnqmiFPsSy1+ILLqtvM1BwPxqpl14A88a5Y7yhVg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O50PM8nTZjeAH6peznjsVNd6ROJAp6sMkDLlxgluh1/bV+AZuGG13WvvLXqX+q4Eq
+	 R+5KEY0Fwt6gST2XIhanC4g0pZIV6FcfCNUQnjJfRLXT4HdPf/jyyLXU4u1RtZarV6
+	 t1iUo0u+CinRkl2OzZLqFCL24N1yV2abe0xQq4UA=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250605051321epcas2p41d48d5da8ce26a73ad4b5de424a807f6~GDYxoACPw3115231152epcas2p4R;
+	Thu,  5 Jun 2025 05:13:21 +0000 (GMT)
+Received: from epcas2p4.samsung.com (unknown [182.195.36.89]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4bCXf930Kmz6B9m5; Thu,  5 Jun
+	2025 05:13:21 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250605051320epcas2p31ea8aec2cbc88346cd08b2200a96e53f~GDYwk3cVo1550815508epcas2p3O;
+	Thu,  5 Jun 2025 05:13:20 +0000 (GMT)
+Received: from tiffany (unknown [10.229.95.142]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250605051320epsmtip116d0132b5d4ad98ba02e5f10b4ee2d5f~GDYwhojvp2376823768epsmtip1Z;
+	Thu,  5 Jun 2025 05:13:20 +0000 (GMT)
+Date: Thu, 5 Jun 2025 14:11:31 +0900
+From: Hyesoo Yu <hyesoo.yu@samsung.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: janghyuck.kim@samsung.com, zhaoyang.huang@unisoc.com,
+	jaewon31.kim@gmail.com, david@redhat.com, Jason Gunthorpe <jgg@ziepe.ca>,
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm: gup: avoid CMA page pinning by retrying
+ migration if no migratable page
+Message-ID: <20250605051131.GA3407065@tiffany>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20250604204323.95a646ae67f6800069a11e36@linux-foundation.org>
+X-CMS-MailID: 20250605051320epcas2p31ea8aec2cbc88346cd08b2200a96e53f
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----bfByJ-ZIY6BJv7sVO1BMUP1RgQAR8Q.m4BWNyUsw_2ev9GnZ=_322ae_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+cpgsPolicy: CPGSC10-234,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250605033432epcas2p4c024a9d05246b18c217f3562b3f53551
+References: <20250605033210.3184521-1-hyesoo.yu@samsung.com>
+	<CGME20250605033432epcas2p4c024a9d05246b18c217f3562b3f53551@epcas2p4.samsung.com>
+	<20250605033210.3184521-3-hyesoo.yu@samsung.com>
+	<20250604204323.95a646ae67f6800069a11e36@linux-foundation.org>
+
+------bfByJ-ZIY6BJv7sVO1BMUP1RgQAR8Q.m4BWNyUsw_2ev9GnZ=_322ae_
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250604-adi-i3c-master-v1-2-0488e80dafcb@analog.com>
 
-Hi Jorge,
+On Wed, Jun 04, 2025 at 08:43:23PM -0700, Andrew Morton wrote:
+> On Thu,  5 Jun 2025 12:32:07 +0900 Hyesoo Yu <hyesoo.yu@samsung.com> wrote:
+> 
+> > Commit 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
+> > introduced an issue where CMA pages could be pinned by longterm GUP requests.
+> > This occurs when unpinnable pages are detected but the movable_page_list is empty;
+> > the commit would return success without retrying, allowing unpinnable
+> > pages (such as CMA) to become pinned.
+> > 
+> > CMA pages may be temporarily off the LRU due to concurrent isolation,
+> > for example when multiple longterm GUP requests are racing and therefore
+> > not appear in movable_page_list. Before commit 1aaf8c, the kernel would
+> > retry migration in such cases, which helped avoid accidental CMA pinning.
+> > 
+> > The original intent of the commit was to support longterm GUP on non-LRU
+> > CMA pages in out-of-tree use cases such as pKVM. However, allowing this
+> > can lead to broader CMA pinning issues.
+> > 
+> > To avoid this, the logic is restored to return -EAGAIN instead of success
+> > when no folios could be collected but unpinnable pages were found.
+> > This ensures that migration is retried until success, and avoids
+> > inadvertently pinning unpinnable pages.
+> > 
+> > Fixes: 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
+> 
+> v6.14.
+> 
+> As ever, a question is "should we backport this fix".  To answer that
+> we should understand the effect the regression has upon our users. 
+> Readers can guess, but it's better if you tell us this, please?
+>
 
-kernel test robot noticed the following build warnings:
+Hi Andrew.
 
-[auto build test WARNING on 00286d7d643d3c98e48d9cc3a9f471b37154f462]
+We have confirmed that this regression causes CMA pages to be pinned
+in our kernel 6.12-based environment.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jorge-Marques/dt-bindings-i3c-Add-adi-i3c-master/20250604-235108
-base:   00286d7d643d3c98e48d9cc3a9f471b37154f462
-patch link:    https://lore.kernel.org/r/20250604-adi-i3c-master-v1-2-0488e80dafcb%40analog.com
-patch subject: [PATCH 2/2] i3c: master: Add driver for Analog Devices I3C Controller IP
-config: alpha-randconfig-r111-20250605 (https://download.01.org/0day-ci/archive/20250605/202506051224.6jLJ0AOh-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 10.5.0
-reproduce: (https://download.01.org/0day-ci/archive/20250605/202506051224.6jLJ0AOh-lkp@intel.com/reproduce)
+In addition to CMA allocation failures, we also observed GUP longterm
+failures in cases where the same VMA was accessed repeatedly.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506051224.6jLJ0AOh-lkp@intel.com/
+Specifically, the first GUP longterm call would pin a CMA page, and a second
+call on the same region would fail the migration due to the cma page already
+being pinned.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/i3c/master/adi-i3c-master.c:768:28: sparse: sparse: dubious: x | !y
+After reverting commit 1aaf8c122918, the issue no longer reproduced.
 
-vim +768 drivers/i3c/master/adi-i3c-master.c
+Therefore, this fix is important to ensure reliable behavior of GUP longterm
+and CMA-backed memory, and should be backported to stable.
 
-   759	
-   760	static void adi_i3c_master_handle_da_req(struct adi_i3c_master *master)
-   761	{
-   762		u8 payload0[8];
-   763		u32 addr;
-   764	
-   765		/* Clear device characteristics */
-   766		adi_i3c_master_rd_from_rx_fifo(master, payload0, 6);
-   767		addr = master->daa.addrs[master->daa.index++];
- > 768		addr = (addr << 1) | !parity8(addr);
-   769	
-   770		writel(addr, master->regs + REG_SDO_FIFO);
-   771	}
-   772	
+Thanks,
+Regards.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> 
+
+------bfByJ-ZIY6BJv7sVO1BMUP1RgQAR8Q.m4BWNyUsw_2ev9GnZ=_322ae_
+Content-Type: text/plain; charset="utf-8"
+
+
+------bfByJ-ZIY6BJv7sVO1BMUP1RgQAR8Q.m4BWNyUsw_2ev9GnZ=_322ae_--
