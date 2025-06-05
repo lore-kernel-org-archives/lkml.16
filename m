@@ -1,287 +1,324 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298221F3BAC
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62DD1BD035;
+	Thu,  5 Jun 2025 07:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749107460; cv=none; b=nww9taiLyBN/VzVhhz2a2AY3WWgvfiReSZwBFfIycRM/o0XD8MMQxZytBg7W4OoLY925x56I78tVpBtU4x01b89rDAhB8vT+UBxaBXiFZ41RyugnWP26M+989Umn/PIMoWeAsjTJt9e/ymkLCQnUeGvH5XiFqQ6vZ3i4c0DB2N8=
+	t=1749107539; cv=none; b=UcXx5a0TWXT5/Pn5WSRi3MhXzNpLK4So3sVlvT+Idt/7rrWZp4T/EnfCnDtNW2MFdXBfHZ6e2fpFPKnWK0yEeSr7a6r8HaXGzlhkR1gl9teleUiSKMo+1Od0sEL46Q+iUjK0ZGFcoLRc3Pt5Uj5SK8wMK67dYErgifoxUh651hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749107460; c=relaxed/simple;
-	bh=885VIx6kzDrf0KfKwiUVuXwoWV8wBIF7oAVVVxA10zQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NSCcjX4yWIpUzeMogWY4krJGsjT6mI/fBMVVglAjExM1wp6vVaHU6FO/rSf5J96RyqWTmHBEHvwCmPJnvf6GjFvEOYEz7SMR+wB1ciEDP3EqEEjndfXzqH9BEYELIdyhcErxNpokFb1UVbTKbcyKF+95iSkqdVk3MkEj1YSCPRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fI+FwC4h; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fI+FwC4h"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso1121614a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749107456; x=1749712256; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vbmofZAA3TlXbKhnQqtXMU8CfPLcrFe6uu6tYmuI958=;
-        b=fI+FwC4hbRwbdiq7Lxk+KWDfSbWKhofZ0IhG4i4J3cbuZtzzdTLXNGtYmeWk5OvkP7
-         YitJftn597O7+K636zBl4klbidooa7cQc6gOOHOVNbtSdZWwKSOf0CpfnurnfwcZGdbE
-         63UJWpefcBQR4EWRSAN61E9GKORF8UbuD21KMjYo2eCx5fFpQB4CaC4mfC2M3MsJTGUU
-         f76TY63YHlNW9EV0t4WBa3vGPx2p3iqCyoxMNc6eZEuwFwN3wprU4bhR9zMm6+5i6ePI
-         CwqvxpS5fCCU2gf8F2lU/z19VouJZkQGOWFusOIziJ4CsS/MIlGo53efvegDb5kxQsBk
-         bVeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749107456; x=1749712256;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vbmofZAA3TlXbKhnQqtXMU8CfPLcrFe6uu6tYmuI958=;
-        b=BVMdc9SsQLFoFM7vw0bWLGkYoVK1ATrXxEDy+zW5npnDDYDpg8r5WwDTLGTs1MfKch
-         UUed9r1F2E2ma78NOWCHZthu5ulqWBtO3mbn/2vDhyybWEnlL1p26nTenJp/HRGAzaL2
-         2/F0cWkXpnVygXQMoVbfZ1RyMQof/ofjcW4q6Jn96oYKXXiDqgPlDsKVvgAt5/+73yqx
-         bkFHoJlzaCGGMMHg48Nrmi/ZoLAxo0w/zlF5fYBXY5t918Ha+7gcos4Nf7qPauJmVCvM
-         CITKBRVVfuL7FeQqVIdn6I7i9vZBJWf5ghldQ9m+GShoQvhUPPx7tZKk5uD/pFAk4b0Y
-         EIlQ==
-X-Gm-Message-State: AOJu0YxzWCtX7fjWH2/xiIz0kIgy9Ssts/aI59v/s/Y/3X+3jQObG87l
-	yxxfqtB3iVHlHpuj320Frr1L91aTxitq72rRhSK8xjX+mOhQnhjEUBNeueKLE2VaNUY=
-X-Gm-Gg: ASbGncsZEt8JUHO7OfHdm8O+/KTwzZWuzqRHWqI3TA4COweypnHXHE6WSqne15vo20/
-	AkWLnTe91I4Qyc2uN4xByBXrZPIsVonqDjg4Ksp0nUHODlSiKN8wf++XkytHBgCOZ0+sY02eeGH
-	+actfjiTzLGm+cn1RpxojaQMf0bI+UM8sZIoqV8DyYxn+AMEDRMo1s5Aiq5HYJ9SDriv/G27pmM
-	Aw9RI85iC74zl0z/WFt4NvTYCfxYjP9b0ZRt6LBA5uLIt9RPS/Jkpz6Q+wYH8Di7OTy0WiWDhKS
-	37g14hp4kK751+nqvThOG9VT14b8pKccf56O03Z+HNGxJdfFuSKO6kwbgC2CBQWmmmqSw/jBCNQ
-	=
-X-Google-Smtp-Source: AGHT+IE8sHHRwQar+3CLp0koW1FVTyH3vEN2IdU9qg5bSpsv++Z5rRrVGAZDYPz5dOS2nyQtefp2bg==
-X-Received: by 2002:a05:6402:26d0:b0:604:5cae:4031 with SMTP id 4fb4d7f45d1cf-606ea191815mr6085467a12.28.1749107456276;
-        Thu, 05 Jun 2025 00:10:56 -0700 (PDT)
-Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-60566c5a758sm9856845a12.19.2025.06.05.00.10.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 00:10:55 -0700 (PDT)
-Date: Thu, 5 Jun 2025 09:10:55 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-Message-ID: <aEFC_12om2UHFGbu@tiehlicka>
-References: <20250604140544.688711-1-david@redhat.com>
+	s=arc-20240116; t=1749107539; c=relaxed/simple;
+	bh=dqpOxE4mTWQ6JZcpUgFsCHFD5lbxyOFNMNRVeHiBoIg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TN4DaxuoaxiUX8t+7oLtdNBxCW4HZRVTRF08mCUZ9Jio8/kuIjwmsqWGrM0z85++pxJBRzK/qinGI0dk2XJb0Vvx+p0e3yv18XGzmTJdJsR5UH0WkaRCsgpCDnQtFogQE+J24XC+tTUltbY+vQwkZJ5TyHmASVJX+SwjIrC+yec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E077E41DF4;
+	Thu,  5 Jun 2025 07:12:09 +0000 (UTC)
+Message-ID: <3a26b273-7014-448a-b12c-d8a48b7d8fc6@ghiti.fr>
+Date: Thu, 5 Jun 2025 09:12:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604140544.688711-1-david@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/14] riscv: add SBI FWFT misaligned exception
+ delegation support
+To: Charlie Jenkins <charlie@rivosinc.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: cleger@rivosinc.com, Paul Walmsley <paul.walmsley@sifive.com>,
+ anup@brainfault.org, atishp@atishpatra.org, shuah@kernel.org,
+ corbet@lwn.net, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, samuel.holland@sifive.com,
+ ajones@ventanamicro.com, debug@rivosinc.com
+References: <20250523101932.1594077-1-cleger@rivosinc.com>
+ <mhng-C1CE13EE-C4E6-490D-ABF4-CE7BD84737C3@palmerdabbelt-mac>
+ <aECfReNdxc1ERz6K@ghost>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <aECfReNdxc1ERz6K@ghost>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeffedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeefueejtdegkedvhefhudfhgeefieevheeugeehgedvgfejhfetjeeiudelvdefteenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghdpihhnfhhrrgguvggrugdrohhrghenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdeingdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedujedprhgtphhtthhopegthhgrrhhlihgvsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegtlhgvghgvrhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtoheprghnu
+ hhpsegsrhgrihhnfhgruhhlthdrohhrghdprhgtphhtthhopegrthhishhhphesrghtihhshhhprghtrhgrrdhorhhgpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvght
+X-GND-Sasl: alex@ghiti.fr
 
-On Wed 04-06-25 16:05:44, David Hildenbrand wrote:
-> Especially once we hit one of the assertions in
-> sanity_check_pinned_pages(), observing follow-up assertions failing
-> in other code can give good clues about what went wrong, so use
-> VM_WARN_ON_ONCE instead.
-> 
-> While at it, let's just convert all VM_BUG_ON to VM_WARN_ON_ONCE as
-> well. Add one comment for the pfn_valid() check.
-> 
-> We have to introduce VM_WARN_ON_ONCE_VMA() to make that fly.
-> 
-> Drop the BUG_ON after mmap_read_lock_killable(), if that ever returns
-> something > 0 we're in bigger trouble. Convert the other BUG_ON's into
-> VM_WARN_ON_ONCE as well, they are in a similar domain "should never
-> happen", but more reasonable to check for during early testing.
+On 6/4/25 21:32, Charlie Jenkins wrote:
+> On Wed, Jun 04, 2025 at 11:02:35AM -0700, Palmer Dabbelt wrote:
+>> On Fri, 23 May 2025 03:19:17 PDT (-0700), cleger@rivosinc.com wrote:
+>>> The SBI Firmware Feature extension allows the S-mode to request some
+>>> specific features (either hardware or software) to be enabled. This
+>>> series uses this extension to request misaligned access exception
+>>> delegation to S-mode in order to let the kernel handle it. It also adds
+>>> support for the KVM FWFT SBI extension based on the misaligned access
+>>> handling infrastructure.
+>>>
+>>> FWFT SBI extension is part of the SBI V3.0 specifications [1]. It can be
+>>> tested using the qemu provided at [2] which contains the series from
+>>> [3]. Upstream kvm-unit-tests can be used inside kvm to tests the correct
+>>> delegation of misaligned exceptions. Upstream OpenSBI can be used.
+>>>
+>>> Note: Since SBI V3.0 is not yet ratified, FWFT extension API is split
+>>> between interface only and implementation, allowing to pick only the
+>>> interface which do not have hard dependencies on SBI.
+>>>
+>>> The tests can be run using the kselftest from series [4].
+>>>
+>>> $ qemu-system-riscv64 \
+>>> 	-cpu rv64,trap-misaligned-access=true,v=true \
+>>> 	-M virt \
+>>> 	-m 1024M \
+>>> 	-bios fw_dynamic.bin \
+>>> 	-kernel Image
+>>>   ...
+>>>
+>>>   # ./misaligned
+>>>   TAP version 13
+>>>   1..23
+>>>   # Starting 23 tests from 1 test cases.
+>>>   #  RUN           global.gp_load_lh ...
+>>>   #            OK  global.gp_load_lh
+>>>   ok 1 global.gp_load_lh
+>>>   #  RUN           global.gp_load_lhu ...
+>>>   #            OK  global.gp_load_lhu
+>>>   ok 2 global.gp_load_lhu
+>>>   #  RUN           global.gp_load_lw ...
+>>>   #            OK  global.gp_load_lw
+>>>   ok 3 global.gp_load_lw
+>>>   #  RUN           global.gp_load_lwu ...
+>>>   #            OK  global.gp_load_lwu
+>>>   ok 4 global.gp_load_lwu
+>>>   #  RUN           global.gp_load_ld ...
+>>>   #            OK  global.gp_load_ld
+>>>   ok 5 global.gp_load_ld
+>>>   #  RUN           global.gp_load_c_lw ...
+>>>   #            OK  global.gp_load_c_lw
+>>>   ok 6 global.gp_load_c_lw
+>>>   #  RUN           global.gp_load_c_ld ...
+>>>   #            OK  global.gp_load_c_ld
+>>>   ok 7 global.gp_load_c_ld
+>>>   #  RUN           global.gp_load_c_ldsp ...
+>>>   #            OK  global.gp_load_c_ldsp
+>>>   ok 8 global.gp_load_c_ldsp
+>>>   #  RUN           global.gp_load_sh ...
+>>>   #            OK  global.gp_load_sh
+>>>   ok 9 global.gp_load_sh
+>>>   #  RUN           global.gp_load_sw ...
+>>>   #            OK  global.gp_load_sw
+>>>   ok 10 global.gp_load_sw
+>>>   #  RUN           global.gp_load_sd ...
+>>>   #            OK  global.gp_load_sd
+>>>   ok 11 global.gp_load_sd
+>>>   #  RUN           global.gp_load_c_sw ...
+>>>   #            OK  global.gp_load_c_sw
+>>>   ok 12 global.gp_load_c_sw
+>>>   #  RUN           global.gp_load_c_sd ...
+>>>   #            OK  global.gp_load_c_sd
+>>>   ok 13 global.gp_load_c_sd
+>>>   #  RUN           global.gp_load_c_sdsp ...
+>>>   #            OK  global.gp_load_c_sdsp
+>>>   ok 14 global.gp_load_c_sdsp
+>>>   #  RUN           global.fpu_load_flw ...
+>>>   #            OK  global.fpu_load_flw
+>>>   ok 15 global.fpu_load_flw
+>>>   #  RUN           global.fpu_load_fld ...
+>>>   #            OK  global.fpu_load_fld
+>>>   ok 16 global.fpu_load_fld
+>>>   #  RUN           global.fpu_load_c_fld ...
+>>>   #            OK  global.fpu_load_c_fld
+>>>   ok 17 global.fpu_load_c_fld
+>>>   #  RUN           global.fpu_load_c_fldsp ...
+>>>   #            OK  global.fpu_load_c_fldsp
+>>>   ok 18 global.fpu_load_c_fldsp
+>>>   #  RUN           global.fpu_store_fsw ...
+>>>   #            OK  global.fpu_store_fsw
+>>>   ok 19 global.fpu_store_fsw
+>>>   #  RUN           global.fpu_store_fsd ...
+>>>   #            OK  global.fpu_store_fsd
+>>>   ok 20 global.fpu_store_fsd
+>>>   #  RUN           global.fpu_store_c_fsd ...
+>>>   #            OK  global.fpu_store_c_fsd
+>>>   ok 21 global.fpu_store_c_fsd
+>>>   #  RUN           global.fpu_store_c_fsdsp ...
+>>>   #            OK  global.fpu_store_c_fsdsp
+>>>   ok 22 global.fpu_store_c_fsdsp
+>>>   #  RUN           global.gen_sigbus ...
+>>>   [12797.988647] misaligned[618]: unhandled signal 7 code 0x1 at 0x0000000000014dc0 in misaligned[4dc0,10000+76000]
+>>>   [12797.988990] CPU: 0 UID: 0 PID: 618 Comm: misaligned Not tainted 6.13.0-rc6-00008-g4ec4468967c9-dirty #51
+>>>   [12797.989169] Hardware name: riscv-virtio,qemu (DT)
+>>>   [12797.989264] epc : 0000000000014dc0 ra : 0000000000014d00 sp : 00007fffe165d100
+>>>   [12797.989407]  gp : 000000000008f6e8 tp : 0000000000095760 t0 : 0000000000000008
+>>>   [12797.989544]  t1 : 00000000000965d8 t2 : 000000000008e830 s0 : 00007fffe165d160
+>>>   [12797.989692]  s1 : 000000000000001a a0 : 0000000000000000 a1 : 0000000000000002
+>>>   [12797.989831]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ffffffffdeadbeef
+>>>   [12797.989964]  a5 : 000000000008ef61 a6 : 626769735f6e0000 a7 : fffffffffffff000
+>>>   [12797.990094]  s2 : 0000000000000001 s3 : 00007fffe165d838 s4 : 00007fffe165d848
+>>>   [12797.990238]  s5 : 000000000000001a s6 : 0000000000010442 s7 : 0000000000010200
+>>>   [12797.990391]  s8 : 000000000000003a s9 : 0000000000094508 s10: 0000000000000000
+>>>   [12797.990526]  s11: 0000555567460668 t3 : 00007fffe165d070 t4 : 00000000000965d0
+>>>   [12797.990656]  t5 : fefefefefefefeff t6 : 0000000000000073
+>>>   [12797.990756] status: 0000000200004020 badaddr: 000000000008ef61 cause: 0000000000000006
+>>>   [12797.990911] Code: 8793 8791 3423 fcf4 3783 fc84 c737 dead 0713 eef7 (c398) 0001
+>>>   #            OK  global.gen_sigbus
+>>>   ok 23 global.gen_sigbus
+>>>   # PASSED: 23 / 23 tests passed.
+>>>   # Totals: pass:23 fail:0 xfail:0 xpass:0 skip:0 error:0
+>>>
+>>> With kvm-tools:
+>>>
+>>>   # lkvm run -k sbi.flat -m 128
+>>>    Info: # lkvm run -k sbi.flat -m 128 -c 1 --name guest-97
+>>>    Info: Removed ghost socket file "/root/.lkvm//guest-97.sock".
+>>>
+>>>   ##########################################################################
+>>>   #    kvm-unit-tests
+>>>   ##########################################################################
+>>>
+>>>   ... [test messages elided]
+>>>   PASS: sbi: fwft: FWFT extension probing no error
+>>>   PASS: sbi: fwft: get/set reserved feature 0x6 error == SBI_ERR_DENIED
+>>>   PASS: sbi: fwft: get/set reserved feature 0x3fffffff error == SBI_ERR_DENIED
+>>>   PASS: sbi: fwft: get/set reserved feature 0x80000000 error == SBI_ERR_DENIED
+>>>   PASS: sbi: fwft: get/set reserved feature 0xbfffffff error == SBI_ERR_DENIED
+>>>   PASS: sbi: fwft: misaligned_deleg: Get misaligned deleg feature no error
+>>>   PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature invalid value error
+>>>   PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature invalid value error
+>>>   PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value no error
+>>>   PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value 0
+>>>   PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value no error
+>>>   PASS: sbi: fwft: misaligned_deleg: Set misaligned deleg feature value 1
+>>>   PASS: sbi: fwft: misaligned_deleg: Verify misaligned load exception trap in supervisor
+>>>   SUMMARY: 50 tests, 2 unexpected failures, 12 skipped
+>>>
+>>> This series is available at [5].
+>>>
+>>> Link: https://github.com/riscv-non-isa/riscv-sbi-doc/releases/download/vv3.0-rc2/riscv-sbi.pdf [1]
+>>> Link: https://github.com/rivosinc/qemu/tree/dev/cleger/misaligned [2]
+>>> Link: https://lore.kernel.org/all/20241211211933.198792-3-fkonrad@amd.com/T/ [3]
+>>> Link: https://lore.kernel.org/linux-riscv/20250414123543.1615478-1-cleger@rivosinc.com [4]
+>>> Link: https://github.com/rivosinc/linux/tree/dev/cleger/fwft [5]
+>>> ---
+>>>
+>>> V8:
+>>>   - Move misaligned_access_speed under CONFIG_RISCV_MISALIGNED and add a
+>>>     separate commit for that.
+>>>
+>>> V7:
+>>>   - Fix ifdefery build problems
+>>>   - Move sbi_fwft_is_supported with fwft_set_req struct
+>>>   - Added Atish Reviewed-by
+>>>   - Updated KVM vcpu cfg hedeleg value in set_delegation
+>>>   - Changed SBI ETIME error mapping to ETIMEDOUT
+>>>   - Fixed a few typo reported by Alok
+>>>
+>>> V6:
+>>>   - Rename FWFT interface to remove "_local"
+>>>   - Fix test for MEDELEG values in KVM FWFT support
+>>>   - Add __init for unaligned_access_init()
+>>>   - Rebased on master
+>>>
+>>> V5:
+>>>   - Return ERANGE as mapping for SBI_ERR_BAD_RANGE
+>>>   - Removed unused sbi_fwft_get()
+>>>   - Fix kernel for sbi_fwft_local_set_cpumask()
+>>>   - Fix indentation for sbi_fwft_local_set()
+>>>   - Remove spurious space in kvm_sbi_fwft_ops.
+>>>   - Rebased on origin/master
+>>>   - Remove fixes commits and sent them as a separate series [4]
+>>>
+>>> V4:
+>>>   - Check SBI version 3.0 instead of 2.0 for FWFT presence
+>>>   - Use long for kvm_sbi_fwft operation return value
+>>>   - Init KVM sbi extension even if default_disabled
+>>>   - Remove revert_on_fail parameter for sbi_fwft_feature_set().
+>>>   - Fix comments for sbi_fwft_set/get()
+>>>   - Only handle local features (there are no globals yet in the spec)
+>>>   - Add new SBI errors to sbi_err_map_linux_errno()
+>>>
+>>> V3:
+>>>   - Added comment about kvm sbi fwft supported/set/get callback
+>>>     requirements
+>>>   - Move struct kvm_sbi_fwft_feature in kvm_sbi_fwft.c
+>>>   - Add a FWFT interface
+>>>
+>>> V2:
+>>>   - Added Kselftest for misaligned testing
+>>>   - Added get_user() usage instead of __get_user()
+>>>   - Reenable interrupt when possible in misaligned access handling
+>>>   - Document that riscv supports unaligned-traps
+>>>   - Fix KVM extension state when an init function is present
+>>>   - Rework SBI misaligned accesses trap delegation code
+>>>   - Added support for CPU hotplugging
+>>>   - Added KVM SBI reset callback
+>>>   - Added reset for KVM SBI FWFT lock
+>>>   - Return SBI_ERR_DENIED_LOCKED when LOCK flag is set
+>>>
+>>> Clément Léger (14):
+>>>    riscv: sbi: add Firmware Feature (FWFT) SBI extensions definitions
+>>>    riscv: sbi: remove useless parenthesis
+>>>    riscv: sbi: add new SBI error mappings
+>>>    riscv: sbi: add FWFT extension interface
+>>>    riscv: sbi: add SBI FWFT extension calls
+>>>    riscv: misaligned: request misaligned exception from SBI
+>>>    riscv: misaligned: use on_each_cpu() for scalar misaligned access
+>>>      probing
+>>>    riscv: misaligned: declare misaligned_access_speed under
+>>>      CONFIG_RISCV_MISALIGNED
+>>>    riscv: misaligned: move emulated access uniformity check in a function
+>>>    riscv: misaligned: add a function to check misalign trap delegability
+>>>    RISC-V: KVM: add SBI extension init()/deinit() functions
+>>>    RISC-V: KVM: add SBI extension reset callback
+>>>    RISC-V: KVM: add support for FWFT SBI extension
+>>>    RISC-V: KVM: add support for SBI_FWFT_MISALIGNED_DELEG
+>>>
+>>>   arch/riscv/include/asm/cpufeature.h        |  14 +-
+>>>   arch/riscv/include/asm/kvm_host.h          |   5 +-
+>>>   arch/riscv/include/asm/kvm_vcpu_sbi.h      |  12 +
+>>>   arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h |  29 +++
+>>>   arch/riscv/include/asm/sbi.h               |  60 +++++
+>>>   arch/riscv/include/uapi/asm/kvm.h          |   1 +
+>>>   arch/riscv/kernel/sbi.c                    |  81 ++++++-
+>>>   arch/riscv/kernel/traps_misaligned.c       | 112 ++++++++-
+>>>   arch/riscv/kernel/unaligned_access_speed.c |   8 +-
+>>>   arch/riscv/kvm/Makefile                    |   1 +
+>>>   arch/riscv/kvm/vcpu.c                      |   4 +-
+>>>   arch/riscv/kvm/vcpu_sbi.c                  |  54 +++++
+>>>   arch/riscv/kvm/vcpu_sbi_fwft.c             | 257 +++++++++++++++++++++
+>>>   arch/riscv/kvm/vcpu_sbi_sta.c              |   3 +-
+>>>   14 files changed, 620 insertions(+), 21 deletions(-)
+>>>   create mode 100644 arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
+>>>   create mode 100644 arch/riscv/kvm/vcpu_sbi_fwft.c
+>> Sorry I'm still kind of out of it here, but I think Alex was saying this has
+>> dependencies in the patchwork call this morning?
 
-The patch itself makes sense and I think it is good time to revisit old
-discussion [1] and finally drop VM_BUG_ON altogether and replace it by
-VM_WARN_ON which could be still a useful debugging aid.
 
-[1] https://lore.kernel.org/all/c9abf109-80f2-88f5-4aae-d6fd4a30bcd3@google.com/T/#u
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Peter Xu <peterx@redhat.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Yes, you need this patchset too: 
+https://lore.kernel.org/linux-riscv/20250602193918.868962-1-cleger@rivosinc.com/
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+I prepared a PR that does not merge the KVM parts and I checked with 
+Anup, he will merge them in the next MW. My PR with FWFT passed the CI, 
+so I'll send it now anyway.
 
-> ---
-> 
-> Wanted to do this for a long time, but my todo list keeps growing ...
-> 
-> Based on mm/mm-unstable
-> 
-> ---
->  include/linux/mmdebug.h | 12 ++++++++++++
->  mm/gup.c                | 41 +++++++++++++++++++----------------------
->  2 files changed, 31 insertions(+), 22 deletions(-)
-> 
-> diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
-> index a0a3894900ed4..14a45979cccc9 100644
-> --- a/include/linux/mmdebug.h
-> +++ b/include/linux/mmdebug.h
-> @@ -89,6 +89,17 @@ void vma_iter_dump_tree(const struct vma_iterator *vmi);
->  	}								\
->  	unlikely(__ret_warn_once);					\
->  })
-> +#define VM_WARN_ON_ONCE_VMA(cond, vma)		({			\
-> +	static bool __section(".data..once") __warned;			\
-> +	int __ret_warn_once = !!(cond);					\
-> +									\
-> +	if (unlikely(__ret_warn_once && !__warned)) {			\
-> +		dump_vma(vma);						\
-> +		__warned = true;					\
-> +		WARN_ON(1);						\
-> +	}								\
-> +	unlikely(__ret_warn_once);					\
-> +})
->  #define VM_WARN_ON_VMG(cond, vmg)		({			\
->  	int __ret_warn = !!(cond);					\
->  									\
-> @@ -115,6 +126,7 @@ void vma_iter_dump_tree(const struct vma_iterator *vmi);
->  #define VM_WARN_ON_FOLIO(cond, folio)  BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ON_ONCE_FOLIO(cond, folio)  BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ON_ONCE_MM(cond, mm)  BUILD_BUG_ON_INVALID(cond)
-> +#define VM_WARN_ON_ONCE_VMA(cond, vma)  BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ON_VMG(cond, vmg)  BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
-> diff --git a/mm/gup.c b/mm/gup.c
-> index e065a49842a87..3c3931fcdd820 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -64,11 +64,11 @@ static inline void sanity_check_pinned_pages(struct page **pages,
->  		    !folio_test_anon(folio))
->  			continue;
->  		if (!folio_test_large(folio) || folio_test_hugetlb(folio))
-> -			VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page), page);
-> +			VM_WARN_ON_ONCE_PAGE(!PageAnonExclusive(&folio->page), page);
->  		else
->  			/* Either a PTE-mapped or a PMD-mapped THP. */
-> -			VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page) &&
-> -				       !PageAnonExclusive(page), page);
-> +			VM_WARN_ON_ONCE_PAGE(!PageAnonExclusive(&folio->page) &&
-> +					     !PageAnonExclusive(page), page);
->  	}
->  }
->  
-> @@ -760,8 +760,8 @@ static struct page *follow_huge_pmd(struct vm_area_struct *vma,
->  	if (!pmd_write(pmdval) && gup_must_unshare(vma, flags, page))
->  		return ERR_PTR(-EMLINK);
->  
-> -	VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> -			!PageAnonExclusive(page), page);
-> +	VM_WARN_ON_ONCE_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> +			     !PageAnonExclusive(page), page);
->  
->  	ret = try_grab_folio(page_folio(page), 1, flags);
->  	if (ret)
-> @@ -899,8 +899,8 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  		goto out;
->  	}
->  
-> -	VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> -		       !PageAnonExclusive(page), page);
-> +	VM_WARN_ON_ONCE_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
-> +			     !PageAnonExclusive(page), page);
->  
->  	/* try_grab_folio() does nothing unless FOLL_GET or FOLL_PIN is set. */
->  	ret = try_grab_folio(folio, 1, flags);
-> @@ -1180,7 +1180,7 @@ static int faultin_page(struct vm_area_struct *vma,
->  	if (unshare) {
->  		fault_flags |= FAULT_FLAG_UNSHARE;
->  		/* FAULT_FLAG_WRITE and FAULT_FLAG_UNSHARE are incompatible */
-> -		VM_BUG_ON(fault_flags & FAULT_FLAG_WRITE);
-> +		VM_WARN_ON_ONCE(fault_flags & FAULT_FLAG_WRITE);
->  	}
->  
->  	ret = handle_mm_fault(vma, address, fault_flags, NULL);
-> @@ -1760,10 +1760,7 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
->  		}
->  
->  		/* VM_FAULT_RETRY or VM_FAULT_COMPLETED cannot return errors */
-> -		if (!*locked) {
-> -			BUG_ON(ret < 0);
-> -			BUG_ON(ret >= nr_pages);
-> -		}
-> +		VM_WARN_ON_ONCE(!*locked && (ret < 0 || ret >= nr_pages));
->  
->  		if (ret > 0) {
->  			nr_pages -= ret;
-> @@ -1808,7 +1805,6 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
->  
->  		ret = mmap_read_lock_killable(mm);
->  		if (ret) {
-> -			BUG_ON(ret > 0);
->  			if (!pages_done)
->  				pages_done = ret;
->  			break;
-> @@ -1819,11 +1815,11 @@ static __always_inline long __get_user_pages_locked(struct mm_struct *mm,
->  				       pages, locked);
->  		if (!*locked) {
->  			/* Continue to retry until we succeeded */
-> -			BUG_ON(ret != 0);
-> +			VM_WARN_ON_ONCE(ret != 0);
->  			goto retry;
->  		}
->  		if (ret != 1) {
-> -			BUG_ON(ret > 1);
-> +			VM_WARN_ON_ONCE(ret > 1);
->  			if (!pages_done)
->  				pages_done = ret;
->  			break;
-> @@ -1885,10 +1881,10 @@ long populate_vma_page_range(struct vm_area_struct *vma,
->  	int gup_flags;
->  	long ret;
->  
-> -	VM_BUG_ON(!PAGE_ALIGNED(start));
-> -	VM_BUG_ON(!PAGE_ALIGNED(end));
-> -	VM_BUG_ON_VMA(start < vma->vm_start, vma);
-> -	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
-> +	VM_WARN_ON_ONCE(!PAGE_ALIGNED(start));
-> +	VM_WARN_ON_ONCE(!PAGE_ALIGNED(end));
-> +	VM_WARN_ON_ONCE_VMA(start < vma->vm_start, vma);
-> +	VM_WARN_ON_ONCE_VMA(end   > vma->vm_end, vma);
->  	mmap_assert_locked(mm);
->  
->  	/*
-> @@ -1957,8 +1953,8 @@ long faultin_page_range(struct mm_struct *mm, unsigned long start,
->  	int gup_flags;
->  	long ret;
->  
-> -	VM_BUG_ON(!PAGE_ALIGNED(start));
-> -	VM_BUG_ON(!PAGE_ALIGNED(end));
-> +	VM_WARN_ON_ONCE(!PAGE_ALIGNED(start));
-> +	VM_WARN_ON_ONCE(!PAGE_ALIGNED(end));
->  	mmap_assert_locked(mm);
->  
->  	/*
-> @@ -2908,7 +2904,8 @@ static int gup_fast_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
->  		} else if (pte_special(pte))
->  			goto pte_unmap;
->  
-> -		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
-> +		/* If it's not marked as special it must have a valid memmap. */
-> +		VM_WARN_ON_ONCE(!pfn_valid(pte_pfn(pte)));
->  		page = pte_page(pte);
->  
->  		folio = try_grab_folio_fast(page, 1, flags);
-> 
-> base-commit: 2d0c297637e7d59771c1533847c666cdddc19884
-> -- 
-> 2.49.0
+Thanks,
 
--- 
-Michal Hocko
-SUSE Labs
+Alex
+
+
+> The "dependency" is that the kvm tree will not accept patches this late.
+> The KVM patches can be dropped and the riscv patches can be merged, but
+> it is pretty late now.
+>
+> - Charlie
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
