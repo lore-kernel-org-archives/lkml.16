@@ -1,149 +1,175 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2054.outbound.protection.outlook.com [40.107.244.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070AF1F1515
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749148154; cv=none; b=Bn1DrZu0KtM00xFgHBYDn0tniOpLrKQfBweSfltw9/lNiLybLLuFqeD0qkwcIAv+tUShLqCsO94691RlAbWl+zC9/5IR/tJR2CfRj8Qqcv1tNaXzv5NhQ4hrJ+uUMpWmNsl6GYFdhaI6Py6BzqntyeHr4qQ94wilgEJH8xUOaYc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749148154; c=relaxed/simple;
-	bh=Wt5KC8ZNvg182Wq6/9VX19wy9cgLmZ7fK+da71TzJsg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=tl7gtGgi5YIIdULTo3Fde/On08hjXxpqVfG+0EBAqHsbLkU4kK3HhlgjAR2ZNRehVSd/MQv3DF90K17NtbKvtQ5NvBpG67vBJd002scFuheHr+rfZj3nfa1d6TTFE1Iz70gGU/b99StDOeK4ohPHIxnIEctFrYQnj9Why6pNnao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ExEl+NRy; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B9F1F1515;
+	Thu,  5 Jun 2025 18:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749148189; cv=fail; b=rSMVQRqvmeNzhnc7bwuCmZYDGMvDSE2CiVVuAsmvqvAqN4h1PgjWJawvn1ADQh+eURmdRsra0/yt7tFgW7ou9oUMjbezvIZkyEU7m4bOD7x12mnUhQJMW36/NtjyabwQf0avNPYjapSRpe6ix6NzGRWz9w/UnGFAxDwUHln7fxg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749148189; c=relaxed/simple;
+	bh=MCFz8LKJ8ff6hnsPNxV2FJVGktvEmShsjTNKAMRTh54=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aELfWxW4FiSkWELbvfLEo3r37TCWHisE/HIf7Ph/Pl/EvecI/5A8ZyCOiL8/ejuEGsfKhMMhRjnR8HWIZMiomhJunTEFkwIwPsZT01vf4CNJNnX61k+vvn1QUcZEqEo7D8YFHJ2WvzRLRVXYPUypVbIlSC2UiTbGh86+fiVulEg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mQWxTIBn; arc=fail smtp.client-ip=40.107.244.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ExEl+NRy"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so11649025e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 11:29:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749148148; x=1749752948; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IzQU0GYDCtvjDaFcIIDQKTVpPe5cNm+Sh+k7f14x/ac=;
-        b=ExEl+NRywFLDK79RcL+C5tiWm9ZKaYeYIjQ00Kql5apoHOt78HFNJDN8s/5+LLWSUW
-         qmy26XuOtHKBe+YdTPzvECde6K5WUPupOAbP049dIUEKICxYYl9BJX+YaCyvpbQZ/vt3
-         V5GXXh0Jj9j/KmEmLu9xDDVbaXKF5qiV+KFvp0siZxsfudlMApfmeBOCoM2niiEFAYaO
-         i0c4cvegZzd4MwJ1vr7pBT+VsAeUfYd46UUeuHlG/g+hqOSSmeydIb9D9FAqBtfoBt7V
-         Oo/Hcqd2/9uAQLJsCJb+nfr3RuDsPmvBQ4rU2CUpRLKB+Di874JlaZ/27Oe4m8HOuZcb
-         2MuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749148148; x=1749752948;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IzQU0GYDCtvjDaFcIIDQKTVpPe5cNm+Sh+k7f14x/ac=;
-        b=OjoLDLsEHxn4sDdcRuiF6uqZsHBVgJYCJHbUEdpfQmGDDrsqmo11E9TkUyToIzZJzQ
-         MfKdzG+007eYOQDGzOBhkFmmSFId9vTqaAOx0uL3oeO3QZ94vG2jATAFmaPMhPF1+Rnl
-         00mGaafsT2oVzjPo4yD8k7aLFr3rBT+cJiFMM+Z1qPUpaKAzAv0SzQbO/7OyeucVLMiP
-         XQ/9zX62uGzYhtauXUlqOw70lGQGOi88Hiq8LTkKBNjOn1p/3ZH7qHV3LAEPc8vJdIx0
-         jS3SOjLsnDiTLJTyN4ZlC0tvaAZ2i2/u+X3G0dIKOYd0VYUnfvq5O8UBjL6ep/clX5km
-         fQ4g==
-X-Forwarded-Encrypted: i=1; AJvYcCWhTYQtUsmt6aAbaNGFmb2MFXIzWKsazHEZYBuulFIZDLe9mYMQiNzeFL7779QGqGn0QLc8zAwrvWJRGUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdgN8OCfcaOCx6raJUZsX87HPmqcvmnShPQIJ8k25DIzIZc1Ks
-	QkCK2bRweA0iQ4Jj9M4//H3UPE9fWLko63GuUrYE3LZkXEvRlybUwQIQiVySVC7EzgjhqDJb595
-	WM0zK
-X-Gm-Gg: ASbGncvdCkv/2SwJ19k5VOHckspAKoX4huxw2OKraPagpoiqc+YNNqO2KpUb7WFksr5
-	5U6eAwhJntq04PcWPBsAuuetqVcHMxXkbWpA6Ifw+UzQafvmrfFo0QUdidybIrbfM4lBWIZMqEy
-	hTuv1Z80ZL0QwW0A071EFXlyq5KWY1VTy5K/wWZ4sZOr4+Wi6Ig0YPv1lDhT+pFvg1SDHP0qF+0
-	lUkPduvOSj53J08BTFUaRZRtj7KObu4nB3aSPlYDfzfif8dYv30U1mPRS94gsbF12+PGCRT9pRY
-	HIlvPYCcD19r4t0KqLFIAIoOBtaN1pQOOe7yV6pQzPkIOJ+15NWVOmRY34uNxzuYKPIJ3pG1lZl
-	9pNZbD8Y65oIZo7o49XdSfNScipwa
-X-Google-Smtp-Source: AGHT+IEeipGTi0gZyJq1VrPNmalkI1q5oXitMDq3faZIy63My4V9xLMQfKPT8mghoCRREMO2unFoTA==
-X-Received: by 2002:a05:600c:3b95:b0:442:faa3:fadb with SMTP id 5b1f17b1804b1-4520134081dmr4658675e9.2.1749148137729;
-        Thu, 05 Jun 2025 11:28:57 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:a613:826b:6813:c968? ([2a01:e0a:3d9:2080:a613:826b:6813:c968])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213726c44sm847955e9.28.2025.06.05.11.28.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 11:28:57 -0700 (PDT)
-Message-ID: <f2fcb48e-7f94-4e3b-bfab-0016d58a5674@linaro.org>
-Date: Thu, 5 Jun 2025 20:28:56 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mQWxTIBn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B38EeKDf3M2fWqtZmebVy8P2rJlCz0WOwmz2zXwHUzipjygDBZR6btPWLoHNUgBobh5wEL+6oCMn+LBVWoY9Bieq5GL97wzhlycudJZZ9fdqqyUVBpfx7CV1Q6ggQj7vrJViR+Jk9efB2MIE/ng84Gw7NacBaeNLF5WjP6A8L3++kNEgkFtq3K/XcZqlYjvprMuR/kDUs5yiFtaRMJ2dwnJf9dt8doEaHdJp5AbAJ/Mjr5ixSd4owGXcMInQ791hViBF3h5EYJ1BlfIam0Cn28qmkR3GuDe+v9uZQrMVuf+rBSfZhusC8Rss18TQBC4RpUFiVESC5lY7vNBoxGcCdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UBOkRwEQvLXKYGTn0VC+09AwyvnINSXidmZ9vbum7xI=;
+ b=DVyFnPGl5FTqlDrO3i4Svgr54ZdoY3nmfP1vjJwvIzvIBeKTRtfJAYRYxmQdUGpMUf6VggAnDfuXqAgHv7xEaclKO3IMuTueCsqHUe10DNFOnEhUotghFIHg4PIOmW60aQrTOFPBbOir0EV/Ei6qERuZ1J0CfmSV8o2lArAbB7cFwpsIyS8tZOgou13f+a4+iy69Rt9MMbfV8GelFzQ+nHNv7lGz2cK42d7VfpgjAq7t4euI4LzMIBAHoJOlksYpKzfhGLeMGQHV8fmGcDZT2xB0qLXBvJbVXg7u3ZJ6klqxRPL92WVYIlBAhkiGw/qPONUlorwgmDFx3yZxkXkdug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UBOkRwEQvLXKYGTn0VC+09AwyvnINSXidmZ9vbum7xI=;
+ b=mQWxTIBnVybaQLrsqAEKNwFbyIHBR8vAAIQ/E8ffYxIz45bX1UxFeMVKANM0dwIyrDKo6krhO2zEkZQaAySWlHlsfaI2doGnC2+LeEoHUC8qU/mRl1gPQ4iOpGT/4SwC79XJ7udfIrwa++EUwYEkH42LmAOVkLB0C622MhXo83s=
+Received: from BN1PR13CA0020.namprd13.prod.outlook.com (2603:10b6:408:e2::25)
+ by PH7PR12MB5901.namprd12.prod.outlook.com (2603:10b6:510:1d5::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Thu, 5 Jun
+ 2025 18:29:45 +0000
+Received: from BN1PEPF00004682.namprd03.prod.outlook.com
+ (2603:10b6:408:e2:cafe::4f) by BN1PR13CA0020.outlook.office365.com
+ (2603:10b6:408:e2::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.9 via Frontend Transport; Thu, 5
+ Jun 2025 18:29:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF00004682.mail.protection.outlook.com (10.167.243.88) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8792.29 via Frontend Transport; Thu, 5 Jun 2025 18:29:45 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Jun
+ 2025 13:29:43 -0500
+Received: from xhdradheys41.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Thu, 5 Jun 2025 13:29:41 -0500
+From: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+To: <gregkh@linuxfoundation.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <michal.simek@amd.com>
+CC: <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <git@amd.com>, Radhey Shyam Pandey
+	<radhey.shyam.pandey@amd.com>
+Subject: [PATCH] dt-bindings: usb: microchip,usb5744: Add support for configurable board reset delays
+Date: Thu, 5 Jun 2025 23:59:31 +0530
+Message-ID: <1749148171-1729610-1-git-send-email-radhey.shyam.pandey@amd.com>
+X-Mailer: git-send-email 2.1.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [RESEND PATCH] arm64: defconfig: Enable camcc and videocc on
- Qualcomm SM8450+
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250605173608.217495-2-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250605173608.217495-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: radhey.shyam.pandey@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004682:EE_|PH7PR12MB5901:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6bc66e09-2484-42b4-d89b-08dda45ef258
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3USuY4Ar5oT799eO+RrC/VNkTkaVFfE2iGHudQRpKBYe/xJHixVi8okWBUS3?=
+ =?us-ascii?Q?6yv3Jmfq1VYj7vokUPLUVu/MhvI6u1aWYUBEKX2jmq3+Hj+q/ye8rsH35pNL?=
+ =?us-ascii?Q?lHiBiSPzGzMffh998hOTVRqkzf2E3PaOTUFVfnUoOt15Ok0ZgKcmTLbZTd9C?=
+ =?us-ascii?Q?N9vweoDSxg3iMBsR0Pd+unkErS6uwBQ3Pgzyk/lEBB3PXx5GD6MlGBMjxV7p?=
+ =?us-ascii?Q?KEGyPnKI6h0HzqOJ14TIZmXKs4Ta95tksxsRhFD9/X0miEyOsdCxPB6cMGhR?=
+ =?us-ascii?Q?/e72olXsnNvAMOeN2bGGpOxgulzTGvCHzRCxPsbDHifCmRs6X+FFqz41rNLp?=
+ =?us-ascii?Q?KnxIzbLLDuR87hdlk/G0x/Am6KNJE9rRd3oK3GEr5ITIcbeUlnKS9kpMXbtr?=
+ =?us-ascii?Q?abcKhcNkRd/TdCPqCppR6ZnP0RDHEsmvxjgie5Ip39rMRcj8UHGCxEraxVS/?=
+ =?us-ascii?Q?tfJWLbWJ6iDwuYnClM9gtCTOZija03ULS18XPzw3fXtrc7JT8sfnn/sDtF1G?=
+ =?us-ascii?Q?+zTslPkwLNeQYPhvyhrTlKwjRE8UFVF7QeLGGbG8jc98cqabmH1tDAXH/U5M?=
+ =?us-ascii?Q?vnHO7U8kppvHqHUf9E0a9GryA3/Br0JibiRsD/5nrXjWQpldOVcKT1WkdYkc?=
+ =?us-ascii?Q?iZB+bTtLyWtU5prVzhx7n6HaTfKNpssgPF8vw4OnjrnRKLJKVvP+FVtNnfk3?=
+ =?us-ascii?Q?uOZty1du6PcMhCybOHLZqr4/XpmLgeUvi80vlwRDnkfyim4sgxF+HJEmxLiY?=
+ =?us-ascii?Q?/IE56oFZgHvyRLifB5xpFuzhd33ZLBjNqb67UswhIl14cFwdnPJhvSFFOd3d?=
+ =?us-ascii?Q?XAC7Wzcne4qnwsvZesqRcAq+0UhUggguQAsbnsD27NIROamt3wq6sGKUzvGK?=
+ =?us-ascii?Q?ymSPbPwZsHhu02grvgac1Y1XGSINHsT4aOU+6yr/xMdAXeydVf664Fmu3lRh?=
+ =?us-ascii?Q?Qu8BSTMl2ezqfzoRQEgTkk6iDCTP67WWraVybMiqgS03GTQuX4S+5G0mFohL?=
+ =?us-ascii?Q?ZgZwFF1o8tnVK99Uorl2m3ESuvDyfMQhrx+4fl3rLybv2KxUa6qKqMSayClh?=
+ =?us-ascii?Q?Gl7EOJN5At7ZnT6u3FVX2m8nh0/00GSQ1JRoUp8aMOLA2bgaIgCx9SgTEK2M?=
+ =?us-ascii?Q?JH/QIBLweK/BLWpNz3Z+cgKxhECWKfIfY+4lB61FFcW0sIoKx6jJDdf+/bpr?=
+ =?us-ascii?Q?dmi3Pv7HrGgq2W0FF8qjd3G6eKpfTZj2y9iL51CA9cioLewET0C2ghbMtZ8n?=
+ =?us-ascii?Q?Xs8WFT9yyYqfRQxcMnLUqTlrF7eiiXES27+voO1SlpvpJTJRl+ibb8Df7X7/?=
+ =?us-ascii?Q?jQMCHCqxhm5t15aXbe8AA/Q8xrw6pFrfil0WLwy5cgir9gUxn03ovCHUvSV2?=
+ =?us-ascii?Q?Zy1ug7FFq3zb2mli0eukT8Yygi2bMqrLYMuHY0GIS0fheIoBw94vTZt33cN8?=
+ =?us-ascii?Q?1Vhycn7b1LS/p6jqPFjuH6NvMzk35jJ+n0GTpzyNY7ccC1yvd6Au+o8JZl4+?=
+ =?us-ascii?Q?IKwYSFs0FPchs+TrdGuajObNzgo4Mt4MWh2T?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 18:29:45.5845
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6bc66e09-2484-42b4-d89b-08dda45ef258
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00004682.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5901
 
-On 05/06/2025 19:36, Krzysztof Kozlowski wrote:
-> Enable the drivers for camera clock controllers on Qualcomm SM8550 and
-> SM8650 SoC (enabled in all DTS files like SM8550-HDK or SM8650-HDK) and
-> video clock controllers on Qualcomm SM8450 SoC (enabled in SM8450-HDK
-> DTS).
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Resend because I forgot to CC right people.
-> ---
->   arch/arm64/configs/defconfig | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 62d3c87858e1..2ffa590b962f 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -1404,6 +1404,8 @@ CONFIG_SDM_DISPCC_845=y
->   CONFIG_SDM_LPASSCC_845=m
->   CONFIG_SDX_GCC_75=y
->   CONFIG_SM_CAMCC_8250=m
-> +CONFIG_SM_CAMCC_8550=m
-> +CONFIG_SM_CAMCC_8650=m
->   CONFIG_SM_DISPCC_6115=m
->   CONFIG_SM_DISPCC_8250=y
->   CONFIG_SM_DISPCC_8450=m
-> @@ -1431,6 +1433,7 @@ CONFIG_SM_VIDEOCC_8250=y
->   CONFIG_SM_VIDEOCC_8550=m
->   CONFIG_QCOM_HFPLL=y
->   CONFIG_CLK_GFM_LPASS_SM8250=m
-> +CONFIG_SM_VIDEOCC_8450=m
->   CONFIG_CLK_RCAR_USB2_CLOCK_SEL=y
->   CONFIG_CLK_RENESAS_VBATTB=m
->   CONFIG_HWSPINLOCK=y
+Introduce 'reset-delay-us' and 'power-on-delay-us' properties. Default
+delays in datasheet are not good enough for Xilinx Kria KR260 Robotics
+Starter Kit (and others) so there is a need to program board specific
+reset and power on delay via DT.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+---
+Taken reference from mdio.yaml[1]
+[1]: Documentation/devicetree/bindings/net/mdio.yaml
+---
+ .../devicetree/bindings/usb/microchip,usb5744.yaml   | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml b/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
+index c68c04da3399..94a2bebd32da 100644
+--- a/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
++++ b/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
+@@ -52,6 +52,16 @@ properties:
+     description:
+       phandle of an usb hub connected via i2c bus.
+ 
++  reset-delay-us:
++    description:
++      RESET pulse width in microseconds.
++
++  power-on-delay-us:
++    description:
++      Delay after power on in microseconds. USB5744 Hub requires some
++      delay after reset to get to state when SMBus configuration
++      data is going to be accepted.
++
+ required:
+   - compatible
+   - reg
+@@ -69,6 +79,8 @@ allOf:
+         vdd2-supply: false
+         peer-hub: false
+         i2c-bus: false
++        reset-delay-us: false
++        power-on-delay-us: false
+     else:
+       $ref: /schemas/usb/usb-device.yaml
+ 
+
+base-commit: 4f27f06ec12190c7c62c722e99ab6243dea81a94
+-- 
+2.34.1
+
