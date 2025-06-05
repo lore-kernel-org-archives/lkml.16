@@ -1,111 +1,88 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E75230D35;
-	Thu,  5 Jun 2025 13:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9180522F16F
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129429; cv=none; b=SmveJKKGBm1LJqtLZBLwnMcb+APLSOg4u1Ih85xQ9H0qNKiBNX6AJIs+1/WMC1/XjshcIQHQd+NJgpuacjNz77XzCufRvzoI45tz5XClU9hJZBMlK97tbuIuLmbBnI6JVUy/xTAxkrPRrwx+puQcI1dUrHyK8qNN23g9Chbh2u8=
+	t=1749129442; cv=none; b=nv+ecNyvhy8MX06WRLc9adPZLlefFjW8o7XEf/aCTuL/KgF+leD+1GgIxXTlHJhZ4NReZLuYyzv8idNHQvvSWNuHXAo4q5GdWpXh2g1nHQZgtWefP3aZ2t+Zpo4UdQUubaWRqlF7lPEfE3mm5u7MdDT16OrvfPAATO9ewizedbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129429; c=relaxed/simple;
-	bh=5Cz93IxqRdgLk6dXKax3WOl99BnT6SF31MyUBLILXUE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RHz9E18qLTurIXcf38C6843vOHVdz+pXX0Nb4sNkL1WoAmSdHMV4UbrAJU8+UgHqAHOde1x0n4dCxluyx2M9POzeqXvti+lG1lEsP4INdwdqr/OeNW6H/pUpb1SswkvzXzMYClaoxyJqFa4T8VhkWqfNLR6I/LyAYpmZpXG3Ws0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bClNF0cTjzKHNGR;
-	Thu,  5 Jun 2025 21:17:01 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 70FCA1A09DF;
-	Thu,  5 Jun 2025 21:16:59 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP1 (Coremail) with SMTP id cCh0CgDnTH3HmEFobD9lOQ--.29489S8;
-	Thu, 05 Jun 2025 21:16:59 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: hughd@google.com,
-	baolin.wang@linux.alibaba.com,
-	willy@infradead.org,
-	akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 6/7] mm: shmem: simplify error flow in thpsize_shmem_enabled_store()
-Date: Fri,  6 Jun 2025 06:10:36 +0800
-Message-Id: <20250605221037.7872-7-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250605221037.7872-1-shikemeng@huaweicloud.com>
-References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1749129442; c=relaxed/simple;
+	bh=JYxfNLUhajuZaDRRmStEgps44e1RMYkmRRzlZU8Wqi4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pS3PqKLqTg1CYijeaeKFCvITqy7FGqNCmh1bY/H47FbYeqrvD+Wzej+7OrHayVWiFKlaHnReRM1SvE25YzDPXLnF+TyjoDGXLvalttVyXT6Tc4Fk+/s9upfcEjE35sIgwYMlXA3+fWp21RSYML0dlKqup/xmRVcaVsDF0rO8P38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=URyF9kk3; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="URyF9kk3"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5532a30ac41so1097783e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749129439; x=1749734239; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aVRYwEpnZ9G37QC8CdeQkhsKUCGJDds8q+iTQKaOrS8=;
+        b=URyF9kk3Fsb2DItj67bfO0zdxI5KbRZASQRjGUMIVVTZcphQqg58YNuZXG8AZt2eio
+         z1R0ax5Uqcl3yvTut5nSuIEfGQjJIkAGvv+PHo1IKqbjXLlMMjJ7EAwxj9fAirZI2XOm
+         9ZIrUloogH0Rq01bUWiPEEFCntQ1fNZFF7EwGfTT+YCR7VqGw4ntxkmRuiNHxIc7Wr1b
+         tBZruTjNyobTPyQxCfuYgJ01TVowcc6C7aSFj2W93nYLxnMCHLrNMxhFRjEJqP8+o/mI
+         ElCyawQKY32esnOhFod5P9DVPJB/6Na2mR1l3YrpgkI8D5jPuQ/JyuKccQjMSFrGAo4N
+         TWIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749129439; x=1749734239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aVRYwEpnZ9G37QC8CdeQkhsKUCGJDds8q+iTQKaOrS8=;
+        b=upXxHIOBiOoL4dMXqd4FSFWcf9OUjvWM16IH5m+Jc7V3PDz40SDJe98k0M4GRDOTeu
+         mgik+A51Z6kbp/NZ8pOWk40xGxBfgteuAR5t41d/+lZI5pmWR8Uxkp8ymWx8e6SNhOiK
+         KguCzbWqz012gJonTLlAUnvFcaueyj5ASZzxScb8GrJZkSASkHSHNVSXq+8gBMI60P+A
+         zlCJHS7BtaQZ+E+c0REc8n82kn7pRCwXtadoA2dwlLTV249StfrbLC+zWa5k8mWhHPL5
+         WqfidMQKO5v3qYgoaCBoC5eVhpIRvHnUd5dNIr05axB0NIf6n6PrEY39SYrsjwUM+S46
+         O87A==
+X-Forwarded-Encrypted: i=1; AJvYcCXYADXOoPUCu83q0J+v51fJjiQMw81axMFrZ8tQmNux981aDLJ7NqvvfiR8pqQUfUCDXQwC/7ry+HWT1nY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZK+RiauqJU0x4egu9aVASk1SfJLT4+Uk1+whxp3uWy0yTiQQD
+	PdkJrMNFjoCripW0wuFJQs1TOmAVluiy26FyPaKtl37sFRv9n8YLT40d5NNv7OKRSg3wZG0jBS7
+	VxBaAxmHtegzDIgkfkA/PLhmCyCAEf7Y3YO31zaMYdQ==
+X-Gm-Gg: ASbGncsUcbo8QbVC5kdkObPkT9FhWJKa6+u9qXR7EUw0nOvDBc+tYojkNZ/jmPZm9Uz
+	b5x3T6rjbcLerSz75Dzn/rbh7SRyVkNj9IPKSnGYZzvZxVFfxHqC7nDu1XhyQR4fGPsG5wJdrjl
+	02L4RUI/EBsc8zayx72pfRIGtKXSjzSj73WhpWYCeTf5A=
+X-Google-Smtp-Source: AGHT+IGSwgYnrvr3g8aeRhiSjVHFD+1gNjjWAA5+wUJMnF+AzDSh1sGl53H+1ztLSXhG3Ujo7CEKSbOVGk6DthmnUAk=
+X-Received: by 2002:a05:6512:318b:b0:553:2ca4:39e6 with SMTP id
+ 2adb3069b0e04-55357bd6ebemr1929113e87.50.1749129438604; Thu, 05 Jun 2025
+ 06:17:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDnTH3HmEFobD9lOQ--.29489S8
-X-Coremail-Antispam: 1UD129KBjvdXoW7XF4fKrWkJF4UWw1Dtr1UJrb_yoWDtFc_CF
-	yjqF9rWr47Ww4kKF1Ykw42qr9YgFWDuryqgry8tFWak34DXrZ7Jr4DXrWYvryxXayrWF95
-	Canavasagw1DWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
-	xGYIkIc2x26280x7IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC
-	64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM2
-	8EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq
-	3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7
-	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07ja
-	g4hUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+References: <20250528104514.184122-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250528104514.184122-2-krzysztof.kozlowski@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 5 Jun 2025 15:17:07 +0200
+X-Gm-Features: AX0GCFsyHTy0xHTXMQQJYfVcsI20tWGrSxmyCezmfvwpOnDjuZ5_vrh0a2YdFDg
+Message-ID: <CACRpkdYfQYzkU49eVhaWB9M32yTrCN_Lr6xFte0bSM91t3z3SQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: MAINTAINERS: Drop bouncing Jianlong Huang
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Hal Feng <hal.feng@starfivetech.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Simplify error flow in thpsize_shmem_enabled_store().
+On Wed, May 28, 2025 at 12:45=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- mm/shmem.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+> Emails to Jianlong Huang bounce since 9 months, so drop the person from
+> maintainers:
+>
+>   550 5.4.1 Recipient address rejected: Access denied.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index e3e05bbb6db2..c6ea45d542d2 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -5601,7 +5601,7 @@ static ssize_t thpsize_shmem_enabled_store(struct kobject *kobj,
- 					   const char *buf, size_t count)
- {
- 	int order = to_thpsize(kobj)->order;
--	ssize_t ret = count;
-+	int err;
- 
- 	if (sysfs_streq(buf, "always")) {
- 		spin_lock(&huge_shmem_orders_lock);
-@@ -5644,16 +5644,14 @@ static ssize_t thpsize_shmem_enabled_store(struct kobject *kobj,
- 		clear_bit(order, &huge_shmem_orders_madvise);
- 		spin_unlock(&huge_shmem_orders_lock);
- 	} else {
--		ret = -EINVAL;
-+		return -EINVAL;
- 	}
- 
--	if (ret > 0) {
--		int err = start_stop_khugepaged();
-+	err = start_stop_khugepaged();
-+	if (err)
-+		return err;
- 
--		if (err)
--			ret = err;
--	}
--	return ret;
-+	return count;
- }
- 
- struct kobj_attribute thpsize_shmem_enabled_attr =
--- 
-2.30.0
+Patch applied for fixes.
 
+Yours,
+Linus Walleij
