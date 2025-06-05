@@ -1,122 +1,174 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170A77E792
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 09:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DD3A927;
+	Thu,  5 Jun 2025 09:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749114721; cv=none; b=DNl1B3icw2uDYAlhhZj95mdL6ZkTu8LeQjptzf42G27TBofHzei6xT5wzZP8Ih99vRyEryEkVWmgNCWDOm9f6LIlSwFnz9sqNhdq8wrmn+nKcUroudxOI5rdbYwCxB8VbAIKYWvN5YJ4bBS+njOs5CAhqSPdmlaRXDwiyC6DgJ8=
+	t=1749114790; cv=none; b=gEFmw8mSEAnnYAbIrPe7m9ynO7keH7m89589vLKWQylEEV9DrDVnPmIZTnjnbcAtTGSOQxIJVyotNeBIxUczvQLvuCKiHiZGmpJYDjhilJuBOQmdd3QL+WWCbYHmsljk5k7Zre11Jdr8z4IuO3ywxPhJOzuRV2daMWlb66NnaA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749114721; c=relaxed/simple;
-	bh=G8kQVo9kZRVl4z1fCLT77N9XWV4CaD4IIzyLf31CqNw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jLQi/2xiFpF0mHFZnW8W6p91NYswz55I+jB1jsHkQsyv6MwulPZB5dWznDo26rLfAraroUedkCeaodYLNSoVgNGYV8EGaA6ZMkGWppFwChClKV+U5nlEM8bA+b9dcjLl6VzQFVsJn8mBOkB+k8AnjFWicZcULgQq1k0pOkrnkhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Mpjw853b; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749114790; c=relaxed/simple;
+	bh=G++elx2LCqVPMzd1qaMXiMItgUkW1e7Mp3r17N/MptE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=F9y/BX0xa627qMcTX1NhGLJ6lzSjDbFC/LifY8EVidqOIJt9JEX6Hp1DiSwj/4lXbKBo+kE5QgWQafRgugtEo6uS+5HkWNNS5RB3DUfppYepO+MKxzLRWMsayPUjpd5A6+9cg43H9yqYTeS4PRlm3eeeDyOI045tZHmzJ6JZz60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=peX41RTT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Mpjw853b"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-adb47e0644dso182288266b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 02:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749114717; x=1749719517; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nGXviXZa4fv0rKqlJANWxK6jWt62sKeWC9rdavPKx0k=;
-        b=Mpjw853bY0PpGki3cB6Pe4tKR3DhSFlZdRH2d3IL06knTdqBK79KmiWxedh8RV9x+k
-         ENAynPyctziWtG1EWX2V+7XIseF1afYhHomfg2RpKod/IOMUkTKYAbKpomj/Gca+Svyh
-         TpflPEKe6g5ghcO0pwEoDjKwh0zKM4B/Mh8XCpKZxXySPx6b0d3+BXPBRw2ubMAzVC/5
-         JJ0kXtttAE8OwCU/DZ02GZPGBqiB0NiqZ0T10GNNMtVpIUkFcGJmZj2d0JgL1LkPKwE1
-         zz6ileG97EJxuOV5TcWIoKRNmo2pz2p87bApyx3XK5PvQIJjPiiiINEW16pcuTqA06KS
-         kY+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749114717; x=1749719517;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nGXviXZa4fv0rKqlJANWxK6jWt62sKeWC9rdavPKx0k=;
-        b=ruK/2b6S6Wo/fS9Qm08BEuFDrl1eI8wT5PEtkBVfczfPZZ0Dlzrebqz1npkQ+RuD/K
-         tYd+L5oIdM7RbpmwAFa3b2EFQ5ApkBvb2rBdyfvXMx7HCiYwT1C8h0WolPeoMy/Kb2i2
-         /KoVC2l7lIO9SPiSv1SsolN9JkalZ3s1xFBTt7SgHpRYL0ZylboJomB6EmP+nH1H3l+K
-         oIIcYWWtAjwcTtNdzSwpPuMT5f25mA4QtuyjOOQIYjVu0g/HDwO6WDphELTR7wKN1vg3
-         eO/+6RbCBFY6xVW9xITBLZVoCSNVVY4mYL8f3N41IcjtUlKaQf4DeOTAfGhvvOw2Tqkx
-         tXTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbsIz7Fo5pT5gKksMks2qG5AyFBUh5V6QcRsmyarbTocyBd6OQxlooSOOl/Mh//7KN4fwMNLnXyetj9sI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZLwsVkl+MMeHzEwjb0hZO3D9ZhAxH4S58bbUe5KiEt5GwxvBH
-	vmVTJCOeQ+duWjqhHlvO0Oa3VDt6fvFpwVrOTff1KvQ/rlVQ/ci7VCiVah89KE/t/eI=
-X-Gm-Gg: ASbGncs6nkhuBqhQeit0RTOjzvFamyWMKDrWNyB2ecY1CNwSLWAdOIngxkxdIPWPq8G
-	3CjgD2p/jK9afml8oqa8Kd6Vpu3ZQr+4LQhB1ZjOWIZ5g4+JfAARv3t7+AkJ7UH+zHUkBJX4SX3
-	1vx1C29dSezUma7ClYmpTtRt1lqjVvRgygm8dBREFcpUErDQBv8WfyjuyLSLEqx6rPp0FcNSctp
-	TdyZ84zJH2NuBhsdKZKbnlVDx+o9PZjzbmEgAeeG9CaOjR8ovXyO2xJYD/DUOTJYpgSz83P10C7
-	xVx6/TPhUhMGFomaJXc3tNNcc9hC7VrdCArv8g/9HO+dyFZYCZ05dOmFypdEcxRe/y4JBnYKfu0
-	KVlNStcTv4OUoG+wO8IOSZw==
-X-Google-Smtp-Source: AGHT+IEGrnUt4umUYNEiTeNqeKeV4ar31YaPjgdpxip8tej/ukHXsFFWJmS8AyV6pNbbTkZTC/DHRw==
-X-Received: by 2002:a17:907:2d0f:b0:ad8:6dc0:6a8a with SMTP id a640c23a62f3a-ade07635a9dmr240594366b.1.1749114717229;
-        Thu, 05 Jun 2025 02:11:57 -0700 (PDT)
-Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad3df98sm1225545566b.158.2025.06.05.02.11.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 02:11:56 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 5 Jun 2025 11:13:34 +0200
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	linux-clk@vger.kernel.org
-Subject: Re: linux-next: Tree for Jun 3 (clk/clk-rp1.c)
-Message-ID: <aEFfvl7dAANZQuI1@apocalypse>
-References: <20250603170058.5e1e1058@canb.auug.org.au>
- <cee929b0-8b09-4e6b-95c1-c4067a8c389d@infradead.org>
- <6e88587d-f426-4841-b370-b46917822212@broadcom.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="peX41RTT"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5557AioQ006342;
+	Thu, 5 Jun 2025 09:13:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+sJbkp7Z3oHzA6Mj9+h6lPD2ASqtY2mNiec+zkMik5s=; b=peX41RTToAJaAcnr
+	Rzuck/hJovHhbeTKuu1csfkwy7RwUJW1XlCvC9KQ80TEpHAJ/33+6a5sLa1GiNon
+	3RzhPk7YoHsk3vMgvVmMYTqahc9S2JfpMw1lfSlizOwPFq9v0qA06L2C9bPxa9Ho
+	9BII5uqU+tmHOuVk2IXIOAomRP1OyPcmLxStxSYTkxkDWQCIiBzHYhTL6f8G6Q7W
+	cKDmSUJ5UMwnJSGjBQmBHuRy7PQhjV6mFW/kiqc9W8wD8I5T0ftNZXS1yxflSEqR
+	LKdUi3YqZhxhgEX6CGBGyFFmq9VoPelvg2bR0Jt6LwKLdPDQVqSBd2ECi1vbs2o1
+	hR1nQw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8t0sg4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Jun 2025 09:13:03 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5559D2iF010348
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 5 Jun 2025 09:13:02 GMT
+Received: from [10.253.10.58] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 5 Jun 2025
+ 02:13:00 -0700
+Message-ID: <b3432e80-9a54-4338-8991-606d1484dcc5@quicinc.com>
+Date: Thu, 5 Jun 2025 17:12:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6e88587d-f426-4841-b370-b46917822212@broadcom.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] wifi: ath11k: fix dest ring-buffer corruption
+To: Johan Hovold <johan+linaro@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+CC: Miaoqing Pan <quic_miaoqing@quicinc.com>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250604143457.26032-1-johan+linaro@kernel.org>
+ <20250604143457.26032-2-johan+linaro@kernel.org>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <20250604143457.26032-2-johan+linaro@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: rCjR7tm-7zmN6W2-66X499j-GCsEmhtX
+X-Authority-Analysis: v=2.4 cv=EPcG00ZC c=1 sm=1 tr=0 ts=68415f9f cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=ISufsDh2QXdYQW1nCwMA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: rCjR7tm-7zmN6W2-66X499j-GCsEmhtX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDA3OSBTYWx0ZWRfX7DGYr96K5foe
+ W4Lyk7sqlm0Uw3O/sibVX07X64AnNWkAYka2cQFqZhQQgb01kzjxKYLO3Qt+onVCW8fdyyyKmBt
+ Idu+xoM3SFLdynu3K2Yqy85DJRUYFTvrWl3PLmrdx1OwU5eu2L/QKiE8opu0VtPRBtkDsUG9onD
+ +NnuSVERbpno0hLp/dZEJeTg0UPOoiwQQIbqHJAau8AGnefGwmg60bsJLu0z3slvek6xESmtelc
+ wVCVmAYHe35H7Ar9ohC3Hhc153a/3CfPOlVZVOxkv70/UFnaRp4KViEjSiDgzPZPu2xLKE3Un5H
+ eOdks9uQnNQBHqT954HRYomjw8l2SVu5NGRtOCZ0GeaMfrnJskr/A9Gb1FZkedzteDvfAYwppag
+ ij0OGiayAXxO0OGKKy4P+syBfd5lu7XwnsSYu0CxpIdKVgiHy/4ERWx+AVWojusChfto8UTi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 mlxscore=0
+ clxscore=1015 mlxlogscore=880 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506050079
 
-Hi Florian,
 
-On 20:06 Wed 04 Jun     , Florian Fainelli wrote:
+
+On 6/4/2025 10:34 PM, Johan Hovold wrote:
+> Add the missing memory barrier to make sure that destination ring
+> descriptors are read after the head pointers to avoid using stale data
+> on weakly ordered architectures like aarch64.
 > 
+> The barrier is added to the ath11k_hal_srng_access_begin() helper for
+> symmetry with follow-on fixes for source ring buffer corruption which
+> will add barriers to ath11k_hal_srng_access_end().
 > 
-> On 6/3/2025 10:01 AM, Randy Dunlap wrote:
-> > 
-> > 
-> > On 6/3/25 12:00 AM, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Please do not add any material destined for v6.17 to you rlinux-next
-> > > included branches until after v6.16-rc1 has been released.
-> > > 
-> > > Changes since 20250530:
-> > > 
-> > 
-> > on i386:
-> > 
-> > ld: drivers/clk/clk-rp1.o: in function `rp1_pll_divider_set_rate':
-> > clk-rp1.c:(.text+0xba1): undefined reference to `__udivdi3'
-> > 
-> > caused by
-> > 	/* must sleep 10 pll vco cycles */
-> > 	ndelay(10ULL * div * NSEC_PER_SEC / parent_rate);
-> > 
-> > 
+> Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
 > 
-> Andrea, do you mind fixing this build error for a 32-bit kernel? Thanks!
-
-Sure, I'm on it...
-
-Regards,
-Andrea
-
-> -- 
-> Florian
+> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+> Cc: stable@vger.kernel.org	# 5.6
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>  drivers/net/wireless/ath/ath11k/ce.c    |  3 ---
+>  drivers/net/wireless/ath/ath11k/dp_rx.c |  3 ---
+>  drivers/net/wireless/ath/ath11k/hal.c   | 12 +++++++++++-
+>  3 files changed, 11 insertions(+), 7 deletions(-)
 > 
+> diff --git a/drivers/net/wireless/ath/ath11k/ce.c b/drivers/net/wireless/ath/ath11k/ce.c
+> index 9d8efec46508..39d9aad33bc6 100644
+> --- a/drivers/net/wireless/ath/ath11k/ce.c
+> +++ b/drivers/net/wireless/ath/ath11k/ce.c
+> @@ -393,9 +393,6 @@ static int ath11k_ce_completed_recv_next(struct ath11k_ce_pipe *pipe,
+>  		goto err;
+>  	}
+>  
+> -	/* Make sure descriptor is read after the head pointer. */
+> -	dma_rmb();
+> -
+>  	*nbytes = ath11k_hal_ce_dst_status_get_length(desc);
+>  
+>  	*skb = pipe->dest_ring->skb[sw_index];
+> diff --git a/drivers/net/wireless/ath/ath11k/dp_rx.c b/drivers/net/wireless/ath/ath11k/dp_rx.c
+> index ea2959305dec..d8dab182a9af 100644
+> --- a/drivers/net/wireless/ath/ath11k/dp_rx.c
+> +++ b/drivers/net/wireless/ath/ath11k/dp_rx.c
+> @@ -2650,9 +2650,6 @@ int ath11k_dp_process_rx(struct ath11k_base *ab, int ring_id,
+>  try_again:
+>  	ath11k_hal_srng_access_begin(ab, srng);
+>  
+> -	/* Make sure descriptor is read after the head pointer. */
+> -	dma_rmb();
+> -
+>  	while (likely(desc =
+>  	      (struct hal_reo_dest_ring *)ath11k_hal_srng_dst_get_next_entry(ab,
+>  									     srng))) {
+> diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
+> index 8cb1505a5a0c..921114686ba3 100644
+> --- a/drivers/net/wireless/ath/ath11k/hal.c
+> +++ b/drivers/net/wireless/ath/ath11k/hal.c
+> @@ -823,13 +823,23 @@ u32 *ath11k_hal_srng_src_peek(struct ath11k_base *ab, struct hal_srng *srng)
+>  
+>  void ath11k_hal_srng_access_begin(struct ath11k_base *ab, struct hal_srng *srng)
+>  {
+> +	u32 hp;
+> +
+>  	lockdep_assert_held(&srng->lock);
+>  
+>  	if (srng->ring_dir == HAL_SRNG_DIR_SRC) {
+>  		srng->u.src_ring.cached_tp =
+>  			*(volatile u32 *)srng->u.src_ring.tp_addr;
+>  	} else {
+> -		srng->u.dst_ring.cached_hp = READ_ONCE(*srng->u.dst_ring.hp_addr);
+> +		hp = READ_ONCE(*srng->u.dst_ring.hp_addr);
+> +
+> +		if (hp != srng->u.dst_ring.cached_hp) {
+
+My ath12k comments apply here: this consumes more CPU cycles
+
+> +			srng->u.dst_ring.cached_hp = hp;
+> +			/* Make sure descriptor is read after the head
+> +			 * pointer.
+> +			 */
+> +			dma_rmb();
+> +		}
+>  
+>  		/* Try to prefetch the next descriptor in the ring */
+>  		if (srng->flags & HAL_SRNG_FLAGS_CACHED)
+
