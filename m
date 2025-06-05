@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790D3442C
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 03:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D713DF50F
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 03:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749094298; cv=none; b=imbpQ6CVEgtcMsCL7bFg91zTqPFZfPRPHYrUhdChSfUoKcGADMJwTy+6g6g4vNTyn1xDM2stJC6peQQxrgGidA/FZlPCINjfDH4R3pshjy4h/A5FgVPfGJvLEuzUi3lbIZ6l3c7R3qTeLAhK33ZAYjtqjjqmb8YyN1V/P6C1xYQ=
+	t=1749094446; cv=none; b=YKSXznJEuVmnUH0XrdMw3eOopd+eEGNOG1eV3ro0o5gKu2yw9R3IfEeOjosolEfDsHcqBQMe0DEUe8RdpabKo56hZYYCj0ntolk2KrbzlVqqHCnshnHUgmOwbB5vZtgZkKDnQ+TSoSOwTLY1oD4ux6TCEuOISafUHorlbdeRx2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749094298; c=relaxed/simple;
-	bh=zD9KLdlxoxnlel0R+Dkuhh1beMBQe4Pg1pYX12Fw11w=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fig8b4HHtIkjsjOxJmAusxOnxpn6kNqerI1sXj9sZ7c7fscZjmf0UZ6UfGUjb0kJGX6aMqGpqxVq5vo7EfsXjI6O+2RHP2nUB0ddjLMxI2dEEweLtRBo2GdtYFwl+vfEpwshYjqT5dre3y8dSzwbWBWochx0f4O7BrSkznmT3Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0mNAood; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749094446; c=relaxed/simple;
+	bh=dQqP5Mw9oBgntBuM940PPtoh91B6oGN2B1g372Bat54=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gEP+EMeyq0cMA7ertZPVdM3682LgM75MbksHrG7+wTXpyn1okpboz2fk9vlp4CHwnHaZNL7pWKMuDmY1s54DlrxP5vKnWyiBruKR2ys0oBbCmjybK7yJaK0dQkOJj7tFMAHmBD37yyMdRPsfzu8RjPoi/Dfj1651211lykZT63k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oqx199nB; arc=none smtp.client-ip=209.85.128.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0mNAood"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 058F1C4CEEB;
-	Thu,  5 Jun 2025 03:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749094298;
-	bh=zD9KLdlxoxnlel0R+Dkuhh1beMBQe4Pg1pYX12Fw11w=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=N0mNAoodH8TxwIffoYAp4amYWbVnUShMldcW4shFI9Q/GpK8mGqNUXUYAktsr4ENm
-	 r1JuvnXsClo3jrA+Ytf96oIb9pwpDI3IBMQHKeWUZDKwMfnBmWMvEr2roh/G8XlE+z
-	 p2D1ae2GUomPL+GMpSywOWft13FqwUqVs2wKOUIMH0yPghuaEa6hszSQaA0wNSLYnI
-	 rYyhSUdgkrlgCOm4WcDIMy8QdsslayX00qr+oKJfLkojas6Uceey8+8aKRwhMsUuGZ
-	 53D1yxHwsKlqY5hy+NBVMnR6XV7SrBDmHAjNL+cCGYRlD5NEQwldkdOLu9CMRznpRU
-	 UHEflhRf82O5g==
-Message-ID: <2a387dd6-9c10-478d-aae2-8284ad395944@kernel.org>
-Date: Thu, 5 Jun 2025 11:31:33 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oqx199nB"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so4034435e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 20:34:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749094443; x=1749699243; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/vEVlRXJsGRk+CYX2FZa+ooZ3uzbfFEcI/JYbkngtl4=;
+        b=Oqx199nB+2CCtZEngiXHk3kVG5yL5aylJgGuiBMsgiy87aurr/LrZiVj3oMgRyXx/Q
+         Veo2jiEyXCfpOeuU8pDb1wgPqJhD5ZN8n7+c/GU/DGb2iZMsczjgwHA3xRZVb1PgoPNF
+         /DKwM3NQ3/mDV4aOx4yOh8+U0maLmWtTostOPXKguERig2bQQpKM9AeTAotUbwMCB7Jq
+         1IIqUFNJCc3ydc8wiybsDO88Tyc/cvtpaYVZzk+rmttEi0nmBcH7VXnV58NNdgJH7P9y
+         N2Fx+kSLY0ltOF/BYIi6CVxLlZ4QwzJTnFO6SqwZtkz5jLohacdIi17T/cBoMBemZrd5
+         N2Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749094443; x=1749699243;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/vEVlRXJsGRk+CYX2FZa+ooZ3uzbfFEcI/JYbkngtl4=;
+        b=A83EQdv1Yhqb+wXsFnY1eIWswtbEcs4FnHFDIFo6W4aojlnDiv8aeC9mm8n2HNL7Nn
+         qcKzkhjjjNcu++EmEodAZzz+Zd33fp6JNnwTn1SdLe1l0VD9jZtYY2DzLA2r+6O6C8u4
+         JwQZ5Lc2OIpYfuESusN4C2bFTazLw9fw31pIYtSCe6511mCwkjFDGFz23Q3GnK3u4tV8
+         EJUvz5fgBfTNrynib6vArNfnV+V6oGhx6c5fGfjgPNbv+l9AaExsWf69WtVexNAfctOg
+         Ky2iKyIj4MqVc8VbAQ6CSVSegFAAx0kYUuji03CG+tfNEG+6mgSwya3t94COglTF95GT
+         hucQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5RJFxT8JQCcgNyhzSp/Wq8zPAzn+m4QpER8fZ7QaOaugml4czTnunOTuUQfGf4QIai3u0DeqaZRdTvPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpI3fqsuuLpnvC9Ttgbms6uYRGi0hMfPuMyw2xoryFaweUq0cF
+	lJ0zhMgFsJ0nKm0F1z5BpAOaR93NzIXEaI17eHvWvtfbzEI3WpXPf00q
+X-Gm-Gg: ASbGncsrcCy1bFRIbRPF1Ns9N9XHltVy9v9Bfuo+QadvblLIcdWGB6g4wnEI7rPkksY
+	ydmNZwm9lmweHBCnEZWFZuP+LLJuwq8l6F5ZPSC2jsAvKidCmc7LgE6Zsmsn1pyysU9lJ2zflQH
+	mBnd3xyKdNTszLrefgcpbp1GZiWXJdZLrTrzaqk+RrLIfmt1Gg7EQfKdsX0ah6PA7NNvz2R6vAJ
+	pNiOhIVmea6o/boOMU+EDom4/px10C5weV8hhzj3xhuBWUxBSUChnUj29K9ec7u1kEZYCe3OrTk
+	Hf+ZExaqZ6MXrrEJ7JmRJxwQV5MGsXLNbLrXXpf0QfZG3s8NMe9ncFM+lDqMHLueEXbUnNKjJ+N
+	bDWMuQqW9xwCzORFMNF7eP8uocT5mo0cShKgEGtH62SqRMCnMxjASsCdckRokF1O740g=
+X-Google-Smtp-Source: AGHT+IEZgXvmDKwf9FJeIM45CjWz76tqF1urHtCuuWuqbDzmF4SGEdtCa9SQaWtDO2CfP9KYiUjtrw==
+X-Received: by 2002:a05:600c:3e88:b0:450:d611:eb95 with SMTP id 5b1f17b1804b1-451f0b269a4mr51677185e9.17.1749094442734;
+        Wed, 04 Jun 2025 20:34:02 -0700 (PDT)
+Received: from [26.26.26.1] (ec2-63-177-217-227.eu-central-1.compute.amazonaws.com. [63.177.217.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f99198a9sm9586775e9.30.2025.06.04.20.33.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 20:34:01 -0700 (PDT)
+Message-ID: <d30b70da-d06e-4d96-b110-1459533e2943@gmail.com>
+Date: Thu, 5 Jun 2025 11:33:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,139 +67,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- ke.wang@unisoc.com, Hao_hao.Wang@unisoc.com, baocong.liu@unisoc.com
-Subject: Re: [PATCH v2] f2fs: compress: fix UAF of f2fs_inode_info in
- f2fs_free_dic
-To: Zhiguo Niu <niuzhiguo84@gmail.com>
-References: <1749037059-4243-1-git-send-email-zhiguo.niu@unisoc.com>
- <76adf905-191d-4415-a584-a79bc502bb87@kernel.org>
- <CAHJ8P3+ygYG=9ZnPY15=L9AwGr9b5_2PkMwT8AXOyE68v6Hg3A@mail.gmail.com>
+Subject: Re: [PATCH v1] iommu/vt-d: Remove the redundant logic in
+ first_level_by_default()
+To: "Wang, Wei W" <wei.w.wang@intel.com>, "Tian, Kevin"
+ <kevin.tian@intel.com>, Ethan Zhao <haifeng.zhao@linux.intel.com>,
+ "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+ "Liu, Yi L" <yi.l.liu@intel.com>, "dwmw2@infradead.org"
+ <dwmw2@infradead.org>, "jroedel@suse.de" <jroedel@suse.de>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+References: <20250523081056.223082-1-wei.w.wang@intel.com>
+ <01e5d0a9-715a-48d4-a2a4-2a0b5d99149b@linux.intel.com>
+ <BN9PR11MB5276CFBD4CF795CCB3ADCD1B8C66A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <5fed2452-ae2a-4fca-8483-85ecf645ec1b@gmail.com>
+ <DS0PR11MB637325E3CD8FECC9A1D1213ADC6FA@DS0PR11MB6373.namprd11.prod.outlook.com>
 Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <CAHJ8P3+ygYG=9ZnPY15=L9AwGr9b5_2PkMwT8AXOyE68v6Hg3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Ethan Zhao <etzhao1900@gmail.com>
+In-Reply-To: <DS0PR11MB637325E3CD8FECC9A1D1213ADC6FA@DS0PR11MB6373.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 6/5/25 10:44, Zhiguo Niu wrote:
-> Chao Yu <chao@kernel.org> 于2025年6月5日周四 10:23写道：
->>
->> On 6/4/25 19:37, Zhiguo Niu wrote:
->>> The decompress_io_ctx may be released asynchronously after
->>> I/O completion. If this file is deleted immediately after read,
->>> and the kworker of processing post_read_wq has not been executed yet
->>> due to high workloads, It is possible that the inode(f2fs_inode_info)
->>> is evicted and freed before it is used f2fs_free_dic.
->>>
->>>     The UAF case as below:
->>>     Thread A                                      Thread B
->>>     - f2fs_decompress_end_io
->>>      - f2fs_put_dic
->>>       - queue_work
->>>         add free_dic work to post_read_wq
->>>                                                    - do_unlink
->>>                                                     - iput
->>>                                                      - evict
->>>                                                       - call_rcu
->>>     This file is deleted after read.
->>>
->>>     Thread C                                 kworker to process post_read_wq
->>>     - rcu_do_batch
->>>      - f2fs_free_inode
->>>       - kmem_cache_free
->>>      inode is freed by rcu
->>>                                              - process_scheduled_works
->>>                                               - f2fs_late_free_dic
->>>                                                - f2fs_free_dic
->>>                                                 - f2fs_release_decomp_mem
->>>                                       read (dic->inode)->i_compress_algorithm
->>>
->>> This patch use __iget before f2fs_free_dic and iput after free the dic.
->>>
->>> Cc: Daeho Jeong <daehojeong@google.com>
->>> Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in softirq")
->>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
->>> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
->>> ---
->>> v2: use __iget/iput function
->>> ---
->>>  fs/f2fs/compress.c | 16 +++++++++++-----
->>>  1 file changed, 11 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
->>> index b3c1df9..3f0c18d 100644
->>> --- a/fs/f2fs/compress.c
->>> +++ b/fs/f2fs/compress.c
->>> @@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct decompress_io_ctx *dic,
->>>  }
->>>
->>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
->>> -             bool bypass_destroy_callback);
->>> +             bool bypass_destroy_callback, bool late_free);
->>>
->>>  struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
->>>  {
->>> @@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
->>>       return dic;
->>>
->>>  out_free:
->>> -     f2fs_free_dic(dic, true);
->>> +     f2fs_free_dic(dic, true, false);
->>>       return ERR_PTR(ret);
->>>  }
->>>
->>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
->>> -             bool bypass_destroy_callback)
->>> +             bool bypass_destroy_callback, bool late_free)
->>>  {
->>>       int i;
->>>
->>> @@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
->>>       }
->>>
->>>       page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
->>> +     if (late_free)
->>> +             iput(dic->inode);
->>>       kmem_cache_free(dic_entry_slab, dic);
->>>  }
->>>
->>> @@ -1783,16 +1785,20 @@ static void f2fs_late_free_dic(struct work_struct *work)
->>>       struct decompress_io_ctx *dic =
->>>               container_of(work, struct decompress_io_ctx, free_work);
->>>
->>> -     f2fs_free_dic(dic, false);
->>> +     f2fs_free_dic(dic, false, true);
->>>  }
->>>
->>>  static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task)
->>>  {
->>>       if (refcount_dec_and_test(&dic->refcnt)) {
->>>               if (in_task) {
->>> -                     f2fs_free_dic(dic, false);
->>> +                     f2fs_free_dic(dic, false, false);
->>>               } else {
->>>                       INIT_WORK(&dic->free_work, f2fs_late_free_dic);
->>> +                     /* to avoid inode is evicted simultaneously */
->>> +                     spin_lock(&dic->inode->i_lock);
->>> +                     __iget(dic->inode);
->>> +                     spin_unlock(&dic->inode->i_lock);
->>
->> Oh, how about using igrab() instead?
-> Hi Chao,
-> after I check igrab, I think it is ok,
-> but here We don't need care about igarb's return value, right?
 
-I guess "return NULL" should be impossible case, but still we can add
-f2fs_bug_on() to detect any potential bug, right?
+
+On 6/5/2025 9:04 AM, Wang, Wei W wrote:
+> On Wednesday, June 4, 2025 3:26 PM, Ethan Zhao wrote:
+>> On 5/29/2025 2:11 PM, Tian, Kevin wrote:
+>>>> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>>>> Sent: Thursday, May 29, 2025 1:48 PM
+>>>>
+>>>> 在 2025/5/23 16:10, Wei Wang 写道:
+>>>>> This original implementation included redundant logic to determine
+>>>> whether
+>>>>> first-stage translation should be used by default. Simplify it and
+>>>>> preserve the original behavior:
+>>>>> - Returns false in legacy mode (no scalable mode support).
+>>>>> - Defaults to first-level translation when both FLTS and SLTS are
+>>>>>      supported.
+>>>>>
+>>>>> Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+>>>>> ---
+>>>>>     drivers/iommu/intel/iommu.c | 10 +---------
+>>>>>     1 file changed, 1 insertion(+), 9 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/iommu/intel/iommu.c
+>>>>> b/drivers/iommu/intel/iommu.c index cb0b993bebb4..228da47ab7cd
+>>>>> 100644
+>>>>> --- a/drivers/iommu/intel/iommu.c
+>>>>> +++ b/drivers/iommu/intel/iommu.c
+>>>>> @@ -1366,15 +1366,7 @@ static void free_dmar_iommu(struct
+>>>> intel_iommu *iommu)
+>>>>>      */
+>>>>>     static bool first_level_by_default(struct intel_iommu *iommu)
+>>>>>     {
+>>>>> -	/* Only SL is available in legacy mode */
+>>>>> -	if (!sm_supported(iommu))
+>>>>> -		return false;
+>>>>> -
+>>>>> -	/* Only level (either FL or SL) is available, just use it */
+>>>>> -	if (ecap_flts(iommu->ecap) ^ ecap_slts(iommu->ecap))
+>>>>> -		return ecap_flts(iommu->ecap);
+>>>>> -
+>>>>> -	return true;
+>>>>
+>>>> The function works like a digital circurt has 3 single bit inputs
+>>>> sm, flts, slts and one bit output ret.
+>>>>
+>>>> so the true value table of the orignal function looks like
+>>>>
+>>>>       sm   flts   slts    ret
+>>>> a   0     x     x      false
+>>>> b   1     1     0      true
+>>>> c   1     0     1      false
+>>>> d   1     1     1      true
+>>>> e   1     0     0      true
+>>>
+>>> 'e' is actually wrong. We should not return true when the 1st level
+>>> cap doesn't exist.
+>>
+>> If so, this patch should mention it fixes such case with fix tag, not
+>>    "removing the redundant logic with the same behavior".
+>>
+> 
+> Probably not a fix (just code improvement). Your 'e' above is not possible
+> from the hardware side, and the old implementation doesn't have it too.
+> 
+Is there any items in Intel VT-d spec to say "It is impossible to have 
+both flts and slts to false" or you design code under an assumption that 
+hardware always works perfect ?
+
+You made an assumption that the hardware never would reach there and 
+then got a conclusion 'e' doesn't exist ?
+
 
 Thanks,
-
-> Thanks!
+Ethan
 > 
->>
->>>                       queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
->>>                                       &dic->free_work);
->>>               }
->>
+>>>
+>>>>
+>>>>> +	return sm_supported(iommu) && ecap_flts(iommu->ecap);
+>>>>
+>>>> And the true value table of this new one looks like
+>>>>
+>>>>       sm  flts slts    ret
+>>>>
+>>>> f   1     1     x      true
+>>>> g   1     0     x      false
+>>>>
+>>>> h   0     1     x      false
+>>>> i    0     0     x      false
+>>>
+>>> so this table is correct.
+> 
 
