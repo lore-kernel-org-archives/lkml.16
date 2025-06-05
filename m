@@ -1,131 +1,126 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D651A2545;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E461ACEDC;
 	Thu,  5 Jun 2025 07:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749108931; cv=none; b=GXggvh5Y2h94e+Zdl79u6gciivNLpK60n+nXxFA1RIHsq+xBnxuSPrSLdHZa7ExUpd4FlA5MCnmBCquneHk9FFVQj58UZUK9iUmrqitYutgvwneLFSWctobqDT7XHHzAF5lKN4Q4BATXxonCCj3KorbF5x5Q7o+y8b8PX8cqVOg=
+	t=1749108933; cv=none; b=aBPJWv/N72SvS4PGx3DQYvA865KVmMRiBsxIc+pQxq2sVuq3PmP/rgzX3rYRoav+lYhC15yaIENt/QNBm0Q9BNJSbldcOnDpzW47TZQKjRW53DUAFAgHFQHH00G/yhF19WcuZBfK1olznCxET7n4aFkc/3RNXbC5PR3gTQYs0os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749108931; c=relaxed/simple;
-	bh=5Yg2TszODfSWyu/tkAewlOKe9bmGQWD5HRPUFzitAq0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=KiJsa4xEGDz2aJLNsv/s54tTTnXmNvA/LuFx4QEm3OynDdd3VjYtDXxkfCF5qUKeJZCpdXdzxJRY/uWBplaFG/n7TbQ1nF4Ewg3UTfGoL3YEULhKxJd+GWqZPnwaE6bGwTzQbck0iP35txm7iTb/dwib6Z1aC6ix5FREBy9IENg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kj784Nm5; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kj784Nm5"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5236843935;
-	Thu,  5 Jun 2025 07:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749108920;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Yg2TszODfSWyu/tkAewlOKe9bmGQWD5HRPUFzitAq0=;
-	b=kj784Nm5ZgltuTXJv+pbKGMDA1t5/ru/eck+iLsRHT9bh9dUAeKg1UtiSce3r6Rlkt7NZG
-	qIToZTnegQa10FbPzHFs+21XG8fPMSJ9luRmHf0Tcez7mIKtXf9cvIyEX0qlJeupy/3EGv
-	MrWDfRryvUUNfeFlQnZP3sB5mO5Z0Q7yCadc1YSb2Q4hFOq0DMbigaRqE5MeN8JAuyOXOS
-	tdRwbxKu/TiRONaFFbT1o0xDZe9esDi5hlY10LwDmFTJoQ+xZELZxa87B0WtIdPEUOanPV
-	hRLRzekmcstDQk4EaSTKY5DBrLMkgQ6hPQxyzj9+v0rfzvpRPaSdlch0EXpxZg==
+	s=arc-20240116; t=1749108933; c=relaxed/simple;
+	bh=JiPjZpPszKvce3bAitOvkf5ocNgd1DZGGqYRlad1oWQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LMzj3aF5l0B1FW8dkCPQJz2M+pIyOB4c+fhdXsPs62CN+46Fqf+JL9st+znWboM3AXiu4MXf1B/oFFNUge7nXSbMHiSpmu83GDg56QwAAaCY3xY65vUA79OASMRHhiiX2Dcw+ugd9I0vhRvvePYom6UgU9QgYWgqfe9YqA3bADg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: eac0473241de11f0b29709d653e92f7d-20250605
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:5f0b65d3-5033-4296-8fe1-3298b09a26ea,IP:0,U
+	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-30
+X-CID-META: VersionHash:6493067,CLOUDID:bbfc68758d43e42d124c0b08258bac5d,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:2,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: eac0473241de11f0b29709d653e92f7d-20250605
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangheng@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1051063951; Thu, 05 Jun 2025 15:30:12 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 5A0B1E00891C;
+	Thu,  5 Jun 2025 15:30:12 +0800 (CST)
+X-ns-mid: postfix-68414784-21522215
+Received: from localhost.localdomain (unknown [172.25.120.77])
+	by mail.kylinos.cn (NSMail) with ESMTPA id BF327E00891B;
+	Thu,  5 Jun 2025 15:30:11 +0800 (CST)
+From: Zhang Heng <zhangheng@kylinos.cn>
+To: jikos@kernel.org,
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhang Heng <zhangheng@kylinos.cn>
+Subject: [PATCH] HID: Add IGNORE quirk for SMARTLINKTECHNOLOGY
+Date: Thu,  5 Jun 2025 15:29:59 +0800
+Message-Id: <20250605072959.91625-1-zhangheng@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 05 Jun 2025 09:35:15 +0200
-Message-Id: <DAEFD2WH7HRV.2SOG9Q00QSEXH@bootlin.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
- <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
- <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
- <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
- <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
- <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Catalin
- Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan" <shuah@kernel.org>, "Maxime
- Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
- <alexandre.torgue@foss.st.com>, "Florent Revest" <revest@chromium.org>,
- "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
- <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>, <dwarves@vger.kernel.org>
-Subject: Re: [Question] attributes encoding in BTF
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: "Ihor Solodrai" <ihor.solodrai@linux.dev>, "Andrii Nakryiko"
- <andrii.nakryiko@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
- <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
- <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
- <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
- <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
- <DADMLIVHMSSO.3AXSI5216WCT6@bootlin.com>
- <9a2ba0ad-b34d-42f8-89a6-d9a44f007bdc@linux.dev>
-In-Reply-To: <9a2ba0ad-b34d-42f8-89a6-d9a44f007bdc@linux.dev>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeffedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefuhffvofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffvddufffhieffheetfffggeeugedtieduheeilefguddvheegvdeuffeuveeltdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefvddprhgtphhtthhopehihhhorhdrshholhhoughrrghisehlihhnuhigrdguvghvpdhrtghpthhtoheprghnughrihhirdhnrghkrhihihhkohesghhmrghilhdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvt
- hdprhgtphhtthhopehjohhhnhdrfhgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomh
-X-GND-Sasl: alexis.lothore@bootlin.com
 
-Hi Ihor,
+MARTLINKTECHNOLOGY is a microphone device, when the HID interface in an
+audio device is requested to get specific report id, the following error
+may occur.
 
-On Wed Jun 4, 2025 at 7:31 PM CEST, Ihor Solodrai wrote:
-> On 6/4/25 2:02 AM, Alexis Lothor=C3=83=C2=A9 wrote:
+[  562.939373] usb 1-1.4.1.2: new full-speed USB device number 21 using x=
+hci_hcd
+[  563.104908] usb 1-1.4.1.2: New USB device found, idVendor=3D4c4a, idPr=
+oduct=3D4155, bcdDevice=3D 1.00
+[  563.104910] usb 1-1.4.1.2: New USB device strings: Mfr=3D1, Product=3D=
+2, SerialNumber=3D3
+[  563.104911] usb 1-1.4.1.2: Product: USB Composite Device
+[  563.104912] usb 1-1.4.1.2: Manufacturer: SmartlinkTechnology
+[  563.104913] usb 1-1.4.1.2: SerialNumber: 20201111000001
+[  563.229499] input: SmartlinkTechnology USB Composite Device as /device=
+s/pci0000:00/0000:00:07.1/0000:04:00.3/usb1/1-1/1-1.4/1-1.4.1/1-1.4.1.2/1=
+-1.4.1.2:1.2/0003:4C4A:4155.000F/input/input35
+[  563.291505] hid-generic 0003:4C4A:4155.000F: input,hidraw2: USB HID v2=
+.01 Keyboard [SmartlinkTechnology USB Composite Device] on usb-0000:04:00=
+.3-1.4.1.2/input2
+[  563.291557] usbhid 1-1.4.1.2:1.3: couldn't find an input interrupt end=
+point
+[  568.506654] usb 1-1.4.1.2: 1:1: usb_set_interface failed (-110)
+[  573.626656] usb 1-1.4.1.2: 1:1: usb_set_interface failed (-110)
+[  578.746657] usb 1-1.4.1.2: 1:1: usb_set_interface failed (-110)
+[  583.866655] usb 1-1.4.1.2: 1:1: usb_set_interface failed (-110)
+[  588.986657] usb 1-1.4.1.2: 1:1: usb_set_interface failed (-110)
 
-[...]
+Ignore HID interface. The device is working properly.
 
->> Could I be missing something obvious ? Or did I misunderstand the actual
->> attribute encoding feature ?
->
-> Hi Alexis.
->
-> The changes recently landed in pahole and libbpf re attributes had a=20
-> very narrow goal: passing through particular attributes for some BPF=20
-> kfuncs from the kernel source to vmlinux.h
->
-> BTF now has a way of encoding any attribute (as opposed to only bpf=20
-> type/decl tags) by setting type/decl tag kind flag [1]. So it is=20
-> possible to represent attributes like packed and aligned in BTF.
->
-> However, the BTF tags need to be generated by something, in case of=20
-> vmlinux by pahole. Pahole generates BTF by parsing DWARF. And, as far as=
+Signed-off-by: Zhang Heng <zhangheng@kylinos.cn>
+---
+
+I also tried adding HID_QUIRK_NOGET, but it didn't work.
+
+ drivers/hid/hid-ids.h    | 3 +++
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index e3fb4e2fe911..83d731c9fcd2 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1525,4 +1525,7 @@
+ #define USB_VENDOR_ID_SIGNOTEC			0x2133
+ #define USB_DEVICE_ID_SIGNOTEC_VIEWSONIC_PD1011	0x0018
 =20
-> I understand, attributes are not (can not be?) represented in DWARF in a=
++#define USB_VENDOR_ID_SMARTLINKTECHNOLOGY              0x4c4a
++#define USB_DEVICE_ID_SMARTLINKTECHNOLOGY_4155         0x4155
++
+ #endif
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 7fefeb413ec3..78db734c3f6f 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -904,6 +904,7 @@ static const struct hid_device_id hid_ignore_list[] =3D=
+ {
+ #endif
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_YEALINK, USB_DEVICE_ID_YEALINK_P1K_P4K_B=
+2K) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_QUANTA, USB_DEVICE_ID_QUANTA_HP_5MP_CAME=
+RA_5473) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SMARTLINKTECHNOLOGY, USB_DEVICE_ID_SMART=
+LINKTECHNOLOGY_4155) },
+ 	{ }
+ };
 =20
-> generic way, it really depends on specifics of the attribute.
->
-> In order to support packed/aligned, pahole needs to know how to figure=20
-> them out from DWARF input and add the tags to BTF. And this does not=20
-> happen right now, which is why you don't see anything in bpftool output.
->
-> [1]=20
-> https://lore.kernel.org/bpf/20250130201239.1429648-1-ihor.solodrai@linux.=
-dev/
-
-Thanks for the details ! I have missed this possibility, as I have been
-assuming that DWARF info was exposing the needed info. I'll take a look at
-it, but if those attributes can not be represented by DWARF, I'll have to
-find another way of getting those packing/alignment modifications on data
-type (eg: re-use/share btf__align_of from libbpf, as suggested by Andrii,
-but it may not able to cover all cases).
-
-Thanks,
-
-Alexis
-
 --=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.25.1
 
