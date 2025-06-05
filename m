@@ -1,130 +1,183 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2059A17548;
-	Thu,  5 Jun 2025 21:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3FE27452
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749157421; cv=none; b=FPTWwuoBew3iiEwaOiS7dPjI6r5BogVlfOngpdBkYUJqB+WDvpKHpEWKbbRZoEMWw+AOGnyNaY8YB7GNbqmvoznqXRLVRKv8IuwdPjfJAewacFH9xsCgqdhBqbn2VM0CbgsUB685KXNR9CEEu0IsrR4UM0Wm1ocs2hucFYCm0WA=
+	t=1749157607; cv=none; b=dxQTvmVONYX74qKBCZQeLEsO/hMRcMZSI0ozY+89s6CfhXeQKF0L8KnelpYGfAA5YDYAxDQ0xCCKJCdHDWPtlOlVVSo2m2KTek6LklNuW9bW/aF1dogquopZctF6Qqh4nxlK2VlVJ8IxlzHU/54CCniQdQwpWK9GIylrwjYBO28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749157421; c=relaxed/simple;
-	bh=DxZuCT3zQTNmwF1w5Jm8UNNxG3gAbyWGaSO957EG0X0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NFX/E9MhZbRZK8XCZn49S3ZW/9jo83RSzlGFJe4vnhDQwFV4anST5IBrksM/HKKnlhgFeQrRsnAUQafx2fjvtHUO7WqD3uVpgKiVAQEoUwV78/PkTeauHolGBZPQtBpkfd8QsNWmn2x9LT10LjQLevXko6lZBAOHzDYcYE7Iivo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=lXP4G1Xq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eeiE05iw; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749157607; c=relaxed/simple;
+	bh=IWFTL12W3d29/s71G/pRQ2UpdRAu+A8TalDs+OprTbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fK2shI8qf9stjTK10S5pkEsZSSbteqxQkBIaVg68Avd1+ufjFebyGbFYA1anr1ySpb+Ua0j66dcK7p8h3wVoALQbdgq+A3FzsUvhFXxdxc1Q0f6aY2hEwPkAGjIQRWaCPVdxmk3irmzQHynbLtNRZSu7Nmr8Blf9tHvaFJLUNNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M6wss3j8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="lXP4G1Xq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eeiE05iw"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 934E825400A6;
-	Thu,  5 Jun 2025 17:03:36 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Thu, 05 Jun 2025 17:03:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749157416;
-	 x=1749243816; bh=zVXTQZbdvC/TAzsb8x4vqo9EMW+NlidVTsUt3AlM1ic=; b=
-	lXP4G1Xq5ZjVlFKq7Gix18VYqGVRI/WRB0nc7KXjXTNDuuRMIHdVUkJd5GDrEqbn
-	F0fBSSDKhriKiwnMEKUEKPSZwyHliTMH38NCC2h4d1UPa9P8Q0Jh5eEZXo1sRyXJ
-	R1k7Y6xy0TIC3edWP5R2/Jz/IxHIFArRH9F6jB8rpgj3rmFk51OW0/RNAv24mVzW
-	Tx4hNjMkzSGZRVPDZ5M4CddPVoG7OF//c1EDNtFfWif/UglsuUfsG6mUA5dVtORf
-	vOKyBhq10IhVRJvBTcZpOq89utXSmCajHfH1d+F61dSeroEHmBMtsr3SqLsWTY+R
-	nQasJAaVFhP9l0DurRyrUQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749157416; x=
-	1749243816; bh=zVXTQZbdvC/TAzsb8x4vqo9EMW+NlidVTsUt3AlM1ic=; b=e
-	eiE05iwGYDaO3E/O8JDndkKK0VxO6F1x6Hm+rFuL2llSHoH1UAXlJuLOflOElRMD
-	9v1rv9b6bzgasRmeA7aJcU4Zs4VT0vvmr+BFoSt72hzIn1uKN/Ndex6j3ViGtWoo
-	8LHA0abS9VAUTl6Z1bZ9hLdClhmLfyZfFm/6ZdIThtPeiIHVlp7ja5A+RCaB6zU9
-	Uf6JQHymBioylFyLYZt+gaZnBAC0jEG+/hWGDmwmE8avbY7hJwwGeG6pqZOmIvac
-	IUZ29rY7b6Fs2cSdiR6WRg0LH+3jqwBeJTzHHdpDBd55rTY1gyeAHZ/l9Yyl4yw8
-	KDt0c+rhum9FGvMTmGmxA==
-X-ME-Sender: <xms:JwZCaNOYXk3GU1KfdHQwcm5gjtm0nFK96JEChOWimEFb3Xsf0z7tDw>
-    <xme:JwZCaP-_DhP4kX2MeE_ciRlbqT7TmRQtQ8NoFCUmBoRJ5UsTBbFMUu9073LjeT52O
-    ktUjF2kVaSwlzXyEuY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
-    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
-    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
-    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
-    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
-    hrpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhn
-    thgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
-    hinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhs
-    thhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfi
-    hnrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgt
-    phhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:JwZCaMQxO3al6dnB9sAdgd8ehpyzlkre8wKXr_4f6tlTNw8GmhNm2Q>
-    <xmx:JwZCaJu0faNmirli2wnJb6Qgxyczz_r6eaqfNJ85KVD4rGjFJ2wxTA>
-    <xmx:JwZCaFfs8LEfV22mhfqxO6oZU_Bd1x-r8bDhi14rhokQhsQUNLo5yw>
-    <xmx:JwZCaF1nBQuTKr9assGbqRn69EmcugK5WfAevgrNEySn17TCeyC7tw>
-    <xmx:KAZCaB89Oo0mEfqAobynotnzf2EN0r0SWxl4WmYtyFEH5vw3KrU3ka-W>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BFFF82CE0060; Thu,  5 Jun 2025 17:03:35 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M6wss3j8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749157605;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=KsrSkUpql3itSV3/ri1zxMtGV9J2VnAsgTf2vYhM3xo=;
+	b=M6wss3j84+ogOP/layNTmKPT7T+8n8W6reDGU5sOssxFQDx0sOsKVviheg9XMiU+Q5ShzT
+	PIUGhbHsNr6/tLdlhcQJrynzk5xygIv0jmaHdSw9CG+4jjLc7VTtrUwoErZRDi23s0EDTe
+	adhazVEdo6vJabNqlTDP6oWLsHZ8B6U=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-684-747Jiz7nO0akHwe3J0UTSA-1; Thu, 05 Jun 2025 17:06:43 -0400
+X-MC-Unique: 747Jiz7nO0akHwe3J0UTSA-1
+X-Mimecast-MFC-AGG-ID: 747Jiz7nO0akHwe3J0UTSA_1749157603
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a50816ccc6so966059f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 14:06:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749157602; x=1749762402;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KsrSkUpql3itSV3/ri1zxMtGV9J2VnAsgTf2vYhM3xo=;
+        b=T4EqlT7pLMa2SowYY5t/BpnK3Un6UDEgPuqV1Wa8NEl1ZKLzwpeNE0WhJYUUyjL8V7
+         sm+qHyN9hej1uABc1/GgU/Qfh6t3WH9EJb6e4HuHvArVFG4U6TZJ4eBOS1IimcfCqhja
+         lzWnYh6XN7idbY49tfMyJyymzR92Ny8PM1zSfvUA0xsLeHtQsFWE3BGcUB+S8NK5cW9A
+         DFLKF/bfky0AOkfhRDI/TazCnKtLD4puE1TGH1SKjBBV/PyNFMhjIgEumDyp4UZilEJ4
+         whFDfeBW+uWfzOjmcqeqF8eEPWouI+/4bxR5B2Bfyqv7iDsVx4mcEslL1cSxZbhtx3GW
+         Bclw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJzd1lONIMZlauSTWukvoYwAVPvsKjjCuwLbYBU07QCiNe0Y55GKi2kBVBp/2z4y1Nw4dIrIm5omy2+7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfn3rsyTAoagGOO7NgSqLO0qL3bX2ib71wnUukzyCSspPPppuK
+	Fy82Gu7MeFNPyBSvZbN8DOdrQ5Zpn7AI5Yzx/ufGJ51t51nKfO6M00FFR0wXFPNRsK8g5q19A+p
+	hsdWdBhCPOdz+ZAnR5iCp6rNu/IvVwF0N9OJITxFHeVUDZ6LvPdwe0MFXeuCexi1gbA==
+X-Gm-Gg: ASbGnct7SX/BhsBe8I6ROkfRzRZ3zfONI59VXg/f8++gmrBQpdFFZ83V52RJng176tW
+	odQRezr7L8rVv0ZX3hUUw3jZrRvN1CXinIZaKmsqKfEivbGoUbuTU+O7j1dahRovyGqQjxknMQ8
+	ltXPQKdoPWz5VJI0/QGDfqy5gdTc6yp8kh/soQRJT8X29AZ1Rxs8Pcl18mmjD6Yqe5TLwsNClbg
+	/RN5w+IOi6isWuGFAnAufMc8xCoKQMyR13VHZZbLDSonmnQo8q2Z+Ea81mLoJ84iVZpF7VvadsY
+	6JfzCkoRMOdKzzOHNz3By2CkRm8QAcxDDqS6sDsMxh4=
+X-Received: by 2002:a05:6000:430a:b0:3a4:fcc3:4a14 with SMTP id ffacd0b85a97d-3a531cb0becmr528118f8f.34.1749157602652;
+        Thu, 05 Jun 2025 14:06:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE66VFB4S99TdbaanehyTYCVo34FSkB9+r8xBeGIhBPQc+rl+mKxmTd1eM066L0mrneeEm4/w==
+X-Received: by 2002:a05:6000:430a:b0:3a4:fcc3:4a14 with SMTP id ffacd0b85a97d-3a531cb0becmr528089f8f.34.1749157602170;
+        Thu, 05 Jun 2025 14:06:42 -0700 (PDT)
+Received: from [192.168.3.141] (p4fe0f5ef.dip0.t-ipconnect.de. [79.224.245.239])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323c08fasm207200f8f.44.2025.06.05.14.06.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 14:06:40 -0700 (PDT)
+Message-ID: <0a1dab1c-80d2-436f-857f-734d95939aec@redhat.com>
+Date: Thu, 5 Jun 2025 23:06:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T107eb5199b18744c
-Date: Thu, 05 Jun 2025 17:03:15 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
- ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Armin Wolf" <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Message-Id: <dd3b79e3-a0d1-4413-8c69-58ca6b4fb8c9@app.fastmail.com>
-In-Reply-To: <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
- <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
- <71f410f4-6ac6-41d2-8c99-2a02e0f05fed@app.fastmail.com>
- <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] userfaultfd: prevent unregistering VMAs through a
+ different userfaultfd
+To: Peter Xu <peterx@redhat.com>
+Cc: Tal Zussman <tz2294@columbia.edu>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Pavel Emelyanov <xemul@parallels.com>, Andrea Arcangeli
+ <aarcange@redhat.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+References: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
+ <20250603-uffd-fixes-v1-2-9c638c73f047@columbia.edu>
+ <84cf5418-42e9-4ec5-bd87-17ba91995c47@redhat.com> <aEBhqz1UgpP8d9hG@x1.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aEBhqz1UgpP8d9hG@x1.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Andy
+On 04.06.25 17:09, Peter Xu wrote:
+> On Wed, Jun 04, 2025 at 03:23:38PM +0200, David Hildenbrand wrote:
+>> On 04.06.25 00:14, Tal Zussman wrote:
+>>> Currently, a VMA registered with a uffd can be unregistered through a
+>>> different uffd asssociated with the same mm_struct.
+>>>
+>>> Change this behavior to be stricter by requiring VMAs to be unregistered
+>>> through the same uffd they were registered with.
+>>>
+>>> While at it, correct the comment for the no userfaultfd case. This seems
+>>> to be a copy-paste artifact from the analagous userfaultfd_register()
+>>> check.
+>>
+>> I consider it a BUG that should be fixed. Hoping Peter can share his
+>> opinion.
+> 
+> Agree it smells like unintentional, it's just that the man page indeed
+> didn't mention what would happen if the userfaultfd isn't the one got
+> registered but only requesting them to be "compatible".
+> 
+> DESCRIPTION
+>         Unregister a memory address range from userfaultfd.  The pages in
+>         the range must be “compatible” (see UFFDIO_REGISTER(2const)).
+> 
+> So it sounds still possible if we have existing userapp creating multiple
+> userfaultfds (for example, for scalability reasons on using multiple
+> queues) to manage its own mm address space, one uffd in charge of a portion
+> of VMAs, then it can randomly take one userfaultfd to do unregistrations.
+> Such might break.
 
-On Thu, Jun 5, 2025, at 3:43 PM, Andy Shevchenko wrote:
-> On Thu, Jun 05, 2025 at 11:53:47AM -0400, Mark Pearson wrote:
->> On Thu, Jun 5, 2025, at 1:58 AM, Andy Shevchenko wrote:
->> > On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
->> >> Create lenovo subdirectory for holding Lenovo specific drivers.
->
-> ...
->
->> >> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
->> >> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
->> >
->> > You may follow the trick in the Makefile (see intel folder) to avoid repetition
->> > of the folder name in the file names. Note, the modules will be called the
->> > same (assuming no ABI breakages due to renames).
->> >
->> Interesting - I'll have to look at that a bit more.
->> Any objections if I leave that for a future change?
->
-> IF it's nearest future :-)
->
-I got this implemented - I'll include it with v3. It's less complicated than I thought when I initially looked. 
-Thanks for the suggestion.
+Not sure if relevant, but consider the following:
 
-Mark
+an app being controlled by another process using userfaultfd.
+
+The app itself can "escape" uffd control of the other process by simply 
+creating a userfaultfd and unregistering VMAs.
+
+-- 
+Cheers,
+
+David / dhildenb
+
