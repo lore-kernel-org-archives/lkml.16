@@ -1,77 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1142D27A127;
-	Thu,  5 Jun 2025 20:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327CD27A127;
+	Thu,  5 Jun 2025 20:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749155604; cv=none; b=NvC8eQ/JJA46dCJrfsq/p7plzQpqVzRj9NxFgT1dUf+YpodZZMZkIvGZCFNjG0WEJAmrxX/WJbb5nSj+sFPuFxYE2fiGO9/Y+8koYfVJJekmf/+UISP2sD+Cre6+0Mzf/nRROoAnFYmzZ9HFJVyFPjvewCl0I4Clxi3NPFDFPAg=
+	t=1749155617; cv=none; b=K8/NiDOdhSSb+wkYsLVO9vI5YTSgo9QWy4fvqN26UGvDbRrMsy4B5at9jmnyWkN8uVdEokzssy1nZtkr78OGYVIphrdpwb+9n/YTILHIorAVnhBaBjj/2QaZsJYpwIjAv7R+Fv7fjtQNl+hR692hSpKw4t0pcpcE2C3VSYT1DCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749155604; c=relaxed/simple;
-	bh=LqPpE5uLwfjDAz02pBK0TvjVK+8DTskFli7aSpfSgTs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uWzS8Y6/4BKNdb+ZrNAVwxlDwIxL+pEQ+OxysJAuzqDEB9xTlrnNfOtbkq6WslaIW4CqZxt6eH18i6pgkDjsdByoqBRZ2Fkut4m4uUzMJHfGAbSXryaTib+NSIFljnKnjG/kg0YpguLAemVNYeU3suRDpZiu7DKeXJUNbIpUlWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGgYBYmZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749155617; c=relaxed/simple;
+	bh=C13lyaepQeg+W9FybN+9Webo8rqXcAFoCH0QZGDKxcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGUY+0qz2d1xXj+Y8xhBUakemN7Q4+VPIwOqI4MVxQ/gAuTODtAwDGNFMtRbn69FvUyhryBHOVB3RhbZUrBN5e98dPI/ffDQoTJ3LjaZOP1JUTz/dkpNRGsRj6GU4k9bG1tKaACA3SMN5F+bwHTFEjnNonLHK44/AkZ/w+A897g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jAXTuLFa; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGgYBYmZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF3E2C4CEEB;
-	Thu,  5 Jun 2025 20:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749155603;
-	bh=LqPpE5uLwfjDAz02pBK0TvjVK+8DTskFli7aSpfSgTs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UGgYBYmZH9f1+FHgAlKdJCFw3jcobKPBsADjisneQVg6NP1ZRlONu4cHfBk9VdvUb
-	 8WY/35dj6D69eCiUuDUnTyg7mNCfxbI7bilnru7s8SbaZ9lC1WzPsrI9KxYfNsGgfd
-	 OWRET5ZnD0SaxKHZAa5J9BI2FGqt9nX6aV0Qf8XKLgQ/e8whLiFBQ6k+vRN0MC+NJl
-	 IaegNTAgV1mXAyMPY0YGHwjKFkMHQiyqNyUgLdrM6jRblJknAlyjt/gIHSTpVj0Qcs
-	 +SsSQGUvvJEWIwqtrjBJBsBW4Z0XGoX8GmZPO9A4JbVD0Tr1WhAeiJLYwdby+Nokjw
-	 2AYg7EL9aswlg==
-Message-ID: <f1a055d9-ba72-43cd-8e01-7017fd586be4@kernel.org>
-Date: Thu, 5 Jun 2025 22:33:17 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jAXTuLFa"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a528e301b0so108912f8f.1;
+        Thu, 05 Jun 2025 13:33:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749155614; x=1749760414; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C13lyaepQeg+W9FybN+9Webo8rqXcAFoCH0QZGDKxcI=;
+        b=jAXTuLFatQnKS1TMyPSf3lx6BYGlsaFMkqKoFBrzRtflQvzj1ryn9AYKC04HJUKUJy
+         M75P4XDi2y/KOomUVdndtM3f1CzoOzFh7vLiSAs87oCw/iOWfW4J6ZKtS2d86BNZlGsO
+         VXUf3q00s1xxsLCKhPEBX7vs/1h4FPTAFn5adVMGOUW6G3m0gpzMINdPCINBPGcRkmiQ
+         XMJThm4+nqAW38Bb0hF6kkriHsmqaGag632ZeBXyn8ufL7W4VqlS8EGCafF+/bClmci/
+         0iawWKTf+XU+I5S50ibZz9AK9DbFEVSkbqK2qXR9aSRT4ES8JDjftPdPiQbqS5m+9MAn
+         YqYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749155614; x=1749760414;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C13lyaepQeg+W9FybN+9Webo8rqXcAFoCH0QZGDKxcI=;
+        b=DGQXKhaQOxMqGkRFyUWTSqMxj3Y9bX26oZMAbhMOBdGFsD+s0CBRHXyQZqyhbyDkD+
+         E/Lo7+wD8W0rYd4zAbYUws8SLSTeoUH83rDXazi830MLKUiBYT1vMnfcbAtsPMRctDRw
+         7uZeOqjNivC/tZAh7bhnGHqwKl2uNX18dRJXeEsSKMkDBBCZSUn2S9gyUvulKclU6bIM
+         nfqydrBmPsMEkpIJ6ppAlPHeP2t3xn4AgWmaZk7Epw6qdQhhqdZN/t8jliTJGFnHqOPt
+         8Glvi+GkW6su5kcNDX3XSFUMBuhNMBLThbxiIWUkozJcsva55jmFYhwjwnfW1derAjvm
+         tajQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNnjBogH5xy0eTdVEsWkmRPJoDo0V9E9aF0QGONPnw+5BDL+EmyrOgVygg0C1d3UpCq1Ehu3lMdzkquS8=@vger.kernel.org, AJvYcCXtek22UXX1qvknhYDdcGcvb04Ia2lWgJpEzsEPML7E62KG6CynrCQnlTG9o+wPojly5Mz2Iszr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtjP5y27dAvU1Lvpxd0grRpzW9F436TpEnkoaqEPImG4Fh2/XF
+	0VG4cg+HW7lpVyET8XRWzxO37B8H73AdX2m3HWyQesd84tqlQIB9HpEd
+X-Gm-Gg: ASbGncui/jrB3zqZfA1EJgdL1Op4nBb3uGYXyN7yDSjyr4t5Z2SAw73G01NZ0fthhMm
+	uC47ghSfqNpQh8nAtLkj17P5XLLQPe2jhwJtPP6rvMUiO86XIo5lI22LvONw0Fkzf7g3pZoVcyb
+	aCGICs69JzNMIa8i2WKrlexwo8B18ekJs/zYEvdOfk5cDE99bTT0p9tTBuwxQOvx8qtCO3Iac7G
+	8/vv9IS5ay/JdijDibICSdxxFlI5NVbV4VXmPX+rYlYFP8fCXIqvEnP4eBnkdVTkhNOkWJEVrXB
+	/E1BKrDM+aXQIkfFW7SS1XhPnqCKai8bqfDJhgSgwRHc57oAIA==
+X-Google-Smtp-Source: AGHT+IGXEKJnubZ7beEaQJblRyNzWfu8E4pvqMGMNr0AwK4lFXVVSq9+04lNS3pnIjDVm8/5AwunAQ==
+X-Received: by 2002:a05:6000:2dc9:b0:3a4:eeeb:7e79 with SMTP id ffacd0b85a97d-3a5319a96admr170386f8f.12.1749155614180;
+        Thu, 05 Jun 2025 13:33:34 -0700 (PDT)
+Received: from skbuf ([86.127.125.65])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209cf9715sm3554475e9.18.2025.06.05.13.33.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 13:33:33 -0700 (PDT)
+Date: Thu, 5 Jun 2025 23:33:31 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: b53: fix untagged traffic sent via cpu
+ tagged with VID 0
+Message-ID: <20250605203331.twof2p2orvuxwuzt@skbuf>
+References: <20250602194914.1011890-1-jonas.gorski@gmail.com>
+ <20250605202043.ivkjlwtvzi6jqhqx@skbuf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Tamir Duberstein
- <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605202043.ivkjlwtvzi6jqhqx@skbuf>
 
-On 6/5/25 9:55 PM, Andreas Hindborg wrote:
-> The current implementation of `ForeignOwnable` is leaking the type of the
-> opaque pointer to consumers of the API. This allows consumers of the opaque
-> pointer to rely on the information that can be extracted from the pointer
-> type.
-> 
-> To prevent this, change the API to the version suggested by Maira
-> Canal (link below): Remove `ForeignOwnable::PointedTo` in favor of a
-> constant, which specifies the alignment of the pointers returned by
-> `into_foreign`.
-> 
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Suggested-by: Maíra Canal <mcanal@igalia.com>
-> Link: https://lore.kernel.org/r/20240309235927.168915-3-mcanal@igalia.com
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+On Thu, Jun 05, 2025 at 11:20:43PM +0300, Vladimir Oltean wrote:
+> Testing both on sja1105, as well as on veth using software bridging, the
+> answer should be "tagged with VID 2". However, you make it sounds like
+> the answer on b53 is "untagged".
 
-I think having the pointer type be `crate::ffi::c_void` was much more convenient
-for users of the API anyways. :)
+Sorry, some neurons misfired. I don't expect the b53 answer to be
+anything other than "tagged with VID 2". The bridge passes the skb as
+tagged with VID 2 already.
 
-	Acked-by: Danilo Krummrich <dakr@kernel.org>
+Only if the bridge port VLAN 2 were egress-untagged, would the skb be
+coming to ndo_start_xmit() as VLAN-untagged. Then it would be processed
+in VID 2 in software, and in VID 0 in hardware. But the fact that VID 2
+is egress-untagged in software just like VID 0 is egress-untagged in
+hardware will mask that. That would only potentially matter for source
+address learning, which I'm not sure whether it exists on CPU-injected
+packets on b53.
