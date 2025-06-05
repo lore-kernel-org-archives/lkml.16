@@ -1,166 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37251A0BF1;
-	Thu,  5 Jun 2025 23:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AED218AD1;
+	Thu,  5 Jun 2025 23:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749166103; cv=none; b=ewcJ2/zofndpMilm3LtH+I6WdS/kVZ9BY0UrR30VPepAHbXR2drvRu7Y7nS42Zh9holi19mtwDlqa0Sve1B7iFiw1uRnMRMeYobXHALIVasV/JaPgdBRY29CxfikbC97xfmefa3asgTAgVd79Bbm0PF2HIgthkDbeNqbu2nq7xY=
+	t=1749166129; cv=none; b=fw7Wx8CmWPifcxQqH04n/R5RA8SpTCZKUXmxYcOU7UmijdKknMRButNG4/Lpzk05EbcWbBSH0+R79NJZdqLNbT9rEEZ0tvGuFY6WbvXsyrY75pBQ6t/92X+VNcYzZFhG76kADGaL2HXXi5tPRD7pMCwkpU3CRckrtyqR5Ou4YEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749166103; c=relaxed/simple;
-	bh=wpT4kdhFrVLz3iKJ50S2pa3mTyei+h7mexPBYlVblpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C8+bbl2C2DbuhefToaS4xmOSqO4ognKlqeDgGzZfmE8ERYuBoZ1ATSGDpjcfBy4D/nCTYgSDhsWSKWrnlaWJ5PcFUDNZZ46XwoTrO4Em0IRO6awpgxjH83SU6s/OrA+uINbrh0Yl1VPydrci/PL2xRDeaDWLNZ1T5M3ln51iUtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rWmq/hUr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749166129; c=relaxed/simple;
+	bh=PgvI5pderInIY5c86tPDww7UEclj+CoScCJ7c6jY70E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UbTe28aeOt8gk/dW89u1b/zqxGBgjTCNV4E9pdLG43ULeKjS2T/VvZMiuQw07K0QeqW7/lUxNW6AEHarM0N0XvbXwy8SuQ2oyE2BPeFcM6mNPDl4AUoopBrJNGxZAEHreml6DlTbldofR9TpaswVf49u61fYl7iAPeFjKMSywVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PbKPewkK; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rWmq/hUr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ACD7C4CEE7;
-	Thu,  5 Jun 2025 23:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749166103;
-	bh=wpT4kdhFrVLz3iKJ50S2pa3mTyei+h7mexPBYlVblpE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rWmq/hUrBAiEFgH+Rxiy1HbEdUiNebMP/czdlikDUQF64Ox3eOdKjap50YlGioveZ
-	 WmkFY+LfUTXEHcW1gEAq+j+FeEf53h6dOS71NHpizqw+1hjvnB38eE5CwJM9E+Ct40
-	 GwDEDdMm3cgLpncIAO4rHXDMBJWgVhbbJkvMufQR+SlhxmY0evOf7NtNFd6rjzMopt
-	 NflDgOXOsiJrCTPd2T+G+dQGngMQV7410xmLe4ZEYTzndJWvL7pZStEsG01uHSqDbB
-	 ropW4j90kdA+7+oMEp2IG+fsc1gp6imvwXJzSixn9i7zKw3v5BbSp1VrHbCIT3RAx+
-	 FIiGBEaFZx4/Q==
-Date: Fri, 6 Jun 2025 01:28:17 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Matthew Wilcox <willy@infradead.org>, Randy Dunlap
- <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Suren
- Baghdasaryan <surenb@google.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>
-Subject: Re: [PATCH] scripts/kernel-doc: drop "_noprof" on function
- prototypes
-Message-ID: <20250606012817.27f16dd0@foz.lan>
-In-Reply-To: <875xhaf145.fsf@trenco.lwn.net>
-References: <20240326054149.2121-1-rdunlap@infradead.org>
-	<aEHq_Jy3hPQIzaO-@casper.infradead.org>
-	<875xhaf145.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PbKPewkK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749166128; x=1780702128;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=PgvI5pderInIY5c86tPDww7UEclj+CoScCJ7c6jY70E=;
+  b=PbKPewkKobmvZGEW7e806GLu6NRLQJw2WFGCcCuEiPXpaz7ZSAN0gz/h
+   ljDBpZNFO6hl/1qMVeCtbP+RGYcwrgykkL4SwZpMModjDCqGC+W/1Y+Da
+   ZNrYWFrBIwqCm3pij8LmUSD7PN0BLka6LoYHkB6Fi8FlhynLDfi3R5QJJ
+   x1Y1IYIKNFs8hsFz1evoampadSQSivnOde2S34PCfUSsbgATOw3Z+rS+a
+   2hH9uwp9jenW+GLQicD2kJytZB9UEZmpng3zfxkpkPQsz6K+o/Sx2AuiO
+   fArGH+/yF6nHufLm7UngR5ftA4Aul7FqVg4T4Dr6m+nhbFMR99DBbfqrh
+   g==;
+X-CSE-ConnectionGUID: hkh6tuyfQWmfHchwvYZmUw==
+X-CSE-MsgGUID: 3YUW2LTLRfWiLWenOND02A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51169015"
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="51169015"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 16:28:47 -0700
+X-CSE-ConnectionGUID: MUGYREc+SpiAkMC+YLPwbw==
+X-CSE-MsgGUID: zivcIAXKRtaZfkH9QZRZTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="150486352"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.7]) ([10.125.111.7])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 16:28:46 -0700
+Message-ID: <3d3e88aa-dbf3-428b-b763-fd760701e55d@intel.com>
+Date: Thu, 5 Jun 2025 16:28:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 02/16] PCI/AER: Report CXL or PCIe bus error type in
+ trace logging
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
+ shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-3-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250603172239.159260-3-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Em Thu, 05 Jun 2025 13:18:50 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> Matthew Wilcox <willy@infradead.org> writes:
+
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
+> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
+> Type' for CXL device errors.
 > 
-> > On Mon, Mar 25, 2024 at 10:41:49PM -0700, Randy Dunlap wrote:  
-> >> Memory profiling introduces macros as hooks for function-level
-> >> allocation profiling[1]. Memory allocation functions that are profiled
-> >> are named like xyz_alloc() for API access to the function. xyz_alloc()
-> >> then calls xyz_alloc_noprof() to do the allocation work.
-> >> 
-> >> The kernel-doc comments for the memory allocation functions are
-> >> introduced with the xyz_alloc() function names but the function
-> >> implementations are the xyz_alloc_noprof() names.
-> >> This causes kernel-doc warnings for mismatched documentation and
-> >> function prototype names.
-> >> By dropping the "_noprof" part of the function name, the kernel-doc
-> >> function name matches the function prototype name, so the warnings
-> >> are resolved.  
-> >
-> > This turns out not to be enough.  For example, krealloc() is
-> > currently undocumented.  This is because we match the function name
-> > in EXPORT_SYMBOL() against the function name in the comment, and they
-> > don't match.  This patch restores the documentation, although only
-> > for the python version of kernel-doc, and I'm pretty sure there's a
-> > better way to do it (eg building it into the export_symbol* regexes).
-> > I can turn this into a proper patch if this is the way to go, but for
-> > now it's just to illustrate the problem.  
+> This requires the AER can identify and distinguish between PCIe errors and
+> CXL errors.
 > 
-> FWIW, I have no problem with leaving the perl version behind, I expect
-> we'll drop it in 6.17.
+> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+> aer_get_device_error_info() and pci_print_aer().
 > 
-> We see other variants of this problem out there, where we want to
-> document foo(), but that's really just a macro calling _foo(), where the
-> real code is.
+> Update the aer_event trace routine to accept a bus type string parameter.
 > 
-> I wonder if we could add some sort of a marker to the kerneldoc comment
-> saying "we are documenting foo(), but do you checks against _foo()"
-> instead?  That would be more general than trying to keep a list of
-> suffixes to hack off.
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/pci/pci.h       |  6 ++++++
+>  drivers/pci/pcie/aer.c  | 18 ++++++++++++------
+>  include/ras/ras_event.h |  9 ++++++---
+>  3 files changed, 24 insertions(+), 9 deletions(-)
 > 
-> I'll try to ponder on this...
-> 
-> (Meanwhile I don't object to your fix as a short-term workaround)
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index b81e99cd4b62..d6296500b004 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -588,6 +588,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+>  struct aer_err_info {
+>  	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+>  	int error_dev_num;
+> +	bool is_cxl;
+>  
+>  	unsigned int id:16;
+>  
+> @@ -604,6 +605,11 @@ struct aer_err_info {
+>  	struct pcie_tlp_log tlp;	/* TLP Header */
+>  };
+>  
+> +static inline const char *aer_err_bus(struct aer_err_info *info)
+> +{
+> +	return info->is_cxl ? "CXL" : "PCIe";
+> +}
+> +
+>  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>  
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index a1cf8c7ef628..adb4b1123b9b 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -698,13 +698,14 @@ static void __aer_print_error(struct pci_dev *dev,
+>  
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+> +	const char *bus_type = aer_err_bus(info);
+>  	int layer, agent;
+>  	int id = pci_dev_id(dev);
+>  	const char *level;
+>  
+>  	if (!info->status) {
+> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> -			aer_error_severity_string[info->severity]);
+> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> +			bus_type, aer_error_severity_string[info->severity]);
+>  		goto out;
+>  	}
+>  
+> @@ -713,8 +714,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  
+>  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+>  
+> -	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+> -		   aer_error_severity_string[info->severity],
+> +	aer_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
+> +		   bus_type, aer_error_severity_string[info->severity],
+>  		   aer_error_layer[layer], aer_agent_string[agent]);
+>  
+>  	aer_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+> @@ -729,7 +730,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  	if (info->id && info->error_dev_num > 1 && info->id == id)
+>  		pci_err(dev, "  Error of this Agent is reported first\n");
+>  
+> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
+>  			info->severity, info->tlp_header_valid, &info->tlp);
+>  }
+>  
+> @@ -763,6 +764,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  		   struct aer_capability_regs *aer)
+>  {
+> +	const char *bus_type;
+>  	int layer, agent, tlp_header_valid = 0;
+>  	u32 status, mask;
+>  	struct aer_err_info info;
+> @@ -784,6 +786,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  	info.status = status;
+>  	info.mask = mask;
+>  	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+> +	info.is_cxl = pcie_is_cxl(dev);
+> +
+> +	bus_type = aer_err_bus(&info);
+>  
+>  	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+>  	__aer_print_error(dev, &info);
+> @@ -797,7 +802,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  	if (tlp_header_valid)
+>  		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>  
+> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
+>  			aer_severity, tlp_header_valid, &aer->header_log);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+> @@ -1215,6 +1220,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>  	/* Must reset in this function */
+>  	info->status = 0;
+>  	info->tlp_header_valid = 0;
+> +	info->is_cxl = pcie_is_cxl(dev);
+>  
+>  	/* The device might not support AER */
+>  	if (!aer)
+> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+> index 14c9f943d53f..080829d59c36 100644
+> --- a/include/ras/ras_event.h
+> +++ b/include/ras/ras_event.h
+> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
+>  
+>  TRACE_EVENT(aer_event,
+>  	TP_PROTO(const char *dev_name,
+> +		 const char *bus_type,
+>  		 const u32 status,
+>  		 const u8 severity,
+>  		 const u8 tlp_header_valid,
+>  		 struct pcie_tlp_log *tlp),
+>  
+> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
+> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
+>  
+>  	TP_STRUCT__entry(
+>  		__string(	dev_name,	dev_name	)
+> +		__string(	bus_type,	bus_type	)
+>  		__field(	u32,		status		)
+>  		__field(	u8,		severity	)
+>  		__field(	u8, 		tlp_header_valid)
+> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
+>  
+>  	TP_fast_assign(
+>  		__assign_str(dev_name);
+> +		__assign_str(bus_type);
+>  		__entry->status		= status;
+>  		__entry->severity	= severity;
+>  		__entry->tlp_header_valid = tlp_header_valid;
+> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
+>  		}
+>  	),
+>  
+> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
+> -		__get_str(dev_name),
+> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
+> +		__get_str(dev_name), __get_str(bus_type),
+>  		__entry->severity == AER_CORRECTABLE ? "Corrected" :
+>  			__entry->severity == AER_FATAL ?
+>  			"Fatal" : "Uncorrected, non-fatal",
 
-If we willing to place hacks like that, better to bold it:
-
-	# FIXME: this is not what we should do in long term
-
-> > diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-> > index 062453eefc7a..bdfa698d5570 100644
-> > --- a/scripts/lib/kdoc/kdoc_parser.py
-> > +++ b/scripts/lib/kdoc/kdoc_parser.py
-> > @@ -1176,11 +1176,15 @@ class KernelDoc:
-> >
-> >          if export_symbol.search(line):
-> >              symbol = export_symbol.group(2)
-> > +            # See alloc_tags.h
-> > +            symbol = symbol.removesuffix('_noprof')
-
-If we're willing to do that, I would prefer to place "_noprof" into an array, 
-as we may have other similar cases. Also, please comment why we need it and
-where we have those "_noprof". We tent to forget why rules are added. As the
-code churns, we may end dropping things without updating kernel-doc.
-
----
-
-for a more long term solution, maybe one option for cases like that would
-be to have something like:
-
-/**
-  * foo(), foo_noprof() - common function description (is it possible to have 
-  *      a single description for both - as they're semantically different?)
-  * @_size: size description
-  * @_flags: flags description
-  *
-  * some description, including an explanation what are the differences
-  * between both
-  */
-#define foo(_size, _flags)                    foo_node(_size, _flags, NUMA_NO_NODE)
-#define foo_noprof(_size, _flags)             foo_node_noprof(_size, _flags, NUMA_NO_NODE)
-
-Still, another kernel-doc markup will be needed for foo_node variants, as 
-the parameters are different anyway.
-
-Please notice that this is easier said than done as the above may break the
-kernel-doc's sequential state machine at the parser if not done with care,
-specially since one might eventually modify the arguments on just one of
-the variants, like:
-
-#define foo(_size, _flags, _bar)              foo_node(_size, _flags, bar, NUMA_NO_NODE)
-#define foo_noprof(_size, _flags)             foo_node_noprof(_size, _flags, NUMA_NO_NODE)
-	
-Btw, we do have things like that: there are several register 
-functions/macros that have THIS_MODULE on one of their variants,
-like this:
-
-	#define acpi_bus_register_driver(drv) \
-	        __acpi_bus_register_driver(drv, THIS_MODULE)
-
-I didn't find yet a good way to have a single kernel-doc markup
-that would fill both cases and won't add too much complexity on
-both kernel-doc syntax and at the kernel-doc code.
-
-At the above, we probably don't want to document the __foo
-variant, as all kAPI calls should use the variant that doesn't
-have THIS_MODULE, but there are other similar cases where the
-__foo variant, for instance, don't have some mutex or semaphore,
-and we may still want both documented.
-
-
-Thanks,
-Mauro
