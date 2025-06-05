@@ -1,175 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99984218AD1;
-	Thu,  5 Jun 2025 23:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37251A0BF1;
+	Thu,  5 Jun 2025 23:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749165872; cv=none; b=ESkoJMY33nv8T+NoDl7U6Dj07gh3H4NXhrJUMs1hYF7eNxz/NsyALnUKoLCm8wsRonGi5UWVF4pkP0T3n1z0B5mbzPiQz5WryIKfqeQtMNozJhV3aFtaLGOJCyQq4Oxqp4r/yj8GApERcLtBkmXjQC8lvoAkeYjAhGpOoKxOy4k=
+	t=1749166103; cv=none; b=ewcJ2/zofndpMilm3LtH+I6WdS/kVZ9BY0UrR30VPepAHbXR2drvRu7Y7nS42Zh9holi19mtwDlqa0Sve1B7iFiw1uRnMRMeYobXHALIVasV/JaPgdBRY29CxfikbC97xfmefa3asgTAgVd79Bbm0PF2HIgthkDbeNqbu2nq7xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749165872; c=relaxed/simple;
-	bh=D4qDQmRcYChj0MTBJgVUzbnY7abBbwgrW4Z1X2oM1Gk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KHt0BjRmI9VqQxFuXKcsK2dt/kzsUUyEEMKRTUF7J7eFMeou9ZnCNYr09l+MexLIt2eQHjL0hNqrJ0+ntFI2Jmc0tmfrZRRRCv56SPigMZnIqH7Y/mTAqD5PT8/QA7jaNpzJFbO20qQ5b5OLwBUeHMwC9e5znhL4qMl91973GMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ey8u7pF3; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749166103; c=relaxed/simple;
+	bh=wpT4kdhFrVLz3iKJ50S2pa3mTyei+h7mexPBYlVblpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C8+bbl2C2DbuhefToaS4xmOSqO4ognKlqeDgGzZfmE8ERYuBoZ1ATSGDpjcfBy4D/nCTYgSDhsWSKWrnlaWJ5PcFUDNZZ46XwoTrO4Em0IRO6awpgxjH83SU6s/OrA+uINbrh0Yl1VPydrci/PL2xRDeaDWLNZ1T5M3ln51iUtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rWmq/hUr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ey8u7pF3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749165871; x=1780701871;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=D4qDQmRcYChj0MTBJgVUzbnY7abBbwgrW4Z1X2oM1Gk=;
-  b=ey8u7pF3+sA7M6c1TCH+MFRciOjqO09JLptV1LLM3QH26DarWg6+qDHR
-   gm88S6Qr3ocExXyXAdWKBGNJdP3Dc8vMoW8bRTpaoBL+4IQfKuWxEjxbG
-   IE0S1htbBPTp51OpJR/WqqdXpFjL0gagbsLRRyVQhF8UM5sxLrRtDnGli
-   aNeKI9tvwx8A5D4oMnowlU9Jd+KT9JAOFk/b6nWZYpaiCadFsMu2q5MHx
-   Sk4jffG7dnxv7rCmhC9OYgdssNOHc1sBOQYdhsBev80HRiqzNSXGAM54d
-   slzz48XzZDz9xcRAthWLXdObbyKcXT2pBY0/goObQaqap+V6OCyTD2yjH
-   w==;
-X-CSE-ConnectionGUID: ZZkJZLqvQ8i0sRDraficFw==
-X-CSE-MsgGUID: bBaLBVaJRUCH8EymuKiS1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51187289"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="51187289"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 16:24:30 -0700
-X-CSE-ConnectionGUID: iDDBsxE8Rb69QEJX8IDtdA==
-X-CSE-MsgGUID: p10WynqrR+uqOPqalLRJZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="146021420"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.7]) ([10.125.111.7])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 16:24:27 -0700
-Message-ID: <fb895685-9e73-49e5-b8e6-224b87110892@intel.com>
-Date: Thu, 5 Jun 2025 16:24:26 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rWmq/hUr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ACD7C4CEE7;
+	Thu,  5 Jun 2025 23:28:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749166103;
+	bh=wpT4kdhFrVLz3iKJ50S2pa3mTyei+h7mexPBYlVblpE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rWmq/hUrBAiEFgH+Rxiy1HbEdUiNebMP/czdlikDUQF64Ox3eOdKjap50YlGioveZ
+	 WmkFY+LfUTXEHcW1gEAq+j+FeEf53h6dOS71NHpizqw+1hjvnB38eE5CwJM9E+Ct40
+	 GwDEDdMm3cgLpncIAO4rHXDMBJWgVhbbJkvMufQR+SlhxmY0evOf7NtNFd6rjzMopt
+	 NflDgOXOsiJrCTPd2T+G+dQGngMQV7410xmLe4ZEYTzndJWvL7pZStEsG01uHSqDbB
+	 ropW4j90kdA+7+oMEp2IG+fsc1gp6imvwXJzSixn9i7zKw3v5BbSp1VrHbCIT3RAx+
+	 FIiGBEaFZx4/Q==
+Date: Fri, 6 Jun 2025 01:28:17 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Matthew Wilcox <willy@infradead.org>, Randy Dunlap
+ <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Suren
+ Baghdasaryan <surenb@google.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>
+Subject: Re: [PATCH] scripts/kernel-doc: drop "_noprof" on function
+ prototypes
+Message-ID: <20250606012817.27f16dd0@foz.lan>
+In-Reply-To: <875xhaf145.fsf@trenco.lwn.net>
+References: <20240326054149.2121-1-rdunlap@infradead.org>
+	<aEHq_Jy3hPQIzaO-@casper.infradead.org>
+	<875xhaf145.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 01/16] PCI/CXL: Add pcie_is_cxl()
-To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
- shiju.jose@huawei.com, dan.carpenter@linaro.org,
- Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
- yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
- uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-2-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250603172239.159260-2-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+Em Thu, 05 Jun 2025 13:18:50 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
+
+> Matthew Wilcox <willy@infradead.org> writes:
+> 
+> > On Mon, Mar 25, 2024 at 10:41:49PM -0700, Randy Dunlap wrote:  
+> >> Memory profiling introduces macros as hooks for function-level
+> >> allocation profiling[1]. Memory allocation functions that are profiled
+> >> are named like xyz_alloc() for API access to the function. xyz_alloc()
+> >> then calls xyz_alloc_noprof() to do the allocation work.
+> >> 
+> >> The kernel-doc comments for the memory allocation functions are
+> >> introduced with the xyz_alloc() function names but the function
+> >> implementations are the xyz_alloc_noprof() names.
+> >> This causes kernel-doc warnings for mismatched documentation and
+> >> function prototype names.
+> >> By dropping the "_noprof" part of the function name, the kernel-doc
+> >> function name matches the function prototype name, so the warnings
+> >> are resolved.  
+> >
+> > This turns out not to be enough.  For example, krealloc() is
+> > currently undocumented.  This is because we match the function name
+> > in EXPORT_SYMBOL() against the function name in the comment, and they
+> > don't match.  This patch restores the documentation, although only
+> > for the python version of kernel-doc, and I'm pretty sure there's a
+> > better way to do it (eg building it into the export_symbol* regexes).
+> > I can turn this into a proper patch if this is the way to go, but for
+> > now it's just to illustrate the problem.  
+> 
+> FWIW, I have no problem with leaving the perl version behind, I expect
+> we'll drop it in 6.17.
+> 
+> We see other variants of this problem out there, where we want to
+> document foo(), but that's really just a macro calling _foo(), where the
+> real code is.
+> 
+> I wonder if we could add some sort of a marker to the kerneldoc comment
+> saying "we are documenting foo(), but do you checks against _foo()"
+> instead?  That would be more general than trying to keep a list of
+> suffixes to hack off.
+> 
+> I'll try to ponder on this...
+> 
+> (Meanwhile I don't object to your fix as a short-term workaround)
+
+If we willing to place hacks like that, better to bold it:
+
+	# FIXME: this is not what we should do in long term
+
+> > diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
+> > index 062453eefc7a..bdfa698d5570 100644
+> > --- a/scripts/lib/kdoc/kdoc_parser.py
+> > +++ b/scripts/lib/kdoc/kdoc_parser.py
+> > @@ -1176,11 +1176,15 @@ class KernelDoc:
+> >
+> >          if export_symbol.search(line):
+> >              symbol = export_symbol.group(2)
+> > +            # See alloc_tags.h
+> > +            symbol = symbol.removesuffix('_noprof')
+
+If we're willing to do that, I would prefer to place "_noprof" into an array, 
+as we may have other similar cases. Also, please comment why we need it and
+where we have those "_noprof". We tent to forget why rules are added. As the
+code churns, we may end dropping things without updating kernel-doc.
+
+---
+
+for a more long term solution, maybe one option for cases like that would
+be to have something like:
+
+/**
+  * foo(), foo_noprof() - common function description (is it possible to have 
+  *      a single description for both - as they're semantically different?)
+  * @_size: size description
+  * @_flags: flags description
+  *
+  * some description, including an explanation what are the differences
+  * between both
+  */
+#define foo(_size, _flags)                    foo_node(_size, _flags, NUMA_NO_NODE)
+#define foo_noprof(_size, _flags)             foo_node_noprof(_size, _flags, NUMA_NO_NODE)
+
+Still, another kernel-doc markup will be needed for foo_node variants, as 
+the parameters are different anyway.
+
+Please notice that this is easier said than done as the above may break the
+kernel-doc's sequential state machine at the parser if not done with care,
+specially since one might eventually modify the arguments on just one of
+the variants, like:
+
+#define foo(_size, _flags, _bar)              foo_node(_size, _flags, bar, NUMA_NO_NODE)
+#define foo_noprof(_size, _flags)             foo_node_noprof(_size, _flags, NUMA_NO_NODE)
+	
+Btw, we do have things like that: there are several register 
+functions/macros that have THIS_MODULE on one of their variants,
+like this:
+
+	#define acpi_bus_register_driver(drv) \
+	        __acpi_bus_register_driver(drv, THIS_MODULE)
+
+I didn't find yet a good way to have a single kernel-doc markup
+that would fill both cases and won't add too much complexity on
+both kernel-doc syntax and at the kernel-doc code.
+
+At the above, we probably don't want to document the __foo
+variant, as all kAPI calls should use the variant that doesn't
+have THIS_MODULE, but there are other similar cases where the
+__foo variant, for instance, don't have some mutex or semaphore,
+and we may still want both documented.
 
 
-On 6/3/25 10:22 AM, Terry Bowman wrote:
-> CXL and AER drivers need the ability to identify CXL devices.
-> 
-> Add set_pcie_cxl() with logic checking for CXL Flexbus DVSEC presence. The
-> CXL Flexbus DVSEC presence is used because it is required for all the CXL
-> PCIe devices.[1]
-> 
-> Add boolean 'struct pci_dev::is_cxl' with the purpose to cache the CXL
-> Flexbus presence.
-> 
-> Add function pcie_is_cxl() to return 'struct pci_dev::is_cxl'.
-> 
-> [1] CXL 3.1 Spec, 8.1.1 PCIe Designated Vendor-Specific Extended
->     Capability (DVSEC) ID Assignment, Table 8-2
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/pci/probe.c           | 10 ++++++++++
->  include/linux/pci.h           |  6 ++++++
->  include/uapi/linux/pci_regs.h |  8 +++++++-
->  3 files changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 364fa2a514f8..aa29b4b98ad1 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1691,6 +1691,14 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
->  		dev->is_thunderbolt = 1;
->  }
->  
-> +static void set_pcie_cxl(struct pci_dev *dev)
-> +{
-> +	u16 dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
-> +					      PCI_DVSEC_CXL_FLEXBUS);
-> +	if (dvsec)
-> +		dev->is_cxl = 1;
-> +}
-> +
->  static void set_pcie_untrusted(struct pci_dev *dev)
->  {
->  	struct pci_dev *parent = pci_upstream_bridge(dev);
-> @@ -2021,6 +2029,8 @@ int pci_setup_device(struct pci_dev *dev)
->  	/* Need to have dev->cfg_size ready */
->  	set_pcie_thunderbolt(dev);
->  
-> +	set_pcie_cxl(dev);
-> +
->  	set_pcie_untrusted(dev);
->  
->  	if (pci_is_pcie(dev))
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 51e2bd6405cd..bff3009f9ff0 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -455,6 +455,7 @@ struct pci_dev {
->  	unsigned int	is_hotplug_bridge:1;
->  	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
->  	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
-> +	unsigned int	is_cxl:1;               /* Compute Express Link (CXL) */
->  	/*
->  	 * Devices marked being untrusted are the ones that can potentially
->  	 * execute DMA attacks and similar. They are typically connected
-> @@ -746,6 +747,11 @@ static inline bool pci_is_vga(struct pci_dev *pdev)
->  	return false;
->  }
->  
-> +static inline bool pcie_is_cxl(struct pci_dev *pci_dev)
-> +{
-> +	return pci_dev->is_cxl;
-> +}
-> +
->  #define for_each_pci_bridge(dev, bus)				\
->  	list_for_each_entry(dev, &bus->devices, bus_list)	\
->  		if (!pci_is_bridge(dev)) {} else
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index ba326710f9c8..c50ffa75d5fc 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1215,9 +1215,15 @@
->  /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
->  
-> -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
-> +/* Compute Express Link (CXL r3.2, sec 8.1)
-> + *
-> + * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
-> + * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
-> + * registers on downstream link-up events.
-> + */
->  #define PCI_DVSEC_CXL_PORT				3
->  #define PCI_DVSEC_CXL_PORT_CTL				0x0c
->  #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
-> +#define PCI_DVSEC_CXL_FLEXBUS				7
->  
->  #endif /* LINUX_PCI_REGS_H */
-
+Thanks,
+Mauro
