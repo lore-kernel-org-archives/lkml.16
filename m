@@ -1,89 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AF936D;
-	Thu,  5 Jun 2025 00:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534F3A32;
+	Thu,  5 Jun 2025 00:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749081876; cv=none; b=e6G84a4Nrz4Fz+OQ1LNaQRQmCLtzp41Mdnop6sZUqE90nR7GsMnjPvZyHf090rOblSeWdp9orMXIID5yXMlYGW3SEY/cxM3nefknH4lVN6VaHCtcnKLv7kCKme5KVXXlkP3dnJDKbKp924+FcfLO0OOEVPdvyjrOGuUltPzxg9w=
+	t=1749082015; cv=none; b=YShlpIBe4xRFN304Yg9DHRaZbTfyXlAfqrvLRngGix790vRGcw7qVsyC38Lv9NYlVwCtg/t5VCEQUPtWs8Rum//0xqn5FRWRDmRXhKSBM7sKX7XOHjM/vs9V8Vg2YawKPgA2wxBaSVj3Hp3GYa9PDn5jQPLIQrbNs0AxsLlK8Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749081876; c=relaxed/simple;
-	bh=fG7CS8UcFYi2yhT/A7/PcuUjtV5PNse5wW8m63oIo6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LRli95HU8OaKDXxrXmxYDk6AgCob2/JU2y6VCHPB4xlJ/gHnlz0X04mWrtm35OrbvRgGwQbu5oEQFRIXvWlHs8bLpKHRlU8RyoiP0l/exPvqGgsgRDLshb7en0ZDYB6H/XQZOpHO7DwX7X/qM2PVi6+Cmu578T7ff5QI29MGtOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aafXWzSe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749082015; c=relaxed/simple;
+	bh=0CCPwPznTo8e1C80rD4v5dfasdzjtlizNqRqq4FZQd8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hihBpT204b07u9nXWEaQcUjLOll8u0KInTx5dwg/5MtPbLEY+5DwRR/fW5NL3kS/FWZFPcKFLrZ/hCbrucY7hBAn5xC19Pc0C7uVQIeYzdprlgnjSg8jVx87BCgvC8Ns8Vq3iZX3QK+V9ILQMEaHYi4WBJZXr3ZJKY6uCtFClks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=juQKESK9; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aafXWzSe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0D9C4CEE4;
-	Thu,  5 Jun 2025 00:04:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749081876;
-	bh=fG7CS8UcFYi2yhT/A7/PcuUjtV5PNse5wW8m63oIo6M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aafXWzSeJXugkmFi+0coGA34S0bHRfPuDaSg1KGxhfunjvgF4e0KQjVTFjow29o7R
-	 9Hn9wneqOQwpfseX1p/9QDUeTAwFJl4jmMv/TQLpU2pyFrri6NeDcSqcZjv+LiBx6J
-	 PdL/bwC17CV3UOJ0+ddt6QcXFkEabdsP/6dJX95kV3vOnEu2fbYZhgeoBepMQMdIql
-	 ivYYZjhbVla7hlYe95HYmd1onTg2tjGbj8XWHho4tlmWMaozaLOCyIFqMSTITRx+nB
-	 K01ydjZ5yp484XnY+J/BocX/phcwKa//yycCGFW/anwFL4d5hIWZWgFHnpqmgHxkjX
-	 k1GItrQgMIGKA==
-Date: Wed, 4 Jun 2025 17:04:33 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
-	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
-	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
-	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
-	Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: [PATCH v2 29/62] objtool: Mark prefix functions
-Message-ID: <e2hv6jkitxvbtaqj377dvpwtn5tyaoux53ofkkegxcn3fapbcx@kfqxactn4ogj>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <c4233972de0b0f2e6c94d4a225c953748d7c446b.1746821544.git.jpoimboe@kernel.org>
- <20250526104355.GM24938@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="juQKESK9"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e818a572828so146825276.1;
+        Wed, 04 Jun 2025 17:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749082013; x=1749686813; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jYGDWZp7STe9epYxyRZPry6LWZ2IgWRwn6tFibdzSAI=;
+        b=juQKESK9laPJeM6KQ50bS6f974JD81a7LZBeQw+mUoFQiYbonlplJOyuH7FwU5VI/h
+         Pv/wOpolRDJml/bKEo1/sA/V2qlQ0KNoMwtlvXXZi0Lu7LNWlZP2zGx79Ylzi/e0BLvn
+         5V+ieCmhdW8p+0mUP0rIgwdpPycRQUE2BX2pUrArRA+jBMFHgV0JDUOjV0bw/uIH5WD7
+         c0G6Zx26xzdCvfQd+ikcea9Ip1ihkTarV9C2Bow0AcNMGal2Vcy0UKbABURRdZgDyLVv
+         pNfAcPvDNOdD06Gy0TVZe/O2Vk6Ti9WCpUllbB2PWO2wY4Cgo5Emot82vo9xdAD7Q7K8
+         9IXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749082013; x=1749686813;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jYGDWZp7STe9epYxyRZPry6LWZ2IgWRwn6tFibdzSAI=;
+        b=d8mNLqrN7N/I1w3NGNZ7YV0Cxw2qYeo/I+dYIFFZmoa+DvmzDKxpFVeDm+QkTPkvOm
+         9vUJ/CzhjHfFOiImCTeLZom/hWl9SthM0dwo0WSi4ZZQPcF3jDTvFWE/u5mN+TrpXrFn
+         1y5G3XFCmAo0zdV8fx3D/uujZ2PS5IxcteNYpzSRUEns/m0gKV4JplOtMkGIyp6FRQ1G
+         gzYmLP7O6yC+s8ahyycX3zkR6y7kzIPm7oWttnF7Llgrl8b0LtbhkWUV2tKff7iuITJd
+         jk2YpBua9j5MLeA9jTK/2UktoCztjcj24XGwV7dF9B0O70eyzoaEw9uOvYeKH/is4NPi
+         4QGw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmAdR06aMIyJUvnDcks8vIHZ52lHhpAR66X8fNo/3HYnRs6jIsoFKuMoKq3a2HS78+LlftG73g2ich0Ps=@vger.kernel.org, AJvYcCXtJli/Z+srVtYGwwQjiCdQCA4LUXdJkubK/y4YQDGbk1SCb1iheT39vqfF95WXNUWZlnrqKM/PgG0Fe0VW/lbc7wsf@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVK+d8auhWKYiaUNR+DyzxALn3IOPpwmv9C3XNyVF6dbvcj5gv
+	/HmOEpgKoB5byaCRV1a0ezg34X7+x2jPL6oV8luqOMnFlRelf2oD0Ubp
+X-Gm-Gg: ASbGncsPLRWThtvCldt0VN73969MUvKp0x6x3hyMrGzH2UjFt6qvmZgWHG+OXWMPSgY
+	Pd+T+H7BLMY4fQpvxjRtRfDAHWJc+28z7be+obS863H0lxmNWzCXnJiNQX8HWtcsw6zyMjSTZNE
+	TGwqvd7gUNahI7a4cQqyAxB6cckTaYwj39+ECyXT3DUQJJ2XZ68muwJWDyWbY5allaTPHa7v7S/
+	cx3PZ3u2Au5wJR1e3FRMqHjvS/NedwHp2mJMOvbB8fEZvrbuIlCNysdAGDUiO6BYKpewS9Mq8fr
+	1EpeJ+y5WHD6nC7+1KTTxGPCPkf9mwueBCRx89F3tJvOua+gaKxa8Y+Qbyd/Gxd0+ADUt9tNQ+T
+	TzlbuN3zcAyo=
+X-Google-Smtp-Source: AGHT+IEaTT2Odqt9s3aafh3eYQkQCU7ibTz4//UO8SfwKYgfxswGGtOn96hF2VfXOqO66zZ8OHpWnA==
+X-Received: by 2002:a05:690c:6705:b0:710:a35d:1de6 with SMTP id 00721157ae682-710d9f35e08mr63781647b3.17.1749082013152;
+        Wed, 04 Jun 2025 17:06:53 -0700 (PDT)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8abef114sm32531027b3.29.2025.06.04.17.06.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 17:06:52 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Yury Norov <yury.norov@gmail.com>
+Subject: [PATCH] trace: fix opencoded cpumask_next_wrap() in move_to_next_cpu()
+Date: Wed,  4 Jun 2025 20:06:50 -0400
+Message-ID: <20250605000651.45281-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250526104355.GM24938@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 26, 2025 at 12:43:55PM +0200, Peter Zijlstra wrote:
-> > +++ b/tools/objtool/elf.c
-> > @@ -442,6 +442,11 @@ static void elf_add_symbol(struct elf *elf, struct symbol *sym)
-> >  	elf_hash_add(symbol, &sym->hash, sym->idx);
-> >  	elf_hash_add(symbol_name, &sym->name_hash, str_hash(sym->name));
-> >  
-> > +	if (is_func_sym(sym) && sym->len == 16 &&
-> 
-> Where did that 'sym->len == 16' thing come from? I mean, they are, but
-> the old code didn't assert that.
-> 
-> I would rather objtool issue a warn if not 16, but still consider these
-> as prefix.
+The dedicated cpumask_next_wrap() is more verbose and effective than
+cpumask_next() followed by cpumask_first().
 
-Ok:
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+---
+ kernel/trace/trace_hwlat.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 9a1fc0392b7f..2953aa8d2b81 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -442,10 +442,12 @@ static void elf_add_symbol(struct elf *elf, struct symbol *sym)
- 	elf_hash_add(symbol, &sym->hash, sym->idx);
- 	elf_hash_add(symbol_name, &sym->name_hash, str_hash(sym->name));
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index b65353ec2837..2f7b94e98317 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -325,12 +325,9 @@ static void move_to_next_cpu(void)
  
--	if (is_func_sym(sym) && sym->len == 16 &&
--	    (strstarts(sym->name, "__pfx") || strstarts(sym->name, "__cfi_")))
-+	if (is_func_sym(sym) &&
-+	    (strstarts(sym->name, "__pfx_") || strstarts(sym->name, "__cfi_"))) {
-+		if (sym->len != 16)
-+			WARN("%s size %d != 16", sym->name, sym->len);
- 		sym->prefix = 1;
+ 	cpus_read_lock();
+ 	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
+-	next_cpu = cpumask_next(raw_smp_processor_id(), current_mask);
++	next_cpu = cpumask_next_wrap(raw_smp_processor_id(), current_mask);
+ 	cpus_read_unlock();
+ 
+-	if (next_cpu >= nr_cpu_ids)
+-		next_cpu = cpumask_first(current_mask);
 -
-+	}
+ 	if (next_cpu >= nr_cpu_ids) /* Shouldn't happen! */
+ 		goto change_mode;
  
- 	if (is_func_sym(sym) && strstr(sym->name, ".cold"))
- 		sym->cold = 1;
+-- 
+2.43.0
+
