@@ -1,289 +1,113 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF934212B28
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 09:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5398F20B22
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 09:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749116604; cv=none; b=YQJptM/nogCXeXSJ07gDTPR3IzEGJ7HboH+P9E8NuKjKp53V0Hm1V4iUHqOT+kFINji/IyasTCsW395pY9PnGWwK9Fy5kTXmQe713vEKQ4XYsDLRWYThfadft6YzE9w3lWQ4YlchqFaxso6PsgUVJasNte+fkthGVEjRplyUajk=
+	t=1749116762; cv=none; b=U90E5nLY++qSuaKagJZzoW6Re2aaKuQIfSsI8NA2LK28aFPoOfGOlAlQTFwzBpuE+hyeigDS5oxCXXOz6SaQS75LowkvWEfV6vgx03/ilSubwszHRdnTEiJ5gWowpnl50gNqylS5+NTQcu/kmQ4LsIVdA4M6HwHiX+cwMx0l+zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749116604; c=relaxed/simple;
-	bh=3CzAUpmVmfrQ1t4F5v8cEc+jwk13Dy2UTL8cmMebjbQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=aqkyj/GBrqgCiB8otvze8CVpWDyKM6SaeRi1B5GzibtTaH3rn6w3Hm4IF5WMMpXMuGJBPBP1kiNJaMyxW6LLYtoTYUlNvW+AfLW41lyqpXXh1Da1j0v6a+lCDttnc5FZlUUGhxs2TJjFfFDFkeP5P/t+lWWtniB9WVxbTWx6KUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZvAUiyFA; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749116762; c=relaxed/simple;
+	bh=604HNf7UlClQFzx0yTPzgoW3P7AHHBZFozvDgSJXS0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nxV15Mkr1DaHQy59YSsJhXdCAi7gxWJFIyF+8YhkdrEwIC4Bs8RuAhl2Fg6+IXpxMZE5QhdcTLeS6kZvsNd+HfE+WvwiXYwfVFcobLUm7XsB5EXxjAKzXGSeHNeEiQZ2aT9F7s33VSK7nqC89jJvfH3VtrKkJCQFHlrzawrx7rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fsIgkseA; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZvAUiyFA"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749116589;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9lThtLOtQl+h3cysY0wqvjMRcuzy/6SuzhFkQRTpDlE=;
-	b=ZvAUiyFAu9nMRJs58c2zOJSV4g2RXqfQC2U3dVx0ORx5bnsaYBTji+MCOs0iMxnNQw6y24
-	mZXnixMu3Sbn/L3MmiSDVPvtVDTALEwKNR6w7KlumpV0qTDytZiZZd8lMKSpUesuNbO4G0
-	CJQskSEZ0XkPU78YwhMqb3U4lHrL1sI=
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fsIgkseA"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so594376f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 02:46:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749116758; x=1749721558; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=604HNf7UlClQFzx0yTPzgoW3P7AHHBZFozvDgSJXS0k=;
+        b=fsIgkseA9jD1xx/ouTUFIBBItOUHV3mExDufCzzBDaDpsaZ3sBLbn5Nl4dalR2w8iE
+         7dMbVkAAH10GqsCm1Y07YU7iWVHjAIFngNJPN7a7BgAmwfSy7PEyKQb85/wGQLB3PBhX
+         LXaAaQK2TjDMqZrBzboqwpyEchVL0Ysu112iAxxeRGLBOVqWHpZ8S0r4T4tSfRANgxKa
+         9vxcURJuhnYoV9K/nkqBZfygFCsS+TKfFMEreJCF1wjAKV3oxLRrgLEIpYxv5bk21ZTG
+         zi++LFqgCF9pSV9GHXnScjYVxLCpq0VR8B7gXCv6+RsjsP+YqZCEwun7TUCG9kZ1PH45
+         V8AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749116758; x=1749721558;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=604HNf7UlClQFzx0yTPzgoW3P7AHHBZFozvDgSJXS0k=;
+        b=iEu0crOw68RmDBSrfn2dwANRhLhyhXNMYzdXOKMC9bFLLIQEyZyTRXl4K7lWOfMg6p
+         UeetKx0T1C8o+UEe1TOyn2qFAaPIsBc3/c8kqmpfiP8rN4kY7ts7cXdahR8zCjHh9CgQ
+         Evbtrj1kwcbEtAI9BfYOy5hxmU3nKFJ4ymsh6KI3vjSvdV8o+eGhxF0JqeBHRDk+6mrj
+         uu6NnivXeq+/B/F+8xM22bM5vVo1G+OnPi8/DRiCtSdDJzac55L0IJZ9WTKnSixnqDJg
+         TegcULa9vjXLrODGNQvX62sB6sCwCvvU3pff6S1u9y8cXOiq/QD32Y7HnYQw+/cdje5U
+         pvBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXl4z5mJD7hOmRfxP/vpXXHT4qV8edHKkLTFPriZt6FECwmnDzrwcTlycgP1+kQpS5vG61Y3cbhnAQuIGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHo6I5boMVByizvF5YP6jhpx2SQvsRUUBLQwWsGBbJfIF/FXNz
+	XpHpjNrcsQ//FSky80Dq7Ylcu2gh5XPpo5Y8f5CtUKy/6B9BvGqtgaDTYWlxDlSiOFQ=
+X-Gm-Gg: ASbGnctPSpJ30R+yAM6m2TAj0znlI2YJ6UXSX8azH+onVu/2S5vfYAaBVTiAF5dvDVs
+	R0Fc14XMCVKI0V458mdPYqNA1/hL1+5Hf6q/6kphsVis3ZPdlosA9cbpRdzycmtcS8nvmupVW3b
+	YTabL2b0bGO71Pn7A+2AOI9HI01gvnD5n8nVxs3R1X7vZGozQNTlZTWPpsqOtMUUVxtWpRbW+eq
+	p5X06cTr3C5RpMa4L4InL6d8mOtzQJSTwIQFe/CZKlBXu5yfs7PLN7zkFZNWL3qD7zov+IjN6K+
+	qWtKc3m+EQyPVYnAL4JLMNtGps4hAOQZmcceZ0oFvv5c/wL8lI/xQRmLVIeo42EM
+X-Google-Smtp-Source: AGHT+IEag34AytathBayu/Y8CxhAv38XZqHMCx2v9NsF24iHtnlbNHPubu7RDxi6AKmu9nvDIgxx3A==
+X-Received: by 2002:a5d:58cb:0:b0:3a5:27ba:4795 with SMTP id ffacd0b85a97d-3a527ba4a2emr1593144f8f.41.1749116758550;
+        Thu, 05 Jun 2025 02:45:58 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f990d3acsm19034065e9.24.2025.06.05.02.45.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 02:45:57 -0700 (PDT)
+Date: Thu, 5 Jun 2025 11:45:56 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Vishal Chourasia <vishalc@linux.ibm.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bagasdotme@gmail.com, llong@redhat.com
+Subject: Re: [PATCH] Documentation: cgroup: add section explaining controller
+ availability
+Message-ID: <mzki6zhrnxdvuqgu56rztrkw473u2r4uqt5mu3t3nv2afyhaub@4qneqmlxgwog>
+References: <20250604054352.76641-2-vishalc@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v2] mm/pagewalk: split walk_page_range_novma() into
- kernel/user parts
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <5a06f383-7d01-4ea7-a010-013063770240@lucifer.local>
-Date: Thu, 5 Jun 2025 17:42:16 +0800
-Cc: Vlastimil Babka <vbabka@suse.cz>,
- Andrew Morton <akpm@linux-foundation.org>,
- Barry Song <baohua@kernel.org>,
- David Hildenbrand <david@redhat.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>,
- Oscar Salvador <osalvador@suse.de>,
- Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>,
- Jann Horn <jannh@google.com>,
- loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- linux-openrisc@vger.kernel.org,
- linux-riscv@lists.infradead.org,
- linux-mm@kvack.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1AA4A4B3-AEBE-484A-8EE2-35A15035E748@linux.dev>
-References: <20250604141958.111300-1-lorenzo.stoakes@oracle.com>
- <536f5ffd-b4cf-4f35-970c-ad3a7593af2f@suse.cz>
- <5a06f383-7d01-4ea7-a010-013063770240@lucifer.local>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zij33dnokk3rcpgl"
+Content-Disposition: inline
+In-Reply-To: <20250604054352.76641-2-vishalc@linux.ibm.com>
 
 
+--zij33dnokk3rcpgl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH] Documentation: cgroup: add section explaining controller
+ availability
+MIME-Version: 1.0
 
-> On Jun 5, 2025, at 17:24, Lorenzo Stoakes <lorenzo.stoakes@oracle.com> =
-wrote:
->=20
-> On Thu, Jun 05, 2025 at 08:56:59AM +0200, Vlastimil Babka wrote:
->> On 6/4/25 16:19, Lorenzo Stoakes wrote:
->>> The walk_page_range_novma() function is rather confusing - it =
-supports two
->>> modes, one used often, the other used only for debugging.
->>>=20
->>> The first mode is the common case of traversal of kernel page =
-tables, which
->>> is what nearly all callers use this for.
->>>=20
->>> Secondly it provides an unusual debugging interface that allows for =
-the
->>> traversal of page tables in a userland range of memory even for that =
-memory
->>> which is not described by a VMA.
->>>=20
->>> It is far from certain that such page tables should even exist, but =
-perhaps
->>> this is precisely why it is useful as a debugging mechanism.
->>>=20
->>> As a result, this is utilised by ptdump only. Historically, things =
-were
->>> reversed - ptdump was the only user, and other parts of the kernel =
-evolved
->>> to use the kernel page table walking here.
->>>=20
->>> Since we have some complicated and confusing locking rules for the =
-novma
->>> case, it makes sense to separate the two usages into their own =
-functions.
->>>=20
->>> Doing this also provide self-documentation as to the intent of the =
-caller -
->>> are they doing something rather unusual or are they simply doing a =
-standard
->>> kernel page table walk?
->>>=20
->>> We therefore establish two separate functions - =
-walk_page_range_debug() for
->>> this single usage, and walk_kernel_page_table_range() for general =
-kernel
->>> page table walking.
->>>=20
->>> We additionally make walk_page_range_debug() internal to mm.
->>>=20
->>> Note that ptdump uses the precise same function for kernel walking =
-as a
->>=20
->> IMHO it's not clear at this point what "the precise same function" =
-means.
->>=20
->>> convenience, so we permit this but make it very explicit by having
->>> walk_page_range_novma() invoke walk_kernel_page_table_range() in =
-this case.
->>=20
->>  ^ walk_page_range_debug()
->=20
-> Oops will fix.
->=20
->>=20
->> Maybe this could be reworded in the sense (AFAIU) that
->> walk_page_range_debug() can be used for both user space page table =
-walking
->> or kernel depending on what mm is passed, so in the case of init_mm =
-it
->> invokes walk_kernel_page_table_range() internally.
->=20
-> Sure.
->=20
->>=20
->>>=20
->>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->>> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->>> ---
->>> v2:
->>> * Renamed walk_page_range_novma() to walk_page_range_debug() as per =
-David.
->>> * Moved walk_page_range_debug() definition to mm/internal.h as per =
-Mike.
->>> * Renamed walk_page_range_kernel() to walk_kernel_page_table_range() =
-as
->>>  per David.
->>>=20
->>> v1 resend:
->>> * Actually cc'd lists...
->>> * Fixed mistake in walk_page_range_novma() not handling kernel =
-mappings and
->>>  update commit message to referene.
->>> * Added Mike's off-list Acked-by.
->>> * Fixed up comments as per Mike.
->>> * Add some historic flavour to the commit message as per Mike.
->>> =
-https://lore.kernel.org/all/20250603192213.182931-1-lorenzo.stoakes@oracle=
-.com/
->>>=20
->>> v1:
->>> (accidentally sent off-list due to error in scripting)
->>>=20
->>> arch/loongarch/mm/pageattr.c |  2 +-
->>> arch/openrisc/kernel/dma.c   |  4 +-
->>> arch/riscv/mm/pageattr.c     |  8 +--
->>> include/linux/pagewalk.h     |  7 ++-
->>> mm/hugetlb_vmemmap.c         |  2 +-
->>> mm/internal.h                |  4 ++
->>> mm/pagewalk.c                | 98 =
-++++++++++++++++++++++++------------
->>> mm/ptdump.c                  |  3 +-
->>> 8 files changed, 82 insertions(+), 46 deletions(-)
->>>=20
->>> diff --git a/arch/loongarch/mm/pageattr.c =
-b/arch/loongarch/mm/pageattr.c
->>> index 99165903908a..f5e910b68229 100644
->>> --- a/arch/loongarch/mm/pageattr.c
->>> +++ b/arch/loongarch/mm/pageattr.c
->>> @@ -118,7 +118,7 @@ static int __set_memory(unsigned long addr, int =
-numpages, pgprot_t set_mask, pgp
->>> return 0;
->>>=20
->>> mmap_write_lock(&init_mm);
->>> - ret =3D walk_page_range_novma(&init_mm, start, end, &pageattr_ops, =
-NULL, &masks);
->>> + ret =3D walk_kernel_page_table_range(start, end, &pageattr_ops, =
-NULL, &masks);
->>> mmap_write_unlock(&init_mm);
->>=20
->> You've removed init_mm from walk_page_range_novma() but I see most =
-callers
->> do the locking of init_mm immediately around it. This suggests a =
-version
->> handling that automatically? A bit complicated by the read/write
->> possibilities, so maybe not worth wrapping? Just a thought, as David =
-says ;)
->=20
-> Most callers write lock interestingly, but then one read lock's, so we =
-can't
-> just assume and would need to pass a boolean which would kind of suck.
+On Wed, Jun 04, 2025 at 11:13:53AM +0530, Vishal Chourasia <vishalc@linux.ibm.com> wrote:
+> +Availablity
+> +~~~~~~~~~~~
+> +
+> +A controller is available in a cgroup when it is supported by the kernel and
++A controller is available in a cgroup when it is supported by the
++kernel (compiled, not disabled and not attached to a v1 hierarchy) and
 
-Hi Lorenzo,
+Maybe this point about v1 exclusion. But altogether this section as
+drafted looks sensible to me.
 
-Actually, the write lock introduced in commit 8782fb61cc848 to fix the
-race condition when walking user page tables can be replaced with a read
-lock. As explained in commit b123d09304d86, it is safe to walk kernel
-page tables while holding the mmap read lock. The function name
-`walk_kernel_page_table_range` clearly indicates its purpose: walking
-kernel page tables. Thus, using a read lock internally is appropriate
-and safe. Please correct me, if I am wrong.
+Thanks,
+Michal
 
-To further enhance robustness, it is better to add a WARN_ON check to
-ensure that the address range passed to walk_kernel_page_table_range
-is indeed within the kernel address space. This will help prevent any
-accidental misuse and catch issues early.
+--zij33dnokk3rcpgl
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Muchun,
-Thanks.
+-----BEGIN PGP SIGNATURE-----
 
->=20
-> Also other walkers assume the caller has the lock so it's consistent =
-to
-> keep it this way.
->=20
->>=20
->>>=20
->>> flush_tlb_kernel_range(start, end);
->>> diff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
->>> index 3a7b5baaa450..af932a4ad306 100644
->>> --- a/arch/openrisc/kernel/dma.c
->>> +++ b/arch/openrisc/kernel/dma.c
->>> @@ -72,7 +72,7 @@ void *arch_dma_set_uncached(void *cpu_addr, size_t =
-size)
->>>  * them and setting the cache-inhibit bit.
->>>  */
->>> mmap_write_lock(&init_mm);
->>> - error =3D walk_page_range_novma(&init_mm, va, va + size,
->>> + error =3D walk_kernel_page_table_range(va, va + size,
->>> &set_nocache_walk_ops, NULL, NULL);
->>> mmap_write_unlock(&init_mm);
->>>=20
->>> @@ -87,7 +87,7 @@ void arch_dma_clear_uncached(void *cpu_addr, =
-size_t size)
->>>=20
->>> mmap_write_lock(&init_mm);
->>> /* walk_page_range shouldn't be able to fail here */
->>> - WARN_ON(walk_page_range_novma(&init_mm, va, va + size,
->>> + WARN_ON(walk_kernel_page_table_range(va, va + size,
->>> &clear_nocache_walk_ops, NULL, NULL));
->>> mmap_write_unlock(&init_mm);
->>> }
->>> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
->>> index d815448758a1..3f76db3d2769 100644
->>> --- a/arch/riscv/mm/pageattr.c
->>> +++ b/arch/riscv/mm/pageattr.c
->>> @@ -299,7 +299,7 @@ static int __set_memory(unsigned long addr, int =
-numpages, pgprot_t set_mask,
->>> if (ret)
->>> goto unlock;
->>>=20
->>> - ret =3D walk_page_range_novma(&init_mm, lm_start, lm_end,
->>> + ret =3D walk_kernel_page_table_range(lm_start, lm_end,
->>>     &pageattr_ops, NULL, &masks);
->>=20
->> Note this and other places break the second line's arguments =
-alignment on
->> the opening bracket. Maybe it just shows it's a bit fragile style...
->>=20
->>=20
->=20
-> Yeah I know :) I know you won't believe this coming from me, but I was
-> trying to minimise the churn :P
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaEFnUgAKCRAt3Wney77B
+SYD2AQD1/XItHwQUhYR860OS8RuDmuzgC+aYYTBMu01ywJEKcwD/TZxY1pEcxg5D
+wXa3RXxszLiTtREuJrTuHaTRsQ2C7QI=
+=69vi
+-----END PGP SIGNATURE-----
 
-
+--zij33dnokk3rcpgl--
