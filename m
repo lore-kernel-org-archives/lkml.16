@@ -1,145 +1,115 @@
-Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088E918C06;
-	Thu,  5 Jun 2025 00:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCF318EAB;
+	Thu,  5 Jun 2025 00:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749084513; cv=none; b=CI1raqkY4Pzhsj5rQJ37553UyGKseyusJge9FqEBOZ55dKbdorauSeDW2OiOwTJS7gGdrgDAW8thAKbzS3XQ01fluy0iODgABwgMDHcgu0b5SkdPjkJxqiG4nJiTzL9bmYi03Yc8H5yrZN1i9rxBi0bokIFRo7GLloJ/yO5YW4Q=
+	t=1749084523; cv=none; b=X7J8f5FE2ljZZ/+tKOOnGixq9HFGEwPOwRNwYcEspWlZ3LvV0NIRz+PqoTXH23rIAl/t9X5lEL5okNqWGOZP2AI1n7tyTliUaYxGDlGl1oM3EQkMSAgg9g6AKONxwFKI6FrbaVuV7QqAvRhnOfzE7cu98ArD6EWeWNZinjgZuJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749084513; c=relaxed/simple;
-	bh=spiNuMouzkosxKKAlHJ/LKnfR6O/EaZkfHwVp4bYclQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iloMX3MpV+uv8wg4DtIE4OCP5mjc7YJkapCWz8HjjwNP+ryhDLWkS3IsZI0ISIpO9pOItyhUu/i1Dbzb+ygsgfRW07alNwLT+C5/qGUfaGmqk2+5NKIzFDyUmEslJ3M2uTmtuXrIqJ80nyVNWcAPq6ZbTqktHSSA+gad3LeJIhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=UodMRz/H; arc=none smtp.client-ip=47.90.199.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749084523; c=relaxed/simple;
+	bh=Bt1uUIhyXdLS4aUaEfNXLggCzOJf8qDImRaEfyppjNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TVzOrYs/xARcfiNnyw2buZaPzYMVd5tL3mP1C7lPQ4LvMUXKbqxhEFSC474v/isr4B0Mt/PXvNb2DJpYb87RDbFsKHb996P5fRHoh1jr5+4uWEAmLBCLxBZgIf3JFzQq9+9MeSLr8b3u8Rf5ViVQuzlL6d5eiVsMeF8NEKoqFdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NpgIfcxA; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="UodMRz/H"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749084492; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=hoFzIfUZJ4wj8058GkOSPWGehDB1B6IcsKmHwslnUG0=;
-	b=UodMRz/HOMIBX30RINyRFY2tD1EH1zPFYc2AwHaP0+L3+7NkM1Rj/uMBghFVnuLOHzd6KQGriFSxHvmuw/n366oV51rq4jUHR16hM0W7eaN42++G6GyE9Xf0LmVFtCTEfc8Xqkp2KEquxx/WQP+fdXikxQNUFeWsrldwj8xHa7g=
-Received: from 192.168.43.81(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wd5p7oJ_1749084488 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 05 Jun 2025 08:48:10 +0800
-Message-ID: <985a92d4-e0d4-4164-88eb-dc7931e2c40c@linux.alibaba.com>
-Date: Thu, 5 Jun 2025 08:48:07 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NpgIfcxA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1749084510;
+	bh=R8riJaruyP3aW/0lSUw4SB+HAC/3LuiYmDZGvpZHth4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=NpgIfcxAsqj3x8ryDHLX/IgHNzUmk4HbKV68kAI2D+PdAOssvcjv6Xh05G8e3QxwU
+	 74iVqMB34aLgnuYqwkd3/XW/NUtTVDF6Po3uBCS1kI2sbLBgzdeHE7Qi2+4XQ8XOnT
+	 ybtA8s6Y6R2ThVUry6+jhI9Jn5u63Nz4TGnh6k6wB1iX66lGhoJ3qU2ZAK3P+VOzy8
+	 UN0/2gkJXhxEyBXJTpl0BbBW74fzrB0b8uL1xGJL4mK0u+6eCx9wI+T5cEMwtBB/A2
+	 Z45nqDn6cNE2flJoieV2Eet4jaGlHAt8ftjzK8S7y0w+fEoqo7dBSDBCtQP8z7sdTC
+	 t8qR90SW/HMcw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bCQmX5C2Xz4wyV;
+	Thu,  5 Jun 2025 10:48:28 +1000 (AEST)
+Date: Thu, 5 Jun 2025 10:48:26 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, Bryan O'Donoghue
+ <bod@kernel.org>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Hans
+ Verkuil <hverkuil@xs4all.nl>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Rob Clark <robin.clark@oss.qualcomm.com>
+Subject: linux-next: manual merge of the drm-msm tree with Linus' tree
+Message-ID: <20250605104826.3263d45b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@suse.com>,
- Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
- surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
- sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <72f0dc8c-def3-447c-b54e-c390705f8c26@linux.alibaba.com>
- <aD6vHzRhwyTxBqcl@tiehlicka>
- <ef2c9e13-cb38-4447-b595-f461f3f25432@linux.alibaba.com>
- <aD7OM5Mrg5jnEnBc@tiehlicka>
- <7307bb7a-7c45-43f7-b073-acd9e1389000@linux.alibaba.com>
- <aD8LKHfCca1wQ5pS@tiehlicka>
- <obfnlpvc4tmb6gbd4mw7h7jamp3kouyhnpl4cusetyctswznod@yr6dyrsbay6w>
- <250ec733-8b2d-4c56-858c-6aada9544a55@linux.alibaba.com>
- <1aa7c368-c37f-4b00-876c-dcf51a523c42@suse.cz>
- <d2b76402-7e1a-4b2d-892a-2e8ffe1a37a9@linux.alibaba.com>
- <nohu552nfqkfumrj3zc7akbdrq3bzwexle3i6weyta76dltppv@txizmvtg3swd>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <nohu552nfqkfumrj3zc7akbdrq3bzwexle3i6weyta76dltppv@txizmvtg3swd>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/S1Jjq_KPyiY50B76mUR82e3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/S1Jjq_KPyiY50B76mUR82e3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2025/6/5 00:54, Shakeel Butt wrote:
-> On Wed, Jun 04, 2025 at 10:16:18PM +0800, Baolin Wang wrote:
->>
->>
->> On 2025/6/4 21:46, Vlastimil Babka wrote:
->>> On 6/4/25 14:46, Baolin Wang wrote:
->>>>> Baolin, please run stress-ng command that stresses minor anon page
->>>>> faults in multiple threads and then run multiple bash scripts which cat
->>>>> /proc/pidof(stress-ng)/status. That should be how much the stress-ng
->>>>> process is impacted by the parallel status readers versus without them.
->>>>
->>>> Sure. Thanks Shakeel. I run the stress-ng with the 'stress-ng --fault 32
->>>> --perf -t 1m' command, while simultaneously running the following
->>>> scripts to read the /proc/pidof(stress-ng)/status for each thread.
->>>
->>> How many of those scripts?
->>
->> 1 script, but will start 32 threads to read each stress-ng thread's status
->> interface.
->>
->>>>    From the following data, I did not observe any obvious impact of this
->>>> patch on the stress-ng tests when repeatedly reading the
->>>> /proc/pidof(stress-ng)/status.
->>>>
->>>> w/o patch
->>>> stress-ng: info:  [6891]          3,993,235,331,584 CPU Cycles
->>>>             59.767 B/sec
->>>> stress-ng: info:  [6891]          1,472,101,565,760 Instructions
->>>>             22.033 B/sec (0.369 instr. per cycle)
->>>> stress-ng: info:  [6891]                 36,287,456 Page Faults Total
->>>>              0.543 M/sec
->>>> stress-ng: info:  [6891]                 36,287,456 Page Faults Minor
->>>>              0.543 M/sec
->>>>
->>>> w/ patch
->>>> stress-ng: info:  [6872]          4,018,592,975,968 CPU Cycles
->>>>             60.177 B/sec
->>>> stress-ng: info:  [6872]          1,484,856,150,976 Instructions
->>>>             22.235 B/sec (0.369 instr. per cycle)
->>>> stress-ng: info:  [6872]                 36,547,456 Page Faults Total
->>>>              0.547 M/sec
->>>> stress-ng: info:  [6872]                 36,547,456 Page Faults Minor
->>>>              0.547 M/sec
->>>>
->>>> =========================
->>>> #!/bin/bash
->>>>
->>>> # Get the PIDs of stress-ng processes
->>>> PIDS=$(pgrep stress-ng)
->>>>
->>>> # Loop through each PID and monitor /proc/[pid]/status
->>>> for PID in $PIDS; do
->>>>        while true; do
->>>>            cat /proc/$PID/status
->>>> 	usleep 100000
->>>
->>> Hm but this limits the reading to 10 per second? If we want to simulate an
->>> adversary process, it should be without the sleeps I think?
->>
->> OK. I drop the usleep, and I still can not see obvious impact.
->>
->> w/o patch:
->> stress-ng: info:  [6848]          4,399,219,085,152 CPU Cycles
->> 67.327 B/sec
->> stress-ng: info:  [6848]          1,616,524,844,832 Instructions
->> 24.740 B/sec (0.367 instr. per cycle)
->> stress-ng: info:  [6848]                 39,529,792 Page Faults Total
->> 0.605 M/sec
->> stress-ng: info:  [6848]                 39,529,792 Page Faults Minor
->> 0.605 M/sec
->>
->> w/patch:
->> stress-ng: info:  [2485]          4,462,440,381,856 CPU Cycles
->> 68.382 B/sec
->> stress-ng: info:  [2485]          1,615,101,503,296 Instructions
->> 24.750 B/sec (0.362 instr. per cycle)
->> stress-ng: info:  [2485]                 39,439,232 Page Faults Total
->> 0.604 M/sec
->> stress-ng: info:  [2485]                 39,439,232 Page Faults Minor
->> 0.604 M/sec
-> 
-> Is the above with 32 non-sleeping parallel reader scripts?
+Today's linux-next merge of the drm-msm tree got a conflict in:
 
-Yes.
+  MAINTAINERS
+
+between commit:
+
+  4acbaa8794b3 ("media: MAINTAINERS: Add myself to iris Reviewers")
+
+from Linus' tree and commit:
+
+  d6984d0c0a56 ("MAINTAINERS: update my email address")
+
+from the drm-msm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index 95747d11d82a,afbb82858934..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -20429,8 -19975,7 +20430,8 @@@ F:	drivers/regulator/vqmmc-ipq4019-regu
+  QUALCOMM IRIS VIDEO ACCELERATOR DRIVER
+  M:	Vikash Garodia <quic_vgarodia@quicinc.com>
+  M:	Dikshita Agarwal <quic_dikshita@quicinc.com>
+- R:	Abhinav Kumar <quic_abhinavk@quicinc.com>
++ R:	Abhinav Kumar <abhinav.kumar@linux.dev>
+ +R:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+  L:	linux-media@vger.kernel.org
+  L:	linux-arm-msm@vger.kernel.org
+  S:	Maintained
+
+--Sig_/S1Jjq_KPyiY50B76mUR82e3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhA6VoACgkQAVBC80lX
+0GxevAf/d5pOmwV+cJLNzYyJo/iYQD4ZGCQ+tyyUVaGTc3hHdj0k+2xS5p0dzOC4
+W7hqb5t2SeEWqtu18pkKdUydC455bcClzfRIju2GN5e+w7doqngNmEkTW/ucmdui
+QVJcULvGZ+GqmJeD//jaGh+5VEBAUmR8AlqnDr/QRPMLXNUR53k1X8Gr5j689yfl
+aqX04phjltazL4LBGd86+FzKJ1DLAWa5LKjpCTR9pr9XzAV7pm+8LFw24emwS4b2
+J9yboGedsoRCBAnz6U6CtHg9Bf8MHQvUNiejY6R84GlCmxQfBU+e+q//GR1rDq8Z
+qkp8v6XOUKVPZnp4I3e9PzxYy2Q1Bw==
+=3Y5h
+-----END PGP SIGNATURE-----
+
+--Sig_/S1Jjq_KPyiY50B76mUR82e3--
