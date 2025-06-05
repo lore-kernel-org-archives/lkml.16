@@ -1,62 +1,62 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34921202C40;
-	Thu,  5 Jun 2025 07:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819392063F3;
+	Thu,  5 Jun 2025 07:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749110132; cv=none; b=Xe8JxhgkhVf6K/dT800C/+tPz6sz3IDlnxvVn2tjbyWoqr5ser9GM+W1lcup9OL98DK9LRCc1rOOZK+0TvnuxtEsfQkd/2gGLb6mXAHPKD6NblXLTbINnkOa3P1EM0I6k9Z+T2AWuUM7/6x96iXjDcaVIGFhnBbLbi3MS88qBn0=
+	t=1749110141; cv=none; b=qJD5bY2mvix+AlckIRag7LvP3MZ6sI8euSvIXnDQ3SW/zPdE2NLaZ17Kq/T5AMLKFmTNOj91nkSyRVcqx8k4+ZUhcJTxGTV3qm35xL03y8VYPT1tFiUb/CDjV3vpKQla8ydv8Rnr3wE5lwAwJDGSXwMvzGuWr+Tzw2Y03PYyN/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749110132; c=relaxed/simple;
-	bh=R6cDWrNLeIJW3a1+hrWpOXzcEBadxi2F3alk6u15b7Y=;
+	s=arc-20240116; t=1749110141; c=relaxed/simple;
+	bh=2xA063MC/kRWwLZ2fnrCOQUwpNQHP8a730Tx2EfSIpU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N5PgukDAngM12mFL9ccI5ZRdJg3Vx04OeQszfMkiGJVaNEtvLiyRPnsh4fGGBpyGTfcuNW5CMcfLIHMIjIN9FxJYqlnjkCY+F11rSkgeZsf09/EJmCWw81PGxh5HAetdIaqVd7u606elvj6sfYHgtA6Ol1HXzccDPwO1P61+ktE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FwskwrsW; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=hiqGQfkC1KKj7Jykx3t8t3REf3bOrUfX22a3zM2SICbX4+edufKFtm4x8MQrW193EDdLK3ufB4iI4PPWohpZh2SACdTJaYwQIUUr/6hKKJcbbTcCGNAHJIpwdlEAbMYatN3SL5/ws/aPFI8G4jYCuJMI04zPiLMpxZRy/AMhaYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlZk04lI; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwskwrsW"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235ef62066eso9340035ad.3;
-        Thu, 05 Jun 2025 00:55:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlZk04lI"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22c33677183so6007455ad.2;
+        Thu, 05 Jun 2025 00:55:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749110130; x=1749714930; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749110139; x=1749714939; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/OARrN9ueY6P2vrwU+QQZWWr2aQNmcjiO53DZHt44K8=;
-        b=FwskwrsWFclBWLDTUlo95Hd2DdYfLapx5rZou0M08/1JPt590PBPR7Oscx6MsYY2CE
-         +11oV3YbTme+NeNLM4p27Q4XnOu1zcvzvhAciFd7q1hcDnhZUK+42c0FrwAMY+8Zptso
-         v2fs6OaC2J81Zu/VAY43WQQtU8im33DHsdTOMEbnFr94GMI0iYrqdjRm0loL5fKQiIWd
-         xbAY5t6OtZDfwzt0T5kEboBWYW3qcIdQIylkPgxVzAVGCCDmXpfxzjI5MeLTEE6q9dtr
-         D+ZSok738JaN/tk0RPd2fTbCV5MN6UkgFvnj71+3wM4srZKef2rtqKbZmnb/4f939l3U
-         u2Aw==
+        bh=YvczEWOtd3+xUjc0wRT/ahzTCf7ZeIPM0+H+Q6/x2ZA=;
+        b=SlZk04lIZc6TINH97kLREBGQlxcQ0WexEw3Rv7xkuTs7QZfXd5gqBraHHzfOCaL/im
+         OBW/71gjUQvfNcZolODu/3cqrZYSMmlQ3e3EWQELnoRBGgtYyewcRimzj3UYDtcV+CIH
+         SpcHexYVUlCrP3cVbz4Zkuhowi6IDGZ0Sxhp94JBUQ+FFQqJIaFRrOcLGJjlB5We+dhH
+         5ZupHMGCmp9SbitKnPSJFoks04gbQ/ghEZUQQV/W04Dg+wegMY8orhWVKM8eqB41JkqL
+         g8Cn7qecJikCuetVtnuLKERd/wCbeMChsheqspMFZGT4cATGTCT+LmcAFjkGzM9rI8TE
+         V12g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749110130; x=1749714930;
+        d=1e100.net; s=20230601; t=1749110139; x=1749714939;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/OARrN9ueY6P2vrwU+QQZWWr2aQNmcjiO53DZHt44K8=;
-        b=I88j9KCcLl2LK64uT6/l7TQiOyQP9Pxyts4EXo2qEylT1VPUTNEnBn2hxTm/sU0MY5
-         DChG2pgBEI1UOm8OyS3DiYZ5lWTAXzGoCyaZEYOu74L71irqv2CRbJ++/TWnHQjlg3FX
-         GTTZ3frYULJY0MCaSiv5eTFDk7y2U7cg4+IH0Xf6KP2w1jUE/rY0ioan98Y1xH+D5sbo
-         ZdU5DpFLvJp/6bgfU7Rnzoid0bB2t3DBrOhBm5JLpugwZrtLcGUGYfgdMXMpZd9xg6qt
-         KG90dkK7SUi57lzfaBBmJwZKI63f8xdiwV5KAmMmDSmFsEcE+PqSs0gsl5J3d6XU0EbS
-         fxsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUA4vSEWQrU5rnsnrTtJeXNZ5EwspKNPmEq1VLknp/tUZGzU3nZlzUveM6a861fOPFUN+UaW7P2SvOzkVYD@vger.kernel.org, AJvYcCVSHKj3yvxBl2sASXAx0BlH0AoWHvKDxmZe4CuP5Jem1T34OJNQ5qEdJK8HJHCJi2k6JJFgSXKjNGz3@vger.kernel.org, AJvYcCWnNyOZJ0sU5B3RkW2zwH6oamjxqlayPgYpBXhGUWAC4szWHRF6kWJjDqNrkCLoBdvPwrN8KiXKGD/k@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG57LuCOS3g7Mp/wDxFjDfZzgvrMOPe+q+g52D0CaMLa4o3Lns
-	p6ni8//v1cLY3zONpiFZrc+pY80tb7fXpHNqjo8ab8T+zqsW9T06qQ/z
-X-Gm-Gg: ASbGncvJkvu571tVFnoxfskq1Gkz4LnWGMtDkhYX4iI/H9OJ+fPjiVcd9BF37fbIXjW
-	27Dv9OPSMZYrSvIk92zTeC9YqmNJnFXmmQEQnbgyjE2qBQRAXYDNtNpD8rBevFIIrwebrh+Xcfm
-	xP8RtijnNGMXrRq+0Gt5ISIofj9Xkh1LnGO86d+NtPSlxDmMZLEWNcIpjYgB3391om4Q4zfOxLl
-	sbWYVfBhPgUAc6YCefsvNwYBkGdDwFTvh3HhV+5yOq7S3xBdAlFMmUQLKCf/78PYCfuriVaJhyu
-	+BklpjSIZtenz8SR9cRlwAFwDPn7F6qzNcnwc43hFvshQN+LVQ==
-X-Google-Smtp-Source: AGHT+IESM+PsIHMZjhlFraZNSrVLcXeSjWVnZVNlOFs0AbkPjyTu6TKzdg08IR+ohI1U6CzkfeXnig==
-X-Received: by 2002:a17:902:ce82:b0:224:24d3:6103 with SMTP id d9443c01a7336-235e12535e8mr99006335ad.35.1749110130339;
-        Thu, 05 Jun 2025 00:55:30 -0700 (PDT)
+        bh=YvczEWOtd3+xUjc0wRT/ahzTCf7ZeIPM0+H+Q6/x2ZA=;
+        b=NGvw2HpzGY7ZC63955bm4yNFRPN21hnWjPZZye5hJ6ZZlCmftCiHI9u1nF41ky9FPu
+         9oJEZ4XQV8pf0m8441deEnu4KC0yJFoEmbws1lS2KduuiGLSO6lLIzCHndcp9UiqOkw/
+         sh2/NQW1f9sV0thapc4fhH3QC5h0tjDo8k3bRkO/EcFzx0eSk0e5N735o4Dq61TRJank
+         Zg3o9M4b9WgUls8oep/OxME3qQJb8SnouqAtEHDd9mP9iV/3ySO/NP/kXzB7vl0o76I+
+         qmMvuTzx3uhyH483y4CsVe2WRsYca3xXNMoGSympASCLLzu1lK58eWZT1M8iPQeroT3z
+         0ZyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcCB8BULLC9ohO204PezP8c8geyJkFgPpltKsnUUhEQxxlPkTSGWccRtXCs/JfVLR5AnzZL+Is/d9m@vger.kernel.org, AJvYcCUrTJnAY/iTgHZpqM5ov6wGvccL5l44RxXcMrJij9cqgpc5T23ybmIaF+bEY/eg1pisYytcKm+CHo2o@vger.kernel.org, AJvYcCXm8Vva0rnFgIlr5l+98tCpDyZrVsspQ8/zacw4kHYy+oAideTNqnAXvzzwIS41qtxN/YK+SQu3bYKTKzWU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGf5q2WFMVzAfhmx42gUQFf06tj98zBUV5fJWQIPOv6In0NOt1
+	Z9G/c9vZk280txj28tS/9aJvF/3Rxd7vVXm2gtkZGIUADpD0t0IOom2D
+X-Gm-Gg: ASbGncspBDj/OYCbgh6TJPSLXUiorAq5Q65A8qCR+HckoLiCnWp63bxh4Nm/0pAuHQn
+	E70aXF/dLSsy3+6xLOK/0UoA4isweXOJndO2mFAlTSl4AErPiMI8Y5Dz6Z70hbZIMrdNi99HLa2
+	/6JuvgWNsV7z++VObxbLGT7DeiDvWpenw2zKkESgyFg01HxWPGX5LYH96NcSTsDLQhaVary86LE
+	uFZ5RUyY2n9sQMmemr/WdsyFOXAvBFxY91f8GrHTwVEEpinJlHStEo7jj41V56UqDxT/SmambLG
+	XlsAxB4yg8YvaN7p1wH9s/r29HbeQVbsk/8oXitXYhlnfmluPw==
+X-Google-Smtp-Source: AGHT+IHDBtVhYgZv7Nkx8O5e23AQ6vkU0MEDQDC0hGmYlT0A5bgGGLDgSHJWQgz3WLF35zxAQbaZ6w==
+X-Received: by 2002:a17:903:1a6f:b0:234:f4da:7eed with SMTP id d9443c01a7336-235e120069emr90257885ad.44.1749110138600;
+        Thu, 05 Jun 2025 00:55:38 -0700 (PDT)
 Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc86cdsm115201015ad.8.2025.06.05.00.55.26
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc86cdsm115201015ad.8.2025.06.05.00.55.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 00:55:29 -0700 (PDT)
+        Thu, 05 Jun 2025 00:55:38 -0700 (PDT)
 From: Pengyu Luo <mitltlatltl@gmail.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -70,9 +70,9 @@ Cc: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Pengyu Luo <mitltlatltl@gmail.com>
-Subject: [PATCH RESEND 1/3] dt-bindings: dma: qcom,gpi: Document the sc8280xp GPI DMA engine
-Date: Thu,  5 Jun 2025 15:54:32 +0800
-Message-ID: <20250605075434.412580-2-mitltlatltl@gmail.com>
+Subject: [PATCH RESEND 3/3] arm64: dts: qcom: sc8280xp: Enable GPI DMA
+Date: Thu,  5 Jun 2025 15:54:34 +0800
+Message-ID: <20250605075434.412580-4-mitltlatltl@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250605075434.412580-1-mitltlatltl@gmail.com>
 References: <20250605075434.412580-1-mitltlatltl@gmail.com>
@@ -84,25 +84,132 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document the GPI DMA engine on the sc8280xp platform.
+Enable GPI DMA for sc8280xp based devices.
 
 Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
 ---
- Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/sc8280xp-crd.dts            | 12 ++++++++++++
+ arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts | 12 ++++++++++++
+ .../boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts  | 12 ++++++++++++
+ .../boot/dts/qcom/sc8280xp-microsoft-arcata.dts      | 12 ++++++++++++
+ .../boot/dts/qcom/sc8280xp-microsoft-blackrock.dts   | 12 ++++++++++++
+ 5 files changed, 60 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-index 7052468b1..19764452d 100644
---- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-+++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-@@ -30,6 +30,7 @@ properties:
-               - qcom,sa8775p-gpi-dma
-               - qcom,sar2130p-gpi-dma
-               - qcom,sc7280-gpi-dma
-+              - qcom,sc8280xp-gpi-dma
-               - qcom,sdx75-gpi-dma
-               - qcom,sm6115-gpi-dma
-               - qcom,sm6375-gpi-dma
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
+index 8e2c02497..667d840db 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
+@@ -495,6 +495,18 @@ &dispcc0 {
+ 	status = "okay";
+ };
+ 
++&gpi_dma0 {
++	status = "okay";
++};
++
++&gpi_dma1 {
++	status = "okay";
++};
++
++&gpi_dma2 {
++	status = "okay";
++};
++
+ &gpu {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
+index 1667c7157..0374251d3 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
+@@ -586,6 +586,18 @@ &dispcc0 {
+ 	status = "okay";
+ };
+ 
++&gpi_dma0 {
++	status = "okay";
++};
++
++&gpi_dma1 {
++	status = "okay";
++};
++
++&gpi_dma2 {
++	status = "okay";
++};
++
+ &gpu {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+index ae7a275fd..3fbd0c005 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+@@ -708,6 +708,18 @@ &dispcc0 {
+ 	status = "okay";
+ };
+ 
++&gpi_dma0 {
++	status = "okay";
++};
++
++&gpi_dma1 {
++	status = "okay";
++};
++
++&gpi_dma2 {
++	status = "okay";
++};
++
+ &gpu {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dts b/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dts
+index d00889fa6..aeed3ef15 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dts
+@@ -448,6 +448,18 @@ &dispcc1 {
+ 	status = "okay";
+ };
+ 
++&gpi_dma0 {
++	status = "okay";
++};
++
++&gpi_dma1 {
++	status = "okay";
++};
++
++&gpi_dma2 {
++	status = "okay";
++};
++
+ &gpu {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts b/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts
+index 812251324..55ffe615e 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts
+@@ -565,6 +565,18 @@ &dispcc0 {
+ 	status = "okay";
+ };
+ 
++&gpi_dma0 {
++	status = "okay";
++};
++
++&gpi_dma1 {
++	status = "okay";
++};
++
++&gpi_dma2 {
++	status = "okay";
++};
++
+ &gpu {
+ 	status = "okay";
+ 
 -- 
 2.49.0
 
