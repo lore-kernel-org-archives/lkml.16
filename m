@@ -1,80 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34CE23741;
-	Thu,  5 Jun 2025 22:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F021F30AD
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 22:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749160878; cv=none; b=YoAzvkVSIznH7Ar0xSQlz9vWRNH4encDO1otFe711pe5N5Zzw9vvvChE2a3I0/4GWpsiqvHVpbQMGb8hAmBxDsut+QTCLrhbpXubQF/8fp5CB8GP0ak82kbt9KLxXlpg1rjYkUWnW4LyNvjDfx2LU5cvhdWTMv2WP9UI6zosSRY=
+	t=1749161045; cv=none; b=kaQvIOBrwWC4r7MMu4SN9J71jg2lp1B2Atnc/flrrAQhdrPgQM4YsxT7xPt1MYzEj9fRPlFKA9/c4TUmSFSusoZaGgq8qAY55Cx4z3D6Isqrcc3daZrn8jBdAHhhGyd/ktsi9X3di/a7dIgKE2WNNxICReGDQn2p620lZR2sGEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749160878; c=relaxed/simple;
-	bh=LSWvhFvn4bSvUg9aMhGnvwKlF1PbeLBvfGTYfwBBF+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JIDjKaVT7dVFVoa/yvs1cTDLx0SHCjPdnk6LR8adQXOQBK6rendu8TznHcnesiJ7MBjYokCIE0nJEOADj6c5fRRGQm8TDRwTcRKSOGI1vVG+cntpUd/tEdtQa6yb291vyJe1XNxGmGUlQ0eCl+szMqqggMqjPFbaeucl9rWW2c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTxpUdJ5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749161045; c=relaxed/simple;
+	bh=wAoJF+V1ixKUD7xCt1cvsGQns9uQ8DokbH9TB7UIoKg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qn955aGU9slFamrebJoNxKvnEPTastrJoVTfV5omLv2OfTJfgNgV+a2QYPcZw7jSlDNKn7ysyVTwDlMMSsF+oPFDeeKRR+YtzSLLARL1jtiQ8WObYCYZZL/wACg/fGv/1SEwcJxRy2vMO1adxtnm6ySJaBtVlxHCSIWxYVBP5yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rkcmRDqR; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTxpUdJ5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 409A4C4CEE7;
-	Thu,  5 Jun 2025 22:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749160877;
-	bh=LSWvhFvn4bSvUg9aMhGnvwKlF1PbeLBvfGTYfwBBF+E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VTxpUdJ5OHKZjXAi+PQNclXJB8RI+uPvU8mIL52gQ6MxUBUPmyd3TpdB59NsjoCFs
-	 w1NnTzk7G+bIZ8C4mX0sRObH7XokmO/WOvDtjspEm99M+NHf6iVMu0oaQuMsHjhXVj
-	 kZMXPqb8oz46aCYwtnCQGKlauDA3NYjq4TFtEjIqbnOLSVjIERmQuJ+3YRc4qkiATs
-	 Ww587r/V4MBABbHZuLb6tdLAnNDIfc/3K+ox4K1udF2AkdokpUpjyAPMIspQV2hknt
-	 Q88ELbggQTWNM5eEjwUKo7bVLfC52GP6oAefKl6ZnPwL+vyyA+12yBSASZk1d+JFaT
-	 z2l/J3O+VVymQ==
-Date: Thu, 5 Jun 2025 17:01:15 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Andrej Picej <andrej.picej@norik.com>
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Marek Vasut <marex@denx.de>, Robert Foss <rfoss@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org, Simona Vetter <simona@ffwll.ch>,
-	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, David Airlie <airlied@gmail.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] dt-bindings: drm/bridge: ti-sn65dsi83: drop $ref to fix
- lvds-vod* warnings
-Message-ID: <174916086474.3326887.3182401787143665659.robh@kernel.org>
-References: <20250529053654.1754926-1-andrej.picej@norik.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rkcmRDqR"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ddc5084952so5685655ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 15:04:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749161043; x=1749765843; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VUXnGKzBcTguV8+MTjnylUmPLATGpHiUDWNltHtDUyI=;
+        b=rkcmRDqRXNaaEz7jIyIVXofLti6kl3R0ADBkPl0J2yra5h+nW/gLD8bGtTEW4/rZGU
+         8tIKzfrDPxu+/jeC46IThtEPXm+JhNcKRB19n4J95d+UDzOYDDrU6+Y5wa7qYeUKJZ9q
+         M0Hq5c6YMVEp02dObEdNyynvTe/gg7Nw6dTLBFB2qH8RInQd6o1GUlQp6rZ+pu0KaSJu
+         qpLsriM3pklV3QosSRu4qpbS52r3r7glGUGFhm0+Nwcd7euvvgF5QfeG2hFtlGkPa5gM
+         GeP1IisuXXiAQ5zp8wyDCcjXnBPr8weJCOmpss2VQjSO8qZDBwJmCQHWAaMQB81gahUv
+         H7Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749161043; x=1749765843;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VUXnGKzBcTguV8+MTjnylUmPLATGpHiUDWNltHtDUyI=;
+        b=vRDkCFwqcI9K7VRxH+s+Jlsnjsz1klmRwmro9qENbXqWDKfV/fJd+LZVLxjXkqBOyh
+         ViFn1gh9xIrc6F13C5j1bjBvNByQz7mlAG9qOVlynbitZc2oF4obIm/r+vqT4foeDlTd
+         VcF4cA6AQyx/F7bnC7HeV9EnINwwRjgIvlyJm8ee3yYd5ECJoVrlk8WOjZ9gSTUKyKq5
+         wGsjx2hRwAhknSiXfEB28IP6RhX/BE3GgJmsm4wIASKj77uuI4rauTtnfO5Bonpjsp3s
+         Y5TcGTWWKwWnEApsrBtCnTkm/Dt8GHcLmcZRqEPF+tPqR/89bRHAv8jyvr/Phh2gnFHp
+         ohWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2YgNj+fkFCqy2KX5CmSoc7I0rZo/JaNJWIrzseO8j72MUWYwfIou1833uMhGTdmu6qz0Tee/T9DDyjfw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKtZ81mZ8gIDst/duyfHiWDpDccjKgn442pRaFteBjnngGN/O0
+	zjuIDYX3syV7rb13AhzpvGkxMcJ5pzR4dBrTjaYCzTHPeuCXQSEmN6hgstabiCXL63K9lJR1cvX
+	wpO5E
+X-Gm-Gg: ASbGncs9a14KYhj6g+qjuiGIxG5lef1W+DpwFKNaVEduuMYksVeKwT+CZwwZ7VgyVyV
+	O75dtPUEqh61fLuLmuozy5BYuzPCGORHmvlksSKCbPEvpo9v5q8UTTYM2EbMyMxNWMe3GCL7ZzS
+	I1sUzBuO2RwBDrW2HWBqBeehf7I4ckCtMtFBIJRmsZtpV2oQNjkHPt9FWh0bpolkomIFfTuWxmy
+	VQBAVgHNe34imGaD/kcleO8ha3CleC/VpW2qusXcFBnOPWk6Bn07x08c/cUZQEMsG0lBT+vEcQq
+	JDY24Yb/8MT9vNNcuviY5t0jzLY0Yh0YXWG4iSQfTIh2QnFq6rqGlwcGRz8=
+X-Google-Smtp-Source: AGHT+IGgfAKEnkU5dJt4CEDcabnlosi+J8OfnBK+4UySYontAor1SeZ9LKCEkVPHVVC/2Z7AtYqeog==
+X-Received: by 2002:a05:6e02:3090:b0:3d9:34c8:54ce with SMTP id e9e14a558f8ab-3ddce4a9ff5mr14367375ab.18.1749161043046;
+        Thu, 05 Jun 2025 15:04:03 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-500df5fa234sm91779173.119.2025.06.05.15.04.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 15:04:02 -0700 (PDT)
+Message-ID: <f3129b82-e01c-4213-8582-dcc3a6bcf807@kernel.dk>
+Date: Thu, 5 Jun 2025 16:04:01 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529053654.1754926-1-andrej.picej@norik.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Signed-off-by missing for commit in the block tree
+To: Keith Busch <kbusch@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Christoph Hellwig <hch@lst.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250606075230.6a13c53d@canb.auug.org.au>
+ <aEISwo8LR8hG0zyV@kbusch-mbp>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <aEISwo8LR8hG0zyV@kbusch-mbp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 6/5/25 3:57 PM, Keith Busch wrote:
+> On Fri, Jun 06, 2025 at 07:52:30AM +1000, Stephen Rothwell wrote:
+>> Commit
+>>
+>>   10f4a7cd724e ("nvme: fix command limits status code")
+>>
+>> is missing a Signed-off-by from its author.
+> 
+> FWIW, my Signed-off-by is in the original posting, so it must have
+> accidently been chopped off somewhere on the way.
+> 
+>   https://lore.kernel.org/linux-nvme/20250520202037.2751433-1-kbusch@meta.com/
 
-On Thu, 29 May 2025 07:36:53 +0200, Andrej Picej wrote:
-> The kernel test robot reported a warning related to the use of "$ref"
-> type definitions for custom endpoint properties
-> - "ti,lvds-vod-swing-clock-microvolt" and
-> - "ti,lvds-vod-swing-data-microvolt".
-> 
-> Using "$ref" with "uint32-array" is not correctly handled in this
-> context. Removing "$ref" and relying solely on "maxItems: 2" enforces
-> the intended requirement of specifying exactly two values, without
-> triggering a schema validation warning.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505021937.efnQPPqx-lkp@intel.com/
-> Signed-off-by: Andrej Picej <andrej.picej@norik.com>
-> ---
->  .../devicetree/bindings/display/bridge/ti,sn65dsi83.yaml      | 4 ----
->  1 file changed, 4 deletions(-)
-> 
+Either maybe some manual amend that Christoph did, or he's not using
+tooling like b4 perhaps and manual labor lost it?
 
-Applied, thanks!
+-- 
+Jens Axboe
 
