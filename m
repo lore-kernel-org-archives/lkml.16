@@ -1,50 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D5F1552FD
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB27527510C;
+	Thu,  5 Jun 2025 16:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749142699; cv=none; b=X6lbDqjda18KmYZchFU5vkcAjmdCU30sBByfskx/ZwyZiLde19NwO8OKXaOA4eg6UoPC7C3ZwJSkhU7zD1SOQPNcl7CsbXTCs4zPw/Iz/TPe4CSKuN9ADKZDCBkBjS3zkEi+8SWmTceHIhdxSN8t5b5yUqdf23RlyaztckdCveQ=
+	t=1749142725; cv=none; b=Aqd84/vKtbHwt0RoH6Q5V2qweCWNJ9ThL7vzPV7DG7cvpAqzqMjGimjsZ6IUNI46qf5FuVjQ3Pgr9VTtGb3T1ItU7ChKCU40OicPhUsQZTOCjm4O8km0pcIDz7qRqGnxl26UVWFHei6HQRX9Pig5/7ZaouWLZ2oDJBX1juAF1lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749142699; c=relaxed/simple;
-	bh=VBjxNJjQgs+ucg+s3d+qPGpwzIFzKdP+cYHvcC16z7U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sxRz5MxmO2MWEgIwDZ0dcYHPfENhdK+f5m/GY0VxdJ+nCkxzpSh/eQtBZ9gZQuLOXLPppGwDOL38IVfpeU4Hs/4yYiFgNw75RoqBkb6nJbGW5jJ0Bf+N9pRw/AqilIt6UtC5i6/ziN8vTlCkIk83riUXBY/mut1aDjF+2HcKEjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ccv1deIX; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749142725; c=relaxed/simple;
+	bh=V+RGtOXj+Div4Ph+uYyTLz/ZlWZWtTVuSKRa6XJvkRE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Hc5FIBh8aAz/W56GOnPpkd19TP2JF5QHIyh98tY6rQLy1QvPmu4rwxczHbBf8HvM+kcalP7SdqaLnC7Rw5Va658R5kXG7dfbiX/fVHWjujdxbzBou9GU5TrDPD5eHa4kkR5fcgoEfr5CQxyl4ORCvQiu3gZk6RQGcyw4x1CBYyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=glcvHbI4; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ccv1deIX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="glcvHbI4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749142698; x=1780678698;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VBjxNJjQgs+ucg+s3d+qPGpwzIFzKdP+cYHvcC16z7U=;
-  b=Ccv1deIXahGa50dRlHiXSzpY004jzUyhoDitodoaUWPfTtBnj+Zti+xX
-   vmFhHrnw6SkoJBxIAb5tEsIcyiMldC0WkuEGM7UlWP4ljb5DETg9Tczry
-   XX6sbhR7ANUNgxWxoph7jDjX88zigzd6DwLhrTuPfkmlAwu6L7+hQygt3
-   aVTYnMYFTijFGxSEP62vcpNwaR0NDCl6hLFce78UIthS15TXfPO3bdenN
-   0U7lKgR/EJGVm6Z+X8ySKZO1M/xQioOwK6vc6KrMYXj4Y13YK06uGs+dK
-   5atJ4kQJRQaY01FYM0yNaAw4PRBkhbng/JTmm0tQUK7yEwyMSzrAoGfQ3
-   A==;
-X-CSE-ConnectionGUID: cNDF4xPYQTeewm0LWZfO1g==
-X-CSE-MsgGUID: zxFlALoORi2IAqyVfaZoNQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="62672374"
+  t=1749142724; x=1780678724;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=V+RGtOXj+Div4Ph+uYyTLz/ZlWZWtTVuSKRa6XJvkRE=;
+  b=glcvHbI4xhobYW25ZHxH7O9sHXcvSMH1H7Za+biUkRDgWXEElhCTqSCd
+   NMUVqdN8+ye+jl+Dzn5/bG9Vvx9olYRdymUXmCY0AxMxY55XY1VliZMPA
+   Z+Qo6fpV1JNjUoad/HEINYOCB+CSZTSZcG4QvN7ps1GAz/+uic/RW7tjD
+   IevtiUbufM0wOULrGGsqb/5Who/V0tjjGgunrkcXZS5yfGYXSkzeL4C8U
+   bh64wZQ2utYsxObrot8/fQUTWXsuBosO2uIignWjox6oH/cIe+Bw1drlT
+   SPGv5j+zXq3qnYMEiPHZOT5vG/YZM5blvj9uW4esXytVkr1YKhbCxhgLF
+   Q==;
+X-CSE-ConnectionGUID: t3BHrIU1SNaO1+81gNGmxQ==
+X-CSE-MsgGUID: 9fCVKPXMSIGrPwpERi65tg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="55081374"
 X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="62672374"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:15 -0700
-X-CSE-ConnectionGUID: xYpI/lUPSJe/WM7I4lC6qg==
-X-CSE-MsgGUID: L22CH+1DQL+tBQiuIkcDgg==
+   d="scan'208";a="55081374"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:43 -0700
+X-CSE-ConnectionGUID: NOPijMEIR2+RuRTbWL0dyg==
+X-CSE-MsgGUID: WSA14enaRF+vDbDZschLWw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="145536933"
-Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.0]) ([10.125.111.0])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:14 -0700
-Message-ID: <46d299f1-f358-4920-9528-4b3381cd065c@intel.com>
-Date: Thu, 5 Jun 2025 09:58:14 -0700
+   d="scan'208";a="150833768"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:43 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 0285C20B5736;
+	Thu,  5 Jun 2025 09:58:40 -0700 (PDT)
+Message-ID: <b5c3cc21-26d6-4e87-84de-fa99909bdf1c@linux.intel.com>
+Date: Thu, 5 Jun 2025 12:58:38 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,74 +58,136 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 0/7] Intel RAR TLB invalidation
-To: Sean Christopherson <seanjc@google.com>, Rik van Riel <riel@surriel.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- bp@alien8.de, x86@kernel.org, nadav.amit@gmail.com, tglx@linutronix.de
-References: <20250605163544.3852565-1-riel@surriel.com>
- <aEHKu-0g6_MBiAST@google.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
+ Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+ <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+ <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <aEHKu-0g6_MBiAST@google.com>
+In-Reply-To: <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/5/25 09:50, Sean Christopherson wrote:
->> This patch series is based off a 2019 patch series created by Intel
-> Do you have performance numbers?  IIRC, the reason that 2019 series never went
-> anywhere is because RAR wasn't a win for bare metal.  Though I believe it _was_
-> a win for KVM, due to the cost of an IPI being significantly higher (requires a
-> VM-Exit => VM-Enter roundtrip).
 
-I'd love to see some performance numbers too.
 
-But the real problem with the 2019 series was that it didn't have a
-global PCID space at all, only the per-cpu space. That greatly limited
-how RAR could be used.
+On 2025-06-05 9:46 a.m., Liang, Kan wrote:
+> 
+> 
+> On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
+>> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
+>>>
+>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>
+>>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+>>> below perf command.
+>>>   perf record -a -e cpu-clock -- sleep 2
+>>>
+>>> The issue is introduced by the generic throttle patch set, which
+>>> unconditionally invoke the event_stop() when throttle is triggered.
+>>>
+>>> The cpu-clock and task-clock are two special SW events, which rely on
+>>> the hrtimer. The throttle is invoked in the hrtimer handler. The
+>>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+>>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+>>> be used to stop the timer.
+>>>
+>>> There may be two ways to fix it.
+>>> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>>>   perf_event_throttle() if the flag is detected.
+>>>   It has been implemented in the
+>>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>>   The new flag was thought to be an overkill for the issue.
+>>> - Add a check in the event_stop. Return immediately if the throttle is
+>>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>>>   method to stop the timer.
+>>>
+>>> The latter is implemented here.
+>>>
+>>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+>>> the order the same as perf_event_unthrottle(). Except the patch, no one
+>>> checks the hw.interrupts in the stop(). There is no impact from the
+>>> order change.
+>>>
+>>> Reported-by: Leo Yan <leo.yan@arm.com>
+>>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+>>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+>>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> It seems the patch fixes one issue and introduces another ?
+>>
+>> Looks like the throttle event is sticky.
+>> Once it's reached the perf_event no longer works ?
+> 
+> No. It should still work even the throttle is triggered.
+> 
+> sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
+> /proc/sys/kernel/perf_event_max_sample_rate'
+> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
+> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.564 MB perf.data (613 samples) ]
+> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.545 MB perf.data (502 samples) ]
+> 
+> 
+>> Repro:
+>> test_progs -t perf_branches/perf_branches_no_hw
+>> #250/2   perf_branches/perf_branches_no_hw:OK
+>>
+>> test_progs -t stacktrace_build_id_nmi
+>> #393     stacktrace_build_id_nmi:OK
+>>
+>> test_progs -t perf_branches/perf_branches_no_hw
+>> perf_branches/perf_branches_no_hw:FAIL
+>>
+> 
+> Do you have more logs regarding where it's failed?
+> 
+> Thanks,
+> Kan> Maybe it's an unrelated bug.
 
-I suspect now that Rik added the global space for INVLPGB that we'll
-have better luck with RAR.
+I tried the tests on my machine. I don't see any issues.
+
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+perf_branches/perf_branches_no_hw
+#240/2   perf_branches/perf_branches_no_hw:OK
+#240     perf_branches:OK
+Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+stacktrace_build_id_nmi
+#376     stacktrace_build_id_nmi:OK
+Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+perf_branches/perf_branches_no_hw
+#240/2   perf_branches/perf_branches_no_hw:OK
+#240     perf_branches:OK
+Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+stacktrace_build_id_nmi
+#376     stacktrace_build_id_nmi:OK
+Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+perf_branches/perf_branches_no_hw
+#240/2   perf_branches/perf_branches_no_hw:OK
+#240     perf_branches:OK
+Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+
+
+Thanks,
+Kan
