@@ -1,101 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2818578F2B;
-	Thu,  5 Jun 2025 14:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B5715747D;
+	Thu,  5 Jun 2025 14:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749134363; cv=none; b=UoM/l8brsSk7LlvRtbYYmqokh3qSCzrvFjyYlcd014Ju45dXFbx4ShMe3Q/dd4SZTeTOc4zM2/BpzRGF0ZLef5mgCDE68SJ9RfAZJNxJ3fOGV9zbanDMXQfkgCwR9ljGuVKKO5cXChiYGA3kfnO/iwI+diRNnESan5ZMLStKtx0=
+	t=1749134389; cv=none; b=dErTnalugsfL30gLP31p89UKqYEgMSy3vlbq9SvF6TtxdKckSeHNjJczihhMeyRp35C3bZw77T8HdHfRfMBmdmZKLNlHKeQ9P0nOssPfEZ54ZRXPti+I6VoNbfTVVdEXmbvmp6MWix4U6r1ZbUskt1z7PmD7tzV0UaON+XwwW7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749134363; c=relaxed/simple;
-	bh=Hf3Fh9gEp1P+PTJfdAgSS2nwgQSjZ7bjZZw4KUfHBuQ=;
+	s=arc-20240116; t=1749134389; c=relaxed/simple;
+	bh=L6aA5Viruzm2wERJh3j0+c0zu7oOACnuzqloM0reXk8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gi4dJOQIIJGMVZE5XNnbsIR+ZFiCSh5rAgAUU8jRhhYbTX22VTn7YNfS5/N4GNes578xlYLFQCvGuLUaAnWqrcT0W8FdQEqdY4YkYHSUcU4SO0kcYSzJmk2ZNcB+rm2A2kDMU9ujxmzDf9aIcksR2yFTzlffyixO2vTSrY82BzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ecu/x/rR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jGxJl3uOuI16qaToskatba8IVtNdvuDcIDvYIT4ALJ538FqO8KmJzJsjbaInJSWru3J3ev/Snko4lOf0wc7XrlavFB1gmfKaGH87J+n7ooz+yLZGioh1RaN3MKvPKMEvzxohu2MLg/HjM7ac9jFHTtqa5tN9sPNwLhIPaN1eeJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=dMkiogsX; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ecu/x/rR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3312CC4CEE7;
-	Thu,  5 Jun 2025 14:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749134362;
-	bh=Hf3Fh9gEp1P+PTJfdAgSS2nwgQSjZ7bjZZw4KUfHBuQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ecu/x/rR3vq5mel//5ty7JjZSiBVTxDdK6q9qvPzn7MmFrIcFn6MKMvTNITkUS9KU
-	 hV3PUdvbWZ9a5kUT/O16aZ+rJ7QT51vtscVM+/2CfTea3aHA/TaEWQNB9Eun34kKl3
-	 NMKHX1hPYJdDSDKvtw0V0Zei7T/3ikg0VvPaaFVsG+UhEJuLP8mXWK2tRWs2vTsAtR
-	 bgjeUZDU53Ev7RZ5BAy0tpv+tMY4Y7q+hp4zFQkbAXbwEjVOS188sJFkIKh4tEapWH
-	 ec0wJq/g0zGgOnEA5mmGMft0FUyvFJp5GsTev/JAAdw1f6jJ9usDOo+3+yptG7GYH/
-	 3/iLm9tn6uYBg==
-Date: Thu, 5 Jun 2025 09:39:20 -0500
-From: Rob Herring <robh@kernel.org>
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
-	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v10 01/10] dt-bindings: serial: Added secondary clock for
- RZ/T2H RSCI
-Message-ID: <20250605143920.GA2458810-robh@kernel.org>
-References: <20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com>
- <20250523142417.2840797-2-thierry.bultel.yh@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="dMkiogsX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=76dZEhygqEmfXO4M+UtL7RXa31FuQvFw4pYtr93FC8o=; b=dMkiogsXx/sRijvX
+	p2WEvMt21radIYsASpJfvJ+7YP2XRMaVw6+cFA0HrrAC/PZYcio9fHUnq+yM+Jhe7MgLQG4+cgrsj
+	Ok7NilWtZRk0F52cf9WltlUL5ATLDKNBf3VcbltxEelEeeac79JZdvKu53OoWJTGMu0eq72Kq/x2o
+	pfzUjsp/VfXbYqMJcffcspeC705dbTmBvGTHZZC3qXu20ekyvM0OqoWq7AMXus32hteAL7WcQxSoU
+	gbd8f6EOtxKcj8Y/UYR8JbtiAjdE+TTfau/Vn432dzfevLeAdL+OTn/wv27F/C97MrP1EbOjEvvSO
+	UmQl+KR/VkKvRoLgbQ==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1uNBkr-007nEF-2s;
+	Thu, 05 Jun 2025 14:39:41 +0000
+Date: Thu, 5 Jun 2025 14:39:41 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+	linux-arch@vger.kernel.org, netdev@vger.kernel.org,
+	Nadav Amit <nadav.amit@gmail.com>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Subject: Re: Large modules with 6.15 [was: [PATCH v4 6/6] percpu/x86: Enable
+ strict percpu checks via named AS qualifiers]
+Message-ID: <aEGsLeUWj6_wiovf@gallifrey>
+References: <20250127160709.80604-1-ubizjak@gmail.com>
+ <20250127160709.80604-7-ubizjak@gmail.com>
+ <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250523142417.2840797-2-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
+X-Uptime: 14:39:23 up 38 days, 22:52,  1 user,  load average: 0.04, 0.06, 0.02
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Fri, May 23, 2025 at 04:24:05PM +0200, Thierry Bultel wrote:
-> At boot, the default clock is the PCLKM core clock (synchronous
-> clock, which is enabled by the bootloader).
-> For different baudrates, the asynchronous clock input must be used.
-> Clock selection is made by an internal register of RCSI.
+* Jiri Slaby (jirislaby@kernel.org) wrote:
+> On 27. 01. 25, 17:05, Uros Bizjak wrote:
+> > This patch declares percpu variables in __seg_gs/__seg_fs named AS
+> > and keeps them named AS qualified until they are dereferenced with
+> > percpu accessor. This approach enables various compiler check
+> > for cross-namespace variable assignments.
+> > 
+> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> > Acked-by: Nadav Amit <nadav.amit@gmail.com>
+> > Cc: Dennis Zhou <dennis@kernel.org>
+> > Cc: Tejun Heo <tj@kernel.org>
+> > Cc: Christoph Lameter <cl@linux.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Andy Lutomirski <luto@kernel.org>
+> > Cc: Brian Gerst <brgerst@gmail.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > ---
+> >   arch/x86/include/asm/percpu.h | 15 ++++++++++++---
+> >   1 file changed, 12 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+> > index 27f668660abe..474d648bca9a 100644
+> > --- a/arch/x86/include/asm/percpu.h
+> > +++ b/arch/x86/include/asm/percpu.h
+> > @@ -95,9 +95,18 @@
+> >   #endif /* CONFIG_SMP */
+> > -#define __my_cpu_type(var)	typeof(var) __percpu_seg_override
+> > -#define __my_cpu_ptr(ptr)	(__my_cpu_type(*(ptr))*)(__force uintptr_t)(ptr)
+> > -#define __my_cpu_var(var)	(*__my_cpu_ptr(&(var)))
+> > +#if defined(CONFIG_USE_X86_SEG_SUPPORT) && defined(USE_TYPEOF_UNQUAL)
+> > +# define __my_cpu_type(var)	typeof(var)
+> > +# define __my_cpu_ptr(ptr)	(ptr)
+> > +# define __my_cpu_var(var)	(var)
+> > +
+> > +# define __percpu_qual		__percpu_seg_override
+> > +#else
+> > +# define __my_cpu_type(var)	typeof(var) __percpu_seg_override
+> > +# define __my_cpu_ptr(ptr)	(__my_cpu_type(*(ptr))*)(__force uintptr_t)(ptr)
+> > +# define __my_cpu_var(var)	(*__my_cpu_ptr(&(var)))
+> > +#endif
+> > +
 > 
-> Add the optional "sck", external clock input.
-> 
-> Also remove the unneeded serial0 alias from the dts example.
-> 
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> ---
-> Changes v9->v10:
->  - mention sck in description
->  - no maxItems on clock-names
->  - fixed the #include dependency in dts example
-> Changes v8->v9:
->  - typo in description
->  - named clocks 'operational' and 'bus', and added optional 'sck' clock
->  - uses value of 2nd core clock in example to break the dependency on cpg patch
-> ---
->  .../bindings/serial/renesas,rsci.yaml           | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-> index ea879db5f485..1bf255407df0 100644
-> --- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-> +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-> @@ -35,10 +35,15 @@ properties:
->        - const: tei
->  
->    clocks:
-> -    maxItems: 1
-> +    minItems: 2
-> +    maxItems: 3
->  
->    clock-names:
-> -    const: fck # UART functional clock
-> +    minItems: 2
-> +    items:
-> +      - const: operation
-> +      - const: bus
-> +      - const: sck # optional external clock input
+> Another issue with this is this causes all modules in 6.15 are 2-4 times
+> (compressed size) bigger:
 
-You can't just change the clock names. What happens to users of 'fck'?
+Oh, is that why config-all kernel is too big?
 
-And you can't make additional entries required. What happens to users 
-with only 1 clock defined?
+Dave
 
-Rob
+> $ ll /usr/lib/modules/*-[0-9]-default/kernel/drivers/atm/atmtcp.ko.zst
+> > -rw-r--r--. 1 root root 10325 May 13 11:49
+> /usr/lib/modules/6.14.6-2-default/kernel/drivers/atm/atmtcp.ko.zst
+> > -rw-r--r--. 1 root root 39677 Jun  2 09:13
+> /usr/lib/modules/6.15.0-1-default/kernel/drivers/atm/atmtcp.ko.zst
+> 
+> It's due to larger .BTF section:
+> .BTF              PROGBITS         0000000000000000  [-00003080-]
+> [-       00000000000011a8-]  {+00003100+}
+> {+       0000000000012cf8+}  0000000000000000           0     0     1
+> 
+> There are a lot of new BTF types defined in each module like:
+> +attribute_group STRUCT
+> +backing_dev_info STRUCT
+> +bdi_writeback STRUCT
+> +bin_attribute STRUCT
+> +bio_end_io_t TYPEDEF
+> +bio_list STRUCT
+> +bio_set STRUCT
+> +bio STRUCT
+> +bio_vec STRUCT
+> 
+> Reverting this gives me back to normal sizes.
+> 
+> Any ideas?
+> 
+> FTR downstream report:
+> https://bugzilla.suse.com/show_bug.cgi?id=1244135
+> 
+> thanks,
+> -- 
+> js
+> suse labs
+> 
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
