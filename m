@@ -1,76 +1,64 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701971FC0E6
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 09:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99662C3272;
+	Thu,  5 Jun 2025 09:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749116411; cv=none; b=HK0W+xZzJRCZiw4R1kd5rvyz6PZHv/V3NSPIqDbE38BMNwzkbZyRJBDCYOlhmoSdrOnRMlc3NXJQby44M4NOHZuxOOVcXibcFxgTQPxWo+fxAynOFzNiFzPF2YD4cADttKtzUH+UwFKUsYDeVohV26Vz//48LjMxdnrE4D2xtGQ=
+	t=1749116508; cv=none; b=gl6oqyAzZZfblelZyn5RgE2IGzuhBNeU9/yCK7hdJp6jyxxBmTa5gpW2lEo6DmBZpQZQfWSvAT039wkNxi45w7qZU/IpINFWbXUUvbpy2R1eKQJi6xKba3k5ALnsf8oNcuGKdoNNCBodOb8rJDBvvTEWPT1ShkdRaBI2OVew5cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749116411; c=relaxed/simple;
-	bh=37Arqy2BHs5dHLnhyh0SXncpjqTWtndVJ9WbNjPGYF8=;
+	s=arc-20240116; t=1749116508; c=relaxed/simple;
+	bh=ZLBC+KA6NGYS62D45P2YGEB4+x9lL6nfJSA2rz2NBK0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m9j6xgwTJnKjwO8C0SzK/XYPeQHQg95xhdlOk/A4lTyV0EtYqZs1iZlrPXpWfHiWFhQNmT20lNXYM/Hc4NRJcUph9AngC2tC9YT0cQWv0lKtM1KaJrpweohrO13Rsr9kjTSulaoWC52w/O48XpVk9Oh3lK2m4x9QH24eI9h0LZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=H9x+QY3Y; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lF1MnK7loYoabseu7VSRFi9hw5qhO1EbPsAwg3l3bQx+7qNmgw8gR6dGsm3I+VoGJ6984l1NZjiMdeboxIQSodkVsQ3GD5hgWiSEjBZWFNpJQ7K+wgYKbq3fmrhRL7XCPXzEc4Udl5tsOTqqSOxXSOtnVMkcBG1q5E8LK6gKjOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=CVQi9mh4; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="H9x+QY3Y"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acb39c45b4eso122959166b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 02:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749116407; x=1749721207; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KM55FHiiGw0ty5Vw0ggnMJ0P//GMDx7Mh10xK2QVjHM=;
-        b=H9x+QY3YfVmQGs9Xx2InOZ01IZxaSoF1D6pdSfsKU7Vm6x+xyzd02AuFuCGEGJcbUB
-         X1eI2NKqe0VTmlNNn9Rp8Eqay+0ZqUP1ILsFINLTYKGKGffGEc4pQUHH3KcBGV6c7AZD
-         lYP55RueSwd9SPUesC5fdgjEeH7ITtUJDCv4cK+LtNZbBiaTE9oKsdif0web6wMksi1A
-         +ujhh6nT1t/4NIlWW/gIi2fCiuheFaT0HswPlqcm5v+dFG2XgznO2GdhkeON053LLPm5
-         7DysuvLp8VZrmn8w/MxMGTEES0QX/VTURtO84tZw0P9JA2/cLJ+iVePZAPIV+E6Mzj9j
-         pnDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749116407; x=1749721207;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KM55FHiiGw0ty5Vw0ggnMJ0P//GMDx7Mh10xK2QVjHM=;
-        b=IuKDqG6Sb37X9LxkPkDXKf1I/6Dy2aHo2ec/mjUGxoxzOQE3pCUNE+j8mfETfR6PdU
-         JZ6Dum2lPOZKuReu3WzGlSeqB/zEqXGEH1itVW2OV7N6rFCzlgJVDyvTiYTmQMJQpLDB
-         NO6LyyftZMookz6aEDPKqqah3dax3Tw+nPyJd9DwlGFzCQhVISwVNQOkgZO5InEMBrhe
-         RuPpYWMBOiJmMz6XJobE2+2S+g8AR/kx+SCOyWKSRNtG15N690butidSIa1aXoMJMCcr
-         ZiMwr8qXYRZbtrkEnc30VnIdfPb9GvpZA+rZmU+5EwqHaydjB+/yiLim0IER0HINJa86
-         6y2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXUsVk/6dWdrdPU22x5PASlcq/pcbV0UCBVTH14NpHlvmA58hZLw+rJnU2dZs2EiEaob5dE1eUO+KquKE0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwtSjGY+z2VRtDawcO3jx3rkhPI7w2Vptmj6oiGzbsneFYCkxP
-	mb9JYf74hvPxBHAlrdbuiITmcUh/UoAlFGnSWp+QQyUhNvxCE7R9lzSEUfQTw0L7tUI=
-X-Gm-Gg: ASbGncsJivnhFZMv3AAtYXL/UKUVgwRGicp2OTPiKc2dFOZaBLpgnJKVIkuulnSYqG+
-	YIIGna1ob4VHfIvwfJhtkiXLyCA9qmH97rHFCufyrKcHroWWgmacw3oZUDlTIm6VbIUHGzbzlqz
-	sKmDSCKxHv5QRLGcji/P9Pu7zsPXYf68R6qO59PbgAUc3+6/MQccwVICRLgDVayjDAHe5oHpOcz
-	2E4BExswswT27Cvdv5zqweHMyFIFlOXRxgAAcF6M29hM6EFbHNgOLAhtEXPKmOHi9mmQhylw0p+
-	zqlerOfJjzzoNs3b/AEaJtXbA55ST7fX/ieJstEjHqez8bNSBteVZQ==
-X-Google-Smtp-Source: AGHT+IEXAjvH2zAlv9GtYKAcrlRuefB5G0wPoME06kubs8x8USrSVlKV/uqYoLN1zCBBu1d/yvPWvA==
-X-Received: by 2002:a17:907:d644:b0:ad2:2fe3:7074 with SMTP id a640c23a62f3a-addf8c87b91mr542476566b.14.1749116406549;
-        Thu, 05 Jun 2025 02:40:06 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82d773sm1243900166b.61.2025.06.05.02.40.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 02:40:06 -0700 (PDT)
-Date: Thu, 5 Jun 2025 11:40:04 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: syzbot <syzbot+23de6daeb71241d36a18@syzkaller.appspotmail.com>,
-	Liam.Howlett@oracle.com, akpm@linux-foundation.org,
-	jannh@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	lorenzo.stoakes@oracle.com, pfalcato@suse.de,
-	syzkaller-bugs@googlegroups.com,
-	Suren Baghdasaryan <surenb@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	John Ogness <john.ogness@linutronix.de>
-Subject: Re: [syzbot] [mm?] possible deadlock in __vma_start_write
-Message-ID: <aEFl9FWQHEJqnl2Q@pathway.suse.cz>
-References: <68387feb.a70a0220.29d4a0.0830.GAE@google.com>
- <f03916ab-19fc-4832-b564-58d3c885011d@suse.cz>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CVQi9mh4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=pYfa480QeywizKCHmMV9b915U3JdV7fcJg6oO97CKu8=; b=CVQi9mh4ODfteTqvJxx8P3pgzH
+	J7gv3ERrIwSmKbjAfu/ozSb+f/7Ai2Z8/085hSu5wn0ZMV4ZLHJPccZYuhdZ4hFHifYPX8+lUEeP4
+	YkCuW44+6OgALcJ0ZIU5BybG8D2wtGreR/zTmlaJUEQVdhFWhZGdG8loYAwYmHFdmegxyJ/bNOiFS
+	srJJGO/M09BLQeI55Jy0yAKALvV702c23xNLjumdC7CzJPLBXUBgXi9W2kUDKZUIqiwZtP9qoqxy1
+	zC0V0Q5i0Re3KNHAe2VW0IhA0K/cpyNLlXpRX/G7AJJOcNwINXs5YvpS8KHRZtyqSMjjCEEEe89GN
+	xRYAgE0w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36144)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uN763-00081c-1p;
+	Thu, 05 Jun 2025 10:41:15 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uN75w-00025P-0W;
+	Thu, 05 Jun 2025 10:41:08 +0100
+Date: Thu, 5 Jun 2025 10:41:08 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
+ informative text about RGMII delays
+Message-ID: <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
+References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
+ <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
+ <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
+ <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,188 +67,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f03916ab-19fc-4832-b564-58d3c885011d@suse.cz>
+In-Reply-To: <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed 2025-06-04 09:52:24, Vlastimil Babka wrote:
-> On 5/29/25 17:40, syzbot wrote:
-> > Hello,
+On Thu, Jun 05, 2025 at 05:06:43PM +0800, Icenowy Zheng wrote:
+> In addition, analyzing existing Ethernet drivers, I found two drivers
+> with contradition: stmicro/stmmac/dwmac-qcom-ethqos.c and
+> ti/icssg/icssg_prueth.c .
+> 
+> The QCOM ETHQOS driver enables the MAC's TX delay if the phy_mode is
+> rgmii or rgmii-rxid, and the PRU ETH driver, which works on some MAC
+> with hardcoded TX delay, rejects rgmii and rgmii-rxid, and patches
+> rgmii-id or rgmii-txid to remove the txid part.
+
+No, this is wrong.
+
+First, it does not reject any RGMII mode. See qcom_ethqos_probe() and
+the switch() in there. All four RGMII modes are accepted.
+
+The code in ethqos_rgmii_macro_init() is the questionable bit, but
+again, does _not_ do any rejection of any RGMII mode. It simply sets
+the transmit clock phase shift according to the mode, and the only
+way this can work is if the board does not provide the required delay.
+
+This code was not reviewed by phylib maintainers, so has slipped
+through the review process. It ought to be using the delay properties
+to configure the MAC.
+
+> The logic of QCOM ETHQOS clearly follows the original DT binding, which
+
+Let's make this clear. "original DT binding" - no, nothing has
+*actually* changed with the DT binding - the meaning of the RGMII
+modes have not changed. The problem is one of interpretation, and
+I can tell you from personal experience that getting stuff documented
+so that everyone gets the same understanding is nigh on impossible.
+People will pick holes, and deliberately interpret whatever is written
+in ways that it isn't meant to - and the more words that are used the
+more this happens.
+
+The RGMII modes have been documented in Documentation/networking/phy.rst
+(Documentation/networking/phy.txt predating) since:
+
+commit bf8f6952a233f5084431b06f49dc0e1d8907969e
+Author: Florian Fainelli <f.fainelli@gmail.com>
+Date:   Sun Nov 27 18:45:14 2016 -0800
+
+    Documentation: net: phy: Add blurb about RGMII
+
+    RGMII is a recurring source of pain for people with Gigabit Ethernet
+    hardware since it may require PHY driver and MAC driver level
+    configuration hints. Document what are the expectations from PHYLIB and
+    what options exist.
+
+    Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+    Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+> describes "rgmii-id" as `RGMII with internal RX and TX delays provided
+> by the PHY, the MAC should not add the RX or TX delays in this case`
+> (the driver skips the delay for rgmii-id). The logic of PRU ETH follows
+> the logic of the new DT binding. This shows that the DT binding patch
+> is not a simple clarification, but a change of meanings.
+
+Let me say again. Nothing has changed. There is no "old binding" or
+"new binding". If you think there is, then it's down to
+misinterpretation.
+
+This is precisely why I've been opposed to documenting these properties
+in the binding document _and_ Documentation/networking/phy.* because
+keeping them both in sync is going to be a pain, leading to ambiguity
+and misinterpretation.
+
+> > If you want the kernel to not touch the PHY, use
 > > 
-> > syzbot found the following issue on:
+> > phy-mode = 'internal'
+> 
+> This sounds weird, and may introduce side effect on the MAC side.
+> 
+> Well we might need to allow PHY to have phy-mode property in addition
+> to MAC, in this case MAC phy-mode='rgmii*' and PHY phy-mode='internal'
+> might work?
+
+I'm not convinced that adding more possibilities to the problem (i.o.w.
+the idea that phy=mode = "internal" can be used to avoid the delays
+being messed with) is a good idea - not at this point, because as you
+point out MACs (and PHYs) won't know that they need to be configured
+for RGMII mode. "internal" doesn't state this, and if we do start doing
+this, we'll end up with "internal" selecting RGMII mode which may work
+for some platforms but not all.
+
+So, IMHO this is a bad idea.
+
+> > > In addition, the Linux kernel contains a "Generic PHY" driver for
+> > > any
+> > > 802.1 c22 PHYs to work, without setting any delays.
 > > 
-> > HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
-> > git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=12bbdad4580000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=23de6daeb71241d36a18
-> > compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> > userspace arch: arm64
-> > 
-> > Unfortunately, I don't have any reproducer for this issue yet.
-> > 
-> > Downloadable assets:
-> > disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
-> > 
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+23de6daeb71241d36a18@syzkaller.appspotmail.com
-> > 
-> > SQUASHFS error: zstd decompression failed, data probably corrupt
-> > SQUASHFS error: Failed to read block 0x60: -5
-> > ======================================================
-> > WARNING: possible circular locking dependency detected
-> > 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 Not tainted
-> > ------------------------------------------------------
-> > syz.1.261/8150 is trying to acquire lock:
-> > ffff0000d7ffcbc8 (vm_lock){++++}-{0:0}, at: __vma_start_write+0x34/0x158 mm/memory.c:6497
-> > 
-> > but task is already holding lock:
-> > ffff0000d572df50 (&mm->mmap_lock){++++}-{4:4}, at: mmap_write_lock include/linux/mmap_lock.h:128 [inline]
-> > ffff0000d572df50 (&mm->mmap_lock){++++}-{4:4}, at: exit_mmap+0x200/0xbec mm/mmap.c:1292
-> > 
-> > which lock already depends on the new lock.
-> > 
-> > 
-> > the existing dependency chain (in reverse order) is:
-> > 
-> > -> #6 (&mm->mmap_lock){++++}-{4:4}:
-> >        __might_fault+0xc4/0x124 mm/memory.c:7151
-> >        drm_mode_get_lease_ioctl+0x2bc/0x53c drivers/gpu/drm/drm_lease.c:673
-> >        drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
-> >        drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
-> >        vfs_ioctl fs/ioctl.c:51 [inline]
-> >        __do_sys_ioctl fs/ioctl.c:906 [inline]
-> >        __se_sys_ioctl fs/ioctl.c:892 [inline]
-> >        __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
-> >        __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-> >        invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-> >        el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-> >        do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-> >        el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-> >        el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-> >        el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-> >
-> > -> #5 (&dev->mode_config.idr_mutex){+.+.}-{4:4}:
-> >        __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-> >        __mutex_lock kernel/locking/mutex.c:746 [inline]
-> >        mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-> >        __drm_mode_object_add+0xa8/0x1f0 drivers/gpu/drm/drm_mode_object.c:47
-> >        drm_framebuffer_init+0x14c/0x2bc drivers/gpu/drm/drm_framebuffer.c:875
-> >        drm_gem_fb_init drivers/gpu/drm/drm_gem_framebuffer_helper.c:82 [inline]
-> >        drm_gem_fb_init_with_funcs+0xa60/0xda4 drivers/gpu/drm/drm_gem_framebuffer_helper.c:202
-> >        drm_gem_fb_create_with_funcs drivers/gpu/drm/drm_gem_framebuffer_helper.c:245 [inline]
-> >        drm_gem_fb_create+0x84/0xd4 drivers/gpu/drm/drm_gem_framebuffer_helper.c:286
-> >        drm_internal_framebuffer_create+0xfcc/0x19dc drivers/gpu/drm/drm_framebuffer.c:304
-> >        drm_mode_addfb2+0xac/0x2a0 drivers/gpu/drm/drm_framebuffer.c:338
-> >        drm_client_buffer_addfb drivers/gpu/drm/drm_client.c:386 [inline]
-> >        drm_client_framebuffer_create+0x2d0/0x55c drivers/gpu/drm/drm_client.c:428
-> >        drm_fbdev_shmem_driver_fbdev_probe+0x180/0x70c drivers/gpu/drm/drm_fbdev_shmem.c:151
-> >        drm_fb_helper_single_fb_probe drivers/gpu/drm/drm_fb_helper.c:1649 [inline]
-> >        __drm_fb_helper_initial_config_and_unlock+0xf94/0x159c drivers/gpu/drm/drm_fb_helper.c:1829
-> >        drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-> >        drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-> >        drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-> >        drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-> >        drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-> >        vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-> >        vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-> >        do_one_initcall+0x250/0x990 init/main.c:1257
-> >        do_initcall_level+0x154/0x214 init/main.c:1319
-> >        do_initcalls+0x84/0xf4 init/main.c:1335
-> >        do_basic_setup+0x8c/0xa0 init/main.c:1354
-> >        kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-> >        kernel_init+0x24/0x1dc init/main.c:1457
-> >        ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-> >
-> > -> #4 (&helper->lock){+.+.}-{4:4}:
-> >        __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-> >        __mutex_lock kernel/locking/mutex.c:746 [inline]
-> >        mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-> >        __drm_fb_helper_restore_fbdev_mode_unlocked+0x74/0x198 drivers/gpu/drm/drm_fb_helper.c:228
-> >        drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-> >        fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-> >        visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-> >        do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-> >        do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-> >        do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-> >        do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-> >        fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-> >        do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-> >        register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-> >        __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-> >        drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-> >        drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-> >        drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-> >        drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-> >        drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-> >        vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-> >        vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-> >        do_one_initcall+0x250/0x990 init/main.c:1257
-> >        do_initcall_level+0x154/0x214 init/main.c:1319
-> >        do_initcalls+0x84/0xf4 init/main.c:1335
-> >        do_basic_setup+0x8c/0xa0 init/main.c:1354
-> >        kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-> >        kernel_init+0x24/0x1dc init/main.c:1457
-> >        ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+> > genphy is best effort, cross your fingers, it might work if you are
+> > luckily. Given the increasing complexity of PHYs, it is becoming less
+> > and less likely to work. From a Maintainers perspective, i only care
+> > if the system works with the proper PHY driver for the
+> > hardware. Anything else is unmaintainable.
+> 
+> Well this sounds unfortunate but reasonable.
 
-I just wanted to better understand what was going on here ;-)
-Let me share my thoughts.
+We're already in this state with PHYs faster than gigabit, because
+IEEE 802.3 in their wisdom did not define where the 1000BASE-T
+autoneg parameters appear in the register space. As a result, vendors
+have done their own thing, and every vendor / PHY is different.
+Without access to this key data, phylib has no way to know the
+negotiation results. Thus, a generic PHY driver that works correctly
+for PHYs > 1G just isn't possible.
 
-First, the deadlock might happen only when all these (or similar) code
-paths might be called in parallel.
+I expect that in years to come, we'll see IEEE 802.3 updated with
+the 1G registers for Clause 45 PHYs, but the boat has already sailed
+so this would be totally pointless as there will be too many PHYs
+out there doing their own thing for whatever IEEE 802.3 says about
+this to have any relevence what so ever. Just like they did with
+2500BASE-X, which is a similar mess due to IEEE 802.3 being way too
+late.
 
-The two backtraces, right above, are from initcalls. It is possible
-that the code path in the 1st backtrace can't be called before
-the device is initialized. So, it is possible that the deadlock
-can't happen in the real life.
+I hope that there isn't going to be more of this, because each time
+it happens, the IEEE 802.3 "standard" less relevant.
 
-I guess that this is the reason why people say that the deadlock
-is very unlikely.
-
-
-Second. if we wanted to remove the cyclic dependency then we would
-need to break the chain somewhere.
-
-I am not familiar with th fbcon code. But my guess is that we take
-console_lock() here to prevent using the graphical console by printk()
-while we are switching the driver behind the console.
-
-I am afraid that we might have similar problem even after removing
-console_lock. It just would be replaced by another tty-specific lock or so.
-
-Just an idea. A solution would be to temporary pause the related
-console. I mean to do something like:
-
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index ac3c99ed92d1..12ec99b69068 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -3002,14 +3002,14 @@ int fbcon_fb_registered(struct fb_info *info)
- 	int ret;
- 
- 	if (!lockless_register_fb)
--		console_lock();
-+		pause_tty_console();
- 	else
- 		atomic_inc(&ignore_console_lock_warning);
- 
- 	ret = do_fb_registered(info);
- 
- 	if (!lockless_register_fb)
--		console_unlock();
-+		unpause_tty_console();
- 	else
- 		atomic_dec(&ignore_console_lock_warning);
- 
-
-Where pause_tty_console()/unpause_tty_console() would just set a flag
-or manipulate a counter in struct console.
-
-The trick is that do_fb_registered() could then be called
-without console_lock(). I hope that it might broke the chain.
-
-Is it worth investigating this approach?
-Does it make any sense?
-
-Best Regards,
-Petr
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
