@@ -1,95 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AD623507C;
-	Thu,  5 Jun 2025 13:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5904C2550D2;
+	Thu,  5 Jun 2025 13:34:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749130419; cv=none; b=MEvvET8WUadPEsfpnbIoUGhs3OdDXESX7YmrSekhRXJVejdGL0uWqK3W5K+VI7I5bUnEAJvRQpR7oAtdgtdOKuQA6V7YPxV+kv3pP3hMe7mZ6UH8rtS7YgXfrE4jK8ehOWuyaS+lGKTVtbiVohhLcP/YZ6uoQjXZu1T3IORfqYU=
+	t=1749130467; cv=none; b=u8BDb8jiIHmr9epagxUZVYmNVYpIsK1BlLa6/0Ob4d4D6YY5snwgspulqi3Q3v+xJCtB93SCctE5j/BndpPk8NEhc4SOxeqKYd9eP4cOSXSrUkDzMRLp2p8wIJRxl0J5l8Vb/m7GbPpMhyJ0BVeHUCO5zdhcE7DcfPS8n3N6OtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749130419; c=relaxed/simple;
-	bh=yxqHU2sOZN27FulrAoAbvaO56DcbsQKhcY/tONUxapg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vmow+wxomqGdVtu4QlbHtQoP4+/tulVNabY1gVy2cT/egaekqyHzXp2/E1HAhlBH02KmgSvlP4WCShbkoVtsDmjeLszHe8+nmkLul2d5rHsDt7A/o/1iQiBUwVh7aBJVmC8Cw1LGcmKvTNXTrf8WoIodhQthdR/q1h8cUBHb1Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXXzABH/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749130467; c=relaxed/simple;
+	bh=iDQyDqaMZzD+KwhPTYZgckpOuUb9ZIO+TRLpfY+1e54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tR42MqDaJBeWA4C9VIPlvl/YGPwaIPJ/VA6yDjIrp4JVhup3/WAyP4KnpDeMN6Nnj6xpLtxQZEDhar51SJXKtjTb+lopSoHlvQt71og26nDk8i2UoTvcgMKn5+7FtGATE4nj8v9GlL+2+cfAk+kT2zCPYa7ENw8wAP0VcurL8ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A71k7a57; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXXzABH/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 121AFC4CEE7;
-	Thu,  5 Jun 2025 13:33:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A71k7a57"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A4F1C4CEE7;
+	Thu,  5 Jun 2025 13:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749130419;
-	bh=yxqHU2sOZN27FulrAoAbvaO56DcbsQKhcY/tONUxapg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PXXzABH/J2X+vsgPNiyyVobzGpKHW4ZnkuN6qgNbdAWtraINx/hRirrLgERmAI2fg
-	 O3r2rSRBLCJRdcVmRHNj5RhVOqxcCoqzSGyOdkYopDU6HUbp8TqXz3xDFiOOryliDs
-	 wylMSmmKV252l0db+CVj7VxuSeX7JEVkrHn8ztKfHi0UGSmdRr3G2xSZeflt0exUJG
-	 dbSUDq8Ao1qFERKPsnvMxBStOqO3KSvYDjMkrDGQGC67oO1WzOt2AqvPxnUCSNWyb6
-	 K75JqBZDQg01SnJv1qIyupDf4uZ8pHjB8IPOWJRYCrqxdfF0bc1CUPRgJItS+dZLwN
-	 Odn3i+cZ2P0TA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uNAiu-004J3E-Kj;
-	Thu, 05 Jun 2025 14:33:36 +0100
-From: Marc Zyngier <maz@kernel.org>
-To: Oliver Upton <oliver.upton@linux.dev>,
-	Sebastian Ott <sebott@redhat.com>
-Cc: Colton Lewis <coltonlewis@google.com>,
-	Ricardo Koller <ricarkol@google.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
+	s=k20201202; t=1749130466;
+	bh=iDQyDqaMZzD+KwhPTYZgckpOuUb9ZIO+TRLpfY+1e54=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A71k7a57mJm5O/QCRNip7OFitnYaQQERbWmKct5HWfhQTUtcTz6a1g50WnDiKzhwb
+	 z1w73Sbcf13kYA4xkuCtXszG49AbmjylSVYr79gUNbeSn6E88g50U/0CTsl39qR3cW
+	 dfOhK5juDFF1HFbvHfWmD6n9bQdw9EduP5X92eOzGqHAuth+eyvh3I3rnDoH3EzstH
+	 zbiCdxYFoEnS5dCtPQKNNH/ng+R3n2OJo+b+aemCMmOjDuotDdxElcle5uAY6J6xyi
+	 ktxaKmWstgN75KUFC5cyTkv1nK1BxMqv6Bct7fGOXm5u7iGChEYm2eH+jMgh5Smgx+
+	 nOgKO1DQpOZQw==
+Date: Thu, 5 Jun 2025 08:34:24 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>, linux-pci@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
 	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] KVM: arm64: selftests: arch_timer_edge_cases fixes
-Date: Thu,  5 Jun 2025 14:33:30 +0100
-Message-Id: <174913039935.1215874.15467510100629405540.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250605103613.14544-1-sebott@redhat.com>
-References: <20250605103613.14544-1-sebott@redhat.com>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	devicetree@vger.kernel.org, Qiang Yu <quic_qianyu@quicinc.com>,
+	Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Subject: Re: [PATCH 1/4] dt-bindings: PCI: qcom,pcie-sc8180x: Drop unrelated
+ clocks from PCIe hosts
+Message-ID: <174913046189.2427423.8082975472516161400.robh@kernel.org>
+References: <20250521-topic-8150_pcie_drop_clocks-v1-0-3d42e84f6453@oss.qualcomm.com>
+ <20250521-topic-8150_pcie_drop_clocks-v1-1-3d42e84f6453@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, sebott@redhat.com, coltonlewis@google.com, ricarkol@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, shuah@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521-topic-8150_pcie_drop_clocks-v1-1-3d42e84f6453@oss.qualcomm.com>
 
-On Thu, 05 Jun 2025 12:36:09 +0200, Sebastian Ott wrote:
-> Some small fixes for arch_timer_edge_cases that I stumbled upon
-> while debugging failures for this selftest on ampere-one.
+
+On Wed, 21 May 2025 15:38:10 +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > 
-> Changes since v1:
->  * determine effective counter width based on suggestions from Marc
-> Changes since v2:
->  * new patch to fix xval initialization
+> The TBU clock belongs to the Translation Buffer Unit, part of the SMMU.
+> The ref clock is already being driven upstream through some of the
+> branches.
 > 
-> [...]
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml         | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
+> 
 
-Applied to fixes, thanks!
-
-[1/4] KVM: arm64: selftests: fix help text for arch_timer_edge_cases
-      commit: 9a9864fd09c7e52440c05e70609bf5ee8da425d0
-[2/4] KVM: arm64: selftests: fix thread migration in arch_timer_edge_cases
-      commit: 050632ae6571d0f148fa0d4b90b6409a12645461
-[3/4] KVM: arm64: selftests: arch_timer_edge_cases - fix xval init
-      commit: 05ce38d489dbc96eb1dd700b287f949cb8cc0610
-[4/4] KVM: arm64: selftests: arch_timer_edge_cases - determine effective counter width
-      commit: fad4cf944839da7f5c3376243aa353295c88f588
-
-Cheers,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
-
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
