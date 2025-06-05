@@ -1,233 +1,199 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4984B28E3F;
-	Thu,  5 Jun 2025 08:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6911342A87
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749112125; cv=none; b=LjQrWYA1PNr3oOeYQd+vvVx7SnlepTd+JjvaxA27H8DaqzikeYJ8QculOvq2JoXwXs0TxLeK/yIUxG2hz5a2JL0YSi9tiYJUuHvwCY8WM4+IwerkaQVqpEb6rdSQBCqtVvo+1nkPbBpUKvznYr2cUfEd4SOpPAQIXKJDGa3vfmk=
+	t=1749112253; cv=none; b=V6mNReNU4Rav42wDo6yLroZn7TCP2Qt5S/rTT4F/D03tIxzGmW/4We2dOmAqeeVQZKXVVQlkZa/Xz/NjBQMPHL6AGqg/tT3umg0v/WsbCn9ZBEZt7OPZ6jyj0kzH0HB7Hq20nV/VgMEtn77y2XeumZ4jGyfmzest1iRWBSH1C2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749112125; c=relaxed/simple;
-	bh=Pe4KOyg59O5dYC8Q9siCzSuz/vlV6XZT/S0hkjn+kPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D3kwtqOs9HY7mtr+sh5tuno4UoSqU6FzEwyF5jG/nH3Xr/90Or9ZeLWDv07r5OE7teBuQ7IcemyMYOg4kGHDz07ua0BUjJneVL0AIgPaj29HSk1nDuTmnB+ALJA4PwytB7yrbcz1zEDD5yC25o7jKoF6rYy4Lif55NQy57mVdss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=j+euAddt; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749112253; c=relaxed/simple;
+	bh=AkHB+thfbIQIqfeaA9UXwrnfoEhwL6KbN+8bNql7SCE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KhvSQHrqrN0vQwnE6WwaXetgCF1EVc+ovs84wl+19IUVn+1d6IyI5dv04mRldC8b6AvCm35fQP5uHFQdEMN1dvH8CRWmrst7Q7x5ih8lKMMdXN3fT+EEHNU836KAeBZeVdoGDQlR2SMh2QFXtzg1xn/r3nxpibPbzcGzvJls3PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=o3KpyXAc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j+euAddt"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 307831838;
-	Thu,  5 Jun 2025 10:28:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749112116;
-	bh=Pe4KOyg59O5dYC8Q9siCzSuz/vlV6XZT/S0hkjn+kPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j+euAddtyqSBzXRWy4B3jiDEzpRfKF19CYFdux+vhhkTwza6z3fHAnGbv6Hz7F+S7
-	 GyjbnhIMt9E+1f3Ddmz+aO6KYUIKP8xTH41jQ9JgMBvREYqZmbCl9VfwALjo7peT0I
-	 b5wkRUhwXUMgXffiM/LcAlK0ExBJ8wVpWh04wxbY=
-Date: Thu, 5 Jun 2025 11:28:29 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Stefan Klug <stefan.klug@ideasonboard.com>
-Cc: Dafna Hirschfeld <dafna@fastmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Paul Elder <paul.elder@ideasonboard.com>
-Subject: Re: [PATCH v3 2/3] media: rkisp1: Add
- RKISP1_CID_SUPPORTED_PARAMS_BLOCKS control
-Message-ID: <20250605082829.GI3755@pendragon.ideasonboard.com>
-References: <20250523-supported-params-and-wdr-v3-0-7283b8536694@ideasonboard.com>
- <20250523-supported-params-and-wdr-v3-2-7283b8536694@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="o3KpyXAc"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554MJ5Z8023897
+	for <linux-kernel@vger.kernel.org>; Thu, 5 Jun 2025 08:30:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=F+dqIkfsczA9GFhBQTlcna
+	o8P8XWtJj7CYZ1dLe6ckw=; b=o3KpyXAch4TXHCXTeDQsjUBrptC/TpVi5jDrWH
+	hIrbQVBcCIZo6KCVjtrWd2eM47hW41wGzCRQakFYDJ5Njt2cRGFp0QveyH5sR82V
+	S8IT3EktQE9stKm6JBUIq2kU3DL1o0k7AqvbPpgXYl53QiTOLtxCYWVk6H00LxYw
+	sisqVwI/zoCDWNfg3h4DqGbBUs75k3Wb3elW9mhw9B1VTcjaNb6irBNpmtTQDwUO
+	hPnlLgikWCZUVGBZ4iGjaiVLfhxNY3wrX1MrZdVvCyA/Gg1MpqRtbhmpraVXfob+
+	s/rf3Ts6ZF0mA4+yzsQMKDKT2BflgbFmsC8w5f2RNprWuPlA==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 472mn02x5v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 08:30:49 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b115fb801bcso891763a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 01:30:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749112249; x=1749717049;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F+dqIkfsczA9GFhBQTlcnao8P8XWtJj7CYZ1dLe6ckw=;
+        b=Dn0s5xv1lnDF0rU8KGT8nHBcIE9epJ3UlAWW6SSUbQV+cnDD5Rj48/oFr/bdQ0t0Mm
+         Q5NnGCQ16NeMRiJGbmrOqp/tEn0iYD1mBC3AG9z6OA9URtizT+kIjPz7ar/GDlOUsznm
+         syKvqFEAhTqa+cs3O4asm+3kHEk3q0rpUQWniqzcK6/QZoEHIeaG35jDG6HeevkvoDl8
+         dPn39UZ1J0Rr63ADmSsPaAIb1BamqxeY8bgEBEIkt1ZrsiaH0ak6bqZfarWx2WD7hEx9
+         t+gZXUdgYdI5Gs5996Ubk5s0QpnpFiROSk1oG9OWxZLTRPPxOZX8ky/oHSwVOrxy53ua
+         /zgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXurV1Yesfzo3PeehgLfUYCMnVqQaZTNTWm8YWwpywI27wF/OjNwxPqztkYbq2+O8nqYQpjA3lxElkH9KA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykaNxJn6CfEPnW9fDqhmxMKKn6epMLjpZYBjelyzpsPK0O5gFX
+	NLK2a18DlQZU7FhC6dvsVQ1wavKHn0V5CSgS5g077MKzYirLcIGpBMFTV8BBvV6e7CNFx+iNAXL
+	/YtYGncJeyWIlmyLN/jJN+0Xtv44VMITRPIAboWnN5euB6JoDY8BAHPp1HS1c0WovnVc=
+X-Gm-Gg: ASbGncu9eeYMtfrQ5YHWLgHrFg0jso52ZJ9AgCkGGIQxoQITRz3apsCiGqpKzXY7B2y
+	XPFZbJ5hTskI+l+Cv1RMqbbwfJ0QhCYGUkE10slqb3Yo1eR2ncJ2ZoD9n3YhVsBGgoCDfOwQUJ+
+	wQ5UIdU5ObLvg/ebswyeYuvfuMGzriWsEVCGjc7PeIB8MNxnVcUgBbp3d/5scgwB5a1IaDgBnxI
+	No76C6i13sXlah0l1HgUXtff4zzogAiKVaaXHhDgCoCPsxL+eACONGAu1lrnRK6VlqYsdTJHtpC
+	mNPcnVr/CtW2enqbG7n2ho4LzRUzJQr9YTjxv5UVhzY5WkY=
+X-Received: by 2002:a05:6a21:9982:b0:1f5:717b:46dc with SMTP id adf61e73a8af0-21d22c6620dmr8915816637.27.1749112248694;
+        Thu, 05 Jun 2025 01:30:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGylkJnpUOGJZB7KO5B1USnsbYCwCycZuG/xEPtXYdkFvCeHitQoWPi0Kj0W7n6zqS31uMn5w==
+X-Received: by 2002:a05:6a21:9982:b0:1f5:717b:46dc with SMTP id adf61e73a8af0-21d22c6620dmr8915778637.27.1749112248213;
+        Thu, 05 Jun 2025 01:30:48 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb37d5dsm9819095a12.34.2025.06.05.01.30.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 01:30:47 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH v4 0/2] PCI: qcom: Move PERST# GPIO & phy retrieval from
+ controller to PCIe bridge node
+Date: Thu, 05 Jun 2025 14:00:36 +0530
+Message-Id: <20250605-perst-v4-0-efe8a0905c27@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250523-supported-params-and-wdr-v3-2-7283b8536694@ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAKxVQWgC/33Oy2rDMBAF0F8JWldBMxo9nFX/I2ShyONG0MSpl
+ JiW4H+vbGpq6GMjuGLO5T5E4Zy4iN3mITIPqaT+UgM9bUQ8hcsLy9TWLFChUaBAXjmXm4xH783
+ RBAvYiHp7zdyl97lnf6j5lMqtzx9z7QDT79JgvxoGkEoq8pZZM0Wln/tStm/38Br783lbn6l3R
+ hrVGnUQDHbgjbP4H8I1YsPUBkcBFf1E0+QBv2cS0IKxYt8gOUe2dcb8gfUaNwvWFUPoOOpIHH6
+ bexjH8RNvd67HhQEAAA==
+X-Change-ID: 20250101-perst-cb885b5a6129
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749112243; l=3003;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=AkHB+thfbIQIqfeaA9UXwrnfoEhwL6KbN+8bNql7SCE=;
+ b=aBzd0q2UeMu0y5PpuU6Sn6yccSOXnqz6vMHKIPHsDdx2cBR0KzPn5z8pXk6xw4fXHjJhJeuMH
+ dVqAsYgwRisAaoZkRpz3s6opfGgtqzJCm/5uSENhV5KFxKTlBabmnQL
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-ORIG-GUID: cwTaRzG9g9XPuMs8LkmCxdXBomyUcQ0G
+X-Proofpoint-GUID: cwTaRzG9g9XPuMs8LkmCxdXBomyUcQ0G
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDA3NCBTYWx0ZWRfX/snUpNWFNAbJ
+ /VQR28gM1dDZcq+sY2WRf7qeOZ9CBkmxTi/BkHXjVRpFWW7KKzQuem2MURPpx8y6xohfmPirSPU
+ zfz8M9QE9nzmAi6zr7Jni1eaourPDAbSpGY6UajJzf9bKsM1AU22WJPwr/3vXqfWcJc1CLvsf56
+ fAdkGw+hFqXItsBPxbD6hsoTkXswlq+xAvVIKQAbLOWx1wg8htXkhAoFMs8UKVswKMjl78w1A/r
+ PMGoJtU8EY16NCWETkJWSC/D3LmkLgUN0cQitdRGp2NuTeywSuq0uhsZPmduHHdnwiar+v7kV1J
+ ZR+2Oul6E5YLCtWXJ/ws/FxQ8vKd1Z+zjJl8vEvdYr3KZzpXtv86LEebb2bm6uWk75TEz9bch9D
+ tDj1iklHHM3D7lfaqCuAsO86lOiG2RhTbkw5xZDvSbtc6XwTpKXxYHw49tHR7OCmkELFhcSw
+X-Authority-Analysis: v=2.4 cv=Y8/4sgeN c=1 sm=1 tr=0 ts=684155ba cx=c_pps
+ a=rz3CxIlbcmazkYymdCej/Q==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=DNAdngzMxNmsW-howNoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=bFCP_H2QrGi7Okbo017w:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0 phishscore=0
+ clxscore=1015 impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
+ malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506050074
 
-Hi Stefan,
+The main intention of this series is to move wake# to the root port node.
+After this series we will come up with a patch which registers for wake IRQ
+from the pcieport driver. The wake IRQ is needed for the endpoint to wakeup
+the host from D3cold. The driver change for wake IRQ is posted here[1].
 
-Thank you for the patch.
+There are many places we agreed to move the wake and perst gpio's
+and phy etc to the pcie root port node instead of bridge node[2] as the
+these properties are root port specific and does not belongs to
+bridge node.
 
-On Fri, May 23, 2025 at 05:14:31PM +0200, Stefan Klug wrote:
-> Add a RKISP1_CID_SUPPORTED_PARAMS_BLOCKS V4L2 control to be able to
-> query the parameters blocks supported by the current kernel on the
-> current hardware from user space.
-> 
-> Signed-off-by: Stefan Klug <stefan.klug@ideasonboard.com>
-> Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
+So move the phy, phy-names, wake-gpio's in the root port.
+There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
+start using that property instead of perst-gpio.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+For backward compatibility, don't remove any existing properties in the
+bridge node.
 
-> ---
-> Changes in v3:
-> - Moved the rkisp1_params_init_vb2_queue() return check back into
->   separate patch
-> - Renamed rkisp1_ctrl_init to rkisp1_params_ctrl_init
-> - Applied missed review comment in docs
-> 
-> Changes in v2:
-> - Added docs improvements from review
-> - Moved ctrl_config declaration to top
-> - Moved rkisp1_params_init_vb2_queue() return check into this patch as
->   the previous patch got dropped
-> - Call rkisp1_ctrl_init() after media_entity_pads_init() for easier
->   error handling
-> ---
->  .../media/platform/rockchip/rkisp1/rkisp1-common.h |  2 +
->  .../media/platform/rockchip/rkisp1/rkisp1-params.c | 49 +++++++++++++++++++++-
->  include/uapi/linux/rkisp1-config.h                 | 11 +++++
->  include/uapi/linux/v4l2-controls.h                 |  6 +++
->  4 files changed, 67 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
-> index ca952fd0829b..5f187f9efc7b 100644
-> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
-> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
-> @@ -415,6 +415,8 @@ struct rkisp1_params {
->  	spinlock_t config_lock; /* locks the buffers list 'params' */
->  	struct list_head params;
->  
-> +	struct v4l2_ctrl_handler ctrls;
-> +
->  	const struct v4l2_meta_format *metafmt;
->  
->  	enum v4l2_quantization quantization;
-> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
-> index 24a8de697f2b..4db0ca8d86db 100644
-> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
-> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-params.c
-> @@ -2736,6 +2736,44 @@ static int rkisp1_params_init_vb2_queue(struct vb2_queue *q,
->  	return vb2_queue_init(q);
->  }
->  
-> +static int rkisp1_params_ctrl_init(struct rkisp1_params *params)
-> +{
-> +	struct v4l2_ctrl_config ctrl_config = {
-> +		.id = RKISP1_CID_SUPPORTED_PARAMS_BLOCKS,
-> +		.name = "Supported Params Blocks",
-> +		.type = V4L2_CTRL_TYPE_BITMASK,
-> +		.flags = V4L2_CTRL_FLAG_READ_ONLY,
-> +	};
-> +	int ret;
-> +
-> +	v4l2_ctrl_handler_init(&params->ctrls, 1);
-> +
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(rkisp1_ext_params_handlers); i++) {
-> +		const struct rkisp1_ext_params_handler *block_handler;
-> +
-> +		block_handler = &rkisp1_ext_params_handlers[i];
-> +		ctrl_config.max |= BIT(i);
-> +
-> +		if ((params->rkisp1->info->features & block_handler->features) !=
-> +		    block_handler->features)
-> +			continue;
-> +
-> +		ctrl_config.def |= BIT(i);
-> +	}
-> +
-> +	v4l2_ctrl_new_custom(&params->ctrls, &ctrl_config, NULL);
-> +
-> +	params->vnode.vdev.ctrl_handler = &params->ctrls;
-> +
-> +	if (params->ctrls.error) {
-> +		ret = params->ctrls.error;
-> +		v4l2_ctrl_handler_free(&params->ctrls);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int rkisp1_params_register(struct rkisp1_device *rkisp1)
->  {
->  	struct rkisp1_params *params = &rkisp1->params;
-> @@ -2781,15 +2819,23 @@ int rkisp1_params_register(struct rkisp1_device *rkisp1)
->  	if (ret)
->  		goto err_media;
->  
-> +	ret = rkisp1_params_ctrl_init(params);
-> +	if (ret) {
-> +		dev_err(rkisp1->dev, "Control initialization error %d\n", ret);
-> +		goto err_media;
-> +	}
-> +
->  	ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
->  	if (ret) {
->  		dev_err(rkisp1->dev,
->  			"failed to register %s, ret=%d\n", vdev->name, ret);
-> -		goto err_media;
-> +		goto err_ctrl;
->  	}
->  
->  	return 0;
->  
-> +err_ctrl:
-> +	v4l2_ctrl_handler_free(&params->ctrls);
->  err_media:
->  	media_entity_cleanup(&vdev->entity);
->  	mutex_destroy(&node->vlock);
-> @@ -2806,6 +2852,7 @@ void rkisp1_params_unregister(struct rkisp1_device *rkisp1)
->  		return;
->  
->  	vb2_video_unregister_device(vdev);
-> +	v4l2_ctrl_handler_free(&params->ctrls);
->  	media_entity_cleanup(&vdev->entity);
->  	mutex_destroy(&node->vlock);
->  }
-> diff --git a/include/uapi/linux/rkisp1-config.h b/include/uapi/linux/rkisp1-config.h
-> index 2d995f3c1ca3..5ca4d5961c5b 100644
-> --- a/include/uapi/linux/rkisp1-config.h
-> +++ b/include/uapi/linux/rkisp1-config.h
-> @@ -1086,6 +1086,9 @@ enum rkisp1_ext_params_block_type {
->  #define RKISP1_EXT_PARAMS_FL_BLOCK_DISABLE	(1U << 0)
->  #define RKISP1_EXT_PARAMS_FL_BLOCK_ENABLE	(1U << 1)
->  
-> +/* A bitmask of parameters blocks supported on the current hardware. */
-> +#define RKISP1_CID_SUPPORTED_PARAMS_BLOCKS	(V4L2_CID_USER_RKISP1_BASE + 0x01)
-> +
->  /**
->   * struct rkisp1_ext_params_block_header - RkISP1 extensible parameters block
->   *					   header
-> @@ -1520,6 +1523,14 @@ enum rksip1_ext_param_buffer_version {
->   * V4L2 control. If such control is not available, userspace should assume only
->   * RKISP1_EXT_PARAM_BUFFER_V1 is supported by the driver.
->   *
-> + * The read-only V4L2 control ``RKISP1_CID_SUPPORTED_PARAMS_BLOCKS`` can be used
-> + * to query the blocks supported by the device. It contains a bitmask where each
-> + * bit represents the availability of the corresponding entry from the
-> + * :c:type:`rkisp1_ext_params_block_type` enum. The current and default values
-> + * of the control represents the blocks supported by the device instance, while
-> + * the maximum value represents the blocks supported by the kernel driver,
-> + * independently of the device instance.
-> + *
->   * For each ISP block that userspace wants to configure, a block-specific
->   * structure is appended to the @data buffer, one after the other without gaps
->   * in between nor overlaps. Userspace shall populate the @data_size field with
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 72e32814ea83..f836512e9deb 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -222,6 +222,12 @@ enum v4l2_colorfx {
->   */
->  #define V4L2_CID_USER_UVC_BASE			(V4L2_CID_USER_BASE + 0x11e0)
->  
-> +/*
-> + * The base for Rockchip ISP1 driver controls.
-> + * We reserve 16 controls for this driver.
-> + */
-> +#define V4L2_CID_USER_RKISP1_BASE		(V4L2_CID_USER_BASE + 0x1220)
-> +
->  /* MPEG-class control IDs */
->  /* The MPEG controls are applicable to all codec controls
->   * and the 'MPEG' part of the define is historical */
+There are some other properties like num-lanes, max-link-speed which
+needs to be moved to the root port nodes, but in this series we are
+excluding them for now as this requires more changes in dwc layer and
+can complicate the things.
 
+Once this series gets merged all other platforms also will be updated
+to use this new way.
+
+Note:- The driver change needs to be merged first before dts changes.
+Krzysztof Wilczyński or Mani can you provide the immutable branch with
+these PCIe changes.
+
+[1] https://lore.kernel.org/all/20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com/ 
+[2] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+Changes in v4:
+- Removed dts patch as Mani suggested to merge driver and dt-binding
+  patch in this release and have dts changes in the next release.
+- Remove wake property from as this will be addressed in
+  pci-bus-common.yaml (Mani)
+- Did couple of nits in the comments, function names code etc (Mani).
+- Link to v3: https://lore.kernel.org/r/20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com
+
+Changes in v3:
+- Make old properties as deprecated, update commit message (Dmitry)
+- Add helper functions wherever both multiport and legacy methods are used. (Mani)
+- Link to v2: https://lore.kernel.org/r/20250414-perst-v2-0-89247746d755@oss.qualcomm.com
+
+Changes in v2:
+- Remove phy-names property and change the driver, dtsi accordingly (Rob)
+- Link to v1: https://lore.kernel.org/r/20250322-perst-v1-0-e5e4da74a204@oss.qualcomm.com
+
+---
+Krishna Chaitanya Chundru (2):
+      dt-bindings: PCI: qcom: Move phy & reset gpio's to root port
+      PCI: qcom: Add support for multi-root port
+
+ .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  32 +++-
+ .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |  16 +-
+ drivers/pci/controller/dwc/pcie-qcom.c             | 177 +++++++++++++++++----
+ 3 files changed, 192 insertions(+), 33 deletions(-)
+---
+base-commit: ec7714e4947909190ffb3041a03311a975350fe0
+change-id: 20250101-perst-cb885b5a6129
+
+Best regards,
 -- 
-Regards,
+krishnachaitanya-linux <krishna.chundru@oss.qualcomm.com>
 
-Laurent Pinchart
