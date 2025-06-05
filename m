@@ -1,255 +1,106 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21056215062;
-	Thu,  5 Jun 2025 10:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749120746; cv=pass; b=DEDiOL4u1IOdadNnQX9p10RcCt4/bJ+LzAdkm51hBse9b2kG/6VFAt+XBNXqNTNT93KH8wLXxSH5yPjdrhWKcHUoQMSuw06FtfhPqPQaQ/pXBXg20KoBrOZvoFxSUJPkMmpdP/4QzqpehZopUWXM1neMT0VwK9v0g4cSxuBcDKc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749120746; c=relaxed/simple;
-	bh=3KAXOZuaBz9Dv9DJEb/iDjXU7Oc5bKzSDIHRfogA5wY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FwSS6Y23cMSCTvwb+2gxfXFZKAAMggufTBRWv0qEN8ZtiwljQeIp5pXPiT+mtwB5aSanpULm+qPA93MRaIeQDxB5ygb+SqU5Y9rVSHD0En/njktE0triVpDMxVgFRKelpMVt1s7oawYtjOkMWOOBmYSzwfoN8p6ZVwgTlU/uh/8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=NT07QpkT; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A3C3C17;
+	Thu,  5 Jun 2025 10:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749120899; cv=none; b=EzSc34d4CaPGHTkmXAgb0+zeLIOvWC5XKiC9a8FrT50toIn61EudpiNMmAdL0phfKMcO0RJdjXJ5I51K3TLjyzmkMOWpc4Qr/Us0e3Up2ynfeZ0pMjK9NvkcJrCO2LFJiIcpNwTEWCkEi3C8/qqjceZrAqPJggY8zO8S74Rqtc0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749120899; c=relaxed/simple;
+	bh=qGJoIKuzWxeup+4EU8w+O1YM2vOcHJSSSMuoRwZiCQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pvxFaUUclnw5osiUEtlz7Zz+Qo8QDdacAuKTg8UsspLjv+3pJQYDEJpxIVKnBK7LoYQMlh1kUNvhOGaqpsNzx5A6CsWVZGnYLFCFxtGXTsN9dSRRj9Km5aEydiac6cDXGDphLCT1b9J8L0OS81ftoVvrZN/DAasdBwuCYgQb02I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kwU0m2b8; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="NT07QpkT"
-ARC-Seal: i=1; a=rsa-sha256; t=1749120715; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=O0k20jIieuJVJKHzhP6vy+maShQ2Fr0s32WLWJN6YvFFCwSH3M+JgJV7VXCvAJWZKdrLcj6Gu5pYGyianIBw7m1yvcXTCiTWKicR0Lg2FaDhpsgY+cvbuT+F3L17Cve2zzgMyZxWywK9V/I3O/Xrzck/i/xsuZPUIDQ9uD74kP4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749120715; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=SAie0uRwKxnup3S4O6PlgMQP08g2PVUJ7Grj8M8zYe8=; 
-	b=RQgAd0ptaTx1pINDT1scDu83sXABgeHMku4IKELEV4B3F/6Sb/yqYtRE47W4yeVaQzmESiiV941NytlTnyyX07GP8UXaoeIBJMrvYPMAnIiFzjEfSC6mROBvdX7QBiPL7tkTYt43TNZcbA6YJBAZIoVd8GKixrysQvW6zJTKLkI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749120715;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=SAie0uRwKxnup3S4O6PlgMQP08g2PVUJ7Grj8M8zYe8=;
-	b=NT07QpkTvINCnNHuF7k1rEu84BUpvfkjM28N9wyo12B0nwJJo1Qcpb9kaLdwR+QY
-	WL97IiJLjfiDdKNHum9quO7RyNOilSxEX3qk24d0qqD6BTubJREnSg++plcamVJwvlv
-	bzxrG8eSKXIMy75eHjNjUSR1MK5p3xkAFfmuSGleAbBOAyo+xl5ezVQY15Jy7hZy47D
-	tk/3kF0TlS/eA7Qv/3Zar+zmEZClS1gFkiQYw+xSGHqmygob2+iBEmmXFdmOMcjig6F
-	0O70DEsRaB+HU+IwHbzaNqFS2M5nw9/FMApIq8Lk/4KQZf24Vh35CXww+sXtk4ZDNxf
-	irNLb2Ve+Q==
-Received: by mx.zohomail.com with SMTPS id 1749120712498839.2967324276685;
-	Thu, 5 Jun 2025 03:51:52 -0700 (PDT)
-Message-ID: <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-From: Icenowy Zheng <uwu@icenowy.me>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Chaoyi Chen <chaoyi.chen@rock-chips.com>,
- Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, Heiner Kallweit
- <hkallweit1@gmail.com>,  netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 05 Jun 2025 18:51:43 +0800
-In-Reply-To: <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
-	 <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
-	 <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
-	 <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
-	 <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwU0m2b8"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad88105874aso135148966b.1;
+        Thu, 05 Jun 2025 03:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749120896; x=1749725696; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RVFpUO0Ly3idy9LjRRbGnnclNU17iOu62Gz5GozMQoM=;
+        b=kwU0m2b8T3eAM1nmwOVMbIhZwLu4eGOUkJ2KEthWq+ucsMjmOaBrfQtRkdvVO4q/2q
+         MIxKNP09r8TTAwDjO3n35x+ZnBFM4veESMJNfvutSnDxyQqYWGzJxQmsVwS3VgwUKOMR
+         49mEvf5xhIB9uYY2FDgoLKCnbfTAqNQeomESo8VVfhVofv3lNcedyWOxfTcSDpvRlWO0
+         dSmSLVzG4cVcYKQ5spG8a9JBRn1KN4Caf1/4GGZccUyoaJUKvcPGjc1SkI/ELcVh9nue
+         za8nnoY9IY1nbSamQPVZzUJYc7ixCY8cUtSLkEsE3VjH6AMujUcJ0+/z3eDYPhXi0NlL
+         YbpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749120896; x=1749725696;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RVFpUO0Ly3idy9LjRRbGnnclNU17iOu62Gz5GozMQoM=;
+        b=e0T/jjIZA24eWL0nUA8K7doNlwnOdaQdSp3T2eFdNxWJxqDzs2JDI9rKUpmrBqZnRD
+         rfjpPNmzWvTAYBu8zM5OF/zJ9zdH15J8jAl3LaoOEkkLyJ2Pl81dpzAACjXMOCznkKk9
+         grItgyoP/+/A6AZjpQ7bAMRK3v8uPtrwwU0wLW/8o3hTxsYeTsBA1TzxWVTFM1RGzcYd
+         b6zP+KzoTPfVl+LWCzuUN64BiRGIu/8a5WPE1Qd21tWeRlkQhwXQBoHcJOIZxyqZM7/K
+         JFn0kn1VnCEH1mRgjrUw8yfMK4RJom/N9v2SlzHbcWkb3sOubULTIqb5y1zhnfLAGsPd
+         pJwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhV5XgE/kgd2wjJSi5y8va6oVwoIBIBYn8QkbwiSZgUcPX0RXrwjFkLKrlTrK17tR0muKt//vVeSvwpw==@vger.kernel.org, AJvYcCWv3MWhHJE/pWpd9PqxHxVFmf0O8JU+clmmY9xRSyDzfrVfohlIu9j2WXwEID2vymymdPWNaVUQ@vger.kernel.org, AJvYcCX2xRjtdKfwE59iuH4nOTzqKgaE1kyHTJAuqbZFlqHYAPuBbamVqa9znqGhevGKL9ORz80=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbggZn5//66vwVNuadrtokcK62EfFnNqCCi4OB7EZVfhFIQZul
+	tJ0sDMotJMAIUroWI1nTwjpM3T2iTd5/kPdm1eR1vD3ivHwxoyDY55uRIkWdi8rj
+X-Gm-Gg: ASbGncuIsG82G7JzP15WfOoSXKwGRnshZqfUeVAXWCp+/+oj7n0CjEtWEXtk3hXxlvq
+	3oUC+zxUQTWIYxDn12CbFSq2/3OFnDD6jTR9fdgiGTjMxVpM1yl85hHrF6AiAiQEVVwHOmj1F+l
+	IP1qazhtN/db16xMyqbVCFG4rNzr22OUTobxqR71gL0xyqR6BUQsgTWsZAYnVbLK/foHme3MzzR
+	BxOoooFztkzI5c4g+QHSEBtfr/tXeb3mtb9ANB4Yh22/yZmiJ6CuEbRyR8EtaeOoNn2r6lyoLk7
+	QXySRqswtQSukFazDoymZzVmjpSeLgNz2INhQKmuhcXui3XuLFwJDlv20UU1ndGJ
+X-Google-Smtp-Source: AGHT+IFOh3n0Lq1+0bCNr3K1c0pK3yMqrWaY4N48Q3In6bxJO12Nso8MJwVau6mL3MN8wVXf7QRWQg==
+X-Received: by 2002:a17:907:3f99:b0:ad2:1a63:3ba4 with SMTP id a640c23a62f3a-addf8f5270dmr588304666b.37.1749120895954;
+        Thu, 05 Jun 2025 03:54:55 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325::22f? ([2620:10d:c092:600::1:d66f])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adb390f09b9sm997635666b.75.2025.06.05.03.54.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 03:54:55 -0700 (PDT)
+Message-ID: <390073b2-cc7f-4d31-a1c8-4149e884ce95@gmail.com>
+Date: Thu, 5 Jun 2025 11:56:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v4 18/18] page_pool: access ->pp_magic through struct
+ netmem_desc in page_pool_page_is_pp()
+To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
+ netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+ ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+ akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
+ andrew+netdev@lunn.ch, toke@redhat.com, tariqt@nvidia.com,
+ edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+References: <20250604025246.61616-1-byungchul@sk.com>
+ <20250604025246.61616-19-byungchul@sk.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250604025246.61616-19-byungchul@sk.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=E5=9C=A8 2025-06-05=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:41 +0100=EF=BC=
-=8CRussell King (Oracle)=E5=86=99=E9=81=93=EF=BC=9A
-> On Thu, Jun 05, 2025 at 05:06:43PM +0800, Icenowy Zheng wrote:
-> > In addition, analyzing existing Ethernet drivers, I found two
-> > drivers
-> > with contradition: stmicro/stmmac/dwmac-qcom-ethqos.c and
-> > ti/icssg/icssg_prueth.c .
-> >=20
-> > The QCOM ETHQOS driver enables the MAC's TX delay if the phy_mode
-> > is
-> > rgmii or rgmii-rxid, and the PRU ETH driver, which works on some
-> > MAC
-> > with hardcoded TX delay, rejects rgmii and rgmii-rxid, and patches
-> > rgmii-id or rgmii-txid to remove the txid part.
->=20
-> No, this is wrong.
->=20
-> First, it does not reject any RGMII mode. See qcom_ethqos_probe() and
-> the switch() in there. All four RGMII modes are accepted.
+On 6/4/25 03:52, Byungchul Park wrote:
+> To simplify struct page, the effort to separate its own descriptor from
+> struct page is required and the work for page pool is on going.
+> 
+> To achieve that, all the code should avoid directly accessing page pool
+> members of struct page.
 
-Well my sentence have its subject switched here. I mean the TI PRU ETH
-driver is rejecting modes.
+Just to clarify, are we leaving the corresponding struct page fields
+for now until the final memdesc conversion is done? If so, it might be
+better to leave the access in page_pool_page_is_pp() to be "page->pp_magic",
+so that once removed the build fails until the helper is fixed up to
+use the page->type or so.
 
->=20
-> The code in ethqos_rgmii_macro_init() is the questionable bit, but
-> again, does _not_ do any rejection of any RGMII mode. It simply sets
-> the transmit clock phase shift according to the mode, and the only
-> way this can work is if the board does not provide the required
-> delay.
->=20
-> This code was not reviewed by phylib maintainers, so has slipped
-> through the review process. It ought to be using the delay properties
-> to configure the MAC.
->=20
-> > The logic of QCOM ETHQOS clearly follows the original DT binding,
-> > which
->=20
-> Let's make this clear. "original DT binding" - no, nothing has
-> *actually* changed with the DT binding - the meaning of the RGMII
-> modes have not changed. The problem is one of interpretation, and
-> I can tell you from personal experience that getting stuff documented
-> so that everyone gets the same understanding is nigh on impossible.
-> People will pick holes, and deliberately interpret whatever is
-> written
-> in ways that it isn't meant to - and the more words that are used the
-> more this happens.
-
-Well I am not sure, considering two examples I raised here (please note
-I am comparing QCOM ETHQOS and TI PRUETH two drivers, they have
-contrary handling of RGMII modes, and one matches the old binding
-document, one matches the new one).
-
->=20
-> The RGMII modes have been documented in
-> Documentation/networking/phy.rst
-> (Documentation/networking/phy.txt predating) since:
-
-I checked the document here, and it seems that it's against the changed
-binding document (it matches the original one):
-
-The phy.rst document says:
-```
-* PHY_INTERFACE_MODE_RGMII: the PHY is not responsible for inserting
-any
-  internal delay by itself, it assumes that either the Ethernet MAC (if
-capable)
-  or the PCB traces insert the correct 1.5-2ns delay
-```
-
-The changed binding document says:
-```
-# If the PCB does not add these delays via extra long traces,
-# 'rgmii-id' should be used. Here, 'id' refers to 'internal delay',
-# where either the MAC or PHY adds the delay.
-```
-
-In the case of MAC inserting delays, the phy.rst document assumes it's
-PHY_INTERFACE_MODE_RGMII but the changed binding document assumes it's
-'rgmii-id'.
-
-> commit bf8f6952a233f5084431b06f49dc0e1d8907969e
-> Author: Florian Fainelli <f.fainelli@gmail.com>
-> Date:=C2=A0=C2=A0 Sun Nov 27 18:45:14 2016 -0800
->=20
-> =C2=A0=C2=A0=C2=A0 Documentation: net: phy: Add blurb about RGMII
->=20
-> =C2=A0=C2=A0=C2=A0 RGMII is a recurring source of pain for people with Gi=
-gabit
-> Ethernet
-> =C2=A0=C2=A0=C2=A0 hardware since it may require PHY driver and MAC drive=
-r level
-> =C2=A0=C2=A0=C2=A0 configuration hints. Document what are the expectation=
-s from
-> PHYLIB and
-> =C2=A0=C2=A0=C2=A0 what options exist.
->=20
-> =C2=A0=C2=A0=C2=A0 Reviewed-by: Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com>
-> =C2=A0=C2=A0=C2=A0 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> =C2=A0=C2=A0=C2=A0 Signed-off-by: David S. Miller <davem@davemloft.net>
->=20
-> > describes "rgmii-id" as `RGMII with internal RX and TX delays
-> > provided
-> > by the PHY, the MAC should not add the RX or TX delays in this
-> > case`
-> > (the driver skips the delay for rgmii-id). The logic of PRU ETH
-> > follows
-> > the logic of the new DT binding. This shows that the DT binding
-> > patch
-> > is not a simple clarification, but a change of meanings.
->=20
-> Let me say again. Nothing has changed. There is no "old binding" or
-> "new binding". If you think there is, then it's down to
-> misinterpretation.
->=20
-> This is precisely why I've been opposed to documenting these
-> properties
-> in the binding document _and_ Documentation/networking/phy.* because
-> keeping them both in sync is going to be a pain, leading to ambiguity
-> and misinterpretation.
->=20
-> > > If you want the kernel to not touch the PHY, use
-> > >=20
-> > > phy-mode =3D 'internal'
-> >=20
-> > This sounds weird, and may introduce side effect on the MAC side.
-> >=20
-> > Well we might need to allow PHY to have phy-mode property in
-> > addition
-> > to MAC, in this case MAC phy-mode=3D'rgmii*' and PHY phy-
-> > mode=3D'internal'
-> > might work?
->=20
-> I'm not convinced that adding more possibilities to the problem
-> (i.o.w.
-> the idea that phy=3Dmode =3D "internal" can be used to avoid the delays
-> being messed with) is a good idea - not at this point, because as you
-> point out MACs (and PHYs) won't know that they need to be configured
-> for RGMII mode. "internal" doesn't state this, and if we do start
-> doing
-> this, we'll end up with "internal" selecting RGMII mode which may
-> work
-> for some platforms but not all.
->=20
-> So, IMHO this is a bad idea.
->=20
-> > > > In addition, the Linux kernel contains a "Generic PHY" driver
-> > > > for
-> > > > any
-> > > > 802.1 c22 PHYs to work, without setting any delays.
-> > >=20
-> > > genphy is best effort, cross your fingers, it might work if you
-> > > are
-> > > luckily. Given the increasing complexity of PHYs, it is becoming
-> > > less
-> > > and less likely to work. From a Maintainers perspective, i only
-> > > care
-> > > if the system works with the proper PHY driver for the
-> > > hardware. Anything else is unmaintainable.
-> >=20
-> > Well this sounds unfortunate but reasonable.
->=20
-> We're already in this state with PHYs faster than gigabit, because
-> IEEE 802.3 in their wisdom did not define where the 1000BASE-T
-> autoneg parameters appear in the register space. As a result, vendors
-> have done their own thing, and every vendor / PHY is different.
-> Without access to this key data, phylib has no way to know the
-> negotiation results. Thus, a generic PHY driver that works correctly
-> for PHYs > 1G just isn't possible.
->=20
-> I expect that in years to come, we'll see IEEE 802.3 updated with
-> the 1G registers for Clause 45 PHYs, but the boat has already sailed
-> so this would be totally pointless as there will be too many PHYs
-> out there doing their own thing for whatever IEEE 802.3 says about
-> this to have any relevence what so ever. Just like they did with
-> 2500BASE-X, which is a similar mess due to IEEE 802.3 being way too
-> late.
->=20
-> I hope that there isn't going to be more of this, because each time
-> it happens, the IEEE 802.3 "standard" less relevant.
->=20
+-- 
+Pavel Begunkov
 
