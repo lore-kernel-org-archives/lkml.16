@@ -1,77 +1,79 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CAE1DE3DB
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6860A1F03D9
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749106543; cv=none; b=V46a8f7L5kzg2+ZcLxsJy+5A+Tz5GlFZSFusllBqVGjymesHiOU4NNvc4aIzIYdq2ZMonVTG0YIrTY4TBwrLGzyCm7voDiNnlUTIOs+kUUkTUWxWSUV66sX1wdjTP5G//TttIYAyHA0sWMltz3yiEvK20QbVp2+cUpiplkutU7w=
+	t=1749106544; cv=none; b=GKyjwwyyory84bwldVNo+gx0h/HPTL70FjJARm/nQ9ZCXnEkPXkwWGOq1AoEiVbC5XMCgUaxsb7eFnffJ2PLSb8kkweK8WYQ9h5CtTDcAeFrMohI3CLriBVmT9N1ye0eMZlQxxP5J4QuXzfpn7uZmz8iQHQoqNlvEzV2u69Won8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749106543; c=relaxed/simple;
-	bh=BNT2EU7DDjsNuCPdkeDmo7wds9jKjVE7XJWO06NNEcE=;
+	s=arc-20240116; t=1749106544; c=relaxed/simple;
+	bh=0j5gYjKOZOgxpjecfrLGjbWTh//vv70qPSNPVWr+hWY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sisY+gKfyqb0rnqkp7jjQzQHor3hPsEeqq53jeIQd09c9QzmsdpOseVaB/tMj1/uMxVpmfg/nlbMpnc6vfzcVfKiXXIhtm4rf2SzwRCvibp1wmjGPi5FlkZJc91N0rlSuWj6qfx0/6QPcI8jmTq9rKQRgY9CbKTlDBCpCLH+Nqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TggLlj92; arc=none smtp.client-ip=209.85.221.48
+	 MIME-Version:Content-Type; b=HBVgkfklcVQLxT7n4vqlGA3D/1Rm2blI2jPfXVMglallm1/lvvvOnw0c/rWWnZgy+68ZQId2wFSBSmwnDMQd3fkO90wq/0C9MsUT7PS3eSeSR7oVKPMyFtl+layFTUEAFtO5x8mgEpxa36JemIDU+On0j6Ntw52UHOBoF4s4JcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bQPEMzmx; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TggLlj92"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a35c894313so519827f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 23:55:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bQPEMzmx"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a5257748e1so416437f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Jun 2025 23:55:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749106540; x=1749711340; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749106541; x=1749711341; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Oyx0ftJ64FlzpC17BLoghE0ntQMOF4o150mtfRdZYiw=;
-        b=TggLlj92uqBqazF7/rtmwKy1oGR0SpCXGIyEaSpGtM4LkAC7gyAuhOwMCukNjiV4JT
-         1X9jyzfB6UB7GawCbfBH0aegxasemTQWvg7lKRgQpVGS8t1okCqvr0XsuWMz1UOAhQ4y
-         PthPXrjS3whPb5iPG228PWER01oKKn1lGXDdq7LOsFIA4Yb0G3mRQZWr6HfEi7WeZhQn
-         KLaNLaz8qt1e5uV/zg+FiNutqw6jj2xf7XmSOlIR9nT5v1hGhdCN3MRc6O1ZFBwlX+z7
-         aWyNEBKqcICKwgdck32EKp/HtsVi4FBUZxYFoBmNDlOVntZzAsECGSANQTCh8OfbVDs2
-         pKAg==
+        bh=YTgawIlCqa6snL5rle0l3SP+UrYy+5hrMdq2H5aZTbg=;
+        b=bQPEMzmxt7JvWAxj9AecUYFR4daTtIaeBimU08YHU7p3GokGadfOko4cP4webaiu4G
+         y5Tt77h35icOEQcZSUChqGwxRDNwNUDdMueGnUIWtL/TDcqDORrkZPhVxiQa41CfTZtb
+         A7ULEdwp98Dmwo8Us6tcZ310y2NZxM61ygmo5Yt6vpP5kkHmJuuTYzG66apRkgHrqMfy
+         skUzN1qCoc1d+QVZTfwIiUf1WR5REZteVoFaeG8c0EZa8nG5q95DZSzECthEHUIyMxF1
+         kgYbJ+99m3Zqc8+UfuFgRX4ECLPO709qh2X4s4Kr4Mv8TJ5ON+/rMlyLAEn4vHauRhtO
+         NsgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749106540; x=1749711340;
+        d=1e100.net; s=20230601; t=1749106541; x=1749711341;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Oyx0ftJ64FlzpC17BLoghE0ntQMOF4o150mtfRdZYiw=;
-        b=Y5mngo1SDoVD+ZiIa1zBGUj3lRRp4e9gH90Vlk/JgnJZQdMxhJTPeZ/sjb1FGM9vZX
-         vciPqO2HV+v9yYJ+YxqfhONyI8CRTcIVgMU+cYUkxNHn05vLEy/dsM+Afcc6MFG6Ukba
-         NWvqnAsXtZ/nAV+DMqp6aR/V6VLsg4YLWygzCTbS08Q15cDJ4+OToWglwpm7VZ6OKJuT
-         9FJ4zXkQ3XzsUAPMt85Qz6YWtL7JBGae2qvGueRuJWAvhPihpqjvluKCnEILf6r6gXH4
-         SSkOjt6EDY12AWqAETmCuOlThU67/+xW0ESP//50SiV5MjFR9HDEJL/15VcnlxJVlN/g
-         0h8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVdSxLk8RAW0bKX4Q5yejVINNq7Yy3ty8vUt8aAZ7VCgr3E3yiQcAkyowTIbwoMiDIrMmyzFcI92faP+jA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNzyjlBJcmgbtybA1Q+aV7MLAeXeETOO2SQgy73itxg816fe55
-	8zf2w92nyKUHfWs1ryTxdVIKppMp5xkzkHKHXF+uqW9jaS4U6Hhst5fpgEMHzqrNAap7Z0C1tlz
-	OIc6O
-X-Gm-Gg: ASbGncswiiEcTYqf3kMWfwYpGrBizdYiW7USJkE4EDv/j+snr9YxajaaqOqcmqu0DA9
-	PadI3iMeMDfUg/oDM0ibEcwDooG+W9UfwL+bZ/8OiWnG74U2ia940shem2aNo7AMPM7+7bJFUya
-	qdg/aMAhumzyLN0Y6hBNNlGGoiV52qOjhKysMqi4SfOmH3X77O47WvY8Da2rs+675vqlhwoCXYl
-	LS9eKi5jHxdLK2Nv46yUG9Po1r4+7xlTtDo15sOK1kJFkhLLV41DjWsLZ6FBrdQMAoSCn5Hbqrl
-	pDAhng2N5W3oV8GXk1/++isasOeuLYszdNFtK1J0qB8MhJsPpLTSMgZTS7egORXJ1lM4I4Kp
-X-Google-Smtp-Source: AGHT+IFrS7bC9yM6c1Umhr2I5M7bqyTsyWg+etIUGp1hD7NgyJNk9bH2qumwy99MkZcbUNMkog9zVA==
-X-Received: by 2002:a05:6000:2504:b0:3a4:d64a:3df6 with SMTP id ffacd0b85a97d-3a51d8efcc8mr4223971f8f.3.1749106539874;
-        Wed, 04 Jun 2025 23:55:39 -0700 (PDT)
+        bh=YTgawIlCqa6snL5rle0l3SP+UrYy+5hrMdq2H5aZTbg=;
+        b=Vm6d08k8MIJTZFAnoQ6OZM90ux+HsoFOPmPcZZ+a7dYhxBMTK6KLosfgVPpVe/MR8b
+         pePlog2BROrnBQZtHrCAgx6XkpdXC0qljNBUBDoBsJbYG5wHM3AdAq6h0XTg58zsCeAt
+         m1tykeLnMPsVCrWkWw+GiRoTnWBj27LeTt2IEs0HdlZYful/4xW8SRO9pTRG5Sw8g+3Z
+         HYOiMpUnr0eeguaWKpnRHS12inbU3S9Fq4qJNp3FbJ/D/yry2WQYV9jvev5lHXVHnFX+
+         ub9PvjDC1GIEf9nMJRiIm31R/vhkLLE4Dp6eivswGiO7tWkURBeed9mdDqy8WTDuh9W0
+         dFQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhbdsMC5hJXYAkgeSb3d1ccHCTFvBXzB4uE2q3xTh/eydsMIoU1ywsCkP46ho2T7kXb0gyki95sinYEnM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9C9BXgytxeam+zo7f1efvO3qNonPi4vB52nxwyS1GdONlnd71
+	hWmKGWBg//gADV5x1Xv41rF95gzvJi+H7MqUlb/mO3vT3eJxFBqw8Ub1vKKruhbKNR0=
+X-Gm-Gg: ASbGncvQmMGQEnk1IpJ0vVg2Z3ctoS31ahnBzgvbzp2KN4RT7AqCbvOiTlVcNJ2Ugl9
+	EAeT5YWkOmacEWRWrGjrIiU9Cf4g2xadq9vc/1ZgCuWhD8xsJPCCyaj23lPv+f9HAZe7MbOhuVC
+	q+MFrJJr+YqSll87R10trX7kKt14AbSvo3XXJBH0ZXZsXOmifzcWC+E7fd2rVEmtRKxqOxfISMh
+	17nMEPLQT4TPz6j7YM/FweK4cOQG6KLvShF57qwHcRZkC9x4ThG9QWd6RlFCzJIPq9ksTnp1G3P
+	MjGAflyDTGGEkk3SnuvYWdSy7/AgCUBKPkbP8xVtbCPQK1s84gxyMBUxcrH0ITt8I5iKteaL
+X-Google-Smtp-Source: AGHT+IEL+6tBVVRvp0xx1uUE5vKVrbbEUAQcz4JgR/37DUDVvCUG2yUMzTiEh2o7sHCW73N+Ae3r9Q==
+X-Received: by 2002:a05:6000:26d3:b0:3a3:7387:3078 with SMTP id ffacd0b85a97d-3a51d8f8ff8mr4161811f8f.4.1749106540703;
+        Wed, 04 Jun 2025 23:55:40 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a526057278sm1910099f8f.63.2025.06.04.23.55.39
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a526057278sm1910099f8f.63.2025.06.04.23.55.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 23:55:39 -0700 (PDT)
+        Wed, 04 Jun 2025 23:55:40 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Abhishek Tamboli <abhishektamboli9@gmail.com>, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, 
+To: Jessica Zhang <quic_jesszhan@quicinc.com>, 
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-In-Reply-To: <20250519133345.257138-1-andriy.shevchenko@linux.intel.com>
-References: <20250519133345.257138-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] drm/panel: ili9341: Remove unused member from
- struct ili9341
-Message-Id: <174910653899.1422723.14584247273343467171.b4-ty@linaro.org>
-Date: Thu, 05 Jun 2025 08:55:38 +0200
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Michael Walle <mwalle@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org
+In-Reply-To: <20250520074439.655749-1-mwalle@kernel.org>
+References: <20250520074439.655749-1-mwalle@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: display: simple: add AUO P238HAN01
+ panel
+Message-Id: <174910654001.1422723.810101462867818295.b4-ty@linaro.org>
+Date: Thu, 05 Jun 2025 08:55:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,15 +86,17 @@ X-Mailer: b4 0.14.2
 
 Hi,
 
-On Mon, 19 May 2025 16:33:45 +0300, Andy Shevchenko wrote:
-> struct device *dev from struct ili9341 is not used anywhere, remove it.
+On Tue, 20 May 2025 09:44:38 +0200, Michael Walle wrote:
+> Add AUO P238HAN01 23.8" 1920x1080 LVDS panel compatible string.
 > 
 > 
 
 Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
 
-[1/1] drm/panel: ili9341: Remove unused member from struct ili9341
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0f9c561a7a63ec0a7d69c227b090ee6defa45d35
+[1/2] dt-bindings: display: simple: add AUO P238HAN01 panel
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/a3bc2ee00b488bb7a90770447a886c678d64756a
+[2/2] drm/panel-simple: add AUO P238HAN01 panel entry
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/8a45632ed3179995b2956cfbf140655701301471
 
 -- 
 Neil
