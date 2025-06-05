@@ -1,38 +1,38 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8279B84E1C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8287415746F
 	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:35:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749141364; cv=none; b=XODpDKtA064wVlpz/0/DlgfN8cOBoDmqqkRGZKcx+K31xrX/mCAf8b7ufccIeY4QO3OhTtQJ7xV1tFI5rU7PRp0LFaBmiKa+OjsYwB+ar7T86l0URpFxrWk+DRmUl1tjlGBgXmbb6PWTBqxP7NjgSl2jM3Q4E4kNL15t7ifoF64=
+	t=1749141364; cv=none; b=bbNLEQaSmvITSrvnGI7DRrCwTBXMIzEgIa9l8VQcR+kfgQEJhD3wxs4Pi86w2w45BnPe9sv+ZujZgt8WCfCCNlvcZXnr2gIWSjQq6onfTFOdRp00+mg4U7iLEwEcR0TSQd5uDXsBTXF4UJfPeNer3qS5nYyypOU6lh8k1BEWsKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749141364; c=relaxed/simple;
-	bh=25nE3AP6G/VH0ulig6Pf87unBvwnVISmhX6u3B+80Rk=;
+	bh=dIU2IPQXRRDph6JR52vMNSkMkpJZDqBmw+laGUXhAy4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n6xEYWWpXo2bAH1C0JPUVugibcnW4Mw2CPMTNasrxwxUSqNaXNgKukCI8GH7O3ULNe+Qybc40zlE+O62K4DECeV28aWfpeTrj3jnGtURjxgvNmY6RbSerCRvlsfWa2npuLWA+3FZid+5kGrcSKBHbJoBagRKOOl6cxFAyBCq7PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=YZSE4cZM; arc=none smtp.client-ip=96.67.55.147
+	 MIME-Version; b=UydutReJAt2qBd/8pmxaqu5d1Ksm2+JyB/x0tuIdR+ck0qj8YFE349E4Ydv45urCl0rqYoWRWZYzig4Pwg86rxn+dbonXGvCdReIIFgCPQN6BspqlVlDjme+k4WcT3uMA6P7Hgt7FANIUVJzdc3ZM1baZdlFMjYX8kFptQEOFOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=m0u+Q9Tf; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="YZSE4cZM"
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="m0u+Q9Tf"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
 	; s=mail; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=ns8Xv98DYTXn1XvQ4Hh9ILsDIPyjR4wi8vgj74UOuo0=; b=YZSE4cZMuEyy/ZGdbe4TPopc+t
-	FJgE21DpYqbfrE4Ee6vXz1YtjoL27HDzkOsTIQhBOebUlYieZabacXcIfvPj5dZKE4GYForzu2VPB
-	ZrUJZHyYbCQDXNJ8nhsnji7ESBXXYT1F9JsGG3Y4XL+ixd14r6OI37YVo7qlRk+LtPDp7WZBd9Tts
-	dOvJeS6f0kSQOWrC8s+/2HgoLJNLiu6U8hB1jQFgLiYMM6yXwkH60XRGY0a0GSL9tegxz6xt4yC4r
-	8l9FaIQFRLK9KaD9OlwpRaDc0eOJOsR/I9sAmfl53/yx2tGSQ0eVxq+z//AhZkeA7tS9zTK6//l5w
-	3epVskog==;
+	bh=abUxIwN6dE9IQKt0FIPVCZFxzLCAfWpqcU4Ho5sOehU=; b=m0u+Q9Tf8WMBaC6AbPKIPDrSQl
+	D6rR2M40yJSKDpdQDe6CoWUWR51tpXkR5opuDcrvA2rPi9QrzenUUd2YFMwGORpeZU6RRwcvVnpjw
+	U8821RnIGv9JbSci8jRZG6ebSaYnOTdkOlxJFU3aLMDvm+K7toWWd1KKTxTlX0B8pFTTY/KaUJavu
+	EWuJMQnfm7M1CuCvkuBHRaFWuxYnab4PzTEwqx4TDa9HFUBSRWEwXUINLKFKQcdrJzMmA+hu8WBeF
+	Rj1BHOHkvx7IWUiwM86JuvtT3mAEYVcLtN6UKZu1CERX4CyNPNfNKUfeconYIUE0CxjsYSi2baKpW
+	kOE5P39Q==;
 Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@surriel.com>)
-	id 1uNDZC-000000002qg-3faA;
+	id 1uNDZC-000000002qg-3MhL;
 	Thu, 05 Jun 2025 12:35:46 -0400
 From: Rik van Riel <riel@surriel.com>
 To: linux-kernel@vger.kernel.org
@@ -45,11 +45,11 @@ Cc: kernel-team@meta.com,
 	nadav.amit@gmail.com,
 	seanjc@google.com,
 	tglx@linutronix.de,
-	Rik van Riel <riel@fb.com>,
+	Yu-cheng Yu <yu-cheng.yu@intel.com>,
 	Rik van Riel <riel@surriel.com>
-Subject: [RFC PATCH v3 6/7] x86/mm: use RAR for kernel TLB flushes
-Date: Thu,  5 Jun 2025 12:35:15 -0400
-Message-ID: <20250605163544.3852565-7-riel@surriel.com>
+Subject: [RFC PATCH v3 3/7] x86/mm: Introduce X86_FEATURE_RAR
+Date: Thu,  5 Jun 2025 12:35:12 -0400
+Message-ID: <20250605163544.3852565-4-riel@surriel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250605163544.3852565-1-riel@surriel.com>
 References: <20250605163544.3852565-1-riel@surriel.com>
@@ -61,104 +61,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Rik van Riel <riel@fb.com>
+From: Yu-cheng Yu <yu-cheng.yu@intel.com>
 
-Use Intel RAR for kernel TLB flushes, when enabled.
+Introduce X86_FEATURE_RAR and enumeration of the feature.
 
-Pass in PCID 0 to smp_call_rar_many() to flush the specified addresses,
-regardless of which PCID they might be cached under in any destination CPU.
+[riel: moved initialization to intel.c and disabling to Kconfig.cpufeatures]
 
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- arch/x86/mm/tlb.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ arch/x86/Kconfig.cpufeatures       | 4 ++++
+ arch/x86/include/asm/cpufeatures.h | 2 +-
+ arch/x86/kernel/cpu/intel.c        | 9 +++++++++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 39f80111e6f1..8931f7029d6c 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -21,6 +21,7 @@
- #include <asm/apic.h>
- #include <asm/msr.h>
- #include <asm/perf_event.h>
-+#include <asm/rar.h>
- #include <asm/tlb.h>
- 
- #include "mm_internal.h"
-@@ -1468,6 +1469,18 @@ static void do_flush_tlb_all(void *info)
- 	__flush_tlb_all();
- }
- 
-+static void rar_full_flush(const cpumask_t *cpumask)
-+{
-+	guard(preempt)();
-+	smp_call_rar_many(cpumask, 0, 0, TLB_FLUSH_ALL);
-+	invpcid_flush_all();
-+}
+diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
+index 250c10627ab3..7d459b5f47f7 100644
+--- a/arch/x86/Kconfig.cpufeatures
++++ b/arch/x86/Kconfig.cpufeatures
+@@ -195,3 +195,7 @@ config X86_DISABLED_FEATURE_SEV_SNP
+ config X86_DISABLED_FEATURE_INVLPGB
+ 	def_bool y
+ 	depends on !BROADCAST_TLB_FLUSH
 +
-+static void rar_flush_all(void)
-+{
-+	rar_full_flush(cpu_online_mask);
-+}
++config X86_DISABLED_FEATURE_RAR
++	def_bool y
++	depends on !BROADCAST_TLB_FLUSH
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index ee176236c2be..e6781541ffce 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -76,7 +76,7 @@
+ #define X86_FEATURE_K8			( 3*32+ 4) /* Opteron, Athlon64 */
+ #define X86_FEATURE_ZEN5		( 3*32+ 5) /* CPU based on Zen5 microarchitecture */
+ #define X86_FEATURE_ZEN6		( 3*32+ 6) /* CPU based on Zen6 microarchitecture */
+-/* Free                                 ( 3*32+ 7) */
++#define X86_FEATURE_RAR			( 3*32+ 7) /* Intel Remote Action Request */
+ #define X86_FEATURE_CONSTANT_TSC	( 3*32+ 8) /* "constant_tsc" TSC ticks at a constant rate */
+ #define X86_FEATURE_UP			( 3*32+ 9) /* "up" SMP kernel running on UP */
+ #define X86_FEATURE_ART			( 3*32+10) /* "art" Always running timer (ART) */
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 076eaa41b8c8..f5cac46e1b91 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -335,6 +335,15 @@ static void early_init_intel(struct cpuinfo_x86 *c)
+ 	 */
+ 	if (cpu_has(c, X86_FEATURE_TME))
+ 		detect_tme_early(c);
 +
- void flush_tlb_all(void)
- {
- 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
-@@ -1475,6 +1488,8 @@ void flush_tlb_all(void)
- 	/* First try (faster) hardware-assisted TLB invalidation. */
- 	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
- 		invlpgb_flush_all();
-+	else if (cpu_feature_enabled(X86_FEATURE_RAR))
-+		rar_flush_all();
- 	else
- 		/* Fall back to the IPI-based invalidation. */
- 		on_each_cpu(do_flush_tlb_all, NULL, 1);
-@@ -1504,15 +1519,36 @@ static void do_kernel_range_flush(void *info)
- 	struct flush_tlb_info *f = info;
- 	unsigned long addr;
- 
-+	/*
-+	 * With PTI kernel TLB entries in all PCIDs need to be flushed.
-+	 * With RAR the PCID space becomes so large, we might as well flush it all.
-+	 *
-+	 * Either of the two by itself works with targeted flushes.
-+	 */
-+	if (cpu_feature_enabled(X86_FEATURE_RAR) &&
-+	    cpu_feature_enabled(X86_FEATURE_PTI)) {
-+		invpcid_flush_all();
-+		return;
++	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
++		u64 msr;
++
++		rdmsrl(MSR_IA32_CORE_CAPS, msr);
++
++		if (msr & MSR_IA32_CORE_CAPS_RAR)
++			setup_force_cpu_cap(X86_FEATURE_RAR);
 +	}
-+
- 	/* flush range by one by one 'invlpg' */
- 	for (addr = f->start; addr < f->end; addr += PAGE_SIZE)
- 		flush_tlb_one_kernel(addr);
  }
  
-+static void rar_kernel_range_flush(struct flush_tlb_info *info)
-+{
-+	guard(preempt)();
-+	smp_call_rar_many(cpu_online_mask, 0, info->start, info->end);
-+	do_kernel_range_flush(info);
-+}
-+
- static void kernel_tlb_flush_all(struct flush_tlb_info *info)
- {
- 	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
- 		invlpgb_flush_all();
-+	else if (cpu_feature_enabled(X86_FEATURE_RAR))
-+		rar_flush_all();
- 	else
- 		on_each_cpu(do_flush_tlb_all, NULL, 1);
- }
-@@ -1521,6 +1557,8 @@ static void kernel_tlb_flush_range(struct flush_tlb_info *info)
- {
- 	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
- 		invlpgb_kernel_range_flush(info);
-+	else if (cpu_feature_enabled(X86_FEATURE_RAR))
-+		rar_kernel_range_flush(info);
- 	else
- 		on_each_cpu(do_kernel_range_flush, info, 1);
- }
+ static void bsp_init_intel(struct cpuinfo_x86 *c)
 -- 
 2.49.0
 
