@@ -1,199 +1,86 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEC01EEA40;
-	Thu,  5 Jun 2025 13:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F1322F765
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 13:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749130248; cv=none; b=Y4/B9hwr/sOYrrlS7K5CuSGKNEOwPoJ74XMQAuo3S05pnAh2beBY90uQZ0io3AfMUtxXXw2lcn+f4rjEWu6r8o1L117a+rxbB9Rj07atXGcwomhbdo8Lf8DZLGCQfm2X7ZE8faFl14jUBeY6bYpwMYkHHAagtAUJwC7J2q7mRhE=
+	t=1749130313; cv=none; b=TGH0f32r1Y/hE828VUBWY1z0Q/+yWEEzcVWp696PRYqFQ+Dmoy528EmHlcaDy4NzV6mWIhrZWhcyGHpN9/w9CSfBk9Uy88hc1JeQWKPyU59kFNcvyCKqa47XOl9xI9JJUcLn0daNJxPHnDs6BpDh7ygsopRYsG0s+sttU+if56I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749130248; c=relaxed/simple;
-	bh=NMWEAjEnzZjApTVwiRgXnucHoBIYdvfSZ3X1Z3+VKyg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DWxBdmk0VtogsSdyJrwME7OJgLqBddsxMhDsHpMh8IbzVKo0M2hntHKQNTgVvmpzkxIpRlBXEMb8brkz19Hc4ZzSYtvRHC55/PQkWYfEO5XH/MS5RDsf9OjOXLMe8G+9XZe7ELw2uDmb7TGxNt7HKluWPvly6NSFk+dd6DYlxq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LIpvC2Un; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749130313; c=relaxed/simple;
+	bh=3Xp16Ul5W2xdqpl8OIkvkRsLmilUb5eDdkpE06xCKR4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HBhpIY7qfLV9xhiSoLnAqow3bFzoV0ETgi6uaWBFGiZN2vnvIIegPW5EcA59opDIlPuod/8cQv4tHa6T5OYLVHoebdrluXI4epE9tgX1rqmkczFAxnmHsU9IrqX1t6mCVaFxb3e7p8WrWGQxKIgJro5xL7VrFbwhJ7P9UlBtaDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZTgtrG+p; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIpvC2Un"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-552206ac67aso1131995e87.2;
-        Thu, 05 Jun 2025 06:30:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZTgtrG+p"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32918fe5334so10050221fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 06:31:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749130244; x=1749735044; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ELiHfGb3gJOhYFEbnYSWkZyihCqMCFVCR+nZR19Yl7U=;
-        b=LIpvC2UncqevOqLQUuBC6hyAKIma4AlaQrkkQ0KSPUuoWvKSD467CV6hl2qwEaiwBV
-         uO3B9RsLC53nO2qkxnfCdVsgDZLYip16GFffMSQoMAQrVNOPi0cu1Q8+6A/ekM5BtHYh
-         G2297mFR4miNiTp26BsfnEHjusne4HdoKFl5p4mCRdJPPJmOuFoswIboH9fWuc1Wvr4v
-         3AbHvVNMpoqGbDJUoq/l+oMbzf4CNBwtIaD5vjh0qvUaYmUMAYlkmWCmLa+g4enbK8Xo
-         WzPOCctXzG9zpaEWiLCQNEc1tzprMQDpTR4pvjy6uWbgjgANvX8ju8mMfwhwpbag8lKS
-         Kx7w==
+        d=linaro.org; s=google; t=1749130309; x=1749735109; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3Xp16Ul5W2xdqpl8OIkvkRsLmilUb5eDdkpE06xCKR4=;
+        b=ZTgtrG+pCz+16QVRtN3gJYSXhZaVSvIuOEx9hh4+3y7ImKdbCNdu3jdznAuDhBm90y
+         TSBGxiQP0Jd1xwSeZwlwrr5r+NZXG5EworM7T+9NAhkaIHI67GtG+q6lwN7wKdVf4v1g
+         ljSNnA4AU6pYtWavPYG7H4RhDQwEQrYz3z2ye57FgDwEhMBBqo/oF6KTO5mKEvl0Dpja
+         fM+gJu/x53Wj0f+GC1zLxBP+KhkBpQrNw7bC9Herh4sHf5rHNQ+ETT51gTHzDz48h1qK
+         qgbvmOpP8kK7G3csEC8bqA0+KeNXHOnoxw28UKW+RQCsd9VZYk2fVhC97CjBHlHGvTQn
+         vxLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749130244; x=1749735044;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ELiHfGb3gJOhYFEbnYSWkZyihCqMCFVCR+nZR19Yl7U=;
-        b=bNAvMELn54CA/hrUssYbUL2xC1NgrjbaNDQvzqXc4Cp39xfZ6WCjgQtt76bxlpIWYb
-         09TYS1rIxHPPf+9G3mMtrjTO4IPpRfJ+TcMP2N4oc4Zuc0bsDuHps8LdbKK6ebsbqZep
-         I/j51/HS6lj8oR1/MXLlqB2In0G5feVn5Y2i6/HeJVg8Rd3rPlF9VIpckDKDqR7XFLaO
-         M3bnMyTrQpbDvgjzSOb8iuKnELHceoazF29PtxtQDtdF+4XE0v/cdslISs6HFZmzrTEs
-         Yyz6Wsx1E5bYvZuR6LZC4s3kXtMygQfylcMbBHRBZhMsK73sIl6BzGYESlNLVCCcUo1j
-         +mgg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0LAchqcUSyisjMeB6ZJKrjilyY+3Gy8ZSIg8Zymm7iuKUteNqGSaCvbUN6/r1Gu4aRMq5nF4Zx5KLKEk=@vger.kernel.org, AJvYcCW2AZogBlBA/7MQkcqN0iy1cHYtbiqOytPVwgNmSIltWALX2g0+RmB5n8FdfkCfcTABpEs0RHZMGsQsPJHDN/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNvcGytqNTGYiJ9CnKQR5fxzJNXpWt2qDR+dRAGkpfCFZv2OVk
-	M6e5ZBaJx8XHesCZC1tzsqJH6MoBxzEhCVKMNPoriiLVerRAB/SSyIE/
-X-Gm-Gg: ASbGnctHhONXJcjj7k1l9m38K4kAha1OCBDJp53+N18SfDA2vZ5WDU05yjePNz1TVba
-	ZlsXKhsiGC2NUyvapunNxqUt1JNRAOgTDOlDV10fig+LEhNOJfbZ5Z8Th8g9W9gSJ3EiEEm1aKO
-	r7t2qVa/mGpXtzos5qwt9cq0cJXWRB8xiIrnZmFW25XsOTxBq/eKZ6tF5xIOQ6kEJFDk5IbujQ6
-	44lYV2dGxYqlNmHWekw6f+4ZsQJzTcYY5Qhwd7OnRpAX+UQs7AI1idjvn+R6rc+RV+URux5yEPD
-	mXO98S9IcHeAXwRjnY9WGVCe89dIPPu3uEQU2rf6wfJKUfQBQTJcvFSB+pXFAA9oesFCJaK6Q43
-	Z+FMmyvkZyMf83OrJScP9+M7Rm/fG
-X-Google-Smtp-Source: AGHT+IEF+PITkMRWLVOjyJ0cqd4cnK3Xcxhp4Mve7qYR67GwKQOBFCd8LgQs47YQTlm7h85zXe3RRQ==
-X-Received: by 2002:a05:6512:ea0:b0:553:2f57:f8af with SMTP id 2adb3069b0e04-55356bf152amr2102514e87.20.1749130244273;
-        Thu, 05 Jun 2025 06:30:44 -0700 (PDT)
-Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5533787d325sm2605610e87.49.2025.06.05.06.30.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 06:30:43 -0700 (PDT)
-Message-ID: <27e17dbf-df6a-48fc-a652-ad48a776f668@gmail.com>
-Date: Thu, 5 Jun 2025 16:30:42 +0300
+        d=1e100.net; s=20230601; t=1749130309; x=1749735109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3Xp16Ul5W2xdqpl8OIkvkRsLmilUb5eDdkpE06xCKR4=;
+        b=NfgZQJQfEzkxb5ShV3dYE9cM+ksV3vUuUKzOizWTOKIma0Cwyxbz2MZN8JgArFBsqZ
+         rAwISFFxBEpX5tNAzks7T8EP5zkgiVnLhh28mYxJ7VxvDS5SR6dQstNcKSp1sy9Z3kPV
+         rWQaMVNkJDPzOOmQZ5aV96jbGIhJmppysz2siF7SA4hpwI9sDLM3bu7B0KiF6cFPpp4F
+         NWQBs12SWrwx33NB8Mvq6f3AHzBrZiNamF412/SMFiYiIWYOFXH3Pk+gayHNS74gYqPf
+         KpoUQnRj8acNB2+g3OYV3o9yTwCZ4lKQFIQCBvRvep0lvHo4Cx3GmL2QKb7KkxSUXp++
+         86jA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDAeLmRSJHIPTgzsh2IPuHiASfe+lotsaDoBGBrrWPBk4mfSwzkn988zlmDN0v5AUGGe2UK5cyF2Ka+C4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVThcwEdKz3BbbEerehMG7zUwRy9U/5FibH81TpUocBlti1wR4
+	Xgnzk5iJzHkyD8ZTgryn0Vd5W1Bm/s9k05JqdJdEavMBrPM7KtKi3WVj3rfQoQB4ulVSaEs8hO4
+	0yCKkgbECBCuXlvNwdxOMl0bIgW4aEDy7/Ty6zhIUyg==
+X-Gm-Gg: ASbGncsSTjPqMLa5guuA7X8ZvqJ6/s9Ll8s/Eb46f/xpF9picFCZc35qtyvd+vOgmfB
+	7muoMKhntjdr78dQqZPWy8rLwnZE5v4nPKCHe8Lc7fvzwEcXZSVJQ4JzOBAp9xQzudy05KIWD05
+	xwEQJA6n31aAOcxwSvExcDXO0p4jiuD6ar
+X-Google-Smtp-Source: AGHT+IHSnKSDNQUJOOGzj78O2oKNC6lGuJm7j4wb7PTPZDyANZnfX0CVuXsuVoOMf6kUNk+ATNKuvBm/XvtBIQhaxeY=
+X-Received: by 2002:a2e:ae13:0:b0:31c:31a7:4679 with SMTP id
+ 38308e7fff4ca-32ac7258010mr17887721fa.37.1749130309416; Thu, 05 Jun 2025
+ 06:31:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
-To: Alexandre Courbot <acourbot@nvidia.com>, Lyude Paul <lyude@redhat.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-Cc: dakr@kernel.org, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
- rust-for-linux@vger.kernel.org,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
- <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
- <20250529004550.GB192517@ziepe.ca> <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
- <95ff963ddabf7c3cd2cfd07d0231a0073ff6847e.camel@redhat.com>
- <DAED5BUK7TUQ.4JRHFMWZ99W3@nvidia.com>
-Content-Language: en-US
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-In-Reply-To: <DAED5BUK7TUQ.4JRHFMWZ99W3@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250531195801.3632110-1-andriy.shevchenko@linux.intel.com> <20250531195801.3632110-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250531195801.3632110-2-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 5 Jun 2025 15:31:37 +0200
+X-Gm-Features: AX0GCFsbnofQ22BvZl1sODGZD9DlgA1gYR1ngBlv5uhGKV5q5X97cgJTuxkbKFE
+Message-ID: <CACRpkdZhBDCZi=-wdK=tNhgt+K=jjgScF+7FMN_Q=ge6eRrJxw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpio: Remove unused 'struct gpio' definition
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, May 31, 2025 at 9:58=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
+> There is no user for the legacy 'struct gpio', remove it for good.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 05/06/2025 08:51, Alexandre Courbot wrote:
-> On Thu Jun 5, 2025 at 3:21 AM JST, Lyude Paul wrote:
->> On Fri, 2025-05-30 at 23:02 +0900, Alexandre Courbot wrote:
->>> On Thu May 29, 2025 at 9:45 AM JST, Jason Gunthorpe wrote:
->>>> On Thu, May 29, 2025 at 01:14:05AM +0300, Abdiel Janulgue wrote:
->>>>> +impl SGEntry<Unmapped> {
->>>>> +    /// Set this entry to point at a given page.
->>>>> +    pub fn set_page(&mut self, page: &Page, length: u32, offset: u32) {
->>>>> +        let c: *mut bindings::scatterlist = self.0.get();
->>>>> +        // SAFETY: according to the `SGEntry` invariant, the scatterlist pointer is valid.
->>>>> +        // `Page` invariant also ensures the pointer is valid.
->>>>> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, offset) };
->>>>> +    }
->>>>> +}
->>>>
->>>> Wrong safety statement. sg_set_page captures the page.as_ptr() inside
->>>> the C datastructure so the caller must ensure it holds a reference on
->>>> the page while it is contained within the scatterlist.
->>>>
->>>> Which this API doesn't force to happen.
->>>>
->>>> Most likely for this to work for rust you have to take a page
->>>> reference here and ensure the page reference is put back during sg
->>>> destruction. A typical normal pattern would 'move' the reference from
->>>> the caller into the scatterlist.
->>>
->>> As Jason mentioned, we need to make sure that the backing pages don't get
->>> dropped while the `SGTable` is alive. The example provided unfortunately fails
->>> to do that:
->>>
->>>      let sgt = SGTable::alloc_table(4, GFP_KERNEL)?;
->>>      let sgt = sgt.init(|iter| {
->>>          for sg in iter {
->>>              sg.set_page(&Page::alloc_page(GFP_KERNEL)?, PAGE_SIZE as u32, 0);
->>>          }
->>>          Ok(())
->>>      })?;
->>>
->>> Here the allocated `Page`s are dropped immediately after their address is
->>> written by `set_page`, giving the device access to memory that may now be used
->>> for completely different purposes. As long as the `SGTable` exists, the memory
->>> it points to must not be released or reallocated in any way.
->>>
->>> To that effect, we could simply store the `Page`s into the `SGTable`, but that
->>> would cover only one of the many ways they can be constructed. For instance we
->>> may want to share a `VVec` with a device and this just won't allow doing it.
->>>
->>> So we need a way to keep the provider of the pages alive into the `SGTable`,
->>> while also having a convenient way to get its list of pages. Here is rough idea
->>> for doing this, it is very crude and probably not bulletproof but hopefully it
->>> can constitute a start.
->>>
->>> You would have a trait for providing the pages and their range:
->>>
->>>      /// Provides a list of pages that can be used to build a `SGTable`.
->>>      trait SGTablePages {
->>>          /// Returns an iterator to the pages providing the backing memory of `self`.
->>>          fn pages_iter<'a>(&'a self) -> impl Iterator<Item = &'a bindings::page>;
->>>          /// Returns the effective range of the mapping.
->>>          fn range(&self) -> Range<usize>;
->>>      }
->>>
->>> The `SGTable` becomes something like:
->>>
->>>      struct SGTable<P: SGTablePages, T: MapState>
->>>      {
->>>          table: Opaque<bindings::sg_table>,
->>>          pages: P,
->>>          _s: PhantomData<T>,
->>>      }
->>
->> Hopefully I'm not missing anything here but - I'm not sure how I feel about
->> this making assumptions about the memory layout of an sg_table beyond just
->> being a struct sg_table. For instance, in the gem shmem helpers I had this for
->> exposing the SGTable that is setup for gem shmem objects:
->>
->> struct OwnedSGTable<T: drm::gem::shmem::DriverObject> {
->>      sg_table: NonNull<SGTable>
->>      _owner: ARef<Object<T>>
->> }
->>
->> So, I'm not really sure we have any reasonable representation for P here as we
->> don't handle the memory allocation for the SGTable.
-> 
-> Maybe I need more context to understand your problem, but the point of
-> this design is precisely that it doesn't make any assumption about the
-> memory layout - all `P` needs to do is provide the pages describing the
-> memory backing.
-> 
-> Assuming that `_owner` here is the owner of the memory, couldn't you
-> flip your data layout and pass `_owner` (or rather a newtype wrapping
-> it) to `SGTable`, thus removing the need for a custom type?
+Good riddance.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I think what Lyude has in mind here (Lyude, correct me if I'm wrong) is 
-for cases where we need to have a rust SGTable instances for those 
-struct sg_table that we didn't allocate ourselves for instance in the 
-gem shmem bindings. So memory layout needs to match for
-#[repr(transparent)] to work
-
+Yours,
+Linus Walleij
