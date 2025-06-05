@@ -1,188 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41AB713D521;
-	Thu,  5 Jun 2025 17:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646BB27602F
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749144429; cv=none; b=iQn6dMt/s2nNoXI1VxO5xNF6zjni9Cr8IkB19QefcK+7drDATf5hOIQcwMHMnzwQms+KPvhzdPTJY4VniXyG9AuCeCdND+WQRB24nC62UbFQqwGUmtW9X5G0JkjMj7UlOitWQPN87YOOXFOsxETyVYybir8xIl3mU/JdlE282Ok=
+	t=1749144450; cv=none; b=Xis5RFaPH+p56pSu78vJdAX/ki+z743vQfvUf521GF+VdaLyEIAyao35VkSB7eBCY1AQrWDofHAal8wG8AW6/Nz6nquqld185iHgqmLvKcbAYXPhjGA9sM+8p8uqS+gU8OhWVHFntC7E6zFFNHE5T+UcmRcwJo6kAUe8NC1Mhqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749144429; c=relaxed/simple;
-	bh=qhhsf28tLC9W5bYRZe+HBHM2rQskAaB3uTZkwcVqSRU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=J2r1q/tHznr5ALQ2TKaWB+ju+qTY7iOmqD/C1jsgEmsthnznP7SJCSf/N5SmBro10evLPePFsndVop3OVtZbPuCWtmQShkCiJrtNB6yZy3Mvg2z+9FvNUHEwql2cXSryeW8XX4GlFERalfsyYYZj7MkaXxPCeGq22KLnSBr+hqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sr4HCN+W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749144450; c=relaxed/simple;
+	bh=dhkkN14WgrUSmUyToafAh2FH0ICjxxpgvf6bFXL0f4Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LZEtZXe5sZBgqL2EyyksRoYTAF74Dq9EHEisU14MQvSZO59PQoH8TR5izZfENWwnQ7LXWwWmnnX/jx72ddks5HF+UDxLnJH98ZpSxW5AV0gNyPXPa10tt/LjJKQHTdYl9NP7qXgHMdfm+JJvzN2Y8KbkHh1QVCJZv7BRtkl702M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mAN+pzXT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sr4HCN+W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 927A2C4CEE7;
-	Thu,  5 Jun 2025 17:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749144428;
-	bh=qhhsf28tLC9W5bYRZe+HBHM2rQskAaB3uTZkwcVqSRU=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=sr4HCN+WmvEP9chhht8q/IMJHxYfjspTZmTUpJQ6KyFPYCFSRYzanSS1cgwL/qISL
-	 uVS2yawsSNjMvDmCHM5CElEKfF2+gCaBHSPlRuqzgz8PZ3PGBRHOz9+5RGsISO9eY0
-	 5f7TjVBepBMdgVdSkXejubTfSpuCN8dqZNu84qC/Yzr1wNp+CefhcBQ4TDOEe4U8gd
-	 0CW1TsF4YLLlUnzs9QMzi5TZ1uwBCSouVtPMUs0GZl/JG3aiH/Vot7s+XYC5rwXWC/
-	 qNLNv9gsqUi9krChdvfzRXACBZIjpcDwKiLg9ovr+xMsP4h8xSeQ9U1xJLDNHeALGZ
-	 KuPRTv8DPXbbQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mAN+pzXT"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5559DtDO013323
+	for <linux-kernel@vger.kernel.org>; Thu, 5 Jun 2025 17:27:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=3xm6VfkW3b6R38nakzaF1b
+	bb+wxJ3bDtlf6fYnH8p0s=; b=mAN+pzXTJGnZmz6vpc4N99ETncv0WEUDRZfqIU
+	1D1gSo9quyNrZmgOT5xChLi+cfSz6gqeaWO8BSNjGw6hgus75I1tGQ5jUP2Lueo0
+	S2V7lRjr6OzVucm26L9jQ378pBe4xNVmFy+ijV7IWW96VDho4/Yx58IKv63MLzSF
+	lI4yRMLai/jhLly5duCJwJB8Gb57FeWmoNH3e1OWq36p6I0L/HLi2EOpoUZOx1i3
+	jWSvOglXv5QozxII9s7lfK9VfF/LYF5maf10rQ36FoB7fPZh63YOQmZZ5EBWmGyB
+	jHdjibXScpRMy4UecsX2UvLG5jY7NXeTAbV+JCWhojo+7mMw==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 472be85uhd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 17:27:28 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-311e7337f26so1019723a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 10:27:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749144447; x=1749749247;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3xm6VfkW3b6R38nakzaF1bbb+wxJ3bDtlf6fYnH8p0s=;
+        b=Vc7MjaMrguaGmd6tm894sbIV3Inlpy65fLg01h6i75NW60iXbz4FHVRjOaU6mCYmK8
+         PozIsBhqKUta4yg3TEimRmUfV6xOreIq4kSnEtVSGWuwtvkd9wJKzf9D6fXvJM9VvHEc
+         UfATh5LrCBCfgZpfUxgLWwbhhVIQCD4/WceV11Zjo9iJU4bUpZP16ctmIw8hhcV2+Viw
+         CLIzPf11kcVn/foC4fd8FxpTvXpsZzvtushREPzVD7udyRgm+8pQjUbSdHoTHf4v/Ggq
+         k7tFYIrW7rv3nDwhKoaP6ltxa+DGteDvfb35q0ZKtrT69poZGK8dYB1EqfXNEm0fEfhR
+         ubZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgyyhIZlehrpD8hK186O2rcbQc9M1pkt+L8RQqhVvUDYjyf2/WGIKFw+jLLpZq1t59O9tWLEtGV0W2ix8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGZt98qCGoZuxXPcaGqomI+GajtHIgCfU0CYxH61Zud77Hh3H7
+	7Op5owKJFbkexMTvIoF0TUg+LZQtu5Q0+yhPzD2FBkvYd35kTWl8YoXx8vRkEyGqKjunD/xr8iU
+	1OshICnhhG1cBMBrwS+08F5BdPh8zUOgiyufySXBC5wH0OKaftruCi7lAK/xvhoR43QTQt/mhgJ
+	c=
+X-Gm-Gg: ASbGnctVx1kFPVLy5055t6ZVtJE+JoTWCAw1svtbUrsU/rr2C2JkrTKR+T5LaSoAGHC
+	xgKHHdkYqcP9SPR1t6vWTEv1LcWTsYCXd2hV6KvelcR1/ZNQknC3bVxzNptqqH0q/9vWX7vNL8p
+	g/u/+lNVQ2h8tG0vqCm7au1tgMHzUMffPLoUKrEitNDFGUxCvtI7CNDuswEZkGd7uz3RaEheEzk
+	9OTaAiT4P+VL+W1+W5BhTyvWCB2jRaiEWRQVnz4QGw1WSpvwnhjh8wF0bCfyMFolQLVryQXqjDT
+	aPaRGaYtU1gYE5RE9ACDUmpJQODhHluhXAqTFtDlpYy6Kwtx
+X-Received: by 2002:a17:90b:2745:b0:312:ec3b:82c0 with SMTP id 98e67ed59e1d1-31347077370mr763369a91.29.1749144447239;
+        Thu, 05 Jun 2025 10:27:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE1HoQdeZlqYAmREaJI3cP23fIbpezAsHxgeEHIl1GsrF8SpIDQpOWIH7S6MY29Twac+yzaog==
+X-Received: by 2002:a17:90b:2745:b0:312:ec3b:82c0 with SMTP id 98e67ed59e1d1-31347077370mr763341a91.29.1749144446832;
+        Thu, 05 Jun 2025 10:27:26 -0700 (PDT)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349f44c28sm11096a91.23.2025.06.05.10.27.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 10:27:26 -0700 (PDT)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Date: Thu, 05 Jun 2025 10:27:22 -0700
+Subject: [PATCH ath-next] wifi: ath12k: Fix hal_reo_cmd_status kernel-doc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 05 Jun 2025 19:27:03 +0200
-Message-Id: <DAERY78ROO76.2WSPPIC01XQ5H@kernel.org>
-Cc: =?utf-8?q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/3] rust: miscdevice: add additional data to
- MiscDeviceRegistration
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Arnd Bergmann" <arnd@arndb.de>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Lee Jones" <lee@kernel.org>, "Daniel
- Almeida" <daniel.almeida@collabora.com>
-X-Mailer: aerc 0.20.1
-References: <20250530-b4-rust_miscdevice_registrationdata-v4-0-d313aafd7e59@gmail.com> <20250530-b4-rust_miscdevice_registrationdata-v4-2-d313aafd7e59@gmail.com> <DAACCYW3QRQE.1O75L2SHJYVPM@kernel.org> <3eef5777-9190-4782-8433-7b6ad4b9acd3@gmail.com> <DADAEIT9E1R8.1J69W5DKYAQGY@kernel.org> <3c1c0563-7f48-4222-a28d-316f885bcad4@gmail.com> <DAEQ7VRHEP4W.4O0KV31IPJFG@kernel.org> <89066f83-db7f-405c-b3b5-ce553f8e6b48@gmail.com>
-In-Reply-To: <89066f83-db7f-405c-b3b5-ce553f8e6b48@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250605-hal_reo_cmd_status-kdoc-v1-1-e59f4b814b88@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAHnTQWgC/42OQW7CMBBFr4K8xiix40Sw4h4ViiaTMbYgdusxE
+ RXK3XGyZdFuRvr6eu/PSzAlTyxOu5dINHv2MZRQ73cCHYQrST+WLFSlTNVWjXRw7xPFHqex5wz
+ 5wfI2RpSorQZllO7QiEJ/J7L+uZm/BGQnAz2zuJRmACY5JAjoVvPaTeDDCjnPOabf7Zu53tA/h
+ +da1tKiaq3t2iMOzTkyH34ecMc4TYdyVvP/NGQ63So9NsYcPzWXZVneNmhgMTEBAAA=
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+X-Mailer: b4 0.14.0
+X-Authority-Analysis: v=2.4 cv=bNYWIO+Z c=1 sm=1 tr=0 ts=6841d380 cx=c_pps
+ a=RP+M6JBNLl+fLTcSJhASfg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=jmxE7Al2yye8V0ZPzYwA:9
+ a=QEXdDO2ut3YA:10 a=iS9zxrgQBfv6-_F4QbHw:22
+X-Proofpoint-GUID: HkoRUUAAlHw_VlWAty6-gmMJIX1Sw03a
+X-Proofpoint-ORIG-GUID: HkoRUUAAlHw_VlWAty6-gmMJIX1Sw03a
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDE1NCBTYWx0ZWRfXzCNg1Tzp1Znc
+ Cko0zh0In+y362iKR0JYB21CpDMnN0ESaIGz3fjBsKdhbcFrBdnhb9YDpChrLiGlkYfnc3u9uQb
+ DGmI9I0450e1rFPvl6IPiyYuNP6oqE/++gtRDuVTBp6HzIo95XHmrSj7OlvbBAIw2AMhOWVnrvz
+ eTLF0jlYIUWImZzHMhI9ASE1E+BKfqTfhHew332C/EzFMSiqzMv0bRhV6gsO7a33+Hr7Sh3lYTX
+ 7WX9ibGGbuKfiKZYjgOm37ydfuW975jenSI8GRyD4UENPxTNCG4ls4x4ldp6H5eJkio8IpnHpnG
+ jxJnTVI6J9bSo9hPOu1HxfySIsSBFt1edeGsvG+gpiP1BVfM1U8YEUbOz7Mn2IPPcw2eVfjXd1+
+ 5vzLKN/4rSser9G80CRF0baszYQ96vI6nBJghWPPqJx5QMeYnCo4Wn2hsKBlAANLJh3K+cFd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-05_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 mlxscore=0 impostorscore=0 spamscore=0 clxscore=1015
+ mlxlogscore=780 adultscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506050154
 
-On Thu Jun 5, 2025 at 6:52 PM CEST, Christian Schrefl wrote:
-> On 05.06.25 6:05 PM, Benno Lossin wrote:
->> On Thu Jun 5, 2025 at 4:57 PM CEST, Christian Schrefl wrote:
->>> On 04.06.25 1:29 AM, Benno Lossin wrote:
->>>> On Mon Jun 2, 2025 at 11:16 PM CEST, Christian Schrefl wrote:
->>>>> On 31.05.25 2:23 PM, Benno Lossin wrote:
->>>>>> On Fri May 30, 2025 at 10:46 PM CEST, Christian Schrefl wrote:
->>>>>>>  #[pinned_drop]
->>>>>>> -impl<T> PinnedDrop for MiscDeviceRegistration<T> {
->>>>>>> +impl<T: MiscDevice> PinnedDrop for MiscDeviceRegistration<T> {
->>>>>>>      fn drop(self: Pin<&mut Self>) {
->>>>>>>          // SAFETY: We know that the device is registered by the ty=
-pe invariants.
->>>>>>>          unsafe { bindings::misc_deregister(self.inner.get()) };
->>>>>>> +
->>>>>>> +        // SAFETY: `self.data` is valid for dropping and nothing u=
-ses it anymore.
->>>>>>
->>>>>> Ditto.
->>>>>
->>>>> I'm not quite sure how to formulate these, what do you think of:
->>>>>
->>>>> /// - `inner` is a registered misc device.
->>>>
->>>> This doesn't really mean something to me, maybe it's better to referen=
-ce
->>>> the registering function?
->>>
->>> That is from previous code so this should probably not be changed
->>> in this series.
->>=20
->> I personally wouldn't mind a commit that fixes this up, but if you don't
->> want to do it, let me know then we can make this a good-first-issue.
->
-> I can do it, but I think it would make a good-first-issue so lets go
-> with that for now.
+Currently a warning is reported when running:
 
-Feel free to open the issue :)
+% scripts/kernel-doc -Wall -Werror -none drivers/net/wireless/ath/ath12k/hal.h
+Warning: drivers/net/wireless/ath/ath12k/hal.h:596 Enum value 'HAL_REO_CMD_RESOURCE_BLOCKED' not described in enum 'hal_reo_cmd_status'
 
->>>>> /// - `data` contains a valid `T::RegistrationData` for the whole lif=
-etime of [`MiscDeviceRegistration`]
->>>>
->>>> This sounds good. But help me understand, why do we need `Opaque` /
->>>> `UnsafePinned` again? If we're only using shared references, then we
->>>> could also just store the object by value?
->>>
->>> Since the Module owns the `MiscDeviceRegistration` it may create `&mut =
-MiscDeviceRegistration`,
->>> so from what I understand having a `& RegistrationData` reference into =
-that is UB without
->>> `UnsafePinned` (or `Opaque` since that includes `UnsafePinned` semantic=
-s).
->>=20
->> And the stored `T::RegistrationData` is shared as read-only with the C
->> side? Yes in that case we want `UnsafePinned<UnsafeCell<>>` (or for the
->> moment `Opaque`).
->
-> Not really shared with the C side, but with the `open` implementation in
-> `MiscDevice` that is (indirectly) called by C. (`UnsafeCell` will probabl=
-y not be
-> needed, as `UnsafePinned` will almost certainly have `UnsafeCell` semanti=
-cs in upstream).
+Add the missing description of HAL_REO_CMD_RESOURCE_BLOCKED.
 
-Ah yes, I meant "shared with other Rust code through the C side" ie the
-pointer round-trips through C (that isn't actually relevant, but that's
-why I mentioned C).
+Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+---
+Note that although HAL_REO_CMD_DRAIN also does not have a description,
+kernel-doc isn't complaining. Furthermore, my analysis indicates that
+HAL_REO_CMD_DRAIN may actually not be required, so after that analysis
+completes I'll either remove HAL_REO_CMD_DRAIN or document it.
+---
+ drivers/net/wireless/ath/ath12k/hal.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Thinking about this has made me realize that the current code already is =
-a bit
-> iffy, since `MiscDevice::open` gets `&MiscDeviceRegistration<Self>` as an=
- argument. (It
-> should be fine since `UnsafeCell` and `UnsafePinned` semantics also apply=
- to "parrent" types
-> i.e. `&MiscDeviceRegistration` also has the semantics of `Opaque`).
-
-It's fine, since all non-ZST fields are `Opaque`. Otherwise we'd need to
-wrap all fields with that.
-
->>>>> /// - no mutable references to `data` may be created.
->>>>
->>>>>>> +        unsafe { core::ptr::drop_in_place(self.data.get()) };
->>>>>>>      }
->>>>>>>  }
->>>>>>> =20
->>>>>>> @@ -109,6 +135,13 @@ pub trait MiscDevice: Sized {
->>>>>>>      /// What kind of pointer should `Self` be wrapped in.
->>>>>>>      type Ptr: ForeignOwnable + Send + Sync;
->>>>>>> =20
->>>>>>> +    /// The additional data carried by the [`MiscDeviceRegistratio=
-n`] for this [`MiscDevice`].
->>>>>>> +    /// If no additional data is required than the unit type `()` =
-should be used.
->>>>>>> +    ///
->>>>>>> +    /// This data can be accessed in [`MiscDevice::open()`] using
->>>>>>> +    /// [`MiscDeviceRegistration::data()`].
->>>>>>> +    type RegistrationData: Sync;
->>>>>>
->>>>>> Why do we require `Sync` here?
->>>>>
->>>>> Needed for `MiscDeviceRegistration` to be `Send`, see response above.
->>>>
->>>> You could also just ask the type there to be `Sync`, then users will g=
-et
->>>> an error when they try to use `MiscDevice` in a way where
->>>> `RegistrationData` is required to be `Sync`.
->>>
->>> I don't think there is any point to allow defining a `MiscDevice` imple=
-mentation
->>> that cant actually be used/registered.
->>=20
->> Sure, but the bound asserting that it is `Sync` doesn't need to be here,
->> having it just on the `impl Sync for MiscDeviceRegistration` is good
->> enough. (though one could argue that people would get an earlier error
->> if it is already asserted here. I think we should have some general
->> guidelines here :)
->
-> That would require a `Send` bound in the `register` function,
-> since a `MiscDevice` with `!Sync` `Data` would be valid now
-> (meaning that `MiscDeviceRegistration` may also be `!Sync`).
->
-> If you want I can go with that. I'm not really sure if its
-> really better (tough I don't feel that strongly either
-> way).
-
-We don't lose anything by doing this, so I think we should do it.
-If in the future someone invents a way `MiscDevice` that's only in the
-current thread and it can be registered (so like a "thread-local"
-`MiscDevice` :), then this will be less painful to change.
+diff --git a/drivers/net/wireless/ath/ath12k/hal.h b/drivers/net/wireless/ath/ath12k/hal.h
+index 0ee9c6b26dab..c1750b5dc03c 100644
+--- a/drivers/net/wireless/ath/ath12k/hal.h
++++ b/drivers/net/wireless/ath/ath12k/hal.h
+@@ -585,7 +585,8 @@ enum hal_reo_cmd_type {
+  *			 or cache was blocked
+  * @HAL_REO_CMD_FAILED: Command execution failed, could be due to
+  *			invalid queue desc
+- * @HAL_REO_CMD_RESOURCE_BLOCKED:
++ * @HAL_REO_CMD_RESOURCE_BLOCKED: Command could not be executed because
++ *				  one or more descriptors were blocked
+  * @HAL_REO_CMD_DRAIN:
+  */
+ enum hal_reo_cmd_status {
 
 ---
-Cheers,
-Benno
+base-commit: c3910de7bab78afbc106206aed5ec8e79458fbee
+change-id: 20250604-hal_reo_cmd_status-kdoc-c3f3a25237c5
+
