@@ -1,145 +1,148 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0A6225405;
-	Thu,  5 Jun 2025 13:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2034187332;
+	Thu,  5 Jun 2025 13:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749131291; cv=none; b=ggS/Df+vN4tIvKxNtlKsVDXz7ulu1M3N4nvYFbxhaEXEwB3GECwDNJ2K9c+oEwJh1snnPUwudco55YMCm7+BKk0hg3cPoaBCIS36DCRbn3qDCvkxfMNVZAwfGod0XHmBSFvXkegG8tdWEupiCFkhjJuoKx7NqtzzdbetK9LBlZQ=
+	t=1749131333; cv=none; b=kucnxS5YifupmhnLVVCqrCaZlWwBXYM79gMrO1Crftfa520e7Qjtx//0MrluGijsSxlebeAm+HnNEv+wYKJFCxdsLNIn9tKiWu5o8E/AvV9KIXvMMoOry5gWBkdFpooSJWnrQFXTSBEtJtrBtd9QhsAitcde6E9/oMkuEfCV5F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749131291; c=relaxed/simple;
-	bh=UBcvPdguHV4fsFDepdmLyKP32n6yzbqE/cbwdYXIwE4=;
-	h=From:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=EstPuNjOfeB2j8pGXtcmtKxJr6kyT9Gl1bH1jQUL+tf2mxvpqHIvWUZtsgYLoCsoWnpKTgPIghbN/lDfmIZUMMfscsrvDFWYT9qTnDg60vIy2tE8vYRUAMr2b0qAQ3xdmzp8Y2gqilZHQzUrPMdCSOK3bMqP3PQgOj3uGl7OIq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=QhH4sLSb; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1749131333; c=relaxed/simple;
+	bh=PQwCtTHpfjblBY1wgPoU6gycETBaSsI0rdsuy5i175U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=huQ6MHT2suWNWwar1kOhVokAxDGqJbLyCiWCQqFUIMFxuW6Pb6uWCEL0QhjHsm8sTx043T/11+uuyFCp7OWMAALEYXogxZ4ca+waQ54IeaFsnMU/O+ymuzswqzLL3TFW567xyPubRFKKJH7dW7s4X37LRVBrz2CoW8B+xrZh+OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4QOqj9mB; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="QhH4sLSb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1749131289; x=1780667289;
-  h=from:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=IUSfxUyqmgfivEu5EZMCkF/RyBzwPvDiznC0GbBHiKk=;
-  b=QhH4sLSbNIs+MgcWX0HFMM/Obwd5DKxaL0uAdhe/tPJmuAnmKKu4qlK2
-   Trp1LoYXgRAougtg+YFmE7ZTx1/3k0x/oTa/B36W94pUZuM5xf7jOrlf8
-   a5RnOTKc01Us/XTI8lj4WKjD03MKbCl+PZZGA8lzaIPqDl/ZvVaGRxNaI
-   xfxyINe6opduq0HSQAfh1U4W9XmMqxlx77CHHB4ezQm+SEye22MUtlzHW
-   ce6ssIEHREqXzQ/AAM4Na2d038GomO2TCCGVpiPKKZKgI27xnHM4L1+8x
-   57InNIUK9CamIpZ9XSsbXEHdMw2gNijPjEKRnl0dMyFGriJj3dyHkYMGF
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.16,212,1744070400"; 
-   d="scan'208";a="101103021"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 13:48:06 +0000
-Received: from EX19MTAEUA002.ant.amazon.com [10.0.43.254:40566]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.12.81:2525] with esmtp (Farcaster)
- id f8dc8fdf-8393-456d-8a76-62e5f1c245a7; Thu, 5 Jun 2025 13:48:04 +0000 (UTC)
-X-Farcaster-Flow-ID: f8dc8fdf-8393-456d-8a76-62e5f1c245a7
-Received: from EX19D008EUC003.ant.amazon.com (10.252.51.205) by
- EX19MTAEUA002.ant.amazon.com (10.252.50.124) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 5 Jun 2025 13:48:03 +0000
-Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
- EX19D008EUC003.ant.amazon.com (10.252.51.205) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 5 Jun 2025 13:48:03 +0000
-Received: from EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1]) by
- EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1%3]) with mapi id
- 15.02.1544.014; Thu, 5 Jun 2025 13:48:03 +0000
-From: "Heyne, Maximilian" <mheyne@amazon.de>
-CC: "Heyne, Maximilian" <mheyne@amazon.de>, Oleg Nesterov <oleg@redhat.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Alexey Dobriyan <adobriyan@gmail.com>,
-	"Sauerwein, David" <dssauerw@amazon.de>, Sasha Levin <sashal@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: [PATCH 5.10] fs/proc: do_task_stat: use __for_each_thread()
-Thread-Topic: [PATCH 5.10] fs/proc: do_task_stat: use __for_each_thread()
-Thread-Index: AQHb1iB1gJ8UYFGzREqCdxVMNVkwmA==
-Date: Thu, 5 Jun 2025 13:48:03 +0000
-Message-ID: <20250605-zulu-clomp-65defe17@mheyne-amazon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="iso-8859-1"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4QOqj9mB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=Avs8RreK+zR7HP1QXRMqbMIL8H/eJs96poV9Y6KSBt8=; b=4Q
+	Oqj9mBciCJWKhvwI8WQ7R3rG9kkXjYiEwi3NywHjU5tUpdrTY+H1J79+vA3gnVJR5s+Z8W0YnnoE/
+	qcXxx+UCq5dLyNQzwGyfFot7sSGg4QCcx6Zdi40E6j7KH7FObEBudB6+6bJcI63NRMQqIeydWMU/n
+	sIwBz7Bis/Z1ZrQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uNAxR-00Em9A-8k; Thu, 05 Jun 2025 15:48:37 +0200
+Date: Thu, 5 Jun 2025 15:48:37 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
+ informative text about RGMII delays
+Message-ID: <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
+References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
+ <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
+ <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
+ <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
+ <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
+ <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
 
-From: Oleg Nesterov <oleg@redhat.com>
+On Thu, Jun 05, 2025 at 06:51:43PM +0800, Icenowy Zheng wrote:
+> 在 2025-06-05星期四的 10:41 +0100，Russell King (Oracle)写道：
+> > On Thu, Jun 05, 2025 at 05:06:43PM +0800, Icenowy Zheng wrote:
+> > > In addition, analyzing existing Ethernet drivers, I found two
+> > > drivers
+> > > with contradition: stmicro/stmmac/dwmac-qcom-ethqos.c and
+> > > ti/icssg/icssg_prueth.c .
+> > > 
+> > > The QCOM ETHQOS driver enables the MAC's TX delay if the phy_mode
+> > > is
+> > > rgmii or rgmii-rxid, and the PRU ETH driver, which works on some
+> > > MAC
+> > > with hardcoded TX delay, rejects rgmii and rgmii-rxid, and patches
+> > > rgmii-id or rgmii-txid to remove the txid part.
+> > 
+> > No, this is wrong.
+> > 
+> > First, it does not reject any RGMII mode. See qcom_ethqos_probe() and
+> > the switch() in there. All four RGMII modes are accepted.
+> 
+> Well my sentence have its subject switched here. I mean the TI PRU ETH
+> driver is rejecting modes.
 
-[ Upstream commit 7904e53ed5a20fc678c01d5d1b07ec486425bb6a ]
+Which is theoretically fine. I've not looked at this driver in
+particular, but there are some MACs were you cannot disable the delay.
+The MAC always imposes 2ns delay. That would mean a PCB which also has
+extra long clock lines is simply FUBAR, cannot work, and 'rgmii' is
+invalid, so reject it.
 
-do/while_each_thread should be avoided when possible.
+> Well I am not sure, considering two examples I raised here (please note
+> I am comparing QCOM ETHQOS and TI PRUETH two drivers, they have
+> contrary handling of RGMII modes, and one matches the old binding
+> document, one matches the new one).
 
-Link: https://lkml.kernel.org/r/20230909164501.GA11581@redhat.com
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Stable-dep-of: 7601df8031fd ("fs/proc: do_task_stat: use sig->stats_lock to=
- gather the threads/children stats")
-[mheyne: adjusted context]
-Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
----
+Nope, i fully agree with Russell, the binding has not changed, just the
+words to explain the binding.
 
-Compile-tested only.
-We're seeing soft lock-ups with 5.10.237 because of the backport of
-commit 4fe85bdaabd6 ("fs/proc: do_task_stat: use sig->stats_lock to
-gather the threads/children stats").
+Just for a minute, consider your interpretation of the old text is
+wrong. Read the old text again and again, and see if you can find an
+interpretation which is the same as the new text. If you do:
 
----
- fs/proc/array.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+* It proves our point that describing what this means is hard, and
+  developers will get it wrong.
 
-diff --git a/fs/proc/array.c b/fs/proc/array.c
-index 8fba6d39e776f..77b94c04e4aff 100644
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -512,18 +512,18 @@ static int do_task_stat(struct seq_file *m, struct pi=
-d_namespace *ns,
- 		cgtime =3D sig->cgtime;
- =
+* There is an interpretation of both the old and new where nothing
+  changed.
 
- 		if (whole) {
--			struct task_struct *t =3D task;
-+			struct task_struct *t;
- =
+* You have to be careful looking at drivers, because some percent of
+  developers also interpreted it wrongly, and have broken
+  implementations as a result.  You cannot say the binding means X,
+  not Y, because there is a driver using meaning X.
 
- 			min_flt =3D sig->min_flt;
- 			maj_flt =3D sig->maj_flt;
- 			gtime =3D sig->gtime;
- =
+My hope with the new text is that it focuses on hardware, which is
+what DT is about. You can look at the schematic, see if there is extra
+long clock lines or not, and then decided on 'rgmii-id' if there are
+not, and 'rgmii' is there are. The rest then follows from that.
 
- 			rcu_read_lock();
--			do {
-+			__for_each_thread(sig, t) {
- 				min_flt +=3D t->min_flt;
- 				maj_flt +=3D t->maj_flt;
- 				gtime +=3D task_gtime(t);
--			} while_each_thread(task, t);
-+			}
- 			rcu_read_unlock();
- =
+And if you look at the questions i've been asking for the last year or
+more, i always start with, "Does the PCB have extra long clock
+lines?".
 
- 			thread_group_cputime_adjusted(task, &utime, &stime);
--- =
+> > The RGMII modes have been documented in
+> > Documentation/networking/phy.rst
+> > (Documentation/networking/phy.txt predating) since:
+> 
+> I checked the document here, and it seems that it's against the changed
+> binding document (it matches the original one):
+> 
+> The phy.rst document says:
+> ```
+> * PHY_INTERFACE_MODE_RGMII: the PHY is not responsible for inserting
+> any
+>   internal delay by itself, it assumes that either the Ethernet MAC (if
+> capable)
+>   or the PCB traces insert the correct 1.5-2ns delay
+> ```
+> 
+> The changed binding document says:
 
-2.47.1
+You are not reading it carefully enough. The binding describes
+hardware, the board. phy.rst describes the phylib interface. They are
+different.
 
-
-
-
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
-
+	Andrew
