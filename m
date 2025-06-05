@@ -1,117 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0552566;
-	Thu,  5 Jun 2025 06:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1D02566;
+	Thu,  5 Jun 2025 06:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749104504; cv=none; b=G2qGlYkDHR/awpgSLgjKPS4x6i+Wn+e1amyPCDzvuATheWLzMUGv4qlhFEpaKAUxlNbdMADd+GVMfQGcgGkrp8Jlnz6JXbbxaryEoslG1hwzCQYAWiCb6Kpo4BKmK0EYSDE0KbRpBVw6eh3s0MoM7uRuQ5gYEm7nOA7aHeHCJek=
+	t=1749104524; cv=none; b=QpGoXif8E2a1LyjxR0Loka8EN/ScOnM2nemJkOJ5iKG1UDZLQgz0gvt92iQ2pPoYxB30NE4NuCc/kpHlooMHoXIPUSNgBI0f99jjKXxO+c2zZ0lSniCewHMH9VvFGEOL9r+9uw2F5ZBDup7DwbOcbBdxh+JQEenXDrBAqjgR+XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749104504; c=relaxed/simple;
-	bh=+Redz4ifkRkx64frRMoX7dOYX5AJN+Q/ArPYmvxEyPc=;
+	s=arc-20240116; t=1749104524; c=relaxed/simple;
+	bh=MHhal0LgKPtaPMkQ1hzcXyBudC1oK/SC0MLQV/wiVH4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qtigZH51Ssl9Yy1MFNLbFCmqkV6soDW9+atHMKJZTh6AGVPWkS5F+1PN2ArKyF3tuGxJC1aoP5FwUhEfOM9lWAgCrcQGUj0IbiV7MvLagR6TjaP3vRORdUzez0tjw3CQ29taqrpnpj6B3GlhqPgPqJadK/m47xLgvXyixho1a8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RpHB0y5R; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D4KyAx/8IabnAyZ6zJecdRqtritjcZrMLzzaCYLugAC2BFR4gC1H1yFu/XnCPP45eY/DvsCZnP5vPHkWKlpn2m8U8TVlue0XxyFr7vQpZFTk3aoD1RDyoYVGYoqg4wtKJ6QiS7WAEd7QYaFEQQ0eeBnzlQ2Drh4Dad0gbjb0uI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a1OUTOVj; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RpHB0y5R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1271C4CEE7;
-	Thu,  5 Jun 2025 06:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749104504;
-	bh=+Redz4ifkRkx64frRMoX7dOYX5AJN+Q/ArPYmvxEyPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RpHB0y5Ra2FIpz9VgGLS53mxOfVMAIYqacJek1YYOjiIK68AYA+laSiYRBvxmXbya
-	 hnJy//xgXODlHJYv3jCjpYD3peZV8eJMilgHHNzMoM6HWjz3ZV75w6Y6B2cwrbo8wB
-	 vBKfKwm47IhwMJ/my3pAsa55ftxFNeYGTAoShHQi8GNHfCkruvz/0Ek2z5DOgJSUz9
-	 MetvBMahFWXn23VTcIJQBrY5d7N3Csdg2JEeZJyMP/u/ZeOmeHUHU2w4cuRm2wiufE
-	 m+rEx0MdwqPAMDfmyWjwHuz/0Lt1kuETWGqydDGZJmm6KhptVX0EF4EBW7vCbGKT2h
-	 nbtBBkx7RZRxA==
-Date: Thu, 5 Jun 2025 08:21:41 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Lukas Timmermann <linux@timmermann.space>
-Cc: lee@kernel.org, pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: leds: Add new as3668 support
-Message-ID: <20250605-poised-furry-elephant-cadd08@kuoka>
-References: <20250604225838.102910-1-linux@timmermann.space>
- <20250604225838.102910-3-linux@timmermann.space>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a1OUTOVj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749104523; x=1780640523;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MHhal0LgKPtaPMkQ1hzcXyBudC1oK/SC0MLQV/wiVH4=;
+  b=a1OUTOVjjTmfktVG00MUvSge4qItQIQJO+N8daVTg+l7f9TW6S2CIC00
+   iJtSboxN8CUUIyQNMEC7qaoYIIa/JWYvI2ugY8BcE21KPg73qQ44LrdPC
+   Jh4blVs3TbDkLXpvZ8zF6DQa2fK+KTdB6BVkcq9etlkydtgIUQMpUk5xu
+   fWZU4bw9/fO4QUwBbeOmdkjBT5puhAg+Fp+qJJrS1EI4yFW5ujLH0+d8z
+   kCLmSCGTyeBunb5baaCufu0MXWiU7DSYIxjvq4Ro4PfgRaOMCZJqFcp36
+   bK5tMtv4ba/WlIugAjWlee8U1e1ttEj+Bz79xM7zbmpFYy+ovL1Xw0kip
+   w==;
+X-CSE-ConnectionGUID: sjnyY6DIRmSbkbK8eyDkrA==
+X-CSE-MsgGUID: DKqW1JuiTW+SbHdvc0IjcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="55009131"
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="55009131"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:22:02 -0700
+X-CSE-ConnectionGUID: 112haDkxTtGUgp88JcSy5w==
+X-CSE-MsgGUID: 34UgflkGQtuotlqHlkBbNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="176358227"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 23:21:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uN3z8-00000003mQH-22Ck;
+	Thu, 05 Jun 2025 09:21:54 +0300
+Date: Thu, 5 Jun 2025 09:21:54 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
+	Pop Paul <paul.pop@analog.com>
+Subject: Re: [PATCH v10 11/12] iio: adc: ad7768-1: add filter type and
+ oversampling ratio attributes
+Message-ID: <aEE3gsbbOuBdI1ky@smile.fi.intel.com>
+References: <cover.1749063024.git.Jonathan.Santos@analog.com>
+ <c36d6494453050041a585c0e79d7bb674da11c99.1749063024.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250604225838.102910-3-linux@timmermann.space>
+In-Reply-To: <c36d6494453050041a585c0e79d7bb674da11c99.1749063024.git.Jonathan.Santos@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Jun 05, 2025 at 12:58:38AM GMT, Lukas Timmermann wrote:
-> Document Osram as3668 LED driver devicetree bindings.
+On Wed, Jun 04, 2025 at 04:37:36PM -0300, Jonathan Santos wrote:
+> Separate filter type and decimation rate from the sampling frequency
+> attribute. The new filter type attribute enables sinc3, sinc3+rej60
+> and wideband filters, which were previously unavailable.
 > 
-> Signed-off-by: Lukas Timmermann <linux@timmermann.space>
-
-Please organize the patch documenting compatible (DT bindings) before their user.
-See also: https://elixir.bootlin.com/linux/v6.14-rc6/source/Documentation/devicetree/bindings/submitting-patches.rst#L46
-
-> ---
->  .../devicetree/bindings/leds/leds-as3668.yaml | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-as3668.yaml
+> Previously, combining decimation and MCLK divider in the sampling
+> frequency obscured performance trade-offs. Lower MCLK divider
+> settings increase power usage, while lower decimation rates reduce
+> precision by decreasing averaging. By creating an oversampling
+> attribute, which controls the decimation, users gain finer control
+> over performance.
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-as3668.yaml b/Documentation/devicetree/bindings/leds/leds-as3668.yaml
-> new file mode 100644
-> index 000000000000..a9d698eb87d2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-as3668.yaml
+> The addition of those attributes allows a wider range of sampling
+> frequencies and more access to the device features. Sampling frequency
+> table is updated after every digital filter parameter change.
+> 
+> Changes in the sampling frequency are not allowed anymore while in
+> buffered mode.
 
-Filename matching compatible. ams,as3668.yaml
+...
 
-
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-as3668.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +static const int ad7768_dec_rate_values[8] = {
+> +	8, 16, 32, 64, 128, 256, 512, 1024,
+> +};
 > +
-> +title: Osram 4-channel i2c LED driver.
+> +/* Decimation rate range for sinc3 filter */
+> +static const int ad7768_sinc3_dec_rate_range[3] = {
+> +	32, 32, 163840
 
-Drop full stop
+Also leave trailing comma here.
 
+> +};
+
+...
+
+> +static const char * const ad7768_filter_enum[] = {
+> +	[AD7768_FILTER_SINC5] = "sinc5",
+> +	[AD7768_FILTER_SINC3] = "sinc3",
+> +	[AD7768_FILTER_WIDEBAND] = "wideband",
+> +	[AD7768_FILTER_SINC3_REJ60] = "sinc3+rej60"
+
+Ditto.
+
+>  };
+
+...
+
+> +static int ad7768_set_mclk_div(struct ad7768_state *st, unsigned int mclk_div)
+> +{
+> +	unsigned int mclk_div_value;
 > +
-> +maintainers:
-> +  - Lukas Timmermann <linux@timmermann.space>
+> +	mclk_div_value = AD7768_PWR_MCLK_DIV(mclk_div);
+> +	/*
+> +	 * Set power mode based on mclk_div value.
+> +	 * ECO_MODE is only recommended for MCLK_DIV 16
+
+'= 16.' ?
+
+> +	 */
+> +	mclk_div_value |= mclk_div > AD7768_MCLK_DIV_16 ?
+> +			  AD7768_PWR_PWRMODE(AD7768_FAST_MODE) :
+> +			  AD7768_PWR_PWRMODE(AD7768_ECO_MODE);
 > +
-> +description: |
+> +	return regmap_update_bits(st->regmap, AD7768_REG_POWER_CLOCK,
+> +				  AD7768_PWR_MCLK_DIV_MSK | AD7768_PWR_PWRMODE_MSK,
+> +				  mclk_div_value);
+>  }
 
-Drop |, Do not need '|' unless you need to preserve formatting.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> +  This IC can drive up to four separate LEDs.
-> +  Having four channels suggests it could be used with a single RGBW LED.
-> +
-> +properties:
-> +  compatible:
-> +    const: ams,as3668
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +      I2C slave address
-
-Drop description, obvious.
-
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-
-Missing gpio / pwm / audio input. I guess you omitted it because you do
-not know how to implement the audio input part? Bindings should be
-complete, so at least mention this in commit msg.
-
-Best regards,
-Krzysztof
 
