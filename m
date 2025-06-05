@@ -1,116 +1,115 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2068B6D17
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6964A1F8676;
+	Thu,  5 Jun 2025 06:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749105727; cv=none; b=mMC6FLT0Gj/P8jmASI6fHJkFJmH+ZBSiD2GAtKFp1vDOVbjl1gDp4MWObUW+WenidNhOdjDI1IzizjkxAdsY53BGTjDgjLoSz6OPJzec11gjHo3zfmJIerNOhpdk7aXsKDyOwnFQM6dFx1I/AVT1mKJHSEy64mtlogiBVlqA8Lk=
+	t=1749105731; cv=none; b=fIzSNoHnsy7H1CedSmP00NGRIEKgIoyUKuBw2j0a8sFI0ZyGKNht212Kz0GyuA7an4Pa554gRV8Z8xVfk/e0tnYoLuIYh2qMiq6KbqfTcqSLR2F3rTA1prFgZgYVe4INmCAV8gVoGeFiffkVe79kQLZuGDOUWail4gp5uBxzaCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749105727; c=relaxed/simple;
-	bh=CWwilyd8DsatWcvNuR/Q5R3fwbO2qSva5uLdXp2uX+Y=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ODgrLfoAFPG2qsZgF+TBS6KCL85B4znf2R/TZOaIEAjFE8Qxu8Q7HmVSCdTCTwatd7GJa6/Ba4RmMpBtwsuk2pGI9fRxdn2RMDffga3Pzs37Q3b9N/xj5uBOZqjRZfIQ/RY6bOqyB3ErBv/XwQEAjkkwN9iN1fX2y4fT0sswezQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=p10Hzjlt; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1749105731; c=relaxed/simple;
+	bh=rU/1YIoV2CLoSuMbCiI2MlnXgOapUv8HsWBJc0q5cto=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=p38DxQXeufMMcQoovh2Ed05GQy937m33LiVh+/4TcLAHopM2tIAH0w2R/rUSwkWXX5UvPxlX9cpolKyDWNmeZUNc6AUCu8dTJIlcXMxZE9La+PUoJCLFqQJasLZdofvBVVP7kgoJlVcofMlneh6NYOIdrDmxwsT7VJyzn9e6cyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=I04OTXgX; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="p10Hzjlt"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5556fM2D357827
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 4 Jun 2025 23:41:23 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5556fM2D357827
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749105683;
-	bh=Lj0QPMaoNN//NUIcs8+QZOBIqJ8N8XAmiP0Wm85OEsM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=p10Hzjlt+lsneXYm78u39WHR//VRbrhyRwOYFOUk6ED7VJO2/hJVHLq0h/tzLRVVS
-	 XnTiP63Cz0gVkslIwOS2pIoHighsyvErcQNWugRWF4WUwIVxf/c/yfbx4CpnKcZy3k
-	 hlIo7o+7U6fKnYhKgQXGZjb4TqGEKFtlj/FC4A5hFrxKbEIgQuos3XWwM88RjD4nLR
-	 Yy4rDK+PN7jspvSd9i3MY/jKEtJ/JSVbSDNn15EBZn5idf6w8gjKXUBk7vsclkHScK
-	 Tm3pAXJFV6Q9HwwTF6HVmT8lN4wFqwK0Wh8KHsqKLI5BbttxHb1lVpbjs9fo/0ahbG
-	 MyjLGe6/sMYFg==
-Date: Wed, 04 Jun 2025 23:41:21 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Ingo Molnar <mingo@kernel.org>, Em Sharnoff <sharnoff@neon.tech>
-CC: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
-        Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-Subject: Re: [PATCH] x86/mm: Handle alloc failure in phys_*_init()
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aEE6_S2a-1tk1dtI@gmail.com>
-References: <9f4c0972-a123-4cc3-89f2-ed3490371e65@neon.tech> <aEE6_S2a-1tk1dtI@gmail.com>
-Message-ID: <70530630-6781-485C-9F2A-531E121692D1@zytor.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I04OTXgX"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5556g0I14008507;
+	Thu, 5 Jun 2025 01:42:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749105720;
+	bh=OrukiiR7vvWd7A9qLRhkqN2uK3tuulRr807NT8fSWc8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=I04OTXgXjr04Ra9WAredg55I4gqGQwkOFx7U5jZLJ7CqhTPCQFMnUtwfU3c1aayhe
+	 /jItUn4dlnRHc9+eHJ1M1txtLQwx4ja48CPgtCNhOovxBqy8KzBN5pTr+x8VHuDoAW
+	 IeEgr7BYwpfCimrWe+utf1uYc+qWYyB471UUNY/M=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5556g07o952009
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 5 Jun 2025 01:42:00 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 5
+ Jun 2025 01:41:59 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 5 Jun 2025 01:41:59 -0500
+Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5556ftHe3275682;
+	Thu, 5 Jun 2025 01:41:56 -0500
+Message-ID: <e70f685c-ec03-4e87-8e5b-963bd9ebb2f1@ti.com>
+Date: Thu, 5 Jun 2025 12:11:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mux: mmio: Extend mmio-mux driver to configure mux
+ with mux-reg-masks-state
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Thorsten Blum
+	<thorsten.blum@linux.dev>, Andrew Davis <afd@ti.com>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>, Peter Rosin <peda@axentia.se>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <s-vadapalli@ti.com>, <vigneshr@ti.com>, <nm@ti.com>,
+        <danishanwar@ti.com>
+References: <20250605063422.3813260-1-c-vankar@ti.com>
+ <20250605063422.3813260-3-c-vankar@ti.com>
+ <c343c5d1-9f8c-4bb3-a98e-af144ace7bfa@kernel.org>
+Content-Language: en-US
+From: Chintan Vankar <c-vankar@ti.com>
+In-Reply-To: <c343c5d1-9f8c-4bb3-a98e-af144ace7bfa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On June 4, 2025 11:36:45 PM PDT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
->
->* Em Sharnoff <sharnoff@neon=2Etech> wrote:
->
->> tl;dr:
->>=20
->> * When setting up page table mappings for physical addresses after boot=
-,
->>   alloc_low_page() uses GFP_ATOMIC, which is allowed to fail=2E
->> * This isn't currently handled, and results in a null pointer
->>   dereference when it occurs=2E
->> * This allocation failure can happen during memory hotplug=2E
->>=20
->> To handle failure, change phys_pud_init() and similar functions to
->> return zero if allocation failed (either directly or transitively), and
->> convert that to -ENOMEM in arch_add_memory()=2E
->
->> +		/*
->> +		 * Bail only after updating pgd/p4d to keep progress from p4d across=
- retries=2E
->> +		 */
->> +		if (!paddr_last)
->> +			return 0;
->> +
->>  		pgd_changed =3D true;
->
->> -	init_memory_mapping(start, start + size, params->pgprot);
->> +	if (!init_memory_mapping(start, start + size, params->pgprot))
->> +		return -ENOMEM;
->
->I agree that it makes total sense to fix all this (especially since you=
-=20
->are actively triggering it), but have you tried also changing it away=20
->from GFP_ATOMIC? There's no real reason why it should be GFP_ATOMIC=20
->AFAICS, other than some historic inertia that nobody bothered to fix=2E
->
->Plus, could you please change the return flow from this zero=20
->special-case over to something like ERR_PTR(-ENOMEM) and IS_ERR()?
->
->*Technically* zero is a valid physical address, although we=20
->intentionally never use it in the kernel AFAIK and wouldn't ever put a=20
->page table there either=2E ERR_PTR()/IS_ERR() is much easier on the eyes=
-=20
->than the zero special-case=2E
->
->Finally, could you make this a 2-patch fix series: first one to fix the=
-=20
->error return path to not crash, and the second one to change it away=20
->from GFP_ATOMIC?
->
->Thanks,
->
->	Ingo
+Hello Krzysztof,
 
-Specifically, zero is a valid *user space* address=2E
+On 05/06/25 12:06, Krzysztof Kozlowski wrote:
+> On 05/06/2025 08:34, Chintan Vankar wrote:
+>> MMIO mux driver is designed to parse "mux-reg-masks" and "idle-states"
+>> property independently to configure mux. The current design is complex for
+>> the devices with larger memory space, which requires synchronization
+>> between the two properties.
+>>
+>> Extend mmio-mux driver to support a single property, "mux-reg-masks-state"
+>> which configures mux registers without above constraint.
+>>
+>> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+>> ---
+>>   drivers/mux/mmio.c | 144 +++++++++++++++++++++++++++++++++++++--------
+>>   1 file changed, 118 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/drivers/mux/mmio.c b/drivers/mux/mmio.c
+>> index 9993ce38a818..5ce9c16fd431 100644
+>> --- a/drivers/mux/mmio.c
+>> +++ b/drivers/mux/mmio.c
+>> @@ -2,7 +2,7 @@
+>>   /*
+>>    * MMIO register bitfield-controlled multiplexer driver
+>>    *
+>> - * Copyright (C) 2017 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
+>> + * Copyright (C) 2017-2025 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
+> 
+> Why are you updating someone's copyrights?
+> 
+
+Yes, I forgot to modify from the RFC series. I will keep it unmodified
+in the next version.
+
+Regards,
+Chintan.
+
+> 
+> Best regards,
+> Krzysztof
