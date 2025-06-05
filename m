@@ -1,108 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47A0141987
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 06:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060571A00F0;
+	Thu,  5 Jun 2025 06:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749106074; cv=none; b=kUGsDJd0rBbI6t7v1qIOZK8TAXf01rBhumdVIA12HqqzNh3sW2Kb2WY/nwlKtDK++/T/Fh2lAl3nKFJnFB0N/bhyS+bA10fqKssGbcL0G4rM5dk0MGUyqK6jl4cnph09SIJKOVCmjLoiem3Elq0bsfoJJM95l8qiqC+9nh1wLBg=
+	t=1749106122; cv=none; b=PDDkIVIy7+Ihc18L2T8+Gv450pVK1QXKyEIm/dn9ZF05/KbIW6SGhsiRFnpyJvcCSfR9mxWamQludZrkkTHlkuseFCCAZ5uThiq8XROav/V9vr+8i038eUH3/F/1dC7JvoLHHo9g2Smw9UT4KyXDP7uUXvzIJgTXBXX0MThoGDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749106074; c=relaxed/simple;
-	bh=LphIixm2U6bTC8EwIvMeBprro1C4ApSqd9LbcXniXGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ek/H+A55yWnFU4q8S7kBJHKxFhwBFWYGPtuwMFzgpWYD/f2CQ2NcCgyeJXa/+SbH1y3xK6kPNuTB3oMPjjJE0FcXihoxzw5tutsJjjNisCVKoYnacGmDcn9K9uQcr9HphQomfXU2hJro7x0x/dWa5PmTYD47uEphfHtqHu9Fj1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3yKLe9f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749106122; c=relaxed/simple;
+	bh=v1VbwHn9X/vcgpehSlsORSX2h1I1ZC7wmEKLIY4Dtio=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y6y3EVDFQbadbw1XuShlyU87tA5XntbN7QmxA3PLbrJWAWjs6CEgc1+wRCftE4eOhj5oAoPrBcVPmWYCi9Te+4TAmOnmo34I6sun+ZZQUmG3Kec609x0rxaHj0b4GngLjh+uLpt/XJIQ4ReuDQpXrldGa27C8IAjZcpekGAjtSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=LI9scScH; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3yKLe9f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96FC8C4CEE7;
-	Thu,  5 Jun 2025 06:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749106074;
-	bh=LphIixm2U6bTC8EwIvMeBprro1C4ApSqd9LbcXniXGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P3yKLe9f2CWW02MQUZgkLMtuVa//3TWcD/mGeKP+RB9o0wOjfYB4ujOXX792t/rJJ
-	 skpC54U7LcXjRrBznKnaDnF3luNPRwmLAqrm8ohnBPltBtU0a+jTZ+qcxInVGryRR/
-	 Vr5GA8r953s/M78NPihLhyhVeoLD2dwb3/B4h7yGB5l9BBGjlH09oAnwasNc6wo7+q
-	 HnD/hG8Ui0pMBF+sG9ji6DGcGhOwqCVavywqf1ywRibRzK8KSIllwQjVdQACd9OoKk
-	 HCQPRebtcVC7q/cZYWkFwenzyUb4qEpF7zZYvEAc7Xg5zSOSCziyCV80Ovl5mw5ChP
-	 BEPANb+Eq75Mw==
-Date: Thu, 5 Jun 2025 08:47:47 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Em Sharnoff <sharnoff@neon.tech>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Oleg Vasilev <oleg@neon.tech>,
-	Arthur Petukhovsky <arthur@neon.tech>,
-	Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-Subject: Re: [PATCH] x86/mm: Handle alloc failure in phys_*_init()
-Message-ID: <aEE9k5XLBWPnHJbu@gmail.com>
-References: <9f4c0972-a123-4cc3-89f2-ed3490371e65@neon.tech>
- <aEE6_S2a-1tk1dtI@gmail.com>
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="LI9scScH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References
+	:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=vw3Uk3105LnqEXM8kkjyZCQuG6ZyTrE+YY65qSzjcI0=; b=LI9scScHpRzQVwEG4A4uDjhr49
+	6LbDw9dbugxOSGcz/8BfYC1xZqGbW8II8ipnio9no12FR8hV8l9NPyW8nxD4pNvPaxFRt9IN9UTE2
+	7uX122hebeivEf4yr/bsLoXxhYxV0VZrMwJkZw1LBOMDUdvINYVQ6A7grHBq5G71yEMw=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:62185 helo=[192.168.0.218])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+	(Exim 4.93)
+	(envelope-from <matthias.fend.oss@emfend.at>)
+	id 1uN47t-00BsXS-Cj; Thu, 05 Jun 2025 08:30:57 +0200
+Message-ID: <ea382833-3782-4203-b31c-7f1a364f671d@emfend.at>
+Date: Thu, 5 Jun 2025 08:30:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEE6_S2a-1tk1dtI@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: adjust file entry in TPS6131X FLASH LED
+ DRIVER
+To: Lukas Bulwahn <lbulwahn@redhat.com>,
+ Matthias Fend <matthias.fend@emfend.at>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Lukas Bulwahn <lukas.bulwahn@redhat.com>
+References: <20250527065434.202622-1-lukas.bulwahn@redhat.com>
+Content-Language: de-DE
+From: Matthias Fend <matthias.fend.oss@emfend.at>
+In-Reply-To: <20250527065434.202622-1-lukas.bulwahn@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: 
+X-Spam-Bar: 
+X-Spam-Report: 
 
+Hi Lukas,
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+thanks for the patch!
+The filename changed during the review and I actually forgot to update 
+it at this point.
 
+Am 27.05.2025 um 08:54 schrieb Lukas Bulwahn:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 > 
-> * Em Sharnoff <sharnoff@neon.tech> wrote:
+> Commit 0d12bb1a7fb6 ("dt-bindings: leds: Add Texas Instruments TPS6131x
+> flash LED driver") adds the device-tree binding file ti,tps61310.yaml,
+> whereas the commit b338a2ae9b31 ("leds: tps6131x: Add support for Texas
+> Instruments TPS6131X flash LED driver") from the same patch series adds the
+> section TEXAS INSTRUMENTS TPS6131X FLASH LED DRIVER in MAINTAINERS,
+> referring to the file ti,tps6131x.yaml. Note the subtle difference between
+> the two file names. Hence, ./scripts/get_maintainer.pl --self-test=patterns
+> complains about a broken reference.
 > 
-> > tl;dr:
-> > 
-> > * When setting up page table mappings for physical addresses after boot,
-> >   alloc_low_page() uses GFP_ATOMIC, which is allowed to fail.
-> > * This isn't currently handled, and results in a null pointer
-> >   dereference when it occurs.
-> > * This allocation failure can happen during memory hotplug.
-> > 
-> > To handle failure, change phys_pud_init() and similar functions to
-> > return zero if allocation failed (either directly or transitively), and
-> > convert that to -ENOMEM in arch_add_memory().
+> Adjust the file reference to the intended file.
 > 
-> > +		/*
-> > +		 * Bail only after updating pgd/p4d to keep progress from p4d across retries.
-> > +		 */
-> > +		if (!paddr_last)
-> > +			return 0;
-> > +
-> >  		pgd_changed = true;
-> 
-> > -	init_memory_mapping(start, start + size, params->pgprot);
-> > +	if (!init_memory_mapping(start, start + size, params->pgprot))
-> > +		return -ENOMEM;
-> 
-> I agree that it makes total sense to fix all this (especially since you 
-> are actively triggering it), but have you tried also changing it away 
-> from GFP_ATOMIC? There's no real reason why it should be GFP_ATOMIC 
-> AFAICS, other than some historic inertia that nobody bothered to fix.
-> 
-> Plus, could you please change the return flow from this zero 
-> special-case over to something like ERR_PTR(-ENOMEM) and IS_ERR()?
-> 
-> *Technically* zero is a valid physical address, although we 
-> intentionally never use it in the kernel AFAIK and wouldn't ever put a 
-> page table there either. ERR_PTR()/IS_ERR() is much easier on the eyes 
-> than the zero special-case.
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-Small correction: since this is a PTE pointer, this is a kernel virtual 
-address, which can never be zero - only physical addresses can be zero 
-(but even they aren't in practice.).
+Reviewed-by: Matthias Fend <matthias.fend@emfend.at>
 
-My main point wrt. using ERR_PTR()/IS_ERR() instead of 0 remains.
+Thanks
+  ~Matthias
 
-Thanks,
+> ---
+>   MAINTAINERS | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e20de38ffa54..0c4f0eb7f49c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -24518,7 +24518,7 @@ TEXAS INSTRUMENTS TPS6131X FLASH LED DRIVER
+>   M:	Matthias Fend <matthias.fend@emfend.at>
+>   L:	linux-leds@vger.kernel.org
+>   S:	Maintained
+> -F:	Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
+> +F:	Documentation/devicetree/bindings/leds/ti,tps61310.yaml
+>   F:	drivers/leds/flash/leds-tps6131x.c
+>   
+>   TEXAS INSTRUMENTS' DAC7612 DAC DRIVER
 
-	Ingo
