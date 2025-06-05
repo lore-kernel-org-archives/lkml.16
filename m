@@ -1,132 +1,108 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FC417548;
-	Thu,  5 Jun 2025 20:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4B314A4C7;
+	Thu,  5 Jun 2025 20:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749154495; cv=none; b=IBk4K7A0iJT5m9I2cTN7cfRzaY2E01mHwXmN7yfBv5HFghN/S9gplR6OCRl6poDsIj1+BWkjUDb4OLEMN+3GJ8bzNYjSbue+oPUC72nonAwlJCBwOI9YJcgHqnSArzT4zCxlonPz9+jLzrFZrSPjrPct+y1LfM/FlUjADxUzYGs=
+	t=1749154533; cv=none; b=ZsGi/9vGk9241Ndh2/uIHGjmBk0bRHMU81kHe6a1Ei9wZ7LxeZtiIYS+QNV21ulT/rWuvF53K/b5d9hnvGiCj+egzxKknHwIHIqDPwfIZhfF0Wrp8Dh4Dj44aSHHHKJiFmdzHgdSG9ad4S4J0GnqyTWosGFeztsF60acmzrQEv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749154495; c=relaxed/simple;
-	bh=k2Q0O9UQ45RQ36LfMj7Bdv+5YX5+XlaWPgX7rs7Tix0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rSxUZrWpi5avJIJSwfyRbVexmm3pO/6CdMyRXxxYH/MTsWtm3FC3YxT6Y0YArqqP7d0MRVMv9UqKepPQg7gHGBwKvABpm4dgDqV6JXGc6daXz0XEHMXPhGm/zsT6GzrK1E4iCz0RyZNthR8D4ytJKhpzj1zYCUENCSbU1skx08g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=brPlE76X; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749154533; c=relaxed/simple;
+	bh=IYT1CcO4LBvLg1Erh1PUlzPXoV02ZdFG//4pEvVZEPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UT0w1yBPsWzuryx788aT0PlOKBhUhFHKCJI4qkc0DTWuchreDj7Ul3JyfdzgGuovcGIh8Z/fuqeBjyK4NusPyhhJLxYB5sYDkc4K7UH8vKQngi+OzfAyi29fYSotWq9y9viPBxqw9tbBPfiodxOQF/jHXgL80EQhWVImjc8ZajM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTKr/Yt2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brPlE76X"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so11888895e9.1;
-        Thu, 05 Jun 2025 13:14:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749154491; x=1749759291; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f+cjUMM/AEqKNUgpKT4nzaOOhbvSaoi3UBoC5zwm/Gw=;
-        b=brPlE76X144Jhoaarg43T2KSiFFR/rNZAoERd7cldT6gPzXtcBGJ8s0Xom2t3rkTkb
-         wnZhYSjlH940uVXofIWbdD+qHnl8nl3DeN4Ppu3G3xoyaBVcCpIPBUzLw5rgsKoXMAlI
-         gDDI+7iQcMJ2C//5NPwWN8Jl/N+OuXIK9sQd0CDG9siM5V8WUc15dHAILBiGfxAMFS20
-         zmYUwOtxrQ0XwiESmA31mh4jXAR+qgX0sYhAL1fyxTTxBMcS8XyT5cbrM86rp7qxqUe9
-         I/hcCoxQE5jIdrZJl1q7Rg/oR4uUx2NI+yfaquJrdrd3lSTRkqmmm7UliJPjAvEubqwW
-         Bftw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749154491; x=1749759291;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f+cjUMM/AEqKNUgpKT4nzaOOhbvSaoi3UBoC5zwm/Gw=;
-        b=Qbz1iYX4D33ez58u9mbzytcQL5d/6eDKr03t8Ra2FOspT7JmdBF10Ke2E6L3yGWcJv
-         sCQ7RqHyWhm7/qEwCqdCNzaiI/fVejr9y8lLvtO+xVcfj040caSntCerkLjF2PkWU6g3
-         wV9Cz0PxL59jAS3p7/ajQDxs9LA1Q0JgzQEBHjKpHfdR+y1yEm8+wsEi7MwBVmYtF5XT
-         ugYDXTUun12Mx+uYivmjNU1XAIPVUIzWdW70SLGVJVgnhu20xIrWV1D463vvNYERIYQg
-         Rb4oUjzFp1PSor4hWy2mmESb4l9s3fiJulrN7uP7FFPQr9sCvIT7e5PR8fPvzZKMSPCt
-         qMkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUB02rJu44s9l/fQhCPq4VvaEjS9vsYfbQOQeN7to4tiUTOMh9AbRImFEIzpy3V3Gqt4iv6wsru@vger.kernel.org, AJvYcCV4v0hX7alnDSWj20L9NG/CYmZJmRnwXEpHhe/ygZHNLw0tbU/gS4578Zy+mrCHHIlFqbFDCx8xmx/pSpyh@vger.kernel.org, AJvYcCVoNIGqLRG4e+5fOnfmYyror9qvJd7NghOdKdl7rpYc0264NB9p/Nnpt2G413OaNroMVXsz7LLYGoRjuA==@vger.kernel.org, AJvYcCVyddUP/vTXVjqym4CBePUs4lQi/5bm8OwgmyY4iLpp5je2RL5CoMAZNKmLZ/kuHYnbgR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3gOu1PIpYEnf7X0MC0DYp8C6XJ57txTf4sZ2HUTYRyzpjMhDz
-	ojzZuiCWM5Co5A2l1V57TVGB+mEYxnrqTAcpzG6baQpJ0BwqTLNstF65
-X-Gm-Gg: ASbGncsERJNBn9jFbSvMhdhjjbTKwXmhWC/RIL2Aq471uD7eCkcS7RH2aIEmAR2aOkk
-	7yqGvrfHsxcOnHcnhn4qITdO5mnzbKpCprvfTqPHwnsrkxMEpAWYNqk+U01mWxbpdh+5Vh67qGY
-	CP2PNDfgvkrl52HFGrLVuH0wzVuLNqYhKUI8dY6Im4Js0S9ECxCFEY+mnci2DQj1sznsaTi9Xvi
-	+WXSXicpfROkmm8st9dYX2t/LBtUmHj7t9sdvVs48WhbrrRQyOTXNAKgF0zsg0a2wVHBiuGvEg1
-	wPHSutujFZF7Me8RYc7bNLa61H9iTXr8XA7PXcgZmxrj/HbrGwc+jD2/WejBZZsdaEf5yEn7mfI
-	ikOOXFW4=
-X-Google-Smtp-Source: AGHT+IFYycvJM2i/VSYKq/XS+8nRykdaQFdAMb7xHQBYhmMNIZdyie6Xtr4zGV+6D8zpAAR7QV4waw==
-X-Received: by 2002:a05:600c:1d05:b0:43b:c592:7e16 with SMTP id 5b1f17b1804b1-451f844f896mr52572425e9.3.1749154490953;
-        Thu, 05 Jun 2025 13:14:50 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.145.124])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b92d4sm109565e9.19.2025.06.05.13.14.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 13:14:50 -0700 (PDT)
-Message-ID: <9138df77-fe7d-430b-a369-05453a76bdb4@gmail.com>
-Date: Thu, 5 Jun 2025 21:16:12 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dTKr/Yt2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371BAC4CEE7;
+	Thu,  5 Jun 2025 20:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749154533;
+	bh=IYT1CcO4LBvLg1Erh1PUlzPXoV02ZdFG//4pEvVZEPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dTKr/Yt2Hy5Ra/GPalkzOkUFA7/xkis8nb3QvcUSx1uSkyip3GUeXJLvaI1Q37XYa
+	 gtXxU6j0esbWwO7AK21FwIU08/csOV39EEYuh8Y90tsXAEqXxfJh87ws6ci4CAfU6d
+	 QvebhzDT+5dO28YbZA/5RsMLwzJFcCI1wZaScn/qjLteznxorhfE+Abf9sCB/pnZ9p
+	 /aAw9KIRqxTSARGXt6FedihZ5FXiNVxhjzdvgnyekN+8B+ijeCaAfAh7/ZqWMvQ5pT
+	 zHC5/7LMdIfZm+KDKOSVkeUv88+wMQJ2OMUGLoScaB9oyMoEDv33arK+TILWsn4tYJ
+	 dKR1Q9gFExg9Q==
+Date: Thu, 5 Jun 2025 13:15:32 -0700
+From: Kees Cook <kees@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	David Rientjes <rientjes@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
+Message-ID: <202506051314.D6EDFA91D@keescook>
+References: <20250415170232.it.467-kees@kernel.org>
+ <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v4 18/18] page_pool: access ->pp_magic through struct
- netmem_desc in page_pool_page_is_pp()
-To: Mina Almasry <almasrymina@google.com>, Harry Yoo <harry.yoo@oracle.com>
-Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org,
- hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net,
- john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
- tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
- saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
- vishal.moola@gmail.com
-References: <20250604025246.61616-1-byungchul@sk.com>
- <20250604025246.61616-19-byungchul@sk.com>
- <390073b2-cc7f-4d31-a1c8-4149e884ce95@gmail.com> <aEGEM3Snkl8z8v4N@hyeyoo>
- <CAHS8izPvdKZncxARWUqUqjXgoMb2MmMy+PaYa8XCcWHCQT-CSg@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAHS8izPvdKZncxARWUqUqjXgoMb2MmMy+PaYa8XCcWHCQT-CSg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
 
-On 6/5/25 20:47, Mina Almasry wrote:
-> On Thu, Jun 5, 2025 at 4:49 AM Harry Yoo <harry.yoo@oracle.com> wrote:
->>
->> On Thu, Jun 05, 2025 at 11:56:14AM +0100, Pavel Begunkov wrote:
->>> On 6/4/25 03:52, Byungchul Park wrote:
->>>> To simplify struct page, the effort to separate its own descriptor from
->>>> struct page is required and the work for page pool is on going.
->>>>
->>>> To achieve that, all the code should avoid directly accessing page pool
->>>> members of struct page.
->>>
->>> Just to clarify, are we leaving the corresponding struct page fields
->>> for now until the final memdesc conversion is done?
->>
->> Yes, that's correct.
->>
->>> If so, it might be better to leave the access in page_pool_page_is_pp()
->>> to be "page->pp_magic", so that once removed the build fails until
->>> the helper is fixed up to use the page->type or so.
->>
->> When we truly separate netmem from struct page, we won't have 'lru' field
->> in memdesc (because not all types of memory are on LRU list),
->> so NETMEM_DESC_ASSERT_OFFSET(lru, pp_magic) should fail.
->>
->> And then page_pool_page_is_pp() should be changed to check lower bits
->> of memdesc pointer to identify its type.
->>
+On Wed, Apr 16, 2025 at 02:06:21PM +0200, Petr Mladek wrote:
+> On Tue 2025-04-15 10:02:33, Kees Cook wrote:
+> > Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+> > but do not want to be forced into having kernel addresses exposed due
+> > to the implicit "no_hash_pointers" boot param setting.[1]
+> > 
+> > Introduce the "hash_pointers" boot param, which defaults to "auto"
+> > (the current behavior), but also includes "always" (forcing on hashing
+> > even when "slab_debug=..." is defined), and "never". The existing
+> > "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+> > 
+> > This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+> > 
+> > Link: https://github.com/KSPP/linux/issues/368 [1]
+> > Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
+> > Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> > Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> > Acked-by: David Rientjes <rientjes@google.com>
+> > Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> > Signed-off-by: Kees Cook <kees@kernel.org>
 > 
-> Oh boy, I'm not sure that works. We already do LSB tricks with
-> netmem_ref to tell what kind of ref it is. I think the LSB pointer
-> tricks with netmem_ref and netmem_desc may trample each other's toes.
-> I guess we'll cross that bridge when we get to it...
+> Tested-by: Petr Mladek <pmladek@suse.com>
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> I am going to wait few more days for a potential feedback.
+> I'll queue it for 6.16 unless anyone complains.
 
-I believe Harry wants to tag struct page::memdesc, while
-netmem is tagging the struct page pointer / net_iov.
+Hi,
+
+Is this still planned for 6.16? I just noticed it wasn't in -next, and
+we're almost to the end of the merge window...
+
+-Kees
 
 -- 
-Pavel Begunkov
-
+Kees Cook
