@@ -1,147 +1,188 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988C11FC0E6
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 09:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D86566A;
+	Thu,  5 Jun 2025 09:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749115416; cv=none; b=ZFQBkjQr5Ug8lAcx4W1EUgB689sD8aHTruEyuRwski/EBrATmlozgX27LU/qSi6wUR2R9oLZW5bN/HS/bsaUXt6g1k+QZbOR9/aKT1VeZEuZi9HLOTwjZmVXWKs6tVE2yIpy3oxZRR21UTmw980uNR3VZi2tk8MZKFsJBqagEDg=
+	t=1749115446; cv=none; b=ax6h6LvisgFTyEQo7ZaCE/GPv34Of46LT0keXx7Vwtd62RO2GGHJ+WQGuDP7rAnoQ7dz1D0MCJ/FhJAtegKoqmWIeq/bByp3Q33kanoa2ZtkOn4/6QnmPCbFi7gOAanKBjm4G6/BwRpoc+YuRmOJlVqB2jkoB7Ga0J1LRk3PJ2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749115416; c=relaxed/simple;
-	bh=IGTYhqTEXbrSAlKpdioh062p42LbNyky8/PSpXXUeWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=brDH9k6CdZ4nGGaNkk0tQ6eoUytiiJx2VVDR9ZY3ukcH2QT9k8tnEyqtzDXQ0FbKOCt2Yt/XGBxx9Uqnjq59AS+qLHmP9Oi03EkgYJgxG0vLvSp/6hF2tGaVxjvnUWwOBjM2OwEIhytVZcVjAqGutszdA+MCdLVyKk4ssclZjQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PINwoJIw; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749115446; c=relaxed/simple;
+	bh=BiRN5nBnZIp/sJcuRCoUB4GHMYYC58pEDXWvQczJNsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=s+b7xWAuOppDVoVDkjtXx0G1478YC0Q2POTKvk5txdXPxeYqPV8HVoZDq23NwJoKnBvbAnCj6YEQLAKpmMQ0WR3822Ac31cIjz347n2uDlphBjVJ6aeiYwZhs8kLg9H9iZmR6cIRlPEfzm2u5VV/+9Yo8FZaYUL/BzgDiBXzyU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eSn7E3NM; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PINwoJIw"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so646133f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 02:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749115412; x=1749720212; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=PMdKYMhvbUkWOEuNMJirqV05bbB8zByRdxXQQcaUe+k=;
-        b=PINwoJIwB2Q65iVkHqqSCXLSECyeSZDTQl0L/NmHv3Qixtpx/20WNHRvk9cVNhQBe1
-         YZ3uQDL0yoUkFQYdmZQdrZxVhN4n2jJkoXhp/z+df+mmoWZ5uSVPEc50xd6zi1n6VjMw
-         3vgmpgwdoc4f52Z9u6tHw/tldc1u/gFuN664sePpvywTeCtTOh2o6020jsihDjhlqMwD
-         Tc/35RKPJaKJh4Nx0oTfnTo9waUotZi668RINnoFiWE2eZiJ2GDD60zoNRlSJrCGI00T
-         +8G1X3A+HOICi3st72+bPPiGCZcv3rjPrU7znAosl0hvSOAaH8dEITEkAHPlWhr9pmEK
-         Kn8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749115412; x=1749720212;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PMdKYMhvbUkWOEuNMJirqV05bbB8zByRdxXQQcaUe+k=;
-        b=Loniaek11JqIiQIITJ4CSEsrFKPZiYUaxgh7i473iX1bQTW1kmJKCvXMOvl/j7yQfL
-         jAz/TrgmDhtEWtSPRUKrImLV796EdvkSsAFoAG9w2TDmg9FORepp4t9+54aFvvYw5lwj
-         8qi/nPGCH2yngcaqi6yoVkzlr2i36S1KH39QqR1Egr0O4G9V1r/BuZfmzAOwu5D1mLOK
-         W2ZwcFjexG+IuqrHbzQDvz0y63QrWyTX9pc3xozu05A67geOzhXFzQh+lCneYV4bxn2X
-         ymVfH/wsQc/QWfyg04/Iv2f0Bd01dUUcrJLKn/3ks/4YxV7N9iqEB529qZkTngZVDNrc
-         KFAA==
-X-Forwarded-Encrypted: i=1; AJvYcCVm/zFYvZc56BZIRCjfuc9w5onAJiTjGMPFqJddVuJzjkh6c1PvQrhRRlNVX3tgPeN0bb3n5Y2i5N6zDg4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRaSudxLVutgXWexUakmxw+4DCdup8r+kHHHdTfoIA/Wnl4VP1
-	CLcis7yE3La1xmY5D+YyE0F/b3xmpNgfwXM07zJQV3RcDi6/8Nhv649HEhqH5iNcPSk=
-X-Gm-Gg: ASbGncvHjrFIcJB0Pb9QqQLGDrzbmY2g/FQt76VwBH6+OphmIPg0WLmvOVqb2FdLMY8
-	WkEtqm21WVVG1yeHId6mmgSfTQrCCpfmrayvAtJQJOWjpBNF9ghCYYyuECXqWBP3f2Jg84V3JZJ
-	X/PXXZowcNkW3ul2dxmXANg1SWe/ZbpljdwX+SlkP2O/UhQDPP6/5CYBauVsruEb3vT8M6Voll0
-	BsBInju7ycNBU+jXELfpuA8g4906sZoF51bH5MivQam2HYX5LIWFd3bsO8eBlBnd1zPo396C5rb
-	yLA+at7VK0kpNzhWmEylBJmXN50vqenapl3mIpc7zDgQe6YOr1b1doDo
-X-Google-Smtp-Source: AGHT+IFurviFEp8JcHtzr5W6FdDeM2cPQcoATIWyCv0v+8ZL8MzgzKHUiPqDOhR7vij3AFd9SpZEjQ==
-X-Received: by 2002:a05:6000:4387:b0:3a5:2949:6c29 with SMTP id ffacd0b85a97d-3a529497006mr1516750f8f.53.1749115411728;
-        Thu, 05 Jun 2025 02:23:31 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.159.167])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451fb178379sm12156115e9.10.2025.06.05.02.23.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 02:23:31 -0700 (PDT)
-Message-ID: <652ce9db-0bca-4892-aa16-1c41ef469f51@suse.com>
-Date: Thu, 5 Jun 2025 12:23:30 +0300
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eSn7E3NM"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0C00F43ACE;
+	Thu,  5 Jun 2025 09:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749115442;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hMtQCtS8IpJTkp97fNAgEE15+YSM+ATUwrgLcxt4Rdk=;
+	b=eSn7E3NM2/a1XL2QCHZ51w/xSFAL+iEZEQboby9jHTs+K7Nvdupz/F7tlxFjA4SZ0+t6Yk
+	IaS1HH4qimcQlrUnTscjr8wXLrDa5llZxxO/uhnsiEMZP/+GB8UnaOmTI/JUhnwlH3boNe
+	e6EugCFOKAu+aLoZCV685Ow7tj908BPs7BIycS44sR/0FFSmiaSGv7TztQiVgAmhCmMRZ4
+	upJ/cQU5kcDPefZJCzPEaXHwRb+M0/uwBsWnKLWQt7bdczxgCObraYqlVcLhTt4Aac/9kv
+	Ul5XZNYHabuX/WaaO+gt8hbFbOX7Do55Ol4WHd8Q2wgmWMdKFAaln7JfUSgHjA==
+Date: Thu, 5 Jun 2025 11:24:00 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RTC for 6.16
+Message-ID: <202506050924004af15615@mail.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] x86/its: explicitly manage permissions for ITS pages
-To: Mike Rapoport <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- =?UTF-8?B?Su+/vXJnZW4gR3Jv77+9?= <jgross@suse.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>,
- Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, x86@kernel.org
-References: <20250603111446.2609381-1-rppt@kernel.org>
- <20250603111446.2609381-5-rppt@kernel.org>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-Autocrypt: addr=nik.borisov@suse.com; keydata=
- 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
-In-Reply-To: <20250603111446.2609381-5-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdefgeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfggtggugfesthekredttddtudenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegueffgfdvhefggefgieehffeikefhfeffudelvdetheffheefffelhfelgefhkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhttgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
+Hello Linus,
 
+Here is the RTC subsystem pull request for 6.16. There are two new drivers this
+cycle. There is also support for a negative offset for RTCs that have been
+shipped with a date set using an epoch that is before 1970. This unfortunately
+happens with some products that ship with a vendor kernel and an out of tree
+driver.
 
-On 6/3/25 14:14, Mike Rapoport wrote:
-> From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> 
-> execmem_alloc() sets permissions differently depending on the kernel
-> configuration, CPU support for PSE and whether a page is allocated
-> before or after mark_rodata_ro().
-> 
-> Add tracking for pages allocated for ITS when patching the core kernel
-> and make sure the permissions for ITS pages are explicitly managed for
-> both kernel and module allocations.
-> 
-> Fixes: 872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches")
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-6.16
+
+for you to fetch changes up to 3d8b44b104fb5f93a853ae34fbcf8d840e4482f5:
+
+  rtc: mt6359: Add mt6357 support (2025-06-02 00:25:32 +0200)
+
+----------------------------------------------------------------
+RTC for 6.16
+
+Core:
+ - support negative offsets for RTCs that have shipped with an epoch earlier
+   than 1970
+
+New drivers:
+ - NXP S32G2/S32G3
+ - Sophgo CV1800
+
+Drivers:
+ - loongson: fix missing alarm notifications for ACPI
+ - m41t80: kickstart ocillator upon failure
+ - mt6359: mt6357 support
+ - pcf8563: fix wrong alarm register
+ - sh: cleanups
+
+----------------------------------------------------------------
+A. Niyas Ahamed Mydeen (1):
+      rtc: m41t80: kickstart ocillator upon failure
+
+Alexandre Belloni (2):
+      rtc: interface: silence KMSAN warning
+      rtc: m41t80: reduce verbosity
+
+Alexandre Mergnat (3):
+      rtc: Make rtc_time64_to_tm() support dates before 1970
+      rtc: Fix offset calculation for .start_secs < 0
+      rtc: mt6359: Add mt6357 support
+
+Ciprian Marian Costea (2):
+      dt-bindings: rtc: add schema for NXP S32G2/S32G3 SoCs
+      rtc: s32g: add NXP S32G2/S32G3 SoC support
+
+Jingbao Qiu (1):
+      rtc: sophgo: add rtc support for Sophgo CV1800 SoC
+
+Johan Hovold (9):
+      dt-bindings: rtc: qcom-pm8xxx: add uefi-variable offset
+      rtc: pm8xxx: fix uefi offset lookup
+      rtc: at91rm9200: drop unused module alias
+      rtc: cpcap: drop unused module alias
+      rtc: da9063: drop unused module alias
+      rtc: jz4740: drop unused module alias
+      rtc: pm8xxx: drop unused module alias
+      rtc: s3c: drop unused module alias
+      rtc: stm32: drop unused module alias
+
+Krzysztof Kozlowski (1):
+      rtc: amlogic: Do not enable by default during compile testing
+
+Liu Dalin (1):
+      rtc: loongson: Add missing alarm notifications for ACPI RTC events
+
+Ryan Wanner (2):
+      dt-bindings: rtc: at91rm9200: add microchip,sama7d65-rtc
+      dt-bindings: at91rm9260-rtt: add microchip,sama7d65-rtt
+
+Troy Mitchell (1):
+      rtc: pcf8563: fix wrong alarm register
+
+Uwe Kleine-König (3):
+      rtc: test: Emit the seconds-since-1970 value instead of days-since-1970
+      rtc: test: Also test time and wday outcome of rtc_time64_to_tm()
+      rtc: test: Test date conversion for dates starting in 1900
+
+Wolfram Sang (13):
+      rtc: sh: assign correct interrupts with DT
+      rtc: sh: remove update interrupt handling
+      rtc: sh: only disable carry interrupts in probe()
+      rtc: sh: remove periodic interrupt handling
+      rtc: sh: simplify irq setup after refactoring
+      rtc: sh: remove useless wrapper function
+      rtc: sh: use local variables in probe() for mapping IO
+      rtc: sh: minor fixes to adhere to coding style
+      rtc: rzn1: clear interrupts on remove
+      rtc: da9063: simplify irq management
+      dt-bindings: rtc: rzn1: add optional second clock
+      rtc: rzn1: Disable controller before initialization
+      rtc: rzn1: support input frequencies other than 32768Hz
+
+ .../bindings/rtc/atmel,at91rm9200-rtc.yaml         |   4 +-
+ .../bindings/rtc/atmel,at91sam9260-rtt.yaml        |   1 +
+ .../devicetree/bindings/rtc/nxp,s32g-rtc.yaml      |  72 ++++
+ .../devicetree/bindings/rtc/qcom-pm8xxx-rtc.yaml   |   6 +
+ .../devicetree/bindings/rtc/renesas,rzn1-rtc.yaml  |   8 +-
+ drivers/rtc/Kconfig                                |  25 +-
+ drivers/rtc/Makefile                               |   2 +
+ drivers/rtc/class.c                                |   2 +-
+ drivers/rtc/interface.c                            |   2 +-
+ drivers/rtc/lib.c                                  |  24 +-
+ drivers/rtc/lib_test.c                             |  27 +-
+ drivers/rtc/rtc-at91rm9200.c                       |   1 -
+ drivers/rtc/rtc-cpcap.c                            |   1 -
+ drivers/rtc/rtc-cv1800.c                           | 218 ++++++++++++
+ drivers/rtc/rtc-da9063.c                           |  31 +-
+ drivers/rtc/rtc-jz4740.c                           |   1 -
+ drivers/rtc/rtc-loongson.c                         |   8 +
+ drivers/rtc/rtc-m41t80.c                           |  78 +++--
+ drivers/rtc/rtc-mt6397.c                           |   1 +
+ drivers/rtc/rtc-pcf8563.c                          |   2 +-
+ drivers/rtc/rtc-pm8xxx.c                           |  18 +-
+ drivers/rtc/rtc-rzn1.c                             |  71 +++-
+ drivers/rtc/rtc-s32g.c                             | 385 +++++++++++++++++++++
+ drivers/rtc/rtc-s3c.c                              |   1 -
+ drivers/rtc/rtc-sh.c                               | 285 +++------------
+ drivers/rtc/rtc-stm32.c                            |   1 -
+ 26 files changed, 946 insertions(+), 329 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/nxp,s32g-rtc.yaml
+ create mode 100644 drivers/rtc/rtc-cv1800.c
+ create mode 100644 drivers/rtc/rtc-s32g.c
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
