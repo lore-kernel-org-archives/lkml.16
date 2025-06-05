@@ -1,135 +1,111 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168B98488
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 14:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066D01C84A2;
+	Thu,  5 Jun 2025 14:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749133740; cv=none; b=u2XYSXcsdAx6Z7L6YyufTy3HeTf4rHUTa4uhZIzTsZ1wEBzPcHKFrA9eAGHzQhbKE+yvFnWy0zWiZrHJ5tdM2sphnWzMfPGo4h0vUfMmZQ5O5thDACxVtLhwSh0qXlduU+JPhwRN5SDZOjSZSo+Db+/q1FRVmOmeID9zDIoPaDA=
+	t=1749133747; cv=none; b=MGE9RlnQ2VJgarO28fNIf7XdhNzWRREnNoLlrJfnZE9qfbx8pL9psujRIRCeK+JFhUBLxDNqatw+O+PbIEaS9hnRlujXPDnMsAndfPrNII7KF1ul8Pi4qtNZrO0dyqJe828utL6SJ5wH2skNB2kVUOnAXnHfjkjfSD6B9ICK5Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749133740; c=relaxed/simple;
-	bh=48EYsY4ls1iWO/3rL9mhxJYE8wjpVQO56bO14A0GiXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ATOSP0nx4V1cnF2/Tp6ikE3f4R2zSMTO6RFXmvWVi1WDq7quahL2h8x8YRZVuVn+dfDdNUDDnOLwE9zoC/RNxaVjAW/f5uw70WogRiqgHKPYtOeHvz/hrNLUrdSQJUI4LJOt6RDA/8mA4lS8aOP54cjnOIopoZyHmefxGMFBS94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=opJLJZvV; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749133747; c=relaxed/simple;
+	bh=SAK1eCG6q30aTdJmw9lTFOqLAVILbrbvQ+z1shYGO1I=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=bmu9FuKTuPakRWOog/nDHvOvcVXvSrRBg/TfWUAsKj3F5h0qQAe5hEXA5c78ld9IaxMxBn9d8K1xf9GIUMIYtYHv94/ObujtMTI4qXpZQb2FEvrqwLtNGDczjUTqRUeYLmMYUyRMoSfEn6Zo5ctks6SW7nqzzZgrqO9Ab3RxDI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZe/8R3A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="opJLJZvV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ag+al2sonYVU0KVcUd9i14JJToHCYR33Hx/hh+FMpt8=; b=opJLJZvVJc4N0SbUnihbFauyD6
-	QahoPr2YfswiAfwmLEdvODHPnV54Z8Txs637aNzdW7OQFw55gd2LjsuFMI7+d3VBENxb/c6UTJbec
-	nm0IiMCQUH/6wdB8SZigahd6tiwI0lvRS6aRxi/cdcAye4BjNpEqw1FxvoWO7aOJXIUAInPdr4dBc
-	rzAXTODRkML8ZW5yMIPH1cooT/ntxVGxv9XmjSAGMshoTvMtjnHdZmeYnVrVlFd65kLCGjs/jOnNe
-	QE6er6I3kU8awVDkwmyhOTyUGmIy6+Vu8kegr+vQf3GPqkcejf4VndVaoamFSy9M6u5cGNCIau6Kg
-	gjXYSLwA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uNBaO-00000001Aqj-1g2y;
-	Thu, 05 Jun 2025 14:28:52 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A4F1330057C; Thu,  5 Jun 2025 16:28:51 +0200 (CEST)
-Date: Thu, 5 Jun 2025 16:28:51 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Zecheng Li <zecheng@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Xu Liu <xliuprof@google.com>, Blake Jones <blakejones@google.com>,
-	Josh Don <joshdon@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] sched/fair: Embed sched_entity into cfs_rq
-Message-ID: <20250605142851.GU39944@noisy.programming.kicks-ass.net>
-References: <20250604195846.193159-1-zecheng@google.com>
- <20250604195846.193159-2-zecheng@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZe/8R3A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A88C4CEE7;
+	Thu,  5 Jun 2025 14:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749133746;
+	bh=SAK1eCG6q30aTdJmw9lTFOqLAVILbrbvQ+z1shYGO1I=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=nZe/8R3AcLEvnjMDtpcPxvHPl9htAqqxUfWnCfPeVtEALXURX+X1eClc/1kxSL/t3
+	 NRjS70aAIVd1HT7OY8CQpCz7SUdsExAatXnNB7ZMw3AEljwwKzLP2WpTbFaOy/hxQ1
+	 BzDi2pF+eiO8CV47eTDm5heAYVVTjA4+Eqrrrvffyfwgd5daxBP9lzUVEmbFDt1kKZ
+	 6z2MlnTwVMPQUt7up3R2VKF8ru8O1rJZ7S1+l258aXwYlPkhSQioz/WAhYplUay7wC
+	 m5ZXUn7HgxyqAP6DtwIuXblxH3uKBGPV8B2bUBcov9tqrHDOt6sZRpULu/60SYe8Gp
+	 l2cKYrev88IWw==
+Date: Thu, 05 Jun 2025 09:29:04 -0500
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604195846.193159-2-zecheng@google.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Frank Li <Frank.li@nxp.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ =?utf-8?q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, imx@lists.linux.dev, 
+ Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
+ Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Pankaj Gupta <pankaj.gupta@nxp.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Gaurav Jain <gaurav.jain@nxp.com>, "David S . Miller" <davem@davemloft.net>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, linux-crypto@vger.kernel.org
+To: John Ernberg <john.ernberg@actia.se>
+In-Reply-To: <20250605132754.1771368-4-john.ernberg@actia.se>
+References: <20250605132754.1771368-1-john.ernberg@actia.se>
+ <20250605132754.1771368-4-john.ernberg@actia.se>
+Message-Id: <174913374447.2520926.5612887459467477896.robh@kernel.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: crypto: fsl,sec-v4.0: Add power
+ domains for iMX8QM and iMX8QXP
 
-On Wed, Jun 04, 2025 at 07:58:41PM +0000, Zecheng Li wrote:
-> To improve data locality and avoid pointer chasing, embed struct
-> sched_entity within struct cfs_rq. This co-locates the runqueue state
-> (cfs_rq) and the entity's scheduling state (se).
+
+On Thu, 05 Jun 2025 13:28:02 +0000, John Ernberg wrote:
+> NXP SoCs like the iMX8QM, iMX8QXP or iMX8DXP use power domains for
+> resource management.
 > 
-> This patch implements the following:
+> Add compatible strings for these SoCs (QXP and DXP gets to share as their
+> only difference is a core-count, Q=Quad core and D=Dual core), and allow
+> power-domains for them only. Keep the old restriction for others.
 > 
-> - Adds a struct sched_entity field to struct cfs_rq.
+> Signed-off-by: John Ernberg <john.ernberg@actia.se>
 > 
-> - Modifies alloc_fair_sched_group() and free_fair_sched_group() to
-> remove the separate allocation and freeing logic for sched_entity
-> objects themselves.
-> 
-> - The task_group->se pointer array (struct sched_entity **se) is
-> retained. The pointers in this array are updated to point to the
-> corresponding embedded &cfs_rq->se for each CPU.
-> 
-> Signed-off-by: Zecheng Li <zecheng@google.com>
 > ---
->  kernel/sched/fair.c  | 10 +---------
->  kernel/sched/sched.h |  4 ++++
->  2 files changed, 5 insertions(+), 9 deletions(-)
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 0fb9bf995a47..c2af9896eef4 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -13343,8 +13343,6 @@ void free_fair_sched_group(struct task_group *tg)
->  	for_each_possible_cpu(i) {
->  		if (tg->cfs_rq)
->  			kfree(tg->cfs_rq[i]);
-> -		if (tg->se)
-> -			kfree(tg->se[i]);
->  	}
->  
->  	kfree(tg->cfs_rq);
-> @@ -13374,11 +13372,7 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
->  		if (!cfs_rq)
->  			goto err;
->  
-> -		se = kzalloc_node(sizeof(struct sched_entity_stats),
-> -				  GFP_KERNEL, cpu_to_node(i));
-> -		if (!se)
-> -			goto err_free_rq;
-> -
-> +		se = &cfs_rq->se;
->  		init_cfs_rq(cfs_rq);
->  		init_tg_cfs_entry(tg, cfs_rq, se, i, parent->se[i]);
->  		init_entity_runnable_average(se);
-> @@ -13386,8 +13380,6 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
->  
->  	return 1;
->  
-> -err_free_rq:
-> -	kfree(cfs_rq);
->  err:
->  	return 0;
->  }
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 47972f34ea70..6e26b7d59c13 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -738,6 +738,10 @@ struct cfs_rq {
->  	struct list_head	throttled_csd_list;
->  #endif /* CONFIG_CFS_BANDWIDTH */
->  #endif /* CONFIG_FAIR_GROUP_SCHED */
-> +#ifdef CONFIG_FAIR_GROUP_SCHED
-> +	/* sched_entity on parent runqueue */
-> +	struct sched_entity	se ____cacheline_aligned;
-> +#endif
->  };
+> v4:
+>  - Reword commit message (Frank Li)
+>  - Add explicit imx8qxp compatible (Frank Li)
+>  - Move the job-ring constraints back to the job-ring section under an
+>    'allOf:' to avoid the warning from v2 (Rob Herring)
+> 
+> v3:
+>  - Fix warnings discovered by Rob Herring's bot
+>  - Declare the compatibles correctly (Krzysztof Kozlowski)
+> 
+> v2:
+>  - Adjust commit message (Frank Li)
+>  - Only allow power-domains when compatible with imx8qm (Frank Li)
+> ---
+>  .../bindings/crypto/fsl,sec-v4.0.yaml         | 41 ++++++++++++++++++-
+>  1 file changed, 40 insertions(+), 1 deletion(-)
+> 
 
-This also blows up struct rq for no reason.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I would much rather you all investigate if you can make the flattened
-cgroup stuff from Rik work.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml:115:17: [warning] wrong indentation: expected 18 but found 16 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250605132754.1771368-4-john.ernberg@actia.se
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
