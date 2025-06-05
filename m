@@ -1,178 +1,171 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11023084.outbound.protection.outlook.com [40.107.159.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9723522FDE8;
-	Thu,  5 Jun 2025 13:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129683; cv=fail; b=Nc31rCZlQYT0n7bwPlN7lnsn7e1pfaTfTNUidy10poG2kv2oQcjGURHqa2ifNVxlGtgpx97jCwkBV5siyrHJS2vrAoOY/5xvD6lxbabiKG9/5Tle4x6u+Ls1tZ1F6cVtUCFW2a+PIezVAEDloorMEqHg6uX8O/bNHs1FjExozAc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129683; c=relaxed/simple;
-	bh=qpJXy7hTFUO7cf9Ge50lXnlSOj2/KjRWbvKfaFU4B8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lUBrnl4v2fqVVRK6Ek/Qlm2M+VYPXOELGd8URwcp265XBYQvy/KUsb5tlA+esohHEHBQjFPFqc1qWnJTi8P/4YgTSFgcwcZEki3xWFY7TQ/4c9M1+tfTM9CEErwr1xDZyCh8qycJVOAh2lmnqBZuBFufBq1RQt6iZSZ199WZikg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de; spf=pass smtp.mailfrom=technica-engineering.de; dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b=GVro/Pl6; arc=fail smtp.client-ip=40.107.159.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=technica-engineering.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A941EDA12;
+	Thu,  5 Jun 2025 13:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749129776; cv=none; b=U9pseO2uBHmuGKb6Y1V1vS2hBWohxYKosUwaZo5gmZvj3SwCFZKTQFpUPfW4tPyqe3gHkCh6oWcd8A4iuc2lWGCmk1o+yhYHX477WQfkTm09NSEeRLUe8i0chfy2NtM2M3vu3b0tvd9xnVcoQ71e3SBirvHOv4k6eKf/rw3ni6U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749129776; c=relaxed/simple;
+	bh=CfFh3w0ThJN+yAH5vQnSPQ1cohCNV0n239N6A/m/PpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LZE27c9AF8UhyjkfMmg3ieZy8DKeznKkL3JQ1lLScgG+YwJJ2dnSQjcP0LEymefi+kg1osgA0544aNXaitVDdaWmpVplLcaxSQFkEWfzkqtm1M1ldRc/KTGwHBFAE023scAU6/RI99uJwNpTugT7tTVxjyI3+ExR1I6Kh/kVTIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ef5dZqDj; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b="GVro/Pl6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YCafJI8ic3RG6qFGOQHK7CHGR1RJ5Bo7zSRZVudIh5Z1GuuHsQhpKD5qFlymngbsApXEOzG7OcRQ4AhjBLYB5hraMOPrg54um/gMdjGnehNQOWPp1SlrJMfkmtsRo9ItkUNe/E50e3klic1hr3ko+31MPYOO6cF2XlRb5555HiuXPABLVKa6AuBG8bTt17MoBRkWfpB/LeQy2u4c8/9PgIzS69nzCD7t6o2lnv2mcTGeKVfqRBehOFD8yrdyDESGA3zb/MkcA6Og/F+o5TcPRtvO1Ym1Rf3z8MVWUParMf+f98s41ViK9s1d3RngSrlslfs9NDiIGdfjbiWqsmrWPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ITODzLQi1PckBoaXElyKR3IRhQzDzOjsE8ZrKJAG49U=;
- b=mDDEKQQAOf5RaRRd9yjK5rsL9bhQy+WQjjOkVlS9EKl3mCOTi8j3V3obaIQXwTzOYzZM1BKNo91n2eunLvhpXyO0Xf9ATHIsnhUKSd0rdN2SGXu+T7kBMva+wWohQK05ID6Vik4YZVP3RoVh1oeIUYDbuTDRR9+TU4XVImz6kLllFTO8vEpoYCyqRVl4ziRnXuefZppNxcPYDs4rLvmZAPJnVDF9XD0lUk9XvLjq2elqkasWSo6wxJiDuHUVNym15jnU0OYcN+Nkhx0g4Mu3RfJhl/nEUeK+30XJaHM6BC9v+h0tp2nqgJJxKfxVjP/vszVC2rCfD8GoLk+RW2eWqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 2.136.200.136) smtp.rcpttodomain=davemloft.net
- smtp.mailfrom=technica-engineering.de; dmarc=fail (p=reject sp=reject
- pct=100) action=oreject header.from=technica-engineering.de; dkim=none
- (message not signed); arc=none (0)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ef5dZqDj"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5534edc6493so1206868e87.1;
+        Thu, 05 Jun 2025 06:22:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=technica-engineering.de; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ITODzLQi1PckBoaXElyKR3IRhQzDzOjsE8ZrKJAG49U=;
- b=GVro/Pl6kBd4D3Y0BMFji8DtQh9kgwaaMX5ngxhkdprAST67jEp5BawzwHc42wHeJ0gWZFdiVvxpJQZ+x2qmdrlIDl7KscrevQZ+7kEXhyACzWrxcGtQiEZsGjjCwK2a0saj0yDBpkBHE1cJM/0TxHj2JFxn7MKe3liG+3ukbtQ=
-Received: from VI1PR0902CA0026.eurprd09.prod.outlook.com (2603:10a6:802:1::15)
- by DU0PR08MB8883.eurprd08.prod.outlook.com (2603:10a6:10:47e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Thu, 5 Jun
- 2025 13:21:15 +0000
-Received: from DU2PEPF00028D0F.eurprd03.prod.outlook.com
- (2603:10a6:802:1:cafe::ea) by VI1PR0902CA0026.outlook.office365.com
- (2603:10a6:802:1::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.32 via Frontend Transport; Thu,
- 5 Jun 2025 13:21:14 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 2.136.200.136)
- smtp.mailfrom=technica-engineering.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=technica-engineering.de;
-Received-SPF: Fail (protection.outlook.com: domain of technica-engineering.de
- does not designate 2.136.200.136 as permitted sender)
- receiver=protection.outlook.com; client-ip=2.136.200.136;
- helo=jump.ad.technica-electronics.es;
-Received: from jump.ad.technica-electronics.es (2.136.200.136) by
- DU2PEPF00028D0F.mail.protection.outlook.com (10.167.242.23) with Microsoft
- SMTP Server id 15.20.8792.29 via Frontend Transport; Thu, 5 Jun 2025 13:21:12
- +0000
-Received: from dalek.ad.technica-electronics.es (unknown [10.10.2.101])
-	by jump.ad.technica-electronics.es (Postfix) with ESMTP id 3DB09402BC;
-	Thu,  5 Jun 2025 15:21:12 +0200 (CEST)
-From: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
-To:
-Cc: carlos.fernandez@technica-engineering.de,
-	sbhatta@marvell.com,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Hannes Frederic Sowa <hannes@stressinduktion.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v3] macsec: MACsec SCI assignment for ES = 0
-Date: Thu,  5 Jun 2025 15:21:04 +0200
-Message-ID: <20250605132110.3922404-1-carlos.fernandez@technica-engineering.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250604123407.2795263-1-carlos.fernandez@technica-engineering.de>
-References: <20250604123407.2795263-1-carlos.fernandez@technica-engineering.de>
+        d=gmail.com; s=20230601; t=1749129772; x=1749734572; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I/GGnrCZDhPfrx6amA2Y2XENRlSPIkx2oqNJAJB+2Yg=;
+        b=Ef5dZqDjjSyZlj0zoQHWjHQyGYDYDtjWKzLhjgwRn5+QEASJkZmpEQud/YUlCNdZGh
+         GwoX8kxe8LpPXdJnA4IL2yv38CmKMn4PP8FMyx+6b7FuIQ04MdCPKs91YvzW7C5EVuvV
+         RGouY/IpX+q3CITjagZCTPpaCH0RJF3ehlP2XlIUd3czB7gpvvEtXSRMGR+j93OGT53J
+         RQpJw3txa+RuR+sP7tZdbMR5SWVRzksETHBOFmb+kttIAEqonxCQ3Y0bdTqfY+/PNoqz
+         6ysVQgoK0llzFX7SjvV6jZUR9MOwHdwvvVd+PEG5/YPiOBDVVb6XaaKnft8Hfh4G5McO
+         KEqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749129772; x=1749734572;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I/GGnrCZDhPfrx6amA2Y2XENRlSPIkx2oqNJAJB+2Yg=;
+        b=kUsLq6UUDLB9PvyI9D+HiDRUex11/r2rLbQFzH/PoAYShqsuNUBZCuHba2ATSJTymt
+         WM/y1wVR8L8njsclgSn6VceGMZZkRqkOpfXJAxieSIMYwWn9XDJEbgF62xoUrlwq91ic
+         I+ZGOIxcaVr0X3hUJceld/MDWCiRL7ZR+/w8cJCpL3tXwonsakdtG/jTAsYrR3ZJFp75
+         RoWinAZdvzvf3W9hKb2uJuZ3GLsJco3vo61ch3EsCxzI9jYdqVgIu18kspUamhi5Rn1v
+         +HVuV+iuysbfWyzkrpXe16rlNbpVuzI9Qbz+v1IMGF+noZtRPfgUDawFGJt2jAPVbC1e
+         rbjw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/YGjJSkgtLeQ5elrJwPnBnrN5bVA0cb+8t4/fKsHI0lGJqpR6OrDaNf5FNhFohg9qDfL0r1HeD8wkmtnz3+g=@vger.kernel.org, AJvYcCWjy4JwjfS5V2Flpiq1nghNHpREaMX1vrl/rIkTehVMqvTv/KBFlagfP4218F2kgLoYWOXR8ulC8rC3NAs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYBh0QrkVAapoAK9B0yG9z5CGvvSWWRAXf6gByFT7K2G47YF6B
+	Pw7uETEEDomS2dYyHUjS3uxLbLqOIyV7c0VUuvJtiN81CkjzHo6/z4Xt
+X-Gm-Gg: ASbGncsZ4gyVe7Yb6LTGMFNkRtJlhyoAFOgPTRhZPAvmkHB1Y7tXZjyB4OHybNqeQIY
+	nbYQ44X8Gk52ThJezuNO3LwOlgCkQgtN2nFBMAPJmtowdTzhSJl15ZE28zt9vh/mYs6GUT/jz1r
+	bNiVv4LioTVLMV80Pp0UI6JXyjR0KKUO+eHkdzXTwDq1ceVR8sqIbSiQu/IcHPESFThbQ5rePs7
+	EXu6jxPSAyqV4TUFLdtcnnYxta8oOJkmHX5daDT0+s0JqajSwSAW7jiolEBCfm7bBxWT9FcF/6T
+	CPY+qu5WhalqH1nXVWhqCjsGKWfx5spToYVYyHPNDcKcb8VhcKJ1Doqbusx9uNPIMapPrFy/3on
+	vapT4sN1l0OHCU7NdJ25YEEjlC/RO
+X-Google-Smtp-Source: AGHT+IGUkWPUVcTxMOH4yIrjfz5Gt3Qal4jvY6QFmn4eIjhXcLJmVM6uyLDL0ne8sloZ4dGqhpJwAg==
+X-Received: by 2002:a05:6512:12c3:b0:553:35ca:5922 with SMTP id 2adb3069b0e04-55356e04c18mr2010599e87.56.1749129771676;
+        Thu, 05 Jun 2025 06:22:51 -0700 (PDT)
+Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5533791d026sm2640505e87.168.2025.06.05.06.22.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 06:22:50 -0700 (PDT)
+Message-ID: <5c72682a-ede9-4a48-a214-f1795115816b@gmail.com>
+Date: Thu, 5 Jun 2025 16:22:50 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PEPF00028D0F:EE_|DU0PR08MB8883:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 17a1346c-65a9-4aff-0efe-08dda433d7c8
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Rdk9G68RbjTjKO7uigRRuishuwTGtXrMdHESM0Wjn81oPPkVotCN2sydbn54?=
- =?us-ascii?Q?EAR2LuTXRqIL47d+onQRypa15n9JWqk4ORo7/avryEe/RjdrMVl8ZqVoRMOQ?=
- =?us-ascii?Q?1RGN9OGLUI2P4Pm29cbS3aQ9W6Yl4vSd9UOZp+qNYAUqUk83izh9J2LH6U6v?=
- =?us-ascii?Q?Ebepw3JXrEASTxUEMNcBd8ZLnohzRzqAi576+INRNL9oHW9RRRPk7SCuKY+y?=
- =?us-ascii?Q?JrLywb+Y67BQtykNHb8tweT5ylrqSWH4Mj9sSkP2bT1GYEybHfdSBBw3WEYW?=
- =?us-ascii?Q?LG9TyLwt+pbQ88lEZM/j6yE4KO4u8CreWRh4n7RMkunssXFhIYX9Jc2J0rWj?=
- =?us-ascii?Q?+kjx5+NdhrMP/TQXobCpG+aJSBvwj6VpZ+t/56ta45DUeSwdMVrVa2XHkArt?=
- =?us-ascii?Q?90tfzL+ZUuz/BhC8DzB+TmC/KvuZ0o9YKZtfkt748TQbH9GK0pImkGzwT8KQ?=
- =?us-ascii?Q?F/pI1gmLnwJYw0UXSsofQ8DcaswAe+RQVZAuSGXbbobcbxU3AwN0cZ/L826W?=
- =?us-ascii?Q?fewjtDspM5tlcyMjuKbWmotXqbC227wnZ+QBg+84qNH+15JUk5BBW7GYtvrB?=
- =?us-ascii?Q?Y8brXY353ijJdnePJ7eK/p+FzBgYFyLlm9uAz27QFDy3WWtDc9PKZOHMSIVm?=
- =?us-ascii?Q?dB+QB8UqBOpFnHjisvQ+Pbl2v1uXLb2M34dEOfvCGaZIQtLZUC5l95QNTXIv?=
- =?us-ascii?Q?IpY+lQbvmGIVDkrIl4ATtIXyUHXdxm/ZMSaQOu4DmK2wFETaGx+PO8lup+KL?=
- =?us-ascii?Q?sQyRGVZf0I6WBbSf07Jw/B6lYq12wm2urqT2gb7RclkVfpxesq7NBEhCc9C/?=
- =?us-ascii?Q?POBUS3ZK/fMIgzoHWk6UVpRNH3FidMZ512Tm/WdfSSsm/9UEujyBmivlVzlC?=
- =?us-ascii?Q?Woi5LM7+jYGyFiDhsQx8xg5J2bIlt9YOvtWl3UWKn366Q6AFOTYVnGkAW45R?=
- =?us-ascii?Q?++HH1Tvu1Z4v5IXZSLzI1E/80SdmQB0CYzT4XACuoozaTtcFBOE72t7UIrHh?=
- =?us-ascii?Q?ALe7FNFCtQUmst9e6ydJwj/dqLOngNxK+p3GSSe6RPE4wjkTBqB6Sw5CAE0x?=
- =?us-ascii?Q?L26L0+1YVF/Gr4H7qe1EQafGKK2+WcmR5AgPJ+De0V3fVPTWkkPO/wO0Dvuo?=
- =?us-ascii?Q?2TrHCPrqgS0rnwgHc4UJXgXXYGNxDwvZ4H68mHqkGZ4zgGkLCCifEm23eygZ?=
- =?us-ascii?Q?fO9Is7KMGL/m/74tIgJRKuzyQ9XNu6tgD+iqjRJIE71RPEryv6cOIsK0ARVt?=
- =?us-ascii?Q?5uFSJwhqfVIOaJajEQf7UsEWM/qiTD6QsPB3b//ZQf08HIB5wdVje16J0Yv1?=
- =?us-ascii?Q?j0nJkRpHyJeeRoebaXX26PdnM8b+WKyLdDOmIBHcZr+AaFc3iw67KAefdVao?=
- =?us-ascii?Q?tv2Ep6+nk/nh4891eoDJ9By0M8kL7vZEmeiKSrrp0NGpTwqw+m0jG2EhKnHy?=
- =?us-ascii?Q?yCbcp97wpsV1TMbZQUpGY+qLtdVmiGSiwV0vb6WmpYPIYZNzGZHlYn7zu4PL?=
- =?us-ascii?Q?J5gxLjpHD97+hUOi3l61UJxDhYFpyQwPrxQY?=
-X-Forefront-Antispam-Report:
-	CIP:2.136.200.136;CTRY:ES;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:jump.ad.technica-electronics.es;PTR:136.red-2-136-200.staticip.rima-tde.net;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1102;
-X-OriginatorOrg: technica-engineering.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 13:21:12.5693
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17a1346c-65a9-4aff-0efe-08dda433d7c8
-X-MS-Exchange-CrossTenant-Id: 1f04372a-6892-44e3-8f58-03845e1a70c1
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1f04372a-6892-44e3-8f58-03845e1a70c1;Ip=[2.136.200.136];Helo=[jump.ad.technica-electronics.es]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D0F.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8883
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
+To: Alexandre Courbot <acourbot@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc: dakr@kernel.org, lyude@redhat.com, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
+ rust-for-linux@vger.kernel.org,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+ Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
+ <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
+ <20250529004550.GB192517@ziepe.ca> <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
+Content-Language: en-US
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+In-Reply-To: <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Sundeep, 
 
-In order to test this scenario, ES and SC flags must be 0 and 
-port identifier should be different than 1.
 
-In order to test it, I runned the following commands that configure
-two network interfaces on qemu over different namespaces.
+On 30/05/2025 17:02, Alexandre Courbot wrote:
+> On Thu May 29, 2025 at 9:45 AM JST, Jason Gunthorpe wrote:
+>> On Thu, May 29, 2025 at 01:14:05AM +0300, Abdiel Janulgue wrote:
+>>> +impl SGEntry<Unmapped> {
+>>> +    /// Set this entry to point at a given page.
+>>> +    pub fn set_page(&mut self, page: &Page, length: u32, offset: u32) {
+>>> +        let c: *mut bindings::scatterlist = self.0.get();
+>>> +        // SAFETY: according to the `SGEntry` invariant, the scatterlist pointer is valid.
+>>> +        // `Page` invariant also ensures the pointer is valid.
+>>> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, offset) };
+>>> +    }
+>>> +}
+>>
+>> Wrong safety statement. sg_set_page captures the page.as_ptr() inside
+>> the C datastructure so the caller must ensure it holds a reference on
+>> the page while it is contained within the scatterlist.
+>>
+>> Which this API doesn't force to happen.
+>>
+>> Most likely for this to work for rust you have to take a page
+>> reference here and ensure the page reference is put back during sg
+>> destruction. A typical normal pattern would 'move' the reference from
+>> the caller into the scatterlist.
+> 
+> As Jason mentioned, we need to make sure that the backing pages don't get
+> dropped while the `SGTable` is alive. The example provided unfortunately fails
+> to do that:
+> 
+>      let sgt = SGTable::alloc_table(4, GFP_KERNEL)?;
+>      let sgt = sgt.init(|iter| {
+>          for sg in iter {
+>              sg.set_page(&Page::alloc_page(GFP_KERNEL)?, PAGE_SIZE as u32, 0);
+>          }
+>          Ok(())
+>      })?;
+> 
+> Here the allocated `Page`s are dropped immediately after their address is
+> written by `set_page`, giving the device access to memory that may now be used
+> for completely different purposes. As long as the `SGTable` exists, the memory
+> it points to must not be released or reallocated in any way.
 
-After applying this configuration, MACsec ping works in the patched version 
-but fails with the original code.
 
-I'll paste the script commands here. Hope it helps your testing.
+Hi just a silly observation while trying to think about other ways to 
+tie the page lifetime to the sgtable. Why can't we just use a lifetime 
+bound annotation?
 
-PORT=11
-SEND_SCI="off"
-ETH1_MAC="52:54:00:12:34:57"
-ETH0_MAC="52:54:00:12:34:56"
-ENCRYPT="on"
+It's simpler and it seems to work:
 
-ip netns add macsec1
-ip netns add macsec0
-ip link set eth0 netns macsec0
-ip link set eth1 netns macsec1
-  
-ip netns exec macsec0 ip link add link eth0 macsec0 type macsec port $PORT send_sci $SEND_SCI end_station off encrypt $ENCRYPT
-ip netns exec macsec0 ip macsec add macsec0 tx sa 0 pn 2 on key 01 12345678901234567890123456789012
-ip netns exec macsec0 ip macsec add macsec0 rx port $PORT address $ETH1_MAC 
-ip netns exec macsec0 ip macsec add macsec0 rx port $PORT address $ETH1_MAC sa 0 pn 2 on key 02 09876543210987654321098765432109
-ip netns exec macsec0 ip link set dev macsec0 up
-ip netns exec macsec0 ip addr add 10.10.12.1/24 dev macsec0
 
-ip netns exec macsec1 ip link add link eth1 macsec1 type macsec port $PORT send_sci $SEND_SCI end_station off encrypt $ENCRYPT
-ip netns exec macsec1 ip macsec add macsec1 tx sa 0 pn 2 on key 02 09876543210987654321098765432109
-ip netns exec macsec1 ip macsec add macsec1 rx port $PORT address $ETH0_MAC 
-ip netns exec macsec1 ip macsec add macsec1 rx port $PORT address $ETH0_MAC sa 0 pn 2 on key 01 12345678901234567890123456789012
-ip netns exec macsec1 ip link set dev macsec1 up
-ip netns exec macsec1 ip addr add 10.10.12.2/24 dev macsec1
+impl<'b> SGEntry<'b, Unmapped> {
+     pub fn set_page<'a: 'b> (&mut self, page: &'a Page, length: u32, 
+offset: u32)
 
-ip netns exec macsec1 ping 10.10.12.1 #Ping works on patched version.
+So with this, my erroneous example fails to compile. Here the compiler 
+enforces the use  of the api so that the page of the lifetime is always 
+tied to the sgtable:
 
-Thanks, 
-Carlos
+
+let sgt = sgt.init(|iter| {
+    |                             ---- has type 
+`kernel::scatterlist::SGTableIterMut<'1>`
+71 |             for sg in iter {
+    |                 -- assignment requires that borrow lasts for `'1`
+72 |                 sg.set_page(&Page::alloc_page(GFP_KERNEL)?, 
+PAGE_SIZE as u32, 0);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+              - temporary value is freed at the end of this statement
+    |                              |
+    |                              creates a temporary value which is 
+freed while still in use
+
+
+Regards,
+Abdiel
