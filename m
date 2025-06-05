@@ -1,269 +1,317 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012061.outbound.protection.outlook.com [52.101.71.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804E37E1
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749113288; cv=none; b=Ca0dbpeoHQ1FXBDw9x6deqIq3tSk4KfrRN30qU7mTpUbkazst9j6d7Ydo7+4sz3KIiF4WnkENziJGk36jBYH5zDWFjcHll/XSZD9bte+foP4HI6Vae/ok05n1I/eLI4TFVYChL4yASolxwtFQGAmQ0irnNEAecPhw6Ej2tcbHTk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749113288; c=relaxed/simple;
-	bh=23jGBlfNy7jF+Sg/qbJXSLZgAa7BjLH7yDzZAQbJ3vU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CjMexR1PTAfULVL0fgcPYqXQUIE0YkoohWbTHmE+MD+gFFOl452cJcNAkULkusKT4JFTmt8MjuqecAeDQXUoniKHwZjuyWt6/RCTQkysu2iCxQM7H87f/+G9N6LD/+YVsvYWEr7kAJGzsv3d47usx1zJ7SgzGY7vuASR18WyrGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wbCuIM3J; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q5Qt3PoV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WN+MoBv5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iNxBrZJJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5686C7E1;
+	Thu,  5 Jun 2025 08:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749113382; cv=fail; b=WIpnDCiw8XpL4HBkAHmkJMFMBNyWggeYc5rsloGfjS0jvrxa8KqxoQrClP2jL3MaoUeXaGS7ND8SMhaGuaq1g83NFUoWRMPwU7f2qwgK/anoPLBRLWuoLWnD90JuuBRYFaDEjL7kp8ep/r1ztbFzk1qu/fBgRBwHQjxalrzYN9g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749113382; c=relaxed/simple;
+	bh=Z0C4/Nacr9BJ+tHwN6ZyVBCHXR4em61TmanWwocXE+k=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MERzNOz+9VFwene6gX5zX1ER8uVigBL1QN5dubp4Xu+Pw0jgEEfDW/XP2cxiEplQWdl6yVqdGwho7r7JZkJy42wtv3lSQ6r9Kbn+nFZrdwszIay1zqHbhymTthTpSy0dIgqlAhtfW+px5GG3Ygd/gD6e6UpQFyKNJebL51ggbNY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=fE4QoAnH; arc=fail smtp.client-ip=52.101.71.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wbCuIM3J";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q5Qt3PoV";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WN+MoBv5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iNxBrZJJ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 47333347B7;
-	Thu,  5 Jun 2025 08:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749113284; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=XynFFcRiIqMIXFW30c/G7NhwK8di++5nyZupzy6ptTQ=;
-	b=wbCuIM3JEsJxieaarbdCqnFfX4LQGczMazTTfEsawXxVBc+wcdLQoablyYeoyiBjtripQw
-	AxNnqsn1F5ZDnrGnB6uzhxo3iSujlt/bNMROeAG1iTg2ni7YsZvDpkbBhI3NfNAAilOJEl
-	WrbzxWPBjFaQmbOM08qvlW8MbZzWGHY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749113284;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=XynFFcRiIqMIXFW30c/G7NhwK8di++5nyZupzy6ptTQ=;
-	b=Q5Qt3PoVdnq55tIIueIkLD/0GZlG5jmvlJQK5h1OGEJmZodTKPjD8TeHOuuC+jlxbKqvhP
-	N/TfMOe0EYhrEuCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749113283; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=XynFFcRiIqMIXFW30c/G7NhwK8di++5nyZupzy6ptTQ=;
-	b=WN+MoBv5tjbXMOv4J6/nRjFUGdJEZn4s5u1HFNo2FCWfc5X3ZaJiB2u7xlbME22+2BYQ3a
-	/PvkG5lionnIVF4L+sJSTT+oOYSZ5NA6bqX0OPm2GjEoNGRSioSWlQwlJL6FbY4KPxhxkS
-	ZZABJmqUmt/SauQLw7qWfkWuJaczWV0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749113283;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=XynFFcRiIqMIXFW30c/G7NhwK8di++5nyZupzy6ptTQ=;
-	b=iNxBrZJJHys4nRvpw9i/ddXkUps5/49v/PlC3On6tZ0br9ryISWDlvjNrFqWVMqW/3tWsx
-	UI4+v95vkX+3FpAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2EA18137FE;
-	Thu,  5 Jun 2025 08:48:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TesJC8NZQWiTSwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 05 Jun 2025 08:48:03 +0000
-Message-ID: <8e85a701-7791-46d9-9443-266c6049c01f@suse.cz>
-Date: Thu, 5 Jun 2025 10:48:03 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="fE4QoAnH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=L2iV3lGZP8e8vGZnWHxwkU7aF+BKhJCbP+5gP09x/fbVxKBicDs4W8TcwFwOzqomZpwhuw+bgRnf1Ea7iCxm9cqRsFEwBykB/Jbhf5wWPfhL0p3cj0ml9WKZOuXkYAh8h/UQSnLdFfq6Opr/PRHAjrbnZQvFjz85tLACv2G0BGfCpSrWAa14BDZNiK6nKdyDsZZLhCgd5hPyKdcFqrcovd2DGR4kGwev2Ik5YvS7JsiAFF0ONRQ20dKDATPgize+7v6zLyUQjX6cc4pbRYbyB0WVOXuIT4Rm70rIsMdz825F6wafPoUkJ1LJ8CLGVkgFIGtQ9mFE2uSEJvQ8XbUisg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uisRWVu8MVaUFRZUVNKQ+z0gG1fMm1NHu7TKgkHy4kU=;
+ b=cQn5C6cxWagRKr3bxEi/mi3o97cwh41V4Y+CFP04PV0aS4ThHO14/KU1VViuVn2WUuiDe5R4Y9WtsgosoHpS8742AcDc3OvzZuVMeB3xczMO0tGaHtXyTsQMfNFYQ5LVexCD7K17/PjyIod7n0CPuGy/91B0WRX6xfXW0GiVscnsz5ztxXGNkOkeojZl7hKJdjwOKRio7iiW+p9ghgY1Z+FFblonxyG3N+lKsOixWI5EwKbbb8vXkeKhYMzVzkhCgs+GanrzumSe5nfn8eDd461lIn0YoubuX6g9aD4xLH5TQuRL2ECv8H+SV0MW5+fYr5oucLZHrjAowki83ra/eA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uisRWVu8MVaUFRZUVNKQ+z0gG1fMm1NHu7TKgkHy4kU=;
+ b=fE4QoAnHxWTmUk0TfchVj3l7z8qFU4HZedIh82NiUbNHX774FPOvVS8/LMyg2VEncWZB1XQORy/c4C9X1VoG5WxVNxePnjIJgTXEc8pT+Giff8dnGaAey5XgMX8Go3J7tKom9g832zlUQm304gOFSZI5/mtKvpu6Ak4mUp39M1PssaEHlnFarhM4wUwco2SSlWGSChj5LcBohvuHR++0U3ou66LRinlepUY4tO6anMuR79I9ulq6+x5cnczkhrpf0vX6Vn1d7sb9m5I3aqa2WLoYXdoXi9abku7CzEqsZ1X6eoPJvJDMUt1/8k0in46cz4gMvMHtLcQ+Pjj8tu1Ziw==
+Received: from DB9PR04MB8409.eurprd04.prod.outlook.com (2603:10a6:10:244::6)
+ by AM8PR04MB7762.eurprd04.prod.outlook.com (2603:10a6:20b:241::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Thu, 5 Jun
+ 2025 08:49:34 +0000
+Received: from DB9PR04MB8409.eurprd04.prod.outlook.com
+ ([fe80::1436:d8ba:25b8:1637]) by DB9PR04MB8409.eurprd04.prod.outlook.com
+ ([fe80::1436:d8ba:25b8:1637%3]) with mapi id 15.20.8813.018; Thu, 5 Jun 2025
+ 08:49:34 +0000
+From: Gaurav Jain <gaurav.jain@nxp.com>
+To: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
+	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+	"davem@davemloft.net" <davem@davemloft.net>, "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] crypto: caam - Set DMA alignment explicitly
+Thread-Topic: [PATCH] crypto: caam - Set DMA alignment explicitly
+Thread-Index: AQHb1TmJnegIOh8JikW+CmFDbvUZV7P0Qwgg
+Date: Thu, 5 Jun 2025 08:49:34 +0000
+Message-ID:
+ <DB9PR04MB8409F4DE065B0EBFD9B45D2CE76FA@DB9PR04MB8409.eurprd04.prod.outlook.com>
+References: <20250604101446.3993932-1-meenakshi.aggarwal@nxp.com>
+In-Reply-To: <20250604101446.3993932-1-meenakshi.aggarwal@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB9PR04MB8409:EE_|AM8PR04MB7762:EE_
+x-ms-office365-filtering-correlation-id: 681345d3-2f5b-4225-19c7-08dda40de520
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?RWnWKhcu8CsjhVM52m8SeRz18PMJx7Nm2n3MpGuakw7Ozn/Xoj/FFmRIFObC?=
+ =?us-ascii?Q?0P+iyVORPNVLvrJV3W3LPNS2rtcGOubJyU4YcIOaXQi8+SlTvsRvY6+3PcYE?=
+ =?us-ascii?Q?RZ1W9FDOrqHK0wZHclgUiwQlA2WE6F1OJCLyK/ILBunYGiOpT15HqfnGtF9h?=
+ =?us-ascii?Q?eKbceqaU918sPROIlCx1pe/KUU/BadPXl3nhGePLsl7gctGjXbbOmDiUlXPx?=
+ =?us-ascii?Q?jsUOz5ifr+Nhy580u7w/97/gy6UwI3QYlzJRclpGgWudfQoeuZRLisdabKFX?=
+ =?us-ascii?Q?DAIv5NyLU8KSMIEWzRLnZ+POnZVbq1DJ7WMteUob4QB0gEg4F+dnNjRfL5NT?=
+ =?us-ascii?Q?9mQIr4IFzFAVOzGsWPbftkLQJ43YngdkQRBOH1NdecySyCeE6tC6hIor9Cdl?=
+ =?us-ascii?Q?ApiUv8bEWoRqEUrqhldDi2Ei9xrYISdlNato9X98PPK2U8c3cPrDYNF+SVCR?=
+ =?us-ascii?Q?lC/3Q99K/uCYOXIJR3DLlFW3uCPkqYy19znBpPgLAg4DaGf36hlVJjs1tjAA?=
+ =?us-ascii?Q?eSz9GkNy3k1MC2FyZ8e9N1RQ24AxbQ1PMXtEqJWrpJVojqEOf3V4t+b5teAK?=
+ =?us-ascii?Q?LdUNmWIkOfEdpIzwk2K80rAUkpwUUKxJYkJfHI0rAVE1Lk92aBPg4i/FfCao?=
+ =?us-ascii?Q?y0RJkFi3y+33wW28Dn8ZZfgEotSfVeAise9AvVg3jMUR+wZB7L9IZn9uooTI?=
+ =?us-ascii?Q?IzLXB4w0OZPOjtE1mHmmb7mCQfxidq102N0RG0vqgp2Z9+JZhJKlvsKuD70q?=
+ =?us-ascii?Q?qQSw4sTfhYmHUDgwkkHJTbL5pLqYht3bOB9NGdtQco/yrn1iAitCbw6Y3noB?=
+ =?us-ascii?Q?K/+h20cRT7SbGGMlp549Z/Qs0OVVDtH3BXgJCFuO3zz7zx0czMhj8jk7nZWs?=
+ =?us-ascii?Q?3mNttIb8JJ5FbtvnfodX3aLycWe3TON1zsEODz3dQgWVQls0jBpAvdOyBfaZ?=
+ =?us-ascii?Q?OBegZuz1lsTSSKRa2sUYDZ1thb0GSvqeGdLXMtBjm4WBLzFLd1DVuIQcaLea?=
+ =?us-ascii?Q?+Un4NUl2GdScJsDNQu2uIHbhllVjnZBH5Ct0DiJs9RG46biGe8q+15qeMjid?=
+ =?us-ascii?Q?khoOS2nNxQNHk5X0ht/jEpPCFr3AbizleigR8xa2NumcNyVAbQym9ZoV3nGR?=
+ =?us-ascii?Q?FJzjF64Ye9dh0CbFiMFEMsAetXZj6PKO2jxF+QAJKhjb+lKGKxsHZUIUrisR?=
+ =?us-ascii?Q?4ji+Ga9IGLp5r3ya/C2ia+KUg5MotVehWRdAi7jXIvCPd1lJKpwa8lFSLg0P?=
+ =?us-ascii?Q?v0ERUQ+s6iXbYwYLqP9XAF2frjpx49mvxLrhoCQSKZRfpugOg/+ev2bJkW2j?=
+ =?us-ascii?Q?ih9LbK+MTB0J/cFpUc3YxyV5sU3mhgUcRSsV0x43a+PJ8mYLlb9y1ZLYJoRy?=
+ =?us-ascii?Q?C/AQmcgRhakRawOZQeeJ1YlzutdacorYJNMdGhaerTZVL241D+TN0S6BPEm0?=
+ =?us-ascii?Q?+DwRRnVN4Wus4lWTW9WBcu/4JtkbKqD1AM7ZbxwgjwVNQzWSKVoWG8dPObUy?=
+ =?us-ascii?Q?PXqajVD/ywu3nGc=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8409.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?0JP2vnbNpv5rcjGC+cKb4fmtW7GYeCojDJKPaX/ec6u84FL7krzdSsaSJc9C?=
+ =?us-ascii?Q?wWsTsWjhg9Hyk2czpWzkZGdGGRa8LJXCa/9dPiR8zCy/GIVZQHKPDVzL6wv4?=
+ =?us-ascii?Q?demlpcX8zA73X/JN1vbwztTj3ypXuHPkx632z6LA3sOjXmz0QBrfV+tP5Xir?=
+ =?us-ascii?Q?GjaVdlBosb6fZ1Dec144adq1lA4I+7gFNjBiE6eYQusMUEw2Og4ZF81eZ8N7?=
+ =?us-ascii?Q?B/MnWEe1f5V4064bFHdUbJu3fHMQoEB6hpoLLt7mZop9rgnp4a/tHa2cHOaP?=
+ =?us-ascii?Q?iM8ldEqqNsdJUL0PPYtwDldqxubVUVVnjjNR2eSa6cxItJ4wVxyWmSrlUlES?=
+ =?us-ascii?Q?eHd/S3vteGNbePrXi2dJXeLp/I8VtTZ/+Jp+HMVQXETdqm0sxFcMdVFEADOB?=
+ =?us-ascii?Q?4+UveyHzRIVW5WKkdPP35QmFOBHQCBo/rbbSzVzA55F/9tymim3cu4tOIdEM?=
+ =?us-ascii?Q?q/wV5BiU8HVr+gbH44xkWaBWuxIB09otzLjDCS0y2zMznWyz7Sf95jak3Ubi?=
+ =?us-ascii?Q?xrqIUmvw79oawWi21iuIEmPjjjtV7GDNUq73GeE60AW20MBqJhMo8QNzi/Bn?=
+ =?us-ascii?Q?KNOjvzy+kP1Mg3yRWmQAIefM06F1ZAK3jIvlSSwWL1CsHklxJ97V5Zw0ypP7?=
+ =?us-ascii?Q?2xFYLMW70Yd6wYzAKTsB+thPn0MkvmZ+gQqzkclMavRSSC4VzlEEmsNtGJKT?=
+ =?us-ascii?Q?HfkVChNfFS7TXsBbVYyXqvsVBWlFLA9YnU0xKfHZpf4F6tcVc/nq80vw5jXd?=
+ =?us-ascii?Q?9pyZGPWtpaq7nlmgK7XP+D/+LdKGvyi5LvIwL48wA772JWoXzW0cWM8ax4Rr?=
+ =?us-ascii?Q?s9PwXFbstGqc7yGa/6yiwhi+/MI4eieHRfWP1E3aLMReTC7g6D0u1n7pxZj6?=
+ =?us-ascii?Q?r1WK1j6Lw6b53yGarORw05hdY2TpGJUgKJiCFN5n8YavdUexhcjLO4Nv+Ajs?=
+ =?us-ascii?Q?o4diNciQvLpy9KoOmJc4F+dsqKpmlkAkJpBwaC00L/DCIc7utxGlgKX3JEOX?=
+ =?us-ascii?Q?h/u7A9JQSYF+9wf+W913yHy5xWYgpZWkwMTAIvip1sPHgGnQounVy4snDmWH?=
+ =?us-ascii?Q?o3KLJJ/49A6UD6SkBauP//i/6tMKDn5AQl40Ucufh8wHTHB057xTFicyQU+F?=
+ =?us-ascii?Q?4AiShxahmgk3Xol965CgHMqAFkoq8MZgkDJWCGSXbdbISjAL4Sn8wN6DxGo4?=
+ =?us-ascii?Q?xxAW2CCewALPyQpEPszS7dksgOZxO56hCpRQEIdPlj5BTmVed+0v+IqOoCJ0?=
+ =?us-ascii?Q?UjbCQn7GtSHfQKR3oLtPylM5gYubpg70/mQNJ0oIIbRQ2GVUD76s8MsbGlvN?=
+ =?us-ascii?Q?EPSJyew2cYNKzxP43nGufhX/7B7aMYnit+YHsk+mEsqxsBhe4tfjCAkVCd2a?=
+ =?us-ascii?Q?fKREoRihBT4cJMxuoUXtgqBEqU8eBXl9iX85lGo1gfrLxLWb/dB7Cdih5gjJ?=
+ =?us-ascii?Q?n0YRutji2D6pKYKFL962lsnngAuYMecVpcfo5QbX/Tq+7wvCKw0dpYnZ6bIn?=
+ =?us-ascii?Q?tt72dbgebUlWrc2YnqkP2YJ2BRSQ2+SkuHkTrTTC8TCGdALnCDKcjacaSQtA?=
+ =?us-ascii?Q?ba7KM0Y+aBHt6pRtfaWa/oB2aV7Ibtme9yy4733q?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>, John Hubbard <jhubbard@nvidia.com>,
- linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Peter Xu <peterx@redhat.com>
-References: <20250604140544.688711-1-david@redhat.com>
- <d08f2cb4-f76b-4ffb-b6fa-2a5a419fb86b@nvidia.com>
- <f1a3e3c1-103f-46d4-aa0e-ea057e78954d@suse.cz>
- <f33f6f73-58bd-4877-a2cc-5436943da292@redhat.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <f33f6f73-58bd-4877-a2cc-5436943da292@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -1.15
-X-Spamd-Result: default: False [-1.15 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_SPAM_SHORT(2.95)[0.984];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8409.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 681345d3-2f5b-4225-19c7-08dda40de520
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2025 08:49:34.1699
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ahq6WrHb8utuuT/hMiX4C/GORavoegr+tX4Kmq/6C/yU4nLF7GkspX7y7fvK99rh2BY7M3k3g6XBl15W7uPZhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7762
 
-On 6/5/25 08:08, David Hildenbrand wrote:
-> On 05.06.25 07:37, Vlastimil Babka wrote:
->> On 6/5/25 03:07, John Hubbard wrote:
->>> On 6/4/25 7:05 AM, David Hildenbrand wrote:
->>>> Especially once we hit one of the assertions in
->>>> sanity_check_pinned_pages(), observing follow-up assertions failing
->>>> in other code can give good clues about what went wrong, so use
->>>> VM_WARN_ON_ONCE instead.
->>>>
->>>> While at it, let's just convert all VM_BUG_ON to VM_WARN_ON_ONCE as
->>>> well. Add one comment for the pfn_valid() check.
->>>
->>> It would be a nice touch to add Linus' notes here, with the BUG() history
->>> and all. It answers a FAQ about BUG vs. WARN* that is really nice
->>> to have in the commit log.
->> 
->> Perhaps then rather put it somewhere appropriate in Documentation/process/
->> than a random commit log?
-> 
-> I mean, I documented most of that already in coding-style.rst. :)
+Reviewed-by: Gaurav Jain <gaurav.jain@nxp.com
 
-Thanks for the reminder, looks good to me :)
-
-> The full BUG history is not in there, but not sure if that is really required if ...
-> we're not supposed to use it.
-
-We could put links to the history excursion email (and appropriate older
-emails you link in the commit log below) to the References appendix of the
-coding-style file, but it's not that critical.
-
-> Is there anything important missing?
-> 
-> 
-> commit 1cfd9d7e43d5a1cf739d1420b10b1e65feb02f88
-> Author: David Hildenbrand <david@redhat.com>
-> Date:   Fri Sep 23 13:34:24 2022 +0200
-> 
->      coding-style.rst: document BUG() and WARN() rules ("do not crash the kernel")
->      
->      Linus notes [1] that the introduction of new code that uses VM_BUG_ON()
->      is just as bad as BUG_ON(), because it will crash the kernel on
->      distributions that enable CONFIG_DEBUG_VM (like Fedora):
->      
->          VM_BUG_ON() has the exact same semantics as BUG_ON. It is literally
->          no different, the only difference is "we can make the code smaller
->          because these are less important". [2]
->      
->      This resulted in a more generic discussion about usage of BUG() and
->      friends. While there might be corner cases that still deserve a BUG_ON(),
->      most BUG_ON() cases should simply use WARN_ON_ONCE() and implement a
->      recovery path if reasonable:
->      
->          The only possible case where BUG_ON can validly be used is "I have
->          some fundamental data corruption and cannot possibly return an
->          error". [2]
->      
->      As a very good approximation is the general rule:
->      
->          "absolutely no new BUG_ON() calls _ever_" [2]
->      
->      ... not even if something really shouldn't ever happen and is merely for
->      documenting that an invariant always has to hold. However, there are sill
->      exceptions where BUG_ON() may be used:
->      
->          If you have a "this is major internal corruption, there's no way we can
->          continue", then BUG_ON() is appropriate. [3]
->      
->      There is only one good BUG_ON():
->      
->          Now, that said, there is one very valid sub-form of BUG_ON():
->          BUILD_BUG_ON() is absolutely 100% fine. [2]
->      
->      While WARN will also crash the machine with panic_on_warn set, that's
->      exactly to be expected:
->      
->          So we have two very different cases: the "virtual machine with good
->          logging where a dead machine is fine" - use 'panic_on_warn'. And
->          the actual real hardware with real drivers, running real loads by
->          users. [4]
->      
->      The basic idea is that warnings will similarly get reported by users
->      and be found during testing. However, in contrast to a BUG(), there is a
->      way to actually influence the expected behavior (e.g., panic_on_warn)
->      and to eventually keep the machine alive to extract some debug info.
->      
->      Ingo notes that not all WARN_ON_ONCE cases need recovery. If we don't ever
->      expect this code to trigger in any case, recovery code is not really
->      helpful.
->      
->          I'd prefer to keep all these warnings 'simple' - i.e. no attempted
->          recovery & control flow, unless we ever expect these to trigger.
->          [5]
->      
->      There have been different rules floating around that were never properly
->      documented. Let's try to clarify.
->      
->      [1] https://lkml.kernel.org/r/CAHk-=wiEAH+ojSpAgx_Ep=NKPWHU8AdO3V56BXcCsU97oYJ1EA@mail.gmail.com
->      [2] https://lore.kernel.org/r/CAHk-=wg40EAZofO16Eviaj7mfqDhZ2gVEbvfsMf6gYzspRjYvw@mail.gmail.com
->      [3] https://lkml.kernel.org/r/CAHk-=wit-DmhMfQErY29JSPjFgebx_Ld+pnerc4J2Ag990WwAA@mail.gmail.com
->      [4] https://lore.kernel.org/r/CAHk-=wgF7K2gSSpy=m_=K3Nov4zaceUX9puQf1TjkTJLA2XC_g@mail.gmail.com
->      [5] https://lore.kernel.org/r/YwIW+mVeZoTOxn%2F4@gmail.com
->      
-> 
-> 
+> -----Original Message-----
+> From: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+> Sent: Wednesday, June 4, 2025 3:45 PM
+> To: Gaurav Jain <gaurav.jain@nxp.com>; herbert@gondor.apana.org.au;
+> davem@davemloft.net; linux-crypto@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+> Subject: [PATCH] crypto: caam - Set DMA alignment explicitly
+>=20
+> From: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+>=20
+> Few DMA alignment were missed in the original patch.
+>=20
+> Fixes: 4cb4f7c11dee ("crypto: caam - Set DMA alignment explicitly")
+>=20
+> Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+> ---
+>  drivers/crypto/caam/caamalg.c    | 22 +++++++++++-----------
+>  drivers/crypto/caam/caamalg_qi.c |  4 ++--
+>  2 files changed, 13 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.=
+c
+> index 2cfb1b8d8c7c..81dfbe436c20 100644
+> --- a/drivers/crypto/caam/caamalg.c
+> +++ b/drivers/crypto/caam/caamalg.c
+> @@ -980,7 +980,7 @@ static void aead_crypt_done(struct device *jrdev, u32
+> *desc, u32 err,
+>  			    void *context)
+>  {
+>  	struct aead_request *req =3D context;
+> -	struct caam_aead_req_ctx *rctx =3D aead_request_ctx(req);
+> +	struct caam_aead_req_ctx *rctx =3D aead_request_ctx_dma(req);
+>  	struct caam_drv_private_jr *jrp =3D dev_get_drvdata(jrdev);
+>  	struct aead_edesc *edesc;
+>  	int ecode =3D 0;
+> @@ -1020,7 +1020,7 @@ static void skcipher_crypt_done(struct device *jrde=
+v,
+> u32 *desc, u32 err,  {
+>  	struct skcipher_request *req =3D context;
+>  	struct skcipher_edesc *edesc;
+> -	struct caam_skcipher_req_ctx *rctx =3D skcipher_request_ctx(req);
+> +	struct caam_skcipher_req_ctx *rctx =3D skcipher_request_ctx_dma(req);
+>  	struct crypto_skcipher *skcipher =3D crypto_skcipher_reqtfm(req);
+>  	struct caam_drv_private_jr *jrp =3D dev_get_drvdata(jrdev);
+>  	int ivsize =3D crypto_skcipher_ivsize(skcipher); @@ -1309,7 +1309,7 @@
+> static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
+>  	struct crypto_aead *aead =3D crypto_aead_reqtfm(req);
+>  	struct caam_ctx *ctx =3D crypto_aead_ctx_dma(aead);
+>  	struct device *jrdev =3D ctx->jrdev;
+> -	struct caam_aead_req_ctx *rctx =3D aead_request_ctx(req);
+> +	struct caam_aead_req_ctx *rctx =3D aead_request_ctx_dma(req);
+>  	gfp_t flags =3D (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+>  		       GFP_KERNEL : GFP_ATOMIC;
+>  	int src_nents, mapped_src_nents, dst_nents =3D 0, mapped_dst_nents =3D =
+0;
+> @@ -1445,7 +1445,7 @@ static struct aead_edesc *aead_edesc_alloc(struct
+> aead_request *req,  static int aead_enqueue_req(struct device *jrdev, str=
+uct
+> aead_request *req)  {
+>  	struct caam_drv_private_jr *jrpriv =3D dev_get_drvdata(jrdev);
+> -	struct caam_aead_req_ctx *rctx =3D aead_request_ctx(req);
+> +	struct caam_aead_req_ctx *rctx =3D aead_request_ctx_dma(req);
+>  	struct aead_edesc *edesc =3D rctx->edesc;
+>  	u32 *desc =3D edesc->hw_desc;
+>  	int ret;
+> @@ -1541,7 +1541,7 @@ static int aead_do_one_req(struct crypto_engine
+> *engine, void *areq)  {
+>  	struct aead_request *req =3D aead_request_cast(areq);
+>  	struct caam_ctx *ctx =3D
+> crypto_aead_ctx_dma(crypto_aead_reqtfm(req));
+> -	struct caam_aead_req_ctx *rctx =3D aead_request_ctx(req);
+> +	struct caam_aead_req_ctx *rctx =3D aead_request_ctx_dma(req);
+>  	u32 *desc =3D rctx->edesc->hw_desc;
+>  	int ret;
+>=20
+> @@ -1614,7 +1614,7 @@ static struct skcipher_edesc
+> *skcipher_edesc_alloc(struct skcipher_request *req,  {
+>  	struct crypto_skcipher *skcipher =3D crypto_skcipher_reqtfm(req);
+>  	struct caam_ctx *ctx =3D crypto_skcipher_ctx_dma(skcipher);
+> -	struct caam_skcipher_req_ctx *rctx =3D skcipher_request_ctx(req);
+> +	struct caam_skcipher_req_ctx *rctx =3D skcipher_request_ctx_dma(req);
+>  	struct device *jrdev =3D ctx->jrdev;
+>  	gfp_t flags =3D (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+>  		       GFP_KERNEL : GFP_ATOMIC;
+> @@ -1778,7 +1778,7 @@ static int skcipher_do_one_req(struct crypto_engine
+> *engine, void *areq)  {
+>  	struct skcipher_request *req =3D skcipher_request_cast(areq);
+>  	struct caam_ctx *ctx =3D
+> crypto_skcipher_ctx_dma(crypto_skcipher_reqtfm(req));
+> -	struct caam_skcipher_req_ctx *rctx =3D skcipher_request_ctx(req);
+> +	struct caam_skcipher_req_ctx *rctx =3D skcipher_request_ctx_dma(req);
+>  	u32 *desc =3D rctx->edesc->hw_desc;
+>  	int ret;
+>=20
+> @@ -1828,7 +1828,7 @@ static inline int skcipher_crypt(struct skcipher_re=
+quest
+> *req, bool encrypt)
+>=20
+>  	if (ctx->fallback && ((ctrlpriv->era <=3D 8 && xts_skcipher_ivsize(req)=
+) ||
+>  			      ctx->xts_key_fallback)) {
+> -		struct caam_skcipher_req_ctx *rctx =3D
+> skcipher_request_ctx(req);
+> +		struct caam_skcipher_req_ctx *rctx =3D
+> skcipher_request_ctx_dma(req);
+>=20
+>  		skcipher_request_set_tfm(&rctx->fallback_req, ctx->fallback);
+>  		skcipher_request_set_callback(&rctx->fallback_req,
+> @@ -3639,10 +3639,10 @@ static int caam_cra_init(struct crypto_skcipher
+> *tfm)
+>  		}
+>=20
+>  		ctx->fallback =3D fallback;
+> -		crypto_skcipher_set_reqsize(tfm, sizeof(struct
+> caam_skcipher_req_ctx) +
+> +		crypto_skcipher_set_reqsize_dma(tfm, sizeof(struct
+> +caam_skcipher_req_ctx) +
+>  					    crypto_skcipher_reqsize(fallback));
+>  	} else {
+> -		crypto_skcipher_set_reqsize(tfm, sizeof(struct
+> caam_skcipher_req_ctx));
+> +		crypto_skcipher_set_reqsize_dma(tfm, sizeof(struct
+> +caam_skcipher_req_ctx));
+>  	}
+>=20
+>  	ret =3D caam_init_common(ctx, &caam_alg->caam, false); @@ -3659,7
+> +3659,7 @@ static int caam_aead_init(struct crypto_aead *tfm)
+>  		 container_of(alg, struct caam_aead_alg, aead.base);
+>  	struct caam_ctx *ctx =3D crypto_aead_ctx_dma(tfm);
+>=20
+> -	crypto_aead_set_reqsize(tfm, sizeof(struct caam_aead_req_ctx));
+> +	crypto_aead_set_reqsize_dma(tfm, sizeof(struct caam_aead_req_ctx));
+>=20
+>  	return caam_init_common(ctx, &caam_alg->caam, !caam_alg-
+> >caam.nodkp);  } diff --git a/drivers/crypto/caam/caamalg_qi.c
+> b/drivers/crypto/caam/caamalg_qi.c
+> index 65f6adb6c673..9aa2d6d97f22 100644
+> --- a/drivers/crypto/caam/caamalg_qi.c
+> +++ b/drivers/crypto/caam/caamalg_qi.c
+> @@ -1435,7 +1435,7 @@ static inline int skcipher_crypt(struct skcipher_re=
+quest
+> *req, bool encrypt)
+>=20
+>  	if (ctx->fallback && ((ctrlpriv->era <=3D 8 && xts_skcipher_ivsize(req)=
+) ||
+>  			      ctx->xts_key_fallback)) {
+> -		struct caam_skcipher_req_ctx *rctx =3D
+> skcipher_request_ctx(req);
+> +		struct caam_skcipher_req_ctx *rctx =3D
+> skcipher_request_ctx_dma(req);
+>=20
+>  		skcipher_request_set_tfm(&rctx->fallback_req, ctx->fallback);
+>  		skcipher_request_set_callback(&rctx->fallback_req,
+> @@ -2524,7 +2524,7 @@ static int caam_cra_init(struct crypto_skcipher *tf=
+m)
+>  		}
+>=20
+>  		ctx->fallback =3D fallback;
+> -		crypto_skcipher_set_reqsize(tfm, sizeof(struct
+> caam_skcipher_req_ctx) +
+> +		crypto_skcipher_set_reqsize_dma(tfm, sizeof(struct
+> +caam_skcipher_req_ctx) +
+>  					    crypto_skcipher_reqsize(fallback));
+>  	}
+>=20
+> --
+> 2.25.1
 
