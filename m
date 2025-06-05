@@ -1,470 +1,145 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35681F4C83
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE0017B50F;
+	Thu,  5 Jun 2025 12:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749125081; cv=none; b=cUL5NgZgu/hQWir7x6BFHCX+lmWKRX9wmgjkAJI1tYKbm5azl/ZtnG8LTkkXFRPnRp9kIwSQy7wLMvXqOwxcOTLykbttiyLng8C23YJYFtVdC99Io+wpzDOFwI8GcRmexAWex6oqQSmx1KNPVK4yIwCLPHX2gM9sawigKIkPFjM=
+	t=1749125161; cv=none; b=swspkK+gMRS+HlqyPgdwWr0NDUW8KaZlKs32qkCxGIdPwnVuiPxT3oM9adc1it6XlhMOos16hcR3cYjbIFcRiu4O7K76P47a5x3Hnpw6otq5A16wR9QnCXgLCTWn9DW7qOoldZMyQeD53p1N+8UbqJSAE6YfBvQy8BOsT2JpU/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749125081; c=relaxed/simple;
-	bh=4CJ9hOqoui4JlCN+zuVRP7AhnJyH4wdZ69h4hStuBWY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZybspPcDK0WnA6UF4mkBVucAU7Pm07GNd/54P92QkvfzdVTHopd4wT4kYMsjWiZnykJvVFds+22gSZLcsJA77JPlJXsZobBoLCiuTWYmStmZiJ2D8eVLKmCX4CwlcmLf/XP8nuk8edoXYE4mSBRbCT18ZqnMy13HrEr/GhmMJCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HoHZT95p; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749125161; c=relaxed/simple;
+	bh=W/K6WUde67pV1S2+vj6A5axx74vdbK/tbL7ISfn9qWM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X3mVtv5rs/fZYbUXQbYMLOsYHTQi7FHCB04Yr2m4cCA0MLlZovxJJcxt+NDIe0QU+spQNvll2aZj4cYqmYYUROfuVdEpHDtHjZo4ytik7iz2G2F7FoByoQU7MibDG9R+bJraC3hWsBM/BCKzgG2PaE7JwMJs7FdCDYuQwPIgkAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=NoZDFlLz; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoHZT95p"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22e09f57ed4so18672205ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749125079; x=1749729879; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uY+1+u4tI5f3R2HsjbASLO23onNPIfvm4SbCLPrNoYs=;
-        b=HoHZT95pYlx7tiPho2LqH1l239lKdBNigAe2juON/5rR8gB2iYadeSZn3Kggat5xIo
-         /nfq/CGrutXgUuwpXRB83l9ofOx2V1NkvUmzC0wdlMq/NNpk8lowAU+lGdkxNCQVWN+l
-         T5f0aJv7L4ellJ7xEYJk/W2slDjieUHFejG71BGyGIm4I27XOuvMOOzyM4NkMoV6r9j+
-         aEHBYbenciBAjED2qBjLZgVXxBZQUaJiPNwCZEGr2pEGgAx0/g2cxrULRrggAwC72iMK
-         o4Z5w/0y/K3BgRxC7xD7MKtMOTnfmHbjgQ+tURMJlAoh9jQk454GOBIWkmjoyiLem6ka
-         aZVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749125079; x=1749729879;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uY+1+u4tI5f3R2HsjbASLO23onNPIfvm4SbCLPrNoYs=;
-        b=iGyieXC7QjO47Goeice2oCLMCkB0QiHos9LYKqlUnPlt2m7qmc6JYSpNbGYYMKkLxS
-         yUR4FlWGSv076tvs9Dow9j2auKmzNNuov2p3HKDEzIxc3AHQw0ZDI5EWUehK19FhQL/B
-         2pvt7JYNdrl+tQSgwuZnuB7qDTTxOJNgTALkkxFqlBPeLssAPwdCcXL//dtZDKM46EIp
-         UKHePRekrh9pwDgos8uGJKKranDKwIUHVA5stp1tWjFlwNh0m+3hQTsuga1XGy8NNOL6
-         v3qixhnJG7Yh4lufAuKnEgIVShUSim2SAkecdL4XeyRHnTgm4Q52LmUkVyqBb1wwEmRq
-         70sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhZxo/FeIRjcPd9U5xEXANfdR54u5BNgQ9gmXCUGwMGcnAflXDvx1T/vnvHU0Ck+CAaAn5SY0e2WQjZQY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySPvTn3PSW9kbSD2O66xWDJhJSJFyv4CYu/pubxWvPacwFmlb7
-	7DvZS3xdRsD1LKQMtKqlfQMo1+4kf543v+orF6lAde1MaqWJFvP2PGDw
-X-Gm-Gg: ASbGnctFDzVlEKaKmkgYN386nTb/9oBy4jAOBnn5NjZ+fSrjl9bo24q+GpdkX4ZtJIk
-	v0cPtyQPy9WlAYCbnlyBtCy+MnUWyIbRe2FgknCAxC9TLZsL94fH/TaYLC/9CEiWqcp3+bAhySw
-	BLVZuLWGyQgJ678dInU8WIjmDrXaCAjgiBQ72+PVVcRvRbefynvF6OMupUJirjtKrHAOlsicONe
-	uAGqKbqvmcmah2ckBFCR3nKla/0RrmtMaIv1zmzGw8z/QYZcZ9wY4QyachKG2xUpkBNOr843IyQ
-	Q6xHZcZVZPsTjInQZiohAUhuNNBGYkOU5XknD7lTXxs3WaVCx60=
-X-Google-Smtp-Source: AGHT+IGkCSxgiSEGG4/X9kDUi9rfiJiddOaEIcYLN5aTyS3UAJMkveKy2sUWuVkQGnBZ047P6kOM1A==
-X-Received: by 2002:a17:903:19f0:b0:234:986c:66cf with SMTP id d9443c01a7336-235f166ccb4mr51021815ad.16.1749125079050;
-        Thu, 05 Jun 2025 05:04:39 -0700 (PDT)
-Received: from jemmy.. ([180.172.46.169])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bf330dsm118673755ad.105.2025.06.05.05.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 05:04:38 -0700 (PDT)
-From: Jemmy Wong <jemmywong512@gmail.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Jemmy Wong <jemmywong512@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guitcct <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] sched/topology: Add lock guard support
-Date: Thu,  5 Jun 2025 20:04:24 +0800
-Message-ID: <20250605120424.14756-2-jemmywong512@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250605120424.14756-1-jemmywong512@gmail.com>
-References: <20250605120424.14756-1-jemmywong512@gmail.com>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="NoZDFlLz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1749125157;
+	bh=W/K6WUde67pV1S2+vj6A5axx74vdbK/tbL7ISfn9qWM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=NoZDFlLzxBpV1gj6rDUHTx4zUXoDiQD7rMVA/ke+qC43Q3lAYkaTG6jlA0rPRF3Nv
+	 Wfn84bPmtPkrElxCv0rMojlrnS14jSrtq6+Om/E9AMjogJzWCOnu5p2p2wQQncyoIH
+	 xX9+uRfrs4ughPPU5kZ9Umm8Gy8fOlrdrBDQNfYo=
+Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 11DAE1C016C;
+	Thu, 05 Jun 2025 08:05:57 -0400 (EDT)
+Message-ID: <bec46b16778d9292ab90b3e1c71be6c56c8a5a50.camel@HansenPartnership.com>
+Subject: Re: [PATCH RFC 1/1] module: Make use of platform keyring for module
+ signature verify
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, 
+ linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, 
+ linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, keyrings@vger.kernel.org, David Howells
+ <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, Jonathan
+ Corbet <corbet@lwn.net>, Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu
+ <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, Daniel
+ Gomez <da.gomez@samsung.com>, Mimi Zohar <zohar@linux.ibm.com>, Roberto
+ Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
+ <dmitry.kasatkin@gmail.com>,  Eric Snowberg <eric.snowberg@oracle.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,  "Serge
+ E. Hallyn" <serge@hallyn.com>, Peter Jones <pjones@redhat.com>, Robert
+ Holmes <robeholmes@gmail.com>, Jeremy Cline <jcline@redhat.com>, Gerd
+ Hoffmann <kraxel@redhat.com>
+Date: Thu, 05 Jun 2025 08:05:56 -0400
+In-Reply-To: <ibosm332sa2kz6vqrru5qsfk4tybsxepo4vascc3zsetmyckvv@pml7puc5jyl6>
+References: <20250602132535.897944-1-vkuznets@redhat.com>
+	 <20250602132535.897944-2-vkuznets@redhat.com>
+	 <948f5567fe4d9ae39aa2528965f123e42bf82b46.camel@HansenPartnership.com>
+	 <87r001yzob.fsf@redhat.com>
+	 <d34555e2b0c4746fc01d5295959a434befcf8b18.camel@HansenPartnership.com>
+	 <ibosm332sa2kz6vqrru5qsfk4tybsxepo4vascc3zsetmyckvv@pml7puc5jyl6>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This change replaces manual lock acquisition and release with lock guards 
-to improve code robustness and reduce the risk of lock mismanagement. 
-No functional changes to the scheduler topology logic are introduced.
+On Thu, 2025-06-05 at 16:34 +0800, Coiby Xu wrote:
+> On Tue, Jun 03, 2025 at 09:03:22AM -0400, James Bottomley wrote:
+> > On Tue, 2025-06-03 at 10:52 +0200, Vitaly Kuznetsov wrote:
+> > > James Bottomley <James.Bottomley@HansenPartnership.com> writes:
+> > [...]
+> > > > Also, are you sure a config option is the right thing?=C2=A0
+> > > > Presumably Red Hat wants to limit its number of kernels and the
+> > > > design of just linking the machine keyring (i.e. MoK) was for
+> > > > the use case where trust is being pivoted away from db by shim,
+> > > > so users don't want to trust the db keys they don't control.=C2=A0
+> > > > If the same kernel gets used for both situations (trusted and
+> > > > untrusted db) you might want a runtime means to distinguish
+> > > > them.
+> > >=20
+> > > I was not personally involved when RH put the patch downstream
+> > > (and wasn't very successful in getting the background story) but
+> > > it doesn't even have an additional Kconfig, e.g.:
+> > > https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-10/-=
+/commit/03d4694fa6511132989bac0da11fa677ea5d29f6
+> > > so apparently there's no desire to limit anything, basically,
+> > > .platform is always trusted on Fedora/RHEL systems (for a long
+> > > time already).
+> >=20
+> > It sounds like that's just distro politics:=C2=A0 RH wants to enable
+> > binary modules (by allowing them to be signed) but doesn't want to
+> > be seen to be signing them (so they can't be signed with the
+> > embedded RH key) so that gamers can have performant graphics
+> > drivers and the like.=C2=A0 Thus it mixes in the db keyring, which
+> > usually contains several Microsoft certificates and also one from
+> > the ODM manufacturer, so now it can send would be shippers of
+> > binary modules to those groups to get them signed. If you only have
+> > the built in and MoK keyrings, the only possible signers are either
+> > RH or the machine owner ... who isn't a single entity to deal
+> > with.=C2=A0 Personally I think this is a bit daft: Debian manages an ou=
+t
+> > of tree module infrastructure using DKMS and MoK signing, so I
+> > can't see why RH can't get it to work in the same way.
+>=20
+> It's interesting to find that although Debian's wiki page [1] only
+> mentions DKMS and MOK, it actually has the same downstream kernel
+> patch [2][3] as Fedora/RHEL to allow using db keys to verify kernel
+> modules.=20
+> [1] https://wiki.debian.org/SecureBoot
+> [2]
+> https://salsa.debian.org/kernel-team/linux/-/blob/debian/latest/debian/pa=
+tches/features/all/db-mok-keyring/KEYS-Make-use-of-platform-keyring-for-mod=
+ule-signature.patch?ref_type=3Dheads
+> [3]
+> https://sources.debian.org/patches/linux/6.12.30-1/features/all/db-mok-ke=
+yring/KEYS-Make-use-of-platform-keyring-for-module-signature.patch/
+>=20
 
-Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
+Well if you read the attached bug reports:
 
----
- include/linux/sched.h   |  11 ++--
- kernel/sched/core.c     |   6 +--
- kernel/sched/debug.c    |  13 ++---
- kernel/sched/rt.c       |  35 ++++++------
- kernel/sched/topology.c | 115 +++++++++++++++++-----------------------
- 5 files changed, 81 insertions(+), 99 deletions(-)
+https://bugs.debian.org/935945
+https://bugs.debian.org/1030200
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4f78a64beb52..10a9d6083b72 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -46,6 +46,7 @@
- #include <linux/rv.h>
- #include <linux/uidgid_types.h>
- #include <linux/tracepoint-defs.h>
-+#include <linux/mutex.h>
- #include <asm/kmap_size.h>
- 
- /* task_struct member predeclarations (sorted alphabetically): */
-@@ -395,14 +396,14 @@ enum uclamp_id {
- 	UCLAMP_CNT
- };
- 
-+extern struct mutex sched_domains_mutex;
- #ifdef CONFIG_SMP
- extern struct root_domain def_root_domain;
--extern struct mutex sched_domains_mutex;
--extern void sched_domains_mutex_lock(void);
--extern void sched_domains_mutex_unlock(void);
-+DEFINE_LOCK_GUARD_0(sched_domains_mutex,
-+	mutex_lock(&sched_domains_mutex),
-+	mutex_unlock(&sched_domains_mutex))
- #else
--static inline void sched_domains_mutex_lock(void) { }
--static inline void sched_domains_mutex_unlock(void) { }
-+DEFINE_LOCK_GUARD_0(sched_domains_mutex, ,)
- #endif
- 
- struct sched_param {
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index dce50fa57471..b2b7a0cae95a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -8457,9 +8457,9 @@ void __init sched_init_smp(void)
- 	 * CPU masks are stable and all blatant races in the below code cannot
- 	 * happen.
- 	 */
--	sched_domains_mutex_lock();
--	sched_init_domains(cpu_active_mask);
--	sched_domains_mutex_unlock();
-+	scoped_guard(sched_domains_mutex) {
-+		sched_init_domains(cpu_active_mask);
-+	}
- 
- 	/* Move init over to a non-isolated CPU */
- 	if (set_cpus_allowed_ptr(current, housekeeping_cpumask(HK_TYPE_DOMAIN)) < 0)
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 9d71baf08075..1c00016fd54c 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -293,8 +293,8 @@ static ssize_t sched_verbose_write(struct file *filp, const char __user *ubuf,
- 	ssize_t result;
- 	bool orig;
- 
--	cpus_read_lock();
--	sched_domains_mutex_lock();
-+	guard(cpus_read_lock)();
-+	guard(sched_domains_mutex)();
- 
- 	orig = sched_debug_verbose;
- 	result = debugfs_write_file_bool(filp, ubuf, cnt, ppos);
-@@ -306,9 +306,6 @@ static ssize_t sched_verbose_write(struct file *filp, const char __user *ubuf,
- 		sd_dentry = NULL;
- 	}
- 
--	sched_domains_mutex_unlock();
--	cpus_read_unlock();
--
- 	return result;
- }
- #else
-@@ -517,9 +514,9 @@ static __init int sched_init_debug(void)
- 	debugfs_create_u32("migration_cost_ns", 0644, debugfs_sched, &sysctl_sched_migration_cost);
- 	debugfs_create_u32("nr_migrate", 0644, debugfs_sched, &sysctl_sched_nr_migrate);
- 
--	sched_domains_mutex_lock();
--	update_sched_domain_debugfs();
--	sched_domains_mutex_unlock();
-+	scoped_guard(sched_domains_mutex) {
-+		update_sched_domain_debugfs();
-+	}
- #endif
- 
- #ifdef CONFIG_NUMA_BALANCING
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index e40422c37033..3533b471b015 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -2920,36 +2920,37 @@ static int sched_rt_handler(const struct ctl_table *table, int write, void *buff
- 	static DEFINE_MUTEX(mutex);
- 	int ret;
- 
--	mutex_lock(&mutex);
--	sched_domains_mutex_lock();
-+	guard(mutex)(&mutex);
-+	guard(sched_domains_mutex)();
-+
- 	old_period = sysctl_sched_rt_period;
- 	old_runtime = sysctl_sched_rt_runtime;
- 
- 	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- 
- 	if (!ret && write) {
--		ret = sched_rt_global_validate();
--		if (ret)
--			goto undo;
-+		do {
-+			ret = sched_rt_global_validate();
-+			if (ret)
-+				break;
- 
--		ret = sched_dl_global_validate();
--		if (ret)
--			goto undo;
-+			ret = sched_dl_global_validate();
-+			if (ret)
-+				break;
- 
--		ret = sched_rt_global_constraints();
--		if (ret)
--			goto undo;
-+			ret = sched_rt_global_constraints();
-+			if (ret)
-+				break;
- 
--		sched_rt_do_global();
--		sched_dl_do_global();
-+			sched_rt_do_global();
-+			sched_dl_do_global();
-+		} while (0);
- 	}
--	if (0) {
--undo:
-+
-+	if (ret) {
- 		sysctl_sched_rt_period = old_period;
- 		sysctl_sched_rt_runtime = old_runtime;
- 	}
--	sched_domains_mutex_unlock();
--	mutex_unlock(&mutex);
- 
- 	return ret;
- }
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index b958fe48e020..3f89f969666c 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -6,14 +6,6 @@
- #include <linux/bsearch.h>
- 
- DEFINE_MUTEX(sched_domains_mutex);
--void sched_domains_mutex_lock(void)
--{
--	mutex_lock(&sched_domains_mutex);
--}
--void sched_domains_mutex_unlock(void)
--{
--	mutex_unlock(&sched_domains_mutex);
--}
- 
- /* Protected by sched_domains_mutex: */
- static cpumask_var_t sched_domains_tmpmask;
-@@ -470,44 +462,41 @@ static void free_rootdomain(struct rcu_head *rcu)
- void rq_attach_root(struct rq *rq, struct root_domain *rd)
- {
- 	struct root_domain *old_rd = NULL;
--	struct rq_flags rf;
- 
--	rq_lock_irqsave(rq, &rf);
-+	scoped_guard(rq_lock_irqsave, rq) {
-+		if (rq->rd) {
-+			old_rd = rq->rd;
- 
--	if (rq->rd) {
--		old_rd = rq->rd;
-+			if (cpumask_test_cpu(rq->cpu, old_rd->online))
-+				set_rq_offline(rq);
-+
-+			cpumask_clear_cpu(rq->cpu, old_rd->span);
-+
-+			/*
-+			 * If we don't want to free the old_rd yet then
-+			 * set old_rd to NULL to skip the freeing later
-+			 * in this function:
-+			 */
-+			if (!atomic_dec_and_test(&old_rd->refcount))
-+				old_rd = NULL;
-+		}
- 
--		if (cpumask_test_cpu(rq->cpu, old_rd->online))
--			set_rq_offline(rq);
-+		atomic_inc(&rd->refcount);
-+		rq->rd = rd;
- 
--		cpumask_clear_cpu(rq->cpu, old_rd->span);
-+		cpumask_set_cpu(rq->cpu, rd->span);
-+		if (cpumask_test_cpu(rq->cpu, cpu_active_mask))
-+			set_rq_online(rq);
- 
- 		/*
--		 * If we don't want to free the old_rd yet then
--		 * set old_rd to NULL to skip the freeing later
--		 * in this function:
-+		 * Because the rq is not a task, dl_add_task_root_domain() did not
-+		 * move the fair server bw to the rd if it already started.
-+		 * Add it now.
- 		 */
--		if (!atomic_dec_and_test(&old_rd->refcount))
--			old_rd = NULL;
-+		if (rq->fair_server.dl_server)
-+			__dl_server_attach_root(&rq->fair_server, rq);
- 	}
- 
--	atomic_inc(&rd->refcount);
--	rq->rd = rd;
--
--	cpumask_set_cpu(rq->cpu, rd->span);
--	if (cpumask_test_cpu(rq->cpu, cpu_active_mask))
--		set_rq_online(rq);
--
--	/*
--	 * Because the rq is not a task, dl_add_task_root_domain() did not
--	 * move the fair server bw to the rd if it already started.
--	 * Add it now.
--	 */
--	if (rq->fair_server.dl_server)
--		__dl_server_attach_root(&rq->fair_server, rq);
--
--	rq_unlock_irqrestore(rq, &rf);
--
- 	if (old_rd)
- 		call_rcu(&old_rd->rcu, free_rootdomain);
- }
-@@ -1809,18 +1798,17 @@ bool find_numa_distance(int distance)
- 	if (distance == node_distance(0, 0))
- 		return true;
- 
--	rcu_read_lock();
-+	guard(rcu)();
-+
- 	distances = rcu_dereference(sched_domains_numa_distance);
- 	if (!distances)
--		goto unlock;
-+		return found;
- 	for (i = 0; i < sched_domains_numa_levels; i++) {
- 		if (distances[i] == distance) {
- 			found = true;
- 			break;
- 		}
- 	}
--unlock:
--	rcu_read_unlock();
- 
- 	return found;
- }
-@@ -2131,26 +2119,24 @@ void sched_domains_numa_masks_clear(unsigned int cpu)
-  */
- int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
- {
--	int i, j = cpu_to_node(cpu), found = nr_cpu_ids;
-+	int i, j = cpu_to_node(cpu);
- 	struct cpumask ***masks;
- 
--	rcu_read_lock();
-+	guard(rcu)();
-+
- 	masks = rcu_dereference(sched_domains_numa_masks);
- 	if (!masks)
--		goto unlock;
-+		return nr_cpu_ids;
- 	for (i = 0; i < sched_domains_numa_levels; i++) {
- 		if (!masks[i][j])
--			break;
-+			return nr_cpu_ids;
- 		cpu = cpumask_any_and_distribute(cpus, masks[i][j]);
- 		if (cpu < nr_cpu_ids) {
--			found = cpu;
--			break;
-+			return cpu;
- 		}
- 	}
--unlock:
--	rcu_read_unlock();
- 
--	return found;
-+	return nr_cpu_ids;
- }
- 
- struct __cmp_key {
-@@ -2201,7 +2187,7 @@ int sched_numa_find_nth_cpu(const struct cpumask *cpus, int cpu, int node)
- 	if (node == NUMA_NO_NODE)
- 		return cpumask_nth_and(cpu, cpus, cpu_online_mask);
- 
--	rcu_read_lock();
-+	guard(rcu)();
- 
- 	/* CPU-less node entries are uninitialized in sched_domains_numa_masks */
- 	node = numa_nearest_node(node, N_CPU);
-@@ -2209,7 +2195,7 @@ int sched_numa_find_nth_cpu(const struct cpumask *cpus, int cpu, int node)
- 
- 	k.masks = rcu_dereference(sched_domains_numa_masks);
- 	if (!k.masks)
--		goto unlock;
-+		return ret;
- 
- 	hop_masks = bsearch(&k, k.masks, sched_domains_numa_levels, sizeof(k.masks[0]), hop_cmp);
- 	hop = hop_masks	- k.masks;
-@@ -2217,8 +2203,7 @@ int sched_numa_find_nth_cpu(const struct cpumask *cpus, int cpu, int node)
- 	ret = hop ?
- 		cpumask_nth_and_andnot(cpu - k.w, cpus, k.masks[hop][node], k.masks[hop-1][node]) :
- 		cpumask_nth_and(cpu, cpus, k.masks[0][node]);
--unlock:
--	rcu_read_unlock();
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(sched_numa_find_nth_cpu);
-@@ -2570,17 +2555,17 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 	}
- 
- 	/* Attach the domains */
--	rcu_read_lock();
--	for_each_cpu(i, cpu_map) {
--		rq = cpu_rq(i);
--		sd = *per_cpu_ptr(d.sd, i);
-+	scoped_guard(rcu) {
-+		for_each_cpu(i, cpu_map) {
-+			rq = cpu_rq(i);
-+			sd = *per_cpu_ptr(d.sd, i);
- 
--		cpu_attach_domain(sd, d.rd, i);
-+			cpu_attach_domain(sd, d.rd, i);
- 
--		if (lowest_flag_domain(i, SD_CLUSTER))
--			has_cluster = true;
-+			if (lowest_flag_domain(i, SD_CLUSTER))
-+				has_cluster = true;
-+		}
- 	}
--	rcu_read_unlock();
- 
- 	if (has_asym)
- 		static_branch_inc_cpuslocked(&sched_asym_cpucapacity);
-@@ -2688,10 +2673,9 @@ static void detach_destroy_domains(const struct cpumask *cpu_map)
- 	if (static_branch_unlikely(&sched_cluster_active))
- 		static_branch_dec_cpuslocked(&sched_cluster_active);
- 
--	rcu_read_lock();
-+	guard(rcu)();
- 	for_each_cpu(i, cpu_map)
- 		cpu_attach_domain(NULL, &def_root_domain, i);
--	rcu_read_unlock();
- }
- 
- /* handle null as "default" */
-@@ -2836,7 +2820,6 @@ static void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new
- void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
- 			     struct sched_domain_attr *dattr_new)
- {
--	sched_domains_mutex_lock();
-+	guard(sched_domains_mutex)();
- 	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
--	sched_domains_mutex_unlock();
- }
--- 
-2.43.0
+You can see that it's people trying to get an external module to work
+(actually zfs locally signed) by adding keys to MoK and it failed
+because of a configuration error (CONFIG_INTEGRITY_MACHINE_KEYRING
+wasn't set).  They added this patch as part of the thrashing around
+trying to fix the problem because they found it in Fedora.
+
+Regards,
+
+James
 
