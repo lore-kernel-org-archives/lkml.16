@@ -1,160 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE7D275869;
-	Thu,  5 Jun 2025 18:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7AE3B19A
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 18:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749147296; cv=none; b=ulBQQ14iFdrhXbO00MA3Upol6evW7bEN0B0HtbNn7C2B2BlJvA1tL1qwsi5+aYMgj5A4cX52RxO0a9R7gk0P2PN+Nj/OIsRm7QwMDhdlTtY5+2PaUhE24Cm2Aowp9zQ5z5oOb+R3QVlfI2P3hFL5NlpHBUYOsdutg1DUZ/iVrhU=
+	t=1749147477; cv=none; b=aTqbeMa4bWvnnz29iIJzXrQ/n1ca7tZCjav5ErVAuFGoLZJW++6d6qpkggPH5xw1sJcfZxI3wwrn2hXROTRef10q4HlG6n7nCyTbqcPo8OVHIYHQIAwuJlw7JKqNfk3ZhXR1PePGUyRgsvYNo7xruJaYRbTLC6GWxdcX4xWf7Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749147296; c=relaxed/simple;
-	bh=kM+tZQLZzYNHuIw8DxjQDCB49bssz5ArH/w0ixdklPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYUZ2tvzNbunXXwMPDGqw3yrO+brcobqYiryd4PYpgTsGLJ0pINHr8HEdzfyDDBvBIpz9HX6QT49HN0pnMjvnv1K7kIyeAIMa5Df7wTkIOErRNagBbVEwBwUzhlxNp2oNVJ+SfMzGcNjflQr7pwEjvz39EEBcMVqG4N/gsn4K0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irglAXUu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749147477; c=relaxed/simple;
+	bh=VpbY71Bl65hiC8LzMCBSfsP0J9rgGMK0RtCDE4f34b4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KrX1B5RnGMvsk36MdOQrXRSd6pxSX2DIAMFdlFoD27fx+8DUZr8PV1zBMMrpnq5bEE/cg0qJcMdekVefLYXqYx88GLtAoiPjC6LBC4Rs0V7oQp99i3HEn6GN6nEga5LFhzhcmks+S4KSg8hAo6WSXCgeyOMqh07Kr65AJAaGiBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YtPk/NOE; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irglAXUu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 949B2C4CEE7;
-	Thu,  5 Jun 2025 18:14:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749147295;
-	bh=kM+tZQLZzYNHuIw8DxjQDCB49bssz5ArH/w0ixdklPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=irglAXUu2OpsKW9nnQWyxV8tVob52YV/dgR9F0uBahjTSfnZlgO5EVlJhjYbltYXu
-	 9lTnWSlOsDUgBwDvE9NnQENGN4k8AxmNWWB21jbtpF/pFzg60sSqmyI9dd3g5UaIz5
-	 F/yka1xtCh7bwVqLQQeTpiQPGJ1kwkYVV0zSpPRYNwVdUkDHn8GPH0MElwJ/1I8bIT
-	 Xd8kh5eKQp/yUzk+TnmPYge/1i12/RZSZK/yV4iJ1ZCrUSYecHTTRFAczRReeZXc0/
-	 MNpV1jjiF6eTu/jqu6EA4GcnV0PXjdq2agD/BztXZ55wQNNMXKc8epepoAHiLxuDss
-	 FLRKwbWv7PVFg==
-Date: Thu, 5 Jun 2025 13:14:53 -0500
-From: Rob Herring <robh@kernel.org>
-To: George Moussalem <george.moussalem@outlook.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] dt-bindings: net: qca,ar803x: Add IPQ5018
- Internal GE PHY support
-Message-ID: <20250605181453.GA2946252-robh@kernel.org>
-References: <20250602-ipq5018-ge-phy-v3-0-421337a031b2@outlook.com>
- <20250602-ipq5018-ge-phy-v3-2-421337a031b2@outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YtPk/NOE"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so1104046f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 11:17:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749147474; x=1749752274; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zvu8sloBNTgv6e6OufuyCWUoelFhsOzVQ6+oeOQaWEs=;
+        b=YtPk/NOEujaUhNzZB/5D2WmMVAborJtZ4eaL2IbesSA4UDDEQ6DthdEeDdG1DsFjuK
+         1C/Zgvls9dx4OokYlIdMQWUzZEXQozZyOSLcJcTsTN/6ct/qq0dG9/GurfAsTEEEG+lZ
+         45gl+trk7FMym4AfPz3+OZoKselmLeTBIxkJaoFIUxaZLpbe01TcnVFbCePs+PoxkKTJ
+         WaDf8koBhMbecFl3YfhWtSq31YYqV4o8Scde4eUFvcrfQTxohtyNhxtTtCziA0+5Gjed
+         A6kZVVaDvNtuHp29xlixIEpRdCe2xdEpkGCu7kvvPhoDWFfR/j3hjAt9SfcW0sds/oCD
+         mqmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749147474; x=1749752274;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zvu8sloBNTgv6e6OufuyCWUoelFhsOzVQ6+oeOQaWEs=;
+        b=fv0o9v4epGDENAh0PMQ1rUtfGZbCDOtlAJlIzzDPWx/HoAYPVijhVSLhX/v1L7twYX
+         lLvzT6t4kY09Mp+C4yE2IgdMOJ5r7XJTUG5Dd8Jx9xFjNEwXTGIRSSW1t01t4ZOeLHeH
+         uFBbl3reYm0aismWY8NYQ1ryXGhftl2bQK7m4lrXZJRU4pcgAQK/bN1IJz1SgXChhp2s
+         BHABM5NdmZx1s9iPi6N7gqit9hbWwTSC1wkPoBhuSK4NDQFvdUBi9yP30x24zKBaX+BR
+         WYlkHInvN57CASgMrTe59nuVK6In5CKoKjgwGJDqjZaJQV/at4rEIZ45Oc+kgaqStUnK
+         wmuQ==
+X-Gm-Message-State: AOJu0Yzj4pGFlz+FvYb79UPOAVCj7OpuSsqLLoxXY95OHL9L+jRaDS+a
+	dxHN9ZiorDJ+GereWyzYlqHhWtAvwK0vE1L/77iioGb6FKgwoFn6iOiFudUDvjDcTn6uiXvjPgN
+	BV5+nHEKVQnMEgOtkhUknf9fo1muAkzObDh3wa5Q=
+X-Gm-Gg: ASbGncvDkp5b+XgMWUgUSP06dr1ssDPlHc6UeHh7iQmeqrMqYSWNLESLu3Vdyvtn0oz
+	Z0BrynzjkGpX6+0hz8bnUle0h+92Xvjjof7W0ieMz2cwRoMCGRaSCIy5DhEz6C89duc63JpbOTh
+	xMGfWe+6sPD8fLIyjdFJEdfFKaHBLVEjnxelFfIcC145z0wbEyZMDn8zLGyWKr3f0NYvOUAW7d
+X-Google-Smtp-Source: AGHT+IGmAHifXr+9NT2LI45QhyXYPEt/bwpDY11autyc0qV6TwFplIUnYKPz354OWkB38DGhRMhQ/kb3T5MipuRJgWc=
+X-Received: by 2002:a05:6000:2511:b0:3a4:ee51:8144 with SMTP id
+ ffacd0b85a97d-3a53189eb82mr149762f8f.13.1749147474167; Thu, 05 Jun 2025
+ 11:17:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602-ipq5018-ge-phy-v3-2-421337a031b2@outlook.com>
+References: <20250604212125.25656-1-yury.norov@gmail.com> <20250604212125.25656-4-yury.norov@gmail.com>
+In-Reply-To: <20250604212125.25656-4-yury.norov@gmail.com>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 5 Jun 2025 11:17:42 -0700
+X-Gm-Features: AX0GCFs0McbnJtpdg_zQ8wVMJ839GQJLKEBCrJmPFN7tXIejYgdFs-3br_7Lh78
+Message-ID: <CANDhNCrq=H1A8-8L6-FuiFSst=kXEgUR+YFNev6dGjfu5garww@mail.gmail.com>
+Subject: Re: [PATCH 3/3] clocksource: improve randomness in clocksource_verify_choose_cpus()
+To: Yury Norov <yury.norov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 01:53:14PM +0400, George Moussalem wrote:
-> Document the IPQ5018 Internal Gigabit Ethernet PHY found in the IPQ5018
-> SoC. Its output pins provide an MDI interface to either an external
-> switch in a PHY to PHY link scenario or is directly attached to an RJ45
-> connector.
-> 
-> The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
-> 802.3az EEE.
-> 
-> For operation, the LDO controller found in the IPQ5018 SoC for which
-> there is provision in the mdio-4019 driver.
-> 
-> Two common archictures across IPQ5018 boards are:
-> 1. IPQ5018 PHY --> MDI --> RJ45 connector
-> 2. IPQ5018 PHY --> MDI --> External PHY
-> In a phy to phy architecture, the DAC needs to be configured to
-> accommodate for the short cable length. As such, add an optional boolean
-> property so the driver sets preset DAC register values accordingly.
-> 
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+On Wed, Jun 4, 2025 at 2:21=E2=80=AFPM Yury Norov <yury.norov@gmail.com> wr=
+ote:
+>
+> From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+>
+> The current algorithm of picking a random CPU works OK for dence online
+
+spelling nit: dence -> dense
+
+> cpumask, but if cpumask is non-dence, the distribution of picked CPUs
+
+same: non-dence -> non-dense
+
+
+> is skewed.
+>
+> For example, on 8-CPU board with CPUs 4-7 offlined, the probability of
+> selecting CPU 0 is 5/8. Accordingly, cpus 1, 2 and 3 are chosen with
+> probability 1/8 each. The proper algorithm should pick each CPU with
+> probability 1/4.
+>
+> Switch it to cpumask_random(), which has better statistical
+> characteristics.
+> Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 > ---
->  .../devicetree/bindings/net/qca,ar803x.yaml        | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qca,ar803x.yaml b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
-> index 3acd09f0da863137f8a05e435a1fd28a536c2acd..fce167412896edbf49371129e3e7e87312eee051 100644
-> --- a/Documentation/devicetree/bindings/net/qca,ar803x.yaml
-> +++ b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
-> @@ -16,8 +16,32 @@ description: |
->  
->  allOf:
->    - $ref: ethernet-phy.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - ethernet-phy-id004d.d0c0
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          const: 7  # This PHY is always at MDIO address 7 in the IPQ5018 SoC
+>  kernel/time/clocksource.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+> index e400fe150f9d..0aef0e349e49 100644
+> --- a/kernel/time/clocksource.c
+> +++ b/kernel/time/clocksource.c
+> @@ -340,10 +340,7 @@ static void clocksource_verify_choose_cpus(void)
+>          * CPUs that are currently online.
+>          */
+>         for (i =3D 1; i < n; i++) {
+> -               cpu =3D get_random_u32_below(nr_cpu_ids);
+> -               cpu =3D cpumask_next(cpu - 1, cpu_online_mask);
+> -               if (cpu >=3D nr_cpu_ids)
+> -                       cpu =3D cpumask_first(cpu_online_mask);
+> +               cpu =3D cpumask_random(cpu_online_mask);
+>                 if (!WARN_ON_ONCE(cpu >=3D nr_cpu_ids))
+>                         cpumask_set_cpu(cpu, &cpus_chosen);
+>         }
 
-blank line
+This looks ok to me.   Again, just the smallest nit about the subject
+line capitalization.
 
-> +        resets:
-> +          items:
-> +            - description:
-> +                GE PHY MISC reset which triggers a reset across MDC, DSP, RX, and TX lines.
+Acked-by: John Stultz <jstultz@google.com>
 
-blank line
-
-> +        qcom,dac-preset-short-cable:
-> +          description:
-> +            Set if this phy is connected to another phy to adjust the values for
-> +            MDAC and EDAC to adjust amplitude, bias current settings, and error
-> +            detection and correction algorithm to accommodate for short cable length.
-> +            If not set, it is assumed the MDI output pins of this PHY are directly
-> +            connected to an RJ45 connector and default DAC values will be used.
-> +          type: boolean
->  
->  properties:
-> +
-
-Drop
-
-But this schema is broken. There's no way for it to be applied to a node 
-because there is no compatible defined in this schema nor a 'select'. 
-You can introduce an error and see (e.g. 'qcom,dac-preset-short-cable = 
-"foo";'). Really, any phy using these properties should have a specific 
-compatible defined here.
-
->    qca,clk-out-frequency:
->      description: Clock output frequency in Hertz.
->      $ref: /schemas/types.yaml#/definitions/uint32
-> @@ -132,3 +156,18 @@ examples:
->              };
->          };
->      };
-> +  - |
-> +    #include <dt-bindings/reset/qcom,gcc-ipq5018.h>
-> +
-> +    mdio {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        /* add alias to set qcom,dac-preset-short-cable on boards that need it */
-> +        ge_phy: ethernet-phy@7 {
-> +            compatible = "ethernet-phy-id004d.d0c0";
-> +            reg = <7>;
-> +
-> +            resets = <&gcc GCC_GEPHY_MISC_ARES>;
-> +        };
-> +    };
-> 
-> -- 
-> 2.49.0
-> 
+thanks
+-john
