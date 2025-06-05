@@ -1,110 +1,193 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABEC272E60
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF061F4CAC
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749142206; cv=none; b=SV6HhbShMtzWe6qOGj4/nnfC2lYfQvgS30zsla0/3rIvuuFkg/Lw4vzrcULOxbcDRT54ifBfOzfek6nFpwuEReSD3JGnjIZ1GxcmtcJZSouE6mjQFFO6QwHjy4tTo2+chP7Xz0qX5JiaoGmOud4fH6NQzUMcQqY4VL4hejLV7ek=
+	t=1749142234; cv=none; b=QUEddjyzK17mmpy5fIMfzMkJmSoNCo+096sLfxc8C8vIuFP9s1ADO6WVoRSG986AkfK/vodIRHWd3lLDfXCHB1+8djlBDXchO4TpjV7xntJW6MAoM23tSe4dcRlkVLI6nQIgQzkcJyxj7rYjnthkfELPBtcg2OIEPbpwGuC9+ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749142206; c=relaxed/simple;
-	bh=5yD0PvMAQQ3XN8Fa5txtl6/IIVYJpcPJ9bokJkUxS0k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dXZ9kaUZuLw2/2V/d8tX0FW79hst+MtJLwnjMcaPOLB5JbvYg4kRzfbr8lQQrMOJIgsvK+A23cgQCsoGNQl9qlslIGCxxCIt6PjSsopMASfTGdFEecuHj5fgkBb/e0KS1vvpyQ+Q9L17RTZzWR8kVCYLTThLBFliCfCViK2iqjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wAagZnuF; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749142234; c=relaxed/simple;
+	bh=ZHCAmfHlX4KQFHaG55ogITAmWjpCAZ9v2RgfvCQDhOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FVITji1euCPOBkHq1X7E2OACVEyeLroRn2hrM7XM4fPlTDOIxUsHMpH3NvcG4+Apz82maD/qMshI3qug/5bf5rVbBbktHj6msiA/bYXzzAXgKYGZRupIhgc/dUhOqw6DIKaQg2roFJFSZvCqY6nzVJXE8HLP/KRSjj4vutduNQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=G5TQU6+Y; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wAagZnuF"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7480d44e6f9so1191525b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 09:50:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="G5TQU6+Y"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0ac853894so1135170f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 09:50:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749142204; x=1749747004; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WLTPXPCNlsILu6jl+2bKHHB8KGvKcIrJx7gvSPqEvlo=;
-        b=wAagZnuFURQYq7ApcpmZ9gcKqkExals7nfd5BFlgjW4L7V+Bd8aHQXoKOWz8z125Jn
-         pwOjiP2mRC6uqjNxVPttIUION606MU/J5hbi0qzQPN2wR7ld2m7Ei6dolOCnw+k/NgDo
-         N0VpmccV4hIUcySTMjfFEiDFqj4FLmypDZuMKyS3Eq8EiUVFPqa4SFVYnN3/2BLazXSJ
-         6CM2yJCVoeYZjKYyKEkBNz+2Cjmj6Xy8fCIT12qvlG+2rhSKUrDkZc2zbgihRx2njBXF
-         nZlFZ2BIG4wnq4HYwEZA+OPvZbyWD9dvzgOkQih0IdrZa477ujn2w2yIffNwvjTpOtLi
-         aHvA==
+        d=suse.com; s=google; t=1749142229; x=1749747029; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jz9xUyA/EiH5AU4vuSWkBdaNT/IXuogFlw5tRX78z5A=;
+        b=G5TQU6+YeHyOtWB4O/1sTjRNIW654AyUZq4loPCuE0lKAgJ2OWs5s1TOfHA7Qil8u1
+         PDOIxRvXPJLiaarxgf5lk7PCV8UthsFWq86M+xLPunjpN+QCJj+coHs1G20rDQXguH7k
+         3Cpzj2KdlKJybWl6xx/WQmmouvexIMX3FebzQeR9CvERIVr1y8wm9kADTR5qUwPFFtlG
+         AdrXq4kR0tsFm1cLYY/K3DT0Osw+PNxuBy909MjQzRjv17grsXyS64O9ur8eaLlrM56o
+         wdTX6kiVujrYoBmaV4yhMNL/mTZ3JTxJA2m5Ao60vkPndThXrcUQkwCVlvxaHXmD8YFT
+         BPvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749142204; x=1749747004;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WLTPXPCNlsILu6jl+2bKHHB8KGvKcIrJx7gvSPqEvlo=;
-        b=Apw8Tk7Ayuzfwz2rGSHUG0Q6jNHe9bj7oSRXD7Uhv88Wjj+zw49HVj1k3f8WVOuaeo
-         eIz87JAWzb1TOjlq0H9VBJ//AMzSIn7keh3dUupSdKmnVf9zVEiWE15YnpHGddeQD22E
-         tu7efUfX+F7EK612IqUPJE8zBA5PzH1+dGxBsYOoawin5jTkC9xk1Jyf193roiwpNaHD
-         YiKCiw7mGO4T+NxEv8xtGsY91SZY76AMiRQQC5hu6TQqXbKoCgC35gqgFSjJZGoBwh89
-         OW43fax63uwqW6NF0t1OTivGd1OovJXLNVQBcs6jevymWVEPm29Nh3J+rtR/rBjx/niI
-         msww==
-X-Gm-Message-State: AOJu0YxPJAjN1WCPRpZjh/Ada1yk+xOaU2XlLU+DhSTERVUHr+qEhFxr
-	9jTaED5Yc8QKo6qVPAapVwWNYd5jwj1SjcdoL58nJMC5T+htboq2igcFeJcBi5tMPFrYXbnBPz8
-	FaHG4FQ==
-X-Google-Smtp-Source: AGHT+IHSmz97ipsoKiWytBBdVnEdth+nXlg7KYI1vLpnEw2twPv9cYfqKXfk72Q3vYVaW+m3AQHLiwnbdK4=
-X-Received: from pfst26.prod.google.com ([2002:aa7:8f9a:0:b0:736:47b8:9b88])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3c88:b0:736:5753:12f7
- with SMTP id d2e1a72fcca58-74827e523e7mr699482b3a.3.1749142204576; Thu, 05
- Jun 2025 09:50:04 -0700 (PDT)
-Date: Thu, 5 Jun 2025 09:50:03 -0700
-In-Reply-To: <20250605163544.3852565-1-riel@surriel.com>
+        d=1e100.net; s=20230601; t=1749142229; x=1749747029;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jz9xUyA/EiH5AU4vuSWkBdaNT/IXuogFlw5tRX78z5A=;
+        b=tqzt582qQkxWs2wKcEFhGNFVHjs+woheSJaOMs9WIVBDDUWm4vAyMPLfZH45jgvE5m
+         a85gZ8h5QndvmTGe0r0ZB3jy+QCHLyPi8bxZ2ft4kGUWnXLLrcxpLjbvFGI7PuTzC4eT
+         /FGutjjfbz+Hm2T9KZgAj8lEWjyg0U4UWyFXBlqsXE6I/xVzaG/jvChEyrtyFjXYacnI
+         o49OyAcTba+TI8OBrNpuUfYxNF1cFj+6iT+5blv3WYQ1Ot0Tm9vecjnyVCqeknN291+K
+         7WrIpmQNTlDBZut0I5N5jB81mayCbrAkQr/1ubQVdkVMQARDgTaeScFnKPHxsnrc/P7x
+         9/XA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8I48d5k6YY7I+wFFZ/0P/4aaMdd8NvpQqSTZojErwbYkeL0xOhQemN+tS967rlmT7lnUU+Db163jjh9w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwsotGeciH4TW/FGw3hfbPM4YS/kBwTpq2GoBo+pgKCSEAZUPb
+	zoxqvRyS+X5WgD312i8sYqVP2ZPdgC0mQrq5kayKEmFqhAY+7Jzm9cY96BCmV+Bm6lE=
+X-Gm-Gg: ASbGncuD28pgudQK8AZrujVocXIrIcttuE0cbISVc2GCXfSNvCdCkQFGqPUO8C70k/J
+	WsQb7DPXJxm7sLpJvmGvSH70p3yA/onuYaeZCikHYMEwwDPjPOclxwfZp5eDFhFj3pRV5nnF+GD
+	x4/Vtk8w17Sow6ixKKfoNT1dknCDxbXlN5gAYczx6hwjxUgjm1S3kEWb3w9JleHN3Ze2gJwrr5n
+	/mPTdQEVIvxzB/ogxr1+XALgxShcBkmynRd7kdHKB/HtQbVhwW8/5VWDUsTv+CL7QlHR8W+aFZ2
+	/AkCFm3Tvg5Tg2iJoIbzHaZM4E8mamxkpp2DKBlAaFyKjaMHKRV3YlnT7nFRpKyMLtyQlg==
+X-Google-Smtp-Source: AGHT+IGRSHzXfap9n0kjJuSMfLR19jyrXtVbAavtSq9J0Rzklw4pAacRpF/BuRTIrpXiqvpyofge9w==
+X-Received: by 2002:a05:6000:2283:b0:3a4:fa6a:9174 with SMTP id ffacd0b85a97d-3a51d9708d4mr7314965f8f.33.1749142229184;
+        Thu, 05 Jun 2025 09:50:29 -0700 (PDT)
+Received: from [10.0.1.22] (109-81-1-248.rct.o2.cz. [109.81.1.248])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00a0a96sm25345955f8f.96.2025.06.05.09.50.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 09:50:28 -0700 (PDT)
+Message-ID: <6a770057-2076-4523-9c98-5ff10ac3562f@suse.com>
+Date: Thu, 5 Jun 2025 18:50:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250605163544.3852565-1-riel@surriel.com>
-Message-ID: <aEHKu-0g6_MBiAST@google.com>
-Subject: Re: [RFC PATCH v3 0/7] Intel RAR TLB invalidation
-From: Sean Christopherson <seanjc@google.com>
-To: Rik van Riel <riel@surriel.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, 
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
-	bp@alien8.de, x86@kernel.org, nadav.amit@gmail.com, tglx@linutronix.de
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] module: Make sure relocations are applied to the
+ per-CPU section
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-modules@vger.kernel.org, oe-lkp@lists.linux.dev, lkp@intel.com,
+ linux-kernel@vger.kernel.org, kernel test robot <oliver.sang@intel.com>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Allison Henderson <allison.henderson@oracle.com>, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ Luis Chamberlain <mcgrof@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+References: <202506041623.e45e4f7d-lkp@intel.com>
+ <20250604152707.CieD9tN0@linutronix.de>
+ <20250605060738.SzA3UESe@linutronix.de>
+ <beb343ec-6349-4f9c-9fea-588b04eb49ee@suse.com>
+ <20250605155405.3BiTtQej@linutronix.de>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250605155405.3BiTtQej@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 05, 2025, Rik van Riel wrote:
-> This patch series adds support for IPI-less TLB invalidation
-> using Intel RAR technology.
+On 6/5/25 5:54 PM, Sebastian Andrzej Siewior wrote:
+> On 2025-06-05 15:44:23 [+0200], Petr Pavlu wrote:
+>> Isn't this broken earlier by "Don't relocate non-allocated regions in modules."
+>> (pre-Git, [1])?
 > 
-> Intel RAR differs from AMD INVLPGB in a few ways:
-> - RAR goes through (emulated?) APIC writes, not instructions
-> - RAR flushes go through a memory table with 64 entries
-> - RAR flushes can be targeted to a cpumask
-> - The RAR functionality must be set up at boot time before it can be used
+> Looking further back into the history, we have
+> 	21af2f0289dea ("[PATCH] per-cpu support inside modules (minimal)")
 > 
-> The cpumask targeting has resulted in Intel RAR and AMD INVLPGB having
-> slightly different rules:
-> - Processes with dynamic ASIDs use IPI based shootdowns
-> - INVLPGB: processes with a global ASID 
->    - always have the TLB up to date, on every CPU
->    - never need to flush the TLB at context switch time
-> - RAR: processes with global ASIDs
->    - have the TLB up to date on CPUs in the mm_cpumask
->    - can skip a TLB flush at context switch time if the CPU is in the mm_cpumask
->    - need to flush the TLB when scheduled on a cpu not in the mm_cpumask,
->      in case it used to run there before and the TLB has stale entries
+> which does
 > 
-> RAR functionality is present on Sapphire Rapids and newer CPUs.
+> +       if (pcpuindex) {
+> +               /* We have a special allocation for this section. */
+> +               mod->percpu = percpu_modalloc(sechdrs[pcpuindex].sh_size,
+> +                                             sechdrs[pcpuindex].sh_addralign);
+> +               if (!mod->percpu) {
+> +                       err = -ENOMEM;
+> +                       goto free_mod;
+> +               }
+> +               sechdrs[pcpuindex].sh_flags &= ~(unsigned long)SHF_ALLOC;
+> +       }
 > 
-> Information about Intel RAR can be found in this whitepaper.
-> 
-> https://www.intel.com/content/dam/develop/external/us/en/documents/341431-remote-action-request-white-paper.pdf
-> 
-> This patch series is based off a 2019 patch series created by Intel
+> so this looks like the origin.
 
-Do you have performance numbers?  IIRC, the reason that 2019 series never went
-anywhere is because RAR wasn't a win for bare metal.  Though I believe it _was_
-a win for KVM, due to the cost of an IPI being significantly higher (requires a
-VM-Exit => VM-Enter roundtrip).
+This patch added the initial per-cpu support for modules. The relocation
+handling at that point appears correct to me. I think it's the mentioned patch
+"Don't relocate non-allocated regions in modules" that broke it.
 
-> with patches later in the series modified to fit into
-> the TLB flush code structure we have after AMD INVLPGB functionality
-> was integrated.
+> 
+> …
+>>> --- a/kernel/module/main.c
+>>> +++ b/kernel/module/main.c
+>>> @@ -2816,6 +2816,10 @@ static struct module *layout_and_allocate(struct load_info *info, int flags)
+>>>  	if (err)
+>>>  		return ERR_PTR(err);
+>>>  
+>>> +	/* Add SHF_ALLOC back so that relocations are applied. */
+>>> +	if (IS_ENABLED(CONFIG_SMP) && info->index.pcpu)
+>>> +		info->sechdrs[info->index.pcpu].sh_flags |= SHF_ALLOC;
+>>> +
+>>>  	/* Module has been copied to its final place now: return it. */
+>>>  	mod = (void *)info->sechdrs[info->index.mod].sh_addr;
+>>>  	kmemleak_load_module(mod, info);
+>>
+>> This looks like a valid fix. The info->sechdrs[info->index.pcpu].sh_addr
+>> is set by rewrite_section_headers() to point to the percpu data in the
+>> userspace-passed ELF copy. The section has SHF_ALLOC reset, so it
+>> doesn't move and the sh_addr isn't adjusted by move_module(). The
+>> function apply_relocations() then applies the relocations in the initial
+>> ELF copy. Finally, post_relocation() copies the relocated percpu data to
+>> their final per-CPU destinations.
+>>
+>> However, I'm not sure if it is best to manipulate the SHF_ALLOC flag in
+>> this way. It is ok to reset it once, but if we need to set it back again
+>> then I would reconsider this.
+> 
+> I had the other way around but this flag is not considered anywhere
+> else other than the functions called here. So I decided to add back what
+> was taken once.
+> 
+>> An alternative approach could be to teach apply_relocations() that the
+>> percpu section is special and should be relocated even though it doesn't
+>> have SHF_ALLOC set. This would also allow adding a comment explaining
+>> that we're relocating the data in the original ELF copy, which I find
+>> useful to mention as it is different to other relocation processing.
+> 
+> Not sure if this makes it better. It looks like it continues a
+> workaround…
+> The only reason why it has been removed in the first place is to skip
+> the copy process.
 
-Please provide diff stats in the cover letter, e.g. so that sub-maintainers like
-myself don't have to scroll through every patch to figure out whether or not there's
-something that requires their review/ack.
+The SHF_ALLOC flag is also removed to prevent the section from being allocated
+by layout_sections().
+
+> We could also keep the flag and skip the section during the copy
+> process based on its id. This was the original intention.
+> 
+>> For instance:
+>>
+>> 	/*
+>> 	 * Don't bother with non-allocated sections.
+>> 	 *
+>> 	 * An exception is the percpu section, which has separate allocations
+>> 	 * for individual CPUs. We relocate the percpu section in the initial
+>> 	 * ELF template and subsequently copy it to the per-CPU destinations.
+>> 	 */
+>> 	if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC) &&
+>> 	    infosec != info->index.pcpu)
+>> 		continue;
+>>
+> 
+> If you insist but…
+
+It seems logical to me that the SHF_ALLOC flag is removed for the percpu section
+since it isn't directly allocated by the regular process. This is consistent
+with what the module loader does in other similar cases. I could also understand
+keeping the flag and explicitly skipping the layout and allocate process for the
+section. However, adjusting the flag back and forth to trigger the right code
+paths in between seems fragile to me and harder to maintain if we need to
+shuffle things around in the future.
+
+-- 
+Cheers,
+Petr
