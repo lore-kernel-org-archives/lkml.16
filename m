@@ -1,94 +1,103 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30463C17;
-	Thu,  5 Jun 2025 10:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140013C17;
+	Thu,  5 Jun 2025 10:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749117815; cv=none; b=Odq/1D9AW5YUhsMSAOkyiSLP27cUHVgD/0mSwt4F3MFq0mO6Kb8Uh9sII/um34l3CtujJrlgCzbL1UuNb/NCirVGlsLWVcyjbK+6GocTlojw1Nm6XEF6OV+hLvpFWrPTJlm18PMzjBsLHOEHazm4/aS810b2PT4+YmxAABIVZ6M=
+	t=1749117839; cv=none; b=DW5HYLetoDabK59OwobgZR3CfyFQydic8Hq/0sd8B7X+/j4gKxoucpX1hEkIr9v5ykY7xMT/cB8Xtx8lV5hlq5+hdjO29rxdL9U8hGcSz/zpUIArqhBVVL7jr7KZVikiLI8PKmyRGKaz1enT9BUxznpWnJ+VlfkgFeapCBiyUOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749117815; c=relaxed/simple;
-	bh=FA/+BHeifIxqogwcWZmS8wqgT9vJObq/p6nrNOEyb80=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r8E0XRs18YQAqjIGWxu6CXD9iLtivbGqyCqxmlCX42fkCQA6jlE7OA9BLpggAp/NWqeEwr773VnYwo6KXfp2QtRUhSnp68nQZpkVwoJUSE1H7Vq/9xe0L8n4rRKhp8VA+vcYphWMXvn/93heEtKGc5hRl+ryEcSD7H3PCzAejSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Xw/U0uZ+; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1749117839; c=relaxed/simple;
+	bh=IbFkBMYSzv1GGq40/JG4FvWS9we2ie1V/FudTFOrr54=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KMpZnG4kuCHVRylXtrCCxv5vGRjqDrzuo8d+LsQiPwW8wBhxDhfaAfzSAVLNazWJxYOWx7Mluy21/YaPHumOmBxQw0RZFSJ9n1cEA/peVuHpBiOmeM3HRXZfkaYCTvY1b1Rlg1x/byV3XDdYE65++4l2SEFRuQTQRYafO8qH4ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WAuxgpuk; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Xw/U0uZ+"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 28EAD1FD24;
-	Thu,  5 Jun 2025 12:03:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1749117808;
-	bh=iegZH7tcjxXe+6mQln8FYa5oEl858U3Y7zsMG9yiJS0=; h=From:To:Subject;
-	b=Xw/U0uZ+3T939JRocOy6a+7VSv+x8VZEXaLHOkU1e/YA9ciISbUxG5NGRLHkm+pI+
-	 7iKjMqByc2w8S0XIV7RNhM+nw+Xaty8cN5v4ocuqJ85rmunreiSRWEoRDNon1pLImj
-	 ymKg1QBTcSdiHpes92K1L/NnIYPWQu3jTXDfPXxOm+5jSw5pP1nKg2rVUuN+rjPYbQ
-	 NIWTwsnf23fFy5gIl4gc04gqQaJUamNKgvUjGZKUl2t2l2WF6JG8Fh97vZlpIM19fV
-	 h7II2LB0aylJUdxqYp0Ix47vkhOBh1AyAkbEdEvvylPiw5kuWsR7KArUOcICT4A55f
-	 YWJ9LCikEhkSA==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jeff Chen <jeff.chen_1@nxp.com>,
-	stable@vger.kernel.org
-Subject: [PATCH wireless v1] Revert "wifi: mwifiex: Fix HT40 bandwidth issue."
-Date: Thu,  5 Jun 2025 12:03:13 +0200
-Message-Id: <20250605100313.34014-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAuxgpuk"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-604e745b6fbso1432069a12.2;
+        Thu, 05 Jun 2025 03:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749117836; x=1749722636; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E6YKIEIURfzN9VHRc77Dd80LqnT7KLN0i32KIXK3tdg=;
+        b=WAuxgpukBAelxaeGSwAncGOzKFD9PmdEUegvK4vrpqToo9Iu1JsXdiQG828iBFLX8m
+         WSJLsUzQqKJYrHSfzXWPdgOV9aWQtKSqbaqif1ckC0qcm++CZTBaMasITeSvTSozbKv3
+         x+wtzQcFO9FqacQ84fZM2+XtZCzDMOR/E4j6K3ARddjk8A+zJorcfmAJAt7jgCcXdT2+
+         HHpmxEtndMrxcymABdR3dbUFbpFCv+JNAtHS+2HcHbAphajFi1eGbt2vPwM4aj0tnqCd
+         p25Xkd146w6wiYcKqLEEDWYKBaqmqnuCQuR4rgIgjfAYDGX3g9MhZIq+nOoBJTU/H0Ji
+         7AHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749117836; x=1749722636;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E6YKIEIURfzN9VHRc77Dd80LqnT7KLN0i32KIXK3tdg=;
+        b=rQIACpOLVlXzI6BGznvB70dbBNp2jD2UbsFXfhN3ANIK4To2sayouZWTEIVREBCSS2
+         tPxFvrPDLhP/e7F+6VH9cDAF/xxFoCTm1bWydJR2mQzOBWiMvxRndQIG1xC0EV8OLuRT
+         FmJZYMkEMMNoSuD2Dl0sPKv71/d0/DP/QlOwFSZdlISkjYh8vH5OFUbUZTbv7QGi667x
+         ILawqG2D2mU/NFgN4vG35H2GTcrCAn536aiJ6oPGiQKWLUg2d178oTRDqNGgkum8J+tS
+         97KiklxUPip4TCHL6nU2/FcwrR3QhR9JvTv8VuMfMyT5IUPTVJK+CDAZ7zwy+Mq3I5AF
+         2BtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4t3gCywrFnbgs0FHJemOJ3tW9TNTlACRmKw/QHZ8S/U9EVIixnFjtvNZ58I8RZ01pPMyJSLXkpVVZ2Q==@vger.kernel.org, AJvYcCX3UsFKi8JuSGPwMj6zrPh8EXdRqjQRvcs/a1Gqg0Is767k1njplRdg1SlZloupaJh/TGgS4i3G@vger.kernel.org, AJvYcCXviZr4tchv/8kXRwK0pSIKzHI9lnRwK2Aeaa1XVnTs3fEflc/rOhyA/jYq8k2V3KnOmu8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXgl0T0U1eIz8iP1uUgBw4CgD3jndE3vq6aZ0VaNFGIWsh+HdC
+	efbtIJyoH2UGTs6ao+mdfxyn8QLPlLD7nHxjG1BSlw07+KMQPA5A25Np
+X-Gm-Gg: ASbGncvt3UdqLf7TyOcYOQdqRiESLptjQck1xHK32vIvkz5czEq6jaUdds5sdZO+iPn
+	33vztErcIHTtRojZO3OMTiXZq5dY5XL2nwsM94Ok/ssLLs2z75bCpknmtNC/mb9k3CkkSHo2rhP
+	glWiOmb+yr5gsr//GROKglbxXQyuyO4MEp5qdb+qLlfJXT1ShckNZKFKmtOm9Y3cRCaU7mI776c
+	ZSUjuukYnDS5iFsONXpqmySYlXb0OoPU9BaM6IFz8phZIrM/fFsAolAm/nqRXfh95kr8WB6Nuuu
+	yD0px3xXgF2RoWXAFKMyl66heC2bEzUJdBb8h4jsu5VqI7V/6KNMXb071d8h/vX8UbYmzCemyRQ
+	=
+X-Google-Smtp-Source: AGHT+IGHwOHFs0rVwCkQOkMluqbJXbdKtriQIiO3+FtsY2VCHwyOrAi82G3s8RnRgtSaBMdtsBdovA==
+X-Received: by 2002:a05:6402:34c1:b0:600:99ba:222f with SMTP id 4fb4d7f45d1cf-606f0b83799mr5118654a12.15.1749117836168;
+        Thu, 05 Jun 2025 03:03:56 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325::22f? ([2620:10d:c092:600::1:d66f])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607193ecba2sm1327674a12.35.2025.06.05.03.03.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 03:03:55 -0700 (PDT)
+Message-ID: <d84f48b0-911b-4a8b-ba08-59eee164bfbf@gmail.com>
+Date: Thu, 5 Jun 2025 11:05:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v4 02/18] netmem: introduce netmem alloc APIs to wrap page
+ alloc APIs
+To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
+ netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+ ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+ akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
+ andrew+netdev@lunn.ch, toke@redhat.com, tariqt@nvidia.com,
+ edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+References: <20250604025246.61616-1-byungchul@sk.com>
+ <20250604025246.61616-3-byungchul@sk.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250604025246.61616-3-byungchul@sk.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Francesco Dolcini <francesco.dolcini@toradex.com>
+On 6/4/25 03:52, Byungchul Park wrote:
+> To eliminate the use of struct page in page pool, the page pool code
+> should use netmem descriptor and APIs instead.
+> 
+> As part of the work, introduce netmem alloc APIs allowing the code to
+> use them rather than the existing APIs for struct page.
 
-This reverts commit 34253084291cb210b251d64657958b8041ce4ab1.
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
 
-That commit introduces a regression, when HT40 mode is enabled,
-received packets are lost, this was experience with W8997 with both
-SDIO-UART and SDIO-SDIO variants. From an initial investigation the
-issue solves on its own after some time, but it's not clear what is
-the reason. Given that this was just a performance optimization, let's
-revert it till we have a better understanding of the issue and a proper
-fix.
-
-Cc: Jeff Chen <jeff.chen_1@nxp.com>
-Cc: stable@vger.kernel.org
-Fixes: 34253084291c ("wifi: mwifiex: Fix HT40 bandwidth issue.")
-Closes: https://lore.kernel.org/all/20250603203337.GA109929@francesco-nb/
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- drivers/net/wireless/marvell/mwifiex/11n.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
-index 738bafc3749b..66f0f5377ac1 100644
---- a/drivers/net/wireless/marvell/mwifiex/11n.c
-+++ b/drivers/net/wireless/marvell/mwifiex/11n.c
-@@ -403,14 +403,12 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
- 
- 		if (sband->ht_cap.cap & IEEE80211_HT_CAP_SUP_WIDTH_20_40 &&
- 		    bss_desc->bcn_ht_oper->ht_param &
--		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY) {
--			chan_list->chan_scan_param[0].radio_type |=
--				CHAN_BW_40MHZ << 2;
-+		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY)
- 			SET_SECONDARYCHAN(chan_list->chan_scan_param[0].
- 					  radio_type,
- 					  (bss_desc->bcn_ht_oper->ht_param &
- 					  IEEE80211_HT_PARAM_CHA_SEC_OFFSET));
--		}
-+
- 		*buffer += struct_size(chan_list, chan_scan_param, 1);
- 		ret_len += struct_size(chan_list, chan_scan_param, 1);
- 	}
 -- 
-2.39.5
+Pavel Begunkov
 
