@@ -1,393 +1,138 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E3C1F30AD
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 22:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7178727E7E6;
+	Thu,  5 Jun 2025 22:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749161095; cv=none; b=azhAEg0j4Z/N5ODiZ3PPGM6h0iUrkBUtHpbl8JXI+RZXqci7a6TTYmLWaKlzFvQ2c7dJ/8lj0XYGPrPbJ/nwNjK9u/jEQn6zH1SBEA7GGFNEMzBSeLbTvWYMHD9+Mg0eNpOx1tvcg5OfcnA/vbrSw/ef3w1npFzi8Te69+CPVDM=
+	t=1749161117; cv=none; b=n+7sP7BKoGqKBwnTaJ8mSzVUIo6l/JfIuIanS6MQ8+OjXIsortLjKrzvpa4Wg5M3+TuansJmHP6qa7t3MljC7X5QdMb8jFH8DRfpvbRH6FyOFsypIHNPKoTfrL9X0ze+pYkzW5XjUL1M/xA9mQxMoShc7jsTWJSYGDqLDwCeyZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749161095; c=relaxed/simple;
-	bh=7mg4Vc3FG3Ub/sNkzbQgtf+fZjB3i5Cl8TFLEjQND6M=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lK+bSopkTUvm5atQBk3TRENEP59pvl/UdMXx4aFLKcEUVyAlImBB1rEXD3x+niaEEnoimHHMY7dtZiXFbQZEYe17vaxlQ8qcGrMomzthhzZLENfRMHZovFEGn5GCoisTXvNHN2SPxNnliAg1n9SWloUUra8B5Z+zgJjiWjDKTJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=Z4qGpffd; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1749161117; c=relaxed/simple;
+	bh=3vj4K85kORNIXijyvLOkpuKK2R+wG3EegDNBKMfMUVs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OCVz9wYzre2NkTterVUlKEzEacsIH1VHw3Mdd2VpYAOnzZ8Mrb4Gets80T3urC+6G1LtVqb3YP0ea/qANSUS6XB8VulVqEzoKAIuAM8PDPm8sHYwX6shyc53GttIdBwvURlAK5X8v9GViXcxB/UaGgB7dplzKH+IGi58SDJQzp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sas1PTQt; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="Z4qGpffd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1749161083; x=1749420283;
-	bh=IrrawZx6kZOkw72+PxxwUrQ2AW3IP1Yx0cPdhL1G4Q8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=Z4qGpffdLJol80t+ZEaiVPEqUJNJu6oLIWlW1tGUzj4sCc8UdpOAe9+6qx2BOjbJT
-	 v953bonVXMQr++/VwBlg3RhpEj1TSbCBxovhv8Uc7gJMcY77waDFs+9g75zdzNAO1H
-	 w8ycMmTb/MG98/1FHpis0vVfGzmrowhXl0fmHUSJjEgHkVb2exZvuAm0WxP5zflE3l
-	 By4AlJA1dA0togu4U+GuD8kkibjgtDMQ7wr5qE+htL3JzpSSaoQMtmQMOLMOxEeGfR
-	 iucP15ryokFafsQEuVdNefSjAGDcuk7Y/PPxk1DmIr/gsKJFfljDV5bGr549RyRgp8
-	 AwoEOrE1wA9WQ==
-Date: Thu, 05 Jun 2025 22:04:39 +0000
-To: Burak Emir <bqe@google.com>
-From: Pekka Ristola <pekkarr@protonmail.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Carlos LLama <cmllamas@google.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v11 5/5] rust: add dynamic ID pool abstraction for bitmap
-Message-ID: <_YXyH2NepC8WAr7ghT3Y-9mpj_x0nZCgmA3Cm5-eUuRE_sK1zcepZsrCJarthhyjI84G3PAwjp316nfUaPvFFIN4QCgj_W9k2SUaGy7pa0s=@protonmail.com>
-In-Reply-To: <20250602135231.1615281-6-bqe@google.com>
-References: <20250602135231.1615281-1-bqe@google.com> <20250602135231.1615281-6-bqe@google.com>
-Feedback-ID: 29854222:user:proton
-X-Pm-Message-ID: cd7b5a4c83110ac7da85fce57973f1a3f869bfc2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sas1PTQt"
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-52b2290e292so525682e0c.3;
+        Thu, 05 Jun 2025 15:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749161114; x=1749765914; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hGastCm36FgXNCcC57ensjLOzhaOTk9LpHFAnhoMBXk=;
+        b=Sas1PTQtTexTrFqpZ8YpB/1Y9YzMr3h2bgVFfTDx9YIBAcNNyM2P7J3SAvPI3MZQ1p
+         +8UfUmov2xuzx0YPhCPhKSy6qIBCt65Sea017sVMQk4ojbFcoLpSCle55xeeVehoRTz2
+         k1fBFyhiJgbMH4szp1E+c7QY5ozbmKnqdx+9f2MPKZkvjSWmw33yapQPbhyS+cYtnu1c
+         Bs6tStlId3xBRIFlQ/9ngW/XJR4CAUJAqmhM6YaaGwINTOdcyFkwOi9KMu0/3jP+t45O
+         PzIRh2fPeuqKSNN3UwTCC1JYc51+fOrFo7MVjgTOAz8zLRogWTAzovIejeDBxSDKEV7j
+         gmGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749161114; x=1749765914;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hGastCm36FgXNCcC57ensjLOzhaOTk9LpHFAnhoMBXk=;
+        b=VM3+6mIgxh3x9Hxrf5o2THYA+E06Pl5rHcZttRhj+HXsCEkgdwSYSUiXszSftiEycj
+         3phkyA7Boecgc3EEG2KgvERAmCmPVapC717aTzClKB88FIRnSIvFs8/0/42umfX2FNkq
+         FO/3r5CXQrcbpeRBj61chkAbDKFYNsCnXw5+guAuaRrzRkW61bmFYPNkUD8+9EmNPcr2
+         4b9kRRLa6GWMFYCHq8rLfp1CHpK0KjGmg3s4rMFuSNtBIVS6srpWD2kMbHJsurRalOTy
+         TSEAwtTo3jJ4kXfuw60dDsQHVcxCmvBkFlpzuXodSn7LcG9Dctnptd099r/zXWHdtP9t
+         Fsig==
+X-Forwarded-Encrypted: i=1; AJvYcCWkNeGyIsODdh5qT2ZX/q8k712Umlc2JHdFmYBVmZ9SlBHgV6ylyd3MvkgYHfC6gKOGVJ3aefiTy5WXEFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxgcWaW6n4BvlianA0rk2UcVIEUhvaCGebOcmPCI0nJT/y0PGT
+	Xet9rPJBvajlCdOIeW6itAKL4eRnDcsCrXDhk2GRWhPceN4p1lBGBjbxylF1cOx3
+X-Gm-Gg: ASbGncuxGaV1RHiCzIqVAXzSGnsjN75gLTyovPP1T8qGFnQMohLHfW+DSZ5CYk67hC5
+	IKBQW3Mu9esExZ1P9XbnEstlxjlJFxtYbIw1zDbUwB4htdpVWDIirkvpuDK/D8Y0OB2Rvc5vsj9
+	7XpUrhYsq6U9rIF9Cn2FCVGZb2IgUWkiqhP+p/j/ZNjey/XkukMLfp/4hTR8tce4Ayu3JFjSw59
+	VO6avhYEZV66g2ztG23pIJPGU38Da0EWh3u4pmXPCMeDyUs1sgwXObCxJSzpFwI3Sc80xGGJmuA
+	KOdgxTIBABND3Uf8BPm22kJIOqzlwcUDVfjAYA3rsr9c4MAWnsfpxbiheHoK
+X-Google-Smtp-Source: AGHT+IF24h1xuJvON1Kzk66i7K7qvXpHURr3Q/4K2J32pCqEHM6ldxx29WQk4cw7RALd9PeIfP5UWQ==
+X-Received: by 2002:a05:6102:1624:b0:4e5:97e3:a97 with SMTP id ada2fe7eead31-4e77290bbcemr1018077137.15.1749161113615;
+        Thu, 05 Jun 2025 15:05:13 -0700 (PDT)
+Received: from [192.168.0.9] ([2804:14d:90a8:477c:13e7:d349:8af8:5d32])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87ebd219ec7sm288832241.24.2025.06.05.15.05.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 15:05:13 -0700 (PDT)
+From: Gustavo Silva <gustavograzs@gmail.com>
+Subject: [PATCH v2 0/3] BMI270: Add support for step counter and motion
+ events
+Date: Thu, 05 Jun 2025 19:05:00 -0300
+Message-Id: <20250605-bmi270-events-v2-0-8b2c07d0c213@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIwUQmgC/3WMQQ6CMBBFr0Jm7ZgytDRx5T0MC6xTmERa05JGQ
+ 7i7lb3L93/e2yBzEs5waTZIXCRLDBXo1ICbxzAxyqMykCKjNGm8L0JWIRcOa0arXc/e+Pp0UJ1
+ XYi/vo3cbKs+S15g+R760v/VfqbSocOydJeptx8Zfp2WU59nFBYZ937/AbMpOqgAAAA==
+X-Change-ID: 20250424-bmi270-events-74c6ef5f4243
+To: Alex Lanzano <lanzano.alex@gmail.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gustavo Silva <gustavograzs@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749161110; l=2012;
+ i=gustavograzs@gmail.com; s=20250111; h=from:subject:message-id;
+ bh=3vj4K85kORNIXijyvLOkpuKK2R+wG3EegDNBKMfMUVs=;
+ b=t44Ry3l1VxGbtLtzd+JFn8FGxrFErMNQqb0smpsZ4cO3gGHGd9aSLhe58dDuJTnkfw8QJPi8g
+ DOd1nREujynDVt6IloX7H+Tko93qRQ5404en+Tz7EdkC3O6cGiYg2kn
+X-Developer-Key: i=gustavograzs@gmail.com; a=ed25519;
+ pk=g2TFXpo1jMCOCN+rzVoM9NDFNfSMOgVyY0rlyvk4RTM=
 
-On Monday, June 2nd, 2025 at 16.53, Burak Emir <bqe@google.com> wrote:
-> This is a port of the Binder data structure introduced in commit
-> 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
-> Rust.
->=20
-> Like drivers/android/dbitmap.h, the ID pool abstraction lets
-> clients acquire and release IDs. The implementation uses a bitmap to
-> know what IDs are in use, and gives clients fine-grained control over
-> the time of allocation. This fine-grained control is needed in the
-> Android Binder. We provide an example that release a spinlock for
-> allocation and unit tests (rustdoc examples).
->=20
-> The implementation does not permit shrinking below capacity below
-> BITS_PER_LONG.
->=20
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Suggested-by: Yury Norov <yury.norov@gmail.com>
-> Signed-off-by: Burak Emir <bqe@google.com>
-> ---
->  MAINTAINERS            |   1 +
->  rust/kernel/id_pool.rs | 222 +++++++++++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs     |   1 +
->  3 files changed, 224 insertions(+)
->  create mode 100644 rust/kernel/id_pool.rs
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 943d85ed1876..bc95d98f266b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4134,6 +4134,7 @@ R:=09Yury Norov <yury.norov@gmail.com>
->  S:=09Maintained
->  F:=09lib/find_bit_benchmark_rust.rs
->  F:=09rust/kernel/bitmap.rs
-> +F:=09rust/kernel/id_pool.rs
->=20
->  BITOPS API
->  M:=09Yury Norov <yury.norov@gmail.com>
-> diff --git a/rust/kernel/id_pool.rs b/rust/kernel/id_pool.rs
-> new file mode 100644
-> index 000000000000..cf26d405d9bb
-> --- /dev/null
-> +++ b/rust/kernel/id_pool.rs
-> @@ -0,0 +1,222 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2025 Google LLC.
-> +
-> +//! Rust API for an ID pool backed by a [`Bitmap`].
-> +
-> +use crate::alloc::{AllocError, Flags};
-> +use crate::bitmap::Bitmap;
-> +
-> +/// Represents a dynamic ID pool backed by a [`Bitmap`].
-> +///
-> +/// Clients acquire and release IDs from unset bits in a bitmap.
-> +///
-> +/// The capacity of the ID pool may be adjusted by users as
-> +/// needed. The API supports the scenario where users need precise contr=
-ol
-> +/// over the time of allocation of a new backing bitmap, which may requi=
-re
-> +/// release of spinlock.
-> +/// Due to concurrent updates, all operations are re-verified to determi=
-ne
-> +/// if the grow or shrink is sill valid.
-> +///
-> +/// # Examples
-> +///
-> +/// Basic usage
-> +///
-> +/// ```
-> +/// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-> +/// use kernel::id_pool::IdPool;
-> +///
-> +/// let mut pool =3D IdPool::new(64, GFP_KERNEL)?;
-> +/// for i in 0..64 {
-> +///   assert_eq!(i, pool.acquire_next_id(i).ok_or(ENOSPC)?);
-> +/// }
-> +///
-> +/// pool.release_id(23);
-> +/// assert_eq!(23, pool.acquire_next_id(0).ok_or(ENOSPC)?);
-> +///
-> +/// assert_eq!(None, pool.acquire_next_id(0));  // time to realloc.
-> +/// let resizer =3D pool.grow_request().ok_or(ENOSPC)?.realloc(GFP_KERNE=
-L)?;
-> +/// pool.grow(resizer);
-> +///
-> +/// assert_eq!(pool.acquire_next_id(0), Some(64));
-> +/// # Ok::<(), Error>(())
-> +/// ```
-> +///
-> +/// Releasing spinlock to grow the pool
-> +///
-> +/// ```no_run
-> +/// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-> +/// use kernel::sync::{new_spinlock, SpinLock};
-> +/// use kernel::id_pool::IdPool;
-> +///
-> +/// fn get_id_maybe_realloc(guarded_pool: &SpinLock<IdPool>) -> Result<u=
-size, AllocError> {
-> +///   let mut pool =3D guarded_pool.lock();
-> +///   loop {
-> +///     match pool.acquire_next_id(0) {
-> +///       Some(index) =3D> return Ok(index),
-> +///       None =3D> {
-> +///         let alloc_request =3D pool.grow_request();
-> +///         drop(pool);
-> +///         let resizer =3D alloc_request.ok_or(AllocError)?.realloc(GFP=
-_KERNEL)?;
-> +///         pool =3D guarded_pool.lock();
-> +///         pool.grow(resizer)
-> +///       }
-> +///     }
-> +///   }
-> +/// }
-> +/// ```
-> +pub struct IdPool {
-> +    map: Bitmap,
-> +}
-> +
-> +/// Indicates that an [`IdPool`] should change to a new target size.
-> +pub struct ReallocRequest {
-> +    num_ids: usize,
-> +}
-> +
-> +/// Contains a [`Bitmap`] of a size suitable for reallocating [`IdPool`]=
-.
-> +pub struct PoolResizer {
-> +    new: Bitmap,
-> +}
-> +
-> +impl ReallocRequest {
-> +    /// Allocates a new backing [`Bitmap`] for [`IdPool`].
-> +    ///
-> +    /// This method only prepares reallocation and does not complete it.
-> +    /// Reallocation will complete after passing the [`PoolResizer`] to =
-the
-> +    /// [`IdPool::grow`] or [`IdPool::shrink`] operation, which will che=
-ck
-> +    /// that reallocation still makes sense.
-> +    pub fn realloc(&self, flags: Flags) -> Result<PoolResizer, AllocErro=
-r> {
-> +        let new =3D Bitmap::new(self.num_ids, flags)?;
-> +        Ok(PoolResizer { new })
-> +    }
-> +}
-> +
-> +impl IdPool {
-> +    /// Constructs a new `[IdPool]`.
+This series adds support for step counter and motion events using
+interrupts in the BMI270 driver.
 
-The link is broken, it should be [`IdPool`].
+The step counter can be enabled, disabled, and configured with a
+watermark, all from userspace.
 
-> +    ///
-> +    /// A capacity below [`BITS_PER_LONG`] is adjusted to [`BITS_PER_LON=
-G`].
+Any-motion and no-motion events are generated by detecting changes
+in acceleration on each axis.
 
-Since `BITS_PER_LONG` is defined in the bindings, it needs an explicit
-path. Rustdoc won't link to it otherwise.
+Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
+---
+Changes in v2:
+- Reduce the scope of mutex lock when clearing the step counter
+- Change the type of the 'steps_enabled' variable from int to bool
+- Add a new DMA safe variable to the device's private data to access the
+  feature registers
+- Remove unnecessary mutex lock
+- Fix a build error found by the kernel test robot by initializing a
+  local variable in the `bmi270_update_feature_reg()` function
+- Remove dead code in the `bmi270_write_event_config()` function
+- Add macro definitions and corresponding datasheet references for
+  relevant constants: step counter maximum value, step counter factor,
+  and threshold upper limit
+- Remove the event bitmask from the device's private data. Read the
+  registers directly to retrieve this information instead
+- Use IIO_UNMOD_EVENT_CODE instead of IIO_MOD_EVENT_CODE where
+  appropriate
+- Fix shadowed error codes
+- Change motion event to be enabled on a per-axis basis
+- Create pseudo channel of type accel_x&y&z for the no-motion event
+- Change no-motion event type to IIO_EV_TYPE_ROC
+- Link to v1: https://lore.kernel.org/r/20250424-bmi270-events-v1-0-a6c722673e5f@gmail.com
 
-Maybe something like:
+---
+Gustavo Silva (3):
+      iio: imu: bmi270: add channel for step counter
+      iio: imu: bmi270: add step counter watermark event
+      iio: imu: bmi270: add support for motion events
 
-```
-/// [`BITS_PER_LONG`]: srctree/include/asm-generic/bitsperlong.h
-```
+ drivers/iio/imu/bmi270/bmi270_core.c | 612 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 609 insertions(+), 3 deletions(-)
+---
+base-commit: b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6
+change-id: 20250424-bmi270-events-74c6ef5f4243
 
-> +    #[inline]
-> +    pub fn new(num_ids: usize, flags: Flags) -> Result<Self, AllocError>=
- {
-> +        let num_ids =3D core::cmp::max(num_ids, bindings::BITS_PER_LONG =
-as usize);
-> +        let map =3D Bitmap::new(num_ids, flags)?;
-> +        Ok(Self { map })
-> +    }
-> +
-> +    /// Returns how many IDs this pool can currently have.
-> +    #[inline]
-> +    pub fn len(&self) -> usize {
-> +        self.map.len()
-> +    }
+Best regards,
+-- 
+Gustavo Silva <gustavograzs@gmail.com>
 
-This needs `#[expect(clippy::len_without_is_empty)]` or adding the
-`is_empty` method.
-
-> +
-> +    /// Returns a [`ReallocRequest`] if the [`IdPool`] can be shrunk, [`=
-None`] otherwise.
-> +    ///
-> +    /// The capacity of an [`IdPool`] cannot be shrunk below [`BITS_PER_=
-LONG`].
-
-The `BITS_PER_LONG` link is broken here as well.
-
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-> +    /// use kernel::id_pool::{ReallocRequest, IdPool};
-> +    ///
-> +    /// let mut pool =3D IdPool::new(1024, GFP_KERNEL)?;
-> +    /// let alloc_request =3D pool.shrink_request().ok_or(AllocError)?;
-> +    /// let resizer =3D alloc_request.realloc(GFP_KERNEL)?;
-> +    /// pool.shrink(resizer);
-> +    /// assert_eq!(pool.len(), kernel::bindings::BITS_PER_LONG as usize)=
-;
-> +    /// # Ok::<(), AllocError>(())
-> +    /// ```
-> +    #[inline]
-> +    pub fn shrink_request(&self) -> Option<ReallocRequest> {
-> +        let len =3D self.map.len();
-> +        // Shrinking below [`BITS_PER_LONG`] is never possible.
-> +        if len <=3D bindings::BITS_PER_LONG as usize {
-> +            return None;
-> +        }
-> +        // Determine if the bitmap can shrink based on the position of
-> +        // its last set bit. If the bit is within the first quarter of
-> +        // the bitmap then shrinking is possible. In this case, the
-> +        // bitmap should shrink to half its current size.
-> +        let last_bit =3D self.map.last_bit();
-> +        if last_bit.is_none() {
-> +            return Some(ReallocRequest {
-> +                num_ids: bindings::BITS_PER_LONG as usize,
-> +            });
-> +        }
-> +        let bit =3D last_bit.unwrap();
-
-Instead of `unwrap`, consider using `let else`:
-
-```
-let Some(bit) =3D self.map.last_bit() else {
-    return Some(ReallocRequest { ... });
-};
-```
-
-> +        if bit >=3D (len / 4) {
-> +            return None;
-> +        }
-> +        let num_ids =3D core::cmp::max(bindings::BITS_PER_LONG as usize,=
- len / 2);
-> +        Some(ReallocRequest { num_ids })
-> +    }
-> +
-> +    /// Shrinks pool by using a new [`Bitmap`], if still possible.
-> +    #[inline]
-> +    pub fn shrink(&mut self, mut resizer: PoolResizer) {
-> +        // Between request to shrink that led to allocation of `resizer`=
- and now,
-> +        // bits may have changed.
-> +        // Verify that shrinking is still possible. In case shrinking to
-> +        // the size of `resizer` is no longer possible, do nothing,
-> +        // drop `resizer` and move on.
-> +        let updated =3D self.shrink_request();
-> +        if updated.is_none() {
-> +            return;
-> +        }
-> +        if updated.unwrap().num_ids > resizer.new.len() {
-
-Same here, the unwrap can be replaced with `let else`.
-
-> +            return;
-> +        }
-> +
-> +        resizer.new.copy_and_extend(&self.map);
-> +        self.map =3D resizer.new;
-> +    }
-> +
-> +    /// Returns a [`ReallocRequest`] for growing this [`IdPool`], if pos=
-sible.
-> +    ///
-> +    /// The capacity of an [`IdPool`] cannot be grown above [`i32::MAX`]=
-.
-> +    #[inline]
-> +    pub fn grow_request(&self) -> Option<ReallocRequest> {
-> +        let num_ids =3D self.map.len() * 2;
-> +        if num_ids > i32::MAX.try_into().unwrap() {
-> +            return None;
-> +        }
-> +        Some(ReallocRequest { num_ids })
-> +    }
-> +
-> +    /// Grows pool by using a new [`Bitmap`], if still necessary.
-> +    ///
-> +    /// The `resizer` arguments has to be obtained by calling [`grow_req=
-uest`]
-> +    /// on this object and performing a `realloc`.
-
-The `grow_request` link doesn't work. Also `realloc` should be a link to
-the `ReallocRequest::realloc` method.
-
-> +    #[inline]
-> +    pub fn grow(&mut self, mut resizer: PoolResizer) {
-> +        // Between request to grow that led to allocation of `resizer` a=
-nd now,
-> +        // another thread may have already grown the capacity.
-> +        // In this case, do nothing, drop `resizer` and move on.
-> +        if resizer.new.len() <=3D self.map.len() {
-> +            return;
-> +        }
-> +
-> +        resizer.new.copy_and_extend(&self.map);
-> +        self.map =3D resizer.new;
-> +    }
-> +
-> +    /// Acquires a new ID by finding and setting the next zero bit in th=
-e
-> +    /// bitmap.
-> +    ///
-> +    /// Upon success, returns its index. Otherwise, returns `None`
-> +    /// to indicate that a `grow_request` is needed.
-
-`None` and `grow_request` should be changed to links.
-
-> +    #[inline]
-> +    pub fn acquire_next_id(&mut self, offset: usize) -> Option<usize> {
-> +        let next_zero_bit =3D self.map.next_zero_bit(offset);
-> +        if let Some(nr) =3D next_zero_bit {
-> +            self.map.set_bit(nr);
-> +        }
-> +        next_zero_bit
-> +    }
-> +
-> +    /// Releases an ID.
-> +    #[inline]
-> +    pub fn release_id(&mut self, id: usize) {
-> +        self.map.clear_bit(id);
-> +    }
-> +}
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 8c4161cd82ac..d7def807900a 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -54,6 +54,7 @@
->  #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
->  pub mod firmware;
->  pub mod fs;
-> +pub mod id_pool;
->  pub mod init;
->  pub mod io;
->  pub mod ioctl;
-> --
-> 2.49.0.1204.g71687c7c1d-goog
-
-Cheers,
-Pekka
