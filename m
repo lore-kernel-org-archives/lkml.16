@@ -1,94 +1,130 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1746917548
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 21:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2059A17548;
+	Thu,  5 Jun 2025 21:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749157412; cv=none; b=AyQRpb6tdRNQIyCQws+gU4OlVi7PVk8MY6zAGWjLzVRRGAkxsEgk6Frk60WOG5mLxEC//tK+R1U+8v/xuKt4T9xQoJWjd/Oj4ksjCshRfbVP+Ehi79qE2/JIoTC+gFoCLIgQcNAlAIGNb3wSWsnUjQH8TYRkMi+Qt/AhXGP0PVw=
+	t=1749157421; cv=none; b=FPTWwuoBew3iiEwaOiS7dPjI6r5BogVlfOngpdBkYUJqB+WDvpKHpEWKbbRZoEMWw+AOGnyNaY8YB7GNbqmvoznqXRLVRKv8IuwdPjfJAewacFH9xsCgqdhBqbn2VM0CbgsUB685KXNR9CEEu0IsrR4UM0Wm1ocs2hucFYCm0WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749157412; c=relaxed/simple;
-	bh=hPeudKWhQ4RbVYkTTt7D3cuJu5GzpC7mlVjqr+LrW3E=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ctsaXihEk0OhbeNqB+woe+Ud4u84+sSxH/I1XaYJqKsXoB0DKudchnJAvwE68ir40uhcSGMTG5mmg5UWJEZqXWKWId1aEkkoHL/LOhTaHwrLSHaxRa/sghF7uaIHLu5VIyHvBglpsNIYrTqhmL1ITMioImS1YVgpoiV5ymLQ4WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=OeTCyz3W; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1749157421; c=relaxed/simple;
+	bh=DxZuCT3zQTNmwF1w5Jm8UNNxG3gAbyWGaSO957EG0X0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=NFX/E9MhZbRZK8XCZn49S3ZW/9jo83RSzlGFJe4vnhDQwFV4anST5IBrksM/HKKnlhgFeQrRsnAUQafx2fjvtHUO7WqD3uVpgKiVAQEoUwV78/PkTeauHolGBZPQtBpkfd8QsNWmn2x9LT10LjQLevXko6lZBAOHzDYcYE7Iivo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=lXP4G1Xq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eeiE05iw; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="OeTCyz3W"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6faff792f9bso14105166d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 14:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1749157410; x=1749762210; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yYv/BBqpPR/j3uwNGj5iM8dPA3cPsdOTHli866hFVas=;
-        b=OeTCyz3WbpKInG3GBWQDdzDtcMCYGK0EYkMwYCJc9Rd6CgJfTkeiq1UAdXBRMpt19P
-         km8kWCtwLIzf9EI9tUEX8SCvth1OAoKDFVuRLzxCWoWoa6dlSgQm8pSywFnKZ1IgWSP3
-         ZRTTge0LLRFXwjkwWjlohHBJ1NxGRJFQpoU5U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749157410; x=1749762210;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yYv/BBqpPR/j3uwNGj5iM8dPA3cPsdOTHli866hFVas=;
-        b=oOdt0ZmCN7UrnwF0U1CGo3YGBTu7q/Nft5j7IiZ3vPXJD1vWqKT5wFxAPDuX1RZReT
-         TFyim8P5fmiRGDEdi0glLefnFmRL59SIU+huM2xU194XG5A4xedp+PiHfSdgqRaZIQFa
-         jMk3QrBfZbZS6u4t0xLLgHZ7rlxWmP2D86LPDYxx8N3JFcl1/S8BkMVM9OGDlgvraF+v
-         EXsOrK1rt9V+aXKuaKZYLy3D46Js6etbV3F3gXf2oGH/yjh1ADI57EOA878iR8Y38+Oe
-         wgGvWUULyJqfYRZ/TO2BYogL0xqj88b2q+Iy04Fp5Rg5Ipab89lXp3ab0Da4gisIVRWx
-         XL+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXq9QlG5Uvf2E7TdghJyNxkUjCHVi8xZJjyztEfu3WyU7mt1u/KumBuxQuYtB+eJIxvCp/lQxvnWt9sxsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxUWdiPdbq2m7q0i8hjSJZEKiGRjjeTs9NJAyUQY9BPhe6wIkm
-	4f1ZOEo2LRQQ3xI9wpIdRyMJZ3/kBVvVqCmbXnnPq6Gji5Y4WVu9L26K2Z0gs1Xtss7ZV7Hw7Ux
-	ybuk=
-X-Gm-Gg: ASbGncs4/V8L8ZHax44Jvrf6P3nuJM67Uzvv2qx4oE/UJed8wvQ14PstfktIdC7Zb1e
-	8LlBenvWQC+LMYFoXb8rxfbnAdR84QqqFXcjiDbqdVsIQrvxAoDJC7wT2W+b7jUmbZwvT9o7r4w
-	O176vHcRaKmoouc9K5WDEPGFTwQd5b/m5KOR2d6Vm8U2z71J4qYWjtkcevQtCWnWJ43rdEfQX2a
-	x8aE36rEXtqnRNMjvZSahrge3hHcWeW4PES8f/QOm7PcNOyO9SPrKZ4w1Gxk6OFNfLSl0RaA4Nw
-	RkjukEXqRi/UMD+EcDA5PTQT7fwh2fHR9fZqXwS5epX4k8SqBYwRKauoKVz2O67gu8o0PiY=
-X-Google-Smtp-Source: AGHT+IFbnGNEIN/7Iacj9GEJZ/AzfVbRazHzR8ojLNpScIs9K/r0gWT4rEk0OkKS9cjVlYMEz1VS7g==
-X-Received: by 2002:ad4:5f0f:0:b0:6e4:2e5f:c03b with SMTP id 6a1803df08f44-6fb08f655f8mr15482596d6.22.1749157409918;
-        Thu, 05 Jun 2025 14:03:29 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09b366f5sm500916d6.117.2025.06.05.14.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 14:03:29 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Thu, 5 Jun 2025 17:03:28 -0400 (EDT)
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>, Chen Yu <yu.c.chen@intel.com>, 
-    Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [perf] fuzzer quickly crashes kernel, possibly memcg related
-In-Reply-To: <b07f0716-c335-4b6d-bf49-26dd24015d10@linux.intel.com>
-Message-ID: <bbd92696-a413-5440-eb65-e2caed0d6a98@maine.edu>
-References: <4ce106d0-950c-aadc-0b6a-f0215cd39913@maine.edu> <b07f0716-c335-4b6d-bf49-26dd24015d10@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="lXP4G1Xq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eeiE05iw"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 934E825400A6;
+	Thu,  5 Jun 2025 17:03:36 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Thu, 05 Jun 2025 17:03:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1749157416;
+	 x=1749243816; bh=zVXTQZbdvC/TAzsb8x4vqo9EMW+NlidVTsUt3AlM1ic=; b=
+	lXP4G1Xq5ZjVlFKq7Gix18VYqGVRI/WRB0nc7KXjXTNDuuRMIHdVUkJd5GDrEqbn
+	F0fBSSDKhriKiwnMEKUEKPSZwyHliTMH38NCC2h4d1UPa9P8Q0Jh5eEZXo1sRyXJ
+	R1k7Y6xy0TIC3edWP5R2/Jz/IxHIFArRH9F6jB8rpgj3rmFk51OW0/RNAv24mVzW
+	Tx4hNjMkzSGZRVPDZ5M4CddPVoG7OF//c1EDNtFfWif/UglsuUfsG6mUA5dVtORf
+	vOKyBhq10IhVRJvBTcZpOq89utXSmCajHfH1d+F61dSeroEHmBMtsr3SqLsWTY+R
+	nQasJAaVFhP9l0DurRyrUQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749157416; x=
+	1749243816; bh=zVXTQZbdvC/TAzsb8x4vqo9EMW+NlidVTsUt3AlM1ic=; b=e
+	eiE05iwGYDaO3E/O8JDndkKK0VxO6F1x6Hm+rFuL2llSHoH1UAXlJuLOflOElRMD
+	9v1rv9b6bzgasRmeA7aJcU4Zs4VT0vvmr+BFoSt72hzIn1uKN/Ndex6j3ViGtWoo
+	8LHA0abS9VAUTl6Z1bZ9hLdClhmLfyZfFm/6ZdIThtPeiIHVlp7ja5A+RCaB6zU9
+	Uf6JQHymBioylFyLYZt+gaZnBAC0jEG+/hWGDmwmE8avbY7hJwwGeG6pqZOmIvac
+	IUZ29rY7b6Fs2cSdiR6WRg0LH+3jqwBeJTzHHdpDBd55rTY1gyeAHZ/l9Yyl4yw8
+	KDt0c+rhum9FGvMTmGmxA==
+X-ME-Sender: <xms:JwZCaNOYXk3GU1KfdHQwcm5gjtm0nFK96JEChOWimEFb3Xsf0z7tDw>
+    <xme:JwZCaP-_DhP4kX2MeE_ciRlbqT7TmRQtQ8NoFCUmBoRJ5UsTBbFMUu9073LjeT52O
+    ktUjF2kVaSwlzXyEuY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
+    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
+    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
+    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
+    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
+    hrpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhn
+    thgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
+    hinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhs
+    thhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfi
+    hnrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgt
+    phhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:JwZCaMQxO3al6dnB9sAdgd8ehpyzlkre8wKXr_4f6tlTNw8GmhNm2Q>
+    <xmx:JwZCaJu0faNmirli2wnJb6Qgxyczz_r6eaqfNJ85KVD4rGjFJ2wxTA>
+    <xmx:JwZCaFfs8LEfV22mhfqxO6oZU_Bd1x-r8bDhi14rhokQhsQUNLo5yw>
+    <xmx:JwZCaF1nBQuTKr9assGbqRn69EmcugK5WfAevgrNEySn17TCeyC7tw>
+    <xmx:KAZCaB89Oo0mEfqAobynotnzf2EN0r0SWxl4WmYtyFEH5vw3KrU3ka-W>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id BFFF82CE0060; Thu,  5 Jun 2025 17:03:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-ThreadId: T107eb5199b18744c
+Date: Thu, 05 Jun 2025 17:03:15 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
+ ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Armin Wolf" <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Message-Id: <dd3b79e3-a0d1-4413-8c69-58ca6b4fb8c9@app.fastmail.com>
+In-Reply-To: <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+ <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
+ <71f410f4-6ac6-41d2-8c99-2a02e0f05fed@app.fastmail.com>
+ <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
+Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Thu, 5 Jun 2025, Liang, Kan wrote:
+Hi Andy
 
-> 
-> This should be a known issue introduced by
-> 9734e25fbf5a perf: Fix the throttle logic for a group
-> 
-> The patch can fix it.
-> https://lore.kernel.org/lkml/20250604171554.3909897-1-kan.liang@linux.intel.com/
+On Thu, Jun 5, 2025, at 3:43 PM, Andy Shevchenko wrote:
+> On Thu, Jun 05, 2025 at 11:53:47AM -0400, Mark Pearson wrote:
+>> On Thu, Jun 5, 2025, at 1:58 AM, Andy Shevchenko wrote:
+>> > On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
+>> >> Create lenovo subdirectory for holding Lenovo specific drivers.
+>
+> ...
+>
+>> >> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+>> >> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
+>> >
+>> > You may follow the trick in the Makefile (see intel folder) to avoid repetition
+>> > of the folder name in the file names. Note, the modules will be called the
+>> > same (assuming no ABI breakages due to renames).
+>> >
+>> Interesting - I'll have to look at that a bit more.
+>> Any objections if I leave that for a future change?
+>
+> IF it's nearest future :-)
+>
+I got this implemented - I'll include it with v3. It's less complicated than I thought when I initially looked. 
+Thanks for the suggestion.
 
-I'm testing with this patch and it does seem to fix the problem.
-
-thanks,
-
-Vince Weaver
-vincent.weaver@maine.edu
+Mark
