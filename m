@@ -1,139 +1,216 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7753C42A87;
-	Thu,  5 Jun 2025 08:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E464442A87
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749112649; cv=none; b=PFOIoHNBrbCO8AJRTaHkyrq/LhgagjHm7YIPXoN/CyO/vxLv2RfAf2MDwS9Rn6kl8iHKkZbHPnGAuej9gyN407mnV1UM8QI/kcFKK/5C97Mg+fqXiBeZl4BQnc2ymJpk4XUFk/HhXJ8aD5NXkYyIyfqk2tOXwNman/Hi/m5qKTE=
+	t=1749112871; cv=none; b=rtCQLGB33SOmSp/GdzxzYkcnJNc/OWRdeu3kXeVDx0AuLoxD2CdaoMP5Hw96MT3EGJY41/HTgep6cqTuSsPPy5y6vUjV45+EmpxMgjkJDNapHjz7IszIBpSVwukqjpJYp39WxhwA9SzvJBJ5vsR9ZF/xXkqv7Q9C1dFQOqW0cfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749112649; c=relaxed/simple;
-	bh=lN8QOUnt3tDoKFR2GRrl18RHwKQjxTLDwQFldfPNPGM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=drX5+XZAn75UpE8JNreDresBb7Qe8Dx+a6SIlmOU+RGW2SQUPbx1ViUlcz5t58kLBA4QeuEkcZMZytfc8lbsdK9oHZcOtGIfb8oI2iI9dxKIiodyB25202Xa16f0KInz+jLf7AyUXm/IiTTFWD3C27Nc+UnlwvhN0g2vuquoVJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S98rW2NY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749112871; c=relaxed/simple;
+	bh=j4C7ey1rAyyOw27WtM4pwE7uGX3hcPUurUCbDCPN9eU=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=fEeMCmfmSUcvhiTZHfJSkJpl4cqhnGs2xB4hIY2WxFcjX3lY0YoS8obY9eqFkCOhQQSnHsiiBKxbnk33+Ok8rTDepPWbJxPB+1qPi20EAvbjheHlut8ECiHrC864LGtVUPnq+bFCIyq3cLln/743cvGZMwY+s13mFI9I6twUyA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EaNAJJZJ; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S98rW2NY"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5557fZOt024416;
-	Thu, 5 Jun 2025 08:37:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GvXMhXjr02ODB+m/D0r6qd74wzQBhpGFQBfiLckl99c=; b=S98rW2NYa9nwHdqm
-	pCxWJEBzJphLXvcpgo1+wiHqDQyjX7W23N4YhIBGfFiDQNky3L9ATePqN41AZAH2
-	ysVVWDyox3kB9gcfW+y7UMJJnMqtPrrOIVjdfTZR0puxk02C7Hh7j+1/KtqG/2O4
-	QeJY8a034cptu6l3U96CrHHim4AYOIJk7exfdp5qLfLTLg/+lsbAg1rWemAknEE1
-	EHzyZtfbyYHJGjVq2h8Vav4LWR493QtxczP/Y657euOJzKqqFtN+duL8JZ1IfYIN
-	OtQkRMZOqI3+rgYUB1N6vJCnNARolxiHAevITudq85ZZGciL/esqOz74LjKXRJqX
-	7NiwdA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8s0pu0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 08:37:19 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5558bJ6l005158
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 5 Jun 2025 08:37:19 GMT
-Received: from [10.253.10.58] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 5 Jun 2025
- 01:37:17 -0700
-Message-ID: <257bf9e9-f4b2-4ab9-804f-b895243c924d@quicinc.com>
-Date: Thu, 5 Jun 2025 16:37:13 +0800
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EaNAJJZJ"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250605084106epoutp01b42e6569190009cb44780ef73dd6de57~GGOKIwTeC0962409624epoutp01g
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 08:41:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250605084106epoutp01b42e6569190009cb44780ef73dd6de57~GGOKIwTeC0962409624epoutp01g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749112866;
+	bh=tXa0SEBrPs7d/bo6iM0bCVitHbWYu8Xz1wgs6ZQqUaM=;
+	h=Date:From:To:Subject:In-Reply-To:References:From;
+	b=EaNAJJZJZFUAmzmXFRn4FhfDFAEZXVfJRyHIfpjs4eqBTLj2XngJogS77RMqpDYME
+	 TF+hvfcnjAwDw8b1zGctMsxdIJ+ExFblv47lGlZPq/mYf7p+DzYtFfTVBk+CJLlLYc
+	 dg3Xddu/bZlZyC6iFgFOKtDrq0B6Sc085CdXB4bw=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250605084105epcas2p1a8fb18def52d2d110fb7fa381d2ca513~GGOJp1GAS1962519625epcas2p1Q;
+	Thu,  5 Jun 2025 08:41:05 +0000 (GMT)
+Received: from epcas2p3.samsung.com (unknown [182.195.36.102]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4bCdFs2nRLz6B9m8; Thu,  5 Jun
+	2025 08:41:05 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250605084104epcas2p14d92d7acfa2efe7ead9fc8d8b9199cb8~GGOIe7tXd1729517295epcas2p1u;
+	Thu,  5 Jun 2025 08:41:04 +0000 (GMT)
+Received: from tiffany (unknown [10.229.95.142]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250605084104epsmtip1f69b1bf62a3b89e8f0ec6b2de3d5eb6a~GGOIbKI9Q2345923459epsmtip1A;
+	Thu,  5 Jun 2025 08:41:04 +0000 (GMT)
+Date: Thu, 5 Jun 2025 17:39:16 +0900
+From: Hyesoo Yu <hyesoo.yu@samsung.com>
+To: janghyuck.kim@samsung.com, zhaoyang.huang@unisoc.com,
+	jaewon31.kim@gmail.com, david@redhat.com, Andrew Morton
+	<akpm@linux-foundation.org>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard
+	<jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] mm: gup: avoid CMA page pinning by retrying
+ migration if no migratable page
+Message-ID: <20250605083916.GA3770753@tiffany>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] wifi: ath12k: fix dest ring-buffer corruption
-To: Johan Hovold <johan+linaro@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
-CC: Miaoqing Pan <quic_miaoqing@quicinc.com>,
-        Remi Pommarel
-	<repk@triplefau.lt>, <linux-wireless@vger.kernel.org>,
-        <ath12k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250604144509.28374-1-johan+linaro@kernel.org>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <20250604144509.28374-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6irz6-X3e9sQVWi0LxvafzqQ-_TPpCC-
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDA3NSBTYWx0ZWRfX12rAmdHVM0Wa
- LtAmT8PLMp+iMqtdW+AA+5BQrqRCORHhcOl9jyYzluXw7Dq6QTHy0vjWgjththn6tHjTapCKA0N
- glkT8Zq0pwzisd65hnOmZMonsLkcl/u4bFUM6U7BhmnFRE54QIioPYs7mvCaAOB6LHIeL9DI6FW
- efvuIA8APe1xqvSc59/Fs/RtA+TMnlc0xDAmy9UmJ4o2QEsdmFC70TqO44X0dnlx9YC9z8pCq/P
- 3NANj0A7346uxPA3NuS9SYflHz0whBm6R4M6m2acTWqyJuOdHgbn0Dt1Og2xc7ffO1EIn6vmmBr
- 8O87429CWSzv+5ryK1KdixVQxSNpWqDvrU4oMKgqi2irH+nbX52orQgnWE2rEX76VjHhPwGftOv
- L6uMEkfpdaHm6xciEQLH9X5vJdltJbKAKGXmAdu3H4OBr5V2Bh/q8wx/D9EkqRMzZqd8LSq3
-X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=6841573f cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=kPFMAqld5iEWQpescWAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 6irz6-X3e9sQVWi0LxvafzqQ-_TPpCC-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_02,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- clxscore=1011 lowpriorityscore=0 malwarescore=0 suspectscore=0
- impostorscore=0 spamscore=0 mlxlogscore=844 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506050075
+In-Reply-To: <20250605080436.3764686-2-hyesoo.yu@samsung.com>
+X-CMS-MailID: 20250605084104epcas2p14d92d7acfa2efe7ead9fc8d8b9199cb8
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----bfByJ-ZIY6BJv7sVO1BMUP1RgQAR8Q.m4BWNyUsw_2ev9GnZ=_34a75_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+cpgsPolicy: CPGSC10-234,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250605080628epcas2p24220eeceef2ae38feeee9d2c18515800
+References: <20250605080436.3764686-1-hyesoo.yu@samsung.com>
+	<CGME20250605080628epcas2p24220eeceef2ae38feeee9d2c18515800@epcas2p2.samsung.com>
+	<20250605080436.3764686-2-hyesoo.yu@samsung.com>
+
+------bfByJ-ZIY6BJv7sVO1BMUP1RgQAR8Q.m4BWNyUsw_2ev9GnZ=_34a75_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+
+On Thu, Jun 05, 2025 at 05:04:31PM +0900, Hyesoo Yu wrote:
+> Commit 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
+> introduced an issue where CMA pages could be pinned by longterm GUP requests.
+> This occurs when unpinnable pages are detected but the movable_page_list is empty;
+> the commit would return success without retrying, allowing unpinnable
+> pages (such as CMA) to become pinned.
+> 
+> CMA pages may be temporarily off the LRU due to concurrent isolation,
+> for example when multiple longterm GUP requests are racing and therefore
+> not appear in movable_page_list. Before commit 1aaf8c, the kernel would
+> retry migration in such cases, which helped avoid accidental CMA pinning.
+> 
+> The original intent of the commit was to support longterm GUP on non-LRU
+> CMA pages in out-of-tree use cases such as pKVM. However, allowing this
+> can lead to broader CMA pinning issues.
+> 
+> To avoid this, the logic is restored to return -EAGAIN instead of success
+> when no folios could be collected but unpinnable pages were found.
+> This ensures that migration is retried until success, and avoids
+> inadvertently pinning unpinnable pages.
+> 
+> Fixes: 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
+> 
+> ---
+> We have confirmed that this regression causes CMA pages to be pinned
+> in our kernel 6.12-based environment.
+> 
+> In addition to CMA allocation failures, we also observed longterm GUP failures
+> when repeatedly accessing the same VMA. Specifically, the first longterm GUP
+> call would pin a CMA page, and a second call on the same region
+> would fail the migration because the cma page was already pinned.
+> 
+> After reverting commit 1aaf8c122918, the issue no longer reproduced.
+> 
+> Therefore, this fix is important to ensure reliable behavior of longterm GUP
+> and CMA-backed memory, and should be backported to stable.
+> ---
+>  mm/gup.c | 28 ++++++++++++++++++++++------
+>  1 file changed, 22 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index e065a49842a8..66193421c1d4 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2300,14 +2300,12 @@ static void pofs_unpin(struct pages_or_folios *pofs)
+>  		unpin_user_pages(pofs->pages, pofs->nr_entries);
+>  }
+>  
+> -/*
+> - * Returns the number of collected folios. Return value is always >= 0.
+> - */
+> -static void collect_longterm_unpinnable_folios(
+> +static bool collect_longterm_unpinnable_folios(
+>  		struct list_head *movable_folio_list,
+>  		struct pages_or_folios *pofs)
+>  {
+>  	struct folio *prev_folio = NULL;
+> +	bool any_unpinnable = false;
+>  	bool drain_allow = true;
+>  	unsigned long i;
+>  
+> @@ -2321,6 +2319,8 @@ static void collect_longterm_unpinnable_folios(
+>  		if (folio_is_longterm_pinnable(folio))
+>  			continue;
+>  
+> +		any_unpinnable = true;
+> +
+>  		if (folio_is_device_coherent(folio))
+>  			continue;
+>
+> @@ -2342,6 +2342,8 @@ static void collect_longterm_unpinnable_folios(
+>  				    NR_ISOLATED_ANON + folio_is_file_lru(folio),
+>  				    folio_nr_pages(folio));
+>  	}
+> +
+> +	return any_unpinnable;
+>  }
+>  
+>  /*
+> @@ -2417,11 +2419,25 @@ migrate_longterm_unpinnable_folios(struct list_head *movable_folio_list,
+>  static long
+>  check_and_migrate_movable_pages_or_folios(struct pages_or_folios *pofs)
+>  {
+> +	bool any_unpinnable;
+> +
+>  	LIST_HEAD(movable_folio_list);
+>  
+> -	collect_longterm_unpinnable_folios(&movable_folio_list, pofs);
+> -	if (list_empty(&movable_folio_list))
+> +	any_unpinnable = collect_longterm_unpinnable_folios(&movable_folio_list, pofs);
+> +
+
+Hi David,
+
+While re-reviewing the v3 patch, I realized that migrate_longterm_unpinnable_folios()
+should always be called whenever unpinnable folios are present, regardless of whether
+the movable_folio_list is empty.
+
+In collect_longterm_unpinnable_folios(), if folio_is_device_coherent() is true,
+the folio is not added to movable_folio_list. However, such device-coherent folios
+still need to be migrated later in migrate_longterm_unpinnable_folios().
+
+I think the condition `list_empty(&movable_folio_list)` should be removed,
+and it might be better to revert commit 1aaf8c122918 rather than adding a new patch.
+
+What do you think?
+
+Thanks,
+Regards.
+
+> +	if (list_empty(&movable_folio_list)) {
+> +		/*
+> +		 * If we find any longterm unpinnable page that we failed to
+> +		 * isolated for migration, it might be because someone else
+> +		 * concurrently isolated it. Make the caller retry until it
+> +		 * succeeds.
+> +		 */
+> +		if (any_unpinnable) {
+> +			pofs_unpin(pofs);
+> +			return -EAGAIN;
+> +		}
+>  		return 0;
+> +	}
+>  
+>  	return migrate_longterm_unpinnable_folios(&movable_folio_list, pofs);
+>  }
+> -- 
+> 2.49.0
+> 
+> 
+
+------bfByJ-ZIY6BJv7sVO1BMUP1RgQAR8Q.m4BWNyUsw_2ev9GnZ=_34a75_
+Content-Type: text/plain; charset="utf-8"
 
 
-
-On 6/4/2025 10:45 PM, Johan Hovold wrote:
-> As a follow up to commit:
-> 
-> 	b67d2cf14ea ("wifi: ath12k: fix ring-buffer corruption")
-> 
-> add the remaining missing memory barriers to make sure that destination
-> ring descriptors are read after the head pointers to avoid using stale
-> data on weakly ordered architectures like aarch64.
-> 
-> Also switch back to plain accesses for the descriptor fields which is
-> sufficient after the memory barrier.
-> 
-> New in v2 are two patches that add the missing barriers also for source
-> rings and when updating the tail pointer for destination rings.
-> 
-> To avoid leaking ring details from the "hal" (lmac or non-lmac), the
-> barriers are added to the ath12k_hal_srng_access_end() helper. For
-
-Could you elaborate? what do you mean by "leaking ring details from the 'hal'"?
-
-> symmetry I therefore moved also the dest ring barriers into
-> ath12k_hal_srng_access_begin() and made the barrier conditional.
-> 
-> [ Due to this change I did not add Miaoqing's reviewed-by tag. ]
-> 
-> Johan
-> 
-> 
-> Changes in v2:
->  - add tested-on tags to plain access patch
->  - move destination barriers into begin helper
->  - fix source ring corruption (new patch)
->  - fix dest ring corruption when ring is full (new patch)
-> 
-> 
-> Johan Hovold (4):
->   wifi: ath12k: fix dest ring-buffer corruption
->   wifi: ath12k: use plain access for descriptor length
->   wifi: ath12k: fix source ring-buffer corruption
->   wifi: ath12k: fix dest ring-buffer corruption when ring is full
-> 
->  drivers/net/wireless/ath/ath12k/ce.c  |  3 --
->  drivers/net/wireless/ath/ath12k/hal.c | 40 ++++++++++++++++++++++-----
->  2 files changed, 33 insertions(+), 10 deletions(-)
-> 
-
+------bfByJ-ZIY6BJv7sVO1BMUP1RgQAR8Q.m4BWNyUsw_2ev9GnZ=_34a75_--
