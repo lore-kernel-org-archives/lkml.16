@@ -1,454 +1,284 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CAC17548
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9361FE44D
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 07:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749110267; cv=none; b=FzNdZaQooEf8UNYE+bysk0aNBM3GeFxio0dVrUUJEhP+e7gsFj8UJV0LRc9lkxNWP1qnpXxHk+LkShFdcCTG+6t6VPyNJfnP4Ans3BxG/Fd5wXBjMiVQi2Ypn4bHJ1cuR1pxLFkHFYpj0TrdzqckSqCTgrY4tC1znG4HG+14oNk=
+	t=1749110382; cv=none; b=drADZynEMRFxP5CkihRIBMvkZUPAHBT5AbanPsHpH4Ryl4b+e+0G3qRalVUHZ+bqbp2WppNtCzBcxDUy5ZiWwX+28+CRmnDR7TmYO9u/UJ/Z74SWNIlPJkpNroV+PkVc3SPlpv+sdypzhuMut9GZF7wPwZod+XWWWP9qQ6MB/8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749110267; c=relaxed/simple;
-	bh=lTA9zjNN3JRVFRXQw/iswVkI+O61SyCDwuvCfwwT6sA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pe/crtlVBVl9TFWM5DxqVW5FG/RV49XxfMFZP7HfahPDbJuSdpdiJ5KXErtInAQV8JvTUho+gw/ZCe1HeVdC3GvNT2WZ2qmgkinw2kEDisUMMjeEFHOEEsvdGdJo4POg8UrZsBllk7c8TXEjJoZmavTMxvjLmsyeVkEJQYj6hT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=NXt9gKdx; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1749110382; c=relaxed/simple;
+	bh=a2/CVQAjIR60WTMMzxWbGVeRq/hOePNljug5w5dqhS4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZCpDPULOGC993ICuyA1iGSGVehzcl+WquFEi9NfqI0iNsElZOGVn5cQtG3+DYBja1W0U8SCaaTJtL6RFmtLC7CYyArVoqq9KNFyZXNGlYmt22TPurvj7exsWP9o0yQg4/7pINO4eJbIl25nwC3Kp4ZXYUBqpgoF4HxTDrWLKoZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q0if4epi; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="NXt9gKdx"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-742c3d06de3so880036b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:57:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0if4epi"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-52b2290e292so241850e0c.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 00:59:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1749110265; x=1749715065; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+zZl2dXMX0VDVWJAsL+cjXNr7Ok2fg0ZVvzGEGrTbrE=;
-        b=NXt9gKdxkt0smYROeldepk+OBONg+wK+WS6irmFMbuM5Yh956ve7YzQQThj09ZtyLd
-         tC0ohv+QpIcX54RX+u4zxAzBcKY8SCyY+zIDBrh+ArwSMgsS01HIWxXHImNzbSN3MfnN
-         2dLcfDCQIeCETU3DCYbUZjF/0/NEgsTXk6TqYlZuNIxZ42b9lLUEpUnK4nWl9gqY67BC
-         w010AwWppj0xupGkvLBW6P2m4khin3x511BgNQlulo599MxmtuPR73Vwi2tUXeK0tvLF
-         rohAoI9wro61NXLBho8oHW6/Ypts8waiCScBfnfs8jG+TXWqFQSDU3RR1fUJkbaGXkTS
-         +xTw==
+        d=gmail.com; s=20230601; t=1749110379; x=1749715179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FIXoZ8nnG6zKXvBD8hYHXvLPlGzG2L6Za+aocYQ9cfw=;
+        b=Q0if4epiuORFjdK5tEAX4o2kTHWLyxzXyjYat+7Mg3WWGog2yGfInB1zsGhHY4/1T/
+         KfJZ17HrRzMhuERjw2aH3fgk1606QiHDD1KRw9ujXaanUOlRoHxlRTcfc803Zbh//WPR
+         DB0yKY7zyzMutAxbDXcCqaVumUSDdp/tO6ALyBEGBXBTQqoExGp+y+t8LcefGTmE55ZU
+         Zg3srcKhy8gmTPRx2kIgPZc3+A8BQ7knBvWMdsB5EWOQXT29t04c8YH57fScksME/8xj
+         u8jbvIQBWg9uiokEJiamFc4KrLt6HZvDaZkdNr//kUOK9lf/TrOBoheQBjMYJtLBk4D6
+         MGkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749110265; x=1749715065;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+zZl2dXMX0VDVWJAsL+cjXNr7Ok2fg0ZVvzGEGrTbrE=;
-        b=hP394erY4nAO+APwCzSGqDGDCXCc1/B1uLk64XmzWIFAoobA/mUN+38plSqc8Nz2JE
-         E7z8ISJPnSo4HpvPf1FPxa6E91Z/iGaN5DSpZWi33PsIpfTbg1OQCZqsFmZi/tNsj3t6
-         QI4sl4PbICAP3bG3gy4OeWmHE97ItG17vRFjYvzUBr/k7yciXkXIvWYchXoNiLRPIANj
-         POajWny6eVuBVRnqyNGEkF+FgAeuZgwxnHKAX20ZoVcpZKsGFkZDOYvqN7ewEhkFuSHl
-         qGhjArXHwyVwjXGGRXh0aqOn2b+FUcrxtPhGdMEpAfsuamRLms+mHeftrhi5E11gw6Np
-         gUjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxsLmu4J5+rYo2Edlp3FEv1GCGe+76tw1Vbmv3coF6DmA0dYZilW0ynyaSbDJDCrClZq+6OaOQgbD6LRU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXkTcZMCc907QlRjH1+q6AfemnPBx0Ko1c1rZ1UqfPLcV/8+FM
-	VMiiHCTtlkyDz2AVNnP0qZBWRtSNspJUi7+Cl391avni1mr6l9Z2xJrJ1PvgMqNXypM=
-X-Gm-Gg: ASbGncvISpZUVRRIDl/orbJyiR496p7f+p/FTav5N6JpN9xI58ANHtAcSzb83uAukjw
-	RQShJQDi3GsWNOGRx42l7QwKh0HprQ+JrxmW3hbjRVkUJtSX0JsF8IuuII3+cKtfSKF7UWqo0Mo
-	ppCOVZmkT+9PhICiZGfRM2JwMU19PXgBQm3GN5vkMQqwqQGXHFFCQSk5FdBlN68FmRCD3L8Gzuo
-	tzZOueGkemQjhDZWg8iNuNZIbTSIk0ChHnen4dzn5kXwF9YYbgXjNSi9vPftCMiHfuFBKiqNXLc
-	noENHvYP/CHAOwj+DTUrnqxDwqetX9KjycOBET4ilLl7DltdTG9e5v91EFC+2ZYq
-X-Google-Smtp-Source: AGHT+IFSoebIZPWJ4N4NNYcabgJf1nxLz3d3ke91Rf5CUCkTc2VJbpBBnWqg7beTFgdLDU7v3xdgJA==
-X-Received: by 2002:a05:6a00:3d13:b0:742:362c:d2e4 with SMTP id d2e1a72fcca58-7480b226180mr7583905b3a.5.1749110264898;
-        Thu, 05 Jun 2025 00:57:44 -0700 (PDT)
-Received: from [157.82.203.223] ([157.82.203.223])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affcf703sm12228046b3a.129.2025.06.05.00.57.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 00:57:44 -0700 (PDT)
-Message-ID: <75ef190e-49fc-48aa-abf2-579ea31e4d15@daynix.com>
-Date: Thu, 5 Jun 2025 16:57:39 +0900
+        d=1e100.net; s=20230601; t=1749110379; x=1749715179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FIXoZ8nnG6zKXvBD8hYHXvLPlGzG2L6Za+aocYQ9cfw=;
+        b=BTFIeXzMnGJfpnYRpX0lQbIEJCeNv2Ah4jftbIAmY3PnCj72toswM8LGPfcROQBnbQ
+         J5+y2A/PPD9JKBEc/hbzWxW83i9HUiRLJAq4Y78QF+fpTSufskefPS8VAZkeLMDGfHz8
+         12HsT1VkfAjCdsac0nAgF/Cb3nuLfVTjnt9a9Qwu0giBFjguT8qEyVkkf15JOhLQU8hD
+         58v66Botvg3UmQZ4NxqLixLJboOZCgg3Vts8dCbrLnSMmOLb5bdxokf4G7ki30EVSmDh
+         egkoW8PJDBw6caOTmw2/IAruswgh7/xVSSYdnXM76KXEn+g5gmJ1l0u3HfdnI1F0VYy0
+         4UvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVszWOTBEuySCgnSnOr6LC6Qc0YQBtNi4r8U7QoF5/s36kjqLwgUF+QOJvRfQVKXhw8iglyxvTJJu01Au8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAxR4zocyaID+QepRqVttIGp26DGM9t5vhYGAOaTDmBzMHQ++7
+	fvWjWW2rP6HnIiiLsu8D78US9D/ekCnW+qbFYFTtRmx7JjbEBqjvNrIuJRoWcK6PBjtt6reHD6z
+	IcOlRS2qHKIHBbe9NE8Guzb6z0rnxDPo=
+X-Gm-Gg: ASbGncsZnSJXf5Wk9z4WyXcu5ao3oXQzkLlnZ0a3Z+c3pll66VNcII/rAkFsWb6tf7q
+	YVlASADYPSpYY9STZgjpb18f8q3qGX8LpZvmq4ohaXpATpnMoQx54IMdtg3wiBIq4MB8JRnHS5P
+	dFd9lAZ2NV6mqhqPqsUmxqQPvmBgQrf/KiZg==
+X-Google-Smtp-Source: AGHT+IGD1VWwlaV9ZhRp/8D2WO1IzmDAledYMtYdxA5w0p2HGkI8w+20Zc5VcEKdQ1kaVVfw8TiY6UdV0u8G7Hcu04E=
+X-Received: by 2002:a05:6122:1d0f:b0:530:6dc2:ba9c with SMTP id
+ 71dfb90a1353d-530c7277cf7mr5533878e0c.2.1749110379470; Thu, 05 Jun 2025
+ 00:59:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v12 01/10] virtio_net: Add functions for hashing
-To: Jason Wang <jasowang@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, kvm@vger.kernel.org,
- virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org,
- Yuri Benditovich <yuri.benditovich@daynix.com>,
- Andrew Melnychenko <andrew@daynix.com>,
- Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com,
- Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
-References: <20250530-rss-v12-0-95d8b348de91@daynix.com>
- <20250530-rss-v12-1-95d8b348de91@daynix.com>
- <CACGkMEufffSj1GQMqwf598__-JgNtXRpyvsLtjSbr3angLmJXg@mail.gmail.com>
- <95cb2640-570d-4f51-8775-af5248c6bc5a@daynix.com>
- <CACGkMEu6fZaErFEu7_UFsykXRL7Z+CwmkcxmvJHC+eN_j0pQvg@mail.gmail.com>
- <4eaa7aaa-f677-4a31-bcc2-badcb5e2b9f6@daynix.com>
- <CACGkMEu3QH+VdHqQEePYz_z+_bNYswpA-KNxzz0edEOSSkJtWw@mail.gmail.com>
-Content-Language: en-US
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-In-Reply-To: <CACGkMEu3QH+VdHqQEePYz_z+_bNYswpA-KNxzz0edEOSSkJtWw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250530152445.2430295-1-ryan.roberts@arm.com>
+ <CAGsJ_4wfhA6C2dV+a=dnx=EKRmrt80ujrh6KrepJ_P8JqCbPnw@mail.gmail.com> <96266c85-0a17-4291-8147-867925cac7ca@arm.com>
+In-Reply-To: <96266c85-0a17-4291-8147-867925cac7ca@arm.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Thu, 5 Jun 2025 19:59:28 +1200
+X-Gm-Features: AX0GCFu-NeKAfhhcYcVhf3vSCPP-_eYGIgeZ7mHBWdE7DMc26rnYrXdIXoJNJwk
+Message-ID: <CAGsJ_4wtbKb_q-QC1zXEtVkepp5ZumMKVAAQ_9YXS3CwR8dK2Q@mail.gmail.com>
+Subject: Re: [PATCH v1] arm64/mm: Close theoretical race where stale TLB entry
+ remains valid
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/06/05 10:53, Jason Wang wrote:
-> On Wed, Jun 4, 2025 at 3:20 PM Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
->>
->> On 2025/06/04 10:18, Jason Wang wrote:
->>> On Tue, Jun 3, 2025 at 1:31 PM Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
->>>>
->>>> On 2025/06/03 12:19, Jason Wang wrote:
->>>>> On Fri, May 30, 2025 at 12:50 PM Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
->>>>>>
->>>>>> They are useful to implement VIRTIO_NET_F_RSS and
->>>>>> VIRTIO_NET_F_HASH_REPORT.
->>>>>>
->>>>>> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
->>>>>> Tested-by: Lei Yang <leiyang@redhat.com>
->>>>>> ---
->>>>>>     include/linux/virtio_net.h | 188 +++++++++++++++++++++++++++++++++++++++++++++
->>>>>>     1 file changed, 188 insertions(+)
->>>>>>
->>>>>> diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
->>>>>> index 02a9f4dc594d..426f33b4b824 100644
->>>>>> --- a/include/linux/virtio_net.h
->>>>>> +++ b/include/linux/virtio_net.h
->>>>>> @@ -9,6 +9,194 @@
->>>>>>     #include <uapi/linux/tcp.h>
->>>>>>     #include <uapi/linux/virtio_net.h>
->>>>>>
->>>>>> +struct virtio_net_hash {
->>>>>> +       u32 value;
->>>>>> +       u16 report;
->>>>>> +};
->>>>>> +
->>>>>> +struct virtio_net_toeplitz_state {
->>>>>> +       u32 hash;
->>>>>> +       const u32 *key;
->>>>>> +};
->>>>>> +
->>>>>> +#define VIRTIO_NET_SUPPORTED_HASH_TYPES (VIRTIO_NET_RSS_HASH_TYPE_IPv4 | \
->>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_TCPv4 | \
->>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_UDPv4 | \
->>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_IPv6 | \
->>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_TCPv6 | \
->>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_UDPv6)
->>>>>> +
->>>>>> +#define VIRTIO_NET_RSS_MAX_KEY_SIZE 40
->>>>>> +
->>>>>> +static inline void virtio_net_toeplitz_convert_key(u32 *input, size_t len)
->>>>>> +{
->>>>>> +       while (len >= sizeof(*input)) {
->>>>>> +               *input = be32_to_cpu((__force __be32)*input);
->>>>>> +               input++;
->>>>>> +               len -= sizeof(*input);
->>>>>> +       }
->>>>>> +}
->>>>>> +
->>>>>> +static inline void virtio_net_toeplitz_calc(struct virtio_net_toeplitz_state *state,
->>>>>> +                                           const __be32 *input, size_t len)
->>>>>> +{
->>>>>> +       while (len >= sizeof(*input)) {
->>>>>> +               for (u32 map = be32_to_cpu(*input); map; map &= (map - 1)) {
->>>>>> +                       u32 i = ffs(map);
->>>>>> +
->>>>>> +                       state->hash ^= state->key[0] << (32 - i) |
->>>>>> +                                      (u32)((u64)state->key[1] >> i);
->>>>>> +               }
->>>>>> +
->>>>>> +               state->key++;
->>>>>> +               input++;
->>>>>> +               len -= sizeof(*input);
->>>>>> +       }
->>>>>> +}
->>>>>> +
->>>>>> +static inline u8 virtio_net_hash_key_length(u32 types)
->>>>>> +{
->>>>>> +       size_t len = 0;
->>>>>> +
->>>>>> +       if (types & VIRTIO_NET_HASH_REPORT_IPv4)
->>>>>> +               len = max(len,
->>>>>> +                         sizeof(struct flow_dissector_key_ipv4_addrs));
->>>>>> +
->>>>>> +       if (types &
->>>>>> +           (VIRTIO_NET_HASH_REPORT_TCPv4 | VIRTIO_NET_HASH_REPORT_UDPv4))
->>>>>> +               len = max(len,
->>>>>> +                         sizeof(struct flow_dissector_key_ipv4_addrs) +
->>>>>> +                         sizeof(struct flow_dissector_key_ports));
->>>>>> +
->>>>>> +       if (types & VIRTIO_NET_HASH_REPORT_IPv6)
->>>>>> +               len = max(len,
->>>>>> +                         sizeof(struct flow_dissector_key_ipv6_addrs));
->>>>>> +
->>>>>> +       if (types &
->>>>>> +           (VIRTIO_NET_HASH_REPORT_TCPv6 | VIRTIO_NET_HASH_REPORT_UDPv6))
->>>>>> +               len = max(len,
->>>>>> +                         sizeof(struct flow_dissector_key_ipv6_addrs) +
->>>>>> +                         sizeof(struct flow_dissector_key_ports));
->>>>>> +
->>>>>> +       return len + sizeof(u32);
->>>>>> +}
->>>>>> +
->>>>>> +static inline u32 virtio_net_hash_report(u32 types,
->>>>>> +                                        const struct flow_keys_basic *keys)
->>>>>> +{
->>>>>> +       switch (keys->basic.n_proto) {
->>>>>> +       case cpu_to_be16(ETH_P_IP):
->>>>>> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT)) {
->>>>>> +                       if (keys->basic.ip_proto == IPPROTO_TCP &&
->>>>>> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv4))
->>>>>> +                               return VIRTIO_NET_HASH_REPORT_TCPv4;
->>>>>> +
->>>>>> +                       if (keys->basic.ip_proto == IPPROTO_UDP &&
->>>>>> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv4))
->>>>>> +                               return VIRTIO_NET_HASH_REPORT_UDPv4;
->>>>>> +               }
->>>>>> +
->>>>>> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv4)
->>>>>> +                       return VIRTIO_NET_HASH_REPORT_IPv4;
->>>>>> +
->>>>>> +               return VIRTIO_NET_HASH_REPORT_NONE;
->>>>>> +
->>>>>> +       case cpu_to_be16(ETH_P_IPV6):
->>>>>> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT)) {
->>>>>> +                       if (keys->basic.ip_proto == IPPROTO_TCP &&
->>>>>> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv6))
->>>>>> +                               return VIRTIO_NET_HASH_REPORT_TCPv6;
->>>>>> +
->>>>>> +                       if (keys->basic.ip_proto == IPPROTO_UDP &&
->>>>>> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv6))
->>>>>> +                               return VIRTIO_NET_HASH_REPORT_UDPv6;
->>>>>> +               }
->>>>>> +
->>>>>> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv6)
->>>>>> +                       return VIRTIO_NET_HASH_REPORT_IPv6;
->>>>>> +
->>>>>> +               return VIRTIO_NET_HASH_REPORT_NONE;
->>>>>> +
->>>>>> +       default:
->>>>>> +               return VIRTIO_NET_HASH_REPORT_NONE;
->>>>>> +       }
->>>>>> +}
->>>>>> +
->>>>>> +static inline void virtio_net_hash_rss(const struct sk_buff *skb,
->>>>>> +                                      u32 types, const u32 *key,
->>>>>> +                                      struct virtio_net_hash *hash)
->>>>>> +{
->>>>>> +       struct virtio_net_toeplitz_state toeplitz_state = { .key = key };
->>>>>> +       struct flow_keys flow;
->>>>>> +       struct flow_keys_basic flow_basic;
->>>>>> +       u16 report;
->>>>>> +
->>>>>> +       if (!skb_flow_dissect_flow_keys(skb, &flow, 0)) {
->>>>>> +               hash->report = VIRTIO_NET_HASH_REPORT_NONE;
->>>>>> +               return;
->>>>>> +       }
->>>>>> +
->>>>>> +       flow_basic = (struct flow_keys_basic) {
->>>>>> +               .control = flow.control,
->>>>>> +               .basic = flow.basic
->>>>>> +       };
->>>>>> +
->>>>>> +       report = virtio_net_hash_report(types, &flow_basic);
->>>>>> +
->>>>>> +       switch (report) {
->>>>>> +       case VIRTIO_NET_HASH_REPORT_IPv4:
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
->>>>>> +                                        (__be32 *)&flow.addrs.v4addrs,
->>>>>> +                                        sizeof(flow.addrs.v4addrs));
->>>>>> +               break;
->>>>>> +
->>>>>> +       case VIRTIO_NET_HASH_REPORT_TCPv4:
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
->>>>>> +                                        (__be32 *)&flow.addrs.v4addrs,
->>>>>> +                                        sizeof(flow.addrs.v4addrs));
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.ports,
->>>>>> +                                        sizeof(flow.ports.ports));
->>>>>> +               break;
->>>>>> +
->>>>>> +       case VIRTIO_NET_HASH_REPORT_UDPv4:
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
->>>>>> +                                        (__be32 *)&flow.addrs.v4addrs,
->>>>>> +                                        sizeof(flow.addrs.v4addrs));
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.ports,
->>>>>> +                                        sizeof(flow.ports.ports));
->>>>>> +               break;
->>>>>> +
->>>>>> +       case VIRTIO_NET_HASH_REPORT_IPv6:
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
->>>>>> +                                        (__be32 *)&flow.addrs.v6addrs,
->>>>>> +                                        sizeof(flow.addrs.v6addrs));
->>>>>> +               break;
->>>>>> +
->>>>>> +       case VIRTIO_NET_HASH_REPORT_TCPv6:
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
->>>>>> +                                        (__be32 *)&flow.addrs.v6addrs,
->>>>>> +                                        sizeof(flow.addrs.v6addrs));
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.ports,
->>>>>> +                                        sizeof(flow.ports.ports));
->>>>>> +               break;
->>>>>> +
->>>>>> +       case VIRTIO_NET_HASH_REPORT_UDPv6:
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
->>>>>> +                                        (__be32 *)&flow.addrs.v6addrs,
->>>>>> +                                        sizeof(flow.addrs.v6addrs));
->>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.ports,
->>>>>> +                                        sizeof(flow.ports.ports));
->>>>>> +               break;
->>>>>> +
->>>>>> +       default:
->>>>>> +               hash->report = VIRTIO_NET_HASH_REPORT_NONE;
->>>>>> +               return;
->>>>>
->>>>> So I still think we need a comment here to explain why this is not an
->>>>> issue if the device can report HASH_XXX_EX. Or we need to add the
->>>>> support, since this is the code from the driver side, I don't think we
->>>>> need to worry about the device implementation issues.
->>>>
->>>> This is on the device side, and don't report HASH_TYPE_XXX_EX.
->>>>
->>>>>
->>>>> For the issue of the number of options, does the spec forbid fallback
->>>>> to VIRTIO_NET_HASH_REPORT_NONE? If not, we can do that.
->>>>
->>>> 5.1.6.4.3.4 "IPv6 packets with extension header" says:
->>>>    > If VIRTIO_NET_HASH_TYPE_TCP_EX is set and the packet has a TCPv6
->>>>    > header, the hash is calculated over the following fields:
->>>>    > - Home address from the home address option in the IPv6 destination
->>>>    >   options header. If the extension header is not present, use the
->>>>    >   Source IPv6 address.
->>>>    > - IPv6 address that is contained in the Routing-Header-Type-2 from the
->>>>    >   associated extension header. If the extension header is not present,
->>>>    >   use the Destination IPv6 address.
->>>>    > - Source TCP port
->>>>    > - Destination TCP port
->>>>
->>>> Therefore, if VIRTIO_NET_HASH_TYPE_TCP_EX is set, the packet has a TCPv6
->>>> and an home address option in the IPv6 destination options header is
->>>> present, the hash is calculated over the home address. If the hash is
->>>> not calculated over the home address in such a case, the device is
->>>> contradicting with this section and violating the spec. The same goes
->>>> for the other HASH_TYPE_XXX_EX types and Routing-Header-Type-2.
->>>
->>> Just to make sure we are one the same page. I meant:
->>>
->>> 1) If the hash is not calculated over the home address (in the case of
->>> IPv6 destination destination), it can still report
->>> VIRTIO_NET_RSS_HASH_TYPE_IPv6. This is what you implemented in your
->>> series. So the device can simply fallback to e.g TCPv6 if it can't
->>> understand all or part of the IPv6 options.
->>
->> The spec says it can fallback if "the extension header is not present",
->> not if the device can't understand the extension header.
-> 
-> I don't think so,
-> 
-> 1) spec had a condition beforehand:
-> 
-> """
-> If VIRTIO_NET_HASH_TYPE_TCP_EX is set and the packet has a TCPv6
-> header, the hash is calculated over the following fields:
-> ...
-> If the extension header is not present ...
-> """
-> 
-> So the device can choose not to set VIRTIO_NET_HASH_TYPE_TCP_EX as
-> spec doesn't say device MUST set VIRTIO_NET_HASH_TYPE_TCP_EX if ...
-> 
-> 2) implementation wise, since device has limited resources, we can't
-> expect the device can parse arbitrary number of ipv6 options
-> 
-> 3) if 1) and 2) not the case, we need fix the spec otherwise implement
-> a spec compliant device is impractical
+On Tue, Jun 3, 2025 at 10:32=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com>=
+ wrote:
+>
+> On 03/06/2025 10:49, Barry Song wrote:
+> > On Sat, May 31, 2025 at 3:24=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.=
+com> wrote:
+> >>
+> >> Commit 3ea277194daa ("mm, mprotect: flush TLB if potentially racing wi=
+th
+> >> a parallel reclaim leaving stale TLB entries") describes a race that,
+> >> prior to the commit, could occur between reclaim and operations such a=
+s
+> >> mprotect() when using reclaim's tlbbatch mechanism. See that commit fo=
+r
+> >> details but the summary is:
+> >>
+> >> """
+> >> Nadav Amit identified a theoritical race between page reclaim and
+> >> mprotect due to TLB flushes being batched outside of the PTL being hel=
+d.
+> >>
+> >> He described the race as follows:
+> >>
+> >>         CPU0                            CPU1
+> >>         ----                            ----
+> >>                                         user accesses memory using RW =
+PTE
+> >>                                         [PTE now cached in TLB]
+> >>         try_to_unmap_one()
+> >>         =3D=3D> ptep_get_and_clear()
+> >>         =3D=3D> set_tlb_ubc_flush_pending()
+> >>                                         mprotect(addr, PROT_READ)
+> >>                                         =3D=3D> change_pte_range()
+> >>                                         =3D=3D> [ PTE non-present - no=
+ flush ]
+> >>
+> >>                                         user writes using cached RW PT=
+E
+> >>         ...
+> >>
+> >>         try_to_unmap_flush()
+> >> """
+> >>
+> >> The solution was to insert flush_tlb_batched_pending() in mprotect() a=
+nd
+> >> friends to explcitly drain any pending reclaim TLB flushes. In the
+> >> modern version of this solution, arch_flush_tlb_batched_pending() is
+> >> called to do that synchronisation.
+> >>
+> >> arm64's tlbbatch implementation simply issues TLBIs at queue-time
+> >> (arch_tlbbatch_add_pending()), eliding the trailing dsb(ish). The
+> >> trailing dsb(ish) is finally issued in arch_tlbbatch_flush() at the en=
+d
+> >> of the batch to wait for all the issued TLBIs to complete.
+> >>
+> >> Now, the Arm ARM states:
+> >>
+> >> """
+> >> The completion of the TLB maintenance instruction is guaranteed only b=
+y
+> >> the execution of a DSB by the observer that performed the TLB
+> >> maintenance instruction. The execution of a DSB by a different observe=
+r
+> >> does not have this effect, even if the DSB is known to be executed aft=
+er
+> >> the TLB maintenance instruction is observed by that different observer=
+.
+> >> """
+> >>
+> >> arch_tlbbatch_add_pending() and arch_tlbbatch_flush() conform to this
+> >> requirement because they are called from the same task (either kswapd =
+or
+> >> caller of madvise(MADV_PAGEOUT)), so either they are on the same CPU o=
+r
+> >> if the task was migrated, __switch_to() contains an extra dsb(ish).
+> >>
+> >> HOWEVER, arm64's arch_flush_tlb_batched_pending() is also implemented =
+as
+> >> a dsb(ish). But this may be running on a CPU remote from the one that
+> >> issued the outstanding TLBIs. So there is no architectural gurantee of
+> >> synchonization. Therefore we are still vulnerable to the theoretical
+> >> race described in Commit 3ea277194daa ("mm, mprotect: flush TLB if
+> >> potentially racing with a parallel reclaim leaving stale TLB entries")=
+.
+> >
+> > Hi Ryan,
+> >
+> > Sorry for bringing up another question late, but your explanation made =
+me
+> > reconsider whether I might also be wrong in arch_tlbbatch_flush(). Spec=
+ifically,
+> > try_to_unmap_flush() needs to ensure that all TLBI operations from othe=
+r CPUs
+> > for all involved memory contexts have completed. However, as you pointe=
+d
+> > out, a DSB ISH alone cannot guarantee this.
+>
+> Hmm, does try_to_unmap_flush() actually need to ensure that *all* pending=
+ TLBIs
+> are completed, or does it only need to ensure that the TLBIs previously i=
+ssued
+> by the same instance of shrink_folio_list() are completed?
+>
+> I understood it to be the latter and therefore thought the current
+> arch_tlbbatch_flush() was safe.
+>
+> If another instance has concurrently queued up some TLBIs using tlbbatch =
+(i.e.
+> MADV_PAGEOUT) then the first instance would never see those PTEs so I don=
+'t
+> think it matters that the TLB flush is still pending? Perhaps I'm wrong..=
+.
 
-The statement is preceded by the following:
- >  The device calculates the hash on IPv4 packets according to
- > ’Enabled hash types’ bitmask as follows:
+You're right =E2=80=94 I got a bit scared that day. As long as each thread =
+can
+flush the pending TLBI for its own folio list, it's all good.
 
-The 'Enabled hash types' bitmask is specified by the device.
+>
+> >
+> > This makes me wonder if we should take inspiration from RISC-V or x86 a=
+nd use a
+> > cpumask to track all CPUs that have pending TLBIs. Then, we could use I=
+PIs to
+> > explicitly request those CPUs to issue DSB ISH, ensuring their TLB
+> > invalidations are fully completed.
+> >
+> > I mean something similar to what x86 and RISC-V do, but using just a
+> > simpler approach like issuing DSB ISH on the relevant CPUs.
+> >
+> > void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+> > {
+> >         on_each_cpu_mask(&batch->cpumask, __ipi_flush_tlbi, NULL, NULL)=
+;
+> >         cpumask_clear(&batch->cpumask);
+> > }
+> >
+> > static void __ipi_flush_tlbi(void *info)
+> > {
+> >         dsb(ish);
+> > }
+>
+> My initial instinct is yuk :). I guess we would need to do a bunch of
+> benchmarking if this is needed. But would be good to avoid if possible. L=
+et's
+> figure out if we definitely have a race first...
+>
+> Thanks,
+> Ryan
+>
+> >
+> > Sorry for the mess I made earlier.
+>
+> No worries, it happens.
+>
+> >
+> >>
+> >> Fix this by flushing the entire mm in arch_flush_tlb_batched_pending()=
+.
+> >> This aligns with what the other arches that implement the tlbbatch
+> >> feature do.
+> >>
+> >> Fixes: 43b3dfdd0455 ("arm64: support batched/deferred tlb shootdown du=
+ring page reclamation/migration")
+> >> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> >> ---
+> >>  arch/arm64/include/asm/tlbflush.h | 9 +++++----
+> >>  1 file changed, 5 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/as=
+m/tlbflush.h
+> >> index eba1a98657f1..7d564c2a126f 100644
+> >> --- a/arch/arm64/include/asm/tlbflush.h
+> >> +++ b/arch/arm64/include/asm/tlbflush.h
+> >> @@ -323,13 +323,14 @@ static inline bool arch_tlbbatch_should_defer(st=
+ruct mm_struct *mm)
+> >>  }
+> >>
+> >>  /*
+> >> - * If mprotect/munmap/etc occurs during TLB batched flushing, we need=
+ to
+> >> - * synchronise all the TLBI issued with a DSB to avoid the race menti=
+oned in
+> >> - * flush_tlb_batched_pending().
+> >> + * If mprotect/munmap/etc occurs during TLB batched flushing, we need=
+ to ensure
+> >> + * all the previously issued TLBIs targeting mm have completed. But s=
+ince we
+> >> + * can be executing on a remote CPU, a DSB cannot guarrantee this lik=
+e it can
+> >> + * for arch_tlbbatch_flush(). Our only option is to flush the entire =
+mm.
+> >>   */
+> >>  static inline void arch_flush_tlb_batched_pending(struct mm_struct *m=
+m)
+> >>  {
+> >> -       dsb(ish);
+> >> +       flush_tlb_mm(mm);
+> >>  }
+> >>
+> >>  /*
+> >> --
+> >> 2.43.0
+> >>
+> >
 
-I think the spec needs amendment.
-
-I wonder if there are any people interested in the feature though. 
-Looking at virtnet_set_hashflow() in drivers/net/virtio_net.c, the 
-driver of Linux does not let users configure HASH_TYPE_XXX_EX. I suppose 
-Windows supports HASH_TYPE_XXX_EX, but those who care network 
-performance most would use Linux so HASH_TYPE_XXX_EX support without 
-Linux driver's support may not be useful.
-
-> 
->>
->>> 2) the VIRTIO_NET_SUPPORTED_HASH_TYPES is not checked against the
->>> tun_vnet_ioctl_sethash(), so userspace may set
->>> VIRTIO_NET_HASH_TYPE_TCP_EX regardless of what has been returned by
->>> tun_vnet_ioctl_gethashtypes(). In this case they won't get
->>> VIRTIO_NET_HASH_TYPE_TCP_EX.
->>
->> That's right. It's the responsibility of the userspace to set only the
->> supported hash types.
-> 
-> Well, the kernel should filter out the unsupported one to have a
-> robust uAPI. Otherwise, we give green light to the buggy userspace
-> which will have unexpected results.
-
-My reasoning was that it may be fine for some use cases other than VM 
-(e.g., DPDK); in such a use case, it is fine as long as the UAPI works 
-in the best-effort basis.
-
-For example, suppose a userspace program that processes TCP packets; the 
-program can enable: HASH_TYPE_IPv4, HASH_TYPE_TCPv4, HASH_TYPE_IPv6, and 
-HASH_TYPE_TCPv6. Ideally, the kernel should support all the hash types, 
-but, even if e.g., HASH_TYPE_TCPv6 is not available, it will fall back 
-to HASH_TYPE_IPv6, which still does something good and may be acceptable.
-
-That said, for a use case that involves VM and implements virtio-net 
-(e.g., QEMU), setting an unsupported hash type here is definitely a bug. 
-Catching the bug may outweigh the extra trouble for other use cases.
-
-> 
->>
->>> 3) implementing part of the hash types might complicate the migration
->>> or at least we need to describe the expectations of libvirt or other
->>> management in this case. For example, do we plan to have a dedicated
->>> Qemu command line like:
->>>
->>> -device virtio-net-pci,hash_report=on,supported_hash_types=X,Y,Z?
->>
->> I posted a patch series to implement such a command line for vDPA[1].
->> The patch series that wires this tuntap feature up[2] reuses the
->> infrastructure so it doesn't bring additional complexity.
->>
->> [1]
->> https://lore.kernel.org/qemu-devel/20250530-vdpa-v1-0-5af4109b1c19@daynix.com/
->> [2]
->> https://lore.kernel.org/qemu-devel/20250530-hash-v5-0-343d7d7a8200@daynix.com/
-> 
-> I meant, if we implement a full hash report feature, it means a single
-> hash cmdline option is more than sufficient and so compatibility code
-> can just turn it off when dealing with machine types. This is much
-> more simpler than
-> 
-> 1) having both hash as well as supported_hash_features
-> 2) dealing both hash as well as supported_hash_features in compatibility codes
-> 3) libvirt will be happy
-> 
-> For [1], it seems it introduces a per has type option, this seems to
-> be a burden to the management layer as it need to learn new option
-> everytime a new hash type is supported
-
-Even with the command line you proposed (supported_hash_types=X,Y,Z), it 
-is still necessary to know the values the supported_hash_types property 
-accepts (X.Y,Z), so I don't think it makes difference.
-
-The burden to the management layer is already present for features, so 
-it is an existing problem (or its mere extension).
-
-This problem was discussed in the following thread in the past, but no 
-solution is implemented yet, and probably solving it will be difficult.
-https://lore.kernel.org/qemu-devel/20230731223148.1002258-5-yuri.benditovich@daynix.com/
-
-Regards,
-Akihiko Odaki
+Thanks
+Barry
