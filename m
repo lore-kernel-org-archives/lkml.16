@@ -1,37 +1,37 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69911DE2CF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95E21DE3A7
 	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 14:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749133424; cv=none; b=YcC/5E1AdOGZWHONPj4AfCptnyL/TsstmNRZ3q62Glhue9pwoYsL1/HKuyV+fPObQ3BLz+fTjBJBAPdQj+Qty33pZHzxTAJ0hwarUns8U2eV4mNeWyo0WUPQY4NWq1KIHvFnNmGupOzejoM5C4UOvHnrTHPz8QoEO7n49DcAu08=
+	t=1749133424; cv=none; b=NmdCOAl1ySUMSlv9eHxwaBDvwo5nQjXGVsmI6t1re3EM7SLlD4gG9+EQHiPw+CanH96tdDr7+Tp49YfCEDoa7ERDHO55MyD9+4tRyUwjW+vJ+ZwkDL37JEDzdgglWj/MsmtYVj2XNLzfdpSvYONFk679WMnVCtu1ZPsa1gfAqC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749133424; c=relaxed/simple;
-	bh=NjrFzsmMMVDfSK30eUWfJlAavtEqL6V+GN78HLu9+eU=;
+	bh=daxhZFbTtNCtc+n3FkbjtNEJWZrBraCDsQ4oBldj/5s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ja/vY3uy3/yXZoSNvuWDxNg1X7irXepCxf7BMGQO10QfeRh7aXjafmpjqmrTXGtsVIEOdeVpjNVV86vGVvZZyDEI2mi73fOIHw3CpB0Okbt0GpVA7bpzSBtNzrE6eV85IpTUexu9Qexv6jO2/7X27+xu+AOLF67K9OVhpwLrvu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=jnYJn4E6X/KwQMfA6+Fv55S1TFgWkQulGyc7G2o54jzX3SuL4zLWx7vcxiuDZRjVPuOl4lulx8FfyCehn1S2MfG8ePRviKhj7hEy5BYU4c7DQYs3QYkfOn+Hl3Ueyk8FHFpk6sNzFudjirhTEjB6YE83M8CdNolnzDE98ficQFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1090E1FCFD;
-	Thu,  5 Jun 2025 14:23:21 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 60A0033726;
+	Thu,  5 Jun 2025 14:23:20 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
 	none
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 72A5B137FE;
-	Thu,  5 Jun 2025 14:23:20 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C5F00139CB;
+	Thu,  5 Jun 2025 14:23:19 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CEI9GVioQWipRwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 05 Jun 2025 14:23:20 +0000
+	id 4CCVLVeoQWipRwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 05 Jun 2025 14:23:19 +0000
 From: Oscar Salvador <osalvador@suse.de>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: David Hildenbrand <david@redhat.com>,
@@ -43,9 +43,9 @@ Cc: David Hildenbrand <david@redhat.com>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v5 09/10] mm,mempolicy: Use node-notifier instead of memory-notifier
-Date: Thu,  5 Jun 2025 16:23:00 +0200
-Message-ID: <20250605142305.244465-10-osalvador@suse.de>
+Subject: [PATCH v5 08/10] kernel,cpuset: Use node-notifier instead of memory-notifier
+Date: Thu,  5 Jun 2025 16:22:59 +0200
+Message-ID: <20250605142305.244465-9-osalvador@suse.de>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250605142305.244465-1-osalvador@suse.de>
 References: <20250605142305.244465-1-osalvador@suse.de>
@@ -59,23 +59,23 @@ Content-Transfer-Encoding: 8bit
 X-Rspamd-Pre-Result: action=no action;
 	module=replies;
 	Message is reply to one we originated
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spam-Level: 
 X-Spamd-Result: default: False [-4.00 / 50.00];
 	REPLY(-4.00)[];
 	TAGGED_RCPT(0.00)[];
 	ASN(0.00)[asn:25478, ipnet:::/0, country:RU]
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 1090E1FCFD
+X-Rspamd-Queue-Id: 60A0033726
 X-Rspamd-Pre-Result: action=no action;
 	module=replies;
 	Message is reply to one we originated
 X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Score: -4.00
 
-mempolicy is only concerned when a numa node changes its memory state,
-because it needs to take this node into account for the auto-weighted
-memory policy system.
+cpuset is only concerned when a numa node changes its memory state,
+as it needs to know the current numa nodes with memory to keep
+an updated mems_allowed mask.
 So stop using the memory notifier and use the new numa node notifer
 instead.
 
@@ -84,47 +84,22 @@ Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- mm/mempolicy.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ kernel/cgroup/cpuset.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 72fd72e156b1..1b87628f3cfc 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3793,20 +3793,20 @@ static int wi_node_notifier(struct notifier_block *nb,
- 			       unsigned long action, void *data)
- {
- 	int err;
--	struct memory_notify *arg = data;
--	int nid = arg->status_change_nid;
-+	struct node_notify *arg = data;
-+	int nid = arg->nid;
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 83639a12883d..66c84024f217 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -4013,7 +4013,7 @@ void __init cpuset_init_smp(void)
+ 	cpumask_copy(top_cpuset.effective_cpus, cpu_active_mask);
+ 	top_cpuset.effective_mems = node_states[N_MEMORY];
  
- 	if (nid < 0)
- 		return NOTIFY_OK;
+-	hotplug_memory_notifier(cpuset_track_online_nodes, CPUSET_CALLBACK_PRI);
++	hotplug_node_notifier(cpuset_track_online_nodes, CPUSET_CALLBACK_PRI);
  
- 	switch (action) {
--	case MEM_ONLINE:
-+	case NODE_ADDED_FIRST_MEMORY:
- 		err = sysfs_wi_node_add(nid);
- 		if (err)
- 			pr_err("failed to add sysfs for node%d during hotplug: %d\n",
- 			       nid, err);
- 		break;
--	case MEM_OFFLINE:
-+	case NODE_REMOVED_LAST_MEMORY:
- 		sysfs_wi_node_delete(nid);
- 		break;
- 	}
-@@ -3845,7 +3845,7 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
- 		}
- 	}
- 
--	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
-+	hotplug_node_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
- 	return 0;
- 
- err_cleanup_kobj:
+ 	cpuset_migrate_mm_wq = alloc_ordered_workqueue("cpuset_migrate_mm", 0);
+ 	BUG_ON(!cpuset_migrate_mm_wq);
 -- 
 2.49.0
 
