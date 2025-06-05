@@ -1,188 +1,254 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D86566A;
-	Thu,  5 Jun 2025 09:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB122566A
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 09:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749115446; cv=none; b=ax6h6LvisgFTyEQo7ZaCE/GPv34Of46LT0keXx7Vwtd62RO2GGHJ+WQGuDP7rAnoQ7dz1D0MCJ/FhJAtegKoqmWIeq/bByp3Q33kanoa2ZtkOn4/6QnmPCbFi7gOAanKBjm4G6/BwRpoc+YuRmOJlVqB2jkoB7Ga0J1LRk3PJ2M=
+	t=1749115478; cv=none; b=i9/AAS6XuTG0Hypwur70perk/x/ULO59b3+B1VAHzjBJhENo82SIMG2kfdxjhUjIllTR1VpDFAKxZ1h9XLdyO8jlAe+i1EqHAY/wkl2jjgGDDa2+55iWw7zx8i2caIw6ll8SuEF2ln1Pv4HaCENxdEkYfJDS2dqbY1vD64NduW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749115446; c=relaxed/simple;
-	bh=BiRN5nBnZIp/sJcuRCoUB4GHMYYC58pEDXWvQczJNsA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=s+b7xWAuOppDVoVDkjtXx0G1478YC0Q2POTKvk5txdXPxeYqPV8HVoZDq23NwJoKnBvbAnCj6YEQLAKpmMQ0WR3822Ac31cIjz347n2uDlphBjVJ6aeiYwZhs8kLg9H9iZmR6cIRlPEfzm2u5VV/+9Yo8FZaYUL/BzgDiBXzyU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eSn7E3NM; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749115478; c=relaxed/simple;
+	bh=10+3YgTr1H5Im6QiRgVdfEWo9Vt7IV6mBZC8mBOdBco=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NHClatWwB6Wb3cG6aMM8Q0W6ePAzyKYwdiNu8NoxUcV1ARbWS5Y7SUML+6BCJwWpFAti/iic2XIMiAbmZT9mmWbAQUQxIjkYvFuUnFSI49u+cgswfihIpfookbsteeYK/T8m0ESaD3IiKcm9Sp1DWL0MnKEgQf4XiWe2/IQ8hF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=rv32Gacw; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eSn7E3NM"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0C00F43ACE;
-	Thu,  5 Jun 2025 09:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749115442;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hMtQCtS8IpJTkp97fNAgEE15+YSM+ATUwrgLcxt4Rdk=;
-	b=eSn7E3NM2/a1XL2QCHZ51w/xSFAL+iEZEQboby9jHTs+K7Nvdupz/F7tlxFjA4SZ0+t6Yk
-	IaS1HH4qimcQlrUnTscjr8wXLrDa5llZxxO/uhnsiEMZP/+GB8UnaOmTI/JUhnwlH3boNe
-	e6EugCFOKAu+aLoZCV685Ow7tj908BPs7BIycS44sR/0FFSmiaSGv7TztQiVgAmhCmMRZ4
-	upJ/cQU5kcDPefZJCzPEaXHwRb+M0/uwBsWnKLWQt7bdczxgCObraYqlVcLhTt4Aac/9kv
-	Ul5XZNYHabuX/WaaO+gt8hbFbOX7Do55Ol4WHd8Q2wgmWMdKFAaln7JfUSgHjA==
-Date: Thu, 5 Jun 2025 11:24:00 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="rv32Gacw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
+	Resent-Message-ID:In-Reply-To:References;
+	bh=QpGV0n6u04ZW1P0zDrdpUx45bUUucEccJqYGRMnCtb8=; t=1749115475; x=1750325075; 
+	b=rv32Gacws2c9vZC28QccsL/ExQUwbpPLzn3jgHjJm2RGYOyQtDkkzHvM/okFJye9GKVI8fsTgC4
+	SgXPoKxRlKMIgU/ML+crAhjWH+TO3LybUNbXxCCdrs878b4TxceycUOUHJ94nK6xDfeem39oOE09q
+	dXhcKkwLWv18mhkNzZdGsyEsDnSIQt9qv4nXEXhh9GEMQc1fRpk4ehpPvwrQKUDUYtKSYvhsz/sCQ
+	HDgfg5TS23a9Ke4h2P47XPNP8B/GoX6Ies7lyA3oWHndIwGJrEwO4bc8hhavtp6UTbVPWO6877kUG
+	rSFRnplevGzkx/exshgm4UUM04+KQT0VjIEg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uN6pn-00000001pmy-0kRw;
+	Thu, 05 Jun 2025 11:24:27 +0200
+From: Johannes Berg <johannes@sipsolutions.net>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RTC for 6.16
-Message-ID: <202506050924004af15615@mail.local>
+Cc: linux-kernel@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Subject: [GIT PULL] uml 6.16-rc1
+Date: Thu,  5 Jun 2025 11:20:57 +0200
+Message-ID: <20250605092423.14973-3-johannes@sipsolutions.net>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdefgeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfggtggugfesthekredttddtudenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegueffgfdvhefggefgieehffeikefhfeffudelvdetheffheefffelhfelgefhkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhttgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alexandre.belloni@bootlin.com
 
-Hello Linus,
+Hi Linus,
 
-Here is the RTC subsystem pull request for 6.16. There are two new drivers this
-cycle. There is also support for a negative offset for RTCs that have been
-shipped with a date set using an epoch that is before 1970. This unfortunately
-happens with some products that ship with a vendor kernel and an out of tree
-driver.
+Looks like I'm getting into a habit of doing this rather
+than Richard, who has been busy with other things :)
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+The only really new thing is the long-standing seccomp
+work (originally from 2021!), even if it still isn't
+enabled by default due to security concerns it can still
+be used e.g. for tests.
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Please pull and let us know if there's any problem.
+
+Thanks,
+johannes
+
+
+
+The following changes since commit 92a09c47464d040866cf2b4cd052bc60555185fb:
+
+  Linux 6.15-rc5 (2025-05-04 13:55:04 -0700)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-6.16
+  https://git.kernel.org/pub/scm/linux/kernel/git/uml/linux.git tags/uml-for-linux-6.16-rc1
 
-for you to fetch changes up to 3d8b44b104fb5f93a853ae34fbcf8d840e4482f5:
+for you to fetch changes up to e56a50ff7c12983aba710bd02a2c2ad401379e91:
 
-  rtc: mt6359: Add mt6357 support (2025-06-02 00:25:32 +0200)
-
-----------------------------------------------------------------
-RTC for 6.16
-
-Core:
- - support negative offsets for RTCs that have shipped with an epoch earlier
-   than 1970
-
-New drivers:
- - NXP S32G2/S32G3
- - Sophgo CV1800
-
-Drivers:
- - loongson: fix missing alarm notifications for ACPI
- - m41t80: kickstart ocillator upon failure
- - mt6359: mt6357 support
- - pcf8563: fix wrong alarm register
- - sh: cleanups
+  um: remove "extern" from implementation of sigchld_handler (2025-06-05 11:12:13 +0200)
 
 ----------------------------------------------------------------
-A. Niyas Ahamed Mydeen (1):
-      rtc: m41t80: kickstart ocillator upon failure
+Notable changes:
 
-Alexandre Belloni (2):
-      rtc: interface: silence KMSAN warning
-      rtc: m41t80: reduce verbosity
+ - remove obsolete network transports
 
-Alexandre Mergnat (3):
-      rtc: Make rtc_time64_to_tm() support dates before 1970
-      rtc: Fix offset calculation for .start_secs < 0
-      rtc: mt6359: Add mt6357 support
+ - remove PCI IO port support
 
-Ciprian Marian Costea (2):
-      dt-bindings: rtc: add schema for NXP S32G2/S32G3 SoCs
-      rtc: s32g: add NXP S32G2/S32G3 SoC support
+ - start adding seccomp-based process handling
+   instead of ptrace
 
-Jingbao Qiu (1):
-      rtc: sophgo: add rtc support for Sophgo CV1800 SoC
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      um: stop using PCI port I/O
 
-Johan Hovold (9):
-      dt-bindings: rtc: qcom-pm8xxx: add uefi-variable offset
-      rtc: pm8xxx: fix uefi offset lookup
-      rtc: at91rm9200: drop unused module alias
-      rtc: cpcap: drop unused module alias
-      rtc: da9063: drop unused module alias
-      rtc: jz4740: drop unused module alias
-      rtc: pm8xxx: drop unused module alias
-      rtc: s3c: drop unused module alias
-      rtc: stm32: drop unused module alias
+Benjamin Berg (12):
+      um: do not send SIGALRM to userspace in time-travel mode
+      um: use proper care when taking mmap lock during segfault
+      um: Move faultinfo extraction into userspace routine
+      um: Add stub side of SECCOMP/futex based process handling
+      um: Add helper functions to get/set state for SECCOMP
+      um: Track userspace children dying in SECCOMP mode
+      um: Implement kernel side of SECCOMP based process handling
+      um: Add SECCOMP support detection and initialization
+      um: pass FD for memory operations when needed
+      um: fix SECCOMP 32bit xstate register restore
+      um: fix unused variable warning
+      um: remove "extern" from implementation of sigchld_handler
 
-Krzysztof Kozlowski (1):
-      rtc: amlogic: Do not enable by default during compile testing
+Jiapeng Chong (1):
+      um: Remove duplicate arch.h header
 
-Liu Dalin (1):
-      rtc: loongson: Add missing alarm notifications for ACPI RTC events
+Jiri Slaby (SUSE) (1):
+      irqdomain: um: use irq_domain_create_linear() helper
 
-Ryan Wanner (2):
-      dt-bindings: rtc: at91rm9200: add microchip,sama7d65-rtc
-      dt-bindings: at91rm9260-rtt: add microchip,sama7d65-rtt
+Johannes Berg (1):
+      um: chan_kern: use raw spinlock for irqs_to_free_lock
 
-Troy Mitchell (1):
-      rtc: pcf8563: fix wrong alarm register
+Lukas Bulwahn (1):
+      MAINTAINERS: remove obsolete file entry in TUN/TAP DRIVER
 
-Uwe Kleine-König (3):
-      rtc: test: Emit the seconds-since-1970 value instead of days-since-1970
-      rtc: test: Also test time and wday outcome of rtc_time64_to_tm()
-      rtc: test: Test date conversion for dates starting in 1900
+Sami Tolvanen (1):
+      um: Add cmpxchg8b_emu and checksum functions to asm-prototypes.h
 
-Wolfram Sang (13):
-      rtc: sh: assign correct interrupts with DT
-      rtc: sh: remove update interrupt handling
-      rtc: sh: only disable carry interrupts in probe()
-      rtc: sh: remove periodic interrupt handling
-      rtc: sh: simplify irq setup after refactoring
-      rtc: sh: remove useless wrapper function
-      rtc: sh: use local variables in probe() for mapping IO
-      rtc: sh: minor fixes to adhere to coding style
-      rtc: rzn1: clear interrupts on remove
-      rtc: da9063: simplify irq management
-      dt-bindings: rtc: rzn1: add optional second clock
-      rtc: rzn1: Disable controller before initialization
-      rtc: rzn1: support input frequencies other than 32768Hz
+Tiwei Bie (8):
+      um: xterm: Add Wayland support
+      um: xterm: Update options for gnome-terminal
+      um: Add VFIO-based virtual PCI driver
+      um: Remove obsolete legacy network transports
+      um: vector: Eliminate the dependency on uml_net
+      um: Remove legacy network transport infrastructure
+      um: vector: Clean up and modernize log messages
+      um: vector: Use mac_pton() for MAC address parsing
 
- .../bindings/rtc/atmel,at91rm9200-rtc.yaml         |   4 +-
- .../bindings/rtc/atmel,at91sam9260-rtt.yaml        |   1 +
- .../devicetree/bindings/rtc/nxp,s32g-rtc.yaml      |  72 ++++
- .../devicetree/bindings/rtc/qcom-pm8xxx-rtc.yaml   |   6 +
- .../devicetree/bindings/rtc/renesas,rzn1-rtc.yaml  |   8 +-
- drivers/rtc/Kconfig                                |  25 +-
- drivers/rtc/Makefile                               |   2 +
- drivers/rtc/class.c                                |   2 +-
- drivers/rtc/interface.c                            |   2 +-
- drivers/rtc/lib.c                                  |  24 +-
- drivers/rtc/lib_test.c                             |  27 +-
- drivers/rtc/rtc-at91rm9200.c                       |   1 -
- drivers/rtc/rtc-cpcap.c                            |   1 -
- drivers/rtc/rtc-cv1800.c                           | 218 ++++++++++++
- drivers/rtc/rtc-da9063.c                           |  31 +-
- drivers/rtc/rtc-jz4740.c                           |   1 -
- drivers/rtc/rtc-loongson.c                         |   8 +
- drivers/rtc/rtc-m41t80.c                           |  78 +++--
- drivers/rtc/rtc-mt6397.c                           |   1 +
- drivers/rtc/rtc-pcf8563.c                          |   2 +-
- drivers/rtc/rtc-pm8xxx.c                           |  18 +-
- drivers/rtc/rtc-rzn1.c                             |  71 +++-
- drivers/rtc/rtc-s32g.c                             | 385 +++++++++++++++++++++
- drivers/rtc/rtc-s3c.c                              |   1 -
- drivers/rtc/rtc-sh.c                               | 285 +++------------
- drivers/rtc/rtc-stm32.c                            |   1 -
- 26 files changed, 946 insertions(+), 329 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/nxp,s32g-rtc.yaml
- create mode 100644 drivers/rtc/rtc-cv1800.c
- create mode 100644 drivers/rtc/rtc-s32g.c
+Uros Bizjak (2):
+      um/asm: Rename rep_nop() to native_pause()
+      um/asm: Replace "REP; NOP" with PAUSE mnemonic
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Yongting Lin (1):
+      um: Fix tgkill compile error on old host OSes
+
+ .../virt/uml/user_mode_linux_howto_v2.rst          |  47 +-
+ MAINTAINERS                                        |   3 +-
+ arch/um/Kconfig                                    |   6 -
+ arch/um/configs/i386_defconfig                     |   7 -
+ arch/um/configs/x86_64_defconfig                   |   7 -
+ arch/um/drivers/Kconfig                            | 204 +----
+ arch/um/drivers/Makefile                           |  22 +-
+ arch/um/drivers/chan_kern.c                        |  10 +-
+ arch/um/drivers/daemon.h                           |  29 -
+ arch/um/drivers/daemon_kern.c                      |  95 ---
+ arch/um/drivers/daemon_user.c                      | 194 -----
+ arch/um/drivers/net_kern.c                         | 889 ---------------------
+ arch/um/drivers/net_user.c                         | 271 -------
+ arch/um/drivers/slip.h                             |  21 -
+ arch/um/drivers/slip_common.c                      |  55 --
+ arch/um/drivers/slip_common.h                      | 106 ---
+ arch/um/drivers/slip_kern.c                        |  93 ---
+ arch/um/drivers/slip_user.c                        | 252 ------
+ arch/um/drivers/slirp.h                            |  34 -
+ arch/um/drivers/slirp_kern.c                       | 120 ---
+ arch/um/drivers/slirp_user.c                       | 124 ---
+ arch/um/drivers/umcast.h                           |  27 -
+ arch/um/drivers/umcast_kern.c                      | 188 -----
+ arch/um/drivers/umcast_user.c                      | 184 -----
+ arch/um/drivers/vde.h                              |  32 -
+ arch/um/drivers/vde_kern.c                         | 129 ---
+ arch/um/drivers/vde_user.c                         | 125 ---
+ arch/um/drivers/vector_kern.c                      |  48 +-
+ arch/um/drivers/vfio_kern.c                        | 642 +++++++++++++++
+ arch/um/drivers/vfio_user.c                        | 327 ++++++++
+ arch/um/drivers/vfio_user.h                        |  44 +
+ arch/um/drivers/virt-pci.c                         |  15 +-
+ arch/um/drivers/xterm.c                            |  11 +-
+ arch/um/include/asm/asm-prototypes.h               |   5 +
+ arch/um/include/asm/irq.h                          |   5 +-
+ arch/um/include/asm/mmu.h                          |   3 +
+ arch/um/include/shared/common-offsets.h            |   4 +
+ arch/um/include/shared/irq_user.h                  |   2 +
+ arch/um/include/shared/net_kern.h                  |  69 --
+ arch/um/include/shared/net_user.h                  |  52 --
+ arch/um/include/shared/os.h                        |   4 +-
+ arch/um/include/shared/skas/mm_id.h                |   9 +
+ arch/um/include/shared/skas/skas.h                 |   1 +
+ arch/um/include/shared/skas/stub-data.h            |  20 +-
+ arch/um/kernel/Makefile                            |   1 -
+ arch/um/kernel/ioport.c                            |  13 -
+ arch/um/kernel/irq.c                               |   6 +
+ arch/um/kernel/skas/mmu.c                          |  91 ++-
+ arch/um/kernel/skas/stub.c                         | 132 ++-
+ arch/um/kernel/skas/stub_exe.c                     | 159 +++-
+ arch/um/kernel/time.c                              |  13 +-
+ arch/um/kernel/trap.c                              | 130 ++-
+ arch/um/os-Linux/Makefile                          |   2 +-
+ arch/um/os-Linux/drivers/Makefile                  |  13 -
+ arch/um/os-Linux/drivers/etap.h                    |  21 -
+ arch/um/os-Linux/drivers/ethertap_kern.c           | 100 ---
+ arch/um/os-Linux/drivers/ethertap_user.c           | 248 ------
+ arch/um/os-Linux/drivers/tuntap.h                  |  21 -
+ arch/um/os-Linux/drivers/tuntap_kern.c             |  86 --
+ arch/um/os-Linux/drivers/tuntap_user.c             | 215 -----
+ arch/um/os-Linux/file.c                            |  15 -
+ arch/um/os-Linux/internal.h                        |   5 +-
+ arch/um/os-Linux/process.c                         |  31 +
+ arch/um/os-Linux/registers.c                       |   4 +-
+ arch/um/os-Linux/sigio.c                           |   3 +-
+ arch/um/os-Linux/signal.c                          |  19 +-
+ arch/um/os-Linux/skas/mem.c                        | 101 ++-
+ arch/um/os-Linux/skas/process.c                    | 488 ++++++++---
+ arch/um/os-Linux/start_up.c                        | 195 ++++-
+ arch/x86/um/asm/checksum.h                         |   3 +
+ arch/x86/um/asm/processor.h                        |   8 +-
+ arch/x86/um/os-Linux/mcontext.c                    | 218 ++++-
+ arch/x86/um/ptrace.c                               |  76 +-
+ arch/x86/um/shared/sysdep/kernel-offsets.h         |   2 +
+ arch/x86/um/shared/sysdep/mcontext.h               |   9 +
+ arch/x86/um/shared/sysdep/stub-data.h              |  23 +
+ arch/x86/um/shared/sysdep/stub.h                   |   2 +
+ arch/x86/um/shared/sysdep/stub_32.h                |  13 +
+ arch/x86/um/shared/sysdep/stub_64.h                |  17 +
+ arch/x86/um/tls_32.c                               |  26 +-
+ 80 files changed, 2683 insertions(+), 4361 deletions(-)
+ delete mode 100644 arch/um/drivers/daemon.h
+ delete mode 100644 arch/um/drivers/daemon_kern.c
+ delete mode 100644 arch/um/drivers/daemon_user.c
+ delete mode 100644 arch/um/drivers/net_kern.c
+ delete mode 100644 arch/um/drivers/net_user.c
+ delete mode 100644 arch/um/drivers/slip.h
+ delete mode 100644 arch/um/drivers/slip_common.c
+ delete mode 100644 arch/um/drivers/slip_common.h
+ delete mode 100644 arch/um/drivers/slip_kern.c
+ delete mode 100644 arch/um/drivers/slip_user.c
+ delete mode 100644 arch/um/drivers/slirp.h
+ delete mode 100644 arch/um/drivers/slirp_kern.c
+ delete mode 100644 arch/um/drivers/slirp_user.c
+ delete mode 100644 arch/um/drivers/umcast.h
+ delete mode 100644 arch/um/drivers/umcast_kern.c
+ delete mode 100644 arch/um/drivers/umcast_user.c
+ delete mode 100644 arch/um/drivers/vde.h
+ delete mode 100644 arch/um/drivers/vde_kern.c
+ delete mode 100644 arch/um/drivers/vde_user.c
+ create mode 100644 arch/um/drivers/vfio_kern.c
+ create mode 100644 arch/um/drivers/vfio_user.c
+ create mode 100644 arch/um/drivers/vfio_user.h
+ delete mode 100644 arch/um/include/shared/net_kern.h
+ delete mode 100644 arch/um/include/shared/net_user.h
+ delete mode 100644 arch/um/kernel/ioport.c
+ delete mode 100644 arch/um/os-Linux/drivers/Makefile
+ delete mode 100644 arch/um/os-Linux/drivers/etap.h
+ delete mode 100644 arch/um/os-Linux/drivers/ethertap_kern.c
+ delete mode 100644 arch/um/os-Linux/drivers/ethertap_user.c
+ delete mode 100644 arch/um/os-Linux/drivers/tuntap.h
+ delete mode 100644 arch/um/os-Linux/drivers/tuntap_kern.c
+ delete mode 100644 arch/um/os-Linux/drivers/tuntap_user.c
+ create mode 100644 arch/x86/um/shared/sysdep/stub-data.h
