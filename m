@@ -1,85 +1,107 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A792153C7
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D21202F83;
+	Thu,  5 Jun 2025 12:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749128129; cv=none; b=Ug8I2xQ5kyML4nG7A05asVvtNJPUP+dCafpoPYJyOx1kqRp8wtDT6fYkiS08oKlh/nlQARfEnE6EsrhDpTjLoYO8Yej/BJRXEtgM6NLB/bIL5/d5gPioXS8NnYq4G5rQg5tbZvHnbAt/pTV7dUYn5x4S7tSFceDREeVmnmpBNGY=
+	t=1749128232; cv=none; b=fme6rClLx9PnzxrWjv5xnkO9iQmxxWd7eFR5B4BjDMAJe2qHC5e+r4h3CwAsvmSWnV6I+QYzHEGNxnboWjWzdeyTtvIsMb0g5iTkMwGjrdQmk49XT6tFpcuhSuj1fGLODH7b96vO53VPVDlRP8fxmZUs5J/6YvyMYCEI+rvEBa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749128129; c=relaxed/simple;
-	bh=eIIQM7TR+T1o+dHAZkYojtv7Dh1o+Bo1e/gCVkYcYrE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MmDBqW4RFbUwUluMS8/3j3uR5o8K0//KoeiFndYvhqizgdW09ikU3b7o+gP6ErAYQMmQ7Y549q0ontqJGB8fchmxOwGmc4yPlhUvu+be28Eh1BIia3GYII3M9GQ7S/QoSYoOzAzWRDDLC8T5eBIovqk2sbp1eQLIR9Y6iO7+MC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sBum1WoZ; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749128232; c=relaxed/simple;
+	bh=Byr/oEoXo9QKBDnSzkZLZeIjz9Ei0CO0nz0HapLAasA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oNoUjaJIDc9GxXSxJW5eFf7Q7g0LEhB4p9ynjoWd3p9xfiAud8iFXJPd4+c7UYHbJcI2eVJ7pnzH6llHgVnd+0mCE8PT1aH10kbe6ktjpzO6MZ1FtHiOmvYmeeeR2i9CKJTwYq1iB8QP0bRJ3Ui8rBCfI+gKyMEhfMS7k6UEfuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9OS9HRe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sBum1WoZ"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-552206ac67aso1081769e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749128126; x=1749732926; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eIIQM7TR+T1o+dHAZkYojtv7Dh1o+Bo1e/gCVkYcYrE=;
-        b=sBum1WoZ3z0r4BE7gVJLZuzsycj7D4rrWlW19JJUORC6Z1/IjLlfeSq7JJI8sOqQyF
-         A4fFs4gzFDZLFyalN08Vuhyo1Ay4xZah86ix1vMIwVdh3NkNaps3SuGU8EzaNWHoCzVR
-         bHnXI+WMgeVx/fE2bX3qJt3uObzlq5iF7gLAoHpQ8kzUvDv+XiwKhiO/mfXtCEiPDEK+
-         0srdlSqNT1oJzPywA7DcHBYTci/BpINtClXPO8cFDV2Jng956vIRUUGUrITGgzbYwuat
-         Hl6mq/6i3rGDJYDd703evepjZjTtcRw9A1plNX6wIQhDjcPOgJtbbylWO1vC+QH6yixP
-         H1UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749128126; x=1749732926;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eIIQM7TR+T1o+dHAZkYojtv7Dh1o+Bo1e/gCVkYcYrE=;
-        b=d4LLxl5E2g3+BdQ/iXWTDWqKVR8mkB50MUDDID8LBPtwquMXaxcICn+ERgH6TldpZj
-         YpY89GJfKq0XdgupACN883m592vMnng1gjn75gi/VbxNONMfMzZzZM+fvqDiLYzSvXzZ
-         nnDBFUOvFmyYfgVuR26aN/a3+1r4wcDjaK7xDDRnm24b4An12q2Q/tuQlKciZsEomK+Y
-         yR3yF2vkXRlNC4FsZR0jvKhnMAtVHEjleIYfCxVgTd7dGy+VUd7DAlgm5Mnu+guaTFcM
-         +pjjmA8kZQGHWjH8QfcNV10ipJVc76A91FK856oz8tvsNESD3xFNb65Z+T3UfX9dHc4F
-         z7pw==
-X-Forwarded-Encrypted: i=1; AJvYcCW3F7fCNEWXEsFquj6Ht9Dv1j7aVaB2nlajHYPNAT7P1jin9XdrA33tAbgk1/TuL2iMMOZomhGIjkEl6ZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0b2Hc5leVs8j00b5n2dxWFkOiPrP0yerCY1ZvJUhJvgoW1Lz+
-	0Ngsryys46+5rG/R/CTXw8Zt/3RtT+qW/aDEr6GH1PMK8s1MBjr/l4f++48b2UOEYbGWju+BybK
-	PoLYCIh6/fuZJtgKT9/bWvs3MgxTzID/oygQCkGZ7PQ==
-X-Gm-Gg: ASbGncs4VP/lycmrr0nGtmVcc40x+PaLY0Tm9+rr7a0IbqzWVuCjYMtEHX3rNhpFoA9
-	VMUzWkP/gVHrfdrOE+kx0zsro7OqdnlZrVd6ggB5I7MJRLxIrcxu4IjaULrOlpJTqEMbgjx3Lkd
-	8iqLBU02GVlLh+x21EYYG23BlkF7x2AtAw
-X-Google-Smtp-Source: AGHT+IFktJaRVQL3O0Bp6utEO8UMc0VZicEcSyobSFeL3Ri7u0e4wIa7Sl6wlc7e4nLZc48ufle+q9gKEzK7mexYjhQ=
-X-Received: by 2002:a05:6512:ba3:b0:553:2868:6355 with SMTP id
- 2adb3069b0e04-55356bf1294mr2148839e87.18.1749128126139; Thu, 05 Jun 2025
- 05:55:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9OS9HRe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A28A7C4CEE7;
+	Thu,  5 Jun 2025 12:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749128230;
+	bh=Byr/oEoXo9QKBDnSzkZLZeIjz9Ei0CO0nz0HapLAasA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=R9OS9HRefttAMjUUukDbCjUUxkF6L3e6PQtquhTwt+9rcPHTkQd+Smke+02RP9JJt
+	 LMQ+TcTYeE9NJNoktZgPHvEikLaA2/dUdiRc1i1t6ZsiqHsVi/CBBZO1Nc9CnutplL
+	 +ocvvQtY4t+q4AkY082rwuZMhnPNI4PdsoAUObS+jExBONZ5F5S7RYcmE2nO/mTcIC
+	 hXdO9CELjXl4i88/FlE7bYmKj6TqFrHCYb4dNwESQcjMouUf6IPTdlg9EjOsXdZN0k
+	 7cOCYVWMQQg4uO89bEBqaBPdOIq2KFp2koMMNwVUXFSqDAthhqAwDbEqsvqXnbfXSr
+	 Q5qA48/s4vIZA==
+Message-ID: <be92ce49-7eaa-49b8-bba8-53a0b0012113@kernel.org>
+Date: Thu, 5 Jun 2025 14:57:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523101437.59092-1-wojciech.slenska@gmail.com>
-In-Reply-To: <20250523101437.59092-1-wojciech.slenska@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 5 Jun 2025 14:55:14 +0200
-X-Gm-Features: AX0GCFvnKpjs7qcRC4zueo0StcdisXIytgLKoGyc_FirjmAk_wruvxxdurKXjDY
-Message-ID: <CACRpkdZ7CEJJkc96Z=nu+Ax8jUJSK_YcMntzEBmoXK1g9d7uYw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: pinctrl-qcm2290: Add missing pins
-To: Wojciech Slenska <wojciech.slenska@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] media: Add Gen 3 IP stateful decoder driver
+To: yassine.ouaissa@allegrodvt.com, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Michael Tretter <m.tretter@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+References: <20250605-allegro_dvt_al300_dec_driver-v2-0-1ef4839f5f06@allegrodvt.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250605-allegro_dvt_al300_dec_driver-v2-0-1ef4839f5f06@allegrodvt.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 23, 2025 at 12:15=E2=80=AFPM Wojciech Slenska
-<wojciech.slenska@gmail.com> wrote:
+On 05/06/2025 14:26, Yassine Ouaissa via B4 Relay wrote:
+> This patch series introduces a new stateful decoder driver for the
+> allegrodvt GEN 3 IPs.
+> 
+> Changes in v2:
+> - patch 2: Fix dt-bindings reviews (Krzysztof Kozlowski) (Conor Dooley)
 
-> Added the missing pins to the qcm2290_pins table.
->
-> Signed-off-by: Wojciech Slenska <wojciech.slenska@gmail.com>
+That's just way too vague. What change specifically?
 
-Patch applied for fixes!
-
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
