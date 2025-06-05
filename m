@@ -1,64 +1,64 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2051C18A93C;
-	Thu,  5 Jun 2025 10:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77032040B6
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 10:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749119605; cv=none; b=OK9G23X7WTVwtmxl6CjDk0dV+5l4QwuAHjp2R2LIeejOcKF0kiwm6tpcanK/FM/enlu1oznTODqim8x2N1uh0KJAlN3Urxkkr3aHEPHddV15Cbirb/QDe2Vhj8kf0qemVfzpMzg4Q27c80A48U4NEPbAm4r20+3/hQY3h9iFVDo=
+	t=1749119607; cv=none; b=ZwJFcqjzyY3ORPnL9KmHgFVAXrigIAa9df+m4trR6MCdGKUzcvX5mV5ASlP7RHMdAMKJ9hhGu9QZO4prg/D2bSsC6gmyk+L2of96OQXTfsCF3UX24eGQhb3kcL/4+ZaNSdJQPPdn6jny8vRvova0B7PcpKS2vnV+NVUmO0Dr7lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749119605; c=relaxed/simple;
-	bh=fEsCRwPMVYPWUNaghwXtinfknmKt4IyQv0wCv/OuI/c=;
+	s=arc-20240116; t=1749119607; c=relaxed/simple;
+	bh=a22MTugVqXJqn2rVeTYu08Ru3J9spYEy5/2EYGhxPUY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hoc7ZM12YEPbL2ZADLw9bgycugIYNaqbVe7V1XLawaRgsT4PmEBP/XMX4HnzdTI4HshZ0l0TqZnezDXac+Z7NPqu3Qj29lxS5UUynAzcDToiKcHRYTVBNpj1aceU6dGuHij8bFgwjMwe8Hjq4aSt0Ype9+OnJGgYcjxh+hbAfBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZXainLeG; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=g4ziBbiT5J7QsrKbvfEbXiyj3Zmgb/uJCdg79rp+zquHfxG2W9ZhpgDXYQHZlTkD9TfpeVSVzWQ8L0l2BfUp6hsya/KeGxpEBtAmXxheJ0RbXVqOyPbn81GbB/XGNDxgH8/YC671rLlZM7xBFijPUmJ31Je2wWNlwq33ezdJ/2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rg9LwBi9; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXainLeG"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso1232814a12.1;
-        Thu, 05 Jun 2025 03:33:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rg9LwBi9"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-442fda876a6so6406765e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 03:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749119602; x=1749724402; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749119603; x=1749724403; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pvkL5BUeGrJoHhgcuCCQPpcR6LRmPz+8h4ofmutJ25Q=;
-        b=ZXainLeGbiraQ6f1bdlMcmCF/sLcad/AAdy1Y+cse0tKXsPfzHjfkPX44yn19iio8W
-         PFEKEhB0VFC/I9iKVEtmzw984FXOTgwBwgC5CBgbofmTnnjxftbM77y5pUqkTlEH92PA
-         BrN7yswLh6jEVPsNVobR9cR4MJZbMt0lR1m86F9WEF042jT4nuzrLpiDN38znswC451Q
-         hdiKaN+m72thDNCYnEzc1d2xW6EhbHo+2RKAj6JMDzKk5sZ9bTinIOb6t5hB+8llFDU3
-         PRthqWSswMfV44nnOsA8ML8LovQNBC8QDsx3k9A7I4TCNOgsJJ64RCwzT4h4pFm4o97t
-         bTsQ==
+        bh=CcvdK+kUqsSYXK1dvlLkx29YE1Y4FdRzYsL+M29q+YQ=;
+        b=Rg9LwBi97TjfLJ/j2rkXiV7RqDLcR1pT1E7ovvAhi73iXulx7wbdfRPm5fDAJ3tPV6
+         knOtXVMhwX+shg2RQ8vtmLnEjxG4lMjkGZLtzE+J/h3LhreFQdTXOivrOixT9clH6zIR
+         pi4QM2e1eZwsykiVR/QYlD4AzkwCUvnSP55v0Cw9WcLRA0+OQYd62IpfskkvhxIH1GzN
+         5l5EFuYcvMqIQKur+caIKOs/P+u1ohNuusOiXT0Ooa5mR/kRjKxOkwq6jO8yQPNZ/U+g
+         a1SEd6LiyAViU9kMKzXBhHmffFK+55CWiB3EADYlb/5ZHwKGfjCBmmqJyHjayjPBDwet
+         oDpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749119602; x=1749724402;
+        d=1e100.net; s=20230601; t=1749119603; x=1749724403;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pvkL5BUeGrJoHhgcuCCQPpcR6LRmPz+8h4ofmutJ25Q=;
-        b=idqewV1YtBr/d/aucJOwlYVFt8LCXLdk10JKFT2BiXE7Wgvi1qHmTyZhJcr8YvHOfp
-         26iX4Fpwrj/A3UFbLHEiXtthui/yhjgl4h/qF1ydHkJSOVISu5tT/9OWQhtt63jWVJ1c
-         IZUGox1KEBKK2S+IyGjD4pHuHUUJS2B1nWFtcRwx+ZBZG8VQbrq+FNZQ89wK4Wj0zE3B
-         s+UtfAyaA/qw+AMoaSQDS9gCvOE2SD+s6Jmh8K3GsyP2Ts4tnN63dkvaVmRMAtRQCpa4
-         wReBHULhFgv2wmSrSR1Nmkt5s+tk4c/zpCkwn9u+/qYyv2WjZH3+Po5YJ90itFIoKC2H
-         Z+tA==
-X-Forwarded-Encrypted: i=1; AJvYcCU//vSJ+HWauuOcMDajWNgEIBN5lpcCZUsVTniC+2k+TgP7EcxqptRSxk6ays8jOcJwMR8=@vger.kernel.org, AJvYcCUyqD3rfMaHB6zLAS/xnTTtKJ4ObR0/aLrEbG6B90iPs5+uTvNqMGBgH6qkap+C3CYFoptUV49T@vger.kernel.org, AJvYcCWgZk1Kws1MESt3eLXnzKI8UN+ngWJaA87zdV2TLzKeBrHTOoYJuRvn/LqNCGvZdix65uNQ+M10DF9jiw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFRvw4ABkpE0BnrwG6CrvkcBppfTrV0QU1N16ojEC4/mR954mE
-	nupXKFo4Kp8WO+X5bT5wulFIY3C6LV9vfCEsh62+Y9d1y2GLlqhTk/Yq
-X-Gm-Gg: ASbGncuI2lhaGa9ixaujJpX40xKHFqAYQlGHEYrs18D3pPJtu9o/MVZUFKUEm4kaSu7
-	rzHN9oUd6ypRuHAAvR9ua9gdmgI/Lqg0kZmVn0j/y8wZE24DhDlu5OUHtLjdf4gU+32ujFaAhkd
-	THaSkObVk1KhHWGcQ4cEz8r7iVvPMWhmi4GMenJLOtytAMDxI779qDnhOVU1aOconqy9C9/M0lG
-	40PVjkqpD8kdBjd+hsBEzWFQEm/jZDONVyVnyv+4iotWrb3rFBBWOvrJIE+e6lOpQ1UOlA1dCul
-	ELRvzqAPfy2OR3g8HqOE0m+r5SxqZAYf0g/u2Ejw/Z1CbN0gW9f6ATOpUl3KERqC
-X-Google-Smtp-Source: AGHT+IEv6oIoayiFALrh6R3BYsml4mBtVK1tTkCc9XAcCjRB029YDmHadKK4jYnYmz9npj/BrRA/eQ==
-X-Received: by 2002:a05:6402:27d0:b0:606:a99d:91d4 with SMTP id 4fb4d7f45d1cf-606ea16f586mr6355901a12.27.1749119602201;
-        Thu, 05 Jun 2025 03:33:22 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325::22f? ([2620:10d:c092:600::1:d66f])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6071edf645asm1213803a12.14.2025.06.05.03.33.20
+        bh=CcvdK+kUqsSYXK1dvlLkx29YE1Y4FdRzYsL+M29q+YQ=;
+        b=Li0YOhpGJectqJCJuKdI5F75DeyyoxgvYAqeSgWNizX5Ebf5rmoYUXNVhkhGzvdiZ8
+         2bFfqiDB8ivdC5KfNidnfky6840c3T2+ZRWsr+F6r+bsJ8la39COh7Sy6EKPg20mkFK0
+         8dttPU9Bot2BOnBNJy1QHB6Oruzmg9gKtipl13bNyza0NFpdtZ4QwfpsqnF+nZ1gclDz
+         f1dq/h5EWqtibQh2FoXyfdY7cyUx7qO0bXUEqPivosggrAEpUSZaiQdpmMhXJS2d0RdY
+         2oaCOYEQWqCcXtkQiQj6u6qPbYwuHsmAAVE3+a1WhsklKxPn3zVcG6E2gAiGpfFHH/TL
+         bLsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwmt4p4jJunNNQTtet4PyjZnqS5Pg0ZZEjaB11XzFAFOugWbI4zfcMUVahBFB5mElXZ5wsey9BB1Ml7Ys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBvly7IZlVepuRCDRBRgyvf2W6QYO8SCYSLRqQ3g2k/QF1rBbo
+	ryfniO0u1Mfx2JBcobE0lXDSM23WibmJYEMAZfQe6XGLdA39TBeN8rQ05gW+xY+mdnw=
+X-Gm-Gg: ASbGnct8YdFvJGQBwvm1CugGZEJKkN6ZY7RtUVPu6N9H2nVvq8+D8SM9oyA9d86zGTK
+	Uu9EkukdFOaTCMuf2ktkKrdTXRz2kIRpZWxtXyJeCakxs1ROEDH/A3Drjgs6Id8Q7VRISOSj5bE
+	Qzx7ZMYCrCSsIA4V4aihJ4YDykZF6Mq9L/i0GAzVHOeUxlrsaE7GjaXx3H3n6LBWaO5s3Lv+jmm
+	l85JUNB8LaRUAydecLRShLYqtVswLUmSeaJF/b3NtGys3iDUcK2Jo2hvN8aTP418UeXdc6Jri3B
+	c6dJ7e6QFUpyGoSHJ2ELzcW3W0ENjQZfjtuv3FqLznRrTFx7PFLz/XWU
+X-Google-Smtp-Source: AGHT+IG/pYQASQpxqALpdTzyKn6tGv+QxqdbmbGFod1wFV2dwtYmyNkB99H/KuhQnFWYsX9U2WTL4A==
+X-Received: by 2002:a05:600c:8112:b0:43d:1b95:6d0e with SMTP id 5b1f17b1804b1-451f0b3ce3fmr54377325e9.23.1749119603114;
+        Thu, 05 Jun 2025 03:33:23 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6ca08sm24967656f8f.33.2025.06.05.03.33.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 03:33:21 -0700 (PDT)
-Message-ID: <e6f7a10e-e16a-4bd0-908d-31b9522ce096@gmail.com>
-Date: Thu, 5 Jun 2025 11:34:41 +0100
+        Thu, 05 Jun 2025 03:33:22 -0700 (PDT)
+Message-ID: <632eadac-e5fd-4e50-9ced-cd4f2b9e6c82@linaro.org>
+Date: Thu, 5 Jun 2025 11:33:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,35 +66,152 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v4 08/18] page_pool: rename __page_pool_release_page_dma()
- to __page_pool_release_netmem_dma()
-To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
- netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
- ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
- akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
- andrew+netdev@lunn.ch, toke@redhat.com, tariqt@nvidia.com,
- edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-References: <20250604025246.61616-1-byungchul@sk.com>
- <20250604025246.61616-9-byungchul@sk.com>
+Subject: Re: [PATCH v2 06/11] KVM: arm64: Add trap configs for PMSDSFR_EL1
+To: Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
+ <20250529-james-perf-feat_spe_eft-v2-6-a01a9baad06a@linaro.org>
+ <867c1ze4pg.wl-maz@kernel.org>
+ <2fb1965b-bef9-4a8e-a1c7-c8a77d957b23@linaro.org>
+ <87a56ned6r.wl-maz@kernel.org>
 Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250604025246.61616-9-byungchul@sk.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <87a56ned6r.wl-maz@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 6/4/25 03:52, Byungchul Park wrote:
-> Now that __page_pool_release_page_dma() is for releasing netmem, not
-> struct page, rename it to __page_pool_release_netmem_dma() to reflect
-> what it does.
 
-Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
 
--- 
-Pavel Begunkov
+On 04/06/2025 4:31 pm, Marc Zyngier wrote:
+> On Tue, 03 Jun 2025 10:50:23 +0100,
+> James Clark <james.clark@linaro.org> wrote:
+>>
+>>
+>>
+>> On 29/05/2025 5:56 pm, Marc Zyngier wrote:
+>>> On Thu, 29 May 2025 12:30:27 +0100,
+>>> James Clark <james.clark@linaro.org> wrote:
+>>>>
+>>>> SPE data source filtering (SPE_FEAT_FDS) adds a new register
+>>>> PMSDSFR_EL1, add the trap configs for it.
+>>>>
+>>>> Signed-off-by: James Clark <james.clark@linaro.org>
+>>>> ---
+>>>>    arch/arm64/kvm/emulate-nested.c | 1 +
+>>>>    arch/arm64/kvm/sys_regs.c       | 1 +
+>>>>    2 files changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/kvm/emulate-nested.c b/arch/arm64/kvm/emulate-nested.c
+>>>> index 0fcfcc0478f9..05d3e6b93ae9 100644
+>>>> --- a/arch/arm64/kvm/emulate-nested.c
+>>>> +++ b/arch/arm64/kvm/emulate-nested.c
+>>>> @@ -1169,6 +1169,7 @@ static const struct encoding_to_trap_config encoding_to_cgt[] __initconst = {
+>>>>    	SR_TRAP(SYS_PMSIRR_EL1,		CGT_MDCR_TPMS),
+>>>>    	SR_TRAP(SYS_PMSLATFR_EL1,	CGT_MDCR_TPMS),
+>>>>    	SR_TRAP(SYS_PMSNEVFR_EL1,	CGT_MDCR_TPMS),
+>>>> +	SR_TRAP(SYS_PMSDSFR_EL1,	CGT_MDCR_TPMS),
+>>>>    	SR_TRAP(SYS_TRFCR_EL1,		CGT_MDCR_TTRF),
+>>>>    	SR_TRAP(SYS_TRBBASER_EL1,	CGT_MDCR_E2TB),
+>>>>    	SR_TRAP(SYS_TRBLIMITR_EL1,	CGT_MDCR_E2TB),
+>>>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>>>> index 5dde9285afc8..9f544ac7b5a6 100644
+>>>> --- a/arch/arm64/kvm/sys_regs.c
+>>>> +++ b/arch/arm64/kvm/sys_regs.c
+>>>> @@ -2956,6 +2956,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>>>>    	{ SYS_DESC(SYS_PMBLIMITR_EL1), undef_access },
+>>>>    	{ SYS_DESC(SYS_PMBPTR_EL1), undef_access },
+>>>>    	{ SYS_DESC(SYS_PMBSR_EL1), undef_access },
+>>>> +	{ SYS_DESC(SYS_PMSDSFR_EL1), undef_access },
+>>>
+>>> PMSDSFR_EL1 has an offset in the VNCR page (0x858), and must be
+>>> described as such. This is equally true for a bunch of other
+>>> SPE-related registers, so you might as well fix those while you're at
+>>> it.
+>>>
+>>> Thanks,
+>>>
+>>> 	M.
+>>>
+>>
+>> I got a bit stuck with what that would look like with registers that
+>> are only undef in case there was something that I missed, but do I
+>> just document the offsets?
+>>
+>> +++ b/arch/arm64/include/asm/vncr_mapping.h
+>> @@ -87,6 +87,8 @@
+>>   #define VNCR_PMSICR_EL1         0x838
+>>   #define VNCR_PMSIRR_EL1         0x840
+>>   #define VNCR_PMSLATFR_EL1       0x848
+>> +#define VNCR_PMSNEVFR_EL1       0x850
+>> +#define VNCR_PMSDSFR_EL1        0x858
+>>
+> 
+> This should be enough.
+> 
+
+Thanks, I'll resend with these added.
+
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -596,6 +596,16 @@ enum vcpu_sysreg {
+>>          VNCR(ICH_HCR_EL2),
+>>          VNCR(ICH_VMCR_EL2),
+>>
+>> +       /* SPE Registers */
+>> +       VNCR(PMBLIMITR_EL1),
+>> +       VNCR(PMBPTR_EL1),
+>> +       VNCR(PMBSR_EL1),
+>> +       VNCR(PMSCR_EL1),
+>> +       VNCR(PMSEVFR_EL1),
+>> +       VNCR(PMSICR_EL1),
+>> +       VNCR(PMSIRR_EL1),
+>> +       VNCR(PMSLATFR_EL1),
+> 
+> I don't see a point in having those until we actually have SPE support
+> for guests, if ever, as these will potentially increase the size of
+> the vcpu sysreg array for no good reason.
+> 
+>> And then sys_reg_descs[] remain as "{ SYS_DESC(SYS_PMBLIMITR_EL1),
+>> undef_access }," rather than EL2_REG_VNCR() because we don't actually
+>> want to change to bad_vncr_trap()?
+> 
+> This seem OK for now. We may want to refine this in the future though,
+> as these registers cannot trap when NV is enabled. Yes, this is a bug
+> in the architecture.
+> 
+>> There are some other parts about fine grained traps and res0 bits for
+>> NV, but they all already look to be setup correctly. Except
+>> HDFGRTR2_EL2.nPMSDSFR_EL1, but it's inverted, none of the FGT2 traps
+>> are configured currently and PMSDSFR_EL1 is already trapped by
+>> MDCR_EL2 anyway.
+> 
+> Can you elaborate on that? We have:
+> 
+> 	SR_FGT(SYS_PMSDSFR_EL1,		HDFGRTR2, nPMSDSFR_EL1, 0),
+> 
+> which seems to match the spec.
+> 
+> We also have full support for FEAT_FGT2 already (even if we have no
+> support for the stuff they trap).
+
+Oh I think that was misleading, the version I was poking around on 
+didn't have the FEAT_FGT2 stuff applied yet but I see it now. And yes, 
+as you say, what's there matches the spec.
+
+> 
+> Thanks,
+> 
+> 	M.
+> 
 
