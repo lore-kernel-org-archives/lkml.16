@@ -1,180 +1,260 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011051.outbound.protection.outlook.com [40.107.130.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A85A927;
-	Thu,  5 Jun 2025 09:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749114796; cv=fail; b=kdfGePVB2abIGY3cNJ41aVHyxQKu2YhZO/1DXxH8jAp1TGBhK+Tfs62+N2M0C6HvzBkk92E/eRoGf4hboI80C6uQatMIBREewpza/FndRRgpeVJH//3MvHCkj1G122TD31864YPWK+w8hU4aLwTE+B3/Kkx/fiPenQ1rgeO7ynU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749114796; c=relaxed/simple;
-	bh=wP4XWVieWpLgLJ/1+UJ8RSRaMYh33pzGdZI6yhr/ADE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IK/HXS3sKMkkPId3nsrijwouGxdX6boAGd4P9HmVMNU9LqcO5LOQsWNu6DWuC1nEgvSAjz6scH1etncpjHI66n6hJLPpipyaKx/sqQRmRIfsQvPGCHHAjUTqPoR32pYLHVQilE5RoK6GPTqXwX/Bc2hZ7H8nTNO6vYHFflAkIkQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=i9Qyvubs; arc=fail smtp.client-ip=40.107.130.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFA7207A18
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 09:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749114828; cv=none; b=uJFeRAQ/3/5uyHoOYrNwp1NO54hd/ivu5N0i/X9Gbz+M0yFNz6QTo14a2kX+wh/XnkXAXPAGE78QnuMzl5W6IGtn67GPRYDR1bvei9Pb8qCe8XwTISahBgVRIJM3Q54UB2ib+wA77W9td1YeHF/lRGPk3eX285WfLGVbDHB2Ln0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749114828; c=relaxed/simple;
+	bh=VMlUbIdXQk7p5zPiV8x5KgGrvaVU12x/wrH52EfnuwM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=r2rpQum3imqG2JG5/R6bUt0AsbNY13c7hITcG7GGMlNx4g7XDgRXCizRCMqP0EnW++3Kim0buViz7vkId+RHq/eW0KP9Ok0sgpwgTsM5EPE6KSyngyxfqyDSZYpdPHnaZpDHl1pbiLgtXC1Ci5Nv/DKqRtIKW2DnwwXupHDPqjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U//OloKg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="i9Qyvubs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=P0y+WbAOkeI1SjoEN0Wc77hgTxUawhY+EKnnG6NKaeKigAYsTcbffNLq4e3KmnAn7nVLDAQVNXMqF6tr90ngMB0ISCploKS76zjL7rtR+uOJgL3DUXnfZm5dNeRZFiAZAfNnXApH6xjejLB6Ccmu+VtFYe61EGYDwULpYf1cQVRrt/vWpr7KhwTryjXMailpDTNii4AJLRl3hsqKOybi93tjz+jtnenIDyH/R2AP9GSUF+V605Pv99s+lO+ybGiVu4Wqz3/0ft68ZzNXglwcYHPUAQaTLGbjJZKHmqUZfqMFsmKPkbhL6hNh6eBzk8pYiXBXMdMLgAMPqaKuLbNS1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wP4XWVieWpLgLJ/1+UJ8RSRaMYh33pzGdZI6yhr/ADE=;
- b=eUC+ef12Jt7WRCiBZFa6oSeuzeoVWrAN++edXIOXrTeEwDhwVsSjoaSmYMYqiPliLgYQ0amtfvUIjKXwXNowLs9ugLxhyo4b4C1X03XlfXJLictJDwyOkAzpywx+Qa4xr7FuthvVMwMISRkZkJ82vNig/MVvJX5pRtSyjmI+DR6TPo5RTOe0V5MaUONPHB/UjETz0X+Iv5lcKCBInYvbJntshejSThxge0G58L6aCtRpIizweLuNbz4MVyIr/ri4HybpG9PQmJtu5hN4sIAb8sBT8NZjw9H33EtrPLy6arRC1mlvz2CwMKAT+3WWn3SARLpWbvCc1RUT2BVCt4Oc8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wP4XWVieWpLgLJ/1+UJ8RSRaMYh33pzGdZI6yhr/ADE=;
- b=i9Qyvubs4An9GfPFw227QMVX/9BlgOxYgW9/IHlkffY7jj/gRGcJmb1Qn4KBh4uJqfiRsXT4ImC29PDTGj/0ZK8+SBHFCCjC2OZgF4e4dy5AZDKqPjdIdJfh9LAWpYeIPuDVy7Ej+KNxTX5exZANZiTFQd8uq1HlHTLuMuZDl5MFFPkl010u48cRjrgQ6JPI+lzKokGHXmP1w3ZUDQKVKPaEMx196fKi0at6HBI422JMP3BWLm1IdbqI6KKgjerYEdEXzZxzAweVLFkripir62dIUiCHqKEOZF5HMJ3QnCrhveXFV5oUniLIIuHJUeJ2WL7cG9nuccpm2UxZ2AdzFw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by PA1PR04MB10227.eurprd04.prod.outlook.com (2603:10a6:102:456::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Thu, 5 Jun
- 2025 09:13:11 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8813.018; Thu, 5 Jun 2025
- 09:13:11 +0000
-Date: Thu, 5 Jun 2025 18:22:38 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Shawn Guo <shawnguo2@yeah.net>
-Cc: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Shengjiu Wang <shengjiu.wang@nxp.com>, Frank Li <Frank.li@nxp.com>,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/6] bus: add driver for IMX AIPSTZ bridge
-Message-ID: <20250605102238.GA25350@nxa18884-linux>
-References: <20250415171919.5623-1-laurentiumihalcea111@gmail.com>
- <20250415171919.5623-4-laurentiumihalcea111@gmail.com>
- <aD0j3gXeD6Nn6L60@dragon>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aD0j3gXeD6Nn6L60@dragon>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI2PR02CA0006.apcprd02.prod.outlook.com
- (2603:1096:4:194::8) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U//OloKg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749114825;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PU3FQpR1h3Dt+zEvCBTcAsStL66OO0crER4962yFxj4=;
+	b=U//OloKgj73So1kCtEIru0fsObDIULQvrys9rrbYan+f7nm6rmnZIxCOcSzN3fUOpMYJZZ
+	s/kmKB9tMqwXO/lz/5FvVEcJxLQEwyiJbhugXcPGAiLXELloP2xDZSdcuEkANmtkOATKfn
+	bU7OqhyXdVvBqLnKSnLidYXLrXHXHUc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-569-77_bSxEqMgalXkgpepC0vw-1; Thu, 05 Jun 2025 05:13:43 -0400
+X-MC-Unique: 77_bSxEqMgalXkgpepC0vw-1
+X-Mimecast-MFC-AGG-ID: 77_bSxEqMgalXkgpepC0vw_1749114822
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d6768d4dso4378355e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 02:13:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749114822; x=1749719622;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PU3FQpR1h3Dt+zEvCBTcAsStL66OO0crER4962yFxj4=;
+        b=rDgoLY26odhrqm2SZpbirC2hgRodXqQRW5BhUiDcyn1dQzZkqxCOA3b2kueapx9dBM
+         DWoSTN1vDnnpnZeysrGTNV2MJiFxf08zfMUx+uyrIDMpVk/+/0talec/HyEHnKQG0KLG
+         dpsW4KloaVhhpAILG8VmCUiX51m9fk0Bs1aINCnuUPFxC7bXsglbVmVSKoK5y/btxebp
+         qGwCDbFldzgy2k2LTnlKy6mULGj74JOR7njlDFJqCG9v/MB9R0lc/hMzJay5fSEzU7Ir
+         dhUWdPG0vv5fqd6LiTxHTz+kmduHJqJptDmY/xeRjNBM2uw5xqYZVY26DzxC301gBcOb
+         3ZxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVuufrVojcR5NXEhDDu84K/lXIt6s223luVq4hr15VrohkEynddfUe2GfJ9mVpPjbUBUnIrqKWj2GujB7U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEAW3x6a1eSTKN4LVM88w/QaHkrHREyB1WLzf7xLlXPpS/kjf5
+	SfJkGtQE0CT/xSz4GNYNfavK/em6w+/S/Pcq4ByPuGTuOiosIOrnlzla6DSf2OA2U6tcSOMk2VU
+	uV6Hd/eJEYVBp6LyxnDiZj52M7y2ejRynjav1Pa47lcaZTwQUAzgK5NKaKIsBH1bmnQ==
+X-Gm-Gg: ASbGncshm4Loe17s4LU2IYN+EGjGKXabQOzzunuPfqBElDIxMnMLtSpees5ltDv6zKz
+	PD+8R7TDGuEoXmNc96LaDnfpiSlvHEeVughRhmsWQLDG80hrxjPRenXQwl9FHcTBR+2Ex9TLDPI
+	74lyOmaMtYffsfK15iudw3Bty+Ot/Z6+AluWHxbnFm3z0gbRHmFnRBxtYdrhf5gkzcKe2Ip8jlQ
+	5n7jGZoCpiaxXyjHrhjqhM2TzrfHY7FFUR18vzbTaJsEGCAsCdCkmKXxGvBxj26tzQUMENS2OB0
+	trOz4iGyORbdKLLjyt8p2iF4pXem5tucz849wDE0fCo7hMBJKD9exQcuT7roJSpVofwd3b06UNh
+	fEdC3ThxCUQvt+vGkoBK+lZT/+tM9xkALztnM
+X-Received: by 2002:a05:6000:310e:b0:3a3:64fb:304d with SMTP id ffacd0b85a97d-3a51d8f68c3mr4694416f8f.12.1749114822451;
+        Thu, 05 Jun 2025 02:13:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGYYWe9vV/todZ3+L6zve+3foocyt6f44lhpViRHk3WWV3k3ABwlYE9sP3wgBSKO8EuPWW/xA==
+X-Received: by 2002:a05:6000:310e:b0:3a3:64fb:304d with SMTP id ffacd0b85a97d-3a51d8f68c3mr4694396f8f.12.1749114822046;
+        Thu, 05 Jun 2025 02:13:42 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2? (p200300d82f27ec004f4d0d38ba979aa2.dip0.t-ipconnect.de. [2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f9813e5dsm17901785e9.12.2025.06.05.02.13.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 02:13:41 -0700 (PDT)
+Message-ID: <9eac8a3f-08c2-41f5-a468-1fe5c00a046c@redhat.com>
+Date: Thu, 5 Jun 2025 11:13:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA1PR04MB10227:EE_
-X-MS-Office365-Filtering-Correlation-Id: bdbeb148-b06c-4b2f-e014-08dda4113168
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?k+w0XjrkhCPuOkNptIP4rj5N7t9VHlMAfNt07BND1ykyj98uAyyKEtgvz3yl?=
- =?us-ascii?Q?bJHyztGp9lnKnENmJLRzufjgTseZPDeq9aIw1l6PSiMSfBQTfTpW+Rq98eek?=
- =?us-ascii?Q?wTn2GZR5qdwI2/DHw5p7MiJzRx+xuK25H7GhMgglhuv0FgdCt+Fg5kNe3to7?=
- =?us-ascii?Q?/GSJfgYtvllavM9GiJXCjnjaWhbDdrKwWOaEzuertEEjVi2gxzBFco8A4eKv?=
- =?us-ascii?Q?DYX8JUUOJ0rWRD9SSMl4hnssSccsB/2KynjHxLxccfuBCOgG+8ZpcOLZwdO8?=
- =?us-ascii?Q?IsnW3IIJwveq/dz+bGBmBlFBvKcwuW3BqjnujFBTFA8znHQhu+LYtNjm6xzl?=
- =?us-ascii?Q?6ETwf9A7QgZr7SZcYtFwn5Uv1bwKFu1cpQilHQaufFZT+SjnILRHB5xVhMZB?=
- =?us-ascii?Q?5Rtj8TTzODbS/iS03A+7Venmmvvg50YfZ8Ou+Es1Ek3uD7uqLJnMK6nBwGJI?=
- =?us-ascii?Q?e53RLKTVDAhbsD4pm/FH0n3BbE0J9NGFW/VGp23b7WuQDfSUQMt5aVPudK3E?=
- =?us-ascii?Q?wsBkQLVBC9UY/BUlVOspmz4TYy9Ouh+y5kZkmwmiBwLxbIgL7VIWU83bsnDH?=
- =?us-ascii?Q?KVQGQ+oT1FDetWD7ViRBNkMsCj2OfcQdX/VQUCA2gt6zMROB9Xr/3aOJ/xnC?=
- =?us-ascii?Q?xJ77gy7MTEuc/+gi8QutoRQ9xOzOf6Eq1Wv2o7NSiNdw3QZ/6wz3t7HY9brp?=
- =?us-ascii?Q?W5y4r7xQwfU2EP6OOy05qi/hvKV5S/XTtZ/v4c9RUlJhbyQg/xe27JWYnsZX?=
- =?us-ascii?Q?b7raTJ1VeVc7lN33EpfO0O/7rIjSB9H0iw4wMJ2iMgU8ihYlNpbxXdwsf4d+?=
- =?us-ascii?Q?UQHgnek6kfdrLwUrYYx5y316/3ibN6gFtLeIqa+8tagQUjNMJPA3FR9hT7kN?=
- =?us-ascii?Q?NkKn3+fYRagkEr0EcL7P7zzihJRBunfk5bFsWsflBGpcAUyOnbikzlxbOLXC?=
- =?us-ascii?Q?/kew3nigHFFMzV5A7fK/Q8hzgyEpCiAlEQT9bmXxmRrm+vKQD7o/dKfTcevJ?=
- =?us-ascii?Q?dearQSPURfcn4/X0ruCSQXSyXYujeW0WaM/A5kJe7xJBHeIMJ/TdNw++NVtk?=
- =?us-ascii?Q?LpQk+UyZW3Ui6ebbOEuB9TtRUYL42n9MsVBAHrUHYhesR145t3lRsiNt5Wn5?=
- =?us-ascii?Q?IQFygjtv0FJ5hEhzGL3zZ0b/R7Np3eVZAf2pAcs6ZHIJ0prQdhvplBjbBgOL?=
- =?us-ascii?Q?Atb1Q5NbHArretjBT10gE+QJaGdpSNxP+ZwDlSbh19/LfatzGK4qVI/Z3mRy?=
- =?us-ascii?Q?zcT4Bkug6FmIu0zAPll6ltADj2y1kXr2WR2PoTxWyDeVyejaZsHScknZ7sIG?=
- =?us-ascii?Q?wKy1P3eP1D7vd2LQEjsoF2N/qX+7/33Cg/pOQmG2kWcGiEAZMxu7jtEsd+Ri?=
- =?us-ascii?Q?d0zWTW6jWqPB3rIpwFFIQbx5sDr7JVqy5o2W4T1GlNH76bhqxm4KE+cgRVuN?=
- =?us-ascii?Q?TYf8RKo+TSJ6805C8LAcBpNdbjv7VYuGNer4ItOPqZnaLzIAKxZ4nA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/EJoWlIC0Na6rkCJIywMzZhgB5vTCErbvKG4DfqXwxKxW1VnFz97bD00FzYJ?=
- =?us-ascii?Q?dBKzPJFGjNuAeAMreESlRcwgd2vLcUJirKe3MWtnMEchKzakUMy8eVIBKBev?=
- =?us-ascii?Q?T/DsCpebiH+4ZU2BwZZGgxpUhE76Evszs4We2VaMtLtz+LBmvJgrPXI3NNDX?=
- =?us-ascii?Q?mAJPkS76T4S7vGWUXho2BlNc/c2oF99xQAVmnqRiahGAMzTmBzDoCobYPyZQ?=
- =?us-ascii?Q?hjSnBL1OyfpA/qm6pd7HUp9Ew3slEmKO3ftxx8m3h6MXSrKsiK4FhVSejiiO?=
- =?us-ascii?Q?7aKgwl9K2D2qT6ThepD4JEk70vyduTVBYl2aDIGHVOH669hQ4p37Y8jyekV4?=
- =?us-ascii?Q?3r4Q6ycC67cJfWvIwbNoR4xk01VLSfhmAymYAlMKerYbS/1yswgxO5hGnhNf?=
- =?us-ascii?Q?b5VXY5OmYEepRybWkAScoIDaN5lFqBg4WIUXM/yAnnHBDJJx0s0/uPhe3ton?=
- =?us-ascii?Q?Ihsh9iKjftUZKgoabCRKVVeFp/Lbe6xoEbXTjGTV3LZMHrGQGalT3u+Vgdlb?=
- =?us-ascii?Q?PkrILZIHHlkw4xv1xIhXOq+DGHqocK7eeJa7qIgTTj6TRyM/HcQhHUWO9he3?=
- =?us-ascii?Q?dczXTYNuF1df5cVafxA/91hA4sotch1QpzqY6KviEbKQGwvCNgz/8lh7WhrI?=
- =?us-ascii?Q?NR5nxfwuZdzGWDI/vbDJwokEupzdq94N+HqnDvJo+T7vssOtXiFrK7FJZrKO?=
- =?us-ascii?Q?CBMsUjM3Ybtcf2sa6LGiNglt+q198ndkANONWpPffU+Ygh5bhPmPzk8RRhjd?=
- =?us-ascii?Q?dPhaEw6rhf3j1vTRlEHvfvgTtR35A4wPjNCVlreHABIqOLgaeTGUpcR50xjj?=
- =?us-ascii?Q?6OlxsGgADIaS61mHnfelqYtprcYKWeXum4lfx7vJQc5f/FU4Wg5Mix4aFmzX?=
- =?us-ascii?Q?8mDmbOQF73PbFEQHGhgAPrYuyQSxa4a0+XAJa0Uj/GwEiwBSp1z9wM4WAuwE?=
- =?us-ascii?Q?4oPKX0dXMNCVJQ39J8nY0MrIbLkwMZY6aFJExgXzY08/jui7ifmYfq7xUiGn?=
- =?us-ascii?Q?p3yHYUBSC54ZAkAmwIHSOB3fHAJpWou3UYrmrbCpHakzuuxTjK0ZREx8qL6B?=
- =?us-ascii?Q?Fm4ivE3RSUFFdXajY6zKX0NPEFPGCfeq+GH0qw5T5DwjK/4ZV6mtbBr54ouY?=
- =?us-ascii?Q?XfBxWx8OJhR35NfBCw8mYJA5y75+IAb2iksAOgfLlYjtNPAtNCLspXMWzNap?=
- =?us-ascii?Q?Qyjvt1JsSYlK0f9KosHOkO8KjKSIiIDEEaQCJmbA1alqExRx10rsPQJvN+FU?=
- =?us-ascii?Q?1s0xYg68r87R890ZP2QbOKgS9g7QiEu/3/KCd18CebU2QnuC8TAtOfgyaiww?=
- =?us-ascii?Q?T0MX2gX5KqJgt3+RYdctizT17mL/ow/NyCLtqKeasnEnIhpJpTM8UaW/mebV?=
- =?us-ascii?Q?RTyXhQ2w1S21NH7PkZsVkpdJ4i6baH4HKzqrgKXT58nuhQCDad/mWbUe4wA9?=
- =?us-ascii?Q?tXM8ouqcbl/0WhjgxB3iQZ7gOsmBkX8+8TSg2Ifoh/CHCUYv77XfYz9H+wX7?=
- =?us-ascii?Q?dHZzS6TkZEb1pfCNuCaRDHj3apdbdb/Ch7TqpROx8pir0Vvx/hkGZA3U2BMh?=
- =?us-ascii?Q?Gda9pw6t596l3iQhNsTtq6nfQ1+YyiG66/g5Cr+s?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdbeb148-b06c-4b2f-e014-08dda4113168
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 09:13:10.9935
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UDPZvjaULCDCaaUQlRwFom/hbJP7vQWT3yQua2h9nsalG/x+QPwyz2SfWKIRgdM6GaOLmLVSTnLSEdKvt1MxXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10227
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] mm: gup: avoid CMA page pinning by retrying
+ migration if no migratable page
+To: Hyesoo Yu <hyesoo.yu@samsung.com>, janghyuck.kim@samsung.com,
+ zhaoyang.huang@unisoc.com, jaewon31.kim@gmail.com,
+ Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250605080436.3764686-1-hyesoo.yu@samsung.com>
+ <CGME20250605080628epcas2p24220eeceef2ae38feeee9d2c18515800@epcas2p2.samsung.com>
+ <20250605080436.3764686-2-hyesoo.yu@samsung.com>
+ <20250605083916.GA3770753@tiffany>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250605083916.GA3770753@tiffany>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Shawn,
+On 05.06.25 10:39, Hyesoo Yu wrote:
+> On Thu, Jun 05, 2025 at 05:04:31PM +0900, Hyesoo Yu wrote:
+>> Commit 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
+>> introduced an issue where CMA pages could be pinned by longterm GUP requests.
+>> This occurs when unpinnable pages are detected but the movable_page_list is empty;
+>> the commit would return success without retrying, allowing unpinnable
+>> pages (such as CMA) to become pinned.
+>>
+>> CMA pages may be temporarily off the LRU due to concurrent isolation,
+>> for example when multiple longterm GUP requests are racing and therefore
+>> not appear in movable_page_list. Before commit 1aaf8c, the kernel would
+>> retry migration in such cases, which helped avoid accidental CMA pinning.
+>>
+>> The original intent of the commit was to support longterm GUP on non-LRU
+>> CMA pages in out-of-tree use cases such as pKVM. However, allowing this
+>> can lead to broader CMA pinning issues.
+>>
+>> To avoid this, the logic is restored to return -EAGAIN instead of success
+>> when no folios could be collected but unpinnable pages were found.
+>> This ensures that migration is retried until success, and avoids
+>> inadvertently pinning unpinnable pages.
+>>
+>> Fixes: 1aaf8c122918 ("mm: gup: fix infinite loop within __get_longterm_locked")
+>> Acked-by: David Hildenbrand <david@redhat.com>
+>> Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
+>>
+>> ---
+>> We have confirmed that this regression causes CMA pages to be pinned
+>> in our kernel 6.12-based environment.
+>>
+>> In addition to CMA allocation failures, we also observed longterm GUP failures
+>> when repeatedly accessing the same VMA. Specifically, the first longterm GUP
+>> call would pin a CMA page, and a second call on the same region
+>> would fail the migration because the cma page was already pinned.
+>>
+>> After reverting commit 1aaf8c122918, the issue no longer reproduced.
+>>
+>> Therefore, this fix is important to ensure reliable behavior of longterm GUP
+>> and CMA-backed memory, and should be backported to stable.
+>> ---
+>>   mm/gup.c | 28 ++++++++++++++++++++++------
+>>   1 file changed, 22 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/mm/gup.c b/mm/gup.c
+>> index e065a49842a8..66193421c1d4 100644
+>> --- a/mm/gup.c
+>> +++ b/mm/gup.c
+>> @@ -2300,14 +2300,12 @@ static void pofs_unpin(struct pages_or_folios *pofs)
+>>   		unpin_user_pages(pofs->pages, pofs->nr_entries);
+>>   }
+>>   
+>> -/*
+>> - * Returns the number of collected folios. Return value is always >= 0.
+>> - */
+>> -static void collect_longterm_unpinnable_folios(
+>> +static bool collect_longterm_unpinnable_folios(
+>>   		struct list_head *movable_folio_list,
+>>   		struct pages_or_folios *pofs)
+>>   {
+>>   	struct folio *prev_folio = NULL;
+>> +	bool any_unpinnable = false;
+>>   	bool drain_allow = true;
+>>   	unsigned long i;
+>>   
+>> @@ -2321,6 +2319,8 @@ static void collect_longterm_unpinnable_folios(
+>>   		if (folio_is_longterm_pinnable(folio))
+>>   			continue;
+>>   
+>> +		any_unpinnable = true;
+>> +
+>>   		if (folio_is_device_coherent(folio))
+>>   			continue;
+>>
+>> @@ -2342,6 +2342,8 @@ static void collect_longterm_unpinnable_folios(
+>>   				    NR_ISOLATED_ANON + folio_is_file_lru(folio),
+>>   				    folio_nr_pages(folio));
+>>   	}
+>> +
+>> +	return any_unpinnable;
+>>   }
+>>   
+>>   /*
+>> @@ -2417,11 +2419,25 @@ migrate_longterm_unpinnable_folios(struct list_head *movable_folio_list,
+>>   static long
+>>   check_and_migrate_movable_pages_or_folios(struct pages_or_folios *pofs)
+>>   {
+>> +	bool any_unpinnable;
+>> +
+>>   	LIST_HEAD(movable_folio_list);
+>>   
+>> -	collect_longterm_unpinnable_folios(&movable_folio_list, pofs);
+>> -	if (list_empty(&movable_folio_list))
+>> +	any_unpinnable = collect_longterm_unpinnable_folios(&movable_folio_list, pofs);
+>> +
+> 
+> Hi David,
+> 
+> While re-reviewing the v3 patch, I realized that migrate_longterm_unpinnable_folios()
+> should always be called whenever unpinnable folios are present, regardless of whether
+> the movable_folio_list is empty.
+ > > In collect_longterm_unpinnable_folios(), if 
+folio_is_device_coherent() is true,
+> the folio is not added to movable_folio_list. However, such device-coherent folios
+> still need to be migrated later in migrate_longterm_unpinnable_folios().
 
-On Mon, Jun 02, 2025 at 12:09:02PM +0800, Shawn Guo wrote:
->On Tue, Apr 15, 2025 at 01:19:16PM -0400, Laurentiu Mihalcea wrote:
->> Add driver for this IP. Since there's currently no framework for
->> access controllers (and since there's currently no need for having
->> flexibility w.r.t the configurations) all this driver does is it
->> applies a relaxed, "default" configuration, in which all masters
->> are trusted for R/W.
->
->Just out of curiosity, is there any ongoing/planned effort about creating
->a framework for access controllers at all?
+Ohh, because we cannot isolate them ... and they are always 
+longterm-unpinnable.
 
-I was planning to add a generic framework for access controller, mainly
-for i.MX various parts for one SoC family. But I have not spent
-much efforts on coding.
+> 
+> I think the condition `list_empty(&movable_folio_list)` should be removed,
+> and it might be better to revert commit 1aaf8c122918 rather than adding a new patch.
+> 
+> What do you think?
 
-Regards,
-Peng
+Yeah, with that in mind, a revert might indeed be the better option.
 
->
->Shawn
->
+-- 
+Cheers,
+
+David / dhildenb
+
