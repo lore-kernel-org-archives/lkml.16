@@ -1,73 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3064A46BF
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9525546BF;
+	Thu,  5 Jun 2025 16:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749142136; cv=none; b=aGkjcufGmpXEgsrCItoBcoiyDByjes7x0BFPa+I3op+PBJVz3fEJ8rdmkj4JJpAZtLLthOzMIFDtNkoeWsoRYkKplfyB3swC3Q3xGOJxrFyWffnDc1V15bjXdOaMdjvs0TqPBesDXfyvustpvINFHn2dl1aaeAWp/ayZ2EWLsXo=
+	t=1749142157; cv=none; b=pP0Vk9DvU7Ne0rq1+wsXbKnj0Oy6XMuVfecsEH++wPC8V7UA2lVD9Mi+DpyUFcAIgC7FbhHtefpni6bYG1T9xECoQdJof4yZk4FHqKzW6xxz5eXIdi036RMjwpJ5nLkGgwZIEY5RBfTLw+4lHM/Epl0rQQRoWHacniTrmWy78ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749142136; c=relaxed/simple;
-	bh=564+cF/axRft9116ScwHN6MoAGhv4fCV2KyeaaSML0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=imIKo1sw6GsDB2cTpXZTQq1h4dpomVD8XKibOMPO5I1qhbh0rKMRpNVfX4bSp94udIKW1uzzBDR+dcL2Sc+2ksDflgv69Sx7qbluXZA/a1GibndCg1RA8xHlfaTmhSxacYFwt37gMt3ayFAc5kjzIC/wSzK+8NoJ51jJ6fwqdhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aGVWz6Ix; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749142157; c=relaxed/simple;
+	bh=5INK5Y26AD3T4VyspB8k2q0xzgY9rPqcSEToekV0KPY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jkHwL1KLdnxBWDHxKLhJLRJWJagajuP6t+GDTP+sSn/wpqguc3XSE+KVyps+o0jQk9/D2tISTs49GI4w7pdQTpbRlZsqh3UF9sYhViroI8ifkH6oNzIe9rS1a6lvgtRVvkLQ88fvJYb2jxAXISa2hz3sR86ks4V4MQAzSsjH4r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WBw36CIs; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aGVWz6Ix"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749142134;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=EhGEn/OmiPAvj5eatsAY05GMVNPxdCqcjhL6DIoJxjs=;
-	b=aGVWz6IxlA21uvx6k9dRUKJshGHZGRHgKMkdpi0ze5Y4fKSICX5Wes3uFvv+LyKPQEZRSc
-	xFnDDlvvkAet52/IDQ032pIELF1pMXCoAvwL3qDrt8ov2OcK6Mx4HyrvlpZPmmVS+Jwt2v
-	Eb2yr+nzsK7Jd6kmhoLlQgYribAJoBM=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-169-cewso51hPeG6Vj8g2P6TMw-1; Thu, 05 Jun 2025 12:48:52 -0400
-X-MC-Unique: cewso51hPeG6Vj8g2P6TMw-1
-X-Mimecast-MFC-AGG-ID: cewso51hPeG6Vj8g2P6TMw_1749142132
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4edf5bb4dso808273f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 09:48:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749142132; x=1749746932;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EhGEn/OmiPAvj5eatsAY05GMVNPxdCqcjhL6DIoJxjs=;
-        b=sLA/odpMv2S2qMQ9pEZN4MnYQjyvyFMpV/cs0F4VOIk6KIwo+lXvOUfLXBb/ybs7WU
-         uuZMQF9flecmJhiHRPe2x3RF6Y3I3ADnGceJg0cPLBgFUsKOuldfe7FvOoX9iWWyRXQP
-         AH8csMpyTRpK9SewntAcvCrhGM6SFL0aQ+vc62u5n36ID3A9z9oZpffVCzl82umb/gdV
-         oex2MFMru3OLmu/ZiezEig7B009j6bilDAQgo+jaD1WmQI6Of6CL6Hj9QYMRD2xEXI0t
-         GDKR//7CffR+iGN8NseOWQf+ZPZeHakSe2SXi+X3JcCQkRC7nfKfzxhvoIITCN6Gsnap
-         sqPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXjzY6lMJWpAesfBxgfybQ7xPgJ2R8JSNThhcwEjPCIcHDBy0kgb9F92xcgcngYLHFaNkDFBw5DmlEiPM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfuJSMa+auD9C0RH4QT/7mytVggXaM4TJmybuFnZlaTOjctcFe
-	CRoozlNNcw+bWCW57qd4snkyjCSyn2QLRjsqTQeLY130ESUQSUYjOfzr1lpfOYa9OlRv/su/FT8
-	FO/mDgFwL1ZLZT2GjxuZubp6wTIUgd+nDaE9n1aplH/NenZueDLnpnJEBjldIVA0MPg==
-X-Gm-Gg: ASbGnctC2g/QKs8b6Hk/9k7G5bs/46UK4F0SsTRUxV01V/DOjeJzq81ohk/IIUkc8fz
-	84svGcDuw3ZFmiH6WWMho4OIW9J6cuC7Wz0XUf4T/PcWXPQkjF8I6hkSII+nhbJS0qY9oJYUQs+
-	J6jtYsyj+nOZEm/q2pnKCqJs5MAAxsySq6473vHsIt4OXweHlZ73NRfAMuvuNRFNiJx/w+EZ6Tx
-	eTnLF0SkJ4tBUIy9nqTa1M5LOuqhcKcPk6wKLwio0/03fMeToU0HEgFQ0mzU+EVNAdU0G1T+Jn+
-	FNummpUfKAZYMPWbp01jzj1wHNxXbh9zfivTh3tOYHQ/EyB9PzdaR+Xv73XVR342ckVkzmU34iM
-	/GFFElks7n4qXlkZAN91mC78ZrweXXFoi0IeS
-X-Received: by 2002:a05:6000:310e:b0:3a4:ea9a:1656 with SMTP id ffacd0b85a97d-3a51d8f5f86mr6635497f8f.10.1749142131669;
-        Thu, 05 Jun 2025 09:48:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHgxIlZfdw0n7Ig7PNG5drsa3AppFPtd8J3xQjqrfGMh581GAlmBD6NseEqNRK10dz3UBK3gw==
-X-Received: by 2002:a05:6000:310e:b0:3a4:ea9a:1656 with SMTP id ffacd0b85a97d-3a51d8f5f86mr6635463f8f.10.1749142131235;
-        Thu, 05 Jun 2025 09:48:51 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2? (p200300d82f27ec004f4d0d38ba979aa2.dip0.t-ipconnect.de. [2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f99243e6sm29693115e9.35.2025.06.05.09.48.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 09:48:50 -0700 (PDT)
-Message-ID: <65862fd7-16ca-4d3b-a589-4389d8df324e@redhat.com>
-Date: Thu, 5 Jun 2025 18:48:49 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WBw36CIs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749142155; x=1780678155;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=5INK5Y26AD3T4VyspB8k2q0xzgY9rPqcSEToekV0KPY=;
+  b=WBw36CIsp1dc+/dGbZfwua9sx27fdLuAd4OaYvxQkaw6+4PWA1Jll5dW
+   9B51sfoV+swNnTrJR0q53p2CoSdSv5TfOCut9VfgAjhQOGJhr8qZR9UsP
+   4efbQCitOKa9GhPX0+xI8uGFvcCS2x8F8FctZTxgnrxBO2aEDuIkiJ+cV
+   5TDKG8yXOAh64OclFUBJcZJTCEw/oam4zH6bInjggauWgiWC20jYc7Fpi
+   JZfbUv3lGm7lGDZEg3fJO7IgGzAKujEB5qt9RpQw9isxuRG61d+cPvW5F
+   T89QkXCra/Mc3e345kQcZKrGucKC0bojyKsFoN/9ov1dl8kjvkDlllCcR
+   w==;
+X-CSE-ConnectionGUID: bowdD3t0QPO1lAO8AgnmCA==
+X-CSE-MsgGUID: vYcyL6KiRBefKwPxPFPLcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51347239"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="51347239"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:49:14 -0700
+X-CSE-ConnectionGUID: z59/7yAETauDjOJAs5oi3A==
+X-CSE-MsgGUID: f2pwzR7LTyqAqdzZPpkAig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="146152899"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:49:15 -0700
+Received: from [10.124.222.23] (unknown [10.124.222.23])
+	by linux.intel.com (Postfix) with ESMTP id 2C7EB20B5736;
+	Thu,  5 Jun 2025 09:49:13 -0700 (PDT)
+Message-ID: <24296383-f676-4bf7-8616-a4fba5b7ac57@linux.intel.com>
+Date: Thu, 5 Jun 2025 09:49:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,95 +55,312 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] selftests/mm: Fix test result reporting in
- gup_longterm
-To: Mark Brown <broonie@kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
- <20250527-selftests-mm-cow-dedupe-v2-4-ff198df8e38e@kernel.org>
- <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
- <722628a8-f3fd-4fb9-ae04-2313a52ffb36@sirena.org.uk>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v9 10/16] cxl/pci: Unify CXL trace logging for CXL
+ Endpoints and CXL Ports
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-11-terry.bowman@amd.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <722628a8-f3fd-4fb9-ae04-2313a52ffb36@sirena.org.uk>
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250603172239.159260-11-terry.bowman@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 05.06.25 18:15, Mark Brown wrote:
-> On Thu, Jun 05, 2025 at 05:00:49PM +0100, Lorenzo Stoakes wrote:
-> 
->> This seems to be causing tests to fail rather than be skipped if hugetlb
->> isn't configured. I bisected the problem to this patch so it's definitely
->> changed how things are handled (though of course it might just be
->> _revealing_ some previously existing bug in this test...).
-> 
->> Using a couple of tests as an example:
-> 
->> Before this patch:
-> 
->> # [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (2048 kB)
->> # memfd_create() failed (Cannot allocate memory)
->> not ok 39 R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (2048 kB)
->> # [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (1048576 kB)
->> # memfd_create() failed (Cannot allocate memory)
->> not ok 40 R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (1048576 kB)
-> 
-> That's the thing with memfd being special and skipping on setup failure
-> that David mentioned, I've got a patch as part of the formatting series
-> I was going to send after the merge window.
 
-@Andew, why did this series get merged already?
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> CXL currently has separate trace routines for CXL Port errors and CXL
+> Endpoint errors. This is inconvenient for the user because they must enable
+> 2 sets of trace routines. Make updates to the trace logging such that a
+> single trace routine logs both CXL Endpoint and CXL Port protocol errors.
+>
+> Rename the 'host' field from the CXL Endpoint trace to 'parent' in the
+> unified trace routines. 'host' does not correctly apply to CXL Port
+> devices. Parent is more general and applies to CXL Port devices and CXL
+> Endpoints.
+>
+> Add serial number parameter to the trace logging. This is used for EPs
+> and 0 is provided for CXL port devices without a serial number.
+>
+> Below is output of correctable and uncorrectable protocol error logging.
+> CXL Root Port and CXL Endpoint examples are included below.
+>
+> Root Port:
+> cxl_aer_correctable_error: device=0000:0c:00.0 parent=pci0000:0c serial: 0 status='CRC Threshold Hit'
+> cxl_aer_uncorrectable_error: device=0000:0c:00.0 parent=pci0000:0c serial: 0 status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+>
+> Endpoint:
+> cxl_aer_correctable_error: device=mem3 parent=0000:0f:00.0 serial=0 status='CRC Threshold Hit'
+> cxl_aer_uncorrectable_error: device=mem3 parent=0000:0f:00.0 serial: 0 status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+
+>   drivers/cxl/core/pci.c   | 18 +++++----
+>   drivers/cxl/core/ras.c   | 14 ++++---
+>   drivers/cxl/core/trace.h | 84 +++++++++-------------------------------
+>   3 files changed, 37 insertions(+), 79 deletions(-)
+>
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 186a5a20b951..0f4c07fd64a5 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -664,7 +664,7 @@ void read_cdat_data(struct cxl_port *port)
+>   }
+>   EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
+>   
+> -static void __cxl_handle_cor_ras(struct device *dev,
+> +static void __cxl_handle_cor_ras(struct device *dev, u64 serial,
+>   				 void __iomem *ras_base)
+>   {
+>   	void __iomem *addr;
+> @@ -679,13 +679,13 @@ static void __cxl_handle_cor_ras(struct device *dev,
+>   	status = readl(addr);
+>   	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+>   		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> -		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
+> +		trace_cxl_aer_correctable_error(dev, serial, status);
+>   	}
+>   }
+>   
+>   static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+>   {
+> -	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->regs.ras);
+> +	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>   }
+>   
+>   /* CXL spec rev3.0 8.2.4.16.1 */
+> @@ -709,7 +709,8 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>    * Log the state of the RAS status registers and prepare them to log the
+>    * next error status. Return 1 if reset needed.
+>    */
+> -static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+> +static bool __cxl_handle_ras(struct device *dev, u64 serial,
+> +			     void __iomem *ras_base)
+>   {
+>   	u32 hl[CXL_HEADERLOG_SIZE_U32];
+>   	void __iomem *addr;
+> @@ -738,7 +739,7 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>   	}
+>   
+>   	header_log_copy(ras_base, hl);
+> -	trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
+> +	trace_cxl_aer_uncorrectable_error(dev, serial, status, fe, hl);
+>   	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+>   
+>   	return true;
+> @@ -746,7 +747,8 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>   
+>   static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+>   {
+> -	return __cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->regs.ras);
+> +
+> +	return __cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>   }
+>   
+>   #ifdef CONFIG_PCIEAER_CXL
+> @@ -754,13 +756,13 @@ static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+>   static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
+>   					  struct cxl_dport *dport)
+>   {
+> -	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, dport->regs.ras);
+> +	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->serial, dport->regs.ras);
+>   }
+>   
+>   static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
+>   				       struct cxl_dport *dport)
+>   {
+> -	return __cxl_handle_ras(&cxlds->cxlmd->dev, dport->regs.ras);
+> +	return __cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, dport->regs.ras);
+>   }
+>   
+>   /*
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 715f7221ea3a..0ef8c2068c0c 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -13,7 +13,7 @@ static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+>   {
+>   	u32 status = ras_cap.cor_status & ~ras_cap.cor_mask;
+>   
+> -	trace_cxl_port_aer_correctable_error(&pdev->dev, status);
+> +	trace_cxl_aer_correctable_error(&pdev->dev, 0, status);
+>   }
+>   
+>   static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
+> @@ -28,8 +28,8 @@ static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
+>   	else
+>   		fe = status;
+>   
+> -	trace_cxl_port_aer_uncorrectable_error(&pdev->dev, status, fe,
+> -					       ras_cap.header_log);
+> +	trace_cxl_aer_uncorrectable_error(&pdev->dev, 0, status, fe,
+> +					  ras_cap.header_log);
+>   }
+>   
+>   static void cxl_cper_trace_corr_prot_err(struct pci_dev *pdev,
+> @@ -42,7 +42,8 @@ static void cxl_cper_trace_corr_prot_err(struct pci_dev *pdev,
+>   	if (!cxlds)
+>   		return;
+>   
+> -	trace_cxl_aer_correctable_error(cxlds->cxlmd, status);
+> +	trace_cxl_aer_correctable_error(&cxlds->cxlmd->dev, cxlds->serial,
+> +					status);
+>   }
+>   
+>   static void cxl_cper_trace_uncorr_prot_err(struct pci_dev *pdev,
+> @@ -62,8 +63,9 @@ static void cxl_cper_trace_uncorr_prot_err(struct pci_dev *pdev,
+>   	else
+>   		fe = status;
+>   
+> -	trace_cxl_aer_uncorrectable_error(cxlds->cxlmd, status, fe,
+> -					  ras_cap.header_log);
+> +	trace_cxl_aer_uncorrectable_error(&cxlds->cxlmd->dev,
+> +					  cxlds->serial, status,
+> +					  fe, ras_cap.header_log);
+>   }
+>   
+>   static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index 25ebfbc1616c..8c91b0f3d165 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -48,49 +48,22 @@
+>   	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
+>   )
+>   
+> -TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+> -	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
+> -	TP_ARGS(dev, status, fe, hl),
+> -	TP_STRUCT__entry(
+> -		__string(device, dev_name(dev))
+> -		__string(host, dev_name(dev->parent))
+> -		__field(u32, status)
+> -		__field(u32, first_error)
+> -		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+> -	),
+> -	TP_fast_assign(
+> -		__assign_str(device);
+> -		__assign_str(host);
+> -		__entry->status = status;
+> -		__entry->first_error = fe;
+> -		/*
+> -		 * Embed the 512B headerlog data for user app retrieval and
+> -		 * parsing, but no need to print this in the trace buffer.
+> -		 */
+> -		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+> -	),
+> -	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
+> -		  __get_str(device), __get_str(host),
+> -		  show_uc_errs(__entry->status),
+> -		  show_uc_errs(__entry->first_error)
+> -	)
+> -);
+> -
+>   TRACE_EVENT(cxl_aer_uncorrectable_error,
+> -	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32 *hl),
+> -	TP_ARGS(cxlmd, status, fe, hl),
+> +	TP_PROTO(struct device *dev, u64 serial, u32 status, u32 fe,
+> +		 u32 *hl),
+> +	TP_ARGS(dev, serial, status, fe, hl),
+>   	TP_STRUCT__entry(
+> -		__string(memdev, dev_name(&cxlmd->dev))
+> -		__string(host, dev_name(cxlmd->dev.parent))
+> +		__string(name, dev_name(dev))
+> +		__string(parent, dev_name(dev->parent))
+>   		__field(u64, serial)
+>   		__field(u32, status)
+>   		__field(u32, first_error)
+>   		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+>   	),
+>   	TP_fast_assign(
+> -		__assign_str(memdev);
+> -		__assign_str(host);
+> -		__entry->serial = cxlmd->cxlds->serial;
+> +		__assign_str(name);
+> +		__assign_str(parent);
+> +		__entry->serial = serial;
+>   		__entry->status = status;
+>   		__entry->first_error = fe;
+>   		/*
+> @@ -99,8 +72,8 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>   		 */
+>   		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+>   	),
+> -	TP_printk("memdev=%s host=%s serial=%lld: status: '%s' first_error: '%s'",
+> -		  __get_str(memdev), __get_str(host), __entry->serial,
+> +	TP_printk("device=%s parent=%s serial=%lld status='%s' first_error='%s'",
+> +		  __get_str(name), __get_str(parent), __entry->serial,
+>   		  show_uc_errs(__entry->status),
+>   		  show_uc_errs(__entry->first_error)
+>   	)
+> @@ -124,42 +97,23 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>   	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
+>   )
+>   
+> -TRACE_EVENT(cxl_port_aer_correctable_error,
+> -	TP_PROTO(struct device *dev, u32 status),
+> -	TP_ARGS(dev, status),
+> -	TP_STRUCT__entry(
+> -		__string(device, dev_name(dev))
+> -		__string(host, dev_name(dev->parent))
+> -		__field(u32, status)
+> -	),
+> -	TP_fast_assign(
+> -		__assign_str(device);
+> -		__assign_str(host);
+> -		__entry->status = status;
+> -	),
+> -	TP_printk("device=%s host=%s status='%s'",
+> -		  __get_str(device), __get_str(host),
+> -		  show_ce_errs(__entry->status)
+> -	)
+> -);
+> -
+>   TRACE_EVENT(cxl_aer_correctable_error,
+> -	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
+> -	TP_ARGS(cxlmd, status),
+> +	TP_PROTO(struct device *dev, u64 serial, u32 status),
+> +	TP_ARGS(dev, serial, status),
+>   	TP_STRUCT__entry(
+> -		__string(memdev, dev_name(&cxlmd->dev))
+> -		__string(host, dev_name(cxlmd->dev.parent))
+> +		__string(name, dev_name(dev))
+> +		__string(parent, dev_name(dev->parent))
+>   		__field(u64, serial)
+>   		__field(u32, status)
+>   	),
+>   	TP_fast_assign(
+> -		__assign_str(memdev);
+> -		__assign_str(host);
+> -		__entry->serial = cxlmd->cxlds->serial;
+> +		__assign_str(name);
+> +		__assign_str(parent);
+> +		__entry->serial = serial;
+>   		__entry->status = status;
+>   	),
+> -	TP_printk("memdev=%s host=%s serial=%lld: status: '%s'",
+> -		  __get_str(memdev), __get_str(host), __entry->serial,
+> +	TP_printk("device=%s parent=%s serial=%lld status='%s'",
+> +		  __get_str(name), __get_str(parent), __entry->serial,
+>   		  show_ce_errs(__entry->status)
+>   	)
+>   );
 
 -- 
-Cheers,
-
-David / dhildenb
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
