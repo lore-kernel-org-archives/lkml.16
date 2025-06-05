@@ -1,130 +1,150 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC19276045;
-	Thu,  5 Jun 2025 17:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917DF1F4701
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 17:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143402; cv=none; b=fTFdAwqMD+h2cGIiyX46sS+dEqprcII+WRM5VQrNKHgQ1IKRPIwLP2Mh5R/4mB1dLYjb5OnC9ed2f7NeD8ucSPual+1X+C1XhZPHmyFQA8WrtUGiOLIpkduLBdTv0azYz9lONX1yHvRGZksHGEownJsH/46Q18lTT2586CCDYQI=
+	t=1749143518; cv=none; b=beYfgKEA6p9s85wvGit/sDtBvU4Rl3ULwvBFZvrLLNWZbxDn0xNJvoRuNSZmp9L1wSzF/3QK4m0ZuqQ3D1WkYHFHMPYKC9JFXw4LyfPKMi5bO7WlskldvIG6CWgXkAw3q/O1Opx38lqhkj3lq1VJs7gegxBi0QglWg65fSgIEjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143402; c=relaxed/simple;
-	bh=auMUuETD4ITpFk5SP4iCYcakWo0OQqLMaKASDaIUUvs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AOb5g5VLhqbzJ5tm4N+zGAu2U6DHhvtnzKPfa9RlM51jLTWsISecQrsTxmOTt6b6q21gs3GnWtlixeTE8w8Lmh9oBdI3cgRPGL+jvk5TBtYTrPknfJzITKjehL2IpPsnyGfFVa4i6sZeQLMBFGIQXJ1NhnJkCuR2OPKOxcEke3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kPu19Se9; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749143518; c=relaxed/simple;
+	bh=VPsAJMShnkum23FOlcYAYrO6mPJpYIio8qbx3qLulTc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A7D2ml1XPIWvhAz+oVeNgc4eU97tgDkE4zXLcuBMMvEO2WfEfJlmBY6Tlr/tLFAknmQl36EVHEob79rOTQoTBMimJm6R+hiPfgKp2Cy/3xzRiA4t2Ovpp4Ev4zCAU4kcqmdvvw1O50L1EWbIVaH7R59ueoq6tCdqy8Ykbgu3L9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZ8KEY1F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPu19Se9"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad55d6aeb07so237388466b.0;
-        Thu, 05 Jun 2025 10:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749143399; x=1749748199; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TxfFzgtYBb4ft4C6Eic6I40ofbkTrFmHF3/vpqaw8aU=;
-        b=kPu19Se9cCW88x7FhAa1liU3l8YB12SmhnR1bUaQxrYIPZmlCLrz1ACAPEZPG3Y6jX
-         InbL+WkrWg4ADkx97NUSsXuprvHwXwmJugDcCeJSKPshWPQK/16KOWaPW+o37grs9NPX
-         CTkyz93GVG8CvgfkCRIzcr3SvJ2HqjU0ggbVTlYhy01dGiljEzL/X1t+S7q3a6zG0j/D
-         YeippREMxnSJn9nMvCDvYnYW0aH4CiCCIOWE5EUB+132RxLoOtrPTLawK7Ewt4B3XbL9
-         Aokqg82PNOiBzPQtyv8ao1ezwRaeASSC3I/1MsFGXuSY38wyHEPLyBtEG86nXGSsEsdo
-         65Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749143399; x=1749748199;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TxfFzgtYBb4ft4C6Eic6I40ofbkTrFmHF3/vpqaw8aU=;
-        b=Nm9rEoNCD1/l7eg1Ne8dUIr7OGlmjXI1Me3YCulhhNuWXutRPGOGE1eFGNX3KmLfMn
-         Rdo6t6lLvSU/sTzMc6FdqvhoFs/ADy+E2lWjBEc7JAEPKedBkQaYsUSmzPbBqJKLI0wN
-         DdeWOGMHeQF6ZQOiQQpygpVzowfwwiliKmDeIQx4f5WcyL6UYu3Jmn91vOnQAVvQAqQD
-         pVr4yzxWmrwR2zn1PVPh76NxZjPeNT1Lo1nSYvD8RczIBa8wdoCV3D5EjfqL3c+Qsbe0
-         KyBcL9sU0xJvANa0OeOBoJrWWyYEV35b5TI5htm9BfolIPOhjw7mgEqsenaaXArsFrDK
-         0Hug==
-X-Forwarded-Encrypted: i=1; AJvYcCW3F+MTQ+BaJpOPzJHnCZmwsixIPiZReLt1UhGp8TvxdrN8Z5zdaZewcj1bK7XctSusGoNqNuULAvK7C9s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG5KjMq2xdy9swxRsL25W9uhkLsb8gx3fzoYmeBGmS9s46Q7sc
-	zSB+i7pjcNzfjsH/adwbnMMk5bwDUSDtZEBzcsNAkOaxrV1c0vJP2Oze
-X-Gm-Gg: ASbGncsWESo3FB+RZ3vHrhaj3vC3e1J4tFchZSWVkiEfqDo3GdP9+hg5rMRYkD5UBwS
-	YHWdjv18wGY6/mJVAWakPcA24Vuoy0j2ccaWGSqiEFE5w2OXwtMLm/nu9n2UE74xnK3a8nLfLzy
-	e3yqjcD9oXwBO4PxfjOt2A15B9s5aNc5aVNeD0J0Br9IWrWkVGwcJbSeYFczaTfv3tSw5ZuvXpJ
-	wit0rq3lQVjTphCITbZvZPOG5nxZSDkBp2hTL78yT3HdAuK11Ok2X+k6zDbqL/qA6U0nMIBg4dA
-	XlKyKDDia1a4TERsjOaPxLF9tNfSIOjp+2R6imFzu6vEpTRvxibAnjEabSr+ZFyi1xgzs+M=
-X-Google-Smtp-Source: AGHT+IEsVOA0auJUk6exuoLdSdDwFOdG16tI4HMOQvczbyt6qahPlfzvc6AhMJLJW1WcX8/cbwF+CA==
-X-Received: by 2002:a17:906:dc8e:b0:ad8:ac7e:eeb4 with SMTP id a640c23a62f3a-addf8ebb59emr683586466b.37.1749143397574;
-        Thu, 05 Jun 2025 10:09:57 -0700 (PDT)
-Received: from [10.5.1.144] ([193.170.134.247])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5dd04537sm1303953766b.92.2025.06.05.10.09.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 10:09:57 -0700 (PDT)
-Message-ID: <c42f77c3-d263-43e4-ab37-856c2398c5e1@gmail.com>
-Date: Thu, 5 Jun 2025 19:09:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZ8KEY1F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E6CC4CEE7;
+	Thu,  5 Jun 2025 17:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749143518;
+	bh=VPsAJMShnkum23FOlcYAYrO6mPJpYIio8qbx3qLulTc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MZ8KEY1FI3aFivdxmS7v0djgk2VpJnaC42fl+leC/Zl18zX+AGyshM3gDqhXeufJy
+	 omlf7gLJ2ExTjIpEx5foYIX+0tQw3jbHQHTWDgYqQPlcou2pXsHFH7SAmlXNM0WFLZ
+	 umbmzHnQykgrTLVgDoc2e4CUuHoWoO8gQQ9FrmfT5Dv4DW8V+Yh7rXLyqpZH+76Nm+
+	 SnODbW3kndfYmOXL33LHBAvPwuHp7Ld5nvpzAcTCXc2vbD9p5qlRQZRlFJwC/HLXIw
+	 X7QYxW2cgJ9bU/Yro+k4A63ZFedpSKo4+MeYy8ETFSIYNUBDaFOAKVEKtWoSCnOhQW
+	 G9ayP+IVU24fg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>
+Cc: Pratyush Yadav <ptyadav@amazon.de>,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH] kho: initialize tail pages for higher order folios properly
+Date: Thu,  5 Jun 2025 19:11:41 +0200
+Message-ID: <20250605171143.76963-1-pratyush@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rust: pin-init: examples, tests: use `ignore` instead of
- conditionally compiling tests
-To: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250605155258.573391-1-lossin@kernel.org>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <20250605155258.573391-1-lossin@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 05.06.25 5:52 PM, Benno Lossin wrote:
-> Change `#[cfg(cond)]` to `#[cfg_attr(not(cond), ignore)]` on tests.
-> 
-> Ignoring tests instead of disabling them still makes them appear in the
-> test list, but with `ignored`. It also still compiles the code in those
-> cases.
-> 
-> Some tests still need to be ignore, because they use types that are not
-> present when the condition is false. For example the condition is
-> `feature = std` and then it uses `std::thread::Thread`.
-> 
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Link: https://lore.kernel.org/all/aDC9y829vZZBzZ2p@google.com
-> Link: https://github.com/Rust-for-Linux/pin-init/pull/58/commits/b004dd8e64d4cbe219a4eff0d25f0a5f5bc750ca
-> Signed-off-by: Benno Lossin <lossin@kernel.org>
-> ---
+From: Pratyush Yadav <ptyadav@amazon.de>
 
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+Currently, when restoring higher order folios, kho_restore_folio() only
+calls prep_compound_page() on all the pages. That is not enough to
+properly initialize the folios. The managed page count does not
+get updated, the reserved flag does not get dropped, and page count does
+not get initialized properly.
 
-> 
-> Depends on https://lore.kernel.org/all/20250523125424.192843-3-lossin@kernel.org
-> 
-> ---
->  rust/pin-init/examples/pthread_mutex.rs | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/rust/pin-init/examples/pthread_mutex.rs b/rust/pin-init/examples/pthread_mutex.rs
-> index 6c4d18238956..49b004c8c137 100644
-> --- a/rust/pin-init/examples/pthread_mutex.rs
-> +++ b/rust/pin-init/examples/pthread_mutex.rs
-> @@ -139,7 +139,8 @@ fn deref_mut(&mut self) -> &mut Self::Target {
->      }
->  }
->  
-> -#[cfg_attr(all(test, not(miri)), test)]
-> +#[cfg_attr(test, test)]
-> +#[cfg_attr(all(test, miri), ignore)]
->  fn main() {
->      #[cfg(all(any(feature = "std", feature = "alloc"), not(windows)))]
->      {
-> 
-> base-commit: ae8b3a83fb9de394f609035041cd7a668fda2ab3
-> prerequisite-patch-id: 8d7ade67c2e5189bf8a2c91253d925e25744cba5
-> prerequisite-patch-id: 0ebbd4a86bebeff23257870db92a1b0fe017c481
-> prerequisite-patch-id: 1437fc7adeff6e13abd433594da923272b9388bf
+Restoring a higher order folio with it results in the following BUG with
+CONFIG_DEBUG_VM when attempting to free the folio:
+
+    BUG: Bad page state in process test  pfn:104e2b
+    page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x104e2b
+    flags: 0x2fffff80000000(node=0|zone=2|lastcpupid=0x1fffff)
+    raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000000
+    raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
+    page dumped because: nonzero _refcount
+    [...]
+    Call Trace:
+    <TASK>
+    dump_stack_lvl+0x4b/0x70
+    bad_page.cold+0x97/0xb2
+    __free_frozen_pages+0x616/0x850
+    [...]
+
+Combine the path for 0-order and higher order folios, initialize the
+tail pages with a count of zero, and call adjust_managed_page_count() to
+account for all the pages instead of just missing them.
+
+In addition, since all the KHO-preserved pages get marked with
+MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
+actually set (as can also be seen from the flags of the dumped page in
+the logs above). So drop the ClearPageReserved() calls.
+
+Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
+Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+---
+
+Side note: get_maintainers.pl for KHO only lists kexec@ as the mailing list.
+Since KHO has a bunch of MM bits as well, should we also add linux-mm@ to its
+MAINTAINERS entry?
+
+Adding linux-mm@ to this patch at least, in case MM people have an opinion on
+this.
+
+ kernel/kexec_handover.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
+
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index eb305e7e61296..5214ab27d1f8d 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
+ }
+
+ /* almost as free_reserved_page(), just don't free the page */
+-static void kho_restore_page(struct page *page)
++static void kho_restore_page(struct page *page, unsigned int order)
+ {
+-	ClearPageReserved(page);
+-	init_page_count(page);
+-	adjust_managed_page_count(page, 1);
++	unsigned int i, nr_pages = (1 << order);
++
++	/* Head page gets refcount of 1. */
++	set_page_count(page, 1);
++
++	/* For higher order folios, tail pages get a page count of zero. */
++	for (i = 1; i < nr_pages; i++)
++		set_page_count(page + i, 0);
++
++	if (order > 0)
++		prep_compound_page(page, order);
++
++	adjust_managed_page_count(page, nr_pages);
+ }
+
+ /**
+@@ -179,15 +189,10 @@ struct folio *kho_restore_folio(phys_addr_t phys)
+ 		return NULL;
+
+ 	order = page->private;
+-	if (order) {
+-		if (order > MAX_PAGE_ORDER)
+-			return NULL;
+-
+-		prep_compound_page(page, order);
+-	} else {
+-		kho_restore_page(page);
+-	}
++	if (order > MAX_PAGE_ORDER)
++		return NULL;
+
++	kho_restore_page(page, order);
+ 	return page_folio(page);
+ }
+ EXPORT_SYMBOL_GPL(kho_restore_folio);
+--
+2.47.1
 
