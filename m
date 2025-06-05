@@ -1,108 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A9827CCCD;
-	Thu,  5 Jun 2025 19:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D791F3FE8
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 19:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749151796; cv=none; b=Rnyt8cEIfE3jAMwEX2n91wIcwUzAixYfLUEWqCh1xy8EU+/18blJD2ptStaa+nY9Xq9NvDM5jcIbKGcbOAeeB71Otx+3l5qL/zJGQGr5JNKm6vXl1SvUDAlnFVRQ/mkqjDx7vXyQWz54+JOja/2/WRjPr8zz6waQwpfHqMgbW0I=
+	t=1749151842; cv=none; b=Ml6/DWsSHwKWxKtpzncTbNQxK62oOSZM7vziCYCFZjY9GFU0JcztdiSnRN683Hx2U3C1VN18B1AEY0MT6pDOrhgUbsfragxTrz5o2/xaQ5mtOfp7GjmIM2wm1405sUjffbASZqOEtwamEkqvABRHoi8fKL+fIUr4UkUQDb7yFz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749151796; c=relaxed/simple;
-	bh=KXHyUh+OtRsl2pelaAJoE/6mIIAsOHMnaVL2nVOHDwc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pe4s8u5CutbTK2MJecWdISAW6P8yNoZWEf9aL4041GlErlR7nNMiP6M/1D95eWBXgoH35dPiShcHIJnmoCnF8i7jlq8AnPq6GVZflhi0gq4wEUwKy8NQrxT1VrOHIUoe7mq4pgUDcEUu5CGlr2hbSr5SvDxgQANW7pvGoRlkHVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0By54sI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749151842; c=relaxed/simple;
+	bh=4bez/oFMMRphE1ZaETQJAwo7TME+jkXPNxEhPzOy0tU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KQbozdWZwZBuJXqrtPiCmtqZrBSGFYGZuZB/kNjZCvqCl/J0klv0DZXRv9nOfe7iUPWMoKENegfg/aZ2IsrMM9sg6guQ/DzqXobhRf7w4/WzjseonRRP46X58aZ32iiFqcoJ8zZLES9XhRnP10OZ0eVLFAHJ1Smtmg2a7/rAFgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cEHuK3ai; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0By54sI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EBDCC4CEE7;
-	Thu,  5 Jun 2025 19:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749151796;
-	bh=KXHyUh+OtRsl2pelaAJoE/6mIIAsOHMnaVL2nVOHDwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U0By54sIwEk2LjzqgjimW1UX3NrTsZhnPrhqgr01hNZDIuTeq0Aon61FK9FBZyUE6
-	 fgfi5zwRkms+MsvEtKLTJ80poWuOCg6kHKvBnu0EVIYx9MzQZIT73ir5gI/MNKoda8
-	 s0ZeYqNN2l3oQQnHd9yv3GyeN/FL0XBrEDcxX8jM0im2DyDKardPTXHuQQDE4XjWIw
-	 blmDxRLmFy0dVZMnF5j4o0tCMURfHhVgWTxOdySfYdRaLOqOkNgce8qQ0UrePD7sVn
-	 WGscio8Yn10xwdVY4nNggx/jW65L5qJayHK5BPNfocWIThynJrhpuUXH9qydFxSi+g
-	 0po1MX+htDcIg==
-Date: Thu, 5 Jun 2025 14:29:53 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@foundries.io>
-Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>, 
-	Doug Anderson <dianders@chromium.org>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] soc: qcom: mdt_loader: Ensure we don't read past the
- ELF header
-Message-ID: <4ruhapzeti5hiufdkws27w2q3h4psfcpmcfsqrhsnyr2u4sktp@5itmiqxydwrj>
-References: <20250605-mdt-loader-validation-and-fixes-v1-0-29e22e7a82f4@oss.qualcomm.com>
- <20250605-mdt-loader-validation-and-fixes-v1-1-29e22e7a82f4@oss.qualcomm.com>
- <bsnn6xpkubifuwxz4kccvves3ifq4ocp53qmbobv6ilmnfuh7x@eejawp7thorm>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cEHuK3ai"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235ca5eba8cso35235ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 12:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749151840; x=1749756640; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5pN1olzhc8CpHBBm4iUpbGCBLbnl4LANGlw1FJXE83E=;
+        b=cEHuK3aiwA/A1+KqbfY/WFSEgi7u361u5VWWDTfmz/p1dN/lCysLAL1SjxVOZP65Wd
+         jsLlMgJ8mfNAzj+nbgajmcM4iRBWfigVF3HHCyYxmLapP1EDo6grpm/hGVFH1asV2+EA
+         Q9zG3bnLxe98/ljK+QUVxmC+50MPmgpPptreCkygvHcPUK6CtuQS/wTOJMiFrwJFxpV5
+         UpS6RqfpAFnLEacdMZaUnS8ny36Ie9ilDy/A60yc96POh6KKIrIBUe8QRZdsJwZ1CAmH
+         oDrsHDWwLUx3Qe1I9PdgswTflPAZPZszd4Yt0eheY/w5AETidHIu4zitRorrRII2lchA
+         qQSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749151840; x=1749756640;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5pN1olzhc8CpHBBm4iUpbGCBLbnl4LANGlw1FJXE83E=;
+        b=ErdT4gJizv7V6otzoUMtP8vGA72TOcrzpJV4HNa86kBvoWiuSlMyggeJiptulJtU7o
+         J9fxVj15MhF0Xa0WAvrzdxc9y3DOFwj/RzKiy6ofanHiIcZKMJlk1FAYQwncWejR7U86
+         ONs/xqIZAXK5Kg29b4KYwjqmsnJ8dBmaiYRjWzz2RoqqY1XZghcaTYH5kgu9UcKVYbw4
+         k3ra2lqK+gDsSuuR4AR0KiZuRZb1HSFdOOeKmQvA4SuclPVREAYXss67RwKqvYCjXMrk
+         EtKDNBFhcY9il6J8APEaDuRH9vx5IZLniklGTixpijO0nZrdoUayhj6wNVwsScM7j1+M
+         BA0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUdNHaTEAL/MdY/IsF3v8QXRuUnoNhhiC9Ww8UUM+wjwAeZjEs/3RZpBzc/VD/GlGpK2UpwE1Dpor8ivWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJf7vvR3nUxwb1gLoeuhqcoa+bDheRwpr2GeNVUZOcvjK36loa
+	ZyR4F5lCCZPKK5ryJbPdGr8yOkgHKgpA17zDGuNBKmgTzELrcUdNvF7KQ0tFdmqOAweI5FunoO1
+	dtwm2ovvhz5WO/i17lUrhAI27rnHthZsBpPJe6epi
+X-Gm-Gg: ASbGncvhiUzmgkm8kenIicrWvZ6NuDb9TE0A6ZhKRil8YESssG07qfxaYd4AQhSy/rZ
+	kSwZx/x/p7p2T0k9UtXdpjrJxyycL7Pb0mMi7BhCZNnbXl49TANjGtAJlT3Q8rlvP3aKH48z5NE
+	TkNz8Uk78sTIAWtKCb0UdcoLcbMou9C2633Xr2IqLXoC3W
+X-Google-Smtp-Source: AGHT+IEZUo2qBBR9yZ8J8CWB7wPiYJhomLFn0SMyc3wIzCJ11kpp39ohznAmygfJ0IG/GUGi77IY7bYTMNdUf1wHq7Q=
+X-Received: by 2002:a17:902:e747:b0:216:7aaa:4c5f with SMTP id
+ d9443c01a7336-236024df8e3mr312825ad.3.1749151840320; Thu, 05 Jun 2025
+ 12:30:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bsnn6xpkubifuwxz4kccvves3ifq4ocp53qmbobv6ilmnfuh7x@eejawp7thorm>
+References: <CAHS8izMMU8QZrvXRiDjqwsBg_34s+dhvSyrU7XGMBuPF6eWyTA@mail.gmail.com>
+ <770012.1748618092@warthog.procyon.org.uk> <1098853.1749051265@warthog.procyon.org.uk>
+ <1099957.1749052763@warthog.procyon.org.uk>
+In-Reply-To: <1099957.1749052763@warthog.procyon.org.uk>
+From: Mina Almasry <almasrymina@google.com>
+Date: Thu, 5 Jun 2025 12:30:26 -0700
+X-Gm-Features: AX0GCFtaQpHTxx8RriEcyQWAS8xO0zGQ8-djOws2dAzyDrQGK3gSIIJKsqf3Vq4
+Message-ID: <CAHS8izPOonh6E3B+xHRSsfXpo_jHXymVyNOZOUc_1LjOtT9wow@mail.gmail.com>
+Subject: Re: Device mem changes vs pinning/zerocopy changes
+To: David Howells <dhowells@redhat.com>
+Cc: willy@infradead.org, hch@infradead.org, Jakub Kicinski <kuba@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 05, 2025 at 06:57:41PM +0300, Dmitry Baryshkov wrote:
-> On Thu, Jun 05, 2025 at 08:43:00AM -0500, Bjorn Andersson wrote:
-> > When the MDT loader is used in remoteproc, the ELF header is sanitized
-> > beforehand, but that's not necessary the case for other clients.
-> > 
-> > Validate the size of the firmware buffer to ensure that we don't read
-> > past the end as we iterate over the header.
-> > 
-> > Fixes: 2aad40d911ee ("remoteproc: Move qcom_mdt_loader into drivers/soc/qcom")
-> > Cc: <stable@vger.kernel.org>
-> > Reported-by: Doug Anderson <dianders@chromium.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> > ---
-> >  drivers/soc/qcom/mdt_loader.c | 37 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> > 
-> > diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
-> > index b2c0fb55d4ae678ee333f0d6b8b586de319f53b1..1da22b23d19d28678ec78cccdf8c328b50d3ffda 100644
-> > --- a/drivers/soc/qcom/mdt_loader.c
-> > +++ b/drivers/soc/qcom/mdt_loader.c
-> > @@ -18,6 +18,31 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/soc/qcom/mdt_loader.h>
-> >  
-> > +static bool mdt_header_valid(const struct firmware *fw)
-> > +{
-> > +	const struct elf32_hdr *ehdr;
-> > +	size_t phend;
-> > +	size_t shend;
-> > +
-> > +	if (fw->size < sizeof(*ehdr))
-> > +		return false;
-> > +
-> > +	ehdr = (struct elf32_hdr *)fw->data;
-> > +
-> > +	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG))
-> > +		return false;
-> > +
-> > +	phend = size_add(size_mul(sizeof(struct elf32_phdr), ehdr->e_phnum), ehdr->e_phoff);
-> 
-> Nit, this should be a max(sizeof() and ehdr->e_phentsize.
-> 
+On Wed, Jun 4, 2025 at 8:59=E2=80=AFAM David Howells <dhowells@redhat.com> =
+wrote:
+>
+> (Apologies, I accidentally sent the incomplete email)
+>
+> > I think you need to modify the existing sk_buff. I think adding
+> > a new struct and migrating the entire net stack to use that is a bit
+> > too ambitious. But up to you. Just my 2 cents here.
+>
+> It may come down to that, and if it does, we'll need to handle frags
+> differently.  Basically, for zerocopy, the following will all apply or co=
+me to
+> apply sometime in the future:
+>
+>  (1) We're going to be getting arrays of {physaddr,len} from the higher
+>      layers.  I think Christoph's idea is that this makes DMA mapping eas=
+ier.
+>      We will need to retain this.
+>
 
-Hmm, I forgot about e_phentsize.
+I would punt this to a follow up project. Currently the net stack uses
+pages extensively; replacing them with scatterlist-like {physaddr,
+len} sounds like a huge undertaking. Especially with the conversion to
+netmem_desc happening in parallel with Byungchul's series. Just my 2
+cents.
 
-But the fact is that the check matches what we do below and validates
-that we won't reach outside the provided buffer.
-If e_phentsize != sizeof(struct elf32_phdr) we're not going to be able
-to parse the header.
-
-Not sure if it's worth it, but that would make sense to change
-separately. In which case ehdr->e_phentsize * ehdr->e_phnum would be the
-correct thing to check (no max()). Or perhaps just a check to ensure
-that e_phentsize == sizeof(struct elf32_phdr)?
-
-Regards,
-Bjorn
+--=20
+Thanks,
+Mina
