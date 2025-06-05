@@ -1,236 +1,125 @@
-Received: from sonic312-24.consmr.mail.ne1.yahoo.com (sonic312-24.consmr.mail.ne1.yahoo.com [66.163.191.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56CD276026
-	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.191.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D5F1552FD
+	for <linux-kernel@vger.kernel.org>; Thu,  5 Jun 2025 16:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749142678; cv=none; b=In9lPpu2kufcyAyVVb6NdmK/ED89hVLajgu6TdTY5caxE3nJglFkG0WZcmyWUCRoXEWk4pBAWu8L6Jl3VcM3Vtb+EzYo16ZEe5wRWxJB+CFmvxC9eGA1QA4EpwEZi5CO8dtVq9ulfZRnwT/hpyKIsjzJzlUM4qoIB+E4v8KfOQY=
+	t=1749142699; cv=none; b=X6lbDqjda18KmYZchFU5vkcAjmdCU30sBByfskx/ZwyZiLde19NwO8OKXaOA4eg6UoPC7C3ZwJSkhU7zD1SOQPNcl7CsbXTCs4zPw/Iz/TPe4CSKuN9ADKZDCBkBjS3zkEi+8SWmTceHIhdxSN8t5b5yUqdf23RlyaztckdCveQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749142678; c=relaxed/simple;
-	bh=Se4lCUBfbvGUn11s4S6E/U27wBzXoxFTAw4Zl9wtOuY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JjKd6lizZRMxv7tCc7vb+6fdpgZIcsIiuLLSB/MoGUEHalr7tf3ZzZv+QwYS68cnEdXCmQCr1rXhQ5Aax8z2c/9VIzv7y3hcptQnvHguFj9UBLH/qaDfsalhPLGH10hyBbLA/V08u32OaJuSU6CuKNOGxQOkSzjBKIYvB1w0dMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=uWK3Yz1G; arc=none smtp.client-ip=66.163.191.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1749142699; c=relaxed/simple;
+	bh=VBjxNJjQgs+ucg+s3d+qPGpwzIFzKdP+cYHvcC16z7U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sxRz5MxmO2MWEgIwDZ0dcYHPfENhdK+f5m/GY0VxdJ+nCkxzpSh/eQtBZ9gZQuLOXLPppGwDOL38IVfpeU4Hs/4yYiFgNw75RoqBkb6nJbGW5jJ0Bf+N9pRw/AqilIt6UtC5i6/ziN8vTlCkIk83riUXBY/mut1aDjF+2HcKEjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ccv1deIX; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="uWK3Yz1G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749142676; bh=S9xyrmw89L7efj2UYVH5a+PMETFLh/nhQ4bVH6JaxCo=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=uWK3Yz1Gvmx/rlC+ek/9+XLoHnBBgBE3ouYOp7vbKYeTh5VtHY5Qk5w4JPmPmMzAihUUK4BFTvsuz8S7ebGzdmj/Qu5H4I2/XVf5H7HMhe/AhIBaU3YcRYmUkmCPXgkJPPm/Jo2MP/MJomhsbmrrJgFS/1mJcqjpe+PDkWcLyBq+bvYpMMh3L6HTxLSH5AQECEcAzNS4X3ZympU3QTrHNzWALyFCzjDfnLmZmm+xJMPnkpbhk9RfLxwAuzy/0wxhCwpFFWtvnFwvJDiKD4NpAndxs03niLyPa6AruoVFHv5M4ZSkp/VbImliNRzz5TGzhD0UBiq8ahSLZjj0yYMBIQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749142676; bh=vrqyb1JIu899nQ3aN4j+U8temFosmg5d2n7vwnSVk/Q=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=o9nlkL3nb+NPnR5IoGq+GCjrV9eXH8UQruPsELxgXLhp/zxAPjIg5KcdKlyj7hWGDpMbaXOEpK7jbMZOiDlakRjg7HD+pHW3zeKXFS9LxtzYTHqDS+1qBXKp2xG9vCmhVSqd6J9Nk2Ua3ep7NjV/bxo0M0PdW1grUp4MxV43myYo6NtAUFmds32rH2jh0S1pAyxlLWKiKEfYspM+0cOlXVn6JgTh5w7VH7ht0P0iABmIa9x1or8SznlZE3ionhwEdZhdg8uDl1IUNvhz60BXdnLaYrsXdYJfmcsAkRO0adBG3zJK+DCz/Jkcu9RVXUAg4xZ0t9x3wS+wTAbtuk8Lqg==
-X-YMail-OSG: QFNIsLEVM1mqoF7iwn5REm71RGrFrfpkmo.PUXNRvSpoz6r1XVdmfQmkwLrXD3Q
- RX_ivAtcyUkxFRJJnvOADjvekpEoOgbvNWgl4KTu56TxvIZdG34nbVhwpBYo36F2Q3sXzjQANiV2
- LIz0anEhqJNZpopYEWNnjKkh9fuRJuZM405cASisd.RIrjSrqXNS6EQnq.0yP.OrIpcbqs5z1Xav
- ZBvDQK0QXp0sVadLK.nMXLC.6qr4w2ypbWkLQ__u5d9LcS0MDcOnWpr8bB.gzmH.YkkWny12Hk_s
- GkeC0Zt8iuUW7MK8A5mt8U0R.cIgKiH0wxM4NdLkH_dy0HirMbTCibcW.8lw1NCNtsh6U_M.MkAS
- N_i9lIwIkOuspdve.NzGBn6JnWcxWR4b0aPZ7C4LPuAfi9.e0Dy2WdG6rQnbUjq_D5.K_x8k5JAW
- qvpeSUs2S7VN9lB00UlDnLbJcYECgiExS3CrvYVqbREMTNkloSLKMZpSjNkee8saXM8WkJmWhOeL
- Iy9hvSGFDMbv6zZyfvc8x2EP5_zShrGaOEk9pJ3eIReeGyQwFCWiycWYevvuo8lKASg8fwjAzNtg
- onQSx8Q_4HcwfHI551Pvz9osMHiRoXi4TyH3joqA2FEPzlXkns2PmW2LLyzVX0Vuy880xTOjT1Y3
- BE.5Ke7fjzIc9a1Z86_fJVJw5IbKoBTwLF3VtIF0pEcdFOuPtrYL7sW9_VcKC_f8X6ek3vgoSx_y
- wrh1z1ZsYFrolRguzm7SWlnO_rzfWeAAhE_kBkS3A2wHiVXXsoXXqDFgU9cPrwTwGFW0UTsobBg0
- 9kDh.UjeOe5YGf_vbIdfxs5mXB0wdA8a.xKZWxOiDoaWpgPKgZMWb4rpcfiB6fyhUJLxz2AqEMe8
- TVNFmKHgPPkv0I6piIAkkIzijt72B94ADS.520wZWmpe7Yi9QeB3xdwl92vgxkWL9g7OIa16GVzk
- TvFyAlZdMPpUMC2Fq0Kb9yXE6UF01jQ1ThJsC_Kfu_UjEYbZfYIR6nDfiVhQBxHjIP9SGO3OYVli
- u8PcNYPMu0HKhaE6yJIqa_S.Y0ncBSpFczMAyWSa_tkrfTvKa5XXF.k_XTvss3CzoLkfNcgQP86l
- 1UEabv_QOkYDaHZr49BBwacHA0jP_bNh9e0gPdJyLz2wjvvx7EmD.lHLLoaqdHhTIZkPjZBzbmn_
- NxYs96oHCfXsqQWa3yXCkX89ggkaubvv2KNPGk_oH350skRyTYz.X.E51PtVHmF2aDO.1rL3uEud
- RyIyGFE35yRU0v96iu7f0hSKHPmjj1yRJiYtihtKkJ6S4_GZ2W5bcFnJnvMBbZnVIxwEar.oFO_b
- BC0yy6khmGqymWTIy_8QOn23COpxMyJDGRdUQ89cBCtDePNtZWwT_W9UOhoq1XyQbhG5ey9xMuv6
- mROMsztHB.9sForSjzDAdgm.Fu8dh0aMxTPiWZtG6nI0NqQckC4ve5dl5abJSF3BFLaoGQXB5lX2
- tJ7K0jMq3bfxqXWvMbJjcCCx3FGX6yIPJPHenoVkZtZn8m1ud1G1zlj2xBmXc_7RHQ_MY.kk7ec2
- RV2FTnlkIKpIkWCGPlypPfWhtI0UCvPHaXYYESLe20AlRZj7MbVZ7QZoyDPe0XNqKMC_MMrAves0
- XIqk_f8p0DzT4YYAqxfTddQ35_UUcJfBOJYEjeCUOYSHOqm_eAB4rJZiSfu.ucmw6yZPB5CZk7Kf
- KwYtjuayJmOwkfORE4_LlC2qhF0SXqPiwmnRoiX2K5WpRgrTdt.DM4eRsfARLU093YmB9oLS2nJi
- oWP_by4C.mCWXg_XF4prul58qAxA4PP0zzqrlxEs0MDSvqs6PRTauFD6lRq1NLkvrMDrTvhzkCIw
- PR5wrkLDbJC91jHQh9dZev97yKbavrtoFuS2ez5sPNR5VO_qTNzxrfXFjijeQkSXjEil.4sVP65h
- KZe76DbFvzHMQu2vW92GRhQ5GSasXoWrjcHsMcX3EAqFjnI2mJSeucnFxHAdcVESo8cnWavonaZm
- b3E_yzClCuY5Ea0b2kBmDRds5qwG_tD5n56EZbxxlyeZG4SMahjnENhjOaDEpZfKNgB8DTh8Rru0
- ewdaqImohahTlrZarj1g0wSKQD3.5l0LrwD_FS5Xusqdqgd3Y6yFZrJXz7pulvTmKsd9hV5cbgF_
- ieljg_4C8pYcsGs9.QwWlkybJN9.Bd16izDwSHQMlbuhlxcKqtEz8hSGdwscw4Hjsz7TDQDVkT1I
- 3CH.1kNwYXviPicTUzdJWL.pvfXLfxFClgQD.3b1L9Ps.m6E0GJk1NT5oGJP_KFjom7Q83GE407X
- FGGr.Afo-
-X-Sonic-MF: <igor.korotin@yahoo.com>
-X-Sonic-ID: a01551b3-4643-4ab3-9acf-f5730c6599c7
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.ne1.yahoo.com with HTTP; Thu, 5 Jun 2025 16:57:56 +0000
-Received: by hermes--production-ir2-858bd4ff7b-rsjdf (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 1d1e6bdcafa85f1c72d86546e65fd43d;
-          Thu, 05 Jun 2025 16:27:31 +0000 (UTC)
-From: Igor Korotin <igor.korotin@yahoo.com>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	devicetree@vger.kernel.org
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Tamir Duberstein <tamird@gmail.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	Igor Korotin <igor.korotin.linux@gmail.com>
-Subject: [PATCH v2 3/5] rust: driver: Add ACPI id table support to Adapter trait
-Date: Thu,  5 Jun 2025 17:27:26 +0100
-Message-ID: <20250605162726.3659792-1-igor.korotin@yahoo.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250605161956.3658374-1-igor.korotin.linux@gmail.com>
-References: <20250605161956.3658374-1-igor.korotin.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ccv1deIX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749142698; x=1780678698;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VBjxNJjQgs+ucg+s3d+qPGpwzIFzKdP+cYHvcC16z7U=;
+  b=Ccv1deIXahGa50dRlHiXSzpY004jzUyhoDitodoaUWPfTtBnj+Zti+xX
+   vmFhHrnw6SkoJBxIAb5tEsIcyiMldC0WkuEGM7UlWP4ljb5DETg9Tczry
+   XX6sbhR7ANUNgxWxoph7jDjX88zigzd6DwLhrTuPfkmlAwu6L7+hQygt3
+   aVTYnMYFTijFGxSEP62vcpNwaR0NDCl6hLFce78UIthS15TXfPO3bdenN
+   0U7lKgR/EJGVm6Z+X8ySKZO1M/xQioOwK6vc6KrMYXj4Y13YK06uGs+dK
+   5atJ4kQJRQaY01FYM0yNaAw4PRBkhbng/JTmm0tQUK7yEwyMSzrAoGfQ3
+   A==;
+X-CSE-ConnectionGUID: cNDF4xPYQTeewm0LWZfO1g==
+X-CSE-MsgGUID: zxFlALoORi2IAqyVfaZoNQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="62672374"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="62672374"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:15 -0700
+X-CSE-ConnectionGUID: xYpI/lUPSJe/WM7I4lC6qg==
+X-CSE-MsgGUID: L22CH+1DQL+tBQiuIkcDgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="145536933"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.0]) ([10.125.111.0])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:14 -0700
+Message-ID: <46d299f1-f358-4920-9528-4b3381cd065c@intel.com>
+Date: Thu, 5 Jun 2025 09:58:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 0/7] Intel RAR TLB invalidation
+To: Sean Christopherson <seanjc@google.com>, Rik van Riel <riel@surriel.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
+ dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+ bp@alien8.de, x86@kernel.org, nadav.amit@gmail.com, tglx@linutronix.de
+References: <20250605163544.3852565-1-riel@surriel.com>
+ <aEHKu-0g6_MBiAST@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+In-Reply-To: <aEHKu-0g6_MBiAST@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Igor Korotin <igor.korotin.linux@gmail.com>
+On 6/5/25 09:50, Sean Christopherson wrote:
+>> This patch series is based off a 2019 patch series created by Intel
+> Do you have performance numbers?  IIRC, the reason that 2019 series never went
+> anywhere is because RAR wasn't a win for bare metal.  Though I believe it _was_
+> a win for KVM, due to the cost of an IPI being significantly higher (requires a
+> VM-Exit => VM-Enter roundtrip).
 
-Extend the `Adapter` trait to support ACPI device identification.
+I'd love to see some performance numbers too.
 
-This mirrors the existing Open Firmware (OF) support (`of_id_table`) and
-enables Rust drivers to match and retrieve ACPI-specific device data
-when `CONFIG_ACPI` is enabled.
+But the real problem with the 2019 series was that it didn't have a
+global PCID space at all, only the per-cpu space. That greatly limited
+how RAR could be used.
 
-To avoid breaking compilation, a stub implementation of `acpi_id_table()`
-is added to the Platform adapter; the full implementation will be provided
-in a subsequent patch.
----
- rust/bindings/bindings_helper.h |  1 +
- rust/kernel/driver.rs           | 58 ++++++++++++++++++++++++++++++---
- rust/kernel/platform.rs         |  5 +++
- 3 files changed, 60 insertions(+), 4 deletions(-)
-
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index e0bcd130b494..d974fc6c141f 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -6,6 +6,7 @@
-  * Sorted alphabetically.
-  */
- 
-+#include <linux/acpi.h>
- #include <kunit/test.h>
- #include <linux/blk-mq.h>
- #include <linux/blk_types.h>
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index ec9166cedfa7..d4098596188a 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -6,7 +6,7 @@
- //! register using the [`Registration`] class.
- 
- use crate::error::{Error, Result};
--use crate::{device, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
-+use crate::{device, of, acpi, str::CStr, try_pin_init, types::Opaque, ThisModule};
- use core::pin::Pin;
- use pin_init::{pin_data, pinned_drop, PinInit};
- 
-@@ -141,6 +141,38 @@ pub trait Adapter {
-     /// The type holding driver private data about each device id supported by the driver.
-     type IdInfo: 'static;
- 
-+    /// The [`acpi::IdTable`] of the corresponding driver
-+    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>>;
-+
-+    /// Returns the driver's private data from the matching entry in the [`acpi::IdTable`], if any.
-+    ///
-+    /// If this returns `None`, it means there is no match with an entry in the [`acpi::IdTable`].
-+    #[cfg(CONFIG_ACPI)]
-+    fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-+        let table = Self::acpi_id_table()?;
-+
-+        // SAFETY:
-+        // - `table` has static lifetime, hence it's valid for read,
-+        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
-+        let raw_id = unsafe { bindings::acpi_match_device(table.as_ptr(), dev.as_raw()) };
-+
-+        if raw_id.is_null() {
-+            None
-+        } else {
-+            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
-+            // does not add additional invariants, so it's safe to transmute.
-+            let id = unsafe { &*raw_id.cast::<acpi::DeviceId>() };
-+
-+            Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-+        }
-+    }
-+
-+    #[cfg(not(CONFIG_ACPI))]
-+    #[allow(missing_docs)]
-+    fn acpi_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
-+        None
-+    }
-+
-     /// The [`of::IdTable`] of the corresponding driver.
-     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>>;
- 
-@@ -178,9 +210,27 @@ fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
-     /// If this returns `None`, it means that there is no match in any of the ID tables directly
-     /// associated with a [`device::Device`].
-     fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
--        let id = Self::of_id_info(dev);
--        if id.is_some() {
--            return id;
-+        // SAFETY: `id_info` is called from `Adapter::probe_callback` with a valid `dev` argument.
-+        let fwnode = unsafe{ (*dev.as_raw()).fwnode};
-+
-+        // SAFETY: `bindings::is_acpi_device_node` checks `fwnode` before accessing `fwnode->ops`,
-+        // and only compares it with the address of `acpi_device_fwnode_ops`.
-+        if unsafe { bindings::is_acpi_device_node(fwnode) } {
-+            let id = Self::acpi_id_info(dev);
-+
-+            if id.is_some() {
-+                return id;
-+            }
-+        }
-+
-+        // SAFETY: `bindings::is_of_node` checks `fwnode` before accessing `fwnode->ops`,
-+        // and only compares it with the address of `of_fwnode_ops`.
-+        if unsafe { bindings::is_of_node(fwnode) } {
-+            let id = Self::of_id_info(dev);
-+
-+            if id.is_some() {
-+                return id;
-+            }
-         }
- 
-         None
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index fd4a494f30e8..3cc9fe6ccfcf 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -5,6 +5,7 @@
- //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
- 
- use crate::{
-+    acpi,
-     bindings, device, driver,
-     error::{to_result, Result},
-     of,
-@@ -95,6 +96,10 @@ impl<T: Driver + 'static> driver::Adapter for Adapter<T> {
-     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
-         T::OF_ID_TABLE
-     }
-+
-+    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
-+        None
-+    }
- }
- 
- /// Declares a kernel module that exposes a single platform driver.
--- 
-2.43.0
-
+I suspect now that Rik added the global space for INVLPGB that we'll
+have better luck with RAR.
