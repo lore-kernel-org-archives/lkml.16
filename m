@@ -1,86 +1,74 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A4A7462;
-	Thu,  5 Jun 2025 16:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58341199E89;
+	Thu,  5 Jun 2025 16:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749139269; cv=fail; b=g0rdsQ4fpA8K7BJlry0O5HQ6hxAro9KJ6e0zc0/kuQFgYDUUDpF8PDycfrXFZ24oFvJxKzDu8pY0OAgXlKS22aKhvoy7NNjKxzTzdQTv3nqTrzX+5a2mXKvqI780ygDiuur2xJDsyxXLwK5D5rRqaJ+4rbaoYW4YfpmyGes2WtI=
+	t=1749139295; cv=fail; b=pylNi7L43uefDyl0sCXoFD78mzN9PGVLyIeTvb+ZNceVzTIP4rubVud/bi7y3GyTHm0TeHObZAzMZziIzpM0Zo5SsbuN0wuO2iQJyNf/D7EAzma7KOhW589nZ0dQWwEV8YBnOgItWAdXWybcyQyJuFZ8UNds+THvnfn+qCEoBlI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749139269; c=relaxed/simple;
-	bh=3IfzxlcqUCf9r78zG7voTbFsT/mGQnIRxr0J01sfSDQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OWTyrb/UYj4n+FtQhnTRovrCktJ8VgjFJqTLd4ouB696tizXRrga7WboobtUXC8Z3hnAt+aUfndUco35oDi3ZTdLo74JO76uZy8Eh2QAc+fpFX6kzYbWiJntSpFJr2NR38NEBBxSpQGBR4cc46ibgldXGeB+EpA0pxqGGUeEFWU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=encoLhZJ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=N7Xivbkq; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1749139295; c=relaxed/simple;
+	bh=rxer7jdLiY2aJNx0GvhTRLeIZwyk5GaCYT3CUlpGV7c=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hV3Z7yfzBM+dtu36inTCTJYQlkJVTzAhzQw2nUiVKtwa9Mg7kL7iNtwtZ0AUMlgBh9zPz+CEM95QSNlVfQ0kQ3yaTzATVt78q2f/2xed7PhkxqxQI7OKOJib5Zmhssb46L0+pso/zzXmDfWOUmZ0vz3wezaT/n43LZdaOo3031g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sWii+LnI; arc=fail smtp.client-ip=40.107.223.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="encoLhZJ";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="N7Xivbkq"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555FtVh5022435;
-	Thu, 5 Jun 2025 16:00:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=jLRBfVdGvTouoIhIx2
-	iYZ2MqB7/30jzvnNOhJqpkWVw=; b=encoLhZJGz2B1HMvYnpbyHDLgiB3eWqst8
-	U0mYTQwN3WDV1pTpD9Jujj45q06D3rL0vYknkudv1IBDE6ML6OlajtCK7Le2j/b6
-	zhCxbZHpyzeHA9OmdlTVxXCMfQ71TLFtBhz29Fm8iAxZybzN+/2KbmTfVLK1UXqy
-	WrdmdxyCUdYTDUBjbmd1y4gdu5AmBgofldqSYnmNYfJLokEAF/fsbdV1Vt3m9I2j
-	aQLMeaymeuQoQYn4GOzk40tdzN3EGqEuoNHQAT0/hKn8Q6HHgHmr41pk4Kj+1sgl
-	/bnTcVZYQoP9qERmWIHH92i5lA+nY5zc4e1pE5CFdC/xFRVCFXhg==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471g8gecr8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 05 Jun 2025 16:00:55 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 555FROjD030694;
-	Thu, 5 Jun 2025 16:00:55 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11on2072.outbound.protection.outlook.com [40.107.220.72])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7c8kxx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 05 Jun 2025 16:00:55 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sWii+LnI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LBLwVteeHftYaZNX1Xqc5TG/SW+0iDOJTwAzVubwwEY8zOhYVxCNHRsvdXH3+/qpDwbIz7YxVv6JaWRy31SDLmuX4aLWFiCCB2LJHQ55aiGYTF0xBjgQ3XXY0BFZz+lHFDtpwH1gasUEyzC+nPgZYk5uxwUsq8XYqz9bwOXq95eLZeJy4iZsc3oRVw7JtEhBfq78HuqNanz9pxi6wNVLCZtqkr0OPJMdoJgW64n/O+KFWw6YvKwGSIA9fqubiqqOH01LW3vyjGrasHvR3Sdd5qWChzXsFD9PR0UL9niXGtLkctVaYYMbfK/xtpmIPXdPoq75S9lzZw/8Xao4s7bP/w==
+ b=CsSYl3h/q5VQZBu5Bi8/T668nAMQVqNhG6FNH9UaARIKADdyku0cs6wOCYgaGVqfUyyKocD6Sb+ncjbn0zf/AWq/AokuABZIASxZNAmweftIWhk8PC87fhOdOBqDNYhN1e7rJRR75UpmCoO3MTaFcDL7GAhNHVcq9DawHiHXq6aeNf/6d9lDeYX+v80ZvlCcXBs6p5Tj2kLAuBDJ865JZwMPNQ261lei1dvpY/kUDsolIRwN8dUDNImHAB+QOmIKvgOKjrir7zXwPEsfIsh5rdwXmxTDNpTP+etH0wNtlVfky2B+75F1S0A81vsFhj10hLOcUa223ZB1LZlEwc9jLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jLRBfVdGvTouoIhIx2iYZ2MqB7/30jzvnNOhJqpkWVw=;
- b=mHjq/6Atd1wEWLepoFaOXx5m8tiCtAH2N2q6NBDZkSPaYRrXG5abGLa8qir/Fa3C+RLhgRSfDBGIM1l+F4DOrRQ8jPPma4hE3yMcr7334ifeF2NA4IIqYRYdPc0ImUtEsY+zR7WKTMBOhup+p1lzMz7LFUITiCc9a6pSpLSOHDmL0SFNI/fgJjgGzAEMLpbjMt9k7izE17RR7F+ta6kGdOgaHQg8UCO8lk8G5i/1ur/ii02XW6WAJ3K7bBPtJ+cwTKkojv4B9FqGUaS7fs4D9QwOLipk0t7mAownqgxPxeVsfko7tfykqEe0RghOiVUJ0ctXVdG3nvdymNzTQ6XKYA==
+ bh=I8F5meKzh/LwybhbM769pQgdV8lhxL/4Zvh9Ocsf5tM=;
+ b=iKhRK0r5Q5e/feP2FDP90+oWQYOsPdtlUdfecE2+jXIg0A8ixMgvcNCzWOKMn8mABioI6jyVhphX3T2Tl17oh5Q0W+XyUOPT9mR77oDeGqeVrziAhZ/eRzgKWltKlmcQ08MMQClwRDLDD7lIlJNrUeq8cOTtN8tRg3fHGTNEqbC+tnlzFaEB3CJ7nfYPO9f37a3WdlzK0jgkwyLu0ouecfb7QzF1fHX+YaR7Uvi1KkAN34hdEcl3se9eDzoEQEfMeUZc1IYexQLMwk1MIvimgx+yOUDVQNXjz1/e7xt0Sc3kWrJPqgTeHXMoMALgJZzC/PqV9lVKTHnJzApOLKqLpA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jLRBfVdGvTouoIhIx2iYZ2MqB7/30jzvnNOhJqpkWVw=;
- b=N7XivbkqmRC8AdA4/GnkQ0SKYnpM6ZFwT8oG++zruNjnf7CR2rJjPktWj7fE2y/4E6dPTHtMF6dCfic2kyEJ5ebpPzoy4Lqere7Ye+4LuNr9v1q9o8tnwFn6i5apwhrVA0hspKIFQqYVnQ/zdBsUfpoZzipiXl5N3q7/Gpr4f/Q=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DS7PR10MB7322.namprd10.prod.outlook.com (2603:10b6:8:e5::21) with
+ bh=I8F5meKzh/LwybhbM769pQgdV8lhxL/4Zvh9Ocsf5tM=;
+ b=sWii+LnI864Lizm2nxEVkbehQwon7ISX/WrJK6k7MdIWthMIQElC2iTLdPySXR3TJ6xRTxNF1CrcAoaaORQ0HAg/sV1lxHhh9CCoTkGgypJMmupLocD/zST4MEhEgVmKrxYYk+tqQ70yBA4YITpNMjUDCvchIAGcp7sZNmzljTQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ SA3PR12MB9159.namprd12.prod.outlook.com (2603:10b6:806:3a0::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.33; Thu, 5 Jun
- 2025 16:00:52 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8746.041; Thu, 5 Jun 2025
- 16:00:52 +0000
-Date: Thu, 5 Jun 2025 17:00:49 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] selftests/mm: Fix test result reporting in
- gup_longterm
-Message-ID: <a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local>
-References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
- <20250527-selftests-mm-cow-dedupe-v2-4-ff198df8e38e@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527-selftests-mm-cow-dedupe-v2-4-ff198df8e38e@kernel.org>
-X-ClientProxiedBy: LO4P123CA0595.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:295::12) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Thu, 5 Jun
+ 2025 16:01:28 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8792.034; Thu, 5 Jun 2025
+ 16:01:28 +0000
+Message-ID: <9df8deca-a34e-4f0b-aa02-084260b14c55@amd.com>
+Date: Thu, 5 Jun 2025 11:01:24 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 05/16] CXL/PCI: Introduce CXL uncorrectable protocol
+ error recovery
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-6-terry.bowman@amd.com>
+ <4ceb5bef-d5f2-4552-a1aa-c282286bf10f@linux.intel.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <4ceb5bef-d5f2-4552-a1aa-c282286bf10f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR2101CA0029.namprd21.prod.outlook.com
+ (2603:10b6:805:106::39) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,444 +76,259 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS7PR10MB7322:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3a786455-aef7-4b5c-e356-08dda44a256d
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SA3PR12MB9159:EE_
+X-MS-Office365-Filtering-Correlation-Id: 10ebda5d-449d-419f-3045-08dda44a3b09
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hHHxtpV48JU1rfEaf/ItbQiju9Gbp07+pg8mXAeq2Q7e++xUYa1T93ll/RwO?=
- =?us-ascii?Q?JAwRbzRmVUBYUBDVnSYgRzspDxlsu5WMxC0XdC7Zcja4OkGt8RnD8Ph4sesu?=
- =?us-ascii?Q?QlmVseoh01BdIBhI748V0NWQxXRkIciwqiSsVN5hsoqM2vXmkx3rzRNX/g37?=
- =?us-ascii?Q?Er5a6tk23ti8bZfXIq7rhU4hQuLeXxJON+cgUHHpYHCtcmDy6zAGqIbUBygs?=
- =?us-ascii?Q?dxqoMuRQDwgx9QlukQ/sx6j57sVWkaspGibMaU27Vpkf5oNHudHiULjjA9Yx?=
- =?us-ascii?Q?A86X8o/hDUNBz3cm40C7b4qLh5UW6HNlJ1HMLCT9gGJjC4Z3UlVhk0oewK9n?=
- =?us-ascii?Q?ltNDjwCUxNMY8+KIompqhipnna+H1ssErkChf2qOGZowI9OGRXcVD1BT1ZCu?=
- =?us-ascii?Q?AXlegcdt1Gu8tsn5DPkLYcsp07nrKWzZfSIXbKZyZdwQcByyTFuV59AcLAP+?=
- =?us-ascii?Q?1nqB9wkmVRMJzhrt6EZutdZfXLl1fe/Lm0AMpooB1aQKhlt9SbPqXfVszVzI?=
- =?us-ascii?Q?TEKJ+K5LY8IK6dNkf1dMYnEBs+k61hmnrKm633njyFZkLDTNnuO+gRT9H95z?=
- =?us-ascii?Q?Z0wTSFBH0XdxGQV7qnC5P8DAi5DiAl/M8Q3G3fNYDuv83+KknMO0TA1KaCPq?=
- =?us-ascii?Q?iVZArmoXX87UYpzot6TSveCrf+oQEpHjhGlJokiyEt7U6BSJJs6VudN6FrWK?=
- =?us-ascii?Q?2t4R2KY03TCZTGA8gbCbcRpXa3uDXe98kf4pB2a3JhrKyzWAJzsHEVAfIMqK?=
- =?us-ascii?Q?mrIFInzbbo+zLRwrNDH4E4qZik3s/SFn+cWAD+G9UaQo+ST0dNWdt9Rplf6s?=
- =?us-ascii?Q?iwBVfjbxuhRy7d65KEkZwVAbro8Wb2LOMjUEDKnRW4fqFpgf3q/i5wgs+Xoz?=
- =?us-ascii?Q?oXPUHLOOURXeONTnhyDVeYm3XVDA79JFSR4nroO98r9lxGjZowlKQO2sybwh?=
- =?us-ascii?Q?crleH8W9A3WkgQaMRewiJWtaIQaU3vuOgHF+c8K7irGC34MdpIm72ms0W+xW?=
- =?us-ascii?Q?bm/wNQGT0KQTUNX6rcAzH2/n9yZmTHQU/c5Q2yQK5uE19d1ZugAYEviHnFpl?=
- =?us-ascii?Q?qvz9ZDUO5A6kVHenjHu60+2tgGakvdE8kym5sV+Q/d/RGOOTMnj+Dn0Te8nK?=
- =?us-ascii?Q?HdCbPn8qs4qqQSOsbHk9p8nm9FSEhgczwq4281cSglSvdpqil2lZbsK7C666?=
- =?us-ascii?Q?8+ycI1OIL66Sak7Dcxaj5BD3pL3jSRaV2LPvE0DyxfQNLL1jTG7facTN9Wgx?=
- =?us-ascii?Q?PXui32ES7OF2wAsJAaKE8tWHjH7mjG6EnFHgG5SN+S1RX0X+S4eXEEQLTxNe?=
- =?us-ascii?Q?ScVfy0Pm+x9Ucb59mgD9N86rqYcLLd4RYcHN/hHFR8CdgxJ6ua51K8JcaiSi?=
- =?us-ascii?Q?uLIH/H225k4Mi/7IEeuKFjaatM6sY7aNGVZhjZB5XoCeESlnYoBEeyMhFEn7?=
- =?us-ascii?Q?F+XS6eMK4GY=3D?=
+	=?utf-8?B?S2o2MmhmNkc4aXlDejAyYXFGbVF5aW9DQkFlNldxWkMrNEJRNjJ6ZzY2Y2xs?=
+ =?utf-8?B?bHN2SnpzSld2MjY4MzBVWm5nQ0lHQnk3QWFhTDRVRloyTVpXYmFVVUNVdXoy?=
+ =?utf-8?B?UVk4b2o0L0d2N3lnSW56cjVzdklBUEYyWUxjcXVIWjI1MWluTVZYN3JyTW1K?=
+ =?utf-8?B?SklzQWpKekZ4NUxScjhpV3BLMnhaOENrdUlzczVEWUZaVHo0UXRKVEtCZTJs?=
+ =?utf-8?B?aTNrSUJ6WXVaWmdPVmVuMnIxbS9mbWNoUVlVdFB4L2JxdzRiNnhwUnpoS2Nr?=
+ =?utf-8?B?dlpUVCtwMld5ZWZBSUgvU2RDRXR6ZGVFSktDQkduUlQvWmFOOEcrTFlBZmtl?=
+ =?utf-8?B?TUFnUkRkWVU4SG1sQ1dwbHN1K3pMNGZndmpqUVhlQTRGT0NtK243SkNKV3lj?=
+ =?utf-8?B?QmtTRnV2SkRldmNISmxpMjhkSFJsYXUrcXFmOTdZZFFRdFZCbWlxQmVxYlU5?=
+ =?utf-8?B?UWtCSGlNRUw1NDBRRmUwRHpuZU0wTzk4TmpBdWVDWjJXL1hQcnZuUEhINXZj?=
+ =?utf-8?B?QlIxSldDTDlxdGMrUUpTS3RnOGRMUkwvWmxuTkx4OUhaTHFhY3pmS1hGRExp?=
+ =?utf-8?B?Zyt2clpTUzYycVl1Wm9nMWI0THI5SjZnQnhvVlRtTXdVLzBjNFlMSWtQVjA0?=
+ =?utf-8?B?eTJPcFRubGU5UGhDN3l2Y2tjajJUeE1UQi9SNzllWUp0TXphRGZyZVpnbjVq?=
+ =?utf-8?B?ZDFhT0RjWkpoemQ4eW1uS3RZY3pkUE5STW05TzRzTGdUcEN2REFnUjJ0RXJF?=
+ =?utf-8?B?UW1MbUZhMVoyOHB2TEE2UE0wZkVnNTE4Um8xNGhKU3Q0UE94UzM5K2pYRlVw?=
+ =?utf-8?B?N1d3N0pCa2R0TWp1RktqS0hSRnRieklqNGtjN1V0YkNDcjd2UHZwU2U1MUJo?=
+ =?utf-8?B?L1NjeHhCV0RENk81YU5rZXMyci82TUl5NEFoNHlvWCtIaUxMSmRPMU1CV09v?=
+ =?utf-8?B?SEo2QVRzOFpvdEwrQWVPM29RVjdTeStLY0JmYkJPN21XUGRZYllGSTN3Yk55?=
+ =?utf-8?B?NTRreWZjWC9NT3dkaC9HVGdkb2JkWmZYTWkzcTlybzJqemM3NlcwbVRaZ3Nq?=
+ =?utf-8?B?SS8wWHQxMmMrYWxSc3VTdUR1eWNpNWFzVDd2OHVvY1drZ1RwZVZkbG5FcWkz?=
+ =?utf-8?B?enpWZFUvMEhZaWE0ZUdEc05FdDFsZE44S25IZzQrbFVrcXpNT3ZWcGJjamZu?=
+ =?utf-8?B?Z0J6QTBrZHlvSjhpYTNjeTYwYUFMQjhuVU9CMldUcXlBWExFcDFQaXlGaVlt?=
+ =?utf-8?B?MGdoZUhYNkZCKzh3c1ZITEFQQ3oxRU1YUnJJMnhLU1phZEdqU1dadjNkR1d3?=
+ =?utf-8?B?aEFRM1V4RFZoUFRTRHBESUUrMU94UnVsaUk2aWZBZk5USXREZ3FRL1VIcGJ5?=
+ =?utf-8?B?Y202LzNkVW1mc1A4dWlpdVJsZC9ubWxYNmtmTGlKR2p5UFcvdGtWTWdNeVk4?=
+ =?utf-8?B?Y3orQUNJSVNYYWpUdzRFdHZBT1BhczNVWVd6QTFPY1dSd2R0akNDdTF0RzJB?=
+ =?utf-8?B?TXBoQzBZRTdKNzQ4MUxWejhNL0lINkVoV2ptUWwzSDgwaGFCdmdzRFppN0JN?=
+ =?utf-8?B?dFNKai96aytJZk5QenpYYmpuUi8xQ3IydVZkL3lMMlAvaW1iTWliUEE0bnRy?=
+ =?utf-8?B?QSsyTWFNTzY0Nm0xOHVSYmZpNHV5T1ZJZHplckZaRHRQZjVucVI3ZDlPQU1B?=
+ =?utf-8?B?QVZXTERHb2JxT0NrVkx0dEpUcU54NjZuUC9CNXB6eVJQMHl0MFh6L1k4YWVx?=
+ =?utf-8?B?WDQwRjZjVXRXL0pOUjMwWWJVZFB2L0lxblJHQ3FBeUtYTnQyM2dnRFZQVThT?=
+ =?utf-8?B?aFJ6UHBKV2lkTmNJaENXTFhjN3RjTXFuZzJjOWZNNjNqYXViN2NIcE9BZ1Yx?=
+ =?utf-8?B?MTl1QXlVVi80YSt6dzNZcHQrRWRtSTUvR1JDREtWZWhZSGd2L01waVdZWGNU?=
+ =?utf-8?B?NHRRcW1idDFEdVpmZWxYSzRPVmVLMityT280U204NXp1NVUvRUdaL281ejFr?=
+ =?utf-8?B?eG5STGJJK2RRPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8PxLyO9M0RDhtGEA/pc7UDBgOLqnnYEAQ0TT5uWYTHHt4PDbV/e/vJrnuUSJ?=
- =?us-ascii?Q?ULlVrzkhPicM3/R+iMRWETLD/JlHsRtLrwuRkkrJFaJD14drmddgsITMU0yd?=
- =?us-ascii?Q?9K1Wd9ns6mBJVXiYXVtuLy+MXmZAocKFfMLY9gsWCqsghe5CMaiFglQ5eowW?=
- =?us-ascii?Q?iUcsK2howM9EHsd63HIYachgGiH5iQNtT8ux7V1+CMBjCyWQHZ1xWueJ3Y8a?=
- =?us-ascii?Q?ZIM8Hb8wsle4fiYwgmqLM3oioObiLeAMW/2VVMpPczVM+shdgTq+bwpn/x+P?=
- =?us-ascii?Q?g7cAQSJaP0PxgiP/FINycUpEyYqw1ddOMnGdxVI4IOXeisX4EdktOzU1IY2x?=
- =?us-ascii?Q?pU5Lq6/ejm2f8SHBFdyy1t5qD5BBvqGSBsOJ8ITv4ezRf/ZAxVQMrVgvKF6Q?=
- =?us-ascii?Q?0+nC2HgAkxmJG49B8N8h5s34mibVQjIho3gICE8y5Kil8Uv8e8Sb3a5fxeDZ?=
- =?us-ascii?Q?pYmYBplcIOFHh0e3lm0tODCmOn2hZMRJx+xJlXIlCUUd9aKIILLNiUdZaZzD?=
- =?us-ascii?Q?kLMHJsakGf5QBpgRVQKw3rIK7Mi7Gc8w0pTYgyu6cFRzwArUwUbKOlo9bWVC?=
- =?us-ascii?Q?jYHusGN6ZnxYTrYaia5ZEewqZa2Ti6R9cl7zXKZi5cKmcN3PfQi7y7P46g91?=
- =?us-ascii?Q?lKH13bmuUW4HpEZ8zLm3gGJFD9r4rzPhbNZHJL/KWmHmo/TZmRqYFHCN+heF?=
- =?us-ascii?Q?RDkp1/uy1MyeEHb72RKfSVdzNEaaRg61tLGftOAEMg2zWP6KN7JHGrErcGkg?=
- =?us-ascii?Q?uNsD/JibGi+TxNBkYpjp08mRBLjrn8KFpBO9HBYQQZFetX33yKjvgwyO+gC/?=
- =?us-ascii?Q?KrsotXGb4+I57dfy/kgmdF/GtlQReoTmmc/JcAMHKPqxCOeNdmlmVDv4Vpi9?=
- =?us-ascii?Q?TapQtlJRMCecBWf9dEQZQfWFetAOKrLEX5BW2cDsLqX6Yr/Gn6/X8JKjfQxp?=
- =?us-ascii?Q?+fCymfX7dLZsBP59UFJkCk/gHNqKFf99hP1JRTGM4t9R2TpiOXxdiFI/SesN?=
- =?us-ascii?Q?aCqRBuCHyM0XTTignxED94o8lFmt6tRLSklkZyJVJhYSNldXIwzrvrjQuVa3?=
- =?us-ascii?Q?/AIF7I9ISlZv8/AmSf0jqxOi5pakj06eHIi5IyWmJktpC0qd3uFgxeN5a+zA?=
- =?us-ascii?Q?wm+JHnyOs4Cmn9sSvqRMrAvNzxCOeqKR/bW5Tz5nDu8xGh2cvqUH7v2Q6EhZ?=
- =?us-ascii?Q?mILkpPZDnH8F9ItONy/X1DjHj2r/3fallgsIy3DBhkag5KnhKWr0BBJI9/Sc?=
- =?us-ascii?Q?WI+vgmPAKyfBFLYwU5ttPMrypY23zJs7v6v/GPr/CgaMfjAuVy7hVns5iEWc?=
- =?us-ascii?Q?4pPSj08Z9YDcUDNndHdN4krWBQI4LyyaZUqpLiurF2UXfzYzgiyAbVu4ZxYF?=
- =?us-ascii?Q?+oAQqnoGoRn3uDn/a+2BARgVPBmkenzRiqwswY2nJG4FCVmIan1w9IwfoSFS?=
- =?us-ascii?Q?ZtgrNQjgux0ZIsPu2TDMceHTqmiLbdiHR0JsZXmdDOZqDmzeHi7g96TFY0gP?=
- =?us-ascii?Q?+xuNiFN2bL1z62/Gp1W5zCFd9IgyHMEUFQP1R0diwCM95kDLGCUK5/RAZCa5?=
- =?us-ascii?Q?DC4YNRP2DBQDLEgWTvjoOJUPLgGHrggeGV5ltmPpHuRrrwAaOknowhfXrY/4?=
- =?us-ascii?Q?4w=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	C2ixPs6aZVpDdcHg5C6ETbVmV8U6oGULGALMLszMpmAS+bbTv2CigGNzS4L1/AmeHa2nFuapzUwmwropVRotD0RqQ2n9dlxPhbKr8VdP83CWjvlnAnddkxCNLxwMhPO5uea33q9Eq60DAwEd3/yxo6sN0bggalyfW3VtbddQI3Ly0/sNiRiElMFAH0zjeNvoVPfcEf/x7AseRveP1GKDT73PzOrS7IqVOf9jmgMzuS6SoCvl7Nej+ghH+Dkpf01TguAEDDS3wOI3pqiWaGLmcy71JfK7rYUUX0OCqkFAT+WoolveX/SLbXiYkpVS5586X4yg2s0xswTNYfcbl9ISgaMjJd7GTqi9WXYFq41lBTWogJ68kbw1NZ7ViAPgU3SJftqJXFt4Fp1o23jeV5E4TN7CkFeIX81BmrjHPmvMdfB2UmYcF09k1LX8NIFheooKmarkEGTV68VN3PWgoPC/pi/lU6dh+LCmyl4OP2x7dNcbcLYwI9rKwkbCz5JtmBHGmyiWQ5Mb+2F4iGx7fewQc84SxabRdoeceBt3OJVmCSkvyZjtlNPIf4Wu81NbgMU4y8Heaiehir0ZbfHv4RqVV5V7ATtb+JmhwYsnRZMOvPU=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a786455-aef7-4b5c-e356-08dda44a256d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+	=?utf-8?B?THluMVNDL0xMUWVROXNDWHMxMXdvcnhBWnovZG0rdHpjVUhVWU9aRGdlVjJt?=
+ =?utf-8?B?TEF2STNHT2dtb0gvY09iQnErMXl5bXB2NGhFT0FIOGtZdXFWa2RmZk9UamtD?=
+ =?utf-8?B?ZVhmTWdnTngyMWI5cEJJWnY2VjRzNVFPMjNuUGt3UlBXdU5PcWViRU44dUZE?=
+ =?utf-8?B?c1BXUmIrZ0dMdzQzVVBaY2RIL0szaU5oK25helhIOGpNT3RXU2pIRWZFbG9x?=
+ =?utf-8?B?OFpsNXljODJJNzc4WUVHL2JuL0lub0JEUkVJQ3FTejBGaUREUHREY1U5U2xE?=
+ =?utf-8?B?TEpmVlhrcWZZS1A0cG1SQ3dmNUIraFpKSkptRGpaWjdHNm5ZaUU1NTFMdWlG?=
+ =?utf-8?B?QjRBU25uV0U3NGJJL0d5eGhjczBRakQyeGtlTHpxd2dUV1I0WUs1VU5OYXBN?=
+ =?utf-8?B?SlE3MEtERkhyL0ZqUXNtNTlVWXIycm4zOGdaV09tWXcvdVJobElORXFBL2ND?=
+ =?utf-8?B?V2pFMDI0OVBZL3ltZFExR0Q4WWw0L3hOV2pqQ1BkWmY4Y2IzS0xUZ2U1cHhL?=
+ =?utf-8?B?OGFVU2RrSVZXZFFrRXNnVndubXFFTWFTb3JzWE00MXBucTdLcXF0TzZuT1V1?=
+ =?utf-8?B?Vzc1Lzl2V3RPaElQUUxUZzBTdkk2eFdzWDFKODZKSjlML0JOUVMwS0R1emM5?=
+ =?utf-8?B?STJWd0xORGgydU5icXdiNGszWTFSKzdnMjN3RGRQUlJOakNkRjhhbFhvbm5O?=
+ =?utf-8?B?N3pPenNaRW5tS0FHY1pCcjRKbFZVOVM4elEyU1cvOENpd1Fuak1TVTU3T2RK?=
+ =?utf-8?B?VXQydlJDa1VjSzQwSmYvVVFBeEtURWpVNnBJMFdjbUpGcVhyancwNnRZY1RB?=
+ =?utf-8?B?MEp1NmZ6ZTZjTkRSYzZnUDNJYldPek84SGpGSlFIclN4dGhnMkJQWEFHVXdZ?=
+ =?utf-8?B?eXpxWlBqd0RxQTFIUGNwSHB0aVZwTDZQTW1Cc0gxQXFlemtqeUQ0WUJ3Ukdn?=
+ =?utf-8?B?U1czTFpHeStkUEhDZU5hK2tXcHk0bzBOMXlsYlJ1RzF1bEdKdTNhTjU4d0Vi?=
+ =?utf-8?B?eS9NOUE1bWJwbjF6YU5DNXVySGh2ZkJncjQwb2tndEdHU2wzSHEwMEErTVMr?=
+ =?utf-8?B?RTMyTkxoVmNlMU02NFFCU3dBT01UNEltRk9iN01BOUF3ZUZJUERyR1JVSTg4?=
+ =?utf-8?B?ZlYySUdOVGN4Y0dWUGx1TTBIZXQwU1Z5cnlmZzYrb2dYT29UT3Z4TFh6akl2?=
+ =?utf-8?B?RUF1WU1ZNGFUbDIwVjY4NE5CeXFMeHNMVDVRQXlGNFFNWndmNERka0ZrZDQz?=
+ =?utf-8?B?L2tLQVVzdWl5Skp2eXBWME9xend3R3FHdXduaTNNNmIwblJXNno0RWpTeVAy?=
+ =?utf-8?B?QWFpSGVCWkNEdXVxUWhJYnd4R0pSUk1rZk16em1wb3BUSVo2dGEyRDhIc3Bl?=
+ =?utf-8?B?VWhBK24yYis2VDZobWlwQkFVd0dLbk5IWXE0TE1yUHNJeVVkQVo2ejVJaHFZ?=
+ =?utf-8?B?MTZ4dE9Xc0tUdTJ5YkdwSS91VWhJdDFZY0xiVzF0VTFqWTIvUDEvamN0Mmo2?=
+ =?utf-8?B?ZkVPQW5Rcm4rWnAxZ1VoU1dUU3pEcVVvWmRZOE9nZGRnK3ZudmxOa1FrM2w1?=
+ =?utf-8?B?ekl3ak5JQ2FuNnFlQkJETHRHMWVvdDRuMWptL1loOFBXSDZYcXNPdmVyYTFC?=
+ =?utf-8?B?bnd5Z2hieEh4OXdDV2RSQWNuVlFVVGkyUlFraGlYdU8xMjJQTThlTHRpS2Jr?=
+ =?utf-8?B?QVNOa3J5SkNxaUN0VEhnWlFBYnZoVjRaRitTbmxXQVVtM2tpLzloV29nbnNU?=
+ =?utf-8?B?KzBkT0YxSnVFZzJSN29XMnBYNXVRaWh4MlZTbjlWREJQbklUZW5hdTZUR0Nl?=
+ =?utf-8?B?a0lFUDQ0dy9SalVnMkVMdFg0SjNzOHpRd1BUUmFQMEpvcTNhZ2lXTmNwM2VI?=
+ =?utf-8?B?YzhHMzA2R3lqMlMrWkVXSSt4YzYweGlGckFvampRVkpJZGVsUkNmd0oxRzA0?=
+ =?utf-8?B?QjJUUG9yUC94RUZNY1NoZW14eHNyQnVUN3QweGlkZzNXbkdXM3hNdTZZSVJB?=
+ =?utf-8?B?V0cvMjZSNGFqTVg4ZlNDV1MvVmIwVGRWZVd0T1A4Tm5aS2Z5OXY3ZDFOS3JM?=
+ =?utf-8?B?YUZzL1VPWjZkZkFrUi8zZUw1SGZ1ZWczUEwvU1RSa0lUWVVURG4wRXVGYnlh?=
+ =?utf-8?Q?99YtzvsCy6SpauOJWgj8htOLH?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10ebda5d-449d-419f-3045-08dda44a3b09
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 16:00:52.1156
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 16:01:28.3957
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Rv2WzpDHybMI+JXWF96KlJ+0Id4eEWic5uYVxETdQQbzJR01FRgv1aBam00nFsndpi4yCXPVPN/RGQn7Jd7OWGAylxEvwRz6yXz4dN9Focw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7322
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_04,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506050140
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA1MDE0MCBTYWx0ZWRfX1zC+d7BH+YOX 6GefiU7b88G6NENODBz2PIQdVnkQo72Wq7nPY7cOmuQSDNrYc+nj4XpX7DMKoUBKO6jqmlM/1AK bzhIKZRwuQwIQ2qYASw+p76aOZnRvgseq7rx/pPLB+RVL5KXIR9hS10l96FIa6h6h9Z5YKTlq3w
- KWO/OqevTV4A89CIi6Wvjye9c80GnkLOwXLAcupi68ak6glNIQsaeLVIUIq4pNKMwkgfCe/s6+Y iO/5NeEKvRhfF6t61IISBqxDOaUhf9APPf9quT4g7AI4r4lXn2EhqTduUbErFqSeleTOEP6B6Rr 2ipYDZaWe0YjSQ2zv5GHf8TcrZBdeSZVvvRd8I7u6fZxjg2DI8BKSf0dTKYmBmmZ/kjd2dK+T+u
- gTorNxdQocZ4m5VeXIc8y+vN0msMWResIxr/CyVyfND5KIbPy8jFNH/WUz8BS+w+o1DEXhfU
-X-Proofpoint-GUID: 2T_oQHBoLKcA8zAE5xTG9xqGYfo7PnIF
-X-Proofpoint-ORIG-GUID: 2T_oQHBoLKcA8zAE5xTG9xqGYfo7PnIF
-X-Authority-Analysis: v=2.4 cv=H5Tbw/Yi c=1 sm=1 tr=0 ts=6841bf38 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=M3thGXLoIc5jhnJeB1EA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:14714
+X-MS-Exchange-CrossTenant-UserPrincipalName: XbhIxIrGFvSy0nXh6TH+7motU3Y9pR6KJLycGmgQEyidX6RGmTfcWw5J3B5hv4YoLY8sJ8VqA6HkDf7VrfqgeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9159
 
-This seems to be causing tests to fail rather than be skipped if hugetlb
-isn't configured. I bisected the problem to this patch so it's definitely
-changed how things are handled (though of course it might just be
-_revealing_ some previously existing bug in this test...).
 
-Using a couple of tests as an example:
 
-Before this patch:
+On 6/5/2025 10:14 AM, Sathyanarayanan Kuppuswamy wrote:
+> On 6/3/25 10:22 AM, Terry Bowman wrote:
+>> Create cxl_do_recovery() to provide uncorrectable protocol error (UCE)
+>> handling. Follow similar design as found in PCIe error driver,
+>> pcie_do_recovery(). One difference is cxl_do_recovery() will treat all UCEs
+>> as fatal with a kernel panic. This is to prevent corruption on CXL memory.
+>>
+>> Copy the PCI error driver's merge_result() and rename as cxl_merge_result().
+>> Introduce PCI_ERS_RESULT_PANIC and add support in the cxl_merge_result()
+>> routine.
+>>
+>> Copy pci_walk_bridge() to cxl_walk_bridge(). Make a change to walk the
+>> first device in all cases.
+>>
+>> Copy the PCI error driver's report_error_detected() to cxl_report_error_detected().
+>> Note, only CXL Endpoints are currently supported. Add locking for PCI
+>> device as done in PCI's report_error_detected(). Add reference counting for
+>> the CXL device responsible for cleanup of the CXL RAS. This is necessary
+>> to prevent the RAS registers from disappearing before logging is completed.
+>>
+>> Call panic() to halt the system in the case of uncorrectable errors (UCE)
+>> in cxl_do_recovery(). Export pci_aer_clear_fatal_status() for CXL to use
+>> if a UCE is not found. In this case the AER status must be cleared and
+>> uses pci_aer_clear_fatal_status().
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> ---
+>>   drivers/cxl/core/ras.c | 79 ++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/pci.h    |  3 ++
+>>   2 files changed, 82 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+>> index 9ed5c682e128..715f7221ea3a 100644
+>> --- a/drivers/cxl/core/ras.c
+>> +++ b/drivers/cxl/core/ras.c
+>> @@ -110,8 +110,87 @@ static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+>>   
+>>   #ifdef CONFIG_PCIEAER_CXL
+>>   
+>> +static pci_ers_result_t cxl_merge_result(enum pci_ers_result orig,
+>> +					 enum pci_ers_result new)
+>> +{
+>> +	if (new == PCI_ERS_RESULT_PANIC)
+>> +		return PCI_ERS_RESULT_PANIC;
+>> +
+>> +	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
+>> +		return PCI_ERS_RESULT_NO_AER_DRIVER;
+>> +
+>> +	if (new == PCI_ERS_RESULT_NONE)
+>> +		return orig;
+>> +
+>> +	switch (orig) {
+>> +	case PCI_ERS_RESULT_CAN_RECOVER:
+>> +	case PCI_ERS_RESULT_RECOVERED:
+>> +		orig = new;
+>> +		break;
+>> +	case PCI_ERS_RESULT_DISCONNECT:
+>> +		if (new == PCI_ERS_RESULT_NEED_RESET)
+>> +			orig = PCI_ERS_RESULT_NEED_RESET;
+>> +		break;
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return orig;
+>> +}
+>> +
+>> +static int cxl_report_error_detected(struct pci_dev *pdev, void *data)
+>> +{
+>> +	pci_ers_result_t vote, *result = data;
+>> +	struct cxl_dev_state *cxlds;
+>> +
+>> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+>> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END))
+>> +		return 0;
+>> +
+>> +	cxlds = pci_get_drvdata(pdev);
+>> +	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+>> +
+>> +	device_lock(&pdev->dev);
+>> +	vote = cxl_error_detected(pdev, pci_channel_io_frozen);
+>> +	*result = cxl_merge_result(*result, vote);
+>> +	device_unlock(&pdev->dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void cxl_walk_bridge(struct pci_dev *bridge,
+>> +			    int (*cb)(struct pci_dev *, void *),
+>> +			    void *userdata)
+>> +{
+>> +	if (cb(bridge, userdata))
+>> +		return;
+>> +
+>> +	if (bridge->subordinate)
+>> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+>> +}
+>> +
+>>   static void cxl_do_recovery(struct pci_dev *pdev)
+>>   {
+>> +	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
+>> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>> +
+>> +	cxl_walk_bridge(pdev, cxl_report_error_detected, &status);
+>> +	if (status == PCI_ERS_RESULT_PANIC)
+>> +		panic("CXL cachemem error.");
+>> +
+>> +	/*
+>> +	 * If we have native control of AER, clear error status in the device
+>> +	 * that detected the error.  If the platform retained control of AER,
+>> +	 * it is responsible for clearing this status.  In that case, the
+>> +	 * signaling device may not even be visible to the OS.
+>> +	 */
+>> +	if (host->native_aer) {
+> You don't need to check for pcie_ports_native ?
+You're correct. I need to check pcie_ports_native for case when the user commandline includes
+'pcie_ports=native'. I'll add call to AER driver's cxl_error_is_native() that checks
+pcie_ports_native and host->native_aer. Thanks.
 
-# [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (2048 kB)
-ok 39 # SKIP memfd_create() failed (Cannot allocate memory)
-# [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (1048576 kB)
-ok 40 # SKIP memfd_create() failed (Cannot allocate memory)
+>> +		pcie_clear_device_status(pdev);
+>> +		pci_aer_clear_nonfatal_status(pdev);
+>> +		pci_aer_clear_fatal_status(pdev);
+>> +	}
+> Since you want to clear all AER error status, what about correctable status?
+I intentionally left out the CE status clear as it should be properly logged
+in the CE handlers.
+>
+>> +
+>> +	pci_info(pdev, "CXL uncorrectable error.\n");
+> pci_errr?
+I think this can be removed. I believe this was left over from debugging. At this point the
+UCE logging has already occurred making this unnecessary in production. Let me know if
+you want to keep it with the recommended change.
 
-After:
+>>   }
+>>   
+>>   static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index cd53715d53f3..b0e7545162de 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -870,6 +870,9 @@ enum pci_ers_result {
+>>   
+>>   	/* No AER capabilities registered for the driver */
+>>   	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
+>> +
+>> +	/* System is unstable, panic  */
+>> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
+> Since this error state is specific to CXL, add it part of the comment. Otherwise,
+> other PCIe drivers may also use it.
+Yes, good point. I'll change.
 
-# [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (2048 kB)
-# memfd_create() failed (Cannot allocate memory)
-not ok 39 R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (2048 kB)
-# [RUN] R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (1048576 kB)
-# memfd_create() failed (Cannot allocate memory)
-not ok 40 R/O longterm GUP-fast pin in MAP_PRIVATE file mapping ... with memfd hugetlb (1048576 kB)
+Thanks for reviewing.
 
-See below, I think I've found where it happens...
+Terry
 
-On Tue, May 27, 2025 at 05:04:48PM +0100, Mark Brown wrote:
-> The kselftest framework uses the string logged when a test result is
-> reported as the unique identifier for a test, using it to track test
-> results between runs. The gup_longterm test fails to follow this
-> pattern, it runs a single test function repeatedly with various
-> parameters but each result report is a string logging an error message
-> which is fixed between runs.
 >
-> Since the code already logs each test uniquely before it starts refactor
-> to also print this to a buffer, then use that name as the test result.
-> This isn't especially pretty but is relatively straightforward and is a
-> great help to tooling.
->
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  tools/testing/selftests/mm/gup_longterm.c | 150 +++++++++++++++++++-----------
->  1 file changed, 94 insertions(+), 56 deletions(-)
->
-> diff --git a/tools/testing/selftests/mm/gup_longterm.c b/tools/testing/selftests/mm/gup_longterm.c
-> index e60e62809186..f84ea97c2543 100644
-> --- a/tools/testing/selftests/mm/gup_longterm.c
-> +++ b/tools/testing/selftests/mm/gup_longterm.c
-> @@ -93,33 +93,48 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->  	__fsword_t fs_type = get_fs_type(fd);
->  	bool should_work;
->  	char *mem;
-> +	int result = KSFT_PASS;
->  	int ret;
->
-> +	if (fd < 0) {
-> +		result = KSFT_FAIL;
-> +		goto report;
-> +	}
-> +
->  	if (ftruncate(fd, size)) {
->  		if (errno == ENOENT) {
->  			skip_test_dodgy_fs("ftruncate()");
->  		} else {
-> -			ksft_test_result_fail("ftruncate() failed (%s)\n", strerror(errno));
-> +			ksft_print_msg("ftruncate() failed (%s)\n",
-> +				       strerror(errno));
-> +			result = KSFT_FAIL;
-> +			goto report;
->  		}
->  		return;
->  	}
->
->  	if (fallocate(fd, 0, 0, size)) {
-> -		if (size == pagesize)
-> -			ksft_test_result_fail("fallocate() failed (%s)\n", strerror(errno));
-> -		else
-> -			ksft_test_result_skip("need more free huge pages\n");
-> -		return;
-> +		if (size == pagesize) {
-> +			ksft_print_msg("fallocate() failed (%s)\n", strerror(errno));
-> +			result = KSFT_FAIL;
-> +		} else {
-> +			ksft_print_msg("need more free huge pages\n");
-> +			result = KSFT_SKIP;
-> +		}
-> +		goto report;
->  	}
->
->  	mem = mmap(NULL, size, PROT_READ | PROT_WRITE,
->  		   shared ? MAP_SHARED : MAP_PRIVATE, fd, 0);
->  	if (mem == MAP_FAILED) {
-> -		if (size == pagesize || shared)
-> -			ksft_test_result_fail("mmap() failed (%s)\n", strerror(errno));
-> -		else
-> -			ksft_test_result_skip("need more free huge pages\n");
-> -		return;
-> +		if (size == pagesize || shared) {
-> +			ksft_print_msg("mmap() failed (%s)\n", strerror(errno));
-> +			result = KSFT_FAIL;
-> +		} else {
-> +			ksft_print_msg("need more free huge pages\n");
-> +			result = KSFT_SKIP;
-> +		}
-> +		goto report;
->  	}
->
->  	/* Fault in the page such that GUP-fast can pin it directly. */
-> @@ -134,7 +149,8 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->  		 */
->  		ret = mprotect(mem, size, PROT_READ);
->  		if (ret) {
-> -			ksft_test_result_fail("mprotect() failed (%s)\n", strerror(errno));
-> +			ksft_print_msg("mprotect() failed (%s)\n", strerror(errno));
-> +			result = KSFT_FAIL;
->  			goto munmap;
->  		}
->  		/* FALLTHROUGH */
-> @@ -147,12 +163,14 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->  				type == TEST_TYPE_RW_FAST;
->
->  		if (gup_fd < 0) {
-> -			ksft_test_result_skip("gup_test not available\n");
-> +			ksft_print_msg("gup_test not available\n");
-> +			result = KSFT_SKIP;
->  			break;
->  		}
->
->  		if (rw && shared && fs_is_unknown(fs_type)) {
-> -			ksft_test_result_skip("Unknown filesystem\n");
-> +			ksft_print_msg("Unknown filesystem\n");
-> +			result = KSFT_SKIP;
->  			return;
->  		}
->  		/*
-> @@ -169,14 +187,19 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->  		args.flags |= rw ? PIN_LONGTERM_TEST_FLAG_USE_WRITE : 0;
->  		ret = ioctl(gup_fd, PIN_LONGTERM_TEST_START, &args);
->  		if (ret && errno == EINVAL) {
-> -			ksft_test_result_skip("PIN_LONGTERM_TEST_START failed (EINVAL)n");
-> +			ksft_print_msg("PIN_LONGTERM_TEST_START failed (EINVAL)n");
-> +			result = KSFT_SKIP;
->  			break;
->  		} else if (ret && errno == EFAULT) {
-> -			ksft_test_result(!should_work, "Should have failed\n");
-> +			if (should_work)
-> +				result = KSFT_FAIL;
-> +			else
-> +				result = KSFT_PASS;
->  			break;
->  		} else if (ret) {
-> -			ksft_test_result_fail("PIN_LONGTERM_TEST_START failed (%s)\n",
-> -					      strerror(errno));
-> +			ksft_print_msg("PIN_LONGTERM_TEST_START failed (%s)\n",
-> +				       strerror(errno));
-> +			result = KSFT_FAIL;
->  			break;
->  		}
->
-> @@ -189,7 +212,10 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->  		 * some previously unsupported filesystems, we might want to
->  		 * perform some additional tests for possible data corruptions.
->  		 */
-> -		ksft_test_result(should_work, "Should have worked\n");
-> +		if (should_work)
-> +			result = KSFT_PASS;
-> +		else
-> +			result = KSFT_FAIL;
->  		break;
->  	}
->  #ifdef LOCAL_CONFIG_HAVE_LIBURING
-> @@ -199,8 +225,9 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->
->  		/* io_uring always pins pages writable. */
->  		if (shared && fs_is_unknown(fs_type)) {
-> -			ksft_test_result_skip("Unknown filesystem\n");
-> -			return;
-> +			ksft_print_msg("Unknown filesystem\n");
-> +			result = KSFT_SKIP;
-> +			goto report;
->  		}
->  		should_work = !shared ||
->  			      fs_supports_writable_longterm_pinning(fs_type);
-> @@ -208,8 +235,9 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->  		/* Skip on errors, as we might just lack kernel support. */
->  		ret = io_uring_queue_init(1, &ring, 0);
->  		if (ret < 0) {
-> -			ksft_test_result_skip("io_uring_queue_init() failed (%s)\n",
-> -					      strerror(-ret));
-> +			ksft_print_msg("io_uring_queue_init() failed (%s)\n",
-> +				       strerror(-ret));
-> +			result = KSFT_SKIP;
->  			break;
->  		}
->  		/*
-> @@ -222,17 +250,28 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->  		/* Only new kernels return EFAULT. */
->  		if (ret && (errno == ENOSPC || errno == EOPNOTSUPP ||
->  			    errno == EFAULT)) {
-> -			ksft_test_result(!should_work, "Should have failed (%s)\n",
-> -					 strerror(errno));
-> +			if (should_work) {
-> +				ksft_print_msg("Should have failed (%s)\n",
-> +					       strerror(errno));
-> +				result = KSFT_FAIL;
-> +			} else {
-> +				result = KSFT_PASS;
-> +			}
->  		} else if (ret) {
->  			/*
->  			 * We might just lack support or have insufficient
->  			 * MEMLOCK limits.
->  			 */
-> -			ksft_test_result_skip("io_uring_register_buffers() failed (%s)\n",
-> -					      strerror(-ret));
-> +			ksft_print_msg("io_uring_register_buffers() failed (%s)\n",
-> +				       strerror(-ret));
-> +			result = KSFT_SKIP;
->  		} else {
-> -			ksft_test_result(should_work, "Should have worked\n");
-> +			if (should_work) {
-> +				result = KSFT_PASS;
-> +			} else {
-> +				ksft_print_msg("Should have worked\n");
-> +				result = KSFT_FAIL;
-> +			}
->  			io_uring_unregister_buffers(&ring);
->  		}
->
-> @@ -246,6 +285,8 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->
->  munmap:
->  	munmap(mem, size);
-> +report:
-> +	log_test_result(result);
->  }
->
->  typedef void (*test_fn)(int fd, size_t size);
-> @@ -254,13 +295,11 @@ static void run_with_memfd(test_fn fn, const char *desc)
->  {
->  	int fd;
->
-> -	ksft_print_msg("[RUN] %s ... with memfd\n", desc);
-> +	log_test_start("%s ... with memfd", desc);
->
->  	fd = memfd_create("test", 0);
-> -	if (fd < 0) {
-> -		ksft_test_result_fail("memfd_create() failed (%s)\n", strerror(errno));
-> -		return;
-> -	}
-> +	if (fd < 0)
-> +		ksft_print_msg("memfd_create() failed (%s)\n", strerror(errno));
->
->  	fn(fd, pagesize);
->  	close(fd);
-> @@ -271,23 +310,23 @@ static void run_with_tmpfile(test_fn fn, const char *desc)
->  	FILE *file;
->  	int fd;
->
-> -	ksft_print_msg("[RUN] %s ... with tmpfile\n", desc);
-> +	log_test_start("%s ... with tmpfile", desc);
->
->  	file = tmpfile();
->  	if (!file) {
-> -		ksft_test_result_fail("tmpfile() failed (%s)\n", strerror(errno));
-> -		return;
-> -	}
-> -
-> -	fd = fileno(file);
-> -	if (fd < 0) {
-> -		ksft_test_result_fail("fileno() failed (%s)\n", strerror(errno));
-> -		goto close;
-> +		ksft_print_msg("tmpfile() failed (%s)\n", strerror(errno));
-> +		fd = -1;
-> +	} else {
-> +		fd = fileno(file);
-> +		if (fd < 0) {
-> +			ksft_print_msg("fileno() failed (%s)\n", strerror(errno));
-> +		}
->  	}
->
->  	fn(fd, pagesize);
-> -close:
-> -	fclose(file);
-> +
-> +	if (file)
-> +		fclose(file);
->  }
->
->  static void run_with_local_tmpfile(test_fn fn, const char *desc)
-> @@ -295,22 +334,22 @@ static void run_with_local_tmpfile(test_fn fn, const char *desc)
->  	char filename[] = __FILE__"_tmpfile_XXXXXX";
->  	int fd;
->
-> -	ksft_print_msg("[RUN] %s ... with local tmpfile\n", desc);
-> +	log_test_start("%s ... with local tmpfile", desc);
->
->  	fd = mkstemp(filename);
-> -	if (fd < 0) {
-> -		ksft_test_result_fail("mkstemp() failed (%s)\n", strerror(errno));
-> -		return;
-> -	}
-> +	if (fd < 0)
-> +		ksft_print_msg("mkstemp() failed (%s)\n", strerror(errno));
->
->  	if (unlink(filename)) {
-> -		ksft_test_result_fail("unlink() failed (%s)\n", strerror(errno));
-> -		goto close;
-> +		ksft_print_msg("unlink() failed (%s)\n", strerror(errno));
-> +		close(fd);
-> +		fd = -1;
->  	}
->
->  	fn(fd, pagesize);
-> -close:
-> -	close(fd);
-> +
-> +	if (fd >= 0)
-> +		close(fd);
->  }
->
->  static void run_with_memfd_hugetlb(test_fn fn, const char *desc,
-> @@ -319,15 +358,14 @@ static void run_with_memfd_hugetlb(test_fn fn, const char *desc,
->  	int flags = MFD_HUGETLB;
->  	int fd;
->
-> -	ksft_print_msg("[RUN] %s ... with memfd hugetlb (%zu kB)\n", desc,
-> +	log_test_start("%s ... with memfd hugetlb (%zu kB)", desc,
->  		       hugetlbsize / 1024);
->
->  	flags |= __builtin_ctzll(hugetlbsize) << MFD_HUGE_SHIFT;
->
->  	fd = memfd_create("test", flags);
->  	if (fd < 0) {
-> -		ksft_test_result_skip("memfd_create() failed (%s)\n", strerror(errno));
-> -		return;
-> +		ksft_print_msg("memfd_create() failed (%s)\n", strerror(errno));
+>>   };
+>>   
+>>   /* PCI bus error event callbacks */
 
-I think it's this change that does it (probably).
-
-I wonder if it's worth checking for errno == ENOMEM and skipping in this
-case? Or is that too general?
-
->  	}
->
->  	fn(fd, hugetlbsize);
->
-> --
-> 2.39.5
->
