@@ -1,143 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A620283FF6;
-	Fri,  6 Jun 2025 08:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDB7283FE0
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749198452; cv=none; b=Z9C0UAJTfJczivxzlN0Y7cY3RJtatcKwO0IpMDg5cYv0NyMB2p+LK/2Tr6fJpJ1zVdzHll1O/OXuc677fVu4Rcqu0uQENt7PxuH41R6NXLnXrbwx5scmDEV7Amt5zBQCiq91VlMeh0LHkAbrl6+T+hVsP8yf1oHcZEclOc5tfyg=
+	t=1749198480; cv=none; b=PZheYj+9Vvrxk+mFW2vJYHTLqtw+fLdmCUPQIsR3YsfaooJ0SYa/eTgStCNfEHyFHwyh/m/AYwRFKQLgCVArIdkRQlV0Iv+rMyRxdncpha2W2uzxyeXfJmZajlKtv0cJfJ/PL3jB/l/czqLDYtN2JvZU3NhCDZOSp4aJJjXXflA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749198452; c=relaxed/simple;
-	bh=1rGlRVjSZPJRrzPluhWaoHUnHwZJhdUL6Aqwr9RzSoc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T2bPn29mXfGthv4/kWAUZWT62raFNo0yjPvG/VAAoVkhvsSw6ckuq9ZzfH9GPLqCEoOLefqr4ny9P4AMW+abz5JdJ603OT2Vor1mnJwqQbIWuar0aw2B7yfFzkSatV6A1NvlFljlg5gjMZ9ba3mkx803txw2+zD7pVrc+yFcB+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSLGYVQl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749198480; c=relaxed/simple;
+	bh=pxzgXOH7f2i5HEYun5Lr3zFDGbof870M40Sioco0D+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P6TwZ3wQLGO2nwjy9qy8VAkvsgaYYzlb3czjrWqPZKVaXC5srW/e0d07ERn9dFPiMfxcotRnzdrnPSW4wp0jJHtmqv9GBFiAWOInLuHDbQSPp8t2OAk5iAZRpxgoJe5gJzRwRbs2D7zqJlBvFujxytAz5dssYYcbwlzE9xf+aeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KOF1jKI2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AR6NHLpV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WPxQ79t0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Eexde3bT; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSLGYVQl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEDA4C4CEF0;
-	Fri,  6 Jun 2025 08:27:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749198451;
-	bh=1rGlRVjSZPJRrzPluhWaoHUnHwZJhdUL6Aqwr9RzSoc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XSLGYVQlSts7oEwwuQ3Q08mw0laKIlKJOhi+9Mw3I5X38+oFfYNBRfM+1BYZzx0Bt
-	 sMj42KKZ5lO9nlBP0uzp04ltasOB0cptKlCizmE+Bgof5b8KXdbYyr+5/hHDBNHe1Q
-	 /2lTnuPhuCQBGBIaUrfVCim0AwYifrl4OaRNOMJaK8Yeun8jkemorn7jwc6Cd4l/O3
-	 VJe90UIjf+fIJ/gjduuPROp1BBG5ChtuSYVvYJEGg+d+Jok6yGyjrk/+4LPQlcp04A
-	 abcxgMlLF2hHFG5w2ThDNVfTUyyFxL3f+I9D8HcMT6YOKV+9RjVlIkvrPWhxTBvPLl
-	 wlNcuG+lgPnUw==
-Message-ID: <a9512a7d-1e8e-414a-9c92-b0a4e1af3617@kernel.org>
-Date: Fri, 6 Jun 2025 10:27:24 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KOF1jKI2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AR6NHLpV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WPxQ79t0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Eexde3bT"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D8A9A33891;
+	Fri,  6 Jun 2025 08:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749198477; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DwzFtLoAJF6LpFfXdB3aqnEfVul/lrSEoNcvLPxWOR4=;
+	b=KOF1jKI2gHjfP3lAzs4XdafSN5r//4FT9CH2yZb1SeGzbiBgvK1fEPYJ73EVQNtDzpB8nK
+	nj29N2a6kOnU32RqGRjiIxqKs9OyZb8JUpxTbbG6IdOg64IxVXPGU1ECvcg3FC2fHe+JM4
+	3vvFpm4p6l1mK63UX+Wlo0b4CclhufY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749198477;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DwzFtLoAJF6LpFfXdB3aqnEfVul/lrSEoNcvLPxWOR4=;
+	b=AR6NHLpVXaal8rWTDncnWHccF5IWUPTfv0c5VrVyDQZmryLFXVmkjeW841HFLq0eBBzvNX
+	vGXjGbd4+suMzuDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=WPxQ79t0;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Eexde3bT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749198476; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DwzFtLoAJF6LpFfXdB3aqnEfVul/lrSEoNcvLPxWOR4=;
+	b=WPxQ79t0iVA0bJuYeOc6PWTQs7j2Ou3UF1bCN28JThmtwkJRlY3y8agQdemGgXsmBFK7fn
+	YnshLE8EWNaJ39vuhkIUGHVWoO4MS5VPS2vmO/4BgeawXmXMFk92YTNSu18CgyBDa8/CAF
+	nqtmQsEa2znGnVBckDnjrA3hUpSGEAg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749198476;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DwzFtLoAJF6LpFfXdB3aqnEfVul/lrSEoNcvLPxWOR4=;
+	b=Eexde3bTxa1egIHClBT0y3eyFsVnhvrfHQDX2GO8fqyXMir9clNOrqKM21Dou6DsJsKxOe
+	erfmSONNOWmLFWDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C2FF31369F;
+	Fri,  6 Jun 2025 08:27:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AEbsLIumQminBgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 06 Jun 2025 08:27:55 +0000
+Date: Fri, 6 Jun 2025 10:27:54 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v1 2/2] mm/huge_memory: don't mark refcounted pages
+ special in vmf_insert_folio_pud()
+Message-ID: <aEKmivRxYEytAIaa@localhost.localdomain>
+References: <20250603211634.2925015-1-david@redhat.com>
+ <20250603211634.2925015-3-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: mfd: mediatek: mt6397: Add
- #sound-dai-cells property
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
-Cc: Julien Massot <julien.massot@collabora.com>, kernel@collabora.com,
- Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
- Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Hui Liu <hui.liu@mediatek.com>, Yong Wu <yong.wu@mediatek.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Tinghan Shen
- <tinghan.shen@mediatek.com>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- iommu@lists.linux.dev
-References: <20250514-mt8395-dtb-errors-v2-0-d67b9077c59a@collabora.com>
- <20250514-mt8395-dtb-errors-v2-1-d67b9077c59a@collabora.com>
- <20250522-independent-ginger-bullfrog-4552d1@kuoka>
- <cee1e8bc-f4b0-49b9-a67b-2f54382c3d8e@notapiano>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <cee1e8bc-f4b0-49b9-a67b-2f54382c3d8e@notapiano>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603211634.2925015-3-david@redhat.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D8A9A33891
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-On 29/05/2025 17:53, Nícolas F. R. A. Prado wrote:
-> On Thu, May 22, 2025 at 09:52:07AM +0200, Krzysztof Kozlowski wrote:
->> On Wed, May 14, 2025 at 10:19:56AM GMT, Julien Massot wrote:
->>> The 'mt6359.dtsi' file already uses the '#sound-dai-cells' property.
->>> Add the corresponding property to the binding to fix the following
->>> dtb-check error:
->>>
->>> mediatek/mt8395-radxa-nio-12l.dtb: pmic: '#sound-dai-cells', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
->>> from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
->>
->> If this is a random drive-by, would be fine, but if that's your platform
->> which you should know, then I expect this to be a real reason instead
->> something which can easily be rejected with: what if DTS is wrong?
->>
->> I could not find the ASoC driver for that compatible and quick glance to
->> MFD shown me no usage of dai cells, so you need proper explanation here.
->>
->> Especially, that there is a subnode audio-codec, so adding dai cells to
->> the parent node feels just wrong. One is wrong - either subnode or
->> parent is a codec.
+On Tue, Jun 03, 2025 at 11:16:34PM +0200, David Hildenbrand wrote:
+> Marking PUDs that map a "normal" refcounted folios as special is
+> against our rules documented for vm_normal_page().
 > 
-> The driver is sound/soc/codecs/mt6359.c, which defines 2 DAIs. It's currently
-> probed by the MFD through the driver name, hence the parent MFD device is the
+> Fortunately, there are not that many pud_special() check that can be
+> mislead and are right now rather harmless: e.g., none so far
+> bases decisions whether to grab a folio reference on that decision.
+> 
+> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
+> implications as it seems.
+> 
+> Getting this right will get more important as we introduce
+> folio_normal_page_pud() and start using it in more place where we
+> currently special-case based on other VMA flags.
+> 
+> Fix it by just inlining the relevant code, making the whole
+> pud_none() handling cleaner.
+> 
+> Add folio_mk_pud() to mimic what we do with folio_mk_pmd().
+> 
+> While at it, make sure that the pud that is non-none is actually present
+> before comparing PFNs.
+> 
+> Fixes: dbe54153296d ("mm/huge_memory: add vmf_insert_folio_pud()")
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-It does not matter whether MFD or simple bus instantiates a device. Really.
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-> one used to register the audio component.
+ 
 
-I see codecs/mt6359.c registering the component, not the parent MFD
-device. This change does not look right but maybe the binding needs
-fixes as well.
-
-
-
-Best regards,
-Krzysztof
+-- 
+Oscar Salvador
+SUSE Labs
