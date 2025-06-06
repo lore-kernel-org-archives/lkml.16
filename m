@@ -1,307 +1,218 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1275D1C861D;
-	Fri,  6 Jun 2025 08:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749198707; cv=pass; b=P1nd+l3YzNAPjer/0t7gifDT9YB53dJS3ltxCxpFL0T+Ed4fZ2qnXxRpjfcMcR2MQtDmrYXeYlZeEna9b9tWyWLkb9C8PEzx4l+FU2CQ1JDVrHfxMYHrsW0/LiZ/TxJykZe73QQUGADImP7NEGvOLSQ3ImNsblNHAF6HenD9sm0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749198707; c=relaxed/simple;
-	bh=ErLmJhVn4QAUnKv5ZTvKBfWmiSxEPldyafoLzI0VyrE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OYJ+3eTjH/T1c63j7rflil5xzvnW5htQmYAkAceB1uuYKrfZM4RP+xL4XeJZlzeddJUj8hAQf1sMLUzOWkL+9C02XYYTQOcYCBUUJCre4k03V4SJEwCRjdoKb109Ygm/K/XCAutX15nPNE0iZqvgkU9RmjqD9eoI9vYpVwHFY0s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=KRFSflEU; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80ED113B2A4;
+	Fri,  6 Jun 2025 08:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749198788; cv=none; b=P2d23eoMeP6kNpMv0xpnXeHdSYDixaxnSYq6JjW38/++hYcMSdzVUV0zQq1+voTiRk4l9xIkQJQknoR9JXR80qiFVt/D5cGhmrdOF8L99bD89Q/eA5CBSrxi7aL9kz+/qiaxccalrNMTYWHWa8vUN4YbXgILasMRQJmse/QjJmg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749198788; c=relaxed/simple;
+	bh=1gzjtlxcNBaboAp10B6DsPzSnR0n5tBzCYY1UIHBU9Q=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PK7naPSuRbLQYTuZMiQw0mJDi6HvFEJft6iV40efN2+q1ISeOOX83ng+GNYYPSwn/XK4wz8BA/wx7Isaji2bEFTIowuGnDhACsjpV6Ljf/e8mIXoWYT4omLED46XLCKfAVfsdzYheCKDLvX9O2DC0EPC50Bs82udjSHrUnUKpRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=onjfzsfj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="KRFSflEU"
-ARC-Seal: i=1; a=rsa-sha256; t=1749198678; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=HIyyKYnUOxeCtpNB8W9sCxYALrq0N55a65L0wqg2z9q0dYV7VZt3pyxAAliuANRZvShYordAvWf15N+188V4QaUd25KDIRcy4nGXvuLB3EJTFK8nSi4Xv43GpmZOBrkt+XO9vBwNxpURmgWE6J5nK4xJ946kxXrPLPpTt5giFsw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749198678; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=sRk5wAd8hyWXbE60JMWVdo9yqvvwrUsmbz/uBn+epe0=; 
-	b=EUgOCE21rlt5geURNVWicY558R5aZrojdY+SG3F1mN5XcNp3uW7ZccMuf+B2NyNqh511ixkmldyy0f4wcGLTSf53cwJM6RL6GKRsUd05JzSpM72gMyUT55k/IAnq++DGtM5PyHZJOCpT/ATGOhMlljzkdo7MN6uV8R7DOcr5zqk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749198678;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=sRk5wAd8hyWXbE60JMWVdo9yqvvwrUsmbz/uBn+epe0=;
-	b=KRFSflEUokqfhdFotwJLk80GuhWjg0lX7o3n/PG5O9YJXTs7adWeTYHs8ZJ70jMO
-	cJkgxONNpCzBczeSHCEUtldPq2fCwUGvjI+OF0dw85e+XobY9tAtj1b2eKgPlupHG9Z
-	5vQHhTVdO6jbwqW2V7m7kiIcVfE+Wh0glpbXgjDk=
-Received: by mx.zohomail.com with SMTPS id 1749198677646331.17372961499655;
-	Fri, 6 Jun 2025 01:31:17 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>, Jonas Karlman <jonas@kwiboo.se>,
- Sebastian Reichel <sebastian.reichel@collabora.com>, kernel@collabora.com,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 6/7] arm64: dts: rockchip: Add thermal nodes to RK3576
-Date: Fri, 06 Jun 2025 10:31:12 +0200
-Message-ID: <8702624.EvYhyI6sBW@workhorse>
-In-Reply-To:
- <CABjd4YwrraMC587sn1afA+pHGA-P25xhEMh7AJJQbQ5RwYJPsg@mail.gmail.com>
-References:
- <20250425-rk3576-tsadc-upstream-v5-0-0c840b99c30e@collabora.com>
- <20250425-rk3576-tsadc-upstream-v5-6-0c840b99c30e@collabora.com>
- <CABjd4YwrraMC587sn1afA+pHGA-P25xhEMh7AJJQbQ5RwYJPsg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="onjfzsfj"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5560K2am012188;
+	Fri, 6 Jun 2025 08:33:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=jQfYr5ca0u+R0dNsjLWO8jy3
+	cZurjVwbb0x8P7BeGgg=; b=onjfzsfjkif9rFWctQ3uS9DTlk/d+C229qRRix49
+	gwkUOWe0mV0rQhZCjE2inkiLHZT4BnxAwZN/mbGNaBRwB7cPaLYwRxJbFCmCkrN0
+	08vT5AxlHT0rcsN0tH6dxmADs9ZNXTmZCOz5BmlZdjpeitO7VriLCwfAMbthw3HU
+	sxYJsNxkR0Sc3hNm3IRfvSH55YqI3OihS7U2aMCzbGMxcedN2wL7SoqRTgWDY3Dz
+	5rvf4WkgbdQtRQ8HkXx9/+M9ZvSlIg4UByCAxuH8lEdKDhnPcNW5f2Oy1FCC0I/S
+	8pYv6MXAAKOyc6gK4vdMhdhsEn/2ojBtwUMv1KOGATbjgQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 473nphs09h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Jun 2025 08:33:02 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5568X107019131
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 6 Jun 2025 08:33:01 GMT
+Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 6 Jun 2025 01:32:54 -0700
+Date: Fri, 6 Jun 2025 14:02:50 +0530
+From: Wasim Nazir <quic_wasimn@quicinc.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>, <kernel@oss.qualcomm.com>,
+        Pratyush Brahma <quic_pbrahma@quicinc.com>,
+        Prakash Gupta <quic_guptap@quicinc.com>
+Subject: Re: [PATCH v9 2/4] arm64: dts: qcom: iq9: Introduce new memory map
+ for qcs9100/qcs9075
+Message-ID: <aEKnstzguH7f0A92@hu-wasimn-hyd.qualcomm.com>
+References: <20250530092850.631831-1-quic_wasimn@quicinc.com>
+ <20250530092850.631831-3-quic_wasimn@quicinc.com>
+ <ss3xhat6v3s4ivcypw6fqcmblqait56pqhzwuhzyfhevp4kzlr@5e3f5nwb6lhb>
+ <aEATe3pi1SsfZVI3@hu-wasimn-hyd.qualcomm.com>
+ <q3hzryk4s7jd4kyavcg7s6d3oyzfpnjy4jhpeluvnikiglbeng@r4ydugwidgv7>
+ <aEBzNnnyqt/aZ35r@hu-wasimn-hyd.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aEBzNnnyqt/aZ35r@hu-wasimn-hyd.qualcomm.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: zgZp3PWVoq8iKPL3K4ByqNG-_DC-rBzx
+X-Authority-Analysis: v=2.4 cv=N8QpF39B c=1 sm=1 tr=0 ts=6842a7be cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=YzUi6L5IsME7Xw4Q_eYA:9 a=CjuIK1q_8ugA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA3OCBTYWx0ZWRfX0BSiBwDhf80o
+ nn86y8LkCsZtd9PJIftHtvhWGqL7o5eVjlR1/Eq4ewL3dfK9INuU2bA4RzIu0D9ofMUhftecBwl
+ xR7f+34gmQhs1FFwEoImdYq0MXHGv67MwmoYgV884oW0FYqq9P81j8hsouvlFDwsTKeYqcT3Soj
+ frdpRjPm/u8fE10rkeQmXYLttWKq8WnJC9fO0fW5G8uyuCtq8TVQ3lbLWW2w3VSfFEiQc2bXG4U
+ turh/IGPYlRly+6V9GJL0Vs3vUOvFFW6Apa7Z9hXX2jo4+aBeJeYOlu4/54BCJ0qssABZHQM0uh
+ OrlJ+cZNreYWBtdl+oY2ufN/SQD1Zg/eG0aSH0NxmKjCmXLJu1e0M/OqGkE/P5HDQaePmtcpAj+
+ VQogTeb3yfO5LJgQOe5aXB3kIiQvfmBKOiOuNSh89oe1n1hHm7fp7NA6YOyoEQdrBN2i7CdY
+X-Proofpoint-GUID: zgZp3PWVoq8iKPL3K4ByqNG-_DC-rBzx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-06_02,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 malwarescore=0 suspectscore=0 bulkscore=0
+ mlxscore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506060078
 
-Hi Alexey,
+On Wed, Jun 04, 2025 at 09:54:38PM +0530, Wasim Nazir wrote:
+> On Wed, Jun 04, 2025 at 04:21:46PM +0300, Dmitry Baryshkov wrote:
+> > On Wed, Jun 04, 2025 at 03:05:55PM +0530, Wasim Nazir wrote:
+> > > On Mon, Jun 02, 2025 at 10:41:39AM -0500, Bjorn Andersson wrote:
+> > > > On Fri, May 30, 2025 at 02:58:45PM +0530, Wasim Nazir wrote:
+> > > > > From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> > > > > 
+> > > > > SA8775P has a memory map which caters to the auto specific requirements.
+> > > > 
+> > > > I thought SA8775P was the IoT platform and SA8255P was the automotive
+> > > > one. Has this changed?
+> > > 
+> > > Both SA8775P & SA8255P is for auto but former one is non-SCMI based while
+> > > the later one is SCMI based chip.
+> > > 
+> > > Only IQ9 series of chips (QCS9100 & QCS9075) are for IOT.
+> > > 
+> > > > 
+> > > > > QCS9100 & QCS9075 are its IOT variants (with marketing name as IQ9) which
+> > > > > inherit the memory map of SA8775P require a slightly different memory
+> > > > > map as compared to SA8775P auto parts.
+> > > > > This new memory map is applicable for all the IoT boards which inherit
+> > > > > the initial SA8775P memory map. This is not applicable for non-IoT
+> > > > 
+> > > > Is there are platform out there that actually uses the "initial SA8775P
+> > > > memory map"?
+> > > 
+> > > Yes currently sa8775p-ride and sa8775p-ride-r3 are using initial memory
+> > > map.
+> > > 
+> > > > 
+> > > > > boards.
+> > > > > 
+> > > > > Some new carveouts (viz. gunyah_md and a few pil dtb carveouts) have been
+> > > > > introduced as part of firmware updates for IoT. The size and base address
+> > > > > have been updated for video PIL carveout compared to SA8775P since it is
+> > > > > being brought up for the first time on IoT boards. The base addresses
+> > > > > of the rest of the PIL carveouts have been updated to accommodate the
+> > > > > change in size of video since PIL regions are relocatable and their
+> > > > > functionality is not impacted due to this change. The size of camera
+> > > > > pil has also been increased without breaking any feature.
+> > > > > 
+> > > > > The size of trusted apps carveout has also been reduced since it is
+> > > > > sufficient to meet IoT requirements. Also, audio_mdf_mem & tz_ffi_mem
+> > > > > carveout and its corresponding scm reference has been removed as these
+> > > > > are not required for IoT parts.
+> > > > > 
+> > > > > Incorporate these changes in the updated memory map.
+> > > > > 
+> > > > > Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> > > > > Signed-off-by: Prakash Gupta <quic_guptap@quicinc.com>
+> > > > > Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+> > > > > ---
+> > > > >  .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 113 ++++++++++++++++++
+> > > > >  1 file changed, 113 insertions(+)
+> > > > >  create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> > > > > 
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> > > > > new file mode 100644
+> > > > > index 000000000000..ff2600eb5e3d
+> > > > > --- /dev/null
+> > > > > +++ b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> > > > 
+> > > > The naming convention is <soc>-<something>.dtsi and I don't see any
+> > > > other uses of the "iq9" naming.
+> > > 
+> > > As this new memory map is common for IQ9 series of SoC (QCS9100 &
+> > > QCS9075), so we have used its common name.
+> > 
+> > IQ9 name is not known or visible outside of this commit.
+> 
+> Are you referring to add the same in cover-letter?
+> 
+> > 
+> > > Once the DT structure for QCS9100 is refactored, we would update this
+> > > common file there.
+> > 
+> > Can you refactor it first?
+> 
+> This refactoring involves changes in all the ride/ride-r3 boards which
+> are based on sa8775p & qcs9100. Even though we had sent v0[1] but we still
+> need to conclude on the final structure. Since, ethernet is broken in upstream,
+> we are working on its fix before sending another series.
+> 
+> Hence, we want to proceed for iq9075-evk for now and once qcs9100 is
+> finalized, we can use the memory-map there.
+> 
+> But to avoid this dependency and to proceed with iq9075-evk alone,
+> I can rename it to qcs9075-reserved-memory.dtsi.
+> 
+> Let me know if that works here.
+> 
+> [1] https://lore.kernel.org/all/20250507065116.353114-1-quic_wasimn@quicinc.com/
 
-On Thursday, 5 June 2025 21:19:39 Central European Summer Time Alexey Chark=
-ov wrote:
-> Hi Nicolas,
->=20
-> On Thu, Jun 5, 2025 at 11:07=E2=80=AFPM Nicolas Frattaroli
-> <nicolas.frattaroli@collabora.com> wrote:
-> >
-> > Add the TSADC node to the RK3576. Additionally, add everything the TSADC
-> > needs to function, i.e. thermal zones, their trip points and maps, as
-> > well as adjust the CPU cooling-cells property.
-> >
-> > The polling-delay properties are set to 0 as we do have interrupts for
-> > this TSADC on this particular SoC.
-> >
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > ---
-> >  arch/arm64/boot/dts/rockchip/rk3576.dtsi | 164 +++++++++++++++++++++++=
-+++++++-
-> >  1 file changed, 162 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot=
-/dts/rockchip/rk3576.dtsi
-> > index a6bfef82d50bc9b0203a04324d61e0f232b61a65..1c07ad78c9230f1e46b0ef8=
-817834f58b19eb86b 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-> > @@ -11,6 +11,7 @@
-> >  #include <dt-bindings/power/rockchip,rk3576-power.h>
-> >  #include <dt-bindings/reset/rockchip,rk3576-cru.h>
-> >  #include <dt-bindings/soc/rockchip,boot-mode.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> >
-> >  / {
-> >         compatible =3D "rockchip,rk3576";
-> > @@ -113,9 +114,9 @@ cpu_l0: cpu@0 {
-> >                         capacity-dmips-mhz =3D <485>;
-> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
-> >                         operating-points-v2 =3D <&cluster0_opp_table>;
-> > -                       #cooling-cells =3D <2>;
-> >                         dynamic-power-coefficient =3D <120>;
-> >                         cpu-idle-states =3D <&CPU_SLEEP>;
-> > +                       #cooling-cells =3D <2>;
-> >                 };
-> >
-> >                 cpu_l1: cpu@1 {
-> > @@ -127,6 +128,7 @@ cpu_l1: cpu@1 {
-> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
-> >                         operating-points-v2 =3D <&cluster0_opp_table>;
-> >                         cpu-idle-states =3D <&CPU_SLEEP>;
-> > +                       #cooling-cells =3D <2>;
-> >                 };
-> >
-> >                 cpu_l2: cpu@2 {
-> > @@ -138,6 +140,7 @@ cpu_l2: cpu@2 {
-> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
-> >                         operating-points-v2 =3D <&cluster0_opp_table>;
-> >                         cpu-idle-states =3D <&CPU_SLEEP>;
-> > +                       #cooling-cells =3D <2>;
-> >                 };
-> >
-> >                 cpu_l3: cpu@3 {
-> > @@ -149,6 +152,7 @@ cpu_l3: cpu@3 {
-> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
-> >                         operating-points-v2 =3D <&cluster0_opp_table>;
-> >                         cpu-idle-states =3D <&CPU_SLEEP>;
-> > +                       #cooling-cells =3D <2>;
-> >                 };
-> >
-> >                 cpu_b0: cpu@100 {
-> > @@ -159,9 +163,9 @@ cpu_b0: cpu@100 {
-> >                         capacity-dmips-mhz =3D <1024>;
-> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
-> >                         operating-points-v2 =3D <&cluster1_opp_table>;
-> > -                       #cooling-cells =3D <2>;
-> >                         dynamic-power-coefficient =3D <320>;
-> >                         cpu-idle-states =3D <&CPU_SLEEP>;
-> > +                       #cooling-cells =3D <2>;
-> >                 };
-> >
-> >                 cpu_b1: cpu@101 {
-> > @@ -173,6 +177,7 @@ cpu_b1: cpu@101 {
-> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
-> >                         operating-points-v2 =3D <&cluster1_opp_table>;
-> >                         cpu-idle-states =3D <&CPU_SLEEP>;
-> > +                       #cooling-cells =3D <2>;
-> >                 };
-> >
-> >                 cpu_b2: cpu@102 {
-> > @@ -184,6 +189,7 @@ cpu_b2: cpu@102 {
-> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
-> >                         operating-points-v2 =3D <&cluster1_opp_table>;
-> >                         cpu-idle-states =3D <&CPU_SLEEP>;
-> > +                       #cooling-cells =3D <2>;
-> >                 };
-> >
-> >                 cpu_b3: cpu@103 {
-> > @@ -195,6 +201,7 @@ cpu_b3: cpu@103 {
-> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
-> >                         operating-points-v2 =3D <&cluster1_opp_table>;
-> >                         cpu-idle-states =3D <&CPU_SLEEP>;
-> > +                       #cooling-cells =3D <2>;
-> >                 };
-> >
-> >                 idle-states {
-> > @@ -436,6 +443,143 @@ psci {
-> >                 method =3D "smc";
-> >         };
-> >
-> > +       thermal_zones: thermal-zones {
-> > +               /* sensor near the center of the SoC */
-> > +               package_thermal: package-thermal {
-> > +                       polling-delay-passive =3D <0>;
-> > +                       polling-delay =3D <0>;
-> > +                       thermal-sensors =3D <&tsadc 0>;
-> > +
-> > +                       trips {
-> > +                               package_crit: package-crit {
-> > +                                       temperature =3D <115000>;
-> > +                                       hysteresis =3D <0>;
-> > +                                       type =3D "critical";
-> > +                               };
-> > +                       };
-> > +               };
-> > +
-> > +               /* sensor for cluster1 (big Cortex-A72 cores) */
-> > +               bigcore_thermal: bigcore-thermal {
-> > +                       polling-delay-passive =3D <0>;
->=20
-> I've tried these on my board, and it seems that with a zero here it
-> never stops throttling the CPU even after it cools down. I believe you
-> need something like <100> here, which is what I used on RK3588 for
-> similar reasons.
->=20
-> I think it's because the TSADC only fires an interrupt when the
-> temperature crosses the trip point, but the thermal governor also
-> needs to observe temperature trends and step up / step down the
-> cooling states depending on whether the system is cooling sufficiently
-> or not. So it needs to poll the temperature once the cooling device is
-> activated (passive in this case).
+Hi Dmitry,
 
-Thanks, good catch. I struggled to make the CPU throttle at all in my
-case, so I never managed to catch this.
+Shall I proceed with qcs9075-reserved-memory.dtsi or do you have any
+other suggestion that we should discuss?
 
-I'll fix it in v6, which I'll send out next week based on v6.16-rc1.
+Aparently, this series is for qcs9075 only so using exact (not common)
+name also aligns the naming format.
 
->=20
-> > +                       polling-delay =3D <0>;
-> > +                       thermal-sensors =3D <&tsadc 1>;
-> > +
-> > +                       trips {
-> > +                               bigcore_alert: bigcore-alert {
-> > +                                       temperature =3D <85000>;
-> > +                                       hysteresis =3D <2000>;
-> > +                                       type =3D "passive";
-> > +                               };
-> > +
-> > +                               bigcore_crit: bigcore-crit {
-> > +                                       temperature =3D <115000>;
-> > +                                       hysteresis =3D <0>;
-> > +                                       type =3D "critical";
-> > +                               };
-> > +                       };
-> > +
-> > +                       cooling-maps {
-> > +                               map0 {
-> > +                                       trip =3D <&bigcore_alert>;
-> > +                                       cooling-device =3D
-> > +                                               <&cpu_b0 THERMAL_NO_LIM=
-IT THERMAL_NO_LIMIT>,
-> > +                                               <&cpu_b1 THERMAL_NO_LIM=
-IT THERMAL_NO_LIMIT>,
-> > +                                               <&cpu_b2 THERMAL_NO_LIM=
-IT THERMAL_NO_LIMIT>,
-> > +                                               <&cpu_b3 THERMAL_NO_LIM=
-IT THERMAL_NO_LIMIT>;
-> > +                               };
-> > +                       };
-> > +               };
-> > +
-> > +               /* sensor for cluster0 (little Cortex-A53 cores) */
-> > +               littlecore_thermal: littlecore-thermal {
-> > +                       polling-delay-passive =3D <0>;
->=20
-> polling-delay-passive =3D <100>;
+> 
+> > 
+> > > 
+> > > > 
+> > 
+> > -- 
+> > With best wishes
+> > Dmitry
+> 
+> Regards,
+> Wasim
 
-Will change as well, thank you
-
->=20
-> > +                       polling-delay =3D <0>;
-> > +                       thermal-sensors =3D <&tsadc 2>;
-> > +
-> > +                       trips {
-> > +                               littlecore_alert: littlecore-alert {
-> > +                                       temperature =3D <85000>;
-> > +                                       hysteresis =3D <2000>;
-> > +                                       type =3D "passive";
-> > +                               };
-> > +
-> > +                               littlecore_crit: littlecore-crit {
-> > +                                       temperature =3D <115000>;
-> > +                                       hysteresis =3D <0>;
-> > +                                       type =3D "critical";
-> > +                               };
-> > +                       };
-> > +
-> > +                       cooling-maps {
-> > +                               map0 {
-> > +                                       trip =3D <&littlecore_alert>;
-> > +                                       cooling-device =3D
-> > +                                               <&cpu_l0 THERMAL_NO_LIM=
-IT THERMAL_NO_LIMIT>,
-> > +                                               <&cpu_l1 THERMAL_NO_LIM=
-IT THERMAL_NO_LIMIT>,
-> > +                                               <&cpu_l2 THERMAL_NO_LIM=
-IT THERMAL_NO_LIMIT>,
-> > +                                               <&cpu_l3 THERMAL_NO_LIM=
-IT THERMAL_NO_LIMIT>;
-> > +                               };
-> > +                       };
-> > +               };
-> > +
-> > +               gpu_thermal: gpu-thermal {
-> > +                       polling-delay-passive =3D <0>;
->=20
-> polling-delay-passive =3D <100>;
-
-Will change as well, thank you
-
->=20
-> Best regards,
-> Alexey
->=20
-
-Best regards,
-Nicolas Frattaroli
-
-
-
+-- 
+Regards,
+Wasim
