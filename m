@@ -1,209 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150622746A;
-	Fri,  6 Jun 2025 19:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52AA1EA7CC
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 19:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749236695; cv=none; b=UpUiuIdTmyaBW/mkFQYQ1GJoS0ip4lehoTFund7SqJwxuTpIXVUDQZt3wmak+S6eGgThzwoXnmeuT12stuU7JB+Ij+zSSz02oRWkOn2UreX//GkOohnW1fZHJfBVh59aAphyMJZeKX1fH5+nMPLrppSPErp9/B0scjfaPvM/FUk=
+	t=1749236714; cv=none; b=sfOQrnKhLVx9+cuaX0ui/7jwp8jdrYYNNFv7ryM0lv8mHZLEdu99E3bN/alOg4kpxiQPPdeL0yf28epdh0dFeguEgAMSmo97/12BFiHSlU/qWjOFfrGf5/rgoFvqrxJYiJgL+ddL8bQPUdf+OfymiAKxJ5xYsvF1ysNNP7qg1fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749236695; c=relaxed/simple;
-	bh=fuYqdoV1jvKU3tUKFTnTsNAh6QOQSVphydcsDKTi/LQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gO9yUxRk5KJ4w0l5LlMQqZSnfEscjsVflHIfKN5d3Yrh62cEHlSeoJnaNzM3/T2MSwOxKQO4TjqZ7iO58ctcBsG6+lzscImPnLHvVZECXvC5k3GvcHrm6Zvq5dnTeNRNvuXxUeRCib+4Z28xI+9WeXmL0Ia1zB3iZIW7jf24ex8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIjkbpRy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749236714; c=relaxed/simple;
+	bh=6H0DwloF7vOEqUU5gLmsPjegYl0CykJEIcaaq36pH1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jtI8AOlEHGjDQnwcHDc8Hw0t3i5XPN9gkQQpLyC3D2Bs3zV36r5uapwCb+yP7rEgIX4zQw4+iyvNzcvv6wGtp87Gu1YhG1eaSfV92p3KoyrM/H46oOrx0q5AL2yJqR8NAW9e7RHTn204u2LQMlM12ceopVzEilbvGsVNwDmGjD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=CZrpXVTE; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GIjkbpRy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DD0C4CEEB;
-	Fri,  6 Jun 2025 19:04:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749236694;
-	bh=fuYqdoV1jvKU3tUKFTnTsNAh6QOQSVphydcsDKTi/LQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GIjkbpRyH44Mlt7GAnAgaOAIRy4YqXVlLPyuoVWVvX6QHHsLAwoMb+ZYgdpLWu/RD
-	 mplKgMnNVeZrWGOyXae6f34CJGx03x4xZDU4+b6+62FMvLAW6Y9PYF+TR780QTFmpu
-	 ElB1/EOBJpmqs0nPQYHs3mJ/BlteV9moMfLKVQ5ivTWSj4aaundU3qGIgpMce2FiLK
-	 VtBCar1apDUTvlccIvzLiW6c//Peg8571g/tinuHpTtBB6P0ryRkKFjjMdzoQ2tmPL
-	 tWuzbm5GdhoqEpfT/Uz+M+hAxpYMG7yhXghzjF2i+eaFWiMJ9SlPBPEbHMMqwFk9QP
-	 tiNyMi/Q+54Dg==
-Date: Fri, 6 Jun 2025 12:04:52 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Blake Jones <blakejones@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Yujie Liu <yujie.liu@intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] perf: detect support for libbpf's emit_strings
- option
-Message-ID: <aEM71LulKhuEinN6@google.com>
-References: <20250605233934.1881839-1-blakejones@google.com>
- <20250605233934.1881839-2-blakejones@google.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="CZrpXVTE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=dTTSMmd1HyZzX30vPWlv02znwCagkmKHfnpI1QcQGwo=; b=CZrpXVTE0FnsVVm7uXUEYzF6vT
+	qSJpxpOwJO+OTIEXd7HXrWaA+0EQdFcpLY59ywCDaZe1x74hlN4GRFzVkQpebOKnO4zCQLAF6liQO
+	vM2Qn6F/dEVlMBkP0q5PSvx55xrNTezm/CaaG2BvNr4A9Ab/X/KzonvZ1Srt7eVAC8u6ixpOSli4x
+	GdGzcvhFdXz/QZT+5MgtTR3wqNsWllSLSmBkeiZpUvlWyMJJ8622iWIZgLXBj0kWYX4xLeNnre12G
+	m+UlkL+zcQjm6MU1PAqSc8dyczD7P0j0Tk1rYoVE1bFRMtr08pQeXVxpLu9/GVkkuG4idRdeouyBF
+	HF2Y37GQ==;
+Received: from i53875ad6.versanet.de ([83.135.90.214] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uNcNE-0003rs-0W; Fri, 06 Jun 2025 21:05:04 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	wens@kernel.org,
+	quentin.schulz@cherry.de,
+	Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH] regulator: fan53555: add enable_time support and soft-start times
+Date: Fri,  6 Jun 2025 21:04:18 +0200
+Message-ID: <20250606190418.478633-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250605233934.1881839-2-blakejones@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 05, 2025 at 04:39:31PM -0700, Blake Jones wrote:
-> This creates a config option that detects libbpf's ability to display
-> character arrays as strings, which was just added to the BPF tree
-> (https://git.kernel.org/bpf/bpf-next/c/87c9c79a02b4).
-> 
-> To test this change, I built perf (from later in this patch set) with:
-> 
-> - static libbpf (default, using source from kernel tree)
-> - dynamic libbpf (LIBBPF_DYNAMIC=1 LIBBPF_INCLUDE=/usr/local/include)
-> 
-> For both the static and dynamic versions, I used headers with and without
-> the ".emit_strings" option.
-> 
-> I verified that of the four resulting binaries, the two with
-> ".emit_strings" would successfully record BPF_METADATA events, and the two
-> without wouldn't.  All four binaries would successfully display
-> BPF_METADATA events, because the relevant bit of libbpf code is only used
-> during "perf record".
-> 
-> Signed-off-by: Blake Jones <blakejones@google.com>
-> ---
->  tools/build/Makefile.feature              |  1 +
->  tools/build/feature/Makefile              |  4 ++++
->  tools/build/feature/test-libbpf-strings.c | 10 ++++++++++
->  tools/perf/Documentation/perf-check.txt   |  1 +
->  tools/perf/Makefile.config                | 12 ++++++++++++
->  tools/perf/builtin-check.c                |  1 +
->  6 files changed, 29 insertions(+)
->  create mode 100644 tools/build/feature/test-libbpf-strings.c
-> 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 57bd995ce6af..541ea3cc53e9 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -126,6 +126,7 @@ FEATURE_TESTS_EXTRA :=                  \
->           llvm                           \
->           clang                          \
->           libbpf                         \
-> +         libbpf-strings                 \
->           libbpf-btf__load_from_kernel_by_id \
->           libbpf-bpf_prog_load           \
->           libbpf-bpf_object__next_program \
+The datasheets for all the fan53555 variants (and clones using the same
+interface) define so called soft start times, from enabling the regulator
+until at least some percentage of the output (i.e. 92% for the rk860x
+types) are available.
 
-Please check out tmp.perf-tools-next branch which made some changes in
-the area.
+The regulator framework supports this with the enable_time property
+but currently the fan53555 driver does not define enable_times for any
+variant.
 
-Thanks,
-Namhyung
+I ran into a problem with this while testing the new driver for the
+Rockchip NPUs (rocket), which does runtime-pm including disabling and
+enabling a rk8602 as needed. When reenabling the regulator while running
+a load, fatal hangs could be observed while enabling the associated
+power-domain, which the regulator supplies.
 
+Experimentally setting the regulator to always-on, made the issue
+disappear, leading to the missing delay to let power stabilize.
+And as expected, setting the enable-time to a non-zero value
+according to the datasheet also resolved the regulator-issue.
 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index b8b5fb183dd4..327bb501fd2b 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -59,6 +59,7 @@ FILES=                                          \
->           test-lzma.bin                          \
->           test-bpf.bin                           \
->           test-libbpf.bin                        \
-> +         test-libbpf-strings.bin                \
->           test-get_cpuid.bin                     \
->           test-sdt.bin                           \
->           test-cxx.bin                           \
-> @@ -360,6 +361,9 @@ $(OUTPUT)test-libbpf-bpf_program__set_insns.bin:
->  $(OUTPUT)test-libbpf-btf__raw_data.bin:
->  	$(BUILD) -lbpf
->  
-> +$(OUTPUT)test-libbpf-strings.bin:
-> +	$(BUILD)
-> +
->  $(OUTPUT)test-sdt.bin:
->  	$(BUILD)
->  
-> diff --git a/tools/build/feature/test-libbpf-strings.c b/tools/build/feature/test-libbpf-strings.c
-> new file mode 100644
-> index 000000000000..83e6c45f5c85
-> --- /dev/null
-> +++ b/tools/build/feature/test-libbpf-strings.c
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <bpf/btf.h>
-> +
-> +int main(void)
-> +{
-> +	struct btf_dump_type_data_opts opts;
-> +
-> +	opts.emit_strings = 0;
-> +	return opts.emit_strings;
-> +}
-> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-> index a764a4629220..799982d8d868 100644
-> --- a/tools/perf/Documentation/perf-check.txt
-> +++ b/tools/perf/Documentation/perf-check.txt
-> @@ -52,6 +52,7 @@ feature::
->                  dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
->                  auxtrace                /  HAVE_AUXTRACE_SUPPORT
->                  libbfd                  /  HAVE_LIBBFD_SUPPORT
-> +                libbpf-strings          /  HAVE_LIBBPF_STRINGS_SUPPORT
->                  libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
->                  libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
->                  libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index d1ea7bf44964..647ade45e4e5 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -595,8 +595,20 @@ ifndef NO_LIBELF
->            LIBBPF_STATIC := 1
->            $(call detected,CONFIG_LIBBPF)
->            CFLAGS += -DHAVE_LIBBPF_SUPPORT
-> +          ifneq ($(OUTPUT),)
-> +            LIBBPF_INCLUDE = $(abspath $(OUTPUT))/libbpf/include
-> +          else
-> +            LIBBPF_INCLUDE = $(CURDIR)/libbpf/include
-> +          endif
->          endif
->        endif
-> +
-> +      FEATURE_CHECK_CFLAGS-libbpf-strings="-I$(LIBBPF_INCLUDE)"
-> +      $(call feature_check,libbpf-strings)
-> +      ifeq ($(feature-libbpf-strings), 1)
-> +        $(call detected,CONFIG_LIBBPF_STRINGS)
-> +        CFLAGS += -DHAVE_LIBBPF_STRINGS_SUPPORT
-> +      endif
->      endif
->    endif # NO_LIBBPF
->  endif # NO_LIBELF
-> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-> index 9a509cb3bb9a..f4827f0ddb47 100644
-> --- a/tools/perf/builtin-check.c
-> +++ b/tools/perf/builtin-check.c
-> @@ -43,6 +43,7 @@ struct feature_status supported_features[] = {
->  	FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
->  	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
->  	FEATURE_STATUS_TIP("libbfd", HAVE_LIBBFD_SUPPORT, "Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el]"),
-> +	FEATURE_STATUS("libbpf-strings", HAVE_LIBBPF_STRINGS_SUPPORT),
->  	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
->  	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
->  	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
-> -- 
-> 2.50.0.rc0.604.gd4ff7b7c86-goog
-> 
+The datasheets in nearly all cases only specify "typical" values,
+except for the fan53555 type 08. There both a typical and maximum
+value are listed - 40uS apart.
+
+For all typical values I've added 100uS to be on the safe side.
+Individual details for the relevant regulators below:
+
+- fan53526:
+  The datasheet for all variants lists a typical value of 150uS, so
+  make that 250uS with safety margin.
+- fan53555:
+  types 08 and 18 (unsupported) are given a typical enable time of 135uS
+  but also a maximum of 175uS so use that value. All the other types only
+  have a typical time in the datasheet of 300uS, so give a bit margin by
+  setting it to 400uS.
+- rk8600 + rk8602:
+  Datasheet reports a typical value of 260us, so use 360uS to be safe.
+- syr82x + syr83x:
+  All datasheets report typical soft-start values of 300uS for these
+  regulators, so use 400uS.
+- tcs452x:
+  Datasheet sadly does not report a soft-start time, so I've not set
+  an enable-time
+
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+I've started with just setting regulator-enable-ramp-delay in devicetree,
+but Chen-Yu suggested [0] that these are characteristics of the regulator
+so possibly should be defined in the driver instead.
+And after thinking about it more, I agree.
+
+[0] https://lore.kernel.org/linux-rockchip/CAGb2v65C0jHsD2HD_AEt+AGqMfWUUwwWV0bXw4i9Hw2tCNHZpA@mail.gmail.com/
+
+ drivers/regulator/fan53555.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/regulator/fan53555.c b/drivers/regulator/fan53555.c
+index bd9447dac596..c282236959b1 100644
+--- a/drivers/regulator/fan53555.c
++++ b/drivers/regulator/fan53555.c
+@@ -147,6 +147,7 @@ struct fan53555_device_info {
+ 	unsigned int slew_mask;
+ 	const unsigned int *ramp_delay_table;
+ 	unsigned int n_ramp_values;
++	unsigned int enable_time;
+ 	unsigned int slew_rate;
+ };
+ 
+@@ -282,6 +283,7 @@ static int fan53526_voltages_setup_fairchild(struct fan53555_device_info *di)
+ 	di->slew_mask = CTL_SLEW_MASK;
+ 	di->ramp_delay_table = slew_rates;
+ 	di->n_ramp_values = ARRAY_SIZE(slew_rates);
++	di->enable_time = 250;
+ 	di->vsel_count = FAN53526_NVOLTAGES;
+ 
+ 	return 0;
+@@ -296,10 +298,12 @@ static int fan53555_voltages_setup_fairchild(struct fan53555_device_info *di)
+ 		case FAN53555_CHIP_REV_00:
+ 			di->vsel_min = 600000;
+ 			di->vsel_step = 10000;
++			di->enable_time = 400;
+ 			break;
+ 		case FAN53555_CHIP_REV_13:
+ 			di->vsel_min = 800000;
+ 			di->vsel_step = 10000;
++			di->enable_time = 400;
+ 			break;
+ 		default:
+ 			dev_err(di->dev,
+@@ -311,13 +315,19 @@ static int fan53555_voltages_setup_fairchild(struct fan53555_device_info *di)
+ 	case FAN53555_CHIP_ID_01:
+ 	case FAN53555_CHIP_ID_03:
+ 	case FAN53555_CHIP_ID_05:
++		di->vsel_min = 600000;
++		di->vsel_step = 10000;
++		di->enable_time = 400;
++		break;
+ 	case FAN53555_CHIP_ID_08:
+ 		di->vsel_min = 600000;
+ 		di->vsel_step = 10000;
++		di->enable_time = 175;
+ 		break;
+ 	case FAN53555_CHIP_ID_04:
+ 		di->vsel_min = 603000;
+ 		di->vsel_step = 12826;
++		di->enable_time = 400;
+ 		break;
+ 	default:
+ 		dev_err(di->dev,
+@@ -350,6 +360,7 @@ static int fan53555_voltages_setup_rockchip(struct fan53555_device_info *di)
+ 	di->slew_mask = CTL_SLEW_MASK;
+ 	di->ramp_delay_table = slew_rates;
+ 	di->n_ramp_values = ARRAY_SIZE(slew_rates);
++	di->enable_time = 360;
+ 	di->vsel_count = FAN53555_NVOLTAGES;
+ 
+ 	return 0;
+@@ -372,6 +383,7 @@ static int rk8602_voltages_setup_rockchip(struct fan53555_device_info *di)
+ 	di->slew_mask = CTL_SLEW_MASK;
+ 	di->ramp_delay_table = slew_rates;
+ 	di->n_ramp_values = ARRAY_SIZE(slew_rates);
++	di->enable_time = 360;
+ 	di->vsel_count = RK8602_NVOLTAGES;
+ 
+ 	return 0;
+@@ -395,6 +407,7 @@ static int fan53555_voltages_setup_silergy(struct fan53555_device_info *di)
+ 	di->slew_mask = CTL_SLEW_MASK;
+ 	di->ramp_delay_table = slew_rates;
+ 	di->n_ramp_values = ARRAY_SIZE(slew_rates);
++	di->enable_time = 400;
+ 	di->vsel_count = FAN53555_NVOLTAGES;
+ 
+ 	return 0;
+@@ -594,6 +607,7 @@ static int fan53555_regulator_register(struct fan53555_device_info *di,
+ 	rdesc->ramp_mask = di->slew_mask;
+ 	rdesc->ramp_delay_table = di->ramp_delay_table;
+ 	rdesc->n_ramp_values = di->n_ramp_values;
++	rdesc->enable_time = di->enable_time;
+ 	rdesc->owner = THIS_MODULE;
+ 
+ 	rdev = devm_regulator_register(di->dev, &di->desc, config);
+-- 
+2.47.2
+
