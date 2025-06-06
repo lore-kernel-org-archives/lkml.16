@@ -1,90 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD175C96;
-	Fri,  6 Jun 2025 02:16:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2735C96
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 02:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749176187; cv=none; b=EIb5Va6YJ45Ht7d100b/qGoJLroepa5X04J8Fk7mQ4gtufTthY621DbENsn20nKsdby6t4zJ3CM3Iw1gtwB02K0ruTkJCyAUoU6Ki6qrNSlXQcCcC/vTmV8rKmPws+umpLGO3rTIf+TAASLemNv46F7p2duf24ncRQWrCPKlONI=
+	t=1749176288; cv=none; b=Xx+bMUR+N7lIYVfUa7r2PgGsjTyKwWMtD91j8R12Fj1llJ8SPfCMBtRapFMSmAXFVLUzYNn5wurKaF2VcGxo0hReSKdQ49mlZpuEfOHkKPfVNeYiHtNE2dOJ9X2TArZIYC7UPhTbNIdYAlOPa6FuwVQT3b2y+db1yZrum0UUlqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749176187; c=relaxed/simple;
-	bh=wLz27OhmpWOMF3fZD3h6HrziarJBuqb8KFTIz16hHw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sJnPHm/JdS0r5KqAYchRwj1sDD9ZneNutv+dcDnoAj168oO1Muj0QLOj4b2W89KOcv7O19fhIvUyruJrz3KtVmzmbTTQCi+N6vPjEzB+gNKj3RNGx+uRrfofqGj9/kLyl9EDYsYLQaBANaiT2Uikdw+WlmboT7TdC8aF8jtuUEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UO0Wxtgs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749176288; c=relaxed/simple;
+	bh=6qA7YBQpFiK4Ibv64ZbIu8PGXennlTHCTuEMTnnA2+A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i9Q7kcrNtEVG0dil7FqVB8H3ZBZhiOTkZUMTlAW8tfOg1/zYnTtVJkwmijYMqPJz53l9U4FgW+5KiJ0I4RIWrQ8meSR8y9OIjLGmmqLLJn12rqF8coniWCW9PIgfVNb53YLtQjY2gzfiXewiJtCf6OEbLBXUJs/URY+Qh3WUYfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqJhFoOV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UO0Wxtgs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC362C4CEE7;
-	Fri,  6 Jun 2025 02:16:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqJhFoOV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF703C4CEF2
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 02:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749176187;
-	bh=wLz27OhmpWOMF3fZD3h6HrziarJBuqb8KFTIz16hHw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UO0WxtgspT3sXf83z00pbvllyXup00F2TBOsDTsnrDvz7k6/tNj2tS5ONZKgsPIs8
-	 15wuH6zUVfYCe+nMzxk1cK71LSsghqiqDyLh5jhrgxtbCKwfmHL3QZ0+NUcTolc27o
-	 3/dVaPwhsm+pjURPXv5Po9fGfd/aU+MdE1Xt6KCvZ4E7HeUyEYZ017Ko0QpdEe/Sc3
-	 +4kiBCJylIRv0UeE8KoSEQQgpL2jA64C6BRnodYo9RUahwvE0omYECytN4eiCsJw1F
-	 58BGmv4K2IGDP1n6yhBuK176Jlu94Ea+nW5yYj8jcsw5DPORs6bRZiqyC/ThFfp1VL
-	 CwM4Jt1sxwAuw==
-Date: Thu, 5 Jun 2025 21:16:25 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-	Ira Weiny <ira.weiny@intel.com>, linux-pwm@vger.kernel.org,
-	Heiko Stuebner <heiko@sntech.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dave Ertman <david.m.ertman@intel.com>, devicetree@vger.kernel.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	William Breathitt Gray <wbg@kernel.org>, linux-iio@vger.kernel.org,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	kernel@collabora.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 2/7] dt-bindings: pwm: Add a new binding for
- rockchip,rk3576-pwm
-Message-ID: <174917618272.3791802.11051043079285296957.robh@kernel.org>
-References: <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
- <20250602-rk3576-pwm-v2-2-a6434b0ce60c@collabora.com>
+	s=k20201202; t=1749176287;
+	bh=6qA7YBQpFiK4Ibv64ZbIu8PGXennlTHCTuEMTnnA2+A=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=KqJhFoOVKrziTHIUrXZpN//39jSp3rRY0YE4Ll642fNVb89wEV//IQz0PHrqNSSDs
+	 hXq7i6ovic24xieFPXevCFZV9tb/D4IMr0e/SeBtSipfZEM8ZAjhY0jWS6tFC91Z5l
+	 21rV8QlQDpKiYwLWXBYfkq/wF8BauBX5JPL+Ga+VtS/0JyzAYC6P499h95SrozDtSs
+	 qRqN9+RZku0dO18yk8t0oQ31LW/eaBcXf8sbulOo060fWbyhTtIX7RIyLhnjMNdgIm
+	 aOZecUZbzJZhVTyihLN5wojnpZTYG6I000O8YkNy2gs3EYmlkhC/nhRkWu/4V9++nG
+	 wdflXV5cK5kTA==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-55324e35f49so1706228e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 19:18:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKcCqjHMnz6VX9XdyPIFJqyl583qhyKmteVmCUSW7ehzATBnPN3rpXSNlxzve0CTkTxqXv26jw1bEZQ5E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7hmZVv+HmVxak2I5J4M+hbDBg2hF3EMuhT/lr6d3d/ZBE/I+l
+	cXa38qNKDMUwRyfYqLtw9z7XCR0jWMQJ5zWFrsaIV+f9lTnrnbW8b/DdQBPfR9omA2V4eFkmv2g
+	3nDSScL0cIreRqT5fNI+4cdu+4u33lX4=
+X-Google-Smtp-Source: AGHT+IGO0F1wP7gpgYi2lunUSLtB2eWuNwcIOZ7QiYAP+juBVh9hkY1iACCnipgD2v8g1JzHxJSNVztgLLcWQwygpeU=
+X-Received: by 2002:a05:6512:4026:b0:553:663c:584e with SMTP id
+ 2adb3069b0e04-55366c413f3mr305058e87.47.1749176286022; Thu, 05 Jun 2025
+ 19:18:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602-rk3576-pwm-v2-2-a6434b0ce60c@collabora.com>
+References: <20250605185001.377055-1-heiko@sntech.de>
+In-Reply-To: <20250605185001.377055-1-heiko@sntech.de>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Fri, 6 Jun 2025 10:17:53 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65C0jHsD2HD_AEt+AGqMfWUUwwWV0bXw4i9Hw2tCNHZpA@mail.gmail.com>
+X-Gm-Features: AX0GCFuToKRUmITqgDNGpW_ZR3HS5yeuUl6k2yiigcbUSEF1x31-6X5nEgTdfNg
+Message-ID: <CAGb2v65C0jHsD2HD_AEt+AGqMfWUUwwWV0bXw4i9Hw2tCNHZpA@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: add regulator-enable-ramp-delay
+ to RK860-0/-2/-3 regulators
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: quentin.schulz@cherry.de, jonas@kwiboo.se, dsimic@manjaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 6, 2025 at 2:57=E2=80=AFAM Heiko Stuebner <heiko@sntech.de> wro=
+te:
+>
+> The RK860-0/-1/-2/-3 regulators are used on rk3588 boards in addition to
+> the main pmic, to supply components like the big cpu-clusters and npu.
+>
+> So far nobody had a use-case for turning these off. The supplies for the
+> big cpu-clusters are on by default and those clusters normally are not
+> completely turned off during runtime.
+>
+> This changed with the new Rocket driver for the NPU, which does use
+> runtime-pm and thus does turn off and on the NPU's supply regulator as
+> needed. This regulator is also needed to run to actually turn on the
+> power-domain for the NPU.
+>
+> If the rocket driver now runtime-suspends while running a load and then
+> runtime-resumes again, hangs can be observed with messages like
+>
+>   rockchip-pm-domain fd8d8000.power-management:power-controller: failed t=
+o set domain 'nputop' on, val=3D0
+>
+> A way to "fix" that issue when it happens, is to set the regulator to
+> always-on. This suggests that the power-domain is trying to get power
+> from the regulator before it is ready to deliver power.
+>
+> And in fact the datasheet for the regulator defines an "Internal soft-sta=
+rt
+> time" characteristic. For a target output voltage of 1.0V the _typical_
+> time to reach at least 92% of the output, is given as 260uS.
+>
+> That means the time is dependent on the target voltage (up to 1.5V for
+> the type) and also the rest of the board design.
+>
+> So add a regulator-enable-ramp-delay to all rk860-2/-3 nodes we have in
+> mainline right now. I've chosen 500uS to be on the safe side, as
+> 260uS is the "typical" value for 1.0V and sadly no max value is given
+> in the datasheet.
 
-On Mon, 02 Jun 2025 18:19:13 +0200, Nicolas Frattaroli wrote:
-> The Rockchip RK3576 SoC has a newer PWM controller IP revision than
-> previous Rockchip SoCs. This IP, called "PWMv4" by Rockchip, introduces
-> several new features, and consequently differs in its bindings.
-> 
-> Instead of expanding the ever-growing rockchip-pwm binding that already
-> has an if-condition, add an entirely new binding to handle this.
-> 
-> There are two additional clocks, "osc" and "rc". These are available for
-> every PWM instance, and the PWM hardware can switch between the "pwm",
-> "osc" and "rc" clock at runtime.
-> 
-> The PWM controller also comes with an interrupt now. This interrupt is
-> used to signal various conditions.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  .../bindings/pwm/rockchip,rk3576-pwm.yaml          | 77 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++
->  2 files changed, 84 insertions(+)
-> 
+Since these are characteristics of the PMIC, I wonder if it makes more
+sense to put them in the driver? At least that's what we've done with a
+similar fix for the AXP PMICs.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+ChenYu
 
+>
+> This adds the property to all rk8600, rk8602 and rk8603 occurences that
+> are in mainline as of 6.16-rc1. There is currently no rk8601 used in
+> any in-kernel devicetree.
