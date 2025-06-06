@@ -1,106 +1,177 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B0324E4A1
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 06:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9DF1E5B6D;
+	Fri,  6 Jun 2025 06:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749191274; cv=none; b=U85bqmc4NyG31nTFCXIiXsZBJAC3q3XUijZgEJniWtjYvdamjk/8kLFdQhwsHb5do1KGeCawOPuiI7sbmqbs/EIxQXvsI1rx7ZdFd/aUuxK8olhu1skA1HvnJWBsDP1bE6iPBvvM5BOJLcY4A/xlU8VX0lzt1MsSv8Cru3VkQQc=
+	t=1749191341; cv=none; b=CxRR4fYZKxM3UpL3hiUeHGN8ON3tGhK2scYimoglpWcsnzx/98Nc4ZjrXccIeiVJGtWMJIk3KZTBTkDHBhkGX2mi5kH5G5nVrcfAy6W5gw0A9szIQ8Is/LnOii0cSanjbuvQ8yMmlzTuaUIpr7wckqbDt3/ulKrAkjBApCN5ZhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749191274; c=relaxed/simple;
-	bh=/6CeuiLut9XVucvvljmh0853EV7UDDXs/x4UmqOUs3c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MvCsvDacjtj+adb3TnN00E3UR6xn+TjuHTO5pc41xrkij7f2A0GZ+z42W3F2ROnBwsiVaktC9QXO/de5phJsOfBz/MWR9uqmtqf59L5+reb1spCNPrGPg6vnBU9hMnAnHDSeWc7+Y6ZvRfNJ+7CdoYRWsxebB6dAwK1F2MDEZL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ccwLfdR0; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1749191341; c=relaxed/simple;
+	bh=3xAbZPGH9ibkSw2OQPvd5qNkxMgmKjzCh7ZIwvdJLro=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YW8z5hMcAHBoiN3HowqKXAYWa+hh04o+rsWawGT/rLgDHM0Xj0ByyT4cmcgtpkx14lKWe3dX1p32yb18yZN9Dkk4BrzVJlJjEC1QedDdWne1YeymEBeHwTsYxfAmhNS4Q9sF4CD/qzPReXzcltxlePIr7rxdTjThPMdbgiZwG4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccwLfdR0"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so1817972e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 23:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749191271; x=1749796071; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tzDIUNzlZzE8Exp7uJq4kZitY7Z7cIX3lYetygV3xS4=;
-        b=ccwLfdR0IpV1glLUzc1+Xu6FyVNb/ivfzuHJWR5+qGlW24b8FUvS066pHN2aOINM/I
-         QKXLx2d5uOoy9Mc0pYTCeAov5snRps/KgNzYXSBAehKAmgYMYD11z5/Ck3czJRpk0AkU
-         Z3ajccxUdJRmMYOhE4wXETyppgIagL5iFLsKN27xx57bFTgtR8/mZ0cbUWH9Kc9IZHLN
-         E4m0OxR4SrnTjMxk42DUpyxwGcukd1vnXiX+Qux08mHu86xvRgA9V1RrQQGtsyR6jbfx
-         oalKdz7gnj0xUei1pwHlbJS9Ux+OAA60z4lKhHYKzXjaVAv+BQ7Ug6prqT0sohbxRTMF
-         m7lw==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so2914824a12.2;
+        Thu, 05 Jun 2025 23:28:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749191271; x=1749796071;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tzDIUNzlZzE8Exp7uJq4kZitY7Z7cIX3lYetygV3xS4=;
-        b=k4qYp0aA38F8XOasPEuGI0NPEGR0rUtu34prnavKqgNSW1hXgTbgsv4s0CadXuRoY0
-         jpaTJCn2Wh6e4ZuoPaFJj5pNcO8hsWwIFA+oOwKRp6oZJk8HCqtWxUjlgCtezfyZ5oR2
-         X6tW25NI3rQpxOqtaHt4rEXOSJ3olhv4pcOBtEPJoXxW752+dJTvybGSjkvLgqHdVycW
-         t2d/487XSLFKPuPsuD5Dqfv6caUWjIbiwUJoetgnnxJ+alfi3Uod4Q0r6gzffZL51fst
-         SZNKvAPyjdcFRX2+X19GaRmARArZjS8B+mA48aGUQJ/dPVfPeY6Eub4nCNVRMHb3/SUw
-         e2lg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmrH/iplEwMYuaUBj7Ldk+pAdXQyManKtVEH1NafksVeSXl8l1l1LEt7WjsIMnUU8HhZY3u75d/W7bwp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeIZxrAHnwYfh/6psgFHD2ot8vgVUQb33lhCcguGgJdOY8zLdr
-	SBgnPYCvU2X5nqp6VgJaD/XdfhXsTdPnSpUNXB9/giFg2ZbDjnLSFRSU2xQF0Q6dzAqQXf7uO8t
-	LBf8bjSICFTBSn2lpT4n8l80c9k1QXWy7X1m6zRc=
-X-Gm-Gg: ASbGncvzhL6fXKE2a2brEDaeEifhFDdagkGsC1e5tw4KGkOC1HVLhHE0UGafKwIibym
-	tsoBujvNbhMAXggAQO37d8o6MR21F338Kkyj71O/X97T9Dm3UR67H/9Bi9aRQrP0aD6ex004cYh
-	cAEP0FrWdkz6ctxgYvrfqLcDAVsNZZSUfq
-X-Google-Smtp-Source: AGHT+IGeMMe/IEfSmGHrjkKKtJpK9PNQS0qXxBBszE1Swm/h32AeISc6HAC99hfCMUixWLwv1PU+pXk6joS65XpGV3c=
-X-Received: by 2002:a05:6512:1294:b0:553:543d:d963 with SMTP id
- 2adb3069b0e04-55366c30244mr466930e87.36.1749191271080; Thu, 05 Jun 2025
- 23:27:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749191336; x=1749796136;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Azp50qUoKvhWib2z96ivM3bk0Xe8grvpHixajVtU5v4=;
+        b=hfaZPKIbpNa1ScHnD4Dz9dnacVYanITzFerXx9xtr9dp4dnQPG1czculK5rjB9Rqdw
+         5XgseD+Q7SSxA+3HqpGgqnCDXBix9pChnKdpYcEEQrvxdAnXe2K3oCTozR97kkMKCE+y
+         RHtmWdRH2rt32Go3twZgpBKEJ6/cVH9tIVbL5EF9NfIn9aC1mHVuG3VpUFmGm3kqhnEb
+         PIIMJ1XTgRMpqAzA9ZkjrDSN68q8DfzZ/W6YOs6Fxph4O7nfDCJdOf0hZX9hahso7OGl
+         vQ16QHnaSUFwsgCODH4BK9Y4k5rzixoCiFWAvLbYB81X4bxh3zsHyoEB3P3njINyEbrQ
+         jpnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEoMv7YFNCYuxE3gS2p9MUfYGEaJPibBWA8MI+Rtfao74nM7H75TSo5Db/I7nrLSf/OzYf+vK9D3c=@vger.kernel.org, AJvYcCW32XIyW1fxMbkRWMduhXBDVwtR0nJHdQdoHCcixXbZ7EpHcbCctc4G68IaV3i8ODxiLRNpUf0Qd0d75sw=@vger.kernel.org, AJvYcCWownmWm2iBzTacHPbb9F8bka1qzT3PIn2AcTZn8H+DZTFrTaBPVDA8vKvzDhJVof43CGh3aZZRd+5teoHm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgEE9HsWIzRCh4gyrSo6kBpmM/UbL2tbbjZSkSZMwS4fonvcOG
+	l781t0SN2HaFJ3oUgix5iBxCf+G5Ir8nKeTSpuc4uEpt68jEIsZDscAt
+X-Gm-Gg: ASbGncsVv4TizZbrGdfrEsvWpSt+B4uJqqirubjHGbol/Bh/PvGuSrB4o18hdbhGeTe
+	LUYC7e9u1M87hEhLMjEP6PfM5XTBwr/DnEZ54xitHtuBjBSy3YYisRb4wVxBiYHcMxaOuXxD+9f
+	Q9OlgpustO6dAbAxLRr8sLPZ57EWdQoPXXJBoh0fVGgTO6h6eyWmI/Os1I+4AORCVkXscd1tuOT
+	imwLHAjOzaFWKdTz+JcVQ256Yoppa+SPSd8mgTtmzMJWz7HpcPLjfzi5GI9IOsWn265XVoGxicG
+	1fjYX4gX5RADstcPWVpZ8nBrmHjnCzfQ0wN99VuJZBei1usojS15IVMbi/yrssSFOfagT21vKhf
+	QkSP0vTHq0SZ8F9zAcXL8NnUpunEQNq0=
+X-Google-Smtp-Source: AGHT+IGXNQ/Kv/GAHaZTlEm0PZukBBO2kWUNKuvYaAwM9uxr8U9d/fuebZy2jBADIT8dDmhYUoCnRw==
+X-Received: by 2002:a17:906:eecb:b0:ad8:8efe:31fe with SMTP id a640c23a62f3a-ade1ab876f7mr153758766b.43.1749191335712;
+        Thu, 05 Jun 2025 23:28:55 -0700 (PDT)
+Received: from [10.42.0.1] (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d754653sm67989966b.20.2025.06.05.23.28.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 23:28:55 -0700 (PDT)
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Subject: [PATCH v7 00/10] New DRM accel driver for Rockchip's RKNN NPU
+Date: Fri, 06 Jun 2025 08:28:20 +0200
+Message-Id: <20250606-6-10-rocket-v7-0-dc16cfe6fe4e@tomeuvizoso.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605164733.737543-1-mjguzik@gmail.com> <20250605190054.GH30486@noisy.programming.kicks-ass.net>
- <CAFULd4b1dQO3biWvRoHfpyE-Bot0urmWDzxfO0dEverzuQOpdA@mail.gmail.com>
-In-Reply-To: <CAFULd4b1dQO3biWvRoHfpyE-Bot0urmWDzxfO0dEverzuQOpdA@mail.gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Fri, 6 Jun 2025 08:27:39 +0200
-X-Gm-Features: AX0GCFvjfb_7FBAh99GgftH7Lniw5WfTdcvevEmNBvdRrc32to_dxITK1kHneUs
-Message-ID: <CAFULd4Zito-1VasojoL7qZdu_yggDgQL_0qMSv6ZBrtMe3i1zA@mail.gmail.com>
-Subject: Re: [PATCH v2] x86: prevent gcc from emitting rep movsq/stosq for
- inlined ops
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, torvalds@linux-foundation.org, mingo@redhat.com, 
-	x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAISKQmgC/23OzWrDMBAE4FcJOldl9R/31PcIPUirVSNKrWK7J
+ m3wu1cOlESg4wzMx1zZTFOmmb0crmyiNc+5jDW4pwPDsx/fiedYM5MgNVghueUC+FTwgxY+KGE
+ jJRQaHauLr4lSvty001vN5zwvZfq54avY276zCg4cLJA+Enlp4HUpn/S95t8yl+eRFrZrq/wXD
+ EhpWkFWIeoYMPn9j+gL6i4YYVtBVcHV2uNQ9Rj6gn4UhlbQ+wcbU7JBI3jqC+ZBkNAKpgriiAN
+ 6SBgU9gV7FyzoVrBVkMp5dCbGYDoftm37AzYXVxT2AQAA
+X-Change-ID: 20240612-6-10-rocket-9316defc14c7
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Kever Yang <kever.yang@rock-chips.com>, Robin Murphy <robin.murphy@arm.com>, 
+ Daniel Stone <daniel@fooishbar.org>, Da Xue <da@libre.computer>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Fri, Jun 6, 2025 at 8:13=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com> wrot=
-e:
->
-> On Thu, Jun 5, 2025 at 9:00=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
-> >
-> > On Thu, Jun 05, 2025 at 06:47:33PM +0200, Mateusz Guzik wrote:
-> > > gcc is over eager to use rep movsq/stosq (starts above 40 bytes), whi=
-ch
-> > > comes with a significant penalty on CPUs without the respective fast
-> > > short ops bits (FSRM/FSRS).
-> >
-> > I don't suppose there's a magic compiler toggle to make it emit prefix
-> > padded 'rep movs'/'rep stos' variants such that they are 5 bytes each,
-> > right?
-> >
-> > Something like:
-> >
-> >    2e 2e 2e f3 a4          cs cs rep movsb %ds:(%rsi),%es:(%rdi)
->
-> This won't fly, because gas complains:
->
-> z.s: Assembler messages:
-> z.s:1: Error: same type of prefix used twice
+This series adds a new driver for the NPU that Rockchip includes in its
+newer SoCs, developed by them on the NVDLA base.
 
-However, it is possible to use " cs ; cs ; cs ; rep movsb". We can add
-a compile flag to the compiler, and it will be able to emit the
-desired sequence.
+In its current form, it supports the specific NPU in the RK3588 SoC.
 
-Uros.
+The userspace driver is part of Mesa and an initial draft can be found at:
+
+https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/29698
+
+Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+---
+Changes in v7:
+- Actually enable process isolation by allocating its own IOMMU domain
+  to each DRM client.
+- Link to v6: https://lore.kernel.org/r/20250604-6-10-rocket-v6-0-237ac75ddb5e@tomeuvizoso.net
+
+Changes in v6:
+- Make all cores depend on pclk and npu clocks
+- Fix BO sync direction logic
+- Misc. cleanups
+- Link to v5: https://lore.kernel.org/r/20250520-6-10-rocket-v5-0-18c9ca0fcb3c@tomeuvizoso.net
+
+Changes in v5:
+- Use bulk clk API
+- Rename bindings file
+- Syntax improvement to bindings
+- Link to v4: https://lore.kernel.org/r/20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net
+
+Changes in v4:
+- Several fixes to DT bindings.
+- Link to v3: https://lore.kernel.org/r/20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net
+
+Changes in v3:
+- Reference in the device tree only the register blocks that are
+  actually used.
+- Several style and robustness fixes suggested in the mailing list.
+- Added patches from Nicolas Frattaroli that add support to the NPU for
+  the Rock 5B board.
+- Link to v2: https://lore.kernel.org/r/20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net
+
+Changes in v2:
+- Drop patch adding the rk3588 compatible to rockchip-iommu (Sebastian Reichel)
+- Drop patch adding support for multiple power domains to rockchip-iommu (Sebastian Reichel)
+- Link to v1: https://lore.kernel.org/r/20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net
+
+---
+Nicolas Frattaroli (2):
+      arm64: dts: rockchip: add pd_npu label for RK3588 power domains
+      arm64: dts: rockchip: enable NPU on ROCK 5B
+
+Tomeu Vizoso (8):
+      accel/rocket: Add registers header
+      accel/rocket: Add a new driver for Rockchip's NPU
+      accel/rocket: Add IOCTL for BO creation
+      accel/rocket: Add job submission IOCTL
+      accel/rocket: Add IOCTLs for synchronizing memory accesses
+      dt-bindings: npu: rockchip,rknn: Add bindings
+      arm64: dts: rockchip: Add nodes for NPU and its MMU to rk3588-base
+      arm64: dts: rockchip: Enable the NPU on quartzpro64
+
+ Documentation/accel/index.rst                      |    1 +
+ Documentation/accel/rocket/index.rst               |   19 +
+ .../bindings/npu/rockchip,rk3588-rknn-core.yaml    |  118 +
+ MAINTAINERS                                        |   10 +
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi      |   89 +-
+ .../arm64/boot/dts/rockchip/rk3588-quartzpro64.dts |   30 +
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    |   56 +
+ drivers/accel/Kconfig                              |    1 +
+ drivers/accel/Makefile                             |    1 +
+ drivers/accel/rocket/Kconfig                       |   25 +
+ drivers/accel/rocket/Makefile                      |   10 +
+ drivers/accel/rocket/rocket_core.c                 |   80 +
+ drivers/accel/rocket/rocket_core.h                 |   59 +
+ drivers/accel/rocket/rocket_device.c               |   31 +
+ drivers/accel/rocket/rocket_device.h               |   30 +
+ drivers/accel/rocket/rocket_drv.c                  |  301 ++
+ drivers/accel/rocket/rocket_drv.h                  |   19 +
+ drivers/accel/rocket/rocket_gem.c                  |  197 +
+ drivers/accel/rocket/rocket_gem.h                  |   32 +
+ drivers/accel/rocket/rocket_job.c                  |  700 ++++
+ drivers/accel/rocket/rocket_job.h                  |   52 +
+ drivers/accel/rocket/rocket_registers.h            | 4425 ++++++++++++++++++++
+ include/uapi/drm/rocket_accel.h                    |  145 +
+ 23 files changed, 6430 insertions(+), 1 deletion(-)
+---
+base-commit: a6d708809579ed3d902465785666085ff07a1d7c
+change-id: 20240612-6-10-rocket-9316defc14c7
+
+Best regards,
+-- 
+Tomeu Vizoso <tomeu@tomeuvizoso.net>
+
