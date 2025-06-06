@@ -1,229 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30D02882B6
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 16:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749229035; cv=fail; b=BAOsaIj3hdJHA4HRpSP+zpiYEBQ6Js1SWMpTDkUp6rE3Xy0B86kKtnuxWDHt5vbyBNB14l27ErgFltOPGWMjxBfR+Lli4Rz50iI2UCSas932BDy3QRPmrqccVGn24EdSMaKxljg7YeM5oUoA23qAANNt+cPoSn/Y+/Jeb18fKNI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749229035; c=relaxed/simple;
-	bh=o4ATKNEEQsXjc66L5VCOE5XOBCuJzsa0oY9ZYKJPqIM=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fUNq7Mmn2QLQO0mV9PApD9NPhecgxU4DXESIjKAUlSD156lWIpIXWAmaN6B3jfaCyF54ExvhKoO+7X352yFz1IBfo082R6wnIuwZnF7SY7IUwHxowfkt4lPZHUde1k0MHp1BtwhbRDFoS1ktXQQ9niCN5nhUG1RU+UJxFFux0e8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hUuSo1YV; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708C42882B6
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 16:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749229101; cv=none; b=T4VVZW0YZWcg7AmbFbFBJh/YtVeQdbdc2sqsW1qt3Ws9K4BasDk44G/RX5Z4Ib+o5CaIFdb7IqUxl2F/zfzaJxQYYNwI+jEI6j9BfSdnYwe5k6hdsYSQBEEb+/5/fw0EC3Nw539iPddNDuaATijbpfsuT4YzTKLwRPOdBRw3tTs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749229101; c=relaxed/simple;
+	bh=/89DxzOAi7PMxm7LqunTELrn5pv182kVgQoUK1apSAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p3UlcvG+BFshZ8zoYfy95FKEHrxmeeLqepr8WzmyPvgguCNA63MkHMpRwA5R2O+szto8BMqVJEuWf9F+2360hRRn59r8X3Nca/7hd/HnphVhyMJxbKV6X7J0RgdNTE54jTuCHI2Ikixu9weHXdLds7DQjzKsdCu66k7+JS/l11c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kglEKFuJ; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hUuSo1YV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749229034; x=1780765034;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=o4ATKNEEQsXjc66L5VCOE5XOBCuJzsa0oY9ZYKJPqIM=;
-  b=hUuSo1YVgERP209q6i2/60vw7UhY+1N2Pw3gfsnz7l1UY71HsXFiitZW
-   t4xELLkTsrkubAYHdkIeR7sdwVi35J41w1oRvCERqHU6mkF22yjrlNTq/
-   gYFz3d7WJWzDU9P+vG/ybWpDybKhLsV6FOMXS9tkRize8WUCH3F78OSrl
-   uXEl+WmmpZaNCc97EXSedn8BrrCjSBnVTeZoW38zH9wfCONxatzu272zW
-   FOFH3jtesxNLdsXDt9IhF/P87WAZUqfAj3Nz2eI9WdV1KyMHLHcwmQPKW
-   XahXyH4HT5j/8rjcqC0rs7eS2xlI2G6plEFtLs4PIp4N6LKmo1M/7qVfY
-   w==;
-X-CSE-ConnectionGUID: kQ6F49/gRqGR1si7D4cZYQ==
-X-CSE-MsgGUID: 0r8/0ej8RMmIIC/VccX6UA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="54015379"
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="54015379"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 09:56:30 -0700
-X-CSE-ConnectionGUID: C+ojGLRATBSZYcUhnY8CgA==
-X-CSE-MsgGUID: 32SOo4hgRV+T7ze6Yvqi8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="146847149"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 09:56:30 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 6 Jun 2025 09:56:29 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 6 Jun 2025 09:56:29 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.65) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Fri, 6 Jun 2025 09:56:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MlFLOk675cJ/XsBzBAN3CluR0mb5kEhWbcc0Wjr8x4Y1L1OZFmDezcpG2I4jQo24Ouur8P9AecRYSW12qBpMHCyzF7jPcx783UFJSDrK7iNS/2MDIrGDzPj4H2ZIC5qm1f0KAOxluFbXOoueEJD4gSYEI8jQGjQzpLfmW8scriHDpGZH5Jd+sUpXk77I4Fl7Uv00pWL/cr62mgwExlYku+N9gStsIAtI6iOLhdzwaaw7aOdXo1Hzzs0GytyXVvyl7ahHk3iGr4tjZ3MhWMwszC+RqNlsG1vwktwoPLXTx9aroS06uqLtM3IKETtawdHeKIC3HVozfAxtFNTKOaHUVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9Q8PoeNGh4miPe6R3VYescVYxux58LKeJ+qyT7H5/LU=;
- b=V9a2O0xmb9YmUHr6ODD48UFvZALPeMhjBn3dVxqr2um/ZZI23bt9nsJtPAIf0ezkK/ecK6+4k95D3MxRWxr/5ZEZXb0XnUpY+VdAzA3S74+27uRiDVfQrJbogfnClR5nFWH6amr2rd6lnDBzTRjfUY2KbL2mgOXIax5lIaOl7CL4uUwK3kqVOVlNjS5Td1rOhVAmgH4okTEH8tvwssgw4ijy2/Hi51IRXjNcxn9x2cf36Xlgleo/Q8jaAoujn8XPkCLEc5c5/zX/4MkaTr3a1p+nwiGCoHfSeb9uvxGErpoFW4jvSF82uakAC+9bRoEp2XsdJKp2ucJ8pXDZhXh4Sg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by SJ5PPF1611BC49E.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::812) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.21; Fri, 6 Jun
- 2025 16:56:27 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8792.034; Fri, 6 Jun 2025
- 16:56:27 +0000
-Message-ID: <7d4c739b-3fe2-43e2-9771-6137f15b42f1@intel.com>
-Date: Fri, 6 Jun 2025 09:56:25 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 14/29] x86,fs/resctrl: Support binary fixed point event
- counters
-To: "Luck, Tony" <tony.luck@intel.com>
-CC: Fenghua Yu <fenghuay@nvidia.com>, Maciej Wieczor-Retman
-	<maciej.wieczor-retman@intel.com>, Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>, "Drew
- Fustini" <dfustini@baylibre.com>, Dave Martin <Dave.Martin@arm.com>, "Anil
- Keshavamurthy" <anil.s.keshavamurthy@intel.com>, Chen Yu
-	<yu.c.chen@intel.com>, <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<patches@lists.linux.dev>
-References: <20250521225049.132551-1-tony.luck@intel.com>
- <20250521225049.132551-15-tony.luck@intel.com>
- <f368c506-c479-4e8b-a5c6-b9bc5bcd5674@intel.com>
- <aEMWhMbLpImmMBrL@agluck-desk3>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <aEMWhMbLpImmMBrL@agluck-desk3>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR04CA0001.namprd04.prod.outlook.com
- (2603:10b6:a03:40::14) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kglEKFuJ"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2353a2bc210so21692145ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 09:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1749229099; x=1749833899; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BcxjZScvM2lKpgQY852iFru4i2EtNEedlu5deP8M4Ro=;
+        b=kglEKFuJWMbWRPi/qv2oHyF3WJ7RRj3kOfV4RAU8NMXhr6d0/LT4xkMZYsiE/EauIR
+         fUlFFflvQuZCvUSsaOS3aJavPFdgfdR261OyYrQLOtu9BmW9INMtRA/SZ2uy55qrDi04
+         56LL+tbwEokAnwNOu4d1IwPjRGDVBIPVYP/KHoJMWyV1s8jSTHzzkfBIGJ4pv056J4c8
+         vrWFp6Sh2XaFqE6nj74a9YWnCVDU/CxjT2b6JolerMdPyLHfQKHV+NiVBjwk/SfQVuyO
+         PDuum+yIw0APpQG7j5YyLRv3CwTs9UQmRSm3n/j2bokxp8jvILQmnp97bbAMFGEZnCoB
+         R+SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749229099; x=1749833899;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BcxjZScvM2lKpgQY852iFru4i2EtNEedlu5deP8M4Ro=;
+        b=ECcZT6VfgE+zRTRm9u8Sh/x388UnbtUyytH01KPmAJawarE1VCSLAkOOWIVnJlFw6t
+         1NcFhYqWotHj3FkHRo/la8k4tqO+xcyC02d6TscQlY2xTN/B4ANXt6jjgktU1cK5xlVi
+         vkpXZCkYbNZBRppFm677ys4ScxBLX6FNREuPBwMdK/xcDXsR2/MR1uRjPnp5Xi7jt9RX
+         Zyp3TAmPZEHGdPDz2Kguk3aNvgkiF6LM+/iMhOUKIpvVYrPhwnYxUFaAN70hVGq+chM8
+         ub+9UT24Lu4MXe0heP0tgkUOht3nM4P5+lhZAxQRjUeL3w2+iQ7oKb9SJpMqLQnXXxO1
+         sfHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCZXqKs8AIkaLgpGdSFxHEVq7Xoh2J7I5C2h4km3QBWVg1dcSZ+Xph9dk7GROYByzeFQ3UEN0kekmnSu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJXZJl6vbVi0wFx243pJmST7gAKLJerf0IFEjaf8VT2+U5/ZrE
+	XoqdTPBc/sad1LtdM5wUWHFgtUfQgaARvDPIc0FvGZuw0YWQ3nCvlgN+kjyBZFyl4Lg=
+X-Gm-Gg: ASbGncvoUSJTlPXUcm89i2KKi9y9RE4xCMoFP4xbnKXSblKIyxM4yI5BebU7q+w5cjs
+	G2lwsdnX797yXjeA9ifzPzq+9nwBw7yrBtqX/6OkApjyqqaYZTFrx7nMu72vJP+GpafpXRPIrKR
+	86VpPPZ9n4c/9u4hzmp6BiCcrBxS/lZyphdpdM+kAYX9eABpTI11gzHxzK/pjqmO8gi8LC2mKJN
+	JruWOX41bVquVVYKLqfW+4kHB3FHRkUD0G2mnBaDIoGyCY8MBSKwjkd67so08q+u+7eVJKdBuJy
+	arX648lMpLkpaO5zvsWL/4Y5veoyrRiYpnmLv5uaxboswQz9mhrGT9NvmicSxw==
+X-Google-Smtp-Source: AGHT+IEFbEqDfqUF5m1o5ZSy4azWIZls70KNFStC8E9KnYlaEsLemZ77jdHc6KP24GJveCrVcgRxfw==
+X-Received: by 2002:a17:903:32cf:b0:235:6f7:b918 with SMTP id d9443c01a7336-23601d225cdmr62084635ad.28.1749229098693;
+        Fri, 06 Jun 2025 09:58:18 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032ff216sm14585925ad.111.2025.06.06.09.58.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 09:58:18 -0700 (PDT)
+Date: Fri, 6 Jun 2025 09:58:16 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexandre Ghiti <alex@ghiti.fr>, Ved Shanbhogue <ved@rivosinc.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH RFC v7 1/3] riscv: Add RISC-V Svrsw60t59b extension
+ support
+Message-ID: <aEMeKIBDKUTUI3B1@debug.ba.rivosinc.com>
+References: <20250409095320.224100-1-zhangchunyan@iscas.ac.cn>
+ <20250409095320.224100-2-zhangchunyan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SJ5PPF1611BC49E:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf9292a4-c76c-4c1c-abcf-08dda51b13d4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?RFJGV1dmUEJaUEdaZ2hoVHNZVWE2b3Y3UkRBYk1HL0hxM1U0cVBVZVl1VGZl?=
- =?utf-8?B?LzZTVnk2UHZsd2EreU1BTzQ5WGxmTkc2ZVhLODJ1Rm52TmNVclBEbVRlSFdi?=
- =?utf-8?B?MHBuY0lKY1RZdFUyb0s0YTV3S0R3ZTI2VkxYaXh5Nld2bW1ET0VtdlE1eDJw?=
- =?utf-8?B?bTcxWVF4ZE1SZWhaWDdnWWRrSXRKTzVYVVRpTkxJL2xaZ0hRdndyUDJGTE0x?=
- =?utf-8?B?TU5rMllsSmhGN0c1b1BlNTNNeEZacXpNWEVWc2IzdSs1WnMyd1huRmxrQUNU?=
- =?utf-8?B?bk1mOG54QjlmdCtwaGN3K0tNd2hPQ1YwT2dINEpHQ0d2NkltSHJxbHlwRXox?=
- =?utf-8?B?akVGa1ZQcXhyWW9LUjZZZ1dkdjlpb21wamRnWTJ5RmY1WjFpTDhnMUF6TUJC?=
- =?utf-8?B?bGcrOE1SUlA5SnZYQU1uY3dEYkhoQ2hiYlVxZWdvUWEzempaYjJ1K3NyRlha?=
- =?utf-8?B?RjVZUzAzT0R0TDFjZlR0dE9neXEydFYwZzgxSXFSMDlwTVFSOUZZK1dCSG1h?=
- =?utf-8?B?TTlqY212SVdSMVJHTHJPNmJ4M1lCaThFaTIzUzR1ZXE4NDFHZS91Q2hwbWpi?=
- =?utf-8?B?ZXkxbkN1WkhjL3RySHpaSDVyaTdRYWpERnI0N28zQlVDTjFCd2w1bXV5Qmx3?=
- =?utf-8?B?L216MkREWVRxTU9MUFJyQXpBdC95MU94cVdmajVTZDRVUzB3ZmhxTU1FY3k5?=
- =?utf-8?B?R0ZCcUNqRGppUW9xbG1WWlBqeEt5VmdhN0VPTStRNmdUcThNNHhUbnR3YWl1?=
- =?utf-8?B?cU4xcVMzckJPN2hEUE12K1hHREd6Q1FGYlZoeU5KZ2o4U0tYWjhlMm83M094?=
- =?utf-8?B?dGVUSytlcjRxYWV4azh6ZE8weGRheWRHZy94WGErN1gwandzQkoxc0E2NUZL?=
- =?utf-8?B?WTUyUWRmZ3NTUmRjUGMyUGxYS2gxNlFZallIMTN5TnJXZmorLytrSTdaSzZv?=
- =?utf-8?B?TVhBb0Y3K08zK2VrNGIrUS9teTV5VEFobGltbzFuME1aOTY1MXdaS2JjbXlq?=
- =?utf-8?B?ZzhUL2hhTFk2RWwzZ25rbVRxTzNNc2t1eXV4U0VOYkQzUkFwdmE0NWdzOS9X?=
- =?utf-8?B?cmkzM0Z1dVhCV2l5N3gvbEljYWZjLzRvNTQyTk5jR0JCWVIxb1RJTnVucHVG?=
- =?utf-8?B?VEwxWUYzd1BSM00zQUFTQTFEWVNmWDdCQ3R3N21lRnRpZWRYNWxCN0JRc3N2?=
- =?utf-8?B?Sy9TOVFGV0xmcVZNNTFBdVdWN3RkS2tiS1BVR1E5LzNmOG9yUGNINVVrZjFp?=
- =?utf-8?B?NEY1U3Bvd1ZuVWFUbW45VFFSSXhlY3RZMzFzL3BKZ1BBTE9TVWthazlhTVNz?=
- =?utf-8?B?WnBka24ycHlqUXlOK2QvZ2txQUtrNlY1OHdRZ21yNk1pZktsZUxCd1l1RjVV?=
- =?utf-8?B?Tm5aTXhKZ1FUalVCd3dUMzFrSm44cERIUFNzQm9yQVhzRDBkRGtCZ3JsY3Ns?=
- =?utf-8?B?bEhsSlorRGpzcGhDZlE2MzE1MTIxKy9QbmIwdUpSTjFubjgwUWhGYW5wdVpF?=
- =?utf-8?B?V2ZqT1hTVjlTa2dmVlRMaEJya1RjWlpyVVFCeW4vQStBbzdJNjVENkY2WXhm?=
- =?utf-8?B?NjhOWnY1aUs0NHd5Vi8ydERjdG5tOXE3WjFqZWUyUHFJZjM5S3g2ZUZEYjhq?=
- =?utf-8?B?clRDd3ZONUpuV29tREFiVDVPRnI2UUZjOXU3aFdLT2Q3WXBQQWUyTlg2aDNE?=
- =?utf-8?B?Qm1MQTFjTmlSb291V2gxUHRkN0pkUzJFS01pMUlBRWtNNko0LzZnVkFHc0o3?=
- =?utf-8?B?dmRCenF2TG5lRjY2SnhHUkVVSFZiRkNtNWIyQ2ZjS0ZVbTUxU3MzYkY0endr?=
- =?utf-8?B?WlZHNjliaFRIV09LVk1udFNnWlFDb2xKMnZMamJMdkhSeHNvb3RDeGZQeGYr?=
- =?utf-8?B?MkpxTHd2Vk9LOEZhZjVWMnltK3RXYThzcjdueGcyTmlyUVF2ZEV5eUFBRFpF?=
- =?utf-8?Q?1m5+uEAFy8Y=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Uklhb0NLL042SFJ2b0tEc0JUR1lTNUtXL1RZcURna2dsVks0ZkgwTFZQWXhM?=
- =?utf-8?B?K0lWd1JtUmRoYmowcHAwQlliUkF6QlN6MXN1RnJielNnL3JKejFKMEtqY0dp?=
- =?utf-8?B?bFcyeEtES0lMMVY4MzVBNXlsZVZUMk1ZRTFkeFM0czdDR1VBeElNRXVmbHdo?=
- =?utf-8?B?WmNPak0zdFN2VzBHUU1ja2o5MkxKTlJ3NURVS0lIZ1dudnlZNHdUK2lRcDVn?=
- =?utf-8?B?VVNLb3kwOCsxMHJKM0ZhV1RETjlNeTlMMVlxYjREL2lNeHNDSldreCtVUmhq?=
- =?utf-8?B?OHYycGU3UVI5T1JUN05ZTU8vNHBObWZOdlFTbHIyWEtGdG85dUgyN0g1NW9T?=
- =?utf-8?B?WmYzVFZZZlJmSWtpbVRDYm9mSWsxKzd5WDhBK1h0M0w3MEZDZ1UzSUR6T2ZS?=
- =?utf-8?B?RGFYMjF0enJrem9GUHlEVm90VDNGTm1UZHJ3Y2RHRmpnbm9GVTNaSmg5Nmd6?=
- =?utf-8?B?T1doU29HZkxBT05mNzdIQ0pBN3BOUFA1bFhRdndVeUJCWTFBTkdaSFh0UUtw?=
- =?utf-8?B?SmxOQk82WGdDbXVONU5JeWxXa0hOeWxrMFFHSzlkbmUxS2pJSzdBQkpkWHRT?=
- =?utf-8?B?ZzRrQXIrOEZwNDhSY3JUdGRnbXFLZmlqc2UxWkVjcEV6UzVtMWhyQlR2WWF3?=
- =?utf-8?B?YXFYZlh5RWNBZEt3eGwwdFNaNW5wYlVoZ3ljUE5xOXhJQWNFMFlvZVVzNElz?=
- =?utf-8?B?SnUyYW9KYVMraC9DVWUvOEMwKzZGV3FuQzJLa1I0dzl0bE1kdkRoSkxQcXNH?=
- =?utf-8?B?L3NEUjVwSlRWcjBxMjU2SlFWVFBGNHhIQnlrMXZlS0lBclFXQWRDbDJER1lF?=
- =?utf-8?B?N2xPT3RLMnppVEY1Z1VLUHVoNlozUS91Y1JZVnp5ekFpZTl1R0puVHRNKzA5?=
- =?utf-8?B?K1B2NzBpMGd3YXk0T0dVYnV6b0tvamFvTlpmYjRidVAva2QxZGd2MzdVSnRZ?=
- =?utf-8?B?b3o4UGs0NS83MkxLNUJvMkpJNXBzQkhvZlNKcEhFSmJkQmRUOWJCS3kyZ2Ix?=
- =?utf-8?B?L2tGUWZFaFRuWXV0OVNSTmQ1T2VzenJVZEM5eXRkcEdBeGlocFdFMHZwdzcx?=
- =?utf-8?B?eWlaK2taNGNYS0VCREpsT1o2ZVhXRUVVVEVRZ21ySDdFeTZrQjlIU3NSTXF3?=
- =?utf-8?B?bnF3NE5NeEpxdnBsYlVHYmVTb3FUSHV2YXo4VkMvSjIzS3pkbXRENnlUWllR?=
- =?utf-8?B?RHFtV0lSWHByQjlVenFWc0lXeGNZcHZOMUJhZjNBZmg2RXNZeFlPRDZnbWdr?=
- =?utf-8?B?YUxGRlR1RG5sUUFRWDVGc1JvSW0zbkRsSXQvNk0xUmk2cC91Vk1ERlRVQU1W?=
- =?utf-8?B?S1RINWRCak1CZ095cWtTNGdnSEdkWUNZbkthaTE1eS84SFd5QS9KVXVHbDNl?=
- =?utf-8?B?endlMlQ4VGwzdU00cFBEVk5XNGxnaDd2aXBKdFplcVVvQUFXbGxHQTIxYkNP?=
- =?utf-8?B?clQ2Q1dWSEVXNDYzc2NzS0I2NUFYKy9XVE1MYUhYVmpsdkdKNHFyVnA5RWRp?=
- =?utf-8?B?KzRlQ3BVREphTDQyYzBaeXJCaU56SVJnaHd2eW9lNE5ROTNTdXFRUnIxZWVJ?=
- =?utf-8?B?RkhYZ3ZyOWdkOEJTVHdoa3IxSDJXU2RUTUpuRE5qLzI3UjNYL0pMaVJvc1Jn?=
- =?utf-8?B?cmJmeUtubG0rVnVHN01vSmdPK0ljYzhoNGtoWXBSTDdrWFVoQXg3amoxenor?=
- =?utf-8?B?ZEVCMWg3dUoyU25LRDVzYmhRK1hzS0hWai8xbzlsc3lBZmxpSml0cGlrdkZJ?=
- =?utf-8?B?dFBsSjFjOWVaMkNoUGtzRFZ1VU13cENsV0YvQk9qNHd4MlpybjV0QmcyUWN3?=
- =?utf-8?B?aWE4N29kMFVhRGFIc2U0T3U5SlM5KzBOcGlPVlJRSVY0UFVoWnVnaEdDSk9m?=
- =?utf-8?B?YUJoMXRxNnJrNlVjMGtIdnljMlYwZHZFSWNkdVJiUTJuOHFJaFJWVDg3SVBN?=
- =?utf-8?B?MDduQ09odWFtSFNrTXlqNkZGTzB2SjdjUU1CQUhZN3VicVU4VWJJampkaGdG?=
- =?utf-8?B?bU54RW94VWN1VEsxNHo1YStaelh0YzNyRXFDV0lRSU1sdUdWbXZrL0h4NGhE?=
- =?utf-8?B?VEhKY1BNU0kycFg0bHhRaVB2dVJtU0ZZZ3V3RW96ckNoRmNrM0krYllLdzdW?=
- =?utf-8?B?azY2UElPR2h4YXR4TTFOVU55bVgydVRlcUp1b2lWK0VJdk9tUldWZUZsWmh3?=
- =?utf-8?B?d2c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf9292a4-c76c-4c1c-abcf-08dda51b13d4
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 16:56:27.3055
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: h9EPcsMbf//vZqhbPKgHqknNofDfx4WX5imYSUQZPUYzTgFOu7Iw2iTs7h/kOXOijLy1a8vm9yetNfoLmgq7ecq83X++hIebxldDTL/g25M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF1611BC49E
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250409095320.224100-2-zhangchunyan@iscas.ac.cn>
 
-Hi Tony,
+On Wed, Apr 09, 2025 at 05:53:18PM +0800, Chunyan Zhang wrote:
+>The Svrsw60t59b extension allows to free the PTE reserved bits 60
+>and 59 for software to use.
+>
+>Signed-off-by: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
+>---
+> arch/riscv/Kconfig             | 13 +++++++++++++
+> arch/riscv/include/asm/hwcap.h |  1 +
+> arch/riscv/kernel/cpufeature.c |  1 +
+> 3 files changed, 15 insertions(+)
+>
+>diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>index bbec87b79309..332fc00243ad 100644
+>--- a/arch/riscv/Kconfig
+>+++ b/arch/riscv/Kconfig
+>@@ -842,6 +842,19 @@ config RISCV_ISA_ZICBOZ
+>
+> 	   If you don't know what to do here, say Y.
+>
+>+config RISCV_ISA_SVRSW60T59B
+>+	bool "Svrsw60t59b extension support for using PTE bits 60 and 59"
+>+	depends on RISCV_ALTERNATIVE
 
-On 6/6/25 9:25 AM, Luck, Tony wrote:
-> On Tue, Jun 03, 2025 at 08:49:08PM -0700, Reinette Chatre wrote:
->>> +	sprintf(buf, "%0*llu", fp->decplaces, frac);
->>
->> I'm a bit confused here. I see fp->decplaces as the field width and the "0" indicates
->> that the value is zero padded on the _left_. I interpret this to mean that, for example,
->> if the value of frac is 42 then it will be printed as "0042". The fraction's value is modified
->> (it is printed as "0.0042") and there are no trailing zeroes to remove. What am I missing?
-> 
-> An example may help. Suppose architecture is providing 18 binary place
-> numbers, and delivers the value 0x60000 to be displayed. With 18 binary
-> places filesystem chooses 6 decimal places (I'll document the rationale
-> for this choice in comments in next version). In binary the value looks
-> like this:
-> 
-> 	integer	binary_places
-> 	1	100000000000000000
-> 
-> Running through my algorithm will end with "frac" = 500000 (decimal).
-> 
-> Thus there are *trailing* zeroes. The value should be displayed as
-> "1.5" not as "1.500000".
+depends on MMU && 64BIT as well.
 
-Instead of a counter example, could you please make it obvious through
-the algorithm description and/or explanation of decimal place choice how
-"frac" is guaranteed to never be smaller than "decplaces"?
-
-Reinette
+>+	default y
+>+	help
+>+	  Adds support to dynamically detect the presence of the SVRSW60T59B
+>+	  extension and enable its usage.
+>+
+>+	  The Svrsw60t59b extension allows to free the PTE reserved bits 60
+>+	  and 59 for software to use.
+>+
+>+	  If you don't know what to do here, say Y.
+>+
+> config TOOLCHAIN_NEEDS_EXPLICIT_ZICSR_ZIFENCEI
+> 	def_bool y
+> 	# https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=aed44286efa8ae8717a77d94b51ac3614e2ca6dc
+>diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+>index e3cbf203cdde..985f6dfc80ed 100644
+>--- a/arch/riscv/include/asm/hwcap.h
+>+++ b/arch/riscv/include/asm/hwcap.h
+>@@ -105,6 +105,7 @@
+> #define RISCV_ISA_EXT_ZVFBFWMA		96
+> #define RISCV_ISA_EXT_ZAAMO		97
+> #define RISCV_ISA_EXT_ZALRSC		98
+>+#define RISCV_ISA_EXT_SVRSW60T59B	99
+>
+> #define RISCV_ISA_EXT_XLINUXENVCFG	127
+>
+>diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+>index 2054f6c4b0ae..0f0f3027d400 100644
+>--- a/arch/riscv/kernel/cpufeature.c
+>+++ b/arch/riscv/kernel/cpufeature.c
+>@@ -523,6 +523,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+> 	__RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+> 	__RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+> 	__RISCV_ISA_EXT_DATA(svvptc, RISCV_ISA_EXT_SVVPTC),
+>+	__RISCV_ISA_EXT_DATA(svrsw60t59b, RISCV_ISA_EXT_SVRSW60T59B),
+> };
+>
+> const size_t riscv_isa_ext_count = ARRAY_SIZE(riscv_isa_ext);
+>-- 
+>2.34.1
+>
