@@ -1,186 +1,182 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F705289E1D
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 16:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0FE28980E
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 16:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749226993; cv=none; b=jSrCFF0nzmxKTOfa3q21wKzfew2/YJtaOprdIbEaHmANGao/d82jRy+yVH4nORyHyhuS0+zv6sR0uk3qaXVUcshF667mwmIdsCC1XFBodE20MwQYOMRFCMmIS0ezH2tuiRFH+NcWKenzL6HkRBmqWJoWGZQiB9NLCc33QMvJGt0=
+	t=1749227011; cv=none; b=k9j8fX3EOoadukia7btoJHvCR2cYuEzF3/ne7N6RtRXEbgcV3UbLjKifsMYJaFNthL/ghtE5Z2OUQTrunZcQa6qw1aIM4kDzPoZzOLdCJwVKZP1A2olt5VzND5lOdEbagyCdRV4HaN29ZveWjOxa0waV6cHXVcO1nTulwcW3830=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749226993; c=relaxed/simple;
-	bh=M1jOEuhivTZKy/mwihHb5k9W7LK7MVVycL5m83PizRY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tvCTbrmdtvrV5Of78JbFOcABn6GDXisxLzzmVsNsh8ZEYVE5TlX0zVPjN13AEiJUuXHdkLXqdN+7MYLZ5X2IK4KCssW4fZbKwi3vt21QRsAFl2Jxkl7obix7go3JbZsWRc5SI0E5lXfdN8iuuq3jCHdW+TlAORv/2KKg/YjSEW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0TDxS94L; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749227011; c=relaxed/simple;
+	bh=g0LVpQxipeOCOXuAtAJhs14mbqA3NiYPX4nhcwbpzZw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NjzNVhRlH19ukdUqSz7xI9mec3uOesRtxqN2m1T1Mg1qeFRFRyO2lH+LH+WDHwJ3Yr4mjvUO/7S3QUnsqNLBLVeXppP/zTwye/5IsXZnu9E+WUHJDDo3TZfbPnLuAyPPpbSs59YWGHkwVt6fJ8PdD7Q2PWLWG1g8sqEqoopJBLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=oQfDrnf1; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0TDxS94L"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c38df7ed2so1648726a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 09:23:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="oQfDrnf1"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a3db0666f2so47520391cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 09:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749226990; x=1749831790; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iqr00pI7lwlLVWJXPD39OYX7ZXcxb0u30DdjvVVkUqE=;
-        b=0TDxS94L+nmcB5yYQB7tpxOMLs7UB49L6oEYGdkvtwuXPeRNhNZ4ljFNT+rv1aB33/
-         DqrNBGsrmg0k6F0zIMxCVLq8xbBpuAWcZqnXjsNFW+//CrW24h3oNxIPtUGF3QRB+ujX
-         XXRBlZ02jlceqo6mTy9fLZb8tZQkmA0dc2r4dW/YBJ0OIzihYFQQv9dOhDyDGIve35nV
-         iv8qIB3Ah2eocrXfmA4TtSIvbmcTlGPnmE829mPXJTlm9lbvWhHKayJ9j7Q2jRTkPdM7
-         b3OtYyGj9LZmLZmCTwTvv952HOXO66tdpmssQzOVH0v+TI5HOzxtFHQmgodmbeAUSOEm
-         Si3A==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749227008; x=1749831808; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mFpeqJEhDacu967h49T3bcYqqSd1cDscEpckxmXpo1A=;
+        b=oQfDrnf1GHhy/Yfm+t50dRTNVkCkE+yZVcatrecWiCe8q37aUIjfNYV5GXxTN06KyJ
+         5/9ldkHF70sTN7w5sklsNmXQRJBn4VKA9j3pfxpOUVprJUCIqKbgILwlndgGEZ2SsMyg
+         K8B3oZflr0jCgfSEFukr31lOT4lRSUmpSRU8WWWYUfrUOTJo4oaUs1k5PBTRInGGzY7g
+         TbeyEDHASgFdyVeo0wLEzDa2V/3Objfqgb+re2QSod7CHS1Z8+QVx6mok/q7JffePFlh
+         nMK5kKCzQEkL3Lqm98b+/yKgwnz+18Bz8RUXH/dZ07CRKEX1eiTeLI8FTOlcqpBr8yTz
+         JtEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749226990; x=1749831790;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iqr00pI7lwlLVWJXPD39OYX7ZXcxb0u30DdjvVVkUqE=;
-        b=rWQ/FtkrLoJUGKV5We2e0iX5fS/zFywN82bQ7BFvq1SGXKJ1wcR1D2EfUOR4ubu/ti
-         9tbOrfwPccqNiW6pggHJlCb06Om3EC0oI0tCIwH/2HX6spZaf/MyJSun4a25QEngThCE
-         FstwUIU9ZcAyahUx8P28SKlgDVFGB8XVDbUkMn1DS86SWRYasmlJK1AQTSZEbsi1HJ3V
-         7/Q3RxPJXHlLh9r6aVKVoYP6ER5+JXj7d/TZVOa4cyCIit5B0jF/NQGgwtnIl+QVxJs/
-         JjwzuJcDl4ZPT00Xoq1LJZk1oD+JK6lja55U4MMgYhv/umby9Dq2b2yUzNrKPgH9fnND
-         BqVg==
-X-Gm-Message-State: AOJu0YwtPF45HtDyReWYfKrRB6oQZ3gnKV7GRcr8MZRbde1/BQqkL4Vd
-	vk737OAF1X+BL110SdAPyZPgtjdOAerLMYmMdpvfiZRgaM5mv/LHQBQqFNFD/8qlWPOyFYSpJQd
-	vm2258Q==
-X-Google-Smtp-Source: AGHT+IEbdeG1/EtRym+qW1Vn8WnmqKEc3a8Vg6fFl1bLllc5eruW4ye1N0jRNWJY9KZzuwW5IEBvBc5bSDQ=
-X-Received: from plbmi16.prod.google.com ([2002:a17:902:fcd0:b0:234:dbbb:e786])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2451:b0:234:aa98:7d41
- with SMTP id d9443c01a7336-23601d977fcmr50980545ad.42.1749226990318; Fri, 06
- Jun 2025 09:23:10 -0700 (PDT)
-Date: Fri, 6 Jun 2025 09:23:09 -0700
-In-Reply-To: <20250401161106.790710-11-pbonzini@redhat.com>
+        d=1e100.net; s=20230601; t=1749227008; x=1749831808;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mFpeqJEhDacu967h49T3bcYqqSd1cDscEpckxmXpo1A=;
+        b=Sl/yOnO9b1NOzwUKu94IViorKYimotjnCIjgZIkT8njcxAXCsxd+qiZrq2y8IRRpGL
+         6rmgm0C2eLLHq0WJ0AhE8HF/J0GRy/VOL9qqmOjq6Z+FajYlJQTQAyno8CXC8kntaKxf
+         1ULORx2Sw7Lh219/s0MHeIRgYTZugDN7/El9IifO78jd6iHP8kEqsRr9++eokaFyomPE
+         k7imBg5MHewEKzD1oOE/zFFNvFIH1L7PzmWJec1N5HKZQVCNLRy4tDFdvmlk0gb9QxAk
+         OfyWURqnzLjVCX3aUTja5YWgjFhEh4kfKJcIJAGD/9Ucb9+ydAytxcTryYtNyRjHZjS8
+         hPgw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7XcYYiEP9H6fiXbdxvuAH6ay8YFZCo8t2ByyKXgvFR6UfSf7FZ1Qomnyws7BcrZ4TYGeqcvhot7hVjp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyE+S9trRvd+nu9VvBJVP2j3E1XAA5bkfebWnCvMNEmXNbDvuuD
+	bF3GBsF9ks5i08qrz4htiKARcZrRR5T0E3JKfTq3aEBN039Y7G+irimZtaAUBs/VdkIzDiU3EPm
+	k48pvh2GuHzpj9B/ifRGffcQ/OcJeljaNX14a/f+Z2g==
+X-Gm-Gg: ASbGncshhJdtYsOZwDAJQYVE0cGci/xYyZrYLY7XSpdrJJ7R7XIrp+xkaZxnNEKDM2d
+	wvAS/7kp0De4mfe/WWjMYiHJ2BX8aDpM1s1kUGRTmKTQEnBlWAIC33zw3MDM6WHrSYeeUwCRsYN
+	zZHczlxTtZlxTQ0nT966KO9Wuee6BQNY+2l1FrUOn+
+X-Google-Smtp-Source: AGHT+IGPsHSaGwXVvY8YZpTqOE2qMLkHKMqQkhbImGTUUVVWXZpV4mBeVtnt3fOpZqXUHctLEMLr/kgfyV+cty9EU04=
+X-Received: by 2002:a05:622a:a044:b0:4a2:719b:1231 with SMTP id
+ d75a77b69052e-4a5b9d96135mr48575531cf.35.1749227008164; Fri, 06 Jun 2025
+ 09:23:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250401161106.790710-1-pbonzini@redhat.com> <20250401161106.790710-11-pbonzini@redhat.com>
-Message-ID: <aEMV7awKTSXEkLqu@google.com>
-Subject: Re: [PATCH 10/29] KVM: share statistics for same vCPU id on different planes
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, roy.hopkins@suse.com, 
-	thomas.lendacky@amd.com, ashish.kalra@amd.com, michael.roth@amd.com, 
-	jroedel@suse.de, nsaenz@amazon.com, anelkz@amazon.de, 
-	James.Bottomley@hansenpartnership.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+ <20250515182322.117840-4-pasha.tatashin@soleen.com> <mafs05xhbv9fd.fsf@kernel.org>
+In-Reply-To: <mafs05xhbv9fd.fsf@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 6 Jun 2025 12:22:51 -0400
+X-Gm-Features: AX0GCFutlDyG92JoXPnUdMDlv9OT8nRqcidR71SxEcHa0BYzPpqGY1tjEjK24Po
+Message-ID: <CA+CK2bAZY7L20CwkHMKwThYj9nK8S4jHm-NXx-EhXpXntnv6Jw@mail.gmail.com>
+Subject: Re: [RFC v2 03/16] kho: add kho_unpreserve_folio/phys
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: jasonmiu@google.com, graf@amazon.com, changyuanl@google.com, 
+	rppt@kernel.org, dmatlack@google.com, rientjes@google.com, corbet@lwn.net, 
+	rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, 
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, 
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com, 
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com, 
+	vincent.guittot@linaro.org, hannes@cmpxchg.org, dan.j.williams@intel.com, 
+	david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, 
+	linux@weissschuh.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, gregkh@linuxfoundation.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org, 
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
+	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 01, 2025, Paolo Bonzini wrote:
-> Statistics are protected by vcpu->mutex; because KVM_RUN takes the
-> plane-0 vCPU mutex, there is no race on applying statistics for all
-> planes to the plane-0 kvm_vcpu struct.
-> 
-> This saves the burden on the kernel of implementing the binary stats
-> interface for vCPU plane file descriptors, and on userspace of gathering
-> info from multiple planes.  The disadvantage is a slight loss of
-> information, and an extra pointer dereference when updating stats.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/arm64/kvm/arm.c                 |  2 +-
->  arch/arm64/kvm/handle_exit.c         |  6 +--
->  arch/arm64/kvm/hyp/nvhe/gen-hyprel.c |  4 +-
->  arch/arm64/kvm/mmio.c                |  4 +-
->  arch/loongarch/kvm/exit.c            |  8 ++--
->  arch/loongarch/kvm/vcpu.c            |  2 +-
->  arch/mips/kvm/emulate.c              |  2 +-
->  arch/mips/kvm/mips.c                 | 30 +++++++-------
->  arch/mips/kvm/vz.c                   | 18 ++++-----
->  arch/powerpc/kvm/book3s.c            |  2 +-
->  arch/powerpc/kvm/book3s_hv.c         | 46 ++++++++++-----------
->  arch/powerpc/kvm/book3s_hv_rm_xics.c |  8 ++--
->  arch/powerpc/kvm/book3s_pr.c         | 22 +++++-----
->  arch/powerpc/kvm/book3s_pr_papr.c    |  2 +-
->  arch/powerpc/kvm/powerpc.c           |  4 +-
->  arch/powerpc/kvm/timing.h            | 28 ++++++-------
->  arch/riscv/kvm/vcpu.c                |  2 +-
->  arch/riscv/kvm/vcpu_exit.c           | 10 ++---
->  arch/riscv/kvm/vcpu_insn.c           | 16 ++++----
->  arch/riscv/kvm/vcpu_sbi.c            |  2 +-
->  arch/riscv/kvm/vcpu_sbi_hsm.c        |  2 +-
->  arch/s390/kvm/diag.c                 | 18 ++++-----
->  arch/s390/kvm/intercept.c            | 20 +++++-----
->  arch/s390/kvm/interrupt.c            | 48 +++++++++++-----------
->  arch/s390/kvm/kvm-s390.c             |  8 ++--
->  arch/s390/kvm/priv.c                 | 60 ++++++++++++++--------------
->  arch/s390/kvm/sigp.c                 | 50 +++++++++++------------
->  arch/s390/kvm/vsie.c                 |  2 +-
->  arch/x86/kvm/debugfs.c               |  2 +-
->  arch/x86/kvm/hyperv.c                |  4 +-
->  arch/x86/kvm/kvm_cache_regs.h        |  4 +-
->  arch/x86/kvm/mmu/mmu.c               | 18 ++++-----
->  arch/x86/kvm/mmu/tdp_mmu.c           |  2 +-
->  arch/x86/kvm/svm/sev.c               |  2 +-
->  arch/x86/kvm/svm/svm.c               | 18 ++++-----
->  arch/x86/kvm/vmx/tdx.c               |  8 ++--
->  arch/x86/kvm/vmx/vmx.c               | 20 +++++-----
->  arch/x86/kvm/x86.c                   | 40 +++++++++----------
->  include/linux/kvm_host.h             |  5 ++-
->  virt/kvm/kvm_main.c                  | 19 ++++-----
->  40 files changed, 285 insertions(+), 283 deletions(-)
+On Wed, Jun 4, 2025 at 11:00=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org=
+> wrote:
+>
+> On Thu, May 15 2025, Pasha Tatashin wrote:
+>
+> > From: Changyuan Lyu <changyuanl@google.com>
+> >
+> > Allow users of KHO to cancel the previous preservation by adding the
+> > necessary interfaces to unpreserve folio.
+> >
+> > Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> > Co-developed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> > ---
+> >  include/linux/kexec_handover.h | 12 +++++
+> >  kernel/kexec_handover.c        | 84 ++++++++++++++++++++++++++++------
+> >  2 files changed, 83 insertions(+), 13 deletions(-)
+> >
+> [...]
+> > diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+> > index 8ff561e36a87..eb305e7e6129 100644
+> > --- a/kernel/kexec_handover.c
+> > +++ b/kernel/kexec_handover.c
+> > @@ -101,26 +101,33 @@ static void *xa_load_or_alloc(struct xarray *xa, =
+unsigned long index, size_t sz)
+> >       return elm;
+> >  }
+> >
+> > -static void __kho_unpreserve(struct kho_mem_track *track, unsigned lon=
+g pfn,
+> > -                          unsigned long end_pfn)
+> > +static void __kho_unpreserve_order(struct kho_mem_track *track, unsign=
+ed long pfn,
+> > +                                unsigned int order)
+> >  {
+> >       struct kho_mem_phys_bits *bits;
+> >       struct kho_mem_phys *physxa;
+> > +     const unsigned long pfn_high =3D pfn >> order;
+> >
+> > -     while (pfn < end_pfn) {
+> > -             const unsigned int order =3D
+> > -                     min(count_trailing_zeros(pfn), ilog2(end_pfn - pf=
+n));
+> > -             const unsigned long pfn_high =3D pfn >> order;
+> > +     physxa =3D xa_load(&track->orders, order);
+> > +     if (!physxa)
+> > +             return;
+> >
+> > -             physxa =3D xa_load(&track->orders, order);
+> > -             if (!physxa)
+> > -                     continue;
+> > +     bits =3D xa_load(&physxa->phys_bits, pfn_high / PRESERVE_BITS);
+> > +     if (!bits)
+> > +             return;
+> >
+> > -             bits =3D xa_load(&physxa->phys_bits, pfn_high / PRESERVE_=
+BITS);
+> > -             if (!bits)
+> > -                     continue;
+> > +     clear_bit(pfn_high % PRESERVE_BITS, bits->preserve);
+> > +}
+> >
+> > -             clear_bit(pfn_high % PRESERVE_BITS, bits->preserve);
+> > +static void __kho_unpreserve(struct kho_mem_track *track, unsigned lon=
+g pfn,
+> > +                          unsigned long end_pfn)
+> > +{
+> > +     unsigned int order;
+> > +
+> > +     while (pfn < end_pfn) {
+> > +             order =3D min(count_trailing_zeros(pfn), ilog2(end_pfn - =
+pfn));
+>
+> This is fragile. If the preserve call spans say 4 PFNs, then it gets
+> preserved as a order 2 allocation, but if the PFNs are unpreserved
+> one-by-one, __kho_unpreserve_order() will unpreserve from the order 0
+> xarray, which will end up doing nothing, leaking those pages.
+>
+> It should either look through all orders to find the PFN, or at least
+> have a requirement in the API that the same phys and size combination as
+> the preserve call must be given to unpreserve.
 
-...
+Thank you Pratyush, this is an excellent point. I will add to the
+comments of these functions, that it is a requirement to unpreserve
+exactly the memory that was preserved, and subsections are not
+allowed. I do not think this is needed, but in the future, if a use
+case arises, we can relax this requirement.
 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index dbca418d64f5..d2e0c0e8ff17 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -393,7 +393,8 @@ struct kvm_vcpu {
->  	bool ready;
->  	bool scheduled_out;
->  	struct kvm_vcpu_arch arch;
-> -	struct kvm_vcpu_stat stat;
-> +	struct kvm_vcpu_stat *stat;
-> +	struct kvm_vcpu_stat __stat;
-
-Rather than special case invidiual fields, I think we should give kvm_vcpu the
-same treatment as "struct kvm", and have kvm_vcpu represent the overall vCPU,
-with an array of planes to hold the sub-vCPUs.
-
-Having "kvm_vcpu" represent a plane, while "kvm" represents the overall VM, is
-conceptually messy.  And more importantly, I think the approach taken here will
-be nigh impossible to maintain, and will have quite a bit of baggage.  E.g. planes1+
-will be filled with dead memory, and we also risk goofs where KVM could access
-__stat in a plane1+ vCPU.
-
-Documenting which fields are plane0-only, i.e. per-vCPU, via comments isn't
-sustainable, whereas a hard split via structures will naturally what fields are
-scope to the overall vCPU, versus what is per-plane, and will force us to more
-explicitly audit the code.  E.g. ____srcu_idx (and thus srcu_depth) is something
-that I think should be shared by all planes.  Ditto for preempt_notifier, vcpu_id,
-vcpu_idx, pid, etc.
-
-Aha!  And to prove my point, this series breaks legacy signal handling, because
-sigset_active and sigset are accessed using the plane1+ vCPU in kvm_vcpu_ioctl_run_plane(),
-but KVM_SET_SIGNAL_MASK is only allowed to operated on plane0.  And I definitely
-don't think the answer is to let KVM_SET_SIGNAL_MASK operate on plane1+, because
-forcing userspace to duplicate the sigmal masks to all planes is pointless.
-
-Yeeeaaap.  pid and pid_lock are also broken.  As is vmx_hwapic_isr_update()
-and kvm_sched_out()'s usage of wants_to_run.  And guest_debug.
-
-Long term, I just don't see this approach as being maintainable.  We're pretty
-much guaranteed to end up with bugs where KVM operates on the wrong kvm_vcpu
-structure due to lack of explicit isolation in code.  And those bugs are going
-to absolutely brutal to debug (or even notice).  E.g. failure to set "preempted"
-on planes 1+ will mostly manifest as subtle performance issues.
-
-Oof.  And that would force us to document that duplicating cpuid and cpu_caps to
-planes1+ is actually necessary, due to dynamic CPUID features (ugh).  Though FWIW,
-we could dodge that by special casing dynamic features, which isn't a bad idea
-irrespective of planes.
-
-Somewhat of a side topic: unless we need/want to explicitly support concurrent
-GET/SET on planes of a vCPU, I think we should make vcpu->mutex per-vCPU, not
-per-plane, so that there's zero chance of having bugs due to thinking that holding
-vcpu->mutex provides protection against a race.
-
-Extracing fields to a separate kvm_vcpu_plane will obviously require a *lot* more
-churn, but I think in the long run it will be less work in total, because we won't
-spend as much time chasing down bugs.
-
-Very little per-plane state is in "struct kvm_vcpu", so I think we can do the big
-conversion on a per-arch basis via a small amount of #ifdefs, i.e. not be force to
-immediatedly convert all architectures to a kvm_vcpu vs. kvm_vcpu_plane world.
+Pasha
