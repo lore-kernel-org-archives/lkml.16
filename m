@@ -1,280 +1,109 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD68171C9
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749221869; cv=fail; b=HObFmvupSaxBOdvBxQ31iXeY3zB7cBwD7cbHYiEVl3tytgEabDPdtqDXN2a6bwC7kTTwqhOveMnLj7Fw0NHka89TD+VezosCaAJ2rjCubn/hNNJp9Z83Yv3dQhjKAgFaTizMKgLDefnG+OBzNVwRCRVAQmZP7pCqgGOJNblThfE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749221869; c=relaxed/simple;
-	bh=kj8mr1xtL/5m3vA/lw1nPHzAfYSCtZTMvjhcAKV9b+Y=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NDMMEsKL77Lq2i9sVnZiRxJm4wLMHPq2/CGP4OWEVosGChU/+7POQ2g7KlSqUJrejQazl4E6FR7ZBZep0KuQMJBuCZ6qQGxhsHDPQbFN7AziId32ruaZo22rWyE5CpaQR+MY2gLt+vLotVSa2m1RAee+dhkDF6V23dGPSH9m/Ws=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Nwd4M0rx; arc=fail smtp.client-ip=40.107.223.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7AB27E7CF;
+	Fri,  6 Jun 2025 14:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749221905; cv=none; b=FdnS56CusMUy/ARFj3jPUjzfwCoMczpR1QQtEXdZvZ8/Gp0J80ormYaJfbTf9/wnHLu9kcy6K0ScZZdS1QWEGNUedgTIlnb5V2oMcz6eGosx2Sfi7ahJYMw0dXYPD564hqaVthdPM3vAfUxSZ2TIuzudW510BFD2F9HbfFtlqY4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749221905; c=relaxed/simple;
+	bh=L3ansMab82uYiup2PPPtsuZ7QMMlqwUdIbnuDaDUGZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RXubPFqMUQwaoO1rmthG6lawk97Iqjt562IYH50EA6TpZfJLXqBvcotqlL62am7uJOLOzPL1nGdX+JJdmwGHzfz1SQq8MXWdcaEQ3nxC4tbcyWXvTS50xkRlPEgQPYrYMp2gPby9/HBHxA2vY5wJM7g0Nf7DGQlBTrHATduiEXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WEsSPpjR; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Nwd4M0rx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MEBRQHdyEylNtdD/ogQSkp0KIuOzThoMlIoxNctL6/hO0yJk6/62/kKTuUwHN5CDMcmc4wvonxjGF7sZm8nru2rHvuqCEc7jYbCOyGLm9LcsD1Odi83EAcc0X8V4J+84u+2upgZgliP3RwZHXbT9Bz9s/gU70upuEP+4tYmPw85hJQhTVsMqmx5Y6e0fdByMAT2wVoL2sX9Ng1yL7BDjMixrmc1FN5BsBgAjmMR1vBVtQcFyUEXLF0zsGlEX1sIZaIY8Go57uURfJjfZboc+S14sB6NQvGPXVzvqbtucVMM9WKMQmMW+vQ/U4IKmjLv3kiPZWOfW4ilBL+/OXOk/jQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BQcIp+09qq/oG+Lqkcv4qvTHvgnr1G3PgBCBMHhest8=;
- b=Yuc/mJTc970Uh13vYGrIFiapoorIFGTCZCE82FXrVIpSV+X0JVXEUPoOIv6FgocAw2Xr4x3H6r3I/6fSz1ynHxpBdYv/59pu1X2R8lHCGnr1AGkPbETg594rJJ/TsVO3erMEysaAAxPTB7qahKnIhBmuySlWGKZf4im5dhEffGXI3nQeAFbO3kHpm2pdcHMy592kcEHFf5mDYRSGVFjASBHAHakTaBHtf67r2GfENuF+O1uOmzMYOSnt3msOUMdG6FzamRqgbrxmtZeSymi61SzEEZJxaVtLr4PocBzs1MB32yai/db7lqG22snhL4wlVqsY31sByVlDRyH1PPabLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BQcIp+09qq/oG+Lqkcv4qvTHvgnr1G3PgBCBMHhest8=;
- b=Nwd4M0rx4ZSD/ik3AU3dP7OVHciXCI7KAjQ01OabKdWS9YmCVtMs4LccakBnHATBWP52ZZ6OFbNJ2EtZgldtv7B7khvcg07i5d4pC4GZIxJG7r+zKvbMOQ9pAEkFUBvhUjpBpjAO7MkZmDUXg0Dcj/ouce7HzZu8o8RXHQJ8BrU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by DS7PR12MB5741.namprd12.prod.outlook.com (2603:10b6:8:70::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.34; Fri, 6 Jun 2025 14:57:45 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Fri, 6 Jun 2025
- 14:57:44 +0000
-Message-ID: <d443719b-cf74-437b-8049-5f7a130350b9@amd.com>
-Date: Fri, 6 Jun 2025 16:57:37 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/9] drm/ttm: Add ttm_bo_kmap_try_from_panic()
-To: Jocelyn Falempe <jfalempe@redhat.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
- Matthew Brost <matthew.brost@intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250606120519.753928-1-jfalempe@redhat.com>
- <20250606120519.753928-5-jfalempe@redhat.com>
- <dd0532a2-4011-41ec-896d-ec066dc23cbc@amd.com>
- <8ed62378-269f-4385-bf05-eda28098fc1f@redhat.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <8ed62378-269f-4385-bf05-eda28098fc1f@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL0PR02CA0005.namprd02.prod.outlook.com
- (2603:10b6:207:3c::18) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEsSPpjR"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87ead500f9aso1193276241.3;
+        Fri, 06 Jun 2025 07:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749221902; x=1749826702; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L3ansMab82uYiup2PPPtsuZ7QMMlqwUdIbnuDaDUGZQ=;
+        b=WEsSPpjRro+OtSr5TZInS5YlqrDfteWA0XAJBquWoMwUE2K//mT5NUOC46JIaSM2DL
+         eb1wMM5WspZ/r3bFpKuNVqSMJzuMgBu1l9FVlPr+yZ0MO0SqmX9SUpX6CPkuzAWvDCG+
+         HollNWQRqCVZA197KkKyiUx2zEUf4i0G2LZ2euHa8WLNPQCOrymzdqFmVTrdS1OLYhat
+         61142HwcsOp/bDbpuYKLe78FtF7jW/EuIIwz6r0vpOVAyJQWgQpFb6LFwLCd7AgE05wo
+         rD7rVhGZcVOB/P9tsqNuNxk/V+tuCOFR226jqa3s+BZj/ueXg+fBJQtbjLrNFbC5TZbM
+         uk4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749221902; x=1749826702;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L3ansMab82uYiup2PPPtsuZ7QMMlqwUdIbnuDaDUGZQ=;
+        b=HmMtmTFb3cgt3UbM+LzV27ltfol1ZdEFpMH+ffj2S/89Pl8STx65DYk7FEwo+58r6c
+         6j1icaY+MSF1t32DCdKONeyhfyph5O9yCIw8HqOsM40vopf1y0FN9HcaO7PI4ewye2n9
+         iOvN6DTENk3zj4yBPJlH0CvWbk/b8actDB4T4g/3NLE8p2QwEGPvFfkWlLMI3Vy6fADR
+         +QJKETBrJ9EBpQt9AJVQqTnsIB3wb/+4J57darYJO/g6hyMmyVCiYzHM3GqFKSEKy8iT
+         VvmQGaATYGEinALoeDC07Wbv0HndD3J8WYe9c3If8RZkFx51q1Ql3SY0eF2z/DweZriU
+         2UKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUaeiQZyG5rvSu07rf/xIv3dxQm7ySzhEuJJGeNsXng+MFlSIYXjHG5aXQxSF6JLnisOchQKQQRRBnxkQMlouI=@vger.kernel.org, AJvYcCVej/gwuRpmkYo2r1FQRCHFq7OKpUR/65C0XnDvtNpdNpUC5cK+ydzeiypQ34XWT6anIHlaPcOTYIm1YRia@vger.kernel.org, AJvYcCWSefYTXR3qdDkDgg7NuBZMDxDSZ3p7+8bmPrm02ttqdp5oH1G83gd8bDc0kd8mWJJkr6pEQ7GB0FaQ@vger.kernel.org, AJvYcCXVmfFCyRNO+iQNBt6UAj4bF56ZNPfMWMHLSwvyT/D7pYxcKQ+69VMUZZ9kRvxYs7I6PRfZhRsHK6Zf3w==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzsh+sux3dYqMQu4VZUY+3spTLr1qYvMGej7fuIo3iSvcEbHa8O
+	r7l13tt4f+Wrz0yXAxNJhNETOBM0XR0GCVdYRmTjPeiDZz46bF4etbTMzCBJqy/kovqsQAZdCag
+	n+bn/GB3++K6xpk4fquL3KIfovDW2sbo=
+X-Gm-Gg: ASbGnctsE3TAmDI+ujJJ3SL4TNQjUEMvwnqzUu3JXQwTBgDDUSRJ4oGCaANKyO7w81V
+	JfnU3w7DIxMrUB2PvYloXKXCgubYAB0y3cV03bf9NpUJ9kp83RwHijm2R5fVmdnGHGGaok/QZJR
+	EOma+dUG1IsKe3lcWkI8s4OrYdXAz5K2fH08iQGFeP
+X-Google-Smtp-Source: AGHT+IGEngtE5dWaklnsqQU6Ig0UmMfAlJowM3JqRrbcvQtEtfvISuLc4Jr4sWBXQ4ZCf8k92OHmpc46xgu8moJvcw4=
+X-Received: by 2002:a05:6122:2193:b0:529:1a6a:cc2f with SMTP id
+ 71dfb90a1353d-530e48876e6mr3854370e0c.7.1749221902592; Fri, 06 Jun 2025
+ 07:58:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS7PR12MB5741:EE_
-X-MS-Office365-Filtering-Correlation-Id: c39a04d6-7bb9-4f0d-06c7-08dda50a7e62
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MWtvUUEyQ1VpK3ZaVjJsc0UycHZYN1RpSzFvL0EwLyszcGtua3ZpeXBXYUc4?=
- =?utf-8?B?WUtBU3FHKzVuR0JiRjlQTVhBQlNSQTdKbXpjUWVoVWxPcnZlT3Y2SHA1VTJ6?=
- =?utf-8?B?QWlqNkRick4xL1FNQTA2RmUrQUpDN2g5VFJ2THBkdmpRSE9zR045R0xuUGJS?=
- =?utf-8?B?MHd0L0hyejhtbi9GQjhJMVhCRmtZZnhETlRXUzBsK3Y0L21VcHlRS1NzUHIz?=
- =?utf-8?B?ME5tcDJpZUdUYk9wRENwV3pyTk4yWUlvRFY5RlYyaUhqLzRxdTRJK3Y0dXdr?=
- =?utf-8?B?M1plMmh1ZGxnNkRwWDVQMjc1VXY4VThXYm5ySHBWd1R3Y2c1T29jdEc2c3k0?=
- =?utf-8?B?bVRPekthaVVrWld1bk1UVHZUdm9tVERCSjU0UWN0UlY2bENiM3FBTG5nWHk2?=
- =?utf-8?B?cUpERW9VTVZBZmxxbkdwMm4xeWIrTjlYbU04bU14U3p6S216K3VOc0Y3TzF4?=
- =?utf-8?B?ODZyZzZNekZlenpYQjFuc09aMHN2SlVqcG9tcDNwaDhWZ1ZtYkpTSHdrbWQx?=
- =?utf-8?B?cFJwNUlRSS9NSTNtYVY2ZDFuR0R5WTU4RlhOQVEyY1RmdENxZ2NjREpxa1pu?=
- =?utf-8?B?UmYxd2kyTkxnWTlKb2xzSlVaeFovU3ZwTmI4czIvYXZteGJNdE4zUUQzRmxW?=
- =?utf-8?B?TkE2Rjc5K3A5YndTeDUySnJ3b25KUkJ5QlN3aXptNE5GUUVLTitvRlJWbXI2?=
- =?utf-8?B?M0dOYkk3Qk9qM2wrWHlEU01GbmJ3YVJhUGdIdjFQOUJKMzdLRFFzU29YZW00?=
- =?utf-8?B?ZjI2UWhiNkpVV0w5VUh4ekJwVjdxVHV5Sno4dzZGcnQ1RFJmb0ZPQUFsRUl6?=
- =?utf-8?B?UDIzVXF6d05Md01nbW1zQ0JmN01DZjdTYTdUbVk4S3dlVVN5Rm8xUko1YmRY?=
- =?utf-8?B?UEdveDJLQkE3WTNBMDlhczlBc2tnV1JIOU9XNVhpTWo4QUFnQmx2dTA1VUNa?=
- =?utf-8?B?K2k1QVF5WHNxV3NlVXNKNkRkS0NaNkNCTmVpM2M5R1RtWER3dHNYb0poVk9u?=
- =?utf-8?B?K1NwMmZhRnR5Z3JrcEc1TUtyMXhFTElGQ1R0UlNrYmxjdUVYelNDTnBNUjlZ?=
- =?utf-8?B?WlZKRGJQdS9kOXY1LzBzR0xodlBWby9yVDBKUFFuNEpKZzAxZ1JuRkFDTkh5?=
- =?utf-8?B?eEVObkw3eVBxM3oySjl4S1FOcHBqQXpNbHM5V0xBNUhZRkZlck53eEovbFJN?=
- =?utf-8?B?OVlaOVh6aDR2VFRreGJMYitXNnpNZk9rOVc5QktYeDJ1b3c3UTlMTFpjZC8z?=
- =?utf-8?B?aUxtRUFuVVgvTXJDQjRWdWFwTExMR1pQWEN4TzNtbzZVcFc3L01hdWtWcmEz?=
- =?utf-8?B?M0ZJaFowL3M2dmZnSHlqTUJPNXo2d1UzS3R2cmV0Rks0MERmMjEwWHV1Q3Zh?=
- =?utf-8?B?aFhXby9iZ1Z6MU1OS0xjaEl1Q2NRQStjWEY0UlpOZjNlcHA0S3lGRG15WnA1?=
- =?utf-8?B?T0hMSkRLOWlsdUs3NXN0UFlvd1d5aVpRZDJFTDlFUVdhY2lVNStGcnNSZThI?=
- =?utf-8?B?U0FnQU1OamZXUmpJNVhYc1RCUDYwRER5VWtmekI5T1ZmNDI3ZnhMakk1WWwv?=
- =?utf-8?B?VlM3WVBQVmJONkZlN2xqOEROOXRPN3UvTmIrQWh2N3czaGZJeTR2NHVQL0xX?=
- =?utf-8?B?RGFCTXY2N1lsS1RJejkwZ0VCekdzMUZSSHNVR0pyQjhqZnRhc2pWVkNJTjF5?=
- =?utf-8?B?YldnWWhaczdZUXZhZEpScmNhNmkzbW1ucDFsbldYS3ZHeXdhYy9jdnIvSUw3?=
- =?utf-8?B?RU02OWJ6K2RVSk5BdEt1eUVDNXZ6ZllZdWx2NFZIZSs3N0tUQWNlcmlrdWZH?=
- =?utf-8?B?bk9VczJWdHp3YWFxQ3YzemNVeTBuZjJQZmlPQUtRTS8vam9mRTJzMkIwZGhw?=
- =?utf-8?B?YWZiQ3MwVW1VMEErQjNqWWpxVG8zMVAwOWxmRTZOcDJ0SmNSL1l4S0hteTEx?=
- =?utf-8?Q?bxNAt1LVCSc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SDVmUVZMaDhSSjR0Q3JSRzNpamFxSXNUZkhUTWVDN1MrZnZ3ZE5HcFZUMm9O?=
- =?utf-8?B?eTRjQnFPRnZVQTcwbGZGSVlsOWZmRmxDWWhoMjNGL1FtUjJ1SWkranVURG5X?=
- =?utf-8?B?RHBMWkxseGl4NC9wdlZOL3ZQbFZ1MytlejB4TjdZNzBTZENaWkYxTmU1NzRS?=
- =?utf-8?B?cmFNL0s2YWo3RDNLTmxWTFdvMHZ0N1Q0Wi9GelJlUGw2SnBicEpTdVpjSldr?=
- =?utf-8?B?cUljTGs1ZlpNekJsUkVsL0FjY3FHUEZ1bmptbTFaMWJQbmdqK3ZhZmlmQklK?=
- =?utf-8?B?eDJxL2VDRW1laXliV0FRNVBuVWN3SnEwQzNjdFJKdlMzNEdmcmpBSXdMSVEr?=
- =?utf-8?B?dW9qcWxOM29PZ09rZXNjc0lnb0VwMXozNzlJaXp3eUdqMU5iWTExK09wYXZV?=
- =?utf-8?B?Zldmc3hId3gxOEJQUEF0b0JPN3Uyb1N2VU44cHdqQ1BBSXZZUklZMUFGVHpG?=
- =?utf-8?B?cEs2cjEvdXRZbTJSQjV5YTBOdUw4QVhiV0ZEblhXMEl2czVkcGFUb1hEZFlD?=
- =?utf-8?B?aGpmMXh2YkxUZjBTTzV1ZjI2LzEwc25TZGVtYXhqZk9JNVgxRXRySUtsYXFm?=
- =?utf-8?B?a1EyLy94VkQ3Ukw1d0U5Zk5iR3F0Rk05ZDIvMUJkcmh5a3FrN1h1VXl1OW96?=
- =?utf-8?B?cTdCTGt5dlZWSzRtaXNJNTFOZzlRNlp1UklXQjZpZlF3cnRuSUxEd3NoVDFF?=
- =?utf-8?B?SXJ6ZnBKZmpxb04vZklmb2J1YVJxangzRTMyRDFIQUVXZHJPeC83dEY3Mzd2?=
- =?utf-8?B?UDNWdlNWeUZrWDltdTNkNCtNbVhaTHdsbFc2eHpVa0ZOS1FFTU9WQ2NBK0Jj?=
- =?utf-8?B?bmdBVFhscHpiRUd3NFFPa2dLTkIvQ2s5SEY4MzhxdktkQkp5NkZPSmpLcS8v?=
- =?utf-8?B?ajRzemdYaVZubU1xZm5hR05RcG1MamwzUGNGTi80R0huNUNQY3gycnZCeFVQ?=
- =?utf-8?B?UDNXZHhjTkR4Vy9QaFdrUHhac3QrTzNPbkc1ZlZ6UkVjK0wzZWV6Mjc5Rlpu?=
- =?utf-8?B?V3F4bUJkY0RGcmxHZzlCL0c5cytXbkJia1lHb2ptcXkzOC9QaFRrQXFZbi91?=
- =?utf-8?B?RncrWFJOK1huWTJ0cG12SkxJSWRGYjJQc011bHlNcEJhNDVHSGJQVHdESjFi?=
- =?utf-8?B?NXprYSt5L3U3YnRpcWI3ZUtkUWRDYlFDR2NPM1VDNVJaU1o3b1hLQ0dMQlZi?=
- =?utf-8?B?QU9HMVJ2VC9oVnlPWkRqa3NWYkthNllvQy92QUNKckxMaHhNRVFFREFkYVRt?=
- =?utf-8?B?L0lSV2o5N2swbnQ5YTA3alZxSUp2UlVTUm95S25kS3ZwWkl0SzNkbVNvZ1Vl?=
- =?utf-8?B?V2FHZHlWV3lZTStuM3VsS1Z3RUJaUVRCRVVJNHpnVE91d01wODI1OE5QRnVK?=
- =?utf-8?B?L3MvRVBORkhRYW9sYUZKT2UxVkZ1bDcwUU9rbTMzZk1XVm9WRlJ4cHZiclZQ?=
- =?utf-8?B?SVJaajFuTk1HWTlhazk1N1BXTk9mTXlyM3pwNXN4TnlCWDNnc1NiS0I2TEZw?=
- =?utf-8?B?Q2VTcThyeXhEQUFTelY3ZXhUM2dlbDFHejdmb0lrSk1Qb1RHQ3gvYVJGUXNI?=
- =?utf-8?B?UFZSNTlTdlluR2xsRU5zejNOOHc2TXQ5d3N4cWpadTkvdXUyWW1nWEZncTVO?=
- =?utf-8?B?QmpwYy9JTkcvZkhJbUUyRUZzb1FPeWpSVjRUVjY0Yk5KNERsTFNxdkhuT0lL?=
- =?utf-8?B?MWprSjNYb1NVQVdTU2hqaGc1WXF2K3AzbzZ0Si9QNU1YMzdpSVh5NmdKcUJF?=
- =?utf-8?B?aUx0RWVpVU1EdjU5WG12RVpGYW16LzBvSk5RWll2SEQvbUZ3QmNWQVpRQUw1?=
- =?utf-8?B?SXJIelF6QzMvcFN2aWxjY3VhS1NzWkxKb0VDTzVncGZEVUx1ekVNRTZ6ZGFr?=
- =?utf-8?B?b1FLYkFWelRIU2ZIaDFJTDFPUWZiTnJyK0RMdzVqWHBSdnF5dHNRVlA5TzNE?=
- =?utf-8?B?M1VneHV6UVpkT1FubE5DYU55RGYxSEd2ZjdvUlIydXlEZW95WE5oUFhWUWFw?=
- =?utf-8?B?cXI2YW5MbnlYenFLaDF6Rlo1eVY2WFp5cjdGdWgvTmEyVUU0L3lRTnpBamR1?=
- =?utf-8?B?cm9IQzNFL2ZuWGtYSldxb1BpZm5SZDZMblZtUTFzMm45ZFlXMUhIZHJ4ZFNy?=
- =?utf-8?Q?jVyUGqHQ7514LvMzgCACBlVky?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c39a04d6-7bb9-4f0d-06c7-08dda50a7e62
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 14:57:44.7414
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 06NZgiaVjAZti9rNgZNg8HiO4/uqSeUpFaXxOyRo4BxU2NrAxpT12O4q0oK56bvu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5741
+References: <20250605161956.3658374-1-igor.korotin.linux@gmail.com>
+ <20250605162726.3659792-1-igor.korotin@yahoo.com> <aELyEqg0GrkC8oZY@pollux>
+ <CAG7QV91AWpOk7VUcE-B1MLkEQPDB0Y=zsBOBf6MhHVYh1aEGQA@mail.gmail.com> <aEL76mgHSZG5idW8@pollux>
+In-Reply-To: <aEL76mgHSZG5idW8@pollux>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+Date: Fri, 6 Jun 2025 15:58:11 +0100
+X-Gm-Features: AX0GCFuTvai9XMEtyC_KYBdO9EciOGTan2CvJLh680Tl9vtdtqAjm7YLmxzKx0Q
+Message-ID: <CAG7QV91kkVqE2BgB5VpmX7QST25VDCqr+9zNx1Nt0-fuwp9t=A@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] rust: driver: Add ACPI id table support to Adapter trait
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Igor Korotin <igor.korotin@yahoo.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	devicetree@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Len Brown <lenb@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Alex Hung <alex.hung@amd.com>, Tamir Duberstein <tamird@gmail.com>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Xiangfei Ding <dingxiangfei2009@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/6/25 15:14, Jocelyn Falempe wrote:
-> On 06/06/2025 14:28, Christian König wrote:
->> On 6/6/25 13:48, Jocelyn Falempe wrote:
->>> If the ttm bo is backed by pages, then it's possible to safely kmap
->>> one page at a time, using kmap_try_from_panic().
->>
->> I strongly assume that we don't care about locking anything in this case, don't we?
-> 
-> Yes, normally it's called for the current framebuffer, so I assume it's properly allocated, and isn't growing/shrinking while being displayed.
-> 
->>
->>> Unfortunately there is no way to do the same with ioremap, so it
->>> only supports the kmap case.
->>
->> Oh, there actually is on most modern systems.
->>
->> At least on 64bit systems amdgpu maps the whole VRAM BAR into kernel address space on driver load.
->>
->> So as long as you have a large BAR system you can trivially have access to the MMIO memory.
-> 
-> For amdgpu, I used the indirect MMIO access, so I didn't need to ioremap
-> https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c#L1800
+On Fri, Jun 6, 2025 at 3:32=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
+>
+> On Fri, Jun 06, 2025 at 03:26:13PM +0100, Igor Korotin wrote:
+> > On Fri, Jun 6, 2025 at 2:50=E2=80=AFPM Danilo Krummrich <dakr@kernel.or=
+g> wrote:
+> > > However, I don't understand why we need this and the subsequent
+> > > is_acpi_device_node() and is_of_node() checks.
+> >
+> > The idea is to avoid unnecessary table lookups when both OF and ACPI
+> > match tables are present.
+>
+> Ok, that's fair -- let's build it on top of the FwNode abstractions thoug=
+h.
 
-Good point. That is probably quite slow, but works under really all circumstances as long as the device hasn't fallen of the bus.
+I'm ok with the FwNode abstractions. Just to make sure I understood
+you correctly:
+I'll need to wait until these FwNode abstractions are pushed to the
+rust-next branch, reimplement what is necessary and send v3. Is this
+the course of actions?
 
-> For the xe driver, I only tested on integrated GPU, using system RAM, so this first approach is good enough.
-> But I'm still interested to find a solution, is there a way to get the current io-mapping if it exists?
-
-You need to ask that the XE guys. There is TTMs bdev->funcs->access_memory() callback which should allow doing that, but I have no idea how that is implemented for XE. 
-
-Regards,
-Christian.
-
-> 
-> 
->>
->>> This is needed for proper drm_panic support with xe driver.
->>>
->>> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
->>> ---
->>>
->>> v8:
->>>   * Added in v8
->>>
->>>   drivers/gpu/drm/ttm/ttm_bo_util.c | 27 +++++++++++++++++++++++++++
->>>   include/drm/ttm/ttm_bo.h          |  1 +
->>>   2 files changed, 28 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
->>> index 15cab9bda17f..9c3f3b379c2a 100644
->>> --- a/drivers/gpu/drm/ttm/ttm_bo_util.c
->>> +++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
->>> @@ -377,6 +377,33 @@ static int ttm_bo_kmap_ttm(struct ttm_buffer_object *bo,
->>>       return (!map->virtual) ? -ENOMEM : 0;
->>>   }
->>>   +/**
->>> + *
->>> + * ttm_bo_kmap_try_from_panic
->>> + *
->>> + * @bo: The buffer object
->>> + * @page: The page to map
->>> + *
->>> + * Sets up a kernel virtual mapping using kmap_local_page_try_from_panic().
->>> + * This can safely be called from the panic handler, if you make sure the bo
->>
->> "This can *only* be called from the panic handler..."
-> 
-> Yes, I will fix that, it shouldn't be called for normal operations.
-> 
->>
->> Apart from those open questions, looks sane to me.
->>
->> Regards,
->> Christian.
->>
->>> + * is the one being displayed, so is properly allocated, and won't be modified.
->>> + *
->>> + * Returns the vaddr, that you can use to write to the bo, and that you should
->>> + * pass to kunmap_local() when you're done with this page, or NULL if the bo
->>> + * is in iomem.
->>> + */
->>> +void *ttm_bo_kmap_try_from_panic(struct ttm_buffer_object *bo, unsigned long page)
->>> +{
->>> +    if (page + 1 > PFN_UP(bo->resource->size))
->>> +        return NULL;
->>> +
->>> +    if (!bo->resource->bus.is_iomem && bo->ttm->pages && bo->ttm->pages[page])
->>> +        return kmap_local_page_try_from_panic(bo->ttm->pages[page]);
->>> +
->>> +    return NULL;
->>> +}
->>> +EXPORT_SYMBOL(ttm_bo_kmap_try_from_panic);
->>> +
->>>   /**
->>>    * ttm_bo_kmap
->>>    *
->>> diff --git a/include/drm/ttm/ttm_bo.h b/include/drm/ttm/ttm_bo.h
->>> index cf027558b6db..8c0ce3fa077f 100644
->>> --- a/include/drm/ttm/ttm_bo.h
->>> +++ b/include/drm/ttm/ttm_bo.h
->>> @@ -429,6 +429,7 @@ int ttm_bo_init_validate(struct ttm_device *bdev, struct ttm_buffer_object *bo,
->>>   int ttm_bo_kmap(struct ttm_buffer_object *bo, unsigned long start_page,
->>>           unsigned long num_pages, struct ttm_bo_kmap_obj *map);
->>>   void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
->>> +void *ttm_bo_kmap_try_from_panic(struct ttm_buffer_object *bo, unsigned long page);
->>>   int ttm_bo_vmap(struct ttm_buffer_object *bo, struct iosys_map *map);
->>>   void ttm_bo_vunmap(struct ttm_buffer_object *bo, struct iosys_map *map);
->>>   int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
->>
-> 
-
+Thanks
+Igor
