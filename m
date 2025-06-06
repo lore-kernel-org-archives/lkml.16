@@ -1,80 +1,88 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FE0265CC5;
-	Fri,  6 Jun 2025 08:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A84265CC5;
+	Fri,  6 Jun 2025 08:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749200202; cv=none; b=kGSBnAN2n1roeudwg37DRri3QCGjWNAyrhwnFxCuBjW45L+BD1el9NxTycelXRemFeJ8HzC4xF2r99NkCmc/CB4CLm47vAr/KvhopgqqdUIcDg7j6nBKl5gcYTmac2DBKzz+Kt7h7fsOLZI2abjgcp3L7MZRajHQQfQAiafA9qk=
+	t=1749200219; cv=none; b=ZKc8K5KBFYERclK6xMPXDEHxvrr24BlAZSRtopQRo1ZCF8yjIROMGO5xQQ8BrP1NrTGv+UxaIImCu9RO64YykFD5iZSJsZb0AIb7W4YSB1PMZszLRVq1AxSSDYQmPZq2WD1KCZrij0SmoyA/1T52XG7ZTTEgPKnIfbJP7pA2ErY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749200202; c=relaxed/simple;
-	bh=oA1jw9FL/EQacFPmNkgTSY6MfvlP3z2SAdsG0q4xTqg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=KYcZb4JS4w0ApQlIaYq0jsq/ukbRk2MfWwyHML/d7OTH8suJDovFBt4WCeJqiKE9DTStRtlqpwE84FNvBh06It2OtDL84Cjppx5MY/0Tl1h9BHwVFQnHOgLvel0hgPh9TobeFjvPscldXJ4+UVBljtx8NVooOXLfhcfD51FOFEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bDFYJ4BKMzKHNmq;
-	Fri,  6 Jun 2025 16:56:36 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id EC1531A1A34;
-	Fri,  6 Jun 2025 16:56:34 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgBXu19BrUJoqv+vOg--.7485S3;
-	Fri, 06 Jun 2025 16:56:34 +0800 (CST)
-Subject: Re: [PATCH 15/23] md/md-llbitmap: implement llbitmap IO
-To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de,
- colyli@kernel.org, song@kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-16-yukuai1@huaweicloud.com>
- <4b1e7a50-f448-4e0f-a498-a8c6b0c7f97d@redhat.com>
- <7ef969ed-8468-5d63-a08d-886ca853f772@huaweicloud.com>
- <89b1283c-c256-4830-96dd-ef9e5a7ce355@redhat.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <54391288-57fc-ed5e-9ba6-aaf93bb71e3d@huaweicloud.com>
-Date: Fri, 6 Jun 2025 16:56:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1749200219; c=relaxed/simple;
+	bh=ihq1PWlB2U3WzY86lVnSq59NBEGnqtz4IiNft5x+ZSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O83u2KxGKbbaEBHYuqhzdgY5T0IdNp6RYDmFUBPL5sWGKSKe8QIlIesH0/qiWCyMmWDl7CpN/FaBTMlt5OK4TP48meStuHMicAzBYP074JHWdXSB2/rYemirWjD9gol9UMHgBvd6B4NmrU1omJ83zBjiCIJaJQANi7SWhjEHkik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYzMRvCZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYzMRvCZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0422EC4CEEB;
+	Fri,  6 Jun 2025 08:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749200219;
+	bh=ihq1PWlB2U3WzY86lVnSq59NBEGnqtz4IiNft5x+ZSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qYzMRvCZvFXJL5/UK4Ayh1axQtFKH3Z/1LrvAm87knFoFPh7aJ+uq0mUcwhrK3oOu
+	 6CpJd1Z4aHGjRhxq3Zm69/2RXAoWTZ1FlxRR8xXKm0y7Efvqzzy4vi6OPxBXEK35Sb
+	 hHfp9w/NY8vrtAsNE/qlp8jTqG3QO/3YyzfaphH537iqUYqh4PNSB0TBqbsWoirjLV
+	 ios/bNyHqo+84mtxrIIhgohAq/bq41bGEz/p5SnFjF3stlCufhpOoZV9+1IyHKy2hc
+	 TMJD5DslnH9DnWar5pwx7DrThmtZ+Eot7642ySIiseWBQG+EvT/tLlMI3in6UreILa
+	 xTTCcvA6lmEmw==
+Date: Fri, 6 Jun 2025 10:56:57 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Brian Masney <bmasney@redhat.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, 
+	Alberto Ruiz <aruiz@redhat.com>
+Subject: Re: [PATCH v2 03/10] clk: test: introduce a few specific rate
+ constants for mock testing
+Message-ID: <20250606-fabulous-fortunate-chamois-ab4c98@houat>
+References: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
+ <20250528-clk-wip-v2-v2-3-0d2c2f220442@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <89b1283c-c256-4830-96dd-ef9e5a7ce355@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXu19BrUJoqv+vOg--.7485S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYt7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
-	IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
-	CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxG
-	xcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrw
-	CF54CYxVCY1x0262kKe7AKxVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUp
-	6wZUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="wea4pqj4lkytyzs5"
+Content-Disposition: inline
+In-Reply-To: <20250528-clk-wip-v2-v2-3-0d2c2f220442@redhat.com>
 
-Hi,
 
-在 2025/06/06 14:24, Xiao Ni 写道:
-> Maybe consider another name of bits_per_page? bits_per_page can easily 
-> let people to think the bitmat bits in one page. Through the graph 
-> below, maybe blocks_per_page?
+--wea4pqj4lkytyzs5
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 03/10] clk: test: introduce a few specific rate
+ constants for mock testing
+MIME-Version: 1.0
 
-Sounds good. :)
+On Wed, May 28, 2025 at 07:16:49PM -0400, Brian Masney wrote:
+> Some of the mock tests care about the relationship between two
+> different rates, and the specific numbers are important, such as for
+> mocking a divider.
+>=20
+> Signed-off-by: Brian Masney <bmasney@redhat.com>
 
-Thanks,
-Kuai
+It's not obvious to me why they are important, actually. The relation
+between the two is, but a divider (and our tests) should work with any
+parent rate, so I guess we can expect it to be opaque.
 
+Can you expand on why it's important?
+
+Maxime
+
+--wea4pqj4lkytyzs5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEKtWAAKCRAnX84Zoj2+
+drfnAYDtvCw013kwk9Ob5wtsOFRbehBvu5UEoU6eZtcmqiNg9XzY6ULKSJUTsRTw
+eOcbsWQBegOcYCyySnL2jfXK3176j3vFkZox9qW0yWQKbpgYdv9fJi9gmDtCftS4
+y9jfowNwoQ==
+=Ggfj
+-----END PGP SIGNATURE-----
+
+--wea4pqj4lkytyzs5--
