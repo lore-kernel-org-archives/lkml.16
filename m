@@ -1,212 +1,162 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2058.outbound.protection.outlook.com [40.107.100.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4134728981C
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 17:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749229891; cv=none; b=i4CrZ3THFzaO6+texvIz7n/ITU5dKDa9mgksnncmKutwcgu423NQT8n5GTpGUOH7MpWkoM9gyCbmY2vsss1guY4ldEVgRtWUYTAOvW2fgWj/9l0KMYWc+OAwFslA9kZ4HP6jPlqFGeAKBmk+MEmN+Ls9lPhkJ0zYVZYYf8KmZsk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749229891; c=relaxed/simple;
-	bh=pdRvUV9h/SGutwunhxJKENeXCkz2Vk2NqMFNvihGUhk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QYSSS+QBQs9i92g+6e/tzDheCXJUi/tTj9XKmgebqDYq05n/k5dA3ybK6bEvHV5sAQOhdZ3nwnaMxAMk8yi2ljhJNYXDOuYhoPrRvYcXkIexHXRw5XUHdNi929v3wVqr7yC3WlnI3Bk2+FnKp5Yw5PZY44WCHxg4GDO8WUB36Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=dD7xrdwF; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7973148838
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 17:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749230129; cv=fail; b=m7alo3KEQ/b0xQBMQmSo29jtOdWltwVpM45fdaLdZFyQ19C/FShytWU3nAu/eM9dpa/O3jnntP6D4T5Vv8jBTMVe9EUHEn22RP6jmHmKgej/ZqFAjV/NdyH6jQK3uq3mQOCCZWhaSymDDky9ht/UjDzHlKpDMSSZNOoww3YclwU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749230129; c=relaxed/simple;
+	bh=iYrMdvdtQkX2tWUgEd8VB+QIXnd2shozY7pTaV/2sSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=FO1qOUgWHj7CVEj4CR/M60CzrzlGNLu2I59cmDSbZn8EZnOXdC6NaDUI2i1DDiURuzDiNETTlUjt6JwiX/tQjHDg4MSO22EoYecEHKOIs0OX5ouUW1XqkcZZC5HGZDqUpiGWRVG36B5pa769uauPV1VqNLXUUyjCYETH6k6aDUE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sa/G1Tkw; arc=fail smtp.client-ip=40.107.100.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="dD7xrdwF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
-	; s=mail; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=CdjWnwKuJqKe6pzZkRWk+shJN45H1hDdYXeyHoLpWq8=; b=dD7xrdwF4vK6419z7zXXVKFcap
-	gNvWx/sGPSMBE7h6OobnmSKrHtlNHh3Gt2xW8qAYOxIpFAeaHICmwbGNG3RSBj6O2ojRPnZv37VOo
-	PPEmZ0ymlSk2MMjVArGAtZWWAJQYLc2LnKnuKiITlxIqX6Hs0mZMbI6oweZmAj6VBR5Ey8BrKa4YP
-	VMtrRoUbzPrvQFmaYpEiHOsU3++J+nuZkRnvDiK7F4ZV0bOhPHoejVCN1TksQpVcKZW/CL+z0J+gi
-	odd+/xeNTl6zD4b0XcSYPaYtq0ONzuuwLJ7YzGI8M9f222gkUy/9WdxHD/rHEKUe9w74YVqsTVvnu
-	Mkq1BiLQ==;
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@surriel.com>)
-	id 1uNab3-000000006Se-1dFD;
-	Fri, 06 Jun 2025 13:11:13 -0400
-From: Rik van Riel <riel@surriel.com>
-To: linux-kernel@vger.kernel.org
-Cc: kernel-team@meta.com,
-	dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	bp@alien8.de,
-	x86@kernel.org,
-	nadav.amit@gmail.com,
-	seanjc@google.com,
-	tglx@linutronix.de,
-	mingo@kernel.org,
-	Rik van Riel <riel@meta.com>,
-	Rik van Riel <riel@surriel.com>,
-	stable@kernel.org
-Subject: [PATCH v2 1/3] x86/mm: Fix potential overflow in user_pcid_flush_mask
-Date: Fri,  6 Jun 2025 13:10:33 -0400
-Message-ID: <20250606171112.4013261-2-riel@surriel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250606171112.4013261-1-riel@surriel.com>
-References: <20250606171112.4013261-1-riel@surriel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sa/G1Tkw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kjYT0+g7p1G6IiSINXqHqIk6YfEiIS5OKrxTqEWg1o7kLLefNAPAYOo0oraBKTRD2omo70POLILQ/HzA9hS20YMAHDa+dH3JDRGp79u9Gcq4NqJc2teTFt6WTePMbRl+LGJ7ssXKWneWvQrUsvVExOdNPxnKoZY7im4fpEiSnskZKU90QDwJMhmtX6GvR4xyvumQ3K7UNsl3gfJmHEqAEDH10cmyTT9ulgQ2fhhVtVdYOFsD010D4TDR2n18DM7Qtf5wZLbh9Nj63hgFj57Dr6stwT80sHxVRibA4bOmLSPMsxvgvz9W4SIPmnjLiJR5yEHfHy1H0K4YGv5MNdv5BQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TfB11Q4cDSp8B3Cb9kI47qEdHya9GyK47e5U0uD5qPs=;
+ b=S6atnmzoYEQLEqwIl7FFDiDFHlB/9eW/ygnfyJ/axcWJyLIXGd3awpJ+raSLJuWJEtvTc+zPJPDyZ7I9JndntZ5Y8myh8uixP0dB+wa+qPSENho+tPPtjn13fvglRKoAqIdC9WWJaIjv8406tjKbIlcmQO6JfmZfgzKNcb3yPIXc0LwaaKYbTXAf6XfWJYOa7m8380sAulFaH3IIhbHdxpXyh7TajF1mnYRAEaYVnt0ax9VM/k3qXmUTWPOxCffu5NFQyGClOahYiTtEKkpGysYCSS0ytVWSMuthxObRoGb29Zx40GsbqOngoeGJ6Zx49LUoA6zHC4Zz7U9zEYsSeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TfB11Q4cDSp8B3Cb9kI47qEdHya9GyK47e5U0uD5qPs=;
+ b=sa/G1TkwhBdGl+kf2hv4YpIdvcTHFYKo+K5m++nAUdbyR+7eh5vBzzjRyrlII8G7vs6hbbj6i5eZeh0jFT4TGccMmowN/t5YHZbfyWakV+UwU6KuGFCHjD6lPWYOFpwYaZcwaVx/jQBO6v5YlmMsY6rub2EDkHMvCi6DjsNnkPitA/QQIUPBfDYFjmeotswUN2Qijy3sB1CY5JnsPuLVPCd9gZmBMnVKtgrJH4/ykDgParP+z6ZdI+z226QHmFR1PbdNlHZxhOfuI5mrbrxGe5TVMhjygQtaALg5NEozsu0f6v5jRVTwNqAwuKQk3MRVTU5vwaE+tYnz9UjXgt4LRw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by PH8PR12MB7232.namprd12.prod.outlook.com (2603:10b6:510:224::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Fri, 6 Jun
+ 2025 17:15:24 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8792.038; Fri, 6 Jun 2025
+ 17:15:24 +0000
+Date: Fri, 6 Jun 2025 14:15:23 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Wei Wang <wei.w.wang@intel.com>
+Cc: baolu.lu@linux.intel.com, kevin.tian@intel.com, yi.l.liu@intel.com,
+	dwmw2@infradead.org, joro@8bytes.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH v1] iommu/vt-d: Remove redundant SLTS cap check for
+ nested and dirty tracking
+Message-ID: <20250606171523.GJ19710@nvidia.com>
+References: <20250605101052.955174-1-wei.w.wang@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605101052.955174-1-wei.w.wang@intel.com>
+X-ClientProxiedBy: YT4PR01CA0104.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d7::9) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|PH8PR12MB7232:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc9f6a0b-146c-4b48-aede-08dda51db978
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2TZqb81642Xg6C0uPYsauiRDvwpD37DY9uwtbFhc2yRSAy08Dj14PTWMXkyo?=
+ =?us-ascii?Q?ZirHregPgxBpa4Q3ssqA0fbY1EHeNsK84e1jDXXFScsj8pp3Vkkoa//3TKTt?=
+ =?us-ascii?Q?pjUS4X1glMSf1XdotbJHuIpJPVZsuDdsLKd6FiAYl0OKKdjFYylrjThp1Fdp?=
+ =?us-ascii?Q?LSG1bVRrZMUiN8CjfPCxD0wkh3WZMaMtEriAYrf/U0X5DLNlXP0y5pCoCjor?=
+ =?us-ascii?Q?ZvK0VCfrcfHkxk+qGqeHy6/p1cHr6AbH7wg5xuJy8IQLfwE5PJzNyspm84dd?=
+ =?us-ascii?Q?uAIKgqt88YeVFpmc6pQoBBI/v/G9DGagrrYCOzZh7TwqM9lyFQe6QZedtJQY?=
+ =?us-ascii?Q?YV3jDkfZhH8myx4CerDViPq1twrvfqetuFTIISolwPzZbjoepdFjcazsQ38m?=
+ =?us-ascii?Q?s9vukkxHbMs1zZeVPzV9Z7eAiy8FNnpFDt7sr8GP1PyP2YSs+NSdi7ojSDr7?=
+ =?us-ascii?Q?pWAsXELtb0BT7SU6QLslcDkwfdWKtyutkjdkUrGRda4UjOYMhizNbhZgcVvc?=
+ =?us-ascii?Q?hCQ8x/rdwt0nXVf4WNzZv3J/yzam6OKja9HhdBbPJ4q0pQDB+myFGYWiCGfM?=
+ =?us-ascii?Q?7qAsQ6jEUa9GRh8NxiMuAiV33da7PuecvixzlCE/lIIccR2iiyYD3m90lji+?=
+ =?us-ascii?Q?gIex1NhugNWk8KrtrplKXeFEZ6+Ls5CFtLZ7R3AZsTMDTF52vWC7zHkkWn9P?=
+ =?us-ascii?Q?ZR9Ti1zm3Cop3oPOjZOG4FTJL+ZQZ1Etonx27d9cauNgFu70w4HquX7DGbj/?=
+ =?us-ascii?Q?lEkP32pI56z53DUhHJd2ZmDdjyazpFXrvfWVGIdmzRkjrMvnjwVm/dUHH1C9?=
+ =?us-ascii?Q?Vb7w7oudPg9Twr8ms9llYQTDJr6QWMVXQ4BSkz2yxA5pXrSBRfvJPSFSNeX3?=
+ =?us-ascii?Q?ZUY8hO5FHUS6OBEMXZgtdpQlT2/CKFTeSBkWfpHSM50Iq0jgNVe2WO1uoUoK?=
+ =?us-ascii?Q?R8e/bawSdY5b3gqKEGxwSu8Q4WcJid/wx7wVLMICEv18mASrJrmCcgXhBptc?=
+ =?us-ascii?Q?/cuslMcX9rlz+3VfNcFhA45CktaehoO17ClTEpGiL3OwaKlSmVo6OeL932Dn?=
+ =?us-ascii?Q?jzAv1siWUfEYrwFIqE2c34N/N5BfzMaGjehIvE/PQuwZrhAttb56ChQRhZia?=
+ =?us-ascii?Q?YkewS7uQi0+hcQI/3w7DosAJGsi02zBX8kejP2Rt0jjCJNwHnd2GwgOq9+Ip?=
+ =?us-ascii?Q?r+mu8fFct+kvIeaVR4RbzaMCUcHbkvZfpbKXLK1gimpB97A39i8zEwIo4/Ec?=
+ =?us-ascii?Q?CBxBbGLpjIIAlq7mto9yiu5WSWhIQ7vjvEuYa9ajPBhLx358K9ggh4CDaVhL?=
+ =?us-ascii?Q?b1Q1X1FhCOu/osnue26hRN6BFqRONmP04sgxtvQrZ9ivkd+spVrK02cZavo9?=
+ =?us-ascii?Q?1PoWnlT0+wEZecyFdl/L71q1WsXbQJrtxUaHlnbzobPuXVQ4kHdsaYL0HLZn?=
+ =?us-ascii?Q?rs500+DqIQw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?T6oHv4lcFotmfs9mXaUUZMVQ4OIuMD4eb9ij2eU7kO+XVNoR4NK/Wq9yVc62?=
+ =?us-ascii?Q?W+n80Nzju3Su4ddEMl2SBZWYD0HbCbFWoxsWCFyH6l3NySfAYVYMXM4G1wKj?=
+ =?us-ascii?Q?xjcoiaWDAsLLqUt05v7PdqNC/o1KFcfh+vxDgY1TyCUz2jBj/wjuIwfvk8pe?=
+ =?us-ascii?Q?K+NnQ/sOFG6NPgzrRMl5GbRfnjAk46LNc/VaKP7l11M6EN6p+I2W4qk1143y?=
+ =?us-ascii?Q?s9wkQaCsLfXDiyYZjs+UxY3qzcJrslLcuQlUvnK1xGJhPPGX/9kw+O/D2HVr?=
+ =?us-ascii?Q?Y20WEC92j61Z7A0zO5wKSXA5V49i1nGXDtulJGrzjRrFSorjEKBHVh8Z26jS?=
+ =?us-ascii?Q?8kKkNBYp5Xp5AYUYPihDqMD1Wn6WYjpzcM1RDihEjkEWCXi6kT86zcuEtlJa?=
+ =?us-ascii?Q?wlR3bQfHAx8CZAc/Wd2oNgbU6/KFggxJL0f2nrzYuYOF3q4fGGs+8G4QOWtX?=
+ =?us-ascii?Q?hh4vJy7G1K3BYPpTYuSIS7Evcw9EFWaMuNFiLpbHNQstHIOcgI0gHvIjaJ19?=
+ =?us-ascii?Q?unUF5np4Vdn5RTu92tVUquNBwi+7Q+WrACv1w399ou0obH0LgY32IeeHwZR1?=
+ =?us-ascii?Q?gHXD67tM0yDTsiZdwYyDekhAbPPmcFtqKPuxidsohDLuQZyOy8yBNv2Fg6IL?=
+ =?us-ascii?Q?wXr2XCF9ovcUxa3TszXnXtnZ7CdmiB3AXb/EpfYqanFLGWPOhvrYNwyUtS0l?=
+ =?us-ascii?Q?JAJsoAGYcbVn2k/N6IXd2kCYih86e+f7Qjgn4TSFs55U+TlNnj0Agrc9MVz9?=
+ =?us-ascii?Q?659WENBT20u1jU/ms2afm3rJHssfdC/jP6NgqWemmT43Lr56cnlm2IepBiDF?=
+ =?us-ascii?Q?B+c405l0FIoCeCqB7y/UGcY4P5ljAZ0iiETluJgZpLw2MNiKd2ZsZw/ID9Zm?=
+ =?us-ascii?Q?cq0jk4GS3EW69t/iTu+dgTDJWu9EIRlQegeV8B6fQ4A6Fp0MyrQNbK6WZI5q?=
+ =?us-ascii?Q?iYLoGe4kbglcWsnPPpjZyLFbmXhKG0ke2dDi7qW2+8RTS9do0dTefLUGX/iW?=
+ =?us-ascii?Q?MNEiKHIpO1QduPY6g+hbWa99HpYtf7ZV2B8GJvbOZBSbtNEComxVu/VAZHNc?=
+ =?us-ascii?Q?ApwATgS+baJ+1O30KGhRf6aNlMwGUTy5WOwdYWU4UHnMMTrjgVDlmg8WqPtY?=
+ =?us-ascii?Q?jIzTnzaFxGfISwuEpx0jYo8CjdnC7MNgSLO4mcG38/SWcc5JYHtLcWD6w4Pi?=
+ =?us-ascii?Q?agIE9Z4Smi+vgcL/gxK8UYUqWH+IaKrGF099L2WsiZjHTbxj/eVl8L+uHths?=
+ =?us-ascii?Q?qkVqBIBl1w25kLHMgSvGiB5ClAcYYhI169MDvwRFXPR31FmqE79JLPEEp5Jg?=
+ =?us-ascii?Q?yJP+5KHho05MMkvjkqmit57o8bik53rhGCZY1J/WJQAi2jaIQaIaH87fU7Lw?=
+ =?us-ascii?Q?Gz9oIARYWaDifSAurSfzNvXOngVgR0BLfh45poPLHQ41+wfVZ3CZk5mDFroc?=
+ =?us-ascii?Q?3qz1Iqw02wFnxpCFuLFYMVlZBvPHPOxDLyzb31J4qETMTl3SJg8KopK+9Y5c?=
+ =?us-ascii?Q?b3bnqgT8wXfXLvZTHC40vxX0L31psiRmXlFpcLHG2sWaQ3HVlF5TqXORcnnY?=
+ =?us-ascii?Q?FCKJl6zBklGi2IOdHXQ=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc9f6a0b-146c-4b48-aede-08dda51db978
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 17:15:24.3138
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gEy1SzWi4hRkaoO/FjdSjaf3FTuWHmiYUmLDacsKNgpqgJoR/QvVrNq5zMyxje9D
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7232
 
-From: Rik van Riel <riel@meta.com>
+On Thu, Jun 05, 2025 at 06:10:52PM +0800, Wei Wang wrote:
+> In intel_iommu_domain_alloc_paging_flags():
+> For the nested_parent case, nested_supported() has been check earlier,
+> and for the dirty_tracking case, ssads_supported() has been check earlier.
+> Both of these imply SLTS support, making the subsequent SLTS cap check
+> redundant.
+> Also, false-initialize the first_stage boolean to simplify the code.
+> 
+> Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
 
-Currently no system with AMD INVLPGB support requires the page table
-isolation mitigation. However, people could still enable PTI manually,
-or a vulnerability could be found in the future that makes PTI useful
-on certain AMD CPUs.
+I'm going to post a patch that fixes this (and the other one you sent)
+differently next week:
 
-The combination of PTI and broadcast TLB flush has a problem:
-- invalidate_user_asid() sets a bit corresponding to the process PCID in user_pcid_flush_mask
-- SWITCH_TO_USER_CR3 tests and clears a bit corresponding to the process PCID in user_pcid_flush_mask
+https://github.com/jgunthorpe/linux/commits/iommu_pt_vtd/
 
-When using only ASIDs 0-5 this does not cause any issues,
-because only PCID numbers 1-6 ever get used.
+  iommu/vtd: Split intel_iommu_domain_alloc_paging_flags()
 
-However, with broadcast TLB flushing PCID numbers up to 2048
-can be used, leading to an overflow of the user_pcid_flush_mask,
-if a system using INVLPGB is booted with the pti=on option.
-
-Enlarge user_pcid_flush_mask to fit the PCID numbers that can be present
-when using broadcast TLB flushing. This takes up 256 or 512 bytes per CPU,
-depending on whether or not page table isolation is built into the kernel.
-
-Signed-off-by: Rik van Riel <riel@surriel.com>
-Fixes: c3ed3f5b2550 x86/mm: userspace & pageout flushing using Intel RAR
-Cc: stable@kernel.org
----
- arch/x86/include/asm/tlbflush.h | 49 +++++++++++++++++++++++++++------
- arch/x86/mm/tlb.c               | 22 +--------------
- 2 files changed, 42 insertions(+), 29 deletions(-)
-
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index e9b81876ebe4..401e93958022 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -23,6 +23,40 @@ void __flush_tlb_all(void);
- #define TLB_FLUSH_ALL	-1UL
- #define TLB_GENERATION_INVALID	0
- 
-+/*
-+ * When enabled, MITIGATION_PAGE_TABLE_ISOLATION consumes a single bit for
-+ * user/kernel switches
-+ */
-+#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
-+# define PTI_CONSUMED_PCID_BITS	1
-+#else
-+# define PTI_CONSUMED_PCID_BITS	0
-+#endif
-+
-+#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS)
-+
-+/*
-+ * ASIDs are zero-based: 0->MAX_AVAIL_ASID are valid.  -1 below to account
-+ * for them being zero-based.  Another -1 is because PCID 0 is reserved for
-+ * use by non-PCID-aware users.
-+ */
-+#define MAX_ASID_AVAILABLE ((1 << CR3_AVAIL_PCID_BITS) - 2)
-+
-+/*
-+ * With page table isolation, the user_pcid_flush_mask is used to indicate
-+ * that the TLB for a process needs to be flushed when switching to user
-+ * space. Broadcast TLB flushing uses more PCIDs, and a larger bitmap.
-+ */
-+#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
-+# ifdef CONFIG_BROADCAST_TLB_FLUSH
-+#  define CR3_AVAIL_PCID_LONGS ((1 << CR3_AVAIL_PCID_BITS) / BITS_PER_LONG)
-+# else
-+#  define CR3_AVAIL_PCID_LONGS 1
-+# endif
-+#else
-+# define CR3_AVAIL_PCID_LONGS 0
-+#endif
-+
- void cr4_update_irqsoff(unsigned long set, unsigned long clear);
- unsigned long cr4_read_shadow(void);
- 
-@@ -115,14 +149,6 @@ struct tlb_state {
- 	 */
- 	u8 lam;
- #endif
--
--	/*
--	 * Mask that contains TLB_NR_DYN_ASIDS+1 bits to indicate
--	 * the corresponding user PCID needs a flush next time we
--	 * switch to it; see SWITCH_TO_USER_CR3.
--	 */
--	unsigned short user_pcid_flush_mask;
--
- 	/*
- 	 * Access to this CR4 shadow and to H/W CR4 is protected by
- 	 * disabling interrupts when modifying either one.
-@@ -149,6 +175,13 @@ struct tlb_state {
- 	 * context 0.
- 	 */
- 	struct tlb_context ctxs[TLB_NR_DYN_ASIDS];
-+
-+	/*
-+	 * Mask that contains TLB_NR_DYN_ASIDS+1 bits to indicate
-+	 * the corresponding user PCID needs a flush next time we
-+	 * switch to it; see SWITCH_TO_USER_CR3.
-+	 */
-+	unsigned long user_pcid_flush_mask[CR3_AVAIL_PCID_LONGS];
- };
- DECLARE_PER_CPU_ALIGNED(struct tlb_state, cpu_tlbstate);
- 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 39f80111e6f1..fceec13a05c1 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -90,25 +90,6 @@
-  *
-  */
- 
--/*
-- * When enabled, MITIGATION_PAGE_TABLE_ISOLATION consumes a single bit for
-- * user/kernel switches
-- */
--#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
--# define PTI_CONSUMED_PCID_BITS	1
--#else
--# define PTI_CONSUMED_PCID_BITS	0
--#endif
--
--#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS)
--
--/*
-- * ASIDs are zero-based: 0->MAX_AVAIL_ASID are valid.  -1 below to account
-- * for them being zero-based.  Another -1 is because PCID 0 is reserved for
-- * use by non-PCID-aware users.
-- */
--#define MAX_ASID_AVAILABLE ((1 << CR3_AVAIL_PCID_BITS) - 2)
--
- /*
-  * Given @asid, compute kPCID
-  */
-@@ -557,8 +538,7 @@ static inline void invalidate_user_asid(u16 asid)
- 	if (!static_cpu_has(X86_FEATURE_PTI))
- 		return;
- 
--	__set_bit(kern_pcid(asid),
--		  (unsigned long *)this_cpu_ptr(&cpu_tlbstate.user_pcid_flush_mask));
-+	__set_bit(kern_pcid(asid), this_cpu_ptr(&cpu_tlbstate.user_pcid_flush_mask[0]));
- }
- 
- static void load_new_mm_cr3(pgd_t *pgdir, u16 new_asid, unsigned long lam,
--- 
-2.49.0
-
+Jason
