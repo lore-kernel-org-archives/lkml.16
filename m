@@ -1,221 +1,247 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5AA288C23;
-	Fri,  6 Jun 2025 13:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7403A1BA
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749217197; cv=none; b=kHmFBKUeh0poLBq4vc8Dn3iB/Jfq3D4jMM0npv5HdSym4UAnl17N++3QxYIBLNb1Udk44aImOcL7rHt+xmG32pJCNe2wd4W0K9lShjUYKHeFtxBF1RF90IdpnzJh2d7m0hO8OfDar5mL/w5w42hs3AyvuG0aGXxAKCGGIhsIYr8=
+	t=1749217318; cv=none; b=hY3GWfV3L9E7aiyX64j6RxYSK/jcu+4afZdNGbtTd8m8DG7nbxdYHDNRXTykI117gvbWEwir9mIZnJXgbuXDp9p1hYwlnNA0S8CPPRfu2FKOSVBcLwKuDtGJkUzJ6L2VFf25SzHP4mtzuQPiM/4a2zPkYlL8lLelWSg0xYGTGdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749217197; c=relaxed/simple;
-	bh=kpYBCOWqlcUbNI8U/W5uVMq4kEfwQ6kJSs+hTJoI0Gg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=o8ITaMlrjm3tDL3rTiKctWwxsY33aY1Zv7K+1qlKsLd4A2378z3srd2DrdsqCucYwNg/qvXUcM01JF0SGkzvR970X/jKU/x5pioKju9KnttOzUqE/NJ9Wj1J8PTS229hH5G/15PmwcGP+MuJCu9eFGQH3+mOGiCDQFfN3LMt2Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZkwI0RYP; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749217318; c=relaxed/simple;
+	bh=9nLwSViwc+aWV16xCbkbc68VQlSagffWIhULfrfxBu4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IveEvbhu6iJHJhJYJDscoYZ9u7uv3ypW4tNCE0+Joaqu3y9MXKRnRlRbhiuNrPLR6arEs8Fn+uy1IhwXm5Oh16/bbSoSSjfuEGClLzDV0ZcY7+PKw4EiArMamXlcPOa/OxqDaF1hEcTFl1AVC4OVJnApNLyBpoRp74pvnPkzP0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cacx1iEy; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkwI0RYP"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-74019695377so1406020b3a.3;
-        Fri, 06 Jun 2025 06:39:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cacx1iEy"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so14128085e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:41:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749217195; x=1749821995; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T0kzSCcm7K1KpCxO5k7+lql1juWpoA+wPJQtkbiIdI0=;
-        b=ZkwI0RYPLrQ+f+2/XRKTslWVbNHij+AzJZdksvaCKQ7qZtr0F8AyUED3DnxVCQRF26
-         4bS7E1Lt3GxQIcfGx+MNLxF2P1bKPsRqUCCWqYQPKcl9giuzIDipW3qovrCgD4GiEqWY
-         4NbBzMqIxb9USdtUFz/m6O2mxs8TDNiNWGZR7GBbUizTGT/kE930OJTDz/08CphKVd57
-         XvvB6Vgwf/aBznXVjAD6rGSWi7yfps+J00OPzjNX6Z5JHXdVLML5oj2dcqubXWtqLzJI
-         tBXOyhh62mZE2WejbMNhvX5xfl+KWQstVmAAImcoNi7r4kVopr2fcppdps8pLtbyPG8q
-         O+Nw==
+        d=linaro.org; s=google; t=1749217313; x=1749822113; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HTFOzWRKtno69oZOUe1NTizA/xt3mfhoIf6VlgXm33Q=;
+        b=cacx1iEyTvCfe7IQU8l+6wGSFSEQvDRGeow0bZsqQE1OPWQSOKlgA0I0ThSJFKAsgb
+         ztPS8fpTGrFKkMKmiOnKGARVHDC0fpOQf59yfI+N/q62aF/ySIcxnwNDygcfV5BWZkhN
+         nTqeZkgwA+mD+cMUA8i9XEcKIqhh5byGLyTRJ3+TVrhD0lVCG8onhEGXiTcdjeVluU48
+         +oUrK3o+T98kuH+qxiUMvKcdq38Tb4eYpbV2PwO88rBv3keOJ+/ZX6NTGfBiuveoO9oa
+         nRCuhjzXJtQRUDO76ihVaxmtQ0YLONAm9M9rvGIVlfvqmG9yZiZvq2k9oRc28ydOgJw+
+         4Hxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749217195; x=1749821995;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T0kzSCcm7K1KpCxO5k7+lql1juWpoA+wPJQtkbiIdI0=;
-        b=Zs563dvnvNqiaFgFitlhNrOz/wn/fC2jgeYL0LL3FbdVTx+kGwOfJ5iWYbJc4zb76e
-         iByIbje27i/fkXejs0E20SppzQS1sVa+UCwu7WQg2Rm+kl/4GNlPjoQWG8B/FufBv8Yp
-         0Z/Nh7zSzxS7k7+h1WC/dLaFUJ2+WWVEZ5AuMkdoQFXUsb4tK9x3xILj/9+z+GU9CRTF
-         JXjYI2D4Ig6SjV92qiZ4bJqoYIZX46PZWLkAAFCJnWEtDYhcZ+8RJ3gT/2FXthqhwg9x
-         r75WdqxzEhndHSS6RCZPDJdytuecU2V8sU5n5sQgX2S8WcL9X0dkobdbVhQAj/bEpXRn
-         eaog==
-X-Forwarded-Encrypted: i=1; AJvYcCWpztSKviYP/ibl2zmrwIlNA8lW4eCcFL47W+nNneX6V8PjkyI0Vd2MKOkaOzXjzTeSHLx34LSC@vger.kernel.org, AJvYcCX/eEw8BMRYQPLjcg77VyBnrfMjup9s04C2waztBJ9tm3n6NCYcKIHs7jvNeycScfvYY91Ca47HFJogrbtH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFqa0CHohq6C3yCB0gOsfbyBVqOX8P/UmhhClU9+/q7v64Vp52
-	ixwm1DjgMIgDCywsAoBpqS71k01pkxWPE3WbgCTLlpigAygu2j7HlL4hc/04KIPeBLP4bw==
-X-Gm-Gg: ASbGncvaMYb/mov6xpXzYJqFm/hPY/1FoG0q2ek8eIzdfF+tq4k6W9wGZWLpSFyUq/f
-	xndtuEFv9a4dcMjXCXIIU0SgDzfwn4BkfLN2ohAgASo0Khc7w9KPvwCHZwps243GNHfJsXot7i7
-	6gIYimDv/yGnbNazSbfI0bcazWymoIF9osOdBPewLBzlMWZWHqqoDEdIFYjoi4IkxGJJ0rN6Dzj
-	dly2kAc+c1dRe9cVyhzfxfiDJf5pb5i3aQDRDBJjPwVIIa0fiQAdyaoC80OYWayMjrde1ImSm1m
-	Gn/lpy3Tlad81nJbp88ClMdI4kUfmWn1BFyVOuHU8GZ1qSpMYpxTLrzu6d/i1zz1SqPtEAnj
-X-Google-Smtp-Source: AGHT+IEMlcmwoxdTvWn0G98Yet4VJ5pqbwUzfEyzyHyYpjEiKg/CzXJUy3i9Oim6mG2bP7tJSFDg0w==
-X-Received: by 2002:a05:6a21:a8c:b0:1f5:769a:a4bf with SMTP id adf61e73a8af0-21ee264c083mr6045628637.36.1749217195492;
-        Fri, 06 Jun 2025 06:39:55 -0700 (PDT)
-Received: from smtpclient.apple ([202.8.105.124])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f66a7c9sm1161513a12.46.2025.06.06.06.39.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Jun 2025 06:39:55 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1749217313; x=1749822113;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HTFOzWRKtno69oZOUe1NTizA/xt3mfhoIf6VlgXm33Q=;
+        b=sp+ecAseWH8wBJ6Nn/NKwzWbC4P2HuCDLB/Q7Tf8Jt0FYuaFhU2vnkSewXHMkJ2+e5
+         EuN/4UfoTFpVsIALpdr/+XYG+s4GlXVQtxF/cnS6yX9V/Vi0ahet2hQFIs+omaEU6Snw
+         anPWPfvw2COEN9EThXB9Hoe/JBUGz+0Db48IKDJuuLXDoTiDtDS5+JuXmtmvccGGwucR
+         2CRf1LJYRNUEk5h0h8g312+3Luu55H3IZml5jBFPKRP8e++AXRrdZzYRsQJRMU7e54pW
+         c/oZEiPT8aM6YJPag7eJgrfJgt6mlo9xiSI8r7Q4JFbDp+00JKh7IfIB/J6sIiFB/X7+
+         Md/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXXNjQqCbNm9cb/Shve2u8nrW+MfQdvqj3yG+UKX/DmNLMsCWPxcbo34nUX3bTbenijlQFoopFOc569Nds=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjTugWpocFswzG0PgdObtWRKr5pMtVwzjELG9RNbxXl3m34ZHN
+	k6CTiYKDT9Pbk4NtQaZ7PB6TTbtPACZH0cR4mg+DkN5UBNKI0UClOlG1gsJtZswrLTc=
+X-Gm-Gg: ASbGncvieiuTs5k224eWj5r2dTo019N8mrU+Kc7pSTi3QLBh3Hhw6XRMbGvE19i13vU
+	0XN1f/ZHV9M1hFIFtjdaFCE38TDUUN2koEWI520phG2KLR6g3z+NzrmLg0KDuxfxvgx/jK3BcKb
+	9bPiOi22DBBbwEQcdZaluMYCfgQxAP9cZm2//mIoUz5H8EXP/FNon7IEL5BbqKxl/SOl9S/P30C
+	x3MlSI27+dj/9c4gXVlyZZKoBGgoo58FryG0xQwNfmSgkL+fT12bE+6jpQ5//5ri10j8hnKj3Ea
+	oeCxbeIUxUBfG5L8JIoKeu5SsM4k/0ig2I2H1Fq009QAG2V12sMwhHK7Wj78k6caVptHKewIWhh
+	4EqnkHKpwGDtkXNl9u5htpNib8442m2boLmv460vEPg==
+X-Google-Smtp-Source: AGHT+IE1rwwQG+rrsjon14loLoaLqiSSZKx9HHA2Hy4/99w3nYKxkficVfbYFMwV7U9uCCDFDR7jUg==
+X-Received: by 2002:a05:600c:6099:b0:440:61eb:2ce5 with SMTP id 5b1f17b1804b1-452013bb38dmr43474495e9.17.1749217313338;
+        Fri, 06 Jun 2025 06:41:53 -0700 (PDT)
+Received: from ta2.c.googlers.com (213.20.187.35.bc.googleusercontent.com. [35.187.20.213])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b9b3esm21744355e9.25.2025.06.06.06.41.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 06:41:52 -0700 (PDT)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Date: Fri, 06 Jun 2025 13:41:47 +0000
+Subject: [PATCH] mailbox: stop the release and reacquire of the chan lock
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v0] cgroup: Add lock guard support
-From: Jemmy Wong <jemmywong512@gmail.com>
-In-Reply-To: <20250606104248.GA1118@cmpxchg.org>
-Date: Fri, 6 Jun 2025 21:39:39 +0800
-Cc: Jemmy <jemmywong512@gmail.com>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Tejun Heo <tj@kernel.org>,
- =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>,
- KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>,
- "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CB194CAD-0279-4A4B-90EA-A510F1A3438E@gmail.com>
-References: <20250605211053.19200-1-jemmywong512@gmail.com>
- <CAADnVQJyATTb9GFyBhOy5V_keAO5NZ6+zucLRyN27Cmg2FGPVA@mail.gmail.com>
- <20250606104248.GA1118@cmpxchg.org>
-To: Johannes Weiner <hannes@cmpxchg.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250606-mbox-drop-reacquire-lock-v1-1-d36d1a13d83f@linaro.org>
+X-B4-Tracking: v=1; b=H4sIABrwQmgC/x3MSwqAMAwA0atI1gaq2ApeRVzYNmrwU01RBPHuF
+ pdvMfNAJGGK0GQPCF0cOWwJRZ6Bm/ptJGSfDKUqtTLK4GrDjV7CjkK9O04WwiW4GYvK1k77wWj
+ rIeW70MD3v2679/0A0bwLw2oAAAA=
+X-Change-ID: 20250606-mbox-drop-reacquire-lock-14b7c5df65bd
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: peter.griffin@linaro.org, andre.draszik@linaro.org, 
+ willmcvicker@google.com, cristian.marussi@arm.com, sudeep.holla@arm.com, 
+ kernel-team@android.com, arm-scmi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Tudor Ambarus <tudor.ambarus@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749217312; l=4642;
+ i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
+ bh=9nLwSViwc+aWV16xCbkbc68VQlSagffWIhULfrfxBu4=;
+ b=yN4/VRu2saV+kafEgQ/J98zKsJ5c/2AtnH4fkCjwcQCOOssEK0vbYLKHc3ubvIscEIATb5UE6
+ rIpC5QBMDZUDAE+3ENPq6msKD+CmxZbAON0pZc8TugUi1B9xRzibRA0
+X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
+ pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
 
-Hi Johannes,
+There are two cases where the chan lock is released and reacquired
+were it shouldn't really be:
 
-Thanks for your feedback. I understand your concerns about the=20
-indentation and visual clarity with the lock guard.=20
-Let me explain why I think it=E2=80=99s still a good choice:
+1/ released at the end of add_to_rbuf() and reacquired at the beginning
+of msg_submit(). After the lock is released at the end of add_to_rbuf(),
+if the mailbox core is under heavy load, the mailbox software queue may
+fill up without any of the threads getting the chance to drain the
+software queue.
+	T#0 acquires chan lock, fills rbuf, releases the lock, then
+	T#1 acquires chan lock, fills rbuf, releases the lock, then
+	...
+	T#MBOX_TX_QUEUE_LEN returns -ENOBUFS;
+We shall drain the software queue as fast as we can, while still holding
+the channel lock.
 
-1. Less Error-Prone
-Lock guards automatically release the lock when the scope ends,=20
-even with early returns or errors. Manual lock/unlock can miss an =
-unlock,=20
-causing deadlocks=E2=80=94lock guards prevent this.
+2/ tx_tick() releases the lock after setting chan->active_req = NULL.
+This gives again the possibility for the software queue to fill up, as
+described in case 1/.
 
-2. Clear Critical Sections
-The scoped_guard clearly shows where the critical section starts and =
-ends,=20
-making the code easier to follow and maintain, even if it adds =
-indentation.
+Address the cases from above by draining the software queue while still
+holding the channel lock.
 
-3. Fixing the Concerns
-I agree the extra indentation can look messy. I can refactor to reduce =
-nesting=20
-or adjust the style to make critical sections clearer.=20
-I=E2=80=99ll also ensure the lock guard only covers the critical =
-section,=20
-avoiding non-critical work inside.
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+ drivers/mailbox/mailbox.c | 75 ++++++++++++++++++++++++++---------------------
+ 1 file changed, 41 insertions(+), 34 deletions(-)
 
-Many modern programming languages provide lock guard-like constructs
-to manage synchronization safely,=20
-showing that this approach is a widely accepted best practice.=20
-Manual lock/unlock is often discouraged because it=E2=80=99s =
-error-prone,=20
-especially in complex codebases. Here are a few examples:
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 5cd8ae22207309fadbe8fe7f6fd8b4bc2c345cfd..b064a0bd98fd07bfa4dc4186c90e5989d5dfd510 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -26,8 +26,6 @@ static int add_to_rbuf(struct mbox_chan *chan, void *mssg)
+ {
+ 	int idx;
+ 
+-	guard(spinlock_irqsave)(&chan->lock);
+-
+ 	/* See if there is any space left */
+ 	if (chan->msg_count == MBOX_TX_QUEUE_LEN)
+ 		return -ENOBUFS;
+@@ -48,49 +46,49 @@ static void msg_submit(struct mbox_chan *chan)
+ {
+ 	unsigned count, idx;
+ 	void *data;
+-	int err = -EBUSY;
+-
+-	scoped_guard(spinlock_irqsave, &chan->lock) {
+-		if (!chan->msg_count || chan->active_req)
+-			break;
+ 
+-		count = chan->msg_count;
+-		idx = chan->msg_free;
+-		if (idx >= count)
+-			idx -= count;
+-		else
+-			idx += MBOX_TX_QUEUE_LEN - count;
++	count = chan->msg_count;
++	idx = chan->msg_free;
++	if (idx >= count)
++		idx -= count;
++	else
++		idx += MBOX_TX_QUEUE_LEN - count;
+ 
+-		data = chan->msg_data[idx];
++	data = chan->msg_data[idx];
+ 
+-		if (chan->cl->tx_prepare)
+-			chan->cl->tx_prepare(chan->cl, data);
+-		/* Try to submit a message to the MBOX controller */
+-		err = chan->mbox->ops->send_data(chan, data);
+-		if (!err) {
+-			chan->active_req = data;
+-			chan->msg_count--;
+-		}
++	if (chan->cl->tx_prepare)
++		chan->cl->tx_prepare(chan->cl, data);
++	/* Try to submit a message to the MBOX controller */
++	if (!chan->mbox->ops->send_data(chan, data)) {
++		chan->active_req = data;
++		chan->msg_count--;
+ 	}
++}
+ 
+-	if (!err && (chan->txdone_method & TXDONE_BY_POLL)) {
+-		/* kick start the timer immediately to avoid delays */
+-		scoped_guard(spinlock_irqsave, &chan->mbox->poll_hrt_lock)
+-			hrtimer_start(&chan->mbox->poll_hrt, 0, HRTIMER_MODE_REL);
+-	}
++static void mbox_kick_start_timer(struct mbox_chan *chan)
++{
++	/* kick start the timer immediately to avoid delays */
++	scoped_guard(spinlock_irqsave, &chan->mbox->poll_hrt_lock)
++		hrtimer_start(&chan->mbox->poll_hrt, 0, HRTIMER_MODE_REL);
+ }
+ 
+ static void tx_tick(struct mbox_chan *chan, int r)
+ {
++	bool sent = false;
+ 	void *mssg;
+ 
+ 	scoped_guard(spinlock_irqsave, &chan->lock) {
+ 		mssg = chan->active_req;
+ 		chan->active_req = NULL;
++
++		if (chan->msg_count) {
++			msg_submit(chan);
++			sent = true;
++		}
+ 	}
+ 
+-	/* Submit next message */
+-	msg_submit(chan);
++	if (sent && (chan->txdone_method & TXDONE_BY_POLL))
++		mbox_kick_start_timer(chan);
+ 
+ 	if (!mssg)
+ 		return;
+@@ -243,18 +241,27 @@ EXPORT_SYMBOL_GPL(mbox_client_peek_data);
+  */
+ int mbox_send_message(struct mbox_chan *chan, void *mssg)
+ {
++	bool sent = false;
+ 	int t;
+ 
+ 	if (!chan || !chan->cl)
+ 		return -EINVAL;
+ 
+-	t = add_to_rbuf(chan, mssg);
+-	if (t < 0) {
+-		dev_err(chan->mbox->dev, "Try increasing MBOX_TX_QUEUE_LEN\n");
+-		return t;
++	scoped_guard(spinlock_irqsave, &chan->lock) {
++		t = add_to_rbuf(chan, mssg);
++		if (t < 0) {
++			dev_err(chan->mbox->dev, "Try increasing MBOX_TX_QUEUE_LEN\n");
++			return t;
++		}
++
++		if (!chan->active_req) {
++			msg_submit(chan);
++			sent = true;
++		}
+ 	}
+ 
+-	msg_submit(chan);
++	if (sent && (chan->txdone_method & TXDONE_BY_POLL))
++		mbox_kick_start_timer(chan);
+ 
+ 	if (chan->cl->tx_block) {
+ 		unsigned long wait;
 
-C++:
-std::mutex m;
-void example() {
-    std::lock_guard<std::mutex> lock(m); // Locks m
-    // Critical section
-} // Automatically unlocks m when scope ends
+---
+base-commit: a0bea9e39035edc56a994630e6048c8a191a99d8
+change-id: 20250606-mbox-drop-reacquire-lock-14b7c5df65bd
 
+Best regards,
+-- 
+Tudor Ambarus <tudor.ambarus@linaro.org>
 
-Rust:
-use std::sync::Mutex;
-let m =3D Mutex::new(0);
-{
-    let mut guard =3D m.lock().unwrap(); // Locks mutex
-    *guard +=3D 1; // Critical section
-} // Automatically unlocks here
-
-Java:
-ReentrantLock lock =3D new ReentrantLock();
-try (lock.lock();) { // Locks and ensures unlock
-    // Critical section
-} // Automatically unlocks here
-
-Python:
-from threading import Lock
-lock =3D Lock()
-with lock: # Locks here
-    # Critical section
-# Automatically unlocks here
-
-I think lock guards make the code safer and clearer,=20
-but I=E2=80=99m happy to tweak the implementation to address your =
-concerns.=20
-Let me know your thoughts!
-
-Best,
-Jemmy
-
-
-> On Jun 6, 2025, at 6:42=E2=80=AFPM, Johannes Weiner =
-<hannes@cmpxchg.org> wrote:
->=20
-> On Thu, Jun 05, 2025 at 05:54:15PM -0700, Alexei Starovoitov wrote:
->> On Thu, Jun 5, 2025 at 2:11=E2=80=AFPM Jemmy Wong =
-<jemmywong512@gmail.com> wrote:
->>>=20
->>> This change replaces manual lock acquisition and release with lock =
-guards
->>> to improve code robustness and reduce the risk of lock =
-mismanagement.
->>> No functional changes to the cgroup logic are introduced.
->>>=20
->>> Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
->>>=20
->>> ---
->>> include/linux/cgroup.h     |   7 +
->>> kernel/bpf/cgroup.c        |  96 +++---
->>> kernel/bpf/local_storage.c |  12 +-
->>=20
->> Nack for bpf bits.
->> It only uglifies the code.
->=20
-> I agree with this.
->=20
-> The extra indentation from scoped guard is unfortunate.
->=20
-> The guard with implicit unlock gives me the heebeejeebees - it's
-> asymmetric and critical sections don't stand out visually at all.
-
-There=E2=80=99re two types of guard: guard and socped_guard.=20
-
-The guard is asymptomatic and doesn=E2=80=99t stand out visually very =
-well.
-We could choose socped_guard which clearly defines the boundaries of =
-critical section.
-
-To clarify usage:
-- For critical sections is part of a function, prefer socped_guard,=20
-    as it explicitly delineates the boundaries of the critical section.
-- For critical sections spanning an entire function, prefer guard,=20
-    as it better suits the broader scope.
-
-> Adjusting critical section boundaries with guard means either:
-> * indentation churn to convert to scoped guard,
-> * forcing abstraction splits along critical sections (non-API
->  _locked functions), which makes the code flow harder to follow,
-> * or straight-up violating abstraction layering and adding
->  non-critical stuff to callers where it doesn't make sense.
->=20
-> I don't remember the last production bug from forgetting to drop a
-> lock. Meanwhile, the things that people actually seem to struggle with
-> when it comes to locks appear to become harder with those primitives.
