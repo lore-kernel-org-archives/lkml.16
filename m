@@ -1,216 +1,151 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487387FD
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 02:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638EF7FD;
+	Fri,  6 Jun 2025 02:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749177483; cv=none; b=lznAJqPomKgHGmImWMernJn9iClxjLJSbHVtCIibsN3UxunYwVDMfdcDT9XDkB9joVZMXxoFr1+XHRY+/KNmY6YB2AvHEUmL0+OudfCVsNYDBq+ucb/CLWo6AayT6fIfMqz+eDMF9u/lmhS+oIdXHUdfTylV58Y9E4AF2teDE9M=
+	t=1749177849; cv=none; b=HGEWeXpTIyLJC04ifEM6LJH/JSkDGU8hP1xJOyU5yxGu9ft9Oui0VEb584vH/dTeeAwaBkAGgJ+Gh8haRaeN+lhsElcx5c70G3JK42q2hqmlPwwF+oEWuu8lO0jmn8OvyZHGQG65xmStBSe74ns+ljxkPC1zRUXjb8zzmXlLTRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749177483; c=relaxed/simple;
-	bh=cI2XH/eLLkWvVYhVpomxn9VZ6NJFlKunlfuFe0Pz4c0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PWQ61yVp1H+kRGhakIGOUJoUqX24PAl++DbpHf7DSNidvnL24t042cPwe+YncEjuHXHqskb9RwnDEaez2qObhOGgasS8LOWTGEe7RPeXHbfSdSwMspn9vsfT8SJ9AzGAR5soAaJ4/8AzwIPRrVfMYxLdlPh/gW7T0XcsQqIrL00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=f6MsUG2G; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1749177849; c=relaxed/simple;
+	bh=n4s9I5oBH0Ds6zdVWzWpq5dfQH24U9msWd0nmP1p8XI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kSfGFJWXPli8nHkyzoODKjuXUgEPrWNMS8ufWbm70kX20fxVF/3Dv7gHTIJKm8nNZINWfS/OWGGVOFYe7308cMU2IdJUm8jNw6lnvdU/wTIzvPgicMgDMvPNxEGVRp2NQuxvk91d8fZhM+frEYaZEgrnpsX5E7kDfmpb43Ul2BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnb7XpJZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="f6MsUG2G"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-231e98e46c0so16500635ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 19:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1749177480; x=1749782280; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+LoKFbaTAzGXCfMggd8263jdoOLVlpajbWllgdTcRGM=;
-        b=f6MsUG2GMpMXMIWL8WHTnpSbzDXXA5gQN8MeAT66BVBINNn4kOBZFFRp/ncu9fIJ2Q
-         /OEcjEwxxkk9O9EUxZj9XEQrMBC4wrQ3ytFdiKvEHlZ56FPTePUvBwVCcHpU8FpesT6c
-         0+gQEzi4XtkIZX5GOlEu4EnhlloK+mXM2cLmozACnNOHVE3LL3P88ev+J3JnkfEwuup8
-         K4mPOn6xMpNxp/xZU297G+xvYqiJgweAXTxOQicyGB/R5zt1ySSrjsM1D+R57BFk7xuE
-         ER4G8RywrKFgN3c3/mWvtW/4QkXVNCYUK00Ki4L/ef1j2HHoUhnJ8LSHohixle6aCucv
-         TCVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749177480; x=1749782280;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+LoKFbaTAzGXCfMggd8263jdoOLVlpajbWllgdTcRGM=;
-        b=NiNj/nrA057JH/LHU+ou3Gu6FyedfrDyNy0PZ373HpcHKg/jn3jHGojiXYoJKttay8
-         1FwqM/dA1icy+D+vXJkmFXrK9jfPd3RmErHsK7jVWZcXB1P4zVdJ0sRSGoIKMTjVLt5I
-         uwHQk4lHgGkoh9AbXq7ZblpohDuGT05FNH+hagYjXYL/nOhIjrwvH8eMUu4BTSWOKgZr
-         TwRpylH3qkfCD044ZW5/fBH+cCfMw3l2ZXmBz5s5xPQOb4/qugVrAVZcgi0NfhDRjhA7
-         vv1UBYkyjm0UKwpt+rkmyGIN87lSnld1n/RaaxG/ynYmvyTjOS+tCQKcvzugZzEqyZrg
-         JhBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdZJQUIjLri8tnqm1RVr4i4RwA1UpJzMa+ICvQfw4QB+LnEdlhVlsUATLIwHDXSu0o6Us/tsvXsCFyhcQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypBaiKnESPYEfhDwnNmLvMg+uVPQ3XvO0RvwUL8sCn3yiIzgAD
-	ayWtw+IbpI5CHrgeGsWjtb1Oy2ay3u8+J9u1mubaefGC2KoTAeg0ppVX+bhOEvElPVI=
-X-Gm-Gg: ASbGncuBHguq2OW/z2AeHK2Y/GRh1LoDD2mKPEJqdGryW+OLEyDde1J2DQiDgV88RA6
-	BCm4CmIjnjsjJR45wtPKCKToRVOYO3i5/Ei2XAKAwBms6S7yLphk8ebdGiqOI4iqZu6mfSIuepM
-	K/NzvjD5XKAo8bLXHM/rGkrXNMP2lCQ/Q4HXEiJxa5b0z913Nf4Gz6+FeaAlu92OtctTvVK7/zm
-	HzT7RZvjoW2wI0kF2HQxdtqkhhncxNa1YqtrQjwZzQ+X8YddIylIczL5FStJT7ck7og8Hmec66O
-	d8Vj6guUhtl7oG7NQtWaPGix3hKLSNgteSes21kdSjDK9lZYDdG85gOtWQ6cSwP8hzJJuGEsm8i
-	2bw==
-X-Google-Smtp-Source: AGHT+IGtZW3BdOgL3r8jOtAGn1vMu3y//2ew46XW2/qIieN+7GShazHZ2qvIKrktPJFplwx1zsWpXw==
-X-Received: by 2002:a17:902:e5cf:b0:235:f45f:ed41 with SMTP id d9443c01a7336-23601d01966mr24112125ad.19.1749177480438;
-        Thu, 05 Jun 2025 19:38:00 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fcd58sm2768275ad.122.2025.06.05.19.37.56
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 05 Jun 2025 19:38:00 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: akpm@linux-foundation.org,
-	david@redhat.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	peterx@redhat.com
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	muchun.song@linux.dev,
-	dev.jain@arm.com,
-	lizhe.67@bytedance.com
-Subject: [PATCH v4] gup: optimize longterm pin_user_pages() for large folio
-Date: Fri,  6 Jun 2025 10:37:42 +0800
-Message-ID: <20250606023742.58344-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnb7XpJZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E45E9C4CEE7;
+	Fri,  6 Jun 2025 02:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749177848;
+	bh=n4s9I5oBH0Ds6zdVWzWpq5dfQH24U9msWd0nmP1p8XI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gnb7XpJZUBVO7XX4XeozSlTZNgvY/nZOkxfQwaIBlvvVh5A9RYuSI1PeirljQW23l
+	 fxhw7UBPoKDsmhyP9fC+Q7Ele6zbFwusRPr5x9J0QtS8cebnCnBqUxa+t2DRNDbSXI
+	 7mB6r+OXtZ6dzkyM70biUhNVeeYGWlXGppWXkGj4nVOmYIg8a9jvGproHCc8iye6WQ
+	 yJV06gioxtnN4nDNeV8m9+r5PRSmiieCJGSVOycRLZQufrV3jQFy3lGQj2lCRCfru0
+	 3uaw1Qy75lpbxkwEeJCCd3yTyZtTPxT4dgJ6o2wdmbYUyHoOYUZ9glGNRt3OB58Uok
+	 z3uOyijeIStjw==
+Date: Thu, 5 Jun 2025 19:44:06 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>, Leo Yan <leo.yan@arm.com>,
+	Hao Ge <gehao@kylinos.cn>, Howard Chu <howardchu95@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Gautam Menghani <gautam@linux.ibm.com>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] Move uid filtering to BPF filters
+Message-ID: <aEJV9i0AptY81GfS@google.com>
+References: <20250604174545.2853620-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250604174545.2853620-1-irogers@google.com>
 
-From: Li Zhe <lizhe.67@bytedance.com>
+Hi Ian,
 
-In the current implementation of the longterm pin_user_pages() function,
-we invoke the collect_longterm_unpinnable_folios() function. This function
-iterates through the list to check whether each folio belongs to the
-"longterm_unpinnabled" category. The folios in this list essentially
-correspond to a contiguous region of user-space addresses, with each folio
-representing a physical address in increments of PAGESIZE. If this
-user-space address range is mapped with large folio, we can optimize the
-performance of function collect_longterm_unpinnable_folios() by reducing
-the using of READ_ONCE() invoked in
-pofs_get_folio()->page_folio()->_compound_head(). Also, we can simplify
-the logic of collect_longterm_unpinnable_folios(). Instead of comparing
-with prev_folio after calling pofs_get_folio(), we can check whether the
-next page is within the same folio.
+On Wed, Jun 04, 2025 at 10:45:34AM -0700, Ian Rogers wrote:
+> Rather than scanning /proc and skipping PIDs based on their UIDs, use
+> BPF filters for uid filtering. The /proc scanning in thread_map is
+> racy as the PID may exit before the perf_event_open causing perf to
+> abort. BPF UID filters are more robust as they avoid the race. The
+> /proc scanning also misses processes starting after the perf
+> command. Add a helper for commands that support UID filtering and wire
+> up. Remove the non-BPF UID filtering support given it doesn't work.
+> 
+> v4: Add a warning message on top of Namhyung's BPF filter error message:
+> https://lore.kernel.org/lkml/20250604054234.23608-1-namhyung@kernel.org/
+>     in the parse_uid_filter helper. In TUI the warning is shown then
+>     the BPF error shown, with stdio the warning appears below the BPF
+>     errors.
+> 
+> v3: Add lengthier commit messages as requested by Arnaldo. Rebase on
+>     tmp.perf-tools-next.
+> 
+> v2: Add a perf record uid test (Namhyung) and force setting
+>     system-wide for perf trace and perf record (Namhyung). Ensure the
+>     uid filter isn't set on tracepoint evsels.
+> 
+> v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.com/
+> 
+> Ian Rogers (10):
+>   perf parse-events filter: Use evsel__find_pmu
+>   perf target: Separate parse_uid into its own function
+>   perf parse-events: Add parse_uid_filter helper
+>   perf record: Switch user option to use BPF filter
+>   perf tests record: Add basic uid filtering test
+>   perf top: Switch user option to use BPF filter
+>   perf trace: Switch user option to use BPF filter
+>   perf bench evlist-open-close: Switch user option to use BPF filter
+>   perf target: Remove uid from target
+>   perf thread_map: Remove uid options
 
-The performance test results, based on v6.15, obtained through the
-gup_test tool from the kernel source tree are as follows. We achieve an
-improvement of over 66% for large folio with pagesize=2M. For small folio,
-we have only observed a very slight degradation in performance.
+I've noticed two things.
 
-Without this patch:
+* it takes a quite long time to load the BPF filter.  Not sure what's
+  the issue, but maybe annoying for users.
 
-    [root@localhost ~] ./gup_test -HL -m 8192 -n 512
-    TAP version 13
-    1..1
-    # PIN_LONGTERM_BENCHMARK: Time: get:14391 put:10858 us#
-    ok 1 ioctl status 0
-    # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-    [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
-    TAP version 13
-    1..1
-    # PIN_LONGTERM_BENCHMARK: Time: get:130538 put:31676 us#
-    ok 1 ioctl status 0
-    # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+* normal users cannot use BPF filter even if the BPF is loaded and
+  pinned already.  It works fine for perf record.
 
-With this patch:
+I don't think the issues are from this change though.
 
-    [root@localhost ~] ./gup_test -HL -m 8192 -n 512
-    TAP version 13
-    1..1
-    # PIN_LONGTERM_BENCHMARK: Time: get:4867 put:10516 us#
-    ok 1 ioctl status 0
-    # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-    [root@localhost ~]# ./gup_test -LT -m 8192 -n 512
-    TAP version 13
-    1..1
-    # PIN_LONGTERM_BENCHMARK: Time: get:131798 put:31328 us#
-    ok 1 ioctl status 0
-    # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+Thanks,
+Namhyung
 
-Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
----
-Changelogs:
-
-v3->v4:
-- Fix some issues of code formatting.
-
-v2->v3:
-- Update performance test data based on v6.15.
-- Refine the description of the optimization approach in commit message.
-- Fix some issues of code formatting.
-- Fine-tune the conditions for entering the optimization path.
-
-v1->v2:
-- Modify some unreliable code.
-- Update performance test data.
-
-v3 patch: https://lore.kernel.org/all/20250605033430.83142-1-lizhe.67@bytedance.com/
-v2 patch: https://lore.kernel.org/all/20250604031536.9053-1-lizhe.67@bytedance.com/
-v1 patch: https://lore.kernel.org/all/20250530092351.32709-1-lizhe.67@bytedance.com/
-
- mm/gup.c | 37 +++++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index 84461d384ae2..be968640b935 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2317,6 +2317,31 @@ static void pofs_unpin(struct pages_or_folios *pofs)
- 		unpin_user_pages(pofs->pages, pofs->nr_entries);
- }
- 
-+static struct folio *pofs_next_folio(struct folio *folio,
-+		struct pages_or_folios *pofs, long *index_ptr)
-+{
-+	long i = *index_ptr + 1;
-+
-+	if (!pofs->has_folios && folio_test_large(folio)) {
-+		const unsigned long start_pfn = folio_pfn(folio);
-+		const unsigned long end_pfn = start_pfn + folio_nr_pages(folio);
-+
-+		for (; i < pofs->nr_entries; i++) {
-+			unsigned long pfn = page_to_pfn(pofs->pages[i]);
-+
-+			/* Is this page part of this folio? */
-+			if (pfn < start_pfn || pfn >= end_pfn)
-+				break;
-+		}
-+	}
-+
-+	if (unlikely(i == pofs->nr_entries))
-+		return NULL;
-+	*index_ptr = i;
-+
-+	return pofs_get_folio(pofs, i);
-+}
-+
- /*
-  * Returns the number of collected folios. Return value is always >= 0.
-  */
-@@ -2324,16 +2349,12 @@ static void collect_longterm_unpinnable_folios(
- 		struct list_head *movable_folio_list,
- 		struct pages_or_folios *pofs)
- {
--	struct folio *prev_folio = NULL;
- 	bool drain_allow = true;
--	unsigned long i;
--
--	for (i = 0; i < pofs->nr_entries; i++) {
--		struct folio *folio = pofs_get_folio(pofs, i);
-+	struct folio *folio;
-+	long i = 0;
- 
--		if (folio == prev_folio)
--			continue;
--		prev_folio = folio;
-+	for (folio = pofs_get_folio(pofs, i); folio;
-+		 folio = pofs_next_folio(folio, pofs, &i)) {
- 
- 		if (folio_is_longterm_pinnable(folio))
- 			continue;
--- 
-2.20.1
-
+> 
+>  tools/perf/bench/evlist-open-close.c        | 36 ++++++++------
+>  tools/perf/builtin-ftrace.c                 |  1 -
+>  tools/perf/builtin-kvm.c                    |  2 -
+>  tools/perf/builtin-record.c                 | 27 ++++++-----
+>  tools/perf/builtin-stat.c                   |  4 +-
+>  tools/perf/builtin-top.c                    | 22 +++++----
+>  tools/perf/builtin-trace.c                  | 27 +++++++----
+>  tools/perf/tests/backward-ring-buffer.c     |  1 -
+>  tools/perf/tests/event-times.c              |  8 ++-
+>  tools/perf/tests/keep-tracking.c            |  2 +-
+>  tools/perf/tests/mmap-basic.c               |  2 +-
+>  tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
+>  tools/perf/tests/openat-syscall-tp-fields.c |  1 -
+>  tools/perf/tests/openat-syscall.c           |  2 +-
+>  tools/perf/tests/perf-record.c              |  1 -
+>  tools/perf/tests/perf-time-to-tsc.c         |  2 +-
+>  tools/perf/tests/shell/record.sh            | 26 ++++++++++
+>  tools/perf/tests/switch-tracking.c          |  2 +-
+>  tools/perf/tests/task-exit.c                |  1 -
+>  tools/perf/tests/thread-map.c               |  2 +-
+>  tools/perf/util/bpf-filter.c                |  2 +-
+>  tools/perf/util/evlist.c                    |  3 +-
+>  tools/perf/util/parse-events.c              | 47 +++++++++++++-----
+>  tools/perf/util/parse-events.h              |  1 +
+>  tools/perf/util/python.c                    | 10 ++--
+>  tools/perf/util/target.c                    | 54 +++------------------
+>  tools/perf/util/target.h                    | 15 ++----
+>  tools/perf/util/thread_map.c                | 32 ++----------
+>  tools/perf/util/thread_map.h                |  6 +--
+>  tools/perf/util/top.c                       |  4 +-
+>  tools/perf/util/top.h                       |  1 +
+>  31 files changed, 164 insertions(+), 182 deletions(-)
+> 
+> -- 
+> 2.50.0.rc0.604.gd4ff7b7c86-goog
+> 
