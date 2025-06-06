@@ -1,147 +1,171 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C4628468B
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EEA253947;
+	Fri,  6 Jun 2025 07:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749196304; cv=none; b=Waq06ME2y6Z5306eXSi8/r4Mn7vB0UbF6yAsd3QQWNqRk4RG+p1LzlmTAI8jL44u47fMAqLD08CihbDRPwa+dmK7YBQGfY7Hr1cSodqrXzWyV0FDBp/WlEaJTHDE1Zni8FkiReiUsreJQNmofVmHMBfWk/tb74eLBBr+SPLSv7I=
+	t=1749196318; cv=none; b=IMCtpFu1TDwmS4XsTCZ2dJF6u20lOswAvjx2evzLlWQuP8ev3c5IgNsgdLmTaAHBf0jtAYJF4fwM/gOtYzHz6bSaz2Y1QCTMp3Z3eb151TZDPuHQ4S48dXMz8f0IZdyjTpIzTgA+HfV/K0tVt5iYvJU5mntc0ZAjYBDZ2tasZeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749196304; c=relaxed/simple;
-	bh=aKWaCYwDz1+bVvsuOEtWRHAykIFV2+vyZzfLCF7Fzw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b3dvAWJtVXXEcdAoNjoYsZi/kHRxSEudvMeictkZ9cZbgqxN7wV0HKsyVwhjU87woMDDTW4pklCZKFmGPgCsje41+Zk2CfomIewCezhtmNh8h19nb/UPWxwflLOhMCJhSE3VeqZT6k+fQ8xkeNknyMq6JHuxI3LslnOnj/gv4+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GkVRhPLr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ixSCkc1r; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jmAAtApL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=beYxy38h; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749196318; c=relaxed/simple;
+	bh=ixcHSzravCF5OHMCMsSfMl6iEx0oa59ZZWL3buzN8HE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=Uc8ctRsCH3L7URZhd7J/vC9JOdzwDkmzOf094sr4989Bi7BbCC57mhlWzHFO+MAh5vqIBJx30dS8sIrdWNFY64YmDTNLAeDMyKhQYz7PoVerrJQBxIzES/aIJ8IO3Tg+K4Sk63xi8mbrxnlPvBEDFC2sOZqGNStzg/EZedo36B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dfVefHjT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GkVRhPLr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ixSCkc1r";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jmAAtApL";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="beYxy38h"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B837D1F46E;
-	Fri,  6 Jun 2025 07:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749196301; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p6yHYzHnziYKvQVg+eB8bpqQd4mKjnL/fU2jPtSxu54=;
-	b=GkVRhPLroLdWtsNbA5YzSxfvtZgfblc/YFZJBXOWJY5LOnE4338DeKZajyRixTgQTM7tjK
-	bDpa2pc6LlSGKxJUgSakNLCYB4EklsOXWW115uQH4zVxZX5F63QnlGl0+XuMGviroo1Oy0
-	lPCnuEzbO+nFv1GheNbZbCWaOEdRupE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749196301;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p6yHYzHnziYKvQVg+eB8bpqQd4mKjnL/fU2jPtSxu54=;
-	b=ixSCkc1rIc01pV8FMKhPoDbOUGLc1IEd2YNMNbbeokAbTRYdoP/3uWxlrEGKW6KkYnVFN7
-	o7M+7Uoqr6iuQvBw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=jmAAtApL;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=beYxy38h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749196300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p6yHYzHnziYKvQVg+eB8bpqQd4mKjnL/fU2jPtSxu54=;
-	b=jmAAtApLjrC/fAxcLtt7RO5MsLXbgc2J7L/PAfq/Xbei450Zs7BvxUrQR6hwhVYVvQ6afJ
-	41Kb2JJO2s464NrxWXZr+Skj+in9N+h9Kop25K9pJLwjfLcjUb0txCgFXavDhVJ2rzlzzs
-	w/fsDqVDV9MMsDQ428RHnohBc9TXwrI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749196300;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p6yHYzHnziYKvQVg+eB8bpqQd4mKjnL/fU2jPtSxu54=;
-	b=beYxy38hcvWHQOOt+KVnko5USCV08ZrQwf+lj43luZOXqBO66VICAitwjJkW9K921MLCKs
-	/IYcdZ72Qv+QYACg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2115B1336F;
-	Fri,  6 Jun 2025 07:51:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fK1lBQyeQmioeAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 06 Jun 2025 07:51:40 +0000
-Date: Fri, 6 Jun 2025 09:51:38 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: kernel test robot <lkp@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 04/10] mm,slub: Use node-notifier instead of
- memory-notifier
-Message-ID: <aEKeCg_xyTpZyA-P@localhost.localdomain>
-References: <20250605142305.244465-5-osalvador@suse.de>
- <202506060918.HDCPogq9-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dfVefHjT"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5566v6Uh007519;
+	Fri, 6 Jun 2025 07:51:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4OmRq2rQW2Lq33eRxKHtUNom0yzDPlFkjIY3X6SMU08=; b=dfVefHjTuF5iEq3B
+	jqSXdF0I5LcTqFwkYQjktMtaQZLBWytd80W04TEnkS+fp9BwKtG3S7GQnM28YFln
+	+keSKUfd612HNlcE34isDE+Ms7ONcvAyyisLhn7EJImLLMkNDjgveO3nihytgd+k
+	s5IrVRlK7TXJWCXkdDoZGUE6H/myXrUc5avH4uo5ydT3cugl2IvhGXBHB+Qnxv1e
+	hPAPXCWNu6lz3v65uaI4zxK5Gy3apSMRLcdBGrpsg1c7szShulq+16BcLuXu3kh0
+	Xn6CcXaB5MX/2Tfn9vctT5KI6Tx/Ti1No+JcRZ0ZXoFcddUY+UB/QnEqOz6Q1dj+
+	vu4ojw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8t3tx5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Jun 2025 07:51:52 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5567pqp1028641
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 6 Jun 2025 07:51:52 GMT
+Received: from [10.231.216.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 6 Jun 2025
+ 00:51:34 -0700
+Message-ID: <e18bdd88-3866-4aef-8873-b9b67f0cb9b7@quicinc.com>
+Date: Fri, 6 Jun 2025 15:51:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202506060918.HDCPogq9-lkp@intel.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: B837D1F46E
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,lists.linux.dev,kvack.org,redhat.com,suse.cz,huawei.com,oracle.com,sk.com,gmail.com,vger.kernel.org];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
-X-Spam-Score: -3.01
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+From: Renjiang Han <quic_renjiang@quicinc.com>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Krzysztof Kozlowski
+	<krzk@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Nicolas
+ Dufresne" <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
+ <a3bf69f3-6500-4e45-ba34-8ba24312938a@kernel.org>
+ <CAO9ioeWkLu+ne18kjEST7YU7b1aBzcMBBeyfpagzis99BAeOHg@mail.gmail.com>
+ <b710e357-09e3-460e-b097-28cf0c856aeb@kernel.org>
+ <44b3779b-702c-4e8b-8ccd-c9c3314a511f@linaro.org>
+ <3956eeef-2a60-4bfb-908e-5e3e32970b86@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <3956eeef-2a60-4bfb-908e-5e3e32970b86@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=RMizH5i+ c=1 sm=1 tr=0 ts=68429e19 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=FFWuaSR45GQhWSSMqCAA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA3MiBTYWx0ZWRfXxvDBPT3t5Wwv
+ 5n2fdUlHiLpn2WqC5GEMuXV1nGhw+27pYVg5zjhZGKsL2nKkWfmxU5wjSMpJAaaqXnDfXwVZhtg
+ ikNslJIToL6bCxcbq6gO9wIp1/Ut74RRjG42DVJfnlzA0vl+FyUYZ8lllXZZIYj8c3jqZGBFUaB
+ h5ST/4DFR1ct7Yb5R9jPZN2mjLsdAd4eItdF21XjKl2vOErHcDvo9+X1Rg/nK0WVVToHYcKjsSK
+ fIqQo7r7rYzYzlyn4M0nUU7geuxdRaP3KKeLesOuoQHQrmjjIVtrHjwLIGOkZgqvvTK8CPwZbuL
+ u2seoA/jTQ3yCIaMSSOARSle1LSKCyJkFXmXKRkbKtA2vgu1zfxXWNafQ3hHxAV809VKu+tCHbW
+ OJdnNttl7gIxfDkO0yX6r+Ty6jIDOpCmfBK9b9uFo7nHdZ2djmbK+GAGvYenWe3zA4j00FLw
+X-Proofpoint-GUID: lMZHjnQ-pNeHXXze68TsacmFKXiiyDTM
+X-Proofpoint-ORIG-GUID: lMZHjnQ-pNeHXXze68TsacmFKXiiyDTM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-06_02,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 suspectscore=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506060072
 
-On Fri, Jun 06, 2025 at 09:50:39AM +0800, kernel test robot wrote:
-> Hi Oscar,
-> 
-> kernel test robot noticed the following build errors:
 
-Fixed, see:
+On 6/6/2025 11:52 AM, Renjiang Han wrote:
+>
+> On 6/5/2025 8:40 PM, Bryan O'Donoghue wrote:
+>>>>> Well, that's a NAK then (although depends what you mean by DT).
+>>>>
+>>>> I mean qcs615.dtsi. I'd suggest an immutable branch for the driver
+>>>
+>>> Sorry, but no, DTS cannot depend on drivers. You CANNOT merge them into
+>>> one branch.
+>>>
+>>>> patch. Or just merging the patches in two consequent releases.
+>>>
+>>> That's a new device nodes, new hardware so it should not be blocked by
+>>> any driver patch. This is just totally broken process / patchset / 
+>>> work.
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>
+>> Reading this thread, I don't think that is the case.
+>>
+>> I don't see how patches 2/3 or 3/3 depend on 1/3.
+>>
+>> The frequency table is a fallback in the driver and the DT changes 
+>> are completely straight forward.
+>>
+>> TBH, I think we are hitting an email comms/social barrier here, not a 
+>> technical one.
+>>
+>> @Renjiang can you please confirm that freq_table is a fallback, 
+>> qcs615 will work without OPP table and the DTS stuff doesn't depend 
+>> on the driver.
+> yes, freq_table is a fallback. driver will use freq_table without OPP 
+> table. the DTS doesn't depend on the driver.
+To correct my previous response:
+For this project, the driver patch needs to be merged first. Since it
+falls back to SC7180, but their frequencies are different which is
+reflected in the OPP table defined in the DTS.
 
-https://lore.kernel.org/linux-mm/aEKdvc8IWgSXSF8Q@localhost.localdomain/T/#mb3acf8bc17463f621f2b85d688817acd65cef042
+The DTS patch is intended to enable video function on the QCS615 platform.
 
-Thanks
+The driver patch is to switch from using the driver freq_table to the
+OPP table from the DTS. Without it, the driver will continue to use the
+internal freq_table as before.
 
+Therefore, if the DTS patch is applied without the driver patch, the video
+function will be enabled on the QCS615 platform, but the driver will use
+the SC7180 frequency table, which can lead to an overclocking issue.
+>>
+>> TBH, I don't see how the DTS can or should but...
+>>
+>> ---
+>> bod 
+>
 -- 
-Oscar Salvador
-SUSE Labs
+Best Regards,
+Renjiang
+
