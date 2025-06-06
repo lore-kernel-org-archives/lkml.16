@@ -1,134 +1,108 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381D0207A3A;
-	Fri,  6 Jun 2025 09:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CF3191F7E;
+	Fri,  6 Jun 2025 09:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749203085; cv=none; b=OPUbe08bDn9evVN/dmeKFmBwK+WjrPSpca0zVzW1lKtbhe2BCQ1ze6MxaYQ7GuDTS5v7m4MtKjxw+N15oULFRfhcCbpwbHeGtM4WVewopODN+gw9xKf/Tuufm8XHK47dfUmVNmR9YkODQPTClqrYrfRMEpDr0EYUGnFZoaD6vFM=
+	t=1749203248; cv=none; b=FKWgyxlFgNCTX/+BT11ptcpqbeP4+krp+rwm+DZIRNPlGRX3kdjMtbPtBKQw7sZYTPC2K62NEUKh0EUtJNMn7z3YYJOUKblYZMoGj4i7vjUjL1uXZ0IwMch2xxsFn84JZAEPVSZyuuxgue9jF/GYaR8QxE4JbWhB7PQHLkiU/jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749203085; c=relaxed/simple;
-	bh=9qfH4e4DKeBNWo1tN5k/hRYd/YM+kbmrEZZ6Hb/KOZs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V1/qU3PHGEYXGSxASr7gWjET1ewqMCuq1SXaeV3acI6B5bOKKbazv3WnGB32AvU4Rk73SKsCcObM3uytNXcRttYkxsFvnnmP0kkjrZ4Llc5MD1+EfwXAlqLzaheMJgJDp2XbIujRKkt2Jv0cVWaLEpICzSrOvtPO2+9FjkdPf1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Sl5v8Ary; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749203248; c=relaxed/simple;
+	bh=vvY+zy9RAHY5Xv9bdqTJBXFQVoDzhPJHF1eJQ9KYoDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tTv8/yxTKBLsMYGcyPWVh9M8g84/dVHCXOYEa3HPyIvolx9quQrQS3AHvSgfxbsz48W63EI5zOcFEjbLYgor1rwXhPEJ+dP1VQyAB/Cb+l9kupO+CgrV5Pug6IfaOhBoukldKGoSs3Kjv8QD9BJq4EEwXea8fcc0bx44m/azf6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ildp5oto; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Sl5v8Ary"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 03E9542E77;
-	Fri,  6 Jun 2025 09:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749203081;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eTDZAF5gNbxnNxj+lsJqqE9vfgSs2erOnFdEb7FBGt0=;
-	b=Sl5v8AryVjAS3ndFPZhBmcx9hFXUMFuUCZ34zswapUR19vQWw3kr8zlh28JFfquff+41aw
-	OqYBYRq7X+WjlTW/mT8YlsWcrPDu96IEpKTBfef0F+3XJMLpqiOdDjTkWRFKtOpr+MCZaT
-	qPamB/Oik2zueznSG0VIz9HIfJr16PuUDvoY/dBY6bAXfn1GGTASm2+73unuCYAqEqNveb
-	nUjHbCy3+bla4Dm9H0cdBYCPC37gB6WvwFEBUJ63FBdMdjQ7ntAdqfTQH47gG1ixy2uSu0
-	2nK3Klxd9rMka1CHvRJf5SyrC7AXENylNnsiqB+EeaHWM24GhLOesCU+cFZq0A==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Simon Horman <horms@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Jijie Shao <shaojijie@huawei.com>,
-	Larysa Zaremba <larysa.zaremba@intel.com>
-Subject: [PATCH net v2] net: phy: phy_caps: Don't skip better duplex macth on non-exact match
-Date: Fri,  6 Jun 2025 11:43:20 +0200
-Message-ID: <20250606094321.483602-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ildp5oto"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206BBC4CEEB;
+	Fri,  6 Jun 2025 09:47:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749203247;
+	bh=vvY+zy9RAHY5Xv9bdqTJBXFQVoDzhPJHF1eJQ9KYoDA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Ildp5otoztJksh2Bp1iOkOSirhm5+tezfn0hw/Rw+xybsiVkpMtUl54gFeybakK2A
+	 8RZOGYWAhYSCikgMAbxy2p/8yRm1+AUtktxfoeTjI3vS4jUxcK4lfhX+07ujCkyAFA
+	 nRkbbY6N6WbvUMItJV1PhxzLzLAqKbzMPyuJptfBYQXxJSU3TfMiKjhDurw+OakI3N
+	 ychK01gtpN9frEV4+RqJFC2YNvU2DQmhSxPj5KHTBCbsokkcNALcy8bH1OHvGKgkXI
+	 6mjlXu+mxSSospxpDKx2MeWOfPtTGTXGKcJ/4R6TdZHTO1heZkj5Ra3cJSO52BtlrJ
+	 26JDjpOv836EA==
+Date: Fri, 6 Jun 2025 11:47:24 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Lechner <dlechner@baylibre.com>, 
+	Trevor Gamblin <tgamblin@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] pwm: axi-pwmgen: Fix handling of external clock
+Message-ID: <jzbvo3ranrbpiaox6pzs73jmq5njkkmq7iqnme5z7krcugjdk2@6hy7myyjdji5>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegleduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjefhleeihefgffeiffdtffeivdehfeetheekudekgfetffetveffueeujeeitdevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdduvddruddthedrudehtddrvdehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvuddvrddutdehrdduhedtrddvhedvpdhhvghlohepfhgvughorhgrrddrpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtr
- dgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ixgvzd3utbel5w3b"
+Content-Disposition: inline
 
-When performing a non-exact phy_caps lookup, we are looking for a
-supported mode that matches as closely as possible the passed speed/duplex.
 
-Blamed patch broke that logic by returning a match too early in case
-the caller asks for half-duplex, as a full-duplex linkmode may match
-first, and returned as a non-exact match without even trying to mach on
-half-duplex modes.
+--ixgvzd3utbel5w3b
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: [GIT PULL] pwm: axi-pwmgen: Fix handling of external clock
+MIME-Version: 1.0
 
-Reported-by: Jijie Shao <shaojijie@huawei.com>
-Closes: https://lore.kernel.org/netdev/20250603102500.4ec743cf@fedora/T/#m22ed60ca635c67dc7d9cbb47e8995b2beb5c1576
-Tested-by: Jijie Shao <shaojijie@huawei.com>
-Reviewed-by: Larysa Zaremba <larysa.zaremba@intel.com>
-Fixes: fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps based on speed and duplex")
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
- drivers/net/phy/phy_caps.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+Hello Linus,
 
-diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
-index 703321689726..38417e288611 100644
---- a/drivers/net/phy/phy_caps.c
-+++ b/drivers/net/phy/phy_caps.c
-@@ -188,6 +188,9 @@ phy_caps_lookup_by_linkmode_rev(const unsigned long *linkmodes, bool fdx_only)
-  * When @exact is not set, we return either an exact match, or matching capabilities
-  * at lower speed, or the lowest matching speed, or NULL.
-  *
-+ * Non-exact matches will try to return an exact speed and duplex match, but may
-+ * return matching capabilities with same speed but a different duplex.
-+ *
-  * Returns: a matched link_capabilities according to the above process, NULL
-  *	    otherwise.
-  */
-@@ -195,7 +198,7 @@ const struct link_capabilities *
- phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
- 		bool exact)
- {
--	const struct link_capabilities *lcap, *last = NULL;
-+	const struct link_capabilities *lcap, *match = NULL, *last = NULL;
- 
- 	for_each_link_caps_desc_speed(lcap) {
- 		if (linkmode_intersects(lcap->linkmodes, supported)) {
-@@ -204,16 +207,19 @@ phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
- 			if (lcap->speed == speed && lcap->duplex == duplex) {
- 				return lcap;
- 			} else if (!exact) {
--				if (lcap->speed <= speed)
--					return lcap;
-+				if (!match && lcap->speed <= speed)
-+					match = lcap;
-+
-+				if (lcap->speed < speed)
-+					break;
- 			}
- 		}
- 	}
- 
--	if (!exact)
--		return last;
-+	if (!match && !exact)
-+		match = last;
- 
--	return NULL;
-+	return match;
- }
- EXPORT_SYMBOL_GPL(phy_caps_lookup);
- 
--- 
-2.49.0
+the following changes since commit c0c980f237e822fd9cc6c0ab5b60ce8efe76464e:
 
+  dt-bindings: timer: renesas,tpu: remove binding documentation (2025-05-19 18:46:45 +0200)
+
+(which corresponds to my tag pwm/for-6.16-rc1 that you already pulled
+last week) are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.16-rc1-fixes
+
+for you to fetch changes up to a8841dc3dfbf127a19c3612204bd336ee559b9a1:
+
+  pwm: axi-pwmgen: fix missing separate external clock (2025-06-02 18:23:33 +0200)
+
+----------------------------------------------------------------
+pwm: axi-pwmgen: Fix handling of external clock
+
+The pwm-axi-pwmgen device is backed by an FPGA and can be synthesized in
+different ways. Relevant here is that it can use one or two external
+clock signals. The changes included here fix clock handling for the two
+clocks case.
+
+----------------------------------------------------------------
+
+The two commits have been in next since last Tuesday without issues.
+Please pull these two changes for 6.16-rc1.
+
+Thanks
+Uwe
+
+David Lechner (2):
+      dt-bindings: pwm: adi,axi-pwmgen: Fix clocks
+      pwm: axi-pwmgen: fix missing separate external clock
+
+ .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    | 13 ++++++++++--
+ drivers/pwm/pwm-axi-pwmgen.c                       | 23 +++++++++++++++++++---
+ 2 files changed, 31 insertions(+), 5 deletions(-)
+
+--ixgvzd3utbel5w3b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhCuSkACgkQj4D7WH0S
+/k6vOQf+NCDzm/4JC9KgW9GvFklJ811OhzwGYtDBvTPpOjwI8vU1/d0c+0gffUDx
+BkbuEGS3fTZSURW2uXhP8OiazkVbBCZIJbJVScssNTbskQVDWNSgOojnqQz7uzjK
+oCO8W2uUURBSCdafJ+mRpsRgN0I7YB4Pili0o5QWtjrZ+YU1VYfKZVGlTbl58Dci
+z9QtzZX5uxBNq5FxtSpiPQIWKMGl5HiGaGo4JTI9wwb+tQiFdi843AkpTwhLiAgD
+YjJ91a7wzMgWvOuEmP/8cGyIlJCbN99RLEu0lh2p6UbFxpPS6SWpRj5vJ4HQ69K1
+9AS5znuYDWPT6wbvJ4VtF+Q/IhRkgw==
+=TiO0
+-----END PGP SIGNATURE-----
+
+--ixgvzd3utbel5w3b--
