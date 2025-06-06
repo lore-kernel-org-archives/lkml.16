@@ -1,247 +1,279 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7403A1BA
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749217318; cv=none; b=hY3GWfV3L9E7aiyX64j6RxYSK/jcu+4afZdNGbtTd8m8DG7nbxdYHDNRXTykI117gvbWEwir9mIZnJXgbuXDp9p1hYwlnNA0S8CPPRfu2FKOSVBcLwKuDtGJkUzJ6L2VFf25SzHP4mtzuQPiM/4a2zPkYlL8lLelWSg0xYGTGdM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749217318; c=relaxed/simple;
-	bh=9nLwSViwc+aWV16xCbkbc68VQlSagffWIhULfrfxBu4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IveEvbhu6iJHJhJYJDscoYZ9u7uv3ypW4tNCE0+Joaqu3y9MXKRnRlRbhiuNrPLR6arEs8Fn+uy1IhwXm5Oh16/bbSoSSjfuEGClLzDV0ZcY7+PKw4EiArMamXlcPOa/OxqDaF1hEcTFl1AVC4OVJnApNLyBpoRp74pvnPkzP0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cacx1iEy; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27143288CB2;
+	Fri,  6 Jun 2025 13:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749217361; cv=fail; b=hCYgYZmMKoc4hVTz4sx5+Tv2JxRalMg+coKE+vXTkw+xdWDtFUj3jGbrxsMaT7BlTgBWvVSnsGYmrA79MQA7AHxYJL5VY3XmDLcqSSMqmtNv6PocT+ARYCG5/3mRZo4iWfUnq7mIJHKg/iDcgIqi+vq1oQ0e2vgGe9JkSSSjyZ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749217361; c=relaxed/simple;
+	bh=ApA3niORv5NqgA+qW1GewKpafM0Rklu9TT0TjWoXWbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=B79ovBGw0JOiu0X4wHlSNCVdWtV1A/zC2VZx4FgoVuIAILTk2UJEsQ45hLZ2kdJM0HfTyQqPPoIKij8En2nd9C/97H1vALlw6uM7UDBYWejZI9qCBcJjUFLoyRGjpobo55mdt5t+FCpkLYTJxAtXfAqhMOALAiCk6exFMasMLp8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gdM9hmqL; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ujZFEKGP; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cacx1iEy"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so14128085e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:41:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gdM9hmqL";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ujZFEKGP"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5565NO5N012746;
+	Fri, 6 Jun 2025 13:41:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=ApA3niORv5NqgA+qW1GewKpafM0Rklu9TT0TjWoXWbU=; b=
+	gdM9hmqLBoB6IoEiGCKrf5BwrHc/yEdOZtEdVSJ6Nvs8msIWUuyTRKLRHwy59V5U
+	FMyFdaAvgbPgffdIJykAHgT3x4q3bJOsQBoVRH5VNtN27IL1SaWy636sBVXNLC4J
+	YEquyqsGZMCgkMocDq+n07rMZda13BsyjpxsK9cMBgqYwbADFGEYm+Ycxd8XKRYf
+	7SmyNOjUVfySLfQKPUI742NfUGDDIyVEkLvNf4TyAiw1AZZgfXeRszBG6v7J5mE+
+	YUpPiMu/7eK7OtKaQeWlWExlv22nZvDT/YGRX5kFhrsn2X5sL07f8l21sf4ZjVY8
+	MMRwXAc7AxRV+gKvK6EaDA==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471g8j82rw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 06 Jun 2025 13:41:57 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 556C8XHH033797;
+	Fri, 6 Jun 2025 13:41:57 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04on2083.outbound.protection.outlook.com [40.107.100.83])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7d9qf3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 06 Jun 2025 13:41:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JbphUMBQ+3HqvxD2Awb8nW6H8ApNRsZtX7DaXYquRN1pUSVgLQ2j2iCXyAE4Bm++A2DiDXNt9WN9EZi8Oej2LoLPeowNwvs6MHub18fHSD2Y++4jCC4xdMf/biEsOKkrw0IJ1cunn7vsdQAI2GgM72y3aejk8O3Bgli5IxMDOgU4N1pS0IHBO1iHHz5xw9KdYAOS38xvyWx741CzR9KessxMX8anCI82npf+WA/+bJP+JgtR0MfM3nciL4qvHrXO+eZ7prkrK1+14wrU3Kv1qcXuLUffvQs0UJVcXPvV9JEhvZUYuSSESnC/wLAN0YTG8bdcmgkKkCMHlDIgLSd2DA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ApA3niORv5NqgA+qW1GewKpafM0Rklu9TT0TjWoXWbU=;
+ b=GcOAWTCUxiFql3H///0tkWvUUdQ3CTnB8TlvfIAQkJlAP/NJnszQuaCTxDpNXjama8FPwEcF19GK8sIS9nUB0CelOdKeX2AykCjd1kmniisrDAalxCbPa+s7ohSeAqASsZqUqhi5FeN1Bv2nLU3Od2DlAsIuDzYkbCYVlzdQUmMvdP3kDLDoLmDQsQc38/4y0J8HfgApJSoVp82bUyR5gVAC8clW6XslRprUsf7WpfZACqtgI0I5IJsimSWEe2zlyeb+b41Skr71rr5CAFHNGIhuasHaw7qNksfIr05cmn+jPXIuijseRq9qzblAGoAY2Aov66s/JDXYiRv97SKpvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749217313; x=1749822113; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HTFOzWRKtno69oZOUe1NTizA/xt3mfhoIf6VlgXm33Q=;
-        b=cacx1iEyTvCfe7IQU8l+6wGSFSEQvDRGeow0bZsqQE1OPWQSOKlgA0I0ThSJFKAsgb
-         ztPS8fpTGrFKkMKmiOnKGARVHDC0fpOQf59yfI+N/q62aF/ySIcxnwNDygcfV5BWZkhN
-         nTqeZkgwA+mD+cMUA8i9XEcKIqhh5byGLyTRJ3+TVrhD0lVCG8onhEGXiTcdjeVluU48
-         +oUrK3o+T98kuH+qxiUMvKcdq38Tb4eYpbV2PwO88rBv3keOJ+/ZX6NTGfBiuveoO9oa
-         nRCuhjzXJtQRUDO76ihVaxmtQ0YLONAm9M9rvGIVlfvqmG9yZiZvq2k9oRc28ydOgJw+
-         4Hxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749217313; x=1749822113;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HTFOzWRKtno69oZOUe1NTizA/xt3mfhoIf6VlgXm33Q=;
-        b=sp+ecAseWH8wBJ6Nn/NKwzWbC4P2HuCDLB/Q7Tf8Jt0FYuaFhU2vnkSewXHMkJ2+e5
-         EuN/4UfoTFpVsIALpdr/+XYG+s4GlXVQtxF/cnS6yX9V/Vi0ahet2hQFIs+omaEU6Snw
-         anPWPfvw2COEN9EThXB9Hoe/JBUGz+0Db48IKDJuuLXDoTiDtDS5+JuXmtmvccGGwucR
-         2CRf1LJYRNUEk5h0h8g312+3Luu55H3IZml5jBFPKRP8e++AXRrdZzYRsQJRMU7e54pW
-         c/oZEiPT8aM6YJPag7eJgrfJgt6mlo9xiSI8r7Q4JFbDp+00JKh7IfIB/J6sIiFB/X7+
-         Md/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXXNjQqCbNm9cb/Shve2u8nrW+MfQdvqj3yG+UKX/DmNLMsCWPxcbo34nUX3bTbenijlQFoopFOc569Nds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjTugWpocFswzG0PgdObtWRKr5pMtVwzjELG9RNbxXl3m34ZHN
-	k6CTiYKDT9Pbk4NtQaZ7PB6TTbtPACZH0cR4mg+DkN5UBNKI0UClOlG1gsJtZswrLTc=
-X-Gm-Gg: ASbGncvieiuTs5k224eWj5r2dTo019N8mrU+Kc7pSTi3QLBh3Hhw6XRMbGvE19i13vU
-	0XN1f/ZHV9M1hFIFtjdaFCE38TDUUN2koEWI520phG2KLR6g3z+NzrmLg0KDuxfxvgx/jK3BcKb
-	9bPiOi22DBBbwEQcdZaluMYCfgQxAP9cZm2//mIoUz5H8EXP/FNon7IEL5BbqKxl/SOl9S/P30C
-	x3MlSI27+dj/9c4gXVlyZZKoBGgoo58FryG0xQwNfmSgkL+fT12bE+6jpQ5//5ri10j8hnKj3Ea
-	oeCxbeIUxUBfG5L8JIoKeu5SsM4k/0ig2I2H1Fq009QAG2V12sMwhHK7Wj78k6caVptHKewIWhh
-	4EqnkHKpwGDtkXNl9u5htpNib8442m2boLmv460vEPg==
-X-Google-Smtp-Source: AGHT+IE1rwwQG+rrsjon14loLoaLqiSSZKx9HHA2Hy4/99w3nYKxkficVfbYFMwV7U9uCCDFDR7jUg==
-X-Received: by 2002:a05:600c:6099:b0:440:61eb:2ce5 with SMTP id 5b1f17b1804b1-452013bb38dmr43474495e9.17.1749217313338;
-        Fri, 06 Jun 2025 06:41:53 -0700 (PDT)
-Received: from ta2.c.googlers.com (213.20.187.35.bc.googleusercontent.com. [35.187.20.213])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b9b3esm21744355e9.25.2025.06.06.06.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 06:41:52 -0700 (PDT)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Date: Fri, 06 Jun 2025 13:41:47 +0000
-Subject: [PATCH] mailbox: stop the release and reacquire of the chan lock
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ApA3niORv5NqgA+qW1GewKpafM0Rklu9TT0TjWoXWbU=;
+ b=ujZFEKGPekWtOxqJICn624ZONClMwZHocNhJlHl8fLjvE00DJl3hZ461FIVT5OVbch+VTcjR4NsZ8S6f0cChIf12HRIWVuaFRwn5vXIX9kg0Uw87K/yqA3JHZNzmf90P6WHiwbJt0i2TsppilOLnUDkzrchlsmk67LWSdi9B1/A=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by PH7PR10MB6132.namprd10.prod.outlook.com (2603:10b6:510:1f4::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.21; Fri, 6 Jun
+ 2025 13:41:53 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8813.022; Fri, 6 Jun 2025
+ 13:41:53 +0000
+Date: Fri, 6 Jun 2025 14:41:49 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Jann Horn <jannh@google.com>
+Cc: David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Barry Song <baohua@kernel.org>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Alexandre Ghiti <alex@ghiti.fr>, loongarch@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-openrisc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2] mm/pagewalk: split walk_page_range_novma() into
+ kernel/user parts
+Message-ID: <3664f529-cba0-4e9b-a434-356695c109db@lucifer.local>
+References: <20250604141958.111300-1-lorenzo.stoakes@oracle.com>
+ <CAG48ez3hvPbfc2dapQQu9TKrjdi5mhZ4tAWi+m0tNZeEtSZBrQ@mail.gmail.com>
+ <af6d28d0-d646-45d5-832c-66add20ea388@redhat.com>
+ <CAG48ez3-QiaT1hSFz64xiucR4azQsrcj+6rQrLoz+d0zd-BUuQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez3-QiaT1hSFz64xiucR4azQsrcj+6rQrLoz+d0zd-BUuQ@mail.gmail.com>
+X-ClientProxiedBy: LO3P123CA0030.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:388::13) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250606-mbox-drop-reacquire-lock-v1-1-d36d1a13d83f@linaro.org>
-X-B4-Tracking: v=1; b=H4sIABrwQmgC/x3MSwqAMAwA0atI1gaq2ApeRVzYNmrwU01RBPHuF
- pdvMfNAJGGK0GQPCF0cOWwJRZ6Bm/ptJGSfDKUqtTLK4GrDjV7CjkK9O04WwiW4GYvK1k77wWj
- rIeW70MD3v2679/0A0bwLw2oAAAA=
-X-Change-ID: 20250606-mbox-drop-reacquire-lock-14b7c5df65bd
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: peter.griffin@linaro.org, andre.draszik@linaro.org, 
- willmcvicker@google.com, cristian.marussi@arm.com, sudeep.holla@arm.com, 
- kernel-team@android.com, arm-scmi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Tudor Ambarus <tudor.ambarus@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749217312; l=4642;
- i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
- bh=9nLwSViwc+aWV16xCbkbc68VQlSagffWIhULfrfxBu4=;
- b=yN4/VRu2saV+kafEgQ/J98zKsJ5c/2AtnH4fkCjwcQCOOssEK0vbYLKHc3ubvIscEIATb5UE6
- rIpC5QBMDZUDAE+3ENPq6msKD+CmxZbAON0pZc8TugUi1B9xRzibRA0
-X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
- pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|PH7PR10MB6132:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1cb47e8f-e018-4f5e-efe9-08dda4ffe56a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R3hJTFB0RGd0NkUyNnZxSFNHQ0VDSHFuYUR0dklxYklKLzFUYjN5anJuVEtp?=
+ =?utf-8?B?TUlSdFJKMTNSQ1JtSzZiWitremV0M3JLbjV3T3ZzRkovYVdiai9PT0djaW8x?=
+ =?utf-8?B?bGhyR3I5Z3ZzSGpwQlAzcTZ2S0IyVS9tVzVibnQzemhtWjZaMCtNOTNNODJa?=
+ =?utf-8?B?eEV2amtFUXN1UkNLVnE0RnhlQ05TUmF2MjZuTE9LbEJNaFlUeUkrakhDSi9n?=
+ =?utf-8?B?LzdoZTNXL1NIdmt1Sm1xTU9Td2IyR203amkwMmhLVnc2b3pvWngxS1gyVGpU?=
+ =?utf-8?B?NGFYaGpVcEdpbkd5czlGNDJMcHAwUFpubzgveE96a1MyZ3NMQzhRamlhUmpa?=
+ =?utf-8?B?Wk5KaWM1MmdvYWZSYmhRT24raU45SXR4SXVhdnpnRnEwd0QwL3FRRkpmTVB1?=
+ =?utf-8?B?NWZ4Unc4ZTVIb2VXWEVxTzA2NHdnWmo0SFdzaUlCeXcrUzVJNnYvOWErNzJx?=
+ =?utf-8?B?RXBoQ1BUZEU4aHl4NXhQeUxhMmxGREplUEovQ2ZqbkVnRHNScElNdnd2NHJG?=
+ =?utf-8?B?UE91aFdaVjFwMWx0ZWlLU2Y0UDdwM294L2tiODRmaXRnUVJLS0gxWDk0YTc1?=
+ =?utf-8?B?Uy9KbVhxRXY1TUZ3OVNORVF4S3hEdWJHeW1NYkZsY0tiamFaOWhGTElmWjZI?=
+ =?utf-8?B?eUtXenFSUEZSeHQ5QWtYUFBQNWZVZlNmOFBVYUdUSFV5N2xTVVBmZVJVL1dt?=
+ =?utf-8?B?V0ZtMGN3QUovMWVjd1ZKd3hKNTJ0NmUxQ09lYVliakxwdnNNY2YyNk00a2NP?=
+ =?utf-8?B?MjQyS2luOXZHUWNKWTlwT213UFNQbERsNlpFZEhzeDlnUk94bTJBQkxMTFJ1?=
+ =?utf-8?B?NUhIemJjNmFRNmc0SGFWVGtkYmNhaDVXazJFTFlOb1pzSlRSZ01EZXFwOW9a?=
+ =?utf-8?B?aUN2d3puLytVQXNyOElWTFZvV21XQUhsQkU0NTUzRkZ5YWNpZ1FsMUU2RkZo?=
+ =?utf-8?B?eCtLTWF6aGF6Wm5iQnB2ZWdWUllZakxnZXVGcHlBUmJCcjAyRjVPMTlaaDBn?=
+ =?utf-8?B?N3UyNm5qSEJzeGVXQ0kycFpUR1ZMRnltQXpBeEpEUVhpMkZ0TDdTRmpRMWoz?=
+ =?utf-8?B?UThWNngweVdiSVB1Rk5kU3FKRHh5OFAzTEw0dFM4bW44NVBHdlNYUGZkU1Aw?=
+ =?utf-8?B?WlZLSDROUHdYS1B0SXVxekdIaFpnbkVFTmJtbmwvaWFpRVFQWElsTHNkNXJ5?=
+ =?utf-8?B?V3FKYzl0Slp4dU1PRjNDWkNjcUl3Y2plVCtGUlFzK2tuczY2UVdCMEZNbDhq?=
+ =?utf-8?B?NTBSSS8rWkpOeTZXMGx2amhxUDB6My9uQytrdTVBNWNrWlUvUWIxMkEwOGVB?=
+ =?utf-8?B?MUFNNnBaaGNyS282bjJhNVJEbnFDR0p5Y3lMeG9BQzhqUUNRVTNNaEhWUWFI?=
+ =?utf-8?B?dEJNNTBkNnFDNWlwRFZEV0Jnb0l2QldCUjlxOWRBeUx1b3FNSU5qS2JmTXY5?=
+ =?utf-8?B?ZUdUR1BUT3FHN1duMjZMZjZVaVNHRE5yRW9HSmRzSnM3bWtaeERpM2R2TFNs?=
+ =?utf-8?B?WFBlZG9EdmVmdWQyc3lJUUxwVHlWeG9SckpnNUcxWWxvdlFINHIrSHFJUzZ6?=
+ =?utf-8?B?Z2JVZ0pCUUpTUzVuek16ZVgzODVOYWJlRG04TUpRQWx4SnowTjJvdEJQa2xI?=
+ =?utf-8?B?TU11b1l3RWswcE5OR1ZiT051UDRvSjZZMlJ1cVk5allqSE1FVEw3bWIyVmNH?=
+ =?utf-8?B?V05kZUtoTjlLR0VuYllyWG5oSUdDbVFINVhpYk1VeU9DcnR5SGh1ZzRaRm1V?=
+ =?utf-8?B?UzhxcGUwdnQvSHk4TnNMYWRva1hEbWJwazZTYmFaNDNCdFprYXJ5dzJNZDVa?=
+ =?utf-8?B?amtFM0x3OXBKdFFEazZmUWVZekxaR1lpN3IxeHl3MWI3aU0wV0gwVzVkdUJP?=
+ =?utf-8?B?UVg2UTVYdThhNXdIR1U5U3JLbncrYXJxVGlWbDFmWGxSc3BpeWdYNEtGc29u?=
+ =?utf-8?Q?vxdKMia2PCM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SmtoY1JaMVRocDVyQVV0WG5TUWVhVDNobWdBdVJUVTcwbEFiVWlFbmVOczN1?=
+ =?utf-8?B?RlFSeSs2ZUNiaytvbXJLZFZ1ejI3SGkwVWprUHJMcGZQVHVqWVFXL3JlM0ts?=
+ =?utf-8?B?VXJjaHBtOHdzVU95Y2RTMVZBclErQnF6YlNha0VwSmVSR3Y5am9VQnJIY2g2?=
+ =?utf-8?B?Z3BNdXR5VnFVZ0c4dTRlUTFNSzRVeHdMOUxac09ETnBqYmpKd3RIc0xvL1BC?=
+ =?utf-8?B?M2xoc2dpSlNIQU1YZG1SdlFGRVpxZ1VHckphTHp5Yi91YkY1L1NwZUl0b2xM?=
+ =?utf-8?B?dkltQTd4SkVUMUpHd3lDWmIrNEN5ZmU5Qmg3dW5yOHFDaUhkWkFNYnVpS1Bl?=
+ =?utf-8?B?RVp0NEpNV0ZuYVRWSUI1dytvQXgyZTRVRGlvQUVLN244cnlRa2FGK3h4cFph?=
+ =?utf-8?B?bEIySTFkclVuaERzUXplUjlzdGNOR1hUbVRYY0FOamRJQXorb1EybVY4K2RT?=
+ =?utf-8?B?eHdsSUVoeWtuT1hPczFwY3VvZXhBcWFPRVJ4aXgvdm8yVkJPbXVxQlVzYWUv?=
+ =?utf-8?B?N2JsSUdiM1hkRnJRSnNFMzN2OFRlVmhoZ3VsWEJ5bFAyT0RJYnAwdUlZUmIv?=
+ =?utf-8?B?UkVQUENFU09BWTVZTDRBREkzODBiVkl6S0oxbzJWeHd1OGlaaUNMQXFyV2V1?=
+ =?utf-8?B?TUhPZGptOVY4Q1N2N1kvc2lZRGVQRkkvTWdHblAvcXRpQmxYUlgrZ05odGlh?=
+ =?utf-8?B?T2djWFM1SklsRzBuaFk3US95TzYrL0JyS2dRd1VMYkVCSHdOR2cyaDNTMzR2?=
+ =?utf-8?B?OVQ0RUt6a0hla0ViVlF4dWM4NllGYTVuQ3ZoQWdIY1pVNzJ5cUtjSlpWbXkz?=
+ =?utf-8?B?YVU3OHI3cEgwT3pDSUdOYWZjMzlIcjVYZjJoWXVyUFpoamtDb2JYTzZZOEgv?=
+ =?utf-8?B?TVZJRFJMaDdmUkY2dnhweWI0T09SODFKY1FwWThIV2lvRnYrTS9UOWcvMjNx?=
+ =?utf-8?B?YTZ2cFJqbTZCNXRoaFlLMlZJOVBCUUliOEs4OG5xYzVBQ1pGQ0tzNmpCK0lU?=
+ =?utf-8?B?S05WMzVoQ0xHc0ZxeTh1QUxBY2xNWGt1NmU4eWFJdXJVSXM2Zm9sbWVYVmEw?=
+ =?utf-8?B?cWZKYnQ4NFNHNXFyYUtoeFAxSjI2MkxvWXBjcXB5N1ptaDlEdEYzbmJlaHho?=
+ =?utf-8?B?b2JwL3c5TDgxdVptbGxPRGpTWC8rdVpadTdFTnRBM3c2UFRsUkFBNDdvaStM?=
+ =?utf-8?B?NWxaeTNJQ2hJMXZkUXhvNy94ZXFhRDdRRkVDSDFnMkZCZEZ6cWt0T08wRHJw?=
+ =?utf-8?B?NWt6V1VUR2tFaGI2ZHdMQit6Y0Q3WjBIam1tR29Ja1hWR1ppZHJrTHpza2pM?=
+ =?utf-8?B?OXpPdXFQZTJ3TGdnMkdHeEtuV2dENzgvTG04b2RDNUh0UzRac05sd0R4L255?=
+ =?utf-8?B?TzA5cDlmTTRTMVljVjBTd3NTT25HeXVmaTl0MW5zZ0RDU2FWcVB1ZkQwbXlM?=
+ =?utf-8?B?SlNNdloxTERQVUg5RnpUdDMrUnJXdXdqL2ljdU12UkIxWS9tRmpmcTdnWWZP?=
+ =?utf-8?B?MmsvTWtsTHlsMjk3Zi81QVloNHZuZEpyZzlDdUIxRTZpb2hLZ0Nmb0IxNFRX?=
+ =?utf-8?B?TTNkUUtJQjRLaTF5azBxa3NpRXl5TmRqQ056Vnh4U3grTDJybkVmZU5wVVNk?=
+ =?utf-8?B?dEc5azdnbE1peEw1TzlSYndYcVdkckRaN25kb2RmSU9DU1VBcVlGbTNGRlNT?=
+ =?utf-8?B?Vjh3K0N5MHAyQkFITHRJUytGN1FHM0hIenc3U0JLcThVQmJSUjRiYTF0c3pn?=
+ =?utf-8?B?SWNINUhvUGl6WGo1RzN4QTdCOWhCblp2Z01IVmhQR2VKRzk0UEgzZTRuTHhi?=
+ =?utf-8?B?UW80WGFnTjhucjFBSjc0cUxWd28vcEtnSjcxYzJDWXU5WGpMNVFkbzJHUUZH?=
+ =?utf-8?B?NGtGcTVsQzMzQkdzTEN6WmpKNy9xb1Rrd25FS3V2TWpMR3RZR3pvL3k4bUJF?=
+ =?utf-8?B?QWZ5NG9GQkVWNS9jajlubCtKcUFTOGdTT2g3anREeCs0V3pHNmZiRmhTWHFN?=
+ =?utf-8?B?bXhBRlphMVVGOEJGSi93SU9FUUZ3ZHd2RXI0bjZpNW9maTg0WGpiK1l1ck12?=
+ =?utf-8?B?Ni8vRVRrRlRFOUpycnZLQUZGK3pFTWI0aXBnTVhpUVhQSTMyeVdJcHh1SmJt?=
+ =?utf-8?B?dFdNQ0Z1RVVoUmYyNzV1Q21NbGpYYVhmalFHNmpKRHJQdzgvbVVDRng0ek5y?=
+ =?utf-8?B?YUE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	TKHU7JlWd/tPXHWuRv+4fNSzlXEEW4E8/lXlYJIkm4wBLkb6da4/Ee1lHGpAlz8cI6GMBaaA5PyMRALQpDqXbFEd+pF8rVycASCWKIFzlvAbRMupcvpukAbBb2ZFKYuW9RCLXJb/bD/Z7RccRSkxWEBYchJ0ttmpBrJ8Syf8Ty/3Q6O8C5wVzbQlFq+MDhxcdqVsGOGUUzygQ1C5i7ItmYUlgdc31eH1Ppvw2eNBC/3zgDusuxozknEggNzKnGXpL5vKhiIf5EsZnWiHMaT9T8rrx011Ua4MuIskVt0F5FpPIZNuUmYe4KmBenxi/zF0ZW14T45BXEoPRry7oXt23ZwLQEtQ8efAd9kg0GnPuZ581Rf3mdHyvE01lh2o0PqAeflEz/eZP/Z8RGi19jEiLMZmooAnR0VNkt3pWa44MZuByPfCNP0LYyvzh00oEzZfZ6qTh7huF4TOjwv9qf7ACBx8GUqQ1AEMrHg0o0qIdNm2CWW/S2v96LCaxhufdX7tDOX39LFpu5S31kyCVI1y6hkd8Q9tDVFMS775d+IjzmIcmSHRnHvm0sPji4z0CySQmT38zp3ZLyfej07XS5XNO1kbFmhRKP/+wyzCFDugIWI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cb47e8f-e018-4f5e-efe9-08dda4ffe56a
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 13:41:53.0246
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2oRqwLEJ49syUbPhQo7hU619PxMmym9hlBxDkfBn9SnUhXEnkKVtrRIY9BppLqN/r3eJ8DCVy5Jr7+/AjZUbzMhWZQMfwefNjZ6rp5AiZlQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6132
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-06_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506060124
+X-Proofpoint-GUID: -jFIZ8eEI2im3NM1Oprz65htIbhzq-dD
+X-Proofpoint-ORIG-GUID: -jFIZ8eEI2im3NM1Oprz65htIbhzq-dD
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDEyNCBTYWx0ZWRfX7s8xQqQDRqTe K7/euXT1ZmyMXRYpAixSo5WjoeKrUJTgWIky7IzSidc9EnMbfEpCIyppHc4B3ehzByP6SMr6AqF NMCOREH4MtW+gdLPQMVYzleIBgXsqJVd6fvhmJWqk2z0UN4xPLxVH4NxLssb+AvO9ibUHfR0vtn
+ e6gsacTLvuKjPoCNSpktgE04vvqm8vCRbk5wMRQqzkj9EULT6XQYPI093ETqq/DgPWyGlm4yQD4 JXKJxBD1d+brY2cDq2ocbsAWlQBJnwxj0k09BvD8+QbvSjwfRixtVcSR0ZusftJ7rvfFiec2y1c xpQrwXVvYuCkdYEZW1VZQYrQRMhQzFdh56BJa46fWsvLm+CLNxxHJd9HkaNyHxxn36B/Fzu9lJ/
+ 3vYz6RNrUvsI+u9w0IAfss498E27x0EwXdS7dF6Gom3XADkxbXy0Dbxv43jReRquV7C6El39
+X-Authority-Analysis: v=2.4 cv=QI1oRhLL c=1 sm=1 tr=0 ts=6842f026 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=UjR7xggHdibGdW3K1PsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=5XbyYV5GRZAA:10 cc=ntf
+ awl=host:13207
 
-There are two cases where the chan lock is released and reacquired
-were it shouldn't really be:
+On Fri, Jun 06, 2025 at 12:59:20PM +0200, Jann Horn wrote:
+> On Thu, Jun 5, 2025 at 10:23 PM David Hildenbrand <david@redhat.com> wrote:
+> > On 05.06.25 21:19, Jann Horn wrote:
+> > > On Wed, Jun 4, 2025 at 4:21 PM Lorenzo Stoakes
+> > > <lorenzo.stoakes@oracle.com> wrote:
+> > >> The walk_page_range_novma() function is rather confusing - it supports two
+> > >> modes, one used often, the other used only for debugging.
+> > >>
+> > >> The first mode is the common case of traversal of kernel page tables, which
+> > >> is what nearly all callers use this for.
+> > >>
+> > >> Secondly it provides an unusual debugging interface that allows for the
+> > >> traversal of page tables in a userland range of memory even for that memory
+> > >> which is not described by a VMA.
+> > >>
+> > >> It is far from certain that such page tables should even exist, but perhaps
+> > >> this is precisely why it is useful as a debugging mechanism.
+> > >>
+> > >> As a result, this is utilised by ptdump only. Historically, things were
+> > >> reversed - ptdump was the only user, and other parts of the kernel evolved
+> > >> to use the kernel page table walking here.
+> > >
+> > > Just for the record, copy-pasting my comment on v1 that was
+> > > accidentally sent off-list:
+> > > ```
+> > > Sort of a tangential comment: I wonder if it would make sense to give
+> > > ptdump a different page table walker that uses roughly the same safety
+> > > contract as gup_fast() - turn off IRQs and then walk the page tables
+> > > locklessly. We'd need basically no locking and no special cases
+> > > (regarding userspace mappings at least), at the cost of having to
+> > > write the walker code such that we periodically restart the walk from
+> > > scratch and not being able to inspect referenced pages. (That might
+> > > also be nicer for debugging, since it wouldn't block on locks...)
+> > > ```
+> >
+> > I assume we don't have to dump more than pte values etc? So
+> > pte_special() and friends are not relevant to get it right.
+> >
+> > GUP-fast depend on CONFIG_HAVE_GUP_FAST, not sure if that would be a
+> > concern for now.
+>
+> Ah, good point, that's annoying... maaaybe we should just gate this
+> entire feature on CONFIG_HAVE_GUP_FAST to make sure the userspace
+> mappings are designed to be walkable in this way? It's in debugfs,
+> which _theoretically_
+> (https://docs.kernel.org/filesystems/debugfs.html) means there are no
+> stability guarantees, and I think it is normally used on architectures
+> that define CONFIG_HAVE_GUP_FAST...
 
-1/ released at the end of add_to_rbuf() and reacquired at the beginning
-of msg_submit(). After the lock is released at the end of add_to_rbuf(),
-if the mailbox core is under heavy load, the mailbox software queue may
-fill up without any of the threads getting the chance to drain the
-software queue.
-	T#0 acquires chan lock, fills rbuf, releases the lock, then
-	T#1 acquires chan lock, fills rbuf, releases the lock, then
-	...
-	T#MBOX_TX_QUEUE_LEN returns -ENOBUFS;
-We shall drain the software queue as fast as we can, while still holding
-the channel lock.
+Hm, it's a nice idea, but I wonder if it's worthwhile just for ptdump?
 
-2/ tx_tick() releases the lock after setting chan->active_req = NULL.
-This gives again the possibility for the software queue to fill up, as
-described in case 1/.
+I really hate how we're just arbitrarily using init_mm.mmap_lock as a mutex
+here though.
 
-Address the cases from above by draining the software queue while still
-holding the channel lock.
+Could we GUP fast walkers here in general I wonder...? Or optionally maybe
+for more general page table walking?
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- drivers/mailbox/mailbox.c | 75 ++++++++++++++++++++++++++---------------------
- 1 file changed, 41 insertions(+), 34 deletions(-)
+I mean of course gated on availability.
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index 5cd8ae22207309fadbe8fe7f6fd8b4bc2c345cfd..b064a0bd98fd07bfa4dc4186c90e5989d5dfd510 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -26,8 +26,6 @@ static int add_to_rbuf(struct mbox_chan *chan, void *mssg)
- {
- 	int idx;
- 
--	guard(spinlock_irqsave)(&chan->lock);
--
- 	/* See if there is any space left */
- 	if (chan->msg_count == MBOX_TX_QUEUE_LEN)
- 		return -ENOBUFS;
-@@ -48,49 +46,49 @@ static void msg_submit(struct mbox_chan *chan)
- {
- 	unsigned count, idx;
- 	void *data;
--	int err = -EBUSY;
--
--	scoped_guard(spinlock_irqsave, &chan->lock) {
--		if (!chan->msg_count || chan->active_req)
--			break;
- 
--		count = chan->msg_count;
--		idx = chan->msg_free;
--		if (idx >= count)
--			idx -= count;
--		else
--			idx += MBOX_TX_QUEUE_LEN - count;
-+	count = chan->msg_count;
-+	idx = chan->msg_free;
-+	if (idx >= count)
-+		idx -= count;
-+	else
-+		idx += MBOX_TX_QUEUE_LEN - count;
- 
--		data = chan->msg_data[idx];
-+	data = chan->msg_data[idx];
- 
--		if (chan->cl->tx_prepare)
--			chan->cl->tx_prepare(chan->cl, data);
--		/* Try to submit a message to the MBOX controller */
--		err = chan->mbox->ops->send_data(chan, data);
--		if (!err) {
--			chan->active_req = data;
--			chan->msg_count--;
--		}
-+	if (chan->cl->tx_prepare)
-+		chan->cl->tx_prepare(chan->cl, data);
-+	/* Try to submit a message to the MBOX controller */
-+	if (!chan->mbox->ops->send_data(chan, data)) {
-+		chan->active_req = data;
-+		chan->msg_count--;
- 	}
-+}
- 
--	if (!err && (chan->txdone_method & TXDONE_BY_POLL)) {
--		/* kick start the timer immediately to avoid delays */
--		scoped_guard(spinlock_irqsave, &chan->mbox->poll_hrt_lock)
--			hrtimer_start(&chan->mbox->poll_hrt, 0, HRTIMER_MODE_REL);
--	}
-+static void mbox_kick_start_timer(struct mbox_chan *chan)
-+{
-+	/* kick start the timer immediately to avoid delays */
-+	scoped_guard(spinlock_irqsave, &chan->mbox->poll_hrt_lock)
-+		hrtimer_start(&chan->mbox->poll_hrt, 0, HRTIMER_MODE_REL);
- }
- 
- static void tx_tick(struct mbox_chan *chan, int r)
- {
-+	bool sent = false;
- 	void *mssg;
- 
- 	scoped_guard(spinlock_irqsave, &chan->lock) {
- 		mssg = chan->active_req;
- 		chan->active_req = NULL;
-+
-+		if (chan->msg_count) {
-+			msg_submit(chan);
-+			sent = true;
-+		}
- 	}
- 
--	/* Submit next message */
--	msg_submit(chan);
-+	if (sent && (chan->txdone_method & TXDONE_BY_POLL))
-+		mbox_kick_start_timer(chan);
- 
- 	if (!mssg)
- 		return;
-@@ -243,18 +241,27 @@ EXPORT_SYMBOL_GPL(mbox_client_peek_data);
-  */
- int mbox_send_message(struct mbox_chan *chan, void *mssg)
- {
-+	bool sent = false;
- 	int t;
- 
- 	if (!chan || !chan->cl)
- 		return -EINVAL;
- 
--	t = add_to_rbuf(chan, mssg);
--	if (t < 0) {
--		dev_err(chan->mbox->dev, "Try increasing MBOX_TX_QUEUE_LEN\n");
--		return t;
-+	scoped_guard(spinlock_irqsave, &chan->lock) {
-+		t = add_to_rbuf(chan, mssg);
-+		if (t < 0) {
-+			dev_err(chan->mbox->dev, "Try increasing MBOX_TX_QUEUE_LEN\n");
-+			return t;
-+		}
-+
-+		if (!chan->active_req) {
-+			msg_submit(chan);
-+			sent = true;
-+		}
- 	}
- 
--	msg_submit(chan);
-+	if (sent && (chan->txdone_method & TXDONE_BY_POLL))
-+		mbox_kick_start_timer(chan);
- 
- 	if (chan->cl->tx_block) {
- 		unsigned long wait;
-
----
-base-commit: a0bea9e39035edc56a994630e6048c8a191a99d8
-change-id: 20250606-mbox-drop-reacquire-lock-14b7c5df65bd
-
-Best regards,
--- 
-Tudor Ambarus <tudor.ambarus@linaro.org>
-
+We sorely need a truly generalised page walker :) though of course it's a
+matter of people having time :P
