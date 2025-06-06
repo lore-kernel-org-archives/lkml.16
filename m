@@ -1,88 +1,161 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C5EA13B2A4;
-	Fri,  6 Jun 2025 09:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749203481; cv=none; b=tnEDBOlv9BfIe+FilXsEEojwYYBqr0XqQmr2NCQpUiPHhqLPZyze/G0poO3+axlE9alI+oibcxAloo4MK8OItZLX0hX/xEdHo0iqjRCk6QUxGp6cgz4MpfWJxHCV/3x6Felb6+MflR3DS/wmf3dQgQys15S6BqnU0gUM6eradgo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749203481; c=relaxed/simple;
-	bh=Liqzz+y3Xpct0YUxn1hcdqAN16lyEo7U507Jr8n4RDA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OJmU3fhiHj9XXF4Shy4aIoev+Lny+1dHr6Kd0pBN/oaMOREwQSmjMCom/WBJgRpR7cqtiN42U1si+SLvPFBU9hw3Bmp4iLoZRdYBSB6+J115IFxjOdH1VoQxTTMwMOrByOaGJ2sNSGDJvs0Uw6mWmr8K7np25CTC8HHloVyfRMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=nReW8NZX; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D4F286881;
+	Fri,  6 Jun 2025 09:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749203504; cv=pass; b=ujphRqbidhx91P2Dal6tj6vr88taYy7HSHqXJRXyiYQStlbpkgtVbgfKW/LbOfA+gmbPsqBKJUbVWBzD6L/ZmbpEe3SlchIddtmYZFwNQAClQV6nRWI6CKETguhLhvb96Ulnwx7HhuOKqkdvVbwFOKdYc6AuK95G4sVmlUwX7Q8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749203504; c=relaxed/simple;
+	bh=kTrpTqTzCsXY5bYJidp9/0da5RBF2G/y1wGZ1MRfJbY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WxpUgM29buVA+xfvyOb0Hkud6bNbyEizOv4SC6HNgRkYvkEjcvWvgzueINUbEmN2UD77NLuQ7UWgCMd9sFqrb4VXXdxokv9abl+0LLpVphiiDR6pB2RhB/mNh+lvY19iYGK9/jq0dnQjSszns2QPHK4effQT5dQgzSWqkDFnWgQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=b4dEefdS; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nReW8NZX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=gV
-	Q67dkOWrUUbsyOUp1tkuG+EhYQ5alDpGFSmm71tg0=; b=nReW8NZX2u/A3csB07
-	Ts+bguMylNdkNqrnf2D7GisAbTZQPVObt7IMiGHnmC3FjnIYaPNxMCeqYdoEIzXV
-	g0/PK6f8LG4kREf6iUK8GT/fdCm3UepINupCu7ENZFeBc3rCmnhZI1fVV2YlPaeQ
-	fDMQ39Hj0tOJv0Rx48mth5tS4=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDnS1LduUJoDSSKGQ--.2037S2;
-	Fri, 06 Jun 2025 17:50:23 +0800 (CST)
-From: Slark Xiao <slark_xiao@163.com>
-To: manivannan.sadhasivam@linaro.org,
-	johan+linaro@kernel.org,
-	mhi@lists.linux.dev
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Slark Xiao <slark_xiao@163.com>
-Subject: [PATCH] bus: mhi: host: pci_generic: Change T99W515 to T99W640
-Date: Fri,  6 Jun 2025 17:50:19 +0800
-Message-Id: <20250606095019.383992-1-slark_xiao@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="b4dEefdS"
+ARC-Seal: i=1; a=rsa-sha256; t=1749203482; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=OYTEc6yXPsIcRrHcRogHNuuYr2RSQbvW8h0bM+VDGsFW7I+pApg6ySm9RGKZc7RHwHUpCSQYHImtfJOimVIphDyxV0wOcV9FR5eQTKsAT/IB+AMXPUUjCoRZ7sQPIIgcnmgn41FI/ABk4zVLVetmv8eWb6ySp/cpoIjDzhO7Sik=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749203482; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=tfnGcQSUHbLimk8z8aZ3QSd/T6JAuGeb919MpsyxEvo=; 
+	b=QjTRmi6jQa2aQnzKRdkghqnj8WvmY3P25PwvVQs/Hzrl0rpgcWRJKqSmaDevvNS+1Avk3MR59AJlMTWZOG0edVwZtx1Hd8SSuI/5z97jdTZwEu/nA8ckAPSt1k4xFua5FNmdZUA+Y1Ww3+8/vRy/hFejNWUnEipPe9lAhlZmKPo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749203482;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=tfnGcQSUHbLimk8z8aZ3QSd/T6JAuGeb919MpsyxEvo=;
+	b=b4dEefdSzxzo0UixhUC9rGQqPy00a2fiwxiLzerpmJqIc1MixsZgnSaIWYd/8uOQ
+	om56GC0tC26vEt3ywPCxM/ZjNDIE2GvM+3Ahs5j0S/WZGIkaakUTE85sq2bHar2R78a
+	IYLrcqqZl0kUlJ5QnAl8q5f0LNbdLgqO8KGULl2g=
+Received: by mx.zohomail.com with SMTPS id 1749203480891403.2196795067804;
+	Fri, 6 Jun 2025 02:51:20 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+ heiko@sntech.de, linux-rockchip@lists.infradead.org,
+ linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Pei Xiao <xiaopei01@kylinos.cn>
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject:
+ Re: [PATCH v2 2/2] ASOC: rockchip: Use helper function devm_clk_get_enabled()
+Date: Fri, 06 Jun 2025 11:51:17 +0200
+Message-ID: <2818018.CQOukoFCf9@workhorse>
+In-Reply-To:
+ <84bc40641d05596f1edf4f01d1e6aea16bdbeeb5.1749201126.git.xiaopei01@kylinos.cn>
+References:
+ <cover.1749201126.git.xiaopei01@kylinos.cn>
+ <84bc40641d05596f1edf4f01d1e6aea16bdbeeb5.1749201126.git.xiaopei01@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnS1LduUJoDSSKGQ--.2037S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AFy7GFWfArW8Zr18Wr1UAwb_yoW8WF48pF
-	4fur1UtaykXr45Ka1kAryDuas8GrsxCryxK3WxG34Igr1qyrWYgFZ7Gr1a9w1Yqa93tF1S
-	vFWUuFyUX3WDKF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRhNVhUUUUU=
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbibgZkZGhCsRPxxQAAsU
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-T99W515 is a LGA device but not a M.2 modem device.
-So correct this name in case a name mismatch issue.
+On Friday, 6 June 2025 11:18:22 Central European Summer Time Pei Xiao wrote:
+> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for prepared
+> and enabled clocks"), devm_clk_get() and clk_prepare_enable() can now be
+> replaced by devm_clk_get_enabled() when driver enables the clocks for the
+> whole lifetime of the device. Moreover, it is no longer necessary to
+> unprepare and disable the clocks explicitly.
+> 
+> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+> ---
+>  sound/soc/rockchip/rockchip_sai.c | 35 +++++++++----------------------
+>  1 file changed, 10 insertions(+), 25 deletions(-)
+> 
+> diff --git a/sound/soc/rockchip/rockchip_sai.c b/sound/soc/rockchip/rockchip_sai.c
+> index 916af63f1c2c..0b9f54102d69 100644
+> --- a/sound/soc/rockchip/rockchip_sai.c
+> +++ b/sound/soc/rockchip/rockchip_sai.c
+> @@ -1427,43 +1427,32 @@ static int rockchip_sai_probe(struct platform_device *pdev)
+>  	if (irq > 0) {
+>  		ret = devm_request_irq(&pdev->dev, irq, rockchip_sai_isr,
+>  				       IRQF_SHARED, node->name, sai);
+> -		if (ret) {
+> +		if (ret)
+>  			return dev_err_probe(&pdev->dev, ret,
+>  					     "Failed to request irq %d\n", irq);
+> -		}
+>  	} else {
+>  		dev_dbg(&pdev->dev, "Asked for an IRQ but got %d\n", irq);
+>  	}
+>  
+>  	sai->mclk = devm_clk_get(&pdev->dev, "mclk");
+> -	if (IS_ERR(sai->mclk)) {
+> +	if (IS_ERR(sai->mclk))
+>  		return dev_err_probe(&pdev->dev, PTR_ERR(sai->mclk),
+>  				     "Failed to get mclk\n");
+> -	}
+>  
+> -	sai->hclk = devm_clk_get(&pdev->dev, "hclk");
+> -	if (IS_ERR(sai->hclk)) {
+> +	sai->hclk = devm_clk_get_enabled(&pdev->dev, "hclk");
+> +	if (IS_ERR(sai->hclk))
+>  		return dev_err_probe(&pdev->dev, PTR_ERR(sai->hclk),
+>  				     "Failed to get hclk\n");
+> -	}
+> -
+> -	ret = clk_prepare_enable(sai->hclk);
+> -	if (ret)
+> -		return dev_err_probe(&pdev->dev, ret, "Failed to enable hclk\n");
+>  
+>  	regmap_read(sai->regmap, SAI_VERSION, &sai->version);
+>  
+>  	ret = rockchip_sai_init_dai(sai, res, &dai);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "Failed to initialize DAI: %d\n", ret);
+> -		goto err_disable_hclk;
+> -	}
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to initialize DAI\n");
+>  
+>  	ret = rockchip_sai_parse_paths(sai, node);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "Failed to parse paths: %d\n", ret);
+> -		goto err_disable_hclk;
+> -	}
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to parse paths\n");
+>  
+>  	/*
+>  	 * From here on, all register accesses need to be wrapped in
+> @@ -1474,10 +1463,8 @@ static int rockchip_sai_probe(struct platform_device *pdev)
+>  	devm_pm_runtime_enable(&pdev->dev);
+>  	pm_runtime_get_noresume(&pdev->dev);
+>  	ret = rockchip_sai_runtime_resume(&pdev->dev);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "Failed to resume device: %pe\n", ERR_PTR(ret));
+> -		goto err_disable_hclk;
+> -	}
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to resume device\n");
+>  
+>  	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
+>  	if (ret) {
+> @@ -1504,8 +1491,6 @@ static int rockchip_sai_probe(struct platform_device *pdev)
+>  	/* If we're !CONFIG_PM, we get -ENOSYS and disable manually */
+>  	if (pm_runtime_put(&pdev->dev))
+>  		rockchip_sai_runtime_suspend(&pdev->dev);
+> -err_disable_hclk:
+> -	clk_disable_unprepare(sai->hclk);
+>  
+>  	return ret;
+>  }
+> 
 
-Fixes: bf30a75e6e00("bus: mhi: host: Add support for Foxconn SDX72 modems")
-Signed-off-by: Slark Xiao<slark_xiao@163.com>
----
- drivers/bus/mhi/host/pci_generic.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Acked-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
-index a4a62429c784..9c2d10327ce5 100644
---- a/drivers/bus/mhi/host/pci_generic.c
-+++ b/drivers/bus/mhi/host/pci_generic.c
-@@ -593,8 +593,8 @@ static const struct mhi_pci_dev_info mhi_foxconn_dw5932e_info = {
- 	.sideband_wake = false,
- };
- 
--static const struct mhi_pci_dev_info mhi_foxconn_t99w515_info = {
--	.name = "foxconn-t99w515",
-+static const struct mhi_pci_dev_info mhi_foxconn_t99w640_info = {
-+	.name = "foxconn-t99w640",
- 	.edl = "qcom/sdx72m/foxconn/edl.mbn",
- 	.edl_trigger = true,
- 	.config = &modem_foxconn_sdx72_config,
-@@ -920,9 +920,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {
- 	/* DW5932e (sdx62), Non-eSIM */
- 	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0f9),
- 		.driver_data = (kernel_ulong_t) &mhi_foxconn_dw5932e_info },
--	/* T99W515 (sdx72) */
-+	/* T99W640 (sdx72) */
- 	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe118),
--		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w515_info },
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w640_info },
- 	/* DW5934e(sdx72), With eSIM */
- 	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe11d),
- 		.driver_data = (kernel_ulong_t) &mhi_foxconn_dw5934e_info },
--- 
-2.25.1
+Thank you!
+
+
 
