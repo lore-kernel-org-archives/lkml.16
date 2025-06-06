@@ -1,214 +1,242 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A361A433A6
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1B11E98F3;
+	Fri,  6 Jun 2025 18:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749234213; cv=none; b=QkLGJ+1xyxRlUWD6bu3OkA+YT0kb/va3nlL5zJNkVfLVdzWVhzrtraXiHcDXSyg9uXdnU0IY8N2y2CQkItcb292uY39vV/gH9qub1D83jgOSdx2+77vwBb3k3+dzs3mWT8t99TEfbaXvS5VALX8qaq/JhEeDpTclTbCqZD1N6NI=
+	t=1749234451; cv=none; b=Lsr3K9+JtF9ne8OGD9nGliNj+t7iCbCPBINw/S6sjP+kwl2H0wZ6e2b/vAJdjhXEXkYJ0oqweU4y39/3WqRpH4EMJKu5kog7UE+VFLX7omh+d5pphLVJxwpD2xGBoS7HG+x78fEPWoV/KyELA0p9JjylAugD08m/NMTjxoMZCQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749234213; c=relaxed/simple;
-	bh=RYOWzqJO2EfEC/awvItMe9Z5A0XaQhmh/O4j46xBP+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JdvkNHWVyRsPYbTywfkNf0COjqsZt7espgQTjlzd1/NOzPPmfmn4oeUGEoaDO1jOV284NndB/ck2Npu70ToHrJzU5XF7DYBdZ9dSIlU5EBGPdWKCfzJQtlUGOzn2fpWsWWtIq2dS9EEz1jFWS+vFbjU4InTVVTmMU7YmVVXcyVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LfQFDgqy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749234451; c=relaxed/simple;
+	bh=coEURojyF2RYr3/NNYFNcZUu9iisklHxAaAxm1k7pW8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ACm2hUyPf9CVp9gTpYAmRx0JKcIwwioK0VBzr3gp5OGJnwjVLOGtsEOfufyCCLxc1aFdoLZFueEAuUdqumzWBeIDvsRg3iRYieveyAhnzgYhplXZF6Bi533QEZ2SFfYjuK4P/dU36GgMrPMuF1PTm+KtI9lGAmNtNSDp3aygGrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BlhySpem; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LfQFDgqy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749234210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Ug2rgnBs6oJAavrVeN9J6WIfZuijp5pXf6YiUZQknzU=;
-	b=LfQFDgqy02vdEKhS9IFAEZuWdB2BoE/xhCWsvCVjnyTrn4oYs1k3mE1hTAL1DZmwtc7NqR
-	BHty8i9IwDopaR35lmuGihD3GhWw1X8+occLONgh90X+vnarnU2ta+ZA0TfMKi6H/L0f73
-	9bYylYVwTtdMhPMTOy85PUgnYUvScp8=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-pWyLs_E9PtWMjvJ1LNB3LQ-1; Fri, 06 Jun 2025 14:23:29 -0400
-X-MC-Unique: pWyLs_E9PtWMjvJ1LNB3LQ-1
-X-Mimecast-MFC-AGG-ID: pWyLs_E9PtWMjvJ1LNB3LQ_1749234208
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a1f6c5f4f2so1081662f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:23:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlhySpem"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a3758b122cso1548313f8f.1;
+        Fri, 06 Jun 2025 11:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749234448; x=1749839248; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rbNInwmCXurTgn6zhiZL579Qtyh8Q8n0xxLohpO7vO0=;
+        b=BlhySpem2UcE2W+/TTOwseOJKvRiuz7I/wtUnzaS/wpGhUZoeIiIL80RvY+lc3Harq
+         BBU4nnu7ifi/RMGNoBMpXZ7tT0His1ZLVhXsKBjxe2MNKXy4xfyB/cbxq6cleLzCw29X
+         8P8+Ef/1xl+JT6ZrnJ4QzGWd2LIpDhjoai29cqxnWDj8FfCzN4cE/UwI+P9W9RioAe4W
+         iPnrKcINeI3/4t5RCyew+GKR9cW3L8HqsYTY/xftcy4iuobMgQ+yMtMnNgtzfuBgoKCW
+         4v7IsN4tX1WtjlZF8Rxt0Y49zJShyU/FF7D3HO64KWuVUOCIgzjsFYKxgbfaAgPzNxH+
+         Zk4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749234208; x=1749839008;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ug2rgnBs6oJAavrVeN9J6WIfZuijp5pXf6YiUZQknzU=;
-        b=JYr1kSpnB2GvWXFleR2UMDfe8c5xcvbHdAZVYuMdnTHY5jOuckwJ0x2XVnGcig6sAs
-         0Fi4VqCGRPgieh4hpMOPoc4kYJYDOgtNrzhwI8+GTlYD+BkK921BF4vz2xLn9lv0hbuk
-         8O4Fo5rEdwNV4OdE2X6iBSbyPgECSuIvg8PLO7huMT88TvZZeYD4/f8bvuseN1bS6YVm
-         +hWaySB/zzbSJ3wVOvAsr+wDJo9WTw9rOaV6hsrR+dE4qqGPCrpZkrU4xie8pzlGSSKW
-         4IYaj3ClDHk+CNXqxVQoMoRQPCAuRGB+wNExLTLkvrEFWfCWHtz0pZ5q4Qz1XEh81vrM
-         h/bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVKn4zqLpiKfdwmOYOSXUvvsNdjtfE7WDRDw/EMS1++cdvOtCHJiTnURgIRs2ODYiaxExNxGPUVtnEBTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWO5DVR+1YVb+Hq9v+b926Wk1K321JX9QCNbk0ZXD2LeVJc5/A
-	7P8RcG7fZsIMiYZM1ofBWl7m8+9uY/T5pM0Ib10wfbYS2RYG50ZhF24SqGgAWQoEmHvGaCCg5pm
-	uNzjCs4DSGbPtpD0nF7MbTd5DkNaP9fQ+sfwriq/KHryLCqWRjFkpm1zW2janm7gkPA==
-X-Gm-Gg: ASbGncuh85nWpAJuCLhUPNJMOcru5uNu5MeuditniPLEWxrJU6QxzV5xaaglCZgaB8O
-	phqp+i0L7uNc0R/e3Q8p+RRdzJkwIR+Xo3tsvhInyS5biDaC5D63D2bKNV7EzTMQVrewxdKPTlv
-	p1rkdfKhecDZGtzk+tep1km7Ecz/IjHSIUaNR7AdAESJU/alIZTKMir7eJCJpkWTAobfiLaaJ2r
-	ngZC2ZzWa3HSyYDuq48fitbKjNnWRZitAccbOD1jWc24oaB7aV/sHxsjQi8RGe4cfQ9u9wOAy4N
-	WqCglCAq9RbHGeYuvtfZL7NGApVLYvQ2lSm/SO5MDjQpbqqM+PPaZTlzcWnOPKHcH9nGn+1XoYz
-	o/EQOoysntqEREOvE2hBskk4aLnVCsN0=
-X-Received: by 2002:a05:6000:200d:b0:3a4:dc2a:924e with SMTP id ffacd0b85a97d-3a531784971mr3973412f8f.6.1749234208252;
-        Fri, 06 Jun 2025 11:23:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8/EXOFVWPefbdu/a4nHn2MByHfexAc310Ody1Xrl1rxFHi1hd9fL2kjWdNFfNi7AORNazHQ==
-X-Received: by 2002:a05:6000:200d:b0:3a4:dc2a:924e with SMTP id ffacd0b85a97d-3a531784971mr3973385f8f.6.1749234207849;
-        Fri, 06 Jun 2025 11:23:27 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f8fb57b1sm34324945e9.1.2025.06.06.11.23.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 11:23:26 -0700 (PDT)
-Message-ID: <44af8f5a-2d94-498b-a3e0-31f5dde74538@redhat.com>
-Date: Fri, 6 Jun 2025 20:23:25 +0200
+        d=1e100.net; s=20230601; t=1749234448; x=1749839248;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rbNInwmCXurTgn6zhiZL579Qtyh8Q8n0xxLohpO7vO0=;
+        b=fJ2JCJgdWq3jccwC61AsZYgNFjSZstIy4i0j+QkoI6C/fW1cA/KTmQsIlxHlblNls7
+         DgATlghe6ZCVjc5hViirVhHLQOTC1K7JgR64aa2HmfXOYfKKri1X4185BO+xDVU8bK+k
+         aMn6BIsjgqFuo8xwWI5/fCgfT4WXVBk/y2vqWBLjbdTtRwnOmNkVIb5ZoiSOY8JP4tv7
+         9Yro5ukIAvj5COtlO71jr4JjBQVj5uYQCPAoeoeIwo9VJuawgEjEWLT5WCCxLkwxn4To
+         mnH1nU1e9dnDQSZhSlFFy8MQmuW81cCkP67yQ/Afe3VtGz6k1Xi/HOWTTK8gF7wkpCOn
+         BJXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqYhdX2nf4bb3y0t5WoTZrK9LJdb5gJmUQJEM/goF2wQbkot5KjZD1T03myzZTi2ToJplDN5otHxrUG9lk@vger.kernel.org, AJvYcCVzcaeHUM1BT4amATmtpI1kimsvuroy2ictiZrXkcWj8zcZVuSwN6DyGpqhBBqgr7r3j1HEMvpZwIgrzkqZf0KklA==@vger.kernel.org, AJvYcCXRWkNNpYCy4NKLG/uTPM2gaueoApJvVNhhszrlwcuDcNwqwhu32NeJdcEAVBgQ/Tjijxw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yydtko+e4ymTr1CI6s93gKcRHCZF3dSiPJVRM3GQR1TsnRAKuS4
+	VkjUD0z+Xy8w9HuAISoBEWcHctxxrU8qLwZ0DZWcSMTPeqZFwbPl1VeGA2SHsSQTipzJgkdSDVx
+	7YeDQ82PwEwhFIfYuqSO/IHpvUfYEBLk=
+X-Gm-Gg: ASbGnctcVFO+sbc8LJQjlXKzBNv85CXhHBpfaGPabOzx1mxf+mNi7pN1LcUotyLdRQD
+	kcQ5la0wMJ9Xz2iu6zGp+IC6H0hMu71h/dtcKXiSB9SX5SzJHZR8ge4/rxko8kyvgnBYF/9eAuq
+	p+/2QwU7d7KsFlcXpDtf1S6MAN5BGtemePs7GCgLyPc+z2xszDLHQXBAuhkr7WOPmbTk0zvsve
+X-Google-Smtp-Source: AGHT+IFDfg5zQNFFQhQ3znGa/eV6pg5oooCOcd3jscmyAaPp0/p7fZ9C2+elcLblHORV0vFrWJtDiExcvoa0BG3+RCo=
+X-Received: by 2002:a05:6000:220d:b0:3a4:f7f3:2d02 with SMTP id
+ ffacd0b85a97d-3a531abdf59mr3483496f8f.17.1749234448058; Fri, 06 Jun 2025
+ 11:27:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-To: John Hubbard <jhubbard@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Peter Xu <peterx@redhat.com>
-References: <20250604140544.688711-1-david@redhat.com>
- <aEFC_12om2UHFGbu@tiehlicka>
- <1a65d0e6-6088-4a15-9c19-537203fe655c@redhat.com>
- <aEKnSxHG8_BGj7zQ@tiehlicka>
- <e680a8f3-7b45-4836-8da7-7e7a0d2fcd56@redhat.com>
- <aEK_R93gihEn-xW6@tiehlicka>
- <50ff9149-2824-4e57-8d74-d8d0c063c87e@lucifer.local>
- <e5fa4a36-2af8-48e9-811e-680881c06b86@redhat.com>
- <1a7513cf-4a0a-4e58-b20d-31c1370b760f@lucifer.local>
- <e898e52e-a223-4567-9514-b4a021b5d460@nvidia.com>
- <72bb36f2-65b6-4785-af9d-5b1f8126fc78@lucifer.local>
- <2f866f12-2aa0-4456-b215-08ddc9b13b1e@redhat.com>
- <3dfbbd63-697d-42aa-8906-539d74df9123@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <3dfbbd63-697d-42aa-8906-539d74df9123@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250529065537.529937-1-howardchu95@gmail.com>
+ <aDpBTLoeOJ3NAw_-@google.com> <CAH0uvojGoLX6mpK9wA1cw-EO-y_fUmdndAU8eZ1pa70Lc_rvvw@mail.gmail.com>
+ <20250602181743.1c3dabea@gandalf.local.home> <aEAfHYLEyc7xGy7E@krava>
+In-Reply-To: <aEAfHYLEyc7xGy7E@krava>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 6 Jun 2025 11:27:16 -0700
+X-Gm-Features: AX0GCFtu_4copkwLu7w1Y3LJbOxFzibxvD5MnH8zkQWQwdSOwtRB3Lw8U1qWBHA
+Message-ID: <CAADnVQJBG=nHRCJBcxXuEjpNp8iy1CD+Hg=g571uOTr61b8Peg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
+ trace instances
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06.06.25 20:21, John Hubbard wrote:
-> 
-> 
-> On 6/6/25 11:15 AM, David Hildenbrand wrote:
->> On 06.06.25 20:06, Lorenzo Stoakes wrote:
->>> On Fri, Jun 06, 2025 at 10:57:44AM -0700, John Hubbard wrote:
->>>> On 6/6/25 4:04 AM, Lorenzo Stoakes wrote:
->>>>> On Fri, Jun 06, 2025 at 12:28:28PM +0200, David Hildenbrand wrote:
->>>>>> On 06.06.25 12:19, Lorenzo Stoakes wrote:
->>>>>>> On Fri, Jun 06, 2025 at 12:13:27PM +0200, Michal Hocko wrote:
->>>>>>>> On Fri 06-06-25 11:01:18, David Hildenbrand wrote:
->>>>>>>>> On 06.06.25 10:31, Michal Hocko wrote:
->>>>>>>> [...]
->>>>> So to me the only assessment needed is 'do we want to warn on this or not?'.
->>>>>
->>>>> And as you say, really WARN_ON_ONCE() seems appropriate, because nearly always
->>>>> we will get flooded with useless information.
->>>>>
->>>>
->>>> As yet another victim of such WARN_ON() floods at times, I've followed
->>>> this thread with great interest. And after reflecting on it a bit, I believe
->>>> that, surprisingly enough, WARN_ON() is a better replacement for VM_BUG_ON()
->>>> than WARN_ON_ONCE(), because:
->>>
->>> Right, these shouldn't be happening _at all_.
->>   > > I'm easy on this point, I'd say in that case VM_WARN_ON() is the most
->>> _conservative_ approach, since these are things that must not happen, and
->>> so it's not unreasonable to fail to repress repetitions of the 'impossible'
->>> :)
->>>
->>> But I get the general point about ...WARN_ON_ONCE() avoiding floods.
->>>
->>> David, what do you think?
->>
->> Well, in this patch here I deliberately want _ONCE for the unpin sanity
->> checks. Because if they start happening (IOW, now after 5 years observed
->> for the first time?) I *absolutely don't* want to get flooded and
->> *really* figure out what is going on by seeing what else failed.
->>
->> And crashing on VM_BUG_ON() and not observing anything else was also not
->> particularly helpful :)
->>
->> Because ... they shouldn't be happening ...
->>
->> (well, it goes back to my initial point about requiring individual
->> decisions etc ...)
->>
->> Not sure what's best now in the general case, in the end I don't care
->> that much.
->>
->> Roll a dice? ;)
-> 
-> One last data point: I've often logged onto systems that were running
-> long enough that the dmesg had long since rolled over. And this makes
-> the WARN_ON_ONCE() items disappear.
+On Wed, Jun 4, 2025 at 3:25=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
+:
+>
+> On Mon, Jun 02, 2025 at 06:17:43PM -0400, Steven Rostedt wrote:
+> > On Fri, 30 May 2025 17:00:38 -0700
+> > Howard Chu <howardchu95@gmail.com> wrote:
+> >
+> > > Hello Namhyung,
+> > >
+> > > On Fri, May 30, 2025 at 4:37=E2=80=AFPM Namhyung Kim <namhyung@kernel=
+.org> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > (Adding tracing folks)
+> > >
+> > > (That's so convenient wow)
+> >
+> > Shouldn't the BPF folks be more relevant. I don't see any of the tracin=
+g
+> > code involved here.
+> >
+> > >
+> > > >
+> > > > On Wed, May 28, 2025 at 11:55:36PM -0700, Howard Chu wrote:
+> > > > > perf trace utilizes the tracepoint utility, the only filter in pe=
+rf
+> > > > > trace is a filter on syscall type. For example, if perf traces on=
+ly
+> > > > > openat, then it filters all the other syscalls, such as readlinka=
+t,
+> > > > > readv, etc.
+> > > > >
+> > > > > This filtering is flawed. Consider this case: two perf trace
+> > > > > instances are running at the same time, trace instance A tracing
+> > > > > readlinkat, trace instance B tracing openat. When an openat sysca=
+ll
+> > > > > enters, it triggers both BPF programs (sys_enter) in both perf tr=
+ace
+> > > > > instances, these kernel functions will be executed:
+> > > > >
+> > > > > perf_syscall_enter
+> > > > >   perf_call_bpf_enter
+> > > > >     trace_call_bpf
+> >
+> > This is in bpf_trace.c (BPF related, not tracing related).
+> >
+> > -- Steve
+> >
+> >
+> > > > >       bpf_prog_run_array
+> > > > >
+> > > > > In bpf_prog_run_array:
+> > > > > ~~~
+> > > > > while ((prog =3D READ_ONCE(item->prog))) {
+> > > > >       run_ctx.bpf_cookie =3D item->bpf_cookie;
+> > > > >       ret &=3D run_prog(prog, ctx);
+> > > > >       item++;
+> > > > > }
+> > > > > ~~~
+> > > > >
+> > > > > I'm not a BPF expert, but by tinkering I found that if one of the=
+ BPF
+> > > > > programs returns 0, there will be no tracepoint sample. That is,
+> > > > >
+> > > > > (Is there a sample?) =3D ProgRetA & ProgRetB & ProgRetC
+> > > > >
+> > > > > Where ProgRetA is the return value of one of the BPF programs in =
+the BPF
+> > > > > program array.
+> > > > >
+> > > > > Go back to the case, when two perf trace instances are tracing tw=
+o
+> > > > > different syscalls, again, A is tracing readlinkat, B is tracing =
+openat,
+> > > > > when an openat syscall enters, it triggers the sys_enter program =
+in
+> > > > > instance A, call it ProgA, and the sys_enter program in instance =
+B,
+> > > > > ProgB, now ProgA will return 0 because ProgA cares about readlink=
+at only,
+> > > > > even though ProgB returns 1; (Is there a sample?) =3D ProgRetA (0=
+) &
+> > > > > ProgRetB (1) =3D 0. So there won't be a tracepoint sample in B's =
+output,
+> > > > > when there really should be one.
+> > > >
+> > > > Sounds like a bug.  I think it should run bpf programs attached to =
+the
+> > > > current perf_event only.  Isn't it the case for tracepoint + perf +=
+ bpf?
+> > >
+> > > I really can't answer that question.
+>
+> bpf programs for tracepoint are executed before the perf event specific
+> check/trigger in perf_trace_run_bpf_submit
+>
+> bpf programs array is part of struct trace_event_call so it's global per
+> tracepoint, not per perf event
 
-I think what would be *really* helpful would be quick access to the very 
-first warning that triggered. At least that's what I usually dig for ... :)
+right.
+looks like perf is attaching two different progs to the same sys_enter
+tracepoint and one of them returns 0.
+That's expected behavior.
+The rule is all-yes-is-yes, any-no-is-no.
+We apply this logic to majority (if not all) bpf prog return values.
 
--- 
-Cheers,
+> IIRC perf trace needs the perf event sample and the bpf program is there
+> to do the filter and some other related stuff?
+>
+> if that's the case I wonder we could switch bpf_prog_run_array logic
+> to be permissive like below, and perhaps make that as tracepoint specific
+> change, because bpf_prog_run_array is used in other place
 
-David / dhildenb
+No. That might break somebody and we don't want to deviate from the rule.
 
+> or make it somehow configurable.. otherwise I fear that might break exist=
+ing
+> use cases.. FWIW bpf ci tests [1] survived the change below
+>
+> jirka
+>
+>
+> [1] https://github.com/kernel-patches/bpf/pull/9044
+>
+> ---
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 5b25d278409b..4ca8afe0217c 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -2218,12 +2218,12 @@ bpf_prog_run_array(const struct bpf_prog_array *a=
+rray,
+>         const struct bpf_prog *prog;
+>         struct bpf_run_ctx *old_run_ctx;
+>         struct bpf_trace_run_ctx run_ctx;
+> -       u32 ret =3D 1;
+> +       u32 ret =3D 0;
+>
+>         RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "no rcu lock held");
+>
+>         if (unlikely(!array))
+> -               return ret;
+> +               return 1;
+>
+>         run_ctx.is_uprobe =3D false;
+>
+> @@ -2232,7 +2232,7 @@ bpf_prog_run_array(const struct bpf_prog_array *arr=
+ay,
+>         item =3D &array->items[0];
+>         while ((prog =3D READ_ONCE(item->prog))) {
+>                 run_ctx.bpf_cookie =3D item->bpf_cookie;
+> -               ret &=3D run_prog(prog, ctx);
+> +               ret |=3D run_prog(prog, ctx);
+>                 item++;
+>         }
+>         bpf_reset_run_ctx(old_run_ctx);
+>
