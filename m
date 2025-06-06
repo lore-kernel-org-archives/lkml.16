@@ -1,99 +1,45 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F65E1A2C3A
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 04:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D143234;
+	Fri,  6 Jun 2025 04:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749183626; cv=none; b=ZLnsvNCcsXDdP9BuIrIXLKUTMCw6r51fMNRo+VFG8u8gZq+LklFa6W3CBouic+v3R2U4O3XBNpyG9k/kH06mQ/L1HpQA1e7qT+g4cfTxWUnlcy00zlKPLhyhEjIs9KNUxsdGIUsWm6g2TGV0IaId/CGdh74VlpTevfnsHpE0Tu8=
+	t=1749183908; cv=none; b=E8EfxA9PAdJrXseLLQGT1/Wml8UXeMSXFxu3C1c8xDRvtKRasjAlO4la/ljFOcthC35+hgIEYnS0cx/pU8RiazznVtqIP1uVx80S1M5n+PvXJTI4RzvHIWsMLY06jEG/70cScJRw3fwphTJqD+pi9FozjIPr3VanIVeLQlOML94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749183626; c=relaxed/simple;
-	bh=cBPVUZEqDCouVeRGB+TRMPGlVd7k9y+CujAOPGFklYo=;
+	s=arc-20240116; t=1749183908; c=relaxed/simple;
+	bh=jWs0GMla51yiYCkT98ds2y58nfOLoUvbpGt+kdMkuXM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NFvliQy7DtDA3atNot3BJo/xmdm8k33x5Jdvr4NiCgBAhNRLAFsANdycucMf+PVxAtRQt6oY82ozYvcdVYvF9GaVY7k8vbNIRoRkPiPY/YhudejS8B0jTNaNkpNf87A0oBPSksNLyq9cgyxkT90zuD1iGYkARJBxZWSZ7w+QuHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L8Wi0j0i; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=o+bMOZeGTjGVe+N+hTCWrN29V/vyacuiR9FQI8onyZi334e4qhgaGP8q8e06M4gsQ/DXaSG2RDEhuW3VcP6enmOzpkwV0I/U5COBTAcBHwITJ7tBM7jHJKM9+wY2Trn6OqY+cllkaeP9eBOkGZDE4kBLvHXUBvu/kf2QCM5uTww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=wfmCj/QT; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L8Wi0j0i"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b2f1032e1c4so1535466a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 21:20:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749183624; x=1749788424; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m7TQ+3XX3FlrGS8OYKUYQhs5M06UIOQDCmX22nbGDmQ=;
-        b=L8Wi0j0iij46YCZxAnh4eP82ssKergFuTF+qf3R/L+ApEtSE+Anb9VmYR7Lgb+1gLQ
-         kvPoSY2eNoqqJ3WAeIkWb2aBB7rf04jys8tEdZ7s88UIxOofePP/mxbGATKgYcY1k6Lz
-         Uid7lf98X5gC9eRTolqzhqrAEDclwwt0NuSws8e5m1Jbi+i4g1+VjeNLSRqZpVGCjWF2
-         AFaGKbwGD/EFXowED4ExDejr7J1nnobHmKVo21UHsWDvXqFQj4ZhF0/UyS+7tzuRDxbf
-         1zr2/UG+PU/LvLFycAT+1uRu4yBmqm6k/N3xzaTrI6AXQY6vsSJ2HNsX5Lap3PY2Q/ui
-         Z3Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749183624; x=1749788424;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m7TQ+3XX3FlrGS8OYKUYQhs5M06UIOQDCmX22nbGDmQ=;
-        b=R45p6HrBYTyQ2Qm74HMNHH6JYFl4axQt8clwLl5116cKcc19qexiPoqkBzOv1gWM2c
-         G8YjWpQsGjnR0oMuseuSL2MGwiiMybkmzySe/5CUMiurOgp1km7agdnFs6jnG54DIwkv
-         lhWXSHMbxOr7hGBAcsFdpVZ6Od9e3UoQ6bHe6h+i7nYvMwSzdwdP8ZghYU537bU/ZU+9
-         IBpOLGNZ/KHq8Eocx8e+e1n4Kxb8vcLzM2QBnrAkJ4B6sxoG5e4Ay1cbb0aa5/1PwPq6
-         4encRar47+BRQb8RpG7WlnCvJNGpjDqyqCor2NrsDP3BQ1UaKJiItrG9WOMFuit+GZQO
-         HWQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGjFUoGH3crYxYqf65/laWV2fu/ZNtCAap1unyoUSmn0Q3j9Bw9ve6YQTkaN11vLtLH4rHJTZBLn716S8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlIsdGV6qbTUwr/0vFQL+CmronyNk3f46lFLfVzIKNjOscJwSa
-	PpeEwlewAz8QdX7ox0axD9OxS9lE2BrS8QvXS/Zj+pH0ylE5FPg/+mOKGItOfuY/ROY=
-X-Gm-Gg: ASbGnct+TbYBedNtneuqWnvAk2gHqgSoQBNtRkBXVNZN1wVBZAGW05OTtWLkP9eTZxu
-	pXHih9eb6wN9oqBouLz/WXsEyUiYBgxcOrtriPtiGb97FpQ6RJDgLwuSeF+FBfsgz/t1ORhr6QN
-	1+g4LieFoDzA9vDvH1PAg0iX5MYep24ghgFPpJCs06ANc4FW6raaldMJ5UTNmRy9SPEyKQzdxQM
-	qoHwcY07pp9qGPSuLtGiWZKutxVNhLfGtEsPHDybbcXe296u9eVyNKpe6oGxefRJO23zp8nmzQi
-	AwEBLH2E2m371BGLsu/FfXioXPQTlAHi61qrCgfv3nrmeb3ARAaW
-X-Google-Smtp-Source: AGHT+IHFJsnesAwLkWRA6zdkndEn9SX9qS0GFQhYN/5iMboGyQM1Gp0sj8pgSAH/JFC5Su+szK4MWw==
-X-Received: by 2002:a17:902:e88a:b0:235:ec11:f0ee with SMTP id d9443c01a7336-23601cf96d6mr29339135ad.14.1749183624573;
-        Thu, 05 Jun 2025 21:20:24 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313286fa44bsm908620a91.0.2025.06.05.21.20.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 21:20:23 -0700 (PDT)
-Date: Fri, 6 Jun 2025 09:50:20 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Trevor Gross <tmgross@umich.edu>, Viresh Kumar <vireshk@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Andrew Ballance <andrewjballance@gmail.com>,
-	Anisse Astier <anisse@astier.eu>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V12 00/15] Rust abstractions for clk, cpumask, cpufreq,
- OPP
-Message-ID: <20250606042020.ytpvgd43auymf65b@vireshk-i7>
-References: <HVTDJypFNQFfSQJmmYDSPU4o-irFnjmDN22RW3S0z5Kwe_hVk9kquZWElv-C2k6d5kOIiewhj_Xo2kAoTHbHgg==@protonmail.internalid>
- <cover.1747634382.git.viresh.kumar@linaro.org>
- <87qzzy3ric.fsf@kernel.org>
- <aEH6GzCTgXZSneHt@tardis.local>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="wfmCj/QT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+6zkQOBycn4uT+YeUBvYpDwM+Bb5loLxwP/2YHCEYEk=; b=wfmCj/QTQNiEiytDpCOpRd7VAF
+	m/+HqmyUkdZK+yI3TWqqoiTR5XycUTfRqgtZPzhJ8xH8mFz/DGqQgLBt/qsooU2og5x8tD3FXAiyZ
+	MzO/BonImYGyy2O8vbJ5ilICwRHib3Tmoi9JtvotXF8EnabqAn/Y+Vwz8Kv8H3ltht6Zv8svJShuS
+	oD9IYhjIAL2cmFMj5rsuSZIx9EIxG9CQCvyQfEriOuRTfEzEhlpTAIlWJvC8//vJqCf6gWrFRTAI0
+	CbLOYtjs2LSxCDIbz0ABo22r71KK0ekv/3LVi7c1uCBiJwEY7EBPsCaab9m82bRPeShKaXw2SB/6h
+	Dl+PA+HA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uNOdZ-0000000BhLE-41rW;
+	Fri, 06 Jun 2025 04:25:02 +0000
+Date: Fri, 6 Jun 2025 05:25:01 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: syzbot+598057afa0f49e62bd23@syzkaller.appspotmail.com,
+	almaz.alexandrovich@paragon-software.com,
+	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] fs/ntfs3: Add sanity check for file name
+Message-ID: <20250606042501.GR299672@ZenIV>
+References: <68407923.a00a0220.d8eae.008f.GAE@google.com>
+ <20250606035125.1693536-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -102,16 +48,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEH6GzCTgXZSneHt@tardis.local>
+In-Reply-To: <20250606035125.1693536-1-lizhi.xu@windriver.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On 05-06-25, 13:12, Boqun Feng wrote:
-> I assume you run it in a VM? How many vcpus are you using? I've checked
-> the code, cpumask_{set,test}() can set or set bits out of nr_cpu_ids
-> without triggering warning if CONFIG_DEBUG_PER_CPU_MAPS=n, but
-> cpumask_weight() only examine nr_cpu_ids bits. So if you run with
-> nr_cpu_ids < 4, the test case may fail.
+On Fri, Jun 06, 2025 at 11:51:24AM +0800, Lizhi Xu wrote:
+> The length of the file name should be smaller than the directory entry size.
+> 
+> Reported-by: syzbot+598057afa0f49e62bd23@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=598057afa0f49e62bd23
+> Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+> ---
+>  fs/ntfs3/dir.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/ntfs3/dir.c b/fs/ntfs3/dir.c
+> index b6da80c69ca6..b31bc9cbfa35 100644
+> --- a/fs/ntfs3/dir.c
+> +++ b/fs/ntfs3/dir.c
+> @@ -304,6 +304,9 @@ static inline bool ntfs_dir_emit(struct ntfs_sb_info *sbi,
+>  	if (sbi->options->nohidden && (fname->dup.fa & FILE_ATTRIBUTE_HIDDEN))
+>  		return true;
+>  
+> +	if (fname->name_len > le16_to_cpu(e->size) - sizeof(struct NTFS_DE))
+> +		return true;
 
-Ahh, thanks for that. It was really helpful.
+And if e->size happens to be e.g. 0?  Note that (unsigned short)0 - sizeof(whatever)
+ends up being a large unsigned.
 
--- 
-viresh
+unsigned short gets promoted to int.  sizeof is size_t - whatever it is,
+it's an unsigned integer type, with rank no lower than that of int.
+
+Since we have the entire range of unsigned short representable by int on all
+architectures we care about, we get unsigned short promoted to int (preserving
+the value) and then to size_t (value taken modulo range of size_t, i.e.
+the original unsigned short value preserved).  Incidentally, even on a target
+where sizeof(unsigned short) == sizeof(int) we'd still get an unsigned result -
+unsigned short would be promoted to unsigned int, and mix of two unsigned
+integer types gets converted to whichever has the higher rank.
+
+IOW, comparison in
+	if (fname->name_len > le16_to_cpu(e->size) - sizeof(struct NTFS_DE))
+is going to be an unsigned one.  AFAICS, fname->name_len is u8, so just
+turn that check into
+	if (sizeof(struct NTFS_DE) + fname->name_len > le16_to_cpu(e->size))
+and be done with that - comparison is, again, unsigned, but there's no
+possibility of wraparounds in that variant.
