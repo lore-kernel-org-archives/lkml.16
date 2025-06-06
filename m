@@ -1,94 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D541A38F9;
-	Fri,  6 Jun 2025 15:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937D6EEB5
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:58:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749225515; cv=none; b=pFFbO3F7i4VRMHynhyYlXvLT77Gss/m9GV8P4lYb61POiNlbaGiy+EaPaq8o5GF4xnU45tUd6SMdpLnZGM4IvTIaadLxGmxzJzdLndptrIvrNKQGWPGUqIX4gDTYfAY+kefWJpRMRMzQI7vK9dazB0bee75RpjJC+uje7+0T+38=
+	t=1749225537; cv=none; b=EIqBoEhn7EkDkaab4JCinjq74eIu73J69PVR2hYUCv5Z+fwXM4WLlK4zw73TprbtHKS7O0QAd9w56WtCxWYE/PPVzE4cZ0Rv1rtc145QgXUcq977YROzlJT+fPStZHWsR1ePZ+Bppo2p0US1Chng5lLutDBu/kCJ9EnppWhLDcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749225515; c=relaxed/simple;
-	bh=AL9QLyGrPiB1rKESmOFNM9nstIUPTufyq9r7kW0msVE=;
+	s=arc-20240116; t=1749225537; c=relaxed/simple;
+	bh=j5TPzlQxuBV7D2im7ELoEsLQzI/C4gvKm5ZmyQfItgg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PyBdFD2WS0Ib28V65a6L5GtEVXaVmJfIafGpgJjGAD09wUmvKY5MDgSqfUW3zvfoVL+O7NPLLSaIhgkXCJzqXFHG7yMI/jP/Wx2rnZ0ZnhTd6sUvdeENiR5h+nUyw2Yvot7/9z9W5bbPso+HMSkvjPmSXkpClQ2GcF9ViUHgBK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OFTt35IO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvrTZWOMwbIneveZ+sOucAOS0vSGzDNkhV6+Ucc6umg1s+6YKzNHkgzuA2pQWokYnNErBKxh4POSITgMEwRFO6Ja3hsDqv3knDkXaFZgaSbqqcyUTvFo86g5+jQ307G2VczgFKErxgoxOs4QrwI0ow22HfB507M77+WW3A/0qg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kF5cE0eV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OFTt35IO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C3C9C4CEEB;
-	Fri,  6 Jun 2025 15:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749225513;
-	bh=AL9QLyGrPiB1rKESmOFNM9nstIUPTufyq9r7kW0msVE=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kF5cE0eV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25827C4CEEB;
+	Fri,  6 Jun 2025 15:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749225537;
+	bh=j5TPzlQxuBV7D2im7ELoEsLQzI/C4gvKm5ZmyQfItgg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OFTt35IOAIC/mybfp6f42KZChNyZFl6qHw3JH5bSMseFWQa4H75nB9oZDpHrI+apS
-	 WvY/aG3eIw4e6QK4eGF2a4YLhB51rwFsRqRsWsdCQiH1E4SDEC1MvaD9SZDYC5xShi
-	 CyB0/xr5WMe/6zW0JcZbpjPh5ZOmGSXCIu6cv6zA=
-Date: Fri, 6 Jun 2025 17:58:30 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-Cc: arnd@arndb.de, conor+dt@kernel.org, devicetree@vger.kernel.org,
-	krzk+dt@kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
-Subject: Re: [PATCH v3 2/3] misc: add driver for ST M24LR series RFID/NFC
- EEPROM chips
-Message-ID: <2025060657-nemeses-perpetual-c70f@gregkh>
-References: <2025060650-tried-widen-4443@gregkh>
- <20250606142456.3140225-1-abd.masalkhi@gmail.com>
+	b=kF5cE0eVIrQ137Xbv0R/q4SW2Otl5PALvUgLPM63wnD2r0zDoChMBeP98jlyRDuIo
+	 0pVMMQkriDcltThKwSY5j9PnTgj44QIQg8niB/1gOATubkaEBJDegM3/TBkdTZ7dIi
+	 UmaF0QiU4s4x89TkmB6taoN3MCK/KLYvpuIbniQTX+ffpTytkpt3KcSDER0pN8caqp
+	 aDt8Tl3f6evYEGkxO34SmbmPA20e0WjmbwadELUt/WJ8MPiHu3gWqdn/wHrh7gd1J+
+	 2ld6XvYIBtOEE619E+YvnCFDjwvJT8ZmYSB/KKGSmnVxn9RwKMyhbzhGE3FRAVbhqd
+	 lufoEAUnof2FA==
+Date: Fri, 6 Jun 2025 08:58:54 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc: linux-kernel@vger.kernel.org, mingo@kernel.org, peterz@infradead.org
+Subject: Re: [RFC 00/13] objtool: Function validation tracing
+Message-ID: <cqfgywnwfjnyujvgcz63drka47glxj2n7fq5xvhrt74st6xa5w@2bf4vp6duotr>
+References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250606142456.3140225-1-abd.masalkhi@gmail.com>
+In-Reply-To: <20250606153440.865808-1-alexandre.chartre@oracle.com>
 
-On Fri, Jun 06, 2025 at 02:24:56PM +0000, Abd-Alrhman Masalkhi wrote:
-> >> +	if (unlikely(!is_power_of_2(reg_size) || reg_size > 8)) {
-> >> +		dev_dbg(dev,
-> >> +			"Invalid register size: must be a power of 2 and <= 8 bytes (%u)\n",
-> >> +			reg_size);
-> >> +		return -EIO;
-> >
-> > Not -EINVAL?  This isn't an I/O error.
+On Fri, Jun 06, 2025 at 05:34:27PM +0200, Alexandre Chartre wrote:
+> Hi,
 > 
-> The last if statement is primarily for debugging purposes. The reg_size
-> value is specified internally by the driver (not user-controlled), so
-> this check helps catch potential mistakes in the driver's sysfs entry
-> definitions. That's why I used -EIO instead of -EINVAL, as it's not due
-> to invalid user input but rather an internal misconfiguration.
-
-But you just leaked your internal check to userspace in a potential
-error code, so you must justify why userspace would ever see it and what
-it should do with it :)
-
-Just make it EINVAL please.  And if this is something that can't
-actually happen, don't check it at all.
-
-> >> +		for (i = 0; i < n_sss; i++) {
-> >> +			char *name = devm_kasprintf(dev, GFP_KERNEL, "sss%d", i);
-> >> +
-> >> +			sss[i].reg_size = 1;
-> >> +			sss[i].reg_addr = i;
-> >> +			sss[i].attr.attr.name = name;
-> >> +			sss[i].attr.attr.mode = 0600;
-> >> +			sss[i].attr.show = m24lr_ctl_show;
-> >> +			sss[i].attr.store = m24lr_ctl_store;
-> >> +
-> >> +			err = device_create_file(dev, &sss[i].attr);
-> >
-> > You just raced with userspace and lost. This is not how to do this,
-> > please do not dynamically create attributes (hint, this should have
-> > errored out as you didn't correctly initialize them), but also:
+> This RFC provides two changes to objtool.
 > 
-> I didn't fully understand where the race condition comes from. Is
-> the issue caused by calling device_create_file() from within the
-> probe() function, or is it due to the fact that the attributes
-> are being allocated dynamically rather than defined statically?
+> - Disassemble code with libopcodes instead of running objdump
+> 
+>   objtool executes the objdump command to disassemble code. In particular,
+>   if objtool fails to validate a function then it will use objdump to
+>   disassemble the entire file which is not very helpful when processing
+>   a large file (like vmlinux.o).
+> 
+>   Using libopcodes provides more control about the disassembly scope and
+>   output, and it is possible to disassemble a single instruction or
+>   a single function. Now when objtool fails to validate a function it
+>   will disassemble that single function instead of disassembling the
+>   entire file.
 
-From calling device_create_file() at any point in time.  The driver core
-should be doing that, not individual drivers.
+Ah, nice to get rid of that awful objdump hack.
 
-thanks,
+> - Add the --trace <function> option to trace function validation
+> 
+>   Figuring out why a function validation has failed can be difficult because
+>   objtool checks all code flows (including alternatives) and maintains
+>   instructions states (in particular call frame information).
+> 
+>   The trace option allows to follow the function validation done by objtool
+>   instruction per instruction, see what objtool is doing and get function
+>   validation information. An output example is shown below.
 
-greg k-h
+This is pretty freaking awesome!
+
+I assume we could eventually build on this work to have an "objtool
+disas" subcommand, which would basically be an improved "objdump -d"
+which annotates alternatives and other runtime patching.
+
+-- 
+Josh
