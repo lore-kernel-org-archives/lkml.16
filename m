@@ -1,112 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-1-12.ptr.blmpb.com (sg-1-12.ptr.blmpb.com [118.26.132.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C15D3234;
-	Fri,  6 Jun 2025 04:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4243234
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 04:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749184095; cv=none; b=cek1S1Mti4O69g9XDwozkx1nHRdd9B887A1SqngxJh0a90uYoWKKD6JB4SyTNGvkTdnAk2iZ2k/MyllLR+c7KVMCiZT3q6N8hzd4ICMitotFFrUt3y3ZOIgGX80xktPxwkXr5mCYV3dOJMfyaW8ESxwo4MjLiV9e/TKKHdyJi3g=
+	t=1749184129; cv=none; b=g3SifL/9Lljw3P1CNv+u08+Z5nI0nx7J5Qpl23A7AA+bpyjEs3egzNoezWuUk770DHI0CT4XtyeiJn0ra2dPWxECls03tz24QlYH9eBoqluFuugOY368AKnB3rdfHmGDEuNPclctKlPidGlAg4Ecd3ZuVQE3IcFa7IaqsHONebs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749184095; c=relaxed/simple;
-	bh=9Gyg33hqhbnXrEaxdUutoGy/DPXrhX0kl0SjpeBRIB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTiiNZWBOFbLmz6+MRDrK1PuhgOmOI3ox+6qP96SNr5asw+UvW5B+RlyJCm6NRXuQ09Dyix817dPLB9yMvqwwZjf2VQtX3d1rkzXtkb/9Q2FiMxDFceHX2p42pl1fxdnUq2fcdana3SpMT3/exURh28BuJo/kEqNu7/snw4ogW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ihkyY6R/; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749184129; c=relaxed/simple;
+	bh=IdexLD3eLQvA1s6fHt6lYm6nLYATX2RacfQTFZ/sCXs=;
+	h=To:Content-Type:In-Reply-To:Cc:Message-Id:References:Date:From:
+	 Subject:Mime-Version; b=j67GWNnDahbhRdVcI71f83ei0YVKpSrb9qV94v7WlBk5PPKMjqMXD0Ka0TyjtIhd16fnsDC/78AeiTN/TCTXyqycenz9V0RwEWR7QlyBJ2kgyO2Kx4Dv/BFf8Koj1td4ctPIMfj9o0EQY48prX6I7kjKSlinrnfbDcUT4p7XnhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=tiKxe8Tl; arc=none smtp.client-ip=118.26.132.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ihkyY6R/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749184093; x=1780720093;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9Gyg33hqhbnXrEaxdUutoGy/DPXrhX0kl0SjpeBRIB0=;
-  b=ihkyY6R/rx23xzFpcSFeS5fcVOmvy3JJb+sM1sh4T4wF4P0P6TL2oxFk
-   25ATTZEQrTKJ2Ij5OxxgHo+/OVaKKAEGq/uS2q9pMoW/wdyqQoyerdJEU
-   EpNSOMhRx9JfOyLx3x7UeSIpKS0Ko9E94m6w0LmMHnStMJwWFSjE9FZpY
-   zCvIGpFsajBLegiWbTQRlvL6ovreAk35tXOZhrv8y310/s4AZCywU1Fzp
-   nTIeghPYvEFJfJxwAdLmg/hgGu+1NbALBluADCUkXN27fk0fWlZyhAW27
-   giZRpG147L0CbQ4SU2tUnPndq7o4fvsyZ+KGR6tvXonKc5yBjElGDzDsw
-   w==;
-X-CSE-ConnectionGUID: J4R0TdOETTS74TgeX6YoOA==
-X-CSE-MsgGUID: vOj2DCx1RY62uBtpmk2o5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="38958111"
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="38958111"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 21:28:12 -0700
-X-CSE-ConnectionGUID: /C4I0hPvTW6lOY9red7p/g==
-X-CSE-MsgGUID: KDyzMU7zSQy32t/M5w9/aA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="145653438"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 05 Jun 2025 21:28:07 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNOgX-0004jp-0d;
-	Fri, 06 Jun 2025 04:28:05 +0000
-Date: Fri, 6 Jun 2025 12:27:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ricardo Ribalda <ribalda@chromium.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
-Subject: Re: [PATCH v2 04/12] media: ipu-bridge: Use v4l2_fwnode_device_parse
- helper
-Message-ID: <202506061223.m9fBRBFN-lkp@intel.com>
-References: <20250605-uvc-orientation-v2-4-5710f9d030aa@chromium.org>
+	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="tiKxe8Tl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1749183289;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=bxW97WAtWMI/gihYEj6Ht7PAyVXQrYH3mCMOcOfQ04s=;
+ b=tiKxe8TlLzaSpftlkKEpF8OWyyY6pKZ27yIdGyAK+Kbd6dB0QZNd5FxI6mAWs79O7n92/p
+ IYsmuk7woUc/zMnRRRaAsh6vISLeElv+E+ct5C0DbxK087f70FtCmY5YUPEl+IL1e8jpjh
+ 27r/sNpvVacdHzVbRvb6fduyZRP8OCe/2eadEC7muBnieLplfYDUpAQY0nZLL5WOv5B10L
+ lky+mWeHC2NzSpe0HxbSYQBia0v3fo2urov21PrA+IbZmlDZZM1Bez4q8gBgZXunYmbdVw
+ G+TE4jiIp9vVneN9+4wetUjpAXuuPQHeKRdKRg0cXNkhJ3AElqSLQkWAmTh5jA==
+To: "Anup Patel" <apatel@ventanamicro.com>, 
+	"Atish Patra" <atish.patra@linux.dev>
+User-Agent: Mozilla Thunderbird
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250605061458.196003-5-apatel@ventanamicro.com>
+Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
+	"Paul Walmsley" <paul.walmsley@sifive.com>, 
+	"Alexandre Ghiti" <alex@ghiti.fr>, 
+	"Andrew Jones" <ajones@ventanamicro.com>, 
+	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
+	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
+	<linux-kernel@vger.kernel.org>
+Message-Id: <670cf57f-775e-43e1-abc3-189f3e0dc35c@lanxincomputing.com>
+References: <20250605061458.196003-1-apatel@ventanamicro.com> <20250605061458.196003-5-apatel@ventanamicro.com>
+Date: Fri, 6 Jun 2025 12:14:43 +0800
+Content-Language: en-US
+Received: from [127.0.0.1] ([180.165.23.184]) by smtp.feishu.cn with ESMTPS; Fri, 06 Jun 2025 12:14:45 +0800
+Content-Transfer-Encoding: 7bit
+X-Lms-Return-Path: <lba+268426b37+26deb6+vger.kernel.org+liujingqi@lanxincomputing.com>
+X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
+From: "Nutty Liu" <liujingqi@lanxincomputing.com>
+Subject: Re: [PATCH 04/13] RISC-V: KVM: Drop the return value of kvm_riscv_vcpu_aia_init()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605-uvc-orientation-v2-4-5710f9d030aa@chromium.org>
+Mime-Version: 1.0
 
-Hi Ricardo,
+On 6/5/2025 2:14 PM, Anup Patel wrote:
+> The kvm_riscv_vcpu_aia_init() does not return any failure so drop
+> the return value which is always zero.
+>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>   arch/riscv/include/asm/kvm_aia.h | 2 +-
+>   arch/riscv/kvm/aia_device.c      | 6 ++----
+>   arch/riscv/kvm/vcpu.c            | 4 +---
+>   3 files changed, 4 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/kvm_aia.h b/arch/riscv/include/asm/kvm_aia.h
+> index 3b643b9efc07..0a0f12496f00 100644
+> --- a/arch/riscv/include/asm/kvm_aia.h
+> +++ b/arch/riscv/include/asm/kvm_aia.h
+> @@ -147,7 +147,7 @@ int kvm_riscv_vcpu_aia_rmw_ireg(struct kvm_vcpu *vcpu, unsigned int csr_num,
+>   
+>   int kvm_riscv_vcpu_aia_update(struct kvm_vcpu *vcpu);
+>   void kvm_riscv_vcpu_aia_reset(struct kvm_vcpu *vcpu);
+> -int kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu);
+> +void kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu);
+>   void kvm_riscv_vcpu_aia_deinit(struct kvm_vcpu *vcpu);
+>   
+>   int kvm_riscv_aia_inject_msi_by_id(struct kvm *kvm, u32 hart_index,
+> diff --git a/arch/riscv/kvm/aia_device.c b/arch/riscv/kvm/aia_device.c
+> index 43e472ff3e1a..5b7ed2d987db 100644
+> --- a/arch/riscv/kvm/aia_device.c
+> +++ b/arch/riscv/kvm/aia_device.c
+> @@ -539,12 +539,12 @@ void kvm_riscv_vcpu_aia_reset(struct kvm_vcpu *vcpu)
+>   	kvm_riscv_vcpu_aia_imsic_reset(vcpu);
+>   }
+>   
+> -int kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu)
+> +void kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu)
+>   {
+>   	struct kvm_vcpu_aia *vaia = &vcpu->arch.aia_context;
+>   
+>   	if (!kvm_riscv_aia_available())
+> -		return 0;
+> +		return;
+>   
+>   	/*
+>   	 * We don't do any memory allocations over here because these
+> @@ -556,8 +556,6 @@ int kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu)
+>   	/* Initialize default values in AIA vcpu context */
+>   	vaia->imsic_addr = KVM_RISCV_AIA_UNDEF_ADDR;
+>   	vaia->hart_index = vcpu->vcpu_idx;
+> -
+> -	return 0;
+>   }
+>   
+>   void kvm_riscv_vcpu_aia_deinit(struct kvm_vcpu *vcpu)
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index 6a1914b21ec3..f98a1894d55b 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -160,9 +160,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>   	kvm_riscv_vcpu_pmu_init(vcpu);
+>   
+>   	/* Setup VCPU AIA */
+> -	rc = kvm_riscv_vcpu_aia_init(vcpu);
+> -	if (rc)
+> -		return rc;
+> +	kvm_riscv_vcpu_aia_init(vcpu);
+>   
 
-kernel test robot noticed the following build errors:
+Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
 
-[auto build test ERROR on 5e1ff2314797bf53636468a97719a8222deca9ae]
+This seems more reasonable.
+Thanks,
+Nutty
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ricardo-Ribalda/media-uvcvideo-Always-set-default_value/20250606-015643
-base:   5e1ff2314797bf53636468a97719a8222deca9ae
-patch link:    https://lore.kernel.org/r/20250605-uvc-orientation-v2-4-5710f9d030aa%40chromium.org
-patch subject: [PATCH v2 04/12] media: ipu-bridge: Use v4l2_fwnode_device_parse helper
-config: riscv-randconfig-002-20250606 (https://download.01.org/0day-ci/archive/20250606/202506061223.m9fBRBFN-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506061223.m9fBRBFN-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506061223.m9fBRBFN-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
->> ERROR: modpost: "v4l2_fwnode_device_parse" [drivers/media/pci/intel/ipu-bridge.ko] undefined!
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>   	/*
+>   	 * Setup SBI extensions
