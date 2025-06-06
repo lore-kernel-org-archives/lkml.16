@@ -1,123 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D9413EFF3;
-	Fri,  6 Jun 2025 15:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE523158218
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749222124; cv=none; b=LCMtJdAo0kwEwe+SC2o8NWEvER7Aji4GS++L8HY7EkldteICS6k+pmbXJxIBz9bULcDlMb2y2AdPOqhy2HbvxOmn0OoD0vuhqavWqctQOPgOeIQSJWzloPn80mldsmLWkne0gohLKJeuWgDZG/2xTmMc/oKYWbyqp7zV7bxGQHQ=
+	t=1749222195; cv=none; b=BiWRFeVc0A3B5fbYufbi3Cgr3qp3AlYWHQBlQ6ECTfVN5vqWGkMzUyFt2+JlyUrl3h4vHjF0hHUpahMOl9kSVVm2SvRknP98mj614igGYU9aLW6qPPocXG97FmeMgQl+mmTk1cwza1oIfe9Xtnh2eZrECyFWzTE1X9Q3fSWx1so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749222124; c=relaxed/simple;
-	bh=O8kB7jya7MJUklWdBDfGyAbIfXaS0eU41lUunp/mlxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IXk/GtOXcNTtB31+7yfdDAJBz62e3BeJ16K2GMI+CIwzMdlG1UdL+uqAFeO2Rg//+fOXRnPOyeDrji97EqAvx55rjM+zlKt3wfMbupZYf0hkIuwTXXD3A2buvRpjT809/3VcqMAEM+QuBMos1O44xDk5sQQHVbQmLbt+E0u52OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dkev1l3U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749222195; c=relaxed/simple;
+	bh=7zSaIBi9uiibHWNuWKSeAbF5KYAWL6vX77slfEv5hbA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=V17tB0f4ebTEks5atPaxQ9ViGHu3tX5Wjv2sWoVmEQnpZprui1oQF6ZdRqizsmJO1Wt+a1TVGJFXRzdHWBkYmisSXPblwM6WI+PTRfIGkEmOQ41bKArKHEmZxsyKpJ6/BtJJGg1lixRc363L1YxDIwy80ZR/iXV7D+COs7VI8ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XEyjJYcC; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dkev1l3U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E514C4CEEB;
-	Fri,  6 Jun 2025 15:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749222124;
-	bh=O8kB7jya7MJUklWdBDfGyAbIfXaS0eU41lUunp/mlxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dkev1l3UmZlruTsci+pGK3iQ5QRzp0CffMyW+Xyk3TGHFzHNIQikq3gt4ohBsBHy2
-	 ROTsG6QrCKXMRqkPC+5/isMlCadCLeL/DnbC9R6Z6EFlT5+e+KzGg2/n9ExCaGs+Zo
-	 J66aQr4SEwJBkCBD/U6BMQjvRctm/MnhKHejdZj0YF0oCtvghT098E6S8ceSujM+yQ
-	 fXT50Ri7ASBflKYQPVX9ntx6q+5l7oncvV/0GuqTfMPKu4FbYAd/5Xk9NzYWnJrnv3
-	 sbFftXbjfEHBjSuBUvetFF6HcUrxteovFUwjzWd/SY2oBhOH/0qUXKesjwCw+cVFZg
-	 boKBnkDbBe2eA==
-Date: Fri, 6 Jun 2025 12:02:01 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@kernel.org>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf top/report TUI: Provide visual cue when
- starting annotation
-Message-ID: <aEMC6a3BCbSWfcuz@x1>
-References: <aEIJJIiuRTVjPaPT@x1>
- <aEJdAs9P8m2ZiY5Y@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEyjJYcC"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad891bb0957so354238266b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 08:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749222192; x=1749826992; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RCcZVL4U6ihTDzJ3VSPWudzlRqrxb23wPEKhLKoBA2s=;
+        b=XEyjJYcCTUYSK6t2VRjMkTZj4v/Fg387qtOZ1N0NIpeHij3ULMSdoqfDpS/OxhfY5X
+         crpQrHELA/1N0LZNfPkutklv1QgDvl9qVKupzTTbqV3qppWeWlvMlgnpVGbUvsh/r0Z6
+         9FxjgyyAvdgWIHZ8nZWUVP4HhS2aGiCYUJopyRuSbtW2AL/Sueat+vEkJMQJUj1pYGs7
+         +KT9zkK9pbIYa2oRgC/fcoaX3ty1JClXJPbGCZ658+dFz0xl+1+3RRgZ5eCkfpVu6NW+
+         0WgUcOqLL+sPdZppvBCyH0PQUQOmsMrhy6vQUXcALK+BLb7JpKRCuhFD//QaaRCBX2fY
+         di1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749222192; x=1749826992;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RCcZVL4U6ihTDzJ3VSPWudzlRqrxb23wPEKhLKoBA2s=;
+        b=Q2p9A0m9pzyM654c0EAJdzkaoDFPe0DejFnqohfkT8ktVCkOIpY/ALKnwtvAKdc9uR
+         PmQTqDUW5R6+UcNrD/cQs7nBuyLCoi/yk4hBytPtwOjjNz8B5zQsuCY2yW9hAPl/PkaX
+         jD88l+5uZ+JOzuBn1CEUzLolW2zD0ZYU1aeJxtaTSQ9EFZpy4R2GovxdI38NKJPsvtqV
+         oD/wEBp2AdFzBWZfzahMSsdYnnVReR908yhaaQ4g6eKnsmEA3oyUvql9qa9mscEX4J6o
+         0x8eQoigZIb0DDYlGugF17QwazDETr907skg2q4umfqDslIaQt49emD+pEg99sJ9tGlp
+         bSug==
+X-Forwarded-Encrypted: i=1; AJvYcCW1g0N2GPcKtTCMYITTrS7Dh7y/+XiF8MuBL1FQcEQGEiz/5iui2ibDHlxziSLukBDts1IaHjcohQx6+m0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPM34NU1NsghRxBc3ljNvP59kj7cG9ro3L4bL5JdIYvEsiFME/
+	AxSwQ4cJ9HDVA3782iqstY5NhLW3uKdrSvNtwOBHNkoKWB2G6c9w3k4P0SEQY2e9eBM=
+X-Gm-Gg: ASbGncvTRU1mOWvb43kF64P5BhLGwf/Wtm2IERZZbEAomUc/r8+qPtFSuBjt0KeLY3e
+	1BrE+EfkqzokT5teNch5tZowbO1uLWath1NHC+U2SJeb9Kabx6WNHe9wx/bRYZPLmHucAKcBVtv
+	IhZ+oKRDyN5ZlxIE9UpbseqX8pUpTZEMfOCqvNL76ScXIQdE6KQScoWFK+sPxgWsIcacDfFA0G6
+	+n23ecc7+SqgKoD+FQQkBUojGPcSWKwxAMsrGQ232ORNN8A9JZaKQsD42SLpJA3UrcQMQacvH2e
+	13I5j9bPTvI/IUuczS93GxzNXZEBX0qQ7tUx4BR0Qhzby26lOr6TfdkfCEwOEYLfzAs22rSpBkZ
+	NOpE7FW400GUKWBlh8BSwEcRZdHFTeXPI6FOk/wdz1mhhrQ==
+X-Google-Smtp-Source: AGHT+IF9JL8hjME8iUOhCNN7DFMjh4zd0yx4XgWB3wO5GrjhD+ZZ+DAVbctjpCTTiSCGzDKTRCksCg==
+X-Received: by 2002:a17:906:c113:b0:ad8:8364:d4ab with SMTP id a640c23a62f3a-ade1aaf4eb4mr352597966b.49.1749222192110;
+        Fri, 06 Jun 2025 08:03:12 -0700 (PDT)
+Received: from puffmais.c.googlers.com (140.20.91.34.bc.googleusercontent.com. [34.91.20.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc38cf2sm127735066b.121.2025.06.06.08.03.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 08:03:11 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Fri, 06 Jun 2025 16:02:57 +0100
+Subject: [PATCH v2 01/17] dt-bindings: firmware: google,gs101-acpm-ipc:
+ convert regulators to lowercase
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEJdAs9P8m2ZiY5Y@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250606-s2mpg1x-regulators-v2-1-b03feffd2621@linaro.org>
+References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
+In-Reply-To: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Thu, Jun 05, 2025 at 08:14:10PM -0700, Namhyung Kim wrote:
-> On Thu, Jun 05, 2025 at 06:16:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Sometimes it takes a while for the annotation to be presented after
-> > pressing 'a' in the 'perf top'/'report' TUI, provide a visual cue
-> > informing that the annotation has started for that symbol.
+Using lowercase for the buck and ldo nodenames is preferred, as
+evidenced e.g. in [1].
+
+Convert the example here to lowercase before we add any bindings
+describing the s2mpg1x regulators that will enforce the spelling.
+
+Link: https://lore.kernel.org/all/20250223-mysterious-infrared-civet-e5bcbf@krzk-bin/ [1]
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+ Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml b/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
+index 9785aac3b5f34955bbfe2718eec48581d050954f..62a3a7dac5bd250a7f216c72f3315cd9632d93e1 100644
+--- a/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
++++ b/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
+@@ -64,7 +64,7 @@ examples:
+             interrupts-extended = <&gpa0 6 IRQ_TYPE_LEVEL_LOW>;
  
-> It's probably because objdump takes long to process DWARF.  I think I
-> need to update this.
+             regulators {
+-                LDO1 {
++                ldo1m {
+                     regulator-name = "vdd_ldo1";
+                     regulator-min-microvolt = <700000>;
+                     regulator-max-microvolt = <1300000>;
+@@ -73,7 +73,7 @@ examples:
  
-> https://lore.kernel.org/linux-perf-users/Z_gunJ9C3H25Uo9Q@google.com/
-
-Humm, in this case I had explicitely asked for using objdump:
-
-root@number:~# cat ~/.perfconfig 
-# this file is auto-generated.
-[annotate]
-	disassemblers = objdump
-root@number:~# 
-
-So, yeah, its objdump running but in my case there was no DWARF
-involved, it was just a big C++ app, so the ELF files were big and
-objdump takes a long time even without DWARF.
-
-One way or the other, your patch switching to use objdump when 's' is
-pressed is a good one, please update it :-)
-
-- Arnaldo
+                 // ...
  
-> Thanks,
-> Namhyung
-> 
-> > 
-> > This is the quick and most of the time improvement, but for some cases
-> > its better to improve on it by having a cancellable progress bar, which
-> > is now in my TODO list.
-> > 
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: James Clark <james.clark@linaro.org>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/ui/browsers/annotate.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> > index cd1d452035a265d3..66ffeb96db29532c 100644
-> > --- a/tools/perf/ui/browsers/annotate.c
-> > +++ b/tools/perf/ui/browsers/annotate.c
-> > @@ -2,6 +2,7 @@
-> >  #include "../browser.h"
-> >  #include "../helpline.h"
-> >  #include "../ui.h"
-> > +#include "../util.h"
-> >  #include "../../util/annotate.h"
-> >  #include "../../util/debug.h"
-> >  #include "../../util/debuginfo.h"
-> > @@ -1016,6 +1017,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> >  		return -1;
-> >  
-> >  	if (not_annotated || !sym->annotate2) {
-> > +		ui__info_window("Annotating", sym->name);
-> >  		err = symbol__annotate2(ms, evsel, &browser.arch);
-> >  		if (err) {
-> >  			char msg[BUFSIZ];
-> > -- 
-> > 2.49.0
-> > 
+-                BUCK1 {
++                buck8m {
+                     regulator-name = "vdd_mif";
+                     regulator-min-microvolt = <450000>;
+                     regulator-max-microvolt = <1300000>;
+
+-- 
+2.50.0.rc0.604.gd4ff7b7c86-goog
+
