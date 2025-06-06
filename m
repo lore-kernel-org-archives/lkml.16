@@ -1,113 +1,128 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859A82857F0
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3EE283FFB;
+	Fri,  6 Jun 2025 09:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749200697; cv=none; b=hyAMe9yM3P6kj0MyRPQC18RT8wRRZ1NvUwzfeBu99kWwzFmf9NeHmNQ3J+eevGIEqYJOWqR4d4Y8ILwjRxrSzgOSXUGDAWtczzRdpMzwqoqUO/f6rHeGypIJb8sazOG/bZPOv1Ftt3KjGL02b2hSBCQUAC5NXJC1i2CXvDIiVRE=
+	t=1749200794; cv=none; b=jFSUiODyuubhNZXWwr/UkYTSg0tHk0+bCadk8CFQQtgE32tvbxOgrdXEskWiqBvJEECShLAh7ZyxQyyjcjZzmKuIDxAAXFozv7/IZu8WyfAHDLp2eATM8BOkLgW+Sls81yi4olgvem7I0XOFN1piTyPq4VOMnyWyC1jFHc8CgoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749200697; c=relaxed/simple;
-	bh=CfGvj7ncrPabLetrwNG8k5H0Ppg5o++CXB29qT1hAiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Kdc7gEKr3Wu4dFhRPrhgbkLxBl9L3XT9tb6CXdnQDLExszagwtCv/xVeGuIgqcvtmKneVqbkdI+1wlRsHHtEI42yTacQfCfYOxLnU/6kCJkugPEo73PuIe5D+2gjD7skw8Y7L7qW+uuDI05a/hrzGXYIPt+5h2o8cSArSAQI/Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X6zJ9Djs; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749200794; c=relaxed/simple;
+	bh=xZFCh0EkmJ6fC+3ypO4Zo22JJAr5ALjmJDD8E4XtJ4c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WPF0vsipdOiX5N966BI87eF45X/8M8if5eC3a4hAMRbWmMa+SiNMk0p6fnaPRHQ5NIcZfaZbHUVgdSghR59l5Fhpf9eNr8D3tgSE6otl7MLCm5XFZCmv8EApChqkkojX2YlUNsngzdG1LH98qElX/VW8dfs/QLk5OMBmKQ0pMXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8l9QigN; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X6zJ9Djs"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso17869195e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 02:04:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8l9QigN"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a42cb03673so22606291cf.3;
+        Fri, 06 Jun 2025 02:06:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749200694; x=1749805494; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u22QGRwwJcexG344pLAuyEqJQtDbVkBJOvRPUpkYyrs=;
-        b=X6zJ9DjsF5qprN7O0M0TfvQOs54j8gyvmlXk/7OcFqnIPBI01jJKfiC4e8olzgZBJ9
-         8CnmAv5efzcoJbQWvlht/gGiRl87WVonpbNq8s0Bs/1IbrStza1jfLhyOXVYgFoV0o9m
-         pqZY1hygRvmllFBPGz3snbK3ZmLkraNdr2KZTjU+xYu0RNLE/R69exeKNCdP33qfUHz8
-         oL3BCnXNdioKtd0/eIE/1jbDj7x7zL3y/obJ2Rf0+BhECKGb4Dam8YI5nMrxAGlB8gsj
-         rT0het3qF0XIoUGiqvxQOP1iAwiRW1pZbpn7IhtDtd+Ik2kD71L6kheF6RWYbAe0AvF8
-         WDuA==
+        d=gmail.com; s=20230601; t=1749200792; x=1749805592; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+iEKTaT2LElUyz6hn/T8Mh2vQ8hFTWoMkAbmwi0/NDg=;
+        b=G8l9QigN6nfbatr8wQSZiI11udlH5vGQPTx2U7+LrqY1Awy53ZEXckqGqAigXghwt+
+         1NCqQauHeC+6KCNhkX4+FYJJ+PMvTpPMZx+qSm1I7nNqRW4FXBX6L3japGSSq+JXosRw
+         FlVAZFYo3zSIawiEW/n4sWN48wu5vu807krtI196kEdZD64qW4O5qiFRilyiHKjE1yI7
+         EN9a63OiJs1voPbG50R8hX/kVk/4PehyVZTyfEAxdV0/dw+KJMnOa+Ot4kzo4RikNUtn
+         AOogTrPIVPFZahy6zgCzeMnaZvctU7tV8J6fWgNI9yK7oVrFF0PglJ85eXfINV5gOKvk
+         sIaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749200694; x=1749805494;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u22QGRwwJcexG344pLAuyEqJQtDbVkBJOvRPUpkYyrs=;
-        b=db7lharwyJPVM9mwYgu18veaoKzpDfuJ7n8IWnPLSBrDZf3VaX9+Xxbv/6xjVTDxxq
-         3B2aEdpVZjJuMgCz9JWqo0k/0ciCMgnDCtaGQ9GX70atyv+cxJh8meLHZQ9O1gaxbNe1
-         Zf96W5d8THugOkFBQEjEvlE2wgHb8qui654WGfNrOyleva7YYIH5ANeMIc/7QXUG5wXA
-         uK0Kq241LyvhkW1KF9q3F7isbwnuAQhAL6GgL0Oql8czdMw/05Tg679dg2Ik09nP55Ug
-         kCJhLYrrlsEeiDqR0Mb5/C0IhMYnGSSQEBTiALBvj3bHm3oAT2KaoEpgNgNRbqT6b+F1
-         1zYA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlz+QFOiUmjcB3uZtREDMm6ZbquZyFM8uNSnO0M6Sin1WaqfAbivfnW/5y6avygXHYLqJHH3MaV++hPrE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzcsc6Rk8jQO6OV73XILNSAneXiZXenBkTtw58QbIdtlZmOy11U
-	Fa/4Pd9PKDamnqpjDOHjlGdi99y20Bh05Xnfknf5Fv/u7gyUIl6vlCGmgW0VO3Nz8ns=
-X-Gm-Gg: ASbGnctp4ElxT0BqHngIg5HMdgPHhjTVt5WHEm9s4Nam/qd4aEOKc0eZjEaCcNnQ+VR
-	5oi5PE7BURuYZQYQicRkJ6CvcBYaQwjv2Yzji6KZMPV/gyiQnqk3jW/hNbUojM9h/BYSkV5Z9dh
-	5al9txoG9F6GccTu6RQUHWodNfH9tNWQdktkTh1a/g+l5FBJqmzhciFUcxVzFWcIiNeLXvajDvg
-	yQbNRtcus7kp2eGB9syaJKLnvvGiuumire6Icv3BSme5d0/iSQiDq/HqX/Y5aFFNDXP40drTKsr
-	BW8VB0LAlqog3qMdhRagPNcPcpVXJeJyO6Hu2qLyPGfE/XzmG0KQ8T3G
-X-Google-Smtp-Source: AGHT+IGH8f3CnE94XpqqdfYVCG9k/7hxNJbSdjv+c/qZQ3TVj4IPHFuU+kXHjf6bXNo01qdvKdGN4w==
-X-Received: by 2002:a05:600c:871a:b0:442:cab1:e092 with SMTP id 5b1f17b1804b1-4520135f5cemr25871865e9.11.1749200693818;
-        Fri, 06 Jun 2025 02:04:53 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45203e6e424sm17461325e9.0.2025.06.06.02.04.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 02:04:53 -0700 (PDT)
-Date: Fri, 6 Jun 2025 12:04:49 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/i915/selftests: Fix error pointer vs NULL in
- __mock_request_alloc()
-Message-ID: <aEKvMfJ63V7i-6xU@stanley.mountain>
+        d=1e100.net; s=20230601; t=1749200792; x=1749805592;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+iEKTaT2LElUyz6hn/T8Mh2vQ8hFTWoMkAbmwi0/NDg=;
+        b=GYodUHo/nEhYE0/0x1pHFFs5p+CdDhd4Vt/eRNXZ4bkaWdTmIddT/elgH/G3rxZm2+
+         wrEd29eOB71ClmjmPuSPunwfMiqcvVfEULv+x55BLLKyI0/FTDG0OElGzCO6SF/PVJhy
+         39KhyDmhDUix9oqfMNmA1FdHR1jwdZDhCzkPWM4xiABvJHa1dFKFQwNhpNgmLpm3xu9/
+         Rc7Gtf68ffLyII1hrZxd7JN29aeZ/vl5w+00x6sgWeQ7OiSZYmvF2Bthgd1Lk5IM1VSk
+         1Ty7GfCKQ+5zPLMxcYgNOB/JQyTI21hp25kU9XcmC9zuRcpnSDo04dkRPAdRHHbHRe7B
+         pPpg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4Bj4SX3vrQlPWUSLrDyOdvtxvdlSDD+3Bk16+jE7U8sSo3URdGSVFg8ZTVArPKSV0MzcFY4mD+x/D@vger.kernel.org, AJvYcCWhpojanAgvn9y4TU4f1EIEmoZnwLLoEMfIAmiBsCElN5jSaGruzjXit14ddz0WWvv08wqb85qXl2GIMTQv@vger.kernel.org, AJvYcCXONlUgkja/NrJaT/AONMt3TEdWIb05wH8M3qr3vrQ8f9IKl5oQWSQpwDhPjTVEYFS2f1FVuDDaM4Pb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWygNfphq9quIPtbotKKykGIS0pg8n3R+Y3ajgolM2+vMUD8TO
+	/b22nLenxE4G75MroBhNCvICwUIeEswva9nTNuvvKldAxHbtZ6AZe9AKfO5bFtw0aAaWcvwLBHJ
+	TqQlvjTZqMQRh81eMM8T5qbp1D9ZrZew=
+X-Gm-Gg: ASbGncvBda2DHTarZCUjWP7JJJNVggmyUdJ8Dx2F6s/2Edw/yVuO8BBStoXb++ZHFVG
+	x4R8thZGFoS1yIFA1T7T0zmQzU5CJShOKOSz0yUFL5zHdxJRMB/UGShehFTnldx08Eekiy09Mhm
+	fhTmHtLWMdzWjmp74rVS0ZTPbZTyu7LQKmNJ6GOwbSV3p9TarbZz8Z5bS4xDx+2SWZNuSjB8D23
+	9Kl
+X-Google-Smtp-Source: AGHT+IEAnnzIxtW3T+9hMHK+wBH7ZD7AMKC5gNvjX9nEPuofdL7PSuw1v4ThDP1ou2X6MNg+w1DXRb5CyDe5GpT5zFk=
+X-Received: by 2002:a05:622a:90a:b0:491:20d6:75ff with SMTP id
+ d75a77b69052e-4a5b9e55b32mr50608161cf.31.1749200791922; Fri, 06 Jun 2025
+ 02:06:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+References: <20250510-wmt-sflash-v1-0-02a1ac6adf12@gmail.com>
+ <20250510-wmt-sflash-v1-1-02a1ac6adf12@gmail.com> <20250514204159.GA2988411-robh@kernel.org>
+ <CABjd4Yz3w75PtkRk_edzD5yf6b2xPuf20gopbm8ygddgCBfpkw@mail.gmail.com> <2b520ae5-eb0d-40eb-ba73-cc18759f33b9@kernel.org>
+In-Reply-To: <2b520ae5-eb0d-40eb-ba73-cc18759f33b9@kernel.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Fri, 6 Jun 2025 13:06:22 +0400
+X-Gm-Features: AX0GCFtSe5pvb_MWkkzTKnls_WaiQE0eICzI9uRkedvlSrNICRkV_prB9UA_SHY
+Message-ID: <CABjd4YxRMfi3ZFQxhB__6U4Rm3KQ7bm6J=wQLWAkpb++61ddEg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: spi: Add VIA/WonderMedia serial flash controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Pratyush Yadav <pratyush@kernel.org>, 
+	Michael Walle <mwalle@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, linux-spi@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The __mock_request_alloc() implements the smoketest->request_alloc()
-function pointer.  It's called from __igt_breadcrumbs_smoketest().
-It's supposed to return error pointers, and returning NULL will lead to
-a NULL pointer dereference.
+On Fri, Jun 6, 2025 at 12:29=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 15/05/2025 21:50, Alexey Charkov wrote:
+> >>> +
+> >>> +  "#address-cells":
+> >>> +    const: 1
+> >>> +
+> >>> +  "#size-cells":
+> >>> +    const: 0
+> >>
+> >> This follows the SPI binding, right? Drop these 2 and add a $ref to
+> >> spi-controller.yaml.
+> >
+> > Need some advice here. While this controller speaks SPI protocol to
+> > its connected flash chips, it's a special-purpose thing that doesn't
+> > expose much SPI functionality to the outside world, nor can it drive
+> > any SPI devices other than SPI NOR flash. Does that still qualify as
+> > an SPI controller as far as the bindings are concerned?
+> >
+> > Happy to reference the spi-controller.yaml binding if so.
+>
+> SPI NOR flashes are still child devices of an SPI controller. You can
+> look at other examples - aren't they all using spi-controller? Why this
+> would be different? Unless you found some cases that are different, but
+> then which ones?
 
-Fixes: 52c0fdb25c7c ("drm/i915: Replace global breadcrumbs with per-context interrupt tracking")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/gpu/drm/i915/selftests/i915_request.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+No strong opinions here, and no expectation of any special treatment
+:) Just wanted to consult on what's most appropriate.
 
-diff --git a/drivers/gpu/drm/i915/selftests/i915_request.c b/drivers/gpu/drm/i915/selftests/i915_request.c
-index 88870844b5bd..e349244a5fba 100644
---- a/drivers/gpu/drm/i915/selftests/i915_request.c
-+++ b/drivers/gpu/drm/i915/selftests/i915_request.c
-@@ -290,7 +290,12 @@ struct smoketest {
- static struct i915_request *
- __mock_request_alloc(struct intel_context *ce)
- {
--	return mock_request(ce, 0);
-+	struct i915_request *rq;
-+
-+	rq = mock_request(ce, 0);
-+	if (!rq)
-+		return ERR_PTR(-ENOMEM);
-+	return rq;
- }
- 
- static struct i915_request *
--- 
-2.47.2
+My (subjective and perhaps unfounded) expectation when seeing
+something advertise itself as an SPI controller was that it would be a
+general purpose SPI master, to which one can e.g. connect an SPI
+driven LCD screen and get it to work with generic Linux SPI
+infrastructure - which would not be possible with this single-purpose
+NOR-only flash controller. Given that I don't know how flexible or
+restrictive other examples are in terms of driving arbitrary SPI
+devices, I thought it's better to just ask.
 
+What I'm getting from this exchange here is that I'd better use the
+spi-controller binding and respective node names regardless of the
+fact that this controller cannot drive arbitrary SPI devices beyond
+NOR flash (which, as I'm getting, is irrelevant after all).
+
+Best regards,
+Alexey
