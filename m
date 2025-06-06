@@ -1,118 +1,142 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91271276051;
-	Fri,  6 Jun 2025 07:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749194991; cv=pass; b=KnKB2pCYzdslNpHbg5gxW7lCbWPxbslXvUNI3EA+dryLDhA0EO+6TIW+P0FNVS6D5QH2qJ+EUu0/HTg4/DeNJxQox2lMb34MyAMaJbonoPfbRIg5EeJ6vfvNvHSlYxYh/awMeXg4CuqWM3jezGm7WCHsBJgM69d+1u76HUYGK1I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749194991; c=relaxed/simple;
-	bh=PkE9IzA6eF7lcZSRpM8TLOhOBuPn8MAenMZuqetOh5Y=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ChSVvCreh4xytucyPm4JvpH0Rt10eAQOKLxQgr9d0AKV1EPTJaU1FVau/vJv1G1RJNANAvdvd5i5Bb7bvSue8eT4UFwXRnkW51YiPSfo2bulcOb/y2Pj4Lq5xyAH2W/HaADbDHpBiPDB8ICuJuhmPTpy9hGbyU2c8cvGSAqd4y4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=OP47TFlE; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAF13234
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749195214; cv=none; b=C8c/SR/vk6mzAQy62krPnXC5J131X9OqwyCu1CHdjc2WZ4ztQuyHwkmrKGvqUHrzg724nQQJMTSl6xai0Wm/lCeFyEvThMVg9OMz2n10qWjcC8QVK6xnlgqGxdo+5gV8fO79T2bqTZCmR/d5ISpjs9bMyojGA3x8aRM3tz8dfSI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749195214; c=relaxed/simple;
+	bh=GgpsoVc6kfsSKu3xWYJA7jgXEAg40pxLEZStQKU5UU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EPlrlAQxn1IFnXh/Ym4xFOA4u2dVzO12bqlan7TA4YyZtrkOtXT/F1eMIcuNOSsowlckh/Fw9bpLeTGu/3w3LsnayxzWDdmuNZkkwO45Ijrx3fu5adsooNZs01CYanLmxXyIIS3OwtgJohApZe3oAlFui8aOGd+PuTEURZ6stPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/lufMmZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="OP47TFlE"
-ARC-Seal: i=1; a=rsa-sha256; t=1749194910; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=O4fbyuuLCZ/UNw4Bf88gAVG9Y3YRG4bWdKbmU5i+G+zEgvkGQQKh+8kMMEWxA3m6yb+caboaEa43RsHiIkVzl+KVqtzqfcTah5264Jv65tS/7Wft9dkxs/PAYyesKVPRxvD/nG8E+TML9ZV+poJ1UUl+PvNS3bCyCPbOuBmrL7c=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749194910; h=Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=wGYCSzqgyscwX5RWcWecTBpY7TJ/S+OUK1ejoxldwXU=; 
-	b=Hs73Y7n2dALRul3MN3HwO09tjg8LoOjG3OTc19Ng3eix+uB1hn12afCjNmS/oQE0Qt9ZdsYZLk+5BKiYCDAN47VELlBXptsP/vPAf9nsz/NLJ32ri8kQfdLgPK4H/8Dx6fdRCCmBm9JnXmUW1Oke0yYs0w+mWsWKGc5ZbzMK9Fs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749194909;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=wGYCSzqgyscwX5RWcWecTBpY7TJ/S+OUK1ejoxldwXU=;
-	b=OP47TFlEAXWTY1X4cNQ/pA4d2f/CH0AOSaRTAq8GBT4woSe57CoswFvcr8KisNVt
-	3DTkNbroEYYq1x2SkM9hJhB87Nm9rS6o7pD0uHF253ZnD3+07D0ixoN1PRpFVNEgjgm
-	OapyMhcJFNx1QyOSIaQmLM9cKXcepJ/F7rGqrBdQ=
-Received: by mx.zohomail.com with SMTPS id 1749194907959941.1326295181373;
-	Fri, 6 Jun 2025 00:28:27 -0700 (PDT)
-From: Li Chen <me@linux.beauty>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Liu Wei <liuwei09@cestc.cn>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Li Chen <chenl311@chinatelecom.cn>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH 2/2] ACPI: Suppress misleading SPCR console message when SPCR table is absent
-Date: Fri,  6 Jun 2025 15:27:45 +0800
-Message-ID: <20250606072802.191580-3-me@linux.beauty>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250606072802.191580-1-me@linux.beauty>
-References: <20250606072802.191580-1-me@linux.beauty>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/lufMmZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9392EC4CEEB;
+	Fri,  6 Jun 2025 07:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749195213;
+	bh=GgpsoVc6kfsSKu3xWYJA7jgXEAg40pxLEZStQKU5UU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H/lufMmZV6xnLzAXFzkNz8IPJRd2Q2kpznY/0otRooxnk9ADP4W3S+1K7WIkBcNxL
+	 1qWh655K7ypWrYZ6+yPWWuW3Weq9zSnZJ+L2rap6Hvpny04qd5clKyFyfKEOc64ooz
+	 1dcKOGm0dw+TZOgCJWkzme59r2N5rewh168FnhBk0eiRZ7CGBFlAPkPXWQoaRe+y7Q
+	 OWnDHV9lF3Ak+Ywx5/zrfd1SH42vuKjxc3K5ALrvC4GHb0O61MUaY9C5B1Wnp60i1v
+	 DhOgjDkDeTN/uU+1oqYZmBDg1TpmDLgHPLnlr+hIczgZ/qcQLF+ottDbtEztyX5o6U
+	 jIPizOP2hyP7g==
+Date: Fri, 6 Jun 2025 09:33:31 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
+Message-ID: <20250606-pompous-mellow-guan-1d9ea4@houat>
+References: <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
+ <874ixvtbxy.fsf@intel.com>
+ <20250509-rapid-flounder-of-devotion-6b26bb@houat>
+ <87r00yj6kv.fsf@intel.com>
+ <molexnyjkiryvhetfdc66gmzecrf6f7kxl656qn46djdkixrkb@fdgnp5hispbf>
+ <875xi3im1r.fsf@intel.com>
+ <20250519-singing-silent-stingray-fe5c9b@houat>
+ <87sekztwyc.fsf@intel.com>
+ <20250527-winged-prawn-of-virtuosity-d11a47@houat>
+ <4a1c28b2ad4f701b9b2fe363ebf6acbab504e6ad@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="67qv6diskukyz3pt"
+Content-Disposition: inline
+In-Reply-To: <4a1c28b2ad4f701b9b2fe363ebf6acbab504e6ad@intel.com>
 
-From: Li Chen <chenl311@chinatelecom.cn>
 
-The kernel currently prints:
-"Use ACPI SPCR as default console: No/Yes "
+--67qv6diskukyz3pt
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
+MIME-Version: 1.0
 
-even on systems that lack an SPCR table. This can
-mislead users into thinking the SPCR table exists
-on the machines without SPCR.
+On Tue, May 27, 2025 at 10:40:49PM +0300, Jani Nikula wrote:
+> On Tue, 27 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
+> > On Tue, May 20, 2025 at 01:09:47PM +0300, Jani Nikula wrote:
+> >>=20
+> >> Maxime -
+> >>=20
+> >> I'm cutting a lot of context here. Not because I don't think it deserv=
+es
+> >> an answer, but because I seem to be failing at communication.
+> >>=20
+> >> On Mon, 19 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
+> >> > You still haven't explained why it would take anything more than
+> >> > registering a dumb device at probe time though.
+> >>=20
+> >> With that, do you mean a dumb struct device, or any struct device with=
+ a
+> >> suitable lifetime, that we'd pass to devm_drm_panel_alloc()?
+> >>=20
+> >> Is using devm_drm_panel_alloc() like that instead of our own allocation
+> >> with drm_panel_init() the main point of contention for you? If yes, we
+> >> can do that.
+> >
+> > Yeah, I was thinking of something along the lines of:
+> >
+> > const struct drm_panel_funcs dummy_funcs =3D {};
+> >
+> > struct drm_panel *register_panel() {
+> >     struct faux_device *faux;
+> >     struct drm_panel *panel;
+> >     int ret;
+> >
+> >     faux =3D faux_device_create(...);
+> >     if IS_ERR(faux)
+> >        return ERR_CAST(faux);
+> >
+> >     return __devm_drm_panel_alloc(&faux->dev, sizeof(*panel), 0, &dummy=
+_funcs, $CONNECTOR_TYPE);
+> > }
+> >
+> > And you have a panel, under your control, with exactly the same
+> > setup than anyone else.
+>=20
+> This [1] is what I'm toying with now, but again, draft stuff. Using
+> __devm_drm_panel_alloc() directly like above does make it cleaner.
+>=20
+> Long term it can be improved, but my first dab at refactoring to make
+> that happen is already like 15-20 patches, and it'll just have to wait
+> until after making stuff work at all first.
+>=20
+> I'm not sure if the ACPI device I'm passing to devm_drm_panel_alloc() is
+> correct, but it'll have to be *some* ACPI device for the lookup to
+> work. I am blissfully ignorant about its lifetime, but as long as
+> drm_panel_add() and drm_panel_remove() remain as they are, I don't think
+> it leaks anything. Fingers crossed.
 
-With this change, the message is only printed if
-acpi_parse_spcr() succeeds (i.e., if the SPCR table
-is present and parsed). This avoids user confusion
-on SPCR-less systems.
+Thanks for working on that. Your two patches (the one you sent here, and
+the one in the other subthread) look good to me. So if that works, it
+looks like we have a way forward.
 
-Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
----
- arch/arm64/kernel/acpi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Thanks!
+Maxime
 
-diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-index b9a66fc146c9f..bf29e7b668f1d 100644
---- a/arch/arm64/kernel/acpi.c
-+++ b/arch/arm64/kernel/acpi.c
-@@ -197,6 +197,8 @@ static int __init acpi_fadt_sanity_check(void)
-  */
- void __init acpi_boot_table_init(void)
- {
-+	int ret;
-+
- 	/*
- 	 * Enable ACPI instead of device tree unless
- 	 * - ACPI has been disabled explicitly (acpi=off), or
-@@ -250,10 +252,11 @@ void __init acpi_boot_table_init(void)
- 		 * behaviour, use acpi=nospcr to disable console in ACPI SPCR
- 		 * table as default serial console.
- 		 */
--		acpi_parse_spcr(earlycon_acpi_spcr_enable,
-+		ret = acpi_parse_spcr(earlycon_acpi_spcr_enable,
- 			!param_acpi_nospcr);
--		pr_info("Use ACPI SPCR as default console: %s\n",
--				param_acpi_nospcr ? "No" : "Yes");
-+		if (!ret)
-+			pr_info("Use ACPI SPCR as default console: %s\n",
-+					param_acpi_nospcr ? "No" : "Yes");
- 
- 		if (IS_ENABLED(CONFIG_ACPI_BGRT))
- 			acpi_table_parse(ACPI_SIG_BGRT, acpi_parse_bgrt);
--- 
-2.49.0
+--67qv6diskukyz3pt
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEKZygAKCRAnX84Zoj2+
+dn5cAYCkwOYmJ6UscZiyfFYQtRN968mhhnJoxkK2C1GTH4KOP4Q+W5o6shKCLkDZ
+yH3gStwBfRXpQ9eCilwegVakty+hEFlgKTEXYW3QgkcpX/ElYapqcVoizKdGxDo8
+tPcfqac3Zg==
+=A9mR
+-----END PGP SIGNATURE-----
+
+--67qv6diskukyz3pt--
