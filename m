@@ -1,175 +1,143 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CBF28642F
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E3D283FFB;
+	Fri,  6 Jun 2025 09:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749201147; cv=none; b=EAjAjwWV8n1V1QlAtM/08T+RH8T3L58gubNbOg6X1WHJImVQnzUijiWq4JmpIdjjjpM/2bGdGPrb7R6zcH4wl7NnewIt0voPTiiGUyS7XO0tiVtmsHOs4e9f6Ru0QtwM0kFeofvwTXmRXiHO90nFpk29W6U7SVp8nRqRk6wsIyU=
+	t=1749201240; cv=none; b=YmXO+74h4EK4/FwTGQpV63mQ/NRLqF8dz2pZF6PS/WlAae3iJJKgdwwSk43so2PNO1YqXxgJDvXA0UZ4hxYiAF0akQivRG8FQL9dS6k0mYTVRoEbzOdpQpCYLlkfVGOTSoPSMuFhMgrUHxMPbP4/NYX6+5UO/marujLBX0j4w08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749201147; c=relaxed/simple;
-	bh=HmRNUwvFUl/hdKoO4B1dgc6/Hw5mGyFSqMWv/NJQVWE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uH+gizAI5bNev/gHcJxu1gUHAM5ifFeebMcifX3Me0NHxZbAIVu9oFxcK1vEZppAtx0jkaYVvUhEQDMjnhdjS8wKE1CXxfYt2k+5f8XS5zebxD/Idz22t2fNO3AYsJxwCDjnRsHMpvHPFnSRyHuP2ELtX9WK1m4OLKkeZ0gtKrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=TxvA3+vc; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1749201240; c=relaxed/simple;
+	bh=8AzNZ4la2PoPmxTh0qvOadpjPianLkUkYxBsjSoIfoM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gGLJrZExG0Nm667rcKVwUfZjCbRlX4B/5kdf+qZ0g3Za3W2SXKW7WoSnyjLHDuX/y9alqX8zeIEzh7i2Voe22hhBdeEjyQH78xkduTQ2IQ+iuhaw3kIPXIJUbICKaIUN7yJBex+RJkLPAdJJJPjIHi3+rYIiHVPxR2OK5AJJg0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=N6bY10+K; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="TxvA3+vc"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad883afdf0cso359278366b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 02:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1749201144; x=1749805944; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wc+ifX+7O38yry593NEDWvp79xQMU3g4ALAygrP5+5k=;
-        b=TxvA3+vcesJZKqLdzgVo3evL9gOZzhwlcXroGLLBq+G8ahix5MAMLbKqLE35JLUHF2
-         VAvfkrrzKMTNT1Er2AEEtR0GK5Jklbeh4SDj//wLvZ+MXHqpuLHP1y8+Ew37iDNJ/ELB
-         zGhVek5Cu05m1W0oBuGylGglcngGZP80EfUkifMT7AU6RLF4+uduuyt1BPRz3coEAQtq
-         SW9pJJVof/RhUpHQVgMQkGdxLiu/xtLDer20WNPoe3nsqhMdclVAfEwnrx7puRF3IKrA
-         3xZthlRqDnC+BfNnrav3UnkwCkSEWUZ9QA8rf88C/gzcD6VYUSmeu6f9qbBQ1uH4nfQi
-         3eoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749201144; x=1749805944;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wc+ifX+7O38yry593NEDWvp79xQMU3g4ALAygrP5+5k=;
-        b=rn8WwJNlZyaQrNUCEopIdIi5g/rqxdYWjbbZHwUonxxX9p55W1Eqijf2mzc90hVAp1
-         Eo4l/f07KCM2c08rUT02qQ+r/+pq1zUBQD0jj+wh6+WBzEkYheo47npWMR5p/uaXPUzn
-         r2lgr6HKTlCLmyKjeJANgPLn/YLzyz++ynP/Nzll2vGC942zBusS8gKM5kTDyO3Og2Qx
-         81k53f5IKiDFDyDV11aR7CFOSTGloYeFSxcBYvugwEWsF6C1w6pqoK+muafoiT0iNG+e
-         kjGz4PRp4q51qL2VQJdWzuF/GBlUxusRhvVtPfcLx/iwAw1AbTIx2FeLGNQtIN6W8JOn
-         dGUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWo0CJCyK2L4vKjWIcnFWvscLXMqxHOevWmeOkw2F16Km37EmPWwXR+9f+OBNES2JxomX+OgJ4T4oxjF2E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvUIi74HnZB9nrufgxr5bmksUWeYtQaT86nsFYAv45Va0hvxr4
-	9mSX1mlsoOmK5PfnpkFrrJNuxtwzyBlduaDPYVkQcEOLbAdmO/thPdYz+ro4nNaYxZA=
-X-Gm-Gg: ASbGncudpV4i4wUPxx/DD0z/HICHFibj0RIUgCmHJGtuPFUt9QVIFMxqfZMNOpyMXxP
-	/GtCE51IgjvPd7R5u6zDOGzEF0ANHSb2IxfDAVWDB9fgQ8oHIx6cjNLHpvIlocS8oj/Gz2pALWE
-	H9eVcMSoIHcshzhx9XjrXg7doIUh/T7iMWVEcxa74i7roJgsZbeIwHWTatRm9y73C+MTQgSvkW6
-	77vQnIfdjrmraIJAuMxxs8WWCeXKxxqZkEE1djGUxIBzA1LfDx9e5XA086c8HWY4tISKtfgWf9g
-	6Ae1j0Zu63AK/iruQFalSdORAXntG1vKBqXgLcgxOIJHrF07hEj4Su70/+EA
-X-Google-Smtp-Source: AGHT+IEjDHiLE7sMo+a12s7VFlD8SjfCEiBfxxMF3QVGmJjKfSvQI7x7ZEGc6pDRlowYGNhvaszk6A==
-X-Received: by 2002:a17:907:bb49:b0:adb:428f:f748 with SMTP id a640c23a62f3a-ade1aa06c95mr206620466b.21.1749201143788;
-        Fri, 06 Jun 2025 02:12:23 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.126])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc7d300sm85900566b.179.2025.06.06.02.12.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 02:12:23 -0700 (PDT)
-Message-ID: <53921bd9-6ac9-49fb-8c9d-2c439ec8cd5b@tuxon.dev>
-Date: Fri, 6 Jun 2025 12:12:21 +0300
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="N6bY10+K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1749201229;
+	bh=HQ4lHEPmIHw9cneR2PlF0QPtXcQfPGIV8GSmE9YMTkU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=N6bY10+Kk0WxoqAfmlihmF2xdiA8O9584b5lKeU3vxuVh5CokRiOc+fFAC6Dzdp7U
+	 84izpGR5FOAvvpndZozSMK5woPm8xNFVJQBQ2kTr1h7kOl9jkYpMyRKBfFwlvuXzTt
+	 xwSWTgYrBRbErFjHPYLfcDTm+hjHKmNBAkkvdYok=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id F10D865992;
+	Fri,  6 Jun 2025 05:13:46 -0400 (EDT)
+Message-ID: <06e4746ade602f42907aed82c16826230a8ff80e.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: vDSO: correctly use asm parameters in
+ syscall wrappers
+From: Xi Ruoyao <xry111@xry111.site>
+To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Theodore Ts'o	 <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Nathan Chancellor	 <nathan@kernel.org>, Nick Desaulniers
+ <nick.desaulniers+lkml@gmail.com>,  Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>, 	loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 	stable@vger.kernel.org
+Date: Fri, 06 Jun 2025 17:13:45 +0800
+In-Reply-To: <20250605092735-bd76e803-e896-4d4c-a1f1-c30f8d321a9a@linutronix.de>
+References: 
+	<20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
+	 <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
+	 <5a5329feaab84acb91bbb4f48ea548b3fb4eab0f.camel@xry111.site>
+	 <20250605092735-bd76e803-e896-4d4c-a1f1-c30f8d321a9a@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
- mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
- linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- john.madieu.xa@bp.renesas.com,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250605225730.GA625963@bhelgaas>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250605225730.GA625963@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi, Bjorn,
+On Thu, 2025-06-05 at 09:37 +0200, Thomas Wei=C3=9Fschuh wrote:
+> On Wed, Jun 04, 2025 at 10:30:55PM +0800, Xi Ruoyao wrote:
+> > On Wed, 2025-06-04 at 22:05 +0800, Huacai Chen wrote:
+> > > On Tue, Jun 3, 2025 at 7:49=E2=80=AFPM Thomas Wei=C3=9Fschuh
+> > > <thomas.weissschuh@linutronix.de> wrote:
+> > > >=20
+> > > > The syscall wrappers use the "a0" register for two different regist=
+er
+> > > > variables, both the first argument and the return value. The "ret"
+> > > > variable is used as both input and output while the argument regist=
+er is
+> > > > only used as input. Clang treats the conflicting input parameters a=
+s
+> > > > undefined behaviour and optimizes away the argument assignment.
+> > > >=20
+> > > > The code seems to work by chance for the most part today but that m=
+ay
+> > > > change in the future. Specifically clock_gettime_fallback() fails w=
+ith
+> > > > clockids from 16 to 23, as implemented by the upcoming auxiliary cl=
+ocks.
+> > > >=20
+> > > > Switch the "ret" register variable to a pure output, similar to the=
+ other
+> > > > architectures' vDSO code. This works in both clang and GCC.
+> > > Hmmm, at first the constraint is "=3Dr", during the progress of
+> > > upstream, Xuerui suggested me to use "+r" instead [1].
+> > > [1]=C2=A0 https://lore.kernel.org/linux-arch/5b14144a-9725-41db-7179-=
+c059c41814cf@xen0n.name/
+> >=20
+> > Based on the example at
+> > https://gcc.gnu.org/onlinedocs/gcc/Local-Register-Variables.html:
+> >=20
+> > =C2=A0=C2=A0 To force an operand into a register, create a local variab=
+le and specify
+> > =C2=A0=C2=A0 the register name after the variable=E2=80=99s declaration=
+. Then use the local
+> > =C2=A0=C2=A0 variable for the asm operand and specify any constraint le=
+tter that
+> > =C2=A0=C2=A0 matches the register:
+> > =C2=A0=C2=A0=20
+> > =C2=A0=C2=A0 register int *p1 asm ("r0") =3D =E2=80=A6;
+> > =C2=A0=C2=A0 register int *p2 asm ("r1") =3D =E2=80=A6;
+> > =C2=A0=C2=A0 register int *result asm ("r0");
+> > =C2=A0=C2=A0 asm ("sysint" : "=3Dr" (result) : "0" (p1), "r" (p2));
+> > =C2=A0=C2=A0=20
+> > I think this should actually be written
+> >=20
+> > =C2=A0	asm volatile(
+> > =C2=A0	"=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 syscall 0\n"
+> > 	: "=3Dr" (ret)
+> > =C2=A0	: "r" (nr), "0" (buffer), "r" (len), "r" (flags)
+> > =C2=A0	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
+> > "$t8",
+> > =C2=A0	=C2=A0 "memory");
+> >=20
+> > i.e. "=3D" should be used for the output operand 0, and "0" should be u=
+sed
+> > for the input operand 2 (buffer) to emphasis the same register as
+> > operand 0 is used.
+>=20
+> I would have expected that matching constraints ("0") would only really m=
+ake
+> sense if the compiler selects the specific register to use. When the regi=
+ster is
+> already selected manually it seems redundant.
+> But my inline ASM knowledge is limited and this is a real example from th=
+e GCC
+> docs, so it is probably more correct.
+> On the other hand all the other vDSO implementations use "r" over "0" for=
+ the
+> input operand 2 and I'd like to keep them consistent.
 
-On 06.06.2025 01:57, Bjorn Helgaas wrote:
-> On Fri, May 30, 2025 at 02:19:13PM +0300, Claudiu wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
->> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
->> only as a root complex, with a single-lane (x1) configuration. The
->> controller includes Type 1 configuration registers, as well as IP
->> specific registers (called AXI registers) required for various adjustments.
-> 
->> +/* Timeouts */
->> +#define RZG3S_REQ_ISSUE_TIMEOUT_US		2500
->> +#define RZG3S_LTSSM_STATE_TIMEOUT_US		1000
->> +#define RZG3S_LS_CHANGE_TIMEOUT_US		1000
->> +#define RZG3S_LINK_UP_TIMEOUT_US		500000
-> 
-> Are any of these timeouts related to values in the PCIe spec?  If so,
-> use #defines from drivers/pci/pci.h, or add a new one if needed.
-> 
-> If they come from the RZ/G3S spec, can you include citations?
+Per https://gcc.gnu.org/pipermail/gcc-help/2025-June/144261.html and
+https://gcc.gnu.org/pipermail/gcc-help/2025-June/144266.html it should
+be fine to just use "r".
 
-The values here were retrieved by experimenting. They are not present in
-RZ/G3S specification. I'll look though the header you pointed and use any
-defines if they match.
+Reviewed-by: Xi Ruoyao <xry111@xry111.site>
 
-> 
->> +static int rzg3s_pcie_host_init(struct rzg3s_pcie_host *host, bool probe)
->> +{
->> +	u32 val;
->> +	int ret;
->> +
->> +	/* Initialize the PCIe related registers */
->> +	ret = rzg3s_pcie_config_init(host);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Initialize the interrupts */
->> +	rzg3s_pcie_irq_init(host);
->> +
->> +	ret = reset_control_bulk_deassert(host->data->num_cfg_resets,
->> +					  host->cfg_resets);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Wait for link up */
->> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, val,
->> +				 !(val & RZG3S_PCI_PCSTAT1_DL_DOWN_STS), 5000,
->> +				 RZG3S_LINK_UP_TIMEOUT_US);
-> 
-> Where do we wait for PCIE_T_RRS_READY_MS before pci_host_probe()
-> starts issuing config requests to enumerate devices?
-
-I missed adding it as RZ/G3S manual don't mention this delay.
-
-> 
->> +	if (ret) {
->> +		reset_control_bulk_assert(host->data->num_cfg_resets,
->> +					  host->cfg_resets);
->> +		return ret;
->> +	}
->> +
->> +	val = readl(host->axi + RZG3S_PCI_PCSTAT2);
->> +	dev_info(host->dev, "PCIe link status [0x%x]\n", val);
->> +
->> +	val = FIELD_GET(RZG3S_PCI_PCSTAT2_STATE_RX_DETECT, val);
->> +	dev_info(host->dev, "PCIe x%d: link up\n", hweight32(val));
->> +
->> +	if (probe) {
->> +		ret = devm_add_action_or_reset(host->dev,
->> +					       rzg3s_pcie_cfg_resets_action,
->> +					       host);
->> +	}
->> +
->> +	return ret;
->> +}
-> 
->> +		 * According to the RZ/G3S HW manual (Rev.1.10, section
->> +		 * 34.3.1.71 AXI Window Mask (Lower) Registers) HW expects first
->> +		 * 12 LSB bits to be 0xfff. Extract 1 from size for this.
-> 
-> s/Extract/Subtract/
-
-OK.
-
-Thank you for your review,
-Claudiu
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
