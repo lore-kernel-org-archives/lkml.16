@@ -1,174 +1,232 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FB7253355
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 10:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF902C3242;
+	Fri,  6 Jun 2025 10:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749205838; cv=none; b=QJp1MBclFWv5YJd/Kz4pNlgeGIG6ODtIwO4kWBfi4ZrTDkbIyZr0oov5NxVfq4FpITs00cheb5ZvlkfofGe9pxnaKrY4bFDAY1xtAce2XhFOV2HwQl8gr88fiQUVDnTrXcxVpqdLgWrSHI9MaOt1DOUkC5wD2VxwueV/OdQyAUk=
+	t=1749205983; cv=none; b=kNowh+Ho+8CjdaxTPK6vZnLevVkoV6+D5MwwYwxaU+C/mMcigAkG+gWsroXa5PtiuoMLeNde+6hUzbCtMu0nZWWjTcnoCtZxXzjV+foA6Xwd34+a4siHiUe0fyJd/cxZhF4gvwOQIs57cT/cIoxbB5ebi7gXfEQOPSzp1+KCHC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749205838; c=relaxed/simple;
-	bh=3Z5xaT5zKkEE4PAdWP7WsmhS5IlnEFQjdxzTWBMpMTA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h0UmX16Ryiyo7sS50a4R7ijw2U2TkfknjYivO5+EwlT9QPiyPHrzMQV4Aekr8CVN4Zboy7a6AAW0oQ0pku03NvXOFpsXrwBjtjC75BXCC0ebn7KawPMlVWZlJff6URILzJ/hLMdHI5wB1x01tBUWAZZ79f06y9yiUE8Mz2QGzxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dITYTa3j; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749205983; c=relaxed/simple;
+	bh=EWmGOY2fETYBex1yy7JXLNMgL5UaZwO+d6xDM+yA6e0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=frryZTqEWRwUv19O5AWMNw61u6t0UnMZW3TukSuPveKhYSzGFTPMAhxn0eYc1EvfgXN1q9pEWnFKIGDmnsoxNJrkpkHWXgVtW3SOO15GFXHwUjca/2k8m6WwGfeu/GRF9X5/yy6GmcvDuWOf2czgRPR5ofkrn5kIBf/BMUaGYOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BlNAwxvu; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dITYTa3j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749205835;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2bTEZ1vLd2ySBvqwuRAeBvN6sKQAY124DUV80JjBS0w=;
-	b=dITYTa3jlqQ82cagOCgc0FdmFaWKP4S8/NlqBwEf1HisfGwO1cWrmtI/02fvx+vFZUKP8n
-	AbsetQK9EsDgb8XLTz4/lzk0NOpJQYEHXmguMo5Eaq53udo2B2QH9RWfBn1R00A2RzfA5K
-	ZD1r5Gu9s/vALF9GMe/bDWN9Faf/zJw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-74-UCWrq5oTMJCjN6uROokifA-1; Fri, 06 Jun 2025 06:30:34 -0400
-X-MC-Unique: UCWrq5oTMJCjN6uROokifA-1
-X-Mimecast-MFC-AGG-ID: UCWrq5oTMJCjN6uROokifA_1749205833
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a5058f9ef4so1052745f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 03:30:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlNAwxvu"
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4e45cfc3a26so1394467137.0;
+        Fri, 06 Jun 2025 03:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749205980; x=1749810780; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MSCRtgJh3mrO0HRWQido0oMhIOru4mIvGKrAajD/acI=;
+        b=BlNAwxvuHpX4hfRJypQKHlqlxXJA4jap2RDxYgXnURCbtBOss+ILN9pUyXBwRImxdk
+         n6giTy1JIpyniLI6+oN8hltZ9z63Bg06TYp1FZk0rGOhd2m9XvoxJDPU6hJyKBKR0mcL
+         ULlS+3cnR4qT8ovoYBCNche/0bwkUHwH8Zf4ryz5wdTKtL8fTuhPjQH0WHczCvCyKha9
+         RjmPaC9xeKkmrwNY1G6u8ex/EutQAKsJ66NVb93lj5MBGVtDzPjoaevaEcl2C0X/ozSL
+         FJqEgqnR9F0QSd1AKsuvA+NgK1l06PLVAAMcphxDdYBBHbsjOzXdipa84jqzY/TJuDsH
+         V4TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749205833; x=1749810633;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2bTEZ1vLd2ySBvqwuRAeBvN6sKQAY124DUV80JjBS0w=;
-        b=DxNxtH+QljUcaVfeZLm5vCHOXkOVUIDrzJCcaQSADP7cULpxtM9WJrnpLSdbtoJPJX
-         K2gQwqozCD3XAXfZ0vDuqy3LxIr8O+ifOqrUeOeDD00wZXFt7UWnvYrEwXpL+dQAPdYa
-         th7vG9HX8oAjZXYosizuRNWdfT4/DAJUOowaI9hZR+gly5A/Vncfykw5c+eAub1CVawQ
-         I0bCHCTaMgDdQP3StQ/0cHrbMHYY9zCeCRzf9823v4Bbuc6sHgNEhqLoWZQU1prqkvSv
-         IBa2ZOm48sr5tWaLHLl3NpNS/hgyK0OZYPzWUDyOKkHSRyJsq074zvhtgzxeQtRrL5i+
-         6L4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV4BXJW74P28OwIfXRuCU6UYellssBxQznaewYbXn1aIBeQOvB8kNfAGO99NtjUnyHRmcrQZ2FhEJ1zP2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTC2yfFoaRSM2eDLrNrkx4JcwNWVN3vgA7q2fviYypOcnmtb97
-	yqgm0ixV277hlHH55ScstZ70QjMUVHyQKiubNp8Gq4qomq2CtJt7RUU32BGkYB0cG6iW9yuIF04
-	Rz1siO0REggsYbG6qI1e/0DMQxQStp1YXF0SjiCKEli0JMe91DW6bOqZzYwT4aUdi1w==
-X-Gm-Gg: ASbGncvZm0G0R/i6DmUObCdEoZyK3u0SNtlb72OA4SChFEX0L9pyQwrXFnUfbzlvxpU
-	0VJrucZJQCvD0ayDTP3RoqUwXCUvYaV1XYT1qP9NDffZc1ZCs/kvPcqnwsDVDwL3a8/gE6hbAeP
-	4rS0x48h6ZvP+4uftlUGn29wjx7mlHMF85CZvhkGIZN4DLbYcI8fmjXioWtix6Ntz19VCCbsmX/
-	2NeG6DA6jaS0rjVqbPI9pBkXGHWFf1yP4MmCrneWYxMg7GVXwL1Qe9hCgDlsBczXC7rRqDLMPlK
-	hHgFL7QX+7cOXU14V8eW+l5Flr/tYR/XekhNIGmDPdsKb5nDaZaGP8971ixkbw8Ed1sHLiUkXdE
-	KttIyr6JMy6kNaBnvLTNwIBMfJF5reUvKhalCD4kCjw==
-X-Received: by 2002:a5d:5c84:0:b0:3a5:2182:bd11 with SMTP id ffacd0b85a97d-3a53189b6d1mr2385096f8f.20.1749205832822;
-        Fri, 06 Jun 2025 03:30:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHZ8zn1DJwYaoBTRpNkad0mZiAjY2iLHqkNZy1mWBuUYEv02AEOeaCRfW88O1wnKzjCVIId1A==
-X-Received: by 2002:a5d:5c84:0:b0:3a5:2182:bd11 with SMTP id ffacd0b85a97d-3a53189b6d1mr2385070f8f.20.1749205832424;
-        Fri, 06 Jun 2025 03:30:32 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532463905sm1468475f8f.92.2025.06.06.03.30.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 03:30:31 -0700 (PDT)
-Message-ID: <59559bf8-fded-458d-9e6e-5bdfd5cbd816@redhat.com>
-Date: Fri, 6 Jun 2025 12:30:30 +0200
+        d=1e100.net; s=20230601; t=1749205980; x=1749810780;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MSCRtgJh3mrO0HRWQido0oMhIOru4mIvGKrAajD/acI=;
+        b=qPVbIWHfZ5OI5WBnNkRyOgXHhNOd/D2c5PUse3jsKre8qHY3ry9JtkmuekpVz4NzPk
+         P8ygVxjLdw7NdKOTAPt5WIW9vnwX7js+bvTooHxugRf+WUXr+XmlX1qR0tLLgDfRDbLu
+         dxjizr2P54dUEBplw5ihi3Rg67yjdFSVQeML4kDtCbmTaONg6w2t2A8b0N05sVnsbcl4
+         RFEcWX9G/S5f6q6eRrM5LYu5NaBgiEMOFKKOjIs0YjPGgQqflRl3SFRGnOdaQAsXWxWn
+         Qdkh9vf7t7zwNKvIAfC0r7jQRSdsEoqxiS3+T3muLF+pa5NNejj1QSBpBiuIKTFYtUiL
+         8zTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQGHBZb0s5kPvh7rRwPGbXS/+AKOcANJ9EDxlB8v2Hq/7HH8zGYljNh5xFy71aAF862H7fZCMVt8pRYmc=@vger.kernel.org, AJvYcCVrVhUo7sXmfW1Y4bQH/WCTTLDoirP7/juFNzOXIHD6js+KmOiperJBR6ysRD/IL0UlpVpatWNJTAeG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDyDFxZS3mV9pJo3/61eXHxbrlq9/Jt0MFofiAoyfFLqSryc+j
+	yv5lSTYnbPzp778A5yUJiqbWqXPm6rIDz+5z4eFV3nj0aFSlqKNhnYi6v2h/BdMpxZ29R+qrqZ5
+	d+kB0U6cprZBruGX6zYJfaEfXI2qouJ67gua7
+X-Gm-Gg: ASbGnctVlY+6MrhW+Kr63y+LOOcrkmyn7ums1foahEAThRJy7vDEq6HseZbde4DNVBy
+	WDFwG3JLjg2/Vqjob5QDDAr3BopcIDJ3y3gCN7FxkRg4xdj9JzTj4xnWNtMaoY8u6bWmdleOgwr
+	gWhW1GInSPzSP/ypQM5TwJgsRyOGhgg0DdRmQqyz4KYz8IYSuVS71489dogpuvOdndmw==
+X-Google-Smtp-Source: AGHT+IGOU9vZErXkR16hmHisOuyevRgplZOoNNGLBXXZWihYYDanMFHkCRIUkTwK/lR/zMYAuNMpHitCjxQNZcxLuYs=
+X-Received: by 2002:a05:6122:338a:b0:530:ba70:cfc9 with SMTP id
+ 71dfb90a1353d-530e5025eb2mr2261725e0c.0.1749205969153; Fri, 06 Jun 2025
+ 03:32:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: Skip failed memfd setups in gup_longterm
-To: Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250605-selftest-mm-gup-longterm-tweaks-v1-1-2fae34b05958@kernel.org>
- <20250605180421.c8d8c48f3e340f9488937ab7@linux-foundation.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250605180421.c8d8c48f3e340f9488937ab7@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250523110155.10451-1-victorshihgli@gmail.com>
+ <20250523110155.10451-3-victorshihgli@gmail.com> <20d2730f-1e1b-4f47-b208-201468e21029@intel.com>
+In-Reply-To: <20d2730f-1e1b-4f47-b208-201468e21029@intel.com>
+From: Victor Shih <victorshihgli@gmail.com>
+Date: Fri, 6 Jun 2025 18:32:36 +0800
+X-Gm-Features: AX0GCFuCsh_QPaMAcJWsev2oqyRwidon6gRsisjqQtww0hDLSd6tUsDIB2dWTJ4
+Message-ID: <CAK00qKB3QZZjXFvwQazE7iYG_W-0PgsQzYWWTMKt8fAr5ePiyw@mail.gmail.com>
+Subject: Re: [PATCH RESEND V2 2/2] mmc: sdhci-uhs2: Adjust some error messages
+ and register dump for SD UHS-II card
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, benchuanggli@gmail.com, 
+	HL.Liu@genesyslogic.com.tw, Greg.tu@genesyslogic.com.tw, 
+	Ben.Chuang@genesyslogic.com.tw, Victor Shih <victor.shih@genesyslogic.com.tw>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06.06.25 03:04, Andrew Morton wrote:
-> On Thu, 05 Jun 2025 22:34:31 +0100 Mark Brown <broonie@kernel.org> wrote:
-> 
->> Unlike the other cases gup_longterm's memfd tests previously skipped the
->> test when failing to set up the file descriptor to test, restore this
->> behaviour.
->>
->> Signed-off-by: Mark Brown <broonie@kernel.org>
-> 
-> I added a bunch of stuff to this.  Please check?
-> 
-> 
-> From: Mark Brown <broonie@kernel.org>
-> Subject: selftests/mm: skip failed memfd setups in gup_longterm
-> Date: Thu, 05 Jun 2025 22:34:31 +0100
-> 
-> Unlike the other cases gup_longterm's memfd tests previously skipped the
-> test when failing to set up the file descriptor to test.  Restore this
-> behavior to avoid hitting failures when hugetlb isn't configured.
-> 
-> Link: https://lkml.kernel.org/r/20250605-selftest-mm-gup-longterm-tweaks-v1-1-2fae34b05958@kernel.org
-> Fies: 66bce7afbaca ("selftests/mm: fix test result reporting in gup_longterm")
+On Wed, May 28, 2025 at 8:10=E2=80=AFPM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> On 23/05/2025 14:01, Victor Shih wrote:
+> > From: Victor Shih <victor.shih@genesyslogic.com.tw>
+> >
+> > Adjust some error messages to debug mode and register dump to dynamic
+> > debug mode to avoid causing misunderstanding it is an error.
+> >
+> > Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
+>
+> I think Ulf asked for the drivers/mmc/host/sdhci.h change to be
+> a separate patch.
+>
+> In any case:
+>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>
 
-"Fixes:"
+Hi, Adrian
 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> Reported-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Closes: https://lkml.kernel.org/r/a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> 
+I left this part out, I'll resend the patch for the new series to
+match this thing,
+and I will also keep your acked tag.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Thanks, Victor Shih
 
--- 
-Cheers,
-
-David / dhildenb
-
+> > ---
+> >  drivers/mmc/host/sdhci-uhs2.c | 20 ++++++++++----------
+> >  drivers/mmc/host/sdhci.h      | 16 ++++++++++++++++
+> >  2 files changed, 26 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-uhs2.c b/drivers/mmc/host/sdhci-uhs=
+2.c
+> > index c53b64d50c0d..0efeb9d0c376 100644
+> > --- a/drivers/mmc/host/sdhci-uhs2.c
+> > +++ b/drivers/mmc/host/sdhci-uhs2.c
+> > @@ -99,8 +99,8 @@ void sdhci_uhs2_reset(struct sdhci_host *host, u16 ma=
+sk)
+> >       /* hw clears the bit when it's done */
+> >       if (read_poll_timeout_atomic(sdhci_readw, val, !(val & mask), 10,
+> >                                    UHS2_RESET_TIMEOUT_100MS, true, host=
+, SDHCI_UHS2_SW_RESET)) {
+> > -             pr_warn("%s: %s: Reset 0x%x never completed. %s: clean re=
+set bit.\n", __func__,
+> > -                     mmc_hostname(host->mmc), (int)mask, mmc_hostname(=
+host->mmc));
+> > +             pr_debug("%s: %s: Reset 0x%x never completed. %s: clean r=
+eset bit.\n", __func__,
+> > +                      mmc_hostname(host->mmc), (int)mask, mmc_hostname=
+(host->mmc));
+> >               sdhci_writeb(host, 0, SDHCI_UHS2_SW_RESET);
+> >               return;
+> >       }
+> > @@ -335,8 +335,8 @@ static int sdhci_uhs2_interface_detect(struct sdhci=
+_host *host)
+> >       if (read_poll_timeout(sdhci_readl, val, (val & SDHCI_UHS2_IF_DETE=
+CT),
+> >                             100, UHS2_INTERFACE_DETECT_TIMEOUT_100MS, t=
+rue,
+> >                             host, SDHCI_PRESENT_STATE)) {
+> > -             pr_warn("%s: not detect UHS2 interface in 100ms.\n", mmc_=
+hostname(host->mmc));
+> > -             sdhci_dumpregs(host);
+> > +             pr_debug("%s: not detect UHS2 interface in 100ms.\n", mmc=
+_hostname(host->mmc));
+> > +             sdhci_dbg_dumpregs(host, "UHS2 interface detect timeout i=
+n 100ms");
+> >               return -EIO;
+> >       }
+> >
+> > @@ -345,8 +345,8 @@ static int sdhci_uhs2_interface_detect(struct sdhci=
+_host *host)
+> >
+> >       if (read_poll_timeout(sdhci_readl, val, (val & SDHCI_UHS2_LANE_SY=
+NC),
+> >                             100, UHS2_LANE_SYNC_TIMEOUT_150MS, true, ho=
+st, SDHCI_PRESENT_STATE)) {
+> > -             pr_warn("%s: UHS2 Lane sync fail in 150ms.\n", mmc_hostna=
+me(host->mmc));
+> > -             sdhci_dumpregs(host);
+> > +             pr_debug("%s: UHS2 Lane sync fail in 150ms.\n", mmc_hostn=
+ame(host->mmc));
+> > +             sdhci_dbg_dumpregs(host, "UHS2 Lane sync fail in 150ms");
+> >               return -EIO;
+> >       }
+> >
+> > @@ -417,12 +417,12 @@ static int sdhci_uhs2_do_detect_init(struct mmc_h=
+ost *mmc)
+> >               host->ops->uhs2_pre_detect_init(host);
+> >
+> >       if (sdhci_uhs2_interface_detect(host)) {
+> > -             pr_warn("%s: cannot detect UHS2 interface.\n", mmc_hostna=
+me(host->mmc));
+> > +             pr_debug("%s: cannot detect UHS2 interface.\n", mmc_hostn=
+ame(host->mmc));
+> >               return -EIO;
+> >       }
+> >
+> >       if (sdhci_uhs2_init(host)) {
+> > -             pr_warn("%s: UHS2 init fail.\n", mmc_hostname(host->mmc))=
+;
+> > +             pr_debug("%s: UHS2 init fail.\n", mmc_hostname(host->mmc)=
+);
+> >               return -EIO;
+> >       }
+> >
+> > @@ -504,8 +504,8 @@ static int sdhci_uhs2_check_dormant(struct sdhci_ho=
+st *host)
+> >       if (read_poll_timeout(sdhci_readl, val, (val & SDHCI_UHS2_IN_DORM=
+ANT_STATE),
+> >                             100, UHS2_CHECK_DORMANT_TIMEOUT_100MS, true=
+, host,
+> >                             SDHCI_PRESENT_STATE)) {
+> > -             pr_warn("%s: UHS2 IN_DORMANT fail in 100ms.\n", mmc_hostn=
+ame(host->mmc));
+> > -             sdhci_dumpregs(host);
+> > +             pr_debug("%s: UHS2 IN_DORMANT fail in 100ms.\n", mmc_host=
+name(host->mmc));
+> > +             sdhci_dbg_dumpregs(host, "UHS2 IN_DORMANT fail in 100ms")=
+;
+> >               return -EIO;
+> >       }
+> >       return 0;
+> > diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> > index f9d65dd0f2b2..70ada1857a4c 100644
+> > --- a/drivers/mmc/host/sdhci.h
+> > +++ b/drivers/mmc/host/sdhci.h
+> > @@ -900,4 +900,20 @@ void sdhci_switch_external_dma(struct sdhci_host *=
+host, bool en);
+> >  void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable);
+> >  void __sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *=
+cmd);
+> >
+> > +#if defined(CONFIG_DYNAMIC_DEBUG) || \
+> > +     (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DYNAMIC_DEBUG_MODU=
+LE))
+> > +#define SDHCI_DBG_ANYWAY 0
+> > +#elif defined(DEBUG)
+> > +#define SDHCI_DBG_ANYWAY 1
+> > +#else
+> > +#define SDHCI_DBG_ANYWAY 0
+> > +#endif
+> > +
+> > +#define sdhci_dbg_dumpregs(host, fmt)                                 =
+       \
+> > +do {                                                                 \
+> > +     DEFINE_DYNAMIC_DEBUG_METADATA(descriptor, fmt);                 \
+> > +     if (DYNAMIC_DEBUG_BRANCH(descriptor) || SDHCI_DBG_ANYWAY)       \
+> > +             sdhci_dumpregs(host);                                   \
+> > +} while (0)
+> > +
+> >  #endif /* __SDHCI_HW_H */
+>
