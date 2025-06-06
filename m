@@ -1,130 +1,101 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24301218827
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 20:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE715217F23;
+	Fri,  6 Jun 2025 20:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749241669; cv=none; b=vFrG9RddograYAVdTBwh4jprwAem1paP8vYxp6iyfnD3T3y8o3fFT4GvOsSL/m5TkrhATmrdVMmiSUIR4ueItujkgHZgqyPh5uvQXXq3IwztYY2KeT9Opz1vin8c4rHPnIesHqT6sfzsWxoDEyVyHTC+hHTY+uOf+Be19udMZ3Y=
+	t=1749241702; cv=none; b=ibq8tcPxT4wK+f55ONbU0v3YLMO8Y3gs+lPiK05nco7nJyFdkRa0g44NWsd9VNfbgzeAWAs8Ng0mp2YmOUqkm0j6D5FbztCDLZGPwpnWPC3SaQ8v6Q+Yiuc4nr9ZLx7RO4TYp5uMUjSuwEln5ovTXh9bs5XVECD7mDDdOPZiPuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749241669; c=relaxed/simple;
-	bh=DnmuKb4te8Dpg4MpVG4LfMdpxQAkeF48rj6DbMQ/hwU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T2AewdOKevwThZMHVsYmdGujVsC/rPTty74lzhmID6gtX9FWfLorFpRtSEbCHog5o+LTHGXxQUmr07mLT/HECmk5Wae/U9YP24tq+0nwzveGCptLtC3j+x7qzelnkONEKMUx9p66DCUjZxgMQPhAtzr3OP1l1VKB+9wZBh3ZOu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F3qpBYls; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749241702; c=relaxed/simple;
+	bh=8IILO79EXNgU162PlK4G+w9NQreXJ6wJ1JiN/QMclS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B7WdBrYP93XZN34jpUy9NoIFBEyMdvrHuZPk91Kv1XWJRrKb/7bTiVHoe8hpkcxpLI+ntDOPkBepMM803YjByel6LVMIWDK4DC6r8IKr+fAI5l4fLRlfCc0udf6p1hIl5Z31CLRj+WtSFKOxGdPbonRZrQZ7FdMpJWGlcev8SgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVD19OU+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3qpBYls"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b2f645eba5dso594939a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 13:27:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749241667; x=1749846467; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jc+5CHD3tDL3SNSorIV87nIdNFJZNqq5KxOMmRZzmKU=;
-        b=F3qpBYls+ard4gndsWXDYnFZ1DrkE1ObHvIVRyw2954hA6XppJ7/QV47JC50YkQEyx
-         BPtkZo+Gv+zRDJBy1UO454vxORVY7UbKAuym6ItJ197XpLcsyt9p3nE3bplPua4hqYfN
-         MOAWi0Zaz+i6MHbWSy8FDYHV15jq7fT7htM66SJzVkWYY6xLi6wVs/D6mVR97p8oCYnv
-         aryrIhRd0fsO50sEfU1ZtfxuL8tQQxh0jZZPrUEZLy4impssESIG/63OxPMtWiz8sCDK
-         p5UFn4qzsy5Olk5s3Aw4MnoYLPgb00/MfgQEl2wLa0wrtFidnUXVoPwr7Pd0jpDF749K
-         EAmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749241667; x=1749846467;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jc+5CHD3tDL3SNSorIV87nIdNFJZNqq5KxOMmRZzmKU=;
-        b=moyiVcwI2U44z3FR8NDa8Ux+paJcrN5fjwbJoxCukuxPwvdeFPbanSNl59rTNRUTe2
-         YCl8sqHKoQRXjqN0t4RiaS8iL+tFvX+GbPqaLfzh9NgkpTjqbvQIfij/aRMb34jyANMu
-         nKFQ/xn1amwkS82SVmUF8KJiTKZ23Ju2FH+t6OL9HhbLO8Yu6ZOTd7qadFr7wB562Qx2
-         dIRShSQgeTvw9jkB2llQlz1tsO79MGPGyN+O8qMMrwtU5cwAGPW0GHWdAUZmVa6/+nOp
-         fPx4cylZ6H/6Vz5LocqfAvdXnwMYb1Ke4lIngcaPBYm0f00zhq7k3qLtWKyYpfcay3wQ
-         aEqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUO7F3HOrfNP1x4wkVm4vhwz8EyCMjyhLp/TJ3vx5brIi2JbUIN3VQAlx5LjLx1q3/hGNqYsVNoWxZ+9Yg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2hn4Li40LzxuE+X6YLIi6u8MgsNCuMZzpi+AERVmOw04efNZB
-	5ef6zdbg8UGxozdOF4mxHtwJIfmoBT3pX9zuSxn2evL7cUN8HPPZsVyy
-X-Gm-Gg: ASbGncu0Xz8Q0xj6vNnEZLMZyQ5yv14TqDW6vPS0jFlGjH2yr6AOapZcOUYIU4SxoiN
-	fX4bcf9K2tyyx7nIEGGtfaWA/LWiGNWtBk39nKY9ZQNT+88yLneB08YCRFV1lAjFdHevqJn75lJ
-	gt7gyXbWXFTZvIy8y4e5ABlFRjiB1stqO42oB0/VQlG8xsKqEKUmXyg+JUu51G+eBK30jYDNOs3
-	J3o4l0VpvD/lMrqpj+1cBCEL4g9TIwTYxup1Bt5fUVzMtGl2eiFtTr8stIH+fVRbY80wTGg60Xo
-	3e2y+CjVmResRTQjFr41BilIm/7GRXbaG1tyAdhbb/ntKJYImTM=
-X-Google-Smtp-Source: AGHT+IHIl/2sIz0QzhUU71ZO2gTtcWGbLD5DKJni6Zi4pQpGhtBHoXECcyo381A/ocFKz4V9mKzNlA==
-X-Received: by 2002:a17:90b:520d:b0:311:b5ac:6f7d with SMTP id 98e67ed59e1d1-31349f4311emr6162152a91.6.1749241667286;
-        Fri, 06 Jun 2025 13:27:47 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349fc374asm1702099a91.29.2025.06.06.13.27.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 13:27:46 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] smp: Defer check for local execution in smp_call_function_many_cond()
-Date: Fri,  6 Jun 2025 16:27:31 -0400
-Message-ID: <20250606202732.426551-5-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250606202732.426551-1-yury.norov@gmail.com>
-References: <20250606202732.426551-1-yury.norov@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVD19OU+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30ACFC4CEEB;
+	Fri,  6 Jun 2025 20:28:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749241702;
+	bh=8IILO79EXNgU162PlK4G+w9NQreXJ6wJ1JiN/QMclS4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YVD19OU+axoDAg6treRJMELka/j7YNU39HAOXBtQGF3cx1PWiW6j/r3IHrNeURKib
+	 BCfC6tfE28DM2OGmw9/FfneIKNvYyFoTAxldHpNKYkMpoZXbyIj5+JPfTY6N+Jet09
+	 hTxujw18w0cYDAo9aD/aryqXPtvSWCQZTMLk3gENMvat2A4n3ELKegURQWFLM1v7a7
+	 9Xw7NqaG8yXyp8F+a3GdflUHCi35eVyBiEtzffkZUA/TuLAaHm9WEiSdewwRNHtwWh
+	 JFFro6gWZI6EUYL0dLer+8KpU4rGrJLeDPYUU3zNOl5mc0im7nVOf/LL158YnoprJ+
+	 LnD0UNAesTa9g==
+Date: Fri, 6 Jun 2025 13:28:19 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org, 
+	Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+Message-ID: <fo7d53hseij2pes7fml5hf2gnmfbuzlr7glpbc7wij2sgctuxx@mpr223nazmgg>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+ <f97a2e18-d672-41b1-ac26-4d1201528ed7@redhat.com>
+ <27bkpjpv4lklcxafb4yifrbdjmfxn2sh67lckom2w7hpmgdyxr@zgty22rlp62q>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <27bkpjpv4lklcxafb4yifrbdjmfxn2sh67lckom2w7hpmgdyxr@zgty22rlp62q>
 
-From: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+On Fri, Jun 06, 2025 at 12:03:45PM -0700, Josh Poimboeuf wrote:
+> On Fri, Jun 06, 2025 at 09:05:59AM -0400, Joe Lawrence wrote:
+> > Should the .cmd file copy come from the reference SRC and not original
+> > ORIG directory?
+> > 
+> >   cmd_file="$SRC/$(dirname "$rel_file")/.$(basename "$rel_file").cmd"
+> > 
+> > because I don't see any .cmd files in klp-tmp/orig/
+> > 
+> > FWIW, I only noticed this after backporting the series to
+> > centos-stream-10.  There, I got this build error:
+> > 
+> >   Building original kernel
+> >   Copying original object files
+> >   Fixing patches
+> >   Building patched kernel
+> >   Copying patched object files
+> >   Diffing objects
+> >   vmlinux.o: changed function: cmdline_proc_show
+> >   Building patch module: livepatch-test.ko
+> >   <...>/klp-tmp/kmod/.vmlinux.o.cmd: No such file or directory
+> >   make[2]: *** [scripts/Makefile.modpost:145:
+> > <...>/klp-tmp/kmod/Module.symvers] Error 1
+> >  make[1]: *** [<...>/Makefile:1936: modpost] Error 2
+> >  make: *** [Makefile:236: __sub-make] Error 2
+> > 
+> > The above edit worked for both your upstream branch and my downstream
+> > backport.
+> 
+> Hm, I broke this in one of my refactorings before posting.
+> 
+> Is this with CONFIG_MODVERSIONS?
+> 
+> If you get a chance to test, here's a fix (currently untested):
 
-Defer check for local execution to the actual place where it is needed,
-and save some stack on a useless local variable.
+It was indeed CONFIG_MODVERSIONS.  I verified the fix works.
 
-Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
----
- kernel/smp.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+All the latest fixes are in my klp-build branch:
 
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 715190669e94..867f79689684 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -779,7 +779,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
- 	bool wait = scf_flags & SCF_WAIT;
- 	int nr_cpus = 0;
- 	bool run_remote = false;
--	bool run_local = false;
- 
- 	lockdep_assert_preemption_disabled();
- 
-@@ -801,11 +800,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
- 	 */
- 	WARN_ON_ONCE(!in_task());
- 
--	/* Check if we need local execution. */
--	if ((scf_flags & SCF_RUN_LOCAL) && cpumask_test_cpu(this_cpu, mask) &&
--	    (!cond_func || cond_func(this_cpu, info)))
--		run_local = true;
--
- 	/* Check if we need remote execution, i.e., any CPU excluding this one. */
- 	if (cpumask_any_and_but(mask, cpu_online_mask, this_cpu) < nr_cpu_ids) {
- 		run_remote = true;
-@@ -853,7 +847,9 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
- 			run_remote = false;
- 	}
- 
--	if (run_local) {
-+	/* Check if we need local execution. */
-+	if ((scf_flags & SCF_RUN_LOCAL) & cpumask_test_cpu(this_cpu, mask) &&
-+	    (!cond_func || cond_func(this_cpu, info))) {
- 		unsigned long flags;
- 
- 		local_irq_save(flags);
+  git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git klp-build
+
+I hope to post v3 next week and then start looking at merging patches --
+if not all of them, then at least the first ~40 dependency patches which
+are mostly standalone improvements.
+
 -- 
-2.43.0
-
+Josh
