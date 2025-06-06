@@ -1,141 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C5E8C0E;
-	Fri,  6 Jun 2025 01:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8A517BCE
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 01:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749172737; cv=none; b=nFII+NeNNUxTPOX3GjWO2c6ahMEMKFNaRIIyq88tbtinef9jZdaYWMyNkaIJz+ew2yFX/cT/j8Qv4Q2j5Ngw6n2L3vuMBmFG2V7twrGF0bIVYYC9p3up+7f7UJdKL8Hmnlr+maWyt+YSXkeqU67AGBvLu99wKc86lwkG+tTqUcM=
+	t=1749172881; cv=none; b=fo377GxIUbllNZMlEomiQjs3pPAlmDo06lFEN4TNUNzKpvehAQVJplhag11MOlizMFFGS330akBWMXFoWe61LZ75UEAc+UeP0sWCq6M3q9Tuw/W/+5LHPgxJbIcG2aA7qQjI6QN/MsqADEG6RydpH4Ez02DXcL9wGp/qtOrzewA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749172737; c=relaxed/simple;
-	bh=5ANy1on2fzZ35lbPi1IAXLj13vHKSzD+X1aeMjgxbOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oNdFgbND8FzHHSe6UJmSHS9+Xirt6UdXBmb2dNUpYbTnukfvqXV3jhh3EYEH+jnpJvBONDlgpXnKJfDDLZuVm++cE1qdanrT2cYQ1oiMnV7cJkn3TpilXmkOj9UPAbzev2sST3EYVWA1O2PaAslG/U1yvpMiuO8VtZzwLWbvJkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DybYdh9S; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749172881; c=relaxed/simple;
+	bh=gix5L869sGTvfLYorKge2i9dJIKj3m5mjK5cZtko69Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S5TPtQPH0S77PmtbRngt2cQ1d19RmgEUQQIJBGhlA9ynE8QndtwgvrGODIuLDqqebWqT5WZqF8jpBMt6rDqVMZn/mMK9eOFTuMIihqkEk6xYOgPeqDObj3nXaa7hr2K9FmPzfH5XnaE0l9DMVrhNntKiVCVbvcy9y4nZMoOn1+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ffuQcmh7; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DybYdh9S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749172735; x=1780708735;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5ANy1on2fzZ35lbPi1IAXLj13vHKSzD+X1aeMjgxbOU=;
-  b=DybYdh9SiDVWbghBa4NAM3jt3aXdW/Zb6UOWi9q/p68r7h+AyIIHoIJY
-   50AGAu8iWAxeCnuXmHGNpHNM8uwVmHFqS1hywFPL9A8XIfLJ6YbiarXrd
-   fjNwrAvanivFy6bWwtOI2fGldBvMlQZYoGUh/qQOBWwRZUSj14pRYohPq
-   uCBfIwzBjHISL5BwqkmV7n5Zft/AYf/8UoEMKR7SL2sj3UaSMGqfWfA5A
-   ZwBcdaMl9P/TS3iR1jMKetUvNDW+XtiLVgFl0Oh4XPxk9ra4O+VbBWBOG
-   vTke+nCj/6Ef8HSyw2XriFu6ih5g5sgG70R07wPhB6fuy7Ut2jZRKNLRI
-   Q==;
-X-CSE-ConnectionGUID: hJ9qw4P4QKqckhU+nmWrrQ==
-X-CSE-MsgGUID: vU7R8ylFQC62z9p9veb//Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51393130"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="51393130"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 18:18:54 -0700
-X-CSE-ConnectionGUID: EryJAv3KT6iDNrLgn8bU7w==
-X-CSE-MsgGUID: pJlUijYkQpaQqO4YjcQajA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="146183893"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 05 Jun 2025 18:18:48 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNLjK-0004bh-0Q;
-	Fri, 06 Jun 2025 01:18:46 +0000
-Date: Fri, 6 Jun 2025 09:17:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Igor Korotin <igor.korotin.linux@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Hung <alex.hung@amd.com>, Tamir Duberstein <tamird@gmail.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	Igor Korotin <igor.korotin.linux@gmail.com>
-Subject: Re: [PATCH v2 1/5] rust: acpi: add `acpi::DeviceId` abstraction
-Message-ID: <202506060925.Thw3s9xE-lkp@intel.com>
-References: <20250605162326.3659046-1-igor.korotin.linux@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ffuQcmh7"
+Message-ID: <54c9651f-47ee-4b0d-8df4-2a0da679b2c3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749172875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pDGaaLcSzuIeoOSHuJpYzbEv+9LO2YuTG7IVWKH//Q8=;
+	b=ffuQcmh7yCa/+CRsdD0k+UqoNRh8L0BnFQJKzRE3+ZlNWTibag47VUBlXpzf4hSKL3ZF+Y
+	+U6IJSaXz3u3gjh1Axg1AF9zLLd8ntsozD8EgTkMSC3de6O98FlwTvPWvPAc0fsofGCX3T
+	0/lt4OwWfAoz/SNWlNVJMrzbYkMpQhk=
+Date: Thu, 5 Jun 2025 18:21:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605162326.3659046-1-igor.korotin.linux@gmail.com>
+Subject: Re: [PATCH 05/13] RISC-V: KVM: Rename and move
+ kvm_riscv_local_tlb_sanitize()
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250605061458.196003-1-apatel@ventanamicro.com>
+ <20250605061458.196003-6-apatel@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250605061458.196003-6-apatel@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Igor,
 
-kernel test robot noticed the following build errors:
+On 6/4/25 11:14 PM, Anup Patel wrote:
+> The kvm_riscv_local_tlb_sanitize() deals with sanitizing current
+> VMID related TLB mappings when a VCPU is moved from one host CPU
+> to another.
+>
+> Let's move kvm_riscv_local_tlb_sanitize() to VMID management
+> sources and rename it to kvm_riscv_gstage_vmid_sanitize().
+>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>   arch/riscv/include/asm/kvm_host.h |  3 +--
+>   arch/riscv/kvm/tlb.c              | 23 -----------------------
+>   arch/riscv/kvm/vcpu.c             |  4 ++--
+>   arch/riscv/kvm/vmid.c             | 23 +++++++++++++++++++++++
+>   4 files changed, 26 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> index 85cfebc32e4c..134adc30af52 100644
+> --- a/arch/riscv/include/asm/kvm_host.h
+> +++ b/arch/riscv/include/asm/kvm_host.h
+> @@ -327,8 +327,6 @@ void kvm_riscv_local_hfence_vvma_gva(unsigned long vmid,
+>   				     unsigned long order);
+>   void kvm_riscv_local_hfence_vvma_all(unsigned long vmid);
+>   
+> -void kvm_riscv_local_tlb_sanitize(struct kvm_vcpu *vcpu);
+> -
+>   void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu);
+>   void kvm_riscv_hfence_gvma_vmid_all_process(struct kvm_vcpu *vcpu);
+>   void kvm_riscv_hfence_vvma_all_process(struct kvm_vcpu *vcpu);
+> @@ -376,6 +374,7 @@ unsigned long kvm_riscv_gstage_vmid_bits(void);
+>   int kvm_riscv_gstage_vmid_init(struct kvm *kvm);
+>   bool kvm_riscv_gstage_vmid_ver_changed(struct kvm_vmid *vmid);
+>   void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu);
+> +void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu);
+>   
+>   int kvm_riscv_setup_default_irq_routing(struct kvm *kvm, u32 lines);
+>   
+> diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
+> index 2f91ea5f8493..b3461bfd9756 100644
+> --- a/arch/riscv/kvm/tlb.c
+> +++ b/arch/riscv/kvm/tlb.c
+> @@ -156,29 +156,6 @@ void kvm_riscv_local_hfence_vvma_all(unsigned long vmid)
+>   	csr_write(CSR_HGATP, hgatp);
+>   }
+>   
+> -void kvm_riscv_local_tlb_sanitize(struct kvm_vcpu *vcpu)
+> -{
+> -	unsigned long vmid;
+> -
+> -	if (!kvm_riscv_gstage_vmid_bits() ||
+> -	    vcpu->arch.last_exit_cpu == vcpu->cpu)
+> -		return;
+> -
+> -	/*
+> -	 * On RISC-V platforms with hardware VMID support, we share same
+> -	 * VMID for all VCPUs of a particular Guest/VM. This means we might
+> -	 * have stale G-stage TLB entries on the current Host CPU due to
+> -	 * some other VCPU of the same Guest which ran previously on the
+> -	 * current Host CPU.
+> -	 *
+> -	 * To cleanup stale TLB entries, we simply flush all G-stage TLB
+> -	 * entries by VMID whenever underlying Host CPU changes for a VCPU.
+> -	 */
+> -
+> -	vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
+> -	kvm_riscv_local_hfence_gvma_vmid_all(vmid);
+> -}
+> -
+>   void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu)
+>   {
+>   	kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_FENCE_I_RCVD);
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index f98a1894d55b..cc7d00bcf345 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -961,12 +961,12 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>   		}
+>   
+>   		/*
+> -		 * Cleanup stale TLB enteries
+> +		 * Sanitize VMID mappings cached (TLB) on current CPU
+>   		 *
+>   		 * Note: This should be done after G-stage VMID has been
+>   		 * updated using kvm_riscv_gstage_vmid_ver_changed()
+>   		 */
+> -		kvm_riscv_local_tlb_sanitize(vcpu);
+> +		kvm_riscv_gstage_vmid_sanitize(vcpu);
+>   
+>   		trace_kvm_entry(vcpu);
+>   
+> diff --git a/arch/riscv/kvm/vmid.c b/arch/riscv/kvm/vmid.c
+> index ddc98714ce8e..92c01255f86f 100644
+> --- a/arch/riscv/kvm/vmid.c
+> +++ b/arch/riscv/kvm/vmid.c
+> @@ -122,3 +122,26 @@ void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu)
+>   	kvm_for_each_vcpu(i, v, vcpu->kvm)
+>   		kvm_make_request(KVM_REQ_UPDATE_HGATP, v);
+>   }
+> +
+> +void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu)
+> +{
+> +	unsigned long vmid;
+> +
+> +	if (!kvm_riscv_gstage_vmid_bits() ||
+> +	    vcpu->arch.last_exit_cpu == vcpu->cpu)
+> +		return;
+> +
+> +	/*
+> +	 * On RISC-V platforms with hardware VMID support, we share same
+> +	 * VMID for all VCPUs of a particular Guest/VM. This means we might
+> +	 * have stale G-stage TLB entries on the current Host CPU due to
+> +	 * some other VCPU of the same Guest which ran previously on the
+> +	 * current Host CPU.
+> +	 *
+> +	 * To cleanup stale TLB entries, we simply flush all G-stage TLB
+> +	 * entries by VMID whenever underlying Host CPU changes for a VCPU.
+> +	 */
+> +
+> +	vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
+> +	kvm_riscv_local_hfence_gvma_vmid_all(vmid);
+> +}
 
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus linus/master v6.15 next-20250605]
-[cannot apply to rust/rust-next driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Igor-Korotin/rust-acpi-add-acpi-DeviceId-abstraction/20250606-042551
-base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20250605162326.3659046-1-igor.korotin.linux%40gmail.com
-patch subject: [PATCH v2 1/5] rust: acpi: add `acpi::DeviceId` abstraction
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250606/202506060925.Thw3s9xE-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506060925.Thw3s9xE-lkp@intel.com/reproduce)
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506060925.Thw3s9xE-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   PATH=/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   INFO PATH=/opt/cross/rustc-1.78.0-bindgen-0.65.1/cargo/bin:/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   /usr/bin/timeout -k 100 12h /usr/bin/make KCFLAGS= -Wno-error=return-type -Wreturn-type -funsigned-char -Wundef W=1 --keep-going LLVM=1 -j32 -C source O=/kbuild/obj/consumer/x86_64-rhel-9.4-rust ARCH=x86_64 SHELL=/bin/bash rustfmtcheck
-   make: Entering directory '/kbuild/src/consumer'
-   make[1]: Entering directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
->> Diff in rust/kernel/acpi.rs at line 59:
-            $crate::module_device_table!("acpi", $module_table_name, $table_name);
-        };
-    }
-   -
-    
->> Diff in rust/kernel/acpi.rs at line 59:
-            $crate::module_device_table!("acpi", $module_table_name, $table_name);
-        };
-    }
-   -
-    
-   make[2]: *** [Makefile:1826: rustfmt] Error 123
-   make[2]: Target 'rustfmtcheck' not remade because of errors.
-   make[1]: Leaving directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[1]: Target 'rustfmtcheck' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'rustfmtcheck' not remade because of errors.
-   make: Leaving directory '/kbuild/src/consumer'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
