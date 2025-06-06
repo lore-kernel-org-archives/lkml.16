@@ -1,48 +1,44 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EEA253947;
-	Fri,  6 Jun 2025 07:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B16BA2D;
+	Fri,  6 Jun 2025 07:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749196318; cv=none; b=IMCtpFu1TDwmS4XsTCZ2dJF6u20lOswAvjx2evzLlWQuP8ev3c5IgNsgdLmTaAHBf0jtAYJF4fwM/gOtYzHz6bSaz2Y1QCTMp3Z3eb151TZDPuHQ4S48dXMz8f0IZdyjTpIzTgA+HfV/K0tVt5iYvJU5mntc0ZAjYBDZ2tasZeM=
+	t=1749196320; cv=none; b=DmN0yuJD5/SgZpRsHte62kA4jCyK0hcZj2gMgDITbeHusaYJPJHDpXTz9jhDNiLoakt8CpO3Wxf91j98ZkLGqXhIiBlVPS0s6rXw3mFR81tGjo6ODNeTW4lMORcUW+w0eeE4v0EaUaYTbitjsOONVyQZ8Dma6zKC8juFimUr7ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749196318; c=relaxed/simple;
-	bh=ixcHSzravCF5OHMCMsSfMl6iEx0oa59ZZWL3buzN8HE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=Uc8ctRsCH3L7URZhd7J/vC9JOdzwDkmzOf094sr4989Bi7BbCC57mhlWzHFO+MAh5vqIBJx30dS8sIrdWNFY64YmDTNLAeDMyKhQYz7PoVerrJQBxIzES/aIJ8IO3Tg+K4Sk63xi8mbrxnlPvBEDFC2sOZqGNStzg/EZedo36B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dfVefHjT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749196320; c=relaxed/simple;
+	bh=EDlQUrtU1qJkkSrcni6ucsuRlZ7kPWt8p6ob4+KRYQo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vFblTYshm0Kg/CoQMmms6jfKtqIKsEB3q8oiE6TMlrUOU7RpYpaLvAHc4O0jQlw3ET8Bv119OFPmt7VTbfGMhGp13cZFAQiz3kGCSSX3iKyNSou6bte93DNprSdYz/QGCoFW9XF2Ex4pDNCfUT4/YE/5PSE5gkJclnE3cs18gOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=ojAMqJBD; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dfVefHjT"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5566v6Uh007519;
-	Fri, 6 Jun 2025 07:51:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4OmRq2rQW2Lq33eRxKHtUNom0yzDPlFkjIY3X6SMU08=; b=dfVefHjTuF5iEq3B
-	jqSXdF0I5LcTqFwkYQjktMtaQZLBWytd80W04TEnkS+fp9BwKtG3S7GQnM28YFln
-	+keSKUfd612HNlcE34isDE+Ms7ONcvAyyisLhn7EJImLLMkNDjgveO3nihytgd+k
-	s5IrVRlK7TXJWCXkdDoZGUE6H/myXrUc5avH4uo5ydT3cugl2IvhGXBHB+Qnxv1e
-	hPAPXCWNu6lz3v65uaI4zxK5Gy3apSMRLcdBGrpsg1c7szShulq+16BcLuXu3kh0
-	Xn6CcXaB5MX/2Tfn9vctT5KI6Tx/Ti1No+JcRZ0ZXoFcddUY+UB/QnEqOz6Q1dj+
-	vu4ojw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8t3tx5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Jun 2025 07:51:52 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5567pqp1028641
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 6 Jun 2025 07:51:52 GMT
-Received: from [10.231.216.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 6 Jun 2025
- 00:51:34 -0700
-Message-ID: <e18bdd88-3866-4aef-8873-b9b67f0cb9b7@quicinc.com>
-Date: Fri, 6 Jun 2025 15:51:31 +0800
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="ojAMqJBD"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uNRrd-00DNpR-9G; Fri, 06 Jun 2025 09:51:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=TljNjwKkshCY8uWNOtmVIUOyloDQ5ChN1LgYlk3cHFk=; b=ojAMqJBDrn4OISor8wx0h8/ZLJ
+	l3b4b9TsHHJW2qojpODKCoDeWxzVU8FhXjwulAeDKT7/Xz2Nx6obQvYi4OOZSNF+2IXTuL3IIZh22
+	hGy4IDrCliQcqT2OU6HXanUaWSvNBuWFpkrt3gvDSkCSCBqelURHS2hoXItufkJcz2GKBkIH3/Wo4
+	BGdEjxunRdfmMJ01ftiJ8C7dSsdetk4bh+v5B32nI83l7MJj5e1Jsqa/tHWuEnBvaYiJ65Mjq0uXI
+	SyoxQpxTQbFgZCiLfS8ae+tK7N4XJrEBD2CPOEu6iZ4RKVueWLZypbuOEsTCg+LAPJ21uGOJrwUia
+	lIgBBvfg==;
+Received: from [10.9.9.72] (helo=submission01.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uNRrc-00045z-NI; Fri, 06 Jun 2025 09:51:44 +0200
+Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uNRrO-006aKk-2a; Fri, 06 Jun 2025 09:51:30 +0200
+Message-ID: <adae2539-2a48-45c3-a340-e9ab3776941f@rbox.co>
+Date: Fri, 6 Jun 2025 09:51:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,122 +46,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
-From: Renjiang Han <quic_renjiang@quicinc.com>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Nicolas
- Dufresne" <nicolas.dufresne@collabora.com>
-References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
- <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
- <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
- <t6niql4jfotjnbducypwxkdjqt3or7k3rwmltvbhifmpphsiwy@er56ey4v2pzo>
- <a3bf69f3-6500-4e45-ba34-8ba24312938a@kernel.org>
- <CAO9ioeWkLu+ne18kjEST7YU7b1aBzcMBBeyfpagzis99BAeOHg@mail.gmail.com>
- <b710e357-09e3-460e-b097-28cf0c856aeb@kernel.org>
- <44b3779b-702c-4e8b-8ccd-c9c3314a511f@linaro.org>
- <3956eeef-2a60-4bfb-908e-5e3e32970b86@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <3956eeef-2a60-4bfb-908e-5e3e32970b86@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH RFC net-next v2 2/3] vsock/test: Introduce
+ get_transports()
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250528-vsock-test-inc-cov-v2-0-8f655b40d57c@rbox.co>
+ <20250528-vsock-test-inc-cov-v2-2-8f655b40d57c@rbox.co>
+ <wzbyv7fvzgpf4ta775of6k4ozypnfe6szysvnz4odd3363ipsp@2v3h5w77cr7a>
+ <b4f3bc0d-9ff5-4271-be28-bbace27927bd@rbox.co>
+ <hxnugz3xrrn3ze2arcvjumvjqekvjfsrvd32wi7e3zgdagdaqb@cm3y6fipqdf3>
+Content-Language: pl-PL, en-GB
+From: Michal Luczaj <mhal@rbox.co>
+In-Reply-To: <hxnugz3xrrn3ze2arcvjumvjqekvjfsrvd32wi7e3zgdagdaqb@cm3y6fipqdf3>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=RMizH5i+ c=1 sm=1 tr=0 ts=68429e19 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=FFWuaSR45GQhWSSMqCAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA3MiBTYWx0ZWRfXxvDBPT3t5Wwv
- 5n2fdUlHiLpn2WqC5GEMuXV1nGhw+27pYVg5zjhZGKsL2nKkWfmxU5wjSMpJAaaqXnDfXwVZhtg
- ikNslJIToL6bCxcbq6gO9wIp1/Ut74RRjG42DVJfnlzA0vl+FyUYZ8lllXZZIYj8c3jqZGBFUaB
- h5ST/4DFR1ct7Yb5R9jPZN2mjLsdAd4eItdF21XjKl2vOErHcDvo9+X1Rg/nK0WVVToHYcKjsSK
- fIqQo7r7rYzYzlyn4M0nUU7geuxdRaP3KKeLesOuoQHQrmjjIVtrHjwLIGOkZgqvvTK8CPwZbuL
- u2seoA/jTQ3yCIaMSSOARSle1LSKCyJkFXmXKRkbKtA2vgu1zfxXWNafQ3hHxAV809VKu+tCHbW
- OJdnNttl7gIxfDkO0yX6r+Ty6jIDOpCmfBK9b9uFo7nHdZ2djmbK+GAGvYenWe3zA4j00FLw
-X-Proofpoint-GUID: lMZHjnQ-pNeHXXze68TsacmFKXiiyDTM
-X-Proofpoint-ORIG-GUID: lMZHjnQ-pNeHXXze68TsacmFKXiiyDTM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_02,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 suspectscore=0 adultscore=0 mlxlogscore=999 mlxscore=0
- clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506060072
 
-
-On 6/6/2025 11:52 AM, Renjiang Han wrote:
->
-> On 6/5/2025 8:40 PM, Bryan O'Donoghue wrote:
->>>>> Well, that's a NAK then (although depends what you mean by DT).
->>>>
->>>> I mean qcs615.dtsi. I'd suggest an immutable branch for the driver
+On 6/5/25 12:46, Stefano Garzarella wrote:
+> On Wed, Jun 04, 2025 at 09:10:19PM +0200, Michal Luczaj wrote:
+>> On 6/4/25 11:07, Stefano Garzarella wrote:
+>>> On Wed, May 28, 2025 at 10:44:42PM +0200, Michal Luczaj wrote:
+>>>> +static int __get_transports(void)
+>>>> +{
+>>>> +	/* Order must match transports defined in util.h.
+>>>> +	 * man nm: "d" The symbol is in the initialized data section.
+>>>> +	 */
+>>>> +	const char * const syms[] = {
+>>>> +		"d loopback_transport",
+>>>> +		"d virtio_transport",
+>>>> +		"d vhost_transport",
+>>>> +		"d vmci_transport",
+>>>> +		"d hvs_transport",
+>>>> +	};
 >>>
->>> Sorry, but no, DTS cannot depend on drivers. You CANNOT merge them into
->>> one branch.
+>>> I would move this array (or a macro that define it), near the transport
+>>> defined in util.h, so they are near and we can easily update/review
+>>> changes.
 >>>
->>>> patch. Or just merging the patches in two consequent releases.
->>>
->>> That's a new device nodes, new hardware so it should not be blocked by
->>> any driver patch. This is just totally broken process / patchset / 
->>> work.
->>>
->>> Best regards,
->>> Krzysztof
+>>> BTW what about adding static asserts to check we are aligned?
 >>
->> Reading this thread, I don't think that is the case.
+>> Something like
 >>
->> I don't see how patches 2/3 or 3/3 depend on 1/3.
->>
->> The frequency table is a fallback in the driver and the DT changes 
->> are completely straight forward.
->>
->> TBH, I think we are hitting an email comms/social barrier here, not a 
->> technical one.
->>
->> @Renjiang can you please confirm that freq_table is a fallback, 
->> qcs615 will work without OPP table and the DTS stuff doesn't depend 
->> on the driver.
-> yes, freq_table is a fallback. driver will use freq_table without OPP 
-> table. the DTS doesn't depend on the driver.
-To correct my previous response:
-For this project, the driver patch needs to be merged first. Since it
-falls back to SC7180, but their frequencies are different which is
-reflected in the OPP table defined in the DTS.
+>> #define KNOWN_TRANSPORTS	\
+> 
+> What about KNOWN_TRANSPORTS(_) ?
 
-The DTS patch is intended to enable video function on the QCS615 platform.
+Ah, yeah.
 
-The driver patch is to switch from using the driver freq_table to the
-OPP table from the DTS. Without it, the driver will continue to use the
-internal freq_table as before.
+>> 	_(LOOPBACK, "loopback")	\
+>> 	_(VIRTIO, "virtio")	\
+>> 	_(VHOST, "vhost")	\
+>> 	_(VMCI, "vmci")		\
+>> 	_(HYPERV, "hvs")
+>>
+>> enum transport {
+>> 	TRANSPORT_COUNTER_BASE = __COUNTER__ + 1,
+>> 	#define _(name, symbol)	\
+>> 		TRANSPORT_##name = _BITUL(__COUNTER__ - TRANSPORT_COUNTER_BASE),
+>> 	KNOWN_TRANSPORTS
+>> 	TRANSPORT_NUM = __COUNTER__ - TRANSPORT_COUNTER_BASE,
+>> 	#undef _
+>> };
+>>
+>> static char * const transport_ksyms[] = {
+>> 	#define _(name, symbol) "d " symbol "_transport",
+>> 	KNOWN_TRANSPORTS
+>> 	#undef _
+>> };
+>>
+>> static_assert(ARRAY_SIZE(transport_ksyms) == TRANSPORT_NUM);
+>>
+>> ?
+> 
+> Yep, this is even better, thanks :-)
 
-Therefore, if the DTS patch is applied without the driver patch, the video
-function will be enabled on the QCS615 platform, but the driver will use
-the SC7180 frequency table, which can lead to an overclocking issue.
->>
->> TBH, I don't see how the DTS can or should but...
->>
->> ---
->> bod 
->
--- 
-Best Regards,
-Renjiang
+Although checkpatch complains:
+
+ERROR: Macros with complex values should be enclosed in parentheses
+#105: FILE: tools/testing/vsock/util.h:11:
++#define KNOWN_TRANSPORTS(_)	\
++	_(LOOPBACK, "loopback")	\
++	_(VIRTIO, "virtio")	\
++	_(VHOST, "vhost")	\
++	_(VMCI, "vmci")		\
++	_(HYPERV, "hvs")
+
+BUT SEE:
+
+   do {} while (0) advice is over-stated in a few situations:
+
+   The more obvious case is macros, like MODULE_PARM_DESC, invoked at
+   file-scope, where C disallows code (it must be in functions).  See
+   $exceptions if you have one to add by name.
+
+   More troublesome is declarative macros used at top of new scope,
+   like DECLARE_PER_CPU.  These might just compile with a do-while-0
+   wrapper, but would be incorrect.  Most of these are handled by
+   detecting struct,union,etc declaration primitives in $exceptions.
+
+   Theres also macros called inside an if (block), which "return" an
+   expression.  These cannot do-while, and need a ({}) wrapper.
+
+   Enjoy this qualification while we work to improve our heuristics.
+
+ERROR: Macros with complex values should be enclosed in parentheses
+#114: FILE: tools/testing/vsock/util.h:20:
++	#define _(name, symbol)	\
++		TRANSPORT_##name = BIT(__COUNTER__ - TRANSPORT_COUNTER_BASE),
+
+WARNING: Argument 'symbol' is not used in function-like macro
+#114: FILE: tools/testing/vsock/util.h:20:
++	#define _(name, symbol)	\
++		TRANSPORT_##name = BIT(__COUNTER__ - TRANSPORT_COUNTER_BASE),
+
+WARNING: Argument 'name' is not used in function-like macro
+#122: FILE: tools/testing/vsock/util.h:28:
++	#define _(name, symbol) "d " symbol "_transport",
+
+Is it ok to ignore this? FWIW, I see the same ERRORs due to similarly used
+preprocessor directives in fs/bcachefs/alloc_background_format.h, and the
+same WARNINGs about unused macro arguments in arch/x86/include/asm/asm.h
+(e.g. __ASM_SEL).
 
