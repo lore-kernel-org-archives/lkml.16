@@ -1,220 +1,168 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27733284B46;
-	Fri,  6 Jun 2025 08:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4A824EF6B
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749196802; cv=none; b=hjqNXIAKG8fOrTBTzpGlgHAgeAcqRb5rAUt64uDNw0iSMtCNhN6Kl7mD+XH0sFXYhrZO1PLxzHkZ3ftXQckm9b5zsV431NRU67Ltx69Yq9dilAgc2Hyw2orMPNkrpNehXb5WDM6QNckk+tG7HBZzFwKoY5MkKiXYGIgxcAespF0=
+	t=1749197086; cv=none; b=saSgPV+iAcozIH8s7wvKl6tOAT4BYTkWL487Yl66zF721A0XfD/llR2gkJp6rLTKD4G7pdqjFgoea2f7wsQo/dl1dXMlQLvgHyq6NwRL1yOgIhoAyIepyKTBzzb8F2lL4Bswgt3xgnKgPZzZ4WF+4GtTZNNpc0bUb7PFVayV7cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749196802; c=relaxed/simple;
-	bh=KfrhofsOFofV4Yxp9rI2KSMcovauU9GJjmAbXeaDSsg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JjCUHq9Ft9kCyTE6GP08o4vpTeXJ3kalbhC9wID8v6sU/6TcunrDe7fSxqFNuazVhB+NHi9cr8XaYm/rkCNbJFBTCUllqsNiYlO+TRTOg+V0vFSE1fnRLT8eSF9r7rYlv7233Gie2iZoR2UsFqtEe9K8SjO5qbQRrHYX80fnh+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqhLkbKM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749197086; c=relaxed/simple;
+	bh=/eAbsE62fKUCaEC3zAvD15WyaOeeMA6jncyNVQwRldg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IqICIVloqDydMg0Sw9vDbvIxDfVG9vEoneZ+BdzR/l9LcLVl+LhyFnVxYw17OlmqIdqdtWdgewQDAaN/u2WpzPzzUq6g3/Nysn9WgQujDgDuoP1BHV+J+PqTRV0XHLMKvW3z0GHtEyRu3o4/RfOXWIrLy6Bir8u7fFZXWZNfnx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qV4jtDv+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqhLkbKM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA779C4CEEB;
-	Fri,  6 Jun 2025 07:59:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qV4jtDv+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EB2C4CEEB;
+	Fri,  6 Jun 2025 08:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749196801;
-	bh=KfrhofsOFofV4Yxp9rI2KSMcovauU9GJjmAbXeaDSsg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pqhLkbKMkWlh09VG2BUFsVfs6NK4OKZbNwioszl4dtm7v6FQc/Us4v9H8idPC/YAZ
-	 R9D+pS+mxBdOKoDLgqtqaLdXdLYDHR597Gg2BMYpada9SrbtQR4t7wJ6ImnWZzHOGF
-	 5gnEw5tKPIaK4Qhwzw0wHveRseXshANV2N2aXKDZSBLnFRNaJV0E6A9mAQ3TDfvhAW
-	 nq1UgqiGf25d7D2QCO1dYHLdR3DKyUk5gBrQSU/DXnxiQOQSAcqvdEmw/eUcLOA38h
-	 uMHfd3tmg5iZSInah3S9vB1cxcIVwyIczZWhxfCIK6FtpP8QL5Pdy+ytPlW1pxl4sd
-	 CpZ9A7pZeYAkw==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
-	sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
-	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
-	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
-	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
-	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
-	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
-	iommu@lists.linux.dev, kevin.tian@intel.com
-Subject: Re: [RFC PATCH 17/30] iommufd/device: Add TSM Bind/Unbind for TIO
- support
-In-Reply-To: <20250604132403.GJ5028@nvidia.com>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-18-yilun.xu@linux.intel.com>
- <yq5awm9ujouz.fsf@kernel.org> <aD6UQy4KwKcdSvVE@yilunxu-OptiPlex-7050>
- <20250603122149.GH376789@nvidia.com> <yq5aplfj99x0.fsf@kernel.org>
- <20250604132403.GJ5028@nvidia.com>
-Date: Fri, 06 Jun 2025 13:29:46 +0530
-Message-ID: <yq5a4iwt8fm5.fsf@kernel.org>
+	s=k20201202; t=1749197086;
+	bh=/eAbsE62fKUCaEC3zAvD15WyaOeeMA6jncyNVQwRldg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qV4jtDv+PQOS1Z54jDelm+RkHP6SZV4PHiNcZ7pa3FEoaNtqdWNmfGY+gApAqOlfr
+	 wGx1+FACRrsQAzZ7HF9ROT3Oc5yRqgeEgYkSwrTVslT3taQMq7DRWpcBnKbjam0jkh
+	 FzS4NAgwzQCOJUMLwIGww+BNzcXdv9D8Bu/UY5PY8mAeCL0jBg78dfowP/RdmO1GY/
+	 8j3RSNfj4DPOJccGvQK70atOh8UnIKDqhJUl+2qw041PRIdtXhzL7igODq4SbPy5HR
+	 5rPxt5E3JOIiJPjdgUc338VwGktz2mCgS5JNdfiK6ss7hQbT9oVG4g04Klb/wQr2zS
+	 TmnoqI11hBOfQ==
+Date: Fri, 6 Jun 2025 11:04:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, Changyuan Lyu <changyuanl@google.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Pratyush Yadav <ptyadav@amazon.de>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
+ properly
+Message-ID: <aEKhF3HcrvG77Ogb@kernel.org>
+References: <20250605171143.76963-1-pratyush@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605171143.76963-1-pratyush@kernel.org>
 
-Jason Gunthorpe <jgg@nvidia.com> writes:
+On Thu, Jun 05, 2025 at 07:11:41PM +0200, Pratyush Yadav wrote:
+> From: Pratyush Yadav <ptyadav@amazon.de>
+> 
+> Currently, when restoring higher order folios, kho_restore_folio() only
+> calls prep_compound_page() on all the pages. That is not enough to
+> properly initialize the folios. The managed page count does not
+> get updated, the reserved flag does not get dropped, and page count does
+> not get initialized properly.
+> 
+> Restoring a higher order folio with it results in the following BUG with
+> CONFIG_DEBUG_VM when attempting to free the folio:
+> 
+>     BUG: Bad page state in process test  pfn:104e2b
+>     page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x104e2b
+>     flags: 0x2fffff80000000(node=0|zone=2|lastcpupid=0x1fffff)
+>     raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000000
+>     raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
+>     page dumped because: nonzero _refcount
+>     [...]
+>     Call Trace:
+>     <TASK>
+>     dump_stack_lvl+0x4b/0x70
+>     bad_page.cold+0x97/0xb2
+>     __free_frozen_pages+0x616/0x850
+>     [...]
+> 
+> Combine the path for 0-order and higher order folios, initialize the
+> tail pages with a count of zero, and call adjust_managed_page_count() to
+> account for all the pages instead of just missing them.
+> 
+> In addition, since all the KHO-preserved pages get marked with
+> MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
+> actually set (as can also be seen from the flags of the dumped page in
+> the logs above). So drop the ClearPageReserved() calls.
+> 
+> Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
+> Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+> ---
+> 
+> Side note: get_maintainers.pl for KHO only lists kexec@ as the mailing list.
+> Since KHO has a bunch of MM bits as well, should we also add linux-mm@ to its
+> MAINTAINERS entry?
+> 
+> Adding linux-mm@ to this patch at least, in case MM people have an opinion on
+> this.
+> 
+>  kernel/kexec_handover.c | 29 +++++++++++++++++------------
+>  1 file changed, 17 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+> index eb305e7e61296..5214ab27d1f8d 100644
+> --- a/kernel/kexec_handover.c
+> +++ b/kernel/kexec_handover.c
+> @@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
+>  }
+> 
+>  /* almost as free_reserved_page(), just don't free the page */
+> -static void kho_restore_page(struct page *page)
+> +static void kho_restore_page(struct page *page, unsigned int order)
+>  {
+> -	ClearPageReserved(page);
 
-....
+So now we don't clear PG_Reserved even on order-0 pages? ;-)
 
->> tsm_unbind in vdevice_destroy:
->>=20
->> vdevice_destroy() ends up calling tsm_unbind() while holding only the
->> vdev_lock. At first glance, this seems unsafe. But in practice, it's
->> fine because the corresponding iommufd_device has already been destroyed
->> when the VFIO device file descriptor was closed=E2=80=94triggering
->> vfio_df_iommufd_unbind().
->
-> This needs some kind of fixing the idevice should destroy the vdevices
-> during idevice destruction so we don't get this out of order where the
-> idevice is destroyed before the vdevice.
->
-> This should be a separate patch as it is an immediate bug fix..
->
+> -	init_page_count(page);
+> -	adjust_managed_page_count(page, 1);
+> +	unsigned int i, nr_pages = (1 << order);
 
-Something like below?
+Can you please declare 'i' inside the loop, looks nicer IMHO.
 
-diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
-index 86244403b532..a49b293bd516 100644
---- a/drivers/iommu/iommufd/device.c
-+++ b/drivers/iommu/iommufd/device.c
-@@ -221,6 +221,8 @@ struct iommufd_device *iommufd_device_bind(struct iommu=
-fd_ctx *ictx,
- 	refcount_inc(&idev->obj.users);
- 	/* igroup refcount moves into iommufd_device */
- 	idev->igroup =3D igroup;
-+	idev->vdev   =3D NULL;
-+	mutex_init(&idev->lock);
-=20
- 	/*
- 	 * If the caller fails after this success it must call
-@@ -282,6 +284,12 @@ EXPORT_SYMBOL_NS_GPL(iommufd_ctx_has_group, "IOMMUFD");
-  */
- void iommufd_device_unbind(struct iommufd_device *idev)
- {
-+	/* this will be unlocked while destroying the idev obj */
-+	mutex_lock(&idev->lock);
-+
-+	if (idev->vdev)
-+		/* extra refcount taken during vdevice alloc */
-+		iommufd_object_destroy_user(idev->ictx, &idev->vdev->obj);
- 	iommufd_object_destroy_user(idev->ictx, &idev->obj);
- }
- EXPORT_SYMBOL_NS_GPL(iommufd_device_unbind, "IOMMUFD");
-diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommuf=
-d/iommufd_private.h
-index 9ccc83341f32..d85bd8b38751 100644
---- a/drivers/iommu/iommufd/iommufd_private.h
-+++ b/drivers/iommu/iommufd/iommufd_private.h
-@@ -425,6 +425,10 @@ struct iommufd_device {
- 	/* always the physical device */
- 	struct device *dev;
- 	bool enforce_cache_coherency;
-+	/* to protect the following members*/
-+	struct mutex lock;
-+	/* if there is a vdevice mapping the idev */
-+	struct iommufd_vdevice *vdev;
- };
-=20
- static inline struct iommufd_device *
-@@ -606,6 +610,7 @@ struct iommufd_vdevice {
- 	struct iommufd_ctx *ictx;
- 	struct iommufd_viommu *viommu;
- 	struct device *dev;
-+	struct iommufd_device *idev;
- 	u64 id; /* per-vIOMMU virtual ID */
- };
-=20
-diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
-index 3df468f64e7d..c38303df536f 100644
---- a/drivers/iommu/iommufd/main.c
-+++ b/drivers/iommu/iommufd/main.c
-@@ -172,6 +172,11 @@ int iommufd_object_remove(struct iommufd_ctx *ictx,
- 		ictx->vfio_ioas =3D NULL;
- 	xa_unlock(&ictx->objects);
-=20
-+	if (obj->type =3D=3D IOMMUFD_OBJ_DEVICE) {
-+		/* idevice should be freed with lock held */
-+		struct iommufd_device *idev =3D container_of(obj, struct iommufd_device,=
- obj);
-+		mutex_unlock(&idev->lock);
-+	}
- 	/*
- 	 * Since users is zero any positive users_shortterm must be racing
- 	 * iommufd_put_object(), or we have a bug.
-diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
-index 01df2b985f02..17f189bc9e2c 100644
---- a/drivers/iommu/iommufd/viommu.c
-+++ b/drivers/iommu/iommufd/viommu.c
-@@ -84,15 +84,24 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucm=
-d)
- 	return rc;
- }
-=20
-+/* This will be called from iommufd_device_unbind  */
- void iommufd_vdevice_destroy(struct iommufd_object *obj)
- {
- 	struct iommufd_vdevice *vdev =3D
- 		container_of(obj, struct iommufd_vdevice, obj);
- 	struct iommufd_viommu *viommu =3D vdev->viommu;
-+	struct iommufd_device *idev =3D vdev->idev;
-+
-+	/*
-+	 * since we have an refcount on idev, it can't be freed.
-+	 */
-+	lockdep_assert_held(&idev->lock);
-=20
- 	/* xa_cmpxchg is okay to fail if alloc failed xa_cmpxchg previously */
- 	xa_cmpxchg(&viommu->vdevs, vdev->id, vdev, NULL, GFP_KERNEL);
- 	refcount_dec(&viommu->obj.users);
-+	idev->vdev =3D NULL;
-+	refcount_dec(&idev->obj.users);
- 	put_device(vdev->dev);
- }
-=20
-@@ -124,10 +133,15 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *=
-ucmd)
- 		goto out_put_idev;
- 	}
-=20
-+	mutex_lock(&idev->lock);
-+	if (idev->vdev) {
-+		rc =3D -EINVAL;
-+		goto out_put_idev_unlock;
-+	}
- 	vdev =3D iommufd_object_alloc(ucmd->ictx, vdev, IOMMUFD_OBJ_VDEVICE);
- 	if (IS_ERR(vdev)) {
- 		rc =3D PTR_ERR(vdev);
--		goto out_put_idev;
-+		goto out_put_idev_unlock;
- 	}
-=20
- 	vdev->id =3D virt_id;
-@@ -147,10 +161,18 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *=
-ucmd)
- 	if (rc)
- 		goto out_abort;
- 	iommufd_object_finalize(ucmd->ictx, &vdev->obj);
--	goto out_put_idev;
-+	/* don't allow idev free without vdev free */
-+	refcount_inc(&idev->obj.users);
-+	vdev->idev =3D idev;
-+	/* vdev lifecycle now managed by idev */
-+	idev->vdev =3D vdev;
-+	refcount_inc(&vdev->obj.users);
-+	goto out_put_idev_unlock;
-=20
- out_abort:
- 	iommufd_object_abort_and_destroy(ucmd->ictx, &vdev->obj);
-+out_put_idev_unlock:
-+	mutex_unlock(&idev->lock);
- out_put_idev:
- 	iommufd_put_object(ucmd->ictx, &idev->obj);
- out_put_viommu:
+> +
+> +	/* Head page gets refcount of 1. */
+> +	set_page_count(page, 1);
+
+ClearPageReserved(page) here?
+
+> +
+> +	/* For higher order folios, tail pages get a page count of zero. */
+> +	for (i = 1; i < nr_pages; i++)
+> +		set_page_count(page + i, 0);
+
+and here?
+
+> +
+> +	if (order > 0)
+> +		prep_compound_page(page, order);
+> +
+> +	adjust_managed_page_count(page, nr_pages);
+>  }
+> 
+>  /**
+> @@ -179,15 +189,10 @@ struct folio *kho_restore_folio(phys_addr_t phys)
+>  		return NULL;
+> 
+>  	order = page->private;
+> -	if (order) {
+> -		if (order > MAX_PAGE_ORDER)
+> -			return NULL;
+> -
+> -		prep_compound_page(page, order);
+> -	} else {
+> -		kho_restore_page(page);
+> -	}
+> +	if (order > MAX_PAGE_ORDER)
+> +		return NULL;
+> 
+> +	kho_restore_page(page, order);
+>  	return page_folio(page);
+>  }
+>  EXPORT_SYMBOL_GPL(kho_restore_folio);
+> --
+> 2.47.1
+> 
+
+-- 
+Sincerely yours,
+Mike.
