@@ -1,108 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AE23208
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 00:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFF67FD
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 00:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749168593; cv=none; b=mqe59bekm9f4o91Qxz/lPiQCkm4ySK9EAALP2dSL4Yr14HNul5ohwbX4u9Up7NYWyLGEBzcI5GzdL+BzSwdPp/Zq1dmxf2zpkOTrfiBLR9sFHi3MCZPsWKKGYiHvECozrgqnhFDi6zhB0/+l3JxG4Cm6vKXeffQlW5oimCEjWBA=
+	t=1749168723; cv=none; b=Mkao/NUvVnWuESAk2VBucKVfUyrF5uPzJ0VMEhWiAKCVVyqZ6hnkVAxYgU3lja2NYw7Fbt8v9HGk7Wy33Gq74zm8WrPuxIvT+1ReALBgPh5BC6FOx/R43LJ5n8rdw7iRFKDfYdE9rwK3e2vhjGrr1QGtTxY2r67e5DjlcK3uMgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749168593; c=relaxed/simple;
-	bh=HelkW/bWw8McxxXZHEIrR28siZM+fgO3DHrIn0ODxGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bc/Kbqn/T2bbeU9wqTKX+ankVAISuBaYFteP1DcSmeGWmugE0Ky69glTicgrHLEttJG1DiN3n83LeBWpHV6Qa10HAH13U3yUBXHoCoxN4iUOeahThhuIh6tgesOMbVIi/72SjDmUHGLtAi1gVvNzi5M6wKotz68g9jykyiV1yjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hU3ahuw4; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749168723; c=relaxed/simple;
+	bh=wDf6tSZb//7+XWN/SrX+v494UtsLj5YYhF5RdZUm2Jo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ju9IMM/cXSU8yNQFyOU+gtRqHmbGD/RWsFe39BGi6NmRCoYEAJC58vLcRqfJx9rWzHx/BHxcW/pWHEXMrBpiNxSvAy83dbhkwSWrcnQsoO9G0BmhPah2PuwW/n82hWh9RUUc6An3CNYgIEP3tHBYcKCJlDQrFN36lRt68pH3Q20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ITauuJeu; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hU3ahuw4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749168592; x=1780704592;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HelkW/bWw8McxxXZHEIrR28siZM+fgO3DHrIn0ODxGo=;
-  b=hU3ahuw4nxEL0uH0hSp+rlEZ3UMay/zp2tA0ZaYT3qRLHmhL3xAkEWYe
-   ZxfqtwWYVZIq18B+PxBgSxhHQV9LAOPzqY3DFCOplqXEM5YpSX001EYuK
-   LRGKO3GuWb5BYN1++Ij0+xX5sR9+eZ+aUelVLxbYBVjUy/Psy1xgL1sqL
-   ao8AfyUXYs4JPnRyTdcf4/FVRLAxY7XBg3vsDAFZfiKLtcek6kFQUjKyU
-   6JIepeE03nsgcIXRz3e+7ASxkaO6JvLYH98MzGBixqVdRXkmvkJDSze3E
-   pHeFPd2WReEkMUjbLAuOseeN7NftyQ/Bka8Dbpjr4cGzLPFE75dcBZef9
-   A==;
-X-CSE-ConnectionGUID: GmkpomXTSPysyLE9llgJjw==
-X-CSE-MsgGUID: WU12CQCRTKyiy24dxdDPTA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="55101505"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="55101505"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:09:51 -0700
-X-CSE-ConnectionGUID: 7BiVIETJSymTZrniWRzO7w==
-X-CSE-MsgGUID: O1hvVvTySe6NS5MwRlktaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="176629122"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:09:51 -0700
-Date: Thu, 5 Jun 2025 17:09:49 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v5 27/29] fs/resctrl: Add file system mechanism for
- architecture info file
-Message-ID: <aEIxzbuFybLBE3xt@agluck-desk3>
-References: <20250521225049.132551-1-tony.luck@intel.com>
- <20250521225049.132551-28-tony.luck@intel.com>
- <f25d136c-b1d3-483a-ac77-92464d7fe25c@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ITauuJeu"
+Message-ID: <a17bf7bf-238f-4b71-8f77-6ca4fea380f8@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749168718;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uXGHLViCT6YsAqsubq+1xL9M6AMjoxBoATCFHCFNHMw=;
+	b=ITauuJeusjWNoPZBazcCGDTBOS9Mzdjmvqy+zHyfdEJxh9I5R+6TB+D6FH2g60izyxGVIj
+	y8LTRwAPhaN/omJbgCxyx40ZZX/H/8QW+iIhnwPrf0u9C+GHyX3Km2xSGTe2nEZlOGg+YD
+	7Jm9BC3zaOXU7d/fDTh+4fstAorXqkU=
+Date: Thu, 5 Jun 2025 17:11:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f25d136c-b1d3-483a-ac77-92464d7fe25c@intel.com>
+Subject: Re: [PATCH 02/13] RISC-V: KVM: Don't treat SBI HFENCE calls as NOPs
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250605061458.196003-1-apatel@ventanamicro.com>
+ <20250605061458.196003-3-apatel@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250605061458.196003-3-apatel@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 03, 2025 at 09:15:02PM -0700, Reinette Chatre wrote:
-> Hi Tony,
-> 
-> On 5/21/25 3:50 PM, Tony Luck wrote:
-> > Creation of all files in the resctrl file system is under control of
-> > the file system layer.
-> > 
-> > But some resources may need to add a file to the info/{resource}
-> > directory for debug purposes.
-> > 
-> > Add a new rdt_resource::info_file field for the resource to specify
-> > show() and/or write() operations. These will be called with the
-> > rdtgroup_mutex held.
-> > 
-> > Architecture can note the file is only for debug using by setting
-> > the rftype::flags RFTYPE_DEBUG bit.
-> 
-> This needs to change. This punches a crater through the separation
-> between fs and arch that we worked hard to achieve. Please make an attempt
-> to do so as I am sure you can.
 
-The file I want to create here amy only be of interest in debugging
-the telemetry h/w interface. So my next choice is debugfs.
+On 6/4/25 11:14 PM, Anup Patel wrote:
+> The SBI specification clearly states that SBI HFENCE calls should
+> return SBI_ERR_NOT_SUPPORTED when one of the target hart doesn’t
+> support hypervisor extension (aka nested virtualization in-case
+> of KVM RISC-V).
+>
+> Fixes: c7fa3c48de86 ("RISC-V: KVM: Treat SBI HFENCE calls as NOPs")
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>   arch/riscv/kvm/vcpu_sbi_replace.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/kvm/vcpu_sbi_replace.c b/arch/riscv/kvm/vcpu_sbi_replace.c
+> index 9752d2ffff68..b17fad091bab 100644
+> --- a/arch/riscv/kvm/vcpu_sbi_replace.c
+> +++ b/arch/riscv/kvm/vcpu_sbi_replace.c
+> @@ -127,9 +127,9 @@ static int kvm_sbi_ext_rfence_handler(struct kvm_vcpu *vcpu, struct kvm_run *run
+>   	case SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID:
+>   		/*
+>   		 * Until nested virtualization is implemented, the
+> -		 * SBI HFENCE calls should be treated as NOPs
+> +		 * SBI HFENCE calls should return not supported
+> +		 * hence fallthrough.
+>   		 */
+> -		break;
+>   	default:
+>   		retdata->err_val = SBI_ERR_NOT_SUPPORTED;
+>   	}
 
-But creation of the debugfs "resctrl" directory is done by file
-system code and the debugfs_resctrl variable is only marked "extern" by
-fs/resctrl/internal.h, so currently not accessible to architecture code.
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
 
-Is that a deliberate choice? Would it be OK to make that visible to
-architecture code to create files in /sys/kernel/debug/resctrl?
-
-Or should I add my file in a new /sys/kernel/debug/x86/resctrl
-directory?
-
--Tony
