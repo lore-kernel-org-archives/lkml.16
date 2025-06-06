@@ -1,164 +1,247 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7702C136672;
-	Fri,  6 Jun 2025 01:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D904629A2;
+	Fri,  6 Jun 2025 02:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749175096; cv=none; b=Z67M7Id8ygh8S3YXxaub1e6s/R83W8w4oBHnWSH6iPYlWdksOsbmw2xgmV0WCAmGZ+pssr0xrEGZY3C9Sxjd8K0iZbaGlfZ43Sq/fXhEd+9n/Yz8/XqRwu63DSItDpz/viCz1yzQkB2krQDp508vo+hkOigpgGrB0jkGF4RCDAg=
+	t=1749175275; cv=none; b=FBCfMY+MK3lVCYJ/nHlXk8avLGnfBfrpw7m8cFMpGg7mmi8IjaRR2Sa/aC3Ilr5bG4bZRb2LStsV+SoPV6iCcXc4YRBLGHuICU+rSni6/pkImcN6ogP3UCcs4JMJmH7ozlWw6Lz7mn7cdsE5fI+UAxovqRgq0yvind1Sx0xWeys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749175096; c=relaxed/simple;
-	bh=MkBvdwK6FNaM0fTErE7K1l3fRohr1KqHDqz4JSkiUIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=g3QjmdCKT7x4PRVMOa1cR52LCRiOfDEWKpA8U/KbV8ZokTnXZDg0A6BRMyMsAve4Fl9ChSsqT601YLDuQgmmEsdZdTgAgcm/1Z+h6kpSV/MQLBMwY4bXtJDINLGyx7obSSDH5r+aEyA6SIsMK0Mur66ehxAjiXHgwEcmu4Rj16U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bTm2NzG4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749175275; c=relaxed/simple;
+	bh=0Vl0iSkRpBh/E7MBlT0kYMNSiuiqq/ySln8Q8tbd0QY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ixQvtPuY9DQFd2eouH8yw6ZLgp80rvqszEK4j9KV2Y4GilXzoTsNtDomsSY1e4AeLV2Pb/CjOG+otB+aLNkR+UtTj8z4XEnj2nSfD87WDr6haCGGmu43dTYqx+3RXLXD8KNhmqRPGwZsO9GXLblLu4Ub/TylODA129Zes5b1Sjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9XtnQjj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bTm2NzG4"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555GoJ8L032298;
-	Fri, 6 Jun 2025 01:58:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1eVv25fyJD7fIwowHkr2az93vCNXy8gdcolEbjwyhqE=; b=bTm2NzG48wsYFvrc
-	/VrOAaTxPzQS11NxEZN+EX8FCSOicO5tU1iOLy70wXIs116itFzZ4hNYRTAJJMNW
-	3kyeyVLAKBpt97SrtcJKapBwBNbKVrsoa7vXCynWD+vST6BTCF9luYUAZYQdWiRi
-	oV4QJRi/LunQM7GnhKFPt6Aj2NBkv0zPfvcKqSW8pPiOGAWsyBdAPkUzvnjuebnz
-	+kPiVd6E0B870ll/++Lcd5D54lbV2gh+yACv9wMG2aqmYMfs7kgO9eIdXH4+ZDzf
-	sPUSR41mPPukkDvJxRSuZssgKfnn2eKeLGA07FJ60wWK8+q63TIjxlWe4Vn5uWP8
-	ZqZ1Kg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471sfv2211-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Jun 2025 01:58:12 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5561wBdv030347
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 6 Jun 2025 01:58:11 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 5 Jun 2025
- 18:58:09 -0700
-Message-ID: <9ab8e8f8-e176-44ab-b8e5-0c27e5eff30b@quicinc.com>
-Date: Fri, 6 Jun 2025 09:58:06 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9XtnQjj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18488C4CEE7;
+	Fri,  6 Jun 2025 02:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749175274;
+	bh=0Vl0iSkRpBh/E7MBlT0kYMNSiuiqq/ySln8Q8tbd0QY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n9XtnQjj2/8a94/f/q1nDpzBTnKMUkLMlYbmApep4tZpQKr5M51rHa5ri4rE+RD+w
+	 vcvmVt/8KUQYQ8+k/5jHFCv2A2heniPGaCdoKMFdorVlLrx4UWA13pTHOkhBpJdSgB
+	 JULxLX76cpz/4dIKwV0lai1Le+dSSAhXempoqtlpEUd0misnDZt+lln3Fn/Ur7CaeU
+	 dIR3aeMP2he1nen7IAxRMEbbIPhEo/CQV9YZH30cte+IhvtjjJLiGDZTKRdJmuAJQd
+	 jN/5gkjeXjhdTUQUye72FbomnEeTpMG3fVwK1TZJm1/sVJpNt+bj9Kxjq2R6WKPXnH
+	 FUL0SLHl8Z+pg==
+Date: Thu, 5 Jun 2025 21:01:12 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: pinctrl: convert xp,lpc1850-scu.txt to
+ yaml format
+Message-ID: <20250606020112.GA3765019-robh@kernel.org>
+References: <20250602143930.943830-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mhi: host: Add standard elf image download
- functionality
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Qiang Yu
-	<qiang.yu@oss.qualcomm.com>
-CC: <jeff.hugo@oss.qualcomm.com>, <mhi@lists.linux.dev>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <can.guo@oss.qualcomm.com>, Mayank Rana <mayank.rana@oss.qualcomm.com>
-References: <20250603-standard_elf_image_load_support-v2-1-cce97644e99e@oss.qualcomm.com>
- <sdhop6vyvt4y63tbbtorqfd5xa4ckbiwxdad5g6zzwlljqvd6q@eoaqmairdeey>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <sdhop6vyvt4y63tbbtorqfd5xa4ckbiwxdad5g6zzwlljqvd6q@eoaqmairdeey>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CY8I5Krl c=1 sm=1 tr=0 ts=68424b34 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=6AU4lJIUDbi98Puw4poA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Oht6ufUQ6kt8e6WswzDKGONEyKqAEudZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDAxNyBTYWx0ZWRfX8iKnOpL/TbpX
- 01jU1OPwGfPGSoi/imxTgHxeJxS6Wi3fzi3FzJT3O5txlcr9lXdiWfDuHIAFAjsas2ocBJo4Kec
- CCYaRy1rkqpqDjrY9dX0vXIwNyIIliM+iCOTc54c64bWYfx2Y5PV+xptc2NEaPS29TdYC5jzUbP
- bJaMtkiJKF/ZBh9QR2wfJFqGcGtNjYfebuzo+Z4JogKP/7+x2o745h+ctj2hwnQnaseV+teReLf
- qefS7x4ueQdHSr1Zs2YsTQAlduGDJlGr2xYCTALEA4i8Ohl+pdLmP7s9+rbcXQCrd6zGbhGKntD
- hx72o00JWwOKT1CBeU82X7Se92JH3sPApaD46xEwamotQu0q2H68/m2j54zG93evp4Hdq4C0aG7
- n29n8jx9gNjb2itLzKXVIsvw06u92vyoGZuOxBx0UoWDIHQLpo3hBqkmEEm6GLHi4HZJDkOE
-X-Proofpoint-GUID: Oht6ufUQ6kt8e6WswzDKGONEyKqAEudZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_08,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 spamscore=0 impostorscore=0
- phishscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506060017
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602143930.943830-1-Frank.Li@nxp.com>
 
+On Mon, Jun 02, 2025 at 10:39:29AM -0400, Frank Li wrote:
+> Convert nxp,lpc1850-scu.txt to yaml format.
+> 
+> Additional changes:
+> - keep child name *_cfg to align legancy very old platform dts file.
+> - remove label in examples.
+> - just keep one examples.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../bindings/pinctrl/nxp,lpc1850-scu.txt      | 71 ---------------
+>  .../bindings/pinctrl/nxp,lpc1850-scu.yaml     | 91 +++++++++++++++++++
+>  2 files changed, 91 insertions(+), 71 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt b/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
+> deleted file mode 100644
+> index bd8b0c69fa447..0000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
+> +++ /dev/null
+> @@ -1,71 +0,0 @@
+> -NXP LPC18xx/43xx SCU pin controller Device Tree Bindings
+> ---------------------------------------------------------
+> -
+> -Required properties:
+> -- compatible		: Should be "nxp,lpc1850-scu"
+> -- reg			: Address and length of the register set for the device
+> -- clocks		: Clock specifier (see clock bindings for details)
+> -
+> -The lpc1850-scu driver uses the generic pin multiplexing and generic pin
+> -configuration documented in pinctrl-bindings.txt.
+> -
+> -The following generic nodes are supported:
+> - - function
+> - - pins
+> - - bias-disable
+> - - bias-pull-up
+> - - bias-pull-down
+> - - drive-strength
+> - - input-enable
+> - - input-disable
+> - - input-schmitt-enable
+> - - input-schmitt-disable
+> - - slew-rate
+> -
+> -NXP specific properties:
+> - - nxp,gpio-pin-interrupt : Assign pin to gpio pin interrupt controller
+> -			    irq number 0 to 7. See example below.
+> -
+> -Not all pins support all properties so either refer to the NXP 1850/4350
+> -user manual or the pin table in the pinctrl-lpc18xx driver for supported
+> -pin properties.
+> -
+> -Example:
+> -pinctrl: pinctrl@40086000 {
+> -	compatible = "nxp,lpc1850-scu";
+> -	reg = <0x40086000 0x1000>;
+> -	clocks = <&ccu1 CLK_CPU_SCU>;
+> -
+> -	i2c0_pins: i2c0-pins {
+> -		i2c0_pins_cfg {
+> -			pins = "i2c0_scl", "i2c0_sda";
+> -			function = "i2c0";
+> -			input-enable;
+> -		};
+> -	};
+> -
+> -	uart0_pins: uart0-pins {
+> -		uart0_rx_cfg {
+> -			pins = "pf_11";
+> -			function = "uart0";
+> -			bias-disable;
+> -			input-enable;
+> -		};
+> -
+> -		uart0_tx_cfg {
+> -			pins = "pf_10";
+> -			function = "uart0";
+> -			bias-disable;
+> -		};
+> -	};
+> -
+> -	gpio_joystick_pins: gpio-joystick-pins {
+> -		gpio_joystick_1_cfg {
+> -			pins =  "p9_0";
+> -			function = "gpio";
+> -			nxp,gpio-pin-interrupt = <0>;
+> -			input-enable;
+> -			bias-disable;
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
+> new file mode 100644
+> index 0000000000000..4df47fee3a228
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/nxp,lpc1850-scu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP LPC18xx/43xx SCU pin controller
+> +
+> +description: |
+> +  The following generic nodes are supported:
+> +    - function
+> +    - pins
+> +    - bias-disable
+> +    - bias-pull-up
+> +    - bias-pull-down
+> +    - drive-strength
+> +    - input-enable
+> +    - input-disable
+> +    - input-schmitt-enable
+> +    - input-schmitt-disable
+> +    - slew-rat
 
+Drop this list. Or list them in the schema if you want to keep it.
 
-On 6/6/2025 1:04 AM, Manivannan Sadhasivam wrote:
-> On Tue, Jun 03, 2025 at 02:05:44AM -0700, Qiang Yu wrote:
->> From: Mayank Rana <mayank.rana@oss.qualcomm.com>
->>
->> Currently, the FBC image is a non-standard ELF file that contains a single
->> ELF header, followed by segments for SBL, RDDM, and AMSS. Some devices are
->> unable to process this non-standard ELF format and therefore require
->> special handling during image loading.
->>
+> +  Not all pins support all properties so either refer to the NXP 1850/4350
+> +  user manual or the pin table in the pinctrl-lpc18xx driver for supported
+> +  pin properties.
+> +
+> +maintainers:
+> +  - Frank Li <Frank.Li@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,lpc1850-scu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    patternProperties:
+> +      '_cfg$':
+> +        type: object
+> +
+> +        allOf:
+> +          - $ref: pincfg-node.yaml#
+> +          - $ref: pinmux-node.yaml#
+> +
+> +        unevaluatedProperties: false
+> +
+> +        properties:
+> +          nxp,gpio-pin-interrupt:
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+> +            minimum: 0
+> +            maximum: 7
+> +            description:
+> +              Assign pin to gpio pin interrupt controller
+> +              irq number 0 to 7. See example below.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/lpc18xx-ccu.h>
+> +
+> +    pinctrl@40086000 {
+> +        compatible = "nxp,lpc1850-scu";
+> +        reg = <0x40086000 0x1000>;
+> +        clocks = <&ccu1 CLK_CPU_SCU>;
+> +
+> +        gpio-joystick-pins {
+> +            gpio-joystick-1_cfg {
+> +                pins = "p9_0";
+> +                function = "gpio";
+> +                nxp,gpio-pin-interrupt = <0>;
+> +                input-enable;
+> +                bias-disable;
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.34.1
 > 
-> What are those "some devices"? Why are they not able to process this format
-> which is used across the rest of the Qcom devices?
-> 
->> Add standard_elf_image flag to determine whether the device can process
->> the non-standard ELF format. If this flag is set, a standard ELF image
->> must be loaded, meaning the first 512 KB of the FBC image should be
->> skipped when loading the AMSS image over the BHIe interface.
-> 
-> Please explain what is present in the first 512KiB and why skipping that is
-> required.
-> 
->> Note that
->> this flag does not affect the SBL image download process.
->>
->> Signed-off-by: Mayank Rana <mayank.rana@oss.qualcomm.com>
->> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
->> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
->> ---
->> Changes in v2:
->> - V1 patch is paused because of no user. WLAN team plan to add support for
->>   new WLAN chip that requires this patch, so send v2.
->> - Change author and SOB with new mail address.
->> - Reword commit message.
->> - Place standard_elf_image flag after wake_set in struct mhi_controller
->> - Link to v1: https://lore.kernel.org/mhi/1689907189-21844-1-git-send-email-quic_qianyu@quicinc.com/
->> ---
->>  drivers/bus/mhi/host/boot.c | 7 +++++++
->>  include/linux/mhi.h         | 4 ++++
->>  2 files changed, 11 insertions(+)
->>
->> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
->> index efa3b6dddf4d2f937535243bd8e8ed32109150a4..f1686a8e0681d49f778838820b44f4c845ddbd1f 100644
->> --- a/drivers/bus/mhi/host/boot.c
->> +++ b/drivers/bus/mhi/host/boot.c
->> @@ -584,6 +584,13 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
->>  	 * device transitioning into MHI READY state
->>  	 */
->>  	if (fw_load_type == MHI_FW_LOAD_FBC) {
->> +		dev_dbg(dev, "standard_elf_image:%s\n",
->> +			(mhi_cntrl->standard_elf_image ? "True" : "False"));
-> 
-> This print is just a noise even for debug.
-> 
->> +		if (mhi_cntrl->standard_elf_image) {
->> +			fw_data += mhi_cntrl->sbl_size;
->> +			fw_sz -= mhi_cntrl->sbl_size;
-> 
-> Is it possible to detect the image type during runtime instead of using a flag?
-> Also, the flag is currently unused. So it should come along an user.
-
-The flag would be used when a new WLAN device getting upstream. So either we merge this
-patch alone, or we get it grouped within the WLAN patches. Kindly share your thoughts?
-
-> 
-> - Mani
-> 
-
