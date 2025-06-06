@@ -1,343 +1,578 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653F233DF;
-	Fri,  6 Jun 2025 00:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1483FC0E
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 00:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749170371; cv=none; b=H4iFeE0kgyxD9VuMtqRr44eife6CWKTDqTRRQv90s1u7s2cArKCJqxeb8vCN8hgIxRNUISsSJqTn7s4RuC0XOw6AoZT1TT0SLOYvLSchCkQyO/gbGZdIaj4MsQVnS/RLnyAsmp+BA44D91cGP2cQ6Kx/sqKI4RnOHr56EZbHpRE=
+	t=1749170946; cv=none; b=X77j0OPmxYh9MMErjFqL7DPYscMSRrXOBYnHm9SIrETs9CdZQGoY1ZgTgW1xcXFYP+gnza2A0qRgG94WRLambTcsK0mrCWidA5Up4SoRoR3F9yPzrL7LHjCi+G37PY7a4N/Owd16r8eYbf4ry0UNB+8lY1RrMpeAJDoAf0ZeY8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749170371; c=relaxed/simple;
-	bh=aa+3Dvw38MNX5aUkF/vodM5NQdYGec+DXBb+ZuTil6w=;
+	s=arc-20240116; t=1749170946; c=relaxed/simple;
+	bh=tY+k3QGwsZ7nAcD2q9trIH+sq8HEFtWho6gpPouXGKo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UFjzef3CIWv6CiAKv3CE9Yfr18dO1oAnZl6rNVNm4/YeJX3URLeqjz0T3ktbVVIoMY8iGZbyhEmHdwmBg5Yw1/bkcC0qnp+Nr2qMcrDzjCRr6HnEI4VSRxTC0APEUDT7OBlj/SpuSRTPyvP1Duk36yx5LxKrJ4vYkc0LwBXfmtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=htp/k+vN; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=cATGsvFY63MDQi9pe+mlxATUG1adoo94B5Nsy6GV+XijiWuwjk22TxVtRxC/h6G64DwgEIfLESJvxlth0yzkjb7p4Eyz6DqaIe00IKvnFIeNdXamaOWklm/Zzd8viahWpjuP/yD+NFLd4Y4NMVKQOcOsLR/u4NrBon6vKTCu+hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2TiX3hJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htp/k+vN"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so1161464f8f.0;
-        Thu, 05 Jun 2025 17:39:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749170367; x=1749775167; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KbQG6IUXd/kv5+F326ERkYXthCubIIcYZcaaLwPl3e0=;
-        b=htp/k+vNnAVfYgZcDz7mdSLFGipM9MoOkGiE6O7Z2uiPPCoTUlbBQwj/Pk8AZi8UIp
-         PKO2DripbiGTE1XM4stz0bVXpwgJDNdx2lj26AfDQPGjfEydUphhgykAc77Q2xB6q2Xm
-         eWcXOIV9bpF1wOtxcIBVpN2cQoK4MpnFrAjRsrYnZvJWMMrJErfCfWXpD6QJrXt1jJbl
-         zdiP1tO5JYSUKBNVpyXncv0kS0G4ReFn4dzSxmgPS2j+d7ch6gKUW4PHzOx2UZm+Z4tn
-         B1obunCMDFNkbQ/RmZPnuF7LKN77r43VyBzNMDI/nEeorD7+wDhDchNa3fL8DjP+QhOF
-         /4og==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2TiX3hJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749170943;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ix90UYUbM9rkF+vvvxIw9m2PWD1r5sZBXm0z/BO9x9w=;
+	b=A2TiX3hJqTNYPfFXP+gVw8qLux4FwbsdMP7919Va00u7vXGM/XSaTdGMntp6k6g6DyWMZr
+	vSc3wedggRiZSCVi67Zq/jm41aoBgB7SeEx8h3w+kNUv2uj+KwM7sMb6JQ3p/r46Zkn47S
+	HifxTaz4LnvgG1z45vtUk31CvVIFAPM=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-490-fZwcPtTDOjq8aSsI8LF45w-1; Thu, 05 Jun 2025 20:49:01 -0400
+X-MC-Unique: fZwcPtTDOjq8aSsI8LF45w-1
+X-Mimecast-MFC-AGG-ID: fZwcPtTDOjq8aSsI8LF45w_1749170941
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-311b6d25163so1530173a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 17:49:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749170367; x=1749775167;
+        d=1e100.net; s=20230601; t=1749170940; x=1749775740;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KbQG6IUXd/kv5+F326ERkYXthCubIIcYZcaaLwPl3e0=;
-        b=cSP7CJqjrlJrhuZAN0vLIoOzQXfUKdT3BO6ccZARy5YEzAHuRZi2eKJgdgKKQ07H60
-         7gZSfH3DKJkoGo5jZJai2u8Py2E/fuWk2vHtvk7I9rs8YSsPJYPpFY/maUmuWm0fa+pn
-         NXzYTZ6bn3HflaZDJzxgjVW7nYZhZZgV01syO/TLNNUSQw3hJWrAsgnIeIP5uMGlTuRU
-         WpWBx1uK7fI1Tqzs8cFlPMx+WXvCgq0hSwJKGXZfOQou7hxrDHLm+HpvvtiLBi0KMEVn
-         wwsZy385HnR2SfVS4bUkIvjWxvCFqJCHuWjGSvvOb9ibEoWB1AAdb7n42St/eMXemzBJ
-         b/WA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiYZYW/8GA0AQyZpq+GEou43NW2CpeAa2LwBVjrfqemP39UH7bVRxwtusgJRU6GC/B8aioF8Jl/vHcJlc=@vger.kernel.org, AJvYcCXnHo20at3pf6vBGk92XE9WIt0DY8OwGaT0WSDu28WSDkkZP0bW0V8c7LNwPK91ixiA3LFQOuLfV6IKhbVzmbVAfw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzL1KStxAZj8w9kmfUL37KaQiqZ+KMPC/u1RzYLDh+cULEhtdM
-	6Pn5iVSVASe6wC28T4K9Pyiwh1ZC+5YOXViyB2cAVkzWm6adTXcJ1QbIgnX7i4+QpQFuHOfkKIn
-	weAfI/fJxJGbBxELAtCk3q2z5IpE8ZU607SpI
-X-Gm-Gg: ASbGncuOwRMBZqET/XwTnS+TT1NcJG/d5KxUL+FE4zE7Cqom2Fi3pZC8IseLf1mjhUD
-	+3fD6URwkEMZiKD+IY6LTHRj6fHOZL0iaU8/AHwQx6TdArTEy6489J+rVeIqu6ADugS1WCIy5xA
-	C89DH7C7+CxiB/x633cHt0b97hsM38xCkh0G5dAKzfB953Rt8c+PNXz25UveOPsG1kxc1dUHBPp
-	pbc85Qe73Q=
-X-Google-Smtp-Source: AGHT+IFiNDMr+4Ov0gR5Y6haWozTJ8ahtirqu1iWbzD6uCPZs8LURNUqI3s6xlWcp8EMhADNfP9R3/WWTWvcmLUv+fQ=
-X-Received: by 2002:a05:6000:310b:b0:3a3:598f:5a97 with SMTP id
- ffacd0b85a97d-3a526dcdd9cmr5018497f8f.9.1749170367424; Thu, 05 Jun 2025
- 17:39:27 -0700 (PDT)
+        bh=ix90UYUbM9rkF+vvvxIw9m2PWD1r5sZBXm0z/BO9x9w=;
+        b=c3cDChwKXc04ZJcAhifxpzMfcCMKugTKeOnvP6J+J/wFoLXEzW3y17fN9HccdnHrpB
+         9pocwuaoT2LpMmim6S8FmO8wfXMPTcWy2fS3EpU6BKbvm9EkzaUSW3nfBCS9WczBUj4Z
+         Fhdl65hJ07MYCK+m5yqzdyB7SWEKj9kI1Q+kqHopZyG0/KiJh4jmdWnkq6epWjzZzDGI
+         VXAoxjSgFoxEa5mbSwWadyOONC69pIsZAVgM1LJmV2G0bICFi97w5CLRKMph8u3GTpnc
+         XxyEL4tkH6dstcOt37ybcfsKbL+LYPGZ0Ok6hSgVsmAa8ToLfRz8IxgnBctER3QAGgNM
+         ggDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJyzo/9uTV/szY340mCyZ6VwnTwEh5YOWqrpAaZXjTxbhcfVgjlwpPfR0uWC3Dz3VnKtDIHKMkT7/+/0o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0TSj6Q/tjyMwr4obTe8Lau/JRFm/Myaosx5D1grf3M3PvTHTR
+	nMj3uzXvNl6Lwg6WYjZW/ufL21XB8C1gZ3cYO+UF9wkVjuvUa4gelak+F9DOAqDvs7U5WgJNW94
+	+9wv0sDIQmm92biH6AmrTkxmhqnvtDsLEHL5IubPlXT5LZXgWf01RUtEqjvPROUTiUc0106FXTk
+	zhajaKcdWG/2prOu2bjhRa87PECyA7xZ6A3Lwdrm1CYa9iFx2EosVFKQ==
+X-Gm-Gg: ASbGncuDTaE39yvdU7ztFK2YPWsldn/8RonlymREbzIO0JXtQBaqcJBqszg5pdzhm0w
+	XvjeNSKSiZD17lYSeMtbW1DRFgDc+AcgyeH069lFiYFoACQev17SwhG7DracdiOipUbcYCw==
+X-Received: by 2002:a17:90b:2748:b0:311:9c9a:58d7 with SMTP id 98e67ed59e1d1-31346b4d641mr2035819a91.19.1749170940192;
+        Thu, 05 Jun 2025 17:49:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEWzeQYYlHyrRnH0s8g3D2h7+H4wjFzq19umt7qxJB6T3fclwGB4lj/P/ELm4NXZdTbix/ibSCmW9j5MWfqMZ8=
+X-Received: by 2002:a17:90b:2748:b0:311:9c9a:58d7 with SMTP id
+ 98e67ed59e1d1-31346b4d641mr2035796a91.19.1749170939711; Thu, 05 Jun 2025
+ 17:48:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
- <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
- <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com> <CAADnVQ+N5UaBwLjtLGHAe1PCjpRzxxcFL45gbb0eHMDZD5+X6A@mail.gmail.com>
- <3f8b0b58-3b48-470e-b8ff-a71a26370bc3@linux.intel.com> <CAADnVQKRJKsG08KkEriuBQop0LgDr+c9rkNE6MUh_n3rzZoXVQ@mail.gmail.com>
- <7638853b-bbc6-464d-8890-29ed92aa5cef@linux.intel.com>
-In-Reply-To: <7638853b-bbc6-464d-8890-29ed92aa5cef@linux.intel.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 5 Jun 2025 17:39:16 -0700
-X-Gm-Features: AX0GCFs1PvceD-69sP-JuiXzhfzlRRJ7X5MQmMZCFwfo1nFURympjYb6rMy1IOs
-Message-ID: <CAADnVQLBv08fjWWVL+7w7TqoYN-EbGT-E=YsAcms+NEQ9zGUeQ@mail.gmail.com>
-Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	Aishwarya TCV <aishwarya.tcv@arm.com>, Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+References: <20250530-rss-v12-0-95d8b348de91@daynix.com> <20250530-rss-v12-1-95d8b348de91@daynix.com>
+ <CACGkMEufffSj1GQMqwf598__-JgNtXRpyvsLtjSbr3angLmJXg@mail.gmail.com>
+ <95cb2640-570d-4f51-8775-af5248c6bc5a@daynix.com> <CACGkMEu6fZaErFEu7_UFsykXRL7Z+CwmkcxmvJHC+eN_j0pQvg@mail.gmail.com>
+ <4eaa7aaa-f677-4a31-bcc2-badcb5e2b9f6@daynix.com> <CACGkMEu3QH+VdHqQEePYz_z+_bNYswpA-KNxzz0edEOSSkJtWw@mail.gmail.com>
+ <75ef190e-49fc-48aa-abf2-579ea31e4d15@daynix.com>
+In-Reply-To: <75ef190e-49fc-48aa-abf2-579ea31e4d15@daynix.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Fri, 6 Jun 2025 08:48:48 +0800
+X-Gm-Features: AX0GCFt0LCt6YkIaNNqaDSQP6RZfBK6gZ-qHk5EyLlhxJLUXtnUYLlys2ZX1-3E
+Message-ID: <CACGkMEu2n-O0UtVEmcPkELcg9gpML=m5W=qYPjeEjp3ba73Eiw@mail.gmail.com>
+Subject: Re: [PATCH net-next v12 01/10] virtio_net: Add functions for hashing
+To: Akihiko Odaki <akihiko.odaki@daynix.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+	Yuri Benditovich <yuri.benditovich@daynix.com>, Andrew Melnychenko <andrew@daynix.com>, 
+	Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 4:50=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.co=
-m> wrote:
+On Thu, Jun 5, 2025 at 3:58=E2=80=AFPM Akihiko Odaki <akihiko.odaki@daynix.=
+com> wrote:
 >
->
->
-> On 2025-06-05 4:46 p.m., Alexei Starovoitov wrote:
-> > On Thu, Jun 5, 2025 at 1:24=E2=80=AFPM Liang, Kan <kan.liang@linux.inte=
-l.com> wrote:
+> On 2025/06/05 10:53, Jason Wang wrote:
+> > On Wed, Jun 4, 2025 at 3:20=E2=80=AFPM Akihiko Odaki <akihiko.odaki@day=
+nix.com> wrote:
 > >>
-> >>
-> >>
-> >> On 2025-06-05 2:45 p.m., Alexei Starovoitov wrote:
-> >>> On Thu, Jun 5, 2025 at 6:46=E2=80=AFAM Liang, Kan <kan.liang@linux.in=
-tel.com> wrote:
+> >> On 2025/06/04 10:18, Jason Wang wrote:
+> >>> On Tue, Jun 3, 2025 at 1:31=E2=80=AFPM Akihiko Odaki <akihiko.odaki@d=
+aynix.com> wrote:
 > >>>>
-> >>>>
-> >>>>
-> >>>> On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
-> >>>>> On Wed, Jun 4, 2025 at 10:16=E2=80=AFAM <kan.liang@linux.intel.com>=
- wrote:
+> >>>> On 2025/06/03 12:19, Jason Wang wrote:
+> >>>>> On Fri, May 30, 2025 at 12:50=E2=80=AFPM Akihiko Odaki <akihiko.oda=
+ki@daynix.com> wrote:
 > >>>>>>
-> >>>>>> From: Kan Liang <kan.liang@linux.intel.com>
+> >>>>>> They are useful to implement VIRTIO_NET_F_RSS and
+> >>>>>> VIRTIO_NET_F_HASH_REPORT.
 > >>>>>>
-> >>>>>> Both ARM and IBM CI reports RCU stall, which can be reproduced by =
-the
-> >>>>>> below perf command.
-> >>>>>>   perf record -a -e cpu-clock -- sleep 2
+> >>>>>> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> >>>>>> Tested-by: Lei Yang <leiyang@redhat.com>
+> >>>>>> ---
+> >>>>>>     include/linux/virtio_net.h | 188 +++++++++++++++++++++++++++++=
+++++++++++++++++
+> >>>>>>     1 file changed, 188 insertions(+)
 > >>>>>>
-> >>>>>> The issue is introduced by the generic throttle patch set, which
-> >>>>>> unconditionally invoke the event_stop() when throttle is triggered=
-.
+> >>>>>> diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net=
+.h
+> >>>>>> index 02a9f4dc594d..426f33b4b824 100644
+> >>>>>> --- a/include/linux/virtio_net.h
+> >>>>>> +++ b/include/linux/virtio_net.h
+> >>>>>> @@ -9,6 +9,194 @@
+> >>>>>>     #include <uapi/linux/tcp.h>
+> >>>>>>     #include <uapi/linux/virtio_net.h>
 > >>>>>>
-> >>>>>> The cpu-clock and task-clock are two special SW events, which rely=
- on
-> >>>>>> the hrtimer. The throttle is invoked in the hrtimer handler. The
-> >>>>>> event_stop()->hrtimer_cancel() waits for the handler to finish, wh=
-ich is
-> >>>>>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART =
-should
-> >>>>>> be used to stop the timer.
-> >>>>>>
-> >>>>>> There may be two ways to fix it.
-> >>>>>> - Introduce a PMU flag to track the case. Avoid the event_stop in
-> >>>>>>   perf_event_throttle() if the flag is detected.
-> >>>>>>   It has been implemented in the
-> >>>>>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@=
-linux.intel.com/
-> >>>>>>   The new flag was thought to be an overkill for the issue.
-> >>>>>> - Add a check in the event_stop. Return immediately if the throttl=
-e is
-> >>>>>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NOR=
-ESTART
-> >>>>>>   method to stop the timer.
-> >>>>>>
-> >>>>>> The latter is implemented here.
-> >>>>>>
-> >>>>>> Move event->hw.interrupts =3D MAX_INTERRUPTS before the stop(). It=
- makes
-> >>>>>> the order the same as perf_event_unthrottle(). Except the patch, n=
-o one
-> >>>>>> checks the hw.interrupts in the stop(). There is no impact from th=
-e
-> >>>>>> order change.
-> >>>>>>
-> >>>>>> Reported-by: Leo Yan <leo.yan@arm.com>
-> >>>>>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-> >>>>>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132=
-581.arm.com/
-> >>>>>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> >>>>>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxm=
-ugu4jccdjysza7tlc5fef@ktp4rffawgcw/
-> >>>>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> >>>>>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9=
-f131293@linux.ibm.com/
-> >>>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> >>>>>
-> >>>>> It seems the patch fixes one issue and introduces another ?
-> >>>>>
-> >>>>> Looks like the throttle event is sticky.
-> >>>>> Once it's reached the perf_event no longer works ?
-> >>>>
-> >>>> No. It should still work even the throttle is triggered.
-> >>>>
-> >>>> sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
-> >>>> /proc/sys/kernel/perf_event_max_sample_rate'
-> >>>> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- slee=
-p 1
-> >>>> [ perf record: Woken up 1 times to write data ]
-> >>>> [ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
-> >>>
-> >>> With the patch applied above command hangs in my VM:
-> >>>
-> >>> # perf record -a -e cpu-clock -c10000 -- sleep 1
-> >>> [   43.656855] hrtimer: interrupt took 21640 ns
-> >>> [   68.561052] watchdog: BUG: soft lockup - CPU#0 stuck for 41s! [per=
-f:2253]
-> >>> [   68.561056] Modules linked in: bpf_preload
-> >>> [   68.561060] CPU: 0 UID: 0 PID: 2253 Comm: perf Not tainted
-> >>> 6.15.0-12294-gc89e5202e569 #1172 PREEMPT
-> >>> [   68.561062] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> >>> BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-> >>> [   68.561063] RIP: 0010:handle_softirqs+0x77/0x2a0
-> >>> [   68.561070] Code: 6b 96 02 00 01 00 00 bd 0a 00 00 00 44 89 64 24
-> >>> 14 89 6c 24 10 40 88 7c 24 04 31 c0 65 66 89 05 5f 6b 96 02 fb bb ff
-> >>> ff ff ff <48> c7 c0 c0 f
-> >>> [   68.561071] RSP: 0018:ffa0000000003fa0 EFLAGS: 00000246
-> >>> [   68.561072] RAX: 0000000000000000 RBX: 00000000ffffffff RCX: 00000=
-000000006e0
-> >>> [   68.561073] RDX: 0000000000000007 RSI: ff1100010212e100 RDI: 00000=
-00000000000
-> >>> [   68.561074] RBP: 000000000000000a R08: 0000000000000000 R09: 7ffff=
-fffffffffff
-> >>> [   68.561074] R10: 00000005a3af2140 R11: 0000000000004601 R12: 00000=
-00000400100
-> >>> [   68.561075] R13: 0000000000000000 R14: 0000000000000002 R15: 00000=
-00000000000
-> >>> [   68.561111] FS:  00007fa1b536f780(0000) GS:ff110004abe26000(0000)
-> >>> knlGS:0000000000000000
-> >>> [   68.561112] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>> [   68.561113] CR2: 0000000001c67a30 CR3: 000000010f2f3003 CR4: 00000=
-000003716f0
-> >>> [   68.561113] Call Trace:
-> >>> [   68.561170]  <IRQ>
-> >>> [   68.561174]  irq_exit_rcu+0x91/0xb0
-> >>> [   68.561176]  sysvec_apic_timer_interrupt+0x71/0x90
-> >>> [   68.561181]  </IRQ>
-> >>> [   68.561181]  <TASK>
-> >>> [   68.561182]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
-> >>> [   68.561184] RIP: 0010:generic_exec_single+0x33/0x120
-> >>> [   68.561188] Code: 65 39 3d 5c 4d 89 02 74 28 3b 3d b8 f5 17 02 0f
-> >>> 83 de 00 00 00 89 f8 48 0f a3 05 d8 f1 17 02 0f 83 ce 00 00 00 e8 bd
-> >>> fe ff ff <31> c0 5b 5d 9
-> >>> [   68.561189] RSP: 0018:ffa00000025a3cc0 EFLAGS: 00000206
-> >>> [   68.561190] RAX: 0000000000000000 RBX: ffffffff8145b310 RCX: ff110=
-004abe26000
-> >>> [   68.561190] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ff110=
-0042fa26540
-> >>> [   68.561191] RBP: 0000000000000202 R08: 0000000000000000 R09: 00000=
-00000000000
-> >>> [   68.561191] R10: ffa00000025a3ee0 R11: 0000000000000000 R12: ffa00=
-000025a3d40
-> >>> [   68.561192] R13: ff11000100881220 R14: ff11000100880fc0 R15: 00000=
-00000000000
-> >>> [   68.561192]  ? sw_perf_event_destroy+0x70/0x70
-> >>> [   68.561197]  smp_call_function_single+0xc4/0x110
-> >>> [   68.561199]  ? sw_perf_event_destroy+0x70/0x70
-> >>> [   68.561200]  event_function_call+0x160/0x170
-> >>> [   68.561202]  ? ctx_resched+0x2d0/0x2d0
-> >>> [   68.561205]  ? perf_event_set_state+0x60/0x60
-> >>> [   68.561206]  ? _perf_event_disable+0x50/0x50
-> >>> [   68.561208]  perf_event_for_each_child+0x37/0x80
-> >>> [   68.561209]  ? _perf_event_disable+0x50/0x50
-> >>> [   68.561211]  _perf_ioctl+0x1df/0xad0
-> >>> [   68.561213]  ? __set_cpus_allowed_ptr+0x71/0x80
-> >>> [   68.561216]  ? avc_has_perm+0x72/0x160
-> >>> [   68.561219]  ? ldsem_down_write+0x1bb/0x1fc
-> >>> [   68.561222]  perf_ioctl+0x42/0x70
-> >>> [   68.561224]  __x64_sys_ioctl+0x8f/0xd0
-> >>> [   68.561226]  do_syscall_64+0x46/0x160
-> >>> [   68.561228]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> >>>
-> >>> but only after a fresh boot.
-> >>>
-> >>> If I run bpf selftests before that it works.
-> >>> Like test_progs -t stacktrace_build_id_nmi
-> >>> followed by the same
-> >>> perf record -a -e cpu-clock ..
-> >>> it works fine.
-> >>>
-> >>
-> >> There should be a bug in V3. When stops in the throttle, the event
-> >> should not be updated, stop(event, 0). But the cpu_clock_event_stop()
-> >> doesn't handle the flag. That changes the behavior a little bit.
-> >>
-> >> Could you please try the below patch and see if it helps?
-> >>
-> >> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> >> index cd85b1820e7d..b6c57ba24e78 100644
-> >> --- a/kernel/events/core.c
-> >> +++ b/kernel/events/core.c
-> >> @@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct
-> >> perf_event *event, bool start)
-> >>
-> >>  static void perf_event_throttle(struct perf_event *event)
-> >>  {
-> >> -       event->pmu->stop(event, 0);
-> >>         event->hw.interrupts =3D MAX_INTERRUPTS;
-> >> +       event->pmu->stop(event, 0);
-> >>         if (event =3D=3D event->group_leader)
-> >>                 perf_log_throttle(event, 0);
-> >>  }
-> >> @@ -11777,7 +11777,12 @@ static void perf_swevent_cancel_hrtimer(struc=
-t
-> >> perf_event *event)
-> >>  {
-> >>         struct hw_perf_event *hwc =3D &event->hw;
-> >>
-> >> -       if (is_sampling_event(event)) {
-> >> +       /*
-> >> +        * The throttle can be triggered in the hrtimer handler.
-> >> +        * The HRTIMER_NORESTART should be used to stop the timer,
-> >> +        * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
-> >> +        */
-> >> +       if (is_sampling_event(event) && (hwc->interrupts !=3D MAX_INTE=
-RRUPTS)) {
-> >>                 ktime_t remaining =3D hrtimer_get_remaining(&hwc->hrti=
-mer);
-> >>                 local64_set(&hwc->period_left, ktime_to_ns(remaining))=
+> >>>>>> +struct virtio_net_hash {
+> >>>>>> +       u32 value;
+> >>>>>> +       u16 report;
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +struct virtio_net_toeplitz_state {
+> >>>>>> +       u32 hash;
+> >>>>>> +       const u32 *key;
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +#define VIRTIO_NET_SUPPORTED_HASH_TYPES (VIRTIO_NET_RSS_HASH_TYPE=
+_IPv4 | \
+> >>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_=
+TCPv4 | \
+> >>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_=
+UDPv4 | \
+> >>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_=
+IPv6 | \
+> >>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_=
+TCPv6 | \
+> >>>>>> +                                        VIRTIO_NET_RSS_HASH_TYPE_=
+UDPv6)
+> >>>>>> +
+> >>>>>> +#define VIRTIO_NET_RSS_MAX_KEY_SIZE 40
+> >>>>>> +
+> >>>>>> +static inline void virtio_net_toeplitz_convert_key(u32 *input, si=
+ze_t len)
+> >>>>>> +{
+> >>>>>> +       while (len >=3D sizeof(*input)) {
+> >>>>>> +               *input =3D be32_to_cpu((__force __be32)*input);
+> >>>>>> +               input++;
+> >>>>>> +               len -=3D sizeof(*input);
+> >>>>>> +       }
+> >>>>>> +}
+> >>>>>> +
+> >>>>>> +static inline void virtio_net_toeplitz_calc(struct virtio_net_toe=
+plitz_state *state,
+> >>>>>> +                                           const __be32 *input, s=
+ize_t len)
+> >>>>>> +{
+> >>>>>> +       while (len >=3D sizeof(*input)) {
+> >>>>>> +               for (u32 map =3D be32_to_cpu(*input); map; map &=
+=3D (map - 1)) {
+> >>>>>> +                       u32 i =3D ffs(map);
+> >>>>>> +
+> >>>>>> +                       state->hash ^=3D state->key[0] << (32 - i)=
+ |
+> >>>>>> +                                      (u32)((u64)state->key[1] >>=
+ i);
+> >>>>>> +               }
+> >>>>>> +
+> >>>>>> +               state->key++;
+> >>>>>> +               input++;
+> >>>>>> +               len -=3D sizeof(*input);
+> >>>>>> +       }
+> >>>>>> +}
+> >>>>>> +
+> >>>>>> +static inline u8 virtio_net_hash_key_length(u32 types)
+> >>>>>> +{
+> >>>>>> +       size_t len =3D 0;
+> >>>>>> +
+> >>>>>> +       if (types & VIRTIO_NET_HASH_REPORT_IPv4)
+> >>>>>> +               len =3D max(len,
+> >>>>>> +                         sizeof(struct flow_dissector_key_ipv4_ad=
+drs));
+> >>>>>> +
+> >>>>>> +       if (types &
+> >>>>>> +           (VIRTIO_NET_HASH_REPORT_TCPv4 | VIRTIO_NET_HASH_REPORT=
+_UDPv4))
+> >>>>>> +               len =3D max(len,
+> >>>>>> +                         sizeof(struct flow_dissector_key_ipv4_ad=
+drs) +
+> >>>>>> +                         sizeof(struct flow_dissector_key_ports))=
 ;
+> >>>>>> +
+> >>>>>> +       if (types & VIRTIO_NET_HASH_REPORT_IPv6)
+> >>>>>> +               len =3D max(len,
+> >>>>>> +                         sizeof(struct flow_dissector_key_ipv6_ad=
+drs));
+> >>>>>> +
+> >>>>>> +       if (types &
+> >>>>>> +           (VIRTIO_NET_HASH_REPORT_TCPv6 | VIRTIO_NET_HASH_REPORT=
+_UDPv6))
+> >>>>>> +               len =3D max(len,
+> >>>>>> +                         sizeof(struct flow_dissector_key_ipv6_ad=
+drs) +
+> >>>>>> +                         sizeof(struct flow_dissector_key_ports))=
+;
+> >>>>>> +
+> >>>>>> +       return len + sizeof(u32);
+> >>>>>> +}
+> >>>>>> +
+> >>>>>> +static inline u32 virtio_net_hash_report(u32 types,
+> >>>>>> +                                        const struct flow_keys_ba=
+sic *keys)
+> >>>>>> +{
+> >>>>>> +       switch (keys->basic.n_proto) {
+> >>>>>> +       case cpu_to_be16(ETH_P_IP):
+> >>>>>> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT))=
+ {
+> >>>>>> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_TC=
+P &&
+> >>>>>> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv=
+4))
+> >>>>>> +                               return VIRTIO_NET_HASH_REPORT_TCPv=
+4;
+> >>>>>> +
+> >>>>>> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_UD=
+P &&
+> >>>>>> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv=
+4))
+> >>>>>> +                               return VIRTIO_NET_HASH_REPORT_UDPv=
+4;
+> >>>>>> +               }
+> >>>>>> +
+> >>>>>> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv4)
+> >>>>>> +                       return VIRTIO_NET_HASH_REPORT_IPv4;
+> >>>>>> +
+> >>>>>> +               return VIRTIO_NET_HASH_REPORT_NONE;
+> >>>>>> +
+> >>>>>> +       case cpu_to_be16(ETH_P_IPV6):
+> >>>>>> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT))=
+ {
+> >>>>>> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_TC=
+P &&
+> >>>>>> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv=
+6))
+> >>>>>> +                               return VIRTIO_NET_HASH_REPORT_TCPv=
+6;
+> >>>>>> +
+> >>>>>> +                       if (keys->basic.ip_proto =3D=3D IPPROTO_UD=
+P &&
+> >>>>>> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv=
+6))
+> >>>>>> +                               return VIRTIO_NET_HASH_REPORT_UDPv=
+6;
+> >>>>>> +               }
+> >>>>>> +
+> >>>>>> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv6)
+> >>>>>> +                       return VIRTIO_NET_HASH_REPORT_IPv6;
+> >>>>>> +
+> >>>>>> +               return VIRTIO_NET_HASH_REPORT_NONE;
+> >>>>>> +
+> >>>>>> +       default:
+> >>>>>> +               return VIRTIO_NET_HASH_REPORT_NONE;
+> >>>>>> +       }
+> >>>>>> +}
+> >>>>>> +
+> >>>>>> +static inline void virtio_net_hash_rss(const struct sk_buff *skb,
+> >>>>>> +                                      u32 types, const u32 *key,
+> >>>>>> +                                      struct virtio_net_hash *has=
+h)
+> >>>>>> +{
+> >>>>>> +       struct virtio_net_toeplitz_state toeplitz_state =3D { .key=
+ =3D key };
+> >>>>>> +       struct flow_keys flow;
+> >>>>>> +       struct flow_keys_basic flow_basic;
+> >>>>>> +       u16 report;
+> >>>>>> +
+> >>>>>> +       if (!skb_flow_dissect_flow_keys(skb, &flow, 0)) {
+> >>>>>> +               hash->report =3D VIRTIO_NET_HASH_REPORT_NONE;
+> >>>>>> +               return;
+> >>>>>> +       }
+> >>>>>> +
+> >>>>>> +       flow_basic =3D (struct flow_keys_basic) {
+> >>>>>> +               .control =3D flow.control,
+> >>>>>> +               .basic =3D flow.basic
+> >>>>>> +       };
+> >>>>>> +
+> >>>>>> +       report =3D virtio_net_hash_report(types, &flow_basic);
+> >>>>>> +
+> >>>>>> +       switch (report) {
+> >>>>>> +       case VIRTIO_NET_HASH_REPORT_IPv4:
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >>>>>> +                                        (__be32 *)&flow.addrs.v4a=
+ddrs,
+> >>>>>> +                                        sizeof(flow.addrs.v4addrs=
+));
+> >>>>>> +               break;
+> >>>>>> +
+> >>>>>> +       case VIRTIO_NET_HASH_REPORT_TCPv4:
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >>>>>> +                                        (__be32 *)&flow.addrs.v4a=
+ddrs,
+> >>>>>> +                                        sizeof(flow.addrs.v4addrs=
+));
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.po=
+rts.ports,
+> >>>>>> +                                        sizeof(flow.ports.ports))=
+;
+> >>>>>> +               break;
+> >>>>>> +
+> >>>>>> +       case VIRTIO_NET_HASH_REPORT_UDPv4:
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >>>>>> +                                        (__be32 *)&flow.addrs.v4a=
+ddrs,
+> >>>>>> +                                        sizeof(flow.addrs.v4addrs=
+));
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.po=
+rts.ports,
+> >>>>>> +                                        sizeof(flow.ports.ports))=
+;
+> >>>>>> +               break;
+> >>>>>> +
+> >>>>>> +       case VIRTIO_NET_HASH_REPORT_IPv6:
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >>>>>> +                                        (__be32 *)&flow.addrs.v6a=
+ddrs,
+> >>>>>> +                                        sizeof(flow.addrs.v6addrs=
+));
+> >>>>>> +               break;
+> >>>>>> +
+> >>>>>> +       case VIRTIO_NET_HASH_REPORT_TCPv6:
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >>>>>> +                                        (__be32 *)&flow.addrs.v6a=
+ddrs,
+> >>>>>> +                                        sizeof(flow.addrs.v6addrs=
+));
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.po=
+rts.ports,
+> >>>>>> +                                        sizeof(flow.ports.ports))=
+;
+> >>>>>> +               break;
+> >>>>>> +
+> >>>>>> +       case VIRTIO_NET_HASH_REPORT_UDPv6:
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state,
+> >>>>>> +                                        (__be32 *)&flow.addrs.v6a=
+ddrs,
+> >>>>>> +                                        sizeof(flow.addrs.v6addrs=
+));
+> >>>>>> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.po=
+rts.ports,
+> >>>>>> +                                        sizeof(flow.ports.ports))=
+;
+> >>>>>> +               break;
+> >>>>>> +
+> >>>>>> +       default:
+> >>>>>> +               hash->report =3D VIRTIO_NET_HASH_REPORT_NONE;
+> >>>>>> +               return;
+> >>>>>
+> >>>>> So I still think we need a comment here to explain why this is not =
+an
+> >>>>> issue if the device can report HASH_XXX_EX. Or we need to add the
+> >>>>> support, since this is the code from the driver side, I don't think=
+ we
+> >>>>> need to worry about the device implementation issues.
+> >>>>
+> >>>> This is on the device side, and don't report HASH_TYPE_XXX_EX.
+> >>>>
+> >>>>>
+> >>>>> For the issue of the number of options, does the spec forbid fallba=
+ck
+> >>>>> to VIRTIO_NET_HASH_REPORT_NONE? If not, we can do that.
+> >>>>
+> >>>> 5.1.6.4.3.4 "IPv6 packets with extension header" says:
+> >>>>    > If VIRTIO_NET_HASH_TYPE_TCP_EX is set and the packet has a TCPv=
+6
+> >>>>    > header, the hash is calculated over the following fields:
+> >>>>    > - Home address from the home address option in the IPv6 destina=
+tion
+> >>>>    >   options header. If the extension header is not present, use t=
+he
+> >>>>    >   Source IPv6 address.
+> >>>>    > - IPv6 address that is contained in the Routing-Header-Type-2 f=
+rom the
+> >>>>    >   associated extension header. If the extension header is not p=
+resent,
+> >>>>    >   use the Destination IPv6 address.
+> >>>>    > - Source TCP port
+> >>>>    > - Destination TCP port
+> >>>>
+> >>>> Therefore, if VIRTIO_NET_HASH_TYPE_TCP_EX is set, the packet has a T=
+CPv6
+> >>>> and an home address option in the IPv6 destination options header is
+> >>>> present, the hash is calculated over the home address. If the hash i=
+s
+> >>>> not calculated over the home address in such a case, the device is
+> >>>> contradicting with this section and violating the spec. The same goe=
+s
+> >>>> for the other HASH_TYPE_XXX_EX types and Routing-Header-Type-2.
+> >>>
+> >>> Just to make sure we are one the same page. I meant:
+> >>>
+> >>> 1) If the hash is not calculated over the home address (in the case o=
+f
+> >>> IPv6 destination destination), it can still report
+> >>> VIRTIO_NET_RSS_HASH_TYPE_IPv6. This is what you implemented in your
+> >>> series. So the device can simply fallback to e.g TCPv6 if it can't
+> >>> understand all or part of the IPv6 options.
 > >>
-> >> @@ -11832,7 +11837,8 @@ static void cpu_clock_event_start(struct
-> >> perf_event *event, int flags)
-> >>  static void cpu_clock_event_stop(struct perf_event *event, int flags)
-> >>  {
-> >>         perf_swevent_cancel_hrtimer(event);
-> >> -       cpu_clock_event_update(event);
-> >> +       if (flags & PERF_EF_UPDATE)
-> >> +               cpu_clock_event_update(event);
-> >>  }
+> >> The spec says it can fallback if "the extension header is not present"=
+,
+> >> not if the device can't understand the extension header.
 > >
-> > Nope. The last hunk didn't make any difference.
-> > Same soft lockup.
+> > I don't think so,
+> >
+> > 1) spec had a condition beforehand:
+> >
+> > """
+> > If VIRTIO_NET_HASH_TYPE_TCP_EX is set and the packet has a TCPv6
+> > header, the hash is calculated over the following fields:
+> > ...
+> > If the extension header is not present ...
+> > """
+> >
+> > So the device can choose not to set VIRTIO_NET_HASH_TYPE_TCP_EX as
+> > spec doesn't say device MUST set VIRTIO_NET_HASH_TYPE_TCP_EX if ...
+> >
+> > 2) implementation wise, since device has limited resources, we can't
+> > expect the device can parse arbitrary number of ipv6 options
+> >
+> > 3) if 1) and 2) not the case, we need fix the spec otherwise implement
+> > a spec compliant device is impractical
 >
-> Thanks for the verification.
+> The statement is preceded by the following:
+>  >  The device calculates the hash on IPv4 packets according to
+>  > =E2=80=99Enabled hash types=E2=80=99 bitmask as follows:
 >
-> I have some questions, could you please help to clarify?
+> The 'Enabled hash types' bitmask is specified by the device.
 >
-> - What's the value of proc/sys/kernel/perf_event_max_sample_rate in the
-> test?
+> I think the spec needs amendment.
 
-100000
+Michael, can you help to clarify here?
 
-> - Can the soft lockup issue be produced by both bpf selftests and the
-> perf record command? Or just the perf record command?
+>
+> I wonder if there are any people interested in the feature though.
+> Looking at virtnet_set_hashflow() in drivers/net/virtio_net.c, the
+> driver of Linux does not let users configure HASH_TYPE_XXX_EX. I suppose
+> Windows supports HASH_TYPE_XXX_EX, but those who care network
+> performance most would use Linux so HASH_TYPE_XXX_EX support without
+> Linux driver's support may not be useful.
 
-just perf record.
+It might be still interesting for example for the hardware virtio
+vendors to support windows etc.
 
-> - Can the soft lockup issue be reproduced with the v2 patchset?
-> https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.int=
-el.com/
+>
+> >
+> >>
+> >>> 2) the VIRTIO_NET_SUPPORTED_HASH_TYPES is not checked against the
+> >>> tun_vnet_ioctl_sethash(), so userspace may set
+> >>> VIRTIO_NET_HASH_TYPE_TCP_EX regardless of what has been returned by
+> >>> tun_vnet_ioctl_gethashtypes(). In this case they won't get
+> >>> VIRTIO_NET_HASH_TYPE_TCP_EX.
+> >>
+> >> That's right. It's the responsibility of the userspace to set only the
+> >> supported hash types.
+> >
+> > Well, the kernel should filter out the unsupported one to have a
+> > robust uAPI. Otherwise, we give green light to the buggy userspace
+> > which will have unexpected results.
+>
+> My reasoning was that it may be fine for some use cases other than VM
+> (e.g., DPDK); in such a use case, it is fine as long as the UAPI works
+> in the best-effort basis.
 
-yes. With v2
-perf record -a -e cpu-clock -c10000 -- sleep 1
+Best-effort might increase the chance for user visisable changes after
+migration.
 
-soft locks up as well with the same stack trace.
+>
+> For example, suppose a userspace program that processes TCP packets; the
+> program can enable: HASH_TYPE_IPv4, HASH_TYPE_TCPv4, HASH_TYPE_IPv6, and
+> HASH_TYPE_TCPv6. Ideally, the kernel should support all the hash types,
+> but, even if e.g., HASH_TYPE_TCPv6 is not available,
 
-> - Furthermore, can the soft lockup issue be reproduced after reverting
-> the recent generic throttle logic fix?
-> commit e800ac51202f ("perf: Only dump the throttle log for the leader")
-> commit 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+For "available" did you mean it is not supported by the device?
 
-yes.
+> it will fall back
+> to HASH_TYPE_IPv6, which still does something good and may be acceptable.
 
-perf record -a -e cpu-clock -- sleep 1
-works
+This fallback is exactly the same as I said above, let
+VIRTIO_NET_HASH_TYPE_TCP_EX to fallback.
 
-but
-perf record -a -e cpu-clock -c100 -- sleep 1
-locks up.
--c1, -c100, -c10000 all lockup.
+My point is that, the implementation should either:
+
+1) allow fallback so it can claim to support all hash types
+
+or
+
+2) don't allow fallback so it can only support a part of the hash types
+
+If we're doing something in the middle, for example, allow part of the
+type to fallback.
+
+>
+> That said, for a use case that involves VM and implements virtio-net
+> (e.g., QEMU), setting an unsupported hash type here is definitely a bug.
+> Catching the bug may outweigh the extra trouble for other use cases.
+>
+> >
+> >>
+> >>> 3) implementing part of the hash types might complicate the migration
+> >>> or at least we need to describe the expectations of libvirt or other
+> >>> management in this case. For example, do we plan to have a dedicated
+> >>> Qemu command line like:
+> >>>
+> >>> -device virtio-net-pci,hash_report=3Don,supported_hash_types=3DX,Y,Z?
+> >>
+> >> I posted a patch series to implement such a command line for vDPA[1].
+> >> The patch series that wires this tuntap feature up[2] reuses the
+> >> infrastructure so it doesn't bring additional complexity.
+> >>
+> >> [1]
+> >> https://lore.kernel.org/qemu-devel/20250530-vdpa-v1-0-5af4109b1c19@day=
+nix.com/
+> >> [2]
+> >> https://lore.kernel.org/qemu-devel/20250530-hash-v5-0-343d7d7a8200@day=
+nix.com/
+> >
+> > I meant, if we implement a full hash report feature, it means a single
+> > hash cmdline option is more than sufficient and so compatibility code
+> > can just turn it off when dealing with machine types. This is much
+> > more simpler than
+> >
+> > 1) having both hash as well as supported_hash_features
+> > 2) dealing both hash as well as supported_hash_features in compatibilit=
+y codes
+> > 3) libvirt will be happy
+> >
+> > For [1], it seems it introduces a per has type option, this seems to
+> > be a burden to the management layer as it need to learn new option
+> > everytime a new hash type is supported
+>
+> Even with the command line you proposed (supported_hash_types=3DX,Y,Z), i=
+t
+> is still necessary to know the values the supported_hash_types property
+> accepts (X.Y,Z), so I don't think it makes difference.
+
+It could be a uint32_t.
+
+>
+> The burden to the management layer is already present for features, so
+> it is an existing problem (or its mere extension).
+
+Yes, but since this feature is new it's better to try our best to avoid tha=
+t.
+
+>
+> This problem was discussed in the following thread in the past, but no
+> solution is implemented yet, and probably solving it will be difficult.
+> https://lore.kernel.org/qemu-devel/20230731223148.1002258-5-yuri.benditov=
+ich@daynix.com/
+
+It's a similar issue but not the same, it looks more like a discussion
+on whether the fallback from vhost-net to qemu works for missing
+features etc.
+
+Thanks
+
+>
+> Regards,
+> Akihiko Odaki
+>
+
