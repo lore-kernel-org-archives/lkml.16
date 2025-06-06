@@ -1,102 +1,382 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8BC28852E;
-	Fri,  6 Jun 2025 13:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15A028852E
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749216240; cv=none; b=VPiMgmn6Ofw7Ug8fuiFSrHya2G6RjleDvQRGxFogiJtg0ketJHy8q6710CvP8/CIy9xNxXiMf0mcnVDliKKplYwf0SHvrn51PJiW4c6iMZOD/tmfbwYpXHHzsyEbhThl2PzUv9UJsYYFDmnUgTnO4mnTHxaJzwT1etPXFgT9Wo4=
+	t=1749216295; cv=none; b=G83pu6Jh47gjML2nVLniEEg9xYCiIvFrJ13/pzIzdkVmf1rzj4IWdBb1Ix+xznghCeVd6hOV+DQojZwNCrnDpr2lZU8ahE5o4a+YjMM9HG+bX3NSZXdDIP7SMmlhFwqoEsJNtJT5WjGumkZHMfym+C2mA7ikoorE9dyysaW3zx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749216240; c=relaxed/simple;
-	bh=ODzVjULCU7LA5AwD99W9he//DtffyhQ9WeBhknElp8I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CJd8SDf0k8oXFV0fJy1nFdfBuyhFdGxvxidyMVcvY7XDBPCKQMNPs2uFXGApCDc0mHFLLyKTwWKxvLn7lTR95HxRSNO1XJBMGCviSPdiM2GQX2Du6ejdrlSaJUDttVdMhbZGz3Y4VREXvKe48vUv334zzwHwITEGcyvVt2toJFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e45ebe7ac1so451611137.2;
-        Fri, 06 Jun 2025 06:23:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749216237; x=1749821037;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mp5mCaEdHKFmEnLbLz+m6JFQFDxSV2BJAh/7PrIe5RY=;
-        b=jc+nexL360YBPZzkGL2lV8VWC/Q8BFpT9N4eKMVWDszFJrkvFmKYIDEK0QrFtiNRHv
-         aPmTcfci7/tRfYnV/MnI75xiWUEBPjGnf+RSAh4KdwouQSfM3nrYNzEICxodgFVRG7TC
-         B3e3kJBbPjCNHmpy7Dj5GYwhEokFI4mtkrTsXh8Z5I5hKCweDdkWjgsxkdIbEl2Z4Ul/
-         6Yu1v8IB9+WDTf+ZKiU5efmdCZFG8PA/5N60eBn1OTL0BHB1aug0ewiaRiBOHUDsuYwc
-         5EcfMFFVI8i97hDZPJH9LVYWgQ4dVy6041I55grKr7P8kBIcK45Qn67YgeyXRLtflXI3
-         750g==
-X-Forwarded-Encrypted: i=1; AJvYcCVQklKoegDMYwbOFJIV2xJ298vgAYMh8AToInFNhfnbiX/nCHbLodSKvF+MHkEvMOEI4c6rNdrjua7E@vger.kernel.org, AJvYcCWJP3Kq9wTrp8IACv2TBXflgeKWw3MD/r9fYiAGH7rhDzTJDWN4dyDFwXzLOSRgZbW4om/ZBicGMLDBWrI9XJcT6TU=@vger.kernel.org, AJvYcCWTeafZTyjtpWfhvfPEym/7Tg1K9oXqGRjy2VF7BQF+GpviSsa7mT+uwc009l8UHQZjJ8ldGFlthWYVPfWf@vger.kernel.org, AJvYcCXGdH2xr0G/JcCeOqBwiDYUFVhSc9MEM9MKLa1dAz45JJxuiBiWG9FTBgANS1eKyZ5UfasOpg8+X5Kp@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBP+69pdr2OQ3WwOqwa9gNyenexB1Aj0/hqdbAU8wP8n6oEh4G
-	9kah30Ktk9id7d8BfKMjl1Eb2vaQ5Vcx0FUkotpO035AQ79uF2ilW19TSJzvUGhL
-X-Gm-Gg: ASbGnct1BUNNxHAJjxOTqOQaxjbjUMkvWUzTOQGg1E2K01iu68ZyIbPS5TlzuNj0YT5
-	x+qPk4qcmPQ5PhApqgS1gSUCd+4WFwxlAWDH94gIcuxF5Hr/fp+6DjhyqQ5IvWtTtCrLzNwXhBy
-	Xs5aoVQkwTh4TqjrAKXS/UzmbEhvChZ3w/0Vk923LfrJzqDW2v8bCOtH3Z5/PtXXjDFZqGgm5KR
-	7Iv/xtjkpMUWkurEEcEImTKGyRmd14fizcz+dN4N3RYiJwqDjNerWmp3TKHvVrkVtz20KM52Hxr
-	Jl872zrO22uzxMEf4QSbeyP+B5df2Spl2K3a879AbnfQe27bOGY86SzfwRteSfzhBbXjAXX6vbJ
-	C1iTmkp1XKNo3kR0SxX6JhVVR4H9hiN++hqM=
-X-Google-Smtp-Source: AGHT+IHRUA+s4LhE0rQQMXTB8bxlu6SiKH0fWfYoPKkOqmyfNKC2GKnlf7ZkrcTPc2U4P/8hXYExyg==
-X-Received: by 2002:a05:6102:e14:b0:4e5:9cf0:4eb6 with SMTP id ada2fe7eead31-4e772887fc2mr2641089137.5.1749216236842;
-        Fri, 06 Jun 2025 06:23:56 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87ec4dc0c21sm312759241.5.2025.06.06.06.23.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 06:23:56 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e58ef9cb69so635017137.1;
-        Fri, 06 Jun 2025 06:23:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUFZNlsL7bn8xSAt3Fr1TlgiTLvdr2YD607TR2wlgHIyll3wgcSF7+4uhPbd3ozAgGRUIDP9ZOBjwbI@vger.kernel.org, AJvYcCVC5knTn0qwZLZI8VdGKqgpI8wTWzfHppTvxmCfIsVqyIChHY2H1fMiZEBvcj4ihHfotbEaIvde8jWiw5Em@vger.kernel.org, AJvYcCVN7JYP07AspQGBSS0AekaxS+3pK0Ub+XaV0iuX+TRFEmVB0KNDDAOUMjOgtX7HcO0fi4yA8zh5Yo4A@vger.kernel.org, AJvYcCWLw/eGGWw4irGKCdjHwKgUFjPpk/8GU/N7b2jphz6O2ZfVT7mk98TA0rg4AbKEP/nUTgw2p89CCg7hRQC2fPGF7Po=@vger.kernel.org
-X-Received: by 2002:a05:6102:149f:b0:4c1:9780:3830 with SMTP id
- ada2fe7eead31-4e772a0b67amr2750672137.23.1749216236152; Fri, 06 Jun 2025
- 06:23:56 -0700 (PDT)
+	s=arc-20240116; t=1749216295; c=relaxed/simple;
+	bh=mR55Kc+kasQ+GdFfuLzdqz3KzIMWEML2Li9QTwOSxo4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=oqpWDIH7wQ/qmHgHiFyT8G7Ac2dQ2sbwrt6OlkjtBGmWLiStpjVY11WFdpueDcbbbw4TJGLSVmq/d+8ijNetjyVNKoLi8uRR36zSlNrLExFjinUCkkeqtQ/rM0uenSL3VOGPDJgC2ZyWdXHgh2LN+CgYLpL2IsS+endSiRalM5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MoyErIVI; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MoyErIVI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749216293; x=1780752293;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=mR55Kc+kasQ+GdFfuLzdqz3KzIMWEML2Li9QTwOSxo4=;
+  b=MoyErIVI6LtQwVkvjNDLg6JV6EIvsFnp0H4utOzOnSwdoEqU+Y2eo+zE
+   1qnxlzcMHpuzMHFGxYK+bzjg7pnBQ0bC7ACPmQaBW9bzcHeeZxbQPxNmU
+   hajvR7FWDnhkE3eN1AjJUvqPckZm7nWL9x0u5FCFS8tDUR+YtGKjGkroy
+   ano7RCGWQN+rS2T9oti7afNeQF51vOgX2k911eDGrVUP4OD31t9bhCyEG
+   oBJfOThE4hu7iL8D0kzNMrcBwEPYrbQwV6b+6F/QIbrL93rSEJo/qWJWD
+   7JdUp0JAo5XYscsO953QjU9MA+OiW4Ucubpym1zTKN1aXTaxNMZ1M+e4H
+   A==;
+X-CSE-ConnectionGUID: l38oyRKfSwGQGZ5QQirunA==
+X-CSE-MsgGUID: izvhKUaRTjeorqo9BY23Iw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="68805140"
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="68805140"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 06:24:52 -0700
+X-CSE-ConnectionGUID: Uu4+QIsIQTyV/d6ER5uSjQ==
+X-CSE-MsgGUID: 8g3tbaSETyKuPkm74jU9BQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="145835952"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.33])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 06:24:46 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Jocelyn Falempe <jfalempe@redhat.com>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>,
+ Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, David
+ Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Christian Koenig
+ <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew Auld
+ <matthew.auld@intel.com>, Matthew Brost <matthew.brost@intel.com>, Maxime
+ Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: Re: [PATCH v8 5/9] drm/i915: Add intel_bo_panic_setup and
+ intel_bo_panic_finish
+In-Reply-To: <20250606120519.753928-6-jfalempe@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250606120519.753928-1-jfalempe@redhat.com>
+ <20250606120519.753928-6-jfalempe@redhat.com>
+Date: Fri, 06 Jun 2025 16:24:43 +0300
+Message-ID: <5e5014e3f1cbc9c91d2d6e4a3258c775a468bf46@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250530143135.366417-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250530143135.366417-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 6 Jun 2025 15:23:43 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVmzU6_3Na==q02jEb-mJmkA6oT1g+xP2RUw9UC1wEx9w@mail.gmail.com>
-X-Gm-Features: AX0GCFvn0KOWXwFEAW2t_z0vkiPVJ2lZPCcUTJH01Ivefj35RTpeaQ5i6J8a6R0
-Message-ID: <CAMuHMdVmzU6_3Na==q02jEb-mJmkA6oT1g+xP2RUw9UC1wEx9w@mail.gmail.com>
-Subject: Re: [PATCH 5/6] i2c: riic: Move generic compatible string to end of array
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 30 May 2025 at 16:31, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri, 06 Jun 2025, Jocelyn Falempe <jfalempe@redhat.com> wrote:
+> Implement both functions for i915 and xe, they prepare the work for
+> drm_panic support.
+> They both use kmap_try_from_panic(), and map one page at a time, to
+> write the panic screen on the framebuffer.
 >
-> Reorder the entry in `riic_i2c_dt_ids` to place the generic compatible
-> string `renesas,riic-rz` at the end of the array, following the
-> convention used in other Renesas drivers.
+> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+> ---
 >
-> Also, drop the unnecessary comma after the sentinel entry, as it is
-> not needed.
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> v5:
+>  * Use iosys_map for intel_bo_panic_map().
+>
+> v7:
+>  * Return int for i915_gem_object_panic_map() (Ville Syrj=C3=A4l=C3=A4)
+>
+> v8:
+>  * Complete rewrite, to use kmap_try_from_panic() which is safe
+>    to call from a panic handler
+>
+>  drivers/gpu/drm/i915/display/intel_bo.c    | 11 +++
+>  drivers/gpu/drm/i915/display/intel_bo.h    |  3 +
+>  drivers/gpu/drm/i915/gem/i915_gem_object.h |  4 +
+>  drivers/gpu/drm/i915/gem/i915_gem_pages.c  | 92 ++++++++++++++++++++++
+>  drivers/gpu/drm/xe/display/intel_bo.c      | 55 +++++++++++++
+>  5 files changed, 165 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_bo.c b/drivers/gpu/drm/i9=
+15/display/intel_bo.c
+> index fbd16d7b58d9..83dbd8ae16fe 100644
+> --- a/drivers/gpu/drm/i915/display/intel_bo.c
+> +++ b/drivers/gpu/drm/i915/display/intel_bo.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: MIT
+>  /* Copyright =C2=A9 2024 Intel Corporation */
+>=20=20
+> +#include <drm/drm_panic.h>
+>  #include "gem/i915_gem_mman.h"
+>  #include "gem/i915_gem_object.h"
+>  #include "gem/i915_gem_object_frontbuffer.h"
+> @@ -57,3 +58,13 @@ void intel_bo_describe(struct seq_file *m, struct drm_=
+gem_object *obj)
+>  {
+>  	i915_debugfs_describe_obj(m, to_intel_bo(obj));
+>  }
+> +
+> +int intel_bo_panic_setup(struct drm_gem_object *obj, struct drm_scanout_=
+buffer *sb)
+> +{
+> +	return i915_gem_object_panic_setup(to_intel_bo(obj), sb);
+> +}
+> +
+> +void intel_bo_panic_finish(struct drm_gem_object *obj)
+> +{
+> +	return i915_gem_object_panic_finish(to_intel_bo(obj));
+> +}
+> diff --git a/drivers/gpu/drm/i915/display/intel_bo.h b/drivers/gpu/drm/i9=
+15/display/intel_bo.h
+> index ea7a2253aaa5..9ac087ea275d 100644
+> --- a/drivers/gpu/drm/i915/display/intel_bo.h
+> +++ b/drivers/gpu/drm/i915/display/intel_bo.h
+> @@ -4,6 +4,7 @@
+>  #ifndef __INTEL_BO__
+>  #define __INTEL_BO__
+>=20=20
+> +#include <drm/drm_panic.h>
+>  #include <linux/types.h>
+>=20=20
+>  struct drm_gem_object;
+> @@ -23,5 +24,7 @@ struct intel_frontbuffer *intel_bo_set_frontbuffer(stru=
+ct drm_gem_object *obj,
+>  						   struct intel_frontbuffer *front);
+>=20=20
+>  void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj);
+> +int intel_bo_panic_setup(struct drm_gem_object *obj, struct drm_scanout_=
+buffer *sb);
+> +void intel_bo_panic_finish(struct drm_gem_object *obj);
+>=20=20
+>  #endif /* __INTEL_BO__ */
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_object.h b/drivers/gpu/drm=
+/i915/gem/i915_gem_object.h
+> index c34f41605b46..9a0c1019dcad 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_object.h
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_object.h
+> @@ -9,6 +9,7 @@
+>  #include <drm/drm_gem.h>
+>  #include <drm/drm_file.h>
+>  #include <drm/drm_device.h>
+> +#include <drm/drm_panic.h>
+>=20=20
+>  #include "intel_memory_region.h"
+>  #include "i915_gem_object_types.h"
+> @@ -691,6 +692,9 @@ i915_gem_object_unpin_pages(struct drm_i915_gem_objec=
+t *obj)
+>  int __i915_gem_object_put_pages(struct drm_i915_gem_object *obj);
+>  int i915_gem_object_truncate(struct drm_i915_gem_object *obj);
+>=20=20
+> +int i915_gem_object_panic_setup(struct drm_i915_gem_object *obj, struct =
+drm_scanout_buffer *sb);
+> +void i915_gem_object_panic_finish(struct drm_i915_gem_object *obj);
+> +
+>  /**
+>   * i915_gem_object_pin_map - return a contiguous mapping of the entire o=
+bject
+>   * @obj: the object to map into kernel address space
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/=
+i915/gem/i915_gem_pages.c
+> index 7f83f8bdc8fb..9bdbac3d9433 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+> @@ -3,6 +3,7 @@
+>   * Copyright =C2=A9 2014-2016 Intel Corporation
+>   */
+>=20=20
+> +#include <drm/drm_panic.h>
+>  #include <drm/drm_cache.h>
+>  #include <linux/vmalloc.h>
+>=20=20
+> @@ -354,6 +355,97 @@ static void *i915_gem_object_map_pfn(struct drm_i915=
+_gem_object *obj,
+>  	return vaddr ?: ERR_PTR(-ENOMEM);
+>  }
+>=20=20
+> +static struct page **i915_panic_pages;
+> +static int i915_panic_page =3D -1;
+> +static void *i915_panic_vaddr;
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+How do the per module variables work when you have multiple devices?
 
-Gr{oetje,eeting}s,
+BR,
+Jani.
 
-                        Geert
+> +
+> +static void i915_panic_kunmap(void)
+> +{
+> +	if (i915_panic_vaddr) {
+> +		drm_clflush_virt_range(i915_panic_vaddr, PAGE_SIZE);
+> +		kunmap_local(i915_panic_vaddr);
+> +		i915_panic_vaddr =3D NULL;
+> +	}
+> +}
+> +
+> +static struct page **i915_gem_object_panic_pages(struct drm_i915_gem_obj=
+ect *obj)
+> +{
+> +	unsigned long n_pages =3D obj->base.size >> PAGE_SHIFT, i;
+> +	struct page *page;
+> +	struct page **pages;
+> +	struct sgt_iter iter;
+> +
+> +	pages =3D kvmalloc_array(n_pages, sizeof(*pages), GFP_ATOMIC);
+> +	if (!pages)
+> +		return NULL;
+> +
+> +	i =3D 0;
+> +	for_each_sgt_page(page, iter, obj->mm.pages)
+> +		pages[i++] =3D page;
+> +	return pages;
+> +}
+> +
+> +/*
+> + * The scanout buffer pages are not mapped, so for each pixel,
+> + * use kmap_local_page_try_from_panic() to map the page, and write the p=
+ixel.
+> + * Try to keep the map from the previous pixel, to avoid too much map/un=
+map.
+> + */
+> +static void i915_gem_object_panic_page_set_pixel(struct drm_scanout_buff=
+er *sb, unsigned int x,
+> +						 unsigned int y, u32 color)
+> +{
+> +	unsigned int new_page;
+> +	unsigned int offset;
+> +
+> +	offset =3D y * sb->pitch[0] + x * sb->format->cpp[0];
+> +
+> +	new_page =3D offset >> PAGE_SHIFT;
+> +	offset =3D offset % PAGE_SIZE;
+> +	if (new_page !=3D i915_panic_page) {
+> +		i915_panic_kunmap();
+> +		i915_panic_page =3D new_page;
+> +		i915_panic_vaddr =3D kmap_local_page_try_from_panic(
+> +				   i915_panic_pages[i915_panic_page]);
+> +	}
+> +	if (i915_panic_vaddr) {
+> +		u32 *pix =3D i915_panic_vaddr + offset;
+> +		*pix =3D color;
+> +	}
+> +}
+> +
+> +/*
+> + * Setup the gem framebuffer for drm_panic access.
+> + * Use current vaddr if it exists, or setup a list of pages.
+> + * pfn is not supported yet.
+> + */
+> +int i915_gem_object_panic_setup(struct drm_i915_gem_object *obj, struct =
+drm_scanout_buffer *sb)
+> +{
+> +	enum i915_map_type has_type;
+> +	void *ptr;
+> +
+> +	ptr =3D page_unpack_bits(obj->mm.mapping, &has_type);
+> +	if (ptr) {
+> +		if (i915_gem_object_has_iomem(obj))
+> +			iosys_map_set_vaddr_iomem(&sb->map[0], (void __iomem *)ptr);
+> +		else
+> +			iosys_map_set_vaddr(&sb->map[0], ptr);
+> +
+> +		return 0;
+> +	}
+> +	if (i915_gem_object_has_struct_page(obj)) {
+> +		i915_panic_pages =3D i915_gem_object_panic_pages(obj);
+> +		sb->set_pixel =3D i915_gem_object_panic_page_set_pixel;
+> +		i915_panic_page =3D -1;
+> +		return 0;
+> +	}
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +void i915_gem_object_panic_finish(struct drm_i915_gem_object *obj)
+> +{
+> +	i915_panic_kunmap();
+> +	i915_panic_page =3D -1;
+> +}
+> +
+>  /* get, pin, and map the pages of the object into kernel space */
+>  void *i915_gem_object_pin_map(struct drm_i915_gem_object *obj,
+>  			      enum i915_map_type type)
+> diff --git a/drivers/gpu/drm/xe/display/intel_bo.c b/drivers/gpu/drm/xe/d=
+isplay/intel_bo.c
+> index 27437c22bd70..eb9a3400c110 100644
+> --- a/drivers/gpu/drm/xe/display/intel_bo.c
+> +++ b/drivers/gpu/drm/xe/display/intel_bo.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: MIT
+>  /* Copyright =C2=A9 2024 Intel Corporation */
+>=20=20
+> +#include <drm/drm_cache.h>
+>  #include <drm/drm_gem.h>
+>=20=20
+>  #include "xe_bo.h"
+> @@ -59,3 +60,57 @@ void intel_bo_describe(struct seq_file *m, struct drm_=
+gem_object *obj)
+>  {
+>  	/* FIXME */
+>  }
+> +
+> +static int xe_panic_page =3D -1;
+> +static void *xe_panic_vaddr;
+> +static struct xe_bo *xe_panic_bo;
+> +
+> +static void xe_panic_kunmap(void)
+> +{
+> +	if (xe_panic_vaddr) {
+> +		drm_clflush_virt_range(xe_panic_vaddr, PAGE_SIZE);
+> +		kunmap_local(xe_panic_vaddr);
+> +		xe_panic_vaddr =3D NULL;
+> +	}
+> +}
+> +/*
+> + * The scanout buffer pages are not mapped, so for each pixel,
+> + * use kmap_local_page_try_from_panic() to map the page, and write the p=
+ixel.
+> + * Try to keep the map from the previous pixel, to avoid too much map/un=
+map.
+> + */
+> +static void xe_panic_page_set_pixel(struct drm_scanout_buffer *sb, unsig=
+ned int x,
+> +				    unsigned int y, u32 color)
+> +{
+> +	unsigned int new_page;
+> +	unsigned int offset;
+> +
+> +	offset =3D y * sb->pitch[0] + x * sb->format->cpp[0];
+> +
+> +	new_page =3D offset >> PAGE_SHIFT;
+> +	offset =3D offset % PAGE_SIZE;
+> +	if (new_page !=3D xe_panic_page) {
+> +		xe_panic_kunmap();
+> +		xe_panic_page =3D new_page;
+> +		xe_panic_vaddr =3D ttm_bo_kmap_try_from_panic(&xe_panic_bo->ttm,
+> +							    xe_panic_page);
+> +	}
+> +	if (xe_panic_vaddr) {
+> +		u32 *pix =3D xe_panic_vaddr + offset;
+> +		*pix =3D color;
+> +	}
+> +}
+> +
+> +int intel_bo_panic_setup(struct drm_gem_object *obj, struct drm_scanout_=
+buffer *sb)
+> +{
+> +	struct xe_bo *bo =3D gem_to_xe_bo(obj);
+> +
+> +	xe_panic_bo =3D bo;
+> +	sb->set_pixel =3D xe_panic_page_set_pixel;
+> +	return 0;
+> +}
+> +
+> +void intel_bo_panic_finish(struct drm_gem_object *obj)
+> +{
+> +	xe_panic_kunmap();
+> +	xe_panic_page =3D -1;
+> +}
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+Jani Nikula, Intel
