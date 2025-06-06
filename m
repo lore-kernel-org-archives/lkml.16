@@ -1,452 +1,174 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663BD2882AE;
-	Fri,  6 Jun 2025 10:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FB7253355
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 10:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749205779; cv=none; b=Hkm902TZK7bV0RRtZfciShgqx3AvUQpSMimtWap3XRHfUTmbj1V+Sn15ArnHpB5Kt8ocTeYMCuSRR3JsnRvNrEXftGRlaJFzNCcEVDop0UUA5mFkvFAEqNd0A7gBDy18nqpT29NSMm45pYC6qL54BqTxTALjAfMkAOlgMoLJIOg=
+	t=1749205838; cv=none; b=QJp1MBclFWv5YJd/Kz4pNlgeGIG6ODtIwO4kWBfi4ZrTDkbIyZr0oov5NxVfq4FpITs00cheb5ZvlkfofGe9pxnaKrY4bFDAY1xtAce2XhFOV2HwQl8gr88fiQUVDnTrXcxVpqdLgWrSHI9MaOt1DOUkC5wD2VxwueV/OdQyAUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749205779; c=relaxed/simple;
-	bh=8CEzxdIV+2aRtC0PtQKkli9DkHXfXShenAcDp/owwRY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=L8qboqDv0UPPqiMDs8OvoVWjy3jE9KflYsz2L6Qc9NoWYUsi6wX3Giv3IqJCWUJj+D62m5FkvJYqFL9ksmjWkdPZ8+0tJX8Yx3x/YSxW5axhhFdzwldTdL4wDyeHArc4l0uMdFOX3TL9zEU6VQqcIBW2TV1ZvCxipn6G/M5gg8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Ze36v+A2; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749205838; c=relaxed/simple;
+	bh=3Z5xaT5zKkEE4PAdWP7WsmhS5IlnEFQjdxzTWBMpMTA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h0UmX16Ryiyo7sS50a4R7ijw2U2TkfknjYivO5+EwlT9QPiyPHrzMQV4Aekr8CVN4Zboy7a6AAW0oQ0pku03NvXOFpsXrwBjtjC75BXCC0ebn7KawPMlVWZlJff6URILzJ/hLMdHI5wB1x01tBUWAZZ79f06y9yiUE8Mz2QGzxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dITYTa3j; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ze36v+A2"
-Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8B5BA149B;
-	Fri,  6 Jun 2025 12:29:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749205769;
-	bh=8CEzxdIV+2aRtC0PtQKkli9DkHXfXShenAcDp/owwRY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ze36v+A21xfr61znbfxYt4Rk4zxuLKsTvpN4xS3IcvO+gJr34cyhKkBFoG03c+Zm0
-	 lZSo0gH+68a7yGZKND7LY9EcBVPjhptS2BAaeLZnmrmzNiMoHmRBlwOuO+KZV/RzcW
-	 FqKxiFBl/od/cE0bXIxcr/iMfNZ61T3qe3eEjTG8=
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Date: Fri, 06 Jun 2025 12:29:23 +0200
-Subject: [PATCH v7 3/4] media: pisp_be: Split jobs creation and scheduling
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dITYTa3j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749205835;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2bTEZ1vLd2ySBvqwuRAeBvN6sKQAY124DUV80JjBS0w=;
+	b=dITYTa3jlqQ82cagOCgc0FdmFaWKP4S8/NlqBwEf1HisfGwO1cWrmtI/02fvx+vFZUKP8n
+	AbsetQK9EsDgb8XLTz4/lzk0NOpJQYEHXmguMo5Eaq53udo2B2QH9RWfBn1R00A2RzfA5K
+	ZD1r5Gu9s/vALF9GMe/bDWN9Faf/zJw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-74-UCWrq5oTMJCjN6uROokifA-1; Fri, 06 Jun 2025 06:30:34 -0400
+X-MC-Unique: UCWrq5oTMJCjN6uROokifA-1
+X-Mimecast-MFC-AGG-ID: UCWrq5oTMJCjN6uROokifA_1749205833
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a5058f9ef4so1052745f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 03:30:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749205833; x=1749810633;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2bTEZ1vLd2ySBvqwuRAeBvN6sKQAY124DUV80JjBS0w=;
+        b=DxNxtH+QljUcaVfeZLm5vCHOXkOVUIDrzJCcaQSADP7cULpxtM9WJrnpLSdbtoJPJX
+         K2gQwqozCD3XAXfZ0vDuqy3LxIr8O+ifOqrUeOeDD00wZXFt7UWnvYrEwXpL+dQAPdYa
+         th7vG9HX8oAjZXYosizuRNWdfT4/DAJUOowaI9hZR+gly5A/Vncfykw5c+eAub1CVawQ
+         I0bCHCTaMgDdQP3StQ/0cHrbMHYY9zCeCRzf9823v4Bbuc6sHgNEhqLoWZQU1prqkvSv
+         IBa2ZOm48sr5tWaLHLl3NpNS/hgyK0OZYPzWUDyOKkHSRyJsq074zvhtgzxeQtRrL5i+
+         6L4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV4BXJW74P28OwIfXRuCU6UYellssBxQznaewYbXn1aIBeQOvB8kNfAGO99NtjUnyHRmcrQZ2FhEJ1zP2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTC2yfFoaRSM2eDLrNrkx4JcwNWVN3vgA7q2fviYypOcnmtb97
+	yqgm0ixV277hlHH55ScstZ70QjMUVHyQKiubNp8Gq4qomq2CtJt7RUU32BGkYB0cG6iW9yuIF04
+	Rz1siO0REggsYbG6qI1e/0DMQxQStp1YXF0SjiCKEli0JMe91DW6bOqZzYwT4aUdi1w==
+X-Gm-Gg: ASbGncvZm0G0R/i6DmUObCdEoZyK3u0SNtlb72OA4SChFEX0L9pyQwrXFnUfbzlvxpU
+	0VJrucZJQCvD0ayDTP3RoqUwXCUvYaV1XYT1qP9NDffZc1ZCs/kvPcqnwsDVDwL3a8/gE6hbAeP
+	4rS0x48h6ZvP+4uftlUGn29wjx7mlHMF85CZvhkGIZN4DLbYcI8fmjXioWtix6Ntz19VCCbsmX/
+	2NeG6DA6jaS0rjVqbPI9pBkXGHWFf1yP4MmCrneWYxMg7GVXwL1Qe9hCgDlsBczXC7rRqDLMPlK
+	hHgFL7QX+7cOXU14V8eW+l5Flr/tYR/XekhNIGmDPdsKb5nDaZaGP8971ixkbw8Ed1sHLiUkXdE
+	KttIyr6JMy6kNaBnvLTNwIBMfJF5reUvKhalCD4kCjw==
+X-Received: by 2002:a5d:5c84:0:b0:3a5:2182:bd11 with SMTP id ffacd0b85a97d-3a53189b6d1mr2385096f8f.20.1749205832822;
+        Fri, 06 Jun 2025 03:30:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZ8zn1DJwYaoBTRpNkad0mZiAjY2iLHqkNZy1mWBuUYEv02AEOeaCRfW88O1wnKzjCVIId1A==
+X-Received: by 2002:a5d:5c84:0:b0:3a5:2182:bd11 with SMTP id ffacd0b85a97d-3a53189b6d1mr2385070f8f.20.1749205832424;
+        Fri, 06 Jun 2025 03:30:32 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532463905sm1468475f8f.92.2025.06.06.03.30.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 03:30:31 -0700 (PDT)
+Message-ID: <59559bf8-fded-458d-9e6e-5bdfd5cbd816@redhat.com>
+Date: Fri, 6 Jun 2025 12:30:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/mm: Skip failed memfd setups in gup_longterm
+To: Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250605-selftest-mm-gup-longterm-tweaks-v1-1-2fae34b05958@kernel.org>
+ <20250605180421.c8d8c48f3e340f9488937ab7@linux-foundation.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250605180421.c8d8c48f3e340f9488937ab7@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250606-pispbe-mainline-split-jobs-handling-v6-v7-3-46169f0622b7@ideasonboard.com>
-References: <20250606-pispbe-mainline-split-jobs-handling-v6-v7-0-46169f0622b7@ideasonboard.com>
-In-Reply-To: <20250606-pispbe-mainline-split-jobs-handling-v6-v7-0-46169f0622b7@ideasonboard.com>
-To: Naushir Patuck <naush@raspberrypi.com>, 
- Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>, 
- David Plowman <david.plowman@raspberrypi.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12686;
- i=jacopo.mondi@ideasonboard.com; h=from:subject:message-id;
- bh=8CEzxdIV+2aRtC0PtQKkli9DkHXfXShenAcDp/owwRY=;
- b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoQsMJIQuMTolpJr/4egEnJNl3dkYnu8L3fh3Gf
- wPmHtDWIfyJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaELDCQAKCRByNAaPFqFW
- PA64EADDySBRRHXygcfzeR5Tz6wsWq8pwNjcsAjr2sjDeI5tU2GjdZ8CEZYGZK/rukOJBdU/SLH
- TY9bx+H+SJ3/G1s24BSUHFAGDqz4JxRm4BkWP6Wpvhhq5N0Vczsd/SCgo0vcX/lKLYA0ejnSz4B
- qzhrUWiWSpj/rZi59wM3yS/NK1ccQqPIiXTCwIj46e9woIwFE1/01WLqOxGxP6Opw9PNPCGaBUg
- P8Xt3g+Rpnhl5YCeQDHJ/PNuInEmwp3yrdI09dg7td8t5bVDKxwOXWxMCyPZKq5MWeDso+cRD1B
- R6mg56sMvJXBlpLiAo5fqZiFLjvKN7KIRdVS61m0N8S/CY26ZMdviHleiEyH/I4mjPfRGXbnAIB
- 8MTIaOlwLxw1QW4Cf7hszfPU48HnVt6/GreK3QxuRMScmXXb47q1NbKE3+p7SkbIa9hznviFknM
- GA4BnSM3b5agSmitdao7YBWirszsEXw8NFGHdXb6OmMaQy/ckA+pGLCH9myyWwhXalbrcuGpg4w
- 1E0GlVz+iXCKt/TreWgSnlgade2elKfsH595lHyLTRzC982aYB/DAg2NkAOGc0l09jNXQUihPJX
- Nfd8aYFG7BV4l5jvBfOHtCsIb6I/dqqg2N8VuXVIo4HWicyiVI2VVkKB/OnXR7xixWdHLwgBZgs
- yupODJLPudPjCAQ==
-X-Developer-Key: i=jacopo.mondi@ideasonboard.com; a=openpgp;
- fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-Currently the 'pispbe_schedule()' function does two things:
+On 06.06.25 03:04, Andrew Morton wrote:
+> On Thu, 05 Jun 2025 22:34:31 +0100 Mark Brown <broonie@kernel.org> wrote:
+> 
+>> Unlike the other cases gup_longterm's memfd tests previously skipped the
+>> test when failing to set up the file descriptor to test, restore this
+>> behaviour.
+>>
+>> Signed-off-by: Mark Brown <broonie@kernel.org>
+> 
+> I added a bunch of stuff to this.  Please check?
+> 
+> 
+> From: Mark Brown <broonie@kernel.org>
+> Subject: selftests/mm: skip failed memfd setups in gup_longterm
+> Date: Thu, 05 Jun 2025 22:34:31 +0100
+> 
+> Unlike the other cases gup_longterm's memfd tests previously skipped the
+> test when failing to set up the file descriptor to test.  Restore this
+> behavior to avoid hitting failures when hugetlb isn't configured.
+> 
+> Link: https://lkml.kernel.org/r/20250605-selftest-mm-gup-longterm-tweaks-v1-1-2fae34b05958@kernel.org
+> Fies: 66bce7afbaca ("selftests/mm: fix test result reporting in gup_longterm")
 
-1) Tries to assemble a job by inspecting all the video node queues
-   to make sure all the required buffers are available
-2) Submit the job to the hardware
+"Fixes:"
 
-The pispbe_schedule() function is called at:
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Reported-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Closes: https://lkml.kernel.org/r/a76fc252-0fe3-4d4b-a9a1-4a2895c2680d@lucifer.local
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> 
 
-- video device start_streaming() time
-- video device qbuf() time
-- irq handler
-
-As assembling a job requires inspecting all queues, it is a rather
-time consuming operation which is better not run in IRQ context.
-
-To avoid the executing the time consuming job creation in interrupt
-context split the job creation and job scheduling in two distinct
-operations. When a well-formed job is created, append it to the
-newly introduced 'pispbe->job_queue' where it will be dequeued from
-by the scheduling routine.
-
-As the per-node 'ready_queue' buffer list is only accessed in vb2
-ops callbacks, protected by a mutex, it is not necessary to guard it
-with a dedicated spinlock so drop it. Also use the spin_lock_irq()
-variant in all functions not called from an IRQ context where the
-spin_lock_irqsave() version was used.
-
-Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
----
- .../media/platform/raspberrypi/pisp_be/pisp_be.c   | 152 +++++++++++----------
- 1 file changed, 79 insertions(+), 73 deletions(-)
-
-diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-index 92c452891d6c..c25f7d9b404c 100644
---- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-+++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-@@ -161,8 +161,6 @@ struct pispbe_node {
- 	struct mutex node_lock;
- 	/* vb2_queue lock */
- 	struct mutex queue_lock;
--	/* Protect pispbe_node->ready_queue and pispbe_buffer->ready_list */
--	spinlock_t ready_lock;
- 	struct list_head ready_queue;
- 	struct vb2_queue queue;
- 	struct v4l2_format format;
-@@ -190,6 +188,8 @@ struct pispbe_hw_enables {
- 
- /* Records a job configuration and memory addresses. */
- struct pispbe_job_descriptor {
-+	struct list_head queue;
-+	struct pispbe_buffer *buffers[PISPBE_NUM_NODES];
- 	dma_addr_t hw_dma_addrs[N_HW_ADDRESSES];
- 	struct pisp_be_tiles_config *config;
- 	struct pispbe_hw_enables hw_enables;
-@@ -215,8 +215,10 @@ struct pispbe_dev {
- 	unsigned int sequence;
- 	u32 streaming_map;
- 	struct pispbe_job queued_job, running_job;
--	spinlock_t hw_lock; /* protects "hw_busy" flag and streaming_map */
-+	/* protects "hw_busy" flag, streaming_map and job_queue */
-+	spinlock_t hw_lock;
- 	bool hw_busy; /* non-zero if a job is queued or is being started */
-+	struct list_head job_queue;
- 	int irq;
- 	u32 hw_version;
- 	u8 done, started;
-@@ -440,41 +442,47 @@ static void pispbe_xlate_addrs(struct pispbe_dev *pispbe,
-  * For Output0, Output1, Tdn and Stitch, a buffer only needs to be
-  * available if the blocks are enabled in the config.
-  *
-- * Needs to be called with hw_lock held.
-+ * If all the buffers required to form a job are available, append the
-+ * job descriptor to the job queue to be later queued to the HW.
-  *
-  * Returns 0 if a job has been successfully prepared, < 0 otherwise.
-  */
--static int pispbe_prepare_job(struct pispbe_dev *pispbe,
--			      struct pispbe_job_descriptor *job)
-+static int pispbe_prepare_job(struct pispbe_dev *pispbe)
- {
- 	struct pispbe_buffer *buf[PISPBE_NUM_NODES] = {};
-+	struct pispbe_job_descriptor *job;
-+	unsigned int streaming_map;
- 	unsigned int config_index;
- 	struct pispbe_node *node;
--	unsigned long flags;
- 
--	lockdep_assert_held(&pispbe->hw_lock);
-+	scoped_guard(spinlock_irq, &pispbe->hw_lock) {
-+		static const u32 mask = BIT(CONFIG_NODE) | BIT(MAIN_INPUT_NODE);
- 
--	memset(job, 0, sizeof(struct pispbe_job_descriptor));
-+		if ((pispbe->streaming_map & mask) != mask)
-+			return -ENODEV;
- 
--	if (((BIT(CONFIG_NODE) | BIT(MAIN_INPUT_NODE)) &
--		pispbe->streaming_map) !=
--			(BIT(CONFIG_NODE) | BIT(MAIN_INPUT_NODE)))
--		return -ENODEV;
-+		/*
-+		 * Take a copy of streaming_map: nodes activated after this
-+		 * point are ignored when preparing this job.
-+		 */
-+		streaming_map = pispbe->streaming_map;
-+	}
-+
-+	job = kzalloc(sizeof(*job), GFP_KERNEL);
-+	if (!job)
-+		return -ENOMEM;
- 
- 	node = &pispbe->node[CONFIG_NODE];
--	spin_lock_irqsave(&node->ready_lock, flags);
- 	buf[CONFIG_NODE] = list_first_entry_or_null(&node->ready_queue,
- 						    struct pispbe_buffer,
- 						    ready_list);
--	if (buf[CONFIG_NODE]) {
--		list_del(&buf[CONFIG_NODE]->ready_list);
--		pispbe->queued_job.buf[CONFIG_NODE] = buf[CONFIG_NODE];
-+	if (!buf[CONFIG_NODE]) {
-+		kfree(job);
-+		return -ENODEV;
- 	}
--	spin_unlock_irqrestore(&node->ready_lock, flags);
- 
--	/* Exit early if no config buffer has been queued. */
--	if (!buf[CONFIG_NODE])
--		return -ENODEV;
-+	list_del(&buf[CONFIG_NODE]->ready_list);
-+	job->buffers[CONFIG_NODE] = buf[CONFIG_NODE];
- 
- 	config_index = buf[CONFIG_NODE]->vb.vb2_buf.index;
- 	job->config = &pispbe->config[config_index];
-@@ -495,7 +503,7 @@ static int pispbe_prepare_job(struct pispbe_dev *pispbe,
- 			continue;
- 
- 		buf[i] = NULL;
--		if (!(pispbe->streaming_map & BIT(i)))
-+		if (!(streaming_map & BIT(i)))
- 			continue;
- 
- 		if ((!(rgb_en & PISP_BE_RGB_ENABLE_OUTPUT0) &&
-@@ -522,25 +530,25 @@ static int pispbe_prepare_job(struct pispbe_dev *pispbe,
- 		node = &pispbe->node[i];
- 
- 		/* Pull a buffer from each V4L2 queue to form the queued job */
--		spin_lock_irqsave(&node->ready_lock, flags);
- 		buf[i] = list_first_entry_or_null(&node->ready_queue,
- 						  struct pispbe_buffer,
- 						  ready_list);
- 		if (buf[i]) {
- 			list_del(&buf[i]->ready_list);
--			pispbe->queued_job.buf[i] = buf[i];
-+			job->buffers[i] = buf[i];
- 		}
--		spin_unlock_irqrestore(&node->ready_lock, flags);
- 
- 		if (!buf[i] && !ignore_buffers)
- 			goto err_return_buffers;
- 	}
- 
--	pispbe->queued_job.valid = true;
--
- 	/* Convert buffers to DMA addresses for the hardware */
- 	pispbe_xlate_addrs(pispbe, job, buf);
- 
-+	scoped_guard(spinlock_irq, &pispbe->hw_lock) {
-+		list_add_tail(&job->queue, &pispbe->job_queue);
-+	}
-+
- 	return 0;
- 
- err_return_buffers:
-@@ -551,33 +559,39 @@ static int pispbe_prepare_job(struct pispbe_dev *pispbe,
- 			continue;
- 
- 		/* Return the buffer to the ready_list queue */
--		spin_lock_irqsave(&n->ready_lock, flags);
- 		list_add(&buf[i]->ready_list, &n->ready_queue);
--		spin_unlock_irqrestore(&n->ready_lock, flags);
- 	}
- 
--	memset(&pispbe->queued_job, 0, sizeof(pispbe->queued_job));
-+	kfree(job);
- 
- 	return -ENODEV;
- }
- 
- static void pispbe_schedule(struct pispbe_dev *pispbe, bool clear_hw_busy)
- {
--	struct pispbe_job_descriptor job;
--	unsigned long flags;
--	int ret;
-+	struct pispbe_job_descriptor *job;
-+
-+	scoped_guard(spinlock_irqsave, &pispbe->hw_lock) {
-+		if (clear_hw_busy)
-+			pispbe->hw_busy = false;
-+
-+		if (pispbe->hw_busy)
-+			return;
- 
--	spin_lock_irqsave(&pispbe->hw_lock, flags);
-+		job = list_first_entry_or_null(&pispbe->job_queue,
-+					       struct pispbe_job_descriptor,
-+					       queue);
-+		if (!job)
-+			return;
- 
--	if (clear_hw_busy)
--		pispbe->hw_busy = false;
-+		list_del(&job->queue);
- 
--	if (pispbe->hw_busy)
--		goto unlock_and_return;
-+		for (unsigned int i = 0; i < PISPBE_NUM_NODES; i++)
-+			pispbe->queued_job.buf[i] = job->buffers[i];
-+		pispbe->queued_job.valid = true;
- 
--	ret = pispbe_prepare_job(pispbe, &job);
--	if (ret)
--		goto unlock_and_return;
-+		pispbe->hw_busy = true;
-+	}
- 
- 	/*
- 	 * We can kick the job off without the hw_lock, as this can
-@@ -585,16 +599,8 @@ static void pispbe_schedule(struct pispbe_dev *pispbe, bool clear_hw_busy)
- 	 * only when the following job has been queued and an interrupt
- 	 * is rised.
- 	 */
--	pispbe->hw_busy = true;
--	spin_unlock_irqrestore(&pispbe->hw_lock, flags);
--
--	pispbe_queue_job(pispbe, &job);
--
--	return;
--
--unlock_and_return:
--	/* No job has been queued, just release the lock and return. */
--	spin_unlock_irqrestore(&pispbe->hw_lock, flags);
-+	pispbe_queue_job(pispbe, job);
-+	kfree(job);
- }
- 
- static void pispbe_isr_jobdone(struct pispbe_dev *pispbe,
-@@ -846,18 +852,16 @@ static void pispbe_node_buffer_queue(struct vb2_buffer *buf)
- 		container_of(vbuf, struct pispbe_buffer, vb);
- 	struct pispbe_node *node = vb2_get_drv_priv(buf->vb2_queue);
- 	struct pispbe_dev *pispbe = node->pispbe;
--	unsigned long flags;
- 
- 	dev_dbg(pispbe->dev, "%s: for node %s\n", __func__, NODE_NAME(node));
--	spin_lock_irqsave(&node->ready_lock, flags);
- 	list_add_tail(&buffer->ready_list, &node->ready_queue);
--	spin_unlock_irqrestore(&node->ready_lock, flags);
- 
- 	/*
- 	 * Every time we add a buffer, check if there's now some work for the hw
- 	 * to do.
- 	 */
--	pispbe_schedule(pispbe, false);
-+	if (!pispbe_prepare_job(pispbe))
-+		pispbe_schedule(pispbe, false);
- }
- 
- static int pispbe_node_start_streaming(struct vb2_queue *q, unsigned int count)
-@@ -865,17 +869,16 @@ static int pispbe_node_start_streaming(struct vb2_queue *q, unsigned int count)
- 	struct pispbe_node *node = vb2_get_drv_priv(q);
- 	struct pispbe_dev *pispbe = node->pispbe;
- 	struct pispbe_buffer *buf, *tmp;
--	unsigned long flags;
- 	int ret;
- 
- 	ret = pm_runtime_resume_and_get(pispbe->dev);
- 	if (ret < 0)
- 		goto err_return_buffers;
- 
--	spin_lock_irqsave(&pispbe->hw_lock, flags);
--	node->pispbe->streaming_map |=  BIT(node->id);
--	node->pispbe->sequence = 0;
--	spin_unlock_irqrestore(&pispbe->hw_lock, flags);
-+	scoped_guard(spinlock_irq, &pispbe->hw_lock) {
-+		node->pispbe->streaming_map |=  BIT(node->id);
-+		node->pispbe->sequence = 0;
-+	}
- 
- 	dev_dbg(pispbe->dev, "%s: for node %s (count %u)\n",
- 		__func__, NODE_NAME(node), count);
-@@ -883,17 +886,16 @@ static int pispbe_node_start_streaming(struct vb2_queue *q, unsigned int count)
- 		node->pispbe->streaming_map);
- 
- 	/* Maybe we're ready to run. */
--	pispbe_schedule(pispbe, false);
-+	if (!pispbe_prepare_job(pispbe))
-+		pispbe_schedule(pispbe, false);
- 
- 	return 0;
- 
- err_return_buffers:
--	spin_lock_irqsave(&pispbe->hw_lock, flags);
- 	list_for_each_entry_safe(buf, tmp, &node->ready_queue, ready_list) {
- 		list_del(&buf->ready_list);
- 		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
- 	}
--	spin_unlock_irqrestore(&pispbe->hw_lock, flags);
- 
- 	return ret;
- }
-@@ -903,7 +905,6 @@ static void pispbe_node_stop_streaming(struct vb2_queue *q)
- 	struct pispbe_node *node = vb2_get_drv_priv(q);
- 	struct pispbe_dev *pispbe = node->pispbe;
- 	struct pispbe_buffer *buf;
--	unsigned long flags;
- 
- 	/*
- 	 * Now this is a bit awkward. In a simple M2M device we could just wait
-@@ -915,11 +916,7 @@ static void pispbe_node_stop_streaming(struct vb2_queue *q)
- 	 * This may return buffers out of order.
- 	 */
- 	dev_dbg(pispbe->dev, "%s: for node %s\n", __func__, NODE_NAME(node));
--	spin_lock_irqsave(&pispbe->hw_lock, flags);
- 	do {
--		unsigned long flags1;
--
--		spin_lock_irqsave(&node->ready_lock, flags1);
- 		buf = list_first_entry_or_null(&node->ready_queue,
- 					       struct pispbe_buffer,
- 					       ready_list);
-@@ -927,15 +924,23 @@ static void pispbe_node_stop_streaming(struct vb2_queue *q)
- 			list_del(&buf->ready_list);
- 			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
- 		}
--		spin_unlock_irqrestore(&node->ready_lock, flags1);
- 	} while (buf);
--	spin_unlock_irqrestore(&pispbe->hw_lock, flags);
- 
- 	vb2_wait_for_all_buffers(&node->queue);
- 
--	spin_lock_irqsave(&pispbe->hw_lock, flags);
-+	spin_lock_irq(&pispbe->hw_lock);
- 	pispbe->streaming_map &= ~BIT(node->id);
--	spin_unlock_irqrestore(&pispbe->hw_lock, flags);
-+
-+	/* Release all jobs once all nodes have stopped streaming. */
-+	if (pispbe->streaming_map == 0) {
-+		struct pispbe_job_descriptor *job, *temp;
-+
-+		list_for_each_entry_safe(job, temp, &pispbe->job_queue, queue) {
-+			list_del(&job->queue);
-+			kfree(job);
-+		}
-+	}
-+	spin_unlock_irq(&pispbe->hw_lock);
- 
- 	pm_runtime_mark_last_busy(pispbe->dev);
- 	pm_runtime_put_autosuspend(pispbe->dev);
-@@ -1393,7 +1398,6 @@ static int pispbe_init_node(struct pispbe_dev *pispbe, unsigned int id)
- 	mutex_init(&node->node_lock);
- 	mutex_init(&node->queue_lock);
- 	INIT_LIST_HEAD(&node->ready_queue);
--	spin_lock_init(&node->ready_lock);
- 
- 	node->format.type = node->buf_type;
- 	pispbe_node_def_fmt(node);
-@@ -1677,6 +1681,8 @@ static int pispbe_probe(struct platform_device *pdev)
- 	if (!pispbe)
- 		return -ENOMEM;
- 
-+	INIT_LIST_HEAD(&pispbe->job_queue);
-+
- 	dev_set_drvdata(&pdev->dev, pispbe);
- 	pispbe->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, pispbe);
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
-2.49.0
+Cheers,
+
+David / dhildenb
 
