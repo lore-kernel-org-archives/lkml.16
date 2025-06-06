@@ -1,155 +1,142 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0939283FF6
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA64024EF6B
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749198435; cv=none; b=YWqM7nGQSmxUyj23Gv1bZv3Mtw+d6G4xwRzWHVqfgLcMpD5BWW2f3i+dofg6c1pXIW/cMiml/wOzmngjWSFLk9TVTjDsIoDf90rmNZt1sJP7UmIwqpYfley9Js/vGlE5kwXxv5X3uhVGBtgTpfojoZTArLF38g25TawOypoIf6w=
+	t=1749198444; cv=none; b=IEhIm9HPs0omAy0plNnu/h0U6sU2AEME/mq+1UhzHQLUWngug9ZuHGgnubQVqjVGZ+rf0cgZCYdagrAe9vFexZJwiiiSrLLyzmDilaG8jF76/A+OoY1xEVXSNHbsERchQzWhPce113PfhjwnqA8sJ4BTKlmTs4ha/Q/e+5whJao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749198435; c=relaxed/simple;
-	bh=GUe49uEBje2seW3kBTDoZdmBDgc00U9icBdzKvpEZpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GC12sR3GWFX7GT/aVd9mZPANgypKLXywlTbILj7KZZDLbsNOstyiGbW4QVrU1HxWKjuOmjFhrHqAq2fZtyuLTdILtgV0O8Gs1xUwVhtHwqaldWFOXBqr2QDWhznFz3yw2Gscvg5HMp834wduvwCXaGCT0TT78O30XJYs9ROJLIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wO3P6wlX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=97BLMfZJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wO3P6wlX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=97BLMfZJ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749198444; c=relaxed/simple;
+	bh=OhGHkhlhsWkEXzpD84HgUOBXnBUgHnGtjN3NZKBrsBg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MH/bKZQi2WoBIYZMgDILFFCzqEylICqLwYL55FntHPddVG936PEb/y5p5m/QBVtckTi95Q7kI5yUvkXlon3A9zncW0UNVkbN4+KQ3o8dJ7qtT+5URG2+PWnrR8xRTeSdhxGYxA0ZOY6CMJUlqZye8+J+vVvseuQA/jajSMegjU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=gmOpoVux; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wO3P6wlX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="97BLMfZJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wO3P6wlX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="97BLMfZJ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id F202E1F46E;
-	Fri,  6 Jun 2025 08:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749198432; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AbHdt3R0Dg9obxm/5Tz1H6QEtuLCv5Q1f/9X9tztXsM=;
-	b=wO3P6wlXjt+W2MXDO5dpFJQtBoEA+cO0kTABzo8wu0ZgsP/GIND4cEv9ird8Jj3G8dfomz
-	0apDkoEosXdlMJ2mO5i7mrUL9GnYJW5IqmKRwDyENFT/OwpIxt5NBae9DUe8WuxUhVmEji
-	WIb+diNAClLe+73zzJUpkfbtp+bmNjo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749198432;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AbHdt3R0Dg9obxm/5Tz1H6QEtuLCv5Q1f/9X9tztXsM=;
-	b=97BLMfZJ9qD0GtqMNCwjkDm9sNoMwU91m0fym1mB+cyV4t8UjT2cKTAwWqQyv6JCtK13qN
-	dXD9J2eP/h35eYCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749198432; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AbHdt3R0Dg9obxm/5Tz1H6QEtuLCv5Q1f/9X9tztXsM=;
-	b=wO3P6wlXjt+W2MXDO5dpFJQtBoEA+cO0kTABzo8wu0ZgsP/GIND4cEv9ird8Jj3G8dfomz
-	0apDkoEosXdlMJ2mO5i7mrUL9GnYJW5IqmKRwDyENFT/OwpIxt5NBae9DUe8WuxUhVmEji
-	WIb+diNAClLe+73zzJUpkfbtp+bmNjo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749198432;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AbHdt3R0Dg9obxm/5Tz1H6QEtuLCv5Q1f/9X9tztXsM=;
-	b=97BLMfZJ9qD0GtqMNCwjkDm9sNoMwU91m0fym1mB+cyV4t8UjT2cKTAwWqQyv6JCtK13qN
-	dXD9J2eP/h35eYCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E88001369F;
-	Fri,  6 Jun 2025 08:27:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zkcMNl6mQmhgBgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 06 Jun 2025 08:27:10 +0000
-Date: Fri, 6 Jun 2025 10:27:09 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v1 1/2] mm/huge_memory: don't mark refcounted pages
- special in vmf_insert_folio_pmd()
-Message-ID: <aEKmXbkbSpaPLXPD@localhost.localdomain>
-References: <20250603211634.2925015-1-david@redhat.com>
- <20250603211634.2925015-2-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="gmOpoVux"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234bfe37cccso24642515ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 01:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1749198441; x=1749803241; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=extr3XZ/haT3dc79zffQPJHDsai5V/OpqWCLpKSp2E0=;
+        b=gmOpoVuxWN/dhQWAkvqk/G6Htj7sDmKhGBwSUOaMbXtQZUe6M855b6/v/HpiXOrWDw
+         Tulv/xpvQrxZJgEHh0dFqEOdnaFl7Un+gMff03EbWlch1xSX2B5YCKWrAUpAgYqR7UOy
+         vYk+rR6nommTm8buBqvqnix9tAL1QXUrUByppSHWbqm5qdLNllDgHpdBiWk8aHuzyLrw
+         tFVVWQQR364a0Nz6ChUvEBR9VZPIVWKwxVXK7+aOyTMAbk2sLNkU/1pwtY9UrNWn1QCp
+         6sWYsG8cssEQmzKBj/zCBy8k4PBoQHBrqJlRaNxCyqqov51Xw8pd9d1xP51E1USYHPik
+         h8sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749198441; x=1749803241;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=extr3XZ/haT3dc79zffQPJHDsai5V/OpqWCLpKSp2E0=;
+        b=hoy4sLyNjW0GAlJEWvJOS1CZd1QF8p4j1qeXG4Vpbn5YUC0paf+cYqBjC/EgNcHTdi
+         vxb/onN46SJGSWH+XqGljqHcp+X8OPzeNCeCan/8+zBe7F/8qRfupcAP3ooLWtxVBV/6
+         kEDnqIO+MmrTCEvlYKXut9cPQMaRwMZfGSPNi4CM+L6C3DHn0zhAwJZixUGvaMWVX9Ur
+         /30K0zIjc5KY4++y0DFBGDJhmlcovnOZA6sy1a5aKGQLcs+VXdm0HttONzhajHwvzzNB
+         +Ht8y4oQgOleeBr990lczz0JgOW4Ohqe6HaeP6Cg0BFDyLeMSyP7BulnILzhOu6ZftUv
+         gKUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVL8K95ybsIPbOuYPIX+/1mUV1IKCVWi2ixiJUk5bS3dQ72dRdQNZVYZWIvaS7jPSqkXGUmvpg/UisB29w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9pTyGDgiquI/O3azzxiOx6hJF/Pxan/kEKFArw1WJ4cwI+zHt
+	5/eg5cKUkodFVCYvWUU3oEIfKY4JMbarT9H+oqQXHO4Mc66vAYEgLxiPQlxeDvgbkHU=
+X-Gm-Gg: ASbGncv8pgQVkFUn9GJD93HMWuSzDWfdZUhXG12fPVqtnEQiXSOYG9R7K8BN5+3kdME
+	TnfN3fCBE8AFAAPwn9erKfj1ixGvmRdd1SlelozFy1nyXSRev0R5FX2kEf9cAiuNSsP7IJXLbl1
+	GC9u9wef3axiLn78CHWbmxKMey0hFj2DGSSHjbteSZLA2DJ8zLTqBjXh5wDYBVjfWV45hiYvQih
+	PZRJRHSZg833PHvOir34YRf34/d/pjEgMnxs1CB90bnQOEz/HXniJvoLybpnd5bTAo1k/v1Upky
+	61IcX8cf1OHe/oSpEl1lIIfljQMvqMrrXlX1NKdTP+H57Bza4YqWQGMor6P7zs2wZBIOy8YDEKs
+	rvhJolZdnJlZBuw==
+X-Google-Smtp-Source: AGHT+IFUlGXn2qNj4ZqTz0dX5zZ8LVzeKqWCQat20Jw46/I0Y3IPj/UjlGDTiNQPDJuEycZswR0MVw==
+X-Received: by 2002:a17:902:cf10:b0:235:ef79:2997 with SMTP id d9443c01a7336-23601debd78mr32214005ad.47.1749198441000;
+        Fri, 06 Jun 2025 01:27:21 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.14])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092f38sm7684535ad.79.2025.06.06.01.27.17
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 06 Jun 2025 01:27:20 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: david@redhat.com,
+	akpm@linux-foundation.org
+Cc: dev.jain@arm.com,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	muchun.song@linux.dev,
+	peterx@redhat.com
+Subject: Re: [PATCH v4] gup: optimize longterm pin_user_pages() for large folio
+Date: Fri,  6 Jun 2025 16:27:13 +0800
+Message-ID: <20250606082713.87113-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <6f0ee0d4-60a9-4453-a08e-2353b234dac1@redhat.com>
+References: <6f0ee0d4-60a9-4453-a08e-2353b234dac1@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603211634.2925015-2-david@redhat.com>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 03, 2025 at 11:16:33PM +0200, David Hildenbrand wrote:
-> Marking PMDs that map a "normal" refcounted folios as special is
-> against our rules documented for vm_normal_page().
-> 
-> Fortunately, there are not that many pmd_special() check that can be
-> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
-> would get this wrong right now are rather harmless: e.g., none so far
-> bases decisions whether to grab a folio reference on that decision.
-> 
-> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
-> implications as it seems.
-> 
-> Getting this right will get more important as we use
-> folio_normal_page_pmd() in more places.
-> 
-> Fix it by just inlining the relevant code, making the whole
-> pmd_none() handling cleaner. We can now use folio_mk_pmd().
-> 
-> While at it, make sure that a pmd that is not-none is actually present
-> before comparing PFNs.
-> 
-> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Fri, 6 Jun 2025 09:58:45 +0200, david@redhat.com wrote:
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> On 06.06.25 09:37, lizhe.67@bytedance.com wrote:
+> > On Fri, 6 Jun 2025 10:37:42 +0800, david@redhat.com wrote:
+> > 
+> >>>     * Returns the number of collected folios. Return value is always >= 0.
+> >>>     */
+> >>> @@ -2324,16 +2349,12 @@ static void collect_longterm_unpinnable_folios(
+> >>>    		struct list_head *movable_folio_list,
+> >>>    		struct pages_or_folios *pofs)
+> >>>    {
+> >>> -	struct folio *prev_folio = NULL;
+> >>>    	bool drain_allow = true;
+> >>> -	unsigned long i;
+> >>> -
+> >>> -	for (i = 0; i < pofs->nr_entries; i++) {
+> >>> -		struct folio *folio = pofs_get_folio(pofs, i);
+> >>> +	struct folio *folio;
+> >>> +	long i = 0;
+> >>>    
+> >>> -		if (folio == prev_folio)
+> >>> -			continue;
+> >>> -		prev_folio = folio;
+> >>> +	for (folio = pofs_get_folio(pofs, i); folio;
+> >>> +		 folio = pofs_next_folio(folio, pofs, &i)) {
+> >>
+> >> Nit: indentation is still off?
+> > 
+> > In my editor (vim with ts=4), after applying this patch, the folio on
+> > this line would be positioned directly below the folio on the previous
+> > line.
+> 
+> Documentation/process/coding-style.rst
+> 
+> "Tabs are 8 characters"
+> 
+> :)
+> 
+> Good choice on using vim. This is what I have in my .vimrc regarding tabs
+> 
+> set tabstop=8
+> set shiftwidth=8
+> set noexpandtab
+> 
+> set smartindent
+> set cindent
 
+I truly appreciate your correction and guidance. I sincerely apologize
+for the formatting issue that I've caused.
 
+I noticed that Andrew has already integrated this patch into the mm-new
+branch. I'm just wondering if there's still a need for me to send out a
+v5 patch. I'm happy to do whatever is necessary to ensure everything is
+in order.
 
--- 
-Oscar Salvador
-SUSE Labs
+Thanks,
+Zhe
