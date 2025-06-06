@@ -1,226 +1,123 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4A523A6;
-	Fri,  6 Jun 2025 03:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5334A0A;
+	Fri,  6 Jun 2025 03:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749180450; cv=none; b=W5KSJ8wA+OFShKDg0IHv7cqMsE4cSglQK0ntxlhkEkplNyMV6X/jAKTRIuzb7TI0Jyl0t4a2CvLYFOyMvQs2MrsS3IHaZwdeRkxwSK7dEaeQcf1jwLGNQBMs524apmqUiovWMuYSZzz00NU8IFFCUMIaZfyamLzw6tVMQtPjc0k=
+	t=1749180745; cv=none; b=uw6R9gigfZb3Id+G03xegkJ+wUoKsSDM8w2O2Id3bq/SGgA2XSbw0NgaSmE0ZOI6V17+3p19BYiIoUW0ewayLGKKdPGkVPBVgce2z7Jmsada8CDH3RpdSp+UwWA3hRAqGtfW+0/yjXjjUiZJrLI5VCfxYoPB9qS1zH9V0Y8fC9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749180450; c=relaxed/simple;
-	bh=j11qS+3iZ3c1Kqt5nLnoCEYCTM05m7hNK64pUTMgBXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KKrBw8dJcf0tXkYDk51U6lhUdBgu4UvZwwXD4qDijvCTTdKhl7vPikRQiBzEnsgwi+ZFvJrh0c6QOnc6Zum++uda4WlNWAMGeyWFV7P2/Xiv+wrwQuDXwhTOoNrqImaWqLV1lpfwQZ+siiNx+rbb2zENYl8m6MMJ1FEXx3PibG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 24be5cc4428611f0b29709d653e92f7d-20250606
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:b5740708-e9d2-4d9f-87c8-2456abc1d479,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:bf5a24c28619cba9b3ca4c7f565fe913,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
-	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 24be5cc4428611f0b29709d653e92f7d-20250606
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <xiaopei01@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 163200506; Fri, 06 Jun 2025 11:27:15 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id 93A3416001A01;
-	Fri,  6 Jun 2025 11:27:15 +0800 (CST)
-X-ns-mid: postfix-68426013-513704641
-Received: from [10.42.13.56] (unknown [10.42.13.56])
-	by node4.com.cn (NSMail) with ESMTPA id 00CC516001CC7;
-	Fri,  6 Jun 2025 03:27:13 +0000 (UTC)
-Message-ID: <3f589ddf-e421-494f-85e5-1adebd19d03a@kylinos.cn>
-Date: Fri, 6 Jun 2025 11:27:13 +0800
+	s=arc-20240116; t=1749180745; c=relaxed/simple;
+	bh=Qcz12GY2obmAahfa+Hf4viUpaHRcvM1vkETwyIXnzVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nJJPx/ePDTaa/iPJSumhTBiFvPd9Iq18PTaaJqhDDPaafHQOZ6d39pkZm12NOrp2deM9IdDzISSTMLuaqe8cRQvsftraLe95LvDywCz9KdmbMRkjG+THhdle/CCcOLUCKT9pk0DkC9VyZeD7g3llNPt1CYDCX0WSkMhuzVzaH/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBtLj6+G; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBtLj6+G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749180745; x=1780716745;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qcz12GY2obmAahfa+Hf4viUpaHRcvM1vkETwyIXnzVQ=;
+  b=bBtLj6+G+KM9WWIWbB4mblwVOVF2RI7eOOLMcid7FfbjRRZ/c+3ZSC/j
+   5ihXRnJmcECztOCISIH6FbBJoYYZ5U00f7fx3qLnEeefDQCpi6r3xdQeq
+   HS5hFQlkWYzPCIKM5+O3h/i5zvnC1MzvPQ61zskCV/QIgbPGBOW5r4tJI
+   9D3ZIYgXQr25NyEvQT6ZqG7ek9KBH48WM/Hsm0TjgdV9IZdfIvjZBFY5/
+   7KipzjZuYun3aYkWz45NsgLmkIBYjqbnwr6FnZLgtZlxymDEo7nt00hah
+   V0z5boK4nvvhhy7c8itbcTlY3O4kd4OWpJAA0MpBzHwBJI3TTd782lC66
+   A==;
+X-CSE-ConnectionGUID: 2e0jv3SURS20XdQUoSi38w==
+X-CSE-MsgGUID: 6ESo2b8AQe687K3fcEoJcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51205003"
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="51205003"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 20:32:24 -0700
+X-CSE-ConnectionGUID: +lkkTJKXTyuykVQI6XdC0g==
+X-CSE-MsgGUID: Fs5aCXcMTN+tx2jIxltA5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="149541684"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa003.fm.intel.com with ESMTP; 05 Jun 2025 20:32:17 -0700
+Date: Fri, 6 Jun 2025 11:25:36 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	iommu@lists.linux.dev, kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+Message-ID: <aEJfsFxVxXTDIucc@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+ <yq5aplfn210z.fsf@kernel.org>
+ <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
+ <yq5ajz5r8w6p.fsf@kernel.org>
+ <aEFmPaYorqaYCKBY@yilunxu-OptiPlex-7050>
+ <20250605150916.GB19710@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] ASOC: rockchip: Use helper function
- devm_clk_get_enabled()
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1749006565.git.xiaopei01@kylinos.cn>
- <3b3d8f60e553af09a51b501b8ff5406fa5e898dd.1749006565.git.xiaopei01@kylinos.cn>
- <24654754.ouqheUzb2q@workhorse>
-From: Pei Xiao <xiaopei01@kylinos.cn>
-In-Reply-To: <24654754.ouqheUzb2q@workhorse>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605150916.GB19710@nvidia.com>
 
+On Thu, Jun 05, 2025 at 12:09:16PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jun 05, 2025 at 05:41:17PM +0800, Xu Yilun wrote:
+> 
+> > No, this is not device side TDISP requirement. It is host side
+> > requirement to fix DMA silent drop issue. TDX enforces CPU S2 PT share
+> > with IOMMU S2 PT (does ARM do the same?), so unmap CPU S2 PT in KVM equals
+> > unmap IOMMU S2 PT.
+> > 
+> > If we allow IOMMU S2 PT unmapped when TDI is running, host could fool
+> > guest by just unmap some PT entry and suppress the fault event. Guest
+> > thought a DMA writting is successful but it is not and may cause
+> > data integrity issue.
+> 
+> So, TDX prevents *any* unmap, even of normal memory, from the S2 while
+> a guest is running?  Seems extreme?
 
-=E5=9C=A8 2025/6/5 01:42, Nicolas Frattaroli =E5=86=99=E9=81=93:
-> On Wednesday, 4 June 2025 05:13:30 Central European Summer Time Pei Xia=
-o wrote:
->> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for prep=
-ared
->> and enabled clocks"), devm_clk_get() and clk_prepare_enable() can now =
-be
->> replaced by devm_clk_get_enabled() when driver enables the clocks for =
-the
->> whole lifetime of the device. Moreover, it is no longer necessary to
->> unprepare and disable the clocks explicitly.
->>
->> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
->> ---
->>  sound/soc/rockchip/rockchip_sai.c | 8 +-------
->>  1 file changed, 1 insertion(+), 7 deletions(-)
->>
->> diff --git a/sound/soc/rockchip/rockchip_sai.c b/sound/soc/rockchip/ro=
-ckchip_sai.c
->> index 79b04770da1c..2ec675708681 100644
->> --- a/sound/soc/rockchip/rockchip_sai.c
->> +++ b/sound/soc/rockchip/rockchip_sai.c
->> @@ -1448,16 +1448,12 @@ static int rockchip_sai_probe(struct platform_=
-device *pdev)
->>  				     "Failed to get mclk\n");
->>  	}
->> =20
->> -	sai->hclk =3D devm_clk_get(&pdev->dev, "hclk");
->> +	sai->hclk =3D devm_clk_get_enabled(&pdev->dev, "hclk");
->>  	if (IS_ERR(sai->hclk)) {
->>  		return dev_err_probe(&pdev->dev, PTR_ERR(sai->hclk),
->>  				     "Failed to get hclk\n");
->>  	}
->> =20
->> -	ret =3D clk_prepare_enable(sai->hclk);
->> -	if (ret)
->> -		return dev_err_probe(&pdev->dev, ret, "Failed to enable hclk\n");
->> -
->>  	regmap_read(sai->regmap, SAI_VERSION, &sai->version);
->> =20
->>  	ret =3D rockchip_sai_init_dai(sai, res, &dai);
->> @@ -1512,8 +1508,6 @@ static int rockchip_sai_probe(struct platform_de=
-vice *pdev)
->>  	if (pm_runtime_put(&pdev->dev))
->>  		rockchip_sai_runtime_suspend(&pdev->dev);
->>  err_disable_hclk:
->> -	clk_disable_unprepare(sai->hclk);
->> -
->>  	return ret;
->>  }
->> =20
->>
-> Please get rid of the err_disable_hclk label, and change the
->
->     goto err_disable_hclk;
->
-> in the resume failure condition to a=20
->
->     return ret;
-May I ask, could we use the=C2=A0dev_err_probe=C2=A0function instead?
+Prevents any unmap *not intended* by guest, even for normal memory.
 
-return dev_err_probe(&pdev->dev, ret, "Failed to initialize DAI\n");
+Guest could show its unmapping intention by issuing an "page release"
+firmware call then host is OK to unmap. This for normal memory.
 
+For MMIO, Guest implicitly hwo the intention by unbind the TDI first.
 
-@@ -1441,28 +1441,22 @@ static int rockchip_sai_probe(struct platform_dev=
-ice *pdev)
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Faile=
-d to get mclk\n");
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-=C2=A0
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sai->hclk =3D devm_clk_get(&pdev->d=
-ev, "hclk");
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sai->hclk =3D devm_clk_get_enabled(=
-&pdev->dev, "hclk");
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(sai->hclk)) {
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return dev_err_probe(&pdev->dev, PTR_ERR(sai->hclk),
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Faile=
-d to get hclk\n");
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-=C2=A0
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D clk_prepare_enable(sai->hcl=
-k);
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return dev_err_probe(&pdev->dev, ret, "Failed to enable hclk=
-\n");
--
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regmap_read(sai->regmap, SAI_V=
-ERSION, &sai->version);
-=C2=A0
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D rockchip_sai_init_dai(=
-sai, res, &dai);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 dev_err(&pdev->dev, "Failed to initialize DAI: %d\n", ret);
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 goto err_disable_hclk;
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return dev_err_probe(&pdev->dev, ret, "Failed to initialize =
-DAI\n");
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-=C2=A0
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D rockchip_sai_parse_pat=
-hs(sai, node);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 dev_err(&pdev->dev, "Failed to parse paths: %d\n", ret);
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 goto err_disable_hclk;
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return dev_err_probe(&pdev->dev, ret, "Failed to parse paths=
-\n");
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-=C2=A0
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-@@ -1475,8 +1469,7 @@ static int rockchip_sai_probe(struct platform_devic=
-e *pdev)
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_get_noresume(&pdev-=
->dev);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D rockchip_sai_runtime_r=
-esume(&pdev->dev);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 dev_err(&pdev->dev, "Failed to resume device: %pe\n", ERR_PT=
-R(ret));
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 goto err_disable_hclk;
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return dev_err_probe(&pdev->dev, ret, "Failed to resume devi=
-ce\n");
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-=C2=A0
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D devm_snd_dmaengine_pcm=
-_register(&pdev->dev, NULL, 0);
-@@ -1504,8 +1497,6 @@ static int rockchip_sai_probe(struct platform_devic=
-e *pdev)
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* If we're !CONFIG_PM, we get=
- -ENOSYS and disable manually */
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pm_runtime_put(&pdev->dev)=
-)
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 rockchip_sai_runtime_suspend(&pdev->dev);
--err_disable_hclk:
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(sai->hclk);
-=C2=A0
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
-=C2=A0}
+> 
+> MMIO isn't special, if you have a rule like that for such a security
+> reason it should cover all of the S2.
 
-thanks!
+It does.
 
-Pei.
+Thanks,
+Yilun
 
-> Other than that, patch tested to be working fine.
->
-> Kind regards,
-> Nicolas Frattaroli
->
->
+> 
+> > This is not a TDX specific problem, but different vendors has different
+> > mechanisms for this. For TDX, firmware fails the MMIO unmap for S2. For
+> > AMD, will trigger some HW protection called "ASID fence" [1]. Not sure
+> > how ARM handles this?
+> 
+> This seems even more extreme, if the guest gets a bad DMA address into
+> the device then the entire device gets killed? No chance to debug it?
+> 
+> Jason
+> 
