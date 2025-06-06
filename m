@@ -1,100 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372B47FD;
-	Fri,  6 Jun 2025 07:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F04B25F98C;
+	Fri,  6 Jun 2025 07:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749195807; cv=none; b=UpgPt1gTNGBDbmu1G6OiguLwo3DimuanL6iBDVnips1LI/FlOxLLoOYAY/4u2LE6rNngUIBfRMoA7OJr+QShZ2vyHkPY/uILIfTZ6Y9ZZp4j7cHDG+8DgqLhowFRlckqoUFt8qlweStMCBbRXbyZ6x1xmTbPOOovnE2eRKSI16w=
+	t=1749195832; cv=none; b=GQqGbpOySG4/TBFdVqAl0Hs8AY7EOga4Vo6lCxtF42nvIiGRZwXgvjsTs6s1T1TmyHEibD2KDKSX8uIS+YiVGH7pHDDatQQr9qT6I8SnMydJCF3yi8EOJ/1NIyF4IaUKHj2z6ZTTCHFU3j/NlI4gd1wJgwryHsze+Z7kOXAiMBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749195807; c=relaxed/simple;
-	bh=pL+c8rM/f0Lmikugk0/0+1Z85wAvi81Ttm6NT/gOM2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8jJrlQgOGbnoDIcZ2gn4y8F9I0RxI3MIYTVc08ZH8bghGm0Cx2QflVJst4sqi9lCRTnyDGvO9hz96+0vpPPTkdh0GkkWZLjyz/aZoro0facbEvWRGi+PTJTowv30aMS69IQ7Z9d8+5QDuLJtDuTYg7uHzuAdJI0iBTsmx7Yn18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aoFf50Xs; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749195832; c=relaxed/simple;
+	bh=yOTxnf0MNIgRnQyoM0bcoADdXzJwoUdRrf874ml8Lgo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QsRS3DhB+xpNSuMJB2wuLI0ZYf554l22Wb1EnconuPFQN2S2uAuW+XnirYO6sY1pI1qrlyUf3OGwopno3rZDm0qeXjwKdeKb3wwriMmeKe5a7blyqvXpUPDKW3Iu15pyoSARQvNPlZ/p/PBYsB3G/p6NZQly/vwxUczNagFZBpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Rf/IuWwU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aoFf50Xs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749195806; x=1780731806;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pL+c8rM/f0Lmikugk0/0+1Z85wAvi81Ttm6NT/gOM2o=;
-  b=aoFf50XslGqvB/dRaPY+KIIbAK9Em6OVmcTJZr3xdnMIJux0b4fyeGvA
-   syY+bO25SpHkca1YyDernCexVr+IV3qu28Z77MRe4aKusjfgB/FtNVO52
-   Q06fPUzEOBhCDZy7pparTn9OflVCs3HjrBsrW4kFj/ZssiMuqNxloyG+b
-   Jn8okWkbQoY5+o6n46FaSSLg/KYcLArBk0NN21clFUcvlwlhHvHbfMDEx
-   Km1EJCT1dgrh0qdtFwEdyGPbfF0XRvH3/zEIG6HSNiz3/HmDELyYMebm3
-   cCCA9qESDT4aMNn8rWM/jOS95H0fhp+Vn+QW9UxCIlMwiBj0jMhIizgeq
-   g==;
-X-CSE-ConnectionGUID: 9fTli2ysQYWVh8glriz0Lw==
-X-CSE-MsgGUID: m575OFcyTmCJT6TNTJK1zg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="54998663"
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="54998663"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 00:43:25 -0700
-X-CSE-ConnectionGUID: 5e6Dzf6nT42rRraoqgprKg==
-X-CSE-MsgGUID: 24/8OSH8Q6OToOAibQGDZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="146716524"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 06 Jun 2025 00:43:22 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNRjU-0004p7-0G;
-	Fri, 06 Jun 2025 07:43:20 +0000
-Date: Fri, 6 Jun 2025 15:43:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gustavo Silva <gustavograzs@gmail.com>,
-	Alex Lanzano <lanzano.alex@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Gustavo Silva <gustavograzs@gmail.com>
-Subject: Re: [PATCH v2 1/3] iio: imu: bmi270: add channel for step counter
-Message-ID: <202506061501.4kluId3d-lkp@intel.com>
-References: <20250605-bmi270-events-v2-1-8b2c07d0c213@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Rf/IuWwU"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5566ZWlM004261;
+	Fri, 6 Jun 2025 07:43:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	kvMimh7QmZo25zRmksscLKSebUu4yESVGPBM/YkSIME=; b=Rf/IuWwUqko5Pe7u
+	X/bFEkzJ8d61kOBJ4BZ1NhoKswDCH669TrkSGe/qiiMXhn0fJqGEmlO6JbcOIewg
+	vfzgqS+lrpCNXJhMXxDezxZV2ymD/mv74jGy/+GZWvb8pM+WhR8fX5H5lGl0wKQ/
+	hu9OyV8xMtf7tVr1NevW+wP5QC0cfDoocdOoh9iuwh16jh02GQ+kxxQaqxJqsuyL
+	IW6wQCnUX9r+fMHsUEVpIBOA7QqKLfQ7g8s3P0HJorMB3j+KfKomdy+tE8LkF/Hr
+	kH0vxauasnCjd1Ikc2q/c83omqHRBtMYrgNCsWd+MD4VF/MAOPPY65G8/XMucOgP
+	tDvtYg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8s3wkq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Jun 2025 07:43:44 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5567hduY011523
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 6 Jun 2025 07:43:39 GMT
+Received: from [10.133.33.151] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 6 Jun 2025
+ 00:43:37 -0700
+Message-ID: <5330f0fd-5896-4426-92cf-8e8b39b19c14@quicinc.com>
+Date: Fri, 6 Jun 2025 15:43:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605-bmi270-events-v2-1-8b2c07d0c213@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
+To: Baochen Qiang <quic_bqiang@quicinc.com>, Johan Hovold <johan@kernel.org>
+CC: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Johan Hovold
+	<johan+linaro@kernel.org>,
+        Jeff Johnson <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250526114803.2122-1-johan+linaro@kernel.org>
+ <20250526114803.2122-2-johan+linaro@kernel.org>
+ <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
+ <aD1axxSAJsbUfnHH@hovoldconsulting.com>
+ <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
+ <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
+ <01634993-80b1-496e-8453-e94b2efe658c@quicinc.com>
+ <50555c1a-c200-4ac0-8dfb-424ff121b41d@oss.qualcomm.com>
+ <03354d56-ed21-47e0-a52e-14f559ff3bfb@quicinc.com>
+ <aEFupJ_nd9ryaTVt@hovoldconsulting.com>
+ <bc2afbd6-2876-4f36-81cf-ad8960588a02@quicinc.com>
+ <d3ec49ab-964b-4c50-a6ea-534b6c6e336b@quicinc.com>
+ <06daee91-709e-4a98-b7ff-8233d33877b9@quicinc.com>
+Content-Language: en-US
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
+In-Reply-To: <06daee91-709e-4a98-b7ff-8233d33877b9@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: DWHs2zIX55j2eP5Dt9zGkwh4Ho0TqsAE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA3MSBTYWx0ZWRfX7TfnkOcqDlxy
+ ZYoAqFVH+P9hOTXH7Z5D9cIeT0OB1lZrEGURVjGYhhEybFvFizmL6Xb3tSlanLYD/C6pi3Zp5V9
+ +5UJUNjSsSME8vHg2D2lCCxoaluYl9e6SHQrexCaJPwq8etk5wyvOFSoL6xKj6mcTekBIUPVhU3
+ uUb1fNaZTzIBYuVa7+F6HOwT1zlhSrRgEMF0OJA+1ZT72Qq8DAffYNwPHL2aoXwkObWn9FxgWJq
+ G0DBhgyUCQ3rU2VIk57MuwBZ3wPHZJxtcZjM1GB1FVQO0gX2255oDGr6IRwE+Zj54OVCz/RMuRV
+ +6Rn+3eOeK47NhdxqYMIDVRcfJkGJeQfXSgOR08fONwsNCVGiwsoQ7ZWCOcRWwOAeV1xwH0ws5h
+ wM/QrTe1HmsSDkOUTpMao7KaVjhBkOQmFTZ+MXOUH0oM5EE9hr4dvVn8caHkk5PM5yfQvdV3
+X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=68429c31 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=3zI7SI0Xz8OAuioJ69MA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: DWHs2zIX55j2eP5Dt9zGkwh4Ho0TqsAE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-06_02,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 spamscore=0 mlxlogscore=999 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506060071
 
-Hi Gustavo,
 
-kernel test robot noticed the following build errors:
 
-[auto build test ERROR on b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6]
+On 6/6/2025 10:02 AM, Baochen Qiang wrote:
+> 
+> 
+> On 6/6/2025 8:52 AM, Miaoqing Pan wrote:
+>>
+>>
+>> On 6/5/2025 6:54 PM, Baochen Qiang wrote:
+>>>
+>>>
+>>> On 6/5/2025 6:17 PM, Johan Hovold wrote:
+>>>> On Thu, Jun 05, 2025 at 12:01:29PM +0800, Miaoqing Pan wrote:
+>>>>> On 6/5/2025 12:24 AM, Jeff Johnson wrote:
+>>>>>> On 6/3/2025 7:34 PM, Miaoqing Pan wrote:
+>>>>>>> We previously had extensive discussions on this topic in the
+>>>>>>> https://lore.kernel.org/linux-wireless/ecfe850c-b263-4bee-b888-
+>>>>>>> c34178e690fc@quicinc.com/
+>>>>>>> thread. On my platform, dma_rmb() did not work as expected. The issue
+>>>>>>> only disappeared after disabling PCIe endpoint relaxed ordering in
+>>>>>>> firmware side. So it seems that HP was updated (Memory write) before
+>>>>>>> descriptor (Memory write), which led to the problem.
+>>>>>>
+>>>>>> Have all ath11k and ath12k firmware been updated to prevent this problem from
+>>>>>> the firmware side?
+>>>>>>
+>>>>> No, as this is not a widespread issue, and addressing it would require
+>>>>> modifying the core underlying modules of the firmware. Therefore, we
+>>>>> chose not to proceed with that approach but instead used the workaround
+>>>>> patch I previously submitted.
+>>>
+>>> If firmware has a concern, how about doing it in host? As I know it is only a register in
+>>> PCI config space?
+>>>
+>>
+>> No, host can only configure the RC, while the initialization of the EP can only be
+>> configured on the firmware side.
+> 
+> Are you talking about this specific register or whole configuration space? If it is the
+> latter case we already have something similar (such as disabling ASPM) done in host side.
+> Just curious why not for your issue.
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Gustavo-Silva/iio-imu-bmi270-add-channel-for-step-counter/20250606-061020
-base:   b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6
-patch link:    https://lore.kernel.org/r/20250605-bmi270-events-v2-1-8b2c07d0c213%40gmail.com
-patch subject: [PATCH v2 1/3] iio: imu: bmi270: add channel for step counter
-config: sh-randconfig-002-20250606 (https://download.01.org/0day-ci/archive/20250606/202506061501.4kluId3d-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506061501.4kluId3d-lkp@intel.com/reproduce)
+ath11k_pci_aspm_disable() disables ASPM for RC, not works here. But we 
+can configured via WMI, which was one of our previous fix options. If 
+there are new questions, we can discuss internally.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506061501.4kluId3d-lkp@intel.com/
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+>>
+>>>>
+>>>> I strongly suggest you fix this at the firmware level rather than try to
+>>>> work around it in the kernel to avoid playing whack-a-mole whenever a
+>>>> new (hard to track down) bug shows up.
+>>>>
+>>>> The barriers should be enough, but if they are not then the firmware
+>>>> must be fixed.
+>>>>
+>>>> Johan
+>>>
+>> This is beyond our control. After nearly three months of effort, we have decided to
+>> abandon it.
+>>
+> 
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
->> ERROR: modpost: "__cmpxchg_called_with_bad_pointer" [drivers/iio/imu/bmi270/bmi270_core.ko] undefined!
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
