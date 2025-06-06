@@ -1,100 +1,159 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD41286D6B
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 10:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BCE286D48;
+	Fri,  6 Jun 2025 10:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749205717; cv=none; b=g2bhwbYzOqFuihTAi0VeLqeDO6ST72KZEtOkQmd6HQ57POEu2hy7zVYI86BatDu4Wx3qSsUPX6qMLc66JvKVwfp8K+yckalswUZI9BdWI60gS/6cMeY+4w5Iwn6OhreYrm/P4TaLAv3vt6gqriW650Aoo/FfTjEv2yvAc7E8444=
+	t=1749205774; cv=none; b=Ygct07elApVtFQgjlLljN1Uq5/6p6aal4gl6MmSpYn0+yX1bmy7SuHbL9u114s8J+2e9HAJGNkj8FGRiN99wLN+zPHZ4W0JsPjb3DhtvBtiasHcA/e08RJAtuu4yT3AbIcIWfZntnQdXPuEeFeX91wRJjFs/O/Y6cDf4J62WS9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749205717; c=relaxed/simple;
-	bh=fb/cqwm8IPgZDM2BO5J8THRZMZ4T6ouGM/u2A4WTIyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBe9Fk1PV7LxJrEFldAkCaHP1OQJXqi4nt3HTkGIovqyT4ziQBkJgkAYQX+HZ6BXmT7DScrGKqb6neZ9h7NFu1kJC167+47HV+GlaE9oXTy9cINzGRXfJHS8Fk0EuzTCmIB1bqw6sX8+wEhKu2GU4qyQlFSenJulD6BXP4vQhYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JFGXqId6; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749205774; c=relaxed/simple;
+	bh=txbxer0KAPdPC189YbZbWLopsJnSLNb/anti8PSwHIM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HHkJDnoaYLSfy6aGsBegyY7jr2WTAr/qhngHlkaNRNs5Gm4hWREdZCprvpYTaOrGea+Ks2mgUxVqV4I1mgNytVDQUbKiWRdH5hz70A5l8RvkU9NvV9JAT8HdK0kLmpx5BkCHBb0hWAVHWawsikWtyC4mh45PrsyCdf+oxVHRL6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=vY5ufT6Y; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JFGXqId6"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-442fda876a6so16303825e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 03:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749205713; x=1749810513; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0y7ijdQypxqLTvbk+opJt5eDnn2DOdTCBFw/PW90tvs=;
-        b=JFGXqId6voMsueIE1FRUlNIp4LyGKvnbrbefU0fkmx6M+Xrenk0IgjRLJUBU/J31d/
-         VaDQOwRJJ+ARwSODvGMl87d8foVwXBTquNXnzOfGCRYCcv5+lzs527PQGmgwgCWZKhxk
-         zg4rBl3kilCP3sm5YqEfWQSo/YllMOS/8LrxtR+OhPIDo+aYMF3uG9tYeg49qFIbkFyA
-         RnWoBZCG7iqHRp2ufzkTIg5WraJL6s9NXdKUeFMLqu06PkxXp4XAgNbKy1uY4Ub6MlZY
-         qbhsEE6ZvZO8uaU86r4x6qplZ1tWD6OxVYT1MXYUylrXrQwBaSbTU3OaAy+73G/KrBxW
-         Ys5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749205713; x=1749810513;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0y7ijdQypxqLTvbk+opJt5eDnn2DOdTCBFw/PW90tvs=;
-        b=ogyRDCAP6ffEgPymAIIq78ZuiqIFs7bojaIgpRSIUbl0G9MPsOzsc6dGqL4d/HOmvx
-         JOMSg2PMupcQC9He2MHXcVLGRH4GpKZ8fWHJetBXnSEXQ25vPH4Rmk0HT//mrgnlTplE
-         i3vUwLe3nAlrUFmqgMybhSYkyKqaq9dXa4pLB32tJB3hXg/zo5P6wPoLGfbMXVSZwqzu
-         akfZLcEPp4YEDtAhfdvOVZCrfd0uAZj2Qy3Hon7HXvF44/eM0v6a8WllIowTZu1F5IUX
-         PrxavpB4XWONX4W9CrQ2w6fLlg4anVPVlfqs6Q9ROXLhQnD2y87Ye/UDK1Rw6VmcB3qz
-         yESQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUf/oEaM5wHEXaHMHe/+IP8t+JOogPfAeIzmAdY1Tj2jsitvPcxwSIflpCk1IC5QHB7m2oCbFXKu1iTnnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yynt+LnEsn71C6NcGQXaYezTMWk9FUFDHFbXPMZ6KzpK8WMICqm
-	3X4aQUbnSaZul5iLdy/AAd95DYxx8VHYicCMOjLqHp0bLMyZmmvc4EnoHKUa5tX2/2I=
-X-Gm-Gg: ASbGnctEBHdwlE2SMY/ErCY6Ko63MVqZU9Cm+ptkh1/NRVzlJdndnGpGjy69bXxbeBp
-	2zGAptyY88OmIjQqm/DHnxsye/fkGhqS3O+oeA2pRw32LSc+aoexLuAqkFcJesYoFTggesaCdJ/
-	yDGj50O7qbn4Ad3xUmFS830NAp9vYQrhWZOvU8f+9OfLXOjwMxQlEPFYUkwSAhjqHgCITeb/3g3
-	5GamaG8tH8avCBcceqLMyMbwC3shP1f8fo3w8Y0eE0nFnsHsfnKirHqO7aDFYEHlX1R8XINgxe5
-	AMHRsYoux0dIfUatBq3fpcGNOiOOuN+NPAUbRZ2C0tdWnPeuruDDxbSZLUBCPzeWPDKxdHROpHQ
-	=
-X-Google-Smtp-Source: AGHT+IGCtW3+HsBx2trqj05+wy5vuf0bHkM0mnvh4NmRgCfrhoDGHG+3c937IQeNhCYs4Lgn9vMx7Q==
-X-Received: by 2002:a05:600c:8b72:b0:43d:9f2:6274 with SMTP id 5b1f17b1804b1-45201360d06mr30369075e9.14.1749205713596;
-        Fri, 06 Jun 2025 03:28:33 -0700 (PDT)
-Received: from localhost (109-81-91-107.rct.o2.cz. [109.81.91.107])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a53229ddebsm1474197f8f.17.2025.06.06.03.28.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 03:28:33 -0700 (PDT)
-Date: Fri, 6 Jun 2025 12:28:32 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-Message-ID: <aELC0KqiTttqJNs-@tiehlicka>
-References: <20250604140544.688711-1-david@redhat.com>
- <aEFC_12om2UHFGbu@tiehlicka>
- <1a65d0e6-6088-4a15-9c19-537203fe655c@redhat.com>
- <aEKnSxHG8_BGj7zQ@tiehlicka>
- <e680a8f3-7b45-4836-8da7-7e7a0d2fcd56@redhat.com>
- <aEK_R93gihEn-xW6@tiehlicka>
- <50ff9149-2824-4e57-8d74-d8d0c063c87e@lucifer.local>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vY5ufT6Y"
+Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 92ECB11DD;
+	Fri,  6 Jun 2025 12:29:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749205766;
+	bh=txbxer0KAPdPC189YbZbWLopsJnSLNb/anti8PSwHIM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=vY5ufT6YH5BJ6+pQUGtxa6/DA4Tfymt4RXZJ0AiPdAoJZRZwjsxpsK3xpFASk1rrG
+	 MLYLifH1qAqT6blZ8hDkzZPYPH/Wt1AFZmugkmhPtZ3mGksLeGPDaztoo3n34qUR1+
+	 gg1fj/+AmO1/PxzDCvOxiagjJikOuqtckwItaADw=
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: [PATCH v7 0/4] media: pisp-be: Split jobs creation and scheduling
+Date: Fri, 06 Jun 2025 12:29:20 +0200
+Message-Id: <20250606-pispbe-mainline-split-jobs-handling-v6-v7-0-46169f0622b7@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50ff9149-2824-4e57-8d74-d8d0c063c87e@lucifer.local>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAADDQmgC/5WNQQqDMBBFryJZd0qibYpd9R7FRXRGnaJJyIi0i
+ Hdv6g0Kf/M+n/82JZSYRN2LTSVaWTj4DLdTobrR+YGAMbMqdXnRdaUhssSWYHbsJ/YEEide4BV
+ agbzH3A2wWjBX7IwlY6hyKp/FRD2/D9GzyTyyLCF9Du9qf+3fihwNtkKr+xrR6P7BSE6Cb4NLe
+ O7CrJp937+VDhfn4wAAAA==
+X-Change-ID: 20240930-pispbe-mainline-split-jobs-handling-v6-15dc16e11e3a
+To: Naushir Patuck <naush@raspberrypi.com>, 
+ Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>, 
+ David Plowman <david.plowman@raspberrypi.com>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>, stable@vger.kernel.org
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3076;
+ i=jacopo.mondi@ideasonboard.com; h=from:subject:message-id;
+ bh=txbxer0KAPdPC189YbZbWLopsJnSLNb/anti8PSwHIM=;
+ b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoQsMIO75DdqfQ/t8A6NKKf9eAFUOd+N9w6nemF
+ 8qPNi9sQJuJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaELDCAAKCRByNAaPFqFW
+ PBGID/0Ut910UF1VVZnqZg7XfAARRO10t1TXpcUMY9GBM+jh+2JRp6sYkAC7IhQRlb70AENym/Q
+ wekFzbnB92U5VLc7PL8oD/hHOkIWiXt5nARfjf4MYHFfZ+hA59lDu/U2E3bT0c43GTyVwDWdamD
+ 3uFZKvhpp3iTwbH0CjCnTAesJZms9O/buNaXiuVOew3bWW6t8s255iXY8I4mlGXjoSD+1J9cEsj
+ 5ZExVW/edUKPHRnUnpLFyCFe2Q+ybisjmjClCUq0F+5LkXjB0kxT+1eoJopcC+VnX4O15izPdpF
+ xrBWgyuoQnyK0bQfCt7c/QT3o5arCVdEl9SYRapPYsusKqNwoJtWRSFjybnjPNKTTOTEd77dU2W
+ qpJB1qB500vzbTdc/tmwBlSU5LIkdgI2u6dDsSzGGOBAy/dC1R7nQsfrRFO9a/rnXzeN+IQWiar
+ xH47zSFqsUC4Wx32ATkGUXybko/dhBVdS9W2D0i3lyjc539EDJFW9Vj9yK0da4o7uJ5Q7gU5Xn2
+ U9pcqfiIRBNm6TAY4JlRN5QUKCKooJbGKkKyUs9G0AdJFuuWu4U2Mdg9LtaHLwxdgkta5DDcWj0
+ hhdpVJXNXX0+8I+OqRtrztwIJOikHyiqq8vG8SKBzbyw35PiJme8zSVTxXNFSmzywaD8z02x/8u
+ 2xXElPRfUFiRAMQ==
+X-Developer-Key: i=jacopo.mondi@ideasonboard.com; a=openpgp;
+ fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-On Fri 06-06-25 11:19:28, Lorenzo Stoakes wrote:
-> As the "king of churn" (TM) you'll not be surprised to hear that I'm in favour
-> of us just doing a big patch and convert all VM_BUG_ON() -> VM_WARN_ON_ONCE()
-> and remove VM_BUG_ON*().
+Currently the 'pispbe_schedule()' function does two things:
 
-Yes please! I really think this is the most viable way to get rid of
-VM_BUG_ON which I believe is a generally agreed way to go.
+1) Tries to assemble a job by inspecting all the video node queues
+   to make sure all the required buffers are available
+2) Submit the job to the hardware
 
-Thanks and let there be a force with your boldness.
+The pispbe_schedule() function is called at:
+
+- video device start_streaming() time
+- video device qbuf() time
+- irq handler
+
+As assembling a job requires inspecting all queues, it is a rather
+time consuming operation which is better not run in IRQ context.
+
+To avoid executing the time consuming job creation in interrupt
+context, split the job creation and job scheduling in two distinct
+operations. When a well-formed job is created, append it to the
+newly introduced 'pispbe->job_queue' where it will be dequeued from
+by the scheduling routine.
+
+At start_streaming() and qbuf() time immediately try to schedule a job
+if one has been created as the irq handler routine is only called when
+a job has completed, and we can't solely rely on it for scheduling new
+jobs.
+
+Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+---
+Changes in v7:
+- Rebased on media-committers/next
+- Fix lockdep warning by using the proper spinlock_irq() primitive in
+  pispbe_prepare_job() which can race with the IRQ handler
+- Link to v6: https://lore.kernel.org/r/20240930-pispbe-mainline-split-jobs-handling-v6-v6-0-63d60f9dd10f@ideasonboard.com
+
+v5->v6:
+- Make the driver depend on PM
+  - Simplify the probe() routine by using pm_runtime_
+  - Remove suspend call from remove()
+
+v4->v5:
+- Use appropriate locking constructs:
+  - spin_lock_irq() for pispbe_prepare_job() called from non irq context
+  - spin_lock_irqsave() for pispbe_schedule() called from irq context
+  - Remove hw_lock from ready_queue accesses in stop_streaming and
+    start_streaming
+  - Fix trivial indentation mistake in 4/4
+
+v3->v4:
+- Expand commit message in 2/4 to explain why removing validation in schedule()
+  is safe
+- Drop ready_lock spinlock
+- Use non _irqsave version of safe_guard(spinlock
+- Support !CONFIG_PM in 4/4 by calling the enable/disable routines directly
+  and adjust pm_runtime usage as suggested by Laurent
+
+v2->v3:
+- Mark pispbe_runtime_resume() as __maybe_unused
+- Add fixes tags where appropriate
+
+v1->v2:
+- Add two patches to address Laurent's comments separately
+- use scoped_guard() when possible
+- Add patch to fix runtime_pm imbalance
+
+---
+Jacopo Mondi (4):
+      media: pisp_be: Drop reference to non-existing function
+      media: pisp_be: Remove config validation from schedule()
+      media: pisp_be: Split jobs creation and scheduling
+      media: pisp_be: Fix pm_runtime underrun in probe
+
+ drivers/media/platform/raspberrypi/pisp_be/Kconfig |   1 +
+ .../media/platform/raspberrypi/pisp_be/pisp_be.c   | 187 ++++++++++-----------
+ 2 files changed, 90 insertions(+), 98 deletions(-)
+---
+base-commit: 5e1ff2314797bf53636468a97719a8222deca9ae
+change-id: 20240930-pispbe-mainline-split-jobs-handling-v6-15dc16e11e3a
+
+Best regards,
 -- 
-Michal Hocko
-SUSE Labs
+Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+
