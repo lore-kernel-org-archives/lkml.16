@@ -1,105 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286F3287515;
-	Fri,  6 Jun 2025 12:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFB6F9EC
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749214430; cv=none; b=laDGaDuYsWjci79M60WzZoc70JR5uXVK8QG1ZWHLfCHrkgu1VEbODp8Qr4J4/deImTfErvXcH8Gk9LT882OVaD7f3l8dvXkwzN0b2KNdzeX4e0yl0mmKrHIkZtJ3vouWQVjet3KsE2GmomV6+w1GiQ+UiV6mjZXty37AsMTyRkY=
+	t=1749214566; cv=none; b=lsoj/t4BREAARJv7s431+r7UCLw0mQ3EuSWsXZDA44o7jlNQ/ny2QXntx7ZOwqX1B4sCPaqP+SUUZjAlqGm7wtVdUBiyyzAWRT1bmgUUNeUPaBI88FTCNRk2cfMk37+yaS+w6vdtjhUKW7sitX3twe2t1vvQt3ajgQcfeVjKhM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749214430; c=relaxed/simple;
-	bh=n1wykN0q4zEYvLq7DTQo3g0PyzEzM3Sutii1zJAfHIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a8VWm8LNnjhnl8W6gORhpCPSEu7orXQwmJO8WP+4C1FkZy9Sh3HJ5y/CVZVv+d08Y1dDtsmYxNRds5nv9w7EKqmsd1p2wPSUoYQRdSewxS6beL1YlYaFZ8+Al2ROUQa6FKHMUvMJSXlP6qWjzoFsU9pN0MR0SWV/nqDdTRl4+jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WluuDH+C; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749214566; c=relaxed/simple;
+	bh=pyP4voBTnGow5cseeEAeEmJxNYO/WBjrdKku1W4VhIE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F6H+Z7w25b23IgTq+Xtr2tKj9zUtfSg7SdlWX6DwyMw9Ts41BVv7/plnk+KEIeAmmxKqivk82xi7SbxtN0FybtBrkyVOGUfDuYLi4aKWSbJtSaJLGtGzt25NaflcEi63X209PxJy0plrgvzUvzvaQZ2POT/mNWfwL2b7Vfa6jg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uBFbsyo4; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WluuDH+C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749214429; x=1780750429;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n1wykN0q4zEYvLq7DTQo3g0PyzEzM3Sutii1zJAfHIY=;
-  b=WluuDH+CPB477xP4ido3tnucJrMFa3GY47k/qn+O5i2UlMJdpo5IvcVw
-   C6cric8SLZgRPXjJVj/n1jhPRE0+mo7yrU50REj/sar4QpSgROzgaUbQx
-   KbsHUmQURLiPUdkBuf7cZ6fObrdmcFpP//DM/HG3PqwFzwCvdchtypYFC
-   Dj+m33JbfQFkNzE5tFtxOIsJgX0id6V43a3yawSHpBcpYjqGbKEfL64Tl
-   enwqHyLtHS+Khn8amTuvMklq6UzSGUQeC42IAYYM7Vj+5l+llnH0e7QdJ
-   P6f1CBUEPaYmkU49y8yqi2vAJEU8wEW1Fkb0nDBlRAQJaRTuINTrLCOfR
-   A==;
-X-CSE-ConnectionGUID: 8z9dY4TaR2iV8SLF2aMU/Q==
-X-CSE-MsgGUID: 6e8OgLxAToeMKTvy/YGOPQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="62409313"
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="62409313"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 05:53:49 -0700
-X-CSE-ConnectionGUID: PBzPIMJlR4+S61gzOioHKA==
-X-CSE-MsgGUID: yWnVIu1CTEK2prYn7GVKXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="176771560"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 06 Jun 2025 05:53:46 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNWZr-0004zB-32;
-	Fri, 06 Jun 2025 12:53:43 +0000
-Date: Fri, 6 Jun 2025 20:53:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Alexey Gladkov <legion@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH 3/4] kbuild: keep .modinfo section in vmlinux.unstripped
-Message-ID: <202506062053.zbkFBEnJ-lkp@intel.com>
-References: <20250606041029.614348-4-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uBFbsyo4"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso8595a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 05:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749214561; x=1749819361; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lej/JzmO0Dw1V/XOb+M60AVoOmPPuLiZ67cVi04ciIo=;
+        b=uBFbsyo4SkLBrAKLUmvzR34JtdqTWUnPPAzOILSYG9PupdcRaLlRR1c20f/GeS3vtu
+         C9tQgaeTLgKSWtL/v/yTjo2P4Ll4p9cc2A8YCSkW4ZL67RntHfZlMp3P72vy0vo9DZad
+         JlNETEPiBUdgZ61Ip/DDT9cGMlNBraDcgHbb4mBhK/MGdCifR2Ow4PebsehI9l87XapG
+         JzWza0J/yxV33ob9S2cun7Ux407OSytqlFY1Tn80JhXTcEWPzdmXo63LA/yMgBwZu3+X
+         8v8t7gYstMSJpWb3VvHhmRMbjUJ33dMF1lICdlDADiADxMOGMcNqfWXTaPo+GVk73J7w
+         Z+Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749214561; x=1749819361;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lej/JzmO0Dw1V/XOb+M60AVoOmPPuLiZ67cVi04ciIo=;
+        b=DYUR+/65YnMRfNpN9gN2Ro5dl+A0EizruhkfgMnp04czY459biYS+r9fHTx38mpqrv
+         ZN6bdS8QApJGSqa7VjODnQ+fGV/BQLlOBCiPX8thWt/KRQGedGCPFar1exji+oNz3rL2
+         w0QzWIEn53CughZSw3bGbIkavXyciJioTdtHFTbog5szmYmAoK2LeiGYhqN4mvX/PBOm
+         SIQeLcCTOhYpgSCF2b86spzAIB0AAUPfTAJ37KpaYEqKDixn0Ac1HKjhGI5ooCC7/qDj
+         H2MSUkAfqwHlPsAEY0qQTmHpF7bZe+xTTbExd+MF63S5Fnvux7WJssKsvH7UQkr29DAa
+         bBNg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9Lx7AbfJs4gnkwXnhZXPBp3E33Vaja3JQGB0kADJ02FVGRFh926q/HGa/iLXlOtnd3XxqYYhhfpOicSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBaCSkMhqWUcnekAs01zskfncH/l5UkhCIncreBlOkHxcMutvD
+	TLTaFRlxIBlP0oB6wLWLCVZ3r5RGhJpxtw/LVwrM+2XyMaxK+YDCSD/eEZRvmVGsqG0HckhGnoU
+	ugujZiWu2J10FoqLIpN0HzyEusGs6d5KoesEIYkYG
+X-Gm-Gg: ASbGncvkStP77FYL9nNLjRARkoX7EdRTeJPa/rWV06btLUOLCfWqqQHBsry5YSbccNJ
+	zUurm2d8q/m5QqFyNbK9VVOrKAgxLr57LUEd4+6T1YPrWjPdPCxcHhcDC8WEoBmZaq8NoPCmNrO
+	AGT8ho8dnTrTwoI+PdtF0cjR2rGbzQDB4bcQQJNoNjeslI9V6zhgRdSHqzpt2eUarJMV/Zlw==
+X-Google-Smtp-Source: AGHT+IHXwcAquv0lb5IUM1aVYSbEaPQ46aM0vazICMyj+IzmQp//DMyCXsrGOLh2XTNX6ibsNYUExUiUldgyqMaL0gE=
+X-Received: by 2002:aa7:c346:0:b0:607:1323:9c2c with SMTP id
+ 4fb4d7f45d1cf-607793de3b1mr62222a12.7.1749214561141; Fri, 06 Jun 2025
+ 05:56:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606041029.614348-4-masahiroy@kernel.org>
+References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
+ <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com> <ba208d76-7992-4c70-be8f-49082001f194@suse.cz>
+In-Reply-To: <ba208d76-7992-4c70-be8f-49082001f194@suse.cz>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 6 Jun 2025 14:55:25 +0200
+X-Gm-Features: AX0GCFtRkqF2Lt6u6n6mq4FlDl2aj4mZ-IS4O5MGhg5wVl65bWzoxagLke2Bp80
+Message-ID: <CAG48ez1R7v-L-L33nJUXtj_Y=SKyyFcU8amLs0dQ6ecuC3xMWA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory snapshot
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	linux-mm@kvack.org, Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Masahiro,
+On Thu, Jun 5, 2025 at 9:33=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wro=
+te:
+> On 6/3/25 20:21, Jann Horn wrote:
+> > When fork() encounters possibly-pinned pages, those pages are immediate=
+ly
+> > copied instead of just marking PTEs to make CoW happen later. If the pa=
+rent
+> > is multithreaded, this can cause the child to see memory contents that =
+are
+> > inconsistent in multiple ways:
+> >
+> > 1. We are copying the contents of a page with a memcpy() while userspac=
+e
+> >    may be writing to it. This can cause the resulting data in the child=
+ to
+> >    be inconsistent.
+> > 2. After we've copied this page, future writes to other pages may
+> >    continue to be visible to the child while future writes to this page=
+ are
+> >    no longer visible to the child.
+> >
+> > This means the child could theoretically see incoherent states where
+> > allocator freelists point to objects that are actually in use or stuff =
+like
+> > that. A mitigating factor is that, unless userspace already has a deadl=
+ock
+> > bug, userspace can pretty much only observe such issues when fancy lock=
+less
+> > data structures are used (because if another thread was in the middle o=
+f
+> > mutating data during fork() and the post-fork child tried to take the m=
+utex
+> > protecting that data, it might wait forever).
+> >
+> > On top of that, this issue is only observable when pages are either
+> > DMA-pinned or appear false-positive-DMA-pinned due to a page having >=
+=3D1024
+> > references and the parent process having used DMA-pinning at least once
+> > before.
+>
+> Seems the changelog seems to be missing the part describing what it's doi=
+ng
+> to fix the issue? Some details are not immediately obvious (the writing
+> threads become blocked in page fault) as the conversation has shown.
 
-kernel test robot noticed the following build warnings:
+I tried to document this in patch 2/2, where I wrote this (though I
+guess I should maybe make it more verbose and not just say "subsequent
+writes are delayed until mmap_write_unlock()"):
 
-[auto build test WARNING on masahiroy-kbuild/for-next]
-[also build test WARNING on masahiroy-kbuild/fixes linus/master v6.15 next-20250606]
-[cannot apply to herbert-cryptodev-2.6/master herbert-crypto-2.6/master arnd-asm-generic/master mcgrof/modules-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
++ *  - Before mmap_write_unlock(), a TLB flush ensures that parent threads =
+can't
++ *    write to copy-on-write pages anymore.
++ *  - Before dup_mmap() copies page contents (which happens rarely), the
++ *    parent's PTE for the page is made read-only and a TLB flush is issue=
+d, so
++ *    subsequent writes are delayed until mmap_write_unlock().
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Masahiro-Yamada/module-remove-meaningless-name-parameter-from-__MODULE_INFO/20250606-121255
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git for-next
-patch link:    https://lore.kernel.org/r/20250606041029.614348-4-masahiroy%40kernel.org
-patch subject: [PATCH 3/4] kbuild: keep .modinfo section in vmlinux.unstripped
-config: s390-randconfig-002-20250606 (https://download.01.org/0day-ci/archive/20250606/202506062053.zbkFBEnJ-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506062053.zbkFBEnJ-lkp@intel.com/reproduce)
+But I guess this way makes it hard to review patch 1/2 individually.
+Should I just squash the two patches together, and then write in the
+commit message "see the comment blocks I'm adding for the fix
+approach"? Or is there value in repeating the explanation in the
+commit message?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506062053.zbkFBEnJ-lkp@intel.com/
+> > Fixes: 70e806e4e645 ("mm: Do early cow for pinned pages during fork() f=
+or ptes")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Jann Horn <jannh@google.com>
+>
+> Given how the fix seems to be localized to the already rare slowpath and
+> doesn't require us to pessimize every trivial fork(), it seems reasonable=
+ to
+> me even if don't have a concrete example of a sane code in the wild that'=
+s
+> broken by the current behavior, so:
+>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-All warnings (new ones prefixed by >>):
-
->> s390x-linux-ld: .tmp_vmlinux1: warning: allocated section `.modinfo' not in segment
->> s390x-linux-ld: .tmp_vmlinux2: warning: allocated section `.modinfo' not in segment
->> s390x-linux-ld: vmlinux.unstripped: warning: allocated section `.modinfo' not in segment
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks!
