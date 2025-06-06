@@ -1,116 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4002A205501;
-	Fri,  6 Jun 2025 20:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D773D2045B1
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 20:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749241522; cv=none; b=EmNeqrDb1MmJCjnG9Yo2Y235ht197b5p3L9n5uLwtFNouKkaj4p4pv0sVPLvc+/TMOhi2BR2yb2l0YXFfcP8q+RMgjNks57PYdmKh4WB/0PJUJGYOspEiku7mEN/G+YxP2RH8vQ9ZItolxyaDTVaiAge7yzHaWjXuvVRk5MQPWM=
+	t=1749241659; cv=none; b=TvzOjhSy2HWPfQ/ikBH7z+htHsVSiMz0cfw+KCxWIsjij2A7A3bTzfz53RJ/2NAOTOo23+QYw9sSHqWsI0Rv4iqajnHDrU4iBYmKPIRWjbfqoryyh3ihZocF0ZY/HfKQBRc9fd3CR8JGkQCBprlSJngWjf0xfjWtnm7T2DwZvGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749241522; c=relaxed/simple;
-	bh=Otn+TbMMpoczEt25Uww0lW5KGyPxmRKnMr5yVaE1rGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQbGYB+1jaGglk/UsaXYMLQcj/onoigV9SmwQLYYVVh3pSDwgrBmmJ7ccOdlKt6LG8Jg0SmEDrhL3lGktHksrKmIBQxD7jfujh3bTFJcyV28vJiV3Q8H60VYp2+5VTfwZAUktG6y2jxf1quN4ArZWhhbFMGMDPCO745uOLILBKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ObUoiGRd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749241659; c=relaxed/simple;
+	bh=Kx3XQZvl8VfR+h4RVQp8H/VfkrAYCingflhIoS+B/Js=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=sqmXxrJVNdMekoVuLxcsftQ45+oPBO/xlg1+b7TaVif0To9br47MJsapRF5/yMXCnHd0XpwENb7oPbwwNmNosMXcCwa/dk1IvGzW4489wmIJn+5e+eDgzUHaaw7uss7Iu/mEsK4zZGtu5Xymu0BB3fIROtIJ2bJ5q99Q7rQ2wKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fxGqh7Pw; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ObUoiGRd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506DEC4CEEB;
-	Fri,  6 Jun 2025 20:25:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749241521;
-	bh=Otn+TbMMpoczEt25Uww0lW5KGyPxmRKnMr5yVaE1rGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ObUoiGRdfVzQ8SqaJG4wYyixhyqdfzS/C512G1KGQov1/FYcFvOq6E/W3n9GQFoI/
-	 wLu2xdcvcC1Rig7KJ06olabm/f6JGx0YT9mNCDzY6u4DfiP+YndNrRqUoRPpKRhIUF
-	 2rRfYZ24LwWED/4dCR+2H5KYAJpzlFmRL2nbnss9Zz7+rP/lpeKg+p83aHfWjRMBZi
-	 9+aALEo3WWm62/xEoenFqgaaqXqDMSwcRv4+m0ADsDlqiF7jikAS7DP/NnOkeMTEWX
-	 7Cn+z397YnoCyX3kAKqojKnASAxxIqMhyJZ3aLT3KexDY5A/I9HAKScg8/KHR1yrLK
-	 mk3SUgBqdYvXw==
-Date: Fri, 6 Jun 2025 17:25:18 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Chun-Tse Shao <ctshao@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1 v6.16] perf test event_uniquifying: Skip test on
- platforms without 'clockticks' events
-Message-ID: <aENOrmDxKPYAaYNR@x1>
-References: <aEHugAPinlWLuTAS@x1>
- <aEMqwmCmbyAlb1Y1@google.com>
- <aENM_KGb-x14pHRX@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxGqh7Pw"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so2186953a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 13:27:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749241656; x=1749846456; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KPgY1nx6H+W62cgXA349go+Izuxgt6k+LGGsLohDlv4=;
+        b=fxGqh7PwsRFHkROj/arvZqSIcGa3zU9CkQkTVCEYzbu9SOEhHJxJjD5/2sgULrmiez
+         ddi2iuu42825SiPXEgBuleqXSL9YBO8qvXcikC3fiLgsL3WWC8K208f7xtl5ZfAGR4Au
+         B47BpeIP0axMMnrPSFRb9lA7AV/jqLncikdpjQ/vK0Midw1u9H9YG1ADstZNvyU+qPgG
+         HN0vcCuWowXau1F78axORDOOJ1RJ/E7UnT80v0lqMmEWaD79mCLPdVhzKF8psC5S2mxv
+         qpQe1DHK6ge5KY5L4Ts066Nrm9IyVNlwV/2FnXFEy+TznMbIJuTfDT0KVsqdw4q3wnig
+         ur2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749241656; x=1749846456;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KPgY1nx6H+W62cgXA349go+Izuxgt6k+LGGsLohDlv4=;
+        b=DI8Ano+TYzI+sriUSpWt0jNIsDwe41dpwbLNgotMus6YiJnM8W3NeQbFNm3xQl8ORR
+         lGhVLeIB15pqrP2ZDsnqafAAAnjPoOvIDf8bpftc1QSfxZl2t19xLY1uq9JVg7Hl/VFk
+         9wajeWmJ0QYI0eicBlJtsY76DBi8/D/eQ7PyVokArD3DvOa1G4IUa6SXG+6mVN/HHafN
+         TLg3Gi52A4NV7ajM2axo0+wwtaEhAFTrZnHsAWpFPrtClUfcroU48QXC0+xfFP05HFVH
+         8gw2z1Vgv+PhE2Gh7sMfit9UaR4cjERObbagKEsCEDicypC28oBY6GQFaE0gsVqY9ICX
+         SHig==
+X-Forwarded-Encrypted: i=1; AJvYcCXzKSoZdCIkhN7KwlsSfcG2Y7Xe/+kwzeBBvzE1/XbLhRAdHL0aeVXu5zwYWRS2Bdwzo1/jfl0R93NpZPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsTLLVV80aYrmNE87ckWKsEauRv0NSIjn7AdqYICXdX7hd9yso
+	lFZy1tbjf1M40TcUrl6pKj94Suyc1XXRKRjngokHBTcXcCwxEPHW15Vy
+X-Gm-Gg: ASbGnctEnLmXn86XcR9CehYUSseo/Jtmx0nLKIx1GZF6P88HuieY3JLcMRK6qrThp7c
+	VgRHjcpfFAWkvobVLIc+o0HGmeRhyEvqi0n0pLI+e+giPsJ1EDf/25DA+TGQ+JI3s1RnVCpwswJ
+	x5fcLF1eFoJkdv4pgKBYjJt2x08UEursHM2JXB7bLpa9gRfU0MdXE56rN54JcAWDlscJzq2+MWN
+	XlQSZWioM4T7XxnsW1GtC4U1E2UJqLLgMHfVpl8hNzY+Jyln0HR/t4dHNIMA5wip74RyW0Y9BOB
+	+ufzNWpYjcfSlIiXtcyHbpi+1fAmaSFiKTiUgMREY91zcxtYBmA=
+X-Google-Smtp-Source: AGHT+IFS1RV2ewhBThP6gINCUGusEx36LRy7+RSDGs7aL1nZcYsVpswGWBi/CP0UOK9IsnBM3gNj6w==
+X-Received: by 2002:a17:90b:38c6:b0:311:da03:3437 with SMTP id 98e67ed59e1d1-31347681535mr7359618a91.27.1749241655961;
+        Fri, 06 Jun 2025 13:27:35 -0700 (PDT)
+Received: from localhost ([216.228.127.129])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5ee70c5asm1573130a12.30.2025.06.06.13.27.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 13:27:35 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] smp: Improve on cpumasks handling
+Date: Fri,  6 Jun 2025 16:27:27 -0400
+Message-ID: <20250606202732.426551-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aENM_KGb-x14pHRX@x1>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 06, 2025 at 05:18:07PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Jun 06, 2025 at 10:52:02AM -0700, Namhyung Kim wrote:
-> > On Thu, Jun 05, 2025 at 04:22:40PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > I'll add this to perf-tools for v6.16, please check.
- 
-> > Plesae see
+Switch smp_call_function_*() to use more suitable cpumask API.
 
-> > https://lore.kernel.org/linux-perf-users/20250521224513.1104129-1-ctshao@google.com/
- 
-> Oh, great, I'll drop my fix and get that one instead.
+Yury Norov [NVIDIA] (4):
+  smp: Improve locality in smp_call_function_any()
+  smp: Use cpumask_any_but() in smp_call_function_many_cond()
+  smp: Don't wait for remote work done if not needed in
+    smp_call_function_many_cond()
+  smp: Defer check for local execution in smp_call_function_many_cond()
 
-Nope, that one returns ok if the test can't be performed, it should
-return 2 so that it is skipped and since we don't have a way to show the
-reason for skipping a shell test, when using 'perf test -vv' the warning
-that is there already (the needed PMU not being available) will be
-shown.
+ kernel/smp.c | 38 +++++++++-----------------------------
+ 1 file changed, 9 insertions(+), 29 deletions(-)
 
-So I'm amending this on top, ok?
+-- 
+2.43.0
 
-diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/perf/tests/shell/stat+event_uniquifying.sh
-index 5a51fbaa13bb9b3c..c39d77ab4ad95bfc 100755
---- a/tools/perf/tests/shell/stat+event_uniquifying.sh
-+++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-@@ -47,6 +47,7 @@ test_event_uniquifying() {
-   # Skip if the machine does not have `uncore_imc` device.
-   if ! ${perf_tool} list pmu | grep -q ${pmu}; then
-     echo "Target does not support pmu ${pmu} [Skipped]"
-+    err=2
-     return
-   fi
-
-Then we get:
-root@number:~# perf test uniqu
- 93: perf stat events uniquifying                                    : Skip
-root@number:~#
-
-Instead of the misleading:
-
-root@number:~# perf test uniqu
- 93: perf stat events uniquifying                                    : Ok
-root@number:~# 
-
-With -vv and the fix:
-
-root@number:~# perf test -vv uniqu
- 93: perf stat events uniquifying:
---- start ---
-test child forked, pid 94671
-stat event uniquifying test
-Target does not support PMU uncore_imc [Skipped]
----- end(-2) ----
- 93: perf stat events uniquifying                                    : Skip
-root@number:~#
-
-- Arnaldo
