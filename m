@@ -1,129 +1,115 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7D823C8D3
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 23:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A41204F93;
+	Fri,  6 Jun 2025 23:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749251101; cv=none; b=nIpYVIdGWWZ/YP8dPknCVyAHFJfw2IfIERputG4QAQHnu8bCEIkiR7Gx2QlNtOHmP6s54mShA1wEceVdHRiMB6VxSlyv0lWFt4TRSkwt67Vs9I3bdfjugMnVcqUwIMuDkVu2yqRdNozSif0A7qBlC97SBHC3pnuavkd1P+SePc0=
+	t=1749251529; cv=none; b=QJCn7l+CY1U36ruRLLsmaFKafd1uhYgerQdz0ltY7voO/mWPA9/WeGgljE3LCRnOCBFOiVogttiGI3q+/7QirNJApVexypo8SAOlpyDV+E/2zCPKO8gks+YHk2S21Jncbre2lePe1vFHojU+JMeN0EQguvGSUPnue25hbbIEFkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749251101; c=relaxed/simple;
-	bh=QOivU9cCWOuD6+qnCQXHqwXBoofn756k+BYeNjlbNGU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=m/bQ1UTwbgQnGgJNKnIMYTACfszW40+BwgFhRKIW2Ye4hvXjcZMWeCMvACLbn9emKujk4nIT0XjJMR/EK3hYuUaTQ/TePNymX4Nh8woNE9p1h+d++yKMzXOm7g+xz9Dk2OtB4GAX31I6dILyVZqNOYd1dj0rbt9nsJuSiWzWtvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=Dne/0Q5q; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
+	s=arc-20240116; t=1749251529; c=relaxed/simple;
+	bh=SIQBpzgDhCq3i24zk4KvGnlpxag/7lRvBGruUPdocL0=;
+	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=I4fekBD1E6qY2b6gizlKnttH1gdVIJOQJFk60YmKkhBL75m43w3DX5Bhhl2qrz1Gjt/ykybDiz0AcvYDWB1+gfwMD1m0qXX0FLiEUJL3Nk6PoCddx925d9bLnxYgAl02t0hNzG4yUEpLZXnT7PHcD0D5z1PsAucQSbwKm8UcSM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XrnmW6Fk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="Dne/0Q5q"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3121aed2435so2702568a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 16:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1749251099; x=1749855899; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8FCwWKZSt8jlO+Nh8PWh4qO6V0jK1RFpZe2Cr7kkzR4=;
-        b=Dne/0Q5qqaKrbXz7KduXx2zlzMNmN96B2q+Vin2OC0P4VIo0cmaoDMzAl+gtw0yBAH
-         rNOedtEqBGRos+Ofv2R8YdHTWT/2YO2gwjfXRdoOoN4ZrUwUvEbJG4vgRR7lJtX7O9o4
-         WJ4/OI/Gm+odswFbLQRdW7D3eIbOyjuGzLXbXjRtPdIVEvFQZKs21nMGJrLlbcO24DTB
-         lfeMf2ecidmiv4VBPYfKPe2li6Ju/BI0/8Rf97rmqmblgYsoEd5ZS7j2Y3r7T/XUE5N/
-         mB/gvBJnJu+GaG1bOVNHnOrH5nhNpDjznwi8P3+sYbJ2GKF9Yf8iILcLiJ3EZ1w5qi4X
-         bckA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749251099; x=1749855899;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8FCwWKZSt8jlO+Nh8PWh4qO6V0jK1RFpZe2Cr7kkzR4=;
-        b=Uybl6/2hZAdJCWxrCz78/S6ORyOm8xxBzO1gwyadrc1zSekJSSScB6K31j3DwV48Sk
-         pkpWIBxEeVyRloOjF2S03eicGJpeahmiUI5KPX41ODSY5j3VG4ApG3lorZxCIFv4NeH6
-         WQr7axfws0ZZ+vBVp5lbsQ0trEtBxEPN76+SYNGGWBOczDH9/No3Gt4fVFarlf1sPCyn
-         SwqYbehUxCeeLaJdgxaXJxl6pHAPu3+ClJdXK25NRnXj+YxtQxlJFY3VQm/aDKD7n9P6
-         E05xDLqEgKzG6NrpvXaJ71JnfS34c4lJqNDvCXOOuGr920epfwgcZzGSfrC39loPadTs
-         pdeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYYUvUqeCk1bfg8BerzUlsWqqB3PrMH5nVHiLeoNeuuLp1kaIyGu4Mx/9FGZ8MfEYRkmz7p3RaT7JImjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqMELiP+SfHsloZzaZ4zmQRCYHi4ouxpD8SXcxhHNkNGXmEkn7
-	BbFj6fKx8z4P+yJiaQEkCttmDI93wYlteYBBwSnH3JmfdUMe/N8rb8lQAgAgRrOR0Iw=
-X-Gm-Gg: ASbGnctD1jXhS4yxUpQBNLqPAQIpn7Uem+VFIQ5xRdma9HoIyS0NOOK9tQyE7EfIhtd
-	z57ap6/+m5RdE9xwUzWfWmxlhPY2FvEuhE6bNc+jX1msVxAsCZfxKAlqEl5mc1E/xwobIpja669
-	KlqLnLm7QJ4LJD1lei5sGyzOu6SYqi1qJr4rfvZ37dCp+OJyJ4Buf0E7F/5/mb+GtgAXwX1uq7F
-	Rn1lFqWpPs6XO+09OjCeozspIFFaAJab9KB/8ub3oquSdf5s9U7ZdBkQDZ0cxY9jRir5RHhS88a
-	mF+1p5XGqAQPAJQRqUDjqfblGpQAZtl6h+G4aE/LS6kS3U8fo2MJFTuJFXrzeWBl12ZCrf/4Put
-	CQvUYY0rOdhDw9alq/WM1
-X-Google-Smtp-Source: AGHT+IG64ChHlIEnH7AGZWP1roW4oYFooio9dxXqOSvuAYjcY7yPJNcaadXJ+ghoASQqymoWgh+a0A==
-X-Received: by 2002:a17:90b:4e83:b0:312:f54e:ba28 with SMTP id 98e67ed59e1d1-31347057c9amr8210172a91.24.1749251098933;
-        Fri, 06 Jun 2025 16:04:58 -0700 (PDT)
-Received: from ?IPv6:2600:1700:6476:1430:77a3:4e60:32de:3fd? ([2600:1700:6476:1430:77a3:4e60:32de:3fd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349f32cc6sm1829579a91.11.2025.06.06.16.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 16:04:58 -0700 (PDT)
-Message-ID: <e9aa0276f0aad149ee7225da5f6b2493d7593df9.camel@dubeyko.com>
-Subject: Re:  [PATCH 2/2] hfs: make splice write available again
-From: Viacheslav Dubeyko <slava@dubeyko.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>, Viacheslav
- Dubeyko <Slava.Dubeyko@ibm.com>,  "frank.li@vivo.com"	 <frank.li@vivo.com>,
- "glaubitz@physik.fu-berlin.de"	 <glaubitz@physik.fu-berlin.de>,
- "viro@zeniv.linux.org.uk"	 <viro@zeniv.linux.org.uk>, "kees@kernel.org"
- <kees@kernel.org>
-Date: Fri, 06 Jun 2025 16:04:57 -0700
-In-Reply-To: <604cca238cdecbbe3dee499b8363f31ddd9e63bc.camel@ibm.com>
-References: <20250529140033.2296791-1-frank.li@vivo.com>
-		 <20250529140033.2296791-2-frank.li@vivo.com>
-	 <604cca238cdecbbe3dee499b8363f31ddd9e63bc.camel@ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (by Flathub.org) 
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XrnmW6Fk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC28EC4CEEB;
+	Fri,  6 Jun 2025 23:12:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749251529;
+	bh=SIQBpzgDhCq3i24zk4KvGnlpxag/7lRvBGruUPdocL0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=XrnmW6FkWxwo8Sxbuzq5PmOjTjhQGaxnP89uuDcfKb280YAcLM7/ieLalI5RTfHNM
+	 orHDP3hLBj5N+OB1v6EYh+kjElucHjtBcvEcuAVpK0BOkV1wEkUkPohp5ubclGNnYN
+	 pyINPHvi8EO9X+tsnD5gEguat8Im0RNoAElUFBas=
+Date: Fri, 6 Jun 2025 16:12:08 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ mm-commits@vger.kernel.org
+Subject: [GIT PULL] hotfixes for 6.16-rc1
+Message-Id: <20250606161208.2d18790220a7c75ec18b361b@linux-foundation.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Christian,
 
-Could you please pick up the patch?
+Linus, please merge this batch of hotfixes, thanks.
 
-Thanks,
-Slava.
 
-On Thu, 2025-05-29 at 18:28 +0000, Viacheslav Dubeyko wrote:
-> On Thu, 2025-05-29 at 08:00 -0600, Yangtao Li wrote:
-> > Since 5.10, splice() or sendfile() return EINVAL. This was
-> > caused by commit 36e2c7421f02 ("fs: don't allow splice read/write
-> > without explicit ops").
-> >=20
-> > This patch initializes the splice_write field in file_operations,
-> > like
-> > most file systems do, to restore the functionality.
-> >=20
-> > Fixes: 36e2c7421f02 ("fs: don't allow splice read/write without
-> > explicit ops")
-> > Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> > ---
-> > =C2=A0fs/hfs/inode.c | 1 +
-> > =C2=A01 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/fs/hfs/inode.c b/fs/hfs/inode.c
-> > index a81ce7a740b9..451115360f73 100644
-> > --- a/fs/hfs/inode.c
-> > +++ b/fs/hfs/inode.c
-> > @@ -692,6 +692,7 @@ static const struct file_operations
-> > hfs_file_operations =3D {
-> > =C2=A0	.write_iter	=3D generic_file_write_iter,
-> > =C2=A0	.mmap		=3D generic_file_mmap,
-> > =C2=A0	.splice_read	=3D filemap_splice_read,
-> > +	.splice_write	=3D iter_file_splice_write,
-> > =C2=A0	.fsync		=3D hfs_file_fsync,
-> > =C2=A0	.open		=3D hfs_file_open,
-> > =C2=A0	.release	=3D hfs_file_release,
->=20
-> Makes sense.
->=20
-> Reviewed-by: Viacheslav Dubeyko <slava@dubeyko.com>
->=20
-> Thanks,
-> Slava.
+The following changes since commit 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253:
+
+  Merge tag 'bootconfig-v6.16' of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace (2025-06-02 17:39:24 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2025-06-06-16-02
+
+for you to fetch changes up to 2da20fd904f87f7bb31b79719bc3dda4093f8cdb:
+
+  kernel/rcu/tree_stall: add /sys/kernel/rcu_stall_count (2025-06-05 22:02:25 -0700)
+
+----------------------------------------------------------------
+13 hotfixes.  6 are cc:stable and the remainder address post-6.15 issues
+or aren't considered necessary for -stable kernels.  11 are for MM.
+
+----------------------------------------------------------------
+Alistair Popple (1):
+      MAINTAINERS: add Alistair as reviewer of mm memory policy
+
+Arnd Bergmann (1):
+      kmsan: test: add module description
+
+Jann Horn (2):
+      mm/hugetlb: unshare page tables during VMA split, not before
+      mm/hugetlb: fix huge_pmd_unshare() vs GUP-fast race
+
+Joshua Hahn (1):
+      mm/mempolicy: fix incorrect freeing of wi_kobj
+
+Kirill A. Shutemov (1):
+      mm: fix vmstat after removing NR_BOUNCE
+
+Lorenzo Stoakes (2):
+      KVM: s390: rename PROT_NONE to PROT_TYPE_DUMMY
+      MAINTAINERS: add mm swap section
+
+Max Kellermann (1):
+      kernel/rcu/tree_stall: add /sys/kernel/rcu_stall_count
+
+Nitesh Shetty (1):
+      iov_iter: use iov_offset for length calculation in iov_iter_aligned_bvec
+
+SeongJae Park (1):
+      mm/madvise: handle madvise_lock() failure during race unwinding
+
+Suren Baghdasaryan (1):
+      alloc_tag: handle module codetag load errors as module load failures
+
+Tal Zussman (1):
+      MAINTAINERS: add tlb trace events to MMU GATHER AND TLB INVALIDATION
+
+ MAINTAINERS                      | 21 +++++++++++++
+ arch/s390/kvm/gaccess.c          |  8 ++---
+ include/linux/codetag.h          |  8 ++---
+ include/linux/hugetlb.h          |  3 ++
+ kernel/module/main.c             |  5 +--
+ kernel/rcu/tree_stall.h          | 26 ++++++++++++++++
+ lib/alloc_tag.c                  | 12 ++++---
+ lib/codetag.c                    | 34 ++++++++++++++------
+ lib/iov_iter.c                   |  2 +-
+ mm/hugetlb.c                     | 67 ++++++++++++++++++++++++++++++----------
+ mm/kmsan/kmsan_test.c            |  1 +
+ mm/madvise.c                     |  5 ++-
+ mm/mempolicy.c                   |  4 +--
+ mm/vma.c                         |  7 +++++
+ mm/vmstat.c                      |  1 -
+ tools/testing/vma/vma_internal.h |  2 ++
+ 16 files changed, 160 insertions(+), 46 deletions(-)
+
