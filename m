@@ -1,56 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D104D1A274;
-	Fri,  6 Jun 2025 13:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED528289362
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749218313; cv=none; b=Mhj4gms/BeC6LHl7OSWoP3J+zrkhA4mcz38q/b3Uz2lPrYz7wee/rnjv3CfID2IVuz+PcK//OQ27aJYtyONlpztbGFLLxMjRx8sVLyjPKR59wSswL8PaPsdnQaUrzIHsnUAgxuhOxdLg69+qD9KWrLhiI41J7lWSE5Sr4Lv/qSg=
+	t=1749218399; cv=none; b=RoJN4CurB4D8u31iUs5l1+mFRvPD4b85xcqyb6REcj6lV1MT6tvOhFMmtX72stH4TkDyHt0/NQmDHbGBcmXcBPfyQekVPQ0QTFIaq5X6+wUTcJj3MnKovtQ5fzZlLeijw+r8eNXUFMmTBx0w/i45y52pKs3/8hBy6kjGID/GtPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749218313; c=relaxed/simple;
-	bh=QyO94pd4hlnn9BKqJzgyhfcD8waNKskd+/HKP0CvpQg=;
+	s=arc-20240116; t=1749218399; c=relaxed/simple;
+	bh=LV8m1IqOpB2LBObXMZpR34Lyt37fiij8J4QaTlaQOVI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ww8mU6cV9K1o3AopT1xdtfxLqa/LzXlCfSYy6+BROokUDewQrjyEJcHpFTcxlXJsnUhwD6WcbSfnuh/AdO6NbImBS3VxLTYSeKTLJhZwzB0FFfbtPldyGNh8w5OEENiYXdTR65j4zGXchPV/oMdGRdrPFiE1LdRKMykwBDjaiTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=boD0tZeV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AQtYPpWqWJ6PvzJW1ZxU5UHVcmzmqzJzqN0S9LilG+tgK16OPNUPh7yi6dLC/e6UJWHKmMmTvnSpmYgn+o39PZ5Kdp/DKXKWZy0wnHr3MW9VrQQpkO1TX0gfBnUQL6A+C6fpfDAh6mBXcPBa/WVJCKCBcFkRTsX/URvgoqrIHx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RPniiSvw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IO0LzPk6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ajwWj5wR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KqtLDMWm; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="boD0tZeV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC28FC4CEEB;
-	Fri,  6 Jun 2025 13:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749218311;
-	bh=QyO94pd4hlnn9BKqJzgyhfcD8waNKskd+/HKP0CvpQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=boD0tZeVz5UtG9+im6UihIJ+Z3HQVXLzuovQCa76Atf/9RHJd0Xy0unwT4wwKsQ+U
-	 IazlNovBJ4GSG7qM8+lXg86bB8VuD/12OnlxwVm1uCwbqBrW8OttMdBn3MyTyCX/+F
-	 KsHnXp2ftgx8rT65KtGmXpExDfPqjsWx6xc3RgjumuBb/LaoUAk/zru1lJg7Qa6BH+
-	 haVxJHJCz808MLSPhmGUjOeyNUDeirD4ekFhd9PA8NGB7Q8ySMFMP0l+yE63y4hZ92
-	 tw7ECnLbyvsMHl7sAIwFFTQzZXWhDhNbR+/zRiPCYRTyi9x6oOfMNjL1liJCxEvdGs
-	 fkfa4ID5MlTLA==
-Date: Fri, 6 Jun 2025 15:58:24 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Len Brown <lenb@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Hung <alex.hung@amd.com>, Tamir Duberstein <tamird@gmail.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>
-Subject: Re: [PATCH v2 5/5] samples: rust: add ACPI match table example to
- platform driver
-Message-ID: <aEL0AGBZqDp1lMFe@pollux>
-References: <20250605161956.3658374-1-igor.korotin.linux@gmail.com>
- <20250605165231.3663810-1-igor.korotin.linux@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RPniiSvw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IO0LzPk6";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ajwWj5wR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KqtLDMWm"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E95EF336A1;
+	Fri,  6 Jun 2025 13:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749218396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jo8YNOz40hlh2OYeYB2Ua7DhuadBgtsPAMk95xtqrbI=;
+	b=RPniiSvwXsID+Kbr15bqnDABhowfSWAmYHazHxAay+Ig59ZcJ4Ol0muvB3zF3B0q4dzK2W
+	5dBxCevc4D5TpUSDXDmGGg6rhcTTealpexHkcWNhCIGVn7BdxziDhQSqKb2Um4+lcB0SaN
+	skKWYYCMSS0Hs0zdxG9bZ08Aw77FpNc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749218396;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jo8YNOz40hlh2OYeYB2Ua7DhuadBgtsPAMk95xtqrbI=;
+	b=IO0LzPk6DUAw2KgzeoxbMuKoYLWH1p/YOUuvkGtgvJ1HEZGxasBo8Br8cFqEMTdWnq5Wzk
+	XGWXE+aAEbavq4Dw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749218395; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jo8YNOz40hlh2OYeYB2Ua7DhuadBgtsPAMk95xtqrbI=;
+	b=ajwWj5wRLrZSPt9Tyis80l3hrZfZ19XhM4xWUUVBDNnOZukzEknGdMclxtYuvkYd8b+ICe
+	FcvJbxpM1wpVmS7vEOuuvl3S7yhGNMdOtGs+cu77Rb5HZOm+yGA2LZ03Pj6CBlQGQCx9wA
+	Db1/dLYd0bnUFTQOQZyp2LKe72DMd0A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749218395;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jo8YNOz40hlh2OYeYB2Ua7DhuadBgtsPAMk95xtqrbI=;
+	b=KqtLDMWmvtBL0jNGOYzzHMH4Qgyv/xouKGyRY4n7eyt0f/kYnIFcz5dtTJ9xHqwHfHcX3D
+	ewaGjhP9UVhIlGBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 723811336F;
+	Fri,  6 Jun 2025 13:59:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id k8PUGFv0Qmg6CwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 06 Jun 2025 13:59:55 +0000
+Date: Fri, 6 Jun 2025 14:59:53 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/vma: reset VMA iterator on commit_merge() OOM failure
+Message-ID: <my6v4d5ytsivvw4yloyutafscahbctetvpkqok42flusbgklx4@ixm6kcgihkbv>
+References: <20250606125032.164249-1-lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,86 +86,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605165231.3663810-1-igor.korotin.linux@gmail.com>
+In-Reply-To: <20250606125032.164249-1-lorenzo.stoakes@oracle.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On Thu, Jun 05, 2025 at 05:52:31PM +0100, Igor Korotin wrote:
-> Extend the Rust sample platform driver to probe using device/driver name
-> matching, OF ID table matching, or ACPI ID table matching.
+On Fri, Jun 06, 2025 at 01:50:32PM +0100, Lorenzo Stoakes wrote:
+> While an OOM failure in commit_merge() isn't really feasible due to the
+> allocation which might fail (a maple tree pre-allocation) being 'too small
+> to fail', we do need to handle this case correctly regardless.
 > 
-> Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+> In vma_merge_existing_range(), we can theoretically encounter failures
+> which result in an OOM error in two ways - firstly dup_anon_vma() might
+> fail with an OOM error, and secondly commit_merge() failing, ultimately, to
+> pre-allocate a maple tree node.
+> 
+> The abort logic for dup_anon_vma() resets the VMA iterator to the initial
+> range, ensuring that any logic looping on this iterator will correctly
+> proceed to the next VMA.
+> 
+> However the commit_merge() abort logic does not do the same thing. This
+> resulted in a syzbot report occurring because mlockall() iterates through
+> VMAs, is tolerant of errors, but ended up with an incorrect previous VMA
+> being specified due to incorrect iterator state.
+> 
+> While making this change, it became apparent we are duplicating logic - the
+> logic introduced in commit 41e6ddcaa0f1 ("mm/vma: add give_up_on_oom option
+> on modify/merge, use in uffd release") duplicates the vmg->give_up_on_oom
+> check in both abort branches.
+> 
+> Additionally, we observe that we can perform the anon_dup check safely on
+> dup_anon_vma() failure, as this will not be modified should this call fail.
+> 
+> Finally, we need to reset the iterator in both cases, so now we can simply
+> use the exact same code to abort for both.
+> 
+> We remove the VM_WARN_ON(err != -ENOMEM) as it would be silly for this to
+> be otherwise and it allows us to implement the abort check more neatly.
+> 
+> Reported-by: syzbot+d16409ea9ecc16ed261a@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/linux-mm/6842cc67.a00a0220.29ac89.003b.GAE@google.com/
+> Fixes: 47b16d0462a4 ("mm: abort vma_modify() on merge out of memory failure")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+
 > ---
->  samples/rust/rust_driver_platform.rs | 40 +++++++++++++++++++++++++++-
->  1 file changed, 39 insertions(+), 1 deletion(-)
-> 
-> diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-> index e3992e7a71e9..ee0780c1d6ae 100644
-> --- a/samples/rust/rust_driver_platform.rs
-> +++ b/samples/rust/rust_driver_platform.rs
-> @@ -17,10 +17,48 @@ struct SampleDriver {
->      [(of::DeviceId::new(c_str!("test,rust-device")), Info(42))]
->  );
->  
-> +kernel::acpi_device_table!(
-> +    ACPI_TABLE,
-> +    MODULE_ACPI_TABLE,
-> +    <SampleDriver as platform::Driver>::IdInfo,
-> +    [(acpi::DeviceId::new(c_str!("TEST4321")), Info(0))]
+>  mm/vma.c | 22 ++++------------------
+>  1 file changed, 4 insertions(+), 18 deletions(-)
 
-Can you please explain add a comment explaining how to make this probe? In the
-cover letter you mention:
+Neat cleanup, thanks!
 
-"Tested using QEMU with a custom SSDT that creates an ACPI device matching the
-sample Rust platform driver."
-
-> +);
-> +
-> +/// OF/ACPI match tables for Platform Driver implementation
-> +///
-> +/// The platform::Driver requires declaration of both OF_ID_TABLE and
-> +/// ACPI_ID_TABLE, but if driver is not going to use either of them
-> +/// it can implement one of them or both as None.
-> +///
-> +/// # Example:
-> +///
-> +///```
-> +/// impl platform::Driver for SampleDriver {
-> +///     type IdInfo = Info;
-> +///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
-> +///     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = None;
-> +///
-> +///     fn probe(
-> +///         pdev: &platform::Device<Core>,
-> +///         info: Option<&Self::IdInfo>,
-> +///     ) -> Result<Pin<KBox<Self>>> {
-> +///         dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
-> +///
-> +///         if let Some(info) = info {
-> +///             dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
-> +///         }
-> +///
-> +///         let drvdata = KBox::new(Self { pdev: pdev.into() }, GFP_KERNEL)?;
-> +///
-> +///         Ok(drvdata.into())
-> +///     }
-> +/// }
-> +///```
-
-I assume you want to make clear that both the ACPI and OF table are optional;
-not sure of that's required given their type is Option<...>. But I'm fine having
-this additional comment and example.
-
-Please make sure that it compiles though and remove everything unnecessary from
-probe() please.
-
-> +
->  impl platform::Driver for SampleDriver {
->      type IdInfo = Info;
->      const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-> -    const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = None;
-> +    const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
->  
->      fn probe(
->          pdev: &platform::Device<Core>,
-> -- 
-> 2.43.0
-> 
+-- 
+Pedro
