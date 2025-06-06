@@ -1,133 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67A0284689;
-	Fri,  6 Jun 2025 10:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F6A2853EB
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 10:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749206472; cv=none; b=H0mYAL1gKXjw0clEFgpOvH7ufKDlmpuU/KsvRIE+IsZqJOvMGmVbUO/rbllfieiiLSEoodBK8kM18pwkx1zbDrulMSH7e8MAgBL/AO9WzqyHSB2FhPBPVdoXrQ5j4Cb6JszuWa8/DsR58ySQhxshxi0oy567XpRefNPMH/0isU0=
+	t=1749206578; cv=none; b=fdRXIKWOtXIdjUHwQPKSmr2MnAuDNP6WpuOWV1iV3rBaY6xGvfWdOB8wXJwl68OT4CxWcCtDARmbOJQ7ihtMiwpkHEvL9kQaBy0/ybqCmHlgUgK/fTuGB+caT93iTd/taAPb/U4l+GbafPJaR6k95+ePmy4+yIP6ojcI8nLqcKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749206472; c=relaxed/simple;
-	bh=1RAJDfmY+lnaXEvqMTdbBLC/C9yMjAtki0kirkAjUxY=;
+	s=arc-20240116; t=1749206578; c=relaxed/simple;
+	bh=vkmochM2SrgurI2OOeUhLIqKvSLPLxHe2qx4RPVkYM0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J8iBUJEk1gQmCQm0Yk06HYPsOw7wVLAFV6zWPx9fHJeRpZoRzq0Z0ZECxVQCKd3vwOlchzne/YfXh+s9/apygN72r3rXKz0OYUvnxNWNKZjoZ4PtAso7EUe+ZKCGZZ2Gjx7ax0CPFcms3Ejb1rysAmzRbkYA28f7wZE3xlimwjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=peLdSwy7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dr+Ew+/YgXL6pZ1fXxmLCHKltvCR0bFyRcjAvVAiE9GJBwvP+ipV4jxZ+sH0DL9uXcDA+ynqadoBb2/Q38rS+G3oHYH4buPsKT12jxzrGw6yVmgHX3L8/WbEZ4MI5bSLF2RieWvSNLJfEn2vNS6/9MqA7JBjJfE3AES9DsVLMH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=YibZ/noB; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="peLdSwy7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5EEEC4CEF1;
-	Fri,  6 Jun 2025 10:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749206472;
-	bh=1RAJDfmY+lnaXEvqMTdbBLC/C9yMjAtki0kirkAjUxY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=peLdSwy7fJQdXOeMxrAFU3BAJG7QZRkfdVx0hSNDBwfu8WQlCsAxQy5D1+ZFFm2mm
-	 gyUKLHu2IkAPqt+SpRshb8Ytp+7fINvHQ2TMOH/C6DsArXlR8mxrh3TEMSZdNy7FFR
-	 tGWHRWeCMUxqeF+imif1ruWHeB4wNFUXmbTvh9YI=
-Date: Fri, 6 Jun 2025 12:41:09 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-Cc: arnd@arndb.de, andriy.shevchenko@linux.intel.com,
-	benjamin.larsson@genexis.eu, heikki.krogerus@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com, jirislaby@kernel.org,
-	jkeeping@inmusicbrands.com, john.ogness@linutronix.de,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	markus.mayer@linaro.org, matt.porter@linaro.org,
-	namcao@linutronix.de, paulmck@kernel.org, pmladek@suse.com,
-	schnelle@linux.ibm.com, sunilvl@ventanamicro.com,
-	tim.kryger@linaro.org
-Subject: Re: [PATCH v7 4/4] serial: 8250_dw: fix PSLVERR on RX_TIMEOUT
-Message-ID: <2025060659-reason-renewal-bff9@gregkh>
-References: <20250528062609.25104-1-cuiyunhui@bytedance.com>
- <20250528062609.25104-4-cuiyunhui@bytedance.com>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="YibZ/noB"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a376ba6f08so1157161f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 03:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1749206573; x=1749811373; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=y+nokHFtXpu0WDXP27AgjIbn53JQRm7K0yzN0KncLEM=;
+        b=YibZ/noBW9p5fbTljedjX37/LW/rNg2zIH6cr8A6m9dgCxyI/m2NBw1zs8mQZRGboO
+         6LcQyjx1+X76kagCCIGGm8/grQR4hBJuAJ6+UR1rdLXT0W3dzk02Wzk281wQclxppJ6x
+         FoPB95Z76o3ajldDZ4xQDn+QXazOexsRrOYD/01ICMknb6tGRTFpvXzJtmdMchDC9x4i
+         hxG+SRAQ7fdav9+ofvxi4tRHytVAGHVZpIO5z5+UmoXOYi/AtxiNunHlEdA9UwRe6Pp+
+         ul9bWJehKOO2uc3BGMJXjUS7C7YLrHB1zsRwb8lHSp0jybyOwUyWspHPG46U8Jezp1qx
+         V3bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749206573; x=1749811373;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y+nokHFtXpu0WDXP27AgjIbn53JQRm7K0yzN0KncLEM=;
+        b=UtBokfZcsmuqLvHgnMMn8+o61O6wGHt3VYnZkYjZ8JvoanDAvXCUE9AFoMQgKFxfwG
+         B4EwBXPqiuqHUljjSnX2lCUw72rzU00wjiQfATiKSQTlkUbJ8FVOSdfLWAdRM2n3N00m
+         EAv+U0I1Jyd39f+/zm4R8QeSN6YLanlf+iqUAVmGltFQFn2zknr6yEpVrNSQfEn1Isi5
+         qdQgKj1zC/6ifY8nNqfq9aUaM7ZL3zI355BMYXut3hOX4ThXzvav3/GOFIYLz/W1qlBx
+         yo14fUljwe8hOE3Kiw8Prf/+fmTERjI8a3mrUBpnh2oz0wd6g3JM2qNjxiAv0WXE0ZAa
+         iZ3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWq4ADjCdbxVriIHEJEzyVoo2S+/gb/BYzdl8p8wEfoHDaznKOQbUcxhtqDMAHPzjqj+T5Wau2Z5C8psfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxOQGrN6N7lz7Rnmjkt5rp7dhbkiqdN//2zPVhoqxS/0cDHfuL
+	n3IvxEUdeBelQ44YBnwUCIW+r+TY0kUAcxCG8HTZdINhv+dhYHzxAg/QL8aQbCPa8iQ=
+X-Gm-Gg: ASbGncucQ1FylYIrwStDfdkCRSaJfwWzckdzcG1xgci1tBlHt5NA3BiV2t9u72PgHWb
+	2cnyu8deC29sTtdTy94MluDT9oMHswNtk30Jpy/O0RGQIDy1UeRBlvZq9ReAhN+DAIHU+UjhuRB
+	w+l/KcCIDn2du0ZQSGFVD0xXQelbUqj1NkvPR4hrswMPRXGnFrpTYGLAW1CC7S24WbxlwIqP8fQ
+	2i8QLLvOtloPuNBxpCriIM448e2vMKOnG0TnhshRkebAtedZ2V9Ww7nd18++DohgdPzdVbRL1yf
+	cco/qhwrRuk5E2LizfPra8+3grCVlTEcLMYE0gZfHR6x8VMS
+X-Google-Smtp-Source: AGHT+IEtx3a0U8v1fBCckXwCRNLbBtPgODWu90k6CS+zdoTBmpVDSFh/aW2UVu82FYy50xGmDq3LCA==
+X-Received: by 2002:a05:6000:2dc9:b0:3a3:6415:96c8 with SMTP id ffacd0b85a97d-3a5319a78fcmr2195820f8f.41.1749206573116;
+        Fri, 06 Jun 2025 03:42:53 -0700 (PDT)
+Received: from localhost ([2a02:8071:6401:180:da11:6260:39d6:12c])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a5324361ffsm1461768f8f.47.2025.06.06.03.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 03:42:52 -0700 (PDT)
+Date: Fri, 6 Jun 2025 12:42:48 +0200
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Jemmy Wong <jemmywong512@gmail.com>, Tejun Heo <tj@kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v0] cgroup: Add lock guard support
+Message-ID: <20250606104248.GA1118@cmpxchg.org>
+References: <20250605211053.19200-1-jemmywong512@gmail.com>
+ <CAADnVQJyATTb9GFyBhOy5V_keAO5NZ6+zucLRyN27Cmg2FGPVA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250528062609.25104-4-cuiyunhui@bytedance.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQJyATTb9GFyBhOy5V_keAO5NZ6+zucLRyN27Cmg2FGPVA@mail.gmail.com>
 
-On Wed, May 28, 2025 at 02:26:09PM +0800, Yunhui Cui wrote:
-> The DW UART may trigger the RX_TIMEOUT interrupt without data
-> present and remain stuck in this state indefinitely. The
-> dw8250_handle_irq() function detects this condition by checking
-> if the UART_LSR_DR bit is not set when RX_TIMEOUT occurs. When
-> detected, it performs a "dummy read" to recover the DW UART from
-> this state.
+On Thu, Jun 05, 2025 at 05:54:15PM -0700, Alexei Starovoitov wrote:
+> On Thu, Jun 5, 2025 at 2:11 PM Jemmy Wong <jemmywong512@gmail.com> wrote:
+> >
+> > This change replaces manual lock acquisition and release with lock guards
+> > to improve code robustness and reduce the risk of lock mismanagement.
+> > No functional changes to the cgroup logic are introduced.
+> >
+> > Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
+> >
+> > ---
+> >  include/linux/cgroup.h     |   7 +
+> >  kernel/bpf/cgroup.c        |  96 +++---
+> >  kernel/bpf/local_storage.c |  12 +-
 > 
-> When the PSLVERR_RESP_EN parameter is set to 1, reading the UART_RX
-> while the FIFO is enabled and UART_LSR_DR is not set will generate a
-> PSLVERR error, which may lead to a system panic. There are two methods
-> to prevent PSLVERR: one is to check if UART_LSR_DR is set before reading
-> UART_RX when the FIFO is enabled, and the other is to read UART_RX when
-> the FIFO is disabled.
-> 
-> Given these two scenarios, the FIFO must be disabled before the
-> "dummy read" operation and re-enabled afterward to maintain normal
-> UART functionality.
-> 
-> Fixes: 424d79183af0 ("serial: 8250_dw: Avoid "too much work" from bogus rx timeout interrupt")
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> ---
->  drivers/tty/serial/8250/8250_dw.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-> index 8b0018fadccea..686f9117a3339 100644
-> --- a/drivers/tty/serial/8250/8250_dw.c
-> +++ b/drivers/tty/serial/8250/8250_dw.c
-> @@ -301,9 +301,17 @@ static int dw8250_handle_irq(struct uart_port *p)
->  		uart_port_lock_irqsave(p, &flags);
->  		status = serial_lsr_in(up);
->  
-> -		if (!(status & (UART_LSR_DR | UART_LSR_BI)))
-> +		if (!(status & (UART_LSR_DR | UART_LSR_BI))) {
-> +			/* To avoid PSLVERR, disable the FIFO first. */
-> +			if (up->fcr & UART_FCR_ENABLE_FIFO)
-> +				serial_out(up, UART_FCR, 0);
-> +
->  			serial_port_in(p, UART_RX);
->  
-> +			if (up->fcr & UART_FCR_ENABLE_FIFO)
-> +				serial_out(up, UART_FCR, up->fcr);
-> +		}
-> +
->  		uart_port_unlock_irqrestore(p, flags);
->  	}
->  
-> -- 
-> 2.39.5
-> 
-> 
+> Nack for bpf bits.
+> It only uglifies the code.
 
-Hi,
+I agree with this.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+The extra indentation from scoped guard is unfortunate.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+The guard with implicit unlock gives me the heebeejeebees - it's
+asymmetric and critical sections don't stand out visually at all.
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
+Adjusting critical section boundaries with guard means either:
+* indentation churn to convert to scoped guard,
+* forcing abstraction splits along critical sections (non-API
+  _locked functions), which makes the code flow harder to follow,
+* or straight-up violating abstraction layering and adding
+  non-critical stuff to callers where it doesn't make sense.
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+I don't remember the last production bug from forgetting to drop a
+lock. Meanwhile, the things that people actually seem to struggle with
+when it comes to locks appear to become harder with those primitives.
