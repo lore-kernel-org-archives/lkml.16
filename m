@@ -1,221 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D1F17B50A;
-	Fri,  6 Jun 2025 14:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749221656; cv=fail; b=pp56++FE4g/d4lBo6kusVX2yriEYgWyrFci9eiqQ2ZzkVSGJWVbX94DBu4aGwhVbDxGH748QlCocb4JhkySQaMxUxIm3dwcqo8Ju0SBvVfee0Yje+knRI5guDAi6BKkQTojA8DIXY/BieOiFc4Qq3hr+5sGyqsLID6LjeYNHK78=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749221656; c=relaxed/simple;
-	bh=Ar96aFkUDG1FlAGaPEoh+H4OCJUv53jQ0kzRtxaX8kk=;
-	h=Message-ID:Date:Subject:From:To:CC:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uvrGyvCA8DitShFxRX2Ni2Qm2Yx0C+7BxIFURIW1MGT7wUh3Z+iCTO/vzgyLaYHA4Kg+t1c/IDfTC7wPq29uq9/BMUdNbac7fGz2Wv939piN7Wa0PRkH4Gq9+xyLuQHUpBBLI5jzrc8altHZJk6OF5HID4PDzn3YiRZndF0dixw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VWYoKYaw; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2980F17B50A;
+	Fri,  6 Jun 2025 14:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749221745; cv=none; b=k4JrfnuDkrIu0WbKVJKUB9LlW8FVvbR5+rhboc1jRtQ0mLCbDqhazomgodoyBREzvK7/VB5mz/rMzMSXd0qf5/wzkseLWtFBimjGZHDgxDuyOzpfqzPDWMnV3lrjyAHGX4/lomJVNTjnzcxSaaj6ibiIvhSJyN7YKI0tQgvX1ps=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749221745; c=relaxed/simple;
+	bh=L9/yg7FYVpcvI0YfTkdkZgBobhQMILGK8egVK8yFG2w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SDlYwq+KtvPYjv64x5T8cK2uiV0FPZUoCwhdc5WlSrVwtX9uW5aYEYARIka6BNeQJZDtl4dV5vq2Bk7FKhh7MnSGu+mDZ0u6QlKS0+tyEgbRGw9kau7ww5ja6amdzzwqb5MVLTxOzEp3H+Y2oM479RiiIwqqdvJ2w6HNrE3Sid4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S0y/zdVS; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VWYoKYaw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749221655; x=1780757655;
-  h=message-id:date:subject:from:to:cc:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Ar96aFkUDG1FlAGaPEoh+H4OCJUv53jQ0kzRtxaX8kk=;
-  b=VWYoKYawiy4LBj27B/PFLpog8RmmifeadhPM8GSzLLygX6hfFPUJJWbD
-   1mrCheqR96UaF0hUA+xH2GFaP4XwO+3jimwZl5/qBETF1qhn8svaCd15Z
-   Y8WPHGq+zSOJqi0TeHjj6yMp0VUO6wwpRCkRTH1DZEcfeFQRUApkDJE7n
-   BtK1nfA4vlvsdWcFOojz4qijWHpQxQtcZO5T77yQt3zCt64NDj1YhS0Zq
-   8voT8blauSoVaUmoZIwFHIIdsMLcjyXVkqjOHFDT5JOcLe7BdUlxLTM/i
-   vru0yn0gPMjLGgGpP7yBc83w3XGazfRl4BJc2hMdavrciX438exkQBUUN
-   A==;
-X-CSE-ConnectionGUID: 7i7nDbEeTcqTcP35aOOK7Q==
-X-CSE-MsgGUID: 6QLGK9RITumBkE8qM1cyDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="50603167"
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="50603167"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 07:54:14 -0700
-X-CSE-ConnectionGUID: +RP9AxKHRy6I1Ul77lTPNA==
-X-CSE-MsgGUID: 7pJp6GfPT+W0H4zJInSGnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="150855865"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 07:54:14 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 6 Jun 2025 07:54:13 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 6 Jun 2025 07:54:13 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.66) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Fri, 6 Jun 2025 07:54:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JlrlAcNP1ZNKB4b2oasNskPbrGze4NpHxyoPMJeRSLRc7dIaVXIodRft+hqXk9FRMycajGxLXntjKEsbH0iqJuAFXFQzRoOv3Mtxhl0q06RSLQ2G/RKu9rFm9SgMb9GY4nfu5ykPE1x5e4w+f8uFaDE6hdMko8s94lZ7mHdTJejfKJzn5//9D7HNykNWFPOqs9KGIBwdRp9JuGTzeCPQETJ1MclUtfMnsjXUWfEnzQ/m804pH8fBIA2R+jkTUM34KCiTb6uxGyRGfK+QQY50sVojfQqKmkPd+AfaL12iMYDTdO/L1rkQ+8oc8gxHkKC3dhH4XSMqUOLL3UfBo0EghQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qhm0Ab8mMGAvMqyE/X3kpNNa6NJmiMerokqfdQgZVpk=;
- b=Kh67tJQ85Ed2KTci96KkMt2WOg8JJ+BoRo2J9eOPeSbPva1ONq9n9l9Li/YRh2MhjSHLYeE0xmj1IXdSy1dqN4URsV8BXuCrNZzDHewyPZh2UR7ByavJaJyT4OvxjIXTfen6cxzLTJMLIhjlOHWyER2OYI4CFl1b2MwVnU5F3lttPkDHBCqVL8d/qd4r33VyqQFr28wcW8LJv4xTmJpFca9qUCQ3XbvjBawenOio8P96CpcyPkBIxK9sIXPffYtJo6MCZSVAIzFglUIbjVF+yovXEqSWd/aavZ0a22BMNiqDWk5SzKzli4D2gmviQXt0wboDErzQTdDdgPH8BeJtDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB6054.namprd11.prod.outlook.com (2603:10b6:510:1d2::8)
- by IA3PR11MB9447.namprd11.prod.outlook.com (2603:10b6:208:571::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Fri, 6 Jun
- 2025 14:53:57 +0000
-Received: from PH7PR11MB6054.namprd11.prod.outlook.com
- ([fe80::a255:8692:8575:1301]) by PH7PR11MB6054.namprd11.prod.outlook.com
- ([fe80::a255:8692:8575:1301%6]) with mapi id 15.20.8813.021; Fri, 6 Jun 2025
- 14:53:57 +0000
-Message-ID: <5ad4a1c1-e04d-4773-a739-c21b1df41aed@intel.com>
-Date: Fri, 6 Jun 2025 17:53:50 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: <pbonzini@redhat.com>, <seanjc@google.com>
-CC: <mlevitsk@redhat.com>, <kvm@vger.kernel.org>,
-	<rick.p.edgecombe@intel.com>, <kirill.shutemov@linux.intel.com>,
-	<kai.huang@intel.com>, <reinette.chatre@intel.com>, <xiaoyao.li@intel.com>,
-	<tony.lindgren@linux.intel.com>, <binbin.wu@linux.intel.com>,
-	<isaku.yamahata@intel.com>, <linux-kernel@vger.kernel.org>,
-	<yan.y.zhao@intel.com>, <chao.gao@intel.com>
-References: <20250425075756.14545-1-adrian.hunter@intel.com>
- <20250425075756.14545-2-adrian.hunter@intel.com>
- <e5ede906-0dd2-4f41-86e1-1364c8321774@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <e5ede906-0dd2-4f41-86e1-1364c8321774@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DU7PR01CA0010.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:50f::23) To PH7PR11MB6054.namprd11.prod.outlook.com
- (2603:10b6:510:1d2::8)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0y/zdVS"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-551efd86048so2345950e87.3;
+        Fri, 06 Jun 2025 07:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749221740; x=1749826540; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9vEqxDPn0ZUq7X1FTJtTDzBWFl7WShO2WerhdN2+vTs=;
+        b=S0y/zdVSsX+BIuiw04KolyZlTKAsgnxYFkl35jzQ5QrVOO3bfTWvGyeIR0MVmQZylK
+         oFnWx+fNUVZEhk+O7PKWE7cGxqR0HgHXVvBM/dnBIyltDQg/WVJLc/JCxkHwH2iRgpCs
+         kP0V4oxn+xZvzPK2rixvgctkF4n4HHONK3e/r3JYo4a7KV4u4f7ADT2tkhDtbuWxLbTE
+         /HNqZ7eJ8vVXaD+1h+5ftCbOe0dt4TQme14TyXOEiQQHYV9gXpOroMvQs68G3zYLQy23
+         +e8NQylRgQm9AwUMaYKLQcpENx7QQ0506Qts2SX3iWeV+MGdfDZJKbaU8vIh+VqYR75U
+         aNHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749221740; x=1749826540;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9vEqxDPn0ZUq7X1FTJtTDzBWFl7WShO2WerhdN2+vTs=;
+        b=kkn1ZeYNjuTplWzEiUvXaUbNYkRyX3/hI1RVVITprm78nh50QA2mjzX/SiNpBbahqQ
+         okCpM51ZOnOJkoIYhJcp/v7nXM4yLlxg+ciTIxqfHOMKSGldLQBsJtGbYV/MuO4XzaL7
+         mNYF/GurFXf5C/puIKDZPESuaobYAX+Pn+rwfKZPxwKsOZp9HZvaBICI/g6lcpfMh7xE
+         dFzF95gUHxjFXeJrPsdz1Hcv+CAMLUhQrC2r5nu0zStSn6/6HNVHsJgAOq+6Nfc60l9K
+         zfDe+segjFVcjxghfKkNUiMZGfTyycbJZ+6luifeLqF+6eQPJjT+xPGwrN67xgsD2YFx
+         Qq/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVtMviv861IjmvtbkcOXZNtt6n/W8keTs27BrSPIQEunoYnUYAvrGkXwdvTWgVCQIG8WBRytPOOI6YotJU=@vger.kernel.org, AJvYcCXd5LBw0kQ4u2hmhaqKFClJ2mBe7vMTMj/XsFk7b0jHbxRdO5H3hNizVlcUnDECg2G+fpcnfMK5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/CdToSSWgL1iHoTe43zDYoGL+a0yoIVmy3INaeVHmPumLrHec
+	/xiSxV86RGJWyWd+hFIGDHimtvtUD3RgNXnTw/RR3ctD+hXxRufIHbpuy8XDxyNlsZfaxWtBBMp
+	QcHVmpUzq489zpoo3RXOKedy5nizebRQ=
+X-Gm-Gg: ASbGncseSBvfc8cDDy52AqcjTP7fwdhr8wCjour/qtI//8yLeBi1R0AVG2bQT0EVx3w
+	XKDFfqm47RaSp1DP6Rnfpo+QMoyA88voT9lAHV2imfZCzXEMtNJlU/xHHRmjagtbCpa0VJu5lr5
+	N7SaNzh+RRTFDq0U7t+ue5C6cfR37iuFt4Nstems0iGmDviWwmuKzXcWyM3bS3B+Ehko7S4WiiA
+	dPvNA==
+X-Google-Smtp-Source: AGHT+IFZWOEBNtk6rAy+hlSFXTHbia35W3Eb5q7wIpwrt+5TKHTVOh1XTS2ghbuZ6plcpgQrnD1VoNRTQQ+B8Al5/mQ=
+X-Received: by 2002:a05:651c:1545:b0:32a:6c39:8938 with SMTP id
+ 38308e7fff4ca-32adfc821acmr9118621fa.13.1749221740202; Fri, 06 Jun 2025
+ 07:55:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB6054:EE_|IA3PR11MB9447:EE_
-X-MS-Office365-Filtering-Correlation-Id: e89336d0-1cc9-4ca1-428f-08dda509f694
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?R2V0YUR0WU8yUXdyR0ltaWJKakN0bStNQlo2VFNXb2RXNEc3ejkrQ2NTcENS?=
- =?utf-8?B?MXBNOUlLYVJrN28xNEp2N09EV0RpdWZNVG15QWQ4T2EvVlNBOWY1WENvZEg3?=
- =?utf-8?B?d1B3amhLNnBxVlNmOGNHUmpaeUFpZ1RKdkNoQi9zdG9zYXFZSkU3OTZncHJk?=
- =?utf-8?B?eEJXVEVvdkFMK1Q2Q1BaL21CQnA1bzdlWnBXTE9NOFkxdTZweDBzdzAwaTV0?=
- =?utf-8?B?YnREb1Rra05tTGxjK0ZBdDdOZmlMQ05kQ2tTdGFxNnU2bVRvNzI4ejBzWGY1?=
- =?utf-8?B?clB4Q245VEoyd2xWWVNaU2pzNDhHd0l0L2o3cFI3QVMxTkVBWTJBT2pZZ2p6?=
- =?utf-8?B?ZDJLT29JMXhTUkpMbUhUZFdWdHkyK2YzNlFZR3l4MFh6MUJsN2lQQjFQU3lH?=
- =?utf-8?B?dlM5L0lJcDJoZ2kxN3FDOTVtUjY4djErdW5sbTdaWHU2OEpxUlhwaWdra2d3?=
- =?utf-8?B?MFAwSVpqRExxemVTZG1DN09WakJUZkpQS3UvREZpdGhjMzhpMzRTV1AwRzhF?=
- =?utf-8?B?VE9PZUJHZjJ4ckcrUzJQTXovRE03YjQ1NW5Zb0VudHVIVlpqcmZibTA1cVlK?=
- =?utf-8?B?RFcwYjhXV1ZCWCt2NE5CZjNISXdqQlpCU21EUDBnRVdveGIwK1JMSmkxM082?=
- =?utf-8?B?eU1POGdTZVJoL3Z0ZTlkMnFjRWUxWGNncVdBTEVxRUYvS0E2RzZBTjlpOGoz?=
- =?utf-8?B?U255UjNubE1tL1ZWSmFXTzBQSStHRFFOK1gvK3laS3BGWmZ3eXM2RitESExL?=
- =?utf-8?B?Y1JaWkx2d2FxK1piU1gvTzRQOFJTYTdjaGMwdEhGdThUb2MyazlITFNkREtn?=
- =?utf-8?B?N040NHRBNG52UWxLNHFWRWYzaWlibUtKL1Fxa3BHcGZJcnI5aGlXRUJvNjdO?=
- =?utf-8?B?Ulg3UWpWd3lEbVdXWVhyVERYenpaOGdqdWdrVXY4VGtQV3N5QXIycVRLUDJp?=
- =?utf-8?B?QXJiRnM1cS8ySno5YmZLRlluZ0hkcGJYL2h0ZUQxUUFoM1kwUWJiOGN3RkR1?=
- =?utf-8?B?UUVzTWtqbjRPMjZwL1VGRWpwMTYwZll2RE5Ud2lXMHpONjNpUzdnTE5uU2Iv?=
- =?utf-8?B?WGZGaG0xWVJTSVgrblBGWEI0cWNFR0xISmZYeDNjaUpvbzlRaHBwRlI5bDhU?=
- =?utf-8?B?RHJrYVh1ZHFlYnhzTnZqVzN5RlpqQlgvV1h2ajVIUmRpbHphVEZ6MVR6UjRV?=
- =?utf-8?B?OVNNT1l5Z0UycWxERjNQSUsrWGpyWHF6K2h0RCtBU2daWVIyNmVYMnlmYzZv?=
- =?utf-8?B?bXZpZlNIVEEzOG9ZSnJpRHhyeG9ORFltTG9jQytENnlaa3NUaGxJdlRKb3JC?=
- =?utf-8?B?d3gwZFlFTENzdFlaaFFDOGp2V1B5UzE1NGNvb3BRejFjSEgycWJoVXpNbjhD?=
- =?utf-8?B?OHd3N2ZUbVE3U1FFK28zV2tXVGl4c2JrenJ3bGhGaGhkL1FWRVhjQWkzcStJ?=
- =?utf-8?B?RmZWRDhpRmlCZkg3bTNpZXRIY2hxUVkyYml6WEdSVm04L0ZnOStvTC9vK0Qx?=
- =?utf-8?B?cTR1Z1dNaDg0Vm5KN0x6Z3o1TjdnQmFRNHk2SnRKdTk2aG1qbk9jMnU4YzNE?=
- =?utf-8?B?YzZ2YytGNlQvMFV1bDFyQUQyVkxKUEJkM0I4ZURORllsSkppbkszejBCMkNk?=
- =?utf-8?B?eGNQSU54UUkvOGNKeUVoSXRYL1YwcjF5TlZaNTRVQ1ZzcHBSQ1pkb2RQM0hX?=
- =?utf-8?B?aitEWDhINkZnZ2tUb3k2RmxzU2Z0alRyYzlmSVYwQU1XdldJeDBiSXpKc0Rt?=
- =?utf-8?B?ckUrSm1lTnlPbXhVSTFwVSs2RDNOd0d0ZGI2Vll3eGExQlpTaE9lYUxWVDhT?=
- =?utf-8?B?Q2x0d0gwQU5WdVJQbElmR1FiS1gzLzFuV0l2dXV5elVEbGpqUTZwWXlOYTBz?=
- =?utf-8?B?R2hxUjVsTzdnalZDNThWTDZnbXpKdnJ5RWZkNS85eDJVc2J5cWNJNzNObUZX?=
- =?utf-8?Q?H9audyxvsLE=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6054.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MkdObmxKUHd1UC9xbGRTdFdsMTFuRWp6ZFMwS1dlZTJlVTBzcTBFUkxwK2NM?=
- =?utf-8?B?NW5ZNEcrc05aazhkQ25HeXNBaXlQWU96VmIrOVYxUEFGSDFjMmJuUUxvOXo1?=
- =?utf-8?B?V3RsT1AwUkFKNXpaYzVTOFRhZmZteU1nY0ZVV1pUdGcrYUdkVTRGZjAxVGV3?=
- =?utf-8?B?U0V4dmhNVkJ3d0REbTdqNGtvZXNhZWxsSFloM1oyK0ZGaW9zczI5SitvWjNL?=
- =?utf-8?B?ZWcrTm1UeEYxT09Gb3pUOFd6dWZraXBsdUpvbllCMU96Y2hsbnVtQUFxeSta?=
- =?utf-8?B?bW9DMFRweUczYlhSeGNRWmt6V3JKOWdMTXNWVVpPa0RpOTdtczdhYi81Szky?=
- =?utf-8?B?UXhTVkdLMTBsV3ViVEFZajM1eUVmUm9GSDYxVEFmWnZhK1RKQ0E0ODQzTVQ5?=
- =?utf-8?B?Y21teUxIenJzdjZPalQ1cmU5NXZTcW05Qjk2cmhCcFd5Y3JFVkRZVDJqVU9B?=
- =?utf-8?B?eEhWQ05qTUhXdDlvRmpZZFRvR1pTRTFDTE5GZFM4cURuYW43ejBGOXcrQkl2?=
- =?utf-8?B?R25DWDM0VkxXdHg5TXBydWc4SS9xUzFnY2xGekNyUXRuOUpwa3hUMlROTlQy?=
- =?utf-8?B?TG9NRU1LdHArYVZEZFVIRXZTSlBGQjdqK0wxK0kwM1Vjck85c3hGQVBvd1Bz?=
- =?utf-8?B?QXhZejNtOVZSbTVwaDFSUTRHT0ZSajhKYm0vdDVYbm9vNkQxajRocmxoMkdP?=
- =?utf-8?B?M1NQck5EM2xSYkxnSzNkUnk1ZHduVm56SS92dTVHTU9nYXF5OTM0bXRSWjg3?=
- =?utf-8?B?UzdGRGk3K1VjTzJKZGR2S2FCUEtJNkdNaTZDc2VHaENNd2gxeVdkbmtrMkNq?=
- =?utf-8?B?YmhRWVdMOUVPRlRHMzFETzdPamVNc2tPNWJSSzA3MjhBZzNKNUdCZ09qQ1BI?=
- =?utf-8?B?M29RWHlxSCtWNTZsR1dYZWZKZTFrMGhVUnFHRW44K3RERlZpVktOTWpKSlEw?=
- =?utf-8?B?dmJ5R21nV0JkcHpIQkdpTTZlU1RZbEZvUTRkR2pId1E1VDcyNUQzMXBrdm9o?=
- =?utf-8?B?eTlBVmFRK3p5NG03T2JOVlByQ2RMcGJJV2Nwb2l2Qm9lbTNML24yTDNieW52?=
- =?utf-8?B?N2w3d0pGM2lFS0tUeGdPOWx0SlVXWkJ5K3pWNjhXK0dVa0E0UTIzV01yQTQ4?=
- =?utf-8?B?cVZvZXk5MEt5VUF1QUprcVRBOWdKUlc4a2U3cnJkdVI0U3FURExIdDQxU016?=
- =?utf-8?B?aUw5cGE5d2EzUlBzV2xpOXZpMjJtOFVmSjJHdHF1MTRwRHNtM3k2ejhvSi9B?=
- =?utf-8?B?NmNzODB2ejQ0WDdZUmJHSm5UQkkxUzJYQTF5Y2kySWJUT2gzaTBNM2JnNjhh?=
- =?utf-8?B?MHlyM0R2dXpYK3Q3TWdVWlhUSTRUR3ZKbE5MTVMrWTA2QUpmWGJlQlZUclkx?=
- =?utf-8?B?VjY4WVVNVk92dVIrYit0b2UzZDcxdmEyd3ZMaE5iNG5Pb1R4TDNvQTNweWhS?=
- =?utf-8?B?QTNNTlJkY0xOZ3Yva05oTXQ0OWJuSXR4MHpqUkFSdU9SL2RScVBWRW1XNThS?=
- =?utf-8?B?b254dEpXWldPYUFuUGYvclBYSlFnbG5nNzU3RWtnb1puWEVkMGZnRGprSDc2?=
- =?utf-8?B?bncrdHJucmlmbnVnUTFxZXdDTFB4NGZSZnNGcVlaaE5iOFZKZmlxS3BQaVd6?=
- =?utf-8?B?ZlFEdkNxVmpacnhUK011Sm45ZThjbXVkdE9mWFd2VmUxczU3aExZTGdDb3ha?=
- =?utf-8?B?MFpFL2s4NnoweEdLTWU1WFlPVHZ0OUlyUXhmc2xuMnllMGJyckFwL1Ixdkxz?=
- =?utf-8?B?TGFnOWt3MXZOYzU1L3BMRHFicVVXN3NCcTA0S1dRdzhRUFZNU25PSVNGaEV6?=
- =?utf-8?B?VUFZVUlXRkRNRDM5NDErWE92dzVSYWk1OUFlR1dETE1pcVQyZzFweEFmb3RH?=
- =?utf-8?B?VTQwWE5UTFo0UEYvN3BoeWhWWS9NN2hHSEdzN05FaHdXUWQwTmRsd0RBc3U4?=
- =?utf-8?B?U1RMVlk1VVRaTU1GVmVxK2UzODVpSkpOVWdweDVnV2thaTE0Ykk1MlpqT1F1?=
- =?utf-8?B?ZnFaMU5iRVhJblY1VkYvbkZaWVVTbWIxMDZxMlJ3MHlDdUJVYkMxRzRDZjhY?=
- =?utf-8?B?d2dZampLRUlLbmJzeEN1RlRKWEdpdktEQVJFVlJXWkp0SlNSeWhiMWZjV0d6?=
- =?utf-8?B?cTc5SnBlSnlveDl0cExPM3Q2K0VKdXFNQ3Z0akhsNDA0RGttVHZqQ1RQVDRB?=
- =?utf-8?B?SXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e89336d0-1cc9-4ca1-428f-08dda509f694
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6054.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 14:53:56.9613
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xdPAHbJ2DA3DCb8Ssxw4BHz7DcoSiD3k/HJtJZTRmFOqAHDqfFLCJTJycofHqzJle+qfNKYGpUA1Fl5vi+F5BA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB9447
-X-OriginatorOrg: intel.com
+References: <20250602135932.464194-1-pranav.tyagi03@gmail.com>
+ <053507e4-14dc-48db-9464-f73f98c16b46@lunn.ch> <202506021057.3AB03F705@keescook>
+ <25d96fc0-c54b-4f24-a62b-cf68bf6da1a9@lunn.ch>
+In-Reply-To: <25d96fc0-c54b-4f24-a62b-cf68bf6da1a9@lunn.ch>
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Date: Fri, 6 Jun 2025 20:25:27 +0530
+X-Gm-Features: AX0GCFvWsxNzpeHQ-45krsT9OQBs0Twpqds55CAANGDSlgC7gQxq8HsNVzgkPKQ
+Message-ID: <CAH4c4jJRkeiCaRji9s1dXxWL538X=vXRyKgwcuAOLPNd-jv4VQ@mail.gmail.com>
+Subject: Re: [PATCH] net: randomize layout of struct net_device
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Kees Cook <kees@kernel.org>, andrew+netdev@lunn.ch, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/05/2025 11:57, Adrian Hunter wrote:
-> On 25/04/2025 10:57, Adrian Hunter wrote:
->> +static int tdx_terminate_vm(struct kvm *kvm)
->> +{
->> +	if (!kvm_trylock_all_vcpus(kvm))
-> 
-> Introduction of kvm_trylock_all_vcpus() is still in progress:
-> 
-> 	https://lore.kernel.org/r/20250430203013.366479-3-mlevitsk@redhat.com/
-> 
-> but it has kvm_trylock_all_vcpus(kvm) return value the other way around, so
-> this will instead need to be:
-> 
-> 	if (kvm_trylock_all_vcpus(kvm))
-> 
+On Tue, Jun 3, 2025 at 12:36=E2=80=AFAM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Mon, Jun 02, 2025 at 11:03:18AM -0700, Kees Cook wrote:
+> > On Mon, Jun 02, 2025 at 04:46:14PM +0200, Andrew Lunn wrote:
+> > > On Mon, Jun 02, 2025 at 07:29:32PM +0530, Pranav Tyagi wrote:
+> > > > Add __randomize_layout to struct net_device to support structure la=
+yout
+> > > > randomization if CONFIG_RANDSTRUCT is enabled else the macro expand=
+s to
+> > > > do nothing. This enhances kernel protection by making it harder to
+> > > > predict the memory layout of this structure.
+> > > >
+> > > > Link: https://github.com/KSPP/linux/issues/188
+> >
+> > I would note that the TODO item in this Issue is "evaluate struct
+> > net_device".
+> >
+> > > A dumb question i hope.
+> > >
+> > > As you can see from this comment, some time and effort has been put
+> > > into the order of members in this structure so that those which are
+> > > accessed on the TX fast path are in the same cache line, and those on
+> > > the RX fast path are in the same cache line, and RX and TX fast paths
+> > > are in different cache lines, etc.
+> >
+> > This is pretty well exactly one of the right questions to ask, and
+> > should be detailed in the commit message. Mainly: a) how do we know it
+> > will not break anything? b) why is net_device a struct that is likely
+> > to be targeted by an attacker?
+>
+> For a), i doubt anything will break. The fact the structure has been
+> optimised for performance implies that members have been moved around,
+> and there are no comments in the structure saying don't move this,
+> otherwise bad things will happen.
+>
+> There is a:
+>
+>         u8                      priv[] ____cacheline_aligned
+>                                        __counted_by(priv_len);
+>
+> at the end, but i assume RANDSTRUCT knows about them and won't move it.
+>
+> As for b), i've no idea, not my area. There are a number of pointers
+> to structures contains ops. Maybe if you can take over those pointers,
+> point to something you can control, you can take control of the
+> Program Counter?
+>
+> > > Does CONFIG_RANDSTRUCT understand this? It is safe to move members
+> > > around within a cache line. And it is safe to move whole cache lines
+> > > around. But it would be bad if the randomisation moved members betwee=
+n
+> > > cache lines, mixing up RX and TX fast path members, or spreading fast
+> > > path members over more cache lines, etc.
+> >
+> > No, it'll move stuff all around. It's very much a security vs
+> > performance trade-off, but the systems being built with it are happy to
+> > take the hit.
+>
+> It would be interesting to look back at the work optimising this
+> stricture to get a ball park figure how big a hit this is?
+>
+> I also think some benchmark numbers would be interesting. I would
+> consider two different systems:
+>
+> 1) A small ARM/MIPS/RISC-V with 1G interfaces. The low amount of L1
+> cache on these systems mean that cache misses are important. So
+> spreading out the fast path members will be bad.
+>
+> 2) Desktop/Server class hardware, lots of cores, lots of cache, 10G,
+> 40G or 100G interfaces. For these systems, i expect cache line
+> bouncing is more of an issue, so Rx and Tx fast path members want to
+> be kept in separate cache lines.
+>
+> > The basic details are in security/Kconfig.hardening in the "choice" fol=
+lowing
+> > the CC_HAS_RANDSTRUCT entry.
+>
+> So i see two settings here. It looks like RANDSTRUCT_PERFORMANCE
+> should have minimal performance impact, so maybe this should be
+> mentioned in the commit message, and the benchmarks performed both on
+> full randomisation and with the performance setting.
+>
+> I would also suggest a comment is added to the top of
+> Documentation/networking/net_cachelines/net_device.rst pointing out
+> this assumed RANDSTRUCT is disabled, and the existing comment in
+> struct net_device is also updated.
+>
+>         Andrew
 
-Sean, do you have any comments on this patch?  Should I send out a new version
-with the change above?
+Resending to the list=E2=80=94my previous reply was accidentally sent off-l=
+ist.
 
-Note kvm_trylock_all_vcpus() now in Linus' tree:
+Apologies for the delayed response, and thank you
+all for the detailed feedback.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e4a454ced74c0ac97c8bd32f086ee3ad74528780
+Regarding the concern about breaking functionality,
+I did compile and boot the kernel successfully with
+this change, and everything appeared to work as
+expected during basic testing. However, I agree
+that this is not a substitute for thorough
+benchmarking.
 
+You're absolutely right that applying
+__randomize_layout to net_device will shuffle
+structure fields and likely incur a performance
+penalty. As mentioned, this is a trade-off that
+targets hardening over performance. It's worth
+noting that CONFIG_RANDSTRUCT has two options:
+RANDSTRUCT_FULL and RANDSTRUCT_PERFORMANCE, with
+the latter aiming to minimize the impact by only
+shuffling less performance-critical members.
+
+I=E2=80=99d appreciate guidance on which specific
+benchmarking tests would be most appropriate to
+quantify the performance impact. Based on your
+suggestions, I plan to run benchmarks on a small
+SoC (ARM/MIPS/RISC-V) with 1G NICs. However, I
+currently don=E2=80=99t have access to high-end server
+hardware with 10G/40G+ NICs, so I=E2=80=99ll start with the
+systems I have and clearly note the limitations in
+the revised commit message.
+
+I=E2=80=99ll also update the commit message to reflect the
+security vs performance trade-offs, mention
+RANDSTRUCT_PERFORMANCE, and add a reference to
+net_cachelines/net_device.rst to document the
+assumption of structure layout.
+
+Thanks again for the thoughtful review=E2=80=94I=E2=80=99ll revise
+the patch accordingly.
+
+Regards
+Pranav Tyagi
