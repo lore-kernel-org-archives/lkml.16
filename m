@@ -1,190 +1,137 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11BCA27468;
-	Fri,  6 Jun 2025 09:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2F4191F7E;
+	Fri,  6 Jun 2025 09:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749202346; cv=none; b=IYklOYotOyHDubiz8vvkTfqrkaPE1jpJVj3VmBWGyxVfVzSTRx4IROjgDDQxNwamKV4ltlijQ5tyHzfB4tJfQw8CO26ilt+2WrwsQDkOVjP6Wd2DpzOVTPtDtadIb+L/CrsbfI+oSlyK7J5RRmmKqSEv31PjsxaU5UF5anD2PU8=
+	t=1749202383; cv=none; b=LfHZDB+fQPJwoA+b8NW67ziOGXUaLRd92/uHTIlhDcxHHzf2FugevwwC9MBWkihTmji3OfWjH1IJvvGB8LNpSW5VSfYolRzajMcHLHNF4so7OH6Dau/wmcRXe4FijHcdxYE7QH7Y0MV9TkBnxZeNGVsG+swMY9iz4OBJEW7dbD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749202346; c=relaxed/simple;
-	bh=g81aEbYwteZ3V3OWzvKzvIPAPWgs84217Y0lm1MM9SA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VZFEGuWT30NXGaXRxqLv/8BQiRw95BnSjQNEgwddOn5B+TFgNHVdCtkGrxv31jyMqkS0+G12Hv5AmAJ1Xq9/U9kHgRowdCgprft4pOYWrRfS+qys7/t1ptoBEL0J2fpEn/MdhTlACXu65AlKCzSUpo/HNNPwcMmCQmWqBOuvqxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 830E3153B;
-	Fri,  6 Jun 2025 02:32:06 -0700 (PDT)
-Received: from [10.57.49.177] (unknown [10.57.49.177])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4A98B3F59E;
-	Fri,  6 Jun 2025 02:32:22 -0700 (PDT)
-Message-ID: <11ea6009-72d2-4306-a068-a828d4af429d@arm.com>
-Date: Fri, 6 Jun 2025 10:32:21 +0100
+	s=arc-20240116; t=1749202383; c=relaxed/simple;
+	bh=a/cSRPXXvWMntEronSsbDihFTabNg3hkGiuEn4chUIA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hDNEX4h/T4/K0Kd2eW1x3SUGBGrBOchYEjhs3Z+onwhEMhZhAnS78kMSvRMZpz5yKlnwxhO1FMNsY7RTBCDr8UsC6r2XueIhDuyH6hCTZ4Xg6PeF2KpKWLADSBt9mvCnfMKbVgtJCsRqdNwyPkfBGpaHJYQHKS7hNsjIntBxfxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHjUGbiM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHjUGbiM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10A5FC4CEEB;
+	Fri,  6 Jun 2025 09:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749202382;
+	bh=a/cSRPXXvWMntEronSsbDihFTabNg3hkGiuEn4chUIA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=aHjUGbiMRTgqmKBI5/NKSytER+wD+f8xtIQAG9im9jNLtdG0Euimvzu7mf27OGY9+
+	 02d4tGq5I3JSdFyRFuprtiwxviESlUW+rjOju0gNhU9O+51pPm9ArY1Jb4zZ9+iaFL
+	 4+tfVM5CGBw9LbksFk0KUh5/3IXXkhxjz3MX4gFhNP8vwp4S3zppGj+T6jvzfDfI3b
+	 mC65zomebElguFf6DZbQwXmqg3dRm2SZQ7UVQMkAS0eZMMVEXIPjCElKMlyC9MjPDR
+	 1CanswgBu1tw1VRmrDvt8/qS2s2JGvUgF4Q+c893ZONew80RB7FZKa7htzlP+zA8/a
+	 BvOmCaJ/eEw3w==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	iommu@lists.linux.dev, kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+In-Reply-To: <20250605163339.GE19710@nvidia.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+ <yq5ah60u8kev.fsf@kernel.org> <20250605151029.GC19710@nvidia.com>
+ <yq5a7c1q88oy.fsf@kernel.org> <20250605163339.GE19710@nvidia.com>
+Date: Fri, 06 Jun 2025 15:02:49 +0530
+Message-ID: <yq5a1prx8bb2.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/2] dt-bindings: arm: Add device Trace Network On Chip
- definition
-Content-Language: en-GB
-To: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250606-trace-noc-v8-0-833f94712c57@quicinc.com>
- <20250606-trace-noc-v8-1-833f94712c57@quicinc.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250606-trace-noc-v8-1-833f94712c57@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 06/06/2025 10:18, Yuanfang Zhang wrote:
-> Add a new coresight-tnoc.yaml file to describe the bindings required to
-> define Trace Network On Chip (TNOC) in device trees. TNOC is an
-> integration hierarchy which is a hardware component that integrates the
-> functionalities of TPDA and funnels. It collects trace form subsystems
-> and transfers to coresight sink.
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-> ---
->   .../bindings/arm/qcom,coresight-tnoc.yaml          | 111 +++++++++++++++++++++
->   1 file changed, 111 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..d07c6f2d7b949f69f9d8dd8de8664382eb39fac1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
-> @@ -0,0 +1,111 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/qcom,coresight-tnoc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Trace Network On Chip - TNOC
-> +
-> +maintainers:
-> +  - Yuanfang Zhang <quic_yuanfang@quicinc.com>
-> +
-> +description: >
-> +  The Trace Network On Chip (TNOC) is an integration hierarchy hardware
-> +  component that integrates the functionalities of TPDA and funnels.
-> +
-> +  It sits in the different subsystem of SOC and aggregates the trace and
-> +  transports it to Aggregation TNOC or to coresight trace sink eventually.
-> +  TNOC embeds bridges for all the interfaces APB, ATB, TPDA and NTS (Narrow
-> +  Time Stamp).
-> +
-> +  TNOC can take inputs from different trace sources i.e. ATB, TPDM.
+Jason Gunthorpe <jgg@nvidia.com> writes:
 
-This looks like the generic description of TNOC. But please could you
-also mention this binding is only for Aggregator TNOC ? Or make the
-binding as such explicit ?
+> On Thu, Jun 05, 2025 at 09:47:01PM +0530, Aneesh Kumar K.V wrote:
+>> Jason Gunthorpe <jgg@nvidia.com> writes:
+>>=20
+>> > On Thu, Jun 05, 2025 at 05:33:52PM +0530, Aneesh Kumar K.V wrote:
+>> >
+>> >> > +
+>> >> > +	/* To ensure no host side MMIO access is possible */
+>> >> > +	ret =3D pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
+>> >> > +	if (ret)
+>> >> > +		goto out_unlock;
+>> >> > +
+>> >> >
+>> >>=20
+>> >> I am hitting failures here with similar changes. Can you share the Qe=
+mu
+>> >> changes needed to make this pci_request_regions_exclusive successful.
+>> >> Also after the TDI is unbound, we want the region ownership backto
+>> >> "vfio-pci" so that things continue to work as non-secure device. I do=
+n't
+>> >> see we doing that. I could add a pci_bar_deactivate/pci_bar_activate =
+in
+>> >> userspace which will result in vfio_unmap()/vfio_map(). But that does=
+n't
+>> >> release the region ownership.
+>> >
+>> > Again, IMHO, we should not be doing this dynamically. VFIO should do
+>> > pci_request_regions_exclusive() once at the very start and it should
+>> > stay that way.
+>> >
+>> > There is no reason to change it dynamically.
+>> >
+>> > The only decision to make is if all vfio should switch to exclusive
+>> > mode or if we need to make it optional for userspace.
+>>=20
+>> We only need the exclusive mode when the device is operating in secure
+>> mode, correct? That suggests we=E2=80=99ll need to dynamically toggle th=
+is
+>> setting based on the device=E2=80=99s security state.
+>
+> No, if the decision is that VFIO should allow this to be controlled by
+> userspace then userspace will tell iommufd to run in regions_exclusive
+> mode prior to opening the vfio cdev and VFIO will still do it once at
+> open time and never change it.
+>
 
-- qcom,coresight-aggregator-tnoc
+So this will be handled by setting
+vdevice::flags =3D IOMMUFD_PCI_REGION_EXCLUSIVE in
+iommufd_vdevice_alloc_ioctl()? And we set this flag when starting a
+secure guest, regardless of whether the device is TEE-capable or not
 
-Suzuki
+and vfio_pci_core_mmap() will do
+
+	if (!vdev->barmap[index]) {
+
+		if (core_vdev->iommufd_device &&
+		    iommufd_vdevice_region_exclusive(core_vdev->iommufd_device))
+			ret =3D pci_request_selected_regions_exclusive(pdev,
+							1 << index, "vfio-pci");
+		else
+			ret =3D pci_request_selected_regions(pdev,
+						1 << index, "vfio-pci");
 
 
-> +
-> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - qcom,coresight-tnoc
-> +  required:
-> +    - compatible
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^tn(@[0-9a-f]+)$"
-> +
-> +  compatible:
-> +    items:
-> +      - const: qcom,coresight-tnoc
-> +      - const: arm,primecell
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: apb_pclk
-> +
-> +  clocks:
-> +    items:
-> +      - description: APB register access clock
-> +
-> +  in-ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    patternProperties:
-> +      '^port(@[0-9a-f]{1,2})?$':
-> +        description: Input connections from CoreSight Trace Bus
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +
-> +  out-ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      port:
-> +        description:
-> +          Output connection to CoreSight Trace Bus
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - in-ports
-> +  - out-ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    tn@109ab000  {
-> +      compatible = "qcom,coresight-tnoc", "arm,primecell";
-> +      reg = <0x109ab000 0x4200>;
-> +
-> +      clocks = <&aoss_qmp>;
-> +      clock-names = "apb_pclk";
-> +
-> +      in-ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 {
-> +          reg = <0>;
-> +
-> +          tn_ag_in_tpdm_gcc: endpoint {
-> +            remote-endpoint = <&tpdm_gcc_out_tn_ag>;
-> +          };
-> +        };
-> +      };
-> +
-> +      out-ports {
-> +        port {
-> +          tn_ag_out_funnel_in1: endpoint {
-> +            remote-endpoint = <&funnel_in1_in_tn_ag>;
-> +          };
-> +        };
-> +      };
-> +    };
-> +...
-> 
 
+
+>
+> The only thing request_regions does is block other drivers outside
+> vfio from using this memory space. There is no reason at all to change
+> this dynamically. A CC VMM using VFIO will never use a driver outside
+> VFIO to touch the VFIO controlled memory.
+>
+> Jason
+
+-aneesh
