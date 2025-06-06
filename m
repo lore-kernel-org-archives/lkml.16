@@ -1,310 +1,160 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011038.outbound.protection.outlook.com [40.107.130.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BB91311AC
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.38
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235691; cv=fail; b=C0nNTDPSisptaIcpshxGQ+kgSZHjPyi/OhX/VGs6oMCcJoiSuDgN/gc95tsqMWnZBQ4xN+poHIhC/3/dYOVlz3dugOL+rZGZI/lfEKONHMMXnSCjafpo3QsL5T7S67KaELFetWhkxt5h7EBQwFdxMDS4FuW9m/8iqRaI/MpWb7Y=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235691; c=relaxed/simple;
-	bh=yVdatzaMnqopy6+8IXnogKV3ILAgDogD3v5EIN62u+c=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aw/PwQIkex2tLEK/MRJnPuImWY4FMyXgf7ZOd1Imf0tcZ2chWiI55pDnDToBGlyHBNECzaaZEeGFwQIo/ljyJZhANtEBA/0tB3a0drfQ7CWSWapnAh6VoEPo3/e4exx2SWf+rvoeIs1DU76KVSyq9EhcwiY/JE48Ko4jGK3Qyv0=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=aVos9BBO; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=aVos9BBO; arc=fail smtp.client-ip=40.107.130.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808A21D432D;
+	Fri,  6 Jun 2025 18:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749235723; cv=none; b=avDncWbKt2PZzqH6j7v0a7bBaDcuSxep1T29n3kP9OcAwUNAl6hn11FbtXcdjzSjIJV3rRo6QxhkCr3waYWIWGEu+Yw14bEOWCfSjqONOVq2yZYRA3AK/PINhHA8AZPaO+cL20yXl88R3fr+Twgoe5vjEAREmb9g1Z/XUGFNG+0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749235723; c=relaxed/simple;
+	bh=u04s2l7lgDPKZ6dFtdINL+UHcdN7QHWvT6iYBViISn8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E/yizLWDUgSLVndMqNv1q144wmgImHnRy55n5fWgu02ePkgL9C8xeaFG+EdMqPu8vUrMsPcrT8rCPzfxb8daeBpvDGl4Z0TcgToSc54677kSpCgt/C+tfIU3x0C1Xmwf3TCZiYoMy9oCUVvKn5EncshFBcHukMtLuVVQOkfHY1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jpiMfTEc; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="aVos9BBO";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="aVos9BBO"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=TdgSiUEZlnDoV6CMdNj+20Fn4u+bKRCDNCd6HoXpHcLLmtE3t4z0lRx4A1hGioE5iFezYyNC2GdaVoLyJdX5yai68Hr0juPcfRw9zbJLXaCgaZvogt0JuGfGVvW9Vxg/0wmGjVX5PxR4e8JX8s7AW5LpDD6lOk9/VKry9nv/QsAYVRRsiB1o7Nx4zTQiplf/egvkRd+nL6mx2NKJYigle79d0mvq8/Mwb895ql/MZQ7T0TbP1bpvijg+IHeFR40ZT83F97Q94UXYYQXbKdQfciZkYodaaOkZKKkRCOJOXBrZ12W7iRIJFz6S/Qr/nbVwtSdWV+6SCsZXM91cjgnyZA==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FHr95Vzp9ttLwwRQ9ialukf2ht19iD4Kt+uqBzsrUEk=;
- b=rF8/xVy8thExpynn/Xogo5ueWMElKYvU42fJc5Ab3DdHtyr3xFIeaGabNU8pWnhTbIDbLR9NzT2nq753RbLIw0VU72EQyjJwm6W7XhK2Q/gy3WNBIBbY8H7JNaGE6rBQqtmMRGPlyYQg1k5jNaf7l0zuSlSUGVbDOZO6sca53iyCpauOHvMd+hNiXavSJI0vImFmCribc1n9txsKvRHNSBweHsdixNvMLIqdLGsf3v1dTDA/4zrjJLq43p9PgUt0xHVZPvXqcY8Bq068ZJrfy55aegPTdwMptjoB6jy2SqBFdA5bioAmS/S5Frgl546L/wVzKhvIJ6wjQ+QpgFP6Cg==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=linux.alibaba.com smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FHr95Vzp9ttLwwRQ9ialukf2ht19iD4Kt+uqBzsrUEk=;
- b=aVos9BBOquKcsxPgNWnMKxYwCX8NW8CzQCpWrY0v/v/c2i16U4dTgoT+OtpiYcTpJcz/QiDL23Yr8bW/+nOT5dpC85sJ8T2IA84i11WvL34ViPxHrwdQUF3MaURuVqFMJM1EKRxj/e2NMT8pXpl676WYeRWuvf9n8w+F2zHUOKI=
-Received: from DB8PR09CA0013.eurprd09.prod.outlook.com (2603:10a6:10:a0::26)
- by AS2PR08MB8504.eurprd08.prod.outlook.com (2603:10a6:20b:55f::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Fri, 6 Jun
- 2025 18:48:02 +0000
-Received: from DU6PEPF0000B622.eurprd02.prod.outlook.com
- (2603:10a6:10:a0:cafe::67) by DB8PR09CA0013.outlook.office365.com
- (2603:10a6:10:a0::26) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.26 via Frontend Transport; Fri,
- 6 Jun 2025 18:48:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU6PEPF0000B622.mail.protection.outlook.com (10.167.8.139) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29
- via Frontend Transport; Fri, 6 Jun 2025 18:48:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s03eK0t+5m59OD3b8EQ7wHrMCEGO59KX5Y1HVZS1gA4tfRYN+7jYAkbgFzicUsrw0wGWXO4QtmGUNWzpmONx+w1NAKFJVymNtcBMg63fyDA3cuWELmKeE9V+Ykl3KQhUJzn+9fZvRFD3LQyIK/qNwq9m6pP8TiUK2vKJlAkYse0/1xUvCpbBl7Tx9+JMDokDStBSQuqP2AvT/Nrdus4keGP+vRBOfl5S/bWYTQ0lXhKC9wW/tiy60cPolq23+wdUl/q7kabV9AMqD1TmdOWU1f+5/X5EDzOA4Qkdq2k7FFK4yj4CPbrfoJVDdR1FmIjQ82exB7XLZFCBseE5XjTt5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FHr95Vzp9ttLwwRQ9ialukf2ht19iD4Kt+uqBzsrUEk=;
- b=iqwAYM0XA51WqdqqsPIl9oxY3TG+jeifoKDZD7+jEUJnGBw2S6OSugpQNLLPK5BI7cTFLejfF+RU+EPPmAjj9r7oa+r253c4zB3Hz44cAg1pePsFCLnahZJjDInWntaTA+J2uRYA565KfjCR3kXjfmk8ZNCGigr0wzUUB+zjfLL16ZOF8R/sPxqI8naaQR6wpUo0cza0givfUmiIiS7zkx5U6nctXvL5Hdf6HTCtzxGJWJAx7naRsTLoMAAwEcREcHCwrrKDrJML3cm9oGIi9BXJpkj9rXZu7WZvCE8akjtYgqBsZKZi2WlVm7enB2Gsdy9yKjVHFRX20VfUS09Mug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FHr95Vzp9ttLwwRQ9ialukf2ht19iD4Kt+uqBzsrUEk=;
- b=aVos9BBOquKcsxPgNWnMKxYwCX8NW8CzQCpWrY0v/v/c2i16U4dTgoT+OtpiYcTpJcz/QiDL23Yr8bW/+nOT5dpC85sJ8T2IA84i11WvL34ViPxHrwdQUF3MaURuVqFMJM1EKRxj/e2NMT8pXpl676WYeRWuvf9n8w+F2zHUOKI=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
- by AS4PR08MB7429.eurprd08.prod.outlook.com (2603:10a6:20b:4e1::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Fri, 6 Jun
- 2025 18:47:28 +0000
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e%2]) with mapi id 15.20.8813.018; Fri, 6 Jun 2025
- 18:47:28 +0000
-Message-ID: <e4356d6f-ac7a-40dc-b89d-27031b490fa1@arm.com>
-Date: Sat, 7 Jun 2025 00:17:22 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] mm: huge_memory: disallow hugepages if the
- system-wide THP sysfs settings are disabled
-From: Dev Jain <dev.jain@arm.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com, david@redhat.com
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1749109709.git.baolin.wang@linux.alibaba.com>
- <8eefb0809c598fadaa4a022634fba5689a4f3257.1749109709.git.baolin.wang@linux.alibaba.com>
- <c5ba98b8-a686-4a70-92e3-28d76ce05d1e@arm.com>
-Content-Language: en-US
-In-Reply-To: <c5ba98b8-a686-4a70-92e3-28d76ce05d1e@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0PR01CA0106.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:af::16) To AM9PR08MB7120.eurprd08.prod.outlook.com
- (2603:10a6:20b:3dc::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpiMfTEc"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32addf54a01so14422741fa.3;
+        Fri, 06 Jun 2025 11:48:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749235719; x=1749840519; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u04s2l7lgDPKZ6dFtdINL+UHcdN7QHWvT6iYBViISn8=;
+        b=jpiMfTEcwGT2tjd/7jV+opmqO2r47jbKiF/EWuVturN4l0fHHiPZHlAsQyrhdFIaGw
+         qQ6ZAJv6mN1byH/r9ZNlGeLCB2qaW8D+m1s3rGTh7bavQBTBa6QSYDGdMH8oQ7q72PGM
+         m2/T8ziokM1A1gmrAQpswDbck805FVl6molGPkIOKdkHFm0Xo2gwE6lXSbGx7uTJbUPI
+         HmcmWhU6tC5ifOb5p/nMI/Eowx64hpSb+/ak/CMTqgz7XjIC0zaaG8Y1MYjXlp4XzjtY
+         4thAvQZLC4zjQr3Ku6RdFARD8SNrYcO+g0a3mFNmQssd0MaK/fcI2I0wdRhvYAOSWMYB
+         Xr8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749235719; x=1749840519;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u04s2l7lgDPKZ6dFtdINL+UHcdN7QHWvT6iYBViISn8=;
+        b=J92fLOEtvRlUeUkTME2yx7gKIXKMqEzsu1coI3m2iPZl99+VmDYdPvn5J+72wmO8Gq
+         glnG/uXKVpTxnl9Qd8Ldr7sm3bza4KAz6gzOuxHxECAaGjSHXeOgouBzz/q5prlOW4KD
+         wX7LmNgU4lvO1UYD+aIIcWs6tU4jStNXqC2ozvHVvWv7/VDGKxdhWDSlIRCTmNJ7FbL+
+         yUezeC6OqwkGqV7i5ddHEbxVz5ZtTbv83pVkb+bKVC8V3RYSVY3fA2+kEvBi8i3iPlop
+         N9PLWuIjSmnxC1XKNQGgUpux1gY7ELEjprgbcM9r47KEzHOZB6T+4/yevadpkYgsQZE5
+         PIgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYdf7+XHGdjok/BvpWGrSWS3Xn+YlblJuGZQANvnqKyChJ0GRpoTc97guivTUCyR0x0QSYAE4zTi5ayemcrc4=@vger.kernel.org, AJvYcCXZNSLt77FB1wifTa86buTyx44Dzjx+w6oDF9M5gauX3qWZ6EVNKDWbq1phFm2nsyJmDmvj8/S3u7PLgF1H@vger.kernel.org, AJvYcCXgS63U88UlKqJKvWRdXccIdF9ezau1J2a2n+Rk343mkDrwzYzx6t2R7vOdT8JCNMiyMHl+Lt6aHhNj@vger.kernel.org, AJvYcCXz+QbSvRbkdd/4nrxDvG3fGvhAGRabQEF7CLAn1ADFV3iJ/wuwRpnoUkHE9h0/Rkpvm2IHVXK4@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsTFDvvtkA0ItEuRuL5kI/AqM6uawW0Cd+DyNXAemZNxqGraro
+	DvPxhwCXOlsg+I1NObFtYMURPIacEFb/6oya1+Xrxwh6rUXeuB/8NPutBbptY3FLhGkYh4iwR4I
+	OBTKKj30ZN6k2JfiiiF18VB6nx+Dl8lg=
+X-Gm-Gg: ASbGncsYc1C8fXPnPVZl3QYGgEsll8pT6xVsHxbkClNwmcDQvbMPNfoVMvy7pXrXNoi
+	/6O3DRs8mKcYTYzctUhgp2OtCF02S6vvEbHkLqVbDsQRYLWOUjT92B2sahn3Djyqlc9lA7LSId2
+	gah8sqUZamvH1EWzSh5aOupauuDGdvRT3nHnwcEdIVDrc=
+X-Google-Smtp-Source: AGHT+IHRFX6pedFewi8e06EiF+Tweg5TPKPhvAts3knS7mZumhUVV8MZdcXwJlSfigEyad1PYjODCtTTIDO1cPYXieo=
+X-Received: by 2002:a05:651c:1a0a:b0:32a:ec98:e15c with SMTP id
+ 38308e7fff4ca-32aec98e9fbmr5564231fa.19.1749235719187; Fri, 06 Jun 2025
+ 11:48:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM9PR08MB7120:EE_|AS4PR08MB7429:EE_|DU6PEPF0000B622:EE_|AS2PR08MB8504:EE_
-X-MS-Office365-Filtering-Correlation-Id: 848e666b-8659-4a21-781c-08dda52aa9e4
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?OW5yeWhKeW5ycklCdmp6c3V0UTVYWFRPd1A0cSsrTzhCbkRaMVJhRkdvK3NY?=
- =?utf-8?B?RnVLM3k5WlZMS1VNZVExUEpMb3dQNU9laVVFYnZsT3lONDk3azdHWWN3WHJy?=
- =?utf-8?B?UE1vUkdKc0lTMWtTUGt4a2loOFMyWGpIZDV2N2JKNVlyVitoOG81dmxOaTVG?=
- =?utf-8?B?T2xwclNRNStEZVlNMmV6SlJQUGgyK0lHbmtZYlhQK2NFUDlKQ1ZxMER0Nnhu?=
- =?utf-8?B?T3hpSVU4VjdwZ1VKc2JVOHBZeko2OFlXWFM3RnB4MmtGMU41bmpNY3NrY1ow?=
- =?utf-8?B?dG04ZGQ2TU1oUHhBbnJsRG5zYXFZNkYycG56SlBqcU1pTFdhVjhzcTVOQllk?=
- =?utf-8?B?TkhWK09Ub2pNYjNNSmxVR2xPUXFDRmFWYTNnQnRuKytFMzR1NjlaZFIyRXht?=
- =?utf-8?B?NUEzcGFUclZJYzIvVTFVUHFOS1NoL05WNWs0VGpOSGRUNlBqWVpMWm13VVEr?=
- =?utf-8?B?ejNKa3AwMHpMWVZIS1hSSUNDa00vUVJrNDl2cUlrV2dQeTNXNmdSS3FBUHhD?=
- =?utf-8?B?UHB1Unp3QjJMQUN6aTRQYkpwalp0UWhqYTNOOVhlQm1TQ2VzNk5hODdsOGVZ?=
- =?utf-8?B?YWFQZDdsYi9mckxOKzZrZ3pzTXN4VStDbVYvanhsY3Q4RkROWWJ2TUtyUExj?=
- =?utf-8?B?TFJYcUF5bVUwZXBvN0Y4dFEzQ2UweDE3TWsvYUNyTm1EK0k3MVY1a1JOU0Np?=
- =?utf-8?B?MG15eEdIcWRPanlwSlBMQ3E5WUNaTE5ENFU0YkpyU3UwdHVxcFp0ZVVkZklz?=
- =?utf-8?B?eGhPcW1EclVXMFVPaXQ4eTFxRTdVenEzd2VIQ2QzTW9vcU10Z0lETjFEbFNo?=
- =?utf-8?B?R3pWdlJ4ZlAzU2RPdU9ReVFUd2szU3FOT3pGL2ZoL3FoS1kzc3FHSGtrZ2VS?=
- =?utf-8?B?V2FNLzhiUU0yMWhaTXJjTlNGWnBidXhXM0NmVnFObEczZVZSU01FaGptWGVM?=
- =?utf-8?B?Zkd0NGZUeU5ERWVBOUZCamo5QVIxNUJ4bXlLZlJsbDhmN2JQbkNKUVBMWGZP?=
- =?utf-8?B?bVpJeno4UVQ1dGN4Ync4NC9Tc21mRk5xOXFIMzE5OW96VVZiN1RFSnRaK1ly?=
- =?utf-8?B?S3BoZE5BYjJpNXpXMkl3WE1peVFveWJqTEYwTW1lOGxXTFZvYWNtMmNGVU52?=
- =?utf-8?B?bFdZdnpLZmsrRGhEWStaNUlMN0ZsM08zSmpDdGpMWnErVWhwQko4WkdiRXU0?=
- =?utf-8?B?OG5McXB2Rk5kRUE5ZGtGS3dRcmlBcW9rKzFXNXc2am1EcnljZWlpc3dqQ05q?=
- =?utf-8?B?VVE5RXdydlRZSFNGdHBTNXdMbTRBZmZCcTRSend1d2YxOHk3WXIvaFgwTDFh?=
- =?utf-8?B?SnJ3OHNqUExUY0VEamxZQ1d4dk9BR2JhdUJCK3RQaWxNMlVsdS9NY2hqTS9m?=
- =?utf-8?B?Smo1SE9iN0VMcmxkblJxS2c3N2dkMTEzaGlxVnVVY0Y3QzBOenA4WWMrekw1?=
- =?utf-8?B?QWxubkNxVzlQdUJsNUNXQ3FWdUZxVXlBbkhDaEZ5Y0ExMENHSE10R0hUZjEx?=
- =?utf-8?B?TFpWRnR0anpRZklJZElHdnEzNW9md3J6UHY4Tk5BQkMwdVRPZ1ZEamtzd0hF?=
- =?utf-8?B?enlRTEJzOGZtOU9MbWZLUklHdDJRZUczMlNyS2V2SmlqVXBTcjFMRVNtcDY3?=
- =?utf-8?B?RDJ6ajhYRVJtTDYwcDBjbmRTLys1M0djOWFYbHBMOTRmdThXZzdqckdYM3hF?=
- =?utf-8?B?OCtqZ1JNb3NmMStFV09iSGZBeUgzVnFNbXFlcHFxNmVaMjIyUEdNVm1PS3o0?=
- =?utf-8?B?N2VzNlc4RzU1SWJtRUFkSkhTL3RKdFdJNVpyenhneFNvSS9uVUtRdWVRTDBW?=
- =?utf-8?B?eGJxN0ZMODU5NXZHa3krWVpaY09xb05FWnk0RnViaDJES1h5TUFMU3hXYTVD?=
- =?utf-8?B?ZTQ5UzY0OEg1SU9WU3lzWlFBbmNNQkd3cEM2eW15WS9xSkJhNFhiYXJvcU5E?=
- =?utf-8?Q?uu7wEguG+RM=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR08MB7429
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU6PEPF0000B622.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	d1f1eb2e-b567-4cb7-fba2-08dda52a95c6
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|14060799003|82310400026|36860700013|35042699022|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VkNSaWNrSXZlM21lQ2dRU0VtUnBkT0t0YjRXbXNXTi9kd3pEWVJoMkZFbjdr?=
- =?utf-8?B?TmhQWlVUay84MmFFMGR3RldWUEFIUXcyaXJoSW04R2dqZHJVVGlqM1RlcG9k?=
- =?utf-8?B?ellnTWR3OVIxQlhmaHJtNHN1Z1RPY0w4Tnk1RlpIRHczZjFMRmI1eHUzeGJV?=
- =?utf-8?B?bmZHYmg1R2VKSlNUMEx5bDc3QnNGNkt0QmxlQzZHK0tib045c3BIbUdGMWx5?=
- =?utf-8?B?NnBSZE9DUE5KVXN3djhrZnJoa3pIUHZCeE8xeUVvUXVDN0JXQW16L2FoWHYz?=
- =?utf-8?B?alZBSjduc3lRYXVNU2wzd3VKaklqWndVYjhXN2w5UjRTUUNwMVpMUld0cnl1?=
- =?utf-8?B?THJZWTQ2YVJ6SHpROEg1UFlsZ2h5dmhvOW5vTENyclE4UlZ4c1AyalRZSTVW?=
- =?utf-8?B?OVF0WDlOSDJrWGZ3SmxhQnRUSkVhbEY3cHBKUDBubTV2ajlzVXcwNS9kZlZV?=
- =?utf-8?B?UlBaUC9pN3VkQll5VGNZKzc0ZE15bEQ5M0tTZmY3Q1dhenljakdJakxqajlJ?=
- =?utf-8?B?ODVvd0JORXRrM1d3b0FMZlZRcWxPTG9ITCt2SEdKWENockFDb3BqSWRHSUlH?=
- =?utf-8?B?aCtWNFgzbDVaWWJDQ1NnZGF4eCs4VHhIR0VrRWp2MHlLT05JYThQVnVoTVpE?=
- =?utf-8?B?UXZBeG1HSHBVY1Fkajc5MXdobERZRzM2TWZmNTd0NGxqTlVCNlh5QmFFMU84?=
- =?utf-8?B?OGVNSE9zazZMTHhWOXVFR0ozVndyb3VVQ2Q4TmJNTml1VmxiS0x5TG9RZDB3?=
- =?utf-8?B?L1FyVW1jcjN0a1lMOTExb0tNOHN4Y0hXdVBRQnhYU1RYdVhiVVlQaFpHckFD?=
- =?utf-8?B?Z3BZRzAraEN0a2pBUjFrRkhtaE05U1ZMSTVTWmRCZ2RHQVRlNSt3TGUwVnc0?=
- =?utf-8?B?Sm1xcXlwZ2ZUelRyam92cHF5K3ZkTGordGcrOW0vWWxqcUQ4MnhFWHBUMTIx?=
- =?utf-8?B?T25lMVRSUkM2NUhRTmFrMDIyZEgwS0puU2NGRmJlcDhVNDEyeXlKdTEvT29O?=
- =?utf-8?B?UmlmNFJJUjMzeXlKM2tPbzZTMkNlY0hBL0p6QTdoQlNWSHFkdWEvN1BCYXdK?=
- =?utf-8?B?d1RIL0xqU09CbU1JMms5M25KNGJ6YVJkT3RXWlRwai9DWlJpTHNsTFQ1Znps?=
- =?utf-8?B?d2JVREZWQ25mVFhyZ1NXdWhJMnZiNDFLMFZYdUtVZ0I5MUZsbjZ3Uks3VzU2?=
- =?utf-8?B?d3VybWpZdzN1NlJNYTV5TXorWEc4RWVDM1NvcjZWZ0ZQdEtpK3NTcllsSFQr?=
- =?utf-8?B?Rnd6YXo4RWk0UlBKME0vUEk2WkZqbXpZcnJaMm05RDF1U0NkTFMvRkpTa1Bu?=
- =?utf-8?B?cVVVT1RsbVBkYmFQb2FETVhQNGo3WjdZL2hqZUVmdnpKTExMd1Z4RFgxci9W?=
- =?utf-8?B?T2JFMnI1Z1UzbURabTJrY2krb1FYcVhWSDZBT0JKU2ZPQklMTCtQZjVuRFlS?=
- =?utf-8?B?cUVCM1AxL3JEaXh3TXE4UUptVXVlWkoxcDJLOWtDZ0krbVQyWmdtejdvbzZH?=
- =?utf-8?B?Q285YnRPVUFhUWtSTkZxcWJYVDIzMDdFQ2RmTVVZWVAyeFlveUNHcTJSWXVO?=
- =?utf-8?B?UW0wQzl4UkdPVGZtVjQ0bmJIS0hacEpaaDZOVEt4cVQwM2ZSSDdycGZZd1pw?=
- =?utf-8?B?dXgxam9maW9XNDErcjN4U0s2L0VhdmdLWlRUUjRieWdnRlpGWXd5V0hOVHcz?=
- =?utf-8?B?TXpXUlUyRzNKdDNLemtsNVpjdjd6WXRDZThVT2tZWFV0ZG5KWmVCekFrVHdY?=
- =?utf-8?B?bXhQamd4d0F5Rm9JTzhNbjE1R1NsK3MvZERxQkhDOE9KQmxMa2dKRXI1QmRX?=
- =?utf-8?B?L2M0ODhML2V4VVBxK3o2SlJ4UUM0VmczZzF2YkJvNElBcitncUhUTHBGeCt3?=
- =?utf-8?B?ano2ejlZOGowbG1kckpwNWpmbVhTeUduQWtNK1dWZWVhVnRUcWxQN2RWdTM4?=
- =?utf-8?B?alVjZXNjQ3hPN0tvWGJoeDRINCtRSDM2K2VoWGJCWlBtanNOd25tb2REN0xB?=
- =?utf-8?B?QjBiU2lrak1GOVJKZUVVVDhLMVFDckVMbDFaem9wemlremIvMDJnWnRsSS8w?=
- =?utf-8?Q?DQ49En?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(14060799003)(82310400026)(36860700013)(35042699022)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 18:48:01.2959
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 848e666b-8659-4a21-781c-08dda52aa9e4
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU6PEPF0000B622.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB8504
+References: <20250127160709.80604-1-ubizjak@gmail.com> <20250127160709.80604-7-ubizjak@gmail.com>
+ <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org> <b27d96fc-b234-4406-8d6e-885cd97a87f3@intel.com>
+ <CAFULd4Ygz8p8rD1=c-S2MjJniP6vjVNMsWG_B=OjCVpthk0fBg@mail.gmail.com>
+ <9767d411-81dc-491b-b6da-419240065ffe@kernel.org> <CAFULd4Zf4FOP-h0GVYo=frJ90tF07yvbuLbngnqUwyx9x+qz6w@mail.gmail.com>
+ <CAADnVQ+FG9BH=FrgPctQfC+cSMoP2rZwR1d8cHVqn28xv-Uc1Q@mail.gmail.com>
+In-Reply-To: <CAADnVQ+FG9BH=FrgPctQfC+cSMoP2rZwR1d8cHVqn28xv-Uc1Q@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Fri, 6 Jun 2025 20:48:36 +0200
+X-Gm-Features: AX0GCFvXERXK_nHAKIR60I6AOdB-3j1GvEhNua1NJKWBq6uXzktIDbaVIardb-k
+Message-ID: <CAFULd4bnOA=pBKSkxqpWEX7yTwSNc0duR0enJHY5sBTGzsw46A@mail.gmail.com>
+Subject: Re: Large modules with 6.15 [was: [PATCH v4 6/6] percpu/x86: Enable
+ strict percpu checks via named AS qualifiers]
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>, Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>, 
+	linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-bcachefs@vger.kernel.org, linux-arch <linux-arch@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, Nadav Amit <nadav.amit@gmail.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
+	Brian Gerst <brgerst@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 06/06/25 10:19 pm, Dev Jain wrote:
+On Fri, Jun 6, 2025 at 6:39=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 >
-> On 05/06/25 1:30 pm, Baolin Wang wrote:
->> The MADV_COLLAPSE will ignore the system-wide Anon THP sysfs 
->> settings, which
->> means that even though we have disabled the Anon THP configuration, 
->> MADV_COLLAPSE
->> will still attempt to collapse into a Anon THP. This violates the 
->> rule we have
->> agreed upon: never means never.
->>
->> Another rule for madvise, referring to David's suggestion: “allowing 
->> for collapsing
->> in a VM without VM_HUGEPAGE in the "madvise" mode would be fine".
->>
->> To address this issue, should check whether the Anon THP 
->> configuration is disabled
->> in thp_vma_allowable_orders(), even when the TVA_ENFORCE_SYSFS flag 
->> is set.
+> On Fri, Jun 6, 2025 at 2:27=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com> wr=
+ote:
+> >
+> > On Fri, Jun 6, 2025 at 11:17=E2=80=AFAM Jiri Slaby <jirislaby@kernel.or=
+g> wrote:
+> > >
+> > > On 05. 06. 25, 19:31, Uros Bizjak wrote:
+> > > > On Thu, Jun 5, 2025 at 7:15=E2=80=AFPM Dave Hansen <dave.hansen@int=
+el.com> wrote:
+> > > >>
+> > > >> On 6/5/25 07:27, Jiri Slaby wrote:
+> > > >>> Reverting this gives me back to normal sizes.
+> > > >>>
+> > > >>> Any ideas?
+> > > >>
+> > > >> I don't see any reason not to revert it. The benefits weren't exac=
+tly
+> > > >> clear from the changelogs or cover letter. Enabling "various compi=
+ler
+> > > >> checks" doesn't exactly scream that this is critical to end users =
+in
+> > > >> some way.
+> > > >>
+> > > >> The only question is if we revert just this last patch or the whol=
+e series.
+> > > >>
+> > > >> Uros, is there an alternative to reverting?
+> > > >
+> > > > This functionality can easily be disabled in include/linux/compiler=
+.h
+> > > > by not defining USE_TYPEOF_UNQUAL:
+> > > >
+> > > > #if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
+> > > > # define USE_TYPEOF_UNQUAL 1
+> > > > #endif
+> > > >
+> > > > (support for typeof_unqual keyword is required to handle __seg_gs
+> > > > qualifiers), but ...
+> > > >
+> > > > ... the issue is reportedly fixed, please see [1], and ...
+> > >
+> > > Confirmed, I need a patched userspace (libbpf).
+> > >
+> > > > ... you will disable much sought of feature, just ask tglx (and ple=
+ase
+> > > > read his rant at [2]):
+> > >
+> > > Given this is the second time I hit a bug with this, perhaps introduc=
+e
+> > > an EXPERIMENTAL CONFIG option, so that random users can simply disabl=
+e
+> > > it if an issue occurs? Without the need of patching random userspace =
+and
+> > > changing random kernel headers?
+> >
+> > In both cases, the patch *exposed* a bug in a related utility
+> > software, it is not that the patch itself is buggy. IMO, waving off
+> > the issue by disabling the feature you just risk the bug in the
+> > related software to hit even harder in some not too distant future.
 >
-> Did you mean to say "even when the TVA_ENFORCE_SYSFS flag is *not* 
-> set"? Because if
-> is set, then we have to check the anon THP sysfs config.
+> The typeof_unqual exposed the issue in the way GCC generates dwarf.
+> The libbpf/pahole is a workaround for incorrect dwarf.
+> The compiler shouldn't emit two identical dwarf definition for
+> one underlying type within one compilation unit. In this case
+> typeof_unqual somehow confused gcc.
 
-Otherwise the patch itself looks good to me, so:
+Can you please file a bugreport in GCC bugzilla, so we can analyze the issu=
+e?
 
-Reviewed-by: Dev Jain <dev.jain@arm.com>
-
-
->
->>
->> In summary, the current strategy is:
->>
->> 1. If always & orders == 0, and madvise & orders == 0, and 
->> hugepage_global_enabled() == false
->> (global THP settings are not enabled), it means mTHP of that orders 
->> are prohibited
->> from being used, then madvise_collapse() is forbidden for that orders.
->>
->> 2. If always & orders == 0, and madvise & orders == 0, and 
->> hugepage_global_enabled() == true
->> (global THP settings are enabled), and inherit & orders == 0, it 
->> means mTHP of that
->> orders are still prohibited from being used, thus madvise_collapse() 
->> is not allowed
->> for that orders.
->>
->> Reviewed-by: Zi Yan <ziy@nvidia.com>
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->> ---
->>   include/linux/huge_mm.h | 23 +++++++++++++++++++----
->>   1 file changed, 19 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
->> index 2f190c90192d..199ddc9f04a1 100644
->> --- a/include/linux/huge_mm.h
->> +++ b/include/linux/huge_mm.h
->> @@ -287,20 +287,35 @@ unsigned long thp_vma_allowable_orders(struct 
->> vm_area_struct *vma,
->>                          unsigned long orders)
->>   {
->>       /* Optimization to check if required orders are enabled early. */
->> -    if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
->> -        unsigned long mask = READ_ONCE(huge_anon_orders_always);
->> +    if (vma_is_anonymous(vma)) {
->> +        unsigned long always = READ_ONCE(huge_anon_orders_always);
->> +        unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
->> +        unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);
->> +        unsigned long mask = always | madvise;
->> +
->> +        /*
->> +         * If the system-wide THP/mTHP sysfs settings are disabled,
->> +         * then we should never allow hugepages.
->> +         */
->> +        if (!(mask & orders) && !(hugepage_global_enabled() && 
->> (inherit & orders)))
->> +            return 0;
->> +
->> +        if (!(tva_flags & TVA_ENFORCE_SYSFS))
->> +            goto skip;
->>   +        mask = always;
->>           if (vm_flags & VM_HUGEPAGE)
->> -            mask |= READ_ONCE(huge_anon_orders_madvise);
->> +            mask |= madvise;
->>           if (hugepage_global_always() ||
->>               ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()))
->> -            mask |= READ_ONCE(huge_anon_orders_inherit);
->> +            mask |= inherit;
->>             orders &= mask;
->>           if (!orders)
->>               return 0;
->>       }
->>   +skip:
->>       return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, 
->> orders);
->>   }
->
+Uros.
