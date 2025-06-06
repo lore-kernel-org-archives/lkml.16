@@ -1,160 +1,225 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9CD1A38F9;
-	Fri,  6 Jun 2025 16:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE9128980E
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 16:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749226959; cv=none; b=fm6bcHjXiVi9A3prklGc9FJzVHDh05S6JhT4KRG0YxDjUv/Ivtkgx98uSIr0IWiaCaby1RGDzsnOnFYN4SizgXoBYnuDG3VqxnBHijzfKLjbgyzPOluqeyaH1jH5lGRG+e9O/bhy7uTkuQCTtIggyI+iiys26pIPwP55ZrOjcvM=
+	t=1749226989; cv=none; b=vEzMg/ayqP1JTY/7nqYW9FXDw/aZcp8rogAq2J1wvbmQVPizncNCx1yn1KZD/uYnWlpx/fnb/iqysQ4AmhybdAtD07/IC5jXACr4A+Uie1VscyS2/k2h93Tk7BqktKZpA0upHoEJag3luC1POFX/guw+lJtR2ZEY/qCKBYAgqZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749226959; c=relaxed/simple;
-	bh=jn0A54m+AigrC0Kje3Ksl/fHLeDP7CfNeV5+EpwZARg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ucVkzGH6dyL7zsQDSNp9HaXFqWA9x/PoCGVtPI827VfKvkkfVtcXB+fQAyFvTCKLwuEgPGzXX7QqNaNX+9vcRVOs6A+aeE/mf6qrXTmcyf2S/UynX7nrCQ+/coGob4iBXn5CvjhxA80KGrwSUVOhbjoBzVlHMRWjt22UaNYHL1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AkgXZ7UD; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749226989; c=relaxed/simple;
+	bh=6rhc/ZDVVnpQpTCIp4jX95hAhu4FDuDrKeo8BKnWZ3Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NMxusvEWdaY2TLXh4tDICDgQT3LpjIKEUX9n1mAY06rgBDz+Uhpe+lyWEhuuZnvDDVSsWgv5Lx30dx5MI/o9tIuzjVk2j9GAMGrnIOM6jYL/BlrOejXFayMjy0s0oUPzky3oiJwUG2o9eFIQqWvfE1MiYBHR76M3TuwjaNm/PC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQPmZdLH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AkgXZ7UD"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so1842938f8f.3;
-        Fri, 06 Jun 2025 09:22:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749226956; x=1749831756; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KP+8ZJbQ3Iy35rM91JKh8W2oEf1yzBugHuEwD4w/SXs=;
-        b=AkgXZ7UDFNmFeYGhbkVSl3n2NGvuvMlYq0xAE5qojNwJCIuj1h8CxGwj1sEbx3Sm9X
-         gAhku1mlnsCXc+oNOgKd9oy6DeT6OXAscJntKBGypIcpmMem8lkKSsNnJIhC3a+9HH9k
-         +92yRFDFdsK1Kf9E6lvHf4gVJ2T0xZn8fm2Km8G+St/p2rwGPH1oEvON1brbevZ+UrMP
-         ycTqgPHpWUFSQFocgicFUl0pKJLRuRJt7yXnIqQ7nVLdeaNCxqu/AcjqtXLoKdQhSYa6
-         CHfcBTCLj7uB/5fgQpX+ygypYTvCni65ByH8JhssS6sIzJus9rQEn6+7wqkumPfYVj+y
-         2z8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749226956; x=1749831756;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KP+8ZJbQ3Iy35rM91JKh8W2oEf1yzBugHuEwD4w/SXs=;
-        b=C9luDzNnwEj/qVwbg+hZDwbvQkRn+OSx7imKbIsjf5brvJxhSlf8g3xDleDVPP8ccy
-         W2m6soXzU6hWJww8rCos+Z0np2pps7itTnFPPXT6aUI4dG85dxNMz6mKxzSi5w8NgYK3
-         eGmRE6qoaAgo9KW9RqeTF2giuMx4Gsen6x50ULFjm7Tftw7/yW/fRMBH5Ndo9C5R5XK+
-         eUerEbdO7mYkuI+lGrN+BCzRMV/uhngKuuqG/2qX65IUqYK2IgyfKKsFiQPwb02vY81F
-         nw2il4r1JJYLSJX4eHxrnPscfPaPOoixpd0YzQpcZ9ZmNrdWifOrhYkT16EsiQ+bvvGH
-         3lLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJbyizmhBsoQVseY5v6Obm4QSZ/vwxmy3cyZY2bzR+TOw60tG/GCfXdcsX0NOEE2dYH4kDJLpqPyiIJNkrAaRW@vger.kernel.org, AJvYcCWfzbpivWrRUMsbWdttOB8g5Ys4PkXV3luJljFy9yKSDfleilrbxc1FkLEmwlqqbzfbcCmfQsrFAA==@vger.kernel.org, AJvYcCX/FfMbyS9bcZPDc7PkzsC0uleYO5MWU8m9iMCuu29TVd5nFxsR6PQwOBf12zHyNbO6mPA=@vger.kernel.org, AJvYcCX6TCrxZ0lb5eiU3Xwa2sytpqCixep6zVUjm+lIZ5YcWnmS92EVxiotd0s5/U5niLzwEHNSmSev+rCRdkzQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYQ9ns578lsokB+R8bo+pWe0UiApeTD98NcSYhhOAmp8H4tn3J
-	7xDDlvTszRhjgwKweVhz/FWV8yBTxafaf9UWYa9ss7fvqPebvSA4hO1hhqF2/lO6rXW4QypNsG2
-	PY0Ay1//YIxj4yKQ19xgmkY7GPLFrjuo=
-X-Gm-Gg: ASbGncvmLMLfmjTMW3A7SS1QZiaAxXAVfKkeI4+nDMC3KjPJG90joNpnYXD3gIVhtX5
-	GqZGpDU2l6VY0ZInLSZSFHnVv4QICM08GRPouRyTc/j5TeCNGBxZfs3zREtiavMA88JzHXhr6pO
-	j2V4gxZEOJFiphY90uFaGl/JYEdGIqPq2bkFJ5ZNyH8pjQVZC2OWSZ2offN4eWtg==
-X-Google-Smtp-Source: AGHT+IGVEAky3KX3oy4NEAVyuC3jToJkW1CmYjw5OMscoOz7z7KXYJisj9AihaxTJFjuwXjoE5ERBeNQiq7yk/6UiSY=
-X-Received: by 2002:a05:6000:288c:b0:3a4:db49:94aa with SMTP id
- ffacd0b85a97d-3a531ab5272mr3524523f8f.21.1749226955387; Fri, 06 Jun 2025
- 09:22:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQPmZdLH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D92EC4CEEB;
+	Fri,  6 Jun 2025 16:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749226989;
+	bh=6rhc/ZDVVnpQpTCIp4jX95hAhu4FDuDrKeo8BKnWZ3Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=sQPmZdLHLDPhq6jJ5XL+69EoRnhjMkxvVY02bXGdIzR8rAJFIDjMWNkcQ3mzkVyOw
+	 SWxGsxofSa1kUHpBTyAahAd6/+RXffUuxRDtPig2b8G8kbHEkUiR1Qr63ZZnKQFXWp
+	 VAj7YZHGU4wHItd2HmgNa1LocUE1ghegfrqy/rimkd/ZEXb8cOx6zolEvp0+LqGfZp
+	 vSc8M16uHz7Gmqq8D6pZ46l0S0t5aSJB6s4Rn0vDS6FwBEYP91i6zYcFTme3lt15P4
+	 6AyWwRzzV2jZWdUmZKzBAD5ca/1SaODXVN5v6cWCo9cjjjGWCNqikn9KbpmDPQ6BHO
+	 gqFSAGnA4eMjA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Alexander Graf <graf@amazon.com>,
+  Changyuan Lyu <changyuanl@google.com>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Andrew Morton <akpm@linux-foundation.org>,
+  Baoquan He <bhe@redhat.com>,  kexec@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org
+Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
+ properly
+In-Reply-To: <aEKhF3HcrvG77Ogb@kernel.org>
+References: <20250605171143.76963-1-pratyush@kernel.org>
+	<aEKhF3HcrvG77Ogb@kernel.org>
+Date: Fri, 06 Jun 2025 18:23:06 +0200
+Message-ID: <mafs0jz5osutx.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com> <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
- <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com> <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
- <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com> <DADMLIVHMSSO.3AXSI5216WCT6@bootlin.com>
- <9a2ba0ad-b34d-42f8-89a6-d9a44f007bdc@linux.dev> <DAEFD2WH7HRV.2SOG9Q00QSEXH@bootlin.com>
- <CAADnVQ+T_s6dAwJ5JKqNqA8tq1P+MdfPvPw0EoY5yOf8PnGT4g@mail.gmail.com> <DAFA7QSTVFQF.3MG5408HBVNT7@bootlin.com>
-In-Reply-To: <DAFA7QSTVFQF.3MG5408HBVNT7@bootlin.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 6 Jun 2025 09:22:24 -0700
-X-Gm-Features: AX0GCFtcDPhEpzZqMjlQoxov485AHY3mrKKmWdCvVJeIQl1NL0jKc2KqPI-LVsc
-Message-ID: <CAADnVQKr3ftNt1uQVrXBE0a2o37ZYRo2PHqCoHUnw6PE5T2LoA@mail.gmail.com>
-Subject: Re: [Question] attributes encoding in BTF
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Cc: Ihor Solodrai <ihor.solodrai@linux.dev>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Florent Revest <revest@chromium.org>, Bastien Curutchet <bastien.curutchet@bootlin.com>, 
-	ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, 
-	dwarves@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Fri, Jun 6, 2025 at 12:45=E2=80=AFAM Alexis Lothor=C3=A9
-<alexis.lothore@bootlin.com> wrote:
->
-> Hi Alexei,
->
-> On Thu Jun 5, 2025 at 6:09 PM CEST, Alexei Starovoitov wrote:
-> > On Thu, Jun 5, 2025 at 12:35=E2=80=AFAM Alexis Lothor=C3=A9
-> > <alexis.lothore@bootlin.com> wrote:
-> >>
-> >> Hi Ihor,
-> >>
-> >> On Wed Jun 4, 2025 at 7:31 PM CEST, Ihor Solodrai wrote:
-> >> > On 6/4/25 2:02 AM, Alexis Lothor=C3=83=C2=A9 wrote:
->
-> [...]
->
-> >> Thanks for the details ! I have missed this possibility, as I have bee=
-n
-> >> assuming that DWARF info was exposing the needed info. I'll take a loo=
-k at
-> >> it, but if those attributes can not be represented by DWARF, I'll have=
- to
-> >> find another way of getting those packing/alignment modifications on d=
-ata
-> >> type (eg: re-use/share btf__align_of from libbpf, as suggested by Andr=
-ii,
-> >> but it may not able to cover all cases).
-> >
-> > Not sure all the trouble is worth it.
-> > I feel it's a corner case. Something we don't need to fix.
->
-> TBH I don't own any specific use case really needing this handling, so if
-> it does not feel worth the trouble, I'm fine with not trying to support
-> this. My effort is rather motivated by the goal of aligning the ARM64
-> features with other platform, and so of getting rid of
-> tools/testing/selftests/bpf/DENYLIST.aarch64.
->
-> For the record, this effort also showed that the same kind of issue affec=
-ts
-> other platforms already supporting many args + structs passed by value ([=
-1])
-> - structs alignment with specific alignment constraints are not
->   specifically handled (eg: a struct with an __int128 as a top-level
->   member, leading to a 16 byte alignment requirement)
-> - packing and custom alignment is not handled
->
-> From there, I could do two different things:
-> 1. do nothing, keep ARM64 as-is with the current version which has been
->   recently merged: ARM64 then denies attachment to any function trying to
->   pass a struct by value on stack. We keep the tracing_struct tests denie=
-d
->   for ARM64. Other platforms still allow to attach such functions, but ma=
-y
->   be parsing wrongly arguments in those specific cases.
-> 2. add the constraint applied on ARM64 (refusing attachment when structs =
-are
->   passed through stack) to other JIT compilers. Then update the
->   tracing_struct test to ensure this specific case is properly denied on
->   all platforms to avoid risking reading wrongly arguments passed through
->   stack when structs or large types are involved.
->
-> I tend to think 2. is better, but let me know if you have a different
-> opinion here.
+Hi Mike,
 
-Agree. tracing_struct_many_args is working on x86, but assumptions
-about BTF being able to express everything about calling convention
-were not correct, so let's roll back.
+On Fri, Jun 06 2025, Mike Rapoport wrote:
+
+> On Thu, Jun 05, 2025 at 07:11:41PM +0200, Pratyush Yadav wrote:
+>> From: Pratyush Yadav <ptyadav@amazon.de>
+>> 
+>> Currently, when restoring higher order folios, kho_restore_folio() only
+>> calls prep_compound_page() on all the pages. That is not enough to
+>> properly initialize the folios. The managed page count does not
+>> get updated, the reserved flag does not get dropped, and page count does
+>> not get initialized properly.
+>> 
+>> Restoring a higher order folio with it results in the following BUG with
+>> CONFIG_DEBUG_VM when attempting to free the folio:
+>> 
+>>     BUG: Bad page state in process test  pfn:104e2b
+>>     page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x104e2b
+>>     flags: 0x2fffff80000000(node=0|zone=2|lastcpupid=0x1fffff)
+>>     raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000000
+>>     raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
+>>     page dumped because: nonzero _refcount
+>>     [...]
+>>     Call Trace:
+>>     <TASK>
+>>     dump_stack_lvl+0x4b/0x70
+>>     bad_page.cold+0x97/0xb2
+>>     __free_frozen_pages+0x616/0x850
+>>     [...]
+>> 
+>> Combine the path for 0-order and higher order folios, initialize the
+>> tail pages with a count of zero, and call adjust_managed_page_count() to
+>> account for all the pages instead of just missing them.
+>> 
+>> In addition, since all the KHO-preserved pages get marked with
+>> MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
+>> actually set (as can also be seen from the flags of the dumped page in
+>> the logs above). So drop the ClearPageReserved() calls.
+>> 
+>> Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
+>> Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+>> ---
+>> 
+>> Side note: get_maintainers.pl for KHO only lists kexec@ as the mailing list.
+>> Since KHO has a bunch of MM bits as well, should we also add linux-mm@ to its
+>> MAINTAINERS entry?
+>> 
+>> Adding linux-mm@ to this patch at least, in case MM people have an opinion on
+>> this.
+>> 
+>>  kernel/kexec_handover.c | 29 +++++++++++++++++------------
+>>  1 file changed, 17 insertions(+), 12 deletions(-)
+>> 
+>> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+>> index eb305e7e61296..5214ab27d1f8d 100644
+>> --- a/kernel/kexec_handover.c
+>> +++ b/kernel/kexec_handover.c
+>> @@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
+>>  }
+>> 
+>>  /* almost as free_reserved_page(), just don't free the page */
+>> -static void kho_restore_page(struct page *page)
+>> +static void kho_restore_page(struct page *page, unsigned int order)
+>>  {
+>> -	ClearPageReserved(page);
+>
+> So now we don't clear PG_Reserved even on order-0 pages? ;-)
+
+We don't need to. As I mentioned in the commit message as well,
+PG_Reserved is never set for KHO pages since they are reserved with
+MEMBLOCK_RSRV_NOINIT, so memmap_init_reserved_pages() skips over them.
+
+To double-check, I added some quick prints to kho_restore_page():
+
+    /* Head page gets refcount of 1. */
+    set_page_count(page, 1);
+    printk("Head page flags: 0x%lx reserved: %d\n",
+           page->flags, PageReserved(page));
+    
+    /* For higher order folios, tail pages get a page count of zero. */
+    for (i = 1; i < nr_pages; i++) {
+    	printk("Tail page %u flags: 0x%lx reserved: %d\n",
+    		i, (page+i)->flags, PageReserved(page+i));
+    	set_page_count(page + i, 0);
+    }
+
+And this is what I get:
+
+    [    9.003187] Head page flags: 0x2fffff80000000 reserved: 0
+    [    9.003730] Tail page 1 flags: 0x2fffff80000000 reserved: 0
+    [    9.004229] Tail page 2 flags: 0x2fffff80000000 reserved: 0
+    [    9.004740] Tail page 3 flags: 0x2fffff80000000 reserved: 0
+    [    9.005265] Head page flags: 0x2fffff80000000 reserved: 0
+    [    9.005759] Head page flags: 0x2fffff80000000 reserved: 0
+    [...]
+
+So PG_Reserved is never set.
+
+That said, while reading through some of the code, I noticed another
+bug: because KHO reserves the preserved pages as NOINIT, with
+CONFIG_DEFERRED_STRUCT_PAGE_INIT == n, all the pages get initialized
+when memmap_init_range() is called from setup_arch (paging_init() on
+x86). This happens before kho_memory_init(), so the KHO-preserved pages
+are not marked as reserved to memblock yet.
+
+With deferred page init, some pages might not get initialized early, and
+get initialized after kho_memory_init(), by which time the KHO-preserved
+pages are marked as reserved. So, deferred_init_maxorder() will skip
+over those pages and leave them uninitialized.
+
+And sure enough, doing the same with CONFIG_DEFERRED_STRUCT_PAGE_INIT ==
+y results in:
+
+    [   10.060842] Head page flags: 0x2fffff80000000 reserved: 0
+    [   10.061387] Tail page 1 flags: 0x2fffff80000000 reserved: 0
+    [   10.061902] Tail page 2 flags: 0x2fffff80000000 reserved: 0
+    [   10.062400] Tail page 3 flags: 0x2fffff80000000 reserved: 0
+    [   10.062924] page:00000000fb3dca54 is uninitialized and poisoned
+    [   10.063494] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(page))
+    [   10.064190] ------------[ cut here ]------------
+    [   10.064636] kernel BUG at ./include/linux/page-flags.h:571!
+    [   10.065194] Oops: invalid opcode: 0000 [#1] SMP PTI
+    [   10.065661] CPU: 2 UID: 0 PID: 1954 Comm: test Not tainted 6.15.0+ #297 PREEMPT(undef)
+    [   10.066449] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
+    [   10.067353] RIP: 0010:kho_restore_folio+0x4e/0x70
+    [...]
+
+So we need to either also call init_deferred_page(), or remove the
+memblock_reserved_mark_noinit() call in deserialize_bitmap(). And TBH, I
+am not sure why KHO pages even need to be marked noinit in the first
+place. Probably the only benefit would be if a large chunk of memory is
+KHO-preserved, the pages can be initialized later on-demand, reducing
+bootup time a bit.
+
+What do you think? Should we drop noinit or call init_deferred_page()?
+FWIW, my preference is to drop noinit, since init_deferred_page() is
+__meminit and we would have to make sure it doesn't go away after boot.
+
+>
+>> -	init_page_count(page);
+>> -	adjust_managed_page_count(page, 1);
+>> +	unsigned int i, nr_pages = (1 << order);
+>
+> Can you please declare 'i' inside the loop, looks nicer IMHO.
+
+Ok, will do.
+
+>
+>> +
+>> +	/* Head page gets refcount of 1. */
+>> +	set_page_count(page, 1);
+>
+> ClearPageReserved(page) here?
+>
+>> +
+>> +	/* For higher order folios, tail pages get a page count of zero. */
+>> +	for (i = 1; i < nr_pages; i++)
+>> +		set_page_count(page + i, 0);
+>
+> and here?
+>
+>> +
+>> +	if (order > 0)
+>> +		prep_compound_page(page, order);
+>> +
+>> +	adjust_managed_page_count(page, nr_pages);
+>>  }
+>> 
+>>  /**
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
