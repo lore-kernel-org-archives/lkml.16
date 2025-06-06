@@ -1,229 +1,200 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786231E766F
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2791BF58
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749193510; cv=none; b=ufDnts10Iuue/b1RL9Xwiq/Dl5GMQ0vGMWJ0xR7agXNl2ROA72wAq1Fs/m4flWCkyHfqO4sRLF7VIHMfOI+iXc+tjr4zsT78yZCB9l5RYKfzwRde6ZLUORQPiitPJoeuWeqrWVKAwCIGe8Jz9tqR3zhmFbOuYfR2UEYz4769ogI=
+	t=1749193605; cv=none; b=j+ger24p63cozTuGmmM3SF5Vv8LClrL/rKqexALPgfA0lkBfaHUifEHmlx30a16ILv2aiqu7XzZxZLCn9XLVbTj34JMtOcsqgmv6AzvAJrVPKTYNEfj/KFXn7QzjciGm//WuD6NzAF/yuMXSk6ivzjOcc/Cq1MymmwAhqq2A+LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749193510; c=relaxed/simple;
-	bh=tC//mIrfAJjU7WfUsuOw9mvVsuwgq7xskNKiRRyR8bA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PcFYcMzMZLlUCmehi1CVVZiQmhpKsvVMcz5QhZ+2KFdNNjmBE6U3DTJDZpqjCnXRPeidDAwdIcf8bFrrxbGOKvQsuWdI1ZRrdrF7pF/zvXaAwLJC5qDUJAg4iAnBUmJLmwmqfGVQ+IMc8LWKzNbQnFDyV09xbQgEgN0WxihpNC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mso8S6Go; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LxrEBdxm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mso8S6Go; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LxrEBdxm; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749193605; c=relaxed/simple;
+	bh=8NCNDOFKVX4l5yQGOXyPhRGYHAm0YXygur2y+QsQT+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=brjOv0iE9BvWQtYOvnDtSVwa3oiuFbJhbDtBYaVeMkFfaYyTyipWJZV9wQyJPem/ySZI1tHUCjsszcSH7l11Pr0aaSAuc/x1shz/aw9mew47vzCO/ajvTwq71ZkUcNs77aCRatmuw8yWlfHcs+a2OjdMhkgK18Iv9IDMKB+RHC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zFqwksVc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vgjPFlC5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mso8S6Go";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LxrEBdxm";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mso8S6Go";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LxrEBdxm"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 783AD33698;
-	Fri,  6 Jun 2025 07:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749193505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zFqwksVc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vgjPFlC5"
+Date: Fri, 6 Jun 2025 09:06:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749193599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
-	b=mso8S6Gok2dLZQNjeDNICwcHsC3OUwLXGktjoEbiTOTMMsspYjQkqrJKoA0N5Tpmv/P3Op
-	JySGQIyDsI3kq32H2jfxO1WekPZPExkTY+4eEV78qXN7+9smu1dDBSnn+C67v2Sa5EG+pm
-	QEF4Xh5D9EvYcs5liWaPQGi5HAeSGRg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749193505;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CvmhLghGljnZK4lbrm7YCzxGbGhVL5rk2OVbZ5M8Mz8=;
+	b=zFqwksVc5XiAenpC280DSds5VU1hH8itGRnTApN09TT59dYO+MIlcYP/eeFP3bvx6+XFTH
+	qubv/6zWq3sAOEHtcFac9HK4XqU6OoUMO6QRsC6R1jBHiM7YVXY5WEl58nrWE142E4LBzY
+	JbTcRt+nyDgn2nBxOCUhe9zgwOL9wNGkR0jOV5o2YVmAr4O3D4GqtfKGTY0nwmyioq1P/y
+	wbyilk/z7JIrgcMYtnzV4F1CX9x6CsmsH9CDES8lKnFvp8x77S0xT2ze4m6aa6JsTNYPlS
+	XD4w40duMDgMp9SwTsKfwT9swfd04OpreQukP2mXcKJAaYECkmpuADwtjUaBXA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749193599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
-	b=LxrEBdxm55dQcTQCMKtS/h7h44wFx3HhWJoLzUqd6GtWwYuelIfi/qgsitS5hjye5jchSk
-	l/fgatD5LeIVyHBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=mso8S6Go;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=LxrEBdxm
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749193505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
-	b=mso8S6Gok2dLZQNjeDNICwcHsC3OUwLXGktjoEbiTOTMMsspYjQkqrJKoA0N5Tpmv/P3Op
-	JySGQIyDsI3kq32H2jfxO1WekPZPExkTY+4eEV78qXN7+9smu1dDBSnn+C67v2Sa5EG+pm
-	QEF4Xh5D9EvYcs5liWaPQGi5HAeSGRg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749193505;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
-	b=LxrEBdxm55dQcTQCMKtS/h7h44wFx3HhWJoLzUqd6GtWwYuelIfi/qgsitS5hjye5jchSk
-	l/fgatD5LeIVyHBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0DF481336F;
-	Fri,  6 Jun 2025 07:05:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zKnSASGTQmhoaAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 06 Jun 2025 07:05:05 +0000
-Message-ID: <575e098d-ef9f-4431-bef9-bfc8070a0dfd@suse.de>
-Date: Fri, 6 Jun 2025 09:05:04 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=CvmhLghGljnZK4lbrm7YCzxGbGhVL5rk2OVbZ5M8Mz8=;
+	b=vgjPFlC50CRMDthTsmUR5/tlTDddl9N+ai19d6fKpZyhx/X5dPkFjQsrCBFOUMN7nuzfZG
+	DcjfPP9J/sOhE6Cg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Chris Mason <clm@meta.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: futex performance regression from "futex: Allow automatic
+ allocation of process wide futex hash"
+Message-ID: <20250606070638.2Wk45AMk@linutronix.de>
+References: <3ad05298-351e-4d61-9972-ca45a0a50e33@meta.com>
+ <20250604092815.UtG-oi0v@linutronix.de>
+ <372d8277-7edb-4f78-99bd-6d23b8f94984@meta.com>
+ <20250604200808.hqaWJdCo@linutronix.de>
+ <aa6154d1-726c-4da1-a27b-69d2e8b449c6@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
- memory framebuffers
-To: Michael Kelley <mhklinux@outlook.com>,
- Simona Vetter <simona.vetter@ffwll.ch>
-Cc: David Hildenbrand <david@redhat.com>, "simona@ffwll.ch"
- <simona@ffwll.ch>, "deller@gmx.de" <deller@gmx.de>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "weh@microsoft.com" <weh@microsoft.com>, "hch@lst.de" <hch@lst.de>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20250523161522.409504-1-mhklinux@outlook.com>
- <20250523161522.409504-4-mhklinux@outlook.com>
- <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
- <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <c0b91a50-d3e7-44f9-b9c5-9c3b29639428@suse.de>
- <SN6PR02MB4157871127ED95AD24EDF96DD46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <9a93813c-4d7c-45ef-b5a2-0ad37e7a078a@suse.de>
- <aEBcCjMWZJgbsRas@phenom.ffwll.local>
- <SN6PR02MB415702B00D6D52B0EE962C98D46CA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <154aa365-0e27-458c-b801-62fd1cbfa169@suse.de>
- <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 783AD33698
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-6.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FREEMAIL_TO(0.00)[outlook.com,ffwll.ch];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de,outlook.com];
-	FREEMAIL_CC(0.00)[redhat.com,ffwll.ch,gmx.de,microsoft.com,kernel.org,linux-foundation.org,lst.de,lists.freedesktop.org,vger.kernel.org,kvack.org];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -6.51
-X-Spam-Level: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aa6154d1-726c-4da1-a27b-69d2e8b449c6@meta.com>
 
-Hi
+On 2025-06-05 20:55:27 [-0400], Chris Mason wrote:
+> >> We've got large systems that are basically dedicated to single
+> >> workloads, and those will probably miss the larger global hash table,
+> >> regressing like schbench did.  Then we have large systems spread over
+> >> multiple big workloads that will love the private tables.
+> >>
+> >> In either case, I think growing the hash table as a multiple of thread
+> >> count instead of cpu count will probably better reflect the crazy thin=
+gs
+> >> multi-threaded applications do?  At any rate, I don't think we want
+> >> applications to need prctl to get back to the performance they had on
+> >> older kernels.
+> >=20
+> > This is only an issue if all you CPUs spend their time in the kernel
+> > using the hash buckets at the same time.
+> > This was the case in every benchmark I've seen so far. Your thing might
+> > be closer to an actual workload.
+> >=20
+>=20
+> I didn't spend a ton of time looking at the perf profiles of the slower
+> kernel, was the bottleneck in the hash chain length or in contention for
+> the buckets?
 
-Am 05.06.25 um 19:38 schrieb Michael Kelley:
-[...]
->> I try to address the problem with the patches at
->>
->> https://lore.kernel.org/dri-devel/20250605152637.98493-1-tzimmermann@suse.de/
->>
->> Testing and feedback is much appreciated.
->>
-> Nice!
->
-> I ran the same test case with your patches, and everything works well. The
-> hyperv_drm numbers are now pretty much the same as the hyperv_fb
-> numbers for both elapsed time and system CPU time -- within a few percent.
-> For hyperv_drm, there's no longer a gap in the elapsed time and system
-> CPU time. No errors due to the guest-to-host ring buffer being full. Total
-> messages to Hyper-V for hyperv_drm are now a few hundred instead of 3M.
+Every futex operation does a rcuref_get() (which is an atomic inc) on
+the private hash. This is before anything else happens. If you have two
+threads, on two CPUs, which simultaneously do a futex() operation then
+both do this rcuref_get(). That atomic inc ensures that the cacheline
+bounces from one CPU to the other. On the exit of the syscall there is a
+matching rcuref_put().
 
-Sounds great. Credit also goes to the vkms devs, which already have the 
-software vblank in their driver.
+> >> For people that want to avoid that memory overhead, I'm assuming they
+> >> want the CONFIG_FUTEX_PRIVATE_HASH off, so the Kconfig help text should
+> >> make that more clear.
+> >>
+> >>> Then there the possibility of=20
+> > =E2=80=A6
+> >>> 256 cores, 2xNUMA:
+> >>> | average rps: 1 701 947.02 Futex HBs: 0 immutable: 1
+> >>> | average rps:   785 446.07 Futex HBs: 1024 immutable: 0
+> >>> | average rps: 1 586 755.62 Futex HBs: 1024 immutable: 1> | average
+> >> rps:   736 769.77 Futex HBs: 2048 immutable: 0
+> >>> | average rps: 1 555 182.52 Futex HBs: 2048 immutable: 1
+> >>
+> >>
+> >> How long are these runs?  That's a huge benefit from being immutable
+> >> (1.5M vs 736K?) but the hash table churn should be confined to early in
+> >> the schbench run right?
+> >=20
+> > I think 30 secs or so. I used your command line.=20
+>=20
+> Ah ok, my command line is 60 seconds.  It feels like something is
+> strange for the immutable flag to make it that much faster?  schbench
+> starts all the threads up front, so it should hit steady state pretty
+> quickly.  More on NUMA below, but I'll benchmark with the immutable flag
+> on the turin box in the morning to see if it is the extra atomics.
 
-This might need better support for cases where display updates take 
-exceptionally long, but I can see this being merged as a DRM feature.
+That immutable flag makes this rcuref_get()/ put() go away. The price is
+that you can't change the size of the private hash anymore. So if your
+workload works best with a hash size of X and you don't intend to change
+it during the runtime of the program, set the immutable flag.
 
-> The hyperv_drm message count is still a little higher than for hyperv_fb,
-> presumably because the simulated vblank rate in hyperv_drm is higher than
-> the 20 Hz rate used by hyperv_fb deferred I/O. But the overall numbers are
-> small enough that the difference is in the noise. Question: what is the default
-> value for the simulated vblank rate? Just curious ...
+> > The 256 core box showed
+> > a higher improvement than the 144 one. I attached a patch against
+> > schbench in the previous mail, I did then
+> > 	./schbench -L -m 4 -M auto -t 256 -n 0 -r 60 -s 0 -H 1024 -I
+> >=20
+> > =E2=80=A6
+> >> This schbench hunk is just testing the performance impact of different
+> >> bucket sizes, but hopefully we don't need it long term unless we want =
+to
+> >> play with even bigger hash tables?
+> >=20
+> > If you do "-H 0" then you should get the "old" behaviour. However the h=
+ash
+> > bucket are spread now over the NUMA nodes:
+> >=20
+> > | dmesg |grep -i futex
+> > | [    0.501736] futex hash table entries: 32768 (2097152 bytes on 2 NU=
+MA nodes, total 4096 KiB, linear).
+> >=20
+> > Now there are 32768 hash buckets on both NUMA nodes. Depending on the
+> > hash it computes, it uses the data structures on NUMA node 1 or 2. The
+> > old code allocated 65536 hash buckets via vmalloc().
+>=20
+> So I wanted to mention this earlier and forgot, but schbench obviously
+> isn't numa aware at all.  This combination of command line options
+> basically just has the 4 message threads waking up the 256 worker
+> threads (per message thread) after scribbling a timestamp into shared
+> memory.  From a schbench pov at least, we'll get much more stable
+> numbers by sticking to a single socket.  <makes numa placement hand
+> gestures>
 
-As with a hardware interrupt, the vblank rate comes from the programmed 
-display mode, so most likely 60 Hz. The difference in the update 
-frequency could explain the remaining differences to hyperv_fb.
+Earlier the global hash was somehow spread via vmalloc(). Now it is
+spread slightly different. If you request the private hash, then it is
+allocated on the current node. Unless you move from one node the other,
+this should be good.
 
-Best regards
-Thomas
+> > The bigger hash table isn't always the answer. Yes, you could play
+> > around figure out what works best for you. The problem is that the hash
+> > is based on the mm and the (user) memory address. So on each run you
+> > will get a different hash and therefore different collisions.
+> > If you end up having many hash collisions and then block on the same
+> > lock then yes, larger hash table will be the cure. If you have many
+> > threads doing the futex syscall simultaneously then making the hash
+> > immutable avoids two atomic ops on the same memory address.
+> > This would be my favorite.
+> >=20
+> > Now that I think about it, it might be possible to move the atomic ops
+> > the hash bucket itself. Then it wouldn't bounce the cache line so much.
+> > Making the hash immutable is simpler.
+>=20
+> Going back to your diff, if we have a process growing the total number
+> of threads, can we set FH_IMMUTABLE too early?  As the number of threads
+> increases, eventually we'll pick the 2x num_cpus, but that'll take a whil=
+e?
 
->
-> Michael
+If you refer to the schbench diff, then set it early. Once the prctl()
+to set the size of the private hash, there will be no resize by the
+kernel.
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+If you refer to the kernel diff where set the FH_IMMUTABLE flag, then it
+is set once the upper limit is reached (that was the plan in case I did
+the logic wrong). Which means at that point it won't increase any
+further because of the CPU limit. The only way how you can reach it too
+early is if you offline CPUs.
 
+> I do see what you mean about immutable being simpler though, I'll get
+> some numbers on those atomics.
+
+I have another idea to add a refcount to the hb slot itself. I hope that
+it won't be that expensive if a atomic inc/dec occurs on different
+memory locations. But then maybe freeze it if the upper limit is
+reached. But that might help if we don't reach the upper limit.
+
+> -chris
+
+Sebastian
