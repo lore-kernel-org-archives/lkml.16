@@ -1,225 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE9128980E
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 16:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F705289E1D
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 16:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749226989; cv=none; b=vEzMg/ayqP1JTY/7nqYW9FXDw/aZcp8rogAq2J1wvbmQVPizncNCx1yn1KZD/uYnWlpx/fnb/iqysQ4AmhybdAtD07/IC5jXACr4A+Uie1VscyS2/k2h93Tk7BqktKZpA0upHoEJag3luC1POFX/guw+lJtR2ZEY/qCKBYAgqZc=
+	t=1749226993; cv=none; b=jSrCFF0nzmxKTOfa3q21wKzfew2/YJtaOprdIbEaHmANGao/d82jRy+yVH4nORyHyhuS0+zv6sR0uk3qaXVUcshF667mwmIdsCC1XFBodE20MwQYOMRFCMmIS0ezH2tuiRFH+NcWKenzL6HkRBmqWJoWGZQiB9NLCc33QMvJGt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749226989; c=relaxed/simple;
-	bh=6rhc/ZDVVnpQpTCIp4jX95hAhu4FDuDrKeo8BKnWZ3Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NMxusvEWdaY2TLXh4tDICDgQT3LpjIKEUX9n1mAY06rgBDz+Uhpe+lyWEhuuZnvDDVSsWgv5Lx30dx5MI/o9tIuzjVk2j9GAMGrnIOM6jYL/BlrOejXFayMjy0s0oUPzky3oiJwUG2o9eFIQqWvfE1MiYBHR76M3TuwjaNm/PC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQPmZdLH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749226993; c=relaxed/simple;
+	bh=M1jOEuhivTZKy/mwihHb5k9W7LK7MVVycL5m83PizRY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tvCTbrmdtvrV5Of78JbFOcABn6GDXisxLzzmVsNsh8ZEYVE5TlX0zVPjN13AEiJUuXHdkLXqdN+7MYLZ5X2IK4KCssW4fZbKwi3vt21QRsAFl2Jxkl7obix7go3JbZsWRc5SI0E5lXfdN8iuuq3jCHdW+TlAORv/2KKg/YjSEW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0TDxS94L; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQPmZdLH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D92EC4CEEB;
-	Fri,  6 Jun 2025 16:23:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749226989;
-	bh=6rhc/ZDVVnpQpTCIp4jX95hAhu4FDuDrKeo8BKnWZ3Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=sQPmZdLHLDPhq6jJ5XL+69EoRnhjMkxvVY02bXGdIzR8rAJFIDjMWNkcQ3mzkVyOw
-	 SWxGsxofSa1kUHpBTyAahAd6/+RXffUuxRDtPig2b8G8kbHEkUiR1Qr63ZZnKQFXWp
-	 VAj7YZHGU4wHItd2HmgNa1LocUE1ghegfrqy/rimkd/ZEXb8cOx6zolEvp0+LqGfZp
-	 vSc8M16uHz7Gmqq8D6pZ46l0S0t5aSJB6s4Rn0vDS6FwBEYP91i6zYcFTme3lt15P4
-	 6AyWwRzzV2jZWdUmZKzBAD5ca/1SaODXVN5v6cWCo9cjjjGWCNqikn9KbpmDPQ6BHO
-	 gqFSAGnA4eMjA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Alexander Graf <graf@amazon.com>,
-  Changyuan Lyu <changyuanl@google.com>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Andrew Morton <akpm@linux-foundation.org>,
-  Baoquan He <bhe@redhat.com>,  kexec@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org
-Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
- properly
-In-Reply-To: <aEKhF3HcrvG77Ogb@kernel.org>
-References: <20250605171143.76963-1-pratyush@kernel.org>
-	<aEKhF3HcrvG77Ogb@kernel.org>
-Date: Fri, 06 Jun 2025 18:23:06 +0200
-Message-ID: <mafs0jz5osutx.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0TDxS94L"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c38df7ed2so1648726a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 09:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749226990; x=1749831790; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iqr00pI7lwlLVWJXPD39OYX7ZXcxb0u30DdjvVVkUqE=;
+        b=0TDxS94L+nmcB5yYQB7tpxOMLs7UB49L6oEYGdkvtwuXPeRNhNZ4ljFNT+rv1aB33/
+         DqrNBGsrmg0k6F0zIMxCVLq8xbBpuAWcZqnXjsNFW+//CrW24h3oNxIPtUGF3QRB+ujX
+         XXRBlZ02jlceqo6mTy9fLZb8tZQkmA0dc2r4dW/YBJ0OIzihYFQQv9dOhDyDGIve35nV
+         iv8qIB3Ah2eocrXfmA4TtSIvbmcTlGPnmE829mPXJTlm9lbvWhHKayJ9j7Q2jRTkPdM7
+         b3OtYyGj9LZmLZmCTwTvv952HOXO66tdpmssQzOVH0v+TI5HOzxtFHQmgodmbeAUSOEm
+         Si3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749226990; x=1749831790;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iqr00pI7lwlLVWJXPD39OYX7ZXcxb0u30DdjvVVkUqE=;
+        b=rWQ/FtkrLoJUGKV5We2e0iX5fS/zFywN82bQ7BFvq1SGXKJ1wcR1D2EfUOR4ubu/ti
+         9tbOrfwPccqNiW6pggHJlCb06Om3EC0oI0tCIwH/2HX6spZaf/MyJSun4a25QEngThCE
+         FstwUIU9ZcAyahUx8P28SKlgDVFGB8XVDbUkMn1DS86SWRYasmlJK1AQTSZEbsi1HJ3V
+         7/Q3RxPJXHlLh9r6aVKVoYP6ER5+JXj7d/TZVOa4cyCIit5B0jF/NQGgwtnIl+QVxJs/
+         JjwzuJcDl4ZPT00Xoq1LJZk1oD+JK6lja55U4MMgYhv/umby9Dq2b2yUzNrKPgH9fnND
+         BqVg==
+X-Gm-Message-State: AOJu0YwtPF45HtDyReWYfKrRB6oQZ3gnKV7GRcr8MZRbde1/BQqkL4Vd
+	vk737OAF1X+BL110SdAPyZPgtjdOAerLMYmMdpvfiZRgaM5mv/LHQBQqFNFD/8qlWPOyFYSpJQd
+	vm2258Q==
+X-Google-Smtp-Source: AGHT+IEbdeG1/EtRym+qW1Vn8WnmqKEc3a8Vg6fFl1bLllc5eruW4ye1N0jRNWJY9KZzuwW5IEBvBc5bSDQ=
+X-Received: from plbmi16.prod.google.com ([2002:a17:902:fcd0:b0:234:dbbb:e786])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2451:b0:234:aa98:7d41
+ with SMTP id d9443c01a7336-23601d977fcmr50980545ad.42.1749226990318; Fri, 06
+ Jun 2025 09:23:10 -0700 (PDT)
+Date: Fri, 6 Jun 2025 09:23:09 -0700
+In-Reply-To: <20250401161106.790710-11-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+References: <20250401161106.790710-1-pbonzini@redhat.com> <20250401161106.790710-11-pbonzini@redhat.com>
+Message-ID: <aEMV7awKTSXEkLqu@google.com>
+Subject: Re: [PATCH 10/29] KVM: share statistics for same vCPU id on different planes
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, roy.hopkins@suse.com, 
+	thomas.lendacky@amd.com, ashish.kalra@amd.com, michael.roth@amd.com, 
+	jroedel@suse.de, nsaenz@amazon.com, anelkz@amazon.de, 
+	James.Bottomley@hansenpartnership.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Mike,
+On Tue, Apr 01, 2025, Paolo Bonzini wrote:
+> Statistics are protected by vcpu->mutex; because KVM_RUN takes the
+> plane-0 vCPU mutex, there is no race on applying statistics for all
+> planes to the plane-0 kvm_vcpu struct.
+> 
+> This saves the burden on the kernel of implementing the binary stats
+> interface for vCPU plane file descriptors, and on userspace of gathering
+> info from multiple planes.  The disadvantage is a slight loss of
+> information, and an extra pointer dereference when updating stats.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/arm64/kvm/arm.c                 |  2 +-
+>  arch/arm64/kvm/handle_exit.c         |  6 +--
+>  arch/arm64/kvm/hyp/nvhe/gen-hyprel.c |  4 +-
+>  arch/arm64/kvm/mmio.c                |  4 +-
+>  arch/loongarch/kvm/exit.c            |  8 ++--
+>  arch/loongarch/kvm/vcpu.c            |  2 +-
+>  arch/mips/kvm/emulate.c              |  2 +-
+>  arch/mips/kvm/mips.c                 | 30 +++++++-------
+>  arch/mips/kvm/vz.c                   | 18 ++++-----
+>  arch/powerpc/kvm/book3s.c            |  2 +-
+>  arch/powerpc/kvm/book3s_hv.c         | 46 ++++++++++-----------
+>  arch/powerpc/kvm/book3s_hv_rm_xics.c |  8 ++--
+>  arch/powerpc/kvm/book3s_pr.c         | 22 +++++-----
+>  arch/powerpc/kvm/book3s_pr_papr.c    |  2 +-
+>  arch/powerpc/kvm/powerpc.c           |  4 +-
+>  arch/powerpc/kvm/timing.h            | 28 ++++++-------
+>  arch/riscv/kvm/vcpu.c                |  2 +-
+>  arch/riscv/kvm/vcpu_exit.c           | 10 ++---
+>  arch/riscv/kvm/vcpu_insn.c           | 16 ++++----
+>  arch/riscv/kvm/vcpu_sbi.c            |  2 +-
+>  arch/riscv/kvm/vcpu_sbi_hsm.c        |  2 +-
+>  arch/s390/kvm/diag.c                 | 18 ++++-----
+>  arch/s390/kvm/intercept.c            | 20 +++++-----
+>  arch/s390/kvm/interrupt.c            | 48 +++++++++++-----------
+>  arch/s390/kvm/kvm-s390.c             |  8 ++--
+>  arch/s390/kvm/priv.c                 | 60 ++++++++++++++--------------
+>  arch/s390/kvm/sigp.c                 | 50 +++++++++++------------
+>  arch/s390/kvm/vsie.c                 |  2 +-
+>  arch/x86/kvm/debugfs.c               |  2 +-
+>  arch/x86/kvm/hyperv.c                |  4 +-
+>  arch/x86/kvm/kvm_cache_regs.h        |  4 +-
+>  arch/x86/kvm/mmu/mmu.c               | 18 ++++-----
+>  arch/x86/kvm/mmu/tdp_mmu.c           |  2 +-
+>  arch/x86/kvm/svm/sev.c               |  2 +-
+>  arch/x86/kvm/svm/svm.c               | 18 ++++-----
+>  arch/x86/kvm/vmx/tdx.c               |  8 ++--
+>  arch/x86/kvm/vmx/vmx.c               | 20 +++++-----
+>  arch/x86/kvm/x86.c                   | 40 +++++++++----------
+>  include/linux/kvm_host.h             |  5 ++-
+>  virt/kvm/kvm_main.c                  | 19 ++++-----
+>  40 files changed, 285 insertions(+), 283 deletions(-)
 
-On Fri, Jun 06 2025, Mike Rapoport wrote:
+...
 
-> On Thu, Jun 05, 2025 at 07:11:41PM +0200, Pratyush Yadav wrote:
->> From: Pratyush Yadav <ptyadav@amazon.de>
->> 
->> Currently, when restoring higher order folios, kho_restore_folio() only
->> calls prep_compound_page() on all the pages. That is not enough to
->> properly initialize the folios. The managed page count does not
->> get updated, the reserved flag does not get dropped, and page count does
->> not get initialized properly.
->> 
->> Restoring a higher order folio with it results in the following BUG with
->> CONFIG_DEBUG_VM when attempting to free the folio:
->> 
->>     BUG: Bad page state in process test  pfn:104e2b
->>     page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x104e2b
->>     flags: 0x2fffff80000000(node=0|zone=2|lastcpupid=0x1fffff)
->>     raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000000
->>     raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
->>     page dumped because: nonzero _refcount
->>     [...]
->>     Call Trace:
->>     <TASK>
->>     dump_stack_lvl+0x4b/0x70
->>     bad_page.cold+0x97/0xb2
->>     __free_frozen_pages+0x616/0x850
->>     [...]
->> 
->> Combine the path for 0-order and higher order folios, initialize the
->> tail pages with a count of zero, and call adjust_managed_page_count() to
->> account for all the pages instead of just missing them.
->> 
->> In addition, since all the KHO-preserved pages get marked with
->> MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
->> actually set (as can also be seen from the flags of the dumped page in
->> the logs above). So drop the ClearPageReserved() calls.
->> 
->> Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
->> Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
->> ---
->> 
->> Side note: get_maintainers.pl for KHO only lists kexec@ as the mailing list.
->> Since KHO has a bunch of MM bits as well, should we also add linux-mm@ to its
->> MAINTAINERS entry?
->> 
->> Adding linux-mm@ to this patch at least, in case MM people have an opinion on
->> this.
->> 
->>  kernel/kexec_handover.c | 29 +++++++++++++++++------------
->>  1 file changed, 17 insertions(+), 12 deletions(-)
->> 
->> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
->> index eb305e7e61296..5214ab27d1f8d 100644
->> --- a/kernel/kexec_handover.c
->> +++ b/kernel/kexec_handover.c
->> @@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
->>  }
->> 
->>  /* almost as free_reserved_page(), just don't free the page */
->> -static void kho_restore_page(struct page *page)
->> +static void kho_restore_page(struct page *page, unsigned int order)
->>  {
->> -	ClearPageReserved(page);
->
-> So now we don't clear PG_Reserved even on order-0 pages? ;-)
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index dbca418d64f5..d2e0c0e8ff17 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -393,7 +393,8 @@ struct kvm_vcpu {
+>  	bool ready;
+>  	bool scheduled_out;
+>  	struct kvm_vcpu_arch arch;
+> -	struct kvm_vcpu_stat stat;
+> +	struct kvm_vcpu_stat *stat;
+> +	struct kvm_vcpu_stat __stat;
 
-We don't need to. As I mentioned in the commit message as well,
-PG_Reserved is never set for KHO pages since they are reserved with
-MEMBLOCK_RSRV_NOINIT, so memmap_init_reserved_pages() skips over them.
+Rather than special case invidiual fields, I think we should give kvm_vcpu the
+same treatment as "struct kvm", and have kvm_vcpu represent the overall vCPU,
+with an array of planes to hold the sub-vCPUs.
 
-To double-check, I added some quick prints to kho_restore_page():
+Having "kvm_vcpu" represent a plane, while "kvm" represents the overall VM, is
+conceptually messy.  And more importantly, I think the approach taken here will
+be nigh impossible to maintain, and will have quite a bit of baggage.  E.g. planes1+
+will be filled with dead memory, and we also risk goofs where KVM could access
+__stat in a plane1+ vCPU.
 
-    /* Head page gets refcount of 1. */
-    set_page_count(page, 1);
-    printk("Head page flags: 0x%lx reserved: %d\n",
-           page->flags, PageReserved(page));
-    
-    /* For higher order folios, tail pages get a page count of zero. */
-    for (i = 1; i < nr_pages; i++) {
-    	printk("Tail page %u flags: 0x%lx reserved: %d\n",
-    		i, (page+i)->flags, PageReserved(page+i));
-    	set_page_count(page + i, 0);
-    }
+Documenting which fields are plane0-only, i.e. per-vCPU, via comments isn't
+sustainable, whereas a hard split via structures will naturally what fields are
+scope to the overall vCPU, versus what is per-plane, and will force us to more
+explicitly audit the code.  E.g. ____srcu_idx (and thus srcu_depth) is something
+that I think should be shared by all planes.  Ditto for preempt_notifier, vcpu_id,
+vcpu_idx, pid, etc.
 
-And this is what I get:
+Aha!  And to prove my point, this series breaks legacy signal handling, because
+sigset_active and sigset are accessed using the plane1+ vCPU in kvm_vcpu_ioctl_run_plane(),
+but KVM_SET_SIGNAL_MASK is only allowed to operated on plane0.  And I definitely
+don't think the answer is to let KVM_SET_SIGNAL_MASK operate on plane1+, because
+forcing userspace to duplicate the sigmal masks to all planes is pointless.
 
-    [    9.003187] Head page flags: 0x2fffff80000000 reserved: 0
-    [    9.003730] Tail page 1 flags: 0x2fffff80000000 reserved: 0
-    [    9.004229] Tail page 2 flags: 0x2fffff80000000 reserved: 0
-    [    9.004740] Tail page 3 flags: 0x2fffff80000000 reserved: 0
-    [    9.005265] Head page flags: 0x2fffff80000000 reserved: 0
-    [    9.005759] Head page flags: 0x2fffff80000000 reserved: 0
-    [...]
+Yeeeaaap.  pid and pid_lock are also broken.  As is vmx_hwapic_isr_update()
+and kvm_sched_out()'s usage of wants_to_run.  And guest_debug.
 
-So PG_Reserved is never set.
+Long term, I just don't see this approach as being maintainable.  We're pretty
+much guaranteed to end up with bugs where KVM operates on the wrong kvm_vcpu
+structure due to lack of explicit isolation in code.  And those bugs are going
+to absolutely brutal to debug (or even notice).  E.g. failure to set "preempted"
+on planes 1+ will mostly manifest as subtle performance issues.
 
-That said, while reading through some of the code, I noticed another
-bug: because KHO reserves the preserved pages as NOINIT, with
-CONFIG_DEFERRED_STRUCT_PAGE_INIT == n, all the pages get initialized
-when memmap_init_range() is called from setup_arch (paging_init() on
-x86). This happens before kho_memory_init(), so the KHO-preserved pages
-are not marked as reserved to memblock yet.
+Oof.  And that would force us to document that duplicating cpuid and cpu_caps to
+planes1+ is actually necessary, due to dynamic CPUID features (ugh).  Though FWIW,
+we could dodge that by special casing dynamic features, which isn't a bad idea
+irrespective of planes.
 
-With deferred page init, some pages might not get initialized early, and
-get initialized after kho_memory_init(), by which time the KHO-preserved
-pages are marked as reserved. So, deferred_init_maxorder() will skip
-over those pages and leave them uninitialized.
+Somewhat of a side topic: unless we need/want to explicitly support concurrent
+GET/SET on planes of a vCPU, I think we should make vcpu->mutex per-vCPU, not
+per-plane, so that there's zero chance of having bugs due to thinking that holding
+vcpu->mutex provides protection against a race.
 
-And sure enough, doing the same with CONFIG_DEFERRED_STRUCT_PAGE_INIT ==
-y results in:
+Extracing fields to a separate kvm_vcpu_plane will obviously require a *lot* more
+churn, but I think in the long run it will be less work in total, because we won't
+spend as much time chasing down bugs.
 
-    [   10.060842] Head page flags: 0x2fffff80000000 reserved: 0
-    [   10.061387] Tail page 1 flags: 0x2fffff80000000 reserved: 0
-    [   10.061902] Tail page 2 flags: 0x2fffff80000000 reserved: 0
-    [   10.062400] Tail page 3 flags: 0x2fffff80000000 reserved: 0
-    [   10.062924] page:00000000fb3dca54 is uninitialized and poisoned
-    [   10.063494] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(page))
-    [   10.064190] ------------[ cut here ]------------
-    [   10.064636] kernel BUG at ./include/linux/page-flags.h:571!
-    [   10.065194] Oops: invalid opcode: 0000 [#1] SMP PTI
-    [   10.065661] CPU: 2 UID: 0 PID: 1954 Comm: test Not tainted 6.15.0+ #297 PREEMPT(undef)
-    [   10.066449] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
-    [   10.067353] RIP: 0010:kho_restore_folio+0x4e/0x70
-    [...]
-
-So we need to either also call init_deferred_page(), or remove the
-memblock_reserved_mark_noinit() call in deserialize_bitmap(). And TBH, I
-am not sure why KHO pages even need to be marked noinit in the first
-place. Probably the only benefit would be if a large chunk of memory is
-KHO-preserved, the pages can be initialized later on-demand, reducing
-bootup time a bit.
-
-What do you think? Should we drop noinit or call init_deferred_page()?
-FWIW, my preference is to drop noinit, since init_deferred_page() is
-__meminit and we would have to make sure it doesn't go away after boot.
-
->
->> -	init_page_count(page);
->> -	adjust_managed_page_count(page, 1);
->> +	unsigned int i, nr_pages = (1 << order);
->
-> Can you please declare 'i' inside the loop, looks nicer IMHO.
-
-Ok, will do.
-
->
->> +
->> +	/* Head page gets refcount of 1. */
->> +	set_page_count(page, 1);
->
-> ClearPageReserved(page) here?
->
->> +
->> +	/* For higher order folios, tail pages get a page count of zero. */
->> +	for (i = 1; i < nr_pages; i++)
->> +		set_page_count(page + i, 0);
->
-> and here?
->
->> +
->> +	if (order > 0)
->> +		prep_compound_page(page, order);
->> +
->> +	adjust_managed_page_count(page, nr_pages);
->>  }
->> 
->>  /**
-[...]
-
--- 
-Regards,
-Pratyush Yadav
+Very little per-plane state is in "struct kvm_vcpu", so I think we can do the big
+conversion on a per-arch basis via a small amount of #ifdefs, i.e. not be force to
+immediatedly convert all architectures to a kvm_vcpu vs. kvm_vcpu_plane world.
