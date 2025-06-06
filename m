@@ -1,144 +1,138 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAD617BEBF
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71A01B4F09
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749221794; cv=none; b=aVaectKMGReCGL2i1Ck750NlwAD7e2v/DLrPO11FBeAZ3sO2eP264tpBqHGv+WpUi7y53ckDBlJwlkWjHeqkPsd3rA6tvukRxkbOXgysSMCmwU8f1QYgNUh5xO5WUsaZ3Q5ufWVyssKlu7p2OrRvAr7SmnPdpztQUWCdBm//RhA=
+	t=1749221831; cv=none; b=ixYNdskl2OWIOswlkxcVgA2yNsr8f3mJG/nK+zN95BTWiYHam8jYnX8eQu8X0wtgt2qgF1wjiJ7IolcKdne70hof825e9DY1I8CagfjCbD+yLKB7dSl4sH/oR2sXxDKq8pvKLMNHEB+qx6C2gNMsReKdjr1MMf3Wdy4lP/UL/ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749221794; c=relaxed/simple;
-	bh=Un6/u1lqCJMKeoiAiYXzAp6NLdokv78xP3NcfhlOiFM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tfjEegry8jZX25c+gYGK1QwT8AbK0LksDTO16jg4BEVMD52wYclXm28AZjrFFbmZqs8ZZ3pNQSJtdV24r4FFqJfI4UftQO65GVu8AJ6eGifLOrIX3Su+KTOpRMD3LMLz2S2AuhkglUMQObDjLbLHlflftwUYL0eEVUqb8kKHBCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3da6fe2a552so41685945ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:56:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749221792; x=1749826592;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1749221831; c=relaxed/simple;
+	bh=5rLk0Y1o9Yqu936oDGAf+guTBOuXSZ/KP5hY7VpGzCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X8x7Z87GkYHCV+5JEhopNr1r4wsUX/IbY0TXBx8Y8B6QlsX+FaIaxI6ItcIFqG9GuMg7XWi2UXnoIm2zLhMSwJ6pPhtcEpHeMUq3I66A0CemrD81GSpTOgnIX+gox87XRRNFCynVDxzzvJnNXlHyeCtsiA8RUay4+M+2zLOG4FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=hMtKoXXh; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="hMtKoXXh"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-86cfc1b6dcaso61531739f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:57:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749221828; x=1749826628; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YF+eXovpI+BPFHViBf5OAfiZKlMj7V/t4795WnL00rU=;
-        b=cUrNa8hHanuPROXZOXk1Y3YLzROvTk8wnr00Fd69zLPGsS/Sse1qxmxXvbNIvHFVbQ
-         hHYeex4pZoj7ToEgGuoIdxIfxWdWnBfukpqMpOHO5A25RGeogVh1uhNgJ2a+ncHPfA4a
-         rAOmA+pM8ZyLeXBExOqtvDO67AAZY+maF+1vXNghbvg1bX7ODMqgCl4wk8gT3hsDA/wG
-         6p1DUM+0xSmAk4xfE1QXljNbU3pWZipSvcAZ2aPHHzxUWPBS5BfdnoXL2XVm7iydcEda
-         RdaeZswHpatwu5xpRsPH38j2QbayyaXvT9j/6Ol1YWOoCDYMeCCy9LruIJi300pC3rjf
-         ZW/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX6rQUAoz52zB44jd8RqU57I/xhE1ONBvhku+BK2gwH8WPViGBLr08Nmjq9sCaeKRQDnlq0qLMvguaf1vQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq01Bi3nFt/oJWXuPy61XPT5md3sYE1HgrSVnTIFAb6+lb5L4t
-	0zsW9E5pHzjRxUN3OERUGlWSH3ayCt1ku9OT30OOO4vLoPh/rJtGsn3eGNZtYHo9Pjhz4sGApAs
-	wMDluR/XzQgzZR25QUgo/1HyzIMVba+C9RVyR79GHG6gwtaUEd1T6/IHLsHw=
-X-Google-Smtp-Source: AGHT+IFoFrrAmYlUpTD7FdSKQo72bN7Yrvawlqt2K4lsdzd6TpbdcCvkEx3s0/p4fEZWZ1kM1Nfeko7FkjTGgW4lQtakoFYCEXF7
+        bh=y4SilW7Kz/GqOrsdyu9o99hQfeO+kZMJ6kTTI3SZL88=;
+        b=hMtKoXXh8+5SC4d//xyI/YsWQof1pTyJgp8PvZMRjJEr+ZXGQDP6PiKucpYcvXxhgt
+         R/v1olg0Jg27bs2vAvbXLvE45rYoG68EZ58vWZtBT+YKvSE/Y61EG6Jgsuv5c7j7Q4CT
+         N/ZaM/yXxUEhAabGOWU23a3e2mAqusOZvhacUnQPB8HTsuTR9UlfgAN8gIV3ssAnmWfq
+         YqQLiPlal2Hv22VEolt+uyoxborkDCIxNRXuov18yx2KNRy3TAqCcSFxGpvuQVV8gXia
+         HlbkOMQthwezDppKAreITxg5uCk6PNvrqFLM4Aw9kHo6ObeJR3xcgVGqd6O2DVHzEjiY
+         Txdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749221828; x=1749826628;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4SilW7Kz/GqOrsdyu9o99hQfeO+kZMJ6kTTI3SZL88=;
+        b=oA0yVaaof9dK0oQo3Xi91XoDeskidWb4+XIEiN0wVBFPNPJuaufo/cjFFwfnOOrmKK
+         I0Ij2Nky2Tqsv4BEPstORu/ak+m2waDEf5isPYlH13b6+pURb8kxz0tedchT4WUEJmpl
+         WM/AyCcYbUJ9D1GhrDqxw+6k2ZAguXK/VXjaF4YGijBhBFraE6mDabuC9e9rR655T165
+         xxOYdoaeYtuRER4CmFV925+Vv0Gy1P0q/JpoQ6+tTJXMEUy8qqA7jJz7Vpxb8LiY3uiW
+         Ejti0M2hx5ndv7xBOxI9Wm1oLGjrCbTB4DxdA2H6NZZMoL/OffClWYuTBIkb1C8j/xoy
+         yHdA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/YvLPwq4qY0BRbBl71LkN50j9gEMzSwUqA5yMsVURMF99TMmiOFO3oHWiDrJOt9l5xUfydHbE+yJ3vJo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAh0HiwwjU+X6RIAQ/URHUrIaGKNaOZOX+kkWhLsR9icei8AkG
+	nqNdydU8gOY24vsCOvq0LF8vUszatNZ910NvWgymFIvryRRACN0x1sh2jtNOtJa/eOg=
+X-Gm-Gg: ASbGncvboXQlNoAzzUreDqqpgCxNQ92Ect7Nk0/NaI5vEo4bY9u7ZiGpRfIOSseuY3F
+	rQ9qC1ePMLDai0J3+9W8C3CjJ5mIUxQyOyPx78epPu0aBuOtZdvFapD1tPUft8RhR/J/dwq2+pu
+	003Q5KytD6r6MOTEio81GMyfpckWiVAIUL7xLaOgGZj+T8Qi0NTtk997cxYsMl42CFPIgVKcsBf
+	Cu/mPcEUMhaIom2ipBgdObrSOLBLmvJxGP/vsqa275HfVG3UbsNWuyZh8BoHFGk6/vrIJPurwAb
+	wpOorwMJflojoMwA1c77rEbHdaSO+7yH2EOQnaa455NaP+NHLdmADYoIrg==
+X-Google-Smtp-Source: AGHT+IHCqdvcPc2EHD8OF2SGiY28FRz5VxV/iMut9sL/Iq4G5xTeNxhhacKuQVTKYCyvf5H+SS82Sg==
+X-Received: by 2002:a05:6602:4c03:b0:86c:fa3a:fe97 with SMTP id ca18e2360f4ac-873366c4eb2mr364557439f.10.1749221827729;
+        Fri, 06 Jun 2025 07:57:07 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-87338782c7dsm37099439f.2.2025.06.06.07.57.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 07:57:07 -0700 (PDT)
+Message-ID: <9b9199f0-347b-42fb-984a-761f0e738837@kernel.dk>
+Date: Fri, 6 Jun 2025 08:57:06 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4416:10b0:3dd:d348:715a with SMTP id
- e9e14a558f8ab-3ddd3487186mr12124125ab.8.1749221791701; Fri, 06 Jun 2025
- 07:56:31 -0700 (PDT)
-Date: Fri, 06 Jun 2025 07:56:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6843019f.a00a0220.29ac89.0044.GAE@google.com>
-Subject: [syzbot] [net?] WARNING: refcount bug in gro_cleanup
-From: syzbot <syzbot+9de2587cce48f5642f16@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 3/5] io_uring/bpf: implement struct_ops registration
+To: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1749214572.git.asml.silence@gmail.com>
+ <f43e5d4e5e1797312ef3ee7986f4447bddac1d3c.1749214572.git.asml.silence@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <f43e5d4e5e1797312ef3ee7986f4447bddac1d3c.1749214572.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 6/6/25 7:58 AM, Pavel Begunkov wrote:
+> Add ring_fd to the struct_ops and implement [un]registration.
+> 
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
+>  io_uring/bpf.c | 67 +++++++++++++++++++++++++++++++++++++++++++++++++-
+>  io_uring/bpf.h |  3 +++
+>  2 files changed, 69 insertions(+), 1 deletion(-)
+> 
+> diff --git a/io_uring/bpf.c b/io_uring/bpf.c
+> index 3096c54e4fb3..0f82acf09959 100644
+> --- a/io_uring/bpf.c
+> +++ b/io_uring/bpf.c
+> @@ -3,6 +3,8 @@
+>  #include "bpf.h"
+>  #include "register.h"
+>  
+> +DEFINE_MUTEX(io_bpf_ctrl_mutex);
+> +
+>  static struct io_uring_ops io_bpf_ops_stubs = {
+>  };
+>  
+> @@ -50,20 +52,83 @@ static int bpf_io_init_member(const struct btf_type *t,
+>  			       const struct btf_member *member,
+>  			       void *kdata, const void *udata)
+>  {
+> +	u32 moff = __btf_member_bit_offset(t, member) / 8;
+> +	const struct io_uring_ops *uops = udata;
+> +	struct io_uring_ops *ops = kdata;
+> +
+> +	switch (moff) {
+> +	case offsetof(struct io_uring_ops, ring_fd):
+> +		ops->ring_fd = uops->ring_fd;
+> +		return 1;
+> +	}
+> +	return 0;
 
-syzbot found the following issue on:
+Possible to pass in here whether the ring fd is registered or not? Such
+that it can be used in bpf_io_reg() as well.
 
-HEAD commit:    d0c22de9995b Merge tag 'input-for-v6.15-rc7' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1745b5f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
-dashboard link: https://syzkaller.appspot.com/bug?extid=9de2587cce48f5642f16
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> +static int io_register_bpf_ops(struct io_ring_ctx *ctx, struct io_uring_ops *ops)
+> +{
+> +	if (ctx->bpf_ops)
+> +		return -EBUSY;
+> +	if (!(ctx->flags & IORING_SETUP_DEFER_TASKRUN))
+> +		return -EOPNOTSUPP;
+> +
+> +	percpu_ref_get(&ctx->refs);
+> +	ops->ctx = ctx;
+> +	ctx->bpf_ops = ops;
+>  	return 0;
+>  }
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Haven't looked too deeply yet, but what's the dependency with
+DEFER_TASKRUN?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b862906e9f4b/disk-d0c22de9.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c0d716f15db2/vmlinux-d0c22de9.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7ffe8e4af4ec/bzImage-d0c22de9.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9de2587cce48f5642f16@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 8170 at lib/refcount.c:28 refcount_warn_saturate+0x11a/0x1d0 lib/refcount.c:28
-Modules linked in:
-CPU: 1 UID: 0 PID: 8170 Comm: syz.4.605 Not tainted 6.15.0-rc7-syzkaller-00152-gd0c22de9995b #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:refcount_warn_saturate+0x11a/0x1d0 lib/refcount.c:28
-Code: 80 aa c1 8b e8 e7 52 cb fc 90 0f 0b 90 90 eb d7 e8 4b f6 06 fd c6 05 67 3c b0 0a 01 90 48 c7 c7 e0 aa c1 8b e8 c7 52 cb fc 90 <0f> 0b 90 90 eb b7 e8 2b f6 06 fd c6 05 44 3c b0 0a 01 90 48 c7 c7
-RSP: 0018:ffffc9000419f628 EFLAGS: 00010246
-RAX: b3f3c577eef85a00 RBX: 0000000000000003 RCX: 0000000000080000
-RDX: ffffc9001071e000 RSI: 000000000007ffff RDI: 0000000000080000
-RBP: 0000000000000000 R08: ffffffff8f7f3577 R09: 1ffffffff1efe6ae
-R10: dffffc0000000000 R11: fffffbfff1efe6af R12: dffffc0000000000
-R13: 4888ffffe8ffffc8 R14: ffffe8ffffc8496e R15: ffffe8ffffc8488a
-FS:  00007f92701cb6c0(0000) GS:ffff8881261c2000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f0f5af71440 CR3: 00000000262e0000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- kfree_skb_reason include/linux/skbuff.h:1279 [inline]
- kfree_skb include/linux/skbuff.h:1288 [inline]
- gro_cleanup+0x300/0x640 net/core/gro.c:815
- __netif_napi_del_locked+0x2e0/0x3c0 net/core/dev.c:7301
- __netif_napi_del include/linux/netdevice.h:2876 [inline]
- gro_cells_destroy+0x16a/0x430 net/core/gro_cells.c:117
- ip_tunnel_dev_free+0x19/0x30 net/ipv4/ip_tunnel.c:1102
- netdev_run_todo+0xcd7/0xea0 net/core/dev.c:11300
- setup_net+0x5db/0x830 net/core/net_namespace.c:392
- copy_net_ns+0x32e/0x590 net/core/net_namespace.c:518
- create_new_namespaces+0x3d3/0x700 kernel/nsproxy.c:110
- copy_namespaces+0x438/0x4b0 kernel/nsproxy.c:179
- copy_process+0x1700/0x3b80 kernel/fork.c:2433
- kernel_clone+0x21e/0x870 kernel/fork.c:2845
- __do_sys_clone kernel/fork.c:2988 [inline]
- __se_sys_clone kernel/fork.c:2972 [inline]
- __x64_sys_clone+0x18b/0x1e0 kernel/fork.c:2972
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f926f38e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f92701cafe8 EFLAGS: 00000206 ORIG_RAX: 0000000000000038
-RAX: ffffffffffffffda RBX: 00007f926f5b6160 RCX: 00007f926f38e969
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000042000000
-RBP: 00007f926f410ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000000
-R13: 0000000000000001 R14: 00007f926f5b6160 R15: 00007fff8df30f78
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Jens Axboe
