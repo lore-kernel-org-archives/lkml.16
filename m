@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2AB1E5B7B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3031E5B82
 	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 03:15:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749179757; cv=none; b=Z/hvj1G0Sk+6QsX/16RhXhN+gWoOGzkUHSFb95aWV7SGbIJHUsID/d4nITAmfNbQye2vp/Us4rwxiwr+kWwc2kYpF//1ac3SFYocPkk1T4QI+oE/1XXWIMRllocmy2+E0o+xVSMXRBG2X93VGvpikVCntpfwy+C7igvRSuaVuSA=
+	t=1749179757; cv=none; b=lbVuh9hIaTZuSvBgjV+zrhl8scJnVNyGbPdyQTNSuvMNxDTEBP/WJLF3VM1Qx5z7KhcV4xMF9Bg/tQAGtc11VtEREZ8+zYozl7iFP0Fs+Yr4e/fkjbHTYcAL/Yvum5U9Qfbj0/xf2lftbZRTe04LCpK8fgQKst1sCudzpNQxIZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749179757; c=relaxed/simple;
-	bh=Lmu043ttmoNqgiYahD+6aywyp8FaBNBKAT+/DxnS4+s=;
+	bh=aUrkhYNlXTJCWXCgbtnmm4zqDqOMSYCdnXZD4yzRPj8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UBrJMpkohhT+B1RZnqrTu5fKKkZpySrYC6THywjhhTtobkqiK8GNbBaOjgsYLaf1rspSxuaAL0ythiEVWqcs5mBKGMGm2tL5avYOcv8RJ8r0SkR9wLHi9cf7NOx22fkqUytL3gOTDIP2zc6SSHjW7FD92YcoFO0xYU1s8VcSEvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eVoibdGG; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=ujo8VcU2xfotxEPHEsa9Xhh+1igGOOujFzTGgjbi9Re8Sog5Ha0ucauMw3IEJBYVXPUTVMBPwCPkuziiba55ZCT5lmW+5cVe64jUwtmP+R/iZVm4ANRBiExEZGhSDjAcmTuCf/AKwlYsEaDCAm8MHsT+S5stJHVS0wTHhYhIC1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=csZSkkRy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eVoibdGG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="csZSkkRy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1749179754;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=InNfZwJnSoubR+c9L0hThUN+6+PZmB6lqdOn6p8BxJI=;
-	b=eVoibdGGZysfxSUXz5oeIBV+laYuOZtI39eMBdDeu35tAweUb+exVRKjHD/MbuzerfBgcp
-	i/QXIs1JiwQX2UO2SOvIs/zei7o4gMmhYcFuCrNh5y4CUAnNC4svBZg/UY1+y1F0l4b1Z9
-	Ra9M+ih8BiDqoY+5Z8+cJOSFuT4hgqU=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=eJAGNO2ZGACYOax/SSfhQsIr4XXMxufpmtTjm3rXVzE=;
+	b=csZSkkRyn109LvnXwZ5j858c4m+uO2ObsMrjPkNcwkW6TpA5yxTLH4+JQyC1nlP84pEHD0
+	Iot4unDJP06fC8ELy8D3fAs5aE3Cs3lu3E3GmdDjxG9ZWbluX5VCe5zt72gDXEz/RfRamy
+	CavfbAuyOyRZ9qV7n9zkdHUD73mJWrQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-670-m8Jdkil0NHaXN8Hm38u2rQ-1; Thu,
- 05 Jun 2025 23:15:53 -0400
-X-MC-Unique: m8Jdkil0NHaXN8Hm38u2rQ-1
-X-Mimecast-MFC-AGG-ID: m8Jdkil0NHaXN8Hm38u2rQ_1749179752
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-668-m5Ax-cfrNvGUgB8n-0tV9w-1; Thu,
+ 05 Jun 2025 23:15:51 -0400
+X-MC-Unique: m5Ax-cfrNvGUgB8n-0tV9w-1
+X-Mimecast-MFC-AGG-ID: m5Ax-cfrNvGUgB8n-0tV9w_1749179750
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 22ACD1956087;
-	Fri,  6 Jun 2025 03:15:52 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.64.88])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7CECE195E74A;
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2F7E91800345;
 	Fri,  6 Jun 2025 03:15:50 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.64.88])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CD0D8195E74A;
+	Fri,  6 Jun 2025 03:15:48 +0000 (UTC)
 From: Waiman Long <longman@redhat.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Andrew Morton <akpm@linux-foundation.org>,
@@ -49,9 +49,9 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
 	Waiman Long <longman@redhat.com>
-Subject: [PATCH v2 3/3] timers: Disable memory pre-allocation of timer debug objects
-Date: Thu,  5 Jun 2025 23:15:39 -0400
-Message-ID: <20250606031539.1004644-4-longman@redhat.com>
+Subject: [PATCH v2 2/3] debugobjects: Show the state of debug_objects_enabled
+Date: Thu,  5 Jun 2025 23:15:38 -0400
+Message-ID: <20250606031539.1004644-3-longman@redhat.com>
 In-Reply-To: <20250606031539.1004644-1-longman@redhat.com>
 References: <20250606031539.1004644-1-longman@redhat.com>
 Precedence: bulk
@@ -63,65 +63,74 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-A circular locking dependency lockdep splat was hit recently with a
-debug kernel. The dependency chain (in reverse order) is:
-
-  -> #3 (&zone->lock){-.-.}-{2:2}:
-  -> #2 (&base->lock){-.-.}-{2:2}:
-  -> #1 (&console_sch_key){-.-.}-{2:2}:
-  -> #0 (console_owner){..-.}-{0:0}:
-
-The last one is from calling printk() within the rmqueue_bulk() call in
-mm/page_alloc.c. The "base->lock" is from lock_timer_base() and first
-one is due to calling add_timer_on() leading to debug_object_activate()
-doing actual memory allocation acquiring the zone lock.
-
-The console_sch_key comes from a s390 console driver in driver/s390/cio.
-The console_sch_key -> timer dependency happens because the console
-driver is setting a timeout value while holding its lock. Apparently it
-is pretty common for a console driver to use timer for timeout or other
-timing purposes. So this may happen to other console drivers as well.
-
-One way to break this circular locking dependency is to disallow any
-memory allocation when a timer debug object is being handled. Do this by
-setting the ODEBUG_FLAG_NO_ALLOC flag in the timer_debug_descr structure.
-
-The figures below show the number of times the debug_objects_fill_pool()
-function has reached the statement right before and after the no_alloc
-check in initial bootup and after running a parallel kernel build on
-a 2-socket 96-threads x86-64 system.
-
-			 Before      After     non-timer %
-		 	 ------      -----     -----------
-  Initial bootup	  150,730     148,198     98.3%
-  Parallel kernel build 5,974,464   5,893,116     98.6%
-
-So from object pre-allocation perspective, timer debug objects represent
-just a small slice of the total number of debug objects to be processed.
-
-The allocation of debug_object to the global pool happens when its object
-count falls below the (256 + 16 * num_possible_cpus) threshold. Even
-then, there may still be free objects available in the percpu pool. So
-the chance that debug_objects gets disabled because it is running out
-of free debug_object should be minimal.
+In the rare case that debug_objects got disabled because we are running
+out of free debug objects, it is not easy to figure this out. Fix that
+by showing the state of "debug_objects_enabled" in the stats debugfs
+file as well as always printing a message in the console log.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/time/timer.c | 1 +
- 1 file changed, 1 insertion(+)
+ lib/debugobjects.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 553fa469d7cc..e0be64591e43 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -775,6 +775,7 @@ static bool timer_fixup_assert_init(void *addr, enum debug_obj_state state)
+diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+index 52bc77b41f48..df72bc49cc5d 100644
+--- a/lib/debugobjects.c
++++ b/lib/debugobjects.c
+@@ -125,6 +125,12 @@ static int __init disable_object_debug(char *str)
+ }
+ early_param("no_debug_objects", disable_object_debug);
  
- static const struct debug_obj_descr timer_debug_descr = {
- 	.name			= "timer_list",
-+	.flags			= ODEBUG_FLAG_NO_ALLOC,
- 	.debug_hint		= timer_debug_hint,
- 	.is_static_object	= timer_is_static_object,
- 	.fixup_init		= timer_fixup_init,
++static void debug_objects_disable(const char *msg)
++{
++	debug_objects_enabled = false;
++	pr_warn("debug_objects disabled: %s\n", msg);
++}
++
+ static const char *obj_states[ODEBUG_STATE_MAX] = {
+ 	[ODEBUG_STATE_NONE]		= "none",
+ 	[ODEBUG_STATE_INIT]		= "initialized",
+@@ -690,7 +696,7 @@ static struct debug_obj *lookup_object_or_alloc(void *addr, struct debug_bucket
+ 	}
+ 
+ 	/* Out of memory. Do the cleanup outside of the locked region */
+-	debug_objects_enabled = false;
++	debug_objects_disable("out of memory");
+ 	return NULL;
+ }
+ 
+@@ -1161,6 +1167,8 @@ static int debug_stats_show(struct seq_file *m, void *v)
+ 	seq_printf(m, "on_free_list  : %u\n", pool_count(&pool_to_free));
+ 	seq_printf(m, "objs_allocated: %d\n", debug_objects_allocated);
+ 	seq_printf(m, "objs_freed    : %d\n", debug_objects_freed);
++	seq_printf(m, "debug_objects : %s\n", debug_objects_enabled ? "enabled"
++								    : "disabled");
+ 	return 0;
+ }
+ DEFINE_SHOW_ATTRIBUTE(debug_stats);
+@@ -1314,7 +1322,7 @@ check_results(void *addr, enum debug_obj_state state, int fixups, int warnings)
+ out:
+ 	raw_spin_unlock_irqrestore(&db->lock, flags);
+ 	if (res)
+-		debug_objects_enabled = false;
++		debug_objects_disable("selftest");
+ 	return res;
+ }
+ 
+@@ -1486,11 +1494,8 @@ void __init debug_objects_mem_init(void)
+ 	cache = kmem_cache_create("debug_objects_cache", sizeof (struct debug_obj), 0,
+ 				  SLAB_DEBUG_OBJECTS | SLAB_NOLEAKTRACE, NULL);
+ 
+-	if (!cache || !debug_objects_replace_static_objects(cache)) {
+-		debug_objects_enabled = false;
+-		pr_warn("Out of memory.\n");
+-		return;
+-	}
++	if (!cache || !debug_objects_replace_static_objects(cache))
++		debug_objects_disable("out of memory");
+ 
+ 	/*
+ 	 * Adjust the thresholds for allocating and freeing objects
 -- 
 2.49.0
 
