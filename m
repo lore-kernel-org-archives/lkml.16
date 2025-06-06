@@ -1,137 +1,123 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE268460;
-	Fri,  6 Jun 2025 15:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D9413EFF3;
+	Fri,  6 Jun 2025 15:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749222096; cv=none; b=OAKWORWs3tZcfsmqtxGfc3oupn5biXfytz+dMmHRX+CaMQUq0TZP2r1/5ysIEQMFTprJm9npaezrtih5gHDL3S8zlJRwldpryXFeeuyz3/HroygqiQrNFpBLD9MZ3L4pOTTL63bKHPKdjeDBcWh2X4S1hSZvw6W+9M3Ltzmb4GY=
+	t=1749222124; cv=none; b=LCMtJdAo0kwEwe+SC2o8NWEvER7Aji4GS++L8HY7EkldteICS6k+pmbXJxIBz9bULcDlMb2y2AdPOqhy2HbvxOmn0OoD0vuhqavWqctQOPgOeIQSJWzloPn80mldsmLWkne0gohLKJeuWgDZG/2xTmMc/oKYWbyqp7zV7bxGQHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749222096; c=relaxed/simple;
-	bh=yUUhB1V4P3vMF52b0JssHYCOLC3ksdnfcLgsPK4tb8I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VQBu3KfD3iQAshKYQoLGSy4sIZIqmrcyNxcxYdEVPbLosYLbJSGKU626N4RmfLEpttYQ4w/poKOk9X/YoXkNgsFWbd6tJF3+iWU1O59z8Sw20aelqkDwkZvLq7WGEz7tfrxrhFri09PDMRDWflHyUsJKFDUEbVZODGoentJG2i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cgL4adfy; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749222124; c=relaxed/simple;
+	bh=O8kB7jya7MJUklWdBDfGyAbIfXaS0eU41lUunp/mlxs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IXk/GtOXcNTtB31+7yfdDAJBz62e3BeJ16K2GMI+CIwzMdlG1UdL+uqAFeO2Rg//+fOXRnPOyeDrji97EqAvx55rjM+zlKt3wfMbupZYf0hkIuwTXXD3A2buvRpjT809/3VcqMAEM+QuBMos1O44xDk5sQQHVbQmLbt+E0u52OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dkev1l3U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cgL4adfy"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so25484705e9.1;
-        Fri, 06 Jun 2025 08:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749222092; x=1749826892; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XhE/4kgP6Fj+Sk1yGpIDfKiYEXxDvnVhFRdNE9ODL7c=;
-        b=cgL4adfyWXgCRWpv68FR8aNVux6r7CeKCFyXaCIi73oWOCNhBHFGbJzDM5bl8yxRED
-         B5gjXwz6ORzE3tha/oGb5Y+I3AmbM0k9/P0CRLCVdArqoou69pNcO3xTszZhOGnmn3vT
-         qC1VJyCGLoMruTFOB/AVpYhV73IQsbT2J7bdOr9l8LnBpPzTM59aoDsLE1RSufgI2Wh6
-         MMq5esi+mDm7GpKVuqLXh0B3hOBXwiJe0eSex4EhIAAuGcMsz9w3OQ71bJ4jF6DbVpT1
-         5QgOQ+tqt3D2e1GdQiJ126G+23bnKzDhd21P738HihJc8ZOsyHwJ1RkmP7gh5bvXXYiW
-         ipww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749222092; x=1749826892;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XhE/4kgP6Fj+Sk1yGpIDfKiYEXxDvnVhFRdNE9ODL7c=;
-        b=UFjpDOWHlWDFrJF25yV2FCQWfMWhIuxN3WFg5SP/NhdXMa6X8PyPDvQWRXi0WLJuW/
-         OtdyTxbfM9hqY05EB2yeSkB6piIyEFi8ys3BUUGBhyCsYxFZ2Fcsqd0WOI/ITkBWr4AX
-         e2P5oO3WLccZcZ+9zaIb364EeqeX5lGJLzqo32+69v/wqV+KYe3RYAbGmg8kAfe0v7+6
-         2+Mcztf7k7A2wT71+cocGGhtv+DJzJ/U2rDsd0WINER2u0FbyS9FZ228VWxafdg5/lKj
-         HAo0UBs2lwHBoAxAr+mgfkELtND/JksQ7/YI6N6wDytcEYByGRnlT8O++xzl5e9LA88K
-         Txqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUskQacVXBxdrdEyWFxrq9ooqaspplMZbpAEsQLSy7v9rQH86qZopogmUT01Su0EPh3JroXuZRR8/s=@vger.kernel.org, AJvYcCXfW9ys3BMtrCJDfXf+SFZOoos8+O8sCgOFdd1VFGmAaTjCiT8W6Z39kKq+5uemgMJ9Cxy/eJZNYY2CPeBI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFt5jdQpRWTIZVVOEiMvE3osO+maEfIPRjh7oyvedaVkpDgQuF
-	NysuFMJCoBs8UiXyF9nuessOcAkAO68IfQxHlLbRpY1cEOPwmOrv7ZWe
-X-Gm-Gg: ASbGncvYJDsmV/vkkYS/Aggwfj044tZq75qRkSIa1BYV1QSQ13+zoM2i5P5X+r7pMAx
-	IrzWPdw6hIQQ/DOM4BR/miwBCLHhNUVyjvi0tdQBy4b2HwbL+JHUdRWP3fjmWLNAUqgJtBNKgAq
-	AU9evENSklh8bt9grM1FFUMZxzrQKMpKTL+hULYO+xtMrDXQyZu1Sa/ncn8lKkkfSjBmU+qNmSB
-	pjLsDI4xAbCv9dNVE1ppBaITr4jBSNi5WxcBkcnA7n821VuuPiBTwtYTYUBtg3YknXPtbHE7/yR
-	hxL3nn5/hiIH9w35u9m70JMHQF1J3wet9Z2RoFmtmRWdndfyGOwF0+NEa8OTe8HHzTBeNyrOLHr
-	LbjX+PSJHvSSegY4WlWC6rphaUmeZwludcTpvitgnIDHiihg=
-X-Google-Smtp-Source: AGHT+IGht4L4AYrqtRi/DYoLhXywqrxJl5BXrMudsXr/8v6ZxPuIrlGuqilGoY0sNyJ/JMif5N4S6g==
-X-Received: by 2002:a05:600c:1ca9:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-452013fb5d4mr44245585e9.30.1749222090165;
-        Fri, 06 Jun 2025 08:01:30 -0700 (PDT)
-Received: from ?IPV6:2a02:6b6f:e750:f900:146f:2c4f:d96e:4241? ([2a02:6b6f:e750:f900:146f:2c4f:d96e:4241])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45203e6e424sm27286955e9.0.2025.06.06.08.01.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 08:01:29 -0700 (PDT)
-Message-ID: <a179fd65-dc3f-4769-9916-3033497188ba@gmail.com>
-Date: Fri, 6 Jun 2025 16:01:28 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dkev1l3U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E514C4CEEB;
+	Fri,  6 Jun 2025 15:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749222124;
+	bh=O8kB7jya7MJUklWdBDfGyAbIfXaS0eU41lUunp/mlxs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dkev1l3UmZlruTsci+pGK3iQ5QRzp0CffMyW+Xyk3TGHFzHNIQikq3gt4ohBsBHy2
+	 ROTsG6QrCKXMRqkPC+5/isMlCadCLeL/DnbC9R6Z6EFlT5+e+KzGg2/n9ExCaGs+Zo
+	 J66aQr4SEwJBkCBD/U6BMQjvRctm/MnhKHejdZj0YF0oCtvghT098E6S8ceSujM+yQ
+	 fXT50Ri7ASBflKYQPVX9ntx6q+5l7oncvV/0GuqTfMPKu4FbYAd/5Xk9NzYWnJrnv3
+	 sbFftXbjfEHBjSuBUvetFF6HcUrxteovFUwjzWd/SY2oBhOH/0qUXKesjwCw+cVFZg
+	 boKBnkDbBe2eA==
+Date: Fri, 6 Jun 2025 12:02:01 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@kernel.org>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf top/report TUI: Provide visual cue when
+ starting annotation
+Message-ID: <aEMC6a3BCbSWfcuz@x1>
+References: <aEIJJIiuRTVjPaPT@x1>
+ <aEJdAs9P8m2ZiY5Y@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] mm: khugepaged: use largest enabled hugepage order for
- min_free_kbytes
-To: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
- linux-mm@kvack.org
-Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
- ziy@nvidia.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, hughd@google.com, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, kernel-team@meta.com,
- Breno Leitao <leitao@debian.org>
-References: <20250606143700.3256414-1-usamaarif642@gmail.com>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <20250606143700.3256414-1-usamaarif642@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEJdAs9P8m2ZiY5Y@google.com>
 
+On Thu, Jun 05, 2025 at 08:14:10PM -0700, Namhyung Kim wrote:
+> On Thu, Jun 05, 2025 at 06:16:20PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Sometimes it takes a while for the annotation to be presented after
+> > pressing 'a' in the 'perf top'/'report' TUI, provide a visual cue
+> > informing that the annotation has started for that symbol.
+ 
+> It's probably because objdump takes long to process DWARF.  I think I
+> need to update this.
+ 
+> https://lore.kernel.org/linux-perf-users/Z_gunJ9C3H25Uo9Q@google.com/
 
+Humm, in this case I had explicitely asked for using objdump:
 
-On 06/06/2025 15:37, Usama Arif wrote:
-> On arm64 machines with 64K PAGE_SIZE, the min_free_kbytes and hence the
-> watermarks are evaluated to extremely high values, for e.g. a server with
-> 480G of memory, only 2M mTHP hugepage size set to madvise, with the rest
-> of the sizes set to never, the min, low and high watermarks evaluate to
-> 11.2G, 14G and 16.8G respectively.
-> In contrast for 4K PAGE_SIZE of the same machine, with only 2M THP hugepage
-> size set to madvise, the min, low and high watermarks evaluate to 86M, 566M
-> and 1G respectively.
-> This is because set_recommended_min_free_kbytes is designed for PMD
-> hugepages (pageblock_order = min(HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)).
-> Such high watermark values can cause performance and latency issues in
-> memory bound applications on arm servers that use 64K PAGE_SIZE, eventhough
-> most of them would never actually use a 512M PMD THP.
+root@number:~# cat ~/.perfconfig 
+# this file is auto-generated.
+[annotate]
+	disassemblers = objdump
+root@number:~# 
+
+So, yeah, its objdump running but in my case there was no DWARF
+involved, it was just a big C++ app, so the ELF files were big and
+objdump takes a long time even without DWARF.
+
+One way or the other, your patch switching to use objdump when 's' is
+pressed is a good one, please update it :-)
+
+- Arnaldo
+ 
+> Thanks,
+> Namhyung
 > 
-> Instead of using HPAGE_PMD_ORDER for pageblock_order use the highest large
-> folio order enabled in set_recommended_min_free_kbytes.
-> With this patch, when only 2M THP hugepage size is set to madvise for the
-> same machine with 64K page size, with the rest of the sizes set to never,
-> the min, low and high watermarks evaluate to 2.08G, 2.6G and 3.1G
-
-I forgot to change the other pageblock_nr_pages instance, the patch
-will need the below fixlet as well. The watermark numbers will then be
-the same as when 4K PAGE_SIZE is used.
-
-commit 0c6bb4e5b3aa078949d712ab9c35e7b2a33cd8a4 (HEAD)
-Author: Usama Arif <usamaarif642@gmail.com>
-Date:   Fri Jun 6 15:43:25 2025 +0100
-
-    [fixlet] mm: khugepaged: replace all instances of pageblock_nr_pages
-    
-    This will change the 64K page size, 2M THP hugepage madvise  min, low
-    and high watermarks to 87M, 575M and 1G.
-    
-    Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index e64cba74eb2a..1c643f13135e 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -2650,7 +2650,7 @@ static void set_recommended_min_free_kbytes(void)
-        }
- 
-        /* Ensure 2 pageblocks are free to assist fragmentation avoidance */
--       recommended_min = pageblock_nr_pages * nr_zones * 2;
-+       recommended_min = min_thp_pageblock_nr_pages() * nr_zones * 2;
- 
-        /*
-         * Make sure that on average at least two pageblocks are almost free
+> > 
+> > This is the quick and most of the time improvement, but for some cases
+> > its better to improve on it by having a cancellable progress bar, which
+> > is now in my TODO list.
+> > 
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/ui/browsers/annotate.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> > index cd1d452035a265d3..66ffeb96db29532c 100644
+> > --- a/tools/perf/ui/browsers/annotate.c
+> > +++ b/tools/perf/ui/browsers/annotate.c
+> > @@ -2,6 +2,7 @@
+> >  #include "../browser.h"
+> >  #include "../helpline.h"
+> >  #include "../ui.h"
+> > +#include "../util.h"
+> >  #include "../../util/annotate.h"
+> >  #include "../../util/debug.h"
+> >  #include "../../util/debuginfo.h"
+> > @@ -1016,6 +1017,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+> >  		return -1;
+> >  
+> >  	if (not_annotated || !sym->annotate2) {
+> > +		ui__info_window("Annotating", sym->name);
+> >  		err = symbol__annotate2(ms, evsel, &browser.arch);
+> >  		if (err) {
+> >  			char msg[BUFSIZ];
+> > -- 
+> > 2.49.0
+> > 
