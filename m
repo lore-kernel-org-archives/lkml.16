@@ -1,83 +1,124 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F54A1E47B3;
-	Fri,  6 Jun 2025 08:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3F1265CC5;
+	Fri,  6 Jun 2025 08:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749199395; cv=none; b=hH+fsCqQ0bEZJv2pJmwlRxgWUmuaDv+Ct8QuG3O41X8zWudD2EiB+5QEdPQzLt18KXJjBb3NSewvmHkNf7uZgx6AoK/4ciiok+M1sbfbW5m+uvbDOWbkB6M1QecJELO07UgWU1TiAqbopJ2JqsyC2FfZ22ep7jNLQKBg6NLiNGw=
+	t=1749199819; cv=none; b=t6Eubs1VjsNGAbgl//YLOEkcR0Rl3HmmJs6i5Iez8VVUlBpf9jKaXRv/c27Lf9NTJKL/az/W4cWrXFgCQ8qOvpqe/7mRfgUsx99qkVBb+2mm8x7zVw6BHPbcfPrIADGjcpioqKXNZSQoDVQ3m3CEDVRlPTicB9EwtC2/2hsqdxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749199395; c=relaxed/simple;
-	bh=xY60W2BpmB0R6C9zKdovNQDuFT/q6JFS4MVm+3+XWpQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W6DNhiqocMP9mJL7WFkHuvCcovM0A3ObTy8eN9CQ0NVh0qi7pCeor5zeVp+aolzAP6vOs1LvHt3GNZhhmvVLH8RQZrRi2nzQFzs4aNVRQJJu5dlfwWD7VRpsTRASxv9tnNMuMhmv033BLPKtoDeqbdZymhyG/4Zhy82Yjhdb2Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=yA4L+iDT; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+	s=arc-20240116; t=1749199819; c=relaxed/simple;
+	bh=+eoLmQacIUxSOHGpeCe3Yx9Bo4ZyJjcv0ewuZVWgALM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dxR6DkWnE5nEdQkfdSG7XppvNbS6TBJ4sB/nb+c8RikCqcOR0PHPUzQZbOzk7JBLonrBUaVFFO2KbgIWp9foKQ8au5PhJ0vRCQopOb1e4o5Mh2xX+JSh/gFp5fUctziry17xX2xSgSagFjDJx/jWRMA1Q9H01AitLTlXSlJsuiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vNZfKOvu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="yA4L+iDT"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1749199390;
-	bh=Tcu/KYS+fxw8u/obcEYaDuxxeoOnLQd6Ipi8xhkZ5U8=; l=490;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=yA4L+iDTXwcqe76lhVSAP0pB+f4N0Mg6Hm4gKvEs8ncFe1duGSedBctgdvJ8nw3CB
-	 iwZTNkXal8bxejrD+/MxPHY5jinsrnId6iXk71t4fjn1pX3/PZrRBWV9TXCwMz5nUF
-	 dKQCNIdruW4US2AH+vofYltySqzBG89G3wHXzYKQamtPrSUVtDeVG8b06f6mFzvoT6
-	 9jA/aAX1KBY0P8nNRQXwk5EYjt/T2NHpeWOc4dPqdWalZQT6InuZTSiUfVVoi2E8Id
-	 5+wLBy52e00bd28933IIJrvAOgQOWyMBFdmXE1MqEmm0NMT4c4qZbFYqlWnutpWFq4
-	 fJT3pLHpegoJg==
-Received: from 192.168.10.47
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(2288475:0:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Fri, 06 Jun 2025 16:42:51 +0800 (CST)
-Received: from ex3.rt.l (192.168.10.46) by ex4.rt.l (192.168.10.47) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 6 Jun
- 2025 16:42:50 +0800
-Received: from git-send.richtek.com (192.168.10.154) by ex3.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
- Transport; Fri, 6 Jun 2025 16:42:50 +0800
-Date: Fri, 6 Jun 2025 16:43:05 +0800
-From: ChiYuan Huang <cy_huang@richtek.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Conor
- Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>, Roy Chiu <roy_chiu@richtek.com>,
-	<linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] ASoC: dt-bindings: Add Richtek RTQ9124
-Message-ID: <aEKqGS8xGKNL4WxD@git-send.richtek.com>
-References: <cover.1749197773.git.cy_huang@richtek.com>
- <b95d701e5eb93d011a9e428adede845a309d1f12.1749197773.git.cy_huang@richtek.com>
- <3853e99b-30bf-4263-8abb-2b9f812415bc@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vNZfKOvu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B8CC4CEEB;
+	Fri,  6 Jun 2025 08:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749199819;
+	bh=+eoLmQacIUxSOHGpeCe3Yx9Bo4ZyJjcv0ewuZVWgALM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vNZfKOvu1A7E3h7LJyn76lt30+qcmJazKz2EcIziOlKhm5FDuncInYcu/MQ8GgA9o
+	 wc5IWQ9iedMzvM1y2dRP7BpKeS3cu8mZ0IhNq0iJgqGclNloqSCi93lbM/6wsgMuId
+	 /cVirHko1VUxU957M/cGVqghhKMHBgdxPZgLURttuJwgLuLwrBAhKJ7L16b1lg/2eu
+	 HCQIE/JhgRm0epIR1K2Z+6JkWpL/84iaoHAZC+FWoFCbzHeZQikeoRKgTyYqeE9/FP
+	 7pJ6znGJcjO92l1H8N0j+eGGQ48YXmxKEFVDmMg2zTe4DbVYYE7Nm/mBr6ztpEDheB
+	 zKAd6k6oLiwiw==
+Message-ID: <d923e0a2-acee-4e25-80e7-cdbc125408a4@kernel.org>
+Date: Fri, 6 Jun 2025 10:50:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <3853e99b-30bf-4263-8abb-2b9f812415bc@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] ASoC: dt-bindings: Add Richtek RTQ9124
+To: ChiYuan Huang <cy_huang@richtek.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Conor Dooley <conor+dt@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Roy Chiu <roy_chiu@richtek.com>, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1749197773.git.cy_huang@richtek.com>
+ <b95d701e5eb93d011a9e428adede845a309d1f12.1749197773.git.cy_huang@richtek.com>
+ <3853e99b-30bf-4263-8abb-2b9f812415bc@kernel.org>
+ <aEKqGS8xGKNL4WxD@git-send.richtek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aEKqGS8xGKNL4WxD@git-send.richtek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 06, 2025 at 10:33:46AM +0200, Krzysztof Kozlowski wrote:
-> On 06/06/2025 10:24, cy_huang@richtek.com wrote:
-> > +
-> > +allOf:
-> > +  - $ref: dai-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - richtek,rtq9124
-> 
-> Exactly the same as richtek,rt9123. Don't create same binding files for
-> similar devices.
-> 
-Do you mean to expand rtq9124 description in rt9123 binding file? Any example that I
-can refer to?
+On 06/06/2025 10:43, ChiYuan Huang wrote:
+> On Fri, Jun 06, 2025 at 10:33:46AM +0200, Krzysztof Kozlowski wrote:
+>> On 06/06/2025 10:24, cy_huang@richtek.com wrote:
+>>> +
+>>> +allOf:
+>>> +  - $ref: dai-common.yaml#
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - richtek,rtq9124
+>>
+>> Exactly the same as richtek,rt9123. Don't create same binding files for
+>> similar devices.
+>>
+> Do you mean to expand rtq9124 description in rt9123 binding file? 
 
-> Best regards,
-> Krzysztof
+Yes
+
+> Any example that I
+> can refer to?
+
+Majority of bindings.
+
+Best regards,
+Krzysztof
