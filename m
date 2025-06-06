@@ -1,110 +1,167 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE32920F09A
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764A72882B6
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749215723; cv=none; b=IZ6DljN253bhT+Q/1MUZ+AOqYdZr5hqxyT/KgL6+Fz7wDcfoHKFdyPu50HceHflVAmDpCKQnAl4qhMA6fMy9NEwvvrfoapaXBoKv4DpoeAy4loBsqvhkzDFVNNYRurl7Z9iQbQ0Xkvr8wk4vNMWVF0X2wrosCrs+x34TgN69w/o=
+	t=1749215755; cv=none; b=k5wpNqNTc4gG/iq18zCnZyv7rugm19b3RiI57gmbJIVRXc9T0fDN0cw16AJmYNghm9TukJ5g8nAVnjjnGXea/g0BKmGekRv74cAGyWPWL3C0WHHB/Vtmk+udgFY5dEM5ZfYlK+rb6GLSFPWn0fnhjMN+KY3sj4IV3a/8LjpcXvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749215723; c=relaxed/simple;
-	bh=gyt4YaLylyEdGqTGCWW7/jEsxjYOduZjnQjBg14MIi4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BcjJLXaf7uUDTAaRFP0hxfQiY8WkOf6c/WVqWhQirlmN8BEEjCcPkhgNTl97BDNFWi0aWCTGDWn/56mbwrsLYdT0XSv9DEEi/IEcrhAzBFH01qodpBcfZQkOaXvCfO8lfFVV/d0YVB+GOw7HPQexA0qPlVyOLtg69+tSdWHirpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nHVT0pQW; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749215755; c=relaxed/simple;
+	bh=63qnBFn3IeeXRHtX0JRv2KN/seMyYa9Ut3ikUMT03o8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o32hZSuyp7ZsB9lSX6kCnXve92Ty6nyShnvwzdlzFgiNBCEDi/6RvhNjYsXno85s0QIj53BAtjBij28QjZC77VM8M6pzISaTo0fu+aaBvL5wC85AaQvP+n7cXxgzs36C0NPOki/SP61m9jvORDKB0tFZyP/XyPpZFB/ER3eFKTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UxFegecJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nHVT0pQW"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2f103f6074so1408881a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749215721; x=1749820521; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGgF9r+9FKkiYTuXty2xB/3AJrpX6qlhSbOSApR1j+c=;
-        b=nHVT0pQWo7ERZEECiSRejF4scmWQQb9qA7RJPGzFRO+D70E0vHxvE6ry0SDdO2jLEu
-         ayD/jMv6ENgeGhL8L9M0QBLcKmj+aEmmrOM90onV2fBJyIBkDtCbOotBtfKYpMN33JCo
-         WYIUfTuxKs/H8XrbsC+piGECk3VDsuLg89MxZK/xGgiD50k0N0q6JALbEYehc4dF/Nk/
-         bGXMKia3nesSV5aQrL03hdgwufRgBPYOXbO8V/SBLc8mQI+XLvFMBMkERvKUhWzTAAy2
-         kwwBo1Yj4UYOSmtq4BJpIys3RF1i9RNizQmx4YEWZ7p9irItoCe2SDSTaxsxTiUfp2Xf
-         51Yw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UxFegecJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749215752;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=s0OWnwlwuv3H3/Si1rSXJZVeVgGfMEx966EIC+C5qno=;
+	b=UxFegecJR5vX0P298Y3b6kJQtbuHozBNdW9HC4gwL3+xLkAxUSXa7HscjW9m+V86IE4Ffi
+	rZtg4CbWOt0auSAIDg9WIOOUwhs8lkRsnqd06KGAJ1q298sjAYYppxfEsr43M5uhPiQQOh
+	n7z+Rx538wLSvH319yO/8swUa1xD2Iw=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-615-IKS85TjuNFKaQQkhhyGf7g-1; Fri, 06 Jun 2025 09:15:51 -0400
+X-MC-Unique: IKS85TjuNFKaQQkhhyGf7g-1
+X-Mimecast-MFC-AGG-ID: IKS85TjuNFKaQQkhhyGf7g_1749215750
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450dada0f83so17370695e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:15:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749215721; x=1749820521;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGgF9r+9FKkiYTuXty2xB/3AJrpX6qlhSbOSApR1j+c=;
-        b=XbBYtgOq2MXmquyC30961q2P8NDUNk47QcJNeCmvzV6Vls+Woqigl2Pk3R45hhaD83
-         0euz0QkgjgOKeYtbG5LiGKmbvKIVk3RlwKNgWcKUAMAJv6tnBJXCex6jNn8y2FkMCeOB
-         szZzcssP6SGns1dJ0wB9903UC//8rJW2cCzpjj6uqDAMVHSp0XDtrM8/8LHvyLNful5U
-         BdVHOhyP3W06+DxxlxP8U85DK8HrkVs0dTHs9VvsBWDnNtgGoX6nO2slcqUPMx/xL+EE
-         fakkzFPWkXPngQjWJVJKpGFkZzcB8VEisvyYB/MV3ua5qDbdl8c+hzyo6/fpCasvLumr
-         Zv0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU7ew2+MqKJwhlmidm1biI3T4yYdo+TYMgBXJ3I28Faovop42Oqcy+MAXKJSgeslcC4y7zzCOF9VYqm2FI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd8XWSGzuJpT9DDjXOdleOH373fncD4l0hzy2ZD83GTwJ0WyGZ
-	WKXuGc7StiNPYvrZHN7W/iQdriUbaE8sp5FL7AnLRSVHCcbeEXkAaZXINBZMlMEYY2y+MySyCV4
-	GzOeM2Q==
-X-Google-Smtp-Source: AGHT+IEkmdmlhxkvvno3PR4WzLdHB4CTjnz10V2ZdnBYVgAxNWQfyn5XDRSLEqyR+GWL3cZrVs8zuw5Pz+4=
-X-Received: from pjc16.prod.google.com ([2002:a17:90b:2f50:b0:2fb:fa85:1678])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b09:b0:313:2adc:b4c4
- with SMTP id 98e67ed59e1d1-31347678bbcmr5190417a91.24.1749215721138; Fri, 06
- Jun 2025 06:15:21 -0700 (PDT)
-Date: Fri, 6 Jun 2025 06:15:19 -0700
-In-Reply-To: <20250606104945.GY39944@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1749215750; x=1749820550;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s0OWnwlwuv3H3/Si1rSXJZVeVgGfMEx966EIC+C5qno=;
+        b=Sw7Y75VD6RQUrunSTLluZuiUJmrwK/CJJqZCTUo21ZdNnQgODtMdZJuzE/TP1/mnGY
+         qF5OZQRan0bYNawDXEOQfhrSY8wTJmpH1JkvkJswq7eULmFJxoMneekgqIje3NhCahG7
+         4Gz2bn0kUBvcDSKKrW1eRriaSB4Zf9+HuEJIiQii2RxawjUC0oBF+z8grD2DfEdyd8rt
+         j8vlMn/ufnKXclTKs0ssRxYKvllQqcy3fJy6Annz+/JgRYoIO6HFHgb7lKVyP3MtGKZ1
+         Y3voK+yTE1y8Wp2CG7kiFzS6O4W7RIsxccKKaFEu0m1JPkof0GK87Jg+FqGhnuDQF5U4
+         6gWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+7LZpPUAJZuR56MChWFhKCK9bTXi8ENC3QuZhSkjPu+8mT/vUeRS51+tlDuBPupxeMM1ZiU3TQhZDRBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmsOwdla5YA6C4jM26j+2zDZNrGhLEUxCbTzQOxYeHQwRA5x+N
+	lMX5HpUhaAijJ92RpLVLYfZGAdf4r8fQgFYzSVyygP03e5ICha5dLe8TDjf3HRL3DQDHom2VhkO
+	ldEh/F0uwuIJ150h7dihZmPo5R5KHU3kyZkwy3GoGLL/bPswJdvUyaaLfZsft0TI0gw==
+X-Gm-Gg: ASbGncsT6rYjLA+Vl5JpQnVe8YMWy16PMTmJqSBXPuGGpyaY5BD2ZW/ClnM3W6oghCZ
+	gCHCRdx8HQ0cWnHUOWfGRkhUz8sRVKygAoePbtlO8g9VxA+iGw/WyE/LnAk5KuNV54TLxG7HJen
+	S+xksE7MQx/1LVr1FqfnySvxIfAwbYI51DbN0ae7waqJn7SsTEUIj0FyDIDMbq2i13/v5mSU+6K
+	eLLjlFlLizD8AVGA1HQKU54a/Q4RkqJjNpnI0UMXApcAalqU2Y/oVmJhupVgHIydxpj2aNlyfD+
+	aGHWAR5MvMHnPhZN7eGEIBzud+PP5ZCkgE51CTkHUaoX//G+6aPbbxPVL097P1iS5d/AvkdYngO
+	uyxmt/+cz29my9JpMdZAZLaraHXYWVG93CeEoEvuD3Q==
+X-Received: by 2002:a05:600c:a44:b0:43c:fcbc:9680 with SMTP id 5b1f17b1804b1-4520140470fmr30901765e9.25.1749215750178;
+        Fri, 06 Jun 2025 06:15:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHcONZMZ9mzWPMwS39oEdC+r6GbtQPJGE/G206HVbssbK1tyXGdWsRNMfKOqk0bAqRBIjoj9g==
+X-Received: by 2002:a05:600c:a44:b0:43c:fcbc:9680 with SMTP id 5b1f17b1804b1-4520140470fmr30901485e9.25.1749215749766;
+        Fri, 06 Jun 2025 06:15:49 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213709670sm23732595e9.25.2025.06.06.06.15.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 06:15:49 -0700 (PDT)
+Message-ID: <4108db4a-5b3f-4a8a-beb2-9ace3bd199bf@redhat.com>
+Date: Fri, 6 Jun 2025 15:15:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250506133234.GH4356@noisy.programming.kicks-ass.net>
- <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
- <20250528074452.GU39944@noisy.programming.kicks-ass.net> <20250528163035.GH31726@noisy.programming.kicks-ass.net>
- <20250528163557.GI31726@noisy.programming.kicks-ass.net> <20250529093017.GJ31726@noisy.programming.kicks-ass.net>
- <fp5amaygv37wxr6bglagljr325rsagllbabb62ow44kl3mznb6@gzk6nuukjgwv>
- <eegs5wq4eoqpu5yqlzug7icptiwzusracrp3nlmjkxwfywzvez@jngbkb3xqj6o>
- <4z4fhaqesjlevwiugiqpnxdths5qkkj7vd4q3wgdosu4p24ppl@nb6c2gybuwe5> <20250606104945.GY39944@noisy.programming.kicks-ass.net>
-Message-ID: <aELptV62mbTC3YA9@google.com>
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls in
- __nocfi functions
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, 
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org, 
-	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org, samitolvanen@google.com, 
-	ojeda@kernel.org, xin@zytor.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] userfaultfd: prevent unregistering VMAs through a
+ different userfaultfd
+To: Peter Xu <peterx@redhat.com>
+Cc: Tal Zussman <tz2294@columbia.edu>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Pavel Emelyanov <xemul@parallels.com>, Andrea Arcangeli
+ <aarcange@redhat.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+References: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
+ <20250603-uffd-fixes-v1-2-9c638c73f047@columbia.edu>
+ <84cf5418-42e9-4ec5-bd87-17ba91995c47@redhat.com> <aEBhqz1UgpP8d9hG@x1.local>
+ <0a1dab1c-80d2-436f-857f-734d95939aec@redhat.com> <aELnNH5LTFHmtdfQ@x1.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aELnNH5LTFHmtdfQ@x1.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 06, 2025, Peter Zijlstra wrote:
-> On Thu, Jun 05, 2025 at 10:19:41AM -0700, Josh Poimboeuf wrote:
-> > diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-> > index 29c5c32c16c3..5d1eef193b79 100644
-> > --- a/arch/x86/entry/entry_64_fred.S
-> > +++ b/arch/x86/entry/entry_64_fred.S
-> > @@ -112,11 +112,12 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
-> >  	push %rax				/* Return RIP */
-> >  	push $0					/* Error code, 0 for IRQ/NMI */
-> >  
-> > -	PUSH_AND_CLEAR_REGS clear_bp=0 unwind_hint=0
-> > +	PUSH_AND_CLEAR_REGS clear_callee=0 unwind_hint=0
-> >  	movq %rsp, %rdi				/* %rdi -> pt_regs */
-> >  	call __fred_entry_from_kvm		/* Call the C entry point */
-> > -	POP_REGS
-> > -	ERETS
-> > +	addq $C_PTREGS_SIZE, %rsp
-> > +
-> > +	ALTERNATIVE "mov %rbp, %rsp", __stringify(ERETS), X86_FEATURE_FRED
+On 06.06.25 15:03, Peter Xu wrote:
+> On Thu, Jun 05, 2025 at 11:06:38PM +0200, David Hildenbrand wrote:
+>> Not sure if relevant, but consider the following:
+>>
+>> an app being controlled by another process using userfaultfd.
+>>
+>> The app itself can "escape" uffd control of the other process by simply
+>> creating a userfaultfd and unregistering VMAs.
 > 
-> So... I was wondering.. do we actually ever need the ERETS?
+> IMHO it's okay if it's intentional by the child. E.g., even after this
+> patch, the child, if intentional, can also mmap() a new VMA on top of the
+> uffd tracked region to stop being trapped by the parent.  The parent might
+> still get a UNMAP event if registered, but it'll not be able to track the
+> new VMAs mapped.
 
-Yes, to unblock NMIs, because NMIs are blocked on VM-Exit due to NMI.
+Ah, I thought there was a way yo track/intercept all new mappings as 
+well, but looks like that is at least not the case through UFFD_EVENT_* 
+as it seems.
 
-The !X86_FEATURE_FRED path can use RET (instead of IRET) because NMIs are routed
-through vmx_do_nmi_irqoff(), as proposed in this version[*], after you pointed out
-that the FRED entry doesn't have the legacy NMI madness.
+-- 
+Cheers,
 
-[*] https://lore.kernel.org/all/aBUiwLV4ZY2HdRbz@google.com
+David / dhildenb
+
