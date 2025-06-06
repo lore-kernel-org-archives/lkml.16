@@ -1,184 +1,185 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3089C287513;
-	Fri,  6 Jun 2025 12:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CEC287513
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749213255; cv=none; b=G8iXrBezfv9C8553UGPZcc2bdvCoXrD8OFA91rdFOA1OHd9iYtuFTx2o7xvTRg1eTQQC9ZgmHDYk6FdxkLQIndmFzKWNWYF1KdAgcuTrSPFmsLr6ewkQFnuadENV04AYyxkd8Laer9XaV0QX+BjxTZWfU0lEdgX8r4fvvDx1PGw=
+	t=1749213335; cv=none; b=ICm7YPycLKcs3X8ims7CDSk0YNLh4EmDGpgFSPQpUcdprWMivPl414hKUD5C47kOtLz/Sd8UDWSvmA5r1VHOHYHQmq+fngcIn25dWkfIORoAC6o+xiBoQ04NjAPB2K2FTIrxUfp1aKlWcaXz4uWRTA0IEhstRRX9F5RMjERCW/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749213255; c=relaxed/simple;
-	bh=KUB1zHF41EieIHY6D7XrX8haH8SMgp958TtlLmEVyME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mykdciOsmDGJsy6nkPZYELNGfEbpBVvFgYCQ4CWHqYEahncwDGmiGZGHiz/GxLIPXY4izC6oajb5bUdypuVC/pXqd6JlQ34Rr3tJ5BwLXD3YAHsE1ozBuFShdn+IFJyt9FDOM3bKvW4hzJuwLTw1MjgtQ6s5svMROTPWuh3+8Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=iYmgYv6/; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749213335; c=relaxed/simple;
+	bh=kpRINIUUT3cNR5P8bR7a4qNj9t6jrjVfH1S2gblGSHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VmKIWDQSpwkh8iiETuU+Q3kCd4CE7oa0NCV0wd0v99EFrcAHbj0ZKjkmlrIvQHraSPPVIYYOP1qMoqbsqROGmmjsHb8UBk2wECvYnC/OADJs5MoqhR2/KTvCVT/VhXIAyAl2go8KhVPhlvHuiwONZdR8gOBpiF8hUUaIx5eCHys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VdV/OTlJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iYmgYv6/"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 00E1811DD;
-	Fri,  6 Jun 2025 14:34:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749213247;
-	bh=KUB1zHF41EieIHY6D7XrX8haH8SMgp958TtlLmEVyME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iYmgYv6/bkOqUY27LwbLH8YpzTftPCEyojGssCbFJDNzi/e7NTTfKskNvC6JTRalL
-	 weTLpS/8iDMAjVRE9f4JNBoBaRviTxp+dQ7r2//TfTQYSbQpKveA36ua5KsYHRFkoe
-	 Jp4lyDEB7i1raRFKlZvqzbOwFywnH6ytawPeQg9k=
-Date: Fri, 6 Jun 2025 15:34:00 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Isaac Scott <isaac.scott@ideasonboard.com>
-Cc: kieran.bingham@ideasonboard.com, rmfrfs@gmail.com, martink@posteo.de,
-	kernel@puri.sm, mchehab@kernel.org, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	linux-media@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] media: platform: Refactor interrupt status registers
-Message-ID: <20250606123400.GB27510@pendragon.ideasonboard.com>
-References: <20250606121403.498153-1-isaac.scott@ideasonboard.com>
- <20250606121403.498153-2-isaac.scott@ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VdV/OTlJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749213332;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sSb0ikd6dE0bNHJf4fDasJAbxnz21Z9UlDYPOcjiVX4=;
+	b=VdV/OTlJmud2hXMtcpQGU1m6bz/J39Z9DEutp6WbqjNt74cvsTm9ozaKSMUZ+GUeMFskDb
+	v/DoP2rRu7a1RIYBzBDCZOhzQy+YVTMaL7ZJEgU91ggrMtxT0nPrJK4w6PfdhS8uJEPprO
+	xFPG+TqSspMXm1zPoFUzLvvCDw6ee60=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-636-bi0XcQL4Ot2fNu3OXGir2A-1; Fri, 06 Jun 2025 08:35:31 -0400
+X-MC-Unique: bi0XcQL4Ot2fNu3OXGir2A-1
+X-Mimecast-MFC-AGG-ID: bi0XcQL4Ot2fNu3OXGir2A_1749213330
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-441c122fa56so10407855e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 05:35:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749213330; x=1749818130;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sSb0ikd6dE0bNHJf4fDasJAbxnz21Z9UlDYPOcjiVX4=;
+        b=IrN4Kr4JYhOAOXu9S2T7t8JPDkv7js4ze/Sb/0fx0sjBZx4dqeov/EJ7jJQ8oQer87
+         bRUXbXPk3ynv6P7rUDryUTdLFcOwob+43F/pmukS2L9gDRnj2elcUYj3EPv5iyw8h2V7
+         c0MP+uUpJsB+xvH5kPFbHdrk2bBDOT+MxTmTkAjiq2fn0QUq526XSgQG4pRXssVbae8i
+         LS4E60w4NyrWVv6P/pjOd/vnkvRqZQKj/dY+o6wHH8BorfULC60mhN8CayuN1VG0Taex
+         TPkZZb5MoZ9CKt5pqchpzRMM/nPUdVT5n1FWueVDI7Ia6ZNfsiNMZBfQd8lxND2pwdRG
+         0oWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXbkb2cK1rN2lykOO7F94fJoj4PHXJpNIU4v5XiiGRAMea+VJK7RybdlIJRHyC3U7g8wQf5vwKFU8cZQD0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLvzmcrkF1lvR4i7HA8NkxIAHQkakk/+utdw2T8ouACD6dkgox
+	0W2AeUuipnQ3ONEy1vywNlQeAIi6f2y6Camvmng6aoaLBuD8NfmX+Q3DnvFw+6A/Dvi90KMyLce
+	+/kdDoUeIEQNsltbQTlqQ70OUg30IB/Ud3RUPXLYd6eGKWI4+8pRIC+/1DySE8t7D5A==
+X-Gm-Gg: ASbGncsF2PT0meCOJ6DNXYHJgb/0ykl7s1ZGp0EDnHOFbcrLOkdUjj46hVgoKCL4CFx
+	z6KzPgmMlRCpE25G5i/MhjyMcTiHDAzpgN9ukJFM4nY8/GPnZ7lOi92CeV8GwrlFptkVOSQqkE9
+	RRJRkJNxbdgIFXEPCKoeGwvc/2GnFYTRAAAiEGSAsI/+kJTK2sDDXvOuwTdU3RNnAlY3Rt0uvI4
+	S1QZuYQB91k0CwB5kPFspGg7JbPPwbYKLVvkmis56dtzjUQ0LMNkJuzCMLbCwqdOiNMyPJb8E2n
+	gZaLsxtFMxIdBGy0XUkpvfe9b20EdWY0d4scjXwUn9afkVI/FksH8eqT0hdeYThBaF8mF9ngroD
+	oNXUKi/lnlIVp8FOnN840gylKHeLhOMjMprbp73Jpdw==
+X-Received: by 2002:a05:6000:310d:b0:3a5:2beb:747b with SMTP id ffacd0b85a97d-3a5319b592bmr2739322f8f.3.1749213330325;
+        Fri, 06 Jun 2025 05:35:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE6Ebolrz1IOoMpW3aYGJSUpFY88OxyWoAs8HB+AGnlcGOsl5vVciX1PlKuEnfQRSWeZP/PAQ==
+X-Received: by 2002:a05:6000:310d:b0:3a5:2beb:747b with SMTP id ffacd0b85a97d-3a5319b592bmr2739302f8f.3.1749213329969;
+        Fri, 06 Jun 2025 05:35:29 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532436668sm1788926f8f.54.2025.06.06.05.35.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 05:35:29 -0700 (PDT)
+Message-ID: <e105ba14-f9f5-4510-bf9d-b65440361f51@redhat.com>
+Date: Fri, 6 Jun 2025 14:35:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250606121403.498153-2-isaac.scott@ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 04/10] mm,slub: Use node-notifier instead of
+ memory-notifier
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250605142305.244465-1-osalvador@suse.de>
+ <20250605142305.244465-5-osalvador@suse.de>
+ <0ca963af-8dc9-4cb4-9142-04497c359b81@redhat.com>
+ <aELfAo3RgIU0CV-5@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aELfAo3RgIU0CV-5@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Isaac,
-
-Thank you for the patch.
-
-On Fri, Jun 06, 2025 at 01:14:02PM +0100, Isaac Scott wrote:
-> The NXP i.MX 8 MP CSI-2 receiver features multiple interrupt and debug
-> status sources which span multiple registers. The driver currently
-> supports two interrupt source registers, and attributes the
-> mipi_csis_event event entries to those registers through a boolean debug
-> field that indicate if the event relates to the main interrupt status
-> (false) or debug interrupt status (true) register. To make it easier to
-> add new event fields, replace the debug bool with a 'status index'
-> integer than indicates the index of the corresponding status register.
+On 06.06.25 14:28, Oscar Salvador wrote:
+> On Fri, Jun 06, 2025 at 01:56:15PM +0200, David Hildenbrand wrote:
+>>> @@ -6217,15 +6217,12 @@ static int slab_memory_callback(struct notifier_block *self,
+>>>    	int ret = 0;
+>>>    	switch (action) {
+>>> -	case MEM_GOING_ONLINE:
+>>> +	case NODE_ADDING_FIRST_MEMORY:
+>>>    		ret = slab_mem_going_online_callback(arg);
+>>
+>> In slab_mem_going_online_callback we will cast arg to "struct
+>> memory_notify", no?
 > 
-> Signed-off-by: Isaac Scott <isaac.scott@ideasonboard.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/media/platform/nxp/imx-mipi-csis.c | 64 +++++++++++-----------
->  1 file changed, 31 insertions(+), 33 deletions(-)
+> Uhm... not sure if I understood this correctly but slab_mem_going_online_callback looks
+> like this:
 > 
-> diff --git a/drivers/media/platform/nxp/imx-mipi-csis.c b/drivers/media/platform/nxp/imx-mipi-csis.c
-> index d060eadebc7a..bbc549c22aff 100644
-> --- a/drivers/media/platform/nxp/imx-mipi-csis.c
-> +++ b/drivers/media/platform/nxp/imx-mipi-csis.c
-> @@ -249,7 +249,7 @@
->  #define MIPI_CSI2_DATA_TYPE_USER(x)		(0x30 + (x))
->  
->  struct mipi_csis_event {
-> -	bool debug;
-> +	unsigned int status_index;
->  	u32 mask;
->  	const char * const name;
->  	unsigned int counter;
-> @@ -257,30 +257,30 @@ struct mipi_csis_event {
->  
->  static const struct mipi_csis_event mipi_csis_events[] = {
->  	/* Errors */
-> -	{ false, MIPI_CSIS_INT_SRC_ERR_SOT_HS,		"SOT Error" },
-> -	{ false, MIPI_CSIS_INT_SRC_ERR_LOST_FS,		"Lost Frame Start Error" },
-> -	{ false, MIPI_CSIS_INT_SRC_ERR_LOST_FE,		"Lost Frame End Error" },
-> -	{ false, MIPI_CSIS_INT_SRC_ERR_OVER,		"FIFO Overflow Error" },
-> -	{ false, MIPI_CSIS_INT_SRC_ERR_WRONG_CFG,	"Wrong Configuration Error" },
-> -	{ false, MIPI_CSIS_INT_SRC_ERR_ECC,		"ECC Error" },
-> -	{ false, MIPI_CSIS_INT_SRC_ERR_CRC,		"CRC Error" },
-> -	{ false, MIPI_CSIS_INT_SRC_ERR_UNKNOWN,		"Unknown Error" },
-> -	{ true, MIPI_CSIS_DBG_INTR_SRC_DT_NOT_SUPPORT,	"Data Type Not Supported" },
-> -	{ true, MIPI_CSIS_DBG_INTR_SRC_DT_IGNORE,	"Data Type Ignored" },
-> -	{ true, MIPI_CSIS_DBG_INTR_SRC_ERR_FRAME_SIZE,	"Frame Size Error" },
-> -	{ true, MIPI_CSIS_DBG_INTR_SRC_TRUNCATED_FRAME,	"Truncated Frame" },
-> -	{ true, MIPI_CSIS_DBG_INTR_SRC_EARLY_FE,	"Early Frame End" },
-> -	{ true, MIPI_CSIS_DBG_INTR_SRC_EARLY_FS,	"Early Frame Start" },
-> +	{ 0, MIPI_CSIS_INT_SRC_ERR_SOT_HS,		"SOT Error"},
-> +	{ 0, MIPI_CSIS_INT_SRC_ERR_LOST_FS,		"Lost Frame Start Error"},
-> +	{ 0, MIPI_CSIS_INT_SRC_ERR_LOST_FE,		"Lost Frame End Error"},
-> +	{ 0, MIPI_CSIS_INT_SRC_ERR_OVER,		"FIFO Overflow Error"},
-> +	{ 0, MIPI_CSIS_INT_SRC_ERR_WRONG_CFG,		"Wrong Configuration Error"},
-> +	{ 0, MIPI_CSIS_INT_SRC_ERR_ECC,			"ECC Error"},
-> +	{ 0, MIPI_CSIS_INT_SRC_ERR_CRC,			"CRC Error"},
-> +	{ 0, MIPI_CSIS_INT_SRC_ERR_UNKNOWN,		"Unknown Error"},
-> +	{ 1, MIPI_CSIS_DBG_INTR_SRC_DT_NOT_SUPPORT,	"Data Type Not Supported"},
-> +	{ 1, MIPI_CSIS_DBG_INTR_SRC_DT_IGNORE,		"Data Type Ignored"},
-> +	{ 1, MIPI_CSIS_DBG_INTR_SRC_ERR_FRAME_SIZE,	"Frame Size Error"},
-> +	{ 1, MIPI_CSIS_DBG_INTR_SRC_TRUNCATED_FRAME,	"Truncated Frame"},
-> +	{ 1, MIPI_CSIS_DBG_INTR_SRC_EARLY_FE,		"Early Frame End"},
-> +	{ 1, MIPI_CSIS_DBG_INTR_SRC_EARLY_FS,		"Early Frame Start"},
->  	/* Non-image data receive events */
-> -	{ false, MIPI_CSIS_INT_SRC_EVEN_BEFORE,		"Non-image data before even frame" },
-> -	{ false, MIPI_CSIS_INT_SRC_EVEN_AFTER,		"Non-image data after even frame" },
-> -	{ false, MIPI_CSIS_INT_SRC_ODD_BEFORE,		"Non-image data before odd frame" },
-> -	{ false, MIPI_CSIS_INT_SRC_ODD_AFTER,		"Non-image data after odd frame" },
-> +	{ 0, MIPI_CSIS_INT_SRC_EVEN_BEFORE,		"Non-image data before even frame"},
-> +	{ 0, MIPI_CSIS_INT_SRC_EVEN_AFTER,		"Non-image data after even frame"},
-> +	{ 0, MIPI_CSIS_INT_SRC_ODD_BEFORE,		"Non-image data before odd frame"},
-> +	{ 0, MIPI_CSIS_INT_SRC_ODD_AFTER,		"Non-image data after odd frame"},
->  	/* Frame start/end */
-> -	{ false, MIPI_CSIS_INT_SRC_FRAME_START,		"Frame Start" },
-> -	{ false, MIPI_CSIS_INT_SRC_FRAME_END,		"Frame End" },
-> -	{ true, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_FALL,	"VSYNC Falling Edge" },
-> -	{ true, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_RISE,	"VSYNC Rising Edge" },
-> +	{ 0, MIPI_CSIS_INT_SRC_FRAME_START,		"Frame Start"},
-> +	{ 0, MIPI_CSIS_INT_SRC_FRAME_END,		"Frame End"},
-> +	{ 1, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_FALL,	"VSYNC Falling Edge"},
-> +	{ 1, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_RISE,	"VSYNC Rising Edge"},
->  };
->  
->  #define MIPI_CSIS_NUM_EVENTS ARRAY_SIZE(mipi_csis_events)
-> @@ -765,32 +765,30 @@ static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
->  	struct mipi_csis_device *csis = dev_id;
->  	unsigned long flags;
->  	unsigned int i;
-> -	u32 status;
-> -	u32 dbg_status;
-> +	u32 status[2];
->  
-> -	status = mipi_csis_read(csis, MIPI_CSIS_INT_SRC);
-> -	dbg_status = mipi_csis_read(csis, MIPI_CSIS_DBG_INTR_SRC);
-> +	status[0] = mipi_csis_read(csis, MIPI_CSIS_INT_SRC);
-> +	status[1] = mipi_csis_read(csis, MIPI_CSIS_DBG_INTR_SRC);
->  
->  	spin_lock_irqsave(&csis->slock, flags);
->  
->  	/* Update the event/error counters */
-> -	if ((status & MIPI_CSIS_INT_SRC_ERRORS) || csis->debug.enable) {
-> +	if ((status[0] & MIPI_CSIS_INT_SRC_ERRORS) || csis->debug.enable) {
->  		for (i = 0; i < MIPI_CSIS_NUM_EVENTS; i++) {
->  			struct mipi_csis_event *event = &csis->events[i];
->  
-> -			if ((!event->debug && (status & event->mask)) ||
-> -			    (event->debug && (dbg_status & event->mask)))
-> +			if (status[event->status_index] & event->mask)
->  				event->counter++;
->  		}
->  	}
->  
-> -	if (status & MIPI_CSIS_INT_SRC_FRAME_START)
-> +	if (status[0] & MIPI_CSIS_INT_SRC_FRAME_START)
->  		mipi_csis_queue_event_sof(csis);
->  
->  	spin_unlock_irqrestore(&csis->slock, flags);
->  
-> -	mipi_csis_write(csis, MIPI_CSIS_INT_SRC, status);
-> -	mipi_csis_write(csis, MIPI_CSIS_DBG_INTR_SRC, dbg_status);
-> +	mipi_csis_write(csis, MIPI_CSIS_INT_SRC, status[0]);
-> +	mipi_csis_write(csis, MIPI_CSIS_DBG_INTR_SRC, status[1]);
->  
->  	return IRQ_HANDLED;
->  }
+>   static int slab_mem_going_online_callback(void *arg)
+>   {
+>           struct kmem_cache_node *n;
+>           struct kmem_cache *s;
+>           struct node_notify *narg = arg;
+>           int nid = narg->nid;
+>           int ret = 0;
+> 
+
+I'm stupid and missed that hunk, sorry.
+
+> 
+> 
+>> Probably needs to get fixed.
+>>
+>> ... and probably best to pass marg directly.
+> 
+> You mean to cast it directly in slab_memory_callback and pass 'narg'
+> to slab_mem_going_online_callback?
+
+Yes :)
+
+
 
 -- 
-Regards,
+Cheers,
 
-Laurent Pinchart
+David / dhildenb
+
