@@ -1,74 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB6617BCE;
-	Fri,  6 Jun 2025 01:28:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EBE17BCE;
+	Fri,  6 Jun 2025 01:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749173284; cv=none; b=O4wtoOv07RvBzzrb5GynGilWhi+O0skab7c7gnvKlV+EGYcy5jR+8SwhYFLdpH2GmvW3mgq7on/Qifs6LwSskzMZ+hIKV4PhCVwM9nDy7URU5yNMQUSRHTofrQyGwumxvzmUtswIVc9MzvZOaIaSN19xDVl6A4RRUvuPOXbp5aE=
+	t=1749173398; cv=none; b=KC4m4IRMgmCBvYJ0bxgjg7rhomFw4WFI5oIi70044s/fWqSZbImENmIXEHd+CJ3fPobWrdAYuFU7QimlRhvjf/dlw+YJAL/+3Vo6JElYN2qJhhdQvsSWuC2sebVk47GRlAIQHpUmqvbyADQCU4kSwXxgyOzogYcVKSyKrjwDsVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749173284; c=relaxed/simple;
-	bh=0iKrL/n+MLFh0pCCbTB9JGw89j/b/nhbrgaZzkAxMu4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sxaKyWtKFgP2Z2ts6T5/4TiBMZ4JoUURdsNiee8Rkt1Oh09R3Ohus6cyDv+ZAgRswpFO4gKQrWGQYjXNmL2P2l6UuM+RRqQOqIAGHLeZ6fpgJrRJ7SZ0CofFZu30cjGZlEq7s30SxTNAhKrdr4n2wZaO3JSv7r0S08Z8iY3i5Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Q0mAeVB4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749173398; c=relaxed/simple;
+	bh=iwf5a5FP/+wveBfvG/f8Kj+2lB82zStdmDbWQfjenHA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=qqRWsyQpO4eUSgfOHCMVg6FS14gFsoDmxPa9WR47aU2AuCwmZQdhkQ//TWkBx+e95AvhdWc0sIQhg8ngLqsg2ipELW/GfZicsP3RKdpSfEpfclnQOUgScegrZXDdRTTbuuQz2ZoTVEtOqIPK5ncLFNmkFetBo6G0YaWDfbnqwAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQdCkqb2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Q0mAeVB4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0659EC4CEE7;
-	Fri,  6 Jun 2025 01:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749173283;
-	bh=0iKrL/n+MLFh0pCCbTB9JGw89j/b/nhbrgaZzkAxMu4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Q0mAeVB4rEePRqck8J74qLvSR6giowX04BXsAcszmK9avuglxP2sgBkaCq6ERXmjv
-	 CchR7WWg5EpKpXVNiJL9jtqfeKRaExqH7v8LJlCcRVdQjyHiNZ+0pKNTlVQ0343V1B
-	 pRYqZYbl/lNk1iivZ3+i+BNDs3RxKVGdSx6GxkEo=
-Date: Thu, 5 Jun 2025 18:28:02 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: hughd@google.com, baolin.wang@linux.alibaba.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/7] mm: shmem: correctly pass alloced parameter to
- shmem_recalc_inode() to avoid WARN_ON()
-Message-Id: <20250605182802.ec8d869bc02583cbc9de9648@linux-foundation.org>
-In-Reply-To: <721923ac-4bb1-1b2b-fce5-9d957c535c97@huaweicloud.com>
-References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
-	<20250605221037.7872-2-shikemeng@huaweicloud.com>
-	<20250605125724.d2e3db9c23af7627a53d8914@linux-foundation.org>
-	<721923ac-4bb1-1b2b-fce5-9d957c535c97@huaweicloud.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQdCkqb2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EDC3C4CEE7;
+	Fri,  6 Jun 2025 01:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749173397;
+	bh=iwf5a5FP/+wveBfvG/f8Kj+2lB82zStdmDbWQfjenHA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jQdCkqb2i6KhzcFjuBGS/gKWflsJRJ+tXmzeFKyGsagLRrsDhyAMa7IyGlhiqkQXD
+	 fUmHCNX/tuiUG/31ktDtIsRr/fpgqSoeVFre/qavXUnnyS26FeNdsB1P+Es3YLrx/2
+	 xT1kGo1umdW8ljJDZjEVo5cKspLm1z2OXQiKui6NoaH0HBBDhC+RUMYckcG40qRgU7
+	 ldEQq3iBNQ0vSDQANSoqyxVF3ZMPNa2Yq5pOP+owtiLmJ5t7xPIVtZxO2rj0qFzUpY
+	 gR8use6wDUtEKIpJUcIWZXgiXQQSp/HXY7n6forrCH5+mgVC9M1FrDsRCy6VkJPrPI
+	 fky4td/JJl9GA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BD439D60B4;
+	Fri,  6 Jun 2025 01:30:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] ptp: remove ptp->n_vclocks check logic in
+ ptp_vclock_in_use()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174917342925.3314262.10526916646495537846.git-patchwork-notify@kernel.org>
+Date: Fri, 06 Jun 2025 01:30:29 +0000
+References: <20250520160717.7350-1-aha310510@gmail.com>
+In-Reply-To: <20250520160717.7350-1-aha310510@gmail.com>
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, yangbo.lu@nxp.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, 6 Jun 2025 09:11:37 +0800 Kemeng Shi <shikemeng@huaweicloud.com> wrote:
+Hello:
 
-> >> --- a/mm/shmem.c
-> >> +++ b/mm/shmem.c
-> >> @@ -2145,7 +2145,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
-> >>  	 * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
-> >>  	 * in shmem_evict_inode().
-> >>  	 */
-> >> -	shmem_recalc_inode(inode, -nr_pages, -nr_pages);
-> >> +	shmem_recalc_inode(inode, 0, -nr_pages);
-> >>  	swap_free_nr(swap, nr_pages);
-> >>  }
-> > 
-> > Huh, three years ago.  What do we think might be the userspace-visible
-> > runtime effects of this?
-> This could trigger WARN_ON(i_blocks) in shmem_evict_inode() as i_blocks
-> is supposed to be dropped in the quota free routine.
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-I don't believe we've seen such a report in those three years so perhaps
-no need to backport.  But it's a one-liner so let's backport ;) And
-possibly [2/7] and [3/7] should receive the same treatment.
+On Wed, 21 May 2025 01:07:17 +0900 you wrote:
+> There is no disagreement that we should check both ptp->is_virtual_clock
+> and ptp->n_vclocks to check if the ptp virtual clock is in use.
+> 
+> However, when we acquire ptp->n_vclocks_mux to read ptp->n_vclocks in
+> ptp_vclock_in_use(), we observe a recursive lock in the call trace
+> starting from n_vclocks_store().
+> 
+> [...]
 
-I don't think any of these need to be fast-tracked into mm-hotfixes so
-please resend after a suitable review period and include the cc:stable
-on those which -stable needs.
+Here is the summary with links:
+  - [v2] ptp: remove ptp->n_vclocks check logic in ptp_vclock_in_use()
+    https://git.kernel.org/netdev/net/c/87f7ce260a3c
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
