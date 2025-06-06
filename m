@@ -1,308 +1,822 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBED1BF58
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 00:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.145.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749171364; cv=fail; b=rJ1LA2Gb+orHMZIs6pMbvTwF/kENNEimcLtOxOhFplSyWSC0GjS/xObXe9Jrb7nzD6xBZI5EjkZQ2uXmT5/xaZIfMf1vcleXOWwbF3qOi84D3FwNKYwaLBRxHkBUN66mhHxxd5OBNC20igakqbhjDtXq1zNz9uMm2wM8bd4118k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749171364; c=relaxed/simple;
-	bh=V7LoZgcm0QpcbqxfJmKNLBVwp4jnvjJ9Yx5sQGg84bo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=J7YuzvLdnwFBs+7SlZnev6iwRZR9AQp5DosoFl3/7xS69A9lA1ZKDUr/0qZ/pdlGO9kNspSxRNIk7DkrB+saQ8xV3+9iEqNwVwnQJOUKrf3KEtDbPPi/TnoZBD8FKYdCN9NceMAJiJXm/z/n0P7OR3DM1pEpWKmUROtAEiN6LCM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=WJrvzi4Z; arc=fail smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF55A2D
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 01:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749171716; cv=none; b=V5kMVtioYATyUpvB3plH5Hp1nF26U2+BcZTzuurTiPhjNSfc9hSucgVmYocS3J7NH0/8MaYZ82IXzxWHebApw8Tzzj3wdglDdmTaHPJFamWO5GAWFyTz+ofJFRdfxRDvCscjjKMkVG2HITixIBJjSqUsBQnizfyx8hyGus5jDjY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749171716; c=relaxed/simple;
+	bh=6Xqf9lprQVqkSWRREDnbUeYvjtd+s92AifV9VOuE0yI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MYQd1lFP0Y/42YApPBy/XdxewvrjFrZAtc3FATgVlU63MliluUTkpdMRDKJWj4yOpsHx3j+BDROcyIGlR6ebfqE/Il53+tEJcaL45ay2dzNXybcQrvFqgh1wA2BmTuCBAGVKt4MNBPY6ba/BrrE3Bx8VHZV/T/4Ld0sQv6YGrOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S9h/A6s/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="WJrvzi4Z"
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555N35Dx011682;
-	Thu, 5 Jun 2025 17:55:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
-	 bh=/78sMsxSTgr/same0S61Mote6LlAWhgfK0lINh0EVcg=; b=WJrvzi4ZbmNq
-	WhxF3vFdItdYzumgC3GVHy4e1WDA8QqDNBzqw5/ss0oZv0FumQkCpB4cUkpN9tSw
-	uis1UqL1J27nZGZXdNdOVtJeh1P04zboyM5RHcqsfLdAfQGfMo1ZZxej/gr4Gy3s
-	kHEbV4g1/2wUrAGHN+uNl4ODgwbbXxmN0urs+a95wHQVhj/YTbvCFzPsjzxkBB94
-	K3Nl4X7/v6bSn0LgQUYmabWLPvszvSAgcxSRCoA/noJkNMfnk21FCWoSdfYv98tk
-	ONkKTr9nfEUsiUn6I+QkiKp2ZSueT1/Y7Dlw/bb5agd40YNBWuakW6rvHElbs0cG
-	8qJNRAXhaw==
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11on2046.outbound.protection.outlook.com [40.107.220.46])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 473gta264u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Jun 2025 17:55:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ESwpYDIQvWlKo/weTpgMK4PV667QUA6AMImI2Oa6R8Lt+cYobWxzgwi7L3kPDtGRn7ZnR3j8y/Z9xdkfeFhtUj3QMrn5hfH5P52KRU7LrdWTTPiRMh+Y+h0yQFmcLdjYxgvTJdBWDvBYOgXQVSde73yYdzBU3zLnFth6IfwTBcPlIYA9t3enq+X9StM8SYyv6YefO2nENdxWS1xc6B5tisi6K3jdEl6n68zg4Y0Zd0DHPF1illcqNig/edALLNXM0kkHEb/lnx5aqhmuVF0xf2t3zWnht9Th+hFtVJKRwak10n2OnO3f21od3nc5OC3BqIvG643xLfGJ1JQ0SoUHVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/78sMsxSTgr/same0S61Mote6LlAWhgfK0lINh0EVcg=;
- b=y62lWhJKxHYbhNNtQTNwWU3clJY5IGRbDculPoVPM4UkE7E6AmMelOo38bNAkZdb1L4RwS6XO0SHa5it+5DT5HI9kRDFW1r68Iiu5qpWfCtgj8OespQwUrtbWqrkYohJghXGijvVG5t/xOqX1TgVzIG3DEwFTRcJFX+CWju33k++T8dKu6QvlLkxEejViedYaS/ZPlv6awbhVFbRIC6avWVdzGlTnZhxp3sfBDB+72piHt1ADJgGqt/ovJ5Gr1eNFTcV4i+6zAZ4uzBwBmONoYoxk74XXJ+GAcsVVA0X667l9iDnL20VSGjKUwoJc96ZbGO4lppXKHIxdF+WNjMTTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
- dkim=pass header.d=meta.com; arc=none
-Received: from LV3PR15MB6455.namprd15.prod.outlook.com (2603:10b6:408:1ad::10)
- by DM3PPF9E2B88E93.namprd15.prod.outlook.com (2603:10b6:f:fc00::434) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Fri, 6 Jun
- 2025 00:55:38 +0000
-Received: from LV3PR15MB6455.namprd15.prod.outlook.com
- ([fe80::595a:4648:51bc:d6e0]) by LV3PR15MB6455.namprd15.prod.outlook.com
- ([fe80::595a:4648:51bc:d6e0%7]) with mapi id 15.20.8813.020; Fri, 6 Jun 2025
- 00:55:37 +0000
-Message-ID: <aa6154d1-726c-4da1-a27b-69d2e8b449c6@meta.com>
-Date: Thu, 5 Jun 2025 20:55:27 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: futex performance regression from "futex: Allow automatic
- allocation of process wide futex hash"
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-References: <3ad05298-351e-4d61-9972-ca45a0a50e33@meta.com>
- <20250604092815.UtG-oi0v@linutronix.de>
- <372d8277-7edb-4f78-99bd-6d23b8f94984@meta.com>
- <20250604200808.hqaWJdCo@linutronix.de>
-From: Chris Mason <clm@meta.com>
-Content-Language: en-US
-In-Reply-To: <20250604200808.hqaWJdCo@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR06CA0013.namprd06.prod.outlook.com
- (2603:10b6:208:23d::18) To LV3PR15MB6455.namprd15.prod.outlook.com
- (2603:10b6:408:1ad::10)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S9h/A6s/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749171712;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1oIMKo20rMDNqV6BtvgPuWkO7ebZm3QeRHz07x9w/4U=;
+	b=S9h/A6s/7zleQhvjqyThPUEVrkvwBe3iWwmXHa+PAkkqwpmQzokkEfKoBasRjigirq5+Wa
+	xCdd5yEHpqXpqB4xFQ3j5o+hMMInbHUn+GbOj7hMI6+fglEBKT9rU8EYnpEmkP6saCeJQ7
+	Yysz92ZJ/ZPgYzzSYRovZapgh1mkKus=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-177-XA7UZNexPmWNF2jkE3vVtQ-1; Thu, 05 Jun 2025 21:01:50 -0400
+X-MC-Unique: XA7UZNexPmWNF2jkE3vVtQ-1
+X-Mimecast-MFC-AGG-ID: XA7UZNexPmWNF2jkE3vVtQ_1749171710
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-311e98ee3fcso2411731a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 18:01:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749171709; x=1749776509;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1oIMKo20rMDNqV6BtvgPuWkO7ebZm3QeRHz07x9w/4U=;
+        b=VHaoNZmxhnRtjuPw6EJWcwnPnStKGqQe7ojx7etDbYUviN23a8L8Wg6ZChFPT6BfNN
+         cA8SOEWNHwoXVi1VWtuQ61F6wS6MRSZXKEka3PXwfny+D6hIIYl/UN2/3VeFKDWvVTXa
+         /Etai8zG/n+N4GLxHMNCZbnUCqVnOU5EjkRJl0tSPrCOxXMGlwCwxdC2mTQrevgr3stP
+         vMBjo0r+L6S6JhM+0JR9RLWVeOuaaE4SJAiK8jK24MFya+rRZEzQyY7rfcRdiRuQDycL
+         ijdq/8n385Dp+KWK847/7ym2IC7VBfVdK0pXRtKZTkMI1heDphRnx7gm57HYIxEi6Kil
+         X88g==
+X-Forwarded-Encrypted: i=1; AJvYcCUcxkzxULE2D8oLoA5aZSVVSvq1Zw493ysvzPCogWuphkJK9kz2b5OwYwRGB1eoH8L5ZAtn3QzzANsFmDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSM5qFp0Jjg4c0f+poLRuIXPguskbyc2YElg71c03L1SIEts6C
+	+BSW3Q0gwGSvE9YiGrniwyDsUH34KT64mQ9+LkSspGxd4MKxDruRybGHv6mHmdrT3t7hf55tOuQ
+	7zQ5RNgZLCoj2h9Ynux6P6aHrEHZTZEl1vNWG5OyE9Ng5gZMITY/alzdyzDQbg9Z47k23g9UUaw
+	gG8mzcwDSW1NEV33Xn6j3pMLRqmLux0oC+eVXkh1vW
+X-Gm-Gg: ASbGncssSnTLAM/7tAwHPHknDJkg9lifu7PTOWsn7zpiMhGoGdJF5acqwXjB6l2UUH7
+	YNOEXBnjxzdV28yMGY+c8yY8WNHUGJxrDNTXEogopG/ii0zzxHxUIIJzxpAx1qZ4wIKWhe8uzum
+	c7jopx
+X-Received: by 2002:a17:90b:48d0:b0:312:e751:8213 with SMTP id 98e67ed59e1d1-31349fb548cmr1604607a91.13.1749171709131;
+        Thu, 05 Jun 2025 18:01:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IElSk+Lw13rzo/Rlh93dzINmhWKscdyWYLtvAHEpcN6hNxiUrL2tix/ZD/N9G+7sXjSZKFlG45V+HomMonEFTY=
+X-Received: by 2002:a17:90b:48d0:b0:312:e751:8213 with SMTP id
+ 98e67ed59e1d1-31349fb548cmr1604517a91.13.1749171708286; Thu, 05 Jun 2025
+ 18:01:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR15MB6455:EE_|DM3PPF9E2B88E93:EE_
-X-MS-Office365-Filtering-Correlation-Id: 701c6d28-c8c4-45a8-def2-08dda494d9ca
-X-FB-Source: Internal
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?KzJ3UVpLMlJ0cDRIaUMwMy9VcDJsdjQ4ZXMzZUFjWENYRDcxZXZpRG5JdDJt?=
- =?utf-8?B?djRZQ2lkQnF3QXIrYlErZ0s4YkRZUXZSMGFMVUNHeFJ5NFNGSkJndFRvSHIz?=
- =?utf-8?B?VVRDK1pENDFLQkFwelRGTFkrQ0Rjd2cyNmZiVjk5K1NzVHdCeExJaUU1bWgr?=
- =?utf-8?B?WlB6d0owdDBUOURWazhNTXlnWFBoMmZlR3BlQ2Y4Z3N5NFRwTjRsV1ZlMzhY?=
- =?utf-8?B?eVlJWThDZzR5cjN1dnZXeUNsQ1VWVzNCZGFFZHYrUlNLVk50NUFjS1Y4OXdT?=
- =?utf-8?B?OFl1MU1qNk45ZFFWZlF6cDRSWngrVk94U3VzOHdIM214bWJRTUZHY2RxNjdQ?=
- =?utf-8?B?SVIrK1ZIbDRVZVpoZXZkNnRlUk9ncEg2NlJRQVdvVmJNL29qaktFcXdXT2Qz?=
- =?utf-8?B?VlhCMERrazlJeWVpaVdSMURFTzNFS2xwR3BCaEZWdWFaczlPSEZFOHFVVWVr?=
- =?utf-8?B?STQ4MFcvZWdWT09GT2l4MkVyalUzZVBoOVpSSzFuallzZ1duOXZ6Vm9mZVBq?=
- =?utf-8?B?OHJiNkJsSFpoeGU2ek5tYVFuRk15bU1jSnRwbGVPdm8zelRSUjRHNlc1bkVt?=
- =?utf-8?B?SU0yRHJUSHpuSEpSakdQU29nN3ZmNHh2Q1hOaXpEZVpKNjE1MlZtRFJid1Mr?=
- =?utf-8?B?YWJmMmdmdityODdvb1BVVkpqRloxNVdIZ3psNktTWnNKc2FHWEgyN01uR1hJ?=
- =?utf-8?B?Mjk4bDRDU0NhNGZXbjkyYUpDUVpudUpRcWt0a2k5VjM1eGlnMXZVNWRHREIy?=
- =?utf-8?B?dGdsOUpLdFBGelFLUndzWmVHL1JSZW1yRFlUSlNsU3JJSTRmczFHeVVOdTZx?=
- =?utf-8?B?cEx5UTMyYlBzcHpCTmtUc2ZtMW5KMjFLaytjc0toTHRxUDVRMThBWDhtQnNa?=
- =?utf-8?B?bTJVWXE0clBaaEhQMTNHYWl4c2dVQUhZazI2R1Z6Tit5NU5QQ3NJUVZIQ1Zr?=
- =?utf-8?B?dDVqUnhyVzh6Y2NkTVJPTmhlUDJZbTFmSFhFdEpQSERpaGhKMlh1SnFvSnBv?=
- =?utf-8?B?YnE3QS9yT2E0Z2s2ODV4bTNkbWxQZURlWEx2WG1BRDBsSWQ2MEVHWmh5LzVD?=
- =?utf-8?B?ZGl4Q2FaYWFsTjRpd0lKUkxtUmNHTWdzaFFoS1FhblZDWWhFN3hRRmhNQmNn?=
- =?utf-8?B?Z1JBcDV4bGp2c0c3ZGY2QUZTODR0WlhwbGRKS0hIaHhwYWllNml4Yjk1TjNI?=
- =?utf-8?B?TTF4dzR3UjhaQTVOMkJLSGFkQWE2WEtHTUY2Qnp5Qm1QL0FMN1AwYStid1hK?=
- =?utf-8?B?cWtPb0psSUp6MTk0bTlwRk9mT3FmMktmTlFUOFFaZzRTVGM4eFgvazdhTTVO?=
- =?utf-8?B?RHVhNjNuaWhpc1RTZWFQZVBNYldUeG40U0VvcUZ5dGVBSW9BTlRLUWNLNnFW?=
- =?utf-8?B?bEdLNHF4cGh0Qk5ud3lobHd4a1VMMFJPemhzUkE1TEhHenROeXg4bkwzTkZs?=
- =?utf-8?B?NFhnUjgyRjVENUI5dlpLcjFSQnBrZFVLNngxbXhWNlRzenZKaUZTQkJtZmJC?=
- =?utf-8?B?WFovN3dTZXl1dERzNm9lZDRJVlcrVkxVRHpTVlpxaHJtSDBPT0R2alZKd0Z0?=
- =?utf-8?B?VWlGdm4rdzFVaVNpTDg1bjNBVFQ1R29WYlZwdnB4VzlBRnlzZ1F5UlBUa0Jl?=
- =?utf-8?B?VmpIcFBHa0dNd2NQN011WW1BSGRBSnN3bFd5b3M0cG0yMnc2VHkweHFSMnhk?=
- =?utf-8?B?SHVvUFRwS1ROdmZaQjFROEtoVXQrLzVUSVk5cENOZDgveFU1T3pTcExjMStE?=
- =?utf-8?B?RElkODBlU0M4ekVqbk9VRHBVVldEUUNTd2xOTWw0eDRZbDZOenphQXNSM2x0?=
- =?utf-8?B?VG9LazkzUGFReWZMOGRLWml3eVlvbVN3SmlsckVuZ0xCSW5yN0lRS3FlMUFX?=
- =?utf-8?B?TlI2Wlp2SEVYM0ZteDc5YXI0cGJ1eXM4dkVGUFRPbUErNVVyb1paM2w1cXdM?=
- =?utf-8?Q?4d8zimZaJfo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR15MB6455.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?c2dsdkhSY3lQcGpnNU9ydG8xSnV3MjRjdmFxZ3RsZGtDT2ZzQUt5ZVhwWm8v?=
- =?utf-8?B?Zk1kV3dLRzFhVXNvdHlqQURZczNMRDl0ZUJUeEs3QmpWdWNFWTA3dkxFQ0c3?=
- =?utf-8?B?T2ZkZE9oMW9rTGNQSkhybDdTTTJjU2hRMmdEa3d6NytWMm9veVhYQXBBaWNZ?=
- =?utf-8?B?UlloVVNGclEwY2FZZlQxUDlHMFl1QzQxNWRITmFValo5YXljYlFsL3A3bjVT?=
- =?utf-8?B?dWo2UHZjd0lwdVdWV0lEeHhubUhDeUN6aSsvaE5HbXp4SGxXbytzVjlXcEFS?=
- =?utf-8?B?MDFqRXphZm8yWnZoWlhiT01Yc2ExZ2JuL2VPVmdEelBRcnFDY1AzdUxhcEta?=
- =?utf-8?B?eFZISmdZSkR6b2lDOHQ2b2pKVTA4MGkyRmh1LzBmanRDZVNVZDJhaEFkV0p4?=
- =?utf-8?B?bWlreW1ZNGl2ZVVzazkzeVZDcHF3TEJqQXNMWkw5RWdpK0NTQkcwU2RtcktL?=
- =?utf-8?B?NUJHcFhXdU1SSVZkQXJaQXJPUllkMlhGMUlUc2ZCelNGeWZYNWV0NTdERU85?=
- =?utf-8?B?ODVXSXN4SEtQMldKbjZXTWlCaUVxQi9EandKNENkZ2FNR0NuTWJjUzVkRHdZ?=
- =?utf-8?B?NjBxb3lVa05EUmV6WTh1aTlhWlFZemVaWkVUdHUxVFhZc2E2UEhnN0lCdEFE?=
- =?utf-8?B?aXQ0WS9QdFFWMXJ3bXFwaUFQRXRJNnppSmdXekN0bEdJeTRjUitFRzRZL0U1?=
- =?utf-8?B?WS9IYXhIQ0x5dE5VRzE4aG4yalY4TG9vY2lwbkpJcm1MZE9McjZuUHg4UkV4?=
- =?utf-8?B?ck52dXhyTW55ZzZLT2xSY1M4MjNXYnRRL3NuTHpuNFpzNkYvZXBUcFZJeXRl?=
- =?utf-8?B?TlNhSXJaaEE1aEVOYnZHTDRJakdEc0pOa3hMWlpYZmgwMnVjR1h4aFNXanZl?=
- =?utf-8?B?ZVAwVFJnZXlGcHhCRUhuM3I4RDA3QU9oaEFRZk9ib1UxV3pOZzc4dFlTQWxD?=
- =?utf-8?B?ZlVnUlh5YXYvR1B6SFZITHl4bkY1M01iYkpZanovWnBwVEVrRkJ0NkJtNXFF?=
- =?utf-8?B?VjI0S2duSmN3SnVLMngwdFlobE9vbjB1dzVIUmpwVG9hSysvaWUzd3l0N2pu?=
- =?utf-8?B?MlA5amFncXBjQ1V3ZkNqZk9PbS9aSnVxUUp0R0RVLzdGMVZLWjVVS0RnQUc5?=
- =?utf-8?B?U0w4dHJHN0JGeC94K1pEcUNtWlRDL3FjcGY2NDk3bjF6dHpOVWVvTlN4dGJK?=
- =?utf-8?B?Tnh1cFJPemlteGdXSEpDUFJYU1lCVzV0WHpxK0MwV1ZSUjFsSFFHZHh1cWNC?=
- =?utf-8?B?MmNvN2U0bW8ybW1oM2EwMFBrVWNseUVvZThSSHRaTDJGQm5hQ1FTZUNUZU1x?=
- =?utf-8?B?cS9SYkpqNTRpWUVzaC9Sc0tJOHUrMlFhY3FzbzBMQjRCWlVQVmZWZWJBQVNp?=
- =?utf-8?B?RDBIZDdSM2UvWFVzajVDSHhCWkhPYVBqZXg0aVZnajl6TlhiWEx5WWRVdEpm?=
- =?utf-8?B?NkJ1K0ZwWnJmSFlDR3FOZHJ2Q0FpT0s5RUhKWEpGeCtWdlBGejh5Rm5Wakpu?=
- =?utf-8?B?YWNtQTUwUko2NXhRU0NBc1ZKbytSUXVwd3R6eVFQUnM1QzJBT2RlWWNNN0tJ?=
- =?utf-8?B?amQ0M2RHN3BtbEUycmtEVmt5SExuZ0pobTMvajRGRHBTaUlYQU1VeHl6enkr?=
- =?utf-8?B?VC9XZDljSTE5WlprUmp3QWJiTldLemxEcE00dDc2NGNlOTV0SXZoeVVhbTdO?=
- =?utf-8?B?QjhsMnhOT0dsVlRnaVAwaVIwbHlXWmEzWWJFSnBkWmpoMTIwaEVDc3RXS2lS?=
- =?utf-8?B?WDh2aXE1ZlBnR1hqM3RyZHF3UXBJK3orY05KdXJ6LzRML0pScWpiYXpXSFhK?=
- =?utf-8?B?bFo5cHIvbnVPMUkvOHRjOE4rZUh5WHJvdEsyQUJQS1llQWJOYVhYdzNTQUJt?=
- =?utf-8?B?cjlQcm82SVdkbXdwTDY1dk45ZjgyMllQaWw0UDFvWEFqQ0hJTHpUc3ZaZGkr?=
- =?utf-8?B?YWRya2t6Y25hL05zS0dVdmh5Z2ZMeHcxNFZtbmhoRkdQaUwrTVY0aHdWMkRV?=
- =?utf-8?B?cllOZTNOM2FLNkhObExYTXFPWldmOG5OOGVXQUFGa0tRcEtRVnA5Q0RXcU5C?=
- =?utf-8?B?ZWFVdTlFREJXTlJyMDN5blM4VGlYVmh0QU44OEpZemVnUCs0em9mS1JmR2xr?=
- =?utf-8?B?dUNlNVhEK01RdU5wY3liT0p5ZmZjVzR3SENSRzJFT1ZjdFhsaTJETEZqOVU4?=
- =?utf-8?B?NUE9PQ==?=
-X-OriginatorOrg: meta.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 701c6d28-c8c4-45a8-def2-08dda494d9ca
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR15MB6455.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 00:55:37.3958
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +akJmQ5Uk0ll4aTg7K+KdunpD4hEnjBUFBHAL4nPkIycbyfhK8QRAEig7Bij2KsY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF9E2B88E93
-X-Proofpoint-GUID: b641wZG-FBTwDnKI0eX4o2w86VcVGmij
-X-Authority-Analysis: v=2.4 cv=W8c4VQWk c=1 sm=1 tr=0 ts=68423c8c cx=c_pps a=WhUEUVamR7lPV9LkVsdNog==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=Usw6ks3wQ9e2hmVS8j0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDAwNyBTYWx0ZWRfX3b7t9HiAeZMN JgTqBWhjzuhzXelwmoTP//aoOOq0fXJn8+UscPxQrrNj6ElKQ9NhXz1MQm026svDZmC4LRvmHk3 vYp86fzf1HTvHgOWH3U3XyHT3fu8EqoZErGdYt4nGA08wCMhdGjwdOnmxpYIwBxTlSLpoZD8MPj
- /Vck2xL9k/uCniTezO4tBsD/OwLXgwc2wTkc695sqCpQZrtQyflnWK5TYclgSAo22PvPWWK3WFl KMi6ThLBl6O27N291nxQNv5LI8RswDsify0a5PdYpXL/6bOtsfgBEbInc/jxS25U8TxUYxzZHkd dwyzC7eHTqTBp+6/0bs415fXsK2brZt42QSIvaUrHVM8MTlL4FS2GxgXbzZbCj+/Y2WGmHlqISM
- 0osZgicddxA8LyuPsXmy6xhea0sTz90vC+/rAV5ZAAsW+EKJnpNZGMYvl8lTnuG1zBBirAvL
-X-Proofpoint-ORIG-GUID: b641wZG-FBTwDnKI0eX4o2w86VcVGmij
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_08,2025-06-05_01,2025-03-28_01
+References: <20250530-rss-v12-0-95d8b348de91@daynix.com> <20250530-rss-v12-4-95d8b348de91@daynix.com>
+ <CACGkMEupCBFH2eLv_93uy9K=+s_jQPM12mvyhU=zGbwSUnyVaA@mail.gmail.com>
+ <a3e21479-2967-4604-a684-9b9b9e115f37@daynix.com> <CACGkMEuBb6eB9w=HgYq7wy2vW-4PMGGQKk5dd=kCm3ednJ2WxQ@mail.gmail.com>
+ <56647ddd-c6ac-43cf-bcb2-626a162858a4@daynix.com>
+In-Reply-To: <56647ddd-c6ac-43cf-bcb2-626a162858a4@daynix.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Fri, 6 Jun 2025 09:01:36 +0800
+X-Gm-Features: AX0GCFsHVcFi1ALb09VOzUp2KBcWHu5AaEEwHpjJVp3_PfuL1P7UF6y9zEfe6YE
+Message-ID: <CACGkMEs+3Pu9-E7RcmEzp6wZxZYwDS1G+1P3ti=Vzceq=C31YQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v12 04/10] tun: Add common virtio-net hash
+ feature code
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+	Yuri Benditovich <yuri.benditovich@daynix.com>, Andrew Melnychenko <andrew@daynix.com>, 
+	Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/4/25 4:08 PM, Sebastian Andrzej Siewior wrote:
-> On 2025-06-04 11:48:05 [-0400], Chris Mason wrote:
->>> --- a/kernel/futex/core.c
->>> +++ b/kernel/futex/core.c
->>> @@ -1687,7 +1687,7 @@ int futex_hash_allocate_default(void)
->>>  	scoped_guard(rcu) {
->>>  		threads = min_t(unsigned int,
->>>  				get_nr_threads(current),
->>> -				num_online_cpus());
->>> +				num_online_cpus() * 2);
->>>  
->>>  		fph = rcu_dereference(current->mm->futex_phash);
->>>  		if (fph) {
->>>
->>> which would increase it to 2048 as Chris asks for.
->>
->> I haven't followed these changes, so asking some extra questions.  This
->> would bump to num_online_cpus() * 2, which probably isn't 2048 right?
-> 
-> Assuming you have 256 CPUs and -m 4 -t 256 creates 4 * 256 = 1024 then
-> threads = 512 gets computed (= min(1024, 256 * 2)). Later we do 512 * 4
-> (roundup_pow_of_two(4 * threads)). This makes 2048 hash buckets.
-> 
+On Thu, Jun 5, 2025 at 4:18=E2=80=AFPM Akihiko Odaki <akihiko.odaki@daynix.=
+com> wrote:
+>
+> On 2025/06/05 11:46, Jason Wang wrote:
+> > On Wed, Jun 4, 2025 at 4:42=E2=80=AFPM Akihiko Odaki <akihiko.odaki@day=
+nix.com> wrote:
+> >>
+> >> On 2025/06/04 10:53, Jason Wang wrote:
+> >>> On Fri, May 30, 2025 at 12:50=E2=80=AFPM Akihiko Odaki <akihiko.odaki=
+@daynix.com> wrote:
+> >>>>
+> >>>> Add common code required for the features being added to TUN and TAP=
+.
+> >>>> They will be enabled for each of them in following patches.
+> >>>>
+> >>>> Added Features
+> >>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>>
+> >>>> Hash reporting
+> >>>> --------------
+> >>>>
+> >>>> Allow the guest to reuse the hash value to make receive steering
+> >>>> consistent between the host and guest, and to save hash computation.
+> >>>>
+> >>>> Receive Side Scaling (RSS)
+> >>>> --------------------------
+> >>>>
+> >>>> RSS is a receive steering algorithm that can be negotiated to use wi=
+th
+> >>>> virtio_net. Conventionally the hash calculation was done by the VMM.
+> >>>> However, computing the hash after the queue was chosen defeats the
+> >>>> purpose of RSS.
+> >>>>
+> >>>> Another approach is to use eBPF steering program. This approach has
+> >>>> another downside: it cannot report the calculated hash due to the
+> >>>> restrictive nature of eBPF steering program.
+> >>>>
+> >>>> Introduce the code to perform RSS to the kernel in order to overcome
+> >>>> thse challenges. An alternative solution is to extend the eBPF steer=
+ing
+> >>>> program so that it will be able to report to the userspace, but I di=
+dn't
+> >>>> opt for it because extending the current mechanism of eBPF steering
+> >>>> program as is because it relies on legacy context rewriting, and
+> >>>> introducing kfunc-based eBPF will result in non-UAPI dependency whil=
+e
+> >>>> the other relevant virtualization APIs such as KVM and vhost_net are
+> >>>> UAPIs.
+> >>>>
+> >>>> Added ioctls
+> >>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>>
+> >>>> They are designed to make extensibility and VM migration compatible.
+> >>>> This change only adds the implementation and does not expose them to
+> >>>> the userspace.
+> >>>>
+> >>>> TUNGETVNETHASHTYPES
+> >>>> -------------------
+> >>>>
+> >>>> This ioctl tells supported hash types. It is useful to check if a VM=
+ can
+> >>>> be migrated to the current host.
+> >>>>
+> >>>> TUNSETVNETREPORTINGAUTOMQ, TUNSETVNETREPORTINGRSS, and TUNSETVNETRSS
+> >>>> --------------------------------------------------------------------
+> >>>>
+> >>>> These ioctls configures a steering algorithm and, if needed, hash
+> >>>> reporting.
+> >>>>
+> >>>> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> >>>> Tested-by: Lei Yang <leiyang@redhat.com>
+> >>>> ---
+> >>>>    drivers/net/tap.c           |  10 ++-
+> >>>>    drivers/net/tun.c           |  12 +++-
+> >>>>    drivers/net/tun_vnet.h      | 165 +++++++++++++++++++++++++++++++=
+++++++++++---
+> >>>>    include/uapi/linux/if_tun.h |  71 +++++++++++++++++++
+> >>>>    4 files changed, 244 insertions(+), 14 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/net/tap.c b/drivers/net/tap.c
+> >>>> index d4ece538f1b2..25c60ff2d3f2 100644
+> >>>> --- a/drivers/net/tap.c
+> >>>> +++ b/drivers/net/tap.c
+> >>>> @@ -179,6 +179,11 @@ static void tap_put_queue(struct tap_queue *q)
+> >>>>           sock_put(&q->sk);
+> >>>>    }
+> >>>>
+> >>>> +static const struct virtio_net_hash *tap_find_hash(const struct sk_=
+buff *skb)
+> >>>> +{
+> >>>> +       return NULL;
+> >>>> +}
+> >>>> +
+> >>>>    /*
+> >>>>     * Select a queue based on the rxq of the device on which this pa=
+cket
+> >>>>     * arrived. If the incoming device is not mq, calculate a flow ha=
+sh
+> >>>> @@ -711,11 +716,12 @@ static ssize_t tap_put_user(struct tap_queue *=
+q,
+> >>>>           int total;
+> >>>>
+> >>>>           if (q->flags & IFF_VNET_HDR) {
+> >>>> -               struct virtio_net_hdr vnet_hdr;
+> >>>> +               struct virtio_net_hdr_v1_hash vnet_hdr;
+> >>>>
+> >>>>                   vnet_hdr_len =3D READ_ONCE(q->vnet_hdr_sz);
+> >>>>
+> >>>> -               ret =3D tun_vnet_hdr_from_skb(q->flags, NULL, skb, &=
+vnet_hdr);
+> >>>> +               ret =3D tun_vnet_hdr_from_skb(vnet_hdr_len, q->flags=
+, NULL, skb,
+> >>>> +                                           tap_find_hash, &vnet_hdr=
+);
+> >>>>                   if (ret)
+> >>>>                           return ret;
+> >>>>
+> >>>> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> >>>> index 9133ab9ed3f5..03d47799e9bd 100644
+> >>>> --- a/drivers/net/tun.c
+> >>>> +++ b/drivers/net/tun.c
+> >>>> @@ -451,6 +451,11 @@ static inline void tun_flow_save_rps_rxhash(str=
+uct tun_flow_entry *e, u32 hash)
+> >>>>                   e->rps_rxhash =3D hash;
+> >>>>    }
+> >>>>
+> >>>> +static const struct virtio_net_hash *tun_find_hash(const struct sk_=
+buff *skb)
+> >>>> +{
+> >>>> +       return NULL;
+> >>>> +}
+> >>>> +
+> >>>>    /* We try to identify a flow through its rxhash. The reason that
+> >>>>     * we do not check rxq no. is because some cards(e.g 82599), choo=
+ses
+> >>>>     * the rxq based on the txq where the last packet of the flow com=
+es. As
+> >>>> @@ -1993,7 +1998,7 @@ static ssize_t tun_put_user_xdp(struct tun_str=
+uct *tun,
+> >>>>           ssize_t ret;
+> >>>>
+> >>>>           if (tun->flags & IFF_VNET_HDR) {
+> >>>> -               struct virtio_net_hdr gso =3D { 0 };
+> >>>> +               struct virtio_net_hdr_v1_hash gso =3D { 0 };
+> >>>>
+> >>>>                   vnet_hdr_sz =3D READ_ONCE(tun->vnet_hdr_sz);
+> >>>>                   ret =3D tun_vnet_hdr_put(vnet_hdr_sz, iter, &gso);
+> >>>> @@ -2046,9 +2051,10 @@ static ssize_t tun_put_user(struct tun_struct=
+ *tun,
+> >>>>           }
+> >>>>
+> >>>>           if (vnet_hdr_sz) {
+> >>>> -               struct virtio_net_hdr gso;
+> >>>> +               struct virtio_net_hdr_v1_hash gso;
+> >>>>
+> >>>> -               ret =3D tun_vnet_hdr_from_skb(tun->flags, tun->dev, =
+skb, &gso);
+> >>>> +               ret =3D tun_vnet_hdr_from_skb(vnet_hdr_sz, tun->flag=
+s, tun->dev,
+> >>>> +                                           skb, tun_find_hash, &gso=
+);
+> >>>>                   if (ret)
+> >>>>                           return ret;
+> >>>>
+> >>>> diff --git a/drivers/net/tun_vnet.h b/drivers/net/tun_vnet.h
+> >>>> index 58b9ac7a5fc4..45d0533efc8d 100644
+> >>>> --- a/drivers/net/tun_vnet.h
+> >>>> +++ b/drivers/net/tun_vnet.h
+> >>>> @@ -6,6 +6,17 @@
+> >>>>    #define TUN_VNET_LE     0x80000000
+> >>>>    #define TUN_VNET_BE     0x40000000
+> >>>>
+> >>>> +typedef struct virtio_net_hash *(*tun_vnet_hash_add)(struct sk_buff=
+ *);
+> >>>> +typedef const struct virtio_net_hash *(*tun_vnet_hash_find)(const s=
+truct sk_buff *);
+> >>>> +
+> >>>> +struct tun_vnet_hash {
+> >>>> +       bool report;
+> >>>> +       bool rss;
+> >>>> +       struct tun_vnet_rss common;
+> >>>> +       u32 rss_key[VIRTIO_NET_RSS_MAX_KEY_SIZE];
+> >>>> +       u16 rss_indirection_table[];
+> >>>> +};
+> >>>> +
+> >>>>    static inline bool tun_vnet_legacy_is_little_endian(unsigned int =
+flags)
+> >>>>    {
+> >>>>           bool be =3D IS_ENABLED(CONFIG_TUN_VNET_CROSS_LE) &&
+> >>>> @@ -107,6 +118,128 @@ static inline long tun_vnet_ioctl(int *vnet_hd=
+r_sz, unsigned int *flags,
+> >>>>           }
+> >>>>    }
+> >>>>
+> >>>> +static inline long tun_vnet_ioctl_gethashtypes(u32 __user *argp)
+> >>>> +{
+> >>>> +       return put_user(VIRTIO_NET_SUPPORTED_HASH_TYPES, argp) ? -EF=
+AULT : 0;
+> >>>> +}
+> >>>> +
+> >>>> +static inline long tun_vnet_ioctl_sethash(struct tun_vnet_hash __rc=
+u **hashp,
+> >>>> +                                         unsigned int cmd,
+> >>>> +                                         void __user *argp)
+> >>>> +{
+> >>>> +       struct tun_vnet_rss common;
+> >>>> +       struct tun_vnet_hash *hash;
+> >>>> +       size_t indirection_table_size;
+> >>>> +       size_t key_size;
+> >>>> +       size_t size;
+> >>>> +
+> >>>> +       switch (cmd) {
+> >>>> +       case TUNSETVNETREPORTINGAUTOMQ:
+> >>>> +               if (get_user(common.hash_types, (u32 __user *)argp))
+> >>>> +                       return -EFAULT;
+> >>>> +
+> >>>> +               if (common.hash_types) {
+> >>>> +                       hash =3D kzalloc(sizeof(*hash), GFP_KERNEL);
+> >>>> +                       if (!hash)
+> >>>> +                               return -ENOMEM;
+> >>>> +
+> >>>> +                       hash->report =3D true;
+> >>>> +                       hash->common.hash_types =3D common.hash_type=
+s;
+> >>>> +               } else {
+> >>>> +                       hash =3D NULL;
+> >>>> +               }
+> >>>> +               break;
+> >>>> +
+> >>>> +       case TUNSETVNETREPORTINGRSS:
+> >>>> +       case TUNSETVNETRSS:
+> >>>
+> >>> So the above three shows unnecessary design redundancy as well as a
+> >>> burden for the future extension.  Why not simply have
+> >>>
+> >>> 1) TUNSETVNET_RSS
+> >>> 2) TUNSETVNET_HASH_REPORT
+> >>> ?
+> >>>
+> >>> Which maps to
+> >>>
+> >>>    #define VIRTIO_NET_CTRL_MQ_RSS_CONFIG          1 (for configurable
+> >>> receive steering)
+> >>>    #define VIRTIO_NET_CTRL_MQ_HASH_CONFIG         2 (for configurable
+> >>> hash calculation)
+> >>>
+> >>> It would be always easier to start with what spec had or at least we
+> >>> need to explain why we choose a different design here or in the
+> >>> changelog to ease our life.
+> >>
+> >> TUNSETVNETREPORTINGAUTOMQ maps to VIRTIO_NET_CTRL_MQ_HASH_CONFIG.
+> >
+> > It's not:
+> >
+> > VIRTIO_NET_CTRL_MQ_HASH_CONFIG uses:
+> >
+> > struct virtio_net_hash_config {
+> >      le32 hash_types;
+> >      le16 reserved[4];
+> >      u8 hash_key_length;
+> >      u8 hash_key_data[hash_key_length];
+> > };
+> >
+> > but TUNSETVNETREPORTINGAUTOMQ only accepts hash_types without others:
+>
+> The others are not present because the spec doesn't specify what to do
+> with them and the kernel doesn't use them either.
 
-Ah right, I missed the x4.
+Did you mean the hash_key_length and hash_key_data? Note that we have
+drivers other than the Linux ones as well.
 
->> We've got large systems that are basically dedicated to single
->> workloads, and those will probably miss the larger global hash table,
->> regressing like schbench did.  Then we have large systems spread over
->> multiple big workloads that will love the private tables.
->>
->> In either case, I think growing the hash table as a multiple of thread
->> count instead of cpu count will probably better reflect the crazy things
->> multi-threaded applications do?  At any rate, I don't think we want
->> applications to need prctl to get back to the performance they had on
->> older kernels.
-> 
-> This is only an issue if all you CPUs spend their time in the kernel
-> using the hash buckets at the same time.
-> This was the case in every benchmark I've seen so far. Your thing might
-> be closer to an actual workload.
-> 
+>
+> >
+> >>
+> >> TUNSETVNETREPORTINGRSS and TUNSETVNETRSS map to
+> >> VIRTIO_NET_CTRL_MQ_RSS_CONFIG.
+> >
+> > I think we've already had a discussion about this.
+> >
+> > Reusing virtio-net uAPI is much better instead of having a tun
+> > specific one considering tun may need to support more virtio commands
+> > in the future. Or maybe it's the time to introduce a transport for the
+> > virtio control virtqueue uAPI in tuntap to avoid inventing new uAPI
+> > endlessly.
+> >
+> > What's more I see:
+> >
+> > struct tun_vnet_rss {
+> >          __u32 hash_types;
+> >          __u16 indirection_table_mask;
+> >          __u16 unclassified_queue;
+> > };
+> >
+> > struct tun_vnet_hash {
+> >          bool report;
+> >          bool rss;
+> >          struct tun_vnet_rss common;
+> >          u32 rss_key[VIRTIO_NET_RSS_MAX_KEY_SIZE];
+> >          u16 rss_indirection_table[];
+> > };
+> >
+> > As I pointed out in the past, let's just decouple the rss from hash,
+> > everything would be much simpler, or you need to explain why you
+> > couple this somewhere.
+> >
+> > For example:
+> >
+> > 1) why is the tun_vnet_hash not part of the uAPI but tun_vnet_rss, or
+> > how could userspace know what kind of format it would use for
+> > TUNSETVNETREPORTINGRSS?
+>
+> That was the previous version.
+>
+> > 2) what's the advantages of embedding rss specific stuff into hash
+> > report structure
+>
+> Because the hash types field in struct tun_vnet_rss is used by hash
+> reporting too.
+>
+> > 3) what's the advantages of not using virtio-net uAPI
+>
+> 1. The use cases that don't involve VM will be simplified; programs for
+> such a use case will not need to convert endian or to fill fileds the
+> kernel doesn't care.
 
-I didn't spend a ton of time looking at the perf profiles of the slower
-kernel, was the bottleneck in the hash chain length or in contention for
-the buckets?
+Well, virtio_net_hdr is used by packet socket as well. Considering the
+complexity of designing a new uAPI, it's still better.
 
->> For people that want to avoid that memory overhead, I'm assuming they
->> want the CONFIG_FUTEX_PRIVATE_HASH off, so the Kconfig help text should
->> make that more clear.
->>
->>> Then there the possibility of 
-> …
->>> 256 cores, 2xNUMA:
->>> | average rps: 1 701 947.02 Futex HBs: 0 immutable: 1
->>> | average rps:   785 446.07 Futex HBs: 1024 immutable: 0
->>> | average rps: 1 586 755.62 Futex HBs: 1024 immutable: 1> | average
->> rps:   736 769.77 Futex HBs: 2048 immutable: 0
->>> | average rps: 1 555 182.52 Futex HBs: 2048 immutable: 1
->>
->>
->> How long are these runs?  That's a huge benefit from being immutable
->> (1.5M vs 736K?) but the hash table churn should be confined to early in
->> the schbench run right?
-> 
-> I think 30 secs or so. I used your command line. 
+Or maybe you can clarify which field that kernel doesn't care about?
+In this case TUN/TAP is basically the device datapath, if some of the
+fields don't make sense, it's a bug of the spec.
 
-Ah ok, my command line is 60 seconds.  It feels like something is
-strange for the immutable flag to make it that much faster?  schbench
-starts all the threads up front, so it should hit steady state pretty
-quickly.  More on NUMA below, but I'll benchmark with the immutable flag
-on the turin box in the morning to see if it is the extra atomics.
+> 2. It aligns with existing UAPIs that operate in native endian and don't
+> use virtio-net data structures like TUNSETOFFLOAD and TUNSETVNETHDRSZ.
 
-> The 256 core box showed
-> a higher improvement than the 144 one. I attached a patch against
-> schbench in the previous mail, I did then
-> 	./schbench -L -m 4 -M auto -t 256 -n 0 -r 60 -s 0 -H 1024 -I
-> 
-> …
->> This schbench hunk is just testing the performance impact of different
->> bucket sizes, but hopefully we don't need it long term unless we want to
->> play with even bigger hash tables?
-> 
-> If you do "-H 0" then you should get the "old" behaviour. However the hash
-> bucket are spread now over the NUMA nodes:
-> 
-> | dmesg |grep -i futex
-> | [    0.501736] futex hash table entries: 32768 (2097152 bytes on 2 NUMA nodes, total 4096 KiB, linear).
-> 
-> Now there are 32768 hash buckets on both NUMA nodes. Depending on the
-> hash it computes, it uses the data structures on NUMA node 1 or 2. The
-> old code allocated 65536 hash buckets via vmalloc().
+For those two examples, it would be used by guests directly. This is
+different from RSS stuff.
 
-So I wanted to mention this earlier and forgot, but schbench obviously
-isn't numa aware at all.  This combination of command line options
-basically just has the 4 message threads waking up the 256 worker
-threads (per message thread) after scribbling a timestamp into shared
-memory.  From a schbench pov at least, we'll get much more stable
-numbers by sticking to a single socket.  <makes numa placement hand
-gestures>
+With native endian, you need an endian conversation that converts le to nat=
+ive.
 
-> 
-> The bigger hash table isn't always the answer. Yes, you could play
-> around figure out what works best for you. The problem is that the hash
-> is based on the mm and the (user) memory address. So on each run you
-> will get a different hash and therefore different collisions.
-> If you end up having many hash collisions and then block on the same
-> lock then yes, larger hash table will be the cure. If you have many
-> threads doing the futex syscall simultaneously then making the hash
-> immutable avoids two atomic ops on the same memory address.
-> This would be my favorite.
-> 
-> Now that I think about it, it might be possible to move the atomic ops
-> the hash bucket itself. Then it wouldn't bounce the cache line so much.
-> Making the hash immutable is simpler.
+>
+> >
+> > More issues:
+> >
+> > 1) max_tx_vq is ignored, so do you expect the userspace to intercept
+> > this and switch to using TUNSETQUEUE? This seems like a burden as TUN
+> > can simply accept it and do the attaching/detaching by itself
+> > 2) the rx depends on the indirection table, so userspace need to
+> > intercept the indirection and change the rx queue numbers accordingly
+> > 3) RSS allows a async TX/RX queue, this is not supported by TUN now,
+> > no matter if we decide to let userspace to intercept max_tx_vq or not,
+> > we need to implement it first
+>  > > Things would be much more simpler, if kernel can do 1) and 2).
+>
+> Attaching and detaching queues is not possible for the kernel because it
+> doesn't know what file descriptors that map to queues will be used by
+> the userspace.
 
-Going back to your diff, if we have a process growing the total number
-of threads, can we set FH_IMMUTABLE too early?  As the number of threads
-increases, eventually we'll pick the 2x num_cpus, but that'll take a while?
+The kernel knows, tfile has a queue_index part.
 
-I do see what you mean about immutable being simpler though, I'll get
-some numbers on those atomics.
+>
+> The following patch does 2) for QEMU:
+> https://lore.kernel.org/qemu-devel/20250322-vq-v2-1-cee0aafe6404@daynix.c=
+om/
 
--chris
+See below point, form the view of the kernel, it's still a queue pair
+not async TX/RX queue.
+
+>
+> For 3), the patch for QEMU takes the maximum of TX and RX queue numbers
+> to derive the number of queue pairs.
+>
+> >
+> >> We have two ioctls here because
+> >> VIRTIO_NET_CTRL_MQ_RSS_CONFIG behaves differently depending on whether
+> >> VIRTIO_NET_F_HASH_REPORT is negotiated or not;
+> >
+> > It wouldn't be a problem if you do 1:1 mapping between virtio commands
+> > and TUN uAPI, otherwise it should have a bug somewhere.
+>
+> Speaking of 1:1 mapping, it is possible to map VIRTIO_NET_F_HASH_REPORT
+> into another ioctl. It may help add another receive steering algorithm
+> in the future by not requiring two ioctls (TUNSETVNETREPORTING_X and
+> TUNSETVNET_X).
+
+Yes and as I pointed out, virtio_net_hash_config should not be
+specific to automq, it can work for other steering algorithm as well.
+
+>
+> >
+> >> it also enables hash
+> >> reporting if the feature is negotiated.
+> >
+> > Again, starting from virtio-net command is easier, a strong
+> > justification is needed to explain why we choose another for tun/tap.
+> >
+> >>
+> >>>
+> >>> One day we would have tun_select_queue_algorithm_x() we don't have to
+> >>> duplicate the ioctls once again here like TUNSETVNETREPORTINGXYZ
+> >>
+> >> 5.1.6.5.6.4 Hash calculation says:
+> >>>   If VIRTIO_NET_F_HASH_REPORT was negotiated and the device uses
+> >>> automatic receive steering, the device MUST support a command to
+> >>> configure hash calculation parameters.
+> >>>
+> >>> The driver provides parameters for hash calculation as follows:
+> >>>
+> >>> class VIRTIO_NET_CTRL_MQ, command VIRTIO_NET_CTRL_MQ_HASH_CONFIG.
+> >>
+> >> VIRTIO_NET_CTRL_MQ_HASH_CONFIG is for automatic receive steering and n=
+ot
+> >> for RSS (or other steering algorithms if the spec gets any in the futu=
+re).
+> >
+> > I'm not sure but the spec needs some tweaking. For example, I don't
+> > expect there would be a dedicated hash config command for flow filters
+> > in the future. I think the reason why spec says like this is that
+> > virtio-net only supports automatic receive steering.
+> >
+> > Note that macvtap doesn't implement automatic receive steering.
+>
+> QEMU advertises VIRTIO_NET_F_CTRL_VQ for macvtap too, so it should have
+> implemented it. I think QEMU with macvtap still compliant to the spec.
+
+Compliant, but automatic traffic steering is the best effort as well.
+
+Nope, TUN/TAP implements a flow cache that can steer tx based on rx.
+Macvtap simply uses hash here.
+
+>
+> "5.1.6.5.6 Automatic receive steering in multiqueue mode" says:
+>
+>  > After the driver transmitted a packet of a flow on transmitqX, the
+>  > device SHOULD cause incoming packets for that flow to be steered to
+>  > receiveqX.
+>
+> It is "SHOULD", so it is still compliant if the device doesn't properly
+> respect the flow.
+
+Yes, a quality of implementation, or it's impractical to support a
+correct steering for this device as limited resources and mailious
+users can do syn flood etc.
+
+>
+> >
+> >>
+> >>>
+> >>>> +               if (copy_from_user(&common, argp, sizeof(common)))
+> >>>> +                       return -EFAULT;
+> >>>> +               argp =3D (struct tun_vnet_rss __user *)argp + 1;
+> >>>> +
+> >>>> +               indirection_table_size =3D ((size_t)common.indirecti=
+on_table_mask + 1) * 2;
+> >>>> +               key_size =3D virtio_net_hash_key_length(common.hash_=
+types);
+> >>>> +               size =3D struct_size(hash, rss_indirection_table,
+> >>>> +                                  (size_t)common.indirection_table_=
+mask + 1);
+> >>>> +
+> >>>> +               hash =3D kmalloc(size, GFP_KERNEL);
+> >>>> +               if (!hash)
+> >>>> +                       return -ENOMEM;
+> >>>> +
+> >>>> +               if (copy_from_user(hash->rss_indirection_table,
+> >>>> +                                  argp, indirection_table_size)) {
+> >>>> +                       kfree(hash);
+> >>>> +                       return -EFAULT;
+> >>>> +               }
+> >>>> +               argp =3D (u16 __user *)argp + common.indirection_tab=
+le_mask + 1;
+> >>>> +
+> >>>> +               if (copy_from_user(hash->rss_key, argp, key_size)) {
+> >>>> +                       kfree(hash);
+> >>>> +                       return -EFAULT;
+> >>>> +               }
+> >>>> +
+> >>>> +               virtio_net_toeplitz_convert_key(hash->rss_key, key_s=
+ize);
+> >>>> +               hash->report =3D cmd =3D=3D TUNSETVNETREPORTINGRSS;
+> >>>
+> >>> At least, if this is the only difference why not simply code this int=
+o
+> >>> the ioctl itself other than having a very similar command?
+> >>
+> >> It is what the previous version did. Either is fine I guess; the only
+> >> practical difference would be the size of the configuration struct is
+> >> smaller with this approach.
+> >>
+> >>>
+> >>>> +               hash->rss =3D true;
+> >>>> +               hash->common =3D common;
+> >>>> +               break;
+> >>>> +
+> >>>> +       default:
+> >>>> +               return -EINVAL;
+> >>>> +       }
+> >>>> +
+> >>>> +       kfree_rcu_mightsleep(rcu_replace_pointer_rtnl(*hashp, hash))=
+;
+> >>>> +       return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static inline void tun_vnet_hash_report(const struct tun_vnet_hash =
+*hash,
+> >>>> +                                       struct sk_buff *skb,
+> >>>> +                                       const struct flow_keys_basic=
+ *keys,
+> >>>> +                                       u32 value,
+> >>>> +                                       tun_vnet_hash_add vnet_hash_=
+add)
+> >>>> +{
+> >>>> +       struct virtio_net_hash *report;
+> >>>> +
+> >>>> +       if (!hash || !hash->report)
+> >>>> +               return;
+> >>>> +
+> >>>> +       report =3D vnet_hash_add(skb);
+> >>>> +       if (!report)
+> >>>> +               return;
+> >>>> +
+> >>>> +       *report =3D (struct virtio_net_hash) {
+> >>>> +               .report =3D virtio_net_hash_report(hash->common.hash=
+_types, keys),
+> >>>> +               .value =3D value
+> >>>> +       };
+> >>>> +}
+> >>>> +
+> >>>> +static inline u16 tun_vnet_rss_select_queue(u32 numqueues,
+> >>>> +                                           const struct tun_vnet_ha=
+sh *hash,
+> >>>> +                                           struct sk_buff *skb,
+> >>>> +                                           tun_vnet_hash_add vnet_h=
+ash_add)
+> >>>> +{
+> >>>> +       struct virtio_net_hash *report;
+> >>>> +       struct virtio_net_hash ret;
+> >>>> +       u16 index;
+> >>>> +
+> >>>> +       if (!numqueues)
+> >>>> +               return 0;
+> >>>> +
+> >>>> +       virtio_net_hash_rss(skb, hash->common.hash_types, hash->rss_=
+key, &ret);
+> >>>> +
+> >>>> +       if (!ret.report)
+> >>>> +               return hash->common.unclassified_queue % numqueues;
+> >>>> +
+> >>>> +       if (hash->report) {
+> >>>> +               report =3D vnet_hash_add(skb);
+> >>>> +               if (report)
+> >>>> +                       *report =3D ret;
+> >>>> +       }
+> >>>> +
+> >>>> +       index =3D ret.value & hash->common.indirection_table_mask;
+> >>>> +
+> >>>> +       return hash->rss_indirection_table[index] % numqueues;
+> >>>> +}
+> >>>> +
+> >>>>    static inline int tun_vnet_hdr_get(int sz, unsigned int flags,
+> >>>>                                      struct iov_iter *from,
+> >>>>                                      struct virtio_net_hdr *hdr)
+> >>>> @@ -135,15 +268,17 @@ static inline int tun_vnet_hdr_get(int sz, uns=
+igned int flags,
+> >>>>    }
+> >>>>
+> >>>>    static inline int tun_vnet_hdr_put(int sz, struct iov_iter *iter,
+> >>>> -                                  const struct virtio_net_hdr *hdr)
+> >>>> +                                  const struct virtio_net_hdr_v1_ha=
+sh *hdr)
+> >>>>    {
+> >>>> +       int content_sz =3D MIN(sizeof(*hdr), sz);
+> >>>> +
+> >>>>           if (unlikely(iov_iter_count(iter) < sz))
+> >>>>                   return -EINVAL;
+> >>>>
+> >>>> -       if (unlikely(copy_to_iter(hdr, sizeof(*hdr), iter) !=3D size=
+of(*hdr)))
+> >>>> +       if (unlikely(copy_to_iter(hdr, content_sz, iter) !=3D conten=
+t_sz))
+> >>>>                   return -EFAULT;
+> >>>>
+> >>>> -       if (iov_iter_zero(sz - sizeof(*hdr), iter) !=3D sz - sizeof(=
+*hdr))
+> >>>> +       if (iov_iter_zero(sz - content_sz, iter) !=3D sz - content_s=
+z)
+> >>>>                   return -EFAULT;
+> >>>>
+> >>>>           return 0;
+> >>>> @@ -155,26 +290,38 @@ static inline int tun_vnet_hdr_to_skb(unsigned=
+ int flags, struct sk_buff *skb,
+> >>>>           return virtio_net_hdr_to_skb(skb, hdr, tun_vnet_is_little_=
+endian(flags));
+> >>>>    }
+> >>>>
+> >>>> -static inline int tun_vnet_hdr_from_skb(unsigned int flags,
+> >>>> +static inline int tun_vnet_hdr_from_skb(int sz, unsigned int flags,
+> >>>>                                           const struct net_device *d=
+ev,
+> >>>>                                           const struct sk_buff *skb,
+> >>>> -                                       struct virtio_net_hdr *hdr)
+> >>>> +                                       tun_vnet_hash_find vnet_hash=
+_find,
+> >>>> +                                       struct virtio_net_hdr_v1_has=
+h *hdr)
+> >>>>    {
+> >>>>           int vlan_hlen =3D skb_vlan_tag_present(skb) ? VLAN_HLEN : =
+0;
+> >>>> +       const struct virtio_net_hash *report =3D sz < sizeof(struct =
+virtio_net_hdr_v1_hash) ?
+> >>>> +                                              NULL : vnet_hash_find=
+(skb);
+> >>>> +
+> >>>> +       *hdr =3D (struct virtio_net_hdr_v1_hash) {
+> >>>> +               .hash_report =3D VIRTIO_NET_HASH_REPORT_NONE
+> >>>> +       };
+> >>>> +
+> >>>> +       if (report) {
+> >>>> +               hdr->hash_value =3D cpu_to_le32(report->value);
+> >>>> +               hdr->hash_report =3D cpu_to_le16(report->report);
+> >>>> +       }
+> >>>>
+> >>>> -       if (virtio_net_hdr_from_skb(skb, hdr,
+> >>>> +       if (virtio_net_hdr_from_skb(skb, (struct virtio_net_hdr *)hd=
+r,
+> >>>>                                       tun_vnet_is_little_endian(flag=
+s), true,
+> >>>>                                       vlan_hlen)) {
+> >>>>                   struct skb_shared_info *sinfo =3D skb_shinfo(skb);
+> >>>>
+> >>>>                   if (net_ratelimit()) {
+> >>>>                           netdev_err(dev, "unexpected GSO type: 0x%x=
+, gso_size %d, hdr_len %d\n",
+> >>>> -                                  sinfo->gso_type, tun_vnet16_to_cp=
+u(flags, hdr->gso_size),
+> >>>> -                                  tun_vnet16_to_cpu(flags, hdr->hdr=
+_len));
+> >>>> +                                  sinfo->gso_type, tun_vnet16_to_cp=
+u(flags, hdr->hdr.gso_size),
+> >>>> +                                  tun_vnet16_to_cpu(flags, hdr->hdr=
+.hdr_len));
+> >>>>                           print_hex_dump(KERN_ERR, "tun: ",
+> >>>>                                          DUMP_PREFIX_NONE,
+> >>>>                                          16, 1, skb->head,
+> >>>> -                                      min(tun_vnet16_to_cpu(flags, =
+hdr->hdr_len), 64), true);
+> >>>> +                                      min(tun_vnet16_to_cpu(flags, =
+hdr->hdr.hdr_len), 64), true);
+> >>>>                   }
+> >>>>                   WARN_ON_ONCE(1);
+> >>>>                   return -EINVAL;
+> >>>> diff --git a/include/uapi/linux/if_tun.h b/include/uapi/linux/if_tun=
+.h
+> >>>> index 980de74724fc..fe4b984d3bbb 100644
+> >>>> --- a/include/uapi/linux/if_tun.h
+> >>>> +++ b/include/uapi/linux/if_tun.h
+> >>>> @@ -62,6 +62,62 @@
+> >>>>    #define TUNSETCARRIER _IOW('T', 226, int)
+> >>>>    #define TUNGETDEVNETNS _IO('T', 227)
+> >>>>
+> >>>> +/**
+> >>>> + * define TUNGETVNETHASHTYPES - ioctl to get supported virtio_net h=
+ashing types
+> >>>> + *
+> >>>> + * The argument is a pointer to __u32 which will store the supporte=
+d virtio_net
+> >>>> + * hashing types.
+> >>>> + */
+> >>>> +#define TUNGETVNETHASHTYPES _IOR('T', 228, __u32)
+> >>>> +
+> >>>> +/**
+> >>>> + * define TUNSETVNETREPORTINGAUTOMQ - ioctl to enable automq with h=
+ash reporting
+> >>>> + *
+> >>>> + * Disable RSS and enable automatic receive steering with hash repo=
+rting.
+> >>>> + *
+> >>>> + * The argument is a pointer to __u32 that contains a bitmask of ha=
+sh types
+> >>>> + * allowed to be reported.
+> >>>> + *
+> >>>> + * This ioctl results in %EBADFD if the underlying device is delete=
+d. It affects
+> >>>> + * all queues attached to the same device.
+> >>>> + *
+> >>>> + * This ioctl currently has no effect on XDP packets and packets wi=
+th
+> >>>> + * queue_mapping set by TC.
+> >>>> + */
+> >>>> +#define TUNSETVNETREPORTINGAUTOMQ _IOR('T', 229, __u32)
+> >>>> +
+> >>>> +/**
+> >>>> + * define TUNSETVNETREPORTINGRSS - ioctl to enable RSS with hash re=
+porting
+> >>>> + *
+> >>>> + * Disable automatic receive steering and enable RSS with hash repo=
+rting.
+> >>>
+> >>> This is unnecessary, e.g one day will have select_queue_xyz(), we
+> >>> don't want to say "Disable automatic receive steering and xyz ..."
+> >>
+> >> It is still something better to be documented as its behavior is
+> >> somewhat complicated.
+> >
+> > This is a hint of uAPI design issue.
+> >
+> >>
+> >> Concretely, this ioctl disables automatic receive steering but doesn't
+> >> disable steering by eBPF, which is implied by TUN_STEERINGEBPF_FALLBAC=
+K.
+> >
+> > It would be simpler:
+> >
+> > 1) not having TUN_STEERINGEBPF_FALLBACK
+> > 2) the steering algorithm depends on the last uAPI call
+>
+> What will TUNSETSTEERINGEBPF with NULL mean in that case? It currently
+> switches the steering algorithm to automq.
+
+A stackwise semantic then?
+
+Thanks
+
+>
+> Regards,
+> Akihiko Odaki
+>
 
