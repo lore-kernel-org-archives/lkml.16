@@ -1,46 +1,59 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03722A31;
-	Fri,  6 Jun 2025 20:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16081DE887;
+	Fri,  6 Jun 2025 20:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749242429; cv=none; b=t8lt152wvbpJOMwZv7YxWDYd+PQfLQoqaTRFquU4Vm4XV7Xyzo03jwR1MNwAktlv01nnN7PX9obpuM5zqiM/kMLeT/bTuVCMBK6t+LUKfzQ9OOz7NPp5YYkDZBr79vAfluAUm15S8+hbeyZSKnNSkRgq/ld7JEpYQQimJ0y0zSk=
+	t=1749243200; cv=none; b=pUVU8bcGs5Ks93sT3zzRGtAY9MQwO0RHSmlr5hOgLAvUXpatkr33TCTeCnPs1LVtZo1yvSg7533KwhS/xkd4Qjh2qr9vTSxApEcP2ofT0Ss9FPvLbadRmbUBKHYw1pMtgVPJgheKbsikoKx1Nsfbmn9MhkxvHknCpqXTaMx+GJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749242429; c=relaxed/simple;
-	bh=PYJ17zVlwG6h6k8ktBpCxEgg0pf1P1oAEKV/s7pyeeY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LdiSkME6pYHYEWanHbdLKK0yAGDXYWuktvqS6FOVvwprLyCOeHof43NxA9heBqoulqSPDxXpuR100A99FrTwAJ9gcjd2SSskMZk+ajEWc0hKiOQ05nzccypD1KNR54s2SXD72NMbGQWvp0I9YLSWPHZRhyBrHighaxc7XL4LXIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=tRA8tjyp; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
+	s=arc-20240116; t=1749243200; c=relaxed/simple;
+	bh=te0rz6iuH+tuOfeWxtRzrEQXLcAUOuPCArfYha2FS8Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dDpJ//KNrdOwU0zp1E2mDJs/rq+D9PNrbbck2yWB1kVnFBIFIvYeyALmf+0lp5Rcjmpqa0iIas0fFvnztdHytSvIXcealdgJoqKAwyQniPOhwGPK9u24x6cX5BtDXYDqwv8Ktz29ZdBsoR405B2hw+eAAYkybWa03CG6IkB5A3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=maNdaJrr; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="tRA8tjyp"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bDY9F2gn0z9sqs;
-	Fri,  6 Jun 2025 22:40:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
-	t=1749242417;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=itUArjAKsAYhptKQCK+BX5ePPL1yAExXPENZKWZynC0=;
-	b=tRA8tjypf1SBzyhIWfD8S5NO55tkte5uSZ7uDILW/gxo6Kezz/DetjB24SmKR2Z/NDm17U
-	HWCyMC802dmXd+2U4Fpam92wwlnJc28qPqs/WewnsP5FZMwOPWpcaJzXN2mGrjviGDHrql
-	0j/+SyNSXfFcdMU1tRYGxWDcmRiUyuuWEH9aHI+bmqEz9vIQky45V52T2IgWV5q4+JltCx
-	k83XUc/pQNA+bzD4z+/uzz8B7wrR+VuFNr5NWhtODzMqGarzqRURs2Ri0Iq2S6oRCemZnF
-	lqHBwVbu0wgH+kFiYuZNehZtQSCShbeMhwOnYI35c6/RQcQ3IUO6oQUpIv5OxA==
-From: Brahmajit Das <listout@listout.xyz>
-To: linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org
-Cc: wychay@ctl.creative.com,
-	tiwai@suse.com,
-	perex@perex.cz
-Subject: [PATCH 1/1] ALSA: ctxfi: Replace deprecated strcpy() with strscpy()
-Date: Sat,  7 Jun 2025 02:10:00 +0530
-Message-ID: <20250606204000.8156-1-listout@listout.xyz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="maNdaJrr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749243198; x=1780779198;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=te0rz6iuH+tuOfeWxtRzrEQXLcAUOuPCArfYha2FS8Q=;
+  b=maNdaJrrFJmbF7qBzXgb7krjpgnt1c/6Jx6IvNg7lGUZXfd+v/On1p2M
+   Yk5QafNi1aQOxJAxUw/ZNXUr4dn5sDIFmGUcqxEUJmilpVCZ+cr3d+Wzw
+   4wZlTHZ00lSCd7xd69xDiWbQVinX6kI2DV8Kp/tmhx5Wa0MlIp4A/PeNn
+   lavAoIdOqpRJC3BGO+qjb18SkwVVyu+V3iEa44C+1DCejBNVihDfnKq+P
+   nMOOPZm55gVh/rw9yWfPT1QAkvnUqJWr7jqrnAJ+PRU4UYrD3XyY57bm4
+   j0K8lJ+oYzalIz9AIejRbgq6QS1cIaD6IxIaC5Wh4V2hgPBc2ZlayVWX8
+   g==;
+X-CSE-ConnectionGUID: G9mqQ4hOTBicBocx8FxEBg==
+X-CSE-MsgGUID: PnlqbgcFSpmTUfeiEfk+MQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="73931460"
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="73931460"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 13:53:17 -0700
+X-CSE-ConnectionGUID: ZUzEG+hISHSsKQ+aQroEfA==
+X-CSE-MsgGUID: sQ9MDDtzTx2DxZmGMHll6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="176806018"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
+  by fmviesa001.fm.intel.com with ESMTP; 06 Jun 2025 13:53:16 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86/intel-uncore-freq: Fail module load when plat_info is NULL
+Date: Fri,  6 Jun 2025 13:53:00 -0700
+Message-ID: <20250606205300.2384494-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,35 +61,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4bDY9F2gn0z9sqs
 
-strcpy() is deprecated; use strscpy() instead. Use strscpy() to copy the
-long name because there's no string to format with sprintf().
+Address a Smatch static checker warning regarding an unchecked
+dereference in the function call:
+set_cdie_id(i, cluster_info, plat_info)
+when plat_info is NULL.
 
-No functional changes intended.
+Instead of addressing this one case, in general if plat_info is NULL
+then it can cause other issues. For example in a two package system it
+will give warning for duplicate sysfs entry as package ID will be always
+zero for both packages when creating string for attribute group name.
 
-Link: https://github.com/KSPP/linux/issues/88
+plat_info is derived from TPMI ID TPMI_BUS_INFO, which is integral to
+the core TPMI design. Therefore, it should not be NULL on a production
+platform. Consequently, the module should fail to load if plat_info is
+NULL.
 
-Signed-off-by: Brahmajit Das <listout@listout.xyz>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/platform-driver-x86/aEKvGCLd1qmX04Tc@stanley.mountain/T/#u
+Fixes: 8a54e2253e4c ("platform/x86/intel-uncore-freq: Uncore frequency control via TPMI")
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: stable@vger.kernel.org
 ---
- sound/pci/ctxfi/xfi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c   | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/sound/pci/ctxfi/xfi.c b/sound/pci/ctxfi/xfi.c
-index 713d36ea40cb..d8dd84d41c87 100644
---- a/sound/pci/ctxfi/xfi.c
-+++ b/sound/pci/ctxfi/xfi.c
-@@ -98,8 +98,8 @@ ct_card_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
- 	if (err < 0)
- 		goto error;
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+index 1c7b2f2716ca..44d9948ed224 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+@@ -511,10 +511,13 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
  
--	strcpy(card->driver, "SB-XFi");
--	strcpy(card->shortname, "Creative X-Fi");
-+	strscpy(card->driver, "SB-XFi");
-+	strscpy(card->shortname, "Creative X-Fi");
- 	snprintf(card->longname, sizeof(card->longname), "%s %s %s",
- 		 card->shortname, atc->chip_name, atc->model_name);
+ 	/* Get the package ID from the TPMI core */
+ 	plat_info = tpmi_get_platform_data(auxdev);
+-	if (plat_info)
+-		pkg = plat_info->package_id;
+-	else
++	if (unlikely(!plat_info)) {
+ 		dev_info(&auxdev->dev, "Platform information is NULL\n");
++		ret = -ENODEV;
++		goto err_rem_common;
++	}
++
++	pkg = plat_info->package_id;
  
+ 	for (i = 0; i < num_resources; ++i) {
+ 		struct tpmi_uncore_power_domain_info *pd_info;
 -- 
 2.49.0
 
