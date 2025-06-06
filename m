@@ -1,47 +1,37 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2591B199E89;
-	Fri,  6 Jun 2025 16:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5FE13D52F;
+	Fri,  6 Jun 2025 16:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749228413; cv=none; b=fhN8FTa6HsdRk1Nm1inadsKcp6k31A2DmLpHq1zrWPLIhxcsZw/FMXUVhWL85wNNsNbLNFLLRvMOfVnyO+8eoUBaUANECUZUG2kbOMLJuHdetRpG7rbmU6diOdXryiTsCQ7k0uDDnRzN+vGB0fQGLptiGfnHgOcQ7aCSGtXgPuY=
+	t=1749228578; cv=none; b=Q+vnrdpibU4Y4PRFGwH9Zt/5O45Tc6X1p0KLo0QtoTkMAM3OsQKME6yh+h3DkEVt14Ax2VTaPsFVpcvDnB87TlX8iP3Ws9YQV5pBFfpfyEADs0ce2xvU4xd2abRRGvyWFaPCeUe2LjsuPPBDVJCEFu8JK8D/x7cJQR1KMIsPxGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749228413; c=relaxed/simple;
-	bh=6xq/oyb8A+TRQohcI41rVqLHpVK5LY7V7ZyDGoVetRg=;
+	s=arc-20240116; t=1749228578; c=relaxed/simple;
+	bh=CbKTrDH6DkgeqDHwB6B55ZVuxGJDKlN/CGMpI1jO7Yk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WzpewafBXE8BR+cnxgJ4+/VRarI+LrBCRxyPSMnArZvPjqZgec5lHESYNqgZh2jLtxO1Vlyf1dN+JiaY9/i3oL9qyobm+GPheYMQ9v/EMDnszr3dEhYftDx5rQ2taXTjjiHVjOCasJk6yqpaI7Hz/I7+cA2gzAIFSff6XioSbQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=cfvTSh0P; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=XhrX5OGgKmN5V6ooLA5PILbaWJPTSce5uhszvDGlD2DdVmVZxQ+iF6cWTRk9wsxev6wtjJTdwhT1S/MWWjIYMGoEh+cbnln9Q/vXzIecKEkyBXR/83Z+OUhfvLINph+hxxo3cryYWV4TR5zBGqAZISLHVFt4HzlpKJALbsmHATU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ys7VnHh9; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="cfvTSh0P"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2eUBIbHOyubhcMWsju0QiqId4ceda0lLxT+x5k6pgFw=; b=cfvTSh0Pta9FD6eps3ExyBf/CW
-	s1Apbuv7hChaGWh5vSuISL+v49r306D2m8jc2CWArFHuv5h7OhpNCxjWKFBBd1baE9QRHx+SUjxcr
-	3yyBBEwfR6ZIbjiXPPoBZUcQmbcnlIiB7ZGJcYdG8FuUPvRvY11Xk7GxqFNw9yAuxTJLOCQz0qqwa
-	yc4qKRCcakewftXRbtwmA6dXIqY88psUc1NZTpaVbfUo1qWOFHfb1whQotq4kix6Lp9WdAzAjP/Mv
-	z/KUtfdLc3mqmi/wF3JQGkJkMdNzx22yCHm/YFUngaOuyLbEtNFzVhzx0o1PtGufdxkHv0+/yF1mt
-	e3c4k3dg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60438)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uNaD9-00010W-0F;
-	Fri, 06 Jun 2025 17:46:32 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uNaD4-0003Mt-23;
-	Fri, 06 Jun 2025 17:46:26 +0100
-Date: Fri, 6 Jun 2025 17:46:26 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Xandy.Xiong" <xiongliang@xiaomi.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ys7VnHh9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=vPtwpH1jLrXxNG2nETvRcGobsy3AhXLHMhEjodWgmfE=; b=ys7VnHh9d+L+WKkYBGsg1qBjbF
+	I/0BIXY579y/T1T5rbPhxDYqCzBFnq2ccBi+IflYIxrnMFiQvaB1MoeG/cLzyT1vp2U1nmUzuQzj0
+	L7sPDqeKy586XDsiEcCNtxkh9JBXXkFMSZHWZ7NYDuVryRdEF/BX57eF9uhzgokKTbh8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uNaFt-00EuyZ-O4; Fri, 06 Jun 2025 18:49:21 +0200
+Date: Fri, 6 Jun 2025 18:49:21 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: "Xandy.Xiong" <xiongliang@xiaomi.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
@@ -50,8 +40,9 @@ Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
 	Furong Xu <0x1207@gmail.com>, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] net: stmmac: add support for platform specific config.
-Message-ID: <aEMbYjmsMUqdsvP4@shell.armlinux.org.uk>
+Message-ID: <855e58a9-17ea-4baf-8686-15c9abf60a80@lunn.ch>
 References: <20250606114155.3517-1-xiongliang@xiaomi.com>
+ <aEMbYjmsMUqdsvP4@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,35 +51,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250606114155.3517-1-xiongliang@xiaomi.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <aEMbYjmsMUqdsvP4@shell.armlinux.org.uk>
 
-On Fri, Jun 06, 2025 at 07:41:55PM +0800, Xandy.Xiong wrote:
-> This patch adds support for platform-specific init config in the
-> stmmac driver. As SMMU remap, must after dma descriptor setup,
-> and same mac link caps must init before phy init. To support these feature,
-> a new function pointer 'fix_mac_config' is added to the
-> plat_stmmacenet_data structure.
-> And call the function pointer 'fix_mac_config' in the __stmmac_open().
+> Also, please review the netdev FAQ, if you can find it...
 
-We need to see the use case for any new hook.
+https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
 
-I'm afraid we've seen way too many cases of new hooks added to the
-kernel tree only to never see their corresponding implementations
-come along, so now there's a requirement to post an implementation
-along with a hook.
+It got renamed, since it is no longer a set of questions and answers.
 
-Also, please review the netdev FAQ, if you can find it... I can't
-anymore. It'll tell you how to submit patches, when to submit them,
-how to indicate which tree, etc.
-
-You can find the source file for what I think _was_ the FAQ at:
-
-Documentation/process/maintainer-netdev.rst
-
-but this doesn't seem to be in the documentation tree on kernel.org
-(or at least is not in an obvious place.)
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+	Andrew
