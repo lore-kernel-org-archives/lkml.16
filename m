@@ -1,69 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15A028852E
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39526288C37
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749216295; cv=none; b=G83pu6Jh47gjML2nVLniEEg9xYCiIvFrJ13/pzIzdkVmf1rzj4IWdBb1Ix+xznghCeVd6hOV+DQojZwNCrnDpr2lZU8ahE5o4a+YjMM9HG+bX3NSZXdDIP7SMmlhFwqoEsJNtJT5WjGumkZHMfym+C2mA7ikoorE9dyysaW3zx0=
+	t=1749216297; cv=none; b=WGuoyjJzGpuSw7ddFzkyKBADH9XKDjKUDMOFnOEUanZnephqH06vN9Tkv+P/n1q0SzZz135HpNtTkHzKWUhWUf/JEDp7yA+3p1i4J1HUCLgOfgSuxeqHvHWZ236XJoyfpMRfEg0GWaOBn9BFYIQy9aaU5XUIp0Y0T4r/nvYMHlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749216295; c=relaxed/simple;
-	bh=mR55Kc+kasQ+GdFfuLzdqz3KzIMWEML2Li9QTwOSxo4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=oqpWDIH7wQ/qmHgHiFyT8G7Ac2dQ2sbwrt6OlkjtBGmWLiStpjVY11WFdpueDcbbbw4TJGLSVmq/d+8ijNetjyVNKoLi8uRR36zSlNrLExFjinUCkkeqtQ/rM0uenSL3VOGPDJgC2ZyWdXHgh2LN+CgYLpL2IsS+endSiRalM5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MoyErIVI; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749216297; c=relaxed/simple;
+	bh=XaUFchsTlj47ki7jmwSOkGfvA6QoHDzYcRN06zVBsh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=si/dP7ZUTRUj3SbL1abCEZda+j03ooAeXjVSwD/vx/SNFR9R87VfgE5U4yODwS8kwpuxglQ7XDF+QUeCgsycC16wQ7/X/JXcOYAAjGJmkq2X9e5uMtfvlMVb8gD5RTeTOW8C3fX8lGs+H2HsvYhsNITKsA2XLOitSyaHcK89bWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bMeXzgKt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MoyErIVI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749216293; x=1780752293;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=mR55Kc+kasQ+GdFfuLzdqz3KzIMWEML2Li9QTwOSxo4=;
-  b=MoyErIVI6LtQwVkvjNDLg6JV6EIvsFnp0H4utOzOnSwdoEqU+Y2eo+zE
-   1qnxlzcMHpuzMHFGxYK+bzjg7pnBQ0bC7ACPmQaBW9bzcHeeZxbQPxNmU
-   hajvR7FWDnhkE3eN1AjJUvqPckZm7nWL9x0u5FCFS8tDUR+YtGKjGkroy
-   ano7RCGWQN+rS2T9oti7afNeQF51vOgX2k911eDGrVUP4OD31t9bhCyEG
-   oBJfOThE4hu7iL8D0kzNMrcBwEPYrbQwV6b+6F/QIbrL93rSEJo/qWJWD
-   7JdUp0JAo5XYscsO953QjU9MA+OiW4Ucubpym1zTKN1aXTaxNMZ1M+e4H
-   A==;
-X-CSE-ConnectionGUID: l38oyRKfSwGQGZ5QQirunA==
-X-CSE-MsgGUID: izvhKUaRTjeorqo9BY23Iw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="68805140"
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="68805140"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 06:24:52 -0700
-X-CSE-ConnectionGUID: Uu4+QIsIQTyV/d6ER5uSjQ==
-X-CSE-MsgGUID: 8g3tbaSETyKuPkm74jU9BQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="145835952"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.33])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 06:24:46 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Jocelyn Falempe <jfalempe@redhat.com>, Rodrigo Vivi
- <rodrigo.vivi@intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>,
- Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, David
- Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Christian Koenig
- <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew Auld
- <matthew.auld@intel.com>, Matthew Brost <matthew.brost@intel.com>, Maxime
- Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: Re: [PATCH v8 5/9] drm/i915: Add intel_bo_panic_setup and
- intel_bo_panic_finish
-In-Reply-To: <20250606120519.753928-6-jfalempe@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250606120519.753928-1-jfalempe@redhat.com>
- <20250606120519.753928-6-jfalempe@redhat.com>
-Date: Fri, 06 Jun 2025 16:24:43 +0300
-Message-ID: <5e5014e3f1cbc9c91d2d6e4a3258c775a468bf46@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bMeXzgKt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749216295;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ky+WeROHZ4Ae+uVfELGBGltSg87Rkj3Uw9xYsa9j3qg=;
+	b=bMeXzgKtFZH5L+oZf1hFR+XQI6E8Tbd/sEYeWgE75j5Rs4jXghP8SAo4wlrfFI16vuJtk+
+	LVSjAOXGf2EaHjNJuxT8dlTk3E6Oj6qFWAg0XUnZztTdhFpWZxmFZp1brkqiUSsPTAIbav
+	PSrrx4kbcrTWiMhLzJVQChORU/XrmWQ=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-655-UTzIust-MY2jkAHA4zm9DA-1; Fri, 06 Jun 2025 09:24:54 -0400
+X-MC-Unique: UTzIust-MY2jkAHA4zm9DA-1
+X-Mimecast-MFC-AGG-ID: UTzIust-MY2jkAHA4zm9DA_1749216294
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d0962035b7so355967085a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:24:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749216294; x=1749821094;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ky+WeROHZ4Ae+uVfELGBGltSg87Rkj3Uw9xYsa9j3qg=;
+        b=OX/Jp8/ulewqUl6DJ6FD06Xcr6O7lJLWCCoWbszIDRiX8Yu+sa+Ecwwpul1I18ZroA
+         MFdjWgAU1U/9qmhdxRrHEkgLXVR7E6kRAHIVNc36HaUGWkI+4WXzet6nJlF5r6R9PXze
+         XzAJtYoIRHemXnonvrOj5Jl/QZBnrsblpS0ZUJe3hyoYCvdKFJBEvRWvYs7Mf1lPaAC2
+         V23hgr16tV4Q7Hxus0lD2/IfblAojbwZfzTZAN+Sg4waVL5XEpcbIQ12LKG7QlpIM2XE
+         mN55nD+y2YiVstRgKtNrklyk/Nc+yYQxTHA1xifajqpsZAAPXxsE8VeI2wsiVhGsgzCv
+         GPgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbjzQNzXsJCNbZX/B0ptadtuF6m5n8g9TJL5UI40vOtJOc2obo0kCRsV70OWmm7QDrUDyRzcqndJO8pS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhTvy7/RW79n1Snpz1R0l+YYSpzB77QIylrZo3pBM2OISTnQoM
+	hKM6zXvlKROsbr/kJN4Yvm0jgNrsZvmWfU+KwLCvdLF4FzdoadQZVhYpFnzQrXRg9n104rOuGgi
+	mIXBrcRhpB06UAQlUiKuFqCejxP5LIQ9yUhcEaG/w6QY/CGdpQ2bKKJGBX2hi4wxO6Q==
+X-Gm-Gg: ASbGncvg2jldj4P4MEGjtf3b07JaM00Y7hsefXz3UFNpus81jAqNja78UPFfAMNGb7j
+	prTPKCxhk1X2UjNcH6UcakFNNg53lVdKgOg0vWpiE9qD5hapviVBLXlFj1dYxNOqAl+5FJeWzhT
+	Ezb0dS3dZvchqLY664DZrwDfdpDuT7vBQBH1uaBQvQUpUKGivp/+PrX5hJ7pgHImBwWV4H+iY08
+	JOqFLPLw74O2tHk/AXNTqyX6O7dva/IjjFNXWcCWJ7nQJ7fY2RHmwaLPX6wwtTFpt0mOuN8JnDE
+	8g8=
+X-Received: by 2002:a05:620a:2608:b0:7d0:9688:b650 with SMTP id af79cd13be357-7d22990277cmr623270885a.54.1749216293751;
+        Fri, 06 Jun 2025 06:24:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHyw7rhIbtMEbMw7aXS5kBcEv8c0niayT/VMXPsAHzS6JTC/rav5RqlYy0t+iQ6S4rhlqvdfA==
+X-Received: by 2002:a05:620a:2608:b0:7d0:9688:b650 with SMTP id af79cd13be357-7d22990277cmr623265985a.54.1749216293377;
+        Fri, 06 Jun 2025 06:24:53 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25a5948f8sm129289485a.49.2025.06.06.06.24.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 06:24:52 -0700 (PDT)
+Date: Fri, 6 Jun 2025 09:24:50 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Tal Zussman <tz2294@columbia.edu>
+Cc: David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/3] userfaultfd: prevent unregistering VMAs through a
+ different userfaultfd
+Message-ID: <aELsIq2uOT5d1Tng@x1.local>
+References: <20250603-uffd-fixes-v1-0-9c638c73f047@columbia.edu>
+ <20250603-uffd-fixes-v1-2-9c638c73f047@columbia.edu>
+ <84cf5418-42e9-4ec5-bd87-17ba91995c47@redhat.com>
+ <aEBhqz1UgpP8d9hG@x1.local>
+ <CAKha_sqFV_0TsM1NgwtYYY0=ouDjkO7OOZc2WsR0X5hK5AUOJA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,312 +89,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKha_sqFV_0TsM1NgwtYYY0=ouDjkO7OOZc2WsR0X5hK5AUOJA@mail.gmail.com>
 
-On Fri, 06 Jun 2025, Jocelyn Falempe <jfalempe@redhat.com> wrote:
-> Implement both functions for i915 and xe, they prepare the work for
-> drm_panic support.
-> They both use kmap_try_from_panic(), and map one page at a time, to
-> write the panic screen on the framebuffer.
->
-> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
-> ---
->
->
-> v5:
->  * Use iosys_map for intel_bo_panic_map().
->
-> v7:
->  * Return int for i915_gem_object_panic_map() (Ville Syrj=C3=A4l=C3=A4)
->
-> v8:
->  * Complete rewrite, to use kmap_try_from_panic() which is safe
->    to call from a panic handler
->
->  drivers/gpu/drm/i915/display/intel_bo.c    | 11 +++
->  drivers/gpu/drm/i915/display/intel_bo.h    |  3 +
->  drivers/gpu/drm/i915/gem/i915_gem_object.h |  4 +
->  drivers/gpu/drm/i915/gem/i915_gem_pages.c  | 92 ++++++++++++++++++++++
->  drivers/gpu/drm/xe/display/intel_bo.c      | 55 +++++++++++++
->  5 files changed, 165 insertions(+)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_bo.c b/drivers/gpu/drm/i9=
-15/display/intel_bo.c
-> index fbd16d7b58d9..83dbd8ae16fe 100644
-> --- a/drivers/gpu/drm/i915/display/intel_bo.c
-> +++ b/drivers/gpu/drm/i915/display/intel_bo.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: MIT
->  /* Copyright =C2=A9 2024 Intel Corporation */
->=20=20
-> +#include <drm/drm_panic.h>
->  #include "gem/i915_gem_mman.h"
->  #include "gem/i915_gem_object.h"
->  #include "gem/i915_gem_object_frontbuffer.h"
-> @@ -57,3 +58,13 @@ void intel_bo_describe(struct seq_file *m, struct drm_=
-gem_object *obj)
->  {
->  	i915_debugfs_describe_obj(m, to_intel_bo(obj));
->  }
-> +
-> +int intel_bo_panic_setup(struct drm_gem_object *obj, struct drm_scanout_=
-buffer *sb)
-> +{
-> +	return i915_gem_object_panic_setup(to_intel_bo(obj), sb);
-> +}
-> +
-> +void intel_bo_panic_finish(struct drm_gem_object *obj)
-> +{
-> +	return i915_gem_object_panic_finish(to_intel_bo(obj));
-> +}
-> diff --git a/drivers/gpu/drm/i915/display/intel_bo.h b/drivers/gpu/drm/i9=
-15/display/intel_bo.h
-> index ea7a2253aaa5..9ac087ea275d 100644
-> --- a/drivers/gpu/drm/i915/display/intel_bo.h
-> +++ b/drivers/gpu/drm/i915/display/intel_bo.h
-> @@ -4,6 +4,7 @@
->  #ifndef __INTEL_BO__
->  #define __INTEL_BO__
->=20=20
-> +#include <drm/drm_panic.h>
->  #include <linux/types.h>
->=20=20
->  struct drm_gem_object;
-> @@ -23,5 +24,7 @@ struct intel_frontbuffer *intel_bo_set_frontbuffer(stru=
-ct drm_gem_object *obj,
->  						   struct intel_frontbuffer *front);
->=20=20
->  void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj);
-> +int intel_bo_panic_setup(struct drm_gem_object *obj, struct drm_scanout_=
-buffer *sb);
-> +void intel_bo_panic_finish(struct drm_gem_object *obj);
->=20=20
->  #endif /* __INTEL_BO__ */
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_object.h b/drivers/gpu/drm=
-/i915/gem/i915_gem_object.h
-> index c34f41605b46..9a0c1019dcad 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_object.h
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_object.h
-> @@ -9,6 +9,7 @@
->  #include <drm/drm_gem.h>
->  #include <drm/drm_file.h>
->  #include <drm/drm_device.h>
-> +#include <drm/drm_panic.h>
->=20=20
->  #include "intel_memory_region.h"
->  #include "i915_gem_object_types.h"
-> @@ -691,6 +692,9 @@ i915_gem_object_unpin_pages(struct drm_i915_gem_objec=
-t *obj)
->  int __i915_gem_object_put_pages(struct drm_i915_gem_object *obj);
->  int i915_gem_object_truncate(struct drm_i915_gem_object *obj);
->=20=20
-> +int i915_gem_object_panic_setup(struct drm_i915_gem_object *obj, struct =
-drm_scanout_buffer *sb);
-> +void i915_gem_object_panic_finish(struct drm_i915_gem_object *obj);
-> +
->  /**
->   * i915_gem_object_pin_map - return a contiguous mapping of the entire o=
-bject
->   * @obj: the object to map into kernel address space
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/=
-i915/gem/i915_gem_pages.c
-> index 7f83f8bdc8fb..9bdbac3d9433 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-> @@ -3,6 +3,7 @@
->   * Copyright =C2=A9 2014-2016 Intel Corporation
->   */
->=20=20
-> +#include <drm/drm_panic.h>
->  #include <drm/drm_cache.h>
->  #include <linux/vmalloc.h>
->=20=20
-> @@ -354,6 +355,97 @@ static void *i915_gem_object_map_pfn(struct drm_i915=
-_gem_object *obj,
->  	return vaddr ?: ERR_PTR(-ENOMEM);
->  }
->=20=20
-> +static struct page **i915_panic_pages;
-> +static int i915_panic_page =3D -1;
-> +static void *i915_panic_vaddr;
+On Thu, Jun 05, 2025 at 05:11:53PM -0400, Tal Zussman wrote:
+> On Wed, Jun 4, 2025 at 11:10 AM Peter Xu <peterx@redhat.com> wrote:
+> >
+> > On Wed, Jun 04, 2025 at 03:23:38PM +0200, David Hildenbrand wrote:
+> > > On 04.06.25 00:14, Tal Zussman wrote:
+> > > > Currently, a VMA registered with a uffd can be unregistered through a
+> > > > different uffd asssociated with the same mm_struct.
+> > > >
+> > > > Change this behavior to be stricter by requiring VMAs to be unregistered
+> > > > through the same uffd they were registered with.
+> > > >
+> > > > While at it, correct the comment for the no userfaultfd case. This seems
+> > > > to be a copy-paste artifact from the analagous userfaultfd_register()
+> > > > check.
+> > >
+> > > I consider it a BUG that should be fixed. Hoping Peter can share his
+> > > opinion.
+> >
+> > Agree it smells like unintentional, it's just that the man page indeed
+> > didn't mention what would happen if the userfaultfd isn't the one got
+> > registered but only requesting them to be "compatible".
+> >
+> > DESCRIPTION
+> >        Unregister a memory address range from userfaultfd.  The pages in
+> >        the range must be “compatible” (see UFFDIO_REGISTER(2const)).
+> >
+> > So it sounds still possible if we have existing userapp creating multiple
+> > userfaultfds (for example, for scalability reasons on using multiple
+> > queues) to manage its own mm address space, one uffd in charge of a portion
+> > of VMAs, then it can randomly take one userfaultfd to do unregistrations.
+> > Such might break.
+> 
+> As I mentioned in my response to James, it seems like the existing behavior
+> is broken as well, due to the following in in userfaultfd_unregister():
+> 
+>     if (!vma_can_userfault(cur, cur->vm_flags, wp_async))
+>             goto out_unlock;
+> 
+> where wp_async is derived from ctx, not cur.
+> 
+> Pasting here:
+> 
+> This also seems to indicate that the current behavior is broken and may reject
+> unregistering some VMAs incorrectly. For example, a file-backed VMA registered
+> with `wp_async` and UFFD_WP cannot be unregistered through a VMA that does not
+> have `wp_async` set.
 
-How do the per module variables work when you have multiple devices?
+This is true.  Meanwhile it seems untrivial to fix the flag alone with the
+prior per-vma loop to check compatibility.  We could drop the prior check
+but then it slightly breaks the abi in another way..
 
-BR,
-Jani.
+Then let's go with the change to see our luck.
 
-> +
-> +static void i915_panic_kunmap(void)
-> +{
-> +	if (i915_panic_vaddr) {
-> +		drm_clflush_virt_range(i915_panic_vaddr, PAGE_SIZE);
-> +		kunmap_local(i915_panic_vaddr);
-> +		i915_panic_vaddr =3D NULL;
-> +	}
-> +}
-> +
-> +static struct page **i915_gem_object_panic_pages(struct drm_i915_gem_obj=
-ect *obj)
-> +{
-> +	unsigned long n_pages =3D obj->base.size >> PAGE_SHIFT, i;
-> +	struct page *page;
-> +	struct page **pages;
-> +	struct sgt_iter iter;
-> +
-> +	pages =3D kvmalloc_array(n_pages, sizeof(*pages), GFP_ATOMIC);
-> +	if (!pages)
-> +		return NULL;
-> +
-> +	i =3D 0;
-> +	for_each_sgt_page(page, iter, obj->mm.pages)
-> +		pages[i++] =3D page;
-> +	return pages;
-> +}
-> +
-> +/*
-> + * The scanout buffer pages are not mapped, so for each pixel,
-> + * use kmap_local_page_try_from_panic() to map the page, and write the p=
-ixel.
-> + * Try to keep the map from the previous pixel, to avoid too much map/un=
-map.
-> + */
-> +static void i915_gem_object_panic_page_set_pixel(struct drm_scanout_buff=
-er *sb, unsigned int x,
-> +						 unsigned int y, u32 color)
-> +{
-> +	unsigned int new_page;
-> +	unsigned int offset;
-> +
-> +	offset =3D y * sb->pitch[0] + x * sb->format->cpp[0];
-> +
-> +	new_page =3D offset >> PAGE_SHIFT;
-> +	offset =3D offset % PAGE_SIZE;
-> +	if (new_page !=3D i915_panic_page) {
-> +		i915_panic_kunmap();
-> +		i915_panic_page =3D new_page;
-> +		i915_panic_vaddr =3D kmap_local_page_try_from_panic(
-> +				   i915_panic_pages[i915_panic_page]);
-> +	}
-> +	if (i915_panic_vaddr) {
-> +		u32 *pix =3D i915_panic_vaddr + offset;
-> +		*pix =3D color;
-> +	}
-> +}
-> +
-> +/*
-> + * Setup the gem framebuffer for drm_panic access.
-> + * Use current vaddr if it exists, or setup a list of pages.
-> + * pfn is not supported yet.
-> + */
-> +int i915_gem_object_panic_setup(struct drm_i915_gem_object *obj, struct =
-drm_scanout_buffer *sb)
-> +{
-> +	enum i915_map_type has_type;
-> +	void *ptr;
-> +
-> +	ptr =3D page_unpack_bits(obj->mm.mapping, &has_type);
-> +	if (ptr) {
-> +		if (i915_gem_object_has_iomem(obj))
-> +			iosys_map_set_vaddr_iomem(&sb->map[0], (void __iomem *)ptr);
-> +		else
-> +			iosys_map_set_vaddr(&sb->map[0], ptr);
-> +
-> +		return 0;
-> +	}
-> +	if (i915_gem_object_has_struct_page(obj)) {
-> +		i915_panic_pages =3D i915_gem_object_panic_pages(obj);
-> +		sb->set_pixel =3D i915_gem_object_panic_page_set_pixel;
-> +		i915_panic_page =3D -1;
-> +		return 0;
-> +	}
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +void i915_gem_object_panic_finish(struct drm_i915_gem_object *obj)
-> +{
-> +	i915_panic_kunmap();
-> +	i915_panic_page =3D -1;
-> +}
-> +
->  /* get, pin, and map the pages of the object into kernel space */
->  void *i915_gem_object_pin_map(struct drm_i915_gem_object *obj,
->  			      enum i915_map_type type)
-> diff --git a/drivers/gpu/drm/xe/display/intel_bo.c b/drivers/gpu/drm/xe/d=
-isplay/intel_bo.c
-> index 27437c22bd70..eb9a3400c110 100644
-> --- a/drivers/gpu/drm/xe/display/intel_bo.c
-> +++ b/drivers/gpu/drm/xe/display/intel_bo.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: MIT
->  /* Copyright =C2=A9 2024 Intel Corporation */
->=20=20
-> +#include <drm/drm_cache.h>
->  #include <drm/drm_gem.h>
->=20=20
->  #include "xe_bo.h"
-> @@ -59,3 +60,57 @@ void intel_bo_describe(struct seq_file *m, struct drm_=
-gem_object *obj)
->  {
->  	/* FIXME */
->  }
-> +
-> +static int xe_panic_page =3D -1;
-> +static void *xe_panic_vaddr;
-> +static struct xe_bo *xe_panic_bo;
-> +
-> +static void xe_panic_kunmap(void)
-> +{
-> +	if (xe_panic_vaddr) {
-> +		drm_clflush_virt_range(xe_panic_vaddr, PAGE_SIZE);
-> +		kunmap_local(xe_panic_vaddr);
-> +		xe_panic_vaddr =3D NULL;
-> +	}
-> +}
-> +/*
-> + * The scanout buffer pages are not mapped, so for each pixel,
-> + * use kmap_local_page_try_from_panic() to map the page, and write the p=
-ixel.
-> + * Try to keep the map from the previous pixel, to avoid too much map/un=
-map.
-> + */
-> +static void xe_panic_page_set_pixel(struct drm_scanout_buffer *sb, unsig=
-ned int x,
-> +				    unsigned int y, u32 color)
-> +{
-> +	unsigned int new_page;
-> +	unsigned int offset;
-> +
-> +	offset =3D y * sb->pitch[0] + x * sb->format->cpp[0];
-> +
-> +	new_page =3D offset >> PAGE_SHIFT;
-> +	offset =3D offset % PAGE_SIZE;
-> +	if (new_page !=3D xe_panic_page) {
-> +		xe_panic_kunmap();
-> +		xe_panic_page =3D new_page;
-> +		xe_panic_vaddr =3D ttm_bo_kmap_try_from_panic(&xe_panic_bo->ttm,
-> +							    xe_panic_page);
-> +	}
-> +	if (xe_panic_vaddr) {
-> +		u32 *pix =3D xe_panic_vaddr + offset;
-> +		*pix =3D color;
-> +	}
-> +}
-> +
-> +int intel_bo_panic_setup(struct drm_gem_object *obj, struct drm_scanout_=
-buffer *sb)
-> +{
-> +	struct xe_bo *bo =3D gem_to_xe_bo(obj);
-> +
-> +	xe_panic_bo =3D bo;
-> +	sb->set_pixel =3D xe_panic_page_set_pixel;
-> +	return 0;
-> +}
-> +
-> +void intel_bo_panic_finish(struct drm_gem_object *obj)
-> +{
-> +	xe_panic_kunmap();
-> +	xe_panic_page =3D -1;
-> +}
+Could you mention more things when repost in the commit log?  (1) wp_async
+bug, (2) explicitly mention that this is a slight ABI change, and (3) not
+needed to backport to stable.
 
---=20
-Jani Nikula, Intel
+Thanks,
+
+-- 
+Peter Xu
+
