@@ -1,65 +1,48 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A895D1E4AB;
-	Fri,  6 Jun 2025 12:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B833228E0F;
+	Fri,  6 Jun 2025 12:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749214233; cv=none; b=Ll2Bi3vMTUsTDpy/xmha1qP8wGNXXr8pJtCaqZLCTHC5UCWhhrUxZDvGZKiVGIgiH44z1TJZXtnOOzCOsK4LPhmdBbJ2ZqPHhC8BXg5GriT32SOm1KkZz0b0KPXYBrLp4ArP+UaM63/7Ej69ZM2dFZ2Q73lJbh6TWkefnDslKEA=
+	t=1749214298; cv=none; b=gesSh0U3wWbPZkcKldMJEYQyibj/gReIji1Ba4MgqMj2c9xIt7cWT6aZfti8uV3lV4TMkk47ztViPvUvulkxa+3P4WAni5RaDsw4YfjdIeB98vMqEnkxWwB6LhkdAvHgQKY0kT0KMXFJTYpPljcqht+mlNsHWfGr14FUIeQB+/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749214233; c=relaxed/simple;
-	bh=W+LlfNk2HsbBqdZ79RTapibL/KsF2dILx+zv70pwrYI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R/FvPRYWLJ2YZE833dbZJZ6L7TIACoIBVlALzWyA76QsDW/WbmiO3EelxQbmZzdacu+l0Be/NVHAcJHMAgEnSKnjkdrbr/gSWNpmy5R6xOyTQqwrYXfWRdIaDHZVXagRTtuKbcUSwFOuKOQMKiUL9Ao9Z1QjSrl0rVUHz2de6QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ix5pt9hO; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749214298; c=relaxed/simple;
+	bh=dtecXRWUyF0yin5ved9QdoDV8185V+TTuWa3QEslO5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=d63cQut1IvLMW8RKHs3n533GxZnYbk54LEmZpjmnLDk6/aWjkar7Iqbu+CSX+BSt5XW7uf66EFJWnVH/S8el7gaYNEvciiubAD3nflO4y1Sb1s9Rf+FGVeGZ0iptZ7J7rzH1fM6t7jSqNPhbRGk+E1AXa2ZuaYAjGCDjNXS04Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bHpQu8MX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ix5pt9hO"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235a6b89dfaso3281905ad.3;
-        Fri, 06 Jun 2025 05:50:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749214231; x=1749819031; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0J3vuS2o0FutGzGx+1kPPU7uFTM+MDxsKMVlIteTB4Q=;
-        b=Ix5pt9hOwGA+OYCfEhci34fbRDASA9xb7JYJy0ewotj0CcCYNKaBdD60cZwPgf26ek
-         AZU907C1ujZmPFeNvdNl1WQs3VTjqrpV/xN4XaMvi2q9dFFTPjbMNeZ43Rv8oSPCl4UR
-         486VLSs6iVNI+MQ8MxGgnUX+XT7U42eZz8OSOkz9jwGKoMubIADDzBtRkSFH9fE3vqWL
-         8nTfT40KDtwDpqZyhByFwjxCTcqOSHmPJx+WkHcs0j7U60ISzUfpN3O+95pXBnfnBjqm
-         Hj7UQvkzfX+ze0uDuPgdzx2FjsN7zr2YYSas1f3VSVdWc/92HjIrWnqiILylgEovn519
-         RYXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749214231; x=1749819031;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0J3vuS2o0FutGzGx+1kPPU7uFTM+MDxsKMVlIteTB4Q=;
-        b=KTa2OczGEE5nJuVGNet+abeZRET9akrXrHbbu+bRXVb4vXQe+8U+HpLvcWv3GCN2L4
-         sfI3xudGE7C7E4yQTqBvtf04muWU75n3gBFLrJRhWKGdpyO1FH6qIcuuj7ZVsrEXK0JA
-         taLPlUNb7PvTx2ReebzAbSpZCEznosmDgfWIby7Uzv7dTxj4zj6/5ysJvcHx1fFnTC3H
-         P2b7l/lXQvMhy/XxUERRAVpJwRQWUqr8AiCut0bihcre17JU/rRmFeDmdp+M72W/aSOF
-         yjdfSA00PW5Pra0Q35dQGb4X3VjaJdgEp09VKpg2EVQLBz4EMjy9PYn7w4szfdN5nUz1
-         lHFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUjyb/h631Q9Inl6Ux1HXPyo2+tCNcfBcM1tSI4mxq1NrxYlW+0kc+3EAWKk45zTK1VSIEAMPBADQK4NkU=@vger.kernel.org, AJvYcCVzznssAneEzPFuEPyofOzbrsoslUA0exMB+7Z/ewwl0noG/9O2N+U6MmTivxFo8HAKn7vABWax9UGs@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYcpdBeV7BYPXJa1yQdOfjxR3GdnRk17WWjWyHTbI+XqqvkLNe
-	NDjTw0vk9ueKDn/9wBPCzxJPP4yNVC7Zn62ZuPtsfU/yH0U77lToWHs=
-X-Gm-Gg: ASbGnctQW+en5blSkafQh4BCYYL9byruFWqguDD9OOH2oCIx6sCa6In0RZChL5P2TC0
-	/FSEGyH653kxPmwE9BJ2aT1BViqvjo5uczh+jA3AmQHIT37b1KSBVsHjFu332nLZHp1kHNbjXsZ
-	1lbWuTzXGxlMUhjS2+4J77/70w0vFCSVT8Zrepedo4c/XzQy7B5uy7btKACl+C3Zc4g7PmBkGo3
-	+oA3D1PQFtAHVQ+Cj5XxP0IkV9VXmxr4wan1nNN3rTFgf4iTslqb63BHCfUeeqYGjSw28HvFs3R
-	bH5c6DWxYKfDueFFcbuflE8aPCw4ErTI+RLC/swq1kasPtW7ZNzUvhollCv5mi5eiLPvQTv3GWt
-	p08AITMiCPP6HaCp3v/ASNxpaxq0=
-X-Google-Smtp-Source: AGHT+IHx0FKv5yZh74fOjj8IoRFYxtYWCQ/LS+Nkl4PMdKvrGGqAR3s4MnLBPejuysbls23PDTgzig==
-X-Received: by 2002:a17:902:f54d:b0:235:caf9:8b1d with SMTP id d9443c01a7336-236040902d7mr13142645ad.12.1749214230898;
-        Fri, 06 Jun 2025 05:50:30 -0700 (PDT)
-Received: from ?IPV6:2406:7400:56:b5f1:3fae:6c04:a3e1:b0f3? ([2406:7400:56:b5f1:3fae:6c04:a3e1:b0f3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092f50sm11705095ad.71.2025.06.06.05.50.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 05:50:30 -0700 (PDT)
-Message-ID: <6f02afbe-cc55-4fe2-8615-1547f1d43efa@gmail.com>
-Date: Fri, 6 Jun 2025 18:20:27 +0530
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bHpQu8MX"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5568VQDR031008;
+	Fri, 6 Jun 2025 12:51:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	KPZLJlpuZibqD575czjkKdQ3SW/r72UBFjCfKtCMLfg=; b=bHpQu8MXVjdBwRsn
+	xLH7HSeuEc0QBpCVSiUl/Vy6QX5TP61GsRg2Iouf91ZQcqTGhgZW9iPS1QxTOsiY
+	lK/2dx+Hqv19NLcW0whJRX04rpB4ytuMJAPBCLjCji+6UQ6S0AG3TTddAKNQ/XlL
+	w/lqtDnCz8Zz91XI53AAWXGPQWE8IPakTQbj/qNbVA2Kn8GZLiZ6XrkcEJoCTiTM
+	cTTa/4v2AXNoGTB6G2K/UcHrMOtKgxifj1TPRwYavct1ohJuk1jDXFJ9tTjqaF7w
+	MNvJKatWZI6A00y6qNKheiwyWc0amZWyT+wCu1JUTtY+zg/cLFO7pZH/XrkvLmWg
+	51fA6w==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8s4q8k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Jun 2025 12:51:31 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 556CpUl0026102
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 6 Jun 2025 12:51:30 GMT
+Received: from [10.253.79.143] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 6 Jun 2025
+ 05:51:26 -0700
+Message-ID: <7aa36a0f-6741-40c2-93f4-036823d245fd@quicinc.com>
+Date: Fri, 6 Jun 2025 20:51:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,55 +50,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] usb-serial-simple: device conflict with Owon VDS1022I
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: johan@kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <6430992c-d50b-4cfd-bcb9-d7d376c53444@gmail.com>
- <2025060620-twister-starved-3fb8@gregkh>
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Nicolas
+ Dufresne" <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
+ <996c9a39-5520-4b43-adfa-06ce29223ba0@quicinc.com>
+ <713b87cb-0003-4ee3-a599-9cd41629bb42@kernel.org>
 Content-Language: en-US
-From: Amit <lestoppe@gmail.com>
-In-Reply-To: <2025060620-twister-starved-3fb8@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Renjiang Han <quic_renjiang@quicinc.com>
+In-Reply-To: <713b87cb-0003-4ee3-a599-9cd41629bb42@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 323KRHMxj_jGHTw_9905x9k9nk2FmZAg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDExNiBTYWx0ZWRfX+OPckuXGwuBi
+ jSFzDZvsCcavwXjpQeUQbhabayTdBGApWQD/O0tFwySCsTRAwbUO6P3EXlGIte8MODQoU18zHuW
+ fD9btlVOrlGpRfxac6StYhlgWuRO93PNczh/a2KCyTsHw8rUxOVtc7DqHEOV9eR+JdtAo+/rj+k
+ IEBKfSVQu69J4qtI5wMi1g+EDRyW2+RRlIPGSH2DnvQvrE/YkN6rS8/EPDwMbdsudGrTlVIX8aC
+ nln6jdDmRt8EfPLffoJWJpso7bhVBsnOvYp3gmoGQ4lnvC5qNiA/hh+iBzmCZCR4t2/8AAAgmUc
+ BRw2pl6ak8tlyoGw6SlsYcKwekq3kuxV0vYODyd/IYqAtPW1GQCGnkwXPDZ8Kgi4+uch/hPb8at
+ cyw6VTh6qJaFSMvWpZHief/Hj8y9T5rWLbMGBKzsIjGT++w1uAqcJGYo1Tzw3t7PAdEUjVYX
+X-Authority-Analysis: v=2.4 cv=RdWQC0tv c=1 sm=1 tr=0 ts=6842e453 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=nhFwFTAwuBtyWiKGGJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 323KRHMxj_jGHTw_9905x9k9nk2FmZAg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-06_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 spamscore=0 mlxlogscore=932 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506060116
 
-Hi Greg,
 
-     You've made valid points on both. Let me check with the authors of 
-the software, there is an ongoing discussion on this.
-
-regards,
-
-Amit
-
-On 06/06/25 17:47, Greg KH wrote:
-> On Fri, Jun 06, 2025 at 05:00:29PM +0530, Amit wrote:
->> Hi,
->>
->>      PATCH 6.1 082/167 adds serial support for OWON HDS200 through the simple
->> usb serial driver (). This causes issues with Owon VDS1022. The VID and PID
->> is the same for both devices so the the Linux kernel loads the serial
->> driver, preventing the associated software from working.
-> As vendors are not supposed to use the same device id for different
-> devices, that's against the USB.org rules, so that's on them, not us :)
+On 6/6/2025 8:44 PM, Krzysztof Kozlowski wrote:
+> On 06/06/2025 14:37, Renjiang Han wrote:
+>> On 6/5/2025 8:34 PM, Bryan O'Donoghue wrote:
+>>> On 31/05/2025 01:05, Renjiang Han wrote:
+>>>>>> Note:
+>>>>>> This series consist of DT patches and a venus driver patch. The patch
+>>>>>> 1/3, which is venus driver patch, can be picked independently without
+>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>>>>>> DT patches, still depend on [1].
+>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video
+>>>>> core
+>>>>> on QCS615 over(?)clocked.
+>>>> Agree, so we need to make sure that the driver patch is not picked
+>>>> after the DT patch.
+>>> This statement is confusing.
+>>>
+>>> 1/3 states that there will be a fallback if there is no OPP table
+>>> present.
+>>>
+>>> Giving the code a glance, I believe that is so, freq_table should be
+>>> used if there is no OPP specified in the DT.
+>>>
+>>> I think we are having a hard time here understanding what you are saying.
+>>>
+>>> My understanding:
+>>>
+>>> - venus modification is standalone 1/3
+>>>    Qcs615 will fallback if no OPP is present
+>>>
+>>> - dt modification 2/3 3/3 is therefore also independent of driver
+>>>
+>>> ---
+>>> bod
+>> yes, let me re-spin this with driver patch alone. Once that gets in,
+>> will bring in the DT patches.
+> Did you read my feedback? There is no "once that gets in". DTS is an
+> independent hardware description and your patchset claiming there is
+> dependency is just broken.
 >
->>      My current work around for this is to blacklist usb_serial_simple. Given
->> that this driver change was recent and still under testing, could we find a
->> solution for this that doesn't involve such hacks at my end.
->>
->>      I  was able to root cause this issue only because the USB device and
->> software was working correctly before. A new user would just assume that the
->> device is not Linux compatible.
->>
->>      I've filed a bugzilla report here :
->> https://bugzilla.kernel.org/show_bug.cgi?id=220193
->>
->>      This is the software : https://github.com/florentbr/OWON-VDS1022
-> As that's just using libusb, it can disconnect the device from the
-> usb-serial driver if it needs to from the program itself.  Why not
-> suggest this change to the authors of the software, OR just change it to
-> use the serial connection that the kernel now presents instead of
-> attempting to talk to it directly from userspace?
+> I am repeating this since few emails, so shall I NAK it that you will
+> address the main issue you have?
 >
-> thanks,
->
-> greg k-h
+> Best regards,
+> Krzysztof
+
+Hi Krzysztof
+
+SC7180 and QCS615 use the same video core. Only difference lies in the
+freq_table for the video. Freq_table is generally determined at SOC level.
+The Venus driver does not currently handle freq_table compatibility well
+across platforms. This patch enables the driver to use the OPP-table from
+the DT, addressing the frequency compatibility issue.
+
+-- 
+Best Regards,
+Renjiang
+
