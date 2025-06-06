@@ -1,114 +1,83 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9034E81724;
-	Fri,  6 Jun 2025 10:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1348286883;
+	Fri,  6 Jun 2025 10:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749204651; cv=none; b=X/vmDbTVG4n++oWA9aJ0F5U18u2LPdhyVm+PJARuVp4J7ENO5c1AEtVeYQqd/dqaltedejArB4gutLg+11kA+60rYjBYneJHdoZvVHI//EhAxFnnZ434/JKApASJpBT078opJTcFwN/2vOT+aLRaeP8s5Eg1AMOOvXIVc0ROqtE=
+	t=1749204662; cv=none; b=TdN1wmiMIe2hztKBhZ/O2WTTK5BNShUNL4IOufTgR3PF/7oY33EemnuUZoM70OfS8ObH6tL4I/LG+aVrOChGRHpmyyiuxDhCExbiu4CgR8uJFXV1rgLyCSciWSb6SqWYomKNLRJJ2bzNmCaoB1h0N1vq81PpjSqOVWJoE/oARaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749204651; c=relaxed/simple;
-	bh=w3jvPKDcZ5KnZ8bgfQHEt/tnSSP/RaDEPYHKY4JFfQk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K3cA1FMXLGvYCKSAOhuLwHkgvgdUS5WBib7/6962QGwLN9n05/zP54ppeNlVsp+1HaC3XkzqXpoDuhhNJx1j6gTu8+1aeqegHzLWTbAa9VZEjNn+x13ElXAWOkbl34IL8NerCbLwmMknq8JQxHMP9t3HUzeOQZz2K/2mCoqPyVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIKBcX83; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749204662; c=relaxed/simple;
+	bh=QpA/JuCnAP/vFa+RSbOkJBcKz4J+tC4XXGlQAhLxjiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q4UfznYGbivLKvkQheM+E4iC4I+Xp+tqYbBjlC0cJTFOyuTmk13PfFAOY/eHwtE3XsCjiZyZRI05m9FQfpYHGXQ6uUfhmfa+OsMdVRgyG2S+zmk9ZGPJ8UURPJTrq+SVVpUcBIL9GN/qzuG687sdzk9xOgUW6xA6hR5omb0/rDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOYV3ygE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIKBcX83"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234c26f8a25so3035745ad.1;
-        Fri, 06 Jun 2025 03:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749204650; x=1749809450; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fEVsPcmujVG4TPPGthouiu2CSCG3XCwm4flJ5gXb89s=;
-        b=bIKBcX83PfeyoiJ/l4HcDSJKMC5T4UcVCLLqaSM1ocYlPRD4oPfyyF5d/ff3/Qo5fs
-         3KZFZroJVdbsvJH7zgDtZYcfpEy5NV50DjWEhFCa118DHCV70Guvmnn3wXx6t95ldwdd
-         AoDqczoR2QqQPIYNcKA7pA+KQXTsgSlkEqltQF8XQa9yo22TCBgUSifwsJVwNbbnivZV
-         cUUhWQLMHm4dlm7geSRxEq9StcAH0VqlbhBcBls+mMh5bSlCZrJrfNN1RI0hZqn0WK3p
-         0YCp6Mim6eV1vEMvZXxVkVHAYqTFGtPtMIcanZxQ4c7c3vqLXTreIbiJ6sc+5thS24cu
-         UJ7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749204650; x=1749809450;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fEVsPcmujVG4TPPGthouiu2CSCG3XCwm4flJ5gXb89s=;
-        b=H9kQdAxJkwUuFRNHcaG3yrwvqIQ1m1tLvya8K3ojmpHmi1+lxIQP6V2hJIEMSucMnI
-         qA+DKzsSU8q7ZDKAC6nO1pUL4m8w+h4nAC51mvJpyei4v1MiqcXTyNRGUQjI+HQboFBH
-         s1eZ7x6RK7wxMkL7LWXVedng0LscOSo3vnWUOjBEY+S2vpPxpap+1IeWVUCu0L6P7B82
-         MmukQYeoECL/SRZgLNl9lRCBmQR2dX1baDlc/yQQWUiGUEnJ/j/y3Cq62LGI1b9KzLdb
-         uafxk3aNvr6aoW82VYJSSZRHGE0prfHid4LHopeXUg0iGS/b3rIBOuqGaU/7zF/36xah
-         k8ag==
-X-Forwarded-Encrypted: i=1; AJvYcCU7jqOdoBK9KwrZkq0o0sttJhOOfQtqg2Qz6oekkiFqKy4C0BqxizZc02Fq/6AbQh60lXXej1/40PA=@vger.kernel.org, AJvYcCW+uU5orndG6orzfsSi2oItRzBhRzezCMAILrjsD22j0wYzB1PXNpL0SkNfreZEc2++F1ShY2lfyw4=@vger.kernel.org, AJvYcCW//BNwocnmehOV855x2XMoY3aLcH2mNFVVPlS1fMT4tBjWtoofVqHOgTaFAds6ERPyTXlfQv+OKmdcsoFA@vger.kernel.org, AJvYcCW0IhZR520dcPA449FAAEJ7L/DqvJgZbZO8CCyeKE8K8oOqDxPLT/hrtLQb3LSp6Fc2qmnyrL+f6b24BOQpLh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs4vHL6EJ4AX0WQdjTP3JauBpog0f518bPKAM1c+a3iLC/bUpF
-	XRqLTZclrB9V/VakDhTTz0nJe/MzIrXzaE6fgZF6VOWUzMtqlOCxCos1hp50aqO6uXiTpzsVmYi
-	q0wgnl14zXYkVIoZWfGFPLh43jLRL1rs=
-X-Gm-Gg: ASbGnctu9ycIYa3de5U/8kfH0pshJ9BaxxyERVQOrq+1Ywq1lwSh7ni992vpsl8fVbd
-	6M7jvsS/uPvliRm1CfomtwFFCO1OYt62opVCCn/vpiUB0nlRPr5kUbyFM4l1EdxNXqWvZlA7mpO
-	+bVqhod2Qo4lvo2Y9XGT/GaNOMzNbNwc2v+S51n0AhIbE=
-X-Google-Smtp-Source: AGHT+IHJK6lS0GjeOTRlGjUGlIzSEOQJan0nGM6pFx6roUYemWWUxEZ7RboJGS+1ELFs1nF2rCoKHpO5YCC2dkuhHuo=
-X-Received: by 2002:a17:90b:3d04:b0:312:ec:411a with SMTP id
- 98e67ed59e1d1-3134e3fa0e4mr1136329a91.3.1749204649600; Fri, 06 Jun 2025
- 03:10:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOYV3ygE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D32C4CEEB;
+	Fri,  6 Jun 2025 10:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749204662;
+	bh=QpA/JuCnAP/vFa+RSbOkJBcKz4J+tC4XXGlQAhLxjiY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kOYV3ygE1WUo2ThdlO7485Uw/rj45w0Z+n/6w5WbgFyUCXIjsyKtxqHf2YHZO0Hv8
+	 WbPKtRgW3k55PDtqmLWOUmorRkt/FVHsXcRPlM5ZyYNCebTbP+Q4uCa7zdoWaOn2O1
+	 WbPE3oVUkM6WgXPuJMOlqd5WvzgdONu1RXVFeFzL0nqWRUOi3mG4dHgnrBzE/83Mqn
+	 FyKKPmY4pvB6Z7tMVxcKOpNcAeK0soEHiZtQYZhuh00iKPvG3IhxtaXWR/Hhmik34O
+	 gCbYNzdXNCtYHoXL9fEAWqLDFlVb1+xzr5QSZaqBb4CM/pdq0K28lxwY0NR1kAf91W
+	 W7kAAiZVNcUhQ==
+Date: Fri, 6 Jun 2025 12:10:54 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
+	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
+	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+	Dai Ngo <Dai.Ngo@oracle.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Amir Goldstein <amir73il@gmail.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH RFC v2 04/28] vfs: allow mkdir to wait for delegation
+ break on parent
+Message-ID: <20250606-zuzahlen-vervielfachen-8831c5ca8f69@brauner>
+References: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
+ <20250602-dir-deleg-v2-4-a7919700de86@kernel.org>
+ <wqp4ruxfzv47xwz2fca5trvpwg7rxufvd3nlfiu5kfsasqzsih@lutnvxe4ri62>
+ <eeefb45bc67182971ae7d3c455a4ecfdec53d640.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <HVTDJypFNQFfSQJmmYDSPU4o-irFnjmDN22RW3S0z5Kwe_hVk9kquZWElv-C2k6d5kOIiewhj_Xo2kAoTHbHgg==@protonmail.internalid>
- <cover.1747634382.git.viresh.kumar@linaro.org> <87qzzy3ric.fsf@kernel.org>
-In-Reply-To: <87qzzy3ric.fsf@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 6 Jun 2025 12:10:37 +0200
-X-Gm-Features: AX0GCFulh-NApLJ_BZprdr-LgDGIG0IRhXBoIDMZxa1As4OIxQVem2hDI7xiYt0
-Message-ID: <CANiq72=EE1Gqhjhyz46njFa5Wb6gbax3Abg83PyhQNX=X7pF1Q@mail.gmail.com>
-Subject: Re: [PATCH V12 00/15] Rust abstractions for clk, cpumask, cpufreq, OPP
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@redhat.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Benno Lossin <benno.lossin@proton.me>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	Michael Turquette <mturquette@baylibre.com>, Miguel Ojeda <ojeda@kernel.org>, Nishanth Menon <nm@ti.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Trevor Gross <tmgross@umich.edu>, 
-	Viresh Kumar <vireshk@kernel.org>, Yury Norov <yury.norov@gmail.com>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, rust-for-linux@vger.kernel.org, 
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, Burak Emir <bqe@google.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
-	linux-clk@vger.kernel.org, Andrew Ballance <andrewjballance@gmail.com>, 
-	Anisse Astier <anisse@astier.eu>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <eeefb45bc67182971ae7d3c455a4ecfdec53d640.camel@kernel.org>
 
-On Thu, Jun 5, 2025 at 9:42=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel.=
-org> wrote:
->
-> I was testing an unrelated patch and found this kunit failure in
-> mainline today:
->
-> [19:45:34] # rust_doctest_kernel_cpumask_rs_0.location: rust/kernel/cpuma=
-sk.rs:180
-> [19:45:34] # rust_doctest_kernel_cpumask_rs_0: ASSERTION FAILED at rust/k=
-ernel/cpumask.rs:190
->
-> This is for arm64 defconfig. The test seems to passes on x86_64.
+On Thu, Jun 05, 2025 at 07:25:38AM -0400, Jeff Layton wrote:
+> On Thu, 2025-06-05 at 13:19 +0200, Jan Kara wrote:
+> > On Mon 02-06-25 10:01:47, Jeff Layton wrote:
+> > > In order to add directory delegation support, we need to break
+> > > delegations on the parent whenever there is going to be a change in the
+> > > directory.
+> > > 
+> > > Rename the existing vfs_mkdir to __vfs_mkdir, make it static and add a
+> > > new delegated_inode parameter. Add a new exported vfs_mkdir wrapper
+> > > around it that passes a NULL pointer for delegated_inode.
+> > > 
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > 
+> > FWIW I went through the changes adding breaking of delegations to VFS
+> > directory functions and they look ok to me. Just I dislike the addition of
+> > __vfs_mkdir() (and similar) helpers because over longer term the helpers
+> > tend to pile up and the maze of functions (already hard to follow in VFS)
+> > gets unwieldy. Either I'd try to give it a proper name or (if exposing the
+> > functionality to the external world is fine - which seems it is) you could
+> > just add the argument to vfs_mkdir() and change all the callers? I've
+> > checked and for each of the modified functions there's less than 10 callers
+> > so the churn shouldn't be that big. What do others think?
 
-Yeah, I reported this back in v11:
-
-    https://lore.kernel.org/rust-for-linux/CANiq72k3ozKkLMinTLQwvkyg9K=3DBe=
-Rxs1oYZSKhJHY-veEyZdg@mail.gmail.com/
-
-No harm done, but let's please try to avoid merging new stuff into
-mainline with open issues.
-
-Thanks!
-
-Cheers,
-Miguel
+If it's just a few callers we should just add the argument.
