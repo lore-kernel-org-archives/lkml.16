@@ -1,154 +1,140 @@
-Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C84289E2A
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E9719D07A
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749222311; cv=none; b=M+9VFgxaWZjojI5Hv/QkPBQs3I0TyQqW06NVW7ML0V1OC+Pm8Kutvo4OezsKEQv8byBVHLsX+WJQsze4FhO0i8fnLBo0D44K2okP8bYd8IhLPr0fhxLAK8QXuNVWJpfrmqQTieMYGSAXcjZtKsIkGWcOCVn6HYvbVJZAvtlDG1E=
+	t=1749222434; cv=none; b=MMp6SUdHIdl9DsKLLFTG0rYzAAa4JdGtWsgAGPGWonNgmXSSh8woilj3UjHDY8Y2zLTZocUu9KAW6IDcW6xUVJg4Vd0SjtIoSQ18wSwHlZA2QxA7TSksX3NXEY8hshUJsC4ailRLEYsM8mopVPc//6vjzMp6a2AIVu5QH26N/h0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749222311; c=relaxed/simple;
-	bh=X++z+hQYFYN3nw3M+I3vO+WuT+TKLemBGmnnjojb3mM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=oCUlnAd6H46fT6Ngdfri+ANp+enBMVmQg73nrIHOrg2/RChUjrX2NbNzTdSYyCO4h8qeE3fapQuNBiWAFWsQ4OI69rjpkghGkyKv1UWCIgNis1N05GxbGqfNhqwbqEJcsRcHkUoFcu/KUWoE2UIH0B8rAhf93Ds6wHyQLr+pNtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=vy/ub6sv; arc=none smtp.client-ip=91.207.212.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	s=arc-20240116; t=1749222434; c=relaxed/simple;
+	bh=ADVJJCRcmD0mLAlYAE92zYCKME0YhADfudgXzeyCt+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o7fIF0msBoHQQu3AWHYbXdctv68jotM0YeVFfzzTWQO3FLRT2DJeXf1I7hPjAyNl4+75AaCGRI/pXJhQ5aTS/hIoP4zj1jG4V787JfSbzD/YilIA9/7V/wkHM/1o5Gtq32M+JIKhoCmrtQmbGgqUreluKh+VCmCqYkMlYvD4uKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hve9braA; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="vy/ub6sv"
-Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5565hD2J006948;
-	Fri, 6 Jun 2025 16:04:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=dk201812; bh=SMsHjoH5Q2nG0ifgBRmmw70
-	aAn/K1FaIdIXnVF9bSm8=; b=vy/ub6svoGkvMYJU5GwFa81XZKREJGkiGofK+XL
-	bmhRbtSlNBhyXA8Ch9gmOqGfuk22RjfZiqIXRjlbzh/p3rKp1qODLmRLrggA9FaR
-	2bM4PNsnTlVL8NyFNnpQ81NVVlaQF3sGTdkCK+xB5/ETL+69u4rEPhWLYE4a203L
-	/voI8GZQe2KrKsOqP0pGTu6Am7dITuArtM2jhS+HtzEt0kMN9juun9N2qLcDiYna
-	qkOU0btTXWOkJ+TT0cBrEIodZgftA7/E8Ztm/yL0X/dN4mrvXm0eRMggdgRmVcMT
-	6Q4i0jMkVIRB0UG9AfqWz5qJG23yNQg+KTMGkPtQtTvmXFw==
-Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 46yr1s63k6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 06 Jun 2025 16:04:44 +0100 (BST)
-Received: from [127.0.1.1] (10.100.108.37) by HHMAIL05.hh.imgtec.org
- (10.100.10.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 6 Jun
- 2025 16:04:43 +0100
-From: Alexandru Dadu <alexandru.dadu@imgtec.com>
-Date: Fri, 6 Jun 2025 16:04:34 +0100
-Subject: [PATCH] drm/imagination: Reasoning code comments for Sparse
- warnings/errors
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hve9braA"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-adb47e0644dso493771966b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 08:07:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749222431; x=1749827231; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pc/SK1Fvfl7qYXo204AzZDmTFG30IXxvBddG6FvY2z4=;
+        b=Hve9braA/Xw2ZtkTjBqpKh1ShWZQe0+Kj2zPfQSihjN+7rzlCIqzRSBj13BhEG4JOJ
+         FC1S2PHg6yWK3G1JyaU/Z3clV9VkIw2OeCYQiGnh5ldadlpRbE11vTFMw+f8vKbY58MW
+         hH9Vc7lw474waRGL23HF6DksydN1F/p0RhoWnPwHcD3NSt8uSkoa+Rknjtesu66hLKHW
+         MB1CFsvR3ADgQWWYnckAaRvZ5AOLNXSYUtXRKY614f6ew+JHfbIxFiBg3SpNcJLO2mnL
+         SvQjJvVz+ybzrW0X63shQ6A5Iamexypiv4XK53ul4VCYuJSpnnuRSAFIaoZDEBmt6ovK
+         LHOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749222431; x=1749827231;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pc/SK1Fvfl7qYXo204AzZDmTFG30IXxvBddG6FvY2z4=;
+        b=cbvCYEh63xf2FhSImd9TiNGTMw8zYOidnrUkhTA4F8zV9H1MK+SDvuzpjy99xM4oEt
+         2nEAcjZGy+t6ytyU6rjepEMhMXVapx9mitGfZgwaR1oDP0O9qNdvo98aLLb9+6qGleA5
+         l2LVhUucvJAjGty96R8yTxARTkXGOA4PGP2RIFdQsLc93/pmBvKsgqWXTD69lMr4HIMY
+         Enb0U4j6MdnLoCJ9j/JU1Srlgnscyy91CIB572H/vRTQXmpHMGkaRM0OE6D17bIrAOnr
+         szMsA8Yf5wHG9SWNk2cc072hf9mQ0YwhgTunnmLw0LTfNH00snzFeof45bKyw/khrfxE
+         vMuw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/SDf50tA9aW8ZnY4Ki37gIEZGL64ESnRcL3YMes+9enhj5MD6i+SRl5G3IxAQGfLyT49Aq38+Ye8Uzk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQduc/6rveu4f7IDl0hIDVrsKmqiVHrdhsQS4mKhgPobiokv8t
+	cPrSRsSNVV4l0oFFFoOV/eCU8FNFgsX5a/crEbVOsm6ExEvTeVacmVAzkHgDyQ884sA=
+X-Gm-Gg: ASbGncuBBg58dtKcI+mB75a47jxIMf9nYd181rXesY8YAkCOCWcbMdqU5Am9vbx9hcx
+	2fe2veZVCCy+NoAlv+7DcDYzrI2IoHqs8OmaColC8TV7FYo4ycj/7MQPJ7tLXJ9gTBGWtDaUVOW
+	8CorJX88lePiX6SYK0NXoOyiHjnWnogek196PXiErXCeCD/YE684S19gHHvYjA0q8taZoASYIDk
+	ewkAL1bZPjDiP47I7TUcmxpb8lqx2hvWlYFSezdVZyS6vS7pxd7nRLip6V10JxWrVMeUZ43HSYx
+	onYmvQZVhkczpCnPIy5HWco4gw+1vu1uN0XrvcyOCtTuLHJCo7965XjxUQVj/4c8s4rzDisEtg=
+	=
+X-Google-Smtp-Source: AGHT+IHAKCgU6k68iC6QxjWSvfB5F/Whj3LvE9iYIb5LO7mQImUC1Ui1uT3AEHCwbJX5msacoU1mJA==
+X-Received: by 2002:a17:906:830f:b0:ade:31bf:611c with SMTP id a640c23a62f3a-ade31bf657cmr104820766b.9.1749222431322;
+        Fri, 06 Jun 2025 08:07:11 -0700 (PDT)
+Received: from linaro.org ([2a02:2454:ff21:ef30:fec5:df29:72db:ff36])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d7542c8sm130047266b.21.2025.06.06.08.07.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 08:07:10 -0700 (PDT)
+Date: Fri, 6 Jun 2025 17:07:05 +0200
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: quic_utiwari@quicinc.com
+Cc: Thara Gopinath <thara.gopinath@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bartosz.golaszewski@linaro.org,
+	quic_neersoni@quicinc.com
+Subject: Re: [PATCH] crypto: qce - Add suspend and resume support
+Message-ID: <aEMEGZhGamnRD6_I@linaro.org>
+References: <20250606105808.2119280-1-quic_utiwari@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250606-sprase-reasoning-comments-v1-1-433c0ff11a09@imgtec.com>
-X-B4-Tracking: v=1; b=H4sIAIEDQ2gC/x3MywrCQAxG4VcpWRuIYzteXkVcDPW3ZtFMSYoIp
- e/u4PJbnLNRwBVBt24jx0dDqzUcDx2N72ITWJ/NlCQNkiVzLF4C7ChRTW3isc4zbA1Gf5HcD6d
- 0liu1fnG89Pt/3x/7/gOOxCkpawAAAA==
-X-Change-ID: 20250606-sprase-reasoning-comments-e48064532709
-To: Frank Binns <frank.binns@imgtec.com>,
-        Matt Coster
-	<matt.coster@imgtec.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Alexandru Dadu <alexandru.dadu@imgtec.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3309;
- i=alexandru.dadu@imgtec.com; h=from:subject:message-id;
- bh=X++z+hQYFYN3nw3M+I3vO+WuT+TKLemBGmnnjojb3mM=;
- b=owEB7QES/pANAwAKARW10uOFNYqiAcsmYgBoQwOKkbBZi/rxufPpXkC9fyJL/1bwCQRSpKVdS
- a+8gzrCL6mJAbMEAAEKAB0WIQS9+pJTOgt5GeXoStwVtdLjhTWKogUCaEMDigAKCRAVtdLjhTWK
- ol55C/48yg+Qgz4D9kRy6vfYEv/WDC8kbF01pPaGOOITCi8/0OFVbE/iZ1MZR8QE3ni+bRYXa1F
- hjW5+smCiN23unWDNI57tY0QpzAU+Q+UgGpDF+MEkuzzNEgNHtoZnxaLBCHvJmCFYqpROLoHDBN
- ynh43FHaqUl2TpyXDuOBprzX8cwBwD/QPgB6uYe3aZZfrSq7ickkzU7jXfxBK7WmkaSouBjTBll
- YDiwj9s2j9BrmUEJYLSbbIef0VIE3IB9pS/oTqfNqQeT5lduRvyLNg74k2lE+Q9H3cvBrvljJWy
- QxHenKbb8D+VpGvOU4CYMQxuLYldBGjDaQq8bQxmeNc4FmarTVRhj6K3saSKpw09ieMBNT/0mIP
- gR7nvp3KFZPJBmvKefnlL4oWHm7eG6r/G3MUGRIOUGLbuYJhxpiMimW1bHR5R+LpZs42Bbb8QG4
- JxKQ38PsA8dPWIexGqMStHC45R26keJ1AI8P/fgkT9hc2GuvQem042i8PyJXYsa2rJJGY=
-X-Developer-Key: i=alexandru.dadu@imgtec.com; a=openpgp;
- fpr=BDFA92533A0B7919E5E84ADC15B5D2E385358AA2
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDEzMyBTYWx0ZWRfX6wFwHCYW2OnI +bGai4RlOcjZxumrnGXQc+kh2O9+/qFI2Wfuzbt3KDViAvc/qb7IazvHLfWF7JMNHHh1fhCLssI LwfSU8zk3/xOqZM1l9hc427JySvJb0Dib4qKcbQDU8kw6oVvqp1MXEleyHTNybZjS7zrzGS/ijZ
- Fni7aYfZNFvpoik9MeM62aVzdxUnmWE7ALpeIqJ0f+2eNrg5qe7rHq193BBcOwG9HIim6RodaPi jDgW+rxNDlsdArdoxryYxM5tq/V4wOHRSEGrRxeV0D9cFlvrKI6isYB8LiE96RvYt/GY1WPIBEN Djdyc8lcRZTI69xXL2c/yivyXrFvx9EJ0uOM+2hEMKrPe+VikIoLSHunSVUj9y17Ch60Xat7vN8
- qNm3g2qRrjlYU16pj50JQI4WCV4KxLizfpFf9j4+nZT9V85q9TY31xXUzNrTI5OG3cfokdRl
-X-Proofpoint-GUID: PsfeHOxNl8A2KxD9JuUdMlum11DxwHG8
-X-Proofpoint-ORIG-GUID: PsfeHOxNl8A2KxD9JuUdMlum11DxwHG8
-X-Authority-Analysis: v=2.4 cv=ENAG00ZC c=1 sm=1 tr=0 ts=6843038c cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=WWlI6AgWcwAA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=r_1tXGB3AAAA:8 a=s9JQ9v9PLfxFY4fmZf8A:9 a=QEXdDO2ut3YA:10
- a=t8nPyN_e6usw4ciXM-Pk:22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606105808.2119280-1-quic_utiwari@quicinc.com>
 
-Added code comments for the lines that might generate Sparse
-warnings/errors.
-The warnings/errors cannot be fixed with refactoring without masively
-impacting the whole code implementation and/or they are incorrectly
-generated by Sparse.
+On Fri, Jun 06, 2025 at 04:28:08PM +0530, quic_utiwari@quicinc.com wrote:
+> From: Udit Tiwari <quic_utiwari@quicinc.com>
+> 
+> Add basic suspend and resume callbacks to the QCE platform driver to
+> manage interconnect bandwidth during system sleep and wake-up cycles.
+> 
+> Signed-off-by: Udit Tiwari <quic_utiwari@quicinc.com>
 
-Signed-off-by: Alexandru Dadu <alexandru.dadu@imgtec.com>
----
- drivers/gpu/drm/imagination/pvr_rogue_fwif_check.h | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Can you add runtime PM support instead, so we can also reduce the
+bandwidth/power consumption at runtime when QCE is not used?
 
-diff --git a/drivers/gpu/drm/imagination/pvr_rogue_fwif_check.h b/drivers/gpu/drm/imagination/pvr_rogue_fwif_check.h
-index 51dc37e78f41d7bdf45d1f434dd1aa5b9eca700a..96a423f34c639581a745a7c0498b82d601680ca6 100644
---- a/drivers/gpu/drm/imagination/pvr_rogue_fwif_check.h
-+++ b/drivers/gpu/drm/imagination/pvr_rogue_fwif_check.h
-@@ -157,6 +157,20 @@ OFFSET_CHECK(struct rogue_fwif_frag_ctx_state, frag_reg_pm_deallocated_mask_stat
- OFFSET_CHECK(struct rogue_fwif_frag_ctx_state, frag_reg_dm_pds_mtilefree_status, 4);
- OFFSET_CHECK(struct rogue_fwif_frag_ctx_state, ctx_state_flags, 8);
- OFFSET_CHECK(struct rogue_fwif_frag_ctx_state, frag_reg_isp_store, 12);
-+
-+/*
-+ ******************************************************************************
-+ * SPARSE warning reasoning: SIZE_CHECK(struct rogue_fwif_frag_ctx_state, 16)
-+ ******************************************************************************
-+ *
-+ * The structure rogue_fwif_frag_ctx_state contains a flexible size field.
-+ * The SIZE_CHECK will run a static_assert function over the structure and it
-+ * will use 'sizeof' over a flexible structure.
-+ * The implementation of the flexible size field is there by design and cannot
-+ * be refactored in a way thet doesn't impact key features.
-+ * To avoid having the sparse warning this argument can be used when triggering
-+ * the sparse check from the build command "-Wno-sizeof-array-argument"
-+ */
- SIZE_CHECK(struct rogue_fwif_frag_ctx_state, 16);
- 
- OFFSET_CHECK(struct rogue_fwif_compute_ctx_state, ctx_state_flags, 0);
-@@ -484,6 +498,20 @@ OFFSET_CHECK(struct rogue_fwif_hwrtdata, rtc_dev_addr, 264);
- OFFSET_CHECK(struct rogue_fwif_hwrtdata, owner_geom_not_used_by_host, 272);
- OFFSET_CHECK(struct rogue_fwif_hwrtdata, geom_caches_need_zeroing, 276);
- OFFSET_CHECK(struct rogue_fwif_hwrtdata, cleanup_state, 320);
-+
-+/*
-+ ******************************************************************************
-+ * SPARSE error reasoning: SIZE_CHECK(struct rogue_fwif_hwrtdata, 384)
-+ ******************************************************************************
-+ *
-+ * The structure rogue_fwif_hwrtdata contains different memory alignment
-+ * attributes for its fields.
-+ * The SIZE_CHECK will run a static_assert function over the structure to check
-+ * the size. The compilation will fail if the SIZE_CHECK fails.
-+ * SPARSE seems to treat the alignment attributes in a different way than the
-+ * compilation does since the compilation is not failing.
-+ * This SPARSE error over this line should be ignored if it pops up.
-+ */
- SIZE_CHECK(struct rogue_fwif_hwrtdata, 384);
- 
- OFFSET_CHECK(struct rogue_fwif_sync_checkpoint, state, 0);
+Also, what about the clocks? They should also be disabled, not just the
+bandwidth.
 
----
-base-commit: 217f80acfcf126b7d7d7b818c9bfea3c96fa85ec
-change-id: 20250606-sprase-reasoning-comments-e48064532709
+Thanks,
+Stephan
 
-Best regards,
--- 
-Alexandru Dadu <alexandru.dadu@imgtec.com>
-
+> ---
+>  drivers/crypto/qce/core.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
+> index e95e84486d9a..2566bdad5d4a 100644
+> --- a/drivers/crypto/qce/core.c
+> +++ b/drivers/crypto/qce/core.c
+> @@ -249,6 +249,21 @@ static int qce_crypto_probe(struct platform_device *pdev)
+>  	return devm_qce_register_algs(qce);
+>  }
+>  
+> +static int qce_crypto_suspend(struct platform_device *pdev, pm_message_t state)
+> +{
+> +	struct qce_device *qce = platform_get_drvdata(pdev);
+> +
+> +	return icc_set_bw(qce->mem_path, 0, 0);
+> +}
+> +
+> +static int qce_crypto_resume(struct platform_device *pdev)
+> +{
+> +	struct qce_device *qce = platform_get_drvdata(pdev);
+> +
+> +	return icc_set_bw(qce->mem_path, QCE_DEFAULT_MEM_BANDWIDTH,
+> +		QCE_DEFAULT_MEM_BANDWIDTH);
+> +}
+> +
+>  static const struct of_device_id qce_crypto_of_match[] = {
+>  	{ .compatible = "qcom,crypto-v5.1", },
+>  	{ .compatible = "qcom,crypto-v5.4", },
+> @@ -259,6 +274,8 @@ MODULE_DEVICE_TABLE(of, qce_crypto_of_match);
+>  
+>  static struct platform_driver qce_crypto_driver = {
+>  	.probe = qce_crypto_probe,
+> +	.suspend = qce_crypto_suspend,
+> +	.resume = qce_crypto_resume,
+>  	.driver = {
+>  		.name = KBUILD_MODNAME,
+>  		.of_match_table = qce_crypto_of_match,
+> -- 
+> 2.34.1
+> 
