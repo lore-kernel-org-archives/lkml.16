@@ -1,170 +1,202 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B16BA2D;
-	Fri,  6 Jun 2025 07:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A91284685
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749196320; cv=none; b=DmN0yuJD5/SgZpRsHte62kA4jCyK0hcZj2gMgDITbeHusaYJPJHDpXTz9jhDNiLoakt8CpO3Wxf91j98ZkLGqXhIiBlVPS0s6rXw3mFR81tGjo6ODNeTW4lMORcUW+w0eeE4v0EaUaYTbitjsOONVyQZ8Dma6zKC8juFimUr7ck=
+	t=1749196421; cv=none; b=QJ9dlK5nhUixlP9bI+tmPg+HXE00+kKllU3nFl6ytu05CRSgGhCdAcmuC1Jxuznz1TS0IMXMcNCJLXa+z8SZWkavbvZDsDRaLMh0SO63w1KP1MuXlPbvltXGi/LNY3C85jKINDUJXAQciZ+U87lHJThyb7ZV3MJO4ESJXoft9Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749196320; c=relaxed/simple;
-	bh=EDlQUrtU1qJkkSrcni6ucsuRlZ7kPWt8p6ob4+KRYQo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vFblTYshm0Kg/CoQMmms6jfKtqIKsEB3q8oiE6TMlrUOU7RpYpaLvAHc4O0jQlw3ET8Bv119OFPmt7VTbfGMhGp13cZFAQiz3kGCSSX3iKyNSou6bte93DNprSdYz/QGCoFW9XF2Ex4pDNCfUT4/YE/5PSE5gkJclnE3cs18gOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=ojAMqJBD; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1749196421; c=relaxed/simple;
+	bh=VedvAdrk0UYsIcSq4+g2X7qKC0IU3ySa5DfrStg1g9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o0DMMQ0OJx3KsR6xbHsf0cC59ZNSKU9HwcDnOLzesnPqJCNvl8OwEHrIIYeBm+maP7p37pDR7FK8hRlLUpXvoj9eAyZxCbf/fNERiQhu+lP9AP52sEfcAurkxuxV+z2cloP112z1bEmlWEfp1TeU+K6RgWszh8Aj4TuK0wZUt2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XkPPhlPM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="ojAMqJBD"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uNRrd-00DNpR-9G; Fri, 06 Jun 2025 09:51:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=TljNjwKkshCY8uWNOtmVIUOyloDQ5ChN1LgYlk3cHFk=; b=ojAMqJBDrn4OISor8wx0h8/ZLJ
-	l3b4b9TsHHJW2qojpODKCoDeWxzVU8FhXjwulAeDKT7/Xz2Nx6obQvYi4OOZSNF+2IXTuL3IIZh22
-	hGy4IDrCliQcqT2OU6HXanUaWSvNBuWFpkrt3gvDSkCSCBqelURHS2hoXItufkJcz2GKBkIH3/Wo4
-	BGdEjxunRdfmMJ01ftiJ8C7dSsdetk4bh+v5B32nI83l7MJj5e1Jsqa/tHWuEnBvaYiJ65Mjq0uXI
-	SyoxQpxTQbFgZCiLfS8ae+tK7N4XJrEBD2CPOEu6iZ4RKVueWLZypbuOEsTCg+LAPJ21uGOJrwUia
-	lIgBBvfg==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uNRrc-00045z-NI; Fri, 06 Jun 2025 09:51:44 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uNRrO-006aKk-2a; Fri, 06 Jun 2025 09:51:30 +0200
-Message-ID: <adae2539-2a48-45c3-a340-e9ab3776941f@rbox.co>
-Date: Fri, 6 Jun 2025 09:51:29 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XkPPhlPM"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5565omXn000698
+	for <linux-kernel@vger.kernel.org>; Fri, 6 Jun 2025 07:53:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	c4DWEQmRQ+i2IbBTLmrZiOQE2x9PEkpFgFS9oq7Dy+s=; b=XkPPhlPMJLXyi9f7
+	me975QOOnekEnZz2gXeNhHC6aD8F8ZC+x7ecr9nYsKCq4da+xPOTmPHNYN7wY70g
+	1wZ38ximQacLDP/AfPlNKXbyLxe+gkcydwv0SYSkggW+822jOl+t9oD3jK5NptyT
+	s6nBZPOE1qY/CmrivCjDo6cB+V0eYZayeGgWdo1fM+hhmsmdSY9ZjCzPU5d8TkGw
+	v7VZlSGvzCJZ6v37C6UzsB5D1w0MdtqTpdfP4GS+zQueg5a6QFI19QD+qWYY3Gdc
+	J1yO6ERnbyhWZvwb/EZwrhUAjv7I0Cxxzv0FepzW7D8TPbGyBfAigPon0SI6QXCG
+	HT//lA==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8qbwbr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:53:37 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-23494a515e3so14505665ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 00:53:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749196416; x=1749801216;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c4DWEQmRQ+i2IbBTLmrZiOQE2x9PEkpFgFS9oq7Dy+s=;
+        b=nnwbxP6h3NHoDea5lgnpEXTuFLfaLGfydADLCogTGWYovzT3EzoviGb9gSWw+imeAr
+         vWtka1ePpOFeC4SPGIrFx/umsf4NExwl+Sho9JSMTQHveERpBbYGZLFpzsvC8Ne5VZbp
+         T/GwT4/XKM9gFOvcMRnByth8O9es5ulmdvW4FO/OSLpvShoG78gSlfUYrRIWMxcUqyn9
+         tGpccws+nphldhnz4rl2oQMFMOzA4F9B5ouvBviU3zdose7zlkaEs+J9HR8DEWQg6uzb
+         Eypx4GF2gyMbEetKRo8ka2BEcUoQbGOEqsBxrij1YAqu1GWhKYUO+eeNcKu9Bvtrr3x6
+         ekmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeSIV1NeuS9iJuFHep+z5XvMwKY9jucE1wfTGgJAzSHLvg9/XZctnUmQ9FI9bpe+KQsoyWzLjIZJFFdxg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjzZeEbmfsw+AsVLlSDyfVwqkaEP0nSpAxm+L/mZVny67TV6kV
+	f9RuR+R/994S7rsv5eBs3UdGJM3hvge6G/8Eflez/nlPdJxsujW3H2Hwcl62qkmCZPch8RFGnOs
+	U0KbF0Q1xJwFe8qPLY7ytPCImE1RsoT41FTzf0lueSGwHYrvmXGrVGNzHaXmOCKLZCBg=
+X-Gm-Gg: ASbGncvQ90C9BfVOd1FZuKyTNiD1tf8TMd52098SgLDuSRqELZFcp++gHTKDO/Qj4Mh
+	+reC9Kmq2HlNjvBASX4Gi56hZYb5NVyH6z1t6nfFyaUpGzwnanukZ/xYffOVEPPalSCbO0x842z
+	9g3O2tazCRy+P+J2Il6DuLOPCCTE9ewlVIHaOYIIFEMzGBVqZF3QuJZVlP7PogLe04K6R8xUcKv
+	mqW9vbKrFIRcwZAUXAVWc3867hoqBdcZJICUAMfasejR7eK1EgICovbcqu1G18ThSLyl6Z4uDCR
+	qgDKgvJMwYEYOftvOkxlJTLiBTF7Nb8riRLq3eGOPtkbPEgKP0avoQDQEV0=
+X-Received: by 2002:a17:902:dad1:b0:235:f3b0:ae81 with SMTP id d9443c01a7336-23601d16effmr33765605ad.27.1749196415998;
+        Fri, 06 Jun 2025 00:53:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmLeNT0jN4KGfW+N/v1tEX9Oe0BlAkplrf6kG+pT3ie2tPkD3R+nDj5hUiv2s54Auns9oNpA==
+X-Received: by 2002:a17:902:dad1:b0:235:f3b0:ae81 with SMTP id d9443c01a7336-23601d16effmr33765305ad.27.1749196415603;
+        Fri, 06 Jun 2025 00:53:35 -0700 (PDT)
+Received: from hu-qianyu-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fe704sm7056245ad.138.2025.06.06.00.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 00:53:35 -0700 (PDT)
+Date: Fri, 6 Jun 2025 00:53:33 -0700
+From: Qiang Yu <qiang.yu@oss.qualcomm.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: jeff.hugo@oss.qualcomm.com, mhi@lists.linux.dev,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_bqiang@quicinc.com, can.guo@oss.qualcomm.com,
+        Mayank Rana <mayank.rana@oss.qualcomm.com>
+Subject: Re: [PATCH v2] mhi: host: Add standard elf image download
+ functionality
+Message-ID: <aEKefb87GTR/scbO@hu-qianyu-lv.qualcomm.com>
+References: <20250603-standard_elf_image_load_support-v2-1-cce97644e99e@oss.qualcomm.com>
+ <sdhop6vyvt4y63tbbtorqfd5xa4ckbiwxdad5g6zzwlljqvd6q@eoaqmairdeey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next v2 2/3] vsock/test: Introduce
- get_transports()
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250528-vsock-test-inc-cov-v2-0-8f655b40d57c@rbox.co>
- <20250528-vsock-test-inc-cov-v2-2-8f655b40d57c@rbox.co>
- <wzbyv7fvzgpf4ta775of6k4ozypnfe6szysvnz4odd3363ipsp@2v3h5w77cr7a>
- <b4f3bc0d-9ff5-4271-be28-bbace27927bd@rbox.co>
- <hxnugz3xrrn3ze2arcvjumvjqekvjfsrvd32wi7e3zgdagdaqb@cm3y6fipqdf3>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <hxnugz3xrrn3ze2arcvjumvjqekvjfsrvd32wi7e3zgdagdaqb@cm3y6fipqdf3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <sdhop6vyvt4y63tbbtorqfd5xa4ckbiwxdad5g6zzwlljqvd6q@eoaqmairdeey>
+X-Proofpoint-GUID: i12zpTLMG-WzHZ1M51pU5T_zupMu83So
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA3MiBTYWx0ZWRfXyCyOzsEl2CAO
+ fJ4TGMpb/cEZ3QnZyZpiT1AC4N5yJQmg+/UZWgjtIAeXjnJDznkp3v4yaTZN9q8MEYqBi/Xgd/S
+ tJhD7Cnaqk5DYr7CK419GyHtL96L2DpByCibztoFi9E6/dAyZwm/nuJDWQ+kDkCLb3Jsz3WNxfI
+ x0deqtIFgIFfAN+42sxbyIME2GGbrDNDvyvgMCg0j8V+yL1RHqInpZVmEtoADt0xwtWvuLHmM4H
+ W5FaNPZsUmbcpxpctuadzI03Rkc8TxlMebIfiv8qyKVP7kBw63QJsyQAS1hAUWvyGm4ka2OkO1L
+ gw2p1w1mgkF/waPMeQmjLVbMAxW0IC4bePxNSkK42RB6MBZKkZBHUu5lNff0KWvpqwRtOFxSfmS
+ sKTtK+EoLKwpCiZvQMMAOVTrY+0HazHEgmLBHTG/jkYEE21YA+hITZhGNyDU0vd1b+FrYURx
+X-Proofpoint-ORIG-GUID: i12zpTLMG-WzHZ1M51pU5T_zupMu83So
+X-Authority-Analysis: v=2.4 cv=PrmTbxM3 c=1 sm=1 tr=0 ts=68429e81 cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=3eKJ-SLyz9EkZku_pjEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=uG9DUKGECoFWVXl0Dc02:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-06_02,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 adultscore=0
+ suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506060072
 
-On 6/5/25 12:46, Stefano Garzarella wrote:
-> On Wed, Jun 04, 2025 at 09:10:19PM +0200, Michal Luczaj wrote:
->> On 6/4/25 11:07, Stefano Garzarella wrote:
->>> On Wed, May 28, 2025 at 10:44:42PM +0200, Michal Luczaj wrote:
->>>> +static int __get_transports(void)
->>>> +{
->>>> +	/* Order must match transports defined in util.h.
->>>> +	 * man nm: "d" The symbol is in the initialized data section.
->>>> +	 */
->>>> +	const char * const syms[] = {
->>>> +		"d loopback_transport",
->>>> +		"d virtio_transport",
->>>> +		"d vhost_transport",
->>>> +		"d vmci_transport",
->>>> +		"d hvs_transport",
->>>> +	};
->>>
->>> I would move this array (or a macro that define it), near the transport
->>> defined in util.h, so they are near and we can easily update/review
->>> changes.
->>>
->>> BTW what about adding static asserts to check we are aligned?
->>
->> Something like
->>
->> #define KNOWN_TRANSPORTS	\
+On Thu, Jun 05, 2025 at 10:34:50PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Jun 03, 2025 at 02:05:44AM -0700, Qiang Yu wrote:
+> > From: Mayank Rana <mayank.rana@oss.qualcomm.com>
+> > 
+> > Currently, the FBC image is a non-standard ELF file that contains a single
+> > ELF header, followed by segments for SBL, RDDM, and AMSS. Some devices are
+> > unable to process this non-standard ELF format and therefore require
+> > special handling during image loading.
+> > 
 > 
-> What about KNOWN_TRANSPORTS(_) ?
+> What are those "some devices"? Why are they not able to process this format
 
-Ah, yeah.
+Eg. QCC2072
 
->> 	_(LOOPBACK, "loopback")	\
->> 	_(VIRTIO, "virtio")	\
->> 	_(VHOST, "vhost")	\
->> 	_(VMCI, "vmci")		\
->> 	_(HYPERV, "hvs")
->>
->> enum transport {
->> 	TRANSPORT_COUNTER_BASE = __COUNTER__ + 1,
->> 	#define _(name, symbol)	\
->> 		TRANSPORT_##name = _BITUL(__COUNTER__ - TRANSPORT_COUNTER_BASE),
->> 	KNOWN_TRANSPORTS
->> 	TRANSPORT_NUM = __COUNTER__ - TRANSPORT_COUNTER_BASE,
->> 	#undef _
->> };
->>
->> static char * const transport_ksyms[] = {
->> 	#define _(name, symbol) "d " symbol "_transport",
->> 	KNOWN_TRANSPORTS
->> 	#undef _
->> };
->>
->> static_assert(ARRAY_SIZE(transport_ksyms) == TRANSPORT_NUM);
->>
->> ?
+> which is used across the rest of the Qcom devices?
+
+These devices include TME-L (Trust Management Engine Lite).
+Currently, the FBC image is a non-standard ELF file containing an ELF
+header followed by segments for SBL and WLAN firmware. The ELF header and
+SBL segment within the first 512KB are loaded via BHI, while the full FBC
+image is loaded via BHIe.
+
+Due to TME-L limitations, the full FBC image loaded via BHIe cannot be
+processed, as it does not conform to the standard ELF format. 
 > 
-> Yep, this is even better, thanks :-)
+> > Add standard_elf_image flag to determine whether the device can process
+> > the non-standard ELF format. If this flag is set, a standard ELF image
+> > must be loaded, meaning the first 512 KB of the FBC image should be
+> > skipped when loading the AMSS image over the BHIe interface.
+> 
+> Please explain what is present in the first 512KiB and why skipping that is
+> required.
 
-Although checkpatch complains:
+ELF header and SBL segment are in the first 512KiB.
 
-ERROR: Macros with complex values should be enclosed in parentheses
-#105: FILE: tools/testing/vsock/util.h:11:
-+#define KNOWN_TRANSPORTS(_)	\
-+	_(LOOPBACK, "loopback")	\
-+	_(VIRTIO, "virtio")	\
-+	_(VHOST, "vhost")	\
-+	_(VMCI, "vmci")		\
-+	_(HYPERV, "hvs")
+New FBC image format adds second ELF header in the start of WLAN FW
+segment on top of current format. After loading SBL, second ELF header
+and WLAN FW segment is loaded using BHIe.
+> 
+> > Note that
+> > this flag does not affect the SBL image download process.
+> > 
+> > Signed-off-by: Mayank Rana <mayank.rana@oss.qualcomm.com>
+> > Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> > Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> > ---
+> > Changes in v2:
+> > - V1 patch is paused because of no user. WLAN team plan to add support for
+> >   new WLAN chip that requires this patch, so send v2.
+> > - Change author and SOB with new mail address.
+> > - Reword commit message.
+> > - Place standard_elf_image flag after wake_set in struct mhi_controller
+> > - Link to v1: https://lore.kernel.org/mhi/1689907189-21844-1-git-send-email-quic_qianyu@quicinc.com/
+> > ---
+> >  drivers/bus/mhi/host/boot.c | 7 +++++++
+> >  include/linux/mhi.h         | 4 ++++
+> >  2 files changed, 11 insertions(+)
+> > 
+> > diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+> > index efa3b6dddf4d2f937535243bd8e8ed32109150a4..f1686a8e0681d49f778838820b44f4c845ddbd1f 100644
+> > --- a/drivers/bus/mhi/host/boot.c
+> > +++ b/drivers/bus/mhi/host/boot.c
+> > @@ -584,6 +584,13 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+> >  	 * device transitioning into MHI READY state
+> >  	 */
+> >  	if (fw_load_type == MHI_FW_LOAD_FBC) {
+> > +		dev_dbg(dev, "standard_elf_image:%s\n",
+> > +			(mhi_cntrl->standard_elf_image ? "True" : "False"));
+> 
+> This print is just a noise even for debug.
 
-BUT SEE:
+Will drop it.
 
-   do {} while (0) advice is over-stated in a few situations:
+> 
+> > +		if (mhi_cntrl->standard_elf_image) {
+> > +			fw_data += mhi_cntrl->sbl_size;
+> > +			fw_sz -= mhi_cntrl->sbl_size;
+> 
+> Is it possible to detect the image type during runtime instead of using a flag?
+> Also, the flag is currently unused. So it should come along an user.
 
-   The more obvious case is macros, like MODULE_PARM_DESC, invoked at
-   file-scope, where C disallows code (it must be in functions).  See
-   $exceptions if you have one to add by name.
-
-   More troublesome is declarative macros used at top of new scope,
-   like DECLARE_PER_CPU.  These might just compile with a do-while-0
-   wrapper, but would be incorrect.  Most of these are handled by
-   detecting struct,union,etc declaration primitives in $exceptions.
-
-   Theres also macros called inside an if (block), which "return" an
-   expression.  These cannot do-while, and need a ({}) wrapper.
-
-   Enjoy this qualification while we work to improve our heuristics.
-
-ERROR: Macros with complex values should be enclosed in parentheses
-#114: FILE: tools/testing/vsock/util.h:20:
-+	#define _(name, symbol)	\
-+		TRANSPORT_##name = BIT(__COUNTER__ - TRANSPORT_COUNTER_BASE),
-
-WARNING: Argument 'symbol' is not used in function-like macro
-#114: FILE: tools/testing/vsock/util.h:20:
-+	#define _(name, symbol)	\
-+		TRANSPORT_##name = BIT(__COUNTER__ - TRANSPORT_COUNTER_BASE),
-
-WARNING: Argument 'name' is not used in function-like macro
-#122: FILE: tools/testing/vsock/util.h:28:
-+	#define _(name, symbol) "d " symbol "_transport",
-
-Is it ok to ignore this? FWIW, I see the same ERRORs due to similarly used
-preprocessor directives in fs/bcachefs/alloc_background_format.h, and the
-same WARNINGs about unused macro arguments in arch/x86/include/asm/asm.h
-(e.g. __ASM_SEL).
-
+Perhaps we can check the second ELF Magic Number, but I don't think it's
+safe to determine the format by doing such check. Using a flag is simple
+and safe.
+> 
+> - Mani
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
