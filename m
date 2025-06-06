@@ -1,165 +1,95 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDB7283FE0
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4999283FE0
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749198480; cv=none; b=PZheYj+9Vvrxk+mFW2vJYHTLqtw+fLdmCUPQIsR3YsfaooJ0SYa/eTgStCNfEHyFHwyh/m/AYwRFKQLgCVArIdkRQlV0Iv+rMyRxdncpha2W2uzxyeXfJmZajlKtv0cJfJ/PL3jB/l/czqLDYtN2JvZU3NhCDZOSp4aJJjXXflA=
+	t=1749198527; cv=none; b=eD82P0KC4Q1Z/AkBZXfr8MRTERhWDXzTkHv09Qn9ZpVUYYvkI2SShCLwUCIHUMpPihhVZstx/MrFBrZ9qtgXrSBxzhUD9vFHahDoCAOwmt0cYqyRCNPWJOe0ZyZhyA+JdF5N13NrdMDZy0Wz9LR5jX7o99JTMZxS5z4jFmDH18M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749198480; c=relaxed/simple;
-	bh=pxzgXOH7f2i5HEYun5Lr3zFDGbof870M40Sioco0D+g=;
+	s=arc-20240116; t=1749198527; c=relaxed/simple;
+	bh=PAaodisFRp8BXNshl8hjloIjaJQDtSt/c9gq0ObNylk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P6TwZ3wQLGO2nwjy9qy8VAkvsgaYYzlb3czjrWqPZKVaXC5srW/e0d07ERn9dFPiMfxcotRnzdrnPSW4wp0jJHtmqv9GBFiAWOInLuHDbQSPp8t2OAk5iAZRpxgoJe5gJzRwRbs2D7zqJlBvFujxytAz5dssYYcbwlzE9xf+aeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KOF1jKI2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AR6NHLpV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WPxQ79t0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Eexde3bT; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=nO4vasQ5ct5/5hAAvDI36phyUCB0YRWkHB/sFym2QMSMw12eqeSYq01ZeEZk430PLs12XUP0+cQecrESBj8XqvqHT8Zmfqssw1EPDZwE5JjZPxjk0ZkdXC/pcwk3fYZySqdlqeZH8dugyZH8bEq36aNgARhJM7qptiyucsfFCE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XlbGiJC9; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KOF1jKI2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AR6NHLpV";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WPxQ79t0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Eexde3bT"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D8A9A33891;
-	Fri,  6 Jun 2025 08:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749198477; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DwzFtLoAJF6LpFfXdB3aqnEfVul/lrSEoNcvLPxWOR4=;
-	b=KOF1jKI2gHjfP3lAzs4XdafSN5r//4FT9CH2yZb1SeGzbiBgvK1fEPYJ73EVQNtDzpB8nK
-	nj29N2a6kOnU32RqGRjiIxqKs9OyZb8JUpxTbbG6IdOg64IxVXPGU1ECvcg3FC2fHe+JM4
-	3vvFpm4p6l1mK63UX+Wlo0b4CclhufY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749198477;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DwzFtLoAJF6LpFfXdB3aqnEfVul/lrSEoNcvLPxWOR4=;
-	b=AR6NHLpVXaal8rWTDncnWHccF5IWUPTfv0c5VrVyDQZmryLFXVmkjeW841HFLq0eBBzvNX
-	vGXjGbd4+suMzuDQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=WPxQ79t0;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Eexde3bT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749198476; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DwzFtLoAJF6LpFfXdB3aqnEfVul/lrSEoNcvLPxWOR4=;
-	b=WPxQ79t0iVA0bJuYeOc6PWTQs7j2Ou3UF1bCN28JThmtwkJRlY3y8agQdemGgXsmBFK7fn
-	YnshLE8EWNaJ39vuhkIUGHVWoO4MS5VPS2vmO/4BgeawXmXMFk92YTNSu18CgyBDa8/CAF
-	nqtmQsEa2znGnVBckDnjrA3hUpSGEAg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749198476;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DwzFtLoAJF6LpFfXdB3aqnEfVul/lrSEoNcvLPxWOR4=;
-	b=Eexde3bTxa1egIHClBT0y3eyFsVnhvrfHQDX2GO8fqyXMir9clNOrqKM21Dou6DsJsKxOe
-	erfmSONNOWmLFWDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C2FF31369F;
-	Fri,  6 Jun 2025 08:27:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AEbsLIumQminBgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 06 Jun 2025 08:27:55 +0000
-Date: Fri, 6 Jun 2025 10:27:54 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v1 2/2] mm/huge_memory: don't mark refcounted pages
- special in vmf_insert_folio_pud()
-Message-ID: <aEKmivRxYEytAIaa@localhost.localdomain>
-References: <20250603211634.2925015-1-david@redhat.com>
- <20250603211634.2925015-3-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XlbGiJC9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=3+Pbk+AMqlQcQg0IkPAdVHTlxrIIFf5Dha1LbvjUbTc=; b=XlbGiJC9RQz1KM7Ij82rDYp0z9
+	LD+AZyjrmmvR+Iw7srmbzOykDg4dmR59qkjiXx1PPtvzGmt8SZiBmcBvPsJG5wTeK2tYYN89l3sG8
+	KNvzYW771h9vCw8GyQrxNBE5uhwloCna//c1+lQcOV3aLi2vozired3CEL2KK0ShK6rscjf2x5OlG
+	JyqAgHATRtsrux9WnKO6RHkQOVsOYSo4UqxQZt9Pvp8mgHyS7IoJQK1csbmZx0PSNJsNr4DQV/DXZ
+	RQFxVxiXwxeaf7C0gTPk3oAn7B+YCGtudDz7/OIjZAW3vKl2jpGHLMZzlyVF7DsA4UBT71yJ9dzMf
+	LogbYWMg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uNSRH-00000001FeD-3qdc;
+	Fri, 06 Jun 2025 08:28:36 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EF72130078B; Fri,  6 Jun 2025 10:28:34 +0200 (CEST)
+Date: Fri, 6 Jun 2025 10:28:34 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kuyo Chang <kuyo.chang@mediatek.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 1/1] sched/core: Fix migrate_swap() vs. hotplug
+Message-ID: <20250606082834.GM30486@noisy.programming.kicks-ass.net>
+References: <20250602072242.1839605-1-kuyo.chang@mediatek.com>
+ <20250605100009.GO39944@noisy.programming.kicks-ass.net>
+ <8e1018116ad7c5c325eced2cb17b65c73ca2ceca.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250603211634.2925015-3-david@redhat.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: D8A9A33891
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -4.51
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8e1018116ad7c5c325eced2cb17b65c73ca2ceca.camel@mediatek.com>
 
-On Tue, Jun 03, 2025 at 11:16:34PM +0200, David Hildenbrand wrote:
-> Marking PUDs that map a "normal" refcounted folios as special is
-> against our rules documented for vm_normal_page().
-> 
-> Fortunately, there are not that many pud_special() check that can be
-> mislead and are right now rather harmless: e.g., none so far
-> bases decisions whether to grab a folio reference on that decision.
-> 
-> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
-> implications as it seems.
-> 
-> Getting this right will get more important as we introduce
-> folio_normal_page_pud() and start using it in more place where we
-> currently special-case based on other VMA flags.
-> 
-> Fix it by just inlining the relevant code, making the whole
-> pud_none() handling cleaner.
-> 
-> Add folio_mk_pud() to mimic what we do with folio_mk_pmd().
-> 
-> While at it, make sure that the pud that is non-none is actually present
-> before comparing PFNs.
-> 
-> Fixes: dbe54153296d ("mm/huge_memory: add vmf_insert_folio_pud()")
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Fri, Jun 06, 2025 at 11:46:57AM +0800, Kuyo Chang wrote:
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Thank you for your patch.
+> I believe this patch also effectively addresses this race condition.
+> I will queue it in our test pool for testing.
 
- 
+Thank you; I shall await the results!
 
--- 
-Oscar Salvador
-SUSE Labs
+
+> > @@ -101,12 +98,12 @@ static bool cpu_stop_queue_work(unsigned int
+> > cpu, struct cpu_stop_work *work)
+> >         raw_spin_lock_irqsave(&stopper->lock, flags);
+> >         enabled = stopper->enabled;
+> >         if (enabled)
+> > -               __cpu_stop_queue_work(stopper, work, &wakeq);
+> > +               __cpu_stop_queue_work(stopper, work);
+> >         else if (work->done)
+> >                 cpu_stop_signal_done(work->done);
+> >         raw_spin_unlock_irqrestore(&stopper->lock, flags);
+> > 
+> > -       wake_up_q(&wakeq);
+> > +       wake_up_process(stopper->thread);
+> 
+> BTW, should we add enabled check here?
+> 	if (enabled) 
+> 		wake_up_process(stopper->thread);
+
+Ah yes. Spuriously waking the stopper thread is harmless, but wasteful.
+
+> >         preempt_enable();
+> > 
+> >         return enabled;
