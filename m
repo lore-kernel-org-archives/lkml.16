@@ -1,181 +1,103 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9872428A71A
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 17:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9F712CDBE;
+	Fri,  6 Jun 2025 17:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749230896; cv=none; b=NAZDowPmkxAMcIm1nDzjcPTNvOUE9YJvKSddm+WF5fj6tUbmWntKLzEb57vzGUszXj0x31EYe1hmtZLRJTmJi9KhGdmGYVmn82UVtJgIVDMgBLKdrM+p1AJt4wXd+sfdxde2nN+p96OpDdGaNo5TBcwbcRdnORbScIHjsRr7vHg=
+	t=1749230964; cv=none; b=X4aPaGBwgmfpYhjp8OyUXN+wW5imUS00cD9T4L277AkOKG6S5MXITt7yM/pVapDjaAE5Tn1hx6RJQPXFWcMNcrMD+p/Cc8fAzpWr1rcVaWZS2Alvn4L4CPgsT6j8bY25DyZ0L0jpn0mMWtkJoXfJEdDoovVMP266+n2+ujCa3oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749230896; c=relaxed/simple;
-	bh=2OmHS4d4LLkJyCDJRd0Sh2nA9xIIDRgfYtuAClUrl1k=;
+	s=arc-20240116; t=1749230964; c=relaxed/simple;
+	bh=V/cpUhfftxSgEKkgVpLpoJFamzINkyavrZoLmAupKCY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mcx5D4D82PFRZzVgzhvwszW7n7GRmvjIMRSt6QKjrp7ujr5WV8C9iwT858OTP5R09JokdHmzGNVZ9SxwsNBJRQ6pD/ZxPsE4/K2BXAmqrxZL8JsywHLl+wPyfeIUObSuZhQEQV7r3/UXBX1/j3YUeyVu4I8n+kt/295bTgyuw7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=V9Jl3/Ml; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dihhV7pM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=V9Jl3/Ml; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dihhV7pM; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=F7Z7/VfMfI1Kqct+6VGA6lSZvrU7tz+0SIkODZKhK8oTsWvxOBhA/lPG5JbLsEgrGlUt2X3ZgA4rlDIPyO4hi6iqcQ3HEE5VoC7s2OrOTYuFnkt6ZE4Tr3iNa24yMjLEOqnLGgBuQzOkMSuwfvx+LbeWOr+Jh4+RMylnelbL6nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRACbj0m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="V9Jl3/Ml";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dihhV7pM";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="V9Jl3/Ml";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dihhV7pM"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C47B7336B1;
-	Fri,  6 Jun 2025 17:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749230892;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qep49SCoIb7Px0X63pnsLPhhPKdUjmluUs+NJCFgizs=;
-	b=V9Jl3/MlQVoXXhhjRP86nJlbiLlj2JDmEeNQOGHMXZP/5bl5haWhz3MKADVJK+hN/WOFMB
-	cpCbJDblrrVK8gK8HZqM8BkYiDUmx+0xK7gpK94E6OK259z8crUdFhmFv4qZra9BuYTy9N
-	8eVGYTa87rxN26/93dXorPRRCKf26kM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749230892;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qep49SCoIb7Px0X63pnsLPhhPKdUjmluUs+NJCFgizs=;
-	b=dihhV7pMKSJMjLo2E7Iq2gLt9tt0LMWsM/vG+m0D0aoXmhmbrx6l/nkxeTUpKDlU/j/Lt9
-	uwr9ZViXFA44m9Cw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749230892;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qep49SCoIb7Px0X63pnsLPhhPKdUjmluUs+NJCFgizs=;
-	b=V9Jl3/MlQVoXXhhjRP86nJlbiLlj2JDmEeNQOGHMXZP/5bl5haWhz3MKADVJK+hN/WOFMB
-	cpCbJDblrrVK8gK8HZqM8BkYiDUmx+0xK7gpK94E6OK259z8crUdFhmFv4qZra9BuYTy9N
-	8eVGYTa87rxN26/93dXorPRRCKf26kM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749230892;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qep49SCoIb7Px0X63pnsLPhhPKdUjmluUs+NJCFgizs=;
-	b=dihhV7pMKSJMjLo2E7Iq2gLt9tt0LMWsM/vG+m0D0aoXmhmbrx6l/nkxeTUpKDlU/j/Lt9
-	uwr9ZViXFA44m9Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A86AE1336F;
-	Fri,  6 Jun 2025 17:28:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HbecKCwlQ2g7UAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Fri, 06 Jun 2025 17:28:12 +0000
-Date: Fri, 6 Jun 2025 19:28:11 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: index buffer_tree using node size
-Message-ID: <20250606172811.GY4037@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250512172321.3004779-1-neelx@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRACbj0m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113D1C4CEEB;
+	Fri,  6 Jun 2025 17:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749230963;
+	bh=V/cpUhfftxSgEKkgVpLpoJFamzINkyavrZoLmAupKCY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iRACbj0mcsWq901qlWS7gff7keJTsDjJPrBIZr0CWwXS6qbA9JWVHH8zzoj8xX2EA
+	 hlTgBT8ZwfSWE7krInaNE78H8+Pj/aFa3Gklx1xpyjxge2z5EU6nU1cmiuuog5qMwl
+	 yHRvn2rJJCkGudAvNKjwwEYnG14jSRK2RxmWbWkVCQsnmmRjennzdwboV9325S98P0
+	 gsjobZqdZ+IdeyiRt01+MDDxbimV+VMuzcgVYthS/uWwyGpGJtsxqDXMsOli6QSjjW
+	 /3kIOIJlwGWNRdnIOZwdIxVFzXpvEBlfkW1Spnd3rIOasNkLfwCGGQbfWFQDeQ9Jlq
+	 cWt0/6wgGvh/A==
+Date: Fri, 6 Jun 2025 10:29:21 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Suchit K <suchitkarunakaran@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org
+Subject: Re: [PATCH RESEND] perf stat: Fix JSON output formatting in
+ iostat_prefix()
+Message-ID: <aEMlcf02v1kpNVEa@google.com>
+References: <20250605180012.16788-1-suchitkarunakaran@gmail.com>
+ <aEJnQIviayEi-Jsv@google.com>
+ <CAO9wTFhyQnE2hgvtQuYxfCTjd7iRHJN5O+v3wka7smDkrUX1GA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512172321.3004779-1-neelx@suse.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Level: 
+In-Reply-To: <CAO9wTFhyQnE2hgvtQuYxfCTjd7iRHJN5O+v3wka7smDkrUX1GA@mail.gmail.com>
 
-On Mon, May 12, 2025 at 07:23:20PM +0200, Daniel Vacek wrote:
-> So far we are deriving the buffer tree index using the sector size. But each
-> extent buffer covers multiple sectors. This makes the buffer tree rather sparse.
+On Fri, Jun 06, 2025 at 10:04:17AM +0530, Suchit K wrote:
+> On Fri, 6 Jun 2025 at 09:27, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Thu, Jun 05, 2025 at 11:30:11PM +0530, Suchit Karunakaran wrote:
+> > > The iostat_prefix() function previously included a TODO noting that its output
+> > > format was incorrect in JSON mode. This patch corrects that by conditionally
+> > > formatting the prefix string based on the output mode specified in
+> > > perf_stat_config.
+> >
+> > I've tested this.  It doesn't work well.
+> >
+> > Before:
+> >   # ./perf iostat -j -I 1000 true
+> >   #          time    port              0.000517525 0000:00 "Inbound Read(MB)" : "0", "Inbound Write(MB)" : "0", "Outbound Read(MB)" : "0", "Outbound Write(MB)" : "0"
+> >        0.000517525 0000:80
+> >        0.000517525 0000:17 , "Inbound Read(MB)" : "0", "Inbound Write(MB)" : "0", "Outbound Read(MB)" : "0", "Outbound Write(MB)" : "0"
+> >        0.000517525 0000:85
+> >        0.000517525 0000:3a , "Inbound Read(MB)" : "0", "Inbound Write(MB)" : "0", "Outbound Read(MB)" : "0", "Outbound Write(MB)" : "0"
+> >        0.000517525 0000:ae
+> >        0.000517525 0000:5d , "Inbound Read(MB)" : "0", "Inbound Write(MB)" : "0", "Outbound Read(MB)" : "0", "Outbound Write(MB)" : "0"
+> >        0.000517525 0000:d7
+> >
+> >
+> > After:
+> >   # ./perf iostat -j -I 1000 true
+> >   #          time    port         "interval" : 0.000463559, "device" : "0000:00""Inbound Read(MB)" : "0", "Inbound Write(MB)" : "0", "Outbound Read(MB)" : "0", "Outbound Write(MB)" : "0"
+> >   "interval" : 0.000463559, "device" : "0000:80"
+> >   "interval" : 0.000463559, "device" : "0000:17", "Inbound Read(MB)" : "0", "Inbound Write(MB)" : "0", "Outbound Read(MB)" : "0", "Outbound Write(MB)" : "0"
+> >   "interval" : 0.000463559, "device" : "0000:85"
+> >   "interval" : 0.000463559, "device" : "0000:3a", "Inbound Read(MB)" : "0", "Inbound Write(MB)" : "0", "Outbound Read(MB)" : "0", "Outbound Write(MB)" : "0"
+> >   "interval" : 0.000463559, "device" : "0000:ae"
+> >   "interval" : 0.000463559, "device" : "0000:5d", "Inbound Read(MB)" : "0", "Inbound Write(MB)" : "0", "Outbound Read(MB)" : "0", "Outbound Write(MB)" : "0"
+> >   "interval" : 0.000463559, "device" : "0000:d7"
 > 
-> For example the typical and quite common configuration uses sector size of 4KiB
-> and node size of 16KiB. In this case it means the buffer tree is using up to
-> the maximum of 25% of it's slots. Or in other words at least 75% of the tree
-> slots are wasted as never used.
-> 
-> We can score significant memory savings on the required tree nodes by indexing
-> the tree using the node size instead. As a result far less slots are wasted
-> and the tree can now use up to all 100% of it's slots this way.
-> 
-> Signed-off-by: Daniel Vacek <neelx@suse.com>
+> Hi Namhyung,
+> Thanks for testing it. Could you please tell what could be improved?
 
-This is a useful improvement, so we should continue and merge it. The
-performance improvements should be done so we get some idea. Runtime and
-slab savings.
+I think it should show a valid JSON.  Something like this?
 
-One coding comment, please rename node_bits to nodesize_bits so it's
-consistent with sectorsize and sectorsize_bits.
+  # ./perf iostat -j -I 1000 true
+  {"interval" : 0.000463559, "device" : "0000:00", "Inbound Read(MB)" : "0", ...}
+  {"interval" : 0.000463559, "device" : "0000:80", "Inbound Read(MB)" : "0", ...}
+  {"interval" : 0.000463559, "device" : "0000:17", "Inbound Read(MB)" : "0", ...}
+  {"interval" : 0.000463559, "device" : "0000:85", "Inbound Read(MB)" : "0", ...}
+  ...
 
->  fs/btrfs/disk-io.c   |  1 +
->  fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
->  fs/btrfs/fs.h        |  3 ++-
->  3 files changed, 18 insertions(+), 16 deletions(-)
-> 
-> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-> index 5bcf11246ba66..dcea5b0a2db50 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -4294,9 +4294,9 @@ static int try_release_subpage_extent_buffer(struct folio *folio)
->  {
->  	struct btrfs_fs_info *fs_info = folio_to_fs_info(folio);
->  	struct extent_buffer *eb;
-> -	unsigned long start = folio_pos(folio) >> fs_info->sectorsize_bits;
-> +	unsigned long start = folio_pos(folio) >> fs_info->node_bits;
->  	unsigned long index = start;
-> -	unsigned long end = index + (PAGE_SIZE >> fs_info->sectorsize_bits) - 1;
-> +	unsigned long end = index + (PAGE_SIZE >> fs_info->node_bits) - 1;
+Thanks,
+Namhyung
 
-This looks a bit suspicious, page size is 4k node size can be 4k .. 64k.
-It's in subpage code so sector < page, the shift it's always >= 0. Node
-can be larger so the shift result would be 0 but as a result of 4k
-shifted by "16k".
-
->  	int ret;
->  
->  	xa_lock_irq(&fs_info->buffer_tree);
-> diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
-> index cf805b4032af3..8c9113304fabe 100644
-> --- a/fs/btrfs/fs.h
-> +++ b/fs/btrfs/fs.h
-> @@ -778,8 +778,9 @@ struct btrfs_fs_info {
->  
->  	struct btrfs_delayed_root *delayed_root;
->  
-> -	/* Entries are eb->start / sectorsize */
-> +	/* Entries are eb->start >> node_bits */
->  	struct xarray buffer_tree;
-> +	int node_bits;
-
-u32 and pleas move it to nodesize.
