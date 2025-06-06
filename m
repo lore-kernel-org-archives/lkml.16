@@ -1,213 +1,427 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419393A8C1;
-	Fri,  6 Jun 2025 16:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5B1289E3A;
+	Fri,  6 Jun 2025 16:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749228150; cv=none; b=d2HnCtQAOEgQc3aykiIQ5d8bwFfirxsUrVOxSyu7ofNBEmyQRosPH4O6eOxr0q10GToIVNICOCHRSGQCebq3CW34Jz4dI4R3evyaC9f1fKAitwUz3V0n/YY5MmQaxocSLJsPNGnzpgbtxb5Q9cO23apJbQet1ObmGHB941ppXnc=
+	t=1749228152; cv=none; b=YPb4VErHK13F6K+24wnhpct6exqNhxEfAejAzf68AVtmQZVV+hLaW5J+P+Evr+4VXxSLEvACLPRqEGTvzqiHStOq++X5JDP+v83084UeOw6OSpQ8CrUkBelMZ9/Y7FXohqS5rV4/EcJj0JmzAAINIAAAyPd45DTsS/23+t3lFjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749228150; c=relaxed/simple;
-	bh=FXCAeqxR1LAON9Pwe6CC8F9hsonCO1tuK/KA9y9w1Ug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m5gy8DDDLTaJId1nJsc/ldqEQMOUsugc0dOIEqw/J5ekesO+hG502FD0sMeggh7JH8SD+HIhnhXjY92RZc9GJmZ5ahymEj1xy9L/XngsKmVfKmJw4H3Z6fyNvi5JaEG5YByCz4C9NtORaa7IjP9JivLXvRqZDy4iyVQ69dLhs/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aKHVMVYl; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKHVMVYl"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3dc729471e3so7945565ab.1;
-        Fri, 06 Jun 2025 09:42:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749228148; x=1749832948; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uMeYsxUgjqxog+Ak4U2urOTlJ0rw3A1XKz5qXAyaQdo=;
-        b=aKHVMVYlZatJdJSjx76k1fkOglZCKURH7L36Xuud9hmjOWAaFS7OwPqfHR/SF58B55
-         4CBHcTAhUiWSqw296weVoBYbJJlkAJKxAim41eqcbG9tF1unn+K2uJLtiapoeUm2tN1c
-         5bR6XN2ktJIle3O2WqxREWp2jclpwChK/WTbFA5f5PqRnr59pXPQwyQcJp3XsSRxg/R4
-         8gdOEYA6RDZ9jDX0WUWNW6cxqYvo4PrRk9znS/urqbprVja1DSVC9/TnoBphi4Sza64T
-         1JiI0bQ/X5uTbtFwhBIbpB2w98lIHQVgslT5v4mPPPynNCh7qBAmjQo8K0YIC6uvLrLB
-         J1GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749228148; x=1749832948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uMeYsxUgjqxog+Ak4U2urOTlJ0rw3A1XKz5qXAyaQdo=;
-        b=eEfMYqboRbulN4JwvjvMVx6dz+Et/fk//Uu+99Py7/YMLo+uqWpXlurl8reY5hkNlf
-         eS9cuBqlL3916gzsP2IGARUwS40+WDDmEz/HHqoxrL7HJr63fb7gcVxcNymG6Ws5LRSJ
-         iRnPGxISXVhN60HoSDsbG2Ygde2jAJ4edYuWLP24bHBnHIp5Wf1AyZX0ZYWkHy8JB7IU
-         A4wcMaszUTn4hjgySNQTcUOjxOOsCrCzXNk6ZCMs/RClIyrKs6CTem5OxVMjGzlcvUmf
-         iBxcCC/367p8tDBhAEi7Zs36dT6gFVg+Kd4RvtO8HkFb4kHkzz3Vo4LI83yQ3mR9qrO6
-         bgMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULR9KLjCewGbHXLfawqT8IzIfTYQ9CKpz7Y81S14JccUXSuXIBDDi3VWQDfVf2ADPnWciJrjU0EQ7E@vger.kernel.org, AJvYcCXMF9PaPtMtSbgTyN2zubWXYeC7AVqDOcYzFZfnTJiiwK3Mf5Vkf87MwzbtydZl+7q7PVOtjv6VngSzg2Jr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyqf7AdxOZTeFBMSjcxVeXQV+XUgZ/RqSjnbbKZStrOTnfOCrdJ
-	qK98VPbpER9wKf3rkEc4jtNMw4Y+IjVyENHe+a0mSBVwDcAOco+15MRnqkTVx7ac76VuVfs1sS4
-	zQ4cohT30xaEZEwNM9jvZfYNrmA2wzMSZaSfi
-X-Gm-Gg: ASbGnctMZmNTCl3qOdnypktUDwwsapYJKyGVXqIApj90qCaj0So1SwD6+9UcrOEbAuf
-	1yGjSJQ6+4MRvrseniMKRc4SRg+zeLST9mSMCbMDKBp4r8WLe5YvIrIA+xY8/Md30tEYcZ8dqjO
-	/urZftqGsErz7UuwC3dFE4tYlaqfHQ6HUEgHs7njvL7dKFi+zYmnkb
-X-Google-Smtp-Source: AGHT+IFlV+kTTqKAlFNc6/Q8eaL8fHicj7OQNSk3pESNYyA27MAqC5cCScNwhcB8fj/OsGWlxBp0LvXax4FYxj83epQ=
-X-Received: by 2002:a05:6e02:4518:20b0:3dd:d189:8a6c with SMTP id
- e9e14a558f8ab-3ddd1898dd9mr19809775ab.4.1749228148149; Fri, 06 Jun 2025
- 09:42:28 -0700 (PDT)
+	s=arc-20240116; t=1749228152; c=relaxed/simple;
+	bh=FSJ2NFCigh/zm/yHBe9thSEYQN2IqjgbWwmIYyf+kM8=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=k+dvSi/mCDzImfc9Cw53TK91/7lmlx6CI0TOLgusvFzSFX4zRdnCW2WkiTUivz32gYhrU4VWsA7LId7kxtT9cXt6wB946q8L1GYhEFiwNEDg042H+80W0i7QxixJTZ2WXxHd2Usc0SvPKeLhzkWD+DiIq5jZRvEdqFnGceK/2kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF1B2C4CEED;
+	Fri,  6 Jun 2025 16:42:31 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uNaAb-0000000FxAQ-1sqW;
+	Fri, 06 Jun 2025 12:43:53 -0400
+Message-ID: <20250606164353.303660896@goodmis.org>
+User-Agent: quilt/0.68
+Date: Fri, 06 Jun 2025 12:42:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ stable@vger.kernel.org,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ "Kiszka, Jan" <jan.kiszka@siemens.com>,
+ "Ziegler, Andreas" <ziegler.andreas@siemens.com>,
+ "MOESSBAUER, Felix" <felix.moessbauer@siemens.com>,
+ "Flot, Julien" <julien.flot@siemens.com>
+Subject: [for-linus][PATCH 1/3] tracing: Fix regression of filter waiting a long time on RCU
+ synchronization
+References: <20250606164229.056794577@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605-rk3588s-cm5-io-dts-upstream-v4-0-8445db5ca6b0@gmail.com>
- <20250605-rk3588s-cm5-io-dts-upstream-v4-2-8445db5ca6b0@gmail.com> <CALWfF7J-Lygg+N3oH+p7XkPvH_6ZbvTRY6CaZzFqDixzSgDHBA@mail.gmail.com>
-In-Reply-To: <CALWfF7J-Lygg+N3oH+p7XkPvH_6ZbvTRY6CaZzFqDixzSgDHBA@mail.gmail.com>
-From: Joseph Kogut <joseph.kogut@gmail.com>
-Date: Fri, 6 Jun 2025 09:41:52 -0700
-X-Gm-Features: AX0GCFsGQAfqG6AckaE2dzN-sFHMIgG2nS5Dtrqvn7bKG-PkR87MSRPoQm07c1U
-Message-ID: <CAMWSM7gD0Tiu-JOUqyoASHQHrz79rnW3+kfQ4wnRSOx051GB4Q@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] arm64: dts: rockchip: Add rk3588 based Radxa CM5
-To: Jimmy Hon <honyuenkwun@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Steve deRosier <derosier@cal-sierra.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Thu, Jun 5, 2025 at 5:51=E2=80=AFPM Jimmy Hon <honyuenkwun@gmail.com> wr=
-ote:
->
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-radxa-cm5.dtsi b/arch=
-/arm64/boot/dts/rockchip/rk3588s-radxa-cm5.dtsi
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..d7946fe2bb4e721689e3eb4=
-d60d8e9783402f05e
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3588s-radxa-cm5.dtsi
-> > @@ -0,0 +1,156 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Copyright (c) 2025 Joseph Kogut <joseph.kogut@gmail.com>
-> > + */
-> > +
-> > +/*
-> > + * CM5 data sheet
-> > + * https://dl.radxa.com/cm5/v2210/radxa_cm5_v2210_schematic.pdf
-> > + */
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/leds/common.h>
-> > +#include <dt-bindings/soc/rockchip,vop2.h>
-> > +#include <dt-bindings/usb/pd.h>
-> > +
-> > +/ {
-> > +       compatible =3D "radxa,cm5", "rockchip,rk3588s";
-> > +
-> > +       aliases {
-> > +               mmc0 =3D &sdmmc;
-> Since the microSD card is on the carrier board, this alias should be
-> moved to the board DTS.
->
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Good point, I'll move this to the board DTS. This is a remnant from
-copying aspects of the downstream DTS, and adapting it for mainline
-conventions.
+When faultable trace events were added, a trace event may no longer use
+normal RCU to synchronize but instead used synchronize_rcu_tasks_trace().
+This synchronization takes a much longer time to synchronize.
 
-> > +               mmc1 =3D &sdhci;
-> Most of the other Radxa rk3588 boards have the eMMC alias to mmc0. Why
-> does this use another convention?
->
-> > +               mmc2 =3D &sdio;
-> The sdio is not enabled. This alias won't be used.
->
+The filter logic would free the filters by calling
+tracepoint_synchronize_unregister() after it unhooked the filter strings
+and before freeing them. With this function now calling
+synchronize_rcu_tasks_trace() this increased the time to free a filter
+tremendously. On a PREEMPT_RT system, it was even more noticeable.
 
-These were copied from the downstream DTS. I'll go ahead and use the
-mainline convention here as well.
+ # time trace-cmd record -p function sleep 1
+ [..]
+ real	2m29.052s
+ user	0m0.244s
+ sys	0m20.136s
 
-> > +       };
-> > +
-> > +       leds {
-> > +               compatible =3D "gpio-leds";
-> > +
-> > +               led_sys: led-0 {
-> > +                       color =3D <LED_COLOR_ID_BLUE>;
-> > +                       default-state =3D "on";
-> > +                       function =3D LED_FUNCTION_HEARTBEAT;
-> > +                       gpios =3D <&gpio4 RK_PB4 GPIO_ACTIVE_HIGH>;
-> > +                       linux,default-trigger =3D "heartbeat";
-> > +               };
-> > +       };
-> > +};
-> > +
-> > +&cpu_b0 {
-> > +       cpu-supply =3D <&vdd_cpu_big0_s0>;
-> > +};
-> > +
-> > +&cpu_b1 {
-> > +       cpu-supply =3D <&vdd_cpu_big0_s0>;
-> > +};
-> > +
-> > +&cpu_b2 {
-> > +       cpu-supply =3D <&vdd_cpu_big1_s0>;
-> > +};
-> > +
-> > +&cpu_b3 {
-> > +       cpu-supply =3D <&vdd_cpu_big1_s0>;
-> > +};
-> > +
-> > +&cpu_l0 {
-> > +       cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > +};
-> > +
-> > +&cpu_l1 {
-> > +       cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > +};
-> > +
-> > +&cpu_l2 {
-> > +       cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > +};
-> > +
-> > +&cpu_l3 {
-> > +       cpu-supply =3D <&vdd_cpu_lit_s0>;
-> > +};
-> > +
-> > +&gmac1 {
-> > +       clock_in_out =3D "output";
-> > +       phy-handle =3D <&rgmii_phy1>;
-> > +       phy-mode =3D "rgmii-id";
-> > +       phy-supply =3D <&vcc_3v3_s0>;
-> > +       pinctrl-names =3D "default";
-> > +       pinctrl-0 =3D <&gmac1_miim
-> > +                    &gmac1_tx_bus2
-> > +                    &gmac1_rx_bus2
-> > +                    &gmac1_rgmii_clk
-> > +                    &gmac1_rgmii_bus
-> > +                    &gmac1_clkinout>;
-> > +       status =3D "okay";
-> > +};
-> Should this be left disabled on the SoM dtsi? And only enabled on the
-> carrier board, if the carrier board has the RJ45 jack?
-> i.e. a handheld using the CM5 may not have ethernet
-> https://github.com/StonedEdge/Retro-Lite-CM5
->
+As trace-cmd would clear out all the filters before recording, it could
+take up to 2 minutes to do a recording of "sleep 1".
 
-I think that makes sense, not every carrier is guaranteed to have ethernet.
+To find out where the issues was:
 
-> > +
-> > +&gpu {
-> > +       mali-supply =3D <&vdd_gpu_s0>;
-> > +       status =3D "okay";
-> > +};
-> > +
-> > +&hdmi0 {
-> > +       status =3D "okay";
-> > +};
-> This should be moved to the carrier board DTS where all the other
-> HDMI0 nodes are.
->
+ ~# trace-cmd sqlhist -e -n sched_stack  select start.prev_state as state, end.next_comm as comm, TIMESTAMP_DELTA_USECS as delta,  start.STACKTRACE as stack from sched_switch as start join sched_switch as end on start.prev_pid = end.next_pid
 
-That makes sense, I'll make this change. Thanks for the feedback, Jimmy.
+Which will produce the following commands (and -e will also execute them):
+
+ echo 's:sched_stack s64 state; char comm[16]; u64 delta; unsigned long stack[];' >> /sys/kernel/tracing/dynamic_events
+ echo 'hist:keys=prev_pid:__arg_18057_2=prev_state,__arg_18057_4=common_timestamp.usecs,__arg_18057_7=common_stacktrace' >> /sys/kernel/tracing/events/sched/sched_switch/trigger
+ echo 'hist:keys=next_pid:__state_18057_1=$__arg_18057_2,__comm_18057_3=next_comm,__delta_18057_5=common_timestamp.usecs-$__arg_18057_4,__stack_18057_6=$__arg_18057_7:onmatch(sched.sched_switch).trace(sched_stack,$__state_18057_1,$__comm_18057_3,$__delta_18057_5,$__stack_18057_6)' >> /sys/kernel/tracing/events/sched/sched_switch/trigger
+
+The above creates a synthetic event that creates a stack trace when a task
+schedules out and records it with the time it scheduled back in. Basically
+the time a task is off the CPU. It also records the state of the task when
+it left the CPU (running, blocked, sleeping, etc). It also saves the comm
+of the task as "comm" (needed for the next command).
+
+~# echo 'hist:keys=state,stack.stacktrace:vals=delta:sort=state,delta if comm == "trace-cmd" &&  state & 3' > /sys/kernel/tracing/events/synthetic/sched_stack/trigger
+
+The above creates a histogram with buckets per state, per stack, and the
+value of the total time it was off the CPU for that stack trace. It filters
+on tasks with "comm == trace-cmd" and only the sleeping and blocked states
+(1 - sleeping, 2 - blocked).
+
+~# trace-cmd record -p function sleep 1
+
+~# cat /sys/kernel/tracing/events/synthetic/sched_stack/hist | tail -18
+{ state:          2, stack.stacktrace         __schedule+0x1545/0x3700
+         schedule+0xe2/0x390
+         schedule_timeout+0x175/0x200
+         wait_for_completion_state+0x294/0x440
+         __wait_rcu_gp+0x247/0x4f0
+         synchronize_rcu_tasks_generic+0x151/0x230
+         apply_subsystem_event_filter+0xa2b/0x1300
+         subsystem_filter_write+0x67/0xc0
+         vfs_write+0x1e2/0xeb0
+         ksys_write+0xff/0x1d0
+         do_syscall_64+0x7b/0x420
+         entry_SYSCALL_64_after_hwframe+0x76/0x7e
+} hitcount:        237  delta:   99756288  <<--------------- Delta is 99 seconds!
+
+Totals:
+    Hits: 525
+    Entries: 21
+    Dropped: 0
+
+This shows that this particular trace waited for 99 seconds on
+synchronize_rcu_tasks() in apply_subsystem_event_filter().
+
+In fact, there's a lot of places in the filter code that spends a lot of
+time waiting for synchronize_rcu_tasks_trace() in order to free the
+filters.
+
+Add helper functions that will use call_rcu*() variants to asynchronously
+free the filters. This brings the timings back to normal:
+
+ # time trace-cmd record -p function sleep 1
+ [..]
+ real	0m14.681s
+ user	0m0.335s
+ sys	0m28.616s
+
+And the histogram also shows this:
+
+~# cat /sys/kernel/tracing/events/synthetic/sched_stack/hist | tail -21
+{ state:          2, stack.stacktrace         __schedule+0x1545/0x3700
+         schedule+0xe2/0x390
+         schedule_timeout+0x175/0x200
+         wait_for_completion_state+0x294/0x440
+         __wait_rcu_gp+0x247/0x4f0
+         synchronize_rcu_normal+0x3db/0x5c0
+         tracing_reset_online_cpus+0x8f/0x1e0
+         tracing_open+0x335/0x440
+         do_dentry_open+0x4c6/0x17a0
+         vfs_open+0x82/0x360
+         path_openat+0x1a36/0x2990
+         do_filp_open+0x1c5/0x420
+         do_sys_openat2+0xed/0x180
+         __x64_sys_openat+0x108/0x1d0
+         do_syscall_64+0x7b/0x420
+} hitcount:          2  delta:      77044
+
+Totals:
+    Hits: 55
+    Entries: 28
+    Dropped: 0
+
+Where the total waiting time of synchronize_rcu_tasks_trace() is 77
+milliseconds.
+
+Cc: stable@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Kiszka, Jan" <jan.kiszka@siemens.com>
+Cc: "Ziegler, Andreas" <ziegler.andreas@siemens.com>
+Cc: "MOESSBAUER, Felix" <felix.moessbauer@siemens.com>
+Link: https://lore.kernel.org/20250605161701.35f7989a@gandalf.local.home
+Reported-by: "Flot, Julien" <julien.flot@siemens.com>
+Tested-by: Julien Flot <julien.flot@siemens.com>
+Fixes: a363d27cdbc2 ("tracing: Allow system call tracepoints to handle page faults")
+Closes: https://lore.kernel.org/all/240017f656631c7dd4017aa93d91f41f653788ea.camel@siemens.com/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_filter.c | 164 ++++++++++++++++++++++-------
+ 1 file changed, 127 insertions(+), 37 deletions(-)
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 2048560264bb..3ff782d6b522 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1335,6 +1335,74 @@ static void filter_free_subsystem_preds(struct trace_subsystem_dir *dir,
+ 	}
+ }
+ 
++struct filter_list {
++	struct list_head	list;
++	struct event_filter	*filter;
++};
++
++struct filter_head {
++	struct list_head	list;
++	struct rcu_head		rcu;
++};
++
++
++static void free_filter_list(struct rcu_head *rhp)
++{
++	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
++	struct filter_list *filter_item, *tmp;
++
++	list_for_each_entry_safe(filter_item, tmp, &filter_list->list, list) {
++		__free_filter(filter_item->filter);
++		list_del(&filter_item->list);
++		kfree(filter_item);
++	}
++	kfree(filter_list);
++}
++
++static void free_filter_list_tasks(struct rcu_head *rhp)
++{
++	call_rcu(rhp, free_filter_list);
++}
++
++/*
++ * The tracepoint_synchronize_unregister() is a double rcu call.
++ * It calls synchronize_rcu_tasks_trace() followed by synchronize_rcu().
++ * Instead of waiting for it, simply call these via the call_rcu*()
++ * variants.
++ */
++static void delay_free_filter(struct filter_head *head)
++{
++	call_rcu_tasks_trace(&head->rcu, free_filter_list_tasks);
++}
++
++static void try_delay_free_filter(struct event_filter *filter)
++{
++	struct filter_head *head;
++	struct filter_list *item;
++
++	head = kmalloc(sizeof(*head), GFP_KERNEL);
++	if (!head)
++		goto free_now;
++
++	INIT_LIST_HEAD(&head->list);
++
++	item = kmalloc(sizeof(*item), GFP_KERNEL);
++	if (!item) {
++		kfree(head);
++		goto free_now;
++	}
++
++	item->filter = filter;
++	list_add_tail(&item->list, &head->list);
++	delay_free_filter(head);
++	return;
++
++ free_now:
++	/* Make sure the filter is not being used */
++	tracepoint_synchronize_unregister();
++	__free_filter(filter);
++}
++
+ static inline void __free_subsystem_filter(struct trace_event_file *file)
+ {
+ 	__free_filter(file->filter);
+@@ -1342,15 +1410,53 @@ static inline void __free_subsystem_filter(struct trace_event_file *file)
+ }
+ 
+ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+-					  struct trace_array *tr)
++					  struct trace_array *tr,
++					  struct event_filter *filter)
+ {
+ 	struct trace_event_file *file;
++	struct filter_head *head;
++	struct filter_list *item;
++
++	head = kmalloc(sizeof(*head), GFP_KERNEL);
++	if (!head)
++		goto free_now;
++
++	INIT_LIST_HEAD(&head->list);
++
++	item = kmalloc(sizeof(*item), GFP_KERNEL);
++	if (!item) {
++		kfree(head);
++		goto free_now;
++	}
++
++	item->filter = filter;
++	list_add_tail(&item->list, &head->list);
+ 
+ 	list_for_each_entry(file, &tr->events, list) {
+ 		if (file->system != dir)
+ 			continue;
+-		__free_subsystem_filter(file);
++		item = kmalloc(sizeof(*item), GFP_KERNEL);
++		if (!item)
++			goto free_now;
++		item->filter = file->filter;
++		list_add_tail(&item->list, &head->list);
++		file->filter = NULL;
++	}
++
++	delay_free_filter(head);
++	return;
++ free_now:
++	tracepoint_synchronize_unregister();
++
++	if (head)
++		free_filter_list(&head->rcu);
++
++	list_for_each_entry(file, &tr->events, list) {
++		if (file->system != dir || !file->filter)
++			continue;
++		__free_filter(file->filter);
+ 	}
++	__free_filter(filter);
+ }
+ 
+ int filter_assign_type(const char *type)
+@@ -2131,11 +2237,6 @@ static inline void event_clear_filter(struct trace_event_file *file)
+ 	RCU_INIT_POINTER(file->filter, NULL);
+ }
+ 
+-struct filter_list {
+-	struct list_head	list;
+-	struct event_filter	*filter;
+-};
+-
+ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 				struct trace_array *tr,
+ 				struct filter_parse_error *pe,
+@@ -2144,11 +2245,16 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 	struct trace_event_file *file;
+ 	struct filter_list *filter_item;
+ 	struct event_filter *filter = NULL;
+-	struct filter_list *tmp;
+-	LIST_HEAD(filter_list);
++	struct filter_head *filter_list;
+ 	bool fail = true;
+ 	int err;
+ 
++	filter_list = kmalloc(sizeof(*filter_list), GFP_KERNEL);
++	if (!filter_list)
++		return -ENOMEM;
++
++	INIT_LIST_HEAD(&filter_list->list);
++
+ 	list_for_each_entry(file, &tr->events, list) {
+ 
+ 		if (file->system != dir)
+@@ -2175,7 +2281,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 		if (!filter_item)
+ 			goto fail_mem;
+ 
+-		list_add_tail(&filter_item->list, &filter_list);
++		list_add_tail(&filter_item->list, &filter_list->list);
+ 		/*
+ 		 * Regardless of if this returned an error, we still
+ 		 * replace the filter for the call.
+@@ -2195,31 +2301,22 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 	 * Do a synchronize_rcu() and to ensure all calls are
+ 	 * done with them before we free them.
+ 	 */
+-	tracepoint_synchronize_unregister();
+-	list_for_each_entry_safe(filter_item, tmp, &filter_list, list) {
+-		__free_filter(filter_item->filter);
+-		list_del(&filter_item->list);
+-		kfree(filter_item);
+-	}
++	delay_free_filter(filter_list);
+ 	return 0;
+  fail:
+ 	/* No call succeeded */
+-	list_for_each_entry_safe(filter_item, tmp, &filter_list, list) {
+-		list_del(&filter_item->list);
+-		kfree(filter_item);
+-	}
++	free_filter_list(&filter_list->rcu);
+ 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+ 	return -EINVAL;
+  fail_mem:
+ 	__free_filter(filter);
++
+ 	/* If any call succeeded, we still need to sync */
+ 	if (!fail)
+-		tracepoint_synchronize_unregister();
+-	list_for_each_entry_safe(filter_item, tmp, &filter_list, list) {
+-		__free_filter(filter_item->filter);
+-		list_del(&filter_item->list);
+-		kfree(filter_item);
+-	}
++		delay_free_filter(filter_list);
++	else
++		free_filter_list(&filter_list->rcu);
++
+ 	return -ENOMEM;
+ }
+ 
+@@ -2361,9 +2458,7 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
+ 
+ 		event_clear_filter(file);
+ 
+-		/* Make sure the filter is not being used */
+-		tracepoint_synchronize_unregister();
+-		__free_filter(filter);
++		try_delay_free_filter(filter);
+ 
+ 		return 0;
+ 	}
+@@ -2387,11 +2482,8 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
+ 
+ 		event_set_filter(file, filter);
+ 
+-		if (tmp) {
+-			/* Make sure the call is done with the filter */
+-			tracepoint_synchronize_unregister();
+-			__free_filter(tmp);
+-		}
++		if (tmp)
++			try_delay_free_filter(tmp);
+ 	}
+ 
+ 	return err;
+@@ -2417,9 +2509,7 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
+ 		filter = system->filter;
+ 		system->filter = NULL;
+ 		/* Ensure all filters are no longer used */
+-		tracepoint_synchronize_unregister();
+-		filter_free_subsystem_filters(dir, tr);
+-		__free_filter(filter);
++		filter_free_subsystem_filters(dir, tr, filter);
+ 		return 0;
+ 	}
+ 
+-- 
+2.47.2
 
 
-Joseph
