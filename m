@@ -1,105 +1,134 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A988C2C3242;
-	Fri,  6 Jun 2025 10:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7981B253355;
+	Fri,  6 Jun 2025 10:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749206232; cv=none; b=EcVY3vXtEH8c7xPScQpz98ob8e4kxXthoFI4fJO3f3lprhlAKG2q9QJvURFF6lvCvDRDjjZbugL1W8OQu8l6EdyoaFW99E9LLuA4mRHgBA/Htl56grG8LM9gjToIOYmhX5J3Ew+yj2K1P4oe2KkfcMaLakQIx4U50af3CFfU25Y=
+	t=1749206437; cv=none; b=PluaLMWsTxDOtadCParaKFB7bwlN9n679cZkK35g41MdBC1jjjDa9YEUEZuXiBeZQr3Viatso81PYAAYMY8N8UIEed1663GJ3Cl8lZRE1dCJOoQozhzptKFf/ylyNJdNt96VAEQNDaeQH2hPD7xxw2aw+tXQkfD0DlVzeU6daP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749206232; c=relaxed/simple;
-	bh=Mq4k4ekcbiqjRIxZJ0xXM1aKpS5twuBvYi6/9eFoJo8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bito4myopx6FUom7ZrV5ZDAPnbPQZl/QDodtZu8kayN3vj8xaWXUAsNAoU0c871UGLRIs5GjW4k/+NZqx1m4Ko/ZRAialG6V8bfuZr/+AA4Y24TlGL9gEi+UwbPvLzseYm06ZJkF3IaZ3/Sr+D14N7hOI8IoIRAx4jo9RcNQWvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h23P9u9P; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749206437; c=relaxed/simple;
+	bh=N0dWlwt/wUZAlKZIKffM0LxIo2EDg6xSxq+YVnEkUYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQUurBhX5k5RBjYuQ1YIFQmYoHyp2ZG4dlpnEb+4xFh0tqyvPhIFU8Awlwwy4U2sg7exl2qpx+V6ebxQ0I0g36GTqumDXk3TDiL+86Ji4rwOyf3BDAfmqigxdUZ4O1yt4mgqFgZveV21Vu2vOIGGYpjasKnimVbDpymekC+zcdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LlhYlBT/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h23P9u9P"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso2306682b3a.2;
-        Fri, 06 Jun 2025 03:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749206230; x=1749811030; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NdtxJEbjhatRvCDWF7ffdW5RJ6Yji8odY3/KOt6aPsc=;
-        b=h23P9u9P2iy1P2igEqGnvqgONTTZVKs1Q6TsQBOJLmqfiZc96aMUK5gZMLlvPX6XgB
-         NxLUfDQhrooStQA/KCf8fkEv7qM3F+WMbL1AvP/h46DGnIiavzDmhzRiZkKXfSQX/6tC
-         Xp2i6ww3pg3IWGwHBaSTMHKqgfp5aTgXMK7EIZtMBoWBZwjE5aIrCPHvMPRoKagjry0g
-         17XyZJOB+mq7pFgESTxiM/4c37D4w0jgu39gD6wIpMTCxrgm1wHGlHbgJehAwptDdirM
-         4T8u8BmS5G9Ljk7s6V89tthYuGij8SmsrPK9B/6KNdpp99ehXi9If3pYMe5GGQ4+Y+mI
-         j9MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749206230; x=1749811030;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NdtxJEbjhatRvCDWF7ffdW5RJ6Yji8odY3/KOt6aPsc=;
-        b=fC5UhgUa0tcMvDfKJakc0+KG3rUvH+p4NuV0FyN54J5U0cUI7Uq/qtdYTivDDzio7B
-         4XN/OyNGnAbn4mobnaJ20+WirD4uzkHEpVcXtbbkHl2XOzu6KSg8B69ibkR1gtSWXiRG
-         2PLwvGmNEOE6zy8GWJgkTe4krEfidqJ9QF3hOOLl5LgYQGtYb8k/Mc0/lzcmvIL/4j7e
-         JzFc8s659u172rUoF4D7d5B03JFnggOx7oMbHHpQXEwjo1LOD65Fd+cvFJ0YvYskLkYW
-         Ov0NOzbNvknZ4NBsN8BnkpZkfVXIapL5Q09xUDFZu2o+dpOyi7ZxG1Y+iD2+zuVQOE3L
-         f0IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOsqiPL2Xrm8e5TgCh6WhQpFug+rr6wl5M6+a2dsZge2Mbk89won+XE3FkloA/Kn+dsIiijlrtb3JIHIU=@vger.kernel.org, AJvYcCVMrbhVHhXpFydSWFAIhhwVS1BDwKDgP9PaTO/Dbtbl2p2CIhgqpC8HDV/V49gvU320RgpBHIeu@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhbkTs/rxMXaiECD8/4U1mWvDPeEgU0NTMUG08Z2B2dBlYVrWN
-	wpqPA5zeKsB/4SN4CsX2XkxiFQiq3TakmFd+rmZ5ZyW69mzwhS3TmUzs
-X-Gm-Gg: ASbGncvkKNcCkq0GL3oRZFXNhNhEg7J/kPF7mxQ+SGAGUvJ4cUxTozxxvvI/q0kA4Ad
-	E3HvyaVQnBMazt9Lwr3M+6g6FMtR+zdBKpuzVkz6GaHjaNWGUVwwN8mcPB+StyLSZEDOZJWLSBX
-	VlUWdHxYNCz9tlPxtisx3euuhdeFsBVM+ebrTHVqaHPIjpAUbvS90olehiAFaPwjYNWSd60Ql86
-	4N0rQVf9TA2BPH/OZ8PWRzWqhUjca4f5keaTXg5hLBHm1iQ9IxyAfLV6RVeVhLIV0cEDjQVneIL
-	shPmtEnD7gKkVXX423a/qbllh7NHSavGSYYmQNJJpoQPVx9DrwM8CTAolUB6s44WdaLPhACEKIR
-	gDyuYFQjAGJZ8uoA=
-X-Google-Smtp-Source: AGHT+IESWEQByLV3zPRY07M398R8ZoM9qPk001wtKdUGokyw0THc1FuuH31hxl2c0VkrBS+61mTUzA==
-X-Received: by 2002:a05:6a00:2e0d:b0:746:24c9:c92e with SMTP id d2e1a72fcca58-74827e810demr4833871b3a.8.1749206229803;
-        Fri, 06 Jun 2025 03:37:09 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b084695sm1033041b3a.96.2025.06.06.03.37.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 03:37:09 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: richardcochran@gmail.com
-Cc: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH] ptp: remove unnecessary brace in ptp_clock_unregister()
-Date: Fri,  6 Jun 2025 19:36:59 +0900
-Message-ID: <20250606103659.8336-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LlhYlBT/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23A3AC4CEEB;
+	Fri,  6 Jun 2025 10:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749206436;
+	bh=N0dWlwt/wUZAlKZIKffM0LxIo2EDg6xSxq+YVnEkUYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LlhYlBT/0EQdYF0dX9loZ15WZBxDzM3zowld8tKGu4uUwK1OzXcDwNyxHMks1wjgt
+	 SawS3DS6Mp5CtUbz+FNqcguL78XRgRIPU7TTSL5G7Wjbcneo3sI+leO5/03MpLxD1z
+	 P9b1eBOXp1zO84Srh5X8sbMZxP+loTc6DOAv3CFg=
+Date: Fri, 6 Jun 2025 12:40:34 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: arnd@arndb.de, andriy.shevchenko@linux.intel.com,
+	benjamin.larsson@genexis.eu, heikki.krogerus@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com, jirislaby@kernel.org,
+	jkeeping@inmusicbrands.com, john.ogness@linutronix.de,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	markus.mayer@linaro.org, matt.porter@linaro.org,
+	namcao@linutronix.de, paulmck@kernel.org, pmladek@suse.com,
+	schnelle@linux.ibm.com, sunilvl@ventanamicro.com,
+	tim.kryger@linaro.org
+Subject: Re: [PATCH v7 1/4] serial: 8250: fix panic due to PSLVERR
+Message-ID: <2025060621-hankie-groovy-bad6@gregkh>
+References: <20250528062609.25104-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528062609.25104-1-cuiyunhui@bytedance.com>
 
-There are unnecessary brace used in the conditional statement where
-ptp_vclock_in_use() is used in ptp_clock_unregister(). This should be
-removed.
+On Wed, May 28, 2025 at 02:26:06PM +0800, Yunhui Cui wrote:
+> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> an error response if an attempt is made to read an empty RBR (Receive
+> Buffer Register) while the FIFO is enabled.
+> 
+> In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> Execution proceeds to the serial_port_in(port, UART_RX).
+> This satisfies the PSLVERR trigger condition.
+> 
+> When another CPU (e.g., using printk()) is accessing the UART (UART
+> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
+> (lcr & ~UART_LCR_SPAR) in dw8250_check_lcr(), causing it to enter
+> dw8250_force_idle().
+> 
+> Put serial_port_out(port, UART_LCR, UART_LCR_WLEN8) under the port->lock
+> to fix this issue.
+> 
+> Panic backtrace:
+> [    0.442336] Oops - unknown exception [#1]
+> [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> ...
+> [    0.442416] console_on_rootfs+0x26/0x70
+> 
+> Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround")
+> Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>  drivers/tty/serial/8250/8250_port.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 6d7b8c4667c9c..07fe818dffa34 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2376,9 +2376,10 @@ int serial8250_do_startup(struct uart_port *port)
+>  	/*
+>  	 * Now, initialize the UART
+>  	 */
+> -	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+>  
+>  	uart_port_lock_irqsave(port, &flags);
+> +	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> +
+>  	if (up->port.flags & UPF_FOURPORT) {
+>  		if (!up->port.irq)
+>  			up->port.mctrl |= TIOCM_OUT1;
+> -- 
+> 2.39.5
+> 
+> 
 
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
----
- drivers/ptp/ptp_clock.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Hi,
 
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index 35a5994bf64f..0ae9f074fc52 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -412,9 +412,8 @@ static int unregister_vclock(struct device *dev, void *data)
- 
- int ptp_clock_unregister(struct ptp_clock *ptp)
- {
--	if (ptp_vclock_in_use(ptp)) {
-+	if (ptp_vclock_in_use(ptp))
- 		device_for_each_child(&ptp->dev, NULL, unregister_vclock);
--	}
- 
- 	ptp->defunct = 1;
- 	wake_up_interruptible(&ptp->tsev_wq);
---
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
