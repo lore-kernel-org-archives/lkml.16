@@ -1,125 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161E81EE033;
-	Fri,  6 Jun 2025 20:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578DF219A80;
+	Fri,  6 Jun 2025 20:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749241768; cv=none; b=KBYH9zxACC9WIqFq417Tv9cBtOnEbxbRsoKPso82rGgpePh9xb3a+neqJQQt439/GvBS0AGMM6057Ye6imAXRXCvKNkNYbxjykTk/bhdzAmp2LgcEhWwPCLKwKi2gBc8OSDSMa7k4Vbd6kErw6FLgt8jroHTXqGXZJlytCHmZ50=
+	t=1749241818; cv=none; b=HBwi2z92gBRE0zH38WwhprsGfoHdrF0H0UwQlPccsmWjYDj+DHaC9dz+53K7PP22+VEa86B+gtGu5kthFb5BOTkboU6oQuD5PkFD8cEe1dlg6Wbjt3JMTcxd9bVpKVnrdOu04couUTZubZBmX9vXbDmBvTmk7vloJmHZiUsGeXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749241768; c=relaxed/simple;
-	bh=XE8OBWuC9+U991iDiZIJKTb6Sh+vpFUYsmJELuaWVeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BSA04iuYANyC9HxTOx62P6Ki3I9tvJovo9sait1aZq811eT+nfGNeVyqEXnbqaWSDDtjrM5E2IP/tm7UA2V3W36xm56A1mVosBO7teFs5AHrSLNXcxGD3YBmfHNvfz8+EnoOL1Wm9rHYSW1x8o/s+RZSrWA1UYC6I9KQ5yY1Nk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EvwcQn5I; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749241818; c=relaxed/simple;
+	bh=XxMbubhexh9kAk1xe21ppFti4Lj4G8QmL9rUFUSgl68=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=TOvVDu0rqFj8D1633rqzJFKFQKBAxzEuN9HWB2lAdA4Ap243WGud1zeDkOxfMf9f5c5+FvVEQ5ygA2ka/6eE7Gri7l2yJANB99DVJdiGXq2U0Yfo0Diafb/ztGT4TfIDo4Egnr74MY+UIRAO2YAADRhWmrJL+hSlwsnC5mQcICw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1L+5W1i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EvwcQn5I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749241767; x=1780777767;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XE8OBWuC9+U991iDiZIJKTb6Sh+vpFUYsmJELuaWVeI=;
-  b=EvwcQn5Ivl7QD3OlwVjzIR/hXUEvzijyLW8ETWgmRsNi87qk3WwLwS6K
-   AlIUjqg0QXo1ZKRmX4ycGvnrrtnQcifXpi43U6lIE8V/xYZKlFMDjk41J
-   hHby+LfbgVf+5cPG6pl1NCUyLGCDu80SptVpY96w/Fj5Kzi/rrokipu5a
-   52TeCppz8E2q/bNr1qLUHQsC8OGXN7bvBrPiYklIqXHo/VZDMUiuZ1B8o
-   ZoUSRlSQkN6PaT0VQstLzexib2gOZ2TmQ1SzYR+OaKt2y0WY5YlWJJmx8
-   8ON9dRagg2FYiv5o8ochJeWianC5B0IZg3Ixe/lul8MAI5MoRdlf1F2Ls
-   A==;
-X-CSE-ConnectionGUID: aQtAo0kcQnayHLCDW+xOjQ==
-X-CSE-MsgGUID: pJRE5U4QQP+odBHRGO3Wqw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="62059335"
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="62059335"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 13:29:26 -0700
-X-CSE-ConnectionGUID: MlPlovSpR4CrjKcFPkerWA==
-X-CSE-MsgGUID: nKyfc+FEQTuVjuW0oKJFtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="145847260"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 06 Jun 2025 13:29:25 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNdgo-0005Fx-2F;
-	Fri, 06 Jun 2025 20:29:22 +0000
-Date: Sat, 7 Jun 2025 04:28:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: "feng.liu" <feng.liu@senarytech.com>, perex@perex.cz, tiwai@susu.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org, "feng.liu" <feng.liu@senarytech.com>
-Subject: Re: [PATCH] Correct boost volume
-Message-ID: <202506070421.thMBn9rY-lkp@intel.com>
-References: <20250606113349.129746-1-feng.liu@senarytech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1L+5W1i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE01C4CEEE;
+	Fri,  6 Jun 2025 20:30:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749241818;
+	bh=XxMbubhexh9kAk1xe21ppFti4Lj4G8QmL9rUFUSgl68=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=q1L+5W1ioFsQbT2cRC7rVS3C9F6524Uamg+Ft+zI1266Jr1bVJdGAQcpQXhrgsROP
+	 On18oPUobnnis8krCEBcFMU4R145yFsd1ShkmAyS7+N9rcAxGrqGJdu2ZaHOEnwQcc
+	 5rpBH8pvzHBRWa17o3jHE+hKXPvpsDhXZKtMFXwYfa8uq7ycLQVmCqxJRLlThSjAHc
+	 iPNAwW47esfh8Xlyez1VcxlsDiwZzccfv5L2+7Q0h/JkJ84Zt2mAl0Q0DPqGt/ZRo0
+	 Yp+MZCNBHgRzx+rRTNISR6fyMJPIcvbNtyucDk4WxeYssSoIpXSj52vopT3P1I5HWB
+	 gvll0OcvGg4EA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id E9F6039F1DF9;
+	Fri,  6 Jun 2025 20:30:50 +0000 (UTC)
+Subject: Re: [GIT PULL] pwm: axi-pwmgen: Fix handling of external clock
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <jzbvo3ranrbpiaox6pzs73jmq5njkkmq7iqnme5z7krcugjdk2@6hy7myyjdji5>
+References: <jzbvo3ranrbpiaox6pzs73jmq5njkkmq7iqnme5z7krcugjdk2@6hy7myyjdji5>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <jzbvo3ranrbpiaox6pzs73jmq5njkkmq7iqnme5z7krcugjdk2@6hy7myyjdji5>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.16-rc1-fixes
+X-PR-Tracked-Commit-Id: a8841dc3dfbf127a19c3612204bd336ee559b9a1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8a2ba6f8ee7dd764ffec4484e4f4d5ad377f9a69
+Message-Id: <174924184956.3981198.16330161061990733058.pr-tracker-bot@kernel.org>
+Date: Fri, 06 Jun 2025 20:30:49 +0000
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, David Lechner <dlechner@baylibre.com>, Trevor Gamblin <tgamblin@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606113349.129746-1-feng.liu@senarytech.com>
 
-Hi feng.liu,
+The pull request you sent on Fri, 6 Jun 2025 11:47:24 +0200:
 
-kernel test robot noticed the following build warnings:
+> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.16-rc1-fixes
 
-[auto build test WARNING on tiwai-sound/for-next]
-[also build test WARNING on tiwai-sound/for-linus linus/master v6.15 next-20250606]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8a2ba6f8ee7dd764ffec4484e4f4d5ad377f9a69
 
-url:    https://github.com/intel-lab-lkp/linux/commits/feng-liu/Correct-boost-volume/20250606-201348
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git for-next
-patch link:    https://lore.kernel.org/r/20250606113349.129746-1-feng.liu%40senarytech.com
-patch subject: [PATCH] Correct boost volume
-config: i386-buildonly-randconfig-002-20250607 (https://download.01.org/0day-ci/archive/20250607/202506070421.thMBn9rY-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250607/202506070421.thMBn9rY-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506070421.thMBn9rY-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   sound/pci/hda/patch_conexant.c: In function 'cxt_get_defaut_capture_gain_boost':
->> sound/pci/hda/patch_conexant.c:1223:1: warning: no return statement in function returning non-void [-Wreturn-type]
-    1223 | }
-         | ^
-
-
-vim +1223 sound/pci/hda/patch_conexant.c
-
-  1204	
-  1205	static int cxt_get_defaut_capture_gain_boost(struct hda_codec *codec)
-  1206	{
-  1207		struct conexant_spec *spec = codec->spec;
-  1208		int i;
-  1209		unsigned int boost;
-  1210	
-  1211		for (i = 0; i < HDA_MAX_NUM_INPUTS; i++) {
-  1212			if (spec->gen.imux_pins[i] == 0)
-  1213				continue;
-  1214	
-  1215			boost = snd_hda_codec_read(codec, spec->gen.imux_pins[i],
-  1216				0, AC_VERB_GET_AMP_GAIN_MUTE, 0);
-  1217			spec->init_imux_boost_val[spec->gen.imux_pins[i]] = boost;
-  1218			codec_info(codec, "%s, node_id = %x, mic_boost =%x", __func__,
-  1219				spec->gen.imux_pins[i], boost);
-  1220		}
-  1221	
-  1222		spec->gen.cap_sync_hook = cxt_cap_sync_hook;
-> 1223	}
-  1224	
+Thank you!
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
