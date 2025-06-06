@@ -1,131 +1,307 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47205F9EC;
-	Fri,  6 Jun 2025 08:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749198677; cv=none; b=kCR6Plth6BPUnRNYiJ7RxAFM6VRlRUnyp+47Ps8l2H5vTRozAdfled1WITk2IXAtFFuvdV9ZKuuLXqVyLBb7dW32Pc/lGALOA3a8OXcUGZgHC/JIaFtYJCZzbx/jdhCuOjyfUAqrrOn3CDW68236J8AEDYw6gvxJsyThlE7Ehd0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749198677; c=relaxed/simple;
-	bh=GOaecTwnFqUtKaM46dtg8BN9hvAYfBIit3afUD3tV4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FNRXsD0TuRiYoTXr+PbP42Kj6MJ86AGt24YqIMp3/yz6mtAqb6mM9TqosctsRkH46Xb7L4ucLZH0EUYixTlXhS9DubqVUrTqrxRqZ0BEySekVbHH7cmkwmAKEyfYNlFJfIYJ8L7bylDMmo1XrtpAXSmkY10uNBqUuYfPFf8gKro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=r7EdqUQS; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1275D1C861D;
+	Fri,  6 Jun 2025 08:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749198707; cv=pass; b=P1nd+l3YzNAPjer/0t7gifDT9YB53dJS3ltxCxpFL0T+Ed4fZ2qnXxRpjfcMcR2MQtDmrYXeYlZeEna9b9tWyWLkb9C8PEzx4l+FU2CQ1JDVrHfxMYHrsW0/LiZ/TxJykZe73QQUGADImP7NEGvOLSQ3ImNsblNHAF6HenD9sm0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749198707; c=relaxed/simple;
+	bh=ErLmJhVn4QAUnKv5ZTvKBfWmiSxEPldyafoLzI0VyrE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OYJ+3eTjH/T1c63j7rflil5xzvnW5htQmYAkAceB1uuYKrfZM4RP+xL4XeJZlzeddJUj8hAQf1sMLUzOWkL+9C02XYYTQOcYCBUUJCre4k03V4SJEwCRjdoKb109Ygm/K/XCAutX15nPNE0iZqvgkU9RmjqD9eoI9vYpVwHFY0s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=KRFSflEU; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="r7EdqUQS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UiP4Miv2fJBDHLcvZPsk9HjMhtpzsvxsINCe1ehfFjc=; b=r7EdqUQSJRqm9CeA+rK2wsC/Xm
-	s2szXU0GVh++A4mDTsHpuq3LGkszUuEdzlaAculq6QhLktb52PTg4VCssV8DMF3ktMRbeYlgjo3md
-	wHvN5GQma3fHpkPAE0Qu+kA52r6/uwh8L/gvtSF7z8Rb3XxxtUYZtPtQUd26DBhFpVLQ8WEDR+GOw
-	FEXwoJw+SnfMc+WG13rWZzdRa8u/+8Y1zMm+VNbreqiKZQ28jqpPQBbS1a5k+0uxw5C/ILmaUdxgN
-	XUuQQUiKriG38tnn9HGEq0RJIUYAXTGLR4a6fd3xNwRFHJ4MUjux+hOJ8dreS7Rz0z83KsC4vi3aD
-	MtTXOAmQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33176)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uNSTg-0000Zv-22;
-	Fri, 06 Jun 2025 09:31:04 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uNSTb-00034M-2K;
-	Fri, 06 Jun 2025 09:30:59 +0100
-Date: Fri, 6 Jun 2025 09:30:59 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Simon Horman <horms@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Jijie Shao <shaojijie@huawei.com>
-Subject: Re: [PATCH net] net: phy: phy_caps: Don't skip better duplex macth
- on non-exact match
-Message-ID: <aEKnQ4haQtcJWzXX@shell.armlinux.org.uk>
-References: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
- <ef3efb3c-3b5a-4176-a512-011e80c52a06@redhat.com>
- <20250606101923.04393789@fedora>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="KRFSflEU"
+ARC-Seal: i=1; a=rsa-sha256; t=1749198678; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=HIyyKYnUOxeCtpNB8W9sCxYALrq0N55a65L0wqg2z9q0dYV7VZt3pyxAAliuANRZvShYordAvWf15N+188V4QaUd25KDIRcy4nGXvuLB3EJTFK8nSi4Xv43GpmZOBrkt+XO9vBwNxpURmgWE6J5nK4xJ946kxXrPLPpTt5giFsw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749198678; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=sRk5wAd8hyWXbE60JMWVdo9yqvvwrUsmbz/uBn+epe0=; 
+	b=EUgOCE21rlt5geURNVWicY558R5aZrojdY+SG3F1mN5XcNp3uW7ZccMuf+B2NyNqh511ixkmldyy0f4wcGLTSf53cwJM6RL6GKRsUd05JzSpM72gMyUT55k/IAnq++DGtM5PyHZJOCpT/ATGOhMlljzkdo7MN6uV8R7DOcr5zqk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749198678;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=sRk5wAd8hyWXbE60JMWVdo9yqvvwrUsmbz/uBn+epe0=;
+	b=KRFSflEUokqfhdFotwJLk80GuhWjg0lX7o3n/PG5O9YJXTs7adWeTYHs8ZJ70jMO
+	cJkgxONNpCzBczeSHCEUtldPq2fCwUGvjI+OF0dw85e+XobY9tAtj1b2eKgPlupHG9Z
+	5vQHhTVdO6jbwqW2V7m7kiIcVfE+Wh0glpbXgjDk=
+Received: by mx.zohomail.com with SMTPS id 1749198677646331.17372961499655;
+	Fri, 6 Jun 2025 01:31:17 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, Jonas Karlman <jonas@kwiboo.se>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>, kernel@collabora.com,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 6/7] arm64: dts: rockchip: Add thermal nodes to RK3576
+Date: Fri, 06 Jun 2025 10:31:12 +0200
+Message-ID: <8702624.EvYhyI6sBW@workhorse>
+In-Reply-To:
+ <CABjd4YwrraMC587sn1afA+pHGA-P25xhEMh7AJJQbQ5RwYJPsg@mail.gmail.com>
+References:
+ <20250425-rk3576-tsadc-upstream-v5-0-0c840b99c30e@collabora.com>
+ <20250425-rk3576-tsadc-upstream-v5-6-0c840b99c30e@collabora.com>
+ <CABjd4YwrraMC587sn1afA+pHGA-P25xhEMh7AJJQbQ5RwYJPsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606101923.04393789@fedora>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Jun 06, 2025 at 10:19:23AM +0200, Maxime Chevallier wrote:
-> In reality, the case you're mentioning would be a device that supports
-> 1000/Full, 100/Full and 100/Half, user asks for 1000/Half, and 100/Full
-> would be reported.
-> 
-> That's unlikely to exist, but I'll document it as I've been surprised
-> in the past with setups that shouldn't exist that actually do :)
+Hi Alexey,
 
-That's not unlikely. Many MACs do not support 1000/Half but do support
-100/Half and 10/Half.
+On Thursday, 5 June 2025 21:19:39 Central European Summer Time Alexey Chark=
+ov wrote:
+> Hi Nicolas,
+>=20
+> On Thu, Jun 5, 2025 at 11:07=E2=80=AFPM Nicolas Frattaroli
+> <nicolas.frattaroli@collabora.com> wrote:
+> >
+> > Add the TSADC node to the RK3576. Additionally, add everything the TSADC
+> > needs to function, i.e. thermal zones, their trip points and maps, as
+> > well as adjust the CPU cooling-cells property.
+> >
+> > The polling-delay properties are set to 0 as we do have interrupts for
+> > this TSADC on this particular SoC.
+> >
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/rk3576.dtsi | 164 +++++++++++++++++++++++=
++++++++-
+> >  1 file changed, 162 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot=
+/dts/rockchip/rk3576.dtsi
+> > index a6bfef82d50bc9b0203a04324d61e0f232b61a65..1c07ad78c9230f1e46b0ef8=
+817834f58b19eb86b 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+> > @@ -11,6 +11,7 @@
+> >  #include <dt-bindings/power/rockchip,rk3576-power.h>
+> >  #include <dt-bindings/reset/rockchip,rk3576-cru.h>
+> >  #include <dt-bindings/soc/rockchip,boot-mode.h>
+> > +#include <dt-bindings/thermal/thermal.h>
+> >
+> >  / {
+> >         compatible =3D "rockchip,rk3576";
+> > @@ -113,9 +114,9 @@ cpu_l0: cpu@0 {
+> >                         capacity-dmips-mhz =3D <485>;
+> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
+> >                         operating-points-v2 =3D <&cluster0_opp_table>;
+> > -                       #cooling-cells =3D <2>;
+> >                         dynamic-power-coefficient =3D <120>;
+> >                         cpu-idle-states =3D <&CPU_SLEEP>;
+> > +                       #cooling-cells =3D <2>;
+> >                 };
+> >
+> >                 cpu_l1: cpu@1 {
+> > @@ -127,6 +128,7 @@ cpu_l1: cpu@1 {
+> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
+> >                         operating-points-v2 =3D <&cluster0_opp_table>;
+> >                         cpu-idle-states =3D <&CPU_SLEEP>;
+> > +                       #cooling-cells =3D <2>;
+> >                 };
+> >
+> >                 cpu_l2: cpu@2 {
+> > @@ -138,6 +140,7 @@ cpu_l2: cpu@2 {
+> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
+> >                         operating-points-v2 =3D <&cluster0_opp_table>;
+> >                         cpu-idle-states =3D <&CPU_SLEEP>;
+> > +                       #cooling-cells =3D <2>;
+> >                 };
+> >
+> >                 cpu_l3: cpu@3 {
+> > @@ -149,6 +152,7 @@ cpu_l3: cpu@3 {
+> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_L>;
+> >                         operating-points-v2 =3D <&cluster0_opp_table>;
+> >                         cpu-idle-states =3D <&CPU_SLEEP>;
+> > +                       #cooling-cells =3D <2>;
+> >                 };
+> >
+> >                 cpu_b0: cpu@100 {
+> > @@ -159,9 +163,9 @@ cpu_b0: cpu@100 {
+> >                         capacity-dmips-mhz =3D <1024>;
+> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
+> >                         operating-points-v2 =3D <&cluster1_opp_table>;
+> > -                       #cooling-cells =3D <2>;
+> >                         dynamic-power-coefficient =3D <320>;
+> >                         cpu-idle-states =3D <&CPU_SLEEP>;
+> > +                       #cooling-cells =3D <2>;
+> >                 };
+> >
+> >                 cpu_b1: cpu@101 {
+> > @@ -173,6 +177,7 @@ cpu_b1: cpu@101 {
+> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
+> >                         operating-points-v2 =3D <&cluster1_opp_table>;
+> >                         cpu-idle-states =3D <&CPU_SLEEP>;
+> > +                       #cooling-cells =3D <2>;
+> >                 };
+> >
+> >                 cpu_b2: cpu@102 {
+> > @@ -184,6 +189,7 @@ cpu_b2: cpu@102 {
+> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
+> >                         operating-points-v2 =3D <&cluster1_opp_table>;
+> >                         cpu-idle-states =3D <&CPU_SLEEP>;
+> > +                       #cooling-cells =3D <2>;
+> >                 };
+> >
+> >                 cpu_b3: cpu@103 {
+> > @@ -195,6 +201,7 @@ cpu_b3: cpu@103 {
+> >                         clocks =3D <&scmi_clk SCMI_ARMCLK_B>;
+> >                         operating-points-v2 =3D <&cluster1_opp_table>;
+> >                         cpu-idle-states =3D <&CPU_SLEEP>;
+> > +                       #cooling-cells =3D <2>;
+> >                 };
+> >
+> >                 idle-states {
+> > @@ -436,6 +443,143 @@ psci {
+> >                 method =3D "smc";
+> >         };
+> >
+> > +       thermal_zones: thermal-zones {
+> > +               /* sensor near the center of the SoC */
+> > +               package_thermal: package-thermal {
+> > +                       polling-delay-passive =3D <0>;
+> > +                       polling-delay =3D <0>;
+> > +                       thermal-sensors =3D <&tsadc 0>;
+> > +
+> > +                       trips {
+> > +                               package_crit: package-crit {
+> > +                                       temperature =3D <115000>;
+> > +                                       hysteresis =3D <0>;
+> > +                                       type =3D "critical";
+> > +                               };
+> > +                       };
+> > +               };
+> > +
+> > +               /* sensor for cluster1 (big Cortex-A72 cores) */
+> > +               bigcore_thermal: bigcore-thermal {
+> > +                       polling-delay-passive =3D <0>;
+>=20
+> I've tried these on my board, and it seems that with a zero here it
+> never stops throttling the CPU even after it cools down. I believe you
+> need something like <100> here, which is what I used on RK3588 for
+> similar reasons.
+>=20
+> I think it's because the TSADC only fires an interrupt when the
+> temperature crosses the trip point, but the thermal governor also
+> needs to observe temperature trends and step up / step down the
+> cooling states depending on whether the system is cooling sufficiently
+> or not. So it needs to poll the temperature once the cooling device is
+> activated (passive in this case).
 
-Also... you're wrong about the result.
+Thanks, good catch. I struggled to make the CPU throttle at all in my
+case, so I never managed to catch this.
 
-If phy_lookup_setting() is called with speed = 1000, duplex = half,
-and we have a MAC that supports 1000/Full, 100/Half, 100/Full, then:
+I'll fix it in v6, which I'll send out next week based on v6.16-rc1.
 
-- We iterate down through the phy_settings[] to:
-	PHY_SETTING(   1000, FULL,   1000baseT_Full             ),
+>=20
+> > +                       polling-delay =3D <0>;
+> > +                       thermal-sensors =3D <&tsadc 1>;
+> > +
+> > +                       trips {
+> > +                               bigcore_alert: bigcore-alert {
+> > +                                       temperature =3D <85000>;
+> > +                                       hysteresis =3D <2000>;
+> > +                                       type =3D "passive";
+> > +                               };
+> > +
+> > +                               bigcore_crit: bigcore-crit {
+> > +                                       temperature =3D <115000>;
+> > +                                       hysteresis =3D <0>;
+> > +                                       type =3D "critical";
+> > +                               };
+> > +                       };
+> > +
+> > +                       cooling-maps {
+> > +                               map0 {
+> > +                                       trip =3D <&bigcore_alert>;
+> > +                                       cooling-device =3D
+> > +                                               <&cpu_b0 THERMAL_NO_LIM=
+IT THERMAL_NO_LIMIT>,
+> > +                                               <&cpu_b1 THERMAL_NO_LIM=
+IT THERMAL_NO_LIMIT>,
+> > +                                               <&cpu_b2 THERMAL_NO_LIM=
+IT THERMAL_NO_LIMIT>,
+> > +                                               <&cpu_b3 THERMAL_NO_LIM=
+IT THERMAL_NO_LIMIT>;
+> > +                               };
+> > +                       };
+> > +               };
+> > +
+> > +               /* sensor for cluster0 (little Cortex-A53 cores) */
+> > +               littlecore_thermal: littlecore-thermal {
+> > +                       polling-delay-passive =3D <0>;
+>=20
+> polling-delay-passive =3D <100>;
 
-	if (p->speed == speed && p->duplex == duplex) {
-  the first condition is true, the second is false.
-	} else if (!exact) {
-  this is true.
-		if (!match && p->speed <= speed)
-  match is NULL, and p->speed == speed, so this is a candidate:
-			match = p;
-  We continue.
-- The next entry that will be tested is:
-	PHY_SETTING(    100, FULL,    100baseT_Full             ),
+Will change as well, thank you
 
-	if (p->speed == speed && p->duplex == duplex) {
-  the first condition is false.
-	} else if (!exact) {
-  this is true.
-		if (!match && p->speed <= speed)
-  this is now false because match is set.
-  We continue.
-- The next entry that will be tested is:
-	PHY_SETTING(    100, HALF,    100baseT_Half             ),
+>=20
+> > +                       polling-delay =3D <0>;
+> > +                       thermal-sensors =3D <&tsadc 2>;
+> > +
+> > +                       trips {
+> > +                               littlecore_alert: littlecore-alert {
+> > +                                       temperature =3D <85000>;
+> > +                                       hysteresis =3D <2000>;
+> > +                                       type =3D "passive";
+> > +                               };
+> > +
+> > +                               littlecore_crit: littlecore-crit {
+> > +                                       temperature =3D <115000>;
+> > +                                       hysteresis =3D <0>;
+> > +                                       type =3D "critical";
+> > +                               };
+> > +                       };
+> > +
+> > +                       cooling-maps {
+> > +                               map0 {
+> > +                                       trip =3D <&littlecore_alert>;
+> > +                                       cooling-device =3D
+> > +                                               <&cpu_l0 THERMAL_NO_LIM=
+IT THERMAL_NO_LIMIT>,
+> > +                                               <&cpu_l1 THERMAL_NO_LIM=
+IT THERMAL_NO_LIMIT>,
+> > +                                               <&cpu_l2 THERMAL_NO_LIM=
+IT THERMAL_NO_LIMIT>,
+> > +                                               <&cpu_l3 THERMAL_NO_LIM=
+IT THERMAL_NO_LIMIT>;
+> > +                               };
+> > +                       };
+> > +               };
+> > +
+> > +               gpu_thermal: gpu-thermal {
+> > +                       polling-delay-passive =3D <0>;
+>=20
+> polling-delay-passive =3D <100>;
 
-	if (p->speed == speed && p->duplex == duplex) {
-  the first condition is false.
-	} else if (!exact) {
-  this is true.
-		if (!match && p->speed <= speed)
-  this is now false because match is set.
-  We continue.
+Will change as well, thank you
 
-- We eventually get to the end of the list.
-	if (!match && !exact)
-  this is false.
+>=20
+> Best regards,
+> Alexey
+>=20
 
-- We return the entry for 1000/Full, which is exactly the behaviour I
-  was after when I wrote this matching.
+Best regards,
+Nicolas Frattaroli
 
-If you're version doesn't come out with a matching speed, then I'm
-afraid it's still broken.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+
