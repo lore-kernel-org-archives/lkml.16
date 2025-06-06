@@ -1,182 +1,112 @@
-Received: from sg-1-13.ptr.blmpb.com (sg-1-13.ptr.blmpb.com [118.26.132.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809C63234
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 04:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C15D3234;
+	Fri,  6 Jun 2025 04:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749183975; cv=none; b=NNCeArGDEvp22JxtR56syoQQl3fB5gWTIDcEiORQ5Dog1h5aRlZH9putbfivZVhqH+ThB+ym5tu0Jn8EgrP0txsMbs8CDDvBjaAqjHH63n7IuG+fXRCkP6cuQlJsuInpJx12SjCPPMlABSDycLwforxldmVlkOVd/eAAfVpoobU=
+	t=1749184095; cv=none; b=cek1S1Mti4O69g9XDwozkx1nHRdd9B887A1SqngxJh0a90uYoWKKD6JB4SyTNGvkTdnAk2iZ2k/MyllLR+c7KVMCiZT3q6N8hzd4ICMitotFFrUt3y3ZOIgGX80xktPxwkXr5mCYV3dOJMfyaW8ESxwo4MjLiV9e/TKKHdyJi3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749183975; c=relaxed/simple;
-	bh=Am7HXR3Njlqss4G5BEuoNyLPBqJ+LbLJG8/4zJZ6BHI=;
-	h=Content-Type:To:Subject:Date:Message-Id:Mime-Version:In-Reply-To:
-	 References:Cc:From; b=BskR0UHHntLRueiUH93GjN1ObFA3xKBFR5mMg+b1+th1jJXgHqAazbJ1J0bFXFCxO4nf6hcivi9Fqm+e5/pJ6Pasw0QMJzPW1VBYdko+NnY8MWICgZTABsCPNNb23/mtnPEg6O3TTKk1GQnxwpIz7GRjE4iLiZPHROpsqvClEkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=2k8niFS8; arc=none smtp.client-ip=118.26.132.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
+	s=arc-20240116; t=1749184095; c=relaxed/simple;
+	bh=9Gyg33hqhbnXrEaxdUutoGy/DPXrhX0kl0SjpeBRIB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTiiNZWBOFbLmz6+MRDrK1PuhgOmOI3ox+6qP96SNr5asw+UvW5B+RlyJCm6NRXuQ09Dyix817dPLB9yMvqwwZjf2VQtX3d1rkzXtkb/9Q2FiMxDFceHX2p42pl1fxdnUq2fcdana3SpMT3/exURh28BuJo/kEqNu7/snw4ogW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ihkyY6R/; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="2k8niFS8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1749183964;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=k4UTS9zfNjzXfbqFSh5F0rYTKZrQ+NdfqBJ4iEJ2ZhY=;
- b=2k8niFS88KxGFPALcAa38Jw7sjrdwkPfFMEAG4B+kHpqVcQaqxkmiSconxOGziNmUoQHty
- e0a7hSMCrinssRtK8F49jZJ9RdIH5pNsIymNZjv5B/WdMk/sLmxDwwLhbfqAU1LpwFu6Mg
- C9WYcOHcDNOLVqrlYTJ2tUf9Q+s5DcpNiKBdFneD39adoT7UDg5kA6+BMYkLwGp6s9/Alu
- gRwQXR5jb8QhOFJXHVD+vx/6YYkDYbPkDDnJrOyMOSzLj3s5s112GRPpjpRQL1BAuSELwZ
- /mFoiXwcOkfdWcw/8vIiXsksp+i8EzNL49xfCKxqOFxFr6NPkaIXuOkb9y9CIw==
-Content-Type: text/plain; charset=UTF-8
-To: "Anup Patel" <apatel@ventanamicro.com>, 
-	"Atish Patra" <atish.patra@linux.dev>
-Subject: Re: [PATCH 05/13] RISC-V: KVM: Rename and move kvm_riscv_local_tlb_sanitize()
-Date: Fri, 6 Jun 2025 12:25:59 +0800
-Message-Id: <321c0f23-9e9f-4626-8b0d-b805c7cdf5ad@lanxincomputing.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ihkyY6R/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749184093; x=1780720093;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9Gyg33hqhbnXrEaxdUutoGy/DPXrhX0kl0SjpeBRIB0=;
+  b=ihkyY6R/rx23xzFpcSFeS5fcVOmvy3JJb+sM1sh4T4wF4P0P6TL2oxFk
+   25ATTZEQrTKJ2Ij5OxxgHo+/OVaKKAEGq/uS2q9pMoW/wdyqQoyerdJEU
+   EpNSOMhRx9JfOyLx3x7UeSIpKS0Ko9E94m6w0LmMHnStMJwWFSjE9FZpY
+   zCvIGpFsajBLegiWbTQRlvL6ovreAk35tXOZhrv8y310/s4AZCywU1Fzp
+   nTIeghPYvEFJfJxwAdLmg/hgGu+1NbALBluADCUkXN27fk0fWlZyhAW27
+   giZRpG147L0CbQ4SU2tUnPndq7o4fvsyZ+KGR6tvXonKc5yBjElGDzDsw
+   w==;
+X-CSE-ConnectionGUID: J4R0TdOETTS74TgeX6YoOA==
+X-CSE-MsgGUID: vOj2DCx1RY62uBtpmk2o5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="38958111"
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="38958111"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 21:28:12 -0700
+X-CSE-ConnectionGUID: /C4I0hPvTW6lOY9red7p/g==
+X-CSE-MsgGUID: KDyzMU7zSQy32t/M5w9/aA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="145653438"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 05 Jun 2025 21:28:07 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uNOgX-0004jp-0d;
+	Fri, 06 Jun 2025 04:28:05 +0000
+Date: Fri, 6 Jun 2025 12:27:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ricardo Ribalda <ribalda@chromium.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
+Subject: Re: [PATCH v2 04/12] media: ipu-bridge: Use v4l2_fwnode_device_parse
+ helper
+Message-ID: <202506061223.m9fBRBFN-lkp@intel.com>
+References: <20250605-uvc-orientation-v2-4-5710f9d030aa@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
-Content-Transfer-Encoding: 7bit
-Received: from [127.0.0.1] ([180.165.23.184]) by smtp.feishu.cn with ESMTPS; Fri, 06 Jun 2025 12:26:01 +0800
-In-Reply-To: <20250605061458.196003-6-apatel@ventanamicro.com>
-Content-Language: en-US
-X-Lms-Return-Path: <lba+268426dda+015927+vger.kernel.org+liujingqi@lanxincomputing.com>
-References: <20250605061458.196003-1-apatel@ventanamicro.com> <20250605061458.196003-6-apatel@ventanamicro.com>
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>, 
-	"Andrew Jones" <ajones@ventanamicro.com>, 
-	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
-	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
-	<linux-kernel@vger.kernel.org>
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
-User-Agent: Mozilla Thunderbird
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605-uvc-orientation-v2-4-5710f9d030aa@chromium.org>
 
-On 6/5/2025 2:14 PM, Anup Patel wrote:
-> The kvm_riscv_local_tlb_sanitize() deals with sanitizing current
-> VMID related TLB mappings when a VCPU is moved from one host CPU
-> to another.
->
-> Let's move kvm_riscv_local_tlb_sanitize() to VMID management
-> sources and rename it to kvm_riscv_gstage_vmid_sanitize().
->
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/include/asm/kvm_host.h |  3 +--
->   arch/riscv/kvm/tlb.c              | 23 -----------------------
->   arch/riscv/kvm/vcpu.c             |  4 ++--
->   arch/riscv/kvm/vmid.c             | 23 +++++++++++++++++++++++
->   4 files changed, 26 insertions(+), 27 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> index 85cfebc32e4c..134adc30af52 100644
-> --- a/arch/riscv/include/asm/kvm_host.h
-> +++ b/arch/riscv/include/asm/kvm_host.h
-> @@ -327,8 +327,6 @@ void kvm_riscv_local_hfence_vvma_gva(unsigned long vmid,
->   				     unsigned long order);
->   void kvm_riscv_local_hfence_vvma_all(unsigned long vmid);
->   
-> -void kvm_riscv_local_tlb_sanitize(struct kvm_vcpu *vcpu);
-> -
->   void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu);
->   void kvm_riscv_hfence_gvma_vmid_all_process(struct kvm_vcpu *vcpu);
->   void kvm_riscv_hfence_vvma_all_process(struct kvm_vcpu *vcpu);
-> @@ -376,6 +374,7 @@ unsigned long kvm_riscv_gstage_vmid_bits(void);
->   int kvm_riscv_gstage_vmid_init(struct kvm *kvm);
->   bool kvm_riscv_gstage_vmid_ver_changed(struct kvm_vmid *vmid);
->   void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu);
-> +void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu);
->   
->   int kvm_riscv_setup_default_irq_routing(struct kvm *kvm, u32 lines);
->   
-> diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
-> index 2f91ea5f8493..b3461bfd9756 100644
-> --- a/arch/riscv/kvm/tlb.c
-> +++ b/arch/riscv/kvm/tlb.c
-> @@ -156,29 +156,6 @@ void kvm_riscv_local_hfence_vvma_all(unsigned long vmid)
->   	csr_write(CSR_HGATP, hgatp);
->   }
->   
-> -void kvm_riscv_local_tlb_sanitize(struct kvm_vcpu *vcpu)
-> -{
-> -	unsigned long vmid;
-> -
-> -	if (!kvm_riscv_gstage_vmid_bits() ||
-> -	    vcpu->arch.last_exit_cpu == vcpu->cpu)
-> -		return;
-> -
-> -	/*
-> -	 * On RISC-V platforms with hardware VMID support, we share same
-> -	 * VMID for all VCPUs of a particular Guest/VM. This means we might
-> -	 * have stale G-stage TLB entries on the current Host CPU due to
-> -	 * some other VCPU of the same Guest which ran previously on the
-> -	 * current Host CPU.
-> -	 *
-> -	 * To cleanup stale TLB entries, we simply flush all G-stage TLB
-> -	 * entries by VMID whenever underlying Host CPU changes for a VCPU.
-> -	 */
-> -
-> -	vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
-> -	kvm_riscv_local_hfence_gvma_vmid_all(vmid);
-> -}
-> -
->   void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu)
->   {
->   	kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_FENCE_I_RCVD);
-> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> index f98a1894d55b..cc7d00bcf345 100644
-> --- a/arch/riscv/kvm/vcpu.c
-> +++ b/arch/riscv/kvm/vcpu.c
-> @@ -961,12 +961,12 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->   		}
->   
->   		/*
-> -		 * Cleanup stale TLB enteries
-> +		 * Sanitize VMID mappings cached (TLB) on current CPU
->   		 *
->   		 * Note: This should be done after G-stage VMID has been
->   		 * updated using kvm_riscv_gstage_vmid_ver_changed()
->   		 */
-> -		kvm_riscv_local_tlb_sanitize(vcpu);
-> +		kvm_riscv_gstage_vmid_sanitize(vcpu);
->   
->   		trace_kvm_entry(vcpu);
->   
-> diff --git a/arch/riscv/kvm/vmid.c b/arch/riscv/kvm/vmid.c
-> index ddc98714ce8e..92c01255f86f 100644
-> --- a/arch/riscv/kvm/vmid.c
-> +++ b/arch/riscv/kvm/vmid.c
-> @@ -122,3 +122,26 @@ void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu)
->   	kvm_for_each_vcpu(i, v, vcpu->kvm)
->   		kvm_make_request(KVM_REQ_UPDATE_HGATP, v);
->   }
-> +
-> +void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu)
-> +{
-> +	unsigned long vmid;
-> +
-> +	if (!kvm_riscv_gstage_vmid_bits() ||
-> +	    vcpu->arch.last_exit_cpu == vcpu->cpu)
-> +		return;
-> +
-> +	/*
-> +	 * On RISC-V platforms with hardware VMID support, we share same
-> +	 * VMID for all VCPUs of a particular Guest/VM. This means we might
-> +	 * have stale G-stage TLB entries on the current Host CPU due to
-> +	 * some other VCPU of the same Guest which ran previously on the
-> +	 * current Host CPU.
-> +	 *
-> +	 * To cleanup stale TLB entries, we simply flush all G-stage TLB
-> +	 * entries by VMID whenever underlying Host CPU changes for a VCPU.
-> +	 */
-> +
-> +	vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
-> +	kvm_riscv_local_hfence_gvma_vmid_all(vmid);
-> +}
+Hi Ricardo,
 
-Thanks.
+kernel test robot noticed the following build errors:
 
-Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
+[auto build test ERROR on 5e1ff2314797bf53636468a97719a8222deca9ae]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ricardo-Ribalda/media-uvcvideo-Always-set-default_value/20250606-015643
+base:   5e1ff2314797bf53636468a97719a8222deca9ae
+patch link:    https://lore.kernel.org/r/20250605-uvc-orientation-v2-4-5710f9d030aa%40chromium.org
+patch subject: [PATCH v2 04/12] media: ipu-bridge: Use v4l2_fwnode_device_parse helper
+config: riscv-randconfig-002-20250606 (https://download.01.org/0day-ci/archive/20250606/202506061223.m9fBRBFN-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506061223.m9fBRBFN-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506061223.m9fBRBFN-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
+>> ERROR: modpost: "v4l2_fwnode_device_parse" [drivers/media/pci/intel/ipu-bridge.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
