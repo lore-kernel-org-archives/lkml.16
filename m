@@ -1,104 +1,175 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C782874F2;
-	Fri,  6 Jun 2025 13:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C5D288C81;
+	Fri,  6 Jun 2025 13:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749215671; cv=none; b=lGARRwCwNN/DPPNxDbn8bp9G+IBC2HxxohsAlmq+OHlBD4PtHqw179WmUOVXMi3+stRVRhCSemo8Fi1lQeduuZJUgDjzkB5WCE+B7QkNnIXTDKYhw6Wgo4LAk9GQPswN4qLwz/kVHwQG45QTj7RrtGhMdKm2lqK3P397r2q8ZH8=
+	t=1749215679; cv=none; b=gR2i3k1urmZV++pZsg8P9JeRrBhbfYIdbAnE4+m13c+6ICBw6fHtf/oEnAvUdpQf7WJZ4r6mwCjejPi+sIOyLf0WmqQ06cpAlZNGXBSbW9AaUIx6/MWvJdzHK72Wslri4N1BkcpNgsKUUCcIjUu0Y5VaytVbFKLa49CfIqyJaTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749215671; c=relaxed/simple;
-	bh=3NJ+PTFh2Yn3x9J4tEZnxKh27qQe+KeBRZhOB8aY1vI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rf9WIh/GWZGPrzlrcjahucfDZhN6AnJMSKnNjd0kGqj8c5wTVWQovT5yQrznFVHIsZafdMpcwdtcCnPgOZUoLiHP2afiX2RcmsDo7Wmj4RXxEOD7JzFz+CyII5ji5J8f4LUBUhv+1CSxroe0GKSg26mPf0yXzM+BPbjhOygpc6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oWPYnJJw; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749215679; c=relaxed/simple;
+	bh=uX87r25sOY/1WTUP20esRNg38m9XX/w5q7gcRgS18QQ=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=qtAUsXk19lxZwCJwlhsJ9LhhiVQpbVEzIAIUOOj3REz2K2LnissJy4oKqtpTCRaVgEYamFq0161Z1C8rnr04gaFJnduyZV4FCzVNpWifZlxA4ct9GUyAPB1hEXsUxpmZ0/37lFClU7xeSLzWHmI2xOPevjbtRx6BUoJKW+M869c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNX/OhLm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oWPYnJJw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749215667;
-	bh=3NJ+PTFh2Yn3x9J4tEZnxKh27qQe+KeBRZhOB8aY1vI=;
-	h=From:Date:Subject:To:Cc:From;
-	b=oWPYnJJwa0UyYbR7t6WBXfzzghJ5KN4dDQf0bO7BmlrLmDt14Q5dxUpKutfdfFb6I
-	 epijd68Du6aRYLqhaEL7IeBds/ozteeemEYTiMdeBjmbf7MQGOhZbO6qUQSmqi45UD
-	 gEGQ4rIAtKQAjWfQ+wI2HYB+nDsqn+EFnD93PWfKbdyzDmq1nPc5nh6T54f8xIP41T
-	 3i7+fdDXDMNlYNQfAOnvlma0hjWawzUf+y0NrPYs+MZjQUhkQEuxXOFTwavaiBdvCh
-	 1alX+gi+SdZpxByG+xQYXGI9r5sZU8cgE7jUrUjJdGz0tNSkcqmSIcCT9Xys30slz0
-	 Tqj9DcuVxKQjg==
-Received: from [192.168.1.63] (unknown [IPv6:2600:4041:5b1a:9400:99d:464c:62e0:2118])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 34DF417E0156;
-	Fri,  6 Jun 2025 15:14:25 +0200 (CEST)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Fri, 06 Jun 2025 09:14:22 -0400
-Subject: [PATCH] media: platform: mtk-mdp3: Add missing MT8188 compatible
- to comp_dt_ids
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNX/OhLm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27CBDC4CEED;
+	Fri,  6 Jun 2025 13:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749215679;
+	bh=uX87r25sOY/1WTUP20esRNg38m9XX/w5q7gcRgS18QQ=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=GNX/OhLm3nAycI2ro8ffRV7TtiUUmvidr1pz/SBdzN/BJbprZsY3obGBaVK6I/wLj
+	 aiLzTWGKK81SaKweshbBiVA50sltqeuNc97V7xDTzbtDEU3RYlreGHxYV+kF6XbhWB
+	 8CrC3UoPNMXt/itNSIqddnjH1zuzbvhkhL3biVQR3Eq3pbNwfgvXJ5YIiCoFnAdw55
+	 FspHVDLa/R7taXp9Sc/sg3HaUDAX6QAsN2AKfwcHN9w6K7CmwPbPA7hiFXPYpT5+uV
+	 R5K+cD9uiwCtn1j6ck7v/ej5d1yw96pQ090qYyk9AUxFunc+BIf8fwaS4CcZpfKvaT
+	 grFdgOzKAoUJw==
+Date: Fri, 06 Jun 2025 08:14:36 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250606-mt8188-mdp-regression-comp-compat-fix-v1-1-e68772d7a3aa@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAK3pQmgC/x2NSwqEMBBEryK9noZEyUevMriQpCfTi2joyDAg3
- t3opuAVvKoDKglThak7QOjHlbe1gX51EL7Lmgg5NoZe9UZZZTHvXnuPORYUSkL1NjBsuTyx7Pj
- hPzprfIjWDaPR0LaKUKufn/d8nhe7LEwbdwAAAA==
-X-Change-ID: 20250606-mt8188-mdp-regression-comp-compat-fix-7658cd673951
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: joel@jms.id.au, jerry.lin@quantatw.com, linux-kernel@vger.kernel.org, 
+ linux-aspeed@lists.ozlabs.org, patrick@stwcx.xyz, 
+ devicetree@vger.kernel.org, krzk+dt@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, conor+dt@kernel.org, 
+ yang.chen@quantatw.com, andrew@codeconstruct.com.au
+To: Jason Hsu <jasonhell19@gmail.com>
+In-Reply-To: <20250606025251.887953-1-jasonhell19@gmail.com>
+References: <20250606025251.887953-1-jasonhell19@gmail.com>
+Message-Id: <174921562395.1204073.15298468789619817202.robh@kernel.org>
+Subject: Re: [PATCH v7 0/2] Add Meta(Facebook) Ventura BMC(AST2600)
 
-Commit 4a81656c8eaa ("arm64: dts: mediatek: mt8188: Address binding
-warnings for MDP3 nodes") caused a regression on the MDP functionality
-when it removed the MT8195 compatibles from the MDP3 nodes, since the
-MT8188 compatible was not yet listed as a possible MDP component
-compatible in mdp_comp_dt_ids. This resulted in an empty output
-bitstream when using the MDP from userspace, as well as the following
-errors:
 
-  mtk-mdp3 14001000.dma-controller: Uninit component inner id 4
-  mtk-mdp3 14001000.dma-controller: mdp_path_ctx_init error 0
-  mtk-mdp3 14001000.dma-controller: CMDQ sendtask failed: -22
+On Fri, 06 Jun 2025 10:52:49 +0800, Jason Hsu wrote:
+> Add Linux device tree entry related to Meta(Facebook) Ventura specific
+> devices connected to BMC(AST2600) SoC.
+> 
+> ---
+> v1:
+>     1. Create ventura dts file.
+>     2. Add commit msg.
+>     3. Use format-patch to generate patch.
+>     4. Add subject prefixes matching the subsystem.
+> ---
+> v2:
+>     1. Modify email content.
+> ---
+> v3:
+>     1. Add mail list.
+> ---
+> v4:
+>     1. Apply git send-email --thread option.
+>     2. Sort nodes in the dts alphanumerically.
+> ---
+> v5:
+>     1. Run scripts/checkpatch.pl and fix reported warnings.
+>     2. Remove unnecessary 88E6393X CONFIG FRU.
+> ---
+> v6:
+>     1. Add a new stage for the DTS change.
+>     2. Run scripts/checkpatch.pl and fix reported error.
+>     3. Fix the issue in a separate patch.
+> ---
+> v7:
+>     1. Fix broken indentation in the device tree file.
+>     2. Sort nodes alphabetically, then by address if equal.
+>     3. Rename fan sensor nodes from 'hwmon' to 'fan-controller'.
+> ---
+> Jason Hsu (2):
+>   ARM: dts: aspeed: ventura: add Meta Ventura BMC
+>   dt-bindings: arm: aspeed: add Meta Ventura board
+> 
+>  .../bindings/arm/aspeed/aspeed.yaml           |    1 +
+>  arch/arm/boot/dts/aspeed/Makefile             |    1 +
+>  .../aspeed/aspeed-bmc-facebook-ventura.dts    | 1481 +++++++++++++++++
+>  3 files changed, 1483 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dts
+> 
+> --
+> 2.34.1
+> 
+> 
+> 
 
-Add the missing compatible to the array to restore functionality.
 
-Fixes: 4a81656c8eaa ("arm64: dts: mediatek: mt8188: Address binding warnings for MDP3 nodes")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- drivers/media/platform/mediatek/mdp3/mtk-mdp3-comp.c | 3 +++
- 1 file changed, 3 insertions(+)
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-comp.c b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-comp.c
-index 683c066ed97586a187f7d30191ba0f6c99c83371..7fcb2fbdd64eea18ca0c7e4600bb1f601cf8725e 100644
---- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-comp.c
-+++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-comp.c
-@@ -1530,6 +1530,9 @@ static const struct of_device_id mdp_comp_dt_ids[] __maybe_unused = {
- 	}, {
- 		.compatible = "mediatek,mt8195-mdp3-tcc",
- 		.data = (void *)MDP_COMP_TYPE_TCC,
-+	}, {
-+		.compatible = "mediatek,mt8188-mdp3-rdma",
-+		.data = (void *)MDP_COMP_TYPE_RDMA,
- 	},
- 	{}
- };
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
----
-base-commit: 475c850a7fdd0915b856173186d5922899d65686
-change-id: 20250606-mt8188-mdp-regression-comp-compat-fix-7658cd673951
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-Best regards,
--- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: failed to guess base
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20250606025251.887953-1-jasonhell19@gmail.com:
+
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: timer (arm,armv7-timer): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /sdram@1e6e0000: failed to match any schema with compatible: ['aspeed,ast2600-sdram-edac', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: bus@1e600000 (aspeed,ast2600-ahbc): compatible: ['aspeed,ast2600-ahbc', 'syscon'] is too long
+	from schema $id: http://devicetree.org/schemas/bus/aspeed,ast2600-ahbc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: syscon@1e6e2000 (aspeed,ast2600-scu): 'smp-memram@180' does not match any of the regexes: '^interrupt-controller@[0-9a-f]+$', '^p2a-control@[0-9a-f]+$', '^pinctrl(@[0-9a-f]+)?$', '^pinctrl-[0-9]+$', '^silicon-id@[0-9a-f]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed,ast2x00-scu.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/apb@1e6e0000/syscon@1e6e2000/smp-memram@180: failed to match any schema with compatible: ['aspeed,ast2600-smpmem']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/apb@1e6e0000/display@1e6e6000: failed to match any schema with compatible: ['aspeed,ast2600-gfx', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: crypto@1e6fa000 (aspeed,ast2600-acry): 'aspeed,ahbc' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/crypto/aspeed,ast2600-acry.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740100:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740200:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/sdc@1e740000/sdhci@1e740100: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/sdc@1e740000/sdhci@1e740200: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/apb@1e780000/timer@1e782000: failed to match any schema with compatible: ['aspeed,ast2600-timer']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): reg-io-width: 4 is not of type 'object'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): lpc-snoop@80: 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: kcs@24 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: kcs@28 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: kcs@2c (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: kcs@114 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/apb@1e780000/lpc@1e789000/lhc@a0: failed to match any schema with compatible: ['aspeed,ast2600-lhc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/apb@1e780000/lpc@1e789000/ibt@140: failed to match any schema with compatible: ['aspeed,ast2600-ibt-bmc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: i2c@400 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('aspeed,hw-timeout-ms' was unexpected)
+	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: fsi@1e79b000 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/apb@1e790000/fsi@1e79b000: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: fsi@1e79b100 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/apb@1e790000/fsi@1e79b100: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dtb: /ahb/apb@1e790000/dma-controller@1e79e000: failed to match any schema with compatible: ['aspeed,ast2600-udma']
+
+
+
+
 
