@@ -1,131 +1,190 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20C9027468;
-	Fri,  6 Jun 2025 09:28:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11BCA27468;
+	Fri,  6 Jun 2025 09:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749202104; cv=none; b=E5k16oC0W6wsxApSg3J830DG3QLRj81iOAMTII/6PO4qcWgLFFWO8rONLYJ7hDuJLzytFp/YM2nIxbJKYWpOON0Qts19G1Zo7yJaVzSv15G9xlpSx722b2XpFhuIrks5Jqm8JrbwexQ1q94412I38MwJSBCRWdvrrmmH1cGjrWw=
+	t=1749202346; cv=none; b=IYklOYotOyHDubiz8vvkTfqrkaPE1jpJVj3VmBWGyxVfVzSTRx4IROjgDDQxNwamKV4ltlijQ5tyHzfB4tJfQw8CO26ilt+2WrwsQDkOVjP6Wd2DpzOVTPtDtadIb+L/CrsbfI+oSlyK7J5RRmmKqSEv31PjsxaU5UF5anD2PU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749202104; c=relaxed/simple;
-	bh=XHWGZ7c7xcEbWzJJedFfGFBEzPbGnbtlcjdCVfCQva0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tYyze+nlvwYkAkXWyh6vAx7ZUc9dMbc06J3PvKcHtiT9dIR3ThrLmV3mTe5S1JUmR+avbp4ePw80/5Q6U11Sox4Mhz57rzEwrNQAr2j03o4JYSpp9EW21eexDJy4Fj6pt1XrKWex7vT3Sos7IPqFhMShgdwOE2C3hOd3mx4yMcg=
+	s=arc-20240116; t=1749202346; c=relaxed/simple;
+	bh=g81aEbYwteZ3V3OWzvKzvIPAPWgs84217Y0lm1MM9SA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VZFEGuWT30NXGaXRxqLv/8BQiRw95BnSjQNEgwddOn5B+TFgNHVdCtkGrxv31jyMqkS0+G12Hv5AmAJ1Xq9/U9kHgRowdCgprft4pOYWrRfS+qys7/t1ptoBEL0J2fpEn/MdhTlACXu65AlKCzSUpo/HNNPwcMmCQmWqBOuvqxQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 525361655;
-	Fri,  6 Jun 2025 02:28:04 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4AEE3F59E;
-	Fri,  6 Jun 2025 02:28:20 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	Mel Gorman <mgorman@suse.de>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v1] mm: Close theoretical race where stale TLB entries could linger
-Date: Fri,  6 Jun 2025 10:28:07 +0100
-Message-ID: <20250606092809.4194056-1-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 830E3153B;
+	Fri,  6 Jun 2025 02:32:06 -0700 (PDT)
+Received: from [10.57.49.177] (unknown [10.57.49.177])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4A98B3F59E;
+	Fri,  6 Jun 2025 02:32:22 -0700 (PDT)
+Message-ID: <11ea6009-72d2-4306-a068-a828d4af429d@arm.com>
+Date: Fri, 6 Jun 2025 10:32:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/2] dt-bindings: arm: Add device Trace Network On Chip
+ definition
+Content-Language: en-GB
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250606-trace-noc-v8-0-833f94712c57@quicinc.com>
+ <20250606-trace-noc-v8-1-833f94712c57@quicinc.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250606-trace-noc-v8-1-833f94712c57@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Commit 3ea277194daa ("mm, mprotect: flush TLB if potentially racing with
-a parallel reclaim leaving stale TLB entries") described a theoretical
-race as such:
+On 06/06/2025 10:18, Yuanfang Zhang wrote:
+> Add a new coresight-tnoc.yaml file to describe the bindings required to
+> define Trace Network On Chip (TNOC) in device trees. TNOC is an
+> integration hierarchy which is a hardware component that integrates the
+> functionalities of TPDA and funnels. It collects trace form subsystems
+> and transfers to coresight sink.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> ---
+>   .../bindings/arm/qcom,coresight-tnoc.yaml          | 111 +++++++++++++++++++++
+>   1 file changed, 111 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..d07c6f2d7b949f69f9d8dd8de8664382eb39fac1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
+> @@ -0,0 +1,111 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/qcom,coresight-tnoc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Trace Network On Chip - TNOC
+> +
+> +maintainers:
+> +  - Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> +
+> +description: >
+> +  The Trace Network On Chip (TNOC) is an integration hierarchy hardware
+> +  component that integrates the functionalities of TPDA and funnels.
+> +
+> +  It sits in the different subsystem of SOC and aggregates the trace and
+> +  transports it to Aggregation TNOC or to coresight trace sink eventually.
+> +  TNOC embeds bridges for all the interfaces APB, ATB, TPDA and NTS (Narrow
+> +  Time Stamp).
+> +
+> +  TNOC can take inputs from different trace sources i.e. ATB, TPDM.
 
-"""
-Nadav Amit identified a theoritical race between page reclaim and
-mprotect due to TLB flushes being batched outside of the PTL being held.
+This looks like the generic description of TNOC. But please could you
+also mention this binding is only for Aggregator TNOC ? Or make the
+binding as such explicit ?
 
-He described the race as follows:
+- qcom,coresight-aggregator-tnoc
 
-	CPU0                            CPU1
-	----                            ----
-					user accesses memory using RW PTE
-					[PTE now cached in TLB]
-	try_to_unmap_one()
-	==> ptep_get_and_clear()
-	==> set_tlb_ubc_flush_pending()
-					mprotect(addr, PROT_READ)
-					==> change_pte_range()
-					==> [ PTE non-present - no flush ]
+Suzuki
 
-					user writes using cached RW PTE
-	...
 
-	try_to_unmap_flush()
-
-The same type of race exists for reads when protecting for PROT_NONE and
-also exists for operations that can leave an old TLB entry behind such
-as munmap, mremap and madvise.
-"""
-
-The solution was to introduce flush_tlb_batched_pending() and call it
-under the PTL from mprotect/madvise/munmap/mremap to complete any
-pending tlb flushes.
-
-However, while madvise_free_pte_range() and
-madvise_cold_or_pageout_pte_range() were both retro-fitted to call
-flush_tlb_batched_pending() immediately after initially acquiring the
-PTL, they both temporarily release the PTL to split a large folio if
-they stumble upon one. In this case, where re-acquiring the PTL
-flush_tlb_batched_pending() must be called again, but it previously was
-not. Let's fix that.
-
-There are 2 Fixes: tags here: the first is the commit that fixed
-madvise_free_pte_range(). The second is the commit that added
-madvise_cold_or_pageout_pte_range(), which looks like it copy/pasted the
-faulty pattern from madvise_free_pte_range().
-
-This is a theoretical bug discovered during code review.
-
-Cc: stable@vger.kernel.org
-Fixes: 3ea277194daa ("mm, mprotect: flush TLB if potentially racing with a parallel reclaim leaving stale TLB entries")
-Fixes: 9c276cc65a58 ("mm: introduce MADV_COLD")
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
-
-Applies on today's mm-unstable (3f676fe5c7a0). All mm selftests continue to
-pass.
-
-Thanks,
-Ryan
-
- mm/madvise.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 5f7a66a1617e..1d44a35ae85c 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -508,6 +508,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 					pte_offset_map_lock(mm, pmd, addr, &ptl);
- 				if (!start_pte)
- 					break;
-+				flush_tlb_batched_pending(mm);
- 				arch_enter_lazy_mmu_mode();
- 				if (!err)
- 					nr = 0;
-@@ -741,6 +742,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
- 				start_pte = pte;
- 				if (!start_pte)
- 					break;
-+				flush_tlb_batched_pending(mm);
- 				arch_enter_lazy_mmu_mode();
- 				if (!err)
- 					nr = 0;
---
-2.43.0
+> +
+> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - qcom,coresight-tnoc
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^tn(@[0-9a-f]+)$"
+> +
+> +  compatible:
+> +    items:
+> +      - const: qcom,coresight-tnoc
+> +      - const: arm,primecell
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb_pclk
+> +
+> +  clocks:
+> +    items:
+> +      - description: APB register access clock
+> +
+> +  in-ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +
+> +    patternProperties:
+> +      '^port(@[0-9a-f]{1,2})?$':
+> +        description: Input connections from CoreSight Trace Bus
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +
+> +  out-ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      port:
+> +        description:
+> +          Output connection to CoreSight Trace Bus
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - in-ports
+> +  - out-ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    tn@109ab000  {
+> +      compatible = "qcom,coresight-tnoc", "arm,primecell";
+> +      reg = <0x109ab000 0x4200>;
+> +
+> +      clocks = <&aoss_qmp>;
+> +      clock-names = "apb_pclk";
+> +
+> +      in-ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +
+> +          tn_ag_in_tpdm_gcc: endpoint {
+> +            remote-endpoint = <&tpdm_gcc_out_tn_ag>;
+> +          };
+> +        };
+> +      };
+> +
+> +      out-ports {
+> +        port {
+> +          tn_ag_out_funnel_in1: endpoint {
+> +            remote-endpoint = <&funnel_in1_in_tn_ag>;
+> +          };
+> +        };
+> +      };
+> +    };
+> +...
+> 
 
