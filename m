@@ -1,160 +1,184 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A5314AD2B;
-	Fri,  6 Jun 2025 16:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075211B040D;
+	Fri,  6 Jun 2025 16:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749226059; cv=none; b=rTFIzEzBYYHMPAJ/Y4VPWEDVUpO/E8TKzU7wfZ23Klwfwoh/+muaVftgUrzdp2eE37ZgwvvVlGxvt8awRBs6s58G74+tc1Ff8T0uK3EcnhPTEWFuTm6GHFxvRH2b21Oq3OkR53RScQIwooxEwaBJVEielpdi+w0ABJPp2/QjqB0=
+	t=1749226130; cv=none; b=pm0RnuPQkXmA5T0UnH2SBh7YvfbqNe4cOQF3CUsfN3aVR0F/mtoGV0o3r+cDn38qRqmdStdF9xznrYwsKomC+0nLCX6brDVI1u77Pj87dofwcSW3J2gV23TCI6FuYzB2zo3dyTX0Y0WhwBgq4KxM/QAqE9CTLN8tANab5mKWn9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749226059; c=relaxed/simple;
-	bh=aCBYs3HYbqHCtSKb89ZiDyardqdxI2f1i3HiuFqwWtE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TqvAHktPJv8ke2iqPbNuNMbblq0nS5RJ3dr/ZHJNKnal+4B1AoF1SRdbu2H44b9Zmwn4B9qN5pHi+AUQi/9IpN/P1/rtENpYX3DCyRxsBeKsku8+OkFXvP+RluTSEHcSZnQLlDHLF8JuxIsajwgH6MzyWCbBXEgTAkEBgMF46Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmV6czw6; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749226130; c=relaxed/simple;
+	bh=m2TJ06NSfnjbzVgJp7+Aa4QRI/goAHsiXLyozAXhKBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dHeW7jUV0Sbl8CB16bNMmVQDTLiPcGEhadPi5he0sriMhaB58EPuib8xoSJxvtV+ZD3ta2J/w+7zljg9E2xm4IrTR43RGfCM4orzwDyZWWhTk++RcjcLNo7fB1hE+GvpWmUNhlOAeA7dnuTleWSadvmzfhLj5jaAbmdmhVyBg9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AF+/+ynG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmV6czw6"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so15901545e9.1;
-        Fri, 06 Jun 2025 09:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749226056; x=1749830856; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GmxqTl8zXhUJWzbEhSbM4iH/Woj92FmKhTvp/ZOVPhY=;
-        b=NmV6czw6ejLXnlWyTEEJFLctsgsE/QRFzEzZJ8WwO984vySQX34oUffkyLsc6t6Efq
-         73Muksj0CijOTRtE+qZAATBcYWeE3jxF2nY7wgyHsu++ZeYUukVZ5RlEn6fyTMiLaPRI
-         yYRsOqUtOKlGj0kRkN9pi84gx1+FOIe7NhiIi5Gdd7YirbAqY5VqDyc3l3Z3bl4+cIQy
-         vbYF5iDIBfNlD8ZD8h9F4N1KDI4VKarkkc8+yHaoNG5Jg+WHy3w5no8xJ+XDF9kKDkPa
-         RsD+2cwfzflvUgrbOXqIUfw/I93pQwKCKZ+5aKutRcfGH/+L1lcoTeUo2L5JHNk1LUiB
-         Lo/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749226056; x=1749830856;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GmxqTl8zXhUJWzbEhSbM4iH/Woj92FmKhTvp/ZOVPhY=;
-        b=KyEaaHXnIe3aawiPOyFxLS3tuVMXUDr5hfS4gzKKJSJEpaxfZH6Af/suu5Y2ZyFI5G
-         x9o4m9otwMGwWbjvdUjUbnt5UsLkvl7Vx2PtAT9I0ZFK25TP+xzSPtIQY8II9kDoY8BJ
-         8ksWa49eHYgQjILcwvHvEoO7bpBLk5gj6lrmYJvqHOD+h1i3J9C59joIpIQ3TDZ5KAsz
-         1/GIrvMaHnxPQjR5x6IiBZFXE+iXO63wXUJbYFDUQSgTQTEkqsY+Ko4FfIvPYP6i0UZt
-         ttQiN6OsAv4hdLnUejfhFH2sOUlemy2Z3IvByYHe2GtxQzqhwjRF4Ed688yrewRegLXE
-         Wcsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNtX43m4eFTlwqHzxI+FbBbZPAyFJQUOBVGf1akfG+PvIRajN09nnN+Uce5QHXgLmP5iKy/aj3IH6n6Ac=@vger.kernel.org, AJvYcCWyDxNGmDWQoQaGBKLDgUof0MfeTeXQ4Y78u3Po+srRClJqvTmlHUbyX1AqOgR1Apb1JQ/6VXkf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwByEYvl8iUMquLOS1EcEZZHNCe9fXAy8nNiY3W+3g6tGb0Yz1L
-	NdKMi7r6BGfLaa2zFq3CJP/t+C/VMux9QTQsK/I1pY8jr2MupcBLweiYIcpx9g==
-X-Gm-Gg: ASbGncsAzQx1T7aOgNxM3PEsbZ5T98tVGCtLdsaxyWnmi2CPTDbUbtwUmWwZ0960mSQ
-	/JtKC4ZtT+G7vABrRNqQRPH4jUA9+VR6+yoCH1D6VSG1qxbr5a5idX18Fy2k1fA9LtfIX/K9yK5
-	P0uu8Ihn+upWWZw7hsuM0u12ZDjUtoiXd03k+zvLQgC/q2f+tq2aGDGbcI54r65R/qs0s0oLRjx
-	SsrrFOfWuTvLkZft8QRsLKyhQ94L6RR7ah/O8vdsrc/u9a2Hym5WIRM+jrylSNwQ9JIJJ/a4Mmn
-	cMoAB/CFwBiHZwCuM0PrJxsigMg6gZSC17cqy5uSEIikUzKnuxurI3KYtxxdnLw=
-X-Google-Smtp-Source: AGHT+IHSPmMAHUVKafg9JMqrfsTW9IVMgChgGgQ5N7vYRn20mw+68UMyYTnoSjJ3+qTqY0HgNX2N0A==
-X-Received: by 2002:a05:600c:a49:b0:43c:fceb:91a with SMTP id 5b1f17b1804b1-452013512a3mr41720205e9.11.1749226055624;
-        Fri, 06 Jun 2025 09:07:35 -0700 (PDT)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:44e7:a1ae:b1f1:d5a4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209ce458bsm28732025e9.15.2025.06.06.09.07.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 09:07:35 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ch9200: use BIT macro for bitmask constants
-Date: Fri,  6 Jun 2025 17:07:23 +0100
-Message-Id: <20250606160723.12679-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AF+/+ynG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9CF1C4CEEB;
+	Fri,  6 Jun 2025 16:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749226129;
+	bh=m2TJ06NSfnjbzVgJp7+Aa4QRI/goAHsiXLyozAXhKBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AF+/+ynGBC9CqRuCphqPdWg19oKQBNefs5Uo86usrjuiyCzqXTz3arq/QRBB2kE++
+	 WBYvqNa7gNTEV/V0/yaRnCRPEvR/T2etKdB1i7c6cdn3/OLhGg4/x+8NXs/Twzk5ID
+	 5sidnesVZvfKDRX5IaC1qbNkEeLXxgJ8Ra40cCWABoVBFMUJEl5GME7FLU36gpRaaf
+	 hLQScvfH7On4uCXpvL98u8/TyVLM8jvaqK0/WtemhWMzGZ+xlvH/LSvj7pQv64QrR+
+	 2IZ1njtV5REZXtoj6KOUOcAh2Lirj9gyQRkJOxdrDNHCAaSH+UUJq+xn2MIXBWlOVK
+	 nUabw3G++wPVQ==
+Date: Fri, 6 Jun 2025 17:08:45 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Jorge Marques <jorge.marques@analog.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-i3c@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: Add adi-i3c-master
+Message-ID: <20250606-sliver-freeing-d01268258c25@spud>
+References: <20250606-adi-i3c-master-v2-0-e68b9aad2630@analog.com>
+ <20250606-adi-i3c-master-v2-1-e68b9aad2630@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6hQ4mkac1n7o3C5/"
+Content-Disposition: inline
+In-Reply-To: <20250606-adi-i3c-master-v2-1-e68b9aad2630@analog.com>
 
-Use the BIT() macro for bitmask constants.
 
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/net/usb/ch9200.c | 50 ++++++++++++++++++++--------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+--6hQ4mkac1n7o3C5/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/usb/ch9200.c b/drivers/net/usb/ch9200.c
-index a206ffa76f1b..bfe27a7dcbb4 100644
---- a/drivers/net/usb/ch9200.c
-+++ b/drivers/net/usb/ch9200.c
-@@ -59,42 +59,42 @@
-  *
-  * Note: bits 13 and 15 are reserved
-  */
--#define LOOPBACK		(0x01 << 14)
--#define BASE100X		(0x01 << 12)
--#define MBPS_10			(0x01 << 11)
--#define DUPLEX_MODE		(0x01 << 10)
--#define PAUSE_FRAME		(0x01 << 9)
--#define PROMISCUOUS		(0x01 << 8)
--#define MULTICAST		(0x01 << 7)
--#define BROADCAST		(0x01 << 6)
--#define HASH			(0x01 << 5)
--#define APPEND_PAD		(0x01 << 4)
--#define APPEND_CRC		(0x01 << 3)
--#define TRANSMITTER_ACTION	(0x01 << 2)
--#define RECEIVER_ACTION		(0x01 << 1)
--#define DMA_ACTION		(0x01 << 0)
-+#define LOOPBACK		BIT(14)
-+#define BASE100X		BIT(12)
-+#define MBPS_10			BIT(11)
-+#define DUPLEX_MODE		BIT(10)
-+#define PAUSE_FRAME		BIT(9)
-+#define PROMISCUOUS		BIT(8)
-+#define MULTICAST		BIT(7)
-+#define BROADCAST		BIT(6)
-+#define HASH			BIT(5)
-+#define APPEND_PAD		BIT(4)
-+#define APPEND_CRC		BIT(3)
-+#define TRANSMITTER_ACTION	BIT(2)
-+#define RECEIVER_ACTION		BIT(1)
-+#define DMA_ACTION		BIT(0)
- 
- /* Status register bits
-  *
-  * Note: bits 7-15 are reserved
-  */
--#define ALIGNMENT		(0x01 << 6)
--#define FIFO_OVER_RUN		(0x01 << 5)
--#define FIFO_UNDER_RUN		(0x01 << 4)
--#define RX_ERROR		(0x01 << 3)
--#define RX_COMPLETE		(0x01 << 2)
--#define TX_ERROR		(0x01 << 1)
--#define TX_COMPLETE		(0x01 << 0)
-+#define ALIGNMENT		BIT(6)
-+#define FIFO_OVER_RUN		BIT(5)
-+#define FIFO_UNDER_RUN		BIT(4)
-+#define RX_ERROR		BIT(3)
-+#define RX_COMPLETE		BIT(2)
-+#define TX_ERROR		BIT(1)
-+#define TX_COMPLETE		BIT(0)
- 
- /* FIFO depth register bits
-  *
-  * Note: bits 6 and 14 are reserved
-  */
- 
--#define ETH_TXBD		(0x01 << 15)
--#define ETN_TX_FIFO_DEPTH	(0x01 << 8)
--#define ETH_RXBD		(0x01 << 7)
--#define ETH_RX_FIFO_DEPTH	(0x01 << 0)
-+#define ETH_TXBD		BIT(15)
-+#define ETN_TX_FIFO_DEPTH	BIT(8)
-+#define ETH_RXBD		BIT(7)
-+#define ETH_RX_FIFO_DEPTH	BIT(0)
- 
- static int control_read(struct usbnet *dev,
- 			unsigned char request, unsigned short value,
--- 
-2.39.5
+On Fri, Jun 06, 2025 at 03:21:02PM +0200, Jorge Marques wrote:
+> Add bindings doc for ADI I3C Controller IP core, a FPGA synthesizable IP
+> core that implements the MIPI I3C Basic controller specification.
+>=20
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> ---
+>  .../devicetree/bindings/i3c/adi,i3c-master.yaml    | 63 ++++++++++++++++=
+++++++
+>  MAINTAINERS                                        |  5 ++
+>  2 files changed, 68 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml b/=
+Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e7fae394ad8fd4143eb1fffb9=
+591a30a2d6cc6ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/i3c/adi,i3c-master.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices I3C Controller
+> +
+> +description: |
+> +  The ADI I3C controller implements a subset of the I3C-basic specificat=
+ion to
+> +  interface I3C and I2C peripherals [1].
+> +
+> +  [1] https://analogdevicesinc.github.io/hdl/library/i3c_controller
+> +
+> +maintainers:
+> +  - Jorge Marques <jorge.marques@analog.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: adi,i3c-master
 
+Seeing this with no versioning info is pretty suspect.
+The adi spi, pwm, axi-dmac etc all have versioning info, please try to
+emulate that.
+
+Otherwise, I think this is okay.
+
+Cheers,
+Conor.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    items:
+> +      - description: The AXI interconnect clock.
+> +      - description: The I3C controller clock.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: axi
+> +      - const: i3c
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +allOf:
+> +  - $ref: i3c.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    i3c@44a00000 {
+> +        compatible =3D "adi,i3c-master";
+> +        reg =3D <0x44a00000 0x1000>;
+> +        interrupts =3D <0 56 4>;
+> +        clocks =3D <&clkc 15>, <&clkc 15>;
+> +        clock-names =3D "axi", "i3c";
+> +        #address-cells =3D <3>;
+> +        #size-cells =3D <0>;
+> +
+> +        /* I3C and I2C devices */
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 96b82704950184bd71623ff41fc4df31e4c7fe87..6f56e17dcecf902c6812827c1=
+ec3e067c65e9894 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11243,6 +11243,11 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/i3c/aspeed,ast2600-i3c.yaml
+>  F:	drivers/i3c/master/ast2600-i3c-master.c
+> =20
+> +I3C DRIVER FOR ANALOG DEVICES I3C CONTROLLER IP
+> +M:	Jorge Marques <jorge.marques@analog.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
+> +
+>  I3C DRIVER FOR CADENCE I3C MASTER IP
+>  M:	Przemys=C5=82aw Gaj <pgaj@cadence.com>
+>  S:	Maintained
+>=20
+> --=20
+> 2.43.0
+>=20
+
+--6hQ4mkac1n7o3C5/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEMSjQAKCRB4tDGHoIJi
+0rbTAP4spTJrUASLewamc2NSPCBtIjPY8qbsTcW2CmsKLmo9OwEAlhaoy3iBc6BX
+xk8rWner/IjjAMNN64diVOneBUcjbgE=
+=gjg3
+-----END PGP SIGNATURE-----
+
+--6hQ4mkac1n7o3C5/--
