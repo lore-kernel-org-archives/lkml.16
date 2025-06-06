@@ -1,77 +1,77 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DAC1E8335
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6641E1F4168;
+	Fri,  6 Jun 2025 18:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235827; cv=none; b=F/3oGO9HHUDnd8gkT34mWYTOYVvz9NHo99P1qw7pEKYSPgMJ1REaFpub66kovvdiXmIJmOTJJmoz/klkU4dhuQh7v+DfK5nK330X9qW/Gdeogb+Y2T91UHY+HTzw/PogRM585QP/3QGiy8ZRg6JAlsqcOT7QlxbeCA0+w4Ou5xw=
+	t=1749235837; cv=none; b=pXZLEZmFaYFEGEfav8OtCV7eVodwg1uUsdntP2q6iXfkC+70M7fx3IH235JASd5erJyEtyOaz6qQYBuWTATans7Uw8wvZOmIXTRtET3lhJgOlAGIUXuEGBtOHk6kGxmUFmX98k1DYRRgFoxVF8d6OfO5ZzbaDWC3f5SnkP+LtKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235827; c=relaxed/simple;
-	bh=/dqd4gsiXRTcfp+0X9yq9B99EvZcupPMVZfAGuQtBNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=THuSh7X52NyJL9gLUPl3WOqv53p1kXQbBZdE5G5koP6F2/PNQnXLqz2zMvSKxCUoiYPIRWrN8skWWa4BSbmb23bDk+ZjuWB5TO/S+JhSgLPZqrIvbheJaX5PuZnD7x5d73OO1ivtZjX2xhzf5T3LR+feyuToDU67oEYmaMpAqO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=hgva45pU; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	s=arc-20240116; t=1749235837; c=relaxed/simple;
+	bh=NdLZx6SNrtrx4SwH5gojmNTGg6eqHtkXjAak/CamQvw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BqLAoq3y4TXLARpgHVlg4xSQkf9A4VHPGIlcJQl6cEMN9nMBJstH3Vt5hlDVAYkoJnP3vCKpt0Z8mRJU9MTEdO2UuPxNupDwURf3ohsKn11IcpqqCxm64nQZUAE9mEgUBujIa7c6g7kH0a3i2Mi3XObAwKVAkApf5BZr3wO5Quo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PG881Zy1; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="hgva45pU"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-23526264386so21034475ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:50:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PG881Zy1"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a5096158dcso2090665f8f.1;
+        Fri, 06 Jun 2025 11:50:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749235825; x=1749840625; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zDvQKKxsfWnILy2mH3BQ9U7IfG3DuTu++rNRUJOw37w=;
-        b=hgva45pUHIESQwyjTxWPRV7D6eWOGjPkUhuBheLqEpJbQCHtwSCf6KyyOpqrFasIbK
-         LReRTNAK5m6bJ6v/RNCtY8OlOx1Jpf50lxbqsh3fpA6oLtuw6PTLbqk2rBJJuBzqPh2w
-         oeuIkXU/YUtY2k3jMrxSD8DTu9qmt67q5h4Pr60H86GNf6w4cZ3dh58GGiaNwIHW9wGz
-         aDnredw+MAgKRo8Cl5vD2vB2MHvs1cDuj3iHrV3TtUwr+a98FfFFGnBvLvVCHE/gCiPt
-         41x1RFopobJqDapvQzntpb/BegrEUFKHu8CCGlzQ6izX4b89eoIHs9Yhw+Dd2i9xWN6e
-         N7rQ==
+        d=gmail.com; s=20230601; t=1749235833; x=1749840633; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0X9KHOsc9F0ZidCqJwKzDvYsUjyRXhITd5dF3RTeynU=;
+        b=PG881Zy1hQggnmBG1qGrvQAftswSrkRd/xzmiNzksKBcCvBKk6ddyXpcbKrtWYt2CX
+         r5d74B/jvaaMSX50tSjLL65My0c9jLbmJAXJ1sY92JiNwpcQh5UbcLbsAMpdn4zeCiuL
+         ao3ZiXUR5I+8AuiIbMPaGiZnhlCYDxXMaNDBX6lXbNC8YW/xW+hTtquRlhnkzaq5y1WN
+         6YT2KV4mOh7oA747vkTCGySRD/FfoRjOAnZBUJ6IH0Qr+WjTfez9BOeBpewpgK4siihZ
+         5iYdUWoouBrxIoFWmCxi+xh6ko6++mu8G3Qui+1kDab/qt2zBubZMvgn9SSpkUooICtz
+         sV3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749235825; x=1749840625;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zDvQKKxsfWnILy2mH3BQ9U7IfG3DuTu++rNRUJOw37w=;
-        b=vMg6/DI9kdykwFw/p+amO3cdt1wj5rnEg0HTm6tH1Q+4dLIap/i1Vq2ReRkNyq4HfQ
-         wuwbNcQ3GMlrEijx2oshXeUylW8VqlLFKt9+hzJwahhaM5EkplkALMzfFhr3DzstRz5v
-         Nn1G94oekoKLHYdf5Ck+cx1RRTgU0Haz9Ofer0SuChRSj/C4EmGPSJFBBghGpT/YqsY5
-         AlIReAxytGzaxWS+9Poj54eg1XuPmj7Vf9yBXJKRe7uwm806tM/MvLiLLCXWMybVxXr0
-         vLCM3J4lme6k6tYfdyuyTzLpuDZUxnGx+grVK/4Pb4nI9E+RrNFwlMwuRV1qfV/qRotK
-         95xg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQqsYg8jaeuFO28OifKDoUcwb6W+WVFhNrJ7eH97TC61IrSCmp4kFXKUOfoO24JLSYuI3GdPz8jlUTTNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yza3uSM3unPamCCBjjY3tlcYM08F2uuHHbF6OqxylsV3i1TU8g/
-	JJE2uQuXIQXsKUBLWC2fztqlGWoL508QV+N15+ryjfb738d0U9q+Q75Z6fhS3MSGvTc=
-X-Gm-Gg: ASbGncv6IUcz2aT0kzUXMFhPSNsh+KCYItpMQihIQAdgFZQ27dY7PGsBbAVzYaRoiQf
-	63iP3tJ0CRVtLWdOFmo3Pf+2jr2hqmt5mPZkfIaPsaGc5gMVmkHv4jZMc50bwX9uvtKjJIkwHod
-	XpbP9pPTbzCzxUHr9KiHOvIGkFSPyT8pXpFZw8F15sWLE5tNmD79fMBsGdgpbq9quqzeTsnU8C3
-	F0lup+G9i7P8ULiB0zWYeVBipSoYsfLp0Flwr75/t8uJCGXHtichPvkggdtyzRj8CU2JJqhUOP1
-	mjvIpruzg9lVJXILiBV7LejxOnpttNAM6jNfFYMIpiH+YgQzz2zUvOVInmA=
-X-Google-Smtp-Source: AGHT+IHZJuISdaOQA9ORyw2q+y1x20F/e9MNZXHDSrwlivNtd8EgXD7EmYmmTpZQgthCiMV++qIcEQ==
-X-Received: by 2002:a17:902:ce85:b0:235:f078:4733 with SMTP id d9443c01a7336-23601cf6f4bmr58352295ad.8.1749235825082;
-        Fri, 06 Jun 2025 11:50:25 -0700 (PDT)
-Received: from thelio.tailc1103.ts.net ([97.120.245.255])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f782246sm1473617a12.51.2025.06.06.11.50.24
+        d=1e100.net; s=20230601; t=1749235833; x=1749840633;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0X9KHOsc9F0ZidCqJwKzDvYsUjyRXhITd5dF3RTeynU=;
+        b=SsNNp+b7C2rVVCm+Jc1/9LQOZ6D9M4g1o+s0r+ih+z8ZfwyTFklxUUS2jsBrVINljd
+         MoJWtpk8AkuJYA3Yj0uioFLRtYVPOeNsWOiphwefAKiRx5ApYr3SjcfKCPb0bMb4DF+5
+         Q+2c5baU4pj8BVVna5lyvZ5B0hfl88UzLk/lzp22azilbzwLvuBFh7qOu74GJNBLkwox
+         wM+sG/aqIT2s9HLdf57w50BFoYZ/LTy0OQmnF/bBCBccTCZN1a1sDHu0NVHet2rZVS2Y
+         3gVuOvcNGspJoLMN5/+IfrTrdbr4bVwGwWHiZpdo5f/+h669JJlQz0pSsqT5HwcL/tUN
+         9WGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdLBKLDHzHZPTVsj9RFDt6L7XsmNlc0numJuZFkNVm5npK5mGj8+PiF6PEERPKw4T8j0k29Ygv+Xagr+JV@vger.kernel.org, AJvYcCWqPhB7sr+YVxVut+dZ0sZ9zwjK2hPCjB7W4kdloTk7sh9aZv91NeEHkJ0rh9CX43yfqOHtTPlM@vger.kernel.org, AJvYcCXStuDFmmG+IebMGRxRq3oXe4MkF0XoOBjiIYZFqgKK570nqTLy8XXzUPWiR1Em7T59KXNdwNA2514RBQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzizqsO5PDoklX9yaz1vCW1xFKBYGh6wH8TSKKhF0kmGEEPNCma
+	p2HtfQTzUEvNHcCMiFtF7pMcXiA9x007lz21WollYHglZDZJha8x2gEv
+X-Gm-Gg: ASbGncu6i9btpM1P7DP3+YnQbAqx3fED672lxEgt/4gvv+T7/NBeW2/hrNP6awMpB15
+	ehVoDDw7+Apn/slFcZiBHl2kAdQXoo7z5mkxMwI54F4G+fWBzYNZ2PvxwcDkRIq1/qG/3H0tPYp
+	1VIjGG8ZVaV7ubt8iSTMka5pJABA6CtZ9UTzqSWinuiwLgaaJx8RSc6X7NsQJslEtius/UdORbg
+	rFCyuS42XA9dHNl1vs0/Gyg/od12+0H+0ttcfGcDsbzLn+/ItLmlyGpYhglplKfXPuSw3QZf3ep
+	aFXjWgEBgUwgqE6lIVLeNT9uXkRGDeXXPNRcPImt4KumLknuaT4tqXkzrxg4y7M=
+X-Google-Smtp-Source: AGHT+IGnMAGQpDA3bxgIqVeDYLg7txF+FfUKJgcUdxE9mxm3KBo3HRNuKAnnkuXFaZPTqmSQdkyb0A==
+X-Received: by 2002:a05:6000:220d:b0:3a5:1471:d885 with SMTP id ffacd0b85a97d-3a531cec3e7mr4688607f8f.56.1749235832447;
+        Fri, 06 Jun 2025 11:50:32 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:44e7:a1ae:b1f1:d5a4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532435771sm2713057f8f.63.2025.06.06.11.50.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 11:50:24 -0700 (PDT)
-From: Drew Fustini <drew@pdp7.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	nvdimm@lists.linux.dev
-Cc: Oliver O'Halloran <oohall@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Drew Fustini <drew@pdp7.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v3] dt-bindings: pmem: Convert binding to YAML
-Date: Fri,  6 Jun 2025 11:11:17 -0700
-Message-ID: <20250606184405.359812-4-drew@pdp7.com>
-X-Mailer: git-send-email 2.43.0
+        Fri, 06 Jun 2025 11:50:31 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Ping Cheng <ping.cheng@wacom.com>,
+	Jason Gerecke <jason.gerecke@wacom.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Qasim Ijaz <qasdev00@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND 1/3] HID: wacom: fix memory leak on kobject creation failure
+Date: Fri,  6 Jun 2025 19:49:57 +0100
+Message-Id: <20250606184959.35915-2-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250606184959.35915-1-qasdev00@gmail.com>
+References: <20250606184959.35915-1-qasdev00@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,185 +80,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the PMEM device tree binding from text to YAML. This will allow
-device trees with pmem-region nodes to pass dtbs_check.
+During wacom_initialize_remotes() a fifo buffer is allocated
+with kfifo_alloc() and later a cleanup action is registered
+during devm_add_action_or_reset() to clean it up.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Acked-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Drew Fustini <drew@pdp7.com>
+However if the code fails to create a kobject and register it
+with sysfs the code simply returns -ENOMEM before the cleanup
+action is registered leading to a memory leak.
+
+Fix this by ensuring the fifo is freed when the kobject creation
+and registration process fails.
+
+Fixes: 83e6b40e2de6 ("HID: wacom: EKR: have the wacom resources dynamically allocated")
+Reviewed-by: Ping Cheng <ping.cheng@wacom.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com> 
 ---
-Dan/Dave/Vishal: does it make sense for this pmem binding patch to go
-through the nvdimm tree?
+ drivers/hid/wacom_sys.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Note: checkpatch complains about "DT binding docs and includes should
-be a separate patch". Rob told me that this a false positive. I'm hoping
-that I can fix the false positive at some point if I can remember enough
-perl :)
-
-v3:
- - no functional changes
- - add Oliver's Acked-by
- - bump version to avoid duplicate message-id mess in v2 and v2 resend:
-   https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
-
-v2 resend:
- - actually put v2 in the Subject
- - add Conor's Acked-by
-   - https://lore.kernel.org/all/20250520-refract-fling-d064e11ddbdf@spud/
-
-v2:
- - remove the txt file to make the conversion complete
- - https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
-
-v1:
- - https://lore.kernel.org/all/20250518035539.7961-1-drew@pdp7.com/
-
- .../devicetree/bindings/pmem/pmem-region.txt  | 65 -------------------
- .../devicetree/bindings/pmem/pmem-region.yaml | 49 ++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 50 insertions(+), 66 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
- create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.yaml
-
-diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-deleted file mode 100644
-index cd79975e85ec..000000000000
---- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
-+++ /dev/null
-@@ -1,65 +0,0 @@
--Device-tree bindings for persistent memory regions
-------------------------------------------------------
--
--Persistent memory refers to a class of memory devices that are:
--
--	a) Usable as main system memory (i.e. cacheable), and
--	b) Retain their contents across power failure.
--
--Given b) it is best to think of persistent memory as a kind of memory mapped
--storage device. To ensure data integrity the operating system needs to manage
--persistent regions separately to the normal memory pool. To aid with that this
--binding provides a standardised interface for discovering where persistent
--memory regions exist inside the physical address space.
--
--Bindings for the region nodes:
-------------------------------
--
--Required properties:
--	- compatible = "pmem-region"
--
--	- reg = <base, size>;
--		The reg property should specify an address range that is
--		translatable to a system physical address range. This address
--		range should be mappable as normal system memory would be
--		(i.e cacheable).
--
--		If the reg property contains multiple address ranges
--		each address range will be treated as though it was specified
--		in a separate device node. Having multiple address ranges in a
--		node implies no special relationship between the two ranges.
--
--Optional properties:
--	- Any relevant NUMA associativity properties for the target platform.
--
--	- volatile; This property indicates that this region is actually
--	  backed by non-persistent memory. This lets the OS know that it
--	  may skip the cache flushes required to ensure data is made
--	  persistent after a write.
--
--	  If this property is absent then the OS must assume that the region
--	  is backed by non-volatile memory.
--
--Examples:
----------------------
--
--	/*
--	 * This node specifies one 4KB region spanning from
--	 * 0x5000 to 0x5fff that is backed by non-volatile memory.
--	 */
--	pmem@5000 {
--		compatible = "pmem-region";
--		reg = <0x00005000 0x00001000>;
--	};
--
--	/*
--	 * This node specifies two 4KB regions that are backed by
--	 * volatile (normal) memory.
--	 */
--	pmem@6000 {
--		compatible = "pmem-region";
--		reg = < 0x00006000 0x00001000
--			0x00008000 0x00001000 >;
--		volatile;
--	};
--
-diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.yaml b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-new file mode 100644
-index 000000000000..a4aa4ce3318b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pmem-region.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+maintainers:
-+  - Bjorn Helgaas <bhelgaas@google.com>
-+  - Oliver O'Halloran <oohall@gmail.com>
-+
-+title: Persistent Memory Regions
-+
-+description: |
-+  Persistent memory refers to a class of memory devices that are:
-+
-+    a) Usable as main system memory (i.e. cacheable), and
-+    b) Retain their contents across power failure.
-+
-+  Given b) it is best to think of persistent memory as a kind of memory mapped
-+  storage device. To ensure data integrity the operating system needs to manage
-+  persistent regions separately to the normal memory pool. To aid with that this
-+  binding provides a standardised interface for discovering where persistent
-+  memory regions exist inside the physical address space.
-+
-+properties:
-+  compatible:
-+    const: pmem-region
-+
-+  reg:
-+    maxItems: 1
-+
-+  volatile:
-+    description: |
-+      Indicates the region is volatile (non-persistent) and the OS can skip
-+      cache flushes for writes
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pmem@5000 {
-+        compatible = "pmem-region";
-+        reg = <0x00005000 0x00001000>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ee93363ec2cb..eba2b81ec568 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13798,7 +13798,7 @@ M:	Oliver O'Halloran <oohall@gmail.com>
- L:	nvdimm@lists.linux.dev
- S:	Supported
- Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
--F:	Documentation/devicetree/bindings/pmem/pmem-region.txt
-+F:	Documentation/devicetree/bindings/pmem/pmem-region.yaml
- F:	drivers/nvdimm/of_pmem.c
+diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
+index eaf099b2efdb..ec5282bc69d6 100644
+--- a/drivers/hid/wacom_sys.c
++++ b/drivers/hid/wacom_sys.c
+@@ -2048,8 +2048,10 @@ static int wacom_initialize_remotes(struct wacom *wacom)
  
- LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
+ 	remote->remote_dir = kobject_create_and_add("wacom_remote",
+ 						    &wacom->hdev->dev.kobj);
+-	if (!remote->remote_dir)
++	if (!remote->remote_dir) {
++		kfifo_free(&remote->remote_fifo);
+ 		return -ENOMEM;
++	}
+ 
+ 	error = sysfs_create_files(remote->remote_dir, remote_unpair_attrs);
+ 
 -- 
-2.43.0
+2.39.5
 
