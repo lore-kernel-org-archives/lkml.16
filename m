@@ -1,168 +1,153 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9099D1A9B3D
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 21:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5141A9B3D
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 22:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749247181; cv=none; b=uQd9RnG0SiIk3+WJoxQzRaGUsisz00jTrSuBgtRTrZBxgtkFpEoPJwJYrgZ+Md0gqoAvb0vp077pUx88bamiYzWmRnKZjPW/tkxZm5gSpft6aagMIYj0CbgFcEodNCDzvMsAOJWeljqF/OxLkt5lQbns7Z9ossZHckh16iI498E=
+	t=1749247292; cv=none; b=GKQY3dfsZTFs9ny6IiVnPU/AjgGmGkwO0BLSNwnJJX+pe8SUUhHYSi7oTClJnA0iIq8zexiEAjb4+eGyTZHpmmrHrJkzNccezdSY+ozgt8DsAkZ64Y60QedVQi9THI2p/xwe1gLWaRV2NSVZYglbd5Tp37jXcej/zG7tQfxGH+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749247181; c=relaxed/simple;
-	bh=YiTEgPLwch4Bs+k/s9/DVupdd2uxEJ58BERhALJ2HC8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MJLt6eWiXTUbB4iug0XFI1btNa+9EjW7qi1q/lVpFYzLFh7van2hJjoBoicHocV6sefLLCexGy5sSSJI6EmUk+mIYFuZ8TKDLXJEIEJuGFommThA2Hcp54dHcJ8DczCqzFpPmRgRlLLYZmHeqyb6knHtd4t3hFjVKrnT8WjIjEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0xdaHdP; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749247292; c=relaxed/simple;
+	bh=QDNc3hB7m3NjGn7ho3WdVBpyCKJL6MbkGvHw+uSZGS4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T6rL95HalC1IPLo4Ivvd24/rdYVCsBWZL9Zwe3YrnKmOryU4PE2GK3tHNF3X7GCFvCwcVpzaaJIdMMHHj29kaTFnNCnxjwy1Mg4vkbW5PBG4YNVBEiZYtSq4C1qxX8q7Q8NpAdZSNHn+eQZU0o38lO4+YZNKlKELQDRD+WomGV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=eV245SvJ; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0xdaHdP"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234b440afa7so26629305ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 14:59:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="eV245SvJ"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so2027588b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 15:01:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749247179; x=1749851979; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3zZWlbsZsWBDzSGqtGht4OhBTNgnXf0xW+1Vj0/hhfI=;
-        b=C0xdaHdPcddW+fLPxMFpdAVqDtK4Y1Rq/43t7+xAl5YSKMrEktt5GZ3F7ieccADSN0
-         zqPTbmiAsx5oNABK+94anlWqWWgQRBULpWSvx/PV6hqP10NfX4+uxCy7NuAy42OD4OKe
-         tMcyI16JU2Yw5cIgFeJv575SEJADsX1sc7n5yDPMgaTjFfhpZQJEggbw6hgePrTK8XZB
-         u2XMEyH8iQj2FqSuzfNNEYc3qnfu1TDeL70lqeZuFTxmNi8EG5gOfUyNA68NRfZNDhwZ
-         sYNR26RdfoU4yovCoQZ/dlrEKMrlWi+1l2L/nvYEIFGqTbw2mps+heAiOpL10KKv8Oa7
-         Pz9A==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1749247290; x=1749852090; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ttz69yCGjmx1eoS6euDZxmboEjtbtLBmCyAJgWTUfxI=;
+        b=eV245SvJ7G5ixQlpU70N/fHxI1cHn20TEvpcH1StXlcRMULnPJ/NoYkYV8Ftvksi18
+         rqPQKk3ADxOA669uyLBWqwAopWNh28eSK0OvQnQISujxEb7rl/Qe3qFZXXMe7yUmEJhq
+         kpuqCJGC4aSJhZTvRxIFQv20GxLRquXN1i1BaBT1LDFDIN7y/X1TiaHi8iqFDXAhYn3n
+         ht+HO4lAN/TtTbhu6gIb9h5UKrFZ3yfw9A6mWGc8ZVf3PtKdvmm025P9E1lpQxP6UGIL
+         NSjvceIt1O7rEHEcqpNQ3tVHOgigEPO0gIxfbAOkA/Zw9/a7LiS8lbjwCrf4ickGEkLZ
+         71GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749247179; x=1749851979;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3zZWlbsZsWBDzSGqtGht4OhBTNgnXf0xW+1Vj0/hhfI=;
-        b=v6qwvMpP0FVPOQkK/7DE0hPCwoe9NsuPOVCLqt6pqyRXYEX4Yxv5X7XW5wE+2jdoeD
-         3itPLxZylvDWRCyIAt2cKsxCdDlBqJLX7O9xMXr0PsltXssRxlPfUVMUMf/tzqFjmxSb
-         24y0JREOI68q1ZTsZ2OilnM/0CoLAZ0yDf/h15y3CPGXc88HjIR+t++krjsjcalxIzlp
-         PBpvf4DvvIUgVI8wJ3WRVydbGjoH6OB72Hc7QGXtNTUXmEWxV/3SWdg/84k6xdK4+ENY
-         fmlnenr8U0FYai8mhhrFxJSvQ877ZxE0yLDOq131WsO5XR2HnKkB8suTbFNt/Awyosr/
-         iDxw==
-X-Gm-Message-State: AOJu0YzH4pz1j84SvrD3My/9+zIkVW2AhhDh3nZ0B500KLNT1XN3w/+9
-	QT1ObvFRAZKa+9BcAOZbF7oSClP449ASW0uEdFu5EOhPvz1o4PfuCi+dMjwnXg==
-X-Gm-Gg: ASbGncvRnDqhhTM+3h6vgMGC7yTMBs1l7oIPN6imdhv4bOlEo6xs/85iYvTO82+QzAF
-	ZWUwpNSfSH+q969TGUPZ/4kGnsXfY7en55Do9wcldbmtdydLG7ZNtv9SdtGqRC7z9A3g/xjph5M
-	upafrjUZSSXcdlR3I4xu6jOnjHfZkwEgsOeA1uT2tOnibb79RY3tLEyUr2KIP8YkAcs5iDUYKkB
-	/5jr/Y9ksJ5EPwzT+jgpkGcUaTyuR8EWjVInk+3ZAUs3pcFhB0yaVpFefcFK5lzUiyViUB4ztMA
-	7VcChmL/l8mIYiXOniYBBCySXEb6KJbpenlhlslqeETwkD0N7H4PkKQnTugW5FSr3TAERfS9pXo
-	sWwd8iVVcA6vY99xduBaezrus/DeGKGZhQtrCzLGn2lHd869L+agU
-X-Google-Smtp-Source: AGHT+IGRsYTvhTtG9mBhuM8Z3ZXSmPKu2CNyDifUVuE0zlVIJSCgJ202lfmjd43VebliOXdmMiIbnA==
-X-Received: by 2002:a17:902:e80e:b0:235:c9ef:c9e1 with SMTP id d9443c01a7336-23601cf0b28mr76283335ad.5.1749247178611;
-        Fri, 06 Jun 2025 14:59:38 -0700 (PDT)
-Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:d02c:e22:e5a4:2f84])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236035068f3sm16963425ad.236.2025.06.06.14.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 14:59:38 -0700 (PDT)
-From: Daeho Jeong <daeho43@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	kernel-team@android.com
-Cc: Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH] f2fs: add gc_boost_gc_greedy sysfs node
-Date: Fri,  6 Jun 2025 14:59:32 -0700
-Message-ID: <20250606215932.1226604-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
+        d=1e100.net; s=20230601; t=1749247290; x=1749852090;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ttz69yCGjmx1eoS6euDZxmboEjtbtLBmCyAJgWTUfxI=;
+        b=gHY7/OBMQumVfNW85BxFRiOV3ypLKNV5SRfe+gAe6VJfl3WcyRKyeORk0q5frkOFq1
+         ZMugF9RXzRZN1+cSxpHH3ncAVs3Ab+gAH5X/SOCy4exDX8fJtNkMBKKB3rNZT7tAmZS2
+         CmTC2f5u3niCYU90Z4apbFLo1L9hcBpTJXGh4E20BdeCDLAbVCSWF61LLKx24B4KnNYG
+         RGCmR57/tD2EBMwufuN5kSO6FcPnbkJi7K4XAa6EA47tFvk5B7vhjatugMHYo2PXcNwY
+         zLodbOuktdZFnbQd6MI6E5PuYsFYPA8wN8n5iJHPDoZam3hA/MFE6JZb1tjxT3npfqao
+         1n9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUTt0oLPtTg6bWK6evYheadXieLNXQsNBReGjU9zLnipdLsMR8WuYrJbFHv/sGG5E5evrd9XcibP5QAzC0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpXved81I9kluy/TTevj+GTI/airDa0TkDA2Dov4AqUR7fytfi
+	0DYH96PRU22FTh3LJZOVwCGuMIUoxex2mu27FTi/hIN8/57h4mvOvizJTW2USoX7o78VvptZUwi
+	QT9Qu5NM=
+X-Gm-Gg: ASbGncuWjD3Qs3lEInBpy/ei1pFQ8pTZFMYSMWy9pB1CzuZOjg6nS/K3zut7Wgo6Tdp
+	usOFiaCsnr9LKACzt5gFb6Vu+orwEr1hh8yu2aloSkFRBwCmKt55JR695NJFlYjD+OXYdC0y6gq
+	4wYfuIR1b6v6jBHC8Lx/1iz6ag4JA0eIMLuQ0ENj1CcH6YpJFPf+X5NLrYIH5K+JKmcgJcGe5Lm
+	4Mjao1IngqTMOczySoIAtjI/od6dAVaFRc4jm8zQxYgZO0ObIu2Z3LgXS87co/itgBicSKXI/iQ
+	lwvme4kFyr7BPe0THUIUsFOtnAwm+EPvO7ApIFLeGwgWGovIUGaS
+X-Google-Smtp-Source: AGHT+IEj0bI/X4A5eYGCGK7otcSqbGkj9CDQTq42iS/whU8gXRUwR+/Nu3j77R8mBiu+iyqv60iFhw==
+X-Received: by 2002:a05:6a20:430c:b0:21a:de8e:44b4 with SMTP id adf61e73a8af0-21ee25555eamr6427245637.16.1749247289679;
+        Fri, 06 Jun 2025 15:01:29 -0700 (PDT)
+Received: from [10.0.16.165] ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5ed58e9bsm1632595a12.10.2025.06.06.15.01.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 15:01:29 -0700 (PDT)
+Message-ID: <94f9af73-0b2d-484c-ba1d-d4435908336b@rivosinc.com>
+Date: Fri, 6 Jun 2025 15:01:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] RISC-V: vDSO: Correct inline assembly constraints in
+ the getrandom syscall wrapper
+To: Xi Ruoyao <xry111@xry111.site>, Alexandre Ghiti <alex@ghiti.fr>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Nathan Chancellor <nathan@kernel.org>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Guo Ren <guoren@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250605091112-7cd6b3bd-a466-486a-aebc-7bf0b2a8ac31@linutronix.de>
+ <20250606092443.73650-2-xry111@xry111.site>
+From: Vineet Gupta <vineetg@rivosinc.com>
+Content-Language: en-US
+In-Reply-To: <20250606092443.73650-2-xry111@xry111.site>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Daeho Jeong <daehojeong@google.com>
+On 6/6/25 02:24, Xi Ruoyao wrote:
+> As recently pointed out by Thomas, if a register is forced for two
+> different register variables, among them one is used as "+" (both input
+> and output) and another is only used as input, Clang would treat the
+> conflicting input parameters as undefined behaviour and optimize away
+> the argument assignment.
+>
+> Per an example in the GCC documentation, for this purpose we can use "="
+> (only output) for the output, and "0" for the input for that we must
+> reuse the same register as the output.  And GCC developers have
+> confirmed using a simple "r" (that we use for most vDSO implementations)
+> instead of "0" is also fine.
+>
+> Link: https://lore.kernel.org/all/20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de/
+> Link: https://gcc.gnu.org/onlinedocs/gcc-15.1.0/gcc/Local-Register-Variables.html
+> Link: https://gcc.gnu.org/pipermail/gcc-help/2025-June/144266.html
+> Cc: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>
+> v1 -> v2: Keep using "r" for buffer to follow the existing convention
+> (that the GCC developers have confirmed fine).
+>
+>  arch/riscv/include/asm/vdso/getrandom.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/include/asm/vdso/getrandom.h b/arch/riscv/include/asm/vdso/getrandom.h
+> index 8dc92441702a..c6d66895c1f5 100644
+> --- a/arch/riscv/include/asm/vdso/getrandom.h
+> +++ b/arch/riscv/include/asm/vdso/getrandom.h
+> @@ -18,7 +18,7 @@ static __always_inline ssize_t getrandom_syscall(void *_buffer, size_t _len, uns
+>  	register unsigned int flags asm("a2") = _flags;
+>  
+>  	asm volatile ("ecall\n"
+> -		      : "+r" (ret)
+> +		      : "=r" (ret)
+>  		      : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
+>  		      : "memory");
 
-Add this to control GC algorithm for boost GC.
+My 2 cents as I've dabbled into this for ARC glibc syscall macros [1] where r0
+is both the first syscall/function arg and also the function/syscall return.
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
- Documentation/ABI/testing/sysfs-fs-f2fs | 6 ++++++
- fs/f2fs/gc.c                            | 3 ++-
- fs/f2fs/gc.h                            | 1 +
- fs/f2fs/sysfs.c                         | 7 +++++++
- 4 files changed, 16 insertions(+), 1 deletion(-)
+The v2 approach still keeps 2 different variables in same local reg which has
+potential for any future compiler shenanigans.
+Segher's example avoided specifying the same reg.
+What about something like the following: seems to generate the right code (with
+gcc 15)
 
-diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-index 931c1f63aa2e..b978d183f5b1 100644
---- a/Documentation/ABI/testing/sysfs-fs-f2fs
-+++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-@@ -869,3 +869,9 @@ Description:	Set a multiplier for the background GC migration window when F2FS G
- 		boosted.
- 		Default: 5
- 
-+What:		/sys/fs/f2fs/<disk>/gc_boost_gc_greedy
-+Date:		June 2025
-+Contact:	"Daeho Jeong" <daehojeong@google.com>
-+Description:	Control GC algorithm for boost GC. 0: cost benefit, 1: greedy
-+		Default: 1
-+
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index de7e59bc0906..31afee3af1a0 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -141,7 +141,7 @@ static int gc_thread_func(void *data)
- 					FOREGROUND : BACKGROUND);
- 
- 		sync_mode = (F2FS_OPTION(sbi).bggc_mode == BGGC_MODE_SYNC) ||
--				gc_control.one_time;
-+			(gc_control.one_time && gc_th->boost_gc_greedy);
- 
- 		/* foreground GC was been triggered via f2fs_balance_fs() */
- 		if (foreground)
-@@ -198,6 +198,7 @@ int f2fs_start_gc_thread(struct f2fs_sb_info *sbi)
- 	gc_th->urgent_sleep_time = DEF_GC_THREAD_URGENT_SLEEP_TIME;
- 	gc_th->valid_thresh_ratio = DEF_GC_THREAD_VALID_THRESH_RATIO;
- 	gc_th->boost_gc_multiple = BOOST_GC_MULTIPLE;
-+	gc_th->boost_gc_greedy = 1;
- 
- 	if (f2fs_sb_has_blkzoned(sbi)) {
- 		gc_th->min_sleep_time = DEF_GC_THREAD_MIN_SLEEP_TIME_ZONED;
-diff --git a/fs/f2fs/gc.h b/fs/f2fs/gc.h
-index efa1968810a0..1a2e7a84b59f 100644
---- a/fs/f2fs/gc.h
-+++ b/fs/f2fs/gc.h
-@@ -69,6 +69,7 @@ struct f2fs_gc_kthread {
- 	unsigned int boost_zoned_gc_percent;
- 	unsigned int valid_thresh_ratio;
- 	unsigned int boost_gc_multiple;
-+	unsigned int boost_gc_greedy;
- };
- 
- struct gc_inode_list {
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index b0270b1c939c..5de7cd5c4fd8 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -824,6 +824,11 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
- 		return count;
- 	}
- 
-+	if (!strcmp(a->attr.name, "gc_boost_gc_greedy")) {
-+		if (t > 1)
-+			return -EINVAL;
-+	}
-+
- 	*ui = (unsigned int)t;
- 
- 	return count;
-@@ -1051,6 +1056,7 @@ GC_THREAD_RW_ATTR(gc_no_zoned_gc_percent, no_zoned_gc_percent);
- GC_THREAD_RW_ATTR(gc_boost_zoned_gc_percent, boost_zoned_gc_percent);
- GC_THREAD_RW_ATTR(gc_valid_thresh_ratio, valid_thresh_ratio);
- GC_THREAD_RW_ATTR(gc_boost_gc_multiple, boost_gc_multiple);
-+GC_THREAD_RW_ATTR(gc_boost_gc_greedy, boost_gc_greedy);
- 
- /* SM_INFO ATTR */
- SM_INFO_RW_ATTR(reclaim_segments, rec_prefree_segments);
-@@ -1222,6 +1228,7 @@ static struct attribute *f2fs_attrs[] = {
- 	ATTR_LIST(gc_boost_zoned_gc_percent),
- 	ATTR_LIST(gc_valid_thresh_ratio),
- 	ATTR_LIST(gc_boost_gc_multiple),
-+	ATTR_LIST(gc_boost_gc_greedy),
- 	ATTR_LIST(gc_idle),
- 	ATTR_LIST(gc_urgent),
- 	ATTR_LIST(reclaim_segments),
--- 
-2.50.0.rc0.604.gd4ff7b7c86-goog
+       register long ret asm("a0");
+       register long nr asm("a7") = __NR_getrandom;
+       register size_t len asm("a1") = _len;
+       register unsigned int flags asm("a2") = _flags;
+       ret = (unsigned long) _buffer;
 
+       asm volatile ("ecall\n"
+                     : "+r" (ret)                                 // keep "+r"
+for input _buffer / output ret
+                     : "r" (nr), "r" (len), "r" (flags)
+                     : "memory");
+
+       return ret;
+
+Thx,
+-Vineet
+
+[1] https://github.com/bminor/glibc/blob/master/sysdeps/unix/sysv/linux/arc/sysdep.h
