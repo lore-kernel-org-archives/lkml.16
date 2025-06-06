@@ -1,50 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0C91FC0EA;
-	Fri,  6 Jun 2025 22:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B4B23D290
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 23:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749250789; cv=none; b=Mu2lasNltFWb5NBD/PD11/x7Nb6AH/HV3Oei6NhPtVaHf6E1/vxccppeL4vbcPzET3NuuOfhxHE2mu1V98JSF+MPy55WRpqNLo3s654bgkLcEjmpCL9PvPukSPPN/3RdO13eYmu+g0I5/Lq04wAvS+VYYw8ddinIF/bcNHedjlc=
+	t=1749250826; cv=none; b=HanfrFIxAmA91zrbC0iEEoRlyjOtybvwnbXh2x6h+wvjMeFDGrJo+vM7kyjBd+lwNQOwNQs0ZXjqnIPZdWOr47Cy3wivfTLlEZaHLLKFJYl+qvDCFfBfSrHTnoV41D4rJHWdIig7Ek/qcZTKAmH26B/h0ReM9vdFSJy0SnvCDoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749250789; c=relaxed/simple;
-	bh=FTFPRAZ267L3VdOADE7/ub60Qc7Ju5XwkBj3SD87vxM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WbSUeLNFmVEJGjQKI7XazT9oeVkvvtuumc3K50M5BKocTq6ua0y1rVpC85Ank+0sBb4LRD0toxq5yS4AI7lgCAmjAIPIiV13eej/fzUg8+X5fh8/OdRIACl/8wLGSxCp7dlrb9utnk+e8rz38vDd0+LXzUO7PNCuAANkl6UMs7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ceew3i7Z; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749250826; c=relaxed/simple;
+	bh=wgOe9oGQBPicygJ2wtdDkUZYgoKUx2ndvWSvuhFOfgk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VFNoQ4giR3NKRLsqFi7TOuLhstUEsNHpyv/B4hbQmBH/wo4BJI331i3Ti1VE2ADwoOqRNjQ+E2fnJvac85ZEYyH3lSmqoz3c6k+8qOvNgeiFIjApWAjA0LoZcpo5ORZGfocQVT9/IYcabZYFk87zUih3PxwmG8k6foCB12jynWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=C87jzYaH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ceew3i7Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749250787; x=1780786787;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=FTFPRAZ267L3VdOADE7/ub60Qc7Ju5XwkBj3SD87vxM=;
-  b=ceew3i7ZGJWNyyyB0o3tiehLwIyYqJh/B+6LxBIlOe9O0JVRl40DEdTv
-   2ZJBI+iTAV9Z6x7S8A278CEZVtFnWalEwYlXL63T5QhhnHgf2/QkvrXq9
-   cV4s8xkTG6pqOgyGViTGd5QFg2Hiz4lBnZgKL2l2GPqP2ucAhhca9Q4PY
-   SJ4Ke/NWFkCsRktMDJ8VJYSTphMyjAfY4+z82kcqD7FT8EDYyVunVg42A
-   GzY2af0Tz9XB6VYyRjASSp2qLz5gOmq/o9McQfLGNThkoCa9h4mgyDM5A
-   H93gZylCctjZfkFNgrQduf/VU5Q7vfNcq0hQpHh1Mdt5hq1wlIVfw8oUi
-   Q==;
-X-CSE-ConnectionGUID: NYtEfoO2T46oGQMpcwnbZw==
-X-CSE-MsgGUID: l49QNMmNRsmToSk0cYSM3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="54039810"
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="54039810"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 15:59:46 -0700
-X-CSE-ConnectionGUID: juQn6lj6TiGeCPiG7j3dig==
-X-CSE-MsgGUID: YGeAIvhdRni60Wi4gzmBBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="150959926"
-Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.33]) ([10.125.111.33])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 15:59:44 -0700
-Message-ID: <4ed71897-2b04-438c-8b08-006c12a0037f@intel.com>
-Date: Fri, 6 Jun 2025 15:59:43 -0700
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="C87jzYaH"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 556F9K7Q019255
+	for <linux-kernel@vger.kernel.org>; Fri, 6 Jun 2025 23:00:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9PBNYpHpthyOUGGJ7lE8j0pFLOw80CFSTRyI4+cBOZM=; b=C87jzYaHFcEngeXk
+	fxYpRw2OIm/NLupmcHm+sYVQP5a2BY6WgJjUmOnQhkovGKrW20+HarNM2cmTiMGJ
+	3+9kEHp5dfGaPJaLToDTAnyLvuy/l+9rYWSdwuqBlY0xFx5q3tR47eMVJ7d7gnAj
+	xO8W5t2/fI4voxjILZ8mwGe8E4/6ppaL8XT4CZT4kQ9PlxLgmMV26Wv8NLACGlT8
+	Xqrzzg8OFsl/RSconSY5g7BBqpyWW2qksiLqrI0mE87mm9R9tfGnX6P3hOd/mqCA
+	eW/mf3Iew62neu8T0pwryRUHhEuhtgzvPgVJILc298KdFGDm2wHC2u0Y4Lnmr5GL
+	MJQlgA==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8nwwtn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 23:00:23 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-234906c5e29so29645915ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 16:00:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749250822; x=1749855622;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9PBNYpHpthyOUGGJ7lE8j0pFLOw80CFSTRyI4+cBOZM=;
+        b=qnDc91UaN0uz6dB9WOWmZzXV3290uQs/KpkU2UeEDv+2wEXHFi6sOHSm6irPF6HdZE
+         f8nnjgdY7Mjav56cMl4TN6FN45QkwQT4aiZeYwtf4Ge1CV9UfKhPFv4M3Wu1WHQwad1B
+         2pQi+GaLfcSiypDIHCyReSJSmjrPA0TEmULqe+LFlbTYrFkFD1omV7y1Tphv4JSwBodY
+         1kZy+dV+noYAm+Wjjbm6LZMgD3bnScL4WtVtGBErUHSFhQqX+GN9jZbV1aN6hGe1aPCO
+         jQZHKt/BSptnZff58KBXwH9DPVeZ8TjFpghYn9SB+/KlCYidzSihGxyn23O25h8w30u7
+         mvpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9nalsxVwc0obUaahGJ2HhfZgR2w6SGApNOotfc/x0H+KTzHC6aVaI4Ra8t3VcT39yK2ofGiYm57KgUWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHFHC8Uhf/8iCPIm/Wu/gsQC9ISsozCXdZlUPyFNRPx4pTFxzO
+	NZM4F5zWF93j3nIAwY4fQylAlLu0pxPPIxFK+gzRfVJzAfSRtE8S8aCp5vLH6i1P+Ubc01BXgnN
+	SOFuduo1bsi48LhSXPF1VUYkzMFJo1HuscIJ25y6jGOdbrEhlU6w+qqRGVrMHLMGvkCI=
+X-Gm-Gg: ASbGncs5h2alJC2sSfEBWvNkd8SmuQYvyK1xv2SAZf2S2/Bp/NKGT3z5iMH6SHuAu/h
+	dJoAGhP57QiXUGGgpY8cu7ZZcBHUraNRTvxlIWJypoS9vuXYW9Jp+LR/9JeXdy4I2hjzP2nGCZj
+	T9lHnN5/Ok5wKBZUKx0vomaJNCG0g1D7VUpu7EiM/OlM6KNmnHpSbPXwhUL6EDnsfVoVEERje9S
+	AZuZVm//rgbDSZ320PYcq81Odu+ewqMQmfWA5KJ4ckuP+JMMKOI4HYSS5LHilF+s5XV8w0uLVNd
+	NcYLboMgHRLx93pp5woBEjFqatuyazdM3HlmClQR0LXgsl/bJLKuN/XXvHUV4Ka4CZNxbe37LlG
+	gJWieXXeSpVbmyGo=
+X-Received: by 2002:a17:903:986:b0:235:ecf2:393 with SMTP id d9443c01a7336-23601da7bfamr70694915ad.53.1749250820989;
+        Fri, 06 Jun 2025 16:00:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEJZ+s/3QhqXDs1c/0gIYCAZvR8FCRt2sIzp2/qhB1y/M0rzJJcy3nU24F4cd7HneWwFuq7A==
+X-Received: by 2002:a17:903:986:b0:235:ecf2:393 with SMTP id d9443c01a7336-23601da7bfamr70693935ad.53.1749250819766;
+        Fri, 06 Jun 2025 16:00:19 -0700 (PDT)
+Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5ee6eb96sm1668224a12.17.2025.06.06.16.00.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 16:00:19 -0700 (PDT)
+Message-ID: <2b56c510-2e49-451d-bb50-d96ce3aacff1@oss.qualcomm.com>
+Date: Fri, 6 Jun 2025 16:00:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,158 +75,116 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 16/16] CXL/PCI: Disable CXL protocol error interrupts
- during CXL Port cleanup
-To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
- shiju.jose@huawei.com, dan.carpenter@linaro.org,
- Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
- yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
- uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-17-terry.bowman@amd.com>
+Subject: Re: [PATCH v4 ath-next 2/2] wifi: ath11k: fix HTC rx insufficient
+ length
+To: Johan Hovold <johan@kernel.org>, Miaoqing Pan <quic_miaoqing@quicinc.com>
+Cc: quic_jjohnson@quicinc.com, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johan+linaro@kernel.org
+References: <20250317072036.2066518-1-quic_miaoqing@quicinc.com>
+ <20250317072036.2066518-3-quic_miaoqing@quicinc.com>
+ <Z907FGWBV_MNlTcE@hovoldconsulting.com>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250603172239.159260-17-terry.bowman@amd.com>
+In-Reply-To: <Z907FGWBV_MNlTcE@hovoldconsulting.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: uVx_yBz_xuXXbXWMW6Bmt3Qj4ARsbHUI
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDE5MiBTYWx0ZWRfX+JB8KH5VhMUB
+ eIZNzhm9sirMxpAlYCEFWUImrgm0ztoh3x2j5BeZqCgdWJ4Vo+juIDyxA1Q3KKIb0TOPmm1LLtx
+ SLcfO1LKTea/rBe7r4vVS3R4dNRQFveGjuBEfZ2NnRE5hRqajpenpUfuMP7M34kA1Q2kMSzTbf3
+ U65shEdvubmbJBVxn2XXmnjg4AbzrXUoW45qQVL2mWLE5uBXa5UaWeZmAONu2P+harGn1HaNgdz
+ EV8rm5qOuvW0A6hw07RCzQ3TYJnum8TfHqQdEBf7vjIY6s0UVumZbRCvyC0FK+ZB1MGDWRQp6C2
+ 4Dz4GwWkKeY/jDKXe3HaIyDqPl8saYVXsRTX9+/ryPIMmfgt1Pkk7jfCvXxH4tA0gYCYg3uj+IU
+ iop5J0yM6VopU6V3ugnLlHjFaeHfwBZ9oSeNyEzb6aJMOGa+xVpZj5R2WQJmMzERCN7sMOr2
+X-Proofpoint-ORIG-GUID: uVx_yBz_xuXXbXWMW6Bmt3Qj4ARsbHUI
+X-Authority-Analysis: v=2.4 cv=UphjN/wB c=1 sm=1 tr=0 ts=68437307 cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=e70TP3dOR9hTogukJ0528Q==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=zitRP-D0AAAA:8
+ a=COk6AnOGAAAA:8 a=zvfRP35NZ5SxQhbWGWEA:9 a=QEXdDO2ut3YA:10
+ a=1OuFwYUASf3TG4hYMiVC:22 a=xwnAI6pc5liRhupp6brZ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-06_09,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 spamscore=0 impostorscore=0 lowpriorityscore=0
+ phishscore=0 mlxlogscore=999 clxscore=1015 malwarescore=0 adultscore=0
+ bulkscore=0 mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506060192
 
+On 3/21/2025 3:10 AM, Johan Hovold wrote:
+> On Mon, Mar 17, 2025 at 03:20:36PM +0800, Miaoqing Pan wrote:
+>> A relatively unusual race condition occurs between host software
+>> and hardware, where the host sees the updated destination ring head
+>> pointer before the hardware updates the corresponding descriptor.
+>> When this situation occurs, the length of the descriptor returns 0.
+>>
+>> The current error handling method is to increment descriptor tail
+>> pointer by 1, but 'sw_index' is not updated, causing descriptor and
+>> skb to not correspond one-to-one, resulting in the following error:
+>>
+>> ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1488, expected 1492
+>> ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1460, expected 1484
+>>
+>> To address this problem and work around the broken hardware,
+>> temporarily skip processing the current descriptor and handle it
+>> again next time. Also, skip updating the length field of the
+>> descriptor when it is 0, because there's a racing update, may
+>> never see the updated length.
+>>
+>> Tested-on: QCA6698AQ hw2.1 PCI WLAN.HSP.1.1-04546-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
+>>
+>> Reported-by: Johan Hovold <johan+linaro@kernel.org>
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218623
+>> Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
+> 
+> As I've argued elsewhere, I think this should be fixed by adding the
+> missing memory barrier which is needed to prevent ordering issues like
+> this on aarch64:
+> 
+> 	https://lore.kernel.org/lkml/Z90yyrZcORhJJgNU@hovoldconsulting.com/
+> 
+> The fact that this alone does not seem to be sufficient to address the
+> issue on qcs615 (and qcs8300) suggests that there are further issues
+> with these platforms that need to be properly understood before adding
+> workarounds in one place in one driver.
+> 
+> I've just posted my fix, a version of which users have been running now
+> for a week without hitting the corruption (that some used to hit
+> multiple times a daily), here:
+> 
+> 	https://lore.kernel.org/lkml/20250321094916.19098-1-johan+linaro@kernel.org/
+> 
+>> @@ -387,18 +387,26 @@ static int ath11k_ce_completed_recv_next(struct ath11k_ce_pipe *pipe,
+>>  
+>>  	ath11k_hal_srng_access_begin(ab, srng);
+>>  
+>> -	desc = ath11k_hal_srng_dst_get_next_entry(ab, srng);
+>> +	desc = ath11k_hal_srng_dst_peek(ab, srng);
+>>  	if (!desc) {
+>>  		ret = -EIO;
+>>  		goto err;
+>>  	}
+>>  
+>>  	*nbytes = ath11k_hal_ce_dst_status_get_length(desc);
+>> -	if (*nbytes == 0) {
+>> +	if (unlikely(*nbytes == 0)) {
+>> +		/* A relatively unusual race condition occurs between host
+>> +		 * software and hardware, where the host sees the updated
+>> +		 * destination ring head pointer before the hardware updates
+>> +		 * the corresponding descriptor. Temporarily skip processing
+>> +		 * the current descriptor and handle it again next time.
+>> +		 */
+>>  		ret = -EIO;
+>>  		goto err;
+> 
+> Your tests suggested that you always see the correct length the next
+> time you process the ring buffer, but AFAICT that is not guaranteed to
+> happen (i.e. if you hit this on the last transfer).
 
+I'm going to mark this as Deferred in patchwork.
+Let's have Johan's complete set of barrier changes land both in ath11k and
+ath12k, and then re-evaluate the need for your workaround after that.
 
-On 6/3/25 10:22 AM, Terry Bowman wrote:
-> During CXL device cleanup the CXL PCIe Port device interrupts remain
-> enabled. This potentially allows unnecessary interrupt processing on
-> behalf of the CXL errors while the device is destroyed.
-> 
-> Disable CXL protocol errors by setting the CXL devices' AER mask register.
-> 
-> Introduce pci_aer_mask_internal_errors() similar to pci_aer_unmask_internal_errors().
-> 
-> Introduce cxl_mask_prot_interrupts() to call pci_aer_mask_internal_errors().
-> Add calls to cxl_mask_prot_interrupts() within CXL Port teardown for CXL
-> Root Ports, CXL Downstream Switch Ports, CXL Upstream Switch Ports, and CXL
-> Endpoints. Follow the same "bottom-up" approach used during CXL Port
-> teardown.
-> 
-> Implement cxl_mask_prot_interrupts() in a header file to avoid introducing
-> Kconfig ifdefs in cxl/core/port.c.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/port.c |  6 ++++++
->  drivers/cxl/cxl.h       |  8 ++++++++
->  drivers/pci/pcie/aer.c  | 21 +++++++++++++++++++++
->  include/linux/aer.h     |  1 +
->  4 files changed, 36 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 07b9bb0f601f..6aaaad002a7f 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1433,6 +1433,9 @@ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, "CXL");
->   */
->  static void delete_switch_port(struct cxl_port *port)
->  {
-> +	cxl_mask_prot_interrupts(port->uport_dev);
-> +	cxl_mask_prot_interrupts(port->parent_dport->dport_dev);
-> +
->  	devm_release_action(port->dev.parent, cxl_unlink_parent_dport, port);
->  	devm_release_action(port->dev.parent, cxl_unlink_uport, port);
->  	devm_release_action(port->dev.parent, unregister_port, port);
-> @@ -1446,6 +1449,7 @@ static void reap_dports(struct cxl_port *port)
->  	device_lock_assert(&port->dev);
->  
->  	xa_for_each(&port->dports, index, dport) {
-> +		cxl_mask_prot_interrupts(dport->dport_dev);
->  		devm_release_action(&port->dev, cxl_dport_unlink, dport);
->  		devm_release_action(&port->dev, cxl_dport_remove, dport);
->  		devm_kfree(&port->dev, dport);
-> @@ -1476,6 +1480,8 @@ static void cxl_detach_ep(void *data)
->  {
->  	struct cxl_memdev *cxlmd = data;
->  
-> +	cxl_mask_prot_interrupts(cxlmd->cxlds->dev);
-> +
->  	for (int i = cxlmd->depth - 1; i >= 1; i--) {
->  		struct cxl_port *port, *parent_port;
->  		struct detach_ctx ctx = {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 2c1c00466a25..2753db3d473e 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -12,6 +12,7 @@
->  #include <linux/node.h>
->  #include <linux/io.h>
->  #include <linux/pci.h>
-> +#include <linux/aer.h>
->  
->  extern const struct nvdimm_security_ops *cxl_security_ops;
->  
-> @@ -771,9 +772,16 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->  #ifdef CONFIG_PCIEAER_CXL
->  void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
->  void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
-> +static inline void cxl_mask_prot_interrupts(struct device *dev)
-> +{
-> +	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(to_pci_dev(dev));
-> +
-> +	pci_aer_mask_internal_errors(pdev);
-> +}
->  #else
->  static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
->  						struct device *host) { }
-> +static inline void cxl_mask_prot_interrupts(struct device *dev) { }
->  #endif
->  
->  struct cxl_decoder *to_cxl_decoder(struct device *dev);
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 2d202ad1453a..69230cf87d79 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -979,6 +979,27 @@ void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, "CXL");
->  
-> +/**
-> + * pci_aer_mask_internal_errors - mask internal errors
-> + * @dev: pointer to the pcie_dev data structure
-> + *
-> + * Masks internal errors in the Uncorrectable and Correctable Error
-> + * Mask registers.
-> + *
-> + * Note: AER must be enabled and supported by the device which must be
-> + * checked in advance, e.g. with pcie_aer_is_native().
-> + */
-> +void pci_aer_mask_internal_errors(struct pci_dev *dev)
-> +{
-> +	int aer = dev->aer_cap;
-> +
-> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-> +				       0, PCI_ERR_UNC_INTN);
-> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
-> +				       0, PCI_ERR_COR_INTERNAL);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(pci_aer_mask_internal_errors, "CXL");
-> +
->  static bool is_cxl_mem_dev(struct pci_dev *dev)
->  {
->  	/*
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 74600e75705f..41167ad3797a 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -108,5 +108,6 @@ int cper_severity_to_aer(int cper_severity);
->  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
->  		       int severity, struct aer_capability_regs *aer_regs);
->  void pci_aer_unmask_internal_errors(struct pci_dev *dev);
-> +void pci_aer_mask_internal_errors(struct pci_dev *dev);
->  #endif //_AER_H_
->  
-
+/jeff
