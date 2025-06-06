@@ -1,268 +1,281 @@
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18CD2868BD;
-	Fri,  6 Jun 2025 12:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED375286D72
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749212416; cv=none; b=Gf8iKr7lxHW6FmFnHY++c3rd4LIUDXZUiHqT3xdD0D8mJXq4oeaa8vKrmJoAd5DetGqObtUYnAmkwUM+5ScEkaFqXKqxXavfal3NVgdWjCzQuV4PXD0MIMuB6RuxRQz7DDL2/lww6HEeGD8uadbGfnbRlMgxoIPw9qjqLErAN34=
+	t=1749212521; cv=none; b=ja2MNtLY3CnFFoOB1ekSKg8gxCvXqghhskeERGal1ppBLESqxmKLu72lEjJlSHPJI0r1Wa7+Esr8iAWzBSo9Cq3efTrF3UdpFJH1B5nZwi0B61lMsBVJ1c/14CHm3VPSkgM2Musoo5xJGfLsrEJ8tYsIPHPqYfS5wlJB3vZms6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749212416; c=relaxed/simple;
-	bh=NprR1ehoDfTDot6OFdq1lOyMlHXFb+t2rc/rBu2GTRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nyyVlOh3cZ2YpZsRK6ZbyRFErt2GRrARnwhfC+YrOWD3FlCVRddyXCOZgiRUMB/S8P2723U49wYm5et0jd6/V9z35b08sxrhZyxOZHLCl0OW9Xm7gTAuBCm+SHtpB7LwgPBCnx4NdjiadG3QwLBvmCm8V9p+Lq0I9VGb1kS9X34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=Epb6M8li; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LinPWa1e; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1749212521; c=relaxed/simple;
+	bh=nZRE9jMK6GJm014fdSyKTgnZ//JZUiXylfSpJYVDtNk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xp26iMjkRW9ZxExGOvi6vy30Hsvh7KXMpzi+UcqLXk6ciGWJW8hSg5w4sBgxQJUICV15iyt5oruS2qFruP0SkupxtL8nWdeB51gIpAC1iSLkAcJAKnzldPJeVtEVJMI9jOnFhsao+m/dAcSPmbU+SzcT6AJRhCA1izh/Lcod+WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VItbd/rW; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="Epb6M8li";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LinPWa1e"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id BE7061380388;
-	Fri,  6 Jun 2025 08:20:13 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Fri, 06 Jun 2025 08:20:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749212413;
-	 x=1749298813; bh=F5eKTBewbMvoySvWxVy/ldrx72GRUC0xaamMpK6cgZM=; b=
-	Epb6M8lidkBw4TYXg+ox28A0BAv5NMAGmTl2NSSdJI5Zy/6fSvpYFzIeFiOVuNfU
-	A4+kyvKj46s/5ntJ9FD/mPEjgC8g699m9YQBHls5Qm68jMWC6/Re07cpeYzogfu2
-	Hjgt3Y1KHODlEJ6g0NbIBB+EUioz14ZCDI22sE9zqw7j8IHBSSv8bnxPsFTVs6uT
-	/gBuBTwe1C4TAfJpDtHWt6iGgIai1eG8IMLovIKnnOWW0msAOZ8D2p0p4Ynj4/YQ
-	yQ1wmfhIDt2qbV2lQsiFMHviYCBCmOMflTP+Voh50nkrwQh1yamwf5PKjulayW1Z
-	VPaAT92lY/zF21CQq+QU3w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749212413; x=
-	1749298813; bh=F5eKTBewbMvoySvWxVy/ldrx72GRUC0xaamMpK6cgZM=; b=L
-	inPWa1eYPdNbPoQ46r6hYmsN/Fc+6cTO8GfCUab68A3NYdPi/Uu6Q9fbrMiLgWuw
-	4mIrNJU5BBv8Ot8yXBXlIKwXczHI+mgqgS1+XLUqW/11/2+a/Jeai3686ThrAGkN
-	l5bO6BhQUrrT4pUNxx9yn/jSIa33/ijfLHCOv6p7F5Or90OolQMUdfESYyRDh0Ho
-	Dbk3rThv9hQdJa0Ym+nglZHk7oeUgOz1RdfXRmnPjA5rCGRf2ylrezn0Ch69XH0w
-	9r90X9jXsTvRb3VCM3IIsvGqw5VFyUxntlFsmGOhvaN6nr2+hspll9XQPKB52IUl
-	RvLJN9IQiOwnydVO/xbJw==
-X-ME-Sender: <xms:_dxCaKXpJtNpVwaa9UEKcwrv3hwp1vPJLZ0YdRKyY1PSNjeUEnWy-Q>
-    <xme:_dxCaGnVjZ_nOU64m848wWfCQ2V7rRoBgzQqkZ3Fhc5LETj_tjqwMpfJIOKMTc2JL
-    o2ARbKikXVMHAFlMOo>
-X-ME-Received: <xmr:_dxCaOaLTB_ZyxHMtg9_yoiP-GtnA1e55Tgm1av8QxCtnN0ceiFimcWtXzPGXiIpXZTjuEezk1RxDqe_9oduMbYEx66UEevWBA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehtdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdej
-    necuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhoug
-    gvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeelfefg
-    tddtleeljeeuuddvteefledtfeefjeduheeiffffudetgeejieegffduffenucffohhmrg
-    hinheptghsihdvrdhvtgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrghtvggthhdrsh
-    gvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeht
-    ohhmihdrvhgrlhhkvghinhgvnhdorhgvnhgvshgrshesihguvggrshhonhgsohgrrhgurd
-    gtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepshgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpth
-    htoheplhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepmhgthhgvhhgrsgdohhhurgifvghisehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehlrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgr
-    rhgurdgtohhmpdhrtghpthhtohepjhgrtghophhordhmohhnughisehiuggvrghsohhnsg
-    horghrugdrtghomh
-X-ME-Proxy: <xmx:_dxCaBWhM8rsJjvx3-70ez0ilJ4xJNl3yrsiGfieUHJDQPcabPrjIw>
-    <xmx:_dxCaEk4VGwgK_qgqObZYD4-p_oOesSUfY4MiD8Ue-zxEQ3kxc4WGg>
-    <xmx:_dxCaGcpoHw49EvVkFk40OEg51JKSevfkXZLLIha_HOG30y-9fw0KA>
-    <xmx:_dxCaGG89eTEPOQ3KjbWLyzjBtzwByRy4lZdyLK2AtMR89NVVRvWdg>
-    <xmx:_dxCaI_LXh4v8xuHxDH79cIn3CdDxZBAHb2AuvBNnCDnsUo-cKPd5yg3>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 Jun 2025 08:20:12 -0400 (EDT)
-Date: Fri, 6 Jun 2025 14:20:11 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 11/15] media: rcar-isp: Call get_frame_desc to find
- out VC & DT
-Message-ID: <20250606122011.GH2770609@ragnatech.se>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-11-026655df7138@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VItbd/rW"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-604bff84741so4051124a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 05:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749212518; x=1749817318; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kUcUCGpt2P3y/QMzABkuyFHR7tmd84+UCxMipLCW7j0=;
+        b=VItbd/rWgaKnkmx223P8oCibjoVCn5jHC84myLG3yQ+Km/njzh6OblUOlnQUSK6PIt
+         OkTP7Br4scoG9SZzq9+wTq1Qi/rAvqlsUio+6S07GWAwTXT0sH8LszCDTdOsMb9rDnZ4
+         9icxqjCWs/ZY9gCvy6uifsBrEPjWqtO/Q2dh7OwUUtMQvkp6ACvYUCfMps2Ptxvuo/Lo
+         4+En69Tjy4r/t7inz1aTTPaFTqqOWkMRdsDYX4ar/MetxMz82GfW2IH8SsD8RI3PtzOS
+         qZXduWFAfyxaQURI5u1m19oc64MG9daEw/S72PPhNPKd16WNt0DnjILzoh9THOXm8Cdj
+         SB3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749212518; x=1749817318;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kUcUCGpt2P3y/QMzABkuyFHR7tmd84+UCxMipLCW7j0=;
+        b=Evxqtc+Rw+LvW1U3hv7Zi488hlcTqkpGhVhAH15XTyHccIbx0qMHkL1nGH4yombaGY
+         5ortASy3F5da4EX3Wpb1rRpCJ1dysuf4sy3WaFJFd91UMGGSb/dQInXXh+70YpaNErrl
+         SFVRQqoy225sOnRCPMKF6WaBsen04i3jWAIB3CM+tcQaZ0ExVL0gKwzBLmhWZTQnp04V
+         RaCcdNWstyx9YJ0nTGW3Bo4Xzn1VOqJhtXjno0T5TCLx00dA2eqKnez8FKN0KMTa4Oge
+         deaOz8ZxhpH0EDCY84KNRLMTwWOO3EwVI1U6HbcayzbyjfY/fkvwkja6aHccbGq3gR9J
+         N2Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWXlKk1HB7+3ZzBa0Jy5zfY4G8/bwCOnfcQCTxqtwlVZnSXLT9Y8dMGcr2SFG6q/3i0sK2xm2e3i17aIF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVOEgK0p54a9+a+aYu9ZLxQekyQXJgc5yTwOrZva/fy60zsrp+
+	3LDvZP8RmM4VtGzr+axev5BCsawL0SoGyC9XkbcAEtvoelvzuX7mEnRz/7uo
+X-Gm-Gg: ASbGncuzwYRbLHCWUolEKjylLRFTjOsIHHmkuAznH1EIC4qtJPqeX74BK1OyzRFXmUx
+	gYhyea7+GtTZ6m2nOCbyz9sbGI3rVi9q8Seo7+ZqtDU4/tphjXIUumfEHpytYSA4Xb4b+orDadt
+	qzJjwhL2HLc84anxjj/v9oewF50Xj4PGOTA8jEvXPPxy2ICjei3Vm4UXLuF49IecGFtLWgi0DHh
+	YF55Cp9JO0dVs/J5U75laWdbasN+nJKYaAHLczndj9XlJVeI8K2dRk0JmGSz8clxDUZWEZh3mve
+	lD+IG/q2IxEFB5Gm0VjniWE/UOKrbFxPdbpDYCI1l4YIAuddQg4xJyuMmojASrH76yrGjyOFgkA
+	fIWFeSo3Qoei0ZOSwQajC8DkIiMx0z7Hxq64=
+X-Google-Smtp-Source: AGHT+IHQW6szGhy2I7Njh3emGhJdpYN5VryDQbhoUUYzhfd2Hd+ynaIMW6bluAR6kjU64A5DtZfPQA==
+X-Received: by 2002:a05:6402:40c5:b0:602:15f:5883 with SMTP id 4fb4d7f45d1cf-607735130d3mr2442075a12.9.1749212517884;
+        Fri, 06 Jun 2025 05:21:57 -0700 (PDT)
+Received: from [10.203.235.164] (mob-194-230-148-44.cgn.sunrise.net. [194.230.148.44])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6077837eb84sm946175a12.33.2025.06.06.05.21.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 05:21:57 -0700 (PDT)
+Message-ID: <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+Date: Fri, 6 Jun 2025 14:21:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU
+ hotplug
+To: Brian Norris <briannorris@chromium.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: Tsai Sung-Fu <danielsftsai@google.com>,
+ Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org,
+ Johan Hovold <johan@kernel.org>
+References: <20250514201353.3481400-1-briannorris@chromium.org>
+ <20250514201353.3481400-2-briannorris@chromium.org>
+Content-Language: en-US
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+In-Reply-To: <20250514201353.3481400-2-briannorris@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250530-rcar-streams-v3-11-026655df7138@ideasonboard.com>
 
-Hi Tomi,
 
-Thanks for your work.
+On 5/14/25 22:13, Brian Norris wrote:
+> Affinity-managed IRQs may be shut down and restarted during CPU
+> hotunplug/plug, and the IRQ may be left in an unexpected state.
+> Specifically:
+>
+>   1. IRQ affines to CPU N
+>   2. disable_irq() -> depth is 1
+>   3. CPU N goes offline
+>   4. irq_shutdown() -> depth is set to 1 (again)
+>   5. CPU N goes online
+>   6. irq_startup() -> depth is set to 0 (BUG! client expected IRQ is
+>      still disabled)
+>   7. enable_irq() -> depth underflow / unbalanced enable_irq() WARN
+>
+> It seems depth only needs preserved for managed IRQs + CPU hotplug, so
+> per Thomas's recommendation, we make that explicit.
+>
+> I add kunit tests that cover some of this in a following patch.
+>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Co-developed-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-On 2025-05-30 16:50:40 +0300, Tomi Valkeinen wrote:
-> Call get_frame_desc to find out VC & DT, instead of hardcoding the VC
-> routing and deducing the DT based on the mbus format.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+
+Hi All,
+
+It appears that this commit introduces a critical bug observed on at 
+least some Qualcomm Snapdragon X1E/X1P laptops, rendering the suspend 
+function unusable.
+
+With this change in place, after successful suspend the device either:
+1. Cannot wake up at all. Screen stays black, even though PM has existed 
+suspend (observed by external LEDs controlled by PM)
+
+2. Wakes up eventually after minutes (instead of seconds) with SSD 
+related errors in dmesg. System still exhibits errors eg. UI icons are 
+not properly loaded, WiFi does not (always) connect.
+
+Example of SSD errors:
+```
+
+[   45.997238] PM: suspend exit
+[   76.276320] nvme nvme0: I/O tag 320 (5140) QID 3 timeout, completion 
+polled
+[  104.945562] nvme nvme0: I/O tag 38 (9026) QID 2 timeout, completion 
+polled
+[  104.946170] nvme nvme0: I/O tag 147 (8093) QID 4 timeout, completion 
+polled
+[  106.354320] nvme nvme0: I/O tag 321 (3141) QID 3 timeout, completion 
+polled
+[  136.689693] nvme nvme0: I/O tag 322 (3142) QID 3 timeout, completion 
+polled
+[  141.428102] wlP4p1s0: authenticate with 50:64:2b:5f:e3:ba (local 
+address=8c:3b:4a:a6:fa:f3)
+[  141.428123] wlP4p1s0: send auth to 50:64:2b:5f:e3:ba (try 1/3)
+[  141.433397] wlP4p1s0: authenticated
+[  141.434303] wlP4p1s0: associate with 50:64:2b:5f:e3:ba (try 1/3)
+[  141.438224] wlP4p1s0: RX AssocResp from 50:64:2b:5f:e3:ba 
+(capab=0x1011 status=0 aid=2)
+[  141.451828] wlP4p1s0: associated
+[  149.984776] ath11k_pci 0004:01:00.0: msdu_done bit in attention is 
+not set
+[  160.635229] ath11k_pci 0004:01:00.0: msdu_done bit in attention is 
+not set
+[  165.873389] nvme nvme0: I/O tag 12 (500c) QID 7 timeout, completion 
+polled
+[  165.873478] nvme nvme0: I/O tag 526 (120e) QID 8 timeout, completion 
+polled
+[  166.026369] nvme nvme0: I/O tag 776 (a308) QID 5 timeout, completion 
+polled
+[  166.026406] nvme nvme0: I/O tag 704 (22c0) QID 6 timeout, completion 
+polled
+[  166.769312] nvme nvme0: I/O tag 128 (d080) QID 4 timeout, completion 
+polled
+[  166.858582] systemd-journald[452]: Time jumped backwards, rotating.
+[  196.072359] nvme nvme0: I/O tag 45 (a02d) QID 2 timeout, completion 
+polled
+[  196.072429] nvme nvme0: I/O tag 778 (630a) QID 5 timeout, completion 
+polled
+[  196.072440] nvme nvme0: I/O tag 705 (82c1) QID 6 timeout, completion 
+polled
+[  196.904376] nvme nvme0: I/O tag 346 (215a) QID 3 timeout, completion 
+polled
+[  212.970816] nvme nvme0: I/O tag 129 (e081) QID 4 timeout, completion 
+polled
+
+```
+
+
+This series was merged to linux-next on 20250516 introducing this bug.
+
+Reverting commit 788019eb559fd0b3 ("genirq: Retain disable depth for 
+managed interrupts across CPU hotplug") on either `next-20250516` or 
+anything newer eg. `next-20250605` fixes the issue.
+
+Tested on Dell XPS 9345 (Snaprdagon X1E-80-100), Asus Zenbook A14 
+(Snapdragon X1-26-100).
+
+
+Is it possible to have this addressed/patched up/reverted before 
+6.16-rc1 goes live and introduces the regression?
+It also appears this series was selected for backporting to 6.6, 6.12, 
+6.14, 6.15:  perhaps this should be postponed/aborted until better 
+solution is found?
+
+
+Thanks in advance,
+
+Alex
+
 > ---
->  drivers/media/platform/renesas/rcar-isp/csisp.c | 108 +++++++++++++++++-------
->  1 file changed, 77 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-isp/csisp.c b/drivers/media/platform/renesas/rcar-isp/csisp.c
-> index a04cbf96b809..887d8eb21a3a 100644
-> --- a/drivers/media/platform/renesas/rcar-isp/csisp.c
-> +++ b/drivers/media/platform/renesas/rcar-isp/csisp.c
-> @@ -225,24 +225,86 @@ static void risp_power_off(struct rcar_isp *isp)
->  	pm_runtime_put(isp->dev);
->  }
->  
-> -static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
-> +static int risp_configure_routing(struct rcar_isp *isp,
-> +				  struct v4l2_subdev_state *state)
->  {
-> -	const struct v4l2_mbus_framefmt *fmt;
-> -	const struct rcar_isp_format *format;
-> -	unsigned int vc;
-> -	u32 sel_csi = 0;
-> +	struct v4l2_mbus_frame_desc source_fd;
-> +	struct v4l2_subdev_route *route;
->  	int ret;
->  
-> -	fmt = v4l2_subdev_state_get_format(state, RCAR_ISP_SINK, 0);
-> -	if (!fmt)
-> -		return -EINVAL;
-> +	ret = v4l2_subdev_call(isp->remote, pad, get_frame_desc,
-> +			       isp->remote_pad, &source_fd);
-> +	if (ret)
-> +		return ret;
->  
-> -	format = risp_code_to_fmt(fmt->code);
-> -	if (!format) {
-> -		dev_err(isp->dev, "Unsupported bus format\n");
-> -		return -EINVAL;
-> +	/* Clear the channel registers */
-> +	for (unsigned int ch = 0; ch < 12; ++ch) {
-> +		risp_write_cs(isp, ISPCS_FILTER_ID_CH_REG(ch), 0);
-> +		risp_write_cs(isp, ISPCS_DT_CODE03_CH_REG(ch), 0);
->  	}
->  
-> +	/* Clear the proc mode registers */
-> +	for (unsigned int dt = 0; dt < 64; ++dt)
-> +		risp_write_cs(isp, ISPPROCMODE_DT_REG(dt), 0);
-
-I agree with Laurent's comments, do we really need to clear these 
-registers?
-
+> Thomas provided a better suggestion than my v1, without fully-formed
+> patch metadata. I've incorporated that as "Co-developed-by". Feel free to
+> suggest something different.
+>
+> Changes in v2:
+>   * Adapt Thomas Gleixner's alternative solution, to focus only on CPU
+>     hotplug cases
+>
+>   kernel/irq/chip.c       | 22 +++++++++++++++++++++-
+>   kernel/irq/cpuhotplug.c |  2 +-
+>   kernel/irq/internals.h  |  1 +
+>   3 files changed, 23 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+> index 36cf1b09cc84..ab2bf0de3422 100644
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -223,6 +223,19 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
+>   		return IRQ_STARTUP_ABORT;
+>   	return IRQ_STARTUP_MANAGED;
+>   }
 > +
-> +	for_each_active_route(&state->routing, route) {
-> +		struct v4l2_mbus_frame_desc_entry *source_entry = NULL;
-> +		const struct rcar_isp_format *format;
-> +		const struct v4l2_mbus_framefmt *fmt;
-> +		unsigned int i;
-> +		u8 vc, dt, ch;
-> +		u32 v;
-> +
-> +		for (i = 0; i < source_fd.num_entries; i++) {
-> +			if (source_fd.entry[i].stream == route->sink_stream) {
-> +				source_entry = &source_fd.entry[i];
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (!source_entry) {
-> +			dev_err(isp->dev,
-> +				"Failed to find stream from source frame desc\n");
-> +			return -EPIPE;
-> +		}
-> +
-> +		vc = source_entry->bus.csi2.vc;
-> +		dt = source_entry->bus.csi2.dt;
-> +		/* Channels 4 - 11 go to VIN */
-> +		ch = route->source_pad - 1 + 4;
-> +
-> +		fmt = v4l2_subdev_state_get_format(state, route->sink_pad,
-> +						   route->sink_stream);
-> +		if (!fmt)
-> +			return -EINVAL;
-> +
-> +		format = risp_code_to_fmt(fmt->code);
-> +		if (!format) {
-> +			dev_err(isp->dev, "Unsupported bus format\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* VC Filtering */
-> +		risp_write_cs(isp, ISPCS_FILTER_ID_CH_REG(ch), BIT(vc));
-> +
-> +		/* DT Filtering */
-> +		risp_write_cs(isp, ISPCS_DT_CODE03_CH_REG(ch),
-> +			      ISPCS_DT_CODE03_EN0 | ISPCS_DT_CODE03_DT0(dt));
-> +
-> +		/* Proc mode */
-> +		v = risp_read_cs(isp, ISPPROCMODE_DT_REG(dt));
-> +		v |= ISPPROCMODE_DT_PROC_MODE_VCn(vc, format->procmode);
-> +		risp_write_cs(isp, ISPPROCMODE_DT_REG(dt), v);
-
-Also as Laurent suggested I thin it would be nicer to build these 
-registers up in a local variable and do the writes once outside the 
-loop. That way the clearing of the register will take care of itself ;-)
-
-> +	}
-> +
-> +	return 0;
+> +void irq_startup_managed(struct irq_desc *desc)
+> +{
+> +	/*
+> +	 * Only start it up when the disable depth is 1, so that a disable,
+> +	 * hotunplug, hotplug sequence does not end up enabling it during
+> +	 * hotplug unconditionally.
+> +	 */
+> +	desc->depth--;
+> +	if (!desc->depth)
+> +		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
 > +}
 > +
-> +static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
-> +{
-> +	u32 sel_csi = 0;
-> +	int ret;
+>   #else
+>   static __always_inline int
+>   __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
+> @@ -290,6 +303,7 @@ int irq_startup(struct irq_desc *desc, bool resend, bool force)
+>   			ret = __irq_startup(desc);
+>   			break;
+>   		case IRQ_STARTUP_ABORT:
+> +			desc->depth = 1;
+>   			irqd_set_managed_shutdown(d);
+>   			return 0;
+>   		}
+> @@ -322,7 +336,13 @@ void irq_shutdown(struct irq_desc *desc)
+>   {
+>   	if (irqd_is_started(&desc->irq_data)) {
+>   		clear_irq_resend(desc);
+> -		desc->depth = 1;
+> +		/*
+> +		 * Increment disable depth, so that a managed shutdown on
+> +		 * CPU hotunplug preserves the actual disabled state when the
+> +		 * CPU comes back online. See irq_startup_managed().
+> +		 */
+> +		desc->depth++;
 > +
->  	ret = risp_power_on(isp);
->  	if (ret) {
->  		dev_err(isp->dev, "Failed to power on ISP\n");
-> @@ -256,25 +318,9 @@ static int risp_start(struct rcar_isp *isp, struct v4l2_subdev_state *state)
->  	risp_write_cs(isp, ISPINPUTSEL0_REG,
->  		      risp_read_cs(isp, ISPINPUTSEL0_REG) | sel_csi);
->  
-> -	/* Configure Channel Selector. */
-> -	for (vc = 0; vc < 4; vc++) {
-> -		u8 ch = vc + 4;
-> -		u8 dt = format->datatype;
-> -
-> -		risp_write_cs(isp, ISPCS_FILTER_ID_CH_REG(ch), BIT(vc));
-> -		risp_write_cs(isp, ISPCS_DT_CODE03_CH_REG(ch),
-> -			      ISPCS_DT_CODE03_EN3 | ISPCS_DT_CODE03_DT3(dt) |
-> -			      ISPCS_DT_CODE03_EN2 | ISPCS_DT_CODE03_DT2(dt) |
-> -			      ISPCS_DT_CODE03_EN1 | ISPCS_DT_CODE03_DT1(dt) |
-> -			      ISPCS_DT_CODE03_EN0 | ISPCS_DT_CODE03_DT0(dt));
-> -	}
-> -
-> -	/* Setup processing method. */
-> -	risp_write_cs(isp, ISPPROCMODE_DT_REG(format->datatype),
-> -		      ISPPROCMODE_DT_PROC_MODE_VCn(3, format->procmode) |
-> -		      ISPPROCMODE_DT_PROC_MODE_VCn(2, format->procmode) |
-> -		      ISPPROCMODE_DT_PROC_MODE_VCn(1, format->procmode) |
-> -		      ISPPROCMODE_DT_PROC_MODE_VCn(0, format->procmode));
-> +	ret = risp_configure_routing(isp, state);
-> +	if (ret)
-> +		return ret;
->  
->  	/* Start ISP. */
->  	risp_write_cs(isp, ISPSTART_REG, ISPSTART_START);
-> 
-> -- 
-> 2.43.0
-> 
-
--- 
-Kind Regards,
-Niklas Söderlund
+>   		if (desc->irq_data.chip->irq_shutdown) {
+>   			desc->irq_data.chip->irq_shutdown(&desc->irq_data);
+>   			irq_state_set_disabled(desc);
+> diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+> index 15a7654eff68..3ed5b1592735 100644
+> --- a/kernel/irq/cpuhotplug.c
+> +++ b/kernel/irq/cpuhotplug.c
+> @@ -219,7 +219,7 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+>   		return;
+>   
+>   	if (irqd_is_managed_and_shutdown(data))
+> -		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
+> +		irq_startup_managed(desc);
+>   
+>   	/*
+>   	 * If the interrupt can only be directed to a single target
+> diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+> index b0290849c395..7111747ecb86 100644
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -87,6 +87,7 @@ extern void __enable_irq(struct irq_desc *desc);
+>   extern int irq_activate(struct irq_desc *desc);
+>   extern int irq_activate_and_startup(struct irq_desc *desc, bool resend);
+>   extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
+> +extern void irq_startup_managed(struct irq_desc *desc);
+>   
+>   extern void irq_shutdown(struct irq_desc *desc);
+>   extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
