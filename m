@@ -1,81 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D2420102B
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 19:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977032CA6;
+	Fri,  6 Jun 2025 19:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749236968; cv=none; b=s+aVF7hKYmsGL89znuI2UYGrhVi0+OEJOjZggVN6BFGaCj/6vvEK5VrIvBMt43w7H/h8bb+3JZQUlAvpV6l6WO9NEAUL8tHHVhMsCImc+EFFGKzvzLljVI2tTaF2kze+LcsttponHkhQFKOU/WKZLXWUFe8Y8hUTwvVPkZyqIJ8=
+	t=1749237267; cv=none; b=XG08arosnCZLMNgVCitB627Fk33T0zbfV8qiOHXauWJiWcTuIoyl9mlANFILtlLZT8sYpPd4AM2HuLIpq4nsTp/yA/qR3bR1YwJqihnNvpKli0SVTdEQycCiGCeDxkKp+rdd4wMM00P/wnEwuj7TIHDccC+UDCIYizLSRBTl7d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749236968; c=relaxed/simple;
-	bh=n4pOE8cxjxEv0kasPv8Gkb1netiO/BrEltOsAJdw4s4=;
+	s=arc-20240116; t=1749237267; c=relaxed/simple;
+	bh=VykvfO7Iq4NIgpGD2e+wxvJ1l+F79KW09ICX22DAs5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gJcs5tFzJMvi6sQpPLFnXUF1665Bc2vDw321w+9pCCE8laDBHlCQmk2RwTwAqTgFN/sGiNy5+EwWlzapTw5YBRbEvUF094sAG7yqc4rXS26zAmQv641aNVjffOzc6D4OgkViTHDT/EvAcX48/RpX4b6ZqrdH3cDGbqyFUz3nwK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sx/kjeGd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pgLxb5xsw5fBVpGg1CZB/lM7Wd8Dls3mxmbQlIyO4MmpogDcu2Y7pTWesbxC3mu6OJu4BF/GY920pkWX2ltt5qZWvNIt2EsknihY8mnrH4YRAhee6bVlHv8idgAeJrq6UIbWdusoR48W1R/GE+VBGVBdz+SplCmu1QdxjWBHjUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vgk/KkY4; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sx/kjeGd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A993C4CEEB;
-	Fri,  6 Jun 2025 19:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749236967;
-	bh=n4pOE8cxjxEv0kasPv8Gkb1netiO/BrEltOsAJdw4s4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sx/kjeGdBoJddkBKaikytLtGj3/jB8fme3+9nkh1tnAoVQFEl3N/nAxyg9G7HAske
-	 nodQ2kk2M1fUe3WEM3VxVvZYuY7yCVjKBQcLpJHZyKR+NZdjGGoWXmz5gq1tfMP1RL
-	 Te64sewbCgjR+1Z9CgoBQGWvZYqPZEnCnunUX+GbVE9n6LhMrzZCfKgbNkWxpXM6Qz
-	 V+WJO9mbwvK1JBu/pupeKdCfcp7D7WSH043fijW050p8etGVEKOURCyDqgBO6Xecs9
-	 liIlJheXAtPh0Njo7kRw9/J7WA/NCIg/qO2bQRgRyIAGEnIkBVNxtxlMnuKUtZ4+e+
-	 q8M5U186T+m/A==
-Date: Fri, 6 Jun 2025 20:09:23 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org, wens@kernel.org,
-	quentin.schulz@cherry.de
-Subject: Re: [PATCH] regulator: fan53555: add enable_time support and
- soft-start times
-Message-ID: <03971cd0-c820-41e3-b344-771a5d50a607@sirena.org.uk>
-References: <20250606190418.478633-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vgk/KkY4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749237266; x=1780773266;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VykvfO7Iq4NIgpGD2e+wxvJ1l+F79KW09ICX22DAs5o=;
+  b=Vgk/KkY4MxCkwXYm6456Iv9lMsLkL5F6Hq+msgLwQjB8POTgqAU7Ls+6
+   W71O30mSiCFoarv/qftpDnr+viyupBr4wh1dScFdVmH8PUWuCJV9KuDQ1
+   bjvaiEqgKrQ8lwRcQC/mJzA2TeokDvpYh+1ezcdtTHn5jeQ9yMp3HqbzO
+   lDxOY0NdWZbNbw8nJ4YBlmO/btTNcLoYzi/4UgQ/eJKggs7z39sOeN8O1
+   KaeWv8HdBje4fEA02GpZUZMOIU6sQzS9KA/Xi9UqAiP24uDUzh2ABX7kO
+   rcuWFcdpBi4dlUPD6eoW6Oe0gSH5ugwSzQAS8jhaoluzHoS2HxyuI4xn/
+   A==;
+X-CSE-ConnectionGUID: nvsErlo2RkC/0WuQbbf1pA==
+X-CSE-MsgGUID: mW3j7TJVTa+v0KgRyYnJrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="55057537"
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="55057537"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 12:14:25 -0700
+X-CSE-ConnectionGUID: N81RlHGxROePa8Cre7ag4Q==
+X-CSE-MsgGUID: DRemVxsKTOuXBnHKjizcZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="150919253"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 12:14:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uNcWB-00000004IAB-1gwM;
+	Fri, 06 Jun 2025 22:14:19 +0300
+Date: Fri, 6 Jun 2025 22:14:19 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v9 0/7] iio: adc: add ad7606 calibration support
+Message-ID: <aEM-C0HHPcYTTpBd@smile.fi.intel.com>
+References: <20250606-wip-bl-ad7606-calibration-v9-0-6e014a1f92a2@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dhoJWq1kIEykHogS"
-Content-Disposition: inline
-In-Reply-To: <20250606190418.478633-1-heiko@sntech.de>
-X-Cookie: Stay away from flying saucers today.
-
-
---dhoJWq1kIEykHogS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250606-wip-bl-ad7606-calibration-v9-0-6e014a1f92a2@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Jun 06, 2025 at 09:04:18PM +0200, Heiko Stuebner wrote:
+On Fri, Jun 06, 2025 at 04:19:15PM +0200, Angelo Dureghello wrote:
+> Add gain, offset and phase (as a delay) calibration support, for
+> ad7606b, ad7606c16 and ad7606c18.
+> 
+> Calibration is available for devices with software mode capability. 
+> 
+> Offset and phase calibration is configurable by sysfs attributes, while
+> gain calibration value in ohms must match the external RFilter value,
+> when an external RFilter is available, so implemented through a specific
+> devicetree "adi,rfilter-ohms" property.
 
-> I've started with just setting regulator-enable-ramp-delay in devicetree,
-> but Chen-Yu suggested [0] that these are characteristics of the regulator
-> so possibly should be defined in the driver instead.
-> And after thinking about it more, I agree.
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Yes, that's more what's expected - configuring in the DT is more for
-cases where there's either configurability or board specific variation,
-or for fixed voltage regulators where we don't have a compatible.
+-- 
+With Best Regards,
+Andy Shevchenko
 
---dhoJWq1kIEykHogS
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhDPOMACgkQJNaLcl1U
-h9D6KQf+M89NSa7tuZTj2qS9G88iCpqVhnWIqMVi48KLPe0/8eIPnrSecVDN9bpe
-/HKNDcl0/QMnwcs4Hy4fUJXU37hXFytELlH9v4cuypCtotS9bJxHBdarJXzUsAOv
-aTTUJPizawUZRqSh2PnfqeBn37l2Cq8ShT2v/n/mrxTWaSaG605v6gES+d2m3t/P
-DezQc+gkbu6dee6yJebZR6Bd99Kd0gbEnT2pP653nxripVJWR1ZtBzY8TUZ/c9xT
-GKt4Jnx4AYb/+A97aZkGiYBxnTra9QvA5uXZX5/fNGG7EpIUGrSBr59rpWb+i+hY
-GC8dWOeYSMrJGD7wfh4O+227RZwY8w==
-=SmA9
------END PGP SIGNATURE-----
-
---dhoJWq1kIEykHogS--
