@@ -1,113 +1,127 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBB0BA38
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 19:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74166BA38;
+	Fri,  6 Jun 2025 19:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749238635; cv=none; b=eIKN9YgMQRMRoqpp8HGiTTUbm/WCQ2Mp8mOxTuQQ10BcmbeM5mEiu7L/Lh4jBef4Z7TC9hzJTg7/tcMmVhCStczQontDaFk02T3hSjabftu0FPZauSnuMLBN8zM00iEJAPszdKqMJieUSRRsIvKTRYFrjBsWA9u4h7gdz8Zx6Bw=
+	t=1749238681; cv=none; b=DHZIxItXsGnbRrAPPDLm2n82McLLhHXnCNbUGt6tWgHUuhj+3grdzhycJWsZJUeoThhzncJ59R9WUCPvmZiGtZUz4kKj+tI8q6+hzmekk1gNIvdPnFzgwBt32m3SIVrFRRvsHDqQipMLjieUK/S6SBp8wlXZ+rXPltimT1LYJ9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749238635; c=relaxed/simple;
-	bh=DP7B/KnXqE/5Fx+2b6vnlriV7vATtl0GEcFlV7hZQBQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ETlAzJYeLSENzO8g899dsCxAVkhetkeftI0wFNQ+cGzDBKPtIzuwNrzOTMRtLVY3gjht7CHa2Wr+hvMiHUZwDcsb0sGXM3Zf/NMwnLV1VlCBBETpKamQ/h7L9WfquTvr+OBjBfhoxr+xT+ERhhr264bEw32ANBTASHz9KSEYz0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Zvlv95Tt; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1749238681; c=relaxed/simple;
+	bh=ir1jj3w7RASgWM822FlUDrELte1gttYXfu3fuSt+TRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OGFf83z99bA2txmwirVr2xJgZqXWZrKPJKd0niiVE6A++skaQLfatIIIaN0gpAWV7qLeZnXLW8Tu0TnJPWGpEK5WJqTyc2aj5oy9AVLnCtxcKOo4tPPfxZZmzHoYGeeZB8rikFi0Y6Z8TDKTvb3rKG9ItgCTc4WWlfYt3o/DaJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1PmQOYr; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Zvlv95Tt"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso3889273a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 12:37:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1PmQOYr"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d094f67777so32226585a.1;
+        Fri, 06 Jun 2025 12:37:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1749238630; x=1749843430; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jgatZKIZeCG/8Okk2kimmj0LPUfz/8b8SqKivoXRX6U=;
-        b=Zvlv95Tt01eVuI9fm/KD/aoUSTBAEFxRKoXJqhj6TsPWkOxlq3xPFG6PEkCUORqyVF
-         Qov1aKbqDPKX8K7ZDZIWkUxVO4T9IkZ+5NxZFBF/IybqfF5BMjKRS+pwhpmoPcijiwvD
-         hAqKDZYfsnCsp5/L0zDt96FYMmGkv7PTQ45y4=
+        d=gmail.com; s=20230601; t=1749238678; x=1749843478; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BjtqGF5ZOGFFta8PvepE2weuvIOQh6h102Lg69MuG00=;
+        b=M1PmQOYrOZqs/ZXc+EftvF9Li7hm5QzK+rGJU6HXl1Rsq7eMlR/mGs2UCQupvczXr3
+         34jZiqah5TL3qDbEwU0axGvaYUwWb7exUaLrx3wBkideKiQrrEUJ58Jt9mgi0wSzvlVD
+         lfLEJJ92pQoKRupQ7oQXaDNhib3/jkcyz3FkSgvw38KhYXqbOF0adjGV1aknKGo/ZNg1
+         wckMN5MCAGgGVGEIn8FFDa2Uq5yI5DcVkoMQjzoYFpsPXABbqqRgyLbTaeeY1sk7lkvX
+         B2oTosRutbj7vg49OxB5nbJ4t0tvPFG2l3v4aNYybC9t97kn8ZjD8FOsi1aYQqb+gCbb
+         9cgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749238630; x=1749843430;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jgatZKIZeCG/8Okk2kimmj0LPUfz/8b8SqKivoXRX6U=;
-        b=YQfkq/3X7mxllzvevaNwbBf3iOz+mb2RV01/1oXENnf3R0pG5bnJJ2DQUJmQ3kAP+V
-         M3k73phG7GJ4COXWeuPhzRrujiqhgO4ckIOA8dehOJRrGLNmwXbd9zy5Re/VNDisrOQb
-         04Rwfz89O1cqOf3gXYiF1hWjEs1cjHzUEnVtWN97G1QKhScQoMHsD0dB8EHQUdi9aJrx
-         x/R8wPVnSAtE9/dhUPr72xAknfkQNA6zRCiFu48nITqlZu1ks/vQvobK+mWIzjMuP/eL
-         ReqqdcluLtN1EF9i6a/EN5LZYdggrIe3gcQlIr7QvwkkDhdUWFC16CPOx7yq0M5r+u+f
-         13UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOs7SewDj04mdkno2N+ucXUK7rE2AXZTIrEwHIVjQP3n4Yq4605hSE6RsOjDdlho78jK6kwQ7sCOLXmwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBIivnn8MDBJqxV2fmh17twOBUs8WGJUGOF1xRsu2rd7aZHIDk
-	j8JEJQ8CoVbgXsi0H9pkzebweOfdIJ17IBvxBYJ3oUyETQDAMzJ2MJ52Mo2uI60i7m03n9V3omJ
-	jpcpb5tQ=
-X-Gm-Gg: ASbGncua0YAtWP7hAyYfo/HNOQT4fhIDdDAYgZ5EIH4ZVxVEPGhK57njgIVQ/zQBBvF
-	krTtvtRaa0dkZ96TZ+E1QD1xd0/u9ATyW8Iu8dptuTOzdY8FFmEMkGtcjx8rIV65I0MOnRDIRdf
-	ZA1fPpXJdn+SGmxC3XfGD7luTybl2kqC5EjpVhastO5cPDIA9TrPZC0GULj7ygQyCAHuvxskIF8
-	TkRxBQLJcPF89L/KhfFLzgr0WyrGKhKfrQdT5d5xe4ZFY2zCNZ8Euv9N00Nf4ufUAp6yba1jBhC
-	ltSKi0XGqpXNjemdsWR/XZzwGeGYLmJL1PhRY5lVbjNd5mpN/suu9AGle57ninjaK/Oy3qM+TSp
-	9QXMXD/65+pUNhjdaX2zgsMVUhw==
-X-Google-Smtp-Source: AGHT+IFsj0I9US6PlHCFFoGhK10J9JSnznLo++vnXEODr+HFx5nGyEuXgfhnXhNKJRXGxSO+NgSoXw==
-X-Received: by 2002:a05:6402:4307:b0:604:e602:779a with SMTP id 4fb4d7f45d1cf-6077498deb5mr4751912a12.28.1749238630522;
-        Fri, 06 Jun 2025 12:37:10 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60778377a51sm1432265a12.23.2025.06.06.12.37.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 12:37:09 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-607434e1821so2117735a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 12:37:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUsGjPaFODJVQMbJBh0ORQLtmwqEwxG7mSNJTWSH93heqkJSmZ6EXI7uHayXrNu72X9sBQK/+sAArqT1ng=@vger.kernel.org
-X-Received: by 2002:a05:6402:1ed5:b0:604:e82b:e255 with SMTP id
- 4fb4d7f45d1cf-6077285cb5fmr3963530a12.0.1749238629421; Fri, 06 Jun 2025
- 12:37:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749238678; x=1749843478;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BjtqGF5ZOGFFta8PvepE2weuvIOQh6h102Lg69MuG00=;
+        b=IsnYuj3h4/DjyoBENzkKmDxNAsjWX7pBfe+Z8ZLp/okwky3A+0wIqm368P49d8q0EF
+         8SK83KIgwDTy+foaXdxWvuro7dYuABzo3rrUmasOOKWnPOfmrlKQcuoBpKRCKlmMTAOa
+         dCPNuwxuQW+/6RZwZKm5KwvwX4CT6w/7J93dsotMwkbBEjPn6NNbN7mB412RpbVRl2iC
+         iDbxXahPhFa81RoYG32jtZY1gkN2wXizmf8zD1k45+Rg8CXwCI16bKFA6xG1ytezP39r
+         4yZRzivQyDMFDBntLtKjYTA0EGWdiuhR6bk7tgraHMh0LmpL1SWapw/6WPmNfD2mwfwm
+         lXxA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9iBNMCcQQkZU0jaJdI7nktnWvLTljdGEm001wa2KA5FmIbciD9e6e6lQ5HLYLCdLIeW5tgMdPbuTn@vger.kernel.org, AJvYcCUdeiRxVfKIwXBnl5U9DmrKFiF3hi4+bH9hQaC0w88M81F3ZyhS/cx6cjBYbobXo2TwVWJPdNmqWIlJC4A9@vger.kernel.org, AJvYcCVdR6VbRL1H04UwCG/6OTwqx5Uo+uTmC2FS6ZNFCUqMfgVxQIGXgUk11MXDOC0nzSadWMmKnRvGzZQFuA==@vger.kernel.org, AJvYcCVxVTm0dubaRJvjN9w6HlVhT0b5+qiaL5PBvZJipEb+Tzs6UUJw/bFiVXRCf7iBazg1D8YcA6SjlSr0@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT8lGe9PGSuET0EcvZbjv6UFFRGvbX3kf6a5V4q8q2J32acoTd
+	waW7C91kaQE3boY8BvOLD1RxlyZSYLR4HKoPj4yheTULDiqAnWMvM94v
+X-Gm-Gg: ASbGncudofg+20vpson3niUDhcMu3OFfhTqVl1Qbgl7H2xU54B/pmAfGR++5wOqDCXw
+	H8K/klmJW0c3BsgYgOkrR+uCe6vWMOjxZENe5/IazM6w8tZA83Cd0Z6JP9YmRzgESQStouZ4m1A
+	qFYWe7xLZ3o4mTnYUbXI5wHk7K2M4S0WNsn5XQDjzhqnpsXT2UHxwxk0z16VpCSenKgF7dPXJbE
+	2CIs6mkjC1kSbXWtB9uY8Mw4FZmur/9r+6JC3VRIR6VJFKQ0JE2bE2BJMAmADM3Zwy1BATdXJhH
+	QiW6KVFhS9TUt+kzhlhOgcyD9ibcuvVdX9QXZKAU32VjAGEu+X3QTkvt0VNnius2uRZuDKXnuwA
+	DNmhkwzQ=
+X-Google-Smtp-Source: AGHT+IEr9PlpC7XQYPZn1E4QW5BFOw1Jgh0MjQScfApeePZX6yvxVkPL5XAuiClICqHeds9T6gToDg==
+X-Received: by 2002:a05:620a:40c6:b0:7c5:75ad:5c3a with SMTP id af79cd13be357-7d22996b0b4mr272770585a.8.1749238678242;
+        Fri, 06 Jun 2025 12:37:58 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([191.255.131.70])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25a61b03fsm175643485a.92.2025.06.06.12.37.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 12:37:57 -0700 (PDT)
+Date: Fri, 6 Jun 2025 16:37:52 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, nuno.sa@analog.com,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, dlechner@baylibre.com,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v10 07/12] iio: adc: ad7768-1: Add GPIO controller support
+Message-ID: <aENDkMN597fGsTL0@JSANTO12-L01.ad.analog.com>
+Reply-To: ddb448f0-1cfc-497b-ac1f-9f3d9e9fcc3a@baylibre.com
+References: <cover.1749063024.git.Jonathan.Santos@analog.com>
+ <eb48ea5f11503729b15a36ef00c89de3dd37bcc3.1749063024.git.Jonathan.Santos@analog.com>
+ <aEEzZjfLVUW1kyC9@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aEKpKk71YuLPPMZC@kroah.com>
-In-Reply-To: <aEKpKk71YuLPPMZC@kroah.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 6 Jun 2025 12:36:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh3sbe9ZU_-q4Et=OWtedfFoB2tsZy_+ssMRZnsjApYhw@mail.gmail.com>
-X-Gm-Features: AX0GCFtGZ3fLGhUMu4DFWfeNgP1rwthkpBUB0ueA9yTfoNZEIvW9N3jor1L4vq4
-Message-ID: <CAHk-=wh3sbe9ZU_-q4Et=OWtedfFoB2tsZy_+ssMRZnsjApYhw@mail.gmail.com>
-Subject: Re: [GIT PULL] TTY / Serial driver changes for 6.16-rc1
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.cz>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEEzZjfLVUW1kyC9@smile.fi.intel.com>
 
-On Fri, 6 Jun 2025 at 01:39, Greg KH <gregkh@linuxfoundation.org> wrote:
+On 06/05, Andy Shevchenko wrote:
+> On Wed, Jun 04, 2025 at 04:36:43PM -0300, Jonathan Santos wrote:
+> > From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> > 
+> > The AD7768-1 has the ability to control other local hardware (such as gain
+> > stages),to power down other blocks in the signal chain, or read local
+> > status signals over the SPI interface.
+> > 
+> > Add direct mode conditional locks in the gpio callbacks to prevent register
+> 
+> GPIO
+> 
+> > access when the device is in buffered mode.
+> > 
+> > This change exports the AD7768-1's four gpios and makes them accessible
+> 
+> GPIOs
+> 
+> > at an upper layer.
+> 
+> ...
+> 
+> I haven't seen in the commit message nor in the comments why GPIO regmap can't
+> be used. (No need to resend, just reply here, but keep in mind in case of a new
+> version of the series.)
 >
-> Here is the big set of tty and serial driver changes for 6.16-rc1.
-> A little more churn than normal in this portion of the kernel for this
-> development cycle, Jiri and Nicholas were busy with cleanups and reviews
-> and fixes for the vt unicode handling logic which composed most of the
-> overall work in here.
 
-That series of "revert one series to re-apply the other" looks
-absolutely disgusting.
+We did discussed this, see [1] and [2]. It would need a few tweaks on
+the gpio regmap driver, but I will keep that in mind, thanks.
 
-I was close to deciding to not pull this at all, because some of it is
-just inexcusably stupid. Lookie here:
+[1]: https://lore.kernel.org/linux-iio/7c5e2364-038b-48a8-ad67-3cf0f2fd2be3@baylibre.com/
+[2]: https://lore.kernel.org/linux-iio/ddb448f0-1cfc-497b-ac1f-9f3d9e9fcc3a@baylibre.com/
 
-  git diff d066989a3d41..d066989a3d41^^
-  git log -2 --oneline d066989a3d41
-
-and just stare in wonder at the pure unadulterated garbage.
-
-Yes, the second series then improves on the first one the rest of the
-way, but this should have been done better. And I don't mean just that
-one truly pointless revert and reapply, but just "people should have
-communicated that the patch series wasn't done"
-
-I've pulled this, but I want to protest this kind of development
-practice. The complete mindlessness of that "revert only to reapply"
-really almost made me throw this out.
-
-               Linus
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
