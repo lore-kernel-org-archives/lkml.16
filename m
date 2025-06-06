@@ -1,199 +1,129 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF401F1927
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 22:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE2E218ACC;
+	Fri,  6 Jun 2025 22:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749248683; cv=none; b=UMWZLyLOR+engv5t9ACZT1TFn6jswsMKKOEP6SPOyXeVYMXOVhaBQAdOxC6OjBGu5QAY3KKroxZFp8UBjhlwuKbdLmzWWyyvwhJ9BaJYqljjmLOflF1qjRpx7yLo8NWBsagyVsHgb0oUFlTCLqVS7nH4WL3b2WvEB8vY9aavHVg=
+	t=1749249491; cv=none; b=pL/kIXIUYqw19s+Fsn8NP0gd5FSTQ515dA9XmW+45sFZqorkB0ZqNFc8W8Jn6FaMaqTkOqe23XZEH8Cef6iuitcp4BhZ7Vxfd8hAzQmyLnLFf6/6Oc/sqhea//lrz7a00g/38MHDg0Z4tACcqAgKkPBw5lpRS7ghfw0cMm4Q1dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749248683; c=relaxed/simple;
-	bh=l/GaUTCtB9M9NLyUMV1ziE5vtpFqMU3SOb/ryyWlAwU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Dom0UYH97BjvC/2oumWtCM6yqlqGdzF3I7A2zNIgC9exoT/v+I0+6HMyLg54dK/WfFpLIwFGggAoLJeidHW5W9rWtY4GdQ+QMt39nbTvlGfwbqjo4vE25dN43xlCydY86RLGKSswuIhU8P0GHM2ULoSMRxOgvf7O9ACgt7bJoBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=c+IN61WG; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749249491; c=relaxed/simple;
+	bh=MiAlGzDCGdtNRx+aS6Sqk/MyysYaqJ7V1HeWmUHq96E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dQmTlq1+ADf/YQQmLkkTEd/fhdpbA1T8Wnlp42Lm+4pjuKnSlnQnf8GIW7cLSMczM2MmGoI3gUltLFI/p1DPPWWBMUNNsmKGuWKQgvL9F4pcmDlu9hzW7RCOFQJ7DWR2pJ9Cd8mfyJaxQ4Rdts3KubdtFkY33uiJjdLH3tG/VQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P6oRJOVq; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="c+IN61WG"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-235d6de331fso31693345ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 15:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749248680; x=1749853480; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0pYG25uNc2n9fOHMKUGQ8EBdQt5+P5oxxO35w9SxQS0=;
-        b=c+IN61WGnVRfaeh/PvgYBYwR7I+V0v0JAfS+nhevDlqpLL2U/oMmtMkL4PGH8bwIVq
-         yLe0vGCygIO6xk6YFE3gkW+1bKqLpG8rQvcBXg0YqCfov+tWLLEKFxQnaV0otbKp3A+n
-         b7TlcA5F1dNLYwvAKy+8IGFOmk9pu/18tTkelW+4ai2QlX2KvLUueI5ke0QdWUqCHsNS
-         E38nmY1EFAI4HIyT2gojJaAJXkzY5tEgbz3ATstBN21Xs9Q8g7N2vBLTpubfQeza+u2k
-         Rkg78a2UnwjPkPnT12dg39IBU0KJYZ4aV9ygITdz99zv23ZMo427nzQesEldd9v+UCCb
-         UPHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749248680; x=1749853480;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0pYG25uNc2n9fOHMKUGQ8EBdQt5+P5oxxO35w9SxQS0=;
-        b=irYtVYwbKUhuS4vp3SwsxDPvQxrrglorlTZ8fewglikm4Hhz3bpCV+CaGssR0XAozX
-         c0yr39jxCWzCnYCMc0EJn2uEeN+etWg79l1l+bUXFcuaoDM0e7UbvTKGEhjjjlqJN9l1
-         zXjRbjOuueOPsQKUBzrju2LMVDwZfcJsZjK78jq4tKkoxSFwRvi/8QiANSttV3r0YLjb
-         mMsnCAku7SV8cIwPVp26dvisikGSSRE5G9vB6dfNhKsXWZ/Ru0IaOg5cQOzZJqiHG5gk
-         VbRNdIVeC+ilnIz7LoVBhjTBUYP5PfX+rEKc2TEiO+A0blNltw7+G6hA5OFfiJgtPHmD
-         dcfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiUd5UVIFFx0yBnGODpyDnpA70sgtFR/bTIdB7MDApdiB7NGddyL9gT2mhDxCowbZFcGEaBXgVjly50WE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRNK6Q5zANaaT5M+fIMoa99uT72Nl9NFxzjH/nepsyyvnGThrB
-	FjVGKAKyZyo0s8r0M4JXWXasOhVKJDHmBTf2qUrm0qrthU2gQiSjfw201gg06exGhBM=
-X-Gm-Gg: ASbGncs0qhiApRh8O2jeNiauaAE9Xt9YCg0vMEbWatm6SsmhcRGTd869IONuMN/JiTm
-	5yibtC9r+bzX6Z6gqaM4uBmwrJAaBH1UEqAK/+bkWFcaq3W5+OMuJ6u16X9k9cnFVK6kpevl2PY
-	VkJZsibsUDC0+m3KWwMJNpcv+8TEvr0/wXOwrvb1TLWWTzi4jkwNg6BdFwWa47FIe8zDjSu1AYW
-	cBgCNgpXYdtIZxPsSyV/Y/b15599BBUh2vfxKxY7NU6gq66hL07igbDaVdspZf4RPW1gs1CuKCX
-	4Z/5GjAVrgmnsRediAWPM83HmuSdjAmPjPuW8KY6/aRAcaalkxa1DYiebTvj
-X-Google-Smtp-Source: AGHT+IGaFH7zJsEzEYshn2+g3clbSYNKEpXNRLHwkKBWDVvppEVYcd31LnIc2/CbFDj/U8yN0FJ7XQ==
-X-Received: by 2002:a17:902:ea0d:b0:235:eb8b:9968 with SMTP id d9443c01a7336-23601d71213mr73856945ad.36.1749248680262;
-        Fri, 06 Jun 2025 15:24:40 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603405205sm17150335ad.160.2025.06.06.15.24.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 15:24:39 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "Rafael J.
- Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- arm-scmi@vger.kernel.org
-Subject: Re: [PATCH RFC v2 2/2] pmdomain: core: use DT map to support hierarchy
-In-Reply-To: <20250530135741.GA1598718-robh@kernel.org>
-References: <20250528-pmdomain-hierarchy-onecell-v2-0-7885ae45e59c@baylibre.com>
- <20250528-pmdomain-hierarchy-onecell-v2-2-7885ae45e59c@baylibre.com>
- <20250530135741.GA1598718-robh@kernel.org>
-Date: Fri, 06 Jun 2025 15:24:38 -0700
-Message-ID: <7hecvwld95.fsf@baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P6oRJOVq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749249489; x=1780785489;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=MiAlGzDCGdtNRx+aS6Sqk/MyysYaqJ7V1HeWmUHq96E=;
+  b=P6oRJOVqYfC+o/7vS5Vf8a3jzEkHfMHhPhkzXiVQvsjhamjXO9NHpJKf
+   VR4Mx5fAvDFbDV6OYS17bqPuncuAGfRSnyJcQn5Gslc/dEkgg6dGnXc2A
+   U1MoIAItZ2SJiOjWc+7G0Jtd2lQ8sgILUz/DtGwKR+hoYo0Hp2SSP/HkU
+   8rrzHFteDI0ZahL38tzHl7iCjxUzZHnL9I+oxewcTlBPE5yg/2XF/7HcT
+   HQZJBLw+gH06M2vbeuzkJZabm5ciSInsdjFc+A+bpT6XjlzBf9k2L+twi
+   6aJCs73ReWBpkCymHqO+RWxaGI28kww2j3ZzVFGp6Y+LOTyhBawhVHXhn
+   Q==;
+X-CSE-ConnectionGUID: 2fMNygCSTKmxpM9uInaleA==
+X-CSE-MsgGUID: Dc9C33M5T3OtLEDL0dAaIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="68967579"
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="68967579"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 15:38:08 -0700
+X-CSE-ConnectionGUID: RLeOCq6SRsS+gqZU3VHp3g==
+X-CSE-MsgGUID: wDcPHGCUTPG5XIj1gU1iow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="149773191"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.33]) ([10.125.111.33])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 15:38:04 -0700
+Message-ID: <c09c31bd-aa4f-4ea0-b35b-3dc4abac871a@intel.com>
+Date: Fri, 6 Jun 2025 15:38:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 11/16] cxl/pci: Update __cxl_handle_cor_ras() to return
+ early if no RAS errors
+To: "Bowman, Terry" <terry.bowman@amd.com>,
+ PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
+ shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-12-terry.bowman@amd.com>
+ <e2d30ea5-1b9a-4e11-9065-3b30582de09a@intel.com>
+ <e633dcd9-2208-4eb0-aeed-61af0206f6d1@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <e633dcd9-2208-4eb0-aeed-61af0206f6d1@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Rob,
 
-Rob Herring <robh@kernel.org> writes:
 
-> On Wed, May 28, 2025 at 02:58:52PM -0700, Kevin Hilman wrote:
->> Currently, PM domains can only support hierarchy for simple
->> providers (e.g. ones with #power-domain-cells = 0).
->> 
->> Add support for oncell providers as well by adding support for a nexus
->> node map, as described in section 2.5.1 of the DT spec.
->> 
->> For example, an SCMI PM domain provider might be a subdomain of
->> multiple parent domains. In this example, the parent domains are
->> MAIN_PD and WKUP_PD:
->> 
->>     scmi_pds: protocol@11 {
->>         reg = <0x11>;
->>         #power-domain-cells = <1>;
->>         power-domain-map = <15 &MAIN_PD>,
->>                            <19 &WKUP_PD>;
->>     };
->> 
->> With the new map, child domain 15 (scmi_pds 15) becomes a
->> subdomain of MAIN_PD, and child domain 19 (scmi_pds 19) becomes a
->> subdomain of WKUP_PD.
->> 
->> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+On 6/6/25 1:55 PM, Bowman, Terry wrote:
+> 
+> 
+> On 6/6/2025 3:30 PM, Dave Jiang wrote:
+>>
+>> On 6/3/25 10:22 AM, Terry Bowman wrote:
+>>> __cxl_handle_cor_ras() is missing logic to leave the function early in the
+>>> case there is no RAS error. Update __cxl_handle_cor_ras() to exit early in
+>>> the case there is no RAS errors detected after applying the mask.
+>> This change is small enough that I would just fold it into the patch that introduces this function.
+>>
+>> DJ
+> I agree. The problem is it was already present before this series. This is a 'fix'. I had this change in:
+> [PATCH v9 09/16] cxl/pci: Log message if RAS registers are unmapped
+> but was asked to move out because it appeared as an unrelated miscellaneous patch.
 
-[...]
+Ok. Then
 
->> +/**
->> + * of_genpd_parse_domains_map() - Parse power-domains-map property for Nexus mapping
->> + * @np: Device node pointer associated with the PM domain provider.
->> + * @data: Pointer to the onecell data associated with the PM domain provider.
->> + *
->> + * Parse the power-domains-map property to establish parent-child relationships
->> + * for PM domains using Nexus node mapping as defined in the device tree
->> + * specification section v2.5.1.
->> + *
->> + * The power-domains-map property format is:
->> + * power-domains-map = <child_specifier target_phandle [target_specifier]>, ...;
->> + *
->> + * Where:
->> + * - child_specifier: The child domain ID that should be mapped
->> + * - target_phandle: Phandle to the parent PM domain provider
->> + * - target_specifier: Optional arguments for the parent provider (if it has #power-domain-cells > 0)
->> + *
->> + * Returns 0 on success, -ENOENT if property doesn't exist, or negative error code.
->> + */
->> +static int of_genpd_parse_domains_map(struct device_node *np,
->> +				      struct genpd_onecell_data *data)
->> +{
->> +	struct of_phandle_args parent_args;
->> +	struct generic_pm_domain *parent_genpd, *child_genpd;
->> +	u32 *map_entries;
->> +	int map_len, child_cells, i, ret;
->> +	u32 child_id;
->> +
->> +	/* Check if power-domains-map property exists */
->> +	map_len = of_property_count_u32_elems(np, "power-domains-map");
->> +	if (map_len <= 0)
->> +		return -ENOENT;
->
-> Don't implement your own map parsing. Use or extend 
-> of_parse_phandle_with_args_map().
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-So I've been wrestling with this for a bit, and I need some guidance.
-TBH, these "nexus node maps" and of_parse_phandle_with_args_map() are
-breaking my brain.
+> 
+> Terry
+>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>>> ---
+>>>  drivers/cxl/core/pci.c | 9 +++++----
+>>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>>> index 0f4c07fd64a5..f5f87c2c3fd5 100644
+>>> --- a/drivers/cxl/core/pci.c
+>>> +++ b/drivers/cxl/core/pci.c
+>>> @@ -677,10 +677,11 @@ static void __cxl_handle_cor_ras(struct device *dev, u64 serial,
+>>>  
+>>>  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+>>>  	status = readl(addr);
+>>> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+>>> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+>>> -		trace_cxl_aer_correctable_error(dev, serial, status);
+>>> -	}
+>>> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
+>>> +		return;
+>>> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+>>> +
+>>> +	trace_cxl_aer_correctable_error(dev, serial, status);
+>>>  }
+>>>  
+>>>  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+> 
 
-So, my node looks like this:
-
-	scmi_pds: protocol@11 {
-		reg = <0x11>;
-		#power-domain-cells = <1>;
-		bootph-all;
-
-		power-domain-map = <15 &MAIN_PD>,
-				   <19 &WKUP_PD>;
-	};
-
-my first attempt was to iterate over the child domains by calling:
-
-  of_parse_phandle_with_args_map(np, "power-domains", "power-domain", i,  &mapped_args);  
-
-but this doesn't find any entries because my node doesn't have the
-"base" property.  So I gathered (perhaps mistakenly) that I was missing
-something, so I added:
-
-		power-domains = <&MAIN_PD>, <&WKUP_PD>;
-
-to that node and try to iterate again. Now I got a match for i=0 (it
-returns the node for MAIN_PD) and i=1 (it returns the node for WKUP_PD)
-
-So I gather from that that the index arg to of_parse_phandle_with_args_map()
-is the index into the -map array.  OK, fine.
-
-So I know that the 0th entry in my -map points to &MAIN_PD, an dthe 1st
-entry in the -map points to &WKUP_PD, but I don't see how to get the
-child ID without (re)parsing the -map again myself because
-of_parse_phandle_with_args_map() doesn't give me any information about
-the child ID.
-
-I can maybe see that in other usecases, the caller might not need the
-child ID because it's being (re)mapped, but I need the child ID because
-it's the pmdomain belonging to the child ID that I need to add as a
-subdomain to the pmdomain of the parent.
-
-However, thinking through this, I'm now realizing that maybe the problem
-is that I cannot have a sparse -map table.  For this to work properly,
-maybe my <15 &MAIN_PD> needs to be the 15th entry in the table (or
-technically 16th if it's zero based)?
-
-But before I go down any more rabbit holes, I wanted to check with folks
-who understand this stuff and see if I'm on the right track or if I've
-missed the boat on how to use of_parse_phandle_with_args_map().
-
-Guidance, suggetions and/or public riducle are welcome. ;)
-
-Kevin
