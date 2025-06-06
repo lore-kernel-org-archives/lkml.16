@@ -1,171 +1,213 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A672874E7
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A155A288C15;
+	Fri,  6 Jun 2025 12:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749211623; cv=none; b=naNxftE2SDw8OinPE9fZnsvfqGoLbzuWrcUsSSXP+lOkQmG6pnOtl3OFeZSOzwqRTwZZBK2IkCDljC1VpYJGtkS8d1KgeI+A3vI2SNj+rpSkiz3HndlLl/4Y1fytRV0nhZlUEuKLIZjcBRZhGXcmsO+D9Tudfkklp2l5dgHRQfA=
+	t=1749211627; cv=none; b=gGMNrzmCrNodnXHGKPwiGwNZSLodJWJH+JR1nPVVn+8ao2heJLH+LMKwwh11BtjeNmszgy2svFsjIsqiELbWdDApiKWha6K60jNOp4ESnAHB9D/T/KyybTxrJZGTsAYf+u1EuyxlgMH5/WaBi17ACGY/avxn2DjtkdQIVhGgAtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749211623; c=relaxed/simple;
-	bh=jZhqw3CFkkpAqCC9nzOWg/77t51D878n8OcC+pjLft4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cau/mVHl1oU/waWKkASXvj06SqT201Pdszz6CRr/w2RscxUNkfMddBSFmnSexyBRugPb81FTIlhqqTKFHS/YUL2cVQ53PBWTUbeSJWqSqj9gLaM9Ih9nJwNP/wAylmNG84c41qXFKZpcFQX1PafQ+wy9DtpwUsC9x7ZQ2f2JnXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dk1hBAp8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749211627; c=relaxed/simple;
+	bh=lg3kmFZQXaT6RdO/u7P41CZ1HWdm8SPqQvfiJsphDpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rvg+RvW/mmEw2zzuOFXHVhw8JnDXOwBNnWaqhZ68+PBlCuiuoonb8AXxHpL7ywvNQrTEmuEhjREO/XngnwHfGY0U+/kKrhWWX7AiELIoHISWim4CltZbhD/UQebZclM/cUt9nlHFKuvv8muYBlZaSbgn/u6M2OLkG6gLFksXR8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=SuWL0iqd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kK1vmeEd; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dk1hBAp8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749211619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mrjs5eOHCyu5GrbKeIZJ6mBciwCyDUhu9m4iaDSEfRE=;
-	b=dk1hBAp8S+hkCP0lZSn7YvdpdWzdX2JugbeHOVNLs/Dn3cK08b9VCsOig0srjLzzkuTi/6
-	Oraic979uAjJFGWZjE3pz1HDBnuRAUZI0WmpbvPrHMDrWBB2voFllKd+fRINlhGwAdczLV
-	6LZ1DWOxwhL9ycmIThyqaBqzN7mXH9c=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-530-hhQ4K7OCP1Wb_WyZHMZmRw-1; Fri,
- 06 Jun 2025 08:06:56 -0400
-X-MC-Unique: hhQ4K7OCP1Wb_WyZHMZmRw-1
-X-Mimecast-MFC-AGG-ID: hhQ4K7OCP1Wb_WyZHMZmRw_1749211612
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8FBF819560B3;
-	Fri,  6 Jun 2025 12:06:52 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.44.33.65])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E186C18003FD;
-	Fri,  6 Jun 2025 12:06:44 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Christian Koenig <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v8 9/9] drm/i915/psr: Add intel_psr2_panic_force_full_update
-Date: Fri,  6 Jun 2025 13:48:13 +0200
-Message-ID: <20250606120519.753928-10-jfalempe@redhat.com>
-In-Reply-To: <20250606120519.753928-1-jfalempe@redhat.com>
-References: <20250606120519.753928-1-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="SuWL0iqd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kK1vmeEd"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 981871140144;
+	Fri,  6 Jun 2025 08:07:04 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Fri, 06 Jun 2025 08:07:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749211624;
+	 x=1749298024; bh=nh5POVPYAuUyoy5LaIyDc334XOD2OOPorQvukFMjFAQ=; b=
+	SuWL0iqdM2/T8O4OdKzfzfA5S+UNVDQsq7Aev1PitHbEcj4klwnTP2OFZHvChQzO
+	fRjMx1EHxooCVH+xG870jWZcR7KjbSbWrpU86IUQOBq/hDgXk/IuRV4pD+NtEr9l
+	vfuh7fLnXKhdylEbMtmkX3+qKeXNc32TRKuCdGZ8heNpff+ejIfIP8B7tBiVd+Br
+	erLQrr8HsY69ed1FbROU1TCfGySejYys/AsHBPu2g4PTh2kHBSQdVoPwQO98ritK
+	dahQ7jwNJeF9T+lIGlbA98lN4fMcoytC7erAloJ5MEhdcYvuYX1GnHxKp8hUkbSw
+	D0XbjY/thJNokBiSajZDaA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749211624; x=
+	1749298024; bh=nh5POVPYAuUyoy5LaIyDc334XOD2OOPorQvukFMjFAQ=; b=k
+	K1vmeEdeAkBavAInnZCPJFGQMc/rJjyaksapEtG/kOxv1WdYBQ502N0aQMZV+c3J
+	yl+Sr71EPZFqnXl52uCS4GwCJwJYYf805aQKtcgNXAcEN6qdIOiLy7xa3fOevsQp
+	L1A21nRaefdoAQi73SPDr64/NLFneRUQwrowaU1fh0kNcKBpW64bfuzP3jHXQLfn
+	vN1TswySlrA9JHMqnhin6YfKQRydV6rHYpdoZi/fVd1hnhjhTBCrben+l9VvP7tJ
+	vRm8k5xCIKkQovdnf1RBtlJ9VTg8abBdsez4+jM8/SXKs+pOw4TRBA4m3vQ0mCMd
+	qDNxnyesr20g3ajWEo/Tg==
+X-ME-Sender: <xms:6NlCaGX0EvBx7EIhyI8FXvc349lBq1sksLkmGRqkh-cyD9wFjaFXng>
+    <xme:6NlCaCnptmrJMjcAdypzUKypl37c2aTT4FuMQu6eT1zUvpazrlhX1DwlHdMU0DLb8
+    q0B4wysvcSTMDPh3C4>
+X-ME-Received: <xmr:6NlCaKZ0iDxJjB8vJ2mBwd6T3DHVPQHj_-d45iplg4ZKzqdLfw1ocJHlL7OC0XRl14TaCOhTnrESkN6W5z9Ia9JvSBDIqA3JvA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehtdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdej
+    necuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhoug
+    gvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeevteeg
+    tddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshho
+    uggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeelpdhmoh
+    guvgepshhmthhpohhuthdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgv
+    nhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhh
+    grsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehl
+    ihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghs
+    qdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkh
+    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgvhhgr
+    sgdohhhurgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlrghurhgvnhhtrd
+    hpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhgr
+    tghophhordhmohhnughisehiuggvrghsohhnsghorghrugdrtghomh
+X-ME-Proxy: <xmx:6NlCaNU60iCqoZUxCO4TOZGqQNVectzPJOd-XvXGVBAXEuSh-WvLrA>
+    <xmx:6NlCaAkv_giklsOeq-tmxLMa4Uroskr-R6hFvNTB9EdS37CWUlJ31w>
+    <xmx:6NlCaCe5rt2585NfMWkRqkNvJYvdH_YloVK63NQVBy7quDf11jGXdg>
+    <xmx:6NlCaCFxT1Kb_7G0HFEjNSHaTdxKkipAkCzxo70Jy1s0nFuN0HKxvw>
+    <xmx:6NlCaE_nwb1jaMssEFXpDARl9as58qtxQdEzp-AVlUyFE0uebzSqQe1c>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 6 Jun 2025 08:07:03 -0400 (EDT)
+Date: Fri, 6 Jun 2025 14:07:02 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH v3 07/15] media: rcar-csi2: Optimize rcsi2_calc_mbps()
+Message-ID: <20250606120702.GD2770609@ragnatech.se>
+References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+ <20250530-rcar-streams-v3-7-026655df7138@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20250530-rcar-streams-v3-7-026655df7138@ideasonboard.com>
 
-When the panic handler is called, configure the psr to send the full
-framebuffer to the monitor, otherwise the panic screen is only
-partially visible.
+Hi Tomi,
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
----
+Thanks for your work.
 
-v8:
- * Added in v8
+On 2025-05-30 16:50:36 +0300, Tomi Valkeinen wrote:
+> With modern drivers supporting link-freq, we don't need to do any
+> calculations based on the bpp and number of lanes when figuring out the
+> link frequency. However, the code currently always runs code to get the
+> bpp and number of lanes.
+> 
+> Optimize the rcsi2_calc_mbps() so that we only do that when needed, i.e.
+> when querying the link-freq is not supported by the upstream subdevice.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
 
- .../gpu/drm/i915/display/intel_atomic_plane.c |  7 +++++++
- drivers/gpu/drm/i915/display/intel_psr.c      | 20 +++++++++++++++++++
- drivers/gpu/drm/i915/display/intel_psr.h      |  2 ++
- 3 files changed, 29 insertions(+)
+I wonder if it make sens to add a dev_warn_once() for the old call path 
+so we won't forget to update all known users of this old way, and once 
+fixed we can remove the huristic method all together?
 
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index 8c422c6a7186..c9a9f0770205 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -58,6 +58,7 @@
- #include "intel_fb.h"
- #include "intel_fb_pin.h"
- #include "intel_fbdev.h"
-+#include "intel_psr.h"
- #include "skl_scaler.h"
- #include "skl_universal_plane.h"
- #include "skl_watermark.h"
-@@ -1319,6 +1320,7 @@ static unsigned int intel_4tile_get_offset(unsigned int width, unsigned int x, u
- static void intel_panic_flush(struct drm_plane *plane)
- {
- 	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
-+	struct intel_crtc_state *crtc_state = to_intel_crtc_state(plane->state->crtc->state);
- 	struct intel_plane *iplane = to_intel_plane(plane);
- 	struct intel_display *display = to_intel_display(iplane);
- 	struct drm_framebuffer *fb = plane_state->hw.fb;
-@@ -1328,6 +1330,11 @@ static void intel_panic_flush(struct drm_plane *plane)
- 
- 	intel_bo_panic_finish(obj);
- 
-+	if (crtc_state->enable_psr2_sel_fetch) {
-+		/* Force a full update for psr2 */
-+		intel_psr2_panic_force_full_update(display, crtc_state);
-+	}
-+
- 	/* Flush the cache and don't disable tiling if it's the fbdev framebuffer.*/
- 	if (to_intel_framebuffer(fb) == intel_fbdev_framebuffer(display->fbdev.fbdev)) {
- 		struct iosys_map map;
-diff --git a/drivers/gpu/drm/i915/display/intel_psr.c b/drivers/gpu/drm/i915/display/intel_psr.c
-index db7111374293..283ac2618ea5 100644
---- a/drivers/gpu/drm/i915/display/intel_psr.c
-+++ b/drivers/gpu/drm/i915/display/intel_psr.c
-@@ -2888,6 +2888,26 @@ int intel_psr2_sel_fetch_update(struct intel_atomic_state *state,
- 	return 0;
- }
- 
-+void intel_psr2_panic_force_full_update(struct intel_display *display,
-+					struct intel_crtc_state *crtc_state)
-+{
-+	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
-+	enum transcoder cpu_transcoder = crtc_state->cpu_transcoder;
-+	u32 val = man_trk_ctl_enable_bit_get(display);
-+
-+	/* SF partial frame enable has to be set even on full update */
-+	val |= man_trk_ctl_partial_frame_bit_get(display);
-+	val |= man_trk_ctl_continuos_full_frame(display);
-+
-+	/* Directly write the register */
-+	intel_de_write_fw(display, PSR2_MAN_TRK_CTL(display, cpu_transcoder), val);
-+
-+	if (!crtc_state->enable_psr2_su_region_et)
-+		return;
-+
-+	intel_de_write_fw(display, PIPE_SRCSZ_ERLY_TPT(crtc->pipe), 0);
-+}
-+
- void intel_psr_pre_plane_update(struct intel_atomic_state *state,
- 				struct intel_crtc *crtc)
- {
-diff --git a/drivers/gpu/drm/i915/display/intel_psr.h b/drivers/gpu/drm/i915/display/intel_psr.h
-index 0cf53184f13f..9b061a22361f 100644
---- a/drivers/gpu/drm/i915/display/intel_psr.h
-+++ b/drivers/gpu/drm/i915/display/intel_psr.h
-@@ -57,6 +57,8 @@ int intel_psr2_sel_fetch_update(struct intel_atomic_state *state,
- 				struct intel_crtc *crtc);
- void intel_psr2_program_trans_man_trk_ctl(struct intel_dsb *dsb,
- 					  const struct intel_crtc_state *crtc_state);
-+void intel_psr2_panic_force_full_update(struct intel_display *display,
-+					struct intel_crtc_state *crtc_state);
- void intel_psr_pause(struct intel_dp *intel_dp);
- void intel_psr_resume(struct intel_dp *intel_dp);
- bool intel_psr_needs_vblank_notification(const struct intel_crtc_state *crtc_state);
+> ---
+>  drivers/media/platform/renesas/rcar-csi2.c | 50 +++++++++++++++++-------------
+>  1 file changed, 29 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> index 90973f3cba38..e0a0fd96459b 100644
+> --- a/drivers/media/platform/renesas/rcar-csi2.c
+> +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> @@ -1001,15 +1001,10 @@ static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
+>  static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
+>  			   struct v4l2_subdev_state *state)
+>  {
+> -	const struct rcar_csi2_format *format;
+> -	struct v4l2_mbus_framefmt *fmt;
+>  	struct media_pad *remote_pad;
+>  	struct v4l2_subdev *source;
+> -	unsigned int lanes;
+> -	unsigned int bpp;
+>  	s64 freq;
+>  	u64 mbps;
+> -	int ret;
+>  
+>  	if (!priv->remote)
+>  		return -ENODEV;
+> @@ -1017,28 +1012,41 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
+>  	source = priv->remote;
+>  	remote_pad = &source->entity.pads[priv->remote_pad];
+>  
+> -	ret = rcsi2_get_active_lanes(priv, &lanes);
+> -	if (ret)
+> -		return ret;
+> +	/*
+> +	 * First try to get the real link freq. If that fails, try the heuristic
+> +	 * method with bpp and lanes (but that only works for one route).
+> +	 */
+> +	freq = v4l2_get_link_freq(remote_pad, 0, 0);
+> +	if (freq < 0) {
+> +		const struct rcar_csi2_format *format;
+> +		struct v4l2_mbus_framefmt *fmt;
+> +		unsigned int lanes;
+> +		unsigned int bpp;
+> +		int ret;
+>  
+> -	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
+> -	if (!fmt)
+> -		return -EINVAL;
+> +		ret = rcsi2_get_active_lanes(priv, &lanes);
+> +		if (ret)
+> +			return ret;
+>  
+> -	format = rcsi2_code_to_fmt(fmt->code);
+> -	if (!format)
+> -		return -EINVAL;
+> +		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
+> +		if (!fmt)
+> +			return -EINVAL;
+>  
+> -	bpp = format->bpp;
+> +		format = rcsi2_code_to_fmt(fmt->code);
+> +		if (!format)
+> +			return -EINVAL;
+>  
+> -	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
+> -	if (freq < 0) {
+> -		int ret = (int)freq;
+> +		bpp = format->bpp;
+>  
+> -		dev_err(priv->dev, "failed to get link freq for %s: %d\n",
+> -			source->name, ret);
+> +		freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
+> +		if (freq < 0) {
+> +			int ret = (int)freq;
+>  
+> -		return ret;
+> +			dev_err(priv->dev, "failed to get link freq for %s: %d\n",
+> +				source->name, ret);
+> +
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	mbps = div_u64(freq * 2, MEGA);
+> 
+> -- 
+> 2.43.0
+> 
+
 -- 
-2.49.0
-
+Kind Regards,
+Niklas Söderlund
